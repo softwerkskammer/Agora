@@ -1,0 +1,29 @@
+{
+  "name": "SoftwerkskammerNewPlattform",
+  "description": "A new plattform for Softwerkskammer",
+  "version": "0.0.1",
+  "author": "Nicole Rauch",
+  "contributors ": [
+    {
+      "name": "Markus M. May",
+      "web": "http://www.javafreedom.org"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/softwerkskammer/NeuePlattform-Implementierung"
+  },
+  "main": "",
+  "engines": {
+    "node": ">0.8"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "grunt": "~0.4",
+    "grunt-contrib-jshint": "~0.2"
+  },
+  "scripts": {
+    "test": "grunt travis --verbose"
+  }
+}
