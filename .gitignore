@@ -1,3 +1,5 @@
 .idea
+/.settings
+/.c9revisions/
 *.sublime*
-node_modules
+/node_modules/
