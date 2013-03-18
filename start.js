@@ -5,11 +5,7 @@ var ip = "127.0.0.1", port = 17124;
 var soap = require('soap');
 var url = 'http://swk.monoceres.uberspace.de/fcgi-bin/sympa.fcgi/wsdl';
 var args = {listname: 'craftsmanswap'};
-soap.createClient(url, function(err, client) {
-    client.info(args, function(err, result) {
-        console.log(result);
-    });
-});
+
 
 
 http.createServer(function (req, res) {
@@ -18,6 +14,7 @@ http.createServer(function (req, res) {
     soap.createClient(url, function(err, client) {
         client.info(args, function(err, result) {
             res.end('Hallo Softwerkskammer! :-)\n');
+            console.log(result);
         });
     });
 
