@@ -13,8 +13,10 @@ http.createServer(function (req, res) {
 
     soap.createClient(url, function(err, client) {
         client.info(args, function(err, result) {
-            res.end('Hallo Softwerkskammer! :-)\n');
-            console.log(result);
+            res.end('Hallo Softwerkskammer! :-)\n'+result.body);
+
+
+
         });
     });
 
