@@ -1,9 +1,13 @@
 "use strict";
-var http = require('http');
-var ip = "127.0.0.1", port = 17124;
 
-http.createServer(function (req, res) {
-    res.writeHead(200, {'Content-Type': 'text/plain'});
-    res.end('Hallo Softwerkskammer! :-)\n');
-}).listen(port, ip);
-console.log('Server running at http://' + ip + ':' + port);
+var express = require('express');
+var app = express();
+var port = 17124;
+
+app.get('/', function(req, res){
+  res.send('Hallo Softwerkskammer! :-)');
+});
+
+app.listen(port);
+console.log('Server running at port ' + port);
+
