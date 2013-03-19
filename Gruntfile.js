@@ -13,19 +13,36 @@ module.exports = function (grunt) {
       ' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */\n',
     // Task configuration.
     jshint: {
-      all: ['**/*.js', '!node_modules/**/*.js'],
+      files: ['**/*.js*', '.jshintrc', '!node_modules/**/*.js*'],
       options: {
         jshintrc: '.jshintrc'
       }
+    },
+    watch: {
+      files: ['<%= jshint.files %>'],
+      tasks: ['default']
+    },
+    simplemocha: {
+      options: {
+        globals: ['should'],
+        timeout: 3000,
+        ignoreLeaks: false,
+        ui: 'bdd',
+        reporter: 'dot'
+      },
+
+      all: { src: 'test/**/*.js' }
     }
   });
 
   // These plugins provide necessary tasks.
   grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-simple-mocha');
 
   // Default task.
-  grunt.registerTask('default', ['jshint']);
+  grunt.registerTask('default', ['jshint', 'simplemocha']);
 
   // Travis-CI task
-  grunt.registerTask('travis', ['jshint']);
+  grunt.registerTask('travis', ['default']);
 };
