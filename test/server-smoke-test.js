@@ -8,12 +8,12 @@ var base_uri = "http://localhost:" + port;
 var events_uri = base_uri + '/events';
 
 describe('SWK Plattform server', function () {
-  beforeEach(function () {
-    app.start(port);
+  beforeEach(function (done) {
+    app.start(port, done);
   });
 
-  afterEach(function () {
-    app.stop();
+  afterEach(function (done) {
+    app.stop(done);
   });
 
   it('should respond on a GET for the home page', function (done) {
