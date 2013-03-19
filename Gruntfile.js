@@ -13,15 +13,20 @@ module.exports = function (grunt) {
       ' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */\n',
     // Task configuration.
     jshint: {
-      all: ['**/*.js', '!node_modules/**/*.js'],
+      files: ['**/*.js*', '.jshintrc', '!node_modules/**/*.js*'],
       options: {
         jshintrc: '.jshintrc'
       }
-    }
+    },
+    watch: {
+      files: ['<%= jshint.files %>'],
+      tasks: ['jshint']
+    },
   });
 
   // These plugins provide necessary tasks.
   grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-contrib-watch');
 
   // Default task.
   grunt.registerTask('default', ['jshint']);
