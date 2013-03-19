@@ -1,5 +1,5 @@
 {
-   "curly": true,
+  "curly": true,
   "eqeqeq": true,
   "immed": true,
   "latedef": true,
@@ -15,5 +15,12 @@
   "strict": true,
   "indent": 2,
   "white": true,
-  "trailing": true
+  "trailing": true,
+  "globals": {
+    "describe": true,
+    "expect": true,
+    "it": true,
+    "beforeEach": true,
+    "afterEach": true
+  }
 }
