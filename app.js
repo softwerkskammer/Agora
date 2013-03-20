@@ -11,16 +11,16 @@ app.configure(function () {
   app.use(express.bodyParser());
   app.use(express.methodOverride());
   app.use(app.router);
-  app.use(express.static(path.join(__dirname, '../public')));
+  app.use(express.static(path.join(__dirname, 'public')));
 });
 
 app.configure('development', function () {
   app.use(express.errorHandler());
 });
 
-app.use('/', require('./site'));
-app.use('/events', require('./events'));
-app.use('/gruppenverwaltung', require('./gruppenverwaltung'));
+app.use('/', require('./lib/site'));
+app.use('/events', require('./lib/events'));
+app.use('/gruppenverwaltung', require('./lib/gruppenverwaltung'));
 
 var http = require('http');
 var server = http.createServer(app);

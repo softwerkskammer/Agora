@@ -3,7 +3,7 @@ var should = require('chai').should();
 var request = require('request');
 var port = 17125;
 
-var app = require('../lib/app.js');
+var app = require('../app.js');
 var base_uri = "http://localhost:" + port;
 var events_uri = base_uri + '/events';
 
