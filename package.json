@@ -28,7 +28,8 @@
     "grunt-contrib-watch": "~0.3.1",
     "grunt-simple-mocha": "~0.3.2",
     "chai": "~1.5.0",
-    "request": "~2.16.6"
+    "request": "~2.16.6",
+    "proxyquire": "~0.4.0"
   },
   "scripts": {
     "test": "grunt travis --verbose"
