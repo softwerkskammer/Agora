@@ -1,0 +1,9 @@
+extend ../../../views/layout
+
+block content
+  h1= title
+  
+  ul
+    each gruppe in gruppen
+      li
+        a(href="#{gruppen_route}/#{gruppe.id}") #{gruppe.name}

@@ -19,7 +19,7 @@ module.exports = function (grunt) {
       }
     },
     watch: {
-      files: ['<%= jshint.files %>', 'views/*.jade'],
+      files: ['<%= jshint.files %>', '**/*.jade'],
       tasks: ['default']
     },
     simplemocha: {
