@@ -22,7 +22,7 @@ module.exports = function (grunt) {
       files: ['<%= jshint.files %>', '**/*.jade'],
       tasks: ['default']
     },
-    simplemocha: {
+    'mocha-hack': {
       options: {
         globals: ['should'],
         timeout: 3000,
@@ -38,10 +38,10 @@ module.exports = function (grunt) {
   // These plugins provide necessary tasks.
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-simple-mocha');
+  grunt.loadNpmTasks('grunt-mocha-hack');
 
   // Default task.
-  grunt.registerTask('default', ['jshint', 'simplemocha']);
+  grunt.registerTask('default', ['jshint', 'mocha-hack']);
 
   // Travis-CI task
   grunt.registerTask('travis', ['default']);
