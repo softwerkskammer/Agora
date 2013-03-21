@@ -10,7 +10,7 @@ var appTemplate = function () {
 
 app.configure(function () {
   app.set('view engine', 'jade');
-  app.set('views', __dirname + '/views');
+  app.set('views', path.join(__dirname, 'views'));
   app.use(express.favicon());
   app.use(express.logger('dev'));
   app.use(express.bodyParser());
@@ -48,7 +48,7 @@ exports.start = function (port, done) {
 
 exports.stop = function (done) {
   server.close(function () {
-    console.log('server stopped');
+    console.log('Server stopped');
     if (done) {
       done();
     }
