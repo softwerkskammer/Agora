@@ -10,7 +10,6 @@ describe('Events application', function () {
 
   beforeEach(function () {
     app = express();
-    app.set('view engine', 'jade');
     app.use('/foo', events(express()));
   });
 
