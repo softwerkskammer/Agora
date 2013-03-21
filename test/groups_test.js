@@ -18,7 +18,7 @@ describe('Groups application', function () {
     request(app)
       .get('/')
       .expect(200)
-      .expect(/groupid1/)
+      .expect(/href="groups\/groupid1"/)
       .expect(/Group 1/, done);
   });
 });
