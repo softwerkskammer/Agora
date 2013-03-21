@@ -42,5 +42,17 @@ describe('Server started in different process', function () {
     });
   });
 
+  it('delivers the home page when start.js is called from another directory', function (done) {
+    child = child_process.spawn("node", ["../start.js", port], { cwd: __dirname, stdio: "pipe" });
+    waitForServerRunning(child, function () {
+      request({uri: base_uri}, function (req, resp) {
+        should.exist(resp);
+        console.log(resp.body);
+        resp.statusCode.should.equal(200);
+        resp.body.should.contain('Softwerkskammer');
+        done();
+      });
+    });
+  });
 });
 
