@@ -25,14 +25,14 @@ app.configure('development', function () {
 
 app.use('/', require('./lib/site'));
 app.use('/events', require('./lib/events')(appTemplate()));
-app.use('/gruppenverwaltung', require('./lib/gruppenverwaltung'));
-var gruppenApp = require('./lib/gruppen');
-/* This is needed in the gruppen.jade view, to produce reasonable hrefs */
-gruppenApp.locals({
-  gruppen_route: 'gruppen'
+app.use('/groups_administration', require('./lib/groups_administration'));
+var groupsApp = require('./lib/groups');
+/* This is needed in the groups.jade view, to produce reasonable hrefs */
+groupsApp.locals({
+  groups_route: 'groups'
 });
 
-app.use('/gruppen', gruppenApp);
+app.use('/groups', groupsApp);
 
 var http = require('http');
 var server = http.createServer(app);
