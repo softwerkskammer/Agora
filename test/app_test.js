@@ -1,13 +1,9 @@
 "use strict";
 var should = require('chai').should();
 var request = require('request');
-var proxyquire =  require('proxyquire');
+var app = require('../app.js');
 
 var port = 17125;
-
-var sympaClientStub = {};
-var groupsAppStub = proxyquire('../lib/groups', {'./sympa': sympaClientStub});
-var app = proxyquire('../app.js', {'./lib/groups': groupsAppStub});
 
 var base_uri = "http://localhost:" + port;
 var events_uri = base_uri + '/events';
@@ -63,18 +59,6 @@ describe('SWK Plattform server', function () {
       resp.statusCode.should.equal(200);
       resp.headers['content-type'].should.contain('text/css');
       resp.body.should.contain('color:');
-      done();
-    });
-  });
-
-  it('shows the list of groups as retrieved by the SOAP call', function (done) {
-    var groupsresult = [{id: 'groupid1', name: 'Group 1'}];
-    sympaClientStub.getGroups = function (callback) {
-      callback(null, groupsresult);
-    };
-    request({uri: base_uri + '/groups'}, function (req, resp) {
-      resp.statusCode.should.equal(200);
-      resp.body.should.contain('<a href="groups/groupid1">Group 1</a>');
       done();
     });
   });
