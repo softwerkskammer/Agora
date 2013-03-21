@@ -4,6 +4,10 @@ var express = require('express');
 var path = require('path');
 var app = express();
 
+var appTemplate = function () {
+  return express();
+};
+
 app.configure(function () {
   app.set('view engine', 'jade');
   app.set('views', __dirname + '/views');
@@ -20,7 +24,7 @@ app.configure('development', function () {
 });
 
 app.use('/', require('./lib/site'));
-app.use('/events', require('./lib/events')(express()));
+app.use('/events', require('./lib/events')(appTemplate()));
 app.use('/gruppenverwaltung', require('./lib/gruppenverwaltung'));
 var gruppenApp = require('./lib/gruppen');
 /* This is needed in the gruppen.jade view, to produce reasonable hrefs */
