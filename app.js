@@ -4,9 +4,13 @@ var express = require('express');
 var path = require('path');
 var app = express();
 
+var appTemplate = function () {
+  return express();
+};
+
 app.configure(function () {
   app.set('view engine', 'jade');
-  app.set('views', __dirname + '/views');
+  app.set('views', path.join(__dirname, 'views'));
   app.use(express.favicon());
   app.use(express.logger('dev'));
   app.use(express.bodyParser());
@@ -20,7 +24,7 @@ app.configure('development', function () {
 });
 
 app.use('/', require('./lib/site'));
-app.use('/events', require('./lib/events')(express()));
+app.use('/events', require('./lib/events')(appTemplate()));
 app.use('/gruppenverwaltung', require('./lib/gruppenverwaltung'));
 var gruppenApp = require('./lib/gruppen');
 /* This is needed in the gruppen.jade view, to produce reasonable hrefs */
@@ -44,7 +48,7 @@ exports.start = function (port, done) {
 
 exports.stop = function (done) {
   server.close(function () {
-    console.log('server stopped');
+    console.log('Server stopped');
     if (done) {
       done();
     }
