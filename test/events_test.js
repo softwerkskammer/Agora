@@ -27,7 +27,7 @@ describe('Events application', function () {
       .expect('Content-Type', /text\/html/)
       .expect(200)
       .expect(/<html>/)
-      .expect(/Event X/, done);
+      .expect(/Event/, done);
   });
 });
 

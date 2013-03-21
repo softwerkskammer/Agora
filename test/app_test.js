@@ -46,9 +46,9 @@ describe('SWK Plattform server', function () {
     });
   });
 
-  it('shows "Event X" for GET /events/X', function (done) {
+  it('shows Event for GET /events/X', function (done) {
     request({uri: events_uri + '/X'}, function (req, resp) {
-      resp.body.should.contain('Event X');
+      resp.body.should.contain('Event');
       done();
     });
   });
