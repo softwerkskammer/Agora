@@ -23,6 +23,15 @@ describe('Server started in different process', function () {
     });
   };
 
+  var serverShouldDeliverStartPage = function (done) {
+    request({uri: base_uri}, function (req, resp) {
+      should.exist(resp);
+      resp.statusCode.should.equal(200);
+      resp.body.should.contain('Softwerkskammer');
+      done();
+    });
+  };
+
   afterEach(function (done) {
     child.on("exit", function () {
       done();
@@ -33,24 +42,14 @@ describe('Server started in different process', function () {
   it('delivers the home page when start.js is called from its own directory', function (done) {
     child = child_process.spawn("node", ["start.js", port], { cwd: __dirname + "/../", stdio: "pipe" });
     waitForServerRunning(child, function () {
-      request({uri: base_uri}, function (req, resp) {
-        should.exist(resp);
-        resp.statusCode.should.equal(200);
-        resp.body.should.contain('Softwerkskammer');
-        done();
-      });
+      serverShouldDeliverStartPage(done);
     });
   });
 
   it('delivers the home page when start.js is called from another directory', function (done) {
     child = child_process.spawn("node", ["../start.js", port], { cwd: __dirname, stdio: "pipe" });
     waitForServerRunning(child, function () {
-      request({uri: base_uri}, function (req, resp) {
-        should.exist(resp);
-        resp.statusCode.should.equal(200);
-        resp.body.should.contain('Softwerkskammer');
-        done();
-      });
+      serverShouldDeliverStartPage(done);
     });
   });
 });

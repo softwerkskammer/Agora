@@ -6,8 +6,8 @@ var proxyquire =  require('proxyquire');
 var port = 17125;
 
 var sympaClientStub = {};
-var gruppenAppStub = proxyquire('../lib/gruppen', {'../gruppenverwaltung/swkSympaClient': sympaClientStub});
-var app = proxyquire('../app.js', {'./lib/gruppen': gruppenAppStub});
+var groupsAppStub = proxyquire('../lib/groups', {'../groups_administration/swkSympaClient': sympaClientStub});
+var app = proxyquire('../app.js', {'./lib/groups': groupsAppStub});
 
 var base_uri = "http://localhost:" + port;
 var events_uri = base_uri + '/events';
@@ -67,14 +67,14 @@ describe('SWK Plattform server', function () {
     });
   });
 
-  it('shows the list of gruppen as retrieved by the SOAP call', function (done) {
-    var gruppenresult = [{id: 'groupid1', name: 'Gruppe 1'}];
-    sympaClientStub.getGruppen = function (callback) {
-      callback(null, gruppenresult);
+  it('shows the list of groups as retrieved by the SOAP call', function (done) {
+    var groupsresult = [{id: 'groupid1', name: 'Group 1'}];
+    sympaClientStub.getGroups = function (callback) {
+      callback(null, groupsresult);
     };
-    request({uri: base_uri + '/gruppen'}, function (req, resp) {
+    request({uri: base_uri + '/groups'}, function (req, resp) {
       resp.statusCode.should.equal(200);
-      resp.body.should.contain('<a href="gruppen/groupid1">Gruppe 1</a>');
+      resp.body.should.contain('<a href="groups/groupid1">Group 1</a>');
       done();
     });
   });
