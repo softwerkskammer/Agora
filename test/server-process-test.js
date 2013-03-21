@@ -47,7 +47,6 @@ describe('Server started in different process', function () {
     waitForServerRunning(child, function () {
       request({uri: base_uri}, function (req, resp) {
         should.exist(resp);
-        console.log(resp.body);
         resp.statusCode.should.equal(200);
         resp.body.should.contain('Softwerkskammer');
         done();
