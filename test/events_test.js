@@ -1,9 +1,13 @@
 "use strict";
 
 var request = require('supertest'),
-    express = require('express'),
-    events = require('../lib/events');
+    proxy = require('proxyquire'),
+    express = require('express');
 
+var storeProxy = {
+  getEvents: function () { return []; },
+};
+var events = proxy('../lib/events', { './store': storeProxy });
 
 describe('Events application', function () {
   var app;
@@ -22,12 +26,15 @@ describe('Events application', function () {
   });
 
   it('accepts a route with id', function (done) {
+    storeProxy.getEvent = function () {
+      return { id: 'X', title: 'XYZ' };
+    };
     request(app)
       .get('/X')
       .expect('Content-Type', /text\/html/)
       .expect(200)
       .expect(/<html>/)
-      .expect(/Event/, done);
+      .expect(/XYZ/, done);
   });
 
   it('shows "Upcoming events" on the main page', function (done) {
