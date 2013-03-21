@@ -5,4 +5,6 @@ block title
 
 block content
   h1 Upcoming Events
-  p #{events}
+  ul
+    for event in events
+      li #{event.title}

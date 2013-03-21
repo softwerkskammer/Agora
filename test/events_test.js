@@ -38,10 +38,18 @@ describe('Events application', function () {
   });
 
   it('shows "Upcoming events" on the main page', function (done) {
+    storeProxy.getEvents = function () {
+      return [
+        { id: 'foo', title: 'FooFoo' },
+        { id: 'bar', title: 'Bar baz' }
+      ];
+    };
     request(app)
       .get('/')
       .expect(200)
-      .expect(/Upcoming events/, done);
+      .expect(/Upcoming events/)
+      .expect(/FooFoo/)
+      .expect(/Bar baz/, done);
   });
 });
 
