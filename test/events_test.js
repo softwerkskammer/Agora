@@ -9,25 +9,32 @@ describe('Events application', function () {
   var app;
 
   beforeEach(function () {
-    app = express();
-    app.use('/foo', events(express()));
+    app = events(express());
   });
 
-  it('is mapped to a custom path', function (done) {
-    request(app)
+  it('maps to a custom path', function (done) {
+    var root = express();
+    root.use('/foo', events(express()));
+    request(root)
       .get('/foo')
       .expect('Content-Type', /text\/html/)
-      .expect(200)
-      .expect(/<title>.*events.*<\/title>/, done);
+      .expect(200, done);
   });
 
   it('accepts a route with id', function (done) {
     request(app)
-      .get('/foo/X')
+      .get('/X')
       .expect('Content-Type', /text\/html/)
       .expect(200)
       .expect(/<html>/)
       .expect(/Event/, done);
+  });
+
+  it('shows "Upcoming events" on the main page', function (done) {
+    request(app)
+      .get('/')
+      .expect(200)
+      .expect(/Upcoming events/, done);
   });
 });
 
