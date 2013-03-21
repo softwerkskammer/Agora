@@ -48,7 +48,7 @@ exports.start = function (port, done) {
 
 exports.stop = function (done) {
   server.close(function () {
-    console.log('server stopped');
+    console.log('Server stopped');
     if (done) {
       done();
     }
