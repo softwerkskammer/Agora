@@ -6,7 +6,7 @@ var proxyquire =  require('proxyquire');
 var port = 17125;
 
 var sympaClientStub = {};
-var groupsAppStub = proxyquire('../lib/groups', {'../groups_administration/swkSympaClient': sympaClientStub});
+var groupsAppStub = proxyquire('../lib/groups', {'./sympa': sympaClientStub});
 var app = proxyquire('../app.js', {'./lib/groups': groupsAppStub});
 
 var base_uri = "http://localhost:" + port;
