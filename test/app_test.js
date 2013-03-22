@@ -6,7 +6,6 @@ var app = require('../app.js');
 var port = 17125;
 
 var base_uri = "http://localhost:" + port;
-var events_uri = base_uri + '/events';
 
 describe('SWK Plattform server', function () {
   beforeEach(function (done) {
@@ -39,16 +38,18 @@ describe('SWK Plattform server', function () {
     });
   });
 
-  it('shows "Upcoming events" on the event page', function (done) {
-    request({uri: events_uri}, function (req, resp) {
-      resp.body.should.contain('Upcoming events');
+  it('has events app', function (done) {
+    request({uri: base_uri + '/events'}, function (req, res) {
+      res.statusCode.should.equal(200);
+      res.headers['content-type'].should.contain('text/html');
+      res.body.should.contain('events');
       done();
     });
   });
 
-  it('shows "Event X" for GET /events/X', function (done) {
-    request({uri: events_uri + '/X'}, function (req, resp) {
-      resp.body.should.contain('Event X');
+  it('events app constructs correct links', function (done) {
+    request({uri: base_uri + '/events'}, function (req, res) {
+      res.body.should.contain('href="/events/1"');
       done();
     });
   });

@@ -4,9 +4,12 @@ var express = require('express');
 var path = require('path');
 var app = express();
 
-var appTemplate = function () {
-  return express();
-};
+function useApp(parent, url, factory) {
+  var child = factory(express());
+  child.locals({ baseUrl: url });
+  parent.use(url, child);
+  return child;
+}
 
 app.configure(function () {
   app.set('view engine', 'jade');
@@ -24,7 +27,7 @@ app.configure('development', function () {
 });
 
 app.use('/', require('./lib/site'));
-app.use('/events', require('./lib/events')(appTemplate()));
+useApp(app, '/events', require('./lib/events'));
 var groupsApp = require('./lib/groups');
 /* This is needed in the groups.jade view, to produce reasonable hrefs */
 groupsApp.locals({

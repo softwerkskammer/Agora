@@ -1,0 +1,11 @@
+extends ../../../views/layout
+
+block title
+  | Upcoming events
+
+block content
+  h1 Upcoming Events
+  ul
+    for event in events
+      li
+        a(href='#{baseUrl}/#{event.id}') #{event.title}
