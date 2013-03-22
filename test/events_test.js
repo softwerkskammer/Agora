@@ -14,6 +14,7 @@ describe('Events application', function () {
 
   beforeEach(function () {
     app = events(express());
+    app.locals.baseUrl = '';
   });
 
   it('maps to a custom path', function (done) {

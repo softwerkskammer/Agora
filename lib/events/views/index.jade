@@ -7,4 +7,5 @@ block content
   h1 Upcoming Events
   ul
     for event in events
-      li #{event.title}
+      li
+        a(href='#{baseUrl}/#{event.id}') #{event.title}
