@@ -23,17 +23,17 @@ Running the server
 Running the tests
 -----------------
 
-To run the tests, you need to install Grunt:
+To run the tests, you need to install Grunt. This can be done e.g. in the `bin` folder in your Home directory or in some other directory `GLOBALPATH/bin`.
 
 * In your Home directory, create a file called `.npmrc` with the following contents:
 
-        prefix = path-to-your-home-directory
+        prefix = GLOBALPATH
         umask = 077
         
 * Anywhere, invoke `npm install -g grunt-cli`
-* In your Home directory, create or edit the file `.profile` and add the following line:
+* If the directory `GLOBALPATH/bin` is not in your path (you can check with `echo $PATH`), you need to add it to the path: In your Home directory, create or edit the file `.profile` and add the following line:
 
-        export PATH=path-to-your-home-directory/bin/:$PATH
+        export PATH=GLOBALPATH/bin/:$PATH
 
 Now, you can run the tests in *REPO* with `npm test`
 
