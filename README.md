@@ -23,24 +23,15 @@ Running the server
 Running the tests
 -----------------
 
-<<<<<<< HEAD
-To run the tests, you need to install Grunt. This can be done e.g. in the `bin` folder in your Home directory or in some other directory `GLOBALPATH/bin`.
-=======
-To run the tests, you need to install Grunt. We propose to install Grunt globally via the -g option of npm:
->>>>>>> extended the README
+To run the tests, you need to install Grunt. We propose to install Grunt globally via the -g option of npm. To find out more about this option, see [https://npmjs.org/doc/global.html](https://npmjs.org/doc/global.html).:
 
-* If you want the global npm directory inside your Home directory,create a file called `.npmrc` with the following contents in your Home directory:
+* (Optional) To define the installation location of global npm packages on Unix-like Systems create a file called `.npmrc` with the following contents in your Home directory:
 
         prefix = GLOBALPATH
         umask = 077
         
-<<<<<<< HEAD
-* Anywhere, invoke `npm install -g grunt-cli`
+* Anywhere, invoke `npm install -g grunt-cli` or `sudo npm install -g grunt-cli` if you don't have sufficient user privileges. You can check the installation with `which grunt`. If a location is returned everything is fine.
 * If the directory `GLOBALPATH/bin` is not in your path (you can check with `echo $PATH`), you need to add it to the path: In your Home directory, create or edit the file `.profile` and add the following line:
-=======
-* Anywhere, invoke `npm install -g grunt-cli`. This will install grunt to your global npm repository, typically inside `/usr/local/bin` or - if you chose the option above - to the `bin` folder inside your Home directory.
-* If you chose the Home directory install option: In your Home directory, create or edit the file `.profile` and add the following line:
->>>>>>> extended the README
 
         export PATH=GLOBALPATH/bin/:$PATH
 
