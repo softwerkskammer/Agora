@@ -1,34 +1,56 @@
 /* global describe, beforeEach, it */
 "use strict";
 var request = require('supertest'),
-    express = require('express'),
-    events = require('../lib/events');
+    proxy = require('proxyquire'),
+    express = require('express');
 
+var storeProxy = {
+  getEvents: function () { return []; },
+};
+var events = proxy('../lib/events', { './store': storeProxy });
 
 describe('Events application', function () {
   var app;
 
   beforeEach(function () {
-    app = express();
-    app.set('view engine', 'jade');
-    app.use('/foo', events(express()));
+    app = events(express());
+    app.locals.baseUrl = '';
   });
 
-  it('is mapped to a custom path', function (done) {
-    request(app)
+  it('maps to a custom path', function (done) {
+    var root = express();
+    root.use('/foo', events(express()));
+    request(root)
       .get('/foo')
       .expect('Content-Type', /text\/html/)
-      .expect(200)
-      .expect(/<title>.*events.*<\/title>/, done);
+      .expect(200, done);
   });
 
   it('accepts a route with id', function (done) {
+    storeProxy.getEvent = function () {
+      return { id: 'X', title: 'XYZ' };
+    };
     request(app)
-      .get('/foo/X')
+      .get('/X')
       .expect('Content-Type', /text\/html/)
       .expect(200)
       .expect(/<html>/)
-      .expect(/Event X/, done);
+      .expect(/XYZ/, done);
+  });
+
+  it('shows "Upcoming events" on the main page', function (done) {
+    storeProxy.getEvents = function () {
+      return [
+        { id: 'foo', title: 'FooFoo' },
+        { id: 'bar', title: 'Bar baz' }
+      ];
+    };
+    request(app)
+      .get('/')
+      .expect(200)
+      .expect(/Upcoming events/)
+      .expect(/FooFoo/)
+      .expect(/Bar baz/, done);
   });
 });
 
