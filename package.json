@@ -19,8 +19,9 @@
   },
   "dependencies": {
     "express": "~3.1",
-    "soap": "0.2.7",
-    "jade": "~0.28.2"
+    "soap": "git://github.com/triplem/node-soap.git#master",
+    "jade": "~0.28.2",
+    "node-store": "git://github.com/alexkwolfe/node-store.git#master"
   },
   "devDependencies": {
     "grunt": "~0.4",
