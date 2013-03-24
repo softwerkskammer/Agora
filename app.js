@@ -28,6 +28,11 @@ app.configure('development', function () {
 
 app.use('/', require('./lib/site'));
 useApp(app, '/events', require('./lib/events'));
+var membersApp = require('./lib/members');
+membersApp.locals({
+  members_route: 'members'
+});
+app.use('/members', membersApp);
 var groupsApp = require('./lib/groups');
 /* This is needed in the groups.jade view, to produce reasonable hrefs */
 groupsApp.locals({

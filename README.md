@@ -12,21 +12,23 @@ Some modules are compiled during the installation. Therefore some software shoul
 
 * Python 2.7 in system path
 * OS depending C++ compiler with headers and libraries
-  * For Windows Microsoft Windows SDK for Windows 7 and .NET Framework 4 [available here](http://www.microsoft.com/en-us/download/details.aspx?id=8279)
-
+  * For Windows: Microsoft Windows SDK for Windows 7 and .NET Framework 4 [available here](http://www.microsoft.com/en-us/download/details.aspx?id=8279)
+  * For Mac OS X: Install XCode from the App Store. In XCode's preferences (section "Downloads"), install the command line tools.
 
 Preparations for use
 --------------------
 
 * Check out this project into some folder (let's call it *REPO* from now on)
 * In *REPO*, run `npm install`
-	* Under Windows this command must run from a shell set up for running Windows Microsoft Windows SDK compilers
+  * Under Windows this command must run from a shell set up for running Windows Microsoft Windows SDK compilers
 
             cmd.exe /E:ON /V:ON /T:0E /K "C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\SetEnv.cmd" /Release /X86
 
   * If python 3 is the default, the command should be adopted with the right python version (2.7)
 
             npm install --python /usr/bin/python2
+
+  * Alternatively run `npm install` in the [Windows SDK Command Promt](http://msdn.microsoft.com/en-us/library/ms229859.aspx)
 
 Running the server
 ------------------

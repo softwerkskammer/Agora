@@ -1,0 +1,16 @@
+extends ../../../views/layout
+
+block title
+  | #{member.lastname}
+block content
+  h1 Mitglied #{member.firstname} #{member.lastname}
+  p Nickname: #{member.nickname}
+  p Vorname: #{member.firstname}
+  p Nachname: #{member.lastname}
+  p Email: #{member.email}
+  p Twitter: #{member.twitter}
+  p Ort / Region: #{member.location}
+  p Beruf: #{member.profession}
+  p Interessenschwerpunkte: #{member.interests}
+  p Website / Blog: #{member.site}
+  p Wie ich von der Softwerkskammer erfahren habe: #{member.reference}
