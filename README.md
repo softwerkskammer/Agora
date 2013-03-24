@@ -6,13 +6,23 @@ Current Build Status
 
 [![Build Status](https://travis-ci.org/softwerkskammer/NeuePlattform-Implementierung.png)](https://travis-ci.org/softwerkskammer/NeuePlattform-Implementierung)
 
+System requirements for installation
+--------------------
+Some modules are compiled during the installation. Therefore some software should be installed.
+
+* Python 2.7 in system path
+* OS depending C++ compiler with headers and libraries
+  * For Windows Microsoft Windows SDK for Windows 7 and .NET Framework 4 [available here](http://www.microsoft.com/en-us/download/details.aspx?id=8279)
+
 
 Preparations for use
 --------------------
 
 * Check out this project into some folder (let's call it *REPO* from now on)
 * In *REPO*, run `npm install`
+	* Under Windows this command must run from a shell set up for running Windows Microsoft Windows SDK compilers
 
+            cmd.exe /E:ON /V:ON /T:0E /K "C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\SetEnv.cmd" /Release /X86 
 
 Running the server
 ------------------
