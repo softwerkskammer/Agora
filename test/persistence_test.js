@@ -21,10 +21,21 @@ describe('The store can persist objects and retrieve them', function () {
     var toPersist = {id: 'toPersist', name: 'Heinz'};
     var persistence = createTeststore();
     persistence.save(toPersist);
+  });
 
+  it('retrieves one from the teststore', function () {
+    var persistence = createTeststore();
     persistence.getById('toPersist', function (result) {
       result.id.should.equal('toPersist');
       result.name.should.equal('Heinz');
+    });
+  });
+
+  it('retrieves all from the teststore', function () {
+    var persistence = createTeststore();
+    persistence.list(function (result) {
+      result.length.should.equal(1);
+      result[0].name.should.equal('Heinz');
     });
   });
 
