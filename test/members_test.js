@@ -1,8 +1,8 @@
 /* global describe, it */
 "use strict";
 var request = require('supertest');
-var proxyquire =  require('proxyquire');
-var Member = require('../lib/members/member')
+var proxyquire = require('proxyquire');
+var Member = require('../lib/members/member');
 var storeStub = {};
 
 var app = proxyquire('../lib/members', {'./store': storeStub});
@@ -15,7 +15,7 @@ describe('Members application', function () {
 
   it('shows the list of members as retrieved by persistence call', function (done) {
     storeStub.allMembers = function (callback) {
-      callback( [dummymember]);
+      callback([dummymember]);
     };
     request(app)
       .get('/')
@@ -26,7 +26,7 @@ describe('Members application', function () {
 
   it('shows the details of one members as retrieved by persistence call', function (done) {
     storeStub.getById = function (callback) {
-      callback( dummymember);
+      callback(dummymember);
     };
     request(app)
       .get('/hada')
