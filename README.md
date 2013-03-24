@@ -47,3 +47,8 @@ To run the tests, you need to install Grunt. We propose to install Grunt globall
 
 Now, you can run the tests in *REPO* with `npm test`
 
+Debugging the tests from IDE [Webstorm](http://www.jetbrains.com/webstorm/)
+----------
+Follow this [instructions](http://codebetter.com/glennblock/2013/01/17/debugging-mocha-unit-tests-with-webstorm-step-by-step/)
+
+
