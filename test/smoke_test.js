@@ -1,3 +1,4 @@
+/*global describe, afterEach, it */
 "use strict";
 var child_process = require("child_process");
 var should = require('chai').should();

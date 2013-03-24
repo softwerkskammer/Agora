@@ -1,5 +1,5 @@
+/* global describe, beforeEach, it */
 "use strict";
-
 var request = require('supertest'),
     express = require('express'),
     events = require('../lib/events');
