@@ -20,9 +20,11 @@ Preparations for use
 
 * Check out this project into some folder (let's call it *REPO* from now on)
 * In *REPO*, run `npm install`
-	* Under Windows this command must run from a shell set up for running Windows Microsoft Windows SDK compilers
+  * Under Windows this command must run from a shell set up for running Windows Microsoft Windows SDK compilers
 
             cmd.exe /E:ON /V:ON /T:0E /K "C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\SetEnv.cmd" /Release /X86 
+
+  * Alternatively run `npm install` in the [Windows SDK Command Promt](http://msdn.microsoft.com/en-us/library/ms229859.aspx)
 
 Running the server
 ------------------
