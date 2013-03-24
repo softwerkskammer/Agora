@@ -3,3 +3,6 @@
 /.c9revisions/
 *.sublime*
 /node_modules/
+.DS_Store
+lib/persistence/memberstore/
+lib/persistence/teststore/

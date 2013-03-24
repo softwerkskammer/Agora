@@ -1,0 +1,13 @@
+extends ../../../views/layout
+
+block title
+  | Übersicht der Mitglieder
+
+block content
+  h1 Mitglieder
+  ul
+    for member in members
+        ul
+          li: .member: strong: a(href='#{member.nickname}') #{member.nickname}
+            | #{member.firstname} #{member.lastname},
+            | #{member.email}
