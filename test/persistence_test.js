@@ -1,31 +1,37 @@
 /*global describe, it, beforeEach */
 "use strict";
 
-var fs = require('fs');
-var should = require('chai').should();
+var fs = require('fs'),
+  path = require('path'),
+  should = require('chai').should();
+
 var createTeststore = function () {
   return require('../lib/persistence/persistence')('teststore');
 };
 
 var storeDir = 'lib/persistence/teststore';
-var persistedFile = storeDir + '/toPersist.json';
-if (fs.existsSync(persistedFile)) {
-  fs.unlinkSync(persistedFile);
-}
-if (fs.existsSync(storeDir)) {
-  fs.rmdirSync(storeDir);
-}
 
-describe('The store can persist objects and retrieve them', function () {
+describe('The persistence store', function () {
   var persistence;
+  var toPersist = {id: 'toPersist', name: 'Heinz'};
+
+  var storeSampleData = function () {
+    persistence.save(toPersist);
+  };
+
+  var clearStore = function () {
+    var persistedFile = path.join(storeDir, toPersist.id + '.json');
+    if (fs.existsSync(persistedFile)) {
+      fs.unlinkSync(persistedFile);
+    }
+    if (fs.existsSync(storeDir)) {
+      fs.rmdirSync(storeDir);
+    }
+  };
 
   beforeEach(function () {
+    clearStore();
     persistence = createTeststore();
-  });
-
-  it('stores to the teststore', function () {
-    var toPersist = {id: 'toPersist', name: 'Heinz'};
-    persistence.save(toPersist);
   });
 
   it('retrieves none for non-existing id', function (done) {
@@ -35,7 +41,8 @@ describe('The store can persist objects and retrieve them', function () {
     });
   });
 
-  it('retrieves one from the teststore', function (done) {
+  it('retrieves one for existing id', function (done) {
+    storeSampleData();
     persistence.getById('toPersist', function (result) {
       result.id.should.equal('toPersist');
       result.name.should.equal('Heinz');
@@ -43,10 +50,19 @@ describe('The store can persist objects and retrieve them', function () {
     });
   });
 
-  it('retrieves all from the teststore', function () {
+  it('retreives an empty list when no data is inserted', function (done) {
+    persistence.list(function (result) {
+      result.length.should.equal(0);
+      done();
+    });
+  });
+
+  it('retrieves all', function (done) {
+    storeSampleData();
     persistence.list(function (result) {
       result.length.should.equal(1);
       result[0].name.should.equal('Heinz');
+      done();
     });
   });
 
