@@ -1,4 +1,4 @@
-/* global describe, it */
+/*global describe, it */
 "use strict";
 var request = require('supertest');
 var proxyquire =  require('proxyquire');

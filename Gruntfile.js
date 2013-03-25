@@ -19,7 +19,7 @@ module.exports = function (grunt) {
       }
     },
     watch: {
-      files: ['<%= jshint.files %>', '**/*.jade'],
+      files: ['<%= jshint.files %>', '**/*.jade', '!lib/persistence/*store/*.json'],
       tasks: ['default']
     },
     'mocha-hack': {
