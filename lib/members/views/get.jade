@@ -1,9 +1,9 @@
 extends ../../../views/layout
 
 block title
-  | #{member.lastname}
+  | Profil für #{member.firstname} #{member.lastname}
 block content
-  h1 Mitglied #{member.firstname} #{member.lastname}
+  h1 Profil anzeigen
   p Nickname: #{member.nickname}
   p Vorname: #{member.firstname}
   p Nachname: #{member.lastname}
