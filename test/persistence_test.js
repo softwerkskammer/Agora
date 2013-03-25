@@ -15,8 +15,8 @@ describe('The persistence store', function () {
   var persistence;
   var toPersist = {id: 'toPersist', name: 'Heinz'};
 
-  var storeSampleData = function () {
-    persistence.save(toPersist);
+  var storeSampleData = function (done) {
+    persistence.save(toPersist, done);
   };
 
   var clearStore = function () {
@@ -42,11 +42,12 @@ describe('The persistence store', function () {
   });
 
   it('retrieves one for existing id', function (done) {
-    storeSampleData();
-    persistence.getById('toPersist', function (result) {
-      result.id.should.equal('toPersist');
-      result.name.should.equal('Heinz');
-      done();
+    storeSampleData(function () {
+      persistence.getById('toPersist', function (result) {
+        result.id.should.equal('toPersist');
+        result.name.should.equal('Heinz');
+        done();
+      });
     });
   });
 
@@ -58,11 +59,12 @@ describe('The persistence store', function () {
   });
 
   it('retrieves all', function (done) {
-    storeSampleData();
-    persistence.list(function (result) {
-      result.length.should.equal(1);
-      result[0].name.should.equal('Heinz');
-      done();
+    storeSampleData(function () {
+      persistence.list(function (result) {
+        result.length.should.equal(1);
+        result[0].name.should.equal('Heinz');
+        done();
+      });
     });
   });
 
