@@ -1,3 +1,4 @@
+/*global describe, it, beforeEach */
 "use strict";
 
 var fs = require('fs');
