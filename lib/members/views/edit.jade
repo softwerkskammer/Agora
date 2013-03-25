@@ -1,0 +1,27 @@
+extends ../../../views/layout
+
+block title
+  | Profil bearbeiten
+block content
+  h1 Profil bearbeiten
+
+  mixin text(name, label)
+    div
+      label #{label}:
+      input(id=name, type='text', name=name, value=member[name])
+
+  div#userform
+    form(action='submit',method='post')
+      mixin text('nickname', 'Nickname')
+      mixin text('firstname', 'Vorname')
+      mixin text('lastname', 'Nachname')
+      mixin text('email', 'Email')
+      mixin text('twitter', 'Twitter')
+      mixin text('location', 'Ort / Region')
+      mixin text('profession', 'Beruf')
+      mixin text('interests', 'Interessenschwerpunkte')
+      mixin text('site', 'Website / Blog')
+      mixin text('reference', 'Wie ich von der Softwerkskammer erfahren habe')
+
+      div
+        input(type="submit", value="Submit")
