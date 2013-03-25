@@ -15,7 +15,7 @@ if (fs.existsSync(storeDir)) {
   fs.rmdirSync(storeDir);
 }
 
-describe('The store can persist objects and retrieve them', function () {
+describe('The persistence store', function () {
 
   it('stores to the teststore', function () {
     var toPersist = {id: 'toPersist', name: 'Heinz'};
