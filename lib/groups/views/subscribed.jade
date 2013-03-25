@@ -6,5 +6,8 @@ block title
 block content
   h1 #{title}
 
-  subscribed
+  ul
+    each list in subscribed
+      li= list.subject
+
 
