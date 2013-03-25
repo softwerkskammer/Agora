@@ -50,7 +50,7 @@ describe('The persistence store', function () {
     });
   });
 
-  it('retreives an empty list when no data is inserted', function (done) {
+  it('retrieves an empty list when no data is inserted', function (done) {
     persistence.list(function (result) {
       result.length.should.equal(0);
       done();
