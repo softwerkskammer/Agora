@@ -1,7 +1,8 @@
 /*global describe, it */
 "use strict";
-var request = require('supertest');
-var proxyquire = require('proxyquire');
+var request = require('supertest'),
+  proxyquire = require('proxyquire');
+
 var Member = require('../lib/members/member');
 var storeStub = {};
 
