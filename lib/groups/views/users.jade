@@ -1,0 +1,11 @@
+extend ../../../views/layout
+
+block title
+    | #{title}
+
+block content
+    h1 #{title}
+
+    ul
+        each item in users
+            li= item.listAddress
