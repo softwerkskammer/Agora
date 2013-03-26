@@ -13,13 +13,13 @@ module.exports = function (grunt) {
       ' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */\n',
     // Task configuration.
     jshint: {
-      files: ['**/*.js*', '.jshintrc', '!node_modules/**/*.js*'],
+      files: ['**/*.js*', '.jshintrc', '!node_modules/**/*.js*', '!lib/persistence/*store/*.json'],
       options: {
         jshintrc: '.jshintrc'
       }
     },
     watch: {
-      files: ['<%= jshint.files %>', '**/*.jade', '!lib/persistence/*store/*.json'],
+      files: ['<%= jshint.files %>', '**/*.jade'],
       tasks: ['default']
     },
     'mocha-hack': {

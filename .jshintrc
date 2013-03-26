@@ -16,6 +16,7 @@
   "indent": 2,
   "white": true,
   "trailing": true,
+  "expr": true,
   "globals": {
     "describe": true,
     "expect": true,
