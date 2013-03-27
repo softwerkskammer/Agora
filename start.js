@@ -2,7 +2,12 @@
 
 process.chdir(__dirname);
 
+var nconf = require('nconf');
 var app = require('./app.js');
-var port = process.argv[2] || 17124;
 
-app.start(port);
+nconf.argv().env();
+nconf.defaults({
+  'port': '17124'
+});
+
+app.start(nconf);

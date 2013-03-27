@@ -3,11 +3,13 @@
 var express = require('express');
 var path = require('path');
 var app = express();
+var conf = {};
 
-function useApp(parent, url, factory) {
+function useApp(parent, url, conf, factory) {
   var child = factory(express());
   child.locals({ baseUrl: url });
-  parent.use(url, child);
+  child.conf = conf;
+  parent.use('/' + url, child);
   return child;
 }
 
@@ -27,24 +29,16 @@ app.configure('development', function () {
 });
 
 app.use('/', require('./lib/site'));
-useApp(app, '/events', require('./lib/events'));
-var membersApp = require('./lib/members');
-membersApp.locals({
-  members_route: 'members'
-});
-app.use('/members', membersApp);
-var groupsApp = require('./lib/groups');
-/* This is needed in the groups.jade view, to produce reasonable hrefs */
-groupsApp.locals({
-  groups_route: 'groups'
-});
-
-app.use('/groups', groupsApp);
+useApp(app, 'events', conf, require('./lib/events'));
+useApp(app, 'members', conf, require('./lib/members'));
+useApp(app, 'groups', conf, require('./lib/groups'));
 
 var http = require('http');
 var server = http.createServer(app);
 
-exports.start = function (port, done) {
+exports.start = function (conf, done) {
+  conf = conf;
+  var port = conf.get('port');
   server.listen(port, function () {
     console.log('Server running at port ' + port);
     if (done) {
