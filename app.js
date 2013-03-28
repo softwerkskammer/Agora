@@ -37,7 +37,6 @@ var http = require('http');
 var server = http.createServer(app);
 
 exports.start = function (conf, done) {
-  conf = conf;
   var port = conf.get('port');
   server.listen(port, function () {
     console.log('Server running at port ' + port);
