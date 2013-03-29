@@ -13,12 +13,12 @@ var persistenceStub = {
 var store = proxyquire('../../lib/members/store.js', {'../persistence/persistence': function () { return persistenceStub; }});
 
 describe('Members store', function () {
-  var sampleMember = {};
+  var sampleMember = {name: 'forTest'};
   var sampleList = [sampleMember];
 
   it('calls persistence.getById for store.getMember and passes on the given callback', function (done)  {
     var getById = sinon.stub(persistenceStub, 'getById');
-    getById.callsArgWith(1, sampleMember);
+    getById.callsArgWith(1, null, sampleMember);
 
     store.getMember('nick', function (err, member) {
       member.should.equal(sampleMember);
@@ -29,7 +29,7 @@ describe('Members store', function () {
 
   it('calls persistence.list for store.allMembers and passes on the given callback', function (done)  {
     var list = sinon.stub(persistenceStub, 'list');
-    list.callsArgWith(0, sampleList);
+    list.callsArgWith(0, null, sampleList);
 
     store.allMembers(function (err, members) {
       members.should.equal(sampleList);
@@ -41,7 +41,7 @@ describe('Members store', function () {
     var save = sinon.stub(persistenceStub, 'save');
     save.callsArg(1);
 
-    store.saveMember(sampleMember, function (err) {
+    store.saveMember(sampleMember, function () {
       save.calledWith(sampleMember).should.be.true;
       done();
     });
