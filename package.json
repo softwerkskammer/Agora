@@ -23,7 +23,8 @@
     "jade": "~0.28.2",
     "node-store": "git://github.com/alexkwolfe/node-store.git#master",
     "async": "~0.2.6",
-    "underscore.string":"2.3.0"
+    "underscore.string":"2.3.0",
+    "nconf": "~0.6.7"
   },
   "devDependencies": {
     "grunt": "~0.4",

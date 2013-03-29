@@ -1,14 +1,16 @@
 /*global describe, it */
 "use strict";
 var request = require('supertest'),
-  proxyquire = require('proxyquire');
+    express = require('express'),
+    proxyquire = require('proxyquire');
 
 var Member = require('../lib/members/member');
 var storeStub = {};
 
-var app = proxyquire('../lib/members', {'./store': storeStub});
+var memberApp = proxyquire('../lib/members', {'./store': storeStub});
+var app = memberApp(express());
 app.locals({
-  members_route: 'members'
+  baseUrl: 'members'
 });
 
 describe('Members application', function () {
@@ -16,7 +18,7 @@ describe('Members application', function () {
 
   it('shows the list of members as retrieved by persistence call', function (done) {
     storeStub.allMembers = function (callback) {
-      callback([dummymember]);
+      callback(null, [dummymember]);
     };
     request(app)
       .get('/')
@@ -26,8 +28,8 @@ describe('Members application', function () {
   });
 
   it('shows the details of one members as retrieved by persistence call', function (done) {
-    storeStub.getById = function (callback) {
-      callback(dummymember);
+    storeStub.getById = function (nickname, callback) {
+      callback(null, dummymember);
     };
     request(app)
       .get('/hada')
@@ -36,4 +38,3 @@ describe('Members application', function () {
       .expect(/Wie ich von der Softwerkskammer erfahren habe: beim Bier/, done);
   });
 });
-

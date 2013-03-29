@@ -1,12 +1,11 @@
 /*global describe, it */
 "use strict";
 var request = require('supertest');
+var app = require('express');
 
-var app = require('../lib/groups');
 app.locals({
-  groups_route: 'groups'
+  baseUrl: 'groups'
 });
-
 
 describe('Groups application', function () {
 
@@ -18,3 +17,4 @@ describe('Groups application', function () {
       .expect(body, done);
   });
 });
+
