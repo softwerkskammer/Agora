@@ -57,7 +57,7 @@ describe('SWK Plattform server', function () {
 
   it('events app constructs correct links', function (done) {
     request({uri: base_uri + '/events'}, function (req, res) {
-      res.body.should.contain('href="/events/1"');
+      res.body.should.contain('href="events/1"');
       done();
     });
   });
