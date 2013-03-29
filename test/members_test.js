@@ -16,7 +16,7 @@ describe('Members application', function () {
 
   it('shows the list of members as retrieved by persistence call', function (done) {
     storeStub.allMembers = function (callback) {
-      callback([dummymember]);
+      callback(null, [dummymember]);
     };
     request(app)
       .get('/')
@@ -26,8 +26,8 @@ describe('Members application', function () {
   });
 
   it('shows the details of one members as retrieved by persistence call', function (done) {
-    storeStub.getById = function (callback) {
-      callback(dummymember);
+    storeStub.getById = function (nickname, callback) {
+      callback(null, dummymember);
     };
     request(app)
       .get('/hada')
