@@ -13,7 +13,7 @@ var persistenceStub = {
 var store = proxyquire('../../lib/members/store.js', {'../persistence/persistence': function () { return persistenceStub; }});
 
 describe('Members store', function () {
-  var sampleMember = {};
+  var sampleMember = {name: 'forTest'};
   var sampleList = [sampleMember];
 
   it('calls persistence.getById for store.getMember and passes on the given callback', function (done)  {
