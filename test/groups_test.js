@@ -1,7 +1,10 @@
 /*global describe, it */
 "use strict";
 var request = require('supertest');
-var app = require('express');
+var express = require('express');
+
+var groups = require('../lib/groups');
+var app = groups(express());
 
 app.locals({
   baseUrl: 'groups'
