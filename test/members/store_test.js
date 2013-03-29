@@ -20,7 +20,7 @@ describe('Members store', function () {
     var getById = sinon.stub(persistenceStub, 'getById');
     getById.callsArgWith(1, sampleMember);
 
-    store.getMember('nick', function (member) {
+    store.getMember('nick', function (err, member) {
       member.should.equal(sampleMember);
       getById.calledWith('nick').should.be.true;
       done();
@@ -31,7 +31,7 @@ describe('Members store', function () {
     var list = sinon.stub(persistenceStub, 'list');
     list.callsArgWith(0, sampleList);
 
-    store.allMembers(function (members) {
+    store.allMembers(function (err, members) {
       members.should.equal(sampleList);
       done();
     });
@@ -41,7 +41,7 @@ describe('Members store', function () {
     var save = sinon.stub(persistenceStub, 'save');
     save.callsArg(1);
 
-    store.saveMember(sampleMember, function () {
+    store.saveMember(sampleMember, function (err) {
       save.calledWith(sampleMember).should.be.true;
       done();
     });
