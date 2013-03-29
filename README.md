@@ -14,7 +14,7 @@ Some modules are compiled during the installation. Therefore some software shoul
 * OS depending C++ compiler with headers and libraries
   * For Windows: Microsoft Windows SDK for Windows 7 and .NET Framework 4 [available here](http://www.microsoft.com/en-us/download/details.aspx?id=8279)
   * For Mac OS X: Install XCode from the App Store. In XCode's preferences (section "Downloads"), install the command line tools.
-* MongoDB (Version 2.4) http://www.mongodb.org/downloads
+* MongoDB (Version 2.4) [http://www.mongodb.org/downloads](http://www.mongodb.org/downloads)
 
 Preparations for use
 --------------------
@@ -29,6 +29,9 @@ Preparations for use
   * If python 3 is the default version, the command line for `npm install` must be adopted with the right python version (2.7)
 
             npm install --python /usr/bin/python2
+
+* Install mongodb for you operating system from [http://www.mongodb.org/downloads](http://www.mongodb.org/downloads)
+* Start mongodb. If you only plan to use it for development, the default settings are ok. The app as well as the tests use these defaults if nothing different is configured.
 
 Running the server
 ------------------
