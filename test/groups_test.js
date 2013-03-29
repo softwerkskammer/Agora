@@ -20,4 +20,3 @@ describe('Groups application', function () {
       .expect(body, done);
   });
 });
-
