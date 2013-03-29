@@ -55,13 +55,6 @@ describe('SWK Plattform server', function () {
     });
   });
 
-  it('events app constructs correct links', function (done) {
-    request({uri: base_uri + '/events'}, function (req, res) {
-      res.body.should.contain('href="/events/1"');
-      done();
-    });
-  });
-
   it('provides the style sheet', function (done) {
     var stylesheet_uri = base_uri + '/stylesheets/style.css';
     request({uri: stylesheet_uri}, function (req, resp) {

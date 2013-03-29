@@ -14,7 +14,7 @@ describe('Events application', function () {
 
   beforeEach(function () {
     app = events(express());
-    app.locals.baseUrl = '';
+    app.locals.baseUrl = 'events';
   });
 
   it('maps to a custom path', function (done) {
@@ -51,6 +51,18 @@ describe('Events application', function () {
       .expect(/Upcoming events/)
       .expect(/FooFoo/)
       .expect(/Bar baz/, done);
+  });
+
+  it('constructs correct links to an event', function (done) {
+    storeProxy.getEvents = function () {
+      return [
+        { id: 'foo', title: 'FooFoo' },
+      ];
+    };
+    request(app)
+      .get('/')
+      .expect(200)
+      .expect(/href="events\/foo"/, done);
   });
 });
 
