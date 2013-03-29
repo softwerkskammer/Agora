@@ -18,11 +18,6 @@ module.exports = function (conf) {
   localApp.conf = conf;
 
   function initApp(app) {
-    app.use('/', require('./lib/site'));
-    useApp(app, 'events', conf, require('./lib/events'));
-    useApp(app, 'members', conf, require('./lib/members'));
-    useApp(app, 'groups', conf, require('./lib/groups'));
-
     app.configure(function () {
       app.set('view engine', 'jade');
       app.set('views', path.join(__dirname, 'views'));
@@ -37,6 +32,11 @@ module.exports = function (conf) {
     app.configure('development', function () {
       app.use(express.errorHandler());
     });
+
+    app.use('/', require('./lib/site'));
+    useApp(app, 'events', conf, require('./lib/events'));
+    useApp(app, 'members', conf, require('./lib/members'));
+    useApp(app, 'groups', conf, require('./lib/groups'));
   }
 
   var start = function (done) {
