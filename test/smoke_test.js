@@ -48,7 +48,9 @@ describe('Server started in different process', function () {
   });
 
   it('delivers the home page when start.js is called from its own directory', function (done) {
+    console.log('spawning...');
     child = child_process.spawn("node", ["start.js", "--port", conf.get('port')], { cwd: __dirname + "/../", stdio: "pipe" });
+    console.log('spawned...');
     waitForServerRunning(child, function () {
       serverShouldDeliverStartPage(done);
     });

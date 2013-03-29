@@ -1,8 +1,7 @@
 /*global describe, beforeEach, afterEach, it */
 "use strict";
 var should = require('chai').should(),
-    request = require('request'),
-    app = require('../app.js');
+    request = require('request');
 
 var values = [];
 values['port'] = 17125;
@@ -10,14 +9,18 @@ values['port'] = 17125;
 var conf = {
   get: function (key) {
     return values[key];
+  },
+  defaults: function (obj) {
+    return obj;
   }
 };
 
 var base_uri = "http://localhost:" + conf.get('port');
+var app = require('../app.js')(conf);
 
 describe('SWK Plattform server', function () {
   beforeEach(function (done) {
-    app.start(conf, done);
+    app.start(done);
   });
 
   afterEach(function (done) {

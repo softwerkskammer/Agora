@@ -34,7 +34,9 @@ Running the server
 
 * In *REPO*, invoke `node start.js`
 * You can now access the application by entering [http://localhost:17124](http://localhost:17124) in your browser
+  * The port `17124` is the default and can change via the command line option `--port` to any wanted value
 * The shell script start.sh can be used to set configuration parameters via environment variables
+
 
 Running the tests
 -----------------
