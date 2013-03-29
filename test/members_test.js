@@ -23,7 +23,7 @@ describe('Members application', function () {
     request(app)
       .get('/')
       .expect(200)
-      .expect(/href="hada"/)
+      .expect(/href="members\/hada"/)
       .expect(/hans.dampf@gmail.com/, done);
   });
 
