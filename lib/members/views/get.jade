@@ -14,3 +14,8 @@ block content
   p Interessenschwerpunkte: #{member.interests}
   p Website / Blog: #{member.site}
   p Wie ich von der Softwerkskammer erfahren habe: #{member.reference}
+
+
+  ul
+    each list in subscribed
+        li= list.subject
