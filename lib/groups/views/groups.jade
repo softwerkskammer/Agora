@@ -6,7 +6,14 @@ block title
 block content
   h1 #{title}
 
+  h2 Dummy Groups List
+
   ul
     each group in groups
       li
-        a(href="#{baseUrl}/#{group.id}") #{group.name}
+        a(href="#{groups_route}/#{group.id}") #{group.name}
+
+  ul
+    li: a(href='/groups/lists') Die angelegten Listen
+    li: a(href='/groups/users') Die User der Liste neueplattform
+    li: a(href='/groups/subscribed') Die Listen, in denen Nicole subscribed ist
