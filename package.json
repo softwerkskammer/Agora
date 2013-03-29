@@ -1,7 +1,7 @@
 {
   "name": "SoftwerkskammerNewPlattform",
   "description": "A new plattform for Softwerkskammer",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "Nicole Rauch",
   "contributors ": [
     {
@@ -22,7 +22,8 @@
     "soap": "git://github.com/triplem/node-soap.git#sympasoap_3",
     "jade": "~0.28.2",
     "node-store": "git://github.com/alexkwolfe/node-store.git#master",
-    "async": "~0.2.6"
+    "async": "~0.2.6",
+    "nconf": "~0.6.7"
   },
   "devDependencies": {
     "grunt": "~0.4",
