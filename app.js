@@ -1,8 +1,10 @@
 "use strict";
 
-var express = require('express');
-var path = require('path');
-var app = express();
+var express = require('express'),
+    http = require('http'),
+    path = require('path');
+
+var server;
 
 function useApp(parent, url, conf, factory) {
   var child = factory(express(), conf);
@@ -15,33 +17,33 @@ module.exports = function (conf) {
   var localApp = {};
   localApp.conf = conf;
 
-  app.configure(function () {
-    app.set('view engine', 'jade');
-    app.set('views', path.join(__dirname, 'views'));
+  function initApp(app) {
+    app.use('/', require('./lib/site'));
+    useApp(app, 'events', conf, require('./lib/events'));
+    useApp(app, 'members', conf, require('./lib/members'));
+    useApp(app, 'groups', conf, require('./lib/groups'));
 
-    app.use(express.favicon());
-    app.use(express.logger('dev'));
-    app.use(express.bodyParser());
-    app.use(express.methodOverride());
-    app.use(app.router);
-    app.use(express.static(path.join(__dirname, 'public')));
-  });
+    app.configure(function () {
+      app.set('view engine', 'jade');
+      app.set('views', path.join(__dirname, 'views'));
+      app.use(express.favicon());
+      app.use(express.logger('dev'));
+      app.use(express.bodyParser());
+      app.use(express.methodOverride());
+      app.use(app.router);
+      app.use(express.static(path.join(__dirname, 'public')));
+    });
 
-  app.configure('development', function () {
-    app.use(express.errorHandler());
-  });
+    app.configure('development', function () {
+      app.use(express.errorHandler());
+    });
+  }
 
-  app.use('/', require('./lib/site'));
-  useApp(app, 'events', conf, require('./lib/events'));
-  useApp(app, 'members', conf, require('./lib/members'));
-  useApp(app, 'groups', conf, require('./lib/groups'));
-
-  var http = require('http');
-  var server = http.createServer(app);
-
-  // start the server using the defined port
   var start = function (done) {
-    var port = this.conf.get('port');
+    var port = localApp.conf.get('port');
+    var app = express();
+    initApp(app, conf);
+    server = http.createServer(app);
     server.listen(port, function () {
       console.log('Server running at port ' + port);
       if (done) {
@@ -59,6 +61,7 @@ module.exports = function (conf) {
     });
   };
 
+  localApp.initApp = initApp;
   localApp.start = start;
   localApp.stop = stop;
 
