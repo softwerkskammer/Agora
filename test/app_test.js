@@ -1,16 +1,26 @@
 /*global describe, beforeEach, afterEach, it */
 "use strict";
-var should = require('chai').should();
-var request = require('request');
-var app = require('../app.js');
+var should = require('chai').should(),
+    request = require('request');
 
-var port = 17125;
+var values = [];
+values['port'] = 17125;
 
-var base_uri = "http://localhost:" + port;
+var conf = {
+  get: function (key) {
+    return values[key];
+  },
+  defaults: function (obj) {
+    return obj;
+  }
+};
+
+var base_uri = "http://localhost:" + conf.get('port');
+var app = require('../app.js')(conf);
 
 describe('SWK Plattform server', function () {
   beforeEach(function (done) {
-    app.start(port, done);
+    app.start(done);
   });
 
   afterEach(function (done) {
@@ -44,13 +54,6 @@ describe('SWK Plattform server', function () {
       res.statusCode.should.equal(200);
       res.headers['content-type'].should.contain('text/html');
       res.body.should.contain('events');
-      done();
-    });
-  });
-
-  it('events app constructs correct links', function (done) {
-    request({uri: base_uri + '/events'}, function (req, res) {
-      res.body.should.contain('href="/events/1"');
       done();
     });
   });

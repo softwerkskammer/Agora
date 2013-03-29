@@ -14,6 +14,7 @@ Some modules are compiled during the installation. Therefore some software shoul
 * OS depending C++ compiler with headers and libraries
   * For Windows: Microsoft Windows SDK for Windows 7 and .NET Framework 4 [available here](http://www.microsoft.com/en-us/download/details.aspx?id=8279)
   * For Mac OS X: Install XCode from the App Store. In XCode's preferences (section "Downloads"), install the command line tools.
+* MongoDB (Version 2.4) http://www.mongodb.org/downloads
 
 Preparations for use
 --------------------
@@ -34,7 +35,9 @@ Running the server
 
 * In *REPO*, invoke `node start.js`
 * You can now access the application by entering [http://localhost:17124](http://localhost:17124) in your browser
+  * The port `17124` is the default and can be changed via the command line option `--port` or via the environment option 'port' to any wanted value
 * The shell script start.sh can be used to set configuration parameters via environment variables
+  * The options set in this script (namely `swkTrustedAppName`, `swkTrustedAppPwd` and `swkRemoteAppUser`) can and should be set via the command line option and/or environment variables as well
 
 Running the tests
 -----------------

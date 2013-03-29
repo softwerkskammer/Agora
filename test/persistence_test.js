@@ -1,15 +1,11 @@
 /*global describe, it, beforeEach */
 "use strict";
 
-var fs = require('fs'),
-  path = require('path'),
-  should = require('chai').should();
+var should = require('chai').should();
 
 var createTeststore = function () {
   return require('../lib/persistence/persistence')('teststore');
 };
-
-var storeDir = 'lib/persistence/teststore';
 
 describe('The persistence store', function () {
   var persistence;
@@ -19,18 +15,14 @@ describe('The persistence store', function () {
     persistence.save(toPersist, done);
   };
 
-  var clearStore = function () {
-    var persistedFile = path.join(storeDir, toPersist.id + '.json');
-    if (fs.existsSync(persistedFile)) {
-      fs.unlinkSync(persistedFile);
-    }
-    if (fs.existsSync(storeDir)) {
-      fs.rmdirSync(storeDir);
-    }
+  var clearStore = function (done) {
+    createTeststore().drop(function () {
+      done();
+    });
   };
 
-  beforeEach(function () {
-    clearStore();
+  beforeEach(function (done) {
+    clearStore(done);
     persistence = createTeststore();
   });
 
