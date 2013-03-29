@@ -35,7 +35,7 @@ describe('The persistence store', function () {
   });
 
   it('retrieves none for non-existing id', function (done) {
-    persistence.getById('non-existing-id', function (result) {
+    persistence.getById('non-existing-id', function (err, result) {
       should.not.exist(result);
       done();
     });
@@ -43,7 +43,7 @@ describe('The persistence store', function () {
 
   it('retrieves one for existing id', function (done) {
     storeSampleData(function () {
-      persistence.getById('toPersist', function (result) {
+      persistence.getById('toPersist', function (err, result) {
         result.id.should.equal('toPersist');
         result.name.should.equal('Heinz');
         done();
@@ -52,7 +52,7 @@ describe('The persistence store', function () {
   });
 
   it('retrieves an empty list when no data is inserted', function (done) {
-    persistence.list(function (result) {
+    persistence.list(function (err, result) {
       result.length.should.equal(0);
       done();
     });
@@ -60,7 +60,7 @@ describe('The persistence store', function () {
 
   it('retrieves all', function (done) {
     storeSampleData(function () {
-      persistence.list(function (result) {
+      persistence.list(function (err, result) {
         result.length.should.equal(1);
         result[0].name.should.equal('Heinz');
         done();
