@@ -32,6 +32,7 @@ Preparations for use
 
 * Install mongodb for you operating system from [http://www.mongodb.org/downloads](http://www.mongodb.org/downloads)
 * Start mongodb. If you only plan to use it for development, the default settings are ok. The app as well as the tests use these defaults if nothing different is configured.
+* Instructions for authenticated use are [here](lib/persistence/README.md)
 
 Running the server
 ------------------
