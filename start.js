@@ -9,9 +9,9 @@ var nconf = require('nconf');
 nconf.argv().env();
 nconf.defaults({
   'port': '17124',
-  'appname': 'dummyapp',
-  'apppassword': 'dummypwd',
-  'remoteAppUser': 'dummyuser'
+  'swkTrustedAppName': 'dummyapp',
+  'swkTrustedAppPwd': 'dummypwd',
+  'swkRemoteAppUser': 'dummyuser'
 });
 
 var app = require('./app.js')(nconf);

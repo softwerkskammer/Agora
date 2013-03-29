@@ -34,9 +34,9 @@ Running the server
 
 * In *REPO*, invoke `node start.js`
 * You can now access the application by entering [http://localhost:17124](http://localhost:17124) in your browser
-  * The port `17124` is the default and can change via the command line option `--port` to any wanted value
+  * The port `17124` is the default and can be changed via the command line option `--port` or via the environment option 'port' to any wanted value
 * The shell script start.sh can be used to set configuration parameters via environment variables
-
+  * The options set in this script (namely `swkTrustedAppName`, `swkTrustedAppPwd` and `swkRemoteAppUser`) can and should be set via the command line option and/or environment variables as well
 
 Running the tests
 -----------------
