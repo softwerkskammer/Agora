@@ -1,16 +1,19 @@
 /*global describe, it */
 "use strict";
-var request = require('supertest');
-var proxyquire =  require('proxyquire');
+var request = require('supertest'),
+    proxyquire =  require('proxyquire'),
+    express = require('express');
 
 var sympaClientStub = {};
 var sympaClientStubFactory = function () {
   return sympaClientStub;
 };
 
-var app = proxyquire('../lib/groups', {'./sympa': sympaClientStubFactory});
+var groups = proxyquire('../lib/groups', {'./sympa': sympaClientStubFactory});
+var app = groups(express());
+
 app.locals({
-  groups_route: 'groups'
+  baseUrl: 'groups'
 });
 
 describe('Groups application', function () {
