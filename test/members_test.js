@@ -2,27 +2,30 @@
 "use strict";
 var request = require('supertest'),
   express = require('express'),
-  proxyquire = require('proxyquire'),
-  MongoConf = require('./mongoConf'),
-  conf = new MongoConf();
+  proxyquire = require('proxyquire');
 
 var Member = require('../lib/members/member');
-var storeStub = {};
 
+var dummymember = new Member('hada', 'Hans', 'Dampf', 'hans.dampf@gmail.com', '@hada', 'Süden', 'Entwickler', 'ada', 'http://my.blog', 'beim Bier');
 
-var memberApp = proxyquire('../lib/members', {'./store': storeStub});
-var app = memberApp(express(), conf);
-app.locals({
-  baseUrl: 'members'
+var storeStub = {
+  allMembers: function (callback) { callback(null, [dummymember]); },
+  getMember: function (nickname, callback) { callback(null, dummymember); }
+};
+
+var internalAPIStub = {
+  getSubscribedListsForUser: function (email, callback) { callback(null, []); }
+};
+
+var memberApp = proxyquire('../lib/members', {
+  './memberstore': function () { return storeStub; },
+  '../groups/internalAPI': function () { return internalAPIStub; }
 });
+var app = memberApp(express());
 
 describe('Members application', function () {
-  var dummymember = new Member('hada', 'Hans', 'Dampf', 'hans.dampf@gmail.com', '@hada', 'Süden', 'Entwickler', 'ada', 'http://my.blog', 'beim Bier');
 
   it('shows the list of members as retrieved by persistence call', function (done) {
-    storeStub.allMembers = function (callback) {
-      callback(null, [dummymember]);
-    };
     request(app)
       .get('/')
       .expect(200)
@@ -30,10 +33,31 @@ describe('Members application', function () {
       .expect(/hans.dampf@gmail.com/, done);
   });
 
+  it('renders the link for single parent dir', function (done) {
+    var root = express();
+    root.use('/foo', app);
+    request(root)
+      .get('/foo')
+      .expect(/href="foo\/hada"/, done);
+  });
+
+  it.skip('renders the link for two parent dirs', function (done) {
+    var root = express();
+    root.use('/foo/bar', app);
+    request(root)
+      .get('/foo/bar')
+      .expect(/href="bar\/hada"/, done);
+  });
+
+  it.skip('renders the link for a get request with parameters', function (done) {
+    var root = express();
+    root.use('/foo', app);
+    request(root)
+      .get('/foo?param=value')
+      .expect(/href="foo\/hada"/, done);
+  });
+
   it('shows the details of one members as retrieved by persistence call', function (done) {
-    storeStub.getById = function (nickname, callback) {
-      callback(null, dummymember);
-    };
     request(app)
       .get('/hada')
       .expect(200)
