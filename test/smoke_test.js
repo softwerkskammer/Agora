@@ -3,7 +3,6 @@
 var child_process = require("child_process");
 var should = require('chai').should();
 var request = require('request');
-var _s = require('underscore.string');
 
 var values = [];
 values['port'] = 17126;
@@ -24,7 +23,7 @@ describe('Server started in different process', function () {
     child.stdout.setEncoding("utf8");
     child.stdout.on("data", function (chunk) {
       stdout += chunk;
-      if (_s(stdout).trim().indexOf('Server running') === 0) {
+      if (stdout.trim().indexOf('Server running') === 0) {
         /* prevent callback being called multiple times */
         stdout = "";
         callback();
