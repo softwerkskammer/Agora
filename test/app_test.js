@@ -1,21 +1,13 @@
 /*global describe, beforeEach, afterEach, it */
 "use strict";
 var should = require('chai').should(),
-    request = require('request');
+  request = require('request'),
+  MongoConf = require('./mongoConf'),
+  conf = new MongoConf();
 
-var values = [];
-values['port'] = 17125;
+conf.set('port', '17125');
+var base_uri = "http://localhost:" + parseInt(conf.get('port'), 10);
 
-var conf = {
-  get: function (key) {
-    return values[key];
-  },
-  defaults: function (obj) {
-    return obj;
-  }
-};
-
-var base_uri = "http://localhost:" + conf.get('port');
 var app = require('../app.js')(conf);
 
 describe('SWK Plattform server', function () {
