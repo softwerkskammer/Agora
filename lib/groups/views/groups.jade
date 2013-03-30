@@ -6,13 +6,6 @@ block title
 block content
   h1 #{title}
 
-  h2 Dummy Groups List
-
-  ul
-    each group in groups
-      li
-        a(href="#{baseUrl}/#{group.id}") #{group.name}
-
   ul
     li: a(href='#{baseUrl}/lists') Die angelegten Listen
     li: a(href='#{baseUrl}/users') Die User der Liste neueplattform
