@@ -1,18 +1,11 @@
 /*global describe, it */
 "use strict";
-var request = require('supertest');
-var express = require('express');
+var request = require('supertest'),
+  express = require('express'),
+  MongoConf = require('./mongoConf'),
+  conf = new MongoConf();
 
-var values = [];
-
-var conf = {
-  get: function (key) {
-    return values[key];
-  },
-  defaults: function (obj) {
-    return obj;
-  }
-};
+conf.set('port', '17124');
 
 var groups = require('../lib/groups');
 var app = groups(express(), conf);

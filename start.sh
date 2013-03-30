@@ -1,12 +1,3 @@
 #!/bin/sh
-# set dummy variables for the usage in the sympa client
-export swkTrustedAppName="dummyapp"
-export swkTrustedAppPwd="dummypwd"
-export swkRemoteAppUser="dummyuser"
-
-# export MONGO_HOST="localhost"
-# export MONGO_PORT="27017"
-# export MONGO_USER="leider"
-# export MONGO_PASS="4uonlytoo"
-
+# set application variables from the config files inside the config folder
 node start.js

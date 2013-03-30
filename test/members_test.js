@@ -1,22 +1,14 @@
 /*global describe, it */
 "use strict";
 var request = require('supertest'),
-    express = require('express'),
-    proxyquire = require('proxyquire');
+  express = require('express'),
+  proxyquire = require('proxyquire'),
+  MongoConf = require('./mongoConf'),
+  conf = new MongoConf();
 
 var Member = require('../lib/members/member');
 var storeStub = {};
 
-var values = [];
-
-var conf = {
-  get: function (key) {
-    return values[key];
-  },
-  defaults: function (obj) {
-    return obj;
-  }
-};
 
 var memberApp = proxyquire('../lib/members', {'./store': storeStub});
 var app = memberApp(express(), conf);
@@ -34,7 +26,7 @@ describe('Members application', function () {
     request(app)
       .get('/')
       .expect(200)
-      .expect(/href="members\/hada"/)
+      .expect(/href="\/hada"/)
       .expect(/hans.dampf@gmail.com/, done);
   });
 
