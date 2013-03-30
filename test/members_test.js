@@ -22,7 +22,7 @@ var internalAPIStub = {
 
 var memberApp = proxyquire('../lib/members', {
   './memberstore': function () { return storeStub; },
-  '../groups/internalAPI': function () { return internalAPIStub; }
+  '../groupsAndMembers/internalAPI': function () { return internalAPIStub; }
 });
 var app = memberApp(express());
 
