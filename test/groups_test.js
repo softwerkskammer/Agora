@@ -3,8 +3,19 @@
 var request = require('supertest');
 var express = require('express');
 
+var values = [];
+
+var conf = {
+  get: function (key) {
+    return values[key];
+  },
+  defaults: function (obj) {
+    return obj;
+  }
+};
+
 var groups = require('../lib/groups');
-var app = groups(express());
+var app = groups(express(), conf);
 
 app.locals({
   baseUrl: 'groups'
