@@ -51,7 +51,7 @@ describe('The parallel persistence store', function () {
         });
       },
       function (callback) {
-        persistence1.save({id: 'toStore2', name: 'Hans2'}, function () {
+        persistence2.save({id: 'toStore2', name: 'Hans2'}, function () {
           persistence2.getById('toStore2', function (err, result) {
             result.id.should.equal('toStore2');
             result.name.should.equal('Hans2');
