@@ -11,7 +11,7 @@ var createTeststore = function (collectionName) {
   return require('../lib/persistence/persistence')(collectionName, conf);
 };
 
-describe('The persistence store', function () {
+describe('The parallel persistence store', function () {
   var persistence1;
   var persistence2;
 
@@ -21,7 +21,7 @@ describe('The persistence store', function () {
     done();
   });
 
-  it('retrieves one for existing id', function (done) {
+  it('retrieves in parallel', function (done) {
     async.parallel([
       function (callback) {
         persistence1.save({id: 'toPersist', name: 'Heinz'}, function () {
