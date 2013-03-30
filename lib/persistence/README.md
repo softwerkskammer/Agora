@@ -34,5 +34,5 @@ Some hints on database handling with mongo:
     * `show dbs` - show all availabe databases
     * `use swk` - use swk database
     * `show collections` - show all available collections
-    * `db.getCollection('memberstore').find()` - show all entries in the collection 'memberstore'
+    * `db.memberstore.find()` - show all entries in the collection 'memberstore'
     * `db.dropDatabase()` - drop currently connected database
