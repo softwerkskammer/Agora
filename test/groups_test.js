@@ -20,6 +20,6 @@ describe('Groups application', function () {
     request(app)
       .get('/')
       .expect(200)
-      .expect(/Lists/, done);
+      .expect(/Alle Gruppen/, done);
   });
 });
