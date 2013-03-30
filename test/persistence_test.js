@@ -1,10 +1,12 @@
 /*global describe, it, beforeEach */
 "use strict";
 
-var should = require('chai').should();
+var should = require('chai').should(),
+MongoConf = require('./mongoConf'),
+  conf = new MongoConf();
 
 var createTeststore = function () {
-  return require('../lib/persistence/persistence')('teststore');
+  return require('../lib/persistence/persistence')('teststore', conf);
 };
 
 describe('The persistence store', function () {
