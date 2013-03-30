@@ -26,6 +26,9 @@ module.exports = function (conf) {
     app.configure(function () {
       app.set('view engine', 'jade');
       app.set('views', path.join(__dirname, 'views'));
+      app.use(function (req, res, next) {
+        next();
+      });
       app.use(express.favicon());
       app.use(express.logger('dev'));
       app.use(express.bodyParser());
