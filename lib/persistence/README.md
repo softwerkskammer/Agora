@@ -31,8 +31,8 @@ Remember that once authentication is enabled, the db can only be shutdown via:
 Some hints on database handling with mongo:
 
   * Several statements for easy useage in the mongo command line client
-  ** `show dbs` - show all availabe databases
-  ** `use swk` - use swk database
-  ** `show collections` - show all available collections
-  ** `db.getCollection('memberstore').find()` - show all entries in the collection 'memberstore'
-  ** `db.dropDatabase()` - drop currently connected database
+    * `show dbs` - show all availabe databases
+    * `use swk` - use swk database
+    * `show collections` - show all available collections
+    * `db.getCollection('memberstore').find()` - show all entries in the collection 'memberstore'
+    * `db.dropDatabase()` - drop currently connected database
