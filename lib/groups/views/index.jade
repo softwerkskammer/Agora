@@ -7,7 +7,5 @@ block content
   h1 #{title}
 
   ul
-    each list in subscribed
-      li= list.subject
-
-
+    each list in lists
+      li= list.longName
