@@ -3,17 +3,8 @@
 var child_process = require("child_process");
 var should = require('chai').should();
 var request = require('request');
-
-var values = [];
-values['port'] = 17126;
-
-var conf = {
-  get: function (key) {
-    return values[key];
-  }
-};
-
-var base_uri = "http://localhost:" + conf.get('port');
+var port = 17126;
+var base_uri = "http://localhost:" + port;
 
 describe('Server started in different process', function () {
   var child;
@@ -49,7 +40,7 @@ describe('Server started in different process', function () {
 
   it('delivers the home page when start.js is called from its own directory', function (done) {
     console.log('spawning...');
-    child = child_process.spawn("node", ["start.js", "--port", conf.get('port')], { cwd: __dirname + "/../", stdio: "pipe" });
+    child = child_process.spawn("node", ["start.js", "--port", port], { cwd: __dirname + "/../", stdio: "pipe" });
     console.log('spawned...');
     waitForServerRunning(child, function () {
       serverShouldDeliverStartPage(done);
@@ -57,7 +48,7 @@ describe('Server started in different process', function () {
   });
 
   it('delivers the home page when start.js is called from another directory', function (done) {
-    child = child_process.spawn("node", ["../start.js", "--port", conf.get('port')], { cwd: __dirname, stdio: "pipe" });
+    child = child_process.spawn("node", ["../start.js", "--port", port], { cwd: __dirname, stdio: "pipe" });
     waitForServerRunning(child, function () {
       serverShouldDeliverStartPage(done);
     });

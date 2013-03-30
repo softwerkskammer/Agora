@@ -21,7 +21,7 @@
     "express": "~3.1",
     "soap": "git://github.com/triplem/node-soap.git#sympasoap_3",
     "jade": "~0.28.2",
-    "node-store": "git://github.com/alexkwolfe/node-store.git#master",
+    "mongodb": "1.1.x",
     "async": "~0.2.6",
     "nconf": "~0.6.7",
     "passport" : "~0.1.16",

@@ -1,7 +1,3 @@
 #!/bin/sh
-# set dummy variables for the usage in the sympa client
-export swkTrustedAppName="dummyapp"
-export swkTrustedAppPwd="dummypwd"
-export swkRemoteAppUser="dummyuser"
-
+# set application variables from the config files inside the config folder
 node start.js

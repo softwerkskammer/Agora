@@ -1,16 +1,14 @@
 /*global describe, it */
 "use strict";
 var request = require('supertest'),
-    proxyquire =  require('proxyquire'),
-    express = require('express');
+  express = require('express'),
+  MongoConf = require('./mongoConf'),
+  conf = new MongoConf();
 
-var sympaClientStub = {};
-var sympaClientStubFactory = function () {
-  return sympaClientStub;
-};
+conf.set('port', '17124');
 
-var groups = proxyquire('../lib/groups', {'./sympa': sympaClientStubFactory});
-var app = groups(express());
+var groups = require('../lib/groups');
+var app = groups(express(), conf);
 
 app.locals({
   baseUrl: 'groups'
@@ -18,16 +16,11 @@ app.locals({
 
 describe('Groups application', function () {
 
-  it('shows the list of groups as retrieved by the SOAP call', function (done) {
-    var groupsresult = [{id: 'groupid1', name: 'Group 1'}];
-    sympaClientStub.getGroups = function (callback) {
-      callback(null, groupsresult);
-    };
+  it('shows available groups actions', function (done) {
+    var body = '<!DOCTYPE html><html><head><title>Groups</title><link rel="stylesheet" href="/stylesheets/style.css"></head><body><h1>Groups</h1><ul><li><a href="groups/lists">Die angelegten Listen</a></li><li><a href="groups/users">Die User der Liste neueplattform</a></li><li><a href="groups/subscribed">Die Listen, in denen Nicole subscribed ist</a></li></ul></body></html>';
     request(app)
       .get('/')
       .expect(200)
-      .expect(/href="groups\/groupid1"/)
-      .expect(/Group 1/, done);
+      .expect(body, done);
   });
 });
-
