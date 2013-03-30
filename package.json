@@ -23,7 +23,9 @@
     "jade": "~0.28.2",
     "node-store": "git://github.com/alexkwolfe/node-store.git#master",
     "async": "~0.2.6",
-    "nconf": "~0.6.7"
+    "nconf": "~0.6.7",
+    "passport" : "~0.1.16",
+    "passport-openid" : "~0.3.1"
   },
   "devDependencies": {
     "grunt": "~0.4",
