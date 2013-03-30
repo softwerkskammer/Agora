@@ -15,7 +15,16 @@ Setting up mongodb for authentication
             use swk
             db.addUser("<app-username>", "<app-password>")
 			exit
-  1. Shutdown `mongod`
+  1. Shutdown `mongod` from the `mongo` console
+
+			use admin
+			db.shutdownServer()
   1. Start `mongod -auth`
   1. Edit `start.sh`, replace the values of `MONGO_USER` and `MONGO_PASS` with `<app-username>` and `<app-password>`
+
+Remember that once authentication is enabled, the db can only be shutdown via:
+
+			use admin
+			db.auth("<admin-username>", "<admin-password>")
+			db.shutdownServer()
 
