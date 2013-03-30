@@ -1,7 +1,7 @@
 {
   "name": "SoftwerkskammerNewPlattform",
   "description": "A new plattform for Softwerkskammer",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "Nicole Rauch",
   "contributors ": [
     {
@@ -23,7 +23,6 @@
     "jade": "~0.28.2",
     "mongodb": "1.1.x",
     "async": "~0.2.6",
-    "underscore.string":"2.3.0",
     "nconf": "~0.6.7"
   },
   "devDependencies": {

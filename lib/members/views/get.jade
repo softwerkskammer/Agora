@@ -14,3 +14,9 @@ block content
   p Interessenschwerpunkte: #{member.interests}
   p Website / Blog: #{member.site}
   p Wie ich von der Softwerkskammer erfahren habe: #{member.reference}
+
+
+  h2 Mitglied in:
+  ul
+    each list in subscribedLists
+        li= list.longName

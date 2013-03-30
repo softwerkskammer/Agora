@@ -7,8 +7,19 @@ var request = require('supertest'),
 var Member = require('../lib/members/member');
 var storeStub = {};
 
+var values = [];
+
+var conf = {
+  get: function (key) {
+    return values[key];
+  },
+  defaults: function (obj) {
+    return obj;
+  }
+};
+
 var memberApp = proxyquire('../lib/members', {'./store': storeStub});
-var app = memberApp(express());
+var app = memberApp(express(), conf);
 app.locals({
   baseUrl: 'members'
 });
