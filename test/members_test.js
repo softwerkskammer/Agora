@@ -65,14 +65,17 @@ describe('Members application', function () {
   });
 
   it('shows the details of one members as retrieved from the membersstore', function (done) {
-    var nickname = dummymember.nickname;
-    var getMember = sinon.spy(storeStub, 'getMember');
+    var nickname = dummymember.nickname,
+      email = dummymember.email,
+      getMember = sinon.spy(storeStub, 'getMember'),
+      getSubscribedListsForUser = sinon.spy(internalAPIStub, 'getSubscribedListsForUser');
     request(app)
       .get('/' + nickname)
       .expect(200)
       .expect(/Blog: http:\/\/my.blog/)
       .expect(/Wie ich von der Softwerkskammer erfahren habe: beim Bier/, function () {
         getMember.calledWith(nickname).should.be.true;
+        getSubscribedListsForUser.calledWith(email).should.be.true;
         done();
       });
   });
