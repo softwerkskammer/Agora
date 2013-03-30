@@ -2,7 +2,10 @@
 "use strict";
 var request = require('supertest'),
   express = require('express'),
+  sinon = require('sinon'),
   proxyquire = require('proxyquire');
+
+require('chai').should();
 
 var Member = require('../lib/members/member');
 
@@ -25,12 +28,16 @@ var app = memberApp(express());
 
 describe('Members application', function () {
 
-  it('shows the list of members as retrieved by persistence call', function (done) {
+  it('shows the list of members as retrieved from the membersstore', function (done) {
+    var allMembers = sinon.spy(storeStub, 'allMembers');
     request(app)
       .get('/')
       .expect(200)
       .expect(/href="\/hada"/)
-      .expect(/hans.dampf@gmail.com/, done);
+      .expect(/hans.dampf@gmail.com/, function () {
+        allMembers.calledOnce.should.be.ok;
+        done();
+      });
   });
 
   it('renders the link for single parent dir', function (done) {
@@ -57,11 +64,16 @@ describe('Members application', function () {
       .expect(/href="foo\/hada"/, done);
   });
 
-  it('shows the details of one members as retrieved by persistence call', function (done) {
+  it('shows the details of one members as retrieved from the membersstore', function (done) {
+    var nickname = dummymember.nickname;
+    var getMember = sinon.spy(storeStub, 'getMember');
     request(app)
-      .get('/hada')
+      .get('/' + nickname)
       .expect(200)
       .expect(/Blog: http:\/\/my.blog/)
-      .expect(/Wie ich von der Softwerkskammer erfahren habe: beim Bier/, done);
+      .expect(/Wie ich von der Softwerkskammer erfahren habe: beim Bier/, function () {
+        getMember.calledWith(nickname).should.be.true;
+        done();
+      });
   });
 });
