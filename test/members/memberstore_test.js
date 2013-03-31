@@ -10,6 +10,8 @@ var persistenceStub = {
   },
   getById: function () {
   },
+  getByField: function () {
+  },
   list: function () {
   }
 };
@@ -23,12 +25,12 @@ describe('Members store', function () {
   var sampleList = [sampleMember];
 
   it('calls persistence.getById for store.getMember and passes on the given callback', function (done) {
-    var getById = sinon.stub(persistenceStub, 'getById');
-    getById.callsArgWith(1, null, sampleMember);
+    var getByField = sinon.stub(persistenceStub, 'getByField');
+    getByField.callsArgWith(1, null, sampleMember);
 
     store().getMember('nick', function (err, member) {
       member.should.equal(sampleMember);
-      getById.calledWith('nick').should.be.true;
+      getByField.calledWith({nickname: 'nick'}).should.be.true;
       done();
     });
   });
