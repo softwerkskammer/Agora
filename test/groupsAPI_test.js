@@ -30,14 +30,14 @@ var sympaStub = {
 
 
 
-var groupsAPI = proxyquire('../lib/groups/internalAPI', {
+var groupsAPI = proxyquire('../lib/groups/groupsAPI', {
   './groupstore': function () { return groupstoreStub; },
   './sympaStub': function () { return sympaStub; }
 });
 
 var systemUnderTest = groupsAPI({ get: function () { return null; } });   // empty config -> sympaStub is required
 
-describe('Groups internal API', function () {
+describe('Groups API', function () {
 
   it('returns an empty array of groups for a user who is not subscribed anywhere', function (done) {
     sympaStub.getSubscribedGroupsForUser = function (email, callback) { callback(null, []); };
