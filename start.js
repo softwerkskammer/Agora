@@ -12,7 +12,8 @@ nconf.file('sympa', './config/sympa-config.json');
 nconf.defaults({
   port: '17124',
   mongoHost: 'localhost',
-  mongoPort:  '27017'
+  mongoPort:  '27017',
+  secret: 'softwerkskammer cat'
 });
 
 var app = require('./app.js')(nconf);
