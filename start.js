@@ -9,11 +9,14 @@ var nconf = require('nconf');
 nconf.argv().env();
 nconf.file('mongo', './config/mongo-config.json');
 nconf.file('sympa', './config/sympa-config.json');
+nconf.file('server', './config/server-config.json');
 nconf.defaults({
   port: '17124',
   mongoHost: 'localhost',
   mongoPort:  '27017',
-  secret: 'softwerkskammer cat'
+  publicUrlPrefix: "http://localhost:17124",
+  appUrl: "http://localhost:17124",
+  secret: "secret"
 });
 
 var app = require('./app.js')(nconf);
