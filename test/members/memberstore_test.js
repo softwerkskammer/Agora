@@ -21,15 +21,15 @@ var store = proxyquire('../../lib/members/memberstore.js', {'../persistence/pers
 }});
 
 describe('Members store', function () {
-  var sampleMember = {name: 'forTest'};
+  var sampleMember = {nickname: 'nick'};
   var sampleList = [sampleMember];
 
-  it('calls persistence.getById for store.getMember and passes on the given callback', function (done) {
+  it('calls persistence.getByField for store.getMember and passes on the given callback', function (done) {
     var getByField = sinon.stub(persistenceStub, 'getByField');
     getByField.callsArgWith(1, null, sampleMember);
 
     store().getMember('nick', function (err, member) {
-      member.should.equal(sampleMember);
+      member.nickname.should.equal(sampleMember.nickname);
       getByField.calledWith({nickname: 'nick'}).should.be.true;
       done();
     });
