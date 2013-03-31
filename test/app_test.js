@@ -6,6 +6,7 @@ var should = require('chai').should(),
   conf = new MongoConf();
 
 conf.set('port', '17125');
+conf.set('secret', 'secret');
 var base_uri = "http://localhost:" + parseInt(conf.get('port'), 10);
 
 var app = require('../app.js')(conf);
