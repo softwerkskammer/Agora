@@ -11,6 +11,7 @@ System requirements for installation
 Some modules are compiled during the installation. Therefore some software should be installed.
 
 * Python 2.7 in system path
+* Git in system path
 * OS depending C++ compiler with headers and libraries
   * For Windows: Microsoft Windows SDK for Windows 7 and .NET Framework 4 [available here](http://www.microsoft.com/en-us/download/details.aspx?id=8279)
   * For Mac OS X: Install XCode from the App Store. In XCode's preferences (section "Downloads"), install the command line tools.
