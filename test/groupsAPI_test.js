@@ -40,7 +40,7 @@ var systemUnderTest = groupsAPI({ get: function () { return null; } });   // emp
 describe('Groups API', function () {
 
   it('returns an empty array of groups for a user who is not subscribed anywhere', function (done) {
-    sympaStub.getSubscribedGroupsForUser = function (email, callback) { callback(null, []); };
+    sympaStub.getSubscribedListsForUser = function (email, callback) { callback(null, []); };
 
     systemUnderTest.getSubscribedGroupsForUser('me@bla.com', function (err, validLists) {
       expect(err).to.be.null;
@@ -51,7 +51,7 @@ describe('Groups API', function () {
   });
 
   it('returns one group for a user who is subscribed to one list', function (done) {
-    sympaStub.getSubscribedGroupsForUser = function (email, callback) { callback(null, [{ listAddress: 'GroupA@softwerkskammer.de' }]); };
+    sympaStub.getSubscribedListsForUser = function (email, callback) { callback(null, [{ listAddress: 'GroupA@softwerkskammer.de' }]); };
 
     systemUnderTest.getSubscribedGroupsForUser('GroupAuser@softwerkskammer.de', function (err, validLists) {
       expect(err).to.be.null;
@@ -63,7 +63,7 @@ describe('Groups API', function () {
   });
 
   it('returns two groups for a user who is subscribed to two lists', function (done) {
-    sympaStub.getSubscribedGroupsForUser = function (email, callback) {
+    sympaStub.getSubscribedListsForUser = function (email, callback) {
       callback(null, [{ listAddress: 'GroupA@softwerkskammer.de' }, { listAddress: 'GroupB@softwerkskammer.de' }]);
     };
 
@@ -78,7 +78,7 @@ describe('Groups API', function () {
   });
 
   it('returns an empty array of groups if there are no lists defined in sympa', function (done) {
-    sympaStub.getAllAvailableGroups = function (callback) { callback(null, []); };
+    sympaStub.getAllAvailableLists = function (callback) { callback(null, []); };
 
     systemUnderTest.getAllAvailableGroups(function (err, lists) {
       expect(err).to.be.null;
@@ -89,7 +89,7 @@ describe('Groups API', function () {
   });
 
   it('returns an empty array of groups if there is one list defined in sympa but there is no matching group in Softwerkskammer', function (done) {
-    sympaStub.getAllAvailableGroups = function (callback) { callback(null, [{ listAddress: 'unknownGroup@softwerkskammer.de' }]); };
+    sympaStub.getAllAvailableLists = function (callback) { callback(null, [{ listAddress: 'unknownGroup@softwerkskammer.de' }]); };
 
     systemUnderTest.getAllAvailableGroups(function (err, lists) {
       expect(err).to.be.null;
@@ -100,7 +100,7 @@ describe('Groups API', function () {
   });
 
   it('returns one group if there are two lists defined in sympa and there is one matching group in Softwerkskammer', function (done) {
-    sympaStub.getAllAvailableGroups = function (callback) { callback(null, [{ listAddress: 'GroupA@softwerkskammer.de' }, { listAddress: 'unknownGroup@softwerkskammer.de' }]); };
+    sympaStub.getAllAvailableLists = function (callback) { callback(null, [{ listAddress: 'GroupA@softwerkskammer.de' }, { listAddress: 'unknownGroup@softwerkskammer.de' }]); };
 
     systemUnderTest.getAllAvailableGroups(function (err, lists) {
       expect(err).to.be.null;
@@ -112,7 +112,7 @@ describe('Groups API', function () {
   });
 
   it('returns two groups if there are two lists defined in sympa and there are two matching groups in Softwerkskammer', function (done) {
-    sympaStub.getAllAvailableGroups = function (callback) { callback(null, [{ listAddress: 'GroupA@softwerkskammer.de' }, { listAddress: 'GroupB@softwerkskammer.de' }]); };
+    sympaStub.getAllAvailableLists = function (callback) { callback(null, [{ listAddress: 'GroupA@softwerkskammer.de' }, { listAddress: 'GroupB@softwerkskammer.de' }]); };
 
     systemUnderTest.getAllAvailableGroups(function (err, lists) {
       expect(err).to.be.null;
