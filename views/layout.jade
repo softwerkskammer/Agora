@@ -6,12 +6,11 @@ html
         | Softwerkskammer
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
-    //-
-      div#authenticationinfo
-      - if (user)
-          p profile: #{user.displayedname}
-          p OpenID: #{user.identifier}
-          a(href="/authentication/logout") log out
-      - else
-            a(href="/authentication/login") log in
+    div#authenticationinfo
+    - if (typeof(user) !== 'undefined')
+        p name: #{user.profile.displayName}
+        p ID: #{user.identifier}
+        a(href="/auth/logout") log out
+    - else
+        a(href="/auth/login") log in
     block content

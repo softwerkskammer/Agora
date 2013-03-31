@@ -41,6 +41,13 @@ describe('SWK Plattform server', function () {
     });
   });
 
+  it('shows "log in" on the home page if no user is authenticated', function (done) {
+    request({uri: base_uri}, function (req, resp) {
+      resp.body.should.contain('log in');
+      done();
+    });
+  });
+
   it('has events app', function (done) {
     request({uri: base_uri + '/events'}, function (req, res) {
       res.statusCode.should.equal(200);
