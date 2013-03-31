@@ -2,7 +2,8 @@
 
 var express = require('express'),
   http = require('http'),
-  path = require('path');
+  path = require('path'),
+  authentication = require('./lib/authentication');
 
 var server;
 
@@ -23,8 +24,11 @@ module.exports = function (conf) {
       app.set('views', path.join(__dirname, 'views'));
       app.use(express.favicon());
       app.use(express.logger('dev'));
+      app.use(express.cookieParser());
       app.use(express.bodyParser());
       app.use(express.methodOverride());
+      app.use(express.session({secret: conf.get('secret')}));
+      authentication.configure(app);
       app.use(app.router);
       app.use(express.static(path.join(__dirname, 'public')));
     });
@@ -37,6 +41,7 @@ module.exports = function (conf) {
     useApp(app, 'events', conf, require('./lib/events'));
     useApp(app, 'members', conf, require('./lib/members'));
     useApp(app, 'groups', conf, require('./lib/groups'));
+    useApp(app, 'auth', conf, authentication.initialize);
   }
 
   var start = function (done) {

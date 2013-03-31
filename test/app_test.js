@@ -6,6 +6,7 @@ var should = require('chai').should(),
   conf = new MongoConf();
 
 conf.set('port', '17125');
+conf.set('secret', 'secret');
 var base_uri = "http://localhost:" + parseInt(conf.get('port'), 10);
 
 var app = require('../app.js')(conf);
@@ -37,6 +38,13 @@ describe('SWK Plattform server', function () {
   it('shows "Softwerkskammer" on the home page', function (done) {
     request({uri: base_uri}, function (req, resp) {
       resp.body.should.contain('Softwerkskammer');
+      done();
+    });
+  });
+
+  it('shows "log in" on the home page if no user is authenticated', function (done) {
+    request({uri: base_uri}, function (req, resp) {
+      resp.body.should.contain('log in');
       done();
     });
   });
