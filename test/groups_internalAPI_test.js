@@ -23,16 +23,9 @@ var groupstoreStub = {
 };
 
 var sympaStub = {
-  getSubscribedListsForUser: function (email, callback) {
-    if (email === 'GroupAuser@softwerkskammer.de') {
-      callback(null, [{ listAddress: 'GroupA@softwerkskammer.de' }]);
-    } else if (email === 'GroupAandBuser@softwerkskammer.de') {
-      callback(null, [{ listAddress: 'GroupA@softwerkskammer.de' }, { listAddress: 'GroupB@softwerkskammer.de' }]);
-    } else {
-      callback(null, []);
-    }
-  }
+  getSubscribedListsForUser: function () {}
 };
+
 
 
 var groupsAPI = proxyquire('../lib/groups/internalAPI', {
@@ -45,6 +38,8 @@ var systemUnderTest = groupsAPI({ get: function () { return null; } });   // emp
 describe('Groups internal API', function () {
 
   it('returns an empty array of lists for a user who is not subscribed anywhere', function (done) {
+    sympaStub.getSubscribedListsForUser = function (email, callback) { callback(null, []); };
+
     systemUnderTest.getSubscribedListsForUser('me@bla.com', function (err, validLists) {
       expect(err).to.be.null;
       expect(validLists).to.not.be.null;
@@ -54,6 +49,8 @@ describe('Groups internal API', function () {
   });
 
   it('returns one list for a user who is subscribed to one list', function (done) {
+    sympaStub.getSubscribedListsForUser = function (email, callback) { callback(null, [{ listAddress: 'GroupA@softwerkskammer.de' }]); };
+
     systemUnderTest.getSubscribedListsForUser('GroupAuser@softwerkskammer.de', function (err, validLists) {
       expect(err).to.be.null;
       expect(validLists).to.not.be.null;
@@ -64,6 +61,10 @@ describe('Groups internal API', function () {
   });
 
   it('returns two lists for a user who is subscribed to two lists', function (done) {
+    sympaStub.getSubscribedListsForUser = function (email, callback) {
+      callback(null, [{ listAddress: 'GroupA@softwerkskammer.de' }, { listAddress: 'GroupB@softwerkskammer.de' }]);
+    };
+
     systemUnderTest.getSubscribedListsForUser('GroupAandBuser@softwerkskammer.de', function (err, validLists) {
       expect(err).to.be.null;
       expect(validLists).to.not.be.null;
