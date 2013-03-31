@@ -2,8 +2,7 @@
 
 var express = require('express'),
   http = require('http'),
-  path = require('path'),
-  authentication = require('./lib/authentication');
+  path = require('path');
 
 var server;
 
@@ -15,6 +14,7 @@ function useApp(parent, url, conf, factory) {
 }
 
 module.exports = function (conf) {
+  var authentication = require('./lib/authentication')(conf);
   var localApp = {};
   localApp.conf = conf;
 

@@ -9,7 +9,7 @@ require('chai').should();
 
 var Member = require('../lib/members/member');
 
-var dummymember = new Member('hada', 'Hans', 'Dampf', 'hans.dampf@gmail.com', '@hada', 'Süden', 'Entwickler', 'ada', 'http://my.blog', 'beim Bier');
+var dummymember = new Member('hada', 'hada', 'Hans', 'Dampf', 'hans.dampf@gmail.com', '@hada', 'Süden', 'Entwickler', 'ada', 'http://my.blog', 'beim Bier');
 
 // will eventually be removed:
 var storeStub = {
