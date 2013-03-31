@@ -11,18 +11,28 @@ var Member = require('../lib/members/member');
 
 var dummymember = new Member('hada', 'Hans', 'Dampf', 'hans.dampf@gmail.com', '@hada', 'Süden', 'Entwickler', 'ada', 'http://my.blog', 'beim Bier');
 
+// will eventually be removed:
 var storeStub = {
   allMembers: function (callback) { callback(null, [dummymember]); },
   getMember: function (nickname, callback) { callback(null, dummymember); }
 };
 
-var internalAPIStub = {
+var groupsInternalAPIStub = {
   getSubscribedListsForUser: function (email, callback) { callback(null, []); }
 };
 
+var membersInternalAPIStub = {
+  getMember: function (nickname, callback) { callback(null, dummymember); }
+};
+
+var groupsAndMembers = proxyquire('../lib/groupsAndMembers/internalAPI', {
+  '../groups/internalAPI': function () { return groupsInternalAPIStub; },
+  '../members/internalAPI': function () { return membersInternalAPIStub; }
+});
+
 var memberApp = proxyquire('../lib/members', {
   './memberstore': function () { return storeStub; },
-  '../groups/internalAPI': function () { return internalAPIStub; }
+  '../groupsAndMembers/internalAPI': groupsAndMembers
 });
 var app = memberApp(express());
 
@@ -67,8 +77,8 @@ describe('Members application', function () {
   it('shows the details of one members as retrieved from the membersstore', function (done) {
     var nickname = dummymember.nickname,
       email = dummymember.email,
-      getMember = sinon.spy(storeStub, 'getMember'),
-      getSubscribedListsForUser = sinon.spy(internalAPIStub, 'getSubscribedListsForUser');
+      getMember = sinon.spy(membersInternalAPIStub, 'getMember'),
+      getSubscribedListsForUser = sinon.spy(groupsInternalAPIStub, 'getSubscribedListsForUser');
     request(app)
       .get('/' + nickname)
       .expect(200)
