@@ -30,19 +30,19 @@ var sympaStub = {
 
 
 
-var groupsAPI = proxyquire('../lib/groups/internalAPI', {
+var groupsAPI = proxyquire('../lib/groups/groupsAPI', {
   './groupstore': function () { return groupstoreStub; },
   './sympaStub': function () { return sympaStub; }
 });
 
 var systemUnderTest = groupsAPI({ get: function () { return null; } });   // empty config -> sympaStub is required
 
-describe('Groups internal API', function () {
+describe('Groups API', function () {
 
   it('returns an empty array of groups for a user who is not subscribed anywhere', function (done) {
     sympaStub.getSubscribedListsForUser = function (email, callback) { callback(null, []); };
 
-    systemUnderTest.getSubscribedListsForUser('me@bla.com', function (err, validLists) {
+    systemUnderTest.getSubscribedGroupsForUser('me@bla.com', function (err, validLists) {
       expect(err).to.be.null;
       expect(validLists).to.not.be.null;
       expect(validLists.length).to.equal(0);
@@ -53,7 +53,7 @@ describe('Groups internal API', function () {
   it('returns one group for a user who is subscribed to one list', function (done) {
     sympaStub.getSubscribedListsForUser = function (email, callback) { callback(null, [{ listAddress: 'GroupA@softwerkskammer.de' }]); };
 
-    systemUnderTest.getSubscribedListsForUser('GroupAuser@softwerkskammer.de', function (err, validLists) {
+    systemUnderTest.getSubscribedGroupsForUser('GroupAuser@softwerkskammer.de', function (err, validLists) {
       expect(err).to.be.null;
       expect(validLists).to.not.be.null;
       expect(validLists.length).to.equal(1);
@@ -67,7 +67,7 @@ describe('Groups internal API', function () {
       callback(null, [{ listAddress: 'GroupA@softwerkskammer.de' }, { listAddress: 'GroupB@softwerkskammer.de' }]);
     };
 
-    systemUnderTest.getSubscribedListsForUser('GroupAandBuser@softwerkskammer.de', function (err, validLists) {
+    systemUnderTest.getSubscribedGroupsForUser('GroupAandBuser@softwerkskammer.de', function (err, validLists) {
       expect(err).to.be.null;
       expect(validLists).to.not.be.null;
       expect(validLists.length).to.equal(2);
@@ -80,7 +80,7 @@ describe('Groups internal API', function () {
   it('returns an empty array of groups if there are no lists defined in sympa', function (done) {
     sympaStub.getAllAvailableLists = function (callback) { callback(null, []); };
 
-    systemUnderTest.getAllAvailableLists(function (err, lists) {
+    systemUnderTest.getAllAvailableGroups(function (err, lists) {
       expect(err).to.be.null;
       expect(lists).to.not.be.null;
       expect(lists.length).to.equal(0);
@@ -91,7 +91,7 @@ describe('Groups internal API', function () {
   it('returns an empty array of groups if there is one list defined in sympa but there is no matching group in Softwerkskammer', function (done) {
     sympaStub.getAllAvailableLists = function (callback) { callback(null, [{ listAddress: 'unknownGroup@softwerkskammer.de' }]); };
 
-    systemUnderTest.getAllAvailableLists(function (err, lists) {
+    systemUnderTest.getAllAvailableGroups(function (err, lists) {
       expect(err).to.be.null;
       expect(lists).to.not.be.null;
       expect(lists.length).to.equal(0);
@@ -102,7 +102,7 @@ describe('Groups internal API', function () {
   it('returns one group if there are two lists defined in sympa and there is one matching group in Softwerkskammer', function (done) {
     sympaStub.getAllAvailableLists = function (callback) { callback(null, [{ listAddress: 'GroupA@softwerkskammer.de' }, { listAddress: 'unknownGroup@softwerkskammer.de' }]); };
 
-    systemUnderTest.getAllAvailableLists(function (err, lists) {
+    systemUnderTest.getAllAvailableGroups(function (err, lists) {
       expect(err).to.be.null;
       expect(lists).to.not.be.null;
       expect(lists.length).to.equal(1);
@@ -114,7 +114,7 @@ describe('Groups internal API', function () {
   it('returns two groups if there are two lists defined in sympa and there are two matching groups in Softwerkskammer', function (done) {
     sympaStub.getAllAvailableLists = function (callback) { callback(null, [{ listAddress: 'GroupA@softwerkskammer.de' }, { listAddress: 'GroupB@softwerkskammer.de' }]); };
 
-    systemUnderTest.getAllAvailableLists(function (err, lists) {
+    systemUnderTest.getAllAvailableGroups(function (err, lists) {
       expect(err).to.be.null;
       expect(lists).to.not.be.null;
       expect(lists.length).to.equal(2);

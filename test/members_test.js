@@ -17,22 +17,22 @@ var storeStub = {
   getMember: function (nickname, callback) { callback(null, dummymember); }
 };
 
-var groupsInternalAPIStub = {
-  getSubscribedListsForUser: function (email, callback) { callback(null, []); }
+var groupsAPIStub = {
+  getSubscribedGroupsForUser: function (email, callback) { callback(null, []); }
 };
 
 var membersInternalAPIStub = {
   getMember: function (nickname, callback) { callback(null, dummymember); }
 };
 
-var groupsAndMembers = proxyquire('../lib/groupsAndMembers/internalAPI', {
-  '../groups/internalAPI': function () { return groupsInternalAPIStub; },
+var groupsAndMembers = proxyquire('../lib/groupsAndMembers/groupsAndMembersAPI', {
+  '../groups/groupsAPI': function () { return groupsAPIStub; },
   '../members/internalAPI': function () { return membersInternalAPIStub; }
 });
 
 var memberApp = proxyquire('../lib/members', {
   './memberstore': function () { return storeStub; },
-  '../groupsAndMembers/internalAPI': groupsAndMembers
+  '../groupsAndMembers/groupsAndMembersAPI': groupsAndMembers
 });
 var app = memberApp(express());
 
@@ -78,14 +78,14 @@ describe('Members application', function () {
     var nickname = dummymember.nickname,
       email = dummymember.email,
       getMember = sinon.spy(membersInternalAPIStub, 'getMember'),
-      getSubscribedListsForUser = sinon.spy(groupsInternalAPIStub, 'getSubscribedListsForUser');
+      getSubscribedGroupsForUser = sinon.spy(groupsAPIStub, 'getSubscribedGroupsForUser');
     request(app)
       .get('/' + nickname)
       .expect(200)
       .expect(/Blog: http:\/\/my.blog/)
       .expect(/Wie ich von der Softwerkskammer erfahren habe: beim Bier/, function () {
         getMember.calledWith(nickname).should.be.true;
-        getSubscribedListsForUser.calledWith(email).should.be.true;
+        getSubscribedGroupsForUser.calledWith(email).should.be.true;
         done();
       });
   });
