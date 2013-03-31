@@ -3,7 +3,7 @@ extends layout
 block content
   h1 #{title}
   div#authenticationinfo
-    - if (typeof(user) !== 'undefined')
+    - if (user)
       a(href="/auth/logout") log out
     - else
       a(href="/auth/login") log in
