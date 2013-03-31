@@ -124,22 +124,29 @@ describe('Groups internal API', function () {
     });
   });
 
+  it('returns an empty array of lists if there are no users subscribed to the list in sympa', function (done) {
+    sympaStub.getUsersOfList = function (groupname, callback) { callback(null, []); };
 
-  /*
-    it('shows the details of one members as retrieved from the membersstore', function (done) {
-      var nickname = dummymember.nickname,
-        email = dummymember.email,
-        getMember = sinon.spy(membersInternalAPIStub, 'getMember'),
-        getSubscribedListsForUser = sinon.spy(groupsInternalAPIStub, 'getSubscribedListsForUser');
-      request(app)
-        .get('/' + nickname)
-        .expect(200)
-        .expect(/Blog: http:\/\/my.blog/)
-        .expect(/Wie ich von der Softwerkskammer erfahren habe: beim Bier/, function () {
-          getMember.calledWith(nickname).should.be.true;
-          getSubscribedListsForUser.calledWith(email).should.be.true;
-          done();
-        });
+    systemUnderTest.getSympaUsersOfList('groupname', function (err, lists) {
+      expect(err).to.be.null;
+      expect(lists).to.not.be.null;
+      expect(lists.length).to.equal(0);
+      done();
     });
-    */
+  });
+
+  it('returns the users subscribed to the list in sympa', function (done) {
+    sympaStub.getUsersOfList = function (groupname, callback) { callback(null, ['user1@mail1.de', 'user2@mail2.de', 'user3@mail3.de']); };
+
+    systemUnderTest.getSympaUsersOfList('groupname', function (err, users) {
+      expect(err).to.be.null;
+      expect(users).to.not.be.null;
+      expect(users.length).to.equal(3);
+      expect(users[0]).to.equal('user1@mail1.de');
+      expect(users[1]).to.equal('user2@mail2.de');
+      expect(users[2]).to.equal('user3@mail3.de');
+      done();
+    });
+  });
+
 });
