@@ -18,7 +18,7 @@ var storeStub = {
 };
 
 var groupsInternalAPIStub = {
-  getSubscribedListsForUser: function (email, callback) { callback(null, []); }
+  getSubscribedGroupsForUser: function (email, callback) { callback(null, []); }
 };
 
 var membersInternalAPIStub = {
@@ -78,14 +78,14 @@ describe('Members application', function () {
     var nickname = dummymember.nickname,
       email = dummymember.email,
       getMember = sinon.spy(membersInternalAPIStub, 'getMember'),
-      getSubscribedListsForUser = sinon.spy(groupsInternalAPIStub, 'getSubscribedListsForUser');
+      getSubscribedGroupsForUser = sinon.spy(groupsInternalAPIStub, 'getSubscribedGroupsForUser');
     request(app)
       .get('/' + nickname)
       .expect(200)
       .expect(/Blog: http:\/\/my.blog/)
       .expect(/Wie ich von der Softwerkskammer erfahren habe: beim Bier/, function () {
         getMember.calledWith(nickname).should.be.true;
-        getSubscribedListsForUser.calledWith(email).should.be.true;
+        getSubscribedGroupsForUser.calledWith(email).should.be.true;
         done();
       });
   });
