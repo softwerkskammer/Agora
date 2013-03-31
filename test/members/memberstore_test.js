@@ -1,5 +1,6 @@
 /*global describe, it */
 "use strict";
+require('chai').should();
 
 var proxyquire = require('proxyquire'),
   sinon = require('sinon');
