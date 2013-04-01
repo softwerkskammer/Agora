@@ -66,7 +66,7 @@ describe('Groups and Members API', function () {
     });
   });
 
-  it('returns null as group and an empty list of subscribed users when there is no group and no list', function (done) {
+  it('returns null as group and an empty list of subscribed users when there is no group and no sympa-list', function (done) {
 
     systemUnderTest.getGroupAndUsersOfList('unbekannteListe', function (err, group, users) {
       expect(err).to.be.null;
@@ -77,7 +77,7 @@ describe('Groups and Members API', function () {
     });
   });
 
-  it('returns null as group and an empty list of subscribed users when there is no group in DB but a list in Sympa', function (done) {
+  it('returns null as group and an empty list of subscribed users when there is no group but a sympa-list', function (done) {
     // TODO work in progress, we cannot find the users yet
     groupsAPIStub.getSympaUsersOfList = function (err, callback) {
       callback(null, ['user1@mail1.com', 'user2@mail2.com']);
