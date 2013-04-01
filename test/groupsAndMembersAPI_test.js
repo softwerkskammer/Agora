@@ -14,7 +14,8 @@ var GroupA = new Group('GroupA', 'Gruppe A', 'Dies ist Gruppe A.', 'Themengruppe
 var GroupB = new Group('GroupB', 'Gruppe B', 'Dies ist Gruppe B.', 'Regionalgruppe');
 
 var groupsAPIStub = {
-  getSubscribedGroupsForUser: function () {}
+  getSubscribedGroupsForUser: function () {},
+  getSympaUsersOfList: function () {}
 };
 
 var membersInternalAPIStub = {
@@ -65,8 +66,24 @@ describe('Groups and Members API', function () {
   });
 
   it('returns null as group and an empty list of subscribed users when there is no group and no list', function (done) {
+    groupsAPIStub.getSympaUsersOfList = function (err, callback) { callback(null, []); };
 
-    systemUnderTest.getGroupAndUsersForList('unbekannteListe', function (err, group, users) {
+    systemUnderTest.getGroupAndUsersOfList('unbekannteListe', function (err, group, users) {
+      expect(err).to.be.null;
+      expect(group).to.be.null;
+      expect(users).to.not.be.null;
+      expect(users.length).to.equal(0);
+      done();
+    });
+  });
+
+  it('returns null as group and an empty list of subscribed users when there is no group in DB but a list in Sympa', function (done) {
+    // TODO work in progress, we cannot find the users yet
+    groupsAPIStub.getSympaUsersOfList = function (err, callback) {
+      callback(null, ['user1@mail1.com', 'user2@mail2.com']);
+    };
+
+    systemUnderTest.getGroupAndUsersOfList('sympaListWithoutGroup', function (err, group, users) {
       expect(err).to.be.null;
       expect(group).to.be.null;
       expect(users).to.not.be.null;
