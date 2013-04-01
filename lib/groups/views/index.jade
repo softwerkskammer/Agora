@@ -8,4 +8,4 @@ block content
 
   ul
     each group in groups
-      li= group.longName
+      li: .group: strong: a(href='#{group.id}') #{group.longName}
