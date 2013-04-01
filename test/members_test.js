@@ -36,7 +36,7 @@ var ensureLoggedInStub = {
   }
 };
 
-var membersInternalAPIStub = {
+var membersAPIStub = {
   getMember: function (nickname, callback) {
     callback(null, dummymember);
   }
@@ -46,8 +46,8 @@ var groupsAndMembers = proxyquire('../lib/groupsAndMembers/groupsAndMembersAPI',
   '../groups/groupsAPI'   : function () {
     return groupsAPIStub;
   },
-  '../members/internalAPI': function () {
-    return membersInternalAPIStub;
+  '../members/membersAPI': function () {
+    return membersAPIStub;
   }
 });
 
@@ -101,7 +101,7 @@ describe('Members application', function () {
   it('shows the details of one members as retrieved from the membersstore', function (done) {
     var nickname = dummymember.nickname,
       email = dummymember.email,
-      getMember = sinon.spy(membersInternalAPIStub, 'getMember'),
+      getMember = sinon.spy(membersAPIStub, 'getMember'),
       getSubscribedGroupsForUser = sinon.spy(groupsAPIStub, 'getSubscribedGroupsForUser');
     request(app)
       .get('/' + nickname)
