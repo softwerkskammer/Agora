@@ -15,7 +15,7 @@ var GroupB = new Group('GroupB', 'Gruppe B', 'Dies ist Gruppe B.', 'Regionalgrup
 
 var groupsAPIStub = {
   getSubscribedGroupsForUser: function () {},
-  getSympaUsersOfList: function () {}
+  getSympaUsersOfList: function (err, callback) { callback(null, []); }
 };
 
 var membersInternalAPIStub = {
@@ -66,7 +66,6 @@ describe('Groups and Members API', function () {
   });
 
   it('returns null as group and an empty list of subscribed users when there is no group and no list', function (done) {
-    groupsAPIStub.getSympaUsersOfList = function (err, callback) { callback(null, []); };
 
     systemUnderTest.getGroupAndUsersOfList('unbekannteListe', function (err, group, users) {
       expect(err).to.be.null;
