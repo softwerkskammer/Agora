@@ -5,7 +5,10 @@ var express = require('express'),
   path = require('path');
 
 function ensureRequestedUrlEndsWithSlash(req, res, next) {
-  function endsWithSlash(string) { return (/\/$/).test(string); }
+  function endsWithSlash(string) {
+    return (/\/$/).test(string);
+  }
+
   if (!endsWithSlash(req.url)) {
     return res.redirect(req.url + '/');
   }
