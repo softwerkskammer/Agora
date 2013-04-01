@@ -16,9 +16,7 @@ nconf.defaults({
   mongoHost       : 'localhost',
   mongoPort       : '27017',
   publicUrlPrefix : "http://localhost:17124",
-  secret          : "secret",
-  openidReturnPath: "/auth/openid/return" // should always work
-
+  secret          : "secret"
 });
 
 var app = require('./app.js')(nconf);
