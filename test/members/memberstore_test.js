@@ -10,6 +10,8 @@ var persistenceStub = {
   },
   getById: function () {
   },
+  getByField: function () {
+  },
   list: function () {
   }
 };
@@ -19,16 +21,17 @@ var store = proxyquire('../../lib/members/memberstore.js', {'../persistence/pers
 }});
 
 describe('Members store', function () {
-  var sampleMember = {name: 'forTest'};
-  var sampleList = [sampleMember];
+  var sampleMember = {nickname: 'nick'};
+  var sampleMember2 = {nickname: 'nick2'};
+  var sampleList = [sampleMember, sampleMember2];
 
-  it('calls persistence.getById for store.getMember and passes on the given callback', function (done) {
-    var getById = sinon.stub(persistenceStub, 'getById');
-    getById.callsArgWith(1, null, sampleMember);
+  it('calls persistence.getByField for store.getMember and passes on the given callback', function (done) {
+    var getByField = sinon.stub(persistenceStub, 'getByField');
+    getByField.callsArgWith(1, null, sampleMember);
 
     store().getMember('nick', function (err, member) {
-      member.should.equal(sampleMember);
-      getById.calledWith('nick').should.be.true;
+      member.nickname.should.equal(sampleMember.nickname);
+      getByField.calledWith({nickname: 'nick'}).should.be.true;
       done();
     });
   });
@@ -38,7 +41,8 @@ describe('Members store', function () {
     list.callsArgWith(0, null, sampleList);
 
     store().allMembers(function (err, members) {
-      members.should.equal(sampleList);
+      members[0].nickname.should.equal(sampleMember.nickname);
+      members[1].nickname.should.equal(sampleMember2.nickname);
       done();
     });
   });
