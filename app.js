@@ -15,14 +15,6 @@ function ensureRequestedUrlEndsWithSlash(req, res, next) {
   next();
 }
 
-function newUserMustFillInRegistration(req, res, next) {
-  var urlNew = '/members/new';
-  if (req.originalUrl !== urlNew && req.originalUrl !== '/members/submit' && req.user && !req.user.registered) {
-    return res.redirect(urlNew);
-  }
-  next();
-}
-
 function useApp(parent, url, conf, factory) {
   var child = factory(express(), conf);
   child.locals({ baseUrl: url });
@@ -32,7 +24,17 @@ function useApp(parent, url, conf, factory) {
 }
 
 module.exports = function (conf) {
-  var authentication = require('./lib/authentication')(conf);
+  var authentication = require('./lib/authentication')(conf),
+    urlPrefix = conf.get('publicUrlPrefix');
+
+  function newUserMustFillInRegistration(req, res, next) {
+    var urlNew = '/members/new';
+    if (req.originalUrl !== urlNew && req.originalUrl !== '/members/submit' && req.user && !req.user.registered) {
+      return res.redirect(urlPrefix + urlNew);
+    }
+    next();
+  }
+
   return {
     create: function () {
       var app = express();
