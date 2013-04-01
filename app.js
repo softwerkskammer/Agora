@@ -4,66 +4,88 @@ var express = require('express'),
   http = require('http'),
   path = require('path');
 
-var server;
+function ensureRequestedUrlEndsWithSlash(req, res, next) {
+  function endsWithSlash(string) {
+    return (/\/$/).test(string);
+  }
+
+  if (!endsWithSlash(req.url)) {
+    return res.redirect(req.url + '/');
+  }
+  next();
+}
+
+function newUserMustFillInRegistration(req, res, next) {
+  var urlNew = '/members/new';
+  if (req.originalUrl !== urlNew && req.originalUrl !== '/members/submit' && req.user && !req.user.registered) {
+    return res.redirect(urlNew);
+  }
+  next();
+}
 
 function useApp(parent, url, conf, factory) {
   var child = factory(express(), conf);
   child.locals({ baseUrl: url });
-  parent.use('/' + url, child);
+  parent.get('/' + url, ensureRequestedUrlEndsWithSlash);
+  parent.use('/' + url + '/', child);
   return child;
 }
 
 module.exports = function (conf) {
-  var localApp = {};
-  localApp.conf = conf;
+  var authentication = require('./lib/authentication')(conf);
+  return {
+    create: function () {
+      var app = express();
+      this.initApp(app, conf);
+      return app;
+    },
 
-  function initApp(app) {
-    app.configure(function () {
-      app.set('view engine', 'jade');
-      app.set('views', path.join(__dirname, 'views'));
-      app.use(express.favicon());
-      app.use(express.logger('dev'));
-      app.use(express.bodyParser());
-      app.use(express.methodOverride());
-      app.use(app.router);
-      app.use(express.static(path.join(__dirname, 'public')));
-    });
+    initApp: function (app) {
+      app.configure(function () {
+        app.set('view engine', 'jade');
+        app.set('views', path.join(__dirname, 'views'));
+        app.use(express.favicon());
+        app.use(express.logger('dev'));
+        app.use(express.cookieParser());
+        app.use(express.bodyParser());
+        app.use(express.methodOverride());
+        app.use(express.session({secret: conf.get('secret')}));
+        authentication.configure(app);
+        app.use(newUserMustFillInRegistration);
+        app.use(app.router);
+        app.use(express.static(path.join(__dirname, 'public')));
+      });
 
-    app.configure('development', function () {
-      app.use(express.errorHandler());
-    });
+      app.configure('development', function () {
+        app.use(express.errorHandler());
+      });
 
-    app.use('/', require('./lib/site'));
-    useApp(app, 'events', conf, require('./lib/events'));
-    useApp(app, 'members', conf, require('./lib/members'));
-    useApp(app, 'groups', conf, require('./lib/groups'));
-  }
+      app.use('/', require('./lib/site'));
+      useApp(app, 'events', conf, require('./lib/events'));
+      useApp(app, 'members', conf, require('./lib/members'));
+      useApp(app, 'groups', conf, require('./lib/groups'));
+      useApp(app, 'auth', conf, authentication.initialize);
+    },
 
-  var start = function (done) {
-    var port = localApp.conf.get('port');
-    var app = express();
-    initApp(app, conf);
-    server = http.createServer(app);
-    server.listen(port, function () {
-      console.log('Server running at port ' + port);
-      if (done) {
-        done();
-      }
-    });
+    start: function (done) {
+      var port = conf.get('port');
+      var app = this.create();
+      this.server = http.createServer(app);
+      this.server.listen(port, function () {
+        console.log('Server running at port ' + port);
+        if (done) {
+          done();
+        }
+      });
+    },
+
+    stop: function (done) {
+      this.server.close(function () {
+        console.log('Server stopped');
+        if (done) {
+          done();
+        }
+      });
+    }
   };
-
-  var stop = function (done) {
-    server.close(function () {
-      console.log('Server stopped');
-      if (done) {
-        done();
-      }
-    });
-  };
-
-  localApp.initApp = initApp;
-  localApp.start = start;
-  localApp.stop = stop;
-
-  return localApp;
 };

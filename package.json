@@ -1,7 +1,7 @@
 {
   "name": "SoftwerkskammerNewPlattform",
   "description": "A new plattform for Softwerkskammer",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "Nicole Rauch",
   "contributors ": [
     {
@@ -19,12 +19,15 @@
   },
   "dependencies": {
     "express": "~3.1",
-    "soap": "git://github.com/triplem/node-soap.git#sympasoap_3",
+    "soap-sympa": "~0.0.1",
     "jade": "~0.28.2",
     "mongodb": "1.1.x",
     "async": "~0.2.6",
-    "underscore.string":"2.3.0",
-    "nconf": "~0.6.7"
+    "nconf": "~0.6.7",
+    "passport" : "~0.1.16",
+    "passport-openid" : "~0.3.1",
+    "passport-github" : "~0.1.3",
+    "connect-ensure-login" : "git://github.com/leider/connect-ensure-login.git#master"
   },
   "devDependencies": {
     "grunt": "~0.4",

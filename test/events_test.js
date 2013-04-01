@@ -5,7 +5,7 @@ var request = require('supertest'),
     express = require('express');
 
 var storeProxy = {
-  getEvents: function () { return []; },
+  getEvents: function () { return []; }
 };
 var events = proxy('../lib/events', { './store': storeProxy });
 
@@ -56,13 +56,13 @@ describe('Events application', function () {
   it('constructs correct links to an event', function (done) {
     storeProxy.getEvents = function () {
       return [
-        { id: 'foo', title: 'FooFoo' },
+        { id: 'foo', title: 'FooFoo' }
       ];
     };
     request(app)
       .get('/')
       .expect(200)
-      .expect(/href="events\/foo"/, done);
+      .expect(/href="foo"/, done);
   });
 });
 

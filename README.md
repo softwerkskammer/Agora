@@ -11,6 +11,7 @@ System requirements for installation
 Some modules are compiled during the installation. Therefore some software should be installed.
 
 * Python 2.7 in system path
+* Git in system path
 * OS depending C++ compiler with headers and libraries
   * For Windows: Microsoft Windows SDK for Windows 7 and .NET Framework 4 [available here](http://www.microsoft.com/en-us/download/details.aspx?id=8279)
   * For Mac OS X: Install XCode from the App Store. In XCode's preferences (section "Downloads"), install the command line tools.
@@ -32,7 +33,7 @@ Preparations for use
 
 * Install mongodb for you operating system from [http://www.mongodb.org/downloads](http://www.mongodb.org/downloads)
 * Start mongodb. If you only plan to use it for development, the default settings are ok. The app as well as the tests use these defaults if nothing different is configured.
-* Instructions for authenticated use are [here](lib/persistence/README.md)
+* (Optional) Instructions for authenticated use are [here](lib/persistence/README.md)
 
 Running the server
 ------------------
