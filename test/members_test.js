@@ -13,26 +13,50 @@ var dummymember = new Member('hada', 'hada', 'Hans', 'Dampf', 'hans.dampf@gmail.
 
 // will eventually be removed:
 var storeStub = {
-  allMembers: function (callback) { callback(null, [dummymember]); },
-  getMember: function (nickname, callback) { callback(null, dummymember); }
+  allMembers: function (callback) {
+    callback(null, [dummymember]);
+  },
+  getMember : function (nickname, callback) {
+    callback(null, dummymember);
+  }
+};
+
+// disabling authentication
+var ensureLoggedInStub = {
+  ensureLoggedIn: function () {
+    return function (req, res, next) {
+      next();
+    };
+  }
 };
 
 var groupsInternalAPIStub = {
-  getSubscribedListsForUser: function (email, callback) { callback(null, []); }
+  getSubscribedListsForUser: function (email, callback) {
+    callback(null, []);
+  }
 };
 
 var membersInternalAPIStub = {
-  getMember: function (nickname, callback) { callback(null, dummymember); }
+  getMember: function (nickname, callback) {
+    callback(null, dummymember);
+  }
 };
 
 var groupsAndMembers = proxyquire('../lib/groupsAndMembers/internalAPI', {
-  '../groups/internalAPI': function () { return groupsInternalAPIStub; },
-  '../members/internalAPI': function () { return membersInternalAPIStub; }
+  '../groups/internalAPI' : function () {
+    return groupsInternalAPIStub;
+  },
+  '../members/internalAPI': function () {
+    return membersInternalAPIStub;
+  }
 });
 
 var memberApp = proxyquire('../lib/members', {
-  './memberstore': function () { return storeStub; },
-  '../groupsAndMembers/internalAPI': groupsAndMembers
+  './memberstore'                  : function () {
+    return storeStub;
+  },
+  '../groupsAndMembers/internalAPI': groupsAndMembers,
+  'connect-ensure-login'           : ensureLoggedInStub
 });
 var app = memberApp(express());
 
