@@ -7,10 +7,9 @@ html
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
     div#authenticationinfo
-    - if (typeof(user) !== 'undefined')
-        p name: #{user.profile.displayName}
-        p ID: #{user.identifier}
-        a(href="/auth/logout") log out
-    - else
+      - if (typeof(user) !== 'undefined')
+        a(href="/members/edit") Profil
+      - else
         a(href="/auth/login") log in
+
     block content
