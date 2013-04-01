@@ -19,13 +19,13 @@ var groupsAPIStub = {
   getGroup: function (groupname, callback) { callback(null, null); }
 };
 
-var membersInternalAPIStub = {
+var membersAPIStub = {
   getMember: function () {}
 };
 
 var groupsAndMembersAPI = proxyquire('../lib/groupsAndMembers/groupsAndMembersAPI', {
   '../groups/groupsAPI': function () { return groupsAPIStub; },
-  '../members/internalAPI': function () { return membersInternalAPIStub; }
+  '../members/membersAPI': function () { return membersAPIStub; }
 });
 
 var systemUnderTest = groupsAndMembersAPI({ get: function () { return null; } });   // empty config -> sympaStub is required
@@ -33,7 +33,7 @@ var systemUnderTest = groupsAndMembersAPI({ get: function () { return null; } })
 describe('Groups and Members API', function () {
 
   it('returns null as member and no groups when there is no member for the given nickname', function (done) {
-    membersInternalAPIStub.getMember = function (nickname, callback) {
+    membersAPIStub.getMember = function (nickname, callback) {
       callback(null, null);
     };
     groupsAPIStub.getSubscribedGroupsForUser = function (userMail, globalCallback) {
@@ -49,7 +49,7 @@ describe('Groups and Members API', function () {
   });
 
   it('returns the member and his groups when there is a member for the given nickname', function (done) {
-    membersInternalAPIStub.getMember = function (nickname, callback) {
+    membersAPIStub.getMember = function (nickname, callback) {
       callback(null, dummymember);
     };
     groupsAPIStub.getSubscribedGroupsForUser = function (userMail, globalCallback) {
