@@ -149,4 +149,23 @@ describe('Groups API', function () {
     });
   });
 
+  it('returns null if there is no group with the given name', function (done) {
+
+    systemUnderTest.getGroup('groupname', function (err, group) {
+      expect(err).to.be.null;
+      expect(group).to.be.null;
+      done();
+    });
+  });
+
+  it('returns the group if there is a group with the given name', function (done) {
+
+    systemUnderTest.getGroup('GroupA@softwerkskammer.de', function (err, group) {
+      expect(err).to.be.null;
+      expect(group).to.equal(GroupA);
+      done();
+    });
+  });
+
+
 });
