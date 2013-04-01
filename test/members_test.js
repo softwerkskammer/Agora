@@ -43,7 +43,7 @@ var membersAPIStub = {
 };
 
 var groupsAndMembers = proxyquire('../lib/groupsAndMembers/groupsAndMembersAPI', {
-  '../groups/groupsAPI'   : function () {
+  '../groups/groupsAPI'  : function () {
     return groupsAPIStub;
   },
   '../members/membersAPI': function () {
@@ -58,7 +58,10 @@ var memberApp = proxyquire('../lib/members', {
   '../groupsAndMembers/groupsAndMembersAPI': groupsAndMembers,
   'connect-ensure-login'                   : ensureLoggedInStub
 });
-var app = memberApp(express());
+
+var app = memberApp(express(), { get: function () {
+  return null;
+} });   // empty config
 
 describe('Members application', function () {
 
@@ -82,7 +85,7 @@ describe('Members application', function () {
       .expect(/href="hada"/, done);
   });
 
-  it.skip('renders the link for two parent dirs', function (done) {
+  it('renders the link for two parent dirs', function (done) {
     var root = express();
     root.use('/foo/bar', app);
     request(root)
@@ -90,7 +93,7 @@ describe('Members application', function () {
       .expect(/href="hada"/, done);
   });
 
-  it.skip('renders the link for a get request with parameters', function (done) {
+  it('renders the link for a get request with parameters', function (done) {
     var root = express();
     root.use('/foo', app);
     request(root)
