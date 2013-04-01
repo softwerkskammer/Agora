@@ -1,11 +1,14 @@
 extend ../../../views/layout
 
 block title
-    | #{title}
+    | #{title} #{group.longName}
 
 block content
-    h1 #{title}
+    h1 #{title} #{group.longName}
+    p Beschreibung: #{group.description}
+    p Gruppenart: #{group.type}
 
+    h2 Mitglieder der Gruppe:
     ul
         each item in users
             li= item
