@@ -12,6 +12,14 @@ function ensureRequestedUrlEndsWithSlash(req, res, next) {
   next();
 }
 
+function newUserMustFillInRegistration(req, res, next) {
+  var urlNew = '/members/new';
+  if (req.originalUrl !== urlNew && req.originalUrl !== '/members/submit' && req.user && !req.user.registered) {
+    return res.redirect(urlNew);
+  }
+  next();
+}
+
 function useApp(parent, url, conf, factory) {
   var child = factory(express(), conf);
   child.locals({ baseUrl: url });
@@ -40,6 +48,7 @@ module.exports = function (conf) {
         app.use(express.methodOverride());
         app.use(express.session({secret: conf.get('secret')}));
         authentication.configure(app);
+        app.use(newUserMustFillInRegistration);
         app.use(app.router);
         app.use(express.static(path.join(__dirname, 'public')));
       });
