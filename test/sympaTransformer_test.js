@@ -24,24 +24,24 @@ describe('Sympa-Transformer ', function () {
 
     expect(result).to.not.be.null;
     expect(result.length).to.equal(1);
-    expect(result[0].listAddress).to.equal('list');
+    expect(result[0].groupName).to.equal('list');
     done();
   });
 
   it('transforms a whole list of arbitrary email addresses', function (done) {
 
     var result = systemUnderTest.stripMailSuffixes([{ listAddress: 'list@softwerkskammer.de'},
-      { listAddress: 'ich@tolledomain.com'},
-      { listAddress: 'info@meinefirma.co.uk'},
-      { listAddress: 'wernoch@sonstwo.org'}
+      { listAddress: 'mygroup@tolledomain.com'},
+      { listAddress: 'infolist@meinefirma.co.uk'},
+      { listAddress: 'otherlist@sonstwo.org'}
     ]);
 
     expect(result).to.not.be.null;
     expect(result.length).to.equal(4);
-    expect(result[0].listAddress).to.equal('list');
-    expect(result[1].listAddress).to.equal('ich');
-    expect(result[2].listAddress).to.equal('info');
-    expect(result[3].listAddress).to.equal('wernoch');
+    expect(result[0].groupName).to.equal('list');
+    expect(result[1].groupName).to.equal('mygroup');
+    expect(result[2].groupName).to.equal('infolist');
+    expect(result[3].groupName).to.equal('otherlist');
     done();
   });
 
