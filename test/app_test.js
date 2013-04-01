@@ -88,4 +88,12 @@ describe('The app itself', function () {
       .expect(/events/)
       .expect(200, done);
   });
+
+  it('redirects unauthenticated access to the members sub app to the authentication page', function (done) {
+    request(app.create())
+      .get('/members/')
+      .expect('Content-Type', /text\/plain/)
+      .expect('Moved Temporarily. Redirecting to /auth/login')
+      .expect(302, done);
+  });
 });
