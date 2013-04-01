@@ -2,8 +2,7 @@
 
 var express = require('express'),
   http = require('http'),
-  path = require('path'),
-  authentication = require('./lib/authentication');
+  path = require('path');
 
 function ensureRequestedUrlEndsWithSlash(req, res, next) {
   function endsWithSlash(string) { return (/\/$/).test(string); }
@@ -22,6 +21,7 @@ function useApp(parent, url, conf, factory) {
 }
 
 module.exports = function (conf) {
+  var authentication = require('./lib/authentication')(conf);
   return {
     create: function () {
       var app = express();
