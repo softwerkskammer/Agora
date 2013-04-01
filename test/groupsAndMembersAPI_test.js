@@ -64,4 +64,15 @@ describe('Groups and Members API', function () {
     });
   });
 
+  it('returns null as group and an empty list of subscribed users when there is no group and no list', function (done) {
+
+    systemUnderTest.getGroupAndUsersForList('unbekannteListe', function (err, group, users) {
+      expect(err).to.be.null;
+      expect(group).to.be.null;
+      expect(users).to.not.be.null;
+      expect(users.length).to.equal(0);
+      done();
+    });
+  });
+
 });
