@@ -5,9 +5,20 @@ var express = require('express'),
   path = require('path');
 
 function ensureRequestedUrlEndsWithSlash(req, res, next) {
-  function endsWithSlash(string) { return (/\/$/).test(string); }
+  function endsWithSlash(string) {
+    return (/\/$/).test(string);
+  }
+
   if (!endsWithSlash(req.url)) {
     return res.redirect(req.url + '/');
+  }
+  next();
+}
+
+function newUserMustFillInRegistration(req, res, next) {
+  var urlNew = '/members/new';
+  if (req.originalUrl !== urlNew && req.originalUrl !== '/members/submit' && req.user && !req.user.registered) {
+    return res.redirect(urlNew);
   }
   next();
 }
@@ -40,6 +51,7 @@ module.exports = function (conf) {
         app.use(express.methodOverride());
         app.use(express.session({secret: conf.get('secret')}));
         authentication.configure(app);
+        app.use(newUserMustFillInRegistration);
         app.use(app.router);
         app.use(express.static(path.join(__dirname, 'public')));
       });
