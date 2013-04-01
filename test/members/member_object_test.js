@@ -33,14 +33,13 @@ describe('Member', function () {
   it('is populated by GitHub record', function (done) {
     var member = new Member();
     var userdata = JSON.parse('{' +
-      '"identifier": "github:450708", "profile": {' +
-      ' "provider" : "github", "id" : 450708, "displayName": "Andreas Leidig", "username" :"leider", ' +
+      '"identifier": "github:123456", "profile": {' +
+      ' "provider" : "github", "id" : 123456, "displayName": "Hans Dampf", "username" :"hada", ' +
       '"profileUrl" : "https://github.com/hansdampf", ' + '"emails" : [ { "value": null } ], ' +
       '"_json" : { "html_url" :"https://github.com/hansdampf", "blog" : "http://hada.wordpress.com" }}}');
 
     member.updateWith(null, userdata);
     should.not.exist(member.firstname);
-    should.not.exist(member.lastname);
     should.not.exist(member.lastname);
     member.site.should.equal("https://github.com/hansdampf, http://hada.wordpress.com");
 
