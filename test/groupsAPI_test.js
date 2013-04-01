@@ -12,9 +12,9 @@ var GroupB = new Group('GroupB', 'Gruppe B', 'Dies ist Gruppe B.', 'Regionalgrup
 var groupstoreStub = {
   allGroups: function (callback) { callback(null, [GroupA, GroupB]); },
   getGroup: function (name, callback) {
-    if (name === 'GroupA@softwerkskammer.de') {
+    if (name === 'GroupA@softwerkskammer.de' || name === 'GroupA') {
       callback(null, GroupA);
-    } else if (name === 'GroupB@softwerkskammer.de') {
+    } else if (name === 'GroupB@softwerkskammer.de' || name === 'GroupB') {
       callback(null, GroupB);
     } else {
       callback(null, null);
@@ -158,7 +158,16 @@ describe('Groups API', function () {
     });
   });
 
-  it('returns the group if there is a group with the given name', function (done) {
+  it('returns the group if there is a group with the given name (without email suffix)', function (done) {
+
+    systemUnderTest.getGroup('GroupA', function (err, group) {
+      expect(err).to.be.null;
+      expect(group).to.equal(GroupA);
+      done();
+    });
+  });
+
+  it('returns the group if there is a group with the given name (with email suffix)', function (done) {
 
     systemUnderTest.getGroup('GroupA@softwerkskammer.de', function (err, group) {
       expect(err).to.be.null;
