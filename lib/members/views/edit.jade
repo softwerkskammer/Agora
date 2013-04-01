@@ -5,6 +5,9 @@ block title
 block content
   h1 Profil bearbeiten
 
+  - if (user.registered)
+    p: a(href="/auth/logout") log out
+
   mixin text(name, label)
     div
       label #{label}:

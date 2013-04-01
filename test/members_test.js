@@ -9,7 +9,7 @@ require('chai').should();
 
 var Member = require('../lib/members/member');
 
-var dummymember = new Member('hada', 'Hans', 'Dampf', 'hans.dampf@gmail.com', '@hada', 'Süden', 'Entwickler', 'ada', 'http://my.blog', 'beim Bier');
+var dummymember = new Member('hada', 'hada', 'Hans', 'Dampf', 'hans.dampf@gmail.com', '@hada', 'Süden', 'Entwickler', 'ada', 'http://my.blog', 'beim Bier');
 
 // will eventually be removed:
 var storeStub = {
@@ -43,7 +43,7 @@ describe('Members application', function () {
     request(app)
       .get('/')
       .expect(200)
-      .expect(/href="\/hada"/)
+      .expect(/href="hada"/)
       .expect(/hans.dampf@gmail.com/, function () {
         allMembers.calledOnce.should.be.ok;
         done();
@@ -55,7 +55,7 @@ describe('Members application', function () {
     root.use('/foo', app);
     request(root)
       .get('/foo')
-      .expect(/href="foo\/hada"/, done);
+      .expect(/href="hada"/, done);
   });
 
   it.skip('renders the link for two parent dirs', function (done) {
@@ -63,7 +63,7 @@ describe('Members application', function () {
     root.use('/foo/bar', app);
     request(root)
       .get('/foo/bar')
-      .expect(/href="bar\/hada"/, done);
+      .expect(/href="hada"/, done);
   });
 
   it.skip('renders the link for a get request with parameters', function (done) {
@@ -71,7 +71,7 @@ describe('Members application', function () {
     root.use('/foo', app);
     request(root)
       .get('/foo?param=value')
-      .expect(/href="foo\/hada"/, done);
+      .expect(/href="hada"/, done);
   });
 
   it('shows the details of one members as retrieved from the membersstore', function (done) {
