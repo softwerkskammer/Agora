@@ -8,5 +8,6 @@
 .DS_Store
 lib/persistence/memberstore/
 lib/persistence/teststore/
-config/mongo-config.json
-config/sympa-config.json
+config/*.json
+!config/example-*.json
+
