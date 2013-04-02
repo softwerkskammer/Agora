@@ -8,6 +8,10 @@ Current Build Status
 
 System requirements for installation
 --------------------
+It is a node.js project. Therefore you need node.js installed. We are currently using verion 0.8. 
+
+Get it from [http://nodejs.org](http://nodejs.org)
+
 Some modules are compiled during the installation. Therefore some software should be installed.
 
 * Python 2.7 in system path
