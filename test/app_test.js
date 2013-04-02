@@ -77,7 +77,7 @@ describe('The app itself', function () {
       .expect(302)
       .end(function (err, res) {
         res.header['location'].should.equal('/events/');
-        done();
+        done(err);
       });
   });
 

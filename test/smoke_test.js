@@ -32,7 +32,7 @@ describe('Server started in different process', function () {
   };
 
   afterEach(function (done) {
-    child.on("exit", function () {
+    child.on("exit", function () {  // this callback does not receive an error value
       done();
     });
     child.kill();
