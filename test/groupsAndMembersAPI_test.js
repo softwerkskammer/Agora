@@ -40,11 +40,11 @@ describe('Groups and Members API', function () {
       globalCallback(null, []);
     };
 
-    systemUnderTest.getUserWithHisGroups('nickname', function (member, subscribedLists) {
+    systemUnderTest.getUserWithHisGroups('nickname', function (err, member, subscribedLists) {
       expect(member).to.be.null;
       expect(subscribedLists).to.not.be.null;
       expect(subscribedLists.length).to.equal(0);
-      done();
+      done(err);
     });
   });
 
@@ -56,24 +56,23 @@ describe('Groups and Members API', function () {
       globalCallback(null, [GroupA, GroupB]);
     };
 
-    systemUnderTest.getUserWithHisGroups('nickname', function (member, subscribedGroups) {
+    systemUnderTest.getUserWithHisGroups('nickname', function (err, member, subscribedGroups) {
       expect(member).to.equal(dummymember);
       expect(subscribedGroups).to.not.be.null;
       expect(subscribedGroups.length).to.equal(2);
       expect(subscribedGroups[0]).to.equal(GroupA);
       expect(subscribedGroups[1]).to.equal(GroupB);
-      done();
+      done(err);
     });
   });
 
   it('returns null as group and an empty list of subscribed users when there is no group and no sympa-list', function (done) {
 
     systemUnderTest.getGroupAndUsersOfList('unbekannteListe', function (err, group, users) {
-      expect(err).to.be.null;
       expect(group).to.be.null;
       expect(users).to.not.be.null;
       expect(users.length).to.equal(0);
-      done();
+      done(err);
     });
   });
 
@@ -84,11 +83,10 @@ describe('Groups and Members API', function () {
     };
 
     systemUnderTest.getGroupAndUsersOfList('sympaListWithoutGroup', function (err, group, users) {
-      expect(err).to.be.null;
       expect(group).to.be.null;
       expect(users).to.not.be.null;
       expect(users.length).to.equal(0);
-      done();
+      done(err);
     });
   });
 
@@ -98,11 +96,10 @@ describe('Groups and Members API', function () {
     };
 
     systemUnderTest.getGroupAndUsersOfList('GroupA', function (err, group, users) {
-      expect(err).to.be.null;
       expect(group).to.equal(GroupA);
       expect(users).to.not.be.null;
       expect(users.length).to.equal(0);
-      done();
+      done(err);
     });
   });
 

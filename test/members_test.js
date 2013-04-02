@@ -11,16 +11,6 @@ var Member = require('../lib/members/member');
 
 var dummymember = new Member('hada', 'hada', 'Hans', 'Dampf', 'hans.dampf@gmail.com', '@hada', 'Süden', 'Entwickler', 'ada', 'http://my.blog', 'beim Bier');
 
-// will eventually be removed:
-var storeStub = {
-  allMembers: function (callback) {
-    callback(null, [dummymember]);
-  },
-  getMember : function (nickname, callback) {
-    callback(null, dummymember);
-  }
-};
-
 var groupsAPIStub = {
   getSubscribedGroupsForUser: function (email, callback) {
     callback(null, []);
@@ -37,6 +27,9 @@ var ensureLoggedInStub = {
 };
 
 var membersAPIStub = {
+  allMembers: function (callback) {
+    callback(null, [dummymember]);
+  },
   getMember: function (nickname, callback) {
     callback(null, dummymember);
   }
@@ -52,8 +45,8 @@ var groupsAndMembers = proxyquire('../lib/groupsAndMembers/groupsAndMembersAPI',
 });
 
 var memberApp = proxyquire('../lib/members', {
-  './memberstore'                          : function () {
-    return storeStub;
+  './membersAPI'                          : function () {
+    return membersAPIStub;
   },
   '../groupsAndMembers/groupsAndMembersAPI': groupsAndMembers,
   'connect-ensure-login'                   : ensureLoggedInStub
@@ -66,14 +59,14 @@ var app = memberApp(express(), { get: function () {
 describe('Members application', function () {
 
   it('shows the list of members as retrieved from the membersstore', function (done) {
-    var allMembers = sinon.spy(storeStub, 'allMembers');
+    var allMembers = sinon.spy(membersAPIStub, 'allMembers');
     request(app)
       .get('/')
       .expect(200)
       .expect(/href="hada"/)
-      .expect(/hans.dampf@gmail.com/, function () {
+      .expect(/hans.dampf@gmail.com/, function (err) {
         allMembers.calledOnce.should.be.ok;
-        done();
+        done(err);
       });
   });
 
@@ -109,11 +102,10 @@ describe('Members application', function () {
     request(app)
       .get('/' + nickname)
       .expect(200)
-      .expect(/Blog: http:\/\/my.blog/)
-      .expect(/Wie ich von der Softwerkskammer erfahren habe: beim Bier/, function () {
+      .expect(/Blog: http:\/\/my.blog/, function (err) {
         getMember.calledWith(nickname).should.be.true;
         getSubscribedGroupsForUser.calledWith(email).should.be.true;
-        done();
+        done(err);
       });
   });
 });
