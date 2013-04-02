@@ -40,11 +40,11 @@ describe('Groups and Members API', function () {
       globalCallback(null, []);
     };
 
-    systemUnderTest.getUserWithHisGroups('nickname', function (member, subscribedLists) {
+    systemUnderTest.getUserWithHisGroups('nickname', function (err, member, subscribedLists) {
       expect(member).to.be.null;
       expect(subscribedLists).to.not.be.null;
       expect(subscribedLists.length).to.equal(0);
-      done();
+      done(err);
     });
   });
 
@@ -56,13 +56,13 @@ describe('Groups and Members API', function () {
       globalCallback(null, [GroupA, GroupB]);
     };
 
-    systemUnderTest.getUserWithHisGroups('nickname', function (member, subscribedGroups) {
+    systemUnderTest.getUserWithHisGroups('nickname', function (err, member, subscribedGroups) {
       expect(member).to.equal(dummymember);
       expect(subscribedGroups).to.not.be.null;
       expect(subscribedGroups.length).to.equal(2);
       expect(subscribedGroups[0]).to.equal(GroupA);
       expect(subscribedGroups[1]).to.equal(GroupB);
-      done();
+      done(err);
     });
   });
 
