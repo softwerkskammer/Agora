@@ -71,9 +71,9 @@ describe('Members application', function () {
       .get('/')
       .expect(200)
       .expect(/href="hada"/)
-      .expect(/hans.dampf@gmail.com/, function () {
+      .expect(/hans.dampf@gmail.com/, function (err) {
         allMembers.calledOnce.should.be.ok;
-        done();
+        done(err);
       });
   });
 
@@ -109,11 +109,10 @@ describe('Members application', function () {
     request(app)
       .get('/' + nickname)
       .expect(200)
-      .expect(/Blog: http:\/\/my.blog/)
-      .expect(/Wie ich von der Softwerkskammer erfahren habe: beim Bier/, function () {
+      .expect(/Blog: http:\/\/my.blog/, function (err) {
         getMember.calledWith(nickname).should.be.true;
         getSubscribedGroupsForUser.calledWith(email).should.be.true;
-        done();
+        done(err);
       });
   });
 });

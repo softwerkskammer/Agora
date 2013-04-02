@@ -19,7 +19,7 @@ describe('The persistence store', function () {
 
   var clearStore = function (done) {
     createTeststore().drop(function () {
-      done();
+      done(); // here we can ignore errors
     });
   };
 
@@ -31,7 +31,7 @@ describe('The persistence store', function () {
   it('retrieves none for non-existing id', function (done) {
     persistence.getById('non-existing-id', function (err, result) {
       should.not.exist(result);
-      done();
+      done(err);
     });
   });
 
@@ -40,7 +40,7 @@ describe('The persistence store', function () {
       persistence.getById('toPersist', function (err, result) {
         result.id.should.equal('toPersist');
         result.name.should.equal('Heinz');
-        done();
+        done(err);
       });
     });
   });
@@ -48,7 +48,7 @@ describe('The persistence store', function () {
   it('retrieves an empty list when no data is inserted', function (done) {
     persistence.list(function (err, result) {
       result.length.should.equal(0);
-      done();
+      done(err);
     });
   });
 
@@ -57,7 +57,7 @@ describe('The persistence store', function () {
       persistence.list(function (err, result) {
         result.length.should.equal(1);
         result[0].name.should.equal('Heinz');
-        done();
+        done(err);
       });
     });
   });

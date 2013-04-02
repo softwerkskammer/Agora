@@ -69,11 +69,10 @@ describe('Groups and Members API', function () {
   it('returns null as group and an empty list of subscribed users when there is no group and no sympa-list', function (done) {
 
     systemUnderTest.getGroupAndUsersOfList('unbekannteListe', function (err, group, users) {
-      expect(err).to.be.null;
       expect(group).to.be.null;
       expect(users).to.not.be.null;
       expect(users.length).to.equal(0);
-      done();
+      done(err);
     });
   });
 
@@ -84,11 +83,10 @@ describe('Groups and Members API', function () {
     };
 
     systemUnderTest.getGroupAndUsersOfList('sympaListWithoutGroup', function (err, group, users) {
-      expect(err).to.be.null;
       expect(group).to.be.null;
       expect(users).to.not.be.null;
       expect(users.length).to.equal(0);
-      done();
+      done(err);
     });
   });
 
@@ -98,11 +96,10 @@ describe('Groups and Members API', function () {
     };
 
     systemUnderTest.getGroupAndUsersOfList('GroupA', function (err, group, users) {
-      expect(err).to.be.null;
       expect(group).to.equal(GroupA);
       expect(users).to.not.be.null;
       expect(users.length).to.equal(0);
-      done();
+      done(err);
     });
   });
 
