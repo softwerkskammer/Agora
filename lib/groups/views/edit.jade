@@ -1,0 +1,21 @@
+extends ../../../views/layout
+
+block title
+  | Gruppe bearbeiten
+block content
+  h1 Gruppe bearbeiten
+
+  mixin text(name, label)
+    div
+      label #{label}:
+      input(id=name, type='text', name=name, value=group[name])
+
+  div#userform
+    form(action='submit',method='post')
+      mixin text('id', 'Name')
+      mixin text('longName', 'Titel')
+      mixin text('description', 'Beschreibung')
+      mixin text('type', 'Gruppenart')
+
+      div
+        input(type="submit", value="Speichern")

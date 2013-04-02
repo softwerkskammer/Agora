@@ -36,18 +36,18 @@ var ensureLoggedInStub = {
   }
 };
 
-var membersInternalAPIStub = {
+var membersAPIStub = {
   getMember: function (nickname, callback) {
     callback(null, dummymember);
   }
 };
 
 var groupsAndMembers = proxyquire('../lib/groupsAndMembers/groupsAndMembersAPI', {
-  '../groups/groupsAPI'   : function () {
+  '../groups/groupsAPI'  : function () {
     return groupsAPIStub;
   },
-  '../members/internalAPI': function () {
-    return membersInternalAPIStub;
+  '../members/membersAPI': function () {
+    return membersAPIStub;
   }
 });
 
@@ -58,7 +58,10 @@ var memberApp = proxyquire('../lib/members', {
   '../groupsAndMembers/groupsAndMembersAPI': groupsAndMembers,
   'connect-ensure-login'                   : ensureLoggedInStub
 });
-var app = memberApp(express());
+
+var app = memberApp(express(), { get: function () {
+  return null;
+} });   // empty config
 
 describe('Members application', function () {
 
@@ -82,7 +85,7 @@ describe('Members application', function () {
       .expect(/href="hada"/, done);
   });
 
-  it.skip('renders the link for two parent dirs', function (done) {
+  it('renders the link for two parent dirs', function (done) {
     var root = express();
     root.use('/foo/bar', app);
     request(root)
@@ -90,7 +93,7 @@ describe('Members application', function () {
       .expect(/href="hada"/, done);
   });
 
-  it.skip('renders the link for a get request with parameters', function (done) {
+  it('renders the link for a get request with parameters', function (done) {
     var root = express();
     root.use('/foo', app);
     request(root)
@@ -98,10 +101,10 @@ describe('Members application', function () {
       .expect(/href="hada"/, done);
   });
 
-  it('shows the details of one members as retrieved from the membersstore', function (done) {
+  it('shows the details of one member as retrieved from the membersstore', function (done) {
     var nickname = dummymember.nickname,
       email = dummymember.email,
-      getMember = sinon.spy(membersInternalAPIStub, 'getMember'),
+      getMember = sinon.spy(membersAPIStub, 'getMember'),
       getSubscribedGroupsForUser = sinon.spy(groupsAPIStub, 'getSubscribedGroupsForUser');
     request(app)
       .get('/' + nickname)

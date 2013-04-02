@@ -13,10 +13,9 @@ block content
   p Beruf: #{member.profession}
   p Interessenschwerpunkte: #{member.interests}
   p Website / Blog: #{member.site}
-  p Wie ich von der Softwerkskammer erfahren habe: #{member.reference}
 
 
   h2 Mitglied in:
   ul
-    each list in subscribedLists
-        li= list.longName
+    each group in subscribedGroups
+      li: .group: strong: a(href='../groups/#{group.id}') #{group.longName}
