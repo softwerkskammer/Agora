@@ -16,9 +16,7 @@ block content
   div#userform
     form(action='submit',method='post')
       - if (user.registered)
-        div
-          label #{'Nickname'}:
-          input(id='nickname', type='text', name='nickname', value=member.nickname, readonly=true)
+        div #{'Nickname'}: #{member.nickname}
       - else
         mixin text('nickname', 'Nickname')
       mixin text('firstname', 'Vorname')
