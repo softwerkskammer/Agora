@@ -101,7 +101,7 @@ describe('Members application', function () {
       .expect(/href="hada"/, done);
   });
 
-  it('shows the details of one members as retrieved from the membersstore', function (done) {
+  it('shows the details of one member as retrieved from the membersstore', function (done) {
     var nickname = dummymember.nickname,
       email = dummymember.email,
       getMember = sinon.spy(membersAPIStub, 'getMember'),
