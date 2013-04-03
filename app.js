@@ -2,7 +2,8 @@
 
 var express = require('express'),
   http = require('http'),
-  path = require('path');
+  path = require('path'),
+  winston = require('winston');
 
 function ensureRequestedUrlEndsWithSlash(req, res, next) {
   function endsWithSlash(string) {
@@ -13,6 +14,40 @@ function ensureRequestedUrlEndsWithSlash(req, res, next) {
     return res.redirect(req.url + '/');
   }
   next();
+}
+
+function initWinston(conf) {
+  winston.loggers.add('application', {
+    console: {
+      colorize: true,
+      timestamp: true,
+      level: conf.get('logging:application:consoleLevel')
+    },
+    file: {
+      timestamp: true,
+      json: false,
+      filename: conf.get('logging:application:filename'),
+      maxsize: conf.get('logging:application:maxSize'),
+      maxFiles: conf.get('logging:application:maxFiles'),
+      level: conf.get('logging:application:fileLevel')
+    }
+  });
+
+  winston.loggers.add('http', {
+    console: {
+      colorize: true,
+      timestamp: true,
+      level: conf.get('logging:http:consoleLevel')
+    },
+    file: {
+      timestamp: true,
+      json: false,
+      filename: conf.get('logging:http:filename'),
+      maxsize: conf.get('logging:http:maxSize'),
+      maxFiles: conf.get('logging:http:maxFiles'),
+      level: conf.get('logging:http:fileLevel')
+    }
+  });
 }
 
 function useApp(parent, url, conf, factory) {
@@ -26,6 +61,18 @@ function useApp(parent, url, conf, factory) {
 module.exports = function (conf) {
   var authentication = require('./lib/authentication')(conf),
     urlPrefix = conf.get('publicUrlPrefix');
+
+  // initialize winston and two concrete loggers
+  initWinston(conf);
+  var appLogger = winston.loggers.get('application');
+  var httpLogger = winston.loggers.get('http');
+
+  // stream the log messages of express to winston, remove line breaks on  message
+  var winstonStream = {
+    write: function (message) {
+      httpLogger.info(message.replace(/(\r\n|\n|\r)/gm, ""));
+    }
+  };
 
   function newUserMustFillInRegistration(req, res, next) {
     var urlNew = '/members/new';
@@ -47,7 +94,7 @@ module.exports = function (conf) {
         app.set('view engine', 'jade');
         app.set('views', path.join(__dirname, 'views'));
         app.use(express.favicon());
-        app.use(express.logger('dev'));
+        app.use(express.logger({stream: winstonStream}));
         app.use(express.cookieParser());
         app.use(express.bodyParser());
         app.use(express.methodOverride());
@@ -74,7 +121,7 @@ module.exports = function (conf) {
       var app = this.create();
       this.server = http.createServer(app);
       this.server.listen(port, function () {
-        console.log('Server running at port ' + port);
+        appLogger.info('Server running at port ' + port);
         if (done) {
           done();
         }
@@ -83,7 +130,7 @@ module.exports = function (conf) {
 
     stop: function (done) {
       this.server.close(function () {
-        console.log('Server stopped');
+        appLogger.info('Server stopped');
         if (done) {
           done();
         }
