@@ -1,6 +1,7 @@
 /*global describe, it */
 "use strict";
-var proxyquire = require('proxyquire');
+var proxyquire = require('proxyquire'),
+  sinon = require('sinon');
 
 var expect = require('chai').expect;
 
@@ -8,6 +9,7 @@ var Group = require('../lib/groups/group');
 
 var GroupA = new Group('GroupA', 'Gruppe A', 'Dies ist Gruppe A.', 'Themengruppe');
 var GroupB = new Group('GroupB', 'Gruppe B', 'Dies ist Gruppe B.', 'Regionalgruppe');
+var NonPersistentGroup = new Group('GroupC', 'Gruppe C', 'Dies ist Gruppe C.', 'Regionalgruppe');
 
 var groupstoreStub = {
   allGroups: function (callback) { callback(null, [GroupA, GroupB]); },
@@ -19,10 +21,12 @@ var groupstoreStub = {
     } else {
       callback(null, null);
     }
-  }
+  },
+  saveGroup: function (group, callback) { callback(null, group); }
 };
 
 var sympaStub = {
+  createList: function (err, callback) { callback(); },
   getSubscribedListsForUser: function () {},
   getAllAvailableLists: function () {},
   getUsersOfList: function () {}
@@ -148,10 +152,68 @@ describe('Groups API', function () {
     });
   });
 
-  it('returns the group if there is a group with the given name (without email suffix)', function (done) {
+  it('returns the group if there is a group with the given name', function (done) {
 
     systemUnderTest.getGroup('GroupA', function (err, group) {
       expect(group).to.equal(GroupA);
+      done(err);
+    });
+  });
+
+
+  it('creates a new group by calling the appropriate sympa function', function (done) {
+    var createListSpy = sinon.spy(sympaStub, 'createList');
+    var saveGroupSpy = sinon.spy(groupstoreStub, 'saveGroup');
+
+    systemUnderTest.createGroup(NonPersistentGroup, function (err, group) {
+      expect(group).to.equal(NonPersistentGroup);
+      expect(createListSpy.calledOnce).to.be.true;
+      expect(saveGroupSpy.calledOnce).to.be.true;
+
+      sympaStub.createList.restore();
+      groupstoreStub.saveGroup.restore();
+      done(err);
+    });
+  });
+
+  it('saves a group by calling the appropriate groupstore function', function (done) {
+    var saveGroupSpy = sinon.spy(groupstoreStub, 'saveGroup');
+
+    systemUnderTest.saveGroup(GroupA, function (err, group) {
+      expect(group).to.equal(GroupA);
+      expect(saveGroupSpy.calledOnce).to.be.true;
+
+      groupstoreStub.saveGroup.restore();
+      done(err);
+    });
+  });
+
+  it('creates a new group and saves it if there is no group with the given name', function (done) {
+    var createListSpy = sinon.spy(sympaStub, 'createList');
+    var saveGroupSpy = sinon.spy(groupstoreStub, 'saveGroup');
+
+    systemUnderTest.createOrSaveGroup(NonPersistentGroup, function (err, group) {
+      expect(group).to.equal(NonPersistentGroup);
+      expect(createListSpy.calledOnce).to.be.true;
+      expect(saveGroupSpy.calledOnce).to.be.true;
+
+      sympaStub.createList.restore();
+      groupstoreStub.saveGroup.restore();
+      done(err);
+    });
+  });
+
+  it('only saves the group if there already exists a group with the given name', function (done) {
+    var createListSpy = sinon.spy(sympaStub, 'createList');
+    var saveGroupSpy = sinon.spy(groupstoreStub, 'saveGroup');
+
+    systemUnderTest.createOrSaveGroup(GroupA, function (err, group) {
+      expect(group).to.equal(GroupA);
+      expect(createListSpy.called).to.be.false;
+      expect(saveGroupSpy.calledOnce).to.be.true;
+
+      sympaStub.createList.restore();
+      groupstoreStub.saveGroup.restore();
       done(err);
     });
   });
