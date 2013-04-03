@@ -32,7 +32,7 @@ describe('Members store', function () {
     store().getMember('nick', function (err, member) {
       member.nickname.should.equal(sampleMember.nickname);
       getByField.calledWith({nickname: 'nick'}).should.be.true;
-      done();
+      done(err);
     });
   });
 
@@ -43,7 +43,7 @@ describe('Members store', function () {
     store().allMembers(function (err, members) {
       members[0].nickname.should.equal(sampleMember.nickname);
       members[1].nickname.should.equal(sampleMember2.nickname);
-      done();
+      done(err);
     });
   });
 
@@ -51,9 +51,9 @@ describe('Members store', function () {
     var save = sinon.stub(persistenceStub, 'save');
     save.callsArg(1);
 
-    store().saveMember(sampleMember, function () {
+    store().saveMember(sampleMember, function (err) {
       save.calledWith(sampleMember).should.be.true;
-      done();
+      done(err);
     });
   });
 

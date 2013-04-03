@@ -1,3 +1,3 @@
 #!/bin/sh
-# set application variables from the config files inside the config folder
+# set application variables in the config files inside the config folder
 node start.js
