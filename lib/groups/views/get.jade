@@ -12,3 +12,17 @@ block content
     ul
         each member in users
             li #{member.firstname} #{member.lastname}
+
+    - if (userIsRegistered)
+      - if (userIsGroupMember)
+        div#userform
+          form(action='removeUserFromGroup',method='post')
+            input(id='group', type='hidden', name='group', value=group)
+            div
+              input(type='submit', value="Abmelden")
+      - else
+        div#userform
+          form(action='addUserToGroup',method='post')
+            input(id='group', type='hidden', name='group', value=group)
+            div
+              input(type='submit', value="Eintragen")
