@@ -18,7 +18,8 @@ var groupsAPIStub = {
 };
 
 var groupsAndMembersAPIStub = {
-  getGroupAndUsersOfList: function () {}
+  getGroupAndUsersOfList: function () {},
+  userIsInMemberList: function () {}
 };
 
 var groupsApp = proxyquire('../lib/groups', {
