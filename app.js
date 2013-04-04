@@ -22,7 +22,6 @@ function createLogger(loggerName, conf) {
   winston.loggers.add(loggerName, {
     console: {
       colorize: true,
-      timestamp: true,
       level: conf.get(confPrefix + ':consoleLevel')
     }
   });
