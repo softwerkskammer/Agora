@@ -20,18 +20,10 @@ nconf.defaults({
   secret          : "secret",
   'logging': {
     'application': {
-      'filename': 'log/server.log',
-      'maxSize': '10485760',
-      'maxFiles': '5',
-      'consoleLevel': 'info',
-      'fileLevel': 'info'
+      'consoleLevel': 'info'
     },
     'http': {
-      'filename': 'log/http.log',
-      'maxSize': '10485760',
-      'maxFiles': '5',
-      'consoleLevel': 'warn',
-      'fileLevel': 'info'
+      'consoleLevel': 'warn'
     }
   }
 });

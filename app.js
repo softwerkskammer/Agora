@@ -16,38 +16,35 @@ function ensureRequestedUrlEndsWithSlash(req, res, next) {
   next();
 }
 
-function initWinston(conf) {
-  winston.loggers.add('application', {
+function createLogger(loggerName, conf) {
+  var confPrefix = 'logging:' + loggerName;
+
+  winston.loggers.add(loggerName, {
     console: {
       colorize: true,
       timestamp: true,
-      level: conf.get('logging:application:consoleLevel')
-    },
-    file: {
-      timestamp: true,
-      json: false,
-      filename: conf.get('logging:application:filename'),
-      maxsize: conf.get('logging:application:maxSize'),
-      maxFiles: conf.get('logging:application:maxFiles'),
-      level: conf.get('logging:application:fileLevel')
+      level: conf.get(confPrefix + ':consoleLevel')
     }
   });
 
-  winston.loggers.add('http', {
-    console: {
-      colorize: true,
-      timestamp: true,
-      level: conf.get('logging:http:consoleLevel')
-    },
-    file: {
+  var filename = conf.get(confPrefix + ':filename');
+
+  if (typeof filename !== 'undefined') {
+    var logger = winston.loggers.get(loggerName);
+    logger.add(winston.transports.File, {
       timestamp: true,
       json: false,
-      filename: conf.get('logging:http:filename'),
-      maxsize: conf.get('logging:http:maxSize'),
-      maxFiles: conf.get('logging:http:maxFiles'),
-      level: conf.get('logging:http:fileLevel')
-    }
-  });
+      filename: filename,
+      maxsize: conf.get(confPrefix + ':maxSize'),
+      maxFiles: conf.get(confPrefix + ':maxFiles'),
+      level: conf.get(confPrefix + ':fileLevel')
+    });
+  }
+}
+
+function initWinston(conf) {
+  createLogger('application', conf);
+  createLogger('http', conf);
 }
 
 function useApp(parent, url, conf, factory) {
