@@ -10,5 +10,5 @@ block content
 
     h2 Mitglieder der Gruppe:
     ul
-        each item in users
-            li= item
+        each member in users
+            li #{member.firstname} #{member.lastname}
