@@ -1,9 +1,14 @@
 extends ../../../views/layout
 
+
 block title
-  | Gruppe bearbeiten
+  | Gruppe
+
 block content
-  h1 Gruppe bearbeiten
+  - if (group.isValid())
+    h1 Gruppe bearbeiten
+  - else
+    h1 Gruppe anlegen
 
   mixin text(name, label)
     div
@@ -21,4 +26,7 @@ block content
       mixin text('type', 'Gruppenart')
 
       div
-        input(type="submit", value="Speichern")
+        - if (group.isValid())
+          input(type="submit", value="Speichern")
+        - else
+          input(type="submit", value="Anlegen")
