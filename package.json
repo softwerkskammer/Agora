@@ -27,7 +27,8 @@
     "passport" : "~0.1.16",
     "passport-openid" : "~0.3.1",
     "passport-github" : "~0.1.3",
-    "connect-ensure-login" : "git://github.com/leider/connect-ensure-login.git#master"
+    "connect-ensure-login" : "git://github.com/leider/connect-ensure-login.git#master",
+    "winston": "~0.6.2"
   },
   "devDependencies": {
     "grunt": "~0.4",

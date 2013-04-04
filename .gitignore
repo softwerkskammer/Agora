@@ -10,4 +10,4 @@ lib/persistence/memberstore/
 lib/persistence/teststore/
 config/*.json
 !config/example-*.json
-
+log/*.log
