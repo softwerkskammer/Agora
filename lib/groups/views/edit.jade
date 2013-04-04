@@ -19,6 +19,7 @@ block content
     form(action='submit',method='post')
       - if (group.isValid())
         div #{'Name'}: #{group.id}
+        input(id='id', type='hidden', name='id', value=group['id'])
       - else
         mixin text('id', 'Name')
       mixin text('longName', 'Titel')
