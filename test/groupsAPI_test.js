@@ -218,4 +218,30 @@ describe('Groups API', function () {
     });
   });
 
+  it('returns a new Group object if there is no valid group data', function (done) {
+    var result = systemUnderTest.groupFromObject({});
+
+    expect(result).to.be.not.null;
+    expect(result).to.be.instanceOf(Group);
+    expect(result.id).to.be.undefined;
+    expect(result.longName).to.be.undefined;
+    expect(result.description).to.be.undefined;
+    expect(result.type).to.be.undefined;
+    done();
+  });
+
+  it('returns a valid Group object if there is valid group data', function (done) {
+    var result = systemUnderTest.groupFromObject({ id: 'craftsmanswap', longName: 'Craftsman Swaps',
+      description: 'A group for organizing CS',
+      type: 'Themengruppe' });
+
+    expect(result).to.be.not.null;
+    expect(result).to.be.instanceOf(Group);
+    expect(result.id).to.equal('craftsmanswap');
+    expect(result.longName).to.equal('Craftsman Swaps');
+    expect(result.description).to.equal('A group for organizing CS');
+    expect(result.type).to.equal('Themengruppe');
+    done();
+  });
+
 });
