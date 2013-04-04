@@ -110,4 +110,16 @@ describe('Groups application', function () {
       .expect('Content-Type', /text\/plain/)
       .expect('Moved Temporarily. Redirecting to /null/groups/GroupA', done);
   });
+
+
+  it('redirects to the groups overview page if the group to save is not valid', function (done) {
+    groupsAPIStub.groupFromObject = function () { return new Group(); };
+
+    request(app)
+      .post('/edit/submit')
+      .expect(302)
+      .expect('Content-Type', /text\/plain/)
+      .expect('Moved Temporarily. Redirecting to /null/groups/', done);
+  });
+
 });
