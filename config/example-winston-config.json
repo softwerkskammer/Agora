@@ -1,0 +1,19 @@
+// to use these values, strip "example-" from the filename, delete this comment and replace the below values
+{
+  "logging": {
+    "application": {
+      "filename": "log/server.log",
+      "maxFiles": 5,
+      "maxSize": 10485760,
+      "consoleLevel": "info",
+      "fileLevel": "info"
+    },
+    "http": {
+      "filename": "log/http.log",
+      "maxFiles": 5,
+      "maxSize": 10485760,
+      "consoleLevel": "warn",
+      "fileLevel": "info"
+    }
+  }
+}
