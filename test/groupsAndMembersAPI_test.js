@@ -103,4 +103,33 @@ describe('Groups and Members API', function () {
     });
   });
 
+  it('returns false if the user id is undefined', function (done) {
+    var result = systemUnderTest.userIsInMemberList(undefined, [dummymember]);
+
+    expect(result).to.be.false;
+    done();
+  });
+
+  it('returns false if the member list is empty', function (done) {
+    var result = systemUnderTest.userIsInMemberList('hada', []);
+
+    expect(result).to.be.false;
+    done();
+  });
+
+  it('returns false if the user is not in the member list', function (done) {
+    var result = systemUnderTest.userIsInMemberList('trallala', [dummymember]);
+
+    expect(result).to.be.false;
+    done();
+  });
+
+  it('returns true if the user is in the member list', function (done) {
+    var result = systemUnderTest.userIsInMemberList('hada', [dummymember]);
+
+    expect(result).to.be.true;
+    done();
+  });
+
+
 });

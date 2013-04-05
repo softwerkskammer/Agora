@@ -1,9 +1,14 @@
 extends ../../../views/layout
 
+
 block title
-  | Gruppe bearbeiten
+  | Gruppe
+
 block content
-  h1 Gruppe bearbeiten
+  - if (group.isValid())
+    h1 Gruppe bearbeiten
+  - else
+    h1 Gruppe anlegen
 
   mixin text(name, label)
     div
@@ -12,10 +17,17 @@ block content
 
   div#userform
     form(action='submit',method='post')
-      mixin text('id', 'Name')
+      - if (group.isValid())
+        div #{'Name'}: #{group.id}
+        input(id='id', type='hidden', name='id', value=group['id'])
+      - else
+        mixin text('id', 'Name')
       mixin text('longName', 'Titel')
       mixin text('description', 'Beschreibung')
       mixin text('type', 'Gruppenart')
 
       div
-        input(type="submit", value="Speichern")
+        - if (group.isValid())
+          input(type="submit", value="Speichern")
+        - else
+          input(type="submit", value="Anlegen")
