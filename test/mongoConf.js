@@ -3,7 +3,7 @@
 var nconf = require('nconf');
 
 function MongoConf() {
-  nconf.file('../config/mongo-config.json');
+  nconf.file('./config/mongo-config.json');
   nconf.defaults({
     mongoHost: 'localhost',
     mongoPort: '27017',
