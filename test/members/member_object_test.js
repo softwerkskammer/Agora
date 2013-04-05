@@ -1,7 +1,6 @@
 /*global describe, it */
 "use strict";
 var should = require('chai').should();
-var expect = require('chai').expect;
 
 var Member = require('../../lib/members/member');
 
@@ -11,7 +10,7 @@ describe('Member', function () {
     for (var name in member) {
       var property = member[name];
       if (typeof(property) !== 'function') {
-        should.not.exist(property);
+        should.not.exist(property, name);
       }
     }
     done();
@@ -25,9 +24,9 @@ describe('Member', function () {
       '"name": {"familyName": "Dampf","givenName": "Hans"}}}');
 
     member.updateWith(null, userdata);
-    member.firstname.should.equal("Hans");
-    member.lastname.should.equal("Dampf");
-    member.email.should.equal("hada@web.de");
+    member.firstname.should.equal("Hans", 'firstname');
+    member.lastname.should.equal("Dampf", 'lastname');
+    member.email.should.equal("hada@web.de", 'email');
     done();
   });
 
@@ -40,9 +39,9 @@ describe('Member', function () {
       '"_json" : { "html_url" :"https://github.com/hansdampf", "blog" : "http://hada.wordpress.com" }}}');
 
     member.updateWith(null, userdata);
-    should.not.exist(member.firstname);
-    should.not.exist(member.lastname);
-    member.site.should.equal("https://github.com/hansdampf, http://hada.wordpress.com");
+    should.not.exist(member.firstname, 'firstname');
+    should.not.exist(member.lastname, 'lastname');
+    member.site.should.equal("https://github.com/hansdampf, http://hada.wordpress.com", 'site');
 
     done();
   });
@@ -56,12 +55,12 @@ describe('Member', function () {
       lastname: 'User'
     };
     var member = new Member().updateWith(req_body, null);
-    expect(member.twitter, 'twitter').to.be.undefined;
-    expect(member.location, 'location').to.be.undefined;
-    expect(member.profession, 'profession').to.be.undefined;
-    expect(member.interests, 'interests').to.be.false; // TODO FIXME!!!
-    expect(member.site, 'site').to.be.undefined;
-    expect(member.reference, 'reference').to.be.undefined;
+    should.not.exist(member.twitter, 'twitter');
+    should.not.exist(member.location, 'location');
+    should.not.exist(member.profession, 'profession');
+    should.not.exist(member.interests, 'interest');
+    should.not.exist(member.site, 'site');
+    should.not.exist(member.reference, 'reference');
     done();
   });
 
