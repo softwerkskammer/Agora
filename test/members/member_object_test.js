@@ -1,6 +1,7 @@
 /*global describe, it */
 "use strict";
 var should = require('chai').should();
+var expect = require('chai').expect;
 
 var Member = require('../../lib/members/member');
 
@@ -43,6 +44,24 @@ describe('Member', function () {
     should.not.exist(member.lastname);
     member.site.should.equal("https://github.com/hansdampf, http://hada.wordpress.com");
 
+    done();
+  });
+
+  it('is populated with empty fields where no information is given', function (done) {
+    var req_body = {
+      id: 'testuser',
+      nickname: 'testuser',
+      email: 'mail@google.de',
+      firstname: 'Test',
+      lastname: 'User'
+    };
+    var member = new Member().updateWith(req_body, null);
+    expect(member.twitter, 'twitter').to.be.undefined;
+    expect(member.location, 'location').to.be.undefined;
+    expect(member.profession, 'profession').to.be.undefined;
+    expect(member.interests, 'interests').to.be.false; // TODO FIXME!!!
+    expect(member.site, 'site').to.be.undefined;
+    expect(member.reference, 'reference').to.be.undefined;
     done();
   });
 
