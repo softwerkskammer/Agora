@@ -15,7 +15,7 @@ block content
 
   mixin checkbox(groupId, groupName, subscribed)
     div
-      input(id=groupId, type='checkbox', name=groupId, value=groupName, checked=(subscribed===true ? "true" : undefined))
+      input(type='checkbox', name='newSubscriptions', value=groupId, checked=(subscribed===true ? "true" : undefined))
       | &nbsp; #{groupName}
 
   div#userform
