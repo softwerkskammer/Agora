@@ -48,7 +48,10 @@ function initWinston(conf) {
 
 function useApp(parent, url, conf, factory) {
   var child = factory(express(), conf);
-  child.locals({ baseUrl: url });
+  child.locals({
+    baseUrl: url,
+    pretty: true
+  });
   parent.get('/' + url, ensureRequestedUrlEndsWithSlash);
   parent.use('/' + url + '/', child);
   return child;
@@ -72,7 +75,17 @@ module.exports = function (conf) {
 
   function newUserMustFillInRegistration(req, res, next) {
     var urlNew = '/members/new';
-    if (req.originalUrl !== urlNew && req.originalUrl !== '/members/submit' && req.user && !req.user.registered) {
+    var originalUrl = req.originalUrl;
+
+    function isOK() {
+      return originalUrl !== urlNew &&
+        originalUrl !== '/members/submit' &&
+        !/.clientscripts./.test(originalUrl) &&
+        !/.stylesheets./.test(originalUrl) &&
+        !/.checknickname./.test(originalUrl);
+    }
+
+    if (req.user && !req.user.registered && isOK()) {
       return res.redirect(urlPrefix + urlNew);
     }
     next();
