@@ -1,22 +1,10 @@
-$(document).ready(function () {
+/* global $, document */
+"use strict";
+var member_validator;
 
-  if ($.mockjax) {
-    // mocking the ajax request
-    $.mockjax({
-      url: "/members/checknickname",
-      response: function (formdata) {
-        var nick = formdata.data.nickname.trim(),
-          nicknames = ["Nick", "Nack"];
-        this.responseText = "true";
-        if ($.inArray(nick, nicknames) !== -1) {
-          this.responseText = "false";
-        }
-      },
-      responseTime: 50
-    });
-  }
+var initValidator = function () {
 // validate signup form on keyup and submit
-  var validator = $("#memberform").validate({
+  member_validator = $("#memberform").validate({
     rules: {
       nickname: {
         required: true,
@@ -35,14 +23,11 @@ $(document).ready(function () {
     },
     messages: {
       nickname: {
-        remote: jQuery.validator.format("Dieser Nickname ist leider nicht verfügbar.")
+        remote: $.validator.format("Dieser Nickname ist leider nicht verfügbar.")
       }
     },
     errorPlacement: function (error, element) {
       error.appendTo(element.parent());
-    },
-    submitHandler: function () {
-      alert("submitted!");
     },
     // set this class to error-labels to indicate valid fields
     success: function (label) {
@@ -55,13 +40,13 @@ $(document).ready(function () {
     }
   });
 
-  validator.form();
+  member_validator.form();
 
   ['#nickname', '#lastname', '#firstname', "#email", "#profession", "#location", "#reference"].forEach(function (each) {
     $(each).keyup(function () {
-      validator.element(each);
+      member_validator.element(each);
     });
-  })
+  });
 
-})
-;
+};
+$(document).ready(initValidator);
