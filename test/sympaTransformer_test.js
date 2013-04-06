@@ -47,6 +47,41 @@ describe('Sympa-Transformer ', function () {
 
 
   it('transforms null to an empty array', function (done) {
+    var result = systemUnderTest.toArray(null);
+
+    expect(result).to.not.be.null;
+    expect(result.length).to.equal(0);
+    done();
+  });
+
+  it('transforms undefined to an empty array', function (done) {
+    var result = systemUnderTest.toArray(undefined);
+
+    expect(result).to.not.be.null;
+    expect(result.length).to.equal(0);
+    done();
+  });
+
+  it('transforms a single element to an array with that item', function (done) {
+    var result = systemUnderTest.toArray('Test');
+
+    expect(result).to.not.be.null;
+    expect(result.length).to.equal(1);
+    expect(result[0]).to.equal('Test');
+    done();
+  });
+
+  it('transforms an array to the same array', function (done) {
+    var result = systemUnderTest.toArray([ 'Test1', 'Test2' ]);
+
+    expect(result).to.not.be.null;
+    expect(result.length).to.equal(2);
+    expect(result[0]).to.equal('Test1');
+    expect(result[1]).to.equal('Test2');
+    done();
+  });
+
+  it('transforms a null input to an empty array', function (done) {
     var result = systemUnderTest.inputItemToArray(null);
 
     expect(result).to.not.be.null;
@@ -54,7 +89,7 @@ describe('Sympa-Transformer ', function () {
     done();
   });
 
-  it('transforms a null item to an empty array', function (done) {
+  it('transforms a null input item to an empty array', function (done) {
     var result = systemUnderTest.inputItemToArray({ item: null });
 
     expect(result).to.not.be.null;
@@ -62,7 +97,7 @@ describe('Sympa-Transformer ', function () {
     done();
   });
 
-  it('transforms a single item to an array with that item', function (done) {
+  it('transforms a single input item to an array with that item', function (done) {
     var result = systemUnderTest.inputItemToArray({ item: 'Test' });
 
     expect(result).to.not.be.null;
@@ -71,7 +106,7 @@ describe('Sympa-Transformer ', function () {
     done();
   });
 
-  it('transforms an array of items to the same array', function (done) {
+  it('transforms an array of input items to the same array', function (done) {
     var result = systemUnderTest.inputItemToArray({ item: [ 'Test1', 'Test2' ] });
 
     expect(result).to.not.be.null;
