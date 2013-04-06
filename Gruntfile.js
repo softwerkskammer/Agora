@@ -13,7 +13,7 @@ module.exports = function (grunt) {
       ' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */\n',
     // Task configuration.
     jshint: {
-      files: ['**/*.js*', '.jshintrc', '!node_modules/**/*.js*', '!public/**/*.js*'],
+      files: ['**/*.js*', '.jshintrc', '!node_modules/**/*.js*', '!public/**/*.js*', '!test/client/lib/**/*.js*'],
       options: {
         jshintrc: '.jshintrc'
       }
@@ -31,7 +31,7 @@ module.exports = function (grunt) {
         reporter: 'spec'
       },
 
-      all: { src: 'test/**/*.js' }
+      all: { src: ['test/**/*.js', '!test/client/**/*.js' ]}
     }
   });
 
