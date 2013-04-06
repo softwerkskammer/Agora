@@ -32,16 +32,21 @@ module.exports = function (grunt) {
       },
 
       all: { src: ['test/**/*.js', '!test/client/**/*.js' ]}
+    },
+    qunit: {
+      files: ['test/client/*.html']
     }
+
   });
 
   // These plugins provide necessary tasks.
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-mocha-hack');
+  grunt.loadNpmTasks('grunt-contrib-qunit');
 
   // Default task.
-  grunt.registerTask('default', ['jshint', 'mocha-hack']);
+  grunt.registerTask('default', ['jshint', 'mocha-hack', 'qunit']);
 
   // Travis-CI task
   grunt.registerTask('travis', ['default']);
