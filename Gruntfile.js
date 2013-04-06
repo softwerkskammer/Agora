@@ -13,7 +13,7 @@ module.exports = function (grunt) {
       ' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */\n',
     // Task configuration.
     jshint: {
-      files: ['**/*.js*', '.jshintrc', '!node_modules/**/*.js*', '!public/**/*.js*'],
+      files: ['**/*.js*', '.jshintrc', '!node_modules/**/*.js*', '!public/**/*.js*', '!test/client/lib/**/*.js*'],
       options: {
         jshintrc: '.jshintrc'
       }
@@ -31,17 +31,22 @@ module.exports = function (grunt) {
         reporter: 'spec'
       },
 
-      all: { src: 'test/**/*.js' }
+      all: { src: ['test/**/*.js', '!test/client/**/*.js' ]}
+    },
+    qunit: {
+      files: ['test/client/*.html']
     }
+
   });
 
   // These plugins provide necessary tasks.
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-mocha-hack');
+  grunt.loadNpmTasks('grunt-contrib-qunit');
 
   // Default task.
-  grunt.registerTask('default', ['jshint', 'mocha-hack']);
+  grunt.registerTask('default', ['jshint', 'mocha-hack', 'qunit']);
 
   // Travis-CI task
   grunt.registerTask('travis', ['default']);

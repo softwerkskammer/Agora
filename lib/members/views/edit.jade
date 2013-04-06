@@ -1,5 +1,12 @@
 extends ../../../views/layout
 
+block scripts
+  script(src="/clientscripts/jquery-1.9.1.js")
+  script(src="/clientscripts/jquery.validate-1.11.1.js")
+  script(src="/clientscripts/messages_de.js")
+  script(src="/clientscripts/check-memberform.js")
+
+
 block title
   | Profil bearbeiten
 block content
@@ -14,7 +21,7 @@ block content
       input(id=name, type='text', name=name, value=member[name])
 
   div#userform
-    form(action='submit',method='post')
+    form(id='memberform', action='submit',method='post')
       - if (user.registered)
         div #{'Nickname'}: #{member.nickname}
       - else
