@@ -36,8 +36,8 @@ block content
 
       h2 Gruppenmitgliedschaft
       ul
-        each group in availableGroups
-          mixin checkbox(group.id, group.longName, false)
+        each markedGroup in markedGroups
+          mixin checkbox(markedGroup.group.id, markedGroup.group.longName, markedGroup.selected)
 
       div
         input(type="submit", value="Submit")

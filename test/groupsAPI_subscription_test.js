@@ -5,6 +5,10 @@ var proxyquire = require('proxyquire'),
 
 var expect = require('chai').expect;
 
+var Group = require('../lib/groups/group');
+
+var GroupA = new Group('GroupA', 'Gruppe A', 'Dies ist Gruppe A.', 'Themengruppe');
+var GroupB = new Group('GroupB', 'Gruppe B', 'Dies ist Gruppe B.', 'Regionalgruppe');
 
 var groupstoreStub = {
 };
@@ -176,5 +180,63 @@ describe('Groups API (Subscriptions)', function () {
 
       done(err);
     });
+  });
+
+  it('combines no subscribed and no available groups to an empty array', function (done) {
+    var result = systemUnderTest.combineSubscribedAndAvailableGroups([], []);
+
+    expect(result).to.be.not.null;
+    expect(result.length).to.equal(0);
+    done();
+  });
+
+  it('combines some subscribed but no available groups to an empty array', function (done) {
+    var result = systemUnderTest.combineSubscribedAndAvailableGroups([GroupA, GroupB], []);
+
+    expect(result).to.be.not.null;
+    expect(result.length).to.equal(0);
+    done();
+  });
+
+  it('combines no subscribed and one available group to indicate an unselected group', function (done) {
+    var result = systemUnderTest.combineSubscribedAndAvailableGroups([], [GroupA]);
+
+    expect(result).to.be.not.null;
+    expect(result.length).to.equal(1);
+    expect(result[0].group, 'group').to.equal(GroupA);
+    expect(result[0].selected, 'selected').to.be.false;
+    done();
+  });
+
+  it('combines one subscribed and another available group to indicate an unselected group', function (done) {
+    var result = systemUnderTest.combineSubscribedAndAvailableGroups([GroupA], [GroupB]);
+
+    expect(result).to.be.not.null;
+    expect(result.length).to.equal(1);
+    expect(result[0].group, 'group').to.equal(GroupB);
+    expect(result[0].selected, 'selected').to.be.false;
+    done();
+  });
+
+  it('combines one subscribed and the same available group to indicate a selected group', function (done) {
+    var result = systemUnderTest.combineSubscribedAndAvailableGroups([GroupA], [GroupA]);
+
+    expect(result).to.be.not.null;
+    expect(result.length).to.equal(1);
+    expect(result[0].group, 'group').to.equal(GroupA);
+    expect(result[0].selected, 'selected').to.be.true;
+    done();
+  });
+
+  it('combines some subscribed and some available groups to indicate the correct selections', function (done) {
+    var result = systemUnderTest.combineSubscribedAndAvailableGroups([GroupA], [GroupA, GroupB]);
+
+    expect(result).to.be.not.null;
+    expect(result.length).to.equal(2);
+    expect(result[0].group, 'group').to.equal(GroupA);
+    expect(result[0].selected, 'selected').to.be.true;
+    expect(result[1].group, 'group').to.equal(GroupB);
+    expect(result[1].selected, 'selected').to.be.false;
+    done();
   });
 });
