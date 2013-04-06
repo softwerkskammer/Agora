@@ -54,7 +54,7 @@ describe('Groups API', function () {
   });
 
   it('returns one group for a user who is subscribed to one list', function (done) {
-    sympaStub.getSubscribedListsForUser = function (email, callback) { callback(null, [{ groupName: 'GroupA' }]); };
+    sympaStub.getSubscribedListsForUser = function (email, callback) { callback(null, ['GroupA']); };
 
     systemUnderTest.getSubscribedGroupsForUser('GroupAuser@softwerkskammer.de', function (err, validLists) {
       expect(validLists).to.not.be.null;
@@ -66,7 +66,7 @@ describe('Groups API', function () {
 
   it('returns two groups for a user who is subscribed to two lists', function (done) {
     sympaStub.getSubscribedListsForUser = function (email, callback) {
-      callback(null, [{ groupName: 'GroupA' }, { groupName: 'GroupB' }]);
+      callback(null, ['GroupA', 'GroupB']);
     };
 
     systemUnderTest.getSubscribedGroupsForUser('GroupAandBuser@softwerkskammer.de', function (err, validLists) {
@@ -89,7 +89,7 @@ describe('Groups API', function () {
   });
 
   it('returns an empty array of groups if there is one list defined in sympa but there is no matching group in Softwerkskammer', function (done) {
-    sympaStub.getAllAvailableLists = function (callback) { callback(null, [{ groupName: 'unknownGroup' }]); };
+    sympaStub.getAllAvailableLists = function (callback) { callback(null, ['unknownGroup']); };
 
     systemUnderTest.getAllAvailableGroups(function (err, lists) {
       expect(lists).to.not.be.null;
@@ -99,7 +99,7 @@ describe('Groups API', function () {
   });
 
   it('returns one group if there are two lists defined in sympa and there is one matching group in Softwerkskammer', function (done) {
-    sympaStub.getAllAvailableLists = function (callback) { callback(null, [{ groupName: 'GroupA' }, { groupName: 'unknownGroup' }]); };
+    sympaStub.getAllAvailableLists = function (callback) { callback(null, ['GroupA', 'unknownGroup']); };
 
     systemUnderTest.getAllAvailableGroups(function (err, lists) {
       expect(lists).to.not.be.null;
@@ -110,7 +110,7 @@ describe('Groups API', function () {
   });
 
   it('returns two groups if there are two lists defined in sympa and there are two matching groups in Softwerkskammer', function (done) {
-    sympaStub.getAllAvailableLists = function (callback) { callback(null, [{ groupName: 'GroupA' }, { groupName: 'GroupB' }]); };
+    sympaStub.getAllAvailableLists = function (callback) { callback(null, ['GroupA', 'GroupB']); };
 
     systemUnderTest.getAllAvailableGroups(function (err, lists) {
       expect(lists).to.not.be.null;

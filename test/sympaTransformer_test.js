@@ -24,7 +24,7 @@ describe('Sympa-Transformer ', function () {
 
     expect(result).to.not.be.null;
     expect(result.length).to.equal(1);
-    expect(result[0].groupName).to.equal('list');
+    expect(result[0]).to.equal('list');
     done();
   });
 
@@ -38,10 +38,10 @@ describe('Sympa-Transformer ', function () {
 
     expect(result).to.not.be.null;
     expect(result.length).to.equal(4);
-    expect(result[0].groupName).to.equal('list');
-    expect(result[1].groupName).to.equal('mygroup');
-    expect(result[2].groupName).to.equal('infolist');
-    expect(result[3].groupName).to.equal('otherlist');
+    expect(result[0]).to.equal('list');
+    expect(result[1]).to.equal('mygroup');
+    expect(result[2]).to.equal('infolist');
+    expect(result[3]).to.equal('otherlist');
     done();
   });
 
