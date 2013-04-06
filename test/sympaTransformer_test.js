@@ -24,7 +24,7 @@ describe('Sympa-Transformer ', function () {
 
     expect(result).to.not.be.null;
     expect(result.length).to.equal(1);
-    expect(result[0].groupName).to.equal('list');
+    expect(result[0]).to.equal('list');
     done();
   });
 
@@ -38,10 +38,10 @@ describe('Sympa-Transformer ', function () {
 
     expect(result).to.not.be.null;
     expect(result.length).to.equal(4);
-    expect(result[0].groupName).to.equal('list');
-    expect(result[1].groupName).to.equal('mygroup');
-    expect(result[2].groupName).to.equal('infolist');
-    expect(result[3].groupName).to.equal('otherlist');
+    expect(result[0]).to.equal('list');
+    expect(result[1]).to.equal('mygroup');
+    expect(result[2]).to.equal('infolist');
+    expect(result[3]).to.equal('otherlist');
     done();
   });
 
@@ -54,16 +54,16 @@ describe('Sympa-Transformer ', function () {
     done();
   });
 
-  it('transforms a null item to an empty array', function (done) {
-    var result = systemUnderTest.toArray({ item: null });
+  it('transforms undefined to an empty array', function (done) {
+    var result = systemUnderTest.toArray(undefined);
 
     expect(result).to.not.be.null;
     expect(result.length).to.equal(0);
     done();
   });
 
-  it('transforms a single item to an array with that item', function (done) {
-    var result = systemUnderTest.toArray({ item: 'Test' });
+  it('transforms a single element to an array with that item', function (done) {
+    var result = systemUnderTest.toArray('Test');
 
     expect(result).to.not.be.null;
     expect(result.length).to.equal(1);
@@ -71,8 +71,43 @@ describe('Sympa-Transformer ', function () {
     done();
   });
 
-  it('transforms an array of items to the same array', function (done) {
-    var result = systemUnderTest.toArray({ item: [ 'Test1', 'Test2' ] });
+  it('transforms an array to the same array', function (done) {
+    var result = systemUnderTest.toArray([ 'Test1', 'Test2' ]);
+
+    expect(result).to.not.be.null;
+    expect(result.length).to.equal(2);
+    expect(result[0]).to.equal('Test1');
+    expect(result[1]).to.equal('Test2');
+    done();
+  });
+
+  it('transforms a null input to an empty array', function (done) {
+    var result = systemUnderTest.inputItemToArray(null);
+
+    expect(result).to.not.be.null;
+    expect(result.length).to.equal(0);
+    done();
+  });
+
+  it('transforms a null input item to an empty array', function (done) {
+    var result = systemUnderTest.inputItemToArray({ item: null });
+
+    expect(result).to.not.be.null;
+    expect(result.length).to.equal(0);
+    done();
+  });
+
+  it('transforms a single input item to an array with that item', function (done) {
+    var result = systemUnderTest.inputItemToArray({ item: 'Test' });
+
+    expect(result).to.not.be.null;
+    expect(result.length).to.equal(1);
+    expect(result[0]).to.equal('Test');
+    done();
+  });
+
+  it('transforms an array of input items to the same array', function (done) {
+    var result = systemUnderTest.inputItemToArray({ item: [ 'Test1', 'Test2' ] });
 
     expect(result).to.not.be.null;
     expect(result.length).to.equal(2);
