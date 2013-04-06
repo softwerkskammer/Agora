@@ -31,7 +31,8 @@ describe('Members store', function () {
 
     store().getMember('nick', function (err, member) {
       member.nickname.should.equal(sampleMember.nickname);
-      getByField.calledWith({nickname: new RegExp('nick', 'i')}).should.be.true;
+      getByField.calledWith({nickname: new RegExp()}).should.be.true;
+      getByField.args[0][0].nickname.test(sampleMember.nickname).should.be.true;
       done(err);
     });
   });
