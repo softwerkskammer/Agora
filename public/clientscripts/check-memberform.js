@@ -41,9 +41,6 @@ $(document).ready(function () {
     errorPlacement: function (error, element) {
       error.appendTo(element.parent());
     },
-    submitHandler: function () {
-      alert("submitted!");
-    },
     // set this class to error-labels to indicate valid fields
     success: function (label) {
       // set &nbsp; as text for IE
