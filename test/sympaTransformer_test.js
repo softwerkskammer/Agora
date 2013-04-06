@@ -47,7 +47,7 @@ describe('Sympa-Transformer ', function () {
 
 
   it('transforms null to an empty array', function (done) {
-    var result = systemUnderTest.toArray(null);
+    var result = systemUnderTest.inputItemToArray(null);
 
     expect(result).to.not.be.null;
     expect(result.length).to.equal(0);
@@ -55,7 +55,7 @@ describe('Sympa-Transformer ', function () {
   });
 
   it('transforms a null item to an empty array', function (done) {
-    var result = systemUnderTest.toArray({ item: null });
+    var result = systemUnderTest.inputItemToArray({ item: null });
 
     expect(result).to.not.be.null;
     expect(result.length).to.equal(0);
@@ -63,7 +63,7 @@ describe('Sympa-Transformer ', function () {
   });
 
   it('transforms a single item to an array with that item', function (done) {
-    var result = systemUnderTest.toArray({ item: 'Test' });
+    var result = systemUnderTest.inputItemToArray({ item: 'Test' });
 
     expect(result).to.not.be.null;
     expect(result.length).to.equal(1);
@@ -72,7 +72,7 @@ describe('Sympa-Transformer ', function () {
   });
 
   it('transforms an array of items to the same array', function (done) {
-    var result = systemUnderTest.toArray({ item: [ 'Test1', 'Test2' ] });
+    var result = systemUnderTest.inputItemToArray({ item: [ 'Test1', 'Test2' ] });
 
     expect(result).to.not.be.null;
     expect(result.length).to.equal(2);
