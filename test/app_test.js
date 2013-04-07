@@ -45,7 +45,7 @@ describe('SWK Plattform server', function () {
 
   it('shows "log in" on the home page if no user is authenticated', function (done) {
     httpRequest({uri: base_uri}, function (req, resp) {
-      resp.body.should.contain('log in');
+      resp.body.should.contain('Anmelden');
       done();
     });
   });
