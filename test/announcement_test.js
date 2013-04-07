@@ -10,7 +10,7 @@ require('chai').should();
 var Announcement = require('../lib/announcements/announcement');
 
 var dummyTitle = 'title';
-var dummyFromDate = new Date(2011, 12, 31, 23, 59, 59);
+var dummyFromDate = new Date(2011, 12, 31, 11, 59, 59);
 
 var dummyAnnouncementEntry = new Announcement(dummyTitle, 'shortDescription', 'text', 'author', dummyFromDate, 'thruDate');
 
@@ -41,7 +41,7 @@ describe('Announcement application', function () {
     request(app)
       .get('/')
       .expect(200)
-      .expect(/href="640fefdec100581379129efc43dabda3c69183b7"/)
+      .expect(/href="54d7c600ee5b3e350642aa9604d5b3c4c3f02a9f"/)
       .expect(/title/, function (err) {
         allAnnouncements.calledOnce.should.be.ok;
         done(err);
