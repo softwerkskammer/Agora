@@ -24,14 +24,35 @@ describe('Members store', function () {
   var sampleMember = {nickname: 'nick'};
   var sampleMember2 = {nickname: 'nick2'};
   var sampleList = [sampleMember, sampleMember2];
+  var getByField = sinon.stub(persistenceStub, 'getByField');
+  getByField.callsArgWith(1, null, sampleMember);
 
   it('calls persistence.getByField for store.getMember and passes on the given callback', function (done) {
-    var getByField = sinon.stub(persistenceStub, 'getByField');
-    getByField.callsArgWith(1, null, sampleMember);
-
     store().getMember('nick', function (err, member) {
       member.nickname.should.equal(sampleMember.nickname);
-      getByField.calledWith({nickname: new RegExp('nick', 'i')}).should.be.true;
+      getByField.calledWith({nickname: new RegExp()}).should.be.true;
+      done(err);
+    });
+  });
+
+  it('calls persistence.getByField trimmed for store.getMember and passes on the given callback', function (done) {
+    store().getMember('  nick  ', function (err, member) {
+      member.nickname.should.equal(sampleMember.nickname);
+      getByField.calledWith({nickname: new RegExp()}).should.be.true;
+      var regex = getByField.args[0][0].nickname;
+      regex.toString().should.equal('/^nick$/i');
+      done(err);
+    });
+  });
+
+  it('calls persistence.getByField with an appropriate regex', function (done) {
+    store().getMember('nick', function (err, member) {
+      member.nickname.should.equal(sampleMember.nickname);
+      getByField.calledWith({nickname: new RegExp()}).should.be.true;
+      var regex = getByField.args[0][0].nickname;
+      regex.test('nick').should.be.true;
+      regex.test('nICk').should.be.true;
+      regex.test('nICklaus').should.be.false;
       done(err);
     });
   });
