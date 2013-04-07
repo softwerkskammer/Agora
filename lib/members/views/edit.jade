@@ -1,7 +1,6 @@
 extends ../../../views/layout
 
 block scripts
-  script(src="/clientscripts/jquery-1.9.1.js")
   script(src="/clientscripts/jquery.validate-1.11.1.js")
   script(src="/clientscripts/messages_de.js")
   script(src="/clientscripts/check-memberform.js")
@@ -11,9 +10,6 @@ block title
   | Profil bearbeiten
 block content
   h1 Profil bearbeiten
-
-  - if (user.registered)
-    p: a(href="/auth/logout") log out
 
   mixin text(name, label)
     div
