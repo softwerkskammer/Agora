@@ -20,7 +20,8 @@ var groupsAPIStub = {
 };
 
 var membersAPIStub = {
-  getMember: function () {}
+  getMember: function () {},
+  getMemberForId: function () {}
 };
 
 var groupsAndMembersAPI = proxyquire('../lib/groupsAndMembers/groupsAndMembersAPI', {
@@ -44,7 +45,8 @@ describe('Groups and Members API', function () {
       expect(member).to.be.null;
       expect(subscribedLists).to.not.be.null;
       expect(subscribedLists.length).to.equal(0);
-      done(err);
+      expect(err);
+      done();
     });
   });
 
@@ -57,6 +59,24 @@ describe('Groups and Members API', function () {
     };
 
     systemUnderTest.getUserWithHisGroups('nickname', function (err, member, subscribedGroups) {
+      expect(member).to.equal(dummymember);
+      expect(subscribedGroups).to.not.be.null;
+      expect(subscribedGroups.length).to.equal(2);
+      expect(subscribedGroups[0]).to.equal(GroupA);
+      expect(subscribedGroups[1]).to.equal(GroupB);
+      done(err);
+    });
+  });
+
+  it('returns the member (by id) and his groups when there is a member for the given nickname', function (done) {
+    membersAPIStub.getMemberForId = function (nickname, callback) {
+      callback(null, dummymember);
+    };
+    groupsAPIStub.getSubscribedGroupsForUser = function (userMail, globalCallback) {
+      globalCallback(null, [GroupA, GroupB]);
+    };
+
+    systemUnderTest.getUserWithHisGroupsById('hada', function (err, member, subscribedGroups) {
       expect(member).to.equal(dummymember);
       expect(subscribedGroups).to.not.be.null;
       expect(subscribedGroups.length).to.equal(2);

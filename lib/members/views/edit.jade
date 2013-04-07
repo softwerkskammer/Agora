@@ -1,5 +1,12 @@
 extends ../../../views/layout
 
+block scripts
+  script(src="/clientscripts/jquery-1.9.1.js")
+  script(src="/clientscripts/jquery.validate-1.11.1.js")
+  script(src="/clientscripts/messages_de.js")
+  script(src="/clientscripts/check-memberform.js")
+
+
 block title
   | Profil bearbeiten
 block content
@@ -13,8 +20,13 @@ block content
       label #{label}:
       input(id=name, type='text', name=name, value=member[name])
 
+  mixin checkbox(groupId, groupName, subscribed)
+    div
+      input(type='checkbox', name='newSubscriptions', value=groupId, checked=(subscribed===true ? "true" : undefined))
+      | &nbsp; #{groupName}
+
   div#userform
-    form(action='submit',method='post')
+    form(id='memberform', action='submit',method='post')
       - if (user.registered)
         div #{'Nickname'}: #{member.nickname}
       - else
@@ -29,5 +41,11 @@ block content
       mixin text('site', 'Website / Blog')
       mixin text('reference', 'Wie ich von der Softwerkskammer erfahren habe')
 
+      h2 Gruppenmitgliedschaft
+      ul
+        each markedGroup in markedGroups
+          mixin checkbox(markedGroup.group.id, markedGroup.group.longName, markedGroup.selected)
+
       div
         input(type="submit", value="Submit")
+

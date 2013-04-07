@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Member Editing - Validation Test Suite</title>
+  <link rel="stylesheet" href="lib/qunit/qunit-1.11.0.css"/>
+  <script src="../../public/clientscripts/jquery-1.9.1.js"></script>
+  <script src="lib/qunit/qunit-1.11.0.js"></script>
+  <script src="lib/jquery.mockjax.js"></script>
+  <script src="../../public/clientscripts/jquery.validate-1.11.1.js"></script>
+  <script src="../../public/clientscripts/additional-methods-1.11.1.js"></script>
+  <script src="../../public/clientscripts/messages_de.js"></script>
+  <script src="../../public/clientscripts/check-memberform.js"></script>
+  <script src="editmember-tests.js"></script>
+</head>
+<body>
+<div id="qunit"></div>
+<div id="qunit-fixture">
+  <form id="memberform" action="submit" method="post">
+    <div>
+      <label>Nickname:</label>
+      <input id="nickname" type="text" name="nickname">
+    </div>
+    <div>
+      <label>Vorname:</label>
+      <input id="firstname" type="text" name="firstname">
+    </div>
+    <div>
+      <label>Nachname:</label>
+      <input id="lastname" type="text" name="lastname">
+    </div>
+    <div>
+      <label>Email:</label>
+      <input id="email" type="text" name="email">
+    </div>
+    <div>
+      <label>Twitter:</label>
+      <input id="twitter" type="text" name="twitter">
+    </div>
+    <div>
+      <label>Ort / Region:</label>
+      <input id="location" type="text" name="location">
+    </div>
+    <div>
+      <label>Beruf:</label>
+      <input id="profession" type="text" name="profession">
+    </div>
+    <div>
+      <label>Interessenschwerpunkte:</label>
+      <input id="interests" type="text" name="interests">
+    </div>
+    <div>
+      <label>Website / Blog:</label>
+      <input id="site" type="text" name="site">
+    </div>
+    <div>
+      <label>Wie ich von der Softwerkskammer erfahren habe:</label>
+      <input id="reference" type="text" name="reference">
+    </div>
+    <div>
+      <input type="submit" value="Submit">
+    </div>
+  </form>
+</div>
+</body>
+</html>
