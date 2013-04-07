@@ -45,7 +45,8 @@ describe('Groups and Members API', function () {
       expect(member).to.be.null;
       expect(subscribedLists).to.not.be.null;
       expect(subscribedLists.length).to.equal(0);
-      done(err);
+      expect(err);
+      done();
     });
   });
 
