@@ -1,12 +1,24 @@
-html
-  body
-    div
-      a(href="openid?openid_identifier=https%3A%2F%2Fwww.google.com%2Faccounts%2Fo8%2Fid") Log in with google
-        img(src="images/google-icon.png", alt="google", style="vertical-align:middle; margin:0.2cm; margin-right:1cm")
-      a(href="github") Log in with github
-        img(src="images/github-icon.png", alt="github", style="vertical-align:middle; margin:0.2cm")
-    form(action="openid", method="get")
-      div
-        label Other Open ID Provider:
-          input(type="text",name="openid_identifier", size="50")
-          input(type="submit",value="Login")
+extends ../../../views/layout
+
+block content
+  form(action="openid", method="get")
+    fieldset
+      .span12
+        legend
+          | OpenID
+        .control-group
+          p
+            a(href="openid?openid_identifier=https%3A%2F%2Fwww.google.com%2Faccounts%2Fo8%2Fid")
+              img(src="images/google-icon.png", alt="google")
+              |  Google
+          p
+            label(class="control-label", for="openid_identifier") Freie Eingabe des OpenID Providers:
+            .input-append
+              input(id="openid_identifier", class="input-xxlarge", type='text', name="openid_identifier")
+              button(class="btn", type="submit") Sonstige
+        legend
+          | OAuth
+        p
+          a(href="github")
+            img(src="images/github-icon.png", alt="github")
+            |  Github

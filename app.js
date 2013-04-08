@@ -58,7 +58,8 @@ function useApp(parent, url, conf, factory) {
 }
 
 module.exports = function (conf) {
-  var authentication = require('./lib/authentication')(conf);
+  var authentication = require('./lib/authentication')(conf),
+    urlPrefix = conf.get('publicUrlPrefix');
 
   // initialize winston and two concrete loggers
   initWinston(conf);
@@ -71,6 +72,26 @@ module.exports = function (conf) {
       httpLogger.info(message.replace(/(\r\n|\n|\r)/gm, ""));
     }
   };
+
+  function newUserMustFillInRegistration(req, res, next) {
+    var urlNew = '/members/new';
+    var originalUrl = req.originalUrl;
+
+    function isOK() {
+      return originalUrl !== urlNew &&
+        originalUrl !== '/members/submit' &&
+        originalUrl !== '/auth/logout' &&
+        !/.clientscripts./.test(originalUrl) &&
+        !/.stylesheets./.test(originalUrl) &&
+        !/.img./.test(originalUrl) &&
+        !/.checknickname./.test(originalUrl);
+    }
+
+    if (req.user && !req.user.registered && isOK()) {
+      return res.redirect(urlPrefix + urlNew);
+    }
+    next();
+  }
 
   return {
     create: function () {
@@ -90,6 +111,7 @@ module.exports = function (conf) {
         app.use(express.methodOverride());
         app.use(express.session({secret: conf.get('secret')}));
         authentication.configure(app);
+        app.use(newUserMustFillInRegistration);
         app.use(app.router);
         app.use(express.static(path.join(__dirname, 'public')));
       });
