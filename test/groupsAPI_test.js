@@ -12,7 +12,9 @@ var GroupB = new Group('GroupB', 'Gruppe B', 'Dies ist Gruppe B.', 'Regionalgrup
 var NonPersistentGroup = new Group('GroupC', 'Gruppe C', 'Dies ist Gruppe C.', 'Regionalgruppe');
 
 var groupstoreStub = {
-  allGroups: function (callback) { callback(null, [GroupA, GroupB]); },
+  allGroups: function (callback) {
+    callback(null, [GroupA, GroupB]);
+  },
   getGroup: function (name, callback) {
     if (name === 'GroupA') {
       callback(null, GroupA);
@@ -22,29 +24,43 @@ var groupstoreStub = {
       callback(null, null);
     }
   },
-  saveGroup: function (group, callback) { callback(null, group); }
+  saveGroup: function (group, callback) {
+    callback(null, group);
+  }
 };
 
 var sympaStub = {
-  createList: function (err, callback) { callback(); },
-  getSubscribedListsForUser: function () {},
-  getAllAvailableLists: function () {},
-  getUsersOfList: function () {}
+  createList: function (err, callback) {
+    callback();
+  },
+  getSubscribedListsForUser: function () {
+  },
+  getAllAvailableLists: function () {
+  },
+  getUsersOfList: function () {
+  }
 };
 
 
-
 var groupsAPI = proxyquire('../lib/groups/groupsAPI', {
-  './groupstore': function () { return groupstoreStub; },
-  './sympaStub': function () { return sympaStub; }
+  './groupstore': function () {
+    return groupstoreStub;
+  },
+  './sympaStub': function () {
+    return sympaStub;
+  }
 });
 
-var systemUnderTest = groupsAPI({ get: function () { return null; } });   // empty config -> sympaStub is required
+var systemUnderTest = groupsAPI({ get: function () {
+  return null;
+} });   // empty config -> sympaStub is required
 
 describe('Groups API', function () {
 
   it('returns an empty array of groups for a user who is not subscribed anywhere', function (done) {
-    sympaStub.getSubscribedListsForUser = function (email, callback) { callback(null, []); };
+    sympaStub.getSubscribedListsForUser = function (email, callback) {
+      callback(null, []);
+    };
 
     systemUnderTest.getSubscribedGroupsForUser('me@bla.com', function (err, validLists) {
       expect(validLists).to.not.be.null;
@@ -54,7 +70,9 @@ describe('Groups API', function () {
   });
 
   it('returns one group for a user who is subscribed to one list', function (done) {
-    sympaStub.getSubscribedListsForUser = function (email, callback) { callback(null, ['GroupA']); };
+    sympaStub.getSubscribedListsForUser = function (email, callback) {
+      callback(null, ['GroupA']);
+    };
 
     systemUnderTest.getSubscribedGroupsForUser('GroupAuser@softwerkskammer.de', function (err, validLists) {
       expect(validLists).to.not.be.null;
@@ -79,7 +97,9 @@ describe('Groups API', function () {
   });
 
   it('returns an empty array of groups if there are no lists defined in sympa', function (done) {
-    sympaStub.getAllAvailableLists = function (callback) { callback(null, []); };
+    sympaStub.getAllAvailableLists = function (callback) {
+      callback(null, []);
+    };
 
     systemUnderTest.getAllAvailableGroups(function (err, lists) {
       expect(lists).to.not.be.null;
@@ -89,7 +109,9 @@ describe('Groups API', function () {
   });
 
   it('returns an empty array of groups if there is one list defined in sympa but there is no matching group in Softwerkskammer', function (done) {
-    sympaStub.getAllAvailableLists = function (callback) { callback(null, ['unknownGroup']); };
+    sympaStub.getAllAvailableLists = function (callback) {
+      callback(null, ['unknownGroup']);
+    };
 
     systemUnderTest.getAllAvailableGroups(function (err, lists) {
       expect(lists).to.not.be.null;
@@ -99,7 +121,9 @@ describe('Groups API', function () {
   });
 
   it('returns one group if there are two lists defined in sympa and there is one matching group in Softwerkskammer', function (done) {
-    sympaStub.getAllAvailableLists = function (callback) { callback(null, ['GroupA', 'unknownGroup']); };
+    sympaStub.getAllAvailableLists = function (callback) {
+      callback(null, ['GroupA', 'unknownGroup']);
+    };
 
     systemUnderTest.getAllAvailableGroups(function (err, lists) {
       expect(lists).to.not.be.null;
@@ -110,7 +134,9 @@ describe('Groups API', function () {
   });
 
   it('returns two groups if there are two lists defined in sympa and there are two matching groups in Softwerkskammer', function (done) {
-    sympaStub.getAllAvailableLists = function (callback) { callback(null, ['GroupA', 'GroupB']); };
+    sympaStub.getAllAvailableLists = function (callback) {
+      callback(null, ['GroupA', 'GroupB']);
+    };
 
     systemUnderTest.getAllAvailableGroups(function (err, lists) {
       expect(lists).to.not.be.null;
@@ -122,7 +148,9 @@ describe('Groups API', function () {
   });
 
   it('returns an empty array of lists if there are no users subscribed to the list in sympa', function (done) {
-    sympaStub.getUsersOfList = function (groupname, callback) { callback(null, []); };
+    sympaStub.getUsersOfList = function (groupname, callback) {
+      callback(null, []);
+    };
 
     systemUnderTest.getSympaUsersOfList('groupname', function (err, lists) {
       expect(lists).to.not.be.null;
@@ -132,7 +160,9 @@ describe('Groups API', function () {
   });
 
   it('returns the users subscribed to the list in sympa', function (done) {
-    sympaStub.getUsersOfList = function (groupname, callback) { callback(null, ['user1@mail1.de', 'user2@mail2.de', 'user3@mail3.de']); };
+    sympaStub.getUsersOfList = function (groupname, callback) {
+      callback(null, ['user1@mail1.de', 'user2@mail2.de', 'user3@mail3.de']);
+    };
 
     systemUnderTest.getSympaUsersOfList('groupname', function (err, users) {
       expect(users).to.not.be.null;
@@ -242,6 +272,25 @@ describe('Groups API', function () {
     expect(result.description).to.equal('A group for organizing CS');
     expect(result.type).to.equal('Themengruppe');
     done();
+  });
+
+  it('returns true when there is already a group of this name present', function (done) {
+    systemUnderTest.isGroupNamePresent("Gruppe A", function (err, result) {
+      expect(result).to.be.not.null;
+      expect(result).to.be.true;
+      done();
+
+    });
+
+  });
+
+  it('returns false when there is no group of this name present', function (done) {
+    systemUnderTest.isGroupNamePresent("New Group", function (err, result) {
+      expect(result).to.be.not.null;
+      expect(result).to.be.false;
+      done();
+    });
+
   });
 
 });
