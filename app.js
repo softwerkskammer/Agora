@@ -80,8 +80,10 @@ module.exports = function (conf) {
     function isOK() {
       return originalUrl !== urlNew &&
         originalUrl !== '/members/submit' &&
+        originalUrl !== '/auth/logout' &&
         !/.clientscripts./.test(originalUrl) &&
         !/.stylesheets./.test(originalUrl) &&
+        !/.img./.test(originalUrl) &&
         !/.checknickname./.test(originalUrl);
     }
 

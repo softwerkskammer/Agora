@@ -17,6 +17,7 @@ nconf.defaults({
   mongoHost       : 'localhost',
   mongoPort       : '27017',
   publicUrlPrefix : "http://localhost:17124",
+  securedByLoginURLPattern : "/members(?!submit).*",
   secret          : "secret",
   'logging': {
     'application': {

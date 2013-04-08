@@ -1,10 +1,24 @@
-html
-  body
-    form(action="openid", method="get")
-      div
-        label OpenID:
-          input(type="text",name="openid_identifier",value="https://www.google.com/accounts/o8/id", size="50")
-      div
-        input(type="submit",value="Submit")
-    p
-      a(href="github") log in with github
+extends ../../../views/layout
+
+block content
+  form(action="openid", method="get")
+    fieldset
+      .span12
+        legend
+          | OpenID
+        .control-group
+          p
+            a(href="openid?openid_identifier=https%3A%2F%2Fwww.google.com%2Faccounts%2Fo8%2Fid")
+              img(src="images/google-icon.png", alt="google")
+              |  Google
+          p
+            label(class="control-label", for="openid_identifier") Freie Eingabe des OpenID Providers:
+            .input-append
+              input(id="openid_identifier", class="input-xxlarge", type='text', name="openid_identifier")
+              button(class="btn", type="submit") Sonstige
+        legend
+          | OAuth
+        p
+          a(href="github")
+            img(src="images/github-icon.png", alt="github")
+            |  Github
