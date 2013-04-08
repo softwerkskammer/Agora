@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Group Editing - Validation Test Suite</title>
+    <link rel="stylesheet" href="lib/qunit/qunit-1.11.0.css"/>
+    <script src="../../public/clientscripts/jquery-1.9.1.js"></script>
+    <script src="lib/qunit/qunit-1.11.0.js"></script>
+    <script src="lib/jquery.mockjax.js"></script>
+    <script src="../../public/clientscripts/bootstrap.js"></script>
+    <script src="../../public/clientscripts/jquery.validate-1.11.1.js"></script>
+    <script src="../../public/clientscripts/messages_de.js"></script>
+    <script src="../../public/clientscripts/check-groupform.js"></script>
+    <script src="editgroups-tests.js"></script>
+</head>
+<body>
+<div id="qunit"></div>
+<div id="qunit-fixture">
+
+    <div id="userform">
+        <form id="groupform" action="submit" method="post">
+            <div>
+                <label>Name:</label>
+                <input id="id" type="text" name="id">
+            </div>
+            <div>
+                <label>Titel:</label>
+                <input id="longName" type="text" name="longName">
+            </div>
+            <div>
+                <label>Beschreibung:</label>
+                <input id="description" type="text" name="description">
+            </div>
+            <div>
+                <label>Gruppenart:</label>
+                <input id="type" type="text" name="type">
+            </div>
+            <div>
+                <input type="submit" value="Anlegen">
+            </div>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>
