@@ -17,7 +17,7 @@ block content
     p Website / Blog: #{member.site}
 
 
-    h2 Mitglied in:
+    h3 Mitglied in:
     ul
       each group in subscribedGroups
         li: .group: strong: a(href='../groups/#{group.id}') #{group.longName}
