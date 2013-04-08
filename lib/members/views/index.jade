@@ -10,6 +10,4 @@ block content
         small  Alle
     ul
       for member in members
-        li: .member: strong: a(href='#{member.nickname}') #{member.nickname}
-          | #{member.firstname} #{member.lastname},
-          | #{member.email}
+        li: .member: strong: a(href='#{member.nickname}') #{member.firstname} #{member.lastname}
