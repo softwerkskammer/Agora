@@ -46,7 +46,9 @@ block content
             mixin checkbox(markedGroup.group.id, markedGroup.group.longName, markedGroup.selected)
           p
             button(class="btn btn-primary", type="submit") Speichern
-            a(href="javascript:history.back()", class="btn", type="cancel") Zurück
             - if (user.registered)
+              a(href="javascript:history.back()", class="btn", type="cancel") Zurück
               a(href="/auth/logout", class="btn", type="cancel") Abmelden
+            - else
+              a(href="/auth/logout", class="btn", type="cancel") Abbrechen
 
