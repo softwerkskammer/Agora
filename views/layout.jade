@@ -1,18 +1,3 @@
-mixin text(name, label)
-  .control-group
-    label(class="control-label", for=name) #{label}:
-    input(id=name, class="input-block-level input-xlarge", type='text', name=name, value=member[name])
-mixin textarea(name, label)
-  .control-group
-    label(class="control-label", for=name) #{label}:
-    textarea(rows="4", class="input-block-level input-xxlarge", id=name, type='text', name=name)
-      | #{member[name]}
-mixin checkbox(groupId, groupName, subscribed)
-  div
-    .checkbox
-      input(type='checkbox', name='newSubscriptions', value=groupId, checked=(subscribed===true ? "true" : undefined))
-      | #{groupName}
-
 doctype 5
 html
   head

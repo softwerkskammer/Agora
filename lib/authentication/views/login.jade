@@ -7,9 +7,18 @@ block content
         legend
           | OpenID
         .control-group
-          .input-append
-            input(id="openid_identifier", class="input-xxlarge", type='text', name="openid_identifier", value="https://www.google.com/accounts/o8/id")
-            button(class="btn", type="submit") Anmelden
+          p
+            a(href="openid?openid_identifier=https%3A%2F%2Fwww.google.com%2Faccounts%2Fo8%2Fid")
+              img(src="images/google-icon.png", alt="google")
+              |  Google
+          p
+            label(class="control-label", for="openid_identifier") Freie Eingabe des OpenID Providers:
+            .input-append
+              input(id="openid_identifier", class="input-xxlarge", type='text', name="openid_identifier")
+              button(class="btn", type="submit") Sonstige
         legend
           | OAuth
-        a(href="github", class="btn") Anmelden mit Github
+        p
+          a(href="github")
+            img(src="images/github-icon.png", alt="github")
+            |  Github
