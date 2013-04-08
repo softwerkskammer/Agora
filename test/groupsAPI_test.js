@@ -274,20 +274,28 @@ describe('Groups API', function () {
     done();
   });
 
-  it('returns true when there is already a group of this name present', function (done) {
-    systemUnderTest.isGroupNamePresent("Gruppe A", function (err, result) {
+  it('returns false when there is already a group of this name present', function (done) {
+    sympaStub.getAllAvailableLists = function (callback) {
+      callback(null, ['Gruppe A', 'Gruppe B']);
+    };
+
+    systemUnderTest.isGroupNameAvailable("Gruppe A", function (err, result) {
       expect(result).to.be.not.null;
-      expect(result).to.be.true;
+      expect(result).to.be.false;
       done();
 
     });
 
   });
 
-  it('returns false when there is no group of this name present', function (done) {
-    systemUnderTest.isGroupNamePresent("New Group", function (err, result) {
+  it('returns true when there is no group of this name present', function (done) {
+    sympaStub.getAllAvailableLists = function (callback) {
+      callback(null, ['Gruppe A', 'Gruppe B']);
+    };
+
+    systemUnderTest.isGroupNameAvailable("New Group", function (err, result) {
       expect(result).to.be.not.null;
-      expect(result).to.be.false;
+      expect(result).to.be.true;
       done();
     });
 

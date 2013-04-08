@@ -3,18 +3,21 @@
 var groups_validator;
 
 var initValidator = function () {
-// validate signup form on keyup and submit
-  groups_validator = $("#userform").validate({
+
+  groups_validator = $("#groupform").validate({
     rules: {
-      longName: {
+      id: {
         required: true,
         minlength: 2,
-        remote: "/members/checknickname"
-      }
+        remote: "/groups/checkgroupname"
+      },
+      longName: "required",
+      description: "required",
+      type: "required"
 
     },
     messages: {
-      longName: {
+      id: {
         remote: $.validator.format("Dieser Gruppenname ist bereits vergeben.")
       }
     },
@@ -28,9 +31,9 @@ var initValidator = function () {
     }
   });
 
-  groups_validator.form();
+  //groups_validator.form();
 
-  ['#longName'].forEach(function (each) {
+  ['#id', '#longName', '#description', '#type'].forEach(function (each) {
     $(each).keyup(function () {
       groups_validator.element(each);
     });
