@@ -51,8 +51,9 @@ block content
         mixin text('interests', 'Interessenschwerpunkte')
         mixin text('site', 'Website / Blog')
 
-      .span12
-        mixin textarea('reference', 'Wie ich von der Softwerkskammer erfahren habe')
+    .span12
+        - if (!user.registered)
+          mixin textarea('reference', 'Wie ich von der Softwerkskammer erfahren habe')
 
       .span6
         legend Gruppenmitgliedschaft
