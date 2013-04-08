@@ -7,41 +7,46 @@ block scripts
 
 
 block title
-  | Profil bearbeiten
+  | Profil
+  - if (user.registered)
+    |  bearbeiten
+  - else
+    |  anlegen
+
 block content
-  h1 Profil bearbeiten
+  form(id='memberform', action='submit',method='post')
+    fieldset
+      .span12
+        legend
+          | Profil
+          - if (user.registered)
+            |  bearbeiten für Mitglied "#{member.nickname}"
+          - else
+            |  anlegen
+      .span6
+        - if (!user.registered)
+          mixin text('nickname', 'Nickname')
+        mixin text('firstname', 'Vorname')
+        mixin text('lastname', 'Nachname')
+        mixin text('email', 'Email')
+        mixin text('twitter', 'Twitter')
+      .span6
+        mixin text('location', 'Ort / Region')
+        mixin text('profession', 'Beruf')
+        mixin text('interests', 'Interessenschwerpunkte')
+        mixin text('site', 'Website / Blog')
 
-  mixin text(name, label)
-    div
-      label #{label}:
-      input(id=name, type='text', name=name, value=member[name])
+      .span12
+        mixin textarea('reference', 'Wie ich von der Softwerkskammer erfahren habe')
 
-  mixin checkbox(groupId, groupName, subscribed)
-    div
-      input(type='checkbox', name='newSubscriptions', value=groupId, checked=(subscribed===true ? "true" : undefined))
-      | &nbsp; #{groupName}
-
-  div#userform
-    form(id='memberform', action='submit',method='post')
-      - if (user.registered)
-        div #{'Nickname'}: #{member.nickname}
-      - else
-        mixin text('nickname', 'Nickname')
-      mixin text('firstname', 'Vorname')
-      mixin text('lastname', 'Nachname')
-      mixin text('email', 'Email')
-      mixin text('twitter', 'Twitter')
-      mixin text('location', 'Ort / Region')
-      mixin text('profession', 'Beruf')
-      mixin text('interests', 'Interessenschwerpunkte')
-      mixin text('site', 'Website / Blog')
-      mixin text('reference', 'Wie ich von der Softwerkskammer erfahren habe')
-
-      h2 Gruppenmitgliedschaft
-      ul
-        each markedGroup in markedGroups
-          mixin checkbox(markedGroup.group.id, markedGroup.group.longName, markedGroup.selected)
-
-      div
-        input(type="submit", value="Submit")
+      .span6
+        legend Gruppenmitgliedschaft
+        .control-group
+          each markedGroup in markedGroups
+            mixin checkbox(markedGroup.group.id, markedGroup.group.longName, markedGroup.selected)
+          p
+            button(class="btn btn-primary", type="submit") Speichern
+            a(href="javascript:history.back()", class="btn", type="cancel") Zurück
+            - if (user.registered)
+              a(href="/auth/logout", class="btn", type="cancel") Abmelden
 

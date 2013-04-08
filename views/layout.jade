@@ -1,3 +1,18 @@
+mixin text(name, label)
+  .control-group
+    label(class="control-label", for=name) #{label}:
+    input(id=name, class="input-block-level input-xlarge", type='text', name=name, value=member[name])
+mixin textarea(name, label)
+  .control-group
+    label(class="control-label", for=name) #{label}:
+    textarea(rows="4", class="input-block-level input-xxlarge", id=name, type='text', name=name)
+      | #{member[name]}
+mixin checkbox(groupId, groupName, subscribed)
+  div
+    .checkbox
+      input(type='checkbox', name='newSubscriptions', value=groupId, checked=(subscribed===true ? "true" : undefined))
+      | #{groupName}
+
 doctype 5
 html
   head
@@ -11,28 +26,29 @@ html
     title
       block title
         | Softwerkskammer
-    link(rel='stylesheet', href='/stylesheets/style.css')
   body
-    div(class="navbar navbar-inverse")
-      a(href="/"): img(src="/img/header.jpeg")
-      div(class="navbar-inner")
-        div(class="container")
-        a(class="btn btn-navbar", data-toggle="collapse", data-target=".navbar-inverse-collapse")
-          | <span class="icon-bar"></span>
-          | <span class="icon-bar"></span>
-          | <span class="icon-bar"></span>
-        p(class="navbar-text pull-right")
-          - if (typeof(user) !== 'undefined')
-            a(href="/members/edit", class="navbar-link") Profil
-          - else
-            a(href="/auth/login", class="navbar-link") Anmelden
-        div(class="nav-collapse collapse navbar-inverse-collapse")
-          ul(class="nav")
-            li: a(href="#") Aktivitäten
-            li: a(href="/groups") Gruppen
+    .container
+      div(class="navbar navbar-inverse navbar-static-top")
+        a(href="/"): img(src="/img/header.jpeg")
+        .navbar-inner
+          .container
+          a(class="btn btn-navbar", data-toggle="collapse", data-target=".navbar-inverse-collapse")
+            | <span class="icon-bar"></span>
+            | <span class="icon-bar"></span>
+            | <span class="icon-bar"></span>
+          p(class="navbar-text pull-right")
             - if (typeof(user) !== 'undefined')
-              li: a(href="/members") Mitglieder
+              a(href="/members/edit", class="navbar-link")
+               | Profil <i class="icon-user icon-white"></i>
+            - else
+              a(href="/auth/login", class="navbar-link") Anmelden
+          div(class="nav-collapse collapse navbar-inverse-collapse")
+            ul.nav
+              li: a(href="#") Aktivitäten
+              li: a(href="/groups") Gruppen
+              - if (typeof(user) !== 'undefined')
+                li: a(href="/members") Mitglieder
 
-
-    block content
+      .row
+        block content
 
