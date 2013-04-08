@@ -1,10 +1,12 @@
 html
   body
+    div
+      a(href="openid?openid_identifier=https%3A%2F%2Fwww.google.com%2Faccounts%2Fo8%2Fid") Log in with google
+        img(src="images/google-icon.png", alt="google", style="vertical-align:middle; margin:0.2cm; margin-right:1cm")
+      a(href="github") Log in with github
+        img(src="images/github-icon.png", alt="github", style="vertical-align:middle; margin:0.2cm")
     form(action="openid", method="get")
       div
-        label OpenID:
-          input(type="text",name="openid_identifier",value="https://www.google.com/accounts/o8/id", size="50")
-      div
-        input(type="submit",value="Submit")
-    p
-      a(href="github") log in with github
+        label Other Open ID Provider:
+          input(type="text",name="openid_identifier", size="50")
+          input(type="submit",value="Login")
