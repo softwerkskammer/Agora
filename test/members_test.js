@@ -64,7 +64,7 @@ describe('Members application', function () {
       .get('/')
       .expect(200)
       .expect(/href="hada"/)
-      .expect(/hans.dampf@gmail.com/, function (err) {
+      .expect(/Hans Dampf/, function (err) {
         allMembers.calledOnce.should.be.ok;
         done(err);
       });
