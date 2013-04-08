@@ -2,16 +2,38 @@ doctype 5
 html
   head
     meta(charset="utf-8")
-    block scripts
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    link(href="/stylesheets/bootstrap.css", rel="stylesheet", media="screen")
+    link(href="/stylesheets/bootstrap-responsive.css", rel="stylesheet", media="screen")
     title
       block title
         | Softwerkskammer
-    link(rel='stylesheet', href='/stylesheets/style.css')
   body
-    div#authenticationinfo
-      - if (typeof(user) !== 'undefined')
-        a(href="/members/edit") Profil
-      - else
-        a(href="/auth/login") log in
+    .container
+      div(class="navbar navbar-inverse navbar-static-top")
+        a(href="/"): img(src="/img/header.jpeg")
+        .navbar-inner
+          .container
+          a(class="btn btn-navbar", data-toggle="collapse", data-target=".navbar-inverse-collapse")
+            | <span class="icon-bar"></span>
+            | <span class="icon-bar"></span>
+            | <span class="icon-bar"></span>
+          p(class="navbar-text pull-right")
+            - if (typeof(user) !== 'undefined')
+              a(href="/members/edit", class="navbar-link")
+               | Profil <i class="icon-user icon-white"></i>
+            - else
+              a(href="/auth/login", class="navbar-link") Anmelden
+          div(class="nav-collapse collapse navbar-inverse-collapse")
+            ul.nav
+              li: a(href="#") Aktivitäten
+              li: a(href="/groups") Gruppen
+              - if (typeof(user) !== 'undefined')
+                li: a(href="/members") Mitglieder
 
-    block content
+      .row
+        block content
+
+    script(src="/clientscripts/jquery-1.9.1.js")
+    script(src="/clientscripts/bootstrap.js")
+    block scripts
