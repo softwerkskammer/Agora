@@ -24,7 +24,10 @@ html
               a(href="/members/edit", class="navbar-link")
                | Profil <i class="icon-user icon-white"></i>
             - else
-              a(href="/auth/login", class="navbar-link") Anmelden
+              - var returnTo = ""
+              -if(typeof(currentUrl) !== 'undefined')
+                - returnTo = "?returnTo=" + encodeURIComponent(currentUrl)
+              a(href="/auth/login" + returnTo, class="navbar-link") Anmelden
           div(class="nav-collapse collapse navbar-inverse-collapse")
             ul.nav
               li: a(href="/Announcements") Nachrichten

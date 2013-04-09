@@ -1,6 +1,10 @@
 extends ../../../views/layout
 
 block content
+  -var returnUrlEncoded = encodeURIComponent("/")
+  -if(typeof(returnToPage) !== 'undefined')
+    - returnUrlEncoded = encodeURIComponent(returnToPage)
+  -var returnParam = "returnTo=" + returnUrlEncoded
   form(action="openid", method="get")
     fieldset
       .span12
@@ -8,17 +12,21 @@ block content
           | OpenID
         .control-group
           p
-            a(href="openid?openid_identifier=https%3A%2F%2Fwww.google.com%2Faccounts%2Fo8%2Fid")
+            a(href="openid?openid_identifier=" + encodeURIComponent("https://www.google.com/accounts/o8/id") + "&" + returnParam)
               img(src="images/google-icon.png", alt="google")
               |  Google
           p
             label(class="control-label", for="openid_identifier") Freie Eingabe des OpenID Providers:
             .input-append
               input(id="openid_identifier", class="input-xxlarge", type='text', name="openid_identifier")
+              -if(typeof(returnTo) !== 'undefined')
+                input(type="hidden",name="returnTo",value=returnToPage)
+              else
+                input(type="hidden",name="returnTo",value="/")
               button(class="btn", type="submit") Sonstige
         legend
           | OAuth
         p
-          a(href="github")
+          a(href="github"+ "?" + returnParam)
             img(src="images/github-icon.png", alt="github")
             |  Github
