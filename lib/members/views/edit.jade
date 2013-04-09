@@ -4,11 +4,21 @@ mixin text(name, label)
   .control-group
     label(class="control-label", for=name) #{label}:
     input(id=name, class="input-block-level input-xlarge", type='text', name=name, value=member[name])
+
+mixin twitter(name, label)
+  .control-group
+    label(class="control-label", for=name) #{label}:
+    div(class="input-prepend input-block-level input-xlarge")
+      span(class="add-on", style="width: 5%;float: left;") @
+      input(id=name, class="input-block-level input-xlarge", style="width: 93%;", type='text', name=name, value=member[name])
+
+
 mixin textarea(name, label)
   .control-group
     label(class="control-label", for=name) #{label}:
     textarea(rows="4", class="input-block-level input-xxlarge", id=name, type='text', name=name)
       | #{member[name]}
+
 mixin checkbox(groupId, groupName, subscribed)
   div
     .checkbox
@@ -44,7 +54,7 @@ block content
         mixin text('firstname', 'Vorname')
         mixin text('lastname', 'Nachname')
         mixin text('email', 'Email')
-        mixin text('twitter', 'Twitter')
+        mixin twitter('twitter', 'Twitter')
       .span6
         mixin text('location', 'Ort / Region')
         mixin text('profession', 'Beruf')
