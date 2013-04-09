@@ -4,10 +4,11 @@ block title
   | Aktuelles
 
 block content
-
-  h1 Aktuelles
-  ul
-    for announcement in announcements
-        ul
-          li: .announcement: strong: a(href='#{announcement.title}') #{announcement.title}
-            | #{announcement.shortDescription}
+  .span12
+    .page-header
+      h1 Nachrichten
+        small  Alle
+    ul
+      for announcement in announcements
+        li: .announcement: strong: a(href='#{announcement.title}') #{announcement.title}
+          | #{announcement.shortDescription}
