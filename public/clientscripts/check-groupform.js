@@ -31,7 +31,7 @@ var initValidator = function () {
     }
   });
 
-  //groups_validator.form();
+  groups_validator.form();
 
   ['#id', '#longName', '#description', '#type'].forEach(function (each) {
     $(each).keyup(function () {
