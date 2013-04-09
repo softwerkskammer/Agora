@@ -110,8 +110,8 @@ module.exports = function (conf) {
         app.use(express.bodyParser());
         app.use(express.methodOverride());
         app.use(express.session({secret: conf.get('secret')}));
-        authentication.configure(app);
         app.use(newUserMustFillInRegistration);
+        authentication.configure(app);
         app.use(app.router);
         app.use(express.static(path.join(__dirname, 'public')));
       });
