@@ -9,6 +9,8 @@ var initValidator = function () {
       id: {
         required: true,
         minlength: 2,
+        maxlength: 20,
+        nowhitespace: true,
         remote: "/groups/checkgroupname"
       },
       longName: "required",
