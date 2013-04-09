@@ -3,19 +3,21 @@ extends ../../../views/layout
 block title
   | Profil für #{member.firstname} #{member.lastname}
 block content
-  h1 Profil anzeigen
-  p Nickname: #{member.nickname}
-  p Vorname: #{member.firstname}
-  p Nachname: #{member.lastname}
-  p Email: #{member.email}
-  p Twitter: #{member.twitter}
-  p Ort / Region: #{member.location}
-  p Beruf: #{member.profession}
-  p Interessenschwerpunkte: #{member.interests}
-  p Website / Blog: #{member.site}
+  .span12
+    .page-header
+      h1 "#{member.nickname}"
+        small  Profilansicht
+    p Vorname: #{member.firstname}
+    p Nachname: #{member.lastname}
+    p Email: #{member.email}
+    p Twitter: #{member.twitter}
+    p Ort / Region: #{member.location}
+    p Beruf: #{member.profession}
+    p Interessenschwerpunkte: #{member.interests}
+    p Website / Blog: #{member.site}
 
 
-  h2 Mitglied in:
-  ul
-    each group in subscribedGroups
-      li: .group: strong: a(href='../groups/#{group.id}') #{group.longName}
+    h3 Mitglied in:
+    ul
+      each group in subscribedGroups
+        li: .group: strong: a(href='../groups/#{group.id}') #{group.longName}

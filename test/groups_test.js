@@ -11,19 +11,26 @@ var GroupA = new Group('GroupA', 'Gruppe A', 'Dies ist Gruppe A.', 'Themengruppe
 var MemberA = new Member('hada', 'hada', 'Hans', 'Dampf', 'hans.dampf@gmail.com', '@hada', 'Süden', 'Entwickler', 'ada', 'http://my.blog', 'beim Bier');
 
 var groupsAPIStub = {
-  getAllAvailableGroups: function () {},
-  getGroup: function () {},
-  groupFromObject: function () {},
-  createOrSaveGroup: function (group, callback) { callback(); }
+  getAllAvailableGroups: function () {
+  },
+  getGroup: function () {
+  },
+  groupFromObject: function () {
+  },
+  createOrSaveGroup: function (group, callback) {
+    callback();
+  }
 };
 
 var groupsAndMembersAPIStub = {
-  getGroupAndUsersOfList: function () {},
-  userIsInMemberList: function () {}
+  getGroupAndUsersOfList: function () {
+  },
+  userIsInMemberList: function () {
+  }
 };
 
 var groupsApp = proxyquire('../lib/groups', {
-  './groupsAPI'                          : function () {
+  './groupsAPI': function () {
     return groupsAPIStub;
   },
   '../groupsAndMembers/groupsAndMembersAPI': function () {
@@ -35,20 +42,21 @@ var app = groupsApp(express(), { get: function () {
   return null;
 } });   // empty config
 
-
 app.locals({
   baseUrl: 'groups'
 });
 
 describe('Groups application', function () {
-  groupsAPIStub.getAllAvailableGroups = function (callback) { callback(null, [GroupA]); };
+  groupsAPIStub.getAllAvailableGroups = function (callback) {
+    callback(null, [GroupA]);
+  };
 
   it('shows all available lists', function (done) {
     request(app)
       .get('/')
       .expect(200)
       .expect('Content-Type', /text\/html/)
-      .expect(/Alle Gruppen/)
+      .expect(/Gruppen/)
       .expect(/Gruppe A/, done);
   });
 
@@ -58,8 +66,7 @@ describe('Groups application', function () {
       .get('/new')
       .expect(200)
       .expect('Content-Type', /text\/html/)
-      .expect(/<h1>Gruppe anlegen<\/h1>/)
-      .expect(/<input type="submit" value="Anlegen">/, done);
+      .expect(/Gruppe anlegen/, done);
   });
 
   it('allows to edit an existing group', function (done) {
@@ -71,8 +78,7 @@ describe('Groups application', function () {
       .get('/edit/GroupA')
       .expect(200)
       .expect('Content-Type', /text\/html/)
-      .expect(/<h1>Gruppe bearbeiten<\/h1>/)
-      .expect(/<input type="submit" value="Speichern">/, done);
+      .expect(/Gruppe bearbeiten/, done);
   });
 
   it('displays an existing group and its members', function (done) {
@@ -93,7 +99,9 @@ describe('Groups application', function () {
   });
 
   it('saves a newly created Group', function (done) {
-    groupsAPIStub.groupFromObject = function () { return GroupA; };
+    groupsAPIStub.groupFromObject = function () {
+      return GroupA;
+    };
 
     request(app)
       .post('/submit')
@@ -103,7 +111,9 @@ describe('Groups application', function () {
   });
 
   it('saves an already existing Group', function (done) {
-    groupsAPIStub.groupFromObject = function () { return GroupA; };
+    groupsAPIStub.groupFromObject = function () {
+      return GroupA;
+    };
 
     request(app)
       .post('/edit/submit')
@@ -112,9 +122,10 @@ describe('Groups application', function () {
       .expect('Moved Temporarily. Redirecting to /null/groups/GroupA', done);
   });
 
-
   it('redirects to the groups overview page if the group to save is not valid', function (done) {
-    groupsAPIStub.groupFromObject = function () { return new Group(); };
+    groupsAPIStub.groupFromObject = function () {
+      return new Group();
+    };
 
     request(app)
       .post('/edit/submit')

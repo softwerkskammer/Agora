@@ -64,4 +64,26 @@ describe('Member', function () {
     done();
   });
 
+  it('is autocorrecting the twittername removing leading @', function (done) {
+    var req_body = {
+      id: 'testuser',
+      nickname: 'testuser',
+      twitter: '@twitter'
+    };
+    var member = new Member().updateWith(req_body, null);
+    member.twitter.should.equal('twitter');
+    done();
+  });
+
+  it('is not autocorrecting the twittername when already no leading @', function (done) {
+    var req_body = {
+      id: 'testuser',
+      nickname: 'testuser',
+      twitter: 'twitter'
+    };
+    var member = new Member().updateWith(req_body, null);
+    member.twitter.should.equal('twitter');
+    done();
+  });
+
 });

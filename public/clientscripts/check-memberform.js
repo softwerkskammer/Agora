@@ -26,17 +26,13 @@ var initValidator = function () {
         remote: $.validator.format("Dieser Nickname ist leider nicht verfügbar.")
       }
     },
-    errorPlacement: function (error, element) {
-      error.appendTo(element.parent());
-    },
-    // set this class to error-labels to indicate valid fields
-    success: function (label) {
-      // set &nbsp; as text for IE
-      label.html("&nbsp;").addClass("checked");
-    },
-    // and remove it again in case of error
+    errorElement: "span",
+    errorClass: "help-inline error",
     highlight: function (element, errorClass) {
-      $(element).parent().find("." + errorClass).removeClass("checked");
+      $(element).parent().addClass("error");
+    },
+    unhighlight: function (element, errorClass) {
+      $(element).parent().removeClass("error");
     }
   });
 

@@ -1,51 +1,70 @@
 extends ../../../views/layout
 
+mixin text(name, label)
+  .control-group
+    label(class="control-label", for=name) #{label}:
+    input(id=name, class="input-block-level input-xlarge", type='text', name=name, value=member[name])
+mixin textarea(name, label)
+  .control-group
+    label(class="control-label", for=name) #{label}:
+    textarea(rows="4", class="input-block-level input-xxlarge", id=name, type='text', name=name)
+      | #{member[name]}
+mixin checkbox(groupId, groupName, subscribed)
+  div
+    .checkbox
+      input(type='checkbox', name='newSubscriptions', value=groupId, checked=(subscribed===true ? "true" : undefined))
+      | #{groupName}
+
 block scripts
-  script(src="/clientscripts/jquery-1.9.1.js")
   script(src="/clientscripts/jquery.validate-1.11.1.js")
   script(src="/clientscripts/messages_de.js")
   script(src="/clientscripts/check-memberform.js")
 
 
 block title
-  | Profil bearbeiten
-block content
-  h1 Profil bearbeiten
-
+  | Profil
   - if (user.registered)
-    p: a(href="/auth/logout") log out
+    |  bearbeiten
+  - else
+    |  anlegen
 
-  mixin text(name, label)
-    div
-      label #{label}:
-      input(id=name, type='text', name=name, value=member[name])
+block content
+  form(id='memberform', action='submit',method='post')
+    fieldset
+      .span12
+        legend
+          | Profil
+          - if (user.registered)
+            |  bearbeiten für Mitglied "#{member.nickname}"
+          - else
+            |  anlegen
+      .span6
+        - if (!user.registered)
+          mixin text('nickname', 'Nickname')
+        mixin text('firstname', 'Vorname')
+        mixin text('lastname', 'Nachname')
+        mixin text('email', 'Email')
+        mixin text('twitter', 'Twitter')
+      .span6
+        mixin text('location', 'Ort / Region')
+        mixin text('profession', 'Beruf')
+        mixin text('interests', 'Interessenschwerpunkte')
+        mixin text('site', 'Website / Blog')
 
-  mixin checkbox(groupId, groupName, subscribed)
-    div
-      input(type='checkbox', name='newSubscriptions', value=groupId, checked=(subscribed===true ? "true" : undefined))
-      | &nbsp; #{groupName}
+      - if (!user.registered)
+        .span12
+          mixin textarea('reference', 'Wie ich von der Softwerkskammer erfahren habe')
 
-  div#userform
-    form(id='memberform', action='submit',method='post')
-      - if (user.registered)
-        div #{'Nickname'}: #{member.nickname}
-      - else
-        mixin text('nickname', 'Nickname')
-      mixin text('firstname', 'Vorname')
-      mixin text('lastname', 'Nachname')
-      mixin text('email', 'Email')
-      mixin text('twitter', 'Twitter')
-      mixin text('location', 'Ort / Region')
-      mixin text('profession', 'Beruf')
-      mixin text('interests', 'Interessenschwerpunkte')
-      mixin text('site', 'Website / Blog')
-      mixin text('reference', 'Wie ich von der Softwerkskammer erfahren habe')
-
-      h2 Gruppenmitgliedschaft
-      ul
-        each markedGroup in markedGroups
-          mixin checkbox(markedGroup.group.id, markedGroup.group.longName, markedGroup.selected)
-
-      div
-        input(type="submit", value="Submit")
+      .span6
+        legend Gruppenmitgliedschaft
+        .control-group
+          each markedGroup in markedGroups
+            mixin checkbox(markedGroup.group.id, markedGroup.group.longName, markedGroup.selected)
+          p
+            button(class="btn btn-primary", type="submit") Speichern
+            - if (user.registered)
+              a(href="javascript:history.back()", class="btn", type="cancel") Zurück
+              a(href="/auth/logout", class="btn", type="cancel") Abmelden
+            - else
+              a(href="/auth/logout", class="btn", type="cancel") Abbrechen
 
