@@ -1,0 +1,9 @@
+extends ../../../views/layout
+
+block title
+  | #{announcement.title}
+block content
+  h1 #{announcement.title}
+  p #{announcement.shortDescription}
+  p #{announcement.text}
+  p #{announcement.author}
