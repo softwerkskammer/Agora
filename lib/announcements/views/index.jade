@@ -1,0 +1,13 @@
+extends ../../../views/layout
+
+block title
+  | Aktuelles
+
+block content
+
+  h1 Aktuelles
+  ul
+    for announcement in announcements
+        ul
+          li: .announcement: strong: a(href='#{announcement.title}') #{announcement.title}
+            | #{announcement.shortDescription}
