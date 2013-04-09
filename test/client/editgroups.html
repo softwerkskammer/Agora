@@ -17,27 +17,34 @@
 <div id="qunit"></div>
 <div id="qunit-fixture">
 
-    <div id="userform">
+    <div class="row">
         <form id="groupform" action="submit" method="post">
-            <div>
-                <label>Name:</label>
-                <input id="id" type="text" name="id">
-            </div>
-            <div>
-                <label>Titel:</label>
-                <input id="longName" type="text" name="longName">
-            </div>
-            <div>
-                <label>Beschreibung:</label>
-                <input id="description" type="text" name="description">
-            </div>
-            <div>
-                <label>Gruppenart:</label>
-                <input id="type" type="text" name="type">
-            </div>
-            <div>
-                <input type="submit" value="Anlegen">
-            </div>
+            <fieldset>
+                <div class="span6">
+                    <legend>Gruppe anlegen
+                    </legend>
+                    <div class="control-group">
+                        <label for="id" class="control-label">Name:</label>
+                        <input id="id" type="text" name="id" class="input-block-level input-xlarge"/>
+                    </div>
+                    <div class="control-group">
+                        <label for="longName" class="control-label">Titel:</label>
+                        <input id="longName" type="text" name="longName" class="input-block-level input-xlarge"/>
+                    </div>
+                    <div class="control-group">
+                        <label for="description" class="control-label">Beschreibung:</label>
+                        <input id="description" type="text" name="description" class="input-block-level input-xlarge"/>
+                    </div>
+                    <div class="control-group">
+                        <label for="type" class="control-label">Gruppenart:</label>
+                        <input id="type" type="text" name="type" class="input-block-level input-xlarge"/>
+                    </div>
+                    <p>
+                        <button type="submit" class="btn btn-primary">Anlegen</button>
+                        <a href="javascript:history.back()" type="cancel" class="btn">Zurück</a>
+                    </p>
+                </div>
+            </fieldset>
         </form>
     </div>
 </div>

@@ -6,9 +6,9 @@ mixin text(name, label)
     input(id=name, class="input-block-level input-xlarge", type='text', name=name, value=group[name])
 
 block scripts
-    script(src="/clientscripts/jquery.validate-1.11.1.js")
-    script(src="/clientscripts/messages_de.js")
-    script(src="/clientscripts/check-groupform.js")
+  script(src="/clientscripts/jquery.validate-1.11.1.js")
+  script(src="/clientscripts/messages_de.js")
+  script(src="/clientscripts/check-groupform.js")
 
 block title
   | Gruppe
@@ -17,26 +17,31 @@ block title
   - else
     |  anlegen
 
-    block content
-        form(id='groupform', action='submit', method='post')
-            fieldset
-                .span6
-                    legend
-                        | Gruppe
-                        - if (group.isValid())
-                            |  bearbeiten
-                        - else
-                            |  anlegen
-                    - if (group.isValid())
-                        input(id='id', type='hidden', name='id', value=group['id'])
-                    - else
-                        mixin text('id', 'Name')
-                    mixin text('longName', 'Titel')
-                    mixin text('description', 'Beschreibung')
-                    mixin text('type', 'Gruppenart')
-                    p
-                        - if (group.isValid())
-                            button(class="btn btn-primary", type="submit") Speichern
-                        - else
-                            button(class="btn btn-primary", type="submit") Anlegen
-                        a(href="javascript:history.back()", class="btn", type="cancel") Zurück
+block content
+  form(id='groupform', action='submit', method='post')
+    fieldset
+      .span6
+        legend
+          | Gruppe
+          - if (group.isValid())
+            |  bearbeiten
+          - else
+            |  anlegen
+        - if (group.isValid())
+          input(id='id', type='hidden', name='id', value=group['id'])
+        - else
+          mixin text('id', 'Name')
+        mixin text('longName', 'Titel')
+        mixin text('description', 'Beschreibung')
+        mixin text('type', 'Gruppenart')
+        p
+          - if (group.isValid())
+            button(class="btn btn-primary", type="submit") Speichern
+          - else
+            button(class="btn btn-primary", type="submit") Anlegen
+          a(href="javascript:history.back()", class="btn", type="cancel") Zurück
+
+block scripts
+  script(src="/clientscripts/jquery.validate-1.11.1.js")
+  script(src="/clientscripts/messages_de.js")
+  script(src="/clientscripts/check-groupform.js")
