@@ -4,25 +4,20 @@ block title
     | #{group.longName}
 
 block content
-    h1 #{group.longName}
-    p Beschreibung: #{group.description}
-    p Gruppenart: #{group.type}
+  .span12
+    .page-header
+      h1 #{group.longName}
+        small  #{group.type}
 
-    h2 Mitglieder der Gruppe:
+    p Beschreibung: #{group.description}
+
+    h3 Mitglieder der Gruppe:
     ul
-        each member in users
-            li #{member.firstname} #{member.lastname}
+      each member in users
+        li #{member.firstname} #{member.lastname}
 
     - if (userIsRegistered)
       - if (userIsGroupMember)
-        div#userform
-          form(action='removeUserFromGroup',method='post')
-            input(id='group', type='hidden', name='group', value=group)
-            div
-              input(type='submit', value="Abmelden")
+        a(href="/unsubscribe/#{group.id}", class="btn btn-primary") Gruppe verlassen
       - else
-        div#userform
-          form(action='addUserToGroup',method='post')
-            input(id='group', type='hidden', name='group', value=group)
-            div
-              input(type='submit', value="Eintragen")
+        a(href="/subscribe/#{group.id}", class="btn btn-primary") Gruppe beitreten

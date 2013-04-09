@@ -1,11 +1,13 @@
 extend ../../../views/layout
 
 block title
-  | #{title}
+  | Übersicht der Gruppen
 
 block content
-  h1 #{title}
-
-  ul
-    each group in groups
-      li: .group: strong: a(href='#{group.id}') #{group.longName}
+  .span12
+    .page-header
+      h1 Gruppen
+        small  Alle
+    ul
+      each group in groups
+        li: .group: strong: a(href='#{group.id}') #{group.longName}
