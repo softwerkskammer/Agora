@@ -80,8 +80,10 @@ module.exports = function (conf) {
     function isOK() {
       return originalUrl !== urlNew &&
         originalUrl !== '/members/submit' &&
+        originalUrl !== '/auth/logout' &&
         !/.clientscripts./.test(originalUrl) &&
         !/.stylesheets./.test(originalUrl) &&
+        !/.img./.test(originalUrl) &&
         !/.checknickname./.test(originalUrl);
     }
 
@@ -108,8 +110,8 @@ module.exports = function (conf) {
         app.use(express.bodyParser());
         app.use(express.methodOverride());
         app.use(express.session({secret: conf.get('secret')}));
-        authentication.configure(app);
         app.use(newUserMustFillInRegistration);
+        authentication.configure(app);
         app.use(app.router);
         app.use(express.static(path.join(__dirname, 'public')));
       });

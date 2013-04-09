@@ -1,4 +1,4 @@
-/* global test, $, equal, member_validator, initValidator, stop, start, document */
+/* global test, $, equal, deepEqual, member_validator, initValidator, stop, start, document */
 "use strict";
 
 // mocking the ajax request
@@ -15,15 +15,33 @@ $.mockjax({
   responseTime: 50
 });
 
-test("nickname empty or less than two letters", 2, function () {
+test("A nickname 'NochNichtVorhanden' is valid", 2, function () {
+  initValidator();
+  var nickname = $("#nickname");
+  stop();
+  nickname.val("NochNichtVorhanden");
+  // trigger validation
+  member_validator.element(nickname);
+  $(document).ajaxStop(function () {
+    $(document).unbind("ajaxStop");
+    equal(member_validator.element(nickname), true);
+    deepEqual(member_validator.errorList, []);
+    start();
+  });
+});
+
+test("Nickname is mandatory and must have at least two letters", 4, function () {
+  initValidator();
   var nickname = $("#nickname");
   nickname.val("");
   equal(member_validator.element(nickname), false);
+  equal(member_validator.errorList[0].message, 'Dieses Feld ist ein Pflichtfeld.');
   nickname.val("a");
   equal(member_validator.element(nickname), false);
+  equal(member_validator.errorList[0].message, 'Geben Sie bitte mindestens 2 Zeichen ein.');
 });
 
-test("nickname already taken", 2, function () {
+test("Nickname checking via Ajax is triggered", 3, function () {
   initValidator();
   var nickname = $("#nickname");
   member_validator.element(nickname);
@@ -33,16 +51,38 @@ test("nickname already taken", 2, function () {
   $(document).ajaxStop(function () {
     $(document).unbind("ajaxStop");
     equal(member_validator.element(nickname), false);
+    equal(member_validator.errorList[0].message, 'Dieser Nickname ist leider nicht verfügbar.');
     start();
   });
 });
 
-test("firstname value", 1, function () {
-  var firstname = $("#firstname");
-  equal(firstname.val(), '');
+var checkFieldMandatory = function (fieldname) {
+  initValidator();
+  var field = $(fieldname);
+  field.val("");
+  equal(member_validator.element(field), false);
+  equal(member_validator.errorList[0].message, 'Dieses Feld ist ein Pflichtfeld.');
+  field.val("a");
+  equal(member_validator.element(field), true);
+};
+
+test("Firstname is mandatory", 3, function () {
+  checkFieldMandatory("#firstname");
 });
 
-test("lastname value", 1, function () {
-  var lastname = $("#lastname");
-  equal(lastname.val(), '');
+test("Lastname is mandatory", 3, function () {
+  checkFieldMandatory("#lastname");
 });
+
+test("Location is mandatory", 3, function () {
+  checkFieldMandatory("#location");
+});
+
+test("Reference is mandatory", 3, function () {
+  checkFieldMandatory("#reference");
+});
+
+test("Profession is mandatory", 3, function () {
+  checkFieldMandatory("#profession");
+});
+

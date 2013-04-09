@@ -8,6 +8,8 @@ var should = require('chai').should(),
 
 conf.set('port', '17125');
 conf.set('secret', 'secret');
+conf.set('securedByLoginURLPattern', '/members/.*');
+
 var base_uri = "http://localhost:" + parseInt(conf.get('port'), 10);
 
 var app = require('../app.js')(conf);
@@ -45,17 +47,37 @@ describe('SWK Plattform server', function () {
 
   it('shows "log in" on the home page if no user is authenticated', function (done) {
     httpRequest({uri: base_uri}, function (req, resp) {
-      resp.body.should.contain('log in');
+      resp.body.should.contain('Anmelden');
       done();
     });
   });
 
-  it('provides the style sheet', function (done) {
-    var stylesheet_uri = base_uri + '/stylesheets/style.css';
+  it('provides the bootstrap style sheet', function (done) {
+    var stylesheet_uri = base_uri + '/stylesheets/bootstrap.css';
     httpRequest({uri: stylesheet_uri}, function (req, resp) {
       resp.statusCode.should.equal(200);
       resp.headers['content-type'].should.contain('text/css');
       resp.body.should.contain('color:');
+      done();
+    });
+  });
+
+  it('provides the bootstrap-responsive style sheet', function (done) {
+    var stylesheet_uri = base_uri + '/stylesheets/bootstrap-responsive.css';
+    httpRequest({uri: stylesheet_uri}, function (req, resp) {
+      resp.statusCode.should.equal(200);
+      resp.headers['content-type'].should.contain('text/css');
+      resp.body.should.contain('color:');
+      done();
+    });
+  });
+
+  it('provides the clientside membercheck functions', function (done) {
+    var stylesheet_uri = base_uri + '/clientscripts/check-memberform.js';
+    httpRequest({uri: stylesheet_uri}, function (req, resp) {
+      resp.statusCode.should.equal(200);
+      resp.headers['content-type'].should.contain('application/javascript');
+      resp.body.should.contain('#memberform');
       done();
     });
   });
