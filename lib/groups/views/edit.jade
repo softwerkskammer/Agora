@@ -1,5 +1,10 @@
 extends ../../../views/layout
 
+mixin text(name, label)
+  .control-group
+    label(class="control-label", for=name) #{label}:
+    input(id=name, class="input-block-level input-xlarge", type='text', name=name, value=group[name])
+
 block scripts
     script(src="/clientscripts/jquery.validate-1.11.1.js")
     script(src="/clientscripts/messages_de.js")
@@ -7,32 +12,31 @@ block scripts
 
 block title
   | Gruppe
-
-block content
   - if (group.isValid())
-    h1 Gruppe bearbeiten
+    |  bearbeiten
   - else
-    h1 Gruppe anlegen
+    |  anlegen
 
-  mixin text(name, label)
-    div
-      label #{label}:
-      input(id=name, type='text', name=name, value=group[name])
-
-  div#userform
-
-    form(id='groupform', action='submit',method='post')
-      - if (group.isValid())
-        div #{'Name'}: #{group.id}
-        input(id='id', type='hidden', name='id', value=group['id'])
-      - else
-        mixin text('id', 'Name')
-      mixin text('longName', 'Titel')
-      mixin text('description', 'Beschreibung')
-      mixin text('type', 'Gruppenart')
-
-      div
-        - if (group.isValid())
-          input(type="submit", value="Speichern")
-        - else
-          input(type="submit", value="Anlegen")
+    block content
+        form(id='groupform', action='submit', method='post')
+            fieldset
+                .span6
+                    legend
+                        | Gruppe
+                        - if (group.isValid())
+                            |  bearbeiten
+                        - else
+                            |  anlegen
+                    - if (group.isValid())
+                        input(id='id', type='hidden', name='id', value=group['id'])
+                    - else
+                        mixin text('id', 'Name')
+                    mixin text('longName', 'Titel')
+                    mixin text('description', 'Beschreibung')
+                    mixin text('type', 'Gruppenart')
+                    p
+                        - if (group.isValid())
+                            button(class="btn btn-primary", type="submit") Speichern
+                        - else
+                            button(class="btn btn-primary", type="submit") Anlegen
+                        a(href="javascript:history.back()", class="btn", type="cancel") Zurück
