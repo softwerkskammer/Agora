@@ -244,4 +244,26 @@ describe('Groups API', function () {
     done();
   });
 
+  it('returns false when there is already a group of this name present', function (done) {
+
+    systemUnderTest.isGroupNameAvailable("GroupA", function (err, result) {
+      expect(result).to.be.not.null;
+      expect(result).to.be.false;
+      done();
+
+    });
+
+  });
+
+  it('returns true when there is no group of this name present', function (done) {
+
+
+    systemUnderTest.isGroupNameAvailable("New Group", function (err, result) {
+      expect(result).to.be.not.null;
+      expect(result).to.be.true;
+      done();
+    });
+
+  });
+
 });
