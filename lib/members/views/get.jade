@@ -5,16 +5,32 @@ block title
 block content
   .span12
     .page-header
-      h1 "#{member.nickname}"
+      h2 "#{member.nickname}"
         small  Profilansicht
-    p Vorname: #{member.firstname}
-    p Nachname: #{member.lastname}
-    p Email: #{member.email}
-    p Twitter: #{member.twitter}
-    p Ort / Region: #{member.location}
-    p Beruf: #{member.profession}
-    p Interessenschwerpunkte: #{member.interests}
-    p Website / Blog: #{member.site}
+    p
+      strong Vorname:
+      |  #{member.firstname}
+    p
+      strong Nachname:
+      |  #{member.lastname}
+    p
+      strong Email:
+      |  #{member.email}
+    p
+      strong Twitter:
+      |  #{member.twitter}
+    p
+      strong Ort / Region:
+      |  #{member.location}
+    p
+      strong Beruf:
+      |  #{member.profession}
+    p
+      strong Interessenschwerpunkte:
+      |  #{member.interests}
+    p
+      strong Website / Blog:
+      |  #{member.site}
 
 
     h3 Mitglied in:
