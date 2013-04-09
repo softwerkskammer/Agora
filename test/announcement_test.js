@@ -9,10 +9,7 @@ require('chai').should();
 
 var Announcement = require('../lib/announcements/announcement');
 
-var dummyTitle = 'title';
-var dummyFromDate = new Date(2011, 12, 31, 11, 59, 59);
-
-var dummyAnnouncementEntry = new Announcement(dummyTitle, 'shortDescription', 'text', 'author', dummyFromDate, 'thruDate');
+var dummyAnnouncementEntry = new Announcement('title', 'shortDescription', 'text', 'author', new Date(2011, 12, 31, 11, 59, 59), 'thruDate');
 
 var announcementAPIStub = {
   allAnnouncements: function (callback) {
@@ -41,7 +38,7 @@ describe('Announcement application', function () {
     request(app)
       .get('/')
       .expect(200)
-      .expect(/href="54d7c600ee5b3e350642aa9604d5b3c4c3f02a9f"/)
+      .expect(/href="title"/)
       .expect(/title/, function (err) {
         allAnnouncements.calledOnce.should.be.ok;
         done(err);
