@@ -289,7 +289,7 @@ describe('Groups API (isGroupNameAvailable)', function () {
     systemUnderTest.isGroupNameAvailable("GroupA", function (err, result) {
       expect(result).to.be.not.null;
       expect(result).to.be.false;
-      done();
+      done(err);
 
     });
 
@@ -301,7 +301,7 @@ describe('Groups API (isGroupNameAvailable)', function () {
     systemUnderTest.isGroupNameAvailable("New Group", function (err, result) {
       expect(result).to.be.not.null;
       expect(result).to.be.true;
-      done();
+      done(err);
     });
 
   });
