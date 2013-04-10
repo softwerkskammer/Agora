@@ -86,7 +86,7 @@ describe('Groups API with SympaStub', function () {
   it('can handle the creation of a new group', function (done) {
     var saveGroupSpy = sinon.spy(groupstoreStub, 'saveGroup');
 
-    systemUnderTest.createGroup(NonPersistentGroup, function (err, group) {
+    systemUnderTest.createOrSaveGroup(NonPersistentGroup, function (err, group) {
       expect(group).to.equal(NonPersistentGroup);
       expect(saveGroupSpy.calledOnce).to.be.true;
 

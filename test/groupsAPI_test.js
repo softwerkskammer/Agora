@@ -192,37 +192,6 @@ describe('Groups API (getGroup)', function () {
 });
 
 
-describe('Groups API (createGroup)', function () {
-  it('creates a new group by calling the appropriate sympa function', function (done) {
-    var createListSpy = sinon.spy(sympaStub, 'createList');
-    var saveGroupSpy = sinon.spy(groupstoreStub, 'saveGroup');
-
-    systemUnderTest.createGroup(NonPersistentGroup, function (err, group) {
-      expect(group).to.equal(NonPersistentGroup);
-      expect(createListSpy.calledOnce).to.be.true;
-      expect(saveGroupSpy.calledOnce).to.be.true;
-
-      sympaStub.createList.restore();
-      groupstoreStub.saveGroup.restore();
-      done(err);
-    });
-  });
-});
-
-describe('Groups API (saveGroup)', function () {
-  it('saves a group by calling the appropriate groupstore function', function (done) {
-    var saveGroupSpy = sinon.spy(groupstoreStub, 'saveGroup');
-
-    systemUnderTest.saveGroup(GroupA, function (err, group) {
-      expect(group).to.equal(GroupA);
-      expect(saveGroupSpy.calledOnce).to.be.true;
-
-      groupstoreStub.saveGroup.restore();
-      done(err);
-    });
-  });
-});
-
 describe('Groups API (createOrSaveGroup)', function () {
 
   var createListSpy;
