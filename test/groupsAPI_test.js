@@ -224,32 +224,38 @@ describe('Groups API (saveGroup)', function () {
 });
 
 describe('Groups API (createOrSaveGroup)', function () {
+
+  var createListSpy;
+  var saveGroupSpy;
+
+  beforeEach(function (done) {
+    createListSpy = sinon.spy(sympaStub, 'createList');
+    saveGroupSpy = sinon.spy(groupstoreStub, 'saveGroup');
+    done();
+  });
+
+  afterEach(function (done) {
+    sympaStub.createList.restore();
+    groupstoreStub.saveGroup.restore();
+    done();
+  });
+
   it('creates a new group and saves it if there is no group with the given name', function (done) {
-    var createListSpy = sinon.spy(sympaStub, 'createList');
-    var saveGroupSpy = sinon.spy(groupstoreStub, 'saveGroup');
 
     systemUnderTest.createOrSaveGroup(NonPersistentGroup, function (err, group) {
       expect(group).to.equal(NonPersistentGroup);
       expect(createListSpy.calledOnce).to.be.true;
       expect(saveGroupSpy.calledOnce).to.be.true;
-
-      sympaStub.createList.restore();
-      groupstoreStub.saveGroup.restore();
       done(err);
     });
   });
 
   it('only saves the group if there already exists a group with the given name', function (done) {
-    var createListSpy = sinon.spy(sympaStub, 'createList');
-    var saveGroupSpy = sinon.spy(groupstoreStub, 'saveGroup');
 
     systemUnderTest.createOrSaveGroup(GroupA, function (err, group) {
       expect(group).to.equal(GroupA);
       expect(createListSpy.called).to.be.false;
       expect(saveGroupSpy.calledOnce).to.be.true;
-
-      sympaStub.createList.restore();
-      groupstoreStub.saveGroup.restore();
       done(err);
     });
   });
@@ -285,25 +291,19 @@ describe('Groups API (groupFromObject)', function () {
 
 describe('Groups API (isGroupNameAvailable)', function () {
   it('returns false when there is already a group of this name present', function (done) {
-
     systemUnderTest.isGroupNameAvailable("GroupA", function (err, result) {
       expect(result).to.be.not.null;
       expect(result).to.be.false;
       done(err);
-
     });
-
   });
 
   it('returns true when there is no group of this name present', function (done) {
-
-
     systemUnderTest.isGroupNameAvailable("New Group", function (err, result) {
       expect(result).to.be.not.null;
       expect(result).to.be.true;
       done(err);
     });
-
   });
 
 });
