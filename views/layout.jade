@@ -30,8 +30,8 @@ html
               a(href="/auth/login" + returnTo, class="navbar-link") Anmelden
           div(class="nav-collapse collapse navbar-inverse-collapse")
             ul.nav
-              li: a(href="/Announcements") Nachrichten
-              li: a(href="#") Aktivitäten
+              li: a(href="/announcements") Nachrichten
+              li: a(href="/activities") Aktivitäten
               li: a(href="/groups") Gruppen
               - if (typeof(user) !== 'undefined')
                 li: a(href="/members") Mitglieder

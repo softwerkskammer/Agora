@@ -14,7 +14,6 @@ block scripts
   script(src="/clientscripts/jquery.validate-1.11.1.js")
   script(src="/clientscripts/messages_de.js")
 
-
 block title
   | Aktivität
 
@@ -27,26 +26,13 @@ block content
       .span6
         mixin text('title', 'Titel')
         mixin text('location', 'Veranstaltungsort')
+        mixin text('activityDate', 'Datum')
         mixin text('assignedGroup', 'SWK-Gruppe')
       .span6
         mixin textarea('description', 'Beschreibung')
         mixin textarea('direction', 'Wegbeschreibung')
-        mixin text('site', 'Website / Blog')
+        mixin text('startTime', 'Uhrzeit')
 
-      - if (!user.registered)
-        .span12
-          mixin textarea('reference', 'Wie ich von der Softwerkskammer erfahren habe')
-
-      .span6
-        legend Gruppenmitgliedschaft
-        .control-group
-          each markedGroup in markedGroups
-            mixin checkbox(markedGroup.group.id, markedGroup.group.longName, markedGroup.selected)
-          p
-            button(class="btn btn-primary", type="submit") Speichern
-            - if (user.registered)
-              a(href="javascript:history.back()", class="btn", type="cancel") Zurück
-              a(href="/auth/logout", class="btn", type="cancel") Abmelden
-            - else
-              a(href="/auth/logout", class="btn", type="cancel") Abbrechen
-
+      p
+        button(class="btn btn-primary", type="submit") Anlegen
+        a(href="javascript:history.back()", class="btn", type="cancel") Zurück

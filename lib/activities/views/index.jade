@@ -4,8 +4,12 @@ block title
   | Aktivitäten
 
 block content
-  h1 Aktivitäten
-  ul
-    for activity in activities
-      li
-        a(href='#{activity.id}') #{activity.title}
+  .span12
+    .page-header
+      h2 Aktivitäten
+        small  Alle
+
+    ul
+      for activity in activities
+        li
+          a(href='#{activity.id}') #{activity.title}
