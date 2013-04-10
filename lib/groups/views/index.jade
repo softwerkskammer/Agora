@@ -6,8 +6,12 @@ block title
 block content
   .span12
     .page-header
-      h1 Gruppen
+      h2 Gruppen
         small  Alle
     ul
       each group in groups
-        li: .group: strong: a(href='#{group.id}') #{group.longName}
+        li: .group
+          strong: a(href="#{group.id}") #{group.longName}
+          br
+          | - Schicke eine Nachricht an:
+          a(href="mailto:#{group.id}@softwerkskammer.de")  #{group.id}@softwerkskammer.de

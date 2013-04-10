@@ -78,7 +78,7 @@ describe('Groups application', function () {
       .get('/edit/GroupA')
       .expect(200)
       .expect('Content-Type', /text\/html/)
-      .expect(/Gruppe bearbeiten/, done);
+      .expect(/Gruppe(.+) bearbeiten/, done);
   });
 
   it('displays an existing group and its members', function (done) {

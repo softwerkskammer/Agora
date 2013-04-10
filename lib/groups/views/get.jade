@@ -6,10 +6,19 @@ block title
 block content
   .span12
     .page-header
-      h1 #{group.longName}
+      h2 #{group.longName}
         small  #{group.type}
 
-    p Beschreibung: #{group.description}
+    p
+      strong
+        | Adresse:
+      | 
+      a(href="mailto:#{group.id}@softwerkskammer.de")
+        | #{group.id}@softwerkskammer.de
+    p
+      strong
+        | Beschreibung:
+      |  #{group.description}
 
     h3 Mitglieder der Gruppe:
     ul
