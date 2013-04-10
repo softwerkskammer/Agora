@@ -124,6 +124,7 @@ module.exports = function (conf) {
       useApp(app, 'activities', conf, require('./lib/activities'));
       useApp(app, 'members', conf, require('./lib/members'));
       useApp(app, 'groups', conf, require('./lib/groups'));
+      useApp(app, 'announcements', conf, require('./lib/announcements'));
       useApp(app, 'auth', conf, authentication.initialize);
     },
 

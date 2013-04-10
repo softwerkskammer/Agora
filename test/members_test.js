@@ -102,7 +102,7 @@ describe('Members application', function () {
     request(app)
       .get('/' + nickname)
       .expect(200)
-      .expect(/Blog: http:\/\/my.blog/, function (err) {
+      .expect(/Blog:(.+)http:\/\/my.blog/, function (err) {
         getMember.calledWith(nickname).should.be.true;
         getSubscribedGroupsForUser.calledWith(email).should.be.true;
         done(err);

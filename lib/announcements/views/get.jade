@@ -1,0 +1,12 @@
+extends ../../../views/layout
+
+block title
+  | #{announcement.title}
+block content
+  .span12
+    .page-header
+      h2 #{announcement.title}
+        small  Informationen
+    p #{announcement.shortDescription}
+    p #{announcement.text}
+    p #{announcement.author}
