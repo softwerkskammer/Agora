@@ -11,7 +11,7 @@ block scripts
   script(src="/clientscripts/check-groupform.js")
 
 block title
-  | Gruppe
+  | Gruppe #{group.id}
   - if (group.isValid())
     |  bearbeiten
   - else
@@ -24,7 +24,7 @@ block content
         legend
           | Gruppe
           - if (group.isValid())
-            |  bearbeiten
+            |  "#{group.id}" bearbeiten
           - else
             |  anlegen
         - if (group.isValid())
@@ -33,7 +33,11 @@ block content
           mixin text('id', 'Name')
         mixin text('longName', 'Titel')
         mixin text('description', 'Beschreibung')
-        mixin text('type', 'Gruppenart')
+        .control-group
+          label(class="control-label", for="type") Gruppenart:
+          select(id="type", class="input-block-level input-xlarge", name="type")
+            for item in ['Themengruppe', 'Regionalgruppe']
+              option(selected=group.type == item) #{item}
         p
           - if (group.isValid())
             button(class="btn btn-primary", type="submit") Speichern
@@ -41,3 +45,7 @@ block content
             button(class="btn btn-primary", type="submit") Anlegen
           a(href="javascript:history.back()", class="btn", type="cancel") Zurück
 
+block scripts
+  script(src="/clientscripts/jquery.validate-1.11.1.js")
+  script(src="/clientscripts/messages_de.js")
+  script(src="/clientscripts/check-groupform.js")
