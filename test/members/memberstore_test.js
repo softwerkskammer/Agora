@@ -59,7 +59,7 @@ describe('Members store', function () {
 
   it('calls persistence.list for store.allMembers and passes on the given callback', function (done) {
     var list = sinon.stub(persistenceStub, 'list');
-    list.callsArgWith(0, null, sampleList);
+    list.callsArgWith(1, null, sampleList);
 
     store().allMembers(function (err, members) {
       members[0].nickname.should.equal(sampleMember.nickname);
