@@ -41,7 +41,7 @@ describe('Activity application', function () {
     request(app)
       .get('/')
       .expect(200)
-      .expect(/Ankündigungen/)
+      .expect(/Aktivitäten/)
       .expect(/href="id"/)
       .expect(/title/, function (err) {
         allActivities.calledOnce.should.be.ok;
