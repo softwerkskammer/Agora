@@ -1,0 +1,52 @@
+extends ../../../views/layout
+
+mixin text(name, label)
+  .control-group
+    label(class="control-label", for=name) #{label}:
+    input(id=name, class="input-block-level input-xlarge", type='text', name=name, value=activity[name])
+mixin textarea(name, label)
+  .control-group
+    label(class="control-label", for=name) #{label}:
+    textarea(rows="4", class="input-block-level input-xxlarge", id=name, type='text', name=name)
+      | #{activity[name]}
+
+block scripts
+  script(src="/clientscripts/jquery.validate-1.11.1.js")
+  script(src="/clientscripts/messages_de.js")
+
+
+block title
+  | Aktivität
+
+block content
+  form(id='activityform', action='submit',method='post')
+    fieldset
+      .span12
+        legend
+          | Aktivität
+      .span6
+        mixin text('title', 'Titel')
+        mixin text('location', 'Veranstaltungsort')
+        mixin text('assignedGroup', 'SWK-Gruppe')
+      .span6
+        mixin textarea('description', 'Beschreibung')
+        mixin textarea('direction', 'Wegbeschreibung')
+        mixin text('site', 'Website / Blog')
+
+      - if (!user.registered)
+        .span12
+          mixin textarea('reference', 'Wie ich von der Softwerkskammer erfahren habe')
+
+      .span6
+        legend Gruppenmitgliedschaft
+        .control-group
+          each markedGroup in markedGroups
+            mixin checkbox(markedGroup.group.id, markedGroup.group.longName, markedGroup.selected)
+          p
+            button(class="btn btn-primary", type="submit") Speichern
+            - if (user.registered)
+              a(href="javascript:history.back()", class="btn", type="cancel") Zurück
+              a(href="/auth/logout", class="btn", type="cancel") Abmelden
+            - else
+              a(href="/auth/logout", class="btn", type="cancel") Abbrechen
+
