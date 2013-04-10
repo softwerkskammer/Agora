@@ -12,12 +12,10 @@ var Activity = require('../lib/activities/activity');
 var dummyActivity = new Activity('id', 'title', 'description', 'assignedGroup', 'location', 'direction', 'activityDate', 'startTime');
 
 var activitiesAPIStub = {
-  getActivity: function (id, callback) {
+  getActivityForId: function (id, callback) {
     callback(null, dummyActivity);
   },
   allActivities: function (callback) {
-    console.log('callback: ', callback);
-
     callback(null, [dummyActivity]);
   }
 };
@@ -48,4 +46,18 @@ describe('Activity application', function () {
         done(err);
       });
   });
+
+  it('shows the details of one activity as retrieved from the store', function (done) {
+    var getActivityForId = sinon.spy(activitiesAPIStub, 'getActivityForId');
+    var id = dummyActivity.id;
+
+    request(app)
+      .get('/' + dummyActivity.id)
+      .expect(200)
+      .expect(/<h1>title/, function (err) {
+        getActivityForId.calledWith(id).should.be.true;
+        done(err);
+      });
+  });
+
 });
