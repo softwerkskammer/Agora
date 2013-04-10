@@ -95,7 +95,7 @@ describe('The persistence store sorting', function () {
 
   it('retrieves all in ascending order', function (done) {
     storeSampleData(function () {
-      persistence.list([['lastname', 1], ['firstname', 1]], function (err, result) {
+      persistence.list({lastname: 1, firstname: 1}, function (err, result) {
         result.length.should.equal(4);
         result[0].firstname.should.equal('Anna');
         result[0].lastname.should.equal('Albers');
