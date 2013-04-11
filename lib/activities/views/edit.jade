@@ -27,21 +27,22 @@ block title
   | Aktivität
 
 block content
-  form(id='activityform', action='submit',method='post')
-    fieldset
-      .span12
-        legend
-          | Aktivität
-      .span6
-        mixin text('title', 'Titel')
-        mixin text('location', 'Veranstaltungsort')
-        mixin date('activityDate', 'Datum')
-        mixin text('assignedGroup', 'SWK-Gruppe')
-      .span6
-        mixin textarea('description', 'Beschreibung')
-        mixin textarea('direction', 'Wegbeschreibung')
-        mixin time('startTime', 'Uhrzeit')
+  .container
+    form(id='activityform', action='submit',method='post')
+      fieldset
+        .span12
+          legend
+            | Aktivität
+        .span6
+          mixin text('title', 'Titel')
+          mixin text('location', 'Veranstaltungsort')
+          mixin date('activityDate', 'Datum')
+          mixin time('startTime', 'Uhrzeit')
+        .span6
+          mixin text('assignedGroup', 'SWK-Gruppe')
+          mixin textarea('description', 'Beschreibung')
+          mixin textarea('direction', 'Wegbeschreibung')
 
-      p
-        button(class="btn btn-primary", type="submit") Anlegen
-        a(href="javascript:history.back()", class="btn", type="cancel") Zurück
+        .span12
+          button(class="btn btn-primary", type="submit") Anlegen
+          a(href="javascript:history.back()", class="btn", type="cancel") Zurück
