@@ -1,7 +1,9 @@
 extends ../../../views/layout
-
 block title
-  | #{activity.title}
+  | Aktivitäten
+
 block content
-  h1 #{activity.title}
-  p This will be fun!
+  .span12
+    .page-header
+      h2 Aktivitäten
+        small  #{activity.title}

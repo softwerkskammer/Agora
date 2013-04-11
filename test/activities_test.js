@@ -13,7 +13,15 @@ var dummyActivity = new Activity('id', 'title', 'description', 'assignedGroup', 
 
 var activitiesAPIStub = {
   getActivityForId: function (id, callback) {
-    callback(null, dummyActivity);
+    var activity;
+    var err = null;
+
+    if (id === 'id') {
+      activity = dummyActivity;
+    } else {
+      activity = null;
+    }
+    callback(err, activity);
   },
   allActivities: function (callback) {
     callback(null, [dummyActivity]);
@@ -43,8 +51,10 @@ describe('Activity application', function () {
       .expect(/href="id"/)
       .expect(/title/, function (err) {
         allActivities.calledOnce.should.be.ok;
+        activitiesAPIStub.allActivities.restore();
         done(err);
       });
+
   });
 
   it('shows the details of one activity as retrieved from the store', function (done) {
@@ -54,7 +64,24 @@ describe('Activity application', function () {
     request(app)
       .get('/' + dummyActivity.id)
       .expect(200)
-      .expect(/<h1>title/, function (err) {
+      .expect(/<small> title/)
+      .expect(/<h2>Aktivitäten/, function (err) {
+        getActivityForId.calledWith(id).should.be.true;
+        activitiesAPIStub.getActivityForId.restore();
+        done(err);
+      });
+
+  });
+
+  it('shows the list of activities if the id cannot be found in the store for the detail page', function (done) {
+    var getActivityForId = sinon.spy(activitiesAPIStub, 'getActivityForId');
+
+    var id = dummyActivity.id + '4711';
+
+    request(app)
+      .get('/' + id)
+      .expect(302)
+      .expect(/activities/, function (err) {
         getActivityForId.calledWith(id).should.be.true;
         done(err);
       });
