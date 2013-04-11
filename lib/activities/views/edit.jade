@@ -9,10 +9,19 @@ mixin textarea(name, label)
     label(class="control-label", for=name) #{label}:
     textarea(rows="4", class="input-block-level input-xxlarge", id=name, type='text', name=name)
       | #{activity[name]}
+mixin date(name, label)
+  .control-group
+    label(class="control-label", for=name) #{label}:
+    input(id=name, class="input-block-level input-xlarge", type='date', name=name, value=activity[name])
+mixin time(name, label)
+  .control-group
+    label(class="control-label", for=name) #{label}:
+    input(id=name, class="input-block-level input-xlarge", type='time', name=name, value=activity[name])
 
 block scripts
   script(src="/clientscripts/jquery.validate-1.11.1.js")
   script(src="/clientscripts/messages_de.js")
+  script(src="/clientscripts/check-activityform.js")
 
 block title
   | Aktivität
@@ -26,12 +35,12 @@ block content
       .span6
         mixin text('title', 'Titel')
         mixin text('location', 'Veranstaltungsort')
-        mixin text('activityDate', 'Datum')
+        mixin date('activityDate', 'Datum')
         mixin text('assignedGroup', 'SWK-Gruppe')
       .span6
         mixin textarea('description', 'Beschreibung')
         mixin textarea('direction', 'Wegbeschreibung')
-        mixin text('startTime', 'Uhrzeit')
+        mixin time('startTime', 'Uhrzeit')
 
       p
         button(class="btn btn-primary", type="submit") Anlegen
