@@ -24,7 +24,7 @@ var groupsAPIStub = {
 var membersAPIStub = {
   getMember: function () {},
   getMemberForId: function () {},
-  getMemberForEMail: function () {}
+  getMembersForEMails: function () {}
 };
 
 var groupsAndMembersAPI = proxyquire('../lib/groupsAndMembers/groupsAndMembersAPI', {
@@ -90,7 +90,7 @@ describe('Groups and Members API', function () {
   });
 
   it('returns null as group and an empty list of subscribed users when there is no group and no sympa-list', function (done) {
-    membersAPIStub.getMemberForEMail = function (member, callback) { callback(); };
+    membersAPIStub.getMembersForEMails = function (member, callback) { callback(); };
 
     systemUnderTest.getGroupAndUsersOfList('unbekannteListe', function (err, group, users) {
       expect(group).to.be.null;
@@ -104,12 +104,8 @@ describe('Groups and Members API', function () {
     groupsAPIStub.getSympaUsersOfList = function (err, callback) {
       callback(null, ['user1@mail1.com', 'user2@mail2.com']);
     };
-    membersAPIStub.getMemberForEMail = function (member, callback) {
-      if (member === 'user1@mail1.com') {
-        callback(null, dummymember);
-      } else if (member === 'user2@mail2.com') {
-        callback(null, dummymember2);
-      }
+    membersAPIStub.getMembersForEMails = function (member, callback) {
+      callback(null, [dummymember, dummymember2]);
     };
 
     systemUnderTest.getGroupAndUsersOfList('sympaListWithoutGroup', function (err, group, users) {
@@ -124,18 +120,14 @@ describe('Groups and Members API', function () {
     groupsAPIStub.getGroup = function (groupname, callback) {
       callback(null, GroupA);
     };
-    membersAPIStub.getMemberForEMail = function (member, callback) {
-      if (member === 'user1@mail1.com') {
-        callback(null, dummymember);
-      } else if (member === 'user2@mail2.com') {
-        callback(null, dummymember2);
-      }
+    membersAPIStub.getMembersForEMails = function (member, callback) {
+      callback(null, []);
     };
 
     systemUnderTest.getGroupAndUsersOfList('GroupA', function (err, group, users) {
       expect(group).to.equal(GroupA);
       expect(users).to.not.be.null;
-      expect(users.length).to.equal(2);
+      expect(users.length).to.equal(0);
       done(err);
     });
   });
