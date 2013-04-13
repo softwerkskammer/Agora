@@ -13,40 +13,25 @@ MemberA.firstname = 'Hans';
 MemberA.lastname = 'Dampf';
 
 var groupsAPIStub = {
-  getAllAvailableGroups: function () {
-  },
-  getGroup: function () {
-  },
-  groupFromObject: function () {
-  },
-  createOrSaveGroup: function (group, callback) {
-    callback();
-  }
+  getAllAvailableGroups: function () { },
+  getGroup: function () { },
+  groupFromObject: function () { },
+  createOrSaveGroup: function (group, callback) { callback(); }
 };
 
 var groupsAndMembersAPIStub = {
-  getGroupAndUsersOfList: function () {
-  },
-  userIsInMemberList: function () {
-  }
+  getGroupAndUsersOfList: function () { },
+  userIsInMemberList: function () { }
 };
 
 var groupsApp = proxyquire('../lib/groups', {
-  './groupsAPI': function () {
-    return groupsAPIStub;
-  },
-  '../groupsAndMembers/groupsAndMembersAPI': function () {
-    return groupsAndMembersAPIStub;
-  }
+  './groupsAPI': function () { return groupsAPIStub; },
+  '../groupsAndMembers/groupsAndMembersAPI': function () { return groupsAndMembersAPIStub; }
 });
 
-var app = groupsApp(express(), { get: function () {
-  return null;
-} });   // empty config
+var app = groupsApp(express(), { get: function () { return null; } });   // empty config
 
-app.locals({
-  baseUrl: 'groups'
-});
+app.locals({baseUrl: 'groups'});
 
 describe('Groups application', function () {
   groupsAPIStub.getAllAvailableGroups = function (callback) {
@@ -83,7 +68,7 @@ describe('Groups application', function () {
       .expect(/Gruppe(.+) bearbeiten/, done);
   });
 
-  it('displays an existing group and its members', function (done) {
+  it('displays an existing group and membercount', function (done) {
     groupsAndMembersAPIStub.getGroupAndUsersOfList = function (groupname, callback) {
       callback(null, GroupA, [MemberA]);
     };
@@ -96,7 +81,7 @@ describe('Groups application', function () {
       .expect(/Dies ist Gruppe A./)
       .expect(/Themengruppe/)
       .expect(/Mitglieder der Gruppe:/)
-      .expect(/<ul><li>Hans Dampf<\/li><\/ul>/)
+      .expect(/Diese Gruppe hat ein Mitglied/)
       .end(done);
   });
 
