@@ -11,7 +11,7 @@ block content
             |  Admin
           - else
             |  Profilansicht 
-        - if (user.member.isAdmin)
+        - if (typeof(user) !== 'undefined' && user.member.isAdmin)
           a(href="edit/#{member.nickname}", class="btn") Bearbeiten
     p
       strong Vorname:
