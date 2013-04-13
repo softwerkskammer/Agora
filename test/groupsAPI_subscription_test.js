@@ -64,7 +64,7 @@ describe('Groups API (updateSubscriptions)', function () {
   it('subscribes and unsubscribes no lists if both old and new subscription lists are empty', function (done) {
     setupSubscribedListsForUser([]);
 
-    systemUnderTest.updateSubscriptions('user@mail.com', [], function (err) {
+    systemUnderTest.updateSubscriptions('user@mail.com', 'user@mail.com', [], function (err) {
 
       expect(subscribeSpy.called, 'subscribe is called').to.be.false;
       expect(unsubscribeSpy.called, 'unsubscribe is called').to.be.false;
@@ -76,7 +76,7 @@ describe('Groups API (updateSubscriptions)', function () {
   it('subscribes and unsubscribes no lists if old list contains one element and new subscription is the same element (not list)', function (done) {
     setupSubscribedListsForUser(['list1']);
 
-    systemUnderTest.updateSubscriptions('user@mail.com', 'list1', function (err) {
+    systemUnderTest.updateSubscriptions('user@mail.com', 'user@mail.com', 'list1', function (err) {
 
       expect(subscribeSpy.called, 'subscribe is called').to.be.false;
       expect(unsubscribeSpy.called, 'unsubscribe is called').to.be.false;
@@ -85,10 +85,24 @@ describe('Groups API (updateSubscriptions)', function () {
     });
   });
 
+  it('subscribes list for new mail address and unsubscribes same list for old mail address if old and new mail addresses differ', function (done) {
+    setupSubscribedListsForUser(['list1']);
+
+    systemUnderTest.updateSubscriptions('user-new@mail.com', 'user-old@mail.com', 'list1', function (err) {
+
+      expect(subscribeSpy.calledOnce, 'subscribe is called once').to.be.true;
+      expect(subscribeSpy.calledWith('user-new@mail.com', 'list1'), 'list1 is subscribed with address user-new@mail.com').to.be.true;
+      expect(unsubscribeSpy.calledOnce, 'unsubscribe is called once').to.be.true;
+      expect(unsubscribeSpy.calledWith('user-old@mail.com', 'list1'), 'list1 is unsubscribed with address user-old@mail.com').to.be.true;
+
+      done(err);
+    });
+  });
+
   it('subscribes and unsubscribes no lists if old and new subscription lists contain the same lists', function (done) {
     setupSubscribedListsForUser(['list1', 'list2']);
 
-    systemUnderTest.updateSubscriptions('user@mail.com', ['list1', 'list2'], function (err) {
+    systemUnderTest.updateSubscriptions('user@mail.com', 'user@mail.com', ['list1', 'list2'], function (err) {
 
       expect(subscribeSpy.called, 'subscribe is called').to.be.false;
       expect(unsubscribeSpy.called, 'unsubscribe is called').to.be.false;
@@ -100,7 +114,7 @@ describe('Groups API (updateSubscriptions)', function () {
   it('subscribes one list if old subscriptions are empty and new ones contain one listname (not array)', function (done) {
     setupSubscribedListsForUser([]);
 
-    systemUnderTest.updateSubscriptions('user@mail.com', 'list1', function (err) {
+    systemUnderTest.updateSubscriptions('user@mail.com', 'user@mail.com', 'list1', function (err) {
 
       expect(subscribeSpy.calledOnce, 'subscribe is called once').to.be.true;
       expect(subscribeSpy.calledWith('user@mail.com', 'list1')).to.be.true;
@@ -113,7 +127,7 @@ describe('Groups API (updateSubscriptions)', function () {
   it('subscribes one list if old subscriptions are empty and new ones contain one listname in an array', function (done) {
     setupSubscribedListsForUser([]);
 
-    systemUnderTest.updateSubscriptions('user@mail.com', ['list1'], function (err) {
+    systemUnderTest.updateSubscriptions('user@mail.com', 'user@mail.com', ['list1'], function (err) {
 
       expect(subscribeSpy.calledOnce, 'subscribe is called once').to.be.true;
       expect(subscribeSpy.calledWith('user@mail.com', 'list1')).to.be.true;
@@ -126,7 +140,7 @@ describe('Groups API (updateSubscriptions)', function () {
   it('unsubscribes one list if old subscriptions contain a list and new ones are undefined', function (done) {
     setupSubscribedListsForUser(['list1']);
 
-    systemUnderTest.updateSubscriptions('user@mail.com', undefined, function (err) {
+    systemUnderTest.updateSubscriptions('user@mail.com', 'user@mail.com', undefined, function (err) {
 
       expect(subscribeSpy.called, 'subscribe is called').to.be.false;
       expect(unsubscribeSpy.calledOnce, 'unsubscribe is called once').to.be.true;
@@ -139,7 +153,7 @@ describe('Groups API (updateSubscriptions)', function () {
   it('unsubscribes one list if old subscriptions contain a list and new ones are an empty array', function (done) {
     setupSubscribedListsForUser(['list1']);
 
-    systemUnderTest.updateSubscriptions('user@mail.com', [], function (err) {
+    systemUnderTest.updateSubscriptions('user@mail.com', 'user@mail.com', [], function (err) {
 
       expect(subscribeSpy.called, 'subscribe is called').to.be.false;
       expect(unsubscribeSpy.calledOnce, 'unsubscribe is called once').to.be.true;
@@ -152,7 +166,7 @@ describe('Groups API (updateSubscriptions)', function () {
   it('subscribes and unsubscribes appropriately if there are many changes', function (done) {
     setupSubscribedListsForUser(['list1', 'list2', 'list3']);
 
-    systemUnderTest.updateSubscriptions('user@mail.com', ['list2', 'list4', 'list5'], function (err) {
+    systemUnderTest.updateSubscriptions('user@mail.com', 'user@mail.com', ['list2', 'list4', 'list5'], function (err) {
 
       expect(subscribeSpy.calledTwice, 'subscribe is called twice').to.be.true;
       expect(unsubscribeSpy.calledTwice, 'unsubscribe is called twice').to.be.true;
@@ -160,6 +174,24 @@ describe('Groups API (updateSubscriptions)', function () {
       expect(unsubscribeSpy.calledWith('user@mail.com', 'list3')).to.be.true;
       expect(subscribeSpy.calledWith('user@mail.com', 'list4')).to.be.true;
       expect(subscribeSpy.calledWith('user@mail.com', 'list5')).to.be.true;
+
+      done(err);
+    });
+  });
+
+  it('subscribes and unsubscribes appropriately if there are many changes and the email addresses differ', function (done) {
+    setupSubscribedListsForUser(['list1', 'list2', 'list3']);
+
+    systemUnderTest.updateSubscriptions('user-new@mail.com', 'user-old@mail.com', ['list2', 'list4', 'list5'], function (err) {
+
+      expect(subscribeSpy.calledThrice, 'subscribe is called thrice').to.be.true;
+      expect(unsubscribeSpy.calledThrice, 'unsubscribe is called thrice').to.be.true;
+      expect(unsubscribeSpy.calledWith('user-old@mail.com', 'list1')).to.be.true;
+      expect(unsubscribeSpy.calledWith('user-old@mail.com', 'list2')).to.be.true;
+      expect(unsubscribeSpy.calledWith('user-old@mail.com', 'list3')).to.be.true;
+      expect(subscribeSpy.calledWith('user-new@mail.com', 'list2')).to.be.true;
+      expect(subscribeSpy.calledWith('user-new@mail.com', 'list4')).to.be.true;
+      expect(subscribeSpy.calledWith('user-new@mail.com', 'list5')).to.be.true;
 
       done(err);
     });
