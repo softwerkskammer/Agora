@@ -22,7 +22,8 @@ var groupstoreStub = {
       callback(null, null);
     }
   },
-  saveGroup: function (group, callback) { callback(null, group); }
+  saveGroup: function (group, callback) { callback(null, group); },
+  groupsByLists: function () {}
 };
 
 var groupsAPI = proxyquire('../lib/groups/groupsAPI', {
@@ -34,6 +35,10 @@ var systemUnderTest = groupsAPI({ get: function () { return null; } });   // emp
 describe('Groups API with SympaStub', function () {
 
   it('returns two groups for a user who is mentioned in the stub', function (done) {
+    groupstoreStub.groupsByLists = function (lists, globalCallback) {
+      globalCallback(null, [Craftsmanswap, NeuePlattform]);
+    };
+
     systemUnderTest.getSubscribedGroupsForUser('michael@schumacher.de', function (err, validLists) {
       expect(validLists).to.not.be.null;
       expect(validLists.length).to.equal(2);
@@ -44,6 +49,10 @@ describe('Groups API with SympaStub', function () {
   });
 
   it('returns two groups for the two lists defined in the stub', function (done) {
+    groupstoreStub.groupsByLists = function (lists, globalCallback) {
+      globalCallback(null, [Craftsmanswap, NeuePlattform]);
+    };
+
     systemUnderTest.getAllAvailableGroups(function (err, lists) {
       expect(lists).to.not.be.null;
       expect(lists.length).to.equal(2);
@@ -77,7 +86,7 @@ describe('Groups API with SympaStub', function () {
   it('can handle the creation of a new group', function (done) {
     var saveGroupSpy = sinon.spy(groupstoreStub, 'saveGroup');
 
-    systemUnderTest.createGroup(NonPersistentGroup, function (err, group) {
+    systemUnderTest.createOrSaveGroup(NonPersistentGroup, function (err, group) {
       expect(group).to.equal(NonPersistentGroup);
       expect(saveGroupSpy.calledOnce).to.be.true;
 
