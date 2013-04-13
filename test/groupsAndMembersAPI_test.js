@@ -6,7 +6,8 @@ var expect = require('chai').expect;
 
 var Member = require('../lib/members/member');
 
-var dummymember = new Member('hada', 'Hans', 'Dampf', 'hans.dampf@gmail.com', '@hada', 'Süden', 'Entwickler', 'ada', 'http://my.blog', 'beim Bier');
+var dummymember = new Member();
+dummymember.id = 'hada';
 
 var Group = require('../lib/groups/group');
 
@@ -14,22 +15,35 @@ var GroupA = new Group('GroupA', 'Gruppe A', 'Dies ist Gruppe A.', 'Themengruppe
 var GroupB = new Group('GroupB', 'Gruppe B', 'Dies ist Gruppe B.', 'Regionalgruppe');
 
 var groupsAPIStub = {
-  getSubscribedGroupsForUser: function () {},
-  getSympaUsersOfList: function (err, callback) { callback(null, []); },
-  getGroup: function (groupname, callback) { callback(null, null); }
+  getSubscribedGroupsForUser: function () {
+  },
+  getSympaUsersOfList: function (err, callback) {
+    callback(null, []);
+  },
+  getGroup: function (groupname, callback) {
+    callback(null, null);
+  }
 };
 
 var membersAPIStub = {
-  getMember: function () {},
-  getMemberForId: function () {}
+  getMember: function () {
+  },
+  getMemberForId: function () {
+  }
 };
 
 var groupsAndMembersAPI = proxyquire('../lib/groupsAndMembers/groupsAndMembersAPI', {
-  '../groups/groupsAPI': function () { return groupsAPIStub; },
-  '../members/membersAPI': function () { return membersAPIStub; }
+  '../groups/groupsAPI': function () {
+    return groupsAPIStub;
+  },
+  '../members/membersAPI': function () {
+    return membersAPIStub;
+  }
 });
 
-var systemUnderTest = groupsAndMembersAPI({ get: function () { return null; } });   // empty config -> sympaStub is required
+var systemUnderTest = groupsAndMembersAPI({ get: function () {
+  return null;
+} });   // empty config -> sympaStub is required
 
 describe('Groups and Members API', function () {
 
@@ -150,6 +164,5 @@ describe('Groups and Members API', function () {
     expect(result).to.be.true;
     done();
   });
-
 
 });

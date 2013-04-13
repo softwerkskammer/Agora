@@ -8,7 +8,9 @@ var Group = require('../lib/groups/group');
 var Member = require('../lib/members/member');
 
 var GroupA = new Group('GroupA', 'Gruppe A', 'Dies ist Gruppe A.', 'Themengruppe');
-var MemberA = new Member('hada', 'hada', 'Hans', 'Dampf', 'hans.dampf@gmail.com', '@hada', 'Süden', 'Entwickler', 'ada', 'http://my.blog', 'beim Bier');
+var MemberA = new Member();
+MemberA.firstname = 'Hans';
+MemberA.lastname = 'Dampf';
 
 var groupsAPIStub = {
   getAllAvailableGroups: function () {
