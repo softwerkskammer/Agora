@@ -47,25 +47,21 @@ describe('Groups application', function () {
       .expect(/Gruppe A/, done);
   });
 
-  it('allows to create a new group', function (done) {
+  it('does not allow to create a new group for normal visitors', function (done) {
 
     request(app)
       .get('/new')
-      .expect(200)
-      .expect('Content-Type', /text\/html/)
-      .expect(/Gruppe anlegen/, done);
+      .expect(302, done);
   });
 
-  it('allows to edit an existing group', function (done) {
+  it('does not allow to edit an existing group for normal visitors', function (done) {
     groupsAPIStub.getGroup = function (groupname, callback) {
       callback(null, GroupA);
     };
 
     request(app)
       .get('/edit/GroupA')
-      .expect(200)
-      .expect('Content-Type', /text\/html/)
-      .expect(/Gruppe(.+) bearbeiten/, done);
+      .expect(302, done);
   });
 
   it('displays an existing group and membercount', function (done) {
@@ -85,40 +81,37 @@ describe('Groups application', function () {
       .end(done);
   });
 
-  it('saves a newly created Group', function (done) {
+  it('does not allow save for a newly created Group for normal visitors', function (done) {
     groupsAPIStub.groupFromObject = function () {
       return GroupA;
     };
 
     request(app)
       .post('/submit')
-      .expect(302)
-      .expect('Content-Type', /text\/plain/)
-      .expect('Moved Temporarily. Redirecting to /null/groups/GroupA', done);
+      .expect(302, done);
   });
 
-  it('saves an already existing Group', function (done) {
+  it('does not allow save for an exisiting Group for normal visitors', function (done) {
     groupsAPIStub.groupFromObject = function () {
       return GroupA;
     };
 
     request(app)
       .post('/edit/submit')
-      .expect(302)
-      .expect('Content-Type', /text\/plain/)
-      .expect('Moved Temporarily. Redirecting to /null/groups/GroupA', done);
+      .expect(302, done);
   });
 
-  it('redirects to the groups overview page if the group to save is not valid', function (done) {
-    groupsAPIStub.groupFromObject = function () {
-      return new Group();
-    };
-
-    request(app)
-      .post('/edit/submit')
-      .expect(302)
-      .expect('Content-Type', /text\/plain/)
-      .expect('Moved Temporarily. Redirecting to /null/groups/', done);
-  });
+  // test currently not sensible
+//  it('redirects to the groups overview page if the group to save is not valid', function (done) {
+//    groupsAPIStub.groupFromObject = function () {
+//      return new Group();
+//    };
+//
+//    request(app)
+//      .post('/edit/submit')
+//      .expect(302)
+//      .expect('Content-Type', /text\/plain/)
+//      .expect('Moved Temporarily. Redirecting to /null/groups/', done);
+//  });
 
 });
