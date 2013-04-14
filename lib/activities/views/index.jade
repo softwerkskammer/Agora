@@ -12,4 +12,4 @@ block content
     ul
       for activity in activities
         li
-          a(href='#{activity.id}') #{activity.title}
+          a(href='#{activity.createLink()}') #{activity.title}
