@@ -35,6 +35,6 @@ block content
       mixin memberlist(users)
       - if (userIsRegistered)
         - if (userIsGroupMember)
-          a(href="/unsubscribe/#{group.id}", class="btn btn-primary") Gruppe verlassen
+          a(href="unsubscribe/#{group.id}", class="btn btn-primary") Gruppe verlassen
         - else
-          a(href="/subscribe/#{group.id}", class="btn btn-primary") Gruppe beitreten
+          a(href="subscribe/#{group.id}", class="btn btn-primary") Gruppe beitreten
