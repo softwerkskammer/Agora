@@ -52,15 +52,6 @@ describe('SWK Plattform server', function () {
     });
   });
 
-  it('has events app', function (done) {
-    httpRequest({uri: base_uri + '/events'}, function (req, res) {
-      res.statusCode.should.equal(200);
-      res.headers['content-type'].should.contain('text/html');
-      res.body.should.contain('events');
-      done();
-    });
-  });
-
   it('provides the bootstrap style sheet', function (done) {
     var stylesheet_uri = base_uri + '/stylesheets/bootstrap.css';
     httpRequest({uri: stylesheet_uri}, function (req, resp) {
@@ -93,24 +84,6 @@ describe('SWK Plattform server', function () {
 });
 
 describe('The app itself', function () {
-  it('redirects for a sub app without trailing "/" to the sub app with "/"', function (done) {
-    request(app.create())
-      .get('/events')
-      .expect(302)
-      .end(function (err, res) {
-        res.header['location'].should.equal('/events/');
-        done(err);
-      });
-  });
-
-  it('has the events sub app', function (done) {
-    request(app.create())
-      .get('/events/')
-      .expect('Content-Type', /text\/html/)
-      .expect(/events/)
-      .expect(200, done);
-  });
-
   it('redirects unauthenticated access to the members sub app to the authentication page', function (done) {
     request(app.create())
       .get('/members/')
