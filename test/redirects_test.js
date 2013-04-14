@@ -3,7 +3,7 @@
 var request = require('supertest'),
   express = require('express'),
   proxyquire = require('proxyquire'),
-  conf = require('nconf');
+  conf = require('../configure');
 
 require('chai').should();
 
@@ -56,9 +56,6 @@ var memberModule = proxyquire('../lib/members', {
   'connect-ensure-login': ensureLoggedInStub
 });
 
-conf.set('securedByLoginURLPattern', '/members/.*');
-conf.set('publicUrlPrefix', 'publicUrlPrefix');
-
 var authenticationModule = proxyquire('../lib/authentication', {});
 var authenticationAppFactory = authenticationModule(conf);
 
@@ -109,7 +106,7 @@ describe('member redirects', function () {
     };
     request(appUnderTest)
       .get('/members/')
-      .expect('Moved Temporarily. Redirecting to /publicUrlPrefix/members/new')
+      .expect(/members\/new/)
       .expect(302, function (err) {
         delete authenticationState.user;
         done(err);
