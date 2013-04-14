@@ -20,9 +20,9 @@ html
             | <span class="icon-bar"></span>
             | <span class="icon-bar"></span>
           p(class="navbar-text pull-right")
-            - if (typeof(user) !== 'undefined')
-              a(href="/members/edit", class="navbar-link")
-               | Profil <i class="icon-user icon-white"></i>
+            - if (typeof(user) !== 'undefined' && user.member)
+              a(href="/members/edit/#{user.member.nickname}", class="navbar-link")
+               | Profil (#{user.member.nickname}) <i class="icon-user icon-white"></i>
             - else
               - var returnTo = ""
               -if(typeof(currentUrl) !== 'undefined')
