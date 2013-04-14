@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Activity Editing - Validation Test Suite</title>
+    <link rel="stylesheet" href="lib/qunit/qunit-1.11.0.css"/>
+    <script src="../../public/clientscripts/jquery-1.9.1.js"></script>
+    <script src="lib/qunit/qunit-1.11.0.js"></script>
+    <script src="lib/jquery.mockjax.js"></script>
+    <script src="../../public/clientscripts/jquery.validate-1.11.1.js"></script>
+    <script src="../../public/clientscripts/additional-methods-1.11.1.js"></script>
+    <script src="../../public/clientscripts/messages_de.js"></script>
+    <script src="../../public/clientscripts/check-activityform.js"></script>
+    <script src="editactivity-tests.js"></script>
+  </head>
+  <body>
+    <div id="qunit"></div>
+    <div id="qunit-fixture">
+      <form id="activityform" action="submit" method="post">
+        <div>
+          <label>Titel:</label>
+          <input id="title" type="text" name="title">
+        </div>
+        <div>
+          <label>Ort:</label>
+          <input id="location" type="text" name="location">
+        </div>
+        <div>
+          <label>Datum:</label>
+          <input id="activityDate" type="text" name="activityDate">
+        </div>
+        <div>
+          <label>Zeit:</label>
+          <input id="startTime" type="text" name="startTime">
+        </div>
+        <div>
+          <label>SWK-Gruppe:</label>
+          <input id="assignedGroup" type="text" name="assignedGroup">
+        </div>
+        <div>
+          <label>Beschreibung:</label>
+          <input id="description" type="text" name="description">
+        </div>
+        <div>
+          <label>Wegbeschreibung:</label>
+          <input id="direction" type="text" name="direction">
+        </div>
+        <div>
+          <input type="submit" value="Submit">
+        </div>
+      </form>
+    </div>
+  </body>
+</html>

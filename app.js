@@ -117,7 +117,7 @@ module.exports = function (conf) {
       });
 
       app.use('/', require('./lib/site'));
-      useApp(app, 'events', conf, require('./lib/events'));
+      useApp(app, 'activities', conf, require('./lib/activities'));
       useApp(app, 'members', conf, require('./lib/members'));
       useApp(app, 'groups', conf, require('./lib/groups'));
       useApp(app, 'announcements', conf, require('./lib/announcements'));
