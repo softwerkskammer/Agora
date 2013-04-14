@@ -54,6 +54,7 @@
     "grunt-contrib-qunit": "0.2.1"
   },
   "scripts": {
-    "test": "grunt travis --verbose"
+    "test": "grunt travis --verbose",
+    "prepublish": "git log -1 --pretty=format:\"a(href='https://github.com/softwerkskammer/NeuePlattform-Implementierung/commit/%H') %h\" > version.jade"
   }
 }

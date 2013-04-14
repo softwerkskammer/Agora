@@ -18,7 +18,8 @@ Some modules are compiled during the installation. Therefore some software shoul
 * Git in system path
 * OS depending C++ compiler with headers and libraries
   * For Windows: Microsoft Windows SDK for Windows 7 and .NET Framework 4 [available here](http://www.microsoft.com/en-us/download/details.aspx?id=8279)
-  * For Mac OS X: Install XCode from the App Store. In XCode's preferences (section "Downloads"), install the command line tools.
+  * For Mac OS X: Install XCode from the App Store. In XCode's preferences (section "Downloads"), install the command line tools. When you have installed
+    the stand alone version of the command line tools, you need to execute `sudo xcode-select -switch /usr/bin` before you are able to run `npm install`.
 * MongoDB (Version 2.4) [http://www.mongodb.org/downloads](http://www.mongodb.org/downloads)
 
 Preparations for use
@@ -51,7 +52,7 @@ Running the server
 Running the tests
 -----------------
 
-To run the tests, you need to install Grunt. We propose to install Grunt globally via the -g option of npm. To find out more about this option, see [https://npmjs.org/doc/global.html](https://npmjs.org/doc/global.html).:
+To run the tests, you need to install grunt-cli. We propose to install grunt-cli globally via the -g option of npm. To find out more about this option, see [https://npmjs.org/doc/global.html](https://npmjs.org/doc/global.html).:
 
 * (Optional) To define the installation location of global npm packages on Unix-like Systems create a file called `.npmrc` with the following contents in your Home directory:
 

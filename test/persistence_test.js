@@ -65,7 +65,7 @@ describe('The persistence store', function () {
 });
 
 
-describe('The persistence store sorting', function () {
+describe('The persistence store', function () {
   var persistence;
   var user1 = {id: '1', firstname: 'Heinz', lastname: 'Meier'};
   var user2 = {id: '2', firstname: 'Max', lastname: 'Albers'};
@@ -93,7 +93,7 @@ describe('The persistence store sorting', function () {
     persistence = createTeststore();
   });
 
-  it('retrieves all in ascending order', function (done) {
+  it('retrieves all members in ascending order', function (done) {
     storeSampleData(function () {
       persistence.list({lastname: 1, firstname: 1}, function (err, result) {
         result.length.should.equal(4);
@@ -108,6 +108,20 @@ describe('The persistence store sorting', function () {
         done(err);
       });
     });
+  });
+
+  it('retrieves those members whose IDs are contained in the list', function (done) {
+    storeSampleData(function () {
+      persistence.listByIds(['3', '4', '6', 'test'], {lastname: 1, firstname: 1}, function (err, result) {
+        result.length.should.equal(2);
+        result[0].firstname.should.equal('Anna');
+        result[0].lastname.should.equal('Albers');
+        result[1].firstname.should.equal('Peter');
+        result[1].lastname.should.equal('Paulsen');
+        done(err);
+      });
+    });
+
   });
 
 });

@@ -6,7 +6,14 @@ block content
   .span12
     .page-header
       h2 "#{member.nickname}"
-        small  Profilansicht
+        small  
+          - if (member.isAdmin)
+            |  Admin
+          - else
+            |  Profilansicht
+        - if (typeof(user) !== 'undefined' && user.member.isAdmin)
+          | 
+          a(href="edit/#{member.nickname}", class="btn") Bearbeiten
     p
       strong Vorname:
       |  #{member.firstname}

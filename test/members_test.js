@@ -9,7 +9,11 @@ require('chai').should();
 
 var Member = require('../lib/members/member');
 
-var dummymember = new Member('hada', 'hada', 'Hans', 'Dampf', 'hans.dampf@gmail.com', '@hada', 'Süden', 'Entwickler', 'ada', 'http://my.blog', 'beim Bier');
+var dummymember = new Member();
+dummymember.nickname = 'hada';
+dummymember.site = 'http://my.blog';
+dummymember.firstname = 'Hans';
+dummymember.lastname = 'Dampf';
 
 var groupsAPIStub = {
   getSubscribedGroupsForUser: function (email, callback) {
