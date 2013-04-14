@@ -9,7 +9,6 @@ var securedByLoginURLRegex = new RegExp(nconf.get('securedByLoginURLPattern'));
 describe('default secure URL configuration', function () {
 
   it('should secure \/members\/ pages except "submit"', function (done) {
-    console.log(nconf.get('securedByLoginURLPattern'));
     expect(securedByLoginURLRegex.test('/members')).to.be.true;
     expect(securedByLoginURLRegex.test('/members/new')).to.be.true;
     expect(securedByLoginURLRegex.test('/members/submit')).to.be.false;
@@ -24,8 +23,8 @@ describe('default secure URL configuration', function () {
   });
 
   it('should secure \/edit\/ pages', function (done) {
-    expect(securedByLoginURLRegex.test('/groups/edit')).to.be.true;
-    expect(securedByLoginURLRegex.test('/something/edit')).to.be.true;
+    expect(securedByLoginURLRegex.test('/groups/edit/')).to.be.true;
+    expect(securedByLoginURLRegex.test('/something/edit/')).to.be.true;
     done();
   });
 
