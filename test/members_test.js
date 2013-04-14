@@ -58,7 +58,7 @@ var memberApp = proxyquire('../lib/members', {
 
 var app = memberApp({ get: function () {
   return null; // empty config
-} }).initialize(express());
+} }).create(express());
 
 describe('Members application', function () {
 

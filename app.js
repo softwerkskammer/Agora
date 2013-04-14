@@ -99,7 +99,7 @@ module.exports = function (conf) {
 
       app.use('/', require('./lib/site'));
       useApp(app, 'events', conf, require('./lib/events'));
-      useApp(app, 'members', conf, members.initialize);
+      useApp(app, 'members', conf, members.create);
       useApp(app, 'groups', conf, require('./lib/groups'));
       useApp(app, 'announcements', conf, require('./lib/announcements'));
       useApp(app, 'auth', conf, authentication.initialize);
