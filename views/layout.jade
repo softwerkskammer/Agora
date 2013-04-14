@@ -19,14 +19,21 @@ html
             | <span class="icon-bar"></span>
             | <span class="icon-bar"></span>
             | <span class="icon-bar"></span>
-          p(class="navbar-text pull-right")
-            - if (typeof(user) !== 'undefined' && user.member)
-              a(href="/members/edit/#{user.member.nickname}", class="navbar-link")
-               | Profil (#{user.member.nickname}) <i class="icon-user icon-white"></i>
-            - else
-              - var returnTo = ""
-              -if(typeof(currentUrl) !== 'undefined')
-                - returnTo = "?returnTo=" + encodeURIComponent(currentUrl)
+          - if (typeof(user) !== 'undefined' && user.member)
+            ul(class="nav pull-right")
+              li.dropdown
+                a(href="#", class="dropdown-toggle", data-toggle="dropdown") 
+                  | #{user.member.nickname} <i class="icon-user icon-white"></i>
+                  b.caret
+                ul.dropdown-menu
+                  li: a(href="/members/edit/#{user.member.nickname}") Profil bearbeiten
+                  li: a(href="/auth/logout") Abmelden
+                  li: include ../version
+          - else
+            - var returnTo = ""
+            - if (typeof(currentUrl) !== 'undefined')
+              - returnTo = "?returnTo=" + encodeURIComponent(currentUrl)
+            p(class="navbar-text pull-right")
               a(href="/auth/login" + returnTo, class="navbar-link") Anmelden
           div(class="nav-collapse collapse navbar-inverse-collapse")
             ul.nav
@@ -38,7 +45,7 @@ html
 
       .row
         block content
-
+    
     script(src="/clientscripts/jquery-1.9.1.js")
     script(src="/clientscripts/bootstrap.js")
     script(src="/clientscripts/navbar-scripts.js")
