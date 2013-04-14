@@ -36,7 +36,7 @@ var membersAPIStub = {
 };
 
 var groupsAndMembers = proxyquire('../lib/groupsAndMembers/groupsAndMembersAPI', {
-  '../groups/groupsAPI'  : function () {
+  '../groups/groupsAPI': function () {
     return groupsAPIStub;
   },
   '../members/membersAPI': function () {
@@ -45,16 +45,16 @@ var groupsAndMembers = proxyquire('../lib/groupsAndMembers/groupsAndMembersAPI',
 });
 
 var memberApp = proxyquire('../lib/members', {
-  './membersAPI'                          : function () {
+  './membersAPI': function () {
     return membersAPIStub;
   },
   '../groupsAndMembers/groupsAndMembersAPI': groupsAndMembers,
-  'connect-ensure-login'                   : ensureLoggedInStub
+  'connect-ensure-login': ensureLoggedInStub
 });
 
-var app = memberApp(express(), { get: function () {
-  return null;
-} });   // empty config
+var app = memberApp({ get: function () {
+  return null; // empty config
+} }).initialize(express());
 
 describe('Members application', function () {
 
