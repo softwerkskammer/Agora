@@ -56,9 +56,9 @@ var memberApp = proxyquire('../lib/members', {
   'connect-ensure-login': ensureLoggedInStub
 });
 
-var app = memberApp(express(), { get: function () {
-  return null;
-} });   // empty config
+var app = memberApp({ get: function () {
+  return null; // empty config
+} }).create(express());
 
 describe('Members application', function () {
 
