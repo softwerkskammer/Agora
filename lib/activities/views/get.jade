@@ -1,0 +1,17 @@
+extends ../../../views/layout
+block title
+  | Aktivitäten
+
+block content
+  .span12
+    .page-header
+      h2 Aktivitäten
+        small  #{activity.title}
+
+  .span6
+    p Datum: #{activity.activityDate}
+    p Zeit: #{activity.startTime}
+    p Ort: #{activity.location}
+  .span6
+    p Beschreibung: #{activity.description}
+    p Wegbeschreibung: #{activity.direction}
