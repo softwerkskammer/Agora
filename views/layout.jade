@@ -30,15 +30,16 @@ html
               a(href="/auth/login" + returnTo, class="navbar-link") Anmelden
           div(class="nav-collapse collapse navbar-inverse-collapse")
             ul.nav
-              li: a(href="/Announcements") Nachrichten
-              li: a(href="#") Aktivitäten
-              li: a(href="/groups") Gruppen
+              li#announcements: a(href="/announcements") Nachrichten
+              li#activities: a(href="#") Aktivitäten
+              li#groups: a(href="/groups") Gruppen
               - if (typeof(user) !== 'undefined')
-                li: a(href="/members") Mitglieder
+                li#members: a(href="/members") Mitglieder
 
       .row
         block content
 
     script(src="/clientscripts/jquery-1.9.1.js")
     script(src="/clientscripts/bootstrap.js")
+    script(src="/clientscripts/navbar-scripts.js")
     block scripts

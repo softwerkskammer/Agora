@@ -1,4 +1,5 @@
-extend ../../../views/layout
+extends ../../../views/layout
+include ../../groupsAndMembers/views/gm-mixins
 
 block title
     | #{group.longName}
@@ -31,9 +32,7 @@ block content
     - else
       |  #{users.length} Mitglieder.
     - if (userIsRegistered)
-      ul
-        each member in users
-          li #{member.firstname} #{member.lastname}
+      mixin memberlist(users)
       - if (userIsRegistered)
         - if (userIsGroupMember)
           a(href="/unsubscribe/#{group.id}", class="btn btn-primary") Gruppe verlassen
