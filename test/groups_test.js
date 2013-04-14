@@ -8,43 +8,30 @@ var Group = require('../lib/groups/group');
 var Member = require('../lib/members/member');
 
 var GroupA = new Group('GroupA', 'Gruppe A', 'Dies ist Gruppe A.', 'Themengruppe');
-var MemberA = new Member('hada', 'hada', 'Hans', 'Dampf', 'hans.dampf@gmail.com', '@hada', 'Süden', 'Entwickler', 'ada', 'http://my.blog', 'beim Bier');
+var MemberA = new Member();
+MemberA.firstname = 'Hans';
+MemberA.lastname = 'Dampf';
 
 var groupsAPIStub = {
-  getAllAvailableGroups: function () {
-  },
-  getGroup: function () {
-  },
-  groupFromObject: function () {
-  },
-  createOrSaveGroup: function (group, callback) {
-    callback();
-  }
+  getAllAvailableGroups: function () { },
+  getGroup: function () { },
+  groupFromObject: function () { },
+  createOrSaveGroup: function (group, callback) { callback(); }
 };
 
 var groupsAndMembersAPIStub = {
-  getGroupAndUsersOfList: function () {
-  },
-  userIsInMemberList: function () {
-  }
+  getGroupAndUsersOfList: function () { },
+  userIsInMemberList: function () { }
 };
 
 var groupsApp = proxyquire('../lib/groups', {
-  './groupsAPI': function () {
-    return groupsAPIStub;
-  },
-  '../groupsAndMembers/groupsAndMembersAPI': function () {
-    return groupsAndMembersAPIStub;
-  }
+  './groupsAPI': function () { return groupsAPIStub; },
+  '../groupsAndMembers/groupsAndMembersAPI': function () { return groupsAndMembersAPIStub; }
 });
 
-var app = groupsApp(express(), { get: function () {
-  return null;
-} });   // empty config
+var app = groupsApp(express(), { get: function () { return null; } });   // empty config
 
-app.locals({
-  baseUrl: 'groups'
-});
+app.locals({baseUrl: 'groups'});
 
 describe('Groups application', function () {
   groupsAPIStub.getAllAvailableGroups = function (callback) {
@@ -60,28 +47,24 @@ describe('Groups application', function () {
       .expect(/Gruppe A/, done);
   });
 
-  it('allows to create a new group', function (done) {
+  it('does not allow to create a new group for normal visitors', function (done) {
 
     request(app)
       .get('/new')
-      .expect(200)
-      .expect('Content-Type', /text\/html/)
-      .expect(/Gruppe anlegen/, done);
+      .expect(302, done);
   });
 
-  it('allows to edit an existing group', function (done) {
+  it('does not allow to edit an existing group for normal visitors', function (done) {
     groupsAPIStub.getGroup = function (groupname, callback) {
       callback(null, GroupA);
     };
 
     request(app)
       .get('/edit/GroupA')
-      .expect(200)
-      .expect('Content-Type', /text\/html/)
-      .expect(/Gruppe(.+) bearbeiten/, done);
+      .expect(302, done);
   });
 
-  it('displays an existing group and its members', function (done) {
+  it('displays an existing group and membercount', function (done) {
     groupsAndMembersAPIStub.getGroupAndUsersOfList = function (groupname, callback) {
       callback(null, GroupA, [MemberA]);
     };
@@ -94,44 +77,41 @@ describe('Groups application', function () {
       .expect(/Dies ist Gruppe A./)
       .expect(/Themengruppe/)
       .expect(/Mitglieder der Gruppe:/)
-      .expect(/<ul><li>Hans Dampf<\/li><\/ul>/)
+      .expect(/Diese Gruppe hat ein Mitglied/)
       .end(done);
   });
 
-  it('saves a newly created Group', function (done) {
+  it('does not allow save for a newly created Group for normal visitors', function (done) {
     groupsAPIStub.groupFromObject = function () {
       return GroupA;
     };
 
     request(app)
       .post('/submit')
-      .expect(302)
-      .expect('Content-Type', /text\/plain/)
-      .expect('Moved Temporarily. Redirecting to /null/groups/GroupA', done);
+      .expect(302, done);
   });
 
-  it('saves an already existing Group', function (done) {
+  it('does not allow save for an exisiting Group for normal visitors', function (done) {
     groupsAPIStub.groupFromObject = function () {
       return GroupA;
     };
 
     request(app)
       .post('/edit/submit')
-      .expect(302)
-      .expect('Content-Type', /text\/plain/)
-      .expect('Moved Temporarily. Redirecting to /null/groups/GroupA', done);
+      .expect(302, done);
   });
 
-  it('redirects to the groups overview page if the group to save is not valid', function (done) {
-    groupsAPIStub.groupFromObject = function () {
-      return new Group();
-    };
-
-    request(app)
-      .post('/edit/submit')
-      .expect(302)
-      .expect('Content-Type', /text\/plain/)
-      .expect('Moved Temporarily. Redirecting to /null/groups/', done);
-  });
+  // test currently not sensible
+//  it('redirects to the groups overview page if the group to save is not valid', function (done) {
+//    groupsAPIStub.groupFromObject = function () {
+//      return new Group();
+//    };
+//
+//    request(app)
+//      .post('/edit/submit')
+//      .expect(302)
+//      .expect('Content-Type', /text\/plain/)
+//      .expect('Moved Temporarily. Redirecting to /null/groups/', done);
+//  });
 
 });

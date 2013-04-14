@@ -6,8 +6,10 @@ var expect = require('chai').expect;
 
 var Member = require('../lib/members/member');
 
-var dummymember = new Member('hada', 'Hans', 'Dampf', 'hans.dampf@gmail.com', '@hada', 'Süden', 'Entwickler', 'ada', 'http://my.blog', 'beim Bier');
-var dummymember2 = new Member('hada2', 'Hans', 'Dampf 2', 'hans.dampf@gmail.com', '@hada', 'Süden', 'Entwickler', 'ada', 'http://my.blog', 'beim Bier');
+var dummymember = new Member();
+dummymember.id = 'hada';
+var dummymember2 = new Member();
+dummymember2.id = 'hada2';
 
 var Group = require('../lib/groups/group');
 
