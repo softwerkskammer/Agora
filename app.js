@@ -79,21 +79,21 @@ module.exports = function (conf) {
 
     function isOK() {
       return originalUrl !== urlNew &&
-        originalUrl !== '/members/submit' &&
-        originalUrl !== '/auth/logout' &&
-        !/.clientscripts./.test(originalUrl) &&
-        !/.stylesheets./.test(originalUrl) &&
-        !/.img./.test(originalUrl) &&
-        !/.checknickname./.test(originalUrl);
+        originalUrl !== '/members/submit' && //
+        originalUrl !== '/auth/logout' && //
+        !/.clientscripts./.test(originalUrl) && // 
+        !/.stylesheets./.test(originalUrl) && //
+        !/.img./.test(originalUrl) && !/.checknickname./.test(originalUrl);
     }
 
-    if (req.user && !req.user.registered && isOK()) {
+    if (req.user && !req.user.member && isOK()) {
       return res.redirect(urlPrefix + urlNew);
     }
     next();
   }
 
   return {
+
     create: function () {
       var app = express();
       this.initApp(app, conf);
@@ -110,14 +110,10 @@ module.exports = function (conf) {
         app.use(express.bodyParser());
         app.use(express.methodOverride());
         app.use(express.session({secret: conf.get('secret')}));
-        app.use(newUserMustFillInRegistration);
         authentication.configure(app);
+        app.use(newUserMustFillInRegistration);
         app.use(app.router);
         app.use(express.static(path.join(__dirname, 'public')));
-      });
-
-      app.configure('development', function () {
-        app.use(express.errorHandler());
       });
 
       app.use('/', require('./lib/site'));
@@ -126,6 +122,24 @@ module.exports = function (conf) {
       useApp(app, 'groups', conf, require('./lib/groups'));
       useApp(app, 'announcements', conf, require('./lib/announcements'));
       useApp(app, 'auth', conf, authentication.initialize);
+
+      app.configure('development', function () {
+        // Handle 404
+        app.use(function (req, res) {
+          res.render('404.jade');
+        });
+
+        // Handle 500
+        app.use(function (error, req, res, next) {
+          res.render('500.jade', {error: error});
+          next;
+        });
+      });
+
+      app.configure('production', function () {
+        //app.use(express.errorHandler());
+      });
+
     },
 
     start: function (done) {

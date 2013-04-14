@@ -10,7 +10,9 @@ describe('Member', function () {
     for (var name in member) {
       var property = member[name];
       if (typeof(property) !== 'function') {
-        should.not.exist(property, name);
+        if (name !== 'isAdmin') {
+          should.not.exist(property, name);
+        }
       }
     }
     done();
@@ -86,4 +88,39 @@ describe('Member', function () {
     done();
   });
 
+  it('has a boolean value for "isAdmin"', function (done) {
+    var member = new Member();
+    member.isAdmin.should.be.false;
+    done();
+  });
+
+  it('always has a boolean value vor "isAdmin"', function (done) {
+    var req_body = {};
+    var member = new Member().updateWith(req_body, null);
+    member.isAdmin.should.be.false;
+    done();
+  });
+
+  it('is correctly filled from small database record', function (done) {
+    var db_record = {id: 'ID', nickname: 'NICK'};
+    var member = new Member().fromObject(db_record);
+    member.id.should.equal(db_record.id);
+    member.nickname.should.equal(db_record.nickname);
+    member.isAdmin.should.be.false;
+    done();
+  });
+
+  it('is correctly filled as Admin from small database record', function (done) {
+    var db_record = {isAdmin: true};
+    var member = new Member().fromObject(db_record);
+    member.isAdmin.should.be.true;
+    done();
+  });
+
+  it('is correctly filled as Admin from small database record even when boolean is transmitted as String', function (done) {
+    var db_record = {isAdmin: 'true'};
+    var member = new Member().fromObject(db_record);
+    member.isAdmin.should.be.true;
+    done();
+  });
 });

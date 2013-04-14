@@ -1,4 +1,5 @@
-extend ../../../views/layout
+extends ../../../views/layout
+include ../../groupsAndMembers/views/gm-mixins
 
 block title
     | #{group.longName}
@@ -7,7 +8,9 @@ block content
   .span12
     .page-header
       h2 #{group.longName}
-        small  #{group.type}
+        small  #{group.type} 
+        - if (userIsRegistered && user.member.isAdmin)
+          a(href="edit/#{group.id}", class="btn") Bearbeiten
 
     p
       strong
@@ -21,12 +24,17 @@ block content
       |  #{group.description}
 
     h3 Mitglieder der Gruppe:
-    ul
-      each member in users
-        li #{member.firstname} #{member.lastname}
-
+    | Diese Gruppe hat
+    - if (users.length === 1)
+      |  ein Mitglied.
+    - else if (users.length === 0)
+      |  keine Mitglieder.
+    - else
+      |  #{users.length} Mitglieder.
     - if (userIsRegistered)
-      - if (userIsGroupMember)
-        a(href="/unsubscribe/#{group.id}", class="btn btn-primary") Gruppe verlassen
-      - else
-        a(href="/subscribe/#{group.id}", class="btn btn-primary") Gruppe beitreten
+      mixin memberlist(users)
+      - if (userIsRegistered)
+        - if (userIsGroupMember)
+          a(href="unsubscribe/#{group.id}", class="btn btn-primary") Gruppe verlassen
+        - else
+          a(href="subscribe/#{group.id}", class="btn btn-primary") Gruppe beitreten

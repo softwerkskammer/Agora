@@ -19,26 +19,34 @@ html
             | <span class="icon-bar"></span>
             | <span class="icon-bar"></span>
             | <span class="icon-bar"></span>
-          p(class="navbar-text pull-right")
-            - if (typeof(user) !== 'undefined')
-              a(href="/members/edit", class="navbar-link")
-               | Profil <i class="icon-user icon-white"></i>
-            - else
-              - var returnTo = ""
-              -if(typeof(currentUrl) !== 'undefined')
-                - returnTo = "?returnTo=" + encodeURIComponent(currentUrl)
+          - if (typeof(user) !== 'undefined' && user.member)
+            ul(class="nav pull-right")
+              li.dropdown
+                a(href="#", class="dropdown-toggle", data-toggle="dropdown") 
+                  | #{user.member.nickname} <i class="icon-user icon-white"></i>
+                  b.caret
+                ul.dropdown-menu
+                  li: a(href="/members/edit/#{user.member.nickname}") Profil bearbeiten
+                  li: a(href="/auth/logout") Abmelden
+                  li: include ../version
+          - else
+            - var returnTo = ""
+            - if (typeof(currentUrl) !== 'undefined')
+              - returnTo = "?returnTo=" + encodeURIComponent(currentUrl)
+            p(class="navbar-text pull-right")
               a(href="/auth/login" + returnTo, class="navbar-link") Anmelden
           div(class="nav-collapse collapse navbar-inverse-collapse")
             ul.nav
-              li: a(href="/announcements") Nachrichten
-              li: a(href="/activities") Aktivitäten
-              li: a(href="/groups") Gruppen
+              li#announcements: a(href="/announcements") Nachrichten
+              li#activities: a(href="#") Aktivitäten
+              li#groups: a(href="/groups") Gruppen
               - if (typeof(user) !== 'undefined')
-                li: a(href="/members") Mitglieder
+                li#members: a(href="/members") Mitglieder
 
       .row
         block content
-
+    
     script(src="/clientscripts/jquery-1.9.1.js")
     script(src="/clientscripts/bootstrap.js")
+    script(src="/clientscripts/navbar-scripts.js")
     block scripts
