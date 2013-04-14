@@ -86,7 +86,7 @@ module.exports = function (conf) {
         !/.img./.test(originalUrl) && !/.checknickname./.test(originalUrl);
     }
 
-    if (req.user && !req.user.registered && isOK()) {
+    if (req.user && !req.user.member && isOK()) {
       return res.redirect(urlPrefix + urlNew);
     }
     next();
