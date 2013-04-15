@@ -10,6 +10,7 @@ var initValidator = function () {
         required: true,
         minlength: 2,
         maxlength: 20,
+        alphanumeric: true,
         remote: "/groups/checkgroupname"
       },
       longName: "required",
@@ -19,7 +20,8 @@ var initValidator = function () {
     },
     messages: {
       id: {
-        remote: $.validator.format("Dieser Gruppenname ist bereits vergeben.")
+        remote: $.validator.format("Dieser Gruppenname ist bereits vergeben."),
+        alphanumeric: $.validator.format("Erlaubt sind nur Zahlen, Buchstaben und der Unterstrich.")
       }
     },
     errorElement: "span",
