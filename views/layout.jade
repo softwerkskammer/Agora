@@ -44,7 +44,7 @@ html
               li#groups: a(href="/groups") Gruppen
               - if (typeof(user) !== 'undefined')
                 li#members: a(href="/members") Mitglieder
-                - if (user.member.isAdmin)
+                - if (user && user.member && user.member.isAdmin)
                   ul.nav
                     li.dropdown
                       a(href="#", class="dropdown-toggle", data-toggle="dropdown")
