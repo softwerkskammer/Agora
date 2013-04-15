@@ -96,4 +96,15 @@ describe('Activity application', function () {
       });
   });
 
+
+  it('allows to create a new activity', function (done) {
+
+    request(app)
+      .get('/new')
+      .expect(200)
+      .expect(/activities/, function (err) {
+        done(err);
+      });
+  });
+
 });
