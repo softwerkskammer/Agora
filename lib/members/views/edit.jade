@@ -19,7 +19,7 @@ mixin textarea(name, label)
     textarea(rows="4", class="input-block-level input-xxlarge", id=name, type='text', name=name)
       | #{member[name]}
 
-mixin checkbox(groupId, groupName, subscribed)
+mixin checkboxForGroup(groupId, groupName, subscribed)
   div
     .checkbox
       input(type='checkbox', name='newSubscriptions', value=groupId, checked=(subscribed===true ? "true" : undefined))
@@ -33,24 +33,28 @@ block scripts
 
 block title
   | Profil
-  - if (user.registered)
+  - if (user.member)
     |  bearbeiten
   - else
     |  anlegen
 
 block content
-  form(id='memberform', action='submit',method='post')
+  form(id='memberform', action='/members/submit',method='post')
     fieldset
+      if (member)
+        input(type="hidden", name="id", value=member.id)
       .span12
         legend
           | Profil
-          - if (user.registered)
+          - if (user.member)
             |  bearbeiten für Mitglied "#{member.nickname}"
           - else
             |  anlegen
       .span6
-        - if (!user.registered)
+        - if (!user.member)
           mixin text('nickname', 'Nickname')
+        - else
+          input(type="hidden", name="nickname", value=member.nickname)
         mixin text('firstname', 'Vorname')
         mixin text('lastname', 'Nachname')
         mixin text('email', 'Email')
@@ -60,8 +64,13 @@ block content
         mixin text('profession', 'Beruf')
         mixin text('interests', 'Interessenschwerpunkte')
         mixin text('site', 'Website / Blog')
+        - if (user.member && user.member.isAdmin)
+          div
+            .checkbox
+              input(type='checkbox', name='isAdmin', checked=(!!member.isAdmin ? "true" : undefined)) 
+              | Administrator
 
-      - if (!user.registered)
+      - if (!user.member)
         .span12
           mixin textarea('reference', 'Wie ich von der Softwerkskammer erfahren habe')
 
@@ -69,12 +78,13 @@ block content
         legend Gruppenmitgliedschaft
         .control-group
           each markedGroup in markedGroups
-            mixin checkbox(markedGroup.group.id, markedGroup.group.longName, markedGroup.selected)
+            mixin checkboxForGroup(markedGroup.group.id, markedGroup.group.longName, markedGroup.selected)
           p
             button(class="btn btn-primary", type="submit") Speichern
-            - if (user.registered)
+            - if (user.member)
               a(href="javascript:history.back()", class="btn", type="cancel") Zurück
-              a(href="/auth/logout", class="btn", type="cancel") Abmelden
+              - if (user.member.id === member.id)
+                a(href="/auth/logout", class="btn", type="cancel") Abmelden
             - else
               a(href="/auth/logout", class="btn", type="cancel") Abbrechen
 

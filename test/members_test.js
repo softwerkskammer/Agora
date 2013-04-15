@@ -9,7 +9,11 @@ require('chai').should();
 
 var Member = require('../lib/members/member');
 
-var dummymember = new Member('hada', 'hada', 'Hans', 'Dampf', 'hans.dampf@gmail.com', '@hada', 'Süden', 'Entwickler', 'ada', 'http://my.blog', 'beim Bier');
+var dummymember = new Member();
+dummymember.nickname = 'hada';
+dummymember.site = 'http://my.blog';
+dummymember.firstname = 'Hans';
+dummymember.lastname = 'Dampf';
 
 var groupsAPIStub = {
   getSubscribedGroupsForUser: function (email, callback) {
@@ -36,7 +40,7 @@ var membersAPIStub = {
 };
 
 var groupsAndMembers = proxyquire('../lib/groupsAndMembers/groupsAndMembersAPI', {
-  '../groups/groupsAPI'  : function () {
+  '../groups/groupsAPI': function () {
     return groupsAPIStub;
   },
   '../members/membersAPI': function () {
@@ -45,16 +49,16 @@ var groupsAndMembers = proxyquire('../lib/groupsAndMembers/groupsAndMembersAPI',
 });
 
 var memberApp = proxyquire('../lib/members', {
-  './membersAPI'                          : function () {
+  './membersAPI': function () {
     return membersAPIStub;
   },
   '../groupsAndMembers/groupsAndMembersAPI': groupsAndMembers,
-  'connect-ensure-login'                   : ensureLoggedInStub
+  'connect-ensure-login': ensureLoggedInStub
 });
 
-var app = memberApp(express(), { get: function () {
-  return null;
-} });   // empty config
+var app = memberApp({ get: function () {
+  return null; // empty config
+} }).create(express());
 
 describe('Members application', function () {
 
