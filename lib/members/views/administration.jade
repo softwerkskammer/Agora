@@ -1,0 +1,39 @@
+extends ../../../views/layout
+include ../../groupsAndMembers/views/gm-mixins
+
+block title
+  | Übersicht der Mitglieder
+
+block scripts
+  script(src="/clientscripts/member-administration.js")
+
+block content
+  .span12
+    .page-header
+      h2 Verwaltung
+        small  Mitglieder
+    table(class="table table-condensed table-hover table-striped")
+      thead
+        tr
+          th Nickname
+          th Vorname
+          th Nachname
+          th Email
+          th Twitter
+          th Ort / Region
+          th Beruf
+          th Interessenschwerpunkte
+          th Website / Blog
+      tbody
+        for member in members
+          tr
+            td #{member.nickname}
+            td: a#firstname(href="#", data-pk="#{member.nickname}", data-url="administration") #{member.firstname}
+            td: a#lastname(href="#", data-pk="#{member.nickname}", data-url="administration") #{member.lastname}
+            td: a#email(href="#", data-pk="#{member.nickname}", data-url="administration") #{member.email}
+            td: a#twitter(href="#", data-pk="#{member.nickname}", data-url="administration") #{member.twitter}
+            td: a#location(href="#", data-pk="#{member.nickname}", data-url="administration") #{member.location}
+            td: a#profession(href="#", data-pk="#{member.nickname}", data-url="administration") #{member.profession}
+            td: a#interests(href="#", data-pk="#{member.nickname}", data-url="administration") #{member.interests}
+            td: a#site(href="#", data-pk="#{member.nickname}", data-url="administration") #{member.site}
+  
