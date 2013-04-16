@@ -3,7 +3,7 @@
 var request = require('supertest'),
   express = require('express'),
   proxyquire = require('proxyquire'),
-  conf = require('../configure');
+  conf = require('../configure')();
 
 require('chai').should();
 
@@ -52,7 +52,7 @@ describe('member redirects', function () {
       });
   });
 
-  it('redirects non registered users', function (done) {
+  it('redirects non registered users to \/members\/new', function (done) {
     authenticationState.user = {
     };
     request(appUnderTest)
@@ -63,6 +63,5 @@ describe('member redirects', function () {
         done(err);
       });
   });
-
 });
 
