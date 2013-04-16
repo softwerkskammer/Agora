@@ -2,68 +2,21 @@
 "use strict";
 var request = require('supertest'),
   express = require('express'),
-  sinon = require('sinon'),
-  proxyquire = require('proxyquire');
+  sinon = require('sinon');
 
 require('chai').should();
-
-var Member = require('../lib/members/member');
-
-var dummymember = new Member();
-dummymember.nickname = 'hada';
-dummymember.site = 'http://my.blog';
-dummymember.firstname = 'Hans';
-dummymember.lastname = 'Dampf';
-
-var groupsAPIStub = {
-  getSubscribedGroupsForUser: function (email, callback) {
-    callback(null, []);
-  }
-};
-
-// disabling authentication
-var ensureLoggedInStub = {
-  ensureLoggedIn: function () {
-    return function (req, res, next) {
-      next();
-    };
-  }
-};
-
-var membersAPIStub = {
-  allMembers: function (callback) {
-    callback(null, [dummymember]);
-  },
-  getMember: function (nickname, callback) {
-    callback(null, dummymember);
-  }
-};
-
-var groupsAndMembers = proxyquire('../lib/groupsAndMembers/groupsAndMembersAPI', {
-  '../groups/groupsAPI': function () {
-    return groupsAPIStub;
-  },
-  '../members/membersAPI': function () {
-    return membersAPIStub;
-  }
-});
-
-var memberApp = proxyquire('../lib/members', {
-  './membersAPI': function () {
-    return membersAPIStub;
-  },
-  '../groupsAndMembers/groupsAndMembersAPI': groupsAndMembers,
-  'connect-ensure-login': ensureLoggedInStub
-});
-
-var app = memberApp({ get: function () {
+var memberstubs = require('./membertest_stubs'),
+  dummymember = memberstubs.dummymember,
+  membersAPIStub = memberstubs.membersAPIStub,
+  groupsAPIStub = memberstubs.groupsAPIStub,
+  app = memberstubs.memberModule({ get: function () {
   return null; // empty config
 } }).create(express());
 
 describe('Members application', function () {
 
   it('shows the list of members as retrieved from the membersstore', function (done) {
-    var allMembers = sinon.spy(membersAPIStub, 'allMembers');
+    var allMembers = sinon.spy(memberstubs.membersAPIStub, 'allMembers');
     request(app)
       .get('/')
       .expect(200)
