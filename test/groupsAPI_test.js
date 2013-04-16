@@ -268,11 +268,50 @@ describe('Groups API (isGroupNameAvailable)', function () {
   });
 
   it('returns true when there is no group of this name present', function (done) {
-    systemUnderTest.isGroupNameAvailable("New Group", function (err, result) {
+    systemUnderTest.isGroupNameAvailable("MyGroup", function (err, result) {
       expect(result).to.be.not.null;
       expect(result).to.be.true;
       done(err);
     });
   });
+
+  it('rejects groupnames that contain special characters', function (done) {
+    systemUnderTest.isReserved('Sch adar').should.be.true;
+    systemUnderTest.isReserved('Sch/adar').should.be.true;
+    systemUnderTest.isReserved('Schadar-').should.be.true;
+    systemUnderTest.isReserved('Schad\nar').should.be.true;
+    systemUnderTest.isReserved('Schad@r').should.be.true;
+
+    systemUnderTest.isGroupNameAvailable('Scha dar', function (err, result) {
+      result.should.be.false;
+      done();
+    });
+  });
+
+  it('allows groupnames that contain alphanumeric characters only', function (done) {
+
+    systemUnderTest.isReserved('Schad_r').should.be.false;
+    systemUnderTest.isReserved('Schadar').should.be.false;
+
+    systemUnderTest.isGroupNameAvailable('Schadar', function (err, result) {
+      result.should.be.true;
+      done();
+    });
+  });
+
+  it('rejects groupnames that contain reserved routes', function (done) {
+
+    systemUnderTest.isReserved('new').should.be.true;
+    systemUnderTest.isReserved('submit').should.be.true;
+    systemUnderTest.isReserved('administration').should.be.true;
+    systemUnderTest.isReserved('edit').should.be.true;
+    systemUnderTest.isReserved('checkgroupname').should.be.true;
+
+    systemUnderTest.isGroupNameAvailable('edit', function (err, result) {
+      result.should.be.false;
+      done();
+    });
+  });
+
 
 });
