@@ -4,8 +4,8 @@ var request = require('supertest'),
   express = require('express'),
   proxyquire = require('proxyquire');
 
-var Group = require('../lib/groups/group');
-var Member = require('../lib/members/member');
+var Group = require('../../lib/groups/group');
+var Member = require('../../lib/members/member');
 
 var GroupA = new Group('GroupA', 'Gruppe A', 'Dies ist Gruppe A.', 'Themengruppe');
 var MemberA = new Member();
@@ -24,7 +24,7 @@ var groupsAndMembersAPIStub = {
   userIsInMemberList: function () { }
 };
 
-var groupsApp = proxyquire('../lib/groups', {
+var groupsApp = proxyquire('../../lib/groups', {
   './groupsAPI': function () { return groupsAPIStub; },
   '../groupsAndMembers/groupsAndMembersAPI': function () { return groupsAndMembersAPIStub; }
 });

@@ -4,14 +4,14 @@ var proxyquire = require('proxyquire');
 
 var expect = require('chai').expect;
 
-var Member = require('../lib/members/member');
+var Member = require('../../lib/members/member');
 
 var dummymember = new Member();
 dummymember.id = 'hada';
 var dummymember2 = new Member();
 dummymember2.id = 'hada2';
 
-var Group = require('../lib/groups/group');
+var Group = require('../../lib/groups/group');
 
 var GroupA = new Group('GroupA', 'Gruppe A', 'Dies ist Gruppe A.', 'Themengruppe');
 var GroupB = new Group('GroupB', 'Gruppe B', 'Dies ist Gruppe B.', 'Regionalgruppe');
@@ -29,7 +29,7 @@ var membersAPIStub = {
   getMembersForEMails: function () {}
 };
 
-var groupsAndMembersAPI = proxyquire('../lib/groupsAndMembers/groupsAndMembersAPI', {
+var groupsAndMembersAPI = proxyquire('../../lib/groupsAndMembers/groupsAndMembersAPI', {
   '../groups/groupsAPI': function () { return groupsAPIStub; },
   '../members/membersAPI': function () { return membersAPIStub; }
 });
