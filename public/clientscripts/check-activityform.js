@@ -33,5 +33,14 @@ var initValidator = function () {
     });
   });
 
+  $('.datepicker').datepicker({
+    format: 'dd.mm.yyyy',
+    weekStart: 1,
+    viewMode: 'days',
+    minViewMode: 'days',
+    language: 'de'
+  })
+
 };
+
 $(document).ready(initValidator);
