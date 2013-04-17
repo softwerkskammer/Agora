@@ -5,7 +5,7 @@ var proxyquire = require('proxyquire'),
 
 var expect = require('chai').expect;
 
-var Group = require('../lib/groups/group');
+var Group = require('../../lib/groups/group');
 
 var GroupA = new Group('GroupA', 'Gruppe A', 'Dies ist Gruppe A.', 'Themengruppe');
 var GroupB = new Group('GroupB', 'Gruppe B', 'Dies ist Gruppe B.', 'Regionalgruppe');
@@ -14,10 +14,9 @@ var NonPersistentGroup = new Group('GroupC', 'Gruppe C', 'Dies ist Gruppe C.', '
 var groupstoreStub = {
     allGroups: function (callback) { callback(null, [GroupA, GroupB]); },
     getGroup: function (name, callback) {
-
-      if (new RegExp('^' + name + '$', 'i').test('GroupA')) {
+      if (name === 'GroupA') {
         callback(null, GroupA);
-      } else if (new RegExp('^' + name + '$', 'i').test('GroupB')) {
+      } else if (name === 'GroupB') {
         callback(null, GroupB);
       } else {
         callback(null, null);
@@ -36,7 +35,7 @@ var sympaStub = {
 };
 
 
-var groupsAPI = proxyquire('../lib/groups/groupsAPI', {
+var groupsAPI = proxyquire('../../lib/groups/groupsAPI', {
   './groupstore': function () { return groupstoreStub; },
   './sympaStub': function () { return sympaStub; }
 });
@@ -314,11 +313,5 @@ describe('Groups API (isGroupNameAvailable)', function () {
     });
   });
 
-  it('rejects groupnames that already exist, even with blanks and different case', function (done) {
-    systemUnderTest.isGroupNameAvailable('groUpA', function (err, result) {
-      result.should.be.false;
-      done();
-    });
-  });
 
 });
