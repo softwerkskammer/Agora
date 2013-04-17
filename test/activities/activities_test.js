@@ -7,7 +7,7 @@ var request = require('supertest'),
 
 require('chai').should();
 
-var Activity = require('../lib/activities/activity');
+var Activity = require('../../lib/activities/activity');
 
 var dummyActivity = new Activity('title', 'description', 'assignedGroup', 'location', 'direction', 'activityDate', 'startTime');
 
@@ -28,7 +28,7 @@ var activitiesAPIStub = {
   }
 };
 
-var activityApp = proxyquire('../lib/activities', {
+var activityApp = proxyquire('../../lib/activities', {
   './activitiesAPI': function () {
     return activitiesAPIStub;
   }
