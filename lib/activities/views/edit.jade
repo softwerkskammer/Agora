@@ -12,7 +12,7 @@ mixin textarea(name, label)
 mixin date(name, label)
   .control-group
     label(class="control-label", for=name) #{label}:
-    input(id=name, class="input-block-level input-xlarge", type='date', name=name, value=activity[name])
+    input(id=name, class="input-block-level input-xlarge datepicker", type='text', name=name, value=activity[name])
 mixin time(name, label)
   .control-group
     label(class="control-label", for=name) #{label}:
@@ -21,6 +21,8 @@ mixin time(name, label)
 block scripts
   script(src="/clientscripts/jquery.validate-1.11.1.js")
   script(src="/clientscripts/messages_de.js")
+  script(src="/clientscripts/methods_de.js")
+  script(src="/clientscripts/bootstrap-datepicker.de.js")
   script(src="/clientscripts/check-activityform.js")
 
 block title
