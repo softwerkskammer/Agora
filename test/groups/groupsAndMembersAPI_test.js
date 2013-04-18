@@ -50,7 +50,6 @@ describe('Groups and Members API', function () {
       expect(member).to.be.null;
       expect(subscribedLists).to.not.be.null;
       expect(subscribedLists.length).to.equal(0);
-      expect(err.message).to.equal('Member "nickname" not found');
       done();
     });
   });
