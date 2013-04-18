@@ -4,7 +4,21 @@ block title
   | Übersicht der Gruppen
 
 block scripts
-  script(src="/clientscripts/group-administration.js")
+  script
+    var initEditable = function () {
+      $("table").find("a").filter(function () {return this.id !== "type"; }).editable({
+        showbuttons: false
+      });
+      $("table").find("a").filter(function () {return this.id === "type"; }).editable(
+        {source: [
+          {value: 0, text: "#{groups[0].allTypes()[0]}"},
+          {value: 1, text: "#{groups[0].allTypes()[1]}"}
+        ],
+          showbuttons: false}
+      );
+    };
+    $(document).ready(initEditable);
+
 
 block content
   .span12
@@ -24,13 +38,9 @@ block content
           th Gruppenart
       tbody
         for group in groups
-          - if (group.type === "Themengruppe")
-            typeCode = 1
-          - else
-            typeCode = 2
           tr
             td #{group.id}
             td: a#longName(href="#", data-pk="#{group.id}", data-url="groupChanged") #{group.longName}
             td: a#description(href="#", data-type="textarea", data-pk="#{group.id}", data-url="groupChanged") #{group.description}
-            td: a#type(href="#", , data-type="select", data-value="#(typeCode)", data-pk="#{group.id}", data-url="groupChanged") #{group.type}
+            td: a#type(href="#", , data-type="select", data-value="#{group.typeCode()}", data-pk="#{group.id}", data-url="groupChanged") #{group.type}
               
