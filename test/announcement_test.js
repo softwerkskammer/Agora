@@ -41,6 +41,7 @@ describe('Announcement application', function () {
       .expect(/href="title"/)
       .expect(/title/, function (err) {
         allAnnouncements.calledOnce.should.be.ok;
+        announcementAPIStub.allAnnouncements.restore();
         done(err);
       });
   });
