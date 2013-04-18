@@ -20,8 +20,13 @@ block content
           th Gruppenart
       tbody
         for group in groups
+          - if (group.type === "Themengruppe")
+            typeCode = 1
+          - else
+            typeCode = 2
           tr
             td #{group.id}
             td: a#longName(href="#", data-pk="#{group.id}", data-url="administration") #{group.longName}
             td: a#description(href="#", data-pk="#{group.id}", data-url="administration") #{group.description}
-            td: a#type(href="#", data-pk="#{group.id}", data-url="administration") #{group.type}
+            td: a#type(href="#", , data-type="select", data-value="#(typeCode)", data-pk="#{group.id}", data-url="administration") #{group.type}
+              
