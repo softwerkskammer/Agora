@@ -2,16 +2,17 @@
 "use strict";
 var activity_validator;
 
+var activity_datepicker;
+
+var activity_timepicker;
+
 var initValidator = function () {
 // validate signup form on keyup and submit
   activity_validator = $("#activityform").validate({
     rules: {
       title: "required",
       location: "required",
-      activityDate: {
-        required: true,
-        date: true
-      }
+      activityDate: "required"
     },
     messages: {
     },
@@ -34,4 +35,29 @@ var initValidator = function () {
   });
 
 };
+
+var initDatePicker = function () {
+  activity_datepicker =   $('.datepicker').datepicker({
+    format: 'dd.mm.yyyy',
+    weekStart: 1,
+    viewMode: 'days',
+    minViewMode: 'days',
+    language: 'de'
+  });
+}
+
+var initTimePicker = function () {
+  activity_timepicker =   $('#startTime').timepicker({
+    minuteStep: 1,
+    showSeconds: false,
+    showMeridian: false,
+    showInputs: false,
+    disableFocus: true
+  });
+}
+
 $(document).ready(initValidator);
+
+$(document).ready(initDatePicker);
+
+$(document).ready(initTimePicker);
