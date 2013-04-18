@@ -5,7 +5,7 @@ var proxyquire = require('proxyquire'),
 
 var expect = require('chai').expect;
 
-var Group = require('../lib/groups/group');
+var Group = require('../../lib/groups/group');
 
 var Craftsmanswap = new Group('craftsmanswap', 'Gruppe A', 'Dies ist Gruppe A.', 'Themengruppe');
 var NeuePlattform = new Group('neueplattform', 'Gruppe B', 'Dies ist Gruppe B.', 'Regionalgruppe');
@@ -26,7 +26,7 @@ var groupstoreStub = {
   groupsByLists: function () {}
 };
 
-var groupsAPI = proxyquire('../lib/groups/groupsAPI', {
+var groupsAPI = proxyquire('../../lib/groups/groupsAPI', {
   './groupstore': function () { return groupstoreStub; }
 });
 
