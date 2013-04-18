@@ -4,7 +4,21 @@ block title
   | Übersicht der Mitglieder
 
 block scripts
-  script(src="/clientscripts/member-administration.js")
+  script
+    var initEditable = function () {
+      $("table").find("a").filter(function () {return this.id !== "isAdmin"; }).editable({
+        showbuttons: false
+      });
+      $("table").find("a").filter(function () {return this.id === "isAdmin"; }).editable(
+        {source: [
+          {value: 0, text: "Normal"},
+          {value: 1, text: "Administrator"}
+        ],
+          showbuttons: false}
+      );
+    };
+    $(document).ready(initEditable);
+
 
 block content
   .span12
@@ -30,7 +44,7 @@ block content
             adminValue = 1
           - else
             adminDisplay = "Normal"
-            adminValue = 2
+            adminValue = 0
           tr
             td #{member.nickname}
             td: a#firstname(href="#", data-pk="#{member.nickname}", data-url="memberChanged") #{member.firstname}

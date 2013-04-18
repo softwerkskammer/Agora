@@ -7,8 +7,8 @@ var initEditable = function () {
   });
   $("table").find("a").filter(function () {return this.id === "isAdmin"; }).editable(
     {source: [
-      {value: 1, text: "Administrator"},
-      {value: 2, text: "Normal"}
+      {value: 0, text: "Normal"},
+      {value: 1, text: "Administrator"}
     ],
       showbuttons: false}
   );
