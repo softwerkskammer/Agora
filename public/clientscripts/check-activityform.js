@@ -4,6 +4,8 @@ var activity_validator;
 
 var activity_datepicker;
 
+var activity_timepicker;
+
 var initValidator = function () {
 // validate signup form on keyup and submit
   activity_validator = $("#activityform").validate({
@@ -44,6 +46,18 @@ var initDatePicker = function () {
   });
 }
 
+var initTimePicker = function () {
+  activity_timepicker =   $('#startTime').timepicker({
+    minuteStep: 1,
+    showSeconds: false,
+    showMeridian: false,
+    showInputs: false,
+    disableFocus: true
+  });
+}
+
 $(document).ready(initValidator);
 
 $(document).ready(initDatePicker);
+
+$(document).ready(initTimePicker);
