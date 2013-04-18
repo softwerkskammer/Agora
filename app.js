@@ -98,6 +98,7 @@ module.exports = function (conf) {
       });
 
       app.use('/', require('./lib/site'));
+      useApp(app, 'administration', conf, require('./lib/administration'));
       useApp(app, 'activities', conf, require('./lib/activities'));
       useApp(app, 'members', conf, members.create);
       useApp(app, 'groups', conf, require('./lib/groups'));
