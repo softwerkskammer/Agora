@@ -11,6 +11,10 @@ block content
     .page-header
       h2 Verwaltung
         small  Gruppen
+        - if (typeof(user) !== 'undefined' && user.member.isAdmin)
+          | 
+          a(href="/groups/new/", class="btn") Neu
+
     table(class="table table-condensed table-hover table-striped")
       thead
         tr
@@ -27,6 +31,6 @@ block content
           tr
             td #{group.id}
             td: a#longName(href="#", data-pk="#{group.id}", data-url="groupChanged") #{group.longName}
-            td: a#description(href="#", data-pk="#{group.id}", data-url="groupChanged") #{group.description}
+            td: a#description(href="#", data-type="textarea", data-pk="#{group.id}", data-url="groupChanged") #{group.description}
             td: a#type(href="#", , data-type="select", data-value="#(typeCode)", data-pk="#{group.id}", data-url="groupChanged") #{group.type}
               

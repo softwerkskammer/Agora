@@ -39,7 +39,7 @@ block content
             td: a#twitter(href="#", data-pk="#{member.nickname}", data-url="memberChanged") #{member.twitter}
             td: a#location(href="#", data-pk="#{member.nickname}", data-url="memberChanged") #{member.location}
             td: a#profession(href="#", data-pk="#{member.nickname}", data-url="memberChanged") #{member.profession}
-            td: a#interests(href="#", data-pk="#{member.nickname}", data-url="memberChanged") #{member.interests}
-            td: a#site(href="#", data-pk="#{member.nickname}", data-url="memberChanged") #{member.site}
+            td: a#interests(href="#", data-type="textarea", data-pk="#{member.nickname}", data-url="memberChanged") #{member.interests}
+            td: a#site(href="#", data-type="textarea", data-pk="#{member.nickname}", data-url="memberChanged") #{member.site}
             td: a#isAdmin(href="#", data-type="select", data-value="#{adminValue}", data-pk="#{member.nickname}", data-url="memberChanged") #{adminDisplay}
   
