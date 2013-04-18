@@ -5,26 +5,27 @@ var proxyquire = require('proxyquire'),
 
 var expect = require('chai').expect;
 
-var Group = require('../lib/groups/group');
+var Group = require('../../lib/groups/group');
 
 var GroupA = new Group('GroupA', 'Gruppe A', 'Dies ist Gruppe A.', 'Themengruppe');
 var GroupB = new Group('GroupB', 'Gruppe B', 'Dies ist Gruppe B.', 'Regionalgruppe');
 var NonPersistentGroup = new Group('GroupC', 'Gruppe C', 'Dies ist Gruppe C.', 'Regionalgruppe');
 
 var groupstoreStub = {
-  allGroups: function (callback) { callback(null, [GroupA, GroupB]); },
-  getGroup: function (name, callback) {
-    if (name === 'GroupA') {
-      callback(null, GroupA);
-    } else if (name === 'GroupB') {
-      callback(null, GroupB);
-    } else {
-      callback(null, null);
-    }
-  },
-  saveGroup: function (group, callback) { callback(null, group); },
-  groupsByLists: function () {}
-};
+    allGroups: function (callback) { callback(null, [GroupA, GroupB]); },
+    getGroup: function (name, callback) {
+      if (name === 'GroupA') {
+        callback(null, GroupA);
+      } else if (name === 'GroupB') {
+        callback(null, GroupB);
+      } else {
+        callback(null, null);
+      }
+    },
+    saveGroup: function (group, callback) { callback(null, group); },
+    groupsByLists: function () {}
+  }
+  ;
 
 var sympaStub = {
   createList: function (err, callback) { callback(); },
@@ -34,8 +35,7 @@ var sympaStub = {
 };
 
 
-
-var groupsAPI = proxyquire('../lib/groups/groupsAPI', {
+var groupsAPI = proxyquire('../../lib/groups/groupsAPI', {
   './groupstore': function () { return groupstoreStub; },
   './sympaStub': function () { return sympaStub; }
 });
