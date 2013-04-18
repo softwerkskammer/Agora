@@ -2,16 +2,15 @@
 "use strict";
 var activity_validator;
 
+var activity_datepicker;
+
 var initValidator = function () {
 // validate signup form on keyup and submit
   activity_validator = $("#activityform").validate({
     rules: {
       title: "required",
       location: "required",
-      activityDate: {
-        required: true,
-        date: true
-      }
+      activityDate: "required"
     },
     messages: {
     },
@@ -33,14 +32,18 @@ var initValidator = function () {
     });
   });
 
-  $('.datepicker').datepicker({
+};
+
+var initDatePicker = function () {
+  activity_datepicker =   $('.datepicker').datepicker({
     format: 'dd.mm.yyyy',
     weekStart: 1,
     viewMode: 'days',
     minViewMode: 'days',
     language: 'de'
-  })
-
-};
+  });
+}
 
 $(document).ready(initValidator);
+
+$(document).ready(initDatePicker);
