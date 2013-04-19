@@ -1,7 +1,7 @@
-/*global describe, it */
+/*global describe, it*/
 "use strict";
-var proxyquire = require('proxyquire'),
-  sinon = require('sinon');
+var proxyquire = require('proxyquire');
+var sinon = require('sinon');
 
 var expect = require('chai').expect;
 
@@ -33,7 +33,6 @@ var sympaStub = {
   getAllAvailableLists: function () {},
   getUsersOfList: function () {}
 };
-
 
 var groupsAPI = proxyquire('../../lib/groups/groupsAPI', {
   './groupstore': function () { return groupstoreStub; },
@@ -191,7 +190,6 @@ describe('Groups API (getGroup)', function () {
   });
 });
 
-
 describe('Groups API (createOrSaveGroup)', function () {
 
   var createListSpy;
@@ -276,42 +274,89 @@ describe('Groups API (isGroupNameAvailable)', function () {
   });
 
   it('rejects groupnames that contain special characters', function (done) {
-    systemUnderTest.isReserved('Sch adar').should.be.true;
-    systemUnderTest.isReserved('Sch/adar').should.be.true;
-    systemUnderTest.isReserved('Schadar-').should.be.true;
-    systemUnderTest.isReserved('Schad\nar').should.be.true;
-    systemUnderTest.isReserved('Schad@r').should.be.true;
+    expect(systemUnderTest.isReserved('Sch adar')).to.be.true;
+    expect(systemUnderTest.isReserved('Sch/adar')).to.be.true;
+    expect(systemUnderTest.isReserved('Schadar-')).to.be.true;
+    expect(systemUnderTest.isReserved('Schad\nar')).to.be.true;
+    expect(systemUnderTest.isReserved('Schad@r')).to.be.true;
 
     systemUnderTest.isGroupNameAvailable('Scha dar', function (err, result) {
-      result.should.be.false;
+      expect(result).to.be.false;
       done();
     });
   });
 
   it('allows groupnames that contain alphanumeric characters only', function (done) {
 
-    systemUnderTest.isReserved('Schad_r').should.be.false;
-    systemUnderTest.isReserved('Schadar').should.be.false;
+    expect(systemUnderTest.isReserved('Schad_r')).to.be.false;
+    expect(systemUnderTest.isReserved('Schadar')).to.be.false;
 
     systemUnderTest.isGroupNameAvailable('Schadar', function (err, result) {
-      result.should.be.true;
+      expect(result).to.be.true;
       done();
     });
   });
 
   it('rejects groupnames that contain reserved routes', function (done) {
 
-    systemUnderTest.isReserved('new').should.be.true;
-    systemUnderTest.isReserved('submit').should.be.true;
-    systemUnderTest.isReserved('administration').should.be.true;
-    systemUnderTest.isReserved('edit').should.be.true;
-    systemUnderTest.isReserved('checkgroupname').should.be.true;
+    expect(systemUnderTest.isReserved('new')).to.be.true;
+    expect(systemUnderTest.isReserved('submit')).to.be.true;
+    expect(systemUnderTest.isReserved('administration')).to.be.true;
+    expect(systemUnderTest.isReserved('edit')).to.be.true;
+    expect(systemUnderTest.isReserved('checkgroupname')).to.be.true;
 
     systemUnderTest.isGroupNameAvailable('edit', function (err, result) {
-      result.should.be.false;
+      expect(result).to.be.false;
       done();
     });
   });
 
+  describe('Groups API (updateGroupsFieldWith)', function () {
+    var oldDescription;
+    var oldLongName;
+    var oldType;
+
+    beforeEach(function (done) {
+      oldDescription = GroupA.description;
+      oldLongName = GroupA.longName;
+      oldType = GroupA.type;
+      done();
+    });
+
+    afterEach(function (done) {
+      GroupA.description = oldDescription;
+      GroupA.longName = oldLongName;
+      GroupA.type = oldType;
+      done();
+    });
+
+    it('should update the description correctly', function (done) {
+      expect(GroupA.description).to.not.equal('new Description');
+      systemUnderTest.updateGroupsFieldWith('GroupA', 'description', 'new Description', function (success) {
+        expect(success).to.be.true;
+        expect(GroupA.description).to.equal('new Description');
+        done();
+      });
+    });
+
+    it('should update the longName correctly', function (done) {
+      expect(GroupA.longName).to.not.equal('new Long Name');
+      systemUnderTest.updateGroupsFieldWith('GroupA', 'longName', 'new Long Name', function (success) {
+        expect(success).to.be.true;
+        expect(GroupA.longName).to.equal('new Long Name');
+        done();
+      });
+    });
+
+    it('should update the type correctly', function (done) {
+      expect(GroupA.type).to.equal('Themengruppe');
+      systemUnderTest.updateGroupsFieldWith('GroupA', 'type', '1', function (success) {
+        expect(success).to.be.true;
+        expect(GroupA.type).to.equal('Regionalgruppe');
+        done();
+      });
+    });
+
+  });
 
 });
