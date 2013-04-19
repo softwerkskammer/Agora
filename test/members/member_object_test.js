@@ -1,22 +1,10 @@
 /*global describe, it */
 "use strict";
-var should = require('chai').should();
+var expect = require('chai').expect;
 
 var Member = require('../../lib/members/member');
 
 describe('Member', function () {
-  it('is instantiated empty when no arguments', function (done) {
-    var member = new Member();
-    for (var name in member) {
-      var property = member[name];
-      if (typeof(property) !== 'function') {
-        if (name !== 'isAdmin') {
-          should.not.exist(property, name);
-        }
-      }
-    }
-    done();
-  });
 
   it('is populated by Google OpenID record', function (done) {
     var userdata = JSON.parse('{' +
@@ -25,9 +13,9 @@ describe('Member', function () {
       '"name": {"familyName": "Dampf","givenName": "Hans"}}}');
 
     var member = new Member({sessionUser: userdata});
-    member.firstname.should.equal("Hans", 'firstname');
-    member.lastname.should.equal("Dampf", 'lastname');
-    member.email.should.equal("hada@web.de", 'email');
+    expect(member.firstname, 'firstname').to.equal('Hans');
+    expect(member.lastname, 'lastname').to.equal('Dampf');
+    expect(member.email, 'email').to.equal('hada@web.de');
     done();
   });
 
@@ -39,9 +27,9 @@ describe('Member', function () {
       '"_json" : { "html_url" :"https://github.com/hansdampf", "blog" : "http://hada.wordpress.com" }}}');
 
     var member = new Member({sessionUser: userdata});
-    should.not.exist(member.firstname, 'firstname');
-    should.not.exist(member.lastname, 'lastname');
-    member.site.should.equal("https://github.com/hansdampf, http://hada.wordpress.com", 'site');
+    expect(member.firstname, 'firstname').to.not.exist;
+    expect(member.lastname, 'lastname').to.not.exist;
+    expect(member.site, 'site').to.equal('https://github.com/hansdampf, http://hada.wordpress.com');
 
     done();
   });
@@ -55,12 +43,12 @@ describe('Member', function () {
       lastname: 'User'
     };
     var member = new Member({object: req_body});
-    should.not.exist(member.twitter, 'twitter');
-    should.not.exist(member.location, 'location');
-    should.not.exist(member.profession, 'profession');
-    should.not.exist(member.interests, 'interest');
-    should.not.exist(member.site, 'site');
-    should.not.exist(member.reference, 'reference');
+    expect(member.twitter, 'twitter').to.not.exist;
+    expect(member.location, 'location').to.not.exist;
+    expect(member.profession, 'profession').to.not.exist;
+    expect(member.interests, 'interest').to.not.exist;
+    expect(member.site, 'site').to.not.exist;
+    expect(member.reference, 'reference').to.not.exist;
     done();
   });
 
@@ -71,7 +59,7 @@ describe('Member', function () {
       twitter: '@twitter'
     };
     var member = new Member({object: req_body});
-    member.twitter.should.equal('twitter');
+    expect(member.twitter, 'twitter').to.equal('twitter');
     done();
   });
 
@@ -82,79 +70,79 @@ describe('Member', function () {
       twitter: 'twitter'
     };
     var member = new Member({object: req_body});
-    member.twitter.should.equal('twitter');
+    expect(member.twitter, 'twitter').to.equal('twitter');
     done();
   });
 
   it('has a boolean value for "isAdmin"', function (done) {
     var member = new Member();
-    member.isAdmin.should.be.false;
+    expect(member.isAdmin).to.be.false;
     done();
   });
 
   it('always has a boolean value vor "isAdmin"', function (done) {
     var req_body = {};
     var member = new Member({object: req_body});
-    member.isAdmin.should.be.false;
+    expect(member.isAdmin).to.be.false;
     done();
   });
 
   it('is correctly filled from small database record', function (done) {
     var db_record = {id: 'ID', nickname: 'NICK'};
     var member = new Member({object: db_record});
-    member.id.should.equal(db_record.id);
-    member.nickname.should.equal(db_record.nickname);
-    member.isAdmin.should.be.false;
+    expect(member.id, 'id').to.equal(db_record.id);
+    expect(member.nickname, 'nickname').to.equal(db_record.nickname);
+    expect(member.isAdmin).to.be.false;
     done();
   });
 
   it('is correctly filled as Admin from small database record', function (done) {
     var db_record = {nickname: 'Nick', isAdmin: true};
     var member = new Member({object: db_record});
-    member.isAdmin.should.be.true;
+    expect(member.isAdmin).to.be.true;
     done();
   });
 
   it('is correctly filled as Admin from small database record even when boolean is transmitted as String', function (done) {
     var db_record = {nickname: 'Nick', isAdmin: 'true'};
     var member = new Member({object: db_record});
-    member.isAdmin.should.be.true;
+    expect(member.isAdmin).to.be.true;
     done();
   });
 
   it('is correctly filled as Admin from UI as String', function (done) {
     var db_record = {nickname: 'Nick', isAdmin: false};
     var member = new Member({object: db_record});
-    member.isAdmin.should.be.false;
+    expect(member.isAdmin).to.be.false;
     member.setAdminFromInteger("1");
-    member.isAdmin.should.be.true;
+    expect(member.isAdmin).to.be.true;
     done();
   });
 
   it('is correctly filled as not Admin from UI as String', function (done) {
     var db_record = {nickname: 'Nick', isAdmin: true};
     var member = new Member({object: db_record});
-    member.isAdmin.should.be.true;
+    expect(member.isAdmin).to.be.true;
     member.setAdminFromInteger("0");
-    member.isAdmin.should.be.false;
+    expect(member.isAdmin).to.be.false;
     done();
   });
 
   it('is correctly filled as Admin from UI as Integer', function (done) {
     var db_record = {nickname: 'Nick', isAdmin: false};
     var member = new Member({object: db_record});
-    member.isAdmin.should.be.false;
+    expect(member.isAdmin).to.be.false;
     member.setAdminFromInteger(1);
-    member.isAdmin.should.be.true;
+    expect(member.isAdmin).to.be.true;
     done();
   });
 
   it('is correctly filled as not Admin from UI as Integer', function (done) {
     var db_record = {nickname: 'Nick', isAdmin: true};
     var member = new Member({object: db_record});
-    member.isAdmin.should.be.true;
+    expect(member.isAdmin).to.be.true;
     member.setAdminFromInteger(0);
-    member.isAdmin.should.be.false;
+    expect(member.isAdmin).to.be.false;
     done();
   });
 
