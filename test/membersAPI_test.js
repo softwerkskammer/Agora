@@ -1,11 +1,10 @@
 /*global describe, it */
 "use strict";
-var proxyquire = require('proxyquire'),
-  MongoConf = require('./mongoConf'),
-  conf = new MongoConf();
+var proxyquire = require('proxyquire');
+var MongoConf = require('./mongoConf');
+var conf = new MongoConf();
 
-var
-  Member = require('../lib/members/member');
+var Member = require('../lib/members/member');
 var dummymember = new Member('id', 'hada');
 var memberstoreStub = {
   getMember: function (nickname, callback) {
