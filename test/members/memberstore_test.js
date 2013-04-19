@@ -1,9 +1,9 @@
 /*global describe, it */
 "use strict";
-require('chai').should();
+var expect = require('chai').expect;
 
-var proxyquire = require('proxyquire'),
-  sinon = require('sinon');
+var proxyquire = require('proxyquire');
+var sinon = require('sinon');
 
 var persistenceStub = {
   save: function () {
@@ -29,30 +29,30 @@ describe('Members store', function () {
 
   it('calls persistence.getByField for store.getMember and passes on the given callback', function (done) {
     store().getMember('nick', function (err, member) {
-      member.nickname.should.equal(sampleMember.nickname);
-      getByField.calledWith({nickname: new RegExp()}).should.be.true;
+      expect(member.nickname).to.equal(sampleMember.nickname);
+      expect(getByField.calledWith({nickname: new RegExp()})).to.be.true;
       done(err);
     });
   });
 
   it('calls persistence.getByField trimmed for store.getMember and passes on the given callback', function (done) {
     store().getMember('  nick  ', function (err, member) {
-      member.nickname.should.equal(sampleMember.nickname);
-      getByField.calledWith({nickname: new RegExp()}).should.be.true;
+      expect(member.nickname).to.equal(sampleMember.nickname);
+      expect(getByField.calledWith({nickname: new RegExp()})).to.be.true;
       var regex = getByField.args[0][0].nickname;
-      regex.toString().should.equal('/^nick$/i');
+      expect(regex.toString()).to.equal('/^nick$/i');
       done(err);
     });
   });
 
   it('calls persistence.getByField with an appropriate regex', function (done) {
     store().getMember('nick', function (err, member) {
-      member.nickname.should.equal(sampleMember.nickname);
-      getByField.calledWith({nickname: new RegExp()}).should.be.true;
+      expect(member.nickname).to.equal(sampleMember.nickname);
+      expect(getByField.calledWith({nickname: new RegExp()})).to.be.true;
       var regex = getByField.args[0][0].nickname;
-      regex.test('nick').should.be.true;
-      regex.test('nICk').should.be.true;
-      regex.test('nICklaus').should.be.false;
+      expect(regex.test('nick')).to.be.true;
+      expect(regex.test('nICk')).to.be.true;
+      expect(regex.test('nICklaus')).to.be.false;
       done(err);
     });
   });
@@ -62,8 +62,8 @@ describe('Members store', function () {
     list.callsArgWith(1, null, sampleList);
 
     store().allMembers(function (err, members) {
-      members[0].nickname.should.equal(sampleMember.nickname);
-      members[1].nickname.should.equal(sampleMember2.nickname);
+      expect(members[0].nickname).to.equal(sampleMember.nickname);
+      expect(members[1].nickname).to.equal(sampleMember2.nickname);
       done(err);
     });
   });
@@ -73,7 +73,7 @@ describe('Members store', function () {
     save.callsArg(1);
 
     store().saveMember(sampleMember, function (err) {
-      save.calledWith(sampleMember).should.be.true;
+      expect(save.calledWith(sampleMember)).to.be.true;
       done(err);
     });
   });
