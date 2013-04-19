@@ -1,7 +1,7 @@
-/*global describe, it */
+/*global describe, it*/
 "use strict";
-var proxyquire = require('proxyquire'),
-  sinon = require('sinon');
+var proxyquire = require('proxyquire');
+var sinon = require('sinon');
 
 var expect = require('chai').expect;
 
@@ -33,7 +33,6 @@ var sympaStub = {
   getAllAvailableLists: function () {},
   getUsersOfList: function () {}
 };
-
 
 var groupsAPI = proxyquire('../../lib/groups/groupsAPI', {
   './groupstore': function () { return groupstoreStub; },
@@ -191,7 +190,6 @@ describe('Groups API (getGroup)', function () {
   });
 });
 
-
 describe('Groups API (createOrSaveGroup)', function () {
 
   var createListSpy;
@@ -313,5 +311,52 @@ describe('Groups API (isGroupNameAvailable)', function () {
     });
   });
 
+  describe('Groups API (updateGroupsFieldWith)', function () {
+    var oldDescription;
+    var oldLongName;
+    var oldType;
+
+    beforeEach(function (done) {
+      oldDescription = GroupA.description;
+      oldLongName = GroupA.longName;
+      oldType = GroupA.type;
+      done();
+    });
+
+    afterEach(function (done) {
+      GroupA.description = oldDescription;
+      GroupA.longName = oldLongName;
+      GroupA.type = oldType;
+      done();
+    });
+
+    it('should update the description correctly', function (done) {
+      GroupA.description.should.not.equal('new Description');
+      systemUnderTest.updateGroupsFieldWith('GroupA', 'description', 'new Description', function (success) {
+        success.should.be.true;
+        GroupA.description.should.equal('new Description');
+        done();
+      });
+    });
+
+    it('should update the longName correctly', function (done) {
+      GroupA.longName.should.not.equal('new Long Name');
+      systemUnderTest.updateGroupsFieldWith('GroupA', 'longName', 'new Long Name', function (success) {
+        success.should.be.true;
+        GroupA.longName.should.equal('new Long Name');
+        done();
+      });
+    });
+
+    it('should update the type correctly', function (done) {
+      GroupA.type.should.equal('Themengruppe');
+      systemUnderTest.updateGroupsFieldWith('GroupA', 'type', '1', function (success) {
+        success.should.be.true;
+        GroupA.type.should.equal('Regionalgruppe');
+        done();
+      });
+    });
+
+  });
 
 });
