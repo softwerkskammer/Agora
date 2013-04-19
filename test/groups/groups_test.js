@@ -81,23 +81,13 @@ describe('Groups application', function () {
       .end(done);
   });
 
-  it('does not allow save for a newly created Group for normal visitors', function (done) {
+  it('does not allow save for an existing or a newly created Group for normal visitors', function (done) {
     groupsAPIStub.groupFromObject = function () {
       return GroupA;
     };
 
     request(app)
       .post('/submit')
-      .expect(302, done);
-  });
-
-  it('does not allow save for an exisiting Group for normal visitors', function (done) {
-    groupsAPIStub.groupFromObject = function () {
-      return GroupA;
-    };
-
-    request(app)
-      .post('/edit/submit')
       .expect(302, done);
   });
 
