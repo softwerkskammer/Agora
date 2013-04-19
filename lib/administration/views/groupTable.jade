@@ -11,8 +11,8 @@ block scripts
       });
       $("table").find("a").filter(function () {return this.id === "type"; }).editable(
         {source: [
-          {value: 0, text: "#{groups[0].allTypes()[0]}"},
-          {value: 1, text: "#{groups[0].allTypes()[1]}"}
+          {value: 0, text: "#{groupTypes[0]}"},
+          {value: 1, text: "#{groupTypes[1]}"}
         ],
           showbuttons: false}
       );

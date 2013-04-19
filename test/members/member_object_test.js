@@ -121,4 +121,41 @@ describe('Member', function () {
     member.isAdmin.should.be.true;
     done();
   });
+
+  it('is correctly filled as Admin from UI as String', function (done) {
+    var db_record = {nickname: 'Nick', isAdmin: false};
+    var member = new Member({object: db_record});
+    member.isAdmin.should.be.false;
+    member.setAdminFromInteger("1");
+    member.isAdmin.should.be.true;
+    done();
+  });
+
+  it('is correctly filled as not Admin from UI as String', function (done) {
+    var db_record = {nickname: 'Nick', isAdmin: true};
+    var member = new Member({object: db_record});
+    member.isAdmin.should.be.true;
+    member.setAdminFromInteger("0");
+    member.isAdmin.should.be.false;
+    done();
+  });
+
+  it('is correctly filled as Admin from UI as Integer', function (done) {
+    var db_record = {nickname: 'Nick', isAdmin: false};
+    var member = new Member({object: db_record});
+    member.isAdmin.should.be.false;
+    member.setAdminFromInteger(1);
+    member.isAdmin.should.be.true;
+    done();
+  });
+
+  it('is correctly filled as not Admin from UI as Integer', function (done) {
+    var db_record = {nickname: 'Nick', isAdmin: true};
+    var member = new Member({object: db_record});
+    member.isAdmin.should.be.true;
+    member.setAdminFromInteger(0);
+    member.isAdmin.should.be.false;
+    done();
+  });
+
 });

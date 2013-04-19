@@ -39,12 +39,6 @@ block content
           th Website / Blog
       tbody
         for member in members
-          - if (member.isAdmin)
-            adminDisplay = "Administrator"
-            adminValue = 1
-          - else
-            adminDisplay = "Normal"
-            adminValue = 0
           tr
             td #{member.nickname}
             td: a#firstname(href="#", data-pk="#{member.nickname}", data-url="memberChanged") #{member.firstname}
@@ -55,5 +49,5 @@ block content
             td: a#profession(href="#", data-pk="#{member.nickname}", data-url="memberChanged") #{member.profession}
             td: a#interests(href="#", data-type="textarea", data-pk="#{member.nickname}", data-url="memberChanged") #{member.interests}
             td: a#site(href="#", data-type="textarea", data-pk="#{member.nickname}", data-url="memberChanged") #{member.site}
-            td: a#isAdmin(href="#", data-type="select", data-value="#{adminValue}", data-pk="#{member.nickname}", data-url="memberChanged") #{adminDisplay}
+            td: a#isAdmin(href="#", data-type="select", data-value="#{member.adminDropdownValue()}", data-pk="#{member.nickname}", data-url="memberChanged") #{member.adminDisplayText()}
   
