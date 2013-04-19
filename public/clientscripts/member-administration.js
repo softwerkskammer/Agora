@@ -1,10 +1,16 @@
 /* global $, document */
 "use strict";
 
-var initValidator = function () {
-  $("table").find("a").filter(function () {return this.id !== "isAdmin"; }).editable();
-//  $("table").find("a").filter(function () {return this.id === "isAdmin"; }).editable({
-//    source: [{value: "true", text: "true"}, {value: "false", text: "false"}]
-//  });
+var initEditable = function () {
+  $("table").find("a").filter(function () {return this.id !== "isAdmin"; }).editable({
+    showbuttons: false
+  });
+  $("table").find("a").filter(function () {return this.id === "isAdmin"; }).editable(
+    {source: [
+      {value: 1, text: "Administrator"},
+      {value: 2, text: "Normal"}
+    ],
+      showbuttons: false}
+  );
 };
-$(document).ready(initValidator);
+$(document).ready(initEditable);

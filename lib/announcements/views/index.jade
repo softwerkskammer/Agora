@@ -8,6 +8,10 @@ block content
     .page-header
       h2 Nachrichten
         small  Alle
+        - if (typeof(user) !== 'undefined' && user.member.isAdmin)
+          | 
+          a(href="new/", class="btn") Neu
+
     ul
       for announcement in announcements
         li: .announcement: strong: a(href='#{announcement.title}') #{announcement.title}
