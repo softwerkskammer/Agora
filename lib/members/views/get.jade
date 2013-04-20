@@ -2,6 +2,7 @@ extends ../../../views/layout
 
 block title
   | Profil für #{member.firstname} #{member.lastname}
+
 block content
   .span12
     .page-header
@@ -21,11 +22,13 @@ block content
       strong Nachname:
       |  #{member.lastname}
     p
-      strong Email:
-      |  #{member.email}
+      strong Email: 
+      span.mailtoify
+        | #{member.email}
     p
-      strong Twitter:
-      |  #{member.twitter}
+      strong Twitter: 
+      span.twitterify
+        | #{member.twitter}
     p
       strong Ort / Region:
       |  #{member.location}
@@ -36,8 +39,9 @@ block content
       strong Interessenschwerpunkte:
       |  #{member.interests}
     p
-      strong Website / Blog:
-      |  #{member.site}
+      strong Website / Blog: 
+      span.urlify
+        | #{member.site}
 
 
     h3 Mitglied in:

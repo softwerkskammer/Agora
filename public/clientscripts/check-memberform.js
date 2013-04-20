@@ -39,7 +39,7 @@ var initValidator = function () {
   member_validator.form();
 
   ['#nickname', '#lastname', '#firstname', "#email", "#profession", "#location", "#reference"].forEach(function (each) {
-    $(each).keyup(function () {
+    $(each).on("change", function () {
       member_validator.element(each);
     });
   });

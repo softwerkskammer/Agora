@@ -37,7 +37,7 @@ var initValidator = function () {
   groups_validator.form();
 
   ['#id', '#longName', '#description', '#type'].forEach(function (each) {
-    $(each).keyup(function () {
+    $(each).on("change", function () {
       groups_validator.element(each);
     });
   });
