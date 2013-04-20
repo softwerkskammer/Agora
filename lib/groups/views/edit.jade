@@ -19,7 +19,7 @@ block title
     |  anlegen
 
 block content
-  form(id='groupform', action='submit', method='post')
+  form(id='groupform', action='/groups/submit', method='post')
     fieldset
       .span6
         legend
@@ -37,7 +37,7 @@ block content
         .control-group
           label(class="control-label", for="type") Gruppenart:
           select(id="type", class="input-block-level input-xlarge", name="type")
-            for item in ['Themengruppe', 'Regionalgruppe']
+            for item in group.allTypes()
               option(selected=group.type == item) #{item}
         p
           - if (group.isValid())

@@ -47,13 +47,13 @@ html
                 li#members: a(href="/members") Mitglieder
                 - if (user && user.member && user.member.isAdmin)
                   ul.nav
-                    li.dropdown
+                    li#administration.dropdown
                       a(href="#", class="dropdown-toggle", data-toggle="dropdown")
                         | Verwaltung
                         b.caret
                       ul.dropdown-menu
-                        li: a(href="/members/administration") Mitglieder
-                        li: a(href="/groups/administration") Gruppen
+                        li: a(href="/administration/memberTable") Mitglieder
+                        li: a(href="/administration/groupTable") Gruppen
 
       .row
         block content

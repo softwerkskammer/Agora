@@ -1,0 +1,53 @@
+extends ../../../views/layout
+
+block title
+  | Übersicht der Mitglieder
+
+block scripts
+  script
+    var initEditable = function () {
+      $("table").find("a").filter(function () {return this.id !== "isAdmin"; }).editable({
+        showbuttons: false
+      });
+      $("table").find("a").filter(function () {return this.id === "isAdmin"; }).editable(
+        {source: [
+          {value: 0, text: "Normal"},
+          {value: 1, text: "Administrator"}
+        ],
+          showbuttons: false}
+      );
+    };
+    $(document).ready(initEditable);
+
+
+block content
+  .span12
+    .page-header
+      h2 Verwaltung
+        small  Mitglieder
+    table(class="table table-condensed table-hover table-striped")
+      thead
+        tr
+          th Nickname
+          th Vorname
+          th Nachname
+          th Email
+          th Twitter
+          th Ort / Region
+          th Beruf
+          th Interessenschwerpunkte
+          th Website / Blog
+      tbody
+        for member in members
+          tr
+            td #{member.nickname}
+            td: a#firstname(href="#", data-pk="#{member.nickname}", data-url="memberChanged") #{member.firstname}
+            td: a#lastname(href="#", data-pk="#{member.nickname}", data-url="memberChanged") #{member.lastname}
+            td: a#email(href="#", data-pk="#{member.nickname}", data-url="memberChanged") #{member.email}
+            td: a#twitter(href="#", data-pk="#{member.nickname}", data-url="memberChanged") #{member.twitter}
+            td: a#location(href="#", data-pk="#{member.nickname}", data-url="memberChanged") #{member.location}
+            td: a#profession(href="#", data-pk="#{member.nickname}", data-url="memberChanged") #{member.profession}
+            td: a#interests(href="#", data-type="textarea", data-pk="#{member.nickname}", data-url="memberChanged") #{member.interests}
+            td: a#site(href="#", data-type="textarea", data-pk="#{member.nickname}", data-url="memberChanged") #{member.site}
+            td: a#isAdmin(href="#", data-type="select", data-value="#{member.adminDropdownValue()}", data-pk="#{member.nickname}", data-url="memberChanged") #{member.adminDisplayText()}
+  
