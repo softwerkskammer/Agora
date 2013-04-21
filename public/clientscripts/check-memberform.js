@@ -3,7 +3,9 @@
 var member_validator;
 
 var initValidator = function () {
-// validate signup form on keyup and submit
+
+  // DO NOT FORGET TO KEEP THIS FILE IN SYNC WITH /lib/commons/validation.js
+
   member_validator = $("#memberform").validate({
     rules: {
       nickname: {
