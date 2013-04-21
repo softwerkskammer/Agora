@@ -8,7 +8,7 @@ Current Build Status
 
 System requirements for installation
 --------------------
-It is a node.js project. Therefore you need node.js installed. We are currently using verion 0.8 and npm 1.2.
+It is a node.js project. Therefore you need node.js installed. We are currently using version 0.8 and npm 1.2.
 
 Get it from [http://nodejs.org](http://nodejs.org)
 
