@@ -2,18 +2,32 @@
 {
   "logging": {
     "application": {
-      "filename": "log/server.log",
-      "maxFiles": 5,
-      "maxSize": 10485760,
-      "consoleLevel": "info",
-      "fileLevel": "info"
+      "console": {
+        "level": "info",
+        "colorize": true
+      },
+      "file": {
+        "timestamp": true,
+        "json": false,
+        "filename": "log/server.log",
+        "maxfiles": 5,
+        "maxsize": 10485760,
+        "level": "info"
+      }
     },
     "http": {
-      "filename": "log/http.log",
-      "maxFiles": 5,
-      "maxSize": 10485760,
-      "consoleLevel": "warn",
-      "fileLevel": "info"
+      "console": {
+        "level": "warn",
+        "colorize": true
+      },
+      "file": {
+        "timestamp": true,
+        "json": false,
+        "filename": "log/http.log",
+        "maxfiles": 5,
+        "maxsize": 10485760,
+        "level": "info"
+      }
     }
   }
 }
