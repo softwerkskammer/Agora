@@ -1,4 +1,4 @@
 mixin memberlist(members)
   ul
     for member in members
-      li: .member: a(href='#{member.nickname}') #{member.firstname} #{member.lastname} (#{member.nickname}), #{member.location}
+      li: .member: a(href="/members/#{member.nickname}") #{member.firstname} #{member.lastname} (#{member.nickname}), #{member.location}
