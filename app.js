@@ -3,8 +3,7 @@
 var express = require('express'),
   http = require('http'),
   path = require('path'),
-  winston = require('winston'),
-  winstonConf = require('winston-config');
+  winston = require('winston');
 
 function ensureRequestedUrlEndsWithSlash(req, res, next) {
   function endsWithSlash(string) {
@@ -33,7 +32,7 @@ module.exports = function (conf) {
     members = require('./lib/members')(conf);
 
   // initialize winston and two concrete loggers
-  winstonConf.winstonConfigFromFile(__dirname + '/./config/winston-config.json');
+  require('winston-config').winstonConfigFromFile(__dirname + '/./config/winston-config.json');
   var appLogger = winston.loggers.get('application');
   var httpLogger = winston.loggers.get('http');
 
