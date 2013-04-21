@@ -18,7 +18,7 @@ describe('Members application', function () {
     request(app)
       .get('/')
       .expect(200)
-      .expect(/href="hada"/)
+      .expect(/href="\/members\/hada"/)
       .expect(/Hans Dampf/, function (err) {
         allMembers.calledOnce.should.be.ok;
         done(err);
@@ -30,7 +30,7 @@ describe('Members application', function () {
     root.use('/foo', app);
     request(root)
       .get('/foo')
-      .expect(/href="hada"/, done);
+      .expect(/href="\/members\/hada"/, done);
   });
 
   it('renders the link for two parent dirs', function (done) {
@@ -38,7 +38,7 @@ describe('Members application', function () {
     root.use('/foo/bar', app);
     request(root)
       .get('/foo/bar')
-      .expect(/href="hada"/, done);
+      .expect(/href="\/members\/hada"/, done);
   });
 
   it('renders the link for a get request with parameters', function (done) {
@@ -46,7 +46,7 @@ describe('Members application', function () {
     root.use('/foo', app);
     request(root)
       .get('/foo?param=value')
-      .expect(/href="hada"/, done);
+      .expect(/href="\/members\/hada"/, done);
   });
 
   it('shows the details of one member as retrieved from the membersstore', function (done) {
