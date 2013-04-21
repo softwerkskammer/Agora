@@ -5,10 +5,8 @@ var expect = require('chai').expect;
 
 var Activity = require('../../lib/activities/activity');
 
-var activityId = 'CodingDojo' + 'Munich' + new Date(2013, 5, 1);
-var dummyActivity = new Activity(activityId, 'CodingDojo', 'Munich', new Date(2013, 5, 1));
-dummyActivity.group = 'GroupA';
-
+var activityId = 'UGMUC_CodingDojo_01.04.2015';
+var dummyActivity = new Activity(activityId, 'CodingDojo', 'UGMUC', 'Munich');
 
 var activityStoreStub = {
   getActivity: function (id, callback) {
@@ -22,15 +20,8 @@ var activityStoreStub = {
   }
 };
 
-var groupsAPIStub = {
-  getSubscribedGroupsForUser: function () {},
-  getSympaUsersOfList: function (err, callback) { callback(null, []); },
-  getGroup: function (groupname, callback) { callback(null, null); }
-};
-
 var activitiesAPI = proxyquire('../../lib/activities/activitiesAPI', {
-  './activitystore': function () { return activityStoreStub; },
-  '../groups/groupsAPI': function () { return groupsAPIStub; }
+  './activitystore': function () { return activityStoreStub; }
 });
 
 var api = activitiesAPI({ get: function () { return null; } });
