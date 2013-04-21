@@ -12,20 +12,19 @@ var GroupB = new Group('GroupB', 'Gruppe B', 'Dies ist Gruppe B.', 'Regionalgrup
 var NonPersistentGroup = new Group('GroupC', 'Gruppe C', 'Dies ist Gruppe C.', 'Regionalgruppe');
 
 var groupstoreStub = {
-    allGroups: function (callback) { callback(null, [GroupA, GroupB]); },
-    getGroup: function (name, callback) {
-      if (name === 'GroupA') {
-        callback(null, GroupA);
-      } else if (name === 'GroupB') {
-        callback(null, GroupB);
-      } else {
-        callback(null, null);
-      }
-    },
-    saveGroup: function (group, callback) { callback(null, group); },
-    groupsByLists: function () {}
-  }
-  ;
+  allGroups: function (callback) { callback(null, [GroupA, GroupB]); },
+  getGroup: function (name, callback) {
+    if (name === 'GroupA') {
+      callback(null, GroupA);
+    } else if (name === 'GroupB') {
+      callback(null, GroupB);
+    } else {
+      callback(null, null);
+    }
+  },
+  saveGroup: function (group, callback) { callback(null, group); },
+  groupsByLists: function () {}
+};
 
 var sympaStub = {
   createList: function (err, callback) { callback(); },
@@ -35,11 +34,11 @@ var sympaStub = {
 };
 
 var groupsAPI = proxyquire('../../lib/groups/groupsAPI', {
-  './groupstore': function () { return groupstoreStub; },
+  './groupstore': groupstoreStub,
   './sympaStub': function () { return sympaStub; }
 });
 
-var systemUnderTest = groupsAPI({ get: function () { return null; } });   // empty config -> sympaStub is required
+var systemUnderTest = groupsAPI;
 
 describe('Groups API (getSubscribedGroupsForUser)', function () {
 

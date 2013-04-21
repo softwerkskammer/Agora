@@ -1,7 +1,7 @@
 /*global describe, it */
 "use strict";
 
-var nconf = require('../configure')();
+var nconf = require('./configureForTest');
 var expect = require('chai').expect;
 var securedByLoginURLRegex = new RegExp(nconf.get('securedByLoginURLPattern'));
 

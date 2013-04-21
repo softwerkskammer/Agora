@@ -27,7 +27,7 @@ describe('Groups store', function () {
 
   it('retrieves groupnames given the intended case', function (done) {
     var queriedId = 'groupA';
-    store().getGroup(queriedId, function (err, group) {
+    store.getGroup(queriedId, function (err, group) {
       group.id.should.equal(sampleGroup.id);
       getById.calledWith(new RegExp('^' + queriedId + '$', 'i')).should.be.true;
       done(err);
@@ -36,7 +36,7 @@ describe('Groups store', function () {
 
   it('retrieves groupnames given a different case', function (done) {
     var queriedId = 'GRouPA';
-    store().getGroup(queriedId, function (err, group) {
+    store.getGroup(queriedId, function (err, group) {
       group.id.should.equal(sampleGroup.id);
       getById.calledWith(new RegExp('^' + queriedId + '$', 'i')).should.be.true;
       done(err);

@@ -1,8 +1,6 @@
 /*global describe, it */
 "use strict";
 var proxyquire = require('proxyquire');
-var MongoConf = require('./mongoConf');
-var conf = new MongoConf();
 var expect = require('chai').expect;
 
 var Member = require('../lib/members/member');
@@ -17,10 +15,8 @@ var memberstoreStub = {
 };
 
 var api = proxyquire('../lib/members/membersAPI', {
-  './memberstore': function () {
-    return memberstoreStub;
-  }
-})(conf);
+  './memberstore': memberstoreStub
+});
 
 describe('MembersAPI', function () {
   it('rejects nicknames that are reserved for URLs', function (done) {

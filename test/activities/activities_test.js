@@ -33,14 +33,11 @@ var groupsAPIStub = {
 };
 
 var activityApp = proxyquire('../../lib/activities', {
-  './activitiesAPI': function () { return activitiesAPIStub; },
-  '../groups/groupsAPI': function () { return groupsAPIStub; }
+  './activitiesAPI': activitiesAPIStub,
+  '../groups/groupsAPI': groupsAPIStub
 });
 
-var app = activityApp(express(), { get: function () {
-  return null;
-} });   // empty config
-
+var app = activityApp(express());
 
 describe('Activity application', function () {
 
@@ -98,7 +95,6 @@ describe('Activity application', function () {
         done(err);
       });
   });
-
 
   it('allows to create a new activity', function (done) {
 

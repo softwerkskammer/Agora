@@ -31,15 +31,11 @@ describe('Activity store', function () {
     var list = sinon.stub(persistenceStub, 'list');
     list.callsArgWith(1, null, sampleList);
 
-    store().allActivities(function (err, activities) {
+    store.allActivities(function (err, activities) {
       activities[0].title.should.equal(activity1.title);
       activities[1].title.should.equal(activity2.title);
       done(err);
     });
   });
-
-
-
-
 
 });

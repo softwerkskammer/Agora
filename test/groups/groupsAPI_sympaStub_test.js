@@ -26,11 +26,9 @@ var groupstoreStub = {
   groupsByLists: function () {}
 };
 
-var groupsAPI = proxyquire('../../lib/groups/groupsAPI', {
-  './groupstore': function () { return groupstoreStub; }
-});
+var groupsAPI = proxyquire('../../lib/groups/groupsAPI', {'./groupstore': groupstoreStub});
 
-var systemUnderTest = groupsAPI({ get: function () { return null; } });   // empty config -> the sympaStub is used
+var systemUnderTest = groupsAPI;
 
 describe('Groups API with SympaStub', function () {
 
@@ -81,7 +79,6 @@ describe('Groups API with SympaStub', function () {
       done(err);
     });
   });
-
 
   it('can handle the creation of a new group', function (done) {
     var saveGroupSpy = sinon.spy(groupstoreStub, 'saveGroup');

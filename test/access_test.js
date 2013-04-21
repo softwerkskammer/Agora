@@ -2,15 +2,16 @@
 "use strict";
 var request = require('supertest'),
   express = require('express'),
-  proxyquire = require('proxyquire'),
-  conf = require('../configure')();
+  proxyquire = require('proxyquire');
+
+require('./configureForTest');
 
 require('chai').should();
 
 var authenticationModule = proxyquire('../lib/authentication', {});
-var authenticationAppFactory = authenticationModule(conf);
+var authenticationAppFactory = authenticationModule;
 
-var memberAppFactory = require('./membertest_stubs').memberModule(conf);
+var memberAppFactory = require('./membertest_stubs').memberModule;
 var appUnderTest = express();
 
 var authenticationState = {};
@@ -25,9 +26,9 @@ function configureAuhenticatedUser(req, res, next) {
 appUnderTest.configure(function () {
   appUnderTest.use(configureAuhenticatedUser);
   appUnderTest.use(authenticationAppFactory.secureByLogin);
-  appUnderTest.use(memberAppFactory.newUserMustFillInRegistration);
+  appUnderTest.use(memberAppFactory().newUserMustFillInRegistration);
 });
-appUnderTest.use('/members/', memberAppFactory.create(express()));
+appUnderTest.use('/members/', memberAppFactory().create(express()));
 
 describe('member redirects', function () {
 

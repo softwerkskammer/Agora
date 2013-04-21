@@ -3,12 +3,11 @@
 
 require('chai').should();
 
-var async = require('async'),
-  MongoConf = require('./mongoConf'),
-  conf = new MongoConf();
+var async = require('async');
+require('./configureForTest');
 
 var createTeststore = function (collectionName) {
-  return require('../lib/persistence/persistence')(collectionName, conf);
+  return require('../lib/persistence/persistence')(collectionName);
 };
 
 describe('The parallel persistence store', function () {
