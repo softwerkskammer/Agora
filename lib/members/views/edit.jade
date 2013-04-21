@@ -73,6 +73,9 @@ block content
       - if (!user.member)
         .span12
           mixin textarea('reference', 'Wie ich von der Softwerkskammer erfahren habe')
+      - else
+        input(type="hidden", name="reference", value=member.reference)
+
 
       .span6
         legend Gruppenmitgliedschaft
