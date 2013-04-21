@@ -14,7 +14,9 @@ describe('Server started in different process', function () {
     child.stdout.setEncoding("utf8");
     child.stdout.on("data", function (chunk) {
       stdout += chunk;
-      if (stdout.trim().indexOf('Server running') === 16) {
+
+      // the Server running output highly depends on the log output, it should just be in there, somewhere
+      if (stdout.trim().indexOf('Server running') > -1) {
         /* prevent callback being called multiple times */
         stdout = "";
         callback();

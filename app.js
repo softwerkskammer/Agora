@@ -16,36 +16,6 @@ function ensureRequestedUrlEndsWithSlash(req, res, next) {
   next();
 }
 
-function createLogger(loggerName, conf) {
-  var confPrefix = 'logging:' + loggerName;
-
-  winston.loggers.add(loggerName, {
-    console: {
-      colorize: true,
-      level: conf.get(confPrefix + ':consoleLevel')
-    }
-  });
-
-  var filename = conf.get(confPrefix + ':filename');
-
-  if (typeof filename !== 'undefined') {
-    var logger = winston.loggers.get(loggerName);
-    logger.add(winston.transports.File, {
-      timestamp: true,
-      json: false,
-      filename: filename,
-      maxsize: conf.get(confPrefix + ':maxSize'),
-      maxFiles: conf.get(confPrefix + ':maxFiles'),
-      level: conf.get(confPrefix + ':fileLevel')
-    });
-  }
-}
-
-function initWinston(conf) {
-  createLogger('application', conf);
-  createLogger('http', conf);
-}
-
 function useApp(parent, url, conf, factory) {
   var child = factory(express(), conf);
   child.locals({
@@ -62,7 +32,7 @@ module.exports = function (conf) {
     members = require('./lib/members')(conf);
 
   // initialize winston and two concrete loggers
-  initWinston(conf);
+  require('winston-config').winstonConfigFromFile(__dirname + '/./config/winston-config.json');
   var appLogger = winston.loggers.get('application');
   var httpLogger = winston.loggers.get('http');
 
