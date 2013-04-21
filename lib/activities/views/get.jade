@@ -6,12 +6,17 @@ block content
   .span12
     .page-header
       h2 Aktivitäten
-        small  #{activity.title}
+        small  #{activity.title} &nbsp;
+        - if (typeof(user) !== 'undefined' && user.member.isAdmin)
+          a(href="/activities/edit/#{activity.id}", class="btn") &Auml;ndern
 
   .span6
     p Datum: #{activity.activityDate}
     p Zeit: #{activity.startTime}
     p Ort: #{activity.location}
   .span6
+    for group in groups
+      if group.id == activity.assignedGroup
+        p Gruppe: #{group.longName}
     p Beschreibung: #{activity.description}
     p Wegbeschreibung: #{activity.direction}

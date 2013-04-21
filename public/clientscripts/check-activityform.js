@@ -29,7 +29,7 @@ var initValidator = function () {
   activity_validator.form();
 
   ['#title', '#location', "#activityDate"].forEach(function (each) {
-    $(each).keyup(function () {
+    $(each).on("change", function () {
       activity_validator.element(each);
     });
   });
