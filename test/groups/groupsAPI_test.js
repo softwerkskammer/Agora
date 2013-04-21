@@ -7,9 +7,9 @@ var expect = require('chai').expect;
 
 var Group = require('../../lib/groups/group');
 
-var GroupA = new Group('GroupA', 'Gruppe A', 'Dies ist Gruppe A.', 'Themengruppe');
-var GroupB = new Group('GroupB', 'Gruppe B', 'Dies ist Gruppe B.', 'Regionalgruppe');
-var NonPersistentGroup = new Group('GroupC', 'Gruppe C', 'Dies ist Gruppe C.', 'Regionalgruppe');
+var GroupA = new Group({id: 'GroupA', longName: 'Gruppe A', description: 'Dies ist Gruppe A.', type: 'Themengruppe'});
+var GroupB = new Group({id: 'GroupB', longName: 'Gruppe B', description: 'Dies ist Gruppe B.', type: 'Regionalgruppe'});
+var NonPersistentGroup = new Group({id: 'Group C', longName: 'Gruppe C', description: 'Dies ist Gruppe C.', type: 'Regionalgruppe'});
 
 var groupstoreStub = {
   allGroups: function (callback) { callback(null, [GroupA, GroupB]); },
@@ -27,7 +27,7 @@ var groupstoreStub = {
 };
 
 var sympaStub = {
-  createList: function (err, callback) { callback(); },
+  createList: function (listname, prefix, callback) { callback(); },
   getSubscribedListsForUser: function () {},
   getAllAvailableLists: function () {},
   getUsersOfList: function () {}
