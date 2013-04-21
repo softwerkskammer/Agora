@@ -28,10 +28,13 @@ var activitiesAPIStub = {
   }
 };
 
+var groupsAPIStub = {
+  getAllAvailableGroups: function (callback) { callback(null, []); }
+};
+
 var activityApp = proxyquire('../../lib/activities', {
-  './activitiesAPI': function () {
-    return activitiesAPIStub;
-  }
+  './activitiesAPI': function () { return activitiesAPIStub; },
+  '../groups/groupsAPI': function () { return groupsAPIStub; }
 });
 
 var app = activityApp(express(), { get: function () {
