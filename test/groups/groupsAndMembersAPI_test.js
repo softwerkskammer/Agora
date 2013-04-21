@@ -30,11 +30,11 @@ var membersAPIStub = {
 };
 
 var groupsAndMembersAPI = proxyquire('../../lib/groupsAndMembers/groupsAndMembersAPI', {
-  '../groups/groupsAPI': function () { return groupsAPIStub; },
-  '../members/membersAPI': function () { return membersAPIStub; }
+  '../groups/groupsAPI': groupsAPIStub,
+  '../members/membersAPI': membersAPIStub
 });
 
-var systemUnderTest = groupsAndMembersAPI({ get: function () { return null; } });   // empty config -> sympaStub is required
+var systemUnderTest = groupsAndMembersAPI;   // empty config -> sympaStub is required
 
 describe('Groups and Members API', function () {
 

@@ -34,18 +34,12 @@ var membersAPIStub = {
 };
 
 var groupsAndMembers = proxyquire('../lib/groupsAndMembers/groupsAndMembersAPI', {
-  '../groups/groupsAPI': function () {
-    return groupsAPIStub;
-  },
-  '../members/membersAPI': function () {
-    return membersAPIStub;
-  }
+  '../groups/groupsAPI': groupsAPIStub,
+  '../members/membersAPI': membersAPIStub
 });
 
 var memberModule = proxyquire('../lib/members', {
-  './membersAPI': function () {
-    return membersAPIStub;
-  },
+  './membersAPI': membersAPIStub,
   '../groupsAndMembers/groupsAndMembersAPI': groupsAndMembers,
   'connect-ensure-login': ensureLoggedInStub
 });

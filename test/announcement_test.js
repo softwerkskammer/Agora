@@ -20,15 +20,9 @@ var announcementAPIStub = {
   }
 };
 
-var announcementApp = proxyquire('../lib/announcements', {
-  './announcementAPI'                          : function () {
-    return announcementAPIStub;
-  }
-});
+var announcementApp = proxyquire('../lib/announcements', {  './announcementAPI': announcementAPIStub});
 
-var app = announcementApp(express(), { get: function () {
-  return null;
-} });   // empty config
+var app = announcementApp(express());
 
 describe('Announcement application', function () {
 

@@ -1,14 +1,9 @@
 /*global describe, beforeEach, afterEach, it */
 "use strict";
-var should = require('chai').should(),
-  httpRequest = require('request'),
-  request = require('supertest'),
-  MongoConf = require('./mongoConf'),
-  conf = new MongoConf();
-
-conf.set('port', '17125');
-conf.set('secret', 'secret');
-conf.set('securedByLoginURLPattern', '/members/.*');
+var should = require('chai').should();
+var httpRequest = require('request');
+var request = require('supertest');
+var conf = require('./configureForTest');
 
 var base_uri = "http://localhost:" + parseInt(conf.get('port'), 10);
 

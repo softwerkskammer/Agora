@@ -28,8 +28,8 @@ function useApp(parent, url, conf, factory) {
 }
 
 module.exports = function (conf) {
-  var authentication = require('./lib/authentication')(conf),
-    members = require('./lib/members')(conf);
+  var authentication = require('./lib/authentication'),
+    members = require('./lib/members')();
 
   // initialize winston and two concrete loggers
   require('winston-config').winstonConfigFromFile(__dirname + '/./config/winston-config.json');

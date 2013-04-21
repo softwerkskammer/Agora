@@ -33,7 +33,15 @@ describe('Server started in different process', function () {
     });
   };
 
+  beforeEach(function (done) {
+    var nconf = require('./configureForTest');
+    nconf.set('port', port);
+    done();
+  });
+
   afterEach(function (done) {
+    var nconf = require('./configureForTest');
+    nconf.set('port', 17125);
     child.on("exit", function () {  // this callback does not receive an error value
       done();
     });
