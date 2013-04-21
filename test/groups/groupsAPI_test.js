@@ -27,7 +27,7 @@ var groupstoreStub = {
 };
 
 var sympaStub = {
-  createList: function (err, callback) { callback(); },
+  createList: function (listname, prefix, callback) { callback(); },
   getSubscribedListsForUser: function () {},
   getAllAvailableLists: function () {},
   getUsersOfList: function () {}

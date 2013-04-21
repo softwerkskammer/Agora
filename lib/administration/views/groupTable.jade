@@ -4,11 +4,9 @@ block title
   | Übersicht der Gruppen
 
 block scripts
+  script(src="/clientscripts/utilities-for-editables.js")
   script
     var initEditable = function () {
-      $("table").find("a").filter(function () {return this.id !== "type"; }).editable({
-        showbuttons: false
-      });
       $("table").find("a").filter(function () {return this.id === "type"; }).editable(
         {source: [
           {value: 0, text: "#{groupTypes[0]}"},
@@ -34,13 +32,15 @@ block content
         tr
           th Name
           th Titel
+          th Email-Präfix
           th Beschreibung
           th Gruppenart
       tbody
         for group in groups
           tr
             td #{group.id}
-            td: a#longName(href="#", data-pk="#{group.id}", data-url="groupChanged") #{group.longName}
+            td: a#longName(href="#", data-type="text", data-pk="#{group.id}", data-url="groupChanged") #{group.longName}
+            td: #{group.emailPrefix}
             td: a#description(href="#", data-type="textarea", data-pk="#{group.id}", data-url="groupChanged") #{group.description}
             td: a#type(href="#", , data-type="select", data-value="#{group.typeCode()}", data-pk="#{group.id}", data-url="groupChanged") #{group.type}
               
