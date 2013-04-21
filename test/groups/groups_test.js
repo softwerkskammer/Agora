@@ -8,7 +8,7 @@ require('../configureForTest');
 var Group = require('../../lib/groups/group');
 var Member = require('../../lib/members/member');
 
-var GroupA = new Group('GroupA', 'Gruppe A', 'Dies ist Gruppe A.', 'Themengruppe');
+var GroupA = new Group({id: 'GroupA', longName: 'Gruppe A', description: 'Dies ist Gruppe A.', type: 'Themengruppe'});
 var MemberA = new Member();
 MemberA.firstname = 'Hans';
 MemberA.lastname = 'Dampf';

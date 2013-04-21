@@ -4,12 +4,9 @@ block title
   | Übersicht der Mitglieder
 
 block scripts
+  script(src="/clientscripts/utilities-for-editables.js")
   script
     var initEditable = function () {
-      $("table").find("a").filter(function () {return $(this).data().type === "text"; }).editable({
-        showbuttons: false
-      });
-      $("table").find("a").filter(function () {return $(this).data().type === "textarea"; }).editable();
       $("table").find("a").filter(function () {return this.id === "isAdmin"; }).editable(
         {source: [
           {value: 0, text: "Normal"},

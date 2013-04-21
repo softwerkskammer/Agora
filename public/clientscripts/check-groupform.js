@@ -13,6 +13,13 @@ var initValidator = function () {
         alphanumeric: true,
         remote: "/groups/checkgroupname"
       },
+      emailPrefix: {
+        required: true,
+        minlength: 5,
+        maxlength: 15,
+        alphanumeric: true,
+        remote: "/groups/checkemailprefix"
+      },
       longName: "required",
       description: "required",
       type: "required"
@@ -20,8 +27,10 @@ var initValidator = function () {
     },
     messages: {
       id: {
-        remote: $.validator.format("Dieser Gruppenname ist bereits vergeben."),
-        alphanumeric: $.validator.format("Erlaubt sind nur Zahlen, Buchstaben und der Unterstrich.")
+        remote: $.validator.format("Dieser Gruppenname ist bereits vergeben.")
+      },
+      emailPrefix: {
+        remote: $.validator.format("Dieses Präfix ist bereits vergeben.")
       }
     },
     errorElement: "span",
@@ -36,10 +45,13 @@ var initValidator = function () {
 
   groups_validator.form();
 
-  ['#id', '#longName', '#description', '#type'].forEach(function (each) {
+  ["#id", "#longName", "#description", "#type", "#emailPrefix"].forEach(function (each) {
     $(each).on("change", function () {
       groups_validator.element(each);
     });
+  });
+  $.extend($.validator.messages, {
+    alphanumeric: "Erlaubt sind nur Zahlen, Buchstaben und der Unterstrich."
   });
 
 };
