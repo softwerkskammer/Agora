@@ -7,9 +7,9 @@ var expect = require('chai').expect;
 
 var Group = require('../../lib/groups/group');
 
-var Craftsmanswap = new Group('craftsmanswap', 'Gruppe A', 'Dies ist Gruppe A.', 'Themengruppe');
-var NeuePlattform = new Group('neueplattform', 'Gruppe B', 'Dies ist Gruppe B.', 'Regionalgruppe');
-var NonPersistentGroup = new Group('GroupC', 'Gruppe C', 'Dies ist Gruppe C.', 'Regionalgruppe');
+var Craftsmanswap = new Group({id: 'craftsmanswap', longName: 'Gruppe A', description: 'Dies ist Gruppe A.', type: 'Themengruppe'});
+var NeuePlattform = new Group({id: 'neueplattform', longName: 'Gruppe B', description: 'Dies ist Gruppe B.', type: 'Regionalgruppe'});
+var NonPersistentGroup = new Group({id: 'Group C', longName: 'Gruppe C', description: 'Dies ist Gruppe C.', type: 'Regionalgruppe'});
 
 var groupstoreStub = {
   allGroups: function (callback) { callback(null, [Craftsmanswap, NeuePlattform]); },

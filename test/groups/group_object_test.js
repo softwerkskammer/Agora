@@ -16,13 +16,13 @@ describe('Group object', function () {
   });
 
   it('should deliver the correct type code for Themengruppe', function (done) {
-    var group = new Group(null, null, null, 'Themengruppe');
+    var group = new Group({type: 'Themengruppe'});
     expect(group.typeCode()).to.equal(0);
     done();
   });
 
   it('should deliver the correct type code for Regionalgruppe', function (done) {
-    var group = new Group(null, null, null, 'Regionalgruppe');
+    var group = new Group({type: 'Regionalgruppe'});
     expect(group.typeCode()).to.equal(1);
     done();
   });
