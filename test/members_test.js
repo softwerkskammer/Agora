@@ -9,9 +9,7 @@ var memberstubs = require('./membertest_stubs'),
   dummymember = memberstubs.dummymember,
   membersAPIStub = memberstubs.membersAPIStub,
   groupsAPIStub = memberstubs.groupsAPIStub,
-  app = memberstubs.memberModule({ get: function () {
-  return null; // empty config
-} }).create(express());
+  app = memberstubs.memberModule().create(express());
 
 describe('Members application', function () {
 

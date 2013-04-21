@@ -24,19 +24,14 @@ var sympaStub = {
   }
 };
 
-
 var groupsAPI = proxyquire('../../lib/groups/groupsAPI', {
-  './groupstore': function () {
-    return groupstoreStub;
-  },
+  './groupstore': groupstoreStub,
   './sympaStub': function () {
     return sympaStub;
   }
 });
 
-var systemUnderTest = groupsAPI({ get: function () {
-  return null;
-} });   // empty config -> sympaStub is required
+var systemUnderTest = groupsAPI;
 
 describe('Groups API (updateSubscriptions)', function () {
 

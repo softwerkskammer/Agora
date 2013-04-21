@@ -28,7 +28,7 @@ describe('Members store', function () {
   getByField.callsArgWith(1, null, sampleMember);
 
   it('calls persistence.getByField for store.getMember and passes on the given callback', function (done) {
-    store().getMember('nick', function (err, member) {
+    store.getMember('nick', function (err, member) {
       expect(member.nickname).to.equal(sampleMember.nickname);
       expect(getByField.calledWith({nickname: new RegExp()})).to.be.true;
       done(err);
@@ -36,7 +36,7 @@ describe('Members store', function () {
   });
 
   it('calls persistence.getByField trimmed for store.getMember and passes on the given callback', function (done) {
-    store().getMember('  nick  ', function (err, member) {
+    store.getMember('  nick  ', function (err, member) {
       expect(member.nickname).to.equal(sampleMember.nickname);
       expect(getByField.calledWith({nickname: new RegExp()})).to.be.true;
       var regex = getByField.args[0][0].nickname;
@@ -46,7 +46,7 @@ describe('Members store', function () {
   });
 
   it('calls persistence.getByField with an appropriate regex', function (done) {
-    store().getMember('nick', function (err, member) {
+    store.getMember('nick', function (err, member) {
       expect(member.nickname).to.equal(sampleMember.nickname);
       expect(getByField.calledWith({nickname: new RegExp()})).to.be.true;
       var regex = getByField.args[0][0].nickname;
@@ -61,7 +61,7 @@ describe('Members store', function () {
     var list = sinon.stub(persistenceStub, 'list');
     list.callsArgWith(1, null, sampleList);
 
-    store().allMembers(function (err, members) {
+    store.allMembers(function (err, members) {
       expect(members[0].nickname).to.equal(sampleMember.nickname);
       expect(members[1].nickname).to.equal(sampleMember2.nickname);
       done(err);
@@ -72,7 +72,7 @@ describe('Members store', function () {
     var save = sinon.stub(persistenceStub, 'save');
     save.callsArg(1);
 
-    store().saveMember(sampleMember, function (err) {
+    store.saveMember(sampleMember, function (err) {
       expect(save.calledWith(sampleMember)).to.be.true;
       done(err);
     });

@@ -21,10 +21,10 @@ var activityStoreStub = {
 };
 
 var activitiesAPI = proxyquire('../../lib/activities/activitiesAPI', {
-  './activitystore': function () { return activityStoreStub; }
+  './activitystore': activityStoreStub
 });
 
-var api = activitiesAPI({ get: function () { return null; } });
+var api = activitiesAPI;
 
 describe('Activities API', function () {
 

@@ -1,8 +1,9 @@
 /*global describe, it */
 "use strict";
-var request = require('supertest'),
-  express = require('express'),
-  proxyquire = require('proxyquire');
+var request = require('supertest');
+var express = require('express');
+var proxyquire = require('proxyquire');
+require('../configureForTest');
 
 var Group = require('../../lib/groups/group');
 var Member = require('../../lib/members/member');
@@ -25,11 +26,11 @@ var groupsAndMembersAPIStub = {
 };
 
 var groupsApp = proxyquire('../../lib/groups', {
-  './groupsAPI': function () { return groupsAPIStub; },
-  '../groupsAndMembers/groupsAndMembersAPI': function () { return groupsAndMembersAPIStub; }
+  './groupsAPI': groupsAPIStub,
+  '../groupsAndMembers/groupsAndMembersAPI': groupsAndMembersAPIStub
 });
 
-var app = groupsApp(express(), { get: function () { return null; } });   // empty config
+var app = groupsApp(express());
 
 app.locals({baseUrl: 'groups'});
 
@@ -92,16 +93,16 @@ describe('Groups application', function () {
   });
 
   // test currently not sensible
-//  it('redirects to the groups overview page if the group to save is not valid', function (done) {
-//    groupsAPIStub.groupFromObject = function () {
-//      return new Group();
-//    };
-//
-//    request(app)
-//      .post('/edit/submit')
-//      .expect(302)
-//      .expect('Content-Type', /text\/plain/)
-//      .expect('Moved Temporarily. Redirecting to /null/groups/', done);
-//  });
+  //  it('redirects to the groups overview page if the group to save is not valid', function (done) {
+  //    groupsAPIStub.groupFromObject = function () {
+  //      return new Group();
+  //    };
+  //
+  //    request(app)
+  //      .post('/edit/submit')
+  //      .expect(302)
+  //      .expect('Content-Type', /text\/plain/)
+  //      .expect('Moved Temporarily. Redirecting to /null/groups/', done);
+  //  });
 
 });
