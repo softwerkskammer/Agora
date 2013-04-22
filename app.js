@@ -83,6 +83,7 @@ module.exports = function (conf) {
 
         // Handle 500
         app.use(function (error, req, res, next) {
+          appLogger.error(error);
           res.render('500.jade', {error: error});
           next; // needed for jshint
         });
