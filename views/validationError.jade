@@ -1,0 +1,20 @@
+extends layout
+
+block title
+  | Validation Error
+block content
+  div.span12
+    .page-header
+      h2 Fehlgeschlagen
+        small  Validierung
+      p Offenbar hast Du einige Felder nicht wie vorgesehen ausgefüllt. Diese findest Du unten:
+    ul
+      for error in errors
+        li #{error}
+    p
+      a(href="javascript:history.back()", class="btn", type="cancel") Zurück
+
+
+      
+                    
+    

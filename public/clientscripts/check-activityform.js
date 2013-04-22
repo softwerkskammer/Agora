@@ -32,8 +32,10 @@ var initValidator = function () {
     $(each).on("change", function () {
       activity_validator.element(each);
     });
+    $(each).keyup(function () {
+      activity_validator.element(each);
+    });
   });
-
 };
 
 var initDatePicker = function () {
@@ -44,17 +46,17 @@ var initDatePicker = function () {
     minViewMode: 'days',
     language: 'de'
   });
-}
+};
 
 var initTimePicker = function () {
   activity_timepicker =   $('#startTime').timepicker({
-    minuteStep: 1,
+    minuteStep: 15,
     showSeconds: false,
     showMeridian: false,
-    showInputs: false,
-    disableFocus: true
+    showInputs: true,
+    disableFocus: false
   });
-}
+};
 
 $(document).ready(initValidator);
 
