@@ -10,6 +10,9 @@ var surroundWithLink = function (text) {
 };
 
 var surroundTwitterName = function (twittername) {
+  if (twittername.trim().length === 0) {
+    return twittername;
+  }
   return "<a href=\"http://twitter.com/" + twittername + "\">@" + twittername + "</a>";
 };
 
