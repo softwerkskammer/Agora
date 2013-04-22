@@ -8,18 +8,9 @@ block content
       h2 Fehlgeschlagen
         small  Validierung
       p Offenbar hast Du einige Felder nicht wie vorgesehen ausgefüllt. Diese findest Du unten:
-    table(class="table table-condensed table-hover table-striped")
-      thead
-        tr
-          th Feld
-          th Fehler
-          th Wert
-      tbody
-        for error in errors
-          tr
-            td #{error.param}
-            td #{error.msg}
-            td #{error.value}
+    ul
+      for error in errors
+        li #{error}
     p
       a(href="javascript:history.back()", class="btn", type="cancel") Zurück
 

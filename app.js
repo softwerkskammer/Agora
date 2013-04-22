@@ -4,7 +4,6 @@ var express = require('express');
 var http = require('http');
 var path = require('path');
 var winston = require('winston');
-var expressValidator = require('express-validator');
 
 function ensureRequestedUrlEndsWithSlash(req, res, next) {
   function endsWithSlash(string) {
@@ -60,7 +59,6 @@ module.exports = function (conf) {
         app.use(express.logger({stream: winstonStream}));
         app.use(express.cookieParser());
         app.use(express.bodyParser());
-        app.use(expressValidator);
         app.use(express.methodOverride());
         app.use(express.session({secret: conf.get('secret')}));
         authentication.configure(app);

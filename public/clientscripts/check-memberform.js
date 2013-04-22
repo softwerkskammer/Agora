@@ -44,6 +44,10 @@ var initValidator = function () {
     $(each).on("change", function () {
       member_validator.element(each);
     });
+    $(each).keyup(function () {
+      member_validator.element(each);
+    });
+
   });
 
 };

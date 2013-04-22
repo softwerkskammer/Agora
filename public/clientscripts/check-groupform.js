@@ -49,6 +49,9 @@ var initValidator = function () {
     $(each).on("change", function () {
       groups_validator.element(each);
     });
+    $(each).keyup(function () {
+      groups_validator.element(each);
+    });
   });
   $.extend($.validator.messages, {
     alphanumeric: "Erlaubt sind nur Zahlen, Buchstaben und der Unterstrich."

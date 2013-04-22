@@ -41,7 +41,7 @@
     "winston": "~0.6.2",
     "winston-config": "~0.0.2",
     "underscore": "~1.4.4",
-    "express-validator": "0.3.x"
+    "validator": "1.1.x"
   },
   "devDependencies": {
     "grunt": "~0.4",
