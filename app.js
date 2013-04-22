@@ -1,9 +1,9 @@
 "use strict";
 
-var express = require('express'),
-  http = require('http'),
-  path = require('path'),
-  winston = require('winston');
+var express = require('express');
+var http = require('http');
+var path = require('path');
+var winston = require('winston');
 
 function ensureRequestedUrlEndsWithSlash(req, res, next) {
   function endsWithSlash(string) {
@@ -84,7 +84,7 @@ module.exports = function (conf) {
         // Handle 500
         app.use(function (error, req, res, next) {
           res.render('500.jade', {error: error});
-          next;
+          next; // needed for jshint
         });
       });
 
