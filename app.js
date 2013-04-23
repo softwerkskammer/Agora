@@ -83,7 +83,10 @@ module.exports = function (conf) {
 
         // Handle 500
         app.use(function (error, req, res, next) {
-          appLogger.error(error);
+          appLogger.error(error.stack);
+          if (/InternalOpenIDError|BadRequestError|InternalOAuthError/.test(error.name)) {
+            return res.render('authenticationError.jade', {error: error});
+          }
           res.render('500.jade', {error: error});
           next; // needed for jshint
         });

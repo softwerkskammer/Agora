@@ -7,7 +7,7 @@ var expect = require('chai').expect;
 
 var Group = require('../../lib/groups/group');
 
-var GroupA = new Group({id: 'GroupA', longName: 'Gruppe A', description: 'Dies ist Gruppe A.', type: 'Themengruppe'});
+var GroupA = new Group({id: 'GroupA', longName: 'Gruppe A', description: 'Dies ist Gruppe A.', type: 'Themengruppe', emailPrefix: 'PREFIX'});
 var GroupB = new Group({id: 'GroupB', longName: 'Gruppe B', description: 'Dies ist Gruppe B.', type: 'Regionalgruppe'});
 var NonPersistentGroup = new Group({id: 'Group C', longName: 'Gruppe C', description: 'Dies ist Gruppe C.', type: 'Regionalgruppe'});
 
@@ -295,7 +295,6 @@ describe('Groups API (isGroupNameAvailable)', function () {
       done();
     });
   });
-
   it('rejects groupnames that contain reserved routes', function (done) {
 
     expect(systemUnderTest.isReserved('new')).to.be.true;
@@ -309,53 +308,52 @@ describe('Groups API (isGroupNameAvailable)', function () {
       done();
     });
   });
+});
 
-  describe('Groups API (updateGroupsFieldWith)', function () {
-    var oldDescription;
-    var oldLongName;
-    var oldType;
+describe('Groups API (updateGroupsFieldWith)', function () {
+  var oldDescription;
+  var oldLongName;
+  var oldType;
 
-    beforeEach(function (done) {
-      oldDescription = GroupA.description;
-      oldLongName = GroupA.longName;
-      oldType = GroupA.type;
+  beforeEach(function (done) {
+    oldDescription = GroupA.description;
+    oldLongName = GroupA.longName;
+    oldType = GroupA.type;
+    done();
+  });
+
+  afterEach(function (done) {
+    GroupA.description = oldDescription;
+    GroupA.longName = oldLongName;
+    GroupA.type = oldType;
+    done();
+  });
+
+  it('should update the description correctly', function (done) {
+    expect(GroupA.description).to.not.equal('new Description');
+    systemUnderTest.updateGroupsFieldWith('GroupA', 'description', 'new Description', function (success) {
+      expect(success).to.be.true;
+      expect(GroupA.description).to.equal('new Description');
       done();
     });
+  });
 
-    afterEach(function (done) {
-      GroupA.description = oldDescription;
-      GroupA.longName = oldLongName;
-      GroupA.type = oldType;
+  it('should update the longName correctly', function (done) {
+    expect(GroupA.longName).to.not.equal('new Long Name');
+    systemUnderTest.updateGroupsFieldWith('GroupA', 'longName', 'new Long Name', function (success) {
+      expect(success).to.be.true;
+      expect(GroupA.longName).to.equal('new Long Name');
       done();
     });
+  });
 
-    it('should update the description correctly', function (done) {
-      expect(GroupA.description).to.not.equal('new Description');
-      systemUnderTest.updateGroupsFieldWith('GroupA', 'description', 'new Description', function (success) {
-        expect(success).to.be.true;
-        expect(GroupA.description).to.equal('new Description');
-        done();
-      });
+  it('should update the type correctly', function (done) {
+    expect(GroupA.type).to.equal('Themengruppe');
+    systemUnderTest.updateGroupsFieldWith('GroupA', 'type', '1', function (success) {
+      expect(success).to.be.true;
+      expect(GroupA.type).to.equal('Regionalgruppe');
+      done();
     });
-
-    it('should update the longName correctly', function (done) {
-      expect(GroupA.longName).to.not.equal('new Long Name');
-      systemUnderTest.updateGroupsFieldWith('GroupA', 'longName', 'new Long Name', function (success) {
-        expect(success).to.be.true;
-        expect(GroupA.longName).to.equal('new Long Name');
-        done();
-      });
-    });
-
-    it('should update the type correctly', function (done) {
-      expect(GroupA.type).to.equal('Themengruppe');
-      systemUnderTest.updateGroupsFieldWith('GroupA', 'type', '1', function (success) {
-        expect(success).to.be.true;
-        expect(GroupA.type).to.equal('Regionalgruppe');
-        done();
-      });
-    });
-
   });
 
 });
