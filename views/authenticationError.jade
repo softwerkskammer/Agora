@@ -1,17 +1,20 @@
 extends layout
 
 block title
-  | 500 - Generelles Problem
+  | 500 - Authentifizierungsproblem
 block content
   .row
   .span6
-    h3 Herzlichen Glückwunsch!
-    p Du hast einen fünf-null-null gefunden.
-      | Am Besten klickst Du auf einen unserer Links im Header.
-    p Bitte lass uns 
+    h3 Problem bei der Authentifizierung!
+    p Leider schient bei der Authentifizierung etwas schief gegangen zu sein.
+      | Bitte 
+      a(href="/auth/login") versuche es noch einmal.
+    p Sollte der Fehler wiederholt auftreten, lass uns bitte 
       a(href="https://github.com/softwerkskammer/NeuePlattform-Implementierung/issues/") einen möglichst detaillierten Fehlerbericht zukommen:
       ul
-        li Was hast Du getan?
+        li Wie bist Du auf die Login Seite gegangen?
+        li Welche Authentifizierung hast Du gewählt?
+        li Wenn Du selbst eine URL eingegeben hast, welche war das?
         li Betriebssystem und Browser inkl. Version.
         li Datum / Uhrzeit
         li Den Stacktrace unterhalb von "500"
