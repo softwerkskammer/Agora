@@ -31,6 +31,7 @@ html
                 ul.dropdown-menu
                   li: a(href="/members/edit/#{user.member.nickname}") Profil bearbeiten
                   li: a(href="/auth/logout") Abmelden
+                  li: a(href="https://github.com/softwerkskammer/NeuePlattform-Implementierung/issues?state=open") Einen Bug melden
                   li: include ../version
           - else
             - var returnTo = ""
