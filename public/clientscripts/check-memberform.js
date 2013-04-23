@@ -11,7 +11,8 @@ var initValidator = function () {
       nickname: {
         required: true,
         minlength: 2,
-        remote: "/members/checknickname"
+        remote: "/members/checknickname",
+        alphanumeric: true
       },
       firstname: "required",
       lastname: "required",
@@ -25,7 +26,8 @@ var initValidator = function () {
     },
     messages: {
       nickname: {
-        remote: $.validator.format("Dieser Nickname ist leider nicht verfügbar.")
+        remote: $.validator.format("Dieser Nickname ist leider nicht verfügbar."),
+        alphanumeric: $.validator.format("Nickname darf nur Buchstaben, Zahlen und Unterstrich enthalten.")
       }
     },
     errorElement: "span",
