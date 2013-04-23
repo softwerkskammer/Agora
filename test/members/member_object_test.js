@@ -34,6 +34,21 @@ describe('Member', function () {
     done();
   });
 
+  it('is populated by GitHub record with only github url', function (done) {
+    var userdata = JSON.parse('{' +
+      '"identifier": "github:123456", "profile": {' +
+      ' "provider" : "github", "id" : 123456, "displayName": "Hans Dampf", "username" :"hada", ' +
+      '"profileUrl" : "https://github.com/hansdampf", ' + '"emails" : [ { "value": null } ], ' +
+      '"_json" : { "html_url" :"https://github.com/hansdampf", "blog" : "undefined" }}}');
+
+    var member = new Member({sessionUser: userdata});
+    expect(member.firstname, 'firstname').to.not.exist;
+    expect(member.lastname, 'lastname').to.not.exist;
+    expect(member.site, 'site').to.equal('https://github.com/hansdampf');
+
+    done();
+  });
+
   it('is populated with empty fields where no information is given', function (done) {
     var req_body = {
       id: 'testuser',
