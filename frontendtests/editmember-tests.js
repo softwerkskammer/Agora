@@ -41,6 +41,24 @@ test("Nickname is mandatory and must have at least two letters", 4, function () 
   equal(member_validator.errorList[0].message, 'Geben Sie bitte mindestens 2 Zeichen ein.');
 });
 
+test("Nickname with trailing blanks is invalid", 2, function () {
+  initValidator();
+  var nickname = $("#nickname");
+  nickname.val("nickname ");
+  member_validator.element(nickname);
+  equal(member_validator.element(nickname), false);
+  equal(member_validator.errorList[0].message, 'Nickname darf nur Buchstaben, Zahlen und Unterstrich enthalten.');
+});
+
+test("Nickname with leading blanks is invalid", 2, function () {
+  initValidator();
+  var nickname = $("#nickname");
+  nickname.val(" nickname ");
+  member_validator.element(nickname);
+  equal(member_validator.element(nickname), false);
+  equal(member_validator.errorList[0].message, 'Nickname darf nur Buchstaben, Zahlen und Unterstrich enthalten.');
+});
+
 test("Nickname checking via Ajax is triggered", 3, function () {
   initValidator();
   var nickname = $("#nickname");
