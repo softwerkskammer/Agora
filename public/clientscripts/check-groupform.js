@@ -4,6 +4,8 @@ var groups_validator;
 
 var initValidator = function () {
 
+  // DO NOT FORGET TO KEEP THIS FILE IN SYNC WITH /lib/commons/validation.js
+
   groups_validator = $("#groupform").validate({
     rules: {
       id: {
@@ -27,7 +29,8 @@ var initValidator = function () {
     },
     messages: {
       id: {
-        remote: $.validator.format("Dieser Gruppenname ist bereits vergeben.")
+        remote: $.validator.format("Dieser Gruppenname ist bereits vergeben."),
+        alphanumeric: $.validator.format("Name darf nur Buchstaben, Zahlen und Unterstrich enthalten.")
       },
       emailPrefix: {
         remote: $.validator.format("Dieses Präfix ist bereits vergeben.")
