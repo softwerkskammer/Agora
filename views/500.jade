@@ -3,21 +3,21 @@ extends layout
 block title
   | 500 - Generelles Problem
 block content
-  .row
-  .span6
-    h3 Herzlichen Glückwunsch!
-    p Du hast einen fünf-null-null gefunden.
-      | Am Besten klickst Du auf einen unserer Links im Header.
-    p Bitte lass uns 
-      a(href="https://github.com/softwerkskammer/NeuePlattform-Implementierung/issues/") einen möglichst detaillierten Fehlerbericht zukommen:
-      ul
-        li Was hast Du getan?
-        li Betriebssystem und Browser inkl. Version.
-        li Datum / Uhrzeit
-        li Den Stacktrace unterhalb von "500"
-    p Das Agora-Team bittet um Entschuldigung.
-  .span6
-    h3 500
-      | #{error}
-    h4 Stacktrace:
-    p #{error.stack}
+  .row-fluid
+    .span6
+      h3 Herzlichen Glückwunsch!
+      p Du hast einen fünf-null-null gefunden.
+        | Am Besten klickst Du auf einen unserer Links im Header.
+      p Bitte lass uns 
+        a(href="https://github.com/softwerkskammer/NeuePlattform-Implementierung/issues/") einen möglichst detaillierten Fehlerbericht zukommen:
+        ul
+          li Was hast Du getan?
+          li Betriebssystem und Browser inkl. Version.
+          li Datum / Uhrzeit
+          li Den Stacktrace unterhalb von "500"
+      p Das Agora-Team bittet um Entschuldigung.
+    .span6
+      h3 500
+        | #{error}
+      h4 Stacktrace:
+      p #{error.stack}

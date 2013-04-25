@@ -77,8 +77,8 @@ describe('Activity application', function () {
     request(app)
       .get('/' + id)
       .expect(200)
-      .expect(/<small> title/)
-      .expect(/<h2>Aktivitäten/, function (err) {
+      .expect(/<small> Aktivität/)
+      .expect(/<h2>title/, function (err) {
         getActivityForId.calledWith(id).should.be.true;
         activitiesAPIStub.getActivityForId.restore();
         done(err);

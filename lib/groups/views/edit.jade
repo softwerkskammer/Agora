@@ -29,7 +29,7 @@ block content
           - else
             |  anlegen
         - if (group.isValid())
-          input(id='id', type='hidden', name='id', value=group['id'])
+          input#id(type='hidden', name='id', value=group['id'])
         - else
           mixin text('id', 'Name')
         mixin text('longName', 'Titel')
@@ -44,16 +44,16 @@ block content
             |  #{group.emailPrefix}
 
         .control-group
-          label(class="control-label", for="type") Gruppenart:
-          select(id="type", class="input-block-level input-xlarge", name="type")
+          label.control-label(for="type") Gruppenart:
+          select#type.input-block-level.input-xlarge(name="type")
             for item in group.allTypes()
-              option(selected=group.type == item) #{item}
+              option(selected=group.type === item) #{item}
         p
           - if (group.isValid())
-            button(class="btn btn-primary", type="submit") Speichern
+            button.btn.btn-primary(type="submit") Speichern
           - else
-            button(class="btn btn-primary", type="submit") Anlegen
-          a(href="javascript:history.back()", class="btn", type="cancel") Zurück
+            button.btn.btn-primary(type="submit") Anlegen
+          a.btn(href="javascript:history.back()", type="cancel") Zurück
 
 block scripts
   script(src="/clientscripts/jquery.validate-1.11.1.js")
