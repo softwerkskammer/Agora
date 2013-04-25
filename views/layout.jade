@@ -7,6 +7,7 @@ html
     link(href="/stylesheets/bootstrap-responsive.css", rel="stylesheet", media="screen")
     link(href="/stylesheets/bootstrap-editable.css", rel="stylesheet", media="screen")
     link(href="/stylesheets/bootstrap-timepicker.css", rel="stylesheet", media="screen")
+    link(href="/stylesheets/font-awesome.min.css", rel="stylesheet")
     style
       .container.bottom {padding-top: 20px}
       .brand.no-padding {padding-top: 0px; padding-bottom: 0px; padding-left: 20px; padding-right: 10px}
@@ -34,13 +35,19 @@ html
           - if (typeof(user) !== 'undefined' && user.member)
             ul.nav.pull-right
               li.dropdown
-                a.dropdown-toggle(href="#",  data-toggle="dropdown") 
-                  | #{user.member.nickname} <i class="icon-user"></i>
+                a.dropdown-toggle(href="#", data-toggle="dropdown") #{user.member.nickname}  
+                  i.icon-info-sign
                   b.caret
                 ul.dropdown-menu
-                  li: a(href="/members/edit/#{user.member.nickname}") Profil bearbeiten
-                  li: a(href="/auth/logout") Abmelden
-                  li: a(href="https://github.com/softwerkskammer/NeuePlattform-Implementierung/issues?state=open") Einen Bug melden
+                  li: a(href="/members/edit/#{user.member.nickname}") 
+                    i.icon-edit
+                    |  Profil bearbeiten
+                  li: a(href="/auth/logout") 
+                    i.icon-signout
+                    |  Abmelden
+                  li: a(href="https://github.com/softwerkskammer/NeuePlattform-Implementierung/issues?state=open") 
+                    i.icon-github
+                    |  Einen Bug melden
                   li: include ../version
           - else
             - var returnTo = ""
@@ -50,16 +57,25 @@ html
               a.navbar-link(href="/auth/login" + returnTo) Anmelden
           .nav-collapse.navbar-inverse-collapse
             ul.nav
-              li#announcements: a(href="/announcements") Nachrichten
-              li#activities: a(href="/activities") Aktivitäten
-              li#groups: a(href="/groups") Gruppen
+              li#announcements: a(href="/announcements") 
+                i.icon-globe
+                |  Nachrichten
+              li#activities: a(href="/activities")
+                i.icon-calendar
+                |  Aktivitäten
+              li#groups: a(href="/groups")
+                i.icon-group
+                |  Gruppen
               - if (typeof(user) !== 'undefined')
-                li#members: a(href="/members") Mitglieder
+                li#members: a(href="/members")
+                  i.icon-user
+                  |  Mitglieder
                 - if (user && user.member && user.member.isAdmin)
                   ul.nav
                     li#administration.dropdown
                       a.dropdown-toggle(href="#", data-toggle="dropdown")
-                        | Verwaltung
+                        i.icon-dashboard
+                        |  Verwaltung
                         b.caret
                       ul.dropdown-menu
                         li: a(href="/administration/memberTable") Mitglieder
