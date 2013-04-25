@@ -10,7 +10,7 @@ block content
         small  Alle
         - if (typeof(user) !== 'undefined' && user.member.isAdmin)
           | 
-          a(href="new/", class="btn") Neu
+          a.btn(href="new/") Neu
 
     ul
       each group in groups

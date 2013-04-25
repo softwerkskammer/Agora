@@ -10,7 +10,7 @@ block content
       h2 #{group.longName}
         small  #{group.type} 
         - if (userIsRegistered && user.member.isAdmin)
-          a(href="edit/#{group.id}", class="btn") Bearbeiten
+          a.btn(href="edit/#{group.id}") Bearbeiten
 
     p
       strong
@@ -39,6 +39,6 @@ block content
       mixin memberlist(users)
       - if (userIsRegistered)
         - if (userIsGroupMember)
-          a(href="unsubscribe/#{group.id}", class="btn btn-primary") Gruppe verlassen
+          a.btn.btn-primary(href="unsubscribe/#{group.id}") Gruppe verlassen
         - else
-          a(href="subscribe/#{group.id}", class="btn btn-primary") Gruppe beitreten
+          a.btn.btn-primary(href="subscribe/#{group.id}") Gruppe beitreten

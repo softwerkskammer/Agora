@@ -30,29 +30,29 @@ block title
   | Aktivität
 
 block content
-  .container
-    form(id='activityform', action='/activities/submit',method='post')
-      fieldset
-        .span12
-          legend
-            | Aktivität
+  form(id='activityform', action='/activities/submit',method='post')
+    fieldset
+      .span12
+        legend
+          | Aktivität
+      .row-fluid  
         .span6
-          .control-group
-            label(class="control-label", for="assignedGroup") Gruppe:
-            select(id="assignedGroup", class="input-block-level input-xlarge", name="assignedGroup", disabled=activity.assignedGroup != undefined)
-              for group in groups
-                if activity.assignedGroup != undefined && activity.assignedGroup == group.id
-                  option(value=group.id, selected)  #{group.longName}
-                else
-                  option(value=group.id)  #{group.longName}
           mixin text('title', 'Titel')
-          mixin date('activityDate', 'Datum')
-          mixin time('startTime', 'Uhrzeit')
+          .row-fluid
+            .span6
+              mixin date('activityDate', 'Datum')
+            .span6
+              mixin time('startTime', 'Uhrzeit')
+          mixin textarea('description', 'Beschreibung')
         .span6
           mixin text('location', 'Veranstaltungsort')
-          mixin textarea('description', 'Beschreibung')
           mixin textarea('direction', 'Wegbeschreibung')
-
+          .control-group
+            label.control-label(for="assignedGroup") Gruppe:
+            select#assignedGroup.input-block-level.input-xlarge(name="assignedGroup", disabled=activity.assignedGroup != undefined)
+              for group in groups
+                option(value=group.id, selected = (activity.assignedGroup != undefined && activity.assignedGroup == group.id))  #{group.longName}
+      .row-fluid
         .span12
-          button(class="btn btn-primary", type="submit") Speichern
-          a(href="javascript:history.back()", class="btn", type="cancel") Zurück
+          button.btn.btn-primary(type="submit") Speichern
+          a.btn(href="javascript:history.back()", type="cancel") Zurück

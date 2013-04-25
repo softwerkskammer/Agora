@@ -7,26 +7,35 @@ html
     link(href="/stylesheets/bootstrap-responsive.css", rel="stylesheet", media="screen")
     link(href="/stylesheets/bootstrap-editable.css", rel="stylesheet", media="screen")
     link(href="/stylesheets/bootstrap-timepicker.css", rel="stylesheet", media="screen")
+    style
+      .container.bottom {padding-top: 20px}
+      .brand.no-padding {padding-top: 0px; padding-bottom: 0px; padding-left: 20px; padding-right: 10px}
+      body {padding-top: 65px}
+      @media (max-width: 980px) {
+        body {
+          padding-top: 0;
+        }
+      }
     title
       block title
         | Softwerkskammer
   body
-    .container
-      div(class="navbar navbar-inverse navbar-static-top")
-        a(href="/"): img(src="/img/header.jpeg")
-        .navbar-inner
-          .container
-          a(class="btn btn-navbar", data-toggle="collapse", data-target=".navbar-inverse-collapse")
-            | <span class="icon-bar"></span>
-            | <span class="icon-bar"></span>
-            | <span class="icon-bar"></span>
-            | <span class="icon-bar"></span>
-            | <span class="icon-bar"></span>
+    .navbar.navbar-fixed-top
+      .navbar-inner
+        a.brand.no-padding(href="/") 
+          img(src="/img/SoftwerkskammerWappenLinks.png")
+        .container.bottom
+          a.btn.btn-navbar(data-toggle="collapse", data-target=".navbar-inverse-collapse")
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
           - if (typeof(user) !== 'undefined' && user.member)
-            ul(class="nav pull-right")
+            ul.nav.pull-right
               li.dropdown
-                a(href="#", class="dropdown-toggle", data-toggle="dropdown") 
-                  | #{user.member.nickname} <i class="icon-user icon-white"></i>
+                a.dropdown-toggle(href="#",  data-toggle="dropdown") 
+                  | #{user.member.nickname} <i class="icon-user"></i>
                   b.caret
                 ul.dropdown-menu
                   li: a(href="/members/edit/#{user.member.nickname}") Profil bearbeiten
@@ -37,9 +46,9 @@ html
             - var returnTo = ""
             - if (typeof(currentUrl) !== 'undefined')
               - returnTo = "?returnTo=" + encodeURIComponent(currentUrl)
-            p(class="navbar-text pull-right")
-              a(href="/auth/login" + returnTo, class="navbar-link") Anmelden
-          div(class="nav-collapse collapse navbar-inverse-collapse")
+            p.navbar-text.pull-right
+              a.navbar-link(href="/auth/login" + returnTo) Anmelden
+          .nav-collapse.navbar-inverse-collapse
             ul.nav
               li#announcements: a(href="/announcements") Nachrichten
               li#activities: a(href="/activities") Aktivitäten
@@ -49,19 +58,30 @@ html
                 - if (user && user.member && user.member.isAdmin)
                   ul.nav
                     li#administration.dropdown
-                      a(href="#", class="dropdown-toggle", data-toggle="dropdown")
+                      a.dropdown-toggle(href="#", data-toggle="dropdown")
                         | Verwaltung
                         b.caret
                       ul.dropdown-menu
                         li: a(href="/administration/memberTable") Mitglieder
                         li: a(href="/administration/groupTable") Gruppen
 
-      .row
-        block content
-    
-    script(src="/clientscripts/jquery-1.9.1.js")
-    script(src="/clientscripts/bootstrap.js")
-    script(src="/clientscripts/bootstrap-editable.js")
-    script(src="/clientscripts/navbar-scripts.js")
-    script(src="/clientscripts/surroundWithLink.js")
-    block scripts
+    .container-fluid
+      .row-fluid
+        .span9
+          .row-fluid
+            block content
+        .span3
+          .row-fluid
+            .hero-unit
+              h3 Platzhalter
+              p An dieser Stelle werden in Zukunft der Kalender und andere Dinge auftauchen.
+    .navbar.navbar-fixed-bottom
+      .navbar-inner
+        ul.nav.pull-right
+          li: a(href="/impressum.html") Impressum
+  script(src="/clientscripts/jquery-1.9.1.js")
+  script(src="/clientscripts/bootstrap.js")
+  script(src="/clientscripts/bootstrap-editable.js")
+  script(src="/clientscripts/navbar-scripts.js")
+  script(src="/clientscripts/surroundWithLink.js")
+  block scripts
