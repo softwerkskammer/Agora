@@ -14,7 +14,7 @@ block content
             |  Profilansicht
         - if (typeof(user) !== 'undefined' && user.member.isAdmin)
           | 
-          a(href="edit/#{member.nickname}", class="btn") Bearbeiten
+          a.btn(href="edit/#{member.nickname}") Bearbeiten
     p
       strong Vorname:
       |  #{member.firstname}

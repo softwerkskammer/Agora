@@ -39,55 +39,56 @@ block title
     |  anlegen
 
 block content
-  form(id='memberform', action='/members/submit',method='post')
-    fieldset
-      if (member)
-        input(type="hidden", name="id", value=member.id)
-      .span12
-        legend
-          | Profil
-          - if (user.member)
-            |  bearbeiten für Mitglied "#{member.nickname}"
-          - else
-            |  anlegen
-      .span6
-        - if (!user.member)
-          mixin text('nickname', 'Nickname')
-        - else
-          input(type="hidden", name="nickname", value=member.nickname)
-        mixin text('firstname', 'Vorname')
-        mixin text('lastname', 'Nachname')
-        mixin text('email', 'Email')
-        mixin twitter('twitter', 'Twitter')
-      .span6
-        mixin text('location', 'Ort / Region')
-        mixin text('profession', 'Beruf')
-        mixin text('interests', 'Interessenschwerpunkte')
-        mixin text('site', 'Website / Blog')
-        - if (user.member && user.member.isAdmin)
-          div
-            .checkbox
-              input(type='checkbox', name='isAdmin', checked=(!!member.isAdmin ? "true" : undefined)) 
-              | Administrator
-
-      - if (!user.member)
-        .span12
-          mixin textarea('reference', 'Wie ich von der Softwerkskammer erfahren habe')
+  .span12
+    legend
+      | Profil
+      - if (user.member)
+        |  bearbeiten für Mitglied #{member.nickname}
       - else
-        input(type="hidden", name="reference", value=member.reference)
-
-
-      .span6
-        legend Gruppenmitgliedschaft
-        .control-group
-          each markedGroup in markedGroups
-            mixin checkboxForGroup(markedGroup.group.id, markedGroup.group.longName, markedGroup.selected)
-          p
-            button(class="btn btn-primary", type="submit") Speichern
-            - if (user.member)
-              a(href="javascript:history.back()", class="btn", type="cancel") Zurück
-              - if (user.member.id === member.id)
-                a(href="/auth/logout", class="btn", type="cancel") Abmelden
+        |  anlegen
+    form(id='memberform', action='/members/submit',method='post')
+      fieldset
+        .row-fluid
+          .span6
+            - if (!user.member)
+              mixin text('nickname', 'Nickname')
             - else
-              a(href="/auth/logout", class="btn", type="cancel") Abbrechen
-
+              input(type="hidden", name="id", value=member.id)
+              input(type="hidden", name="nickname", value=member.nickname)
+            mixin text('firstname', 'Vorname')
+            mixin text('lastname', 'Nachname')
+            mixin text('email', 'Email')
+            mixin twitter('twitter', 'Twitter')
+          .span6  
+            mixin text('location', 'Ort / Region')
+            mixin text('profession', 'Beruf')
+            mixin text('interests', 'Interessenschwerpunkte')
+            mixin text('site', 'Website / Blog')
+            - if (user.member && user.member.isAdmin)
+              div
+                .checkbox
+                  input(type='checkbox', name='isAdmin', checked=(!!member.isAdmin ? "true" : undefined)) 
+                  | Administrator
+      
+        - if (!user.member)
+          .row-fluid
+            .span12
+              mixin textarea('reference', 'Wie ich von der Softwerkskammer erfahren habe')
+        - else
+          input(type="hidden", name="reference", value=member.reference)
+      
+        .row-fluid
+          .span6
+            legend Gruppenmitgliedschaft
+            .control-group
+              each markedGroup in markedGroups
+                mixin checkboxForGroup(markedGroup.group.id, markedGroup.group.longName, markedGroup.selected)
+              p
+                button.btn.btn-primary(type="submit") Speichern
+                - if (user.member)
+                  a.btn(href="javascript:history.back()", type="cancel") Zurück
+                  - if (user.member.id === member.id)
+                    a.btn(href="/auth/logout", type="cancel") Abmelden
+                - else
+                  a.btn(href="/auth/logout", type="cancel") Abbrechen
+      
