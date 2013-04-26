@@ -60,7 +60,7 @@ module.exports = function (conf) {
         app.use(express.cookieParser());
         app.use(express.bodyParser());
         app.use(express.methodOverride());
-        app.use(express.session({secret: conf.get('secret')}));
+        app.use(express.session({secret: conf.get('secret'), cookie: {maxAge: 86400 * 1000 * 7}}));
         authentication.configure(app);
         app.use(members.newUserMustFillInRegistration);
         app.use(app.router);
@@ -78,16 +78,16 @@ module.exports = function (conf) {
       app.configure('development', function () {
         // Handle 404
         app.use(function (req, res) {
-          res.render('404.jade');
+          res.render('errorPages/404.jade');
         });
 
         // Handle 500
         app.use(function (error, req, res, next) {
           appLogger.error(error.stack);
           if (/InternalOpenIDError|BadRequestError|InternalOAuthError/.test(error.name)) {
-            return res.render('authenticationError.jade', {error: error});
+            return res.render('errorPages/authenticationError.jade', {error: error});
           }
-          res.render('500.jade', {error: error});
+          res.render('errorPages/500.jade', {error: error});
           next; // needed for jshint
         });
       });

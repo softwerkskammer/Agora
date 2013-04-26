@@ -4,11 +4,20 @@ a.editable-click:hover {
     text-decoration: inherit;
     border-bottom: inherit;
 }
-.container.bottom {padding-top: 20px}
-.brand.no-padding {padding-top: 0px; padding-bottom: 0px; padding-left: 20px; padding-right: 10px}
-body {padding-top: 65px}
-@media (max-width: 980px) {
+
+@media (min-width: 980px) {
+    .container.bottom {
+        padding-top: 20px
+    }
+
+    .brand.no-padding {
+        padding-top: 0px;
+        padding-bottom: 0px;
+        padding-left: 20px;
+        padding-right: 10px
+    }
+
     body {
-        padding-top: 0;
+        padding-top: 65px
     }
 }
