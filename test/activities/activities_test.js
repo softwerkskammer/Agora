@@ -47,6 +47,8 @@ var activityApp = proxyquire('../../lib/activities', {
 
 var app = activityApp(express());
 
+var validation = require('../../lib/commons/validation');
+
 describe('Activity application', function () {
 
   it('object is not valid, if the required fields are not filled', function () {
@@ -58,7 +60,7 @@ describe('Activity application', function () {
         activityDate: '2012-11-11',
         startTime: 'startTime'
       });
-    tmpActivity.isValid().should.equal.false;
+    validation.isValidActivity(tmpActivity).should.equal.false;
   });
 
   it('shows the list of activities as retrieved from the store', function (done) {
@@ -93,13 +95,12 @@ describe('Activity application', function () {
       });
   });
 
-  it('shows the list of activities if the id cannot be found in the store for the detail page', function (done) {
+  it('shows a 404 if the id cannot be found in the store for the detail page', function (done) {
     var link = dummyActivity.id + '4711';
 
     request(app)
       .get('/' + link)
-      .expect(302)
-      .expect(/activities/, function (err) {
+      .expect(404, function (err) {
         done(err);
       });
   });

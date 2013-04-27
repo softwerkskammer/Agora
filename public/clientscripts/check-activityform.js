@@ -14,8 +14,6 @@ var initValidator = function () {
       location: "required",
       activityDate: "required"
     },
-    messages: {
-    },
     errorElement: "span",
     errorClass: "help-inline error",
     highlight: function (element, errorClass) {
