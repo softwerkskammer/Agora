@@ -75,7 +75,7 @@ module.exports = function (conf) {
         app.use(express.cookieParser());
         app.use(express.bodyParser());
         app.use(express.methodOverride());
-        app.use(express.session({secret: conf.get('secret'), cookie: {maxAge: 86400 * 1000 * 7}, store: sessionStore}));
+        app.use(express.session({secret: conf.get('secret'), cookie: {maxAge: 86400 * 1000 * 7}}));
         app.use(addToLocals);
         authentication.configure(app);
         app.use(members.newUserMustFillInRegistration);
