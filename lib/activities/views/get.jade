@@ -21,16 +21,15 @@ block content
   .row-fluid
     .span8
       h3 Beschreibung
-      p #{activity.description}
+      p !{activity.descriptionHTML()}
       h3 Ort
       p #{activity.location}
       h4 Wegbeschreibung: 
-      p #{activity.direction}
+      p !{activity.directionHTML()}
 
 block scripts
   script
     $(document).ready(function () {
-      $('#calendar').fullCalendar('gotoDate', #{activity.year()}, #{activity.month()});      
       $('#calendar').fullCalendar('select', $.fullCalendar.parseDate(#{activity.startUnix}), $.fullCalendar.parseDate(#{activity.endUnix()}), true);      
     });
   

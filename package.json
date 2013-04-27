@@ -43,7 +43,8 @@
     "underscore": "~1.4.4",
     "underscore.string": "~2.3.0",
     "validator": "1.1.x",
-    "moment": "*"
+    "moment": "2.x.x",
+    "markdown": "0.4.x"
   },
   "devDependencies": {
     "grunt": "~0.4",
