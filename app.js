@@ -50,14 +50,6 @@ module.exports = function (conf) {
     }
   };
 
-  var sessionStore = new MongoStore({
-    db: 'swk',
-    host: conf.mongoHost,
-    port: conf.mongoPort,
-    username: conf.mongoUser,
-    password: conf.mongoPass
-  });
-
   return {
 
     create: function () {
