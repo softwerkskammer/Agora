@@ -21,3 +21,12 @@ a.editable-click:hover {
         padding-top: 65px
     }
 }
+
+td.fc-header-right {
+    padding-top: 6px; !important
+}
+
+.verySmall {
+    font-size: .8em;
+    line-height: 1.1em;
+}

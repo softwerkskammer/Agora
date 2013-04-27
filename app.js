@@ -4,6 +4,7 @@ var express = require('express');
 var http = require('http');
 var path = require('path');
 var winston = require('winston');
+var MongoStore = require('connect-mongo')(express);
 
 function ensureRequestedUrlEndsWithSlash(req, res, next) {
   function endsWithSlash(string) {
@@ -27,6 +28,12 @@ function useApp(parent, url, conf, factory) {
   return child;
 }
 
+function addToLocals(req, res, next) {
+  res.locals.calViewYear = req.session.calViewYear;
+  res.locals.calViewMonth = req.session.calViewMonth;
+  next();
+}
+
 module.exports = function (conf) {
   var authentication = require('./lib/authentication'),
     members = require('./lib/members')();
@@ -42,6 +49,14 @@ module.exports = function (conf) {
       httpLogger.info(message.replace(/(\r\n|\n|\r)/gm, ""));
     }
   };
+
+  var sessionStore = new MongoStore({
+    db: 'swk',
+    host: conf.mongoHost,
+    port: conf.mongoPort,
+    username: conf.mongoUser,
+    password: conf.mongoPass
+  });
 
   return {
 
@@ -60,7 +75,8 @@ module.exports = function (conf) {
         app.use(express.cookieParser());
         app.use(express.bodyParser());
         app.use(express.methodOverride());
-        app.use(express.session({secret: conf.get('secret'), cookie: {maxAge: 86400 * 1000 * 7}}));
+        app.use(express.session({secret: conf.get('secret'), cookie: {maxAge: 86400 * 1000 * 7}, store: sessionStore}));
+        app.use(addToLocals);
         authentication.configure(app);
         app.use(members.newUserMustFillInRegistration);
         app.use(app.router);

@@ -6,7 +6,12 @@ var expect = require('chai').expect;
 var Activity = require('../../lib/activities/activity');
 
 var activityId = 'UGMUC_CodingDojo_01.04.2015';
-var dummyActivity = new Activity(activityId, 'CodingDojo', 'UGMUC', 'Munich');
+var dummyActivity = new Activity(
+  {id: activityId,
+    title: 'CodingDojo',
+    assignedGroup: 'UGMUC',
+    location: 'Munich'
+  });
 
 var activityStoreStub = {
   getActivity: function (id, callback) {
