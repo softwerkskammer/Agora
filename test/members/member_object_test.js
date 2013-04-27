@@ -4,7 +4,7 @@ var expect = require('chai').expect;
 
 var Member = require('../../lib/members/member');
 
-describe('Member', function () {
+describe('Member initial filling', function () {
 
   it('is populated by Google OpenID record', function (done) {
     var userdata = JSON.parse('{' +
@@ -66,7 +66,9 @@ describe('Member', function () {
     expect(member.reference, 'reference').to.not.exist;
     done();
   });
+});
 
+describe('Member field autocorrection', function () {
   it('is autocorrecting the twittername removing leading @', function (done) {
     var req_body = {
       id: 'testuser',
@@ -89,6 +91,42 @@ describe('Member', function () {
     done();
   });
 
+  it('is adding http:// when not provided', function (done) {
+    var req_body = {
+      id: 'testuser',
+      nickname: 'testuser',
+      site: 'twitter'
+    };
+    var member = new Member({object: req_body});
+    expect(member.site, 'site').to.equal('http://twitter');
+    done();
+  });
+
+  it('is not adding http:// when already provided', function (done) {
+    var req_body = {
+      id: 'testuser',
+      nickname: 'testuser',
+      site: 'http://twitter'
+    };
+    var member = new Member({object: req_body});
+    expect(member.site, 'site').to.equal('http://twitter');
+    done();
+  });
+
+  it('is not adding http:// when already https:// provided', function (done) {
+    var req_body = {
+      id: 'testuser',
+      nickname: 'testuser',
+      site: 'https://twitter'
+    };
+    var member = new Member({object: req_body});
+    expect(member.site, 'site').to.equal('https://twitter');
+    done();
+  });
+
+});
+
+describe('Member isAdmin', function () {
   it('has a boolean value for "isAdmin"', function (done) {
     var member = new Member();
     expect(member.isAdmin).to.be.false;

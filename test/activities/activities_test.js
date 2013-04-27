@@ -1,15 +1,23 @@
 /*global describe, it */
 "use strict";
-var request = require('supertest'),
-  express = require('express'),
-  sinon = require('sinon'),
-  proxyquire = require('proxyquire');
+var request = require('supertest');
+var express = require('express');
+var sinon = require('sinon');
+var proxyquire = require('proxyquire');
 
 require('chai').should();
 
 var Activity = require('../../lib/activities/activity');
 
-var dummyActivity = new Activity('title', 'description', 'assignedGroup', 'location', 'direction', 'activityDate', 'startTime');
+var dummyActivity = new Activity(
+  {title: 'title',
+    description: 'description',
+    assignedGroup: 'assignedGroup',
+    location: 'location',
+    direction: 'direction',
+    activityDate: 'activityDate',
+    startTime: 'startTime'
+  });
 
 var activitiesAPIStub = {
   getActivityForId: function (id, callback) {
@@ -41,15 +49,15 @@ var app = activityApp(express());
 
 describe('Activity application', function () {
 
-  it('removes all special characters from the id string', function () {
-    dummyActivity.createLink().should.equal('assignedGroup_title_activityDate');
-
-    var tmpActivity = new Activity('?!tit le?!', 'description', 'assignedGroup', 'location', 'direction', '2012-11-11', 'startTime');
-    tmpActivity.createLink().should.equal('assignedGroup___tit_le___2012-11-11');
-  });
-
   it('object is not valid, if the required fields are not filled', function () {
-    var tmpActivity = new Activity('description', 'assignedGroup', 'location', 'direction', 'activityDate', 'startTime');
+    var tmpActivity = new Activity(
+      {description: 'description',
+        assignedGroup: 'assignedGroup',
+        location: 'location',
+        direction: 'direction',
+        activityDate: '2012-11-11',
+        startTime: 'startTime'
+      });
     tmpActivity.isValid().should.equal.false;
   });
 
@@ -67,12 +75,12 @@ describe('Activity application', function () {
         done(err);
       });
 
-//    activitiesAPIStub.allActivities.restore();
+    //    activitiesAPIStub.allActivities.restore();
   });
 
   it('shows the details of one activity as retrieved from the store', function (done) {
     var getActivityForId = sinon.spy(activitiesAPIStub, 'getActivityForId');
-    var id = dummyActivity.createLink();
+    var id = 'assignedGroup_title_activityDate';
 
     request(app)
       .get('/' + id)
