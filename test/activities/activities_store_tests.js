@@ -21,8 +21,8 @@ var store = proxyquire('../../lib/activities/activitystore.js', {'../persistence
 }});
 
 describe('Activity store', function () {
-  var activity1 = {title: 'CodingDojo1', location: 'Munich', activityDate: new Date(2013, 5, 1)};
-  var activity2 = {title: 'CodingDojo2', location: 'Frankfurt', activityDate: new Date(2013, 5, 2)};
+  var activity1 = {title: 'CodingDojo1', location: 'Munich', startDate: new Date(2013, 5, 1)};
+  var activity2 = {title: 'CodingDojo2', location: 'Frankfurt', startDate: new Date(2013, 5, 2)};
   var sampleList = [activity1, activity2];
   var getByField = sinon.stub(persistenceStub, 'getByField');
   getByField.callsArgWith(1, null, activity1);

@@ -7,7 +7,7 @@ mixin text(name, label)
 mixin textarea(name, label)
   .control-group
     label(class="control-label", for=name) #{label}:
-    textarea(rows="4", class="input-block-level input-xxlarge", id=name, type='text', name=name)
+    textarea(rows="7", class="input-block-level input-xxlarge", id=name, type='text', name=name, data-provide="markdown")
       | #{activity[name]}
 mixin date(name, label)
   .control-group
@@ -25,24 +25,35 @@ block scripts
   script(src="/clientscripts/bootstrap-datepicker.de.js")
   script(src="/clientscripts/bootstrap-timepicker.js")
   script(src="/clientscripts/check-activityform.js")
+  script
+    $(function(){
+      $('#color').colorpicker();
+    });
 
 block title
   | Aktivität
 
 block content
-  form(id='activityform', action='/activities/submit',method='post')
+  form(id='activityform', action='/activities/submit', method='post')
+    - if (activity.id)
+      input(type="hidden", name="id", value=activity.id)
     fieldset
       .span12
         legend
           | Aktivität
-      .row-fluid  
+      .row-fluid
         .span6
           mixin text('title', 'Titel')
           .row-fluid
             .span6
-              mixin date('activityDate', 'Datum')
+              mixin date('startDate', 'Startdatum')
             .span6
-              mixin time('startTime', 'Uhrzeit')
+              mixin time('startTime', 'Startuhrzeit')
+          .row-fluid
+            .span6
+              mixin date('endDate', 'Enddatum')
+            .span6
+              mixin time('endTime', 'Enduhrzeit')
           mixin textarea('description', 'Beschreibung')
         .span6
           mixin text('location', 'Veranstaltungsort')
@@ -52,7 +63,14 @@ block content
             select#assignedGroup.input-block-level.input-xlarge(name="assignedGroup", disabled=activity.assignedGroup != undefined)
               for group in groups
                 option(value=group.id, selected = (activity.assignedGroup != undefined && activity.assignedGroup == group.id))  #{group.longName}
+            if activity.assignedGroup != undefined
+              input(type="hidden", name="assignedGroup", value=activity.assignedGroup)
+          .control-group
+            label.control-label(for="color") Farbe für Kalender:
+            #color.input-append.color(data-color="#{activity.color}", data-color-format="hex")
+              input.input-block-level.input-xlarge(type="text", name="color", value="#{activity.color}")
+              span.add-on: i(style="background-color: #{activity.color}")
       .row-fluid
         .span12
-          button.btn.btn-primary(type="submit") Speichern
+          button.btn.btn-primary(type="/activities/submit") Speichern
           a.btn(href="javascript:history.back()", type="cancel") Zurück
