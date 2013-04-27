@@ -12,7 +12,7 @@ block content
             |  Admin
           - else
             |  Profilansicht
-        - if (typeof(user) !== 'undefined' && user.member.isAdmin)
+        - if (typeof(user) !== 'undefined' && (user.member.isAdmin || user.member.id === member.id))
           | 
           a.btn(href="edit/#{member.nickname}") Bearbeiten
     p

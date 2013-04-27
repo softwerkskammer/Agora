@@ -7,6 +7,7 @@ html
     link(href="/stylesheets/bootstrap-responsive.css", rel="stylesheet", media="screen")
     link(href="/stylesheets/bootstrap-editable.css", rel="stylesheet", media="screen")
     link(href="/stylesheets/bootstrap-timepicker.css", rel="stylesheet", media="screen")
+    link(href="/stylesheets/fullcalendar.css", rel="stylesheet", media="screen")
     link(href="/stylesheets/agora.css", rel="stylesheet", media="screen")
     link(href="/stylesheets/font-awesome.min.css", rel="stylesheet")
     title Softwerkskammer - 
@@ -14,7 +15,7 @@ html
   body
     .navbar.navbar-fixed-top
       .navbar-inner
-        a.brand.no-padding(href="/") 
+        a.brand.no-padding(href="/")
           img(src="/img/SoftwerkskammerWappenLinks.png")
         .container.bottom
           a.btn.btn-navbar(data-toggle="collapse", data-target=".navbar-inverse-collapse")
@@ -26,19 +27,19 @@ html
           - if (typeof(user) !== 'undefined' && user.member)
             ul.nav.pull-right
               li.dropdown
-                a.dropdown-toggle(href="#", data-toggle="dropdown") #{user.member.nickname}  
+                a.dropdown-toggle(href="#", data-toggle="dropdown") #{user.member.nickname} 
                   i.icon-info-sign
                   b.caret
                 ul.dropdown-menu
-                  li: a(href="/members/edit/#{user.member.nickname}") 
+                  li: a(href="/members/edit/#{user.member.nickname}")
                     i.icon-edit
-                    |  Profil bearbeiten
-                  li: a(href="/auth/logout") 
+                    | &nbsp; Profil bearbeiten
+                  li: a(href="/auth/logout")
                     i.icon-signout
-                    |  Abmelden
-                  li: a(href="https://github.com/softwerkskammer/NeuePlattform-Implementierung/issues?state=open") 
+                    | &nbsp; Abmelden
+                  li: a(href="https://github.com/softwerkskammer/NeuePlattform-Implementierung/issues?state=open")
                     i.icon-github
-                    |  Einen Bug melden
+                    | &nbsp; Einen Bug melden
                   li: include ../version
           - else
             - var returnTo = ""
@@ -46,28 +47,28 @@ html
               - returnTo = "?returnTo=" + encodeURIComponent(currentUrl)
             p.navbar-text.pull-right
               a.navbar-link(href="/auth/login" + returnTo)
-                i.icon-signin  Anmelden
+                i.icon-signin &nbsp; Anmelden
           .nav-collapse.navbar-inverse-collapse
             ul.nav
-              li#announcements: a(href="/announcements") 
-                i.icon-globe
-                |  Nachrichten
+              li#announcements: a(href="/announcements")
+                i.icon-globe 
+                | &nbsp; Nachrichten
               li#activities: a(href="/activities")
                 i.icon-calendar
-                |  Aktivitäten
+                | &nbsp; Aktivitäten
               li#groups: a(href="/groups")
                 i.icon-group
-                |  Gruppen
+                | &nbsp; Gruppen
               - if (typeof(user) !== 'undefined')
                 li#members: a(href="/members")
                   i.icon-user
-                  |  Mitglieder
+                  | &nbsp; Mitglieder
                 - if (user.member && user.member.isAdmin)
                   ul.nav.visible-desktop
                     li#administration.dropdown
                       a.dropdown-toggle(href="#", data-toggle="dropdown")
                         i.icon-dashboard
-                        |  Verwaltung
+                        | &nbsp; Verwaltung
                         b.caret
                       ul.dropdown-menu
                         li: a(href="/administration/memberTable") Mitglieder
@@ -80,6 +81,7 @@ html
             block content
         .span3
           .row-fluid
+            #calendar
             .hero-unit
               h3 Platzhalter
               p An dieser Stelle werden in Zukunft der Kalender und andere Dinge auftauchen.
@@ -91,7 +93,7 @@ html
               li#administration.dropdown
                 a.dropdown-toggle(href="#", data-toggle="dropdown")
                   i.icon-dashboard
-                  | Verwaltung
+                  | &nbsp; Verwaltung
                   b.caret
                 ul.dropdown-menu
                   li: a(href="/administration/memberTable") Mitglieder
@@ -101,6 +103,8 @@ html
   script(src="/clientscripts/jquery-1.9.1.js")
   script(src="/clientscripts/bootstrap.js")
   script(src="/clientscripts/bootstrap-editable.js")
+  script(src="/clientscripts/fullcalendar.js")
   script(src="/clientscripts/navbar-scripts.js")
   script(src="/clientscripts/surroundWithLink.js")
+  script(src="/clientscripts/agora-calendar.js")
   block scripts

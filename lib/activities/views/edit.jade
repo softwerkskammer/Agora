@@ -30,12 +30,14 @@ block title
   | Aktivität
 
 block content
-  form(id='activityform', action='/activities/submit',method='post')
+  form(id='activityform', action='/activities/submit', method='post')
+    - if (activity.id)
+      input(type="hidden", name="id", value=activity.id)
     fieldset
       .span12
         legend
           | Aktivität
-      .row-fluid  
+      .row-fluid
         .span6
           mixin text('title', 'Titel')
           .row-fluid
@@ -52,7 +54,9 @@ block content
             select#assignedGroup.input-block-level.input-xlarge(name="assignedGroup", disabled=activity.assignedGroup != undefined)
               for group in groups
                 option(value=group.id, selected = (activity.assignedGroup != undefined && activity.assignedGroup == group.id))  #{group.longName}
+            - if (activity.assignedGroup != undefined)
+              input(type="hidden", name="assignedGroup", value=activity.assignedGroup)
       .row-fluid
         .span12
-          button.btn.btn-primary(type="submit") Speichern
+          button.btn.btn-primary(type="/activities/submit") Speichern
           a.btn(href="javascript:history.back()", type="cancel") Zurück
