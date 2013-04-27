@@ -7,10 +7,13 @@ block title
 block content
   .span12
     .page-header
-      h2 #{group.longName}
+      h2 
+        if (userIsRegistered && user.member.isAdmin)
+          a.btn.btn-mini(href="/groups/edit/#{group.id}")
+            i.icon-edit
+          | &nbsp
+        | #{group.longName} 
         small  #{group.type} 
-        - if (userIsRegistered && user.member.isAdmin)
-          a.btn(href="edit/#{group.id}") Bearbeiten
 
     p
       strong

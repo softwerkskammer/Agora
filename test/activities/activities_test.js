@@ -15,7 +15,7 @@ var dummyActivity = new Activity(
     assignedGroup: 'assignedGroup',
     location: 'location',
     direction: 'direction',
-    activityDate: 'activityDate',
+    startDate: 'startDate',
     startTime: 'startTime'
   });
 
@@ -24,7 +24,7 @@ var activitiesAPIStub = {
     var activity;
     var err = null;
 
-    if (id === 'assignedGroup_title_activityDate') {
+    if (id === 'assignedGroup_title_startDate') {
       activity = dummyActivity;
     } else {
       activity = null;
@@ -57,7 +57,7 @@ describe('Activity application', function () {
         assignedGroup: 'assignedGroup',
         location: 'location',
         direction: 'direction',
-        activityDate: '2012-11-11',
+        startDate: '2012-11-11',
         startTime: 'startTime'
       });
     validation.isValidActivity(tmpActivity).should.equal.false;
@@ -70,7 +70,7 @@ describe('Activity application', function () {
       .get('/')
       .expect(200)
       .expect(/Aktivitäten/)
-      .expect(/href="assignedGroup_title_activityDate"/)
+      .expect(/href="assignedGroup_title_startDate"/)
       .expect(/title/, function (err) {
         allActivities.calledOnce.should.be.ok;
         activitiesAPIStub.allActivities.restore();
@@ -82,13 +82,13 @@ describe('Activity application', function () {
 
   it('shows the details of one activity as retrieved from the store', function (done) {
     var getActivityForId = sinon.spy(activitiesAPIStub, 'getActivityForId');
-    var id = 'assignedGroup_title_activityDate';
+    var id = 'assignedGroup_title_startDate';
 
     request(app)
       .get('/' + id)
       .expect(200)
-      .expect(/<small> Aktivität/)
-      .expect(/<h2>title/, function (err) {
+      .expect(/<small>startDate/)
+      .expect(/<h2> title/, function (err) {
         getActivityForId.calledWith(id).should.be.true;
         activitiesAPIStub.getActivityForId.restore();
         done(err);

@@ -3,7 +3,7 @@
 
 $(document).ready(function () {
   // page is now ready, initialize the calendar...
-  $('#calendar').fullCalendar({
+ $('#calendar').fullCalendar({
     aspectRatio: 1.2,
     firstDay: 1,
     weekMode: 'variable',

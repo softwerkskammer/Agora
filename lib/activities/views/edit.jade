@@ -42,9 +42,14 @@ block content
           mixin text('title', 'Titel')
           .row-fluid
             .span6
-              mixin date('activityDate', 'Datum')
+              mixin date('startDate', 'Startdatum')
             .span6
-              mixin time('startTime', 'Uhrzeit')
+              mixin time('startTime', 'Startuhrzeit')
+          .row-fluid
+            .span6
+              mixin date('endDate', 'Enddatum')
+            .span6
+              mixin time('endTime', 'Enduhrzeit')
           mixin textarea('description', 'Beschreibung')
         .span6
           mixin text('location', 'Veranstaltungsort')

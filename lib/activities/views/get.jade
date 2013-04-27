@@ -5,18 +5,32 @@ block title
 block content
   .span12
     .page-header
-      h2 #{activity.title}
-        small  Aktivität &nbsp;
-        - if (typeof(user) !== 'undefined' && user.member.isAdmin)
-          a.btn(href="/activities/edit/#{activity.id}") Bearbeiten
+      h2  
+        if (typeof(user) !== 'undefined' && user.member.isAdmin)
+          a.btn.btn-mini(href="/activities/edit/#{activity.id}")
+            i.icon-edit
+          | &nbsp
+        | #{activity.title} 
+        small #{activity.startDate} (#{activity.startTime}
+          if (activity.endDate && activity.endDate !== activity.startDate)
+            | ) - #{activity.endDate} (#{activity.endTime})
+          else (activity.endTime)
+            |  - #{activity.endTime})
+      p
+        strong #{activity.groupName(groups)}
   .row-fluid
-    .span6
-      p Datum: #{activity.activityDate}
-      p Zeit: #{activity.startTime}
-      p Ort: #{activity.location}
-    .span6
-      for group in groups
-        if group.id == activity.assignedGroup
-          p Gruppe: #{group.longName}
-      p Beschreibung: #{activity.description}
-      p Wegbeschreibung: #{activity.direction}
+    .span8
+      h3 Beschreibung
+      p #{activity.description}
+      h3 Ort
+      p #{activity.location}
+      h4 Wegbeschreibung: 
+      p #{activity.direction}
+
+block scripts
+  script
+    $(document).ready(function () {
+      $('#calendar').fullCalendar('gotoDate', #{activity.year()}, #{activity.month()});      
+      $('#calendar').fullCalendar('select', $.fullCalendar.parseDate(#{activity.startUnix}), $.fullCalendar.parseDate(#{activity.endUnix()}), true);      
+    });
+  

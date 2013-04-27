@@ -6,13 +6,15 @@ block title
 block content
   .span12
     .page-header
-      h2 Aktivitäten
-        small  Alle
-        - if (typeof(user) !== 'undefined' && user.member.isAdmin)
-          | 
+      h2 Aktivitäten&nbsp;
+        small Alle
+        if typeof(user) !== 'undefined' && user.member.isAdmin
+          | &nbsp;
           a.btn(href="new/") Neu
 
-    ul
+    dl.dl-horizontal
       for activity in activities
-        li
-          a(href='#{activity.id}') #{activity.title}
+        dt
+          | #{activity.startDate} 
+        dd: a(href='#{activity.id}') #{activity.title}
+          | in #{activity.location} (#{activity.groupName(groups)})

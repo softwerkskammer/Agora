@@ -51,7 +51,7 @@ html
           .nav-collapse.navbar-inverse-collapse
             ul.nav
               li#announcements: a(href="/announcements")
-                i.icon-globe 
+                i.icon-globe
                 | &nbsp; Nachrichten
               li#activities: a(href="/activities")
                 i.icon-calendar
@@ -82,9 +82,8 @@ html
         .span3
           .row-fluid
             #calendar
-            .hero-unit
-              h3 Platzhalter
-              p An dieser Stelle werden in Zukunft der Kalender und andere Dinge auftauchen.
+
+    p &nbsp;
     .navbar.navbar-fixed-bottom
       .navbar-inner
         ul.nav.pull-right
@@ -107,4 +106,9 @@ html
   script(src="/clientscripts/navbar-scripts.js")
   script(src="/clientscripts/surroundWithLink.js")
   script(src="/clientscripts/agora-calendar.js")
+  if (typeof(calViewYear) !== 'undefined')
+    script
+      $(document).ready(function () {
+        $('#calendar').fullCalendar('gotoDate', #{calViewYear}, #{calViewMonth});      
+      });
   block scripts

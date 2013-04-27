@@ -20,6 +20,10 @@ test("Location is mandatory", 3, function () {
   checkFieldMandatory("#location");
 });
 
-test("activityDate is a text field and mandatory", 3, function () {
-  checkFieldMandatory("#activityDate");
+test("startDate is a text field and mandatory", 3, function () {
+  checkFieldMandatory("#startDate");
+});
+
+test("startTime is a text field and mandatory", 3, function () {
+  checkFieldMandatory("#startTime");
 });

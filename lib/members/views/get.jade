@@ -6,15 +6,17 @@ block title
 block content
   .span12
     .page-header
-      h2 "#{member.nickname}"
+      h2
+        if (typeof(user) !== 'undefined' && (user.member.isAdmin || user.member.id === member.id))
+          a.btn.btn-mini(href="/members/edit/#{member.nickname}")
+            i.icon-edit
+          | &nbsp
+        | "#{member.nickname}"&nbsp;
         small  
           - if (member.isAdmin)
-            |  Admin
+            | Admin
           - else
-            |  Profilansicht
-        - if (typeof(user) !== 'undefined' && (user.member.isAdmin || user.member.id === member.id))
-          | 
-          a.btn(href="edit/#{member.nickname}") Bearbeiten
+            | Profilansicht
     p
       strong Vorname:
       |  #{member.firstname}
