@@ -27,7 +27,13 @@ block scripts
   script(src="/clientscripts/check-activityform.js")
   script
     $(function(){
-      $('#color').colorpicker();
+      $("#color").colorpicker();
+      $("#colorText").on("change", function (event) {
+        $("#color").colorpicker("setValue", event.target.value);
+      });
+      $("#colorText").on("keyup", function (event) {
+        $("#color").colorpicker("setValue", event.target.value);
+      })
     });
 
 block title
@@ -65,12 +71,10 @@ block content
             select#assignedGroup.input-block-level.input-xlarge(name="assignedGroup")
               for group in groups
                 option(value=group.id, selected = (activity.assignedGroup != undefined && activity.assignedGroup == group.id))  #{group.longName}
-            if activity.assignedGroup != undefined
-              input(type="hidden", name="assignedGroup", value=activity.assignedGroup)
           .control-group
             label.control-label(for="color") Farbe für Kalender:
             #color.input-append.color(data-color="#{activity.color}", data-color-format="hex")
-              input.input-block-level.input-xlarge(type="text", name="color", value="#{activity.color}")
+              input#colorText.input-block-level.input-xlarge(type="text", name="color", value="#{activity.color}")
               span.add-on: i(style="background-color: #{activity.color}")
       .row-fluid
         .span12
