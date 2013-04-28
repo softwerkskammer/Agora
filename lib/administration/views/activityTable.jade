@@ -20,6 +20,7 @@ block content
         thead
           tr
             th Titel
+            th URL
             th Startdatum
             th Startzeit
             th Enddatum
@@ -31,7 +32,8 @@ block content
         tbody
           for activity in activities
             tr
-              th #{activity.title}
+              td: a#title(href="#", data-type="text", data-pk="#{activity.id}", data-url="activityChanged") #{activity.title}
+              td: a#url(href="#", data-type="text", data-pk="#{activity.id}", data-url="activityChanged") #{activity.url}
               td: a#startDate(href="#", data-type="text", data-pk="#{activity.id}", data-url="activityChanged") #{activity.startDate}
               td: a#startTime(href="#", data-type="text", data-pk="#{activity.id}", data-url="activityChanged") #{activity.startTime}
               td: a#endDate(href="#", data-type="text", data-pk="#{activity.id}", data-url="activityChanged") #{activity.endDate}

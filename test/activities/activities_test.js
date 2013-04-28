@@ -4,6 +4,7 @@ var request = require('supertest');
 var express = require('express');
 var sinon = require('sinon');
 var proxyquire = require('proxyquire');
+require('../configureForTest');
 
 require('chai').should();
 
@@ -16,20 +17,13 @@ var dummyActivity = new Activity(
     location: 'location',
     direction: 'direction',
     startDate: 'startDate',
-    startTime: 'startTime'
+    startTime: 'startTime',
+    url: 'url'
   });
 
 var activitiesAPIStub = {
-  getActivityForId: function (id, callback) {
-    var activity;
-    var err = null;
-
-    if (id === 'assignedGroup_title_startDate') {
-      activity = dummyActivity;
-    } else {
-      activity = null;
-    }
-    callback(err, activity);
+  getActivity: function (url, callback) {
+    callback(null, (url === 'url') ? dummyActivity : null);
   },
   allActivities: function (callback) {
     callback(null, [dummyActivity]);
@@ -70,7 +64,7 @@ describe('Activity application', function () {
       .get('/')
       .expect(200)
       .expect(/Aktivitäten/)
-      .expect(/href="assignedGroup_title_startDate"/)
+      .expect(/href="url"/)
       .expect(/title/, function (err) {
         allActivities.calledOnce.should.be.ok;
         activitiesAPIStub.allActivities.restore();
@@ -81,16 +75,16 @@ describe('Activity application', function () {
   });
 
   it('shows the details of one activity as retrieved from the store', function (done) {
-    var getActivityForId = sinon.spy(activitiesAPIStub, 'getActivityForId');
-    var id = 'assignedGroup_title_startDate';
+    var getActivity = sinon.spy(activitiesAPIStub, 'getActivity');
+    var url = 'url';
 
     request(app)
-      .get('/' + id)
+      .get('/' + url)
       .expect(200)
       .expect(/<small>startDate/)
       .expect(/<h2> title/, function (err) {
-        getActivityForId.calledWith(id).should.be.true;
-        activitiesAPIStub.getActivityForId.restore();
+        getActivity.calledWith(url).should.be.true;
+        activitiesAPIStub.getActivity.restore();
         done(err);
       });
   });

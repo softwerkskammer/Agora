@@ -16,5 +16,5 @@ block content
       for activity in activities
         dt
           | #{activity.startDate} 
-        dd: a(href='#{activity.id}') #{activity.title}
+        dd: a(href='#{activity.url}') #{activity.title}
           | in #{activity.location} (#{activity.groupName(groups)})
