@@ -32,20 +32,20 @@ block scripts
 
 
 block title
-  | Profil
+  | Profil&nbsp;
   - if (user.member)
-    |  bearbeiten
+    | bearbeiten
   - else
-    |  anlegen
+    | anlegen
 
 block content
   .span12
     legend
-      | Profil
+      | Profil&nbsp;
       - if (user.member)
-        |  bearbeiten für Mitglied #{member.nickname}
+        | bearbeiten für Mitglied #{member.nickname}
       - else
-        |  anlegen
+        | anlegen
     form(id='memberform', action='/members/submit',method='post')
       fieldset
         .row-fluid
@@ -59,7 +59,7 @@ block content
             mixin text('lastname', 'Nachname')
             mixin text('email', 'Email')
             mixin twitter('twitter', 'Twitter')
-          .span6  
+          .span6
             mixin text('location', 'Ort / Region')
             mixin text('profession', 'Beruf')
             mixin text('interests', 'Interessenschwerpunkte')
@@ -67,16 +67,16 @@ block content
             - if (user.member && user.member.isAdmin)
               div
                 .checkbox
-                  input(type='checkbox', name='isAdmin', checked=(!!member.isAdmin ? "true" : undefined)) 
+                  input(type='checkbox', name='isAdmin', checked=(!!member.isAdmin ? "true" : undefined))
                   | Administrator
-      
+
         - if (!user.member)
           .row-fluid
             .span12
               mixin textarea('reference', 'Wie ich von der Softwerkskammer erfahren habe')
         - else
           input(type="hidden", name="reference", value=member.reference)
-      
+
         .row-fluid
           .span6
             legend Gruppenmitgliedschaft
@@ -91,4 +91,3 @@ block content
                     a.btn(href="/auth/logout", type="cancel") Abmelden
                 - else
                   a.btn(href="/auth/logout", type="cancel") Abbrechen
-      

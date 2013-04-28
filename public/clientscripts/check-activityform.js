@@ -7,14 +7,15 @@ var activity_datepicker;
 var activity_timepicker;
 
 var initValidator = function () {
-// validate signup form on keyup and submit
+
+  // DO NOT FORGET TO KEEP THIS FILE IN SYNC WITH /lib/commons/validation.js
+
   activity_validator = $("#activityform").validate({
     rules: {
       title: "required",
       location: "required",
-      activityDate: "required"
-    },
-    messages: {
+      startDate: "required",
+      startTime: "required"
     },
     errorElement: "span",
     errorClass: "help-inline error",
@@ -28,7 +29,7 @@ var initValidator = function () {
 
   activity_validator.form();
 
-  ['#title', '#location', "#activityDate"].forEach(function (each) {
+  ['#title', '#location', "#startDate", "#startTime"].forEach(function (each) {
     $(each).on("change", function () {
       activity_validator.element(each);
     });
@@ -38,7 +39,7 @@ var initValidator = function () {
   });
 };
 
-var initDatePicker = function () {
+var initPickers = function () {
   activity_datepicker =   $('.datepicker').datepicker({
     format: 'dd.mm.yyyy',
     weekStart: 1,
@@ -46,10 +47,8 @@ var initDatePicker = function () {
     minViewMode: 'days',
     language: 'de'
   });
-};
 
-var initTimePicker = function () {
-  activity_timepicker =   $('#startTime').timepicker({
+  activity_timepicker =   $('.timepicker').timepicker({
     minuteStep: 15,
     showSeconds: false,
     showMeridian: false,
@@ -59,7 +58,4 @@ var initTimePicker = function () {
 };
 
 $(document).ready(initValidator);
-
-$(document).ready(initDatePicker);
-
-$(document).ready(initTimePicker);
+$(document).ready(initPickers);
