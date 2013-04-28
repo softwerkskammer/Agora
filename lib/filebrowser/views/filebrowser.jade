@@ -1,0 +1,23 @@
+extends ../../../views/layout
+
+block title
+  | File browser
+
+block content
+  .span12
+    .page-header
+      h2 Root #{root}
+      div Path #{path}
+    ul
+      for dir in dirs
+        li
+          | dir&nbsp;
+          a(href=pathFragment + dir) #{dir}
+    ul
+      for file in files
+        li
+          | file&nbsp;
+          a(href=pathFragment + file) #{file}
+  - if (content != "")
+    h2 File content
+    | !{content}
