@@ -25,7 +25,7 @@ html
             span.icon-bar
             span.icon-bar
             span.icon-bar
-          - if (typeof(user) !== 'undefined' && user.member)
+          if (typeof(user) !== 'undefined' && user.member)
             ul.nav.pull-right
               li.dropdown
                 a.dropdown-toggle(href="#", data-toggle="dropdown") #{user.member.nickname} 
@@ -34,42 +34,47 @@ html
                 ul.dropdown-menu
                   li: a(href="/members/edit/#{user.member.nickname}")
                     i.icon-edit
-                    | &nbsp; Profil bearbeiten
+                    | &nbsp;Profil bearbeiten
                   li: a(href="/auth/logout")
                     i.icon-signout
-                    | &nbsp; Abmelden
+                    | &nbsp;Abmelden
                   li: a(href="https://github.com/softwerkskammer/NeuePlattform-Implementierung/issues?state=open")
                     i.icon-github
-                    | &nbsp; Einen Bug melden
+                    | &nbsp;Einen Bug melden
                   li: include ../version
-          - else
+          else
             - var returnTo = ""
-            - if (typeof(currentUrl) !== 'undefined')
+            if (typeof(currentUrl) !== 'undefined')
               - returnTo = "?returnTo=" + encodeURIComponent(currentUrl)
             p.navbar-text.pull-right
               a.navbar-link(href="/auth/login" + returnTo)
-                i.icon-signin &nbsp; Anmelden
+                i.icon-signin &nbsp;Anmelden
           .nav-collapse.navbar-inverse-collapse
             ul.nav
               li#announcements: a(href="/announcements")
                 i.icon-globe
-                | &nbsp; Nachrichten
-              li#activities: a(href="/activities")
-                i.icon-calendar
-                | &nbsp; Aktivitäten
+                | &nbsp;Nachrichten
+              li#activities.dropdown
+                a.dropdown-toggle(href="#", data-toggle="dropdown")
+                  i.icon-calendar
+                  | &nbsp;Aktivitäten
+                  b.caret
+                ul.dropdown-menu
+                  li: a(href="/activities") Alle
+                  li: a(href="/activities/upcoming") Kommende
               li#groups: a(href="/groups")
                 i.icon-group
-                | &nbsp; Gruppen
+                | &nbsp;Gruppen
               - if (typeof(user) !== 'undefined')
                 li#members: a(href="/members")
                   i.icon-user
-                  | &nbsp; Mitglieder
-                - if (user.member && user.member.isAdmin)
+                  | &nbsp;Mitglieder
+                if (user.member && user.member.isAdmin)
                   ul.nav.visible-desktop
                     li#administration.dropdown
                       a.dropdown-toggle(href="#", data-toggle="dropdown")
                         i.icon-dashboard
-                        | &nbsp; Verwaltung
+                        | &nbsp;Verwaltung
                         b.caret
                       ul.dropdown-menu
                         li: a(href="/administration/memberTable") Mitglieder
@@ -89,7 +94,7 @@ html
     .navbar.navbar-fixed-bottom
       .navbar-inner
         ul.nav.pull-right
-          - if ((typeof(user) !== 'undefined') && user.member && user.member.isAdmin)
+          if ((typeof(user) !== 'undefined') && user.member && user.member.isAdmin)
             ul.nav.hidden-desktop
               li#administration.dropdown
                 a.dropdown-toggle(href="#", data-toggle="dropdown")
