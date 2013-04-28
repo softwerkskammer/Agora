@@ -1,0 +1,45 @@
+extends ../../../views/layout
+
+block title
+  | Übersicht der Gruppen
+
+block scripts
+  script(src="/clientscripts/utilities-for-editables.js")
+
+block content
+  .span12
+    .page-header
+      h2 Verwaltung
+        small  Aktivitäten  
+        - if (typeof(user) !== 'undefined' && user.member.isAdmin)
+          | 
+          a(href="/activities/new/", class="btn") Neu
+  .row-fluid
+    .span12(style="overflow: auto")
+      table(class="table table-condensed table-hover table-striped")
+        thead
+          tr
+            th Titel
+            th URL
+            th Startdatum
+            th Startzeit
+            th Enddatum
+            th Endzeit
+            th Ort
+            th Beschreibung
+            th Wegbeschreibung
+            th Gruppe
+        tbody
+          for activity in activities
+            tr
+              td: a#title(href="#", data-type="text", data-pk="#{activity.id}", data-url="activityChanged") #{activity.title}
+              td: a#url(href="#", data-type="text", data-pk="#{activity.id}", data-url="activityChanged") #{activity.url}
+              td: a#startDate(href="#", data-type="text", data-pk="#{activity.id}", data-url="activityChanged") #{activity.startDate}
+              td: a#startTime(href="#", data-type="text", data-pk="#{activity.id}", data-url="activityChanged") #{activity.startTime}
+              td: a#endDate(href="#", data-type="text", data-pk="#{activity.id}", data-url="activityChanged") #{activity.endDate}
+              td: a#endTime(href="#", data-type="text", data-pk="#{activity.id}", data-url="activityChanged") #{activity.endTime}
+              td: a#location(href="#", data-type="text", data-pk="#{activity.id}", data-url="activityChanged") #{activity.location}
+              td: a#description(href="#", data-placement="left", data-type="textarea", data-pk="#{activity.id}", data-url="activityChanged") #{activity.description}
+              td: a#direction(href="#", data-placement="left", data-type="textarea", data-pk="#{activity.id}", data-url="activityChanged") #{activity.direction}
+              td #{activity.groupName(groups)}
+                

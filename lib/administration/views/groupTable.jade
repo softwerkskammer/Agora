@@ -42,6 +42,6 @@ block content
               th #{group.id}
               td: a#longName(href="#", data-type="text", data-pk="#{group.id}", data-url="groupChanged") #{group.longName}
               td: #{group.emailPrefix}
-              td: a#description(href="#", data-type="textarea", data-pk="#{group.id}", data-url="groupChanged") #{group.description}
+              td: a#description(href="#", data-placement="right", data-type="textarea", data-pk="#{group.id}", data-url="groupChanged") #{group.description}
               td: a#type(href="#", , data-type="select", data-value="#{group.typeCode()}", data-pk="#{group.id}", data-url="groupChanged") #{group.type}
                 

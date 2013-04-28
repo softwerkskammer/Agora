@@ -7,7 +7,7 @@ block content
     .page-header
       h2  
         if (typeof(user) !== 'undefined' && user.member.isAdmin)
-          a.btn.btn-mini(href="/activities/edit/#{activity.id}")
+          a.btn.btn-mini(href="/activities/edit/#{activity.url}")
             i.icon-edit
           | &nbsp
         | #{activity.title} 

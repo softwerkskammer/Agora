@@ -25,7 +25,7 @@ $(document).ready(function () {
     eventMouseover: function (event, jsEvent, view) {
       var activity = event.activity;
       var placement = "left";
-      if (event.dayOfWeek < 2) {
+      if (event.dayOfWeek < 4) {
         placement = "right";
       }
       $(this).tooltip({

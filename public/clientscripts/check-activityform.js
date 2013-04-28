@@ -1,9 +1,7 @@
 /* global $, document */
 "use strict";
 var activity_validator;
-
 var activity_datepicker;
-
 var activity_timepicker;
 
 var initValidator = function () {
@@ -12,10 +10,28 @@ var initValidator = function () {
 
   activity_validator = $("#activityform").validate({
     rules: {
+      url: {
+        required: true,
+        remote: {
+          url: "/activities/checkurl",
+          data: {
+            previousUrl: function () {
+              return $("#previousUrl").val();
+            }
+          }
+        },
+        alphanumeric: true
+      },
       title: "required",
       location: "required",
       startDate: "required",
       startTime: "required"
+    },
+    messages: {
+      url: {
+        remote: $.validator.format("Diese URL ist leider nicht verfügbar."),
+        alphanumeric: $.validator.format("URL darf nur Buchstaben, Zahlen und Unterstrich enthalten.")
+      }
     },
     errorElement: "span",
     errorClass: "help-inline error",
@@ -29,7 +45,7 @@ var initValidator = function () {
 
   activity_validator.form();
 
-  ['#title', '#location', "#startDate", "#startTime"].forEach(function (each) {
+  ['#title', '#location', "#startDate", "#startTime", "#url"].forEach(function (each) {
     $(each).on("change", function () {
       activity_validator.element(each);
     });
@@ -40,7 +56,7 @@ var initValidator = function () {
 };
 
 var initPickers = function () {
-  activity_datepicker =   $('.datepicker').datepicker({
+  activity_datepicker = $('.datepicker').datepicker({
     format: 'dd.mm.yyyy',
     weekStart: 1,
     viewMode: 'days',
@@ -48,7 +64,7 @@ var initPickers = function () {
     language: 'de'
   });
 
-  activity_timepicker =   $('.timepicker').timepicker({
+  activity_timepicker = $('.timepicker').timepicker({
     minuteStep: 15,
     showSeconds: false,
     showMeridian: false,
