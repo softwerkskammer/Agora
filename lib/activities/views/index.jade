@@ -7,7 +7,7 @@ block content
   .span12
     .page-header
       h2 Aktivitäten&nbsp;
-        small Alle
+        small #{range}
         if typeof(user) !== 'undefined' && user.member.isAdmin
           | &nbsp;
           a.btn(href="new/") Neu
