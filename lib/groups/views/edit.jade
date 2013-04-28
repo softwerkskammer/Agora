@@ -1,9 +1,6 @@
 extends ../../../views/layout
 
-mixin text(name, label)
-  .control-group
-    label(class="control-label", for=name) #{label}:
-    input(id=name, class="input-block-level input-xlarge", type='text', name=name, value=group[name])
+include  ../../../views/formComponents
 
 block scripts
   script(src="/clientscripts/jquery.validate-1.11.1.js")
@@ -24,19 +21,19 @@ block content
       .span6
         legend
           | Gruppe
-          - if (group.isValid())
+          if (group.isValid())
             |  "#{group.id}" bearbeiten
-          - else
+          else
             |  anlegen
-        - if (group.isValid())
+        if (group.isValid())
           input#id(type='hidden', name='id', value=group['id'])
-        - else
+        else
           mixin text('id', 'Name')
-        mixin text('longName', 'Titel')
-        mixin text('description', 'Beschreibung')
-        - if (!group.isValid())
-          mixin text('emailPrefix', 'Präfix für Emails')
-        - else
+        mixin text('longName', 'Titel', group)
+        mixin textarea('description', 'Beschreibung', group)
+        if (!group.isValid())
+          mixin text('emailPrefix', 'Präfix für Emails', group)
+        else
           input#emailPrefix(type='hidden', name='emailPrefix', value=group['emailPrefix'])
           p
             strong
@@ -48,12 +45,13 @@ block content
           select#type.input-block-level.input-xlarge(name="type")
             for item in group.allTypes()
               option(selected=group.type === item) #{item}
-        p
-          - if (group.isValid())
-            button.btn.btn-primary(type="submit") Speichern
-          - else
-            button.btn.btn-primary(type="submit") Anlegen
-          a.btn(href="javascript:history.back()", type="cancel") Zurück
+        .row-fluid
+          .span12
+            if group.isValid()
+              button.btn.btn-primary.pull-right(type="submit") Speichern
+            else
+              button.btn.btn-primary.pull-right(type="submit") Anlegen
+            a.btn.pull-right(href="javascript:history.back()", type="cancel") Zurück
 
 block scripts
   script(src="/clientscripts/jquery.validate-1.11.1.js")

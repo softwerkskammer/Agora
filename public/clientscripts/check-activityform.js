@@ -1,8 +1,6 @@
 /* global $, document */
 "use strict";
 var activity_validator;
-var activity_datepicker;
-var activity_timepicker;
 
 var initValidator = function () {
 
@@ -55,23 +53,5 @@ var initValidator = function () {
   });
 };
 
-var initPickers = function () {
-  activity_datepicker = $('.datepicker').datepicker({
-    format: 'dd.mm.yyyy',
-    weekStart: 1,
-    viewMode: 'days',
-    minViewMode: 'days',
-    language: 'de'
-  });
-
-  activity_timepicker = $('.timepicker').timepicker({
-    minuteStep: 15,
-    showSeconds: false,
-    showMeridian: false,
-    showInputs: true,
-    disableFocus: false
-  });
-};
 
 $(document).ready(initValidator);
-$(document).ready(initPickers);

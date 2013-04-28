@@ -1,0 +1,52 @@
+// GENERAL
+
+mixin text(name, label, object)
+  .control-group
+    label(class="control-label", for=name) #{label}:
+    input(id=name, class="input-block-level input-xlarge", type='text', name=name, value=object[name])
+
+mixin textarea(name, label, object)
+  .control-group
+    label(class="control-label", for=name) #{label}:
+    textarea(rows="7", class="input-block-level input-xxlarge", id=name, type='text', name=name, data-provide="markdown")
+      | #{object[name]}
+
+mixin checkbox(name, label, checked, optionalValue)
+  label.checkbox
+    input(type='checkbox', name=name, value=optionalValue, checked=(checked ? "true" : undefined))
+    | #{label}
+
+mixin hidden(name, object, optionalAlternateValue)
+  input(id=name, type="hidden", name=name, value=object[(optionalAlternateValue ? optionalAlternateValue :name)])
+
+// PICKERS
+// you need to include this initPickers.js, if you use the color-, date- or timepicker
+mixin date(name, label, object)
+  .control-group
+    label(class="control-label", for=name) #{label}:
+    input(id=name, class="input-block-level input-xlarge datepicker", type='text', name=name, value=object[name])
+
+mixin time(name, label, object)
+  .control-group.bootstrap-timepicker
+    label(class="control-label", for=name) #{label}:
+    input(id=name, class="input-block-level input-xlarge timepicker", type='text', name=name, value=object[name])
+
+mixin colorPicker(name, object)
+  .control-group
+    label.control-label(for="color") Farbe für Kalender:
+    #color.input-append.color(data-color="#{activity.color}", data-color-format="hex")
+      input#colorText.input-block-level.input-xlarge(type="text", name=name, value=object[name])
+      span.add-on: i(style="background-color: #{activity.color}")
+
+// PICKERS END
+
+// SPECIAL
+mixin twitter(name, label, object)
+  .control-group
+    label(class="control-label", for=name) #{label}:
+    div(class="input-prepend input-block-level input-xlarge")
+      span(class="add-on", style="width: 5%;float: left;") @
+      input(id=name, class="input-block-level input-xlarge", style="width: 93%;", type='text', name=name, value=object[name])
+
+
+
