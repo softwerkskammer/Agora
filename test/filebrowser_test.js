@@ -11,7 +11,7 @@ describe('File browser application', function () {
     var root = express();
     root.use('/foo', app);
     request(root)
-      .get('/foo/root1/filebrowser-testfiles/subdirectory')
+      .get('/foo/root1/filebrowser-testfiles/subdirectory/')
       .expect(404, done);
   });
 
@@ -19,7 +19,7 @@ describe('File browser application', function () {
     var root = express();
     root.use('/foo', app);
     request(root)
-      .get('/foo/root/subdirectory')
+      .get('/foo/root/subdirectory/')
       .expect(/Root root/)
       .expect(/.\/test\/filebrowser-testfiles\/subdirectory/)
       .expect(200, done);
@@ -64,6 +64,34 @@ describe('File browser application', function () {
       .expect(/href="subdirectory"/)
       .expect(200, done);
   });
+
+  it('adds trailing slash to subdirectory names', function (done) {
+    var root = express();
+    root.use('/foo', app);
+    request(root)
+      .get('/foo/root/subdirectory')
+      .expect(/foo\/root\/subdirectory\//)
+      .expect(302, done);
+  });
+
+  it('has links to parent directories for subdirectories', function (done) {
+    var root = express();
+    root.use('/foo', app);
+    request(root)
+      .get('/foo/root/subdirectory/')
+      .expect(/href=".."/)
+      .expect(200, done);
+  });
+
+  it('has links to directories for files', function (done) {
+    var root = express();
+    root.use('/foo', app);
+    request(root)
+      .get('/foo/root/subdirectory/hello3.html')
+      .expect(/href="."/)
+      .expect(200, done);
+  });
+
   it('outputs file content', function (done) {
     var root = express();
     root.use('/foo', app);
