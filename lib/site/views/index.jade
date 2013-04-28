@@ -37,9 +37,11 @@ html
               p Diese Site ist unsere zentrale Anlaufstelle für die lokalen Software Craftsmanship Communities in Deutschland. 
                 | Hierüber organisieren die lokalen Communities (die Softwerkskammern) ihre Treffen und andere Events wie 
                 | CodeRetreats oder OpenSpaces, oder tauschen sich einfach nur via Mailingliste aus.
-              a.btn.btn-large.btn-primary.pull-right(href="/activities")
-                i.icon-calendar
-                | &nbsp; Aktivitäten
+              hr
+              p.text-right Was wir in den nächsten Wochen veranstalten, findest Du unter: 
+                a.btn.btn-large.btn-primary(href="/activities/upcoming")
+                  i.icon-calendar
+                  | &nbsp;Aktivitäten
 
           .item
             .hero-unit
@@ -57,7 +59,7 @@ html
                 | Wir wollen die richtige Software entwickeln, und wir wollen die Software richtig entwickeln.
               a.btn.btn-large.btn-primary.pull-right(href="/announcements")
                 i.icon-globe
-                | &nbsp; Nachrichten
+                | &nbsp;Nachrichten
 
           .item
             .hero-unit
@@ -71,11 +73,16 @@ html
                   | wie Clean Code, TDD etc. austauschen möchtest.
               a.btn.btn-large.btn-primary.pull-right(href="/groups")
                 i.icon-group
-                | &nbsp; Gruppen
+                | &nbsp;Gruppen
 
         a.carousel-control.left(href="#titleCoarousel", data-slide="prev") &lsaquo;
         a.carousel-control.right(href="#titleCoarousel", data-slide="next") &rsaquo;
-        
+
+    p &nbsp;
+    .navbar.navbar-fixed-bottom
+      .navbar-inner
+        ul.nav.pull-right
+          li: a(href="/impressum.html") Impressum
 
     script(src="/clientscripts/jquery-1.9.1.js")
     script(src="/clientscripts/bootstrap.js")

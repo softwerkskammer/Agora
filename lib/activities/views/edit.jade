@@ -35,8 +35,9 @@ block title
 
 block content
   form(id='activityform', action='/activities/submit', method='post')
-    - if (activity.id)
-      input(type="hidden", name="id", value=activity.id)
+    if (activity.id)
+      input#id(type="hidden", name="id", value=activity.id)
+    input#previousUrl(type="hidden", name="previousUrl", value=activity.url)
     fieldset
       .span12
         legend
@@ -56,11 +57,12 @@ block content
               mixin time('endTime', 'Enduhrzeit')
           mixin textarea('description', 'Beschreibung')
         .span6
+          mixin text('url', 'URL')
           mixin text('location', 'Veranstaltungsort')
           mixin textarea('direction', 'Wegbeschreibung')
           .control-group
             label.control-label(for="assignedGroup") Gruppe:
-            select#assignedGroup.input-block-level.input-xlarge(name="assignedGroup", disabled=activity.assignedGroup != undefined)
+            select#assignedGroup.input-block-level.input-xlarge(name="assignedGroup")
               for group in groups
                 option(value=group.id, selected = (activity.assignedGroup != undefined && activity.assignedGroup == group.id))  #{group.longName}
             if activity.assignedGroup != undefined
