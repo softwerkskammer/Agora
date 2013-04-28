@@ -89,6 +89,7 @@ module.exports = function (conf) {
       useApp(app, 'groups', conf, require('./lib/groups'));
       useApp(app, 'announcements', conf, require('./lib/announcements'));
       useApp(app, 'auth', conf, authentication.initialize);
+      useApp(app, 'filebrowser', conf, require('./lib/filebrowser'));
 
       app.configure('development', function () {
         // Handle 404
