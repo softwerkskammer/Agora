@@ -9,9 +9,9 @@ block scripts
   script(src="/clientscripts//additional-methods-1.11.1.js")
 
 block title
-  | Gruppe #{group.id}
+  | Gruppe&nbsp;
   - if (group.isValid())
-    |  bearbeiten
+    | "#{group.id}" bearbeiten
   - else
     |  anlegen
 
@@ -28,7 +28,7 @@ block content
         if (group.isValid())
           input#id(type='hidden', name='id', value=group['id'])
         else
-          mixin text('id', 'Name')
+          mixin text('id', 'Name', group)
         mixin text('longName', 'Titel', group)
         mixin textarea('description', 'Beschreibung', group)
         if (!group.isValid())
