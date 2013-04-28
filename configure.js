@@ -17,8 +17,12 @@ function createConfiguration() {
     mongoPort: '27017',
     publicUrlPrefix: "http://localhost:17124",
     securedByLoginURLPattern: "/members(?!/submit).*|administration|/new|/edit/",
-    secret: "secret"
+    secret: "secret",
+    filebrowser: {
+      root: "./test/filebrowser-testfiles"
+    }
   });
+
   return nconf;
 }
 module.exports = createConfiguration;
