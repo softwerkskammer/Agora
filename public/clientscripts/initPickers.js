@@ -13,11 +13,10 @@ $(document).ready(function () {
   });
 
   $('.timepicker').timepicker({
+    template: false,
     minuteStep: 15,
     showSeconds: false,
-    showMeridian: false,
-    showInputs: true,
-    disableFocus: false
+    showMeridian: false
   });
 
   $("#color").colorpicker();
