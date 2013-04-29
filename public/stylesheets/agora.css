@@ -18,7 +18,8 @@ a.editable-click:hover {
     }
 
     body {
-        padding-top: 65px
+        padding-top: 65px;
+        padding-bottom: 65px
     }
 }
 

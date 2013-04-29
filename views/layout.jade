@@ -48,7 +48,8 @@ html
               - returnTo = "?returnTo=" + encodeURIComponent(currentUrl)
             p.navbar-text.pull-right
               a.navbar-link(href="/auth/login" + returnTo)
-                i.icon-signin &nbsp;Anmelden
+                i.icon-signin 
+                | &nbsp;Anmelden
           .nav-collapse.navbar-inverse-collapse
             ul.nav
               li#announcements: a(href="/announcements")
@@ -77,9 +78,15 @@ html
                         | &nbsp;Verwaltung
                         b.caret
                       ul.dropdown-menu
-                        li: a(href="/administration/memberTable") Mitglieder
-                        li: a(href="/administration/groupTable") Gruppen
-                        li: a(href="/administration/activityTable") Aktivitäten
+                        li: a(href="/administration/memberTable")
+                          i.icon-user
+                          | &nbsp;Mitglieder
+                        li: a(href="/administration/groupTable")
+                          i.icon-group
+                          | &nbsp;Gruppen
+                        li: a(href="/administration/activityTable")
+                          i.icon-calendar
+                          | &nbsp;Aktivitäten
 
     .container-fluid
       .row-fluid
@@ -90,7 +97,6 @@ html
           .row-fluid
             #calendar
 
-    p &nbsp;
     .navbar.navbar-fixed-bottom
       .navbar-inner
         ul.nav.pull-right
