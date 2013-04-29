@@ -48,7 +48,8 @@ html
               - returnTo = "?returnTo=" + encodeURIComponent(currentUrl)
             p.navbar-text.pull-right
               a.navbar-link(href="/auth/login" + returnTo)
-                i.icon-signin &nbsp;Anmelden
+                i.icon-signin 
+                | &nbsp;Anmelden
           .nav-collapse.navbar-inverse-collapse
             ul.nav
               li#announcements: a(href="/announcements")
