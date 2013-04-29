@@ -8,7 +8,7 @@ mixin text(name, label, object)
 mixin textarea(name, label, object)
   .control-group
     label(class="control-label", for=name) #{label}:
-    textarea(rows="7", class="input-block-level input-xxlarge", id=name, type='text', name=name, data-provide="markdown")
+    textarea(rows="7", class="input-block-level input-xxlarge", id=name, type='text', name=name)
       | #{object[name]}
 
 mixin checkbox(name, label, checked, optionalValue)
