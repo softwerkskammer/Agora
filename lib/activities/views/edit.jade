@@ -1,22 +1,6 @@
 extends ../../../views/layout
 
-mixin text(name, label)
-  .control-group
-    label(class="control-label", for=name) #{label}:
-    input(id=name, class="input-block-level input-xlarge", type='text', name=name, value=activity[name])
-mixin textarea(name, label)
-  .control-group
-    label(class="control-label", for=name) #{label}:
-    textarea(rows="7", class="input-block-level input-xxlarge", id=name, type='text', name=name, data-provide="markdown")
-      | #{activity[name]}
-mixin date(name, label)
-  .control-group
-    label(class="control-label", for=name) #{label}:
-    input(id=name, class="input-block-level input-xlarge datepicker", type='text', name=name, value=activity[name])
-mixin time(name, label)
-  .control-group.bootstrap-timepicker
-    label(class="control-label", for=name) #{label}:
-    input(id=name, class="input-block-level input-xlarge timepicker", type='text', name=name, value=activity[name])
+include  ../../../views/formComponents
 
 block scripts
   script(src="/clientscripts/jquery.validate-1.11.1.js")
@@ -24,11 +8,8 @@ block scripts
   script(src="/clientscripts/methods_de.js")
   script(src="/clientscripts/bootstrap-datepicker.de.js")
   script(src="/clientscripts/bootstrap-timepicker.js")
+  script(src="/clientscripts/initPickers.js")
   script(src="/clientscripts/check-activityform.js")
-  script
-    $(function(){
-      $('#color').colorpicker();
-    });
 
 block title
   | Aktivität
@@ -36,43 +17,37 @@ block title
 block content
   form(id='activityform', action='/activities/submit', method='post')
     if (activity.id)
-      input#id(type="hidden", name="id", value=activity.id)
-    input#previousUrl(type="hidden", name="previousUrl", value=activity.url)
+      mixin hidden('id', activity)
+    mixin hidden('previousUrl', activity, 'url')
     fieldset
       .span12
         legend
           | Aktivität
       .row-fluid
         .span6
-          mixin text('title', 'Titel')
+          mixin text('title', 'Titel', activity)
           .row-fluid
             .span6
-              mixin date('startDate', 'Startdatum')
+              mixin date('startDate', 'Startdatum', activity)
             .span6
-              mixin time('startTime', 'Startuhrzeit')
+              mixin time('startTime', 'Startuhrzeit', activity)
           .row-fluid
             .span6
-              mixin date('endDate', 'Enddatum')
+              mixin date('endDate', 'Enddatum', activity)
             .span6
-              mixin time('endTime', 'Enduhrzeit')
-          mixin textarea('description', 'Beschreibung')
+              mixin time('endTime', 'Enduhrzeit', activity)
+          mixin textarea('description', 'Beschreibung', activity)
         .span6
-          mixin text('url', 'URL')
-          mixin text('location', 'Veranstaltungsort')
-          mixin textarea('direction', 'Wegbeschreibung')
+          mixin text('url', 'URL', activity)
+          mixin text('location', 'Veranstaltungsort', activity)
+          mixin textarea('direction', 'Wegbeschreibung', activity)
           .control-group
             label.control-label(for="assignedGroup") Gruppe:
             select#assignedGroup.input-block-level.input-xlarge(name="assignedGroup")
               for group in groups
                 option(value=group.id, selected = (activity.assignedGroup != undefined && activity.assignedGroup == group.id))  #{group.longName}
-            if activity.assignedGroup != undefined
-              input(type="hidden", name="assignedGroup", value=activity.assignedGroup)
-          .control-group
-            label.control-label(for="color") Farbe für Kalender:
-            #color.input-append.color(data-color="#{activity.color}", data-color-format="hex")
-              input.input-block-level.input-xlarge(type="text", name="color", value="#{activity.color}")
-              span.add-on: i(style="background-color: #{activity.color}")
+          mixin colorPicker('color', activity)
       .row-fluid
         .span12
-          button.btn.btn-primary(type="/activities/submit") Speichern
-          a.btn(href="javascript:history.back()", type="cancel") Zurück
+          button.btn.btn-primary.pull-right(type="/activities/submit") Speichern
+          a.btn.pull-right(href="javascript:history.back()", type="cancel") Zurück
