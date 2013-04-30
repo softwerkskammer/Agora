@@ -27,11 +27,15 @@ function useApp(parent, url, conf, factory) {
   return child;
 }
 
-function addToLocals(req, res, next) {
+function expressViewHelper(req, res, next) {
   res.locals.calViewYear = req.session.calViewYear;
   res.locals.calViewMonth = req.session.calViewMonth;
+  res.locals.user = req.user;
+  res.locals.currentUrl = req.url;
   next();
 }
+
+
 
 module.exports = function (conf) {
   var authentication = require('./lib/authentication'),
@@ -74,8 +78,8 @@ module.exports = function (conf) {
         app.use(express.bodyParser());
         app.use(express.methodOverride());
         app.use(express.session({secret: conf.get('secret'), cookie: {maxAge: 86400 * 1000 * 7}, store: sessionStore}));
-        app.use(addToLocals);
         authentication.configure(app);
+        app.use(expressViewHelper);
         app.use(members.newUserMustFillInRegistration);
         app.use(app.router);
         app.use(express.static(path.join(__dirname, 'public')));

@@ -1,88 +1,58 @@
-doctype 5
-html
-  head
-    meta(charset="utf-8")
-    meta(name="viewport", content="width=device-width, initial-scale=1.0")
-    link(href="/stylesheets/bootstrap.css", rel="stylesheet", media="screen")
-    link(href="/stylesheets/bootstrap-responsive.css", rel="stylesheet", media="screen")
-    link(href="/stylesheets/bootstrap-editable.css", rel="stylesheet", media="screen")
-    link(href="/stylesheets/bootstrap-timepicker.css", rel="stylesheet", media="screen")
-    link(href="/stylesheets/agora.css", rel="stylesheet", media="screen")
-    link(href="/stylesheets/font-awesome.min.css", rel="stylesheet")
-    style
-      .container {
-        max-width: 955px;
-      }
+extends ../../../views/layoutTitle
 
-      body {
-        padding-top: 0px;
-      }
-    title Softwerkskammer
-  body
-    .container
-      img(src="/img/Softwerkskammer_Header.png")
-      p &nbsp;
+block content
+  #titleCoarousel.carousel.slide(data-interval="false")
+    ol.carousel-indicators
+      li.active(data-target="#titleCoarousel", data-slide-to="0")
+      li(data-target="#titleCoarousel", data-slide-to="1")
+      li(data-target="#titleCoarousel", data-slide-to="2")
+    .carousel-inner
+      .active.item
+        .hero-unit
+          h2 Schön, dass Du vorbeischaust.
+          p Die Softwerkskammer hat sich 2011 gegründet, um den Austausch Interessierter zum Thema Software Craftsmanship
+            | zu vereinfachen.
+          p Diese Site ist unsere zentrale Anlaufstelle für die lokalen Software Craftsmanship Communities in Deutschland. 
+            | Hierüber organisieren die lokalen Communities (die Softwerkskammern) ihre Treffen und andere Events wie 
+            | CodeRetreats oder OpenSpaces, oder tauschen sich einfach nur via Mailingliste aus.
+          hr
+          p.text-right Was wir in den nächsten Wochen veranstalten, findest Du unter: 
+            a.btn.btn-large.btn-primary(href="/activities/upcoming")
+              i.icon-calendar
+              | &nbsp;Aktivitäten
 
-      #titleCoarousel.carousel.slide(data-interval="false")
-        ol.carousel-indicators
-          li.active(data-target="#titleCoarousel", data-slide-to="0")
-          li(data-target="#titleCoarousel", data-slide-to="1")
-          li(data-target="#titleCoarousel", data-slide-to="2")
-        .carousel-inner
-          .active.item
-            .hero-unit
-              h2 Schön, dass Du vorbeischaust.
-              p Die Softwerkskammer hat sich 2011 gegründet, um den Austausch Interessierter zum Thema Software Craftsmanship
-                | zu vereinfachen.
-              p Diese Site ist unsere zentrale Anlaufstelle für die lokalen Software Craftsmanship Communities in Deutschland. 
-                | Hierüber organisieren die lokalen Communities (die Softwerkskammern) ihre Treffen und andere Events wie 
-                | CodeRetreats oder OpenSpaces, oder tauschen sich einfach nur via Mailingliste aus.
-              hr
-              p.text-right Was wir in den nächsten Wochen veranstalten, findest Du unter: 
-                a.btn.btn-large.btn-primary(href="/activities/upcoming")
-                  i.icon-calendar
-                  | &nbsp;Aktivitäten
+      .item
+        .hero-unit
+          h2 Wir sind …
+          p … eine Community of Professionals, die über ganz Deutschland verteilt sind. Uns geht es darum, gute Software 
+            | zu entwickeln, und zwar im Hinblick auf alle Aspekte.
+          p Wir möchten
+          ul
+            li voneinander lernen und Erfahrungen austauschen
+            li die Software erstellen, die der Kunde wirklich braucht
+            li sicherstellen, dass unsere Ergebnisse eine hohe interne und externe Qualität besitzen
+            li flexible, leicht änderbare Software herstellen
+          p
+            strong Kurz: 
+            | Wir wollen die richtige Software entwickeln, und wir wollen die Software richtig entwickeln.
+          a.btn.btn-large.btn-primary.pull-right(href="/announcements")
+            i.icon-globe
+            | &nbsp;Nachrichten
 
-          .item
-            .hero-unit
-              h2 Wir sind …
-              p … eine Community of Professionals, die über ganz Deutschland verteilt sind. Uns geht es darum, gute Software 
-                | zu entwickeln, und zwar im Hinblick auf alle Aspekte.
-              p Wir möchten
-              ul
-                li voneinander lernen und Erfahrungen austauschen
-                li die Software erstellen, die der Kunde wirklich braucht
-                li sicherstellen, dass unsere Ergebnisse eine hohe interne und externe Qualität besitzen
-                li flexible, leicht änderbare Software herstellen
-              p
-                strong Kurz: 
-                | Wir wollen die richtige Software entwickeln, und wir wollen die Software richtig entwickeln.
-              a.btn.btn-large.btn-primary.pull-right(href="/announcements")
-                i.icon-globe
-                | &nbsp;Nachrichten
+      .item
+        .hero-unit
+          h2 Die Softwerkskammer ist etwas für Dich,
+          p wenn
+          ul
+            li Softwareentwicklung für Dich eine Leidenschaft bedeutet.
+            li Du Teil der deutschlandweiten Software Craftsmanship Community und Teil einer lokalen Softwerkskammer 
+              | sein möchtest.
+            li Du Dich mit Gleichgesinnten zum Thema Software Craftsmanship und allen damit zusammenängenden Themen 
+              | wie Clean Code, TDD etc. austauschen möchtest.
+          a.btn.btn-large.btn-primary.pull-right(href="/groups")
+            i.icon-group
+            | &nbsp;Gruppen
 
-          .item
-            .hero-unit
-              h2 Die Softwerkskammer ist etwas für Dich,
-              p wenn
-              ul
-                li Softwareentwicklung für Dich eine Leidenschaft bedeutet.
-                li Du Teil der deutschlandweiten Software Craftsmanship Community und Teil einer lokalen Softwerkskammer 
-                  | sein möchtest.
-                li Du Dich mit Gleichgesinnten zum Thema Software Craftsmanship und allen damit zusammenängenden Themen 
-                  | wie Clean Code, TDD etc. austauschen möchtest.
-              a.btn.btn-large.btn-primary.pull-right(href="/groups")
-                i.icon-group
-                | &nbsp;Gruppen
+    a.carousel-control.left(href="#titleCoarousel", data-slide="prev") &lsaquo;
+    a.carousel-control.right(href="#titleCoarousel", data-slide="next") &rsaquo;
 
-        a.carousel-control.left(href="#titleCoarousel", data-slide="prev") &lsaquo;
-        a.carousel-control.right(href="#titleCoarousel", data-slide="next") &rsaquo;
-
-    p &nbsp;
-    .navbar.navbar-fixed-bottom
-      .navbar-inner
-        ul.nav.pull-right
-          li: a(href="/impressum.html") Impressum
-
-    script(src="/clientscripts/jquery-1.9.1.js")
-    script(src="/clientscripts/bootstrap.js")
