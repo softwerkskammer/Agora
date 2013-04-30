@@ -20,7 +20,6 @@ function ensureRequestedUrlEndsWithSlash(req, res, next) {
 function useApp(parent, url, conf, factory) {
   var child = factory(express(), conf);
   child.locals({
-    baseUrl: url,
     pretty: true
   });
   parent.get('/' + url, ensureRequestedUrlEndsWithSlash);
