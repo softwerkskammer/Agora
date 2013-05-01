@@ -15,31 +15,30 @@ block content
           | 
           a(href="/activities/new/", class="btn") Neu
   .row-fluid
-    .span12(style="overflow: auto")
-      table(class="table table-condensed table-hover table-striped")
-        thead
+    table(class="span 12 table table-condensed table-hover table-striped", style="overflow: auto; max-height: 600px")
+      thead
+        tr
+          th.ellipsis.narrow.span1 Titel
+          th.ellipsis.narrow.span1 URL
+          th.ellipsis.narrow.span1 Startdatum
+          th.ellipsis.narrow.span1 Startzeit
+          th.ellipsis.narrow.span1 Enddatum
+          th.ellipsis.narrow.span1 Endzeit
+          th.ellipsis.narrow.span1 Ort
+          th.ellipsis.narrow.span2 Beschreibung
+          th.ellipsis.narrow.span2 Wegbeschreibung
+          th.ellipsis.narrow.span1 Gruppe
+      tbody
+        for activity in activities
           tr
-            th Titel
-            th URL
-            th Startdatum
-            th Startzeit
-            th Enddatum
-            th Endzeit
-            th Ort
-            th Beschreibung
-            th Wegbeschreibung
-            th Gruppe
-        tbody
-          for activity in activities
-            tr
-              td: a#title(href="#", data-type="text", data-pk="#{activity.id}", data-url="activityChanged") #{activity.title}
-              td: a#url(href="#", data-type="text", data-pk="#{activity.id}", data-url="activityChanged") #{activity.url}
-              td: a#startDate(href="#", data-type="text", data-pk="#{activity.id}", data-url="activityChanged") #{activity.startDate}
-              td: a#startTime(href="#", data-type="text", data-pk="#{activity.id}", data-url="activityChanged") #{activity.startTime}
-              td: a#endDate(href="#", data-type="text", data-pk="#{activity.id}", data-url="activityChanged") #{activity.endDate}
-              td: a#endTime(href="#", data-type="text", data-pk="#{activity.id}", data-url="activityChanged") #{activity.endTime}
-              td: a#location(href="#", data-type="text", data-pk="#{activity.id}", data-url="activityChanged") #{activity.location}
-              td: a#description(href="#", data-placement="left", data-type="textarea", data-pk="#{activity.id}", data-url="activityChanged") #{activity.description}
-              td: a#direction(href="#", data-placement="left", data-type="textarea", data-pk="#{activity.id}", data-url="activityChanged") #{activity.direction}
-              td #{activity.groupName(groups)}
-                
+            td.ellipsis.narrow.span1: a#title(href="#", data-type="text", data-pk="#{activity.id}", data-url="activityChanged") #{activity.title}
+            td.ellipsis.narrow.span1: a#url(href="#", data-type="text", data-pk="#{activity.id}", data-url="activityChanged") #{activity.url}
+            td.ellipsis.narrow.span1: a#startDate(href="#", data-type="text", data-pk="#{activity.id}", data-url="activityChanged") #{activity.startDate}
+            td.ellipsis.narrow.span1: a#startTime(href="#", data-type="text", data-pk="#{activity.id}", data-url="activityChanged") #{activity.startTime}
+            td.ellipsis.narrow.span1: a#endDate(href="#", data-type="text", data-pk="#{activity.id}", data-url="activityChanged") #{activity.endDate}
+            td.ellipsis.narrow.span1: a#endTime(href="#", data-type="text", data-pk="#{activity.id}", data-url="activityChanged") #{activity.endTime}
+            td.ellipsis.narrow.span1: a#location(href="#", data-type="text", data-pk="#{activity.id}", data-url="activityChanged") #{activity.location}
+            td.ellipsis.narrow.span2: a#description(href="#", data-placement="left", data-type="textarea", data-pk="#{activity.id}", data-url="activityChanged") #{activity.description}
+            td.ellipsis.narrow.span2: a#direction(href="#", data-placement="left", data-type="textarea", data-pk="#{activity.id}", data-url="activityChanged") #{activity.direction}
+            td.ellipsis.narrow.span1 #{activity.groupName(groups)}
+              
