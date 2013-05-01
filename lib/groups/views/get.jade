@@ -7,14 +7,10 @@ block title
 block content
   .span12
     .page-header
-      h2 
+      h2 #{group.longName}&nbsp; 
+        small #{group.type} 
         if (userIsRegistered && user.member.isAdmin)
-          a.btn.btn-mini(href="/groups/edit/#{group.id}")
-            i.icon-edit
-          | &nbsp
-        | #{group.longName} 
-        small  #{group.type} 
-
+          a.pull-right.btn(href="/groups/edit/#{group.id}"): i.icon-edit
     p
       strong
         | Adresse:

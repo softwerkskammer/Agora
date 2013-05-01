@@ -82,7 +82,7 @@ describe('Activity application', function () {
       .get('/' + url)
       .expect(200)
       .expect(/<small>startDate/)
-      .expect(/<h2> title/, function (err) {
+      .expect(/<h2>title/, function (err) {
         getActivity.calledWith(url).should.be.true;
         activitiesAPIStub.getActivity.restore();
         done(err);
