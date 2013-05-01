@@ -1,0 +1,42 @@
+mixin administrationMenu(top)
+  if ((typeof(user) !== 'undefined') && user.member && user.member.isAdmin)
+    ul(class="nav #{top ? "visible-desktop" : "hidden-desktop"}")
+      li#administration.dropdown
+        a.dropdown-toggle(href="#", data-toggle="dropdown")
+          i.icon-dashboard
+          | &nbsp; Verwaltung
+          b.caret
+        ul.dropdown-menu
+          li: a(href="/administration/memberTable")
+            i.icon-user
+            | &nbsp;Mitglieder
+          li: a(href="/administration/groupTable")
+            i.icon-group
+            | &nbsp;Gruppen
+          li: a(href="/administration/activityTable")
+            i.icon-calendar
+            | &nbsp;Aktivitäten
+
+mixin loginMenu
+  if (typeof(user) !== 'undefined' && user.member)
+    ul.nav.pull-right
+      li.dropdown
+        a.dropdown-toggle(href="#", data-toggle="dropdown") #{user.member.nickname} 
+          i.icon-info-sign
+          b.caret
+        ul.dropdown-menu
+          li: a(href="/members/edit/#{user.member.nickname}")
+            i.icon-edit
+            | &nbsp;Profil bearbeiten
+          li: a(href="/auth/logout")
+            i.icon-signout
+            | &nbsp;Abmelden
+          li: a(href="https://github.com/softwerkskammer/NeuePlattform-Implementierung/issues?state=open")
+            i.icon-github
+            | &nbsp;Einen Bug melden
+          li: include ../version
+  else
+    ul.nav.pull-right
+      li: a.navbar-link(data-toggle="modal", href="#login")
+        i.icon-signin
+        | &nbsp;Anmelden
