@@ -19,7 +19,7 @@ html
     .navbar.navbar-fixed-top
       .navbar-inner
         a.brand.no-padding(href="/")
-          img(src="/img/SoftwerkskammerWappenLinks.png")
+          img(src="/img/SoftwerkskammerWappenLinks.png", alt="Softwerkskammer")
         .container.bottom
           a.btn.btn-navbar(data-toggle="collapse", data-target=".navbar-inverse-collapse")
             span.icon-bar
@@ -60,20 +60,20 @@ html
             #calendar
 
     mixin bottomNavbar
-  
-  script(src="/clientscripts/jquery-1.9.1.js")
-  script(src="/clientscripts/bootstrap.js")
-  script(src="/clientscripts/bootstrap-editable.js")
-  script(src="/clientscripts/bootstrap-markdown.js")
-  script(src="/clientscripts/markdown.js")
-  script(src="/clientscripts/fullcalendar.js")
-  script(src="/clientscripts/bootstrap-colorpicker.js")
-  script(src="/clientscripts/navbar-scripts.js")
-  script(src="/clientscripts/surroundWithLink.js")
-  script(src="/clientscripts/agora-calendar.js")
-  if (typeof(calViewYear) !== 'undefined')
-    script
-      $(document).ready(function () {
-        $('#calendar').fullCalendar('gotoDate', #{calViewYear}, #{calViewMonth});      
-      });
-  block scripts
+    
+    script(src="/clientscripts/jquery-1.9.1.js")
+    script(src="/clientscripts/bootstrap.js")
+    script(src="/clientscripts/bootstrap-editable.js")
+    script(src="/clientscripts/bootstrap-markdown.js")
+    script(src="/clientscripts/markdown.js")
+    script(src="/clientscripts/fullcalendar.js")
+    script(src="/clientscripts/bootstrap-colorpicker.js")
+    script(src="/clientscripts/navbar-scripts.js")
+    script(src="/clientscripts/surroundWithLink.js")
+    script(src="/clientscripts/agora-calendar.js")
+    if (typeof(calViewYear) !== 'undefined')
+      script
+        $(document).ready(function () {
+          $('#calendar').fullCalendar('gotoDate', #{calViewYear}, #{calViewMonth});      
+        });
+    block scripts
