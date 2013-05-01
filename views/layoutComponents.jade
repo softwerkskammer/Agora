@@ -48,3 +48,9 @@ mixin bottomNavbar
         mixin administrationMenu(false)
         li: a(href="/credits.html") Credits
         li: a(href="/impressum.html") Impressum
+
+mixin externalUrl(url, text)
+  a(href=url, target="_blank")
+    i.icon-external-link
+    | &nbsp;#{text}
+

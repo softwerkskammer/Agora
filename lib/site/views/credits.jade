@@ -1,53 +1,40 @@
 extends ../../../views/layout
 
+include ../../../views/layoutComponents
+
+mixin defItem(title, url, text)
+  dt #{title}:
+  dd: mixin externalUrl(url, text)
+
 block title
   | Credits
 block content
   .span6
     h2 Server
     dl.dl-horizontal
-      dt Node.js:
-      dd: a(link="http://nodejs.org") Plattform
-      dt MongoDB Treiber:
-      dd: a(link="http://mongodb.github.io/node-mongodb-native/contents.html") Persistenz
-      dt Async:
-      dd: a(link="https://github.com/caolan/async") Funktionale Erweiterungen
-      dt Express:
-      dd: a(link="http://expressjs.com/api.html") Applikationsframework
-      dt Winston:
-      dd: a(link="https://github.com/flatiron/winston") Logging
-      dt Winston-Config:
-      dd: a(link="https://github.com/triplem/winston-config") Logging Einfach
-      dt Underscore:
-      dd: a(link="http://underscorejs.org") Funktionale Erweiterungen
-      dt Underscore String:
-      dd: a(link="http://epeli.github.com/underscore.string/") String Erweiterungen
-      dt Moment:
-      dd: a(link="http://momentjs.com/") Datum und Uhrzeit leicht gemacht
-      dt Markdown.js:
-      dd: a(link="https://github.com/evilstreak/markdown-js/") Markdown nach HTML
-      dt Connect-Mongo:
-      dd: a(link="https://github.com/kcbanner/connect-mongo/") Persistente Sessions
+      mixin defItem('Node.js', 'http://nodejs.org', 'Plattform')
+      mixin defItem('MongoDB Treiber', 'http://mongodb.github.io/node-mongodb-native/contents.html', 'Persistenz')
+      mixin defItem('Async', 'https://github.com/caolan/async', 'Funktionale Erweiterungen')
+      mixin defItem('Express', 'http://expressjs.com/api.html', 'Applikationsframework')
+      mixin defItem('Winston', 'https://github.com/flatiron/winston', 'Logging')
+      mixin defItem('Winston-Config', 'https://github.com/triplem/winston-config', 'Logging Einfach')
+      mixin defItem('Underscore "_"', 'http://underscorejs.org', 'Funktionale Erweiterungen')
+      mixin defItem('Underscore String "_s"', 'http://epeli.github.com/underscore.string/', 'String Erweiterungen')
+      mixin defItem('Moment', 'http://momentjs.com/', 'Datum und Uhrzeit leicht gemacht')
+      mixin defItem('Markdown.js', 'https://github.com/evilstreak/markdown-js/', 'Markdown nach HTML')
+      mixin defItem('Connect-Mongo', 'https://github.com/kcbanner/connect-mongo/', 'Persistente Sessions')
       
   .span6
     h2 Frontend
     dl.dl-horizontal
-      dt Twitter Bootstrap:
-      dd: a(link="http://twitter.github.io/bootstrap/index.html") UI Basis
-      dt JQuery:
-      dd: a(link="http://api.jquery.com") API Referenz
-      dt JQuery Validation:
-      dd: a(link="http://docs.jquery.com/Plugins/Validation/") Frontend Validierung
-      dt Bootstrap-Markdown:
-      dd: a(link="http://toopay.github.com/bootstrap-markdown/") Markdown Editor für Textareas
-      dt X-Editable:
-      dd: a(link="http://vitalets.github.io/x-editable/") Inline Editieren
-      dt Bootstrap-Colorpicker:
-      dd: a(link="http://www.eyecon.ro/bootstrap-colorpicker") Farben auswählen
-      dt Full Calendar:
-      dd: a(link="http://arshaw.com/fullcalendar/") Der Kalender
-      dt Font-Awesome:
-      dd: a(link="http://fortawesome.github.com/Font-Awesome/") Bessere Icons für Buttons etc.
+      mixin defItem('Twitter Bootstrap', 'http://twitter.github.io/bootstrap/index.html', 'UI Basis')
+      mixin defItem('JQuery', 'http://api.jquery.com', 'API Referenz')
+      mixin defItem('JQuery Validation', 'http://docs.jquery.com/Plugins/Validation/', 'Frontend Validierung')
+      mixin defItem('Bootstrap-Markdown', 'http://toopay.github.com/bootstrap-markdown/', 'Markdown Editor für Textareas')
+      mixin defItem('X-Editable', 'http://vitalets.github.io/x-editable/', 'Inline Editieren')
+      mixin defItem('Bootstrap-Colorpicker', 'http://www.eyecon.ro/bootstrap-colorpicker', 'Farben auswählen')
+      mixin defItem('Full Calendar', 'http://arshaw.com/fullcalendar/', 'Der Kalender')
+      mixin defItem('Font-Awesome', 'http://fortawesome.github.com/Font-Awesome/', 'Bessere Icons für Buttons etc.')
 
   .row-fluid
     .span8.offset2.well
