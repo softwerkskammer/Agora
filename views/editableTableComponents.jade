@@ -4,6 +4,10 @@ mixin tabHead(no, title)
 mixin tabHeadNarrow(no, title)
   th(class="span#{no}"): .ellipsis.narrow #{title}
 
+mixin tabDateNarrow(no, object, name, callback, placementOptional)
+  td(class="span#{no}"): a.tabdatepicker(id="#{name}", href="#", data-type="date", data-placement="#{placementOptional ? placementOptional : 'right'}", 
+    data-pk="#{object.id}", data-url="#{callback}") #{object[name]}
+
 mixin tabText(no, object, name, callback, placementOptional)
   td(class="span#{no}"): a(id="#{name}", href="#", data-type="text", data-tpl="<input type=\"text\" class=\"input-xlarge\">",
     data-placement="#{placementOptional ? placementOptional : 'top'}", data-pk="#{object.id}", data-url="#{callback}"): .ellipsis #{object[name]}

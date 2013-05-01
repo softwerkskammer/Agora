@@ -9,12 +9,13 @@ block scripts
   script(src="/clientscripts/utilities-for-editables.js")
 
 block content
-  .span12
-    .page-header
-      h2 Verwaltung
-        small  Aktivitäten  
-        - if (typeof(user) !== 'undefined' && user.member.isAdmin)
-          a.pull-right.btn(href="/activities/new/"): i.icon-file
+  .row-fluid
+    .span12
+      .page-header
+        h2 Verwaltung
+          small  Aktivitäten  
+          - if (typeof(user) !== 'undefined' && user.member.isAdmin)
+            a.pull-right.btn(href="/activities/new/"): i.icon-file
   .row-fluid
     table(class="span 12 table table-condensed table-hover table-striped", style="overflow: auto; max-height: 600px")
       thead
@@ -34,9 +35,9 @@ block content
           tr
             mixin tabTextNarrow(1, activity, 'title', 'activityChanged', 'right')
             mixin tabTextNarrow(1, activity, 'url', 'activityChanged')
-            mixin tabTextNarrow(1, activity, 'startDate', 'activityChanged')
+            mixin tabDateNarrow(1, activity, 'startDate', 'activityChanged')
             mixin tabTextNarrow(1, activity, 'startTime', 'activityChanged')
-            mixin tabTextNarrow(1, activity, 'endDate', 'activityChanged')
+            mixin tabDateNarrow(1, activity, 'endDate', 'activityChanged')
             mixin tabTextNarrow(1, activity, 'endTime', 'activityChanged')
             mixin tabTextNarrow(1, activity, 'location', 'activityChanged')
             mixin tabTextareaNarrow(2, activity, 'description', 'activityChanged')

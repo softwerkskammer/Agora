@@ -4,17 +4,18 @@ block title
   | Übersicht der Gruppen
 
 block content
-  .span12
-    .page-header
-      h2 Gruppen&nbsp;
-        small Alle
-        if (typeof(user) !== 'undefined' && user.member.isAdmin)
-          a.pull-right.btn(href="new/"): i.icon-file
-    ul
-      each group in groups
-        li: .group
-          strong: a(href="#{group.id}") #{group.longName}
-          br
-          | - Schicke eine Nachricht an: 
-          span.mailtoify
-            | #{group.id}@softwerkskammer.de
+  .row-fluid
+    .span12
+      .page-header
+        h2 Gruppen&nbsp;
+          small Alle
+          if (typeof(user) !== 'undefined' && user.member.isAdmin)
+            a.pull-right.btn(href="new/"): i.icon-file
+      ul
+        each group in groups
+          li: .group
+            strong: a(href="#{group.id}") #{group.longName}
+            br
+            | - Schicke eine Nachricht an: 
+            span.mailtoify
+              | #{group.id}@softwerkskammer.de
