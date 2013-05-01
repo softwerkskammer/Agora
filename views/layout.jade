@@ -14,6 +14,7 @@ html
     title Softwerkskammer - 
       block title
   body
+    include loginComponent
     .navbar.navbar-fixed-top
       .navbar-inner
         a.brand.no-padding(href="/")
@@ -43,11 +44,8 @@ html
                     | &nbsp;Einen Bug melden
                   li: include ../version
           else
-            - var returnTo = ""
-            if (typeof(currentUrl) !== 'undefined')
-              - returnTo = "?returnTo=" + encodeURIComponent(currentUrl)
-            p.navbar-text.pull-right
-              a.navbar-link(href="/auth/login" + returnTo)
+            ul.nav.pull-right
+              li: a.navbar-link(data-toggle="modal", href="#login")
                 i.icon-signin 
                 | &nbsp;Anmelden
           .nav-collapse.navbar-inverse-collapse

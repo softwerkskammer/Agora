@@ -1,0 +1,25 @@
+#login.modal.hide.fade
+  .modal-header
+    button.close(type="button", data-dismiss="modal", aria-hidden="true") &times;
+    h3 Authentifizierung erforderlich
+  .modal-body
+    -var returnUrl = (typeof(currentUrl) === 'undefined') ? "/" : currentUrl
+    .row-fluid
+      .span12
+        p Wenn Du bei uns mitmachen möchtest, authentifiziere Dich bitte bei einem der untenstehenden Dienste. Im Anschluss
+          | bitten wir Dich, einige persönliche Daten einzugeben.
+        p
+          a.btn.btn-mini(href="/auth/openid?openid_identifier=" + encodeURIComponent("https://www.google.com/accounts/o8/id") + "&returnTo=" + encodeURIComponent(returnUrl))
+            img(src="/img/google.ico", alt="google")
+            | &nbsp;Google (OpenID)
+          a.btn.btn-mini(href="/auth/github?returnTo=" + encodeURIComponent(returnUrl))
+            img(src="/img/github.ico", alt="github")
+            | &nbsp;Github (OAuth)
+        
+        form(action="/auth/openid", method="get")
+          input(type="hidden", name="returnTo", value=returnUrl)
+          fieldset
+            label(class="control-label", for="openid_identifier") (optional) URL eines alternativen OpenID Providers:
+            .input-append
+              input.input-xxlarge.input-block-level(id="openid_identifier", type='text', name="openid_identifier")
+              button.btn(type="submit") Sonstige

@@ -32,8 +32,6 @@ var groupsApp = proxyquire('../../lib/groups', {
 
 var app = groupsApp(express());
 
-app.locals({baseUrl: 'groups'});
-
 describe('Groups application', function () {
   groupsAPIStub.getAllAvailableGroups = function (callback) {
     callback(null, [GroupA]);
