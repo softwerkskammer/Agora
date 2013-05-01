@@ -1,0 +1,21 @@
+{
+   "groupsApp": {"module": "./lib/groups"},
+
+   "groupsAndMembersAPI": {"module": "./lib/groupsAndMembers/groupsAndMembersAPI"},
+   "groupsAPI": {"module": "./lib/groups/groupsAPI"},
+   "membersAPI": {"module": "./lib/members/membersAPI"},
+
+   "groupstore": {"module": "./lib/groups/groupstore"},
+   "memberstore": {"module": "./lib/members/memberstore"},
+
+
+   "sympaStub": {"module": "./lib/groups/sympaStub"},
+   "groupsPersistence": {"module": "./lib/persistence/persistence",
+                        "constructorArgs": {
+                             "connectionName": "groupstore"
+                       }},
+   "membersPersistence": {"module": "./lib/persistence/persistence",
+                        "constructorArgs": {
+                             "connectionName": "memberstore"
+                       }}
+}
