@@ -29,17 +29,17 @@ block content
     table(class="span 12 table table-condensed table-hover table-striped", style="overflow: auto; max-height: 600px")
       thead
         tr
-          th.ellipsis.span2 Name
-          th.ellipsis.span2 Titel
-          th.ellipsis.span1 Präfix
-          th.ellipsis.span6 Beschreibung
-          th.ellipsis.span1 Gruppenart
+          th.span2: .ellipsis Name
+          th.span2: .ellipsis Titel
+          th.span1: .ellipsis Präfix
+          th.span6: .ellipsis Beschreibung
+          th.span1: .ellipsis Gruppenart
       tbody
         for group in groups
           tr
-            th.ellipsis.span2 #{group.id}
-            td.ellipsis.span2: a#longName(href="#", data-type="text", data-pk="#{group.id}", data-url="groupChanged") #{group.longName}
-            td.ellipsis.span1: #{group.emailPrefix}
-            td.ellipsis.span6: a#description(href="#", data-placement="right", data-type="textarea", data-pk="#{group.id}", data-url="groupChanged") #{group.description}
-            td.ellipsis.span1: a#type(href="#", , data-type="select", data-value="#{group.typeCode()}", data-pk="#{group.id}", data-url="groupChanged") #{group.type}
+            th.span2: .ellipsis #{group.id}
+            td.span2: a#longName(href="#", data-type="text", data-pk="#{group.id}", data-url="groupChanged"): .ellipsis #{group.longName}
+            td.span1: .ellipsis #{group.emailPrefix}
+            td.span6: a#description(href="#", data-placement="right", data-type="textarea", data-pk="#{group.id}", data-url="groupChanged"): .ellipsis #{group.description}
+            td.span1: a#type(href="#", , data-type="select", data-value="#{group.typeCode()}", data-pk="#{group.id}", data-url="groupChanged"): .ellipsis #{group.type}
               
