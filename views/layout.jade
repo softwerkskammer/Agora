@@ -15,10 +15,11 @@ html
       block title
   body
     include loginComponent
+    include layoutComponents
     .navbar.navbar-fixed-top
       .navbar-inner
         a.brand.no-padding(href="/")
-          img(src="/img/SoftwerkskammerWappenLinks.png")
+          img(src="/img/SoftwerkskammerWappenLinks.png", alt="Softwerkskammer")
         .container.bottom
           a.btn.btn-navbar(data-toggle="collapse", data-target=".navbar-inverse-collapse")
             span.icon-bar
@@ -26,28 +27,7 @@ html
             span.icon-bar
             span.icon-bar
             span.icon-bar
-          if (typeof(user) !== 'undefined' && user.member)
-            ul.nav.pull-right
-              li.dropdown
-                a.dropdown-toggle(href="#", data-toggle="dropdown") #{user.member.nickname} 
-                  i.icon-info-sign
-                  b.caret
-                ul.dropdown-menu
-                  li: a(href="/members/edit/#{user.member.nickname}")
-                    i.icon-edit
-                    | &nbsp;Profil bearbeiten
-                  li: a(href="/auth/logout")
-                    i.icon-signout
-                    | &nbsp;Abmelden
-                  li: a(href="https://github.com/softwerkskammer/NeuePlattform-Implementierung/issues?state=open")
-                    i.icon-github
-                    | &nbsp;Einen Bug melden
-                  li: include ../version
-          else
-            ul.nav.pull-right
-              li: a.navbar-link(data-toggle="modal", href="#login")
-                i.icon-signin 
-                | &nbsp;Anmelden
+          mixin loginMenu
           .nav-collapse.navbar-inverse-collapse
             ul.nav
               li#announcements: a(href="/announcements")
@@ -64,27 +44,11 @@ html
               li#groups: a(href="/groups")
                 i.icon-group
                 | &nbsp;Gruppen
-              - if (typeof(user) !== 'undefined')
+              if (typeof(user) !== 'undefined')
                 li#members: a(href="/members")
                   i.icon-user
                   | &nbsp;Mitglieder
-                if (user.member && user.member.isAdmin)
-                  ul.nav.visible-desktop
-                    li#administration.dropdown
-                      a.dropdown-toggle(href="#", data-toggle="dropdown")
-                        i.icon-dashboard
-                        | &nbsp;Verwaltung
-                        b.caret
-                      ul.dropdown-menu
-                        li: a(href="/administration/memberTable")
-                          i.icon-user
-                          | &nbsp;Mitglieder
-                        li: a(href="/administration/groupTable")
-                          i.icon-group
-                          | &nbsp;Gruppen
-                        li: a(href="/administration/activityTable")
-                          i.icon-calendar
-                          | &nbsp;Aktivitäten
+              mixin administrationMenu(true)
 
     .container-fluid
       .row-fluid
@@ -95,34 +59,22 @@ html
           .row-fluid
             #calendar
 
-    .navbar.navbar-fixed-bottom
-      .navbar-inner
-        ul.nav.pull-right
-          if ((typeof(user) !== 'undefined') && user.member && user.member.isAdmin)
-            ul.nav.hidden-desktop
-              li#administration.dropdown
-                a.dropdown-toggle(href="#", data-toggle="dropdown")
-                  i.icon-dashboard
-                  | &nbsp; Verwaltung
-                  b.caret
-                ul.dropdown-menu
-                  li: a(href="/administration/memberTable") Mitglieder
-                  li: a(href="/administration/groupTable") Gruppen
-          li: a(href="/impressum.html") Impressum
-
-  script(src="/clientscripts/jquery-1.9.1.js")
-  script(src="/clientscripts/bootstrap.js")
-  script(src="/clientscripts/bootstrap-editable.js")
-  script(src="/clientscripts/bootstrap-markdown.js")
-  script(src="/clientscripts/markdown.js")
-  script(src="/clientscripts/fullcalendar.js")
-  script(src="/clientscripts/bootstrap-colorpicker.js")
-  script(src="/clientscripts/navbar-scripts.js")
-  script(src="/clientscripts/surroundWithLink.js")
-  script(src="/clientscripts/agora-calendar.js")
-  if (typeof(calViewYear) !== 'undefined')
-    script
-      $(document).ready(function () {
-        $('#calendar').fullCalendar('gotoDate', #{calViewYear}, #{calViewMonth});      
-      });
-  block scripts
+    mixin bottomNavbar
+    
+    script(src="/clientscripts/jquery-1.9.1.js")
+    script(src="/clientscripts/bootstrap.js")
+    script(src="/clientscripts/bootstrap-editable.js")
+    script(src="/clientscripts/bootstrap-markdown.js")
+    script(src="/clientscripts/markdown.js")
+    script(src="/clientscripts/fullcalendar.js")
+    script(src="/clientscripts/bootstrap-colorpicker.js")
+    script(src="/clientscripts/agora.js")
+    script(src="/clientscripts/navbar-scripts.js")
+    script(src="/clientscripts/surroundWithLink.js")
+    script(src="/clientscripts/agora-calendar.js")
+    if (typeof(calViewYear) !== 'undefined')
+      script
+        $(document).ready(function () {
+          $('#calendar').fullCalendar('gotoDate', #{calViewYear}, #{calViewMonth});      
+        });
+    block scripts

@@ -19,15 +19,13 @@ html
       }
     title Softwerkskammer
   body
+    include layoutComponents
     .container
-      img(src="/img/Softwerkskammer_Header.png")
+      img(src="/img/Softwerkskammer_Header.png", alt="Softwerkskammer")
       p &nbsp;
       block content
 
-    .navbar.navbar-fixed-bottom
-      .navbar-inner
-        ul.nav.pull-right
-          li: a(href="/impressum.html") Impressum
-
+    mixin bottomNavbar
     script(src="/clientscripts/jquery-1.9.1.js")
     script(src="/clientscripts/bootstrap.js")
+    script(src="/clientscripts/agora.js")
