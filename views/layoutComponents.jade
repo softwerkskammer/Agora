@@ -40,3 +40,11 @@ mixin loginMenu
       li: a.navbar-link(data-toggle="modal", href="#login")
         i.icon-signin
         | &nbsp;Anmelden
+
+mixin bottomNavbar
+  .navbar.navbar-fixed-bottom
+    .navbar-inner
+      ul.nav.pull-right
+        mixin administrationMenu(false)
+        li: a(href="/credits.html") Credits
+        li: a(href="/impressum.html") Impressum

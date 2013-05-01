@@ -59,12 +59,8 @@ html
           .row-fluid
             #calendar
 
-    .navbar.navbar-fixed-bottom
-      .navbar-inner
-        ul.nav.pull-right
-          mixin administrationMenu(false)
-          li: a(href="/impressum.html") Impressum
-
+    mixin bottomNavbar
+  
   script(src="/clientscripts/jquery-1.9.1.js")
   script(src="/clientscripts/bootstrap.js")
   script(src="/clientscripts/bootstrap-editable.js")
