@@ -20,9 +20,12 @@
     .row-fluid
       .span12
         form(action="/auth/openid", method="get")
-          input(type="hidden", name="returnTo", value=returnUrl)
-          fieldset
-            label(class="control-label", for="openid_identifier") (optional) URL eines alternativen OpenID Providers:
-            .input-append
-              input.input-xxlarge.input-block-level(id="openid_identifier", type='text', name="openid_identifier")
-              button.btn(type="submit") Sonstige
+        input(type="hidden", name="returnTo", value=returnUrl)
+        p
+          a(href="#openIDinput", data-toggle="collapse"): i.icon-caret-right
+            |&nbsp;(optional)
+          |&nbsp;Eingabe der URL eines alternativen OpenID Providers:
+        #openIDinput.collapse
+          .input-append.span10
+            input.input-xxlarge.input-block-level(id="openid_identifier", type='text', name="openid_identifier")
+            button.btn(type="submit") Sonstige
