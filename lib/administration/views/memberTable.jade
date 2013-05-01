@@ -1,5 +1,7 @@
 extends ../../../views/layout
 
+include ../../../views/editableTableComponents
+
 block title
   | Übersicht der Mitglieder
 
@@ -27,29 +29,29 @@ block content
     table(class="span 12 table table-condensed table-hover table-striped", style="overflow: auto; max-height: 600px")
       thead
         tr
-          th.span1: .ellipsis.narrow Nickname
-          th.span1: .ellipsis.narrow Vorname
-          th.span1: .ellipsis.narrow Nachname
-          th.span1: .ellipsis.narrow Email
-          th.span1: .ellipsis.narrow Twitter
-          th.span1: .ellipsis.narrow Ort / Region
-          th.span1: .ellipsis.narrow Beruf
-          th.span1: .ellipsis.narrow Interessenschwerpunkte
-          th.span1: .ellipsis.narrow Website / Blog
-          th.span2: .ellipsis.narrow Wie ich von…
-          th.span1: .ellipsis.narrow Benutzertyp
+          mixin tabHeadNarrow(1, 'Nickname')
+          mixin tabHeadNarrow(1, 'Vorname')
+          mixin tabHeadNarrow(1, 'Nachname')
+          mixin tabHeadNarrow(1, 'Email')
+          mixin tabHeadNarrow(1, 'Twitter')
+          mixin tabHeadNarrow(1, 'Ort/Region')
+          mixin tabHeadNarrow(1, 'Beruf')
+          mixin tabHeadNarrow(1, 'Interessenschwerpunkte')
+          mixin tabHeadNarrow(1, 'Website/Blog')
+          mixin tabHeadNarrow(2, 'Wie ich von…')
+          mixin tabHeadNarrow(1, 'Benutzertyp')
       tbody
         for member in members
           tr
             th.span1: .ellipsis.narrow #{member.nickname}
-            td.span1: a#firstname(href="#", data-type="text", data-pk="#{member.nickname}", data-url="memberChanged"): .ellipsis.narrow #{member.firstname}
-            td.span1: a#lastname(href="#", data-type="text", data-pk="#{member.nickname}", data-url="memberChanged"): .ellipsis.narrow #{member.lastname}
-            td.span1: a#email(href="#", data-type="text", data-pk="#{member.nickname}", data-url="memberChanged"): .ellipsis.narrow #{member.email}
-            td.span1: a#twitter(href="#", data-type="text", data-pk="#{member.nickname}", data-url="memberChanged"): .ellipsis.narrow #{member.twitter}
-            td.span1: a#location(href="#", data-type="text", data-pk="#{member.nickname}", data-url="memberChanged"): .ellipsis.narrow #{member.location}
-            td.span1: a#profession(href="#", data-type="text", data-pk="#{member.nickname}", data-url="memberChanged"): .ellipsis.narrow #{member.profession}
-            td.span1: a#interests(href="#", data-placement="left", data-type="textarea", data-pk="#{member.nickname}", data-url="memberChanged"): .ellipsis.narrow #{member.interests}
-            td.span1: a#site(href="#", data-placement="left", data-type="textarea", data-pk="#{member.nickname}", data-url="memberChanged"): .ellipsis.narrow #{member.site}
-            td.span2: a#reference(href="#", data-placement="left", data-type="textarea", data-pk="#{member.nickname}", data-url="memberChanged"): .ellipsis #{member.reference}
+            mixin tabTextNarrow(1, member, 'firstname', 'memberChanged', 'right')
+            mixin tabTextNarrow(1, member, 'lastname', 'memberChanged')
+            mixin tabTextNarrow(1, member, 'email', 'memberChanged')
+            mixin tabTextNarrow(1, member, 'twitter', 'memberChanged')
+            mixin tabTextNarrow(1, member, 'location', 'memberChanged')
+            mixin tabTextNarrow(1, member, 'profession', 'memberChanged')
+            mixin tabTextNarrow(1, member, 'interests', 'memberChanged')
+            mixin tabTextNarrow(1, member, 'site', 'memberChanged')
+            mixin tabTextareaNarrow(2, member, 'reference', 'memberChanged')
             td.span1: a#isAdmin(href="#", data-type="select", data-value="#{member.adminDropdownValue()}", data-pk="#{member.nickname}", data-url="memberChanged"): .ellipsis.narrow #{member.adminDisplayText()}
 

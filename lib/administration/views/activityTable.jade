@@ -1,5 +1,7 @@
 extends ../../../views/layout
 
+include ../../../views/editableTableComponents
+
 block title
   | Übersicht der Gruppen
 
@@ -17,27 +19,27 @@ block content
     table(class="span 12 table table-condensed table-hover table-striped", style="overflow: auto; max-height: 600px")
       thead
         tr
-          th.span1: .ellipsis.narrow Titel
-          th.span1: .ellipsis.narrow URL
-          th.span1: .ellipsis.narrow Startdatum
-          th.span1: .ellipsis.narrow Startzeit
-          th.span1: .ellipsis.narrow Enddatum
-          th.span1: .ellipsis.narrow Endzeit
-          th.span1: .ellipsis.narrow Ort
-          th.span2: .ellipsis.narrow Beschreibung
-          th.span2: .ellipsis.narrow Wegbeschreibung
-          th.span1: .ellipsis.narrow Gruppe
+          mixin tabHeadNarrow(1, 'Titel')
+          mixin tabHeadNarrow(1, 'URL')
+          mixin tabHeadNarrow(1, 'Startdatum')
+          mixin tabHeadNarrow(1, 'Startzeit')
+          mixin tabHeadNarrow(1, 'Enddatum')
+          mixin tabHeadNarrow(1, 'Endzeit')
+          mixin tabHeadNarrow(1, 'Ort')
+          mixin tabHeadNarrow(2, 'Beschreibung')
+          mixin tabHeadNarrow(2, 'Wegbeschreibung')
+          mixin tabHeadNarrow(1, 'Gruppe')
       tbody
         for activity in activities
           tr
-            td.span1: a#title(href="#", data-type="text", data-pk="#{activity.id}", data-url="activityChanged"): .ellipsis.narrow #{activity.title}
-            td.span1: a#url(href="#", data-type="text", data-pk="#{activity.id}", data-url="activityChanged"): .ellipsis.narrow #{activity.url}
-            td.span1: a#startDate(href="#", data-type="text", data-pk="#{activity.id}", data-url="activityChanged"): .ellipsis.narrow #{activity.startDate}
-            td.span1: a#startTime(href="#", data-type="text", data-pk="#{activity.id}", data-url="activityChanged"): .ellipsis.narrow #{activity.startTime}
-            td.span1: a#endDate(href="#", data-type="text", data-pk="#{activity.id}", data-url="activityChanged"): .ellipsis.narrow #{activity.endDate}
-            td.span1: a#endTime(href="#", data-type="text", data-pk="#{activity.id}", data-url="activityChanged"): .ellipsis.narrow #{activity.endTime}
-            td.span1: a#location(href="#", data-type="text", data-pk="#{activity.id}", data-url="activityChanged"): .ellipsis.narrow #{activity.location}
-            td.span2: a#description(href="#", data-placement="left", data-type="textarea", data-pk="#{activity.id}", data-url="activityChanged"): .ellipsis.narrow #{activity.description}
-            td.span2: a#direction(href="#", data-placement="left", data-type="textarea", data-pk="#{activity.id}", data-url="activityChanged"): .ellipsis.narrow #{activity.direction}
+            mixin tabTextNarrow(1, activity, 'title', 'activityChanged', 'right')
+            mixin tabTextNarrow(1, activity, 'url', 'activityChanged')
+            mixin tabTextNarrow(1, activity, 'startDate', 'activityChanged')
+            mixin tabTextNarrow(1, activity, 'startTime', 'activityChanged')
+            mixin tabTextNarrow(1, activity, 'endDate', 'activityChanged')
+            mixin tabTextNarrow(1, activity, 'endTime', 'activityChanged')
+            mixin tabTextNarrow(1, activity, 'location', 'activityChanged')
+            mixin tabTextareaNarrow(2, activity, 'description', 'activityChanged')
+            mixin tabTextareaNarrow(2, activity, 'direction', 'activityChanged')
             td.span1: .ellipsis.narrow #{activity.groupName(groups)}
               
