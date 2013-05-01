@@ -14,9 +14,11 @@ mixin tabTextNarrow(no, object, name, callback, placementOptional)
 
 mixin tabTextarea(no, object, name, callback, placementOptional)
   td(class="span#{no}"): a(id="#{name}", href="#", data-placement="#{placementOptional ? placementOptional : 'left'}", 
-    data-tpl="<textarea class='input-xlarge'></textarea>", data-type="textarea", data-pk="#{object.id}", data-url="#{callback}"): .ellipsis #{object[name]}
+    data-tpl="<textarea class='input-xlarge'></textarea>", data-type="textarea", data-pk="#{object.id}", 
+    data-url="#{callback}"): .ellipsis #{object[name]}
 
 mixin tabTextareaNarrow(no, object, name, callback, placementOptional)
   td(class="span#{no}"): a(id="#{name}", href="#", data-placement="#{placementOptional ? placementOptional : 'left'}", 
-    data-tpl="<textarea class='input-xlarge'></textarea>", data-type="textarea", data-pk="#{object.id}", data-url="#{callback}"): .ellipsis.narrow #{object[name]}
+    data-tpl="<textarea class='input-xlarge'></textarea>", data-type="textarea", data-pk="#{object.id}", 
+    data-url="#{callback}"): .ellipsis.narrow #{object[name]}
 
