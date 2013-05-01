@@ -8,7 +8,7 @@
    "groupstore": {"module": "./lib/groups/groupstore"},
    "memberstore": {"module": "./lib/members/memberstore"},
 
-   "sympaStub": {"module": "./test/groups/testsympa"},
+   "sympaStub": {"module": "./lib/groups/sympaStub"},
    "groupsPersistence": {"module": "./test/persistence/testpersistence"},
    "membersPersistence": {"module": "./test/persistence/testpersistence"}
 }

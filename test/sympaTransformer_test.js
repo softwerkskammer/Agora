@@ -4,7 +4,7 @@
 var expect = require('chai').expect;
 
 
-var systemUnderTest = require('../lib/groups/sympaTransformer')();
+var systemUnderTest = require('../lib/groups/sympaTransformer');
 
 describe('Sympa-Transformer ', function () {
 

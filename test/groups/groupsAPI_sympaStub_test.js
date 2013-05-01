@@ -1,7 +1,7 @@
-/*global describe, it */
+/*global describe, it, before, after */
 "use strict";
-var proxyquire = require('proxyquire'),
-  sinon = require('sinon');
+var conf = require('../configureForTest');
+var sinon = require('sinon');
 
 var expect = require('chai').expect;
 
@@ -11,51 +11,73 @@ var Craftsmanswap = new Group({id: 'craftsmanswap', longName: 'Gruppe A', descri
 var NeuePlattform = new Group({id: 'neueplattform', longName: 'Gruppe B', description: 'Dies ist Gruppe B.', type: 'Regionalgruppe'});
 var NonPersistentGroup = new Group({id: 'Group C', longName: 'Gruppe C', description: 'Dies ist Gruppe C.', type: 'Regionalgruppe'});
 
+/*
 var groupstoreStub = {
-  allGroups: function (callback) { callback(null, [Craftsmanswap, NeuePlattform]); },
-  getGroup: function (name, callback) {
-    if (name === 'craftsmanswap') {
-      callback(null, Craftsmanswap);
-    } else if (name === 'neueplattform') {
-      callback(null, NeuePlattform);
-    } else {
-      callback(null, null);
-    }
-  },
-  saveGroup: function (group, callback) { callback(null, group); },
+  allGroups: 
+  getGroup: ,
+  saveGroup: ,
   groupsByLists: function () {}
 };
 
 var groupsAPI = proxyquire('../../lib/groups/groupsAPI', {'./groupstore': groupstoreStub});
+*/
 
-var systemUnderTest = groupsAPI;
+var groupstore = conf.get('beans').get('groupstore');
+var systemUnderTest = conf.get('beans').get('groupsAPI');
 
 describe('Groups API with SympaStub', function () {
+  var saveGroupSpy;
+
+  before(function (done) {
+    sinon.stub(groupstore, 'allGroups', function (callback) { callback(null, [Craftsmanswap, NeuePlattform]); });
+    sinon.stub(groupstore, 'getGroup', function (name, callback) {
+      if (name === 'craftsmanswap') {
+        callback(null, Craftsmanswap);
+      } else if (name === 'neueplattform') {
+        callback(null, NeuePlattform);
+      } else {
+        callback(null, null);
+      }
+    });
+    saveGroupSpy = sinon.stub(groupstore, 'saveGroup', function (group, callback) { callback(null, group); });
+
+    done();
+  });
+
+  after(function (done) {
+    groupstore.allGroups.restore();
+    groupstore.getGroup.restore();
+    groupstore.saveGroup.restore();
+    done();
+  });
+
 
   it('returns two groups for a user who is mentioned in the stub', function (done) {
-    groupstoreStub.groupsByLists = function (lists, globalCallback) {
+    sinon.stub(groupstore, 'groupsByLists', function (lists, globalCallback) {
       globalCallback(null, [Craftsmanswap, NeuePlattform]);
-    };
+    });
 
     systemUnderTest.getSubscribedGroupsForUser('michael@schumacher.de', function (err, validLists) {
       expect(validLists).to.not.be.null;
       expect(validLists.length).to.equal(2);
       expect(validLists[0]).to.equal(Craftsmanswap);
       expect(validLists[1]).to.equal(NeuePlattform);
+      groupstore.groupsByLists.restore();
       done(err);
     });
   });
 
   it('returns two groups for the two lists defined in the stub', function (done) {
-    groupstoreStub.groupsByLists = function (lists, globalCallback) {
+    sinon.stub(groupstore, 'groupsByLists', function (lists, globalCallback) {
       globalCallback(null, [Craftsmanswap, NeuePlattform]);
-    };
+    });
 
     systemUnderTest.getAllAvailableGroups(function (err, lists) {
       expect(lists).to.not.be.null;
       expect(lists.length).to.equal(2);
       expect(lists[0]).to.equal(Craftsmanswap);
       expect(lists[1]).to.equal(NeuePlattform);
+      groupstore.groupsByLists.restore();
       done(err);
     });
   });
@@ -81,13 +103,10 @@ describe('Groups API with SympaStub', function () {
   });
 
   it('can handle the creation of a new group', function (done) {
-    var saveGroupSpy = sinon.spy(groupstoreStub, 'saveGroup');
 
     systemUnderTest.createOrSaveGroup(NonPersistentGroup, function (err, group) {
       expect(group).to.equal(NonPersistentGroup);
       expect(saveGroupSpy.calledOnce).to.be.true;
-
-      groupstoreStub.saveGroup.restore();
       done(err);
     });
   });

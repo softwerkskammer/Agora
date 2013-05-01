@@ -9,6 +9,7 @@
    "memberstore": {"module": "./lib/members/memberstore"},
 
 
+   "sympa": {"module": "./lib/groups/sympa"},
    "sympaStub": {"module": "./lib/groups/sympaStub"},
    "groupsPersistence": {"module": "./lib/persistence/persistence",
                         "constructorArgs": {

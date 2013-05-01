@@ -1,6 +1,6 @@
 /*global describe, it*/
 "use strict";
-var proxyquire = require('proxyquire');
+var conf = require('../configureForTest');
 var sinon = require('sinon');
 
 var expect = require('chai').expect;
@@ -11,6 +11,7 @@ var GroupA = new Group({id: 'GroupA', longName: 'Gruppe A', description: 'Dies i
 var GroupB = new Group({id: 'GroupB', longName: 'Gruppe B', description: 'Dies ist Gruppe B.', type: 'Regionalgruppe'});
 var NonPersistentGroup = new Group({id: 'Group C', longName: 'Gruppe C', description: 'Dies ist Gruppe C.', type: 'Regionalgruppe'});
 
+/*
 var groupstoreStub = {
   allGroups: function (callback) { callback(null, [GroupA, GroupB]); },
   getGroup: function (name, callback) {
@@ -37,16 +38,25 @@ var groupsAPI = proxyquire('../../lib/groups/groupsAPI', {
   './groupstore': groupstoreStub,
   './sympaStub': function () { return sympaStub; }
 });
+*/
 
-var systemUnderTest = groupsAPI;
+var groupstore = conf.get('beans').get('groupstore');
+var sympa = conf.get('beans').get('sympaStub');
+var systemUnderTest = conf.get('beans').get('groupsAPI');
 
 describe('Groups API (getSubscribedGroupsForUser)', function () {
 
+  afterEach(function (done) {
+    groupstore.groupsByLists.restore();
+    sympa.getSubscribedListsForUser.restore();
+    done();
+  });
+
   it('returns an empty array of groups for a user who is not subscribed anywhere', function (done) {
-    groupstoreStub.groupsByLists = function (lists, globalCallback) {
+    sinon.stub(groupstore, 'groupsByLists', function (lists, globalCallback) {
       globalCallback(null, []);
-    };
-    sympaStub.getSubscribedListsForUser = function (email, callback) { callback(null, []); };
+    });
+    sinon.stub(sympa, 'getSubscribedListsForUser', function (email, callback) { callback(null, []); });
 
     systemUnderTest.getSubscribedGroupsForUser('me@bla.com', function (err, validLists) {
       expect(validLists).to.not.be.null;
@@ -56,10 +66,10 @@ describe('Groups API (getSubscribedGroupsForUser)', function () {
   });
 
   it('returns one group for a user who is subscribed to one list', function (done) {
-    groupstoreStub.groupsByLists = function (lists, globalCallback) {
+    sinon.stub(groupstore, 'groupsByLists', function (lists, globalCallback) {
       globalCallback(null, [GroupA]);
-    };
-    sympaStub.getSubscribedListsForUser = function (email, callback) { callback(null, ['GroupA']); };
+    });
+    sinon.stub(sympa, 'getSubscribedListsForUser', function (email, callback) { callback(null, ['GroupA']); });
 
     systemUnderTest.getSubscribedGroupsForUser('GroupAuser@softwerkskammer.de', function (err, validLists) {
       expect(validLists).to.not.be.null;
@@ -70,12 +80,12 @@ describe('Groups API (getSubscribedGroupsForUser)', function () {
   });
 
   it('returns two groups for a user who is subscribed to two lists', function (done) {
-    groupstoreStub.groupsByLists = function (lists, globalCallback) {
+    sinon.stub(groupstore, 'groupsByLists', function (lists, globalCallback) {
       globalCallback(null, [GroupA, GroupB]);
-    };
-    sympaStub.getSubscribedListsForUser = function (email, callback) {
+    });
+    sinon.stub(sympa, 'getSubscribedListsForUser', function (email, callback) {
       callback(null, ['GroupA', 'GroupB']);
-    };
+    });
 
     systemUnderTest.getSubscribedGroupsForUser('GroupAandBuser@softwerkskammer.de', function (err, validLists) {
       expect(validLists).to.not.be.null;
@@ -88,6 +98,13 @@ describe('Groups API (getSubscribedGroupsForUser)', function () {
 });
 
 describe('Groups API (getAllAvailableGroups)', function () {
+
+  afterEach(function (done) {
+    groupstore.groupsByLists.restore();
+    sympa.getSubscribedListsForUser.restore();
+    done();
+  });
+
 
   it('returns an empty array of groups if there are no lists defined in sympa', function (done) {
     groupstoreStub.groupsByLists = function (lists, globalCallback) {
