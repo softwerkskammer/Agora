@@ -35,11 +35,9 @@ function expressViewHelper(req, res, next) {
   next();
 }
 
-
-
 module.exports = function (conf) {
-  var authentication = require('./lib/authentication'),
-    members = require('./lib/members')();
+  var authentication = require('./lib/authentication');
+  var members = require('./lib/members')();
 
   // initialize winston and two concrete loggers
   require('winston-config').winstonConfigFromFile(__dirname + '/./config/winston-config.json');
