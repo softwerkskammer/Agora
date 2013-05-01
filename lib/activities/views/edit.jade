@@ -6,7 +6,6 @@ block scripts
   script(src="/clientscripts/jquery.validate-1.11.1.js")
   script(src="/clientscripts/messages_de.js")
   script(src="/clientscripts/methods_de.js")
-  script(src="/clientscripts/bootstrap-datepicker.de.js")
   script(src="/clientscripts/bootstrap-timepicker.js")
   script(src="/clientscripts/initPickers.js")
   script(src="/clientscripts/check-activityform.js")
@@ -20,9 +19,10 @@ block content
       mixin hidden('id', activity)
     mixin hidden('previousUrl', activity, 'url')
     fieldset
-      .span12
-        legend
-          | Aktivität
+      .row-fluid
+        .span12
+          legend
+            | Aktivität
       .row-fluid
         .span6
           mixin text('title', 'Titel', activity)
