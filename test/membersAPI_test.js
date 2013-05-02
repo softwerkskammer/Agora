@@ -3,7 +3,7 @@
 var expect = require('chai').expect;
 var sinon = require('sinon');
 var conf = require('./configureForTest');
-var Member = require('../lib/members/member');
+var Member = conf.get('beans').get('member');
 var dummymember = new Member({object: {id: 'id', nickname: 'hada'}});
 
 var memberstore = conf.get('beans').get('memberstore');

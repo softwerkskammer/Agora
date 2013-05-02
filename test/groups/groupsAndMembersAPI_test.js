@@ -5,14 +5,14 @@ var conf = require('../configureForTest');
 
 var expect = require('chai').expect;
 
-var Member = require('../../lib/members/member');
+var Member = conf.get('beans').get('member');
 
 var dummymember = new Member();
 dummymember.id = 'hada';
 var dummymember2 = new Member();
 dummymember2.id = 'hada2';
 
-var Group = require('../../lib/groups/group');
+var Group = conf.get('beans').get('group');
 
 var GroupA = new Group({id: 'GroupA', longName: 'Gruppe A', description: 'Dies ist Gruppe A.', type: 'Themengruppe'});
 var GroupB = new Group({id: 'GroupB', longName: 'Gruppe B', description: 'Dies ist Gruppe B.', type: 'Regionalgruppe'});

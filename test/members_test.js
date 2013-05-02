@@ -7,12 +7,12 @@ var sinon = require('sinon');
 
 require('chai').should();
 
-var Member = require('../lib/members/member');
+var Member = conf.get('beans').get('member');
 var membersAPI = conf.get('beans').get('membersAPI');
 var groupsAPI = conf.get('beans').get('groupsAPI');
 var dummymember = new Member({object: {nickname: 'hada', email: 'a@b.c', site: 'http://my.blog', firstname: 'Hans', lastname: 'Dampf'}});
 
-var app = conf.get('beans').get('membersApp')().create(express());
+var app = conf.get('beans').get('membersApp').create(express());
 
 var allMembers;
 var getMember;

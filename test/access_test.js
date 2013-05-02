@@ -5,10 +5,9 @@ var express = require('express');
 var proxyquire = require('proxyquire');
 var conf = require('./configureForTest');
 var sinon = require('sinon');
-require('./configureForTest');
 require('chai').should();
 
-var Member = require('../lib/members/member');
+var Member = conf.get('beans').get('member');
 var membersAPI = conf.get('beans').get('membersAPI');
 var authenticationState = {};
 
@@ -26,9 +25,9 @@ var appUnderTest = express();
 appUnderTest.configure(function () {
   appUnderTest.use(configureAuhenticatedUser);
   appUnderTest.use(authenticationAppFactory.secureByLogin);
-  appUnderTest.use(memberAppFactory().newUserMustFillInRegistration);
+  appUnderTest.use(memberAppFactory.newUserMustFillInRegistration);
 });
-appUnderTest.use('/members/', memberAppFactory().create(express()));
+appUnderTest.use('/members/', memberAppFactory.create(express()));
 
 describe('member redirects', function () {
 

@@ -5,7 +5,7 @@ var sinon = require('sinon');
 
 var expect = require('chai').expect;
 
-var Group = require('../../lib/groups/group');
+var Group = conf.get('beans').get('group');
 
 var Craftsmanswap = new Group({id: 'craftsmanswap', longName: 'Gruppe A', description: 'Dies ist Gruppe A.', type: 'Themengruppe'});
 var NeuePlattform = new Group({id: 'neueplattform', longName: 'Gruppe B', description: 'Dies ist Gruppe B.', type: 'Regionalgruppe'});

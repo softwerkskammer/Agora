@@ -3,6 +3,7 @@
   "authenticationApp": {"module": "./lib/authentication"},
   "groupsApp": {"module": "./lib/groups"},
   "membersApp": {"module": "./lib/members"},
+  "siteApp": {"module": "./lib/site"},
 
   "groupsAndMembersAPI": {"module": "./lib/groupsAndMembers/groupsAndMembersAPI"},
   "groupsAPI": {"module": "./lib/groups/groupsAPI"},

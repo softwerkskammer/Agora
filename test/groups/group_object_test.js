@@ -1,7 +1,9 @@
 /*global describe, it */
 "use strict";
 
-var Group = require('../../lib/groups/group');
+var conf = require('../configureForTest');
+
+var Group = conf.get('beans').get('group');
 var expect = require('chai').expect;
 
 describe('Group object', function () {
