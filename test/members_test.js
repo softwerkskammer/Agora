@@ -3,7 +3,6 @@
 var request = require('supertest');
 var express = require('express');
 var conf = require('./configureForTest');
-
 var sinon = require('sinon');
 
 require('chai').should();
