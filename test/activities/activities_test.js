@@ -3,79 +3,60 @@
 var request = require('supertest');
 var express = require('express');
 var sinon = require('sinon');
-var proxyquire = require('proxyquire');
 require('../configureForTest');
 
-require('chai').should();
+var expect = require('chai').expect;
+
+var conf = require('../configureForTest');
 
 var Activity = require('../../lib/activities/activity');
+var dummyActivity = new Activity({title: 'title', description: 'description', assignedGroup: 'assignedGroup',
+  location: 'location', direction: 'direction', startDate: 'startDate', startTime: 'startTime', url: 'url'});
 
-var dummyActivity = new Activity(
-  {title: 'title',
-    description: 'description',
-    assignedGroup: 'assignedGroup',
-    location: 'location',
-    direction: 'direction',
-    startDate: 'startDate',
-    startTime: 'startTime',
-    url: 'url'
-  });
+var activitiesAPI = conf.get('beans').get('activitiesAPI');
+var groupsAPI = conf.get('beans').get('groupsAPI');
 
-var activitiesAPIStub = {
-  getActivity: function (url, callback) {
-    callback(null, (url === 'url') ? dummyActivity : null);
-  },
-  allActivities: function (callback) {
-    callback(null, [dummyActivity]);
-  }
-};
+var app = conf.get('beans').get('activitiesApp')(express());
 
-var groupsAPIStub = {
-  getAllAvailableGroups: function (callback) { callback(null, []); }
-};
-
-var activityApp = proxyquire('../../lib/activities', {
-  './activitiesAPI': activitiesAPIStub,
-  '../groups/groupsAPI': groupsAPIStub
-});
-
-var app = activityApp(express());
-
-var validation = require('../../lib/commons/validation');
+var validation = conf.get('beans').get('validation');
 
 describe('Activity application', function () {
+  var allActivities;
+  var getActivity;
+
+  beforeEach(function (done) {
+    allActivities = sinon.stub(activitiesAPI, 'allActivities', function (callback) {callback(null, [dummyActivity]); });
+    getActivity = sinon.stub(activitiesAPI, 'getActivity', function (url, callback) {callback(null, (url === 'url') ? dummyActivity : null); });
+    sinon.stub(groupsAPI, 'getAllAvailableGroups', function (callback) { callback(null, []); });
+    done();
+  });
+
+  afterEach(function (done) {
+    activitiesAPI.allActivities.restore();
+    activitiesAPI.getActivity.restore();
+    groupsAPI.getAllAvailableGroups.restore();
+    done();
+  });
 
   it('object is not valid, if the required fields are not filled', function () {
-    var tmpActivity = new Activity(
-      {description: 'description',
-        assignedGroup: 'assignedGroup',
-        location: 'location',
-        direction: 'direction',
-        startDate: '2012-11-11',
-        startTime: 'startTime'
-      });
-    validation.isValidActivity(tmpActivity).should.equal.false;
+    var tmpActivity = new Activity({description: 'description', assignedGroup: 'assignedGroup', location: 'location',
+      direction: 'direction', startDate: '2012-11-11', startTime: 'startTime' });
+    expect(validation.isValidActivity(tmpActivity)).to.equal.false;
   });
 
   it('shows the list of activities as retrieved from the store', function (done) {
-    var allActivities = sinon.spy(activitiesAPIStub, 'allActivities');
-
     request(app)
       .get('/')
       .expect(200)
       .expect(/Aktivitäten/)
       .expect(/href="url"/)
       .expect(/title/, function (err) {
-        allActivities.calledOnce.should.be.ok;
-        activitiesAPIStub.allActivities.restore();
+        expect(allActivities.calledOnce).to.be.ok;
         done(err);
       });
-
-    //    activitiesAPIStub.allActivities.restore();
   });
 
   it('shows the details of one activity as retrieved from the store', function (done) {
-    var getActivity = sinon.spy(activitiesAPIStub, 'getActivity');
     var url = 'url';
 
     request(app)
@@ -83,8 +64,7 @@ describe('Activity application', function () {
       .expect(200)
       .expect(/<small>startDate/)
       .expect(/<h2>title/, function (err) {
-        getActivity.calledWith(url).should.be.true;
-        activitiesAPIStub.getActivity.restore();
+        expect(getActivity.calledWith(url)).to.be.true;
         done(err);
       });
   });

@@ -1,8 +1,9 @@
 /*global describe, it */
 "use strict";
+var conf = require('nconf');
 var expect = require('chai').expect;
 
-var Member = require('../../lib/members/member');
+var Member = conf.get('beans').get('member');
 
 describe('Member initial filling', function () {
 

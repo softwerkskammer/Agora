@@ -1,29 +1,28 @@
-/*global describe, it */
+/*global describe, it, before, after */
 "use strict";
+var conf = require('../configureForTest');
+var sinon = require('sinon');
 require('chai').should();
 
-var proxyquire = require('proxyquire'),
-  sinon = require('sinon');
+var persistence = conf.get('beans').get('groupsPersistence');
 
-var persistenceStub = {
-  save: function () {
-  },
-  getById: function () {
-  },
-  getByField: function () {
-  },
-  list: function () {
-  }
-};
-
-var store = proxyquire('../../lib/groups/groupstore.js', {'../persistence/persistence': function () {
-  return persistenceStub;
-}});
+var store = conf.get('beans').get('groupstore');
 
 describe('Groups store', function () {
+
   var sampleGroup = {id: 'groupA'};
-  var getById = sinon.stub(persistenceStub, 'getById');
-  getById.callsArgWith(1, null, sampleGroup);
+  var getById;
+
+  before(function (done) {
+    getById = sinon.stub(persistence, 'getById');
+    getById.callsArgWith(1, null, sampleGroup);
+    done();
+  });
+
+  after(function (done) {
+    persistence.getById.restore();
+    done();
+  });
 
   it('retrieves groupnames given the intended case', function (done) {
     var queriedId = 'groupA';

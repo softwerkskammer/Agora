@@ -36,8 +36,8 @@ function expressViewHelper(req, res, next) {
 }
 
 module.exports = function (conf) {
-  var authentication = require('./lib/authentication');
-  var members = require('./lib/members')();
+  var authentication = conf.get('beans').get('authenticationApp');
+  var members = conf.get('beans').get('membersApp');
 
   // initialize winston and two concrete loggers
   require('winston-config').winstonConfigFromFile(__dirname + '/./config/winston-config.json');
@@ -83,11 +83,11 @@ module.exports = function (conf) {
         app.use(express.static(path.join(__dirname, 'public')));
       });
 
-      app.use('/', require('./lib/site'));
-      useApp(app, 'administration', conf, require('./lib/administration'));
+      app.use('/', conf.get('beans').get('siteApp'));
+      useApp(app, 'administration', conf, conf.get('beans').get('administrationApp'));
       useApp(app, 'activities', conf, require('./lib/activities'));
       useApp(app, 'members', conf, members.create);
-      useApp(app, 'groups', conf, require('./lib/groups'));
+      useApp(app, 'groups', conf, conf.get('beans').get('groupsApp'));
       useApp(app, 'announcements', conf, require('./lib/announcements'));
       useApp(app, 'auth', conf, authentication.initialize);
       useApp(app, 'filebrowser', conf, require('./lib/filebrowser'));
