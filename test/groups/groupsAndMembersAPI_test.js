@@ -1,6 +1,7 @@
 /*global describe, it */
 "use strict";
-var proxyquire = require('proxyquire');
+var sinon = require('sinon');
+var conf = require('../configureForTest');
 
 var expect = require('chai').expect;
 
@@ -16,35 +17,27 @@ var Group = require('../../lib/groups/group');
 var GroupA = new Group({id: 'GroupA', longName: 'Gruppe A', description: 'Dies ist Gruppe A.', type: 'Themengruppe'});
 var GroupB = new Group({id: 'GroupB', longName: 'Gruppe B', description: 'Dies ist Gruppe B.', type: 'Regionalgruppe'});
 
-var groupsAPIStub = {
-  getSubscribedGroupsForUser: function () {},
-  getSympaUsersOfList: function (err, callback) { callback(null, []); },
-  getGroup: function (groupname, callback) { callback(null, null); },
-  filterValidElements: function (elems) { return elems; }
-};
 
-var membersAPIStub = {
-  getMember: function () {},
-  getMemberForId: function () {},
-  getMembersForEMails: function () {}
-};
+var membersAPI = conf.get('beans').get('membersAPI');
+var groupsAPI = conf.get('beans').get('groupsAPI');
 
-var groupsAndMembersAPI = proxyquire('../../lib/groupsAndMembers/groupsAndMembersAPI', {
-  '../groups/groupsAPI': groupsAPIStub,
-  '../members/membersAPI': membersAPIStub
-});
+var systemUnderTest = conf.get('beans').get('groupsAndMembersAPI');
 
-var systemUnderTest = groupsAndMembersAPI;   // empty config -> sympaStub is required
+describe('Groups and Members API (getUserWithHisGroups)', function () {
 
-describe('Groups and Members API', function () {
+  afterEach(function (done) {
+    groupsAPI.getSubscribedGroupsForUser.restore();
+    membersAPI.getMember.restore();
+    done();
+  });
 
   it('returns null as member and no groups when there is no member for the given nickname', function (done) {
-    membersAPIStub.getMember = function (nickname, callback) {
+    sinon.stub(membersAPI, 'getMember', function (nickname, callback) {
       callback(null, null);
-    };
-    groupsAPIStub.getSubscribedGroupsForUser = function (userMail, globalCallback) {
+    });
+    sinon.stub(groupsAPI, 'getSubscribedGroupsForUser', function (userMail, globalCallback) {
       globalCallback(null, []);
-    };
+    });
 
     systemUnderTest.getUserWithHisGroups('nickname', function (err, member, subscribedLists) {
       expect(member).to.be.null;
@@ -55,12 +48,12 @@ describe('Groups and Members API', function () {
   });
 
   it('returns the member and his groups when there is a member for the given nickname', function (done) {
-    membersAPIStub.getMember = function (nickname, callback) {
+    sinon.stub(membersAPI, 'getMember', function (nickname, callback) {
       callback(null, dummymember);
-    };
-    groupsAPIStub.getSubscribedGroupsForUser = function (userMail, globalCallback) {
+    });
+    sinon.stub(groupsAPI, 'getSubscribedGroupsForUser', function (userMail, globalCallback) {
       globalCallback(null, [GroupA, GroupB]);
-    };
+    });
 
     systemUnderTest.getUserWithHisGroups('nickname', function (err, member, subscribedGroups) {
       expect(member).to.equal(dummymember);
@@ -71,14 +64,22 @@ describe('Groups and Members API', function () {
       done(err);
     });
   });
+});
 
+describe('Groups and Members API (getUserWithHisGroupsById)', function () {
+
+  afterEach(function (done) {
+    groupsAPI.getSubscribedGroupsForUser.restore();
+    membersAPI.getMemberForId.restore();
+    done();
+  });
   it('returns the member (by id) and his groups when there is a member for the given nickname', function (done) {
-    membersAPIStub.getMemberForId = function (nickname, callback) {
+    sinon.stub(membersAPI, 'getMemberForId', function (nickname, callback) {
       callback(null, dummymember);
-    };
-    groupsAPIStub.getSubscribedGroupsForUser = function (userMail, globalCallback) {
+    });
+    sinon.stub(groupsAPI, 'getSubscribedGroupsForUser', function (userMail, globalCallback) {
       globalCallback(null, [GroupA, GroupB]);
-    };
+    });
 
     systemUnderTest.getUserWithHisGroupsById('hada', function (err, member, subscribedGroups) {
       expect(member).to.equal(dummymember);
@@ -89,9 +90,21 @@ describe('Groups and Members API', function () {
       done(err);
     });
   });
+});
+
+describe('Groups and Members API (getGroupAndUsersOfList)', function () {
+
+  afterEach(function (done) {
+    groupsAPI.getSympaUsersOfList.restore();
+    groupsAPI.getGroup.restore();
+    membersAPI.getMembersForEMails.restore();
+    done();
+  });
 
   it('returns null as group and an empty list of subscribed users when there is no group and no sympa-list', function (done) {
-    membersAPIStub.getMembersForEMails = function (member, callback) { callback(); };
+    sinon.stub(membersAPI, 'getMembersForEMails', function (member, callback) { callback(); });
+    sinon.stub(groupsAPI, 'getSympaUsersOfList', function (err, callback) { callback(null, []); });
+    sinon.stub(groupsAPI, 'getGroup', function (groupname, callback) { callback(null, null); });
 
     systemUnderTest.getGroupAndUsersOfList('unbekannteListe', function (err, group, users) {
       expect(group).to.be.null;
@@ -102,12 +115,13 @@ describe('Groups and Members API', function () {
   });
 
   it('returns null as group and an empty list of subscribed users when there is no group but a sympa-list', function (done) {
-    groupsAPIStub.getSympaUsersOfList = function (err, callback) {
+    sinon.stub(groupsAPI, 'getSympaUsersOfList', function (err, callback) {
       callback(null, ['user1@mail1.com', 'user2@mail2.com']);
-    };
-    membersAPIStub.getMembersForEMails = function (member, callback) {
+    });
+    sinon.stub(membersAPI, 'getMembersForEMails', function (member, callback) {
       callback(null, [dummymember, dummymember2]);
-    };
+    });
+    sinon.stub(groupsAPI, 'getGroup', function (groupname, callback) { callback(null, null); });
 
     systemUnderTest.getGroupAndUsersOfList('sympaListWithoutGroup', function (err, group, users) {
       expect(group).to.be.null;
@@ -118,12 +132,13 @@ describe('Groups and Members API', function () {
   });
 
   it('returns the group with the given name and an empty list of subscribed users when there is no sympa-list or when there are no subscribers', function (done) {
-    groupsAPIStub.getGroup = function (groupname, callback) {
+    sinon.stub(groupsAPI, 'getSympaUsersOfList', function (err, callback) { callback(null, []); });
+    sinon.stub(groupsAPI, 'getGroup', function (groupname, callback) {
       callback(null, GroupA);
-    };
-    membersAPIStub.getMembersForEMails = function (member, callback) {
+    });
+    sinon.stub(membersAPI, 'getMembersForEMails', function (member, callback) {
       callback(null, []);
-    };
+    });
 
     systemUnderTest.getGroupAndUsersOfList('GroupA', function (err, group, users) {
       expect(group).to.equal(GroupA);
@@ -132,6 +147,10 @@ describe('Groups and Members API', function () {
       done(err);
     });
   });
+});
+
+
+describe('Groups and Members API (userIsInMemberList)', function () {
 
   it('returns false if the user id is undefined', function (done) {
     var result = systemUnderTest.userIsInMemberList(undefined, [dummymember]);
@@ -160,6 +179,4 @@ describe('Groups and Members API', function () {
     expect(result).to.be.true;
     done();
   });
-
-
 });
