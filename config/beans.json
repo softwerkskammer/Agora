@@ -3,13 +3,16 @@
   "authenticationApp": {"module": "./lib/authentication"},
   "groupsApp": {"module": "./lib/groups"},
   "membersApp": {"module": "./lib/members"},
+  "activitiesApp": {"module": "./lib/activities"},
 
   "groupsAndMembersAPI": {"module": "./lib/groupsAndMembers/groupsAndMembersAPI"},
   "groupsAPI": {"module": "./lib/groups/groupsAPI"},
   "membersAPI": {"module": "./lib/members/membersAPI"},
+  "activitiesAPI": {"module": "./lib/activities/activitiesAPI"},
 
   "groupstore": {"module": "./lib/groups/groupstore"},
   "memberstore": {"module": "./lib/members/memberstore"},
+  "activitystore": {"module": "./lib/activities/activitystore"},
 
 
   "sympa": {"module": "./lib/groups/sympa"},
@@ -21,6 +24,10 @@
   "membersPersistence": {"module": "./lib/persistence/persistence",
                         "constructorArgs": {
                              "connectionName": "memberstore"
+                       }},
+  "activitiesPersistence": {"module": "./lib/persistence/persistence",
+                        "constructorArgs": {
+                             "connectionName": "activitystore"
                        }},
 
   "group": {"module": "./lib/groups/group"},
