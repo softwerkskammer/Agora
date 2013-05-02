@@ -5,39 +5,40 @@ block title
     | #{group.longName}
 
 block content
-  .span12
-    .page-header
-      h2 #{group.longName}&nbsp; 
-        small #{group.type} 
-        if (userIsRegistered && user.member.isAdmin)
-          a.pull-right.btn(href="/groups/edit/#{group.id}"): i.icon-edit
-    p
-      strong
-        | Adresse:
-      | 
-      a(href="mailto:#{group.id}@softwerkskammer.de")
-        | #{group.id}@softwerkskammer.de
-    p
-      strong
-        | Beschreibung:
-      |  !{group.descriptionHTML()}
-    p
-      strong
-        | Präfix für Emails:
-      |  #{group.emailPrefix}
-
-    h3 Mitglieder der Gruppe:
-    | Diese Gruppe hat
-    - if (users.length === 1)
-      |  ein Mitglied.
-    - else if (users.length === 0)
-      |  keine Mitglieder.
-    - else
-      |  #{users.length} Mitglieder.
-    - if (userIsRegistered)
-      mixin memberlist(users)
+  .row-fluid
+    .span12
+      .page-header
+        h2 #{group.longName}&nbsp; 
+          small #{group.type} 
+          if (userIsRegistered && user.member.isAdmin)
+            a.pull-right.btn(href="/groups/edit/#{group.id}"): i.icon-edit
+      p
+        strong
+          | Adresse:
+        | 
+        a(href="mailto:#{group.id}@softwerkskammer.de")
+          | #{group.id}@softwerkskammer.de
+      p
+        strong
+          | Beschreibung:
+        |  !{group.descriptionHTML()}
+      p
+        strong
+          | Präfix für Emails:
+        |  #{group.emailPrefix}
+  
+      h3 Mitglieder der Gruppe:
+      | Diese Gruppe hat
+      - if (users.length === 1)
+        |  ein Mitglied.
+      - else if (users.length === 0)
+        |  keine Mitglieder.
+      - else
+        |  #{users.length} Mitglieder.
       - if (userIsRegistered)
-        - if (userIsGroupMember)
-          a.btn.btn-primary(href="unsubscribe/#{group.id}") Gruppe verlassen
-        - else
-          a.btn.btn-primary(href="subscribe/#{group.id}") Gruppe beitreten
+        mixin memberlist(users)
+        - if (userIsRegistered)
+          - if (userIsGroupMember)
+            a.btn.btn-primary(href="unsubscribe/#{group.id}") Gruppe verlassen
+          - else
+            a.btn.btn-primary(href="subscribe/#{group.id}") Gruppe beitreten

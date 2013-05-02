@@ -16,53 +16,54 @@ block title
     | anlegen
 
 block content
-  .span12
-    legend
-      | Profil&nbsp;
-      if user.member
-        | bearbeiten für Mitglied "#{member.nickname}"
+  form(id='memberform', action='/members/submit',method='post')
+    fieldset
+      .row-fluid
+        .span12
+          legend
+            | Profil&nbsp;
+            if user.member
+              | bearbeiten für Mitglied "#{member.nickname}"
+            else
+              | anlegen
+      .row-fluid
+        .span6
+          if (!user.member)
+            mixin text('nickname', 'Nickname', member)
+          else
+            mixin hidden('id', member)
+            mixin hidden('nickname', member)
+          mixin text('firstname', 'Vorname', member)
+          mixin text('lastname', 'Nachname', member)
+          mixin text('email', 'Email', member)
+          mixin twitter('twitter', 'Twitter', member)
+        .span6
+          mixin text('location', 'Ort / Region', member)
+          mixin text('profession', 'Beruf', member)
+          mixin text('interests', 'Interessenschwerpunkte', member)
+          mixin text('site', 'Website / Blog', member)
+          if (user.member && user.member.isAdmin)
+            mixin checkbox('isAdmin', 'Administrator', !!member.isAdmin)
+    
+  if !user.member
+    .row-fluid
+      .span12
+        mixin textarea('reference', 'Wie ich von der Softwerkskammer erfahren habe', member)
+  else
+    mixin hidden('reference', member)
+    
+  .row-fluid
+    .span6
+      legend Gruppenmitgliedschaft
+      .control-group
+        each markedGroup in markedGroups
+          mixin checkbox('newSubscriptions', markedGroup.group.longName, markedGroup.selected, markedGroup.group.id)
+  .row-fluid
+    .span12
+      button.btn.btn-primary.pull-right(type="submit") Speichern
+      if (user.member)
+        a.btn.pull-right(href="javascript:history.back()", type="cancel") Zurück
+        if (user.member.id === member.id)
+          a.btn.pull-right(href="/auth/logout", type="cancel") Abmelden
       else
-        | anlegen
-    form(id='memberform', action='/members/submit',method='post')
-      fieldset
-        .row-fluid
-          .span6
-            if (!user.member)
-              mixin text('nickname', 'Nickname', member)
-            else
-              mixin hidden('id', member)
-              mixin hidden('nickname', member)
-            mixin text('firstname', 'Vorname', member)
-            mixin text('lastname', 'Nachname', member)
-            mixin text('email', 'Email', member)
-            mixin twitter('twitter', 'Twitter', member)
-          .span6
-            mixin text('location', 'Ort / Region', member)
-            mixin text('profession', 'Beruf', member)
-            mixin text('interests', 'Interessenschwerpunkte', member)
-            mixin text('site', 'Website / Blog', member)
-            if (user.member && user.member.isAdmin)
-              mixin checkbox('isAdmin', 'Administrator', !!member.isAdmin)
-
-        if !user.member
-          .row-fluid
-            .span12
-              mixin textarea('reference', 'Wie ich von der Softwerkskammer erfahren habe', member)
-        else
-          mixin hidden('reference', member)
-
-        .row-fluid
-          .span6
-            legend Gruppenmitgliedschaft
-            .control-group
-              each markedGroup in markedGroups
-                mixin checkbox('newSubscriptions', markedGroup.group.longName, markedGroup.selected, markedGroup.group.id)
-        .row-fluid
-          .span12
-            button.btn.btn-primary.pull-right(type="submit") Speichern
-            if (user.member)
-              a.btn.pull-right(href="javascript:history.back()", type="cancel") Zurück
-              if (user.member.id === member.id)
-                a.btn.pull-right(href="/auth/logout", type="cancel") Abmelden
-            else
-              a.btn.pull-right(href="/auth/logout", type="cancel") Abbrechen
+        a.btn.pull-right(href="/auth/logout", type="cancel") Abbrechen

@@ -18,40 +18,44 @@ block title
 block content
   form(id='groupform', action='/groups/submit', method='post')
     fieldset
-      .span6
-        legend
-          | Gruppe
-          if (group.isValid())
-            |  "#{group.id}" bearbeiten
-          else
-            |  anlegen
-        if (group.isValid())
-          input#id(type='hidden', name='id', value=group['id'])
-        else
-          mixin text('id', 'Name', group)
-        mixin text('longName', 'Titel', group)
-        mixin textarea('description', 'Beschreibung', group)
-        if (!group.isValid())
-          mixin text('emailPrefix', 'Präfix für Emails', group)
-        else
-          input#emailPrefix(type='hidden', name='emailPrefix', value=group['emailPrefix'])
-          p
-            strong
-              | Präfix für Emails:
-            |  #{group.emailPrefix}
-
-        .control-group
-          label.control-label(for="type") Gruppenart:
-          select#type.input-block-level.input-xlarge(name="type")
-            for item in group.allTypes()
-              option(selected=group.type === item) #{item}
-        .row-fluid
-          .span12
-            if group.isValid()
-              button.btn.btn-primary.pull-right(type="submit") Speichern
+      .row-fluid
+        .span12
+          legend
+            | Gruppe
+            if (group.isValid())
+              |  "#{group.id}" bearbeiten
             else
-              button.btn.btn-primary.pull-right(type="submit") Anlegen
-            a.btn.pull-right(href="javascript:history.back()", type="cancel") Zurück
+              |  anlegen
+      .row-fluid
+        .span6
+          if (group.isValid())
+            input#id(type='hidden', name='id', value=group['id'])
+          else
+            mixin text('id', 'Name', group)
+          mixin text('longName', 'Titel', group)
+          if (!group.isValid())
+            mixin text('emailPrefix', 'Präfix für Emails', group)
+          else
+            input#emailPrefix(type='hidden', name='emailPrefix', value=group['emailPrefix'])
+            p
+              strong
+                | Präfix für Emails:
+              |  #{group.emailPrefix}
+  
+          .control-group
+            label.control-label(for="type") Gruppenart:
+            select#type.input-block-level.input-xlarge(name="type")
+              for item in group.allTypes()
+                option(selected=group.type === item) #{item}
+        .span6
+          mixin textarea('description', 'Beschreibung', group)
+      .row-fluid
+        .span12
+          if group.isValid()
+            button.btn.btn-primary.pull-right(type="submit") Speichern
+          else
+            button.btn.btn-primary.pull-right(type="submit") Anlegen
+          a.btn.pull-right(href="javascript:history.back()", type="cancel") Zurück
 
 block scripts
   script(src="/clientscripts/jquery.validate-1.11.1.js")

@@ -4,15 +4,16 @@ block title
   | Aktivitäten
 
 block content
-  .span12
-    .page-header
-      h2 Aktivitäten&nbsp;
-        small #{range}
-        if typeof(user) !== 'undefined' && user.member.isAdmin
-          a.pull-right.btn(href="new/"): i.icon-file
-    dl.dl-horizontal
-      for activity in activities
-        dt
-          | #{activity.startDate} 
-        dd: a(href='#{activity.url}') #{activity.title}
-          | in #{activity.location} (#{activity.groupName(groups)})
+  .row-fluid
+    .span12
+      .page-header
+        h2 Aktivitäten&nbsp;
+          small #{range}
+          if typeof(user) !== 'undefined' && user.member.isAdmin
+            a.pull-right.btn(href="new/"): i.icon-file
+      dl.dl-horizontal
+        for activity in activities
+          dt
+            | #{activity.startDate} 
+          dd: a(href='#{activity.url}') #{activity.title}
+            | in #{activity.location} (#{activity.groupName(groups)})
