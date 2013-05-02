@@ -78,6 +78,7 @@ module.exports = function () {
       app.configure('development', function () {
         // Handle 404
         app.use(function (req, res) {
+          appLogger.error('404 - requested url was ' + req.url);
           res.render('errorPages/404.jade');
         });
 
