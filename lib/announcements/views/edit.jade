@@ -1,0 +1,38 @@
+extends ../../../views/layout
+
+include  ../../../views/formComponents
+
+block scripts
+  script(src="/clientscripts/jquery.validate-1.11.1.js")
+  script(src="/clientscripts/messages_de.js")
+  script(src="/clientscripts/methods_de.js")
+  script(src="/clientscripts/bootstrap-timepicker.js")
+  script(src="/clientscripts/initPickers.js")
+  script(src="/clientscripts/check-announcementform.js")
+
+block title
+  | Aktivität
+
+block content
+  form(id='announcementform', action='/announcements/submit', method='post')
+    if (announcement.id)
+      mixin hidden('id', announcement)
+    mixin hidden('previousUrl', announcement, 'url')
+    fieldset
+      .row-fluid
+        .span12
+          legend
+            | Nachricht
+      .row-fluid
+        .span6
+          mixin text('title', 'Titel', announcement)
+          mixin text('url', 'URL', announcement)
+          // TODO: url automatisch aus dem title bilden lassen, z. B. Leerzeichen in Bindestriche umwandeln, alles klein schreiben etc.
+          mixin text('shortDescription', 'Kurzbeschreibung', announcement)
+          mixin text('author', 'Autor', announcement)
+          mixin textarea('text', 'Text der Nachricht', announcement)
+          mixin date('thruDate', 'thruDate', announcement)
+      .row-fluid
+        .span12
+          button.btn.btn-primary.pull-right(type="/announcements/submit") Speichern
+          a.btn.pull-right(href="javascript:history.back()", type="cancel") Zurück
