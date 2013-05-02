@@ -2,13 +2,13 @@
 "use strict";
 var expect = require('chai').expect;
 var sinon = require('sinon');
+var conf = require('../configureForTest');
 
-var Activity = require('../../lib/activities/activity');
+var Activity = conf.get('beans').get('activity');
 
 var activityId = 'UGMUC_CodingDojo_01.04.2015';
 var dummyActivity = new Activity({id: activityId, title: 'CodingDojo', assignedGroup: 'UGMUC', location: 'Munich'});
 
-var conf = require('../configureForTest');
 var store = conf.get('beans').get('activitystore');
 
 var api = conf.get('beans').get('activitystore');

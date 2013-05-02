@@ -3,22 +3,19 @@
 var request = require('supertest');
 var express = require('express');
 var sinon = require('sinon');
-require('../configureForTest');
-
 var expect = require('chai').expect;
 
 var conf = require('../configureForTest');
 
-var Activity = require('../../lib/activities/activity');
+var Activity = conf.get('beans').get('activity');
 var dummyActivity = new Activity({title: 'title', description: 'description', assignedGroup: 'assignedGroup',
   location: 'location', direction: 'direction', startDate: 'startDate', startTime: 'startTime', url: 'url'});
 
 var activitiesAPI = conf.get('beans').get('activitiesAPI');
 var groupsAPI = conf.get('beans').get('groupsAPI');
+var validation = conf.get('beans').get('validation');
 
 var app = conf.get('beans').get('activitiesApp')(express());
-
-var validation = conf.get('beans').get('validation');
 
 describe('Activity application', function () {
   var allActivities;
