@@ -22,8 +22,10 @@
 
   "group": {"module": "./lib/groups/group"},
   "member": {"module": "./lib/members/member"},
+  "activity": {"module": "./lib/activities/activity"},
 
   "fieldHelpers": {"module": "./lib/commons/fieldHelpers"},
   "userCommons": {"module": "./lib/commons/userCommons"},
-  "validation": {"module": "./lib/commons/validation"}
+  "validation": {"module": "./lib/commons/validation"},
+  "sympaTransformer": {"module": "./lib/groups/sympaTransformer"}
 }
