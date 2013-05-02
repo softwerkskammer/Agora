@@ -2,6 +2,7 @@
 "use strict";
 var request = require('supertest');
 var express = require('express');
+var sinon = require('sinon');
 var conf = require('../configureForTest');
 
 var groupsPersistence = conf.get('beans').get('groupsPersistence');
@@ -13,16 +14,25 @@ app.locals({baseUrl: 'groups'});
 
 describe('Groups application', function () {
 
-  sympa.getAllAvailableLists = function (callback) {
-    return callback(null, ['GroupA']);
-  };
-  groupsPersistence.listByIds = function (list, sortOrder, callback) {
-    //      if (list === ['GroupA']) {
-    console.log(list);
-    return callback(null, [{id: 'GroupA', longName: 'Gruppe A', description: 'Dies ist Gruppe A.', type: 'Themengruppe'}]);
-    //      }
-    //      Callback(null, []);
-  };
+  before(function (done) {
+    sinon.stub(sympa, 'getAllAvailableLists', function (callback) {
+      return callback(null, ['GroupA']);
+    });
+    sinon.stub(groupsPersistence, 'listByIds', function (list, sortOrder, callback) {
+      //      if (list === ['GroupA']) {
+      console.log(list);
+      return callback(null, [{id: 'GroupA', longName: 'Gruppe A', description: 'Dies ist Gruppe A.', type: 'Themengruppe'}]);
+      //      }
+      //      Callback(null, []);
+    });
+    done();
+  });
+
+  after(function (done) {
+    sympa.getAllAvailableLists.restore();
+    groupsPersistence.listByIds.restore();
+    done();
+  });
 
   it('shows all available lists', function (done) {
     request(app)
@@ -48,24 +58,24 @@ describe('Groups application', function () {
 
   it('displays an existing group and membercount', function (done) {
 
-    sympa.getUsersOfList = function (groupname, callback) {
+    sinon.stub(sympa, 'getUsersOfList', function (groupname, callback) {
       if (groupname === 'GroupA') {
         return callback(['peter@google.de', 'hans@aol.com']);
       }
-    };
-    groupsPersistence.getById = function (listname, callback) {
+    });
+    sinon.stub(groupsPersistence, 'getById', function (listname, callback) {
       // if (listname === '/^GroupA$/i') {
       console.log(listname);
       return callback(null, {id: 'GroupA', longName: 'Gruppe A', description: 'Dies ist Gruppe A.', type: 'Themengruppe'});
       // }
-    };
-    membersPersistence.listByEMails = function (emails, sortOrder, callback) {
+    });
+    sinon.stub(membersPersistence, 'listByEMails', function (emails, sortOrder, callback) {
       console.log(emails);
       return callback(null, [
         { firstname: 'Hans', lastname: 'Dampf' },
         { firstname: 'Peter', lastname: 'Meyer' }
       ]);
-    };
+    });
 
     request(app)
     .get('/GroupA')
@@ -75,8 +85,12 @@ describe('Groups application', function () {
     .expect(/Dies ist Gruppe A./)
     .expect(/Themengruppe/)
     .expect(/Mitglieder der Gruppe:/)
-    .expect(/Diese Gruppe hat 2 Mitglieder/)
-    .end(done);
+    .expect(/Diese Gruppe hat 2 Mitglieder/, function (err) {
+      sympa.getUsersOfList.restore();
+      groupsPersistence.getById.restore();
+      membersPersistence.listByEMails.restore();
+      done(err);
+    });
   });
 
   it('does not allow save for an existing or a newly created Group for normal visitors', function (done) {
