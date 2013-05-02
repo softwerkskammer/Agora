@@ -1,19 +1,14 @@
 /*global describe, it*/
 "use strict";
-var request = require('supertest'),
-  express = require('express'),
-  proxyquire = require('proxyquire');
-
-require('./configureForTest');
-
+var request = require('supertest');
+var express = require('express');
+var proxyquire = require('proxyquire');
+var conf = require('./configureForTest');
+var sinon = require('sinon');
 require('chai').should();
 
-var authenticationModule = proxyquire('../lib/authentication', {});
-var authenticationAppFactory = authenticationModule;
-
-var memberAppFactory = require('./membertest_stubs').memberModule;
-var appUnderTest = express();
-
+var Member = conf.get('beans').get('member');
+var membersAPI = conf.get('beans').get('membersAPI');
 var authenticationState = {};
 
 function configureAuhenticatedUser(req, res, next) {
@@ -23,22 +18,27 @@ function configureAuhenticatedUser(req, res, next) {
   next();
 }
 
+var memberAppFactory = conf.get('beans').get('membersApp');
+var authenticationAppFactory = proxyquire('../lib/authentication', {});
+
+var appUnderTest = express();
 appUnderTest.configure(function () {
   appUnderTest.use(configureAuhenticatedUser);
   appUnderTest.use(authenticationAppFactory.secureByLogin);
-  appUnderTest.use(memberAppFactory().newUserMustFillInRegistration);
+  appUnderTest.use(memberAppFactory.newUserMustFillInRegistration);
 });
-appUnderTest.use('/members/', memberAppFactory().create(express()));
+appUnderTest.use('/members/', memberAppFactory.create(express()));
 
 describe('member redirects', function () {
 
-  it('redirects from \/members\/ users without authentication', function (done) {
-    request(appUnderTest)
-      .get('/members/')
-      .expect('Moved Temporarily. Redirecting to /auth/login')
-      .expect(302, function (err) {
-        done(err);
-      });
+  beforeEach(function (done) {
+    sinon.stub(membersAPI, 'allMembers', function (callback) {callback(null, [new Member()]); });
+    done();
+  });
+
+  afterEach(function (done) {
+    membersAPI.allMembers.restore();
+    done();
   });
 
   it('allows access to \/members\/ for registered users', function (done) {
@@ -53,9 +53,17 @@ describe('member redirects', function () {
       });
   });
 
+  it('redirects from \/members\/ users without authentication', function (done) {
+    request(appUnderTest)
+      .get('/members/')
+      .expect('Moved Temporarily. Redirecting to /auth/login')
+      .expect(302, function (err) {
+        done(err);
+      });
+  });
+
   it('redirects non registered users to \/members\/new', function (done) {
-    authenticationState.user = {
-    };
+    authenticationState.user = {};
     request(appUnderTest)
       .get('/members/')
       .expect(/members\/new/)

@@ -1,0 +1,29 @@
+{
+  "administrationApp": {"module": "./lib/administration"},
+  "authenticationApp": {"module": "./lib/authentication"},
+  "groupsApp": {"module": "./lib/groups"},
+  "membersApp": {"module": "./lib/members"},
+  "siteApp": {"module": "./lib/site"},
+  "activitiesApp": {"module": "./lib/activities"},
+
+  "groupsAndMembersAPI": {"module": "./lib/groupsAndMembers/groupsAndMembersAPI"},
+  "groupsAPI": {"module": "./lib/groups/groupsAPI"},
+  "membersAPI": {"module": "./lib/members/membersAPI"},
+  "activitiesAPI": {"module": "./lib/activities/activitiesAPI"},
+
+  "groupstore": {"module": "./lib/groups/groupstore"},
+  "memberstore": {"module": "./lib/members/memberstore"},
+  "activitystore": {"module": "./lib/activities/activitystore"},
+
+  "sympaStub": {"module": "./lib/groups/sympaStub"},
+  "groupsPersistence": {"module": "./test/persistence/testpersistence"},
+  "membersPersistence": {"module": "./test/persistence/testpersistence"},
+  "activitiesPersistence": {"module": "./test/persistence/testpersistence"},
+
+  "group": {"module": "./lib/groups/group"},
+  "member": {"module": "./lib/members/member"},
+
+  "fieldHelpers": {"module": "./lib/commons/fieldHelpers"},
+  "userCommons": {"module": "./lib/commons/userCommons"},
+  "validation": {"module": "./lib/commons/validation"}
+}

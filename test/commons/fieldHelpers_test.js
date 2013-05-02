@@ -1,6 +1,7 @@
 /*global describe, it */
 "use strict";
-var fieldHelpers = require('../../lib/commons/fieldHelpers');
+var conf = require('../configureForTest');
+var fieldHelpers = conf.get('beans').get('fieldHelpers');
 
 describe('Activity application', function () {
 

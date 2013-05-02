@@ -1,31 +1,36 @@
-/*global describe, it */
+/*global describe, it, before, after */
 "use strict";
+var conf = require('../configureForTest');
 var expect = require('chai').expect;
 
-var proxyquire = require('proxyquire');
 var sinon = require('sinon');
 
-var persistenceStub = {
-  save: function () {
-  },
-  getById: function () {
-  },
-  getByField: function () {
-  },
-  list: function () {
-  }
-};
-
-var store = proxyquire('../../lib/members/memberstore.js', {'../persistence/persistence': function () {
-  return persistenceStub;
-}});
+var persistence = conf.get('beans').get('membersPersistence');
+var store = conf.get('beans').get('memberstore');
 
 describe('Members store', function () {
   var sampleMember = {nickname: 'nick'};
   var sampleMember2 = {nickname: 'nick2'};
   var sampleList = [sampleMember, sampleMember2];
-  var getByField = sinon.stub(persistenceStub, 'getByField');
-  getByField.callsArgWith(1, null, sampleMember);
+  var getByField;
+  var save;
+
+  before(function (done) {
+    getByField = sinon.stub(persistence, 'getByField');
+    getByField.callsArgWith(1, null, sampleMember);
+    var list = sinon.stub(persistence, 'list');
+    list.callsArgWith(1, null, sampleList);
+    save = sinon.stub(persistence, 'save');
+    save.callsArg(1);
+    done();
+  });
+
+  after(function (done) {
+    persistence.getByField.restore();
+    persistence.list.restore();
+    persistence.save.restore();
+    done();
+  });
 
   it('calls persistence.getByField for store.getMember and passes on the given callback', function (done) {
     store.getMember('nick', function (err, member) {
@@ -58,9 +63,6 @@ describe('Members store', function () {
   });
 
   it('calls persistence.list for store.allMembers and passes on the given callback', function (done) {
-    var list = sinon.stub(persistenceStub, 'list');
-    list.callsArgWith(1, null, sampleList);
-
     store.allMembers(function (err, members) {
       expect(members[0].nickname).to.equal(sampleMember.nickname);
       expect(members[1].nickname).to.equal(sampleMember2.nickname);
@@ -69,9 +71,6 @@ describe('Members store', function () {
   });
 
   it('calls persistence.save for store.saveMember and passes on the given callback', function (done) {
-    var save = sinon.stub(persistenceStub, 'save');
-    save.callsArg(1);
-
     store.saveMember(sampleMember, function (err) {
       expect(save.calledWith(sampleMember)).to.be.true;
       done(err);

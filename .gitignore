@@ -10,6 +10,8 @@ lib/persistence/memberstore/
 lib/persistence/teststore/
 config/*.json
 !config/example-*.json
+!config/beans.json
+!config/testbeans.json
 log/*.log
 public/test/
 version.jade
