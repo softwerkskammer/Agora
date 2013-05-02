@@ -29,7 +29,6 @@ describe('Groups API with SympaStub', function () {
       }
     });
     saveGroupSpy = sinon.stub(groupstore, 'saveGroup', function (group, callback) { callback(null, group); });
-
     done();
   });
 
