@@ -1,20 +1,41 @@
 /*global describe, it */
 "use strict";
-var request = require('supertest'),
-  express = require('express'),
-  sinon = require('sinon');
+var request = require('supertest');
+var express = require('express');
+var conf = require('./configureForTest');
+
+var sinon = require('sinon');
 
 require('chai').should();
-var memberstubs = require('./membertest_stubs'),
-  dummymember = memberstubs.dummymember,
-  membersAPIStub = memberstubs.membersAPIStub,
-  groupsAPIStub = memberstubs.groupsAPIStub,
-  app = memberstubs.memberModule().create(express());
+
+var Member = require('../lib/members/member');
+var membersAPI = conf.get('beans').get('membersAPI');
+var groupsAPI = conf.get('beans').get('groupsAPI');
+var dummymember = new Member({object: {nickname: 'hada', email: 'a@b.c', site: 'http://my.blog', firstname: 'Hans', lastname: 'Dampf'}});
+
+var app = conf.get('beans').get('membersApp')().create(express());
+
+var allMembers;
+var getMember;
+var getSubscribedGroupsForUser;
 
 describe('Members application', function () {
 
+  beforeEach(function (done) {
+    allMembers = sinon.stub(membersAPI, 'allMembers', function (callback) {callback(null, [dummymember]); });
+    getMember = sinon.stub(membersAPI, 'getMember', function (nickname, callback) {callback(null, dummymember); });
+    getSubscribedGroupsForUser = sinon.stub(groupsAPI, 'getSubscribedGroupsForUser', function (email, callback) {callback(null, []); });
+    done();
+  });
+
+  afterEach(function (done) {
+    membersAPI.allMembers.restore();
+    membersAPI.getMember.restore();
+    groupsAPI.getSubscribedGroupsForUser.restore();
+    done();
+  });
+
   it('shows the list of members as retrieved from the membersstore', function (done) {
-    var allMembers = sinon.spy(memberstubs.membersAPIStub, 'allMembers');
     request(app)
       .get('/')
       .expect(200)
@@ -50,17 +71,14 @@ describe('Members application', function () {
   });
 
   it('shows the details of one member as retrieved from the membersstore', function (done) {
-    var nickname = dummymember.nickname,
-      email = dummymember.email,
-      getMember = sinon.spy(membersAPIStub, 'getMember'),
-      getSubscribedGroupsForUser = sinon.spy(groupsAPIStub, 'getSubscribedGroupsForUser');
     request(app)
-      .get('/' + nickname)
+      .get('/hada')
       .expect(200)
       .expect(/Blog:(.+)http:\/\/my.blog/, function (err) {
-        getMember.calledWith(nickname).should.be.true;
-        getSubscribedGroupsForUser.calledWith(email).should.be.true;
+        getMember.calledWith(dummymember.nickname).should.be.true;
+        getSubscribedGroupsForUser.calledWith(dummymember.email).should.be.true;
         done(err);
       });
+
   });
 });
