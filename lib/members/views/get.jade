@@ -4,49 +4,48 @@ block title
   | Profil für #{member.firstname} #{member.lastname}
 
 block content
-  .span12
-    .page-header
-      h2
-        if (typeof(user) !== 'undefined' && (user.member.isAdmin || user.member.id === member.id))
-          a.btn.btn-mini(href="/members/edit/#{member.nickname}")
-            i.icon-edit
-          | &nbsp
-        | "#{member.nickname}"&nbsp;
-        small  
-          - if (member.isAdmin)
-            | Admin
-          - else
-            | Profilansicht
-    p
-      strong Vorname:
-      |  #{member.firstname}
-    p
-      strong Nachname:
-      |  #{member.lastname}
-    p
-      strong Email: 
-      span.mailtoify
-        | #{member.email}
-    p
-      strong Twitter: 
-      span.twitterify
-        | #{member.twitter}
-    p
-      strong Ort / Region:
-      |  #{member.location}
-    p
-      strong Beruf:
-      |  #{member.profession}
-    p
-      strong Interessenschwerpunkte:
-      |  #{member.interests}
-    p
-      strong Website / Blog: 
-      span.urlify
-        | #{member.site}
-
-
-    h3 Mitglied in:
-    ul
-      each group in subscribedGroups
-        li: .group: strong: a(href='../groups/#{group.id}') #{group.longName}
+  .row-fluid
+    .span12
+      .page-header
+        h2
+          | "#{member.nickname}"&nbsp;
+          small  
+            if (member.isAdmin)
+              | Admin
+            else
+              | Profilansicht
+          if (typeof(user) !== 'undefined' && (user.member.isAdmin || user.member.id === member.id))
+            a.pull-right.btn(href="/members/edit/#{member.nickname}"): i.icon-edit
+      p
+        strong Vorname:
+        |  #{member.firstname}
+      p
+        strong Nachname:
+        |  #{member.lastname}
+      p
+        strong Email: 
+        span.mailtoify
+          | #{member.email}
+      p
+        strong Twitter: 
+        span.twitterify
+          | #{member.twitter}
+      p
+        strong Ort / Region:
+        |  #{member.location}
+      p
+        strong Beruf:
+        |  #{member.profession}
+      p
+        strong Interessenschwerpunkte:
+        |  #{member.interests}
+      p
+        strong Website / Blog: 
+        span.urlify
+          | #{member.site}
+  
+  
+      h3 Mitglied in:
+      ul
+        each group in subscribedGroups
+          li: .group: strong: a(href='../groups/#{group.id}') #{group.longName}

@@ -1,0 +1,28 @@
+mixin tabHead(no, title)
+  th(class="span#{no}"): .ellipsis #{title}
+
+mixin tabHeadNarrow(no, title)
+  th(class="span#{no}"): .ellipsis.narrow #{title}
+
+mixin tabDateNarrow(no, object, name, callback, placementOptional)
+  td(class="span#{no}"): a.tabdatepicker(id="#{name}", href="#", data-type="date", data-placement="#{placementOptional ? placementOptional : 'right'}", 
+    data-pk="#{object.id}", data-url="#{callback}") #{object[name]}
+
+mixin tabText(no, object, name, callback, placementOptional)
+  td(class="span#{no}"): a(id="#{name}", href="#", data-type="text", data-tpl="<input type=\"text\" class=\"input-xlarge\">",
+    data-placement="#{placementOptional ? placementOptional : 'top'}", data-pk="#{object.id}", data-url="#{callback}"): .ellipsis #{object[name]}
+
+mixin tabTextNarrow(no, object, name, callback, placementOptional)
+  td(class="span#{no}"): a(id="#{name}", href="#", data-type="text", data-tpl="<input type=\"text\" class=\"input-xlarge\">",
+    data-placement="#{placementOptional ? placementOptional : 'top'}", data-pk="#{object.id}", data-url="#{callback}"): .ellipsis.narrow #{object[name]}
+
+mixin tabTextarea(no, object, name, callback, placementOptional)
+  td(class="span#{no}"): a(id="#{name}", href="#", data-placement="#{placementOptional ? placementOptional : 'left'}", 
+    data-tpl="<textarea class='input-xlarge'></textarea>", data-type="textarea", data-pk="#{object.id}", 
+    data-url="#{callback}"): .ellipsis #{object[name]}
+
+mixin tabTextareaNarrow(no, object, name, callback, placementOptional)
+  td(class="span#{no}"): a(id="#{name}", href="#", data-placement="#{placementOptional ? placementOptional : 'left'}", 
+    data-tpl="<textarea class='input-xlarge'></textarea>", data-type="textarea", data-pk="#{object.id}", 
+    data-url="#{callback}"): .ellipsis.narrow #{object[name]}
+

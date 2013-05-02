@@ -1,0 +1,31 @@
+doctype 5
+html
+  head
+    meta(charset="utf-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    link(href="/stylesheets/bootstrap.css", rel="stylesheet", media="screen")
+    link(href="/stylesheets/bootstrap-responsive.css", rel="stylesheet", media="screen")
+    link(href="/stylesheets/bootstrap-editable.css", rel="stylesheet", media="screen")
+    link(href="/stylesheets/bootstrap-timepicker.css", rel="stylesheet", media="screen")
+    link(href="/stylesheets/agora.css", rel="stylesheet", media="screen")
+    link(href="/stylesheets/font-awesome.min.css", rel="stylesheet")
+    style
+      .container {
+        max-width: 955px;
+      }
+
+      body {
+        padding-top: 0px;
+      }
+    title Softwerkskammer
+  body
+    include layoutComponents
+    .container
+      img(src="/img/Softwerkskammer_Header.png", alt="Softwerkskammer")
+      p &nbsp;
+      block content
+
+    mixin bottomNavbar
+    script(src="/clientscripts/jquery-1.9.1.js")
+    script(src="/clientscripts/bootstrap.js")
+    script(src="/clientscripts/agora.js")

@@ -3,21 +3,19 @@ block title
   | Aktivitäten
 
 block content
-  .span12
-    .page-header
-      h2  
-        if (typeof(user) !== 'undefined' && user.member.isAdmin)
-          a.btn.btn-mini(href="/activities/edit/#{activity.url}")
-            i.icon-edit
-          | &nbsp
-        | #{activity.title} 
-        small #{activity.startDate} (#{activity.startTime}
-          if (activity.endDate && activity.endDate !== activity.startDate)
-            | ) - #{activity.endDate} (#{activity.endTime})
-          else (activity.endTime)
-            |  - #{activity.endTime})
-      p
-        strong #{activity.groupName(groups)}
+  .row-fluid
+    .span12
+      .page-header
+        h2 #{activity.title} 
+          small #{activity.startDate} (#{activity.startTime}
+            if (activity.endDate && activity.endDate !== activity.startDate)
+              | ) - #{activity.endDate} (#{activity.endTime})
+            else (activity.endTime)
+              |  - #{activity.endTime})
+          if (typeof(user) !== 'undefined' && user.member.isAdmin)
+            a.pull-right.btn(href="/activities/edit/#{activity.url}"): i.icon-edit
+        p
+          strong #{activity.groupName(groups)}
   .row-fluid
     .span8
       h3 Beschreibung

@@ -18,7 +18,7 @@ var groupsAPI = conf.get('beans').get('groupsAPI');
 
 var app = conf.get('beans').get('activitiesApp')(express());
 
-var validation = require('../../lib/commons/validation');
+var validation = conf.get('beans').get('validation');
 
 describe('Activity application', function () {
   var allActivities;
@@ -64,7 +64,8 @@ describe('Activity application', function () {
       .expect(200)
       .expect(/<small>startDate/)
       .expect(/<h2> title/, function (err) {
-        expect(getActivity.calledWith(url)).to.be.true;
+        getActivity.calledWith(url).should.be.true;
+        activitiesAPIStub.getActivity.restore();
         done(err);
       });
   });

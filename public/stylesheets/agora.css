@@ -31,3 +31,14 @@ td.fc-header-right {
     font-size: .8em;
     line-height: 1.1em;
 }
+
+.ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 300px;
+}
+
+.ellipsis.narrow {
+    max-width: 120px;
+}
