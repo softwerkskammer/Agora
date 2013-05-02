@@ -85,7 +85,7 @@ module.exports = function (conf) {
 
       app.use('/', conf.get('beans').get('siteApp'));
       useApp(app, 'administration', conf, conf.get('beans').get('administrationApp'));
-      useApp(app, 'activities', conf, require('./lib/activities'));
+      useApp(app, 'activities', conf, conf.get('beans').get('activitiesApp'));
       useApp(app, 'members', conf, members.create);
       useApp(app, 'groups', conf, conf.get('beans').get('groupsApp'));
       useApp(app, 'announcements', conf, require('./lib/announcements'));
