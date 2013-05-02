@@ -1,4 +1,3 @@
-/*global describe, beforeEach, afterEach, it */
 "use strict";
 var should = require('chai').should();
 var httpRequest = require('request');
@@ -7,7 +6,7 @@ var conf = require('./configureForTest');
 
 var base_uri = "http://localhost:" + parseInt(conf.get('port'), 10);
 
-var app = require('../app.js')(conf);
+var app = require('../app.js')();
 
 describe('SWK Plattform server', function () {
   beforeEach(function (done) {

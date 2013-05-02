@@ -1,5 +1,5 @@
-/*global describe, it */
 "use strict";
+
 var expect = require('chai').expect;
 var sinon = require('sinon');
 var conf = require('../configureForTest');

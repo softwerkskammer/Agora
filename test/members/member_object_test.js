@@ -1,5 +1,5 @@
-/*global describe, it */
 "use strict";
+
 var conf = require('nconf');
 var expect = require('chai').expect;
 

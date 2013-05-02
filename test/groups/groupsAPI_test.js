@@ -1,5 +1,5 @@
-/*global describe, it, before, after*/
 "use strict";
+
 var conf = require('../configureForTest');
 var sinon = require('sinon');
 

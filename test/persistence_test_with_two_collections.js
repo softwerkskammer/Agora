@@ -1,4 +1,3 @@
-/*global describe, it, beforeEach */
 "use strict";
 
 require('chai').should();

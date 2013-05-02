@@ -1,18 +1,17 @@
-/*global describe, it */
 "use strict";
+
 var request = require('supertest');
 var express = require('express');
-var conf = require('./configureForTest');
+var conf = require('../configureForTest');
 var sinon = require('sinon');
-
-require('chai').should();
+var expect = require('chai').expect;
 
 var Member = conf.get('beans').get('member');
 var membersAPI = conf.get('beans').get('membersAPI');
 var groupsAPI = conf.get('beans').get('groupsAPI');
 var dummymember = new Member({object: {nickname: 'hada', email: 'a@b.c', site: 'http://my.blog', firstname: 'Hans', lastname: 'Dampf'}});
 
-var app = conf.get('beans').get('membersApp').create(express());
+var app = conf.get('beans').get('membersApp')(express());
 
 var allMembers;
 var getMember;
@@ -40,7 +39,7 @@ describe('Members application', function () {
       .expect(200)
       .expect(/href="\/members\/hada"/)
       .expect(/Hans Dampf/, function (err) {
-        allMembers.calledOnce.should.be.ok;
+        expect(allMembers.calledOnce).to.be.ok;
         done(err);
       });
   });
@@ -74,8 +73,8 @@ describe('Members application', function () {
       .get('/hada')
       .expect(200)
       .expect(/Blog:(.+)http:\/\/my.blog/, function (err) {
-        getMember.calledWith(dummymember.nickname).should.be.true;
-        getSubscribedGroupsForUser.calledWith(dummymember.email).should.be.true;
+        expect(getMember.calledWith(dummymember.nickname)).to.be.true;
+        expect(getSubscribedGroupsForUser.calledWith(dummymember.email)).to.be.true;
         done(err);
       });
 

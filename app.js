@@ -4,47 +4,33 @@ var express = require('express');
 var http = require('http');
 var path = require('path');
 var winston = require('winston');
+var passport = require('passport');
 var MongoStore = require('connect-mongo')(express);
 
-function ensureRequestedUrlEndsWithSlash(req, res, next) {
-  function endsWithSlash(string) {
-    return (/\/$/).test(string);
+function useApp(parent, url, factory) {
+  function ensureRequestedUrlEndsWithSlash(req, res, next) {
+    if (!(/\/$/).test(req.url)) { return res.redirect(req.url + '/'); }
+    next();
   }
 
-  if (!endsWithSlash(req.url)) {
-    return res.redirect(req.url + '/');
-  }
-  next();
-}
-
-function useApp(parent, url, conf, factory) {
-  var child = factory(express(), conf);
-  child.locals({
-    pretty: true
-  });
+  var child = factory(express());
+  child.locals({pretty: true});
   parent.get('/' + url, ensureRequestedUrlEndsWithSlash);
   parent.use('/' + url + '/', child);
   return child;
 }
 
-function expressViewHelper(req, res, next) {
-  res.locals.calViewYear = req.session.calViewYear;
-  res.locals.calViewMonth = req.session.calViewMonth;
-  res.locals.user = req.user;
-  res.locals.currentUrl = req.url;
-  next();
-}
-
-module.exports = function (conf) {
-  var authentication = conf.get('beans').get('authenticationApp');
-  var members = conf.get('beans').get('membersApp');
-
+module.exports = function () {
+  var conf = require('nconf');
+  var redirectRuleForNewUser = conf.get('beans').get('redirectRuleForNewUser');
+  var secureByLogin = conf.get('beans').get('secureByLogin');
+  var expressViewHelper = conf.get('beans').get('expressViewHelper');
   // initialize winston and two concrete loggers
   require('winston-config').winstonConfigFromFile(__dirname + '/./config/winston-config.json');
   var appLogger = winston.loggers.get('application');
   var httpLogger = winston.loggers.get('http');
 
-  // stream the log messages of express to winston, remove line breaks on  message
+  // stream the log messages of express to winston, remove line breaks on message
   var winstonStream = {
     write: function (message) {
       httpLogger.info(message.replace(/(\r\n|\n|\r)/gm, ""));
@@ -62,11 +48,6 @@ module.exports = function (conf) {
   return {
     create: function () {
       var app = express();
-      this.initApp(app, conf);
-      return app;
-    },
-
-    initApp: function (app) {
       app.configure(function () {
         app.set('view engine', 'jade');
         app.set('views', path.join(__dirname, 'views'));
@@ -76,21 +57,23 @@ module.exports = function (conf) {
         app.use(express.bodyParser());
         app.use(express.methodOverride());
         app.use(express.session({secret: conf.get('secret'), cookie: {maxAge: 86400 * 1000 * 7}, store: sessionStore}));
-        authentication.configure(app);
+        app.use(passport.initialize());
+        app.use(passport.session());
+        app.use(secureByLogin);
         app.use(expressViewHelper);
-        app.use(members.newUserMustFillInRegistration);
+        app.use(redirectRuleForNewUser);
         app.use(app.router);
         app.use(express.static(path.join(__dirname, 'public')));
       });
 
       app.use('/', conf.get('beans').get('siteApp'));
-      useApp(app, 'administration', conf, conf.get('beans').get('administrationApp'));
-      useApp(app, 'activities', conf, conf.get('beans').get('activitiesApp'));
-      useApp(app, 'members', conf, members.create);
-      useApp(app, 'groups', conf, conf.get('beans').get('groupsApp'));
-      useApp(app, 'announcements', conf, require('./lib/announcements'));
-      useApp(app, 'auth', conf, authentication.initialize);
-      useApp(app, 'filebrowser', conf, require('./lib/filebrowser'));
+      useApp(app, 'administration', conf.get('beans').get('administrationApp'));
+      useApp(app, 'activities', conf.get('beans').get('activitiesApp'));
+      useApp(app, 'members', conf.get('beans').get('membersApp'));
+      useApp(app, 'groups', conf.get('beans').get('groupsApp'));
+      useApp(app, 'announcements', require('./lib/announcements'));
+      useApp(app, 'auth', conf.get('beans').get('authenticationApp'));
+      useApp(app, 'filebrowser', require('./lib/filebrowser'));
 
       app.configure('development', function () {
         // Handle 404
@@ -112,7 +95,7 @@ module.exports = function (conf) {
       app.configure('production', function () {
         //app.use(express.errorHandler());
       });
-
+      return app;
     },
 
     start: function (done) {

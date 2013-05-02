@@ -1,9 +1,8 @@
-/*global describe, it */
 "use strict";
-var request = require('supertest'),
-  express = require('express'),
-  sinon = require('sinon'),
-  proxyquire = require('proxyquire');
+var request = require('supertest');
+var express = require('express');
+var sinon = require('sinon');
+var proxyquire = require('proxyquire');
 
 require('chai').should();
 
