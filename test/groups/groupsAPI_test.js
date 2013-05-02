@@ -1,4 +1,4 @@
-/*global describe, it*/
+/*global describe, it, before, after*/
 "use strict";
 var conf = require('../configureForTest');
 var sinon = require('sinon');
@@ -11,37 +11,10 @@ var GroupA = new Group({id: 'GroupA', longName: 'Gruppe A', description: 'Dies i
 var GroupB = new Group({id: 'GroupB', longName: 'Gruppe B', description: 'Dies ist Gruppe B.', type: 'Regionalgruppe'});
 var NonPersistentGroup = new Group({id: 'Group C', longName: 'Gruppe C', description: 'Dies ist Gruppe C.', type: 'Regionalgruppe'});
 
-/*
-var groupstoreStub = {
-  allGroups: function (callback) { callback(null, [GroupA, GroupB]); },
-  getGroup: function (name, callback) {
-    if (name === 'GroupA') {
-      callback(null, GroupA);
-    } else if (name === 'GroupB') {
-      callback(null, GroupB);
-    } else {
-      callback(null, null);
-    }
-  },
-  saveGroup: function (group, callback) { callback(null, group); },
-  groupsByLists: function () {}
-};
-
-var sympaStub = {
-  createList: function (listname, prefix, callback) { callback(); },
-  getSubscribedListsForUser: function () {},
-  getAllAvailableLists: function () {},
-  getUsersOfList: function () {}
-};
-
-var groupsAPI = proxyquire('../../lib/groups/groupsAPI', {
-  './groupstore': groupstoreStub,
-  './sympaStub': function () { return sympaStub; }
-});
-*/
 
 var groupstore = conf.get('beans').get('groupstore');
 var sympa = conf.get('beans').get('sympaStub');
+
 var systemUnderTest = conf.get('beans').get('groupsAPI');
 
 describe('Groups API (getSubscribedGroupsForUser)', function () {
@@ -101,16 +74,16 @@ describe('Groups API (getAllAvailableGroups)', function () {
 
   afterEach(function (done) {
     groupstore.groupsByLists.restore();
-    sympa.getSubscribedListsForUser.restore();
+    sympa.getAllAvailableLists.restore();
     done();
   });
 
 
   it('returns an empty array of groups if there are no lists defined in sympa', function (done) {
-    groupstoreStub.groupsByLists = function (lists, globalCallback) {
+    sinon.stub(groupstore, 'groupsByLists', function (lists, globalCallback) {
       globalCallback(null, []);
-    };
-    sympaStub.getAllAvailableLists = function (callback) { callback(null, []); };
+    });
+    sinon.stub(sympa, 'getAllAvailableLists', function (callback) { callback(null, []); });
 
     systemUnderTest.getAllAvailableGroups(function (err, lists) {
       expect(lists).to.not.be.null;
@@ -120,10 +93,10 @@ describe('Groups API (getAllAvailableGroups)', function () {
   });
 
   it('returns an empty array of groups if there is one list defined in sympa but there is no matching group in Softwerkskammer', function (done) {
-    groupstoreStub.groupsByLists = function (lists, globalCallback) {
+    sinon.stub(groupstore, 'groupsByLists', function (lists, globalCallback) {
       globalCallback(null, []);
-    };
-    sympaStub.getAllAvailableLists = function (callback) { callback(null, ['unknownGroup']); };
+    });
+    sinon.stub(sympa, 'getAllAvailableLists', function (callback) { callback(null, ['unknownGroup']); });
 
     systemUnderTest.getAllAvailableGroups(function (err, lists) {
       expect(lists).to.not.be.null;
@@ -133,10 +106,10 @@ describe('Groups API (getAllAvailableGroups)', function () {
   });
 
   it('returns one group if there are two lists defined in sympa and there is one matching group in Softwerkskammer', function (done) {
-    groupstoreStub.groupsByLists = function (lists, globalCallback) {
+    sinon.stub(groupstore, 'groupsByLists', function (lists, globalCallback) {
       globalCallback(null, [GroupA]);
-    };
-    sympaStub.getAllAvailableLists = function (callback) { callback(null, ['GroupA', 'unknownGroup']); };
+    });
+    sinon.stub(sympa, 'getAllAvailableLists', function (callback) { callback(null, ['GroupA', 'unknownGroup']); });
 
     systemUnderTest.getAllAvailableGroups(function (err, lists) {
       expect(lists).to.not.be.null;
@@ -147,10 +120,10 @@ describe('Groups API (getAllAvailableGroups)', function () {
   });
 
   it('returns two groups if there are two lists defined in sympa and there are two matching groups in Softwerkskammer', function (done) {
-    groupstoreStub.groupsByLists = function (lists, globalCallback) {
+    sinon.stub(groupstore, 'groupsByLists', function (lists, globalCallback) {
       globalCallback(null, [GroupA, GroupB]);
-    };
-    sympaStub.getAllAvailableLists = function (callback) { callback(null, ['GroupA', 'GroupB']); };
+    });
+    sinon.stub(sympa, 'getAllAvailableLists', function (callback) { callback(null, ['GroupA', 'GroupB']); });
 
     systemUnderTest.getAllAvailableGroups(function (err, lists) {
       expect(lists).to.not.be.null;
@@ -164,8 +137,13 @@ describe('Groups API (getAllAvailableGroups)', function () {
 
 describe('Groups API (getSympaUsersOfList)', function () {
 
+  afterEach(function (done) {
+    sympa.getUsersOfList.restore();
+    done();
+  });
+
   it('returns an empty array of lists if there are no users subscribed to the list in sympa', function (done) {
-    sympaStub.getUsersOfList = function (groupname, callback) { callback(null, []); };
+    sinon.stub(sympa, 'getUsersOfList', function (groupname, callback) { callback(null, []); });
 
     systemUnderTest.getSympaUsersOfList('groupname', function (err, lists) {
       expect(lists).to.not.be.null;
@@ -175,7 +153,9 @@ describe('Groups API (getSympaUsersOfList)', function () {
   });
 
   it('returns the users subscribed to the list in sympa', function (done) {
-    sympaStub.getUsersOfList = function (groupname, callback) { callback(null, ['user1@mail1.de', 'user2@mail2.de', 'user3@mail3.de']); };
+    sinon.stub(sympa, 'getUsersOfList', function (groupname, callback) {
+      callback(null, ['user1@mail1.de', 'user2@mail2.de', 'user3@mail3.de']);
+    });
 
     systemUnderTest.getSympaUsersOfList('groupname', function (err, users) {
       expect(users).to.not.be.null;
@@ -189,6 +169,25 @@ describe('Groups API (getSympaUsersOfList)', function () {
 });
 
 describe('Groups API (getGroup)', function () {
+
+  before(function (done) {
+    sinon.stub(groupstore, 'getGroup', function (name, callback) {
+      if (name === 'GroupA') {
+        callback(null, GroupA);
+      } else if (name === 'GroupB') {
+        callback(null, GroupB);
+      } else {
+        callback(null, null);
+      }
+    });
+    done();
+  });
+
+  after(function (done) {
+    groupstore.getGroup.restore();
+    done();
+  });
+
   it('returns null if there is no group with the given name', function (done) {
 
     systemUnderTest.getGroup('groupname', function (err, group) {
@@ -208,18 +207,36 @@ describe('Groups API (getGroup)', function () {
 
 describe('Groups API (createOrSaveGroup)', function () {
 
+  before(function (done) {
+    sinon.stub(groupstore, 'getGroup', function (name, callback) {
+      if (name === 'GroupA') {
+        callback(null, GroupA);
+      } else if (name === 'GroupB') {
+        callback(null, GroupB);
+      } else {
+        callback(null, null);
+      }
+    });
+    done();
+  });
+
+  after(function (done) {
+    groupstore.getGroup.restore();
+    done();
+  });
+
   var createListSpy;
   var saveGroupSpy;
 
   beforeEach(function (done) {
-    createListSpy = sinon.spy(sympaStub, 'createList');
-    saveGroupSpy = sinon.spy(groupstoreStub, 'saveGroup');
+    createListSpy = sinon.stub(sympa, 'createList', function (listname, prefix, callback) { callback(); });
+    saveGroupSpy = sinon.stub(groupstore, 'saveGroup', function (group, callback) { callback(null, group); });
     done();
   });
 
   afterEach(function (done) {
-    sympaStub.createList.restore();
-    groupstoreStub.saveGroup.restore();
+    sympa.createList.restore();
+    groupstore.saveGroup.restore();
     done();
   });
 
@@ -273,6 +290,24 @@ describe('Groups API (groupFromObject)', function () {
 });
 
 describe('Groups API (isGroupNameAvailable)', function () {
+  before(function (done) {
+    sinon.stub(groupstore, 'getGroup', function (name, callback) {
+      if (name === 'GroupA') {
+        callback(null, GroupA);
+      } else if (name === 'GroupB') {
+        callback(null, GroupB);
+      } else {
+        callback(null, null);
+      }
+    });
+    done();
+  });
+
+  after(function (done) {
+    groupstore.getGroup.restore();
+    done();
+  });
+
   it('returns false when there is already a group of this name present', function (done) {
     systemUnderTest.isGroupNameAvailable("GroupA", function (err, result) {
       expect(result).to.be.not.null;
@@ -328,21 +363,28 @@ describe('Groups API (isGroupNameAvailable)', function () {
 });
 
 describe('Groups API (updateGroupsFieldWith)', function () {
-  var oldDescription;
-  var oldLongName;
-  var oldType;
+  before(function (done) {
+    sinon.stub(groupstore, 'getGroup', function (name, callback) {
+      if (name === 'GroupA') {
+        callback(null, GroupA);
+      } else if (name === 'GroupB') {
+        callback(null, GroupB);
+      } else {
+        callback(null, null);
+      }
+    });
+    sinon.stub(groupstore, 'saveGroup', function (group, callback) { callback(null, group); });
+    done();
+  });
 
-  beforeEach(function (done) {
-    oldDescription = GroupA.description;
-    oldLongName = GroupA.longName;
-    oldType = GroupA.type;
+  after(function (done) {
+    groupstore.getGroup.restore();
+    groupstore.saveGroup.restore();
     done();
   });
 
   afterEach(function (done) {
-    GroupA.description = oldDescription;
-    GroupA.longName = oldLongName;
-    GroupA.type = oldType;
+    GroupA = new Group({id: 'GroupA', longName: 'Gruppe A', description: 'Dies ist Gruppe A.', type: 'Themengruppe', emailPrefix: 'PREFIX'});
     done();
   });
 
