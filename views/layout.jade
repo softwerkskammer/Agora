@@ -11,6 +11,26 @@ html
     link(href="/stylesheets/fullcalendar.css", rel="stylesheet", media="screen")
     link(href="/stylesheets/colorpicker.css", rel="stylesheet", media="screen")
     link(href="/stylesheets/agora.css", rel="stylesheet", media="screen")
+
+    script(src="/clientscripts/jquery-1.9.1.js")
+    script(src="/clientscripts/bootstrap.js")
+    script(src="/clientscripts/bootstrap-editable.js")
+    script(src="/clientscripts/bootstrap-markdown.js")
+    script(src="/clientscripts/markdown.js")
+    script(src="/clientscripts/fullcalendar.js")
+    script(src="/clientscripts/bootstrap-colorpicker.js")
+    script(src="/clientscripts/bootstrap-datepicker.de.js")
+    script(src="/clientscripts/agora.js")
+    script(src="/clientscripts/navbar-scripts.js")
+    script(src="/clientscripts/surroundWithLink.js")
+    script(src="/clientscripts/agora-calendar.js")
+    if (typeof(calViewYear) !== 'undefined')
+      script
+        $(document).ready(function () {
+          $('#calendar').fullCalendar('gotoDate', #{calViewYear}, #{calViewMonth});      
+        });
+    block scripts
+
     title Softwerkskammer - 
       block title
   body
@@ -60,21 +80,3 @@ html
 
     mixin bottomNavbar
     
-    script(src="/clientscripts/jquery-1.9.1.js")
-    script(src="/clientscripts/bootstrap.js")
-    script(src="/clientscripts/bootstrap-editable.js")
-    script(src="/clientscripts/bootstrap-markdown.js")
-    script(src="/clientscripts/markdown.js")
-    script(src="/clientscripts/fullcalendar.js")
-    script(src="/clientscripts/bootstrap-colorpicker.js")
-    script(src="/clientscripts/bootstrap-datepicker.de.js")
-    script(src="/clientscripts/agora.js")
-    script(src="/clientscripts/navbar-scripts.js")
-    script(src="/clientscripts/surroundWithLink.js")
-    script(src="/clientscripts/agora-calendar.js")
-    if (typeof(calViewYear) !== 'undefined')
-      script
-        $(document).ready(function () {
-          $('#calendar').fullCalendar('gotoDate', #{calViewYear}, #{calViewMonth});      
-        });
-    block scripts
