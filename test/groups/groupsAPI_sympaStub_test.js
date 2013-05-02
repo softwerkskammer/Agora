@@ -11,17 +11,6 @@ var Craftsmanswap = new Group({id: 'craftsmanswap', longName: 'Gruppe A', descri
 var NeuePlattform = new Group({id: 'neueplattform', longName: 'Gruppe B', description: 'Dies ist Gruppe B.', type: 'Regionalgruppe'});
 var NonPersistentGroup = new Group({id: 'Group C', longName: 'Gruppe C', description: 'Dies ist Gruppe C.', type: 'Regionalgruppe'});
 
-/*
-var groupstoreStub = {
-  allGroups: 
-  getGroup: ,
-  saveGroup: ,
-  groupsByLists: function () {}
-};
-
-var groupsAPI = proxyquire('../../lib/groups/groupsAPI', {'./groupstore': groupstoreStub});
-*/
-
 var groupstore = conf.get('beans').get('groupstore');
 var systemUnderTest = conf.get('beans').get('groupsAPI');
 

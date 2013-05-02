@@ -5,26 +5,8 @@ var expect = require('chai').expect;
 
 var sinon = require('sinon');
 
-/*
-var persistenceStub = {
-  save: function () {
-  },
-  getById: function () {
-  },
-  getByField: function () {
-  },
-  list: function () {
-  }
-};
-*/
-
 var persistence = conf.get('beans').get('membersPersistence');
 var store = conf.get('beans').get('memberstore');
-/*
-var store = proxyquire('../../lib/members/memberstore.js', {'../persistence/persistence': function () {
-  return persistenceStub;
-}});
-*/
 
 describe('Members store', function () {
   var sampleMember = {nickname: 'nick'};
