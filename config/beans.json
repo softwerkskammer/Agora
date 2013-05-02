@@ -1,4 +1,6 @@
 {
+  "administrationApp": {"module": "./lib/administration"},
+  "authenticationApp": {"module": "./lib/authentication"},
   "groupsApp": {"module": "./lib/groups"},
   "membersApp": {"module": "./lib/members"},
 
@@ -19,5 +21,12 @@
   "membersPersistence": {"module": "./lib/persistence/persistence",
                         "constructorArgs": {
                              "connectionName": "memberstore"
-                       }}
+                       }},
+
+  "group": {"module": "./lib/groups/group"},
+  "member": {"module": "./lib/members/member"},
+
+  "fieldHelpers": {"module": "./lib/commons/fieldHelpers"},
+  "userCommons": {"module": "./lib/commons/userCommons"},
+  "validation": {"module": "./lib/commons/validation"}
 }
