@@ -21,11 +21,9 @@ var store = proxyquire('../../lib/announcements/announcementstore.js', {'../pers
 }});
 
 describe('Announcement store', function () {
-  // var dummyAnnouncement = new Announcement('title', 'shortDescription', 'text', 'author', new Date(2011, 12, 31, 11, 59, 59), 'thruDate');
   var announcement1 = {
     title: 'Neue Plattform ist online!',
     url: 'NeuePlattformistonline',
-    shortDescription: 'Die neue Softwerkskammer-Plattform Agora ist seit heute online.',
     text: '(Deutschland, Mai 2013) Seit heute ist die neueb Plattform namens „Agora“ unter http://www.softwerkskammer.de erreichbar.',
     author: 'Frank Deberle',
     thruDate: new Date(2013, 12, 31)
@@ -33,8 +31,7 @@ describe('Announcement store', function () {
   var announcement2 = {
     title: 'Server down',
     'url': 'Serverdown',
-    shortDescription: 'Aus technischen Gründen ist der Server leider down',
-    text: 'Technische Gründe sind noch unbekannt.',
+    text: 'Aus technischen Gründen ist der Server leider down. Die genauen Gründe sind noch unbekannt.',
     author: 'Nicole',
     thruDate: new Date(2013, 5, 31)
   };

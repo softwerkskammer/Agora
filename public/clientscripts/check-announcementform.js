@@ -20,7 +20,6 @@ var initValidator = function () {
         }
       },
       title: "required",
-      shortDescription: "required",
       author: "required",
       text: "required"
     },
@@ -41,7 +40,7 @@ var initValidator = function () {
 
   announcement_validator.form();
 
-  ['#title', '#url', '#shortDescription', "#author", "#text"].forEach(function (each) {
+  ['#title', '#url', "#author", "#text"].forEach(function (each) {
     $(each).on("change", function () {
       announcement_validator.element(each);
     });

@@ -13,7 +13,6 @@ var Announcement = require('../../lib/announcements/announcement');
 var dummyAnnouncement = new Announcement({
   title: 'title',
   url: 'url',
-  shortDescription: 'shortDescription',
   text: 'text',
   author: 'author',
   fromDate: new Date(2011, 12, 31, 11, 59, 59),
