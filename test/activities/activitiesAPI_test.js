@@ -7,7 +7,7 @@ var conf = require('../configureForTest');
 var Activity = conf.get('beans').get('activity');
 
 var activityId = 'UGMUC_CodingDojo_01.04.2015';
-var dummyActivity = new Activity({id: activityId, title: 'CodingDojo', assignedGroup: 'UGMUC', location: 'Munich'});
+var dummyActivity = new Activity({id: activityId, url: 'url', title: 'CodingDojo', assignedGroup: 'UGMUC', location: 'Munich'});
 
 var store = conf.get('beans').get('activitystore');
 

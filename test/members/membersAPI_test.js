@@ -61,18 +61,6 @@ describe('MembersAPI', function () {
     });
   });
 
-  it('rejects nicknames that contain special characters', function (done) {
-    expect(api.isReserved('Sch adar')).to.be.true;
-    expect(api.isReserved('Sch/adar')).to.be.true;
-    expect(api.isReserved('Schadar-')).to.be.true;
-    expect(api.isReserved('Schad\nar')).to.be.true;
-    expect(api.isReserved('Schad@r')).to.be.true;
-    api.isValidNickname('Scha dar', function (err, result) {
-      expect(result).to.be.false;
-      done();
-    });
-  });
-
   it('rejects nicknames that already exist, even with blanks and different case', function (done) {
     api.isValidNickname(' haDa ', function (err, result) {
       expect(result).to.be.false;

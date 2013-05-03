@@ -35,8 +35,8 @@ describe('Activity application', function () {
     done();
   });
 
-  it('object is not valid, if the required fields are not filled', function () {
-    var tmpActivity = new Activity({description: 'description', assignedGroup: 'assignedGroup', location: 'location',
+  it('object is not valid, if the title is not filled', function () {
+    var tmpActivity = new Activity({description: 'description', url: 'url', assignedGroup: 'assignedGroup', location: 'location',
       direction: 'direction', startDate: '2012-11-11', startTime: 'startTime' });
     expect(validation.isValidActivity(tmpActivity)).to.equal.false;
   });
