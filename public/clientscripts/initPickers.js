@@ -19,12 +19,4 @@ $(document).ready(function () {
     showMeridian: false
   });
 
-  $("#color").colorpicker();
-  $("#colorText").on("change", function (event) {
-    $("#color").colorpicker("setValue", event.target.value);
-  });
-  $("#colorText").on("keyup", function (event) {
-    $("#color").colorpicker("setValue", event.target.value);
-  });
-
 });
