@@ -15,5 +15,5 @@ block content
       for announcement in announcements
         dt #{moment(announcement.fromDate).format("DD.MM.YYYY")}
         dd
-            a(href='#{announcement.url}') #{announcement.title}
+            a(href='#{encodeURIComponent(announcement.url)}') #{announcement.title}
             p #{announcement.shortDescription}
