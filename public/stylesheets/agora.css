@@ -7,7 +7,8 @@ a.editable-click:hover {
 
 @media (min-width: 980px) {
     .container.bottom {
-        padding-top: 20px
+        padding-top: 20px;
+        margin-right: 0px;
     }
 
     .brand.no-padding {

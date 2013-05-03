@@ -3,14 +3,15 @@ html
   head
     meta(charset="utf-8")
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
-    link(href="/stylesheets/bootstrap.css", rel="stylesheet", media="screen")
-    link(href="/stylesheets/bootstrap-responsive.css", rel="stylesheet", media="screen")
-    link(href="/stylesheets/bootstrap-editable.css", rel="stylesheet", media="screen")
-    link(href="/stylesheets/bootstrap-timepicker.css", rel="stylesheet", media="screen")
+    link(href="/stylesheets/bootstrap.css", rel="stylesheet")
+    link(href="/stylesheets/bootstrap-responsive.css", rel="stylesheet")
+    link(href="/stylesheets/bootstrap-editable.css", rel="stylesheet")
+    link(href="/stylesheets/bootstrap-timepicker.css", rel="stylesheet")
     link(href="/stylesheets/font-awesome.min.css", rel="stylesheet")
-    link(href="/stylesheets/fullcalendar.css", rel="stylesheet", media="screen")
-    link(href="/stylesheets/colorpicker.css", rel="stylesheet", media="screen")
-    link(href="/stylesheets/agora.css", rel="stylesheet", media="screen")
+    link(href="/stylesheets/fullcalendar.css", rel="stylesheet")
+    link(href="/stylesheets/colorpicker.css", rel="stylesheet")
+    link(href="/stylesheets/agora.css", rel="stylesheet")
+    link(href="/stylesheets/agora-print.css", rel="stylesheet", media="print")
 
     script(src="/clientscripts/jquery-1.9.1.js")
     script(src="/clientscripts/bootstrap.js")
@@ -44,9 +45,8 @@ html
     include layoutComponents
     .navbar.navbar-fixed-top
       .navbar-inner
-        a.brand.no-padding(href="/")
-          img(src="/img/SoftwerkskammerWappenLinks.png", alt="Softwerkskammer")
-        .container.bottom
+        img.brand.no-padding(src="/img/SoftwerkskammerWappenLinks.png", alt="Softwerkskammer")
+        .container.bottom.no-print
           a.btn.btn-navbar(data-toggle="collapse", data-target=".navbar-inverse-collapse")
             span.icon-bar
             span.icon-bar
@@ -80,9 +80,9 @@ html
       .row-fluid
         .span9
           block content
-        .span3
+        .span3.no-print
           .row-fluid
-            #calendar
+            #calendar.no-print
 
     mixin bottomNavbar
     

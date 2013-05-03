@@ -16,33 +16,35 @@ mixin administrationMenu(top)
           li: a(href="/administration/activityTable")
             i.icon-calendar
             | &nbsp;Aktivitäten
+          li: a(href="/administration/colors")
+            i.icon-eye-open
+            | &nbsp;Farben
 
 mixin loginMenu
-  if (typeof(user) !== 'undefined' && user.member)
     ul.nav.pull-right
-      li.dropdown
-        a.dropdown-toggle(href="#", data-toggle="dropdown") #{user.member.nickname} 
-          i.icon-info-sign
-          b.caret
-        ul.dropdown-menu
-          li: a(href="/members/edit/#{user.member.nickname}")
-            i.icon-edit
-            | &nbsp;Profil bearbeiten
-          li: a(href="/auth/logout")
-            i.icon-signout
-            | &nbsp;Abmelden
-          li: a(href="https://github.com/softwerkskammer/NeuePlattform-Implementierung/issues?state=open")
-            i.icon-github
-            | &nbsp;Einen Bug melden
-          li: include ../version
-  else
-    ul.nav.pull-right
-      li: a.navbar-link(data-toggle="modal", href="#login")
-        i.icon-signin
-        | &nbsp;Anmelden
-
+      if (typeof(user) !== 'undefined' && user.member)
+        li.dropdown
+          a.dropdown-toggle(href="#", data-toggle="dropdown") #{user.member.nickname} 
+            i.icon-info-sign
+            b.caret
+          ul.dropdown-menu
+            li: a(href="/members/edit/#{user.member.nickname}")
+              i.icon-edit
+              | &nbsp;Profil bearbeiten
+            li: a(href="/auth/logout")
+              i.icon-signout
+              | &nbsp;Abmelden
+            li: a(href="https://github.com/softwerkskammer/NeuePlattform-Implementierung/issues?state=open")
+              i.icon-github
+              | &nbsp;Einen Bug melden
+            li: include ../version
+      else
+        li: a.navbar-link(data-toggle="modal", href="#login")
+          i.icon-signin
+          | &nbsp;Anmelden
+      li: a.navbar-link(href="/"): i.icon-home
 mixin bottomNavbar
-  .navbar.navbar-fixed-bottom
+  .navbar.navbar-fixed-bottom.no-print
     .navbar-inner
       ul.nav.pull-right
         mixin administrationMenu(false)
