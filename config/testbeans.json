@@ -27,5 +27,8 @@
   "fieldHelpers": {"module": "./lib/commons/fieldHelpers"},
   "userCommons": {"module": "./lib/commons/userCommons"},
   "validation": {"module": "./lib/commons/validation"},
-  "sympaTransformer": {"module": "./lib/groups/sympaTransformer"}
+  "sympaTransformer": {"module": "./lib/groups/sympaTransformer"},
+  "redirectRuleForNewUser": {"module": "./lib/middleware/redirectRuleForNewUser"},
+  "secureByLogin": {"module": "./lib/middleware/secureByLogin"},
+  "expressViewHelper": {"module": "./lib/middleware/expressViewHelper"}
 }

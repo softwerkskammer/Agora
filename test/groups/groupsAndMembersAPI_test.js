@@ -1,5 +1,5 @@
-/*global describe, it */
 "use strict";
+
 var sinon = require('sinon');
 var conf = require('../configureForTest');
 
@@ -7,16 +7,13 @@ var expect = require('chai').expect;
 
 var Member = conf.get('beans').get('member');
 
-var dummymember = new Member();
-dummymember.id = 'hada';
-var dummymember2 = new Member();
-dummymember2.id = 'hada2';
+var dummymember = new Member({sessionUser: {identifier: 'hada'}});
+var dummymember2 = new Member({sessionUser: {identifier: 'hada2'}});
 
 var Group = conf.get('beans').get('group');
 
 var GroupA = new Group({id: 'GroupA', longName: 'Gruppe A', description: 'Dies ist Gruppe A.', type: 'Themengruppe'});
 var GroupB = new Group({id: 'GroupB', longName: 'Gruppe B', description: 'Dies ist Gruppe B.', type: 'Regionalgruppe'});
-
 
 var membersAPI = conf.get('beans').get('membersAPI');
 var groupsAPI = conf.get('beans').get('groupsAPI');
@@ -148,7 +145,6 @@ describe('Groups and Members API (getGroupAndUsersOfList)', function () {
     });
   });
 });
-
 
 describe('Groups and Members API (userIsInMemberList)', function () {
 

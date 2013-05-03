@@ -1,8 +1,8 @@
-/*global describe, it, before, after */
 "use strict";
+
 var conf = require('../configureForTest');
 var sinon = require('sinon');
-require('chai').should();
+var expect = require('chai').expect;
 
 var persistence = conf.get('beans').get('groupsPersistence');
 
@@ -27,8 +27,8 @@ describe('Groups store', function () {
   it('retrieves groupnames given the intended case', function (done) {
     var queriedId = 'groupA';
     store.getGroup(queriedId, function (err, group) {
-      group.id.should.equal(sampleGroup.id);
-      getById.calledWith(new RegExp('^' + queriedId + '$', 'i')).should.be.true;
+      expect(group.id).to.equal(sampleGroup.id);
+      expect(getById.calledWith(new RegExp('^' + queriedId + '$', 'i'))).to.be.true;
       done(err);
     });
   });
@@ -36,8 +36,8 @@ describe('Groups store', function () {
   it('retrieves groupnames given a different case', function (done) {
     var queriedId = 'GRouPA';
     store.getGroup(queriedId, function (err, group) {
-      group.id.should.equal(sampleGroup.id);
-      getById.calledWith(new RegExp('^' + queriedId + '$', 'i')).should.be.true;
+      expect(group.id).to.equal(sampleGroup.id);
+      expect(getById.calledWith(new RegExp('^' + queriedId + '$', 'i'))).to.be.true;
       done(err);
     });
   });

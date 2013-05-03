@@ -1,4 +1,3 @@
-/*global describe, it */
 "use strict";
 
 var expect = require('chai').expect;
@@ -9,8 +8,8 @@ var persistence = conf.get('beans').get('activitiesPersistence');
 var store = conf.get('beans').get('activitystore');
 
 describe('Activity store', function () {
-  var activity1 = {title: 'CodingDojo1'};
-  var activity2 = {title: 'CodingDojo2'};
+  var activity1 = {title: 'CodingDojo1', url: 'CodingDojo1'};
+  var activity2 = {title: 'CodingDojo2', url: 'CodingDojo2'};
   var sampleList = [activity1, activity2];
 
   before(function (done) {

@@ -22,7 +22,8 @@
         form(action="/auth/openid", method="get")
         input(type="hidden", name="returnTo", value=returnUrl)
         p
-          a(href="#openIDinput", data-toggle="collapse"): i.icon-caret-right
+          a(href="#openIDinput", data-toggle="collapse")
+            i.icon-caret-right
             |&nbsp;(optional)
           |&nbsp;Eingabe der URL eines alternativen OpenID Providers:
         #openIDinput.collapse
