@@ -22,8 +22,7 @@ var initValidator = function () {
       title: "required",
       shortDescription: "required",
       author: "required",
-      text: "required",
-      thrudate: "required"
+      text: "required"
     },
     messages: {
       url: {
@@ -42,7 +41,7 @@ var initValidator = function () {
 
   announcement_validator.form();
 
-  ['#title', '#url', '#shortDescription', "#author", "#text", "#thrudate"].forEach(function (each) {
+  ['#title', '#url', '#shortDescription', "#author", "#text"].forEach(function (each) {
     $(each).on("change", function () {
       announcement_validator.element(each);
     });
