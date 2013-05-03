@@ -16,6 +16,9 @@ mixin administrationMenu(top)
           li: a(href="/administration/activityTable")
             i.icon-calendar
             | &nbsp;Aktivitäten
+          li: a(href="/administration/colors")
+            i.icon-eye-open
+            | &nbsp;Farben
 
 mixin loginMenu
   if (typeof(user) !== 'undefined' && user.member)

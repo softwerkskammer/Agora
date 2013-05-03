@@ -5,6 +5,12 @@ mixin text(name, label, object)
     label(class="control-label", for=name) #{label}:
     input(id=name, class="input-block-level input-xlarge", type='text', name=name, value=object[name])
 
+mixin textReadonly(name, label, object)
+  .control-group
+    input(id=name, type="hidden", name=name, value=object[name])
+    label(class="control-label", for=name) #{label}:
+    span.input-block-level.input-xlarge.uneditable-input #{object[name]}
+
 mixin textarea(name, label, object)
   .control-group
     label(class="control-label", for=name) #{label}:
@@ -33,10 +39,18 @@ mixin time(name, label, object)
 
 mixin colorPicker(name, object)
   .control-group
-    label.control-label(for="color") Farbe für Kalender:
-    #color.input-append.color(data-color="#{activity.color}", data-color-format="hex")
+    label.control-label(for="color") Farbe:
+    #color.input-append.color(data-color="#{object[name]}", data-color-format="hex")
       input#colorText.input-block-level.input-xlarge(type="text", name=name, value=object[name])
-      span.add-on: i(style="background-color: #{activity.color}")
+      span.add-on: i(style="background-color: #{object[name]}")
+    script
+      $("#color").colorpicker();
+      $("#colorText").on("change", function (event) {
+        $("#color").colorpicker("setValue", event.target.value);
+      });
+      $("#colorText").on("keyup", function (event) {
+        $("#color").colorpicker("setValue", event.target.value);
+      });
 
 // PICKERS END
 

@@ -26,3 +26,25 @@ mixin tabTextareaNarrow(no, object, name, callback, placementOptional)
     data-tpl="<textarea class='input-xlarge'></textarea>", data-type="textarea", data-pk="#{object.id}", 
     data-url="#{callback}"): .ellipsis.narrow #{object[name]}
 
+mixin tabColor(no, object, name, callback)
+  td(class="span#{no}"): a(id="#{name}", href="#", data-type="text",
+    data-pk="#{object.id}", data-url="#{callback}", data-clear="false",
+    data-tpl='<div id="color" data-color="#9d20bd" data-color-format="hex" class="input-append color"><input id="colorText" type="text" name="color" /><span class="add-on"><i style="background-color: #9d20bd"></i></span></div>    <script>    $("#color").colorpicker();    $("#colorText").on("change", function (event) {      $("#color").colorpicker("setValue", event.target.value);    });    $("#colorText").on("keyup", function (event) {      $("#color").colorpicker("setValue", event.target.value);    });'
+    ): .ellipsis #{object[name]}
+
+mixin colorPickerForTable(id, name, object)
+  .control-group
+    label.control-label(for="color#{id}") #{id}:
+    .controls
+      #color.input-append.color(id="color#{id}", data-color="#{object[name]}", data-color-format="hex")
+        input.input-block-level.input-xlarge(id="colorText#{id}", type="text", name=id, value=object[name])
+        span.add-on: i(style="background-color: #{object[name]}")
+      script
+        $("#color#{id}").colorpicker();
+        $("#colorText#{id}").on("change", function (event) {
+          $("#color#{id}").colorpicker("setValue", event.target.value);
+        });
+        $("#colorText#{id}").on("keyup", function (event) {
+          $("#color#{id}").colorpicker("setValue", event.target.value);
+        });
+

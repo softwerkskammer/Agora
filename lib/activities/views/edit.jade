@@ -18,6 +18,11 @@ block content
         .span12
           legend
             | Aktivität
+            if (activity.id)
+              |  bearbeiten
+            else
+              |  anlegen
+
       .row-fluid
         .span6
           mixin text('title', 'Titel', activity)
@@ -44,5 +49,5 @@ block content
           mixin colorPicker('color', activity)
       .row-fluid
         .span12
-          button.btn.btn-primary.pull-right(type="/activities/submit") Speichern
+          button.btn.btn-primary.pull-right(type="submit") Speichern
           a.btn.pull-right(href="javascript:history.back()", type="cancel") Zurück
