@@ -4,6 +4,7 @@ include  ../../../views/formComponents
 
 block scripts
   script(src="/clientscripts/jquery.validate-1.11.1.js")
+  script(src="/clientscripts/additional-methods-1.11.1.js")
   script(src="/clientscripts/messages_de.js")
   script(src="/clientscripts/check-memberform.js")
 
@@ -45,25 +46,25 @@ block content
           if (user.member && user.member.isAdmin)
             mixin checkbox('isAdmin', 'Administrator', !!member.isAdmin)
     
-  if !user.member
+    if !user.member
+      .row-fluid
+        .span12
+          mixin textarea('reference', 'Wie ich von der Softwerkskammer erfahren habe', member)
+    else
+      mixin hidden('reference', member)
+      
+    .row-fluid
+      .span6
+        legend Gruppenmitgliedschaft
+        .control-group
+          each markedGroup in markedGroups
+            mixin checkbox('newSubscriptions', markedGroup.group.longName, markedGroup.selected, markedGroup.group.id)
     .row-fluid
       .span12
-        mixin textarea('reference', 'Wie ich von der Softwerkskammer erfahren habe', member)
-  else
-    mixin hidden('reference', member)
-    
-  .row-fluid
-    .span6
-      legend Gruppenmitgliedschaft
-      .control-group
-        each markedGroup in markedGroups
-          mixin checkbox('newSubscriptions', markedGroup.group.longName, markedGroup.selected, markedGroup.group.id)
-  .row-fluid
-    .span12
-      button.btn.btn-primary.pull-right(type="submit") Speichern
-      if (user.member)
-        a.btn.pull-right(href="javascript:history.back()", type="cancel") Zurück
-        if (user.member.id === member.id)
-          a.btn.pull-right(href="/auth/logout", type="cancel") Abmelden
-      else
-        a.btn.pull-right(href="/auth/logout", type="cancel") Abbrechen
+        button.btn.btn-primary.pull-right(type="submit") Speichern
+        if (user.member)
+          a.btn.pull-right(href="javascript:history.back()", type="cancel") Zurück
+          if (user.member.id === member.id)
+            a.btn.pull-right(href="/auth/logout", type="cancel") Abmelden
+        else
+          a.btn.pull-right(href="/auth/logout", type="cancel") Abbrechen
