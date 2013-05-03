@@ -1,24 +1,33 @@
 /*global describe, it */
 "use strict";
-var proxyquire = require('proxyquire');
 var expect = require('chai').expect;
+var sinon = require('sinon');
+var conf = require('./configureForTest');
+var Member = conf.get('beans').get('member');
+var dummymember = new Member({object: {id: 'id', nickname: 'hada'}});
 
-var Member = require('../lib/members/member');
-var dummymember = new Member('id', 'hada');
-var memberstoreStub = {
-  getMember: function (nickname, callback) {
-    if (new RegExp(nickname, 'i').test('hada')) {
-      return callback(null, dummymember);
-    }
-    callback(null, null);
-  }
-};
+var memberstore = conf.get('beans').get('memberstore');
 
-var api = proxyquire('../lib/members/membersAPI', {
-  './memberstore': memberstoreStub
-});
+var api = conf.get('beans').get('membersAPI');
 
 describe('MembersAPI', function () {
+
+  beforeEach(function (done) {
+    sinon.stub(memberstore, 'getMember', function (nickname, callback) {
+      if (new RegExp(nickname, 'i').test('hada')) {
+        return callback(null, dummymember);
+      }
+      callback(null, null);
+    });
+    done();
+  });
+
+  afterEach(function (done) {
+    memberstore.getMember.restore();
+    done();
+  });
+
+
   it('rejects nicknames that are reserved for URLs', function (done) {
     expect(api.isReserved('edit')).to.be.true;
     expect(api.isReserved('eDit')).to.be.true;

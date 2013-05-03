@@ -1,37 +1,18 @@
 /*global describe, it */
 "use strict";
-var proxyquire = require('proxyquire'),
-  sinon = require('sinon');
+var sinon = require('sinon');
 
 var expect = require('chai').expect;
+var conf = require('../configureForTest');
 
-var Group = require('../../lib/groups/group');
+var Group = conf.get('beans').get('group');
 
 var GroupA = new Group({id: 'GroupA', longName: 'Gruppe A', description: 'Dies ist Gruppe A.', type: 'Themengruppe'});
 var GroupB = new Group({id: 'GroupB', longName: 'Gruppe B', description: 'Dies ist Gruppe B.', type: 'Regionalgruppe'});
 
-var groupstoreStub = {
-};
 
-var sympaStub = {
-  getSubscribedListsForUser: function () {
-  },
-  addUserToList: function (email, list, callback) {
-    callback();
-  },
-  removeUserFromList: function (email, list, callback) {
-    callback();
-  }
-};
-
-var groupsAPI = proxyquire('../../lib/groups/groupsAPI', {
-  './groupstore': groupstoreStub,
-  './sympaStub': function () {
-    return sympaStub;
-  }
-});
-
-var systemUnderTest = groupsAPI;
+var sympaStub = conf.get('beans').get('sympaStub');
+var systemUnderTest = conf.get('beans').get('groupsAPI');
 
 describe('Groups API (updateSubscriptions)', function () {
 
@@ -39,21 +20,26 @@ describe('Groups API (updateSubscriptions)', function () {
   var unsubscribeSpy;
 
   beforeEach(function (done) {
-    subscribeSpy = sinon.spy(sympaStub, 'addUserToList');
-    unsubscribeSpy = sinon.spy(sympaStub, 'removeUserFromList');
+    subscribeSpy = sinon.stub(sympaStub, 'addUserToList', function (email, list, callback) {
+      callback();
+    });
+    unsubscribeSpy = sinon.stub(sympaStub, 'removeUserFromList', function (email, list, callback) {
+      callback();
+    });
     done();
   });
 
   afterEach(function (done) {
     sympaStub.addUserToList.restore();
     sympaStub.removeUserFromList.restore();
+    sympaStub.getSubscribedListsForUser.restore();
     done();
   });
 
   var setupSubscribedListsForUser = function (lists) {
-    sympaStub.getSubscribedListsForUser = function (email, callback) {
+    sinon.stub(sympaStub, 'getSubscribedListsForUser', function (email, callback) {
       callback(null, lists);
-    };
+    });
   };
 
   it('subscribes and unsubscribes no lists if both old and new subscription lists are empty', function (done) {

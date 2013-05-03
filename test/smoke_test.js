@@ -3,6 +3,9 @@
 var child_process = require("child_process");
 var should = require('chai').should();
 var request = require('request');
+
+var nconf = require('./configureForTest');
+
 var port = 17126;
 var base_uri = "http://localhost:" + port;
 
@@ -34,13 +37,11 @@ describe('Server started in different process', function () {
   };
 
   beforeEach(function (done) {
-    var nconf = require('./configureForTest');
     nconf.set('port', port);
     done();
   });
 
   afterEach(function (done) {
-    var nconf = require('./configureForTest');
     nconf.set('port', 17125);
     child.on("exit", function () {  // this callback does not receive an error value
       done();

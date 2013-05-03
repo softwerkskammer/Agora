@@ -1,10 +1,9 @@
 /*global describe, it */
 "use strict";
-
+var conf = require('./configureForTest');
 var expect = require('chai').expect;
 
-
-var systemUnderTest = require('../lib/groups/sympaTransformer')();
+var systemUnderTest = conf.get('beans').get('sympaTransformer');
 
 describe('Sympa-Transformer ', function () {
 
