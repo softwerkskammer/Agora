@@ -17,8 +17,7 @@ var initValidator = function () {
               return $("#previousUrl").val();
             }
           }
-        },
-        alphanumeric: true
+        }
       },
       title: "required",
       location: "required",
@@ -27,8 +26,7 @@ var initValidator = function () {
     },
     messages: {
       url: {
-        remote: $.validator.format("Diese URL ist leider nicht verfügbar."),
-        alphanumeric: $.validator.format("URL darf nur Buchstaben, Zahlen und Unterstrich enthalten.")
+        remote: $.validator.format("Diese URL ist leider nicht verfügbar.")
       }
     },
     errorElement: "span",

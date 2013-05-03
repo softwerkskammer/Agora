@@ -11,8 +11,7 @@ var initValidator = function () {
       nickname: {
         required: true,
         minlength: 2,
-        remote: "/members/checknickname",
-        alphanumeric: true
+        remote: "/members/checknickname"
       },
       firstname: "required",
       lastname: "required",
