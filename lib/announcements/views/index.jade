@@ -9,10 +9,11 @@ block content
       h2 Nachrichten
         small  Alle
         - if (typeof(user) !== 'undefined' && user.member.isAdmin)
-          | 
-          a(href="new/", class="btn") Neu
+            a.pull-right.btn(href="new/"): i.icon-file
 
-    ul
+    dl.dl-horizontal
       for announcement in announcements
-        li: .announcement: strong: a(href='#{announcement.title}') #{announcement.title}
-          | #{announcement.shortDescription}
+        dt #{moment(announcement.fromDate).format("DD.MM.YYYY")}
+        dd
+            a(href='#{announcement.url}') #{announcement.title}
+            p #{announcement.shortDescription}
