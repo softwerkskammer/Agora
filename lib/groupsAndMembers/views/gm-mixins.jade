@@ -1,5 +1,5 @@
 mixin memberlist(members)
   dl.dl-horizontal
     for member in members
-      dt: .member: a(href="/members/#{member.nickname}") #{member.nickname} 
+      dt: .member: a(href="/members/#{encodeURIComponent(member.nickname)}") #{member.nickname} 
       dd #{member.firstname} #{member.lastname}, #{member.location}

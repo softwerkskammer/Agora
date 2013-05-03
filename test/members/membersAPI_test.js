@@ -1,8 +1,8 @@
-/*global describe, it */
 "use strict";
+
 var expect = require('chai').expect;
 var sinon = require('sinon');
-var conf = require('./configureForTest');
+var conf = require('../configureForTest');
 var Member = conf.get('beans').get('member');
 var dummymember = new Member({object: {id: 'id', nickname: 'hada'}});
 
@@ -57,18 +57,6 @@ describe('MembersAPI', function () {
   it('accepts nicknames that contain other nicknames', function (done) {
     api.isValidNickname('Schadar', function (err, result) {
       expect(result).to.be.true;
-      done();
-    });
-  });
-
-  it('rejects nicknames that contain special characters', function (done) {
-    expect(api.isReserved('Sch adar')).to.be.true;
-    expect(api.isReserved('Sch/adar')).to.be.true;
-    expect(api.isReserved('Schadar-')).to.be.true;
-    expect(api.isReserved('Schad\nar')).to.be.true;
-    expect(api.isReserved('Schad@r')).to.be.true;
-    api.isValidNickname('Scha dar', function (err, result) {
-      expect(result).to.be.false;
       done();
     });
   });

@@ -1,8 +1,7 @@
-/*global describe, it*/
 "use strict";
 require('./configureForTest');
-var request = require('supertest'),
-  express = require('express');
+var request = require('supertest');
+var express = require('express');
 
 var app = require('../lib/filebrowser')(express());
 describe('File browser application', function () {
@@ -100,6 +99,5 @@ describe('File browser application', function () {
       .expect(/<div>hello1 content<\/div>/)
       .expect(200, done);
   });
-
 
 });

@@ -1,11 +1,9 @@
-/*global describe, it*/
 "use strict";
+
 var request = require('supertest');
 var express = require('express');
-var proxyquire = require('proxyquire');
 var conf = require('./configureForTest');
 var sinon = require('sinon');
-require('chai').should();
 
 var Member = conf.get('beans').get('member');
 var membersAPI = conf.get('beans').get('membersAPI');
@@ -18,16 +16,13 @@ function configureAuhenticatedUser(req, res, next) {
   next();
 }
 
-var memberAppFactory = conf.get('beans').get('membersApp');
-var authenticationAppFactory = proxyquire('../lib/authentication', {});
-
 var appUnderTest = express();
 appUnderTest.configure(function () {
   appUnderTest.use(configureAuhenticatedUser);
-  appUnderTest.use(authenticationAppFactory.secureByLogin);
-  appUnderTest.use(memberAppFactory.newUserMustFillInRegistration);
+  appUnderTest.use(conf.get('beans').get('secureByLogin'));
+  appUnderTest.use(conf.get('beans').get('redirectRuleForNewUser'));
 });
-appUnderTest.use('/members/', memberAppFactory.create(express()));
+appUnderTest.use('/members/', conf.get('beans').get('membersApp')(express()));
 
 describe('member redirects', function () {
 

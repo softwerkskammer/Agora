@@ -1,9 +1,7 @@
-/*global describe, it */
 "use strict";
 
-var nconf = require('./configureForTest');
 var expect = require('chai').expect;
-var securedByLoginURLRegex = new RegExp(nconf.get('securedByLoginURLPattern'));
+var securedByLoginURLRegex = new RegExp(require('./configureForTest').get('securedByLoginURLPattern'));
 
 
 describe('default secure URL configuration', function () {

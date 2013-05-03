@@ -15,7 +15,7 @@ block content
             else
               | Profilansicht
           if (typeof(user) !== 'undefined' && (user.member.isAdmin || user.member.id === member.id))
-            a.pull-right.btn(href="/members/edit/#{member.nickname}"): i.icon-edit
+            a.pull-right.btn(href="/members/edit/#{encodeURIComponent(member.nickname)}"): i.icon-edit
       p
         strong Vorname:
         |  #{member.firstname}

@@ -1,6 +1,4 @@
 "use strict";
 
-var nconf = require("./configure")();
-
-var app = require('./app.js')(nconf);
-app.start();
+require("./configure")(); // initializing parameters
+require('./app.js')().start();

@@ -13,7 +13,7 @@ block content
             else (activity.endTime)
               |  - #{activity.endTime})
           if (typeof(user) !== 'undefined' && user.member.isAdmin)
-            a.pull-right.btn(href="/activities/edit/#{activity.url}"): i.icon-edit
+            a.pull-right.btn(href="/activities/edit/#{encodeURIComponent(activity.url)}"): i.icon-edit
         p
           strong #{activity.groupName(groups)}
   .row-fluid
