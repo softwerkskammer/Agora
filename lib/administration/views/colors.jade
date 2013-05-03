@@ -33,8 +33,12 @@ block content
         .row-fluid
           .span12
             .control-group
-              label(class="control-label", for='id') Name:
+              label(class="control-label", for='id') Name (keine Leerzeichen!):
               input(id='id', class="input-block-level input-xlarge", type='text', name='id')
             input(id='color', type="hidden", name='color', value='#9c4141')
       .modal-footer
         button.btn.btn-primary(type="submit") Anlegen
+  script
+    $('#newcolor').on('shown', function () {
+      $('#id').focus();
+    })

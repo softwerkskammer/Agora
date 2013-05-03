@@ -14,6 +14,7 @@ var dummyActivity = new Activity({title: 'title', description: 'description', as
 var activitiesAPI = conf.get('beans').get('activitiesAPI');
 var groupsAPI = conf.get('beans').get('groupsAPI');
 var validation = conf.get('beans').get('validation');
+var colors = conf.get('beans').get('colorAPI');
 
 var app = conf.get('beans').get('activitiesApp')(express());
 
@@ -25,6 +26,7 @@ describe('Activity application', function () {
     allActivities = sinon.stub(activitiesAPI, 'allActivities', function (callback) {callback(null, [dummyActivity]); });
     getActivity = sinon.stub(activitiesAPI, 'getActivity', function (url, callback) {callback(null, (url === 'url') ? dummyActivity : null); });
     sinon.stub(groupsAPI, 'getAllAvailableGroups', function (callback) { callback(null, []); });
+    sinon.stub(colors, 'allColors', function (callback) { callback(null, []); });
     done();
   });
 
@@ -32,6 +34,7 @@ describe('Activity application', function () {
     activitiesAPI.allActivities.restore();
     activitiesAPI.getActivity.restore();
     groupsAPI.getAllAvailableGroups.restore();
+    colors.allColors.restore();
     done();
   });
 
@@ -77,7 +80,6 @@ describe('Activity application', function () {
   });
 
   it('allows to create a new activity', function (done) {
-
     request(app)
       .get('/new')
       .expect(200)

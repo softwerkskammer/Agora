@@ -45,8 +45,13 @@ block content
             label.control-label(for="assignedGroup") Gruppe:
             select#assignedGroup.input-block-level.input-xlarge(name="assignedGroup")
               for group in groups
-                option(value=group.id, selected = (activity.assignedGroup != undefined && activity.assignedGroup == group.id))  #{group.longName}
-          mixin colorPicker('color', activity)
+                option(value=group.id, selected = (activity.assignedGroup != undefined && activity.assignedGroup == group.id)) #{group.longName}
+          .control-group
+            label.control-label(for="type") Farbe:
+            select#type.input-block-level.input-xlarge(name="color")
+              for color in colorlist
+                option(selected=activity.color === color) #{color}
+
       .row-fluid
         .span12
           button.btn.btn-primary.pull-right(type="submit") Speichern
