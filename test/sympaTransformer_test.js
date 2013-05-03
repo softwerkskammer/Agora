@@ -1,12 +1,11 @@
-/*global describe, it */
 "use strict";
+
 var conf = require('./configureForTest');
 var expect = require('chai').expect;
 
 var systemUnderTest = conf.get('beans').get('sympaTransformer');
 
 describe('Sympa-Transformer ', function () {
-
 
   it('returns an empty array if the list of objects to be transformed is empty', function (done) {
 
