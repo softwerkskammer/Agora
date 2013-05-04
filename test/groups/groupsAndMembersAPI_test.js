@@ -7,8 +7,8 @@ var expect = require('chai').expect;
 
 var Member = conf.get('beans').get('member');
 
-var dummymember = new Member({sessionUser: {identifier: 'hada'}});
-var dummymember2 = new Member({sessionUser: {identifier: 'hada2'}});
+var dummymember = new Member().initFromSessionUser({identifier: 'hada'});
+var dummymember2 = new Member().initFromSessionUser({identifier: 'hada2'});
 
 var Group = conf.get('beans').get('group');
 
