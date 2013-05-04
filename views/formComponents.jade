@@ -23,7 +23,7 @@ mixin checkbox(name, label, checked, optionalValue)
     | #{label}
 
 mixin hidden(name, object, optionalAlternateValue)
-  input(id=name, type="hidden", name=name, value=object[(optionalAlternateValue ? optionalAlternateValue :name)])
+  input(id=name, type="hidden", name=name, value=object[(optionalAlternateValue ? optionalAlternateValue : name)])
 
 // PICKERS
 // you need to include this initPickers.js, if you use the color-, date- or timepicker
