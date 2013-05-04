@@ -10,20 +10,24 @@
   "groupsAPI": {"module": "./lib/groups/groupsAPI"},
   "membersAPI": {"module": "./lib/members/membersAPI"},
   "activitiesAPI": {"module": "./lib/activities/activitiesAPI"},
+  "colorAPI": {"module": "./lib/administration/colorAPI"},
 
   "groupstore": {"module": "./lib/groups/groupstore"},
   "memberstore": {"module": "./lib/members/memberstore"},
   "activitystore": {"module": "./lib/activities/activitystore"},
+  "colorstore": {"module": "./lib/administration/colorstore"},
 
   "sympaStub": {"module": "./lib/groups/sympaStub"},
   "groupsPersistence": {"module": "./test/persistence/testpersistence"},
   "membersPersistence": {"module": "./test/persistence/testpersistence"},
   "activitiesPersistence": {"module": "./test/persistence/testpersistence"},
   "mailsPersistence": {"module": "./test/persistence/testpersistence"},
+  "colorsPersistence": {"module": "./test/persistence/testpersistence"},
 
   "group": {"module": "./lib/groups/group"},
   "member": {"module": "./lib/members/member"},
   "activity": {"module": "./lib/activities/activity"},
+  "color": {"module": "./lib/administration/color"},
 
   "fieldHelpers": {"module": "./lib/commons/fieldHelpers"},
   "userCommons": {"module": "./lib/commons/userCommons"},

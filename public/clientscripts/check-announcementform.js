@@ -11,25 +11,20 @@ var initValidator = function () {
       url: {
         required: true,
         remote: {
-          url: "/announcement/checkurl",
+          url: "/announcements/checkurl",
           data: {
             previousUrl: function () {
               return $("#previousUrl").val();
             }
           }
-        },
-        alphanumeric: true
+        }
       },
       title: "required",
-      shortDescription: "required",
-      author: "required",
-      text: "required",
-      thrudate: "required"
+      author: "required"
     },
     messages: {
       url: {
-        remote: $.validator.format("Diese URL ist leider nicht verfügbar."),
-        alphanumeric: $.validator.format("URL darf nur Buchstaben, Zahlen und Unterstrich enthalten.")
+        remote: $.validator.format("Diese URL ist leider nicht verfügbar.")
       }
     },
     errorElement: "span",
@@ -44,7 +39,7 @@ var initValidator = function () {
 
   announcement_validator.form();
 
-  ['#title', '#shortDescription', "#author", "#text", "#thrudate"].forEach(function (each) {
+  ['#title', '#url', "#author"].forEach(function (each) {
     $(each).on("change", function () {
       announcement_validator.element(each);
     });

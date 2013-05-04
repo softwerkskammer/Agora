@@ -6,7 +6,7 @@ block content
   .row-fluid
     .span12
       .page-header
-        h2 #{activity.title} 
+        h2 #{activity.title} <br> 
           small #{activity.startDate} (#{activity.startTime}
             if (activity.endDate && activity.endDate !== activity.startDate)
               | ) - #{activity.endDate} (#{activity.endTime})
@@ -14,16 +14,16 @@ block content
               |  - #{activity.endTime})
           if (typeof(user) !== 'undefined' && user.member.isAdmin)
             a.pull-right.btn(href="/activities/edit/#{encodeURIComponent(activity.url)}"): i.icon-edit
-        p
-          strong #{activity.groupName(groups)}
   .row-fluid
     .span8
-      h3 Beschreibung
-      p !{activity.descriptionHTML()}
-      h3 Ort
+      !{activity.descriptionHTML()}
+      hr
+      h3 Adresse:
       p #{activity.location}
       h4 Wegbeschreibung: 
       p !{activity.directionHTML()}
+      hr
+      p Veranstaltet von der Gruppe: #{activity.groupName(groups)}
 
 block scripts
   script

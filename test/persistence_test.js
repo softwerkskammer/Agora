@@ -62,7 +62,7 @@ describe('The persistence store', function () {
 
 });
 
-describe('The persistence store', function () {
+describe('The persistence store for many objects', function () {
   var persistence;
   var user1 = {id: '1', firstname: 'Heinz', lastname: 'Meier'};
   var user2 = {id: '2', firstname: 'Max', lastname: 'Albers'};
@@ -77,6 +77,10 @@ describe('The persistence store', function () {
         });
       });
     });
+  };
+
+  var storeSampleDataAtOnce = function (done) {
+    persistence.saveAll([user1, user2, user3, user4], done);
   };
 
   var clearStore = function (done) {
@@ -118,7 +122,23 @@ describe('The persistence store', function () {
         done(err);
       });
     });
+  });
 
+  it('stores all objects with one call', function (done) {
+    storeSampleDataAtOnce(function () {
+      persistence.list({lastname: 1, firstname: 1}, function (err, result) {
+        result.length.should.equal(4);
+        result[0].firstname.should.equal('Anna');
+        result[0].lastname.should.equal('Albers');
+        result[1].firstname.should.equal('Max');
+        result[1].lastname.should.equal('Albers');
+        result[2].firstname.should.equal('Heinz');
+        result[2].lastname.should.equal('Meier');
+        result[3].firstname.should.equal('Peter');
+        result[3].lastname.should.equal('Paulsen');
+        done(err);
+      });
+    });
   });
 
 });

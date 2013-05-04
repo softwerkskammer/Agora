@@ -15,6 +15,8 @@ module.exports = {
 
   save: function () {},
 
+  saveAll: function () {},
+
   drop: function () {}
 };
 
