@@ -31,6 +31,11 @@
                              "connectionName": "activitystore"
                        }},
 
+  "mailsPersistence": {"module": "./lib/persistence/persistence",
+                        "constructorArgs": {
+                             "connectionName": "mailsstore"
+                       }},
+
   "group": {"module": "./lib/groups/group"},
   "member": {"module": "./lib/members/member"},
   "activity": {"module": "./lib/activities/activity"},
