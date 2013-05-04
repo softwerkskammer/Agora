@@ -43,3 +43,9 @@ td.fc-header-right {
 .ellipsis.narrow {
     max-width: 120px;
 }
+
+@media print {
+    .btn, .no-print {
+        display: none; !important
+    }
+}
