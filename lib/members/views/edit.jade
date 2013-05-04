@@ -26,11 +26,9 @@ block content
               | anlegen
       .row-fluid
         .span6
-          if (!user.member)
-            mixin text('nickname', 'Nickname', member)
-          else
-            mixin hidden('id', member)
-            mixin hidden('nickname', member)
+          mixin hidden('id', member)
+          mixin hidden('previousNickname', member, 'nickname')
+          mixin text('nickname', 'Nickname', member)
           mixin text('firstname', 'Vorname', member)
           mixin text('lastname', 'Nachname', member)
           mixin text('email', 'Email', member)
