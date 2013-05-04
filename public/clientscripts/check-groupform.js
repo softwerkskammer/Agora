@@ -6,6 +6,11 @@ var initValidator = function () {
 
   // DO NOT FORGET TO KEEP THIS FILE IN SYNC WITH /lib/commons/validation.js
 
+  $.validator.addMethod("alnumdashblank", function(value, element)
+                        {
+                          return this.optional(element) || /^[a-z0-9 -]+$/i.test(value);
+                        }, "Präfix für Emails darf nur Zahlen, Buchstaben, Leerzeichen und Bindestriche enthalten.");
+
   groups_validator = $("#groupform").validate({
     rules: {
       id: {
@@ -19,7 +24,7 @@ var initValidator = function () {
         required: true,
         minlength: 5,
         maxlength: 15,
-        alphanumeric: true,
+        alnumdashblank: "",
         remote: "/groups/checkemailprefix"
       },
       longName: "required",
