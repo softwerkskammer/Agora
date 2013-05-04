@@ -28,7 +28,8 @@ module.exports = function () {
   // initialize winston and two concrete loggers
   require('winston-config').fromFile(path.join(__dirname, 'config/winston-config.json'), function (error) {
     if (error) {
-      appLogger.log('error during winston initialization, using default loggers (console with loglevel silly)');
+      console.log('error during winston initialization, using default loggers (console with loglevel silly)');
+      console.log('please provide a valid logging config file (config/winston-config.json)');
     }
   });
   var appLogger = winston.loggers.get('application');
