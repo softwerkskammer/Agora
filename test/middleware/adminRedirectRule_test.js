@@ -84,11 +84,6 @@ describe('RedirectIfNotAdmin Rule (administration)', function () {
     expect(adminURLRegex.test(url)).to.be.true;
   });
 
-  it('secures URLs with administration at the end', function () {
-    var url = 'http://host/administration';
-    expect(adminURLRegex.test(url)).to.be.true;
-  });
-
   it('secures URLs with administration/ at the end', function () {
     var url = 'http://host/administration/';
     expect(adminURLRegex.test(url)).to.be.true;
