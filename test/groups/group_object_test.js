@@ -28,4 +28,10 @@ describe('Group object', function () {
     done();
   });
 
+  it('should transform the id to lowercase', function (done) {
+    var group = new Group({id: 'NeuePlattform'});
+    expect(group.id).to.equal('neueplattform');
+    done();
+  });
+
 });
