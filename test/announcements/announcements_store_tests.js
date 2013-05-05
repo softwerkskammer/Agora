@@ -2,23 +2,11 @@
 "use strict";
 require('chai').should();
 
-var proxyquire = require('proxyquire'),
-  sinon = require('sinon');
+var sinon = require('sinon');
 
-var persistenceStub = {
-  save: function () {
-  },
-  getById: function () {
-  },
-  getByField: function () {
-  },
-  list: function () {
-  }
-};
-
-var store = proxyquire('../../lib/announcements/announcementstore.js', {'../persistence/persistence': function () {
-  return persistenceStub;
-}});
+var conf = require('../configureForTest');
+var persistence = conf.get('beans').get('announcementPersistence');
+var store = conf.get('beans').get('announcementstore');
 
 describe('Announcement store', function () {
   var announcement1 = {
@@ -36,11 +24,11 @@ describe('Announcement store', function () {
     thruDate: new Date(2013, 5, 31)
   };
   var sampleList = [announcement1, announcement2];
-  var getByField = sinon.stub(persistenceStub, 'getByField');
+  var getByField = sinon.stub(persistence, 'getByField');
   getByField.callsArgWith(1, null, announcement1);
 
   it('calls persistence.list for store.allAnnouncements and passes on the given callback', function (done) {
-    var list = sinon.stub(persistenceStub, 'list');
+    var list = sinon.stub(persistence, 'list');
     list.callsArgWith(1, null, sampleList);
 
     store.allAnnouncements(function (err, announcements) {
