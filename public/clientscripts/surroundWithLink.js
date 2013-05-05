@@ -13,7 +13,7 @@ var surroundTwitterName = function (twittername) {
   if (twittername.trim().length === 0) {
     return twittername;
   }
-  return "<a href=\"http://twitter.com/" + twittername + "\" target=\"_blank\"><i class=\"icon-external-link\"/> @" + twittername + "</a>";
+  return "<a href=\"http://twitter.com/" + twittername + "\" target=\"_blank\">@" + twittername + "</a>";
 };
 
 var surroundEmail = function (email) {
