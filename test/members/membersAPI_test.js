@@ -4,7 +4,6 @@ var expect = require('chai').expect;
 var sinon = require('sinon');
 var conf = require('../configureForTest');
 var Member = conf.get('beans').get('member');
-var dummymember = new Member({object: {id: 'id', nickname: 'hada'}});
 
 var memberstore = conf.get('beans').get('memberstore');
 
@@ -15,7 +14,7 @@ describe('MembersAPI', function () {
   beforeEach(function (done) {
     sinon.stub(memberstore, 'getMember', function (nickname, callback) {
       if (new RegExp(nickname, 'i').test('hada')) {
-        return callback(null, dummymember);
+        return callback(null, new Member());
       }
       callback(null, null);
     });

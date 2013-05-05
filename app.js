@@ -26,7 +26,12 @@ module.exports = function () {
   var secureByLogin = conf.get('beans').get('secureByLogin');
   var expressViewHelper = conf.get('beans').get('expressViewHelper');
   // initialize winston and two concrete loggers
-  require('winston-config').winstonConfigFromFile(__dirname + '/./config/winston-config.json');
+  require('winston-config').fromFile(path.join(__dirname, 'config/winston-config.json'), function (error) {
+    if (error) {
+      console.log('error during winston initialization, using default loggers (console with loglevel silly)');
+      console.log('please provide a valid logging config file (config/winston-config.json)');
+    }
+  });
   var appLogger = winston.loggers.get('application');
   var httpLogger = winston.loggers.get('http');
 
