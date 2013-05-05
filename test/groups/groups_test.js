@@ -17,17 +17,31 @@ describe('Groups application', function () {
     sinon.stub(sympa, 'getAllAvailableLists', function (callback) {
       return callback(null, ['GroupA']);
     });
+
     sinon.stub(groupsPersistence, 'listByIds', function (list, sortOrder, callback) {
-      return callback(null, [
-        {id: 'GroupA', longName: 'Gruppe A', description: 'Dies ist Gruppe A.', type: 'Themengruppe'}
-      ]);
+      if (list[0] === 'GroupA') {
+        return callback(null, [
+          {id: 'GroupA', longName: 'Gruppe A', description: 'Dies ist Gruppe A.', type: 'Themengruppe', emailPrefix: 'Group-A'}
+        ]);
+      }
+      return callback(null, []);
     });
+
+    sinon.stub(groupsPersistence, 'getById', function (list, callback) {
+      if (list.test('GroupA')) {
+        return callback(null,
+                        {id: 'GroupA', longName: 'Gruppe A', description: 'Dies ist Gruppe A.', type: 'Themengruppe', emailPrefix: 'Group-A'});
+      }
+      return callback(null, null);
+    });
+
     done();
   });
 
   after(function (done) {
     sympa.getAllAvailableLists.restore();
     groupsPersistence.listByIds.restore();
+    groupsPersistence.getById.restore();
     done();
   });
 
@@ -40,17 +54,18 @@ describe('Groups application', function () {
       .expect(/Gruppe A/, done);
   });
 
-  it('does not allow to create a new group for normal visitors', function (done) {
-
+  it('returns false for checkgroupname when the group name already exists', function (done) {
     request(app)
-      .get('/new')
-      .expect(302, done);
+    .get('/checkgroupname?id=GroupA')
+    .expect(200)
+    .expect(/false/, done);
   });
 
-  it('does not allow to edit an existing group for normal visitors', function (done) {
+  it('returns true for checkgroupname when the group name does not exist', function (done) {
     request(app)
-      .get('/edit/GroupA')
-      .expect(302, done);
+    .get('/checkgroupname?id=UnknownGroup')
+    .expect(200)
+    .expect(/true/, done);
   });
 
   it('displays an existing group and membercount', function (done) {
@@ -59,9 +74,6 @@ describe('Groups application', function () {
       if (groupname === 'GroupA') {
         return callback(['peter@google.de', 'hans@aol.com']);
       }
-    });
-    sinon.stub(groupsPersistence, 'getById', function (listname, callback) {
-      return callback(null, {id: 'GroupA', longName: 'Gruppe A', description: 'Dies ist Gruppe A.', type: 'Themengruppe'});
     });
     sinon.stub(membersPersistence, 'listByEMails', function (emails, sortOrder, callback) {
       return callback(null, [
@@ -80,7 +92,6 @@ describe('Groups application', function () {
       .expect(/Mitglieder der Gruppe:/)
       .expect(/Diese Gruppe hat 2 Mitglieder/, function (err) {
         sympa.getUsersOfList.restore();
-        groupsPersistence.getById.restore();
         membersPersistence.listByEMails.restore();
         done(err);
       });
