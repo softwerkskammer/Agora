@@ -82,7 +82,7 @@ describe('The app itself', function () {
     request(app.create())
       .get('/members/')
       .expect('Content-Type', /text\/plain/)
-      .expect('Moved Temporarily. Redirecting to /auth/login')
+      .expect('Moved Temporarily. Redirecting to /login')
       .expect(302, done);
   });
 });

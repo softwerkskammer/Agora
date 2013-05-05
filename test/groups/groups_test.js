@@ -1,7 +1,6 @@
 "use strict";
 
 var request = require('supertest');
-var express = require('express');
 var sinon = require('sinon');
 var conf = require('../configureForTest');
 
@@ -9,7 +8,7 @@ var groupsPersistence = conf.get('beans').get('groupsPersistence');
 var membersPersistence = conf.get('beans').get('membersPersistence');
 var sympa = conf.get('beans').get('sympaStub');
 
-var app = conf.get('beans').get('groupsApp')(express());
+var app = require('../../app')().create();
 
 describe('Groups application', function () {
 
@@ -47,7 +46,7 @@ describe('Groups application', function () {
 
   it('shows all available lists', function (done) {
     request(app)
-      .get('/')
+      .get('/groups/')
       .expect(200)
       .expect('Content-Type', /text\/html/)
       .expect(/Gruppen/)
@@ -56,14 +55,14 @@ describe('Groups application', function () {
 
   it('returns false for checkgroupname when the group name already exists', function (done) {
     request(app)
-    .get('/checkgroupname?id=GroupA')
+    .get('/groups/checkgroupname?id=GroupA')
     .expect(200)
     .expect(/false/, done);
   });
 
   it('returns true for checkgroupname when the group name does not exist', function (done) {
     request(app)
-    .get('/checkgroupname?id=UnknownGroup')
+    .get('/groups/checkgroupname?id=UnknownGroup')
     .expect(200)
     .expect(/true/, done);
   });
@@ -83,7 +82,7 @@ describe('Groups application', function () {
     });
 
     request(app)
-      .get('/GroupA')
+      .get('/groups/GroupA')
       .expect(200)
       .expect('Content-Type', /text\/html/)
       .expect(/Gruppe A<\/title>/)
@@ -96,11 +95,4 @@ describe('Groups application', function () {
         done(err);
       });
   });
-
-  it('does not allow save for an existing or a newly created Group for normal visitors', function (done) {
-    request(app)
-      .post('/submit')
-      .expect(302, done);
-  });
-
 });
