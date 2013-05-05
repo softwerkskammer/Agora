@@ -10,7 +10,7 @@ var store = conf.get('beans').get('groupstore');
 
 describe('Groups store', function () {
 
-  var sampleGroup = {id: 'groupA'};
+  var sampleGroup = {id: 'groupa'};
   var getById;
 
   before(function (done) {
