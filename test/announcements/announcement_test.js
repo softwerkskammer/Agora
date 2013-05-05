@@ -3,12 +3,12 @@
 var request = require('supertest'),
     express = require('express'),
     sinon = require('sinon'),
-    proxyquire = require('proxyquire');
+    conf = require('nconf');
 
 require('chai').should();
 
-var validation = require('../../lib/commons/validation');
-var Announcement = require('../../lib/announcements/announcement');
+var validation = conf.get('beans').get('validation');
+var Announcement = conf.get('beans').get('announcement');
 
 var dummyAnnouncement = new Announcement({
   title: 'title',
@@ -28,9 +28,7 @@ var announcementAPIStub = {
   }
 };
 
-var announcementApp = proxyquire('../../lib/announcements', {  './announcementAPI': announcementAPIStub});
-
-var app = announcementApp(express());
+var app = conf.get('beans').get('announcementsApp')(express());
 
 describe('Announcement application', function () {
 
@@ -84,7 +82,7 @@ describe('Announcement application', function () {
 //        });
 //  });
 
-  it('allows to create a new activity', function (done) {
+  it('allows to create a new announcement', function (done) {
 
     request(app)
         .get('/new')
