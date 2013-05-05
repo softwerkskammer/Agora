@@ -21,23 +21,15 @@ function useApp(parent, url, factory) {
 
 module.exports = function () {
   var conf = require('nconf');
-  var redirectRuleForNewUser = conf.get('beans').get('redirectRuleForNewUser');
-  var secureByLogin = conf.get('beans').get('secureByLogin');
-  var expressViewHelper = conf.get('beans').get('expressViewHelper');
-
   var appLogger;
   var httpLogger;
-
   // initialize winston and two concrete loggers
   require('winston-config').fromFile(path.join(__dirname, 'config/winston-config.json'), function (error, winston) {
-
     if (error) {
       console.log('error during winston initialization, using default loggers (console with loglevel info)');
       console.log('please provide a valid logging config file (config/winston-config.json)');
-
       winston = require('winston');
     }
-
     appLogger = winston.loggers.get('application');
     httpLogger = winston.loggers.get('http');
   });
@@ -68,12 +60,18 @@ module.exports = function () {
         app.use(express.cookieParser());
         app.use(express.bodyParser());
         app.use(express.methodOverride());
-        app.use(express.session({secret: conf.get('secret'), cookie: {maxAge: 86400 * 1000 * 7}, store: sessionStore}));
+        if (conf.get('dontUsePersistentSessions')) {
+          // TODO: Umbau als CoolBean mit SessionStore als InMemoryStore von Express statt if Konstrukt (leider)
+          app.use(express.session({secret: conf.get('secret'), cookie: {maxAge: 86400 * 1000 * 7}, store: null}));
+        } else {
+          app.use(express.session({secret: conf.get('secret'), cookie: {maxAge: 86400 * 1000 * 7}, store: sessionStore}));
+        }
         app.use(passport.initialize());
         app.use(passport.session());
-        app.use(secureByLogin);
-        app.use(expressViewHelper);
-        app.use(redirectRuleForNewUser);
+        app.use(conf.get('beans').get('secureByLogin'));
+        app.use(conf.get('beans').get('secureAdminOnly'));
+        app.use(conf.get('beans').get('expressViewHelper'));
+        app.use(conf.get('beans').get('redirectRuleForNewUser'));
         app.use(app.router);
         app.use(express.static(path.join(__dirname, 'public')));
       });
