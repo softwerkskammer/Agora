@@ -39,12 +39,13 @@ block content
           mixin tabHeadNarrow(1, 'Beruf')
           mixin tabHeadNarrow(1, 'Interessenschwerpunkte')
           mixin tabHeadNarrow(1, 'Website/Blog')
-          mixin tabHeadNarrow(2, 'Wie ich von…')
+          mixin tabHeadNarrow(1, 'Wie ich von…')
           mixin tabHeadNarrow(1, 'Benutzertyp')
+          mixin tabHeadNarrow(1, 'Angelegt')
       tbody
         for member in members
           tr
-            th.span1: .ellipsis.narrow #{member.nickname}
+            mixin tabTextNarrow(1, member, 'nickname', 'memberChanged', 'right')
             mixin tabTextNarrow(1, member, 'firstname', 'memberChanged', 'right')
             mixin tabTextNarrow(1, member, 'lastname', 'memberChanged')
             mixin tabTextNarrow(1, member, 'email', 'memberChanged')
@@ -53,6 +54,7 @@ block content
             mixin tabTextNarrow(1, member, 'profession', 'memberChanged')
             mixin tabTextNarrow(1, member, 'interests', 'memberChanged')
             mixin tabTextNarrow(1, member, 'site', 'memberChanged')
-            mixin tabTextareaNarrow(2, member, 'reference', 'memberChanged')
-            td.span1: a#isAdmin(href="#", data-type="select", data-value="#{member.adminDropdownValue()}", data-pk="#{member.nickname}", data-url="memberChanged"): .ellipsis.narrow #{member.adminDisplayText()}
+            mixin tabTextareaNarrow(1, member, 'reference', 'memberChanged')
+            td.span1: a#isAdmin(href="#", data-type="select", data-value="#{member.adminDropdownValue()}", data-pk="#{member.id}", data-url="memberChanged"): .ellipsis.narrow #{member.adminDisplayText()}
+            td(class="span1"): .ellipsis.narrow #{member.created}
 
