@@ -49,3 +49,9 @@ td.fc-header-right {
         display: none; !important
     }
 }
+
+@media screen {
+    .print-only {
+        display: none;
+    }
+}

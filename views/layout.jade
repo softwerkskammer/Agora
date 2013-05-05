@@ -42,10 +42,11 @@ html
   body
     include loginComponent
     include layoutComponents
-    .navbar.navbar-fixed-top
+    img.print-only(src="/img/Softwerkskammer_Header.png", alt="Softwerkskammer")
+    .navbar.navbar-fixed-top.no-print
       .navbar-inner
         img.brand.no-padding(src="/img/SoftwerkskammerWappenLinks.png", alt="Softwerkskammer")
-        .container.bottom.no-print
+        .container.bottom
           a.btn.btn-navbar(data-toggle="collapse", data-target=".navbar-inverse-collapse")
             span.icon-bar
             span.icon-bar

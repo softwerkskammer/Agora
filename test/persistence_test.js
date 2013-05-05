@@ -1,14 +1,10 @@
 "use strict";
 
 var should = require('chai').should();
-require('./configureForTest');
-
-var createTeststore = function () {
-  return require('../lib/persistence/persistence')('teststore');
-};
+var conf = require('./configureForTest');
+var persistence = require('../lib/persistence/persistence')('teststore');
 
 describe('The persistence store', function () {
-  var persistence;
   var toPersist = {id: 'toPersist', name: 'Heinz'};
 
   var storeSampleData = function (done) {
@@ -16,14 +12,13 @@ describe('The persistence store', function () {
   };
 
   var clearStore = function (done) {
-    createTeststore().drop(function () {
+    persistence.drop(function () {
       done(); // here we can ignore errors
     });
   };
 
   beforeEach(function (done) {
     clearStore(done);
-    persistence = createTeststore();
   });
 
   it('retrieves none for non-existing id', function (done) {
@@ -63,7 +58,6 @@ describe('The persistence store', function () {
 });
 
 describe('The persistence store for many objects', function () {
-  var persistence;
   var user1 = {id: '1', firstname: 'Heinz', lastname: 'Meier'};
   var user2 = {id: '2', firstname: 'Max', lastname: 'Albers'};
   var user3 = {id: '3', firstname: 'Peter', lastname: 'Paulsen'};
@@ -84,14 +78,13 @@ describe('The persistence store for many objects', function () {
   };
 
   var clearStore = function (done) {
-    createTeststore().drop(function () {
+    persistence.drop(function () {
       done(); // here we can ignore errors
     });
   };
 
   beforeEach(function (done) {
     clearStore(done);
-    persistence = createTeststore();
   });
 
   it('retrieves all members in ascending order', function (done) {
@@ -143,3 +136,35 @@ describe('The persistence store for many objects', function () {
 
 });
 
+describe('The persistence store for Member', function () {
+  var Member = conf.get('beans').get('member');
+  var moment = require('moment');
+  var toPersist = new Member().initFromSessionUser({identifier: 'toPersist'});
+
+  var storeSampleData = function (done) {
+    persistence.save(toPersist, done);
+  };
+
+  var clearStore = function (done) {
+    persistence.drop(function () {
+      done(); // here we can ignore errors
+    });
+  };
+
+  beforeEach(function (done) {
+    clearStore(done);
+  });
+
+  it('checks that created has been written', function (done) {
+    // this test will definitely fail, if run a microsecond before midnight. - Ideas?
+    var today = moment().format('DD.MM.YY');
+    storeSampleData(function () {
+      persistence.getById('toPersist', function (err, result) {
+        result.id.should.equal('toPersist');
+        should.exist(result.created);
+        result.created.should.equal(today);
+        done(err);
+      });
+    });
+  });
+});
