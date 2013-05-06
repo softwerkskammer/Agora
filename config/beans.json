@@ -4,6 +4,7 @@
   "groupsApp": {"module": "./lib/groups"},
   "membersApp": {"module": "./lib/members"},
   "siteApp": {"module": "./lib/site"},
+  "announcementsApp": {"module": "./lib/announcements"},
   "activitiesApp": {"module": "./lib/activities"},
 
   "groupsAndMembersAPI": {"module": "./lib/groupsAndMembers/groupsAndMembersAPI"},
@@ -21,6 +22,7 @@
 
   "sympa": {"module": "./lib/groups/sympa"},
   "sympaStub": {"module": "./lib/groups/sympaStub"},
+
   "groupsPersistence": {"module": "./lib/persistence/persistence",
                         "constructorArgs": {
                              "connectionName": "groupstore"
@@ -42,10 +44,10 @@
                         "constructorArgs": {
                              "connectionName": "mailsstore"
                        }},
-  "announcementPersistence": {"module": "./lib/persistence/persistence",
-    "constructorArgs": {
-      "connectionName": "announcementstore"
-    }},
+  "announcementsPersistence": {"module": "./lib/persistence/persistence",
+                                "constructorArgs": {
+                                  "connectionName": "announcementstore"
+                              }},
 
   "group": {"module": "./lib/groups/group"},
   "member": {"module": "./lib/members/member"},

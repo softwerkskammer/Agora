@@ -4,7 +4,7 @@
   "groupsPersistence": {"module": "./test/persistence/testpersistence"},
   "membersPersistence": {"module": "./test/persistence/testpersistence"},
   "activitiesPersistence": {"module": "./test/persistence/testpersistence"},
-  "announcementPersistence": {"module": "./test/persistence/testpersistence"},
+  "announcementsPersistence": {"module": "./test/persistence/testpersistence"},
   "mailsPersistence": {"module": "./test/persistence/testpersistence"},
   "colorsPersistence": {"module": "./test/persistence/testpersistence"}
 }
