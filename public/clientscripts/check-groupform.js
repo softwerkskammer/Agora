@@ -11,13 +11,18 @@ var initValidator = function () {
                           return this.optional(element) || /^[a-z0-9 -]+$/i.test(value);
                         }, "Präfix für Emails darf nur Zahlen, Buchstaben, Leerzeichen und Bindestriche enthalten.");
 
+  $.validator.addMethod("alnumdashunderscore", function(value, element)
+                        {
+                          return this.optional(element) || /^[a-z0-9 -]+$/i.test(value);
+                        }, "Email-Adresse darf nur Zahlen, Buchstaben, Bindestrich und Unterstrich enthalten.");
+
   groups_validator = $("#groupform").validate({
     rules: {
       id: {
         required: true,
         minlength: 2,
         maxlength: 20,
-        alphanumeric: true,
+        alnumdashunderscore: "",
         remote: "/groups/checkgroupname"
       },
       emailPrefix: {
