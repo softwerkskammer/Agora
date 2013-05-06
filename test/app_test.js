@@ -1,7 +1,6 @@
 "use strict";
 var should = require('chai').should();
 var httpRequest = require('request');
-var request = require('supertest');
 var conf = require('./configureForTest');
 
 var base_uri = "http://localhost:" + parseInt(conf.get('port'), 10);
@@ -74,15 +73,5 @@ describe('SWK Plattform server', function () {
       resp.body.should.contain('#memberform');
       done();
     });
-  });
-});
-
-describe('The app itself', function () {
-  it('redirects unauthenticated access to the members sub app to the authentication page', function (done) {
-    request(app.create())
-      .get('/members/')
-      .expect('Content-Type', /text\/plain/)
-      .expect('Moved Temporarily. Redirecting to /login')
-      .expect(302, done);
   });
 });
