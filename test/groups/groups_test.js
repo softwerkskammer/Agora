@@ -67,6 +67,13 @@ describe('Groups application', function () {
     .expect(/true/, done);
   });
 
+  it('allows dashes and underscores in the groupname', function (done) {
+    request(app)
+    .get('/groups/checkgroupname?id=Un_known-Group')
+    .expect(200)
+    .expect(/true/, done);
+  });
+
   it('displays an existing group and membercount', function (done) {
 
     sinon.stub(sympa, 'getUsersOfList', function (groupname, callback) {
