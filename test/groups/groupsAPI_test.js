@@ -327,7 +327,6 @@ describe('Groups API (isGroupNameAvailable)', function () {
   it('rejects groupnames that contain special characters', function (done) {
     expect(systemUnderTest.isReserved('Sch adar')).to.be.true;
     expect(systemUnderTest.isReserved('Sch/adar')).to.be.true;
-    expect(systemUnderTest.isReserved('Schadar-')).to.be.true;
     expect(systemUnderTest.isReserved('Schad\nar')).to.be.true;
     expect(systemUnderTest.isReserved('Schad@r')).to.be.true;
 
