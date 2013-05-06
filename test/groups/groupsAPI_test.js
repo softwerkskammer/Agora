@@ -209,9 +209,9 @@ describe('Groups API (createOrSaveGroup)', function () {
 
   before(function (done) {
     sinon.stub(groupstore, 'getGroup', function (name, callback) {
-      if (name === 'GroupA') {
+      if (name === 'groupa') {
         callback(null, GroupA);
-      } else if (name === 'GroupB') {
+      } else if (name === 'groupb') {
         callback(null, GroupB);
       } else {
         callback(null, null);
@@ -263,11 +263,11 @@ describe('Groups API (createOrSaveGroup)', function () {
 
 describe('Groups API (groupFromObject)', function () {
   it('returns a new Group object if there is no valid group data', function (done) {
-    var result = systemUnderTest.groupFromObject({});
+    var result = new Group({id: 'x'});
 
     expect(result).to.be.not.null;
     expect(result).to.be.instanceOf(Group);
-    expect(result.id).to.be.undefined;
+    expect(result.id).to.equal('x');
     expect(result.longName).to.be.undefined;
     expect(result.description).to.be.undefined;
     expect(result.type).to.be.undefined;
@@ -275,7 +275,7 @@ describe('Groups API (groupFromObject)', function () {
   });
 
   it('returns a valid Group object if there is valid group data', function (done) {
-    var result = systemUnderTest.groupFromObject({ id: 'craftsmanswap', longName: 'Craftsman Swaps',
+    var result = new Group({ id: 'craftsmanswap', longName: 'Craftsman Swaps',
       description: 'A group for organizing CS',
       type: 'Themengruppe' });
 

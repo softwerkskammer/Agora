@@ -10,7 +10,7 @@ block content
       .page-header
         h2 #{group.longName}&nbsp; 
           small #{group.type} 
-          if (userIsRegistered && user.member.isAdmin)
+          if (user && user.member.isAdmin)
             a.pull-right.btn(href="/groups/edit/#{group.id}"): i.icon-edit
       p
         strong
@@ -29,16 +29,16 @@ block content
   
       h3 Mitglieder der Gruppe:
       | Diese Gruppe hat
-      - if (users.length === 1)
+      if (users.length === 1)
         |  ein Mitglied.
-      - else if (users.length === 0)
+      else if (users.length === 0)
         |  keine Mitglieder.
-      - else
+      else
         |  #{users.length} Mitglieder.
-      - if (userIsRegistered)
+      if (user)
         mixin memberlist(users)
-        - if (userIsRegistered)
-          - if (userIsGroupMember)
+        if (user)
+          if (userIsGroupMember)
             a.btn.btn-primary(href="unsubscribe/#{group.id}") Gruppe verlassen
-          - else
+          else
             a.btn.btn-primary(href="subscribe/#{group.id}") Gruppe beitreten

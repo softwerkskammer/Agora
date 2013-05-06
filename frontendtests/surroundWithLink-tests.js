@@ -22,7 +22,7 @@ test("A text with one URLs and one normal text separated with commas only one li
 test("A twittername is modified to link to twitter and prepend an '@", 1, function () {
   var text = "softwerkskammer";
   var result = surroundTwitterName(text);
-  equal(result, "<a href=\"http://twitter.com/softwerkskammer\" target=\"_blank\"><i class=\"icon-external-link\"/> @softwerkskammer</a>");
+  equal(result, "<a href=\"http://twitter.com/softwerkskammer\" target=\"_blank\">@softwerkskammer</a>");
 });
 
 test("An emailaddress is modified to a mailto-link", 1, function () {
@@ -48,10 +48,10 @@ test("One link and one non-link inside class 'urlify' are linked accordingly", 1
 
 test("One text in class 'twitterify' is linked to twitter", 1, function () {
   var fourth = $("#fourth");
-  equal(fourth.html(), "<a href=\"http://twitter.com/softwerkskammer\" target=\"_blank\"><i class=\"icon-external-link\"></i> @softwerkskammer</a>");
+  equal(fourth.html(), "<a href=\"http://twitter.com/softwerkskammer\" target=\"_blank\">@softwerkskammer</a>");
 });
 
-test("One text in class 'mailtoify' is linked to twitter", 1, function () {
+test("One text in class 'mailtoify' is linked to mailto", 1, function () {
   var fifth = $("#fifth");
   equal(fifth.html(), "<a href=\"mailto:softwerks@kammer.de\">softwerks@kammer.de</a>");
 });

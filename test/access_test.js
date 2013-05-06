@@ -51,7 +51,7 @@ describe('member redirects', function () {
   it('redirects from \/members\/ users without authentication', function (done) {
     request(appUnderTest)
       .get('/members/')
-      .expect('Moved Temporarily. Redirecting to /auth/login')
+      .expect('Moved Temporarily. Redirecting to /login')
       .expect(302, function (err) {
         done(err);
       });
