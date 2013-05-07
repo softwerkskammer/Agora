@@ -35,8 +35,20 @@ module.exports = function (grunt) {
     },
     qunit: {
       files: ['frontendtests/*.html']
+    },
+    exec: {
+      mkGenDocsDir: {
+        command: 'mkdir -p docs/generated'
+      },
+      coverage: {
+        command: 'mocha --require blanket --reporter html-cov --slow 0 test/**/*.js > docs/generated/coverage.html'
+      }
+    },
+    clean: {
+      tests: {
+        src: ["docs"]
+      }
     }
-
   });
 
   // These plugins provide necessary tasks.
@@ -44,9 +56,15 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-mocha-hack');
   grunt.loadNpmTasks('grunt-contrib-qunit');
+  grunt.loadNpmTasks('grunt-contrib-clean');
+  grunt.loadNpmTasks('grunt-exec');
+
 
   // Default task.
   grunt.registerTask('default', ['jshint', 'mocha-hack', 'qunit']);
+
+  // Coverage tasks
+  grunt.registerTask('coverage', ['clean', 'exec:mkGenDocsDir', 'exec:coverage']);
 
   // Travis-CI task
   grunt.registerTask('travis', ['default']);
