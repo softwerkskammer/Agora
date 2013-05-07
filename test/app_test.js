@@ -5,7 +5,7 @@ var conf = require('./configureForTest');
 
 var base_uri = "http://localhost:" + parseInt(conf.get('port'), 10);
 
-var app = require('../app.js')();
+var app = require('../app.js');
 
 describe('SWK Plattform server', function () {
   beforeEach(function (done) {
