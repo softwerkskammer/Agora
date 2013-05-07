@@ -61,7 +61,8 @@
     "sinon": "~1.6.0",
     "grunt-contrib-qunit": "0.2.1",
     "blanket": "~1.1.4",
-    "travis-cov": "~0.2"
+    "travis-cov": "~0.2",
+    "grunt-exec": "~0.4.0"
   },
   "scripts": {
     "test": "grunt travis --verbose",
