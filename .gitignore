@@ -8,7 +8,7 @@
 .DS_Store
 lib/persistence/memberstore/
 lib/persistence/teststore/
-config/*.json
+config/*.json*
 !config/example-*.json
 !config/beans.json
 !config/testbeans.json

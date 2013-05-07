@@ -11,6 +11,7 @@ html
     link(href="/stylesheets/fullcalendar.css", rel="stylesheet")
     link(href="/stylesheets/colorpicker.css", rel="stylesheet")
     link(href="/stylesheets/agora.css", rel="stylesheet")
+    | <!--[if IE]><link href="/stylesheets/agora-ie-addon.css" rel="stylesheet"><![endif]-->
 
     script(src="/clientscripts/jquery-1.9.1.js")
     script(src="/clientscripts/bootstrap.js")
@@ -45,7 +46,8 @@ html
     img.print-only(src="/img/Softwerkskammer_Header.png", alt="Softwerkskammer")
     .navbar.navbar-fixed-top.no-print
       .navbar-inner
-        img.brand.no-padding(src="/img/SoftwerkskammerWappenLinks.png", alt="Softwerkskammer")
+        a.brand.no-padding(href="/")
+          img(src="/img/SoftwerkskammerWappenLinks.png", alt="Softwerkskammer")
         .container.bottom
           a.btn.btn-navbar(data-toggle="collapse", data-target=".navbar-inverse-collapse")
             span.icon-bar
