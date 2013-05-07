@@ -54,7 +54,7 @@ block content
             mixin tabTextNarrow(1, member, 'profession', 'memberChanged')
             mixin tabTextNarrow(1, member, 'interests', 'memberChanged')
             mixin tabTextNarrow(1, member, 'site', 'memberChanged')
-            mixin tabTextareaNarrow(1, member, 'reference', 'memberChanged')
+            mixin tabTextNarrow(1, member, 'reference', 'memberChanged')
             td.span1: a#isAdmin(href="#", data-type="select", data-value="#{member.adminDropdownValue()}", data-pk="#{member.id}", data-url="memberChanged"): .ellipsis.narrow #{member.adminDisplayText()}
             td(class="span1"): .ellipsis.narrow #{member.created}
 
