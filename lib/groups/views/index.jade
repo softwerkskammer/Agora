@@ -11,11 +11,10 @@ block content
           small Alle
           if (typeof(user) !== 'undefined' && user.member.isAdmin)
             a.pull-right.btn(href="new/"): i.icon-file
-      ul
+      dl.dl-horizontal
         each group in groups
-          li: .group
-            strong: a(href="#{group.id}") #{group.longName}
-            br
-            | - Schicke eine Nachricht an: 
-            span.mailtoify
-              | #{group.id}@softwerkskammer.de
+          dt
+            // span.badge(style="background-color: #{group.color}") &nbsp
+            strong: a.group(href="#{group.id}") #{group.longName}&nbsp;
+          dd Schicke eine Nachricht an: 
+            span.mailtoify #{group.id}@softwerkskammer.de
