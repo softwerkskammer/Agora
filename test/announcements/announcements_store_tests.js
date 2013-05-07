@@ -1,24 +1,11 @@
 /*global describe, it */
 "use strict";
-require('chai').should();
+var expect = require('chai').expect;
+var sinon = require('sinon');
 
-var proxyquire = require('proxyquire'),
-  sinon = require('sinon');
-
-var persistenceStub = {
-  save: function () {
-  },
-  getById: function () {
-  },
-  getByField: function () {
-  },
-  list: function () {
-  }
-};
-
-var store = proxyquire('../../lib/announcements/announcementstore.js', {'../persistence/persistence': function () {
-  return persistenceStub;
-}});
+var conf = require('../configureForTest');
+var persistence = conf.get('beans').get('announcementsPersistence');
+var store = conf.get('beans').get('announcementstore');
 
 describe('Announcement store', function () {
   var announcement1 = {
@@ -28,6 +15,7 @@ describe('Announcement store', function () {
     author: 'Frank Deberle',
     thruDate: new Date(2013, 12, 31)
   };
+
   var announcement2 = {
     title: 'Server down',
     'url': 'Serverdown',
@@ -35,17 +23,24 @@ describe('Announcement store', function () {
     author: 'Nicole',
     thruDate: new Date(2013, 5, 31)
   };
+
   var sampleList = [announcement1, announcement2];
-  var getByField = sinon.stub(persistenceStub, 'getByField');
-  getByField.callsArgWith(1, null, announcement1);
+
+  before(function (done) {
+    var list = sinon.stub(persistence, 'list');
+    list.callsArgWith(1, null, sampleList);
+    done();
+  });
+
+  after(function (done) {
+    persistence.list.restore();
+    done();
+  });
 
   it('calls persistence.list for store.allAnnouncements and passes on the given callback', function (done) {
-    var list = sinon.stub(persistenceStub, 'list');
-    list.callsArgWith(1, null, sampleList);
-
     store.allAnnouncements(function (err, announcements) {
-      announcements[0].title.should.equal(announcement1.title);
-      announcements[1].title.should.equal(announcement2.title);
+      expect(announcements[0].title).to.equal(announcement1.title);
+      expect(announcements[1].title).to.equal(announcement2.title);
       done(err);
     });
   });
