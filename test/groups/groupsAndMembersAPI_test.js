@@ -149,7 +149,7 @@ describe('Groups and Members API (getGroupAndUsersOfList)', function () {
 describe('Groups and Members API (userIsInMemberList)', function () {
 
   it('returns false if the user id is undefined', function (done) {
-    var result = systemUnderTest.userIsInMemberList(undefined, [dummymember]);
+    var result = systemUnderTest.userIsInMemberList(undefined, [dummymember, dummymember2]);
 
     expect(result).to.be.false;
     done();
@@ -170,7 +170,7 @@ describe('Groups and Members API (userIsInMemberList)', function () {
   });
 
   it('returns true if the user is in the member list', function (done) {
-    var result = systemUnderTest.userIsInMemberList('hada', [dummymember]);
+    var result = systemUnderTest.userIsInMemberList('hada', [dummymember, dummymember2]);
 
     expect(result).to.be.true;
     done();

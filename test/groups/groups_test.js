@@ -95,7 +95,7 @@ describe('Groups application', function () {
       .expect(/Gruppe A<\/title>/)
       .expect(/Dies ist Gruppe A./)
       .expect(/Themengruppe/)
-      .expect(/Mitglieder der Gruppe:/)
+      .expect(/Mitglieder:/)
       .expect(/Diese Gruppe hat 2 Mitglieder/, function (err) {
         sympa.getUsersOfList.restore();
         membersPersistence.listByEMails.restore();

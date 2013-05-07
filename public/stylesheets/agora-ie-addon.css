@@ -1,0 +1,20 @@
+.container.bottom {
+    padding-top: 20px;
+    margin-right: 0px;
+}
+
+.brand.no-padding {
+    padding-top: 0px;
+    padding-bottom: 0px;
+    padding-left: 20px;
+    padding-right: 10px
+}
+
+body {
+    padding-top: 65px;
+    padding-bottom: 65px
+}
+
+.print-only {
+    display: none;
+}

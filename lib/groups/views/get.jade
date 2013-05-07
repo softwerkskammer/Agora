@@ -18,16 +18,9 @@ block content
         | 
         a(href="mailto:#{group.id}@softwerkskammer.de")
           | #{group.id}@softwerkskammer.de
-      p
-        strong
-          | Beschreibung:
-        |  !{group.descriptionHTML()}
-      p
-        strong
-          | Präfix für Emails:
-        |  #{group.emailPrefix}
+      |!{group.descriptionHTML()}
   
-      h3 Mitglieder der Gruppe:
+      h4 Mitglieder:
       | Diese Gruppe hat
       if (users.length === 1)
         |  ein Mitglied.
