@@ -27,8 +27,8 @@ describe('Announcement application', function () {
   var getAnnouncement;
 
   beforeEach(function (done) {
-    allAnnouncements = sinon.spy(announcementsAPI, 'allAnnouncements', function (callback) {callback(null, [dummyAnnouncement]); });
-    getAnnouncement = sinon.spy(announcementsAPI, 'getAnnouncement', function (url, callback) {callback(null, (url === 'url') ? dummyAnnouncement : null); });
+    allAnnouncements = sinon.stub(announcementsAPI, 'allAnnouncements', function (callback) {return callback(null, [dummyAnnouncement]); });
+    getAnnouncement = sinon.stub(announcementsAPI, 'getAnnouncement', function (url, callback) {callback(null, (url === 'url') ? dummyAnnouncement : null); });
     done();
   });
 
@@ -49,7 +49,6 @@ describe('Announcement application', function () {
   });
 
   it('shows the list of announcements as retrieved from the store', function (done) {
-
     request(app)
         .get('/')
         .expect(200)
