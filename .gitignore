@@ -15,3 +15,6 @@ config/*.json
 log/*.log
 public/test/
 version.jade
+
+test/tempbeans.json
+docs/generated

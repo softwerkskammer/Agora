@@ -6,20 +6,30 @@ var initValidator = function () {
 
   // DO NOT FORGET TO KEEP THIS FILE IN SYNC WITH /lib/commons/validation.js
 
+  $.validator.addMethod("alnumdashblank", function(value, element)
+                        {
+                          return this.optional(element) || /^[a-z0-9 -]+$/i.test(value);
+                        }, "Präfix für Emails darf nur Zahlen, Buchstaben, Leerzeichen und Bindestriche enthalten.");
+
+  $.validator.addMethod("alnumdashunderscore", function(value, element)
+                        {
+                          return this.optional(element) || /^[a-z0-9_-]+$/i.test(value);
+                        }, "Email-Adresse darf nur Zahlen, Buchstaben, Bindestrich und Unterstrich enthalten.");
+
   groups_validator = $("#groupform").validate({
     rules: {
       id: {
         required: true,
         minlength: 2,
         maxlength: 20,
-        alphanumeric: true,
+        alnumdashunderscore: "",
         remote: "/groups/checkgroupname"
       },
       emailPrefix: {
         required: true,
         minlength: 5,
         maxlength: 15,
-        alphanumeric: true,
+        alnumdashblank: "",
         remote: "/groups/checkemailprefix"
       },
       longName: "required",

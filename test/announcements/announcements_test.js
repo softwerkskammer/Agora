@@ -1,15 +1,13 @@
 /*global describe, it */
 "use strict";
+var conf = require('../configureForTest');
+
 var request = require('supertest'),
     express = require('express'),
     sinon = require('sinon'),
-    proxyquire = require('proxyquire');
+    expect = require('chai').expect;
 
-require('chai').should();
-
-var validation = require('../../lib/commons/validation');
-var Announcement = require('../../lib/announcements/announcement');
-
+var Announcement = conf.get('beans').get('announcement');
 var dummyAnnouncement = new Announcement({
   title: 'title',
   url: 'url',
@@ -19,20 +17,27 @@ var dummyAnnouncement = new Announcement({
   thruDate: 'thruDate'
 });
 
-var announcementAPIStub = {
-  allAnnouncements: function (callback) {
-    callback(null, [dummyAnnouncement]);
-  },
-  getAnnouncement: function (url, callback) {
-    callback(null, dummyAnnouncement);
-  }
-};
+var announcementsAPI = conf.get('beans').get('announcementsAPI');
+var validation = conf.get('beans').get('validation');
 
-var announcementApp = proxyquire('../../lib/announcements', {  './announcementAPI': announcementAPIStub});
-
-var app = announcementApp(express());
+var app = conf.get('beans').get('announcementsApp')(express());
 
 describe('Announcement application', function () {
+  var allAnnouncements;
+  var getAnnouncement;
+
+  beforeEach(function (done) {
+    allAnnouncements = sinon.stub(announcementsAPI, 'allAnnouncements', function (callback) {return callback(null, [dummyAnnouncement]); });
+    getAnnouncement = sinon.stub(announcementsAPI, 'getAnnouncement', function (url, callback) {callback(null, (url === 'url') ? dummyAnnouncement : null); });
+    done();
+  });
+
+  afterEach(function (done) {
+    announcementsAPI.allAnnouncements.restore();
+    announcementsAPI.getAnnouncement.restore();
+    done();
+  });
+
 
   it('object is not valid, if the required fields are not filled', function () {
     var tmpAnnouncement = new Announcement({
@@ -40,26 +45,22 @@ describe('Announcement application', function () {
       url: 'url'
       // Other fields are missing
     });
-    validation.isValidAnnouncement(tmpAnnouncement).should.equal.false;
+    expect(validation.isValidAnnouncement(tmpAnnouncement)).to.equal.false;
   });
 
   it('shows the list of announcements as retrieved from the store', function (done) {
-    var allAnnouncements = sinon.spy(announcementAPIStub, 'allAnnouncements');
-
     request(app)
         .get('/')
         .expect(200)
         .expect(/Nachrichten/)
         .expect(/href="url"/)
         .expect(/title/, function (err) {
-          allAnnouncements.calledOnce.should.be.ok;
-          announcementAPIStub.allAnnouncements.restore();
+          expect(allAnnouncements.calledOnce).to.be.ok;
           done(err);
         });
   });
 
   it('shows the details of one announcement as retrieved from the store', function (done) {
-    var getAnnouncement = sinon.spy(announcementAPIStub, 'getAnnouncement');
     var url = 'url';
 
     request(app)
@@ -67,8 +68,7 @@ describe('Announcement application', function () {
         .expect(200)
         .expect(/<small> 31.01.2012/)
         .expect(/<h2>title/, function (err) {
-          getAnnouncement.calledWith(url).should.be.true;
-          announcementAPIStub.getAnnouncement.restore();
+          expect(getAnnouncement.calledWith(url)).to.be.true;
           done(err);
         });
   });
@@ -84,8 +84,7 @@ describe('Announcement application', function () {
 //        });
 //  });
 
-  it('allows to create a new activity', function (done) {
-
+  it('allows to create a new announcement', function (done) {
     request(app)
         .get('/new')
         .expect(200)

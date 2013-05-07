@@ -9,7 +9,7 @@ var expect = require('chai').expect;
 var Member = conf.get('beans').get('member');
 var membersAPI = conf.get('beans').get('membersAPI');
 var groupsAPI = conf.get('beans').get('groupsAPI');
-var dummymember = new Member({object: {nickname: 'hada', email: 'a@b.c', site: 'http://my.blog', firstname: 'Hans', lastname: 'Dampf'}});
+var dummymember = new Member({nickname: 'hada', email: 'a@b.c', site: 'http://my.blog', firstname: 'Hans', lastname: 'Dampf'});
 
 var app = conf.get('beans').get('membersApp')(express());
 

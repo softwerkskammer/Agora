@@ -4,21 +4,25 @@
   "groupsApp": {"module": "./lib/groups"},
   "membersApp": {"module": "./lib/members"},
   "siteApp": {"module": "./lib/site"},
+  "announcementsApp": {"module": "./lib/announcements"},
   "activitiesApp": {"module": "./lib/activities"},
 
   "groupsAndMembersAPI": {"module": "./lib/groupsAndMembers/groupsAndMembersAPI"},
   "groupsAPI": {"module": "./lib/groups/groupsAPI"},
   "membersAPI": {"module": "./lib/members/membersAPI"},
   "activitiesAPI": {"module": "./lib/activities/activitiesAPI"},
+  "announcementsAPI": {"module": "./lib/announcements/announcementsAPI"},
   "colorAPI": {"module": "./lib/administration/colorAPI"},
 
   "groupstore": {"module": "./lib/groups/groupstore"},
   "memberstore": {"module": "./lib/members/memberstore"},
   "activitystore": {"module": "./lib/activities/activitystore"},
+  "announcementstore": {"module": "./lib/announcements/announcementstore"},
   "colorstore": {"module": "./lib/administration/colorstore"},
 
   "sympa": {"module": "./lib/groups/sympa"},
   "sympaStub": {"module": "./lib/groups/sympaStub"},
+
   "groupsPersistence": {"module": "./lib/persistence/persistence",
                         "constructorArgs": {
                              "connectionName": "groupstore"
@@ -36,16 +40,26 @@
                              "connectionName": "colorstore"
                        }},
 
+  "mailsPersistence": {"module": "./lib/persistence/persistence",
+                        "constructorArgs": {
+                             "connectionName": "mailsstore"
+                       }},
+  "announcementsPersistence": {"module": "./lib/persistence/persistence",
+                                "constructorArgs": {
+                                  "connectionName": "announcementstore"
+                              }},
+
   "group": {"module": "./lib/groups/group"},
   "member": {"module": "./lib/members/member"},
   "activity": {"module": "./lib/activities/activity"},
+  "announcement": {"module": "./lib/announcements/announcement"},
   "color": {"module": "./lib/administration/color"},
 
   "fieldHelpers": {"module": "./lib/commons/fieldHelpers"},
-  "userCommons": {"module": "./lib/commons/userCommons"},
   "validation": {"module": "./lib/commons/validation"},
   "sympaTransformer": {"module": "./lib/groups/sympaTransformer"},
   "redirectRuleForNewUser": {"module": "./lib/middleware/redirectRuleForNewUser"},
   "secureByLogin": {"module": "./lib/middleware/secureByLogin"},
+  "secureAdminOnly": {"module": "./lib/middleware/secureAdminOnly"},
   "expressViewHelper": {"module": "./lib/middleware/expressViewHelper"}
 }

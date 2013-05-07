@@ -17,14 +17,20 @@ describe('Group object', function () {
   });
 
   it('should deliver the correct type code for Themengruppe', function (done) {
-    var group = new Group({type: 'Themengruppe'});
+    var group = new Group({id: 'abc', type: 'Themengruppe'});
     expect(group.typeCode()).to.equal(0);
     done();
   });
 
   it('should deliver the correct type code for Regionalgruppe', function (done) {
-    var group = new Group({type: 'Regionalgruppe'});
+    var group = new Group({id: 'abc', type: 'Regionalgruppe'});
     expect(group.typeCode()).to.equal(1);
+    done();
+  });
+
+  it('should transform the id to lowercase', function (done) {
+    var group = new Group({id: 'NeuePlattform'});
+    expect(group.id).to.equal('neueplattform');
     done();
   });
 
