@@ -89,7 +89,7 @@ describe('Groups and Members API (getUserWithHisGroupsById)', function () {
   });
 });
 
-describe('Groups and Members API (getGroupAndUsersOfList)', function () {
+describe('Groups and Members API (getGroupAndMembersForList)', function () {
 
   afterEach(function (done) {
     groupsAPI.getSympaUsersOfList.restore();
@@ -103,7 +103,7 @@ describe('Groups and Members API (getGroupAndUsersOfList)', function () {
     sinon.stub(groupsAPI, 'getSympaUsersOfList', function (err, callback) { callback(null, []); });
     sinon.stub(groupsAPI, 'getGroup', function (groupname, callback) { callback(null, null); });
 
-    systemUnderTest.getGroupAndUsersOfList('unbekannteListe', function (err, group, users) {
+    systemUnderTest.getGroupAndMembersForList('unbekannteListe', function (err, group, users) {
       expect(group).to.be.null;
       expect(users).to.not.be.null;
       expect(users.length).to.equal(0);
@@ -120,7 +120,7 @@ describe('Groups and Members API (getGroupAndUsersOfList)', function () {
     });
     sinon.stub(groupsAPI, 'getGroup', function (groupname, callback) { callback(null, null); });
 
-    systemUnderTest.getGroupAndUsersOfList('sympaListWithoutGroup', function (err, group, users) {
+    systemUnderTest.getGroupAndMembersForList('sympaListWithoutGroup', function (err, group, users) {
       expect(group).to.be.null;
       expect(users).to.not.be.null;
       expect(users.length).to.equal(0);
@@ -137,7 +137,7 @@ describe('Groups and Members API (getGroupAndUsersOfList)', function () {
       callback(null, []);
     });
 
-    systemUnderTest.getGroupAndUsersOfList('GroupA', function (err, group, users) {
+    systemUnderTest.getGroupAndMembersForList('GroupA', function (err, group, users) {
       expect(group).to.equal(GroupA);
       expect(users).to.not.be.null;
       expect(users.length).to.equal(0);
