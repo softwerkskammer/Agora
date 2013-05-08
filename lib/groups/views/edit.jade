@@ -38,7 +38,7 @@ block content
           .control-group
             label.control-label(for="type") Gruppenart:
             select#type.input-block-level.input-xlarge(name="type")
-              for item in group.allTypes()
+              for item in allTypes
                 option(selected=group.type === item) #{item}
         .span6
           mixin colorPicker('color', group)
