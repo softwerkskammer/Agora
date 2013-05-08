@@ -140,6 +140,25 @@ describe('Groups and Members API (getGroupAndMembersForList)', function () {
       done(err);
     });
   });
+
+  it('returns the group with the given name and a list of one subscribed user when there is one subscriber in sympa', function (done) {
+    sinon.stub(groupsAPI, 'getSympaUsersOfList', function (err, callback) { callback(null, ['user@email.com']); });
+    sinon.stub(groupsAPI, 'getGroup', function (groupname, callback) {
+      callback(null, GroupA);
+    });
+    sinon.stub(membersAPI, 'getMembersForEMails', function (member, callback) {
+      callback(null, [dummymember]);
+    });
+
+    systemUnderTest.getGroupAndMembersForList('GroupA', function (err, group) {
+      expect(group).to.equal(GroupA);
+      expect(group.members).to.not.be.null;
+      expect(group.members.length).to.equal(1);
+      expect(group.members[0]).to.equal(dummymember);
+      done(err);
+    });
+  });
+
 });
 
 describe('Groups and Members API (userIsInMemberList)', function () {
