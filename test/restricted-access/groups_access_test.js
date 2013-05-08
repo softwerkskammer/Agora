@@ -3,7 +3,7 @@
 var request = require('supertest');
 require('../configureForTest');
 
-var app = require('../../app')().create();
+var app = require('../../app').create();
 
 describe('Groups application security for normal visitors does not allow to access for', function () {
 

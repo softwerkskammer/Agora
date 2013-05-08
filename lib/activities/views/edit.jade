@@ -25,7 +25,7 @@ block content
 
       .row-fluid
         .span6
-          mixin text('title', 'Titel', activity)
+          mixin text('title', 'Titel', activity, 'Kurz und knackig für Übersichten')
           .row-fluid
             .span6
               mixin date('startDate', 'Startdatum', activity)
@@ -38,7 +38,7 @@ block content
               mixin time('endTime', 'Enduhrzeit', activity)
           mixin textarea('description', 'Beschreibung', activity)
         .span6
-          mixin text('url', 'URL', activity)
+          mixin text('url', 'Adress-Suffix', activity, 'Für die Verlinkung innerhalb dieser Site')
           mixin text('location', 'Veranstaltungsort', activity)
           mixin textarea('direction', 'Wegbeschreibung', activity)
           .control-group

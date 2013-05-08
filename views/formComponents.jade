@@ -1,8 +1,14 @@
 // GENERAL
 
-mixin text(name, label, object)
+mixin text(name, label, object, tooltip)
   .control-group
-    label(class="control-label", for=name) #{label}:
+    label(class="control-label", for=name)
+      if (typeof(tooltip) !== 'undefined')
+        span.tooltiplabel(data-toggle="tooltip", data-original-title="#{tooltip}") #{label}:
+        script
+          $('.tooltiplabel').each(function(each) {$(this).tooltip()})
+      else
+        | #{label}:
     input(id=name, class="input-block-level input-xlarge", type='text', name=name, value=object[name])
 
 mixin textReadonly(name, label, object)
@@ -61,6 +67,4 @@ mixin twitter(name, label, object)
     div(class="input-prepend input-block-level input-xlarge")
       span(class="add-on", style="width: 5%;float: left;") @
       input(id=name, class="input-block-level input-xlarge", style="width: 93%;", type='text', name=name, value=object[name])
-
-
 
