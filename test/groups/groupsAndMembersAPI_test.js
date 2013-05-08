@@ -98,20 +98,18 @@ describe('Groups and Members API (getGroupAndMembersForList)', function () {
     done();
   });
 
-  it('returns null as group and an empty list of subscribed users when there is no group and no sympa-list', function (done) {
+  it('returns null as group when there is no group and no sympa-list', function (done) {
     sinon.stub(membersAPI, 'getMembersForEMails', function (member, callback) { callback(); });
     sinon.stub(groupsAPI, 'getSympaUsersOfList', function (err, callback) { callback(null, []); });
     sinon.stub(groupsAPI, 'getGroup', function (groupname, callback) { callback(null, null); });
 
-    systemUnderTest.getGroupAndMembersForList('unbekannteListe', function (err, group, users) {
+    systemUnderTest.getGroupAndMembersForList('unbekannteListe', function (err, group) {
       expect(group).to.be.null;
-      expect(users).to.not.be.null;
-      expect(users.length).to.equal(0);
       done(err);
     });
   });
 
-  it('returns null as group and an empty list of subscribed users when there is no group but a sympa-list', function (done) {
+  it('returns null as group when there is no group but a sympa-list', function (done) {
     sinon.stub(groupsAPI, 'getSympaUsersOfList', function (err, callback) {
       callback(null, ['user1@mail1.com', 'user2@mail2.com']);
     });
@@ -120,10 +118,8 @@ describe('Groups and Members API (getGroupAndMembersForList)', function () {
     });
     sinon.stub(groupsAPI, 'getGroup', function (groupname, callback) { callback(null, null); });
 
-    systemUnderTest.getGroupAndMembersForList('sympaListWithoutGroup', function (err, group, users) {
+    systemUnderTest.getGroupAndMembersForList('sympaListWithoutGroup', function (err, group) {
       expect(group).to.be.null;
-      expect(users).to.not.be.null;
-      expect(users.length).to.equal(0);
       done(err);
     });
   });
@@ -137,10 +133,10 @@ describe('Groups and Members API (getGroupAndMembersForList)', function () {
       callback(null, []);
     });
 
-    systemUnderTest.getGroupAndMembersForList('GroupA', function (err, group, users) {
+    systemUnderTest.getGroupAndMembersForList('GroupA', function (err, group) {
       expect(group).to.equal(GroupA);
-      expect(users).to.not.be.null;
-      expect(users.length).to.equal(0);
+      expect(group.members).to.not.be.null;
+      expect(group.members.length).to.equal(0);
       done(err);
     });
   });
