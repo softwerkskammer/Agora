@@ -3,6 +3,7 @@
 var express = require('express');
 var http = require('http');
 var path = require('path');
+var winston = require('winston');
 var passport = require('passport');
 var MongoStore = require('connect-mongo')(express);
 
@@ -22,7 +23,8 @@ function useApp(parent, url, factory) {
 var conf = require('nconf');
 
 // initialize winston and two concrete loggers
-var winston = require('winston-config').fromFileSync(path.join(__dirname, 'config/winston-config.json'));
+require('winston-config').fromFileSync(winston, path.join(__dirname, 'config/winston-config.json'));
+
 var appLogger = winston.loggers.get('application');
 var httpLogger = winston.loggers.get('http');
 
