@@ -8,8 +8,7 @@ var expect = require('chai').expect;
 describe('Group object', function () {
 
   it('should deliver two types of groups', function (done) {
-    var group = new Group();
-    var allTypes = group.allTypes();
+    var allTypes = Group.allTypes();
     expect(allTypes.length).to.equal(2);
     expect(allTypes).to.contain('Themengruppe');
     expect(allTypes).to.contain('Regionalgruppe');
