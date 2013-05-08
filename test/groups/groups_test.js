@@ -8,7 +8,7 @@ var groupsPersistence = conf.get('beans').get('groupsPersistence');
 var membersPersistence = conf.get('beans').get('membersPersistence');
 var sympa = conf.get('beans').get('sympaStub');
 
-var app = require('../../app')().create();
+var app = require('../../app').create();
 
 describe('Groups application', function () {
 

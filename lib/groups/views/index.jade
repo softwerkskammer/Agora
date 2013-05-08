@@ -11,10 +11,22 @@ block content
           small Alle
           if (typeof(user) !== 'undefined' && user.member.isAdmin)
             a.pull-right.btn(href="new/"): i.icon-file
+  .row-fluid
+    .span6
+      h3 Regionalgruppen
       dl.dl-horizontal
-        each group in groups
+        each group in regionalgroups
           dt
-            // span.badge(style="background-color: #{group.color}") &nbsp
             strong: a.group(href="#{group.id}") #{group.longName}&nbsp;
+            span.badge(style="background-color: #{group.color}") &nbsp;
+          dd Schicke eine Nachricht an: 
+            span.mailtoify #{group.id}@softwerkskammer.de
+    .span6
+      h3 Themengruppen
+      dl.dl-horizontal
+        each group in themegroups
+          dt
+            strong: a.group(href="#{group.id}") #{group.longName}&nbsp;
+            span.badge(style="background-color: #{group.color}") &nbsp;
           dd Schicke eine Nachricht an: 
             span.mailtoify #{group.id}@softwerkskammer.de

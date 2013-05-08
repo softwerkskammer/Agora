@@ -28,16 +28,12 @@ block content
           if (group.isValid())
             mixin textReadonly('id', 'Name', group)
           else
-            mixin text('id', 'Name', group)
-          mixin text('longName', 'Titel', group)
+            mixin text('id', 'Name', group, 'Die Adresse, unter der die Gruppe "@softwerkskammer.de" erreichbar ist.')
+          mixin text('longName', 'Titel', group, 'Anzeigetext innerhalb der Site, ist auch Realname für Emails')
           if (group.isValid())
             mixin textReadonly('emailPrefix', 'Präfix für Emails', group)
           else
-            mixin text('emailPrefix', 'Präfix für Emails', group)
-            p
-              strong
-                | Präfix für Emails:
-              |  #{group.emailPrefix}
+            mixin text('emailPrefix', 'Präfix für Emails-Subjects', group, 'steht innerhalb [] vor dem Subject in gesendeten Emails')
   
           .control-group
             label.control-label(for="type") Gruppenart:
