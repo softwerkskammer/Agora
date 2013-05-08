@@ -161,6 +161,47 @@ describe('Groups and Members API (getGroupAndMembersForList)', function () {
 
 });
 
+describe('Groups and Members API (addMembersToGroup)', function () {
+
+  afterEach(function (done) {
+    groupsAPI.getSympaUsersOfList.restore();
+    membersAPI.getMembersForEMails.restore();
+    done();
+  });
+
+  it('returns the group with an empty list of subscribed users when there are no subscribers', function (done) {
+    sinon.stub(groupsAPI, 'getSympaUsersOfList', function (err, callback) { callback(null, []); });
+    sinon.stub(membersAPI, 'getMembersForEMails', function (member, callback) {
+      callback(null, []);
+    });
+
+    systemUnderTest.addMembersToGroup(GroupA, function (err, group) {
+      expect(group).to.equal(GroupA);
+      expect(group.members).to.not.be.null;
+      expect(group.members.length).to.equal(0);
+      delete group.members;
+      done(err);
+    });
+  });
+
+  it('returns the group with a list of one subscribed user when there is one subscriber in sympa', function (done) {
+    sinon.stub(groupsAPI, 'getSympaUsersOfList', function (err, callback) { callback(null, ['user@email.com']); });
+    sinon.stub(membersAPI, 'getMembersForEMails', function (member, callback) {
+      callback(null, [dummymember]);
+    });
+
+    systemUnderTest.addMembersToGroup(GroupA, function (err, group) {
+      expect(group).to.equal(GroupA);
+      expect(group.members).to.not.be.null;
+      expect(group.members.length).to.equal(1);
+      expect(group.members[0]).to.equal(dummymember);
+      delete group.members;
+      done(err);
+    });
+  });
+
+});
+
 describe('Groups and Members API (userIsInMemberList)', function () {
 
   it('returns false if the user id is undefined', function (done) {
