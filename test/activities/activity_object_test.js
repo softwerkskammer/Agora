@@ -88,5 +88,48 @@ describe('Activity', function () {
     expect('#353535').to.equal(color);
     done();
   });
+});
+
+describe('Activity stores a list of members', function () {
+  it('can add a member', function (done) {
+    var activity = new Activity();
+    activity.addMemberId('memberID');
+    expect(activity.registeredMembers).to.not.be.empty;
+    done();
+  });
+
+  it('does not add a member twice', function (done) {
+    var activity = new Activity(
+      {url: 'myURL', registeredMembers: ['memberID']}
+    );
+    activity.addMemberId('memberID');
+    expect(1).to.equal(activity.registeredMembers.length);
+    done();
+  });
+
+  it('can remove a registered member', function (done) {
+    var activity = new Activity(
+      {url: 'myURL', registeredMembers: ['memberID']}
+    );
+    activity.removeMemberId('memberID');
+    expect(activity.registeredMembers).to.be.empty;
+    done();
+  });
+
+  it('can remove a non registered member', function (done) {
+    var activity = new Activity(
+      {url: 'myURL', registeredMembers: ['memberID']}
+    );
+    activity.removeMemberId('notRegisteredID');
+    expect(activity.registeredMembers).to.not.be.empty;
+    done();
+  });
+
+  it('can remove even when not initialized', function (done) {
+    var activity = new Activity();
+    activity.removeMemberId('notRegisteredID');
+    expect(activity.registeredMembers).to.be.empty;
+    done();
+  });
 
 });

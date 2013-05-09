@@ -1,4 +1,6 @@
 extends ../../../views/layout
+include ../../members/views/memberlist-mixin
+
 block title
   | Aktivitäten
 
@@ -9,9 +11,9 @@ block content
         h2 #{activity.title} <br> 
           small #{activity.startDate} (#{activity.startTime}
             if (activity.endDate && activity.endDate !== activity.startDate)
-              |  Uhr) - #{activity.endDate} (#{activity.endTime} Uhr)
+              | Uhr) - #{activity.endDate} (#{activity.endTime} Uhr)
             else (activity.endTime)
-              |  - #{activity.endTime} Uhr)
+              | - #{activity.endTime} Uhr)
           if (typeof(user) !== 'undefined' && user.member.isAdmin)
             a.pull-right.btn(href="/activities/edit/#{encodeURIComponent(activity.url)}"): i.icon-edit
   .row-fluid
@@ -22,6 +24,24 @@ block content
       p #{activity.location}
       h4 Wegbeschreibung: 
       p !{activity.directionHTML()}
+      hr
+      div.no-print
+        if (typeof(user) !== 'undefined' && user.member)
+          h4 Zugesagt haben:
+          mixin memberlist(visitors)
+          if (visitors.length > 0 && activity.registeredMembers.indexOf(user.member.id) > -1)
+            a.btn.btn-primary(href="unsubscribe/#{encodeURIComponent(activity.url)}") Ich kann doch nicht…
+          else
+            a.btn.btn-primary(href="subscribe/#{encodeURIComponent(activity.url)}") Ich bin dabei!
+        else
+          p Bislang
+            if (visitors.length === 0)
+              |  gibt es keine Teinahmezusagen.
+            else if (visitors.length === 1)
+              |  hat ein Mitglied seine Teilnahme zugesagt.
+            else
+              |  haben #{visitors.length} Mitglieder ihre Teilnahme zugesagt.
+        
       hr
       p Veranstaltet von der Gruppe: #{activity.groupName(groups)}
 
