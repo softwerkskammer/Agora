@@ -29,5 +29,5 @@ function createConfiguration() {
 
   return nconf;
 }
-module.exports = createConfiguration;
+module.exports = createConfiguration();
 
