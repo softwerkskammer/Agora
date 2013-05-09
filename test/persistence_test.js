@@ -3,6 +3,7 @@
 var should = require('chai').should();
 var conf = require('./configureForTest');
 var persistence = require('../lib/persistence/persistence')('teststore');
+var Timers = require('timers');
 
 describe('The persistence store', function () {
   var toPersist = {id: 'toPersist', name: 'Heinz'};
@@ -16,6 +17,12 @@ describe('The persistence store', function () {
       done(); // here we can ignore errors
     });
   };
+
+  before(function (done) {
+    Timers.setTimeout(function () { // neccessary for the persistence to be up
+      done();
+    }, 10);
+  });
 
   beforeEach(function (done) {
     clearStore(done);

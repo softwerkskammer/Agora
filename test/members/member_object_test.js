@@ -2,6 +2,7 @@
 
 var conf = require('nconf');
 var expect = require('chai').expect;
+require('../configureForTest');
 
 var Member = conf.get('beans').get('member');
 
@@ -69,7 +70,7 @@ describe('Member initial filling', function () {
   });
 });
 
-describe('twitter field autocorrection', function () {
+describe('Member twitter field autocorrection', function () {
   it('is autocorrecting the twittername removing leading @', function (done) {
     var req_body = {
       id: 'testuser',
