@@ -54,6 +54,7 @@
   "activity": {"module": "./lib/activities/activity"},
   "announcement": {"module": "./lib/announcements/announcement"},
   "color": {"module": "./lib/administration/color"},
+  "mail": {"module": "./lib/mailarchive/mail"},
 
   "fieldHelpers": {"module": "./lib/commons/fieldHelpers"},
   "validation": {"module": "./lib/commons/validation"},
