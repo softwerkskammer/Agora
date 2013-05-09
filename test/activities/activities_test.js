@@ -3,6 +3,7 @@
 var request = require('supertest');
 var express = require('express');
 var sinon = require('sinon');
+var sinonSandbox = sinon.sandbox.create();
 var expect = require('chai').expect;
 
 var conf = require('../configureForTest');
@@ -13,6 +14,7 @@ var dummyActivity = new Activity({title: 'title', description: 'description', as
 
 var activitiesAPI = conf.get('beans').get('activitiesAPI');
 var groupsAPI = conf.get('beans').get('groupsAPI');
+var membersAPI = conf.get('beans').get('membersAPI');
 var validation = conf.get('beans').get('validation');
 var colors = conf.get('beans').get('colorAPI');
 
@@ -23,18 +25,16 @@ describe('Activity application', function () {
   var getActivity;
 
   beforeEach(function (done) {
-    allActivities = sinon.stub(activitiesAPI, 'allActivities', function (callback) {callback(null, [dummyActivity]); });
-    getActivity = sinon.stub(activitiesAPI, 'getActivity', function (url, callback) {callback(null, (url === 'url') ? dummyActivity : null); });
-    sinon.stub(groupsAPI, 'getAllAvailableGroups', function (callback) { callback(null, []); });
-    sinon.stub(colors, 'allColors', function (callback) { callback(null, []); });
+    allActivities = sinonSandbox.stub(activitiesAPI, 'allActivities', function (callback) {callback(null, [dummyActivity]); });
+    getActivity = sinonSandbox.stub(activitiesAPI, 'getActivity', function (url, callback) {callback(null, (url === 'url') ? dummyActivity : null); });
+    sinonSandbox.stub(membersAPI, 'allMembers', function (callback) {callback(null, []); });
+    sinonSandbox.stub(groupsAPI, 'getAllAvailableGroups', function (callback) { callback(null, []); });
+    sinonSandbox.stub(colors, 'allColors', function (callback) { callback(null, []); });
     done();
   });
 
   afterEach(function (done) {
-    activitiesAPI.allActivities.restore();
-    activitiesAPI.getActivity.restore();
-    groupsAPI.getAllAvailableGroups.restore();
-    colors.allColors.restore();
+    sinonSandbox.restore();
     done();
   });
 
@@ -72,11 +72,7 @@ describe('Activity application', function () {
   it('shows a 404 if the id cannot be found in the store for the detail page', function (done) {
     var link = dummyActivity.id + '4711';
 
-    request(app)
-      .get('/' + link)
-      .expect(404, function (err) {
-        done(err);
-      });
+    request(app).get('/' + link).expect(404, function (err) { done(err); });
   });
 
   it('allows to create a new activity', function (done) {
