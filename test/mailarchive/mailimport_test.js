@@ -15,7 +15,8 @@ var mailimport = require('../../lib/mailarchive/importMails.js');
 var fileWithTextAndHtml = 'test/mailarchive/testfiles/mailWithTextAndHtml',
   fileWithTextOnly = 'test/mailarchive/testfiles/mailWithTextOnly',
   fileWithoutDate = 'test/mailarchive/testfiles/mailWithoutDate',
-  fileWithReferences = 'test/mailarchive/testfiles/mailWithReferences';
+  fileWithReferences = 'test/mailarchive/testfiles/mailWithReferences',
+  fileWithInReplyTo = 'test/mailarchive/testfiles/mailWithInReplyTo';
 
 describe('Import of mails from files with mime messages', function () {
   beforeEach(function (done) {
@@ -106,6 +107,13 @@ describe('Import of mails from files with mime messages', function () {
   it('imports references', function (done) {
     mailimport(fileWithReferences, 'group', function (err, result) {
       expect(result.references.toString()).to.equal(["message0@nomail.com", "message1@nomail.com"].toString());
+      done();
+    });
+  });
+
+  it('imports reply-to as reference if no references are available', function (done) {
+    mailimport(fileWithInReplyTo, 'group', function (err, result) {
+      expect(result.references.toString()).to.equal(["message0@nomail.com"].toString());
       done();
     });
   });
