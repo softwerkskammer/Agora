@@ -1,7 +1,7 @@
 "use strict";
 
 var request = require('supertest');
-var sinon = require('sinon');
+var sinon = require('sinon').sandbox.create();
 var conf = require('../configureForTest');
 
 var groupsPersistence = conf.get('beans').get('groupsPersistence');
@@ -15,6 +15,18 @@ describe('Groups application', function () {
   before(function (done) {
     sinon.stub(sympa, 'getAllAvailableLists', function (callback) {
       return callback(null, ['GroupA']);
+    });
+
+    sinon.stub(sympa, 'getUsersOfList', function (groupname, callback) {
+      if (groupname === 'groupa') {
+        return callback(['peter@google.de', 'hans@aol.com']);
+      }
+    });
+    sinon.stub(membersPersistence, 'listByEMails', function (emails, sortOrder, callback) {
+      return callback(null, [
+        { firstname: 'Hans', lastname: 'Dampf' },
+        { firstname: 'Peter', lastname: 'Meyer' }
+      ]);
     });
 
     sinon.stub(groupsPersistence, 'listByIds', function (list, sortOrder, callback) {
@@ -38,9 +50,7 @@ describe('Groups application', function () {
   });
 
   after(function (done) {
-    sympa.getAllAvailableLists.restore();
-    groupsPersistence.listByIds.restore();
-    groupsPersistence.getById.restore();
+    sinon.restore();
     done();
   });
 
@@ -75,19 +85,6 @@ describe('Groups application', function () {
   });
 
   it('displays an existing group and membercount', function (done) {
-
-    sinon.stub(sympa, 'getUsersOfList', function (groupname, callback) {
-      if (groupname === 'GroupA') {
-        return callback(['peter@google.de', 'hans@aol.com']);
-      }
-    });
-    sinon.stub(membersPersistence, 'listByEMails', function (emails, sortOrder, callback) {
-      return callback(null, [
-        { firstname: 'Hans', lastname: 'Dampf' },
-        { firstname: 'Peter', lastname: 'Meyer' }
-      ]);
-    });
-
     request(app)
       .get('/groups/GroupA')
       .expect(200)
@@ -97,8 +94,6 @@ describe('Groups application', function () {
       .expect(/Themengruppe/)
       .expect(/Mitglieder:/)
       .expect(/Diese Gruppe hat 2 Mitglieder/, function (err) {
-        sympa.getUsersOfList.restore();
-        membersPersistence.listByEMails.restore();
         done(err);
       });
   });
