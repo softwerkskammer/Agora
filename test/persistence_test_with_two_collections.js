@@ -4,19 +4,20 @@ require('chai').should();
 
 var async = require('async');
 require('./configureForTest');
+var Timers = require('timers');
 
 var createTeststore = function (collectionName) {
   return require('../lib/persistence/persistence')(collectionName);
 };
 
 describe('The parallel persistence store', function () {
-  var persistence1;
-  var persistence2;
+  var persistence1 = createTeststore('teststore1');
+  var persistence2 = createTeststore('teststore2');
 
-  beforeEach(function (done) {
-    persistence1 = createTeststore('teststore1');
-    persistence2 = createTeststore('teststore2');
-    done();
+  before(function (done) {
+    Timers.setTimeout(function () { // neccessary for the persistence to be up
+      done();
+    }, 10);
   });
 
   it('retrieves in parallel', function (done) {
