@@ -6,6 +6,7 @@
   "siteApp": {"module": "./lib/site"},
   "announcementsApp": {"module": "./lib/announcements"},
   "activitiesApp": {"module": "./lib/activities"},
+  "mailsApp": {"module": "./lib/mailarchive"},
 
   "groupsAndMembersAPI": {"module": "./lib/groupsAndMembers/groupsAndMembersAPI"},
   "groupsAPI": {"module": "./lib/groups/groupsAPI"},
@@ -13,12 +14,14 @@
   "activitiesAPI": {"module": "./lib/activities/activitiesAPI"},
   "announcementsAPI": {"module": "./lib/announcements/announcementsAPI"},
   "colorAPI": {"module": "./lib/administration/colorAPI"},
+  "mailsAPI": {"module": "./lib/mailarchive/mailsAPI"},
 
   "groupstore": {"module": "./lib/groups/groupstore"},
   "memberstore": {"module": "./lib/members/memberstore"},
   "activitystore": {"module": "./lib/activities/activitystore"},
   "announcementstore": {"module": "./lib/announcements/announcementstore"},
   "colorstore": {"module": "./lib/administration/colorstore"},
+  "mailstore": {"module": "./lib/mailarchive/mailstore"},
 
   "sympa": {"module": "./lib/groups/sympa"},
   "sympaStub": {"module": "./lib/groups/sympaStub"},

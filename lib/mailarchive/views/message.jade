@@ -1,0 +1,20 @@
+extends ../../../views/layout
+block title
+  | mail 
+  -if (mail != null)
+    | #{mail.subject}
+  -else
+    | not found
+
+block content
+  .span12
+    .page-header
+      -if (mail != null)
+        h2 Root #{mail.subject}
+        div 
+          -if(mail.html != null)
+            | !{mail.html}
+          -else if (mail.text != null)
+            | !{mail.text}
+      -else
+        h2 Keine Mail gefunden
