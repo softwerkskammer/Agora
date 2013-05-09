@@ -77,7 +77,7 @@ describe('Groups application', function () {
   it('displays an existing group and membercount', function (done) {
 
     sinon.stub(sympa, 'getUsersOfList', function (groupname, callback) {
-      if (groupname === 'GroupA') {
+      if (groupname === 'groupa') {
         return callback(['peter@google.de', 'hans@aol.com']);
       }
     });

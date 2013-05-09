@@ -169,6 +169,26 @@ describe('Groups and Members API (addMembersToGroup)', function () {
     done();
   });
 
+  it('returns null when the group is null', function (done) {
+    sinon.stub(groupsAPI, 'getSympaUsersOfList', function () {});
+    sinon.stub(membersAPI, 'getMembersForEMails', function () {});
+
+    systemUnderTest.addMembersToGroup(null, function (err, group) {
+      expect(group).to.be.null;
+      done(err);
+    });
+  });
+
+  it('returns undefined when the group is undefined', function (done) {
+    sinon.stub(groupsAPI, 'getSympaUsersOfList', function () {});
+    sinon.stub(membersAPI, 'getMembersForEMails', function () {});
+
+    systemUnderTest.addMembersToGroup(undefined, function (err, group) {
+      expect(group).to.be.undefined;
+      done(err);
+    });
+  });
+
   it('returns the group with an empty list of subscribed users when there are no subscribers', function (done) {
     sinon.stub(groupsAPI, 'getSympaUsersOfList', function (err, callback) { callback(null, []); });
     sinon.stub(membersAPI, 'getMembersForEMails', function (member, callback) {
