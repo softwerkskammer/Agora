@@ -18,7 +18,7 @@ block content
         each group in regionalgroups
           dt
             strong: a.group(href="#{group.id}") #{group.longName}&nbsp;
-            span.badge(style="background-color: #{group.color}") &nbsp;
+            span.badge(style="background-color: #{group.color}") #{group.members.length}
           dd Schicke eine Nachricht an: 
             span.mailtoify #{group.id}@softwerkskammer.de
     .span6
@@ -27,6 +27,6 @@ block content
         each group in themegroups
           dt
             strong: a.group(href="#{group.id}") #{group.longName}&nbsp;
-            span.badge(style="background-color: #{group.color}") &nbsp;
+            span.badge(style="background-color: #{group.color}") #{group.members.length}
           dd Schicke eine Nachricht an: 
             span.mailtoify #{group.id}@softwerkskammer.de
