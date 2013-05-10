@@ -14,7 +14,7 @@ block content
             if (activity.endDate && activity.endDate !== activity.startDate)
               | Uhr) - #{activity.endDate} (#{activity.endTime} Uhr)
             else (activity.endTime)
-              | - #{activity.endTime} Uhr)
+              |  - #{activity.endTime} Uhr)
           if (typeof(user) !== 'undefined' && user.member.isAdmin)
             a.pull-right.btn(href="/activities/edit/#{encodeURIComponent(activity.url)}"): i.icon-edit
   .row-fluid
