@@ -25,28 +25,28 @@
 
   "groupsPersistence": {"module": "./lib/persistence/persistence",
                         "constructorArgs": {
-                             "connectionName": "groupstore"
+                             "collectionName": "groupstore"
                        }},
   "membersPersistence": {"module": "./lib/persistence/persistence",
                         "constructorArgs": {
-                             "connectionName": "memberstore"
+                             "collectionName": "memberstore"
                        }},
   "activitiesPersistence": {"module": "./lib/persistence/persistence",
                         "constructorArgs": {
-                             "connectionName": "activitystore"
+                             "collectionName": "activitystore"
                        }},
   "colorsPersistence": {"module": "./lib/persistence/persistence",
                         "constructorArgs": {
-                             "connectionName": "colorstore"
+                             "collectionName": "colorstore"
                        }},
 
   "mailsPersistence": {"module": "./lib/persistence/persistence",
                         "constructorArgs": {
-                             "connectionName": "mailsstore"
+                             "collectionName": "mailsstore"
                        }},
   "announcementsPersistence": {"module": "./lib/persistence/persistence",
                                 "constructorArgs": {
-                                  "connectionName": "announcementstore"
+                                  "collectionName": "announcementstore"
                               }},
 
   "group": {"module": "./lib/groups/group"},
