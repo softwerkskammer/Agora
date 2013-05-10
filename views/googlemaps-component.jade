@@ -1,4 +1,4 @@
-mixin map(width, height)
+mixin map(location, width, height)
   #map.no-print(style="width: #{width}; height: #{height}")
   script(src="http://maps.googleapis.com/maps/api/js?sensor=false", type="text/javascript")
   script
@@ -34,7 +34,7 @@ mixin map(width, height)
       ];
       map.setOptions({styles: styles});
       var geocoder = new google.maps.Geocoder();
-      geocoder.geocode( { 'address': "#{activity.location}", region: 'de'}, function(results, status) {
+      geocoder.geocode( { 'address': "#{location}", region: 'de'}, function(results, status) {
         if (status == google.maps.GeocoderStatus.OK) {
           map.setCenter(results[0].geometry.location);
           var marker = new google.maps.Marker({
