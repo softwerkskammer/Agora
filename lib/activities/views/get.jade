@@ -1,5 +1,6 @@
 extends ../../../views/layout
 include ../../members/views/memberlist-mixin
+include ../../../views/googlemaps-component
 
 block title
   | Aktivitäten
@@ -44,10 +45,12 @@ block content
         
       hr
       p Veranstaltet von der Gruppe: #{activity.groupName(groups)}
+    .span4
+      mixin map('100%', '450px')
 
 block scripts
   script
     $(document).ready(function () {
-      $('#calendar').fullCalendar('select', $.fullCalendar.parseDate(#{activity.startUnix}), $.fullCalendar.parseDate(#{activity.endUnix()}), true);      
+      $('#calendar').fullCalendar('select', $.fullCalendar.parseDate(#{activity.startUnix}), $.fullCalendar.parseDate(#{activity.endUnix()}), true);
     });
   
