@@ -201,4 +201,11 @@ describe('Member isAdmin', function () {
     done();
   });
 
+  it('shows the full name as display-name', function (done) {
+    var db_record = {nickname: 'Nick', isAdmin: true, firstname: 'Hans', lastname: 'Dampf'};
+    var member = new Member(db_record);
+    expect(member.displayName()).to.equal('Hans Dampf');
+    done();
+  });
+
 });
