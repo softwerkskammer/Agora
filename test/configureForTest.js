@@ -1,8 +1,4 @@
 "use strict";
-var path = require('path');
-var winston = require('winston');
-require('winston-config').fromFileSync(winston, path.join(__dirname, '../config/winston-config.json'));
-
 var nconf = require('../configure');
 var Beans = require('CoolBeans');
 var fs = require('fs');
