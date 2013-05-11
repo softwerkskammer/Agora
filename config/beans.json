@@ -21,7 +21,6 @@
   "activitystore": {"module": "./lib/activities/activitystore"},
   "announcementstore": {"module": "./lib/announcements/announcementstore"},
   "colorstore": {"module": "./lib/administration/colorstore"},
-  "mailstore": {"module": "./lib/mailarchive/mailstore"},
 
   "sympa": {"module": "./lib/groups/sympa"},
   "sympaStub": {"module": "./lib/groups/sympaStub"},

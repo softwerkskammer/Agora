@@ -1,0 +1,24 @@
+extends ../../../views/layout
+block title
+  | #{group} 
+  | mails 
+
+block content
+  .span12
+    .page-header
+      h2 Mails der Gruppe #{group}
+  -if(mailHeaders.length == 0) 
+    div Keine Mails gefunden
+  -else  
+     ul
+       for mailHeader in mailHeaders
+         li
+           a(href="../show/" + encodeURIComponent(mailHeader.id) ) #{mailHeader.subject} 
+           | (
+           - if (mailHeader.memberNickname != null)
+             a(href="../../members/" + encodeURIComponent(mailHeader.memberNickname)) #{mailHeader.displayedSenderName} 
+           - else
+             | #{mailHeader.displayedSenderName}
+           | , 
+           | #{mailHeader.displayedTime}) 
+  
