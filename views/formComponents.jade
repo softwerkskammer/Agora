@@ -23,6 +23,12 @@ mixin textarea(name, label, object)
     textarea(rows="7", class="input-block-level input-xxlarge", id=name, type='text', name=name)
       | #{object[name]}
 
+mixin hightextarea(name, label, object)
+  .control-group
+    label(class="control-label", for=name) #{label}:
+    textarea(rows="15", class="input-block-level input-xxlarge", id=name, type='text', name=name)
+      | #{object[name]}
+
 mixin checkbox(name, label, checked, optionalValue)
   label.checkbox
     input(type='checkbox', name=name, value=optionalValue, checked=(checked ? "true" : undefined))

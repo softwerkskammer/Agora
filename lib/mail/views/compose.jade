@@ -1,0 +1,28 @@
+extends ../../../views/layout
+
+include  ../../../views/formComponents
+
+block scripts
+  script(src="/clientscripts/check-mailform.js")
+
+block title
+  | EMail-Versand
+
+block content
+  form(id='mailform', action='/mail/submit', method='post')
+    fieldset
+      .row-fluid
+        .span12
+          legend
+            | EMail anlegen
+
+      .row-fluid
+        .span12
+          mixin text('subject', 'Subject', {})
+          mixin hightextarea('htmlText', 'HTML-Text', {})
+          mixin checkbox('sendCopyToSelf', 'Eine Kopie an mich senden', false)
+
+      .row-fluid
+        .span12
+          button.btn.btn-primary.pull-right(type="submit") Senden
+          a.btn.pull-right(href="javascript:history.back()", type="cancel") Zurück
