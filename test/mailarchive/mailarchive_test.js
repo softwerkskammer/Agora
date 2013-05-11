@@ -20,10 +20,18 @@ describe('Mail content page', function () {
     done();
   });
 
+  it('shows "page not found" error if no message is given', function (done) {
+    request(app)
+      .get('/message')
+      .expect(404, function (err) {
+        done(err);
+      });
+  });
+
   it('shows text "Keine Mail gefunden" if mail is not found', function (done) {
     var mailForId = sinonSandbox.stub(mailsAPI, 'mailForId', function (id, callback) {callback(null, undefined); });
     request(app)
-      .get('/show/mailID')
+      .get('/message?id=mailID')
       .expect(200)
       .expect(/Keine Mail gefunden/, function (err) {
         expect(mailForId.calledOnce).to.be.ok;
@@ -47,7 +55,7 @@ describe('Mail content page', function () {
 
     var mailForId = sinonSandbox.stub(mailsAPI, 'mailForId', function (id, callback) {callback(null, displayedMail); });
     request(app)
-      .get('/show/mailID')
+      .get('/message?id=mailID')
       .expect(200)
       .expect(/<div>Html message 1<\/div>/, function (err) {
         expect(mailForId.calledOnce).to.be.ok;

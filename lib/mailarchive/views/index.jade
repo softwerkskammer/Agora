@@ -16,7 +16,7 @@ block content
      ul
        for mailHeader in mailHeaders
          li
-           a(href="../show/" + encodeURIComponent(mailHeader.id) ) #{mailHeader.subject} 
+           a(href="../message?id=" + encodeURIComponent(mailHeader.id) ) #{mailHeader.subject} 
            | (
            mixin mailattributes(mailHeader) 
            | ) 
