@@ -92,6 +92,15 @@ describe('Mail index page', function () {
       });
   });
 
+  it('contains reference to the group page', function (done) {
+    request(app)
+      .get('/list/group')
+      .expect(200)
+      .expect(/ href="..\/..\/groups\/group"/, function (err) {
+        done(err);
+      });
+  });
+
   it('shows text "Keine Mails gefunden" if no mails for group are available', function (done) {
     request(app)
       .get('/list/group')

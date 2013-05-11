@@ -9,6 +9,7 @@ block title
 block content
   .span12
     .page-header
+      a(href="../../groups/" + encodeURIComponent(group) ) Gruppenseite
       h2 Mails der Gruppe #{group}
   -if(mailHeaders.length == 0) 
     div Keine Mails gefunden
