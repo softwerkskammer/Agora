@@ -11,7 +11,7 @@ describe('Mail', function () {
   it('restores time from unix time', function (done) {
     var expectedTime = moment("01 Jan 2010 21:14:14 +0100");
     var mail = new Mail({
-      dateUnix : expectedTime.unix()
+      timeUnix : expectedTime.unix()
     });
     expect(mail.time.format()).to.equal(expectedTime.format());
     done();

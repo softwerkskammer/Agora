@@ -25,7 +25,7 @@ describe('Mailarchive application', function () {
 
   it('shows html if message contains html', function (done) {
     var displayedMail = new Mail({
-      "dateUnix": 1364242214,
+      "timeUnix": 1364242214,
       "from": {
         "name": "Heißen",
         "address": "no@mail.de"

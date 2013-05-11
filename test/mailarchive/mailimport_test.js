@@ -76,7 +76,7 @@ describe('Import of mails from files with mime messages', function () {
 
   it('imports date and time', function (done) {
     mailimport(fileWithTextOnly, 'group', function checkImportedObject(err, result) {
-      expect(result.dateUnix).to.equal(moment('Mon, 25 Mar 2013 21:14:14 +0100').unix());
+      expect(result.timeUnix).to.equal(moment('Mon, 25 Mar 2013 21:14:14 +0100').unix());
       done();
     });
   });
@@ -85,8 +85,8 @@ describe('Import of mails from files with mime messages', function () {
     var beforeTestRunUnix = moment().unix() - 1;
     mailimport(fileWithoutDate, 'group', function checkImportedObject(err, result) {
       var afterTestRunUnix = moment().unix() + 1;
-      expect(result.dateUnix).to.be.greaterThan(beforeTestRunUnix);
-      expect(result.dateUnix).to.be.lessThan(afterTestRunUnix);
+      expect(result.timeUnix).to.be.greaterThan(beforeTestRunUnix);
+      expect(result.timeUnix).to.be.lessThan(afterTestRunUnix);
       done();
     });
   });
