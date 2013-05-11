@@ -1,22 +1,24 @@
 "use strict";
 
 module.exports = {
-  list: function () {},
+  list: function (sortOrder, callback) { callback(null, []); },
 
-  listByIds: function () {},
+  listByIds: function (list, sortOrder, callback) { callback(null, []); },
 
-  listByEMails: function () {},
+  listByEMails: function (list, sortOrder, callback) { callback(null, []); },
 
-  listByField: function () {},
+  listByField: function (searchObject, sortOrder, callback) { callback(null, []); },
 
-  getById: function () {},
+  listByFieldWithOptions: function (searchObject, options, sortOrder, callback) { callback(null, []); },
 
-  getByField: function () {},
+  getById: function (id, callback) { callback(null, undefined); },
 
-  save: function () {},
+  getByField: function (fieldAsObject, callback) { callback(null, undefined); },
 
-  saveAll: function () {},
+  save: function (object, callback) { callback(null, undefined); },
 
-  drop: function () {}
+  saveAll: function (objects, callback) { callback(null, undefined); },
+
+  drop: function (callback) {callback(null, undefined); }
 };
 
