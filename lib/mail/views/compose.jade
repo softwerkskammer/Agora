@@ -18,6 +18,9 @@ block content
 
       .row-fluid
         .span12
+          mixin groupCheckboxes('invitedGroups', regionalgroups, themegroups)
+      .row-fluid
+        .span12
           mixin text('subject', 'Subject', {})
           mixin hightextarea('htmlText', 'HTML-Text', {})
           mixin checkbox('sendCopyToSelf', 'Eine Kopie an mich senden', false)
