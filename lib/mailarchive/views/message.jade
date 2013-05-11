@@ -13,6 +13,7 @@ block content
   .span12
     .page-header
       -if (mail != null)
+        a(href="list/" + encodeURIComponent(mail.group) ) Mailverzeichnis 
         h2 #{mail.subject}
         div
           mixin mailattributes(mail) 
