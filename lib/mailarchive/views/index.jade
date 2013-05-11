@@ -1,4 +1,7 @@
 extends ../../../views/layout
+
+include ./mailheader-mixin
+
 block title
   | #{group} 
   | mails 
@@ -15,10 +18,6 @@ block content
          li
            a(href="../show/" + encodeURIComponent(mailHeader.id) ) #{mailHeader.subject} 
            | (
-           - if (mailHeader.memberNickname != null)
-             a(href="../../members/" + encodeURIComponent(mailHeader.memberNickname)) #{mailHeader.displayedSenderName} 
-           - else
-             | #{mailHeader.displayedSenderName}
-           | , 
-           | #{mailHeader.displayedTime}) 
-  
+           mixin mailattributes(mailHeader) 
+           | ) 
+

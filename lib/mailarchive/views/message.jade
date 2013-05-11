@@ -1,4 +1,7 @@
 extends ../../../views/layout
+
+include ./mailheader-mixin
+
 block title
   | mail 
   -if (mail != null)
@@ -11,6 +14,8 @@ block content
     .page-header
       -if (mail != null)
         h2 #{mail.subject}
+        div
+          mixin mailattributes(mail) 
       -else
         h2 Keine Mail gefunden
   -if (mail != null)
