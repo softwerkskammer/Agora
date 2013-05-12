@@ -1,0 +1,24 @@
+extends ../../../views/layout
+
+include ./mailheader-mixin
+
+block title
+  | #{group} 
+  | mails 
+
+block content
+  .span12
+    .page-header
+      a(href="../../groups/" + encodeURIComponent(group) ) Gruppenseite
+      h2 Mails der Gruppe #{group}
+  -if(mailHeaders.length == 0) 
+    div Keine Mails gefunden
+  -else  
+     ul
+       for mailHeader in mailHeaders
+         li
+           a(href="../message?id=" + encodeURIComponent(mailHeader.id) ) #{mailHeader.subject} 
+           | (
+           mixin mailattributes(mailHeader) 
+           | ) 
+

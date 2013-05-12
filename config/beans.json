@@ -7,6 +7,7 @@
   "announcementsApp": {"module": "./lib/announcements"},
   "activitiesApp": {"module": "./lib/activities"},
   "mailApp": {"module": "./lib/mail"},
+  "mailarchiveApp": {"module": "./lib/mailarchive"},
 
   "groupsAndMembersAPI": {"module": "./lib/groupsAndMembers/groupsAndMembersAPI"},
   "groupsAPI": {"module": "./lib/groups/groupsAPI"},
@@ -15,6 +16,7 @@
   "announcementsAPI": {"module": "./lib/announcements/announcementsAPI"},
   "mailAPI": {"module": "./lib/mail/mailAPI"},
   "colorAPI": {"module": "./lib/administration/colorAPI"},
+  "mailarchiveAPI": {"module": "./lib/mailarchive/mailarchiveAPI"},
 
   "groupstore": {"module": "./lib/groups/groupstore"},
   "memberstore": {"module": "./lib/members/memberstore"},
@@ -27,28 +29,28 @@
 
   "groupsPersistence": {"module": "./lib/persistence/persistence",
                         "constructorArgs": {
-                             "connectionName": "groupstore"
+                             "collectionName": "groupstore"
                        }},
   "membersPersistence": {"module": "./lib/persistence/persistence",
                         "constructorArgs": {
-                             "connectionName": "memberstore"
+                             "collectionName": "memberstore"
                        }},
   "activitiesPersistence": {"module": "./lib/persistence/persistence",
                         "constructorArgs": {
-                             "connectionName": "activitystore"
+                             "collectionName": "activitystore"
                        }},
   "colorsPersistence": {"module": "./lib/persistence/persistence",
                         "constructorArgs": {
-                             "connectionName": "colorstore"
+                             "collectionName": "colorstore"
                        }},
 
   "mailsPersistence": {"module": "./lib/persistence/persistence",
                         "constructorArgs": {
-                             "connectionName": "mailsstore"
+                             "collectionName": "mailsstore"
                        }},
   "announcementsPersistence": {"module": "./lib/persistence/persistence",
                                 "constructorArgs": {
-                                  "connectionName": "announcementstore"
+                                  "collectionName": "announcementstore"
                               }},
 
   "group": {"module": "./lib/groups/group"},
@@ -57,6 +59,7 @@
   "announcement": {"module": "./lib/announcements/announcement"},
   "color": {"module": "./lib/administration/color"},
   "message": {"module": "./lib/mail/message"},
+  "archivedMail": {"module": "./lib/mailarchive/archivedMail"},
 
   "fieldHelpers": {"module": "./lib/commons/fieldHelpers"},
   "validation": {"module": "./lib/commons/validation"},

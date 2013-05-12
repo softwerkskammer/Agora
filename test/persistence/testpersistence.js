@@ -1,22 +1,24 @@
 "use strict";
 
 module.exports = {
-  list: function () {},
+  list: function () {throw new Error('function not implemented'); },
 
-  listByIds: function () {},
+  listByIds: function () {throw new Error('function not implemented'); },
 
-  listByEMails: function () {},
+  listByEMails: function () {throw new Error('function not implemented'); },
 
-  listByField: function () {},
+  listByField: function () {throw new Error('function not implemented'); },
 
-  getById: function () {},
+  listByFieldWithOptions: function () {throw new Error('function not implemented'); },
 
-  getByField: function () {},
+  getById: function () {throw new Error('function not implemented'); },
 
-  save: function () {},
+  getByField: function () {throw new Error('function not implemented'); },
 
-  saveAll: function () {},
+  save: function () {throw new Error('function not implemented'); },
 
-  drop: function () {}
+  saveAll: function () {throw new Error('function not implemented'); },
+
+  drop: function () {throw new Error('function not implemented'); }
 };
 

@@ -48,7 +48,8 @@
     "connect-mongo": "0.3.x",
     "CoolBeans": "0.0.8",
     "mailparser": "~0.3.4",
-    "nodemailer": "0.4.1"
+    "nodemailer": "0.4.1",
+    "node-html-encoder": "~0.0.2"
   },
   "devDependencies": {
     "grunt": "~0.4",

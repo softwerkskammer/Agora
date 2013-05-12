@@ -78,6 +78,7 @@ module.exports = {
     useApp(app, 'mail', conf.get('beans').get('mailApp'));
     useApp(app, 'auth', conf.get('beans').get('authenticationApp'));
     useApp(app, 'filebrowser', require('./lib/filebrowser'));
+    useApp(app, 'mailarchive', conf.get('beans').get('mailarchiveApp'));
 
     app.configure('development', function () {
       // Handle 404

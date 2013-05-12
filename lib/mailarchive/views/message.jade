@@ -1,0 +1,25 @@
+extends ../../../views/layout
+
+include ./mailheader-mixin
+
+block title
+  | mail 
+  -if (mail != null)
+    | #{mail.subject}
+  -else
+    | not found
+
+block content
+  .span12
+    .page-header
+      -if (mail != null)
+        a(href="list/" + encodeURIComponent(mail.group) ) Mailverzeichnis 
+        h2 #{mail.subject}
+        div
+          mixin mailattributes(mail) 
+      -else
+        h2 Keine Mail gefunden
+  -if (mail != null)
+    div
+      -if(mail.html != null)
+        | !{mail.html}
