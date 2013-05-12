@@ -9,10 +9,10 @@ var moment = require('moment');
 
 var conf = require('../configureForTest');
 
-var app = conf.get('beans').get('mailsApp')(express());
-var mailsAPI = conf.get('beans').get('mailsAPI');
+var app = conf.get('beans').get('mailarchiveApp')(express());
+var mailarchiveAPI = conf.get('beans').get('mailarchiveAPI');
 var membersAPI = conf.get('beans').get('membersAPI');
-var Mail = conf.get('beans').get('mail');
+var Mail = conf.get('beans').get('archivedMail');
 
 describe('Mail content page', function () {
   afterEach(function (done) {
@@ -29,7 +29,7 @@ describe('Mail content page', function () {
   });
 
   it('shows text "Keine Mail gefunden" if mail is not found', function (done) {
-    var mailForId = sinonSandbox.stub(mailsAPI, 'mailForId', function (id, callback) {callback(null, undefined); });
+    var mailForId = sinonSandbox.stub(mailarchiveAPI, 'mailForId', function (id, callback) {callback(null, undefined); });
     request(app)
       .get('/message?id=mailID')
       .expect(200)
@@ -53,7 +53,7 @@ describe('Mail content page', function () {
       "group": "group"
     });
 
-    var mailForId = sinonSandbox.stub(mailsAPI, 'mailForId', function (id, callback) {callback(null, displayedMail); });
+    var mailForId = sinonSandbox.stub(mailarchiveAPI, 'mailForId', function (id, callback) {callback(null, displayedMail); });
     request(app)
       .get('/message?id=mailID')
       .expect(200)
@@ -71,7 +71,7 @@ describe('Mail index page', function () {
   });
 
   function stubMailHeaders(headers) {
-    sinonSandbox.stub(mailsAPI, 'mailHeaders', function (query, sortObject, callback) {callback(null, headers); });
+    sinonSandbox.stub(mailarchiveAPI, 'mailHeaders', function (query, sortObject, callback) {callback(null, headers); });
   }
 
   it('shows group name in the title', function (done) {

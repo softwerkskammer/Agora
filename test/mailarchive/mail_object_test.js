@@ -5,7 +5,7 @@ var conf = require('nconf');
 var expect = require('chai').expect;
 var moment = require('moment');
 
-var Mail = conf.get('beans').get('mail');
+var Mail = conf.get('beans').get('archivedMail');
 
 describe('Mail', function () {
   it('restores time from unix time', function (done) {
