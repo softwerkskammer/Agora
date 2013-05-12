@@ -6,6 +6,7 @@
   "siteApp": {"module": "./lib/site"},
   "announcementsApp": {"module": "./lib/announcements"},
   "activitiesApp": {"module": "./lib/activities"},
+  "mailarchiveApp": {"module": "./lib/mailarchive"},
 
   "groupsAndMembersAPI": {"module": "./lib/groupsAndMembers/groupsAndMembersAPI"},
   "groupsAPI": {"module": "./lib/groups/groupsAPI"},
@@ -13,6 +14,7 @@
   "activitiesAPI": {"module": "./lib/activities/activitiesAPI"},
   "announcementsAPI": {"module": "./lib/announcements/announcementsAPI"},
   "colorAPI": {"module": "./lib/administration/colorAPI"},
+  "mailarchiveAPI": {"module": "./lib/mailarchive/mailarchiveAPI"},
 
   "groupstore": {"module": "./lib/groups/groupstore"},
   "memberstore": {"module": "./lib/members/memberstore"},
@@ -54,6 +56,7 @@
   "activity": {"module": "./lib/activities/activity"},
   "announcement": {"module": "./lib/announcements/announcement"},
   "color": {"module": "./lib/administration/color"},
+  "archivedMail": {"module": "./lib/mailarchive/archivedMail"},
 
   "fieldHelpers": {"module": "./lib/commons/fieldHelpers"},
   "validation": {"module": "./lib/commons/validation"},
