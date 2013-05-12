@@ -13,7 +13,7 @@ function createConfiguration() {
   nconf.file('server', './config/server-config.json');
   nconf.file('filebrowser', './config/filebrowser-config.json');
   nconf.file('authentication', './config/authentication-config.json');
-  nconf.file('mail', './config/mail-config.json');
+  nconf.file('mail', './config/mailsender-config.json');
   nconf.defaults({
     port: '17124',
     mongoHost: 'localhost',

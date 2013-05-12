@@ -3,13 +3,13 @@ extends ../../../views/layout
 include  ../../../views/formComponents
 
 block scripts
-  script(src="/clientscripts/check-mailform.js")
+  script(src="/clientscripts/check-mailsenderform.js")
 
 block title
   | EMail-Versand
 
 block content
-  form(id='mailform', action='/mail/submit', method='post')
+  form(id='mailform', action='/mailsender/submit', method='post')
     fieldset
       .row-fluid
         .span12
