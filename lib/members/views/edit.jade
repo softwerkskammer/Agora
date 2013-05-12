@@ -50,16 +50,7 @@ block content
       .span6
         legend Gruppenmitgliedschaft
     .row-fluid
-      .span3
-        h4 Regionale Gruppen
-        .control-group
-          each markedGroup in regionalgroups
-            mixin checkbox('newSubscriptions', markedGroup.group.longName, markedGroup.selected, markedGroup.group.id)
-      .span3
-        h4 Themengruppen
-        .control-group
-          each markedGroup in themegroups
-            mixin checkbox('newSubscriptions', markedGroup.group.longName, markedGroup.selected, markedGroup.group.id)
+      mixin groupCheckboxes('newSubscriptions', regionalgroups, themegroups)
       .span6
         button.btn.btn-primary.pull-right(type="submit") Speichern
         if (user.member)
