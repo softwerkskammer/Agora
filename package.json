@@ -47,7 +47,8 @@
     "markdown": "0.4.x",
     "connect-mongo": "0.3.x",
     "CoolBeans": "0.0.8",
-    "mailparser": "~0.3.4"
+    "mailparser": "~0.3.4",
+    "node-html-encoder": "~0.0.2"
   },
   "devDependencies": {
     "grunt": "~0.4",
