@@ -75,6 +75,8 @@ describe('Mail index page', function () {
   }
 
   it('shows group name in the title', function (done) {
+    stubMailHeaders([]);
+
     request(app)
       .get('/list/group')
       .expect(200)
@@ -84,6 +86,8 @@ describe('Mail index page', function () {
   });
 
   it('shows group name in the header', function (done) {
+    stubMailHeaders([]);
+
     request(app)
       .get('/list/group')
       .expect(200)
@@ -93,6 +97,8 @@ describe('Mail index page', function () {
   });
 
   it('contains reference to the group page', function (done) {
+    stubMailHeaders([]);
+
     request(app)
       .get('/list/group')
       .expect(200)
@@ -102,6 +108,8 @@ describe('Mail index page', function () {
   });
 
   it('shows text "Keine Mails gefunden" if no mails for group are available', function (done) {
+    stubMailHeaders([]);
+
     request(app)
       .get('/list/group')
       .expect(200)

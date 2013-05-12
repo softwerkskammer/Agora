@@ -1,24 +1,24 @@
 "use strict";
 
 module.exports = {
-  list: function (sortOrder, callback) { callback(null, []); },
+  list: function () {throw new Error('function undefined'); },
 
-  listByIds: function (list, sortOrder, callback) { callback(null, []); },
+  listByIds: function () {throw new Error('function undefined'); },
 
-  listByEMails: function (list, sortOrder, callback) { callback(null, []); },
+  listByEMails: function () {throw new Error('function undefined'); },
 
-  listByField: function (searchObject, sortOrder, callback) { callback(null, []); },
+  listByField: function () {throw new Error('function undefined'); },
 
-  listByFieldWithOptions: function (searchObject, options, sortOrder, callback) { callback(null, []); },
+  listByFieldWithOptions: function () {throw new Error('function undefined'); },
 
-  getById: function (id, callback) { callback(null, undefined); },
+  getById: function () {throw new Error('function undefined'); },
 
-  getByField: function (fieldAsObject, callback) { callback(null, undefined); },
+  getByField: function () {throw new Error('function undefined'); },
 
-  save: function (object, callback) { callback(null, undefined); },
+  save: function () {throw new Error('function undefined'); },
 
-  saveAll: function (objects, callback) { callback(null, undefined); },
+  saveAll: function () {throw new Error('function undefined'); },
 
-  drop: function (callback) {callback(null, undefined); }
+  drop: function () {throw new Error('function undefined'); }
 };
 
