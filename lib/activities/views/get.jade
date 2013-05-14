@@ -1,6 +1,7 @@
 extends ../../../views/layout
 include ../../members/views/memberlist-mixin
 include ../../../views/googlemaps-component
+include ../../../views/formComponents
 
 block title
   | Aktivitäten
@@ -47,6 +48,12 @@ block content
       p Veranstaltet von der Gruppe: #{activity.groupName(groups)}
     .span4
       mixin map(activity.location, '100%', '450px')
+
+  if (typeof(user) !== 'undefined' && user.member.isAdmin)
+    .row-fluid
+      form(id='invitationform', action='/mailsender/invitation', method='post')
+        mixin hidden('activityUrl', activity, 'url')
+        button.btn.btn-primary(type='submit') Einladung versenden
 
 block scripts
   script
