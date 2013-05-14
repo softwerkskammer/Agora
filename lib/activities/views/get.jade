@@ -18,6 +18,7 @@ block content
               |  - #{activity.endTime} Uhr)
           if (typeof(user) !== 'undefined' && user.member.isAdmin)
             a.pull-right.btn(href="/activities/edit/#{encodeURIComponent(activity.url)}"): i.icon-edit
+            a.pull-right.btn(href="/mailsender/invitation/#{encodeURIComponent(activity.url)}"): i.icon-envelope
   .row-fluid
     .span8
       !{activity.descriptionHTML()}
@@ -48,12 +49,6 @@ block content
       p Veranstaltet von der Gruppe: #{activity.groupName(groups)}
     .span4
       mixin map(activity.location, '100%', '450px')
-
-  if (typeof(user) !== 'undefined' && user.member.isAdmin)
-    .row-fluid
-      form(id='invitationform', action='/mailsender/invitation', method='post')
-        mixin hidden('activityUrl', activity, 'url')
-        button.btn.btn-primary(type='submit') Einladung versenden
 
 block scripts
   script
