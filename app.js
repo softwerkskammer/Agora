@@ -20,18 +20,12 @@ function useApp(parent, url, factory) {
 }
 
 var conf = require('nconf');
-var appLogger;
-var httpLogger;
+
 // initialize winston and two concrete loggers
-require('winston-config').fromFile(path.join(__dirname, 'config/winston-config.json'), function (error, winston) {
-  if (error) {
-    console.log('error during winston initialization, using default loggers (console with loglevel info)');
-    console.log('please provide a valid logging config file (config/winston-config.json)');
-    winston = require('winston');
-  }
-  appLogger = winston.loggers.get('application');
-  httpLogger = winston.loggers.get('http');
-});
+var winston = require('winston-config').fromFileSync(path.join(__dirname, 'config/winston-config.json'));
+
+var appLogger = winston.loggers.get('application');
+var httpLogger = winston.loggers.get('http');
 
 var sessionStore = new MongoStore({
   db: 'swk',
@@ -81,8 +75,10 @@ module.exports = {
     useApp(app, 'members', conf.get('beans').get('membersApp'));
     useApp(app, 'groups', conf.get('beans').get('groupsApp'));
     useApp(app, 'announcements', require('./lib/announcements'));
+    useApp(app, 'mailsender', conf.get('beans').get('mailsenderApp'));
     useApp(app, 'auth', conf.get('beans').get('authenticationApp'));
     useApp(app, 'filebrowser', require('./lib/filebrowser'));
+    useApp(app, 'mailarchive', conf.get('beans').get('mailarchiveApp'));
 
     app.configure('development', function () {
       // Handle 404
@@ -111,13 +107,10 @@ module.exports = {
   start: function (done) {
     var port = conf.get('port');
     var app = this.create();
+
     this.server = http.createServer(app);
     this.server.listen(port, function () {
-      if (appLogger) {
-        appLogger.info('Server running at port ' + port);
-      } else {
-        console.log('Server running at port ' + port);
-      }
+      console.log('Server running at port ' + port);
       if (done) {
         done();
       }
@@ -126,11 +119,10 @@ module.exports = {
 
   stop: function (done) {
     this.server.close(function () {
-      appLogger.info('Server stopped');
+      console.log('Server stopped');
       if (done) {
         done();
       }
     });
   }
-}
-;
+};

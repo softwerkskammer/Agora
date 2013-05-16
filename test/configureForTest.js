@@ -1,5 +1,5 @@
 "use strict";
-var nconf = require('../configure')();
+var nconf = require('../configure');
 var Beans = require('CoolBeans');
 var fs = require('fs');
 

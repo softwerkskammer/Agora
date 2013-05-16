@@ -1,4 +1,7 @@
 extends ../../../views/layout
+include ../../members/views/memberlist-mixin
+include ../../../views/googlemaps-component
+
 block title
   | Aktivitäten
 
@@ -9,7 +12,7 @@ block content
         h2 #{activity.title} <br> 
           small #{activity.startDate} (#{activity.startTime}
             if (activity.endDate && activity.endDate !== activity.startDate)
-              |  Uhr) - #{activity.endDate} (#{activity.endTime} Uhr)
+              | Uhr) - #{activity.endDate} (#{activity.endTime} Uhr)
             else (activity.endTime)
               |  - #{activity.endTime} Uhr)
           if (typeof(user) !== 'undefined' && user.member.isAdmin)
@@ -23,11 +26,31 @@ block content
       h4 Wegbeschreibung: 
       p !{activity.directionHTML()}
       hr
+      div.no-print
+        if (typeof(user) !== 'undefined' && user.member)
+          h4 Zugesagt haben:
+          mixin memberlist(visitors)
+          if (visitors.length > 0 && activity.registeredMembers.indexOf(user.member.id) > -1)
+            a.btn.btn-primary(href="unsubscribe/#{encodeURIComponent(activity.url)}") Ich kann doch nicht…
+          else
+            a.btn.btn-primary(href="subscribe/#{encodeURIComponent(activity.url)}") Ich bin dabei!
+        else
+          p Bislang
+            if (visitors.length === 0)
+              |  gibt es keine Teinahmezusagen.
+            else if (visitors.length === 1)
+              |  hat ein Mitglied seine Teilnahme zugesagt.
+            else
+              |  haben #{visitors.length} Mitglieder ihre Teilnahme zugesagt.
+        
+      hr
       p Veranstaltet von der Gruppe: #{activity.groupName(groups)}
+    .span4
+      mixin map(activity.location, '100%', '450px')
 
 block scripts
   script
     $(document).ready(function () {
-      $('#calendar').fullCalendar('select', $.fullCalendar.parseDate(#{activity.startUnix}), $.fullCalendar.parseDate(#{activity.endUnix()}), true);      
+      $('#calendar').fullCalendar('select', $.fullCalendar.parseDate(#{activity.startUnix}), $.fullCalendar.parseDate(#{activity.endUnix()}), true);
     });
   

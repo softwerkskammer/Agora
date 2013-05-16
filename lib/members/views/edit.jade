@@ -49,11 +49,9 @@ block content
     .row-fluid
       .span6
         legend Gruppenmitgliedschaft
-        .control-group
-          each markedGroup in markedGroups
-            mixin checkbox('newSubscriptions', markedGroup.group.longName, markedGroup.selected, markedGroup.group.id)
     .row-fluid
-      .span12
+      mixin groupCheckboxes('newSubscriptions', regionalgroups, themegroups)
+      .span6
         button.btn.btn-primary.pull-right(type="submit") Speichern
         if (user.member)
           a.btn.pull-right(href="javascript:history.back()", type="cancel") Zurück

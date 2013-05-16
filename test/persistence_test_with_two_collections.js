@@ -10,14 +10,8 @@ var createTeststore = function (collectionName) {
 };
 
 describe('The parallel persistence store', function () {
-  var persistence1;
-  var persistence2;
-
-  beforeEach(function (done) {
-    persistence1 = createTeststore('teststore1');
-    persistence2 = createTeststore('teststore2');
-    done();
-  });
+  var persistence1 = createTeststore('teststore1');
+  var persistence2 = createTeststore('teststore2');
 
   it('retrieves in parallel', function (done) {
     async.parallel([
