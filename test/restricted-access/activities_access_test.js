@@ -19,4 +19,8 @@ describe('Activities application security for normal visitors does not allow to 
     request(app).post('/activities/submit').expect(302).expect('location', /mustBeAdmin/, done);
   });
 
+  it('/subscribe', function (done) {
+    request(app).get('/activities/subscribe/eventid').expect(302).expect('location', /login/, done);
+  });
+
 });

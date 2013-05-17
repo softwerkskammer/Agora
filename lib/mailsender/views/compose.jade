@@ -6,7 +6,7 @@ block scripts
   script(src="/clientscripts/check-mailsenderform.js")
 
 block title
-  | EMail-Versand
+  | Nachricht
 
 block content
   form(id='mailform', action='/mailsender/submit', method='post')
@@ -14,18 +14,15 @@ block content
       .row-fluid
         .span12
           legend
-            | EMail anlegen
-
-      .row-fluid
-        .span12
-          mixin groupCheckboxes('invitedGroups', regionalgroups, themegroups)
-      .row-fluid
-        .span12
-          mixin text('subject', 'Subject', {})
-          mixin hightextarea('htmlText', 'HTML-Text', {})
+            | Nachricht schreiben
+          if (typeof(regionalgroups) !== 'undefined')
+            mixin groupCheckboxes('invitedGroups', regionalgroups, themegroups)
+          if (typeof(message.receiver) !== 'undefined')
+            mixin textReadonly('nickname', 'An Mitglied', message.receiver)
+          mixin text('subject', 'Betreff', message)
+          mixin hightextarea('markdown', 'Inhalt', message)
           mixin checkbox('sendCopyToSelf', 'Eine Kopie an mich senden', false)
+          mixin hidden('htmlAddOn', message)
 
-      .row-fluid
-        .span12
           button.btn.btn-primary.pull-right(type="submit") Senden
           a.btn.pull-right(href="javascript:history.back()", type="cancel") Zurück

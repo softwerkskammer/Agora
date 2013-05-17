@@ -35,16 +35,17 @@ mixin checkbox(name, label, checked, optionalValue)
     | #{label}
 
 mixin groupCheckboxes(checkboxName, regionalgroups, themegroups)
-  .span3
-    h4 Regionale Gruppen
-    .control-group
-      each markedGroup in regionalgroups
-        mixin checkbox(checkboxName, markedGroup.group.longName, markedGroup.selected, markedGroup.group.id)
-  .span3
-    h4 Themengruppen
-    .control-group
-      each markedGroup in themegroups
-        mixin checkbox(checkboxName, markedGroup.group.longName, markedGroup.selected, markedGroup.group.id)
+  .row-fluid
+    .span6
+      h4 Regionale Gruppen
+      .control-group
+        each markedGroup in regionalgroups
+          mixin checkbox(checkboxName, markedGroup.group.longName, markedGroup.selected, markedGroup.group.id)
+    .span6
+      h4 Themengruppen
+      .control-group
+        each markedGroup in themegroups
+          mixin checkbox(checkboxName, markedGroup.group.longName, markedGroup.selected, markedGroup.group.id)
 
 
 mixin hidden(name, object, optionalAlternateValue)

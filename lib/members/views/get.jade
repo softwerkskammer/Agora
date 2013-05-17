@@ -1,5 +1,7 @@
 extends ../../../views/layout
 
+include ../../../views/formComponents
+
 block title
   | Profil für #{member.firstname} #{member.lastname}
 
@@ -9,7 +11,7 @@ block content
       .page-header
         h2
           | "#{member.nickname}"&nbsp;
-          small  
+          small
             if (member.isAdmin)
               | Admin
             else
@@ -22,10 +24,6 @@ block content
       p
         strong Nachname:
         |  #{member.lastname}
-      p
-        strong Email: 
-        span.mailtoify
-          | #{member.email}
       p
         strong Twitter: 
         span.twitterify
@@ -43,8 +41,13 @@ block content
         strong Website / Blog: 
         span.urlify
           | #{member.site}
-  
-  
+
+      p &nbsp;
+
+      a.btn.btn-primary(href="/mailsender/contactMember/#{encodeURIComponent(member.nickname)}")
+        i.icon-envelope
+        | &nbsp;Eine Mail an #{member.firstname} #{member.lastname} senden
+
       h3 Mitglied in:
       ul
         each group in subscribedGroups

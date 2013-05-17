@@ -20,7 +20,7 @@ function createConfiguration() {
     mongoPort: '27017',
     publicUrlPrefix: "http://localhost:17124",
     adminURLPattern: "/administration/|/new|/edit|/submit|/invitation",
-    securedByLoginURLPattern: "/members|/groups/(subscribe|unsubscribe)/",
+    securedByLoginURLPattern: "/mailsender|/members|/(subscribe|unsubscribe)/",
     secret: "secret",
     filebrowser: {
       root: "./test/filebrowser-testfiles"

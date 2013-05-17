@@ -9,7 +9,7 @@ var initValidator = function () {
   mail_validator = $("#mailform").validate({
     rules: {
       subject: "required",
-      htmltext: "required"
+      markdown: "required"
     },
     errorElement: "span",
     errorClass: "help-inline error",
@@ -23,7 +23,7 @@ var initValidator = function () {
 
   mail_validator.form();
 
-  ['#subject', '#htmltext'].forEach(function (each) {
+  ['#subject', '#markdown'].forEach(function (each) {
     $(each).on("change", function () {
       mail_validator.element(each);
     });
