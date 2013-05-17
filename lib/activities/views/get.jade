@@ -1,6 +1,7 @@
 extends ../../../views/layout
 include ../../members/views/memberlist-mixin
 include ../../../views/googlemaps-component
+include ../../../views/formComponents
 
 block title
   | Aktivitäten
@@ -17,6 +18,7 @@ block content
               |  - #{activity.endTime} Uhr)
           if (typeof(user) !== 'undefined' && user.member.isAdmin)
             a.pull-right.btn(href="/activities/edit/#{encodeURIComponent(activity.url)}", title="Bearbeiten"): i.icon-edit
+            a.pull-right.btn(href="/mailsender/invitation/#{encodeURIComponent(activity.url)}", title="Einladung versenden"): i.icon-envelope
             a.pull-right.btn(href="/activities/newLike/#{encodeURIComponent(activity.url)}", title="Neu auf Basis dieser Aktivität"): i.icon-copy
   .row-fluid
     .span8
