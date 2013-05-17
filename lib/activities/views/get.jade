@@ -13,12 +13,13 @@ block content
         h2 #{activity.title} <br> 
           small #{activity.startDate} (#{activity.startTime}
             if (activity.endDate && activity.endDate !== activity.startDate)
-              | Uhr) - #{activity.endDate} (#{activity.endTime} Uhr)
+              |  Uhr) - #{activity.endDate} (#{activity.endTime} Uhr)
             else (activity.endTime)
               |  - #{activity.endTime} Uhr)
           if (typeof(user) !== 'undefined' && user.member.isAdmin)
-            a.pull-right.btn(href="/activities/edit/#{encodeURIComponent(activity.url)}"): i.icon-edit
-            a.pull-right.btn(href="/mailsender/invitation/#{encodeURIComponent(activity.url)}"): i.icon-envelope
+            a.pull-right.btn(href="/activities/edit/#{encodeURIComponent(activity.url)}", title="Bearbeiten"): i.icon-edit
+            a.pull-right.btn(href="/mailsender/invitation/#{encodeURIComponent(activity.url)}", title="Einladung versenden"): i.icon-envelope
+            a.pull-right.btn(href="/activities/newLike/#{encodeURIComponent(activity.url)}", title="Neu auf Basis dieser Aktivität"): i.icon-copy
   .row-fluid
     .span8
       !{activity.descriptionHTML()}
