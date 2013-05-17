@@ -10,7 +10,7 @@ block content
         h2 Aktivitäten&nbsp;
           small #{range}
           if typeof(user) !== 'undefined' && user.member.isAdmin
-            a.pull-right.btn(href="new/"): i.icon-file
+            a.pull-right.btn(href="new/", title="Neue Aktivität"): i.icon-file
       dl.dl-horizontal
         for activity in activities
           dt
