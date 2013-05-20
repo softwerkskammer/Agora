@@ -62,9 +62,43 @@ describe('Mail content page', function () {
         done(err);
       });
   });
+
+  it('references sender member page if available', function (done) {
+    var displayedMail = new Mail({
+      from: {name: "Sender Name", id: "sender ID"},
+      timeUnix: 0,
+      id: "<message1@nomail.com>",
+      subject: "Mail 1",
+      group: "group",
+      text: "text"
+    });
+    var mailForId = sinonSandbox.stub(mailarchiveAPI, 'mailForId', function (id, callback) {callback(null, displayedMail); });
+
+    var dummyMember = {nickname: "nickname", id: "sender ID"};
+    sinonSandbox.stub(membersAPI, 'getMemberForId', function (id, callback) {
+      callback(null, dummyMember);
+    });
+
+    request(app)
+      .get('/message?id=mailID')
+      .expect(200)
+      .expect(/href="..\/..\/members\/nickname"/, function (err) {
+        expect(mailForId.calledOnce).to.be.ok;
+        done(err);
+      });
+  });
+
 });
 
 describe('Mail index page', function () {
+  beforeEach(function (done) {
+    sinonSandbox.stub(membersAPI, 'getMembersForIds', function (id, callback) {
+      callback(null, []);
+    });
+
+    done();
+  });
+
   afterEach(function (done) {
     sinonSandbox.restore();
     done();
@@ -172,7 +206,10 @@ describe('Mail index page', function () {
     stubMailHeaders([displayedMailHeader]);
 
     var dummyMember = {nickname: "nickname", id: "sender ID"};
-    sinonSandbox.stub(membersAPI, 'getMemberForId', function (id, callback) {callback(null, dummyMember); });
+    membersAPI.getMembersForIds.restore();
+    sinonSandbox.stub(membersAPI, 'getMembersForIds', function (id, callback) {
+      callback(null, [dummyMember]);
+    });
 
     request(app)
       .get('/list/group')
