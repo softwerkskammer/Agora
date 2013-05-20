@@ -4,6 +4,7 @@ var conf = require('../configureForTest');
 var expect = require('chai').expect;
 
 var sinon = require('sinon');
+var sinonSandbox = sinon.sandbox.create();
 
 var persistence = conf.get('beans').get('membersPersistence');
 var store = conf.get('beans').get('memberstore');
@@ -16,19 +17,17 @@ describe('Members store', function () {
   var save;
 
   before(function (done) {
-    getByField = sinon.stub(persistence, 'getByField');
+    getByField = sinonSandbox.stub(persistence, 'getByField');
     getByField.callsArgWith(1, null, sampleMember);
-    var list = sinon.stub(persistence, 'list');
+    var list = sinonSandbox.stub(persistence, 'list');
     list.callsArgWith(1, null, sampleList);
-    save = sinon.stub(persistence, 'save');
+    save = sinonSandbox.stub(persistence, 'save');
     save.callsArg(1);
     done();
   });
 
   after(function (done) {
-    persistence.getByField.restore();
-    persistence.list.restore();
-    persistence.save.restore();
+    sinonSandbox.restore();
     done();
   });
 
