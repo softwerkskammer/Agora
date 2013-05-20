@@ -30,6 +30,29 @@ describe('Members store', function () {
     });
   });
 
+  it('calls persistence.getById for store.getMemberForId and passes on the given callback', function (done) {
+    var getById = sinonSandbox.stub(persistence, 'getById');
+    getById.callsArgWith(1, null, sampleMember);
+
+    store.getMemberForId('id', function (err, member) {
+      expect(member.nickname).to.equal(sampleMember.nickname);
+      expect(getById.calledWith('id')).to.be.true;
+      done(err);
+    });
+  });
+
+  it('calls persistence.listByIds for store.getMembersForIds and passes on the given callback', function (done) {
+    var listByIds = sinonSandbox.stub(persistence, 'listByIds');
+    listByIds.callsArgWith(2, null, sampleList);
+
+    store.getMembersForIds(['id1', 'id2'], function (err, members) {
+      expect(members[0].nickname).to.equal(sampleMember.nickname);
+      expect(members[1].nickname).to.equal(sampleMember2.nickname);
+      expect(listByIds.calledWith(['id1', 'id2'])).to.be.true;
+      done(err);
+    });
+  });
+
   it('calls persistence.getByField trimmed for store.getMember and passes on the given callback', function (done) {
     var getByField = sinonSandbox.stub(persistence, 'getByField');
     getByField.callsArgWith(1, null, sampleMember);
