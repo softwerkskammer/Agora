@@ -105,7 +105,7 @@ describe('Mail index page', function () {
   });
 
   function stubMailHeaders(headers) {
-    sinonSandbox.stub(mailarchiveAPI, 'mailHeaders', function (query, sortObject, callback) {callback(null, headers); });
+    sinonSandbox.stub(mailarchiveAPI, 'mailHeaders', function (group, callback) {callback(null, headers); });
   }
 
   it('shows group name in the title', function (done) {
