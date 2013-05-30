@@ -16,7 +16,7 @@ block content
   -else  
      ul
        for mailHeader in mailHeaders
-         li
+         li(style="margin-left:" + (mailHeader.threadingLevel + 1) + "em")
            a(href="../message?id=" + encodeURIComponent(mailHeader.id) ) #{mailHeader.subject} 
            | (
            mixin mailattributes(mailHeader) 

@@ -39,6 +39,13 @@ describe('Import of mails from files with mime messages', function () {
     });
   });
 
+  it('imports message ID from plain text message', function (done) {
+    mailimport(fileWithTextOnly, 'group', function (err, result) {
+      expect(result.id).to.equal('message2@nomail.com');
+      done();
+    });
+  });
+
   it('imports plain text from plain text message', function (done) {
     mailimport(fileWithTextOnly, 'group', function (err, result) {
       expect(result.text).to.contain('Plain text message 2');
@@ -106,14 +113,14 @@ describe('Import of mails from files with mime messages', function () {
 
   it('imports references', function (done) {
     mailimport(fileWithReferences, 'group', function (err, result) {
-      expect(JSON.stringify(result.references)).to.equal(JSON.stringify(["message0@nomail.com", "message1@nomail.com"]));
+      expect(result.references).to.deep.equal(["message0@nomail.com", "message1@nomail.com"]);
       done();
     });
   });
 
   it('imports reply-to as reference if no references are available', function (done) {
     mailimport(fileWithInReplyTo, 'group', function (err, result) {
-      expect(JSON.stringify(result.references)).to.equal(JSON.stringify(["message0@nomail.com"]));
+      expect(result.references).to.deep.equal(["message0@nomail.com"]);
       done();
     });
   });

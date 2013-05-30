@@ -11,7 +11,7 @@ var membersAPI = conf.get('beans').get('membersAPI');
 var mailarchiveAPI = conf.get('beans').get('mailarchiveAPI');
 var Mail = conf.get('beans').get('archivedMail');
 
-describe('Mailarchive store', function () {
+describe('Mailarchive', function () {
 
   afterEach(function (done) {
     sinonSandbox.restore();
@@ -33,7 +33,7 @@ describe('Mailarchive store', function () {
         {timeUnix: -1}
       )).to.be.true;
       expect(err).to.be.null;
-      expect(JSON.stringify(mails)).to.equal(JSON.stringify(sampleMailList));
+      expect(mails).to.deep.equal(sampleMailList);
       done(err);
     });
   });
@@ -46,7 +46,7 @@ describe('Mailarchive store', function () {
     mailarchiveAPI.mailForId('id', function (err, mail) {
       expect(getById.calledWith('id')).to.be.true;
       expect(err).to.be.null;
-      expect(JSON.stringify(mail)).to.equal(JSON.stringify(sampleMail1));
+      expect(mail).to.deep.equal(sampleMail1);
       done(err);
     });
   });
@@ -89,5 +89,4 @@ describe('Mailarchive store', function () {
       done(err);
     });
   });
-
 });
