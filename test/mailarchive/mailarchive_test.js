@@ -337,4 +337,24 @@ describe('Mail index page', function () {
       });
   });
 
+  it('shows a link to not threaded representation when a threaded index is requested', function (done) {
+    stubMailHeaders([]);
+    request(app)
+      .get('/list/group?thread=true')
+      .expect(200)
+      .expect(/href="group\?thread=false"/, function (err) {
+        done(err);
+      });
+  });
+
+  it('shows a link to threaded representation when a non threaded index is requested', function (done) {
+    stubMailHeaders([]);
+    request(app)
+      .get('/list/group?thread=false')
+      .expect(200)
+      .expect(/href="group\?thread=true"/, function (err) {
+        done(err);
+      });
+  });
+
 });

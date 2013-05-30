@@ -11,6 +11,10 @@ block content
     .page-header
       a(href="../../groups/" + encodeURIComponent(group) ) Gruppenseite
       h2 Mails der Gruppe #{group}
+      -if(threaded)
+        a(href=encodeURIComponent(group)+"?thread=false" ) Anzeigen nicht gruppiert
+      -else
+        a(href=encodeURIComponent(group)+"?thread=true" ) Anzeigen gruppiert nach Thema
   -if(mailHeaders.length == 0) 
     div Keine Mails gefunden
   -else  
