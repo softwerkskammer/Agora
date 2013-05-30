@@ -11,7 +11,6 @@ function createConfiguration() {
   nconf.file('mongo', './config/mongo-config.json');
   nconf.file('sympa', './config/sympa-config.json');
   nconf.file('server', './config/server-config.json');
-  nconf.file('filebrowser', './config/filebrowser-config.json');
   nconf.file('authentication', './config/authentication-config.json');
   nconf.file('mail', './config/mailsender-config.json');
   nconf.defaults({
@@ -22,9 +21,6 @@ function createConfiguration() {
     adminURLPattern: "/administration/|/new|/edit|/submit|/invitation",
     securedByLoginURLPattern: "/mailsender|/members|/(subscribe|unsubscribe)/",
     secret: "secret",
-    filebrowser: {
-      root: "./test/filebrowser-testfiles"
-    },
     beans: new beans('./config/beans.json')
   });
 

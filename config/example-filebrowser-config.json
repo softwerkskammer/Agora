@@ -1,7 +1,0 @@
-// to use these values, strip "example-" from the filename, delete this comment and replace the below values
-{
-  "filebrowser": {
-    "root1" : "/path1/to/be/browsed",
-    "root2" : "/path2/to/be/browsed"
-  }
-}
