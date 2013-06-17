@@ -11,12 +11,16 @@ block content
     .page-header
       a(href="../../groups/" + encodeURIComponent(group) ) Gruppenseite
       h2 Mails der Gruppe #{group}
+      -if(threaded)
+        a(href=encodeURIComponent(group)+"?thread=false" ) Anzeigen nicht gruppiert
+      -else
+        a(href=encodeURIComponent(group)+"?thread=true" ) Anzeigen gruppiert nach Thema
   -if(mailHeaders.length == 0) 
     div Keine Mails gefunden
   -else  
      ul
        for mailHeader in mailHeaders
-         li
+         li(style="margin-left:" + (mailHeader.threadingLevel + 1) + "em")
            a(href="../message?id=" + encodeURIComponent(mailHeader.id) ) #{mailHeader.subject} 
            | (
            mixin mailattributes(mailHeader) 
