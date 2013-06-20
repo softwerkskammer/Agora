@@ -141,6 +141,20 @@ describe('exceptions to the admin guard', function () {
     done();
   });
 
+  it('allows registered users to edit their profile even with blanks in nickname', function (done) {
+    var req = {
+      isAuthenticated: function () {return true; },
+      originalUrl: '/members/edit/nick%20name',
+      user: {
+        member: {nickname: 'nick name'}
+      }
+    };
+    var next = sinon.spy();
+    secureAdminOnly(req, {}, next);
+    expect(next.called).to.be.true;
+    done();
+  });
+
   it('allows registered users to save their profile', function (done) {
     var req = {
       isAuthenticated: function () {return true; },

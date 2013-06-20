@@ -77,7 +77,6 @@ module.exports = {
     useApp(app, 'announcements', require('./lib/announcements'));
     useApp(app, 'mailsender', conf.get('beans').get('mailsenderApp'));
     useApp(app, 'auth', conf.get('beans').get('authenticationApp'));
-    useApp(app, 'filebrowser', require('./lib/filebrowser'));
     useApp(app, 'mailarchive', conf.get('beans').get('mailarchiveApp'));
 
     app.configure('development', function () {
