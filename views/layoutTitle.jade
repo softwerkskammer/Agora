@@ -28,9 +28,7 @@ html
     mixin bottomNavbar
 
     script.
-      //window.mySwipe = Swipe(document.getElementById('slider'), { auto: 300 });
       window.mySwipe = Swipe(document.getElementById('slider'), {
-        auto: 3000,
         callback: function(pos) {
           var i = bullets.length;
           while (i--) {

@@ -15,11 +15,6 @@
     position: relative;
 }
 
-.swipe-wrap div.area {
-    height: 250px;
-    background: darkslategrey;
-}
-
 // Bullets
 #slider.swipe {
     .swipe-wrap {
@@ -28,7 +23,7 @@
     nav {
         position: relative;
         max-width: 680px;
-        margin: 7px auto 0;
+        margin: 0 auto;
         a {
             font-style: normal;
             color: #555 !important
