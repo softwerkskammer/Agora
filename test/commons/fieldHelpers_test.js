@@ -16,3 +16,36 @@ describe('Activity application', function () {
   });
 
 });
+
+describe('Replace email addresses from text', function () {
+
+  it('returns the input if it is null or undefined', function () {
+    expect(fieldHelpers.replaceMailAddresses(null)).to.equal(null);
+    expect(fieldHelpers.replaceMailAddresses(undefined)).to.equal(undefined);
+  });
+
+  it('replaces a single email address', function () {
+    var result = fieldHelpers.replaceMailAddresses('hans.dampf@moby-dick.de');
+
+    expect(result).to.equal('...@...');
+  });
+
+  it('replaces an email address in a text', function () {
+    var result = fieldHelpers.replaceMailAddresses('many thanks to hans.dampf@moby-dick.de who sent me this link');
+
+    expect(result).to.equal('many thanks to ...@... who sent me this link');
+  });
+
+  it('replaces an email address in a quoted mail', function () {
+    var result = fieldHelpers.replaceMailAddresses('31.12.2005, Hans Dampf <hans_dampf.@mymail.org>:');
+
+    expect(result).to.equal('31.12.2005, Hans Dampf <...@...>:');
+  });
+
+  it('replaces multiple email addresses', function () {
+    var result = fieldHelpers.replaceMailAddresses('erna.meier@hihi.com and Hans Dampf <hans_dampf.@mymail.org>tester@system.url');
+
+    expect(result).to.equal('...@... and Hans Dampf <...@...>...@...');
+  });
+
+});
