@@ -45,18 +45,8 @@ describe('SWK Plattform server', function () {
     });
   });
 
-  it('provides the bootstrap style sheet', function (done) {
-    var stylesheet_uri = base_uri + '/stylesheets/bootstrap.css';
-    httpRequest({uri: stylesheet_uri}, function (req, resp) {
-      resp.statusCode.should.equal(200);
-      resp.headers['content-type'].should.contain('text/css');
-      resp.body.should.contain('color:');
-      done();
-    });
-  });
-
-  it('provides the bootstrap-responsive style sheet', function (done) {
-    var stylesheet_uri = base_uri + '/stylesheets/bootstrap-responsive.css';
+  it('provides the screen style sheet', function (done) {
+    var stylesheet_uri = base_uri + '/stylesheets/screen.css';
     httpRequest({uri: stylesheet_uri}, function (req, resp) {
       resp.statusCode.should.equal(200);
       resp.headers['content-type'].should.contain('text/css');
