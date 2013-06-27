@@ -25,14 +25,6 @@ describe('Mail', function () {
     done();
   });
 
-  it('uses sender address local part as name to be displayed if the name is not available', function (done) {
-    var mail = new Mail({
-      from: {address: "local@domain"}
-    });
-    expect(mail.displayedSenderName).to.equal("local");
-    done();
-  });
-
   it('creates html from text', function (done) {
     var mail = new Mail({
       text: "<>\n<>"
