@@ -13,7 +13,7 @@ var dummymember = new Member({sessionUser: {identifier: 'hada'}});
 var mailimport = require('../../lib/mailarchive/importMails.js');
 
 var fileWithTextAndHtml = 'test/mailarchive/testfiles/mailWithTextAndHtml',
-  fileWithTextOnly = 'test/mailarchive/testfiles/mailWithTextOnly',
+  fileWithTextOnlyWithoutSenderName = 'test/mailarchive/testfiles/mailWithTextOnly',
   fileWithoutDate = 'test/mailarchive/testfiles/mailWithoutDate',
   fileWithReferences = 'test/mailarchive/testfiles/mailWithReferences',
   fileWithInReplyTo = 'test/mailarchive/testfiles/mailWithInReplyTo';
@@ -40,14 +40,14 @@ describe('Import of mails from files with mime messages', function () {
   });
 
   it('imports message ID from plain text message', function (done) {
-    mailimport(fileWithTextOnly, 'group', function (err, result) {
+    mailimport(fileWithTextOnlyWithoutSenderName, 'group', function (err, result) {
       expect(result.id).to.equal('message2@nomail.com');
       done();
     });
   });
 
   it('imports plain text from plain text message', function (done) {
-    mailimport(fileWithTextOnly, 'group', function (err, result) {
+    mailimport(fileWithTextOnlyWithoutSenderName, 'group', function (err, result) {
       expect(result.text).to.contain('Plain text message 2');
       done();
     });
@@ -61,28 +61,28 @@ describe('Import of mails from files with mime messages', function () {
   });
 
   it('includes member id from member API ', function (done) {
-    mailimport(fileWithTextOnly, 'group', function checkImportedObject(err, result) {
+    mailimport(fileWithTextOnlyWithoutSenderName, 'group', function checkImportedObject(err, result) {
       expect(result.from.id).to.equal(dummymember.id);
       done();
     });
   });
 
   it('imports sender name', function (done) {
-    mailimport(fileWithTextOnly, 'group', function checkImportedObject(err, result) {
+    mailimport(fileWithTextAndHtml, 'group', function checkImportedObject(err, result) {
       expect(result.from.name).to.equal('Heißen');
       done();
     });
   });
 
-  it('imports sender address', function (done) {
-    mailimport(fileWithTextOnly, 'group', function checkImportedObject(err, result) {
-      expect(result.from.address).to.equal('some@mail.de');
+  it('imports sender name from address if the is not given specifically', function (done) {
+    mailimport(fileWithTextOnlyWithoutSenderName, 'group', function checkImportedObject(err, result) {
+      expect(result.from.name).to.equal('some');
       done();
     });
   });
 
   it('imports date and time', function (done) {
-    mailimport(fileWithTextOnly, 'group', function checkImportedObject(err, result) {
+    mailimport(fileWithTextOnlyWithoutSenderName, 'group', function checkImportedObject(err, result) {
       expect(result.timeUnix).to.equal(moment('Mon, 25 Mar 2013 21:14:14 +0100').unix());
       done();
     });
@@ -98,14 +98,14 @@ describe('Import of mails from files with mime messages', function () {
     });
   });
   it('assigns given group', function (done) {
-    mailimport(fileWithTextOnly, 'group', function (err, result) {
+    mailimport(fileWithTextOnlyWithoutSenderName, 'group', function (err, result) {
       expect(result.group).to.equal('group');
       done();
     });
   });
 
   it('imports subject', function (done) {
-    mailimport(fileWithTextOnly, 'group', function (err, result) {
+    mailimport(fileWithTextOnlyWithoutSenderName, 'group', function (err, result) {
       expect(result.subject).to.equal('Mail 2');
       done();
     });
