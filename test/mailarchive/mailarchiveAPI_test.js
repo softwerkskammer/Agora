@@ -51,26 +51,27 @@ describe('Mailarchive', function () {
     });
   });
 
-  it('calls membersAPI.getMemberForId from addMemberNick with member id from given object ' +
-    'and adds member nick returned in callback to mail header', function (done) {
-    var sampleMember = {id: "sender ID 1", nickname: 'nick1'};
+  it('calls membersAPI.getMemberForId from addProfileDataForMember with member id from given object ' +
+    'and adds member nick and name returned in callback to mail header', function (done) {
+    var sampleMember = {id: "sender ID 1", nickname: 'nick1', firstname: 'firstname1', lastname: 'lastname1'};
     var sampleMail1 = new Mail({ subject: "Mail 1", from: {name: "Sender Name 1", id: sampleMember.id} });
 
     var getMemberForId = sinonSandbox.stub(membersAPI, 'getMemberForId');
     getMemberForId.callsArgWith(1, null, sampleMember);
 
-    mailarchiveAPI.addMemberNick(sampleMail1, function (err) {
+    mailarchiveAPI.addProfileDataForMember(sampleMail1, function (err) {
       expect(getMemberForId.calledWith(sampleMember.id)).to.be.true;
       expect(err).to.be.null;
       expect(sampleMail1.memberNickname).to.equal(sampleMember.nickname);
+      expect(sampleMail1.displayedSenderName).to.equal(sampleMember.firstname + ' ' + sampleMember.lastname);
       done(err);
     });
   });
 
-  it('calls membersAPI.getMembersForIds from addMemberNicks with member ids from given objects ' +
+  it('calls membersAPI.getMembersForIds from addProfileDataForMembers with member ids from given objects ' +
     'and adds matching member nicks returned in callback to mail headers', function (done) {
-    var sampleMember1 = {id: "sender ID 1", nickname: 'nick1'};
-    var sampleMember2 = {id: "sender ID 2", nickname: 'nick2'};
+    var sampleMember1 = {id: "sender ID 1", nickname: 'nick1', firstname: 'firstname1', lastname: 'lastname1'};
+    var sampleMember2 = {id: "sender ID 2", nickname: 'nick2', firstname: 'firstname2', lastname: 'lastname2'};
     var sampleMemberList = [sampleMember1, sampleMember2];
     var sampleMail1 = new Mail({ subject: "Mail 1", from: {name: "Sender Name 1", id: sampleMember1.id} });
     var sampleMail2 = new Mail({ subject: "Mail 2", from: {name: "Sender Name 2", id: sampleMember2.id} });
@@ -79,13 +80,15 @@ describe('Mailarchive', function () {
     var getMembersForIds = sinonSandbox.stub(membersAPI, 'getMembersForIds');
     getMembersForIds.callsArgWith(1, null, sampleMemberList);
 
-    mailarchiveAPI.addMemberNicks(sampleMailList, function (err) {
+    mailarchiveAPI.addProfileDataForMembers(sampleMailList, function (err) {
       expect(getMembersForIds.calledWith(
         Object.keys({"sender ID 1": null, "sender ID 2": null})
       )).to.be.true;
       expect(err).to.be.null;
       expect(sampleMail1.memberNickname).to.equal(sampleMember1.nickname);
+      expect(sampleMail1.displayedSenderName).to.equal(sampleMember1.firstname + ' ' + sampleMember1.lastname);
       expect(sampleMail2.memberNickname).to.equal(sampleMember2.nickname);
+      expect(sampleMail2.displayedSenderName).to.equal(sampleMember2.firstname + ' ' + sampleMember2.lastname);
       done(err);
     });
   });
