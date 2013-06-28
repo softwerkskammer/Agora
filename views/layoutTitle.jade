@@ -3,12 +3,7 @@ html
   head
     meta(charset="utf-8")
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
-    link(href="/stylesheets/bootstrap.css", rel="stylesheet", media="screen")
-    link(href="/stylesheets/bootstrap-responsive.css", rel="stylesheet", media="screen")
-    link(href="/stylesheets/bootstrap-editable.css", rel="stylesheet", media="screen")
-    link(href="/stylesheets/bootstrap-timepicker.css", rel="stylesheet", media="screen")
-    link(href="/stylesheets/font-awesome.min.css", rel="stylesheet")
-    link(href="/stylesheets/agora.css", rel="stylesheet", media="screen")
+    link(href="/stylesheets/screen.css", rel="stylesheet", media="screen")
     | <!--[if IE]><link href="/stylesheets/agora-ie-addon.css" rel="stylesheet"><![endif]-->
     style
       .container {
@@ -21,6 +16,7 @@ html
     script(src="/clientscripts/jquery-1.9.1.js")
     script(src="/clientscripts/bootstrap.js")
     script(src="/clientscripts/agora.js")
+    script(src="/clientscripts/swipe.js")
     title Softwerkskammer
   body
     include layoutComponents
@@ -30,3 +26,15 @@ html
       block content
 
     mixin bottomNavbar
+
+    script.
+      window.mySwipe = Swipe(document.getElementById('slider'), {
+        callback: function(pos) {
+          var i = bullets.length;
+          while (i--) {
+            bullets[i].className = ' ';
+          }
+          bullets[pos].className = 'on';
+        }
+      });
+      var bullets = document.getElementById('position').getElementsByTagName('li');

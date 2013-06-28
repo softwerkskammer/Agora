@@ -1,30 +1,28 @@
 extends ../../../views/layoutTitle
 
 block content
-  #titleCoarousel.carousel.slide(data-interval="false")
-    ol.carousel-indicators
-      li.active(data-target="#titleCoarousel", data-slide-to="0")
-      li(data-target="#titleCoarousel", data-slide-to="1")
-      li(data-target="#titleCoarousel", data-slide-to="2")
-    .carousel-inner
-      .active.item
+
+  #slider.swipe
+    .swipe-wrap
+
+      div
         .hero-unit
           h2 Schön, dass Du vorbeischaust.
           p Die Softwerkskammer hat sich 2011 gegründet, um den Austausch Interessierter zum Thema Software Craftsmanship
             | zu vereinfachen.
-          p Diese Site ist unsere zentrale Anlaufstelle für die lokalen Software Craftsmanship Communities in Deutschland. 
-            | Hierüber organisieren die lokalen Communities (die Softwerkskammern) ihre Treffen und andere Events wie 
+          p Diese Site ist unsere zentrale Anlaufstelle für die lokalen Software Craftsmanship Communities in Deutschland.
+            | Hierüber organisieren die lokalen Communities (die Softwerkskammern) ihre Treffen und andere Events wie
             | CodeRetreats oder OpenSpaces, oder tauschen sich einfach nur via Mailingliste aus.
           hr
-          p.text-right Was wir in den nächsten Wochen veranstalten, findest Du unter: 
+          p.text-right Was wir in den nächsten Wochen veranstalten, findest Du unter:
             a.btn.btn-large.btn-primary(href="/activities/upcoming")
               i.icon-calendar
               | &nbsp;Aktivitäten
 
-      .item
+      div
         .hero-unit
           h2 Wir sind …
-          p … eine Community of Professionals, die über ganz Deutschland verteilt sind. Uns geht es darum, gute Software 
+          p … eine Community of Professionals, die über ganz Deutschland verteilt sind. Uns geht es darum, gute Software
             | zu entwickeln, und zwar im Hinblick auf alle Aspekte.
           p Wir möchten
           ul
@@ -33,26 +31,32 @@ block content
             li sicherstellen, dass unsere Ergebnisse eine hohe interne und externe Qualität besitzen
             li flexible, leicht änderbare Software herstellen
           p
-            strong Kurz: 
+            strong Kurz:
             | Wir wollen die richtige Software entwickeln, und wir wollen die Software richtig entwickeln.
           a.btn.btn-large.btn-primary.pull-right(href="/announcements")
             i.icon-globe
             | &nbsp;Nachrichten
 
-      .item
+      div
         .hero-unit
           h2 Die Softwerkskammer ist etwas für Dich,
           p wenn
           ul
             li Softwareentwicklung für Dich eine Leidenschaft bedeutet.
-            li Du Teil der deutschlandweiten Software Craftsmanship Community und Teil einer lokalen Softwerkskammer 
+            li Du Teil der deutschlandweiten Software Craftsmanship Community und Teil einer lokalen Softwerkskammer
               | sein möchtest.
-            li Du Dich mit Gleichgesinnten zum Thema Software Craftsmanship und allen damit zusammenängenden Themen 
+            li Du Dich mit Gleichgesinnten zum Thema Software Craftsmanship und allen damit zusammenängenden Themen
               | wie Clean Code, TDD etc. austauschen möchtest.
           a.btn.btn-large.btn-primary.pull-right(href="/groups")
             i.icon-group
             | &nbsp;Gruppen
 
-    a.carousel-control.left(href="#titleCoarousel", data-slide="prev") &lsaquo;
-    a.carousel-control.right(href="#titleCoarousel", data-slide="next") &rsaquo;
+    nav
+      ul#position
+        li.on(onclick='mySwipe.slide(0);')
+        li(onclick='mySwipe.slide(1);')
+        li(onclick='mySwipe.slide(2);')
 
+  div(style='text-align:center;padding-top:20px;')
+    button(class='btn', onclick='mySwipe.prev()') zurück
+    button(class='btn', onclick='mySwipe.next()') vor
