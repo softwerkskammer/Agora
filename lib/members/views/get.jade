@@ -18,6 +18,8 @@ block content
               | Profilansicht
           if (typeof(user) !== 'undefined' && (user.member.isAdmin || user.member.id === member.id))
             a.pull-right.btn(href="/members/edit/#{encodeURIComponent(member.nickname)}"): i.icon-edit
+  .row-fluid
+    .span8
       p
         strong Vorname:
         |  #{member.firstname}
@@ -43,7 +45,12 @@ block content
           | #{member.site}
 
       p &nbsp;
+    .span4
+      p
+        img(src=member.avatarUrl(200))
 
+  .row-fluid
+    .span12
       a.btn.btn-primary(href="/mailsender/contactMember/#{encodeURIComponent(member.nickname)}")
         i.icon-envelope
         | &nbsp;Eine Mail an #{member.firstname} #{member.lastname} senden

@@ -68,6 +68,30 @@ describe('Member initial filling', function () {
     expect(member.reference, 'reference').to.not.exist;
     done();
   });
+
+  it('shows the full name as display-name', function (done) {
+    var db_record = {nickname: 'Nick', firstname: 'Hans', lastname: 'Dampf'};
+    var member = new Member(db_record);
+    expect(member.displayName()).to.equal('Hans Dampf');
+    done();
+  });
+
+  it('constructs avatar from mail address using gravatar URL', function (done) {
+    var email = 'member@mail.com';
+    var db_record = {nickname: 'Nick', email: email};
+    var member = new Member(db_record);
+    expect(member.avatarUrl(10)).to.contain('http://www.gravatar.com/avatar/');
+    expect(member.avatarUrl(10)).to.contain('?d=blank&s=10');
+    done();
+  });
+
+  it('uses size 32 if no size is given', function (done) {
+    var email = 'member@mail.com';
+    var db_record = {nickname: 'Nick', email: email};
+    var member = new Member(db_record);
+    expect(member.avatarUrl()).to.contain('?d=blank&s=32');
+    done();
+  });
 });
 
 describe('Member twitter field autocorrection', function () {
@@ -200,12 +224,4 @@ describe('Member isAdmin', function () {
     expect(member.isAdmin).to.be.false;
     done();
   });
-
-  it('shows the full name as display-name', function (done) {
-    var db_record = {nickname: 'Nick', isAdmin: true, firstname: 'Hans', lastname: 'Dampf'};
-    var member = new Member(db_record);
-    expect(member.displayName()).to.equal('Hans Dampf');
-    done();
-  });
-
 });
