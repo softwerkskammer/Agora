@@ -22,25 +22,6 @@ module.exports = function (grunt) {
       files: ['<%= jshint.files %>', '**/*.jade'],
       tasks: ['default']
     },
-    compass: {
-      options: {
-        sassDir: 'public/stylesheets',
-        cssDir: 'public/stylesheets',
-        environment: 'production'
-      },
-      dist: {                   // Target
-        options: {              // Target options
-          environment: 'production'
-        }
-      },
-      dev: {                    // Another target
-        options: {
-          debugInfo: true,
-          outputStyle: 'expanded',
-          environment: 'development'
-        }
-      }
-    },
     'mocha-hack': {
       options: {
         globals: ['should'],
@@ -77,17 +58,13 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-qunit');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-exec');
-  grunt.loadNpmTasks('grunt-contrib-compass');
 
 
   // Default task.
-  grunt.registerTask('default', ['jshint', 'mocha-hack', 'qunit', 'compass:dist']);
+  grunt.registerTask('default', ['jshint', 'mocha-hack', 'qunit']);
 
   // Dev task
-  grunt.registerTask('dev', ['jshint', 'mocha-hack', 'qunit', 'compass:dev']);
-
-  // Compass dev only task
-  grunt.registerTask('compass-dev', ['compass:dev']);
+  grunt.registerTask('dev', ['jshint', 'mocha-hack', 'qunit']);
 
   // Coverage tasks
   grunt.registerTask('coverage', ['clean', 'exec:mkGenDocsDir', 'exec:coverage']);
