@@ -23,6 +23,5 @@ block content
          li(style="margin-left:" + (mailHeader.threadingLevel + 1) + "em")
            a(href="../message?id=" + encodeURIComponent(mailHeader.id) ) #{mailHeader.subject} 
            | (
-           mixin mailattributes(mailHeader) 
-           | ) 
-
+           mixin mailattributes(mailHeader)
+           | )
