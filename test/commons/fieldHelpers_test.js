@@ -24,8 +24,20 @@ describe('Replace email addresses from text', function () {
     expect(fieldHelpers.replaceMailAddresses(undefined)).to.equal(undefined);
   });
 
+  it('does not replace a single @ sign', function () {
+    expect(fieldHelpers.replaceMailAddresses('@')).to.equal('@');
+  });
+
+  it('does not replace an @ sign when it is not in an email (no dots)', function () {
+    expect(fieldHelpers.replaceMailAddresses('Seti@Home')).to.equal('Seti@Home');
+  });
+
+  it('does not replace an @ sign when it is not in an email (suffix too long)', function () {
+    expect(fieldHelpers.replaceMailAddresses('I stay@Hans.Dampf')).to.equal('I stay@Hans.Dampf');
+  });
+
   it('replaces a single email address', function () {
-    var result = fieldHelpers.replaceMailAddresses('hans.dampf@moby-dick.de');
+    var result = fieldHelpers.replaceMailAddresses('Hans.Dampf_1@moby-dick.de');
 
     expect(result).to.equal('...@...');
   });
