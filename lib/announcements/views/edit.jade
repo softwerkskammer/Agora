@@ -12,12 +12,17 @@ block content
   form(id='announcementform', action='/announcements/submit', method='post')
     if (announcement.id)
       mixin hidden('id', announcement)
+      mixin hidden('fromDate', announcement)
     mixin hidden('previousUrl', announcement, 'url')
     fieldset
       .row-fluid
         .span12
           legend
             | Nachricht
+            if (announcement.id)
+              |  bearbeiten
+            else
+              |  anlegen
       .row-fluid
         .span6
           mixin text('title', 'Titel', announcement)

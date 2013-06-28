@@ -14,7 +14,7 @@ var dummyAnnouncement = new Announcement({
   url: announcementUrl,
   text: 'text',
   author: 'author',
-  fromDate: '31.01.2012',
+  fromDate: 1372461025223, // 29.06.2013
   thruDate: 'thruDate'
 });
 
@@ -32,7 +32,7 @@ describe('Announcements API', function () {
     });
     sinon.stub(announcementsAPI, 'saveAnnouncement', function (dummyAnnouncement, callback) {
 //      dummyAnnouncement.timeUnix = moment(dummyAnnouncement.fromDate, "MM-DD-YYYY").unix();
-      dummyAnnouncement.id = fieldHelpers.createLinkFrom([dummyAnnouncement.author, dummyAnnouncement.title, dummyAnnouncement.getTimeUnix()]);
+      dummyAnnouncement.id = fieldHelpers.createLinkFrom([dummyAnnouncement.author, dummyAnnouncement.title, dummyAnnouncement.fromDate]);
       return callback(null, dummyAnnouncement);
     });
     done();
@@ -92,16 +92,16 @@ describe('Announcements API', function () {
     });
   });
 
-  it('gets the field `timeUnix` from a German date when saving', function (done) {
-    announcementsAPI.saveAnnouncement(dummyAnnouncement, function (err, result) {
-      expect(result.getTimeUnix()).to.equal(1404165600);
-      done();
-    });
-  });
+//  it('gets the field `timeUnix` from a German date when saving', function (done) {
+//    announcementsAPI.saveAnnouncement(dummyAnnouncement, function (err, result) {
+//      expect(result).to.have.property('fromDate', 1372461025223);
+//      done();
+//    });
+//  });
 
   it('creates an id out of the fields `author`, `title` and `timeUnix` when saving', function (done) {
     announcementsAPI.saveAnnouncement(dummyAnnouncement, function (err, result) {
-      expect(result).to.have.property('id', 'author_title_1404165600');
+      expect(result).to.have.property('id', 'author_title_1372461025223');
       done();
     });
   });

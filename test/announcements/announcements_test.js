@@ -13,7 +13,7 @@ var dummyAnnouncement = new Announcement({
   url: 'url',
   text: 'text',
   author: 'author',
-  fromDate: '31.01.2012',
+  fromDate: 1372461025223, // 29.06.2013
   thruDate: 'thruDate'
 });
 
@@ -66,7 +66,7 @@ describe('Announcement application', function () {
     request(app)
         .get('/' + url)
         .expect(200)
-        .expect(/&nbsp;<small>31.01.2012/)
+        .expect(/&nbsp;<small>29.06.2013/)
         .expect(/<h2>title/, function (err) {
           expect(getAnnouncement.calledWith(url)).to.be.true;
           done(err);
@@ -91,11 +91,6 @@ describe('Announcement application', function () {
         .expect(/announcements/, function (err) {
           done(err);
         });
-  });
-
-  it('gets the field `timeUnix` from a German date', function (done) {
-    expect(dummyAnnouncement.getTimeUnix()).to.equal(1404165600);
-    done();
   });
 
 });
