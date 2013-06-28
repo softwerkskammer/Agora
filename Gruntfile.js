@@ -63,6 +63,9 @@ module.exports = function (grunt) {
   // Default task.
   grunt.registerTask('default', ['jshint', 'mocha-hack', 'qunit']);
 
+  // Dev task
+  grunt.registerTask('dev', ['jshint', 'mocha-hack', 'qunit']);
+
   // Coverage tasks
   grunt.registerTask('coverage', ['clean', 'exec:mkGenDocsDir', 'exec:coverage']);
 
