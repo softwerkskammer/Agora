@@ -25,7 +25,7 @@ a.editable-click:hover {
 }
 
 td.fc-header-right {
-    padding-top: 6px; !important
+    padding-top: 6px !important;
 }
 
 .verySmall {
@@ -46,7 +46,7 @@ td.fc-header-right {
 
 @media print {
     .btn, .no-print {
-        display: none; !important
+        display: none !important;
     }
 }
 
