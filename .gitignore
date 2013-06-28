@@ -15,6 +15,7 @@ config/*.json*
 log/*.log
 public/test/
 version.jade
+.sass-cache
 
 test/tempbeans.json
 docs/generated
