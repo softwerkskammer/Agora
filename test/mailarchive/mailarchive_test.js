@@ -276,22 +276,22 @@ describe('Mail index page', function () {
       });
   });
 
-  it('sets session property mailarchive_thread to true when a threaded index is requested', function (done) {
+  it('sets session property displayMailsThreaded to true when a threaded index is requested', function (done) {
     stubMailHeaders([]);
     request(app)
       .get('/list/group?thread=true')
       .expect(200, function (err) {
-        expect(session.mailarchive_thread).to.equal(true);
+        expect(session.displayMailsThreaded).to.equal(true);
         done(err);
       });
   });
 
-  it('sets session property mailarchive_thread to false when a threaded index is requested', function (done) {
+  it('sets session property displayMailsThreaded to false when a threaded index is requested', function (done) {
     stubMailHeaders([]);
     request(app)
       .get('/list/group?thread=false')
       .expect(200, function (err) {
-        expect(session.mailarchive_thread).to.equal(false);
+        expect(session.displayMailsThreaded).to.equal(false);
         done(err);
       });
   });
@@ -313,7 +313,7 @@ describe('Mail index page', function () {
     var mail1 = new Mail({id: "Mail 1", subject: "Mail 1", references: [], timeUnix: 1});
     var mail2 = new Mail({id: "Mail 2", subject: "Mail 2", references: ["Mail 1"], timeUnix: 2});
     stubMailHeaders([mail1, mail2]);
-    session.mailarchive_thread = false;
+    session.displayMailsThreaded = false;
 
     request(app)
       .get('/list/group')
@@ -327,7 +327,7 @@ describe('Mail index page', function () {
     var mail1 = new Mail({id: "Mail 1", subject: "Mail 1", references: [], timeUnix: 1});
     var mail2 = new Mail({id: "Mail 2", subject: "Mail 2", references: ["Mail 1"], timeUnix: 2});
     stubMailHeaders([mail1, mail2]);
-    session.mailarchive_thread = true;
+    session.displayMailsThreaded = true;
 
     request(app)
       .get('/list/group')
