@@ -69,5 +69,6 @@
   "redirectRuleForNewUser": {"module": "./lib/middleware/redirectRuleForNewUser"},
   "secureByLogin": {"module": "./lib/middleware/secureByLogin"},
   "secureAdminOnly": {"module": "./lib/middleware/secureAdminOnly"},
+  "announcementsInSidebar": {"module": "./lib/middleware/announcementsInSidebar"},
   "expressViewHelper": {"module": "./lib/middleware/expressViewHelper"}
 }

@@ -79,6 +79,16 @@ html
         .span3.no-print
           .row-fluid
             #calendar.no-print
+            if (typeof(latestNews) != 'undefined')
+              hr
+              #news
+                h4 Das Neueste
+                dl
+                  for announcement in latestNews
+                    dt #{announcement.readableDate()}
+                    dd
+                      a(href='#{encodeURIComponent(announcement.url)}') #{announcement.title}
+
 
     mixin bottomNavbar
     
