@@ -29,7 +29,7 @@ block content
       else
         |  #{users.length} Mitglieder.
       if (user)
-        mixin memberlist(users)
+        mixin memberlist(users, organizers)
         if (user)
           if (userIsGroupMember)
             a.btn.btn-primary(href="unsubscribe/#{group.id}") Gruppe verlassen
