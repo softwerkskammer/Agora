@@ -6,5 +6,6 @@
   "activitiesPersistence": {"module": "./test/persistence/testpersistence"},
   "announcementsPersistence": {"module": "./test/persistence/testpersistence"},
   "mailsPersistence": {"module": "./test/persistence/testpersistence"},
-  "colorsPersistence": {"module": "./test/persistence/testpersistence"}
+  "colorsPersistence": {"module": "./test/persistence/testpersistence"},
+  "announcementsInSidebar": {"module": "./test/noAnnouncementsInSidebar"}
 }
