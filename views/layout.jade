@@ -87,7 +87,7 @@ html
                   for announcement in latestNews
                     dt #{announcement.readableDate()}
                     dd
-                      a(href='#{encodeURIComponent(announcement.url)}') #{announcement.title}
+                      a(href='/announcements/#{encodeURIComponent(announcement.url)}') #{announcement.title}
 
 
     mixin bottomNavbar
