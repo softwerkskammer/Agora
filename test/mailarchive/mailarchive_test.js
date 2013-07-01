@@ -130,13 +130,13 @@ describe('Mail index page', function () {
       });
   });
 
-  it('shows group name in the header', function (done) {
+  it('shows group name and references group page in the header', function (done) {
     stubMailHeaders([]);
 
     request(app)
       .get('/list/group')
       .expect(200)
-      .expect(/Gruppe group/, function (err) {
+      .expect(/Gruppe <a href="\.\.\/\.\.\/groups\/group">group<\/a>/, function (err) {
         done(err);
       });
   });

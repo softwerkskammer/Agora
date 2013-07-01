@@ -5,7 +5,7 @@ NeuePlattform-Implementierung
 
 What this is about
 ==================
-This is the project to build the new groupware platform for the German Software Craftsmanship Communities. It can be seen in action on http://agora.softwerkskammer.de
+This is the project to build the new groupware platform for the German Software Craftsmanship Communities. It can be seen in action on http://softwerkskammer.org
 The site is currently German only.
 
 ---

@@ -34,12 +34,16 @@ block content
             mixin textReadonly('emailPrefix', 'Präfix für Email-Subjects', group)
           else
             mixin text('emailPrefix', 'Präfix für Email-Subjects', group, 'steht innerhalb [] vor dem Subject in gesendeten Emails')
-  
           .control-group
             label.control-label(for="type") Gruppenart:
             select#type.input-block-level.input-xlarge(name="type")
               for item in allTypes
                 option(selected=group.type === item) #{item}
+        
+          h4 Ansprechpartner
+            .control-group
+              each memberAdmin in organizersChecked
+                mixin checkbox('organizers', memberAdmin.member.nickname, memberAdmin.checked, memberAdmin.member.id)
         .span6
           mixin colorPicker('color', group)
           mixin textarea('description', 'Beschreibung', group)

@@ -1,5 +1,7 @@
-mixin memberlist(members)
+mixin memberlist(members, organizers)
   dl.dl-horizontal
     for member in members
-      dt: .member: a(href="/members/#{encodeURIComponent(member.nickname)}") #{member.nickname} 
-      dd #{member.firstname} #{member.lastname}, #{member.location}
+      dt: .member: a(href="/members/#{encodeURIComponent(member.nickname)}") #{member.nickname}
+      dd #{member.firstname} #{member.lastname}, #{member.location}&nbsp;
+        if (organizers && organizers.indexOf(member.id) > -1)
+          span.badge(style="background-color: #DF5353") Ansprechpartner 

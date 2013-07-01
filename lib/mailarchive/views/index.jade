@@ -9,8 +9,8 @@ block title
 block content
   .span12
     .page-header
-      a(href="../../groups/" + encodeURIComponent(group) ) Gruppenseite
-      h2 Mails der Gruppe #{group}
+      h2 Mails der Gruppe 
+        a(href="../../groups/" + encodeURIComponent(group) ) #{group}
       -if(threaded)
         a(href=encodeURIComponent(group)+"?thread=false" ) Anzeigen nicht gruppiert
       -else
@@ -23,6 +23,5 @@ block content
          li(style="margin-left:" + (mailHeader.threadingLevel + 1) + "em")
            a(href="../message?id=" + encodeURIComponent(mailHeader.id) ) #{mailHeader.subject} 
            | (
-           mixin mailattributes(mailHeader) 
-           | ) 
-
+           mixin mailattributes(mailHeader)
+           | )
