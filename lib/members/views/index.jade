@@ -10,4 +10,11 @@ block content
       .page-header
         h2 Mitglieder&nbsp;
           small Alle
+      | Die Softwerkskammer hat
+      if (members.length === 1)
+        |  ein Mitglied.
+      else if (members.length === 0)
+        |  keine Mitglieder.
+      else
+        |  #{members.length} Mitglieder.
       mixin memberlist(members)
