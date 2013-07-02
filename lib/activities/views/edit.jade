@@ -13,6 +13,7 @@ block content
     if (activity.id)
       mixin hidden('id', activity)
     mixin hidden('previousUrl', activity, 'url')
+    mixin hidden('registeredMembers', activity)
     fieldset
       .row-fluid
         .span12
@@ -28,7 +29,7 @@ block content
           mixin text('title', 'Titel', activity, 'Kurz und knackig für Übersichten')
           .row-fluid
             .span6
-              mixin date('startDate', 'Startdatum', activity)
+              mixin date('startDate', 'Starticon-filedatum', activity)
             .span6
               mixin time('startTime', 'Startuhrzeit', activity)
           .row-fluid

@@ -29,5 +29,13 @@ describe('toArray function', function () {
     expect(result[1]).to.equal('Test2');
   });
 
+  it('transforms a comma separated list to an array with the items', function () {
+    var result = misc.toArray('Test,Test,Test');
+    expect(result.length).to.equal(3);
+    expect(result[0]).to.equal('Test');
+    expect(result[1]).to.equal('Test');
+    expect(result[2]).to.equal('Test');
+  });
+
 });
 
