@@ -14,6 +14,7 @@ function createConfiguration() {
   nconf.file('authentication', './config/authentication-config.json');
   nconf.file('mail', './config/mailsender-config.json');
   nconf.defaults({
+    adminListName: "admin",
     port: '17124',
     mongoHost: 'localhost',
     mongoPort: '27017',
