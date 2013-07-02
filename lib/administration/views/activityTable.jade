@@ -15,24 +15,30 @@ block content
         h2 Verwaltung
           small  Aktivitäten  
           - if (typeof(user) !== 'undefined' && user.member.isAdmin)
-            a.pull-right.btn(href="/activities/new/"): i.icon-file
+            a.pull-right.btn(href="/activities/new/", title="Neue Aktivität"): i.icon-file
   .row-fluid
+    p Bitte benutze diese Verwaltungspages nicht, um normale Editiervorgänge oder Neuanlagen vorzunehmen. Diese findest
+      | Du direkt auch auf den jeweiligen Seiten.
+    p Alternativ kannst Du auch auf das Symbol in der ersten Spalte klicken. Damit gelangst Du direkt auf die "Bearbeiten"-Seite
+    
     table(class="span 12 table table-condensed table-hover table-striped", style="overflow: auto; max-height: 600px")
       thead
         tr
+          mixin tabHeadNarrow(1, 'Edit')
           mixin tabHeadNarrow(1, 'Titel')
-          mixin tabHeadNarrow(1, 'URL')
+          mixin tabHeadNarrow(1, 'Adress-Suffix')
           mixin tabHeadNarrow(1, 'Startdatum')
-          mixin tabHeadNarrow(1, 'Startzeit')
+          mixin tabHeadNarrow(1, 'Startuhrzeit')
           mixin tabHeadNarrow(1, 'Enddatum')
-          mixin tabHeadNarrow(1, 'Endzeit')
-          mixin tabHeadNarrow(1, 'Ort')
+          mixin tabHeadNarrow(1, 'Enduhrzeit')
+          mixin tabHeadNarrow(1, 'Veranstaltungsort')
           mixin tabHeadNarrow(2, 'Beschreibung')
-          mixin tabHeadNarrow(2, 'Wegbeschreibung')
+          mixin tabHeadNarrow(1, 'Wegbeschreibung')
           mixin tabHeadNarrow(1, 'Gruppe')
       tbody
         for activity in activities
           tr
+            td(class="span1"): a.btn-small(href="/activities/edit/#{encodeURIComponent(activity.url)}"): i.icon-edit
             mixin tabTextNarrow(1, activity, 'title', 'activityChanged', 'right')
             mixin tabTextNarrow(1, activity, 'url', 'activityChanged')
             mixin tabDateNarrow(1, activity, 'startDate', 'activityChanged')
@@ -41,6 +47,6 @@ block content
             mixin tabTextNarrow(1, activity, 'endTime', 'activityChanged')
             mixin tabTextNarrow(1, activity, 'location', 'activityChanged')
             mixin tabTextareaNarrow(2, activity, 'description', 'activityChanged')
-            mixin tabTextareaNarrow(2, activity, 'direction', 'activityChanged')
+            mixin tabTextareaNarrow(1, activity, 'direction', 'activityChanged')
             td.span1: .ellipsis.narrow #{activity.groupName(groups)}
               
