@@ -185,7 +185,7 @@ describe('Groups API (updateAdminListSubscription)', function () {
   var unsubscribeSpy;
 
   var adminList = conf.get('adminListName');
-  
+
   beforeEach(function (done) {
     subscribeSpy = sinon.stub(sympaStub, 'addUserToList', function (email, list, callback) {
       callback();
