@@ -16,7 +16,7 @@ block content
         h2 Verwaltung
           small  Farben
           - if (typeof(user) !== 'undefined' && user.member.isAdmin)
-            a.pull-right.btn(data-toggle="modal", href="#newcolor"): i.icon-file
+            a.pull-right.btn(data-toggle="modal", href="#newcolor", title="Neue Farbe"): i.icon-file
   .row-fluid
     form.form-horizontal(action='/administration/submitColors', method='post')
       for color in colors
