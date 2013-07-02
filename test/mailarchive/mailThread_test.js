@@ -48,7 +48,7 @@ describe('mail thread builder', function () {
   it('adds thread modification time to leaf mails', function () {
     var mail1 = new Mail({id: "Mail 1", timeUnix: 1});
     mailThread([mail1]);
-    expect(mail1.threadModificationTimeUnix).to.equal(mail1.timeUnix);
+    expect(mail1.lastResponseTimeUnix).to.equal(mail1.timeUnix);
   });
 
 
@@ -57,6 +57,7 @@ describe('mail thread builder', function () {
     var mail2 = new Mail({id: "Mail 2", timeUnix: 2, references: ["Mail 1"]});
     var mail3 = new Mail({id: "Mail 3", timeUnix: 3, references: ["Mail 1"]});
     mailThread([mail1, mail2, mail3]);
-    expect(mail1.threadModificationTimeUnix).to.equal(mail3.timeUnix);
+    expect(mail1.lastResponseTimeUnix).to.equal(mail3.timeUnix);
   });
+
 });
