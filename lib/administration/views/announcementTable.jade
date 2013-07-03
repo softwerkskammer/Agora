@@ -1,0 +1,46 @@
+extends ../../../views/layout
+
+include ../../../views/editableTableComponents
+
+block title
+  | Übersicht der Gruppen
+
+block scripts
+  script(src="/clientscripts/utilities-for-editables.js")
+
+block content
+  .row-fluid
+    .span12
+      .page-header
+        h2 Verwaltung
+          small  Aktivitäten  
+          - if (typeof(user) !== 'undefined' && user.member.isAdmin)
+            a.pull-right.btn(href="/activities/new/"): i.icon-file
+  .row-fluid
+    table(class="span 12 table table-condensed table-hover table-striped", style="overflow: auto; max-height: 600px")
+      thead
+        tr
+          mixin tabHeadNarrow(1, 'Titel')
+          mixin tabHeadNarrow(1, 'URL')
+          mixin tabHeadNarrow(1, 'Startdatum')
+          mixin tabHeadNarrow(1, 'Startzeit')
+          mixin tabHeadNarrow(1, 'Enddatum')
+          mixin tabHeadNarrow(1, 'Endzeit')
+          mixin tabHeadNarrow(1, 'Ort')
+          mixin tabHeadNarrow(2, 'Beschreibung')
+          mixin tabHeadNarrow(2, 'Wegbeschreibung')
+          mixin tabHeadNarrow(1, 'Gruppe')
+      tbody
+        for activity in activities
+          tr
+            mixin tabTextNarrow(1, activity, 'title', 'activityChanged', 'right')
+            mixin tabTextNarrow(1, activity, 'url', 'activityChanged')
+            mixin tabDateNarrow(1, activity, 'startDate', 'activityChanged')
+            mixin tabTextNarrow(1, activity, 'startTime', 'activityChanged')
+            mixin tabDateNarrow(1, activity, 'endDate', 'activityChanged')
+            mixin tabTextNarrow(1, activity, 'endTime', 'activityChanged')
+            mixin tabTextNarrow(1, activity, 'location', 'activityChanged')
+            mixin tabTextareaNarrow(2, activity, 'description', 'activityChanged')
+            mixin tabTextareaNarrow(2, activity, 'direction', 'activityChanged')
+            td.span1: .ellipsis.narrow #{activity.groupName(groups)}
+              
