@@ -63,32 +63,6 @@ describe('Groups and Members API (getUserWithHisGroups)', function () {
   });
 });
 
-describe('Groups and Members API (getUserWithHisGroupsById)', function () {
-
-  afterEach(function (done) {
-    groupsAPI.getSubscribedGroupsForUser.restore();
-    membersAPI.getMemberForId.restore();
-    done();
-  });
-  it('returns the member (by id) and his groups when there is a member for the given nickname', function (done) {
-    sinon.stub(membersAPI, 'getMemberForId', function (nickname, callback) {
-      callback(null, dummymember);
-    });
-    sinon.stub(groupsAPI, 'getSubscribedGroupsForUser', function (userMail, globalCallback) {
-      globalCallback(null, [GroupA, GroupB]);
-    });
-
-    systemUnderTest.getUserWithHisGroupsById('hada', function (err, member, subscribedGroups) {
-      expect(member).to.equal(dummymember);
-      expect(subscribedGroups).to.not.be.null;
-      expect(subscribedGroups.length).to.equal(2);
-      expect(subscribedGroups[0]).to.equal(GroupA);
-      expect(subscribedGroups[1]).to.equal(GroupB);
-      done(err);
-    });
-  });
-});
-
 describe('Groups and Members API (getGroupAndMembersForList)', function () {
 
   afterEach(function (done) {

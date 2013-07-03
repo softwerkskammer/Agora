@@ -27,9 +27,14 @@ block content
         h2 Verwaltung
           small  Mitglieder
   .row-fluid
+    p Bitte benutze diese Verwaltungspages nicht, um normale Editiervorgänge oder Neuanlagen vorzunehmen. Diese findest
+      | Du direkt auch auf den jeweiligen Seiten.
+    p Alternativ kannst Du auch auf das Symbol in der ersten Spalte klicken. Damit gelangst Du direkt auf die "Bearbeiten"-Seite
+
     table(class="span 12 table table-condensed table-hover table-striped", style="overflow: auto; max-height: 600px")
       thead
         tr
+          mixin tabHeadNarrow(1, 'Edit')
           mixin tabHeadNarrow(1, 'Nickname')
           mixin tabHeadNarrow(1, 'Vorname')
           mixin tabHeadNarrow(1, 'Nachname')
@@ -45,6 +50,7 @@ block content
       tbody
         for member in members
           tr
+            td(class="span1"): a.btn-small(href="/members/edit/#{encodeURIComponent(member.nickname)}"): i.icon-edit
             mixin tabTextNarrow(1, member, 'nickname', 'memberChanged', 'right')
             mixin tabTextNarrow(1, member, 'firstname', 'memberChanged', 'right')
             mixin tabTextNarrow(1, member, 'lastname', 'memberChanged')

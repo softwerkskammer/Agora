@@ -27,21 +27,27 @@ block content
         h2 Verwaltung
           small  Gruppen
           - if (typeof(user) !== 'undefined' && user.member.isAdmin)
-            a.pull-right.btn(href="/groups/new/"): i.icon-file
+            a.pull-right.btn(href="/groups/new/", title="Neue Gruppe"): i.icon-file
   .row-fluid
+    p Bitte benutze diese Verwaltungspages nicht, um normale Editiervorgänge oder Neuanlagen vorzunehmen. Diese findest
+      | Du direkt auch auf den jeweiligen Seiten.
+    p Alternativ kannst Du auch auf das Symbol in der ersten Spalte klicken. Damit gelangst Du direkt auf die "Bearbeiten"-Seite
+
     table(class="span 12 table table-condensed table-hover table-striped", style="overflow: auto; max-height: 600px")
       thead
         tr
+          mixin tabHeadNarrow(1, 'Edit')
           mixin tabHead(2, 'Name')
-          mixin tabHead(3, 'Titel')
+          mixin tabHead(2, 'Titel')
           mixin tabHead(1, 'Präfix')
           mixin tabHead(5, 'Beschreibung')
           mixin tabHead(1, 'Gruppenart')
       tbody
         for group in groups
           tr
+            td(class="span1"): a.btn-small(href="/groups/edit/#{encodeURIComponent(group.id)}"): i.icon-edit
             th.span2: .ellipsis #{group.id}
-            mixin tabText(3, group, 'longName', 'groupChanged')
+            mixin tabText(2, group, 'longName', 'groupChanged')
             td.span1: .ellipsis #{group.emailPrefix}
             mixin tabTextarea(5, group, 'description', 'groupChanged')
             td.span1: a#type(href="#", , data-type="select", data-value="#{group.typeCode()}", data-pk="#{group.id}", data-url="groupChanged"): .ellipsis #{group.type}
