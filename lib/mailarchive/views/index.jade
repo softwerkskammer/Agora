@@ -10,13 +10,13 @@ block content
   .span12
     .page-header
       h2 Mails der Gruppe 
-        a(href="../../groups/" + encodeURIComponent(group) ) #{group}
+        a(href="/groups/" + encodeURIComponent(group) ) #{group}
       -if(threaded)
         a(href=encodeURIComponent(group)+"?thread=false" ) Anzeigen nicht gruppiert
       -else
         a(href=encodeURIComponent(group)+"?thread=true" ) Anzeigen gruppiert nach Thema
   -if(mailHeaders.length == 0) 
-    div Keine Mails gefunden
+    div Keine Mails vorhanden
   -else  
      ul
        for mailHeader in mailHeaders
