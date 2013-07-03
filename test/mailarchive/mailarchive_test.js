@@ -38,12 +38,12 @@ describe('Mail content page', function () {
       });
   });
 
-  it('shows text "Keine Mail gefunden" if mail is not found', function (done) {
+  it('shows text "Keine Mail vorhanden" if mail is not found', function (done) {
     var mailForId = sinonSandbox.stub(mailarchiveAPI, 'mailForId', function (id, callback) {callback(null, undefined); });
     request(app)
       .get('/message?id=mailID')
       .expect(200)
-      .expect(/Keine Mail gefunden/, function (err) {
+      .expect(/Keine Mail vorhanden/, function (err) {
         expect(mailForId.calledOnce).to.be.ok;
         done(err);
       });
@@ -92,7 +92,7 @@ describe('Mail content page', function () {
     request(app)
       .get('/message?id=mailID')
       .expect(200)
-      .expect(/href="..\/..\/members\/nickname"/, function (err) {
+      .expect(/href="\/members\/nickname"/, function (err) {
         expect(mailForId.calledOnce).to.be.ok;
         done(err);
       });
@@ -136,7 +136,7 @@ describe('Mail index page', function () {
     request(app)
       .get('/list/group')
       .expect(200)
-      .expect(/Gruppe <a href="\.\.\/\.\.\/groups\/group">group<\/a>/, function (err) {
+      .expect(/Gruppe <a href="\/groups\/group">group<\/a>/, function (err) {
         done(err);
       });
   });
@@ -147,18 +147,18 @@ describe('Mail index page', function () {
     request(app)
       .get('/list/group')
       .expect(200)
-      .expect(/ href="..\/..\/groups\/group"/, function (err) {
+      .expect(/ href="\/groups\/group"/, function (err) {
         done(err);
       });
   });
 
-  it('shows text "Keine Mails gefunden" if no mails for group are available', function (done) {
+  it('shows text "Keine Mails vorhanden" if no mails for group are available', function (done) {
     stubMailHeaders([]);
 
     request(app)
       .get('/list/group')
       .expect(200)
-      .expect(/Keine Mails gefunden/, function (err) {
+      .expect(/Keine Mails vorhanden/, function (err) {
         done(err);
       });
   });
@@ -223,7 +223,7 @@ describe('Mail index page', function () {
     request(app)
       .get('/list/group')
       .expect(200)
-      .expect(/href="..\/..\/members\/nickname"/, function (err) {
+      .expect(/href="\/members\/nickname"/, function (err) {
         done(err);
       });
   });
@@ -245,7 +245,7 @@ describe('Mail index page', function () {
     request(app)
       .get('/list/group')
       .expect(200)
-      .expect(/href="..\/..\/members\/nickname"/, function (err) {
+      .expect(/href="\/members\/nickname"/, function (err) {
         done(err);
       });
   });
