@@ -8,5 +8,6 @@
       "pass": ""
     },
     "debug": "true"
-  }
+  },
+  "sender-address": "info@my-domain.org"
 }
