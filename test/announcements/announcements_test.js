@@ -5,16 +5,18 @@ var conf = require('../configureForTest');
 var request = require('supertest'),
     express = require('express'),
     sinon = require('sinon'),
+    sinonSandbox = sinon.sandbox.create(),
     expect = require('chai').expect;
 
 var Announcement = conf.get('beans').get('announcement');
+
 var dummyAnnouncement = new Announcement({
   title: 'title',
   url: 'url',
-  text: 'text',
+  message: 'text',
   author: 'author',
   fromDate: 1372461025223, // 29.06.2013
-  thruDate: 'thruDate'
+  thruDate: 1388444400 // 31.12.2013
 });
 
 var announcementsAPI = conf.get('beans').get('announcementsAPI');
@@ -24,17 +26,18 @@ var app = conf.get('beans').get('announcementsApp')(express());
 
 describe('Announcement application', function () {
   var allAnnouncements;
+  var allAnnouncementsUntilToday;
   var getAnnouncement;
 
   beforeEach(function (done) {
-    allAnnouncements = sinon.stub(announcementsAPI, 'allAnnouncements', function (callback) {return callback(null, [dummyAnnouncement]); });
-    getAnnouncement = sinon.stub(announcementsAPI, 'getAnnouncement', function (url, callback) {callback(null, (url === 'url') ? dummyAnnouncement : null); });
+    allAnnouncements = sinonSandbox.stub(announcementsAPI, 'allAnnouncements', function (callback) {return callback(null, [dummyAnnouncement]); });
+    allAnnouncementsUntilToday = sinonSandbox.stub(announcementsAPI, 'allAnnouncementsUntilToday', function (callback) {return callback(null, [dummyAnnouncement]); });
+    getAnnouncement = sinonSandbox.stub(announcementsAPI, 'getAnnouncement', function (url, callback) {callback(null, (url === 'url') ? dummyAnnouncement : null); });
     done();
   });
 
   afterEach(function (done) {
-    announcementsAPI.allAnnouncements.restore();
-    announcementsAPI.getAnnouncement.restore();
+    sinonSandbox.restore();
     done();
   });
 
@@ -55,7 +58,7 @@ describe('Announcement application', function () {
         .expect(/Nachrichten/)
         .expect(/href="url"/)
         .expect(/title/, function (err) {
-          expect(allAnnouncements.calledOnce).to.be.ok;
+          expect(allAnnouncementsUntilToday.calledOnce).to.be.ok;
           done(err);
         });
   });

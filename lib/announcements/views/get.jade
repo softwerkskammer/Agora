@@ -12,6 +12,6 @@ block content
             a.pull-right.btn(href="/announcements/edit/#{encodeURIComponent(announcement.url)}"): i.icon-edit
       .row-fluid
         .span8
-          p !{announcement.textHTML()}
+          p !{announcement.messageHTML()}
           p
             i #{announcement.author}
