@@ -1,6 +1,6 @@
 mixin mailattributes(mailHeader)
   - if (mailHeader.memberNickname != null)
-    a(href="../../members/" + encodeURIComponent(mailHeader.memberNickname)) #{mailHeader.displayedSenderName}
+    a(href="/members/" + encodeURIComponent(mailHeader.memberNickname)) #{mailHeader.displayedSenderName}
   - else
     | #{mailHeader.displayedSenderName}
   | , 

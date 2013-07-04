@@ -19,7 +19,9 @@ block content
         a(href="mailto:#{group.id}@softwerkskammer.org")
           | #{group.id}@softwerkskammer.org
       |!{group.descriptionHTML()}
-  
+      
+      a.btn.btn-primary(href="/mailarchive/list/#{group.id}?thread=true") Zum Mailarchiv
+
       h4 Mitglieder:
       | Diese Gruppe hat
       if (users.length === 1)
