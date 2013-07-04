@@ -15,13 +15,15 @@ block content
         a(href=encodeURIComponent(group)+"?thread=false" ) Anzeigen nicht gruppiert
       -else
         a(href=encodeURIComponent(group)+"?thread=true" ) Anzeigen gruppiert nach Thema
-  -if(mailHeaders.length == 0) 
-    div Keine Mails vorhanden
-  -else  
-     ul
-       for mailHeader in mailHeaders
-         li(style="margin-left:" + (mailHeader.threadingLevel + 1) + "em")
-           a(href="../message?id=" + encodeURIComponent(mailHeader.id) ) #{mailHeader.subject} 
-           | (
-           mixin mailattributes(mailHeader)
-           | )
+  .row-fluid
+    .span12
+      -if(mailHeaders.length == 0) 
+        h4 Keine Mails
+      -else
+         ul
+           for mailHeader in mailHeaders
+             li(style="margin-left:" + (mailHeader.threadingLevel + 1) + "em")
+               a(href="../message?id=" + encodeURIComponent(mailHeader.id) ) #{mailHeader.subject} 
+               | (
+               mixin mailattributes(mailHeader)
+               | )
