@@ -2,6 +2,18 @@ extends ../../../views/layout
 
 include ./mailheader-mixin
 
+mixin mailIndex(mailHeaders)
+  -if(typeof(mailHeaders) !== 'undefined')
+    ul
+      for mailHeader in mailHeaders
+        li
+          a(href="../message?id=" + encodeURIComponent(mailHeader.id) ) #{mailHeader.subject}
+          | (
+          mixin mailattributes(mailHeader)
+          | )
+          mixin mailIndex(mailHeader.responses)
+
+
 block title
   | #{group} 
   | mails 
@@ -20,10 +32,4 @@ block content
       -if(mailHeaders.length == 0) 
         h4 Keine Mails
       -else
-         ul
-           for mailHeader in mailHeaders
-             li(style="margin-left:" + (mailHeader.threadingLevel + 1) + "em")
-               a(href="../message?id=" + encodeURIComponent(mailHeader.id) ) #{mailHeader.subject} 
-               | (
-               mixin mailattributes(mailHeader)
-               | )
+        mixin mailIndex(mailHeaders)
