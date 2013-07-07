@@ -15,7 +15,7 @@ mixin mailIndex(mailHeaders)
     ul
       for mailHeader in mailHeaders
         li
-          a(href="../message?id=" + encodeURIComponent(mailHeader.id) ) #{mailHeader.subject}
+          a(href="../message?id=" + encodeURIComponent(mailHeader.id)) #{mailHeader.subject} 
           | (
           mixin mailattributes(mailHeader)
           | )
