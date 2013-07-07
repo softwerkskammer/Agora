@@ -10,7 +10,7 @@ block content
   .span12
     .page-header
       mixin pageHeader(group)
-      a(href=encodeURIComponent(group)+"?thread=false" ) Sortieren nach der Zeit
+      a(href=encodeURIComponent(group)+"?thread=false") Ansicht unthreaded
   .row-fluid
     .span12
       - var mailNumber = 0;
@@ -20,15 +20,12 @@ block content
           .accordion-heading
             a.accordion-toggle(data-toggle="collapse", href="#collapse" + mailNumber) 
               | #{mailHeader.subject}
-              | ( Letzte Nachricht: 
-              mixin mailattributes(mailHeader.lastResponse)
-              | )
           div.accordion-body.collapse(id="collapse" + mailNumber)
             .accordion-inner
               ul
                 li
-                  a(href="../message?id=" + encodeURIComponent(mailHeader.id) ) #{mailHeader.subject}
-                  | (
+                  a(href="../message?id=" + encodeURIComponent(mailHeader.id)) #{mailHeader.subject}
+                  |  (
                   mixin mailattributes(mailHeader)
                   | )
                   mixin mailIndex(mailHeader.responses)
