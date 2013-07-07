@@ -338,7 +338,8 @@ describe('Mail index page', function () {
   });
 
   it('shows a link to not threaded representation when a threaded index is requested', function (done) {
-    stubMailHeaders([]);
+    var mail1 = new Mail({id: "Mail 1", subject: "Mail 1", references: [], timeUnix: 1});
+    stubMailHeaders([mail1]);
     request(app)
       .get('/list/group?thread=true')
       .expect(200)
@@ -348,7 +349,8 @@ describe('Mail index page', function () {
   });
 
   it('shows a link to threaded representation when a non threaded index is requested', function (done) {
-    stubMailHeaders([]);
+    var mail1 = new Mail({id: "Mail 1", subject: "Mail 1", references: [], timeUnix: 1});
+    stubMailHeaders([mail1]);
     request(app)
       .get('/list/group?thread=false')
       .expect(200)

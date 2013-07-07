@@ -1,0 +1,34 @@
+extends ../../../views/layout
+
+include ./mailheader-mixin
+
+block title
+  | #{group} 
+  | mails 
+
+block content
+  .span12
+    .page-header
+      mixin pageHeader(group)
+      a(href=encodeURIComponent(group)+"?thread=false" ) Sortieren nach der Zeit
+  .row-fluid
+    .span12
+      - var mailNumber = 0;
+      for mailHeader in mailHeaders
+        - mailNumber = mailNumber + 1;
+        .accordion-group
+          .accordion-heading
+            a.accordion-toggle(data-toggle="collapse", href="#collapse" + mailNumber) 
+              | #{mailHeader.subject}
+              | ( Letzte Nachricht: 
+              mixin mailattributes(mailHeader.lastResponse)
+              | )
+          div.accordion-body.collapse(id="collapse" + mailNumber)
+            .accordion-inner
+              ul
+                li
+                  a(href="../message?id=" + encodeURIComponent(mailHeader.id) ) #{mailHeader.subject}
+                  | (
+                  mixin mailattributes(mailHeader)
+                  | )
+                  mixin mailIndex(mailHeader.responses)
