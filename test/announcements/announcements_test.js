@@ -3,10 +3,10 @@
 var conf = require('../configureForTest');
 
 var request = require('supertest'),
-    express = require('express'),
-    sinon = require('sinon'),
-    sinonSandbox = sinon.sandbox.create(),
-    expect = require('chai').expect;
+  express = require('express'),
+  sinon = require('sinon'),
+  sinonSandbox = sinon.sandbox.create(),
+  expect = require('chai').expect;
 
 var Announcement = conf.get('beans').get('announcement');
 
@@ -30,9 +30,15 @@ describe('Announcement application', function () {
   var getAnnouncement;
 
   beforeEach(function (done) {
-    allAnnouncements = sinonSandbox.stub(announcementsAPI, 'allAnnouncements', function (callback) {return callback(null, [dummyAnnouncement]); });
-    allAnnouncementsUntilToday = sinonSandbox.stub(announcementsAPI, 'allAnnouncementsUntilToday', function (callback) {return callback(null, [dummyAnnouncement]); });
-    getAnnouncement = sinonSandbox.stub(announcementsAPI, 'getAnnouncement', function (url, callback) {callback(null, (url === 'url') ? dummyAnnouncement : null); });
+    allAnnouncements = sinonSandbox.stub(announcementsAPI, 'allAnnouncements', function (callback) {
+      return callback(null, [dummyAnnouncement]);
+    });
+    allAnnouncementsUntilToday = sinonSandbox.stub(announcementsAPI, 'allAnnouncementsUntilToday', function (callback) {
+      return callback(null, [dummyAnnouncement]);
+    });
+    getAnnouncement = sinonSandbox.stub(announcementsAPI, 'getAnnouncement', function (url, callback) {
+      callback(null, (url === 'url') ? dummyAnnouncement : null);
+    });
     done();
   });
 
@@ -53,27 +59,27 @@ describe('Announcement application', function () {
 
   it('shows the list of announcements as retrieved from the store', function (done) {
     request(app)
-        .get('/')
-        .expect(200)
-        .expect(/Nachrichten/)
-        .expect(/href="url"/)
-        .expect(/title/, function (err) {
-          expect(allAnnouncementsUntilToday.calledOnce).to.be.ok;
-          done(err);
-        });
+      .get('/')
+      .expect(200)
+      .expect(/Nachrichten/)
+      .expect(/href="url"/)
+      .expect(/title/, function (err) {
+        expect(allAnnouncementsUntilToday.calledOnce).to.be.ok;
+        done(err);
+      });
   });
 
   it('shows the details of one announcement as retrieved from the store', function (done) {
     var url = 'url';
 
     request(app)
-        .get('/' + url)
-        .expect(200)
-        .expect(/&nbsp;<small>29.06.2013/)
-        .expect(/<h2>title/, function (err) {
-          expect(getAnnouncement.calledWith(url)).to.be.true;
-          done(err);
-        });
+      .get('/' + url)
+      .expect(200)
+      .expect(/&nbsp;<small>29.06.2013/)
+      .expect(/<h2>title/, function (err) {
+        expect(getAnnouncement.calledWith(url)).to.be.true;
+        done(err);
+      });
   });
 
 //  it('shows a 404 if the url cannot be found in the store for the detail page', function (done) {
@@ -89,11 +95,11 @@ describe('Announcement application', function () {
 
   it('allows to create a new announcement', function (done) {
     request(app)
-        .get('/new')
-        .expect(200)
-        .expect(/announcements/, function (err) {
-          done(err);
-        });
+      .get('/new')
+      .expect(200)
+      .expect(/announcements/, function (err) {
+        done(err);
+      });
   });
 
 });
