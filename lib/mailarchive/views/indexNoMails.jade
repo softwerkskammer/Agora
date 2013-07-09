@@ -1,0 +1,15 @@
+extends ../../../views/layout
+
+include ./mailheader-mixin
+
+block title
+  | #{group} 
+  | mails 
+
+block content
+  .span12
+    .page-header
+      mixin pageHeader(group)
+  .row-fluid
+    .span12
+        h4 Keine Mails

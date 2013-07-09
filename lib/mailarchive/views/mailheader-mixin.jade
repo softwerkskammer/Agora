@@ -1,3 +1,7 @@
+mixin pageHeader(group)
+  h2 Mails der Gruppe 
+    a(href="/groups/" + encodeURIComponent(group) ) #{group}
+
 mixin mailattributes(mailHeader)
   - if (mailHeader.memberNickname != null)
     a(href="/members/" + encodeURIComponent(mailHeader.memberNickname)) #{mailHeader.displayedSenderName}
@@ -5,3 +9,14 @@ mixin mailattributes(mailHeader)
     | #{mailHeader.displayedSenderName}
   | , 
   | #{mailHeader.displayedTime}
+
+mixin mailIndex(mailHeaders)
+  -if(typeof(mailHeaders) !== 'undefined')
+    ul
+      for mailHeader in mailHeaders
+        li
+          a(href="../message?id=" + encodeURIComponent(mailHeader.id)) #{mailHeader.subject} 
+          | (
+          mixin mailattributes(mailHeader)
+          | )
+          mixin mailIndex(mailHeader.responses)
