@@ -15,7 +15,7 @@ var dummyAnnouncement = new Announcement({
   url: 'url',
   message: 'text',
   author: 'author',
-  fromDate: 1372461025223, // 29.06.2013
+  fromDate: 1372475425223, // 29.06.2013
   thruDate: 1388444400 // 31.12.2013
 });
 
