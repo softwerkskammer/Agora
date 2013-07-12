@@ -7,6 +7,9 @@ mixin administrationMenu(top)
           | &nbsp; Verwaltung
           b.caret
         ul.dropdown-menu
+          li: a(href="/administration/announcementTable")
+            i.icon-list
+            | &nbsp;Nachrichten
           li: a(href="/administration/activityTable")
             i.icon-calendar
             | &nbsp;Aktivitäten
