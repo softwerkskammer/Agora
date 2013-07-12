@@ -82,6 +82,35 @@ describe('Announcement application', function () {
       });
   });
 
+  it('shows a thruDate when editing an announcement having a thruDate', function (done) {
+    dummyAnnouncement.id = 1234;
+    var url = 'url';
+
+    request(app)
+      .get('/edit/' + url)
+      .expect(200)
+      .expect(/<input id="thruDate" type="text" name="thruDate" value="1388444400" class="input-block-level input-xlarge datepicker"\/>/)
+      .expect(/<legend>Nachricht bearbeiten/, function (err) {
+        expect(getAnnouncement.calledWith(url)).to.be.true;
+        done(err);
+      });
+  });
+
+  it('shows no thruDate when editing an announcement having no thruDate', function (done) {
+    dummyAnnouncement.id = 1234;
+    dummyAnnouncement.thruDate = null;
+    var url = 'url';
+
+    request(app)
+      .get('/edit/' + url)
+      .expect(200)
+      .expect(/<input id="thruDate" type="text" name="thruDate" class="input-block-level input-xlarge datepicker"\/>/)
+      .expect(/<legend>Nachricht bearbeiten/, function (err) {
+        expect(getAnnouncement.calledWith(url)).to.be.true;
+        done(err);
+      });
+  });
+
 //  it('shows a 404 if the url cannot be found in the store for the detail page', function (done) {
 //    var link = dummyAnnouncement.url + '-does-not-exist';
 //    console.log(link);
