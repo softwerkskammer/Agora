@@ -16,7 +16,8 @@ var fileWithTextAndHtml = 'test/mailarchive/testfiles/mailWithTextAndHtml',
   fileWithTextOnlyWithoutSenderName = 'test/mailarchive/testfiles/mailWithTextOnly',
   fileWithoutDate = 'test/mailarchive/testfiles/mailWithoutDate',
   fileWithReferences = 'test/mailarchive/testfiles/mailWithReferences',
-  fileWithInReplyTo = 'test/mailarchive/testfiles/mailWithInReplyTo';
+  fileWithInReplyTo = 'test/mailarchive/testfiles/mailWithInReplyTo',
+  fileWithoutMessageId = 'test/mailarchive/testfiles/mailWithoutMessageID';
 
 describe('Import of mails from files with mime messages', function () {
   beforeEach(function (done) {
@@ -42,6 +43,13 @@ describe('Import of mails from files with mime messages', function () {
   it('imports message ID from plain text message', function (done) {
     mailimport(fileWithTextOnlyWithoutSenderName, 'group', function (err, result) {
       expect(result.id).to.equal('message2@nomail.com');
+      done();
+    });
+  });
+
+  it('creates message ID from file content if it is missing', function (done) {
+    mailimport(fileWithoutMessageId, 'group', function (err, result) {
+      expect(result.id).to.match(/^mail-sha1-[\w]+@softwerkskammer\.org$/);
       done();
     });
   });
