@@ -1,14 +1,16 @@
 // GENERAL
+mixin controlLabel(name, label, tooltip)
+  label(class="control-label", for=name)
+    if (typeof(tooltip) !== 'undefined')
+      span.tooltiplabel(data-toggle="tooltip", data-original-title="#{tooltip}") #{label}:
+      script
+        $('.tooltiplabel').each(function(each) {$(this).tooltip()})
+    else
+      | #{label}:
 
 mixin text(name, label, object, tooltip)
   .control-group
-    label(class="control-label", for=name)
-      if (typeof(tooltip) !== 'undefined')
-        span.tooltiplabel(data-toggle="tooltip", data-original-title="#{tooltip}") #{label}:
-        script
-          $('.tooltiplabel').each(function(each) {$(this).tooltip()})
-      else
-        | #{label}:
+    mixin controlLabel(name, label, tooltip)
     input(id=name, class="input-block-level input-xlarge", type='text', name=name, value=object[name])
 
 mixin textReadonly(name, label, object)

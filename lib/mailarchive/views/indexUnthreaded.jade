@@ -13,4 +13,5 @@ block content
       a(href=encodeURIComponent(group)+"?thread=true" ) Ansicht threaded
   .row-fluid
     .span12
-      mixin mailIndex(mailHeaders)
+      .pre-scrollable
+        mixin mailIndex(mailHeaders)
