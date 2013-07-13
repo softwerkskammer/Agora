@@ -20,8 +20,8 @@ describe('Mailarchive', function () {
 
   it('calls persistence.listByFieldWithOptions from mailHeaders ' +
     'and passes on the given callback', function (done) {
-    var sampleMail1 = new Mail({ subject: "Mail 1" });
-    var sampleMail2 = new Mail({ subject: "Mail 2" });
+    var sampleMail1 = new Mail({ id: "Mail 1", subject: "Mail 1" });
+    var sampleMail2 = new Mail({ id: "Mail 2", subject: "Mail 2" });
     var sampleMailList = [sampleMail1, sampleMail2];
     var listByFieldWithOptions = sinonSandbox.stub(persistence, 'listByFieldWithOptions');
     listByFieldWithOptions.callsArgWith(3, null, sampleMailList);
@@ -39,7 +39,7 @@ describe('Mailarchive', function () {
   });
 
   it('calls persistence.getById from mailForId and passes on the given callback', function (done) {
-    var sampleMail1 = new Mail({ subject: "Mail 1" });
+    var sampleMail1 = new Mail({ id: "Mail 1", subject: "Mail 1" });
     var getById = sinonSandbox.stub(persistence, 'getById');
     getById.callsArgWith(1, null, sampleMail1);
 
@@ -54,7 +54,7 @@ describe('Mailarchive', function () {
   it('calls membersAPI.getMemberForId from addProfileDataForMember with member id from given object ' +
     'and adds member nick and name returned in callback to mail header', function (done) {
     var sampleMember = {id: "sender ID 1", nickname: 'nick1', firstname: 'firstname1', lastname: 'lastname1'};
-    var sampleMail1 = new Mail({ subject: "Mail 1", from: {name: "Sender Name 1", id: sampleMember.id} });
+    var sampleMail1 = new Mail({ id: "Mail 1", subject: "Mail 1", from: {name: "Sender Name 1", id: sampleMember.id} });
 
     var getMemberForId = sinonSandbox.stub(membersAPI, 'getMemberForId');
     getMemberForId.callsArgWith(1, null, sampleMember);
@@ -73,8 +73,8 @@ describe('Mailarchive', function () {
     var sampleMember1 = {id: "sender ID 1", nickname: 'nick1', firstname: 'firstname1', lastname: 'lastname1'};
     var sampleMember2 = {id: "sender ID 2", nickname: 'nick2', firstname: 'firstname2', lastname: 'lastname2'};
     var sampleMemberList = [sampleMember1, sampleMember2];
-    var sampleMail1 = new Mail({ subject: "Mail 1", from: {name: "Sender Name 1", id: sampleMember1.id} });
-    var sampleMail2 = new Mail({ subject: "Mail 2", from: {name: "Sender Name 2", id: sampleMember2.id} });
+    var sampleMail1 = new Mail({ id: "Mail 1", subject: "Mail 1", from: {name: "Sender Name 1", id: sampleMember1.id} });
+    var sampleMail2 = new Mail({ id: "Mail 2", subject: "Mail 2", from: {name: "Sender Name 2", id: sampleMember2.id} });
     var sampleMailList = [sampleMail1, sampleMail2];
 
     var getMembersForIds = sinonSandbox.stub(membersAPI, 'getMembersForIds');
