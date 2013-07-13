@@ -6,26 +6,31 @@ block scripts
   script(src="/clientscripts/check-announcementform.js")
 
 block title
-  | Aktivität
+  | Nachricht
 
 block content
   form(id='announcementform', action='/announcements/submit', method='post')
     if (announcement.id)
       mixin hidden('id', announcement)
+      mixin hidden('fromDate', announcement)
     mixin hidden('previousUrl', announcement, 'url')
     fieldset
       .row-fluid
         .span12
           legend
             | Nachricht
+            if (announcement.id)
+              |  bearbeiten
+            else
+              |  anlegen
       .row-fluid
         .span6
           mixin text('title', 'Titel', announcement)
           mixin text('url', 'URL', announcement)
           // TODO: url automatisch aus dem title bilden lassen, z. B. Leerzeichen in Bindestriche umwandeln, alles klein schreiben etc.
-          mixin textarea('text', 'Text der Nachricht', announcement)
+          mixin textarea('message', 'Text der Nachricht', announcement)
           mixin text('author', 'Autor', announcement)
-          mixin date('thruDate', 'thruDate', announcement)
+          mixin date('thruDate', 'Anzeigen bis einschließlich', announcement)
       .row-fluid
         .span12
           button.btn.btn-primary.pull-right(type="submit") Speichern
