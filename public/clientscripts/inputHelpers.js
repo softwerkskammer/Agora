@@ -1,6 +1,6 @@
 "use strict";
-function urlFromText(urlId, titleId) {
-  var titleInput = document.getElementById(titleId);
+function fillUrlFromText(urlId, textId) {
+  var titleInput = document.getElementById(textId);
   var title = titleInput.value;
   var urlContent = encodeURIComponent(title.replace(/^\s\s*/, '').replace(/\s\s*$/, '').replace(/[ #,!?ßöäü:"']/gi, '_'));
   var urlInput = document.getElementById(urlId);

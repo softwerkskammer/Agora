@@ -4,7 +4,7 @@ include  ../../../views/formComponents
 
 block scripts
   script(src="/clientscripts/check-activityform.js")
-  script(src="/clientscripts/fieldHelpers.js")
+  script(src="/clientscripts/inputHelpers.js")
 
 block title
   | Aktivität
@@ -41,7 +41,7 @@ block content
           mixin textarea('description', 'Beschreibung', activity)
         .span6
           .control-group
-            button.btn.btn-mini.pull-right(onclick="urlFromText('url', 'title')") 
+            button.btn.btn-mini.pull-right(onclick="fillUrlFromText('url', 'title')") 
               | Vorschlag
             mixin controlLabel('url', 'Adress-Suffix', 'Für die Verlinkung innerhalb dieser Site')
             input.input-xlarge.input-block-level(id='url', type='text', name='url', value=activity['url'])
