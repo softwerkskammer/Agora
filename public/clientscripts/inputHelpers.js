@@ -5,5 +5,5 @@ function fillUrlFromText(urlId, textId) {
   var urlContent = encodeURIComponent(title.replace(/^\s\s*/, '').replace(/\s\s*$/, '').replace(/[ #,!?ßöäü:"']/gi, '_'));
   var urlInput = document.getElementById(urlId);
   urlInput.value = urlContent;
-  window.setTimeout(function () { urlInput.focus(); }, 0);
+  urlInput.focus();
 }

@@ -41,7 +41,7 @@ block content
           mixin textarea('description', 'Beschreibung', activity)
         .span6
           .control-group
-            button.btn.btn-mini.pull-right(onclick="fillUrlFromText('url', 'title')") 
+            button.btn.btn-mini.pull-right(type="button", onclick="fillUrlFromText('url', 'title')") 
               | Vorschlag
             mixin controlLabel('url', 'Adress-Suffix', 'Für die Verlinkung innerhalb dieser Site')
             input.input-xlarge.input-block-level(id='url', type='text', name='url', value=activity['url'])
