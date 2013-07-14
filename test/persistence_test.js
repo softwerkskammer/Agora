@@ -1,6 +1,7 @@
 "use strict";
 
 var should = require('chai').should();
+var expect = require('chai').expect;
 var conf = require('./configureForTest');
 var persistence = require('../lib/persistence/persistence')('teststore');
 
@@ -19,6 +20,20 @@ describe('The persistence store', function () {
 
   beforeEach(function (done) {
     clearStore(done);
+  });
+
+  it('fails to save object without id', function (done) {
+    persistence.save({}, function (err) {
+      expect(err.message).to.equal("Given object has no valid id");
+      done();
+    });
+  });
+
+  it('fails to save object with id null', function (done) {
+    persistence.save({id : null}, function (err) {
+      expect(err.message).to.equal("Given object has no valid id");
+      done();
+    });
   });
 
   it('retrieves none for non-existing id', function (done) {
