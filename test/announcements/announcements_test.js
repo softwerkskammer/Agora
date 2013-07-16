@@ -20,6 +20,7 @@ var dummyAnnouncement = new Announcement({
 });
 
 var announcementsAPI = conf.get('beans').get('announcementsAPI');
+var membersAPI = conf.get('beans').get('membersAPI');
 var validation = conf.get('beans').get('validation');
 
 var app = conf.get('beans').get('announcementsApp')(express());
@@ -70,6 +71,10 @@ describe('Announcement application', function () {
   });
 
   it('shows the details of one announcement as retrieved from the store', function (done) {
+    var dummyMember = {nickname: "nickname", id: "member ID"};
+    sinonSandbox.stub(membersAPI, 'getMemberForId', function (id, callback) {
+      callback(null, dummyMember);
+    });
     var url = 'url';
 
     request(app)
