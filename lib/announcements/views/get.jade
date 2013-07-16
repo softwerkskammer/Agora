@@ -14,4 +14,5 @@ block content
         .span8
           p !{announcement.messageHTML()}
           p
-            i #{announcement.author}
+            em
+              a(href="/members/#{announcement.authorname}") #{announcement.authorname}
