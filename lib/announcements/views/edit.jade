@@ -14,6 +14,7 @@ block content
       mixin hidden('id', announcement)
       mixin hidden('fromDate', announcement)
     mixin hidden('previousUrl', announcement, 'url')
+    mixin hidden('author', announcement)
     fieldset
       .row-fluid
         .span12
@@ -29,7 +30,6 @@ block content
           mixin text('url', 'URL', announcement)
           // TODO: url automatisch aus dem title bilden lassen, z. B. Leerzeichen in Bindestriche umwandeln, alles klein schreiben etc.
           mixin textarea('message', 'Text der Nachricht', announcement)
-          mixin text('author', 'Autor', announcement)
           mixin date('thruDate', 'Anzeigen bis einschließlich', announcement)
       .row-fluid
         .span12
