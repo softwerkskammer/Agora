@@ -116,6 +116,31 @@ describe('Announcement application', function () {
       });
   });
 
+  it('will display member`s nickname as author name', function () {
+    var dummyMember = {nickname: "nickname", id: "member ID"};
+    sinonSandbox.stub(membersAPI, 'getMemberForId', function (id, callback) {
+      callback(null, dummyMember);
+    });
+
+    announcementsAPI.getAuthorName(dummyAnnouncement, function () {});
+    expect(dummyAnnouncement.authorname).to.equal('nickname');
+  });
+
+  it('will display `automatisch` as author name, when there is no author', function () {
+    var dummyMember = {nickname: "nickname", id: "member ID"};
+    sinonSandbox.stub(membersAPI, 'getMemberForId', function (id, callback) {
+      callback(null, dummyMember);
+    });
+
+    dummyAnnouncement.author = '';
+    announcementsAPI.getAuthorName(dummyAnnouncement, function () {});
+    expect(dummyAnnouncement.authorname).to.equal('automatisch');
+
+    dummyAnnouncement.author = null;
+    announcementsAPI.getAuthorName(dummyAnnouncement, function () {});
+    expect(dummyAnnouncement.authorname).to.equal('automatisch');
+  });
+
 //  it('shows a 404 if the url cannot be found in the store for the detail page', function (done) {
 //    var link = dummyAnnouncement.url + '-does-not-exist';
 //    console.log(link);
