@@ -19,14 +19,17 @@ describe('Groups application', function () {
 
     sinon.stub(sympa, 'getUsersOfList', function (groupname, callback) {
       if (groupname === 'groupa') {
-        return callback(['peter@google.de', 'hans@aol.com']);
+        return callback(null, ['peter@google.de', 'hans@aol.com']);
       }
     });
-    sinon.stub(membersPersistence, 'listByEMails', function (emails, sortOrder, callback) {
-      return callback(null, [
-        { firstname: 'Hans', lastname: 'Dampf' },
-        { firstname: 'Peter', lastname: 'Meyer' }
-      ]);
+    sinon.stub(membersPersistence, 'getByField', function (email, callback) {
+      if (email.email.test('hans@aol.com')) {
+        return callback(null, { firstname: 'Hans', lastname: 'Dampf' });
+      }
+      if (email.email.test('peter@google.de')) {
+        return callback(null, { firstname: 'Peter', lastname: 'Meyer' });
+      }
+      return callback("not found");
     });
 
     sinon.stub(groupsPersistence, 'listByIds', function (list, sortOrder, callback) {
