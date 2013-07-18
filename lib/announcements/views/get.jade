@@ -15,4 +15,7 @@ block content
           p !{announcement.messageHTML()}
           p
             em
-              a(href="/members/#{announcement.authorname}") #{announcement.authorname}
+              if ('automatisch' === announcement.authorname)
+                | #{announcement.authorname}
+              else
+                a(href="/members/#{announcement.authorname}") #{announcement.authorname}
