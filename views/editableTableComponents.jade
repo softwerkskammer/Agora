@@ -6,7 +6,7 @@ mixin tabHeadNarrow(no, title)
 
 mixin tabDateNarrow(no, object, name, callback, placementOptional)
   td(class="span#{no}"): a.tabdatepicker(id="#{name}", href="#", data-type="date", data-placement="#{placementOptional ? placementOptional : 'right'}", 
-    data-pk="#{object.id}", data-url="#{callback}") #{object[name]}
+    data-pk="#{object.id}", data-url="#{callback}") #{moment.unix(eval(object[name])).format('DD.MM.YYYY')}
 
 mixin tabText(no, object, name, callback, placementOptional)
   td(class="span#{no}"): a(id="#{name}", href="#", data-type="text", data-tpl="<input type=\"text\" class=\"input-xlarge\">",
