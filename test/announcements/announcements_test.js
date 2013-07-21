@@ -15,11 +15,12 @@ var dummyAnnouncement = new Announcement({
   url: 'url',
   message: 'text',
   author: 'author',
-  fromDate: 1372461025223, // 29.06.2013
+  fromDate: 1372456800, // 29.06.2013
   thruDate: 1388444400 // 31.12.2013
 });
 
 var announcementsAPI = conf.get('beans').get('announcementsAPI');
+var membersAPI = conf.get('beans').get('membersAPI');
 var validation = conf.get('beans').get('validation');
 
 var app = conf.get('beans').get('announcementsApp')(express());
@@ -70,6 +71,10 @@ describe('Announcement application', function () {
   });
 
   it('shows the details of one announcement as retrieved from the store', function (done) {
+    var dummyMember = {nickname: "nickname", id: "member ID"};
+    sinonSandbox.stub(membersAPI, 'getMemberForId', function (id, callback) {
+      callback(null, dummyMember);
+    });
     var url = 'url';
 
     request(app)
@@ -80,6 +85,60 @@ describe('Announcement application', function () {
         expect(getAnnouncement.calledWith(url)).to.be.true;
         done(err);
       });
+  });
+
+  it('shows a thruDate when editing an announcement having a thruDate', function (done) {
+    dummyAnnouncement.id = 1234;
+    var url = 'url';
+
+    request(app)
+      .get('/edit/' + url)
+      .expect(200)
+      .expect(/<input id="thruDate" type="text" name="thruDate" value="1388444400" class="input-block-level input-xlarge datepicker"\/>/)
+      .expect(/<legend>Nachricht bearbeiten/, function (err) {
+        expect(getAnnouncement.calledWith(url)).to.be.true;
+        done(err);
+      });
+  });
+
+  it('shows no thruDate when editing an announcement having no thruDate', function (done) {
+    dummyAnnouncement.id = 1234;
+    dummyAnnouncement.thruDate = null;
+    var url = 'url';
+
+    request(app)
+      .get('/edit/' + url)
+      .expect(200)
+      .expect(/<input id="thruDate" type="text" name="thruDate" class="input-block-level input-xlarge datepicker"\/>/)
+      .expect(/<legend>Nachricht bearbeiten/, function (err) {
+        expect(getAnnouncement.calledWith(url)).to.be.true;
+        done(err);
+      });
+  });
+
+  it('will display member`s nickname as author name', function () {
+    var dummyMember = {nickname: "nickname", id: "member ID"};
+    sinonSandbox.stub(membersAPI, 'getMemberForId', function (id, callback) {
+      callback(null, dummyMember);
+    });
+
+    announcementsAPI.getAuthorName(dummyAnnouncement, function () {});
+    expect(dummyAnnouncement.authorname).to.equal('nickname');
+  });
+
+  it('will display `automatisch` as author name, when there is no author', function () {
+    var dummyMember = {nickname: "nickname", id: "member ID"};
+    sinonSandbox.stub(membersAPI, 'getMemberForId', function (id, callback) {
+      callback(null, dummyMember);
+    });
+
+    dummyAnnouncement.author = '';
+    announcementsAPI.getAuthorName(dummyAnnouncement, function () {});
+    expect(dummyAnnouncement.authorname).to.equal('automatisch');
+
+    dummyAnnouncement.author = null;
+    announcementsAPI.getAuthorName(dummyAnnouncement, function () {});
+    expect(dummyAnnouncement.authorname).to.equal('automatisch');
   });
 
 //  it('shows a 404 if the url cannot be found in the store for the detail page', function (done) {

@@ -208,6 +208,7 @@ describe('Mail index page', function () {
 
   it('references sender member page if available', function (done) {
     var displayedMailHeader = new Mail({
+      id: "Mail 1",
       from: {name: "Sender Name", id: "sender ID"},
       subject: "Mail 1",
       group: "group"
@@ -230,6 +231,7 @@ describe('Mail index page', function () {
 
   it('references sender member page if available', function (done) {
     var displayedMailHeader = new Mail({
+      id: "Mail 1",
       from: {name: "Sender Name", id: "sender ID"},
       subject: "Mail 1",
       group: "group"
