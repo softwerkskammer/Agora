@@ -14,8 +14,8 @@ var dummyAnnouncement = new Announcement({
   url: announcementUrl,
   text: 'text',
   author: 'author',
-  fromDate: 1372461025223, // 29.06.2013
-  thruDate: 'thruDate'
+  fromDate: 1372456800, // 29.06.2013
+  thruDate: 1388444400 // 31.12.2013
 });
 
 //var store = conf.get('beans').get('announcementstore');
@@ -101,7 +101,17 @@ describe('Announcements API', function () {
 
   it('creates an id out of the fields `author`, `title` and `timeUnix` when saving', function (done) {
     announcementsAPI.saveAnnouncement(dummyAnnouncement, function (err, result) {
-      expect(result).to.have.property('id', 'author_title_1372461025223');
+      expect(result).to.have.property('id', 'author_title_1372456800');
+      done();
+    });
+  });
+
+  it('converts a German date to unix timestamp when saving', function (done) {
+    dummyAnnouncement.fromDate = '29.06.2013';
+    dummyAnnouncement.thruDate = '31.12.2013';
+    announcementsAPI.convertDatesBeforeSaving(dummyAnnouncement, function (err, result) {
+      expect(result.fromDate).to.equal(1372456800);
+      expect(result.thruDate).to.equal(1388444400);
       done();
     });
   });
