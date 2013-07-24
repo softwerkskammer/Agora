@@ -39,3 +39,22 @@ describe('toArray function', function () {
 
 });
 
+describe('toLowerCaseRegExp function', function () {
+
+  it('transforms a string to a regexp', function () {
+    var result = misc.toLowerCaseRegExp("string");
+    expect(result.toString()).to.equal("/^string$/i");
+    expect("String").to.match(result);
+  });
+
+  it('is case insensitive', function () {
+    var result = misc.toLowerCaseRegExp("StrInG");
+    expect("StRing").to.match(result);
+  });
+
+  it('escapes special regexp characters', function () {
+    var result = misc.toLowerCaseRegExp("All of these should be escaped: \\ ^ $ * + ? . ( ) | { } [ ]");
+    expect(result.toString()).to.equal("/^All of these should be escaped: \\\\ \\^ \\$ \\* \\+ \\? \\. \\( \\) \\| \\{ \\} \\[ \\]$/i");
+  });
+
+});
