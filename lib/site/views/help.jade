@@ -1,0 +1,57 @@
+extends ../../../views/layout
+
+include ../../../views/layoutComponents
+
+block title
+  | Tipps & Hilfe
+block content
+  .row-fluid
+    .span12
+      .page-header
+        h2 Tipps & FAQs
+  .row-fluid
+    .span6
+      h3 Profil
+      dl
+        dt Wie kann ich ein Profilbild hinterlegen?
+        dd Funktioniert aktuell nur über Gravatar. Wenn Deine hinterlegte Emailadresse bei Gravatar ein Bild hinterlegt hat, zeigen wir das. 
+        dt Kann ich mehr als eine Emailadresse hinterlegen?
+        dd Nein. Uns ist klar, dass dies eventuell beim Posten an eine Gruppe unangenehm ist. Leider ist dies mit unserem Listen-Backend nicht  
+          | ganz einfach, mehrere Adressen für einen User zu verwalten. 
+        dt Kann ich meinen Nickname ändern?
+        dd Ja, das geht.
+        dt Kann ich meine Emailadresse ändern?
+        dd Ja, das geht.
+        dt Kann ich meine Authentifizierungsmethode ändern?
+        dd Nein, aktuell nicht.
+    .span6
+      h3 Gruppen
+      dl
+        dt Was hat es mit den Gruppen auf sich?
+        dd Die Gruppen repräsentieren regionale oder thematische Einheiten und sind gleichzeitig Emaillisten 
+        dt Warum erhalte ich immer Mails, wenn ich einer Gruppe beitrete oder austrete?
+        dd Das liegt daran, dass im Hintergrund ein "ganz normaler" Listenserver die Listen verwaltet. Dieser ist entsprechend
+          | konfiguriert.
+        dt Kann ich aus einer Gruppe über Email austreten? 
+        dd Ja, das geht.
+  .row-fluid
+    .span6
+      h3 Datenschutz
+      dl
+        dt Sichtbarkeit der Daten
+        dd Grundsätzlich sind Mitgliederdaten nur für registrierte Mitglieder sichtbar.
+        dt Sichtbarkeit von Emailadressen
+        dd Emailadressen sind nur für Administratoren sichtbar. Sollte dies nicht so sein, ist das ein Bug
+        dt Fehlerfreiheit
+        dd Die Software ist Open Source und mit Sicherheit voller Fehler. Auch, was den Datenschutz betrifft.
+        dt Cookies, Tracking etc.
+        dd Wir benutzen ein Cookie für die Sessionverwaltung, aber keinerlei Tracker
+    .span6
+      h3 Verwaltung
+      dl
+        dt Wie werde ich Administrator?
+        dd Wenn Du einen Grund hast, Administrator werden zu wollen, schicke uns eine Mail. Dann bist Du es schneller, als
+          | Dir lieb ist :)
+        dt Welche Pflichten habe ich als Administrator?
+        dd Pflichten keine, nur Verantwortung: Gehe verantwortungsvoll mit Deinen erweiterten Rechten um. Diese Site baut
+          | auf das Prinzip Vertrauen.
