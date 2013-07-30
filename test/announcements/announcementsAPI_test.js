@@ -14,11 +14,10 @@ var dummyAnnouncement = new Announcement({
   url: announcementUrl,
   text: 'text',
   author: 'author',
-  fromDate: 1372456800, // 29.06.2013
-  thruDate: 1388444400 // 31.12.2013
+  fromDate: 1372464000, // moment.utc('29.06.2013', 'DD.MM.YYYY').unix()
+  thruDate: 1388448000 // moment.utc('31.12.2013', 'DD.MM.YYYY').unix()
 });
 
-//var store = conf.get('beans').get('announcementstore');
 var announcementsAPI = conf.get('beans').get('announcementsAPI');
 
 describe('Announcements API', function () {
@@ -31,7 +30,6 @@ describe('Announcements API', function () {
       return callback(null, [dummyAnnouncement]);
     });
     sinon.stub(announcementsAPI, 'saveAnnouncement', function (dummyAnnouncement, callback) {
-//      dummyAnnouncement.timeUnix = moment(dummyAnnouncement.fromDate, "MM-DD-YYYY").unix();
       dummyAnnouncement.id = fieldHelpers.createLinkFrom([dummyAnnouncement.author, dummyAnnouncement.title, dummyAnnouncement.fromDate]);
       return callback(null, dummyAnnouncement);
     });
@@ -92,16 +90,9 @@ describe('Announcements API', function () {
     });
   });
 
-//  it('gets the field `timeUnix` from a German date when saving', function (done) {
-//    announcementsAPI.saveAnnouncement(dummyAnnouncement, function (err, result) {
-//      expect(result).to.have.property('fromDate', 1372461025223);
-//      done();
-//    });
-//  });
-
   it('creates an id out of the fields `author`, `title` and `timeUnix` when saving', function (done) {
     announcementsAPI.saveAnnouncement(dummyAnnouncement, function (err, result) {
-      expect(result).to.have.property('id', 'author_title_1372456800');
+      expect(result).to.have.property('id', 'author_title_1372464000');
       done();
     });
   });
@@ -109,9 +100,9 @@ describe('Announcements API', function () {
   it('converts a German date to unix timestamp when saving', function (done) {
     dummyAnnouncement.fromDate = '29.06.2013';
     dummyAnnouncement.thruDate = '31.12.2013';
-    announcementsAPI.convertDatesBeforeSaving(dummyAnnouncement, function (err, result) {
-      expect(result.fromDate).to.equal(1372456800);
-      expect(result.thruDate).to.equal(1388444400);
+    announcementsAPI.convertDates(dummyAnnouncement, function (err, result) {
+      expect(result.fromDate).to.equal(1372464000);
+      expect(result.thruDate).to.equal(1388448000);
       done();
     });
   });

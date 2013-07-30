@@ -7,7 +7,7 @@ block content
     .span12
       .page-header
         h2 #{announcement.title}&nbsp;
-          small #{announcement.readableFromDate()}
+          small #{announcement.readableDate(announcement.fromDate)}
           if (typeof(user) !== 'undefined' && user.member.isAdmin)
             a.pull-right.btn(href="/announcements/edit/#{encodeURIComponent(announcement.url)}"): i.icon-edit
       .row-fluid

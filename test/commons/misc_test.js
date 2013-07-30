@@ -38,4 +38,3 @@ describe('toArray function', function () {
   });
 
 });
-
