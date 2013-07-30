@@ -16,8 +16,8 @@ var dummyAnnouncement = new Announcement({
   url: 'url',
   message: 'text',
   author: 'author',
-  fromDate: 1372456800, // 29.06.2013
-  thruDate: 1388444400 // 31.12.2013
+  fromDate: 1375056000, // 29.07.2013
+  thruDate: 1388448000 // 31.12.2013
 });
 
 var announcementsAPI = conf.get('beans').get('announcementsAPI');
@@ -81,7 +81,7 @@ describe('Announcement application', function () {
     request(app)
       .get('/' + url)
       .expect(200)
-      .expect(/&nbsp;<small>29.06.2013/)
+      .expect(/&nbsp;<small>29.07.2013/)
       .expect(/<h2>title/, function (err) {
         expect(getAnnouncement.calledWith(url)).to.be.true;
         done(err);
