@@ -3,9 +3,6 @@
 var expect = require('chai').expect;
 var sinon = require('sinon');
 var conf = require('../configureForTest');
-//var moment = require('moment');
-
-var fieldHelpers = conf.get('beans').get('fieldHelpers');
 var Announcement = conf.get('beans').get('announcement');
 
 var announcementUrl = 'eineSchoeneUrl';
@@ -14,32 +11,36 @@ var dummyAnnouncement = new Announcement({
   url: announcementUrl,
   text: 'text',
   author: 'author',
-  fromDate: 1372464000, // moment.utc('29.06.2013', 'DD.MM.YYYY').unix()
-  thruDate: 1388448000 // moment.utc('31.12.2013', 'DD.MM.YYYY').unix()
+  fromUnix: 1372464000, // moment.utc('29.06.2013', 'DD.MM.YYYY').unix()
+  thruUnix: 1388448000 // moment.utc('31.12.2013', 'DD.MM.YYYY').unix()
 });
+
+var store = conf.get('beans').get('announcementstore');
 
 var announcementsAPI = conf.get('beans').get('announcementsAPI');
 
 describe('Announcements API', function () {
 
   beforeEach(function (done) {
-    sinon.stub(announcementsAPI, 'getAnnouncement', function (url, callback) {
-      callback(null, (url === announcementUrl) ? dummyAnnouncement : null);
+    sinon.stub(store, 'saveAnnouncement', function (announcement, callback) {
+      callback(null);
     });
-    sinon.stub(announcementsAPI, 'allAnnouncements', function (callback) {
-      return callback(null, [dummyAnnouncement]);
+    sinon.stub(store, 'getAnnouncement', function (url, callback) {
+      if (url === announcementUrl) {
+        return callback(null, dummyAnnouncement);
+      }
+      callback(null, null);
     });
-    sinon.stub(announcementsAPI, 'saveAnnouncement', function (dummyAnnouncement, callback) {
-      dummyAnnouncement.id = fieldHelpers.createLinkFrom([dummyAnnouncement.author, dummyAnnouncement.title, dummyAnnouncement.fromDate]);
-      return callback(null, dummyAnnouncement);
+    sinon.stub(store, 'allAnnouncements', function (callback) {
+      callback(null, [dummyAnnouncement]);
     });
     done();
   });
 
   afterEach(function (done) {
-    announcementsAPI.getAnnouncement.restore();
-    announcementsAPI.allAnnouncements.restore();
-    announcementsAPI.saveAnnouncement.restore();
+    store.saveAnnouncement.restore();
+    store.getAnnouncement.restore();
+    store.allAnnouncements.restore();
     done();
   });
 
@@ -98,13 +99,16 @@ describe('Announcements API', function () {
   });
 
   it('converts a German date to unix timestamp when saving', function (done) {
-    dummyAnnouncement.fromDate = '29.06.2013';
-    dummyAnnouncement.thruDate = '31.12.2013';
-    announcementsAPI.convertDates(dummyAnnouncement, function (err, result) {
-      expect(result.fromDate).to.equal(1372464000);
-      expect(result.thruDate).to.equal(1388448000);
-      done();
-    });
+    var object = {
+      title: 'title',
+      url: announcementUrl,
+      text: 'text',
+      author: 'author',
+      thruDate: '31.12.2013'
+    };
+    var result = new Announcement(object);
+    expect(result.thruUnix).to.equal(1388448000);
+    done();
   });
 
 });

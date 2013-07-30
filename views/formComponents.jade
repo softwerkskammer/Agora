@@ -55,15 +55,15 @@ mixin hidden(name, object, optionalAlternateValue)
 
 // PICKERS
 // you need to include this initPickers.js, if you use the color-, date- or timepicker
-mixin date(name, label, object)
+mixin date(name, label, object, value)
   .control-group
     label(class="control-label", for=name) #{label}:
-    input(id=name, class="input-block-level input-xlarge datepicker", type='text', name=name, value=object['readableDate'](object[name]))
+    input(id=name, class="input-block-level input-xlarge datepicker", type='text', name=name, value=(value ? value : object[name]))
 
-mixin time(name, label, object)
+mixin time(name, label, object, value)
   .control-group.bootstrap-timepicker
     label(class="control-label", for=name) #{label}:
-    input(id=name, class="input-block-level input-xlarge timepicker", type='text', name=name, value=object[name])
+    input(id=name, class="input-block-level input-xlarge timepicker", type='text', name=name, value=(value ? value : object[name]))
 
 mixin colorPicker(name, object)
   .control-group
