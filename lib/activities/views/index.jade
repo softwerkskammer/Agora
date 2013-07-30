@@ -14,6 +14,6 @@ block content
       dl.dl-horizontal
         for activity in activities
           dt
-            | #{activity.startDate} 
+            | #{activity.startDate()} 
           dd: a(href='#{encodeURIComponent(activity.url)}') #{activity.title}
             | in #{activity.location} (#{activity.groupName(groups)})
