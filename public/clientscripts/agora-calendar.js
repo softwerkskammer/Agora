@@ -1,4 +1,4 @@
-/* global $, document, window */
+/* global $, document */
 "use strict";
 
 $(document).ready(function () {
@@ -23,13 +23,12 @@ $(document).ready(function () {
 
     events: '/activities/eventsForSidebar',
     eventMouseover: function (event, jsEvent, view) {
-      var activity = event.activity;
       var placement = "left";
       if (event.dayOfWeek < 4) {
         placement = "right";
       }
       $(this).tooltip({
-        title: activity.startTime + ": " + activity.title,
+        title: event.startTime + ": " + event.title,
         trigger: "manual",
         placement: placement
       });

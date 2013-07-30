@@ -10,7 +10,7 @@ var conf = require('../configureForTest');
 
 var Activity = conf.get('beans').get('activity');
 var dummyActivity = new Activity({title: 'title', description: 'description', assignedGroup: 'assignedGroup',
-  location: 'location', direction: 'direction', startDate: 'startDate', startTime: 'startTime', url: 'url'});
+  location: 'location', direction: 'direction', startDate: '01.01.2013', url: 'url'});
 
 var activitiesAPI = conf.get('beans').get('activitiesAPI');
 var groupsAPI = conf.get('beans').get('groupsAPI');
@@ -62,7 +62,7 @@ describe('Activity application', function () {
     request(app)
       .get('/' + url)
       .expect(200)
-      .expect(/<small>startDate/)
+      .expect(/<small>01.01.2013/)
       .expect(/<h2>title/, function (err) {
         expect(getActivity.calledWith(url)).to.be.true;
         done(err);

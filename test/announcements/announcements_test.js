@@ -16,8 +16,8 @@ var dummyAnnouncement = new Announcement({
   url: 'url',
   message: 'text',
   author: 'author',
-  fromDate: 1375056000, // 29.07.2013
-  thruDate: 1388448000 // 31.12.2013
+  fromUnix: 1375056000, // 29.07.2013
+  thruUnix: 1388448000 // 31.12.2013
 });
 
 var announcementsAPI = conf.get('beans').get('announcementsAPI');
@@ -102,21 +102,6 @@ describe('Announcement application', function () {
       });
   });
 
-  it('shows no thruDate when editing an announcement having no thruDate', function (done) {
-    dummyAnnouncement.id = 1234;
-    dummyAnnouncement.thruDate = null;
-    var url = 'url';
-
-    request(app)
-      .get('/edit/' + url)
-      .expect(200)
-      .expect(/<input id="thruDate" type="text" name="thruDate" class="input-block-level input-xlarge datepicker"\/>/)
-      .expect(/<legend>Nachricht bearbeiten/, function (err) {
-        expect(getAnnouncement.calledWith(url)).to.be.true;
-        done(err);
-      });
-  });
-
   it('will display member`s nickname as author name', function () {
     var dummyMember = {nickname: "nickname", id: "member ID"};
     sinonSandbox.stub(membersAPI, 'getMemberForId', function (id, callback) {
@@ -168,22 +153,16 @@ describe('Announcement application', function () {
       url: 'url',
       message: 'text',
       author: 'author',
-      fromDate: '29.06.2013',
-      thruDate: 1388448000
+      fromUnix: 1388448000,
+      thruUnix: 1388448000
     });
-    expect(dummyAnnouncement.thruDate).to.equal(1388448000);
+    expect(dummyAnnouncement.thruUnix).to.equal(1388448000);
   });
 
   it('sets fromDate to current timestamp, when a new Announcement gets created', function () {
-    var dummyAnnouncement = new Announcement({
-      title: 'title',
-      url: 'url',
-      message: 'text',
-      author: 'author'
-      // no fromDate
-    });
+    var dummyAnnouncement = new Announcement();
     var now = moment.utc().unix();
-    expect(dummyAnnouncement.fromDate).to.equal(now);
+    expect(dummyAnnouncement.fromUnix).to.equal(now);
   });
 
 });
