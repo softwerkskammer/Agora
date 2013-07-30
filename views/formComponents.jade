@@ -58,7 +58,7 @@ mixin hidden(name, object, optionalAlternateValue)
 mixin date(name, label, object)
   .control-group
     label(class="control-label", for=name) #{label}:
-    input(id=name, class="input-block-level input-xlarge datepicker", type='text', name=name, value=object[name])
+    input(id=name, class="input-block-level input-xlarge datepicker", type='text', name=name, value=object['readableDate'](object[name]))
 
 mixin time(name, label, object)
   .control-group.bootstrap-timepicker

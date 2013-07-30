@@ -13,6 +13,6 @@ block content
 
     dl.dl-horizontal
       for announcement in announcements
-        dt #{moment(announcement.fromDate).format('DD.MM.YYYY')}
+        dt #{announcement.readableDate(announcement.fromDate)}
         dd
             a(href='#{encodeURIComponent(announcement.url)}') #{announcement.title}
