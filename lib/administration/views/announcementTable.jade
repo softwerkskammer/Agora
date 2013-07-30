@@ -38,7 +38,7 @@ block content
             td(class="span1"): a.btn-small(href="/announcements/edit/#{encodeURIComponent(announcement.url)}"): i.icon-edit
             mixin tabTextNarrow(1, announcement, 'title', 'announcementChanged', 'right')
             mixin tabTextNarrow(2, announcement, 'url', 'announcementChanged')
-            mixin tabDateNarrow(1, announcement, 'fromDate', 'announcementChanged')
-            mixin tabDateNarrow(1, announcement, 'thruDate', 'announcementChanged')
+            mixin tabDateNarrowWithValue(1, announcement, 'fromDate', 'announcementChanged', announcement.fromDate())
+            mixin tabDateNarrowWithValue(1, announcement, 'thruDate', 'announcementChanged', announcement.thruDate())
             mixin tabTextarea(1, announcement, 'message', 'announcementChanged')
             mixin tabTextNarrow(1, announcement, 'author', 'announcementChanged')

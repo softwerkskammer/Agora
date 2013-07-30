@@ -85,7 +85,7 @@ html
                 h4 Das Neueste
                 dl
                   for announcement in latestNews
-                    dt #{announcement.readableDate()}
+                    dt #{announcement.fromDate()}
                     dd
                       a(href='/announcements/#{encodeURIComponent(announcement.url)}') #{announcement.title}
 

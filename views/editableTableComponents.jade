@@ -4,9 +4,10 @@ mixin tabHead(no, title)
 mixin tabHeadNarrow(no, title)
   th(class="span#{no}"): .ellipsis.narrow #{title}
 
+// TODO: id="#{name}" may be used more than once what leads to invalid html!
 mixin tabDateNarrow(no, object, name, callback, placementOptional)
   td(class="span#{no}"): a.tabdatepicker(id="#{name}", href="#", data-type="date", data-placement="#{placementOptional ? placementOptional : 'right'}", 
-    data-pk="#{object.id}", data-url="#{callback}") #{object[name]}
+    data-pk="#{object.id}", data-url="#{callback}") #{object[name]()}
 
 mixin tabDateNarrowWithValue(no, object, name, callback, value)
   td(class="span#{no}"): a.tabdatepicker(id="#{name}", href="#", data-type="date", data-placement="right", 

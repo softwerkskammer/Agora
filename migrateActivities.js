@@ -2,7 +2,6 @@
 
 require("./configure"); // initializing parameters
 var _ = require('underscore');
-//var moment = require('moment');
 
 var conf = require('nconf');
 
