@@ -11,7 +11,7 @@ block content
         h2 #{group.longName}&nbsp; 
           small #{group.type} 
           if (user && user.member.isAdmin)
-            a.pull-right.btn(href="/groups/edit/#{group.id}"): i.icon-edit
+            a.pull-right.btn(href="/groups/edit/#{group.id}", title="Bearbeiten"): i.icon-edit
       p
         strong
           | Adresse:
