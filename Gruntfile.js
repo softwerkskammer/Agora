@@ -25,7 +25,7 @@ module.exports = function (grunt) {
     'mocha-hack': {
       options: {
         globals: ['should'],
-        timeout: 3000,
+        timeout: 5000,
         ignoreLeaks: false,
         ui: 'bdd',
         reporter: 'spec'
