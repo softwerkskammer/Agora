@@ -10,7 +10,7 @@ block content
         h2 Gruppen&nbsp;
           small Alle
           if (typeof(user) !== 'undefined' && user.member.isAdmin)
-            a.pull-right.btn(href="new/"): i.icon-file
+            a.pull-right.btn(href="new/", title="Neue Gruppe"): i.icon-file
   .row-fluid
     .span6
       h3 Regionalgruppen
