@@ -19,7 +19,6 @@ describe('Activity', function () {
     expect(4).to.equal(event.dayOfWeek);
     expect('/activities/myURL').to.equal(event.url);
     expect('#353535').to.equal(event.color);
-    expect(86400).to.equal(event.end - event.start);
     done();
   });
 
