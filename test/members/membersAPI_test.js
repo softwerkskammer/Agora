@@ -66,5 +66,12 @@ describe('MembersAPI', function () {
       done();
     });
   });
+
+  it('rejects nicknames that contain non alphanumeric chars', function (done) {
+    api.isValidNickname('bu°ha', function (err, result) {
+      expect(result).to.be.false;
+      done();
+    });
+  });
 });
 
