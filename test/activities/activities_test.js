@@ -5,7 +5,7 @@ var express = require('express');
 var sinon = require('sinon');
 var sinonSandbox = sinon.sandbox.create();
 var expect = require('chai').expect;
-
+var I18n = require('i18n-2');
 var conf = require('../configureForTest');
 
 var Activity = conf.get('beans').get('activity');
@@ -18,7 +18,16 @@ var membersAPI = conf.get('beans').get('membersAPI');
 var validation = conf.get('beans').get('validation');
 var colors = conf.get('beans').get('colorAPI');
 
-var app = conf.get('beans').get('activitiesApp')(express());
+var mainApp = express();
+mainApp.configure(function () {
+  I18n.expressBind(mainApp, {
+    locales: ['de', 'en']
+  });
+});
+
+var app = conf.get('beans').get('activitiesApp')(mainApp);
+
+
 
 describe('Activity application', function () {
   var allActivities;
