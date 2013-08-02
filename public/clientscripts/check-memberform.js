@@ -6,11 +6,16 @@ var initValidator = function () {
 
     // DO NOT FORGET TO KEEP THIS FILE IN SYNC WITH /lib/commons/validation.js
 
+    jQuery.validator.addMethod("alphanumeric", function(value, element) {
+      return this.optional(element) || /^\w+$/.test(value);
+    });
+
     member_validator = $("#memberform").validate({
         rules: {
           nickname: {
             required: true,
             minlength: 2,
+            alphanumeric: true,
             remote: {
               url: "/members/checknickname",
               data: {
