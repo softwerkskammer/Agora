@@ -9,12 +9,12 @@ var initValidator = function () {
   $.validator.addMethod("alnumdashblank", function(value, element)
                         {
                           return this.optional(element) || /^[a-z0-9 -]+$/i.test(value);
-                        }, "Präfix für Emails darf nur Zahlen, Buchstaben, Leerzeichen und Bindestriche enthalten.");
+                        }, "Präfix für E-Mails darf nur Zahlen, Buchstaben, Leerzeichen und Bindestriche enthalten.");
 
   $.validator.addMethod("alnumdashunderscore", function(value, element)
                         {
                           return this.optional(element) || /^[a-z0-9_-]+$/i.test(value);
-                        }, "Email-Adresse darf nur Zahlen, Buchstaben, Bindestrich und Unterstrich enthalten.");
+                        }, "E-Mail-Adresse darf nur Zahlen, Buchstaben, Bindestrich und Unterstrich enthalten.");
 
   groups_validator = $("#groupform").validate({
     rules: {
