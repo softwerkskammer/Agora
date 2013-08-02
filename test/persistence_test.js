@@ -17,9 +17,7 @@ describe('The persistence store', function () {
     persistence.save(toPersist, done);
   };
 
-  beforeEach(function (done) {
-    clearStore(done);
-  });
+  beforeEach(clearStore);
 
   it('fails to save object without id', function (done) {
     persistence.save({}, function (err) {
@@ -91,9 +89,7 @@ describe('The persistence store for many objects', function () {
     persistence.saveAll([user1, user2, user3, user4], done);
   };
 
-  beforeEach(function (done) {
-    clearStore(done);
-  });
+  beforeEach(clearStore);
 
   it('retrieves all members in ascending order', function (done) {
     storeSampleData(function () {
@@ -153,9 +149,7 @@ describe('The persistence store for Member', function () {
     persistence.save(toPersist, done);
   };
 
-  beforeEach(function (done) {
-    clearStore(done);
-  });
+  beforeEach(clearStore);
 
   it('checks that created has been written', function (done) {
     // this test will definitely fail, if run a microsecond before midnight. - Ideas?
