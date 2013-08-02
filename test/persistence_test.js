@@ -4,18 +4,17 @@ var should = require('chai').should();
 var expect = require('chai').expect;
 var conf = require('./configureForTest');
 var persistence = require('../lib/persistence/persistence')('teststore');
+var clearStore = function (done) {
+  persistence.drop(function () {
+    done(); // here we can ignore errors
+  });
+};
 
 describe('The persistence store', function () {
   var toPersist = {id: 'toPersist', name: 'Heinz'};
 
   var storeSampleData = function (done) {
     persistence.save(toPersist, done);
-  };
-
-  var clearStore = function (done) {
-    persistence.drop(function () {
-      done(); // here we can ignore errors
-    });
   };
 
   beforeEach(function (done) {
@@ -92,12 +91,6 @@ describe('The persistence store for many objects', function () {
     persistence.saveAll([user1, user2, user3, user4], done);
   };
 
-  var clearStore = function (done) {
-    persistence.drop(function () {
-      done(); // here we can ignore errors
-    });
-  };
-
   beforeEach(function (done) {
     clearStore(done);
   });
@@ -158,12 +151,6 @@ describe('The persistence store for Member', function () {
 
   var storeSampleData = function (done) {
     persistence.save(toPersist, done);
-  };
-
-  var clearStore = function (done) {
-    persistence.drop(function () {
-      done(); // here we can ignore errors
-    });
   };
 
   beforeEach(function (done) {
