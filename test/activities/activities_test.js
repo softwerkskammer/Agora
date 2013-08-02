@@ -23,6 +23,7 @@ mainApp.configure(function () {
   I18n.expressBind(mainApp, {
     locales: ['de', 'en']
   });
+  mainApp.use(conf.get('beans').get('expressViewHelper'));
 });
 
 var app = conf.get('beans').get('activitiesApp')(mainApp);
