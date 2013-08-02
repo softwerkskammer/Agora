@@ -30,6 +30,15 @@ test("A nickname 'NochNichtVorhanden' is valid", 2, function () {
   });
 });
 
+test("A nickname '°!\"§$%' is not valid", 2, function () {
+  initValidator();
+  var nickname = $("#nickname");
+  nickname.val("°!\"§$%");
+  // trigger validation
+  equal(member_validator.element(nickname), false);
+  equal(member_validator.errorList[0].message, 'Nickname darf nur Buchstaben, Zahlen und Unterstrich enthalten.');
+});
+
 test("Nickname is mandatory and must have at least two letters", 4, function () {
   initValidator();
   var nickname = $("#nickname");
