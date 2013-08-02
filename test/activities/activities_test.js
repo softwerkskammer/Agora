@@ -69,6 +69,19 @@ describe('Activity application', function () {
       });
   });
 
+  it('activity is exposed as iCalendar', function (done) {
+    var url = 'url';
+
+    request(app)
+      .get('/ical/' + url)
+      .expect(200)
+      .expect('Content-Type', /text\/calendar/)
+      .expect(/BEGIN:VCALENDAR/)
+      .expect(/SUMMARY:title/)
+      .end(function (err) { done(err); });
+  });
+
+
   it('shows a 404 if the id cannot be found in the store for the detail page', function (done) {
     var link = dummyActivity.id + '4711';
 
