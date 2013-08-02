@@ -1,16 +1,16 @@
 extends ../../../views/layout
 
 block title
-  | Aktivitäten
+  | #{i18n.__("activity")}
 
 block content
   .row-fluid
     .span12
       .page-header
-        h2 Aktivitäten&nbsp;
+        h2 #{i18n.__("activity")}&nbsp;
           small #{range}
           if typeof(user) !== 'undefined' && user.member.isAdmin
-            a.pull-right.btn(href="new/", title="Neue Aktivität"): i.icon-file
+            a.pull-right.btn(href="new/", title='#{i18n.__("activity_new")}'): i.icon-file
       dl.dl-horizontal
         for activity in activities
           dt
