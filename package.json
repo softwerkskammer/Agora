@@ -49,7 +49,8 @@
     "CoolBeans": "0.0.8",
     "mailparser": "~0.3.6",
     "nodemailer": "0.4.1",
-    "node-html-encoder": "~0.0.2"
+    "node-html-encoder": "~0.0.2",
+    "icalendar": "~0.6.3"
   },
   "devDependencies": {
     "grunt": "~0.4",
