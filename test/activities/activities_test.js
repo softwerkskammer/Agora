@@ -78,6 +78,7 @@ describe('Activity application', function () {
       .expect('Content-Type', /text\/calendar/)
       .expect('Content-Disposition', /inline; filename=events.ics/)
       .expect(/BEGIN:VCALENDAR/)
+      .expect(/SUMMARY:title/)
       .end(function (err) { done(err); });
   });
 
