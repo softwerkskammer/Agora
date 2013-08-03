@@ -9,6 +9,7 @@ block content
       .page-header
         h2 Aktivitäten&nbsp;
           small #{range}
+          a.pull-right.btn(href="ical/", title="In Kalender importieren"): i.icon-calendar
           if typeof(user) !== 'undefined' && user.member.isAdmin
             a.pull-right.btn(href="new/", title="Neue Aktivität"): i.icon-file
       dl.dl-horizontal

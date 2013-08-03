@@ -21,11 +21,13 @@ var colors = conf.get('beans').get('colorAPI');
 var app = conf.get('beans').get('activitiesApp')(express());
 
 describe('Activity application', function () {
-  var allActivities;
-  var getActivity;
+  var allActivities,
+    upcomingActivities,
+    getActivity;
 
   beforeEach(function (done) {
     allActivities = sinonSandbox.stub(activitiesAPI, 'allActivities', function (callback) {callback(null, [dummyActivity]); });
+    upcomingActivities = sinonSandbox.stub(activitiesAPI, 'upcomingActivities', function (callback) {callback(null, [dummyActivity]); });
     getActivity = sinonSandbox.stub(activitiesAPI, 'getActivity', function (url, callback) {callback(null, (url === 'url') ? dummyActivity : null); });
     sinonSandbox.stub(membersAPI, 'allMembers', function (callback) {callback(null, []); });
     sinonSandbox.stub(groupsAPI, 'getAllAvailableGroups', function (callback) { callback(null, []); });
@@ -68,6 +70,31 @@ describe('Activity application', function () {
         done(err);
       });
   });
+
+  it('upcoming activities are exposed as iCalendar', function (done) {
+    request(app)
+      .get('/ical')
+      .expect(200)
+      .expect('Content-Type', /text\/calendar/)
+      .expect('Content-Disposition', /inline; filename=events.ics/)
+      .expect(/BEGIN:VCALENDAR/)
+      .expect(/SUMMARY:title/)
+      .end(function (err) { done(err); });
+  });
+
+  it('activity is exposed as iCalendar', function (done) {
+    var url = 'url';
+
+    request(app)
+      .get('/ical/' + url)
+      .expect(200)
+      .expect('Content-Type', /text\/calendar/)
+      .expect('Content-Disposition', /inline; filename=url.ics/)
+      .expect(/BEGIN:VCALENDAR/)
+      .expect(/SUMMARY:title/)
+      .end(function (err) { done(err); });
+  });
+
 
   it('shows a 404 if the id cannot be found in the store for the detail page', function (done) {
     var link = dummyActivity.id + '4711';
