@@ -76,6 +76,7 @@ describe('Activity application', function () {
       .get('/ical/' + url)
       .expect(200)
       .expect('Content-Type', /text\/calendar/)
+      .expect('Content-Disposition', /inline; filename=url.ics/)
       .expect(/BEGIN:VCALENDAR/)
       .expect(/SUMMARY:title/)
       .end(function (err) { done(err); });
