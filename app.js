@@ -6,6 +6,8 @@ var path = require('path');
 var passport = require('passport');
 var MongoStore = require('connect-mongo')(express);
 
+var I18n = require('i18n-2');
+
 function useApp(parent, url, factory) {
   function ensureRequestedUrlEndsWithSlash(req, res, next) {
     if (!(/\/$/).test(req.url)) { return res.redirect(req.url + '/'); }
@@ -46,6 +48,9 @@ module.exports = {
   create: function () {
     var app = express();
     app.configure(function () {
+      I18n.expressBind(app, {
+        locales: ['de', 'en']
+      });
       app.set('view engine', 'jade');
       app.set('views', path.join(__dirname, 'views'));
       app.use(express.favicon(path.join(__dirname, 'public/img/Softwerkskammer16x16.ico')));
