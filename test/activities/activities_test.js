@@ -21,11 +21,13 @@ var colors = conf.get('beans').get('colorAPI');
 var app = conf.get('beans').get('activitiesApp')(express());
 
 describe('Activity application', function () {
-  var allActivities;
-  var getActivity;
+  var allActivities,
+    upcomingActivities,
+    getActivity;
 
   beforeEach(function (done) {
     allActivities = sinonSandbox.stub(activitiesAPI, 'allActivities', function (callback) {callback(null, [dummyActivity]); });
+    upcomingActivities = sinonSandbox.stub(activitiesAPI, 'upcomingActivities', function (callback) {callback(null, [dummyActivity]); });
     getActivity = sinonSandbox.stub(activitiesAPI, 'getActivity', function (url, callback) {callback(null, (url === 'url') ? dummyActivity : null); });
     sinonSandbox.stub(membersAPI, 'allMembers', function (callback) {callback(null, []); });
     sinonSandbox.stub(groupsAPI, 'getAllAvailableGroups', function (callback) { callback(null, []); });
@@ -67,6 +69,16 @@ describe('Activity application', function () {
         expect(getActivity.calledWith(url)).to.be.true;
         done(err);
       });
+  });
+
+  it('upcoming activities are exposed as iCalendar', function (done) {
+    request(app)
+      .get('/ical')
+      .expect(200)
+      .expect('Content-Type', /text\/calendar/)
+      .expect('Content-Disposition', /inline; filename=events.ics/)
+      .expect(/BEGIN:VCALENDAR/)
+      .end(function (err) { done(err); });
   });
 
   it('activity is exposed as iCalendar', function (done) {
