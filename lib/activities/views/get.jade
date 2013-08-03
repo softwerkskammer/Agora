@@ -20,6 +20,7 @@ block content
             a.pull-right.btn(href="/activities/edit/#{encodeURIComponent(activity.url)}", title="Bearbeiten"): i.icon-edit
             a.pull-right.btn(href="/mailsender/invitation/#{encodeURIComponent(activity.url)}", title="Einladung versenden"): i.icon-envelope
             a.pull-right.btn(href="/activities/newLike/#{encodeURIComponent(activity.url)}", title="Neu auf Basis dieser Aktivität"): i.icon-copy
+            a.pull-right.btn(href="/activities/ical/#{encodeURIComponent(activity.url)}", title="In Kalender importieren"): i.icon-calendar
   .row-fluid
     .span8
       !{activity.descriptionHTML()}
