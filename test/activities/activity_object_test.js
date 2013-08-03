@@ -137,13 +137,27 @@ describe('ICalendar', function () {
   var activity = new Activity({
     title: 'Title',
     startDate: '4.4.2013',
+    startTime: '17:00',
+    endTime: '18:00',
     endDate: '5.4.2013',
-    url: 'myURL'
+    url: 'myURL',
+    description: 'foo',
+    location: 'bar'
   });
 
-  it('iCalendar start date conversion', function () {
-    expect(activity.asICal().toString()).to.match(/DTSTART:20130404T000000Z/);
+  it('start date conversion', function () {
+    expect(activity.asICal().toString()).to.match(/DTSTART:20130404T170000Z/);
   });
 
-  // TODO: Test and implement UTC offset
+  it('end date conversion', function () {
+    expect(activity.asICal().toString()).to.match(/DTEND:20130405T180000Z/);
+  });
+
+  it('render description', function () {
+    expect(activity.asICal().toString()).to.match(/DESCRIPTION:foo/);
+  });
+
+  it('render location', function () {
+    expect(activity.asICal().toString()).to.match(/LOCATION:bar/);
+  });
 });
