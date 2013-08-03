@@ -52,7 +52,7 @@ Preparations for use
 Running the server
 ------------------
 
-* In *REPO*, invoke `node start.js`
+* In *REPO*, invoke `npm start`
 * You can now access the application by entering [http://localhost:17124](http://localhost:17124) in your browser
   * The port `17124` is the default and can be changed via the command line option `--port` or via the environment option 'port' to any wanted value
 * The shell script start.sh can be used to set configuration parameters via environment variables
@@ -74,6 +74,9 @@ To run the tests, you need to install grunt-cli. We propose to install grunt-cli
         export PATH=GLOBALPATH/bin/:$PATH
 
 Now, you can run the tests in *REPO* with `npm test`
+
+For running specific tests only, you can use a command like
+`mocha -R spec test/announcements/`
 
 To run the style check (jshint) and the tests on every file change, use `grunt watch`
 
