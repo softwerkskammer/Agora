@@ -31,7 +31,7 @@ mixin loginMenu
             i.icon-info-sign
             b.caret
           ul.dropdown-menu
-            li: a(href="/members/edit/#{user.member.nickname}")
+            li: a(href="/members/edit/#{encodeURIComponent(user.member.nickname)}")
               i.icon-edit
               | &nbsp;Profil bearbeiten
             li: a(href="/auth/logout")
