@@ -1,5 +1,6 @@
-NeuePlattform-Implementierung
-=============================
+Agora
+=====
+There is a companion project where the feature backlog lives. Go to the issues in [https://github.com/softwerkskammer/Agora-Backlog/issues](https://github.com/softwerkskammer/Agora-Backlog/issues)
 
 ---
 
