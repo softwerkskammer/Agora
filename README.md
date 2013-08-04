@@ -1,7 +1,13 @@
-NeuePlattform-Implementierung
-=============================
+Agora
+=====
+There is a companion project where the feature backlog lives. Go to the issues in [https://github.com/softwerkskammer/Agora-Backlog/issues](https://github.com/softwerkskammer/Agora-Backlog/issues)
 
 ---
+
+Weekly video hangout
+--------------------
+
+Every Friday at 21:00 Berlin Time: [https://plus.google.com/hangouts/_/ba8817214c2fdc3971b6851b930a8651f466fd8d](https://plus.google.com/hangouts/_/ba8817214c2fdc3971b6851b930a8651f466fd8d)
 
 What this is about
 ==================
@@ -83,3 +89,13 @@ To run the style check (jshint) and the tests on every file change, use `grunt w
 Debugging the tests from IDE [Webstorm](http://www.jetbrains.com/webstorm/)
 ----------
 Follow this [instructions](http://codebetter.com/glennblock/2013/01/17/debugging-mocha-unit-tests-with-webstorm-step-by-step/)
+
+Editing the stylesheets
+-----------------------
+
+We are working with [compass](http://compass-style.org/). Requires ruby (see website for version and [installation](http://compass-style.org/install/))). Once installed check installation by invoking 
+		compass clean
+		compass compile
+If these run without problems, check the produced file screen.css inside the stylesheets directory.
+
+Only edit the scss-files inside the "partials" subfolder
