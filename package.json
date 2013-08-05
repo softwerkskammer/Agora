@@ -1,5 +1,5 @@
 {
-  "name": "SoftwerkskammerNewPlattform",
+  "name": "Agora",
   "description": "A new plattform for Softwerkskammer",
   "version": "0.0.3",
   "author": "Nicole Rauch",
@@ -15,7 +15,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/softwerkskammer/NeuePlattform-Implementierung"
+    "url": "https://github.com/softwerkskammer/Agora"
   },
   "licenses": [
     {
