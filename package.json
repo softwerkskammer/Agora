@@ -43,7 +43,6 @@
     "underscore": "~1.4.4",
     "underscore.string": "~2.3.0",
     "validator": "1.1.x",
-    "moment": "2.1.x",
     "moment-timezone": "0.0.2",
     "markdown": "0.4.x",
     "connect-mongo": "0.3.x",

@@ -5,7 +5,7 @@ var express = require('express');
 var sinon = require('sinon');
 var sinonSandbox = sinon.sandbox.create();
 var expect = require('chai').expect;
-var moment = require('moment');
+var moment = require('moment-timezone');
 
 var conf = require('../configureForTest');
 var parentApp = express();

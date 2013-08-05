@@ -4,7 +4,7 @@ var expect = require('chai').expect;
 var sinon = require('sinon');
 var sinonSandbox = sinon.sandbox.create();
 var conf = require('../configureForTest');
-var moment = require('moment');
+var moment = require('moment-timezone');
 
 var Activity = conf.get('beans').get('activity');
 
