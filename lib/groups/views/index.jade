@@ -13,13 +13,17 @@ block content
             a.pull-right.btn(href="new/", title="Neue Gruppe"): i.icon-file
   .row-fluid
     .span6
-      h3 Regionalgruppen
+      h3 Regionalgruppen&nbsp;
+        span.badge(style="background-color: #29241C") #{regionalgroups.length}
+
       ul.unstyled
         each group in regionalgroups
           li: strong: a.group(href="#{group.id}") #{group.longName}&nbsp;
             span.badge(style="background-color: #{group.color}") #{group.members.length} Mitglieder
     .span6
-      h3 Themengruppen
+      h3 Themengruppen&nbsp;
+        span.badge(style="background-color: #29241C") #{themegroups.length}
+      
       ul.unstyled
         each group in themegroups
           li: strong: a.group(href="#{group.id}") #{group.longName}&nbsp;
