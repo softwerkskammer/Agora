@@ -14,7 +14,7 @@ block content
   .row-fluid
     .span6
       h3 Regionalgruppen&nbsp;
-        span.badge(style="background-color: #29241C") #{regionalgroups.length}
+        span.badge #{regionalgroups.length}
 
       ul.unstyled
         each group in regionalgroups
@@ -22,7 +22,7 @@ block content
             span.badge(style="background-color: #{group.color}") #{group.members.length} Mitglieder
     .span6
       h3 Themengruppen&nbsp;
-        span.badge(style="background-color: #29241C") #{themegroups.length}
+        span.badge #{themegroups.length}
       
       ul.unstyled
         each group in themegroups
