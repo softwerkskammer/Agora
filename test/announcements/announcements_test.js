@@ -7,7 +7,7 @@ var request = require('supertest'),
   sinon = require('sinon'),
   sinonSandbox = sinon.sandbox.create(),
   expect = require('chai').expect,
-  moment = require('moment');
+  moment = require('moment-timezone');
 
 var Announcement = conf.get('beans').get('announcement');
 
