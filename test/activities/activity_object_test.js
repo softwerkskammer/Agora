@@ -146,11 +146,11 @@ describe('ICalendar', function () {
   });
 
   it('start date conversion', function () {
-    expect(activity.asICal().toString()).to.match(/DTSTART:20130404T170000Z/);
+    expect(activity.asICal().toString()).to.match(/DTSTART:20130404T150000Z/);
   });
 
   it('end date conversion', function () {
-    expect(activity.asICal().toString()).to.match(/DTEND:20130405T180000Z/);
+    expect(activity.asICal().toString()).to.match(/DTEND:20130405T160000Z/);
   });
 
   it('render description', function () {

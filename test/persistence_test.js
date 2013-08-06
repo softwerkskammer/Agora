@@ -143,7 +143,7 @@ describe('The persistence store', function () {
 
   describe('for Member', function () {
     var Member = conf.get('beans').get('member');
-    var moment = require('moment');
+    var moment = require('moment-timezone');
     var toPersist = new Member().initFromSessionUser({identifier: 'toPersist'});
 
     var storeSampleData = function (done) {

@@ -3,7 +3,7 @@
 require('../configureForTest');
 var conf = require('nconf');
 var expect = require('chai').expect;
-var moment = require('moment');
+var moment = require('moment-timezone');
 
 var Mail = conf.get('beans').get('archivedMail');
 
