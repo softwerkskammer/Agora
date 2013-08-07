@@ -12,7 +12,7 @@ block content
             a.pull-right.btn(href="/announcements/edit/#{encodeURIComponent(announcement.url)}", title="Bearbeiten"): i.icon-edit
       .row-fluid
         .span8
-          p !{announcement.messageHTML()}
+          !{announcement.messageHTML()}
           p
             em
               if ('automatisch' === announcement.authorname)

@@ -28,7 +28,7 @@ block content
       h3 Adresse:
       p #{activity.location}
       h4 Wegbeschreibung: 
-      p !{activity.directionHTML()}
+      !{activity.directionHTML()}
       hr
       div.no-print
         if (typeof(user) !== 'undefined' && user.member)
