@@ -3,6 +3,7 @@
 require('../configureForTest');
 var conf = require('nconf');
 var expect = require('chai').expect;
+var moment = require('moment');
 
 var Activity = conf.get('beans').get('activity');
 
@@ -85,6 +86,26 @@ describe('Activity', function () {
     });
     var color = activity.colorFrom(null, []);
     expect('#353535').to.equal(color);
+    done();
+  });
+
+  it('parses start date and time using UTC', function (done) {
+    var activity = new Activity({
+      url: 'myURL',
+      startDate: '01.02.2013',
+      startTime: '12:34'
+    });
+    expect(activity.startUnix).to.equal(moment.utc('2013-02-01 12:34').unix());
+    done();
+  });
+
+  it('parses end date and time using UTC', function (done) {
+    var activity = new Activity({
+      url: 'myURL',
+      endDate: '01.02.2013',
+      endTime: '12:34'
+    });
+    expect(activity.endUnix).to.equal(moment.utc('2013-02-01 12:34').unix());
     done();
   });
 });
