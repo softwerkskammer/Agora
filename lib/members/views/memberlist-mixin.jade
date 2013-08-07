@@ -4,6 +4,6 @@ mixin memberlist(members, organizers)
       dt: .member: a(href="/members/#{encodeURIComponent(member.nickname)}") #{member.nickname}
       dd #{member.firstname} #{member.lastname}, #{member.location}&nbsp;
         if (organizers && organizers.indexOf(member.id) > -1)
-          span.badge(style="background-color: #DF5353") Ansprechpartner &nbsp; 
+          a(href="/mailsender/contactMember/#{encodeURIComponent(member.nickname)}"): span.badge(style="background-color: #DF5353") Ansprechpartner &nbsp; 
         if (!organizers && member.isAdmin)
-          span.badge(style="background-color: #DF5353") Admin 
+          a(href="/mailsender/contactMember/#{encodeURIComponent(member.nickname)}"): span.badge(style="background-color: #DF5353") Admin 
