@@ -50,7 +50,11 @@
     "mailparser": "~0.3.6",
     "nodemailer": "0.4.1",
     "node-html-encoder": "~0.0.2",
-    "icalendar": "~0.6.3"
+    "icalendar": "~0.6.3",
+    "marked": "x.x.x",
+    "crypto": "x.x.x",
+    "node-syntaxhighlighter": "x.x.x",
+    "iconv": "x.x.x"
   },
   "devDependencies": {
     "grunt": "~0.4",

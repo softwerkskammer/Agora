@@ -1,0 +1,18 @@
+extends ../../../views/layout
+
+
+block content
+  .row-fluid
+    .span12
+      .page-header
+        h2 #{title}
+          if (typeof(user) !== 'undefined')
+            a.pull-right.btn(href="/wiki/edit/#{encodeURIComponent(pageName)}"): i.icon-edit
+      .row-fluid
+        .span8
+          !{content}
+          p.footer Last updated by 
+            // img(src=gravatar().url("#{metadata.email}", {s:16}))
+            b  #{metadata.author}, 
+            b(title="#{metadata.date}") #{metadata.relDate} 
+            | &ndash; #{metadata.hash}
