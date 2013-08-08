@@ -1,0 +1,17 @@
+extends ../../../views/layout
+block title
+  | #{page.title}
+
+block content
+  .row-fluid
+    .span12
+      .page-header
+        h2 #{page.title}&nbsp;
+          small untertitel
+          if (typeof(user) !== 'undefined')
+            a.pull-right.btn(href="/wiki/edit/#{encodeURIComponent(page.url)}"): i.icon-edit
+      .row-fluid
+        .span8
+          p #{page.text}
+          p
+            i #{page.author}

@@ -8,6 +8,7 @@
   "activitiesApp": {"module": "./lib/activities"},
   "mailsenderApp": {"module": "./lib/mailsender"},
   "mailarchiveApp": {"module": "./lib/mailarchive"},
+  "wikiApp": {"module": "./lib/wiki"},
 
   "groupsAndMembersAPI": {"module": "./lib/groupsAndMembers/groupsAndMembersAPI"},
   "groupsAPI": {"module": "./lib/groups/groupsAPI"},

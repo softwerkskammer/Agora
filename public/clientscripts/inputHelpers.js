@@ -1,3 +1,4 @@
+/* global document */
 "use strict";
 function fillUrlFromText(urlId, textId) {
   var titleInput = document.getElementById(textId);
