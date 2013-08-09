@@ -3,7 +3,6 @@
 require('../configureForTest');
 var conf = require('nconf');
 var expect = require('chai').expect;
-var moment = require('moment-timezone');
 
 var Activity = conf.get('beans').get('activity');
 
@@ -95,7 +94,8 @@ describe('Activity', function () {
       startDate: '01.02.2013',
       startTime: '12:34'
     });
-    expect(activity.startUnix).to.equal(moment.utc('2013-02-01 12:34').unix());
+    expect(activity.startDate()).to.equal('01.02.2013');
+    expect(activity.startTime()).to.equal('12:34');
     done();
   });
 
@@ -105,7 +105,8 @@ describe('Activity', function () {
       endDate: '01.02.2013',
       endTime: '12:34'
     });
-    expect(activity.endUnix).to.equal(moment.utc('2013-02-01 12:34').unix());
+    expect(activity.endDate()).to.equal('01.02.2013');
+    expect(activity.endTime()).to.equal('12:34');
     done();
   });
 });
