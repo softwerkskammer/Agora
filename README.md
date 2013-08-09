@@ -19,7 +19,7 @@ The site is currently German only.
 Current Build Status
 --------------------
 
-[![Build Status](https://travis-ci.org/softwerkskammer/NeuePlattform-Implementierung.png)](https://travis-ci.org/softwerkskammer/NeuePlattform-Implementierung)
+[![Build Status](https://travis-ci.org/softwerkskammer/Agora.png)](https://travis-ci.org/softwerkskammer/Agora)
 
 System requirements for installation
 --------------------
