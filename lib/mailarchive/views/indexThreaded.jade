@@ -2,6 +2,9 @@ extends ../../../views/layout
 
 include ./mailheader-mixin
 
+block scripts
+  script(src="/clientscripts/change-mails-scrolling-height.js")
+
 block title
   | #{group} 
   | mails 
@@ -13,7 +16,7 @@ block content
       a(href=encodeURIComponent(group)+"?thread=false") Ansicht unthreaded
   .row-fluid
     .span12
-      .pre-scrollable
+      #mails.pre-scrollable
         - var mailNumber = 0;
         for mailHeader in mailHeaders
           - mailNumber = mailNumber + 1;
