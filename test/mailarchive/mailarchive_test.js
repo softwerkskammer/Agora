@@ -229,14 +229,15 @@ describe('Mail index page', function () {
       });
   });
 
-  it('references sender member page if available', function (done) {
-    var displayedMailHeader = new Mail({
-      id: "Mail 1",
-      from: {name: "Sender Name", id: "sender ID"},
-      subject: "Mail 1",
+  it('references sender member page inside the thread', function (done) {
+    var displayedMailHeader1 = new Mail({id: "Mail 1", subject: "Mail 1", references: [],
       group: "group"
     });
-    stubMailHeaders([displayedMailHeader]);
+    var displayedMailHeader2 = new Mail({id: "Mail 2", subject: "Mail 2", references: ["Mail 1"],
+      from: {name: "Sender Name 2", id: "sender ID"}, group: "group"
+    });
+
+    stubMailHeaders([displayedMailHeader1, displayedMailHeader2]);
 
     var dummyMember = {nickname: "nickname", id: "sender ID"};
     membersAPI.getMembersForIds.restore();
@@ -245,7 +246,7 @@ describe('Mail index page', function () {
     });
 
     request(app)
-      .get('/list/group')
+      .get('/list/group?thread=true')
       .expect(200)
       .expect(/href="\/members\/nickname"/, function (err) {
         done(err);
