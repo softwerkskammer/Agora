@@ -1,7 +1,13 @@
-NeuePlattform-Implementierung
-=============================
+Agora
+=====
+There is a companion project where the feature backlog lives. Go to the issues in [https://github.com/softwerkskammer/Agora-Backlog/issues](https://github.com/softwerkskammer/Agora-Backlog/issues)
 
 ---
+
+Weekly video hangout
+--------------------
+
+Every Friday at 21:00 Berlin Time: [https://plus.google.com/hangouts/_/ba8817214c2fdc3971b6851b930a8651f466fd8d](https://plus.google.com/hangouts/_/ba8817214c2fdc3971b6851b930a8651f466fd8d)
 
 What this is about
 ==================
@@ -13,11 +19,11 @@ The site is currently German only.
 Current Build Status
 --------------------
 
-[![Build Status](https://travis-ci.org/softwerkskammer/NeuePlattform-Implementierung.png)](https://travis-ci.org/softwerkskammer/NeuePlattform-Implementierung)
+[![Build Status](https://travis-ci.org/softwerkskammer/Agora.png)](https://travis-ci.org/softwerkskammer/Agora)
 
 System requirements for installation
 --------------------
-It is a node.js project. Therefore you need node.js installed. We are currently using version 0.8 and npm 1.2.
+It is a node.js project. Therefore you need node.js installed. We are currently using version 0.8 (you should use at least 0.8.19) and npm 1.2.
 
 Get it from [http://nodejs.org](http://nodejs.org)
 
@@ -52,7 +58,7 @@ Preparations for use
 Running the server
 ------------------
 
-* In *REPO*, invoke `node start.js`
+* In *REPO*, invoke `npm start`
 * You can now access the application by entering [http://localhost:17124](http://localhost:17124) in your browser
   * The port `17124` is the default and can be changed via the command line option `--port` or via the environment option 'port' to any wanted value
 * The shell script start.sh can be used to set configuration parameters via environment variables
@@ -75,8 +81,21 @@ To run the tests, you need to install grunt-cli. We propose to install grunt-cli
 
 Now, you can run the tests in *REPO* with `npm test`
 
+For running specific tests only, you can use a command like
+`mocha -R spec test/announcements/`
+
 To run the style check (jshint) and the tests on every file change, use `grunt watch`
 
 Debugging the tests from IDE [Webstorm](http://www.jetbrains.com/webstorm/)
 ----------
 Follow this [instructions](http://codebetter.com/glennblock/2013/01/17/debugging-mocha-unit-tests-with-webstorm-step-by-step/)
+
+Editing the stylesheets
+-----------------------
+
+We are working with [compass](http://compass-style.org/). Requires ruby (see website for version and [installation](http://compass-style.org/install/))). Once installed check installation by invoking 
+		compass clean
+		compass compile
+If these run without problems, check the produced file screen.css inside the stylesheets directory.
+
+Only edit the scss-files inside the "partials" subfolder

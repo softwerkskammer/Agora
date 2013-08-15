@@ -1,5 +1,5 @@
 {
-  "name": "SoftwerkskammerNewPlattform",
+  "name": "Agora",
   "description": "A new plattform for Softwerkskammer",
   "version": "0.0.3",
   "author": "Nicole Rauch",
@@ -15,7 +15,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/softwerkskammer/NeuePlattform-Implementierung"
+    "url": "https://github.com/softwerkskammer/Agora"
   },
   "licenses": [
     {
@@ -43,13 +43,14 @@
     "underscore": "~1.4.4",
     "underscore.string": "~2.3.0",
     "validator": "1.1.x",
-    "moment": "2.x.x",
+    "moment-timezone": "0.0.2",
     "markdown": "0.4.x",
     "connect-mongo": "0.3.x",
     "CoolBeans": "0.0.8",
     "mailparser": "~0.3.6",
     "nodemailer": "0.4.1",
-    "node-html-encoder": "~0.0.2"
+    "node-html-encoder": "~0.0.2",
+    "icalendar": "~0.6.3"
   },
   "devDependencies": {
     "grunt": "~0.4",
@@ -67,6 +68,7 @@
     "grunt-exec": "~0.4.0"
   },
   "scripts": {
+    "start": "node start",
     "test": "grunt travis --verbose",
     "blanket": {
       "pattern": "//^((?!\/node_modules\/)(?!\/test\/).)*$/ig",

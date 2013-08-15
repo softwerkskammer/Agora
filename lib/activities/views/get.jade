@@ -11,15 +11,16 @@ block content
     .span12
       .page-header
         h2 #{activity.title} <br> 
-          small #{activity.startDate} (#{activity.startTime}
-            if (activity.endDate && activity.endDate !== activity.startDate)
-              |  Uhr) - #{activity.endDate} (#{activity.endTime} Uhr)
-            else (activity.endTime)
-              |  - #{activity.endTime} Uhr)
+          small #{activity.startDate()} (#{activity.startTime()}
+            if (activity.endDate() && activity.endDate() !== activity.startDate())
+              |  Uhr) - #{activity.endDate()} (#{activity.endTime()} Uhr)
+            else (activity.endTime())
+              |  - #{activity.endTime()} Uhr)
           if (typeof(user) !== 'undefined' && user.member.isAdmin)
             a.pull-right.btn(href="/activities/edit/#{encodeURIComponent(activity.url)}", title="Bearbeiten"): i.icon-edit
             a.pull-right.btn(href="/mailsender/invitation/#{encodeURIComponent(activity.url)}", title="Einladung versenden"): i.icon-envelope
             a.pull-right.btn(href="/activities/newLike/#{encodeURIComponent(activity.url)}", title="Neu auf Basis dieser Aktivität"): i.icon-copy
+            a.pull-right.btn(href="/activities/ical/#{encodeURIComponent(activity.url)}", title="In Kalender importieren"): i.icon-calendar
   .row-fluid
     .span8
       !{activity.descriptionHTML()}
@@ -27,7 +28,7 @@ block content
       h3 Adresse:
       p #{activity.location}
       h4 Wegbeschreibung: 
-      p !{activity.directionHTML()}
+      !{activity.directionHTML()}
       hr
       div.no-print
         if (typeof(user) !== 'undefined' && user.member)
@@ -54,6 +55,6 @@ block content
 block scripts
   script
     $(document).ready(function () {
-      $('#calendar').fullCalendar('select', $.fullCalendar.parseDate(#{activity.startUnix}), $.fullCalendar.parseDate(#{activity.endUnix()}), true);
+      $('#calendar').fullCalendar('select', $.fullCalendar.parseDate(#{activity.startUnix}), $.fullCalendar.parseDate(#{activity.endUnix}), true);
     });
   

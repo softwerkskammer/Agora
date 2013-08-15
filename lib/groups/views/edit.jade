@@ -29,11 +29,11 @@ block content
             mixin textReadonly('id', 'Name', group)
           else
             mixin text('id', 'Name', group, 'Die Adresse, unter der die Gruppe "@softwerkskammer.org" erreichbar ist.')
-          mixin text('longName', 'Titel', group, 'Anzeigetext innerhalb der Site, ist auch Realname für Emails')
+          mixin text('longName', 'Titel', group, 'Anzeigetext innerhalb der Site, ist auch Realname für E-Mails')
           if (group.isValid())
-            mixin textReadonly('emailPrefix', 'Präfix für Email-Subjects', group)
+            mixin textReadonly('emailPrefix', 'Präfix für E-Mail-Subjects', group)
           else
-            mixin text('emailPrefix', 'Präfix für Email-Subjects', group, 'steht innerhalb [] vor dem Subject in gesendeten Emails')
+            mixin text('emailPrefix', 'Präfix für E-Mail-Subjects', group, 'steht innerhalb [] vor dem Subject in gesendeten E-Mails')
           .control-group
             label.control-label(for="type") Gruppenart:
             select#type.input-block-level.input-xlarge(name="type")

@@ -9,10 +9,10 @@ block content
       h2 Nachrichten&nbsp;
         small Alle
         - if (typeof(user) !== 'undefined' && user.member.isAdmin)
-            a.pull-right.btn(href="new/"): i.icon-file
+            a.pull-right.btn(href="new/", title="Neue Nachricht"): i.icon-file
 
     dl.dl-horizontal
       for announcement in announcements
-        dt #{moment.unix(announcement.fromDate).format('DD.MM.YYYY')}
+        dt #{announcement.fromDate()}
         dd
             a(href='#{encodeURIComponent(announcement.url)}') #{announcement.title}

@@ -12,7 +12,7 @@ block content
   form(id='announcementform', action='/announcements/submit', method='post')
     if (announcement.id)
       mixin hidden('id', announcement)
-      mixin hidden('fromDate', announcement)
+    mixin hidden('fromUnix', announcement)
     mixin hidden('previousUrl', announcement, 'url')
     mixin hidden('author', announcement)
     fieldset
@@ -30,7 +30,7 @@ block content
           mixin text('url', 'URL', announcement)
           // TODO: url automatisch aus dem title bilden lassen, z. B. Leerzeichen in Bindestriche umwandeln, alles klein schreiben etc.
           mixin textarea('message', 'Text der Nachricht', announcement)
-          mixin date('thruDate', 'Anzeigen bis einschließlich', announcement)
+          mixin date('thruDate', 'Anzeigen bis einschließlich', announcement, announcement.thruDate())
       .row-fluid
         .span12
           button.btn.btn-primary.pull-right(type="submit") Speichern

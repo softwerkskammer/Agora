@@ -4,9 +4,14 @@ mixin tabHead(no, title)
 mixin tabHeadNarrow(no, title)
   th(class="span#{no}"): .ellipsis.narrow #{title}
 
+// TODO: id="#{name}" may be used more than once what leads to invalid html!
 mixin tabDateNarrow(no, object, name, callback, placementOptional)
   td(class="span#{no}"): a.tabdatepicker(id="#{name}", href="#", data-type="date", data-placement="#{placementOptional ? placementOptional : 'right'}", 
-    data-pk="#{object.id}", data-url="#{callback}") #{moment.unix(eval(object[name])).format('DD.MM.YYYY')}
+    data-pk="#{object.id}", data-url="#{callback}") #{object[name]()}
+
+mixin tabDateNarrowWithValue(no, object, name, callback, value)
+  td(class="span#{no}"): a.tabdatepicker(id="#{name}", href="#", data-type="date", data-placement="right", 
+    data-pk="#{object.id}", data-url="#{callback}") #{value}
 
 mixin tabText(no, object, name, callback, placementOptional)
   td(class="span#{no}"): a(id="#{name}", href="#", data-type="text", data-tpl="<input type=\"text\" class=\"input-xlarge\">",
@@ -15,6 +20,10 @@ mixin tabText(no, object, name, callback, placementOptional)
 mixin tabTextNarrow(no, object, name, callback, placementOptional)
   td(class="span#{no}"): a(id="#{name}", href="#", data-type="text", data-tpl="<input type=\"text\" class=\"input-xlarge\">",
     data-placement="#{placementOptional ? placementOptional : 'top'}", data-pk="#{object.id}", data-url="#{callback}"): .ellipsis.narrow #{object[name]}
+
+mixin tabTextNarrowWithValue(no, object, name, callback, value)
+  td(class="span#{no}"): a(id="#{name}", href="#", data-type="text", data-tpl="<input type=\"text\" class=\"input-xlarge\">",
+    data-placement="top", data-pk="#{object.id}", data-url="#{callback}"): .ellipsis.narrow #{value}
 
 mixin tabTextarea(no, object, name, callback, placementOptional)
   td(class="span#{no}"): a(id="#{name}", href="#", data-placement="#{placementOptional ? placementOptional : 'left'}", 

@@ -62,6 +62,7 @@ html
                   b.caret
                 ul.dropdown-menu
                   li: a(href="/activities/upcoming") Kommende
+                  li: a(href="/activities/past") Vergangene
                   li: a(href="/activities") Alle
               li#groups: a(href="/groups")
                 i.icon-group
@@ -85,7 +86,7 @@ html
                 h4 Das Neueste
                 dl
                   for announcement in latestNews
-                    dt #{announcement.readableFromDate()}
+                    dt #{announcement.fromDate()}
                     dd
                       a(href='/announcements/#{encodeURIComponent(announcement.url)}') #{announcement.title}
 

@@ -20,7 +20,8 @@ var initValidator = function () {
         }
       },
       title: "required",
-      author: "required"
+      author: "required",
+      thruDate: "required"
     },
     messages: {
       url: {
@@ -39,7 +40,7 @@ var initValidator = function () {
 
   announcement_validator.form();
 
-  ['#title', '#url', "#author"].forEach(function (each) {
+  ['#title', '#url', "#author", "thruDate"].forEach(function (each) {
     $(each).on("change", function () {
       announcement_validator.element(each);
     });

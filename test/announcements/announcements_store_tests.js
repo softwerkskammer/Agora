@@ -12,16 +12,14 @@ describe('Announcement store', function () {
     title: 'Neue Plattform ist online!',
     url: 'NeuePlattformistonline',
     text: '(Deutschland, Mai 2013) Seit heute ist die neue Plattform namens „Agora“ unter http://www.softwerkskammer.de erreichbar.',
-    author: 'Frank Deberle',
-    thruDate: new Date(2013, 12, 31)
+    author: 'Frank Deberle'
   };
 
   var announcement2 = {
     title: 'Server down',
     'url': 'Serverdown',
     text: 'Aus technischen Gründen ist der Server leider down. Die genauen Gründe sind noch unbekannt.',
-    author: 'Nicole',
-    thruDate: new Date(2013, 5, 31)
+    author: 'Nicole'
   };
 
   var sampleList = [announcement1, announcement2];

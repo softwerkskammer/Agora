@@ -61,3 +61,19 @@ describe('Replace email addresses from text', function () {
   });
 
 });
+
+describe('readableDate function', function () {
+
+  it('converts a unix timestamp to a German Date', function () {
+    var unixtimestamp = 1375056000;
+    var result = fieldHelpers.readableDate(unixtimestamp);
+    expect(result).to.equal('29.07.2013');
+  });
+
+  it('converts a unix timestamp to a German Date', function () {
+    var unixtimestamp = 1388448000;
+    var result = fieldHelpers.readableDate(unixtimestamp);
+    expect(result).to.equal('31.12.2013');
+  });
+
+});

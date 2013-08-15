@@ -30,14 +30,14 @@ block content
           mixin text('title', 'Titel', activity, 'Kurz und knackig für Übersichten')
           .row-fluid
             .span6
-              mixin date('startDate', 'Startdatum', activity)
+              mixin date('startDate', 'Startdatum', activity, activity.startDate())
             .span6
-              mixin time('startTime', 'Startuhrzeit', activity)
+              mixin time('startTime', 'Startuhrzeit', activity, activity.startTime())
           .row-fluid
             .span6
-              mixin date('endDate', 'Enddatum', activity)
+              mixin date('endDate', 'Enddatum', activity, activity.endDate())
             .span6
-              mixin time('endTime', 'Enduhrzeit', activity)
+              mixin time('endTime', 'Enduhrzeit', activity, activity.endTime())
           mixin textarea('description', 'Beschreibung', activity)
         .span6
           .control-group

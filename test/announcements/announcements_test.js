@@ -6,7 +6,8 @@ var request = require('supertest'),
   express = require('express'),
   sinon = require('sinon'),
   sinonSandbox = sinon.sandbox.create(),
-  expect = require('chai').expect;
+  expect = require('chai').expect,
+  moment = require('moment-timezone');
 
 var Announcement = conf.get('beans').get('announcement');
 
@@ -15,8 +16,8 @@ var dummyAnnouncement = new Announcement({
   url: 'url',
   message: 'text',
   author: 'author',
-  fromDate: 1372456800, // 29.06.2013
-  thruDate: 1388444400 // 31.12.2013
+  fromUnix: 1375056000, // 29.07.2013
+  thruUnix: 1388448000 // 31.12.2013
 });
 
 var announcementsAPI = conf.get('beans').get('announcementsAPI');
@@ -80,7 +81,7 @@ describe('Announcement application', function () {
     request(app)
       .get('/' + url)
       .expect(200)
-      .expect(/&nbsp;<small>29.06.2013/)
+      .expect(/&nbsp;<small>29.07.2013/)
       .expect(/<h2>title/, function (err) {
         expect(getAnnouncement.calledWith(url)).to.be.true;
         done(err);
@@ -94,22 +95,7 @@ describe('Announcement application', function () {
     request(app)
       .get('/edit/' + url)
       .expect(200)
-      .expect(/<input id="thruDate" type="text" name="thruDate" value="1388444400" class="input-block-level input-xlarge datepicker"\/>/)
-      .expect(/<legend>Nachricht bearbeiten/, function (err) {
-        expect(getAnnouncement.calledWith(url)).to.be.true;
-        done(err);
-      });
-  });
-
-  it('shows no thruDate when editing an announcement having no thruDate', function (done) {
-    dummyAnnouncement.id = 1234;
-    dummyAnnouncement.thruDate = null;
-    var url = 'url';
-
-    request(app)
-      .get('/edit/' + url)
-      .expect(200)
-      .expect(/<input id="thruDate" type="text" name="thruDate" class="input-block-level input-xlarge datepicker"\/>/)
+      .expect(/<input id="thruDate" type="text" name="thruDate" value="31.12.2013" class="input-block-level input-xlarge datepicker"\/>/)
       .expect(/<legend>Nachricht bearbeiten/, function (err) {
         expect(getAnnouncement.calledWith(url)).to.be.true;
         done(err);
@@ -159,6 +145,24 @@ describe('Announcement application', function () {
       .expect(/announcements/, function (err) {
         done(err);
       });
+  });
+
+  it('keeps a unix timestamp, if thruDate is already a unix timestamp', function () {
+    var dummyAnnouncement = new Announcement({
+      title: 'title',
+      url: 'url',
+      message: 'text',
+      author: 'author',
+      fromUnix: 1388448000,
+      thruUnix: 1388448000
+    });
+    expect(dummyAnnouncement.thruUnix).to.equal(1388448000);
+  });
+
+  it('sets fromDate to current timestamp, when a new Announcement gets created', function () {
+    var dummyAnnouncement = new Announcement();
+    var now = moment.utc().unix();
+    expect(dummyAnnouncement.fromUnix).to.equal(now);
   });
 
 });
