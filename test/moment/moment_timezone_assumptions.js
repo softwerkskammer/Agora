@@ -6,7 +6,7 @@ var moment = require('moment-timezone');
 describe('moment-timezone', function () {
 
   it('returns same unix timestamp whether in utc mode or not', function () {
-    var now = moment();
+    var now = moment().zone(-120);
     var utcMoment = now.clone().utc();
     var localMoment = now.clone().local();
 
