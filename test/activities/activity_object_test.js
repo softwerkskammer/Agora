@@ -88,7 +88,7 @@ describe('Activity', function () {
     done();
   });
 
-  it('parses start date and time using UTC', function (done) {
+  it('parses start date and time using default timezone', function () {
     var activity = new Activity({
       url: 'myURL',
       startDate: '01.02.2013',
@@ -96,18 +96,18 @@ describe('Activity', function () {
     });
     expect(activity.startDate()).to.equal('01.02.2013');
     expect(activity.startTime()).to.equal('12:34');
-    done();
+    expect(activity.startMoment().format()).to.equal('2013-02-01T12:34:00+01:00');
   });
 
-  it('parses end date and time using UTC', function (done) {
+  it('parses end date and time using default timezone', function () {
     var activity = new Activity({
       url: 'myURL',
-      endDate: '01.02.2013',
+      endDate: '01.08.2013',
       endTime: '12:34'
     });
-    expect(activity.endDate()).to.equal('01.02.2013');
+    expect(activity.endDate()).to.equal('01.08.2013');
     expect(activity.endTime()).to.equal('12:34');
-    done();
+    expect(activity.endMoment().format()).to.equal('2013-08-01T12:34:00+02:00');
   });
 });
 
