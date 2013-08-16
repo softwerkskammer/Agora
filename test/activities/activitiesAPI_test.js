@@ -57,7 +57,7 @@ describe('Activities API', function () {
   it('returns past activities', function (done) {
     var now = moment('2013-08-07 22:28:42.123');
     var start = 0;
-    var end = moment.utc('2013-08-07 22:28:42.123').unix();
+    var end = moment('2013-08-07 22:28:42.123').unix();
 
     sinonSandbox.stub(store, 'allActivitiesByDateRangeInDescendingOrder')
       .withArgs(start, end, sinon.match.func)
@@ -73,8 +73,8 @@ describe('Activities API', function () {
 
   it('returns upcoming activities', function (done) {
     var now = moment('2013-08-07 22:28:42.123');
-    var start = moment.utc('2013-08-07 22:28:42.123').unix();
-    var end = moment.utc('2023-08-07 22:28:42.123').unix();
+    var start = moment('2013-08-07 22:28:42.123').unix();
+    var end = moment('2023-08-07 22:28:42.123').unix();
 
     sinonSandbox.stub(store, 'allActivitiesByDateRangeInAscendingOrder')
       .withArgs(start, end, sinon.match.func)
