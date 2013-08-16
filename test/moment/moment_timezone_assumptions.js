@@ -6,9 +6,9 @@ var moment = require('moment-timezone');
 describe('moment-timezone', function () {
 
   it('returns same unix timestamp whether in utc mode or not', function () {
-    var now = moment().zone(-120);
+    var now = moment();
     var utcMoment = now.clone().utc();
-    var localMoment = now.clone().local();
+    var localMoment = now.clone().zone(-120);
 
     expect(utcMoment.format()).to.not.equal(localMoment.format());
     expect(utcMoment.unix()).to.equal(localMoment.unix());
