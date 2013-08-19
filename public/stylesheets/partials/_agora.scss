@@ -44,6 +44,10 @@ td.fc-header-right {
     max-width: 120px;
 }
 
+.pre-scrollable {
+    max-height: 560px;
+}
+
 @media print {
     .btn, .no-print {
         display: none !important;
