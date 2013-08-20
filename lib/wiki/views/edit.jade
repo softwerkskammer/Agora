@@ -1,0 +1,21 @@
+extends ../../../views/layout
+
+include  ../../../views/formComponents
+
+block scripts
+  script(src="/clientscripts/inputHelpers.js")
+
+block title
+  | Wiki
+
+block content
+  form(action='/wiki/#{pageName}', method='post')
+    fieldset
+      .row-fluid
+        .span12
+          legend
+            | Wiki-Seite bearbeiten
+          mixin hightextarea('content', 'Inhalt', page)
+          mixin text('comment', 'Kommentar', page, 'Kommentar')
+          button.btn.btn-primary.pull-right(type="submit") Speichern
+          a.btn.pull-right(href="javascript:history.back()", type="cancel") Zurück
