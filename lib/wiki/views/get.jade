@@ -1,0 +1,15 @@
+extends ../../../views/layout
+
+block title
+  | Wiki
+
+block content
+  .row-fluid
+    .span12
+      .page-header
+        h5 wiki/#{pageName} &nbsp;
+          small #{metadata.author}, 
+            b(title="#{metadata.date}") #{metadata.relDate} &ndash; #{metadata.hash}
+          if (typeof(user) !== 'undefined' && canEdit)
+            a.pull-right.btn.btn-mini(href="/wiki/edit/#{encodeURIComponent(pageName)}"): i.icon-edit
+      !{content}

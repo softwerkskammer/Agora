@@ -1,61 +1,91 @@
 .editable-click,
 a.editable-click,
 a.editable-click:hover {
-    text-decoration: inherit;
-    border-bottom: inherit;
+  text-decoration: inherit;
+  border-bottom: inherit;
 }
 
 @media (min-width: 980px) {
-    .container.bottom {
-        padding-top: 20px;
-        margin-right: 0px;
-    }
+  .container.bottom {
+    padding-top: 20px;
+    margin-right: 0px;
+  }
 
-    .brand.no-padding {
-        padding-top: 0px;
-        padding-bottom: 0px;
-        padding-left: 20px;
-        padding-right: 10px
-    }
+  .brand.no-padding {
+    padding-top: 0px;
+    padding-bottom: 0px;
+    padding-left: 20px;
+    padding-right: 10px
+  }
 
-    body {
-        padding-top: 65px;
-        padding-bottom: 65px
-    }
+  body {
+    padding-top: 65px;
+    padding-bottom: 65px
+  }
 }
 
 td.fc-header-right {
-    padding-top: 6px !important;
+  padding-top: 6px !important;
 }
 
 .verySmall {
-    font-size: .8em;
-    line-height: 1.1em;
+  font-size: .8em;
+  line-height: 1.1em;
 }
 
 .ellipsis {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 300px;
 }
 
 .ellipsis.narrow {
-    max-width: 120px;
+  max-width: 120px;
 }
 
 .pre-scrollable {
-    max-height: 560px;
+  max-height: 560px;
+}
+
+.compare {
+  font-family: Consolas, monospace;
+  font-size: 12px;
+}
+
+.compare td {
+  padding: 0 3px;
+  border-top-width: 0
+}
+
+.compare .gd {
+  background-color: #ffdddd;
+}
+
+.compare .gc {
+  color: #999999;
+  background-color: #EAF2F5;
+}
+
+.compare .gi {
+  background-color: #ddffdd;
+}
+
+.compare .ln {
+  color: #999999;
+  background-color: #EAF2F5;
+  text-align: right;
+  border-bottom-color: transparent;
 }
 
 @media print {
-    .btn, .no-print {
-        display: none !important;
-    }
+  .btn, .no-print {
+    display: none !important;
+  }
 }
 
 @media screen {
-    .print-only {
-        display: none;
-    }
+  .print-only {
+    display: none;
+  }
 }
