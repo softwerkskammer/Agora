@@ -51,9 +51,8 @@
     "nodemailer": "0.4.1",
     "node-html-encoder": "~0.0.2",
     "icalendar": "~0.6.3",
-    "marked": "x.x.x",
-    "crypto": "x.x.x",
-    "node-syntaxhighlighter": "x.x.x"
+    "marked": "0.2.9",
+    "node-syntaxhighlighter": "0.8.x"
   },
   "devDependencies": {
     "grunt": "~0.4",
