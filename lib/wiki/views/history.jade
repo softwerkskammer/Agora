@@ -10,7 +10,7 @@ block content
   .page-header
     h2 Revisionen von "#{pageName}"
       if (typeof(user) !== 'undefined')
-        button(id="rev-compare", data-pageName="#{encodeURIComponent(pageName)}").btn.pull-right: i.icon-stethoscope &nbsp; Vergleichen…
+        button(id="rev-compare", data-pageName="#{encodeURIComponent(pageName)}", data-subdir="#{subdir}").btn.pull-right: i.icon-stethoscope &nbsp; Vergleichen…
 
   table.history.table.table-striped.table-bordered.table-hover.table-condensed
     each item in items

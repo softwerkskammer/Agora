@@ -11,5 +11,6 @@ block content
           small #{metadata.author}, 
             b(title="#{metadata.date}") #{metadata.relDate} &ndash; #{metadata.hash}
           if (typeof(user) !== 'undefined' && canEdit)
-            a.pull-right.btn.btn-mini(href="/wiki/edit/#{encodeURIComponent(pageName)}"): i.icon-edit
-      !{content}
+            a.pull-right.btn.btn-mini(href="/wiki/edit/#{subdir}/#{encodeURIComponent(pageName)}"): i.icon-edit
+            a.pull-right.btn.btn-mini(href="/wiki/versions/#{subdir}/#{encodeURIComponent(pageName)}"): i.icon-ellipsis-vertical
+  !{content}

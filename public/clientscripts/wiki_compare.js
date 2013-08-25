@@ -41,7 +41,7 @@
         if ($hCol1.find(":checked").length < 2) {
           return false;
         }
-        window.location.href = "/wiki/compare/" + $(this).data('pagename') + "/" + $hCol1.find(":checked").map(function () { return $(this).val(); }).toArray().reverse().join("..");
+        window.location.href = "/wiki/compare/" + $(this).data('subdir') + "/" + $(this).data('pagename') + "/" + $hCol1.find(":checked").map(function () { return $(this).val(); }).toArray().reverse().join("..");
         return false;
       });
 
