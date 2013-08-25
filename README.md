@@ -55,6 +55,11 @@ Preparations for use
 * Start mongodb. If you only plan to use it for development, the default settings are ok. The app as well as the tests use these defaults if nothing different is configured.
 * (Optional) Instructions for authenticated use are [here](lib/persistence/README.md)
 
+The built-in wiki
+-----------------
+
+To set up the built in wiki follow [these instructions](lib/wiki/README.md) 
+
 Running the server
 ------------------
 

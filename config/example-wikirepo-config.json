@@ -1,0 +1,5 @@
+// to use these values, strip "example-" from the filename, delete this comment and replace the below values
+// MUST BE AN ABSOLUTE PATH
+{
+  "wikipath": "/absolute/path/to/initialized/git-repo"
+}

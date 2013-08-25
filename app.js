@@ -80,6 +80,7 @@ module.exports = {
     useApp(app, 'mailsender', conf.get('beans').get('mailsenderApp'));
     useApp(app, 'auth', conf.get('beans').get('authenticationApp'));
     useApp(app, 'mailarchive', conf.get('beans').get('mailarchiveApp'));
+    useApp(app, 'wiki', conf.get('beans').get('wikiApp'));
 
     app.configure('development', function () {
       // Handle 404

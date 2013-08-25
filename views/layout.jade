@@ -47,8 +47,6 @@ html
             span.icon-bar
             span.icon-bar
             span.icon-bar
-            span.icon-bar
-            span.icon-bar
           mixin loginMenu
           .nav-collapse.navbar-inverse-collapse
             ul.nav
@@ -71,6 +69,10 @@ html
                 li#members: a(href="/members")
                   i.icon-user
                   | &nbsp;Mitglieder
+              li#wiki: a(href="/wiki")
+                i.icon-book
+                | &nbsp;Wiki
+
               mixin administrationMenu(true)
 
     .container-fluid
