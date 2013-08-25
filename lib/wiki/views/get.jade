@@ -1,0 +1,16 @@
+extends ../../../views/layout
+
+block title
+  | Wiki
+
+block content
+  .row-fluid
+    .span12
+      .page-header
+        h2 "#{pageName}"&nbsp;
+          small in Wiki "#{subdir}"
+          if (typeof(user) !== 'undefined' && canEdit)
+            a.pull-right.btn(href="/wiki/edit/#{subdir}/#{encodeURIComponent(pageName)}", title="Bearbeiten"): i.icon-edit
+            a.pull-right.btn(href="/wiki/versions/#{subdir}/#{encodeURIComponent(pageName)}", title="Revisionen"): i.icon-sort-by-attributes-alt
+            a.pull-right.btn(href="/wiki/list/#{subdir}/", title="Alle Seiten in \"#{subdir}\""): i.icon-list
+  !{content}

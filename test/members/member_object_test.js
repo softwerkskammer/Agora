@@ -225,3 +225,12 @@ describe('Member isAdmin', function () {
     done();
   });
 });
+
+describe('display functionalities', function () {
+  it('produces a valid git author', function (done) {
+    var db_record = {nickname: 'Nick'};
+    var member = new Member(db_record);
+    expect(member.asGitAuthor()).to.equal('Nick <Nick@softwerkskammer.org>');
+    done();
+  });
+});
