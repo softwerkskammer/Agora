@@ -52,9 +52,10 @@ html
             ul.nav
               li#announcements: a(href="/announcements")
                 i.icon-globe &nbsp;Nachrichten
+              li#activities: a(href="/activities/upcoming", style="padding-right:0px;")
+                i.icon-calendar &nbsp;Aktivitäten
               li#activities.dropdown
-                a.dropdown-toggle(href="#", data-toggle="dropdown")
-                  i.icon-calendar &nbsp;Aktivitäten
+                a.dropdown-toggle(href="#", data-toggle="dropdown", style="padding-left:5px;")
                   b.caret
                 ul.dropdown-menu
                   li: a(href="/activities/upcoming") Kommende
@@ -65,13 +66,15 @@ html
               if (typeof(user) !== 'undefined')
                 li#members: a(href="/members")
                   i.icon-user &nbsp;Mitglieder
+              li#wiki: a(href="/wiki/global/", style="padding-right:0px;")
+                i.icon-book &nbsp;Wiki
               li#wiki.dropdown
-                a.dropdown-toggle(href="#", data-toggle="dropdown")
-                  i.icon-book &nbsp;Wiki
+                a.dropdown-toggle(href="#", data-toggle="dropdown", style="padding-left:5px;")
                   b.caret
                 ul.dropdown-menu
-                  for subdir in wikisubdirs
-                    li: a(href="/wiki/#{subdir}/") #{subdir}
+                  if (typeof(wikisubdirs) !== 'undefined')
+                    for subdir in wikisubdirs
+                      li: a(href="/wiki/#{subdir}/") #{subdir}
 
               mixin administrationMenu(true)
 
@@ -82,7 +85,7 @@ html
         .span3.no-print
           .row-fluid
             #calendar.no-print
-            if (typeof(latestNews) != 'undefined')
+            if (typeof(latestNews) !== 'undefined')
               hr
               #news
                 h4 Das Neueste
