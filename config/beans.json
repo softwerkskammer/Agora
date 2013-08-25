@@ -18,6 +18,7 @@
   "mailsenderAPI": {"module": "./lib/mailsender/mailsenderAPI"},
   "colorAPI": {"module": "./lib/administration/colorAPI"},
   "mailarchiveAPI": {"module": "./lib/mailarchive/mailarchiveAPI"},
+  "wikiAPI": {"module": "./lib/wiki/wikiAPI"},
 
   "groupstore": {"module": "./lib/groups/groupstore"},
   "memberstore": {"module": "./lib/members/memberstore"},

@@ -14,7 +14,11 @@ block content
       .row-fluid
         .span12
           legend
-            | Wiki-Seite bearbeiten
+            | Wiki-Seite&nbsp;
+            if page.content === ''
+              | anlegen
+            else 
+              | bearbeiten
           mixin hightextarea('content', 'Inhalt', page)
           mixin text('comment', 'Kommentar', page, 'Kommentar')
           button.btn.btn-primary.pull-right(type="submit") Speichern
