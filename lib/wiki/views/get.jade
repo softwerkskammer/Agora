@@ -7,10 +7,10 @@ block content
   .row-fluid
     .span12
       .page-header
-        h5 wiki/#{pageName} &nbsp;
-          small #{metadata.author}, 
-            b(title="#{metadata.date}") #{metadata.relDate} &ndash; #{metadata.hash}
+        h2 "#{pageName}"&nbsp;
+          small in Wiki "#{subdir}"
           if (typeof(user) !== 'undefined' && canEdit)
-            a.pull-right.btn.btn-mini(href="/wiki/edit/#{subdir}/#{encodeURIComponent(pageName)}"): i.icon-edit
-            a.pull-right.btn.btn-mini(href="/wiki/versions/#{subdir}/#{encodeURIComponent(pageName)}"): i.icon-ellipsis-vertical
+            a.pull-right.btn(href="/wiki/edit/#{subdir}/#{encodeURIComponent(pageName)}", title="Bearbeiten"): i.icon-edit
+            a.pull-right.btn(href="/wiki/versions/#{subdir}/#{encodeURIComponent(pageName)}", title="Revisionen"): i.icon-sort-by-attributes-alt
+            a.pull-right.btn(href="/wiki/list/#{subdir}/", title="Alle Seiten in \"#{subdir}\""): i.icon-list
   !{content}

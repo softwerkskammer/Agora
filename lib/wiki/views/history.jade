@@ -8,7 +8,8 @@ block title
 
 block content
   .page-header
-    h2 Revisionen von "#{pageName}"
+    h2 Revisionen von "#{pageName}"&nbsp;
+      small in Wiki "#{subdir}"
       if (typeof(user) !== 'undefined')
         button(id="rev-compare", data-pageName="#{encodeURIComponent(pageName)}", data-subdir="#{subdir}").btn.pull-right: i.icon-stethoscope &nbsp; Vergleichen…
 
@@ -18,7 +19,7 @@ block content
         td
           input(type="checkbox", value="#{item.fullhash}")
         td #{item.author}
-        td #{item.relDate}
+        td #{item.date}
         td #{item.subject}
         td 
           a(href="/wiki/#{item.name}/#{item.hashRef}") #{item.hashRef || 'CURRENT'}

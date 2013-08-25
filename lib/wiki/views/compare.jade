@@ -5,7 +5,9 @@ block title
 
 block content
   .page-header
-    h2 Vergleich von "#{pageName}"
+    h2 Vergleich von "#{pageName}"&nbsp;
+      small in Wiki "#{subdir}"
+        a.btn.pull-right(href="javascript:history.back()", type="cancel") Zurück
 
   table.compare.table.table-bordered.table-hover.table-condensed
     each line in lines
