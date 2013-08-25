@@ -51,27 +51,27 @@ html
           .nav-collapse.navbar-inverse-collapse
             ul.nav
               li#announcements: a(href="/announcements")
-                i.icon-globe
-                | &nbsp;Nachrichten
+                i.icon-globe &nbsp;Nachrichten
               li#activities.dropdown
                 a.dropdown-toggle(href="#", data-toggle="dropdown")
-                  i.icon-calendar
-                  | &nbsp;Aktivitäten
+                  i.icon-calendar &nbsp;Aktivitäten
                   b.caret
                 ul.dropdown-menu
                   li: a(href="/activities/upcoming") Kommende
                   li: a(href="/activities/past") Vergangene
                   li: a(href="/activities") Alle
               li#groups: a(href="/groups")
-                i.icon-group
-                | &nbsp;Gruppen
+                i.icon-group &nbsp;Gruppen
               if (typeof(user) !== 'undefined')
                 li#members: a(href="/members")
-                  i.icon-user
-                  | &nbsp;Mitglieder
-              li#wiki: a(href="/wiki")
-                i.icon-book
-                | &nbsp;Wiki
+                  i.icon-user &nbsp;Mitglieder
+              li#wiki.dropdown
+                a.dropdown-toggle(href="#", data-toggle="dropdown")
+                  i.icon-book &nbsp;Wiki
+                  b.caret
+                ul.dropdown-menu
+                  for subdir in wikisubdirs
+                    li: a(href="/wiki/#{subdir}/") #{subdir}
 
               mixin administrationMenu(true)
 

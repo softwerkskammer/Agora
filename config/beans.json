@@ -72,5 +72,7 @@
   "secureByLogin": {"module": "./lib/middleware/secureByLogin"},
   "secureAdminOnly": {"module": "./lib/middleware/secureAdminOnly"},
   "announcementsInSidebar": {"module": "./lib/middleware/announcementsInSidebar"},
-  "expressViewHelper": {"module": "./lib/middleware/expressViewHelper"}
+  "expressViewHelper": {"module": "./lib/middleware/expressViewHelper"},
+  "wikiSubdirs": {"module": "./lib/middleware/wikiSubdirs"},
+  "gitmech": {"module": "./lib/wiki/gitmech"}
 }
