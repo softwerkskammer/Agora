@@ -13,18 +13,16 @@ block content
             a.pull-right.btn(href="new/", title="Neue Gruppe"): i.icon-file
   .row-fluid
     .span6
-      h3 Regionalgruppen&nbsp;
-        span.badge #{regionalgroups.length}
+      h3 #{regionalgroups.length} Regionalgruppen
 
       ul.unstyled
         each group in regionalgroups
-          li: strong: a.group(href="#{group.id}") #{group.longName}&nbsp;
-            span.badge(style="background-color: #{group.color}") #{group.members.length} Mitglieder
+          li: span.badge(style="background-color: #{group.color};min-width:20px;text-align:right;") #{group.members.length}</span>&nbsp;&nbsp;
+              strong: a.group(href="#{group.id}") #{group.longName}
     .span6
-      h3 Themengruppen&nbsp;
-        span.badge #{themegroups.length}
+      h3 #{themegroups.length} Themengruppen
       
       ul.unstyled
         each group in themegroups
-          li: strong: a.group(href="#{group.id}") #{group.longName}&nbsp;
-            span.badge(style="background-color: #{group.color}") #{group.members.length} Mitglieder
+          li: span.badge(style="background-color: #{group.color};min-width:20px;text-align:right;") #{group.members.length}</span>&nbsp;&nbsp;
+              strong: a.group(href="#{group.id}") #{group.longName}
