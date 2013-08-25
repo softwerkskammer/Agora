@@ -67,6 +67,7 @@ module.exports = {
       app.use(conf.get('beans').get('expressViewHelper'));
       app.use(conf.get('beans').get('redirectRuleForNewUser'));
       app.use(conf.get('beans').get('announcementsInSidebar'));
+      app.use(conf.get('beans').get('wikiSubdirs'));
       app.use(app.router);
       app.use(express.static(path.join(__dirname, 'public')));
     });
