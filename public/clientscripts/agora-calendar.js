@@ -24,7 +24,7 @@ $(document).ready(function () {
     events: '/activities/eventsForSidebar',
     eventMouseover: function (event, jsEvent, view) {
       var placement = "left";
-      if (event.dayOfWeek < 4) {
+      if (event.dayOfWeek < 4 && event.dayOfWeek > 0) {
         placement = "right";
       }
       $(this).tooltip({
