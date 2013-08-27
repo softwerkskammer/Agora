@@ -9,7 +9,7 @@ block title
   | #{pageName} (Wiki - Bearbeiten)
 
 block content
-  form(action='/wiki/#{subdir}/#{encodeURIComponent(pageName)}', method='post')
+  form(action='/wiki/#{subdir}/#{pageName}', method='post')
     fieldset
       .row-fluid
         .span12

@@ -52,6 +52,7 @@
     "node-html-encoder": "~0.0.2",
     "icalendar": "~0.6.3",
     "marked": "0.2.9",
+    "iconv": "2.x.x",
     "node-syntaxhighlighter": "0.8.x"
   },
   "devDependencies": {
