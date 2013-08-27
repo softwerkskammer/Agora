@@ -4,14 +4,15 @@ block scripts
   script(src="/clientscripts/wiki_compare.js")
 
 block title
-  | Wiki
+  | #{pageName} (Wiki - Revisionen)
 
 block content
   .page-header
     h2 Revisionen von "#{pageName}"&nbsp;
       small in Wiki "#{subdir}"
-      if (typeof(user) !== 'undefined')
-        button(id="rev-compare", data-pageName="#{encodeURIComponent(pageName)}", data-subdir="#{subdir}").btn.pull-right: i.icon-stethoscope &nbsp; Vergleichen…
+        if (typeof(user) !== 'undefined')
+          button(id="rev-compare", data-pageName="#{encodeURIComponent(pageName)}", data-subdir="#{subdir}").btn.pull-right: i.icon-stethoscope &nbsp; Vergleichen…
+        a.btn.pull-right(href="javascript:history.back()", type="cancel") Zurück
 
   table.history.table.table-striped.table-bordered.table-hover.table-condensed
     each item in items
