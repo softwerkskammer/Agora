@@ -6,7 +6,7 @@ block scripts
   script(src="/clientscripts/inputHelpers.js")
 
 block title
-  | Wiki
+  | #{pageName} (Wiki - Bearbeiten)
 
 block content
   form(action='/wiki/#{subdir}/#{encodeURIComponent(pageName)}', method='post')
