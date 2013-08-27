@@ -131,6 +131,24 @@ describe('Activity stores a list of members', function () {
     done();
   });
 
+  it('resets for copied activity', function (done) {
+    var activity = new Activity({
+      id: 'ID',
+      title: 'Title',
+      startDate: '4.4.2013',
+      endDate: '5.4.2013',
+      url: 'myURL',
+      registeredMembers: ['memberID']
+    });
+    activity = activity.resetForClone();
+    expect(activity.registeredMembers).to.be.empty;
+    expect(activity.startDate()).to.not.equal('04.04.2013');
+    expect(activity.endDate()).to.not.equal('05.04.2013');
+    expect(activity.id).to.be.null;
+    expect(activity.url).to.be.null;
+    done();
+  });
+
 });
 
 describe('ICalendar', function () {
