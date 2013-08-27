@@ -18,7 +18,7 @@ describe("Renderer", function () {
 
   it("should render bracket tags3", function () {
     var text = "a [[Foo Bar]] b";
-    expect(Renderer.render(text, 'subdir')).to.be.equal("<p>a <a class=\"internal\" href=\"/wiki/subdir/foo%20bar\">Foo Bar</a> b</p>\n");
+    expect(Renderer.render(text, 'subdir')).to.be.equal("<p>a <a class=\"internal\" href=\"/wiki/subdir/foo-bar\">Foo Bar</a> b</p>\n");
   });
 
   it("should render bracket tags4", function () {
@@ -38,7 +38,7 @@ describe("Renderer", function () {
 
   it("should render bracket tags7", function () {
     var text = "a [[Foo / Bar]] b";
-    expect(Renderer.render(text, 'subdir')).to.be.equal("<p>a <a class=\"internal\" href=\"/wiki/subdir/foo%20%2F%20bar\">Foo / Bar</a> b</p>\n");
+    expect(Renderer.render(text, 'subdir')).to.be.equal("<p>a <a class=\"internal\" href=\"/wiki/subdir/foo---bar\">Foo / Bar</a> b</p>\n");
   });
 
 });

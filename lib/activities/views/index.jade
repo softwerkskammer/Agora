@@ -9,12 +9,14 @@ block content
       .page-header
         h2 Aktivitäten&nbsp;
           small #{range}
-          a.pull-right.btn(href="ical/", title="In Kalender importieren"): i.icon-calendar
-          if typeof(user) !== 'undefined' && user.member.isAdmin
-            a.pull-right.btn(href="new/", title="Neue Aktivität"): i.icon-file
+            if typeof(user) !== 'undefined' && user.member.isAdmin
+              a.pull-right.btn(href="new/", title="Neue Aktivität"): i.icon-file
+            a.pull-right.btn(href="ical/", title="Für Kalender exportieren. Zum Abo: URL in Kalenderprogramm abonnieren"): i.icon-calendar
       dl.dl-horizontal
         for activity in activities
           dt
             | #{activity.startDate()} 
-          dd: a(href='#{encodeURIComponent(activity.url)}') #{activity.title}
-            | in #{activity.location} (#{activity.groupName(groups)})
+          dd
+            a(href='#{encodeURIComponent(activity.url)}') #{activity.title} in #{activity.location} 
+            a(href='/groups/#{activity.assignedGroup}') 
+              span.badge(style="background-color: #{activity.colorFrom(groupColors, colors)};min-width:20px;text-align:right;") #{activity.groupName(groups)}
