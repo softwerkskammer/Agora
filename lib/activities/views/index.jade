@@ -16,6 +16,7 @@ block content
         for activity in activities
           dt
             | #{activity.startDate()} 
-          dd: a(href='#{encodeURIComponent(activity.url)}') #{activity.title}
-            | in #{activity.location} 
-            span.badge(style="background-color: #{activity.color};min-width:20px;text-align:right;") #{activity.groupName(groups)}
+          dd
+            a(href='#{encodeURIComponent(activity.url)}') #{activity.title} in #{activity.location} 
+            a(href='/groups/#{activity.assignedGroup}') 
+              span.badge(style="background-color: #{activity.colorFrom(groupColors, colors)};min-width:20px;text-align:right;") #{activity.groupName(groups)}
