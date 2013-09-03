@@ -51,9 +51,11 @@ html
           .nav-collapse.navbar-inverse-collapse
             ul.nav
               li#announcements: a(href="/announcements")
-                i.icon-globe &nbsp;Nachrichten
+                i.icon-globe
+                | &nbsp;Nachrichten
               li#activities: a(href="/activities/upcoming", style="padding-right:0px;")
-                i.icon-calendar &nbsp;Aktivitäten
+                i.icon-calendar
+                | &nbsp;Aktivitäten
               li#activities.dropdown
                 a.dropdown-toggle(href="#", data-toggle="dropdown", style="padding-left:5px;")
                   b.caret
@@ -62,12 +64,15 @@ html
                   li: a(href="/activities/past") Vergangene
                   li: a(href="/activities") Alle
               li#groups: a(href="/groups")
-                i.icon-group &nbsp;Gruppen
+                i.icon-group
+                | &nbsp;Gruppen
               if (typeof(user) !== 'undefined')
                 li#members: a(href="/members")
-                  i.icon-user &nbsp;Mitglieder
+                  i.icon-user
+                  | &nbsp;Mitglieder
               li#wiki: a(href="/wiki/global/", style="padding-right:0px;")
-                i.icon-book &nbsp;Wiki
+                i.icon-book
+                | &nbsp;Wiki
               li#wiki.dropdown
                 a.dropdown-toggle(href="#", data-toggle="dropdown", style="padding-left:5px;")
                   b.caret
