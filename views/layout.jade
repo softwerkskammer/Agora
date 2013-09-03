@@ -35,8 +35,8 @@ html
     title Softwerkskammer - 
       block title
   body
-    include loginComponent
     include layoutComponents
+    include loginComponent
     img.print-only(src="/img/Softwerkskammer_Header.png", alt="Softwerkskammer")
     .navbar.navbar-fixed-top.no-print
       .navbar-inner
@@ -86,6 +86,8 @@ html
     .container-fluid
       .row-fluid
         .span9
+          if (typeof(statusmessage) !== 'undefined')
+            mixin notificationsBlock(statusmessage)
           block content
         .span3.no-print
           .row-fluid
