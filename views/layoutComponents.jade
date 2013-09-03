@@ -59,3 +59,10 @@ mixin externalUrl(url, text)
     i.icon-external-link
     | &nbsp;#{text}
 
+mixin notificationsBlock(notificationmessage)
+  #{notificationmessage.kill()}
+  #notifications(class="alert alert-block #{notificationmessage.type}")
+    button.close(type="button", data-dismiss="alert")&times;
+    h4 #{notificationmessage.title}
+    | #{notificationmessage.text}
+    

@@ -23,6 +23,7 @@ block content
           mixin hightextarea('markdown', 'Inhalt', message)
           mixin checkbox('sendCopyToSelf', 'Eine Kopie an mich senden', false)
           mixin hidden('htmlAddOn', message)
+          input(id="successURL", type="hidden", name="successURL", value="#{successURL}")
 
           button.btn.btn-primary.pull-right(type="submit") Senden
           a.btn.pull-right(href="javascript:history.back()", type="cancel") Zurück

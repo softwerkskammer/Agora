@@ -63,6 +63,7 @@
   "message": {"module": "./lib/mailsender/message"},
   "archivedMail": {"module": "./lib/mailarchive/archivedMail"},
   "mailThread": {"module": "./lib/mailarchive/mailThread"},
+  "statusmessage": {"module": "./lib/commons/statusmessage"},
 
   "fieldHelpers": {"module": "./lib/commons/fieldHelpers"},
   "validation": {"module": "./lib/commons/validation"},
