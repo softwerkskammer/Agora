@@ -125,7 +125,7 @@ describe('Mail index page', function () {
     request(app)
       .get('/list/group')
       .expect(200)
-      .expect(/<title>Softwerkskammer\s+-\s+group\s+mails\s+<\/title>/, function (err) {
+      .expect(/<title>+group\s+mails/, function (err) {
         done(err);
       });
   });
