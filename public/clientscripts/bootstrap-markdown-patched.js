@@ -15,6 +15,9 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * !!! PATCHED -> Search line: "      this.$textarea.css('resize','none')"
+ * 
  * ========================================================== */
 
 !function ($) {
@@ -130,7 +133,7 @@
           rowsVal = hasRows ? this.$textarea.attr('rows') : maxRows
 
       this.$textarea.attr('rows',rowsVal)
-      this.$textarea.css('resize','none')
+      this.$textarea.css('resize','vertical')
 
       this.$textarea
         .on('focus',    $.proxy(this.focus, this))

@@ -10,7 +10,7 @@ html
     script(src="/clientscripts/bootstrap.js")
     script(src="/clientscripts/bootstrap-editable.js")
     script(src="/clientscripts/navbar-scripts.js")
-    script(src="/clientscripts/bootstrap-markdown.js")
+    script(src="/clientscripts/bootstrap-markdown-patched.js")
     script(src="/clientscripts/markdown.js")
     script(src="/clientscripts/fullcalendar.js")
     script(src="/clientscripts/bootstrap-colorpicker.js")
@@ -38,6 +38,7 @@ html
   body
     include layoutComponents
     include loginComponent
+    include markdownCheatsheet
     img.print-only(src="/img/Softwerkskammer_Header.png", alt="Softwerkskammer")
     .navbar.navbar-fixed-top.no-print
       .navbar-inner
