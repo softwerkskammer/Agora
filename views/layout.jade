@@ -53,18 +53,11 @@ html
           .nav-collapse.navbar-inverse-collapse
             ul.nav
               li#announcements: a(href="/announcements")
-                i.icon-globe
+                i.icon-globe.icon-spin
                 | &nbsp;Nachrichten
-              li#activities: a(href="/activities/upcoming", style="padding-right:0px;")
+              li#activities: a(href="/activities/upcoming")
                 i.icon-calendar
                 | &nbsp;Aktivitäten
-              li#activities.dropdown
-                a.dropdown-toggle(href="#", data-toggle="dropdown", style="padding-left:5px;")
-                  b.caret
-                ul.dropdown-menu
-                  li: a(href="/activities/upcoming") Kommende
-                  li: a(href="/activities/past") Vergangene
-                  li: a(href="/activities") Alle
               li#groups: a(href="/groups")
                 i.icon-group
                 | &nbsp;Gruppen
@@ -72,11 +65,10 @@ html
                 li#members: a(href="/members")
                   i.icon-user
                   | &nbsp;Mitglieder
-              li#wiki: a(href="/wiki/global/", style="padding-right:0px;")
-                i.icon-book
-                | &nbsp;Wiki
               li#wiki.dropdown
-                a.dropdown-toggle(href="#", data-toggle="dropdown", style="padding-left:5px;")
+                a.dropdown-toggle(href="#", data-toggle="dropdown")
+                  i.icon-book
+                  | &nbsp;Wiki&nbsp;
                   b.caret
                 ul.dropdown-menu
                   if (typeof(wikisubdirs) !== 'undefined')
