@@ -9,28 +9,41 @@ var highlightCurrentSection = function () {
 };
 
 var addHelpButtonToTextarea = function () {
-  $('textarea').each(function () {
-    $(this).markdown({
-      additionalButtons: [
-        [
-          {
-            name: "groupCustom",
-            data: [
+    $('textarea').each(function () {
+      $(this).markdown({
+          additionalButtons: [
+            [
               {
-                name: "cmdBeer",
-                title: "Help",
-                icon: "icon icon-question-sign",
-                callback: function (e) {
-                  window.open("http://daringfireball.net/projects/markdown/syntax", "_blank");
-                }
+                name: "groupCustom",
+                data: [
+                  {
+                    name: "cmdBeer",
+                    title: "Help",
+                    icon: "icon icon-question-sign",
+                    callback: function () {
+                      window.open("http://daringfireball.net/projects/markdown/syntax", "_blank");
+                    }
+                  }
+                ]
               }
             ]
+          ],
+          onPreview: function (e) {
+            $.post("/wiki/preview",
+              {data: e.getContent(), subdir: ($("#subdir").val() || $("#assignedGroup").val() || $('#id').val())},
+              function (data) {
+                $(".md-preview").html(data);
+              }
+            )
+            ;
           }
-        ]
-      ]
-    });
-  });
-};
+        }
+      )
+      ;
+    })
+    ;
+  }
+  ;
 $(document).ready(highlightCurrentSection);
 $(document).ready(addHelpButtonToTextarea);
 
