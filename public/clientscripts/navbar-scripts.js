@@ -21,7 +21,7 @@ var addHelpButtonToTextarea = function () {
                     title: "Help",
                     icon: "icon icon-question-sign",
                     callback: function () {
-                      window.open("http://daringfireball.net/projects/markdown/syntax", "_blank");
+                      $("#cheatsheet").modal();
                     }
                   }
                 ]

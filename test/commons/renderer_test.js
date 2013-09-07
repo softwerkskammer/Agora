@@ -45,12 +45,15 @@ describe("Renderer", function () {
   it("should normalize a string", function () {
     expect(Renderer.normalize("34")).to.equal("34");
     expect(Renderer.normalize("    ")).to.equal("");
+    expect(Renderer.normalize("")).to.equal("");
     expect(Renderer.normalize("hello_Sidebar")).to.equal("hello_sidebar");
     expect(Renderer.normalize("_Sidebar")).to.equal("_sidebar");
     expect(Renderer.normalize("_FOOTER")).to.equal("_footer");
     expect(Renderer.normalize("CoffeE")).to.equal("coffee");
     expect(Renderer.normalize("nell'aria")).to.equal("nellaria");
     expect(Renderer.normalize("lento  lento   lentissimo")).to.equal("lento--lento---lentissimo");
+    expect(Renderer.normalize("nell - aria")).to.equal("nell---aria");
+    expect(Renderer.normalize(" nell - aria ")).to.equal("nell---aria");
     expect(Renderer.normalize("Caffé")).to.equal("caffe");
     expect(Renderer.normalize("Caffé corretto!")).to.equal("caffe-corretto");
     expect(Renderer.normalize("Caff<p>e</p> senza schiuma")).to.equal("caffpe-p-senza-schiuma");
