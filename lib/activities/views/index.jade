@@ -8,7 +8,15 @@ block content
     .span12
       .page-header
         h2 Aktivitäten&nbsp;
-          small #{range}
+          small
+            .btn-group(style="height: 40px;")
+              a.btn.dropdown-toggle(data-toggle="dropdown")
+                | #{range} &nbsp;
+                span.caret
+              ul.dropdown-menu
+                li: a(href="/activities/upcoming") Kommende
+                li: a(href="/activities/past") Vergangene
+                li: a(href="/activities") Alle
             if typeof(user) !== 'undefined' && user.member.isAdmin
               a.pull-right.btn(href="new/", title="Neue Aktivität"): i.icon-file
             a.pull-right.btn(href="ical/", title="Für Kalender exportieren. Zum Abo: URL in Kalenderprogramm abonnieren"): i.icon-calendar
