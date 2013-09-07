@@ -22,13 +22,13 @@ mixin textReadonly(name, label, object)
 mixin textarea(name, label, object)
   .control-group
     label(class="control-label", for=name) #{label}:
-    textarea(rows="7", class="input-block-level input-xxlarge", id=name, type='text', name=name)
+    textarea(data-provide=​'markdown', rows="7", class="input-block-level input-xxlarge", id=name, type='text', name=name)
       | #{object[name]}
 
 mixin hightextarea(name, label, object)
   .control-group
     label(class="control-label", for=name) #{label}:
-    textarea(rows="15", class="input-block-level input-xxlarge", id=name, type='text', name=name)
+    textarea(data-provide=​'markdown', rows="15", class="input-block-level input-xxlarge", id=name, type='text', name=name)
       | #{object[name]}
 
 mixin checkbox(name, label, checked, optionalValue)

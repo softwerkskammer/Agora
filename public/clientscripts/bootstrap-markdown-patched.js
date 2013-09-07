@@ -1,5 +1,5 @@
 /* ===================================================
- * bootstrap-markdown.js v1.0.0
+ * bootstrap-markdown.js v1.1.4
  * http://github.com/toopay/bootstrap-markdown
  * ===================================================
  * Copyright 2013 Taufan Aditya
@@ -15,6 +15,9 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * !!! PATCHED -> Search line: "      this.$textarea.css('resize','none')"
+ * 
  * ========================================================== */
 
 !function ($) {
@@ -30,7 +33,6 @@
     this.$ns          = 'bootstrap-markdown'
     this.$element     = $(element)
     this.$editable    = {el:null, type:null,attrKeys:[], attrValues:[], content:null}
-    this.$cloneEditor = {el:null, type:null,attrKeys:[], attrValues:[], content:null}
     this.$options     = $.extend(true, {}, $.fn.markdown.defaults, options)
     this.$oldContent  = null
     this.$isPreview   = false
@@ -83,20 +85,30 @@
 
           for (z=0;z<buttons.length;z++) {
             var button = buttons[z],
+                buttonToggle = '',
                 buttonHandler = ns+'-'+button.name,
                 btnText = button.btnText ? button.btnText : '',
-                btnClass = button.btnClass ? button.btnClass : 'btn'
+                btnClass = button.btnClass ? button.btnClass : 'btn',
+                tabIndex = button.tabIndex ? button.tabIndex : '-1'
+
+            if (button.toggle == true) {
+              buttonToggle = ' data-toggle="button"'
+            }
 
             // Attach the button object
             btnGroupContainer.append('<button class="'
                                     +btnClass
                                     +' btn-small" title="'
                                     +button.title
+                                    +'" tabindex="'
+                                    +tabIndex
                                     +'" data-provider="'
                                     +ns
                                     +'" data-handler="'
                                     +buttonHandler
-                                    +'"><i class="'
+                                    +'"'
+                                    +buttonToggle
+                                    +'><i class="'
                                     +button.icon
                                     +'"></i> '
                                     +btnText
@@ -121,7 +133,7 @@
           rowsVal = hasRows ? this.$textarea.attr('rows') : maxRows
 
       this.$textarea.attr('rows',rowsVal)
-      this.$textarea.css('resize','none')
+      this.$textarea.css('resize','vertical')
 
       this.$textarea
         .on('focus',    $.proxy(this.focus, this))
@@ -289,26 +301,14 @@
       var options = this.$options,
           callbackContent = options.onPreview(this), // Try to get the content from callback
           container = this.$textarea,
+          afterContainer = container.next(),
           replacementContainer = $('<div/>',{'class':'md-preview','data-provider':'markdown-preview'}),
-          cloneEditor = this.$cloneEditor,
           content
 
       // Give flag that tell the editor enter preview mode
       this.$isPreview = true
       // Disable all buttons
       this.disableButtons('all').enableButtons('cmdPreview')
-
-      // Save the editor
-      cloneEditor.el = container
-      cloneEditor.type = container.prop('tagName').toLowerCase()
-      cloneEditor.content = container.val()
-
-      $(container[0].attributes).each(function(){
-        cloneEditor.attrKeys.push(this.nodeName)
-        cloneEditor.attrValues.push(this.nodeValue)
-      })
-
-      this.$cloneEditor = cloneEditor
 
       if (typeof callbackContent == 'string') {
         // Set the content based by callback content
@@ -318,9 +318,19 @@
         content = (typeof markdown == 'object') ? markdown.toHTML(container.val()) : container.val()
       }
 
-      // Build preview element and replace the editor temporarily
+      // Build preview element
       replacementContainer.html(content)
-      container.replaceWith(replacementContainer)
+
+      if (afterContainer && afterContainer.attr('class') == 'md-footer') {
+        // If there is footer element, insert the preview container before it
+        replacementContainer.insertBefore(afterContainer)
+      } else {
+        // Otherwise, just append it after textarea
+        container.parent().append(replacementContainer)
+      }
+
+      // Hide the last-active textarea
+      container.hide()
 
       // Attach the editor instances
       replacementContainer.data('markdown',this)
@@ -332,26 +342,17 @@
       // Give flag that tell the editor quit preview mode
       this.$isPreview = false
 
-      // Build the original element
-      var container = this.$editor.find('div[data-provider="markdown-preview"]'),
-          cloneEditor = this.$cloneEditor,
-          oldElement = $('<'+cloneEditor.type+'/>')
+      // Obtain the preview container
+      var container = this.$editor.find('div[data-provider="markdown-preview"]')
 
-      $(cloneEditor.attrKeys).each(function(k,v) {
-        oldElement.attr(cloneEditor.attrKeys[k],cloneEditor.attrValues[k])
-      })
-
-      // Set the editor content
-      oldElement.val(cloneEditor.content)
-
-      // Set the editor data
-      container.replaceWith(oldElement)
+      // Remove the preview container
+      container.remove()
 
       // Enable all buttons
       this.enableButtons('all')
 
       // Back to the editor
-      this.$textarea = oldElement
+      this.$textarea.show()
       this.__setListener()
 
       return this
@@ -362,7 +363,7 @@
     }
 
   , getContent: function() {
-      return (this.$isPreview) ? this.$cloneEditor.content : this.$textarea.val()
+      return this.$textarea.val()
     }
 
   , setContent: function(content) {
@@ -545,12 +546,25 @@
             setTimeout(function(){
               that.setSelection(nextTab.start,nextTab.end)
             },500)
+
+            blocked = true
           } else {
-            // Put the cursor to the end
-            this.setSelection(this.getContent().length,this.getContent().length)
+            // The next tab memory contains nothing...
+            // check the cursor position to determine tab action
+            var cursor = this.getSelection() 
+
+            if (cursor.start == cursor.end && cursor.end == this.getContent().length) {
+              // The cursor already reach the end of the content
+              blocked = false
+
+            } else {
+              // Put the cursor to the end
+              this.setSelection(this.getContent().length,this.getContent().length)
+              
+              blocked = true
+            }
           }
 
-          blocked = true
           break
 
         case 13: // enter
@@ -599,11 +613,6 @@
           isHideable = options.hideable,
           editor = this.$editor,
           editable = this.$editable
-
-      // Force to quit preview mode
-      if (this.$isPreview) {
-        this.hidePreview()
-      }
 
       if (editor.hasClass('active') || this.$element.parent().length == 0) {
         editor.removeClass('active')
@@ -870,6 +879,7 @@
         name: 'groupUtil',
         data: [{
           name: 'cmdPreview',
+          toggle: true,
           title: 'Preview',
           btnText: 'Preview',
           btnClass: 'btn btn-inverse',

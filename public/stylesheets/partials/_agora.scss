@@ -78,6 +78,34 @@ td.fc-header-right {
   border-bottom-color: transparent;
 }
 
+.cheatsheet-content .col {
+  float: left;
+  width: 30%;
+  margin-left: 10px;
+}
+
+.cheatsheet-content pre {
+  border: 1px solid #ddd;
+  background-color: #eee;
+  border-radius: 3px;
+  width: 100%;
+  padding: 5px;
+  font-size: 12px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.cheatsheet-content hr {
+  clear: both;
+}
+
+#cheatsheet {
+  width: 75%; /* desired relative width */
+  left: 12.5%; /* (100%-width)/2 */
+  margin: auto auto auto auto; /* place center */
+}
+
 @media print {
   .btn, .no-print {
     display: none !important;
