@@ -6,6 +6,10 @@ include ../../../views/formComponents
 block title
   | #{activity.title} - Aktivitäten
 
+block opengraph
+  meta(property="og:description", content!=activity.descriptionHTML())
+  meta(property="og:title", content=activity.title)
+
 block content
   .row-fluid
     .span12
