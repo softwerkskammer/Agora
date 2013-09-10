@@ -113,6 +113,26 @@ describe('Activity', function () {
   });
 });
 
+describe('Activity\'s description', function () {
+  it('renders anchor tags when required', function (done) {
+    var activity = new Activity();
+    activity.description = '<a href = "http://a.de">dafadf</a> https://b.de';
+    expect(activity.descriptionHTML()).to.contain('"http://a.de"');
+    expect(activity.descriptionHTML()).to.contain('"https://b.de"');
+    done();
+  });
+
+  it('removes anchor tags when required', function (done) {
+    var activity = new Activity();
+    activity.description = '<a href = "http://a.de">dafadf</a> https://b.de';
+    expect(activity.descriptionHTMLWithoutAnchors()).to.not.contain('"http://a.de"');
+    expect(activity.descriptionHTMLWithoutAnchors()).to.not.contain('"https://b.de"');
+    expect(activity.descriptionHTMLWithoutAnchors()).to.not.contain('dafadf');
+    expect(activity.descriptionHTMLWithoutAnchors()).to.not.contain('https://b.de');
+    done();
+  });
+});
+
 describe('Activity stores a list of members', function () {
   it('can add a member', function (done) {
     var activity = new Activity();

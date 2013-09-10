@@ -4,7 +4,11 @@ include ../../../views/googlemaps-component
 include ../../../views/formComponents
 
 block title
-  | Aktivitäten
+  | #{activity.title} - Aktivitäten
+
+block opengraph
+  meta(property="og:description", content!=activity.descriptionHTMLWithoutAnchors())
+  meta(property="og:title", content=activity.title)
 
 block content
   .row-fluid
