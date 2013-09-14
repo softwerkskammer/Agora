@@ -95,23 +95,16 @@ var dateAdapter = function() {
 
     var newStartDate = toUtc($('#startDate').val(), $('#startTime').val());
 
-    // TODO kann raus?!:
-    if(!newStartDate){
-      return;
-    }
-
     var offset = oldStartDate && newStartDate ? newStartDate.diff(oldStartDate, 'minutes') : 0;
     
     var endDayString = endDayStringOr(oldStartDate);
 
     oldStartDate = newStartDate;
 
-    if( offset === 0 ){
-      return;
+    if( offset !== 0 ){
+      var newEndDate = toUtc(endDayString, $('#endTime').val()).add(offset, 'minutes');
+      setEndFieldsTo(newEndDate);
     }
-    
-    var newEndDate = toUtc(endDayString, $('#endTime').val()).add(offset, 'minutes');
-    setEndFieldsTo(newEndDate);
   };
 
   var oldStartDate = toUtc($('#startDate').val(), $('#startTime').val());
