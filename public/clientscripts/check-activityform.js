@@ -49,8 +49,6 @@ var initValidator = function () {
       activity_validator.element(each);
     });
   });
-
-  dateAdapter();
 };
 
 var dateAdapter = function() {
@@ -76,7 +74,7 @@ var dateAdapter = function() {
     return "";
   };
 
-  var endDayString = function () {
+  var endDayStringOr = function (oldStartDate) {
     // if the endDate field is empty, use the old contents of the start date field
     return $('#endDate').val() || dateString(oldStartDate);
   };
@@ -94,21 +92,26 @@ var dateAdapter = function() {
   };
 
   var listener = function() {
+
     var newStartDate = toUtc($('#startDate').val(), $('#startTime').val());
+
+    // TODO kann raus?!:
     if(!newStartDate){
       return;
     }
 
-    var offset = newStartDate.diff(oldStartDate, 'minutes');
+    var offset = oldStartDate && newStartDate ? newStartDate.diff(oldStartDate, 'minutes') : 0;
     
+    var endDayString = endDayStringOr(oldStartDate);
+
+    oldStartDate = newStartDate;
+
     if( offset === 0 ){
       return;
     }
     
-    var newEndDate = toUtc(endDayString(), $('#endTime').val()).add(offset, 'minutes');
+    var newEndDate = toUtc(endDayString, $('#endTime').val()).add(offset, 'minutes');
     setEndFieldsTo(newEndDate);
-    
-    oldStartDate = newStartDate;
   };
 
   var oldStartDate = toUtc($('#startDate').val(), $('#startTime').val());
@@ -118,3 +121,4 @@ var dateAdapter = function() {
 
 
 $(document).ready(initValidator);
+$(document).ready(dateAdapter);
