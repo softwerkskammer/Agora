@@ -1,12 +1,12 @@
-/* global test, $, equal */
+/* global $, setFixtures, expect, dateAdapter */
 "use strict";
 
 describe("StartDate and EndDate adjustment", function () {
 
-  beforeEach (function(){
+  beforeEach(function () {
     setFixtures('<form id="activityform" action="submit" method="post">' +
                 '<input id="startDate" type="text" name="startDate"/>' +
-                '<input id="startTime" type="text" name="startTime"/>'+
+                '<input id="startTime" type="text" name="startTime"/>' +
                 '<input id="endDate" type="text" name="endDate"/>' +
                 '<input id="endTime" type="text" name="endTime"/>' +
                 '</form>');
@@ -30,7 +30,7 @@ describe("StartDate and EndDate adjustment", function () {
     $('#startTime').val(startTime);
     $("#startTime").trigger("change");
   };
-  
+
   var assert = function (startDate, startTime, endDate, endTime) {
     expect($('#startDate').val()).toEqual(startDate);
     expect($('#startTime').val()).toEqual(startTime);
