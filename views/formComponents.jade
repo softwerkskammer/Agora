@@ -2,7 +2,8 @@
 mixin controlLabel(name, label, tooltip)
   label(class="control-label", for=name)
     if (typeof(tooltip) !== 'undefined')
-      span.tooltiplabel(data-toggle="tooltip", data-original-title="#{tooltip}") #{label}:
+      span.tooltiplabel(data-toggle="tooltip", data-original-title="#{tooltip}") #{label}:&nbsp;
+        i.icon-question-sign
       script
         $('.tooltiplabel').each(function(each) {$(this).tooltip()})
     else
@@ -55,14 +56,14 @@ mixin hidden(name, object, optionalAlternateValue)
 
 // PICKERS
 // you need to include this initPickers.js, if you use the color-, date- or timepicker
-mixin date(name, label, object, value)
+mixin date(name, label, object, value, tooltip)
   .control-group
-    label(class="control-label", for=name) #{label}:
+    mixin controlLabel(name, label, tooltip)
     input(id=name, class="input-block-level input-xlarge datepicker", type='text', name=name, value=(value ? value : object[name]))
 
 mixin time(name, label, object, value)
   .control-group.bootstrap-timepicker
-    label(class="control-label", for=name) #{label}:
+    label(class="control-label", for=name) #{label}
     input(id=name, class="input-block-level input-xlarge timepicker", type='text', name=name, value=(value ? value : object[name]))
 
 mixin colorPicker(name, object)
