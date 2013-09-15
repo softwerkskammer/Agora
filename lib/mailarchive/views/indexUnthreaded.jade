@@ -10,11 +10,11 @@ block title
   | mails 
 
 block content
-  .span12
+  .col-md-12
     .page-header
       mixin pageHeader(group)
       a(href=encodeURIComponent(group)+"?thread=true" ) Ansicht threaded
-  .row-fluid
-    .span12
+  .row
+    .col-md-12
       #mails.pre-scrollable
         mixin mailIndex(mailHeaders)

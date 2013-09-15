@@ -1,6 +1,6 @@
 // GENERAL
 mixin controlLabel(name, label, tooltip)
-  label(class="control-label", for=name)
+  label.control-label(for=name)
     if (typeof(tooltip) !== 'undefined')
       span.tooltiplabel(data-toggle="tooltip", data-original-title="#{tooltip}") #{label}:&nbsp;
         i.icon-question-sign
@@ -10,43 +10,44 @@ mixin controlLabel(name, label, tooltip)
       | #{label}:
 
 mixin text(name, label, object, tooltip)
-  .control-group
+  .form-group
     mixin controlLabel(name, label, tooltip)
-    input(id=name, class="input-block-level input-xlarge", type='text', name=name, value=object[name])
+    input.form-control(id=name, type='text', name=name, value=object[name])
 
 mixin textReadonly(name, label, object)
-  .control-group
-    input(id=name, type="hidden", name=name, value=object[name])
+  .form-group
+    mixin hidden(name, object)
     label(class="control-label", for=name) #{label}:
     span.input-block-level.input-xlarge.uneditable-input #{object[name]}
 
 mixin textarea(name, label, object)
-  .control-group
+  .form-group
     label(class="control-label", for=name) #{label}:
     textarea(data-provide=​'markdown', rows="7", class="input-block-level input-xxlarge", id=name, type='text', name=name)
       | #{object[name]}
 
 mixin hightextarea(name, label, object)
-  .control-group
+  .form-group
     label(class="control-label", for=name) #{label}:
     textarea(data-provide=​'markdown', rows="15", class="input-block-level input-xxlarge", id=name, type='text', name=name)
       | #{object[name]}
 
 mixin checkbox(name, label, checked, optionalValue)
-  label.checkbox
-    input(type='checkbox', name=name, value=optionalValue, checked=(checked ? "true" : undefined))
-    | #{label}
+  .checkbox
+    label
+      input(type='checkbox', name=name, value=optionalValue, checked=(checked ? "true" : undefined))
+      | #{label}
 
 mixin groupCheckboxes(checkboxName, regionalgroups, themegroups)
-  .row-fluid
-    .span6
+  .row
+    .col-md-6
       h4 Regionale Gruppen
-      .control-group
+      .form-group
         each markedGroup in regionalgroups
           mixin checkbox(checkboxName, markedGroup.group.longName, markedGroup.selected, markedGroup.group.id)
-    .span6
+    .col-md-6
       h4 Themengruppen
-      .control-group
+      .form-group
         each markedGroup in themegroups
           mixin checkbox(checkboxName, markedGroup.group.longName, markedGroup.selected, markedGroup.group.id)
 
@@ -57,21 +58,21 @@ mixin hidden(name, object, optionalAlternateValue)
 // PICKERS
 // you need to include this initPickers.js, if you use the color-, date- or timepicker
 mixin date(name, label, object, value, tooltip)
-  .control-group
+  .form-group
     mixin controlLabel(name, label, tooltip)
-    input(id=name, class="input-block-level input-xlarge datepicker", type='text', name=name, value=(value ? value : object[name]))
+    input.form-control.datepicker(id=name, type='text', name=name, value=(value ? value : object[name]))
 
 mixin time(name, label, object, value)
-  .control-group.bootstrap-timepicker
+  .form-group.bootstrap-timepicker
     label(class="control-label", for=name) #{label}
-    input(id=name, class="input-block-level input-xlarge timepicker", type='text', name=name, value=(value ? value : object[name]))
+    input.form-control.timepicker(id=name, type='text', name=name, value=(value ? value : object[name]))
 
 mixin colorPicker(name, object)
-  .control-group
+  .form-group
     label.control-label(for="color") Farbe:
-    #color.input-append.color(data-color="#{object[name]}", data-color-format="hex")
-      input#colorText.input-block-level.input-xlarge(type="text", name=name, value=object[name])
-      span.add-on: i(style="background-color: #{object[name]}")
+    #color.input-group(data-color="#{object[name]}", data-color-format="hex")
+      input#colorText.form-control(type="text", name=name, value=object[name])
+      span.input-group-addon: i(style="background-color: #{object[name]}")
     script
       $("#color").colorpicker();
       $("#colorText").on("change", function (event) {
@@ -85,9 +86,9 @@ mixin colorPicker(name, object)
 
 // SPECIAL
 mixin twitter(name, label, object)
-  .control-group
+  .form-group
     label(class="control-label", for=name) #{label}:
-    div(class="input-prepend input-block-level input-xlarge")
-      span(class="add-on", style="width: 5%;float: left;") @
-      input(id=name, class="input-block-level input-xlarge", style="width: 93%;", type='text', name=name, value=object[name])
+    .input-group
+      span.input-group-addon @
+      input.form-control(id=name, type='text', name=name, value=object[name])
 

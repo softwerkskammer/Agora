@@ -5,21 +5,31 @@ a.editable-click:hover {
   border-bottom: inherit;
 }
 
-@media (min-width: 980px) {
+@media (min-width: 1200px) {
+  .container {
+    max-width: 2048px;
+  }
+}
+
+@media (min-width: 992px) {
   .container.bottom {
     padding-top: 20px;
     margin-right: 0px;
   }
 
-  .brand.no-padding {
-    padding-top: 0px;
+  .navbar-brand.no-padding {
+    padding-top: 10px;
     padding-bottom: 0px;
-    padding-left: 20px;
-    padding-right: 10px
+    padding-left: 0px;
+    padding-right: 0px
+  }
+
+  .navbar {
+    margin: 0px;
   }
 
   body {
-    padding-top: 65px;
+    padding-top: 85px;
     padding-bottom: 65px
   }
 }
@@ -78,34 +88,6 @@ td.fc-header-right {
   border-bottom-color: transparent;
 }
 
-.cheatsheet-content .col {
-  float: left;
-  width: 30%;
-  margin-left: 10px;
-}
-
-.cheatsheet-content pre {
-  border: 1px solid #ddd;
-  background-color: #eee;
-  border-radius: 3px;
-  width: 100%;
-  padding: 5px;
-  font-size: 12px;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-}
-
-.cheatsheet-content hr {
-  clear: both;
-}
-
-#cheatsheet {
-  width: 75%; /* desired relative width */
-  left: 12.5%; /* (100%-width)/2 */
-  margin: auto auto auto auto; /* place center */
-}
-
 @media print {
   .btn, .no-print {
     display: none !important;
@@ -115,5 +97,11 @@ td.fc-header-right {
 @media screen {
   .print-only {
     display: none;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .modal-dialog.cheatsheet {
+    width: 80%;
   }
 }

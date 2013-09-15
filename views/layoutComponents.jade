@@ -1,30 +1,29 @@
 mixin administrationMenu(top)
   if ((typeof(user) !== 'undefined') && user.member && user.member.isAdmin)
-    ul(class="nav #{top ? "visible-desktop" : "hidden-desktop"}")
-      li#administration.dropdown
-        a.dropdown-toggle(href="#", data-toggle="dropdown")
-          i.icon-dashboard
-          | &nbsp;Verwaltung&nbsp;
-          b.caret
-        ul.dropdown-menu
-          li: a(href="/administration/announcementTable")
-            i.icon-globe
-            | &nbsp;Nachrichten
-          li: a(href="/administration/activityTable")
-            i.icon-calendar
-            | &nbsp;Aktivitäten
-          li: a(href="/administration/groupTable")
-            i.icon-group
-            | &nbsp;Gruppen
-          li: a(href="/administration/memberTable")
-            i.icon-user
-            | &nbsp;Mitglieder
-          li: a(href="/administration/colors")
-            i.icon-eye-open
-            | &nbsp;Farben
+    li#administration.dropdown(class="nav #{top ? "visible-lg visible-md" : "visible-sm"}")
+      a.dropdown-toggle(href="#", data-toggle="dropdown")
+        i.icon-dashboard
+        | &nbsp;Verwaltung&nbsp;
+        b.caret
+      ul.dropdown-menu
+        li: a(href="/administration/announcementTable")
+          i.icon-globe
+          | &nbsp;Nachrichten
+        li: a(href="/administration/activityTable")
+          i.icon-calendar
+          | &nbsp;Aktivitäten
+        li: a(href="/administration/groupTable")
+          i.icon-group
+          | &nbsp;Gruppen
+        li: a(href="/administration/memberTable")
+          i.icon-user
+          | &nbsp;Mitglieder
+        li: a(href="/administration/colors")
+          i.icon-eye-open
+          | &nbsp;Farben
 
 mixin loginMenu
-    ul.nav.pull-right
+    ul.nav.navbar-nav.pull-right
       if (typeof(user) !== 'undefined' && user.member)
         li.dropdown
           a.dropdown-toggle(href="#", data-toggle="dropdown") #{user.member.nickname} 
@@ -46,9 +45,9 @@ mixin loginMenu
           i.icon-signin
           | &nbsp;Anmelden
 mixin bottomNavbar
-  .navbar.navbar-fixed-bottom.no-print
+  .navbar.navbar-default.navbar-fixed-bottom.no-print
     .navbar-inner
-      ul.nav.pull-right
+      ul.nav.navbar-nav.pull-right
         mixin administrationMenu(false)
         li: a(href="/help.html") Tipps & FAQs
         li: a(href="/credits.html") Credits
