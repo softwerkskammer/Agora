@@ -1,10 +1,3 @@
-.editable-click,
-a.editable-click,
-a.editable-click:hover {
-  text-decoration: inherit;
-  border-bottom: inherit;
-}
-
 @media (min-width: 1200px) {
   .container {
     max-width: 2048px;
@@ -18,7 +11,7 @@ a.editable-click:hover {
   }
 
   .navbar-brand.no-padding {
-    padding-top: 10px;
+    padding-top: 0px;
     padding-bottom: 0px;
     padding-left: 0px;
     padding-right: 0px
@@ -100,8 +93,13 @@ td.fc-header-right {
   }
 }
 
-@media screen and (min-width: 768px) {
+@media (min-width: 768px) {
   .modal-dialog.cheatsheet {
     width: 80%;
+  }
+
+  .navbar-nav > li > a {
+    padding-top: 10px;
+    padding-bottom: 10px;
   }
 }
