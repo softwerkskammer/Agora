@@ -56,31 +56,49 @@ html
           span.icon-bar
       .container.bottom
         .navbar-collapse.collapse
-          mixin loginMenu
+          ul.nav.navbar-nav.pull-right.hidden-xs
+            mixin loginMenu
           ul.nav.navbar-nav
             li#announcements: a(href="/announcements")
-              i.icon-globe.icon-spin
-              | &nbsp;Nachrichten
+              span.hidden-sm
+                i.icon-globe.icon-spin
+                | &nbsp;Nachrichten
+              span.visible-sm
+                i.icon-globe.icon-spin
             li#activities: a(href="/activities/upcoming")
-              i.icon-calendar
-              | &nbsp;Aktivitäten
+              span.hidden-sm
+                i.icon-calendar
+                | &nbsp;Aktivitäten
+              span.visible-sm
+                i.icon-calendar
             li#groups: a(href="/groups")
-              i.icon-group
-              | &nbsp;Gruppen
-            if (typeof(user) !== 'undefined')
-              li#members: a(href="/members")
-                i.icon-user
-                | &nbsp;Mitglieder
+              span.hidden-sm
+                i.icon-group
+                | &nbsp;Gruppen
+              span.visible-sm
+                i.icon-group
             li#wiki.dropdown
               a.dropdown-toggle(href="#", data-toggle="dropdown")
-                i.icon-book
-                | &nbsp;Wiki&nbsp;
-                b.caret
+                span.hidden-sm
+                  i.icon-book
+                  | &nbsp;Wiki&nbsp;
+                  b.caret
+                span.visible-sm
+                  i.icon-book
+                  b.caret
               ul.dropdown-menu
                 if (typeof(wikisubdirs) !== 'undefined')
                   for subdir in wikisubdirs
                     li: a(href="/wiki/#{subdir}/") #{subdir}
-            mixin administrationMenu(true)
+            li#members: a(href="/members")
+              span.hidden-sm
+                if (typeof(user) !== 'undefined')
+                  i.icon-user
+                  | &nbsp;Mitglieder
+              span.visible-sm
+                if (typeof(user) !== 'undefined')
+                  i.icon-user
+            mixin loginMenu(true)
 
     .container
       .row

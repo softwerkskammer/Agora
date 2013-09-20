@@ -1,29 +1,40 @@
-@media (min-width: 1200px) {
-  .container {
-    max-width: 2048px;
-  }
+.container {
+  max-width: 2048px;
 }
 
-@media (min-width: 992px) {
+.container.bottom {
+  padding-top: 20px;
+  margin-right: 0px;
+}
+
+.navbar-brand.no-padding {
+  padding-top: 0px;
+  padding-bottom: 0px;
+  padding-left: 0px;
+  padding-right: 0px
+}
+
+.navbar {
+  margin: 0px;
+}
+
+body {
+  padding-top: 75px;
+  padding-bottom: 65px
+}
+
+.page-header {
+  margin-top: 0px;
+}
+
+.page-header > h2 {
+  margin-top: 0px;
+}
+
+@media (max-width: 768px) {
   .container.bottom {
-    padding-top: 20px;
-    margin-right: 0px;
-  }
-
-  .navbar-brand.no-padding {
     padding-top: 0px;
-    padding-bottom: 0px;
-    padding-left: 0px;
-    padding-right: 0px
-  }
-
-  .navbar {
-    margin: 0px;
-  }
-
-  body {
-    padding-top: 85px;
-    padding-bottom: 65px
+    margin-right: 0px;
   }
 }
 

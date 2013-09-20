@@ -8,8 +8,8 @@ block title
 
 block content
   .page-header
-    h2 Revisionen von "#{pageName}"&nbsp;
-      small in Wiki "#{subdir}"
+    h2 #{pageName}  <br> 
+      small Wiki "#{subdir}"
         if (typeof(user) !== 'undefined')
           button(id="rev-compare", data-pageName="#{pageName}", data-subdir="#{subdir}").btn.btn-default.pull-right
             i.icon-stethoscope 
