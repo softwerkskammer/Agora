@@ -17,7 +17,7 @@ block content
       ul.unstyled
         each group in regionalgroups
           li
-            span.label(style="background-color: #{group.color};min-width:30px;text-align:right;") #{group.members.length}
+            span.label(style="background-color: #{group.color};min-width:30px;text-align:right;display:inline-block") #{group.members.length}
             |  &nbsp;
             strong: a.group(href="#{group.id}") &nbsp; #{group.longName}
     .col-md-6
