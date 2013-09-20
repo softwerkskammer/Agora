@@ -14,16 +14,17 @@ html
         padding-top: 0px;
       }
     script(src="/clientscripts/jquery-1.9.1.js")
-    script(src="/clientscripts/bootstrap.js")
+    script(src="/clientscripts/bootstrap.min.js")
     script(src="/clientscripts/agora.js")
     script(src="/clientscripts/swipe.js")
     title Softwerkskammer
   body
     include layoutComponents
-    .container
+    p.text-center.visible-lg.visible-md.visible-sm
       img(src="/img/Softwerkskammer_Header.png", alt="Softwerkskammer")
-      p &nbsp;
-      block content
+    p.text-center.visible-xs
+      img(src="/img/SoftwerkskammerWappenLinks.png", alt="Softwerkskammer")
+    block content
 
     mixin bottomNavbar
 

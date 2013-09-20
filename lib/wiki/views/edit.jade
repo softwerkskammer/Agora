@@ -2,17 +2,14 @@ extends ../../../views/layout
 
 include  ../../../views/formComponents
 
-block scripts
-  script(src="/clientscripts/inputHelpers.js")
-
 block title
   | #{pageName} : #{subdir} bearbeiten
 
 block content
   form(action='/wiki/#{subdir}/#{pageName}', method='post')
     fieldset
-      .row-fluid
-        .span12
+      .row
+        .col-md-12
           legend
             | Wiki-Seite "#{pageName}" in Wiki "#{subdir}"&nbsp;
             if page.content === ''
@@ -24,4 +21,4 @@ block content
           mixin hidden('metadata', page)
           input(id="subdir", type="hidden", name="subdir", value=subdir)
           button.btn.btn-primary.pull-right(type="submit") Speichern
-          a.btn.pull-right(href="javascript:history.back()", type="cancel") Zurück
+          a.btn.btn-default.pull-right(href="javascript:history.back()", type="cancel") Zurück

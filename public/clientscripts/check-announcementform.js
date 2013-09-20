@@ -29,12 +29,12 @@ var initValidator = function () {
       }
     },
     errorElement: "span",
-    errorClass: "help-inline error",
+    errorClass: "help-block",
     highlight: function (element, errorClass) {
-      $(element).parent().addClass("error");
+      $(element).parent().addClass("has-error");
     },
     unhighlight: function (element, errorClass) {
-      $(element).parent().removeClass("error");
+      $(element).parent().removeClass("has-error");
     }
   });
 
