@@ -1,24 +1,24 @@
 "use strict";
 
 var sinon = require('sinon');
-var conf = require('../configureForTest');
+var beans = require('../configureForTest').get('beans');
 
 var expect = require('chai').expect;
 
-var Member = conf.get('beans').get('member');
+var Member = beans.get('member');
 
 var dummymember = new Member().initFromSessionUser({identifier: 'hada'});
 var dummymember2 = new Member().initFromSessionUser({identifier: 'hada2'});
 
-var Group = conf.get('beans').get('group');
+var Group = beans.get('group');
 
 var GroupA = new Group({id: 'GroupA', longName: 'Gruppe A', description: 'Dies ist Gruppe A.', type: 'Themengruppe'});
 var GroupB = new Group({id: 'GroupB', longName: 'Gruppe B', description: 'Dies ist Gruppe B.', type: 'Regionalgruppe'});
 
-var membersAPI = conf.get('beans').get('membersAPI');
-var groupsAPI = conf.get('beans').get('groupsAPI');
+var membersAPI = beans.get('membersAPI');
+var groupsAPI = beans.get('groupsAPI');
 
-var systemUnderTest = conf.get('beans').get('groupsAndMembersAPI');
+var systemUnderTest = beans.get('groupsAndMembersAPI');
 
 describe('Groups and Members API (getUserWithHisGroups)', function () {
 

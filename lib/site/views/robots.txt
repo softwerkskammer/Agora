@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /clientscripts/
+Disallow: /font/
+Disallow: /img/
+Disallow: /stylesheets/
