@@ -16,16 +16,16 @@ block title
 block content
   form(id='memberform', action='/members/submit',method='post')
     fieldset
-      .row-fluid
-        .span12
+      .row
+        .col-md-12
           legend
             | Profil&nbsp;
             if user.member
               | bearbeiten für Mitglied "#{member.nickname}"
             else
               | anlegen
-      .row-fluid
-        .span6
+      .row
+        .col-md-6
           mixin hidden('id', member)
           mixin hidden('previousNickname', member, 'nickname')
           mixin hidden('created', member)
@@ -34,7 +34,7 @@ block content
           mixin text('lastname', 'Nachname', member)
           mixin text('email', 'Email', member)
           mixin twitter('twitter', 'Twitter', member)
-        .span6
+        .col-md-6
           mixin text('location', 'Ort / Region', member)
           mixin text('profession', 'Beruf', member)
           mixin text('interests', 'Interessenschwerpunkte', member)
@@ -46,15 +46,15 @@ block content
           if (user.member && user.member.isAdmin)
             mixin checkbox('isAdmin', 'Administrator', !!member.isAdmin)
       
-    .row-fluid
-      .span6
+    .row
+      .col-md-6
         legend Gruppenmitgliedschaft
         mixin groupCheckboxes('newSubscriptions', regionalgroups, themegroups)
-      .span6
+      .col-md-6
         button.btn.btn-primary.pull-right(type="submit") Speichern
         if (user.member)
-          a.btn.pull-right(href="javascript:history.back()", type="cancel") Zurück
+          a.btn.btn-default.pull-right(href="javascript:history.back()", type="cancel") Zurück
           if (user.member.id === member.id)
-            a.btn.pull-right(href="/auth/logout", type="cancel") Abmelden
+            a.btn.btn-default.pull-right(href="/auth/logout", type="cancel") Abmelden
         else
-          a.btn.pull-right(href="/auth/logout", type="cancel") Abbrechen
+          a.btn.btn-default.pull-right(href="/auth/logout", type="cancel") Abbrechen

@@ -1,44 +1,34 @@
 extends ../../../views/layout
 
-include ../../../views/editableTableComponents
-
 block title
   | Übersicht der Nachrichten
 
-block scripts
-  script(src="/clientscripts/utilities-for-editables.js")
-
 block content
-  .row-fluid
-    .span12
+  .row
+    .col-md-12
       .page-header
         h2 Verwaltung
           small  Nachrichten
-          - if (typeof(user) !== 'undefined' && user.member.isAdmin)
-            a.pull-right.btn(href="/announcements/new/", title="Neue Nachricht"): i.icon-file
-  .row-fluid
-    p Bitte benutze diese Verwaltungspages nicht, um normale Editiervorgänge oder Neuanlagen vorzunehmen. Diese findest
-      | Du direkt auch auf den jeweiligen Seiten.
-    p Alternativ kannst Du auch auf das Symbol in der ersten Spalte klicken. Damit gelangst Du direkt auf die "Bearbeiten"-Seite
-
-    h3 Alle Nachrichten
-    table(class="span12 table table-condensed table-hover table-striped", style="overflow: auto; max-height: 600px")
-      thead
-        tr
-          mixin tabHeadNarrow(1, 'Edit')
-          mixin tabHeadNarrow(2, 'Titel')
-          mixin tabHeadNarrow(1, 'URL')
-          mixin tabHeadNarrow(1, 'Erstellt am')
-          mixin tabHeadNarrow(1, 'Anzeigen bis einschließlich')
-          mixin tabHeadNarrow(1, 'Text')
-          mixin tabHeadNarrow(1, 'Autor')
-      tbody
-        for announcement in announcements
-          tr
-            td(class="span1"): a.btn-small(href="/announcements/edit/#{encodeURIComponent(announcement.url)}"): i.icon-edit
-            mixin tabTextNarrow(1, announcement, 'title', 'announcementChanged', 'right')
-            mixin tabTextNarrow(2, announcement, 'url', 'announcementChanged')
-            mixin tabDateNarrowWithValue(1, announcement, 'fromDate', 'announcementChanged', announcement.fromDate())
-            mixin tabDateNarrowWithValue(1, announcement, 'thruDate', 'announcementChanged', announcement.thruDate())
-            mixin tabTextarea(1, announcement, 'message', 'announcementChanged')
-            mixin tabTextNarrow(1, announcement, 'author', 'announcementChanged')
+  .row
+    .col-md-12
+      .panel.panel-default(style="overflow: scroll; max-height: 600px")
+        table.table.table-condensed.table-hover.table-striped
+          thead
+            tr
+              th.ellipsis.narrow Edit
+              th.ellipsis Titel
+              th.ellipsis.narrow URL
+              th.ellipsis.narrow Erstellt am
+              th.ellipsis.narrow Anzeigen bis einschließlich
+              th.ellipsis.narrow Text
+              th.ellipsis.narrow Autor
+          tbody
+            for announcement in announcements
+              tr
+                td(class="span1"): a.btn-sm(href="/announcements/edit/#{encodeURIComponent(announcement.url)}"): i.icon-edit
+                td.ellipsis.narrow #{announcement.title}
+                td.ellipsis.narrow #{announcement.url}
+                td.ellipsis.narrow #{announcement.fromDate()}
+                td.ellipsis.narrow #{announcement.thruDate()}
+                td.ellipsis.narrow #{announcement.message}
+                td.ellipsis.narrow #{announcement.author}

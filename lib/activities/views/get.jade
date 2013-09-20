@@ -11,8 +11,8 @@ block opengraph
   meta(property="og:title", content=activity.title)
 
 block content
-  .row-fluid
-    .span12
+  .row
+    .col-md-12
       .page-header
         h2 #{activity.title} <br> 
           small #{activity.startDate()} (#{activity.startTime()}
@@ -21,12 +21,12 @@ block content
             else (activity.endTime())
               |  - #{activity.endTime()} Uhr)
           if (typeof(user) !== 'undefined' && user.member.isAdmin)
-            a.pull-right.btn(href="/activities/edit/#{encodeURIComponent(activity.url)}", title="Bearbeiten"): i.icon-edit
-            a.pull-right.btn(href="/mailsender/invitation/#{encodeURIComponent(activity.url)}", title="Einladung versenden"): i.icon-envelope
-            a.pull-right.btn(href="/activities/newLike/#{encodeURIComponent(activity.url)}", title="Neu auf Basis dieser Aktivität"): i.icon-copy
-            a.pull-right.btn(href="/activities/ical/#{encodeURIComponent(activity.url)}", title="Für Kalender exportieren"): i.icon-calendar
-  .row-fluid
-    .span8
+            a.pull-right.btn.btn-default(href="/activities/edit/#{encodeURIComponent(activity.url)}", title="Bearbeiten"): i.icon-edit
+            a.pull-right.btn.btn-default(href="/mailsender/invitation/#{encodeURIComponent(activity.url)}", title="Einladung versenden"): i.icon-envelope
+            a.pull-right.btn.btn-default(href="/activities/newLike/#{encodeURIComponent(activity.url)}", title="Neu auf Basis dieser Aktivität"): i.icon-copy
+            a.pull-right.btn.btn-default(href="/activities/ical/#{encodeURIComponent(activity.url)}", title="Für Kalender exportieren"): i.icon-calendar
+  .row
+    .col-md-8
       !{activity.descriptionHTML()}
       hr
       h3 Adresse:
@@ -53,7 +53,7 @@ block content
         
       hr
       p Veranstaltet von der Gruppe: #{activity.groupName(groups)}
-    .span4
+    .col-md-4
       mixin map(activity.location, '100%', '450px')
 
 block scripts

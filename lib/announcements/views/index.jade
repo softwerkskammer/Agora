@@ -4,15 +4,16 @@ block title
   | Aktuelles
 
 block content
-  .span12
-    .page-header
-      h2 Nachrichten&nbsp;
-        small Alle
-        - if (typeof(user) !== 'undefined' && user.member.isAdmin)
-            a.pull-right.btn(href="new/", title="Neue Nachricht"): i.icon-file
-
-    dl.dl-horizontal
-      for announcement in announcements
-        dt #{announcement.fromDate()}
-        dd
+  .row
+    .col-md-12
+      .page-header
+        h2 Nachrichten&nbsp;
+          small Alle
+          - if (typeof(user) !== 'undefined' && user.member.isAdmin)
+              a.pull-right.btn.btn-default(href="new/", title="Neue Nachricht"): i.icon-file
+  
+      dl.dl-horizontal
+        for announcement in announcements
+          dt #{announcement.fromDate()}
+          dd
             a(href='#{encodeURIComponent(announcement.url)}') #{announcement.title}
