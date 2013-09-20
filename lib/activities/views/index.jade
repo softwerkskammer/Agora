@@ -4,13 +4,13 @@ block title
   | Aktivitäten
 
 block content
-  .row-fluid
-    .span12
+  .row
+    .col-md-12
       .page-header
         h2 Aktivitäten&nbsp;
           small
             .btn-group(style="height: 40px;")
-              a.btn.dropdown-toggle(data-toggle="dropdown")
+              a.btn.btn-default.dropdown-toggle(data-toggle="dropdown")
                 | #{range} &nbsp;
                 span.caret
               ul.dropdown-menu
@@ -18,13 +18,13 @@ block content
                 li: a(href="/activities/past") Vergangene
                 li: a(href="/activities") Alle
             if typeof(user) !== 'undefined' && user.member.isAdmin
-              a.pull-right.btn(href="new/", title="Neue Aktivität"): i.icon-file
-            a.pull-right.btn(href="ical/", title="Für Kalender exportieren. Zum Abo: URL in Kalenderprogramm abonnieren"): i.icon-calendar
+              a.pull-right.btn.btn-default(href="new/", title="Neue Aktivität"): i.icon-file
+            a.pull-right.btn.btn-default(href="ical/", title="Für Kalender exportieren. Zum Abo: URL in Kalenderprogramm abonnieren"): i.icon-calendar
       dl.dl-horizontal
         for activity in activities
           dt
             | #{activity.startDate()} 
           dd
-            a(href='#{encodeURIComponent(activity.url)}') #{activity.title} in #{activity.location} 
-            a(href='/groups/#{activity.assignedGroup}') 
-              span.badge(style="background-color: #{activity.colorFrom(groupColors, colors)};min-width:20px;text-align:right;") #{activity.groupName(groups)}
+            a(href='/groups/#{activity.assignedGroup}')
+              span.label(style="background-color: #{activity.colorFrom(groupColors, colors)}") #{activity.groupName(groups)}
+            a(href='#{encodeURIComponent(activity.url)}') &nbsp;#{activity.title} 

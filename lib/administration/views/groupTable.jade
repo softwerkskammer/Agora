@@ -1,54 +1,33 @@
 extends ../../../views/layout
 
-include ../../../views/editableTableComponents
-
 block title
   | Übersicht der Gruppen
 
-block scripts
-  script(src="/clientscripts/utilities-for-editables.js")
-  script
-    var initEditable = function () {
-      $("table").find("a").filter(function () {return this.id === "type"; }).editable(
-        {source: [
-          {value: 0, text: "#{groupTypes[0]}"},
-          {value: 1, text: "#{groupTypes[1]}"}
-        ],
-          showbuttons: false}
-      );
-    };
-    $(document).ready(initEditable);
-
-
 block content
-  .row-fluid
-    .span12
+  .row
+    .col-md-12
       .page-header
         h2 Verwaltung
           small  Gruppen
-          - if (typeof(user) !== 'undefined' && user.member.isAdmin)
-            a.pull-right.btn(href="/groups/new/", title="Neue Gruppe"): i.icon-file
-  .row-fluid
-    p Bitte benutze diese Verwaltungspages nicht, um normale Editiervorgänge oder Neuanlagen vorzunehmen. Diese findest
-      | Du direkt auch auf den jeweiligen Seiten.
-    p Alternativ kannst Du auch auf das Symbol in der ersten Spalte klicken. Damit gelangst Du direkt auf die "Bearbeiten"-Seite
-
-    table(class="span12 table table-condensed table-hover table-striped", style="overflow: auto; max-height: 600px")
-      thead
-        tr
-          mixin tabHeadNarrow(1, 'Edit')
-          mixin tabHead(2, 'Name')
-          mixin tabHead(2, 'Titel')
-          mixin tabHead(1, 'Präfix')
-          mixin tabHead(5, 'Beschreibung')
-          mixin tabHead(1, 'Gruppenart')
-      tbody
-        for group in groups
-          tr
-            td(class="span1"): a.btn-small(href="/groups/edit/#{encodeURIComponent(group.id)}"): i.icon-edit
-            th.span2: .ellipsis #{group.id}
-            mixin tabText(2, group, 'longName', 'groupChanged')
-            td.span1: .ellipsis #{group.emailPrefix}
-            mixin tabTextarea(5, group, 'description', 'groupChanged')
-            td.span1: a#type(href="#", , data-type="select", data-value="#{group.typeCode()}", data-pk="#{group.id}", data-url="groupChanged"): .ellipsis #{group.type}
-              
+  .row
+    .col-md-12
+      .panel.panel-default(style="overflow: scroll; max-height: 600px")
+        table.table.table-condensed.table-hover.table-striped
+          thead
+            tr
+              th.ellipsis.narrow Edit
+              th.ellipsis.narrow Name
+              th.ellipsis.narrow Titel
+              th.ellipsis.narrow Präfix
+              th.ellipsis.narrow Beschreibung
+              th.ellipsis.narrow Gruppenart
+          tbody
+            for group in groups
+              tr
+                td: a.btn-sm(href="/groups/edit/#{encodeURIComponent(group.id)}"): i.icon-edit
+                th.ellipsis #{group.id}
+                td.ellipsis #{group.longName}
+                td.ellipsis #{group.emailPrefix}
+                td.ellipsis #{group.description}
+                td.ellipsis #{group.type}
+                  

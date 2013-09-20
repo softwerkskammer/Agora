@@ -11,8 +11,8 @@ block title
 block content
   form(id='mailform', action='/mailsender/send', method='post')
     fieldset
-      .row-fluid
-        .span12
+      .row
+        .col-md-12
           legend
             | Nachricht schreiben
           if (typeof(regionalgroups) !== 'undefined')
@@ -26,4 +26,4 @@ block content
           input(id="successURL", type="hidden", name="successURL", value="#{successURL}")
 
           button.btn.btn-primary.pull-right(type="submit") Senden
-          a.btn.pull-right(href="javascript:history.back()", type="cancel") Zurück
+          a.btn.btn-default.pull-right(href="javascript:history.back()", type="cancel") Zurück

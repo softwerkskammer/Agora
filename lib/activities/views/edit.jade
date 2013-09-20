@@ -17,8 +17,8 @@ block content
     mixin hidden('previousUrl', activity, 'url')
     mixin hidden('registeredMembers', activity)
     fieldset
-      .row-fluid
-        .span12
+      .row
+        .col-md-12
           legend
             | Aktivität
             if (activity.id)
@@ -26,39 +26,39 @@ block content
             else
               |  anlegen
 
-      .row-fluid
-        .span6
+      .row
+        .col-md-6
           mixin text('title', 'Titel', activity, 'Kurz und knackig für Übersichten')
-          .row-fluid
-            .span3
+          .row
+            .col-md-3
               mixin date('startDate', 'Start', activity, activity.startDate(), 'Enddatum und -uhrzeit werden automatisch verschoben (die Dauer bleibt gleich)')
-            .span3
+            .col-md-3
               mixin time('startTime', '&nbsp;', activity, activity.startTime())
-            .span3
+            .col-md-3
               mixin date('endDate', 'Ende', activity, activity.endDate(), 'Hiermit kannst Du die Dauer verändern')
-            .span3
+            .col-md-3
               mixin time('endTime', '&nbsp;', activity, activity.endTime())
           mixin textarea('description', 'Beschreibung', activity)
-        .span6
-          .control-group
-            button.btn.btn-mini.pull-right(type="button", onclick="fillUrlFromText('url', 'title')") 
+        .col-md-6
+          .form-group
+            button.btn.btn-default.btn-xs.pull-right(type="button", onclick="fillUrlFromText('url', 'title')") 
               | Vorschlag
             mixin controlLabel('url', 'Adress-Suffix', 'Für die Verlinkung innerhalb dieser Site')
-            input.input-xlarge.input-block-level(id='url', type='text', name='url', value=activity['url'])
+            input.form-control(id='url', type='text', name='url', value=activity['url'])
           mixin text('location', 'Veranstaltungsort', activity)
           mixin textarea('direction', 'Wegbeschreibung', activity)
-          .control-group
+          .form-group
             label.control-label(for="assignedGroup") Gruppe:
-            select#assignedGroup.input-block-level.input-xlarge(name="assignedGroup")
+            select#assignedGroup.form-control(name="assignedGroup")
               for group in groups
                 option(value=group.id, selected = (activity.assignedGroup != undefined && activity.assignedGroup == group.id)) #{group.longName}
-          .control-group
+          .form-group
             label.control-label(for="type") Farbe:
-            select#type.input-block-level.input-xlarge(name="color")
+            select#type.form-control(name="color")
               for color in colorlist
                 option(selected=activity.color === color) #{color}
 
-      .row-fluid
-        .span12
+      .row
+        .col-md-12
           button.btn.btn-primary.pull-right(type="submit") Speichern
-          a.btn.pull-right(href="javascript:history.back()", type="cancel") Zurück
+          a.btn.btn-default.pull-right(href="javascript:history.back()", type="cancel") Zurück

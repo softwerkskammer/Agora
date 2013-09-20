@@ -1,66 +1,47 @@
 extends ../../../views/layout
 
-include ../../../views/editableTableComponents
-
 block title
   | Übersicht der Mitglieder
 
-block scripts
-  script(src="/clientscripts/utilities-for-editables.js")
-  script
-    var initEditable = function () {
-      $("table").find("a").filter(function () {return this.id === "isAdmin"; }).editable(
-        {source: [
-          {value: 0, text: "Normal"},
-          {value: 1, text: "Administrator"}
-        ],
-          showbuttons: false}
-      );
-    };
-    $(document).ready(initEditable);
-
-
 block content
-  .row-fluid
-    .span12
+  .row
+    .col-md-12
       .page-header
         h2 Verwaltung
           small  Mitglieder
-  .row-fluid
-    p Bitte benutze diese Verwaltungspages nicht, um normale Editiervorgänge oder Neuanlagen vorzunehmen. Diese findest
-      | Du direkt auch auf den jeweiligen Seiten.
-    p Alternativ kannst Du auch auf das Symbol in der ersten Spalte klicken. Damit gelangst Du direkt auf die "Bearbeiten"-Seite
-
-    table(class="span12 table table-condensed table-hover table-striped", style="overflow: auto; max-height: 600px")
-      thead
-        tr
-          mixin tabHeadNarrow(1, 'Edit')
-          mixin tabHeadNarrow(1, 'Nickname')
-          mixin tabHeadNarrow(1, 'Vorname')
-          mixin tabHeadNarrow(1, 'Nachname')
-          mixin tabHeadNarrow(1, 'Email')
-          mixin tabHeadNarrow(1, 'Twitter')
-          mixin tabHeadNarrow(1, 'Ort/Region')
-          mixin tabHeadNarrow(1, 'Beruf')
-          mixin tabHeadNarrow(1, 'Interessenschwerpunkte')
-          mixin tabHeadNarrow(1, 'Website/Blog')
-          mixin tabHeadNarrow(1, 'Wie ich von…')
-          mixin tabHeadNarrow(1, 'Benutzertyp')
-          mixin tabHeadNarrow(1, 'Angelegt')
-      tbody
-        for member in members
-          tr
-            td(class="span1"): a.btn-small(href="/members/edit/#{encodeURIComponent(member.nickname)}"): i.icon-edit
-            mixin tabTextNarrow(1, member, 'nickname', 'memberChanged', 'right')
-            mixin tabTextNarrow(1, member, 'firstname', 'memberChanged', 'right')
-            mixin tabTextNarrow(1, member, 'lastname', 'memberChanged')
-            mixin tabTextNarrow(1, member, 'email', 'memberChanged')
-            mixin tabTextNarrow(1, member, 'twitter', 'memberChanged')
-            mixin tabTextNarrow(1, member, 'location', 'memberChanged')
-            mixin tabTextNarrow(1, member, 'profession', 'memberChanged')
-            mixin tabTextNarrow(1, member, 'interests', 'memberChanged')
-            mixin tabTextNarrow(1, member, 'site', 'memberChanged')
-            mixin tabTextNarrow(1, member, 'reference', 'memberChanged')
-            td.span1: a#isAdmin(href="#", data-type="select", data-value="#{member.adminDropdownValue()}", data-pk="#{member.id}", data-url="memberChanged"): .ellipsis.narrow #{member.adminDisplayText()}
-            td(class="span1"): .ellipsis.narrow #{member.created}
-
+  .row
+    .col-md-12
+      .panel.panel-default(style="overflow: scroll; max-height: 600px")
+        table.table.table-condensed.table-hover.table-striped
+          thead
+            tr
+              th.ellipsis.narrow Edit
+              th.ellipsis.narrow Nickname
+              th.ellipsis.narrow Vorname
+              th.ellipsis.narrow Nachname
+              th.ellipsis.narrow Email
+              th.ellipsis.narrow Twitter
+              th.ellipsis.narrow Ort/Region
+              th.ellipsis.narrow Beruf
+              th.ellipsis.narrow Interessenschwerpunkte
+              th.ellipsis.narrow Website/Blog
+              th.ellipsis.narrow Wie ich von…
+              th.ellipsis.narrow Benutzertyp
+              th.ellipsis.narrow Angelegt
+          tbody
+            for member in members
+              tr
+                td: a(href="/members/edit/#{encodeURIComponent(member.nickname)}"): i.icon-edit
+                td.ellipsis.narrow #{member.nickname}
+                td.ellipsis.narrow #{member.firstname}
+                td.ellipsis.narrow #{member.lastname}
+                td.ellipsis.narrow #{member.email}
+                td.ellipsis.narrow #{member.twitter}
+                td.ellipsis.narrow #{member.location}
+                td.ellipsis.narrow #{member.profession}
+                td.ellipsis.narrow #{member.interests}
+                td.ellipsis.narrow #{member.site}
+                td.ellipsis.narrow #{member.reference}
+                td.ellipsis.narrow #{member.adminDisplayText()}
+                td.ellipsis.narrow #{member.created}
+    
