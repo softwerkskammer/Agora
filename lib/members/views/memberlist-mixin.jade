@@ -8,8 +8,8 @@ mixin memberlist(members, organizers)
         | </a>
       dd #{member.firstname} #{member.lastname}, #{member.location}&nbsp;
         if (organizers && organizers.indexOf(member.id) > -1)
-          a(href="/mailsender/contactMember/#{encodeURIComponent(member.nickname)}", title="Nachricht schreiben"): span.badge(style="background-color: #DF5353") Ansprechpartner &nbsp;
+          a(href="/mailsender/contactMember/#{encodeURIComponent(member.nickname)}", title="Nachricht schreiben"): span.label(style="background-color: #DF5353") Ansprechpartner &nbsp;
         if (!organizers && member.isAdmin)
-          a(href="/mailsender/contactMember/#{encodeURIComponent(member.nickname)}", title="Nachricht schreiben"): span.badge(style="background-color: #DF5353") Admin
+          a(href="/mailsender/contactMember/#{encodeURIComponent(member.nickname)}", title="Nachricht schreiben"): span.label(style="background-color: #DF5353") Admin
   script
     $("[rel=tooltip]").popover({html: true});
