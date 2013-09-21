@@ -1,7 +1,5 @@
 
-var dateCalculator = function (initialValue) {
-
-  var oldStartDate = initialValue;
+var dateCalculator = function (initialDate, initialTime) {
 
   var toUtc = function (dateString, timeString) {
     if (dateString && timeString) {
@@ -9,6 +7,8 @@ var dateCalculator = function (initialValue) {
     }
     return null;
   };
+
+  var oldStartDate = toUtc(initialDate, initialTime);
 
   var dateString = function (date) {
     if (date) {
