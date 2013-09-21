@@ -1,23 +1,9 @@
 
 var dateCalculator = function (initialMoment) {
 
-  var toUtc = function (dateString, timeString) {
-    if (dateString && timeString) {
-      return moment.utc(dateString + " " + timeString, 'D.M.YYYY H:m');
-    }
-    return null;
-  };
-
   var dateString = function (date) {
     if (date) {
       return date.format('DD.MM.YYYY');
-    }
-    return "";
-  };
-
-  var timeString = function (time) {
-    if (time) {
-      return time.format('HH:mm');
     }
     return "";
   };
