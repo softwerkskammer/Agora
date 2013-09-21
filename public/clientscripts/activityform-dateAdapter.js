@@ -41,9 +41,7 @@ var dateAdapter = function () {
     $('#endTime').val(timeString(newEndDate));
   };
 
-  function calculateNewDates(currentStartDate, currentStartTime, currentEndDate, currentEndTime) {
-    var currentTimes = {startDate: currentStartDate, startTime: currentStartTime, endDate: currentEndDate, endTime: currentEndTime};
-
+  function calculateNewDates(currentTimes) {
     var newStartDate = toUtc(currentTimes.startDate, currentTimes.startTime);
 
     var offset = oldStartDate && newStartDate ? newStartDate.diff(oldStartDate, 'minutes') : 0;
@@ -59,6 +57,7 @@ var dateAdapter = function () {
         setEndTimeTo(newEndDate);
       }
     }
+    return currentTimes;
   }
 
   var listener = function () {
@@ -67,7 +66,8 @@ var dateAdapter = function () {
     var currentStartTime = $('#startTime').val();
     var currentEndDate = $('#endDate').val();
     var currentEndTime = $('#endTime').val();
-    calculateNewDates(currentStartDate, currentStartTime, currentEndDate, currentEndTime);
+    var currentTimes2 = {startDate: currentStartDate, startTime: currentStartTime, endDate: currentEndDate, endTime: currentEndTime};
+    var currentTimes = calculateNewDates(currentTimes2);
   };
 
   var oldStartDate = toUtc($('#startDate').val(), $('#startTime').val());
