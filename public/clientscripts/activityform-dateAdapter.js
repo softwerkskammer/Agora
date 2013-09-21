@@ -30,15 +30,19 @@ var dateAdapter = function () {
     return currentEndDate || currentStartDate !== dateString(newEndDate);
   }
 
-  var setEndDateTo = function (newEndDate) {
+  var setEndDateTo = function (currentTimes, newEndDate) {
     if (endFieldWasNotEmptyOrDateChanged(newEndDate, $('#startDate').val(), $('#endDate').val())) {
       // only update the field if it was not empty or if the date is not the same
-      $('#endDate').val(dateString(newEndDate));
+      var newEndDateString = dateString(newEndDate);
+      currentTimes.endDate = newEndDateString;
+      $('#endDate').val(currentTimes.endDate);
     }
   };
 
-  var setEndTimeTo = function (newEndDate) {
-    $('#endTime').val(timeString(newEndDate));
+  var setEndTimeTo = function (currentTimes, newEndDate) {
+    var newEndTimeString = timeString(newEndDate);
+    currentTimes.endTime = newEndTimeString;
+    $('#endTime').val(currentTimes.endTime);
   };
 
   function calculateNewDates(currentTimes) {
@@ -53,8 +57,8 @@ var dateAdapter = function () {
     if (offset !== 0) {
       var newEndDate = toUtc(endDayString, currentTimes.endTime).add(offset, 'minutes');
       if (newEndDate) {
-        setEndDateTo(newEndDate);
-        setEndTimeTo(newEndDate);
+        setEndDateTo(currentTimes, newEndDate);
+        setEndTimeTo(currentTimes, newEndDate);
       }
     }
     return currentTimes;
