@@ -29,34 +29,29 @@ var dateCalculator = function (initialMoment) {
     }
   };
 
-  var setEndTimeTo = function (currentTimes, newEndDate) {
-    currentTimes.endTime = timeString(newEndDate);
-  };
-
   ////////////////////////////////////////////////////
   var oldStartDate = initialMoment;
 
   return {
+    getOldStartDate: function () {
+      return oldStartDate;
+    },
+
     calculateNewDates: function (currentTimes) {
-    var newStartDate = currentTimes.start;
+      var newStartDate = currentTimes.start;
 
-    var offset = oldStartDate && newStartDate ? newStartDate.diff(oldStartDate, 'minutes') : 0;
+      var offset = oldStartDate && newStartDate ? newStartDate.diff(oldStartDate, 'minutes') : 0;
 
-    var endDayString = currentTimes.endDate || dateString(oldStartDate);
-    // if the endDate field is empty, use the old contents of the start date field
+      oldStartDate = newStartDate;
 
-    oldStartDate = newStartDate;
-
-    if (offset !== 0) {
-      var newEndDate = toUtc(endDayString, currentTimes.endTime).add(offset, 'minutes');
-      if (newEndDate) {
+      if (offset !== 0) {
+        var newEndDate = currentTimes.end.add(offset, 'minutes');
+        currentTimes.end = newEndDate;
         setEndDateTo(currentTimes, newEndDate);
-        setEndTimeTo(currentTimes, newEndDate);
       }
+      return currentTimes;
     }
-    return currentTimes;
-  }
-    
-};
+
+  };
 
 };

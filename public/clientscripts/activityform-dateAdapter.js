@@ -8,18 +8,32 @@ var dateAdapter = function () {
     return null;
   };
 
+  var dateString = function (date) {
+    if (date) {
+      return date.format('DD.MM.YYYY');
+    }
+    return "";
+  };
+
+  var timeString = function (time) {
+    if (time) {
+      return time.format('HH:mm');
+    }
+    return "";
+  };
+
   var dateCalc = dateCalculator(toUtc($('#startDate').val(), $('#startTime').val()));
 
   var listener = function () {
     var currentTimes = dateCalc.calculateNewDates({
-      endDate: $('#endDate').val(), endTime: $('#endTime').val(),
+      endDate: $('#endDate').val(),
       start: toUtc($('#startDate').val(), $('#startTime').val()),
-      end: toUtc($('#endDate').val() || $('#startDate').val(), $('#endTime').val()) ,
+      end: toUtc($('#endDate').val() || dateString(dateCalc.getOldStartDate()), $('#endTime').val()) ,
       hasEndDate: !!($('#endDate').val())
     });
 
     $('#endDate').val(currentTimes.endDate);
-    $('#endTime').val(currentTimes.endTime);
+    $('#endTime').val(timeString(currentTimes.end));
   };
 
   $('#startDate').change(listener);
