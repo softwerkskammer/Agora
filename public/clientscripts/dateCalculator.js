@@ -17,7 +17,5 @@ var dateCalculator = function (initialMoment) {
 
       return currentTimes;
     }
-
   };
-
 };
