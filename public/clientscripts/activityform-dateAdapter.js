@@ -1,11 +1,22 @@
 var dateAdapter = function () {
 
-  var dateCalc = dateCalculator($('#startDate').val(), $('#startTime').val());
 
+  var toUtc = function (dateString, timeString) {
+    if (dateString && timeString) {
+      return moment.utc(dateString + " " + timeString, 'D.M.YYYY H:m');
+    }
+    return null;
+  };
+
+  var dateCalc = dateCalculator(toUtc($('#startDate').val(), $('#startTime').val()));
 
   var listener = function () {
-    var currentTimes = dateCalc.calculateNewDates({startDate: $('#startDate').val(), startTime: $('#startTime').val(),
-      endDate: $('#endDate').val(), endTime: $('#endTime').val()});
+    var currentTimes = dateCalc.calculateNewDates({
+      endDate: $('#endDate').val(), endTime: $('#endTime').val(),
+      start: toUtc($('#startDate').val(), $('#startTime').val()),
+      end: toUtc($('#endDate').val() || $('#startDate').val(), $('#endTime').val()) ,
+      hasEndDate: !!($('#endDate').val())
+    });
 
     $('#endDate').val(currentTimes.endDate);
     $('#endTime').val(currentTimes.endTime);

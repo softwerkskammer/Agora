@@ -1,5 +1,5 @@
 
-var dateCalculator = function (initialDate, initialTime) {
+var dateCalculator = function (initialMoment) {
 
   var toUtc = function (dateString, timeString) {
     if (dateString && timeString) {
@@ -7,8 +7,6 @@ var dateCalculator = function (initialDate, initialTime) {
     }
     return null;
   };
-
-  var oldStartDate = toUtc(initialDate, initialTime);
 
   var dateString = function (date) {
     if (date) {
@@ -24,35 +22,28 @@ var dateCalculator = function (initialDate, initialTime) {
     return "";
   };
 
-  var endDayStringOr = function (currentEndDate, oldStartDate) {
-    // if the endDate field is empty, use the old contents of the start date field
-    return currentEndDate || dateString(oldStartDate);
-  };
-
-  function endFieldWasNotEmptyOrDateChanged(newEndDate, currentStartDate, currentEndDate) {
-    return currentEndDate || currentStartDate !== dateString(newEndDate);
-  }
-
   var setEndDateTo = function (currentTimes, newEndDate) {
-    if (endFieldWasNotEmptyOrDateChanged(newEndDate, $('#startDate').val(), $('#endDate').val())) {
+    if (currentTimes.endDate || dateString(currentTimes.start) !== dateString(newEndDate)) {
       // only update the field if it was not empty or if the date is not the same
-      var newEndDateString = dateString(newEndDate);
-      currentTimes.endDate = newEndDateString;
+      currentTimes.endDate = dateString(newEndDate);
     }
   };
 
   var setEndTimeTo = function (currentTimes, newEndDate) {
-    var newEndTimeString = timeString(newEndDate);
-    currentTimes.endTime = newEndTimeString;
+    currentTimes.endTime = timeString(newEndDate);
   };
+
+  ////////////////////////////////////////////////////
+  var oldStartDate = initialMoment;
 
   return {
     calculateNewDates: function (currentTimes) {
-    var newStartDate = toUtc(currentTimes.startDate, currentTimes.startTime);
+    var newStartDate = currentTimes.start;
 
     var offset = oldStartDate && newStartDate ? newStartDate.diff(oldStartDate, 'minutes') : 0;
 
-    var endDayString = endDayStringOr(currentTimes.endDate, oldStartDate);
+    var endDayString = currentTimes.endDate || dateString(oldStartDate);
+    // if the endDate field is empty, use the old contents of the start date field
 
     oldStartDate = newStartDate;
 
@@ -65,8 +56,7 @@ var dateCalculator = function (initialDate, initialTime) {
     }
     return currentTimes;
   }
-
-
+    
 };
 
 };
