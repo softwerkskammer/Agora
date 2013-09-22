@@ -14,17 +14,19 @@ block content
   .row
     .col-md-12
       .page-header
-        h2 #{activity.title} <br> 
+        h2 #{activity.title}
+          .btn-group.pull-right
+            a.btn.btn-default(href="/activities/ical/#{encodeURIComponent(activity.url)}", title="Für Kalender exportieren"): i.icon-calendar
+            a.btn.btn-default(href="/mailsender/invitation/#{encodeURIComponent(activity.url)}", title="Einladung versenden"): i.icon-envelope
+            a.btn.btn-default(href="/activities/newLike/#{encodeURIComponent(activity.url)}", title="Neu auf Basis dieser Aktivität"): i.icon-copy
+            if (typeof(user) !== 'undefined' && user.member.isAdmin)
+              a.btn.btn-default(href="/activities/edit/#{encodeURIComponent(activity.url)}", title="Bearbeiten"): i.icon-edit
+          br
           small #{activity.startDate()} (#{activity.startTime()}
             if (activity.endDate() && activity.endDate() !== activity.startDate())
               |  Uhr) - #{activity.endDate()} (#{activity.endTime()} Uhr)
             else (activity.endTime())
               |  - #{activity.endTime()} Uhr)
-          if (typeof(user) !== 'undefined' && user.member.isAdmin)
-            a.pull-right.btn.btn-default(href="/activities/edit/#{encodeURIComponent(activity.url)}", title="Bearbeiten"): i.icon-edit
-            a.pull-right.btn.btn-default(href="/mailsender/invitation/#{encodeURIComponent(activity.url)}", title="Einladung versenden"): i.icon-envelope
-            a.pull-right.btn.btn-default(href="/activities/newLike/#{encodeURIComponent(activity.url)}", title="Neu auf Basis dieser Aktivität"): i.icon-copy
-            a.pull-right.btn.btn-default(href="/activities/ical/#{encodeURIComponent(activity.url)}", title="Für Kalender exportieren"): i.icon-calendar
   .row
     .col-md-8
       !{activity.descriptionHTML()}

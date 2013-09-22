@@ -8,13 +8,15 @@ block title
 
 block content
   .page-header
-    h2 #{pageName}  <br> 
-      small Wiki "#{subdir}"
+    h2 #{pageName}
+      .btn-group.pull-right
+        a.btn.btn-default(href="javascript:history.back()", type="cancel") Zurück
         if (typeof(user) !== 'undefined')
-          button(id="rev-compare", data-pageName="#{pageName}", data-subdir="#{subdir}").btn.btn-default.pull-right
+          button(id="rev-compare", data-pageName="#{pageName}", data-subdir="#{subdir}").btn.btn-default
             i.icon-stethoscope 
             | &nbsp; Vergleichen…
-        a.btn.btn-default.pull-right(href="javascript:history.back()", type="cancel") Zurück
+      br
+      small Wiki "#{subdir}"
 
   table.history.table.table-striped.table-bordered.table-hover.table-condensed
     each item in items
