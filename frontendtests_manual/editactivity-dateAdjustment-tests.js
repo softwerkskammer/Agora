@@ -1,20 +1,15 @@
-/* global $, setFixtures, expect, dateAdapter */
+/* global test, $, equal */
 "use strict";
 
 describe("StartDate and EndDate adjustment", function () {
 
-var expect = chai.expect;
-
-  var $;
-
-  beforeEach(function () {
-    fixtures.set('<form id="activityform" action="submit" method="post">' +
-                 '<input id="startDate" type="text" name="startDate"/>' +
-                 '<input id="startTime" type="text" name="startTime"/>' +
-                 '<input id="endDate" type="text" name="endDate"/>' +
-                 '<input id="endTime" type="text" name="endTime"/>' +
-                 '</form>');
-    $ = fixtures.window().jQuery;
+  beforeEach (function(){
+    setFixtures('<form id="activityform" action="submit" method="post">' +
+                '<input id="startDate" type="text" name="startDate"/>' +
+                '<input id="startTime" type="text" name="startTime"/>'+
+                '<input id="endDate" type="text" name="endDate"/>' +
+                '<input id="endTime" type="text" name="endTime"/>' +
+                '</form>');
   });
 
   var initialize = function (startDate, startTime, endDate, endTime) {
@@ -35,12 +30,12 @@ var expect = chai.expect;
     $('#startTime').val(startTime);
     $("#startTime").trigger("change");
   };
-
+  
   var assert = function (startDate, startTime, endDate, endTime) {
-    expect($('#startDate').val()).to.equal(startDate);
-    expect($('#startTime').val()).to.equal(startTime);
-    expect($('#endDate').val()).to.equal(endDate);
-    expect($('#endTime').val()).to.equal(endTime);
+    expect($('#startDate').val()).toEqual(startDate);
+    expect($('#startTime').val()).toEqual(startTime);
+    expect($('#endDate').val()).toEqual(endDate);
+    expect($('#endTime').val()).toEqual(endTime);
   };
 
   it("moves EndDate forward if StartDate contains the same date and is moved forward", function () {
