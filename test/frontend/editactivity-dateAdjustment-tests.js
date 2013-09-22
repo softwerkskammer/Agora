@@ -11,6 +11,7 @@ var includeInThisContext = function(path) {
   var code = fs.readFileSync(path);
   vm.runInThisContext(code, path);
 }.bind(this);
+includeInThisContext(__dirname+"/../../public/clientscripts/moment.js");
 includeInThisContext(__dirname+"/../../public/clientscripts/dateCalculator.js");
 
 
@@ -28,7 +29,7 @@ describe("Date Calculator", function () {
 
   it("moves EndDate forward if StartDate contains the same date and is moved forward", function () {
 
-    var calculator = dateCalculator(utc("07.09.2013", "12:15"));
+    var calculator = dateCalculator("07.09.2013", "12:15");
 
     var result = calculator.calculateNewDates({start: utc("08.09.2013", "12:15"), end: utc("07.09.2013", "12:15")});
 
@@ -36,7 +37,7 @@ describe("Date Calculator", function () {
   });
 
   it("moves EndDate forward if StartDate contains a different date and is moved forward", function () {
-    var calculator = dateCalculator(utc("07.09.2013", "12:15"));
+    var calculator = dateCalculator("07.09.2013", "12:15");
 
     var result = calculator.calculateNewDates({start: utc("08.09.2013", "12:15"), end: utc("09.09.2013", "14:15")});
 
@@ -44,7 +45,7 @@ describe("Date Calculator", function () {
   });
 
   it("moves EndDate backward if StartDate contains the same date and is moved backward", function () {
-    var calculator = dateCalculator(utc("07.09.2013", "12:15"));
+    var calculator = dateCalculator("07.09.2013", "12:15");
 
     var result = calculator.calculateNewDates({start: utc("06.09.2013", "12:15"), end: utc("07.09.2013", "12:15")});
 
@@ -54,7 +55,7 @@ describe("Date Calculator", function () {
 
 
   it("moves EndDate backward if StartDate contains a different date and is moved backward", function () {
-    var calculator = dateCalculator(utc("01.09.2013", "12:15"));
+    var calculator = dateCalculator("01.09.2013", "12:15");
 
     var result = calculator.calculateNewDates({start: utc("08.08.2013", "12:15"), end: utc("07.09.2013", "14:15")});
 
@@ -63,7 +64,7 @@ describe("Date Calculator", function () {
 
   /*
   it("leaves the EndDate empty if the StartDate is changed and the EndDate is empty", function () {
-    var calculator = dateCalculator(utc("01.09.2013", "12:15"));
+    var calculator = dateCalculator("01.09.2013", "12:15");
 
     var result = calculator.calculateNewDates({start: utc("04.09.2013", "12:15"), end: utc("", "14:15")});
 
@@ -74,7 +75,7 @@ describe("Date Calculator", function () {
 // Time
 
   it("moves EndTime forward if StartTime contains the same time and is moved forward", function () {
-    var calculator = dateCalculator(utc("07.09.2013", "12:15"));
+    var calculator = dateCalculator("07.09.2013", "12:15");
 
     var result = calculator.calculateNewDates({start: utc("07.09.2013", "14:15"), end: utc("07.09.2013", "12:15")});
 
@@ -83,7 +84,7 @@ describe("Date Calculator", function () {
   });
 
   it("moves EndTime forward if StartTime contains a different time and is moved forward", function () {
-    var calculator = dateCalculator(utc("07.09.2013", "12:15"));
+    var calculator = dateCalculator("07.09.2013", "12:15");
 
     var result = calculator.calculateNewDates({start: utc("07.09.2013", "15:45"), end: utc("09.09.2013", "14:15")});
 
@@ -91,7 +92,7 @@ describe("Date Calculator", function () {
   });
 
   it("moves EndTime backward if StartTime contains the same time and is moved backward", function () {
-    var calculator = dateCalculator(utc("07.09.2013", "12:15"));
+    var calculator = dateCalculator("07.09.2013", "12:15");
 
     var result = calculator.calculateNewDates({start: utc("07.09.2013", "10:10"), end: utc("07.09.2013", "12:15")});
 
@@ -100,7 +101,7 @@ describe("Date Calculator", function () {
   });
 
   it("moves EndTime backward if StartTime contains a different time and is moved backward", function () {
-    var calculator = dateCalculator(utc("01.09.2013", "12:15"));
+    var calculator = dateCalculator("01.09.2013", "12:15");
 
     var result = calculator.calculateNewDates({start: utc("01.09.2013", "00:00"), end: utc("07.09.2013", "14:15")});
 
@@ -108,7 +109,7 @@ describe("Date Calculator", function () {
   });
 
   it("moves EndDate and EndTime forward if StartTime is moved past midnight", function () {
-    var calculator = dateCalculator(utc("07.09.2013", "12:15"));
+    var calculator = dateCalculator("07.09.2013", "12:15");
 
     var result = calculator.calculateNewDates({start: utc("07.09.2013", "14:15"), end: utc("09.09.2013", "23:15")});
 
@@ -118,7 +119,7 @@ describe("Date Calculator", function () {
 
   /*
   it("fills EndDate and moves EndTime forward if EndDate is empty and StartTime is moved past midnight", function () {
-    var calculator = dateCalculator(utc("07.09.2013", "12:15"));
+    var calculator = dateCalculator("07.09.2013", "12:15");
 
     var result = calculator.calculateNewDates({start: utc("07.09.2013", "14:15"), end: utc("", "23:15")});
 
@@ -128,7 +129,7 @@ describe("Date Calculator", function () {
   */
 
   it("... if endDate is moved across the summertime boundary in spring", function () {
-    var calculator = dateCalculator(utc("29.03.2013", "12:15"));
+    var calculator = dateCalculator("29.03.2013", "12:15");
 
     var result = calculator.calculateNewDates({start: utc("30.03.2013", "12:15"), end: utc("30.03.2013", "14:15")});
 
@@ -136,7 +137,7 @@ describe("Date Calculator", function () {
   });
 
   it("... if endDate is moved across the summertime boundary in autumn", function () {
-    var calculator = dateCalculator(utc("25.10.2013", "20:15"));
+    var calculator = dateCalculator("25.10.2013", "20:15");
 
     var result = calculator.calculateNewDates({start: utc("26.10.2013", "20:15"), end: utc("26.10.2013", "23:15")});
 
@@ -144,7 +145,7 @@ describe("Date Calculator", function () {
   });
 
   it("... if endTime is moved across the summertime boundary in spring", function () {
-    var calculator = dateCalculator(utc("30.03.2013", "19:15"));
+    var calculator = dateCalculator("30.03.2013", "19:15");
 
     var result = calculator.calculateNewDates({start: utc("30.03.2013", "22:15"), end: utc("30.03.2013", "23:15")});
 
@@ -152,7 +153,7 @@ describe("Date Calculator", function () {
   });
 
   it("... if endTime is moved across the summertime boundary in autumn", function () {
-    var calculator = dateCalculator(utc("26.10.2013", "20:15"));
+    var calculator = dateCalculator("26.10.2013", "20:15");
 
     var result = calculator.calculateNewDates({start: utc("26.10.2013", "23:15"), end: utc("27.10.2013", "00:15")});
 
