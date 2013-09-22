@@ -19,7 +19,7 @@ var utc = function (dateString, timeString) {
   return moment.utc(dateString + " " + timeString, 'D.M.YYYY H:m');
 };
 
-function assert(moment, date, time) {
+function assertMoment(moment, date, time) {
   expect(moment.format('DD.MM.YYYY')).to.equal(date);
   expect(moment.format('HH:mm')).to.equal(time);
 }
@@ -33,7 +33,7 @@ describe("Date Calculator", function () {
 
     var result = calculator.calculateNewDates({start: utc("08.09.2013", "12:15"), end: utc("07.09.2013", "12:15")});
 
-    assert(result.end, "08.09.2013", "12:15");
+    assertMoment(result.end, "08.09.2013", "12:15");
   });
 
   it("moves EndDate forward if StartDate contains a different date and is moved forward", function () {
@@ -41,7 +41,7 @@ describe("Date Calculator", function () {
 
     var result = calculator.calculateNewDates({start: utc("08.09.2013", "12:15"), end: utc("09.09.2013", "14:15")});
 
-    assert(result.end, "10.09.2013", "14:15");
+    assertMoment(result.end, "10.09.2013", "14:15");
   });
 
   it("moves EndDate backward if StartDate contains the same date and is moved backward", function () {
@@ -49,7 +49,7 @@ describe("Date Calculator", function () {
 
     var result = calculator.calculateNewDates({start: utc("06.09.2013", "12:15"), end: utc("07.09.2013", "12:15")});
 
-    assert(result.end, "06.09.2013", "12:15");
+    assertMoment(result.end, "06.09.2013", "12:15");
 
   });
 
@@ -59,18 +59,8 @@ describe("Date Calculator", function () {
 
     var result = calculator.calculateNewDates({start: utc("08.08.2013", "12:15"), end: utc("07.09.2013", "14:15")});
 
-    assert(result.end, "14.08.2013", "14:15");
+    assertMoment(result.end, "14.08.2013", "14:15");
   });
-
-  /*
-  it("leaves the EndDate empty if the StartDate is changed and the EndDate is empty", function () {
-    var calculator = dateCalculator("01.09.2013", "12:15");
-
-    var result = calculator.calculateNewDates({start: utc("04.09.2013", "12:15"), end: utc("", "14:15")});
-
-    assert(result.end, "", "14:15");
-  });
-  */
 
 // Time
 
@@ -79,7 +69,7 @@ describe("Date Calculator", function () {
 
     var result = calculator.calculateNewDates({start: utc("07.09.2013", "14:15"), end: utc("07.09.2013", "12:15")});
 
-    assert(result.end, "07.09.2013", "14:15");
+    assertMoment(result.end, "07.09.2013", "14:15");
 
   });
 
@@ -88,7 +78,7 @@ describe("Date Calculator", function () {
 
     var result = calculator.calculateNewDates({start: utc("07.09.2013", "15:45"), end: utc("09.09.2013", "14:15")});
 
-    assert(result.end, "09.09.2013", "17:45");
+    assertMoment(result.end, "09.09.2013", "17:45");
   });
 
   it("moves EndTime backward if StartTime contains the same time and is moved backward", function () {
@@ -96,7 +86,7 @@ describe("Date Calculator", function () {
 
     var result = calculator.calculateNewDates({start: utc("07.09.2013", "10:10"), end: utc("07.09.2013", "12:15")});
 
-    assert(result.end, "07.09.2013", "10:10");
+    assertMoment(result.end, "07.09.2013", "10:10");
 
   });
 
@@ -105,7 +95,7 @@ describe("Date Calculator", function () {
 
     var result = calculator.calculateNewDates({start: utc("01.09.2013", "00:00"), end: utc("07.09.2013", "14:15")});
 
-    assert(result.end, "07.09.2013", "02:00");
+    assertMoment(result.end, "07.09.2013", "02:00");
   });
 
   it("moves EndDate and EndTime forward if StartTime is moved past midnight", function () {
@@ -113,27 +103,16 @@ describe("Date Calculator", function () {
 
     var result = calculator.calculateNewDates({start: utc("07.09.2013", "14:15"), end: utc("09.09.2013", "23:15")});
 
-    assert(result.end, "10.09.2013", "01:15");
+    assertMoment(result.end, "10.09.2013", "01:15");
 
   });
-
-  /*
-  it("fills EndDate and moves EndTime forward if EndDate is empty and StartTime is moved past midnight", function () {
-    var calculator = dateCalculator("07.09.2013", "12:15");
-
-    var result = calculator.calculateNewDates({start: utc("07.09.2013", "14:15"), end: utc("", "23:15")});
-
-    assert(result.end, "08.09.2013", "01:15");
-
-  });
-  */
 
   it("... if endDate is moved across the summertime boundary in spring", function () {
     var calculator = dateCalculator("29.03.2013", "12:15");
 
     var result = calculator.calculateNewDates({start: utc("30.03.2013", "12:15"), end: utc("30.03.2013", "14:15")});
 
-    assert(result.end, "31.03.2013", "14:15");
+    assertMoment(result.end, "31.03.2013", "14:15");
   });
 
   it("... if endDate is moved across the summertime boundary in autumn", function () {
@@ -141,7 +120,7 @@ describe("Date Calculator", function () {
 
     var result = calculator.calculateNewDates({start: utc("26.10.2013", "20:15"), end: utc("26.10.2013", "23:15")});
 
-    assert(result.end, "27.10.2013", "23:15");
+    assertMoment(result.end, "27.10.2013", "23:15");
   });
 
   it("... if endTime is moved across the summertime boundary in spring", function () {
@@ -149,7 +128,7 @@ describe("Date Calculator", function () {
 
     var result = calculator.calculateNewDates({start: utc("30.03.2013", "22:15"), end: utc("30.03.2013", "23:15")});
 
-    assert(result.end, "31.03.2013", "02:15"); // ?!
+    assertMoment(result.end, "31.03.2013", "02:15"); // ?!
   });
 
   it("... if endTime is moved across the summertime boundary in autumn", function () {
@@ -157,7 +136,7 @@ describe("Date Calculator", function () {
 
     var result = calculator.calculateNewDates({start: utc("26.10.2013", "23:15"), end: utc("27.10.2013", "00:15")});
 
-    assert(result.end, "27.10.2013", "03:15");
+    assertMoment(result.end, "27.10.2013", "03:15");
   });
 });
 
@@ -169,8 +148,8 @@ describe("Input formatter", function () {
 
     var result = calculator.convertInputs("04.11.2013", "16:15", "07.12.2013", "19:25");
 
-    assert(result.start, "04.11.2013", "16:15");
-    assert(result.end, "07.12.2013", "19:25");
+    assertMoment(result.start, "04.11.2013", "16:15");
+    assertMoment(result.end, "07.12.2013", "19:25");
   });
 
   it("uses the initial start date if the end date is empty", function () {
@@ -178,8 +157,8 @@ describe("Input formatter", function () {
 
     var result = calculator.convertInputs("04.11.2013", "16:15", "", "19:25");
 
-    assert(result.start, "04.11.2013", "16:15");
-    assert(result.end, "01.10.2013", "19:25");
+    assertMoment(result.start, "04.11.2013", "16:15");
+    assertMoment(result.end, "01.10.2013", "19:25");
   });
 
 });
@@ -205,6 +184,19 @@ describe("Output formatter", function () {
 
     expect(result.endDate).to.equal("05.11.2013");
     expect(result.endTime).to.equal("18:15");
+  });
+
+});
+
+describe("Date Model", function () {
+
+  it("does everything together", function () {
+    var calculator = dateCalculator("07.09.2013", "12:15");
+
+    var result = calculator.determineNewEnd("08.09.2013", "12:15", "09.09.2013", "14:15");
+
+    expect(result.endDate).to.equal("10.09.2013");
+    expect(result.endTime).to.equal("14:15");
   });
 
 });
