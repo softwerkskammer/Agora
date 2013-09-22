@@ -18,8 +18,10 @@
   margin: 0px;
 }
 
-body {
-  padding-top: 75px
+@media screen {
+  body {
+    padding-top: 75px
+  }
 }
 
 .page-header {
@@ -92,14 +94,8 @@ td.fc-header-right {
 }
 
 @media print {
-  .btn, .no-print {
+  .btn {
     display: none !important;
-  }
-}
-
-@media screen {
-  .print-only {
-    display: none;
   }
 }
 

@@ -34,7 +34,7 @@ block content
       h4 Wegbeschreibung: 
       !{activity.directionHTML()}
       hr
-      div.no-print
+      div.hidden-print
         if (typeof(user) !== 'undefined' && user.member)
           h4 Zugesagt haben:
           mixin memberlist(visitors)
@@ -51,8 +51,8 @@ block content
             else
               |  haben #{visitors.length} Mitglieder ihre Teilnahme zugesagt.
         
-      hr
-      p Veranstaltet von der Gruppe: #{activity.groupName(groups)}
+      hr.hidden-print
+      p.hidden-print Veranstaltet von der Gruppe: #{activity.groupName(groups)}
     .col-md-4
       mixin map(activity.location, '100%', '450px')
 
