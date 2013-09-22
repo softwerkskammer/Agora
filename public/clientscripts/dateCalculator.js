@@ -19,16 +19,9 @@ var timeString = function (time) {
   return "";
 };
 
-var createDateAndTimeStrings = function (hasEndDate, currentTimes) {
-  return {
-    endDate: hasEndDate || dateString(currentTimes.start) !== dateString(currentTimes.end) ? dateString(currentTimes.end) : "",
-    endTime: timeString(currentTimes.end)
-  };
-};
-
 var dateCalculator = function (initialDate, initialTime) {
 
-  var oldStartDate = toUtc(initialDate, initialTime);
+  var oldStartDate = initialDate && initialTime ? toUtc(initialDate, initialTime) : undefined;
 
   return {
     getOldStartDate: function () {
@@ -50,6 +43,19 @@ var dateCalculator = function (initialDate, initialTime) {
       currentTimes.end = currentTimes.end.add(offset, 'minutes');
 
       return currentTimes;
+    },
+
+    createDateAndTimeStrings: function (hasEndDate, currentTimes) {
+      return {
+        endDate: hasEndDate || dateString(currentTimes.start) !== dateString(currentTimes.end) ? dateString(currentTimes.end) : "",
+        endTime: timeString(currentTimes.end)
+      };
+    },
+
+    determineNewEnd: function (startDate, startTime, endDate, endTime) {
+      var inputMoments = this.convertInputs(startDate, startTime, endDate, endTime);
+      var currentTimes = this.calculateNewDates(inputMoments);
+      return this.createDateAndTimeStrings(!!endDate, currentTimes);
     }
 
   };

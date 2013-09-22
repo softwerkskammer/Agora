@@ -187,21 +187,21 @@ describe("Input formatter", function () {
 describe("Output formatter", function () {
 
   it("creates strings for the inputs", function () {
-    var result = createDateAndTimeStrings(true, { start: utc("04.11.2013", "16:15") , end: utc("04.11.2013", "18:15") });
+    var result = dateCalculator().createDateAndTimeStrings(true, { start: utc("04.11.2013", "16:15") , end: utc("04.11.2013", "18:15") });
 
     expect(result.endDate).to.equal("04.11.2013");
     expect(result.endTime).to.equal("18:15");
   });
 
   it("creates no date string if it did not have one before and if the dates are identical", function () {
-    var result = createDateAndTimeStrings(false, { start: utc("04.11.2013", "16:15") , end: utc("04.11.2013", "18:15") });
+    var result = dateCalculator().createDateAndTimeStrings(false, { start: utc("04.11.2013", "16:15") , end: utc("04.11.2013", "18:15") });
 
     expect(result.endDate).to.equal("");
     expect(result.endTime).to.equal("18:15");
   });
 
   it("creates a date string if it did not have one before but the dates differ", function () {
-    var result = createDateAndTimeStrings(false, { start: utc("04.11.2013", "16:15") , end: utc("05.11.2013", "18:15") });
+    var result = dateCalculator().createDateAndTimeStrings(false, { start: utc("04.11.2013", "16:15") , end: utc("05.11.2013", "18:15") });
 
     expect(result.endDate).to.equal("05.11.2013");
     expect(result.endTime).to.equal("18:15");

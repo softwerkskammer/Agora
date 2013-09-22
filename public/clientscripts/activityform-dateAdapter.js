@@ -17,11 +17,7 @@ var dateAdapter = function () {
   var dateCalc = dateCalculator($('#startDate').val(), $('#startTime').val());
 
   var listener = function () {
-    var hasEndDate = !!($('#endDate').val());
-
-    var inputMoments = dateCalc.convertInputs($('#startDate').val(), $('#startTime').val(), $('#endDate').val(), $('#endTime').val());
-    var currentTimes = dateCalc.calculateNewDates(inputMoments);
-    var endStrings = createDateAndTimeStrings(hasEndDate, currentTimes);
+    var endStrings = dateCalc.determineNewEnd($('#startDate').val(), $('#startTime').val(), ($('#endDate').val()), $('#endTime').val());
 
     $('#endDate').val(endStrings.endDate);
     $('#endTime').val(endStrings.endTime);
