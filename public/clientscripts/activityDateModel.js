@@ -1,37 +1,37 @@
-var toUtc = function (dateString, timeString) {
-  if (dateString && timeString) {
-    return moment.utc(dateString + " " + timeString, 'D.M.YYYY H:m');
-  }
-  return null;
-};
+/* global moment */
 
-var dateString = function (date) {
-  if (date) {
-    return date.format('DD.MM.YYYY');
-  }
-  return "";
-};
+"use strict";
 
-var timeString = function (time) {
-  if (time) {
-    return time.format('HH:mm');
-  }
-  return "";
-};
+var activityDateModel = function (initialDate, initialTime) {
 
-var dateCalculator = function (initialDate, initialTime) {
+  var toUtc = function (dateString, timeString) {
+    if (dateString && timeString) {
+      return moment.utc(dateString + " " + timeString, 'D.M.YYYY H:m');
+    }
+    return null;
+  };
+
+  var dateString = function (date) {
+    if (date) {
+      return date.format('DD.MM.YYYY');
+    }
+    return "";
+  };
+
+  var timeString = function (time) {
+    if (time) {
+      return time.format('HH:mm');
+    }
+    return "";
+  };
 
   var oldStartDate = initialDate && initialTime ? toUtc(initialDate, initialTime) : undefined;
 
   return {
-    getOldStartDate: function () {
-      return oldStartDate;
-    },
-
     convertInputs: function (startDate, startTime, endDate, endTime) {
       return {
         start: toUtc(startDate, startTime),
-        end: toUtc(endDate || dateString(this.getOldStartDate()), endTime)
+        end: toUtc(endDate || dateString(oldStartDate), endTime)
       };
     },
 
