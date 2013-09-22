@@ -1,4 +1,3 @@
-
 var toUtc = function (dateString, timeString) {
   if (dateString && timeString) {
     return moment.utc(dateString + " " + timeString, 'D.M.YYYY H:m');
@@ -6,14 +5,28 @@ var toUtc = function (dateString, timeString) {
   return null;
 };
 
-var dateCalculator = function (initialDate, initialTime) {
+var dateString = function (date) {
+  if (date) {
+    return date.format('DD.MM.YYYY');
+  }
+  return "";
+};
 
-  var dateString = function (date) {
-    if (date) {
-      return date.format('DD.MM.YYYY');
-    }
-    return "";
+var timeString = function (time) {
+  if (time) {
+    return time.format('HH:mm');
+  }
+  return "";
+};
+
+var createDateAndTimeStrings = function (hasEndDate, currentTimes) {
+  return {
+    endDate: hasEndDate || dateString(currentTimes.start) !== dateString(currentTimes.end) ? dateString(currentTimes.end) : "",
+    endTime: timeString(currentTimes.end)
   };
+};
+
+var dateCalculator = function (initialDate, initialTime) {
 
   var oldStartDate = toUtc(initialDate, initialTime);
 
@@ -38,5 +51,6 @@ var dateCalculator = function (initialDate, initialTime) {
 
       return currentTimes;
     }
+
   };
 };
