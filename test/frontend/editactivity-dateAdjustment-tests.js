@@ -15,17 +15,17 @@ includeInThisContext(__dirname+"/../../public/clientscripts/moment.js");
 includeInThisContext(__dirname+"/../../public/clientscripts/dateCalculator.js");
 
 
+var utc = function (dateString, timeString) {
+  return moment.utc(dateString + " " + timeString, 'D.M.YYYY H:m');
+};
+
+function assert(moment, date, time) {
+  expect(moment.format('DD.MM.YYYY')).to.equal(date);
+  expect(moment.format('HH:mm')).to.equal(time);
+}
+
+
 describe("Date Calculator", function () {
-
-  var utc = function (dateString, timeString) {
-    return moment.utc(dateString + " " + timeString, 'D.M.YYYY H:m');
-  };
-
-
-  function assert(moment, date, time) {
-    expect(moment.format('DD.MM.YYYY')).to.equal(date);
-    expect(moment.format('HH:mm')).to.equal(time);
-  }
 
   it("moves EndDate forward if StartDate contains the same date and is moved forward", function () {
 
@@ -160,5 +160,27 @@ describe("Date Calculator", function () {
     assert(result.end, "27.10.2013", "03:15");
   });
 
+
+});
+
+describe("Input formatter", function () {
+
+  it("transforms the input dates into moments", function () {
+    var calculator = dateCalculator("01.10.2013", "20:15");
+
+    var result = calculator.convertInputs("04.11.2013", "16:15", "07.12.2013", "19:25");
+
+    assert(result.start, "04.11.2013", "16:15");
+    assert(result.end, "07.12.2013", "19:25");
+  });
+
+  it("uses the initial start date if the end date is empty", function () {
+    var calculator = dateCalculator("01.10.2013", "20:15");
+
+    var result = calculator.convertInputs("04.11.2013", "16:15", "", "19:25");
+
+    assert(result.start, "04.11.2013", "16:15");
+    assert(result.end, "01.10.2013", "19:25");
+  });
 
 });
