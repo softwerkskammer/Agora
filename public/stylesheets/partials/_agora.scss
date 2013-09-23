@@ -1,26 +1,39 @@
-.editable-click,
-a.editable-click,
-a.editable-click:hover {
-  text-decoration: inherit;
-  border-bottom: inherit;
+.container {
+  max-width: 2048px;
 }
 
-@media (min-width: 980px) {
+.container.bottom {
+  padding-top: 20px;
+  margin-right: 0px;
+}
+
+.navbar-brand.no-padding {
+  padding-top: 0px;
+  padding-bottom: 0px;
+  padding-left: 0px;
+  padding-right: 0px
+}
+
+.navbar {
+  margin: 0px;
+}
+
+body {
+  padding-top: 75px
+}
+
+.page-header {
+  margin-top: 0px;
+}
+
+.page-header > h2 {
+  margin-top: 0px;
+}
+
+@media (max-width: 767px) {
   .container.bottom {
-    padding-top: 20px;
-    margin-right: 0px;
-  }
-
-  .brand.no-padding {
     padding-top: 0px;
-    padding-bottom: 0px;
-    padding-left: 20px;
-    padding-right: 10px
-  }
-
-  body {
-    padding-top: 65px;
-    padding-bottom: 65px
+    margin-right: 0px;
   }
 }
 
@@ -78,34 +91,6 @@ td.fc-header-right {
   border-bottom-color: transparent;
 }
 
-.cheatsheet-content .col {
-  float: left;
-  width: 30%;
-  margin-left: 10px;
-}
-
-.cheatsheet-content pre {
-  border: 1px solid #ddd;
-  background-color: #eee;
-  border-radius: 3px;
-  width: 100%;
-  padding: 5px;
-  font-size: 12px;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-}
-
-.cheatsheet-content hr {
-  clear: both;
-}
-
-#cheatsheet {
-  width: 75%; /* desired relative width */
-  left: 12.5%; /* (100%-width)/2 */
-  margin: auto auto auto auto; /* place center */
-}
-
 @media print {
   .btn, .no-print {
     display: none !important;
@@ -115,5 +100,16 @@ td.fc-header-right {
 @media screen {
   .print-only {
     display: none;
+  }
+}
+
+@media (min-width: 768px) {
+  .modal-dialog.cheatsheet {
+    width: 80%;
+  }
+
+  .navbar-nav > li > a {
+    padding-top: 10px;
+    padding-bottom: 10px;
   }
 }

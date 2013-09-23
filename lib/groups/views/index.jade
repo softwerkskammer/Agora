@@ -4,27 +4,28 @@ block title
   | Übersicht der Gruppen
 
 block content
-  .row-fluid
-    .span12
+  .row
+    .col-md-12
       .page-header
         h2 Gruppen&nbsp;
           small Alle
           if (typeof(user) !== 'undefined' && user.member.isAdmin)
-            a.pull-right.btn(href="new/", title="Neue Gruppe"): i.icon-file
-  .row-fluid
-    .span6
+            a.pull-right.btn.btn-default(href="new/", title="Neue Gruppe"): i.icon-file
+    .col-md-6
       h3 #{regionalgroups.length} Regionalgruppen
 
       ul.unstyled
         each group in regionalgroups
           li
-            span.badge(style="background-color: #{group.color};min-width:20px;text-align:right;") #{group.members.length}
+            span.label(style="background-color: #{group.color};min-width:30px;text-align:right;display:inline-block") #{group.members.length}
+            |  &nbsp;
             strong: a.group(href="#{group.id}") &nbsp; #{group.longName}
-    .span6
+    .col-md-6
       h3 #{themegroups.length} Themengruppen
       
       ul.unstyled
         each group in themegroups
           li 
-            span.badge(style="background-color: #{group.color};min-width:20px;text-align:right;") #{group.members.length}
-            strong: a.group(href="#{group.id}") &nbsp; #{group.longName}
+            span.label(style="background-color: #{group.color};min-width:30px;text-align:right;display:inline-block") #{group.members.length}
+            |  &nbsp;
+            strong: a.group(href="#{group.id}") #{group.longName}

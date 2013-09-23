@@ -3,8 +3,8 @@ extends ../layout
 block title
   | 500 - Generelles Problem
 block content
-  .row-fluid
-    .span6
+  .row
+    .col-md-6
       h3 Herzlichen Glückwunsch!
       p Du hast einen fünf-null-null gefunden.
         | Am Besten klickst Du auf einen unserer Links im Header.
@@ -16,7 +16,7 @@ block content
           li Datum / Uhrzeit
           li Den Stacktrace unterhalb von "500"
       p Das Agora-Team bittet um Entschuldigung.
-    .span6
+    .col-md-6
       h3 500
       p
         pre #{error}

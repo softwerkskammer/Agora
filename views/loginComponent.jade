@@ -1,33 +1,35 @@
-#login.modal.hide.fade
-  .modal-header
-    button.close(type="button", data-dismiss="modal", aria-hidden="true") &times;
-    h3 Authentifizierung
-  .modal-body
-    -var returnUrl = (typeof(currentUrl) === 'undefined') ? "/" : currentUrl
-    .row-fluid
-      .span12
-        p Du kannst Dich über einen der untenstehenden Dienste authentifizieren. Im Anschluss
-          | bitten wir Dich, einige persönliche Daten einzugeben.
-    .row-fluid
-      .span3
-        a.btn(href="/auth/openid?openid_identifier=" + encodeURIComponent("https://www.google.com/accounts/o8/id") + "&returnTo=" + encodeURIComponent(returnUrl))
-          img(src="/img/google.ico", alt="google")
-          | &nbsp;Google
-      .span3
-        a.btn(href="/auth/github?returnTo=" + encodeURIComponent(returnUrl))
-          img(src="/img/github.ico", alt="github")
-          | &nbsp;Github
-    .row-fluid
-      form(action="/auth/openid", method="get")
-        .span12
-          p &nbsp; 
-          input(type="hidden", name="returnTo", value=returnUrl)
-          p
-            a(href="#openIDinput", data-toggle="collapse")
-              i.icon-caret-right
-              |&nbsp;(optional)
-            |&nbsp;Eingabe der URL eines alternativen OpenID Providers:
-          #openIDinput.collapse
-            .input-append.span10
-              input.input-xxlarge.input-block-level(id="openid_identifier", type='text', name="openid_identifier")
-              button.btn(type="submit") Sonstige
+#login.modal.fade
+  .modal-dialog
+    .modal-content
+      .modal-header
+        button.close(type="button", data-dismiss="modal", aria-hidden="true") &times;
+        h3 Authentifizierung
+      .modal-body
+        -var returnUrl = (typeof(currentUrl) === 'undefined') ? "/" : currentUrl
+        .row
+          .col-md-12
+            p Du kannst Dich über einen der untenstehenden Dienste authentifizieren. Im Anschluss
+              | bitten wir Dich, einige persönliche Daten einzugeben.
+        .row
+          .col-md-3
+            a.btn.btn-default.btn.btn-default-default(href="/auth/openid?openid_identifier=" + encodeURIComponent("https://www.google.com/accounts/o8/id") + "&returnTo=" + encodeURIComponent(returnUrl))
+              img(src="/img/google.ico", alt="google")
+              | &nbsp;Google
+          .col-md-3
+            a.btn.btn-default.btn.btn-default-default(href="/auth/github?returnTo=" + encodeURIComponent(returnUrl))
+              img(src="/img/github.ico", alt="github")
+              | &nbsp;Github
+        .row
+          form(action="/auth/openid", method="get")
+            .col-md-12
+              p &nbsp; 
+              input(type="hidden", name="returnTo", value=returnUrl)
+              p
+                a(href="#openIDinput", data-toggle="collapse")
+                  i.icon-caret-right
+                  |&nbsp;(optional)
+                |&nbsp;Eingabe der URL eines alternativen OpenID Providers:
+              #openIDinput.collapse
+                .input-append.col-md-10
+                  input.input-xxlarge.input-block-level(id="openid_identifier", type='text', name="openid_identifier")
+                  button.btn.btn-default(type="submit") Sonstige

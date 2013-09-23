@@ -10,12 +10,12 @@ block title
   | mails 
 
 block content
-  .span12
+  .col-md-12
     .page-header
       mixin pageHeader(group)
       a(href=encodeURIComponent(group)+"?thread=false") Ansicht unthreaded
-  .row-fluid
-    .span12
+  .row
+    .col-md-12
       #mails.pre-scrollable
         - var mailNumber = 0;
         for mailHeader in mailHeaders

@@ -17,6 +17,7 @@
  * limitations under the License.
  * 
  * !!! PATCHED -> Search line: "      this.$textarea.css('resize','none')"
+ * !!! PATCHED -> Button sytles in function __buildButtons
  * 
  * ========================================================== */
 
@@ -98,7 +99,7 @@
             // Attach the button object
             btnGroupContainer.append('<button class="'
                                     +btnClass
-                                    +' btn-small" title="'
+                                    +' btn-sm btn-default" title="'
                                     +button.title
                                     +'" tabindex="'
                                     +tabIndex

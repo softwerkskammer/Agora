@@ -1,61 +1,35 @@
-extends ../../../views/layoutTitle
+extends ../../../views/layout
 
 block content
-
-  #slider.swipe
-    .swipe-wrap
-
-      div
-        .hero-unit
-          h2 Schön, dass Du vorbeischaust.
-          p Die Softwerkskammer hat sich 2011 gegründet, um den Austausch Interessierter zum Thema Software Craftsmanship
-            | zu vereinfachen.
-          p Diese Site ist unsere zentrale Anlaufstelle für die lokalen Software Craftsmanship Communities in Deutschland, Österreich und der Schweiz.
-            | Hierüber organisieren die lokalen Communities (die Softwerkskammern) ihre Treffen und andere Events wie
-            | CodeRetreats oder OpenSpaces oder tauschen sich einfach nur via Mailingliste aus.
-          hr
-          p.text-right Was wir in den nächsten Wochen veranstalten, findest Du unter
-            a.btn.btn-large.btn-primary(href="/activities/upcoming", style="margin-left:14px;")
-              i.icon-calendar
-              | &nbsp;Aktivitäten
-
-      div
-        .hero-unit
-          h2 Wir sind …
-          p … ein Zusammenschluss von Communities of Professionals, die über den ganzen deutschsprachigen Raum verteilt sind. Uns geht es darum, gute Software
-            | zu entwickeln, und zwar im Hinblick auf alle Aspekte.
-          p Wir möchten
-          ul
-            li voneinander lernen und Erfahrungen austauschen
-            li die Software erstellen, die der Kunde wirklich braucht
-            li sicherstellen, dass unsere Ergebnisse eine hohe interne und externe Qualität besitzen
-            li flexible, leicht änderbare Software herstellen
-          p
-            strong Kurz: 
-            | Wir wollen die richtige Software entwickeln, und wir wollen die Software richtig entwickeln.
-          a.btn.btn-large.btn-primary.pull-right(href="/announcements")
-            i.icon-globe
-            | &nbsp;Nachrichten
-
-      div
-        .hero-unit
-          h2 Die Softwerkskammer ist etwas für Dich, wenn
-          ul
-            li Softwareentwicklung für Dich eine Leidenschaft bedeutet.
-            li Du Teil der deutschsprachigen Software Craftsmanship Community und Teil einer lokalen Softwerkskammer
-              | sein möchtest.
-            li Du Dich mit Gleichgesinnten zum Thema Software Craftsmanship und allen damit zusammenhängenden Themen
-              | wie Clean Code, TDD etc. austauschen möchtest.
-          a.btn.btn-large.btn-primary.pull-right(href="/groups")
-            i.icon-group
-            | &nbsp;Gruppen
-
-    nav
-      ul#position
-        li.on(onclick='mySwipe.slide(0);')
-        li(onclick='mySwipe.slide(1);')
-        li(onclick='mySwipe.slide(2);')
-
-  div(style='text-align:center;padding-top:20px;')
-    button(class='btn', onclick='mySwipe.prev()') zurück
-    button(class='btn', onclick='mySwipe.next()') vor
+  .row
+    .col-md-12
+      h2 Schön, dass Du vorbeischaust.
+      p Die Softwerkskammer hat sich 2011 gegründet, um den Austausch Interessierter zum Thema Software Craftsmanship
+        | zu vereinfachen.
+      p Diese Site ist unsere zentrale Anlaufstelle für die lokalen Software Craftsmanship Communities in Deutschland, Österreich und der Schweiz.
+        | Hierüber organisieren die lokalen Communities (die Softwerkskammern) ihre Treffen und andere Events wie
+        | CodeRetreats oder OpenSpaces oder tauschen sich einfach nur via Mailingliste aus.
+      p Was wir in den nächsten Wochen veranstalten, findest Du unter Aktivitäten
+  .row
+    .col-md-6
+      h2 Wir sind …
+      p … ein Zusammenschluss von Communities of Professionals, die über den ganzen deutschsprachigen Raum verteilt sind. Uns geht es darum, gute Software
+        | zu entwickeln, und zwar im Hinblick auf alle Aspekte.
+      p Wir möchten
+      ul
+        li voneinander lernen und Erfahrungen austauschen
+        li die Software erstellen, die der Kunde wirklich braucht
+        li sicherstellen, dass unsere Ergebnisse eine hohe interne und externe Qualität besitzen
+        li flexible, leicht änderbare Software herstellen
+      p
+        strong Kurz: 
+        | Wir wollen die richtige Software entwickeln, und wir wollen die Software richtig entwickeln.
+    .col-md-6
+      h2 Die Softwerkskammer ist etwas für Dich, wenn
+      ul
+        li Softwareentwicklung für Dich eine Leidenschaft bedeutet.
+        li Du Teil der deutschsprachigen Software Craftsmanship Community und Teil einer lokalen Softwerkskammer
+          | sein möchtest.
+        li Du Dich mit Gleichgesinnten zum Thema Software Craftsmanship und allen damit zusammenhängenden Themen
+          | wie Clean Code, TDD etc. austauschen möchtest.
+      
