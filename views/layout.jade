@@ -44,8 +44,9 @@ html
     include layoutComponents
     include loginComponent
     include markdownCheatsheet
-    img.print-only(src="/img/Softwerkskammer_Header.png", alt="Softwerkskammer")
-    .navbar.navbar-default.navbar-fixed-top.no-print(role="navigation")
+    img.visible-print(src="/img/Softwerkskammer_Header.png", alt="Softwerkskammer")
+    p.visible-print &nbsp;
+    .navbar.navbar-default.navbar-fixed-top.hidden-print(role="navigation")
       .navbar-header
         a.navbar-brand.no-padding(href="/")
           img(src="/img/SoftwerkskammerWappenLinks.png", alt="Softwerkskammer")
@@ -106,9 +107,9 @@ html
           if (typeof(statusmessage) !== 'undefined')
             mixin notificationsBlock(statusmessage)
           block content
-        .col-md-3.no-print
+        .col-md-3.hidden-print
           .panel
-            #calendar.no-print
+            #calendar
           if (typeof(latestNews) !== 'undefined')
             hr
             #news

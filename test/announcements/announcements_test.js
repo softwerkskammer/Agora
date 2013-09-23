@@ -81,7 +81,7 @@ describe('Announcement application', function () {
     request(app)
       .get('/' + url)
       .expect(200)
-      .expect(/&nbsp;<small>29.07.2013/)
+      .expect(/<small>29.07.2013/)
       .expect(/<h2>title/, function (err) {
         expect(getAnnouncement.calledWith(url)).to.be.true;
         done(err);
