@@ -46,8 +46,9 @@ var activityDateModel = function (initialDate, initialTime) {
     },
 
     createDateAndTimeStrings: function (hasEndDate, currentTimes) {
+      var endDateString = dateString(currentTimes.end);
       return {
-        endDate: hasEndDate || dateString(currentTimes.start) !== dateString(currentTimes.end) ? dateString(currentTimes.end) : "",
+        endDate: hasEndDate || dateString(currentTimes.start) !== endDateString ? endDateString : "",
         endTime: timeString(currentTimes.end)
       };
     },
