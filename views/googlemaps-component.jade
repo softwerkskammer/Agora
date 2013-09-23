@@ -1,5 +1,5 @@
 mixin map(location, width, height)
-  #map.no-print(style="width: #{width}; height: #{height}")
+  #map.hidden-print(style="width: #{width}; height: #{height}")
   script(src="http://maps.googleapis.com/maps/api/js?sensor=false", type="text/javascript")
   script
     $(document).ready(function () {

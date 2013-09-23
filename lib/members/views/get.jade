@@ -11,13 +11,14 @@ block content
       .page-header
         h2
           | "#{member.nickname}"&nbsp;
+          .btn-group.pull-right
+            if (typeof(user) !== 'undefined' && (user.member.isAdmin || user.member.id === member.id))
+              a.btn.btn-default(href="/members/edit/#{encodeURIComponent(member.nickname)}"): i.icon-edit
           small
             if (member.isAdmin)
               | Admin
             else
               | Profilansicht
-          if (typeof(user) !== 'undefined' && (user.member.isAdmin || user.member.id === member.id))
-            a.pull-right.btn.btn-default(href="/members/edit/#{encodeURIComponent(member.nickname)}"): i.icon-edit
   .row
     .col-md-8
       p

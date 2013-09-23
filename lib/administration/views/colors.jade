@@ -23,9 +23,10 @@ block content
     .col-md-12
       .page-header
         h2 Verwaltung
+          .btn-group.pull-right
+            - if (typeof(user) !== 'undefined' && user.member.isAdmin)
+              a.pull-right.btn.btn-default(data-toggle="modal", href="#newcolor", title="Neue Farbe"): i.icon-file
           small  Farben
-          - if (typeof(user) !== 'undefined' && user.member.isAdmin)
-            a.pull-right.btn.btn-default(data-toggle="modal", href="#newcolor", title="Neue Farbe"): i.icon-file
   .row
     .col-md-8
       form.form-horizontal(action='/administration/submitColors', method='post')
