@@ -7,9 +7,10 @@ block content
     .col-md-12
       .page-header
         h2 #{announcement.title}&nbsp;
+          .btn-group.pull-right
+            if (typeof(user) !== 'undefined' && user.member.isAdmin)
+              a.btn.btn-default(href="/announcements/edit/#{encodeURIComponent(announcement.url)}", title="Bearbeiten"): i.icon-edit
           small #{announcement.fromDate()}
-          if (typeof(user) !== 'undefined' && user.member.isAdmin)
-            a.pull-right.btn.btn-default(href="/announcements/edit/#{encodeURIComponent(announcement.url)}", title="Bearbeiten"): i.icon-edit
       .row
         .col-md-8
           !{announcement.messageHTML()}
