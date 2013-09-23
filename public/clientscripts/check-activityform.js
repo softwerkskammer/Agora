@@ -51,67 +51,6 @@ var initValidator = function () {
   });
 };
 
-var dateAdapter = function() {
-
-  var toUtc = function (dateString, timeString) {
-    if(dateString && timeString) {
-      return moment.utc(dateString + " " + timeString, 'D.M.YYYY H:m');
-    }
-    return null;
-  };
-
-  var dateString = function (date) {
-    if(date){
-      return date.format('DD.MM.YYYY');
-    }
-    return "";
-  };
-
-  var timeString = function (time) {
-    if(time){
-      return time.format('HH:mm');
-    }
-    return "";
-  };
-
-  var endDayStringOr = function (oldStartDate) {
-    // if the endDate field is empty, use the old contents of the start date field
-    return $('#endDate').val() || dateString(oldStartDate);
-  };
-
-  var setEndFieldsTo = function (newEndDate) {
-    if(!newEndDate) {
-      return;
-    }
-
-    if($('#endDate').val() || $('#startDate').val() !== dateString(newEndDate) ){
-      // only update the field if it was not empty or if the date is not the same
-      $('#endDate').val(dateString(newEndDate));
-    }
-    $('#endTime').val(timeString(newEndDate));
-  };
-
-  var listener = function() {
-
-    var newStartDate = toUtc($('#startDate').val(), $('#startTime').val());
-
-    var offset = oldStartDate && newStartDate ? newStartDate.diff(oldStartDate, 'minutes') : 0;
-    
-    var endDayString = endDayStringOr(oldStartDate);
-
-    oldStartDate = newStartDate;
-
-    if( offset !== 0 ){
-      var newEndDate = toUtc(endDayString, $('#endTime').val()).add(offset, 'minutes');
-      setEndFieldsTo(newEndDate);
-    }
-  };
-
-  var oldStartDate = toUtc($('#startDate').val(), $('#startTime').val());
-  $('#startDate').change(listener);
-  $('#startTime').change(listener);
-};
-
 
 $(document).ready(initValidator);
 $(document).ready(dateAdapter);
