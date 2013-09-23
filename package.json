@@ -64,7 +64,6 @@
     "request": "~2.16.6",
     "supertest": "~0.5",
     "sinon": "~1.6.0",
-    "jsdom": "0.8.4",
     "grunt-contrib-qunit": "0.2.1",
     "blanket": "~1.1.4",
     "travis-cov": "~0.2",
