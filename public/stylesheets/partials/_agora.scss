@@ -1,3 +1,7 @@
+.list-group-item > .label {
+  float: right;
+}
+
 .container {
   max-width: 2048px;
 }
@@ -83,7 +87,6 @@ td.fc-header-right {
 @media screen {
   body {
     padding-top: 75px;
-    padding-bottom: 50px
   }
 }
 
@@ -101,6 +104,9 @@ td.fc-header-right {
   .navbar-nav > li > a {
     padding-top: 10px;
     padding-bottom: 10px;
+  }
+  body {
+    padding-bottom: 50px
   }
 }
 
