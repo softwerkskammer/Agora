@@ -9,10 +9,10 @@ mixin controlLabel(name, label, tooltip)
     else
       | #{label}:
 
-mixin text(name, label, object, tooltip)
+mixin text(name, label, object, tooltip, placeholder)
   .form-group
     mixin controlLabel(name, label, tooltip)
-    input.form-control(id=name, type='text', name=name, value=object[name])
+    input.form-control(id=name, type='text', name=name, value=object[name], placeholder=placeholder)
 
 mixin textReadonly(name, label, object)
   .form-group
