@@ -116,8 +116,8 @@ describe('Activity', function () {
 describe('Activity\'s description', function () {
   it('renders anchor tags when required', function (done) {
     var activity = new Activity();
-    activity.description = '<a href = "http://a.de">dafadf</a> https://b.de';
-    expect(activity.descriptionHTML()).to.contain('"http://a.de"');
+    activity.description = '[dafadf](http://a.de) https://b.de';
+    expect(activity.descriptionHTML()).to.contain('a href="http://a.de"');
     expect(activity.descriptionHTML()).to.contain('"https://b.de"');
     done();
   });
@@ -125,10 +125,10 @@ describe('Activity\'s description', function () {
   it('removes anchor tags when required', function (done) {
     var activity = new Activity();
     activity.description = '<a href = "http://a.de">dafadf</a> https://b.de';
-    expect(activity.descriptionHTMLWithoutAnchors()).to.not.contain('"http://a.de"');
-    expect(activity.descriptionHTMLWithoutAnchors()).to.not.contain('"https://b.de"');
-    expect(activity.descriptionHTMLWithoutAnchors()).to.not.contain('dafadf');
-    expect(activity.descriptionHTMLWithoutAnchors()).to.not.contain('https://b.de');
+    expect(activity.descriptionPlain()).to.not.contain('"http://a.de"');
+    expect(activity.descriptionPlain()).to.not.contain('"https://b.de"');
+    expect(activity.descriptionPlain()).to.contain('dafadf');
+    expect(activity.descriptionPlain()).to.contain('https://b.de');
     done();
   });
 });
