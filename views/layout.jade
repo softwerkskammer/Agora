@@ -101,25 +101,24 @@ html
                   i.icon-user
             mixin loginMenu(true)
 
-    .container
+    .container(style="max-width: 2048px")
       .row
-        .col-md-9
-          if (typeof(statusmessage) !== 'undefined')
-            mixin notificationsBlock(statusmessage)
-          block content
-        .col-md-3.hidden-print
-          .panel
+        .col-md-8
+          .container
+            if (typeof(statusmessage) !== 'undefined')
+              mixin notificationsBlock(statusmessage)
+            block content
+        .col-md-4.hidden-print
+          .container
+            .page-header.visible-xs.visible-sm
+              p &nbsp;
+              h2.visible-xs.visible-sm Aktivitäten
             #calendar
-          if (typeof(latestNews) !== 'undefined')
-            hr
-            #news
-              h4 Das Neueste
+            if (typeof(latestNews) !== 'undefined')
+              h2 Das Neueste
               dl
                 for announcement in latestNews
                   dt #{announcement.fromDate()}
-                  dd
-                    a(href='/announcements/#{encodeURIComponent(announcement.url)}') #{announcement.title}
-
-
+                  dd: a(href='/announcements/#{encodeURIComponent(announcement.url)}') #{announcement.title}
     mixin bottomNavbar
     
