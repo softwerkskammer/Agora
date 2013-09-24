@@ -52,13 +52,12 @@ mixin navbar-inside
       span.icon-bar
       span.icon-bar
       span.icon-bar
-  .container-bottom
-    .navbar-collapse.collapse.collapse-btom
-      ul.nav.navbar-nav.pull-right
-        mixin administrationMenu()
-        li: a(href="/help.html") Tipps & FAQs
-        li: a(href="/credits.html") Credits
-        li: a(href="/impressum.html") Impressum
+  .navbar-collapse.collapse.collapse-btom
+    ul.nav.navbar-nav.pull-right
+      mixin administrationMenu()
+      li: a(href="/help.html") Tipps & FAQs
+      li: a(href="/credits.html") Credits
+      li: a(href="/impressum.html") Impressum
 
 mixin bottomNavbar
   .navbar.navbar-default.navbar-bottom.hidden-print.visible-xs
