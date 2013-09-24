@@ -1,5 +1,16 @@
 extends ../../../views/layout
 
+mixin grouplist(title, groupsOfAKind)
+  .col-md-6
+    h3 #{groupsOfAKind.length} #{title}
+    ul.unstyled
+      each group in groupsOfAKind
+        li
+          span.label(style="background-color: #{group.color};min-width:30px;text-align:right;display:inline-block") #{group.members.length}
+          | &nbsp;
+          strong: a.group(href="#{group.id}") &nbsp; #{group.longName}
+
+
 block title
   | Übersicht der Gruppen
 
@@ -12,21 +23,5 @@ block content
             if (typeof(user) !== 'undefined' && user.member.isAdmin)
               a.btn.btn-default(href="new/", title="Neue Gruppe"): i.icon-file
           small Alle
-    .col-md-6
-      h3 #{regionalgroups.length} Regionalgruppen
-
-      ul.unstyled
-        each group in regionalgroups
-          li
-            span.label(style="background-color: #{group.color};min-width:30px;text-align:right;display:inline-block") #{group.members.length}
-            |  &nbsp;
-            strong: a.group(href="#{group.id}") &nbsp; #{group.longName}
-    .col-md-6
-      h3 #{themegroups.length} Themengruppen
-      
-      ul.unstyled
-        each group in themegroups
-          li 
-            span.label(style="background-color: #{group.color};min-width:30px;text-align:right;display:inline-block") #{group.members.length}
-            |  &nbsp;
-            strong: a.group(href="#{group.id}") #{group.longName}
+    mixin grouplist('Regionalgruppen', regionalgroups)
+    mixin grouplist('Themengruppen', themegroups)
