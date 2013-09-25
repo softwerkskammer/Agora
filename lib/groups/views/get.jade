@@ -13,7 +13,8 @@ block content
             a.btn.btn-default(href="/wiki/#{group.id}/")
               i.icon-book 
               | &nbsp;Wiki
-            a.btn.btn-default(href="/mailarchive/list/#{group.id}?thread=true") Mailarchiv
+            if (user)
+              a.btn.btn-default(href="/mailarchive/list/#{group.id}?thread=true") Mailarchiv
             if (user && user.member.isAdmin)
               a.btn.btn-default(href="/groups/edit/#{group.id}", title="Bearbeiten"): i.icon-edit
           small #{group.type} 
@@ -25,6 +26,11 @@ block content
           | #{group.id}@softwerkskammer.org
       |!{group.descriptionHTML()}
 
+      if (user)
+        if (userIsGroupMember)
+          a.btn.btn-primary(href="unsubscribe/#{group.id}") Gruppe verlassen
+        else
+          a.btn.btn-primary(href="subscribe/#{group.id}") Gruppe beitreten
       h4 Mitglieder:
       | Diese Gruppe hat
       if (users.length === 1)
@@ -35,8 +41,3 @@ block content
         |  #{users.length} Mitglieder.
       if (user)
         mixin memberlist(users, organizers)
-        if (user)
-          if (userIsGroupMember)
-            a.btn.btn-primary(href="unsubscribe/#{group.id}") Gruppe verlassen
-          else
-            a.btn.btn-primary(href="subscribe/#{group.id}") Gruppe beitreten

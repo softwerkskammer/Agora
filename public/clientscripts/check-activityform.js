@@ -21,8 +21,12 @@ var initValidator = function () {
       },
       title: "required",
       location: "required",
-      startDate: "required",
-      startTime: "required"
+      startDate: {
+        required: true
+      },
+      startTime: {
+        required: true
+      }
     },
     messages: {
       url: {
@@ -31,10 +35,10 @@ var initValidator = function () {
     },
     errorElement: "span",
     errorClass: "help-block",
-    highlight: function (element, errorClass) {
+    highlight: function (element) {
       $(element).parent().addClass("has-error");
     },
-    unhighlight: function (element, errorClass) {
+    unhighlight: function (element) {
       $(element).parent().removeClass("has-error");
     }
   });
@@ -53,4 +57,3 @@ var initValidator = function () {
 
 
 $(document).ready(initValidator);
-$(document).ready(dateAdapter);

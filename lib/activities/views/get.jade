@@ -39,22 +39,21 @@ block content
       !{activity.directionHTML()}
       hr
       div.hidden-print
+        p Bislang
+          if (visitors.length === 0)
+            |  gibt es keine Teinahmezusagen.
+          else if (visitors.length === 1)
+            |  hat ein Mitglied seine Teilnahme zugesagt.
+          else
+            |  haben #{visitors.length} Mitglieder ihre Teilnahme zugesagt.
         if (typeof(user) !== 'undefined' && user.member)
-          h4 Zugesagt haben:
-          mixin memberlist(visitors)
           if (visitors.length > 0 && activity.registeredMembers.indexOf(user.member.id) > -1)
             a.btn.btn-primary(href="unsubscribe/#{encodeURIComponent(activity.url)}") Ich kann doch nicht…
           else
             a.btn.btn-primary(href="subscribe/#{encodeURIComponent(activity.url)}") Ich bin dabei!
-        else
-          p Bislang
-            if (visitors.length === 0)
-              |  gibt es keine Teinahmezusagen.
-            else if (visitors.length === 1)
-              |  hat ein Mitglied seine Teilnahme zugesagt.
-            else
-              |  haben #{visitors.length} Mitglieder ihre Teilnahme zugesagt.
-        
+          h4 Zugesagt haben:
+          mixin memberlist(visitors)
+
       hr.hidden-print
       p.hidden-print Veranstaltet von der Gruppe: #{activity.groupName(groups)}
     .col-md-6
