@@ -2,19 +2,15 @@ extends ../../../views/layout
 
 include ./mailheader-mixin
 
-block scripts
-  script(src="/clientscripts/change-mails-scrolling-height.js")
 
 block title
-  | #{group} 
-  | mails 
+  | #{group} mails 
 
 block content
-  .col-md-12
-    .page-header
-      mixin pageHeader(group)
-      a(href=encodeURIComponent(group)+"?thread=true" ) Ansicht threaded
   .row
     .col-md-12
-      #mails.pre-scrollable
+      .page-header
+        mixin pageHeader(group)
+        a(href=encodeURIComponent(group)+"?thread=true" ) Ansicht threaded
+      .panel.panel-default.pre-scrollable
         mixin mailIndex(mailHeaders)
