@@ -13,7 +13,8 @@ block content
             a.btn.btn-default(href="/wiki/#{group.id}/")
               i.icon-book 
               | &nbsp;Wiki
-            a.btn.btn-default(href="/mailarchive/list/#{group.id}?thread=true") Mailarchiv
+            if (user)
+              a.btn.btn-default(href="/mailarchive/list/#{group.id}?thread=true") Mailarchiv
             if (user && user.member.isAdmin)
               a.btn.btn-default(href="/groups/edit/#{group.id}", title="Bearbeiten"): i.icon-edit
           small #{group.type} 
