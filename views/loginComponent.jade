@@ -12,11 +12,11 @@
               | bitten wir Dich, einige persönliche Daten einzugeben.
         .row
           .col-md-3
-            a.btn.btn-default.btn.btn-default-default(href="/auth/openid?openid_identifier=" + encodeURIComponent("https://www.google.com/accounts/o8/id") + "&returnTo=" + encodeURIComponent(returnUrl))
+            a.btn.btn-default(href="/auth/openid?openid_identifier=" + encodeURIComponent("https://www.google.com/accounts/o8/id") + "&returnTo=" + encodeURIComponent(returnUrl))
               img(src="/img/google.ico", alt="google")
               | &nbsp;Google
           .col-md-3
-            a.btn.btn-default.btn.btn-default-default(href="/auth/github?returnTo=" + encodeURIComponent(returnUrl))
+            a.btn.btn-default(href="/auth/github?returnTo=" + encodeURIComponent(returnUrl))
               img(src="/img/github.ico", alt="github")
               | &nbsp;Github
         .row
@@ -24,13 +24,11 @@
             form(action="/auth/openid", method="get")
               p &nbsp; 
               input(type="hidden", name="returnTo", value=returnUrl)
-              p
-                a(href="#openIDinput", data-toggle="collapse")
-                  i.icon-caret-right
-                  |&nbsp;(optional)
-                |&nbsp;Eingabe der URL eines alternativen OpenID Providers:
-              #openIDinput.collapse
-                .input-group
-                  input.form-control(id="openid_identifier", type='text', name="openid_identifier")
-                  .input-group-btn
-                    button.btn.btn-default(type="submit") Sonstige
+              .panel.panel-default
+                .panel-heading
+                  a.accordion-toggle(href="#openIDinput", data-toggle="collapse") (optional) Eingabe der URL eines alternativen OpenID Providers:
+                #openIDinput.collapse.panel-collapse
+                  .input-group
+                    input.form-control(id="openid_identifier", type='text', name="openid_identifier")
+                    .input-group-btn
+                      button.btn.btn-default(type="submit") Sonstige
