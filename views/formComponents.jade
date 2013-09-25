@@ -72,7 +72,7 @@ mixin colorPicker(name, object)
     label.control-label(for="color") Farbe:
     #color.input-group(data-color="#{object[name]}", data-color-format="hex")
       input#colorText.form-control(type="text", name=name, value=object[name])
-      span.input-group-addon: i(style="background-color: #{object[name]}")
+      span.input-group-addon(style="background-color: #{object[name]}")
     script
       $("#color").colorpicker();
       $("#colorText").on("change", function (event) {
@@ -80,6 +80,9 @@ mixin colorPicker(name, object)
       });
       $("#colorText").on("keyup", function (event) {
         $("#color").colorpicker("setValue", event.target.value);
+      });
+      $("#color").colorpicker().on('changeColor', function(event) {
+        $("#colorText").val(event.color.toHex());
       });
 
 // PICKERS END
