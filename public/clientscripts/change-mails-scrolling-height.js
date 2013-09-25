@@ -1,11 +1,10 @@
-/* global window, jQuery, $ */
+/* global window, jQuery, $, document */
 "use strict";
-function resizeMails()
+function resizePreScrollable()
 {
   var h = $(window).height();
-  $("#mails").css('maxHeight', Math.max(h - 100, 100) + 'px');
+  $(".pre-scrollable").css('maxHeight', Math.max(h - 220, 100) + 'px');
 }
 
-jQuery.event.add(window, "load", resizeMails);
-jQuery.event.add(window, "resize", resizeMails);
-
+jQuery.event.add(window, "resize", resizePreScrollable);
+$(document).ready(resizePreScrollable);
