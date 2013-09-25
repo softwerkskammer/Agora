@@ -26,6 +26,11 @@ block content
           | #{group.id}@softwerkskammer.org
       |!{group.descriptionHTML()}
 
+      if (user)
+        if (userIsGroupMember)
+          a.btn.btn-primary(href="unsubscribe/#{group.id}") Gruppe verlassen
+        else
+          a.btn.btn-primary(href="subscribe/#{group.id}") Gruppe beitreten
       h4 Mitglieder:
       | Diese Gruppe hat
       if (users.length === 1)
@@ -36,8 +41,3 @@ block content
         |  #{users.length} Mitglieder.
       if (user)
         mixin memberlist(users, organizers)
-        if (user)
-          if (userIsGroupMember)
-            a.btn.btn-primary(href="unsubscribe/#{group.id}") Gruppe verlassen
-          else
-            a.btn.btn-primary(href="subscribe/#{group.id}") Gruppe beitreten
