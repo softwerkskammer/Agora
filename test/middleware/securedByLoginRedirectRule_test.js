@@ -38,3 +38,11 @@ describe('SecuredByLoginURLRedirect Rule (members)', function () {
 
 });
 
+describe('SecuredByLoginURLRedirect Rule (mailarchive)', function () {
+
+  it('secures members/', function () {
+    var url = 'http://host/mailarchive/';
+    expect(securedByLoginURLRegex.test(url)).to.be.true;
+  });
+
+});
