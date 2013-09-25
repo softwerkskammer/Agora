@@ -20,4 +20,4 @@ version.jade
 test/tempbeans.json
 docs/generated
 
-README-FD.md
+npm-debug.log
