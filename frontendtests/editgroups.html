@@ -1,57 +1,62 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <title>Group Editing - Validation Test Suite</title>
-    <link rel="stylesheet" href="lib/qunit/qunit-1.11.0.css"/>
-    <script src="../public/clientscripts/jquery-1.9.1.js"></script>
-    <script src="lib/qunit/qunit-1.11.0.js"></script>
-    <script src="lib/jquery.mockjax.js"></script>
-    <script src="../public/clientscripts/bootstrap.js"></script>
-    <script src="../public/clientscripts/jquery.validate-1.11.1.js"></script>
-    <script src="../public/clientscripts/additional-methods-1.11.1.js"></script>
-    <script src="../public/clientscripts/messages_de.js"></script>
-    <script src="../public/clientscripts/check-groupform.js"></script>
-    <script src="editgroups-tests.js"></script>
+  <meta charset="utf-8">
+  <title>Group Editing - Validation Test Suite</title>
+  <link rel="stylesheet" href="lib/qunit/qunit-1.11.0.css"/>
+  <script src="../public/clientscripts/jquery-1.9.1.js"></script>
+  <script src="lib/qunit/qunit-1.11.0.js"></script>
+  <script src="lib/jquery.mockjax.js"></script>
+  <script src="../public/clientscripts/bootstrap.min.js"></script>
+  <script src="../public/clientscripts/jquery.validate-1.11.1.js"></script>
+  <script src="../public/clientscripts/additional-methods-1.11.1.js"></script>
+  <script src="../public/clientscripts/messages_de.js"></script>
+  <script src="../public/clientscripts/bootstrap-datepicker.js"></script>
+  <script src="../public/clientscripts/bootstrap-datepicker.de.js"></script>
+  <script src="../public/clientscripts/bootstrap-timepicker.js"></script>
+
+  <script src="../public/clientscripts/agora.js"></script>
+  <script src="../public/clientscripts/check-groupform.js"></script>
+  <script src="editgroups-tests.js"></script>
 </head>
 <body>
 <div id="qunit"></div>
 <div id="qunit-fixture">
 
-    <div class="row">
-        <form id="groupform" action="submit" method="post">
-            <fieldset>
-                <div class="span6">
-                    <legend>Gruppe anlegen
-                    </legend>
-                    <div class="control-group">
-                        <label for="id" class="control-label">Name:</label>
-                        <input id="id" type="text" name="id" class="input-block-level input-xlarge"/>
-                    </div>
-                    <div class="control-group">
-                        <label for="longName" class="control-label">Titel:</label>
-                        <input id="longName" type="text" name="longName" class="input-block-level input-xlarge"/>
-                    </div>
-                    <div class="control-group">
-                        <label for="description" class="control-label">Beschreibung:</label>
-                        <input id="description" type="text" name="description" class="input-block-level input-xlarge"/>
-                    </div>
-                    <div class="control-group">
-                        <label for="emailPrefix" class="control-label">Präfix für E-Mails:</label>
-                        <input id="emailPrefix" type="text" name="emailPrefix" class="input-block-level input-xlarge"/>
-                    </div>
-                    <div class="control-group">
-                        <label for="type" class="control-label">Gruppenart:</label>
-                        <input id="type" type="text" name="type" class="input-block-level input-xlarge"/>
-                    </div>
-                    <p>
-                        <button type="submit" class="btn btn-primary">Anlegen</button>
-                        <a href="javascript:history.back()" type="cancel" class="btn">Zurück</a>
-                    </p>
-                </div>
-            </fieldset>
-        </form>
-    </div>
+  <div class="row">
+    <form id="groupform" action="submit" method="post">
+      <fieldset>
+        <div class="span6">
+          <legend>Gruppe anlegen
+          </legend>
+          <div class="control-group">
+            <label for="id" class="control-label">Name:</label>
+            <input id="id" type="text" name="id" class="input-block-level input-xlarge"/>
+          </div>
+          <div class="control-group">
+            <label for="longName" class="control-label">Titel:</label>
+            <input id="longName" type="text" name="longName" class="input-block-level input-xlarge"/>
+          </div>
+          <div class="control-group">
+            <label for="description" class="control-label">Beschreibung:</label>
+            <input id="description" type="text" name="description" class="input-block-level input-xlarge"/>
+          </div>
+          <div class="control-group">
+            <label for="emailPrefix" class="control-label">Präfix für E-Mails:</label>
+            <input id="emailPrefix" type="text" name="emailPrefix" class="input-block-level input-xlarge"/>
+          </div>
+          <div class="control-group">
+            <label for="type" class="control-label">Gruppenart:</label>
+            <input id="type" type="text" name="type" class="input-block-level input-xlarge"/>
+          </div>
+          <p>
+            <button type="submit" class="btn btn-primary">Anlegen</button>
+            <a href="javascript:history.back()" type="cancel" class="btn">Zurück</a>
+          </p>
+        </div>
+      </fieldset>
+    </form>
+  </div>
 </div>
 
 </body>
