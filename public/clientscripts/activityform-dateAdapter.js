@@ -1,4 +1,4 @@
-/* global $, dateCalculator */
+/* global $, document, activityDateModel */
 
 "use strict";
 
@@ -17,3 +17,4 @@ var dateAdapter = function () {
   $('#startTime').change(listener);
 };
 
+$(document).ready(dateAdapter);
