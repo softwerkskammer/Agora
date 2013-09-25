@@ -7,8 +7,7 @@ mixin mailattributes(mailHeader)
     a(href="/members/" + encodeURIComponent(mailHeader.memberNickname)) #{mailHeader.displayedSenderName}
   - else
     | #{mailHeader.displayedSenderName}
-  | , 
-  | #{mailHeader.displayedTime}
+  | , #{mailHeader.displayedTime}
 
 mixin mailIndex(mailHeaders)
   -if(typeof(mailHeaders) !== 'undefined')
@@ -17,6 +16,6 @@ mixin mailIndex(mailHeaders)
         li
           a(href="../message?id=" + encodeURIComponent(mailHeader.id)) #{mailHeader.subject} 
           | (
-          mixin mailattributes(mailHeader)
+          mixin mailattributes(mailHeader) 
           | )
           mixin mailIndex(mailHeader.responses)
