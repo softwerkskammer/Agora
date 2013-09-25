@@ -11,7 +11,7 @@ block content
       .page-header
         mixin pageHeader(group)
         a(href=encodeURIComponent(group)+"?thread=false") Ansicht unthreaded
-      .panel-group.pre-scrollable
+      .panel-group.pre-scrollable#mails
         - var mailNumber = 0;
         for mailHeader in mailHeaders
           - mailNumber = mailNumber + 1;
