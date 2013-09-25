@@ -20,8 +20,8 @@
               img(src="/img/github.ico", alt="github")
               | &nbsp;Github
         .row
-          form(action="/auth/openid", method="get")
-            .col-md-12
+          .col-md-12
+            form(action="/auth/openid", method="get")
               p &nbsp; 
               input(type="hidden", name="returnTo", value=returnUrl)
               p
@@ -30,6 +30,7 @@
                   |&nbsp;(optional)
                 |&nbsp;Eingabe der URL eines alternativen OpenID Providers:
               #openIDinput.collapse
-                .input-append.col-md-10
-                  input.input-xxlarge.input-block-level(id="openid_identifier", type='text', name="openid_identifier")
-                  button.btn.btn-default(type="submit") Sonstige
+                .input-group
+                  input.form-control(id="openid_identifier", type='text', name="openid_identifier")
+                  .input-group-btn
+                    button.btn.btn-default(type="submit") Sonstige
