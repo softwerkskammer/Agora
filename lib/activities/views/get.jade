@@ -7,7 +7,7 @@ block title
   | #{activity.title} - Aktivitäten
 
 block opengraph
-  meta(property="og:description", content!=activity.descriptionHTMLWithoutAnchors())
+  meta(property="og:description", content!=activity.descriptionPlain().substring(0,500))
   meta(property="og:title", content=activity.title)
 
 block content

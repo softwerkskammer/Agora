@@ -17,7 +17,7 @@ block content
             else 
               | bearbeiten
           mixin hightextarea('content', 'Inhalt', page)
-          mixin text('comment', 'Kommentar', page, 'Commit Message')
+          mixin text('comment', 'Kommentar', page, 'Commit Message', 'no commit message')
           mixin hidden('metadata', page)
           input(id="subdir", type="hidden", name="subdir", value=subdir)
           button.btn.btn-primary.pull-right(type="submit") Speichern
