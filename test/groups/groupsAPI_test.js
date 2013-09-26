@@ -11,7 +11,6 @@ var GroupA = new Group({id: 'GroupA', longName: 'Gruppe A', description: 'Dies i
 var GroupB = new Group({id: 'GroupB', longName: 'Gruppe B', description: 'Dies ist Gruppe B.', type: 'Regionalgruppe'});
 var NonPersistentGroup = new Group({id: 'Group C', longName: 'Gruppe C', description: 'Dies ist Gruppe C.', type: 'Regionalgruppe'});
 
-
 var groupstore = conf.get('beans').get('groupstore');
 var sympa = conf.get('beans').get('sympaStub');
 
@@ -72,12 +71,16 @@ describe('Groups API (getSubscribedGroupsForUser)', function () {
 
 describe('Groups API (getAllAvailableGroups)', function () {
 
+  beforeEach(function (done) {
+    systemUnderTest.refreshCache();
+    done();
+  });
+
   afterEach(function (done) {
     groupstore.groupsByLists.restore();
     sympa.getAllAvailableLists.restore();
     done();
   });
-
 
   it('returns an empty array of groups if there are no lists defined in sympa', function (done) {
     sinon.stub(groupstore, 'groupsByLists', function (lists, globalCallback) {
@@ -136,6 +139,11 @@ describe('Groups API (getAllAvailableGroups)', function () {
 });
 
 describe('Groups API (getSympaUsersOfList)', function () {
+
+  beforeEach(function (done) {
+    systemUnderTest.refreshCache();
+    done();
+  });
 
   afterEach(function (done) {
     sympa.getUsersOfList.restore();
@@ -229,6 +237,7 @@ describe('Groups API (createOrSaveGroup)', function () {
   var saveGroupSpy;
 
   beforeEach(function (done) {
+    systemUnderTest.refreshCache();
     createListSpy = sinon.stub(sympa, 'createList', function (listname, prefix, callback) { callback(); });
     saveGroupSpy = sinon.stub(groupstore, 'saveGroup', function (group, callback) { callback(null, group); });
     done();
