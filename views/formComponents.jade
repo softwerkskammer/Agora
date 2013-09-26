@@ -56,7 +56,6 @@ mixin hidden(name, object, optionalAlternateValue)
   input(id=name, type="hidden", name=name, value=object[(optionalAlternateValue ? optionalAlternateValue : name)])
 
 // PICKERS
-// you need to include this initPickers.js, if you use the color-, date- or timepicker
 mixin date(name, label, object, value, tooltip)
   .form-group
     mixin controlLabel(name, label, tooltip)

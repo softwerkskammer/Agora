@@ -45,21 +45,6 @@
         return false;
       });
 
-    },
-
-    preview: function () {
-      $('#preview').modal("show");
-      $.post("/misc/preview", {data: $('#editor').val()}, function (data) {
-        $('#preview .modal-body').html(data).get(0).scrollTop = 0;
-      });
-    },
-
-    markdownSyntax: function () {
-      $('#syntax-reference').modal("show");
-      if (!cheatsheetShown) {
-        $('#syntax-reference .modal-body').load("/misc/syntax-reference");
-        cheatsheetShown = true;
-      }
     }
 
   };
