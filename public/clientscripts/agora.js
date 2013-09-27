@@ -104,7 +104,7 @@ var addHelpButtonToTextarea = function () {
                   name: "cmdHelp",
                   title: "Help",
                   icon: "icon icon-question-sign",
-                  callback: function () { $("#cheatsheet").modal(); }
+                  callback: function () { $("#cheatsheet").modal({remote: "/cheatsheet.html"}); }
                 }
               ]
             }

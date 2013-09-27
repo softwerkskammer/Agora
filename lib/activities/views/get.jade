@@ -20,12 +20,12 @@ block content
           a.btn.btn-default(href="/activities/newLike/#{encodeURIComponent(activity.url)}", title="Neu auf Basis dieser Aktivität"): i.icon-copy
           if (typeof(user) !== 'undefined' && user.member.isAdmin)
             a.btn.btn-default(href="/activities/edit/#{encodeURIComponent(activity.url)}", title="Bearbeiten"): i.icon-edit
-        br
         h2 #{activity.title}
+          br
           small #{activity.startDate()} (#{activity.startTime()}
             if (activity.endDate() && activity.endDate() !== activity.startDate())
               |  Uhr) - #{activity.endDate()} (#{activity.endTime()} Uhr)
-            else (activity.endTime())
+            else 
               |  - #{activity.endTime()} Uhr)
   .row
     .col-md-12
@@ -60,7 +60,7 @@ block content
       mixin map(activity.location, '100%', '450px')
 
 block scripts
-  script
+  script.
     $(document).ready(function () {
       $('#calendar').fullCalendar('select', $.fullCalendar.parseDate(#{activity.startUnix}), $.fullCalendar.parseDate(#{activity.endUnix}), true);
     });

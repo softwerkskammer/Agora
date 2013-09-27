@@ -41,9 +41,9 @@ block content
                 option(selected=group.type === item) #{item}
         
           h4 Ansprechpartner
-            .control-group
-              each memberAdmin in organizersChecked
-                mixin checkbox('organizers', memberAdmin.member.nickname, memberAdmin.checked, memberAdmin.member.id)
+          .control-group
+            each memberAdmin in organizersChecked
+              mixin checkbox('organizers', memberAdmin.member.nickname, memberAdmin.checked, memberAdmin.member.id)
         .col-md-6
           mixin colorPicker('color', group)
           mixin textarea('description', 'Beschreibung', group)

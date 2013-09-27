@@ -1,12 +1,12 @@
 // GENERAL
 mixin controlLabel(name, label, tooltip)
   label.control-label(for=name)
-    if (typeof(tooltip) !== 'undefined')
+    -if (typeof(tooltip) !== 'undefined')
       span.tooltiplabel(data-toggle="tooltip", data-original-title="#{tooltip}") #{label}:&nbsp;
         i.icon-question-sign
-      script
+      script.
         $('.tooltiplabel').each(function(each) {$(this).tooltip()})
-    else
+    -else
       | #{label}:
 
 mixin text(name, label, object, tooltip, placeholder)
@@ -18,18 +18,18 @@ mixin textReadonly(name, label, object)
   .form-group
     mixin hidden(name, object)
     label(class="control-label", for=name) #{label}:
-    span.input-block-level.input-xlarge.uneditable-input #{object[name]}
+    input.form-control(id=name, type='text', name=name, value=object[name], placeholder=placeholder disabled)
 
 mixin textarea(name, label, object)
   .form-group
-    label(class="control-label", for=name) #{label}:
-    textarea(data-provide=​'markdown', rows="7", class="input-block-level input-xxlarge", id=name, type='text', name=name)
+    mixin controlLabel(name, label, tooltip)
+    textarea.input-block-level(rows="7", id=name, type='text', name=name)
       | #{object[name]}
 
 mixin hightextarea(name, label, object)
   .form-group
-    label(class="control-label", for=name) #{label}:
-    textarea(data-provide=​'markdown', rows="15", class="input-block-level input-xxlarge", id=name, type='text', name=name)
+    mixin controlLabel(name, label, tooltip)
+    textarea.input-block-level(rows="15", id=name, type='text', name=name)
       | #{object[name]}
 
 mixin checkbox(name, label, checked, optionalValue)
@@ -63,7 +63,7 @@ mixin date(name, label, object, value, tooltip)
 
 mixin time(name, label, object, value)
   .form-group.bootstrap-timepicker
-    label(class="control-label", for=name) #{label}
+    label(class="control-label", for=name) &nbsp;
     input.form-control.timepicker(id=name, type='text', name=name, value=(value ? value : object[name]))
 
 mixin colorPicker(name, object)
@@ -72,7 +72,7 @@ mixin colorPicker(name, object)
     #color.input-group(data-color="#{object[name]}", data-color-format="hex")
       input#colorText.form-control(type="text", name=name, value=object[name])
       span#colorSpan.input-group-addon(style="background-color: #{object[name]}")
-    script
+    script.
       $("#color").colorpicker();
       $("#colorText").on("change", function (event) {
         $("#color").colorpicker("setValue", event.target.value);
