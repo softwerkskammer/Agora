@@ -7,7 +7,7 @@ There is a companion project where the feature backlog lives. Go to the issues i
 Weekly video hangout
 --------------------
 
-Every Friday at 21:00 Berlin Time: [https://plus.google.com/hangouts/_/ba8817214c2fdc3971b6851b930a8651f466fd8d](https://plus.google.com/hangouts/_/ba8817214c2fdc3971b6851b930a8651f466fd8d)
+Every Friday at 21:00 Berlin Time: [https://plus.google.com/hangouts/_/db4d0882f5443ad3203a17ed36c70fd43ac0d9e3](https://plus.google.com/hangouts/_/db4d0882f5443ad3203a17ed36c70fd43ac0d9e3)
 
 What this is about
 ==================
