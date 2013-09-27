@@ -21,7 +21,7 @@ html
     script(src="/clientscripts/bootstrap-timepicker.js")
     script(src="/clientscripts/agora.js")
     if (typeof(calViewYear) !== 'undefined')
-      script
+      script.
         $(document).ready(function () {
           $('#calendar').fullCalendar('gotoDate', #{calViewYear}, #{calViewMonth});      
         });

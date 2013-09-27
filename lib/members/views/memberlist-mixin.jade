@@ -11,5 +11,5 @@ mixin memberlist(members, organizers)
           a(href="/mailsender/contactMember/#{encodeURIComponent(member.nickname)}", title="Nachricht schreiben"): span.label(style="background-color: #DF5353") Ansprechpartner &nbsp;
         if (!organizers && member.isAdmin)
           a(href="/mailsender/contactMember/#{encodeURIComponent(member.nickname)}", title="Nachricht schreiben"): span.label(style="background-color: #DF5353") Admin
-  script
+  script.
     $("[rel=tooltip]").popover({html: true});

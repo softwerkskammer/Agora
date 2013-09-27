@@ -6,7 +6,7 @@ mixin colorPickerForTable(id, name, object)
     #color.col-md-6.input-group.color(id="color#{id}", data-color="#{object[name]}", data-color-format="hex")
       input.form-control(id="colorText#{id}", type="text", name=id, value=object[name])
       span.input-group-addon: i(style="background-color: #{object[name]}") &nbsp;&nbsp;&nbsp;&nbsp;
-    script
+    script.
       $("#color#{id}").colorpicker();
       $("#colorText#{id}").on("change", function (event) {
         $("#color#{id}").colorpicker("setValue", event.target.value);
@@ -51,7 +51,7 @@ block content
                 input(id='color', type="hidden", name='color', value='#9c4141')
           .modal-footer
             button.btn.btn-primary(type="submit") Anlegen
-  script
+  script.
     $('#newcolor').on('shown', function () {
       $('#id').focus();
     })
