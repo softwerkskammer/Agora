@@ -7,11 +7,11 @@ block content
   .row
     .col-md-12
       .page-header
+        .btn-group.pull-right
+          a.btn.btn-default(href="ical/", title="Für Kalender exportieren. Zum Abo: URL in Kalenderprogramm abonnieren"): i.icon-calendar
+          if typeof(user) !== 'undefined' && user.member.isAdmin
+            a.btn.btn-default(href="new/", title="Neue Aktivität"): i.icon-file
         h2 Aktivitäten&nbsp;
-          .btn-group.pull-right
-            a.btn.btn-default(href="ical/", title="Für Kalender exportieren. Zum Abo: URL in Kalenderprogramm abonnieren"): i.icon-calendar
-            if typeof(user) !== 'undefined' && user.member.isAdmin
-              a.btn.btn-default(href="new/", title="Neue Aktivität"): i.icon-file
           small
             .btn-group(style="height: 40px;")
               a.btn.btn-default.dropdown-toggle(data-toggle="dropdown")

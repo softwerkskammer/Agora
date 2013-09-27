@@ -6,10 +6,10 @@ block content
   .row
     .col-md-12
       .page-header
+        .btn-group.pull-right
+          if (typeof(user) !== 'undefined' && user.member.isAdmin)
+            a.btn.btn-default(href="/announcements/edit/#{encodeURIComponent(announcement.url)}", title="Bearbeiten"): i.icon-edit
         h2 #{announcement.title}&nbsp;
-          .btn-group.pull-right
-            if (typeof(user) !== 'undefined' && user.member.isAdmin)
-              a.btn.btn-default(href="/announcements/edit/#{encodeURIComponent(announcement.url)}", title="Bearbeiten"): i.icon-edit
           small #{announcement.fromDate()}
       .row
         .col-md-8

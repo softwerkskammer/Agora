@@ -8,13 +8,13 @@ block title
 
 block content
   .page-header
+    .btn-group.pull-right
+      a.btn.btn-default(href="javascript:history.back()", type="cancel") Zurück
+      if (typeof(user) !== 'undefined')
+        button(id="rev-compare", data-pageName="#{pageName}", data-subdir="#{subdir}").btn.btn-default
+          i.icon-stethoscope 
+          | &nbsp; Vergleichen…
     h2 #{pageName}
-      .btn-group.pull-right
-        a.btn.btn-default(href="javascript:history.back()", type="cancel") Zurück
-        if (typeof(user) !== 'undefined')
-          button(id="rev-compare", data-pageName="#{pageName}", data-subdir="#{subdir}").btn.btn-default
-            i.icon-stethoscope 
-            | &nbsp; Vergleichen…
       br
       small Wiki "#{subdir}"
 
