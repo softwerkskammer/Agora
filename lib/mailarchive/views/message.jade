@@ -10,16 +10,17 @@ block title
     | not found
 
 block content
-  .col-md-12
-    .page-header
+  .row
+    .col-md-12
+      .page-header
+        -if (mail != null)
+          a(href="list/" + encodeURIComponent(mail.group) ) Mailverzeichnis 
+          h2 #{mail.subject}
+          div
+            mixin mailattributes(mail) 
+        -else
+          h2 Keine Mail vorhanden
       -if (mail != null)
-        a(href="list/" + encodeURIComponent(mail.group) ) Mailverzeichnis 
-        h2 #{mail.subject}
         div
-          mixin mailattributes(mail) 
-      -else
-        h2 Keine Mail vorhanden
-  -if (mail != null)
-    div
-      -if(mail.html != null)
-        | !{mail.html}
+          -if(mail.html != null)
+            | !{mail.html}
