@@ -21,7 +21,7 @@ html
     script(src="/clientscripts/bootstrap-timepicker.js")
     script(src="/clientscripts/agora.js")
     if (typeof(calViewYear) !== 'undefined')
-      script
+      script.
         $(document).ready(function () {
           $('#calendar').fullCalendar('gotoDate', #{calViewYear}, #{calViewMonth});      
         });
@@ -38,7 +38,7 @@ html
   body
     include layoutComponents
     include loginComponent
-    include markdownCheatsheet
+    #cheatsheet.modal.fade
     img.visible-print(src="/img/Softwerkskammer_Header.png", alt="Softwerkskammer")
     p.visible-print &nbsp;
     .navbar.navbar-default.navbar-fixed-top.hidden-print(role="navigation")

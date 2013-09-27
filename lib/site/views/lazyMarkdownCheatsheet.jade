@@ -1,4 +1,5 @@
-#cheatsheet.modal.fade
+doctype 5
+html
   .modal-dialog.cheatsheet
     .modal-content
       .modal-header
@@ -47,29 +48,30 @@
               | As Kanye West said:
               | &gt; We're living the future so
               | &gt; the present is our past.
-          hr
-          h3 Code Examples in Markdown
-          .row
-            .col-md-4
-              p Syntax highlighting with 
-                a(href="http://github.github.com/github-flavored-markdown/", title="GitHub Flavored Markdown", target="_blank") GFM
-              pre
-                |```javascript
-                |function fancyAlert(arg) {
-                |  if(arg) {
-                |    $.facebox({div:'#foo'})
-                |  }
-                |}
-                |```
-            .col-md-4
-              p Or, indent your code by a new line and 4 spaces
-              pre Here is a Python code example
-                | without syntax highlighting:
-                | &nbsp;
-                |     def foo:
-                |       if not bar:
-                |         return true
-            .col-md-4
-              p Inline code for comments
-              pre I think you should use an
-                | &lt;addr&gt; element here instead.
+        .row
+          .col-md-12
+            h3 Code Examples in Markdown
+        .row
+          .col-md-4
+            p Syntax highlighting with 
+              a(href="http://github.github.com/github-flavored-markdown/", title="GitHub Flavored Markdown", target="_blank") GFM
+            pre
+              |```javascript
+              |function fancyAlert(arg) {
+              |  if(arg) {
+              |    $.facebox({div:'#foo'})
+              |  }
+              |}
+              |```
+          .col-md-4
+            p Or, indent your code by a new line and 4 spaces
+            pre Here is a Python code example
+              | without syntax highlighting:
+              | &nbsp;
+              |     def foo:
+              |       if not bar:
+              |         return true
+          .col-md-4
+            p Inline code for comments
+            pre I think you should use an
+              | &lt;addr&gt; element here instead.
