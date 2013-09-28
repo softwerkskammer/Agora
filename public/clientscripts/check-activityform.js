@@ -75,7 +75,7 @@ var initValidator = function () {
 
   activity_validator.form();
 
-  ['#title', '#location', "#startDate", "#startTime", "#url"].forEach(function (each) {
+  ['#title', '#location', "#startDate", "#startTime", "#endDate", "#endTime", "#url"].forEach(function (each) {
     $(each).on("change", function () {
       activity_validator.element(each);
     });
