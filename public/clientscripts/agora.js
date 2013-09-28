@@ -122,6 +122,7 @@ var addHelpButtonToTextarea = function () {
 };
 
 var extendDataTables = function () {
+  if (!$.fn.dataTableExt) { return; }
   $.extend($.fn.dataTableExt.oSort, {
     "date-eu-pre": function (dateString) {
       if (!dateString) { return 0; }
