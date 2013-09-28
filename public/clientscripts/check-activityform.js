@@ -58,10 +58,18 @@ var initValidator = function () {
     errorElement: "span",
     errorClass: "help-block",
     highlight: function (element) {
-      $(element).parent().addClass("has-error");
+      if ($(element).attr("name") === "endDate" || $(element).attr("name") === "endTime") {
+        $("#dates").parent().addClass("has-error");
+      } else {
+        $(element).parent().addClass("has-error");
+      }
     },
     unhighlight: function (element) {
-      $(element).parent().removeClass("has-error");
+      if ($(element).attr("name") === "endDate" || $(element).attr("name") === "endTime") {
+        $("#dates").parent().removeClass("has-error");
+      } else {
+        $(element).parent().removeClass("has-error");
+      }
     }
   });
 
