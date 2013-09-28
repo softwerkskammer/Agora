@@ -1,5 +1,24 @@
 extends ../../../views/layout
 
+block scripts
+  script(src="/clientscripts/jquery.dataTables.min.js")
+  script.
+    $(document).ready(function() {
+      $("#activitytable").dataTable({
+        "oLanguage": {
+          "sUrl": "/clientscripts/dataTables.german.txt"
+        },
+        "aoColumns": [
+          { "bSortable" : false }, null, null, { "sType": "date-eu" }, { "sType": "date-eu" }, null, null, null, null
+        ],
+        "bPaginate": false,
+        "bAutoWidth": false,
+        "aaSorting": [[ 1, "asc" ]],
+        "bStateSave": true
+      });
+      $('.tooltiplabel').each(function(each) {$(this).popover()});
+    });
+
 block title
   | Übersicht der Gruppen
 
@@ -11,29 +30,29 @@ block content
           small  Aktivitäten  
   .row
     .col-md-12
-      .panel.panel-default.pre-scrollable
-        table.table.table-condensed.table-hover.table-striped
+      .panel.pre-scrollable
+        table.table.table-condensed.table-hover.table-striped#activitytable
           thead
             tr
-              th.ellipsis.narrow Edit
-              th.ellipsis.narrow Titel
-              th.ellipsis.narrow Adress-Suffix
-              th.ellipsis.narrow Start
-              th.ellipsis.narrow Ende
-              th.ellipsis.narrow Veranstaltungsort
-              th.ellipsis.narrow Beschreibung
-              th.ellipsis.narrow Wegbeschreibung
-              th.ellipsis.narrow Gruppe
+              th Edit
+              th Titel
+              th Adress-Suffix
+              th Start
+              th Ende
+              th Veranstaltungsort
+              th Beschreibung
+              th Wegbeschreibung
+              th Gruppe
           tbody
             for activity in activities
               tr
-                td(class="span1"): a.btn-sm(href="/activities/edit/#{encodeURIComponent(activity.url)}"): i.icon-edit
-                td.ellipsis.narrow #{activity.title}
-                td.ellipsis.narrow #{activity.url}
-                td.ellipsis.narrow #{activity.startDate()} #{activity.startTime()}
-                td.ellipsis.narrow #{activity.endDate()} #{activity.endTime()}
-                td.ellipsis.narrow #{activity.location}
-                td.ellipsis #{activity.description}
-                td.ellipsis.narrow #{activity.direction}
-                td.ellipsis.narrow #{activity.groupName(groups)}
+                td: a(href="/activities/edit/#{encodeURIComponent(activity.url)}"): i.icon-edit
+                td #{activity.title}
+                td #{activity.url}
+                td #{activity.startDate()}
+                td #{activity.endDate()}
+                td #{activity.location}
+                td.ellipsis: .tooltiplabel(data-toggle="hover", data-placement="auto top", data-html="true", data-content="#{activity.descriptionHTML()}", data-title="#{activity.title}"): #{activity.description}
+                td.ellipsis: .tooltiplabel(data-toggle="hover", data-placement="auto top", data-html="true", data-content="#{activity.directionHTML()}"): #{activity.direction}
+                td #{activity.groupName(groups)}
                   

@@ -1,5 +1,23 @@
 extends ../../../views/layout
 
+block scripts
+  script(src="/clientscripts/jquery.dataTables.min.js")
+  script.
+    $(document).ready(function() {
+      $("#membertable").dataTable({
+        "oLanguage": {
+          "sUrl": "/clientscripts/dataTables.german.txt"
+        },
+        "aoColumns": [
+          { "bSortable" : false }, null, null, null, null, null, null, null, null, null, null, null, { "sType": "date-eu" }
+        ],
+        "bPaginate": false,
+        "bAutoWidth": false,
+        "aaSorting": [[ 1 , "asc" ]],
+        "bStateSave": true
+      });
+    });
+
 block title
   | Übersicht der Mitglieder
 
@@ -9,37 +27,37 @@ block content
       .page-header
         h2 Verwaltung
           small  Mitglieder
-      .panel.panel-default.pre-scrollable
-        table.table.table-condensed.table-hover.table-striped
+      .panel.pre-scrollable
+        table.table.table-condensed.table-hover.table-striped#membertable
           thead
             tr
-              th.ellipsis.narrow Edit
-              th.ellipsis.narrow Nickname
-              th.ellipsis.narrow Vorname
-              th.ellipsis.narrow Nachname
-              th.ellipsis.narrow Email
-              th.ellipsis.narrow Twitter
-              th.ellipsis.narrow Ort/Region
-              th.ellipsis.narrow Beruf
-              th.ellipsis.narrow Interessenschwerpunkte
-              th.ellipsis.narrow Website/Blog
-              th.ellipsis.narrow Wie ich von…
-              th.ellipsis.narrow Benutzertyp
-              th.ellipsis.narrow Angelegt
+              th Edit
+              th Nickname
+              th Vorname
+              th Nachname
+              th Email
+              th Twitter
+              th Ort/Region
+              th Beruf
+              th Interessenschwerpunkte
+              th Website/Blog
+              th Wie&nbsp;ich&nbsp;von&nbsp;der&nbsp;Softwerkskammer&nbsp;erfahren&nbsp;habe
+              th Benutzertyp
+              th Angelegt
           tbody
             for member in members
               tr
                 td: a(href="/members/edit/#{encodeURIComponent(member.nickname)}"): i.icon-edit
-                td.ellipsis.narrow #{member.nickname}
-                td.ellipsis.narrow #{member.firstname}
-                td.ellipsis.narrow #{member.lastname}
-                td.ellipsis.narrow #{member.email}
-                td.ellipsis.narrow #{member.twitter}
-                td.ellipsis.narrow #{member.location}
-                td.ellipsis.narrow #{member.profession}
-                td.ellipsis.narrow #{member.interests}
-                td.ellipsis.narrow #{member.site}
-                td.ellipsis.narrow #{member.reference}
-                td.ellipsis.narrow #{member.adminDisplayText()}
-                td.ellipsis.narrow #{member.created}
+                td #{member.nickname}
+                td #{member.firstname}
+                td #{member.lastname}
+                td #{member.email}
+                td #{member.twitter}
+                td #{member.location}
+                td #{member.profession}
+                td #{member.interests}
+                td #{member.site}
+                td #{member.reference}
+                td #{member.adminDisplayText()}
+                td #{member.created}
     
