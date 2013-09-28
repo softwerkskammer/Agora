@@ -9,7 +9,7 @@ var dateAdapter = function () {
   var listener = function () {
     var endStrings = dateCalc.determineNewEnd($('#startDate').val(), $('#startTime').val(), ($('#endDate').val()), $('#endTime').val());
 
-    $('#endDate').val(endStrings.endDate);
+    $('#endDate').data().datepicker.update(endStrings.endDate);
     $('#endTime').data().timepicker.setTime(endStrings.endTime);
   };
 
