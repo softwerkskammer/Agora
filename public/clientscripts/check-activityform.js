@@ -1,6 +1,20 @@
-/* global $, document */
+/* global $, document, activityDateModel, jQuery */
 "use strict";
 var activity_validator;
+
+$(document).ready(function () {
+
+  var validateDateAndTime = function () {
+    var dateAndTime = activityDateModel().convertInputs($('#startDate').val(), $('#startTime').val(), $('#endDate').val(), $('#endTime').val());
+    return dateAndTime.end.diff(dateAndTime.start, 'minutes') > 0;
+  };
+
+  jQuery.validator.addMethod("dateAndTime", validateDateAndTime, jQuery.format("Das Ende der Aktivität muss nach ihrem Beginn liegen."));
+  $("#endDate").datepicker().on('changeDate', function () {
+    $("#activityform").validate().element($('#endDate'));
+  });
+});
+
 
 var initValidator = function () {
 
@@ -21,16 +35,24 @@ var initValidator = function () {
       },
       title: "required",
       location: "required",
-      startDate: {
-        required: true
-      },
-      startTime: {
-        required: true
-      }
+      startDate: "required",
+      startTime: "required",
+      endDate: "dateAndTime",
+      endTime: "dateAndTime"
+    },
+    groups: {
+      dateAndTimeInterval: "endDate endTime"
     },
     messages: {
       url: {
         remote: $.validator.format("Diese URL ist leider nicht verfügbar.")
+      }
+    },
+    errorPlacement: function (error, element) {
+      if (element.attr("name") === "endDate" || element.attr("name") === "endTime") {
+        error.insertAfter("#dates");
+      } else {
+        error.insertAfter(element);
       }
     },
     errorElement: "span",
