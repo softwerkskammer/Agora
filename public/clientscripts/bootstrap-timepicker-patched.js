@@ -3,6 +3,8 @@
  *
  * Copyright 2013 Joris de Wit
  *
+ * PATCHED by Nicole Rauch (see PATCH comment)
+ *
  * Contributors https://github.com/jdewit/bootstrap-timepicker/graphs/contributors
  *
  * For the full copyright and license information, please view the LICENSE
@@ -499,7 +501,7 @@
       }
       if (this.hour === 23) {
         this.hour = 0;
-
+        this.update();  // PATCH: Nicole Rauch, 28.9.13
         return;
       }
       this.hour++;
