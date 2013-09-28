@@ -1,10 +1,10 @@
 extends ../../../views/layout
 include  ../../../views/formComponents
 block scripts
+  script(src="/clientscripts/moment.js")
   script(src="/clientscripts/activityDateModel.js")
   script(src="/clientscripts/activityform-dateAdapter.js")
   script(src="/clientscripts/check-activityform.js")
-  script(src="/clientscripts/moment.js")
   script(src="/clientscripts/fillUrlFromText.js")
 
 block title
@@ -29,14 +29,14 @@ block content
       .row
         .col-md-6
           mixin text('title', 'Titel', activity, 'Kurz und knackig für Übersichten')
-          .row
-            .col-md-3
+          .row#dates
+            .col-md-3(style="padding-right:0px")
               mixin date('startDate', 'Start', activity, activity.startDate(), 'Enddatum und -uhrzeit werden automatisch verschoben (die Dauer bleibt gleich)')
-            .col-md-3
+            .col-md-3(style="padding-left:5px;padding-right:10px")
               mixin time('startTime', '&nbsp;', activity, activity.startTime())
-            .col-md-3
+            .col-md-3(style="padding-left:10px;padding-right:5px")
               mixin date('endDate', 'Ende', activity, activity.endDate(), 'Hiermit kannst Du die Dauer verändern')
-            .col-md-3
+            .col-md-3(style="padding-left:0px")
               mixin time('endTime', '&nbsp;', activity, activity.endTime())
           mixin textarea('description', 'Beschreibung', activity)
         .col-md-6
