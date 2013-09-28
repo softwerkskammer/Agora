@@ -5,14 +5,14 @@ var activity_validator;
 $(document).ready(function () {
 
   var validateDateAndTime = function () {
-    var dateAndTime = activityDateModel().convertInputs($('#startDate').val(), $('#startTime').val(), $('#endDate').val(), $('#endTime').val());
+    var startDate = $('#startDate').val();
+    var startTime = $('#startTime').val();
+    var dateAndTime = activityDateModel(startDate, startTime).convertInputs(startDate, startTime, $('#endDate').val(), $('#endTime').val());
     return dateAndTime.end.diff(dateAndTime.start, 'minutes') > 0;
   };
 
   jQuery.validator.addMethod("dateAndTime", validateDateAndTime, jQuery.format("Das Ende der Aktivität muss nach ihrem Beginn liegen."));
-  $("#endDate").datepicker().on('changeDate', function () {
-    $("#activityform").validate().element($('#endDate'));
-  });
+
 });
 
 
@@ -71,6 +71,10 @@ var initValidator = function () {
         $(element).parent().removeClass("has-error");
       }
     }
+  });
+
+  $("#endDate").datepicker().on('changeDate', function () {
+    activity_validator.element($('#endDate'));
   });
 
   activity_validator.form();
