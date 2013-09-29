@@ -42,8 +42,8 @@ describe('Activity application', function () {
 
   it('object is not valid, if the title is not filled', function () {
     var tmpActivity = new Activity({description: 'description', url: 'url', assignedGroup: 'assignedGroup', location: 'location',
-      direction: 'direction', startDate: '2012-11-11', startTime: 'startTime' });
-    expect(validation.isValidActivity(tmpActivity)).to.equal.false;
+      direction: 'direction', startDate: '2012-11-11', startTime: '10:10', endDate: '2012-11-11', endTime: '20:10' });
+    expect(validation.isValidActivity(tmpActivity).length).to.equal(1);
   });
 
   it('shows the list of activities as retrieved from the store', function (done) {
