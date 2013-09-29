@@ -88,29 +88,6 @@ describe('Activity', function () {
     done();
   });
 
-  it('adjusts a wrong end date', function (done) {
-    var activity = new Activity({
-      url: 'myURL',
-      startUnix: 22,
-      endUnix: 21
-    });
-    var wasAdjusted = activity.adjustEndDate();
-    expect(activity.endUnix).to.equal(activity.startUnix);
-    expect(wasAdjusted).to.be.true;
-    done();
-  });
-
-  it('does not adjust a correct end date', function (done) {
-    var activity = new Activity({
-      url: 'myURL',
-      startUnix: 22,
-      endUnix: 24
-    });
-    var wasAdjusted = activity.adjustEndDate();
-    expect(activity.endUnix).to.equal(24);
-    expect(wasAdjusted).to.be.false;
-    done();
-  });
 });
 
 describe('Activity\'s description', function () {
