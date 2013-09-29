@@ -121,12 +121,32 @@ var addHelpButtonToTextarea = function () {
   });
 };
 
+var extendDataTables = function () {
+  if (!$.fn.dataTableExt) { return; }
+  $.extend($.fn.dataTableExt.oSort, {
+    "date-eu-pre": function (dateString) {
+      if (!dateString) { return 0; }
+      var date = dateString.replace(" ", "");
+      var eu_date = date.split('.');
+      if (eu_date.length < 2) { return 0; }
+      return (eu_date[2] + eu_date[1] + eu_date[0]) * 1;
+    },
+    "date-eu-asc": function (a, b) {
+      return ((a < b) ? -1 : ((a > b) ? 1 : 0));
+    },
+    "date-eu-desc": function (a, b) {
+      return ((a < b) ? 1 : ((a > b) ? -1 : 0));
+    }
+  });
+};
+
 $.event.add(window, "resize", resizePreScrollable);
 $(document).ready(highlightCurrentSection);
 $(document).ready(addHelpButtonToTextarea);
 $(document).ready(initPickers);
 $(document).ready(resizePreScrollable);
 $(document).ready(initCalendar);
+$(document).ready(extendDataTables);
 $(document).ready(function () {
   $('.urlify').each(function () {
     $(this).html(surroundWithLink(this.innerHTML));

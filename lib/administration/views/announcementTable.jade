@@ -1,5 +1,24 @@
 extends ../../../views/layout
 
+block scripts
+  script(src="/clientscripts/jquery.dataTables.min.js")
+  script.
+    $(document).ready(function() {
+      $("#announcementtable").dataTable({
+        "oLanguage": {
+          "sUrl": "/clientscripts/dataTables.german.txt"
+        },
+        "aoColumns": [
+          { "bSortable" : false }, null, null, { "sType": "date-eu" }, { "sType": "date-eu" }, null, null
+        ],
+        "bPaginate": false,
+        "bAutoWidth": false,
+        "aaSorting": [[ 1, "asc" ]],
+        "bStateSave": true
+      });
+      $('.tooltiplabel').each(function(each) {$(this).popover()});
+    });
+
 block title
   | Übersicht der Nachrichten
 
@@ -11,24 +30,24 @@ block content
           small  Nachrichten
   .row
     .col-md-12
-      .panel.panel-default.pre-scrollable
-        table.table.table-condensed.table-hover.table-striped
+      .panel.pre-scrollable
+        table.table.table-condensed.table-hover.table-striped#announcementtable
           thead
             tr
-              th.ellipsis.narrow Edit
-              th.ellipsis Titel
-              th.ellipsis.narrow URL
-              th.ellipsis.narrow Erstellt am
-              th.ellipsis.narrow Anzeigen bis einschließlich
-              th.ellipsis.narrow Text
-              th.ellipsis.narrow Autor
+              th Edit
+              th Titel
+              th URL
+              th Erstellt am
+              th Anzeigen bis einschließlich
+              th Text
+              th Autor
           tbody
             for announcement in announcements
               tr
                 td(class="span1"): a.btn-sm(href="/announcements/edit/#{encodeURIComponent(announcement.url)}"): i.icon-edit
-                td.ellipsis.narrow #{announcement.title}
-                td.ellipsis.narrow #{announcement.url}
-                td.ellipsis.narrow #{announcement.fromDate()}
-                td.ellipsis.narrow #{announcement.thruDate()}
-                td.ellipsis.narrow #{announcement.message}
-                td.ellipsis.narrow #{announcement.author}
+                td.ellipsis #{announcement.title}
+                td #{announcement.url}
+                td #{announcement.fromDate()}
+                td #{announcement.thruDate()}
+                td.ellipsis: .tooltiplabel(data-toggle="hover", data-placement="auto top", data-html="true", data-content="#{announcement.messageHTML()}"):  #{announcement.message}
+                td #{announcement.author}
