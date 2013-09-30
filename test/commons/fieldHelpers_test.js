@@ -62,6 +62,70 @@ describe('Replace email addresses from text', function () {
 
 });
 
+describe('Replace phone numbers from text', function () {
+
+  it('returns the input if it is null or undefined', function () {
+    expect(fieldHelpers.replacePhoneNumbers(null)).to.equal(null);
+    expect(fieldHelpers.replacePhoneNumbers(undefined)).to.equal(undefined);
+  });
+
+  it('does not replace text without digits', function () {
+    expect(fieldHelpers.replacePhoneNumbers('bla bli blu')).to.equal('bla bli blu');
+  });
+
+  it('does not replace text with single brackets, slashes, plus or minus signs', function () {
+    expect(fieldHelpers.replacePhoneNumbers('text - text + text (text) \/ text')).to.equal('text - text + text (text) \/ text');
+  });
+
+  it('does not replace three digits', function () {
+    expect(fieldHelpers.replacePhoneNumbers('123')).to.equal('123');
+  });
+
+  it('replaces four or more digits', function () {
+    expect(fieldHelpers.replacePhoneNumbers('1234')).to.equal('...');
+  });
+
+  it('replaces phone number with parentheses', function () {
+    expect(fieldHelpers.replacePhoneNumbers('(040) 334455')).to.equal('...');
+  });
+
+  it('replaces phone number with parentheses and spaces', function () {
+    expect(fieldHelpers.replacePhoneNumbers('(040) 33 44 55')).to.equal('...');
+  });
+
+  it('replaces phone number with long pre-dial in parentheses and spaces', function () {
+    expect(fieldHelpers.replacePhoneNumbers('(0 40 35) 33 44 55')).to.equal('...');
+  });
+
+  it('replaces phone number with slash', function () {
+    expect(fieldHelpers.replacePhoneNumbers('040/334455')).to.equal('...');
+  });
+
+  it('replaces phone number with slash and spaces', function () {
+    expect(fieldHelpers.replacePhoneNumbers('040 / 33 44 55')).to.equal('...');
+  });
+
+  it('replaces phone number with dash', function () {
+    expect(fieldHelpers.replacePhoneNumbers('040-334455')).to.equal('...');
+  });
+
+  it('replaces phone number with dash and spaces', function () {
+    expect(fieldHelpers.replacePhoneNumbers('040 - 33 44 55')).to.equal('...');
+  });
+
+  it('replaces phone number with country code', function () {
+    expect(fieldHelpers.replacePhoneNumbers('+4940334455')).to.equal('...');
+  });
+
+  it('replaces phone number with country code and spaces', function () {
+    expect(fieldHelpers.replacePhoneNumbers('+49 40 33 44 55')).to.equal('...');
+  });
+
+  it('replaces phone number with country code and parentheses and spaces', function () {
+    expect(fieldHelpers.replacePhoneNumbers('+49 (40) 33 44 55')).to.equal('...');
+  });
+});
+
 describe('readableDate function', function () {
 
   it('converts a unix timestamp to a German Date', function () {
