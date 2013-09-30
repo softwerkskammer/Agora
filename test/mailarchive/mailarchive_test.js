@@ -73,6 +73,30 @@ describe('Mail content page', function () {
       });
   });
 
+  it('filters mail addresses and phone numbers from html', function (done) {
+    var displayedMail = new Mail({
+      "timeUnix": 1364242214,
+      "from": {
+        "name": "Heißen",
+        "address": "no@mail.de"
+      },
+      "html": "<div>Html message 1: mail@somewhere.org Tel: +49 (123) 45 67 89</div>",
+      "id": "<message1@nomail.com>",
+      "subject": "Mail 1",
+      "text": "Plain text message 1.\n",
+      "group": "group"
+    });
+
+    var mailForId = sinonSandbox.stub(mailarchiveAPI, 'mailForId', function (id, callback) {callback(null, displayedMail); });
+    request(app)
+      .get('/message?id=mailID')
+      .expect(200)
+      .expect(/<div>Html message 1: ...@... Tel: ...<\/div>/, function (err) {
+        expect(mailForId.calledOnce).to.be.ok;
+        done(err);
+      });
+  });
+
   it('references sender member page if available', function (done) {
     var displayedMail = new Mail({
       from: {name: "Sender Name", id: "sender ID"},
