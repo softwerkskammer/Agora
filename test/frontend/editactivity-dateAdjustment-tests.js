@@ -129,7 +129,7 @@ describe("Activity Date Model", function () {
 
     var result = model.calculateNewDates({start: utc("30.03.2013", "22:15"), end: utc("30.03.2013", "23:15")});
 
-    assertMoment(result.end, "31.03.2013", "02:15"); // ?!
+    assertMoment(result.end, "31.03.2013", "02:15");
   });
 
   it("... if endTime is moved across the summertime boundary in autumn", function () {
@@ -153,37 +153,14 @@ describe("Input formatter", function () {
     assertMoment(result.end, "07.12.2013", "19:25");
   });
 
-  it("uses the initial start date if the end date is empty", function () {
-    var model = activityDateModel("01.10.2013", "20:15");
-
-    var result = model.convertInputs("04.11.2013", "16:15", "", "19:25");
-
-    assertMoment(result.start, "04.11.2013", "16:15");
-    assertMoment(result.end, "01.10.2013", "19:25");
-  });
-
 });
 
 describe("Output formatter", function () {
 
-  it("creates strings for the inputs", function () {
-    var result = activityDateModel().createDateAndTimeStrings(true, { start: utc("04.11.2013", "16:15"), end: utc("04.11.2013", "18:15") });
+  it("creates end strings for the inputs", function () {
+    var result = activityDateModel().createDateAndTimeStrings({ start: utc("04.11.2013", "16:15"), end: utc("06.11.2013", "18:15") });
 
-    expect(result.endDate).to.equal("04.11.2013");
-    expect(result.endTime).to.equal("18:15");
-  });
-
-  it("creates no date string if it did not have one before and if the dates are identical", function () {
-    var result = activityDateModel().createDateAndTimeStrings(false, { start: utc("04.11.2013", "16:15"), end: utc("04.11.2013", "18:15") });
-
-    expect(result.endDate).to.equal("");
-    expect(result.endTime).to.equal("18:15");
-  });
-
-  it("creates a date string if it did not have one before but the dates differ", function () {
-    var result = activityDateModel().createDateAndTimeStrings(false, { start: utc("04.11.2013", "16:15"), end: utc("05.11.2013", "18:15") });
-
-    expect(result.endDate).to.equal("05.11.2013");
+    expect(result.endDate).to.equal("06.11.2013");
     expect(result.endTime).to.equal("18:15");
   });
 
