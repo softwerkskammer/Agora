@@ -7,11 +7,13 @@ $(document).ready(function () {
   var validateDateAndTime = function () {
     var startDate = $('#startDate').val();
     var startTime = $('#startTime').val();
-    var dateAndTime = activityDateModel(startDate, startTime).convertInputs(startDate, startTime, $('#endDate').val(), $('#endTime').val());
-    return dateAndTime.end.diff(dateAndTime.start, 'minutes') > 0;
+    var endDate = $('#endDate').val();
+    var endTime = $('#endTime').val();
+    var dateAndTime = activityDateModel(startDate, startTime).convertInputs(startDate, startTime, endDate, endTime);
+    return endDate !== "" && endTime !== "" && dateAndTime.end.diff(dateAndTime.start, 'minutes') > 0;
   };
 
-  jQuery.validator.addMethod("dateAndTime", validateDateAndTime, jQuery.format("Das Ende der Aktivität muss nach ihrem Beginn liegen."));
+  jQuery.validator.addMethod("dateAndTime", validateDateAndTime, jQuery.format("Das Ende muss gefüllt sein und nach dem Beginn liegen."));
 
 });
 
