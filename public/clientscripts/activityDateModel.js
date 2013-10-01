@@ -25,38 +25,35 @@ var activityDateModel = function (initialDate, initialTime) {
     return "";
   };
 
-  var oldStartDate = initialDate && initialTime ? toUtc(initialDate, initialTime) : undefined;
+  var oldStartDate = toUtc(initialDate, initialTime);
 
   return {
     convertInputs: function (startDate, startTime, endDate, endTime) {
       return {
         start: toUtc(startDate, startTime),
-        end: toUtc(endDate || dateString(oldStartDate), endTime)
+        end: toUtc(endDate, endTime)
       };
     },
 
-    calculateNewDates: function (currentTimes) {
+    calculateNewEndMoment: function (currentTimes) {
       var offset = oldStartDate && currentTimes.start ? currentTimes.start.diff(oldStartDate, 'minutes') : 0;
 
       oldStartDate = currentTimes.start;
 
-      currentTimes.end = currentTimes.end.add(offset, 'minutes');
-
-      return currentTimes;
+      return currentTimes.end.add(offset, 'minutes');
     },
 
-    createDateAndTimeStrings: function (hasEndDate, currentTimes) {
-      var endDateString = dateString(currentTimes.end);
+    createDateAndTimeStrings: function (endMoment) {
       return {
-        endDate: hasEndDate || dateString(currentTimes.start) !== endDateString ? endDateString : "",
-        endTime: timeString(currentTimes.end)
+        endDate: dateString(endMoment),
+        endTime: timeString(endMoment)
       };
     },
 
     determineNewEnd: function (startDate, startTime, endDate, endTime) {
       var inputMoments = this.convertInputs(startDate, startTime, endDate, endTime);
-      var currentTimes = this.calculateNewDates(inputMoments);
-      return this.createDateAndTimeStrings(!!endDate, currentTimes);
+      var newEndMoment = this.calculateNewEndMoment(inputMoments);
+      return this.createDateAndTimeStrings(newEndMoment);
     }
 
   };
