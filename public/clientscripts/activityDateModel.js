@@ -35,27 +35,25 @@ var activityDateModel = function (initialDate, initialTime) {
       };
     },
 
-    calculateNewDates: function (currentTimes) {
+    calculateNewEndMoment: function (currentTimes) {
       var offset = oldStartDate && currentTimes.start ? currentTimes.start.diff(oldStartDate, 'minutes') : 0;
 
       oldStartDate = currentTimes.start;
 
-      currentTimes.end = currentTimes.end.add(offset, 'minutes');
-
-      return currentTimes;
+      return currentTimes.end.add(offset, 'minutes');
     },
 
-    createDateAndTimeStrings: function (currentTimes) {
+    createDateAndTimeStrings: function (endMoment) {
       return {
-        endDate: dateString(currentTimes.end),
-        endTime: timeString(currentTimes.end)
+        endDate: dateString(endMoment),
+        endTime: timeString(endMoment)
       };
     },
 
     determineNewEnd: function (startDate, startTime, endDate, endTime) {
       var inputMoments = this.convertInputs(startDate, startTime, endDate, endTime);
-      var currentTimes = this.calculateNewDates(inputMoments);
-      return this.createDateAndTimeStrings(currentTimes);
+      var newEndMoment = this.calculateNewEndMoment(inputMoments);
+      return this.createDateAndTimeStrings(newEndMoment);
     }
 
   };
