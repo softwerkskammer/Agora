@@ -4,7 +4,6 @@ var conf = require('../configureForTest');
 var expect = require('chai').expect;
 
 var mailThread = conf.get('beans').get('mailThread');
-var mailarchiveAPI = conf.get('beans').get('mailarchiveAPI');
 var Mail = conf.get('beans').get('archivedMail');
 
 describe('mail thread builder', function () {
@@ -31,13 +30,6 @@ describe('mail thread builder', function () {
     var mail2 = new Mail({id: "Mail 2", references: ["Mail 1"]});
     var threadedMails = mailThread([mail2]);
     expect(threadedMails).to.deep.equal([mail2]);
-  });
-
-  it('sorts mails with same parent mail', function () {
-    var mail1 = new Mail({id: "Mail 1", references: [], timeUnix: 2});
-    var mail2 = new Mail({id: "Mail 2", references: [], timeUnix: 1});
-    var threadedMails = mailThread([mail2, mail1], mailarchiveAPI.sortOnTimeDescending);
-    expect(threadedMails).to.deep.equal([mail1, mail2]);
   });
 
   it('adds thread modification time to leaf mails', function () {

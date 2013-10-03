@@ -3,18 +3,17 @@ extends ../../../views/layout
 include ./mailheader-mixin
 
 block title
-  | mail 
+  | E-Mail&nbsp; 
   -if (mail != null)
     | #{mail.subject}
   -else
-    | not found
+    | nicht gefunden
 
 block content
   .row
     .col-md-12
       .page-header
         -if (mail != null)
-          a(href="list/" + encodeURIComponent(mail.group) ) Mailverzeichnis 
           h2 #{mail.subject}
           div
             mixin mailattributes(mail) 

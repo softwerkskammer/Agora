@@ -10,7 +10,6 @@ block content
   .row
     .col-md-12
       .page-header
-        mixin pageHeader(group)
-        a(href=encodeURIComponent(group)+"?thread=true" ) Ansicht threaded
-      .panel.panel-default.pre-scrollable
+        mixin pageHeader(group, "Flat")
+      .panel.pre-scrollable
         mixin mailIndex(mailHeaders)
