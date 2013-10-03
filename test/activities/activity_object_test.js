@@ -120,7 +120,7 @@ describe('Activity\'s direction', function () {
 });
 
 describe('Activity\'s markdown', function () {
-  it('creates its markdown ', function (done) {
+  it('creates its markdown with direction', function (done) {
     var activity = new Activity({
       url : 'url',
       description : 'description',
@@ -130,6 +130,19 @@ describe('Activity\'s markdown', function () {
       startTime : '12:21'
     });
     expect(activity.markdown()).to.equal('description\n\n ** Datum:** 04.05.2013, 12:21\n\n**Ort:** location\n\n **Wegbeschreibung:**\n\ndirection');
+    done();
+  });
+
+  it('creates its markdown without direction', function (done) {
+    var activity = new Activity({
+      url : 'url',
+      description : 'description',
+      location : 'location',
+      direction : '',
+      startDate : '4.5.2013',
+      startTime : '12:21'
+    });
+    expect(activity.markdown()).to.equal('description\n\n ** Datum:** 04.05.2013, 12:21\n\n**Ort:** location');
     done();
   });
 });
