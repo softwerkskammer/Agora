@@ -28,11 +28,7 @@ describe('Mailarchive', function () {
     sinonSandbox.stub(membersAPI, 'getMemberForId', function (id, callback) {callback(null, null); });
 
     mailarchiveAPI.unthreadedMails('group', function (err, mails) {
-      expect(listByFieldWithOptions.calledWith(
-        {group: 'group'},
-        {text: 0, html: 0},
-        {timeUnix: -1}
-      )).to.be.true;
+      expect(listByFieldWithOptions.calledWith({group: 'group'}, {text: 0, html: 0}, {timeUnix: -1})).to.be.true;
       expect(err).to.be.null;
       sampleMail1.threadingLevel = 0;
       sampleMail2.threadingLevel = 0;
