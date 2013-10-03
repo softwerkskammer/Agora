@@ -25,7 +25,7 @@ describe('Mailarchive', function () {
     var sampleMailList = [sampleMail1, sampleMail2];
     var listByFieldWithOptions = sinonSandbox.stub(persistence, 'listByFieldWithOptions');
     listByFieldWithOptions.callsArgWith(3, null, sampleMailList);
-    sinonSandbox.stub(membersAPI, 'getMembersForIds', function (ids, callback) {callback(null, []); });
+    sinonSandbox.stub(membersAPI, 'getMemberForId', function (id, callback) {callback(null, null); });
 
     mailarchiveAPI.unthreadedMails('group', function (err, mails) {
       expect(listByFieldWithOptions.calledWith(
@@ -44,7 +44,7 @@ describe('Mailarchive', function () {
   it('calls persistence.getById from mailForId and passes on the given callback', function (done) {
     var sampleMail1 = new Mail({ id: "Mail 1", subject: "Mail 1" });
     var getById = sinonSandbox.stub(persistence, 'getById');
-    sinonSandbox.stub(membersAPI, 'getMembersForIds', function (ids, callback) {callback(null, []); });
+    sinonSandbox.stub(membersAPI, 'getMemberForId', function (ids, callback) {callback(null, null); });
     getById.callsArgWith(1, null, sampleMail1);
 
     mailarchiveAPI.mailForId('id', function (err, mail) {
