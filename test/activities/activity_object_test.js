@@ -111,10 +111,17 @@ describe('Activity\'s description', function () {
 });
 
 describe('Activity\'s direction', function () {
-  it('knows if it contains direction', function (done) {
+  it('knows that it doesn\'t contain direction', function (done) {
     var activity = new Activity();
     activity.direction = '';
     expect(activity.hasDirection()).to.be.false;
+    done();
+  });
+
+  it('knows that it contains direction', function (done) {
+    var activity = new Activity();
+    activity.direction = 'direction';
+    expect(activity.hasDirection()).to.be.true;
     done();
   });
 });
@@ -129,7 +136,13 @@ describe('Activity\'s markdown', function () {
       startDate : '4.5.2013',
       startTime : '12:21'
     });
-    expect(activity.markdown()).to.equal('description\n\n ** Datum:** 04.05.2013, 12:21\n\n**Ort:** location\n\n **Wegbeschreibung:**\n\ndirection');
+    var markdown = activity.markdown();
+    expect(markdown).to.contain('description');
+    expect(markdown).to.contain('04.05.2013');
+    expect(markdown).to.contain('12:21');
+    expect(markdown).to.contain('location');
+    expect(markdown).to.contain('Wegbeschreibung');
+    expect(markdown).to.contain('direction');
     done();
   });
 
@@ -142,7 +155,7 @@ describe('Activity\'s markdown', function () {
       startDate : '4.5.2013',
       startTime : '12:21'
     });
-    expect(activity.markdown()).to.equal('description\n\n ** Datum:** 04.05.2013, 12:21\n\n**Ort:** location');
+    expect(activity.markdown()).to.not.contain('Wegbeschreibung');
     done();
   });
 });
