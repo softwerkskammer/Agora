@@ -8,19 +8,18 @@ block content
     .col-md-12
       .page-header
         .btn-group.pull-right
+          .btn-group
+            a.btn.btn-default.dropdown-toggle(data-toggle="dropdown")
+              | #{range} &nbsp;
+              span.caret
+            ul.dropdown-menu
+              li: a(href="/activities/upcoming") Kommende
+              li: a(href="/activities/past") Vergangene
+              li: a(href="/activities") Alle
           a.btn.btn-default(href="ical/", title="Für Kalender exportieren. Zum Abo: URL in Kalenderprogramm abonnieren"): i.icon-calendar
           if typeof(user) !== 'undefined' && user.member.isAdmin
             a.btn.btn-default(href="new/", title="Neue Aktivität"): i.icon-file
-        h2 Aktivitäten&nbsp;
-          small
-            .btn-group(style="height: 40px;")
-              a.btn.btn-default.dropdown-toggle(data-toggle="dropdown")
-                | #{range} &nbsp;
-                span.caret
-              ul.dropdown-menu
-                li: a(href="/activities/upcoming") Kommende
-                li: a(href="/activities/past") Vergangene
-                li: a(href="/activities") Alle
+        h2 Aktivitäten
       dl.dl-horizontal
         for activity in activities
           dt
