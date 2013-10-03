@@ -110,6 +110,30 @@ describe('Activity\'s description', function () {
   });
 });
 
+describe('Activity\'s direction', function () {
+  it('knows if it contains direction', function (done) {
+    var activity = new Activity();
+    activity.direction = '';
+    expect(activity.hasDirection()).to.be.false;
+    done();
+  });
+});
+
+describe('Activity\'s markdown', function () {
+  it('creates its markdown ', function (done) {
+    var activity = new Activity({
+      url : 'url',
+      description : 'description',
+      location : 'location',
+      direction : 'direction',
+      startDate : '4.5.2013',
+      startTime : '12:21'
+    });
+    expect(activity.markdown()).to.equal('description\n\n ** Datum:** 04.05.2013, 12:21\n\n**Ort:** location\n\n **Wegbeschreibung:**\n\ndirection'); 
+    done();
+  });
+});
+
 describe('Activity stores a list of members', function () {
   it('can add a member', function (done) {
     var activity = new Activity();
