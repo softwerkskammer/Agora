@@ -129,7 +129,7 @@ describe('Activity\'s markdown', function () {
       startDate : '4.5.2013',
       startTime : '12:21'
     });
-    expect(activity.markdown()).to.equal('description\n\n ** Datum:** 04.05.2013, 12:21\n\n**Ort:** location\n\n **Wegbeschreibung:**\n\ndirection'); 
+    expect(activity.markdown()).to.equal('description\n\n ** Datum:** 04.05.2013, 12:21\n\n**Ort:** location\n\n **Wegbeschreibung:**\n\ndirection');
     done();
   });
 });
