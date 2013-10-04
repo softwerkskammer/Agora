@@ -18,6 +18,9 @@ block content
               .panel-heading
                 h4.panel-title
                   a.accordion-toggle(data-toggle="collapse", data-parent="#mails", href="#collapse" + mailNumber) #{mailHeader.subject}
+                | (
+                mixin mailattributes(mailHeader)
+                | )
               .panel-collapse.collapse(id="collapse" + mailNumber)
                 .panel-body
                   mixin mailIndex([mailHeader])
