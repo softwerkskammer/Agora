@@ -23,12 +23,12 @@ describe('Mailarchive', function () {
     var sampleMail1 = new Mail({ id: "Mail 1", subject: "Mail 1" });
     var sampleMail2 = new Mail({ id: "Mail 2", subject: "Mail 2" });
     var sampleMailList = [sampleMail1, sampleMail2];
-    var listByFieldWithOptions = sinonSandbox.stub(persistence, 'listByFieldWithOptions');
-    listByFieldWithOptions.callsArgWith(3, null, sampleMailList);
+    var listByField = sinonSandbox.stub(persistence, 'listByField');
+    listByField.callsArgWith(2, null, sampleMailList);
     sinonSandbox.stub(membersAPI, 'getMemberForId', function (id, callback) {callback(null, null); });
 
     mailarchiveAPI.unthreadedMails('group', function (err, mails) {
-      expect(listByFieldWithOptions.calledWith({group: 'group'}, {text: 0, html: 0}, {timeUnix: -1})).to.be.true;
+      expect(listByField.calledWith({group: 'group'}, {timeUnix: -1})).to.be.true;
       expect(err).to.be.null;
       sampleMail1.threadingLevel = 0;
       sampleMail2.threadingLevel = 0;
