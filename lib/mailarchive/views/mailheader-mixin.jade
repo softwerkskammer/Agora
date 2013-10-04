@@ -18,11 +18,12 @@ mixin mailattributes(mailHeader)
   | , #{mailHeader.displayedTime}
 
 mixin mailIndex(mailHeaders)
-  -if(typeof(mailHeaders) !== 'undefined')
+  if(typeof(mailHeaders) !== 'undefined')
     ul
       for mailHeader in mailHeaders
         li
-          a(href="../../message/" + encodeURIComponent(mailHeader.id)) #{mailHeader.subject} 
+          div(id="messageDetails" + mailHeader.timeUnix, tabindex="-1").modal.fade
+          a(data-toggle="modal", data-target="#messageDetails" + mailHeader.timeUnix, href="../../message/" + encodeURIComponent(mailHeader.id)) #{mailHeader.subject} 
           | (
           mixin mailattributes(mailHeader) 
           | )

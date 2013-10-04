@@ -1,23 +1,21 @@
-extends ../../../views/layout
-
 include ./mailheader-mixin
 
-block title
-  | E-Mail&nbsp; 
-  -if (mail != null)
-    | #{mail.subject}
-  -else
-    | nicht gefunden
-
-block content
-  .row
-    .col-md-12
-      .page-header
-        -if (mail != null)
-          h2 #{mail.subject}
-            br
-            small: mixin mailattributes(mail) 
-        -else
-          h2 Keine Mail vorhanden
-      if (mail != null && mail.html != null)
-        !{mail.getHtml()}
+doctype 5
+html
+  .modal-dialog.cheatsheet
+    .modal-content
+      .modal-header
+        button.close(type="button", data-dismiss="modal", aria-hidden="true") &times;
+        h3 Markdown Cheatsheet
+      .modal-body
+        .row
+          .col-md-12
+            .page-header
+              -if (mail != null)
+                h2 #{mail.subject}
+                  br
+                  small: mixin mailattributes(mail) 
+              -else
+                h2 Keine Mail vorhanden
+            if (mail != null && mail.html != null)
+              !{mail.getHtml()}
