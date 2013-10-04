@@ -23,7 +23,7 @@ Current Build Status
 
 System requirements for installation
 --------------------
-It is a node.js project. Therefore you need node.js installed. We are currently using version 0.8 (you should use at least 0.8.19) and npm 1.2.
+It is a node.js project. Therefore you need node.js installed. You need version 0.8 (at least 0.8.19) and npm 1.2. **Important:** node.js version 0.10 does not work!
 
 Get it from [http://nodejs.org](http://nodejs.org)
 
@@ -93,7 +93,7 @@ To run the style check (jshint) and the tests on every file change, use `grunt w
 
 Debugging the tests from IDE [Webstorm](http://www.jetbrains.com/webstorm/)
 ----------
-Follow this [instructions](http://codebetter.com/glennblock/2013/01/17/debugging-mocha-unit-tests-with-webstorm-step-by-step/)
+Follow these [instructions](http://codebetter.com/glennblock/2013/01/17/debugging-mocha-unit-tests-with-webstorm-step-by-step/)
 
 Editing the stylesheets
 -----------------------
@@ -103,4 +103,4 @@ We are working with [compass](http://compass-style.org/). Requires ruby (see web
 		compass compile
 If these run without problems, check the produced file screen.css inside the stylesheets directory.
 
-Only edit the scss-files inside the "partials" subfolder
+Only edit the scss-files inside the "partials" subfolder.
