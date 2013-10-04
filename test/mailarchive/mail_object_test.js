@@ -1,15 +1,30 @@
 "use strict";
 
 require('../configureForTest');
-var conf = require('nconf');
+var beans = require('nconf').get('beans');
 var expect = require('chai').expect;
 var moment = require('moment-timezone');
 
-var Mail = conf.get('beans').get('archivedMail');
+var Mail = beans.get('archivedMail');
+var Member = beans.get('member');
 
 describe('Mail', function () {
+
+  var member = new Member({
+    id: 'member',
+    nickname: 'member',
+    firstname: 'Hans',
+    lastname: 'Becker'
+  });
+
+  var mailWithFrom = new Mail({
+    id: "Mail 1",
+    from: {name: "name", address: "local@domain"}
+  });
+
   it('throws an error if given object has no valid id', function () {
     function newMail() { new Mail({}); }
+
     expect(newMail).to.throw(Error, /message has no valid id/);
   });
 
@@ -24,11 +39,33 @@ describe('Mail', function () {
   });
 
   it('uses sender name as name to be displayed if it is available', function (done) {
-    var mail = new Mail({
-      id: "Mail 1",
-      from: {name: "name", address: "local@domain"}
-    });
-    expect(mail.displayedSenderName).to.equal("name");
+    expect(mailWithFrom.displayedSenderName()).to.equal("name");
+    done();
+  });
+
+  it('uses the display name of a real member if available', function (done) {
+    mailWithFrom.member = member;
+    expect(mailWithFrom.displayedSenderName()).to.equal("Hans Becker");
+    delete mailWithFrom.member;
+    done();
+  });
+
+  it('uses the display name of a real member if available', function (done) {
+    mailWithFrom.member = member;
+    expect(mailWithFrom.displayedSenderName()).to.equal("Hans Becker");
+    delete mailWithFrom.member;
+    done();
+  });
+
+  it('has a nickname of "null" if no member', function (done) {
+    expect(mailWithFrom.memberNickname()).to.be.null;
+    done();
+  });
+
+  it('uses the nickname of a real member if available', function (done) {
+    mailWithFrom.member = member;
+    expect(mailWithFrom.memberNickname()).to.equal("member");
+    delete mailWithFrom.member;
     done();
   });
 
@@ -46,16 +83,15 @@ describe('Mail', function () {
       id: "Mail 1",
       from: {id: "id"}
     });
-    expect(mail.memberId).to.equal("id");
+    expect(mail.memberId()).to.equal("id");
     done();
   });
 
-  it('sets member ID to null if it is notavailable', function (done) {
+  it('sets member ID to null if it is not available', function (done) {
     var mail = new Mail({
-      id: "Mail 1",
-      from: {}
+      id: "Mail 1"
     });
-    expect(mail.memberId).to.equal(null);
+    expect(mail.memberId()).to.equal(null);
     done();
   });
 });

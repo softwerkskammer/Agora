@@ -12,6 +12,8 @@ var app = conf.get('beans').get('mailarchiveApp')(express());
 
 var mailarchiveAPI = conf.get('beans').get('mailarchiveAPI');
 var Mail = conf.get('beans').get('archivedMail');
+var Member = conf.get('beans').get('member');
+var member = new Member({id: 'id', nickname: 'nickname'});
 
 describe('Mail content page', function () {
   afterEach(function (done) {
@@ -95,7 +97,7 @@ describe('Mail content page', function () {
       group: "group",
       text: "text"
     });
-    displayedMail.memberNickname = "nickname";
+    displayedMail.member = member;
 
     var mailForId = sinonSandbox.stub(mailarchiveAPI, 'mailForId', function (id, callback) {callback(null, displayedMail); });
 
@@ -205,7 +207,7 @@ describe('Mail index page', function () {
       group: 'group'
     });
     stubMailHeaders([displayedMailHeader]);
-    displayedMailHeader.memberNickname = 'nickname';
+    displayedMailHeader.member = member;
 
     request(app)
       .get('/list/threaded/group')
@@ -223,7 +225,7 @@ describe('Mail index page', function () {
       from: {name: 'Sender Name 2', id: 'sender ID'}, group: 'group'
     });
     stubMailHeaders([displayedMailHeader1, displayedMailHeader2]);
-    displayedMailHeader2.memberNickname = 'nickname';
+    displayedMailHeader1.member = member;
 
     request(app)
       .get('/list/threaded/group')
