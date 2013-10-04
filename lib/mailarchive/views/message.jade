@@ -15,11 +15,9 @@ block content
       .page-header
         -if (mail != null)
           h2 #{mail.subject}
-          div
-            mixin mailattributes(mail) 
+            br
+            small: mixin mailattributes(mail) 
         -else
           h2 Keine Mail vorhanden
-      -if (mail != null)
-        div
-          -if(mail.html != null)
-            | !{mail.getHtml()}
+      if (mail != null && mail.html != null)
+        !{mail.getHtml()}
