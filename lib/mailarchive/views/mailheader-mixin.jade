@@ -26,4 +26,4 @@ mixin mailIndex(mailHeaders)
           | (
           mixin mailattributes(mailHeader) 
           | )
-          mixin mailIndex(mailHeader.responses)
+          mixin mailIndex(mailHeader.sortedResponses())
