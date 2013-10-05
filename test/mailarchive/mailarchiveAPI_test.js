@@ -1,15 +1,15 @@
 "use strict";
 
-var conf = require('../configureForTest');
 var expect = require('chai').expect;
 
 var sinon = require('sinon');
 var sinonSandbox = sinon.sandbox.create();
 
-var persistence = conf.get('beans').get('mailsPersistence');
-var membersAPI = conf.get('beans').get('membersAPI');
-var mailarchiveAPI = conf.get('beans').get('mailarchiveAPI');
-var Mail = conf.get('beans').get('archivedMail');
+var beans = require('../configureForTest').get('beans');
+var persistence = beans.get('mailsPersistence');
+var membersAPI = beans.get('membersAPI');
+var mailarchiveAPI = beans.get('mailarchiveAPI');
+var Mail = beans.get('archivedMail');
 
 describe('Mailarchive', function () {
 
@@ -20,8 +20,8 @@ describe('Mailarchive', function () {
 
   it('calls persistence.listByFieldWithOptions from mailHeaders ' +
     'and passes on the given callback', function (done) {
-    var sampleMail1 = new Mail({ id: "Mail 1", subject: "Mail 1" });
-    var sampleMail2 = new Mail({ id: "Mail 2", subject: "Mail 2" });
+    var sampleMail1 = new Mail({ id: 'Mail 1', subject: 'Mail 1' });
+    var sampleMail2 = new Mail({ id: 'Mail 2', subject: 'Mail 2' });
     var sampleMailList = [sampleMail1, sampleMail2];
     var listByField = sinonSandbox.stub(persistence, 'listByField');
     listByField.callsArgWith(2, null, sampleMailList);
@@ -38,7 +38,7 @@ describe('Mailarchive', function () {
   });
 
   it('calls persistence.getById from mailForId and passes on the given callback', function (done) {
-    var sampleMail1 = new Mail({ id: "Mail 1", subject: "Mail 1" });
+    var sampleMail1 = new Mail({ id: 'Mail 1', subject: 'Mail 1' });
     var getById = sinonSandbox.stub(persistence, 'getById');
     sinonSandbox.stub(membersAPI, 'getMemberForId', function (ids, callback) {callback(null, null); });
     getById.callsArgWith(1, null, sampleMail1);

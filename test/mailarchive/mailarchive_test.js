@@ -7,13 +7,13 @@ var sinonSandbox = sinon.sandbox.create();
 var expect = require('chai').expect;
 var moment = require('moment-timezone');
 
-var conf = require('../configureForTest');
-var app = conf.get('beans').get('mailarchiveApp')(express());
-
-var mailarchiveAPI = conf.get('beans').get('mailarchiveAPI');
-var Mail = conf.get('beans').get('archivedMail');
-var Member = conf.get('beans').get('member');
+var beans = require('../configureForTest').get('beans');
+var mailarchiveAPI = beans.get('mailarchiveAPI');
+var Mail = beans.get('archivedMail');
+var Member = beans.get('member');
 var member = new Member({id: 'id', nickname: 'nickname'});
+
+var app = beans.get('mailarchiveApp')(express());
 
 describe('Mail content page', function () {
   afterEach(function (done) {
@@ -44,14 +44,14 @@ describe('Mail content page', function () {
     var displayedMail = new Mail({
       "timeUnix": 1364242214,
       "from": {
-        "name": "Heißen",
-        "address": "no@mail.de"
+        "name": 'Heißen',
+        "address": 'no@mail.de'
       },
       "html": "<div>Html message 1</div>",
       "id": "<message1@nomail.com>",
-      "subject": "Mail 1",
-      "text": "Plain text message 1.\n",
-      "group": "group"
+      "subject": 'Mail 1',
+      "text": 'Plain text message 1.\n',
+      "group": 'group'
     });
 
     var mailForId = sinonSandbox.stub(mailarchiveAPI, 'mailForId', function (id, callback) {callback(null, displayedMail); });
@@ -68,14 +68,14 @@ describe('Mail content page', function () {
     var displayedMail = new Mail({
       "timeUnix": 1364242214,
       "from": {
-        "name": "Heißen",
-        "address": "no@mail.de"
+        "name": 'Heißen',
+        "address": 'no@mail.de'
       },
-      "html": "<div>Html message 1: mail@somewhere.org Tel: +49 (123) 45 67 89</div>",
-      "id": "<message1@nomail.com>",
-      "subject": "Mail 1",
-      "text": "Plain text message 1.\n",
-      "group": "group"
+      "html": '<div>Html message 1: mail@somewhere.org Tel: +49 (123) 45 67 89</div>',
+      "id": '<message1@nomail.com>',
+      "subject": 'Mail 1',
+      "text": 'Plain text message 1.\n',
+      "group": 'group'
     });
 
     var mailForId = sinonSandbox.stub(mailarchiveAPI, 'mailForId', function (id, callback) {callback(null, displayedMail); });
@@ -90,12 +90,12 @@ describe('Mail content page', function () {
 
   it('references sender member page if available', function (done) {
     var displayedMail = new Mail({
-      from: {name: "Sender Name", id: "sender ID"},
+      from: {name: 'Sender Name', id: 'sender ID'},
       timeUnix: 0,
-      id: "<message1@nomail.com>",
-      subject: "Mail 1",
-      group: "group",
-      text: "text"
+      id: '<message1@nomail.com>',
+      subject: 'Mail 1',
+      group: 'group',
+      text: 'text'
     });
     displayedMail.member = member;
 
@@ -156,14 +156,14 @@ describe('Mail index page', function () {
       });
   });
 
-  var mailTime = moment("01 Jan 2010 21:14:14 +0100");
-  mailTime.lang("de");
+  var mailTime = moment('01 Jan 2010 21:14:14 +0100');
+  mailTime.lang('de');
   var displayedMailHeader = new Mail({
-    from: {name: "Sender Name"},
+    from: {name: 'Sender Name'},
     timeUnix: mailTime.unix(),
-    id: "<message1@nomail.com>",
-    subject: "Mail 1",
-    group: "group"
+    id: '<message1@nomail.com>',
+    subject: 'Mail 1',
+    group: 'group'
   });
 
   it('shows sender', function (done) {
