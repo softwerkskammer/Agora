@@ -5,17 +5,13 @@ html
   .modal-dialog.cheatsheet
     .modal-content
       .modal-header
-        button.close(type="button", data-dismiss="modal", aria-hidden="true") &times;
-        h3 Markdown Cheatsheet
+        button.close(type="button", data-dismiss="modal", aria-hidden="true") schließen&nbsp;&times
+        if (mail === null)
+          h3 Keine Mail vorhanden
+        else
+          h3 #{mail.subject}
+            br
+            small: mixin mailattributes(mail) 
       .modal-body
-        .row
-          .col-md-12
-            .page-header
-              -if (mail != null)
-                h2 #{mail.subject}
-                  br
-                  small: mixin mailattributes(mail) 
-              -else
-                h2 Keine Mail vorhanden
-            if (mail != null && mail.html != null)
-              !{mail.getHtml()}
+        if (mail !== null)
+          !{mail.getHtml()}
