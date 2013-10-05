@@ -1,21 +1,30 @@
-mixin pageHeader(group)
-  h2 Mails der Gruppe 
-    a(href="/groups/" + encodeURIComponent(group) ) #{group}
+mixin pageHeader(group, range)
+  .btn-group.pull-right
+    .btn-group
+      a.btn.btn-default.dropdown-toggle(data-toggle="dropdown")
+        | #{range} &nbsp;
+        span.caret
+      ul.dropdown-menu
+        li: a(href="../threaded/#{encodeURIComponent(group)}") Threaded
+        li: a(href="../flat/#{encodeURIComponent(group)}") Flat
+  h2 #{group}&nbsp;
+    small Mailarchiv
 
 mixin mailattributes(mailHeader)
-  - if (mailHeader.memberNickname != null)
-    a(href="/members/" + encodeURIComponent(mailHeader.memberNickname)) #{mailHeader.displayedSenderName}
+  - if (mailHeader.memberNickname() != null)
+    a(href="/members/" + encodeURIComponent(mailHeader.memberNickname())) #{mailHeader.displayedSenderName()}
   - else
-    | #{mailHeader.displayedSenderName}
+    | #{mailHeader.displayedSenderName()}
   | , #{mailHeader.displayedTime}
 
 mixin mailIndex(mailHeaders)
-  -if(typeof(mailHeaders) !== 'undefined')
+  if(typeof(mailHeaders) !== 'undefined')
     ul
       for mailHeader in mailHeaders
         li
-          a(href="../message?id=" + encodeURIComponent(mailHeader.id)) #{mailHeader.subject} 
+          div(id="messageDetails" + mailHeader.timeUnix, tabindex="-1").modal.fade
+          a(data-toggle="modal", data-target="#messageDetails" + mailHeader.timeUnix, href="../../message/" + encodeURIComponent(mailHeader.id)) #{mailHeader.subject} 
           | (
           mixin mailattributes(mailHeader) 
           | )
-          mixin mailIndex(mailHeader.responses)
+          mixin mailIndex(mailHeader.sortedResponses())
