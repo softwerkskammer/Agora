@@ -94,4 +94,22 @@ describe('Mail', function () {
     expect(mail.memberId()).to.equal(null);
     done();
   });
+
+  it('sorts responses ascending', function (done) {
+    var mail = new Mail({
+      id: "Mail 1"
+    });
+    mail.responses = [
+      {timeUnix: 3},
+      {timeUnix: 2},
+      {timeUnix: 1}
+    ];
+
+    expect(mail.sortedResponses()).to.deep.equal([
+      {timeUnix: 1},
+      {timeUnix: 2},
+      {timeUnix: 3}
+    ]);
+    done();
+  });
 });
