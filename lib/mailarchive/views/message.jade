@@ -6,12 +6,12 @@ html
     .modal-content
       .modal-header
         button.close(type="button", data-dismiss="modal", aria-hidden="true") schließen&nbsp;&times
-        if (mail === null)
+        if (!mail)
           h3 Keine Mail vorhanden
         else
           h3 #{mail.subject}
             br
             small: mixin mailattributes(mail) 
       .modal-body
-        if (mail !== null)
+        if (!!mail)
           !{mail.getHtml()}
