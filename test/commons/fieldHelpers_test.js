@@ -147,6 +147,7 @@ describe('killHtmlHead', function () {
   });
 
   it('strips HTML <head></head> completely from text', function () {
+    expect(fieldHelpers.killHtmlHead('<head></head>')).to.equal('');
     expect(fieldHelpers.killHtmlHead('<head>bla</head>')).to.equal('');
     expect(fieldHelpers.killHtmlHead('123<head>bla</head>321')).to.equal('123321');
   });
@@ -158,12 +159,8 @@ describe('killHtmlHead', function () {
 
   it('strips HTML <head></head> completely from text even when text very long', function () {
     expect(fieldHelpers.killHtmlHead('123<head>\nbl\na</head>321 321 321 321 321 321 321 321 321 321 321 321 321 321 ' +
-      '321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 ' +
-      '321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 ' +
       '321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 '))
       .to.equal('123321 321 321 321 321 321 321 321 321 321 321 321 321 321 ' +
-        '321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 ' +
-        '321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 ' +
         '321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 ');
   });
 });
