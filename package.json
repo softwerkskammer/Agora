@@ -65,8 +65,7 @@
     "sinon": "~1.7.3",
     "grunt-contrib-qunit": "0.3.0",
     "blanket": "~1.1.5",
-    "travis-cov": "~0.2.4",
-    "grunt-exec": "~0.4.2"
+    "travis-cov": "~0.2.4"
   },
   "scripts": {
     "start": "node start",
