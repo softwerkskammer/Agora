@@ -28,7 +28,7 @@ describe('Groups and Members API (getUserWithHisGroups)', function () {
     done();
   });
 
-  it('returns null as member and no groups when there is no member for the given nickname', function (done) {
+  it('returns neither member nor groups when there is no member for the given nickname', function (done) {
     sinon.stub(membersAPI, 'getMember', function (nickname, callback) {
       callback(null, null);
     });
@@ -36,10 +36,9 @@ describe('Groups and Members API (getUserWithHisGroups)', function () {
       globalCallback(null, []);
     });
 
-    systemUnderTest.getUserWithHisGroups('nickname', function (err, member, subscribedLists) {
-      expect(member).to.be.null;
-      expect(subscribedLists).to.not.be.null;
-      expect(subscribedLists.length).to.equal(0);
+    systemUnderTest.getUserWithHisGroups('nickname', function (err, member, subscribedGroups) {
+      expect(!!member).to.be.false;
+      expect(!!subscribedGroups).to.be.false;
       done();
     });
   });
@@ -72,18 +71,18 @@ describe('Groups and Members API (getGroupAndMembersForList)', function () {
     done();
   });
 
-  it('returns null as group when there is no group and no sympa-list', function (done) {
+  it('returns no group when there is no group and no sympa-list', function (done) {
     sinon.stub(membersAPI, 'getMembersForEMails', function (member, callback) { callback(); });
     sinon.stub(groupsAPI, 'getSympaUsersOfList', function (err, callback) { callback(null, []); });
     sinon.stub(groupsAPI, 'getGroup', function (groupname, callback) { callback(null, null); });
 
     systemUnderTest.getGroupAndMembersForList('unbekannteListe', function (err, group) {
-      expect(group).to.be.null;
+      expect(!!group).to.be.false;
       done(err);
     });
   });
 
-  it('returns null as group when there is no group but a sympa-list', function (done) {
+  it('returns no group when there is no group but a sympa-list', function (done) {
     sinon.stub(groupsAPI, 'getSympaUsersOfList', function (err, callback) {
       callback(null, ['user1@mail1.com', 'user2@mail2.com']);
     });
@@ -93,7 +92,7 @@ describe('Groups and Members API (getGroupAndMembersForList)', function () {
     sinon.stub(groupsAPI, 'getGroup', function (groupname, callback) { callback(null, null); });
 
     systemUnderTest.getGroupAndMembersForList('sympaListWithoutGroup', function (err, group) {
-      expect(group).to.be.null;
+      expect(!!group).to.be.false;
       done(err);
     });
   });
@@ -143,22 +142,22 @@ describe('Groups and Members API (addMembersToGroup)', function () {
     done();
   });
 
-  it('returns null when the group is null', function (done) {
+  it('returns no group when the group is null', function (done) {
     sinon.stub(groupsAPI, 'getSympaUsersOfList', function () {});
     sinon.stub(membersAPI, 'getMembersForEMails', function () {});
 
     systemUnderTest.addMembersToGroup(null, function (err, group) {
-      expect(group).to.be.null;
+      expect(!!group).to.be.false;
       done(err);
     });
   });
 
-  it('returns undefined when the group is undefined', function (done) {
+  it('returns no group when the group is undefined', function (done) {
     sinon.stub(groupsAPI, 'getSympaUsersOfList', function () {});
     sinon.stub(membersAPI, 'getMembersForEMails', function () {});
 
     systemUnderTest.addMembersToGroup(undefined, function (err, group) {
-      expect(group).to.be.undefined;
+      expect(!!group).to.be.false;
       done(err);
     });
   });

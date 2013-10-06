@@ -11,7 +11,7 @@ var beans = require('../configureForTest').get('beans');
 var mailarchiveAPI = beans.get('mailarchiveAPI');
 var Mail = beans.get('archivedMail');
 var Member = beans.get('member');
-var member = new Member({id: 'id', nickname: 'nickname'});
+var member = new Member({id: 'ai di', nickname: 'nigg'});
 
 var app = beans.get('mailarchiveApp')(express());
 
@@ -42,16 +42,8 @@ describe('Mail content page', function () {
 
   it('shows html if message contains html', function (done) {
     var displayedMail = new Mail({
-      "timeUnix": 1364242214,
-      "from": {
-        "name": 'Heißen',
-        "address": 'no@mail.de'
-      },
       "html": "<div>Html message 1</div>",
-      "id": "<message1@nomail.com>",
-      "subject": 'Mail 1',
-      "text": 'Plain text message 1.\n',
-      "group": 'group'
+      "id": "<message1@nomail.com>"
     });
 
     var mailForId = sinonSandbox.stub(mailarchiveAPI, 'mailForId', function (id, callback) {callback(null, displayedMail); });
@@ -66,16 +58,8 @@ describe('Mail content page', function () {
 
   it('filters mail addresses and phone numbers from html', function (done) {
     var displayedMail = new Mail({
-      "timeUnix": 1364242214,
-      "from": {
-        "name": 'Heißen',
-        "address": 'no@mail.de'
-      },
       "html": '<div>Html message 1: mail@somewhere.org Tel: +49 (123) 45 67 89</div>',
-      "id": '<message1@nomail.com>',
-      "subject": 'Mail 1',
-      "text": 'Plain text message 1.\n',
-      "group": 'group'
+      "id": '<message1@nomail.com>'
     });
 
     var mailForId = sinonSandbox.stub(mailarchiveAPI, 'mailForId', function (id, callback) {callback(null, displayedMail); });
@@ -90,12 +74,7 @@ describe('Mail content page', function () {
 
   it('references sender member page if available', function (done) {
     var displayedMail = new Mail({
-      from: {name: 'Sender Name', id: 'sender ID'},
-      timeUnix: 0,
-      id: '<message1@nomail.com>',
-      subject: 'Mail 1',
-      group: 'group',
-      text: 'text'
+      id: '<message1@nomail.com>'
     });
     displayedMail.member = member;
 
@@ -104,7 +83,7 @@ describe('Mail content page', function () {
     request(app)
       .get('/message/mailID')
       .expect(200)
-      .expect(/href="\/members\/nickname"/, function (err) {
+      .expect(/href="\/members\/nigg"/, function (err) {
         expect(mailForId.calledOnce).to.be.ok;
         done(err);
       });
@@ -201,10 +180,7 @@ describe('Mail index page', function () {
 
   it('references sender member page if available', function (done) {
     var displayedMailHeader = new Mail({
-      id: 'Mail 1',
-      from: {name: 'Sender Name', id: 'sender ID'},
-      subject: 'Mail 1',
-      group: 'group'
+      id: 'Mail 1'
     });
     stubMailHeaders([displayedMailHeader]);
     displayedMailHeader.member = member;
@@ -212,7 +188,7 @@ describe('Mail index page', function () {
     request(app)
       .get('/list/threaded/group')
       .expect(200)
-      .expect(/href="\/members\/nickname"/, function (err) {
+      .expect(/href="\/members\/nigg"/, function (err) {
         done(err);
       });
   });
@@ -230,7 +206,7 @@ describe('Mail index page', function () {
     request(app)
       .get('/list/threaded/group')
       .expect(200)
-      .expect(/href="\/members\/nickname"/, function (err) {
+      .expect(/href="\/members\/nigg"/, function (err) {
         done(err);
       });
   });

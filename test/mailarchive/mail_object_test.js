@@ -48,12 +48,6 @@ describe('Mail', function () {
     delete mailWithFrom.member;
   });
 
-  it('uses the display name of a real member if available', function () {
-    mailWithFrom.member = member;
-    expect(mailWithFrom.displayedSenderName()).to.equal('Hans Becker');
-    delete mailWithFrom.member;
-  });
-
   it('has a nickname of "null" if no member', function () {
     expect(mailWithFrom.memberNickname()).to.be.null;
   });
