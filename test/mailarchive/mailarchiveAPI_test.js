@@ -18,7 +18,7 @@ describe('Mailarchive', function () {
     done();
   });
 
-  it('calls persistence.listByFieldWithOptions from mailHeaders ' +
+  it('calls persistence.listByField from mailHeaders ' +
     'and passes on the given callback', function (done) {
     var sampleMail1 = new Mail({ id: 'Mail 1', subject: 'Mail 1' });
     var sampleMail2 = new Mail({ id: 'Mail 2', subject: 'Mail 2' });
@@ -30,8 +30,6 @@ describe('Mailarchive', function () {
     mailarchiveAPI.unthreadedMails('group', function (err, mails) {
       expect(listByField.calledWith({group: 'group'}, {timeUnix: -1})).to.be.true;
       expect(err).to.be.null;
-      sampleMail1.threadingLevel = 0;
-      sampleMail2.threadingLevel = 0;
       expect(mails).to.deep.equal(sampleMailList);
       done(err);
     });
