@@ -22,52 +22,56 @@ module.exports = function (grunt) {
       files: ['<%= jshint.files %>', '**/*.jade'],
       tasks: ['default']
     },
-    'mocha-hack': {
-      options: {
-        globals: ['should'],
-        timeout: 5000,
-        ignoreLeaks: false,
-        ui: 'bdd',
-        reporter: 'spec'
+    mochaTest: {
+      test: {
+        options: {
+          reporter: 'spec',
+          // Require blanket wrapper here to instrument other required
+          // files on the fly. 
+          //
+          // NB. We cannot require blanket directly as it
+          // detects that we are not running mocha cli and loads differently.
+          //
+          // NNB. As mocha is 'clever' enough to only run the tests once for
+          // each file the following coverage task does not actually run any
+          // tests which is why the coverage instrumentation has to be done here
+          require: 'blanket'
+        },
+        src: ['test/**/*.js']
       },
-
-      all: { src: ['test/**/*.js']}
+      coverage: {
+        options: {
+          reporter: 'html-cov',
+          // use the quiet flag to suppress the mocha console output
+          quiet: true,
+          // specify a destination file to capture the mocha
+          // output (the quiet option does not suppress this)
+          captureFile: 'coverage.html'
+        },
+        src: ['test/**/*.js']
+      },
+      'travis-cov': {
+        options: {
+          reporter: 'travis-cov'
+        },
+        src: ['test/**/*.js']
+      }
     },
     qunit: {
       files: ['frontendtests/*.html']
-    },
-    exec: {
-      mkGenDocsDir: {
-        command: 'mkdir -p docs/generated'
-      },
-      coverage: {
-        command: 'mocha --require blanket --reporter html-cov --slow 0 test/**/*.js > docs/generated/coverage.html'
-      }
-    },
-    clean: {
-      tests: {
-        src: ["docs"]
-      }
     }
   });
 
   // These plugins provide necessary tasks.
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-mocha-hack');
+  grunt.loadNpmTasks('grunt-mocha-test');
   grunt.loadNpmTasks('grunt-contrib-qunit');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-exec');
 
-
   // Default task.
-  grunt.registerTask('default', ['jshint', 'mocha-hack', 'qunit']);
-
-  // Dev task
-  grunt.registerTask('dev', ['jshint', 'mocha-hack', 'qunit']);
-
-  // Coverage tasks
-  grunt.registerTask('coverage', ['clean', 'exec:mkGenDocsDir', 'exec:coverage']);
+  grunt.registerTask('default', ['jshint', 'qunit', 'mochaTest']);
 
   // Travis-CI task
   grunt.registerTask('travis', ['default']);

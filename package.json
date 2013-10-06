@@ -58,16 +58,15 @@
     "grunt": "~0.4.1",
     "grunt-contrib-jshint": "~0.6.4",
     "grunt-contrib-watch": "~0.5.3",
-    "grunt-mocha-hack": "~0.1.0",
-    "grunt-contrib-clean": "~0.4",
-    "chai": "~1.5.0",
-    "request": "~2.16.6",
-    "supertest": "~0.5",
-    "sinon": "~1.6.0",
-    "grunt-contrib-qunit": "0.2.1",
-    "blanket": "~1.1.4",
-    "travis-cov": "~0.2",
-    "grunt-exec": "~0.4.0"
+    "grunt-mocha-test": "~0.7.0",
+    "chai": "~1.8.0",
+    "request": "~2.27.x",
+    "supertest": "~0.8",
+    "sinon": "~1.7.3",
+    "grunt-contrib-qunit": "0.3.0",
+    "blanket": "~1.1.5",
+    "travis-cov": "~0.2.4",
+    "grunt-exec": "~0.4.2"
   },
   "scripts": {
     "start": "node start",
@@ -77,7 +76,7 @@
       "onlyCwd": true,
       "data-cover-flags": { "branchTracking": true }
     },
-    "travis-cov": { "threshold": 67 },
+    "travis-cov": { "threshold": 66 },
     "prepublish": "sh ./prepublish.sh"
   }
 }
