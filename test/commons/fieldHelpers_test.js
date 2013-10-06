@@ -138,6 +138,36 @@ describe('Replace long numbers from text', function () {
   });
 });
 
+describe('killHtmlHead', function () {
+
+  it('does not change text not containing a html head element', function () {
+    expect(fieldHelpers.killHtmlHead(null)).to.equal(null);
+    expect(fieldHelpers.killHtmlHead('')).to.equal('');
+    expect(fieldHelpers.killHtmlHead('<html>bla</html>')).to.equal('<html>bla</html>');
+  });
+
+  it('strips HTML <head></head> completely from text', function () {
+    expect(fieldHelpers.killHtmlHead('<head>bla</head>')).to.equal('');
+    expect(fieldHelpers.killHtmlHead('123<head>bla</head>321')).to.equal('123321');
+  });
+
+  it('strips HTML <head></head> completely from text even when containing newlines', function () {
+    expect(fieldHelpers.killHtmlHead('<head>bl\na</head>')).to.equal('');
+    expect(fieldHelpers.killHtmlHead('123<head>\nbl\na</head>321')).to.equal('123321');
+  });
+
+  it('strips HTML <head></head> completely from text even when text very long', function () {
+    expect(fieldHelpers.killHtmlHead('123<head>\nbl\na</head>321 321 321 321 321 321 321 321 321 321 321 321 321 321 ' +
+      '321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 ' +
+      '321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 ' +
+      '321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 '))
+      .to.equal('123321 321 321 321 321 321 321 321 321 321 321 321 321 321 ' +
+        '321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 ' +
+        '321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 ' +
+        '321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 ');
+  });
+});
+
 describe('readableDate function', function () {
 
   it('converts a unix timestamp to a German Date', function () {
