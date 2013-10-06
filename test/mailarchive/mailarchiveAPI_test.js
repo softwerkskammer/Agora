@@ -12,39 +12,59 @@ var mailarchiveAPI = beans.get('mailarchiveAPI');
 var Mail = beans.get('archivedMail');
 
 describe('Mailarchive', function () {
+  var sampleMail1 = new Mail({ id: 'Mail 1', subject: 'Mail 1' });
+  var sampleMail2 = new Mail({ id: 'Mail 2', subject: 'Mail 2' });
+  var memberID = 'memberID';
+  var sampleMail3 = new Mail({ id: 'Mail 3', subject: 'Mail 3', from: {id: memberID} });
+  var sampleMember = {id: 'id'};
+  var sampleMailList = [sampleMail1, sampleMail2];
+  var listByField;
+  var getById;
+  var idOfMailWithMember = 'id2';
+
+  beforeEach(function (done) {
+    sinonSandbox.stub(membersAPI, 'getMemberForId',
+      function (id, callback) {
+        if (id === memberID) { return callback(null, sampleMember); }
+        callback(null, null);
+      });
+
+    getById = sinonSandbox.stub(persistence, 'getById', function (id, callback) {
+      if (id === idOfMailWithMember) { return callback(null, sampleMail3); }
+      callback(null, sampleMail1);
+    });
+
+    listByField = sinonSandbox.stub(persistence, 'listByField', function (searchObject, sortOrder, callback) {
+      callback(null, sampleMailList);
+    });
+    done();
+  });
 
   afterEach(function (done) {
     sinonSandbox.restore();
     done();
   });
 
-  it('calls persistence.listByField from mailHeaders ' +
-    'and passes on the given callback', function (done) {
-    var sampleMail1 = new Mail({ id: 'Mail 1', subject: 'Mail 1' });
-    var sampleMail2 = new Mail({ id: 'Mail 2', subject: 'Mail 2' });
-    var sampleMailList = [sampleMail1, sampleMail2];
-    var listByField = sinonSandbox.stub(persistence, 'listByField');
-    listByField.callsArgWith(2, null, sampleMailList);
-    sinonSandbox.stub(membersAPI, 'getMemberForId', function (id, callback) {callback(null, null); });
-
+  it('calls persistence.listByField from mailHeaders and passes on the given callback', function (done) {
     mailarchiveAPI.unthreadedMails('group', function (err, mails) {
       expect(listByField.calledWith({group: 'group'}, {timeUnix: -1})).to.be.true;
-      expect(err).to.be.null;
       expect(mails).to.deep.equal(sampleMailList);
       done(err);
     });
   });
 
   it('calls persistence.getById from mailForId and passes on the given callback', function (done) {
-    var sampleMail1 = new Mail({ id: 'Mail 1', subject: 'Mail 1' });
-    var getById = sinonSandbox.stub(persistence, 'getById');
-    sinonSandbox.stub(membersAPI, 'getMemberForId', function (ids, callback) {callback(null, null); });
-    getById.callsArgWith(1, null, sampleMail1);
-
     mailarchiveAPI.mailForId('id', function (err, mail) {
       expect(getById.calledWith('id')).to.be.true;
-      expect(err).to.be.null;
       expect(mail).to.deep.equal(sampleMail1);
+      done(err);
+    });
+  });
+
+  it('adds member data to the mail', function (done) {
+    mailarchiveAPI.mailForId(idOfMailWithMember, function (err, mail) {
+      expect(getById.calledWith(idOfMailWithMember)).to.be.true;
+      expect(mail.member).to.deep.equal(sampleMember);
       done(err);
     });
   });

@@ -11,14 +11,14 @@ mixin pageHeader(group, range)
     small Mailarchiv
 
 mixin mailattributes(mailHeader)
-  - if (mailHeader.memberNickname() != null)
+  if (!!mailHeader.memberNickname())
     a(href="/members/" + encodeURIComponent(mailHeader.memberNickname())) #{mailHeader.displayedSenderName()}
-  - else
+  else
     | #{mailHeader.displayedSenderName()}
   | , #{mailHeader.displayedTime}
 
 mixin mailIndex(mailHeaders)
-  if(typeof(mailHeaders) !== 'undefined')
+  if(!!mailHeaders)
     ul
       for mailHeader in mailHeaders
         li

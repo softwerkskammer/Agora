@@ -39,10 +39,7 @@ block content
           mixin text('profession', 'Beruf', member)
           mixin text('interests', 'Interessenschwerpunkte', member)
           mixin text('site', 'Website / Blog', member)
-          if !user.member
-            mixin text('reference', 'Wie ich von der Softwerkskammer erfahren habe', member)
-          else
-            mixin hidden('reference', member)
+          mixin text('reference', 'Wie ich von der Softwerkskammer erfahren habe', member)
           if (user.member && user.member.isAdmin)
             mixin checkbox('isAdmin', 'Administrator', !!member.isAdmin)
       
