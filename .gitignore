@@ -21,3 +21,4 @@ test/tempbeans.json
 docs/generated
 
 npm-debug.log
+coverage.html
