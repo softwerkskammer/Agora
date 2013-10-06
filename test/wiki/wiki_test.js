@@ -16,11 +16,12 @@ describe('Wiki application', function () {
 
   var pageShow;
   var content = "Hallo, ich bin der Dateiinhalt";
+  var nonExistingPage = 'global/nonExisting';
   beforeEach(function (done) {
     pageShow = sinonSandbox.stub(wikiAPI, 'pageShow',
       function (completePageName, pageVersion, callback) {
-        if (completePageName === 'global/nonExisting') {
-          return callback({}, null);
+        if (completePageName === nonExistingPage) {
+          return callback(new Error());
         }
         callback(null, content);
       });
@@ -59,9 +60,9 @@ describe('Wiki application', function () {
     root.use(userMock);
     root.use('/', app);
     request(root)
-      .get('/global/nonExisting')
+      .get('/' + nonExistingPage)
       .expect(302)
-      .expect('Location', '/wiki/edit/global/nonExisting')
+      .expect('Location', '/wiki/edit/' + nonExistingPage)
       .end(function (err) {
         done(err);
       });
@@ -69,7 +70,7 @@ describe('Wiki application', function () {
 
   it('redirects to 404 page when the page does not exist yet and a user is not logged in', function (done) {
     request(app)
-      .get('/global/nonExisting')
+      .get('/' + nonExistingPage)
       .expect(404)
       .end(function (err) {
         done(err);
