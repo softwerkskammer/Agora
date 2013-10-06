@@ -75,7 +75,7 @@
       "onlyCwd": true,
       "data-cover-flags": { "branchTracking": true }
     },
-    "travis-cov": { "threshold": 66 },
+    "travis-cov": { "threshold": 64 },
     "prepublish": "sh ./prepublish.sh"
   }
 }
