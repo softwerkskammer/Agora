@@ -16,6 +16,9 @@
     <script src="../public/clientscripts/bootstrap-timepicker-patched.js"></script>
 
     <script src="../public/clientscripts/agora.js"></script>
+    <script src="../public/clientscripts/moment.js"></script>
+    <script src="../public/clientscripts/activityDateModel.js"></script>
+    <script src="../public/clientscripts/activityform-dateAdapter.js"></script>
     <script src="../public/clientscripts/check-activityform.js"></script>
 
     <script src="lib/qunit/qunit-1.11.0.js"></script>
@@ -41,7 +44,15 @@
         </div>
         <div>
           <label>Zeit:</label>
-          <input id="startTime" type="text" name="startTime">
+          <input id="startTime" class="timepicker" type="text" name="startTime">
+        </div>
+        <div>
+          <label>Datum:</label>
+          <input id="endDate" class="datepicker" type="text" name="endDate">
+        </div>
+        <div>
+          <label>Zeit:</label>
+          <input id="endTime" class="timepicker" type="text" name="endTime">
         </div>
         <div>
           <label>SWK-Gruppe:</label>
