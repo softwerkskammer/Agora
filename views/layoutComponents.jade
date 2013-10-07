@@ -1,61 +1,79 @@
-mixin administrationMenu(top)
+mixin administrationMenu()
   if ((typeof(user) !== 'undefined') && user.member && user.member.isAdmin)
-    ul(class="nav #{top ? "visible-desktop" : "hidden-desktop"}")
-      li#administration.dropdown
-        a.dropdown-toggle(href="#", data-toggle="dropdown")
-          i.icon-dashboard
-          | &nbsp; Verwaltung
-          b.caret
-        ul.dropdown-menu
-          li: a(href="/administration/announcementTable")
-            i.icon-globe
-            | &nbsp;Nachrichten
-          li: a(href="/administration/activityTable")
-            i.icon-calendar
-            | &nbsp;Aktivitäten
-          li: a(href="/administration/groupTable")
-            i.icon-group
-            | &nbsp;Gruppen
-          li: a(href="/administration/memberTable")
-            i.icon-user
-            | &nbsp;Mitglieder
-          li: a(href="/administration/colors")
-            i.icon-eye-open
-            | &nbsp;Farben
+    li#administration.dropdown.nav
+      a.dropdown-toggle(href="#", data-toggle="dropdown")
+        i.icon-dashboard
+        | &nbsp;Verwaltung&nbsp;
+        b.caret
+      ul.dropdown-menu
+        li: a(href="/administration/announcementTable")
+          i.icon-globe
+          | &nbsp;Nachrichten
+        li: a(href="/administration/activityTable")
+          i.icon-calendar
+          | &nbsp;Aktivitäten
+        li: a(href="/administration/groupTable")
+          i.icon-group
+          | &nbsp;Gruppen
+        li: a(href="/administration/memberTable")
+          i.icon-user
+          | &nbsp;Mitglieder
+        li: a(href="/administration/colors")
+          i.icon-eye-open
+          | &nbsp;Farben
 
-mixin loginMenu
-    ul.nav.pull-right
-      if (typeof(user) !== 'undefined' && user.member)
-        li.dropdown
-          a.dropdown-toggle(href="#", data-toggle="dropdown") #{user.member.nickname} 
-            i.icon-info-sign
-            b.caret
-          ul.dropdown-menu
-            li: a(href="/members/edit/#{encodeURIComponent(user.member.nickname)}")
-              i.icon-edit
-              | &nbsp;Profil bearbeiten
-            li: a(href="/auth/logout")
-              i.icon-signout
-              | &nbsp;Abmelden
-            li: a(href="https://github.com/softwerkskammer/NeuePlattform-Implementierung/issues", target="_blank")
-              i.icon-ambulance
-              | &nbsp;Einen Bug melden
-            li: include ../version
-      else
-        li: a.navbar-link(data-toggle="modal", href="#login")
-          i.icon-signin
-          | &nbsp;Anmelden
+mixin loginMenu(forInline)
+  if (typeof(user) !== 'undefined' && user.member)
+    li.dropdown(class="#{forInline ? 'visible-xs' : ''}")
+      a.dropdown-toggle(href="#", data-toggle="dropdown")
+        i.icon-info-sign&nbsp;
+        | #{user.member.nickname} 
+        b.caret
+      ul.dropdown-menu
+        li: a(href="/members/edit/#{encodeURIComponent(user.member.nickname)}")
+          i.icon-edit
+          | &nbsp;Profil bearbeiten
+        li: a(href="/auth/logout")
+          i.icon-signout
+          | &nbsp;Abmelden
+        li: a(href="https://github.com/softwerkskammer/NeuePlattform-Implementierung/issues", target="_blank")
+          i.icon-ambulance
+          | &nbsp;Einen Bug melden
+        li: include ../version
+  else
+    li: a.navbar-link(data-toggle="modal", href="#login", class="#{forInline ? 'visible-xs' : ''}")
+      i.icon-signin
+      | &nbsp;Anmelden
+
+mixin navbar-inside
+  .navbar-header
+    a.btn.btn-default.navbar-toggle(data-toggle="collapse", data-target=".collapse-btom")
+      span.sr-only Toggle
+      span.icon-bar
+      span.icon-bar
+      span.icon-bar
+  .navbar-collapse.collapse.collapse-btom
+    ul.nav.navbar-nav.pull-right
+      mixin administrationMenu()
+      li: a(href="/help.html") Tipps & FAQs
+      li: a(href="/credits.html") Credits
+      li: a(href="/impressum.html") Impressum
+
 mixin bottomNavbar
-  .navbar.navbar-fixed-bottom.no-print
-    .navbar-inner
-      ul.nav.pull-right
-        mixin administrationMenu(false)
-        li: a(href="/help.html") Tipps & FAQs
-        li: a(href="/credits.html") Credits
-        li: a(href="/impressum.html") Impressum
+  .navbar.navbar-default.navbar-bottom.hidden-print.visible-xs
+    mixin navbar-inside
+  .navbar.navbar-default.navbar-fixed-bottom.hidden-print.hidden-xs
+    mixin navbar-inside
 
 mixin externalUrl(url, text)
   a(href=url, target="_blank")
     i.icon-external-link
     | &nbsp;#{text}
 
+mixin notificationsBlock(notificationmessage)
+  #{notificationmessage.kill()}
+  #notifications(class="alert alert-block #{notificationmessage.type}")
+    button.close(type="button", data-dismiss="alert")&times;
+    h4 #{notificationmessage.title}
+    | #{notificationmessage.text}
+    

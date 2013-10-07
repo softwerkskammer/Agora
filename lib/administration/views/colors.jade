@@ -1,44 +1,57 @@
 extends ../../../views/layout
 
-include ../../../views/editableTableComponents
-
+mixin colorPickerForTable(id, name, object)
+  .form-group
+    label.col-md-6.control-label(for="color#{id}") #{id}:
+    #color.col-md-6.input-group.color(id="color#{id}", data-color="#{object[name]}", data-color-format="hex")
+      input.form-control(id="colorText#{id}", type="text", name=id, value=object[name])
+      span.input-group-addon: i(style="background-color: #{object[name]}") &nbsp;&nbsp;&nbsp;&nbsp;
+    script.
+      $("#color#{id}").colorpicker();
+      $("#colorText#{id}").on("change", function (event) {
+        $("#color#{id}").colorpicker("setValue", event.target.value);
+      });
+      $("#colorText#{id}").on("keyup", function (event) {
+        $("#color#{id}").colorpicker("setValue", event.target.value);
+      });
 
 block title
   | Farben
 
-block scripts
-  script(src="/clientscripts/utilities-for-editables.js")
-
 block content
-  .row-fluid
-    .span12
+  .row
+    .col-md-12
       .page-header
+        .btn-group.pull-right
+          - if (typeof(user) !== 'undefined' && user.member.isAdmin)
+            a.pull-right.btn.btn-default(data-toggle="modal", href="#newcolor", title="Neue Farbe"): i.icon-file
         h2 Verwaltung
           small  Farben
-          - if (typeof(user) !== 'undefined' && user.member.isAdmin)
-            a.pull-right.btn(data-toggle="modal", href="#newcolor", title="Neue Farbe"): i.icon-file
-  .row-fluid
-    form.form-horizontal(action='/administration/submitColors', method='post')
-      for color in colors
-          mixin colorPickerForTable(color.id, 'color', color)
-      button.btn.btn-primary.pull-right(type="submit") Speichern
+  .row
+    .col-md-8
+      form.form-horizontal(action='/administration/submitColors', method='post')
+        for color in colors
+            mixin colorPickerForTable(color.id, 'color', color)
+        button.btn.btn-primary.pull-right(type="submit") Speichern
 
   form(id='newcolorform', action='/administration/submitNewColor', method='post')
     fieldset
-    #newcolor.modal.hide.fade
-      .modal-header
-        button.close(type="button", data-dismiss="modal", aria-hidden="true") &times;
-        h3 Neue Farbe
-      .modal-body
-        .row-fluid
-          .span12
-            .control-group
-              label(class="control-label", for='id') Name (keine Leerzeichen!):
-              input(id='id', class="input-block-level input-xlarge", type='text', name='id')
-            input(id='color', type="hidden", name='color', value='#9c4141')
-      .modal-footer
-        button.btn.btn-primary(type="submit") Anlegen
-  script
+    #newcolor.modal.fade
+      .modal-dialog
+        .modal-content
+          .modal-header
+            button.close(type="button", data-dismiss="modal", aria-hidden="true") &times;
+            h3 Neue Farbe
+          .modal-body
+            .row
+              .col-md-12
+                .control-group
+                  label(class="control-label", for='id') Name (keine Leerzeichen!):
+                  input(id='id', class="input-block-level input-xlarge", type='text', name='id')
+                input(id='color', type="hidden", name='color', value='#9c4141')
+          .modal-footer
+            button.btn.btn-primary(type="submit") Anlegen
+  script.
     $('#newcolor').on('shown', function () {
       $('#id').focus();
     })

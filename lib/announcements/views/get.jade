@@ -3,19 +3,20 @@ block title
   | #{announcement.title}
 
 block content
-  .row-fluid
-    .span12
+  .row
+    .col-md-12
       .page-header
+        .btn-group.pull-right
+          if (typeof(user) !== 'undefined' && user.member.isAdmin)
+            a.btn.btn-default(href="/announcements/edit/#{encodeURIComponent(announcement.url)}", title="Bearbeiten"): i.icon-edit
         h2 #{announcement.title}&nbsp;
           small #{announcement.fromDate()}
-          if (typeof(user) !== 'undefined' && user.member.isAdmin)
-            a.pull-right.btn(href="/announcements/edit/#{encodeURIComponent(announcement.url)}", title="Bearbeiten"): i.icon-edit
-      .row-fluid
-        .span8
+      .row
+        .col-md-8
           !{announcement.messageHTML()}
           p
             em
               if ('automatisch' === announcement.authorname)
                 | #{announcement.authorname}
               else
-                a(href="/members/#{announcement.authorname}") #{announcement.authorname}
+                a(href="/members/#{encodeURIComponent(announcement.authorname)}") #{announcement.authorname}

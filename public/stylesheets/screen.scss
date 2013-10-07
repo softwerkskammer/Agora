@@ -1,9 +1,11 @@
-@import "vendor/bootstrap";
-@import "vendor/bootstrap-responsive";
-@import "vendor/bootstrap-editable";
+@import "vendor/bootstrap.min";
+@import "vendor/datepicker";
 @import "vendor/bootstrap-timepicker";
+@import "vendor/bootstrap-markdown.min";
 @import "vendor/font-awesome.min";
 @import "vendor/fullcalendar";
+@import "vendor/bootstrap-fullcalendar";
 @import "vendor/colorpicker";
+@import "vendor/shCoreDefault";
+@import "vendor/jquery.dataTables";
 @import "partials/agora";
-@import "partials/swipe";

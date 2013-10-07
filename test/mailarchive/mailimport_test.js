@@ -5,19 +5,19 @@ var sinon = require('sinon');
 var sinonSandbox = sinon.sandbox.create();
 var moment = require('moment-timezone');
 
-var conf = require('../configureForTest');
-var membersAPI = conf.get('beans').get('membersAPI');
-var Member = conf.get('beans').get('member');
+var beans = require('../configureForTest').get('beans');
+var membersAPI = beans.get('membersAPI');
+var Member = beans.get('member');
 var dummymember = new Member({sessionUser: {identifier: 'hada'}});
 
 var mailimport = require('../../lib/mailarchive/importMails.js');
 
-var fileWithTextAndHtml = 'test/mailarchive/testfiles/mailWithTextAndHtml',
-  fileWithTextOnlyWithoutSenderName = 'test/mailarchive/testfiles/mailWithTextOnly',
-  fileWithoutDate = 'test/mailarchive/testfiles/mailWithoutDate',
-  fileWithReferences = 'test/mailarchive/testfiles/mailWithReferences',
-  fileWithInReplyTo = 'test/mailarchive/testfiles/mailWithInReplyTo',
-  fileWithoutMessageId = 'test/mailarchive/testfiles/mailWithoutMessageID';
+var fileWithTextAndHtml = 'test/mailarchive/testfiles/mailWithTextAndHtml';
+var fileWithTextOnlyWithoutSenderName = 'test/mailarchive/testfiles/mailWithTextOnly';
+var fileWithoutDate = 'test/mailarchive/testfiles/mailWithoutDate';
+var fileWithReferences = 'test/mailarchive/testfiles/mailWithReferences';
+var fileWithInReplyTo = 'test/mailarchive/testfiles/mailWithInReplyTo';
+var fileWithoutMessageId = 'test/mailarchive/testfiles/mailWithoutMessageID';
 
 describe('Import of mails from files with mime messages', function () {
   beforeEach(function (done) {
@@ -132,6 +132,5 @@ describe('Import of mails from files with mime messages', function () {
       done();
     });
   });
-
 
 });

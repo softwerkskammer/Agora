@@ -3,7 +3,7 @@ extends ../layout
 block title
   | Validation Error
 block content
-  .span12
+  .col-md-12
     .page-header
       h2 Fehlgeschlagen
         small  Validierung
@@ -12,7 +12,7 @@ block content
       for error in errors
         li #{error}
     p
-      a.btn(href="javascript:history.back()", type="cancel") Zurück
+      a.btn.btn-default(href="javascript:history.back()") Zurück
 
 
       

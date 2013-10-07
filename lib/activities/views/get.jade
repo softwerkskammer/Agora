@@ -4,56 +4,64 @@ include ../../../views/googlemaps-component
 include ../../../views/formComponents
 
 block title
-  | Aktivitäten
+  | #{activity.title} - Aktivitäten
+
+block opengraph
+  meta(property="og:description", content!=activity.descriptionPlain().substring(0,500))
+  meta(property="og:title", content=activity.title)
 
 block content
-  .row-fluid
-    .span12
+  .row
+    .col-md-12
       .page-header
-        h2 #{activity.title} <br> 
+        .btn-group.pull-right
+          a.btn.btn-default(href="/activities/ical/#{encodeURIComponent(activity.url)}", title="Für Kalender exportieren"): i.icon-calendar
+          a.btn.btn-default(href="/mailsender/invitation/#{encodeURIComponent(activity.url)}", title="Einladung versenden"): i.icon-envelope
+          a.btn.btn-default(href="/activities/newLike/#{encodeURIComponent(activity.url)}", title="Neu auf Basis dieser Aktivität"): i.icon-copy
+          if (typeof(user) !== 'undefined' && user.member.isAdmin)
+            a.btn.btn-default(href="/activities/edit/#{encodeURIComponent(activity.url)}", title="Bearbeiten"): i.icon-edit
+        h2 #{activity.title}
+          br
           small #{activity.startDate()} (#{activity.startTime()}
             if (activity.endDate() && activity.endDate() !== activity.startDate())
               |  Uhr) - #{activity.endDate()} (#{activity.endTime()} Uhr)
-            else (activity.endTime())
+            else 
               |  - #{activity.endTime()} Uhr)
-          if (typeof(user) !== 'undefined' && user.member.isAdmin)
-            a.pull-right.btn(href="/activities/edit/#{encodeURIComponent(activity.url)}", title="Bearbeiten"): i.icon-edit
-            a.pull-right.btn(href="/mailsender/invitation/#{encodeURIComponent(activity.url)}", title="Einladung versenden"): i.icon-envelope
-            a.pull-right.btn(href="/activities/newLike/#{encodeURIComponent(activity.url)}", title="Neu auf Basis dieser Aktivität"): i.icon-copy
-            a.pull-right.btn(href="/activities/ical/#{encodeURIComponent(activity.url)}", title="In Kalender importieren"): i.icon-calendar
-  .row-fluid
-    .span8
+  .row
+    .col-md-12
       !{activity.descriptionHTML()}
       hr
+  .row
+    .col-md-6
       h3 Adresse:
       p #{activity.location}
-      h4 Wegbeschreibung: 
-      !{activity.directionHTML()}
+      if (activity.hasDirection())
+        h4 Wegbeschreibung: 
+        !{activity.directionHTML()}
       hr
-      div.no-print
+      div.hidden-print
+        p Bislang
+          if (visitors.length === 0)
+            |  gibt es keine Teinahmezusagen.
+          else if (visitors.length === 1)
+            |  hat ein Mitglied seine Teilnahme zugesagt.
+          else
+            |  haben #{visitors.length} Mitglieder ihre Teilnahme zugesagt.
         if (typeof(user) !== 'undefined' && user.member)
-          h4 Zugesagt haben:
-          mixin memberlist(visitors)
           if (visitors.length > 0 && activity.registeredMembers.indexOf(user.member.id) > -1)
             a.btn.btn-primary(href="unsubscribe/#{encodeURIComponent(activity.url)}") Ich kann doch nicht…
           else
             a.btn.btn-primary(href="subscribe/#{encodeURIComponent(activity.url)}") Ich bin dabei!
-        else
-          p Bislang
-            if (visitors.length === 0)
-              |  gibt es keine Teinahmezusagen.
-            else if (visitors.length === 1)
-              |  hat ein Mitglied seine Teilnahme zugesagt.
-            else
-              |  haben #{visitors.length} Mitglieder ihre Teilnahme zugesagt.
-        
-      hr
-      p Veranstaltet von der Gruppe: #{activity.groupName(groups)}
-    .span4
+          h4 Zugesagt haben:
+          mixin memberlist(visitors)
+
+      hr.hidden-print
+      p.hidden-print Veranstaltet von der Gruppe: #{activity.groupName(groups)}
+    .col-md-6
       mixin map(activity.location, '100%', '450px')
 
 block scripts
-  script
+  script.
     $(document).ready(function () {
       $('#calendar').fullCalendar('select', $.fullCalendar.parseDate(#{activity.startMoment().unix()}), $.fullCalendar.parseDate(#{activity.endMoment().unix()}), true);
     });

@@ -1,52 +1,58 @@
 extends ../../../views/layout
 
-include ../../../views/editableTableComponents
+block scripts
+  script(src="/clientscripts/jquery.dataTables.min.js")
+  script.
+    $(document).ready(function() {
+      $("#activitytable").dataTable({
+        "oLanguage": {
+          "sUrl": "/clientscripts/dataTables.german.txt"
+        },
+        "aoColumns": [
+          { "bSortable" : false }, null, null, { "sType": "date-eu" }, { "sType": "date-eu" }, null, null, null, null
+        ],
+        "bPaginate": false,
+        "bAutoWidth": false,
+        "aaSorting": [[ 1, "asc" ]],
+        "bStateSave": true
+      });
+      $('.tooltiplabel').each(function(each) {$(this).popover()});
+    });
 
 block title
   | Übersicht der Gruppen
 
-block scripts
-  script(src="/clientscripts/utilities-for-editables.js")
-
 block content
-  .row-fluid
-    .span12
+  .row
+    .col-md-12
       .page-header
         h2 Verwaltung
           small  Aktivitäten  
-          - if (typeof(user) !== 'undefined' && user.member.isAdmin)
-            a.pull-right.btn(href="/activities/new/", title="Neue Aktivität"): i.icon-file
-  .row-fluid
-    p Bitte benutze diese Verwaltungspages nicht, um normale Editiervorgänge oder Neuanlagen vorzunehmen. Diese findest
-      | Du direkt auch auf den jeweiligen Seiten.
-    p Alternativ kannst Du auch auf das Symbol in der ersten Spalte klicken. Damit gelangst Du direkt auf die "Bearbeiten"-Seite
-    
-    table(class="span 12 table table-condensed table-hover table-striped", style="overflow: auto; max-height: 600px")
-      thead
-        tr
-          mixin tabHeadNarrow(1, 'Edit')
-          mixin tabHeadNarrow(1, 'Titel')
-          mixin tabHeadNarrow(1, 'Adress-Suffix')
-          mixin tabHeadNarrow(1, 'Startdatum')
-          mixin tabHeadNarrow(1, 'Startuhrzeit')
-          mixin tabHeadNarrow(1, 'Enddatum')
-          mixin tabHeadNarrow(1, 'Enduhrzeit')
-          mixin tabHeadNarrow(1, 'Veranstaltungsort')
-          mixin tabHeadNarrow(2, 'Beschreibung')
-          mixin tabHeadNarrow(1, 'Wegbeschreibung')
-          mixin tabHeadNarrow(1, 'Gruppe')
-      tbody
-        for activity in activities
-          tr
-            td(class="span1"): a.btn-small(href="/activities/edit/#{encodeURIComponent(activity.url)}"): i.icon-edit
-            mixin tabTextNarrow(1, activity, 'title', 'activityChanged', 'right')
-            mixin tabTextNarrow(1, activity, 'url', 'activityChanged')
-            mixin tabDateNarrowWithValue(1, activity, 'startDate', 'activityChanged', activity.startDate())
-            mixin tabTextNarrowWithValue(1, activity, 'startTime', 'activityChanged', activity.startTime())
-            mixin tabDateNarrowWithValue(1, activity, 'endDate', 'activityChanged', activity.endDate())
-            mixin tabTextNarrowWithValue(1, activity, 'endTime', 'activityChanged', activity.endTime())
-            mixin tabTextNarrow(1, activity, 'location', 'activityChanged')
-            mixin tabTextareaNarrow(2, activity, 'description', 'activityChanged')
-            mixin tabTextareaNarrow(1, activity, 'direction', 'activityChanged')
-            td.span1: .ellipsis.narrow #{activity.groupName(groups)}
-              
+  .row
+    .col-md-12
+      .panel.pre-scrollable
+        table.table.table-condensed.table-hover.table-striped#activitytable
+          thead
+            tr
+              th Edit
+              th Titel
+              th Adress-Suffix
+              th Start
+              th Ende
+              th Veranstaltungsort
+              th Beschreibung
+              th Wegbeschreibung
+              th Gruppe
+          tbody
+            for activity in activities
+              tr
+                td: a(href="/activities/edit/#{encodeURIComponent(activity.url)}"): i.icon-edit
+                td #{activity.title}
+                td #{activity.url}
+                td #{activity.startDate()}
+                td #{activity.endDate()}
+                td #{activity.location}
+                td.ellipsis: .tooltiplabel(data-toggle="hover", data-placement="auto top", data-html="true", data-content="#{activity.descriptionHTML()}", data-title="#{activity.title}"): #{activity.description}
+                td.ellipsis: .tooltiplabel(data-toggle="hover", data-placement="auto top", data-html="true", data-content="#{activity.directionHTML()}"): #{activity.direction}
+                td #{activity.groupName(groups)}
+                  

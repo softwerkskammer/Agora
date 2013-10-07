@@ -92,7 +92,7 @@ describe('Groups application', function () {
       .get('/groups/GroupA')
       .expect(200)
       .expect('Content-Type', /text\/html/)
-      .expect(/Gruppe A<\/title>/)
+      .expect(/<title>Gruppe A/)
       .expect(/Dies ist Gruppe A./)
       .expect(/Themengruppe/)
       .expect(/Mitglieder:/)

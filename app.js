@@ -67,6 +67,7 @@ module.exports = {
       app.use(conf.get('beans').get('expressViewHelper'));
       app.use(conf.get('beans').get('redirectRuleForNewUser'));
       app.use(conf.get('beans').get('announcementsInSidebar'));
+      app.use(conf.get('beans').get('wikiSubdirs'));
       app.use(app.router);
       app.use(express.static(path.join(__dirname, 'public')));
     });
@@ -80,6 +81,7 @@ module.exports = {
     useApp(app, 'mailsender', conf.get('beans').get('mailsenderApp'));
     useApp(app, 'auth', conf.get('beans').get('authenticationApp'));
     useApp(app, 'mailarchive', conf.get('beans').get('mailarchiveApp'));
+    useApp(app, 'wiki', conf.get('beans').get('wikiApp'));
 
     app.configure('development', function () {
       // Handle 404

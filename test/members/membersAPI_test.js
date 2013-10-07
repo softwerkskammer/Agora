@@ -26,7 +26,6 @@ describe('MembersAPI', function () {
     done();
   });
 
-
   it('rejects nicknames that are reserved for URLs', function (done) {
     expect(api.isReserved('edit')).to.be.true;
     expect(api.isReserved('eDit')).to.be.true;
@@ -66,5 +65,20 @@ describe('MembersAPI', function () {
       done();
     });
   });
+
+  it('rejects nicknames ".." and "."', function (done) {
+    expect(api.isReserved('..')).to.be.true;
+    expect(api.isReserved('.')).to.be.true;
+    done();
+  });
+
+  it('tolerates nicknames containing ".." and "."', function (done) {
+    expect(api.isReserved('a..')).to.be.false;
+    expect(api.isReserved('a.')).to.be.false;
+    expect(api.isReserved('..a')).to.be.false;
+    expect(api.isReserved('.a')).to.be.false;
+    done();
+  });
+
 });
 

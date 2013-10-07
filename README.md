@@ -7,7 +7,7 @@ There is a companion project where the feature backlog lives. Go to the issues i
 Weekly video hangout
 --------------------
 
-Every Friday at 21:00 Berlin Time: [https://plus.google.com/hangouts/_/ba8817214c2fdc3971b6851b930a8651f466fd8d](https://plus.google.com/hangouts/_/ba8817214c2fdc3971b6851b930a8651f466fd8d)
+Every Friday at 21:00 Berlin Time: [https://plus.google.com/hangouts/_/a0f33b1cd0f843df662d49e075d73f8284c2cbbc?authuser=0&hl=de](https://plus.google.com/hangouts/_/a0f33b1cd0f843df662d49e075d73f8284c2cbbc?authuser=0&hl=de)
 
 What this is about
 ==================
@@ -19,11 +19,11 @@ The site is currently German only.
 Current Build Status
 --------------------
 
-[![Build Status](https://travis-ci.org/softwerkskammer/NeuePlattform-Implementierung.png)](https://travis-ci.org/softwerkskammer/NeuePlattform-Implementierung)
+[![Build Status](https://travis-ci.org/softwerkskammer/Agora.png)](https://travis-ci.org/softwerkskammer/Agora)
 
 System requirements for installation
 --------------------
-It is a node.js project. Therefore you need node.js installed. We are currently using version 0.8 (you should use at least 0.8.19) and npm 1.2.
+It is a node.js project. Therefore you need node.js installed. You need version 0.8 (at least 0.8.19) and npm 1.2. **Important:** node.js version 0.10 does not work!
 
 Get it from [http://nodejs.org](http://nodejs.org)
 
@@ -54,6 +54,11 @@ Preparations for use
 * Install mongodb for you operating system from [http://www.mongodb.org/downloads](http://www.mongodb.org/downloads)
 * Start mongodb. If you only plan to use it for development, the default settings are ok. The app as well as the tests use these defaults if nothing different is configured.
 * (Optional) Instructions for authenticated use are [here](lib/persistence/README.md)
+
+The built-in wiki
+-----------------
+
+To set up the built in wiki follow [these instructions](lib/wiki/README.md) 
 
 Running the server
 ------------------
@@ -88,7 +93,7 @@ To run the style check (jshint) and the tests on every file change, use `grunt w
 
 Debugging the tests from IDE [Webstorm](http://www.jetbrains.com/webstorm/)
 ----------
-Follow this [instructions](http://codebetter.com/glennblock/2013/01/17/debugging-mocha-unit-tests-with-webstorm-step-by-step/)
+Follow these [instructions](http://codebetter.com/glennblock/2013/01/17/debugging-mocha-unit-tests-with-webstorm-step-by-step/)
 
 Editing the stylesheets
 -----------------------
@@ -98,4 +103,4 @@ We are working with [compass](http://compass-style.org/). Requires ruby (see web
 		compass compile
 If these run without problems, check the produced file screen.css inside the stylesheets directory.
 
-Only edit the scss-files inside the "partials" subfolder
+Only edit the scss-files inside the "partials" subfolder.

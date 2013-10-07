@@ -9,6 +9,8 @@ var port = 17126;
 var base_uri = "http://localhost:" + port;
 
 describe('Server started in different process', function () {
+  this.timeout(20000);
+
   var child;
 
   var waitForServerRunning = function (child, callback) {

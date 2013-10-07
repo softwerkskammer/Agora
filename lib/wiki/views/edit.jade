@@ -1,0 +1,24 @@
+extends ../../../views/layout
+
+include  ../../../views/formComponents
+
+block title
+  | #{pageName} : #{subdir} bearbeiten
+
+block content
+  form(action='/wiki/#{subdir}/#{pageName}', method='post')
+    fieldset
+      .row
+        .col-md-12
+          legend
+            | Wiki-Seite "#{pageName}" in Wiki "#{subdir}"&nbsp;
+            if page.content === ''
+              | anlegen
+            else 
+              | bearbeiten
+          mixin hightextarea('content', 'Inhalt', page)
+          mixin text('comment', 'Kommentar', page, 'Commit Message', 'no commit message')
+          mixin hidden('metadata', page)
+          input(id="subdir", type="hidden", name="subdir", value=subdir)
+          button.btn.btn-primary.pull-right(type="submit") Speichern
+          a.btn.btn-default.pull-right(href="javascript:history.back()", type="cancel") Zurück

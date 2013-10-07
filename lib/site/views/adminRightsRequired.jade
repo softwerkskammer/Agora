@@ -3,15 +3,15 @@ extends ../../../views/layout
 block title
   | Geschützter Bereich
 block content
-  .row-fluid
-    .span6
+  .row
+    .col-md-6
       h3 Um auf diese Seite zuzugreifen, musst Du Administrator sein!
       p Du wolltest auf eine Seite zugreifen, für die Du Administratorrechte brauchst.
       p Sollte dies ein Fehler in der Anwendung sein, bitten wir um 
         a(href="https://github.com/softwerkskammer/NeuePlattform-Implementierung/issues/") Rückmeldung.
       p Das Agora-Team bittet um Entschuldigung.
-      p: a.btn.pull-right.btn-primary(href="javascript:history.back()", type="cancel") Zurück
-    .span6
+      p: a.btn.pull-right.btn-primary(href="javascript:history.back()") Zurück
+    .col-md-6
       h3 Information
       p Die geschützte Seite war: <br> 
         | #{requestedPage}

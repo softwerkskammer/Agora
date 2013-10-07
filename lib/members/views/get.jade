@@ -3,23 +3,24 @@ extends ../../../views/layout
 include ../../../views/formComponents
 
 block title
-  | Profil für #{member.firstname} #{member.lastname}
+  | #{member.firstname} #{member.lastname} - Profil
 
 block content
-  .row-fluid
-    .span12
+  .row
+    .col-md-12
       .page-header
         h2
           | "#{member.nickname}"&nbsp;
+          .btn-group.pull-right
+            if (typeof(user) !== 'undefined' && (user.member.isAdmin || user.member.id === member.id))
+              a.btn.btn-default(href="/members/edit/#{encodeURIComponent(member.nickname)}"): i.icon-edit
           small
             if (member.isAdmin)
               | Admin
             else
               | Profilansicht
-          if (typeof(user) !== 'undefined' && (user.member.isAdmin || user.member.id === member.id))
-            a.pull-right.btn(href="/members/edit/#{encodeURIComponent(member.nickname)}"): i.icon-edit
-  .row-fluid
-    .span8
+  .row
+    .col-md-8
       p
         strong Vorname:
         |  #{member.firstname}
@@ -45,12 +46,12 @@ block content
           | #{member.site}
 
       p &nbsp;
-    .span4
+    .col-md-4
       p
         img(src=member.avatarUrl(200))
 
-  .row-fluid
-    .span12
+  .row
+    .col-md-12
       a.btn.btn-primary(href="/mailsender/contactMember/#{encodeURIComponent(member.nickname)}")
         i.icon-envelope
         | &nbsp;Eine Mail an #{member.firstname} #{member.lastname} senden

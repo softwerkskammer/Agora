@@ -81,7 +81,7 @@ describe('Announcement application', function () {
     request(app)
       .get('/' + url)
       .expect(200)
-      .expect(/&nbsp;<small>29.07.2013/)
+      .expect(/<small>29.07.2013/)
       .expect(/<h2>title/, function (err) {
         expect(getAnnouncement.calledWith(url)).to.be.true;
         done(err);
@@ -95,7 +95,7 @@ describe('Announcement application', function () {
     request(app)
       .get('/edit/' + url)
       .expect(200)
-      .expect(/<input id="thruDate" type="text" name="thruDate" value="31.12.2013" class="input-block-level input-xlarge datepicker"\/>/)
+      .expect(/<input id="thruDate" type="text" name="thruDate" value="31.12.2013"/)
       .expect(/<legend>Nachricht bearbeiten/, function (err) {
         expect(getAnnouncement.calledWith(url)).to.be.true;
         done(err);

@@ -8,6 +8,7 @@
   "activitiesApp": {"module": "./lib/activities"},
   "mailsenderApp": {"module": "./lib/mailsender"},
   "mailarchiveApp": {"module": "./lib/mailarchive"},
+  "wikiApp": {"module": "./lib/wiki"},
 
   "groupsAndMembersAPI": {"module": "./lib/groupsAndMembers/groupsAndMembersAPI"},
   "groupsAPI": {"module": "./lib/groups/groupsAPI"},
@@ -17,6 +18,7 @@
   "mailsenderAPI": {"module": "./lib/mailsender/mailsenderAPI"},
   "colorAPI": {"module": "./lib/administration/colorAPI"},
   "mailarchiveAPI": {"module": "./lib/mailarchive/mailarchiveAPI"},
+  "wikiAPI": {"module": "./lib/wiki/wikiAPI"},
 
   "groupstore": {"module": "./lib/groups/groupstore"},
   "memberstore": {"module": "./lib/members/memberstore"},
@@ -61,6 +63,8 @@
   "message": {"module": "./lib/mailsender/message"},
   "archivedMail": {"module": "./lib/mailarchive/archivedMail"},
   "mailThread": {"module": "./lib/mailarchive/mailThread"},
+  "statusmessage": {"module": "./lib/commons/statusmessage"},
+  "renderer": {"module": "./lib/commons/renderer"},
 
   "fieldHelpers": {"module": "./lib/commons/fieldHelpers"},
   "validation": {"module": "./lib/commons/validation"},
@@ -70,5 +74,7 @@
   "secureByLogin": {"module": "./lib/middleware/secureByLogin"},
   "secureAdminOnly": {"module": "./lib/middleware/secureAdminOnly"},
   "announcementsInSidebar": {"module": "./lib/middleware/announcementsInSidebar"},
-  "expressViewHelper": {"module": "./lib/middleware/expressViewHelper"}
+  "expressViewHelper": {"module": "./lib/middleware/expressViewHelper"},
+  "wikiSubdirs": {"module": "./lib/middleware/wikiSubdirs"},
+  "gitmech": {"module": "./lib/wiki/gitmech"}
 }

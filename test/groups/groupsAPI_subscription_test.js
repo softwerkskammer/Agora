@@ -19,6 +19,7 @@ describe('Groups API (updateSubscriptions)', function () {
   var unsubscribeSpy;
 
   beforeEach(function (done) {
+    systemUnderTest.refreshCache();
     subscribeSpy = sinon.stub(sympaStub, 'addUserToList', function (email, list, callback) {
       callback();
     });
@@ -187,6 +188,7 @@ describe('Groups API (updateAdminListSubscription)', function () {
   var adminList = conf.get('adminListName');
 
   beforeEach(function (done) {
+    systemUnderTest.refreshCache();
     subscribeSpy = sinon.stub(sympaStub, 'addUserToList', function (email, list, callback) {
       callback();
     });

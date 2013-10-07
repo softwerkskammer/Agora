@@ -13,6 +13,7 @@ function createConfiguration() {
   nconf.file('server', './config/server-config.json');
   nconf.file('authentication', './config/authentication-config.json');
   nconf.file('mail', './config/mailsender-config.json');
+  nconf.file('wiki', './config/wikirepo-config.json');
   nconf.defaults({
     adminListName: "admins",
     port: '17124',
@@ -20,7 +21,7 @@ function createConfiguration() {
     mongoPort: '27017',
     publicUrlPrefix: "http://localhost:17124",
     adminURLPattern: "/administration/|/new|/edit|/submit|/invitation",
-    securedByLoginURLPattern: "/mailsender|/members|/(subscribe|unsubscribe)/",
+    securedByLoginURLPattern: "/mailsender|/members|/(subscribe|unsubscribe)/|/mailarchive",
     secret: "secret",
     beans: new beans('./config/beans.json')
   });

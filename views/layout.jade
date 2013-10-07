@@ -7,9 +7,9 @@ html
     | <!--[if IE]><link href="/stylesheets/agora-ie-addon.css" rel="stylesheet"><![endif]-->
 
     script(src="/clientscripts/jquery-1.9.1.js")
-    script(src="/clientscripts/bootstrap.js")
-    script(src="/clientscripts/bootstrap-editable.js")
-    script(src="/clientscripts/bootstrap-markdown.js")
+    script(src="/clientscripts/bootstrap.min.js")
+    script(src="/clientscripts/bootstrap-datepicker.js")
+    script(src="/clientscripts/bootstrap-markdown-patched.js")
     script(src="/clientscripts/markdown.js")
     script(src="/clientscripts/fullcalendar.js")
     script(src="/clientscripts/bootstrap-colorpicker.js")
@@ -18,78 +18,102 @@ html
     script(src="/clientscripts/additional-methods-1.11.1.js")
     script(src="/clientscripts/messages_de.js")
     script(src="/clientscripts/methods_de.js")
-    script(src="/clientscripts/bootstrap-timepicker.js")
-    script(src="/clientscripts/initPickers.js")
+    script(src="/clientscripts/bootstrap-timepicker-patched.js")
     script(src="/clientscripts/agora.js")
-    script(src="/clientscripts/navbar-scripts.js")
-    script(src="/clientscripts/surroundWithLink.js")
-    script(src="/clientscripts/agora-calendar.js")
-    script(src="/clientscripts/swipe.js")
     if (typeof(calViewYear) !== 'undefined')
-      script
+      script.
         $(document).ready(function () {
           $('#calendar').fullCalendar('gotoDate', #{calViewYear}, #{calViewMonth});      
         });
     block scripts
 
-    title Softwerkskammer - 
+    title
       block title
+      | &nbsp;- SWK
+    meta(property="og:image", content="https://raw.github.com/softwerkskammer/softwerkskammer-logos/master/Wappen%20mit%20Text/Softwerkskammer_WappenMitText.png")
+    meta(property="og:type", content="website")
+    meta(property="og:site_name", content="Softwerkskammer")
+    block opengraph
+    
   body
-    include loginComponent
     include layoutComponents
-    img.print-only(src="/img/Softwerkskammer_Header.png", alt="Softwerkskammer")
-    .navbar.navbar-fixed-top.no-print
-      .navbar-inner
-        a.brand.no-padding(href="/")
+    include loginComponent
+    #cheatsheet.modal.fade(tabindex="-1")
+    img.visible-print(src="/img/Softwerkskammer_Header.png", alt="Softwerkskammer")
+    p.visible-print &nbsp;
+    .navbar.navbar-default.navbar-fixed-top.hidden-print(role="navigation")
+      .navbar-header
+        a.navbar-brand.no-padding(href="/")
           img(src="/img/SoftwerkskammerWappenLinks.png", alt="Softwerkskammer")
-        .container.bottom
-          a.btn.btn-navbar(data-toggle="collapse", data-target=".navbar-inverse-collapse")
-            span.icon-bar
-            span.icon-bar
-            span.icon-bar
-            span.icon-bar
-            span.icon-bar
-          mixin loginMenu
-          .nav-collapse.navbar-inverse-collapse
-            ul.nav
-              li#announcements: a(href="/announcements")
+        a.btn.btn-default.navbar-toggle(data-toggle="collapse", data-target=".collapse-top")
+          span.sr-only Toggle
+          span.icon-bar
+          span.icon-bar
+          span.icon-bar
+      .container.bottom
+        .navbar-collapse.collapse.collapse-top
+          ul.nav.navbar-nav.pull-right.hidden-xs
+            mixin loginMenu
+          ul.nav.navbar-nav
+            li#announcements: a(href="/announcements")
+              span.hidden-sm
                 i.icon-globe
                 | &nbsp;Nachrichten
-              li#activities.dropdown
-                a.dropdown-toggle(href="#", data-toggle="dropdown")
-                  i.icon-calendar
-                  | &nbsp;Aktivitäten
-                  b.caret
-                ul.dropdown-menu
-                  li: a(href="/activities/upcoming") Kommende
-                  li: a(href="/activities/past") Vergangene
-                  li: a(href="/activities") Alle
-              li#groups: a(href="/groups")
+              span.visible-sm
+                i.icon-globe
+            li#activities: a(href="/activities/upcoming")
+              span.hidden-sm
+                i.icon-calendar
+                | &nbsp;Aktivitäten
+              span.visible-sm
+                i.icon-calendar
+            li#groups: a(href="/groups")
+              span.hidden-sm
                 i.icon-group
                 | &nbsp;Gruppen
-              if (typeof(user) !== 'undefined')
-                li#members: a(href="/members")
+              span.visible-sm
+                i.icon-group
+            li#wiki.dropdown
+              a.dropdown-toggle(href="#", data-toggle="dropdown")
+                span.hidden-sm
+                  i.icon-book
+                  | &nbsp;Wiki&nbsp;
+                  b.caret
+                span.visible-sm
+                  i.icon-book
+                  b.caret
+              ul.dropdown-menu
+                if (typeof(wikisubdirs) !== 'undefined')
+                  for subdir in wikisubdirs
+                    li: a(href="/wiki/#{subdir}/") #{subdir}
+            li#members: a(href="/members")
+              span.hidden-sm
+                if (typeof(user) !== 'undefined')
                   i.icon-user
                   | &nbsp;Mitglieder
-              mixin administrationMenu(true)
+              span.visible-sm
+                if (typeof(user) !== 'undefined')
+                  i.icon-user
+            mixin loginMenu(true)
 
-    .container-fluid
-      .row-fluid
-        .span9
-          block content
-        .span3.no-print
-          .row-fluid
-            #calendar.no-print
-            if (typeof(latestNews) != 'undefined')
-              hr
-              #news
-                h4 Das Neueste
-                dl
-                  for announcement in latestNews
-                    dt #{announcement.fromDate()}
-                    dd
-                      a(href='/announcements/#{encodeURIComponent(announcement.url)}') #{announcement.title}
-
-
+    .container(style="max-width: 2048px")
+      .row
+        .col-md-8
+          .container
+            if (typeof(statusmessage) !== 'undefined')
+              mixin notificationsBlock(statusmessage)
+            block content
+        .col-md-4.hidden-print
+          .container
+            .page-header.visible-xs.visible-sm
+              p &nbsp;
+              h2.visible-xs.visible-sm Aktivitäten
+            #calendar
+            if (typeof(latestNews) !== 'undefined')
+              h2 Das Neueste
+              dl
+                for announcement in latestNews
+                  dt #{announcement.fromDate()}
+                  dd: a(href='/announcements/#{encodeURIComponent(announcement.url)}') #{announcement.title}
     mixin bottomNavbar
     

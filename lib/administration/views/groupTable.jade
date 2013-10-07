@@ -1,54 +1,52 @@
 extends ../../../views/layout
 
-include ../../../views/editableTableComponents
+block scripts
+  script(src="/clientscripts/jquery.dataTables.min.js")
+  script.
+    $(document).ready(function() {
+      $("#grouptable").dataTable({
+        "oLanguage": {
+          "sUrl": "/clientscripts/dataTables.german.txt"
+        },
+        "aoColumns": [
+          { "bSortable" : false }, null, null, null, null, null
+        ],
+        "bPaginate": false,
+        "bAutoWidth": false,
+        "aaSorting": [[ 1, "asc" ]],
+        "bStateSave": true
+      });
+      $('.tooltiplabel').each(function(each) {$(this).popover()});
+    });
 
 block title
   | Übersicht der Gruppen
 
-block scripts
-  script(src="/clientscripts/utilities-for-editables.js")
-  script
-    var initEditable = function () {
-      $("table").find("a").filter(function () {return this.id === "type"; }).editable(
-        {source: [
-          {value: 0, text: "#{groupTypes[0]}"},
-          {value: 1, text: "#{groupTypes[1]}"}
-        ],
-          showbuttons: false}
-      );
-    };
-    $(document).ready(initEditable);
-
-
 block content
-  .row-fluid
-    .span12
+  .row
+    .col-md-12
       .page-header
         h2 Verwaltung
           small  Gruppen
-          - if (typeof(user) !== 'undefined' && user.member.isAdmin)
-            a.pull-right.btn(href="/groups/new/", title="Neue Gruppe"): i.icon-file
-  .row-fluid
-    p Bitte benutze diese Verwaltungspages nicht, um normale Editiervorgänge oder Neuanlagen vorzunehmen. Diese findest
-      | Du direkt auch auf den jeweiligen Seiten.
-    p Alternativ kannst Du auch auf das Symbol in der ersten Spalte klicken. Damit gelangst Du direkt auf die "Bearbeiten"-Seite
-
-    table(class="span 12 table table-condensed table-hover table-striped", style="overflow: auto; max-height: 600px")
-      thead
-        tr
-          mixin tabHeadNarrow(1, 'Edit')
-          mixin tabHead(2, 'Name')
-          mixin tabHead(2, 'Titel')
-          mixin tabHead(1, 'Präfix')
-          mixin tabHead(5, 'Beschreibung')
-          mixin tabHead(1, 'Gruppenart')
-      tbody
-        for group in groups
-          tr
-            td(class="span1"): a.btn-small(href="/groups/edit/#{encodeURIComponent(group.id)}"): i.icon-edit
-            th.span2: .ellipsis #{group.id}
-            mixin tabText(2, group, 'longName', 'groupChanged')
-            td.span1: .ellipsis #{group.emailPrefix}
-            mixin tabTextarea(5, group, 'description', 'groupChanged')
-            td.span1: a#type(href="#", , data-type="select", data-value="#{group.typeCode()}", data-pk="#{group.id}", data-url="groupChanged"): .ellipsis #{group.type}
-              
+  .row
+    .col-md-12
+      .panel.pre-scrollable
+        table.table.table-condensed.table-hover.table-striped#grouptable
+          thead
+            tr
+              th Edit
+              th Name
+              th Titel
+              th Präfix
+              th Beschreibung
+              th Gruppenart
+          tbody
+            for group in groups
+              tr
+                td: a.btn-sm(href="/groups/edit/#{encodeURIComponent(group.id)}"): i.icon-edit
+                th #{group.id}
+                td #{group.longName}
+                td #{group.emailPrefix}
+                td.ellipsis: .tooltiplabel(data-toggle="hover", data-placement="auto top", data-html="true", data-content="#{group.descriptionHTML()}"):   #{group.description}
+                td #{group.type}
+                  

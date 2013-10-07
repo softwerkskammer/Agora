@@ -1,66 +1,63 @@
 extends ../../../views/layout
 
-include ../../../views/editableTableComponents
+block scripts
+  script(src="/clientscripts/jquery.dataTables.min.js")
+  script.
+    $(document).ready(function() {
+      $("#membertable").dataTable({
+        "oLanguage": {
+          "sUrl": "/clientscripts/dataTables.german.txt"
+        },
+        "aoColumns": [
+          { "bSortable" : false }, null, null, null, null, null, null, null, null, null, null, null, { "sType": "date-eu" }
+        ],
+        "bPaginate": false,
+        "bAutoWidth": false,
+        "aaSorting": [[ 1 , "asc" ]],
+        "bStateSave": true
+      });
+    });
 
 block title
   | Übersicht der Mitglieder
 
-block scripts
-  script(src="/clientscripts/utilities-for-editables.js")
-  script
-    var initEditable = function () {
-      $("table").find("a").filter(function () {return this.id === "isAdmin"; }).editable(
-        {source: [
-          {value: 0, text: "Normal"},
-          {value: 1, text: "Administrator"}
-        ],
-          showbuttons: false}
-      );
-    };
-    $(document).ready(initEditable);
-
-
 block content
-  .row-fluid
-    .span12
+  .row
+    .col-md-12
       .page-header
         h2 Verwaltung
           small  Mitglieder
-  .row-fluid
-    p Bitte benutze diese Verwaltungspages nicht, um normale Editiervorgänge oder Neuanlagen vorzunehmen. Diese findest
-      | Du direkt auch auf den jeweiligen Seiten.
-    p Alternativ kannst Du auch auf das Symbol in der ersten Spalte klicken. Damit gelangst Du direkt auf die "Bearbeiten"-Seite
-
-    table(class="span 12 table table-condensed table-hover table-striped", style="overflow: auto; max-height: 600px")
-      thead
-        tr
-          mixin tabHeadNarrow(1, 'Edit')
-          mixin tabHeadNarrow(1, 'Nickname')
-          mixin tabHeadNarrow(1, 'Vorname')
-          mixin tabHeadNarrow(1, 'Nachname')
-          mixin tabHeadNarrow(1, 'Email')
-          mixin tabHeadNarrow(1, 'Twitter')
-          mixin tabHeadNarrow(1, 'Ort/Region')
-          mixin tabHeadNarrow(1, 'Beruf')
-          mixin tabHeadNarrow(1, 'Interessenschwerpunkte')
-          mixin tabHeadNarrow(1, 'Website/Blog')
-          mixin tabHeadNarrow(1, 'Wie ich von…')
-          mixin tabHeadNarrow(1, 'Benutzertyp')
-          mixin tabHeadNarrow(1, 'Angelegt')
-      tbody
-        for member in members
-          tr
-            td(class="span1"): a.btn-small(href="/members/edit/#{encodeURIComponent(member.nickname)}"): i.icon-edit
-            mixin tabTextNarrow(1, member, 'nickname', 'memberChanged', 'right')
-            mixin tabTextNarrow(1, member, 'firstname', 'memberChanged', 'right')
-            mixin tabTextNarrow(1, member, 'lastname', 'memberChanged')
-            mixin tabTextNarrow(1, member, 'email', 'memberChanged')
-            mixin tabTextNarrow(1, member, 'twitter', 'memberChanged')
-            mixin tabTextNarrow(1, member, 'location', 'memberChanged')
-            mixin tabTextNarrow(1, member, 'profession', 'memberChanged')
-            mixin tabTextNarrow(1, member, 'interests', 'memberChanged')
-            mixin tabTextNarrow(1, member, 'site', 'memberChanged')
-            mixin tabTextNarrow(1, member, 'reference', 'memberChanged')
-            td.span1: a#isAdmin(href="#", data-type="select", data-value="#{member.adminDropdownValue()}", data-pk="#{member.id}", data-url="memberChanged"): .ellipsis.narrow #{member.adminDisplayText()}
-            td(class="span1"): .ellipsis.narrow #{member.created}
-
+      .panel.pre-scrollable
+        table.table.table-condensed.table-hover.table-striped#membertable
+          thead
+            tr
+              th Edit
+              th Nickname
+              th Vorname
+              th Nachname
+              th Email
+              th Twitter
+              th Ort/Region
+              th Beruf
+              th Interessenschwerpunkte
+              th Website/Blog
+              th Wie&nbsp;ich&nbsp;von&nbsp;der&nbsp;Softwerkskammer&nbsp;erfahren&nbsp;habe
+              th Benutzertyp
+              th Angelegt
+          tbody
+            for member in members
+              tr
+                td: a(href="/members/edit/#{encodeURIComponent(member.nickname)}"): i.icon-edit
+                td #{member.nickname}
+                td #{member.firstname}
+                td #{member.lastname}
+                td #{member.email}
+                td #{member.twitter}
+                td #{member.location}
+                td #{member.profession}
+                td #{member.interests}
+                td #{member.site}
+                td #{member.reference}
+                td #{member.adminDisplayText()}
+                td #{member.created}
+    

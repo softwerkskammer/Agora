@@ -1,0 +1,14 @@
+extends ../../../views/layout
+
+block title
+  | #{subdir} (Subwiki)
+
+block content
+  .page-header
+    .btn-group.pull-right
+      a.btn.btn-default(href="javascript:history.back()", type="cancel") Zurück
+    h2 Übersicht der Dateien in "#{subdir}"
+
+  table.history.table.table-striped.table-bordered.table-hover.table-condensed
+    each item in items
+      tr: td: a(href="/wiki/#{item.fullname}") #{item.name}

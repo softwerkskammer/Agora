@@ -16,22 +16,24 @@ block content
     mixin hidden('previousUrl', announcement, 'url')
     mixin hidden('author', announcement)
     fieldset
-      .row-fluid
-        .span12
+      .row
+        .col-md-12
           legend
             | Nachricht
             if (announcement.id)
               |  bearbeiten
             else
               |  anlegen
-      .row-fluid
-        .span6
+      .row
+        .col-md-6
           mixin text('title', 'Titel', announcement)
           mixin text('url', 'URL', announcement)
-          // TODO: url automatisch aus dem title bilden lassen, z. B. Leerzeichen in Bindestriche umwandeln, alles klein schreiben etc.
-          mixin textarea('message', 'Text der Nachricht', announcement)
+        .col-md-6
           mixin date('thruDate', 'Anzeigen bis einschließlich', announcement, announcement.thruDate())
-      .row-fluid
-        .span12
+      .row
+        .col-md-12
+          mixin hightextarea('message', 'Text der Nachricht', announcement)
+      .row
+        .col-md-12
           button.btn.btn-primary.pull-right(type="submit") Speichern
-          a.btn.pull-right(href="javascript:history.back()", type="cancel") Zurück
+          a.btn.btn-default.pull-right(href="javascript:history.back()", type="cancel") Zurück

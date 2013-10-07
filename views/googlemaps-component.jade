@@ -1,7 +1,7 @@
 mixin map(location, width, height)
-  #map.no-print(style="width: #{width}; height: #{height}")
+  #map.hidden-print(style="width: #{width}; height: #{height}")
   script(src="http://maps.googleapis.com/maps/api/js?sensor=false", type="text/javascript")
-  script
+  script.
     $(document).ready(function () {
       var mapOptions = {
           center: new google.maps.LatLng(50.77740690, 10.0987599999999),

@@ -38,13 +38,6 @@ describe('SWK Plattform server', function () {
     });
   });
 
-  it('shows a carousel on the home page if no user is authenticated', function (done) {
-    httpRequest({uri: base_uri}, function (req, resp) {
-      resp.body.should.contain('slider');
-      done();
-    });
-  });
-
   it('provides the screen style sheet', function (done) {
     var stylesheet_uri = base_uri + '/stylesheets/screen.css';
     httpRequest({uri: stylesheet_uri}, function (req, resp) {

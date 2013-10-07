@@ -3,8 +3,8 @@ extends ../layout
 block title
   | 500 - Authentifizierungsproblem
 block content
-  .row-fluid
-    .span6
+  .row
+    .col-md-6
       h3 Problem bei der Authentifizierung!
       p Leider scheint bei der Authentifizierung etwas schief gegangen zu sein.
         | Bitte 
@@ -19,7 +19,7 @@ block content
           li Datum / Uhrzeit
           li Den Stacktrace unterhalb von "500"
       p Das Agora-Team bittet um Entschuldigung.
-    .span6
+    .col-md-6
       h3 500
         | #{error}
       h4 Stacktrace:

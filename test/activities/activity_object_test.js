@@ -111,6 +111,76 @@ describe('Activity', function () {
   });
 });
 
+describe('Activity\'s description', function () {
+  it('renders anchor tags when required', function (done) {
+    var activity = new Activity();
+    activity.description = '[dafadf](http://a.de) https://b.de';
+    expect(activity.descriptionHTML()).to.contain('a href="http://a.de"');
+    expect(activity.descriptionHTML()).to.contain('"https://b.de"');
+    done();
+  });
+
+  it('removes anchor tags when required', function (done) {
+    var activity = new Activity();
+    activity.description = '<a href = "http://a.de">dafadf</a> https://b.de';
+    expect(activity.descriptionPlain()).to.not.contain('"http://a.de"');
+    expect(activity.descriptionPlain()).to.not.contain('"https://b.de"');
+    expect(activity.descriptionPlain()).to.contain('dafadf');
+    expect(activity.descriptionPlain()).to.contain('https://b.de');
+    done();
+  });
+});
+
+describe('Activity\'s direction', function () {
+  it('knows that it doesn\'t contain direction', function (done) {
+    var activity = new Activity();
+    activity.direction = '';
+    expect(activity.hasDirection()).to.be.false;
+    done();
+  });
+
+  it('knows that it contains direction', function (done) {
+    var activity = new Activity();
+    activity.direction = 'direction';
+    expect(activity.hasDirection()).to.be.true;
+    done();
+  });
+});
+
+describe('Activity\'s markdown', function () {
+  it('creates its markdown with direction', function (done) {
+    var activity = new Activity({
+      url : 'url',
+      description : 'description',
+      location : 'location',
+      direction : 'direction',
+      startDate : '4.5.2013',
+      startTime : '12:21'
+    });
+    var markdown = activity.markdown();
+    expect(markdown).to.contain('description');
+    expect(markdown).to.contain('04.05.2013');
+    expect(markdown).to.contain('12:21');
+    expect(markdown).to.contain('location');
+    expect(markdown).to.contain('Wegbeschreibung');
+    expect(markdown).to.contain('direction');
+    done();
+  });
+
+  it('creates its markdown without direction', function (done) {
+    var activity = new Activity({
+      url : 'url',
+      description : 'description',
+      location : 'location',
+      direction : '',
+      startDate : '4.5.2013',
+      startTime : '12:21'
+    });
+    expect(activity.markdown()).to.not.contain('Wegbeschreibung');
+    done();
+  });
+});
+
 describe('Activity stores a list of members', function () {
   it('can add a member', function (done) {
     var activity = new Activity();
@@ -150,6 +220,24 @@ describe('Activity stores a list of members', function () {
     var activity = new Activity();
     activity.removeMemberId('notRegisteredID');
     expect(activity.registeredMembers).to.be.empty;
+    done();
+  });
+
+  it('resets for copied activity', function (done) {
+    var activity = new Activity({
+      id: 'ID',
+      title: 'Title',
+      startDate: '4.4.2013',
+      endDate: '5.4.2013',
+      url: 'myURL',
+      registeredMembers: ['memberID']
+    });
+    activity = activity.resetForClone();
+    expect(activity.registeredMembers).to.be.empty;
+    expect(activity.startDate()).to.not.equal('04.04.2013');
+    expect(activity.endDate()).to.not.equal('05.04.2013');
+    expect(activity.id).to.be.null;
+    expect(activity.url).to.be.null;
     done();
   });
 

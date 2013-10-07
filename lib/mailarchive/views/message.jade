@@ -1,25 +1,17 @@
-extends ../../../views/layout
-
 include ./mailheader-mixin
 
-block title
-  | mail 
-  -if (mail != null)
-    | #{mail.subject}
-  -else
-    | not found
-
-block content
-  .span12
-    .page-header
-      -if (mail != null)
-        a(href="list/" + encodeURIComponent(mail.group) ) Mailverzeichnis 
-        h2 #{mail.subject}
-        div
-          mixin mailattributes(mail) 
-      -else
-        h2 Keine Mail vorhanden
-  -if (mail != null)
-    div
-      -if(mail.html != null)
-        | !{mail.html}
+doctype 5
+html
+  .modal-dialog.cheatsheet
+    .modal-content
+      .modal-header
+        button.close(type="button", data-dismiss="modal", aria-hidden="true") schließen&nbsp;&times
+        if (!mail)
+          h3 Keine Mail vorhanden
+        else
+          h3 #{mail.subject}
+            br
+            small: mixin mailattributes(mail) 
+      .modal-body
+        if (!!mail)
+          !{mail.getHtml()}

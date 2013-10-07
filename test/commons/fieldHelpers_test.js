@@ -62,6 +62,109 @@ describe('Replace email addresses from text', function () {
 
 });
 
+describe('Replace long numbers from text', function () {
+
+  it('returns the input if it is null or undefined', function () {
+    expect(fieldHelpers.replaceLongNumbers(null)).to.equal(null);
+    expect(fieldHelpers.replaceLongNumbers(undefined)).to.equal(undefined);
+  });
+
+  it('does not replace text without digits', function () {
+    expect(fieldHelpers.replaceLongNumbers('bla bli blu')).to.equal('bla bli blu');
+  });
+
+  it('does not replace text with single brackets, slashes, plus or minus signs', function () {
+    expect(fieldHelpers.replaceLongNumbers('text - text + text (text) \/ text')).to.equal('text - text + text (text) \/ text');
+  });
+
+  it('does not replace years', function () {
+    expect(fieldHelpers.replaceLongNumbers(' 20.12.2011 ')).to.equal(' 20.12.2011 ');
+  });
+
+  it('does not replace postal numbers', function () {
+    expect(fieldHelpers.replaceLongNumbers(' 77123 Testhausen ')).to.equal(' 77123 Testhausen ');
+  });
+
+  it('replaces six or more digits', function () {
+    expect(fieldHelpers.replaceLongNumbers(' 123456 ')).to.equal(' ... ');
+  });
+
+  it('replaces phone number with parentheses', function () {
+    expect(fieldHelpers.replaceLongNumbers(' (040) 334455 ')).to.equal(' ... ');
+  });
+
+  it('replaces phone number with parentheses and spaces', function () {
+    expect(fieldHelpers.replaceLongNumbers('(040) 33 44 55')).to.equal('...');
+  });
+
+  it('replaces phone number with long pre-dial in parentheses and spaces', function () {
+    expect(fieldHelpers.replaceLongNumbers('(0 40 35) 33 44 55')).to.equal('...');
+  });
+
+  it('replaces phone number with slash', function () {
+    expect(fieldHelpers.replaceLongNumbers('040/334455')).to.equal('...');
+  });
+
+  it('replaces phone number with slash and spaces', function () {
+    expect(fieldHelpers.replaceLongNumbers('040 / 33 44 55')).to.equal('...');
+  });
+
+  it('replaces phone number with dash', function () {
+    expect(fieldHelpers.replaceLongNumbers('040-334455')).to.equal('...');
+  });
+
+  it('replaces phone number with dash and spaces', function () {
+    expect(fieldHelpers.replaceLongNumbers('040 - 33 44 55')).to.equal('...');
+  });
+
+  it('replaces phone number with country code', function () {
+    expect(fieldHelpers.replaceLongNumbers('+4940334455')).to.equal('...');
+  });
+
+  it('replaces phone number with country code and spaces', function () {
+    expect(fieldHelpers.replaceLongNumbers('+49 40 33 44 55')).to.equal('...');
+  });
+
+  it('replaces phone number with country code and parentheses and spaces', function () {
+    expect(fieldHelpers.replaceLongNumbers('+49 (40) 33 44 55')).to.equal('...');
+  });
+
+  it('replaces phone number with country code and funny zero and spaces', function () {
+    expect(fieldHelpers.replaceLongNumbers('+49 (0) 40 33 44 55')).to.equal('...');
+  });
+
+  it('replaces phone number with dial-through', function () {
+    expect(fieldHelpers.replaceLongNumbers('(040) 33 44 55 - 66')).to.equal('...');
+  });
+});
+
+describe('killHtmlHead', function () {
+
+  it('does not change text not containing a html head element', function () {
+    expect(fieldHelpers.killHtmlHead(null)).to.equal(null);
+    expect(fieldHelpers.killHtmlHead('')).to.equal('');
+    expect(fieldHelpers.killHtmlHead('<html>bla</html>')).to.equal('<html>bla</html>');
+  });
+
+  it('strips HTML <head></head> completely from text', function () {
+    expect(fieldHelpers.killHtmlHead('<head></head>')).to.equal('');
+    expect(fieldHelpers.killHtmlHead('<head>bla</head>')).to.equal('');
+    expect(fieldHelpers.killHtmlHead('123<head>bla</head>321')).to.equal('123321');
+  });
+
+  it('strips HTML <head></head> completely from text even when containing newlines', function () {
+    expect(fieldHelpers.killHtmlHead('<head>bl\na</head>')).to.equal('');
+    expect(fieldHelpers.killHtmlHead('123<head>\nbl\na</head>321')).to.equal('123321');
+  });
+
+  it('strips HTML <head></head> completely from text even when text very long', function () {
+    expect(fieldHelpers.killHtmlHead('123<head>\nbl\na</head>321 321 321 321 321 321 321 321 321 321 321 321 321 321 ' +
+      '321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 '))
+      .to.equal('123321 321 321 321 321 321 321 321 321 321 321 321 321 321 ' +
+        '321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 ');
+  });
+});
+
 describe('readableDate function', function () {
 
   it('converts a unix timestamp to a German Date', function () {
