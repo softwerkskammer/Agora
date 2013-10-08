@@ -7,11 +7,11 @@ There is a companion project where the feature backlog lives. Go to the issues i
 Weekly video hangout
 --------------------
 
-Every Friday at 21:00 Berlin Time: [https://plus.google.com/hangouts/_/a0f33b1cd0f843df662d49e075d73f8284c2cbbc?authuser=0&hl=de](https://plus.google.com/hangouts/_/a0f33b1cd0f843df662d49e075d73f8284c2cbbc?authuser=0&hl=de)
+Every Friday at 21:00 Berlin Time via Google Hangout. Co-ordination via the mailinglist at [http://www.softwerkskammer.org/groups/neueplattform](http://www.softwerkskammer.org/groups/neueplattform)
 
 What this is about
 ==================
-This is the project to build the new groupware platform for the German Software Craftsmanship Communities. It can be seen in action on http://softwerkskammer.org
+This is the project to build the new groupware platform for the German Software Craftsmanship Communities. It can be seen in action on [http://softwerkskammer.org](http://softwerkskammer.org)
 The site is currently German only.
 
 ---
@@ -63,12 +63,12 @@ To set up the built in wiki follow [these instructions](lib/wiki/README.md)
 Running the server
 ------------------
 
+* If your installation is fresh, perform the db initializing script: In *REPO*, invoke `node initialDBSetup`
 * In *REPO*, invoke `npm start`
 * You can now access the application by entering [http://localhost:17124](http://localhost:17124) in your browser
   * The port `17124` is the default and can be changed via the command line option `--port` or via the environment option 'port' to any wanted value
-* The shell script start.sh can be used to set configuration parameters via environment variables
-  * The options set in this script (namely `swkTrustedAppName`, `swkTrustedAppPwd` and `swkRemoteAppUser`) can and should be set via the command line option and/or environment variables as well
-
+* If your installation is fresh, you should create an account for yourself. After that, perform the initializing script again to give yourself admin priviliges.
+  * The default setup assumes you are running on localhost for authentication. If you are using an alternate hostname, you have to edit the configuration file `config/example-server-config.json`. Follow the instructions in there.
 Running the tests
 -----------------
 
