@@ -9,6 +9,13 @@ var Member = beans.get('member');
 
 var async = require('async');
 
+var really = process.argv[2];
+
+if (!really || really !== 'really') {
+  console.log('If you really want to init the db, appen "really" to the command line.');
+  process.exit();
+}
+
 function logResult(err, message) {
   if (err) { return console.log('An error occurred: ' + err); }
   console.log(message);
