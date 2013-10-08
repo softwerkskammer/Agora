@@ -127,4 +127,50 @@ describe('Members application', function () {
         done(err);
       });
   });
+
+  it('validates a duplicate nickname via ajax - nickname is same as previous', function (done) {
+    request(app)
+      .get('/checknickname?nickname=nickerinack&previousNickname=nickerinack')
+      .expect(200)
+      .expect('true', function (err) {
+        done(err);
+      });
+  });
+
+  it('validates a duplicate nickname via ajax - nickname is valid and different to previous', function (done) {
+    sinon.stub(membersAPI, 'isValidNickname', function (nickname, callback) {
+      callback(null, true);
+    });
+    request(app)
+      .get('/checknickname?nickname=nickerinack&previousNickname=bibabu')
+      .expect(200)
+      .expect('true', function (err) {
+        done(err);
+      });
+  });
+
+  it('validates a duplicate nickname via ajax - nickname is invalid and different to previous', function (done) {
+    sinon.stub(membersAPI, 'isValidNickname', function (nickname, callback) {
+      callback(null, false);
+    });
+    request(app)
+      .get('/checknickname?nickname=nickerinack&previousNickname=bibabu')
+      .expect(200)
+      .expect('false', function (err) {
+        done(err);
+      });
+  });
+
+  it('validates a duplicate nickname via ajax - nickname query yields and error and email is different to previous', function (done) {
+    sinon.stub(membersAPI, 'isValidNickname', function (nickname, callback) {
+      callback(new Error());
+    });
+    request(app)
+      .get('/checknickname?nickname=nickerinack&previousNickname=bibabu')
+      .expect(200)
+      .expect('false', function (err) {
+        done(err);
+      });
+  });
+
 });
