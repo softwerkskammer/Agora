@@ -180,3 +180,42 @@ describe('readableDate function', function () {
   });
 
 });
+
+describe('parseToMomentUsingTimezone function', function () {
+
+  it('parses past time in winter', function () {
+    var result = fieldHelpers.parseToMomentUsingTimezone('2.1.2013', '3:04', 'Europe/Berlin');
+    expect(result.format()).to.equal('2013-01-02T03:04:00+01:00');
+  });
+
+  it('parses future time in winter', function () {
+    var result = fieldHelpers.parseToMomentUsingTimezone('2.1.2113', '3:04', 'Europe/Berlin');
+    expect(result.format()).to.equal('2113-01-02T03:04:00+01:00');
+  });
+
+  it('parses past time in summer', function () {
+    var result = fieldHelpers.parseToMomentUsingTimezone('2.8.2013', '3:04', 'Europe/Berlin');
+    expect(result.format()).to.equal('2013-08-02T03:04:00+02:00');
+  });
+
+  it('parses future time in summer', function () {
+    var result = fieldHelpers.parseToMomentUsingTimezone('2.8.2113', '3:04', 'Europe/Berlin');
+    expect(result.format()).to.equal('2113-08-02T03:04:00+02:00');
+  });
+
+  it('parses date with null time', function () {
+    var result = fieldHelpers.parseToMomentUsingTimezone('2.8.2013', null, 'Europe/Berlin');
+    expect(result.format()).to.equal('2013-08-02T00:00:00+02:00');
+  });
+
+  it('parses date with undefined time', function () {
+    var result = fieldHelpers.parseToMomentUsingTimezone('2.8.2013', undefined, 'Europe/Berlin');
+    expect(result.format()).to.equal('2013-08-02T00:00:00+02:00');
+  });
+
+  it('returns undefined without date', function () {
+    var result = fieldHelpers.parseToMomentUsingTimezone(undefined, undefined, 'Europe/Berlin');
+    expect(result).to.be.undefined;
+  });
+
+});

@@ -55,9 +55,10 @@ describe('Activities API', function () {
   });
 
   it('returns past activities', function (done) {
-    var now = moment();
-    var start = moment(0).unix();
-    var end = now.unix();
+    var now = moment('2013-08-07 22:28:42.123');
+    var start = 0;
+    var end = moment('2013-08-07 22:28:42.123').unix();
+
     sinonSandbox.stub(store, 'allActivitiesByDateRangeInDescendingOrder')
       .withArgs(start, end, sinon.match.func)
       .callsArgWith(2, null, [ dummyActivity ]);
@@ -66,13 +67,15 @@ describe('Activities API', function () {
       expect(result).to.have.lengthOf(1);
       done();
     };
+
     api.pastActivities(callback, now);
   });
 
   it('returns upcoming activities', function (done) {
-    var now = moment();
-    var start = now.unix();
-    var end = now.clone().add('y', 10).unix();
+    var now = moment('2013-08-07 22:28:42.123');
+    var start = moment('2013-08-07 22:28:42.123').unix();
+    var end = moment('2023-08-07 22:28:42.123').unix();
+
     sinonSandbox.stub(store, 'allActivitiesByDateRangeInAscendingOrder')
       .withArgs(start, end, sinon.match.func)
       .callsArgWith(2, null, [ dummyActivity ]);
@@ -81,6 +84,7 @@ describe('Activities API', function () {
       expect(result).to.have.lengthOf(1);
       done();
     };
+
     api.upcomingActivities(callback, now);
   });
 
