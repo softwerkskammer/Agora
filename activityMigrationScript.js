@@ -8,6 +8,13 @@ var fieldHelpers = beans.get('fieldHelpers');
 var persistence = beans.get('activitiesPersistence');
 var Activity = beans.get('activity');
 
+var really = process.argv[2];
+
+if (!really || really !== 'really') {
+  console.log('If you really want to migrate the activities, appen "really" to the command line.');
+  process.exit();
+}
+
 function logResult(err, message) {
   if (err) { return console.log('An error occurred: ' + err); }
   console.log(message);
