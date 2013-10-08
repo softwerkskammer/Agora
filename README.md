@@ -69,6 +69,7 @@ Running the server
   * The port `17124` is the default and can be changed via the command line option `--port` or via the environment option 'port' to any wanted value
 * If your installation is fresh, you should create an account for yourself. After that, perform the initializing script again to give yourself admin priviliges.
   * The default setup assumes you are running on localhost for authentication. If you are using an alternate hostname, you have to edit the configuration file `config/example-server-config.json`. Follow the instructions in there.
+
 Running the tests
 -----------------
 
