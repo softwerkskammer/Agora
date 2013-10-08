@@ -2,7 +2,7 @@
 
 var request = require('supertest');
 var express = require('express');
-var sinon = require('sinon');
+var sinon = require('sinon').sandbox.create();
 var expect = require('chai').expect;
 
 var beans = require('../configureForTest').get('beans');
@@ -20,16 +20,20 @@ var getSubscribedGroupsForUser;
 describe('Members application', function () {
 
   beforeEach(function (done) {
-    allMembers = sinon.stub(membersAPI, 'allMembers', function (callback) {callback(null, [dummymember]); });
-    getMember = sinon.stub(membersAPI, 'getMember', function (nickname, callback) {callback(null, dummymember); });
-    getSubscribedGroupsForUser = sinon.stub(groupsAPI, 'getSubscribedGroupsForUser', function (email, callback) {callback(null, []); });
+    allMembers = sinon.stub(membersAPI, 'allMembers', function (callback) {
+      callback(null, [dummymember]);
+    });
+    getMember = sinon.stub(membersAPI, 'getMember', function (nickname, callback) {
+      callback(null, dummymember);
+    });
+    getSubscribedGroupsForUser = sinon.stub(groupsAPI, 'getSubscribedGroupsForUser', function (email, callback) {
+      callback(null, []);
+    });
     done();
   });
 
   afterEach(function (done) {
-    membersAPI.allMembers.restore();
-    membersAPI.getMember.restore();
-    groupsAPI.getSubscribedGroupsForUser.restore();
+    sinon.restore();
     done();
   });
 
@@ -77,6 +81,50 @@ describe('Members application', function () {
         expect(getSubscribedGroupsForUser.calledWith(dummymember.email)).to.be.true;
         done(err);
       });
+  });
 
+  it('validates a duplicate email address via ajax - email is same as previous', function (done) {
+    request(app)
+      .get('/checkemail?email=my.mail@yourmail.de&previousEmail=my.mail@yourmail.de')
+      .expect(200)
+      .expect('true', function (err) {
+        done(err);
+      });
+  });
+
+  it('validates a duplicate email address via ajax - email is valid and different to previous', function (done) {
+    sinon.stub(membersAPI, 'isValidEmail', function (mail, callback) {
+      callback(null, true);
+    });
+    request(app)
+      .get('/checkemail?email=other@x.de&previousEmail=my.mail@yourmail.de')
+      .expect(200)
+      .expect('true', function (err) {
+        done(err);
+      });
+  });
+
+  it('validates a duplicate email address via ajax - email is invalid and different to previous', function (done) {
+    sinon.stub(membersAPI, 'isValidEmail', function (mail, callback) {
+      callback(null, false);
+    });
+    request(app)
+      .get('/checkemail?email=other@x.de&previousEmail=my.mail@yourmail.de')
+      .expect(200)
+      .expect('false', function (err) {
+        done(err);
+      });
+  });
+
+  it('validates a duplicate email address via ajax - email query yields and error and email is different to previous', function (done) {
+    sinon.stub(membersAPI, 'isValidEmail', function (mail, callback) {
+      callback(new Error());
+    });
+    request(app)
+      .get('/checkemail?email=other@x.de&previousEmail=my.mail@yourmail.de')
+      .expect(200)
+      .expect('false', function (err) {
+        done(err);
+      });
   });
 });
