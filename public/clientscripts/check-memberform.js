@@ -29,7 +29,7 @@ var initValidator = function () {
               url: "/members/checkemail",
               data: {
                 previousEmail: function () {
-                  return "email";
+                  return $("#previousEmail").val();
                 }
               }
             }
