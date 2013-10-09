@@ -4,9 +4,6 @@ require('../configureForTest');
 var conf = require('nconf');
 var expect = require('chai').expect;
 
-var moment = require('moment-timezone');
-var fieldHelpers = conf.get('beans').get('fieldHelpers');
-
 var Activity = conf.get('beans').get('activity');
 
 describe('Activity', function () {
@@ -272,27 +269,5 @@ describe('ICalendar', function () {
 
   it('render location', function () {
     expect(activity.asICal().toString()).to.match(/LOCATION:bar/);
-  });
-});
-
-describe('Activity migration', function () {
-  it('migrates start date and time', function () {
-    var oldWronglyParsedUnixTimestamp = moment.utc("2013-01-02 03:04:06.789").unix();
-    var activity = new Activity({
-      startUnix: oldWronglyParsedUnixTimestamp,
-      url: 'myURL',
-    });
-    expect(activity.startDate()).to.equal("02.01.2013");
-    expect(activity.startTime()).to.equal("04:04");      // WRONG TIME!!
-    expect(activity.startUnix).to.equal(1357095846);
-
-    var momentInLocalTimezone = fieldHelpers._toMomentInTimezone(activity.startMoment().utc(), fieldHelpers.defaultTimezone());
-    activity.startUnix = momentInLocalTimezone.unix();
-
-    // TODO Persist corrected activity.
-
-    expect(activity.startDate()).to.equal("02.01.2013");
-    expect(activity.startTime()).to.equal("03:04");      // CORRECT TIME!!
-    expect(activity.startUnix).to.not.equal(1357095846);
   });
 });
