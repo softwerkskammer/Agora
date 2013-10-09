@@ -173,4 +173,72 @@ describe('Members application', function () {
       });
   });
 
+
+  it('rejects a member with invalid and different nickname on submit', function (done) {
+    sinon.stub(membersAPI, 'isValidNickname', function (nickname, callback) {
+      callback(null, false);
+    });
+
+    var root = express();
+    root.use(express.bodyParser());
+    root.use('/', app);
+    request(root)
+      .post('/submit')
+      .send('id=0815&firstname=A&lastname=B&email=c@d.de&previousEmail=c@d.de&location=x&profession=y&reference=z')
+      .send('nickname=nickerinack')
+      .send('previousNickname=bibabu')
+      .expect(200)
+      .expect(/Validation Error/)
+      .expect(/Dieser Nickname ist leider nicht verfügbar./, function (err) {
+        done(err);
+      });
+  });
+
+
+  it('rejects a member with invalid and different email address on submit', function (done) {
+    sinon.stub(membersAPI, 'isValidEmail', function (nickname, callback) {
+      callback(null, false);
+    });
+
+    var root = express();
+    root.use(express.bodyParser());
+    root.use('/', app);
+    request(root)
+      .post('/submit')
+      .send('id=0815&firstname=A&lastname=B&nickname=nuck&previousNickname=nuck&location=x&profession=y&reference=z')
+      .send('email=here@there.org')
+      .send('previousEmail=there@wherever.com')
+      .expect(200)
+      .expect(/Validation Error/)
+      .expect(/Diese Adresse ist schon registriert. Hast Du bereits ein Profil angelegt?/, function (err) {
+        done(err);
+      });
+  });
+
+  it('rejects a member with invalid nickname and email address on submit, giving two error messages', function (done) {
+    sinon.stub(membersAPI, 'isValidNickname', function (nickname, callback) {
+      callback(null, false);
+    });
+    sinon.stub(membersAPI, 'isValidEmail', function (nickname, callback) {
+      callback(null, false);
+    });
+
+    var root = express();
+    root.use(express.bodyParser());
+    root.use('/', app);
+    request(root)
+      .post('/submit')
+      .send('id=0815&firstname=A&lastname=B&location=x&profession=y&reference=z')
+      .send('nickname=nickerinack')
+      .send('previousNickname=bibabu')
+      .send('email=here@there.org')
+      .send('previousEmail=there@wherever.com')
+      .expect(200)
+      .expect(/Validation Error/)
+      .expect(/Dieser Nickname ist leider nicht verfügbar./)
+      .expect(/Diese Adresse ist schon registriert. Hast Du bereits ein Profil angelegt?/, function (err) {
+        done(err);
+      });
+  });
+
 });
