@@ -231,6 +231,28 @@ describe('Members application', function () {
       });
   });
 
+  it('rejects a member with missing first name who validly changed their nickname and mailaddress on submit', function (done) {
+    // attention: This combination is required to prove the invocations of the callbacks in case of no error!
+    sinon.stub(membersAPI, 'isValidNickname', function (nickname, callback) {
+      callback(null, true);
+    });
+    sinon.stub(membersAPI, 'isValidEmail', function (nickname, callback) {
+      callback(null, true);
+    });
+
+    var root = express();
+    root.use(express.bodyParser());
+    root.use('/', app);
+    request(root)
+      .post('/submit')
+      .send('id=0815&&nickname=nuckNew&previousNickname=nuck&lastname=x&location=x&profession=y&reference=z&email=hereNew@there.org&previousEmail=here@there.org')
+      .expect(200)
+      .expect(/Validation Error/)
+      .expect(/Vorname ist ein Pflichtfeld./, function (err) {
+        done(err);
+      });
+  });
+
   it('rejects a member with invalid nickname and email address on submit, giving two error messages', function (done) {
     sinon.stub(membersAPI, 'isValidNickname', function (nickname, callback) {
       callback(null, false);
