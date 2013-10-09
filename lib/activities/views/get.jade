@@ -63,6 +63,6 @@ block content
 block scripts
   script.
     $(document).ready(function () {
-      $('#calendar').fullCalendar('select', $.fullCalendar.parseDate(#{activity.startUnix}), $.fullCalendar.parseDate(#{activity.endUnix}), true);
+      $('#calendar').fullCalendar('select', $.fullCalendar.parseDate(#{activity.startMoment().unix()}), $.fullCalendar.parseDate(#{activity.endMoment().unix()}), true);
     });
   
