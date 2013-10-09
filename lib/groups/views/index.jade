@@ -1,7 +1,7 @@
 extends ../../../views/layout
 
+
 mixin grouplist(title, groupsOfAKind)
-  .col-md-6
     h3 #{groupsOfAKind.length} #{title}
     ul.unstyled
       each group in groupsOfAKind
@@ -9,6 +9,13 @@ mixin grouplist(title, groupsOfAKind)
           span.label(style="background-color: #{group.color};min-width:30px;text-align:right;display:inline-block") #{group.members.length}
           | &nbsp;&nbsp;
           strong: a.group(href="#{group.id}") #{group.longName}
+
+mixin placeGroupLabels(groupsOfAKind)
+    each group in groupsOfAKind
+      if (group.mapX && group.mapY && group.shortName)
+        strong: a.group(href="#{group.id}")
+          .label(style="background-color: #{group.color}; top: #{group.mapY}px; left: #{group.mapX}px;  padding: 0.3em 0.4em; position:absolute") #{group.shortName}
+
 
 
 block title
@@ -23,5 +30,8 @@ block content
             a.btn.btn-default(href="new/", title="Neue Gruppe"): i.icon-file
         h2 Gruppen&nbsp;
           small Alle
-    mixin grouplist('Regionalgruppen', regionalgroups)
-    mixin grouplist('Themengruppen', themegroups)
+    .col-md-6
+      mixin grouplist('Regionalgruppen', regionalgroups)
+      mixin grouplist('Themengruppen', themegroups)
+    .col-md-6(style="font-size: 1.1em; position: relative; width: 342px; height: 441px; background-image:url('/img/map.svg'); background-size: 342px 441px; background-repeat: no-repeat;")
+      mixin placeGroupLabels(regionalgroups)

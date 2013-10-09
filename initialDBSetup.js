@@ -25,11 +25,11 @@ async.parallel(
   [
     function createGroups(callback) {
       var groups = [
-        {id: 'alle', longName: 'Alle', type: 'Themengruppe'},
-        {id: 'commercial', longName: 'Commercial', type: 'Themengruppe'},
-        {id: 'neueplattform', longName: 'Agora', type: 'Themengruppe'},
-        {id: 'craftsmanswap', longName: 'Craftsman Swaps', type: 'Themengruppe'},
-        {id: 'internet', longName: 'Virtual Group', type: 'Regionalgruppe'}
+        {id: 'alle', longName: 'Alle', type: 'Themengruppe', color: '#ff0000', mapX: '100', mapY: '100'},
+        {id: 'commercial', longName: 'Commercial', type: 'Regionalgruppe', color: '#ff00ff', mapX: '200', mapY: '100', shortName: 'C'},
+        {id: 'neueplattform', longName: 'Agora', type: 'Regionalgruppe', color: '#ffff00', mapX: '300', mapY: '100', shortName: 'A'},
+        {id: 'craftsmanswap', longName: 'Craftsman Swaps', type: 'Regionalgruppe', color: '#0000ff', mapX: '100', mapY: '200', shortName: 'CS'},
+        {id: 'internet', longName: 'Virtual Group', type: 'Regionalgruppe', color: '#00ff00', mapX: '100', mapY: '300', shortName: 'VG'}
       ];
       async.map(groups, function (group, callback) {
         group.description = '';
