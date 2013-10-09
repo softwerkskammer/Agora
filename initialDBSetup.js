@@ -12,7 +12,7 @@ var async = require('async');
 var really = process.argv[2];
 
 if (!really || really !== 'really') {
-  console.log('If you really want to init the db, appen "really" to the command line.');
+  console.log('If you really want to init the db, append "really" to the command line.');
   process.exit();
 }
 
