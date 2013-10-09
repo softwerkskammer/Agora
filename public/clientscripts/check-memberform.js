@@ -24,7 +24,15 @@ var initValidator = function () {
           lastname: "required",
           email: {
             required: true,
-            email: true
+            email: true,
+            remote: {
+              url: "/members/checkemail",
+              data: {
+                previousEmail: function () {
+                  return $("#previousEmail").val();
+                }
+              }
+            }
           },
           location: "required",
           reference: "required",
@@ -34,14 +42,17 @@ var initValidator = function () {
           nickname: {
             remote: $.validator.format("Dieser Nickname ist leider nicht verfügbar."),
             alphanumeric: $.validator.format("Nickname darf nur Buchstaben, Zahlen und Unterstrich enthalten.")
+          },
+          email: {
+            remote: $.validator.format("Diese Adresse ist schon registriert. Hast Du bereits ein Profil angelegt?")
           }
         },
         errorElement: "span",
         errorClass: "help-block",
-        highlight: function (element, errorClass) {
+        highlight: function (element) {
           $(element).parent().addClass("has-error");
         },
-        unhighlight: function (element, errorClass) {
+        unhighlight: function (element) {
           $(element).parent().removeClass("has-error");
         }
       }
