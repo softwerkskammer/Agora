@@ -9,11 +9,11 @@ block scripts
           "sUrl": "/clientscripts/dataTables.german.txt"
         },
         "aoColumns": [
-          { "bSortable" : false }, null, null, null, null, null, null, null, null, null, null, null, { "sType": "date-eu" }
+          { "bSortable" : false }, { "sType": "date-eu" }, null, null, null, null, null, null, null, null, null, null, null
         ],
         "bPaginate": false,
         "bAutoWidth": false,
-        "aaSorting": [[ 1 , "asc" ]],
+        "aaSorting": [[ 1 , "desc" ]],
         "bStateSave": true
       });
     });
@@ -32,6 +32,7 @@ block content
           thead
             tr
               th Edit
+              th Angelegt
               th Nickname
               th Vorname
               th Nachname
@@ -43,11 +44,11 @@ block content
               th Website/Blog
               th Wie&nbsp;ich&nbsp;von&nbsp;der&nbsp;Softwerkskammer&nbsp;erfahren&nbsp;habe
               th Benutzertyp
-              th Angelegt
           tbody
             for member in members
               tr
                 td: a(href="/members/edit/#{encodeURIComponent(member.nickname)}"): i.icon-edit
+                td #{member.created}
                 td #{member.nickname}
                 td #{member.firstname}
                 td #{member.lastname}
@@ -59,5 +60,5 @@ block content
                 td #{member.site}
                 td #{member.reference}
                 td #{member.adminDisplayText()}
-                td #{member.created}
+                
     

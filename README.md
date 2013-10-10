@@ -87,8 +87,8 @@ To run the tests, you need to install grunt-cli. We propose to install grunt-cli
 
 Now, you can run the tests in *REPO* with `npm test`
 
-For running specific tests only, you can use a command like
-`mocha -R spec test/announcements/`
+For running specific tests only, you can use mocha in a command like
+`mocha -R spec test/announcements/` To install mocha, invoke `npm install -g mocha` or `sudo npm install -g mocha` 
 
 To run the style check (jshint) and the tests on every file change, use `grunt watch`
 
