@@ -8,10 +8,12 @@ var expect = require('chai').expect;
 var conf = require('../configureForTest');
 
 var Activity = conf.get('beans').get('activity');
-var dummyActivity = new Activity({title: 'title', description: 'description', assignedGroup: 'assignedGroup',
-  location: 'location', direction: 'direction', startDate: '01.01.2013', url: 'url'});
+var dummyActivity = new Activity({title: 'Title of the Activity', description: 'description', assignedGroup: 'assignedGroup',
+  location: 'location', direction: 'direction', startDate: '01.01.2013', url: 'urlOfTheActivity' });
 
 var activitiesAPI = conf.get('beans').get('activitiesAPI');
+var activitiesGroupsColorsAPI = conf.get('beans').get('activitiesGroupsColorsAPI');
+
 var groupsAPI = conf.get('beans').get('groupsAPI');
 var membersAPI = conf.get('beans').get('membersAPI');
 var validation = conf.get('beans').get('validation');
@@ -27,7 +29,13 @@ describe('Activity application', function () {
   beforeEach(function (done) {
     allActivities = sinon.stub(activitiesAPI, 'allActivities', function (callback) {callback(null, [dummyActivity]); });
     upcomingActivities = sinon.stub(activitiesAPI, 'upcomingActivities', function (callback) {callback(null, [dummyActivity]); });
-    getActivity = sinon.stub(activitiesAPI, 'getActivity', function (url, callback) {callback(null, (url === 'url') ? dummyActivity : null); });
+    sinon.stub(activitiesGroupsColorsAPI, 'getActivitiesForDisplay', function (fetcher, callback) {
+      var enhancedActivity = new Activity(dummyActivity);
+      enhancedActivity.colorRGB = '#123456';
+      enhancedActivity.groupName = 'The name of the assigned Group';
+      callback(null, [enhancedActivity]);
+    });
+    getActivity = sinon.stub(activitiesAPI, 'getActivity', function (url, callback) {callback(null, (url === 'urlOfTheActivity') ? dummyActivity : null); });
     sinon.stub(membersAPI, 'allMembers', function (callback) {callback(null, []); });
     sinon.stub(groupsAPI, 'getAllAvailableGroups', function (callback) { callback(null, []); });
     sinon.stub(colors, 'allColors', function (callback) { callback(null, []); });
@@ -50,21 +58,24 @@ describe('Activity application', function () {
       .get('/')
       .expect(200)
       .expect(/Aktivitäten/)
-      .expect(/href="url"/)
-      .expect(/title/, function (err) {
-        expect(allActivities.calledOnce).to.be.ok;
+      .expect(/href="urlOfTheActivity"/)
+      .expect(/Title of the Activity/)
+      .expect(/01.01.2013/)
+      .expect(/background-color: #123456/)
+      .expect(/href="\/groups\/assignedGroup"/)
+      .expect(/The name of the assigned Group/, function (err) {
         done(err);
       });
   });
 
   it('shows the details of one activity as retrieved from the store', function (done) {
-    var url = 'url';
+    var url = 'urlOfTheActivity';
 
     request(app)
       .get('/' + url)
       .expect(200)
       .expect(/<small>01.01.2013/)
-      .expect(/<h2>title/, function (err) {
+      .expect(/<h2>Title of the Activity/, function (err) {
         expect(getActivity.calledWith(url)).to.be.true;
         done(err);
       });
@@ -77,20 +88,20 @@ describe('Activity application', function () {
       .expect('Content-Type', /text\/calendar/)
       .expect('Content-Disposition', /inline; filename=events.ics/)
       .expect(/BEGIN:VCALENDAR/)
-      .expect(/SUMMARY:title/)
+      .expect(/SUMMARY:Title of the Activity/)
       .end(function (err) { done(err); });
   });
 
   it('activity is exposed as iCalendar', function (done) {
-    var url = 'url';
+    var url = 'urlOfTheActivity';
 
     request(app)
       .get('/ical/' + url)
       .expect(200)
       .expect('Content-Type', /text\/calendar/)
-      .expect('Content-Disposition', /inline; filename=url.ics/)
+      .expect('Content-Disposition', /inline; filename=urlOfTheActivity.ics/)
       .expect(/BEGIN:VCALENDAR/)
-      .expect(/SUMMARY:title/)
+      .expect(/SUMMARY:Title of the Activity/)
       .end(function (err) { done(err); });
   });
 

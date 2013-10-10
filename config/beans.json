@@ -14,6 +14,7 @@
   "groupsAPI": {"module": "./lib/groups/groupsAPI"},
   "membersAPI": {"module": "./lib/members/membersAPI"},
   "activitiesAPI": {"module": "./lib/activities/activitiesAPI"},
+  "activitiesGroupsColorsAPI": {"module": "./lib/activities/activitiesGroupsColorsAPI"},
   "announcementsAPI": {"module": "./lib/announcements/announcementsAPI"},
   "mailsenderAPI": {"module": "./lib/mailsender/mailsenderAPI"},
   "colorAPI": {"module": "./lib/administration/colorAPI"},
