@@ -2,8 +2,7 @@
 
 var request = require('supertest');
 var express = require('express');
-var sinon = require('sinon');
-var sinonSandbox = sinon.sandbox.create();
+var sinon = require('sinon').sandbox.create();
 var expect = require('chai').expect;
 
 var conf = require('../configureForTest');
@@ -26,17 +25,17 @@ describe('Activity application', function () {
     getActivity;
 
   beforeEach(function (done) {
-    allActivities = sinonSandbox.stub(activitiesAPI, 'allActivities', function (callback) {callback(null, [dummyActivity]); });
-    upcomingActivities = sinonSandbox.stub(activitiesAPI, 'upcomingActivities', function (callback) {callback(null, [dummyActivity]); });
-    getActivity = sinonSandbox.stub(activitiesAPI, 'getActivity', function (url, callback) {callback(null, (url === 'url') ? dummyActivity : null); });
-    sinonSandbox.stub(membersAPI, 'allMembers', function (callback) {callback(null, []); });
-    sinonSandbox.stub(groupsAPI, 'getAllAvailableGroups', function (callback) { callback(null, []); });
-    sinonSandbox.stub(colors, 'allColors', function (callback) { callback(null, []); });
+    allActivities = sinon.stub(activitiesAPI, 'allActivities', function (callback) {callback(null, [dummyActivity]); });
+    upcomingActivities = sinon.stub(activitiesAPI, 'upcomingActivities', function (callback) {callback(null, [dummyActivity]); });
+    getActivity = sinon.stub(activitiesAPI, 'getActivity', function (url, callback) {callback(null, (url === 'url') ? dummyActivity : null); });
+    sinon.stub(membersAPI, 'allMembers', function (callback) {callback(null, []); });
+    sinon.stub(groupsAPI, 'getAllAvailableGroups', function (callback) { callback(null, []); });
+    sinon.stub(colors, 'allColors', function (callback) { callback(null, []); });
     done();
   });
 
   afterEach(function (done) {
-    sinonSandbox.restore();
+    sinon.restore();
     done();
   });
 
@@ -110,5 +109,59 @@ describe('Activity application', function () {
         done(err);
       });
   });
+
+  it('rejects an activity with invalid and different url on submit', function (done) {
+    sinon.stub(activitiesAPI, 'isValidUrl', function (nickname, callback) {
+      callback(null, false);
+    });
+
+    var root = express();
+    root.use(express.bodyParser());
+    root.use('/', app);
+    request(root)
+      .post('/submit')
+      //.send('')
+      .send('url=uhu')
+      .send('previousUrl=aha')
+      .expect(200)
+      .expect(/Validation Error/)
+      .expect(/Diese URL ist leider nicht verfügbar./, function (err) {
+        done(err);
+      });
+  });
+
+  it('rejects an activity with empty title on submit', function (done) {
+
+    var root = express();
+    root.use(express.bodyParser());
+    root.use('/', app);
+    request(root)
+      .post('/submit')
+      .send('url=uhu&previousUrl=uhu&location=X&startDate=02.07.2000&startTime=19:00&endDate=02.07.2000&endTime=21:00')
+      .expect(200)
+      .expect(/Validation Error/)
+      .expect(/Titel ist ein Pflichtfeld./, function (err) {
+        done(err);
+      });
+  });
+
+  it('rejects an activity with different but valid url and with empty title on submit', function (done) {
+    sinon.stub(activitiesAPI, 'isValidUrl', function (nickname, callback) {
+      callback(null, true);
+    });
+
+    var root = express();
+    root.use(express.bodyParser());
+    root.use('/', app);
+    request(root)
+      .post('/submit')
+      .send('url=uhu&previousUrl=uhuPrev&location=X&startDate=02.07.2000&startTime=19:00&endDate=02.07.2000&endTime=21:00')
+      .expect(200)
+      .expect(/Validation Error/)
+      .expect(/Titel ist ein Pflichtfeld./, function (err) {
+        done(err);
+      });
+  });
+
 
 });
