@@ -11,7 +11,7 @@ var dummyActivity = new Activity({title: 'Title of the Activity', description: '
 
 var activitiesGroupsColorsAPI = conf.get('beans').get('activitiesGroupsColorsAPI');
 
-var activitiesAPI = conf.get('beans').get('activitiesAPI');
+var activitiesAPI = conf.get('beans').get('activitiesCoreAPI');
 var groupsAPI = conf.get('beans').get('groupsAPI');
 var colors = conf.get('beans').get('colorAPI');
 

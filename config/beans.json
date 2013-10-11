@@ -13,7 +13,7 @@
   "groupsAndMembersAPI": {"module": "./lib/groupsAndMembers/groupsAndMembersAPI"},
   "groupsAPI": {"module": "./lib/groups/groupsAPI"},
   "membersAPI": {"module": "./lib/members/membersAPI"},
-  "activitiesAPI": {"module": "./lib/activities/activitiesAPI"},
+  "activitiesCoreAPI": {"module": "./lib/activities/activitiesCoreAPI"},
   "activitiesGroupsColorsAPI": {"module": "./lib/activities/activitiesGroupsColorsAPI"},
   "announcementsAPI": {"module": "./lib/announcements/announcementsAPI"},
   "mailsenderAPI": {"module": "./lib/mailsender/mailsenderAPI"},

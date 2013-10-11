@@ -13,7 +13,7 @@ var dummyActivity = new Activity({id: activityId, url: 'url', title: 'CodingDojo
 
 var store = conf.get('beans').get('activitystore');
 
-var api = conf.get('beans').get('activitiesAPI');
+var api = conf.get('beans').get('activitiesCoreAPI');
 
 describe('Activities API', function () {
 

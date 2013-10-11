@@ -11,7 +11,7 @@ var Activity = conf.get('beans').get('activity');
 var dummyActivity = new Activity({title: 'Title of the Activity', description: 'description', assignedGroup: 'assignedGroup',
   location: 'location', direction: 'direction', startDate: '01.01.2013', url: 'urlOfTheActivity' });
 
-var activitiesAPI = conf.get('beans').get('activitiesAPI');
+var activitiesCoreAPI = conf.get('beans').get('activitiesCoreAPI');
 var activitiesGroupsColorsAPI = conf.get('beans').get('activitiesGroupsColorsAPI');
 
 var groupsAPI = conf.get('beans').get('groupsAPI');
@@ -27,15 +27,15 @@ describe('Activity application', function () {
     getActivity;
 
   beforeEach(function (done) {
-    allActivities = sinon.stub(activitiesAPI, 'allActivities', function (callback) {callback(null, [dummyActivity]); });
-    upcomingActivities = sinon.stub(activitiesAPI, 'upcomingActivities', function (callback) {callback(null, [dummyActivity]); });
+    allActivities = sinon.stub(activitiesCoreAPI, 'allActivities', function (callback) {callback(null, [dummyActivity]); });
+    upcomingActivities = sinon.stub(activitiesCoreAPI, 'upcomingActivities', function (callback) {callback(null, [dummyActivity]); });
     sinon.stub(activitiesGroupsColorsAPI, 'getActivitiesForDisplay', function (fetcher, callback) {
       var enhancedActivity = new Activity(dummyActivity);
       enhancedActivity.colorRGB = '#123456';
       enhancedActivity.groupName = 'The name of the assigned Group';
       callback(null, [enhancedActivity]);
     });
-    getActivity = sinon.stub(activitiesAPI, 'getActivity', function (url, callback) {callback(null, (url === 'urlOfTheActivity') ? dummyActivity : null); });
+    getActivity = sinon.stub(activitiesCoreAPI, 'getActivity', function (url, callback) {callback(null, (url === 'urlOfTheActivity') ? dummyActivity : null); });
     sinon.stub(membersAPI, 'allMembers', function (callback) {callback(null, []); });
     sinon.stub(groupsAPI, 'getAllAvailableGroups', function (callback) { callback(null, []); });
     sinon.stub(colors, 'allColors', function (callback) { callback(null, []); });
@@ -122,7 +122,7 @@ describe('Activity application', function () {
   });
 
   it('rejects an activity with invalid and different url on submit', function (done) {
-    sinon.stub(activitiesAPI, 'isValidUrl', function (nickname, callback) {
+    sinon.stub(activitiesCoreAPI, 'isValidUrl', function (nickname, callback) {
       callback(null, false);
     });
 
@@ -157,7 +157,7 @@ describe('Activity application', function () {
   });
 
   it('rejects an activity with different but valid url and with empty title on submit', function (done) {
-    sinon.stub(activitiesAPI, 'isValidUrl', function (nickname, callback) {
+    sinon.stub(activitiesCoreAPI, 'isValidUrl', function (nickname, callback) {
       callback(null, true);
     });
 
