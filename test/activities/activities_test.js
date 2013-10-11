@@ -12,7 +12,7 @@ var dummyActivity = new Activity({title: 'Title of the Activity', description: '
   location: 'location', direction: 'direction', startDate: '01.01.2013', url: 'urlOfTheActivity' });
 
 var activitiesCoreAPI = conf.get('beans').get('activitiesCoreAPI');
-var activitiesGroupsColorsAPI = conf.get('beans').get('activitiesGroupsColorsAPI');
+var activitiesAPI = conf.get('beans').get('activitiesAPI');
 
 var groupsAPI = conf.get('beans').get('groupsAPI');
 var membersAPI = conf.get('beans').get('membersAPI');
@@ -29,7 +29,7 @@ describe('Activity application', function () {
   beforeEach(function (done) {
     allActivities = sinon.stub(activitiesCoreAPI, 'allActivities', function (callback) {callback(null, [dummyActivity]); });
     upcomingActivities = sinon.stub(activitiesCoreAPI, 'upcomingActivities', function (callback) {callback(null, [dummyActivity]); });
-    sinon.stub(activitiesGroupsColorsAPI, 'getActivitiesForDisplay', function (fetcher, callback) {
+    sinon.stub(activitiesAPI, 'getActivitiesForDisplay', function (fetcher, callback) {
       var enhancedActivity = new Activity(dummyActivity);
       enhancedActivity.colorRGB = '#123456';
       enhancedActivity.groupName = 'The name of the assigned Group';
