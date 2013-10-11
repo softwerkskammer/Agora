@@ -26,6 +26,6 @@ block content
             | #{activity.startDate()} 
           dd
             a(href='/groups/#{activity.assignedGroup}')
-              span.label(style="background-color: #{activity.colorFrom(groupColors, colors)}") #{activity.groupName(groups)}
+              span.label(style="background-color: #{activity.colorRGB}") #{activity.groupName}
             |  &nbsp;
             a(href='#{encodeURIComponent(activity.url)}') #{activity.title} 
