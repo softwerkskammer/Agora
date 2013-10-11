@@ -56,7 +56,7 @@ block content
           mixin memberlist(visitors)
 
       hr.hidden-print
-      p.hidden-print Veranstaltet von der Gruppe: #{activity.groupName(groups)}
+      p.hidden-print Veranstaltet von der Gruppe: #{activity.groupNameFrom(groups)}
     .col-md-6
       mixin map(activity.location, '100%', '450px')
 
