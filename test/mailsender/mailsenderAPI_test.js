@@ -7,7 +7,7 @@ var beans = require('../configureForTest').get('beans');
 
 var membersAPI = beans.get('membersAPI');
 var groupsAPI = beans.get('groupsAPI');
-var activitiesAPI = beans.get('activitiesAPI');
+var activitiesAPI = beans.get('activitiesCoreAPI');
 //var groupsAndMembersAPI = beans.get('groupsAndMembersAPI');
 
 var api = beans.get('mailsenderAPI');
