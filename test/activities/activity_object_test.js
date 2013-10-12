@@ -8,7 +8,7 @@ var Activity = conf.get('beans').get('activity');
 
 describe('Activity', function () {
   it('converts a wellformed Activity to a calendar display event without colors given', function (done) {
-    var activity = new Activity({
+    var activity = new Activity().fillFromDB({
       title: 'Title',
       startDate: '4.4.2013',
       endDate: '5.4.2013',
@@ -23,7 +23,7 @@ describe('Activity', function () {
   });
 
   it('fetches the group long name', function (done) {
-    var activity = new Activity({
+    var activity = new Activity().fillFromDB({
       url: 'myURL',
       assignedGroup: 'group'
     });
@@ -37,7 +37,7 @@ describe('Activity', function () {
   });
 
   it('fetches a blank string if group not found', function (done) {
-    var activity = new Activity({
+    var activity = new Activity().fillFromDB({
       url: 'myURL',
       assignedGroup: 'group'
     });
@@ -51,7 +51,7 @@ describe('Activity', function () {
   });
 
   it('retrieves the color from the assigned group', function (done) {
-    var activity = new Activity({
+    var activity = new Activity().fillFromDB({
       url: 'myURL',
       assignedGroup: 'group',
       color: 'aus Gruppe'
@@ -66,7 +66,7 @@ describe('Activity', function () {
   });
 
   it('retrieves the color from the assigned color', function (done) {
-    var activity = new Activity({
+    var activity = new Activity().fillFromDB({
       url: 'myURL',
       color: 'special'
     });
@@ -80,7 +80,7 @@ describe('Activity', function () {
   });
 
   it('retrieves the color as default if not found', function (done) {
-    var activity = new Activity({
+    var activity = new Activity().fillFromDB({
       url: 'myURL'
     });
     var color = activity.colorFrom(null, []);
@@ -89,7 +89,7 @@ describe('Activity', function () {
   });
 
   it('parses start date and time using default timezone', function () {
-    var activity = new Activity({
+    var activity = new Activity().fillFromDB({
       url: 'myURL',
       startDate: '01.02.2013',
       startTime: '12:34'
@@ -100,7 +100,7 @@ describe('Activity', function () {
   });
 
   it('parses end date and time using default timezone', function () {
-    var activity = new Activity({
+    var activity = new Activity().fillFromDB({
       url: 'myURL',
       endDate: '01.08.2013',
       endTime: '12:34'
@@ -149,7 +149,7 @@ describe('Activity\'s direction', function () {
 
 describe('Activity\'s markdown', function () {
   it('creates its markdown with direction', function (done) {
-    var activity = new Activity({
+    var activity = new Activity().fillFromDB({
       url : 'url',
       description : 'description',
       location : 'location',
@@ -168,7 +168,7 @@ describe('Activity\'s markdown', function () {
   });
 
   it('creates its markdown without direction', function (done) {
-    var activity = new Activity({
+    var activity = new Activity().fillFromDB({
       url : 'url',
       description : 'description',
       location : 'location',
@@ -190,7 +190,7 @@ describe('Activity stores a list of members', function () {
   });
 
   it('can remove a registered member', function (done) {
-    var activity = new Activity(
+    var activity = new Activity().fillFromDB(
       {url: 'myURL', registeredMembers: ['memberID']}
     );
     activity.removeMemberId('memberID');
@@ -199,7 +199,7 @@ describe('Activity stores a list of members', function () {
   });
 
   it('resets for copied activity', function (done) {
-    var activity = new Activity({
+    var activity = new Activity().fillFromDB({
       id: 'ID',
       title: 'Title',
       startDate: '4.4.2013',
@@ -218,9 +218,9 @@ describe('Activity stores a list of members', function () {
 
   it('copies a registered member from an existing activity', function (done) {
     // this constructor behaviour also affects loading of stored activities
-    var activity = new Activity({url: 'url'});
+    var activity = new Activity().fillFromDB({url: 'url'});
     activity.addMemberId('memberID');
-    var copy = new Activity(activity);
+    var copy = new Activity().fillFromDB(activity);
     expect(copy.registeredMembers()).to.contain('memberID');
     done();
   });
@@ -228,7 +228,7 @@ describe('Activity stores a list of members', function () {
 });
 
 describe('ICalendar', function () {
-  var activity = new Activity({
+  var activity = new Activity().fillFromDB({
     title: 'Title',
     startDate: '4.4.2013',
     startTime: '17:00',
