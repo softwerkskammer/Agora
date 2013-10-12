@@ -77,7 +77,7 @@ module.exports = {
     useApp(app, 'activities', conf.get('beans').get('activitiesApp'));
     useApp(app, 'members', conf.get('beans').get('membersApp'));
     useApp(app, 'groups', conf.get('beans').get('groupsApp'));
-    useApp(app, 'announcements', require('./lib/announcements'));
+    useApp(app, 'announcements', conf.get('beans').get('announcementsApp'));
     useApp(app, 'mailsender', conf.get('beans').get('mailsenderApp'));
     useApp(app, 'auth', conf.get('beans').get('authenticationApp'));
     useApp(app, 'mailarchive', conf.get('beans').get('mailarchiveApp'));
