@@ -38,18 +38,31 @@ mixin checkbox(name, label, checked, optionalValue)
       input(type='checkbox', name=name, value=optionalValue, checked=(checked ? "true" : undefined))
       | #{label}
 
+mixin checkboxWithDescription(name, label, checked, description, optionalValue)
+  .checkbox
+    label
+      -if (!!description)
+        input(type='checkbox', name=name, value=optionalValue, checked=(checked ? "true" : undefined))
+        | <span class="popover-highlight" rel="tooltip" data-trigger="hover"  data-content="#{description}">#{label}</span>
+        script.
+            $("[rel=tooltip]").popover({html: true, animation: true, container: 'body'});
+      -else
+        input(type='checkbox', name=name, value=optionalValue, checked=(checked ? "true" : undefined))
+        | #{label}
+
 mixin groupCheckboxes(checkboxName, regionalgroups, themegroups)
   .row
     .col-md-6
       h4 Regionale Gruppen
       .form-group
         each markedGroup in regionalgroups
-          mixin checkbox(checkboxName, markedGroup.group.longName, markedGroup.selected, markedGroup.group.id)
+          mixin checkboxWithDescription(checkboxName, markedGroup.group.longName, markedGroup.selected, markedGroup.group.descriptionHTMLFiltered("img"), markedGroup.group.id)
     .col-md-6
       h4 Themengruppen
       .form-group
         each markedGroup in themegroups
-          mixin checkbox(checkboxName, markedGroup.group.longName, markedGroup.selected, markedGroup.group.id)
+          mixin checkboxWithDescription(checkboxName, markedGroup.group.longName, markedGroup.selected, markedGroup.group.descriptionHTMLFiltered("img"), markedGroup.group.id)
+
 
 
 mixin hidden(name, object, optionalAlternateValue)
