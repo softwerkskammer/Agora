@@ -55,4 +55,38 @@ describe('Group object', function () {
     done();
   });
 
+  it('descriptionHTMLFiltered should filter the description html by given matchOpenClosedTag', function (done) {
+    var descriptionHTML = function () {
+      return '<a href="#">asda</a>description';
+    };
+    var group = new Group();
+    group.descriptionHTML = descriptionHTML;
+
+    expect(group.descriptionHTMLFiltered("a")).to.equal('description');
+    done();
+  });
+
+  it('descriptionHTMLFiltered should filter the description html by given matchSingleClosedTag', function (done) {
+    var descriptionHTML = function () {
+      return '<img src="#"/>description';
+    };
+    var group = new Group();
+    group.descriptionHTML = descriptionHTML;
+
+    expect(group.descriptionHTMLFiltered("img")).to.equal('description');
+    done();
+  });
+
+  it('descriptionHTMLFiltered should filter the description html by given matchSingleTag', function (done) {
+    var descriptionHTML = function () {
+      return '<img src="#">description';
+    };
+    var group = new Group();
+    group.descriptionHTML = descriptionHTML;
+
+    expect(group.descriptionHTMLFiltered("img")).to.equal('description');
+    done();
+  });
+
+
 });
