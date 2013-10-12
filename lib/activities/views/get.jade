@@ -48,7 +48,7 @@ block content
           else
             |  haben #{visitors.length} Mitglieder ihre Teilnahme zugesagt.
         if (typeof(user) !== 'undefined' && user.member)
-          if (visitors.length > 0 && activity.registeredMembers.indexOf(user.member.id) > -1)
+          if (visitors.length > 0 && activity.registeredMembers().indexOf(user.member.id) > -1)
             a.btn.btn-primary(href="unsubscribe/#{encodeURIComponent(activity.url)}") Ich kann doch nicht…
           else
             a.btn.btn-primary(href="subscribe/#{encodeURIComponent(activity.url)}") Ich bin dabei!

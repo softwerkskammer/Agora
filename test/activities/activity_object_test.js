@@ -185,7 +185,7 @@ describe('Activity stores a list of members', function () {
   it('can add a member', function (done) {
     var activity = new Activity();
     activity.addMemberId('memberID');
-    expect(activity.registeredMembers).to.contain('memberID');
+    expect(activity.registeredMembers()).to.contain('memberID');
     done();
   });
 
@@ -194,7 +194,7 @@ describe('Activity stores a list of members', function () {
       {url: 'myURL', registeredMembers: ['memberID']}
     );
     activity.addMemberId('memberID');
-    expect(activity.registeredMembers.length).to.equal(1);
+    expect(activity.registeredMembers().length).to.equal(1);
     done();
   });
 
@@ -203,7 +203,7 @@ describe('Activity stores a list of members', function () {
       {url: 'myURL', registeredMembers: ['memberID']}
     );
     activity.removeMemberId('memberID');
-    expect(activity.registeredMembers).to.be.empty;
+    expect(activity.registeredMembers()).to.be.empty;
     done();
   });
 
@@ -212,15 +212,15 @@ describe('Activity stores a list of members', function () {
       {url: 'myURL', registeredMembers: ['memberID']}
     );
     activity.removeMemberId('notRegisteredID');
-    expect(activity.registeredMembers.length).to.equal(1);
-    expect(activity.registeredMembers).to.contain('memberID');
+    expect(activity.registeredMembers().length).to.equal(1);
+    expect(activity.registeredMembers()).to.contain('memberID');
     done();
   });
 
   it('can remove even when not initialized', function (done) {
     var activity = new Activity();
     activity.removeMemberId('notRegisteredID');
-    expect(activity.registeredMembers).to.be.empty;
+    expect(activity.registeredMembers()).to.be.empty;
     done();
   });
 
@@ -234,7 +234,7 @@ describe('Activity stores a list of members', function () {
       registeredMembers: ['memberID']
     });
     activity = activity.resetForClone();
-    expect(activity.registeredMembers).to.be.empty;
+    expect(activity.registeredMembers()).to.be.empty;
     expect(activity.startDate()).to.not.equal('04.04.2013');
     expect(activity.endDate()).to.not.equal('05.04.2013');
     expect(activity.id).to.be.null;
