@@ -242,6 +242,15 @@ describe('Activity stores a list of members', function () {
     done();
   });
 
+  it('copies a registered member from an existing activity', function (done) {
+    // this constructor behaviour also affects loading of stored activities
+    var activity = new Activity({url: 'url'});
+    activity.addMemberId('memberID');
+    var copy = new Activity(activity);
+    expect(copy.registeredMembers()).to.contain('memberID');
+    done();
+  });
+
 });
 
 describe('ICalendar', function () {
