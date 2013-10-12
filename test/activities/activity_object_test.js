@@ -185,7 +185,7 @@ describe('Activity stores a list of members', function () {
   it('can add a member', function (done) {
     var activity = new Activity();
     activity.addMemberId('memberID');
-    expect(activity.registeredMembers).to.not.be.empty;
+    expect(activity.registeredMembers).to.contain('memberID');
     done();
   });
 
@@ -194,7 +194,7 @@ describe('Activity stores a list of members', function () {
       {url: 'myURL', registeredMembers: ['memberID']}
     );
     activity.addMemberId('memberID');
-    expect(1).to.equal(activity.registeredMembers.length);
+    expect(activity.registeredMembers.length).to.equal(1);
     done();
   });
 
@@ -212,7 +212,8 @@ describe('Activity stores a list of members', function () {
       {url: 'myURL', registeredMembers: ['memberID']}
     );
     activity.removeMemberId('notRegisteredID');
-    expect(activity.registeredMembers).to.not.be.empty;
+    expect(activity.registeredMembers.length).to.equal(1);
+    expect(activity.registeredMembers).to.contain('memberID');
     done();
   });
 
