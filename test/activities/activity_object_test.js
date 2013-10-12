@@ -189,37 +189,11 @@ describe('Activity stores a list of members', function () {
     done();
   });
 
-  it('does not add a member twice', function (done) {
-    var activity = new Activity(
-      {url: 'myURL', registeredMembers: ['memberID']}
-    );
-    activity.addMemberId('memberID');
-    expect(activity.registeredMembers().length).to.equal(1);
-    done();
-  });
-
   it('can remove a registered member', function (done) {
     var activity = new Activity(
       {url: 'myURL', registeredMembers: ['memberID']}
     );
     activity.removeMemberId('memberID');
-    expect(activity.registeredMembers()).to.be.empty;
-    done();
-  });
-
-  it('can remove a non registered member', function (done) {
-    var activity = new Activity(
-      {url: 'myURL', registeredMembers: ['memberID']}
-    );
-    activity.removeMemberId('notRegisteredID');
-    expect(activity.registeredMembers().length).to.equal(1);
-    expect(activity.registeredMembers()).to.contain('memberID');
-    done();
-  });
-
-  it('can remove even when not initialized', function (done) {
-    var activity = new Activity();
-    activity.removeMemberId('notRegisteredID');
     expect(activity.registeredMembers()).to.be.empty;
     done();
   });
