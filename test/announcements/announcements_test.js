@@ -4,8 +4,7 @@ var conf = require('../configureForTest');
 
 var request = require('supertest'),
   express = require('express'),
-  sinon = require('sinon'),
-  sinonSandbox = sinon.sandbox.create(),
+  sinonSandbox = require('sinon').sandbox.create(),
   expect = require('chai').expect,
   moment = require('moment-timezone');
 

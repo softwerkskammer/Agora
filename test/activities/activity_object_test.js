@@ -31,7 +31,7 @@ describe('Activity', function () {
       {id: 'group', longName: 'groupname'},
       {id: 'other', longName: 'othername'}
     ];
-    var groupName = activity.groupName(groups);
+    var groupName = activity.groupNameFrom(groups);
     expect('groupname').to.equal(groupName);
     done();
   });
@@ -45,7 +45,7 @@ describe('Activity', function () {
       {id: 'each', longName: 'groupname'},
       {id: 'other', longName: 'othername'}
     ];
-    var groupName = activity.groupName(groups);
+    var groupName = activity.groupNameFrom(groups);
     expect('').to.equal(groupName);
     done();
   });
