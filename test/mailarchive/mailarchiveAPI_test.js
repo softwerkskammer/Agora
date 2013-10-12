@@ -2,8 +2,7 @@
 
 var expect = require('chai').expect;
 
-var sinon = require('sinon');
-var sinonSandbox = sinon.sandbox.create();
+var sinon = require('sinon').sandbox.create();
 
 var beans = require('../configureForTest').get('beans');
 var persistence = beans.get('mailsPersistence');
@@ -23,25 +22,25 @@ describe('Mailarchive', function () {
   var idOfMailWithMember = 'id2';
 
   beforeEach(function (done) {
-    sinonSandbox.stub(membersAPI, 'getMemberForId',
+    sinon.stub(membersAPI, 'getMemberForId',
       function (id, callback) {
         if (id === memberID) { return callback(null, sampleMember); }
         callback(null, null);
       });
 
-    getById = sinonSandbox.stub(persistence, 'getById', function (id, callback) {
+    getById = sinon.stub(persistence, 'getById', function (id, callback) {
       if (id === idOfMailWithMember) { return callback(null, sampleMail3); }
       callback(null, sampleMail1);
     });
 
-    listByField = sinonSandbox.stub(persistence, 'listByField', function (searchObject, sortOrder, callback) {
+    listByField = sinon.stub(persistence, 'listByField', function (searchObject, sortOrder, callback) {
       callback(null, sampleMailList);
     });
     done();
   });
 
   afterEach(function (done) {
-    sinonSandbox.restore();
+    sinon.restore();
     done();
   });
 
