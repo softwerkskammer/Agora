@@ -39,7 +39,7 @@ mixin loginMenu(forInline)
         li: a(href="https://github.com/softwerkskammer/NeuePlattform-Implementierung/issues", target="_blank")
           i.icon-ambulance
           | &nbsp;Einen Bug melden
-        
+        li: include ../version
   else
     li: a.navbar-link(data-toggle="modal", href="#login", class="#{forInline ? 'visible-xs' : ''}")
       i.icon-signin

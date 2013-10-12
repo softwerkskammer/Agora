@@ -13,7 +13,7 @@ var initValidator = function () {
 
   $.validator.addMethod("alnumdashunderscore", function(value, element)
                         {
-                          return this.optional(element) || /^[a-z0-9_-üäöÜÄÖ]+$/i.test(value);
+                          return this.optional(element) || /^[a-z0-9_-üäö]+$/i.test(value);
                         }, "E-Mail-Adresse darf nur Zahlen, Buchstaben, Bindestrich und Unterstrich enthalten.");
 
   groups_validator = $("#groupform").validate({
