@@ -333,6 +333,24 @@ describe('Groups API (isGroupNameAvailable)', function () {
     });
   });
 
+  it('allows groupnames that contain ü, ä, ö', function () {
+    expect(systemUnderTest.isReserved('Gruppe')).to.be.false;
+    expect(systemUnderTest.isReserved('Grüppe')).to.be.false;
+    expect(systemUnderTest.isReserved('Gröppe')).to.be.false;
+    expect(systemUnderTest.isReserved('Gräppe')).to.be.false;
+  });
+
+  it('allows groupnames that contain Ü, Ä, Ö, ß', function () {
+    expect(systemUnderTest.isReserved('GrÜppe')).to.be.false;
+    expect(systemUnderTest.isReserved('GrÖppe')).to.be.false;
+    expect(systemUnderTest.isReserved('GrÄppe')).to.be.false;
+    expect(systemUnderTest.isReserved('Grßppe')).to.be.false;
+  });
+
+  it('allows groupnames that contain ß', function () {
+    expect(systemUnderTest.isReserved('Grßppe')).to.be.false;
+  });
+
   it('rejects groupnames that contain special characters', function (done) {
     expect(systemUnderTest.isReserved('Sch adar')).to.be.true;
     expect(systemUnderTest.isReserved('Sch/adar')).to.be.true;
