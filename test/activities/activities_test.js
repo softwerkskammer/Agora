@@ -131,7 +131,7 @@ describe('Activity application', function () {
       .get('/' + 'urlForInteresting')
       .expect(200)
       .expect(/Bislang haben 2 Mitglieder ihre Teilnahme zugesagt./)
-      .expect(/href="subscribe\/urlForInteresting\/default" class="btn btn-primary">Ich bin dabei!/)
+      .expect(/href="subscribe\/urlForInteresting\/default" class=".*">Ich bin dabei!/)
       .expect(/participant1/)
       .expect(/participant2/, function (err) {
         done(err);
@@ -156,7 +156,7 @@ describe('Activity application', function () {
       .get('/' + 'urlForInteresting')
       .expect(200)
       .expect(/Bislang haben 2 Mitglieder ihre Teilnahme zugesagt./)
-      .expect(/href="unsubscribe\/urlForInteresting\/default" class="btn btn-primary">Ich kann doch nicht/)
+      .expect(/href="unsubscribe\/urlForInteresting\/default" class=".*">Ich kann doch nicht/)
       .expect(/participant1/)
       .expect(/participant2/, function (err) {
         done(err);
@@ -182,8 +182,8 @@ describe('Activity application', function () {
       .get('/' + 'urlForMultiple')
       .expect(200)
       .expect(/Bislang haben 4 Mitglieder ihre Teilnahme zugesagt./)
-      .expect(/href="unsubscribe\/urlForMultiple\/Einzelzimmer" class="btn btn-primary">Ich kann doch nicht/)
-      .expect(/href="subscribe\/urlForMultiple\/Doppelzimmer" class="btn btn-primary">Ich bin dabei!/)
+      .expect(/href="unsubscribe\/urlForMultiple\/Einzelzimmer" class=".*">Ich kann doch nicht/)
+      .expect(/href="subscribe\/urlForMultiple\/Doppelzimmer" class=".*">Ich bin dabei!/)
       .expect(/participant1/)
       .expect(/participant2/)
       .expect(/participant3/)
