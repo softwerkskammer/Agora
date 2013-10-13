@@ -159,4 +159,6 @@ $(document).ready(function () {
   $('.mailtoify').each(function () {
     $(this).html(surroundEmail(this.innerHTML));
   });
+  $("[rel=tooltip]").popover({html: true, trigger: "hover"});
+  $("[rel=tooltip-in-body]").popover({container: "body", html: true, trigger: "hover"});
 });
