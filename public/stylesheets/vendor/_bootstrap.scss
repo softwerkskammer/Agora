@@ -2032,7 +2032,7 @@ fieldset[disabled] .btn {
   pointer-events: none;
   cursor: not-allowed;
   opacity: 0.65;
-  filter: alpha(opacity=65);
+  filter: unquote("alpha(opacity = 65)");
   -webkit-box-shadow: none;
           box-shadow: none;
 }
@@ -5569,7 +5569,7 @@ a.list-group-item:focus {
   color: #000000;
   text-shadow: 0 1px 0 #ffffff;
   opacity: 0.2;
-  filter: alpha(opacity=20);
+  filter: unquote("alpha(opacity = 20)");
 }
 
 .close:hover,
@@ -5578,7 +5578,7 @@ a.list-group-item:focus {
   text-decoration: none;
   cursor: pointer;
   opacity: 0.5;
-  filter: alpha(opacity=50);
+  filter: unquote("alpha(opacity = 50)");
 }
 
 button.close {
@@ -5659,12 +5659,12 @@ body.modal-open,
 
 .modal-backdrop.fade {
   opacity: 0;
-  filter: alpha(opacity=0);
+  filter: unquote("alpha(opacity = 0)");
 }
 
 .modal-backdrop.in {
   opacity: 0.5;
-  filter: alpha(opacity=50);
+  filter: unquote("alpha(opacity = 50)");
 }
 
 .modal-header {
@@ -5748,13 +5748,13 @@ body.modal-open,
   font-size: 12px;
   line-height: 1.4;
   opacity: 0;
-  filter: alpha(opacity=0);
+  filter: unquote("alpha(opacity = 0)");
   visibility: visible;
 }
 
 .tooltip.in {
   opacity: 0.9;
-  filter: alpha(opacity=90);
+  filter: unquote("alpha(opacity = 90)");
 }
 
 .tooltip.top {
@@ -6066,7 +6066,7 @@ body.modal-open,
   text-align: center;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
   opacity: 0.5;
-  filter: alpha(opacity=50);
+  filter: unquote("alpha(opacity = 50)");
 }
 
 .carousel-control.left {
@@ -6094,7 +6094,7 @@ body.modal-open,
   color: #ffffff;
   text-decoration: none;
   opacity: 0.9;
-  filter: alpha(opacity=90);
+  filter: unquote("alpha(opacity = 90)");
 }
 
 .carousel-control .icon-prev,
