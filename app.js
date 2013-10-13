@@ -53,6 +53,9 @@ module.exports = {
       app.use(express.cookieParser());
       app.use(express.bodyParser());
       app.use(express.methodOverride());
+      app.use(express.compress());
+      app.use(express.static(path.join(__dirname, 'public')));
+
       var sevenDays = 86400 * 1000 * 7;
       if (conf.get('dontUsePersistentSessions')) {
         // TODO: Umbau als CoolBean mit SessionStore als InMemoryStore von Express statt if Konstrukt (leider)
@@ -69,7 +72,6 @@ module.exports = {
       app.use(conf.get('beans').get('announcementsInSidebar'));
       app.use(conf.get('beans').get('wikiSubdirs'));
       app.use(app.router);
-      app.use(express.static(path.join(__dirname, 'public')));
     });
 
     app.use('/', conf.get('beans').get('siteApp'));
