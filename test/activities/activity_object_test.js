@@ -232,6 +232,13 @@ describe('Activity resource management', function () {
     done();
   });
 
+  it('returns no members if the desired resource does not exist', function (done) {
+    var activity = new Activity();
+
+    expect(activity.registeredMembers('Nicht Existente Ressource')).to.be.empty;
+    done();
+  });
+
   it('resets for copied activity', function (done) {
     var activity = new Activity().fillFromDB({
       id: 'ID',
