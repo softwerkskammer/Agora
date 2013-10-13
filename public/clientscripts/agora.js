@@ -159,9 +159,6 @@ $(document).ready(function () {
   $('.mailtoify').each(function () {
     $(this).html(surroundEmail(this.innerHTML));
   });
-
-  if ($("[rel=tooltip]").constructor !== $) { // "surroundWithLink.html" test fails because the selector returns jQuery - WTF *please help if you can explain*
-    $("[rel=tooltip]").popover({html: true, trigger: "hover", delay: { show: 500, hide: 100 }});
-    $("[rel=tooltip-in-body]").popover({container: "body", html: true, trigger: "hover", delay: { show: 500, hide: 100 }});
-  }
+  $("[rel=tooltip]").popover({html: true, trigger: "hover"});
+  $("[rel=tooltip-in-body]").popover({container: "body", html: true, trigger: "hover"});
 });
