@@ -181,7 +181,7 @@ describe('Activity\'s markdown', function () {
   });
 });
 
-describe('Activity stores a list of members', function () {
+describe('Activity resource management', function () {
   it('can add a member', function (done) {
     var activity = new Activity();
     activity.addMemberId('memberID');
@@ -220,7 +220,7 @@ describe('Activity stores a list of members', function () {
     // this constructor behaviour also affects loading of stored activities
     var activity = new Activity().fillFromDB({url: 'url'});
     activity.addMemberId('memberID');
-    var copy = new Activity().fillFromDB(activity);
+    var copy = new Activity().copyFrom(activity);
     expect(copy.registeredMembers()).to.contain('memberID');
     done();
   });
