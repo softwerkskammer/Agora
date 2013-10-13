@@ -127,7 +127,7 @@ describe('Activity application', function () {
       .get('/' + 'urlForInteresting')
       .expect(200)
       .expect(/Bislang haben 2 Mitglieder ihre Teilnahme zugesagt./)
-      .expect(/href="subscribe\/urlForInteresting" class="btn btn-primary">Ich bin dabei!/)
+      .expect(/href="subscribe\/urlForInteresting\/default" class="btn btn-primary">Ich bin dabei!/)
       .expect(/participant1/)
       .expect(/participant2/, function (err) {
         done(err);
@@ -152,7 +152,7 @@ describe('Activity application', function () {
       .get('/' + 'urlForInteresting')
       .expect(200)
       .expect(/Bislang haben 2 Mitglieder ihre Teilnahme zugesagt./)
-      .expect(/href="unsubscribe\/urlForInteresting" class="btn btn-primary">Ich kann doch nicht/)
+      .expect(/href="unsubscribe\/urlForInteresting\/default" class="btn btn-primary">Ich kann doch nicht/)
       .expect(/participant1/)
       .expect(/participant2/, function (err) {
         done(err);
