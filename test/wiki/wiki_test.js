@@ -57,7 +57,7 @@ describe('Wiki application', function () {
 
   it('redirects to the edit page of a page when the page does not exist yet and a user is logged in', function (done) {
     var root = express();
-    root.use(userMock);
+    root.use(userMock());
     root.use('/', app);
     request(root)
       .get('/' + nonExistingPage)
