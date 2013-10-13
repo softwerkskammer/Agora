@@ -8,8 +8,12 @@ var expect = require('chai').expect;
 var conf = require('../configureForTest');
 
 var Activity = conf.get('beans').get('activity');
-var dummyActivity = new Activity().fillFromDB({title: 'Title of the Activity', description: 'description', assignedGroup: 'assignedGroup',
-  location: 'location', direction: 'direction', startDate: '01.01.2013', url: 'urlOfTheActivity' });
+var emptyActivity = new Activity().fillFromDB({title: 'Title of the Activity', description: 'description1', assignedGroup: 'assignedGroup',
+  location: 'location1', direction: 'direction1', startDate: '01.01.2013', url: 'urlOfTheActivity' });
+var activityWithParticipants = new Activity().fillFromDB({title: 'Interesting Activity', description: 'description2', assignedGroup: 'assignedGroup',
+  location: 'location2', direction: 'direction2', startDate: '01.01.2013', url: 'otherUrl',
+  resources: {default: {_registeredMembers: ['memberId1', 'memberId2']}} });
+
 
 var activitiesCoreAPI = conf.get('beans').get('activitiesCoreAPI');
 var activitiesAPI = conf.get('beans').get('activitiesAPI');
@@ -27,16 +31,17 @@ describe('Activity application', function () {
     getActivity;
 
   beforeEach(function (done) {
-    allActivities = sinon.stub(activitiesCoreAPI, 'allActivities', function (callback) {callback(null, [dummyActivity]); });
-    upcomingActivities = sinon.stub(activitiesCoreAPI, 'upcomingActivities', function (callback) {callback(null, [dummyActivity]); });
+    allActivities = sinon.stub(activitiesCoreAPI, 'allActivities', function (callback) {callback(null, [emptyActivity]); });
+    upcomingActivities = sinon.stub(activitiesCoreAPI, 'upcomingActivities', function (callback) {callback(null, [emptyActivity]); });
     sinon.stub(activitiesAPI, 'getActivitiesForDisplay', function (fetcher, callback) {
-      var enhancedActivity = new Activity().copyFrom(dummyActivity);
+      var enhancedActivity = new Activity().copyFrom(emptyActivity);
       enhancedActivity.colorRGB = '#123456';
       enhancedActivity.groupName = 'The name of the assigned Group';
       callback(null, [enhancedActivity]);
     });
-    getActivity = sinon.stub(activitiesCoreAPI, 'getActivity', function (url, callback) {callback(null, (url === 'urlOfTheActivity') ? dummyActivity : null); });
-    sinon.stub(membersAPI, 'allMembers', function (callback) {callback(null, []); });
+    getActivity = sinon.stub(activitiesCoreAPI, 'getActivity', function (url, callback) {
+      callback(null, (url === 'urlOfTheActivity') ? emptyActivity : (url === 'otherUrl') ? activityWithParticipants : null);
+    });
     sinon.stub(groupsAPI, 'getAllAvailableGroups', function (callback) { callback(null, []); });
     sinon.stub(colors, 'allColors', function (callback) { callback(null, []); });
     done();
@@ -68,15 +73,37 @@ describe('Activity application', function () {
       });
   });
 
-  it('shows the details of one activity as retrieved from the store', function (done) {
+  it('shows the details of one activity without participants as retrieved from the store', function (done) {
+    sinon.stub(membersAPI, 'allMembers', function (callback) {callback(null, []); });
     var url = 'urlOfTheActivity';
 
     request(app)
       .get('/' + url)
       .expect(200)
       .expect(/<small>01.01.2013/)
-      .expect(/<h2>Title of the Activity/, function (err) {
-        expect(getActivity.calledWith(url)).to.be.true;
+      .expect(/<h2>Title of the Activity/)
+      .expect(/description1/)
+      .expect(/location1/)
+      .expect(/direction1/)
+      .expect(/Bislang gibt es keine Teinahmezusagen./, function (err) {
+        done(err);
+      });
+  });
+
+  it('shows the details of one activity with participants as retrieved from the store', function (done) {
+    sinon.stub(membersAPI, 'allMembers', function (callback) {callback(null, [{id: 'memberId1'}, {id: 'memberId2'}]); });
+
+    var url = 'otherUrl';
+
+    request(app)
+      .get('/' + url)
+      .expect(200)
+      .expect(/<small>01.01.2013/)
+      .expect(/<h2>Interesting Activity/)
+      .expect(/description2/)
+      .expect(/location2/)
+      .expect(/direction2/)
+      .expect(/Bislang haben 2 Mitglieder ihre Teilnahme zugesagt./, function (err) {
         done(err);
       });
   });
@@ -107,7 +134,8 @@ describe('Activity application', function () {
 
 
   it('shows a 404 if the id cannot be found in the store for the detail page', function (done) {
-    var link = dummyActivity.id + '4711';
+    sinon.stub(membersAPI, 'allMembers', function (callback) {callback(null, []); });
+    var link = emptyActivity.id + '4711';
 
     request(app).get('/' + link).expect(404, function (err) { done(err); });
   });
