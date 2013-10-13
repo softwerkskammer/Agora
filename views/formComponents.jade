@@ -41,13 +41,10 @@ mixin checkbox(name, label, checked, optionalValue)
 mixin checkboxWithDescription(name, label, checked, description, optionalValue)
   .checkbox
     label
+      input(type='checkbox', name=name, value=optionalValue, checked=(checked ? "true" : undefined))
       -if (!!description)
-        input(type='checkbox', name=name, value=optionalValue, checked=(checked ? "true" : undefined))
-        | <span class="popover-highlight" rel="tooltip" data-trigger="hover"  data-content="#{description}">#{label}</span>
-        script.
-            $("[rel=tooltip]").popover({html: true, animation: true, container: 'body'});
+        span.popover-highlight(rel="tooltip-in-body", data-content="#{description}") #{label}
       -else
-        input(type='checkbox', name=name, value=optionalValue, checked=(checked ? "true" : undefined))
         | #{label}
 
 mixin groupCheckboxes(checkboxName, regionalgroups, themegroups)
