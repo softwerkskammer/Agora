@@ -6,12 +6,14 @@ var sinon = require('sinon').sandbox.create();
 var expect = require('chai').expect;
 
 var conf = require('../configureForTest');
+var userMock = require('../userMock');
 
 var Activity = conf.get('beans').get('activity');
+var Member = conf.get('beans').get('member');
 var emptyActivity = new Activity().fillFromDB({title: 'Title of the Activity', description: 'description1', assignedGroup: 'assignedGroup',
   location: 'location1', direction: 'direction1', startDate: '01.01.2013', url: 'urlOfTheActivity' });
 var activityWithParticipants = new Activity().fillFromDB({title: 'Interesting Activity', description: 'description2', assignedGroup: 'assignedGroup',
-  location: 'location2', direction: 'direction2', startDate: '01.01.2013', url: 'otherUrl',
+  location: 'location2', direction: 'direction2', startDate: '01.01.2013', url: 'urlForInteresting',
   resources: {default: {_registeredMembers: ['memberId1', 'memberId2']}} });
 
 
@@ -40,7 +42,7 @@ describe('Activity application', function () {
       callback(null, [enhancedActivity]);
     });
     getActivity = sinon.stub(activitiesCoreAPI, 'getActivity', function (url, callback) {
-      callback(null, (url === 'urlOfTheActivity') ? emptyActivity : (url === 'otherUrl') ? activityWithParticipants : null);
+      callback(null, (url === 'urlOfTheActivity') ? emptyActivity : (url === 'urlForInteresting') ? activityWithParticipants : null);
     });
     sinon.stub(groupsAPI, 'getAllAvailableGroups', function (callback) { callback(null, []); });
     sinon.stub(colors, 'allColors', function (callback) { callback(null, []); });
@@ -58,7 +60,7 @@ describe('Activity application', function () {
     expect(validation.isValidActivity(tmpActivity).length).to.equal(1);
   });
 
-  it('shows the list of activities as retrieved from the store', function (done) {
+  it('shows the list of activities', function (done) {
     request(app)
       .get('/')
       .expect(200)
@@ -73,12 +75,11 @@ describe('Activity application', function () {
       });
   });
 
-  it('shows the details of one activity without participants as retrieved from the store', function (done) {
+  it('shows the details of one activity without participants', function (done) {
     sinon.stub(membersAPI, 'allMembers', function (callback) {callback(null, []); });
-    var url = 'urlOfTheActivity';
 
     request(app)
-      .get('/' + url)
+      .get('/' + 'urlOfTheActivity')
       .expect(200)
       .expect(/<small>01.01.2013/)
       .expect(/<h2>Title of the Activity/)
@@ -90,13 +91,16 @@ describe('Activity application', function () {
       });
   });
 
-  it('shows the details of one activity with participants as retrieved from the store', function (done) {
-    sinon.stub(membersAPI, 'allMembers', function (callback) {callback(null, [{id: 'memberId1'}, {id: 'memberId2'}]); });
-
-    var url = 'otherUrl';
+  it('shows the details of an activity with participants', function (done) {
+    sinon.stub(membersAPI, 'allMembers', function (callback) {
+      callback(null, [
+        {id: 'memberId1'},
+        {id: 'memberId2'}
+      ]);
+    });
 
     request(app)
-      .get('/' + url)
+      .get('/' + 'urlForInteresting')
       .expect(200)
       .expect(/<small>01.01.2013/)
       .expect(/<h2>Interesting Activity/)
@@ -107,6 +111,54 @@ describe('Activity application', function () {
         done(err);
       });
   });
+
+  it('shows the registration button for an activity with participants when a user is logged in who is not participant', function (done) {
+    sinon.stub(membersAPI, 'allMembers', function (callback) {
+      callback(null, [
+        new Member({id: 'memberId1', nickname: 'participant1', email: "a@b.c"}),
+        new Member({id: 'memberId2', nickname: 'participant2', email: "a@b.c"})
+      ]);
+    });
+
+    var root = express();
+    root.use(userMock({member: {id: 'memberId3'}}));
+    root.use('/', app);
+    request(root)
+      .get('/' + 'urlForInteresting')
+      .expect(200)
+      .expect(/Bislang haben 2 Mitglieder ihre Teilnahme zugesagt./)
+      .expect(/href="subscribe\/urlForInteresting" class="btn btn-primary">Ich bin dabei!/)
+      .expect(/participant1/)
+      .expect(/participant2/, function (err) {
+        done(err);
+      });
+  });
+
+
+  it('shows the registration button for an activity with participants when a user is logged in who already is participant', function (done) {
+    sinon.stub(membersAPI, 'allMembers', function (callback) {
+      callback(null, [
+        new Member({id: 'memberId1', nickname: 'participant1', email: "a@b.c"}),
+        new Member({id: 'memberId2', nickname: 'participant2', email: "a@b.c"})
+      ]);
+    });
+
+    var name = userMock({member: {id: 'memberId1'}});
+
+    var root = express();
+    root.use(name);
+    root.use('/', app);
+    request(root)
+      .get('/' + 'urlForInteresting')
+      .expect(200)
+      .expect(/Bislang haben 2 Mitglieder ihre Teilnahme zugesagt./)
+      .expect(/href="unsubscribe\/urlForInteresting" class="btn btn-primary">Ich kann doch nicht/)
+      .expect(/participant1/)
+      .expect(/participant2/, function (err) {
+        done(err);
+      });
+  });
+
 
   it('upcoming activities are exposed as iCalendar', function (done) {
     request(app)
