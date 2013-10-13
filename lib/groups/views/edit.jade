@@ -30,10 +30,17 @@ block content
           else
             mixin text('id', 'Name', group, 'Die Adresse, unter der die Gruppe "@softwerkskammer.org" erreichbar ist.')
           mixin text('longName', 'Titel', group, 'Anzeigetext innerhalb der Site, ist auch Realname für E-Mails')
+        .col-md-6
           if (group.isValid())
             mixin textReadonly('emailPrefix', 'Präfix für E-Mail-Subjects', group)
           else
             mixin text('emailPrefix', 'Präfix für E-Mail-Subjects', group, 'steht innerhalb [] vor dem Subject in gesendeten E-Mails')
+          mixin colorPicker('color', group)
+      .row
+        .col-md-12
+          mixin hightextarea('description', 'Beschreibung', group)
+      .row
+        .col-md-6
           .control-group
             label.control-label(for="type") Gruppenart:
             select#type.input-block-level.input-xlarge(name="type")
@@ -45,8 +52,12 @@ block content
             each memberAdmin in organizersChecked
               mixin checkbox('organizers', memberAdmin.member.nickname, memberAdmin.checked, memberAdmin.member.id)
         .col-md-6
-          mixin colorPicker('color', group)
-          mixin textarea('description', 'Beschreibung', group)
+          .row
+            .col-md-6
+              mixin text('mapX', 'X-Koord.', group, 'Waagerechte Position auf der Karte')
+            .col-md-6
+              mixin text('mapY', 'Y-Koord.', group, 'Senkrechte Position auf der Karte')
+          mixin text('shortName', 'Label in Karte', group, 'Label, das in der Karte angezeigt wird')
       .row
         .col-md-12
           if group.isValid()
@@ -56,6 +67,4 @@ block content
           a.btn.btn-default.pull-right(href="javascript:history.back()", type="cancel") Zurück
 
 block scripts
-  script(src="/clientscripts/jquery.validate-1.11.1.js")
-  script(src="/clientscripts/messages_de.js")
   script(src="/clientscripts/check-groupform.js")
