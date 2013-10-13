@@ -1,0 +1,8 @@
+mixin visitorCount(anzahl)
+  p Bislang
+    if (anzahl === 0)
+      |  gibt es keine Teinahmezusagen.
+    else if (anzahl === 1)
+      |  hat ein Mitglied seine Teilnahme zugesagt.
+    else
+      |  haben #{anzahl} Mitglieder ihre Teilnahme zugesagt.
