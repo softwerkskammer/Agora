@@ -98,7 +98,7 @@ thead th.fc-last {
 .fc-cell-overlay {
   background: #99ccff;
   opacity: 0.2;
-  filter: alpha(opacity=20); }
+  filter: unquote("alpha(opacity = 20)"); }
 
 .fc-button {
   position: relative;
@@ -156,7 +156,7 @@ thead th.fc-last {
       border-color: white;
       background: #444444;
       opacity: 0.09;
-      filter: alpha(opacity=9); }
+      filter: unquote("alpha(opacity = 9)"); }
   .fc-state-default .fc-button-inner {
     border-style: solid;
     border-color: #cccccc #bbbbbb #aaaaaa;
@@ -264,7 +264,7 @@ table.fc-border-separate {
   padding: 0 2px; }
 .fc-grid .fc-other-month .fc-day-number {
   opacity: 0.3;
-  filter: alpha(opacity=30); }
+  filter: unquote("alpha(opacity = 30)"); }
 
 .fc-rtl .fc-grid .fc-day-number {
   float: left; }

@@ -35,7 +35,8 @@ module.exports = function (grunt) {
           // NNB. As mocha is 'clever' enough to only run the tests once for
           // each file the following coverage task does not actually run any
           // tests which is why the coverage instrumentation has to be done here
-          require: 'blanket'
+          require: 'blanket',
+          colors: true
         },
         src: ['test/**/*.js']
       },
@@ -59,6 +60,17 @@ module.exports = function (grunt) {
     },
     qunit: {
       files: ['frontendtests/*.html']
+    },
+    sass: {
+      default: {
+        options: {
+          outputStyle: 'compressed',
+          sourceComments: 'none'
+        },
+        files: {
+          'public/stylesheets/screen.css': 'public/stylesheets/screen.scss'
+        }
+      }
     }
   });
 
@@ -67,10 +79,15 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-mocha-test');
   grunt.loadNpmTasks('grunt-contrib-qunit');
+  grunt.loadNpmTasks('grunt-sass');
 
   // Default task.
-  grunt.registerTask('default', ['jshint', 'qunit', 'mochaTest']);
+  grunt.registerTask('default', ['jshint', 'qunit', 'mochaTest', 'sass']);
+
+  // Test task.
+  grunt.registerTask('default', ['jshint', 'qunit', 'mochaTest', 'sass']);
 
   // Travis-CI task
   grunt.registerTask('travis', ['default']);
+
 };
