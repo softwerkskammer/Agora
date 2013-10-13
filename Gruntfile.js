@@ -82,10 +82,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-sass');
 
   // Default task.
-  grunt.registerTask('default', ['jshint', 'qunit', 'mochaTest', 'sass']);
-
-  // Test task.
-  grunt.registerTask('default', ['jshint', 'qunit', 'mochaTest', 'sass']);
+  grunt.registerTask('default', ['sass', 'jshint', 'qunit', 'mochaTest']);
 
   // Travis-CI task
   grunt.registerTask('travis', ['default']);
