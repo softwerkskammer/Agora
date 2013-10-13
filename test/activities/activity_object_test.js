@@ -151,12 +151,12 @@ describe('Activity\'s direction', function () {
 describe('Activity\'s markdown', function () {
   it('creates its markdown with direction', function (done) {
     var activity = new Activity().fillFromDB({
-      url : 'url',
-      description : 'description',
-      location : 'location',
-      direction : 'direction',
-      startDate : '4.5.2013',
-      startTime : '12:21'
+      url: 'url',
+      description: 'description',
+      location: 'location',
+      direction: 'direction',
+      startDate: '4.5.2013',
+      startTime: '12:21'
     });
     var markdown = activity.markdown();
     expect(markdown).to.contain('description');
@@ -170,12 +170,12 @@ describe('Activity\'s markdown', function () {
 
   it('creates its markdown without direction', function (done) {
     var activity = new Activity().fillFromDB({
-      url : 'url',
-      description : 'description',
-      location : 'location',
-      direction : '',
-      startDate : '4.5.2013',
-      startTime : '12:21'
+      url: 'url',
+      description: 'description',
+      location: 'location',
+      direction: '',
+      startDate: '4.5.2013',
+      startTime: '12:21'
     });
     expect(activity.markdown()).to.not.contain('Wegbeschreibung');
     done();
@@ -183,19 +183,52 @@ describe('Activity\'s markdown', function () {
 });
 
 describe('Activity resource management', function () {
-  it('can add a member', function (done) {
+  it('adds a member to the default resource', function (done) {
     var activity = new Activity();
-    activity.addMemberId('memberID');
+    activity.addMemberId('memberID', 'default');
     expect(activity.registeredMembers()).to.contain('memberID');
     done();
   });
 
-  it('can remove a registered member', function (done) {
+  it('adds a member to a desired resource', function (done) {
+    var activity = new Activity().fillFromDB({url: 'myURL', resources: {Einzelzimmer: new Resource(), Doppelzimmer: new Resource()}});
+    activity.addMemberId('memberID', 'Einzelzimmer');
+    expect(activity.registeredMembers('Einzelzimmer')).to.contain('memberID');
+    expect(activity.registeredMembers('Doppelzimmer')).to.be.empty;
+    done();
+  });
+
+  it('removes a registered member from the default resource', function (done) {
     var activity = new Activity().fillFromDB(
       {url: 'myURL', registeredMembers: ['memberID']}
     );
-    activity.removeMemberId('memberID');
+    activity.removeMemberId('memberID', 'default');
     expect(activity.registeredMembers()).to.be.empty;
+    done();
+  });
+
+  it('removes a registered member from a desired resource', function (done) {
+    var activity = new Activity().fillFromDB(
+      {url: 'myURL', resources: {
+        Einzelzimmer: new Resource('memberID'),
+        Doppelzimmer: new Resource('memberID')
+      }});
+
+    activity.removeMemberId('memberID', 'Doppelzimmer');
+    expect(activity.registeredMembers('Einzelzimmer')).to.contain('memberID');
+    expect(activity.registeredMembers('Doppelzimmer')).to.be.empty;
+    done();
+  });
+
+  it('does not do anything if the desired resource does not exist', function (done) {
+    var activity = new Activity().fillFromDB(
+      {url: 'myURL', resources: {
+        default: new Resource('memberID')
+      }});
+
+    activity.addMemberId('memberID', 'Einzelzimmer');
+    activity.removeMemberId('memberID', 'Doppelzimmer');
+    expect(activity.registeredMembers('default')).to.contain('memberID');
     done();
   });
 
@@ -220,7 +253,7 @@ describe('Activity resource management', function () {
   it('copies a registered member from an existing activity', function (done) {
     // this constructor behaviour also affects loading of stored activities
     var activity = new Activity().fillFromDB({url: 'url'});
-    activity.addMemberId('memberID');
+    activity.addMemberId('memberID', 'default');
     var copy = new Activity().copyFrom(activity);
     expect(copy.registeredMembers()).to.contain('memberID');
     done();
