@@ -5,6 +5,7 @@ var conf = require('nconf');
 var expect = require('chai').expect;
 
 var Activity = conf.get('beans').get('activity');
+var Resource = conf.get('beans').get('resource');
 
 describe('Activity', function () {
   it('converts a wellformed Activity to a calendar display event without colors given', function (done) {
@@ -222,6 +223,34 @@ describe('Activity resource management', function () {
     activity.addMemberId('memberID');
     var copy = new Activity().copyFrom(activity);
     expect(copy.registeredMembers()).to.contain('memberID');
+    done();
+  });
+
+  it('lists the name of the default resource if no other resources are present', function (done) {
+    var activity = new Activity();
+    expect(activity.resourceNames().length).to.equal(1);
+    expect(activity.resourceNames()).to.contain('default');
+    done();
+  });
+
+  it('lists the name of all resources except the default resource if more resources are present', function (done) {
+    var activity = new Activity();
+    // TODO replace this later by proper resources created by the activity
+    activity.resources['Einzelzimmer'] = new Resource();
+    activity.resources['Doppelzimmer'] = new Resource();
+    expect(activity.resourceNames().length).to.equal(2);
+    expect(activity.resourceNames()).to.contain('Einzelzimmer');
+    expect(activity.resourceNames()).to.contain('Doppelzimmer');
+    done();
+  });
+
+  it('only lists resources that actually contain something', function (done) {
+    var activity = new Activity();
+    activity.resources['Einzelzimmer'] = null;
+    activity.resources['Doppelzimmer'] = undefined;
+    activity.resources['Heuboden'] = "";
+    expect(activity.resourceNames().length).to.equal(1);
+    expect(activity.resourceNames()).to.contain('default');
     done();
   });
 
