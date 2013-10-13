@@ -6,3 +6,9 @@ mixin visitorCount(anzahl)
       |  hat ein Mitglied seine Teilnahme zugesagt.
     else
       |  haben #{anzahl} Mitglieder ihre Teilnahme zugesagt.
+
+mixin subscriptionButtons(registeredMembers, url, visitors, currentMemberId)
+  if (visitors.length > 0 && registeredMembers.indexOf(currentMemberId) > -1)
+    a.btn.btn-primary(href="unsubscribe/#{encodeURIComponent(url)}") Ich kann doch nicht…
+  else
+    a.btn.btn-primary(href="subscribe/#{encodeURIComponent(url)}") Ich bin dabei!
