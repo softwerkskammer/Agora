@@ -35,7 +35,8 @@ module.exports = function (grunt) {
           // NNB. As mocha is 'clever' enough to only run the tests once for
           // each file the following coverage task does not actually run any
           // tests which is why the coverage instrumentation has to be done here
-          require: 'blanket'
+          require: 'blanket',
+          colors: true
         },
         src: ['test/**/*.js']
       },
@@ -59,6 +60,43 @@ module.exports = function (grunt) {
     },
     qunit: {
       files: ['frontendtests/*.html']
+    },
+    sass: {
+      default: {
+        options: {
+          outputStyle: 'compressed',
+          sourceComments: 'none'
+        },
+        files: {
+          'public/stylesheets/screen.css': 'public/stylesheets/screen.scss'
+        }
+      }
+    },
+    uglify: {
+      options: {
+        compress: {},
+        report: 'min'
+      },
+      always: {
+        files: {
+          'public/clientscripts/global.js': [
+            'public/clientscripts/global/jquery-1.9.1.js',
+            'public/clientscripts/global/bootstrap.js',
+            'public/clientscripts/global/bootstrap-datepicker.js',
+            'public/clientscripts/global/bootstrap-markdown-patched.js',
+            'public/clientscripts/global/markdown.js',
+            'public/clientscripts/global/fullcalendar.js',
+            'public/clientscripts/global/bootstrap-colorpicker.js',
+            'public/clientscripts/global/bootstrap-datepicker.de.js',
+            'public/clientscripts/global/jquery.validate-1.11.1.js',
+            'public/clientscripts/global/additional-methods-1.11.1.js',
+            'public/clientscripts/global/messages_de.js',
+            'public/clientscripts/global/methods_de.js',
+            'public/clientscripts/global/bootstrap-timepicker-patched.js',
+            'public/clientscripts/global/agora.js'
+          ]
+        }
+      }
     }
   });
 
@@ -67,10 +105,13 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-mocha-test');
   grunt.loadNpmTasks('grunt-contrib-qunit');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-sass');
 
   // Default task.
-  grunt.registerTask('default', ['jshint', 'qunit', 'mochaTest']);
+  grunt.registerTask('default', ['sass', 'uglify', 'jshint', 'qunit', 'mochaTest']);
 
   // Travis-CI task
   grunt.registerTask('travis', ['default']);
+
 };
