@@ -8,7 +8,7 @@ var expect = require('chai').expect;
 var conf = require('../configureForTest');
 
 var Activity = conf.get('beans').get('activity');
-var dummyActivity = new Activity({title: 'Title of the Activity', description: 'description', assignedGroup: 'assignedGroup',
+var dummyActivity = new Activity().fillFromDB({title: 'Title of the Activity', description: 'description', assignedGroup: 'assignedGroup',
   location: 'location', direction: 'direction', startDate: '01.01.2013', url: 'urlOfTheActivity' });
 
 var activitiesCoreAPI = conf.get('beans').get('activitiesCoreAPI');
@@ -30,7 +30,7 @@ describe('Activity application', function () {
     allActivities = sinon.stub(activitiesCoreAPI, 'allActivities', function (callback) {callback(null, [dummyActivity]); });
     upcomingActivities = sinon.stub(activitiesCoreAPI, 'upcomingActivities', function (callback) {callback(null, [dummyActivity]); });
     sinon.stub(activitiesAPI, 'getActivitiesForDisplay', function (fetcher, callback) {
-      var enhancedActivity = new Activity(dummyActivity);
+      var enhancedActivity = new Activity().copyFrom(dummyActivity);
       enhancedActivity.colorRGB = '#123456';
       enhancedActivity.groupName = 'The name of the assigned Group';
       callback(null, [enhancedActivity]);
@@ -48,7 +48,7 @@ describe('Activity application', function () {
   });
 
   it('object is not valid, if the title is not filled', function () {
-    var tmpActivity = new Activity({description: 'description', url: 'url', assignedGroup: 'assignedGroup', location: 'location',
+    var tmpActivity = new Activity().fillFromDB({description: 'description', url: 'url', assignedGroup: 'assignedGroup', location: 'location',
       direction: 'direction', startDate: '2012-11-11', startTime: '10:10', endDate: '2012-11-11', endTime: '20:10' });
     expect(validation.isValidActivity(tmpActivity).length).to.equal(1);
   });
