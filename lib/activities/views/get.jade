@@ -43,7 +43,8 @@ block content
       div.hidden-print
         mixin visitorCount(visitors.length)
         if (typeof(user) !== 'undefined' && user.member)
-          mixin subscriptionButtons(activity.registeredMembers(), activity.url, 'default', visitors, user.member.id)
+          each resourceName in activity.resourceNames()
+            mixin subscriptionButtons(activity.registeredMembers(resourceName), activity.url, resourceName, user.member.id)
           h4 Zugesagt haben:
           mixin memberlist(visitors)
 

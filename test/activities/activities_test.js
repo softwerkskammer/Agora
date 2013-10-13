@@ -15,6 +15,9 @@ var emptyActivity = new Activity().fillFromDB({title: 'Title of the Activity', d
 var activityWithParticipants = new Activity().fillFromDB({title: 'Interesting Activity', description: 'description2', assignedGroup: 'assignedGroup',
   location: 'location2', direction: 'direction2', startDate: '01.01.2013', url: 'urlForInteresting',
   resources: {default: {_registeredMembers: ['memberId1', 'memberId2']}} });
+var activityWithMultipleResources = new Activity().fillFromDB({title: 'Interesting Activity', description: 'description2', assignedGroup: 'assignedGroup',
+  location: 'location2', direction: 'direction2', startDate: '01.01.2013', url: 'urlForMultiple',
+  resources: {Einzelzimmer: {_registeredMembers: ['memberId1', 'memberId2']}, Doppelzimmer: {_registeredMembers: ['memberId3', 'memberId4']}} });
 
 
 var activitiesCoreAPI = conf.get('beans').get('activitiesCoreAPI');
@@ -42,7 +45,8 @@ describe('Activity application', function () {
       callback(null, [enhancedActivity]);
     });
     getActivity = sinon.stub(activitiesCoreAPI, 'getActivity', function (url, callback) {
-      callback(null, (url === 'urlOfTheActivity') ? emptyActivity : (url === 'urlForInteresting') ? activityWithParticipants : null);
+      callback(null, (url === 'urlOfTheActivity') ? emptyActivity : (url === 'urlForInteresting') ? activityWithParticipants :
+        (url === 'urlForMultiple') ? activityWithMultipleResources : null);
     });
     sinon.stub(groupsAPI, 'getAllAvailableGroups', function (callback) { callback(null, []); });
     sinon.stub(colors, 'allColors', function (callback) { callback(null, []); });
@@ -159,6 +163,35 @@ describe('Activity application', function () {
       });
   });
 
+  it('shows the registration button for an activity multiple resources where the current user has booked one resource', function (done) {
+    sinon.stub(membersAPI, 'allMembers', function (callback) {
+      callback(null, [
+        new Member({id: 'memberId1', nickname: 'participant1', email: "a@b.c"}),
+        new Member({id: 'memberId2', nickname: 'participant2', email: "a@b.c"}),
+        new Member({id: 'memberId3', nickname: 'participant3', email: "a@b.c"}),
+        new Member({id: 'memberId4', nickname: 'participant4', email: "a@b.c"})
+      ]);
+    });
+
+    var name = userMock({member: {id: 'memberId1'}});
+
+    var root = express();
+    root.use(name);
+    root.use('/', app);
+    request(root)
+      .get('/' + 'urlForMultiple')
+      .expect(200)
+      .expect(/Bislang haben 4 Mitglieder ihre Teilnahme zugesagt./)
+      .expect(/href="unsubscribe\/urlForMultiple\/Einzelzimmer" class="btn btn-primary">Ich kann doch nicht/)
+      .expect(/href="subscribe\/urlForMultiple\/Doppelzimmer" class="btn btn-primary">Ich bin dabei!/)
+      .expect(/participant1/)
+      .expect(/participant2/)
+      .expect(/participant3/)
+      .expect(/participant4/, function (err) {
+        done(err);
+      });
+  });
+
 
   it('upcoming activities are exposed as iCalendar', function (done) {
     request(app)
@@ -253,6 +286,5 @@ describe('Activity application', function () {
         done(err);
       });
   });
-
 
 });
