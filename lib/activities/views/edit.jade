@@ -1,11 +1,19 @@
 extends ../../../views/layout
 include  ../../../views/formComponents
 block scripts
-  script(src="/clientscripts/moment.js")
+  script(src="/clientscripts/moment.min.js")
   script(src="/clientscripts/activityDateModel.js")
   script(src="/clientscripts/activityform-dateAdapter.js")
   script(src="/clientscripts/check-activityform.js")
-  script(src="/clientscripts/fillUrlFromText.js")
+  script.
+    function fillUrlFromText (urlId, textId) {
+      var title = document.getElementById(textId).value;
+      var urlContent = encodeURIComponent(title.replace(/^\s\s*/, '').replace(/\s\s*$/, '').replace(/[ #,!?ßöäü:"']/gi, '_'));
+      var urlInput = $('#' + urlId);
+      urlInput.val(urlContent);
+      urlInput.change();
+      urlInput.focus();
+    }
 
 block title
   | Aktivität
