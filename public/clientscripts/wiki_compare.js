@@ -3,8 +3,6 @@
 
 !(function (window, $) {
 
-  var cheatsheetShown = false;
-
   var Jingo = {
 
     init: function () {

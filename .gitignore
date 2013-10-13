@@ -6,19 +6,14 @@
 /node_modules/
 *~
 .DS_Store
-lib/persistence/memberstore/
-lib/persistence/teststore/
 config/*.json*
 !config/example*.json
 !config/beans.json
 !config/testbeans.json
 log/*.log
-public/test/
 version.jade
-.sass-cache
-
 test/tempbeans.json
-docs/generated
 
 npm-debug.log
 coverage.html
+screen.css
