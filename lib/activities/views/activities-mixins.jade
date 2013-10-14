@@ -1,0 +1,26 @@
+mixin visitorCount(anzahl)
+  p Bislang
+    if (anzahl === 0)
+      |  gibt es keine Teinahmezusagen.
+    else if (anzahl === 1)
+      |  hat ein Mitglied seine Teilnahme zugesagt.
+    else
+      |  haben #{anzahl} Mitglieder ihre Teilnahme zugesagt.
+
+
+mixin subscriptionButtons(registeredMembers, url, resource, currentMemberId)
+  if (resource === 'default')
+    if (registeredMembers.indexOf(currentMemberId) > -1)
+      a.btn.btn-primary(href="unsubscribe/#{encodeURIComponent(url)}/#{encodeURIComponent(resource)}") Ich kann doch nicht…
+    else
+      a.btn.btn-primary(href="subscribe/#{encodeURIComponent(url)}/#{encodeURIComponent(resource)}") Ich bin dabei!
+
+  else
+    .row
+      .col-md-8
+        if (registeredMembers.indexOf(currentMemberId) > -1)
+          | #{resource}:
+          a.btn.btn-default.pull-right(href="unsubscribe/#{encodeURIComponent(url)}/#{encodeURIComponent(resource)}") Ich kann doch nicht…
+        else
+          | #{resource}:
+          a.btn.btn-default.pull-right(href="subscribe/#{encodeURIComponent(url)}/#{encodeURIComponent(resource)}") Ich bin dabei!
