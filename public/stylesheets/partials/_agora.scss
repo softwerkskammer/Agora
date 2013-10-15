@@ -96,6 +96,10 @@ td.fc-header-right {
   body {
     padding-bottom: 50px
   }
+
+  .popover {
+    max-width: 450px;
+  }
 }
 
 @media (max-width: 767px) {
@@ -112,6 +116,12 @@ td.fc-header-right {
   border-bottom: 1px dotted;
 }
 
-.popover {
-  max-width: 100%
+a.group {
+  color: #ffffff;
+}
+
+.label.group {
+  padding: .3em .4em .2em .4em;
+  position: absolute;
+  font-size: 0.8em;
 }
