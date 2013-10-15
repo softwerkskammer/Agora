@@ -99,9 +99,4 @@ Follow these [instructions](http://codebetter.com/glennblock/2013/01/17/debuggin
 Editing the stylesheets
 -----------------------
 
-We are working with [compass](http://compass-style.org/). Requires ruby (see website for version and [installation](http://compass-style.org/install/))). Once installed check installation by invoking 
-		compass clean
-		compass compile
-If these run without problems, check the produced file screen.css inside the stylesheets directory.
-
-Only edit the scss-files inside the "partials" subfolder.
+Only edit the scss-files inside the "partials" subfolder. Running `npm test` or `grunt default` will compile the scss files to screen.css.
