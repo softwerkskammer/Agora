@@ -1,12 +1,12 @@
 "use strict";
 
 var request = require('supertest');
-var sinon = require('sinon').sandbox.create();
-var conf = require('../configureForTest');
+var sinon = require('sinon').sandbox;
 
-var groupsPersistence = conf.get('beans').get('groupsPersistence');
-var membersPersistence = conf.get('beans').get('membersPersistence');
-var sympa = conf.get('beans').get('sympaStub');
+var beans = require('../configureForTest').get('beans');
+var groupsPersistence = beans.get('groupsPersistence');
+var membersPersistence = beans.get('membersPersistence');
+var sympa = beans.get('sympaStub');
 
 var app = require('../../app').create();
 
@@ -22,6 +22,11 @@ describe('Groups application', function () {
         return callback(null, ['peter@google.de', 'hans@aol.com']);
       }
     });
+    
+    sinon.stub(membersPersistence, 'list', function (sortorder, callback) {
+      callback(null, null);
+    });
+    
     sinon.stub(membersPersistence, 'getByField', function (email, callback) {
       if (email.email.test('hans@aol.com')) {
         return callback(null, { firstname: 'Hans', lastname: 'Dampf' });

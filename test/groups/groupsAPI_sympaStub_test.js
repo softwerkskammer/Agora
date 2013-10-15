@@ -1,18 +1,18 @@
 "use strict";
 
-var conf = require('../configureForTest');
-var sinon = require('sinon');
+var sinon = require('sinon').sandbox;
 
 var expect = require('chai').expect;
 
-var Group = conf.get('beans').get('group');
+var beans = require('../configureForTest').get('beans');
+var Group = beans.get('group');
 
 var Craftsmanswap = new Group({id: 'craftsmanswap', longName: 'Gruppe A', description: 'Dies ist Gruppe A.', type: 'Themengruppe'});
 var NeuePlattform = new Group({id: 'neueplattform', longName: 'Gruppe B', description: 'Dies ist Gruppe B.', type: 'Regionalgruppe'});
 var NonPersistentGroup = new Group({id: 'Group C', longName: 'Gruppe C', description: 'Dies ist Gruppe C.', type: 'Regionalgruppe'});
 
-var groupstore = conf.get('beans').get('groupstore');
-var systemUnderTest = conf.get('beans').get('groupsAPI');
+var groupstore = beans.get('groupstore');
+var systemUnderTest = beans.get('groupsAPI');
 
 describe('Groups API with SympaStub', function () {
   var saveGroupSpy;
@@ -33,9 +33,7 @@ describe('Groups API with SympaStub', function () {
   });
 
   after(function (done) {
-    groupstore.allGroups.restore();
-    groupstore.getGroup.restore();
-    groupstore.saveGroup.restore();
+    sinon.restore();
     done();
   });
 
