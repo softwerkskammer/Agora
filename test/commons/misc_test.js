@@ -84,4 +84,25 @@ describe('differenceCaseInsensitive function', function () {
     expect(result).to.not.contain('a@b.coM');
     expect(result.length).to.equal(1);
   });
+
+  it('ignores undefined inputs on right side', function () {
+    var leftside = ['a@b.com', 'c@d.de'];
+    var result = misc.differenceCaseInsensitive(leftside, undefined);
+    expect(result).to.contain('c@d.de');
+    expect(result).to.contain('a@b.com');
+    expect(result.length).to.equal(2);
+  });
+
+  it('ignores undefined inputs on left side', function () {
+    var rightside = ['a@b.coM'];
+    var result = misc.differenceCaseInsensitive(undefined, rightside);
+    expect(result.length).to.equal(0);
+  });
+
+  it('ignores arrays with null', function () {
+    var rightside = [null];
+    var leftside = [null];
+    var result = misc.differenceCaseInsensitive(leftside, rightside);
+    expect(result.length).to.equal(0);
+  });
 });
