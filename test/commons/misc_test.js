@@ -36,7 +36,6 @@ describe('toArray function', function () {
     expect(result[1]).to.equal('Test');
     expect(result[2]).to.equal('Test');
   });
-
 });
 
 describe('toLowerCaseRegExp function', function () {
@@ -56,5 +55,33 @@ describe('toLowerCaseRegExp function', function () {
     var result = misc.toLowerCaseRegExp("All of these should be escaped: \\ ^ $ * + ? . ( ) | { } [ ]");
     expect(result.toString()).to.equal("/^All of these should be escaped: \\\\ \\^ \\$ \\* \\+ \\? \\. \\( \\) \\| \\{ \\} \\[ \\]$/i");
   });
+});
 
+describe('differenceCaseInsensitive function', function () {
+  it('filters lowercase strings', function () {
+    var rightside = ['a@b.com'];
+    var leftside = ['a@b.com', 'c@d.de'];
+    var result = misc.differenceCaseInsensitive(leftside, rightside);
+    expect(result).to.contain('c@d.de');
+    expect(result).to.not.contain('a@b.com');
+    expect(result.length).to.equal(1);
+  });
+
+  it('filters found addresses case insensitive', function () {
+    var rightside = ['a@b.com'];
+    var leftside = ['a@b.coM', 'c@d.de'];
+    var result = misc.differenceCaseInsensitive(leftside, rightside);
+    expect(result).to.contain('c@d.de');
+    expect(result).to.not.contain('a@b.coM');
+    expect(result.length).to.equal(1);
+  });
+
+  it('filters found addresses case insensitive inverse', function () {
+    var rightside = ['a@b.coM'];
+    var leftside = ['a@b.com', 'c@d.de'];
+    var result = misc.differenceCaseInsensitive(leftside, rightside);
+    expect(result).to.contain('c@d.de');
+    expect(result).to.not.contain('a@b.coM');
+    expect(result.length).to.equal(1);
+  });
 });
