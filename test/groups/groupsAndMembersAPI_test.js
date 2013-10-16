@@ -1,6 +1,6 @@
 "use strict";
 
-var sinon = require('sinon');
+var sinon = require('sinon').sandbox;
 var beans = require('../configureForTest').get('beans');
 
 var expect = require('chai').expect;
@@ -22,9 +22,13 @@ var systemUnderTest = beans.get('groupsAndMembersAPI');
 
 describe('Groups and Members API (getUserWithHisGroups)', function () {
 
+  beforeEach(function (done) {
+    sinon.stub(membersAPI, 'allMembers', function (callback) { callback(null, null); });
+    done();
+  });
+
   afterEach(function (done) {
-    groupsAPI.getSubscribedGroupsForUser.restore();
-    membersAPI.getMember.restore();
+    sinon.restore();
     done();
   });
 
@@ -64,10 +68,13 @@ describe('Groups and Members API (getUserWithHisGroups)', function () {
 
 describe('Groups and Members API (getGroupAndMembersForList)', function () {
 
+  beforeEach(function (done) {
+    sinon.stub(membersAPI, 'allMembers', function (callback) { callback(null, null); });
+    done();
+  });
+
   afterEach(function (done) {
-    groupsAPI.getSympaUsersOfList.restore();
-    groupsAPI.getGroup.restore();
-    membersAPI.getMembersForEMails.restore();
+    sinon.restore();
     done();
   });
 
@@ -136,9 +143,13 @@ describe('Groups and Members API (getGroupAndMembersForList)', function () {
 
 describe('Groups and Members API (addMembersToGroup)', function () {
 
+  beforeEach(function (done) {
+    sinon.stub(membersAPI, 'allMembers', function (callback) { callback(null, null); });
+    done();
+  });
+
   afterEach(function (done) {
-    groupsAPI.getSympaUsersOfList.restore();
-    membersAPI.getMembersForEMails.restore();
+    sinon.restore();
     done();
   });
 
