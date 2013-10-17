@@ -93,6 +93,24 @@ describe('differenceCaseInsensitive function', function () {
     expect(result.length).to.equal(2);
   });
 
+  it('works with more on right side than on left side', function () {
+    var leftside = ['a@b.com', 'c@d.de'];
+    var rightside = ['a@b.com', 'c@d.de', 'kkkkk'];
+    var result = misc.differenceCaseInsensitive(leftside, rightside);
+    expect(result).to.not.contain('c@d.de');
+    expect(result).to.not.contain('a@b.com');
+    expect(result.length).to.equal(0);
+  });
+
+  it('filters with more on right side than on left side', function () {
+    var leftside = ['a@b.com', 'c@d.de'];
+    var rightside = ['k@b.com', 'c@d.de', 'kkkkk'];
+    var result = misc.differenceCaseInsensitive(leftside, rightside);
+    expect(result).to.not.contain('c@d.de');
+    expect(result).to.contain('a@b.com');
+    expect(result.length).to.equal(1);
+  });
+
   it('ignores undefined inputs on left side', function () {
     var rightside = ['a@b.coM'];
     var result = misc.differenceCaseInsensitive(undefined, rightside);
