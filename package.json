@@ -62,6 +62,7 @@
     "grunt-sass": "~0.6.x",
     "grunt-contrib-qunit": "0.3.0",
     "grunt-contrib-uglify": "~0.2.x",
+    "grunt-contrib-concat": "~0.3.0",
     "chai": "~1.8.0",
     "sinon": "~1.7.3",
     "request": "~2.27.x",
