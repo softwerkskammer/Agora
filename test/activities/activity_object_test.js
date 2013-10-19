@@ -252,8 +252,8 @@ describe('Activity resource management', function () {
     });
     activity = activity.resetForClone();
     expect(activity.registeredMembers()).to.be.empty;
-    expect(activity.startDate()).to.not.equal('04.04.2013');
-    expect(activity.endDate()).to.not.equal('05.04.2013');
+    expect(activity.startDate()).to.equal('04.04.2013');
+    expect(activity.endDate()).to.equal('05.04.2013');
     expect(!!activity.id()).to.be.false;
     expect(!!activity.url()).to.be.false;
     done();
