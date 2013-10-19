@@ -17,3 +17,4 @@ test/tempbeans.json
 npm-debug.log
 coverage.html
 screen.css
+global.js
