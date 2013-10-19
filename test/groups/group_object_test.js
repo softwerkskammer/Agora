@@ -22,7 +22,7 @@ describe('Group object', function () {
     done();
   });
 
-  it('should deliver the correct type code for Regionalgruppe', function (done) {
+  it('should deliver the group for Regionalgruppe', function (done) {
     var group = new Group({id: 'abc', type: 'Regionalgruppe'});
     expect(Group.thematicsFrom([group])).to.deep.equal([]);
     expect(Group.regionalsFrom([group])).to.deep.equal([group]);
