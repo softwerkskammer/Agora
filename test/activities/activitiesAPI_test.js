@@ -42,7 +42,7 @@ describe('Activities API', function () {
       expect(!!err).to.be.false;
       expect(activities.length).to.equal(1);
       var activity = activities[0];
-      expect(activity.title).to.equal('Title of the Activity');
+      expect(activity.title()).to.equal('Title of the Activity');
       expect(activity.colorRGB).to.equal('#123456');
       expect(activity.groupName).to.equal('The name of the assigned Group');
     });

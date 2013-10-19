@@ -4,15 +4,20 @@ require('../configureForTest');
 var conf = require('nconf');
 var expect = require('chai').expect;
 
+//var util = require('util');
+
+var fieldHelpers = conf.get('beans').get('fieldHelpers');
 var Activity = conf.get('beans').get('activity');
 var Resource = conf.get('beans').get('resource');
+
+// TODO Activity.fillFromUI with null/undefined in startDate, startTime, endDate, endTime
 
 describe('Activity', function () {
   it('converts a wellformed Activity to a calendar display event without colors given', function (done) {
     var activity = new Activity().fillFromDB({
       title: 'Title',
-      startDate: '4.4.2013',
-      endDate: '5.4.2013',
+      startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('04.04.2013'),
+      endUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('05.04.2013'),
       url: 'myURL'
     });
     var event = activity.asCalendarEvent();
@@ -32,8 +37,7 @@ describe('Activity', function () {
       {id: 'group', longName: 'groupname'},
       {id: 'other', longName: 'othername'}
     ];
-    var groupName = activity.groupNameFrom(groups);
-    expect('groupname').to.equal(groupName);
+    expect(activity.groupNameFrom(groups)).to.equal('groupname');
     done();
   });
 
@@ -46,8 +50,7 @@ describe('Activity', function () {
       {id: 'each', longName: 'groupname'},
       {id: 'other', longName: 'othername'}
     ];
-    var groupName = activity.groupNameFrom(groups);
-    expect('').to.equal(groupName);
+    expect(activity.groupNameFrom(groups)).to.equal('');
     done();
   });
 
@@ -61,8 +64,7 @@ describe('Activity', function () {
       group: '#FFF',
       other: '000'
     };
-    var color = activity.colorFrom(groupColors, []);
-    expect('#FFF').to.equal(color);
+    expect(activity.colorFrom(groupColors, [])).to.equal('#FFF');
     done();
   });
 
@@ -75,8 +77,7 @@ describe('Activity', function () {
       {id: 'special', color: '#FFF' },
       {id: 'normal', color: '#00' }
     ];
-    var color = activity.colorFrom(null, colors);
-    expect('#FFF').to.equal(color);
+    expect(activity.colorFrom(null, colors)).to.equal('#FFF');
     done();
   });
 
@@ -84,13 +85,12 @@ describe('Activity', function () {
     var activity = new Activity().fillFromDB({
       url: 'myURL'
     });
-    var color = activity.colorFrom(null, []);
-    expect('#353535').to.equal(color);
+    expect(activity.colorFrom(null, [])).to.equal('#353535');
     done();
   });
 
   it('parses start date and time using default timezone', function () {
-    var activity = new Activity().fillFromDB({
+    var activity = new Activity().fillFromUI({
       url: 'myURL',
       startDate: '01.02.2013',
       startTime: '12:34'
@@ -101,7 +101,7 @@ describe('Activity', function () {
   });
 
   it('parses end date and time using default timezone', function () {
-    var activity = new Activity().fillFromDB({
+    var activity = new Activity().fillFromUI({
       url: 'myURL',
       endDate: '01.08.2013',
       endTime: '12:34'
@@ -114,16 +114,18 @@ describe('Activity', function () {
 
 describe('Activity\'s description', function () {
   it('renders anchor tags when required', function (done) {
-    var activity = new Activity();
-    activity.description = '[dafadf](http://a.de) https://b.de';
+    var activity = new Activity().fillFromDB({
+      description: '[dafadf](http://a.de) https://b.de'
+    });
     expect(activity.descriptionHTML()).to.contain('a href="http://a.de"');
     expect(activity.descriptionHTML()).to.contain('"https://b.de"');
     done();
   });
 
   it('removes anchor tags when required', function (done) {
-    var activity = new Activity();
-    activity.description = '<a href = "http://a.de">dafadf</a> https://b.de';
+    var activity = new Activity().fillFromDB({
+      description: '<a href = "http://a.de">dafadf</a> https://b.de'
+    });
     expect(activity.descriptionPlain()).to.not.contain('"http://a.de"');
     expect(activity.descriptionPlain()).to.not.contain('"https://b.de"');
     expect(activity.descriptionPlain()).to.contain('dafadf');
@@ -135,14 +137,14 @@ describe('Activity\'s description', function () {
 describe('Activity\'s direction', function () {
   it('knows that it doesn\'t contain direction', function (done) {
     var activity = new Activity();
-    activity.direction = '';
     expect(activity.hasDirection()).to.be.false;
     done();
   });
 
   it('knows that it contains direction', function (done) {
-    var activity = new Activity();
-    activity.direction = 'direction';
+    var activity = new Activity().fillFromDB({
+      direction: 'direction'
+    });
     expect(activity.hasDirection()).to.be.true;
     done();
   });
@@ -150,7 +152,7 @@ describe('Activity\'s direction', function () {
 
 describe('Activity\'s markdown', function () {
   it('creates its markdown with direction', function (done) {
-    var activity = new Activity().fillFromDB({
+    var activity = new Activity().fillFromUI({
       url: 'url',
       description: 'description',
       location: 'location',
@@ -240,7 +242,7 @@ describe('Activity resource management', function () {
   });
 
   it('resets for copied activity', function (done) {
-    var activity = new Activity().fillFromDB({
+    var activity = new Activity().fillFromUI({
       id: 'ID',
       title: 'Title',
       startDate: '4.4.2013',
@@ -252,8 +254,8 @@ describe('Activity resource management', function () {
     expect(activity.registeredMembers()).to.be.empty;
     expect(activity.startDate()).to.not.equal('04.04.2013');
     expect(activity.endDate()).to.not.equal('05.04.2013');
-    expect(activity.id).to.be.null;
-    expect(activity.url).to.be.null;
+    expect(!!activity.id()).to.be.false;
+    expect(!!activity.url()).to.be.false;
     done();
   });
 
@@ -276,8 +278,8 @@ describe('Activity resource management', function () {
   it('lists the name of all resources except the default resource if more resources are present', function (done) {
     var activity = new Activity();
     // TODO replace this later by proper resources created by the activity
-    activity.resources['Einzelzimmer'] = new Resource();
-    activity.resources['Doppelzimmer'] = new Resource();
+    activity.resources()['Einzelzimmer'] = new Resource();
+    activity.resources()['Doppelzimmer'] = new Resource();
     expect(activity.resourceNames().length).to.equal(2);
     expect(activity.resourceNames()).to.contain('Einzelzimmer');
     expect(activity.resourceNames()).to.contain('Doppelzimmer');
@@ -286,9 +288,9 @@ describe('Activity resource management', function () {
 
   it('only lists resources that actually contain something', function (done) {
     var activity = new Activity();
-    activity.resources['Einzelzimmer'] = null;
-    activity.resources['Doppelzimmer'] = undefined;
-    activity.resources['Heuboden'] = "";
+    activity.resources()['Einzelzimmer'] = null;
+    activity.resources()['Doppelzimmer'] = undefined;
+    activity.resources()['Heuboden'] = "";
     expect(activity.resourceNames().length).to.equal(1);
     expect(activity.resourceNames()).to.contain('default');
     done();
@@ -297,7 +299,7 @@ describe('Activity resource management', function () {
 });
 
 describe('ICalendar', function () {
-  var activity = new Activity().fillFromDB({
+  var activity = new Activity().fillFromUI({
     title: 'Title',
     startDate: '4.4.2013',
     startTime: '17:00',
