@@ -44,4 +44,24 @@ describe('Resource stores a list of members', function () {
     done();
   });
 
+  it('tells that an empty resource is not full', function (done) {
+    var resource = new Resource();
+    expect(resource.isFull()).to.be.false;
+    done();
+  });
+
+  it('tells that a resource with one spot is full when one member is registered', function (done) {
+    var resource = new Resource(['memberID'], 1);
+    expect(resource.isFull()).to.be.true;
+    done();
+  });
+
+  it('tells that a resource with one spot does not accept member registrations when one member is registered', function (done) {
+    var resource = new Resource(['memberID'], 1);
+    resource.addMemberId('otherMemberID');
+    expect(resource.registeredMembers().length).to.equal(1);
+    expect(resource.registeredMembers()).to.contain('memberID');
+    done();
+  });
+
 });
