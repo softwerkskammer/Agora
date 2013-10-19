@@ -15,15 +15,17 @@ describe('Group object', function () {
     done();
   });
 
-  it('should deliver the correct type code for Themengruppe', function (done) {
+  it('should deliver the group for Themengruppe', function (done) {
     var group = new Group({id: 'abc', type: 'Themengruppe'});
-    expect(group.typeCode()).to.equal(0);
+    expect(Group.thematicsFrom([group])).to.deep.equal([group]);
+    expect(Group.regionalsFrom([group])).to.deep.equal([]);
     done();
   });
 
-  it('should deliver the correct type code for Regionalgruppe', function (done) {
+  it('should deliver the group for Regionalgruppe', function (done) {
     var group = new Group({id: 'abc', type: 'Regionalgruppe'});
-    expect(group.typeCode()).to.equal(1);
+    expect(Group.thematicsFrom([group])).to.deep.equal([]);
+    expect(Group.regionalsFrom([group])).to.deep.equal([group]);
     done();
   });
 
