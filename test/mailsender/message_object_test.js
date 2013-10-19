@@ -45,6 +45,27 @@ describe('Message Object\'s bcc', function () {
     done();
   });
 
+  it('is filled by groups with members and removing duplicates', function (done) {
+    var message = new Message();
+    var groups = [
+      {members: [
+        {email: 'heinz'}
+      ]},
+      {members: [
+        {email: 'heinz'}
+      ]},
+      {members: [
+        {email: 'hans'}
+      ]},
+      {members: [
+        {email: 'elfriede'}
+      ]}
+    ];
+    message.setBccToGroupMemberAddresses(groups);
+    expect(message.bcc).to.deep.equal(['heinz', 'hans', 'elfriede']);
+    done();
+  });
+
   it('is not filled by empty members', function (done) {
     var message = new Message();
     var members = [];
