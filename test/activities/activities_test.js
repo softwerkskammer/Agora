@@ -240,7 +240,7 @@ describe('Activity application', function () {
     });
 
     var root = express();
-    root.use(express.bodyParser());
+    root.use(express.urlencoded());
     root.use('/', app);
     request(root)
       .post('/submit')
@@ -257,7 +257,7 @@ describe('Activity application', function () {
   it('rejects an activity with empty title on submit', function (done) {
 
     var root = express();
-    root.use(express.bodyParser());
+    root.use(express.urlencoded());
     root.use('/', app);
     request(root)
       .post('/submit')
@@ -275,7 +275,7 @@ describe('Activity application', function () {
     });
 
     var root = express();
-    root.use(express.bodyParser());
+    root.use(express.urlencoded());
     root.use('/', app);
     request(root)
       .post('/submit')
