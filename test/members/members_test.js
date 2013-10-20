@@ -180,7 +180,7 @@ describe('Members application', function () {
     });
 
     var root = express();
-    root.use(express.bodyParser());
+    root.use(express.urlencoded());
     root.use('/', app);
     request(root)
       .post('/submit')
@@ -201,7 +201,7 @@ describe('Members application', function () {
     });
 
     var root = express();
-    root.use(express.bodyParser());
+    root.use(express.urlencoded());
     root.use('/', app);
     request(root)
       .post('/submit')
@@ -218,7 +218,7 @@ describe('Members application', function () {
   it('rejects a member with missing first and last name on submit', function (done) {
 
     var root = express();
-    root.use(express.bodyParser());
+    root.use(express.urlencoded());
     root.use('/', app);
     request(root)
       .post('/submit')
@@ -241,7 +241,7 @@ describe('Members application', function () {
     });
 
     var root = express();
-    root.use(express.bodyParser());
+    root.use(express.urlencoded());
     root.use('/', app);
     request(root)
       .post('/submit')
@@ -262,7 +262,7 @@ describe('Members application', function () {
     });
 
     var root = express();
-    root.use(express.bodyParser());
+    root.use(express.urlencoded());
     root.use('/', app);
     request(root)
       .post('/submit')
