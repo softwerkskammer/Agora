@@ -51,7 +51,7 @@ module.exports = {
       app.use(express.favicon(path.join(__dirname, 'public/img/Softwerkskammer16x16.ico')));
       app.use(express.logger({stream: winstonStream}));
       app.use(express.cookieParser());
-      app.use(express.bodyParser());
+      app.use(express.urlencoded());
       app.use(express.methodOverride());
       app.use(express.compress());
       app.use(express.static(path.join(__dirname, 'public')));
