@@ -46,13 +46,13 @@ block content
           tbody
             for activity in activities
               tr
-                td: a(href="/activities/edit/#{encodeURIComponent(activity.url)}"): i.icon-edit
-                td #{activity.title}
-                td #{activity.url}
+                td: a(href="/activities/edit/#{encodeURIComponent(activity.url())}"): i.icon-edit
+                td #{activity.title()}
+                td #{activity.url()}
                 td #{activity.startDate()}
                 td #{activity.endDate()}
-                td #{activity.location}
-                td.ellipsis: .tooltiplabel(data-toggle="hover", data-placement="auto top", data-html="true", data-content="#{activity.descriptionHTML()}", data-title="#{activity.title}"): #{activity.description}
-                td.ellipsis: .tooltiplabel(data-toggle="hover", data-placement="auto top", data-html="true", data-content="#{activity.directionHTML()}"): #{activity.direction}
+                td #{activity.location()}
+                td.ellipsis: .tooltiplabel(data-toggle="hover", data-placement="auto top", data-html="true", data-content="#{activity.descriptionHTML()}", data-title="#{activity.title()}") #{activity.description()}
+                td.ellipsis: .tooltiplabel(data-toggle="hover", data-placement="auto top", data-html="true", data-content="#{activity.directionHTML()}") #{activity.direction()}
                 td #{activity.groupNameFrom(groups)}
                   
