@@ -276,10 +276,7 @@ describe('Activity resource management', function () {
   });
 
   it('lists the name of all resources except the default resource if more resources are present', function (done) {
-    var activity = new Activity();
-    // TODO replace this later by proper resources created by the activity
-    activity.resources()['Einzelzimmer'] = new Resource();
-    activity.resources()['Doppelzimmer'] = new Resource();
+    var activity = new Activity().fillFromDB({resources: {Einzelzimmer: new Resource(), Doppelzimmer: new Resource()}});
     expect(activity.resourceNames().length).to.equal(2);
     expect(activity.resourceNames()).to.contain('Einzelzimmer');
     expect(activity.resourceNames()).to.contain('Doppelzimmer');
@@ -287,10 +284,7 @@ describe('Activity resource management', function () {
   });
 
   it('only lists resources that actually contain something', function (done) {
-    var activity = new Activity();
-    activity.resources()['Einzelzimmer'] = null;
-    activity.resources()['Doppelzimmer'] = undefined;
-    activity.resources()['Heuboden'] = "";
+    var activity = new Activity().fillFromDB({resources: {Einzelzimmer: null, Doppelzimmer: undefined, Heuboden: ""}});
     expect(activity.resourceNames().length).to.equal(1);
     expect(activity.resourceNames()).to.contain('default');
     done();
