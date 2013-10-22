@@ -204,7 +204,7 @@ describe('Activity resource management', function () {
       {url: 'myURL', registeredMembers: ['memberID']}
     );
     activity.removeMemberId('memberID', 'default');
-    expect(activity.registeredMembers()).to.be.empty;
+    expect(activity.registeredMembers('default')).to.be.empty;
     done();
   });
 
@@ -250,7 +250,7 @@ describe('Activity resource management', function () {
       registeredMembers: ['memberID']
     });
     activity = activity.resetForClone();
-    expect(activity.registeredMembers()).to.be.empty;
+    expect(activity.registeredMembers('default')).to.be.empty;
     expect(activity.startDate()).to.equal('04.04.2013');
     expect(activity.endDate()).to.equal('05.04.2013');
     expect(!!activity.id()).to.be.false;
@@ -263,7 +263,50 @@ describe('Activity resource management', function () {
     var activity = new Activity().fillFromDB({url: 'url'});
     activity.addMemberId('memberID', 'default');
     var copy = new Activity().copyFrom(activity);
-    expect(copy.registeredMembers()).to.be.empty;
+    expect(copy.registeredMembers('default')).to.be.empty;
+    done();
+  });
+
+  it('can add a new member to a copied activity', function (done) {
+    var activity = new Activity().fillFromDB({url: 'url'});
+    activity.addMemberId('memberID', 'default');
+    var copy = new Activity().copyFrom(activity);
+    copy.addMemberId('memberID', 'default');
+    expect(copy.registeredMembers('default')).to.contain('memberID');
+    done();
+  });
+
+  it('preserves all resources of a copied activity (i.e. the copy accepts registrations for the resources)', function (done) {
+    var activity = new Activity().fillFromDB({url: 'url', resources: {
+      default: { _registeredMembers: []},
+      Einzelzimmer: { _registeredMembers: []},
+      Doppelzimmer: { _registeredMembers: []}
+    }});
+    var copy = new Activity().copyFrom(activity);
+    copy.addMemberId('memberID', 'default');
+    expect(copy.registeredMembers('default')).to.contain('memberID');
+    copy.addMemberId('memberID2', 'Einzelzimmer');
+    expect(copy.registeredMembers('Einzelzimmer')).to.contain('memberID2');
+    copy.addMemberId('memberID3', 'Doppelzimmer');
+    expect(copy.registeredMembers('Doppelzimmer')).to.contain('memberID3');
+    done();
+  });
+
+  it('empties all resources of a copied activity but keeps the original intact', function (done) {
+    var activity = new Activity().fillFromDB({url: 'url', resources: {
+      default: { _registeredMembers: ['memberID']},
+      Einzelzimmer: { _registeredMembers: ['memberID']},
+      Doppelzimmer: { _registeredMembers: ['memberID']}
+    }});
+    var copy = new Activity().copyFrom(activity);
+    expect(copy.registeredMembers('default')).to.be.empty;
+    expect(copy.registeredMembers('Einzelzimmer')).to.be.empty;
+    expect(copy.registeredMembers('Doppelzimmer')).to.be.empty;
+
+    expect(activity.registeredMembers('default')).to.contain('memberID');
+    expect(activity.registeredMembers('Einzelzimmer')).to.contain('memberID');
+    expect(activity.registeredMembers('Doppelzimmer')).to.contain('memberID');
+
     done();
   });
 
