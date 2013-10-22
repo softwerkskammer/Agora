@@ -175,6 +175,39 @@ describe('Activity resource management', function () {
   it('adds no default resource if there are no resources in the activity resources property', function (done) {
     var activity = new Activity({ resources: {}});
     expect(activity.resourceNames()).to.be.empty;
+    expect(!!activity.resourceNames()).to.be.true; // not undefined, not null
+    done();
+  });
+
+  it('lists no registered members if there are no resources', function (done) {
+    var activity = new Activity({ resources: {}});
+    expect(activity.allRegisteredMembers()).to.be.empty;
+    done();
+  });
+
+  it('lists all registered members of any resource', function (done) {
+    var activity = new Activity({ resources: {
+      default: { _registeredMembers: ['memberID1']},
+      Einzelzimmer: { _registeredMembers: ['memberID2']},
+      Doppelzimmer: { _registeredMembers: ['memberID3']}
+    }});
+
+    expect(activity.allRegisteredMembers().length).to.equal(3);
+    expect(activity.allRegisteredMembers()).to.contain('memberID1');
+    expect(activity.allRegisteredMembers()).to.contain('memberID2');
+    expect(activity.allRegisteredMembers()).to.contain('memberID3');
+    done();
+  });
+
+  it('lists a registered member only once even when he registered for multiple resources', function (done) {
+    var activity = new Activity({ resources: {
+      default: { _registeredMembers: ['memberID']},
+      Einzelzimmer: { _registeredMembers: ['memberID']},
+      Doppelzimmer: { _registeredMembers: ['memberID']}
+    }});
+
+    expect(activity.allRegisteredMembers().length).to.equal(1);
+    expect(activity.allRegisteredMembers()).to.contain('memberID');
     done();
   });
 
