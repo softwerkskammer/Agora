@@ -187,7 +187,7 @@ describe('Activity resource management', function () {
   it('adds a member to the default resource', function (done) {
     var activity = new Activity();
     activity.addMemberId('memberID', 'default');
-    expect(activity.registeredMembers()).to.contain('memberID');
+    expect(activity.registeredMembers('default')).to.contain('memberID');
     done();
   });
 
