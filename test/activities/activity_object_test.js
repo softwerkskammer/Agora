@@ -8,7 +8,6 @@ var expect = require('chai').expect;
 
 var fieldHelpers = conf.get('beans').get('fieldHelpers');
 var Activity = conf.get('beans').get('activity');
-var Resource = conf.get('beans').get('resource');
 
 // TODO Activity.fillFromUI with null/undefined in startDate, startTime, endDate, endTime
 
@@ -193,14 +192,14 @@ describe('Activity resource management', function () {
   });
 
   it('adds a member to a desired resource', function (done) {
-    var activity = new Activity().fillFromDB({url: 'myURL', resources: {Einzelzimmer: new Resource(), Doppelzimmer: new Resource()}});
+    var activity = new Activity().fillFromDB({url: 'myURL', resources: {Einzelzimmer: { _registeredMembers: []}, Doppelzimmer: { _registeredMembers: []}}});
     activity.addMemberId('memberID', 'Einzelzimmer');
     expect(activity.registeredMembers('Einzelzimmer')).to.contain('memberID');
     expect(activity.registeredMembers('Doppelzimmer')).to.be.empty;
     done();
   });
 
-  it('removes a registered member from the default resource', function (done) {
+  it('removes a registered member from the default resource (created in compatibility mode)', function (done) {
     var activity = new Activity().fillFromDB(
       {url: 'myURL', registeredMembers: ['memberID']}
     );
@@ -212,8 +211,8 @@ describe('Activity resource management', function () {
   it('removes a registered member from a desired resource', function (done) {
     var activity = new Activity().fillFromDB(
       {url: 'myURL', resources: {
-        Einzelzimmer: new Resource('memberID'),
-        Doppelzimmer: new Resource('memberID')
+        Einzelzimmer: { _registeredMembers: ['memberID']},
+        Doppelzimmer: { _registeredMembers: ['memberID']}
       }});
 
     activity.removeMemberId('memberID', 'Doppelzimmer');
@@ -225,7 +224,7 @@ describe('Activity resource management', function () {
   it('does not do anything if the desired resource does not exist', function (done) {
     var activity = new Activity().fillFromDB(
       {url: 'myURL', resources: {
-        default: new Resource('memberID')
+        default: { _registeredMembers: ['memberID']}
       }});
 
     activity.addMemberId('memberID', 'Einzelzimmer');
@@ -241,7 +240,7 @@ describe('Activity resource management', function () {
     done();
   });
 
-  it('resets for copied activity', function (done) {
+  it('resets for copied activity (original created from compatibility mode)', function (done) {
     var activity = new Activity().fillFromUI({
       id: 'ID',
       title: 'Title',
@@ -259,12 +258,12 @@ describe('Activity resource management', function () {
     done();
   });
 
-  it('copies a registered member from an existing activity', function (done) {
+  it('does not copy a registered member from an existing activity', function (done) {
     // this constructor behaviour also affects loading of stored activities
     var activity = new Activity().fillFromDB({url: 'url'});
     activity.addMemberId('memberID', 'default');
     var copy = new Activity().copyFrom(activity);
-    expect(copy.registeredMembers()).to.contain('memberID');
+    expect(copy.registeredMembers()).to.be.empty;
     done();
   });
 
@@ -276,7 +275,7 @@ describe('Activity resource management', function () {
   });
 
   it('lists the name of all resources except the default resource if more resources are present', function (done) {
-    var activity = new Activity().fillFromDB({resources: {Einzelzimmer: new Resource(), Doppelzimmer: new Resource()}});
+    var activity = new Activity().fillFromDB({resources: {Einzelzimmer: { _registeredMembers: []}, Doppelzimmer: { _registeredMembers: []}}});
     expect(activity.resourceNames().length).to.equal(2);
     expect(activity.resourceNames()).to.contain('Einzelzimmer');
     expect(activity.resourceNames()).to.contain('Doppelzimmer');
@@ -285,8 +284,20 @@ describe('Activity resource management', function () {
 
   it('only lists resources that actually contain something', function (done) {
     var activity = new Activity().fillFromDB({resources: {Einzelzimmer: null, Doppelzimmer: undefined, Heuboden: ""}});
+    expect(activity.resourceNames()).to.be.empty;
+    done();
+  });
+
+  it('adds a default resource if there is no resources property in the activity', function (done) {
+    var activity = new Activity().fillFromDB({});
     expect(activity.resourceNames().length).to.equal(1);
     expect(activity.resourceNames()).to.contain('default');
+    done();
+  });
+
+  it('adds no default resource if there are no resources in the activity resources property', function (done) {
+    var activity = new Activity().fillFromDB({ resources: {}});
+    expect(activity.resourceNames()).to.be.empty;
     done();
   });
 
