@@ -14,7 +14,7 @@ var api = beans.get('mailsenderAPI');
 var Activity = beans.get('activity');
 var fieldHelpers = beans.get('fieldHelpers');
 
-var emptyActivity = new Activity().fillFromDB({title: 'Title of the Activity', description: 'description1', assignedGroup: 'assignedGroup',
+var emptyActivity = new Activity({title: 'Title of the Activity', description: 'description1', assignedGroup: 'assignedGroup',
   location: 'location1', direction: 'direction1', startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'), url: 'urlOfTheActivity' });
 
 

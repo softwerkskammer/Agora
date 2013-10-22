@@ -13,7 +13,7 @@ var Activity = conf.get('beans').get('activity');
 
 describe('Activity', function () {
   it('converts a wellformed Activity to a calendar display event without colors given', function (done) {
-    var activity = new Activity().fillFromDB({
+    var activity = new Activity({
       title: 'Title',
       startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('04.04.2013'),
       endUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('05.04.2013'),
@@ -28,7 +28,7 @@ describe('Activity', function () {
   });
 
   it('fetches the group long name', function (done) {
-    var activity = new Activity().fillFromDB({
+    var activity = new Activity({
       url: 'myURL',
       assignedGroup: 'group'
     });
@@ -41,7 +41,7 @@ describe('Activity', function () {
   });
 
   it('fetches a blank string if group not found', function (done) {
-    var activity = new Activity().fillFromDB({
+    var activity = new Activity({
       url: 'myURL',
       assignedGroup: 'group'
     });
@@ -54,7 +54,7 @@ describe('Activity', function () {
   });
 
   it('retrieves the color from the assigned group', function (done) {
-    var activity = new Activity().fillFromDB({
+    var activity = new Activity({
       url: 'myURL',
       assignedGroup: 'group',
       color: 'aus Gruppe'
@@ -68,7 +68,7 @@ describe('Activity', function () {
   });
 
   it('retrieves the color from the assigned color', function (done) {
-    var activity = new Activity().fillFromDB({
+    var activity = new Activity({
       url: 'myURL',
       color: 'special'
     });
@@ -81,7 +81,7 @@ describe('Activity', function () {
   });
 
   it('retrieves the color as default if not found', function (done) {
-    var activity = new Activity().fillFromDB({
+    var activity = new Activity({
       url: 'myURL'
     });
     expect(activity.colorFrom(null, [])).to.equal('#353535');
@@ -113,7 +113,7 @@ describe('Activity', function () {
 
 describe('Activity\'s description', function () {
   it('renders anchor tags when required', function (done) {
-    var activity = new Activity().fillFromDB({
+    var activity = new Activity({
       description: '[dafadf](http://a.de) https://b.de'
     });
     expect(activity.descriptionHTML()).to.contain('a href="http://a.de"');
@@ -122,7 +122,7 @@ describe('Activity\'s description', function () {
   });
 
   it('removes anchor tags when required', function (done) {
-    var activity = new Activity().fillFromDB({
+    var activity = new Activity({
       description: '<a href = "http://a.de">dafadf</a> https://b.de'
     });
     expect(activity.descriptionPlain()).to.not.contain('"http://a.de"');
@@ -141,7 +141,7 @@ describe('Activity\'s direction', function () {
   });
 
   it('knows that it contains direction', function (done) {
-    var activity = new Activity().fillFromDB({
+    var activity = new Activity({
       direction: 'direction'
     });
     expect(activity.hasDirection()).to.be.true;
@@ -170,7 +170,7 @@ describe('Activity\'s markdown', function () {
   });
 
   it('creates its markdown without direction', function (done) {
-    var activity = new Activity().fillFromDB({
+    var activity = new Activity({
       url: 'url',
       description: 'description',
       location: 'location',
@@ -192,7 +192,7 @@ describe('Activity resource management', function () {
   });
 
   it('adds a member to a desired resource', function (done) {
-    var activity = new Activity().fillFromDB({url: 'myURL', resources: {Einzelzimmer: { _registeredMembers: []}, Doppelzimmer: { _registeredMembers: []}}});
+    var activity = new Activity({url: 'myURL', resources: {Einzelzimmer: { _registeredMembers: []}, Doppelzimmer: { _registeredMembers: []}}});
     activity.addMemberId('memberID', 'Einzelzimmer');
     expect(activity.registeredMembers('Einzelzimmer')).to.contain('memberID');
     expect(activity.registeredMembers('Doppelzimmer')).to.be.empty;
@@ -200,7 +200,7 @@ describe('Activity resource management', function () {
   });
 
   it('removes a registered member from the default resource (created in compatibility mode)', function (done) {
-    var activity = new Activity().fillFromDB(
+    var activity = new Activity(
       {url: 'myURL', registeredMembers: ['memberID']}
     );
     activity.removeMemberId('memberID', 'default');
@@ -209,7 +209,7 @@ describe('Activity resource management', function () {
   });
 
   it('removes a registered member from a desired resource', function (done) {
-    var activity = new Activity().fillFromDB(
+    var activity = new Activity(
       {url: 'myURL', resources: {
         Einzelzimmer: { _registeredMembers: ['memberID']},
         Doppelzimmer: { _registeredMembers: ['memberID']}
@@ -222,7 +222,7 @@ describe('Activity resource management', function () {
   });
 
   it('does not do anything if the desired resource does not exist', function (done) {
-    var activity = new Activity().fillFromDB(
+    var activity = new Activity(
       {url: 'myURL', resources: {
         default: { _registeredMembers: ['memberID']}
       }});
@@ -260,7 +260,7 @@ describe('Activity resource management', function () {
 
   it('does not copy a registered member from an existing activity', function (done) {
     // this constructor behaviour also affects loading of stored activities
-    var activity = new Activity().fillFromDB({url: 'url'});
+    var activity = new Activity({url: 'url'});
     activity.addMemberId('memberID', 'default');
     var copy = new Activity().copyFrom(activity);
     expect(copy.registeredMembers('default')).to.be.empty;
@@ -268,7 +268,7 @@ describe('Activity resource management', function () {
   });
 
   it('can add a new member to a copied activity', function (done) {
-    var activity = new Activity().fillFromDB({url: 'url'});
+    var activity = new Activity({url: 'url'});
     activity.addMemberId('memberID', 'default');
     var copy = new Activity().copyFrom(activity);
     copy.addMemberId('memberID', 'default');
@@ -277,7 +277,7 @@ describe('Activity resource management', function () {
   });
 
   it('preserves all resources of a copied activity (i.e. the copy accepts registrations for the resources)', function (done) {
-    var activity = new Activity().fillFromDB({url: 'url', resources: {
+    var activity = new Activity({url: 'url', resources: {
       default: { _registeredMembers: []},
       Einzelzimmer: { _registeredMembers: []},
       Doppelzimmer: { _registeredMembers: []}
@@ -293,7 +293,7 @@ describe('Activity resource management', function () {
   });
 
   it('empties all resources of a copied activity but keeps the original intact', function (done) {
-    var activity = new Activity().fillFromDB({url: 'url', resources: {
+    var activity = new Activity({url: 'url', resources: {
       default: { _registeredMembers: ['memberID']},
       Einzelzimmer: { _registeredMembers: ['memberID']},
       Doppelzimmer: { _registeredMembers: ['memberID']}
@@ -318,7 +318,7 @@ describe('Activity resource management', function () {
   });
 
   it('lists the name of all resources except the default resource if more resources are present', function (done) {
-    var activity = new Activity().fillFromDB({resources: {Einzelzimmer: { _registeredMembers: []}, Doppelzimmer: { _registeredMembers: []}}});
+    var activity = new Activity({resources: {Einzelzimmer: { _registeredMembers: []}, Doppelzimmer: { _registeredMembers: []}}});
     expect(activity.resourceNames().length).to.equal(2);
     expect(activity.resourceNames()).to.contain('Einzelzimmer');
     expect(activity.resourceNames()).to.contain('Doppelzimmer');
@@ -326,20 +326,20 @@ describe('Activity resource management', function () {
   });
 
   it('only lists resources that actually contain something', function (done) {
-    var activity = new Activity().fillFromDB({resources: {Einzelzimmer: null, Doppelzimmer: undefined, Heuboden: ""}});
+    var activity = new Activity({resources: {Einzelzimmer: null, Doppelzimmer: undefined, Heuboden: ""}});
     expect(activity.resourceNames()).to.be.empty;
     done();
   });
 
   it('adds a default resource if there is no resources property in the activity', function (done) {
-    var activity = new Activity().fillFromDB({});
+    var activity = new Activity({});
     expect(activity.resourceNames().length).to.equal(1);
     expect(activity.resourceNames()).to.contain('default');
     done();
   });
 
   it('adds no default resource if there are no resources in the activity resources property', function (done) {
-    var activity = new Activity().fillFromDB({ resources: {}});
+    var activity = new Activity({ resources: {}});
     expect(activity.resourceNames()).to.be.empty;
     done();
   });
