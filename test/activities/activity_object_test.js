@@ -276,6 +276,14 @@ describe('Activity resource management', function () {
     done();
   });
 
+  it('does not add a state property to any of its resources when copying', function (done) {
+    var activity = new Activity({url: 'url'});
+    activity.addMemberId('memberID', 'default');
+    var copy = new Activity().copyFrom(activity);
+    expect(copy.state.resources.default.state).to.be.undefined;
+    done();
+  });
+
   it('preserves all resources of a copied activity (i.e. the copy accepts registrations for the resources)', function (done) {
     var activity = new Activity({url: 'url', resources: {
       default: { _registeredMembers: []},
@@ -325,7 +333,7 @@ describe('Activity resource management', function () {
     done();
   });
 
-  it('only lists resources that actually contain something', function (done) {
+  it('only lists resources that actually contain something valid', function (done) {
     var activity = new Activity({resources: {Einzelzimmer: null, Doppelzimmer: undefined, Heuboden: ""}});
     expect(activity.resourceNames()).to.be.empty;
     done();
