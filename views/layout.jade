@@ -44,30 +44,30 @@ html
           ul.nav.navbar-nav
             li#announcements: a(href="/announcements")
               span.hidden-sm
-                i.icon-globe
+                i.fa.fa-globe
                 | &nbsp;Nachrichten
               span.visible-sm
-                i.icon-globe
+                i.fa.fa-globe
             li#activities: a(href="/activities/upcoming")
               span.hidden-sm
-                i.icon-calendar
+                i.fa.fa-calendar
                 | &nbsp;Aktivitäten
               span.visible-sm
-                i.icon-calendar
+                i.fa.fa-calendar
             li#groups: a(href="/groups")
               span.hidden-sm
-                i.icon-group
+                i.fa.fa-group
                 | &nbsp;Gruppen
               span.visible-sm
-                i.icon-group
+                i.fa.fa-group
             li#wiki.dropdown
               a.dropdown-toggle(href="#", data-toggle="dropdown")
                 span.hidden-sm
-                  i.icon-book
+                  i.fa.fa-book
                   | &nbsp;Wiki&nbsp;
                   b.caret
                 span.visible-sm
-                  i.icon-book
+                  i.fa.fa-book
                   b.caret
               ul.dropdown-menu
                 if (typeof(wikisubdirs) !== 'undefined')
@@ -76,11 +76,11 @@ html
             li#members: a(href="/members")
               span.hidden-sm
                 if (typeof(user) !== 'undefined')
-                  i.icon-user
+                  i.fa.fa-user
                   | &nbsp;Mitglieder
               span.visible-sm
                 if (typeof(user) !== 'undefined')
-                  i.icon-user
+                  i.fa.fa-user
             mixin loginMenu(true)
 
     .container(style="max-width: 2048px")

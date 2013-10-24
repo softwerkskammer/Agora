@@ -13,7 +13,7 @@ block content
           | "#{member.nickname}"&nbsp;
           .btn-group.pull-right
             if (typeof(user) !== 'undefined' && (user.member.isAdmin || user.member.id === member.id))
-              a.btn.btn-default(href="/members/edit/#{encodeURIComponent(member.nickname)}"): i.icon-edit
+              a.btn.btn-default(href="/members/edit/#{encodeURIComponent(member.nickname)}"): i.fa.fa-edit
           small
             if (member.isAdmin)
               | Admin
@@ -53,7 +53,7 @@ block content
   .row
     .col-md-12
       a.btn.btn-primary(href="/mailsender/contactMember/#{encodeURIComponent(member.nickname)}")
-        i.icon-envelope
+        i.fa.fa-envelope
         | &nbsp;Eine Mail an #{member.firstname} #{member.lastname} senden
 
       h3 Mitglied in:

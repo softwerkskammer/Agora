@@ -2,47 +2,47 @@ mixin administrationMenu()
   if ((typeof(user) !== 'undefined') && user.member && user.member.isAdmin)
     li#administration.dropdown.nav
       a.dropdown-toggle(href="#", data-toggle="dropdown")
-        i.icon-dashboard
+        i.fa.fa-dashboard
         | &nbsp;Verwaltung&nbsp;
         b.caret
       ul.dropdown-menu
         li: a(href="/administration/announcementTable")
-          i.icon-globe
+          i.fa.fa-globe
           | &nbsp;Nachrichten
         li: a(href="/administration/activityTable")
-          i.icon-calendar
+          i.fa.fa-calendar
           | &nbsp;Aktivitäten
         li: a(href="/administration/groupTable")
-          i.icon-group
+          i.fa.fa-group
           | &nbsp;Gruppen
         li: a(href="/administration/memberTable")
-          i.icon-user
+          i.fa.fa-user
           | &nbsp;Mitglieder
         li: a(href="/administration/colors")
-          i.icon-eye-open
+          i.fa.fa-eye
           | &nbsp;Farben
 
 mixin loginMenu(forInline)
   if (typeof(user) !== 'undefined' && user.member)
     li.dropdown(class="#{forInline ? 'visible-xs' : ''}")
       a.dropdown-toggle(href="#", data-toggle="dropdown")
-        i.icon-info-sign&nbsp;
+        i.fa.fa-info-circle&nbsp;
         | #{user.member.nickname} 
         b.caret
       ul.dropdown-menu
         li: a(href="/members/edit/#{encodeURIComponent(user.member.nickname)}")
-          i.icon-edit
+          i.fa.fa-edit
           | &nbsp;Profil bearbeiten
         li: a(href="/auth/logout")
-          i.icon-signout
+          i.fa.fa-sign-out
           | &nbsp;Abmelden
         li: a(href="https://github.com/softwerkskammer/NeuePlattform-Implementierung/issues", target="_blank")
-          i.icon-ambulance
+          i.fa.fa-ambulance
           | &nbsp;Einen Bug melden
         li: include ../version
   else
     li: a.navbar-link(data-toggle="modal", href="#login", class="#{forInline ? 'visible-xs' : ''}")
-      i.icon-signin
+      i.fa.fa-sign-in
       | &nbsp;Anmelden
 
 mixin navbar-inside
@@ -67,7 +67,7 @@ mixin bottomNavbar
 
 mixin externalUrl(url, text)
   a(href=url, target="_blank")
-    i.icon-external-link
+    i.fa.fa-external-link
     | &nbsp;#{text}
 
 mixin notificationsBlock(notificationmessage)

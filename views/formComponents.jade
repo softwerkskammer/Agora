@@ -3,7 +3,7 @@ mixin controlLabel(name, label, tooltip)
   label.control-label(for=name)
     -if (typeof(tooltip) !== 'undefined')
       span.tooltiplabel(data-toggle="tooltip", data-original-title="#{tooltip}") #{label}:&nbsp;
-        i.icon-question-sign
+        i.fa.fa-question-circle
       script.
         $('.tooltiplabel').each(function(each) {$(this).tooltip()})
     -else

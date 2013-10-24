@@ -44,7 +44,7 @@ block content
           tbody
             for announcement in announcements
               tr
-                td(class="span1"): a.btn-sm(href="/announcements/edit/#{encodeURIComponent(announcement.url)}"): i.icon-edit
+                td(class="span1"): a.btn-sm(href="/announcements/edit/#{encodeURIComponent(announcement.url)}"): i.fa.fa-edit
                 td.ellipsis #{announcement.title}
                 td #{announcement.url}
                 td #{announcement.fromDate()}

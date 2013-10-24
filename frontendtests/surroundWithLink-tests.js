@@ -4,19 +4,19 @@
 test("A text starting with 'http' is surrounded with a link consisting of the text", 1, function () {
   var text = "http://my.link";
   var result = surroundWithLink(text);
-  equal(result, "<a href=\"http://my.link\" target=\"_blank\"><i class=\"icon-external-link\"/> http://my.link</a>");
+  equal(result, "<a href=\"http://my.link\" target=\"_blank\"><i class=\"fa fa-external-link\"/> http://my.link</a>");
 });
 
 test("A text with two URLs starting with 'http' and separated with comma both with a link", 1, function () {
   var text = "http://my.link, http://your.link";
   var result = surroundWithLink(text);
-  equal(result, "<a href=\"http://my.link\" target=\"_blank\"><i class=\"icon-external-link\"/> http://my.link</a>, <a href=\"http://your.link\" target=\"_blank\"><i class=\"icon-external-link\"/> http://your.link</a>");
+  equal(result, "<a href=\"http://my.link\" target=\"_blank\"><i class=\"fa fa-external-link\"/> http://my.link</a>, <a href=\"http://your.link\" target=\"_blank\"><i class=\"fa fa-external-link\"/> http://your.link</a>");
 });
 
 test("A text with one URLs and one normal text separated with commas only one link", 1, function () {
   var text = "http://my.link, your.link";
   var result = surroundWithLink(text);
-  equal(result, "<a href=\"http://my.link\" target=\"_blank\"><i class=\"icon-external-link\"/> http://my.link</a>, your.link");
+  equal(result, "<a href=\"http://my.link\" target=\"_blank\"><i class=\"fa fa-external-link\"/> http://my.link</a>, your.link");
 });
 
 test("A twittername is modified to link to twitter and prepend an '@", 1, function () {
@@ -33,17 +33,17 @@ test("An emailaddress is modified to a mailto-link", 1, function () {
 
 test("One link inside class 'urlify' is linked", 1, function () {
   var first = $("#first");
-  equal(first.html(), "<a href=\"http://my.first.link\" target=\"_blank\"><i class=\"icon-external-link\"></i> http://my.first.link</a>");
+  equal(first.html(), "<a href=\"http://my.first.link\" target=\"_blank\"><i class=\"fa fa-external-link\"></i> http://my.first.link</a>");
 });
 
 test("Two links inside class 'urlify' are linked", 1, function () {
   var second = $("#second");
-  equal(second.html(), "<a href=\"http://my.first.link\" target=\"_blank\"><i class=\"icon-external-link\"></i> http://my.first.link</a>, <a href=\"http://my.first.link.again\" target=\"_blank\"><i class=\"icon-external-link\"></i> http://my.first.link.again</a>");
+  equal(second.html(), "<a href=\"http://my.first.link\" target=\"_blank\"><i class=\"fa fa-external-link\"></i> http://my.first.link</a>, <a href=\"http://my.first.link.again\" target=\"_blank\"><i class=\"fa fa-external-link\"></i> http://my.first.link.again</a>");
 });
 
 test("One link and one non-link inside class 'urlify' are linked accordingly", 1, function () {
   var third = $("#third");
-  equal(third.html(), "<a href=\"http://my.first.link\" target=\"_blank\"><i class=\"icon-external-link\"></i> http://my.first.link</a>, my.first.link.again");
+  equal(third.html(), "<a href=\"http://my.first.link\" target=\"_blank\"><i class=\"fa fa-external-link\"></i> http://my.first.link</a>, my.first.link.again");
 });
 
 test("One text in class 'twitterify' is linked to twitter", 1, function () {
