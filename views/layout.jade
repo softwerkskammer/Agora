@@ -44,30 +44,30 @@ html
           ul.nav.navbar-nav
             li#announcements: a(href="/announcements")
               span.hidden-sm
-                i.fa.fa-globe
+                i.fa.fa-globe.fa-fw
                 | &nbsp;Nachrichten
               span.visible-sm
-                i.fa.fa-globe
+                i.fa.fa-globe.fa-fw
             li#activities: a(href="/activities/upcoming")
               span.hidden-sm
-                i.fa.fa-calendar
+                i.fa.fa-calendar.fa-fw
                 | &nbsp;Aktivitäten
               span.visible-sm
-                i.fa.fa-calendar
+                i.fa.fa-calendar.fa-fw
             li#groups: a(href="/groups")
               span.hidden-sm
-                i.fa.fa-group
+                i.fa.fa-group.fa-fw
                 | &nbsp;Gruppen
               span.visible-sm
-                i.fa.fa-group
+                i.fa.fa-group.fa-fw
             li#wiki.dropdown
               a.dropdown-toggle(href="#", data-toggle="dropdown")
                 span.hidden-sm
-                  i.fa.fa-book
+                  i.fa.fa-book.fa-fw
                   | &nbsp;Wiki&nbsp;
                   b.caret
                 span.visible-sm
-                  i.fa.fa-book
+                  i.fa.fa-book.fa-fw
                   b.caret
               ul.dropdown-menu
                 if (typeof(wikisubdirs) !== 'undefined')
@@ -76,11 +76,11 @@ html
             li#members: a(href="/members")
               span.hidden-sm
                 if (typeof(user) !== 'undefined')
-                  i.fa.fa-user
+                  i.fa.fa-user.fa-fw
                   | &nbsp;Mitglieder
               span.visible-sm
                 if (typeof(user) !== 'undefined')
-                  i.fa.fa-user
+                  i.fa.fa-user.fa-fw
             mixin loginMenu(true)
 
     .container(style="max-width: 2048px")

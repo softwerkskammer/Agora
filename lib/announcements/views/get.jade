@@ -8,7 +8,7 @@ block content
       .page-header
         .btn-group.pull-right
           if (typeof(user) !== 'undefined' && user.member.isAdmin)
-            a.btn.btn-default(href="/announcements/edit/#{encodeURIComponent(announcement.url)}", title="Bearbeiten"): i.fa.fa-edit
+            a.btn.btn-default(href="/announcements/edit/#{encodeURIComponent(announcement.url)}", title="Bearbeiten"): i.fa.fa-edit.fa-fw
         h2 #{announcement.title}&nbsp;
           small #{announcement.fromDate()}
       .row

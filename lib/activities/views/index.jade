@@ -16,9 +16,9 @@ block content
               li: a(href="/activities/upcoming") Kommende
               li: a(href="/activities/past") Vergangene
               li: a(href="/activities") Alle
-          a.btn.btn-default(href="ical/", title="Für Kalender exportieren. Zum Abo: URL in Kalenderprogramm abonnieren"): i.fa.fa-calendar
+          a.btn.btn-default(href="ical/", title="Für Kalender exportieren. Zum Abo: URL in Kalenderprogramm abonnieren"): i.fa.fa-calendar.fa-fw
           if typeof(user) !== 'undefined' && user.member.isAdmin
-            a.btn.btn-default(href="new/", title="Neue Aktivität"): i.fa.fa-file-o
+            a.btn.btn-default(href="new/", title="Neue Aktivität"): i.fa.fa-file-o.fa-fw
         h2 Aktivitäten
       dl.dl-horizontal
         for activity in activities

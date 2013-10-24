@@ -16,11 +16,11 @@ block content
     .col-md-12
       .page-header
         .btn-group.pull-right
-          a.btn.btn-default(href="/activities/ical/#{encodeURIComponent(activity.url)}", title="Für Kalender exportieren"): i.fa.fa-calendar
-          a.btn.btn-default(href="/mailsender/invitation/#{encodeURIComponent(activity.url)}", title="Einladung versenden"): i.fa.fa-envelope-o
-          a.btn.btn-default(href="/activities/newLike/#{encodeURIComponent(activity.url)}", title="Neu auf Basis dieser Aktivität"): i.fa.fa-copy
+          a.btn.btn-default(href="/activities/ical/#{encodeURIComponent(activity.url)}", title="Für Kalender exportieren"): i.fa.fa-calendar.fa-fw
+          a.btn.btn-default(href="/mailsender/invitation/#{encodeURIComponent(activity.url)}", title="Einladung versenden"): i.fa.fa-envelope-o.fa-fw
+          a.btn.btn-default(href="/activities/newLike/#{encodeURIComponent(activity.url)}", title="Neu auf Basis dieser Aktivität"): i.fa.fa-copy.fa-fw
           if (typeof(user) !== 'undefined' && user.member.isAdmin)
-            a.btn.btn-default(href="/activities/edit/#{encodeURIComponent(activity.url)}", title="Bearbeiten"): i.fa.fa-edit
+            a.btn.btn-default(href="/activities/edit/#{encodeURIComponent(activity.url)}", title="Bearbeiten"): i.fa.fa-edit.fa-fw
         h2 #{activity.title}
           br
           small #{activity.startDate()} (#{activity.startTime()}

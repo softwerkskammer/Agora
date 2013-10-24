@@ -47,7 +47,7 @@ block content
           tbody
             for member in members
               tr
-                td: a.btn-sm(href="/members/edit/#{encodeURIComponent(member.nickname)}"): i.fa.fa-edit
+                td: a.btn-sm(href="/members/edit/#{encodeURIComponent(member.nickname)}"): i.fa.fa-edit.fa-fw
                 td #{member.created}
                 td #{member.nickname}
                 td #{member.firstname}

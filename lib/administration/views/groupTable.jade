@@ -43,7 +43,7 @@ block content
           tbody
             for group in groups
               tr
-                td: a.btn-sm(href="/groups/edit/#{encodeURIComponent(group.id)}"): i.fa.fa-edit
+                td: a.btn-sm(href="/groups/edit/#{encodeURIComponent(group.id)}"): i.fa.fa-edit.fa-fw
                 th #{group.id}
                 td #{group.longName}
                 td #{group.emailPrefix}

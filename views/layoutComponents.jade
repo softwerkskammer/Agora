@@ -2,42 +2,42 @@ mixin administrationMenu()
   if ((typeof(user) !== 'undefined') && user.member && user.member.isAdmin)
     li#administration.dropdown.nav
       a.dropdown-toggle(href="#", data-toggle="dropdown")
-        i.fa.fa-dashboard
+        i.fa.fa-dashboard.fa-fw
         | &nbsp;Verwaltung&nbsp;
         b.caret
       ul.dropdown-menu
         li: a(href="/administration/announcementTable")
-          i.fa.fa-globe
+          i.fa.fa-globe.fa-fw
           | &nbsp;Nachrichten
         li: a(href="/administration/activityTable")
-          i.fa.fa-calendar
+          i.fa.fa-calendar.fa-fw
           | &nbsp;Aktivitäten
         li: a(href="/administration/groupTable")
-          i.fa.fa-group
+          i.fa.fa-group.fa-fw
           | &nbsp;Gruppen
         li: a(href="/administration/memberTable")
-          i.fa.fa-user
+          i.fa.fa-user.fa-fw
           | &nbsp;Mitglieder
         li: a(href="/administration/colors")
-          i.fa.fa-eye
+          i.fa.fa-eye.fa-fw
           | &nbsp;Farben
 
 mixin loginMenu(forInline)
   if (typeof(user) !== 'undefined' && user.member)
     li.dropdown(class="#{forInline ? 'visible-xs' : ''}")
       a.dropdown-toggle(href="#", data-toggle="dropdown")
-        i.fa.fa-info-circle&nbsp;
+        i.fa.fa-info-circle.fa-fw&nbsp;
         | #{user.member.nickname} 
         b.caret
       ul.dropdown-menu
         li: a(href="/members/edit/#{encodeURIComponent(user.member.nickname)}")
-          i.fa.fa-edit
+          i.fa.fa-edit.fa-fw
           | &nbsp;Profil bearbeiten
         li: a(href="/auth/logout")
-          i.fa.fa-sign-out
+          i.fa.fa-sign-out.fa-fw
           | &nbsp;Abmelden
         li: a(href="https://github.com/softwerkskammer/NeuePlattform-Implementierung/issues", target="_blank")
-          i.fa.fa-ambulance
+          i.fa.fa-ambulance.fa-fw
           | &nbsp;Einen Bug melden
         li: include ../version
   else
