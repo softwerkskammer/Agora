@@ -85,7 +85,7 @@ module.exports = {
     useApp(app, 'mailarchive', conf.get('beans').get('mailarchiveApp'));
     useApp(app, 'wiki', conf.get('beans').get('wikiApp'));
 
-    app.configure('production', 'development', function () {
+    app.configure('production', function () {
       // Handle 404
       app.use(function (req, res) {
         appLogger.error('404 - requested url was ' + req.url);
@@ -103,7 +103,7 @@ module.exports = {
       });
     });
 
-    app.configure('development2', function () {
+    app.configure('development', function () {
       app.use(express.errorHandler());
     });
     return app;
@@ -115,7 +115,7 @@ module.exports = {
 
     this.server = http.createServer(app);
     this.server.listen(port, function () {
-      console.log('Server running at port ' + port + ' in ' + process.env.NODE_ENV + ' MODE');
+      appLogger.info('Server running at port ' + port + ' in ' + process.env.NODE_ENV + ' MODE');
       if (done) {
         done();
       }
