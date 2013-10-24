@@ -79,6 +79,7 @@ module.exports = function (grunt) {
       dist: {
         src: [
           'public/clientscripts/global/jquery-1.9.1.js',
+          'public/clientscripts/global/respond.min.js',
           'public/clientscripts/global/bootstrap.js',
           'public/clientscripts/global/bootstrap-datepicker.js',
           'public/clientscripts/global/bootstrap-markdown-patched.js',
