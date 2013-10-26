@@ -2,11 +2,11 @@
 "use strict";
 var conf = require('../configureForTest');
 
-var request = require('supertest'),
-  express = require('express'),
-  sinonSandbox = require('sinon').sandbox.create(),
-  expect = require('chai').expect,
-  moment = require('moment-timezone');
+var request = require('supertest');
+var express = require('express');
+var sinonSandbox = require('sinon').sandbox.create();
+var expect = require('chai').expect;
+var moment = require('moment-timezone');
 
 var Announcement = conf.get('beans').get('announcement');
 
@@ -47,7 +47,6 @@ describe('Announcement application', function () {
     sinonSandbox.restore();
     done();
   });
-
 
   it('object is not valid, if the required fields are not filled', function () {
     var tmpAnnouncement = new Announcement({
@@ -101,41 +100,16 @@ describe('Announcement application', function () {
       });
   });
 
-  it('will display member`s nickname as author name', function () {
-    var dummyMember = {nickname: "nickname", id: "member ID"};
-    sinonSandbox.stub(membersAPI, 'getMemberForId', function (id, callback) {
-      callback(null, dummyMember);
-    });
-
-    announcementsAPI.getAuthorName(dummyAnnouncement, function () {});
-    expect(dummyAnnouncement.authorname).to.equal('nickname');
-  });
-
-  it('will display `automatisch` as author name, when there is no author', function () {
-    var dummyMember = {nickname: "nickname", id: "member ID"};
-    sinonSandbox.stub(membersAPI, 'getMemberForId', function (id, callback) {
-      callback(null, dummyMember);
-    });
-
-    dummyAnnouncement.author = '';
-    announcementsAPI.getAuthorName(dummyAnnouncement, function () {});
-    expect(dummyAnnouncement.authorname).to.equal('automatisch');
-
-    dummyAnnouncement.author = null;
-    announcementsAPI.getAuthorName(dummyAnnouncement, function () {});
-    expect(dummyAnnouncement.authorname).to.equal('automatisch');
-  });
-
-//  it('shows a 404 if the url cannot be found in the store for the detail page', function (done) {
-//    var link = dummyAnnouncement.url + '-does-not-exist';
-//    console.log(link);
-//
-//    request(app)
-//        .get('/' + link)
-//        .expect(404, function (err) {
-//          done(err);
-//        });
-//  });
+  //  it('shows a 404 if the url cannot be found in the store for the detail page', function (done) {
+  //    var link = dummyAnnouncement.url + '-does-not-exist';
+  //    console.log(link);
+  //
+  //    request(app)
+  //        .get('/' + link)
+  //        .expect(404, function (err) {
+  //          done(err);
+  //        });
+  //  });
 
   it('allows to create a new announcement', function (done) {
     request(app)

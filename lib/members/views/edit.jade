@@ -18,12 +18,28 @@ block content
     fieldset
       .row
         .col-md-12
-          legend
-            | Profil&nbsp;
+          
+          h2 
             if user.member
-              | bearbeiten für Mitglied "#{member.nickname}"
+              | "#{member.nickname}"
             else
-              | anlegen
+              | Neues Mitglied
+            .btn-group.pull-right
+              if (user.member)
+                if (user.member.id === member.id)
+                  a.btn.btn-default(href="/auth/logout", type="cancel") Abmelden
+                a.btn.btn-default(href="javascript:history.back()", type="cancel") Zurück
+              else
+                a.btn.btn-danger(href="/auth/logout", type="cancel") Registrierung abbrechen
+              button.btn.btn-primary(type="submit") Speichern
+
+      .row
+        .col-md-12
+          legend Gruppenmitgliedschaft
+          mixin groupCheckboxes('newSubscriptions', regionalgroups, themegroups)
+      .row
+        .col-md-12
+          legend Persönliche Daten
       .row
         .col-md-6
           mixin hidden('id', member)
@@ -43,16 +59,15 @@ block content
           mixin text('reference', 'Wie ich von der Softwerkskammer erfahren habe', member)
           if (user.member && user.member.isAdmin)
             mixin checkbox('isAdmin', 'Administrator', !!member.isAdmin)
-      
-    .row
-      .col-md-6
-        legend Gruppenmitgliedschaft
-        mixin groupCheckboxes('newSubscriptions', regionalgroups, themegroups)
-      .col-md-6
-        button.btn.btn-primary.pull-right(type="submit") Speichern
-        if (user.member)
-          a.btn.btn-default.pull-right(href="javascript:history.back()", type="cancel") Zurück
-          if (user.member.id === member.id)
-            a.btn.btn-default.pull-right(href="/auth/logout", type="cancel") Abmelden
-        else
-          a.btn.btn-default.pull-right(href="/auth/logout", type="cancel") Abbrechen
+      if (user.member)
+        .row
+          .col-md-12
+            legend Aktuell authentifiziert bei:
+            ul.list-unstyled
+              each auth in member.authentications
+                li #{auth}
+        .row
+          .col-md-6
+            a.btn.btn-primary(data-toggle="modal", href="#login")
+              i.fa.fa-plus-square.fa-fw
+              | &nbsp;Anderswo authentifizieren

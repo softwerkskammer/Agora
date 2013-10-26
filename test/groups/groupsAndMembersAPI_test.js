@@ -1,14 +1,14 @@
 "use strict";
 
-var sinon = require('sinon').sandbox;
+var sinon = require('sinon').sandbox.create();
 var beans = require('../configureForTest').get('beans');
 
 var expect = require('chai').expect;
 
 var Member = beans.get('member');
 
-var dummymember = new Member().initFromSessionUser({identifier: 'hada'});
-var dummymember2 = new Member().initFromSessionUser({identifier: 'hada2'});
+var dummymember = new Member().initFromSessionUser({authenticationId: 'hada'});
+var dummymember2 = new Member().initFromSessionUser({authenticationId: 'hada2'});
 
 var Group = beans.get('group');
 
