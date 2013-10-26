@@ -1,7 +1,7 @@
 "use strict";
 
 var request = require('supertest');
-var sinon = require('sinon').sandbox;
+var sinon = require('sinon').sandbox.create();
 
 var beans = require('../configureForTest').get('beans');
 var groupsPersistence = beans.get('groupsPersistence');
