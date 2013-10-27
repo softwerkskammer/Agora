@@ -21,20 +21,18 @@ describe('Groups application', function () {
       if (groupname === 'groupa') {
         return callback(null, ['peter@google.de', 'hans@aol.com']);
       }
+      callback(null, []);
     });
-    
+
     sinon.stub(membersPersistence, 'list', function (sortorder, callback) {
       callback(null, null);
     });
-    
-    sinon.stub(membersPersistence, 'getByField', function (email, callback) {
-      if (email.email.test('hans@aol.com')) {
-        return callback(null, { firstname: 'Hans', lastname: 'Dampf' });
-      }
-      if (email.email.test('peter@google.de')) {
-        return callback(null, { firstname: 'Peter', lastname: 'Meyer' });
-      }
-      return callback("not found");
+
+    sinon.stub(membersPersistence, 'listByField', function (email, sortOrder, callback) {
+      callback(null, [
+        { firstname: 'Hans', lastname: 'Dampf' },
+        { firstname: 'Peter', lastname: 'Meyer' }
+      ]);
     });
 
     sinon.stub(groupsPersistence, 'listByIds', function (list, sortOrder, callback) {
@@ -49,7 +47,7 @@ describe('Groups application', function () {
     sinon.stub(groupsPersistence, 'getById', function (list, callback) {
       if (list.test('GroupA')) {
         return callback(null,
-                        {id: 'GroupA', longName: 'Gruppe A', description: 'Dies ist Gruppe A.', type: 'Themengruppe', emailPrefix: 'Group-A'});
+          {id: 'GroupA', longName: 'Gruppe A', description: 'Dies ist Gruppe A.', type: 'Themengruppe', emailPrefix: 'Group-A'});
       }
       return callback(null, null);
     });
@@ -73,23 +71,23 @@ describe('Groups application', function () {
 
   it('returns false for checkgroupname when the group name already exists', function (done) {
     request(app)
-    .get('/groups/checkgroupname?id=GroupA')
-    .expect(200)
-    .expect(/false/, done);
+      .get('/groups/checkgroupname?id=GroupA')
+      .expect(200)
+      .expect(/false/, done);
   });
 
   it('returns true for checkgroupname when the group name does not exist', function (done) {
     request(app)
-    .get('/groups/checkgroupname?id=UnknownGroup')
-    .expect(200)
-    .expect(/true/, done);
+      .get('/groups/checkgroupname?id=UnknownGroup')
+      .expect(200)
+      .expect(/true/, done);
   });
 
   it('allows dashes and underscores in the groupname', function (done) {
     request(app)
-    .get('/groups/checkgroupname?id=Un_known-Group')
-    .expect(200)
-    .expect(/true/, done);
+      .get('/groups/checkgroupname?id=Un_known-Group')
+      .expect(200)
+      .expect(/true/, done);
   });
 
   it('displays an existing group and membercount', function (done) {
