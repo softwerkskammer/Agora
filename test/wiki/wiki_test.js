@@ -45,11 +45,11 @@ describe('Wiki application', function () {
       });
   });
 
-  it('redirects to the index page of group "global" when requested root', function (done) {
+  it('redirects to the index page of group "alle" when requested root', function (done) {
     request(app)
       .get('/')
       .expect(302)
-      .expect('Location', '/wiki/global/')
+      .expect('Location', '/wiki/alle/')
       .end(function (err) {
         done(err);
       });

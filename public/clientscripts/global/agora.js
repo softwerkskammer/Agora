@@ -5,7 +5,7 @@ var surroundWithLink = function (text) {
   // shamelessly stolen from http://stackoverflow.com/questions/1500260/detect-urls-in-text-with-javascript
   var urlRegex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
   return text.replace(urlRegex, function (url) {
-    return "<a href=\"" + url + "\" target=\"_blank\">" + "<i class=\"icon-external-link\"/> " + url + "</a>";
+    return "<a href=\"" + url + "\" target=\"_blank\">" + "<i class=\"fa fa-external-link\"/> " + url + "</a>";
   });
 };
 
@@ -33,8 +33,8 @@ var initCalendar = function () {
       },
       buttonText: {
         today: 'heute',
-        prev: '<i class="icon-chevron-left"></i>',
-        next: '<i class="icon-chevron-right"></i>'
+        prev: '<i class="fa fa-chevron-left"></i>',
+        next: '<i class="fa fa-chevron-right"></i>'
       },
       monthNames: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'],
       monthNamesShort: ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'],
@@ -103,7 +103,7 @@ var addHelpButtonToTextarea = function () {
                 {
                   name: "cmdHelp",
                   title: "Help",
-                  icon: "icon icon-question-sign",
+                  icon: "fa fa-question-circle",
                   callback: function () { $("#cheatsheet").modal({remote: "/cheatsheet.html"}); }
                 }
               ]

@@ -1,6 +1,6 @@
 "use strict";
 
-var sinon = require('sinon').sandbox;
+var sinon = require('sinon').sandbox.create();
 
 var expect = require('chai').expect;
 

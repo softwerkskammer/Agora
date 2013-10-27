@@ -679,7 +679,7 @@
         data: [{
           name: 'cmdBold',
           title: 'Bold',
-          icon: 'icon icon-bold',
+          icon: 'fa fa-bold',
           callback: function(e){
             // Give/remove ** surround the selection
             var chunk, cursor, selected = e.getSelection(), content = e.getContent()
@@ -708,7 +708,7 @@
         },{
           name: 'cmdItalic',
           title: 'Italic',
-          icon: 'icon icon-italic',
+          icon: 'fa fa-italic',
           callback: function(e){
             // Give/remove * surround the selection
             var chunk, cursor, selected = e.getSelection(), content = e.getContent()
@@ -737,7 +737,7 @@
         },{
           name: 'cmdHeading',
           title: 'Heading',
-          icon: 'icon icon-font',
+          icon: 'fa fa-font',
           callback: function(e){
             // Append/remove ### surround the selection
             var chunk, cursor, selected = e.getSelection(), content = e.getContent(), pointer, prevChar
@@ -773,7 +773,7 @@
         data: [{
           name: 'cmdUrl',
           title: 'URL/Link',
-          icon: 'icon icon-globe',
+          icon: 'fa fa-link',
           callback: function(e){
             // Give [] surround the selection and prepend the link
             var chunk, cursor, selected = e.getSelection(), content = e.getContent(), link
@@ -799,7 +799,7 @@
         },{
           name: 'cmdImage',
           title: 'Image',
-          icon: 'icon icon-picture',
+          icon: 'fa fa-picture-o',
           callback: function(e){
             // Give ![] surround the selection and prepend the image link
             var chunk, cursor, selected = e.getSelection(), content = e.getContent(), link
@@ -831,7 +831,7 @@
         data: [{
           name: 'cmdList',
           title: 'List',
-          icon: 'icon icon-list',
+          icon: 'fa fa-list-ul',
           callback: function(e){
             // Prepend/Give - surround the selection
             var chunk, cursor, selected = e.getSelection(), content = e.getContent()
@@ -884,7 +884,7 @@
           title: 'Preview',
           btnText: 'Preview',
           btnClass: 'btn btn-inverse',
-          icon: 'icon icon-white icon-search',
+          icon: 'fa fa-search',
           callback: function(e){
             // Check the preview mode and toggle based on this flag
             var isPreview = e.$isPreview,content

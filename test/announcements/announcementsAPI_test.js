@@ -1,9 +1,10 @@
 "use strict";
 
 var expect = require('chai').expect;
-var sinon = require('sinon');
 var conf = require('../configureForTest');
 var Announcement = conf.get('beans').get('announcement');
+var sinon = require('sinon').sandbox.create();
+var membersAPI = conf.get('beans').get('membersAPI');
 
 var announcementUrl = 'eineSchoeneUrl';
 var dummyAnnouncement = new Announcement({
@@ -38,9 +39,7 @@ describe('Announcements API', function () {
   });
 
   afterEach(function (done) {
-    store.saveAnnouncement.restore();
-    store.getAnnouncement.restore();
-    store.allAnnouncements.restore();
+    sinon.restore();
     done();
   });
 
@@ -109,6 +108,33 @@ describe('Announcements API', function () {
     var result = new Announcement(object);
     expect(result.thruUnix).to.equal(1388448000);
     done();
+  });
+
+  it('displays member\'s nickname as author name', function (done) {
+    var dummyMember = {nickname: "nickname", id: "member ID"};
+    sinon.stub(membersAPI, 'getMemberForId', function (id, callback) {
+      callback(null, dummyMember);
+    });
+    announcementsAPI.getAuthorName(dummyAnnouncement, function (err, name) {
+      expect(name).to.equal('nickname');
+      done(err);
+    });
+  });
+
+  it('displays "automatisch" as author name when the authorname is empty', function (done) {
+    dummyAnnouncement.author = '';
+    announcementsAPI.getAuthorName(dummyAnnouncement, function (err, name) {
+      expect(name).to.equal('automatisch');
+      done(err);
+    });
+  });
+
+  it('displays "automatisch" as author name when there is no author', function (done) {
+    dummyAnnouncement.author = null;
+    announcementsAPI.getAuthorName(dummyAnnouncement, function (err, name) {
+      expect(name).to.equal('automatisch');
+      done(err);
+    });
   });
 
 });

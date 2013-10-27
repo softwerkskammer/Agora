@@ -8,7 +8,7 @@ var moment = require('moment-timezone');
 var beans = require('../configureForTest').get('beans');
 var membersAPI = beans.get('membersAPI');
 var Member = beans.get('member');
-var dummymember = new Member({sessionUser: {identifier: 'hada'}});
+var dummymember = new Member({sessionUser: {authenticationId: 'hada'}});
 
 var mailimport = require('../../lib/mailarchive/importMails.js');
 
