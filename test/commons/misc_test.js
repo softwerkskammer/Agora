@@ -57,6 +57,20 @@ describe('toLowerCaseRegExp function', function () {
   });
 });
 
+describe('arrayToLowerCaseRegExp function', function () {
+  
+  it('concatenates multiple strings', function () {
+    var result = misc.arrayToLowerCaseRegExp(['StrInG', 'strong']);
+    expect("StRing").to.match(result);
+    expect("strong").to.match(result);
+  });
+
+  it('concatenates multiple strings rsulting in regex', function () {
+    var result = misc.arrayToLowerCaseRegExp(['StrInG', 'strong']);
+    expect(result.toString()).to.equal('/^StrInG$|^strong$/i');
+  });
+});
+
 describe('differenceCaseInsensitive function', function () {
   it('filters lowercase strings', function () {
     var rightside = ['a@b.com'];
