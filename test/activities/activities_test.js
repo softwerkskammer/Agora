@@ -11,13 +11,14 @@ var userMock = require('../userMock');
 var fieldHelpers = conf.get('beans').get('fieldHelpers');
 var Activity = conf.get('beans').get('activity');
 var Member = conf.get('beans').get('member');
+var Group = conf.get('beans').get('group');
 
-var emptyActivity = new Activity({title: 'Title of the Activity', description: 'description1', assignedGroup: 'assignedGroup',
+var emptyActivity = new Activity({title: 'Title of the Activity', description: 'description1', assignedGroup: 'groupname',
   location: 'location1', direction: 'direction1', startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'), url: 'urlOfTheActivity' });
-var activityWithParticipants = new Activity({title: 'Interesting Activity', description: 'description2', assignedGroup: 'assignedGroup',
+var activityWithParticipants = new Activity({title: 'Interesting Activity', description: 'description2', assignedGroup: 'groupname',
   location: 'location2', direction: 'direction2', startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'), url: 'urlForInteresting',
   resources: {default: {_registeredMembers: ['memberId1', 'memberId2']}} });
-var activityWithMultipleResources = new Activity({title: 'Interesting Activity', description: 'description2', assignedGroup: 'assignedGroup',
+var activityWithMultipleResources = new Activity({title: 'Interesting Activity', description: 'description2', assignedGroup: 'groupname',
   location: 'location2', direction: 'direction2', startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'), url: 'urlForMultiple',
   resources: {Einzelzimmer: {_registeredMembers: ['memberId1', 'memberId2']}, Doppelzimmer: {_registeredMembers: ['memberId3', 'memberId4']}} });
 
@@ -33,9 +34,10 @@ var colors = conf.get('beans').get('colorAPI');
 var app = conf.get('beans').get('activitiesApp')(express());
 
 describe('Activity application', function () {
-  var allActivities,
-    upcomingActivities,
-    getActivity;
+  var allActivities;
+  var upcomingActivities;
+  var getActivity;
+  var getAllAvailableGroups;
 
   beforeEach(function (done) {
     allActivities = sinon.stub(activitiesCoreAPI, 'allActivities', function (callback) {callback(null, [emptyActivity]); });
@@ -51,7 +53,7 @@ describe('Activity application', function () {
       callback(null, (url === 'urlOfTheActivity') ? emptyActivity : (url === 'urlForInteresting') ? activityWithParticipants :
         (url === 'urlForMultiple') ? activityWithMultipleResources : null);
     });
-    sinon.stub(groupsAPI, 'getAllAvailableGroups', function (callback) { callback(null, []); });
+    getAllAvailableGroups = sinon.stub(groupsAPI, 'getAllAvailableGroups', function (callback) { callback(null, []); });
     sinon.stub(colors, 'allColors', function (callback) { callback(null, []); });
     done();
   });
@@ -166,7 +168,7 @@ describe('Activity application', function () {
       });
   });
 
-  it('shows the registration button for an activity multiple resources where the current user has booked one resource', function (done) {
+  it('shows the registration button for an activity with multiple resources where the current user has booked one resource', function (done) {
     sinon.stub(membersAPI, 'allMembers', function (callback) {
       callback(null, [
         new Member({id: 'memberId1', nickname: 'participant1', email: "a@b.c"}),
@@ -288,6 +290,35 @@ describe('Activity application', function () {
       .expect(/Titel ist ein Pflichtfeld./, function (err) {
         done(err);
       });
+  });
+
+  it('shows no group name if no groups are available', function (done) {
+    sinon.stub(membersAPI, 'allMembers', function (callback) {
+      callback(null, []);
+    });
+
+    request(app)
+      .get('/urlOfTheActivity')
+      .expect(200)
+      .expect(/Veranstaltet von der Gruppe <\/p>/, function (err) {
+        done(err);
+      });
+
+  });
+
+  it('shows the name of the assigned group if the group exists', function (done) {
+    var group = new Group({id: "groupname", longName: "Buxtehude"});
+    getAllAvailableGroups.restore();
+    sinon.stub(groupsAPI, 'getAllAvailableGroups', function (callback) { callback(null, [group]); });
+    sinon.stub(membersAPI, 'allMembers', function (callback) { callback(null, []); });
+
+    request(app)
+      .get('/urlOfTheActivity')
+      .expect(200)
+      .expect(/Veranstaltet von der Gruppe Buxtehude<\/p>/, function (err) {
+        done(err);
+      });
+
   });
 
 });
