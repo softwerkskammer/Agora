@@ -21,6 +21,7 @@ describe('Groups application', function () {
       if (groupname === 'groupa') {
         return callback(null, ['peter@google.de', 'hans@aol.com']);
       }
+      callback(null, []);
     });
 
     sinon.stub(membersPersistence, 'list', function (sortorder, callback) {

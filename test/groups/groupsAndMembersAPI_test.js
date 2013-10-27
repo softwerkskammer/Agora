@@ -141,6 +141,44 @@ describe('Groups and Members API (getGroupAndMembersForList)', function () {
 
 });
 
+describe('Groups and Members API (addMembercountToGroup)', function () {
+  afterEach(function (done) {
+    sinon.restore();
+    done();
+  });
+
+  it('returns no group when the group is null', function (done) {
+    systemUnderTest.addMembercountToGroup(null, function (err, group) {
+      expect(!!group).to.be.false;
+      done(err);
+    });
+  });
+
+  it('returns no group when the group is undefined', function (done) {
+    systemUnderTest.addMembercountToGroup(undefined, function (err, group) {
+      expect(!!group).to.be.false;
+      done(err);
+    });
+  });
+
+  it('adds zero to group if there are no subscribers', function (done) {
+    sinon.stub(groupsAPI, 'getSympaUsersOfList', function (err, callback) { callback(null, []); });
+    systemUnderTest.addMembercountToGroup({}, function (err, group) {
+      expect(group.membercount).to.equal(0);
+      done(err);
+    });
+  });
+
+  it('adds the number of subscribers to the group', function (done) {
+    sinon.stub(groupsAPI, 'getSympaUsersOfList', function (err, callback) { callback(null, ['1', '2', '4']); });
+    systemUnderTest.addMembercountToGroup({}, function (err, group) {
+      expect(group.membercount).to.equal(3);
+      done(err);
+    });
+  });
+
+});
+
 describe('Groups and Members API (addMembersToGroup)', function () {
 
   beforeEach(function (done) {
@@ -183,6 +221,7 @@ describe('Groups and Members API (addMembersToGroup)', function () {
       expect(group).to.equal(GroupA);
       expect(group.members).to.not.be.null;
       expect(group.members.length).to.equal(0);
+      expect(group.membercount).to.equal(0);
       delete group.members;
       done(err);
     });
@@ -198,6 +237,7 @@ describe('Groups and Members API (addMembersToGroup)', function () {
       expect(group).to.equal(GroupA);
       expect(group.members).to.not.be.null;
       expect(group.members.length).to.equal(1);
+      expect(group.membercount).to.equal(1);
       expect(group.members[0]).to.equal(dummymember);
       delete group.members;
       done(err);
