@@ -4,15 +4,19 @@ require('../configureForTest');
 var conf = require('nconf');
 var expect = require('chai').expect;
 
+//var util = require('util');
+
+var fieldHelpers = conf.get('beans').get('fieldHelpers');
 var Activity = conf.get('beans').get('activity');
-var Resource = conf.get('beans').get('resource');
+
+// TODO Activity.fillFromUI with null/undefined in startDate, startTime, endDate, endTime
 
 describe('Activity', function () {
   it('converts a wellformed Activity to a calendar display event without colors given', function (done) {
-    var activity = new Activity().fillFromDB({
+    var activity = new Activity({
       title: 'Title',
-      startDate: '4.4.2013',
-      endDate: '5.4.2013',
+      startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('04.04.2013'),
+      endUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('05.04.2013'),
       url: 'myURL'
     });
     var event = activity.asCalendarEvent();
@@ -24,7 +28,7 @@ describe('Activity', function () {
   });
 
   it('fetches the group long name', function (done) {
-    var activity = new Activity().fillFromDB({
+    var activity = new Activity({
       url: 'myURL',
       assignedGroup: 'group'
     });
@@ -32,13 +36,12 @@ describe('Activity', function () {
       {id: 'group', longName: 'groupname'},
       {id: 'other', longName: 'othername'}
     ];
-    var groupName = activity.groupNameFrom(groups);
-    expect('groupname').to.equal(groupName);
+    expect(activity.groupNameFrom(groups)).to.equal('groupname');
     done();
   });
 
   it('fetches a blank string if group not found', function (done) {
-    var activity = new Activity().fillFromDB({
+    var activity = new Activity({
       url: 'myURL',
       assignedGroup: 'group'
     });
@@ -46,13 +49,12 @@ describe('Activity', function () {
       {id: 'each', longName: 'groupname'},
       {id: 'other', longName: 'othername'}
     ];
-    var groupName = activity.groupNameFrom(groups);
-    expect('').to.equal(groupName);
+    expect(activity.groupNameFrom(groups)).to.equal('');
     done();
   });
 
   it('retrieves the color from the assigned group', function (done) {
-    var activity = new Activity().fillFromDB({
+    var activity = new Activity({
       url: 'myURL',
       assignedGroup: 'group',
       color: 'aus Gruppe'
@@ -61,13 +63,12 @@ describe('Activity', function () {
       group: '#FFF',
       other: '000'
     };
-    var color = activity.colorFrom(groupColors, []);
-    expect('#FFF').to.equal(color);
+    expect(activity.colorFrom(groupColors, [])).to.equal('#FFF');
     done();
   });
 
   it('retrieves the color from the assigned color', function (done) {
-    var activity = new Activity().fillFromDB({
+    var activity = new Activity({
       url: 'myURL',
       color: 'special'
     });
@@ -75,22 +76,20 @@ describe('Activity', function () {
       {id: 'special', color: '#FFF' },
       {id: 'normal', color: '#00' }
     ];
-    var color = activity.colorFrom(null, colors);
-    expect('#FFF').to.equal(color);
+    expect(activity.colorFrom(null, colors)).to.equal('#FFF');
     done();
   });
 
   it('retrieves the color as default if not found', function (done) {
-    var activity = new Activity().fillFromDB({
+    var activity = new Activity({
       url: 'myURL'
     });
-    var color = activity.colorFrom(null, []);
-    expect('#353535').to.equal(color);
+    expect(activity.colorFrom(null, [])).to.equal('#353535');
     done();
   });
 
   it('parses start date and time using default timezone', function () {
-    var activity = new Activity().fillFromDB({
+    var activity = new Activity().fillFromUI({
       url: 'myURL',
       startDate: '01.02.2013',
       startTime: '12:34'
@@ -101,7 +100,7 @@ describe('Activity', function () {
   });
 
   it('parses end date and time using default timezone', function () {
-    var activity = new Activity().fillFromDB({
+    var activity = new Activity().fillFromUI({
       url: 'myURL',
       endDate: '01.08.2013',
       endTime: '12:34'
@@ -114,16 +113,18 @@ describe('Activity', function () {
 
 describe('Activity\'s description', function () {
   it('renders anchor tags when required', function (done) {
-    var activity = new Activity();
-    activity.description = '[dafadf](http://a.de) https://b.de';
+    var activity = new Activity({
+      description: '[dafadf](http://a.de) https://b.de'
+    });
     expect(activity.descriptionHTML()).to.contain('a href="http://a.de"');
     expect(activity.descriptionHTML()).to.contain('"https://b.de"');
     done();
   });
 
   it('removes anchor tags when required', function (done) {
-    var activity = new Activity();
-    activity.description = '<a href = "http://a.de">dafadf</a> https://b.de';
+    var activity = new Activity({
+      description: '<a href = "http://a.de">dafadf</a> https://b.de'
+    });
     expect(activity.descriptionPlain()).to.not.contain('"http://a.de"');
     expect(activity.descriptionPlain()).to.not.contain('"https://b.de"');
     expect(activity.descriptionPlain()).to.contain('dafadf');
@@ -135,14 +136,14 @@ describe('Activity\'s description', function () {
 describe('Activity\'s direction', function () {
   it('knows that it doesn\'t contain direction', function (done) {
     var activity = new Activity();
-    activity.direction = '';
     expect(activity.hasDirection()).to.be.false;
     done();
   });
 
   it('knows that it contains direction', function (done) {
-    var activity = new Activity();
-    activity.direction = 'direction';
+    var activity = new Activity({
+      direction: 'direction'
+    });
     expect(activity.hasDirection()).to.be.true;
     done();
   });
@@ -150,7 +151,7 @@ describe('Activity\'s direction', function () {
 
 describe('Activity\'s markdown', function () {
   it('creates its markdown with direction', function (done) {
-    var activity = new Activity().fillFromDB({
+    var activity = new Activity().fillFromUI({
       url: 'url',
       description: 'description',
       location: 'location',
@@ -169,7 +170,7 @@ describe('Activity\'s markdown', function () {
   });
 
   it('creates its markdown without direction', function (done) {
-    var activity = new Activity().fillFromDB({
+    var activity = new Activity({
       url: 'url',
       description: 'description',
       location: 'location',
@@ -182,122 +183,9 @@ describe('Activity\'s markdown', function () {
   });
 });
 
-describe('Activity resource management', function () {
-  it('adds a member to the default resource', function (done) {
-    var activity = new Activity();
-    activity.addMemberId('memberID', 'default');
-    expect(activity.registeredMembers()).to.contain('memberID');
-    done();
-  });
-
-  it('adds a member to a desired resource', function (done) {
-    var activity = new Activity().fillFromDB({url: 'myURL', resources: {Einzelzimmer: new Resource(), Doppelzimmer: new Resource()}});
-    activity.addMemberId('memberID', 'Einzelzimmer');
-    expect(activity.registeredMembers('Einzelzimmer')).to.contain('memberID');
-    expect(activity.registeredMembers('Doppelzimmer')).to.be.empty;
-    done();
-  });
-
-  it('removes a registered member from the default resource', function (done) {
-    var activity = new Activity().fillFromDB(
-      {url: 'myURL', registeredMembers: ['memberID']}
-    );
-    activity.removeMemberId('memberID', 'default');
-    expect(activity.registeredMembers()).to.be.empty;
-    done();
-  });
-
-  it('removes a registered member from a desired resource', function (done) {
-    var activity = new Activity().fillFromDB(
-      {url: 'myURL', resources: {
-        Einzelzimmer: new Resource('memberID'),
-        Doppelzimmer: new Resource('memberID')
-      }});
-
-    activity.removeMemberId('memberID', 'Doppelzimmer');
-    expect(activity.registeredMembers('Einzelzimmer')).to.contain('memberID');
-    expect(activity.registeredMembers('Doppelzimmer')).to.be.empty;
-    done();
-  });
-
-  it('does not do anything if the desired resource does not exist', function (done) {
-    var activity = new Activity().fillFromDB(
-      {url: 'myURL', resources: {
-        default: new Resource('memberID')
-      }});
-
-    activity.addMemberId('memberID', 'Einzelzimmer');
-    activity.removeMemberId('memberID', 'Doppelzimmer');
-    expect(activity.registeredMembers('default')).to.contain('memberID');
-    done();
-  });
-
-  it('returns no members if the desired resource does not exist', function (done) {
-    var activity = new Activity();
-
-    expect(activity.registeredMembers('Nicht Existente Ressource')).to.be.empty;
-    done();
-  });
-
-  it('resets for copied activity', function (done) {
-    var activity = new Activity().fillFromDB({
-      id: 'ID',
-      title: 'Title',
-      startDate: '4.4.2013',
-      endDate: '5.4.2013',
-      url: 'myURL',
-      registeredMembers: ['memberID']
-    });
-    activity = activity.resetForClone();
-    expect(activity.registeredMembers()).to.be.empty;
-    expect(activity.startDate()).to.not.equal('04.04.2013');
-    expect(activity.endDate()).to.not.equal('05.04.2013');
-    expect(activity.id).to.be.null;
-    expect(activity.url).to.be.null;
-    done();
-  });
-
-  it('copies a registered member from an existing activity', function (done) {
-    // this constructor behaviour also affects loading of stored activities
-    var activity = new Activity().fillFromDB({url: 'url'});
-    activity.addMemberId('memberID', 'default');
-    var copy = new Activity().copyFrom(activity);
-    expect(copy.registeredMembers()).to.contain('memberID');
-    done();
-  });
-
-  it('lists the name of the default resource if no other resources are present', function (done) {
-    var activity = new Activity();
-    expect(activity.resourceNames().length).to.equal(1);
-    expect(activity.resourceNames()).to.contain('default');
-    done();
-  });
-
-  it('lists the name of all resources except the default resource if more resources are present', function (done) {
-    var activity = new Activity();
-    // TODO replace this later by proper resources created by the activity
-    activity.resources['Einzelzimmer'] = new Resource();
-    activity.resources['Doppelzimmer'] = new Resource();
-    expect(activity.resourceNames().length).to.equal(2);
-    expect(activity.resourceNames()).to.contain('Einzelzimmer');
-    expect(activity.resourceNames()).to.contain('Doppelzimmer');
-    done();
-  });
-
-  it('only lists resources that actually contain something', function (done) {
-    var activity = new Activity();
-    activity.resources['Einzelzimmer'] = null;
-    activity.resources['Doppelzimmer'] = undefined;
-    activity.resources['Heuboden'] = "";
-    expect(activity.resourceNames().length).to.equal(1);
-    expect(activity.resourceNames()).to.contain('default');
-    done();
-  });
-
-});
 
 describe('ICalendar', function () {
-  var activity = new Activity().fillFromDB({
+  var activity = new Activity().fillFromUI({
     title: 'Title',
     startDate: '4.4.2013',
     startTime: '17:00',

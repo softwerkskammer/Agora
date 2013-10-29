@@ -59,6 +59,7 @@
   "group": {"module": "./lib/groups/group"},
   "member": {"module": "./lib/members/member"},
   "activity": {"module": "./lib/activities/activity"},
+  "resources": {"module": "./lib/activities/resources"},
   "resource": {"module": "./lib/activities/resource"},
   "announcement": {"module": "./lib/announcements/announcement"},
   "color": {"module": "./lib/administration/color"},

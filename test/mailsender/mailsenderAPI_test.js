@@ -7,10 +7,16 @@ var beans = require('../configureForTest').get('beans');
 
 var membersAPI = beans.get('membersAPI');
 var groupsAPI = beans.get('groupsAPI');
-var activitiesAPI = beans.get('activitiesCoreAPI');
+var activitiesCoreAPI = beans.get('activitiesCoreAPI');
 //var groupsAndMembersAPI = beans.get('groupsAndMembersAPI');
 
 var api = beans.get('mailsenderAPI');
+var Activity = beans.get('activity');
+var fieldHelpers = beans.get('fieldHelpers');
+
+var emptyActivity = new Activity({title: 'Title of the Activity', description: 'description1', assignedGroup: 'assignedGroup',
+  location: 'location1', direction: 'direction1', startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'), url: 'urlOfTheActivity' });
+
 
 describe('MailsenderAPI', function () {
   var activityURL = 'acti_vi_ty';
@@ -19,8 +25,8 @@ describe('MailsenderAPI', function () {
   beforeEach(function (done) {
     var availableGroups = [];
     sinon.stub(groupsAPI, 'getAllAvailableGroups', function (callback) { callback(null, availableGroups); });
-    sinon.stub(activitiesAPI, 'getActivity', function (activityURL, callback) {
-      callback(null, {markdown: function () {} });
+    sinon.stub(activitiesCoreAPI, 'getActivity', function (activityURL, callback) {
+      callback(null, emptyActivity);
     });
     sinon.stub(membersAPI, 'getMember', function (nickname, callback) { callback(null, {}); });
     done();

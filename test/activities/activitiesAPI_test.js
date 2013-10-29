@@ -6,7 +6,7 @@ var expect = require('chai').expect;
 var conf = require('../configureForTest');
 
 var Activity = conf.get('beans').get('activity');
-var dummyActivity = new Activity().fillFromDB({title: 'Title of the Activity', description: 'description', assignedGroup: 'assignedGroup',
+var dummyActivity = new Activity({title: 'Title of the Activity', description: 'description', assignedGroup: 'assignedGroup',
   location: 'location', direction: 'direction', startDate: '01.01.2013', url: 'urlOfTheActivity', color: 'aus Gruppe' });
 
 var activitiesAPI = conf.get('beans').get('activitiesAPI');
@@ -42,7 +42,7 @@ describe('Activities API', function () {
       expect(!!err).to.be.false;
       expect(activities.length).to.equal(1);
       var activity = activities[0];
-      expect(activity.title).to.equal('Title of the Activity');
+      expect(activity.title()).to.equal('Title of the Activity');
       expect(activity.colorRGB).to.equal('#123456');
       expect(activity.groupName).to.equal('The name of the assigned Group');
     });

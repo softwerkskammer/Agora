@@ -14,19 +14,30 @@ mixin text(name, label, object, tooltip, placeholder)
     mixin controlLabel(name, label, tooltip)
     input.form-control(id=name, type='text', name=name, value=object[name], placeholder=placeholder)
 
+mixin textWithValue(name, label, value, tooltip, placeholder)
+  .form-group
+    mixin controlLabel(name, label, tooltip)
+    input.form-control(id=name, type='text', name=name, value=value, placeholder=placeholder)
+
 mixin textReadonly(name, label, object)
   .form-group
     mixin hidden(name, object)
     label(class="control-label", for=name) #{label}:
     input.form-control(id=name, type='text', name=name, value=object[name], placeholder=placeholder disabled)
 
-mixin textarea(name, label, object)
+mixin textarea(name, label, object, tooltip)
   .form-group
     mixin controlLabel(name, label, tooltip)
     textarea.input-block-level(rows="7", id=name, type='text', name=name)
       | #{object[name]}
 
-mixin hightextarea(name, label, object)
+mixin textareaWithValue(name, label, value, tooltip)
+  .form-group
+    mixin controlLabel(name, label, tooltip)
+    textarea.input-block-level(rows="7", id=name, type='text', name=name)
+      | #{value}
+
+mixin hightextarea(name, label, object, tooltip)
   .form-group
     mixin controlLabel(name, label, tooltip)
     textarea.input-block-level(rows="15", id=name, type='text', name=name)
@@ -64,6 +75,9 @@ mixin groupCheckboxes(checkboxName, regionalgroups, themegroups)
 
 mixin hidden(name, object, optionalAlternateValue)
   input(id=name, type="hidden", name=name, value=object[(optionalAlternateValue ? optionalAlternateValue : name)])
+
+mixin hiddenWithValue(name, value)
+  input(id=name, type="hidden", name=name, value=value)
 
 // PICKERS
 mixin date(name, label, object, value, tooltip)

@@ -5,23 +5,23 @@ include ../../../views/formComponents
 include activities-mixins
 
 block title
-  | #{activity.title} - Aktivitäten
+  | #{activity.title()} - Aktivitäten
 
 block opengraph
-  meta(property="og:description", content!=activity.descriptionPlain().substring(0,500))
-  meta(property="og:title", content=activity.title)
+  meta(property="og:description", content=activity.descriptionPlain().substring(0,500))
+  meta(property="og:title", content=activity.title())
 
 block content
   .row
     .col-md-12
       .page-header
         .btn-group.pull-right
-          a.btn.btn-default(href="/activities/ical/#{encodeURIComponent(activity.url)}", title="Für Kalender exportieren"): i.fa.fa-calendar.fa-fw
-          a.btn.btn-default(href="/mailsender/invitation/#{encodeURIComponent(activity.url)}", title="Einladung versenden"): i.fa.fa-envelope-o.fa-fw
-          a.btn.btn-default(href="/activities/newLike/#{encodeURIComponent(activity.url)}", title="Neu auf Basis dieser Aktivität"): i.fa.fa-copy.fa-fw
+          a.btn.btn-default(href="/activities/ical/#{encodeURIComponent(activity.url())}", title="Für Kalender exportieren"): i.fa.fa-calendar.fa-fw
+          a.btn.btn-default(href="/mailsender/invitation/#{encodeURIComponent(activity.url())}", title="Einladung versenden"): i.fa.fa-envelope-o.fa-fw
+          a.btn.btn-default(href="/activities/newLike/#{encodeURIComponent(activity.url())}", title="Neu auf Basis dieser Aktivität"): i.fa.fa-copy.fa-fw
           if (typeof(user) !== 'undefined' && user.member.isAdmin)
-            a.btn.btn-default(href="/activities/edit/#{encodeURIComponent(activity.url)}", title="Bearbeiten"): i.fa.fa-edit.fa-fw
-        h2 #{activity.title}
+            a.btn.btn-default(href="/activities/edit/#{encodeURIComponent(activity.url())}", title="Bearbeiten"): i.fa.fa-edit.fa-fw
+        h2 #{activity.title()}
           br
           small #{activity.startDate()} (#{activity.startTime()}
             if (activity.endDate() && activity.endDate() !== activity.startDate())
@@ -35,7 +35,7 @@ block content
   .row
     .col-md-6
       h3 Adresse:
-      p #{activity.location}
+      p #{activity.location()}
       if (activity.hasDirection())
         h4 Wegbeschreibung: 
         !{activity.directionHTML()}
@@ -44,14 +44,14 @@ block content
         mixin visitorCount(visitors.length)
         if (typeof(user) !== 'undefined' && user.member)
           each resourceName in activity.resourceNames()
-            mixin subscriptionButtons(activity.registeredMembers(resourceName), activity.url, resourceName, user.member.id)
+            mixin subscriptionButtons(activity.registeredMembers(resourceName), activity.url(), resourceName, user.member.id)
           h4 Zugesagt haben:
           mixin memberlist(visitors)
 
       hr.hidden-print
       p.hidden-print Veranstaltet von der Gruppe: #{activity.groupNameFrom(groups)}
     .col-md-6
-      mixin map(activity.location, '100%', '450px')
+      mixin map(activity.location(), '100%', '450px')
 
 block scripts
   script.
