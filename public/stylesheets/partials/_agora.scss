@@ -14,10 +14,6 @@
   margin: 0px;
 }
 
-.page-header {
-  margin-top: 0px;
-}
-
 .page-header > h2 {
   margin-top: 0px;
 }
@@ -76,7 +72,7 @@ td.fc-header-right {
   border-bottom-color: transparent;
 }
 
-@media screen {
+@media screen  {
   body {
     padding-top: 75px;
   }
@@ -104,6 +100,11 @@ td.fc-header-right {
   .popover {
     max-width: 450px;
   }
+
+  .page-header {
+    margin-top: 0px;
+  }
+
 }
 
 @media (max-width: 767px) {
@@ -113,6 +114,9 @@ td.fc-header-right {
   }
   .dl-horizontal dt {
     margin-top: 12px;
+  }
+  body {
+    padding-top: 0px !important;
   }
 }
 
