@@ -3,11 +3,13 @@ mixin memberlist(members, organizers)
     for member in members
       dt: .member
         a(href="/members/#{encodeURIComponent(member.nickname)}") #{member.nickname}
-        | &nbsp; <a href="#" rel="tooltip" data-content="#{member.nickname}" title="<div style='height: 128px;'><img src=#{member.avatarUrl(128)}/></div>" > 
-        img(src=member.avatarUrl(16))
+        | &nbsp; <a href="#" rel="tooltip" data-content="#{member.nickname}" title="<div style='height: 128px;'><img src=#{member.avatarUrl(128)}/></div>" >
+        .delayed-image-load(data-src=member.avatarUrl(16), data-width="16")
         | </a>
       dd #{member.firstname} #{member.lastname}, #{member.location}&nbsp;
         if (organizers && organizers.indexOf(member.id) > -1)
           a(href="/mailsender/contactMember/#{encodeURIComponent(member.nickname)}", title="Nachricht schreiben"): span.label(style="background-color: #DF5353") Ansprechpartner &nbsp;
         if (!organizers && member.isAdmin)
           a(href="/mailsender/contactMember/#{encodeURIComponent(member.nickname)}", title="Nachricht schreiben"): span.label(style="background-color: #DF5353") Admin
+  script.
+    new Imager({lazyload: true});
