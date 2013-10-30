@@ -93,6 +93,16 @@ describe('Activity resource management', function () {
     done();
   });
 
+  it('does not copy a registered member in a non-default resource from an existing activity', function (done) {
+    // this constructor behaviour also affects loading of stored activities
+    var activity = new Activity({url: 'url'});
+    activity.addMemberId('memberID', 'non-default');
+    var copy = new Activity().copyFrom(activity);
+    expect(copy.registeredMembers('non-default')).to.be.empty;
+    done();
+  });
+
+
   it('can add a new member to a copied activity', function (done) {
     var activity = new Activity({url: 'url'});
     activity.addMemberId('memberID', 'default');
