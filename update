@@ -1,0 +1,5 @@
+git pull
+npm install
+npm update
+grunt recess
+grunt concat
