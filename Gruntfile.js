@@ -61,15 +61,35 @@ module.exports = function (grunt) {
     qunit: {
       files: ['frontendtests/*.html']
     },
-    sass: {
-      default: {
+    recess: {
+      options: {
+        compile: true
+      },
+      bootstrap: {
+        src: ['public/stylesheets/less/bootstrap.less'],
+        dest: 'public/stylesheets/vendor/bootstrap-custom.css'
+      },
+      bootstrapmarkdown: {
+        src: ['public/stylesheets/less/bootstrap-markdown.less'],
+        dest: 'public/stylesheets/vendor/bootstrap-markdown-custom.css'
+      },
+      cssconcat: {
         options: {
-          outputStyle: 'compressed',
-          sourceComments: 'none'
+          compress: true
         },
-        files: {
-          'public/stylesheets/screen.css': 'public/stylesheets/screen.scss'
-        }
+        src: [
+          'public/stylesheets/vendor/bootstrap-custom.css',
+          'public/stylesheets/vendor/datepicker.css',
+          'public/stylesheets/vendor/bootstrap-timepicker.css',
+          'public/stylesheets/vendor/bootstrap-markdown-custom.css',
+          'public/stylesheets/vendor/font-awesome.min.css',
+          'public/stylesheets/vendor/fullcalendar.css',
+          'public/stylesheets/vendor/colorpicker.css',
+          'public/stylesheets/vendor/shCoreDefault.css',
+          'public/stylesheets/vendor/jquery.dataTables.css',
+          'public/stylesheets/partials/agora.css'
+        ],
+        dest: 'public/stylesheets/screen.css'
       }
     },
     concat: {
@@ -105,10 +125,10 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-mocha-test');
   grunt.loadNpmTasks('grunt-contrib-qunit');
   grunt.loadNpmTasks('grunt-contrib-concat');
-  grunt.loadNpmTasks('grunt-sass');
+  grunt.loadNpmTasks('grunt-recess');
 
   // Default task.
-  grunt.registerTask('default', ['sass', 'concat', 'jshint', 'qunit', 'mochaTest']);
+  grunt.registerTask('default', ['recess', 'concat', 'jshint', 'qunit', 'mochaTest']);
 
   // Travis-CI task
   grunt.registerTask('travis', ['default']);
