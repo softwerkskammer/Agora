@@ -78,12 +78,12 @@ module.exports = function (grunt) {
           compress: true
         },
         src: [
+          'public/stylesheets/vendor/fullcalendar.css',
           'public/stylesheets/vendor/bootstrap-custom.css',
           'public/stylesheets/vendor/datepicker.css',
           'public/stylesheets/vendor/bootstrap-timepicker.css',
           'public/stylesheets/vendor/bootstrap-markdown-custom.css',
           'public/stylesheets/vendor/font-awesome.min.css',
-          'public/stylesheets/vendor/fullcalendar.css',
           'public/stylesheets/vendor/colorpicker.css',
           'public/stylesheets/vendor/shCoreDefault.css',
           'public/stylesheets/vendor/jquery.dataTables.css',
@@ -112,9 +112,10 @@ module.exports = function (grunt) {
           'public/clientscripts/global/messages_de.js',
           'public/clientscripts/global/methods_de.js',
           'public/clientscripts/global/bootstrap-timepicker-patched.js',
-          'public/clientscripts/global/agora.js'
+          'public/clientscripts/global/agora.js',
+          'public/clientscripts/global/Imager.js'
         ],
-        dest: 'public/clientscripts/global.js',
+        dest: 'public/clientscripts/global.js'
       }
     }
   });
