@@ -78,12 +78,12 @@ module.exports = function (grunt) {
           compress: true
         },
         src: [
+          'public/stylesheets/vendor/fullcalendar.css',
           'public/stylesheets/vendor/bootstrap-custom.css',
           'public/stylesheets/vendor/datepicker.css',
           'public/stylesheets/vendor/bootstrap-timepicker.css',
           'public/stylesheets/vendor/bootstrap-markdown-custom.css',
           'public/stylesheets/vendor/font-awesome.min.css',
-          'public/stylesheets/vendor/fullcalendar.css',
           'public/stylesheets/vendor/colorpicker.css',
           'public/stylesheets/vendor/shCoreDefault.css',
           'public/stylesheets/vendor/jquery.dataTables.css',
