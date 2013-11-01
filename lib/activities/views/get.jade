@@ -48,8 +48,10 @@ block content
           h4 Zugesagt haben:
           mixin memberlist(visitors)
 
-      hr.hidden-print
-      p.hidden-print Veranstaltet von der Gruppe: #{activity.groupNameFrom(groups)}
+      if (activity.group)
+        hr.hidden-print
+        p.hidden-print Veranstaltet von der Gruppe&nbsp;
+          a(href="/groups/#{activity.group.id}") #{activity.group.longName}
     .col-md-6
       mixin map(activity.location(), '100%', '450px')
 
