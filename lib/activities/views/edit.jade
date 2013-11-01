@@ -1,14 +1,32 @@
 extends ../../../views/layout
 include  ../../../views/formComponents
+
+mixin resourceRow(name, limit)
+  .row.form-group
+    .col-md-8
+      input.form-control(name="resources[names]", value=name, type="text", placeholder="Name")
+    .col-md-3
+      input.form-control(name="resources[limits]", value=limit, type="text", placeholder="Anzahl")
+    .col-md-1
+      //- XXX kludgily pushing the delete-link to the left with an inline style
+      //- means I probably don't fully understand Bootstrap's grid
+      a.btn.delete(title="Entfernen", style="margin-left: -24px")
+        i.fa.fa-times
+
+
 block scripts
   script(src="/clientscripts/moment.min.js")
   script(src="/clientscripts/activityDateModel.js")
   script(src="/clientscripts/activityform-dateAdapter.js")
   script(src="/clientscripts/check-activityform.js")
+  script(src="/clientscripts/activityResources.js")
+  script#resource-template(type="text/html")
+    mixin resourceRow()
   script.
     function fillUrlFromText (urlId, textId) {
       var title = document.getElementById(textId).value;
       var urlContent = encodeURIComponent(title.replace(/^\s\s*/, '').replace(/\s\s*$/, '').replace(/[ #,!?ßöäü:"']/gi, '_'));
+      //- " <- help syntax highlighting by closing open quotes
       var urlInput = $('#' + urlId);
       urlInput.val(urlContent);
       urlInput.change();
@@ -49,6 +67,17 @@ block content
               #dates.col-md-6(style="padding-left:3px;padding-right:0px")
                 mixin time('endTime', '&nbsp;', activity, activity.endTime())
           mixin textareaWithValue('description', 'Beschreibung', activity.description())
+          #resources.form-group
+            mixin controlLabel('resources[names]', 'Beschränkungen für Ressourcen')
+
+            each name in activity.resourceNames(/*includeDefault=*/true)
+              - var resource = activity.resources().named(name)
+              mixin resourceRow(name, resource.limit())
+            .row.form-group
+              .col-md-5
+                button.add.btn.btn-sm.btn-default(type="button")
+                  i.fa.fa-plus
+                  |  Ressource
         .col-md-6
           .form-group
             button.btn.btn-default.btn-xs.pull-right(type="button", onclick="fillUrlFromText('url', 'title')") 
