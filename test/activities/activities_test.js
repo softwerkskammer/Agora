@@ -22,6 +22,7 @@ var activityWithMultipleResources = new Activity({title: 'Interesting Activity',
   location: 'location2', direction: 'direction2', startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'), url: 'urlForMultiple',
   resources: {Einzelzimmer: {_registeredMembers: ['memberId1', 'memberId2']}, Doppelzimmer: {_registeredMembers: ['memberId3', 'memberId4']}} });
 
+var group = new Group({id: "groupname", longName: "Buxtehude"});
 
 var activitiesCoreAPI = conf.get('beans').get('activitiesCoreAPI');
 var activitiesAPI = conf.get('beans').get('activitiesAPI');
@@ -37,7 +38,7 @@ describe('Activity application', function () {
   var allActivities;
   var upcomingActivities;
   var getActivity;
-  var getAllAvailableGroups;
+  var getGroup;
 
   beforeEach(function (done) {
     allActivities = sinon.stub(activitiesCoreAPI, 'allActivities', function (callback) {callback(null, [emptyActivity]); });
@@ -53,7 +54,7 @@ describe('Activity application', function () {
       callback(null, (url === 'urlOfTheActivity') ? emptyActivity : (url === 'urlForInteresting') ? activityWithParticipants :
         (url === 'urlForMultiple') ? activityWithMultipleResources : null);
     });
-    getAllAvailableGroups = sinon.stub(groupsAPI, 'getAllAvailableGroups', function (callback) { callback(null, []); });
+    getGroup = sinon.stub(groupsAPI, 'getGroup', function (groupname, callback) { callback(null, group); });
     sinon.stub(colors, 'allColors', function (callback) { callback(null, []); });
     done();
   });
@@ -231,6 +232,8 @@ describe('Activity application', function () {
   });
 
   it('allows to create a new activity', function (done) {
+    sinon.stub(groupsAPI, 'getAllAvailableGroups', function (callback) { callback(null, []); });
+
     request(app)
       .get('/new')
       .expect(200)
@@ -293,6 +296,9 @@ describe('Activity application', function () {
   });
 
   it('shows no group name if no groups are available', function (done) {
+    getGroup.restore();
+    getGroup = sinon.stub(groupsAPI, 'getGroup', function (groupname, callback) { callback(null, null); });
+
     sinon.stub(membersAPI, 'allMembers', function (callback) {
       callback(null, []);
     });
@@ -307,9 +313,6 @@ describe('Activity application', function () {
   });
 
   it('shows the name of the assigned group if the group exists', function (done) {
-    var group = new Group({id: "groupname", longName: "Buxtehude"});
-    getAllAvailableGroups.restore();
-    sinon.stub(groupsAPI, 'getAllAvailableGroups', function (callback) { callback(null, [group]); });
     sinon.stub(membersAPI, 'allMembers', function (callback) { callback(null, []); });
 
     request(app)
