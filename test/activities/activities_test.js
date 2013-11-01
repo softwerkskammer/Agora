@@ -299,8 +299,8 @@ describe('Activity application', function () {
 
     request(app)
       .get('/urlOfTheActivity')
-      .expect(200)
-      .expect(/Veranstaltet von der Gruppe <\/p>/, function (err) {
+      // TODO we should test that the string "Veranstaltet von der Gruppe" is NOT present - but how?!
+      .expect(200, function (err) {
         done(err);
       });
 
@@ -315,7 +315,7 @@ describe('Activity application', function () {
     request(app)
       .get('/urlOfTheActivity')
       .expect(200)
-      .expect(/Veranstaltet von der Gruppe Buxtehude<\/p>/, function (err) {
+      .expect(/Veranstaltet von der Gruppe&nbsp;<a href="\/groups\/groupname">Buxtehude<\/a>/, function (err) {
         done(err);
       });
 

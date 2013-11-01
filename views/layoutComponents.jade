@@ -1,3 +1,59 @@
+mixin topNavbar
+  .navbar-header
+    a.navbar-brand.no-padding(href="/")
+      img(src="/img/SoftwerkskammerWappenLinks.png", alt="Softwerkskammer")
+    a.btn.btn-default.navbar-toggle(data-toggle="collapse", data-target=".collapse-top")
+      span.sr-only Toggle
+      span.icon-bar
+      span.icon-bar
+      span.icon-bar
+  .container.bottom
+    .navbar-collapse.collapse.collapse-top
+      ul.nav.navbar-nav.pull-right.hidden-xs
+        mixin loginMenu
+      ul.nav.navbar-nav
+        li#announcements: a(href="/announcements")
+          span.hidden-sm
+            i.fa.fa-globe.fa-fw
+            | &nbsp;Nachrichten
+          span.visible-sm
+            i.fa.fa-globe.fa-fw
+        li#activities: a(href="/activities/upcoming")
+          span.hidden-sm
+            i.fa.fa-calendar.fa-fw
+            | &nbsp;Aktivitäten
+          span.visible-sm
+            i.fa.fa-calendar.fa-fw
+        li#groups: a(href="/groups")
+          span.hidden-sm
+            i.fa.fa-group.fa-fw
+            | &nbsp;Gruppen
+          span.visible-sm
+            i.fa.fa-group.fa-fw
+        li#wiki.dropdown
+          a.dropdown-toggle(href="#", data-toggle="dropdown")
+            span.hidden-sm
+              i.fa.fa-book.fa-fw
+              | &nbsp;Wiki&nbsp;
+              b.caret
+            span.visible-sm
+              i.fa.fa-book.fa-fw
+              b.caret
+          ul.dropdown-menu
+            if (typeof(wikisubdirs) !== 'undefined')
+              for subdir in wikisubdirs
+                li: a(href="/wiki/#{subdir}/") #{subdir}
+        li#members: a(href="/members")
+          span.hidden-sm
+            if (typeof(user) !== 'undefined')
+              i.fa.fa-user.fa-fw
+              | &nbsp;Mitglieder
+          span.visible-sm
+            if (typeof(user) !== 'undefined')
+              i.fa.fa-user.fa-fw
+        mixin loginMenu(true)
+
+
 mixin administrationMenu()
   if ((typeof(user) !== 'undefined') && user.member && user.member.isAdmin)
     li#administration.dropdown.nav
