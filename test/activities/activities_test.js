@@ -86,7 +86,7 @@ describe('Activity application', function () {
   });
 
   it('shows the details of an activity without participants', function (done) {
-    sinon.stub(membersAPI, 'allMembers', function (callback) {callback(null, []); });
+    sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {callback(null, []); });
 
     request(app)
       .get('/' + 'urlOfTheActivity')
@@ -102,7 +102,7 @@ describe('Activity application', function () {
   });
 
   it('shows the details of an activity with participants', function (done) {
-    sinon.stub(membersAPI, 'allMembers', function (callback) {
+    sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {
       callback(null, [
         {id: 'memberId1'},
         {id: 'memberId2'}
@@ -123,7 +123,7 @@ describe('Activity application', function () {
   });
 
   it('shows the registration button for an activity with participants when a user is logged in who is not participant', function (done) {
-    sinon.stub(membersAPI, 'allMembers', function (callback) {
+    sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {
       callback(null, [
         new Member({id: 'memberId1', nickname: 'participant1', email: "a@b.c"}),
         new Member({id: 'memberId2', nickname: 'participant2', email: "a@b.c"})
@@ -146,7 +146,7 @@ describe('Activity application', function () {
 
 
   it('shows the registration button for an activity with participants when a user is logged in who already is participant', function (done) {
-    sinon.stub(membersAPI, 'allMembers', function (callback) {
+    sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {
       callback(null, [
         new Member({id: 'memberId1', nickname: 'participant1', email: "a@b.c"}),
         new Member({id: 'memberId2', nickname: 'participant2', email: "a@b.c"})
@@ -170,7 +170,7 @@ describe('Activity application', function () {
   });
 
   it('shows the registration button for an activity with multiple resources where the current user has booked one resource', function (done) {
-    sinon.stub(membersAPI, 'allMembers', function (callback) {
+    sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {
       callback(null, [
         new Member({id: 'memberId1', nickname: 'participant1', email: "a@b.c"}),
         new Member({id: 'memberId2', nickname: 'participant2', email: "a@b.c"}),
@@ -225,7 +225,7 @@ describe('Activity application', function () {
 
 
   it('shows a 404 if the id cannot be found in the store for the detail page', function (done) {
-    sinon.stub(membersAPI, 'allMembers', function (callback) {callback(null, []); });
+    sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {callback(null, []); });
     var link = emptyActivity.id + '4711';
 
     request(app).get('/' + link).expect(404, function (err) { done(err); });
@@ -299,9 +299,7 @@ describe('Activity application', function () {
     getGroup.restore();
     getGroup = sinon.stub(groupsAPI, 'getGroup', function (groupname, callback) { callback(null, null); });
 
-    sinon.stub(membersAPI, 'allMembers', function (callback) {
-      callback(null, []);
-    });
+    sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) { callback(null, []); });
 
     request(app)
       .get('/urlOfTheActivity')
@@ -309,11 +307,10 @@ describe('Activity application', function () {
       .expect(200, function (err) {
         done(err);
       });
-
   });
 
   it('shows the name of the assigned group if the group exists', function (done) {
-    sinon.stub(membersAPI, 'allMembers', function (callback) { callback(null, []); });
+    sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) { callback(null, []); });
 
     request(app)
       .get('/urlOfTheActivity')
@@ -321,7 +318,6 @@ describe('Activity application', function () {
       .expect(/Veranstaltet von der Gruppe&nbsp;<a href="\/groups\/groupname">Buxtehude<\/a>/, function (err) {
         done(err);
       });
-
   });
 
 });
