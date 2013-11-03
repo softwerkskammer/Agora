@@ -2,17 +2,12 @@ extends ../../../views/layout
 include  ../../../views/formComponents
 
 mixin resourceRow(name, limit)
+  mixin hiddenWithValue("resources[previousNames]", name)
   .row.form-group
     .col-md-8
       input.form-control(name="resources[names]", value=name, type="text", placeholder="Name")
-    .col-md-3
+    .col-md-4
       input.form-control(name="resources[limits]", value=limit, type="text", placeholder="Anzahl")
-    .col-md-1
-      //- XXX kludgily pushing the delete-link to the left with an inline style
-      //- means I probably don't fully understand Bootstrap's grid
-      a.btn.delete(title="Entfernen", style="margin-left: -24px")
-        i.fa.fa-times
-
 
 block scripts
   script(src="/clientscripts/moment.min.js")
