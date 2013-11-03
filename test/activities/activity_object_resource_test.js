@@ -12,24 +12,28 @@ var Activity = conf.get('beans').get('activity');
 describe('Activity resource management', function () {
   it('adds a member to the default resource', function (done) {
     var activity = new Activity();
+
     activity.addMemberId('memberID', 'default');
+
     expect(activity.registeredMembers('default')).to.contain('memberID');
     done();
   });
 
   it('adds a member to a desired resource', function (done) {
     var activity = new Activity({url: 'myURL', resources: {Einzelzimmer: { _registeredMembers: []}, Doppelzimmer: { _registeredMembers: []}}});
+
     activity.addMemberId('memberID', 'Einzelzimmer');
+
     expect(activity.registeredMembers('Einzelzimmer')).to.contain('memberID');
     expect(activity.registeredMembers('Doppelzimmer')).to.be.empty;
     done();
   });
 
   it('removes a registered member from the default resource (created in compatibility mode)', function (done) {
-    var activity = new Activity(
-      {url: 'myURL', registeredMembers: ['memberID']}
-    );
+    var activity = new Activity({url: 'myURL', registeredMembers: ['memberID']});
+
     activity.removeMemberId('memberID', 'default');
+
     expect(activity.registeredMembers('default')).to.be.empty;
     done();
   });
@@ -42,6 +46,7 @@ describe('Activity resource management', function () {
       }});
 
     activity.removeMemberId('memberID', 'Doppelzimmer');
+
     expect(activity.registeredMembers('Einzelzimmer')).to.contain('memberID');
     expect(activity.registeredMembers('Doppelzimmer')).to.be.empty;
     done();
@@ -54,6 +59,7 @@ describe('Activity resource management', function () {
       }});
 
     activity.addMemberId('memberID', 'Einzelzimmer');
+
     activity.removeMemberId('memberID', 'Doppelzimmer');
     expect(activity.registeredMembers('default')).to.contain('memberID');
     done();
@@ -90,7 +96,9 @@ describe('Activity resource management', function () {
     // this constructor behaviour also affects loading of stored activities
     var activity = new Activity({url: 'url'});
     activity.addMemberId('memberID', 'default');
+
     var copy = new Activity().copyFrom(activity);
+
     expect(copy.registeredMembers('default')).to.be.empty;
     done();
   });
@@ -99,7 +107,9 @@ describe('Activity resource management', function () {
     // this constructor behaviour also affects loading of stored activities
     var activity = new Activity({url: 'url'});
     activity.addMemberId('memberID', 'non-default');
+
     var copy = new Activity().copyFrom(activity);
+
     expect(copy.registeredMembers('non-default')).to.be.empty;
     done();
   });
@@ -108,16 +118,20 @@ describe('Activity resource management', function () {
   it('can add a new member to a copied activity', function (done) {
     var activity = new Activity({url: 'url'});
     activity.addMemberId('memberID', 'default');
+
     var copy = new Activity().copyFrom(activity);
-    copy.addMemberId('memberID', 'default');
-    expect(copy.registeredMembers('default')).to.contain('memberID');
+    copy.addMemberId('memberID2', 'default');
+
+    expect(copy.registeredMembers('default')).to.contain('memberID2');
     done();
   });
 
   it('does not add a state property to any of its resources when copying', function (done) {
     var activity = new Activity({url: 'url'});
     activity.addMemberId('memberID', 'default');
+
     var copy = new Activity().copyFrom(activity);
+
     expect(copy.state.resources.default.state).to.be.undefined;
     done();
   });
@@ -128,12 +142,14 @@ describe('Activity resource management', function () {
       Einzelzimmer: { _registeredMembers: []},
       Doppelzimmer: { _registeredMembers: []}
     }});
+
     var copy = new Activity().copyFrom(activity);
     copy.addMemberId('memberID', 'default');
-    expect(copy.registeredMembers('default')).to.contain('memberID');
     copy.addMemberId('memberID2', 'Einzelzimmer');
-    expect(copy.registeredMembers('Einzelzimmer')).to.contain('memberID2');
     copy.addMemberId('memberID3', 'Doppelzimmer');
+
+    expect(copy.registeredMembers('default')).to.contain('memberID');
+    expect(copy.registeredMembers('Einzelzimmer')).to.contain('memberID2');
     expect(copy.registeredMembers('Doppelzimmer')).to.contain('memberID3');
     done();
   });
@@ -144,7 +160,9 @@ describe('Activity resource management', function () {
       Einzelzimmer: { _registeredMembers: ['memberID']},
       Doppelzimmer: { _registeredMembers: ['memberID']}
     }});
+
     var copy = new Activity().copyFrom(activity);
+
     expect(copy.registeredMembers('default')).to.be.empty;
     expect(copy.registeredMembers('Einzelzimmer')).to.be.empty;
     expect(copy.registeredMembers('Doppelzimmer')).to.be.empty;
@@ -162,6 +180,7 @@ describe('Activity resource management', function () {
       Einzelzimmer: { _registeredMembers: [], _limit: 20},
       Doppelzimmer: { _registeredMembers: [], _limit: 30}
     }});
+
     var copy = new Activity().copyFrom(activity);
 
     expect(copy.numberOfFreeSlots('default')).to.equal(10);
@@ -174,6 +193,7 @@ describe('Activity resource management', function () {
 
   it('lists the name of the default resource if no other resources are present', function (done) {
     var activity = new Activity();
+
     expect(activity.resourceNames().length).to.equal(1);
     expect(activity.resourceNames()).to.contain('default');
     done();
@@ -181,6 +201,7 @@ describe('Activity resource management', function () {
 
   it('lists the name of all resources except the default resource if more resources are present', function (done) {
     var activity = new Activity({resources: {Einzelzimmer: { _registeredMembers: []}, Doppelzimmer: { _registeredMembers: []}}});
+
     expect(activity.resourceNames().length).to.equal(2);
     expect(activity.resourceNames()).to.contain('Einzelzimmer');
     expect(activity.resourceNames()).to.contain('Doppelzimmer');
@@ -189,12 +210,14 @@ describe('Activity resource management', function () {
 
   it('only lists resources that actually contain something valid', function (done) {
     var activity = new Activity({resources: {Einzelzimmer: null, Doppelzimmer: undefined, Heuboden: ""}});
+
     expect(activity.resourceNames()).to.be.empty;
     done();
   });
 
   it('adds a default resource if there is no resources property in the activity', function (done) {
     var activity = new Activity({});
+
     expect(activity.resourceNames().length).to.equal(1);
     expect(activity.resourceNames()).to.contain('default');
     done();
@@ -202,6 +225,7 @@ describe('Activity resource management', function () {
 
   it('adds no default resource if there are no resources in the activity resources property', function (done) {
     var activity = new Activity({ resources: {}});
+
     expect(activity.resourceNames()).to.be.empty;
     expect(!!activity.resourceNames()).to.be.true; // not undefined, not null
     done();
@@ -209,6 +233,7 @@ describe('Activity resource management', function () {
 
   it('lists no registered members if there are no resources', function (done) {
     var activity = new Activity({ resources: {}});
+
     expect(activity.allRegisteredMembers()).to.be.empty;
     done();
   });
