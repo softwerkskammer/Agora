@@ -1,12 +1,12 @@
 "use strict";
 
 var request = require('supertest');
-var express = require('express');
 var sinon = require('sinon').sandbox.create();
 var expect = require('chai').expect;
 
 var conf = require('../configureForTest');
-var userMock = require('../userMock');
+
+var createApp = require('../testHelper')('activitiesApp').createApp;
 
 var beans = conf.get('beans');
 var fieldHelpers = beans.get('fieldHelpers');
@@ -32,13 +32,6 @@ var groupsAPI = beans.get('groupsAPI');
 var membersAPI = beans.get('membersAPI');
 var validation = beans.get('validation');
 var colors = beans.get('colorAPI');
-
-var app = express();
-app.use(express.urlencoded());
-app.use(userMock({member: {id: 'memberId1'}}));
-app.use(beans.get('accessrights'));
-var activitesApp = beans.get('activitiesApp')(express());
-app.use('/', activitesApp);
 
 describe('Activity application', function () {
   var allActivities;
@@ -77,7 +70,7 @@ describe('Activity application', function () {
   });
 
   it('shows the list of activities', function (done) {
-    request(app)
+    request(createApp())
       .get('/')
       .expect(200)
       .expect(/Aktivitäten/)
@@ -94,7 +87,7 @@ describe('Activity application', function () {
   it('shows the details of an activity without participants', function (done) {
     sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {callback(null, []); });
 
-    request(app)
+    request(createApp())
       .get('/' + 'urlOfTheActivity')
       .expect(200)
       .expect(/<small>01.01.2013/)
@@ -115,7 +108,7 @@ describe('Activity application', function () {
       ]);
     });
 
-    request(app)
+    request(createApp())
       .get('/' + 'urlForInteresting')
       .expect(200)
       .expect(/<small>01.01.2013/)
@@ -136,13 +129,7 @@ describe('Activity application', function () {
       ]);
     });
 
-    var redefinedApp = express();
-    redefinedApp.use(express.urlencoded());
-    redefinedApp.use(userMock({member: {id: 'memberId3'}}));
-    redefinedApp.use(beans.get('accessrights'));
-    redefinedApp.use('/', activitesApp);
-
-    request(redefinedApp)
+    request(createApp('memberId3'))
       .get('/' + 'urlForInteresting')
       .expect(200)
       .expect(/Bislang haben 2 Mitglieder ihre Teilnahme zugesagt./)
@@ -153,7 +140,6 @@ describe('Activity application', function () {
       });
   });
 
-
   it('shows the registration button for an activity with participants when a user is logged in who already is participant', function (done) {
     sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {
       callback(null, [
@@ -162,7 +148,7 @@ describe('Activity application', function () {
       ]);
     });
 
-    request(app)
+    request(createApp('memberId1'))
       .get('/' + 'urlForInteresting')
       .expect(200)
       .expect(/Bislang haben 2 Mitglieder ihre Teilnahme zugesagt./)
@@ -183,7 +169,7 @@ describe('Activity application', function () {
       ]);
     });
 
-    request(app)
+    request(createApp('memberId1'))
       .get('/' + 'urlForMultiple')
       .expect(200)
       .expect(/Bislang haben 4 Mitglieder ihre Teilnahme zugesagt./)
@@ -197,9 +183,8 @@ describe('Activity application', function () {
       });
   });
 
-
   it('upcoming activities are exposed as iCalendar', function (done) {
-    request(app)
+    request(createApp())
       .get('/ical')
       .expect(200)
       .expect('Content-Type', /text\/calendar/)
@@ -212,7 +197,7 @@ describe('Activity application', function () {
   it('activity is exposed as iCalendar', function (done) {
     var url = 'urlOfTheActivity';
 
-    request(app)
+    request(createApp())
       .get('/ical/' + url)
       .expect(200)
       .expect('Content-Type', /text\/calendar/)
@@ -222,18 +207,17 @@ describe('Activity application', function () {
       .end(function (err) { done(err); });
   });
 
-
   it('shows a 404 if the id cannot be found in the store for the detail page', function (done) {
     sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {callback(null, []); });
     var link = emptyActivity.id + '4711';
 
-    request(app).get('/' + link).expect(404, function (err) { done(err); });
+    request(createApp()).get('/' + link).expect(404, function (err) { done(err); });
   });
 
   it('allows to create a new activity', function (done) {
     sinon.stub(groupsAPI, 'getAllAvailableGroups', function (callback) { callback(null, []); });
 
-    request(app)
+    request(createApp())
       .get('/new')
       .expect(200)
       .expect(/activities/, function (err) {
@@ -246,7 +230,7 @@ describe('Activity application', function () {
       callback(null, false);
     });
 
-    request(app)
+    request(createApp())
       .post('/submit')
       //.send('')
       .send('url=uhu')
@@ -260,7 +244,7 @@ describe('Activity application', function () {
 
   it('rejects an activity with empty title on submit', function (done) {
 
-    request(app)
+    request(createApp())
       .post('/submit')
       .send('url=uhu&previousUrl=uhu&location=X&startDate=02.07.2000&startTime=19:00&endDate=02.07.2000&endTime=21:00')
       .expect(200)
@@ -275,7 +259,7 @@ describe('Activity application', function () {
       callback(null, true);
     });
 
-    request(app)
+    request(createApp())
       .post('/submit')
       .send('url=uhu&previousUrl=uhuPrev&location=X&startDate=02.07.2000&startTime=19:00&endDate=02.07.2000&endTime=21:00')
       .expect(200)
@@ -291,7 +275,7 @@ describe('Activity application', function () {
 
     sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) { callback(null, []); });
 
-    request(app)
+    request(createApp())
       .get('/urlOfTheActivity')
       // TODO we should test that the string "Veranstaltet von der Gruppe" is NOT present - but how?!
       .expect(200, function (err) {
@@ -302,7 +286,7 @@ describe('Activity application', function () {
   it('shows the name of the assigned group if the group exists', function (done) {
     sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) { callback(null, []); });
 
-    request(app)
+    request(createApp())
       .get('/urlOfTheActivity')
       .expect(200)
       .expect(/Veranstaltet von der Gruppe&nbsp;<a href="\/groups\/groupname">Buxtehude<\/a>/, function (err) {

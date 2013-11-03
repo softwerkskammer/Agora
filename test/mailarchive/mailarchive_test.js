@@ -1,7 +1,6 @@
 "use strict";
 
 var request = require('supertest');
-var express = require('express');
 var sinon = require('sinon');
 var sinonSandbox = sinon.sandbox.create();
 var expect = require('chai').expect;
@@ -13,11 +12,7 @@ var Mail = beans.get('archivedMail');
 var Member = beans.get('member');
 var member = new Member({id: 'ai di', nickname: 'nigg'});
 
-var app = express();
-app.use(express.urlencoded());
-app.use(beans.get('accessrights'));
-var mailarchiveApp = beans.get('mailarchiveApp')(express());
-app.use('/', mailarchiveApp);
+var app = require('../testHelper')('mailarchiveApp').createApp();
 
 describe('Mail content page', function () {
   afterEach(function (done) {

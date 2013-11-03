@@ -3,7 +3,6 @@
 var conf = require('../configureForTest');
 
 var request = require('supertest');
-var express = require('express');
 var sinonSandbox = require('sinon').sandbox.create();
 var expect = require('chai').expect;
 var moment = require('moment-timezone');
@@ -24,11 +23,7 @@ var announcementsAPI = beans.get('announcementsAPI');
 var membersAPI = beans.get('membersAPI');
 var validation = beans.get('validation');
 
-var app = express();
-app.use(express.urlencoded());
-app.use(beans.get('accessrights'));
-var announcementsApp = beans.get('announcementsApp')(express());
-app.use('/', announcementsApp);
+var app = require('../testHelper')('announcementsApp').createApp();
 
 describe('Announcement application', function () {
   var allAnnouncements;
