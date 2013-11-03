@@ -203,6 +203,34 @@ describe('Activity (when filled from UI)', function () {
     done();
   });
 
+  it('replaces one resource by removing one and adding a new one', function (done) {
+    var activity = new Activity({resources: {Einzelzimmer: { _registeredMembers: ['memberId1'], limit: 10},
+      Doppelzimmer: {_registeredMembers: ['memberId2'], limit: 20}}})
+      .fillFromUI({resources: {names: ["Einzelzimmer", "", "Schlafsaal"], limits: ["10", "20", "30"] }});
+
+    checkResourceNames(activity, "Einzelzimmer", "Schlafsaal");
+    expect(activity.resources().named("Einzelzimmer").limit(), "Limit of resource").to.equal(10);
+    expect(activity.resources().named("Einzelzimmer").registeredMembers().length, "Member count of resource").to.equal(1);
+    expect(activity.resources().named("Einzelzimmer").registeredMembers(), "Members of resource").to.contain('memberId1');
+    expect(activity.resources().named("Schlafsaal").limit(), "Limit of resource").to.equal(30);
+    expect(activity.resources().named("Schlafsaal").registeredMembers().length, "Member count of resource").to.equal(0);
+    done();
+  });
+
+  it('replaces two resources by renaming one, removing the second and adding a new one', function (done) {
+    var activity = new Activity({resources: {Einzelzimmer: { _registeredMembers: ['memberId1'], limit: 10},
+      Doppelzimmer: {_registeredMembers: ['memberId2'], limit: 20}}})
+      .fillFromUI({resources: {names: ["Koje", "", "Schlafsaal"], limits: ["10", "20", "30"] }});
+
+    checkResourceNames(activity, "Koje", "Schlafsaal");
+    expect(activity.resources().named("Koje").limit(), "Limit of resource").to.equal(10);
+    expect(activity.resources().named("Koje").registeredMembers().length, "Member count of resource").to.equal(1);
+    expect(activity.resources().named("Koje").registeredMembers(), "Members of resource").to.contain('memberId1');
+    expect(activity.resources().named("Schlafsaal").limit(), "Limit of resource").to.equal(30);
+    expect(activity.resources().named("Schlafsaal").registeredMembers().length, "Member count of resource").to.equal(0);
+    done();
+  });
+
   it('exchanges the names of two resources with registered members when the resource order is changed', function (done) {
     var activity = new Activity({resources: {Einzelzimmer: { _registeredMembers: ['memberId1'], limit: 10},
       Doppelzimmer: {_registeredMembers: ['memberId2'], limit: 20}}})
@@ -212,9 +240,9 @@ describe('Activity (when filled from UI)', function () {
     expect(activity.resources().named("Doppelzimmer").limit(), "Limit of resource").to.equal(10);
     expect(activity.resources().named("Doppelzimmer").registeredMembers().length, "Member count of resource").to.equal(1);
     expect(activity.resources().named("Doppelzimmer").registeredMembers(), "Members of resource").to.contain('memberId1');
-    expect(activity.resources().named("Doppelzimmer").limit(), "Limit of resource").to.equal(20);
-    expect(activity.resources().named("Doppelzimmer").registeredMembers().length, "Member count of resource").to.equal(1);
-    expect(activity.resources().named("Doppelzimmer").registeredMembers(), "Members of resource").to.contain('memberId2');
+    expect(activity.resources().named("Einzelzimmer").limit(), "Limit of resource").to.equal(20);
+    expect(activity.resources().named("Einzelzimmer").registeredMembers().length, "Member count of resource").to.equal(1);
+    expect(activity.resources().named("Einzelzimmer").registeredMembers(), "Members of resource").to.contain('memberId2');
     done();
   });
 
