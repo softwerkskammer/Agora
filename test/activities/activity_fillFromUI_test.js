@@ -37,6 +37,23 @@ describe('Activity (when filled from UI)', function () {
     done();
   });
 
+  it('creates a resource without limit when the entered limit is negative', function (done) {
+    var activity = new Activity().fillFromUI({resources: {names: "Einzelzimmer", limits: "-10"}});
+
+    checkResourceNames(activity, "Einzelzimmer");
+    expect(activity.resources().named("Einzelzimmer").limit(), "Limit of resource").to.equal(0);
+    done();
+  });
+
+  it('creates a resource without limit when the entered limit is not an integer', function (done) {
+    var activity = new Activity().fillFromUI({resources: {names: "Einzelzimmer", limits: "dudu"}});
+
+    checkResourceNames(activity, "Einzelzimmer");
+    expect(activity.resources().named("Einzelzimmer").limit(), "Limit of resource").to.equal(0);
+    done();
+  });
+
+
   it('adds a limit to a resource without limit', function (done) {
     var activity = new Activity({resources: {Einzelzimmer: { _registeredMembers: []}}})
       .fillFromUI({resources: {names: "Einzelzimmer", limits: "10"}});
@@ -49,6 +66,24 @@ describe('Activity (when filled from UI)', function () {
   it('removes a limit from a resource with limit', function (done) {
     var activity = new Activity({resources: {Einzelzimmer: { _registeredMembers: [], limit: 10}}})
       .fillFromUI({resources: {names: "Einzelzimmer", limits: ""}});
+
+    checkResourceNames(activity, "Einzelzimmer");
+    expect(activity.resources().named("Einzelzimmer").limit(), "Limit of resource").to.equal(0);
+    done();
+  });
+
+  it('removes a limit from a resource with limit when the new limit is negative', function (done) {
+    var activity = new Activity({resources: {Einzelzimmer: { _registeredMembers: [], limit: 10}}})
+      .fillFromUI({resources: {names: "Einzelzimmer", limits: "-1"}});
+
+    checkResourceNames(activity, "Einzelzimmer");
+    expect(activity.resources().named("Einzelzimmer").limit(), "Limit of resource").to.equal(0);
+    done();
+  });
+
+  it('removes a limit from a resource with limit when the new limit is not an integer', function (done) {
+    var activity = new Activity({resources: {Einzelzimmer: { _registeredMembers: [], limit: 10}}})
+      .fillFromUI({resources: {names: "Einzelzimmer", limits: "tuut"}});
 
     checkResourceNames(activity, "Einzelzimmer");
     expect(activity.resources().named("Einzelzimmer").limit(), "Limit of resource").to.equal(0);
