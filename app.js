@@ -20,6 +20,7 @@ function useApp(parent, url, factory) {
 }
 
 var conf = require('nconf');
+var beans = conf.get('beans');
 
 // initialize winston and two concrete loggers
 var winston = require('winston-config').fromFileSync(path.join(__dirname, 'config/winston-config.json'));
@@ -65,25 +66,26 @@ module.exports = {
       }
       app.use(passport.initialize());
       app.use(passport.session());
-      app.use(conf.get('beans').get('secureByLogin'));
-      app.use(conf.get('beans').get('secureAdminOnly'));
-      app.use(conf.get('beans').get('expressViewHelper'));
-      app.use(conf.get('beans').get('redirectRuleForNewUser'));
-      app.use(conf.get('beans').get('announcementsInSidebar'));
-      app.use(conf.get('beans').get('wikiSubdirs'));
+      app.use(beans.get('accessrights'));
+      app.use(beans.get('secureByLogin'));
+      app.use(beans.get('secureAdminOnly'));
+      app.use(beans.get('expressViewHelper'));
+      app.use(beans.get('redirectRuleForNewUser'));
+      app.use(beans.get('announcementsInSidebar'));
+      app.use(beans.get('wikiSubdirs'));
       app.use(app.router);
     });
 
-    app.use('/', conf.get('beans').get('siteApp'));
-    useApp(app, 'administration', conf.get('beans').get('administrationApp'));
-    useApp(app, 'activities', conf.get('beans').get('activitiesApp'));
-    useApp(app, 'members', conf.get('beans').get('membersApp'));
-    useApp(app, 'groups', conf.get('beans').get('groupsApp'));
-    useApp(app, 'announcements', conf.get('beans').get('announcementsApp'));
-    useApp(app, 'mailsender', conf.get('beans').get('mailsenderApp'));
-    useApp(app, 'auth', conf.get('beans').get('authenticationApp'));
-    useApp(app, 'mailarchive', conf.get('beans').get('mailarchiveApp'));
-    useApp(app, 'wiki', conf.get('beans').get('wikiApp'));
+    app.use('/', beans.get('siteApp'));
+    useApp(app, 'administration', beans.get('administrationApp'));
+    useApp(app, 'activities', beans.get('activitiesApp'));
+    useApp(app, 'members', beans.get('membersApp'));
+    useApp(app, 'groups', beans.get('groupsApp'));
+    useApp(app, 'announcements', beans.get('announcementsApp'));
+    useApp(app, 'mailsender', beans.get('mailsenderApp'));
+    useApp(app, 'auth', beans.get('authenticationApp'));
+    useApp(app, 'mailarchive', beans.get('mailarchiveApp'));
+    useApp(app, 'wiki', beans.get('wikiApp'));
 
     app.configure('production', function () {
       // Handle 404

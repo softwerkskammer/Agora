@@ -13,7 +13,11 @@ var Mail = beans.get('archivedMail');
 var Member = beans.get('member');
 var member = new Member({id: 'ai di', nickname: 'nigg'});
 
-var app = beans.get('mailarchiveApp')(express());
+var app = express();
+app.use(express.urlencoded());
+app.use(beans.get('accessrights'));
+var mailarchiveApp = beans.get('mailarchiveApp')(express());
+app.use('/', mailarchiveApp);
 
 describe('Mail content page', function () {
   afterEach(function (done) {

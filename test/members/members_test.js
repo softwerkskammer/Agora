@@ -11,7 +11,11 @@ var membersAPI = beans.get('membersAPI');
 var groupsAPI = beans.get('groupsAPI');
 var dummymember = new Member({nickname: 'hada', email: 'a@b.c', site: 'http://my.blog', firstname: 'Hans', lastname: 'Dampf'});
 
-var app = beans.get('membersApp')(express());
+var app = express();
+app.use(express.urlencoded());
+app.use(beans.get('accessrights'));
+var membersApp = beans.get('membersApp')(express());
+app.use('/', membersApp);
 
 var allMembers;
 var getMember;

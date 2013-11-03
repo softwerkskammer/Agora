@@ -4,8 +4,10 @@ var conf = require('../configureForTest');
 var sinon = require('sinon');
 var expect = require('chai').expect;
 
-var redirectRuleForNewUser = conf.get('beans').get('redirectRuleForNewUser');
-var secureAdminOnly = conf.get('beans').get('secureAdminOnly');
+var beans = conf.get('beans');
+var redirectRuleForNewUser = beans.get('redirectRuleForNewUser');
+var secureAdminOnly = beans.get('secureAdminOnly');
+var accessrights = beans.get('accessrights');
 
 describe('redirection to registration page for authenticated but not yet registered users', function () {
 
@@ -109,8 +111,10 @@ describe('exceptions to the admin guard', function () {
       originalUrl: '/members/new',
       user: {}
     };
+    var res = {locals: {}};
+    accessrights(req, res, function () {});
     var next = sinon.spy();
-    secureAdminOnly(req, {}, next);
+    secureAdminOnly(req, res, next);
     expect(next.called).to.be.true;
     done();
   });
@@ -121,8 +125,10 @@ describe('exceptions to the admin guard', function () {
       originalUrl: '/members/submit',
       user: {}
     };
+    var res = {locals: {}};
+    accessrights(req, res, function () {});
     var next = sinon.spy();
-    secureAdminOnly(req, {}, next);
+    secureAdminOnly(req, res, next);
     expect(next.called).to.be.true;
     done();
   });
@@ -135,8 +141,10 @@ describe('exceptions to the admin guard', function () {
         member: {nickname: 'nick'}
       }
     };
+    var res = {locals: {}};
+    accessrights(req, res, function () {});
     var next = sinon.spy();
-    secureAdminOnly(req, {}, next);
+    secureAdminOnly(req, res, next);
     expect(next.called).to.be.true;
     done();
   });
@@ -149,8 +157,10 @@ describe('exceptions to the admin guard', function () {
         member: {nickname: 'nick name'}
       }
     };
+    var res = {locals: {}};
+    accessrights(req, res, function () {});
     var next = sinon.spy();
-    secureAdminOnly(req, {}, next);
+    secureAdminOnly(req, res, next);
     expect(next.called).to.be.true;
     done();
   });
@@ -164,8 +174,10 @@ describe('exceptions to the admin guard', function () {
       },
       body: {id: 'id'}
     };
+    var res = {locals: {}};
+    accessrights(req, res, function () {});
     var next = sinon.spy();
-    secureAdminOnly(req, {}, next);
+    secureAdminOnly(req, res, next);
     expect(next.called).to.be.true;
     done();
   });
@@ -179,8 +191,10 @@ describe('exceptions to the admin guard', function () {
       }
     };
     var res = {
+      locals: {},
       redirect: sinon.spy()
     };
+    accessrights(req, res, function () {});
     var next = sinon.spy();
     secureAdminOnly(req, res, next);
     expect(/\/mustBeAdmin/.test(res.redirect.getCall(0).args[0])).to.be.true;
@@ -197,8 +211,10 @@ describe('exceptions to the admin guard', function () {
       }
     };
     var res = {
+      locals: {},
       redirect: sinon.spy()
     };
+    accessrights(req, res, function () {});
     var next = sinon.spy();
     secureAdminOnly(req, res, next);
     expect(/\/mustBeAdmin/.test(res.redirect.getCall(0).args[0])).to.be.true;

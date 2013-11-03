@@ -26,7 +26,7 @@ block content
     .col-md-12
       .page-header
         .btn-group.pull-right
-          if (typeof(user) !== 'undefined' && user.member.isAdmin)
+          if (accessrights.canCreateGroup())
             a.btn.btn-default(href="new/", title="Neue Gruppe"): i.fa.fa-file-o.fa-fw
         h2 Gruppen&nbsp;
           small Alle
