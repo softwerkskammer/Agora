@@ -37,6 +37,15 @@ describe('Activity (when filled from UI)', function () {
     done();
   });
 
+  it('creates two resources with limits', function (done) {
+    var activity = new Activity().fillFromUI({resources: {names: ["Einzelzimmer", "Doppelzimmer"], limits: ["10", "20"]}});
+
+    checkResourceNames(activity, "Einzelzimmer", "Doppelzimmer");
+    expect(activity.resources().named("Einzelzimmer").limit(), "Limit of resource").to.equal(10);
+    expect(activity.resources().named("Doppelzimmer").limit(), "Limit of resource").to.equal(20);
+    done();
+  });
+
   it('creates a resource without limit when the entered limit is negative', function (done) {
     var activity = new Activity().fillFromUI({resources: {names: "Einzelzimmer", limits: "-10"}});
 
