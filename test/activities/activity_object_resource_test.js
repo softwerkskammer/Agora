@@ -93,6 +93,16 @@ describe('Activity resource management', function () {
     done();
   });
 
+  it('does not copy a registered member in a non-default resource from an existing activity', function (done) {
+    // this constructor behaviour also affects loading of stored activities
+    var activity = new Activity({url: 'url'});
+    activity.addMemberId('memberID', 'non-default');
+    var copy = new Activity().copyFrom(activity);
+    expect(copy.registeredMembers('non-default')).to.be.empty;
+    done();
+  });
+
+
   it('can add a new member to a copied activity', function (done) {
     var activity = new Activity({url: 'url'});
     activity.addMemberId('memberID', 'default');
@@ -143,6 +153,22 @@ describe('Activity resource management', function () {
 
     done();
   });
+
+  it('copies the limits of all resources', function (done) {
+    var activity = new Activity({url: 'url', resources: {
+      default: { _registeredMembers: [], _limit: 10},
+      Einzelzimmer: { _registeredMembers: [], _limit: 20},
+      Doppelzimmer: { _registeredMembers: [], _limit: 30}
+    }});
+    var copy = new Activity().copyFrom(activity);
+
+    expect(copy.numberOfFreeSlots('default')).to.equal(10);
+    expect(copy.numberOfFreeSlots('Einzelzimmer')).to.equal(20);
+    expect(copy.numberOfFreeSlots('Doppelzimmer')).to.equal(30);
+    done();
+  });
+
+
 
   it('lists the name of the default resource if no other resources are present', function (done) {
     var activity = new Activity();
