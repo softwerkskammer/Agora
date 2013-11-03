@@ -10,7 +10,7 @@ block content
   .page-header
     .btn-group.pull-right
       a.btn.btn-default(href="javascript:history.back()", type="cancel") Zurück
-      if (typeof(user) !== 'undefined')
+      if (accessrights.isAuthenticated())
         button(id="rev-compare", data-pageName="#{pageName}", data-subdir="#{subdir}").btn.btn-default
           i.fa.fa-stethoscope.fa-fw
           | &nbsp; Vergleichen…

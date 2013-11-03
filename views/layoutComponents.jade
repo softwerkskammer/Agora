@@ -45,11 +45,11 @@ mixin topNavbar
                 li: a(href="/wiki/#{subdir}/") #{subdir}
         li#members: a(href="/members")
           span.hidden-sm
-            if (typeof(user) !== 'undefined')
+            if (accessrights.isRegistered())
               i.fa.fa-user.fa-fw
               | &nbsp;Mitglieder
           span.visible-sm
-            if (typeof(user) !== 'undefined')
+            if (accessrights.isRegistered())
               i.fa.fa-user.fa-fw
         mixin loginMenu(true)
 

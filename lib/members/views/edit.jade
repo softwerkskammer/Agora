@@ -8,7 +8,7 @@ block scripts
 
 block title
   | Profil&nbsp;
-  - if (user.member)
+  - if (accessrights.isRegistered())
     | bearbeiten
   - else
     | anlegen
@@ -20,13 +20,13 @@ block content
         .col-md-12
           
           h2 
-            if user.member
+            if (accessrights.isRegistered())
               | "#{member.nickname}"
             else
               | Neues Mitglied
             .btn-group.pull-right
-              if (user.member)
-                if (user.member.id === member.id)
+              if (accessrights.isRegistered())
+                if (accessrights.isMember(member))
                   a.btn.btn-default(href="/auth/logout", type="cancel") Abmelden
                 a.btn.btn-default(href="javascript:history.back()", type="cancel") Zurück
               else
@@ -44,7 +44,7 @@ block content
         .col-md-6
           mixin hidden('id', member)
           mixin hidden('previousNickname', member, 'nickname')
-          mixin hidden('previousEmail', user.member ? member : {email:''}, 'email')
+          mixin hiddenWithValue('previousEmail', accessrights.isRegistered() ? member.email : '')
           mixin hidden('created', member)
           mixin text('nickname', 'Nickname', member)
           mixin text('firstname', 'Vorname', member)
@@ -57,9 +57,9 @@ block content
           mixin text('interests', 'Interessenschwerpunkte', member)
           mixin text('site', 'Website / Blog', member)
           mixin text('reference', 'Wie ich von der Softwerkskammer erfahren habe', member)
-          if (user.member && user.member.isAdmin)
+          if (accessrights.isAdmin())
             mixin checkbox('isAdmin', 'Administrator', !!member.isAdmin)
-      if (user.member)
+      if (accessrights.isRegistered())
         .row
           .col-md-12
             legend Aktuell authentifiziert bei:
