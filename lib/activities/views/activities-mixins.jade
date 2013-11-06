@@ -8,8 +8,8 @@ mixin visitorCount(anzahl)
       |  haben #{anzahl} Mitglieder ihre Teilnahme zugesagt.
 
 
-mixin subscriptionButtons(registeredMembers, url, resource, currentMemberId)
-  if (resource === 'default')
+mixin subscriptionButtons(registeredMembers, url, resource, currentMemberId, totalNumberOfResources)
+  if (totalNumberOfResources === 1)
     if (registeredMembers.indexOf(currentMemberId) > -1)
       a.btn.btn-primary(href="unsubscribe/#{encodeURIComponent(url)}/#{encodeURIComponent(resource)}") Ich kann doch nicht…
     else
