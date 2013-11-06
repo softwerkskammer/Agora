@@ -13,5 +13,5 @@ html
             br
             small: mixin mailattributes(mail) 
       .modal-body
-        if (!!mail)
+        if (mail)
           !{mail.getHtml()}

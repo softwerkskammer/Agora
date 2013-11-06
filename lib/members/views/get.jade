@@ -12,7 +12,7 @@ block content
         h2
           | "#{member.nickname}"&nbsp;
           .btn-group.pull-right
-            if (typeof(user) !== 'undefined' && (user.member.isAdmin || user.member.id === member.id))
+            if (accessrights.canEditMember(member))
               a.btn.btn-default(href="/members/edit/#{encodeURIComponent(member.nickname)}"): i.fa.fa-edit.fa-fw
           small
             if (member.isAdmin)

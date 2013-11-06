@@ -15,11 +15,11 @@ block content
         .col-md-12
           legend
             | Nachricht schreiben
-          if (typeof(regionalgroups) !== 'undefined')
+          if (regionalgroups)
             mixin groupCheckboxes('invitedGroups', regionalgroups, themegroups)
             h4 Sonstige
             mixin checkbox('toParticipants', 'nur an die Teilnehmer der Aktivität (nicht an Gruppen)', false, 'toParticipants')
-          if (typeof(message.receiver) !== 'undefined')
+          if (message.receiver)
             mixin textReadonly('nickname', 'An Mitglied', message.receiver)
           mixin text('subject', 'Betreff', message)
           mixin hightextarea('markdown', 'Inhalt', message)

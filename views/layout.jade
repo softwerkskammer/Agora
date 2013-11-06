@@ -37,7 +37,7 @@ html
       .row
         .col-md-8
           .container
-            if (typeof(statusmessage) !== 'undefined')
+            if (statusmessage)
               mixin notificationsBlock(statusmessage)
             block content
         .col-md-4.hidden-print
@@ -46,7 +46,7 @@ html
               p &nbsp;
               h2.visible-xs.visible-sm Aktivitäten
             #calendar
-            if (typeof(latestNews) !== 'undefined')
+            if (latestNews)
               h2 Das Neueste
               dl
                 for announcement in latestNews

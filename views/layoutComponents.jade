@@ -45,17 +45,17 @@ mixin topNavbar
                 li: a(href="/wiki/#{subdir}/") #{subdir}
         li#members: a(href="/members")
           span.hidden-sm
-            if (typeof(user) !== 'undefined')
+            if (accessrights.isRegistered())
               i.fa.fa-user.fa-fw
               | &nbsp;Mitglieder
           span.visible-sm
-            if (typeof(user) !== 'undefined')
+            if (accessrights.isRegistered())
               i.fa.fa-user.fa-fw
         mixin loginMenu(true)
 
 
 mixin administrationMenu()
-  if ((typeof(user) !== 'undefined') && user.member && user.member.isAdmin)
+  if (accessrights.isAdmin())
     li#administration.dropdown.nav
       a.dropdown-toggle(href="#", data-toggle="dropdown")
         i.fa.fa-dashboard.fa-fw
@@ -79,7 +79,7 @@ mixin administrationMenu()
           | &nbsp;Farben
 
 mixin loginMenu(forInline)
-  if (typeof(user) !== 'undefined' && user.member)
+  if (accessrights.isRegistered())
     li.dropdown(class="#{forInline ? 'visible-xs' : ''}")
       a.dropdown-toggle(href="#", data-toggle="dropdown")
         i.fa.fa-info-circle.fa-fw&nbsp;

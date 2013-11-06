@@ -3,12 +3,12 @@
 var conf = require('../configureForTest');
 
 var request = require('supertest');
-var express = require('express');
 var sinonSandbox = require('sinon').sandbox.create();
 var expect = require('chai').expect;
 var moment = require('moment-timezone');
 
-var Announcement = conf.get('beans').get('announcement');
+var beans = conf.get('beans');
+var Announcement = beans.get('announcement');
 
 var dummyAnnouncement = new Announcement({
   title: 'title',
@@ -19,11 +19,11 @@ var dummyAnnouncement = new Announcement({
   thruUnix: 1388448000 // 31.12.2013
 });
 
-var announcementsAPI = conf.get('beans').get('announcementsAPI');
-var membersAPI = conf.get('beans').get('membersAPI');
-var validation = conf.get('beans').get('validation');
+var announcementsAPI = beans.get('announcementsAPI');
+var membersAPI = beans.get('membersAPI');
+var validation = beans.get('validation');
 
-var app = conf.get('beans').get('announcementsApp')(express());
+var app = require('../testHelper')('announcementsApp').createApp();
 
 describe('Announcement application', function () {
   var allAnnouncements;

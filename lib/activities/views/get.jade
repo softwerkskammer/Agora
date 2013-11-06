@@ -17,9 +17,10 @@ block content
       .page-header
         .btn-group.pull-right
           a.btn.btn-default(href="/activities/ical/#{encodeURIComponent(activity.url())}", title="Für Kalender exportieren"): i.fa.fa-calendar.fa-fw
-          a.btn.btn-default(href="/mailsender/invitation/#{encodeURIComponent(activity.url())}", title="Einladung versenden"): i.fa.fa-envelope-o.fa-fw
-          a.btn.btn-default(href="/activities/newLike/#{encodeURIComponent(activity.url())}", title="Neu auf Basis dieser Aktivität"): i.fa.fa-copy.fa-fw
-          if (typeof(user) !== 'undefined' && user.member.isAdmin)
+          if (accessrights.canCreateActivity())
+            a.btn.btn-default(href="/activities/newLike/#{encodeURIComponent(activity.url())}", title="Neu auf Basis dieser Aktivität"): i.fa.fa-copy.fa-fw
+          if (accessrights.canEditActivity(activity))
+            a.btn.btn-default(href="/mailsender/invitation/#{encodeURIComponent(activity.url())}", title="Einladung versenden"): i.fa.fa-envelope-o.fa-fw
             a.btn.btn-default(href="/activities/edit/#{encodeURIComponent(activity.url())}", title="Bearbeiten"): i.fa.fa-edit.fa-fw
         h2 #{activity.title()}
           br
@@ -42,9 +43,9 @@ block content
       hr
       div.hidden-print
         mixin visitorCount(activity.visitors.length)
-        if (typeof(user) !== 'undefined' && user.member)
+        if (accessrights.canParticipateInActivity(activity))
           each resourceName in activity.resourceNames()
-            mixin subscriptionButtons(activity.registeredMembers(resourceName), activity.url(), resourceName, user.member.id)
+            mixin subscriptionButtons(activity.registeredMembers(resourceName), activity.url(), resourceName, currentUserId)
           h4 Zugesagt haben:
           mixin memberlist(activity.visitors)
 
