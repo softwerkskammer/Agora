@@ -33,24 +33,21 @@ html
     .navbar.navbar-default.navbar-top.hidden-print.visible-xs(role="navigation")
       mixin topNavbar
 
-    .container(style="max-width: 2048px")
-      .row
-        .col-md-8
-          .container
-            if (statusmessage)
-              mixin notificationsBlock(statusmessage)
-            block content
-        .col-md-4.hidden-print
-          .container
-            .page-header.visible-xs.visible-sm
-              p &nbsp;
-              h2.visible-xs.visible-sm Aktivitäten
-            #calendar
-            if (latestNews)
-              h2 Das Neueste
-              dl
-                for announcement in latestNews
-                  dt #{announcement.fromDate()}
-                  dd: a(href='/announcements/#{encodeURIComponent(announcement.url)}') #{announcement.title}
+    .row.main
+      .col-md-8
+        if (statusmessage)
+          mixin notificationsBlock(statusmessage)
+        block content
+      .col-md-4.hidden-print
+        .page-header.visible-xs.visible-sm
+          p &nbsp;
+          h2.visible-xs.visible-sm Aktivitäten
+        #calendar
+        if (latestNews)
+          h2 Das Neueste
+          dl
+            for announcement in latestNews
+              dt #{announcement.fromDate()}
+              dd: a(href='/announcements/#{encodeURIComponent(announcement.url)}') #{announcement.title}
     mixin bottomNavbar
     
