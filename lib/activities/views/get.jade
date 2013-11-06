@@ -41,15 +41,17 @@ block content
         !{activity.directionHTML()}
       hr
       div.hidden-print
-        mixin visitorCount(visitors.length)
+        mixin visitorCount(activity.visitors.length)
         if (typeof(user) !== 'undefined' && user.member)
           each resourceName in activity.resourceNames()
             mixin subscriptionButtons(activity.registeredMembers(resourceName), activity.url(), resourceName, user.member.id)
           h4 Zugesagt haben:
-          mixin memberlist(visitors)
+          mixin memberlist(activity.visitors)
 
-      hr.hidden-print
-      p.hidden-print Veranstaltet von der Gruppe: #{activity.groupNameFrom(groups)}
+      if (activity.group)
+        hr.hidden-print
+        p.hidden-print Veranstaltet von der Gruppe&nbsp;
+          a(href="/groups/#{activity.group.id}") #{activity.group.longName}
     .col-md-6
       mixin map(activity.location(), '100%', '450px')
 
