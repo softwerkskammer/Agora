@@ -2,7 +2,6 @@ extends ../../../views/layout
 include  ../../../views/formComponents
 
 mixin resourceRow(name, limit)
-  mixin hiddenWithValue("resources[previousNames]", name)
   .row.form-group
     .col-md-8
       input.form-control(name="resources[names]", value=name, type="text", placeholder="Name")
@@ -68,6 +67,7 @@ block content
             each name in activity.resourceNames(/*includeDefault=*/true)
               - var resource = activity.resources().named(name)
               mixin resourceRow(name, resource.limit())
+              mixin hiddenWithValue("resources[previousNames]", name)
             .row.form-group
               .col-md-5
                 button.add.btn.btn-sm.btn-default(type="button")
