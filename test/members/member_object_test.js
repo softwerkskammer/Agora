@@ -18,36 +18,37 @@ describe('Member initial filling', function () {
     expect(member.firstname, 'firstname').to.equal('Hans');
     expect(member.lastname, 'lastname').to.equal('Dampf');
     expect(member.email, 'email').to.equal('hada@web.de');
+    expect(member.githubAccout, 'githubAccount').to.not.exist;
     done();
   });
 
   it('is populated by GitHub record', function (done) {
     var userdata = JSON.parse('{' +
       '"authenticationId": "github:123456", "profile": {' +
-      ' "provider" : "github", "id" : 123456, "displayName": "Hans Dampf", "username" :"hada", ' +
+      ' "provider" : "github", "id" : 123456, "displayName": "Hans Dampf", "username" : "hansdampf", ' +
       '"profileUrl" : "https://github.com/hansdampf", ' + '"emails" : [ { "value": null } ], ' +
       '"_json" : { "html_url" :"https://github.com/hansdampf", "blog" : "http://hada.wordpress.com" }}}');
 
     var member = new Member().initFromSessionUser(userdata);
     expect(member.firstname, 'firstname').to.not.exist;
     expect(member.lastname, 'lastname').to.not.exist;
-    expect(member.site, 'site').to.equal('https://github.com/hansdampf, http://hada.wordpress.com');
-
+    expect(member.site, 'site').to.equal('http://hada.wordpress.com');
+    expect(member.githubAccount, 'githubAccount').to.equal("hansdampf");
     done();
   });
 
   it('is populated by GitHub record with only github url', function (done) {
     var userdata = JSON.parse('{' +
       '"authenticationId": "github:123456", "profile": {' +
-      ' "provider" : "github", "id" : 123456, "displayName": "Hans Dampf", "username" :"hada", ' +
+      ' "provider" : "github", "id" : 123456, "displayName": "Hans Dampf", "username" :"hansdampf", ' +
       '"profileUrl" : "https://github.com/hansdampf", ' + '"emails" : [ { "value": null } ], ' +
       '"_json" : { "html_url" :"https://github.com/hansdampf", "blog" : "undefined" }}}');
 
     var member = new Member().initFromSessionUser(userdata);
     expect(member.firstname, 'firstname').to.not.exist;
     expect(member.lastname, 'lastname').to.not.exist;
-    expect(member.site, 'site').to.equal('https://github.com/hansdampf');
-
+    expect(member.site, 'site').to.be.empty;
+    expect(member.githubAccount, 'githubAccount').to.equal("hansdampf");
     done();
   });
 
@@ -65,6 +66,7 @@ describe('Member initial filling', function () {
     expect(member.profession, 'profession').to.not.exist;
     expect(member.interests, 'interest').to.not.exist;
     expect(member.site, 'site').to.not.exist;
+    expect(member.githubAccount, 'githubAccount').to.not.exist;
     expect(member.reference, 'reference').to.not.exist;
     done();
   });

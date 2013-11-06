@@ -32,6 +32,10 @@ block content
         span.twitterify
           | #{member.twitter}
       p
+        strong github-Account:
+        span.urlify
+          |  #{member.githubAccountAsUrl()}
+      p
         strong Ort / Region:
         |  #{member.location}
       p
