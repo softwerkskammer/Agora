@@ -4,9 +4,9 @@ include  ../../../views/formComponents
 mixin resourceRow(name, limit)
   .row.form-group
     .col-md-8
-      input.form-control(name="resources[names]", value=name, type="text", placeholder="Name")
+      input.form-control(name="resources[names]", value=name, type="text", placeholder="Bezeichnung")
     .col-md-4
-      input.form-control(name="resources[limits]", value=limit, type="text", placeholder="Anzahl")
+      input.form-control(name="resources[limits]", value=limit, type="text", placeholder="unbegrenzt")
 
 block scripts
   script(src="/clientscripts/moment.min.js")
@@ -62,8 +62,12 @@ block content
                 mixin time('endTime', '&nbsp;', activity, activity.endTime())
           mixin textareaWithValue('description', 'Beschreibung', activity.description())
           #resources.form-group
-            mixin controlLabel('resources[names]', 'Beschränkungen für Ressourcen')
-
+            mixin controlLabel('resources[names]', 'Ressourcen')
+            .row
+              .col-md-8
+                mixin controlLabel("bezeichnung", "Bezeichnung", "Name der zu buchenden Einheit (z. B. Einzelzimmer, Doppelzimmer)")
+              .col-md-4
+                mixin controlLabel("anzahl", "Anzahl", "Maximale Teilnehmerzahl (keine Beschränkung bei leerem Feld)")
             each name in activity.resourceNames(/*includeDefault=*/true)
               - var resource = activity.resources().named(name)
               mixin resourceRow(name, resource.limit())
