@@ -20,6 +20,9 @@ var surroundEmail = function (email) {
   return "<a href=\"mailto:" + email + "\">" + email + "</a>";
 };
 
+var displayedActivityStart = null;
+var displayedActivityEnd = null;
+
 var initCalendar = function () {
   // page is now ready, initialize the calendar...
   $('#calendar').each(function () {
@@ -42,7 +45,7 @@ var initCalendar = function () {
       dayNamesShort: ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'],
 
       events: '/activities/eventsForSidebar',
-      eventMouseover: function (event, jsEvent, view) {
+      eventMouseover: function (event) {
         var placement = "left";
         if (event.dayOfWeek < 4 && event.dayOfWeek > 0) {
           placement = "right";
@@ -54,8 +57,14 @@ var initCalendar = function () {
         });
         $(this).tooltip('show');
       },
-      eventMouseout: function (event, jsEvent, view) {
+      eventMouseout: function () {
         $(this).tooltip('destroy');
+      },
+
+      eventAfterAllRender: function () {
+        if (displayedActivityStart) {
+          this.select(displayedActivityStart, displayedActivityEnd, true);
+        }
       }
     });
   });
