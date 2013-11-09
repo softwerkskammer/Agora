@@ -1,14 +1,13 @@
 "use strict";
 
 var request = require('supertest');
-var express = require('express');
 var sinon = require('sinon').sandbox.create();
 
 var conf = require('../configureForTest');
 
 var activitiesCoreAPI = conf.get('beans').get('activitiesCoreAPI');
 
-var app = conf.get('beans').get('activitiesApp')(express());
+var createApp = require('../testHelper')('activitiesApp').createApp;
 
 describe('Activity application - on submit -', function () {
 
@@ -22,10 +21,7 @@ describe('Activity application - on submit -', function () {
       callback(null, false);
     });
 
-    var root = express();
-    root.use(express.urlencoded());
-    root.use('/', app);
-    request(root)
+    request(createApp())
       .post('/submit')
       //.send('')
       .send('url=uhu')
@@ -39,10 +35,7 @@ describe('Activity application - on submit -', function () {
 
   it('rejects an activity with empty title', function (done) {
 
-    var root = express();
-    root.use(express.urlencoded());
-    root.use('/', app);
-    request(root)
+    request(createApp())
       .post('/submit')
       .send('url=uhu&previousUrl=uhu&location=X&startDate=02.07.2000&startTime=19:00&endDate=02.07.2000&endTime=21:00')
       .expect(200)
@@ -57,10 +50,7 @@ describe('Activity application - on submit -', function () {
       callback(null, true);
     });
 
-    var root = express();
-    root.use(express.urlencoded());
-    root.use('/', app);
-    request(root)
+    request(createApp())
       .post('/submit')
       .send('url=uhu&previousUrl=uhuPrev&location=X&startDate=02.07.2000&startTime=19:00&endDate=02.07.2000&endTime=21:00')
       .expect(200)
