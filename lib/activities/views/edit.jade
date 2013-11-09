@@ -70,7 +70,7 @@ block content
                 mixin controlLabel("anzahl", "Anzahl", "Maximale Teilnehmerzahl (keine Beschränkung bei leerem Feld)")
             each name in activity.resourceNames()
               - var resource = activity.resources().named(name)
-              mixin resourceRow(name, resource.limit())
+              mixin resourceRow(name, resource.limit() > 0 ? resource.limit() : undefined)
               mixin hiddenWithValue("resources[previousNames]", name)
             .row.form-group
               .col-md-5
