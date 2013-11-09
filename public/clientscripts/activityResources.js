@@ -11,13 +11,7 @@ function init_resource_buttons() {
   }
 
 
-  function delete_resource() {
-      $(this).closest('.form-group').remove();
-  }
-
-
   $('#resources .add').on('click', add_resource);
-  $('#resources').on('click', '.delete', delete_resource);
 }
 
 
