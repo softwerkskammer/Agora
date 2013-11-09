@@ -10,7 +10,11 @@ var userMock = require('../userMock');
 var beans = require('../configureForTest').get('beans');
 var wikiAPI = beans.get('wikiAPI');
 
-var app = beans.get('wikiApp')(express());
+var app = express();
+app.use(express.urlencoded());
+app.use(beans.get('accessrights'));
+var wikiApp = beans.get('wikiApp')(express());
+app.use('/', wikiApp);
 
 describe('Wiki application', function () {
 

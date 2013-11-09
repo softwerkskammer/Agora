@@ -3,7 +3,7 @@ extends ../../../views/layout
 
 mixin grouplist(title, groupsOfAKind)
     h3 #{groupsOfAKind.length} #{title}
-    ul.unstyled
+    ul.list-unstyled
       each group in groupsOfAKind
         li
           span.label(style="background-color: #{group.color}; min-width:30px; text-align:right; display:inline-block") #{group.membercount}
@@ -26,7 +26,7 @@ block content
     .col-md-12
       .page-header
         .btn-group.pull-right
-          if (typeof(user) !== 'undefined' && user.member.isAdmin)
+          if (accessrights.canCreateGroup())
             a.btn.btn-default(href="new/", title="Neue Gruppe"): i.fa.fa-file-o.fa-fw
         h2 Gruppen&nbsp;
           small Alle

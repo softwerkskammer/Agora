@@ -12,11 +12,11 @@ block content
           a.btn.btn-default(href="/wiki/#{group.id}/")
             i.fa.fa-book.fa-fw 
             | &nbsp;Wiki
-          if (user)
+          if (accessrights.canViewGroupDetails(group))
             a.btn.btn-default(href="/mailarchive/list/threaded/#{group.id}", title="Mailarchiv")
               i.fa.fa-archive.fa-fw
               | &nbsp;Mailarchive
-          if (user && user.member.isAdmin)
+          if (accessrights.canEditGroup(group))
             a.btn.btn-default(href="/groups/edit/#{group.id}", title="Bearbeiten"): i.fa.fa-edit
         h2 #{group.longName} 
           small #{group.type} 
@@ -28,7 +28,7 @@ block content
           | #{group.id}@softwerkskammer.org
       |!{group.descriptionHTML()}
 
-      if (user)
+      if (accessrights.canParticipateInGroup(group))
         if (userIsGroupMember)
           a.btn.btn-primary(href="unsubscribe/#{group.id}") Gruppe verlassen
         else
@@ -41,5 +41,5 @@ block content
         |  keine Mitglieder.
       else
         |  #{users.length} Mitglieder.
-      if (user)
+      if (accessrights.canViewGroupDetails(group))
         mixin memberlist(users, organizers)

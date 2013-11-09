@@ -1,7 +1,6 @@
 "use strict";
 
 var request = require('supertest');
-var express = require('express');
 var sinon = require('sinon').sandbox.create();
 var expect = require('chai').expect;
 
@@ -11,7 +10,7 @@ var membersAPI = beans.get('membersAPI');
 var groupsAPI = beans.get('groupsAPI');
 var dummymember = new Member({nickname: 'hada', email: 'a@b.c', site: 'http://my.blog', firstname: 'Hans', lastname: 'Dampf'});
 
-var app = beans.get('membersApp')(express());
+var app = require('../testHelper')('membersApp').createApp();
 
 var allMembers;
 var getMember;
@@ -46,30 +45,6 @@ describe('Members application', function () {
         expect(allMembers.calledOnce).to.be.ok;
         done(err);
       });
-  });
-
-  it('renders the link for single parent dir', function (done) {
-    var root = express();
-    root.use('/foo', app);
-    request(root)
-      .get('/foo')
-      .expect(/href="\/members\/hada"/, done);
-  });
-
-  it('renders the link for two parent dirs', function (done) {
-    var root = express();
-    root.use('/foo/bar', app);
-    request(root)
-      .get('/foo/bar')
-      .expect(/href="\/members\/hada"/, done);
-  });
-
-  it('renders the link for a get request with parameters', function (done) {
-    var root = express();
-    root.use('/foo', app);
-    request(root)
-      .get('/foo?param=value')
-      .expect(/href="\/members\/hada"/, done);
   });
 
   it('shows the details of one member as retrieved from the membersstore', function (done) {
@@ -179,10 +154,7 @@ describe('Members application', function () {
       callback(null, false);
     });
 
-    var root = express();
-    root.use(express.urlencoded());
-    root.use('/', app);
-    request(root)
+    request(app)
       .post('/submit')
       .send('id=0815&firstname=A&lastname=B&email=c@d.de&previousEmail=c@d.de&location=x&profession=y&reference=z')
       .send('nickname=nickerinack')
@@ -200,10 +172,7 @@ describe('Members application', function () {
       callback(null, false);
     });
 
-    var root = express();
-    root.use(express.urlencoded());
-    root.use('/', app);
-    request(root)
+    request(app)
       .post('/submit')
       .send('id=0815&firstname=A&lastname=B&nickname=nuck&previousNickname=nuck&location=x&profession=y&reference=z')
       .send('email=here@there.org')
@@ -217,10 +186,7 @@ describe('Members application', function () {
 
   it('rejects a member with missing first and last name on submit', function (done) {
 
-    var root = express();
-    root.use(express.urlencoded());
-    root.use('/', app);
-    request(root)
+    request(app)
       .post('/submit')
       .send('id=0815&&nickname=nuck&previousNickname=nuck&location=x&profession=y&reference=z&email=here@there.org&previousEmail=here@there.org')
       .expect(200)
@@ -240,10 +206,7 @@ describe('Members application', function () {
       callback(null, true);
     });
 
-    var root = express();
-    root.use(express.urlencoded());
-    root.use('/', app);
-    request(root)
+    request(app)
       .post('/submit')
       .send('id=0815&&nickname=nuckNew&previousNickname=nuck&lastname=x&location=x&profession=y&reference=z&email=hereNew@there.org&previousEmail=here@there.org')
       .expect(200)
@@ -261,10 +224,7 @@ describe('Members application', function () {
       callback(null, false);
     });
 
-    var root = express();
-    root.use(express.urlencoded());
-    root.use('/', app);
-    request(root)
+    request(app)
       .post('/submit')
       .send('id=0815&firstname=A&lastname=B&location=x&profession=y&reference=z')
       .send('nickname=nickerinack')
