@@ -68,7 +68,7 @@ block content
                 mixin controlLabel("bezeichnung", "Bezeichnung", "Name der zu buchenden Einheit (z. B. Einzelzimmer, Doppelzimmer)")
               .col-md-4
                 mixin controlLabel("anzahl", "Anzahl", "Maximale Teilnehmerzahl (keine Beschränkung bei leerem Feld)")
-            each name in activity.resourceNames(/*includeDefault=*/true)
+            each name in activity.resourceNames()
               - var resource = activity.resources().named(name)
               mixin resourceRow(name, resource.limit())
               mixin hiddenWithValue("resources[previousNames]", name)
