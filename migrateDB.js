@@ -5,7 +5,6 @@ var _ = require('underscore');
 require('./configure'); // initializing parameters
 var beans = require('nconf').get('beans');
 var activitiesCoreAPI = beans.get('activitiesCoreAPI');
-var util = require('util');
 
 var async = require('async');
 
@@ -27,14 +26,12 @@ activitiesCoreAPI.allActivities(function (err, activities) {
   if (!activities) { return console.log("No activities found!"); }
 
   _.each(activities, function (activity) {
-    console.log("Vorher: " + util.inspect(activity));
     var defaultResource = activity.state.resources.default;
     var veranstaltung = activity.state.resources.Veranstaltung;
     if (defaultResource && !veranstaltung) {
       activity.state.resources.Veranstaltung = defaultResource;
       delete activity.state.resources.default;
     }
-    console.log("Nachher: " + util.inspect(activity));
   });
 
   async.map(activities, activitiesCoreAPI.saveActivity, function (err, results) {
