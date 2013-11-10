@@ -63,12 +63,6 @@ describe('Activity application', function () {
     done();
   });
 
-  it('object is not valid, if the title is not filled', function () {
-    var tmpActivity = new Activity({description: 'description', url: 'url', assignedGroup: 'assignedGroup', location: 'location',
-      direction: 'direction', startDate: '2012-11-11', startTime: '10:10', endDate: '2012-11-11', endTime: '20:10' });
-    expect(validation.isValidActivity(tmpActivity).length).to.equal(1);
-  });
-
   it('shows the list of activities', function (done) {
     request(createApp())
       .get('/')
@@ -225,49 +219,6 @@ describe('Activity application', function () {
       });
   });
 
-  it('rejects an activity with invalid and different url on submit', function (done) {
-    sinon.stub(activitiesCoreAPI, 'isValidUrl', function (nickname, callback) {
-      callback(null, false);
-    });
-
-    request(createApp())
-      .post('/submit')
-      //.send('')
-      .send('url=uhu')
-      .send('previousUrl=aha')
-      .expect(200)
-      .expect(/Validation Error/)
-      .expect(/Diese URL ist leider nicht verfügbar./, function (err) {
-        done(err);
-      });
-  });
-
-  it('rejects an activity with empty title on submit', function (done) {
-
-    request(createApp())
-      .post('/submit')
-      .send('url=uhu&previousUrl=uhu&location=X&startDate=02.07.2000&startTime=19:00&endDate=02.07.2000&endTime=21:00')
-      .expect(200)
-      .expect(/Validation Error/)
-      .expect(/Titel ist ein Pflichtfeld./, function (err) {
-        done(err);
-      });
-  });
-
-  it('rejects an activity with different but valid url and with empty title on submit', function (done) {
-    sinon.stub(activitiesCoreAPI, 'isValidUrl', function (nickname, callback) {
-      callback(null, true);
-    });
-
-    request(createApp())
-      .post('/submit')
-      .send('url=uhu&previousUrl=uhuPrev&location=X&startDate=02.07.2000&startTime=19:00&endDate=02.07.2000&endTime=21:00')
-      .expect(200)
-      .expect(/Validation Error/)
-      .expect(/Titel ist ein Pflichtfeld./, function (err) {
-        done(err);
-      });
-  });
 
   it('shows no group name if no groups are available', function (done) {
     getGroup.restore();
