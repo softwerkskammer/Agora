@@ -8,9 +8,10 @@ var beans = require('../configureForTest').get('beans');
 var Member = beans.get('member');
 var membersAPI = beans.get('membersAPI');
 var groupsAPI = beans.get('groupsAPI');
-var dummymember = new Member({nickname: 'hada', email: 'a@b.c', site: 'http://my.blog', firstname: 'Hans', lastname: 'Dampf'});
+var dummymember;
 
-var app = require('../testHelper')('membersApp').createApp();
+var createApp = require('../testHelper')('membersApp').createApp;
+var app = createApp();
 
 var allMembers;
 var getMember;
@@ -19,6 +20,7 @@ var getSubscribedGroupsForUser;
 describe('Members application', function () {
 
   beforeEach(function (done) {
+    dummymember = new Member({nickname: 'hada', email: 'a@b.c', site: 'http://my.blog', firstname: 'Hans', lastname: 'Dampf'});
     allMembers = sinon.stub(membersAPI, 'allMembers', function (callback) {
       callback(null, [dummymember]);
     });
@@ -26,6 +28,9 @@ describe('Members application', function () {
       callback(null, dummymember);
     });
     getSubscribedGroupsForUser = sinon.stub(groupsAPI, 'getSubscribedGroupsForUser', function (email, callback) {
+      callback(null, []);
+    });
+    sinon.stub(groupsAPI, 'getAllAvailableGroups', function (callback) {
       callback(null, []);
     });
     done();
@@ -48,12 +53,49 @@ describe('Members application', function () {
   });
 
   it('shows the details of one member as retrieved from the membersstore', function (done) {
-    request(app)
+    request(createApp('hada'))
       .get('/hada')
       .expect(200)
       .expect(/Blog:(.+)http:\/\/my.blog/, function (err) {
         expect(getMember.calledWith(dummymember.nickname)).to.be.true;
         expect(getSubscribedGroupsForUser.calledWith(dummymember.email)).to.be.true;
+        done(err);
+      });
+  });
+
+  it('allows a member to edit her own data', function (done) {
+    dummymember.id = 'memberID';
+    request(createApp('memberID'))
+      .get('/edit/hada')
+      .expect(200)
+      .expect(/Profil bearbeiten/, function (err) {
+        done(err);
+      });
+  });
+
+  it('does not allow a member to edit another member\'s data', function (done) {
+    dummymember.id = 'memberID';
+    request(createApp('memberID1'))
+      .get('/edit/hada')
+      .expect(302)
+      .expect('location', /members\/hada/, done);
+  });
+
+  it('does not allow an admin member to edit another member\'s data', function (done) {
+    dummymember.id = 'memberID';
+    dummymember.isAdmin = true;
+    request(createApp('memberID1'))
+      .get('/edit/hada')
+      .expect(302)
+      .expect('location', /members\/hada/, done);
+  });
+
+  it('allows a superuser member to edit another member\'s data', function (done) {
+    //dummymember.id = 'superuserID';
+    request(createApp('superuserID'))
+      .get('/edit/hada')
+      .expect(200)
+      .expect(/Profil bearbeiten/, function (err) {
         done(err);
       });
   });
