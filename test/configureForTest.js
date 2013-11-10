@@ -12,6 +12,8 @@ nconf.set('swkRemoteAppUser', null);
 
 nconf.set('dontUsePersistentSessions', true);
 
+nconf.set('superuser', ['superuserID']);
+
 // beans:
 var productionBeans = require('../config/beans.json');
 var testBeans = require('../config/testbeans.json');
