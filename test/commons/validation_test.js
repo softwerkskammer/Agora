@@ -185,6 +185,34 @@ describe('Validation', function () {
       done();
     });
 
+    it('does not validate start and end of activity input when end date is before start date', function (done) {
+      var result = validation.isValidForActivity({ startDate: "01.01.2013", startTime: "12:00", endDate: "01.10.2012", endTime: "12:00" });
+
+      expect(result).to.contain('Start muss vor Ende liegen.');
+      done();
+    });
+
+    it('does not validate start and end of activity input when end time is before start time', function (done) {
+      var result = validation.isValidForActivity({ startDate: "01.01.2013", startTime: "12:00", endDate: "01.01.2013", endTime: "11:00" });
+
+      expect(result).to.contain('Start muss vor Ende liegen.');
+      done();
+    });
+
+    it('does not validate start and end of activity input when end time is same as start time', function (done) {
+      var result = validation.isValidForActivity({ startDate: "01.01.2013", startTime: "12:00", endDate: "01.01.2013", endTime: "12:00" });
+
+      expect(result).to.contain('Start muss vor Ende liegen.');
+      done();
+    });
+
+    it('validates start and end of activity input when end is after start', function (done) {
+      var result = validation.isValidForActivity({ startDate: "01.01.2013", startTime: "12:00", endDate: "01.01.2013", endTime: "13:00" });
+
+      expect(result).to.not.contain('Start muss vor Ende liegen.');
+      done();
+    });
+
   });
 
 });
