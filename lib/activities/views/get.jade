@@ -45,7 +45,7 @@ block content
         mixin visitorCount(activity.visitors.length)
         if (accessrights.canParticipateInActivity(activity))
           each resourceName in activity.resourceNames()
-            mixin subscriptionButtons(activity.registeredMembers(resourceName), activity.url(), resourceName, currentUserId)
+            mixin subscriptionButtons(activity.registeredMembers(resourceName), activity.url(), resourceName, currentUserId, activity.resourceNames().length)
           h4 Zugesagt haben:
           mixin memberlist(activity.visitors)
 

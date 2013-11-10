@@ -8,8 +8,8 @@ mixin visitorCount(anzahl)
       |  haben #{anzahl} Mitglieder ihre Teilnahme zugesagt.
 
 
-mixin subscriptionButtons(registeredMembers, url, resource, currentMemberId)
-  if (resource === 'default')
+mixin subscriptionButtons(registeredMembers, url, resource, currentMemberId, totalNumberOfResources)
+  if (totalNumberOfResources === 1)
     if (registeredMembers.indexOf(currentMemberId) > -1)
       a.btn.btn-primary(href="unsubscribe/#{encodeURIComponent(url)}/#{encodeURIComponent(resource)}") Ich kann doch nicht…
     else
@@ -17,10 +17,10 @@ mixin subscriptionButtons(registeredMembers, url, resource, currentMemberId)
 
   else
     .row
-      .col-md-8
+      .col-md-6
+        | #{resource}:
+      .col-md-6
         if (registeredMembers.indexOf(currentMemberId) > -1)
-          | #{resource}:
           a.btn.btn-default.pull-right(href="unsubscribe/#{encodeURIComponent(url)}/#{encodeURIComponent(resource)}") Ich kann doch nicht…
         else
-          | #{resource}:
           a.btn.btn-default.pull-right(href="subscribe/#{encodeURIComponent(url)}/#{encodeURIComponent(resource)}") Ich bin dabei!
