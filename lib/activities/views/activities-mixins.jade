@@ -11,16 +11,15 @@ mixin visitorCount(anzahl)
 mixin subscriptionButtons(registeredMembers, url, resource, currentMemberId, totalNumberOfResources)
   if (totalNumberOfResources === 1)
     if (registeredMembers.indexOf(currentMemberId) > -1)
-      a.btn.btn-primary(href="unsubscribe/#{encodeURIComponent(url)}/#{encodeURIComponent(resource)}") Ich kann doch nicht…
+      a.btn.btn-default(href="unsubscribe/#{encodeURIComponent(url)}/#{encodeURIComponent(resource)}") Ich kann doch nicht…
     else
       a.btn.btn-primary(href="subscribe/#{encodeURIComponent(url)}/#{encodeURIComponent(resource)}") Ich bin dabei!
 
   else
-    .row
-      .col-md-6
-        | #{resource}:
-      .col-md-6
+    form.form-horizontal
+      .form-group
+        label.control-label.col-xs-6(style="text-align: left;") #{resource}:
         if (registeredMembers.indexOf(currentMemberId) > -1)
-          a.btn.btn-default.pull-right(href="unsubscribe/#{encodeURIComponent(url)}/#{encodeURIComponent(resource)}") Ich kann doch nicht…
+          a.col-xs-6.btn.btn-default(href="unsubscribe/#{encodeURIComponent(url)}/#{encodeURIComponent(resource)}") Absagen
         else
-          a.btn.btn-default.pull-right(href="subscribe/#{encodeURIComponent(url)}/#{encodeURIComponent(resource)}") Ich bin dabei!
+          a.col-xs-6.btn.btn-primary(href="subscribe/#{encodeURIComponent(url)}/#{encodeURIComponent(resource)}") Anmelden
