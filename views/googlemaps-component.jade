@@ -8,6 +8,7 @@ mixin map(location, width, height)
           zoom: 6,
           disableDefaultUI: true,
           zoomControl: true,
+          scrollwheel: false,
           mapTypeId: google.maps.MapTypeId.ROADMAP
         };
       var map = new google.maps.Map($('#map')[0], mapOptions);
