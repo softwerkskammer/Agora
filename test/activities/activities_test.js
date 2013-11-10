@@ -2,7 +2,6 @@
 
 var request = require('supertest');
 var sinon = require('sinon').sandbox.create();
-var expect = require('chai').expect;
 
 var conf = require('../configureForTest');
 
@@ -30,7 +29,6 @@ var activitiesAPI = beans.get('activitiesAPI');
 
 var groupsAPI = beans.get('groupsAPI');
 var membersAPI = beans.get('membersAPI');
-var validation = beans.get('validation');
 var colors = beans.get('colorAPI');
 
 describe('Activity application', function () {
