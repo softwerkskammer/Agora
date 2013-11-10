@@ -8,7 +8,7 @@ var expect = require('chai').expect;
 
 var Activity = conf.get('beans').get('activity');
 
-var defaultName = 'Teilnehmer';
+var defaultName = 'Veranstaltung';
 
 describe('Activity resource management', function () {
 
