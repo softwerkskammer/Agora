@@ -128,7 +128,7 @@ mixin externalUrl(url, text)
 
 mixin notificationsBlock(notificationmessage)
   #{notificationmessage.kill()}
-  #notifications(class="alert alert-block #{notificationmessage.type}")
+  #notifications(class="alert alert-block hidden-print #{notificationmessage.type}")
     button.close(type="button", data-dismiss="alert")&times;
     h4 #{notificationmessage.title}
     | #{notificationmessage.text}
