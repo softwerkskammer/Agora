@@ -14,7 +14,8 @@ var Member = beans.get('member');
 var Group = beans.get('group');
 
 var emptyActivity = new Activity({title: 'Title of the Activity', description: 'description1', assignedGroup: 'groupname',
-  location: 'location1', direction: 'direction1', startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'), url: 'urlOfTheActivity' });
+  location: 'location1', direction: 'direction1', startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'),
+  url: 'urlOfTheActivity', owner: 'owner' });
 var activityWithParticipants = new Activity({title: 'Interesting Activity', description: 'description2', assignedGroup: 'groupname',
   location: 'location2', direction: 'direction2', startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'), url: 'urlForInteresting',
   resources: {default: {_registeredMembers: ['memberId1', 'memberId2']}} });
@@ -79,7 +80,7 @@ describe('Activity application', function () {
   it('shows the details of an activity without participants', function (done) {
     sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {callback(null, []); });
 
-    request(createApp())
+    request(createApp('guest'))
       .get('/' + 'urlOfTheActivity')
       .expect(200)
       .expect(/<small>01.01.2013/)
@@ -100,7 +101,7 @@ describe('Activity application', function () {
       ]);
     });
 
-    request(createApp())
+    request(createApp('guest'))
       .get('/' + 'urlForInteresting')
       .expect(200)
       .expect(/<small>01.01.2013/)
@@ -209,6 +210,7 @@ describe('Activity application', function () {
   it('allows to create a new activity', function (done) {
     sinon.stub(groupsAPI, 'getAllAvailableGroups', function (callback) { callback(null, []); });
 
+    // in the test setup anybody can create an activity because the middleware is not plugged in
     request(createApp())
       .get('/new')
       .expect(200)
@@ -217,6 +219,34 @@ describe('Activity application', function () {
       });
   });
 
+  it('allows the owner to edit an activity', function (done) {
+    sinon.stub(groupsAPI, 'getAllAvailableGroups', function (callback) { callback(null, []); });
+
+    request(createApp('owner'))
+      .get('/edit/urlOfTheActivity')
+      .expect(200)
+      .expect(/activities/, function (err) {
+        done(err);
+      });
+  });
+
+  it('disallows a member to edit another user\'s activity', function (done) {
+    sinon.stub(groupsAPI, 'getAllAvailableGroups', function (callback) { callback(null, []); });
+
+    request(createApp('owner1'))
+      .get('/edit/urlOfTheActivity')
+      .expect(302)
+      .expect('location', /activities\/urlOfTheActivity/, done);
+  });
+
+  it('disallows a guest to edit any user\'s activity', function (done) {
+    sinon.stub(groupsAPI, 'getAllAvailableGroups', function (callback) { callback(null, []); });
+
+    request(createApp())
+      .get('/edit/urlOfTheActivity')
+      .expect(302)
+      .expect('location', /activities\/urlOfTheActivity/, done);
+  });
 
   it('shows no group name if no groups are available', function (done) {
     getGroup.restore();
@@ -224,7 +254,7 @@ describe('Activity application', function () {
 
     sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) { callback(null, []); });
 
-    request(createApp())
+    request(createApp('guest'))
       .get('/urlOfTheActivity')
       // TODO we should test that the string "Veranstaltet von der Gruppe" is NOT present - but how?!
       .expect(200, function (err) {
@@ -235,7 +265,7 @@ describe('Activity application', function () {
   it('shows the name of the assigned group if the group exists', function (done) {
     sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) { callback(null, []); });
 
-    request(createApp())
+    request(createApp('guest'))
       .get('/urlOfTheActivity')
       .expect(200)
       .expect(/Veranstaltet von der Gruppe&nbsp;<a href="\/groups\/groupname">Buxtehude<\/a>/, function (err) {

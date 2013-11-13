@@ -1,7 +1,9 @@
 "use strict";
 
 var conf = require('../configureForTest');
-var accessrights = conf.get('beans').get('accessrights');
+var bean = conf.get('beans');
+var accessrights = bean.get('accessrights');
+var Activity = bean.get('activity');
 var expect = require('chai').expect;
 
 function createAccessrightsWithAdminSetTo(isAdmin, member) {
@@ -28,16 +30,27 @@ function admin(member) {
 }
 
 describe('Accessrights for Activities', function () {
-  it('disallows the creation for non-admins', function () {
-    expect(!!standardMember().canCreateActivity()).to.be.false;
+  it('disallows the creation for guests', function () {
+    expect(guest().canCreateActivity()).to.be.false;
+  });
+
+  it('allows the creation for members', function () {
+    expect(standardMember().canCreateActivity()).to.be.true;
   });
 
   it('allows the creation for admins', function () {
     expect(admin().canCreateActivity()).to.be.true;
   });
 
-  it('disallows editing for non-admins', function () {
-    expect(!!standardMember().canEditActivity()).to.be.false;
+  it('disallows editing other member\'s activity for non-admins', function () {
+    var activity = new Activity({owner: 'somebody'});
+    expect(standardMember().canEditActivity(activity)).to.be.false;
+  });
+
+  it('allows editing own activity for non-admins', function () {
+    var member = {isAdmin: false, id: 'id'};
+    var activity = new Activity({owner: 'id'});
+    expect(standardMember(member).canEditActivity(activity)).to.be.true;
   });
 
   it('allows editing for admins', function () {
@@ -45,7 +58,7 @@ describe('Accessrights for Activities', function () {
   });
 
   it('disallows registration for guests', function () {
-    expect(!!guest().canParticipateInActivity()).to.be.false;
+    expect(guest().canParticipateInActivity()).to.be.false;
   });
 
   it('allows registration for non-admins', function () {
@@ -59,7 +72,7 @@ describe('Accessrights for Activities', function () {
 
 describe('Accessrights for Announcements', function () {
   it('disallows the creation for non-admins', function () {
-    expect(!!standardMember().canCreateAnnouncement()).to.be.false;
+    expect(standardMember().canCreateAnnouncement()).to.be.false;
   });
 
   it('allows the creation for admins', function () {
@@ -67,7 +80,7 @@ describe('Accessrights for Announcements', function () {
   });
 
   it('disallows editing for non-admins', function () {
-    expect(!!standardMember().canEditAnnouncement()).to.be.false;
+    expect(standardMember().canEditAnnouncement()).to.be.false;
   });
 
   it('allows editing for admins', function () {
@@ -77,7 +90,7 @@ describe('Accessrights for Announcements', function () {
 
 describe('Accessrights for Groups', function () {
   it('disallows the creation for non-admins', function () {
-    expect(!!standardMember().canCreateGroup()).to.be.false;
+    expect(standardMember().canCreateGroup()).to.be.false;
   });
 
   it('allows the creation for admins', function () {
@@ -85,7 +98,7 @@ describe('Accessrights for Groups', function () {
   });
 
   it('disallows editing for non-admins', function () {
-    expect(!!standardMember().canEditGroup()).to.be.false;
+    expect(standardMember().canEditGroup()).to.be.false;
   });
 
   it('allows editing for admins', function () {
@@ -93,7 +106,7 @@ describe('Accessrights for Groups', function () {
   });
 
   it('disallows guest to view group details', function () {
-    expect(!!guest().canViewGroupDetails()).to.be.false;
+    expect(guest().canViewGroupDetails()).to.be.false;
   });
 
   it('allows every registered member to view group details', function () {
@@ -101,7 +114,7 @@ describe('Accessrights for Groups', function () {
   });
 
   it('disallows guest to participate in a group', function () {
-    expect(!!guest().canParticipateInGroup()).to.be.false;
+    expect(guest().canParticipateInGroup()).to.be.false;
   });
 
   it('allows every registered member to participate in a group', function () {
@@ -111,7 +124,7 @@ describe('Accessrights for Groups', function () {
 
 describe('Accessrights for Colors', function () {
   it('disallows the creation for non-admins', function () {
-    expect(!!standardMember().canCreateColor()).to.be.false;
+    expect(standardMember().canCreateColor()).to.be.false;
   });
 
   it('allows the creation for admins', function () {
@@ -123,12 +136,12 @@ describe('Accessrights for Members', function () {
   it('disallows editing for non-admins', function () {
     var member = {id: 'id'};
     var otherMember = {id: 'other'};
-    expect(!!standardMember(member).canEditMember(otherMember)).to.be.false;
+    expect(standardMember(member).canEditMember(otherMember)).to.be.false;
   });
 
   it('allows editing herself for non-admins', function () {
     var member = {id: 'id'};
-    expect(!!standardMember(member).canEditMember(member)).to.be.true;
+    expect(standardMember(member).canEditMember(member)).to.be.true;
   });
 
   it('disallows editing for admins', function () {
