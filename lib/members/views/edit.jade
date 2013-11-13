@@ -66,6 +66,7 @@ block content
             ul
               each auth in member.authentications
                 li #{auth}
+      if (accessrights.isMember(member))
         .row
           .col-md-6
             a.btn.btn-primary(data-toggle="modal", href="#login")
