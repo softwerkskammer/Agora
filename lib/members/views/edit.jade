@@ -66,9 +66,9 @@ block content
             ul
               each auth in member.authentications
                 li #{auth}
-      if (accessrights.isMember(member))
-        .row
-          .col-md-6
-            a.btn.btn-primary(data-toggle="modal", href="#login")
-              i.fa.fa-plus-square.fa-fw
-              | &nbsp;Anderswo authentifizieren
+        if (accessrights.isMember(member))
+          .row
+            .col-md-6
+              a.btn.btn-primary(data-toggle="modal", href="#login")
+                i.fa.fa-plus-square.fa-fw
+                | &nbsp;Anderswo authentifizieren
