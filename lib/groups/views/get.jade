@@ -41,5 +41,4 @@ block content
         |  keine Mitglieder.
       else
         |  #{users.length} Mitglieder.
-      if (accessrights.canViewGroupDetails(group))
-        mixin memberlist(users, organizers)
+      mixin memberlist(users, organizers)

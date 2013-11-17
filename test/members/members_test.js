@@ -41,8 +41,8 @@ describe('Members application', function () {
     done();
   });
 
-  it('shows the list of members as retrieved from the membersstore', function (done) {
-    request(app)
+  it('shows the list of members as retrieved from the membersstore if the user is registered', function (done) {
+    request(createApp('hada'))
       .get('/')
       .expect(200)
       .expect(/href="\/members\/hada"/)

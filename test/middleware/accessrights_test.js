@@ -56,18 +56,6 @@ describe('Accessrights for Activities', function () {
   it('allows editing for admins', function () {
     expect(admin().canEditActivity()).to.be.true;
   });
-
-  it('disallows registration for guests', function () {
-    expect(guest().canParticipateInActivity()).to.be.false;
-  });
-
-  it('allows registration for non-admins', function () {
-    expect(standardMember().canParticipateInActivity()).to.be.true;
-  });
-
-  it('allows registration for admins', function () {
-    expect(admin().canParticipateInActivity()).to.be.true;
-  });
 });
 
 describe('Accessrights for Announcements', function () {
