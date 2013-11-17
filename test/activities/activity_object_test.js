@@ -4,15 +4,13 @@ require('../configureForTest');
 var conf = require('nconf');
 var expect = require('chai').expect;
 
-//var util = require('util');
-
 var fieldHelpers = conf.get('beans').get('fieldHelpers');
 var Activity = conf.get('beans').get('activity');
 
 // TODO Activity.fillFromUI with null/undefined in startDate, startTime, endDate, endTime
 
 describe('Activity', function () {
-  it('converts a wellformed Activity to a calendar display event without colors given', function (done) {
+  it('converts a wellformed Activity to a calendar display event without colors given', function () {
     var activity = new Activity({
       title: 'Title',
       startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('04.04.2013'),
@@ -24,10 +22,9 @@ describe('Activity', function () {
     expect(4).to.equal(event.dayOfWeek);
     expect('/activities/myURL').to.equal(event.url);
     expect('#353535').to.equal(event.color);
-    done();
   });
 
-  it('fetches the group long name', function (done) {
+  it('fetches the group long name', function () {
     var activity = new Activity({
       url: 'myURL',
       assignedGroup: 'group'
@@ -37,10 +34,9 @@ describe('Activity', function () {
       {id: 'other', longName: 'othername'}
     ];
     expect(activity.groupNameFrom(groups)).to.equal('groupname');
-    done();
   });
 
-  it('fetches a blank string if group not found', function (done) {
+  it('fetches a blank string if group not found', function () {
     var activity = new Activity({
       url: 'myURL',
       assignedGroup: 'group'
@@ -50,10 +46,9 @@ describe('Activity', function () {
       {id: 'other', longName: 'othername'}
     ];
     expect(activity.groupNameFrom(groups)).to.equal('');
-    done();
   });
 
-  it('retrieves the color from the assigned group', function (done) {
+  it('retrieves the color from the assigned group', function () {
     var activity = new Activity({
       url: 'myURL',
       assignedGroup: 'group',
@@ -64,10 +59,9 @@ describe('Activity', function () {
       other: '000'
     };
     expect(activity.colorFrom(groupColors, [])).to.equal('#FFF');
-    done();
   });
 
-  it('retrieves the color from the assigned color', function (done) {
+  it('retrieves the color from the assigned color', function () {
     var activity = new Activity({
       url: 'myURL',
       color: 'special'
@@ -77,15 +71,13 @@ describe('Activity', function () {
       {id: 'normal', color: '#00' }
     ];
     expect(activity.colorFrom(null, colors)).to.equal('#FFF');
-    done();
   });
 
-  it('retrieves the color as default if not found', function (done) {
+  it('retrieves the color as default if not found', function () {
     var activity = new Activity({
       url: 'myURL'
     });
     expect(activity.colorFrom(null, [])).to.equal('#353535');
-    done();
   });
 
   it('parses start date and time using default timezone', function () {
@@ -111,17 +103,23 @@ describe('Activity', function () {
   });
 });
 
+describe('Activity\'s owner', function () {
+  it('is preserved in existing state if not given to constructor', function () {
+    var activity = new Activity({ owner: 'owner' });
+    expect(activity.owner()).to.equal('owner');
+  });
+});
+
 describe('Activity\'s description', function () {
-  it('renders anchor tags when required', function (done) {
+  it('renders anchor tags when required', function () {
     var activity = new Activity({
       description: '[dafadf](http://a.de) https://b.de'
     });
     expect(activity.descriptionHTML()).to.contain('a href="http://a.de"');
     expect(activity.descriptionHTML()).to.contain('"https://b.de"');
-    done();
   });
 
-  it('removes anchor tags when required', function (done) {
+  it('removes anchor tags when required', function () {
     var activity = new Activity({
       description: '<a href = "http://a.de">dafadf</a> https://b.de'
     });
@@ -129,28 +127,25 @@ describe('Activity\'s description', function () {
     expect(activity.descriptionPlain()).to.not.contain('"https://b.de"');
     expect(activity.descriptionPlain()).to.contain('dafadf');
     expect(activity.descriptionPlain()).to.contain('https://b.de');
-    done();
   });
 });
 
 describe('Activity\'s direction', function () {
-  it('knows that it doesn\'t contain direction', function (done) {
+  it('knows that it doesn\'t contain direction', function () {
     var activity = new Activity();
     expect(activity.hasDirection()).to.be.false;
-    done();
   });
 
-  it('knows that it contains direction', function (done) {
+  it('knows that it contains direction', function () {
     var activity = new Activity({
       direction: 'direction'
     });
     expect(activity.hasDirection()).to.be.true;
-    done();
   });
 });
 
 describe('Activity\'s markdown', function () {
-  it('creates its markdown with direction', function (done) {
+  it('creates its markdown with direction', function () {
     var activity = new Activity().fillFromUI({
       url: 'url',
       description: 'description',
@@ -166,10 +161,9 @@ describe('Activity\'s markdown', function () {
     expect(markdown).to.contain('location');
     expect(markdown).to.contain('Wegbeschreibung');
     expect(markdown).to.contain('direction');
-    done();
   });
 
-  it('creates its markdown without direction', function (done) {
+  it('creates its markdown without direction', function () {
     var activity = new Activity({
       url: 'url',
       description: 'description',
@@ -179,10 +173,8 @@ describe('Activity\'s markdown', function () {
       startTime: '12:21'
     });
     expect(activity.markdown()).to.not.contain('Wegbeschreibung');
-    done();
   });
 });
-
 
 describe('ICalendar', function () {
   var activity = new Activity().fillFromUI({

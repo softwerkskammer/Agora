@@ -12,7 +12,7 @@ describe('Mailsender application security for normal visitors does not allow to 
   });
 
   it('/invitation', function (done) {
-    request(app).get('/invitation').expect(302).expect('location', /mustBeAdmin/, done);
+    request(app).get('/invitation').expect(302).expect('location', /login/, done);
   });
 
 });
