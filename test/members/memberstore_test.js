@@ -131,4 +131,11 @@ describe('Members store', function () {
     });
   });
 
+  it('returns an empty array when asked for all members for empty email list', function (done) {
+    store.getMembersForEMails([], function (err, members) {
+      expect(members).to.be.empty;
+      done();
+    });
+  });
+
 });

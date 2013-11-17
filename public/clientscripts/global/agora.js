@@ -72,7 +72,10 @@ var initCalendar = function () {
 
 var resizePreScrollable = function () {
   var h = $(window).height();
-  $(".pre-scrollable").css('maxHeight', Math.max(h - 220, 100) + 'px');
+  var padtop = parseInt($('body').css('padding-top'), 10);
+  var padbottom = parseInt($('body').css('padding-bottom'), 10);
+  var otherElementsHeight = 95;
+  $('.pre-scrollable').css('maxHeight', Math.max(h - (padtop + padbottom + otherElementsHeight), 250) + 'px');
 };
 
 var initPickers = function () {
