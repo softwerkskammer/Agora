@@ -5,8 +5,9 @@ mixin topNavbar
     a.btn.btn-default.navbar-toggle(data-toggle="collapse", data-target=".collapse-top")
       span.sr-only Toggle
       i.fa.fa-bars.fa-lg
-    a.btn.btn-default.navbar-toggle(href="https://github.com/softwerkskammer/Agora/issues",
-    title="Was funktioniert nicht, wie es soll?", target="_blank"): i.fa.fa-ambulance.fa-fw
+    if (!accessrights.isRegistered())
+      a.btn.btn-default.navbar-toggle(href="https://github.com/softwerkskammer/Agora/issues",
+      title="Was funktioniert nicht, wie es soll?", target="_blank"): i.fa.fa-ambulance.fa-fw
   .container.bottom
     .navbar-collapse.collapse.collapse-top
       ul.nav.navbar-nav.pull-right.hidden-xs
