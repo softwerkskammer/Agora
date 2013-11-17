@@ -2,6 +2,7 @@
 
 var request = require('supertest');
 var sinon = require('sinon').sandbox.create();
+var expect = require('chai').expect;
 
 var conf = require('../configureForTest');
 
@@ -208,10 +209,10 @@ describe('Activity application', function () {
   });
 
   it('allows to create a new activity', function (done) {
-    sinon.stub(groupsAPI, 'getAllAvailableGroups', function (callback) { callback(null, []); });
+    sinon.stub(groupsAPI, 'getSubscribedGroupsForUser', function (email, callback) { callback(null, []); });
 
     // in the test setup anybody can create an activity because the middleware is not plugged in
-    request(createApp())
+    request(createApp('dummy'))
       .get('/new')
       .expect(200)
       .expect(/activities/, function (err) {
@@ -220,7 +221,7 @@ describe('Activity application', function () {
   });
 
   it('allows the owner to edit an activity', function (done) {
-    sinon.stub(groupsAPI, 'getAllAvailableGroups', function (callback) { callback(null, []); });
+    sinon.stub(groupsAPI, 'getSubscribedGroupsForUser', function (email, callback) { callback(null, []); });
 
     request(createApp('owner'))
       .get('/edit/urlOfTheActivity')
@@ -248,6 +249,42 @@ describe('Activity application', function () {
       .expect('location', /activities\/urlOfTheActivity/, done);
   });
 
+  it('offers the owner only his groups to choose from', function (done) {
+    var groupA = new Group({id: 'groupA', longName: 'groupA'});
+    var groupB = new Group({id: 'groupB', longName: 'groupB'});
+    var groupC = new Group({id: 'groupC', longName: 'groupC'});
+    sinon.stub(groupsAPI, 'getAllAvailableGroups', function (callback) { callback(null, [groupA, groupB, groupC]); });
+    sinon.stub(groupsAPI, 'getSubscribedGroupsForUser', function (email, callback) { callback(null, [groupA, groupB]); });
+
+    request(createApp('owner'))
+      .get('/new')
+      .expect(200)
+      .expect(/groupA/)
+      .expect(/groupB/)
+      .end(function (err, res) {
+        expect(res.text).to.not.contain('groupC');
+        done(err);
+      });
+  });
+
+  it('offers a superuser all groups to choose from', function (done) {
+    var groupA = new Group({id: 'groupA', longName: 'groupA'});
+    var groupB = new Group({id: 'groupB', longName: 'groupB'});
+    var groupC = new Group({id: 'groupC', longName: 'groupC'});
+    sinon.stub(groupsAPI, 'getAllAvailableGroups', function (callback) { callback(null, [groupA, groupB, groupC]); });
+    sinon.stub(groupsAPI, 'getSubscribedGroupsForUser', function (email, callback) { callback(null, [groupA, groupB]); });
+
+    request(createApp('superuserID'))
+      .get('/new')
+      .expect(200)
+      .expect(/groupA/)
+      .expect(/groupB/)
+      .expect(/groupC/)
+      .end(function (err) {
+        done(err);
+      });
+  });
+
   it('shows no group name if no groups are available', function (done) {
     getGroup.restore();
     getGroup = sinon.stub(groupsAPI, 'getGroup', function (groupname, callback) { callback(null, null); });
@@ -256,8 +293,9 @@ describe('Activity application', function () {
 
     request(createApp('guest'))
       .get('/urlOfTheActivity')
-      // TODO we should test that the string "Veranstaltet von der Gruppe" is NOT present - but how?!
-      .expect(200, function (err) {
+      .expect(200)
+      .end(function (err, res) {
+        expect(res.text).to.not.contain('Veranstaltet von der Gruppe');
         done(err);
       });
   });
