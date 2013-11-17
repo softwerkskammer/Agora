@@ -5,7 +5,7 @@ mixin topNavbar
     a.btn.btn-default.navbar-toggle(data-toggle="collapse", data-target=".collapse-top")
       span.sr-only Toggle
       i.fa.fa-bars.fa-lg
-    a.btn.btn-default.navbar-toggle(href="https://github.com/softwerkskammer/NeuePlattform-Implementierung/issues",
+    a.btn.btn-default.navbar-toggle(href="https://github.com/softwerkskammer/Agora/issues",
     title="Was funktioniert nicht, wie es soll?", target="_blank"): i.fa.fa-ambulance.fa-fw
   .container.bottom
     .navbar-collapse.collapse.collapse-top
@@ -92,12 +92,12 @@ mixin loginMenu(forInline)
         li: a(href="/auth/logout")
           i.fa.fa-sign-out.fa-fw
           | &nbsp;Abmelden
-        li: a(href="https://github.com/softwerkskammer/NeuePlattform-Implementierung/issues", target="_blank")
+        li: a(href="https://github.com/softwerkskammer/Agora/issues", target="_blank")
           i.fa.fa-ambulance.fa-fw
           | &nbsp;Feedback
         li: include ../version
   else
-    li(class="#{forInline ? 'hidden' : ''}"): a.navbar-link(href="https://github.com/softwerkskammer/NeuePlattform-Implementierung/issues",
+    li(class="#{forInline ? 'hidden' : ''}"): a.navbar-link(href="https://github.com/softwerkskammer/Agora/issues",
     title="Was funktioniert nicht, wie es soll?", target="_blank")
       i.fa.fa-ambulance.fa-fw
       | &nbsp;Feedback
