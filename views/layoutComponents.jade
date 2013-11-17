@@ -4,9 +4,9 @@ mixin topNavbar
       img(src="/img/SoftwerkskammerWappenLinks.png", alt="Softwerkskammer")
     a.btn.btn-default.navbar-toggle(data-toggle="collapse", data-target=".collapse-top")
       span.sr-only Toggle
-      span.icon-bar
-      span.icon-bar
-      span.icon-bar
+      i.fa.fa-bars.fa-lg
+    a.btn.btn-default.navbar-toggle(href="https://github.com/softwerkskammer/NeuePlattform-Implementierung/issues",
+    title="Was funktioniert nicht, wie es soll?", target="_blank"): i.fa.fa-ambulance.fa-fw
   .container.bottom
     .navbar-collapse.collapse.collapse-top
       ul.nav.navbar-nav.pull-right.hidden-xs
@@ -94,10 +94,14 @@ mixin loginMenu(forInline)
           | &nbsp;Abmelden
         li: a(href="https://github.com/softwerkskammer/NeuePlattform-Implementierung/issues", target="_blank")
           i.fa.fa-ambulance.fa-fw
-          | &nbsp;Einen Bug melden
+          | &nbsp;Feedback
         li: include ../version
   else
-    li: a.navbar-link(data-toggle="modal", href="#login", class="#{forInline ? 'visible-xs' : ''}")
+    li(class="#{forInline ? 'hidden' : ''}"): a.navbar-link(href="https://github.com/softwerkskammer/NeuePlattform-Implementierung/issues",
+    title="Was funktioniert nicht, wie es soll?", target="_blank")
+      i.fa.fa-ambulance.fa-fw
+      | &nbsp;Feedback
+    li(class="#{forInline ? 'visible-xs' : ''}"): a.navbar-link(data-toggle="modal", href="#login")
       i.fa.fa-sign-in
       | &nbsp;Anmelden
 
@@ -105,9 +109,7 @@ mixin navbar-inside
   .navbar-header
     a.btn.btn-default.navbar-toggle(data-toggle="collapse", data-target=".collapse-btom")
       span.sr-only Toggle
-      span.icon-bar
-      span.icon-bar
-      span.icon-bar
+      i.fa.fa-bars.fa-lg
   .navbar-collapse.collapse.collapse-btom
     ul.nav.navbar-nav.pull-right
       mixin administrationMenu()
