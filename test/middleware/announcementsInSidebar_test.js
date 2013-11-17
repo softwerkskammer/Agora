@@ -45,6 +45,14 @@ describe('Announcements in Sidebar', function () {
     expect(res.locals.latestNews).to.not.include(annSix);
   });
 
+  it('shows only the latest 5 in the order of the persistence', function () {
+    mockAnouncementsApi([ annSix, annOne, annTwo, annThree, annFour, annFive ]);
+    announcementsInSidebar({}, res, function () {});
+    expect(res.locals.latestNews.length).to.equal(5);
+    expect(res.locals.latestNews).to.include(annOne);
+    expect(res.locals.latestNews).to.not.include(annFive);
+  });
+
   it('signals to show the "more"-link if there are more than 5', function () {
     mockAnouncementsApi([ annOne, annTwo, annThree, annFour, annFive, annSix ]);
     announcementsInSidebar({}, res, function () {});
