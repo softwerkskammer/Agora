@@ -240,4 +240,31 @@ describe('Activity resource management', function () {
       expect(activity.allRegisteredMembers()).to.contain('memberID');
     });
   });
+
+  describe("- when talking about participant numbers -", function () {
+
+    it("knows when a resource is full and when not", function () {
+      var activity = new Activity({url: 'url', resources: {
+        Teilnehmer: { _registeredMembers: [], _limit: 1}
+      }});
+
+      expect(activity.isFull('Teilnehmer')).to.be.false;
+
+      activity.addMemberId('memberId', 'Teilnehmer');
+
+      expect(activity.isFull('Teilnehmer')).to.be.true;
+    });
+
+    it("knows how many free slots are in a resource", function () {
+      var activity = new Activity({url: 'url', resources: {
+        Teilnehmer: { _registeredMembers: [], _limit: 10}
+      }});
+
+      expect(activity.numberOfFreeSlots('Teilnehmer')).to.equal(10);
+
+      activity.addMemberId('memberId', 'Teilnehmer');
+
+      expect(activity.numberOfFreeSlots('Teilnehmer')).to.equal(9);
+    });
+  });
 });
