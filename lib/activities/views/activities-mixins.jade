@@ -8,12 +8,15 @@ mixin visitorCount(anzahl)
       |  haben #{anzahl} Mitglieder ihre Teilnahme zugesagt.
 
 
-mixin subscriptionButtons(registeredMembers, url, resource, currentMemberId, totalNumberOfResources)
+mixin subscriptionButtons(registeredMembers, isFull, url, resource, currentMemberId, totalNumberOfResources)
   if (totalNumberOfResources === 1)
     if (registeredMembers.indexOf(currentMemberId) > -1)
       a.btn.btn-default(href="unsubscribe/#{encodeURIComponent(url)}/#{encodeURIComponent(resource)}") Ich kann doch nicht…
     else
-      a.btn.btn-primary(href="subscribe/#{encodeURIComponent(url)}/#{encodeURIComponent(resource)}") Ich bin dabei!
+      if (isFull)
+        | Alle Plätze sind belegt.
+      else
+        a.btn.btn-primary(href="subscribe/#{encodeURIComponent(url)}/#{encodeURIComponent(resource)}") Ich bin dabei!
 
   else
     form.form-horizontal
@@ -22,4 +25,7 @@ mixin subscriptionButtons(registeredMembers, url, resource, currentMemberId, tot
         if (registeredMembers.indexOf(currentMemberId) > -1)
           a.col-xs-6.btn.btn-default(href="unsubscribe/#{encodeURIComponent(url)}/#{encodeURIComponent(resource)}") Absagen
         else
-          a.col-xs-6.btn.btn-primary(href="subscribe/#{encodeURIComponent(url)}/#{encodeURIComponent(resource)}") Anmelden
+          if (isFull)
+            | Alle Plätze sind belegt.
+          else
+            a.col-xs-6.btn.btn-primary(href="subscribe/#{encodeURIComponent(url)}/#{encodeURIComponent(resource)}") Anmelden
