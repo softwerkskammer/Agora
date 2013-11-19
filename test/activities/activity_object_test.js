@@ -143,32 +143,3 @@ describe('Activity\'s direction', function () {
     expect(activity.hasDirection()).to.be.true;
   });
 });
-
-describe('ICalendar', function () {
-  var activity = new Activity().fillFromUI({
-    title: 'Title',
-    startDate: '4.4.2013',
-    startTime: '17:00',
-    endTime: '18:00',
-    endDate: '5.4.2013',
-    url: 'myURL',
-    description: 'foo',
-    location: 'bar'
-  });
-
-  it('start date conversion', function () {
-    expect(activity.asICal().toString()).to.match(/DTSTART:20130404T150000Z/);
-  });
-
-  it('end date conversion', function () {
-    expect(activity.asICal().toString()).to.match(/DTEND:20130405T160000Z/);
-  });
-
-  it('render description', function () {
-    expect(activity.asICal().toString()).to.match(/DESCRIPTION:foo/);
-  });
-
-  it('render location', function () {
-    expect(activity.asICal().toString()).to.match(/LOCATION:bar/);
-  });
-});
