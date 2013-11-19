@@ -13,11 +13,6 @@ var defaultName = 'Veranstaltung';
 describe('Activity resource management', function () {
 
   describe('- on creation -', function () {
-    it('creates the default resource (in compatibility mode)', function () {
-      var activity = new Activity({url: 'myURL', registeredMembers: ['memberID']});
-      expect(activity.registeredMembers(defaultName)).to.contain('memberID');
-    });
-
     it('lists the name of the default resource if no resources are present on creation', function () {
       var activity = new Activity();
       expect(activity.resourceNames().length).to.equal(1);
@@ -75,8 +70,8 @@ describe('Activity resource management', function () {
   });
 
   describe('- when removing members -', function () {
-    it('removes a registered member from the default resource (created in compatibility mode)', function () {
-      var activity = new Activity({url: 'myURL', registeredMembers: ['memberID']});
+    it('removes a registered member from the default resource', function () {
+      var activity = new Activity({url: 'myURL', resources: { Veranstaltung: { _registeredMembers: ['memberID']}}});
       activity.removeMemberId('memberID', defaultName);
       expect(activity.registeredMembers(defaultName)).to.be.empty;
     });
@@ -111,7 +106,7 @@ describe('Activity resource management', function () {
   });
 
   describe('- when resetting an activity -', function () {
-    it('resets id, url, members, dates and especially the owner for copied activity (original created from compatibility mode)', function () {
+    it('resets id, url, members, dates and especially the owner for copied activity', function () {
       var activity = new Activity({
         id: 'ID',
         title: 'Title',
