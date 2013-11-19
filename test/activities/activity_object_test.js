@@ -144,38 +144,6 @@ describe('Activity\'s direction', function () {
   });
 });
 
-describe('Activity\'s markdown', function () {
-  it('creates its markdown with direction', function () {
-    var activity = new Activity().fillFromUI({
-      url: 'url',
-      description: 'description',
-      location: 'location',
-      direction: 'direction',
-      startDate: '4.5.2013',
-      startTime: '12:21'
-    });
-    var markdown = activity.markdown();
-    expect(markdown).to.contain('description');
-    expect(markdown).to.contain('04.05.2013');
-    expect(markdown).to.contain('12:21');
-    expect(markdown).to.contain('location');
-    expect(markdown).to.contain('Wegbeschreibung');
-    expect(markdown).to.contain('direction');
-  });
-
-  it('creates its markdown without direction', function () {
-    var activity = new Activity({
-      url: 'url',
-      description: 'description',
-      location: 'location',
-      direction: '',
-      startDate: '4.5.2013',
-      startTime: '12:21'
-    });
-    expect(activity.markdown()).to.not.contain('Wegbeschreibung');
-  });
-});
-
 describe('ICalendar', function () {
   var activity = new Activity().fillFromUI({
     title: 'Title',

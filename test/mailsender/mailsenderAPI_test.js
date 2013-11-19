@@ -57,5 +57,36 @@ describe('MailsenderAPI', function () {
     });
   });
 
+  it('creates the activity markdown with direction', function () {
+    var activity = new Activity().fillFromUI({
+      url: 'url',
+      description: 'description',
+      location: 'location',
+      direction: 'direction',
+      startDate: '4.5.2013',
+      startTime: '12:21'
+    });
+    var markdown = api.activityMarkdown(activity);
+    expect(markdown).to.contain('description');
+    expect(markdown).to.contain('04.05.2013');
+    expect(markdown).to.contain('12:21');
+    expect(markdown).to.contain('location');
+    expect(markdown).to.contain('Wegbeschreibung');
+    expect(markdown).to.contain('direction');
+  });
+
+  it('creates the activity markdown without direction', function () {
+    var activity = new Activity({
+      url: 'url',
+      description: 'description',
+      location: 'location',
+      direction: '',
+      startDate: '4.5.2013',
+      startTime: '12:21'
+    });
+    expect(api.activityMarkdown(activity)).to.not.contain('Wegbeschreibung');
+  });
+
 });
+
 
