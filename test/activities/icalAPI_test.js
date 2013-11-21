@@ -51,4 +51,8 @@ describe('ICalendar', function () {
     expect(icalAPI.activityAsICal(activityWithCRLFs).toString()).to.match(/DESCRIPTION:foo\\nbar/);
   });
 
+  it('CRLFs in location are transformed to \\n', function () {
+    expect(icalAPI.activityAsICal(activityWithCRLFs).toString()).to.match(/LOCATION:musterstr\\nkarlsruhe/);
+  });
+  
 });
