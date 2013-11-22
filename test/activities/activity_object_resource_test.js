@@ -3,8 +3,7 @@
 require('../configureForTest');
 var conf = require('nconf');
 var expect = require('chai').expect;
-
-//var util = require('util');
+var moment = require('moment-timezone');
 
 var Activity = conf.get('beans').get('activity');
 
@@ -51,6 +50,21 @@ describe('Activity resource management', function () {
       expect(activity.registeredMembers(defaultName)).to.contain('memberID');
     });
 
+    it('sets the timestemp for the added member', function () {
+      var activity = new Activity();
+      activity.addMemberId('memberID', defaultName);
+      expect(activity.state.resources[defaultName]._registeredMembers[0].memberId).to.equal('memberID');
+      expect(!!activity.state.resources[defaultName]._registeredMembers[0].createdAt).to.be.true;
+    });
+
+    it('sets the timestemp for the added member to the given moment', function () {
+      var now = new moment();
+      var activity = new Activity();
+      activity.addMemberId('memberID', defaultName, now);
+      expect(activity.state.resources[defaultName]._registeredMembers[0].memberId).to.equal('memberID');
+      expect(activity.state.resources[defaultName]._registeredMembers[0].createdAt).to.equal(now.toDate());
+    });
+
     it('adds a member to a desired resource', function () {
       var activity = new Activity({url: 'myURL', resources: {Einzelzimmer: { _registeredMembers: []}, Doppelzimmer: { _registeredMembers: []}}});
       activity.addMemberId('memberID', 'Einzelzimmer');
@@ -61,7 +75,9 @@ describe('Activity resource management', function () {
     it('does not do anything if the desired resource does not exist', function () {
       var activity = new Activity(
         {url: 'myURL', resources: {
-          default: { _registeredMembers: ['memberID']}
+          default: { _registeredMembers: [
+            {memberId: 'memberID'}
+          ]}
         }});
       activity.addMemberId('memberID', 'Einzelzimmer');
       expect(activity.resourceNames().length).to.equal(1);
@@ -71,7 +87,9 @@ describe('Activity resource management', function () {
 
   describe('- when removing members -', function () {
     it('removes a registered member from the default resource', function () {
-      var activity = new Activity({url: 'myURL', resources: { Veranstaltung: { _registeredMembers: ['memberID']}}});
+      var activity = new Activity({url: 'myURL', resources: { Veranstaltung: { _registeredMembers: [
+        {memberId: 'memberID'}
+      ]}}});
       activity.removeMemberId('memberID', defaultName);
       expect(activity.registeredMembers(defaultName)).to.be.empty;
     });
@@ -79,8 +97,12 @@ describe('Activity resource management', function () {
     it('removes a registered member from a desired resource', function () {
       var activity = new Activity(
         {url: 'myURL', resources: {
-          Einzelzimmer: { _registeredMembers: ['memberID']},
-          Doppelzimmer: { _registeredMembers: ['memberID']}
+          Einzelzimmer: { _registeredMembers: [
+            {memberId: 'memberID'}
+          ]},
+          Doppelzimmer: { _registeredMembers: [
+            {memberId: 'memberID'}
+          ]}
         }});
       activity.removeMemberId('memberID', 'Doppelzimmer');
       expect(activity.registeredMembers('Einzelzimmer')).to.contain('memberID');
@@ -90,18 +112,13 @@ describe('Activity resource management', function () {
     it('does not do anything if the desired resource does not exist', function () {
       var activity = new Activity(
         {url: 'myURL', resources: {
-          default: { _registeredMembers: ['memberID']}
+          default: { _registeredMembers: [
+            {memberId: 'memberID'}
+          ]}
         }});
       activity.removeMemberId('memberID', 'Doppelzimmer');
       expect(activity.resourceNames().length).to.equal(1);
       expect(activity.registeredMembers('default')).to.contain('memberID');
-    });
-  });
-
-  describe('- when querying registered members -', function () {
-    it('returns no members if the desired resource does not exist', function () {
-      var activity = new Activity();
-      expect(activity.registeredMembers('Nicht Existente Ressource')).to.be.empty;
     });
   });
 
@@ -113,7 +130,9 @@ describe('Activity resource management', function () {
         startDate: '4.4.2013',
         endDate: '5.4.2013',
         url: 'myURL',
-        resources: { default: { _registeredMembers: ['memberID'] }},
+        resources: { default: { _registeredMembers: [
+          {memberId: 'memberID'}
+        ] }},
         owner: 'owner'
       });
       activity = activity.resetForClone();
@@ -131,6 +150,7 @@ describe('Activity resource management', function () {
       var copy = new Activity().copyFrom(activity);
       expect(copy.owner()).to.not.equal('owner');
     });
+
     it('does not copy a registered member from an existing activity', function () {
       // this constructor behaviour also affects loading of stored activities
       var activity = new Activity({url: 'url'});
@@ -186,8 +206,12 @@ describe('Activity resource management', function () {
 
     it('keeps the original ressource intact after copying', function () {
       var activity = new Activity({url: 'url', resources: {
-        Einzelzimmer: { _registeredMembers: ['memberID']},
-        Doppelzimmer: { _registeredMembers: ['memberID']}
+        Einzelzimmer: { _registeredMembers: [
+          {memberId: 'memberID'}
+        ]},
+        Doppelzimmer: { _registeredMembers: [
+          {memberId: 'memberID'}
+        ]}
       }});
       new Activity().copyFrom(activity);
       expect(activity.registeredMembers('Einzelzimmer')).to.contain('memberID');
@@ -208,6 +232,11 @@ describe('Activity resource management', function () {
   });
 
   describe('- when querying registered members -', function () {
+    it('returns no members if the desired resource does not exist', function () {
+      var activity = new Activity();
+      expect(activity.registeredMembers('Nicht Existente Ressource')).to.be.empty;
+    });
+
     it('lists no registered members if there are no resources', function () {
       var activity = new Activity({ resources: {}});
       expect(activity.allRegisteredMembers()).to.be.empty;
@@ -215,9 +244,15 @@ describe('Activity resource management', function () {
 
     it('lists all registered members of any resource', function () {
       var activity = new Activity({ resources: {
-        default: { _registeredMembers: ['memberID1']},
-        Einzelzimmer: { _registeredMembers: ['memberID2']},
-        Doppelzimmer: { _registeredMembers: ['memberID3']}
+        default: { _registeredMembers: [
+          {memberId: 'memberID1'}
+        ]},
+        Einzelzimmer: { _registeredMembers: [
+          {memberId: 'memberID2'}
+        ]},
+        Doppelzimmer: { _registeredMembers: [
+          {memberId: 'memberID3'}
+        ]}
       }});
       expect(activity.allRegisteredMembers().length).to.equal(3);
       expect(activity.allRegisteredMembers()).to.contain('memberID1');
@@ -227,9 +262,15 @@ describe('Activity resource management', function () {
 
     it('lists a registered member only once even when he registered for multiple resources', function () {
       var activity = new Activity({ resources: {
-        default: { _registeredMembers: ['memberID']},
-        Einzelzimmer: { _registeredMembers: ['memberID']},
-        Doppelzimmer: { _registeredMembers: ['memberID']}
+        default: { _registeredMembers: [
+          {memberId: 'memberID'}
+        ]},
+        Einzelzimmer: { _registeredMembers: [
+          {memberId: 'memberID'}
+        ]},
+        Doppelzimmer: { _registeredMembers: [
+          {memberId: 'memberID'}
+        ]}
       }});
       expect(activity.allRegisteredMembers().length).to.equal(1);
       expect(activity.allRegisteredMembers()).to.contain('memberID');

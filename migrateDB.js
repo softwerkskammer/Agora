@@ -20,21 +20,26 @@ function logResult(err, message) {
   console.log(message);
 }
 
-
 activitiesCoreAPI.allActivities(function (err, activities) {
   if (err) { return console.log("Error: " + err); }
   if (!activities) { return console.log("No activities found!"); }
-
+  var now = new Date();
   _.each(activities, function (activity) {
-    var defaultResource = activity.state.resources.default;
-    var veranstaltung = activity.state.resources.Veranstaltung;
-    if (defaultResource && !veranstaltung) {
-      activity.state.resources.Veranstaltung = defaultResource;
-      delete activity.state.resources.default;
-    }
+    _.each(activity.state.resources, function (resource) {
+      var newRegisteredMembers = [];
+      _.each(resource._registeredMembers, function (member) {
+        if (typeof member === 'string') {
+          newRegisteredMembers.push({memberId: member, createdAt: now});
+        } else {
+          newRegisteredMembers.push(member);
+        }
+      });
+      resource._registeredMembers = newRegisteredMembers;
+    });
   });
 
   async.map(activities, activitiesCoreAPI.saveActivity, function (err, results) {
     logResult(err, "All Activities were migrated: " + results);
+    process.exit();
   });
 });
