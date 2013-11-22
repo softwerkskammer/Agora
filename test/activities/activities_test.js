@@ -1,45 +1,50 @@
 "use strict";
 
 var request = require('supertest');
-var express = require('express');
 var sinon = require('sinon').sandbox.create();
 var expect = require('chai').expect;
 
 var conf = require('../configureForTest');
-var userMock = require('../userMock');
 
-var Activity = conf.get('beans').get('activity');
-var Member = conf.get('beans').get('member');
-var emptyActivity = new Activity().fillFromDB({title: 'Title of the Activity', description: 'description1', assignedGroup: 'assignedGroup',
-  location: 'location1', direction: 'direction1', startDate: '01.01.2013', url: 'urlOfTheActivity' });
-var activityWithParticipants = new Activity().fillFromDB({title: 'Interesting Activity', description: 'description2', assignedGroup: 'assignedGroup',
-  location: 'location2', direction: 'direction2', startDate: '01.01.2013', url: 'urlForInteresting',
+var createApp = require('../testHelper')('activitiesApp').createApp;
+
+var beans = conf.get('beans');
+var fieldHelpers = beans.get('fieldHelpers');
+var Activity = beans.get('activity');
+var Member = beans.get('member');
+var Group = beans.get('group');
+
+var emptyActivity = new Activity({title: 'Title of the Activity', description: 'description1', assignedGroup: 'groupname',
+  location: 'location1', direction: 'direction1', startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'),
+  url: 'urlOfTheActivity', owner: 'owner' });
+var activityWithParticipants = new Activity({title: 'Interesting Activity', description: 'description2', assignedGroup: 'groupname',
+  location: 'location2', direction: 'direction2', startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'), url: 'urlForInteresting',
   resources: {default: {_registeredMembers: ['memberId1', 'memberId2']}} });
-var activityWithMultipleResources = new Activity().fillFromDB({title: 'Interesting Activity', description: 'description2', assignedGroup: 'assignedGroup',
-  location: 'location2', direction: 'direction2', startDate: '01.01.2013', url: 'urlForMultiple',
+var activityWithMultipleResources = new Activity({title: 'Interesting Activity', description: 'description2', assignedGroup: 'groupname',
+  location: 'location2', direction: 'direction2', startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'), url: 'urlForMultiple',
   resources: {Einzelzimmer: {_registeredMembers: ['memberId1', 'memberId2']}, Doppelzimmer: {_registeredMembers: ['memberId3', 'memberId4']}} });
 
+var group = new Group({id: "groupname", longName: "Buxtehude"});
 
-var activitiesCoreAPI = conf.get('beans').get('activitiesCoreAPI');
-var activitiesAPI = conf.get('beans').get('activitiesAPI');
+var activitiesCoreAPI = beans.get('activitiesCoreAPI');
+var activitiesAPI = beans.get('activitiesAPI');
 
-var groupsAPI = conf.get('beans').get('groupsAPI');
-var membersAPI = conf.get('beans').get('membersAPI');
-var validation = conf.get('beans').get('validation');
-var colors = conf.get('beans').get('colorAPI');
-
-var app = conf.get('beans').get('activitiesApp')(express());
+var groupsAPI = beans.get('groupsAPI');
+var membersAPI = beans.get('membersAPI');
+var colors = beans.get('colorAPI');
 
 describe('Activity application', function () {
-  var allActivities,
-    upcomingActivities,
-    getActivity;
+  var allActivities;
+  var upcomingActivities;
+  var getActivity;
+  var getGroup;
 
   beforeEach(function (done) {
     allActivities = sinon.stub(activitiesCoreAPI, 'allActivities', function (callback) {callback(null, [emptyActivity]); });
     upcomingActivities = sinon.stub(activitiesCoreAPI, 'upcomingActivities', function (callback) {callback(null, [emptyActivity]); });
     sinon.stub(activitiesAPI, 'getActivitiesForDisplay', function (fetcher, callback) {
-      var enhancedActivity = new Activity().copyFrom(emptyActivity);
+      var enhancedActivity = new Activity({title: 'Title of the Activity', description: 'description1', assignedGroup: 'assignedGroup',
+        location: 'location1', direction: 'direction1', startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'), url: 'urlOfTheActivity' });
       enhancedActivity.colorRGB = '#123456';
       enhancedActivity.groupName = 'The name of the assigned Group';
       callback(null, [enhancedActivity]);
@@ -48,7 +53,7 @@ describe('Activity application', function () {
       callback(null, (url === 'urlOfTheActivity') ? emptyActivity : (url === 'urlForInteresting') ? activityWithParticipants :
         (url === 'urlForMultiple') ? activityWithMultipleResources : null);
     });
-    sinon.stub(groupsAPI, 'getAllAvailableGroups', function (callback) { callback(null, []); });
+    getGroup = sinon.stub(groupsAPI, 'getGroup', function (groupname, callback) { callback(null, group); });
     sinon.stub(colors, 'allColors', function (callback) { callback(null, []); });
     done();
   });
@@ -58,14 +63,8 @@ describe('Activity application', function () {
     done();
   });
 
-  it('object is not valid, if the title is not filled', function () {
-    var tmpActivity = new Activity().fillFromDB({description: 'description', url: 'url', assignedGroup: 'assignedGroup', location: 'location',
-      direction: 'direction', startDate: '2012-11-11', startTime: '10:10', endDate: '2012-11-11', endTime: '20:10' });
-    expect(validation.isValidActivity(tmpActivity).length).to.equal(1);
-  });
-
   it('shows the list of activities', function (done) {
-    request(app)
+    request(createApp())
       .get('/')
       .expect(200)
       .expect(/Aktivitäten/)
@@ -79,10 +78,10 @@ describe('Activity application', function () {
       });
   });
 
-  it('shows the details of one activity without participants', function (done) {
-    sinon.stub(membersAPI, 'allMembers', function (callback) {callback(null, []); });
+  it('shows the details of an activity without participants', function (done) {
+    sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {callback(null, []); });
 
-    request(app)
+    request(createApp('guest'))
       .get('/' + 'urlOfTheActivity')
       .expect(200)
       .expect(/<small>01.01.2013/)
@@ -96,14 +95,14 @@ describe('Activity application', function () {
   });
 
   it('shows the details of an activity with participants', function (done) {
-    sinon.stub(membersAPI, 'allMembers', function (callback) {
+    sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {
       callback(null, [
-        {id: 'memberId1'},
-        {id: 'memberId2'}
+        new Member({id: 'memberId1', nickname: 'nick1', email: 'nick1@b.c'}),
+        new Member({id: 'memberId2', nickname: 'nick2', email: 'nick2@b.c'})
       ]);
     });
 
-    request(app)
+    request(createApp('guest'))
       .get('/' + 'urlForInteresting')
       .expect(200)
       .expect(/<small>01.01.2013/)
@@ -117,17 +116,14 @@ describe('Activity application', function () {
   });
 
   it('shows the registration button for an activity with participants when a user is logged in who is not participant', function (done) {
-    sinon.stub(membersAPI, 'allMembers', function (callback) {
+    sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {
       callback(null, [
         new Member({id: 'memberId1', nickname: 'participant1', email: "a@b.c"}),
         new Member({id: 'memberId2', nickname: 'participant2', email: "a@b.c"})
       ]);
     });
 
-    var root = express();
-    root.use(userMock({member: {id: 'memberId3'}}));
-    root.use('/', app);
-    request(root)
+    request(createApp('memberId3'))
       .get('/' + 'urlForInteresting')
       .expect(200)
       .expect(/Bislang haben 2 Mitglieder ihre Teilnahme zugesagt./)
@@ -138,21 +134,15 @@ describe('Activity application', function () {
       });
   });
 
-
   it('shows the registration button for an activity with participants when a user is logged in who already is participant', function (done) {
-    sinon.stub(membersAPI, 'allMembers', function (callback) {
+    sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {
       callback(null, [
         new Member({id: 'memberId1', nickname: 'participant1', email: "a@b.c"}),
         new Member({id: 'memberId2', nickname: 'participant2', email: "a@b.c"})
       ]);
     });
 
-    var name = userMock({member: {id: 'memberId1'}});
-
-    var root = express();
-    root.use(name);
-    root.use('/', app);
-    request(root)
+    request(createApp('memberId1'))
       .get('/' + 'urlForInteresting')
       .expect(200)
       .expect(/Bislang haben 2 Mitglieder ihre Teilnahme zugesagt./)
@@ -163,8 +153,8 @@ describe('Activity application', function () {
       });
   });
 
-  it('shows the registration button for an activity multiple resources where the current user has booked one resource', function (done) {
-    sinon.stub(membersAPI, 'allMembers', function (callback) {
+  it('shows the registration button for an activity with multiple resources where the current user has booked one resource', function (done) {
+    sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {
       callback(null, [
         new Member({id: 'memberId1', nickname: 'participant1', email: "a@b.c"}),
         new Member({id: 'memberId2', nickname: 'participant2', email: "a@b.c"}),
@@ -173,17 +163,12 @@ describe('Activity application', function () {
       ]);
     });
 
-    var name = userMock({member: {id: 'memberId1'}});
-
-    var root = express();
-    root.use(name);
-    root.use('/', app);
-    request(root)
+    request(createApp('memberId1'))
       .get('/' + 'urlForMultiple')
       .expect(200)
       .expect(/Bislang haben 4 Mitglieder ihre Teilnahme zugesagt./)
-      .expect(/href="unsubscribe\/urlForMultiple\/Einzelzimmer" class=".*">Ich kann doch nicht/)
-      .expect(/href="subscribe\/urlForMultiple\/Doppelzimmer" class=".*">Ich bin dabei!/)
+      .expect(/href="unsubscribe\/urlForMultiple\/Einzelzimmer" class=".*">Absagen/)
+      .expect(/href="subscribe\/urlForMultiple\/Doppelzimmer" class=".*">Anmelden/)
       .expect(/participant1/)
       .expect(/participant2/)
       .expect(/participant3/)
@@ -192,9 +177,8 @@ describe('Activity application', function () {
       });
   });
 
-
   it('upcoming activities are exposed as iCalendar', function (done) {
-    request(app)
+    request(createApp())
       .get('/ical')
       .expect(200)
       .expect('Content-Type', /text\/calendar/)
@@ -207,7 +191,7 @@ describe('Activity application', function () {
   it('activity is exposed as iCalendar', function (done) {
     var url = 'urlOfTheActivity';
 
-    request(app)
+    request(createApp())
       .get('/ical/' + url)
       .expect(200)
       .expect('Content-Type', /text\/calendar/)
@@ -217,16 +201,18 @@ describe('Activity application', function () {
       .end(function (err) { done(err); });
   });
 
-
   it('shows a 404 if the id cannot be found in the store for the detail page', function (done) {
-    sinon.stub(membersAPI, 'allMembers', function (callback) {callback(null, []); });
+    sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {callback(null, []); });
     var link = emptyActivity.id + '4711';
 
-    request(app).get('/' + link).expect(404, function (err) { done(err); });
+    request(createApp()).get('/' + link).expect(404, function (err) { done(err); });
   });
 
   it('allows to create a new activity', function (done) {
-    request(app)
+    sinon.stub(groupsAPI, 'getSubscribedGroupsForUser', function (email, callback) { callback(null, []); });
+
+    // in the test setup anybody can create an activity because the middleware is not plugged in
+    request(createApp('dummy'))
       .get('/new')
       .expect(200)
       .expect(/activities/, function (err) {
@@ -234,55 +220,93 @@ describe('Activity application', function () {
       });
   });
 
-  it('rejects an activity with invalid and different url on submit', function (done) {
-    sinon.stub(activitiesCoreAPI, 'isValidUrl', function (nickname, callback) {
-      callback(null, false);
-    });
+  it('allows the owner to edit an activity', function (done) {
+    sinon.stub(groupsAPI, 'getSubscribedGroupsForUser', function (email, callback) { callback(null, []); });
 
-    var root = express();
-    root.use(express.urlencoded());
-    root.use('/', app);
-    request(root)
-      .post('/submit')
-      //.send('')
-      .send('url=uhu')
-      .send('previousUrl=aha')
+    request(createApp('owner'))
+      .get('/edit/urlOfTheActivity')
       .expect(200)
-      .expect(/Validation Error/)
-      .expect(/Diese URL ist leider nicht verfügbar./, function (err) {
+      .expect(/activities/, function (err) {
         done(err);
       });
   });
 
-  it('rejects an activity with empty title on submit', function (done) {
+  it('disallows a member to edit another user\'s activity', function (done) {
+    sinon.stub(groupsAPI, 'getAllAvailableGroups', function (callback) { callback(null, []); });
 
-    var root = express();
-    root.use(express.urlencoded());
-    root.use('/', app);
-    request(root)
-      .post('/submit')
-      .send('url=uhu&previousUrl=uhu&location=X&startDate=02.07.2000&startTime=19:00&endDate=02.07.2000&endTime=21:00')
+    request(createApp('owner1'))
+      .get('/edit/urlOfTheActivity')
+      .expect(302)
+      .expect('location', /activities\/urlOfTheActivity/, done);
+  });
+
+  it('disallows a guest to edit any user\'s activity', function (done) {
+    sinon.stub(groupsAPI, 'getAllAvailableGroups', function (callback) { callback(null, []); });
+
+    request(createApp())
+      .get('/edit/urlOfTheActivity')
+      .expect(302)
+      .expect('location', /activities\/urlOfTheActivity/, done);
+  });
+
+  it('offers the owner only his groups to choose from', function (done) {
+    var groupA = new Group({id: 'groupA', longName: 'groupA'});
+    var groupB = new Group({id: 'groupB', longName: 'groupB'});
+    var groupC = new Group({id: 'groupC', longName: 'groupC'});
+    sinon.stub(groupsAPI, 'getAllAvailableGroups', function (callback) { callback(null, [groupA, groupB, groupC]); });
+    sinon.stub(groupsAPI, 'getSubscribedGroupsForUser', function (email, callback) { callback(null, [groupA, groupB]); });
+
+    request(createApp('owner'))
+      .get('/new')
       .expect(200)
-      .expect(/Validation Error/)
-      .expect(/Titel ist ein Pflichtfeld./, function (err) {
+      .expect(/groupA/)
+      .expect(/groupB/)
+      .end(function (err, res) {
+        expect(res.text).to.not.contain('groupC');
         done(err);
       });
   });
 
-  it('rejects an activity with different but valid url and with empty title on submit', function (done) {
-    sinon.stub(activitiesCoreAPI, 'isValidUrl', function (nickname, callback) {
-      callback(null, true);
-    });
+  it('offers a superuser all groups to choose from', function (done) {
+    var groupA = new Group({id: 'groupA', longName: 'groupA'});
+    var groupB = new Group({id: 'groupB', longName: 'groupB'});
+    var groupC = new Group({id: 'groupC', longName: 'groupC'});
+    sinon.stub(groupsAPI, 'getAllAvailableGroups', function (callback) { callback(null, [groupA, groupB, groupC]); });
+    sinon.stub(groupsAPI, 'getSubscribedGroupsForUser', function (email, callback) { callback(null, [groupA, groupB]); });
 
-    var root = express();
-    root.use(express.urlencoded());
-    root.use('/', app);
-    request(root)
-      .post('/submit')
-      .send('url=uhu&previousUrl=uhuPrev&location=X&startDate=02.07.2000&startTime=19:00&endDate=02.07.2000&endTime=21:00')
+    request(createApp('superuserID'))
+      .get('/new')
       .expect(200)
-      .expect(/Validation Error/)
-      .expect(/Titel ist ein Pflichtfeld./, function (err) {
+      .expect(/groupA/)
+      .expect(/groupB/)
+      .expect(/groupC/)
+      .end(function (err) {
+        done(err);
+      });
+  });
+
+  it('shows no group name if no groups are available', function (done) {
+    getGroup.restore();
+    getGroup = sinon.stub(groupsAPI, 'getGroup', function (groupname, callback) { callback(null, null); });
+
+    sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) { callback(null, []); });
+
+    request(createApp('guest'))
+      .get('/urlOfTheActivity')
+      .expect(200)
+      .end(function (err, res) {
+        expect(res.text).to.not.contain('Veranstaltet von der Gruppe');
+        done(err);
+      });
+  });
+
+  it('shows the name of the assigned group if the group exists', function (done) {
+    sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) { callback(null, []); });
+
+    request(createApp('guest'))
+      .get('/urlOfTheActivity')
+      .expect(200)
+      .expect(/Veranstaltet von der Gruppe&nbsp;<a href="\/groups\/groupname">Buxtehude<\/a>/, function (err) {
         done(err);
       });
   });

@@ -5,23 +5,24 @@ include ../../../views/formComponents
 include activities-mixins
 
 block title
-  | #{activity.title} - Aktivitäten
+  | #{activity.title()} - Aktivitäten
 
 block opengraph
-  meta(property="og:description", content!=activity.descriptionPlain().substring(0,500))
-  meta(property="og:title", content=activity.title)
+  meta(property="og:description", content=activity.descriptionPlain().substring(0,500))
+  meta(property="og:title", content=activity.title())
 
 block content
   .row
     .col-md-12
       .page-header
         .btn-group.pull-right
-          a.btn.btn-default(href="/activities/ical/#{encodeURIComponent(activity.url)}", title="Für Kalender exportieren"): i.fa.fa-calendar.fa-fw
-          a.btn.btn-default(href="/mailsender/invitation/#{encodeURIComponent(activity.url)}", title="Einladung versenden"): i.fa.fa-envelope-o.fa-fw
-          a.btn.btn-default(href="/activities/newLike/#{encodeURIComponent(activity.url)}", title="Neu auf Basis dieser Aktivität"): i.fa.fa-copy.fa-fw
-          if (typeof(user) !== 'undefined' && user.member.isAdmin)
-            a.btn.btn-default(href="/activities/edit/#{encodeURIComponent(activity.url)}", title="Bearbeiten"): i.fa.fa-edit.fa-fw
-        h2 #{activity.title}
+          a.btn.btn-default(href="/activities/ical/#{encodeURIComponent(activity.url())}", title="Für Kalender exportieren"): i.fa.fa-calendar.fa-fw
+          if (accessrights.canCreateActivity())
+            a.btn.btn-default(href="/activities/newLike/#{encodeURIComponent(activity.url())}", title="Neu auf Basis dieser Aktivität"): i.fa.fa-copy.fa-fw
+          if (accessrights.canEditActivity(activity))
+            a.btn.btn-default(href="/mailsender/invitation/#{encodeURIComponent(activity.url())}", title="Einladung versenden"): i.fa.fa-envelope-o.fa-fw
+            a.btn.btn-default(href="/activities/edit/#{encodeURIComponent(activity.url())}", title="Bearbeiten"): i.fa.fa-edit.fa-fw
+        h2 #{activity.title()}
           br
           small #{activity.startDate()} (#{activity.startTime()}
             if (activity.endDate() && activity.endDate() !== activity.startDate())
@@ -35,27 +36,28 @@ block content
   .row
     .col-md-6
       h3 Adresse:
-      p #{activity.location}
+      p #{activity.location()}
       if (activity.hasDirection())
         h4 Wegbeschreibung: 
         !{activity.directionHTML()}
       hr
       div.hidden-print
-        mixin visitorCount(visitors.length)
-        if (typeof(user) !== 'undefined' && user.member)
-          each resourceName in activity.resourceNames()
-            mixin subscriptionButtons(activity.registeredMembers(resourceName), activity.url, resourceName, user.member.id)
+        mixin visitorCount(activity.visitors.length)
+        each resourceName in activity.resourceNames()
+          mixin subscriptionButtons(activity.registeredMembers(resourceName), activity.isFull(resourceName), activity.url(), resourceName, currentUserId, activity.resourceNames().length)
+        if (activity.visitors.length > 0)
           h4 Zugesagt haben:
-          mixin memberlist(visitors)
+          mixin memberlist(activity.visitors)
 
-      hr.hidden-print
-      p.hidden-print Veranstaltet von der Gruppe: #{activity.groupNameFrom(groups)}
+      if (activity.group)
+        hr.hidden-print
+        p.hidden-print Veranstaltet von der Gruppe&nbsp;
+          a(href="/groups/#{activity.group.id}") #{activity.group.longName}
     .col-md-6
-      mixin map(activity.location, '100%', '450px')
+      mixin map(activity.location(), '100%', '450px')
 
 block scripts
   script.
-    $(document).ready(function () {
-      $('#calendar').fullCalendar('select', $.fullCalendar.parseDate(#{activity.startMoment().unix()}), $.fullCalendar.parseDate(#{activity.endMoment().unix()}), true);
-    });
+    displayedActivityStart = $.fullCalendar.parseDate(#{activity.startMoment().unix()});
+    displayedActivityEnd = $.fullCalendar.parseDate(#{activity.endMoment().unix()});
   

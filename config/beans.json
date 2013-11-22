@@ -15,6 +15,7 @@
   "membersAPI": {"module": "./lib/members/membersAPI"},
   "activitiesCoreAPI": {"module": "./lib/activities/activitiesCoreAPI"},
   "activitiesAPI": {"module": "./lib/activities/activitiesAPI"},
+  "icalAPI": {"module": "./lib/activities/icalAPI"},
   "announcementsAPI": {"module": "./lib/announcements/announcementsAPI"},
   "mailsenderAPI": {"module": "./lib/mailsender/mailsenderAPI"},
   "colorAPI": {"module": "./lib/administration/colorAPI"},
@@ -59,6 +60,7 @@
   "group": {"module": "./lib/groups/group"},
   "member": {"module": "./lib/members/member"},
   "activity": {"module": "./lib/activities/activity"},
+  "resources": {"module": "./lib/activities/resources"},
   "resource": {"module": "./lib/activities/resource"},
   "announcement": {"module": "./lib/announcements/announcement"},
   "color": {"module": "./lib/administration/color"},
@@ -77,6 +79,7 @@
   "secureAdminOnly": {"module": "./lib/middleware/secureAdminOnly"},
   "announcementsInSidebar": {"module": "./lib/middleware/announcementsInSidebar"},
   "expressViewHelper": {"module": "./lib/middleware/expressViewHelper"},
+  "accessrights": {"module": "./lib/middleware/accessrights"},
   "wikiSubdirs": {"module": "./lib/middleware/wikiSubdirs"},
   "gitmech": {"module": "./lib/wiki/gitmech"}
 }

@@ -1,0 +1,145 @@
+.container.bottom {
+    padding-top: 20px;
+    margin-right: 0px;
+}
+
+.navbar-brand.no-padding {
+    padding-top: 0px;
+    padding-bottom: 0px;
+    padding-left: 0px;
+    padding-right: 0px
+}
+
+.navbar {
+    margin: 0px;
+}
+
+.page-header > h2 {
+    margin-top: 0px;
+}
+
+td.fc-header-right {
+    padding-top: 6px !important;
+}
+
+.fc-event-inner {
+    max-height: 30px;
+}
+
+.verySmall {
+    font-size: .8em;
+    line-height: 1.1em;
+}
+
+.ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 300px;
+}
+
+.ellipsis.narrow {
+    max-width: 120px;
+}
+
+.compare {
+    font-family: Consolas, monospace;
+    font-size: 12px;
+}
+
+.compare td {
+    padding: 0 3px;
+    border-top-width: 0
+}
+
+.compare .gd {
+    background-color: #ffdddd;
+}
+
+.compare .gc {
+    color: #999999;
+    background-color: #EAF2F5;
+}
+
+.compare .gi {
+    background-color: #ddffdd;
+}
+
+.compare .ln {
+    color: #999999;
+    background-color: #EAF2F5;
+    text-align: right;
+    border-bottom-color: transparent;
+}
+
+.main {
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+@media screen {
+    body {
+        padding-top: 75px;
+    }
+}
+
+@media print {
+    .btn {
+        display: none !important;
+    }
+}
+
+@media (min-width: 768px) {
+    .modal-dialog.cheatsheet {
+        width: 80%;
+    }
+
+    .navbar-nav > li > a {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    body {
+        padding-bottom: 50px
+    }
+
+    .popover {
+        max-width: 450px;
+    }
+
+    .page-header {
+        margin-top: 0px;
+    }
+
+}
+
+@media (max-width: 767px) {
+    .container.bottom {
+        padding-top: 0px;
+        margin-right: 0px;
+    }
+
+    .dl-horizontal dt {
+        margin-top: 12px;
+    }
+
+    body {
+        padding-top: 0px !important;
+    }
+}
+
+.popover-highlight {
+    border-bottom: 1px dotted;
+}
+
+a.group {
+    color: #ffffff;
+}
+
+.label.group {
+    padding: .3em .4em .2em .4em;
+    position: absolute;
+    font-size: 0.8em;
+}

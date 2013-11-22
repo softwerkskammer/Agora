@@ -1,5 +1,56 @@
+mixin topNavbar
+  .navbar-header
+    a.navbar-brand.no-padding(href="/")
+      img(src="/img/SoftwerkskammerWappenLinks.png", alt="Softwerkskammer")
+    a.btn.btn-default.navbar-toggle(data-toggle="collapse", data-target=".collapse-top")
+      span.sr-only Toggle
+      i.fa.fa-bars.fa-lg
+    if (!accessrights.isRegistered())
+      a.btn.btn-default.navbar-toggle(href="https://github.com/softwerkskammer/Agora/issues",
+      title="Was funktioniert nicht, wie es soll?", target="_blank"): i.fa.fa-ambulance.fa-fw
+  .container.bottom
+    .navbar-collapse.collapse.collapse-top
+      ul.nav.navbar-nav.pull-right.hidden-xs
+        mixin loginMenu
+      ul.nav.navbar-nav
+        li#activities: a(href="/activities/upcoming")
+          span.hidden-sm
+            i.fa.fa-calendar.fa-fw
+            | &nbsp;Aktivitäten
+          span.visible-sm
+            i.fa.fa-calendar.fa-fw
+        li#groups: a(href="/groups")
+          span.hidden-sm
+            i.fa.fa-group.fa-fw
+            | &nbsp;Gruppen
+          span.visible-sm
+            i.fa.fa-group.fa-fw
+        li#wiki.dropdown
+          a.dropdown-toggle(href="#", data-toggle="dropdown")
+            span.hidden-sm
+              i.fa.fa-book.fa-fw
+              | &nbsp;Wiki&nbsp;
+              b.caret
+            span.visible-sm
+              i.fa.fa-book.fa-fw
+              b.caret
+          ul.dropdown-menu
+            if (typeof(wikisubdirs) !== 'undefined')
+              for subdir in wikisubdirs
+                li: a(href="/wiki/#{subdir}/") #{subdir}
+        li#members: a(href="/members")
+          span.hidden-sm
+            if (accessrights.isRegistered())
+              i.fa.fa-user.fa-fw
+              | &nbsp;Mitglieder
+          span.visible-sm
+            if (accessrights.isRegistered())
+              i.fa.fa-user.fa-fw
+        mixin loginMenu(true)
+
+
 mixin administrationMenu()
-  if ((typeof(user) !== 'undefined') && user.member && user.member.isAdmin)
+  if (accessrights.isAdmin())
     li#administration.dropdown.nav
       a.dropdown-toggle(href="#", data-toggle="dropdown")
         i.fa.fa-dashboard.fa-fw
@@ -23,7 +74,7 @@ mixin administrationMenu()
           | &nbsp;Farben
 
 mixin loginMenu(forInline)
-  if (typeof(user) !== 'undefined' && user.member)
+  if (accessrights.isRegistered())
     li.dropdown(class="#{forInline ? 'visible-xs' : ''}")
       a.dropdown-toggle(href="#", data-toggle="dropdown")
         i.fa.fa-info-circle.fa-fw&nbsp;
@@ -36,12 +87,16 @@ mixin loginMenu(forInline)
         li: a(href="/auth/logout")
           i.fa.fa-sign-out.fa-fw
           | &nbsp;Abmelden
-        li: a(href="https://github.com/softwerkskammer/NeuePlattform-Implementierung/issues", target="_blank")
+        li: a(href="https://github.com/softwerkskammer/Agora/issues", target="_blank")
           i.fa.fa-ambulance.fa-fw
-          | &nbsp;Einen Bug melden
+          | &nbsp;Feedback
         li: include ../version
   else
-    li: a.navbar-link(data-toggle="modal", href="#login", class="#{forInline ? 'visible-xs' : ''}")
+    li(class="#{forInline ? 'hidden' : ''}"): a.navbar-link(href="https://github.com/softwerkskammer/Agora/issues",
+    title="Was funktioniert nicht, wie es soll?", target="_blank")
+      i.fa.fa-ambulance.fa-fw
+      | &nbsp;Feedback
+    li(class="#{forInline ? 'visible-xs' : ''}"): a.navbar-link(data-toggle="modal", href="#login")
       i.fa.fa-sign-in
       | &nbsp;Anmelden
 
@@ -49,9 +104,7 @@ mixin navbar-inside
   .navbar-header
     a.btn.btn-default.navbar-toggle(data-toggle="collapse", data-target=".collapse-btom")
       span.sr-only Toggle
-      span.icon-bar
-      span.icon-bar
-      span.icon-bar
+      i.fa.fa-bars.fa-lg
   .navbar-collapse.collapse.collapse-btom
     ul.nav.navbar-nav.pull-right
       mixin administrationMenu()
@@ -72,7 +125,7 @@ mixin externalUrl(url, text)
 
 mixin notificationsBlock(notificationmessage)
   #{notificationmessage.kill()}
-  #notifications(class="alert alert-block #{notificationmessage.type}")
+  #notifications(class="alert alert-block hidden-print #{notificationmessage.type}")
     button.close(type="button", data-dismiss="alert")&times;
     h4 #{notificationmessage.title}
     | #{notificationmessage.text}

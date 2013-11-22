@@ -3,10 +3,12 @@
 var sinon = require('sinon').sandbox.create();
 var expect = require('chai').expect;
 
+//var util = require('util');
+
 var conf = require('../configureForTest');
 
 var Activity = conf.get('beans').get('activity');
-var dummyActivity = new Activity().fillFromDB({title: 'Title of the Activity', description: 'description', assignedGroup: 'assignedGroup',
+var dummyActivity = new Activity({title: 'Title of the Activity', description: 'description', assignedGroup: 'assignedGroup',
   location: 'location', direction: 'direction', startDate: '01.01.2013', url: 'urlOfTheActivity', color: 'aus Gruppe' });
 
 var activitiesAPI = conf.get('beans').get('activitiesAPI');
@@ -14,6 +16,18 @@ var activitiesAPI = conf.get('beans').get('activitiesAPI');
 var activitiesCoreAPI = conf.get('beans').get('activitiesCoreAPI');
 var groupsAPI = conf.get('beans').get('groupsAPI');
 var colors = conf.get('beans').get('colorAPI');
+var membersAPI = conf.get('beans').get('membersAPI');
+
+var fieldHelpers = conf.get('beans').get('fieldHelpers');
+var Activity = conf.get('beans').get('activity');
+var Member = conf.get('beans').get('member');
+var Group = conf.get('beans').get('group');
+
+var emptyActivity = new Activity({title: 'Title of the Activity', description: 'description1', assignedGroup: 'groupname',
+  location: 'location1', direction: 'direction1', startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'), url: 'urlOfTheActivity' });
+
+var group = new Group({id: "groupname", longName: "Buxtehude"});
+
 
 describe('Activities API', function () {
 
@@ -21,7 +35,9 @@ describe('Activities API', function () {
     sinon.stub(activitiesCoreAPI, 'allActivities', function (callback) {callback(null, [dummyActivity]); });
 
     sinon.stub(groupsAPI, 'getAllAvailableGroups', function (callback) {
-      callback(null, [{id: 'assignedGroup', longName: 'The name of the assigned Group'}]);
+      callback(null, [
+        {id: 'assignedGroup', longName: 'The name of the assigned Group'}
+      ]);
     });
     sinon.stub(groupsAPI, 'allColors', function (callback) {
       var result = {};
@@ -42,9 +58,35 @@ describe('Activities API', function () {
       expect(!!err).to.be.false;
       expect(activities.length).to.equal(1);
       var activity = activities[0];
-      expect(activity.title).to.equal('Title of the Activity');
+      expect(activity.title()).to.equal('Title of the Activity');
       expect(activity.colorRGB).to.equal('#123456');
       expect(activity.groupName).to.equal('The name of the assigned Group');
     });
   });
+
+  it('returns an activity and enhances it with its group and visitors', function (done) {
+    var member1 = new Member({id: 'memberId1', nickname: 'participant1', email: "a@b.c"});
+    var member2 = new Member({id: 'memberId2', nickname: 'participant2', email: "a@b.c"});
+    sinon.stub(activitiesCoreAPI, 'getActivity', function (activityId, callback) { callback(null, emptyActivity); });
+    sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {
+      callback(null, [ member1, member2 ]);
+    });
+    sinon.stub(groupsAPI, 'getGroup', function (groupname, callback) {
+      if (groupname === 'groupname') {
+        return callback(null, group);
+      }
+      return callback(null, null);
+    });
+
+    activitiesAPI.getActivityWithGroupAndParticipants('urlOfTheActivity', function (err, activity) {
+      expect(!!activity, "Activity").to.be.true;
+      expect(activity.group, "Group").to.equal(group);
+      expect(activity.visitors.length).to.equal(2);
+      expect(activity.visitors, "Visitors").to.contain(member1);
+      expect(activity.visitors, "Visitors").to.contain(member2);
+      done(err);
+    });
+  });
+
+
 });
