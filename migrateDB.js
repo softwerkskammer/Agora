@@ -29,7 +29,7 @@ activitiesCoreAPI.allActivities(function (err, activities) {
       var newRegisteredMembers = [];
       _.each(resource._registeredMembers, function (member) {
         if (typeof member === 'string') {
-          newRegisteredMembers.push({memberId: member, createdAt: now});
+          newRegisteredMembers.push({memberId: member, registeredAt: now});
         } else {
           newRegisteredMembers.push(member);
         }

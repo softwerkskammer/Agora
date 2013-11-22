@@ -50,19 +50,19 @@ describe('Activity resource management', function () {
       expect(activity.registeredMembers(defaultName)).to.contain('memberID');
     });
 
-    it('sets the timestemp for the added member', function () {
+    it('sets the timestamp for the added member', function () {
       var activity = new Activity();
       activity.addMemberId('memberID', defaultName);
       expect(activity.state.resources[defaultName]._registeredMembers[0].memberId).to.equal('memberID');
-      expect(!!activity.state.resources[defaultName]._registeredMembers[0].createdAt).to.be.true;
+      expect(!!activity.state.resources[defaultName]._registeredMembers[0].registeredAt).to.be.true;
     });
 
-    it('sets the timestemp for the added member to the given moment', function () {
+    it('sets the timestamp for the added member to the given moment', function () {
       var now = new moment();
       var activity = new Activity();
       activity.addMemberId('memberID', defaultName, now);
       expect(activity.state.resources[defaultName]._registeredMembers[0].memberId).to.equal('memberID');
-      expect(activity.state.resources[defaultName]._registeredMembers[0].createdAt).to.equal(now.toDate());
+      expect(activity.state.resources[defaultName]._registeredMembers[0].registeredAt).to.equal(now.toDate());
     });
 
     it('adds a member to a desired resource', function () {
