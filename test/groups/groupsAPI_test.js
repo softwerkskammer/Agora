@@ -370,3 +370,44 @@ describe('Groups API (isGroupNameAvailable)', function () {
   });
 });
 
+// describe('Groups API (getBlogPosts)', function () {
+  
+//   it('returns two blog posts for berlin', function (done) {
+
+//     var result = systemUnderTest.getBlogPosts("berlin", function (err, result) {
+//       console.log(JSON.stringify(result));
+//       //expect(result).to.deep.equal(["berlin/blog_november2013.md","berlin/blog_oktober2013.md"]);
+//     });
+//   });
+
+//   it('returns no blog posts for potsdam', function (done) {
+
+//     var result = systemUnderTest.getBlogPosts("potsdam", function (err, result) {
+//       console.log(JSON.stringify(result));
+
+//       //expect(result).to.equal([]);
+//     });
+//   });
+
+// });
+
+describe('Groups API (convertGitBlogPost)', function () {
+  
+  it('returns a formatted blog post', function (done) {
+    var input = "Lean Coffee November 2013, 2013-11-01\n " + 
+        "\n" + 
+        "Und beim nächsten Mal haben wir dann.\n" +
+        "\n" +
+        "Diesen Blog gemacht."
+    
+    systemUnderTest.convertGitBlogPost(input, function (err, result) {
+        console.log("result: " + JSON.stringify(result));
+        expect(result).to.equal({title: "Lean Coffee November 2013", 
+        date : new Date("2013-11-01"),
+        teaser : "Und beim nächsten Mal haben wir dann.",
+        text : "Und beim nächsten Mal haben wir dann.\n" +
+               "\n" +
+               "Diesen Blog gemacht." });
+    });
+  });
+});

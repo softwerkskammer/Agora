@@ -14,6 +14,7 @@ function createConfiguration() {
   nconf.file('authentication', './config/authentication-config.json');
   nconf.file('mail', './config/mailsender-config.json');
   nconf.file('wiki', './config/wikirepo-config.json');
+  nconf.stores.wiki.blogPattern = "blog_*";
   nconf.defaults({
     adminListName: "admins",
     port: '17124',
