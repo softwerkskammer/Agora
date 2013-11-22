@@ -370,26 +370,23 @@ describe('Groups API (isGroupNameAvailable)', function () {
   });
 });
 
-// describe('Groups API (getBlogPosts)', function () {
+describe('Groups API (getBlogPosts)', function () {
   
-//   it('returns two blog posts for berlin', function (done) {
+  it('returns two blog posts for berlin', function (done) {
 
-//     var result = systemUnderTest.getBlogPosts("berlin", function (err, result) {
-//       console.log(JSON.stringify(result));
-//       //expect(result).to.deep.equal(["berlin/blog_november2013.md","berlin/blog_oktober2013.md"]);
-//     });
-//   });
+    var result = systemUnderTest.getBlogposts("berlin");
+    console.log(JSON.stringify(result));
+      //expect(result).to.deep.equal(["berlin/blog_november2013.md","berlin/blog_oktober2013.md"]);
+  });
 
-//   it('returns no blog posts for potsdam', function (done) {
+  it('returns no blog posts for potsdam', function (done) {
 
-//     var result = systemUnderTest.getBlogPosts("potsdam", function (err, result) {
-//       console.log(JSON.stringify(result));
+    var result = systemUnderTest.getBlogposts("potsdam");
+    console.log(JSON.stringify(result));
 
-//       //expect(result).to.equal([]);
-//     });
-//   });
+  });
 
-// });
+});
 
 describe('Groups API (convertGitBlogPost)', function () {
   

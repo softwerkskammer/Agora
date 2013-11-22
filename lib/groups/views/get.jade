@@ -33,8 +33,9 @@ block content
           a.btn.btn-primary(href="unsubscribe/#{group.id}") Gruppe verlassen
         else
           a.btn.btn-primary(href="subscribe/#{group.id}") Gruppe beitreten
-      if ()
-      h4 Blog
+      if (blogPosts.length > 0) 
+        h4 Blog
+        mixin blogposts(blogposts)
 
       h4 Mitglieder:
       | Diese Gruppe hat
