@@ -19,10 +19,19 @@ var emptyActivity = new Activity({title: 'Title of the Activity', description: '
   url: 'urlOfTheActivity', owner: 'owner' });
 var activityWithParticipants = new Activity({title: 'Interesting Activity', description: 'description2', assignedGroup: 'groupname',
   location: 'location2', direction: 'direction2', startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'), url: 'urlForInteresting',
-  resources: {default: {_registeredMembers: ['memberId1', 'memberId2']}} });
+  resources: {default: {_registeredMembers: [
+    {memberId: 'memberId1'},
+    {memberId: 'memberId2'}
+  ]}} });
 var activityWithMultipleResources = new Activity({title: 'Interesting Activity', description: 'description2', assignedGroup: 'groupname',
   location: 'location2', direction: 'direction2', startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'), url: 'urlForMultiple',
-  resources: {Einzelzimmer: {_registeredMembers: ['memberId1', 'memberId2']}, Doppelzimmer: {_registeredMembers: ['memberId3', 'memberId4']}} });
+  resources: {Einzelzimmer: {_registeredMembers: [
+    {memberId: 'memberId1'},
+    {memberId: 'memberId2'}
+  ]}, Doppelzimmer: {_registeredMembers: [
+    {memberId: 'memberId3'},
+    {memberId: 'memberId4'}
+  ]}} });
 
 var group = new Group({id: "groupname", longName: "Buxtehude"});
 
