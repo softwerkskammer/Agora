@@ -33,7 +33,8 @@ describe('Activity', function () {
       {id: 'group', longName: 'groupname'},
       {id: 'other', longName: 'othername'}
     ];
-    expect(activity.groupNameFrom(groups)).to.equal('groupname');
+    activity.groupFrom(groups);
+    expect(activity.groupName()).to.equal('groupname');
   });
 
   it('fetches a blank string if group not found', function () {
@@ -45,7 +46,8 @@ describe('Activity', function () {
       {id: 'each', longName: 'groupname'},
       {id: 'other', longName: 'othername'}
     ];
-    expect(activity.groupNameFrom(groups)).to.equal('');
+    activity.groupFrom(groups);
+    expect(activity.groupName()).to.equal('');
   });
 
   it('retrieves the color from the assigned group', function () {
