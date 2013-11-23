@@ -59,7 +59,7 @@ describe('Activity', function () {
       group: '#FFF',
       other: '000'
     };
-    expect(activity.colorFrom(groupColors, [])).to.equal('#FFF');
+    expect(activity.colorFrom(groupColors)).to.equal('#FFF');
   });
 
   it('retrieves the default color if the group is not present in the group colors', function () {
@@ -70,14 +70,14 @@ describe('Activity', function () {
     var groupColors = {
       other: '000'
     };
-    expect(activity.colorFrom(groupColors, [])).to.equal('#353535');
+    expect(activity.colorFrom(groupColors)).to.equal('#353535');
   });
 
   it('retrieves the color as default if no group colors are found', function () {
     var activity = new Activity({
       url: 'myURL'
     });
-    expect(activity.colorFrom(null, [])).to.equal('#353535');
+    expect(activity.colorFrom(null)).to.equal('#353535');
   });
 
   it('parses start date and time using default timezone', function () {
