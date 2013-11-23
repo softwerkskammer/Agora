@@ -21,7 +21,7 @@ mixin subscriptionButtons(activity, resourceName, currentMemberId)
         if (limit > 0)
           | Alle Plätze sind belegt.
         else
-          | Für dieses Event kannst Du Dich nicht bei der Softwerkskammer registrieren
+          | Für dieses Event kannst Du Dich nicht bei der Softwerkskammer registrieren.
       else
         a.btn.btn-primary(href="subscribe/#{url}/#{encodeURIComponent(resourceName)}") Ich bin dabei!
 
@@ -36,6 +36,6 @@ mixin subscriptionButtons(activity, resourceName, currentMemberId)
             if (limit > 0)
               span.control-label.col-xs-6(style="text-align: center;") Alle Plätze sind belegt.
             else
-              span.control-label.col-xs-6(style="text-align: center;") Registrierung nicht über die Softwerkskammer möglich
+              span.control-label.col-xs-6(style="text-align: center;") Registrierung nicht über die Softwerkskammer möglich.
           else
             a.col-xs-6.btn.btn-primary(href="subscribe/#{url}/#{encodeURIComponent(resourceName)}") Anmelden
