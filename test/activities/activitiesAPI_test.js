@@ -15,7 +15,6 @@ var activitiesAPI = conf.get('beans').get('activitiesAPI');
 
 var activitiesCoreAPI = conf.get('beans').get('activitiesCoreAPI');
 var groupsAPI = conf.get('beans').get('groupsAPI');
-var colors = conf.get('beans').get('colorAPI');
 var membersAPI = conf.get('beans').get('membersAPI');
 
 var fieldHelpers = conf.get('beans').get('fieldHelpers');
@@ -39,12 +38,11 @@ describe('Activities API', function () {
         {id: 'assignedGroup', longName: 'The name of the assigned Group'}
       ]);
     });
-    sinon.stub(groupsAPI, 'allColors', function (callback) {
+    sinon.stub(groupsAPI, 'allGroupColors', function (callback) {
       var result = {};
       result['assignedGroup'] = '#123456';
       callback(null, result);
     });
-    sinon.stub(colors, 'allColors', function (callback) { callback(null, []); });
     done();
   });
 

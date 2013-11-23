@@ -89,11 +89,6 @@ block content
             select#assignedGroup.form-control(name="assignedGroup")
               for group in groups
                 option(value=group.id, selected = (activity.assignedGroup() != undefined && activity.assignedGroup() == group.id)) #{group.longName}
-          .form-group
-            label.control-label(for="type") Farbe:
-            select#type.form-control(name="color")
-              for color in colorlist
-                option(selected=activity.color() === color) #{color}
 
       .row
         .col-md-12
