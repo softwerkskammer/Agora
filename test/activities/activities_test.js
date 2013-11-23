@@ -40,13 +40,13 @@ var activitiesAPI = beans.get('activitiesAPI');
 
 var groupsAPI = beans.get('groupsAPI');
 var membersAPI = beans.get('membersAPI');
-var colors = beans.get('colorAPI');
 
 describe('Activity application', function () {
   var allActivities;
   var upcomingActivities;
   var getActivity;
   var getGroup;
+  var getMemberForId;
 
   beforeEach(function (done) {
     allActivities = sinon.stub(activitiesCoreAPI, 'allActivities', function (callback) {callback(null, [emptyActivity]); });
@@ -63,7 +63,7 @@ describe('Activity application', function () {
         (url === 'urlForMultiple') ? activityWithMultipleResources : null);
     });
     getGroup = sinon.stub(groupsAPI, 'getGroup', function (groupname, callback) { callback(null, group); });
-    sinon.stub(colors, 'allColors', function (callback) { callback(null, []); });
+    getMemberForId = sinon.stub(membersAPI, 'getMemberForId', function (ids, callback) {callback(null, undefined); });
     done();
   });
 
@@ -98,7 +98,26 @@ describe('Activity application', function () {
       .expect(/description1/)
       .expect(/location1/)
       .expect(/direction1/)
-      .expect(/Bislang gibt es keine Teinahmezusagen./, function (err) {
+      .expect(/Bislang gibt es keine Teinahmezusagen./, function (err, res) {
+        expect(res.text).to.not.contain('Angelegt von');
+        done(err);
+      });
+  });
+
+  it('shows the details of an activity with Owner', function (done) {
+    sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {callback(null, []); });
+    getMemberForId.restore();
+    getMemberForId = sinon.stub(membersAPI, 'getMemberForId', function (ids, callback) {
+      callback(null,
+        new Member({id: 'ownerId', nickname: 'owner', email: 'owner@b.c'}));
+    });
+
+
+    request(createApp('guest'))
+      .get('/' + 'urlOfTheActivity')
+      .expect(200)
+      .expect(/Angelegt von/)
+      .expect(/owner/, function (err) {
         done(err);
       });
   });

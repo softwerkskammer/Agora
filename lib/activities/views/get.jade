@@ -53,6 +53,9 @@ block content
         hr.hidden-print
         p.hidden-print Veranstaltet von der Gruppe&nbsp;
           a(href="/groups/#{activity.group.id}") #{activity.group.longName}
+          if(activity.ownerNickname)
+            | &nbsp;- Angelegt von&nbsp;
+            a(href="/members/#{activity.ownerNickname}") #{activity.ownerNickname}
     .col-md-6
       mixin map(activity.location(), '100%', '450px')
 
