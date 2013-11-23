@@ -55,7 +55,7 @@ describe('Activity application', function () {
       var enhancedActivity = new Activity({title: 'Title of the Activity', description: 'description1', assignedGroup: 'assignedGroup',
         location: 'location1', direction: 'direction1', startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'), url: 'urlOfTheActivity' });
       enhancedActivity.colorRGB = '#123456';
-      enhancedActivity.groupName = 'The name of the assigned Group';
+      enhancedActivity.group = {longName: 'The name of the assigned Group'};
       callback(null, [enhancedActivity]);
     });
     getActivity = sinon.stub(activitiesCoreAPI, 'getActivity', function (url, callback) {

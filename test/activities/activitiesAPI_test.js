@@ -60,7 +60,7 @@ describe('Activities API', function () {
       var activity = activities[0];
       expect(activity.title()).to.equal('Title of the Activity');
       expect(activity.colorRGB).to.equal('#123456');
-      expect(activity.groupName).to.equal('The name of the assigned Group');
+      expect(activity.groupName()).to.equal('The name of the assigned Group');
     });
   });
 
