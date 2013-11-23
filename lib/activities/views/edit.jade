@@ -1,12 +1,14 @@
 extends ../../../views/layout
 include  ../../../views/formComponents
 
-mixin resourceRow(name, limit)
+mixin resourceRow(name, limit, registrationOpen)
   .row.form-group
-    .col-md-8
+    .col-md-6
       input.form-control(name="resources[names]", value=name, type="text", placeholder="Bezeichnung")
     .col-md-4
       input.form-control(name="resources[limits]", value=limit, type="text", placeholder="unbegrenzt")
+    .col-md-2
+      input.form-control(name="resources[registrationOpen]", value=registrationOpen, type="checkbox", checked=(registrationOpen ? "true" : undefined))
 
 block scripts
   script(src="/clientscripts/moment.min.js")
@@ -15,7 +17,7 @@ block scripts
   script(src="/clientscripts/check-activityform.js")
   script(src="/clientscripts/activityResources.js")
   script#resource-template(type="text/html")
-    mixin resourceRow()
+    mixin resourceRow(undefined, undefined, true)
   script.
     function fillUrlFromText (urlId, textId) {
       var title = document.getElementById(textId).value;
@@ -63,13 +65,15 @@ block content
           #resources.form-group
             mixin controlLabel('resources[names]', 'Ressourcen')
             .row
-              .col-md-8
+              .col-md-6
                 mixin controlLabel("bezeichnung", "Bezeichnung", "Name der zu buchenden Einheit (z. B. Einzelzimmer, Doppelzimmer)")
               .col-md-4
-                mixin controlLabel("anzahl", "Anzahl", "Maximale Teilnehmerzahl (keine Beschränkung bei leerem Feld)")
+                mixin controlLabel("anzahl", "Anzahl", "Maximale Teilnehmerzahl (keine Beschränkung bei leerem Feld, keine Registrierung möglich bei 0)")
+              .col-md-2
+                mixin controlLabel("registrierung", "Anmeldung möglich", "Hiermit lässt sich die Registrierung freigeben oder sperren")
             each name in activity.resourceNames()
               - var resource = activity.resources().named(name)
-              mixin resourceRow(name, resource.limit())
+              mixin resourceRow(name, resource.limit(), resource.registrationOpen())
               mixin hiddenWithValue("resources[previousNames]", name)
             .row.form-group
               .col-md-5
