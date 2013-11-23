@@ -127,10 +127,16 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-recess');
 
+  grunt.registerTask('ignoreTimeout', 'A task especially for travis', function () {
+    grunt.log.writeln("config " + grunt.config('mochaTest').test.options.timeout);
+    grunt.config('mochaTest.test.options.timeout', 60000);
+    grunt.log.writeln("config " + grunt.config('mochaTest').test.options.timeout);
+  });
+
   // Default task.
   grunt.registerTask('default', ['recess', 'concat', 'jshint', 'qunit', 'mochaTest']);
 
   // Travis-CI task
-  grunt.registerTask('travis', ['default']);
+  grunt.registerTask('travis', ['ignoreTimeout', 'default']);
 
 };
