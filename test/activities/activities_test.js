@@ -22,7 +22,8 @@ var activityWithParticipants = new Activity({title: 'Interesting Activity', desc
   resources: {default: {_registeredMembers: [
     {memberId: 'memberId1'},
     {memberId: 'memberId2'}
-  ]}} });
+  ],
+  _registrationOpen: true }} });
 var activityWithMultipleResources = new Activity({title: 'Interesting Activity', description: 'description2', assignedGroup: 'groupname',
   location: 'location2', direction: 'direction2', startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'), url: 'urlForMultiple',
   resources: {Einzelzimmer: {_registeredMembers: [
@@ -31,7 +32,8 @@ var activityWithMultipleResources = new Activity({title: 'Interesting Activity',
   ]}, Doppelzimmer: {_registeredMembers: [
     {memberId: 'memberId3'},
     {memberId: 'memberId4'}
-  ]}} });
+  ],
+  _registrationOpen: true}} });
 
 var group = new Group({id: "groupname", longName: "Buxtehude"});
 
