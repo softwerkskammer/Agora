@@ -63,6 +63,22 @@ describe('Activity (when filled from UI)', function () {
       done();
     });
 
+    it('with open registration', function (done) {
+      var activity = new Activity().fillFromUI({resources: {names: "Einzelzimmer", limits: "dudu", previousNames: "", registrationOpen: "true"}});
+
+      checkResourceNames(activity, "Einzelzimmer");
+      expect(activity.resources().named("Einzelzimmer").registrationOpen(), "Registration at resource").to.equal(true);
+      done();
+    });
+
+    it('with closed registration', function (done) {
+      var activity = new Activity().fillFromUI({resources: {names: "Einzelzimmer", limits: "dudu", previousNames: "", registrationOpen: undefined}});
+
+      checkResourceNames(activity, "Einzelzimmer");
+      expect(activity.resources().named("Einzelzimmer").registrationOpen(), "Registration at resource").to.equal(false);
+      done();
+    });
+
   });
 
   it('creates two resources with limits', function (done) {

@@ -12,18 +12,22 @@ mixin subscriptionButtons(activity, resourceName, currentMemberId)
   registeredMembers = activity.registeredMembers(resourceName)
   url = encodeURIComponent(activity.url())
   limit = activity.resources().named(resourceName).limit()
+  registrationOpen = activity.registrationOpenFor(resourceName)
 
   if (activity.resourceNames().length === 1)
     if (registeredMembers.indexOf(currentMemberId) > -1)
       a.btn.btn-default(href="unsubscribe/#{url}/#{encodeURIComponent(resourceName)}") Ich kann doch nicht…
     else
-      if (activity.isFull(resourceName))
-        if (limit > 0)
-          | Alle Plätze sind belegt.
-        else
-          | Für dieses Event kannst Du Dich nicht bei der Softwerkskammer registrieren.
+      if (!registrationOpen)
+        | Registrierung ist zur Zeit nicht möglich.
       else
-        a.btn.btn-primary(href="subscribe/#{url}/#{encodeURIComponent(resourceName)}") Ich bin dabei!
+        if (activity.isFull(resourceName))
+          if (limit > 0)
+            | Alle Plätze sind belegt.
+          else
+            | Für dieses Event kannst Du Dich nicht bei der Softwerkskammer registrieren.
+        else
+          a.btn.btn-primary(href="subscribe/#{url}/#{encodeURIComponent(resourceName)}") Ich bin dabei!
 
   else
     form.form-horizontal
@@ -32,10 +36,13 @@ mixin subscriptionButtons(activity, resourceName, currentMemberId)
         if (registeredMembers.indexOf(currentMemberId) > -1)
           a.col-xs-6.btn.btn-default(href="unsubscribe/#{url}/#{encodeURIComponent(resourceName)}") Absagen
         else
-          if (activity.isFull(resourceName))
-            if (limit > 0)
-              span.control-label.col-xs-6(style="text-align: center;") Alle Plätze sind belegt.
-            else
-              span.control-label.col-xs-6(style="text-align: center;") Registrierung nicht über die Softwerkskammer möglich.
+          if (!registrationOpen)
+            | Registrierung ist zur Zeit nicht möglich.
           else
-            a.col-xs-6.btn.btn-primary(href="subscribe/#{url}/#{encodeURIComponent(resourceName)}") Anmelden
+            if (activity.isFull(resourceName))
+              if (limit > 0)
+                span.control-label.col-xs-6(style="text-align: center;") Alle Plätze sind belegt.
+              else
+                span.control-label.col-xs-6(style="text-align: center;") Registrierung nicht über die Softwerkskammer möglich.
+            else
+              a.col-xs-6.btn.btn-primary(href="subscribe/#{url}/#{encodeURIComponent(resourceName)}") Anmelden
