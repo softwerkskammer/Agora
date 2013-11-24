@@ -24,6 +24,7 @@ activitiesCoreAPI.allActivities(function (err, activities) {
   if (err) { return console.log("Error: " + err); }
   if (!activities) { return console.log("No activities found!"); }
   _.each(activities, function (activity) {
+    delete activity.state.color;
     _.each(activity.state.resources, function (resource) {
       resource._registrationOpen = true;
     });
