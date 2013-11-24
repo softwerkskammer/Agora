@@ -23,7 +23,7 @@ var activityWithParticipants = new Activity({title: 'Interesting Activity', desc
     {memberId: 'memberId1'},
     {memberId: 'memberId2'}
   ],
-  _registrationOpen: true }} });
+    _registrationOpen: true }} });
 var activityWithMultipleResources = new Activity({title: 'Interesting Activity', description: 'description2', assignedGroup: 'groupname',
   location: 'location2', direction: 'direction2', startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'), url: 'urlForMultiple',
   resources: {Einzelzimmer: {_registeredMembers: [
@@ -33,7 +33,7 @@ var activityWithMultipleResources = new Activity({title: 'Interesting Activity',
     {memberId: 'memberId3'},
     {memberId: 'memberId4'}
   ],
-  _registrationOpen: true}} });
+    _registrationOpen: true}} });
 
 var group = new Group({id: "groupname", longName: "Buxtehude"});
 
@@ -145,67 +145,140 @@ describe('Activity application', function () {
       });
   });
 
-  it('shows the registration button for an activity with participants when a user is logged in who is not participant', function (done) {
-    sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {
-      callback(null, [
-        new Member({id: 'memberId1', nickname: 'participant1', email: "a@b.c"}),
-        new Member({id: 'memberId2', nickname: 'participant2', email: "a@b.c"})
-      ]);
+  describe('- when registration is open -', function () {
+
+    it('shows the registration button for an activity with participants when a user is logged in who is not participant', function (done) {
+      sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {
+        callback(null, [
+          new Member({id: 'memberId1', nickname: 'participant1', email: "a@b.c"}),
+          new Member({id: 'memberId2', nickname: 'participant2', email: "a@b.c"})
+        ]);
+      });
+
+      request(createApp('memberId3'))
+        .get('/' + 'urlForInteresting')
+        .expect(200)
+        .expect(/Bislang haben 2 Mitglieder ihre Teilnahme zugesagt./)
+        .expect(/href="subscribe\/urlForInteresting\/default" class=".*">Ich bin dabei!/)
+        .expect(/participant1/)
+        .expect(/participant2/, function (err) {
+          done(err);
+        });
     });
 
-    request(createApp('memberId3'))
-      .get('/' + 'urlForInteresting')
-      .expect(200)
-      .expect(/Bislang haben 2 Mitglieder ihre Teilnahme zugesagt./)
-      .expect(/href="subscribe\/urlForInteresting\/default" class=".*">Ich bin dabei!/)
-      .expect(/participant1/)
-      .expect(/participant2/, function (err) {
-        done(err);
+    it('shows the registration button for an activity with participants when a user is logged in who already is participant', function (done) {
+      sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {
+        callback(null, [
+          new Member({id: 'memberId1', nickname: 'participant1', email: "a@b.c"}),
+          new Member({id: 'memberId2', nickname: 'participant2', email: "a@b.c"})
+        ]);
       });
-  });
 
-  it('shows the registration button for an activity with participants when a user is logged in who already is participant', function (done) {
-    sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {
-      callback(null, [
-        new Member({id: 'memberId1', nickname: 'participant1', email: "a@b.c"}),
-        new Member({id: 'memberId2', nickname: 'participant2', email: "a@b.c"})
-      ]);
+      request(createApp('memberId1'))
+        .get('/' + 'urlForInteresting')
+        .expect(200)
+        .expect(/Bislang haben 2 Mitglieder ihre Teilnahme zugesagt./)
+        .expect(/href="unsubscribe\/urlForInteresting\/default" class=".*">Ich kann doch nicht/)
+        .expect(/participant1/)
+        .expect(/participant2/, function (err) {
+          done(err);
+        });
     });
 
-    request(createApp('memberId1'))
-      .get('/' + 'urlForInteresting')
-      .expect(200)
-      .expect(/Bislang haben 2 Mitglieder ihre Teilnahme zugesagt./)
-      .expect(/href="unsubscribe\/urlForInteresting\/default" class=".*">Ich kann doch nicht/)
-      .expect(/participant1/)
-      .expect(/participant2/, function (err) {
-        done(err);
+    it('shows the registration button for an activity with multiple resources where the current user has booked one resource', function (done) {
+      sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {
+        callback(null, [
+          new Member({id: 'memberId1', nickname: 'participant1', email: "a@b.c"}),
+          new Member({id: 'memberId2', nickname: 'participant2', email: "a@b.c"}),
+          new Member({id: 'memberId3', nickname: 'participant3', email: "a@b.c"}),
+          new Member({id: 'memberId4', nickname: 'participant4', email: "a@b.c"})
+        ]);
       });
+
+      request(createApp('memberId1'))
+        .get('/' + 'urlForMultiple')
+        .expect(200)
+        .expect(/Bislang haben 4 Mitglieder ihre Teilnahme zugesagt./)
+        .expect(/href="unsubscribe\/urlForMultiple\/Einzelzimmer" class=".*">Absagen/)
+        .expect(/href="subscribe\/urlForMultiple\/Doppelzimmer" class=".*">Anmelden/)
+        .expect(/participant1/)
+        .expect(/participant2/)
+        .expect(/participant3/)
+        .expect(/participant4/, function (err) {
+          done(err);
+        });
+    });
   });
 
-  it('shows the registration button for an activity with multiple resources where the current user has booked one resource', function (done) {
-    sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {
-      callback(null, [
-        new Member({id: 'memberId1', nickname: 'participant1', email: "a@b.c"}),
-        new Member({id: 'memberId2', nickname: 'participant2', email: "a@b.c"}),
-        new Member({id: 'memberId3', nickname: 'participant3', email: "a@b.c"}),
-        new Member({id: 'memberId4', nickname: 'participant4', email: "a@b.c"})
-      ]);
+  describe('- when registration is not open -', function () {
+
+    it('shows the registration button for an activity with participants when a user is logged in who is not participant', function (done) {
+      sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {
+        callback(null, [
+          new Member({id: 'memberId1', nickname: 'participant1', email: "a@b.c"}),
+          new Member({id: 'memberId2', nickname: 'participant2', email: "a@b.c"})
+        ]);
+      });
+      activityWithParticipants.state.resources.default._registrationOpen = false;
+
+      request(createApp('memberId3'))
+        .get('/' + 'urlForInteresting')
+        .expect(200)
+        .expect(/Bislang haben 2 Mitglieder ihre Teilnahme zugesagt./)
+        .expect(/Registrierung ist zur Zeit nicht möglich./)
+        .expect(/participant1/)
+        .expect(/participant2/, function (err) {
+          done(err);
+        });
     });
 
-    request(createApp('memberId1'))
-      .get('/' + 'urlForMultiple')
-      .expect(200)
-      .expect(/Bislang haben 4 Mitglieder ihre Teilnahme zugesagt./)
-      .expect(/href="unsubscribe\/urlForMultiple\/Einzelzimmer" class=".*">Absagen/)
-      .expect(/href="subscribe\/urlForMultiple\/Doppelzimmer" class=".*">Anmelden/)
-      .expect(/participant1/)
-      .expect(/participant2/)
-      .expect(/participant3/)
-      .expect(/participant4/, function (err) {
-        done(err);
+    it('shows the registration button for an activity with participants when a user is logged in who already is participant', function (done) {
+      sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {
+        callback(null, [
+          new Member({id: 'memberId1', nickname: 'participant1', email: "a@b.c"}),
+          new Member({id: 'memberId2', nickname: 'participant2', email: "a@b.c"})
+        ]);
       });
+      activityWithParticipants.state.resources.default._registrationOpen = false;
+
+      request(createApp('memberId1'))
+        .get('/' + 'urlForInteresting')
+        .expect(200)
+        .expect(/Bislang haben 2 Mitglieder ihre Teilnahme zugesagt./)
+        .expect(/href="unsubscribe\/urlForInteresting\/default" class=".*">Ich kann doch nicht/)
+        .expect(/participant1/)
+        .expect(/participant2/, function (err) {
+          done(err);
+        });
+    });
+
+    it('shows the registration button for an activity with multiple resources where the current user has booked one resource', function (done) {
+      sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {
+        callback(null, [
+          new Member({id: 'memberId1', nickname: 'participant1', email: "a@b.c"}),
+          new Member({id: 'memberId2', nickname: 'participant2', email: "a@b.c"}),
+          new Member({id: 'memberId3', nickname: 'participant3', email: "a@b.c"}),
+          new Member({id: 'memberId4', nickname: 'participant4', email: "a@b.c"})
+        ]);
+      });
+      activityWithMultipleResources.state.resources.Einzelzimmer._registrationOpen = false;
+      activityWithMultipleResources.state.resources.Doppelzimmer._registrationOpen = false;
+
+      request(createApp('memberId1'))
+        .get('/' + 'urlForMultiple')
+        .expect(200)
+        .expect(/Bislang haben 4 Mitglieder ihre Teilnahme zugesagt./)
+        .expect(/href="unsubscribe\/urlForMultiple\/Einzelzimmer" class=".*">Absagen/)
+        .expect(/Doppelzimmer:<\/label>Registrierung ist zur Zeit nicht möglich./)
+        .expect(/participant1/)
+        .expect(/participant2/)
+        .expect(/participant3/)
+        .expect(/participant4/, function (err) {
+          done(err);
+        });
+    });
   });
+
 
   it('upcoming activities are exposed as iCalendar', function (done) {
     request(createApp())
