@@ -88,4 +88,44 @@ describe('Activities Core API', function () {
     api.upcomingActivities(callback, now);
   });
 
+  describe('- when adding a visitor -', function () {
+
+    it('succeeds when registration is open', function (done) {
+      var activity = new Activity({resources: {Einzelzimmer: {_registrationOpen: true}}});
+      sinonSandbox.stub(store, 'saveActivity', function (id, callback) { callback(null, activity); });
+      sinonSandbox.stub(store, 'getActivity', function (id, callback) { callback(null, activity); });
+
+      api.addVisitorTo('memberId', 'activity-url', 'Einzelzimmer', new moment(), function (err, savedActivity, statusTitle, statusText) {
+        expect(!!err, "Error").to.be.false;
+        expect(!!statusTitle, "Status Title").to.be.false;
+        expect(!!statusText, "Status Text").to.be.false;
+        expect(activity.registeredMembers('Einzelzimmer')).to.contain('memberId');
+        done();
+      });
+    });
+
+    it('gives a status message when registration is not open', function (done) {
+      var activity = new Activity({resources: {Einzelzimmer: {_registrationOpen: false}}});
+
+      sinonSandbox.stub(store, 'getActivity', function (id, callback) { callback(null, activity); });
+
+      api.addVisitorTo('memberId', 'activity-url', 'Einzelzimmer', new moment(), function (err, savedActivity, statusTitle, statusText) {
+        expect(!!err, "Error").to.be.false;
+        expect(statusTitle, "Status Title").to.equal('Die Anmeldung ist momentan nicht möglich.');
+        expect(statusText, "Status Text").to.equal('Die Anmeldung ist noch nicht freigegeben, oder alle Plätze sind belegt.');
+        expect(activity.registeredMembers('Einzelzimmer')).to.not.contain('memberId');
+        done();
+      });
+    });
+
+    it('gives an error when activity could not be loaded', function (done) {
+      sinonSandbox.stub(store, 'getActivity', function (id, callback) { callback(new Error("error")); });
+
+      api.addVisitorTo('memberId', 'activity-url', 'Einzelzimmer', new moment(), function (err) {
+        expect(!!err, "Error").to.be.true;
+        done();
+      });
+    });
+  });
+
 });
