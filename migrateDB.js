@@ -23,18 +23,9 @@ function logResult(err, message) {
 activitiesCoreAPI.allActivities(function (err, activities) {
   if (err) { return console.log("Error: " + err); }
   if (!activities) { return console.log("No activities found!"); }
-  var now = new Date();
   _.each(activities, function (activity) {
     _.each(activity.state.resources, function (resource) {
-      var newRegisteredMembers = [];
-      _.each(resource._registeredMembers, function (member) {
-        if (typeof member === 'string') {
-          newRegisteredMembers.push({memberId: member, registeredAt: now});
-        } else {
-          newRegisteredMembers.push(member);
-        }
-      });
-      resource._registeredMembers = newRegisteredMembers;
+      resource._registrationOpen = true;
     });
   });
 
