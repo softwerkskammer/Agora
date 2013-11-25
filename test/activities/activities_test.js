@@ -14,6 +14,11 @@ var Activity = beans.get('activity');
 var Member = beans.get('member');
 var Group = beans.get('group');
 
+var member1 = new Member({id: 'memberId1', nickname: 'participant1', email: 'nick1@b.c'});
+var member2 = new Member({id: 'memberId2', nickname: 'participant2', email: 'nick2@b.c'});
+var member3 = new Member({id: 'memberId3', nickname: 'participant3', email: 'nick3@b.c'});
+var member4 = new Member({id: 'memberId4', nickname: 'participant4', email: 'nick4@b.c'});
+
 var emptyActivity = new Activity({title: 'Title of the Activity', description: 'description1', assignedGroup: 'groupname',
   location: 'location1', direction: 'direction1', startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'),
   url: 'urlOfTheActivity', owner: 'owner' });
@@ -126,10 +131,7 @@ describe('Activity application', function () {
 
   it('shows the details of an activity with participants', function (done) {
     sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {
-      callback(null, [
-        new Member({id: 'memberId1', nickname: 'nick1', email: 'nick1@b.c'}),
-        new Member({id: 'memberId2', nickname: 'nick2', email: 'nick2@b.c'})
-      ]);
+      callback(null, [ member1, member2 ]);
     });
 
     request(createApp('guest'))
@@ -149,10 +151,7 @@ describe('Activity application', function () {
 
     it('shows the registration button for an activity with participants when a user is logged in who is not participant', function (done) {
       sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {
-        callback(null, [
-          new Member({id: 'memberId1', nickname: 'participant1', email: "a@b.c"}),
-          new Member({id: 'memberId2', nickname: 'participant2', email: "a@b.c"})
-        ]);
+        callback(null, [ member1, member2 ]);
       });
 
       request(createApp('memberId3'))
@@ -168,10 +167,7 @@ describe('Activity application', function () {
 
     it('shows the registration button for an activity with participants when a user is logged in who already is participant', function (done) {
       sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {
-        callback(null, [
-          new Member({id: 'memberId1', nickname: 'participant1', email: "a@b.c"}),
-          new Member({id: 'memberId2', nickname: 'participant2', email: "a@b.c"})
-        ]);
+        callback(null, [ member1, member2 ]);
       });
 
       request(createApp('memberId1'))
@@ -187,12 +183,7 @@ describe('Activity application', function () {
 
     it('shows the registration button for an activity with multiple resources where the current user has booked one resource', function (done) {
       sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {
-        callback(null, [
-          new Member({id: 'memberId1', nickname: 'participant1', email: "a@b.c"}),
-          new Member({id: 'memberId2', nickname: 'participant2', email: "a@b.c"}),
-          new Member({id: 'memberId3', nickname: 'participant3', email: "a@b.c"}),
-          new Member({id: 'memberId4', nickname: 'participant4', email: "a@b.c"})
-        ]);
+        callback(null, [ member1, member2, member3, member4 ]);
       });
 
       request(createApp('memberId1'))
@@ -214,10 +205,7 @@ describe('Activity application', function () {
 
     it('shows the registration button for an activity with participants when a user is logged in who is not participant', function (done) {
       sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {
-        callback(null, [
-          new Member({id: 'memberId1', nickname: 'participant1', email: "a@b.c"}),
-          new Member({id: 'memberId2', nickname: 'participant2', email: "a@b.c"})
-        ]);
+        callback(null, [ member1, member2 ]);
       });
       activityWithParticipants.state.resources.default._registrationOpen = false;
 
@@ -225,19 +213,59 @@ describe('Activity application', function () {
         .get('/' + 'urlForInteresting')
         .expect(200)
         .expect(/Bislang haben 2 Mitglieder ihre Teilnahme zugesagt./)
-        .expect(/Registrierung ist zur Zeit nicht möglich./)
         .expect(/participant1/)
         .expect(/participant2/, function (err) {
           done(err);
         });
     });
 
-    it('shows the registration button for an activity with participants when a user is logged in who already is participant', function (done) {
+    it('shows that registration is not possible if registrationClosed and no limit set', function (done) {
       sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {
-        callback(null, [
-          new Member({id: 'memberId1', nickname: 'participant1', email: "a@b.c"}),
-          new Member({id: 'memberId2', nickname: 'participant2', email: "a@b.c"})
-        ]);
+        callback(null, [ member1, member2 ]);
+      });
+      activityWithParticipants.state.resources.default._registrationOpen = false;
+
+      request(createApp('memberId3'))
+        .get('/' + 'urlForInteresting')
+        .expect(200)
+        .expect(/Anmeldung ist zur Zeit nicht möglich./, function (err) {
+          done(err);
+        });
+    });
+
+    it('shows that registration is somewhere else if registrationClosed and limit is "0"', function (done) {
+      sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {
+        callback(null, [ member1, member2 ]);
+      });
+      activityWithParticipants.state.resources.default._registrationOpen = false;
+      activityWithParticipants.state.resources.default._limit = 0;
+
+      request(createApp('memberId3'))
+        .get('/' + 'urlForInteresting')
+        .expect(200)
+        .expect(/kannst Du Dich nicht bei der Softwerkskammer anmelden/, function (err) {
+          done(err);
+        });
+    });
+
+    it('shows that the event is full if registrationClosed and some limit set', function (done) {
+      sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {
+        callback(null, [ member1, member2 ]);
+      });
+      activityWithParticipants.state.resources.default._registrationOpen = false;
+      activityWithParticipants.state.resources.default._limit = 1;
+
+      request(createApp('memberId3'))
+        .get('/' + 'urlForInteresting')
+        .expect(200)
+        .expect(/Alle Plätze sind belegt./, function (err) {
+          done(err);
+        });
+    });
+
+    it('shows the deregistration button for an activity with participants when a user is logged in who already is participant', function (done) {
+      sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {
+        callback(null, [ member1, member2 ]);
       });
       activityWithParticipants.state.resources.default._registrationOpen = false;
 
@@ -254,12 +282,7 @@ describe('Activity application', function () {
 
     it('shows the registration button for an activity with multiple resources where the current user has booked one resource', function (done) {
       sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {
-        callback(null, [
-          new Member({id: 'memberId1', nickname: 'participant1', email: "a@b.c"}),
-          new Member({id: 'memberId2', nickname: 'participant2', email: "a@b.c"}),
-          new Member({id: 'memberId3', nickname: 'participant3', email: "a@b.c"}),
-          new Member({id: 'memberId4', nickname: 'participant4', email: "a@b.c"})
-        ]);
+        callback(null, [ member1, member2, member3, member4 ]);
       });
       activityWithMultipleResources.state.resources.Einzelzimmer._registrationOpen = false;
       activityWithMultipleResources.state.resources.Doppelzimmer._registrationOpen = false;
@@ -269,7 +292,7 @@ describe('Activity application', function () {
         .expect(200)
         .expect(/Bislang haben 4 Mitglieder ihre Teilnahme zugesagt./)
         .expect(/href="unsubscribe\/urlForMultiple\/Einzelzimmer" class=".*">Absagen/)
-        .expect(/Doppelzimmer:<\/label>Registrierung ist zur Zeit nicht möglich./)
+        .expect(/Doppelzimmer:<\/label>.*Anmeldung ist zur Zeit nicht möglich./)
         .expect(/participant1/)
         .expect(/participant2/)
         .expect(/participant3/)
@@ -277,6 +300,56 @@ describe('Activity application', function () {
           done(err);
         });
     });
+
+    it('shows that registration is not possible if registrationClosed and no limit set', function (done) {
+      sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {
+        callback(null, [ member1, member2 ]);
+      });
+      activityWithMultipleResources.state.resources.Einzelzimmer._registrationOpen = false;
+      activityWithMultipleResources.state.resources.Doppelzimmer._registrationOpen = false;
+
+      request(createApp('memberId3'))
+        .get('/' + 'urlForMultiple')
+        .expect(200)
+        .expect(/Anmeldung ist zur Zeit nicht möglich./, function (err) {
+          done(err);
+        });
+    });
+
+    it('shows that registration is somewhere else if registrationClosed and limit is "0"', function (done) {
+      sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {
+        callback(null, [ member1, member2 ]);
+      });
+      activityWithMultipleResources.state.resources.Einzelzimmer._registrationOpen = false;
+      activityWithMultipleResources.state.resources.Doppelzimmer._registrationOpen = false;
+      activityWithMultipleResources.state.resources.Einzelzimmer._limit = 0;
+      activityWithMultipleResources.state.resources.Doppelzimmer._limit = 0;
+
+      request(createApp('memberId3'))
+        .get('/' + 'urlForMultiple')
+        .expect(200)
+        .expect(/Anmeldung nicht über die Softwerkskammer möglich./, function (err) {
+          done(err);
+        });
+    });
+
+    it('shows that the event is full if registrationClosed and some limit set', function (done) {
+      sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {
+        callback(null, [ member1, member2 ]);
+      });
+      activityWithMultipleResources.state.resources.Einzelzimmer._registrationOpen = false;
+      activityWithMultipleResources.state.resources.Doppelzimmer._registrationOpen = false;
+      activityWithMultipleResources.state.resources.Einzelzimmer._limit = 2;
+      activityWithMultipleResources.state.resources.Doppelzimmer._limit = 2;
+
+      request(createApp('memberId3'))
+        .get('/' + 'urlForMultiple')
+        .expect(200)
+        .expect(/Alle Plätze sind belegt./, function (err) {
+          done(err);
+        });
+    });
+
   });
 
 

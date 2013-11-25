@@ -14,6 +14,21 @@ describe('Resource', function () {
     done();
   });
 
+  it('disables registration once full', function (done) {
+    var resource = new Resource({
+      _registeredMembers: [
+        {memberId: 'memberID'}
+      ],
+      _limit: 2,
+      _registrationOpen: true
+    });
+    expect(resource.registrationOpen()).to.be.true;
+    resource.addMemberId('memberID1');
+    expect(resource.registeredMembers().length).to.equal(2);
+    expect(resource.registrationOpen()).to.be.false;
+    done();
+  });
+
   it('does not add a member twice', function (done) {
     var resource = new Resource({_registeredMembers: [
       {memberId: 'memberID'}
@@ -32,13 +47,16 @@ describe('Resource', function () {
     done();
   });
 
-  it('does nothing when removing a non registered member', function (done) {
+  it('does not change the registration state when removing a member', function (done) {
     var resource = new Resource({_registeredMembers: [
       {memberId: 'memberID'}
-    ]});
-    resource.removeMemberId('notRegisteredID');
-    expect(resource.registeredMembers().length).to.equal(1);
-    expect(resource.registeredMembers()).to.contain('memberID');
+    ],
+      _limit: 1,
+      _registrationOpen: false
+    });
+    resource.removeMemberId('memberID');
+    expect(resource.isFull()).to.be.false;
+    expect(resource.registrationOpen()).to.be.false;
     done();
   });
 
