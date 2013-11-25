@@ -1,12 +1,23 @@
 extends ../../../views/layout
 include ../../members/views/memberlist-mixin
 
+mixin blogposts(blogposts)
+  dl.dl-horizontal
+    for post in blogposts
+      h4 #{post.title} 
+        small #{post.date} 
+      | #{post.teaser}
+      p
+      a(href="/wiki/#{post.path}") mehr
+      hr
+
+
 block title
     | #{group.longName}
 
 block content
   .row
-    .col-md-12
+    .col-md-6
       .page-header
         .btn-group.pull-right
           a.btn.btn-default(href="/wiki/#{group.id}/")
@@ -33,16 +44,18 @@ block content
           a.btn.btn-primary(href="unsubscribe/#{group.id}") Gruppe verlassen
         else
           a.btn.btn-primary(href="subscribe/#{group.id}") Gruppe beitreten
-      if (blogPosts.length > 0) 
-        h4 Blog
-        mixin blogposts(blogposts)
-
-      h4 Mitglieder:
-      | Diese Gruppe hat
-      if (users.length === 1)
-        |  ein Mitglied.
-      else if (users.length === 0)
-        |  keine Mitglieder.
-      else
-        |  #{users.length} Mitglieder.
-      mixin memberlist(users, organizers)
+      .row
+        .col-md-6
+          h4 Mitglieder:
+          | Diese Gruppe hat
+          if (users.length === 1)
+            |  ein Mitglied.
+          else if (users.length === 0)
+            |  keine Mitglieder.
+          else
+            |  #{users.length} Mitglieder.
+          mixin memberlist(users, organizers)
+        .col-md-6
+          if (blogposts.length > 0)
+            mixin blogposts(blogposts)
+          

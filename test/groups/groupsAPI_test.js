@@ -372,39 +372,30 @@ describe('Groups API (isGroupNameAvailable)', function () {
 
 describe('Groups API (getBlogPosts)', function () {
   
-  it('returns two blog posts for berlin', function (done) {
+  it('returns two blog posts for internet', function (done) {
+    systemUnderTest.getBlogposts("internet", function (err, result) {
+      expect(result.length === 2).to.be.true;
 
-    var result = systemUnderTest.getBlogposts("berlin");
-    console.log(JSON.stringify(result));
-      //expect(result).to.deep.equal(["berlin/blog_november2013.md","berlin/blog_oktober2013.md"]);
+      var post1 = result[0];
+      expect(post1.title).to.equal("Lean Coffee November 2013");
+      expect(post1.teaser).to.equal("Und beim nächsten Mal haben wir dann.\r");
+      expect(post1.path).to.equal("internet/blog_november2013");
+      expect(JSON.stringify(post1.date)).to.equal("\"2013-10-31T23:00:00.000Z\"");
+
+      var post2 = result[1];
+      expect(post2.title).to.equal("Agora Code-Kata Oktober 2013");
+      expect(post2.teaser).to.equal("Weil viele uns weder JavaScript noch populäre JavaScript-Webframeworks wie node.js kennen, hat sich Florian angeboten uns eine kleine Einführung in Agora, der node.js-Anwendung hinter softwerkskammer.org zu geben.\r");
+      expect(post2.path).to.equal("internet/blog_oktober2013");
+      expect(JSON.stringify(post2.date)).to.equal("\"2013-09-30T22:00:00.000Z\"");
+
+      done();
+    });
   });
 
-  it('returns no blog posts for potsdam', function (done) {
-
-    var result = systemUnderTest.getBlogposts("potsdam");
-    console.log(JSON.stringify(result));
-
-  });
-
-});
-
-describe('Groups API (convertGitBlogPost)', function () {
-  
-  it('returns a formatted blog post', function (done) {
-    var input = "Lean Coffee November 2013, 2013-11-01\n " + 
-        "\n" + 
-        "Und beim nächsten Mal haben wir dann.\n" +
-        "\n" +
-        "Diesen Blog gemacht."
-    
-    systemUnderTest.convertGitBlogPost(input, function (err, result) {
-        console.log("result: " + JSON.stringify(result));
-        expect(result).to.equal({title: "Lean Coffee November 2013", 
-        date : new Date("2013-11-01"),
-        teaser : "Und beim nächsten Mal haben wir dann.",
-        text : "Und beim nächsten Mal haben wir dann.\n" +
-               "\n" +
-               "Diesen Blog gemacht." });
+  it('returns no blog posts for alle', function (done) {
+    systemUnderTest.getBlogposts("alle", function(err, result) {
+      expect(result.length === 0).to.be.true;
+      done();
     });
   });
 });

@@ -138,3 +138,26 @@ describe('differenceCaseInsensitive function', function () {
     expect(result.length).to.equal(0);
   });
 });
+
+
+describe('convertGitBlogPost', function () {
+  
+  it('returns a converted blog post', function () {
+    var input = {path: "internet/blog_oktober2013", 
+        text: "Lean Coffee November 2013,2013-11-01\n " +
+        "\n" +
+        "Und beim nächsten Mal haben wir dann.\n" +
+        "\n" +
+        "Diesen Blog gemacht."};
+    
+    var result = misc.convertGitBlogPost(input);
+    var expected = {"title": "Lean Coffee November 2013",
+      "date": new Date("2013-11-01"),
+      "teaser": "Und beim nächsten Mal haben wir dann.",
+      "path": "internet/blog_oktober2013"};
+    expect(result.title).to.equal(expected.title);
+    expect(result.date - expected.date === 0).to.be.true;
+    expect(result.teaser).to.equal(expected.teaser);
+    expect(result.text).to.equal(expected.text);
+  });
+});
