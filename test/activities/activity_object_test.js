@@ -33,7 +33,8 @@ describe('Activity', function () {
       {id: 'group', longName: 'groupname'},
       {id: 'other', longName: 'othername'}
     ];
-    expect(activity.groupNameFrom(groups)).to.equal('groupname');
+    activity.groupFrom(groups);
+    expect(activity.groupName()).to.equal('groupname');
   });
 
   it('fetches a blank string if group not found', function () {
@@ -45,39 +46,38 @@ describe('Activity', function () {
       {id: 'each', longName: 'groupname'},
       {id: 'other', longName: 'othername'}
     ];
-    expect(activity.groupNameFrom(groups)).to.equal('');
+    activity.groupFrom(groups);
+    expect(activity.groupName()).to.equal('');
   });
 
   it('retrieves the color from the assigned group', function () {
     var activity = new Activity({
       url: 'myURL',
-      assignedGroup: 'group',
-      color: 'aus Gruppe'
+      assignedGroup: 'group'
     });
     var groupColors = {
       group: '#FFF',
       other: '000'
     };
-    expect(activity.colorFrom(groupColors, [])).to.equal('#FFF');
+    expect(activity.colorFrom(groupColors)).to.equal('#FFF');
   });
 
-  it('retrieves the color from the assigned color', function () {
+  it('retrieves the default color if the group is not present in the group colors', function () {
     var activity = new Activity({
       url: 'myURL',
-      color: 'special'
+      assignedGroup: 'group'
     });
-    var colors = [
-      {id: 'special', color: '#FFF' },
-      {id: 'normal', color: '#00' }
-    ];
-    expect(activity.colorFrom(null, colors)).to.equal('#FFF');
+    var groupColors = {
+      other: '000'
+    };
+    expect(activity.colorFrom(groupColors)).to.equal('#353535');
   });
 
-  it('retrieves the color as default if not found', function () {
+  it('retrieves the color as default if no group colors are found', function () {
     var activity = new Activity({
       url: 'myURL'
     });
-    expect(activity.colorFrom(null, [])).to.equal('#353535');
+    expect(activity.colorFrom(null)).to.equal('#353535');
   });
 
   it('parses start date and time using default timezone', function () {

@@ -137,6 +137,35 @@ describe('differenceCaseInsensitive function', function () {
     var result = misc.differenceCaseInsensitive(leftside, rightside);
     expect(result.length).to.equal(0);
   });
+
+  describe('toFullQualifiedUrl function', function () {
+
+    it('concatenates simple parts', function () {
+      var result = misc.toFullQualifiedUrl('prefix', 'lastComponent');
+      expect(result).to.equal('http://localhost:17124/prefix/lastComponent');
+    });
+
+    it('concatenates parts with leading "/"', function () {
+      var result = misc.toFullQualifiedUrl('/prefix', '/lastComponent');
+      expect(result).to.equal('http://localhost:17124/prefix/lastComponent');
+    });
+
+    it('concatenates parts with trailing "/"', function () {
+      var result = misc.toFullQualifiedUrl('prefix/', 'lastComponent/');
+      expect(result).to.equal('http://localhost:17124/prefix/lastComponent');
+    });
+
+    it('concatenates parts with inside "/"', function () {
+      var result = misc.toFullQualifiedUrl('pre/fix', 'last/Component');
+      expect(result).to.equal('http://localhost:17124/pre/fix/last/Component');
+    });
+    
+    it('removes only one trailing and one leading "/"', function () {
+      var result = misc.toFullQualifiedUrl('//pre/fix//', '//last/Component//');
+      expect(result).to.equal('http://localhost:17124//pre/fix///last/Component/');
+    });
+  });
+
 });
 
 

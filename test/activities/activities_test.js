@@ -19,10 +19,19 @@ var emptyActivity = new Activity({title: 'Title of the Activity', description: '
   url: 'urlOfTheActivity', owner: 'owner' });
 var activityWithParticipants = new Activity({title: 'Interesting Activity', description: 'description2', assignedGroup: 'groupname',
   location: 'location2', direction: 'direction2', startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'), url: 'urlForInteresting',
-  resources: {default: {_registeredMembers: ['memberId1', 'memberId2']}} });
+  resources: {default: {_registeredMembers: [
+    {memberId: 'memberId1'},
+    {memberId: 'memberId2'}
+  ]}} });
 var activityWithMultipleResources = new Activity({title: 'Interesting Activity', description: 'description2', assignedGroup: 'groupname',
   location: 'location2', direction: 'direction2', startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'), url: 'urlForMultiple',
-  resources: {Einzelzimmer: {_registeredMembers: ['memberId1', 'memberId2']}, Doppelzimmer: {_registeredMembers: ['memberId3', 'memberId4']}} });
+  resources: {Einzelzimmer: {_registeredMembers: [
+    {memberId: 'memberId1'},
+    {memberId: 'memberId2'}
+  ]}, Doppelzimmer: {_registeredMembers: [
+    {memberId: 'memberId3'},
+    {memberId: 'memberId4'}
+  ]}} });
 
 var group = new Group({id: "groupname", longName: "Buxtehude"});
 
@@ -31,13 +40,13 @@ var activitiesAPI = beans.get('activitiesAPI');
 
 var groupsAPI = beans.get('groupsAPI');
 var membersAPI = beans.get('membersAPI');
-var colors = beans.get('colorAPI');
 
 describe('Activity application', function () {
   var allActivities;
   var upcomingActivities;
   var getActivity;
   var getGroup;
+  var getMemberForId;
 
   beforeEach(function (done) {
     allActivities = sinon.stub(activitiesCoreAPI, 'allActivities', function (callback) {callback(null, [emptyActivity]); });
@@ -46,7 +55,7 @@ describe('Activity application', function () {
       var enhancedActivity = new Activity({title: 'Title of the Activity', description: 'description1', assignedGroup: 'assignedGroup',
         location: 'location1', direction: 'direction1', startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'), url: 'urlOfTheActivity' });
       enhancedActivity.colorRGB = '#123456';
-      enhancedActivity.groupName = 'The name of the assigned Group';
+      enhancedActivity.group = {longName: 'The name of the assigned Group'};
       callback(null, [enhancedActivity]);
     });
     getActivity = sinon.stub(activitiesCoreAPI, 'getActivity', function (url, callback) {
@@ -54,7 +63,7 @@ describe('Activity application', function () {
         (url === 'urlForMultiple') ? activityWithMultipleResources : null);
     });
     getGroup = sinon.stub(groupsAPI, 'getGroup', function (groupname, callback) { callback(null, group); });
-    sinon.stub(colors, 'allColors', function (callback) { callback(null, []); });
+    getMemberForId = sinon.stub(membersAPI, 'getMemberForId', function (ids, callback) {callback(null, undefined); });
     done();
   });
 
@@ -89,7 +98,26 @@ describe('Activity application', function () {
       .expect(/description1/)
       .expect(/location1/)
       .expect(/direction1/)
-      .expect(/Bislang gibt es keine Teinahmezusagen./, function (err) {
+      .expect(/Bislang gibt es keine Teinahmezusagen./, function (err, res) {
+        expect(res.text).to.not.contain('Angelegt von');
+        done(err);
+      });
+  });
+
+  it('shows the details of an activity with Owner', function (done) {
+    sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {callback(null, []); });
+    getMemberForId.restore();
+    getMemberForId = sinon.stub(membersAPI, 'getMemberForId', function (ids, callback) {
+      callback(null,
+        new Member({id: 'ownerId', nickname: 'owner', email: 'owner@b.c'}));
+    });
+
+
+    request(createApp('guest'))
+      .get('/' + 'urlOfTheActivity')
+      .expect(200)
+      .expect(/Angelegt von/)
+      .expect(/owner/, function (err) {
         done(err);
       });
   });

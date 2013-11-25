@@ -69,7 +69,7 @@ block content
                 mixin controlLabel("anzahl", "Anzahl", "Maximale Teilnehmerzahl (keine Beschränkung bei leerem Feld)")
             each name in activity.resourceNames()
               - var resource = activity.resources().named(name)
-              mixin resourceRow(name, resource.limit() > 0 ? resource.limit() : undefined)
+              mixin resourceRow(name, resource.limit())
               mixin hiddenWithValue("resources[previousNames]", name)
             .row.form-group
               .col-md-5
@@ -89,11 +89,6 @@ block content
             select#assignedGroup.form-control(name="assignedGroup")
               for group in groups
                 option(value=group.id, selected = (activity.assignedGroup() != undefined && activity.assignedGroup() == group.id)) #{group.longName}
-          .form-group
-            label.control-label(for="type") Farbe:
-            select#type.form-control(name="color")
-              for color in colorlist
-                option(selected=activity.color() === color) #{color}
 
       .row
         .col-md-12
