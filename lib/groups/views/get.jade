@@ -1,17 +1,6 @@
 extends ../../../views/layout
 include ../../members/views/memberlist-mixin
 
-mixin blogposts(blogposts)
-  dl.dl-horizontal
-    for post in blogposts
-      h4 #{post.title} 
-        small #{post.date} 
-      | #{post.teaser}
-      p
-      a(href="/wiki/#{post.path}") mehr
-      hr
-
-
 block title
     | #{group.longName}
 
@@ -45,7 +34,7 @@ block content
         else
           a.btn.btn-primary(href="subscribe/#{group.id}") Gruppe beitreten
       .row
-        .col-md-6
+        .col-md-12
           h4 Mitglieder:
           | Diese Gruppe hat
           if (users.length === 1)
@@ -55,7 +44,4 @@ block content
           else
             |  #{users.length} Mitglieder.
           mixin memberlist(users, organizers)
-        .col-md-6
-          if (blogposts.length > 0)
-            mixin blogposts(blogposts)
           
