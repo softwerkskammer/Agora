@@ -36,9 +36,9 @@ block content
               th Nickname
               th Vorname
               th Nachname
+              th Ort/Region
               th Email
               th Twitter
-              th Ort/Region
               th Beruf
               th Interessenschwerpunkte
               th Website/Blog
@@ -49,12 +49,12 @@ block content
               tr
                 td: a.btn-sm(href="/members/edit/#{encodeURIComponent(member.nickname)}"): i.fa.fa-edit.fa-fw
                 td #{member.created}
-                td #{member.nickname}
+                td: a(href="/members/#{encodeURIComponent(member.nickname)}") #{member.nickname}
                 td #{member.firstname}
                 td #{member.lastname}
+                td #{member.location}
                 td #{member.email}
                 td #{member.twitter}
-                td #{member.location}
                 td #{member.profession}
                 td #{member.interests}
                 td #{member.site}
