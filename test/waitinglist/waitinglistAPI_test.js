@@ -100,4 +100,45 @@ describe('Waitinglist API', function () {
     });
   });
 
+  describe('- canSubscribe -', function () {
+    it('does not allow to subscribe if the registrant is not on the waiting list', function (done) {
+      sinon.stub(store, 'waitinglistEntry', function (searchObject, callback) { callback(null, null); });
+
+      waitinglistAPI.canSubscribe('unknownMemberId', 'unknownActivityUrl', 'unknownResourceName', function (err, canSubscribe) {
+        expect(canSubscribe).to.be.false;
+        done(err);
+      });
+    });
+
+    it('does not allow to subscribe if the registration is not allowed for the waiting list member', function (done) {
+      sinon.stub(store, 'waitinglistEntry', function (searchObject, callback) { callback(null, waitinglistEntry1); });
+      waitinglistEntry1.setRegistrationValidityFor();
+
+      waitinglistAPI.canSubscribe('knownMemberId', 'knownActivityUrl', 'knownResourceName', function (err, canSubscribe) {
+        expect(canSubscribe).to.be.false;
+        done(err);
+      });
+    });
+
+    it('does not allow to subscribe if the registration timeslot is already past', function (done) {
+      sinon.stub(store, 'waitinglistEntry', function (searchObject, callback) { callback(null, waitinglistEntry1); });
+      waitinglistEntry1.setRegistrationValidityFor("-1");
+
+      waitinglistAPI.canSubscribe('knownMemberId', 'knownActivityUrl', 'knownResourceName', function (err, canSubscribe) {
+        expect(canSubscribe).to.be.false;
+        done(err);
+      });
+    });
+
+    it('allows to subscribe if the registration timeslot is still ongoing', function (done) {
+      sinon.stub(store, 'waitinglistEntry', function (searchObject, callback) { callback(null, waitinglistEntry1); });
+      waitinglistEntry1.setRegistrationValidityFor("1");
+
+      waitinglistAPI.canSubscribe('knownMemberId', 'knownActivityUrl', 'knownResourceName', function (err, canSubscribe) {
+        expect(canSubscribe).to.be.true;
+        done(err);
+      });
+    });
+  });
+
 });
