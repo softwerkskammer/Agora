@@ -21,6 +21,7 @@
   "mailsenderAPI": {"module": "./lib/mailsender/mailsenderAPI"},
   "colorAPI": {"module": "./lib/administration/colorAPI"},
   "mailarchiveAPI": {"module": "./lib/mailarchive/mailarchiveAPI"},
+  "waitinglistAPI": {"module": "./lib/waitinglist/waitinglistAPI"},
   "wikiAPI": {"module": "./lib/wiki/wikiAPI"},
 
   "groupstore": {"module": "./lib/groups/groupstore"},
