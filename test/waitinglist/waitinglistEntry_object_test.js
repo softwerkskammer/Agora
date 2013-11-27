@@ -19,7 +19,7 @@ describe('Waitinglist Entry', function () {
   it('without argument yields undefined for each query', function () {
 
     expect(entryWithoutParam.registrantId()).to.be.undefined;
-    expect(entryWithoutParam.activityName()).to.be.undefined;
+    expect(entryWithoutParam.activityUrl()).to.be.undefined;
     expect(entryWithoutParam.resourceName()).to.be.undefined;
     expect(entryWithoutParam.registrationDate()).to.be.undefined;
     expect(entryWithoutParam.registrationValidUntil()).to.be.undefined;
@@ -30,7 +30,7 @@ describe('Waitinglist Entry', function () {
   });
 
   it('returns the activity name', function () {
-    expect(entryWithParam.activityName()).to.equal("Meine Aktivität");
+    expect(entryWithParam.activityUrl()).to.equal("Meine Aktivität");
   })
   ;
 

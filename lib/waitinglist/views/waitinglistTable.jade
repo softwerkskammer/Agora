@@ -23,7 +23,7 @@ block content
             for waitinglistEntry in waitinglist
               tr
                 td #{waitinglistEntry.registrantNickname}
-                td #{waitinglistEntry.activityName()}
+                td #{waitinglistEntry.activityUrl()}
                 td #{waitinglistEntry.resourceName()}
                 td #{waitinglistEntry.registrationDate()}
                 td #{waitinglistEntry.registrationValidUntil()}
@@ -33,8 +33,8 @@ block content
           form(id='waitinglistForm', action='/waitinglist/submit',method='post')
             .col-md-6
               mixin text('nickname', 'Nickname', "")
-              mixin text('activity', 'Aktivität', "")
-              mixin text('resource', 'Ressource', "")
+              mixin text('activity', 'URL der Aktivität', "")
+              mixin text('resource', 'Name der Ressource', "")
             .col-md-6
               mixin text('registrationValidForHours', 'Registrierung möglich für die nächsten ... Stunden', "")
             .col-md-12
