@@ -7,7 +7,7 @@ var beans = require('../configureForTest').get('beans');
 var wikiAPI = beans.get('wikiAPI');
 var Git = beans.get('gitmech');
 
-describe('Wiki API (showPage)', function () {
+describe('Wiki API', function () {
 
   var content = "Hallo, ich bin der Dateiinhalt";
   var nonExistingPage = 'global/nonExisting';
@@ -18,6 +18,9 @@ describe('Wiki API (showPage)', function () {
         return callback(new Error());
       }
       callback(null, content);
+    });
+    sinon.stub(Git, 'log', function (path, version, howMany, callback) {
+      callback(null, []);
     });
     sinon.stub(Git, 'absPath', function (path) {
       return path;
