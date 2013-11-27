@@ -19,6 +19,8 @@ module.exports = {
 
   saveAll: function () {throw new Error('function saveAll not implemented'); },
 
+  saveValueObject: function () {throw new Error('function saveValueObject not implemented'); },
+
   drop: function () {throw new Error('function drop not implemented'); }
 };
 

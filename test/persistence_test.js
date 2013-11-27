@@ -36,6 +36,10 @@ describe('The persistence store', function () {
       });
     });
 
+    it('saves a value object with id null', function (done) {
+      persistence.saveValueObject({id : null}, {}, done);
+    });
+
     it('retrieves none for non-existing id', function (done) {
       persistence.getById('non-existing-id', function (err, result) {
         should.not.exist(result);
