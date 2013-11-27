@@ -9,6 +9,7 @@
   "mailsenderApp": {"module": "./lib/mailsender"},
   "mailarchiveApp": {"module": "./lib/mailarchive"},
   "wikiApp": {"module": "./lib/wiki"},
+  "waitinglistApp": {"module": "./lib/waitinglist"},
 
   "groupsAndMembersAPI": {"module": "./lib/groupsAndMembers/groupsAndMembersAPI"},
   "groupsAPI": {"module": "./lib/groups/groupsAPI"},
@@ -20,12 +21,14 @@
   "mailsenderAPI": {"module": "./lib/mailsender/mailsenderAPI"},
   "colorAPI": {"module": "./lib/administration/colorAPI"},
   "mailarchiveAPI": {"module": "./lib/mailarchive/mailarchiveAPI"},
+  "waitinglistAPI": {"module": "./lib/waitinglist/waitinglistAPI"},
   "wikiAPI": {"module": "./lib/wiki/wikiAPI"},
 
   "groupstore": {"module": "./lib/groups/groupstore"},
   "memberstore": {"module": "./lib/members/memberstore"},
   "activitystore": {"module": "./lib/activities/activitystore"},
   "announcementstore": {"module": "./lib/announcements/announcementstore"},
+  "waitinglistStore": {"module": "./lib/waitinglist/waitinglistStore"},
   "colorstore": {"module": "./lib/administration/colorstore"},
 
   "sympa": {"module": "./lib/groups/sympa"},
@@ -56,6 +59,10 @@
                                 "constructorArgs": {
                                   "collectionName": "announcementstore"
                               }},
+  "waitinglistPersistence": {"module": "./lib/persistence/persistence",
+                                "constructorArgs": {
+                                  "collectionName": "waitinglistStore"
+                              }},
 
   "group": {"module": "./lib/groups/group"},
   "member": {"module": "./lib/members/member"},
@@ -63,6 +70,7 @@
   "resources": {"module": "./lib/activities/resources"},
   "resource": {"module": "./lib/activities/resource"},
   "announcement": {"module": "./lib/announcements/announcement"},
+  "waitinglistEntry": {"module": "./lib/waitinglist/waitinglistEntry"},
   "color": {"module": "./lib/administration/color"},
   "message": {"module": "./lib/mailsender/message"},
   "archivedMail": {"module": "./lib/mailarchive/archivedMail"},

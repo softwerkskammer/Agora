@@ -86,6 +86,7 @@ module.exports = {
     useApp(app, 'auth', beans.get('authenticationApp'));
     useApp(app, 'mailarchive', beans.get('mailarchiveApp'));
     useApp(app, 'wiki', beans.get('wikiApp'));
+    useApp(app, 'waitinglist', beans.get('waitinglistApp'));
 
     app.configure('production', function () {
       // Handle 404

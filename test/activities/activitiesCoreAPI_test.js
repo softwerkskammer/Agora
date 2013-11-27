@@ -3,17 +3,18 @@
 var expect = require('chai').expect;
 var sinon = require('sinon');
 var sinonSandbox = sinon.sandbox.create();
-var conf = require('../configureForTest');
+var beans = require('../configureForTest').get('beans');
 var moment = require('moment-timezone');
 
-var Activity = conf.get('beans').get('activity');
+var Activity = beans.get('activity');
 
 var activityId = 'UGMUC_CodingDojo_01.04.2015';
 var dummyActivity = new Activity({id: activityId, url: 'url', title: 'CodingDojo', assignedGroup: 'UGMUC', location: 'Munich'});
 
-var store = conf.get('beans').get('activitystore');
+var store = beans.get('activitystore');
 
-var api = conf.get('beans').get('activitiesCoreAPI');
+var api = beans.get('activitiesCoreAPI');
+var waitinglistAPI = beans.get('waitinglistAPI');
 
 describe('Activities Core API', function () {
 
@@ -114,6 +115,22 @@ describe('Activities Core API', function () {
         expect(statusTitle, "Status Title").to.equal('Die Anmeldung ist momentan nicht möglich.');
         expect(statusText, "Status Text").to.equal('Die Anmeldung ist noch nicht freigegeben, oder alle Plätze sind belegt.');
         expect(activity.registeredMembers('Einzelzimmer')).to.not.contain('memberId');
+        done();
+      });
+    });
+
+    it('succeeds when registration is not open but registrant is on waiting list and allowed to subscribe', function (done) {
+      var activity = new Activity({resources: {Einzelzimmer: {_registrationOpen: false}}});
+      sinonSandbox.stub(store, 'getActivity', function (id, callback) { callback(null, activity); });
+      sinonSandbox.stub(store, 'saveActivity', function (id, callback) { callback(null, activity); });
+
+      sinonSandbox.stub(waitinglistAPI, 'canSubscribe', function (memberId, activityUrl, resourceName, callback) {return callback(null, true); });
+
+      api.addVisitorTo('memberId', 'activity-url', 'Einzelzimmer', new moment(), function (err, savedActivity, statusTitle, statusText) {
+        expect(!!err, "Error").to.be.false;
+        expect(!!statusTitle, "Status Title").to.be.false;
+        expect(!!statusText, "Status Text").to.be.false;
+        expect(activity.registeredMembers('Einzelzimmer')).to.contain('memberId');
         done();
       });
     });

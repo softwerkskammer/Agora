@@ -1,0 +1,41 @@
+extends ../../../views/layout
+include  ../../../views/formComponents
+
+
+block title
+  | Übersicht der zum Registrieren vorgemerkten Mitglieder
+block content
+  .row
+    .col-md-12
+      .page-header
+        h2 Verwaltung
+          small  Warteliste
+      .panel.pre-scrollable
+        table.table.table-condensed.table-hover.table-striped#waitinglistTable
+          thead
+            tr
+              th Nickname
+              th Aktivität
+              th Ressource
+              th Eingetragen&nbsp;am
+              th Kann&nbsp;sich&nbsp;registrieren&nbsp;bis
+          tbody
+            for waitinglistEntry in waitinglist
+              tr
+                td #{waitinglistEntry.registrantNickname}
+                td #{waitinglistEntry.activityUrl()}
+                td #{waitinglistEntry.resourceName()}
+                td #{waitinglistEntry.registrationDate()}
+                td #{waitinglistEntry.registrationValidUntil()}
+
+      .row
+        .col-md-12
+          form(id='waitinglistForm', action='/waitinglist/submit',method='post')
+            .col-md-6
+              mixin text('nickname', 'Nickname', "")
+              mixin text('activity', 'URL der Aktivität', "")
+              mixin text('resource', 'Name der Ressource', "")
+            .col-md-6
+              mixin text('registrationValidForHours', 'Registrierung möglich für die nächsten ... Stunden', "")
+            .col-md-12
+              button.btn.btn-primary.pull-right(type="submit") Speichern

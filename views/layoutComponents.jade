@@ -69,6 +69,10 @@ mixin administrationMenu()
         li: a(href="/administration/memberTable")
           i.fa.fa-user.fa-fw
           | &nbsp;Mitglieder
+        if (accessrights.isSuperuser())
+          li: a(href="/waitinglist/waitinglistTable")
+            i.fa.fa-list-ol
+            | &nbsp;Warteliste
         li: a(href="/administration/colors")
           i.fa.fa-eye.fa-fw
           | &nbsp;Farben
