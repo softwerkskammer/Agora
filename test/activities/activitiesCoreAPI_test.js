@@ -10,7 +10,7 @@ var Activity = beans.get('activity');
 var activityId = 'UGMUC_CodingDojo_01.04.2015';
 var dummyActivity = new Activity({id: activityId, url: 'url', title: 'CodingDojo', assignedGroup: 'UGMUC', location: 'Munich'});
 
-var store = beans.get('activitystore');
+var activitystore = beans.get('activitystore');
 
 var api = beans.get('activitiesCoreAPI');
 var waitinglistAPI = beans.get('waitinglistAPI');
@@ -24,7 +24,7 @@ describe('Activities Core API', function () {
 
 
   it('returns past activities', function (done) {
-    sinon.stub(store, 'allActivitiesByDateRangeInDescendingOrder', function (start, end, callback) {
+    sinon.stub(activitystore, 'allActivitiesByDateRangeInDescendingOrder', function (start, end, callback) {
       return callback(null, [ dummyActivity ]);
     });
 
@@ -35,7 +35,7 @@ describe('Activities Core API', function () {
   });
 
   it('returns upcoming activities', function (done) {
-    sinon.stub(store, 'allActivitiesByDateRangeInAscendingOrder', function (start, end, callback) {
+    sinon.stub(activitystore, 'allActivitiesByDateRangeInAscendingOrder', function (start, end, callback) {
       return callback(null, [dummyActivity]);
     });
 
@@ -49,11 +49,11 @@ describe('Activities Core API', function () {
 
     it('succeeds when registration is open', function (done) {
       var activity = new Activity({resources: {Einzelzimmer: {_registrationOpen: true}}});
-      sinon.stub(store, 'saveActivity', function (id, callback) { callback(null, activity); });
-      sinon.stub(store, 'getActivity', function (id, callback) { callback(null, activity); });
+      sinon.stub(activitystore, 'saveActivity', function (id, callback) { callback(null, activity); });
+      sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, activity); });
 
       api.addVisitorTo('memberId', 'activity-url', 'Einzelzimmer', new moment(), function (err, savedActivity, statusTitle, statusText) {
-        expect(!!err, "Error").to.be.false;
+        expect(!!err, "Error: " + err).to.be.false;
         expect(!!statusTitle, "Status Title").to.be.false;
         expect(!!statusText, "Status Text").to.be.false;
         expect(activity.registeredMembers('Einzelzimmer')).to.contain('memberId');
@@ -64,7 +64,7 @@ describe('Activities Core API', function () {
     it('gives a status message when registration is not open', function (done) {
       var activity = new Activity({resources: {Einzelzimmer: {_registrationOpen: false}}});
 
-      sinon.stub(store, 'getActivity', function (id, callback) { callback(null, activity); });
+      sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, activity); });
 
       api.addVisitorTo('memberId', 'activity-url', 'Einzelzimmer', new moment(), function (err, savedActivity, statusTitle, statusText) {
         expect(!!err, "Error").to.be.false;
@@ -77,10 +77,10 @@ describe('Activities Core API', function () {
 
     it('succeeds when registration is not open but registrant is on waiting list and allowed to subscribe', function (done) {
       var activity = new Activity({resources: {Einzelzimmer: {_registrationOpen: false}}});
-      sinon.stub(store, 'getActivity', function (id, callback) { callback(null, activity); });
-      sinon.stub(store, 'saveActivity', function (id, callback) { callback(null, activity); });
+      sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, activity); });
+      sinon.stub(activitystore, 'saveActivity', function (id, callback) { callback(null, activity); });
 
-      sinon.stub(waitinglistAPI, 'canSubscribe', function (memberId, activityUrl, resourceName, callback) {return callback(null, true); });
+      sinon.stub(waitinglistAPI, 'canSubscribe', function (memberId, activityId, resourceName, callback) {return callback(null, true); });
 
       api.addVisitorTo('memberId', 'activity-url', 'Einzelzimmer', new moment(), function (err, savedActivity, statusTitle, statusText) {
         expect(!!err, "Error").to.be.false;
@@ -92,7 +92,7 @@ describe('Activities Core API', function () {
     });
 
     it('gives an error when activity could not be loaded', function (done) {
-      sinon.stub(store, 'getActivity', function (id, callback) { callback(new Error("error")); });
+      sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(new Error("error")); });
 
       api.addVisitorTo('memberId', 'activity-url', 'Einzelzimmer', new moment(), function (err) {
         expect(!!err, "Error").to.be.true;
