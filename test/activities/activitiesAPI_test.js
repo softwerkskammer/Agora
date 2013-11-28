@@ -14,7 +14,6 @@ var dummyActivity = new Activity({title: 'Title of the Activity', description: '
 var activitiesAPI = beans.get('activitiesAPI');
 
 var activitystore = beans.get('activitystore');
-var activitiesCoreAPI = beans.get('activitiesCoreAPI');
 var groupsAPI = beans.get('groupsAPI');
 var membersAPI = beans.get('membersAPI');
 
@@ -33,7 +32,7 @@ var group = new Group({id: "groupname", longName: "Buxtehude"});
 describe('Activities API', function () {
 
   beforeEach(function (done) {
-    sinon.stub(activitiesCoreAPI, 'allActivities', function (callback) {callback(null, [dummyActivity]); });
+    sinon.stub(activitystore, 'allActivities', function (callback) {callback(null, [dummyActivity]); });
 
     sinon.stub(groupsAPI, 'getAllAvailableGroups', function (callback) {
       callback(null, [
@@ -54,7 +53,7 @@ describe('Activities API', function () {
   });
 
   it('returns the queried activities and enhances them with their color and group name', function () {
-    activitiesAPI.getActivitiesForDisplay(activitiesCoreAPI.allActivities, function (err, activities) {
+    activitiesAPI.getActivitiesForDisplay(activitystore.allActivities, function (err, activities) {
       expect(!!err).to.be.false;
       expect(activities.length).to.equal(1);
       var activity = activities[0];

@@ -23,16 +23,6 @@ describe('Activities Core API', function () {
   });
 
 
-  it('returns all activites', function (done) {
-    sinon.stub(store, 'allActivities', function (callback) {
-      callback(null, [dummyActivity]);
-    });
-    api.allActivities(function (err, result) {
-      expect(result).to.have.lengthOf(1);
-      done();
-    });
-  });
-
   it('returns past activities', function (done) {
     sinon.stub(store, 'allActivitiesByDateRangeInDescendingOrder', function (start, end, callback) {
       return callback(null, [ dummyActivity ]);

@@ -55,7 +55,7 @@ describe('Activity application', function () {
   var getMemberForId;
 
   beforeEach(function (done) {
-    allActivities = sinon.stub(activitiesCoreAPI, 'allActivities', function (callback) {callback(null, [emptyActivity]); });
+    allActivities = sinon.stub(activitystore, 'allActivities', function (callback) {callback(null, [emptyActivity]); });
     upcomingActivities = sinon.stub(activitiesCoreAPI, 'upcomingActivities', function (callback) {callback(null, [emptyActivity]); });
     sinon.stub(activitiesAPI, 'getActivitiesForDisplay', function (fetcher, callback) {
       var enhancedActivity = new Activity({title: 'Title of the Activity', description: 'description1', assignedGroup: 'assignedGroup',
