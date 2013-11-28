@@ -5,12 +5,12 @@ var beans = require('nconf').get('beans');
 var expect = require('chai').expect;
 
 var WaitinglistEntry = beans.get('waitinglistEntry');
-var fieldHelpers = beans.get('fieldHelpers');
+var moment = require('moment-timezone');
 
 
 var entryWithoutParam = new WaitinglistEntry();
-var registrationDate = fieldHelpers.parseToMomentUsingDefaultTimezone("23.02.2013", "17:44").toDate();
-var entryWithParam = new WaitinglistEntry({_registrantId: "12345", _activityId: "Meine Aktivität", _resourceName: "Meine Ressource",
+var registrationDate = moment('23.02.2013 17:44', 'DD.MM.YYYY HH:mm').toDate();
+var entryWithParam = new WaitinglistEntry({_registrantId: '12345', _activityId: 'Meine Aktivität', _resourceName: 'Meine Ressource',
   _registrationDate: registrationDate});
 
 
