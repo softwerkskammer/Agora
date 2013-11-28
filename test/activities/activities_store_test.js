@@ -51,6 +51,16 @@ describe('Activity store', function () {
     });
   });
 
+  it('calls persistence.getById for store.getActivityForId and transforms the result to an Activity', function (done) {
+    var id = 'id';
+    store.getActivityForId(id, function (err, activity) {
+      expect(activity.title()).to.equal(activity1.title);
+      expect(getById.calledWith(id)).to.be.true;
+      expect(activity.descriptionHTML()).to.contain('bli');
+      done(err);
+    });
+  });
+
   it('returns an activity object for the given id although the persistence only returns a JS object', function (done) {
     getByField.restore();
     getByField = sinonSandbox.stub(persistence, 'getByField', function (id, callback) {
