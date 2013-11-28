@@ -91,4 +91,56 @@ describe('Resource', function () {
     done();
   });
 
+  describe('- when copying -', function () {
+
+    it('resets the registered members and keeps the original members', function (done) {
+      var resource = new Resource({_registeredMembers: [
+        {memberId: 'memberID'}
+      ], _limit: 1});
+      var copy = new Resource({}).copyFrom(resource);
+      expect(resource.registeredMembers()).to.not.be.empty;
+      expect(copy.registeredMembers()).to.be.empty;
+      done();
+    });
+
+    it('does not change the registered members of the copy when a member is added to the original', function (done) {
+      var resource = new Resource({_registeredMembers: [
+        {memberId: 'memberID'}
+      ], _limit: 1});
+      var copy = new Resource({}).copyFrom(resource);
+      resource.addMemberId('memberID2');
+      expect(resource.registeredMembers()).to.not.be.empty;
+      expect(copy.registeredMembers()).to.be.empty;
+      done();
+    });
+
+    it('copies the limit', function (done) {
+      var resource = new Resource({_registeredMembers: [
+        {memberId: 'memberID'}
+      ], _limit: 1});
+      var copy = new Resource({}).copyFrom(resource);
+      expect(copy.limit()).to.equal(1);
+      done();
+    });
+
+    it('opens the registration for the copy', function (done) {
+      var resource = new Resource({_registeredMembers: [
+        {memberId: 'memberID'}
+      ], _limit: 1});
+      var copy = new Resource({}).copyFrom(resource);
+      expect(copy.registrationOpen()).to.be.true;
+      done();
+    });
+
+    it('opens the registration for the copy even when it was not open for the original', function (done) {
+      var resource = new Resource({_registeredMembers: [
+        {memberId: 'memberID'}
+      ], _limit: 1, _registrationOpen: false});
+      var copy = new Resource({}).copyFrom(resource);
+      expect(copy.registrationOpen()).to.be.true;
+      done();
+    });
+
+  });
+
 });
