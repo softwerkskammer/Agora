@@ -1,8 +1,7 @@
 "use strict";
 
 var expect = require('chai').expect;
-var sinon = require('sinon');
-var sinonSandbox = sinon.sandbox.create();
+var sinon = require('sinon').sandbox.create();
 var beans = require('../configureForTest').get('beans');
 var moment = require('moment-timezone');
 
@@ -19,34 +18,13 @@ var waitinglistAPI = beans.get('waitinglistAPI');
 describe('Activities Core API', function () {
 
   afterEach(function (done) {
-    sinonSandbox.restore();
+    sinon.restore();
     done();
   });
 
-  it('returns the activity for the given id', function (done) {
-    sinonSandbox.stub(store, 'getActivity', function (id, callback) {
-      return callback(null, dummyActivity);
-    });
-
-    api.getActivity(activityId, function (err, result) {
-      expect(result).to.equal(dummyActivity);
-      done();
-    });
-  });
-
-  it('returns null when id is not existing', function (done) {
-    sinonSandbox.stub(store, 'getActivity', function (id, callback) {
-      callback(null, null);
-    });
-
-    api.getActivity(1234, function (err, result) {
-      expect(result).to.be.a('null');
-      done();
-    });
-  });
 
   it('returns all activites', function (done) {
-    sinonSandbox.stub(store, 'allActivities', function (callback) {
+    sinon.stub(store, 'allActivities', function (callback) {
       callback(null, [dummyActivity]);
     });
     api.allActivities(function (err, result) {
@@ -56,45 +34,33 @@ describe('Activities Core API', function () {
   });
 
   it('returns past activities', function (done) {
-    var now = moment('2013-08-07 22:28:42.123');
-    var start = 0;
-    var end = moment('2013-08-07 22:28:42.123').unix();
+    sinon.stub(store, 'allActivitiesByDateRangeInDescendingOrder', function (start, end, callback) {
+      return callback(null, [ dummyActivity ]);
+    });
 
-    sinonSandbox.stub(store, 'allActivitiesByDateRangeInDescendingOrder')
-      .withArgs(start, end, sinon.match.func)
-      .callsArgWith(2, null, [ dummyActivity ]);
-
-    var callback = function (err, result) {
+    api.pastActivities(function (err, result) {
       expect(result).to.have.lengthOf(1);
       done();
-    };
-
-    api.pastActivities(callback, now);
+    });
   });
 
   it('returns upcoming activities', function (done) {
-    var now = moment('2013-08-07 22:28:42.123');
-    var start = moment('2013-08-07 22:28:42.123').unix();
-    var end = moment('2023-08-07 22:28:42.123').unix();
+    sinon.stub(store, 'allActivitiesByDateRangeInAscendingOrder', function (start, end, callback) {
+      return callback(null, [dummyActivity]);
+    });
 
-    sinonSandbox.stub(store, 'allActivitiesByDateRangeInAscendingOrder')
-      .withArgs(start, end, sinon.match.func)
-      .callsArgWith(2, null, [ dummyActivity ]);
-
-    var callback = function (err, result) {
+    api.upcomingActivities(function (err, result) {
       expect(result).to.have.lengthOf(1);
       done();
-    };
-
-    api.upcomingActivities(callback, now);
+    });
   });
 
   describe('- when adding a visitor -', function () {
 
     it('succeeds when registration is open', function (done) {
       var activity = new Activity({resources: {Einzelzimmer: {_registrationOpen: true}}});
-      sinonSandbox.stub(store, 'saveActivity', function (id, callback) { callback(null, activity); });
-      sinonSandbox.stub(store, 'getActivity', function (id, callback) { callback(null, activity); });
+      sinon.stub(store, 'saveActivity', function (id, callback) { callback(null, activity); });
+      sinon.stub(store, 'getActivity', function (id, callback) { callback(null, activity); });
 
       api.addVisitorTo('memberId', 'activity-url', 'Einzelzimmer', new moment(), function (err, savedActivity, statusTitle, statusText) {
         expect(!!err, "Error").to.be.false;
@@ -108,7 +74,7 @@ describe('Activities Core API', function () {
     it('gives a status message when registration is not open', function (done) {
       var activity = new Activity({resources: {Einzelzimmer: {_registrationOpen: false}}});
 
-      sinonSandbox.stub(store, 'getActivity', function (id, callback) { callback(null, activity); });
+      sinon.stub(store, 'getActivity', function (id, callback) { callback(null, activity); });
 
       api.addVisitorTo('memberId', 'activity-url', 'Einzelzimmer', new moment(), function (err, savedActivity, statusTitle, statusText) {
         expect(!!err, "Error").to.be.false;
@@ -121,10 +87,10 @@ describe('Activities Core API', function () {
 
     it('succeeds when registration is not open but registrant is on waiting list and allowed to subscribe', function (done) {
       var activity = new Activity({resources: {Einzelzimmer: {_registrationOpen: false}}});
-      sinonSandbox.stub(store, 'getActivity', function (id, callback) { callback(null, activity); });
-      sinonSandbox.stub(store, 'saveActivity', function (id, callback) { callback(null, activity); });
+      sinon.stub(store, 'getActivity', function (id, callback) { callback(null, activity); });
+      sinon.stub(store, 'saveActivity', function (id, callback) { callback(null, activity); });
 
-      sinonSandbox.stub(waitinglistAPI, 'canSubscribe', function (memberId, activityUrl, resourceName, callback) {return callback(null, true); });
+      sinon.stub(waitinglistAPI, 'canSubscribe', function (memberId, activityUrl, resourceName, callback) {return callback(null, true); });
 
       api.addVisitorTo('memberId', 'activity-url', 'Einzelzimmer', new moment(), function (err, savedActivity, statusTitle, statusText) {
         expect(!!err, "Error").to.be.false;
@@ -136,7 +102,7 @@ describe('Activities Core API', function () {
     });
 
     it('gives an error when activity could not be loaded', function (done) {
-      sinonSandbox.stub(store, 'getActivity', function (id, callback) { callback(new Error("error")); });
+      sinon.stub(store, 'getActivity', function (id, callback) { callback(new Error("error")); });
 
       api.addVisitorTo('memberId', 'activity-url', 'Einzelzimmer', new moment(), function (err) {
         expect(!!err, "Error").to.be.true;

@@ -15,7 +15,7 @@ describe('Activity store', function () {
   var getByField;
   var getById;
 
-  before(function (done) {
+  beforeEach(function (done) {
     var list = sinonSandbox.stub(persistence, 'list');
     list.callsArgWith(1, null, sampleList);
     getByField = sinonSandbox.stub(persistence, 'getByField');
@@ -25,7 +25,7 @@ describe('Activity store', function () {
     done();
   });
 
-  after(function (done) {
+  afterEach(function (done) {
     sinonSandbox.restore();
     done();
   });
@@ -57,6 +57,43 @@ describe('Activity store', function () {
       expect(getById.calledWith(id)).to.be.true;
       expect(activity.descriptionHTML()).to.contain('bli');
       done(err);
+    });
+  });
+
+  it('returns an activity object for the given id although the database only contains a JS object', function (done) {
+    getByField.restore();
+    getByField = sinonSandbox.stub(persistence, 'getByField', function (id, callback) {
+      return callback(null, {url: "activityUrl"});
+    });
+
+    store.getActivity("activityUrl", function (err, result) {
+      expect(result.url()).to.equal("activityUrl");
+      done();
+    });
+  });
+
+  it('returns null when id does not exist', function (done) {
+    getByField.restore();
+    getByField = sinonSandbox.stub(persistence, 'getByField', function (id, callback) {
+      callback();
+    });
+
+    store.getActivity(1234, function (err, result) {
+      expect(result).to.be.a('null');
+      done();
+    });
+  });
+
+  it('returns undefined when persistence yields an error', function (done) {
+    getByField.restore();
+    getByField = sinonSandbox.stub(persistence, 'getByField', function (id, callback) {
+      callback(new Error("error"));
+    });
+
+    store.getActivity(1234, function (err, result) {
+      expect(!!err).to.be.true;
+      expect(result).to.be.undefined;
+      done();
     });
   });
 
