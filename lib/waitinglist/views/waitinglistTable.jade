@@ -15,26 +15,27 @@ block content
           thead
             tr
               th Nickname
-              th Aktivität
-              th Ressource
+              th URL der Aktivität
+              th Name der Ressource
               th Eingetragen&nbsp;am
               th Kann&nbsp;sich&nbsp;registrieren&nbsp;bis
           tbody
             for waitinglistEntry in waitinglist
               tr
                 td #{waitinglistEntry.registrantNickname}
-                td #{waitinglistEntry.activityUrl()}
+                td #{waitinglistEntry.activityUrl}
                 td #{waitinglistEntry.resourceName()}
                 td #{waitinglistEntry.registrationDate()}
                 td #{waitinglistEntry.registrationValidUntil()}
-    .row
-      .col-md-12
-        form(id='waitinglistForm', action='/waitinglist/submit',method='post')
-          .col-md-6
-            mixin text('nickname', 'Nickname', "")
-            mixin text('activity', 'URL der Aktivität', "")
-            mixin text('resource', 'Name der Ressource', "")
-          .col-md-6
-            mixin text('registrationValidForHours', 'Registrierung möglich für die nächsten ... Stunden', "")
-          .col-md-12
-            button.btn.btn-primary.pull-right(type="submit") Speichern
+    if(accessrights.isSuperuser())
+      .row
+        .col-md-12
+          form(id='waitinglistForm', action='/waitinglist/submit',method='post')
+            .col-md-6
+              mixin text('nickname', 'Nickname', "")
+              mixin text('activityUrl', 'URL der Aktivität', "")
+              mixin text('resourceName', 'Name der Ressource', "")
+            .col-md-6
+              mixin text('registrationValidForHours', 'Registrierung möglich für die nächsten ... Stunden', "")
+            .col-md-12
+              button.btn.btn-primary.pull-right(type="submit") Speichern

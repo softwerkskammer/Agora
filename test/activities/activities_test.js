@@ -4,12 +4,11 @@ var request = require('supertest');
 var sinon = require('sinon').sandbox.create();
 var expect = require('chai').expect;
 
-var conf = require('../configureForTest');
-
 var createApp = require('../testHelper')('activitiesApp').createApp;
 
-var beans = conf.get('beans');
+var beans = require('../configureForTest').get('beans');
 var fieldHelpers = beans.get('fieldHelpers');
+var activitystore = beans.get('activitystore');
 var Activity = beans.get('activity');
 var Member = beans.get('member');
 var Group = beans.get('group');
@@ -56,7 +55,7 @@ describe('Activity application', function () {
   var getMemberForId;
 
   beforeEach(function (done) {
-    allActivities = sinon.stub(activitiesCoreAPI, 'allActivities', function (callback) {callback(null, [emptyActivity]); });
+    allActivities = sinon.stub(activitystore, 'allActivities', function (callback) {callback(null, [emptyActivity]); });
     upcomingActivities = sinon.stub(activitiesCoreAPI, 'upcomingActivities', function (callback) {callback(null, [emptyActivity]); });
     sinon.stub(activitiesAPI, 'getActivitiesForDisplay', function (fetcher, callback) {
       var enhancedActivity = new Activity({title: 'Title of the Activity', description: 'description1', assignedGroup: 'assignedGroup',
@@ -65,7 +64,7 @@ describe('Activity application', function () {
       enhancedActivity.group = {longName: 'The name of the assigned Group'};
       callback(null, [enhancedActivity]);
     });
-    getActivity = sinon.stub(activitiesCoreAPI, 'getActivity', function (url, callback) {
+    getActivity = sinon.stub(activitystore, 'getActivity', function (url, callback) {
       callback(null, (url === 'urlOfTheActivity') ? emptyActivity : (url === 'urlForInteresting') ? activityWithParticipants :
         (url === 'urlForMultiple') ? activityWithMultipleResources : null);
     });

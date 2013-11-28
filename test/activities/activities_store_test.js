@@ -1,8 +1,7 @@
 "use strict";
 
 var expect = require('chai').expect;
-var sinon = require('sinon');
-var sinonSandbox = sinon.sandbox.create();
+var sinon = require('sinon').sandbox.create();
 
 var conf = require('../configureForTest');
 var persistence = conf.get('beans').get('activitiesPersistence');
@@ -14,19 +13,23 @@ describe('Activity store', function () {
   var sampleList = [activity1, activity2];
   var getByField;
   var getById;
+  var list;
 
-  before(function (done) {
-    var list = sinonSandbox.stub(persistence, 'list');
-    list.callsArgWith(1, null, sampleList);
-    getByField = sinonSandbox.stub(persistence, 'getByField');
-    getByField.callsArgWith(1, null, activity1);
-    getById = sinonSandbox.stub(persistence, 'getById');
-    getById.callsArgWith(1, null, activity1);
+  beforeEach(function (done) {
+    list = sinon.stub(persistence, 'list', function (sortOrder, callback) {
+      return callback(null, sampleList);
+    });
+    getByField = sinon.stub(persistence, 'getByField', function (object, callback) {
+      return callback(null, activity1);
+    });
+    getById = sinon.stub(persistence, 'getById', function (object, callback) {
+      return callback(null, activity1);
+    });
     done();
   });
 
-  after(function (done) {
-    sinonSandbox.restore();
+  afterEach(function (done) {
+    sinon.restore();
     done();
   });
 
@@ -59,5 +62,58 @@ describe('Activity store', function () {
       done(err);
     });
   });
+
+  it('returns an activity object for the given id although the persistence only returns a JS object', function (done) {
+    getByField.restore();
+    sinon.stub(persistence, 'getByField', function (id, callback) {
+      return callback(null, {url: "activityUrl"});
+    });
+
+    store.getActivity("activityUrl", function (err, result) {
+      expect(result.url()).to.equal("activityUrl");
+      done();
+    });
+  });
+
+  it('returns null when id does not exist', function (done) {
+    getByField.restore();
+    sinon.stub(persistence, 'getByField', function (id, callback) {
+      callback();
+    });
+
+    store.getActivity(1234, function (err, result) {
+      expect(result).to.be.a('null');
+      done();
+    });
+  });
+
+  it('returns undefined when persistence yields an error', function (done) {
+    getByField.restore();
+    sinon.stub(persistence, 'getByField', function (id, callback) {
+      callback(new Error("error"));
+    });
+
+    store.getActivity(1234, function (err, result) {
+      expect(!!err).to.be.true;
+      expect(result).to.be.undefined;
+      done();
+    });
+  });
+
+  it('returns all activites although the persistence only returns JS objects', function (done) {
+    list.restore();
+    sinon.stub(persistence, 'list', function (sortOrder, callback) {
+      callback(null, [
+        {url: "activityUrl"}
+      ]);
+    });
+
+    store.allActivities(function (err, result) {
+      expect(result).to.have.lengthOf(1);
+      expect(result[0].url()).to.equal("activityUrl");
+      done();
+    });
+  });
+
 
 });
