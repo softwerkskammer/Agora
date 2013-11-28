@@ -13,6 +13,7 @@ var NonPersistentGroup = new Group({id: 'Group C', longName: 'Gruppe C', descrip
 
 var groupstore = conf.get('beans').get('groupstore');
 var sympa = conf.get('beans').get('sympaStub');
+var Git = conf.get('beans').get('gitmech');
 
 var systemUnderTest = conf.get('beans').get('groupsAPI');
 
@@ -365,6 +366,68 @@ describe('Groups API (isGroupNameAvailable)', function () {
 
     systemUnderTest.isGroupNameAvailable('edit', function (err, result) {
       expect(result).to.be.false;
+      done();
+    });
+  });
+});
+
+describe('Groups API (getBlogPosts)', function () {
+
+  beforeEach(function (done) {
+    sinon.stub(Git, 'lsblogposts', function (groupname, callback) {
+      if (groupname === 'internet') {
+        callback(null, ['internet/blog_oktober2013.md', 'internet/blog_november2013.md']);
+      } else if (groupname === 'alle') {
+        callback(null, []);
+      }
+    });
+    sinon.stub(Git, 'readFile', function (path, version, callback) {
+      if (path === "internet/blog_november2013.md") {
+        callback(null, "Lean Coffee November 2013, 2013-11-01\n" +
+          "\n" +
+          "Und beim nächsten Mal haben wir dann.\n" +
+          "\n" +
+          "Diesen Blog gemacht.");
+      } else if (path === "internet/blog_oktober2013.md") {
+        callback(null, "Agora Code-Kata Oktober 2013, 2013-10-01\n" +
+          "\n" +
+          "Weil viele uns weder JavaScript noch populäre JavaScript...\n" +
+          "\n" +
+          "Leider hatten wir vorher keine Anweisungen herumgeschickt, ...");
+      }
+    });
+    done();
+  });
+
+  afterEach(function (done) {
+    Git.readFile.restore();
+    Git.lsblogposts.restore();
+    done();
+  });
+
+  it('returns two blog posts for internet', function (done) {
+    systemUnderTest.getBlogposts("internet", function (err, result) {
+      expect(result.length === 2).to.be.true;
+
+      var post1 = result[0];
+      expect(post1.title).to.equal("Lean Coffee November 2013");
+      expect(post1.teaser).to.equal("Und beim nächsten Mal haben wir dann.");
+      expect(post1.path).to.equal("internet/blog_november2013");
+      expect(JSON.stringify(post1.date)).to.equal("\"2013-10-31T23:00:00.000Z\"");
+
+      var post2 = result[1];
+      expect(post2.title).to.equal("Agora Code-Kata Oktober 2013");
+      expect(post2.teaser).to.equal("Weil viele uns weder JavaScript noch populäre JavaScript...");
+      expect(post2.path).to.equal("internet/blog_oktober2013");
+      expect(JSON.stringify(post2.date)).to.equal("\"2013-09-30T22:00:00.000Z\"");
+
+      done();
+    });
+  });
+
+  it('returns no blog posts for alle', function (done) {
+    systemUnderTest.getBlogposts("alle", function (err, result) {
+      expect(result.length === 0).to.be.true;
       done();
     });
   });
