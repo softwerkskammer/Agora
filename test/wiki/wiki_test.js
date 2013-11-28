@@ -2,8 +2,7 @@
 
 var request = require('supertest');
 var express = require('express');
-var sinon = require('sinon');
-var sinonSandbox = sinon.sandbox.create();
+var sinon = require('sinon').sandbox.create();
 var expect = require('chai').expect;
 var userMock = require('../userMock');
 
@@ -22,7 +21,7 @@ describe('Wiki application', function () {
   var content = "Hallo, ich bin der Dateiinhalt";
   var nonExistingPage = 'global/nonExisting';
   beforeEach(function (done) {
-    pageShow = sinonSandbox.stub(wikiAPI, 'pageShow',
+    pageShow = sinon.stub(wikiAPI, 'showPage',
       function (completePageName, pageVersion, callback) {
         if (completePageName === nonExistingPage) {
           return callback(new Error());
@@ -33,7 +32,7 @@ describe('Wiki application', function () {
   });
 
   afterEach(function (done) {
-    sinonSandbox.restore();
+    sinon.restore();
     done();
   });
 

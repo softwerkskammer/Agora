@@ -27,15 +27,14 @@ block content
                 td #{waitinglistEntry.resourceName()}
                 td #{waitinglistEntry.registrationDate()}
                 td #{waitinglistEntry.registrationValidUntil()}
-
-      .row
-        .col-md-12
-          form(id='waitinglistForm', action='/waitinglist/submit',method='post')
-            .col-md-6
-              mixin text('nickname', 'Nickname', "")
-              mixin text('activity', 'URL der Aktivität', "")
-              mixin text('resource', 'Name der Ressource', "")
-            .col-md-6
-              mixin text('registrationValidForHours', 'Registrierung möglich für die nächsten ... Stunden', "")
-            .col-md-12
-              button.btn.btn-primary.pull-right(type="submit") Speichern
+    .row
+      .col-md-12
+        form(id='waitinglistForm', action='/waitinglist/submit',method='post')
+          .col-md-6
+            mixin text('nickname', 'Nickname', "")
+            mixin text('activity', 'URL der Aktivität', "")
+            mixin text('resource', 'Name der Ressource', "")
+          .col-md-6
+            mixin text('registrationValidForHours', 'Registrierung möglich für die nächsten ... Stunden', "")
+          .col-md-12
+            button.btn.btn-primary.pull-right(type="submit") Speichern
