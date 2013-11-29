@@ -141,6 +141,20 @@ describe('Resource', function () {
       done();
     });
 
+    it('sets the waitinglist preference for the copy to false', function (done) {
+      var resource = new Resource({_registeredMembers: [ {memberId: 'memberID'} ]});
+      var copy = new Resource({}).copyFrom(resource);
+      expect(copy.withWaitinglist()).to.be.false;
+      done();
+    });
+
+    it('sets the waitinglist preference for the copy to false even when it was true for the original', function (done) {
+      var resource = new Resource({_registeredMembers: [ {memberId: 'memberID'} ], _withWaitinglist: true});
+      var copy = new Resource({}).copyFrom(resource);
+      expect(copy.withWaitinglist()).to.be.false;
+      done();
+    });
+
   });
 
 });
