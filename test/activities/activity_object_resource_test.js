@@ -41,6 +41,13 @@ describe('Activity resource management', function () {
       expect(activity.resourceNames()).to.be.empty;
       expect(!!activity.resourceNames()).to.be.true; // not undefined, not null
     });
+
+    it('indicates whether a given resource has a waitinglist', function () {
+      var activity = new Activity({resources: {Einzelzimmer: { _registeredMembers: [], _withWaitinglist: true}}});
+      expect(activity.withWaitinglist('Einzelzimmer')).to.be.true;
+    });
+
+
   });
 
   describe('- when adding members -', function () {

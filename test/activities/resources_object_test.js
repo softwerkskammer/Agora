@@ -73,6 +73,42 @@ describe("Resources (fillFromUI)", function () {
     done();
   });
 
+  it("allows registration if it is indicated", function (done) {
+    var resources = new Resources({ name1: {_registeredMembers: []}});
+
+    resources.fillFromUI({names: "name1", limits: "10", previousNames: "name1", registrationOpen: "true"});
+
+    expect(resources.state.name1._registrationOpen).to.be.true;
+    done();
+  });
+
+  it("removes 'registration allowed' if it is not indicated", function (done) {
+    var resources = new Resources({ name1: {_registeredMembers: [], _registrationOpen: true}});
+
+    resources.fillFromUI({names: "name1", limits: "", previousNames: "name1", registrationOpen: ""});
+
+    expect(resources.state.name1._registrationOpen).to.be.false;
+    done();
+  });
+
+  it("adds a waitinglist if it is indicated", function (done) {
+    var resources = new Resources({ name1: {_registeredMembers: []}});
+
+    resources.fillFromUI({names: "name1", limits: "10", previousNames: "name1", registrationOpen: "true", withWaitinglist: "true"});
+
+    expect(resources.state.name1._withWaitinglist).to.be.true;
+    done();
+  });
+
+  it("removes 'registration allowed' if it is not indicated", function (done) {
+    var resources = new Resources({ name1: {_registeredMembers: [], _withWaitinglist: true}});
+
+    resources.fillFromUI({names: "name1", limits: "", previousNames: "name1", registrationOpen: "", withWaitinglist: ""});
+
+    expect(resources.state.name1._withWaitinglist).to.be.false;
+    done();
+  });
+
   it("exchanges two resources if their names are switched", function (done) {
     var resources = new Resources({ name1: {_registeredMembers: ['memberId1']},
       name2: {_registeredMembers: ['memberId2']}});
