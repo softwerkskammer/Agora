@@ -1,9 +1,9 @@
 extends ../../../views/layout
 include  ../../../views/formComponents
 
-mixin resourceRow(name, limit, registrationOpen)
+mixin resourceRow(name, limit, registrationOpen, withWaitinglist)
   .row.form-group
-    .col-xs-6.col-sm-8
+    .col-xs-3.col-sm-6
       input.form-control(name="resources[names]", value=name, type="text", placeholder="Bezeichnung")
     .col-xs-3.col-sm-2
       input.form-control(name="resources[limits]", value=limit, type="text", placeholder="unbegrenzt")
@@ -11,6 +11,10 @@ mixin resourceRow(name, limit, registrationOpen)
       .checkbox
         input(name="resources[registrationOpen]", value=registrationOpen, type="checkbox", checked=(registrationOpen ? "true" : undefined))
         | möglich
+    .col-xs-3.col-sm-2
+      .checkbox
+        input(name="resources[withWaitinglist]", value=withWaitinglist, type="checkbox", checked=(withWaitinglist ? "true" : undefined))
+        | ja
 
 block scripts
   script(src="/clientscripts/activityDateModel.js")
@@ -18,7 +22,7 @@ block scripts
   script(src="/clientscripts/check-activityform.js")
   script(src="/clientscripts/activityResources.js")
   script#resource-template(type="text/html")
-    mixin resourceRow(undefined, undefined, true)
+    mixin resourceRow(undefined, undefined, true, false)
   script.
     function fillUrlFromText (urlId, textId) {
       var title = document.getElementById(textId).value;
@@ -82,15 +86,17 @@ block content
           #resources
             legend Ressourcen
             .row
-              .col-xs-6.col-sm-8
+              .col-xs-3.col-sm-6
                 mixin controlLabel("bezeichnung", "Bezeichnung", "Name der zu buchenden Einheit (z. B. Einzelzimmer, Doppelzimmer)")
               .col-xs-3.col-sm-2
                 mixin controlLabel("anzahl", "Anzahl", "Maximale Teilnehmerzahl (keine Beschränkung bei leerem Feld, keine Registrierung möglich bei 0)")
               .col-xs-3.col-sm-2
                 mixin controlLabel("registrierung", "Anmeldung", "Hiermit lässt sich die Registrierung freigeben oder sperren")
+              .col-xs-3.col-sm-2
+                mixin controlLabel("registrierung", "Warteliste", "Soll die Ressource eine Warteliste bekommen?")
             each name in activity.resourceNames()
               - var resource = activity.resources().named(name)
-              mixin resourceRow(name, resource.limit(), resource.registrationOpen())
+              mixin resourceRow(name, resource.limit(), resource.registrationOpen(), resource.withWaitinglist())
               mixin hiddenWithValue("resources[previousNames]", name)
             .row.form-group
               .col-md-12
