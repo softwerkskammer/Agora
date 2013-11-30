@@ -112,6 +112,7 @@ module.exports = function (grunt) {
           'public/clientscripts/global/messages_de.js',
           'public/clientscripts/global/methods_de.js',
           'public/clientscripts/global/bootstrap-timepicker-patched.js',
+          'public/clientscripts/global/moment.min.js',
           'public/clientscripts/global/agora.js'
         ],
         dest: 'public/clientscripts/global.js'
