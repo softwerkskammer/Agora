@@ -378,7 +378,7 @@ describe('Activity application', function () {
       request(createApp('memberId3'))
         .get('/' + 'urlForMultiple')
         .expect(200)
-        .expect(/value="Einzelzimmer".*Auf die Warteliste/, function (err) {
+        .expect(/addToWaitinglist\/urlForMultiple\/Einzelzimmer.*Auf die Warteliste/, function (err) {
           done(err);
         });
     });
