@@ -1,41 +1,73 @@
 extends ../../../views/layout
 include  ../../../views/formComponents
 
+block scripts
+  script(src="/clientscripts/jquery.dataTables.min.js")
+  script.
+    $(document).ready(function() {
+      $("#waitinglisttable").dataTable({
+        "oLanguage": {
+          "sUrl": "/clientscripts/dataTables.german.txt"
+        },
+        "aoColumns": [
+          { "bSortable" : false }, null, null, { "sType": "date-eu" }, { "sType": "date-eu" }
+        ],
+        "bPaginate": false,
+        "bAutoWidth": false,
+        "aaSorting": [[ 1, "asc" ]],
+        "bStateSave": true
+      });
+        $('.tooltiplabel').each(function(each) {$(this).popover()});
+    });
 
 block title
   | Übersicht der zum Registrieren vorgemerkten Mitglieder
 block content
-  .row
-    .col-md-12
-      .page-header
-        h2 Verwaltung
-          small  Warteliste
-      .panel.pre-scrollable
-        table.table.table-condensed.table-hover.table-striped#waitinglistTable
-          thead
-            tr
-              th Nickname
-              th URL der Aktivität
-              th Name der Ressource
-              th Eingetragen&nbsp;am
-              th Kann&nbsp;sich&nbsp;registrieren&nbsp;bis
-          tbody
-            for waitinglistEntry in waitinglist
+  form.form-inline(id='allowRegistrationForm', action='/waitinglist/allowRegistration',method='post')
+    mixin hiddenWithValue("activityUrl", activity.url())
+    .row
+      .col-md-12
+        .page-header
+          h2 #{activity.title()}
+            small  Warteliste
+        .panel.pre-scrollable
+          table.table.table-condensed.table-hover.table-striped#waitinglisttable
+            thead
               tr
-                td #{waitinglistEntry.registrantNickname}
-                td #{waitinglistEntry.activityUrl}
-                td #{waitinglistEntry.resourceName()}
-                td #{waitinglistEntry.registrationDate()}
-                td #{waitinglistEntry.registrationValidUntil()}
-    if(accessrights.isSuperuser())
+                th Markieren
+                th Nickname
+                th Name der Ressource
+                th Eingetragen&nbsp;am
+                th Kann&nbsp;sich&nbsp;registrieren&nbsp;bis
+            tbody
+              for waitinglistEntry in waitinglist
+                - var checkboxid = '{"nickname": "' + waitinglistEntry.registrantNickname + '", "activityUrl": "' + activity.url() + '", "resourcename": "' + waitinglistEntry.resourceName() + '"}'
+                tr
+                  td: mixin checkboxWithDescription("selectedRow", "", false, null, checkboxid)
+                  td #{waitinglistEntry.registrantNickname}
+                  td #{waitinglistEntry.resourceName()}
+                  td #{waitinglistEntry.registrationDate()}
+                  td #{waitinglistEntry.registrationValidUntil()}
+        | Für die gewählten Zeilen wird für die nächsten
+        input.form-control(id="registrationValidForHours", type="text", name="registrationValidForHours", style="width: 50px;")
+        |  Stunden die Registrierung ermöglicht.
+        button.btn.btn-primary.pull-right(type="submit") Speichern
+      
+
+  if(accessrights.isSuperuser())
+    hr
+    form(id='waitinglistForm', action='/waitinglist/add',method='post')
+      mixin hiddenWithValue("activityUrl", activity.url())
+      legend Neuer Eintrag
       .row
-        .col-md-12
-          form(id='waitinglistForm', action='/waitinglist/submit',method='post')
-            .col-md-6
-              mixin text('nickname', 'Nickname', "")
-              mixin text('activityUrl', 'URL der Aktivität', "")
-              mixin text('resourceName', 'Name der Ressource', "")
-            .col-md-6
-              mixin text('registrationValidForHours', 'Registrierung möglich für die nächsten ... Stunden', "")
-            .col-md-12
-              button.btn.btn-primary.pull-right(type="submit") Speichern
+        .col-sm-4
+          input.form-control(id='nickname', type='text', name='nickname', placeholder='Nickname')
+        .col-sm-4
+          if (activity.resourceNames().length > 2)
+            select#nickname.form-control(name="resourceName")
+              for resource in activity.resourceNames()
+                option(value=resourceName) #{resource}
+          else
+            input.form-control(disabled, id='resourceName', type='text', name='resourceName', placeholder='#{activity.resourceNames()[0]}')
+        .col-sm-4
+          button.btn.btn-primary.pull-right(type="submit") Hinzufügen
