@@ -25,7 +25,7 @@ mixin subscriptionButtons(activity, resourceName, currentMemberId)
     else if (!registrationOpen && (!limit || !!limit && registeredMembers.length === 0))
       | Anmeldung ist zur Zeit nicht möglich.
     else if (activity.withWaitinglist(resourceName))
-      form(id='registerInWaitinglist', action='/waitinglist/submit', method='post')
+      form(id='registerInWaitinglist', action='/waitinglist/add', method='post')
         mixin hiddenWithValue('activityUrl', activity.url())
         mixin hiddenWithValue('resourceName', resourceName)
         button.btn.btn-primary(type="submit") Auf die Warteliste
@@ -45,7 +45,7 @@ mixin subscriptionButtons(activity, resourceName, currentMemberId)
         else if (!registrationOpen && (!limit || !!limit && registeredMembers.length === 0))
           span.control-label.col-xs-6(style="text-align: center;") Anmeldung ist zur Zeit nicht möglich.
         else if (activity.withWaitinglist(resourceName))
-          form(id='registerInWaitinglist', action='/waitinglist/submit', method='post')
+          form(id='registerInWaitinglist', action='/waitinglist/add', method='post')
             mixin hiddenWithValue('activityUrl', activity.url())
             mixin hiddenWithValue('resourceName', resourceName)
             button.col-xs-6.btn.btn-primary(type="submit") Auf die Warteliste
