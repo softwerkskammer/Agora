@@ -26,7 +26,7 @@ describe('Waitinglist API', function () {
   beforeEach(function (done) {
     var member1 = new Member({id: "12345", nickname: "hansdampf"});
     var member2 = new Member({id: "abcxyz", nickname: "nickinick"});
-    var activity1 = new Activity({id: "Meine Aktivität"});
+    var activity1 = new Activity({id: "Meine Aktivität", url: "myActivity"});
 
     waitinglistEntry1 = new WaitinglistEntry({_registrantId: "12345", _activityId: "Meine Aktivität", _resourceName: "Meine Ressource",
       _registrationDate: moment().toDate()});
@@ -61,17 +61,17 @@ describe('Waitinglist API', function () {
   describe('- waitinglist - ', function () {
 
     it('returns an empty list when the waitinglist is empty', function (done) {
-      sinon.stub(store, 'waitinglist', function (callback) {callback(null, []); });
-      waitinglistAPI.waitinglist(function (err, waitinglist) {
+      sinon.stub(store, 'waitinglistFor', function (url, callback) {callback(null, []); });
+      waitinglistAPI.waitinglistFor('myActivity', function (err, waitinglist) {
         expect(waitinglist).to.be.empty;
         done(err);
       });
     });
 
     it('returns one entry with its member nickname when the waitinglist contains one entry', function (done) {
-      sinon.stub(store, 'waitinglist', function (callback) {callback(null, [waitinglistEntry1]); });
+      sinon.stub(store, 'waitinglistFor', function (url, callback) {callback(null, [waitinglistEntry1]); });
 
-      waitinglistAPI.waitinglist(function (err, waitinglist) {
+      waitinglistAPI.waitinglistFor('myActivity', function (err, waitinglist) {
         expect(waitinglist.length).to.equal(1);
         expect(waitinglist[0].registrantNickname).to.equal('hansdampf');
         expect(waitinglist[0].activityId()).to.equal('Meine Aktivität');
@@ -83,9 +83,9 @@ describe('Waitinglist API', function () {
     });
 
     it('returns two entries with their member nicknames when the waitinglist contains two entries', function (done) {
-      sinon.stub(store, 'waitinglist', function (callback) {callback(null, [waitinglistEntry1, waitinglistEntry2]); });
+      sinon.stub(store, 'waitinglistFor', function (url, callback) {callback(null, [waitinglistEntry1, waitinglistEntry2]); });
 
-      waitinglistAPI.waitinglist(function (err, waitinglist) {
+      waitinglistAPI.waitinglistFor('myActivity', function (err, waitinglist) {
         expect(waitinglist.length).to.equal(2);
         expect(waitinglist[0].registrantNickname).to.equal('hansdampf');
         expect(waitinglist[1].registrantNickname).to.equal('nickinick');

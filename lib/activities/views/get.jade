@@ -20,7 +20,7 @@ block content
           if (accessrights.canCreateActivity())
             a.btn.btn-default(href="/activities/newLike/#{encodeURIComponent(activity.url())}", title="Neu auf Basis dieser Aktivität"): i.fa.fa-copy.fa-fw
           if (accessrights.canEditActivity(activity))
-            a.btn.btn-default(href="/waitinglist/waitinglistTable/#{encodeURIComponent(activity.url())}", title="Warteliste"): i.fa.fa-list-ol.fa-fw
+            a.btn.btn-default(href="/waitinglist/#{encodeURIComponent(activity.url())}", title="Warteliste"): i.fa.fa-list-ol.fa-fw
             a.btn.btn-default(href="/mailsender/invitation/#{encodeURIComponent(activity.url())}", title="Einladung versenden"): i.fa.fa-envelope-o.fa-fw
             a.btn.btn-default(href="/activities/edit/#{encodeURIComponent(activity.url())}", title="Bearbeiten"): i.fa.fa-edit.fa-fw
         h2 #{activity.title()}
