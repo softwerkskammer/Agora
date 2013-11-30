@@ -1,4 +1,4 @@
-/* global $, document, window*/
+/* global $, document, window, moment*/
 "use strict";
 
 var surroundWithLink = function (text) {
@@ -136,19 +136,9 @@ var addHelpButtonToTextarea = function () {
 var extendDataTables = function () {
   if (!$.fn.dataTableExt) { return; }
   $.extend($.fn.dataTableExt.oSort, {
-    "date-eu-pre": function (dateString) {
-      if (!dateString) { return 0; }
-      var date = dateString.replace(" ", "");
-      var eu_date = date.split('.');
-      if (eu_date.length < 2) { return 0; }
-      return (eu_date[2] + eu_date[1] + eu_date[0]) * 1;
-    },
-    "date-eu-asc": function (a, b) {
-      return ((a < b) ? -1 : ((a > b) ? 1 : 0));
-    },
-    "date-eu-desc": function (a, b) {
-      return ((a < b) ? 1 : ((a > b) ? -1 : 0));
-    }
+    "date-eu-pre": function (dateString) { return moment(dateString, 'DD.MM.YYYY HH:mm').unix(); },
+    "date-eu-asc": function (a, b) { return a - b; },
+    "date-eu-desc": function (a, b) { return b - a; }
   });
 };
 
