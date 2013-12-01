@@ -97,14 +97,13 @@ describe('Waitinglist API', function () {
   describe('- saveWaitingListEntry -', function () {
     it('saves an entry', function (done) {
 
-      var args = {nickname: 'hansdampf', activityUrl: 'Meine Aktivität', resourcename: "Meine Ressource", hoursstring: "7"};
+      var args = {nickname: 'hansdampf', activityUrl: 'Meine Aktivität', resourcename: "Meine Ressource"};
 
       waitinglistAPI.saveWaitinglistEntry(args, function (err, waitinglistEntry) {
         expect(waitinglistEntry.registrantId(), "Registrant ID").to.equal('12345');
         expect(waitinglistEntry.activityId(), "Activity ID").to.equal('Meine Aktivität');
         expect(waitinglistEntry.resourceName(), "Resource Name").to.equal('Meine Ressource');
         expect(waitinglistEntry.registrationDate(), "Registration Date").to.not.be.undefined;
-        expect(waitinglistEntry.registrationValidUntil(), "Registration Valid Until").to.not.be.undefined;
         done(err);
       });
     });

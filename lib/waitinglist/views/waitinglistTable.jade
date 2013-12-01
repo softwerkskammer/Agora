@@ -23,7 +23,7 @@ block scripts
 block title
   | Übersicht der zum Registrieren vorgemerkten Mitglieder
 block content
-  form.form-inline(id='allowRegistrationForm', action='/waitinglist/allowRegistration',method='post')
+  form(id='allowRegistrationForm', name='allowRegistrationForm', action='/waitinglist/allowRegistration',method='post')
     mixin hiddenWithValue("activityUrl", activity.url())
     .row
       .col-md-12
@@ -43,17 +43,19 @@ block content
               for waitinglistEntry in waitinglist
                 - var checkboxid = '{"nickname": "' + waitinglistEntry.registrantNickname + '", "activityUrl": "' + activity.url() + '", "resourcename": "' + waitinglistEntry.resourceName() + '"}'
                 tr
-                  td: mixin checkboxWithDescription("selectedRow", "", false, null, checkboxid)
-                  td #{waitinglistEntry.registrantNickname}
+                  td: .checkbox(style="margin-top:0px;margin-bottom:0px;")
+                    label
+                      input(type='checkbox', name='selectedRow', value=checkboxid)
+
+                  td: a(href="/members/#{encodeURIComponent(waitinglistEntry.registrantNickname)}") #{waitinglistEntry.registrantNickname}
                   td #{waitinglistEntry.resourceName()}
                   td #{waitinglistEntry.registrationDate()}
                   td #{waitinglistEntry.registrationValidUntil()}
-        | Für die gewählten Wartelisteneinträge wird für die nächsten
-        input.form-control(id="registrationValidForHours", type="text", name="registrationValidForHours", style="width: 50px;")
-        |  Stunden die Registrierung ermöglicht.
-        button.btn.btn-primary.pull-right(type="submit") Speichern
-      
-
+        .form-inline
+          | Für die gewählten Wartelisteneinträge wird für die nächsten
+          input.form-control(id="registrationValidForHours", type="text", name="registrationValidForHours", style="width: 50px;")
+          |  Stunden die Registrierung ermöglicht.
+          button.btn.btn-primary.pull-right(type="submit") Speichern und Benachrichtigen
   if(accessrights.isSuperuser())
     hr
     form(id='waitinglistForm', action='/waitinglist/add',method='post')
