@@ -9,7 +9,7 @@ var Resource = conf.get('beans').get('resource');
 describe('Resource', function () {
   describe('registration matters', function () {
     it('can add a member', function () {
-      var resource = new Resource({_registeredMembers: []});
+      var resource = new Resource({ });
       resource.addMemberId('memberID');
       expect(resource.registeredMembers()).to.contain('memberID');
     });
@@ -57,13 +57,13 @@ describe('Resource', function () {
     });
 
     it('can remove member even when empty', function () {
-      var resource = new Resource({_registeredMembers: []});
+      var resource = new Resource();
       resource.removeMemberId('notRegisteredID');
       expect(resource.registeredMembers()).to.be.empty;
     });
 
     it('is not full when it does not contain any members', function () {
-      var resource = new Resource({_registeredMembers: []});
+      var resource = new Resource();
       expect(resource.isFull()).to.be.false;
     });
 
@@ -150,7 +150,7 @@ describe('Resource', function () {
   describe("(fillFromUI)", function () {
 
     it("adds a limit if it is given", function () {
-      var resource = new Resource({ });
+      var resource = new Resource();
       resource.fillFromUI({limit: "10"});
       expect(resource.limit()).to.equal(10);
     });
@@ -162,7 +162,7 @@ describe('Resource', function () {
     });
 
     it("allows registration if it is indicated", function () {
-      var resource = new Resource({ });
+      var resource = new Resource();
       resource.fillFromUI({registrationOpen: "true"});
       expect(resource.registrationOpen()).to.be.true;
     });
@@ -174,7 +174,7 @@ describe('Resource', function () {
     });
 
     it("adds a waitinglist if it is indicated", function () {
-      var resource = new Resource({ });
+      var resource = new Resource();
       resource.fillFromUI({withWaitinglist: "someValue"});
       expect(resource.withWaitinglist()).to.be.true;
     });
