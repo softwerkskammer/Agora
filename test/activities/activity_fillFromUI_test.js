@@ -64,18 +64,18 @@ describe('Activity (when filled from UI)', function () {
     });
 
     it('with open registration', function (done) {
-      var activity = new Activity().fillFromUI({resources: {names: "Einzelzimmer", limits: "dudu", previousNames: "", registrationOpen: "true"}});
+      var activity = new Activity().fillFromUI({resources: {names: "Einzelzimmer", limits: "dudu", previousNames: "", isRegistrationOpen: "true"}});
 
       checkResourceNames(activity, "Einzelzimmer");
-      expect(activity.resources().named("Einzelzimmer").registrationOpen(), "Registration at resource").to.equal(true);
+      expect(activity.resources().named("Einzelzimmer").isRegistrationOpen(), "Registration at resource").to.equal(true);
       done();
     });
 
     it('with closed registration', function (done) {
-      var activity = new Activity().fillFromUI({resources: {names: "Einzelzimmer", limits: "dudu", previousNames: "", registrationOpen: undefined}});
+      var activity = new Activity().fillFromUI({resources: {names: "Einzelzimmer", limits: "dudu", previousNames: "", isRegistrationOpen: undefined}});
 
       checkResourceNames(activity, "Einzelzimmer");
-      expect(activity.resources().named("Einzelzimmer").registrationOpen(), "Registration at resource").to.equal(false);
+      expect(activity.resources().named("Einzelzimmer").isRegistrationOpen(), "Registration at resource").to.equal(false);
       done();
     });
 
