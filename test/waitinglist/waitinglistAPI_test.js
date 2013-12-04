@@ -19,19 +19,17 @@ var Activity = beans.get('activity');
 
 var waitinglistEntry1;
 var waitinglistEntry2;
-
+var activity1;
 
 describe('Waitinglist API', function () {
 
   beforeEach(function (done) {
     var member1 = new Member({id: "12345", nickname: "hansdampf"});
     var member2 = new Member({id: "abcxyz", nickname: "nickinick"});
-    var activity1 = new Activity({id: "Meine Aktivität", url: "myActivity"});
+    activity1 = new Activity({id: "Meine Aktivität", url: "myActivity", resources: {"Meine Ressource": {_waitinglist: []}}});
 
-    waitinglistEntry1 = new WaitinglistEntry({_registrantId: "12345", _activityId: "Meine Aktivität", _resourceName: "Meine Ressource",
-      _registrationDate: moment().toDate()});
-    waitinglistEntry2 = new WaitinglistEntry({_registrantId: "abcxyz", _activityId: "Meine Aktivität", _resourceName: "Meine Ressource",
-      _registrationDate: moment().toDate()});
+    waitinglistEntry1 = new WaitinglistEntry({_memberId: "12345", _registrationDate: moment().toDate()});
+    waitinglistEntry2 = new WaitinglistEntry({_memberId: "abcxyz", _registrationDate: moment().toDate()});
 
     sinon.stub(membersAPI, 'getMemberForId', function (memberId, callback) {
       if (memberId === member1.id) { return callback(null, member1); }
@@ -45,6 +43,9 @@ describe('Waitinglist API', function () {
       return callback(null, waitinglistEntry);
     });
     sinon.stub(activitystore, 'getActivityForId', function (activity, callback) {
+      return callback(null, activity1);
+    });
+    sinon.stub(activitystore, 'saveActivity', function (activity, callback) {
       return callback(null, activity1);
     });
     sinon.stub(activitystore, 'getActivity', function (activity, callback) {
@@ -61,7 +62,6 @@ describe('Waitinglist API', function () {
   describe('- waitinglist - ', function () {
 
     it('returns an empty list when the waitinglist is empty', function (done) {
-      sinon.stub(store, 'waitinglistFor', function (url, callback) {callback(null, []); });
       waitinglistAPI.waitinglistFor('myActivity', function (err, waitinglist) {
         expect(waitinglist).to.be.empty;
         done(err);
@@ -69,12 +69,11 @@ describe('Waitinglist API', function () {
     });
 
     it('returns one entry with its member nickname when the waitinglist contains one entry', function (done) {
-      sinon.stub(store, 'waitinglistFor', function (url, callback) {callback(null, [waitinglistEntry1]); });
+      activity1.resources().named("Meine Ressource").addToWaitinglist('12345', moment());
 
       waitinglistAPI.waitinglistFor('myActivity', function (err, waitinglist) {
         expect(waitinglist.length).to.equal(1);
         expect(waitinglist[0].registrantNickname).to.equal('hansdampf');
-        expect(waitinglist[0].activityId()).to.equal('Meine Aktivität');
         expect(waitinglist[0].resourceName()).to.equal('Meine Ressource');
         expect(waitinglist[0].registrationDate()).to.not.be.undefined;
         expect(waitinglist[0].registrationValidUntil()).to.be.undefined;
@@ -83,7 +82,8 @@ describe('Waitinglist API', function () {
     });
 
     it('returns two entries with their member nicknames when the waitinglist contains two entries', function (done) {
-      sinon.stub(store, 'waitinglistFor', function (url, callback) {callback(null, [waitinglistEntry1, waitinglistEntry2]); });
+      activity1.resources().named("Meine Ressource").addToWaitinglist('12345', moment());
+      activity1.resources().named("Meine Ressource").addToWaitinglist('abcxyz', moment());
 
       waitinglistAPI.waitinglistFor('myActivity', function (err, waitinglist) {
         expect(waitinglist.length).to.equal(2);
@@ -100,10 +100,6 @@ describe('Waitinglist API', function () {
       var args = {nickname: 'hansdampf', activityUrl: 'Meine Aktivität', resourcename: "Meine Ressource"};
 
       waitinglistAPI.saveWaitinglistEntry(args, function (err, waitinglistEntry) {
-        expect(waitinglistEntry.registrantId(), "Registrant ID").to.equal('12345');
-        expect(waitinglistEntry.activityId(), "Activity ID").to.equal('Meine Aktivität');
-        expect(waitinglistEntry.resourceName(), "Resource Name").to.equal('Meine Ressource');
-        expect(waitinglistEntry.registrationDate(), "Registration Date").to.not.be.undefined;
         done(err);
       });
     });
