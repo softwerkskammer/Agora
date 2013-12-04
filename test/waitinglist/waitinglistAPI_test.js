@@ -12,13 +12,9 @@ var store = beans.get('waitinglistStore');
 
 var activitystore = beans.get('activitystore');
 var membersAPI = beans.get('membersAPI');
-var WaitinglistEntry = beans.get('waitinglistEntry');
 var Member = beans.get('member');
 var Activity = beans.get('activity');
 
-
-var waitinglistEntry1;
-var waitinglistEntry2;
 var activity1;
 
 describe('Waitinglist API', function () {
@@ -27,9 +23,6 @@ describe('Waitinglist API', function () {
     var member1 = new Member({id: "12345", nickname: "hansdampf"});
     var member2 = new Member({id: "abcxyz", nickname: "nickinick"});
     activity1 = new Activity({id: "Meine Aktivität", url: "myActivity", resources: {"Meine Ressource": {_waitinglist: []}}});
-
-    waitinglistEntry1 = new WaitinglistEntry({_memberId: "12345", _registrationDate: moment().toDate()});
-    waitinglistEntry2 = new WaitinglistEntry({_memberId: "abcxyz", _registrationDate: moment().toDate()});
 
     sinon.stub(membersAPI, 'getMemberForId', function (memberId, callback) {
       if (memberId === member1.id) { return callback(null, member1); }
@@ -107,8 +100,6 @@ describe('Waitinglist API', function () {
 
   describe('- canSubscribe -', function () {
     it('does not allow to subscribe if the registrant is not on the waiting list', function (done) {
-      sinon.stub(store, 'waitinglistEntry', function (registrantId, activityId, resourceName, callback) { callback(null, null); });
-
       waitinglistAPI.canSubscribe('unknownMemberId', 'unknownActivityId', 'unknownResourceName', function (err, canSubscribe) {
         expect(canSubscribe).to.be.false;
         done(err);
@@ -116,30 +107,30 @@ describe('Waitinglist API', function () {
     });
 
     it('does not allow to subscribe if the registration is not allowed for the waiting list member', function (done) {
-      sinon.stub(store, 'waitinglistEntry', function (registrantId, activityId, resourceName, callback) { callback(null, waitinglistEntry1); });
-      waitinglistEntry1.setRegistrationValidityFor();
+      activity1.resources().named("Meine Ressource").addToWaitinglist('12345', moment());
+      activity1.resources().named("Meine Ressource").waitinglistEntryFor('12345').setRegistrationValidityFor();
 
-      waitinglistAPI.canSubscribe('knownMemberId', 'knownActivityId', 'knownResourceName', function (err, canSubscribe) {
+      waitinglistAPI.canSubscribe('12345', 'Meine Aktivität', 'Meine Ressource', function (err, canSubscribe) {
         expect(canSubscribe).to.be.false;
         done(err);
       });
     });
 
     it('does not allow to subscribe if the registration timeslot is already past', function (done) {
-      sinon.stub(store, 'waitinglistEntry', function (registrantId, activityId, resourceName, callback) { callback(null, waitinglistEntry1); });
-      waitinglistEntry1.setRegistrationValidityFor("-1");
+      activity1.resources().named("Meine Ressource").addToWaitinglist('12345', moment());
+      activity1.resources().named("Meine Ressource").waitinglistEntryFor('12345').setRegistrationValidityFor('-1');
 
-      waitinglistAPI.canSubscribe('knownMemberId', 'knownActivityId', 'knownResourceName', function (err, canSubscribe) {
+      waitinglistAPI.canSubscribe('12345', 'Meine Aktivität', 'Meine Ressource', function (err, canSubscribe) {
         expect(canSubscribe).to.be.false;
         done(err);
       });
     });
 
     it('allows to subscribe if the end of the registration timeslot is not reached yet', function (done) {
-      sinon.stub(store, 'waitinglistEntry', function (registrantId, activityId, resourceName, callback) { callback(null, waitinglistEntry1); });
-      waitinglistEntry1.setRegistrationValidityFor("1");
+      activity1.resources().named("Meine Ressource").addToWaitinglist('12345', moment());
+      activity1.resources().named("Meine Ressource").waitinglistEntryFor('12345').setRegistrationValidityFor('1');
 
-      waitinglistAPI.canSubscribe('knownMemberId', 'knownActivityId', 'knownResourceName', function (err, canSubscribe) {
+      waitinglistAPI.canSubscribe('12345', 'Meine Aktivität', 'Meine Ressource', function (err, canSubscribe) {
         expect(canSubscribe).to.be.true;
         done(err);
       });
