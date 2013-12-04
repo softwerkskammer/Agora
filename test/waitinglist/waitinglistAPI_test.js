@@ -8,7 +8,6 @@ var moment = require('moment-timezone');
 
 var beans = require('../configureForTest').get('beans');
 var waitinglistAPI = beans.get('waitinglistAPI');
-var store = beans.get('waitinglistStore');
 
 var activitystore = beans.get('activitystore');
 var membersAPI = beans.get('membersAPI');
@@ -31,9 +30,6 @@ describe('Waitinglist API', function () {
     sinon.stub(membersAPI, 'getMember', function (nickname, callback) {
       if (nickname === member1.nickname) { return callback(null, member1); }
       if (nickname === member2.nickname) { return callback(null, member2); }
-    });
-    sinon.stub(store, 'saveWaitinglistEntry', function (waitinglistEntry, callback) {
-      return callback(null, waitinglistEntry);
     });
     sinon.stub(activitystore, 'getActivityForId', function (activity, callback) {
       return callback(null, activity1);
@@ -92,7 +88,7 @@ describe('Waitinglist API', function () {
 
       var args = {nickname: 'hansdampf', activityUrl: 'Meine Aktivität', resourcename: "Meine Ressource"};
 
-      waitinglistAPI.saveWaitinglistEntry(args, function (err, waitinglistEntry) {
+      waitinglistAPI.saveWaitinglistEntry(args, function (err) {
         done(err);
       });
     });
