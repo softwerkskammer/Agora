@@ -9,7 +9,7 @@ mixin resourceRow(name, limit, isRegistrationOpen, hasWaitinglist)
       input.form-control(name="resources[limits]", value=limit, type="text", placeholder="unbegrenzt")
     .col-xs-3.col-sm-2
       .checkbox
-        input(name="resources[registrationOpen]", value=isRegistrationOpen, type="checkbox", checked=(isRegistrationOpen ? "true" : undefined))
+        input(name="resources[isRegistrationOpen]", value=isRegistrationOpen, type="checkbox", checked=(isRegistrationOpen ? "true" : undefined))
         | möglich
     .col-xs-3.col-sm-2
       .checkbox
