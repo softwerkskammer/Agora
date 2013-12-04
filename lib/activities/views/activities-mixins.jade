@@ -24,7 +24,7 @@ mixin subscriptionButtons(activity, resourceName, currentMemberId)
       | Für dieses Event kannst Du Dich nicht bei der Softwerkskammer anmelden.
     else if (!registrationOpen && (!limit || !!limit && registeredMembers.length === 0))
       | Anmeldung ist zur Zeit nicht möglich.
-    else if (activity.withWaitinglist(resourceName))
+    else if (activity.hasWaitinglist(resourceName))
       a.btn.btn-primary(href="addToWaitinglist/#{url}/#{encodedResourceName}") Auf die Warteliste
     else
       | Alle Plätze sind belegt.
@@ -41,7 +41,7 @@ mixin subscriptionButtons(activity, resourceName, currentMemberId)
           span.control-label.col-xs-6(style="text-align: center;") Anmeldung nicht über die Softwerkskammer möglich.
         else if (!registrationOpen && (!limit || !!limit && registeredMembers.length === 0))
           span.control-label.col-xs-6(style="text-align: center;") Anmeldung ist zur Zeit nicht möglich.
-        else if (activity.withWaitinglist(resourceName))
+        else if (activity.hasWaitinglist(resourceName))
           a.col-xs-6.btn.btn-primary(href="addToWaitinglist/#{url}/#{encodedResourceName}") Auf die Warteliste
         else
           span.control-label.col-xs-6(style="text-align: center;") Alle Plätze sind belegt.

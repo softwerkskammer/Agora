@@ -134,7 +134,7 @@ describe('Resource', function () {
         {memberId: 'memberID'}
       ]});
       var copy = new Resource({}).copyFrom(resource);
-      expect(copy.withWaitinglist()).to.be.false;
+      expect(copy.hasWaitinglist()).to.be.false;
     });
 
     it('sets the waitinglist preference for the copy to false even when it was true for the original', function () {
@@ -142,7 +142,7 @@ describe('Resource', function () {
         {memberId: 'memberID'}
       ], _withWaitinglist: true});
       var copy = new Resource({}).copyFrom(resource);
-      expect(copy.withWaitinglist()).to.be.false;
+      expect(copy.hasWaitinglist()).to.be.false;
     });
 
   });
@@ -175,14 +175,14 @@ describe('Resource', function () {
 
     it("adds a waitinglist if it is indicated", function () {
       var resource = new Resource();
-      resource.fillFromUI({withWaitinglist: "someValue"});
-      expect(resource.withWaitinglist()).to.be.true;
+      resource.fillFromUI({hasWaitinglist: "someValue"});
+      expect(resource.hasWaitinglist()).to.be.true;
     });
 
     it("removes 'with waitinglist' if it is not indicated", function () {
       var resource = new Resource({ _withWaitinglist: true });
-      resource.fillFromUI({withWaitinglist: ""});
-      expect(resource.withWaitinglist()).to.be.false;
+      resource.fillFromUI({hasWaitinglist: ""});
+      expect(resource.hasWaitinglist()).to.be.false;
     });
 
   });

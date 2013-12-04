@@ -82,17 +82,17 @@ describe("Resources (fillFromUI)", function () {
 
       expect(resources.named('name1').limit()).to.equal(20);
       expect(resources.named('name1').registrationOpen()).to.be.true;
-      expect(resources.named('name1').withWaitinglist()).to.be.true;
+      expect(resources.named('name1').hasWaitinglist()).to.be.true;
     });
 
     it("adds values if given", function () {
       var resources = new Resources({ name1: {}});
 
-      resources.fillFromUI({names: "name1", previousNames: "name1", limits: "10", registrationOpen: "anything", withWaitinglist: "someValue"});
+      resources.fillFromUI({names: "name1", previousNames: "name1", limits: "10", registrationOpen: "anything", hasWaitinglist: "someValue"});
 
       expect(resources.named('name1').limit()).to.equal(10);
       expect(resources.named('name1').registrationOpen()).to.be.true;
-      expect(resources.named('name1').withWaitinglist()).to.be.true;
+      expect(resources.named('name1').hasWaitinglist()).to.be.true;
     });
 
     it("removes value if not given", function () {
@@ -102,7 +102,7 @@ describe("Resources (fillFromUI)", function () {
 
       expect(resources.named('name1').limit()).to.be.undefined;
       expect(resources.named('name1').registrationOpen()).to.be.false;
-      expect(resources.named('name1').withWaitinglist()).to.be.false;
+      expect(resources.named('name1').hasWaitinglist()).to.be.false;
     });
   });
 });
