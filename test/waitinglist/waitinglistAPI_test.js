@@ -63,7 +63,7 @@ describe('Waitinglist API', function () {
       waitinglistAPI.waitinglistFor('myActivity', function (err, waitinglist) {
         expect(waitinglist.length).to.equal(1);
         expect(waitinglist[0].registrantNickname).to.equal('hansdampf');
-        expect(waitinglist[0].resourceName()).to.equal('Meine Ressource');
+        expect(waitinglist[0].resourceName).to.equal('Meine Ressource');
         expect(waitinglist[0].registrationDate()).to.not.be.undefined;
         expect(waitinglist[0].registrationValidUntil()).to.be.undefined;
         done(err);
@@ -89,45 +89,6 @@ describe('Waitinglist API', function () {
       var args = {nickname: 'hansdampf', activityUrl: 'Meine Aktivität', resourcename: "Meine Ressource"};
 
       waitinglistAPI.saveWaitinglistEntry(args, function (err) {
-        done(err);
-      });
-    });
-  });
-
-  describe('- canSubscribe -', function () {
-    it('does not allow to subscribe if the registrant is not on the waiting list', function (done) {
-      waitinglistAPI.canSubscribe('unknownMemberId', 'unknownActivityId', 'unknownResourceName', function (err, canSubscribe) {
-        expect(canSubscribe).to.be.false;
-        done(err);
-      });
-    });
-
-    it('does not allow to subscribe if the registration is not allowed for the waiting list member', function (done) {
-      activity1.resources().named("Meine Ressource").addToWaitinglist('12345', moment());
-      activity1.resources().named("Meine Ressource").waitinglistEntryFor('12345').setRegistrationValidityFor();
-
-      waitinglistAPI.canSubscribe('12345', 'Meine Aktivität', 'Meine Ressource', function (err, canSubscribe) {
-        expect(canSubscribe).to.be.false;
-        done(err);
-      });
-    });
-
-    it('does not allow to subscribe if the registration timeslot is already past', function (done) {
-      activity1.resources().named("Meine Ressource").addToWaitinglist('12345', moment());
-      activity1.resources().named("Meine Ressource").waitinglistEntryFor('12345').setRegistrationValidityFor('-1');
-
-      waitinglistAPI.canSubscribe('12345', 'Meine Aktivität', 'Meine Ressource', function (err, canSubscribe) {
-        expect(canSubscribe).to.be.false;
-        done(err);
-      });
-    });
-
-    it('allows to subscribe if the end of the registration timeslot is not reached yet', function (done) {
-      activity1.resources().named("Meine Ressource").addToWaitinglist('12345', moment());
-      activity1.resources().named("Meine Ressource").waitinglistEntryFor('12345').setRegistrationValidityFor('1');
-
-      waitinglistAPI.canSubscribe('12345', 'Meine Aktivität', 'Meine Ressource', function (err, canSubscribe) {
-        expect(canSubscribe).to.be.true;
         done(err);
       });
     });

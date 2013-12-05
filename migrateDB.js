@@ -1,10 +1,12 @@
 'use strict';
 
-var _ = require('underscore');
-
 require('./configure'); // initializing parameters
+var _ = require('underscore');
+var async = require('async');
+var moment = require('moment-timezone');
 var beans = require('nconf').get('beans');
-var activitiesCoreAPI = beans.get('activitiesCoreAPI');
+var persistence = beans.get('waitinglistPersistence');
+var activitystore = beans.get('activitystore');
 
 var async = require('async');
 
@@ -15,23 +17,26 @@ if (!really || really !== 'really') {
   process.exit();
 }
 
-function logResult(err, message) {
-  if (err) { return console.log('An error occurred: ' + err); }
-  console.log(message);
-}
+activitystore.allActivities(function (err, activities) {
 
-activitiesCoreAPI.allActivities(function (err, activities) {
-  if (err) { return console.log("Error: " + err); }
-  if (!activities) { return console.log("No activities found!"); }
-  _.each(activities, function (activity) {
-    delete activity.state.color;
-    _.each(activity.state.resources, function (resource) {
-      resource._registrationOpen = true;
-    });
-  });
-
-  async.map(activities, activitiesCoreAPI.saveActivity, function (err, results) {
-    logResult(err, "All Activities were migrated: " + results);
+  persistence.list({startUnix: 1}, function (err, results) {
+    async.each(results, function (each, callback) {
+        var activity = _.find(activities, function (activity) { return activity.id() === each._activityId; });
+        if (!activity) { return callback(); }
+        var resource = activity.resources().named(each._resourceName);
+        if (resource.state._withWaitinglist && !resource.state._waitinglist) { resource.state._waitinglist = []; }
+        resource.addToWaitinglist(each._registrantId, moment(each._registrationDate));
+        activitystore.saveActivity(activity, callback);
+      },
+      function (err) {
+        if (err) {
+          console.log(err);
+          process.exit();
+        }
+      });
     process.exit();
   });
+
 });
+
+

@@ -1,10 +1,13 @@
 "use strict";
 
 require('../configureForTest');
+var moment = require('moment-timezone');
 var conf = require('nconf');
 var expect = require('chai').expect;
 
-var Resource = conf.get('beans').get('resource');
+var beans = conf.get('beans');
+var Resource = beans.get('resource');
+var Activity = beans.get('activity');
 
 describe('Resource', function () {
   describe('registration matters', function () {
@@ -185,6 +188,37 @@ describe('Resource', function () {
       expect(resource.hasWaitinglist()).to.be.false;
     });
 
+  });
+
+  describe('- canSubscribe -', function () {
+    var activity1;
+    beforeEach(function () {
+      activity1 = new Activity({id: "Meine Aktivität", url: "myActivity", resources: {"Meine Ressource": {_waitinglist: []}}});
+    });
+
+    it('does not allow to subscribe if the registration is not allowed for the waiting list member', function () {
+      var resource = activity1.resources().named("Meine Ressource");
+      resource.addToWaitinglist('12345', moment());
+      resource.waitinglistEntryFor('12345').setRegistrationValidityFor();
+
+      expect(resource.waitinglistEntryFor('12345').canSubscribe()).to.be.false;
+    });
+
+    it('does not allow to subscribe if the registration timeslot is already past', function () {
+      var resource = activity1.resources().named("Meine Ressource");
+      resource.addToWaitinglist('12345', moment());
+      resource.waitinglistEntryFor('12345').setRegistrationValidityFor('-1');
+
+      expect(resource.waitinglistEntryFor('12345').canSubscribe()).to.be.false;
+    });
+
+    it('allows to subscribe if the end of the registration timeslot is not reached yet', function () {
+      var resource = activity1.resources().named("Meine Ressource");
+      resource.addToWaitinglist('12345', moment());
+      resource.waitinglistEntryFor('12345').setRegistrationValidityFor('1');
+
+      expect(resource.waitinglistEntryFor('12345').canSubscribe()).to.be.true;
+    });
   });
 
 });
