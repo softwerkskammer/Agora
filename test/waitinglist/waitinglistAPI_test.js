@@ -63,7 +63,7 @@ describe('Waitinglist API', function () {
       waitinglistAPI.waitinglistFor('myActivity', function (err, waitinglist) {
         expect(waitinglist.length).to.equal(1);
         expect(waitinglist[0].registrantNickname).to.equal('hansdampf');
-        expect(waitinglist[0].resourceName()).to.equal('Meine Ressource');
+        expect(waitinglist[0].resourceName).to.equal('Meine Ressource');
         expect(waitinglist[0].registrationDate()).to.not.be.undefined;
         expect(waitinglist[0].registrationValidUntil()).to.be.undefined;
         done(err);

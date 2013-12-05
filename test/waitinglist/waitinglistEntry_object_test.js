@@ -10,8 +10,7 @@ var moment = require('moment-timezone');
 
 var entryWithoutParam = new WaitinglistEntry();
 var registrationDate = moment('23.02.2013 17:44', 'DD.MM.YYYY HH:mm').toDate();
-var entryWithParam = new WaitinglistEntry({_memberId: '12345', _registeredAt: registrationDate});
-entryWithParam._resourceName = 'Meine Ressource';
+var entryWithParam = new WaitinglistEntry({_memberId: '12345', _registeredAt: registrationDate}, 'Meine Ressource');
 
 
 describe('Waitinglist Entry', function () {
@@ -19,7 +18,7 @@ describe('Waitinglist Entry', function () {
   it('without argument yields undefined for each query', function () {
 
     expect(entryWithoutParam.registrantId()).to.be.undefined;
-    expect(entryWithoutParam.resourceName()).to.be.undefined;
+    expect(entryWithoutParam.resourceName).to.be.undefined;
     expect(entryWithoutParam.registrationDate()).to.be.undefined;
     expect(entryWithoutParam.registrationValidUntil()).to.be.undefined;
   });
@@ -29,7 +28,7 @@ describe('Waitinglist Entry', function () {
   });
 
   it('returns the resource name', function () {
-    expect(entryWithParam.resourceName()).to.equal("Meine Ressource");
+    expect(entryWithParam.resourceName).to.equal("Meine Ressource");
   });
 
   it('returns the registration date', function () {
