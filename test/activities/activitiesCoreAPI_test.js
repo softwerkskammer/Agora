@@ -13,7 +13,6 @@ var dummyActivity = new Activity({id: activityId, url: 'url', title: 'CodingDojo
 var activitystore = beans.get('activitystore');
 
 var api = beans.get('activitiesCoreAPI');
-var waitinglistAPI = beans.get('waitinglistAPI');
 
 describe('Activities Core API', function () {
 
@@ -21,7 +20,6 @@ describe('Activities Core API', function () {
     sinon.restore();
     done();
   });
-
 
   it('returns past activities', function (done) {
     sinon.stub(activitystore, 'allActivitiesByDateRangeInDescendingOrder', function (start, end, callback) {
@@ -78,13 +76,22 @@ describe('Activities Core API', function () {
     });
 
     it('succeeds when registration is not open but registrant is on waiting list and allowed to subscribe', function (done) {
-      var activity = new Activity({resources: {Einzelzimmer: {_registrationOpen: false}}});
+      var tomorrow = moment();
+      tomorrow.add('days', 1);
+      var activity = new Activity({
+        resources: {
+          Einzelzimmer: {
+            _registrationOpen: false,
+            _waitinglist: [
+              { _memberId: 'memberId', _registrationValidUntil: tomorrow.toDate() }
+            ]
+          }
+        }
+      });
       sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, activity); });
       sinon.stub(activitystore, 'saveActivity', function (id, callback) { callback(null, activity); });
 
-      sinon.stub(waitinglistAPI, 'canSubscribe', function (memberId, activityId, resourceName, callback) {return callback(null, true); });
-
-      api.addVisitorTo('memberId', 'activity-url', 'Einzelzimmer', new moment(), function (err, savedActivity, statusTitle, statusText) {
+      api.addVisitorTo('memberId', 'activity-url', 'Einzelzimmer', moment(), function (err, savedActivity, statusTitle, statusText) {
         expect(!!err, "Error").to.be.false;
         expect(!!statusTitle, "Status Title").to.be.false;
         expect(!!statusText, "Status Text").to.be.false;
