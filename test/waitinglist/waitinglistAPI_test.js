@@ -58,7 +58,7 @@ describe('Waitinglist API', function () {
     });
 
     it('returns one entry with its member nickname when the waitinglist contains one entry', function (done) {
-      activity1.resources().named("Meine Ressource").addToWaitinglist('12345', moment());
+      activity1.resourceNamed("Meine Ressource").addToWaitinglist('12345', moment());
 
       waitinglistAPI.waitinglistFor('myActivity', function (err, waitinglist) {
         expect(waitinglist.length).to.equal(1);
@@ -71,8 +71,8 @@ describe('Waitinglist API', function () {
     });
 
     it('returns two entries with their member nicknames when the waitinglist contains two entries', function (done) {
-      activity1.resources().named("Meine Ressource").addToWaitinglist('12345', moment());
-      activity1.resources().named("Meine Ressource").addToWaitinglist('abcxyz', moment());
+      activity1.resourceNamed("Meine Ressource").addToWaitinglist('12345', moment());
+      activity1.resourceNamed("Meine Ressource").addToWaitinglist('abcxyz', moment());
 
       waitinglistAPI.waitinglistFor('myActivity', function (err, waitinglist) {
         expect(waitinglist.length).to.equal(2);

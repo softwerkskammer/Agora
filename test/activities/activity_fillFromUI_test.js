@@ -27,7 +27,7 @@ describe('Activity (when filled from UI)', function () {
       var activity = new Activity().fillFromUI({resources: {names: "Einzelzimmer", limits: "", previousNames: ""}});
 
       checkResourceNames(activity, "Einzelzimmer");
-      expect(activity.resources().named("Einzelzimmer").limit(), "Limit of resource").to.equal(undefined);
+      expect(activity.resourceNamed("Einzelzimmer").limit(), "Limit of resource").to.equal(undefined);
       done();
     });
 
@@ -35,7 +35,7 @@ describe('Activity (when filled from UI)', function () {
       var activity = new Activity().fillFromUI({resources: {names: "Einzelzimmer", limits: "0", previousNames: ""}});
 
       checkResourceNames(activity, "Einzelzimmer");
-      expect(activity.resources().named("Einzelzimmer").limit(), "Limit of resource").to.equal(0);
+      expect(activity.resourceNamed("Einzelzimmer").limit(), "Limit of resource").to.equal(0);
       done();
     });
 
@@ -43,7 +43,7 @@ describe('Activity (when filled from UI)', function () {
       var activity = new Activity().fillFromUI({resources: {names: "Einzelzimmer", limits: "10", previousNames: ""}});
 
       checkResourceNames(activity, "Einzelzimmer");
-      expect(activity.resources().named("Einzelzimmer").limit(), "Limit of resource").to.equal(10);
+      expect(activity.resourceNamed("Einzelzimmer").limit(), "Limit of resource").to.equal(10);
       done();
     });
 
@@ -51,7 +51,7 @@ describe('Activity (when filled from UI)', function () {
       var activity = new Activity().fillFromUI({resources: {names: "Einzelzimmer", limits: "-10", previousNames: ""}});
 
       checkResourceNames(activity, "Einzelzimmer");
-      expect(activity.resources().named("Einzelzimmer").limit(), "Limit of resource").to.equal(undefined);
+      expect(activity.resourceNamed("Einzelzimmer").limit(), "Limit of resource").to.equal(undefined);
       done();
     });
 
@@ -59,7 +59,7 @@ describe('Activity (when filled from UI)', function () {
       var activity = new Activity().fillFromUI({resources: {names: "Einzelzimmer", limits: "dudu", previousNames: ""}});
 
       checkResourceNames(activity, "Einzelzimmer");
-      expect(activity.resources().named("Einzelzimmer").limit(), "Limit of resource").to.equal(undefined);
+      expect(activity.resourceNamed("Einzelzimmer").limit(), "Limit of resource").to.equal(undefined);
       done();
     });
 
@@ -67,7 +67,7 @@ describe('Activity (when filled from UI)', function () {
       var activity = new Activity().fillFromUI({resources: {names: "Einzelzimmer", limits: "dudu", previousNames: "", isRegistrationOpen: "true"}});
 
       checkResourceNames(activity, "Einzelzimmer");
-      expect(activity.resources().named("Einzelzimmer").isRegistrationOpen(), "Registration at resource").to.equal(true);
+      expect(activity.resourceNamed("Einzelzimmer").isRegistrationOpen(), "Registration at resource").to.equal(true);
       done();
     });
 
@@ -75,7 +75,7 @@ describe('Activity (when filled from UI)', function () {
       var activity = new Activity().fillFromUI({resources: {names: "Einzelzimmer", limits: "dudu", previousNames: "", isRegistrationOpen: undefined}});
 
       checkResourceNames(activity, "Einzelzimmer");
-      expect(activity.resources().named("Einzelzimmer").isRegistrationOpen(), "Registration at resource").to.equal(false);
+      expect(activity.resourceNamed("Einzelzimmer").isRegistrationOpen(), "Registration at resource").to.equal(false);
       done();
     });
 
@@ -85,8 +85,8 @@ describe('Activity (when filled from UI)', function () {
     var activity = new Activity().fillFromUI({resources: {names: ["Einzelzimmer", "Doppelzimmer"], limits: ["10", "20"], previousNames: ["", ""]}});
 
     checkResourceNames(activity, "Einzelzimmer", "Doppelzimmer");
-    expect(activity.resources().named("Einzelzimmer").limit(), "Limit of resource").to.equal(10);
-    expect(activity.resources().named("Doppelzimmer").limit(), "Limit of resource").to.equal(20);
+    expect(activity.resourceNamed("Einzelzimmer").limit(), "Limit of resource").to.equal(10);
+    expect(activity.resourceNamed("Doppelzimmer").limit(), "Limit of resource").to.equal(20);
     done();
   });
 
@@ -97,7 +97,7 @@ describe('Activity (when filled from UI)', function () {
         .fillFromUI({resources: {names: "Einzelzimmer", limits: "10", previousNames: "Einzelzimmer"}});
 
       checkResourceNames(activity, "Einzelzimmer");
-      expect(activity.resources().named("Einzelzimmer").limit(), "Limit of resource").to.equal(10);
+      expect(activity.resourceNamed("Einzelzimmer").limit(), "Limit of resource").to.equal(10);
       done();
     });
 
@@ -108,9 +108,9 @@ describe('Activity (when filled from UI)', function () {
         .fillFromUI({resources: {names: "Einzelzimmer", limits: "10", previousNames: "Einzelzimmer"}});
 
       checkResourceNames(activity, "Einzelzimmer");
-      expect(activity.resources().named("Einzelzimmer").limit(), "Limit of resource").to.equal(10);
-      expect(activity.resources().named("Einzelzimmer").registeredMembers().length, "Member count of resource").to.equal(1);
-      expect(activity.resources().named("Einzelzimmer").registeredMembers(), "Members of resource").to.contain('memberId');
+      expect(activity.resourceNamed("Einzelzimmer").limit(), "Limit of resource").to.equal(10);
+      expect(activity.resourceNamed("Einzelzimmer").registeredMembers().length, "Member count of resource").to.equal(1);
+      expect(activity.resourceNamed("Einzelzimmer").registeredMembers(), "Members of resource").to.contain('memberId');
       done();
     });
 
@@ -122,10 +122,10 @@ describe('Activity (when filled from UI)', function () {
         .fillFromUI({resources: {names: "Einzelzimmer", limits: "1", previousNames: "Einzelzimmer"}});
 
       checkResourceNames(activity, "Einzelzimmer");
-      expect(activity.resources().named("Einzelzimmer").limit(), "Limit of resource").to.equal(1);
-      expect(activity.resources().named("Einzelzimmer").registeredMembers().length, "Member count of resource").to.equal(2);
-      expect(activity.resources().named("Einzelzimmer").registeredMembers(), "Members of resource").to.contain('memberId1');
-      expect(activity.resources().named("Einzelzimmer").registeredMembers(), "Members of resource").to.contain('memberId2');
+      expect(activity.resourceNamed("Einzelzimmer").limit(), "Limit of resource").to.equal(1);
+      expect(activity.resourceNamed("Einzelzimmer").registeredMembers().length, "Member count of resource").to.equal(2);
+      expect(activity.resourceNamed("Einzelzimmer").registeredMembers(), "Members of resource").to.contain('memberId1');
+      expect(activity.resourceNamed("Einzelzimmer").registeredMembers(), "Members of resource").to.contain('memberId2');
       done();
     });
 
@@ -138,7 +138,7 @@ describe('Activity (when filled from UI)', function () {
         .fillFromUI({resources: {names: "Einzelzimmer", limits: "", previousNames: "Einzelzimmer"}});
 
       checkResourceNames(activity, "Einzelzimmer");
-      expect(activity.resources().named("Einzelzimmer").limit(), "Limit of resource").to.equal(undefined);
+      expect(activity.resourceNamed("Einzelzimmer").limit(), "Limit of resource").to.equal(undefined);
       done();
     });
 
@@ -147,7 +147,7 @@ describe('Activity (when filled from UI)', function () {
         .fillFromUI({resources: {names: "Einzelzimmer", limits: "-1", previousNames: "Einzelzimmer"}});
 
       checkResourceNames(activity, "Einzelzimmer");
-      expect(activity.resources().named("Einzelzimmer").limit(), "Limit of resource").to.equal(undefined);
+      expect(activity.resourceNamed("Einzelzimmer").limit(), "Limit of resource").to.equal(undefined);
       done();
     });
 
@@ -156,7 +156,7 @@ describe('Activity (when filled from UI)', function () {
         .fillFromUI({resources: {names: "Einzelzimmer", limits: "tuut", previousNames: "Einzelzimmer"}});
 
       checkResourceNames(activity, "Einzelzimmer");
-      expect(activity.resources().named("Einzelzimmer").limit(), "Limit of resource").to.equal(undefined);
+      expect(activity.resourceNamed("Einzelzimmer").limit(), "Limit of resource").to.equal(undefined);
       done();
     });
 
@@ -167,9 +167,9 @@ describe('Activity (when filled from UI)', function () {
         .fillFromUI({resources: {names: "Einzelzimmer", limits: "", previousNames: "Einzelzimmer"}});
 
       checkResourceNames(activity, "Einzelzimmer");
-      expect(activity.resources().named("Einzelzimmer").limit(), "Limit of resource").to.equal(undefined);
-      expect(activity.resources().named("Einzelzimmer").registeredMembers().length, "Member count of resource").to.equal(1);
-      expect(activity.resources().named("Einzelzimmer").registeredMembers(), "Members of resource").to.contain('memberId');
+      expect(activity.resourceNamed("Einzelzimmer").limit(), "Limit of resource").to.equal(undefined);
+      expect(activity.resourceNamed("Einzelzimmer").registeredMembers().length, "Member count of resource").to.equal(1);
+      expect(activity.resourceNamed("Einzelzimmer").registeredMembers(), "Members of resource").to.contain('memberId');
       done();
     });
 
@@ -222,7 +222,7 @@ describe('Activity (when filled from UI)', function () {
         .fillFromUI({resources: {names: "Doppelzimmer", limits: "", previousNames: "Einzelzimmer"}});
 
       checkResourceNames(activity, "Doppelzimmer");
-      expect(activity.resources().named("Doppelzimmer").limit(), "Limit of resource").to.equal(undefined);
+      expect(activity.resourceNamed("Doppelzimmer").limit(), "Limit of resource").to.equal(undefined);
       done();
     });
 
@@ -231,7 +231,7 @@ describe('Activity (when filled from UI)', function () {
         .fillFromUI({resources: {names: "Doppelzimmer", limits: "20", previousNames: "Einzelzimmer"}});
 
       checkResourceNames(activity, "Doppelzimmer");
-      expect(activity.resources().named("Doppelzimmer").limit(), "Limit of resource").to.equal(20);
+      expect(activity.resourceNamed("Doppelzimmer").limit(), "Limit of resource").to.equal(20);
       done();
     });
 
@@ -240,7 +240,7 @@ describe('Activity (when filled from UI)', function () {
         .fillFromUI({resources: {names: "Doppelzimmer", limits: "10", previousNames: "Einzelzimmer"}});
 
       checkResourceNames(activity, "Doppelzimmer");
-      expect(activity.resources().named("Doppelzimmer").limit(), "Limit of resource").to.equal(10);
+      expect(activity.resourceNamed("Doppelzimmer").limit(), "Limit of resource").to.equal(10);
       done();
     });
 
@@ -251,9 +251,9 @@ describe('Activity (when filled from UI)', function () {
         .fillFromUI({resources: {names: "Doppelzimmer", limits: "20", previousNames: "Einzelzimmer"}});
 
       checkResourceNames(activity, "Doppelzimmer");
-      expect(activity.resources().named("Doppelzimmer").limit(), "Limit of resource").to.equal(20);
-      expect(activity.resources().named("Doppelzimmer").registeredMembers().length, "Member count of resource").to.equal(1);
-      expect(activity.resources().named("Doppelzimmer").registeredMembers(), "Members of resource").to.contain('memberId');
+      expect(activity.resourceNamed("Doppelzimmer").limit(), "Limit of resource").to.equal(20);
+      expect(activity.resourceNamed("Doppelzimmer").registeredMembers().length, "Member count of resource").to.equal(1);
+      expect(activity.resourceNamed("Doppelzimmer").registeredMembers(), "Members of resource").to.contain('memberId');
       done();
     });
 
@@ -269,11 +269,11 @@ describe('Activity (when filled from UI)', function () {
         .fillFromUI({resources: {names: ["Einzelzimmer", "", "Schlafsaal"], limits: ["10", "20", "30"], previousNames: ["Einzelzimmer", "Doppelzimmer", ""] }});
 
       checkResourceNames(activity, "Einzelzimmer", "Schlafsaal");
-      expect(activity.resources().named("Einzelzimmer").limit(), "Limit of resource").to.equal(10);
-      expect(activity.resources().named("Einzelzimmer").registeredMembers().length, "Member count of resource").to.equal(1);
-      expect(activity.resources().named("Einzelzimmer").registeredMembers(), "Members of resource").to.contain('memberId1');
-      expect(activity.resources().named("Schlafsaal").limit(), "Limit of resource").to.equal(30);
-      expect(activity.resources().named("Schlafsaal").registeredMembers().length, "Member count of resource").to.equal(0);
+      expect(activity.resourceNamed("Einzelzimmer").limit(), "Limit of resource").to.equal(10);
+      expect(activity.resourceNamed("Einzelzimmer").registeredMembers().length, "Member count of resource").to.equal(1);
+      expect(activity.resourceNamed("Einzelzimmer").registeredMembers(), "Members of resource").to.contain('memberId1');
+      expect(activity.resourceNamed("Schlafsaal").limit(), "Limit of resource").to.equal(30);
+      expect(activity.resourceNamed("Schlafsaal").registeredMembers().length, "Member count of resource").to.equal(0);
       done();
     });
 
@@ -285,11 +285,11 @@ describe('Activity (when filled from UI)', function () {
         .fillFromUI({resources: {names: ["Koje", "", "Schlafsaal"], limits: ["10", "20", "30"], previousNames: ["Einzelzimmer", "Doppelzimmer", ""] }});
 
       checkResourceNames(activity, "Koje", "Schlafsaal");
-      expect(activity.resources().named("Koje").limit(), "Limit of resource").to.equal(10);
-      expect(activity.resources().named("Koje").registeredMembers().length, "Member count of resource").to.equal(1);
-      expect(activity.resources().named("Koje").registeredMembers(), "Members of resource").to.contain('memberId1');
-      expect(activity.resources().named("Schlafsaal").limit(), "Limit of resource").to.equal(30);
-      expect(activity.resources().named("Schlafsaal").registeredMembers().length, "Member count of resource").to.equal(0);
+      expect(activity.resourceNamed("Koje").limit(), "Limit of resource").to.equal(10);
+      expect(activity.resourceNamed("Koje").registeredMembers().length, "Member count of resource").to.equal(1);
+      expect(activity.resourceNamed("Koje").registeredMembers(), "Members of resource").to.contain('memberId1');
+      expect(activity.resourceNamed("Schlafsaal").limit(), "Limit of resource").to.equal(30);
+      expect(activity.resourceNamed("Schlafsaal").registeredMembers().length, "Member count of resource").to.equal(0);
       done();
     });
 
@@ -305,12 +305,12 @@ describe('Activity (when filled from UI)', function () {
       .fillFromUI({resources: {names: ["Doppelzimmer", "Einzelzimmer"], limits: ["10", "20"], previousNames: ["Einzelzimmer", "Doppelzimmer"] }});
 
     checkResourceNames(activity, "Doppelzimmer", "Einzelzimmer");
-    expect(activity.resources().named("Doppelzimmer").limit(), "Limit of resource").to.equal(10);
-    expect(activity.resources().named("Doppelzimmer").registeredMembers().length, "Member count of resource").to.equal(1);
-    expect(activity.resources().named("Doppelzimmer").registeredMembers(), "Members of resource").to.contain('memberId1');
-    expect(activity.resources().named("Einzelzimmer").limit(), "Limit of resource").to.equal(20);
-    expect(activity.resources().named("Einzelzimmer").registeredMembers().length, "Member count of resource").to.equal(1);
-    expect(activity.resources().named("Einzelzimmer").registeredMembers(), "Members of resource").to.contain('memberId2');
+    expect(activity.resourceNamed("Doppelzimmer").limit(), "Limit of resource").to.equal(10);
+    expect(activity.resourceNamed("Doppelzimmer").registeredMembers().length, "Member count of resource").to.equal(1);
+    expect(activity.resourceNamed("Doppelzimmer").registeredMembers(), "Members of resource").to.contain('memberId1');
+    expect(activity.resourceNamed("Einzelzimmer").limit(), "Limit of resource").to.equal(20);
+    expect(activity.resourceNamed("Einzelzimmer").registeredMembers().length, "Member count of resource").to.equal(1);
+    expect(activity.resourceNamed("Einzelzimmer").registeredMembers(), "Members of resource").to.contain('memberId2');
     done();
   });
 

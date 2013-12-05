@@ -197,7 +197,7 @@ describe('Resource', function () {
     });
 
     it('does not allow to subscribe if the registration is not allowed for the waiting list member', function () {
-      var resource = activity1.resources().named("Meine Ressource");
+      var resource = activity1.resourceNamed("Meine Ressource");
       resource.addToWaitinglist('12345', moment());
       resource.waitinglistEntryFor('12345').setRegistrationValidityFor();
 
@@ -205,7 +205,7 @@ describe('Resource', function () {
     });
 
     it('does not allow to subscribe if the registration timeslot is already past', function () {
-      var resource = activity1.resources().named("Meine Ressource");
+      var resource = activity1.resourceNamed("Meine Ressource");
       resource.addToWaitinglist('12345', moment());
       resource.waitinglistEntryFor('12345').setRegistrationValidityFor('-1');
 
@@ -213,7 +213,7 @@ describe('Resource', function () {
     });
 
     it('allows to subscribe if the end of the registration timeslot is not reached yet', function () {
-      var resource = activity1.resources().named("Meine Ressource");
+      var resource = activity1.resourceNamed("Meine Ressource");
       resource.addToWaitinglist('12345', moment());
       resource.waitinglistEntryFor('12345').setRegistrationValidityFor('1');
 
