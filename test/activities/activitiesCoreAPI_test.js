@@ -51,6 +51,7 @@ describe('Activities Core API', function () {
       var activity = new Activity({resources: {Einzelzimmer: {_registrationOpen: true}}});
       sinon.stub(activitystore, 'saveActivity', function (id, callback) { callback(null, activity); });
       sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, activity); });
+      sinon.stub(activitystore, 'getActivityForId', function (id, callback) { callback(null, activity); });
 
       api.addVisitorTo('memberId', 'activity-url', 'Einzelzimmer', new moment(), function (err, savedActivity, statusTitle, statusText) {
         expect(!!err, "Error: " + err).to.be.false;
@@ -65,6 +66,7 @@ describe('Activities Core API', function () {
       var activity = new Activity({resources: {Einzelzimmer: {_registrationOpen: false}}});
 
       sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, activity); });
+      sinon.stub(activitystore, 'getActivityForId', function (id, callback) { callback(null, activity); });
 
       api.addVisitorTo('memberId', 'activity-url', 'Einzelzimmer', new moment(), function (err, savedActivity, statusTitle, statusText) {
         expect(!!err, "Error").to.be.false;

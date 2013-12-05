@@ -13,18 +13,18 @@ mixin subscriptionButtons(activity, resourceName, currentMemberId)
   url = encodeURIComponent(activity.url())
   encodedResourceName = encodeURIComponent(resourceName)
   limit = activity.resources().named(resourceName).limit()
-  registrationOpen = activity.registrationOpenFor(resourceName)
+  isRegistrationOpen = activity.registrationOpenFor(resourceName)
 
   if (activity.resourceNames().length === 1)
     if (registeredMembers.indexOf(currentMemberId) > -1)
       a.btn.btn-default(href="unsubscribe/#{url}/#{encodedResourceName}") Ich kann doch nicht…
-    else if (registrationOpen && !activity.isFull(resourceName))
+    else if (isRegistrationOpen && !activity.isFull(resourceName))
       a.btn.btn-primary(href="subscribe/#{url}/#{encodedResourceName}") Ich bin dabei!
     else if (limit === 0)
       | Für dieses Event kannst Du Dich nicht bei der Softwerkskammer anmelden.
-    else if (!registrationOpen && (!limit || !!limit && registeredMembers.length === 0))
+    else if (!isRegistrationOpen && (!limit || !!limit && registeredMembers.length === 0))
       | Anmeldung ist zur Zeit nicht möglich.
-    else if (activity.withWaitinglist(resourceName))
+    else if (activity.hasWaitinglist(resourceName))
       a.btn.btn-primary(href="addToWaitinglist/#{url}/#{encodedResourceName}") Auf die Warteliste
     else
       | Alle Plätze sind belegt.
@@ -35,13 +35,13 @@ mixin subscriptionButtons(activity, resourceName, currentMemberId)
         label.control-label.col-xs-6(style="text-align: left;") #{resourceName}:
         if (registeredMembers.indexOf(currentMemberId) > -1)
           a.col-xs-6.btn.btn-default(href="unsubscribe/#{url}/#{encodedResourceName}") Absagen
-        else if (registrationOpen && !activity.isFull(resourceName))
+        else if (isRegistrationOpen && !activity.isFull(resourceName))
           a.col-xs-6.btn.btn-primary(href="subscribe/#{url}/#{encodedResourceName}") Anmelden
         else if (limit === 0)
           span.control-label.col-xs-6(style="text-align: center;") Anmeldung nicht über die Softwerkskammer möglich.
-        else if (!registrationOpen && (!limit || !!limit && registeredMembers.length === 0))
+        else if (!isRegistrationOpen && (!limit || !!limit && registeredMembers.length === 0))
           span.control-label.col-xs-6(style="text-align: center;") Anmeldung ist zur Zeit nicht möglich.
-        else if (activity.withWaitinglist(resourceName))
+        else if (activity.hasWaitinglist(resourceName))
           a.col-xs-6.btn.btn-primary(href="addToWaitinglist/#{url}/#{encodedResourceName}") Auf die Warteliste
         else
           span.control-label.col-xs-6(style="text-align: center;") Alle Plätze sind belegt.

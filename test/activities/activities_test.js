@@ -268,7 +268,7 @@ describe('Activity application', function () {
       });
       activityWithParticipants.state.resources.default._registrationOpen = false;
       activityWithParticipants.state.resources.default._limit = 1;
-      activityWithParticipants.state.resources.default._withWaitinglist = true;
+      activityWithParticipants.state.resources.default._waitinglist = [];
 
       request(createApp('memberId3'))
         .get('/' + 'urlForInteresting')
@@ -373,7 +373,7 @@ describe('Activity application', function () {
       activityWithMultipleResources.state.resources.Doppelzimmer._registrationOpen = false;
       activityWithMultipleResources.state.resources.Einzelzimmer._limit = 2;
       activityWithMultipleResources.state.resources.Doppelzimmer._limit = 2;
-      activityWithMultipleResources.state.resources.Einzelzimmer._withWaitinglist = true;
+      activityWithMultipleResources.state.resources.Einzelzimmer._waitinglist = [];
 
       request(createApp('memberId3'))
         .get('/' + 'urlForMultiple')

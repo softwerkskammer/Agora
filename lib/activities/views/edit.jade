@@ -1,7 +1,7 @@
 extends ../../../views/layout
 include  ../../../views/formComponents
 
-mixin resourceRow(name, limit, registrationOpen, withWaitinglist)
+mixin resourceRow(name, limit, isRegistrationOpen, hasWaitinglist)
   .row.form-group
     .col-xs-3.col-sm-6
       input.form-control(name="resources[names]", value=name, type="text", placeholder="Bezeichnung")
@@ -9,11 +9,11 @@ mixin resourceRow(name, limit, registrationOpen, withWaitinglist)
       input.form-control(name="resources[limits]", value=limit, type="text", placeholder="unbegrenzt")
     .col-xs-3.col-sm-2
       .checkbox
-        input(name="resources[registrationOpen]", value=registrationOpen, type="checkbox", checked=(registrationOpen ? "true" : undefined))
+        input(name="resources[isRegistrationOpen]", value=isRegistrationOpen, type="checkbox", checked=(isRegistrationOpen ? "true" : undefined))
         | möglich
     .col-xs-3.col-sm-2
       .checkbox
-        input(name="resources[withWaitinglist]", value=withWaitinglist, type="checkbox", checked=(withWaitinglist ? "true" : undefined))
+        input(name="resources[hasWaitinglist]", value=hasWaitinglist, type="checkbox", checked=(hasWaitinglist ? "true" : undefined))
         | ja
 
 block scripts
@@ -96,7 +96,7 @@ block content
                 mixin controlLabel("registrierung", "Warteliste", "Soll die Ressource eine Warteliste bekommen?")
             each name in activity.resourceNames()
               - var resource = activity.resources().named(name)
-              mixin resourceRow(name, resource.limit(), resource.registrationOpen(), resource.withWaitinglist())
+              mixin resourceRow(name, resource.limit(), resource.isRegistrationOpen(), resource.hasWaitinglist())
               mixin hiddenWithValue("resources[previousNames]", name)
             .row.form-group
               .col-md-12

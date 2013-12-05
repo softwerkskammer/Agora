@@ -28,7 +28,6 @@
   "memberstore": {"module": "./lib/members/memberstore"},
   "activitystore": {"module": "./lib/activities/activitystore"},
   "announcementstore": {"module": "./lib/announcements/announcementstore"},
-  "waitinglistStore": {"module": "./lib/waitinglist/waitinglistStore"},
   "colorstore": {"module": "./lib/administration/colorstore"},
 
   "sympa": {"module": "./lib/groups/sympa"},

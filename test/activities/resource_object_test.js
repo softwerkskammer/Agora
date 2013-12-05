@@ -22,10 +22,10 @@ describe('Resource', function () {
         _limit: 2,
         _registrationOpen: true
       });
-      expect(resource.registrationOpen()).to.be.true;
+      expect(resource.isRegistrationOpen()).to.be.true;
       resource.addMemberId('memberID1');
       expect(resource.registeredMembers().length).to.equal(2);
-      expect(resource.registrationOpen()).to.be.false;
+      expect(resource.isRegistrationOpen()).to.be.false;
     });
 
     it('does not add a member twice', function () {
@@ -53,7 +53,7 @@ describe('Resource', function () {
       });
       resource.removeMemberId('memberID');
       expect(resource.isFull()).to.be.false;
-      expect(resource.registrationOpen()).to.be.false;
+      expect(resource.isRegistrationOpen()).to.be.false;
     });
 
     it('can remove member even when empty', function () {
@@ -118,7 +118,7 @@ describe('Resource', function () {
         {memberId: 'memberID'}
       ], _limit: 1});
       var copy = new Resource({}).copyFrom(resource);
-      expect(copy.registrationOpen()).to.be.true;
+      expect(copy.isRegistrationOpen()).to.be.true;
     });
 
     it('opens the registration for the copy even when it was not open for the original', function () {
@@ -126,7 +126,7 @@ describe('Resource', function () {
         {memberId: 'memberID'}
       ], _limit: 1, _registrationOpen: false});
       var copy = new Resource({}).copyFrom(resource);
-      expect(copy.registrationOpen()).to.be.true;
+      expect(copy.isRegistrationOpen()).to.be.true;
     });
 
     it('sets the waitinglist preference for the copy to false', function () {
@@ -134,7 +134,7 @@ describe('Resource', function () {
         {memberId: 'memberID'}
       ]});
       var copy = new Resource({}).copyFrom(resource);
-      expect(copy.withWaitinglist()).to.be.false;
+      expect(copy.hasWaitinglist()).to.be.false;
     });
 
     it('sets the waitinglist preference for the copy to false even when it was true for the original', function () {
@@ -142,7 +142,7 @@ describe('Resource', function () {
         {memberId: 'memberID'}
       ], _withWaitinglist: true});
       var copy = new Resource({}).copyFrom(resource);
-      expect(copy.withWaitinglist()).to.be.false;
+      expect(copy.hasWaitinglist()).to.be.false;
     });
 
   });
@@ -163,26 +163,26 @@ describe('Resource', function () {
 
     it("allows registration if it is indicated", function () {
       var resource = new Resource();
-      resource.fillFromUI({registrationOpen: "true"});
-      expect(resource.registrationOpen()).to.be.true;
+      resource.fillFromUI({isRegistrationOpen: "true"});
+      expect(resource.isRegistrationOpen()).to.be.true;
     });
 
     it("removes 'registration allowed' if it is not indicated", function () {
       var resource = new Resource({ _registrationOpen: true });
-      resource.fillFromUI({registrationOpen: ""});
-      expect(resource.registrationOpen()).to.be.false;
+      resource.fillFromUI({isRegistrationOpen: ""});
+      expect(resource.isRegistrationOpen()).to.be.false;
     });
 
     it("adds a waitinglist if it is indicated", function () {
       var resource = new Resource();
-      resource.fillFromUI({withWaitinglist: "someValue"});
-      expect(resource.withWaitinglist()).to.be.true;
+      resource.fillFromUI({hasWaitinglist: "someValue"});
+      expect(resource.hasWaitinglist()).to.be.true;
     });
 
     it("removes 'with waitinglist' if it is not indicated", function () {
       var resource = new Resource({ _withWaitinglist: true });
-      resource.fillFromUI({withWaitinglist: ""});
-      expect(resource.withWaitinglist()).to.be.false;
+      resource.fillFromUI({hasWaitinglist: ""});
+      expect(resource.hasWaitinglist()).to.be.false;
     });
 
   });
