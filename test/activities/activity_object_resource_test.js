@@ -97,7 +97,7 @@ describe('Activity resource management', function () {
       var activity = new Activity({url: 'myURL', resources: { Veranstaltung: { _registeredMembers: [
         {memberId: 'memberID'}
       ]}}});
-      activity.removeMemberId('memberID', defaultName);
+      activity.resourceNamed(defaultName).removeMemberId('memberID');
       expect(activity.resourceNamed(defaultName).registeredMembers()).to.be.empty;
     });
 
@@ -111,7 +111,7 @@ describe('Activity resource management', function () {
             {memberId: 'memberID'}
           ]}
         }});
-      activity.removeMemberId('memberID', 'Doppelzimmer');
+      activity.resourceNamed('Doppelzimmer').removeMemberId('memberID');
       expect(activity.resourceNamed('Einzelzimmer').registeredMembers()).to.contain('memberID');
       expect(activity.resourceNamed('Doppelzimmer').registeredMembers()).to.be.empty;
     });
@@ -123,7 +123,7 @@ describe('Activity resource management', function () {
             {memberId: 'memberID'}
           ]}
         }});
-      activity.removeMemberId('memberID', 'Doppelzimmer');
+      activity.resourceNamed('Doppelzimmer').removeMemberId('memberID');
       expect(activity.resourceNames().length).to.equal(1);
       expect(activity.resourceNamed('default').registeredMembers()).to.contain('memberID');
     });
@@ -142,7 +142,7 @@ describe('Activity resource management', function () {
         ] }},
         owner: 'owner'
       });
-      activity = activity.resetForClone();
+      activity = new Activity().copyFrom(activity);
       expect(activity.resourceNamed('default').registeredMembers()).to.be.empty;
       expect(activity.startDate()).to.not.equal('04.04.2013');
       expect(activity.endDate()).to.not.equal('05.04.2013');
