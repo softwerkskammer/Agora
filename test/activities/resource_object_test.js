@@ -41,7 +41,7 @@ describe('Resource', function () {
 
     it('removes a member from the waitinglist when registering', function () {
       var resource = new Resource({_waitinglist: [
-        {memberId: 'memberID'}
+        {_memberId: 'memberID'}
       ]});
       expect(resource.waitinglistEntries().length).to.equal(1);
       resource.addMemberId('memberID');

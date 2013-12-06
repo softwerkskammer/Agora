@@ -343,7 +343,7 @@ describe('Activity application', function () {
       request(createApp('memberId3'))
         .get('/' + 'urlForMultiple')
         .expect(200)
-        .expect(/Anmeldung nicht über die Softwerkskammer möglich./, function (err) {
+        .expect(/Anmeldung ist nicht über die Softwerkskammer möglich./, function (err) {
           done(err);
         });
     });

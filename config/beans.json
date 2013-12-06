@@ -68,6 +68,7 @@
   "activity": {"module": "./lib/activities/activity"},
   "resources": {"module": "./lib/activities/resources"},
   "resource": {"module": "./lib/activities/resource"},
+  "resourceRegistrationRenderer": {"module": "./lib/activities/resourceRegistrationRenderer"},
   "announcement": {"module": "./lib/announcements/announcement"},
   "waitinglistEntry": {"module": "./lib/waitinglist/waitinglistEntry"},
   "color": {"module": "./lib/administration/color"},

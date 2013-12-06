@@ -83,15 +83,4 @@ describe('Waitinglist API', function () {
     });
   });
 
-  describe('- saveWaitingListEntry -', function () {
-    it('saves an entry', function (done) {
-
-      var args = {nickname: 'hansdampf', activityUrl: 'Meine Aktivität', resourcename: "Meine Ressource"};
-
-      waitinglistAPI.saveWaitinglistEntry(args, function (err) {
-        done(err);
-      });
-    });
-  });
-
 });
