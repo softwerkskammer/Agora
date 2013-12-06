@@ -41,14 +41,14 @@ block content
                 th Kann&nbsp;sich&nbsp;registrieren&nbsp;bis
             tbody
               for waitinglistEntry in waitinglist
-                - var checkboxid = '{"nickname": "' + waitinglistEntry.registrantNickname + '", "activityUrl": "' + activity.url() + '", "resourcename": "' + waitinglistEntry.resourceName + '"}'
+                - var checkboxid = '{"nickname": "' + waitinglistEntry.registrantNickname + '", "activityUrl": "' + activity.url() + '", "resourcename": "' + waitinglistEntry.resourceName() + '"}'
                 tr
                   td: .checkbox(style="margin-top:0px;margin-bottom:0px;")
                     label
                       input(type='checkbox', name='selectedRow', value=checkboxid)
 
                   td: a(href="/members/#{encodeURIComponent(waitinglistEntry.registrantNickname)}") #{waitinglistEntry.registrantNickname}
-                  td #{waitinglistEntry.resourceName}
+                  td #{waitinglistEntry.resourceName()}
                   td #{waitinglistEntry.registrationDate()}
                   td #{waitinglistEntry.registrationValidUntil()}
         .form-inline
