@@ -247,9 +247,9 @@ describe('Activity resource management', function () {
         Doppelzimmer: { _registeredMembers: [], _limit: 30}
       }});
       var copy = new Activity().copyFrom(activity);
-      expect(copy.numberOfFreeSlots('Teilnehmer')).to.equal(10);
-      expect(copy.numberOfFreeSlots('Einzelzimmer')).to.equal(20);
-      expect(copy.numberOfFreeSlots('Doppelzimmer')).to.equal(30);
+      expect(copy.resourceNamed('Teilnehmer').numberOfFreeSlots()).to.equal(10);
+      expect(copy.resourceNamed('Einzelzimmer').numberOfFreeSlots()).to.equal(20);
+      expect(copy.resourceNamed('Doppelzimmer').numberOfFreeSlots()).to.equal(30);
     });
   });
 
@@ -318,11 +318,11 @@ describe('Activity resource management', function () {
         Teilnehmer: { _registeredMembers: [], _limit: 10}
       }});
 
-      expect(activity.numberOfFreeSlots('Teilnehmer')).to.equal(10);
+      expect(activity.resourceNamed('Teilnehmer').numberOfFreeSlots()).to.equal(10);
 
       activity.addMemberId('memberId', 'Teilnehmer');
 
-      expect(activity.numberOfFreeSlots('Teilnehmer')).to.equal(9);
+      expect(activity.resourceNamed('Teilnehmer').numberOfFreeSlots()).to.equal(9);
     });
   });
 });
