@@ -55,7 +55,7 @@ describe('Activities Core API', function () {
         expect(!!err, "Error: " + err).to.be.false;
         expect(!!statusTitle, "Status Title").to.be.false;
         expect(!!statusText, "Status Text").to.be.false;
-        expect(activity.registeredMembers('Einzelzimmer')).to.contain('memberId');
+        expect(activity.resourceNamed('Einzelzimmer').registeredMembers()).to.contain('memberId');
         done();
       });
     });
@@ -70,7 +70,7 @@ describe('Activities Core API', function () {
         expect(!!err, "Error").to.be.false;
         expect(statusTitle, "Status Title").to.equal('Die Anmeldung ist momentan nicht möglich.');
         expect(statusText, "Status Text").to.equal('Die Anmeldung ist noch nicht freigegeben, oder alle Plätze sind belegt.');
-        expect(activity.registeredMembers('Einzelzimmer')).to.not.contain('memberId');
+        expect(activity.resourceNamed('Einzelzimmer').registeredMembers()).to.not.contain('memberId');
         done();
       });
     });
@@ -95,7 +95,7 @@ describe('Activities Core API', function () {
         expect(!!err, "Error").to.be.false;
         expect(!!statusTitle, "Status Title").to.be.false;
         expect(!!statusText, "Status Text").to.be.false;
-        expect(activity.registeredMembers('Einzelzimmer')).to.contain('memberId');
+        expect(activity.resourceNamed('Einzelzimmer').registeredMembers()).to.contain('memberId');
         done();
       });
     });

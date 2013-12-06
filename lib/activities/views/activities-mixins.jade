@@ -9,7 +9,7 @@ mixin visitorCount(anzahl)
 
 
 mixin subscriptionButtons(activity, resourceName, currentMemberId)
-  registeredMembers = activity.registeredMembers(resourceName)
+  registeredMembers = activity.resourceNamed(resourceName).registeredMembers()
   url = encodeURIComponent(activity.url())
   encodedResourceName = encodeURIComponent(resourceName)
   limit = activity.resourceNamed(resourceName).limit()
