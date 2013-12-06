@@ -170,7 +170,7 @@ describe('Activity resource management', function () {
       // this constructor behaviour also affects loading of stored activities
       var activity = new Activity({url: 'url'});
       var copy = new Activity().copyFrom(activity);
-      expect(copy.registrationOpenFor(defaultName)).to.be.true;
+      expect(copy.resourceNamed(defaultName).isRegistrationOpen()).to.be.true;
     });
 
     it('allows registration in a copied activity even if the registration was not open for the original', function () {
@@ -178,7 +178,7 @@ describe('Activity resource management', function () {
       var activity = new Activity({url: 'url'});
       activity.state.resources[defaultName]._registrationOpen = false;
       var copy = new Activity().copyFrom(activity);
-      expect(copy.registrationOpenFor(defaultName)).to.be.true;
+      expect(copy.resourceNamed(defaultName).isRegistrationOpen()).to.be.true;
     });
 
     it('does not copy a registered member in a non-default resource from an existing activity', function () {

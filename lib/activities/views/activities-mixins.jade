@@ -14,7 +14,7 @@ mixin subscriptionButtons(activity, resourceName, currentMemberId)
   url = encodeURIComponent(activity.url())
   encodedResourceName = encodeURIComponent(resourceName)
   limit = resource.limit()
-  isRegistrationOpen = activity.registrationOpenFor(resourceName)
+  isRegistrationOpen = resource.isRegistrationOpen()
 
   if (activity.resourceNames().length === 1)
     if (registeredMembers.indexOf(currentMemberId) > -1)
