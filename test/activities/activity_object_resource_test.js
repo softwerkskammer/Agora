@@ -306,11 +306,11 @@ describe('Activity resource management', function () {
         Teilnehmer: { _registeredMembers: [], _limit: 1}
       }});
 
-      expect(activity.isFull('Teilnehmer')).to.be.false;
+      expect(activity.resourceNamed('Teilnehmer').isFull()).to.be.false;
 
       activity.addMemberId('memberId', 'Teilnehmer');
 
-      expect(activity.isFull('Teilnehmer')).to.be.true;
+      expect(activity.resourceNamed('Teilnehmer').isFull()).to.be.true;
     });
 
     it("knows how many free slots are in a resource", function () {
