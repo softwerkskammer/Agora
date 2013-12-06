@@ -44,7 +44,7 @@ describe('Activity resource management', function () {
 
     it('indicates whether a given resource has a waitinglist', function () {
       var activity = new Activity({resources: {Einzelzimmer: { _registeredMembers: [], _waitinglist: []}}});
-      expect(activity.hasWaitinglist('Einzelzimmer')).to.be.true;
+      expect(activity.resourceNamed('Einzelzimmer').hasWaitinglist()).to.be.true;
     });
 
 
