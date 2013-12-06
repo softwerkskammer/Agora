@@ -39,6 +39,16 @@ describe('Resource', function () {
       expect(resource.registeredMembers().length).to.equal(1);
     });
 
+    it('removes a member from the waitinglist when registering', function () {
+      var resource = new Resource({_waitinglist: [
+        {memberId: 'memberID'}
+      ]});
+      expect(resource.waitinglistEntries().length).to.equal(1);
+      resource.addMemberId('memberID');
+      expect(resource.registeredMembers().length).to.equal(1);
+      expect(resource.waitinglistEntries().length).to.equal(0);
+    });
+
     it('can remove a registered member', function () {
       var resource = new Resource({_registeredMembers: [
         {memberId: 'memberID'}
