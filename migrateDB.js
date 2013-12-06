@@ -19,12 +19,22 @@ if (!really || really !== 'really') {
 
 activitystore.allActivities(function (err, activities) {
 
+  _.each(activities, function (activity) {
+    _.each(activity.resourceNames(), function (name) {
+      var resource = activity.resourceNamed(name);
+      var hasWaitinglist = resource.state._withWaitinglist;
+      if (hasWaitinglist) {
+        resource.state._waitinglist = [];
+      }
+      delete resource.state._withWaitinglist;
+    });
+  });
+
   persistence.list({startUnix: 1}, function (err, results) {
     async.each(results, function (each, callback) {
         var activity = _.find(activities, function (activity) { return activity.id() === each._activityId; });
         if (!activity) { return callback(); }
         var resource = activity.resourceNamed(each._resourceName);
-        if (resource.state._withWaitinglist && !resource.state._waitinglist) { resource.state._waitinglist = []; }
         resource.addToWaitinglist(each._registrantId, moment(each._registrationDate));
         activitystore.saveActivity(activity, callback);
       },
@@ -33,20 +43,7 @@ activitystore.allActivities(function (err, activities) {
           console.log(err);
           process.exit();
         }
-        async.each(activities, function (activity, callback) {
-            _.each(activity.resourceNames(), function (name) {
-              var resourceNamed = activity.resourceNamed(name);
-              console.log("Resource named: " + name);
-              delete resourceNamed.state._withWaitinglist;
-            });
-            activitystore.saveActivity(activity, callback);
-          },
-          function (err) {
-            if (err) {
-              console.log(err);
-            }
-            process.exit();
-          });
+        process.exit();
       });
   });
 });
