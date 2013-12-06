@@ -23,7 +23,7 @@ activitystore.allActivities(function (err, activities) {
     async.each(results, function (each, callback) {
         var activity = _.find(activities, function (activity) { return activity.id() === each._activityId; });
         if (!activity) { return callback(); }
-        var resource = activity.resources().named(each._resourceName);
+        var resource = activity.resourceNamed(each._resourceName);
         if (resource.state._withWaitinglist && !resource.state._waitinglist) { resource.state._waitinglist = []; }
         resource.addToWaitinglist(each._registrantId, moment(each._registrationDate));
         activitystore.saveActivity(activity, callback);
@@ -33,10 +33,22 @@ activitystore.allActivities(function (err, activities) {
           console.log(err);
           process.exit();
         }
+        async.each(activities, function (activity, callback) {
+            _.each(activity.resourceNames(), function (name) {
+              var resourceNamed = activity.resourceNamed(name);
+              console.log("Resource named: " + name);
+              delete resourceNamed.state._withWaitinglist;
+            });
+            activitystore.saveActivity(activity, callback);
+          },
+          function (err) {
+            if (err) {
+              console.log(err);
+            }
+            process.exit();
+          });
       });
-    process.exit();
   });
-
 });
 
 

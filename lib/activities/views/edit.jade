@@ -95,7 +95,7 @@ block content
               .col-xs-3.col-sm-2
                 mixin controlLabel("registrierung", "Warteliste", "Soll die Ressource eine Warteliste bekommen?")
             each name in activity.resourceNames()
-              - var resource = activity.resources().named(name)
+              - var resource = activity.resourceNamed(name)
               mixin resourceRow(name, resource.limit(), resource.isRegistrationOpen(), resource.hasWaitinglist())
               mixin hiddenWithValue("resources[previousNames]", name)
             .row.form-group
