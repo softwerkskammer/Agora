@@ -53,13 +53,13 @@ describe('Activity resource management', function () {
   describe('- when adding members -', function () {
     it('adds a member to the default resource', function () {
       var activity = new Activity();
-      activity.addMemberId('memberID', defaultName);
+      activity.resourceNamed(defaultName).addMemberId('memberID');
       expect(activity.resourceNamed(defaultName).registeredMembers()).to.contain('memberID');
     });
 
     it('sets the timestamp for the added member', function () {
       var activity = new Activity();
-      activity.addMemberId('memberID', defaultName);
+      activity.resourceNamed(defaultName).addMemberId('memberID');
       expect(activity.state.resources[defaultName]._registeredMembers[0].memberId).to.equal('memberID');
       expect(!!activity.state.resources[defaultName]._registeredMembers[0].registeredAt).to.be.true;
     });
@@ -67,14 +67,14 @@ describe('Activity resource management', function () {
     it('sets the timestamp for the added member to the given moment', function () {
       var now = new moment();
       var activity = new Activity();
-      activity.addMemberId('memberID', defaultName, now);
+      activity.resourceNamed(defaultName).addMemberId('memberID', now);
       expect(activity.state.resources[defaultName]._registeredMembers[0].memberId).to.equal('memberID');
       expect(activity.state.resources[defaultName]._registeredMembers[0].registeredAt).to.equal(now.toDate());
     });
 
     it('adds a member to a desired resource', function () {
       var activity = new Activity({url: 'myURL', resources: {Einzelzimmer: { _registeredMembers: []}, Doppelzimmer: { _registeredMembers: []}}});
-      activity.addMemberId('memberID', 'Einzelzimmer');
+      activity.resourceNamed('Einzelzimmer').addMemberId('memberID');
       expect(activity.resourceNamed('Einzelzimmer').registeredMembers()).to.contain('memberID');
       expect(activity.resourceNamed('Doppelzimmer').registeredMembers()).to.be.empty;
     });
@@ -86,7 +86,7 @@ describe('Activity resource management', function () {
             {memberId: 'memberID'}
           ]}
         }});
-      activity.addMemberId('memberID', 'Einzelzimmer');
+      activity.resourceNamed('Einzelzimmer').addMemberId('memberID');
       expect(activity.resourceNames().length).to.equal(1);
       expect(activity.resourceNamed('default').registeredMembers()).to.contain('memberID');
     });
@@ -161,7 +161,7 @@ describe('Activity resource management', function () {
     it('does not copy a registered member from an existing activity', function () {
       // this constructor behaviour also affects loading of stored activities
       var activity = new Activity({url: 'url'});
-      activity.addMemberId('memberID', defaultName);
+      activity.resourceNamed(defaultName).addMemberId('memberID');
       var copy = new Activity().copyFrom(activity);
       expect(copy.resourceNamed(defaultName).registeredMembers()).to.be.empty;
     });
@@ -184,22 +184,22 @@ describe('Activity resource management', function () {
     it('does not copy a registered member in a non-default resource from an existing activity', function () {
       // this constructor behaviour also affects loading of stored activities
       var activity = new Activity({url: 'url'});
-      activity.addMemberId('memberID', 'non-default');
+      activity.resourceNamed('non-default').addMemberId('memberID');
       var copy = new Activity().copyFrom(activity);
       expect(copy.resourceNamed('non-default').registeredMembers()).to.be.empty;
     });
 
     it('can add a new member to a copied activity', function () {
       var activity = new Activity({url: 'url'});
-      activity.addMemberId('memberID', defaultName);
+      activity.resourceNamed(defaultName).addMemberId('memberID');
       var copy = new Activity().copyFrom(activity);
-      copy.addMemberId('memberID2', defaultName);
+      copy.resourceNamed(defaultName).addMemberId('memberID2');
       expect(copy.resourceNamed(defaultName).registeredMembers()).to.contain('memberID2');
     });
 
     it('does not add a state property to any of its resources when copying', function () {
       var activity = new Activity({url: 'url'});
-      activity.addMemberId('memberID', defaultName);
+      activity.resourceNamed(defaultName).addMemberId('memberID');
       var copy = new Activity().copyFrom(activity);
       expect(copy.state.resources[defaultName].state).to.be.undefined;
     });
@@ -210,8 +210,8 @@ describe('Activity resource management', function () {
         Doppelzimmer: { _registeredMembers: []}
       }});
       var copy = new Activity().copyFrom(activity);
-      copy.addMemberId('memberID2', 'Einzelzimmer');
-      copy.addMemberId('memberID3', 'Doppelzimmer');
+      copy.resourceNamed('Einzelzimmer').addMemberId('memberID2');
+      copy.resourceNamed('Doppelzimmer').addMemberId('memberID3');
       expect(copy.resourceNamed('Einzelzimmer').registeredMembers()).to.contain('memberID2');
       expect(copy.resourceNamed('Doppelzimmer').registeredMembers()).to.contain('memberID3');
     });
@@ -308,7 +308,7 @@ describe('Activity resource management', function () {
 
       expect(activity.resourceNamed('Teilnehmer').isFull()).to.be.false;
 
-      activity.addMemberId('memberId', 'Teilnehmer');
+      activity.resourceNamed('Teilnehmer').addMemberId('memberId');
 
       expect(activity.resourceNamed('Teilnehmer').isFull()).to.be.true;
     });
@@ -320,7 +320,7 @@ describe('Activity resource management', function () {
 
       expect(activity.resourceNamed('Teilnehmer').numberOfFreeSlots()).to.equal(10);
 
-      activity.addMemberId('memberId', 'Teilnehmer');
+      activity.resourceNamed('Teilnehmer').addMemberId('memberId');
 
       expect(activity.resourceNamed('Teilnehmer').numberOfFreeSlots()).to.equal(9);
     });
