@@ -142,7 +142,7 @@ describe('Activity resource management', function () {
         ] }},
         owner: 'owner'
       });
-      activity = new Activity().copyFrom(activity);
+      activity = activity.resetForClone();
       expect(activity.resourceNamed('default').registeredMembers()).to.be.empty;
       expect(activity.startDate()).to.not.equal('04.04.2013');
       expect(activity.endDate()).to.not.equal('05.04.2013');
