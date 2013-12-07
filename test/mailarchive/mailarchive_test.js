@@ -28,12 +28,12 @@ describe('Mail content page', function () {
       });
   });
 
-  it('shows text "Keine Mail" if mail is not found', function (done) {
+  it('shows text "Keine E-Mails" if mail is not found', function (done) {
     var mailForId = sinonSandbox.stub(mailarchiveAPI, 'mailForId', function (id, callback) {callback(null, undefined); });
     request(app)
       .get('/message/mailID')
       .expect(200)
-      .expect(/Keine Mail/, function (err) {
+      .expect(/Keine E-Mails/, function (err) {
         expect(mailForId.calledOnce).to.be.ok;
         done(err);
       });
@@ -107,7 +107,7 @@ describe('Mail index page', function () {
     request(app)
       .get('/list/threaded/group')
       .expect(200)
-      .expect(/<title>+group\s+mails/, function (err) {
+      .expect(/<title>+group\s+E-Mails/, function (err) {
         done(err);
       });
   });
@@ -123,13 +123,13 @@ describe('Mail index page', function () {
       });
   });
 
-  it('shows text "Keine Mails" if no mails for group are available', function (done) {
+  it('shows text "Keine E-Mails" if no mails for group are available', function (done) {
     stubMailHeaders([]);
 
     request(app)
       .get('/list/threaded/group')
       .expect(200)
-      .expect(/Keine Mails/, function (err) {
+      .expect(/Keine E-Mails/, function (err) {
         done(err);
       });
   });
