@@ -5,6 +5,7 @@ var http = require('http');
 var path = require('path');
 var passport = require('passport');
 var MongoStore = require('connect-mongo')(express);
+var i18n = require('i18next');
 
 function useApp(parent, url, factory) {
   function ensureRequestedUrlEndsWithSlash(req, res, next) {
@@ -27,6 +28,16 @@ var winston = require('winston-config').fromFileSync(path.join(__dirname, 'confi
 
 var appLogger = winston.loggers.get('application');
 var httpLogger = winston.loggers.get('http');
+
+// initialize i18n
+i18n.init({
+  ignoreRoutes: ['clientscripts/', 'fonts/', 'images/', 'img/', 'stylesheets/'],
+  supportedLngs: ['de', 'en'],
+  preload: ['de', 'en'],
+  fallbackLng: 'de',
+  resGetPath: 'locales/__ns__-__lng__.json'
+});
+
 
 var sessionStore = new MongoStore({
   db: 'swk',
@@ -53,6 +64,7 @@ module.exports = {
       app.use(express.logger({stream: winstonStream}));
       app.use(express.cookieParser());
       app.use(express.urlencoded());
+      app.use(i18n.handle);
       app.use(express.methodOverride());
       app.use(express.compress());
       app.use(express.static(path.join(__dirname, 'public')));
@@ -109,6 +121,9 @@ module.exports = {
     app.configure('development', function () {
       app.use(express.errorHandler());
     });
+
+    i18n.registerAppHelper(app);
+
     return app;
   },
 
