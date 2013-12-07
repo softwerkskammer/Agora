@@ -17,6 +17,7 @@ module.exports = function (internalAppName) {
         app.use(userMock({member: {id: memberID}}));
       }
       app.use(beans.get('accessrights'));
+      app.use(require('i18next'));
       app.use('/', beans.get(appName)(express()));
       return app;
     }
