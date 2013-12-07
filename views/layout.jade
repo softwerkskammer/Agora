@@ -39,6 +39,10 @@ html
           mixin notificationsBlock(statusmessage)
         block content
       .col-md-4.hidden-print
+        .pull-right
+          a(href="/language/#{encodeURIComponent(currentUrl)}/de") Deutsch
+          |
+          a(href="/language/#{encodeURIComponent(currentUrl)}/en") English
         .page-header.visible-xs.visible-sm
           p &nbsp;
           h2.visible-xs.visible-sm Aktivitäten

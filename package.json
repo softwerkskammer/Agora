@@ -40,6 +40,7 @@
     "connect-ensure-login": "0.1.1",
     "winston": "~0.6.2",
     "winston-config": "~0.4.0",
+    "i18next": "~1.7.1",
     "underscore": "~1.5.x",
     "underscore.string": "~2.3.x",
     "validator": "1.5.x",
