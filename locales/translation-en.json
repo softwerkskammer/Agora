@@ -1,8 +1,24 @@
 {
+  "general": {
+    "all": "All",
+    "edit": "Edit",
+    "save": "Save",
+    "back": "Back",
+    "title": "Title",
+    "url": "URL"
+  },
   "activities": {
     "heading": "Activities"
   },
   "announcements": {
-    "heading": "News"
+    "pagetitle": "Latest News",
+    "announcements": "Announcements",
+    "announcement": "Announcement",
+    "new": "New Announcement",
+    "create": "Create announcement",
+    "edit": "Edit announcement",
+    "show_until": "Show until (and including)",
+    "text": "Announcement text",
+    "automatic": "automatic"
   }
 }

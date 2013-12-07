@@ -6,7 +6,7 @@ block scripts
   script(src="/clientscripts/check-announcementform.js")
 
 block title
-  | Nachricht
+  | #{t("announcements.announcement")}
 
 block content
   form(id='announcementform', action='/announcements/submit', method='post')
@@ -19,21 +19,20 @@ block content
       .row
         .col-md-12
           legend
-            | Nachricht
             if (announcement.id)
-              |  bearbeiten
+              |  #{t("announcements.edit")}
             else
-              |  anlegen
+              |  #{t("announcements.create")}
       .row
         .col-md-6
-          mixin text('title', 'Titel', announcement)
-          mixin text('url', 'URL', announcement)
+          mixin text('title', t("general.title"), announcement)
+          mixin text('url', t("general.url"), announcement)
         .col-md-6
-          mixin date('thruDate', 'Anzeigen bis einschließlich', announcement, announcement.thruDate())
+          mixin date('thruDate', t("announcements.show_until"), announcement, announcement.thruDate())
       .row
         .col-md-12
-          mixin hightextarea('message', 'Text der Nachricht', announcement)
+          mixin hightextarea('message', t("announcements.text"), announcement)
       .row
         .col-md-12
-          button.btn.btn-primary.pull-right(type="submit") Speichern
-          a.btn.btn-default.pull-right(href="javascript:history.back()", type="cancel") Zurück
+          button.btn.btn-primary.pull-right(type="submit") #{t("general.save")}
+          a.btn.btn-default.pull-right(href="javascript:history.back()", type="cancel") #{t("general.back")}

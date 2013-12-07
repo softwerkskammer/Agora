@@ -1,8 +1,24 @@
 {
+  "general": {
+    "all": "Alle",
+    "edit": "Bearbeiten",
+    "save": "Speichern",
+    "back": "Zurück",
+    "title": "Titel",
+    "url": "URL"
+  },
   "activities": {
     "heading": "Aktivitäten"
   },
   "announcements": {
-    "heading": "Nachrichten"
+    "pagetitle": "Aktuelles",
+    "announcements": "Nachrichten",
+    "announcement": "Nachricht",
+    "new": "Neue Nachricht",
+    "create": "Nachricht anlegen",
+    "edit": "Nachricht bearbeiten",
+    "show_until": "Anzeigen bis einschließlich",
+    "text": "Text der Nachricht",
+    "automatic": "automatisch"
   }
 }
