@@ -1,11 +1,15 @@
 {
   "general": {
     "all": "All",
+    "create": "Create",
     "edit": "Edit",
     "save": "Save",
     "back": "Back",
     "title": "Title",
-    "url": "URL"
+    "url": "URL",
+    "name": "Name",
+    "address": "Address",
+    "description": "Description"
   },
   "activities": {
     "heading": "Activities"
@@ -20,5 +24,43 @@
     "show_until": "Show until (and including)",
     "text": "Announcement text",
     "automatic": "automatic"
+  },
+  "groups": {
+    "overview": "Overview of Groups",
+    "groups": "Groups",
+    "regional": "Regional Groups",
+    "themed": "Themed Groups",
+    "type": "Group type",
+    "new": "New Group",
+    "create": "Create group",
+    "edit": "Edit group \"__groupId__\"",
+    "join": "Join Group",
+    "leave": "Leave Group",
+    "has": "This group has",
+    "one_member": "one member",
+    "no_members": "no members",
+    "count_members": "__count__ members",
+    "contact": "Contact person(s)",
+    "email_prefix": "Prefix for e-mail-subjects",
+    "x_coord": "X-coord.",
+    "y_coord": "Y-coord.",
+    "map_label": "Label in map",
+    "tooltip": {
+      "name": "The e-mail address \"@softwerkskammer.org\" where the group can be reached.",
+      "title": "Name of the group used in the website, also realname for e-mails sent by the group",
+      "email_prefix": "surrounded by [], it prefixes the subject of e-mails sent via the group",
+      "x_coord": "Horizontal position on the map",
+      "y_coord": "Vertical position on the map",
+      "map_label": "Label that is displayed in the map"
+    }
+  },
+  "mailarchive": {
+    "archive": "Mail Archive"
+  },
+  "members": {
+    "members": "Members"
+  },
+  "wiki": {
+    "wiki": "Wiki"
   }
 }

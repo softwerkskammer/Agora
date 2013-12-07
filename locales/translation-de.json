@@ -1,11 +1,15 @@
 {
   "general": {
     "all": "Alle",
+    "create": "Anlegen",
     "edit": "Bearbeiten",
     "save": "Speichern",
     "back": "Zurück",
     "title": "Titel",
-    "url": "URL"
+    "url": "URL",
+    "name": "Name",
+    "address": "Adresse",
+    "description": "Beschreibung"
   },
   "activities": {
     "heading": "Aktivitäten"
@@ -20,5 +24,43 @@
     "show_until": "Anzeigen bis einschließlich",
     "text": "Text der Nachricht",
     "automatic": "automatisch"
+  },
+  "groups": {
+    "overview": "Übersicht der Gruppen",
+    "groups": "Gruppen",
+    "regional": "Regionalgruppen",
+    "themed": "Themengruppen",
+    "type": "Gruppenart",
+    "new": "Neue Gruppe",
+    "create": "Gruppe anlegen",
+    "edit": "Gruppe \"__groupId__\" bearbeiten",
+    "join": "Gruppe beitreten",
+    "leave": "Gruppe verlassen",
+    "has": "Diese Gruppe hat",
+    "one_member": "ein Mitglied",
+    "no_members": "keine Mitglieder",
+    "count_members": "__count__ Mitglieder",
+    "contact": "Ansprechpartner",
+    "email_prefix": "Präfix für E-Mail-Subjects",
+    "x_coord": "X-Koord.",
+    "y_coord": "Y-Koord.",
+    "map_label": "Label in Karte",
+    "tooltip": {
+      "name": "Die Adresse, unter der die Gruppe \"@softwerkskammer.org\" erreichbar ist.",
+      "title": "Anzeigetext innerhalb der Site, ist auch Realname für E-Mails",
+      "email_prefix": "steht innerhalb [] vor dem Subject in gesendeten E-Mails",
+      "x_coord": "Waagerechte Position auf der Karte",
+      "y_coord": "Senkrechte Position auf der Karte",
+      "map_label": "Label, das in der Karte angezeigt wird"
+    }
+  },
+  "mailarchive": {
+    "archive": "Mailarchiv"
+  },
+  "members": {
+    "members": "Mitglieder"
+  },
+  "wiki": {
+    "wiki": "Wiki"
   }
 }
