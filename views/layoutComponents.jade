@@ -8,10 +8,13 @@ mixin topNavbar
     if (!accessrights.isRegistered())
       a.btn.btn-default.navbar-toggle(href="https://github.com/softwerkskammer/Agora/issues",
       title="Was funktioniert nicht, wie es soll?", target="_blank"): i.fa.fa-ambulance.fa-fw
+
   .container.bottom
     .navbar-collapse.collapse.collapse-top
       ul.nav.navbar-nav.pull-right.hidden-xs
         mixin loginMenu
+        li: a(style="padding: 2px;", href="/language/#{encodeURIComponent(currentUrl)}/de"): img(src="/img/flags/Germany.png", alt="Deutsch")
+        li: a(style="padding: 2px;", href="/language/#{encodeURIComponent(currentUrl)}/en"): img(src="/img/flags/United-Kingdom.png", alt="English")
       ul.nav.navbar-nav
         li#activities: a(href="/activities/upcoming")
           span.hidden-sm
