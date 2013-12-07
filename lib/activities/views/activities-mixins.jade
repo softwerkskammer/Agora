@@ -11,9 +11,9 @@ mixin visitorCount(anzahl)
 mixin subscriptionButtons(activity, resourceName, resourceRegistrationRenderer)
   resource = activity.resourceNamed(resourceName)
   if (activity.resourceNames().length === 1)
-    !{resourceRegistrationRenderer.htmlRepresentationOf(activity, resource, accessrights.memberId())}
+    !{resourceRegistrationRenderer.htmlRepresentationOf(activity, resource, accessrights.memberId()).renderHtml()}
   else
     form.form-horizontal
       .form-group
         label.control-label.col-xs-6(style="text-align: left;") #{resourceName}:
-        !{resourceRegistrationRenderer.htmlRepresentationOf(activity, resource, accessrights.memberId())}
+        !{resourceRegistrationRenderer.htmlRepresentationOf(activity, resource, accessrights.memberId()).renderHtml()}
