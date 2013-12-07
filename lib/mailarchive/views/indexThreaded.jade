@@ -3,13 +3,13 @@ extends ../../../views/layout
 include ./mailheader-mixin
 
 block title
-  | #{group} mails 
+  | #{group} #{t("mailarchive.emails")}
 
 block content
   .row
     .col-md-12
       .page-header
-        mixin pageHeader(group, "Threaded")
+        mixin pageHeader(group, t("mailarchive.threaded"))
       .panel-group.pre-scrollable#mails
         - var mailNumber = 0;
         for mailHeader in mailHeaders

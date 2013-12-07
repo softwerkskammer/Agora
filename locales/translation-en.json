@@ -5,6 +5,7 @@
     "edit": "Edit",
     "save": "Save",
     "back": "Back",
+    "close": "Close",
     "title": "Title",
     "url": "URL",
     "name": "Name",
@@ -55,7 +56,11 @@
     }
   },
   "mailarchive": {
-    "archive": "Mail Archive"
+    "archive": "Mail Archive",
+    "emails": "E-mails",
+    "no_emails": "No e-mails",
+    "threaded": "Threaded",
+    "unthreaded": "Flat"
   },
   "members": {
     "members": "Members"
