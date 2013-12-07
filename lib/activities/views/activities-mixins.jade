@@ -9,11 +9,18 @@ mixin visitorCount(anzahl)
 
 
 mixin subscriptionButtons(activity, resourceName, resourceRegistrationRenderer)
-  resource = activity.resourceNamed(resourceName)
+  result = resourceRegistrationRenderer.htmlRepresentationOf(activity, resourceName, accessrights.memberId())
+  btnClass = result.isWithdrawal() ? 'btn-default' : 'btn-primary'
   if (activity.resourceNames().length === 1)
-    !{resourceRegistrationRenderer.htmlRepresentationOf(activity, resource, accessrights.memberId()).renderHtml()}
+    if (!result.representsButton()) 
+      #{result.displayText}
+    else
+      a(href="#{result.url}", class="btn #{btnClass}") #{result.displayText}
   else
     form.form-horizontal
       .form-group
         label.control-label.col-xs-6(style="text-align: left;") #{resourceName}:
-        !{resourceRegistrationRenderer.htmlRepresentationOf(activity, resource, accessrights.memberId()).renderHtml()}
+        if (!result.representsButton()) 
+          span.col-xs-6.control-label(style="text-align: center;") #{result.displayText}
+        else
+          a(href="#{result.url}", class="btn col-xs-6 #{btnClass}") #{result.displayText}
