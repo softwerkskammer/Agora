@@ -2,19 +2,13 @@ extends ../../../views/layout
 include ./memberlist-mixin
 
 block title
-  | Übersicht der Mitglieder
+  | #{t("members.overview")}
 
 block content
   .row
     .col-md-12
       .page-header
-        h2 Mitglieder&nbsp;
-          small Alle
-      | Die Softwerkskammer hat
-      if (members.length === 1)
-        |  ein Mitglied.
-      else if (members.length === 0)
-        |  keine Mitglieder.
-      else
-        |  #{members.length} Mitglieder.
+        h2 #{t("members.members")}&nbsp;
+          small #{t("general.all")}
+      mixin memberlistHeading(t("members.has"), members.length)
       mixin memberlist(members)

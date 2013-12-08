@@ -10,7 +10,14 @@
     "url": "URL",
     "name": "Name",
     "address": "Address",
-    "description": "Description"
+    "description": "Description",
+    "login": "Log in",
+    "logout": "Log out",
+    "members": {
+      "one": "one member",
+      "none": "no members",
+      "count": "__count__ members"
+    }
   },
   "activities": {
     "heading": "Activities"
@@ -27,7 +34,7 @@
     "automatic": "automatic"
   },
   "groups": {
-    "overview": "Overview of Groups",
+    "overview": "Groups Overview",
     "groups": "Groups",
     "regional": "Regional Groups",
     "themed": "Themed Groups",
@@ -38,10 +45,8 @@
     "join": "Join Group",
     "leave": "Leave Group",
     "has": "This group has",
-    "one_member": "one member",
-    "no_members": "no members",
-    "count_members": "__count__ members",
-    "contact": "Contact person(s)",
+    "contact": "Contact person",
+    "contacts": "Contact persons",
     "email_prefix": "Prefix for e-mail-subjects",
     "x_coord": "X-coord.",
     "y_coord": "Y-coord.",
@@ -74,7 +79,32 @@
     "send": "Send"
   },
   "members": {
-    "members": "Members"
+    "overview": "Members Overview",
+    "members": "Members",
+    "create": "Create Profile",
+    "edit": "Edit Profile",
+    "new": "New Member",
+    "cancel": "Cancel registration",
+    "group_membership": "Group Membership",
+    "member_of": "Member of",
+    "personal_data": "Personal Data",
+    "profile": "Profile",
+    "profileview": "Profile View",
+    "nickname": "Nickname",
+    "firstname": "First name",
+    "lastname": "Last name",
+    "email": "E-Mail",
+    "twitter": "Twitter",
+    "location": "City / Region",
+    "profession": "Profession",
+    "interests": "Main focus of interest",
+    "web": "Website / Blog",
+    "reference": "How I got to know about Softwerkskammer",
+    "administrator": "Administrator",
+    "authenticated_via": "Currently authenticated via",
+    "authenticate": "Authenticate elsewhere",
+    "send_email": "Send e-mail to __firstname__ __lastname__",
+    "has": "Softwerkskammer has"
   },
   "wiki": {
     "wiki": "Wiki"

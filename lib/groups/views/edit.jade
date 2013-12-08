@@ -45,7 +45,7 @@ block content
               for item in allTypes
                 option(selected=group.type === item) #{item}
 
-          h4 #{t("groups.contact")}
+          h4 #{t("groups.contacts")}
           .control-group
             each memberAdmin in organizersChecked
               mixin checkbox('organizers', memberAdmin.member.nickname, memberAdmin.checked, memberAdmin.member.id)

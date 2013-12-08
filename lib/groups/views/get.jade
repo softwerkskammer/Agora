@@ -34,11 +34,5 @@ block content
         else
           a.btn.btn-primary(href="subscribe/#{group.id}") #{t("groups.join")}
       h4 #{t("members.members")}:
-      | #{t("groups.has")}
-      if (users.length === 1)
-        |  #{t("groups.one_member")}.
-      else if (users.length === 0)
-        |  #{t("groups.no_members")}.
-      else
-        |  #{t("groups.count_members", {count: users.length})}.
+      mixin memberlistHeading(t("groups.has"), users.length)
       mixin memberlist(users, organizers)

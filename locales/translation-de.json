@@ -10,7 +10,14 @@
     "url": "URL",
     "name": "Name",
     "address": "Adresse",
-    "description": "Beschreibung"
+    "description": "Beschreibung",
+    "login": "Anmelden",
+    "logout": "Abmelden",
+    "members": {
+      "one": "ein Mitglied",
+      "none": "keine Mitglieder",
+      "count": "__count__ Mitglieder"
+    }
   },
   "activities": {
     "heading": "Aktivitäten"
@@ -38,10 +45,8 @@
     "join": "Gruppe beitreten",
     "leave": "Gruppe verlassen",
     "has": "Diese Gruppe hat",
-    "one_member": "ein Mitglied",
-    "no_members": "keine Mitglieder",
-    "count_members": "__count__ Mitglieder",
     "contact": "Ansprechpartner",
+    "contacts": "Ansprechpartner",
     "email_prefix": "Präfix für E-Mail-Subjects",
     "x_coord": "X-Koord.",
     "y_coord": "Y-Koord.",
@@ -74,7 +79,32 @@
     "send": "Senden"
   },
   "members": {
-    "members": "Mitglieder"
+    "overview": "Übersicht der Mitglieder",
+    "members": "Mitglieder",
+    "create": "Profil anlegen",
+    "edit": "Profil bearbeiten",
+    "new": "Neues Mitglied",
+    "cancel": "Registrierung abbrechen",
+    "group_membership": "Gruppenmitgliedschaft",
+    "member_of": "Mitglied in",
+    "personal_data": "Persönliche Daten",
+    "profile": "Profil",
+    "profileview": "Profilansicht",
+    "nickname": "Nickname",
+    "firstname": "Vorname",
+    "lastname": "Nachname",
+    "email": "E-Mail",
+    "twitter": "Twitter",
+    "location": "Ort / Region",
+    "profession": "Beruf",
+    "interests": "Interessenschwerpunkte",
+    "web": "Website / Blog",
+    "reference": "Wie ich von der Softwerkskammer erfahren habe",
+    "administrator": "Administrator",
+    "authenticated_via": "Aktuell authentifiziert bei",
+    "authenticate": "Anderswo authentifizieren",
+    "send_email": "Eine E-Mail an __firstname__ __lastname__ senden",
+    "has": "Die Softwerkskammer hat"
   },
   "wiki": {
     "wiki": "Wiki"
