@@ -125,5 +125,50 @@
     "searchresults": "Search Results",
     "no_results": "No results",
     "line": "line"
+  },
+  "message": {
+    "title": {
+      "save_successful": "Saving Successful",
+      "problem": "Problem",
+      "conflict": "Save Conflict",
+      "query": "Short Query String",
+      "email_successful": "E-mail sent",
+      "email_problem": "E-mail not sent"
+    },
+    "content": {
+      "save_error": "Save failed.",
+      "query": "The query string you entered is too short.",
+      "activities": {
+        "saved": "Your activity has been saved.",
+        "participation_added": "Your participation has been registered.",
+        "participation_for_resource_added": "Your participation in \"__resourceName__\" has been registered.",
+        "participation_removed": "Too bad, that you will not participate.",
+        "participation_for_resource_removed": "Too bad, that you will not participate in \"__resourceName__\".",
+        "waitinglist_added": "You have been added to the waiting list.",
+        "waitinglist_removed": "You have been removed from the waiting list."
+      },
+      "announcements": {
+        "saved": "Your announcement has been saved."
+      },
+      "colors": {
+        "saved": "Your colors have been saved.",
+        "saved_single": "The new color has been saved."
+      },
+      "groups": {
+        "saved": "Your group has been saved."
+      },
+      "mailsender": {
+        "error_reason": "Your __type__ has not been sent. Reason: __err__",
+        "error_no_recipient": "Your E-mail has not been sent. No recipient given.",
+        "success": "Your __type__ is on its way."
+      },
+      "members": {
+        "saved": "The profile has been saved."
+      },
+      "wiki": {
+        "conflict": "Your changes have been saved. You may have overwritten changes of another user. Please double check.",
+        "saved": "Your changes have been saved."
+      }
+    }
   }
 }

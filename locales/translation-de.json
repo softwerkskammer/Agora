@@ -125,5 +125,50 @@
     "searchresults": "Suchergebnis",
     "no_results": "Keine Ergebnisse",
     "line": "Zeile"
+  },
+  "message": {
+    "title": {
+      "save_successful": "Speichern erfolgreich",
+      "problem": "Problem",
+      "conflict": "Speicherkonflikt",
+      "query": "Suchtext zu kurz",
+      "email_successful": "E-Mail gesendet",
+      "email_problem": "E-Mail nicht gesendet"
+    },
+    "content": {
+      "save_error": "Das Speichern war nicht erfolgreich.",
+      "query": "Dein eingegebener Suchtext ist zu kurz.",
+      "activities": {
+        "saved": "Deine Aktivität wurde gespeichert.",
+        "participation_added": "Deine Teilnahme wurde eingetragen.",
+        "participation_for_resource_added": "Deine Teilnahme wurde für \"__resourceName__\" eingetragen.",
+        "participation_removed": "Schade, dass Du nicht dabei sein wirst.",
+        "participation_for_resource_removed": "Schade, dass Du bei \"__resourceName__\" nicht dabei sein wirst.",
+        "waitinglist_added": "Du bist jetzt auf der Warteliste.",
+        "waitinglist_removed": "Du bist jetzt nicht mehr auf der Warteliste."
+      },
+      "announcements": {
+        "saved": "Deine Nachricht wurde gespeichert."
+      },
+      "colors": {
+        "saved": "Deine Farben wurden gespeichert.",
+        "saved_single": "Die neue Farbe wurde gespeichert."
+      },
+      "groups": {
+        "saved": "Deine Gruppe wurde gespeichert."
+      },
+      "mailsender": {
+        "error_reason": "Deine __type__ wurde nicht gesendet. Grund: __err__",
+        "error_no_recipient": "Deine E-Mail wurde nicht gesendet. Es ist kein Empfänger angegeben.",
+        "success": "Deine __type__ ist unterwegs."
+      },
+      "members": {
+        "saved": "Das Profil wurde gespeichert."
+      },
+      "wiki": {
+        "conflict": "Deine Änderungen wurden gespeichert. Du hast allerdings Änderungen eines anderen Benutzers überschrieben. Bitte überprüfe nochmals die Wikiseite.",
+        "saved": "Deine Änderungen wurden gespeichert."
+      }
+    }
   }
 }
