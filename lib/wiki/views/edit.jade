@@ -3,7 +3,7 @@ extends ../../../views/layout
 include  ../../../views/formComponents
 
 block title
-  | #{pageName} : #{subdir} bearbeiten
+  | #{pageName} : #{subdir} - #{t("general.edit")}
 
 block content
   form(action='/wiki/#{subdir}/#{pageName}', method='post')
@@ -11,14 +11,14 @@ block content
       .row
         .col-md-12
           legend
-            | Wiki-Seite "#{pageName}" in Wiki "#{subdir}"&nbsp;
+            params = {pageName: pageName, subdir: subdir}
             if page.content === ''
-              | anlegen
+              | #{t("wiki.create", params)}
             else 
-              | bearbeiten
-          mixin hightextarea('content', 'Inhalt', page)
-          mixin text('comment', 'Kommentar', page, 'Commit Message', 'no commit message')
+              | #{t("wiki.edit", params)}
+          mixin hightextarea('content', t("wiki.contents"), page)
+          mixin text('comment', t("wiki.message"), page, t("wiki.commit_message"), t("wiki.commit_template"))
           mixin hidden('metadata', page)
           input(id="subdir", type="hidden", name="subdir", value=subdir)
-          button.btn.btn-primary.pull-right(type="submit") Speichern
-          a.btn.btn-default.pull-right(href="javascript:history.back()", type="cancel") Zurück
+          button.btn.btn-primary.pull-right(type="submit") #{t("general.save")}
+          a.btn.btn-default.pull-right(href="javascript:history.back()", type="cancel") #{t("general.back")}

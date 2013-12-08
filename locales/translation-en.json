@@ -6,6 +6,7 @@
     "save": "Save",
     "back": "Back",
     "close": "Close",
+    "compare": "Compare",
     "title": "Title",
     "url": "URL",
     "name": "Name",
@@ -107,6 +108,22 @@
     "has": "Softwerkskammer has"
   },
   "wiki": {
-    "wiki": "Wiki"
+    "overview": "Overview of files in",
+    "wiki": "Wiki",
+    "subwiki": "Subwiki",
+    "comparison_of": "Comparison of",
+    "in": "in Wiki",
+    "all_pages": "All pages in",
+    "revisions": "Revisions",
+    "search": "Search wiki",
+    "create": "$t(general.create) wiki-page \"__pageName__\" $t(wiki.in) \"__subdir__\"",
+    "edit": "$t(general.edit) wiki-page \"__pageName__\" $t(wiki.in) \"__subdir__\"",
+    "contents": "Contents",
+    "message": "Message",
+    "commit_message": "Commit Message",
+    "commit_template": "no commit message",
+    "searchresults": "Search Results",
+    "no_results": "No results",
+    "line": "line"
   }
 }

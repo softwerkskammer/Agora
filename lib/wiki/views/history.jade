@@ -4,16 +4,16 @@ block scripts
   script(src="/clientscripts/wiki_compare.js")
 
 block title
-  | #{pageName} : #{subdir} Revisionen
+  | #{pageName} : #{subdir} - #{t("wiki.revisions")}
 
 block content
   .page-header
     .btn-group.pull-right
-      a.btn.btn-default(href="javascript:history.back()", type="cancel") Zurück
+      a.btn.btn-default(href="javascript:history.back()", type="cancel") #{t("general.back")}
       if (accessrights.isAuthenticated())
         button(id="rev-compare", data-pageName="#{pageName}", data-subdir="#{subdir}").btn.btn-default
           i.fa.fa-stethoscope.fa-fw
-          | &nbsp; Vergleichen…
+          | &nbsp; #{t("general.compare")}…
     h2 #{pageName}
       br
       small Wiki "#{subdir}"

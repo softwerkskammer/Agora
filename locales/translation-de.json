@@ -6,6 +6,7 @@
     "save": "Speichern",
     "back": "Zurück",
     "close": "Schließen",
+    "compare": "Vergleichen",
     "title": "Titel",
     "url": "URL",
     "name": "Name",
@@ -107,6 +108,22 @@
     "has": "Die Softwerkskammer hat"
   },
   "wiki": {
-    "wiki": "Wiki"
+    "overview": "Übersicht der Dateien in",
+    "wiki": "Wiki",
+    "subwiki": "Subwiki",
+    "comparison_of": "Vergleich von",
+    "in": "in Wiki",
+    "all_pages": "Alle Seiten in",
+    "revisions": "Revisionen",
+    "search": "Wiki durchsuchen",
+    "create": "Wiki-Seite \"__pageName__\" $t(wiki.in) \"__subdir__\" anlegen",
+    "edit": "Wiki-Seite \"__pageName__\" $t(wiki.in) \"__subdir__\" bearbeiten",
+    "contents": "Inhalt",
+    "message": "Kommentar",
+    "commit_message": "Commit-Kommentar",
+    "commit_template": "kein Commit-Kommentar",
+    "searchresults": "Suchergebnis",
+    "no_results": "Keine Ergebnisse",
+    "line": "Zeile"
   }
 }
