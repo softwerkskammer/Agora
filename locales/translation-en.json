@@ -8,6 +8,7 @@
     "back": "Back",
     "close": "Close",
     "compare": "Compare",
+    "more": "More",
     "title": "Title",
     "url": "URL",
     "name": "Name",
@@ -15,14 +16,22 @@
     "description": "Description",
     "login": "Log in",
     "logout": "Log out",
+    "overview": "Overview",
+    "administration": "Administration",
+    "faq": "Hints & FAQs",
+    "credits": "Credits",
+    "legal_notice": "Legal Notice",
     "members": {
       "one": "one member",
       "none": "no members",
       "count": "__count__ members"
-    }
+    },
+    "gdcr": "Global Day of Coderetreat",
+    "feedback": "Feedback",
+    "what_does_not_work": "What does not work the way it should?"
   },
   "activities": {
-    "heading": "Activities",
+    "activities": "Activities",
     "resource": "Resource name",
     "waitinglist": "Waitinglist",
     "listed": "Listed on",
@@ -34,7 +43,7 @@
     "waitinglist_new": "New Entry"
   },
   "announcements": {
-    "pagetitle": "Latest News",
+    "latest_news": "Latest News",
     "announcements": "Announcements",
     "announcement": "Announcement",
     "new": "New Announcement",
@@ -43,6 +52,33 @@
     "show_until": "Show until (and including)",
     "text": "Announcement text",
     "automatic": "automatic"
+  },
+  "authentication": {
+    "authentication": "Authentication",
+    "authentication_text": "You can authenticate via one of the methods given below. Subsequently, we ask you to provide some personal data.",
+    "alternative_url": "(optional) Enter the URL of an alternative OpenID provider",
+    "authenticate": "Authenticate",
+    "error": "Authentication Error",
+    "error_text": [
+      "h3 Authentication Error!",
+      "p Unfortunately, something went wrong during authentication.",
+      "  | Please ",
+      "  a(href=\"/login\") try again.",
+      "p If the error occurs repeatedly, please ",
+      "  a(href=\"https://github.com/softwerkskammer/NeuePlattform-Implementierung/issues/\") give us an error report that is as detailed as possible:",
+      "  ul",
+      "    li How did you access the login page?",
+      "    li Which authentication did you choose?",
+      "    li If you entered a URL manually, which was it?",
+      "    li Your operating system and browser, including versions.",
+      "    li Date and time of the error",
+      "    li The stacktrace below \"500\"",
+      "p The Agora-Team begs your pardon."
+    ]
+  },
+  "colors": {
+    "colors": "Colours",
+    "color": "Colour"
   },
   "groups": {
     "overview": "Groups Overview",

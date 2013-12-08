@@ -61,12 +61,12 @@ mixin checkboxWithDescription(name, label, checked, description, optionalValue)
 mixin groupCheckboxes(checkboxName, regionalgroups, themegroups)
   .row
     .col-md-6
-      mixin controlLabel("Regionale Gruppen", "Regionale Gruppen")
+      mixin controlLabel(t("groups.regional"), t("groups.regional"))
       .form-group
         each markedGroup in regionalgroups
           mixin checkboxWithDescription(checkboxName, markedGroup.group.longName, markedGroup.selected, markedGroup.group.descriptionHTMLFiltered("img"), markedGroup.group.id)
     .col-md-6
-      mixin controlLabel("Themengruppen", "Themengruppen")
+      mixin controlLabel(t("groups.themed"), t("groups.themed"))
       .form-group
         each markedGroup in themegroups
           mixin checkboxWithDescription(checkboxName, markedGroup.group.longName, markedGroup.selected, markedGroup.group.descriptionHTMLFiltered("img"), markedGroup.group.id)
@@ -92,7 +92,7 @@ mixin time(name, label, object, value)
 
 mixin colorPicker(name, object)
   .form-group
-    label.control-label(for="color") Farbe:
+    label.control-label(for="color") #{t("colors.color")}:
     #color.input-group(data-color="#{object[name]}", data-color-format="hex")
       input#colorText.form-control(type="text", name=name, value=object[name])
       span#colorSpan.input-group-addon(style="background-color: #{object[name]}")

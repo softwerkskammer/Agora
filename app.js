@@ -6,6 +6,7 @@ var path = require('path');
 var passport = require('passport');
 var MongoStore = require('connect-mongo')(express);
 var i18n = require('i18next');
+var jade = require("jade");
 
 function useApp(parent, url, factory) {
   function ensureRequestedUrlEndsWithSlash(req, res, next) {
@@ -123,6 +124,9 @@ module.exports = {
     });
 
     i18n.registerAppHelper(app);
+    i18n.addPostProcessor("jade", function (val, key, opts) {
+      return jade.compile(val, opts)();
+    });
 
     return app;
   },

@@ -8,6 +8,7 @@
     "back": "Zurück",
     "close": "Schließen",
     "compare": "Vergleichen",
+    "more": "Mehr",
     "title": "Titel",
     "url": "URL",
     "name": "Name",
@@ -15,14 +16,22 @@
     "description": "Beschreibung",
     "login": "Anmelden",
     "logout": "Abmelden",
+    "overview": "Übersicht",
+    "administration": "Verwaltung",
+    "faq": "Tipps & FAQs",
+    "credits": "Credits",
+    "legal_notice": "Impressum",
     "members": {
       "one": "ein Mitglied",
       "none": "keine Mitglieder",
       "count": "__count__ Mitglieder"
-    }
+    },
+    "gdcr": "Der Global Day of Coderetreat",
+    "feedback": "Feedback",
+    "what_does_not_work": "Was funktioniert nicht, wie es soll?"
   },
   "activities": {
-    "heading": "Aktivitäten",
+    "activities": "Aktivitäten",
     "resource": "Name der Ressource",
     "waitinglist": "Warteliste",
     "listed": "Eingetragen am",
@@ -34,7 +43,7 @@
     "waitinglist_new": "Neuer Eintrag"
   },
   "announcements": {
-    "pagetitle": "Aktuelles",
+    "latest_news": "Das Neueste",
     "announcements": "Nachrichten",
     "announcement": "Nachricht",
     "new": "Neue Nachricht",
@@ -43,6 +52,33 @@
     "show_until": "Anzeigen bis einschließlich",
     "text": "Text der Nachricht",
     "automatic": "automatisch"
+  },
+  "authentication": {
+    "authentication": "Authentifizierung",
+    "authentication_text": "Du kannst Dich über einen der untenstehenden Dienste authentifizieren. Im Anschluss bitten wir Dich, einige persönliche Daten einzugeben.",
+    "authenticate": "Authentifizieren",
+    "alternative_url": "(optional) Eingabe der URL eines alternativen OpenID Providers",
+    "error": "Authentifizierungsproblem",
+    "error_text": [
+      "h3 Problem bei der Authentifizierung!",
+      "p Leider scheint bei der Authentifizierung etwas schief gegangen zu sein.",
+      "  | Bitte ",
+      "  a(href=\"/login\") versuche es noch einmal.",
+      "p Sollte der Fehler wiederholt auftreten, lass uns bitte ",
+      "  a(href=\"https://github.com/softwerkskammer/NeuePlattform-Implementierung/issues/\") einen möglichst detaillierten Fehlerbericht zukommen:",
+      "  ul",
+      "    li Wie bist Du auf die Login Seite gegangen?",
+      "    li Welche Authentifizierung hast Du gewählt?",
+      "    li Wenn Du selbst eine URL eingegeben hast, welche war das?",
+      "    li Betriebssystem und Browser inkl. Version.",
+      "    li Datum / Uhrzeit",
+      "    li Den Stacktrace unterhalb von \"500\"",
+      "p Das Agora-Team bittet um Entschuldigung."
+    ]
+  },
+  "colors": {
+    "colors": "Farben",
+    "color": "Farbe"
   },
   "groups": {
     "overview": "Übersicht der Gruppen",
