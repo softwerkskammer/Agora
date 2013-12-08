@@ -3,6 +3,7 @@
     "all": "Alle",
     "create": "Anlegen",
     "edit": "Bearbeiten",
+    "add": "Hinzufügen",
     "save": "Speichern",
     "back": "Zurück",
     "close": "Schließen",
@@ -21,7 +22,16 @@
     }
   },
   "activities": {
-    "heading": "Aktivitäten"
+    "heading": "Aktivitäten",
+    "resource": "Name der Ressource",
+    "waitinglist": "Warteliste",
+    "listed": "Eingetragen am",
+    "register_until": "Kann sich registrieren bis",
+    "select": "Markieren",
+    "activate_registration_1": "Für die gewählten Wartelisteneinträge wird für die nächsten",
+    "activate_registration_2": "Stunden die Registrierung ermöglicht.",
+    "save_and_notify": "Speichern und Benachrichtigen",
+    "waitinglist_new": "Neuer Eintrag"
   },
   "announcements": {
     "pagetitle": "Aktuelles",
