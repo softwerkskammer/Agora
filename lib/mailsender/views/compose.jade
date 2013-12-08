@@ -6,7 +6,7 @@ block scripts
   script(src="/clientscripts/check-mailsenderform.js")
 
 block title
-  | Nachricht
+  | #{t("mailsender.notification")}
 
 block content
   form(id='mailform', action='/mailsender/send', method='post')
@@ -14,18 +14,18 @@ block content
       .row
         .col-md-12
           legend
-            | Nachricht schreiben
+            | #{t("mailsender.write")}
           if (regionalgroups)
             mixin groupCheckboxes('invitedGroups', regionalgroups, themegroups)
-            h4 Sonstige
-            mixin checkbox('toParticipants', 'nur an die Teilnehmer der Aktivität (nicht an Gruppen)', false, 'toParticipants')
+            h4 #{t("mailsender.others")}
+            mixin checkbox('toParticipants', t("mailsender.to_participants"), false, 'toParticipants')
           if (message.receiver)
-            mixin textReadonly('nickname', 'An Mitglied', message.receiver)
-          mixin text('subject', 'Betreff', message)
-          mixin hightextarea('markdown', 'Inhalt', message)
-          mixin checkbox('sendCopyToSelf', 'Eine Kopie an mich senden', false)
+            mixin textReadonly('nickname', t("mailsender.to_member"), message.receiver)
+          mixin text('subject', t("mailsender.subject"), message)
+          mixin hightextarea('markdown', t("mailsender.contents"), message)
+          mixin checkbox('sendCopyToSelf', t("mailsender.copy_to_self"), false)
           mixin hidden('htmlAddOn', message)
           input(id="successURL", type="hidden", name="successURL", value="#{successURL}")
 
-          button.btn.btn-primary.pull-right(type="submit") Senden
-          a.btn.btn-default.pull-right(href="javascript:history.back()", type="cancel") Zurück
+          button.btn.btn-primary.pull-right(type="submit") #{t("mailsender.send")}
+          a.btn.btn-default.pull-right(href="javascript:history.back()", type="cancel") #{t("general.back")}

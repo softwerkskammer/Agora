@@ -62,6 +62,17 @@
     "threaded": "Threaded",
     "unthreaded": "Flat"
   },
+  "mailsender": {
+    "notification": "Notification",
+    "write": "Compose Notification",
+    "others": "Sonstige",
+    "to_member": "To member",
+    "to_participants": "only to the activity's participants (not to groups)",
+    "subject": "Subject",
+    "contents": "Contents",
+    "copy_to_self": "Send a copy to myself",
+    "send": "Send"
+  },
   "members": {
     "members": "Members"
   },
