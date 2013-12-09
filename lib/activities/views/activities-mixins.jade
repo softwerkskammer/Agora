@@ -13,7 +13,7 @@ mixin subscriptionButtons(activity, resourceName, resourceRegistrationRenderer)
   btnClass = result.isWithdrawal() ? 'btn-default' : 'btn-primary'
   if (activity.resourceNames().length === 1)
     if (!result.representsButton()) 
-      #{result.displayText}
+      | #{result.displayText}
     else
       a(href="#{result.url}", class="btn #{btnClass}") #{result.displayText}
   else
