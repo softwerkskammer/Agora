@@ -1,4 +1,4 @@
-/* global $, document, window, moment*/
+/* global $, document, window, moment, today, monthNames, monthNamesShort, dayNames, dayNamesShort, datepicker_lang, datepicker_format */
 "use strict";
 
 var surroundWithLink = function (text) {
@@ -35,14 +35,14 @@ var initCalendar = function () {
         month: 'MMM yy'
       },
       buttonText: {
-        today: 'heute',
+        today: today,
         prev: '<i class="fa fa-chevron-left"></i>',
         next: '<i class="fa fa-chevron-right"></i>'
       },
-      monthNames: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'],
-      monthNamesShort: ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'],
-      dayNames: ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'],
-      dayNamesShort: ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'],
+      monthNames: monthNames,
+      monthNamesShort: monthNamesShort,
+      dayNames: dayNames,
+      dayNamesShort: dayNamesShort,
 
       events: '/activities/eventsForSidebar',
       eventMouseover: function (event) {
@@ -81,11 +81,11 @@ var resizePreScrollable = function () {
 var initPickers = function () {
   $('.datepicker').datepicker({
     autoclose: true,
-    format: 'dd.mm.yyyy',
+    format: datepicker_format,
     weekStart: 1,
     viewMode: 'days',
     minViewMode: 'days',
-    language: 'de'
+    language: datepicker_lang
   });
 
   $('.timepicker').timepicker({

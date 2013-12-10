@@ -5,8 +5,10 @@ html
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
     meta(http-equiv="X-UA-Compatible", content="IE=edge")
     link(href="/stylesheets/screen.css", rel="stylesheet")
-
-    script(src="/clientscripts/global.js")
+    if (language === 'de')
+      script(src="/clientscripts/global_de.js")
+    else
+      script(src="/clientscripts/global_en.js")
     if (typeof(calViewYear) !== 'undefined')
       script.
         $(document).ready(function () {
