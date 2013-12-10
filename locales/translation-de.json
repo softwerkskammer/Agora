@@ -272,6 +272,10 @@
     }
   },
   "validation": {
+    "validation": "Validierung",
+    "validation_error": "Validierungsfehler",
+    "validation_text": "Offenbar hast Du einige Felder nicht wie vorgesehen ausgefüllt. Diese findest Du unten:",
+    "failed": "Fehlgeschlagen",
     "url_not_available": "Diese URL ist leider nicht verfügbar."
   }
 }
