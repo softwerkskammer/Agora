@@ -8,7 +8,7 @@ block content
       .page-header
         .btn-group.pull-right
           if (accessrights.canEditAnnouncement(announcement))
-            a.btn.btn-default(href="/announcements/edit/#{encodeURIComponent(announcement.url)}", title="Bearbeiten"): i.fa.fa-edit.fa-fw
+            a.btn.btn-default(href="/announcements/edit/#{encodeURIComponent(announcement.url)}", title=t("general.edit")): i.fa.fa-edit.fa-fw
         h2 #{announcement.title}&nbsp;
           small #{announcement.fromDate()}
       .row
@@ -17,6 +17,6 @@ block content
           p
             em
               if ('automatisch' === announcement.authorname)
-                | #{announcement.authorname}
+                | #{t("announcements.automatic")}
               else
                 a(href="/members/#{encodeURIComponent(announcement.authorname)}") #{announcement.authorname}

@@ -3,7 +3,7 @@ extends ../../../views/layout
 include ../../../views/formComponents
 
 block title
-  | #{member.firstname} #{member.lastname} - Profil
+  | #{member.firstname} #{member.lastname} - #{t("members.profile")}
 
 block content
   .row
@@ -16,32 +16,32 @@ block content
               a.btn.btn-default(href="/members/edit/#{encodeURIComponent(member.nickname)}"): i.fa.fa-edit.fa-fw
           small
             if (member.isAdmin)
-              | Admin
+              | #{t("members.administrator")}
             else
-              | Profilansicht
+              | #{t("members.profileview")}
   .row
     .col-md-8
       p
-        strong Vorname:
+        strong #{t("members.firstname")}:
         |  #{member.firstname}
       p
-        strong Nachname:
+        strong #{t("members.lastname")}:
         |  #{member.lastname}
       p
-        strong Twitter: 
+        strong #{t("members.twitter")}:
         span.twitterify
           | #{member.twitter}
       p
-        strong Ort / Region:
+        strong #{t("members.location")}:
         |  #{member.location}
       p
-        strong Beruf:
+        strong #{t("members.profession")}:
         |  #{member.profession}
       p
-        strong Interessenschwerpunkte:
+        strong #{t("members.interests")}:
         |  #{member.interests}
       p
-        strong Website / Blog: 
+        strong #{t("members.web")}:
         span.urlify
           | #{member.site}
 
@@ -54,9 +54,9 @@ block content
     .col-md-12
       a.btn.btn-primary(href="/mailsender/contactMember/#{encodeURIComponent(member.nickname)}")
         i.fa.fa-envelope
-        | &nbsp;Eine Mail an #{member.firstname} #{member.lastname} senden
+        | &nbsp;#{t("members.send_email", {firstname: member.firstname, lastname: member.lastname})}
 
-      h3 Mitglied in:
+      h3 #{t("members.member_of")}:
       ul
         each group in subscribedGroups
           li: .group: strong: a(href='../groups/#{group.id}') #{group.longName}

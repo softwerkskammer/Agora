@@ -1,8 +1,277 @@
 {
+  "general": {
+    "all": "Alle",
+    "create": "Anlegen",
+    "edit": "Bearbeiten",
+    "add": "Hinzufügen",
+    "save": "Speichern",
+    "back": "Zurück",
+    "close": "Schließen",
+    "compare": "Vergleichen",
+    "more": "Mehr",
+    "title": "Titel",
+    "url": "URL",
+    "name": "Name",
+    "address": "Adresse",
+    "description": "Beschreibung",
+    "login": "Anmelden",
+    "logout": "Abmelden",
+    "overview": "Übersicht",
+    "administration": "Verwaltung",
+    "faq": "Tipps & FAQs",
+    "credits": "Credits",
+    "legal_notice": "Impressum",
+    "yes": "ja",
+    "members": {
+      "one": "ein Mitglied",
+      "none": "keine Mitglieder",
+      "count": "__count__ Mitglieder"
+    },
+    "gdcr": "Der Global Day of Coderetreat",
+    "gdcr_activities": "Aktivitäten zum GDCR",
+    "gdcr_text": "Hier findest Du fast alle deutschsprachigen Veranstaltungen. Eine vollständige Übersicht findest Du auf",
+    "feedback": "Feedback",
+    "what_does_not_work": "Was funktioniert nicht, wie es soll?"
+  },
   "activities": {
-    "heading": "Aktivitäten"
+    "activity": "Aktivität",
+    "activities": "Aktivitäten",
+    "new": "Neue Aktivität",
+    "create": "Aktivität anlegen",
+    "edit": "Aktivität bearbeiten",
+    "new_copy": "Neu auf Basis dieser Aktivität",
+    "upcoming": "Kommende",
+    "past": "Vergangene",
+    "export": "Für Kalender exportieren",
+    "export_subscribe": "$t(activities.export). Zum Abo: URL in Kalenderprogramm abonnieren",
+    "invitation": "Einladung versenden",
+    "directions": "Wegbeschreibung",
+    "accepted_by": "Zugesagt haben",
+    "organized_by": "Veranstaltet von der Gruppe",
+    "created_by": "Angelegt von",
+    "resource": "Ressource",
+    "waitinglist": "Warteliste",
+    "listed": "Eingetragen am",
+    "register_until": "Kann sich registrieren bis",
+    "select": "Markieren",
+    "activate_registration_1": "Für die gewählten Wartelisteneinträge wird für die nächsten",
+    "activate_registration_2": "Stunden die Registrierung ermöglicht.",
+    "save_and_notify": "Speichern und Benachrichtigen",
+    "waitinglist_new": "Neuer Eintrag",
+    "oclock": "Uhr",
+    "no_participants": "Bislang gibt es keine Teinahmezusagen.",
+    "one_participant": "Bislang hat ein Mitglied seine Teilnahme zugesagt.",
+    "count_participants": "Bislang haben __count__ Mitglieder ihre Teilnahme zugesagt.",
+    "label": "Bezeichnung",
+    "unlimited": "unbegrenzt",
+    "title": "Titel",
+    "start": "Start",
+    "end": "Ende",
+    "address_suffix": "Adress-Suffix",
+    "location": "Veranstaltungsort",
+    "resources": "Ressourcen",
+    "resourcelabel": "$t(activities.label)",
+    "count": "Anzahl",
+    "registration": "Anmeldung",
+    "possible": "möglich",
+    "suggestion": "Vorschlag",
+    "subscribe_single": "Ich bin dabei!",
+    "subscribe_multiple": "Anmelden",
+    "unsubscribe_single": "Ich kann doch nicht…",
+    "unsubscribe_multiple": "Absagen",
+    "registration_not_here": "Anmeldung ist nicht über die Softwerkskammer möglich.",
+    "registration_not_now": "Anmeldung ist zur Zeit nicht möglich.",
+    "add_to_waitinglist": "Auf die Warteliste!",
+    "remove_from_waitinglist": "Warteliste verlassen…",
+    "full": "Alle Plätze sind belegt.",
+    "tooltip": {
+      "title": "Kurz und knackig für Übersichten",
+      "start": "Enddatum und -uhrzeit werden automatisch verschoben (die Dauer bleibt gleich)",
+      "end": "Hiermit kannst Du die Dauer verändern",
+      "address_suffix": "Für die Verlinkung innerhalb dieser Site",
+      "resourcelabel": "Name der zu buchenden Einheit (z. B. Einzelzimmer, Doppelzimmer)",
+      "count": "Maximale Teilnehmerzahl (keine Beschränkung bei leerem Feld, keine Registrierung möglich bei 0)",
+      "registration": "Hiermit lässt sich die Registrierung freigeben oder sperren",
+      "waitinglist": "Soll die Ressource eine Warteliste bekommen?"
+    }
   },
   "announcements": {
-    "heading": "Nachrichten"
+    "latest_news": "Das Neueste",
+    "announcements": "Nachrichten",
+    "announcement": "Nachricht",
+    "new": "Neue Nachricht",
+    "create": "Nachricht anlegen",
+    "edit": "Nachricht bearbeiten",
+    "show_until": "Anzeigen bis einschließlich",
+    "text": "Text der Nachricht",
+    "automatic": "automatisch"
+  },
+  "authentication": {
+    "authentication": "Authentifizierung",
+    "authentication_text": "Du kannst Dich über einen der untenstehenden Dienste authentifizieren. Im Anschluss bitten wir Dich, einige persönliche Daten einzugeben.",
+    "authenticate": "Authentifizieren",
+    "alternative_url": "(optional) Eingabe der URL eines alternativen OpenID Providers",
+    "error": "Authentifizierungsproblem",
+    "error_text": [
+      "h3 Problem bei der Authentifizierung!",
+      "p Leider scheint bei der Authentifizierung etwas schief gegangen zu sein.",
+      "  | Bitte ",
+      "  a(href=\"/login\") versuche es noch einmal.",
+      "p Sollte der Fehler wiederholt auftreten, lass uns bitte ",
+      "  a(href=\"https://github.com/softwerkskammer/NeuePlattform-Implementierung/issues/\") einen möglichst detaillierten Fehlerbericht zukommen:",
+      "  ul",
+      "    li Wie bist Du auf die Login Seite gegangen?",
+      "    li Welche Authentifizierung hast Du gewählt?",
+      "    li Wenn Du selbst eine URL eingegeben hast, welche war das?",
+      "    li Betriebssystem und Browser inkl. Version.",
+      "    li Datum / Uhrzeit",
+      "    li Den Stacktrace unterhalb von \"500\"",
+      "p Das Agora-Team bittet um Entschuldigung."
+    ]
+  },
+  "colors": {
+    "colors": "Farben",
+    "color": "Farbe"
+  },
+  "groups": {
+    "overview": "Übersicht der Gruppen",
+    "group": "Gruppe",
+    "groups": "Gruppen",
+    "regional": "Regionalgruppen",
+    "themed": "Themengruppen",
+    "type": "Gruppenart",
+    "new": "Neue Gruppe",
+    "create": "Gruppe anlegen",
+    "edit": "Gruppe \"__groupId__\" bearbeiten",
+    "join": "Gruppe beitreten",
+    "leave": "Gruppe verlassen",
+    "has": "Diese Gruppe hat",
+    "contact": "Ansprechpartner",
+    "contacts": "Ansprechpartner",
+    "email_prefix": "Präfix für E-Mail-Subjects",
+    "x_coord": "X-Koord.",
+    "y_coord": "Y-Koord.",
+    "map_label": "Label in Karte",
+    "tooltip": {
+      "name": "Die Adresse, unter der die Gruppe \"@softwerkskammer.org\" erreichbar ist.",
+      "title": "Anzeigetext innerhalb der Site, ist auch Realname für E-Mails",
+      "email_prefix": "steht innerhalb [] vor dem Subject in gesendeten E-Mails",
+      "x_coord": "Waagerechte Position auf der Karte",
+      "y_coord": "Senkrechte Position auf der Karte",
+      "map_label": "Label, das in der Karte angezeigt wird"
+    }
+  },
+  "mailarchive": {
+    "archive": "Mailarchiv",
+    "emails": "E-Mails",
+    "no_emails": "Keine E-Mails",
+    "threaded": "Threaded",
+    "unthreaded": "Flat"
+  },
+  "mailsender": {
+    "notification": "Nachricht",
+    "write": "Nachricht schreiben",
+    "others": "Sonstige",
+    "to_member": "An Mitglied",
+    "to_participants": "nur an die Teilnehmer der Aktivität (nicht an Gruppen)",
+    "subject": "Betreff",
+    "contents": "Inhalt",
+    "copy_to_self": "Eine Kopie an mich senden",
+    "send": "Senden"
+  },
+  "members": {
+    "overview": "Übersicht der Mitglieder",
+    "members": "Mitglieder",
+    "create": "Profil anlegen",
+    "edit": "Profil bearbeiten",
+    "new": "Neues Mitglied",
+    "cancel": "Registrierung abbrechen",
+    "group_membership": "Gruppenmitgliedschaft",
+    "member_of": "Mitglied in",
+    "personal_data": "Persönliche Daten",
+    "profile": "Profil",
+    "profileview": "Profilansicht",
+    "nickname": "Nickname",
+    "firstname": "Vorname",
+    "lastname": "Nachname",
+    "email": "E-Mail",
+    "twitter": "Twitter",
+    "location": "Ort / Region",
+    "profession": "Beruf",
+    "interests": "Interessenschwerpunkte",
+    "web": "Website / Blog",
+    "reference": "Wie ich von der Softwerkskammer erfahren habe",
+    "administrator": "Administrator",
+    "authenticated_via": "Aktuell authentifiziert bei",
+    "authenticate": "Anderswo authentifizieren",
+    "send_email": "Eine E-Mail an __firstname__ __lastname__ senden",
+    "has": "Die Softwerkskammer hat"
+  },
+  "wiki": {
+    "overview": "Übersicht der Dateien in",
+    "wiki": "Wiki",
+    "subwiki": "Subwiki",
+    "comparison_of": "Vergleich von",
+    "in": "in Wiki",
+    "all_pages": "Alle Seiten in",
+    "revisions": "Revisionen",
+    "search": "Wiki durchsuchen",
+    "create": "Wiki-Seite \"__pageName__\" $t(wiki.in) \"__subdir__\" anlegen",
+    "edit": "Wiki-Seite \"__pageName__\" $t(wiki.in) \"__subdir__\" bearbeiten",
+    "contents": "Inhalt",
+    "message": "Kommentar",
+    "commit_message": "Commit-Kommentar",
+    "commit_template": "kein Commit-Kommentar",
+    "searchresults": "Suchergebnis",
+    "no_results": "Keine Ergebnisse",
+    "line": "Zeile"
+  },
+  "message": {
+    "title": {
+      "save_successful": "Speichern erfolgreich",
+      "problem": "Problem",
+      "conflict": "Speicherkonflikt",
+      "query": "Suchtext zu kurz",
+      "email_successful": "E-Mail gesendet",
+      "email_problem": "E-Mail nicht gesendet"
+    },
+    "content": {
+      "save_error": "Das Speichern war nicht erfolgreich.",
+      "query": "Dein eingegebener Suchtext ist zu kurz.",
+      "activities": {
+        "saved": "Deine Aktivität wurde gespeichert.",
+        "participation_added": "Deine Teilnahme wurde eingetragen.",
+        "participation_for_resource_added": "Deine Teilnahme wurde für \"__resourceName__\" eingetragen.",
+        "participation_removed": "Schade, dass Du nicht dabei sein wirst.",
+        "participation_for_resource_removed": "Schade, dass Du bei \"__resourceName__\" nicht dabei sein wirst.",
+        "waitinglist_added": "Du bist jetzt auf der Warteliste.",
+        "waitinglist_removed": "Du bist jetzt nicht mehr auf der Warteliste."
+      },
+      "announcements": {
+        "saved": "Deine Nachricht wurde gespeichert."
+      },
+      "colors": {
+        "saved": "Deine Farben wurden gespeichert.",
+        "saved_single": "Die neue Farbe wurde gespeichert."
+      },
+      "groups": {
+        "saved": "Deine Gruppe wurde gespeichert."
+      },
+      "mailsender": {
+        "error_reason": "Deine __type__ wurde nicht gesendet. Grund: __err__",
+        "error_no_recipient": "Deine E-Mail wurde nicht gesendet. Es ist kein Empfänger angegeben.",
+        "success": "Deine __type__ ist unterwegs."
+      },
+      "members": {
+        "saved": "Das Profil wurde gespeichert."
+      },
+      "wiki": {
+        "conflict": "Deine Änderungen wurden gespeichert. Du hast allerdings Änderungen eines anderen Benutzers überschrieben. Bitte überprüfe nochmals die Wikiseite.",
+        "saved": "Deine Änderungen wurden gespeichert."
+      }
+    }
+  },
+  "validation": {
+    "url_not_available": "Diese URL ist leider nicht verfügbar."
   }
 }

@@ -21,7 +21,7 @@ block scripts
     });
 
 block title
-  | Übersicht der zum Registrieren vorgemerkten Mitglieder
+  | #{t("activities.waitinglist")}
 block content
   form(id='allowRegistrationForm', name='allowRegistrationForm', action='/waitinglist/allowRegistration',method='post')
     mixin hiddenWithValue("activityUrl", activity.url())
@@ -29,16 +29,16 @@ block content
       .col-md-12
         .page-header
           h2 #{activity.title()}
-            small  Warteliste
+            small  #{t("activities.waitinglist")}
         .panel.pre-scrollable
           table.table.table-condensed.table-hover.table-striped#waitinglisttable
             thead
               tr
-                th Markieren
-                th Nickname
-                th Name der Ressource
-                th Eingetragen&nbsp;am
-                th Kann&nbsp;sich&nbsp;registrieren&nbsp;bis
+                th #{t("activities.select")}
+                th #{t("members.nickname")}
+                th #{t("activities.resource")}
+                th #{t("activities.listed")}
+                th #{t("activities.register_until")}
             tbody
               for waitinglistEntry in waitinglist
                 - var checkboxid = '{"nickname": "' + waitinglistEntry.registrantNickname + '", "activityUrl": "' + activity.url() + '", "resourcename": "' + waitinglistEntry.resourceName() + '"}'
@@ -52,18 +52,18 @@ block content
                   td #{waitinglistEntry.registrationDate()}
                   td #{waitinglistEntry.registrationValidUntil()}
         .form-inline
-          | Für die gewählten Wartelisteneinträge wird für die nächsten
+          | #{t("activities.activate_registration_1")}
           input.form-control(id="registrationValidForHours", type="text", name="registrationValidForHours", style="width: 50px;")
-          |  Stunden die Registrierung ermöglicht.
-          button.btn.btn-primary.pull-right(type="submit") Speichern und Benachrichtigen
+          |  #{t("activities.activate_registration_2")}
+          button.btn.btn-primary.pull-right(type="submit") #{t("activities.save_and_notify")}
   if(accessrights.isSuperuser())
     hr
     form(id='waitinglistForm', action='/waitinglist/add',method='post')
       mixin hiddenWithValue("activityUrl", activity.url())
-      legend Neuer Eintrag
+      legend #{t("activities.waitinglist_new")}
       .row
         .col-sm-4
-          input.form-control(id='nickname', type='text', name='nickname', placeholder='Nickname')
+          input.form-control(id='nickname', type='text', name='nickname', placeholder=t("members.nickname"))
         .col-sm-4
           if (activity.resourceNames().length > 2)
             select#nickname.form-control(name="resourceName")
@@ -72,4 +72,4 @@ block content
           else
             input.form-control(disabled, id='resourceName', type='text', name='resourceName', placeholder='#{activity.resourceNames()[0]}')
         .col-sm-4
-          button.btn.btn-primary.pull-right(type="submit") Hinzufügen
+          button.btn.btn-primary.pull-right(type="submit") #{t("general.add")}

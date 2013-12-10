@@ -5,9 +5,9 @@ html
   .modal-dialog.cheatsheet
     .modal-content
       .modal-header
-        button.close(type="button", data-dismiss="modal", aria-hidden="true") schließen&nbsp;&times
+        button.close(type="button", data-dismiss="modal", aria-hidden="true") #{t("general.close")}&nbsp;&times
         if (!mail)
-          h3 Keine Mail vorhanden
+          h3 #{t("mailarchive.no_emails")}
         else
           h3 #{mail.subject}
             br

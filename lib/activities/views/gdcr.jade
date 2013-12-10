@@ -22,16 +22,16 @@ mixin placeGroupLabels(activities)
 
 
 block title
-  | Global Day of Coderetreat
+  | #{t("general.gdcr")}
 
 block content
   .row
     .col-md-12
       .page-header
-        h2 Aktivitäten zum GDCR
-      p Hier findest Du fast alle deutschsprachigen Veranstaltungen. Eine vollständige Übersicht findest Du auf
+        h2 #{t("general.gdcr_activities")}
+      p  #{t("general.gdcr_text")}&nbsp;
         span.urlify http://gdcr.coderetreat.org/
-      h2 Nachfolgend #{activities.length) Coderetreats 
+      h2 #{activities.length) Coderetreats
   .row
     .col-md-6
       mixin activitylist(activities)
