@@ -33,6 +33,29 @@
     "feedback": "Feedback",
     "what_does_not_work": "Was funktioniert nicht, wie es soll?"
   },
+  "error": {
+    "congratulations": "Herzlichen Glückwunsch!",
+    "general": "Generelles Problem",
+    "missing_page": "Fehlende Seite",
+    "page_is_missing": "Diese Seite fehlt.",
+    "found404": "Du hast einen vier-null-vier gefunden.",
+    "found500": "Du hast einen fünf-null-null gefunden.",
+    "click_links": "Am Besten klickst Du auf einen unserer Links im Header.",
+    "detailed_report": "einen möglichst detaillierten Fehlerbericht zukommen",
+    "os_browser": "Betriebssystem und Browser inkl. Version.",
+    "datetime": "Datum / Uhrzeit",
+    "stacktrace500": "Den Stacktrace unterhalb von \"500\"",
+    "error500_text": [
+      "p Bitte lass uns ",
+      "  a(href=\"https://github.com/softwerkskammer/NeuePlattform-Implementierung/issues/\") $t(error.detailed_report):",
+      "  ul",
+      "    li Was hast Du getan?",
+      "    li $t(error.os_browser)",
+      "    li $t(error.datetime)",
+      "    li $t(error.stacktrace500)"
+    ],
+    "sorry": "Das Agora-Team bittet um Entschuldigung."
+  },
   "activities": {
     "activity": "Aktivität",
     "activities": "Aktivitäten",
@@ -118,15 +141,15 @@
       "  | Bitte ",
       "  a(href=\"/login\") versuche es noch einmal.",
       "p Sollte der Fehler wiederholt auftreten, lass uns bitte ",
-      "  a(href=\"https://github.com/softwerkskammer/NeuePlattform-Implementierung/issues/\") einen möglichst detaillierten Fehlerbericht zukommen:",
+      "  a(href=\"https://github.com/softwerkskammer/NeuePlattform-Implementierung/issues/\") $t(error.detailed_report):",
       "  ul",
       "    li Wie bist Du auf die Login Seite gegangen?",
       "    li Welche Authentifizierung hast Du gewählt?",
       "    li Wenn Du selbst eine URL eingegeben hast, welche war das?",
-      "    li Betriebssystem und Browser inkl. Version.",
-      "    li Datum / Uhrzeit",
-      "    li Den Stacktrace unterhalb von \"500\"",
-      "p Das Agora-Team bittet um Entschuldigung."
+      "    li $t(error.os_browser)",
+      "    li $t(error.datetime)",
+      "    li $t(error.stacktrace500)",
+      "p $t(error.sorry)"
     ]
   },
   "colors": {
