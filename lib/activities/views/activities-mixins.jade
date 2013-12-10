@@ -1,11 +1,11 @@
 mixin visitorCount(anzahl)
-  p Bislang
+  p
     if (anzahl === 0)
-      |  gibt es keine Teinahmezusagen.
+      |  #{t("activities.no_participants")}
     else if (anzahl === 1)
-      |  hat ein Mitglied seine Teilnahme zugesagt.
+      |  #{t("activities.one_participant")}
     else
-      |  haben #{anzahl} Mitglieder ihre Teilnahme zugesagt.
+      |  #{t("activities.count_participants", {count: anzahl})}
 
 
 mixin subscriptionButtons(activity, resourceName, resourceRegistrationRenderer)
@@ -13,14 +13,14 @@ mixin subscriptionButtons(activity, resourceName, resourceRegistrationRenderer)
   btnClass = result.isWithdrawal() ? 'btn-default' : 'btn-primary'
   if (activity.resourceNames().length === 1)
     if (!result.representsButton()) 
-      | #{result.displayText}
+      | #{t(result.displayText)}
     else
-      a(href="#{result.url}", class="btn #{btnClass}") #{result.displayText}
+      a(href="#{result.url}", class="btn #{btnClass}") #{t(result.displayText)}
   else
     form.form-horizontal
       .form-group
         label.control-label.col-xs-6(style="text-align: left;") #{resourceName}:
         if (!result.representsButton()) 
-          span.col-xs-6.control-label(style="text-align: center;") #{result.displayText}
+          span.col-xs-6.control-label(style="text-align: center;") #{t(result.displayText)}
         else
-          a(href="#{result.url}", class="btn col-xs-6 #{btnClass}") #{result.displayText}
+          a(href="#{result.url}", class="btn col-xs-6 #{btnClass}") #{t(result.displayText)}

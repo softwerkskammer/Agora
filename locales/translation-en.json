@@ -21,26 +21,79 @@
     "faq": "Hints & FAQs",
     "credits": "Credits",
     "legal_notice": "Legal Notice",
+    "yes": "yes",
     "members": {
       "one": "one member",
       "none": "no members",
       "count": "__count__ members"
     },
     "gdcr": "Global Day of Coderetreat",
+    "gdcr_activities": "Activities related to GDCR",
+    "gdcr_text": "Here you find almost all german-speaking activities. You can find a full overview at",
     "feedback": "Feedback",
     "what_does_not_work": "What does not work the way it should?"
   },
   "activities": {
+    "activity": "Activity",
     "activities": "Activities",
-    "resource": "Resource name",
-    "waitinglist": "Waitinglist",
+    "new": "New activity",
+    "create": "Create activity",
+    "edit": "Edit activity",
+    "new_copy": "New (based on this activity)",
+    "upcoming": "Upcoming",
+    "past": "Past",
+    "export": "Export to calendar",
+    "export_subscribe": "$t(activities.export). To subscribe: Subscribe URL in calendar application",
+    "invitation": "Send invitation",
+    "directions": "Directions",
+    "accepted_by": "Accepted by",
+    "organized_by": "Organized by group",
+    "created_by": "Created by",
+    "resource": "Resource",
+    "waitinglist": "Waiting List",
     "listed": "Listed on",
     "register_until": "Can register until",
     "select": "Select",
-    "activate_registration_1": "Registration will be possible for the selected waitinglist entries for the next",
+    "activate_registration_1": "Registration will be possible for the selected waiting list entries for the next",
     "activate_registration_2": "hours.",
     "save_and_notify": "Save and notify",
-    "waitinglist_new": "New Entry"
+    "waitinglist_new": "New Entry",
+    "oclock": "o'clock",
+    "no_participants": "So far, there are no participants.",
+    "one_participant": "So far, there is one participant.",
+    "count_participants": "So far, there are __count__ participants.",
+    "label": "Label",
+    "unlimited": "unlimited",
+    "title": "Title",
+    "startdate": "Start",
+    "end": "End",
+    "address_suffix": "Address-Suffix",
+    "location": "Event location",
+    "resources": "Resources",
+    "resourcelabel": "$t(activities.label)",
+    "count": "Count",
+    "registration": "Registration",
+    "possible": "possible",
+    "suggestion": "Suggestion",
+    "subscribe_single": "I'm in!",
+    "subscribe_multiple": "Subscribe",
+    "unsubscribe_single": "I cannot participate…",
+    "unsubscribe_multiple": "Unsubscribe",
+    "registration_not_here": "Registration is not possible via Softwerkskammer.",
+    "registration_not_now": "Registration is currently not allowed.",
+    "add_to_waitinglist": "Add to waiting list!",
+    "remove_from_waitinglist": "Leave waiting list…",
+    "full": "All spots are taken.",
+    "tooltip": {
+      "title": "Short and concise for overviews",
+      "startdate": "End date and time will be shifted automatically (the duration remains the same)",
+      "end": "Here you can alter the duration",
+      "address_suffix": "Used for links within this site",
+      "resourcelabel": "Name of the unit that can be booked (e.g. Single Room, Twin Room)",
+      "count": "Maximal participant count (No limit if field is empty, registration impossible if 0)",
+      "registration": "Here you can allow or block registration",
+      "waitinglist": "Should the resource have a waiting list?"
+    }
   },
   "announcements": {
     "latest_news": "Latest News",
@@ -82,6 +135,7 @@
   },
   "groups": {
     "overview": "Groups Overview",
+    "group": "Group",
     "groups": "Groups",
     "regional": "Regional Groups",
     "themed": "Themed Groups",
@@ -188,8 +242,8 @@
         "saved": "Your activity has been saved.",
         "participation_added": "Your participation has been registered.",
         "participation_for_resource_added": "Your participation in \"__resourceName__\" has been registered.",
-        "participation_removed": "Too bad, that you will not participate.",
-        "participation_for_resource_removed": "Too bad, that you will not participate in \"__resourceName__\".",
+        "participation_removed": "What a pity that you will not participate.",
+        "participation_for_resource_removed": "What a pity that you will not participate in \"__resourceName__\".",
         "waitinglist_added": "You have been added to the waiting list.",
         "waitinglist_removed": "You have been removed from the waiting list."
       },
@@ -216,5 +270,8 @@
         "saved": "Your changes have been saved."
       }
     }
+  },
+  "validation": {
+    "url_not_available": "This URL is not available."
   }
 }
