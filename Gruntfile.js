@@ -96,7 +96,7 @@ module.exports = function (grunt) {
       options: {
         separator: ';'
       },
-      dist: {
+      de: {
         src: [
           'public/clientscripts/global/jquery-1.9.1.js',
           'public/clientscripts/global/respond.min.js',
@@ -113,9 +113,29 @@ module.exports = function (grunt) {
           'public/clientscripts/global/methods_de.js',
           'public/clientscripts/global/bootstrap-timepicker-patched.js',
           'public/clientscripts/global/moment.min.js',
+          'public/clientscripts/global/strings_de.js',
           'public/clientscripts/global/agora.js'
         ],
-        dest: 'public/clientscripts/global.js'
+        dest: 'public/clientscripts/global_de.js'
+      },
+      en: {
+        src: [
+          'public/clientscripts/global/jquery-1.9.1.js',
+          'public/clientscripts/global/respond.min.js',
+          'public/clientscripts/global/bootstrap.js',
+          'public/clientscripts/global/bootstrap-datepicker.js',
+          'public/clientscripts/global/bootstrap-markdown-patched.js',
+          'public/clientscripts/global/markdown.js',
+          'public/clientscripts/global/fullcalendar.js',
+          'public/clientscripts/global/bootstrap-colorpicker.js',
+          'public/clientscripts/global/jquery.validate-1.11.1.js',
+          'public/clientscripts/global/additional-methods-1.11.1.js',
+          'public/clientscripts/global/bootstrap-timepicker-patched.js',
+          'public/clientscripts/global/moment.min.js',
+          'public/clientscripts/global/strings_en.js',
+          'public/clientscripts/global/agora.js'
+        ],
+        dest: 'public/clientscripts/global_en.js'
       }
     }
   });
