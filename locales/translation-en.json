@@ -33,6 +33,29 @@
     "feedback": "Feedback",
     "what_does_not_work": "What does not work the way it should?"
   },
+  "error": {
+    "congratulations": "Congratulations!",
+    "general": "General Problem",
+    "missing_page": "Missing Page",
+    "page_is_missing": "This page is missing.",
+    "found404": "You found a four-zero-four.",
+    "found500": "You found a five-zero-zero.",
+    "click_links": "I'd suggest you click on one of the links in the header.",
+    "detailed_report": "give us a detailed error report",
+    "os_browser": "Operating system and browser, including versions.",
+    "datetime": "Date and time",
+    "stacktrace500": "The Stacktrace below \"500\"",
+    "error500_text": [
+      "p Please ",
+      "  a(href=\"https://github.com/softwerkskammer/NeuePlattform-Implementierung/issues/\") $t(error.detailed_report):",
+      "  ul",
+      "    li What did you do?",
+      "    li $t(error.os_browser)",
+      "    li $t(error.datetime)",
+      "    li $t(error.stacktrace500)"
+    ],
+    "sorry": "The Agora team begs your pardon."
+  },
   "activities": {
     "activity": "Activity",
     "activities": "Activities",
@@ -118,15 +141,15 @@
       "  | Please ",
       "  a(href=\"/login\") try again.",
       "p If the error occurs repeatedly, please ",
-      "  a(href=\"https://github.com/softwerkskammer/NeuePlattform-Implementierung/issues/\") give us an error report that is as detailed as possible:",
+      "  a(href=\"https://github.com/softwerkskammer/NeuePlattform-Implementierung/issues/\") $t(error.detailed_report):",
       "  ul",
       "    li How did you access the login page?",
       "    li Which authentication did you choose?",
       "    li If you entered a URL manually, which was it?",
-      "    li Your operating system and browser, including versions.",
-      "    li Date and time of the error",
-      "    li The stacktrace below \"500\"",
-      "p The Agora-Team begs your pardon."
+      "    li $t(error.os_browser)",
+      "    li $t(error.datetime)",
+      "    li $t(error.stacktrace500)",
+      "p $t(error.sorry)"
     ]
   },
   "colors": {
