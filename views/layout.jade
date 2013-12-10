@@ -36,9 +36,9 @@ html
     .row.main
       .col-md-8
         .pull-right.visible-xs
-          a(href="/language/#{encodeURIComponent(currentUrl)}/de"): img(src="/img/flags/Germany.png", alt="Deutsch")
+          a(href="/language/de?currentUrl=#{encodeURIComponent(currentUrl)}"): img(src="/img/flags/Germany.png", alt="Deutsch")
           |
-          a(href="/language/#{encodeURIComponent(currentUrl)}/en"): img(src="/img/flags/United-Kingdom.png", alt="English")
+          a(href="/language/en?currentUrl=#{encodeURIComponent(currentUrl)}"): img(src="/img/flags/United-Kingdom.png", alt="English")
         if (statusmessage)
           mixin notificationsBlock(statusmessage)
         block content

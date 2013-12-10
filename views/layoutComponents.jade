@@ -13,8 +13,8 @@ mixin topNavbar
     .navbar-collapse.collapse.collapse-top
       ul.nav.navbar-nav.pull-right.hidden-xs
         mixin loginMenu
-        li: a(style="padding: 2px;", href="/language/#{encodeURIComponent(currentUrl)}/de"): img(src="/img/flags/Germany.png", alt="Deutsch")
-        li: a(style="padding: 2px;", href="/language/#{encodeURIComponent(currentUrl)}/en"): img(src="/img/flags/United-Kingdom.png", alt="English")
+        li: a(style="padding: 2px;", href="/language/de?currentUrl=#{encodeURIComponent(currentUrl)}"): img(src="/img/flags/Germany.png", alt="Deutsch")
+        li: a(style="padding: 2px;", href="/language/en?currentUrl=#{encodeURIComponent(currentUrl)}"): img(src="/img/flags/United-Kingdom.png", alt="English")
       ul.nav.navbar-nav
         li#activities: a(href="/activities/upcoming")
           span.hidden-sm
