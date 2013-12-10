@@ -202,7 +202,7 @@ describe('Members application', function () {
       .send('nickname=nickerinack')
       .send('previousNickname=bibabu')
       .expect(200)
-      .expect(/Validation Error/)
+      .expect(/Validierungsfehler/)
       .expect(/Dieser Nickname ist leider nicht verfügbar./, function (err) {
         done(err);
       });
@@ -220,7 +220,7 @@ describe('Members application', function () {
       .send('email=here@there.org')
       .send('previousEmail=there@wherever.com')
       .expect(200)
-      .expect(/Validation Error/)
+      .expect(/Validierungsfehler/)
       .expect(/Diese Adresse ist schon registriert. Hast Du bereits ein Profil angelegt?/, function (err) {
         done(err);
       });
@@ -232,7 +232,7 @@ describe('Members application', function () {
       .post('/submit')
       .send('id=0815&&nickname=nuck&previousNickname=nuck&location=x&profession=y&reference=z&email=here@there.org&previousEmail=here@there.org')
       .expect(200)
-      .expect(/Validation Error/)
+      .expect(/Validierungsfehler/)
       .expect(/Vorname ist ein Pflichtfeld./)
       .expect(/Nachname ist ein Pflichtfeld./, function (err) {
         done(err);
@@ -252,7 +252,7 @@ describe('Members application', function () {
       .post('/submit')
       .send('id=0815&&nickname=nuckNew&previousNickname=nuck&lastname=x&location=x&profession=y&reference=z&email=hereNew@there.org&previousEmail=here@there.org')
       .expect(200)
-      .expect(/Validation Error/)
+      .expect(/Validierungsfehler/)
       .expect(/Vorname ist ein Pflichtfeld./, function (err) {
         done(err);
       });
@@ -274,7 +274,7 @@ describe('Members application', function () {
       .send('email=here@there.org')
       .send('previousEmail=there@wherever.com')
       .expect(200)
-      .expect(/Validation Error/)
+      .expect(/Validierungsfehler/)
       .expect(/Dieser Nickname ist leider nicht verfügbar./)
       .expect(/Diese Adresse ist schon registriert. Hast Du bereits ein Profil angelegt?/, function (err) {
         done(err);
