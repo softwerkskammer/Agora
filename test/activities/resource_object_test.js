@@ -229,6 +229,15 @@ describe('Resource', function () {
 
       expect(resource.waitinglistEntryFor('12345').canSubscribe()).to.be.true;
     });
+
+    it('does not add a member to waitinglist if this member is already registered', function () {
+      var resource = activity1.resourceNamed("Meine Ressource");
+      resource.addMemberId('12345');
+      expect(resource.isAlreadyRegistered('12345')).to.be.true;
+      resource.addToWaitinglist('12345', moment());
+      
+      expect(resource.waitinglistEntryFor('12345')).to.not.exist;
+    });
   });
 
 });
