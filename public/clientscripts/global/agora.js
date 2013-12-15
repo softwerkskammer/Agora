@@ -127,6 +127,7 @@ var addHelpButtonToTextarea = function () {
             {data: e.getContent(), subdir: ($("#subdir").val() || $("#assignedGroup").val() || $('#id').val())},
             function (data) { $(".md-preview").html(data); }
           );
+          return ""; // to clearly indicate the loading...
         }
       }
     );
