@@ -123,7 +123,7 @@ var addHelpButtonToTextarea = function () {
           ]
         ],
         onPreview: function (e) {
-          $.post("/wiki/preview",
+          $.post("/preview",
             {data: e.getContent(), subdir: ($("#subdir").val() || $("#assignedGroup").val() || $('#id').val())},
             function (data) { $(".md-preview").html(data); }
           );
