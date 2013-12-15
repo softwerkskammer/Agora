@@ -1,5 +1,5 @@
 /* ===================================================
- * bootstrap-markdown.js v1.1.4
+ * bootstrap-markdown.js v2.1.0
  * http://github.com/toopay/bootstrap-markdown
  * ===================================================
  * Copyright 2013 Taufan Aditya
@@ -16,9 +16,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * 
- * !!! PATCHED -> Search line: "      this.$textarea.css('resize','none')"
- * !!! PATCHED -> Button sytles in function __buildButtons
- * 
+ *  
+ *  !!! PATCHED -> Search line: "      this.$textarea.css('resize','none')"
+ *  !!! PATCHED -> replaced glyphicons by fontawesome
+ *  !!! PATCHED -> replaced btn-sm by btn-xs
+ *  !!! PATCHED -> replaced btn-primary by btn-default in preview button
  * ========================================================== */
 
 !function ($) {
@@ -50,7 +52,7 @@
 
     constructor: Markdown
 
-  , __alterButtons: function(name,alter) {
+    , __alterButtons: function(name,alter) {
       var handler = this.$handler, isAll = (name == 'all'),that = this
 
       $.each(handler,function(k,v) {
@@ -66,12 +68,12 @@
         }
       })
     }
-    
-  , __buildButtons: function(buttonsArray, container) {
+
+    , __buildButtons: function(buttonsArray, container) {
       var i,
-          ns = this.$ns,
-          handler = this.$handler,
-          callback = this.$callback
+        ns = this.$ns,
+        handler = this.$handler,
+        callback = this.$callback
 
       for (i=0;i<buttonsArray.length;i++) {
         // Build each group container
@@ -79,18 +81,18 @@
         for (y=0;y<btnGroups.length;y++) {
           // Build each button group
           var z,
-              buttons = btnGroups[y].data,
-              btnGroupContainer = $('<div/>', {
-                                    'class': 'btn-group'
-                                  })
+            buttons = btnGroups[y].data,
+            btnGroupContainer = $('<div/>', {
+              'class': 'btn-group'
+            })
 
           for (z=0;z<buttons.length;z++) {
             var button = buttons[z],
-                buttonToggle = '',
-                buttonHandler = ns+'-'+button.name,
-                btnText = button.btnText ? button.btnText : '',
-                btnClass = button.btnClass ? button.btnClass : 'btn',
-                tabIndex = button.tabIndex ? button.tabIndex : '-1'
+              buttonToggle = '',
+              buttonHandler = ns+'-'+button.name,
+              btnText = button.btnText ? button.btnText : '',
+              btnClass = button.btnClass ? button.btnClass : 'btn',
+              tabIndex = button.tabIndex ? button.tabIndex : '-1'
 
             if (button.toggle == true) {
               buttonToggle = ' data-toggle="button"'
@@ -98,22 +100,22 @@
 
             // Attach the button object
             btnGroupContainer.append('<button class="'
-                                    +btnClass
-                                    +' btn-sm btn-default" title="'
-                                    +button.title
-                                    +'" tabindex="'
-                                    +tabIndex
-                                    +'" data-provider="'
-                                    +ns
-                                    +'" data-handler="'
-                                    +buttonHandler
-                                    +'"'
-                                    +buttonToggle
-                                    +'><i class="'
-                                    +button.icon
-                                    +'"></i> '
-                                    +btnText
-                                    +'</button>')
+              +btnClass
+              +' btn-default btn-xs" title="'
+              +button.title
+              +'" tabindex="'
+              +tabIndex
+              +'" data-provider="'
+              +ns
+              +'" data-handler="'
+              +buttonHandler
+              +'"'
+              +buttonToggle
+              +'><span class="'
+              +button.icon
+              +'"></span> '
+              +btnText
+              +'</button>')
 
             // Register handler and callback
             handler.push(buttonHandler)
@@ -127,11 +129,11 @@
 
       return container
     }
-  , __setListener: function() {
+    , __setListener: function() {
       // Set size and resizable Properties
       var hasRows = typeof this.$textarea.attr('rows') != 'undefined',
-          maxRows = this.$textarea.val().split("\n").length > 5 ? this.$textarea.val().split("\n").length : '5',
-          rowsVal = hasRows ? this.$textarea.attr('rows') : maxRows
+        maxRows = this.$textarea.val().split("\n").length > 5 ? this.$textarea.val().split("\n").length : '5',
+        rowsVal = hasRows ? this.$textarea.attr('rows') : maxRows
 
       this.$textarea.attr('rows',rowsVal)
       this.$textarea.css('resize','vertical')
@@ -149,13 +151,13 @@
       this.$textarea.data('markdown',this)
     }
 
-  , __handle: function(e) {
+    , __handle: function(e) {
       var target = $(e.currentTarget),
-          handler = this.$handler,
-          callback = this.$callback,
-          handlerName = target.attr('data-handler'),
-          callbackIndex = handler.indexOf(handlerName),
-          callbackHandler = callback[callbackIndex]
+        handler = this.$handler,
+        callback = this.$callback,
+        handlerName = target.attr('data-handler'),
+        callbackIndex = handler.indexOf(handlerName),
+        callbackHandler = callback[callbackIndex]
 
       // Trigger the focusin
       $(e.currentTarget).focus()
@@ -171,30 +173,30 @@
       e.preventDefault()
     }
 
-  , showEditor: function() {
+    , showEditor: function() {
       var instance = this,
-          textarea, 
-          ns = this.$ns,
-          container = this.$element,
-          originalHeigth = container.css('height'), 
-          originalWidth = container.css('width'),
-          editable = this.$editable,
-          handler = this.$handler,
-          callback = this.$callback,
-          options = this.$options,
-          editor = $( '<div/>', {
-                      'class': 'md-editor',
-                      click: function() {
-                        instance.focus()
-                      }
-                    })
+        textarea,
+        ns = this.$ns,
+        container = this.$element,
+        originalHeigth = container.css('height'),
+        originalWidth = container.css('width'),
+        editable = this.$editable,
+        handler = this.$handler,
+        callback = this.$callback,
+        options = this.$options,
+        editor = $( '<div/>', {
+          'class': 'md-editor',
+          click: function() {
+            instance.focus()
+          }
+        })
 
       // Prepare the editor
       if (this.$editor == null) {
         // Create the panel
         var editorHeader = $('<div/>', {
-                            'class': 'md-header'
-                            })
+          'class': 'md-header btn-toolbar'
+        })
 
         // Build the main buttons
         if (options.buttons.length > 0) {
@@ -216,13 +218,13 @@
           editor.append(textarea)
         } else {
           var rawContent = (typeof toMarkdown == 'function') ? toMarkdown(container.html()) : container.html(),
-              currentContent = $.trim(rawContent)
+            currentContent = $.trim(rawContent)
 
           // This is some arbitrary content that could be edited
           textarea = $('<textarea/>', {
-                       'class': 'md-input',
-                       'val' : currentContent
-                      })
+            'class': 'md-input',
+            'val' : currentContent
+          })
 
           editor.append(textarea)
 
@@ -243,19 +245,19 @@
         // Create the footer if savable
         if (options.savable) {
           var editorFooter = $('<div/>', {
-                           'class': 'md-footer'
-                         }),
-              saveHandler = 'cmdSave'
+              'class': 'md-footer'
+            }),
+            saveHandler = 'cmdSave'
 
           // Register handler and callback
           handler.push(saveHandler)
           callback.push(options.onSave)
 
           editorFooter.append('<button class="btn btn-success" data-provider="'
-                              +ns
-                              +'" data-handler="'
-                              +saveHandler
-                              +'"><i class="icon icon-white icon-ok"></i> Save</button>')
+            +ns
+            +'" data-handler="'
+            +saveHandler
+            +'"><i class="icon icon-white icon-ok"></i> Save</button>')
 
           editor.append(editorFooter)
         }
@@ -298,13 +300,13 @@
       return this
     }
 
-  , showPreview: function() {
+    , showPreview: function() {
       var options = this.$options,
-          callbackContent = options.onPreview(this), // Try to get the content from callback
-          container = this.$textarea,
-          afterContainer = container.next(),
-          replacementContainer = $('<div/>',{'class':'md-preview','data-provider':'markdown-preview'}),
-          content
+        callbackContent = options.onPreview(this), // Try to get the content from callback
+        container = this.$textarea,
+        afterContainer = container.next(),
+        replacementContainer = $('<div/>',{'class':'md-preview','data-provider':'markdown-preview'}),
+        content
 
       // Give flag that tell the editor enter preview mode
       this.$isPreview = true
@@ -339,7 +341,7 @@
       return this
     }
 
-  , hidePreview: function() {
+    , hidePreview: function() {
       // Give flag that tell the editor quit preview mode
       this.$isPreview = false
 
@@ -359,102 +361,102 @@
       return this
     }
 
-  , isDirty: function() {
+    , isDirty: function() {
       return this.$oldContent != this.getContent()
     }
 
-  , getContent: function() {
+    , getContent: function() {
       return this.$textarea.val()
     }
 
-  , setContent: function(content) {
+    , setContent: function(content) {
       this.$textarea.val(content)
 
       return this
     }
 
-  , findSelection: function(chunk) {
-    var content = this.getContent(), startChunkPosition
+    , findSelection: function(chunk) {
+      var content = this.getContent(), startChunkPosition
 
-    if (startChunkPosition = content.indexOf(chunk), startChunkPosition >= 0 && chunk.length > 0) {
-      var oldSelection = this.getSelection(), selection
+      if (startChunkPosition = content.indexOf(chunk), startChunkPosition >= 0 && chunk.length > 0) {
+        var oldSelection = this.getSelection(), selection
 
-      this.setSelection(startChunkPosition,startChunkPosition+chunk.length)
-      selection = this.getSelection()
+        this.setSelection(startChunkPosition,startChunkPosition+chunk.length)
+        selection = this.getSelection()
 
-      this.setSelection(oldSelection.start,oldSelection.end)
+        this.setSelection(oldSelection.start,oldSelection.end)
 
-      return selection
-    } else {
-      return null
+        return selection
+      } else {
+        return null
+      }
     }
-  }
 
-  , getSelection: function() {
+    , getSelection: function() {
 
       var e = this.$textarea[0]
 
       return (
 
-          ('selectionStart' in e && function() {
-              var l = e.selectionEnd - e.selectionStart
-              return { start: e.selectionStart, end: e.selectionEnd, length: l, text: e.value.substr(e.selectionStart, l) }
-          }) ||
-
-          /* browser not supported */
-          function() { 
-            return null
-          }
-
-      )()
-
-    }
-
-  , setSelection: function(start,end) {
-
-      var e = this.$textarea[0]
-
-      return (
-
-          ('selectionStart' in e && function() {
-              e.selectionStart = start
-              e.selectionEnd = end
-              return 
-          }) ||
-
-          /* browser not supported */
-          function() { 
-            return null
-          }
-
-      )()
-
-    }
-
-  , replaceSelection: function(text) {
-
-      var e = this.$textarea[0]
-
-      return (
-
-          ('selectionStart' in e && function() {
-              e.value = e.value.substr(0, e.selectionStart) + text + e.value.substr(e.selectionEnd, e.value.length)
-              // Set cursor to the last replacement end
-              e.selectionStart = e.value.length
-              return this
-          }) ||
+        ('selectionStart' in e && function() {
+          var l = e.selectionEnd - e.selectionStart
+          return { start: e.selectionStart, end: e.selectionEnd, length: l, text: e.value.substr(e.selectionStart, l) }
+        }) ||
 
           /* browser not supported */
           function() {
-              e.value += text
-              return jQuery(e)
+            return null
           }
 
-      )()
+        )()
 
     }
 
-  , getNextTab: function() {
+    , setSelection: function(start,end) {
+
+      var e = this.$textarea[0]
+
+      return (
+
+        ('selectionStart' in e && function() {
+          e.selectionStart = start
+          e.selectionEnd = end
+          return
+        }) ||
+
+          /* browser not supported */
+          function() {
+            return null
+          }
+
+        )()
+
+    }
+
+    , replaceSelection: function(text) {
+
+      var e = this.$textarea[0]
+
+      return (
+
+        ('selectionStart' in e && function() {
+          e.value = e.value.substr(0, e.selectionStart) + text + e.value.substr(e.selectionEnd, e.value.length)
+          // Set cursor to the last replacement end
+          e.selectionStart = e.value.length
+          return this
+        }) ||
+
+          /* browser not supported */
+          function() {
+            e.value += text
+            return jQuery(e)
+          }
+
+        )()
+
+    }
+
+    , getNextTab: function() {
       // Shift the nextTab
       if (this.$nextTab.length == 0) {
         return null
@@ -468,10 +470,10 @@
         }
 
         return nextTab
-      } 
+      }
     }
 
-  , setNextTab: function(start,end) {
+    , setNextTab: function(start,end) {
       // Push new selection into nextTab collections
       if (typeof start == 'string') {
         var that = this
@@ -490,7 +492,7 @@
       return
     }
 
-  , enableButtons: function(name) {
+    , enableButtons: function(name) {
       var alter = function (el) {
         el.removeAttr('disabled')
       }
@@ -500,7 +502,7 @@
       return this
     }
 
-  , disableButtons: function(name) {
+    , disableButtons: function(name) {
       var alter = function (el) {
         el.attr('disabled','disabled')
       }
@@ -510,7 +512,7 @@
       return this
     }
 
-  , eventSupported: function(eventName) {
+    , eventSupported: function(eventName) {
       var isSupported = eventName in this.$element
       if (!isSupported) {
         this.$element.setAttribute(eventName, 'return;')
@@ -519,74 +521,74 @@
       return isSupported
     }
 
-  , keydown: function (e) {
+    , keydown: function (e) {
       this.suppressKeyPressRepeat = ~$.inArray(e.keyCode, [40,38,9,13,27])
       this.keyup(e)
     }
 
-  , keypress: function (e) {
+    , keypress: function (e) {
       if (this.suppressKeyPressRepeat) return
       this.keyup(e)
     }
 
-  , keyup: function (e) {
+    , keyup: function (e) {
       var blocked = false
       switch(e.keyCode) {
-        case 40: // down arrow
-        case 38: // up arrow
-        case 16: // shift
-        case 17: // ctrl
-        case 18: // alt
-          break
+      case 40: // down arrow
+      case 38: // up arrow
+      case 16: // shift
+      case 17: // ctrl
+      case 18: // alt
+        break
 
-        case 9: // tab
-          var nextTab
-          if (nextTab = this.getNextTab(),nextTab != null) {
-            // Get the nextTab if exists
-            var that = this
-            setTimeout(function(){
-              that.setSelection(nextTab.start,nextTab.end)
-            },500)
+      case 9: // tab
+        var nextTab
+        if (nextTab = this.getNextTab(),nextTab != null) {
+          // Get the nextTab if exists
+          var that = this
+          setTimeout(function(){
+            that.setSelection(nextTab.start,nextTab.end)
+          },500)
+
+          blocked = true
+        } else {
+          // The next tab memory contains nothing...
+          // check the cursor position to determine tab action
+          var cursor = this.getSelection()
+
+          if (cursor.start == cursor.end && cursor.end == this.getContent().length) {
+            // The cursor already reach the end of the content
+            blocked = false
+
+          } else {
+            // Put the cursor to the end
+            this.setSelection(this.getContent().length,this.getContent().length)
 
             blocked = true
-          } else {
-            // The next tab memory contains nothing...
-            // check the cursor position to determine tab action
-            var cursor = this.getSelection() 
-
-            if (cursor.start == cursor.end && cursor.end == this.getContent().length) {
-              // The cursor already reach the end of the content
-              blocked = false
-
-            } else {
-              // Put the cursor to the end
-              this.setSelection(this.getContent().length,this.getContent().length)
-              
-              blocked = true
-            }
           }
+        }
 
-          break
+        break
 
-        case 13: // enter
-        case 27: // escape
-          blocked = false
-          break
+      case 13: // enter
+      case 27: // escape
+        blocked = false
+        break
 
-        default:
-          blocked = false
+      default:
+        blocked = false
       }
 
       if (blocked) {
         e.stopPropagation()
         e.preventDefault()
       }
-  }
+    }
 
-  , focus: function (e) {
+    , focus: function (e) {
       var options = this.$options,
-          isHideable = options.hideable,
-          editor = this.$editor
+        isHideable = options.hideable,
+        editor = this.$editor
 
       editor.addClass('active')
 
@@ -596,8 +598,8 @@
           var attachedMarkdown
 
           if (attachedMarkdown = $(this).find('textarea').data('markdown'),
-              attachedMarkdown == null) {
-              attachedMarkdown = $(this).find('div[data-provider="markdown-preview"]').data('markdown')
+            attachedMarkdown == null) {
+            attachedMarkdown = $(this).find('div[data-provider="markdown-preview"]').data('markdown')
           }
 
           if (attachedMarkdown) {
@@ -609,23 +611,23 @@
       return this
     }
 
-  , blur: function (e) {
+    , blur: function (e) {
       var options = this.$options,
-          isHideable = options.hideable,
-          editor = this.$editor,
-          editable = this.$editable
+        isHideable = options.hideable,
+        editor = this.$editor,
+        editable = this.$editable
 
       if (editor.hasClass('active') || this.$element.parent().length == 0) {
         editor.removeClass('active')
-        
+
         if (isHideable) {
-        
+
           // Check for editable elements
           if (editable.el != null) {
             // Build the original element
             var oldElement = $('<'+editable.type+'/>'),
-                content = this.getContent(),
-                currentContent = (typeof markdown == 'object') ? markdown.toHTML(content) : content 
+              content = this.getContent(),
+              currentContent = (typeof markdown == 'object') ? markdown.toHTML(content) : content
 
             $(editable.attrKeys).each(function(k,v) {
               oldElement.attr(editable.attrKeys[k],editable.attrValues[k])
@@ -637,7 +639,7 @@
             editor.replaceWith(oldElement)
           } else {
             editor.hide()
-            
+
           }
         }
 
@@ -650,8 +652,8 @@
 
   }
 
- /* MARKDOWN PLUGIN DEFINITION
-  * ========================== */
+  /* MARKDOWN PLUGIN DEFINITION
+   * ========================== */
 
   var old = $.fn.markdown
 
@@ -692,8 +694,8 @@
             }
 
             // transform selection and set the cursor into chunked text
-            if (content.substr(selected.start-2,2) == '**' 
-                && content.substr(selected.end,2) == '**' ) {
+            if (content.substr(selected.start-2,2) == '**'
+              && content.substr(selected.end,2) == '**' ) {
               e.setSelection(selected.start-2,selected.end+2)
               e.replaceSelection(chunk)
               cursor = selected.start-2
@@ -721,8 +723,8 @@
             }
 
             // transform selection and set the cursor into chunked text
-            if (content.substr(selected.start-1,1) == '*' 
-                && content.substr(selected.end,1) == '*' ) {
+            if (content.substr(selected.start-1,1) == '*'
+              && content.substr(selected.end,1) == '*' ) {
               e.setSelection(selected.start-1,selected.end+1)
               e.replaceSelection(chunk)
               cursor = selected.start-1
@@ -746,21 +748,21 @@
               // Give extra word
               chunk = 'heading text'
             } else {
-              chunk = selected.text
+              chunk = selected.text + '\n';
             }
 
             // transform selection and set the cursor into chunked text
-            if ((pointer = 4, content.substr(selected.start-pointer,pointer) == '### ') 
-                || (pointer = 3, content.substr(selected.start-pointer,pointer) == '###')) {
+            if ((pointer = 4, content.substr(selected.start-pointer,pointer) == '### ')
+              || (pointer = 3, content.substr(selected.start-pointer,pointer) == '###')) {
               e.setSelection(selected.start-pointer,selected.end)
               e.replaceSelection(chunk)
               cursor = selected.start-pointer
-            } else if (prevChar = content.substr(selected.start-1,1), !!prevChar && prevChar != '\n') {
-              e.replaceSelection('\n\n### '+chunk+'\n')
+            } else if (selected.start > 0 && (prevChar = content.substr(selected.start-1,1), !!prevChar && prevChar != '\n')) {
+              e.replaceSelection('\n\n### '+chunk)
               cursor = selected.start+6
             } else {
               // Empty string before element
-              e.replaceSelection('### '+chunk+'\n')
+              e.replaceSelection('### '+chunk)
               cursor = selected.start+4
             }
 
@@ -787,7 +789,7 @@
 
             link = prompt('Insert Hyperlink','http://')
 
-            if (link != null) {
+            if (link != null && link != '' && link != 'http://') {
               // transform selection and set the cursor into chunked text
               e.replaceSelection('['+chunk+']('+link+')')
               cursor = selected.start+1
@@ -840,7 +842,7 @@
             if (selected.length == 0) {
               // Give extra word
               chunk = 'list text here'
-                
+
               e.replaceSelection('- '+chunk)
 
               // Set the cursor
@@ -870,7 +872,7 @@
               }
             }
 
-           
+
 
             // Set the cursor
             e.setSelection(cursor,cursor+chunk.length)
@@ -883,7 +885,7 @@
           toggle: true,
           title: 'Preview',
           btnText: 'Preview',
-          btnClass: 'btn btn-inverse',
+          btnClass: 'btn btn-default btn-xs',
           icon: 'fa fa-search',
           callback: function(e){
             // Check the preview mode and toggle based on this flag
@@ -911,8 +913,8 @@
   $.fn.markdown.Constructor = Markdown
 
 
- /* MARKDOWN NO CONFLICT
-  * ==================== */
+  /* MARKDOWN NO CONFLICT
+   * ==================== */
 
   $.fn.markdown.noConflict = function () {
     $.fn.markdown = old
@@ -920,7 +922,7 @@
   }
 
   /* MARKDOWN GLOBAL FUNCTION & DATA-API
-  * ==================================== */
+   * ==================================== */
   var initMarkdown = function(el) {
     var $this = el
 
@@ -933,19 +935,19 @@
 
   var analyzeMarkdown = function(e) {
     var blurred = false,
-        el,
-        $docEditor = $(e.currentTarget)
+      el,
+      $docEditor = $(e.currentTarget)
 
     // Check whether it was editor childs or not
     if ((e.type == 'focusin' || e.type == 'click') && $docEditor.length == 1 && typeof $docEditor[0] == 'object'){
       el = $docEditor[0].activeElement
       if ( ! $(el).data('markdown')) {
         if (typeof $(el).parent().parent().parent().attr('class') == "undefined"
-              || $(el).parent().parent().parent().attr('class').indexOf('md-editor') < 0) {
+          || $(el).parent().parent().parent().attr('class').indexOf('md-editor') < 0) {
           if ( typeof $(el).parent().parent().attr('class') == "undefined"
-              || $(el).parent().parent().attr('class').indexOf('md-editor') < 0) {
-          
-                blurred = true
+            || $(el).parent().parent().attr('class').indexOf('md-editor') < 0) {
+
+            blurred = true
           }
         } else {
           blurred = false
@@ -962,8 +964,8 @@
             var attachedMarkdown
 
             if (attachedMarkdown = $(this).find('textarea').data('markdown'),
-                attachedMarkdown == null) {
-                attachedMarkdown = $(this).find('div[data-provider="markdown-preview"]').data('markdown')
+              attachedMarkdown == null) {
+              attachedMarkdown = $(this).find('div[data-provider="markdown-preview"]').data('markdown')
             }
 
             if (attachedMarkdown) {
