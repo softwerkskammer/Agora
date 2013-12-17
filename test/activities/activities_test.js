@@ -4,12 +4,11 @@ var request = require('supertest');
 var sinon = require('sinon').sandbox.create();
 var expect = require('chai').expect;
 
-var conf = require('../configureForTest');
-
 var createApp = require('../testHelper')('activitiesApp').createApp;
 
-var beans = conf.get('beans');
+var beans = require('../configureForTest').get('beans');
 var fieldHelpers = beans.get('fieldHelpers');
+var activitystore = beans.get('activitystore');
 var Activity = beans.get('activity');
 var Member = beans.get('member');
 var Group = beans.get('group');
@@ -56,7 +55,7 @@ describe('Activity application', function () {
   var getMemberForId;
 
   beforeEach(function (done) {
-    allActivities = sinon.stub(activitiesCoreAPI, 'allActivities', function (callback) {callback(null, [emptyActivity]); });
+    allActivities = sinon.stub(activitystore, 'allActivities', function (callback) {callback(null, [emptyActivity]); });
     upcomingActivities = sinon.stub(activitiesCoreAPI, 'upcomingActivities', function (callback) {callback(null, [emptyActivity]); });
     sinon.stub(activitiesAPI, 'getActivitiesForDisplay', function (fetcher, callback) {
       var enhancedActivity = new Activity({title: 'Title of the Activity', description: 'description1', assignedGroup: 'assignedGroup',
@@ -65,7 +64,7 @@ describe('Activity application', function () {
       enhancedActivity.group = {longName: 'The name of the assigned Group'};
       callback(null, [enhancedActivity]);
     });
-    getActivity = sinon.stub(activitiesCoreAPI, 'getActivity', function (url, callback) {
+    getActivity = sinon.stub(activitystore, 'getActivity', function (url, callback) {
       callback(null, (url === 'urlOfTheActivity') ? emptyActivity : (url === 'urlForInteresting') ? activityWithParticipants :
         (url === 'urlForMultiple') ? activityWithMultipleResources : null);
     });
@@ -243,7 +242,7 @@ describe('Activity application', function () {
       request(createApp('memberId3'))
         .get('/' + 'urlForInteresting')
         .expect(200)
-        .expect(/kannst Du Dich nicht bei der Softwerkskammer anmelden/, function (err) {
+        .expect(/Anmeldung ist nicht über die Softwerkskammer möglich./, function (err) {
           done(err);
         });
     });
@@ -259,6 +258,22 @@ describe('Activity application', function () {
         .get('/' + 'urlForInteresting')
         .expect(200)
         .expect(/Alle Plätze sind belegt./, function (err) {
+          done(err);
+        });
+    });
+
+    it('shows the link to the waitinglist if registrationClosed and some limit set and waitinglist is enabled', function (done) {
+      sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {
+        callback(null, [ member1, member2 ]);
+      });
+      activityWithParticipants.state.resources.default._registrationOpen = false;
+      activityWithParticipants.state.resources.default._limit = 1;
+      activityWithParticipants.state.resources.default._waitinglist = [];
+
+      request(createApp('memberId3'))
+        .get('/' + 'urlForInteresting')
+        .expect(200)
+        .expect(/Auf die Warteliste/, function (err) {
           done(err);
         });
     });
@@ -328,7 +343,7 @@ describe('Activity application', function () {
       request(createApp('memberId3'))
         .get('/' + 'urlForMultiple')
         .expect(200)
-        .expect(/Anmeldung nicht über die Softwerkskammer möglich./, function (err) {
+        .expect(/Anmeldung ist nicht über die Softwerkskammer möglich./, function (err) {
           done(err);
         });
     });
@@ -346,6 +361,24 @@ describe('Activity application', function () {
         .get('/' + 'urlForMultiple')
         .expect(200)
         .expect(/Alle Plätze sind belegt./, function (err) {
+          done(err);
+        });
+    });
+
+    it('shows the link to the waitinglist if registrationClosed and some limit set and waitinglist is enabled', function (done) {
+      sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {
+        callback(null, [ member1, member2 ]);
+      });
+      activityWithMultipleResources.state.resources.Einzelzimmer._registrationOpen = false;
+      activityWithMultipleResources.state.resources.Doppelzimmer._registrationOpen = false;
+      activityWithMultipleResources.state.resources.Einzelzimmer._limit = 2;
+      activityWithMultipleResources.state.resources.Doppelzimmer._limit = 2;
+      activityWithMultipleResources.state.resources.Einzelzimmer._waitinglist = [];
+
+      request(createApp('memberId3'))
+        .get('/' + 'urlForMultiple')
+        .expect(200)
+        .expect(/addToWaitinglist\/urlForMultiple\/Einzelzimmer.*Auf die Warteliste/, function (err) {
           done(err);
         });
     });

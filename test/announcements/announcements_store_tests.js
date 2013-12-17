@@ -1,11 +1,11 @@
 /*global describe, it */
 "use strict";
 var expect = require('chai').expect;
-var sinon = require('sinon');
+var sinon = require('sinon').sandbox.create();
 
-var conf = require('../configureForTest');
-var persistence = conf.get('beans').get('announcementsPersistence');
-var store = conf.get('beans').get('announcementstore');
+var beans = require('../configureForTest').get('beans');
+var persistence = beans.get('announcementsPersistence');
+var store = beans.get('announcementstore');
 
 describe('Announcement store', function () {
   var announcement1 = {
@@ -22,16 +22,15 @@ describe('Announcement store', function () {
     author: 'Nicole'
   };
 
-  var sampleList = [announcement1, announcement2];
-
-  before(function (done) {
-    var list = sinon.stub(persistence, 'list');
-    list.callsArgWith(1, null, sampleList);
+  beforeEach(function (done) {
+    sinon.stub(persistence, 'list', function (sortOrder, callback) {
+      return callback(null, [announcement1, announcement2]);
+    });
     done();
   });
 
-  after(function (done) {
-    persistence.list.restore();
+  afterEach(function (done) {
+    sinon.restore();
     done();
   });
 

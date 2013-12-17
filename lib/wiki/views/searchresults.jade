@@ -1,20 +1,20 @@
 extends ../../../views/layout
 
 block title
-  | Suchergebnis
+  | #{t("wiki.searchresults")}
 
 block content
   .row
     .col-md-12
       .page-header
         h2 "#{searchtext}"&nbsp;
-          small Suchergebnis
+          small #{t("wiki.searchresults")}
       if (matches.length === 0)
-        h3 Keine Ergebnisse
+        h3 #{t("wiki.no_results")}
       else 
         dl
           each match in matches
             dt
               a(href="/wiki/#{match.pageName}") #{match.pageName}
-              |  (Zeile #{match.line})
+              |  (#{t("wiki.line")} #{match.line})
             dd: em "#{match.text}"

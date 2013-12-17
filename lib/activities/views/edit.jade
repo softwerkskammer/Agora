@@ -1,25 +1,28 @@
 extends ../../../views/layout
 include  ../../../views/formComponents
 
-mixin resourceRow(name, limit, registrationOpen)
+mixin resourceRow(name, limit, isRegistrationOpen, hasWaitinglist)
   .row.form-group
-    .col-xs-6.col-sm-8
-      input.form-control(name="resources[names]", value=name, type="text", placeholder="Bezeichnung")
+    .col-xs-3.col-sm-6
+      input.form-control(name="resources[names]", value=name, type="text", placeholder=t("label"))
     .col-xs-3.col-sm-2
-      input.form-control(name="resources[limits]", value=limit, type="text", placeholder="unbegrenzt")
+      input.form-control(name="resources[limits]", value=limit, type="text", placeholder=t("unlimited"))
     .col-xs-3.col-sm-2
       .checkbox
-        input(name="resources[registrationOpen]", value=registrationOpen, type="checkbox", checked=(registrationOpen ? "true" : undefined))
-        | möglich
+        input(name="resources[isRegistrationOpen]", value=isRegistrationOpen, type="checkbox", checked=(isRegistrationOpen ? "true" : undefined))
+        | #{t("activities.possible")}
+    .col-xs-3.col-sm-2
+      .checkbox
+        input(name="resources[hasWaitinglist]", value=hasWaitinglist, type="checkbox", checked=(hasWaitinglist ? "true" : undefined))
+        | #{t("general.yes")}
 
 block scripts
-  script(src="/clientscripts/moment.min.js")
   script(src="/clientscripts/activityDateModel.js")
   script(src="/clientscripts/activityform-dateAdapter.js")
   script(src="/clientscripts/check-activityform.js")
   script(src="/clientscripts/activityResources.js")
   script#resource-template(type="text/html")
-    mixin resourceRow(undefined, undefined, true)
+    mixin resourceRow(undefined, undefined, true, false)
   script.
     function fillUrlFromText (urlId, textId) {
       var title = document.getElementById(textId).value;
@@ -32,7 +35,7 @@ block scripts
     }
 
 block title
-  | Aktivität
+  | #{t("activities.activity")}
 
 block content
   form(id='activityform', action='/activities/submit', method='post')
@@ -43,37 +46,36 @@ block content
       .row
         .col-md-12
           legend
-            | Aktivität
             if (activity.id())
-              |  bearbeiten
+              |  #{t("activities.edit")}
             else
-              |  anlegen
+              |  #{t("activities.create")}
 
       .row
         .col-md-6
-          mixin textWithValue('title', 'Titel', activity.title(), 'Kurz und knackig für Übersichten')
+          mixin textWithValue('title', t("activities.title"), activity.title(), t("activities.tooltip.title"))
           .row
             .col-xs-6(style="padding-right:5px")
               .col-xs-6(style="padding-left:0px;padding-right:3px")
-                mixin date('startDate', 'Start', activity, activity.startDate(), 'Enddatum und -uhrzeit werden automatisch verschoben (die Dauer bleibt gleich)')
+                mixin date('startDate', t("activities.start"), activity, activity.startDate(), t("activities.tooltip.startdate"))
               .col-xs-6(style="padding-left:3px;padding-right:0px")
                 mixin time('startTime', '&nbsp;', activity, activity.startTime())
             .col-xs-6(style="padding-left:5px")
               .col-xs-6(style="padding-left:0px;padding-right:3px")
-                mixin date('endDate', 'Ende', activity, activity.endDate(), 'Hiermit kannst Du die Dauer verändern')
+                mixin date('endDate', t("activities.end"), activity, activity.endDate(), t("activities.tooltip.end"))
               #dates.col-xs-6(style="padding-left:3px;padding-right:0px")
                 mixin time('endTime', '&nbsp;', activity, activity.endTime())
-          mixin textareaWithValue('description', 'Beschreibung', activity.description())
+          mixin textareaWithValue('description', t("general.description"), activity.description())
         .col-md-6
           .form-group
             button.btn.btn-default.btn-xs.pull-right(type="button", onclick="fillUrlFromText('url', 'title')") 
-              | Vorschlag
-            mixin controlLabel('url', 'Adress-Suffix', 'Für die Verlinkung innerhalb dieser Site')
+              | #{t("activities.suggestion")}
+            mixin controlLabel('url', t("activities.address_suffix"), t("activities.tooltip.address_suffix"))
             input.form-control(id='url', type='text', name='url', value=activity.url())
-          mixin textWithValue('location', 'Veranstaltungsort', activity.location())
-          mixin textareaWithValue('direction', 'Wegbeschreibung', activity.direction())
+          mixin textWithValue('location', t("activities.location"), activity.location())
+          mixin textareaWithValue('direction', t("activities.directions"), activity.direction())
           .form-group
-            label.control-label(for="assignedGroup") Gruppe:
+            label.control-label(for="assignedGroup") #{t("groups.group")}:
             select#assignedGroup.form-control(name="assignedGroup")
               for group in groups
                 option(value=group.id, selected = (activity.assignedGroup() != undefined && activity.assignedGroup() == group.id)) #{group.longName}
@@ -81,24 +83,26 @@ block content
       .row
         .col-md-12
           #resources
-            legend Ressourcen
+            legend #{t("activities.resources")}
             .row
-              .col-xs-6.col-sm-8
-                mixin controlLabel("bezeichnung", "Bezeichnung", "Name der zu buchenden Einheit (z. B. Einzelzimmer, Doppelzimmer)")
+              .col-xs-3.col-sm-6
+                mixin controlLabel("bezeichnung", t("activities.resourcelabel"), t("activities.tooltip.resourcelabel"))
               .col-xs-3.col-sm-2
-                mixin controlLabel("anzahl", "Anzahl", "Maximale Teilnehmerzahl (keine Beschränkung bei leerem Feld, keine Registrierung möglich bei 0)")
+                mixin controlLabel("anzahl", t("activities.count"), t("activities.tooltip.count"))
               .col-xs-3.col-sm-2
-                mixin controlLabel("registrierung", "Anmeldung", "Hiermit lässt sich die Registrierung freigeben oder sperren")
+                mixin controlLabel("registrierung", t("activities.registration"), t("activities.tooltip.registration"))
+              .col-xs-3.col-sm-2
+                mixin controlLabel("registrierung", t("activities.waitinglist"), t("activities.tooltip.waitinglist"))
             each name in activity.resourceNames()
-              - var resource = activity.resources().named(name)
-              mixin resourceRow(name, resource.limit(), resource.registrationOpen())
+              - var resource = activity.resourceNamed(name)
+              mixin resourceRow(name, resource.limit(), resource.isRegistrationOpen(), resource.hasWaitinglist())
               mixin hiddenWithValue("resources[previousNames]", name)
             .row.form-group
               .col-md-12
                 button.add.btn.btn-sm.btn-default(type="button")
                   i.fa.fa-plus
-                  | Ressource
+                  | &nbsp;#{t("activities.resource")}
       .row
         .col-md-12
-          button.btn.btn-primary.pull-right(type="submit") Speichern
-          a.btn.btn-default.pull-right(href="javascript:history.back()", type="cancel") Zurück
+          button.btn.btn-primary.pull-right(type="submit") #{t("general.save")}
+          a.btn.btn-default.pull-right(href="javascript:history.back()", type="cancel") #{t("general.back")}

@@ -99,7 +99,7 @@ describe('Groups application', function () {
       .expect(/Dies ist Gruppe A./)
       .expect(/Themengruppe/)
       .expect(/Mitglieder:/)
-      .expect(/Diese Gruppe hat 2 Mitglieder/, function (err) {
+      .expect(/Diese Gruppe hat&nbsp;2 Mitglieder./, function (err) {
         done(err);
       });
   });

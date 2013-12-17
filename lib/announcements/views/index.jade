@@ -1,7 +1,7 @@
 extends ../../../views/layout
 
 block title
-  | Aktuelles
+  | #{t("announcements.latest_news")}
 
 block content
   .row
@@ -9,9 +9,9 @@ block content
       .page-header
         .btn-group.pull-right
           if (accessrights.canCreateAnnouncement())
-            a.pull-right.btn.btn-default(href="new/", title="Neue Nachricht"): i.fa.fa-file-o.fa-fw
-        h2 Nachrichten&nbsp;
-          small Alle
+            a.pull-right.btn.btn-default(href="new/", title=t("announcements.new")): i.fa.fa-file-o.fa-fw
+        h2 #{t("announcements.announcements")}&nbsp;
+          small #{t("general.all")}
   
       dl.dl-horizontal
         for announcement in announcements

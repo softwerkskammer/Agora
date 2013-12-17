@@ -7,8 +7,7 @@ var beans = require('../configureForTest').get('beans');
 
 var membersAPI = beans.get('membersAPI');
 var groupsAPI = beans.get('groupsAPI');
-var activitiesCoreAPI = beans.get('activitiesCoreAPI');
-//var groupsAndMembersAPI = beans.get('groupsAndMembersAPI');
+var activitystore = beans.get('activitystore');
 
 var api = beans.get('mailsenderAPI');
 var Activity = beans.get('activity');
@@ -25,7 +24,7 @@ describe('MailsenderAPI', function () {
   beforeEach(function (done) {
     var availableGroups = [];
     sinon.stub(groupsAPI, 'getAllAvailableGroups', function (callback) { callback(null, availableGroups); });
-    sinon.stub(activitiesCoreAPI, 'getActivity', function (activityURL, callback) {
+    sinon.stub(activitystore, 'getActivity', function (activityURL, callback) {
       callback(null, emptyActivity);
     });
     sinon.stub(membersAPI, 'getMember', function (nickname, callback) { callback(null, {}); });

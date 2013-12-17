@@ -19,7 +19,7 @@ mixin placeGroupLabels(groupsOfAKind)
             a.group(href="#{group.id}") #{group.shortName}
 
 block title
-  | Übersicht der Gruppen
+  | #{t("groups.overview")}
 
 block content
   .row
@@ -27,13 +27,13 @@ block content
       .page-header
         .btn-group.pull-right
           if (accessrights.canCreateGroup())
-            a.btn.btn-default(href="new/", title="Neue Gruppe"): i.fa.fa-file-o.fa-fw
-        h2 Gruppen&nbsp;
-          small Alle
+            a.btn.btn-default(href="new/", title=t("groups.new")): i.fa.fa-file-o.fa-fw
+        h2 #{t("groups.groups")}&nbsp;
+          small #{t("general.all")}
   .row
     .col-md-6
-      mixin grouplist('Regionalgruppen', regionalgroups)
-      mixin grouplist('Themengruppen', themegroups)
+      mixin grouplist(t("groups.regional"), regionalgroups)
+      mixin grouplist(t("groups.themed"), themegroups)
     .col-md-6.visible-xs.visible-sm.groupsmap(style="position: relative; width: 100%; height: 100px; background-image:url('/img/map.svg'); background-size: 100% 100%; background-repeat: no-repeat;")
       mixin placeGroupLabels(regionalgroups)
     .col-md-6.hidden-xs.hidden-sm.groupsmap(style="position: relative; width: 50%; height: 100px; background-image:url('/img/map.svg'); background-size: 100% 100%; background-repeat: no-repeat;")

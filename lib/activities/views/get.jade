@@ -5,7 +5,7 @@ include ../../../views/formComponents
 include activities-mixins
 
 block title
-  | #{activity.title()} - Aktivitäten
+  | #{activity.title()} - #{t("activities.activities")}
 
 block opengraph
   meta(property="og:description", content=activity.descriptionPlain().substring(0,500))
@@ -16,45 +16,46 @@ block content
     .col-md-12
       .page-header
         .btn-group.pull-right
-          a.btn.btn-default(href="/activities/ical/#{encodeURIComponent(activity.url())}", title="Für Kalender exportieren"): i.fa.fa-calendar.fa-fw
+          a.btn.btn-default(href="/activities/ical/#{encodeURIComponent(activity.url())}", title=t("activities.export")): i.fa.fa-calendar.fa-fw
           if (accessrights.canCreateActivity())
-            a.btn.btn-default(href="/activities/newLike/#{encodeURIComponent(activity.url())}", title="Neu auf Basis dieser Aktivität"): i.fa.fa-copy.fa-fw
+            a.btn.btn-default(href="/activities/newLike/#{encodeURIComponent(activity.url())}", title=t("activities.new_copy")): i.fa.fa-copy.fa-fw
           if (accessrights.canEditActivity(activity))
-            a.btn.btn-default(href="/mailsender/invitation/#{encodeURIComponent(activity.url())}", title="Einladung versenden"): i.fa.fa-envelope-o.fa-fw
-            a.btn.btn-default(href="/activities/edit/#{encodeURIComponent(activity.url())}", title="Bearbeiten"): i.fa.fa-edit.fa-fw
+            a.btn.btn-default(href="/waitinglist/#{encodeURIComponent(activity.url())}", title=t("activities.waitinglist")): i.fa.fa-list-ol.fa-fw
+            a.btn.btn-default(href="/mailsender/invitation/#{encodeURIComponent(activity.url())}", title=t("activities.invitation")): i.fa.fa-envelope-o.fa-fw
+            a.btn.btn-default(href="/activities/edit/#{encodeURIComponent(activity.url())}", title=t("general.edit")): i.fa.fa-edit.fa-fw
         h2 #{activity.title()}
           br
           small #{activity.startDate()} (#{activity.startTime()}
             if (activity.endDate() && activity.endDate() !== activity.startDate())
-              |  Uhr) - #{activity.endDate()} (#{activity.endTime()} Uhr)
+              |  #{t("activities.oclock")}) - #{activity.endDate()} (#{activity.endTime()} #{t("activities.oclock")})
             else 
-              |  - #{activity.endTime()} Uhr)
+              |  - #{activity.endTime()} #{t("activities.oclock")})
   .row
     .col-md-12
       !{activity.descriptionHTML()}
       hr
   .row
     .col-md-6
-      h3 Adresse:
+      h3 #{t("general.address")}:
       p #{activity.location()}
       if (activity.hasDirection())
-        h4 Wegbeschreibung: 
+        h4 #{t("activities.directions")}:
         !{activity.directionHTML()}
       hr
       div.hidden-print
         mixin visitorCount(activity.visitors.length)
         each resourceName in activity.resourceNames()
-          mixin subscriptionButtons(activity, resourceName, currentUserId)
+          mixin subscriptionButtons(activity, resourceName, resourceRegistrationRenderer)
         if (accessrights.isRegistered() && activity.visitors.length > 0)
-          h4 Zugesagt haben:
+          h4 #{t("activities.accepted_by")}:
           mixin memberlist(activity.visitors)
 
       if (activity.group)
         hr.hidden-print
-        p.hidden-print Veranstaltet von der Gruppe&nbsp;
+        p.hidden-print #{t("activities.organized_by")}&nbsp;
           a(href="/groups/#{activity.group.id}") #{activity.group.longName}
           if(activity.ownerNickname)
-            | &nbsp;- Angelegt von&nbsp;
+            | &nbsp;- #{t("activities.created_by")}&nbsp;
             a(href="/members/#{activity.ownerNickname}") #{activity.ownerNickname}
     .col-md-6
       mixin map(activity.location(), '100%', '450px')
