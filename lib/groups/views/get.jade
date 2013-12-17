@@ -42,7 +42,8 @@ block content
           if (blogposts.length > 0)
             for post in blogposts
               h4 #{post.title}
-                small , #{post.date}
+                if (post.date.isValid())
+                  small , #{post.date}
               | #{post.teaser}
               p
                 a(href="/wiki/#{post.path}") mehr

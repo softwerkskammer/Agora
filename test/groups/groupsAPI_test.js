@@ -14,6 +14,7 @@ var NonPersistentGroup = new Group({id: 'Group C', longName: 'Gruppe C', descrip
 var groupstore = conf.get('beans').get('groupstore');
 var sympa = conf.get('beans').get('sympaStub');
 var Git = conf.get('beans').get('gitmech');
+var moment = require('moment-timezone');
 
 var systemUnderTest = conf.get('beans').get('groupsAPI');
 
@@ -379,6 +380,8 @@ describe('Groups API (getBlogPosts)', function () {
         callback(null, ['internet/blog_oktober2013.md', 'internet/blog_november2013.md']);
       } else if (groupname === 'alle') {
         callback(null, []);
+      } else if (groupname === 'error') {
+        callback(null, ['error/blog_1.md', 'error/blog_2.md', 'error/blog_3.md', 'error/blog_4.md']);
       }
     });
     sinon.stub(Git, 'readFile', function (path, version, callback) {
@@ -394,7 +397,16 @@ describe('Groups API (getBlogPosts)', function () {
           "Weil viele uns weder JavaScript noch populäre JavaScript...\n" +
           "\n" +
           "Leider hatten wir vorher keine Anweisungen herumgeschickt, ...");
+      } else if (path === "error/blog_1.md") {
+        callback(null, "1, 2013-10-01");
+      } else if (path === "error/blog_2.md") {
+        callback(null, "2, not a date");
+      } else if (path === "error/blog_3.md") {
+        callback(null, "3, 2013-05-01");
+      } else if (path === "error/blog_4.md") {
+        callback(null, "");
       }
+
     });
     done();
   });
@@ -405,7 +417,7 @@ describe('Groups API (getBlogPosts)', function () {
     done();
   });
 
-  it('returns two blog posts for internet', function (done) {
+  it('returns two properly parsed blog posts for the group internet', function (done) {
     systemUnderTest.getBlogposts("internet", function (err, result) {
       expect(result.length === 2).to.be.true;
 
@@ -413,21 +425,32 @@ describe('Groups API (getBlogPosts)', function () {
       expect(post1.title).to.equal("Lean Coffee November 2013");
       expect(post1.teaser).to.equal("Und beim nächsten Mal haben wir dann.");
       expect(post1.path).to.equal("internet/blog_november2013");
-      expect(JSON.stringify(post1.date)).to.equal("\"2013-10-31T23:00:00.000Z\"");
+      expect(post1.date.isSame(new moment("2013-11-01"))).to.be.true;
 
       var post2 = result[1];
       expect(post2.title).to.equal("Agora Code-Kata Oktober 2013");
       expect(post2.teaser).to.equal("Weil viele uns weder JavaScript noch populäre JavaScript...");
       expect(post2.path).to.equal("internet/blog_oktober2013");
-      expect(JSON.stringify(post2.date)).to.equal("\"2013-09-30T22:00:00.000Z\"");
+      expect(post2.date.isSame(new moment("2013-10-01"))).to.be.true;
 
       done();
     });
   });
 
-  it('returns no blog posts for alle', function (done) {
+  it('returns no blog posts for the group alle', function (done) {
     systemUnderTest.getBlogposts("alle", function (err, result) {
       expect(result.length === 0).to.be.true;
+      done();
+    });
+  });
+
+  it('sorts post without a date to the end and skips empty posts', function (done) {
+    systemUnderTest.getBlogposts("error", function (err, result) {
+      expect(result.length === 3).to.be.true;
+
+      expect(result[0].title).to.equal('1');
+      expect(result[1].title).to.equal('3');
+      expect(result[2].title).to.equal('2');
       done();
     });
   });

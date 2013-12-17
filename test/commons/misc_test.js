@@ -3,6 +3,7 @@
 var conf = require('../configureForTest');
 var misc = conf.get('beans').get('misc');
 var expect = require('chai').expect;
+var moment = require('moment-timezone');
 
 describe('toArray function', function () {
 
@@ -182,7 +183,50 @@ describe('parseBlogPost', function () {
       "date": new Date("2013-11-01"),
       "teaser": "Und beim nächsten Mal haben wir dann."};
     expect(result.title).to.equal(expected.title);
-    expect(result.date - expected.date === 0).to.be.true;
+    expect(result.date.isValid()).to.be.true;
+    expect(result.date.isSame(new moment("2013-11-01"))).to.be.true;
     expect(result.teaser).to.equal(expected.teaser);
+  });
+
+  it('returns undefined for empty input', function () {
+    var input = "";
+
+    var result = misc.parseBlogPost(input);
+
+    expect(result).to.be.undefined;
+  });
+
+  it('returns future date if date is missing', function () {
+    var input = "Lean Coffee November 2013\n " +
+      "\n" +
+      "Und beim nächsten Mal haben wir dann.\n" +
+      "\n" +
+      "Diesen Blog gemacht.";
+
+    var result = misc.parseBlogPost(input);
+
+    expect(result.date.isValid()).to.be.false;
+  });
+
+  it('returns Invalid date if the date is malformed', function () {
+    var input = "Lean Coffee November 2013, not a date\n " +
+      "\n" +
+      "Und beim nächsten Mal haben wir dann.\n" +
+      "\n" +
+      "Diesen Blog gemacht.";
+
+    var result = misc.parseBlogPost(input);
+
+    expect(result.date.isValid()).to.be.false;
+  });
+
+  it('returns properly if body is missing', function () {
+    var input = "Lean Coffee November 2013, 2013-11-01";
+
+    var result = misc.parseBlogPost(input);
+
+    expect(result.title).to.equal("Lean Coffee November 2013");
+    expect(result.teaser).to.be.undefined;
+    expect(result.date.isValid()).to.be.true;
   });
 });
