@@ -32,7 +32,7 @@ describe('Color API', function () {
 
   it('save color calls to store', function (done) {
     var storeSpy = sinonSandbox.stub(store, 'saveColor', function (color, callback) {
-      callback(null, color);
+      callback(null);
     });
 
     api.saveColor(dummyColor, function () {

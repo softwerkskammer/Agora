@@ -22,11 +22,11 @@ describe('Activities Core API', function () {
 
     it('succeeds when registration is open', function (done) {
       var activity = new Activity({resources: {Einzelzimmer: {_registrationOpen: true}}});
-      sinon.stub(activitystore, 'saveActivity', function (id, callback) { callback(null, activity); });
+      sinon.stub(activitystore, 'saveActivity', function (id, callback) { callback(null); });
       sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, activity); });
       sinon.stub(activitystore, 'getActivityForId', function (id, callback) { callback(null, activity); });
 
-      api.addVisitorTo('memberId', 'activity-url', 'Einzelzimmer', new moment(), function (err, savedActivity, statusTitle, statusText) {
+      api.addVisitorTo('memberId', 'activity-url', 'Einzelzimmer', new moment(), function (err, statusTitle, statusText) {
         expect(!!err, "Error: " + err).to.be.false;
         expect(!!statusTitle, "Status Title").to.be.false;
         expect(!!statusText, "Status Text").to.be.false;
@@ -41,7 +41,7 @@ describe('Activities Core API', function () {
       sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, activity); });
       sinon.stub(activitystore, 'getActivityForId', function (id, callback) { callback(null, activity); });
 
-      api.addVisitorTo('memberId', 'activity-url', 'Einzelzimmer', new moment(), function (err, savedActivity, statusTitle, statusText) {
+      api.addVisitorTo('memberId', 'activity-url', 'Einzelzimmer', new moment(), function (err, statusTitle, statusText) {
         expect(!!err, "Error").to.be.false;
         expect(statusTitle, "Status Title").to.equal('activities.registration_not_now');
         expect(statusText, "Status Text").to.equal('activities.registration_not_possible');
@@ -64,9 +64,9 @@ describe('Activities Core API', function () {
         }
       });
       sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, activity); });
-      sinon.stub(activitystore, 'saveActivity', function (id, callback) { callback(null, activity); });
+      sinon.stub(activitystore, 'saveActivity', function (id, callback) { callback(null); });
 
-      api.addVisitorTo('memberId', 'activity-url', 'Einzelzimmer', moment(), function (err, savedActivity, statusTitle, statusText) {
+      api.addVisitorTo('memberId', 'activity-url', 'Einzelzimmer', moment(), function (err, statusTitle, statusText) {
         expect(!!err, "Error").to.be.false;
         expect(!!statusTitle, "Status Title").to.be.false;
         expect(!!statusText, "Status Text").to.be.false;
