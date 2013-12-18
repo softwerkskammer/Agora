@@ -7,9 +7,6 @@ var moment = require('moment-timezone');
 
 var Activity = beans.get('activity');
 
-var activityId = 'UGMUC_CodingDojo_01.04.2015';
-var dummyActivity = new Activity({id: activityId, url: 'url', title: 'CodingDojo', assignedGroup: 'UGMUC', location: 'Munich'});
-
 var activitystore = beans.get('activitystore');
 
 var api = beans.get('activitiesCoreAPI');
@@ -19,28 +16,6 @@ describe('Activities Core API', function () {
   afterEach(function (done) {
     sinon.restore();
     done();
-  });
-
-  it('returns past activities', function (done) {
-    sinon.stub(activitystore, 'allActivitiesByDateRangeInDescendingOrder', function (start, end, callback) {
-      return callback(null, [ dummyActivity ]);
-    });
-
-    api.pastActivities(function (err, result) {
-      expect(result).to.have.lengthOf(1);
-      done();
-    });
-  });
-
-  it('returns upcoming activities', function (done) {
-    sinon.stub(activitystore, 'allActivitiesByDateRangeInAscendingOrder', function (start, end, callback) {
-      return callback(null, [dummyActivity]);
-    });
-
-    api.upcomingActivities(function (err, result) {
-      expect(result).to.have.lengthOf(1);
-      done();
-    });
   });
 
   describe('- when adding a visitor -', function () {
