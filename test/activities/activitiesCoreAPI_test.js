@@ -68,8 +68,8 @@ describe('Activities Core API', function () {
 
       api.addVisitorTo('memberId', 'activity-url', 'Einzelzimmer', new moment(), function (err, savedActivity, statusTitle, statusText) {
         expect(!!err, "Error").to.be.false;
-        expect(statusTitle, "Status Title").to.equal('Die Anmeldung ist momentan nicht möglich.');
-        expect(statusText, "Status Text").to.equal('Die Anmeldung ist noch nicht freigegeben, oder alle Plätze sind belegt.');
+        expect(statusTitle, "Status Title").to.equal('activities.registration_not_now');
+        expect(statusText, "Status Text").to.equal('activities.registration_not_possible');
         expect(activity.resourceNamed('Einzelzimmer').registeredMembers()).to.not.contain('memberId');
         done();
       });
