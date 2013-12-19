@@ -104,8 +104,11 @@
     "unsubscribe_multiple": "Absagen",
     "registration_not_here": "Anmeldung ist nicht über die Softwerkskammer möglich.",
     "registration_not_now": "Anmeldung ist zur Zeit nicht möglich.",
+    "registration_not_possible": "Die Anmeldung ist noch nicht freigegeben, oder alle Plätze sind belegt.",
     "add_to_waitinglist": "Auf die Warteliste!",
     "remove_from_waitinglist": "Warteliste verlassen…",
+    "waitinglist_not_possible": "Warteliste ist nicht möglich.",
+    "no_waitinglist": "Es gibt keine Warteliste.",
     "full": "Alle Plätze sind belegt.",
     "tooltip": {
       "title": "Kurz und knackig für Übersichten",

@@ -1,4 +1,4 @@
-/* global $, document */
+/* global $, document, nicknameIsNotAvailable, contentsOfNickname, emailAlreadyTaken */
 "use strict";
 var member_validator;
 
@@ -40,11 +40,11 @@ var initValidator = function () {
         },
         messages: {
           nickname: {
-            remote: $.validator.format("Dieser Nickname ist leider nicht verfügbar."),
-            alphanumeric: $.validator.format("Nickname darf nur Buchstaben, Zahlen und Unterstrich enthalten.")
+            remote: $.validator.format(nicknameIsNotAvailable),
+            alphanumeric: $.validator.format(contentsOfNickname)
           },
           email: {
-            remote: $.validator.format("Diese Adresse ist schon registriert. Hast Du bereits ein Profil angelegt?")
+            remote: $.validator.format(emailAlreadyTaken)
           }
         },
         errorElement: "span",

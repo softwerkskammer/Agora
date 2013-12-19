@@ -34,9 +34,7 @@ describe('Waitinglist API', function () {
     sinon.stub(activitystore, 'getActivityForId', function (activity, callback) {
       return callback(null, activity1);
     });
-    sinon.stub(activitystore, 'saveActivity', function (activity, callback) {
-      return callback(null, activity1);
-    });
+    sinon.stub(activitystore, 'saveActivity', function (activity, callback) { return callback(null); });
     sinon.stub(activitystore, 'getActivity', function (activity, callback) {
       return callback(null, activity1);
     });

@@ -91,9 +91,9 @@ describe('Announcements API', function () {
   });
 
   it('creates an id out of the fields `author`, `title` and `timeUnix` when saving', function (done) {
-    announcementsAPI.saveAnnouncement(dummyAnnouncement, function (err, result) {
-      expect(result).to.have.property('id', 'author_title_1372464000');
-      done();
+    announcementsAPI.saveAnnouncement(dummyAnnouncement, function (err) {
+      expect(dummyAnnouncement).to.have.property('id', 'author_title_1372464000');
+      done(err);
     });
   });
 

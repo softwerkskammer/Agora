@@ -41,7 +41,6 @@ var activityWithMultipleResources = new Activity({title: 'Interesting Activity',
 
 var group = new Group({id: "groupname", longName: "Buxtehude"});
 
-var activitiesCoreAPI = beans.get('activitiesCoreAPI');
 var activitiesAPI = beans.get('activitiesAPI');
 
 var groupsAPI = beans.get('groupsAPI');
@@ -56,7 +55,7 @@ describe('Activity application', function () {
 
   beforeEach(function (done) {
     allActivities = sinon.stub(activitystore, 'allActivities', function (callback) {callback(null, [emptyActivity]); });
-    upcomingActivities = sinon.stub(activitiesCoreAPI, 'upcomingActivities', function (callback) {callback(null, [emptyActivity]); });
+    upcomingActivities = sinon.stub(activitystore, 'upcomingActivities', function (callback) {callback(null, [emptyActivity]); });
     sinon.stub(activitiesAPI, 'getActivitiesForDisplay', function (fetcher, callback) {
       var enhancedActivity = new Activity({title: 'Title of the Activity', description: 'description1', assignedGroup: 'assignedGroup',
         location: 'location1', direction: 'direction1', startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'), url: 'urlOfTheActivity' });

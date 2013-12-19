@@ -1,4 +1,4 @@
-/* global $, document */
+/* global $, document, urlIsNotAvailable */
 "use strict";
 var announcement_validator;
 
@@ -25,7 +25,7 @@ var initValidator = function () {
     },
     messages: {
       url: {
-        remote: $.validator.format("Diese URL ist leider nicht verfügbar.")
+        remote: $.validator.format(urlIsNotAvailable)
       }
     },
     errorElement: "span",

@@ -13,7 +13,7 @@ module.exports = function (grunt) {
       ' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */\n',
     // Task configuration.
     jshint: {
-      files: ['**/*.js', '**/*.json', '.jshintrc', '!node_modules/**/*.js', '!node_modules/**/*.json', '!public/**/*.js', '!public/**/*.json', '!frontendtests/lib/**/*.js', '!frontendtests/lib/**/*.json'],
+      files: ['**/*.js', '**/*.json', '.jshintrc', '!node_modules/**/*.js', '!node_modules/**/*.json', '!public/**/*.js', '!public/**/*.json', '!frontendtests/lib/**/*.js', '!frontendtests/lib/**/*.json', '!locales/*.js'],
       options: {
         jshintrc: '.jshintrc'
       }
@@ -98,6 +98,7 @@ module.exports = function (grunt) {
       },
       de: {
         src: [
+          'locales/frontend_de.js',
           'public/clientscripts/global/jquery-1.9.1.js',
           'public/clientscripts/global/respond.min.js',
           'public/clientscripts/global/bootstrap.js',
@@ -120,6 +121,7 @@ module.exports = function (grunt) {
       },
       en: {
         src: [
+          'locales/frontend_en.js',
           'public/clientscripts/global/jquery-1.9.1.js',
           'public/clientscripts/global/respond.min.js',
           'public/clientscripts/global/bootstrap.js',

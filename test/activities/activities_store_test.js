@@ -19,6 +19,9 @@ describe('Activity store', function () {
     list = sinon.stub(persistence, 'list', function (sortOrder, callback) {
       return callback(null, sampleList);
     });
+    sinon.stub(persistence, 'listByField', function (searchObject, sortOrder, callback) {
+      return callback(null, sampleList);
+    });
     getByField = sinon.stub(persistence, 'getByField', function (object, callback) {
       return callback(null, activity1);
     });
@@ -111,6 +114,20 @@ describe('Activity store', function () {
     store.allActivities(function (err, result) {
       expect(result).to.have.lengthOf(1);
       expect(result[0].url()).to.equal("activityUrl");
+      done();
+    });
+  });
+
+  it('returns upcoming activities', function (done) {
+    store.upcomingActivities(function (err, result) {
+      expect(result).to.have.lengthOf(2);
+      done();
+    });
+  });
+
+  it('returns past activities', function (done) {
+    store.pastActivities(function (err, result) {
+      expect(result).to.have.lengthOf(2);
       done();
     });
   });
