@@ -1,7 +1,40 @@
 extends ../../../views/layout
 
 block scripts
-  script(src="/clientscripts/wiki_compare.js")
+  script.
+    $(document).ready(function () {
+      var checkboxes = $(".history td:first-child :checkbox");
+      var compareButton = $("#rev-compare");
+      function toggleCompareCheckboxes() {
+        var checkedCheckboxes = $(".history td:first-child :checked");
+        if (checkboxes.length === 1) {
+          checkboxes.hide();
+          compareButton.attr({"disabled": "disabled"});
+          return;
+        }
+        if (checkedCheckboxes.length === 2) {
+          checkboxes.hide().parents("tr").css({"color": "silver"});
+          checkedCheckboxes.show().parents("tr").css({"color": "black"});
+          compareButton.removeAttr("disabled");
+        } else {
+          checkboxes.show().parents("tr").css({"color": "black"});
+          compareButton.attr({"disabled": "disabled"});
+        }
+      }
+      toggleCompareCheckboxes();
+      checkboxes.on("click", function () {
+        toggleCompareCheckboxes();
+      });
+      compareButton.on("click", function () {
+        var checkedCheckboxes = $(".history td:first-child :checked");
+        if (checkedCheckboxes.length < 2) {
+          return false;
+        }
+        window.location.href = "/wiki/compare/" + $(this).data("subdir") + "/" + $(this).data("pagename") + "/" + checkedCheckboxes.map(function () { return $(this).val(); }).toArray().reverse().join("..");
+        return false;
+      });
+    });
+
 
 block title
   | #{pageName} : #{subdir} - #{t("wiki.revisions")}
@@ -28,6 +61,3 @@ block content
         td #{item.subject}
         td 
           a(href="/wiki/#{item.name}/#{item.hashRef}") #{item.hashRef || 'CURRENT'}
-
-  script.
-    Jingo.init();
