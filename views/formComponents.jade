@@ -93,21 +93,9 @@ mixin time(name, label, object, value)
 mixin colorPicker(name, object)
   .form-group
     label.control-label(for="color") #{t("colors.color")}:
-    #color.input-group(data-color="#{object[name]}", data-color-format="hex")
-      input#colorText.form-control(type="text", name=name, value=object[name])
-      span#colorSpan.input-group-addon(style="background-color: #{object[name]}")
+    input#color.form-control(type="text", name=name, value=object[name])
     script.
-      $("#color").colorpicker();
-      $("#colorText").on("change", function (event) {
-        $("#color").colorpicker("setValue", event.target.value);
-      });
-      $("#colorText").on("keyup", function (event) {
-        $("#color").colorpicker("setValue", event.target.value);
-      });
-      $("#color").colorpicker().on('changeColor', function(event) {
-        $("#colorText").val(event.color.toHex());
-        $("#colorSpan").css("background-color", event.color.toHex());
-      });
+      $("#color").pickAColor();
 
 // PICKERS END
 

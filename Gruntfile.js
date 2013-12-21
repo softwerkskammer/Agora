@@ -73,6 +73,10 @@ module.exports = function (grunt) {
         src: ['public/stylesheets/less/bootstrap-markdown.less'],
         dest: 'public/stylesheets/vendor/bootstrap-markdown-custom.css'
       },
+      pickacolor: {
+        src: ['public/stylesheets/less/pick-a-color-patched.less'],
+        dest: 'public/stylesheets/vendor/pick-a-color-custom.css'
+      },
       cssconcat: {
         options: {
           compress: true
@@ -84,7 +88,7 @@ module.exports = function (grunt) {
           'public/stylesheets/vendor/bootstrap-timepicker.css',
           'public/stylesheets/vendor/bootstrap-markdown-custom.css',
           'public/stylesheets/vendor/font-awesome.min.css',
-          'public/stylesheets/vendor/colorpicker.css',
+          'public/stylesheets/vendor/pick-a-color-custom.css',
           'public/stylesheets/vendor/shCoreDefault.css',
           'public/stylesheets/vendor/jquery.dataTables.css',
           'public/stylesheets/partials/agora.css'
@@ -105,7 +109,8 @@ module.exports = function (grunt) {
           'public/clientscripts/global/bootstrap-markdown-patched.js',
           'public/clientscripts/global/markdown.js',
           'public/clientscripts/global/fullcalendar.js',
-          'public/clientscripts/global/bootstrap-colorpicker.js',
+          'public/clientscripts/global/tinycolor-0.9.15.min.js',
+          'public/clientscripts/global/pick-a-color.js',
           'public/clientscripts/global/bootstrap-datepicker.de.js',
           'public/clientscripts/global/jquery.validate-1.11.1.js',
           'public/clientscripts/global/additional-methods-1.11.1.js',
@@ -127,7 +132,8 @@ module.exports = function (grunt) {
           'public/clientscripts/global/bootstrap-markdown-patched.js',
           'public/clientscripts/global/markdown.js',
           'public/clientscripts/global/fullcalendar.js',
-          'public/clientscripts/global/bootstrap-colorpicker.js',
+          'public/clientscripts/global/tinycolor-0.9.15.min.js',
+          'public/clientscripts/global/pick-a-color.js',
           'public/clientscripts/global/jquery.validate-1.11.1.js',
           'public/clientscripts/global/additional-methods-1.11.1.js',
           'public/clientscripts/global/bootstrap-timepicker-patched.js',
