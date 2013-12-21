@@ -6,7 +6,7 @@ block scripts
     $(document).ready(function() {
       $("#grouptable").dataTable({
         "oLanguage": {
-          "sUrl": "/clientscripts/dataTables.german.txt"
+          "sUrl": "#{(language === 'de') ? "/clientscripts/dataTables.german.txt" : ""}"
         },
         "aoColumns": [
           { "bSortable" : false }, null, null, null, null, null

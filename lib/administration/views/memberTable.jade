@@ -6,7 +6,7 @@ block scripts
     $(document).ready(function() {
       $("#membertable").dataTable({
         "oLanguage": {
-          "sUrl": "/clientscripts/dataTables.german.txt"
+          "sUrl": "#{(language === 'de') ? "/clientscripts/dataTables.german.txt" : ""}"
         },
         "aoColumns": [
           { "bSortable" : false }, { "sType": "date-eu" }, null, null, null, null, null, null, null, null, null, null, null
