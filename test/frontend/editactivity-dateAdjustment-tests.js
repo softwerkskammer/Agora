@@ -1,7 +1,6 @@
-/* global describe, it, activityDateModel */
+/* global describe, it, activityDateModel, moment*/
 "use strict";
 
-var moment = require('moment-timezone');
 var expect = require('chai').expect;
 
 // load a normal Javascript file into the node environment:
