@@ -168,6 +168,7 @@
     "type": "Gruppenart",
     "new": "Neue Gruppe",
     "create": "Gruppe anlegen",
+    "more": "mehr lesen",
     "edit": "Gruppe \"__groupId__\" bearbeiten",
     "join": "Gruppe beitreten",
     "leave": "Gruppe verlassen",
