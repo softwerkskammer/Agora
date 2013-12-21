@@ -98,7 +98,6 @@ module.exports = function (grunt) {
       },
       de: {
         src: [
-          'locales/frontend_de.js',
           'public/clientscripts/global/jquery-1.9.1.js',
           'public/clientscripts/global/respond.min.js',
           'public/clientscripts/global/bootstrap.js',
@@ -114,14 +113,13 @@ module.exports = function (grunt) {
           'public/clientscripts/global/methods_de.js',
           'public/clientscripts/global/bootstrap-timepicker-patched.js',
           'public/clientscripts/global/moment.min.js',
-          'public/clientscripts/global/strings_de.js',
+          'locales/frontend_de.js',
           'public/clientscripts/global/agora.js'
         ],
         dest: 'public/clientscripts/global_de.js'
       },
       en: {
         src: [
-          'locales/frontend_en.js',
           'public/clientscripts/global/jquery-1.9.1.js',
           'public/clientscripts/global/respond.min.js',
           'public/clientscripts/global/bootstrap.js',
@@ -134,7 +132,7 @@ module.exports = function (grunt) {
           'public/clientscripts/global/additional-methods-1.11.1.js',
           'public/clientscripts/global/bootstrap-timepicker-patched.js',
           'public/clientscripts/global/moment.min.js',
-          'public/clientscripts/global/strings_en.js',
+          'locales/frontend_en.js',
           'public/clientscripts/global/agora.js'
         ],
         dest: 'public/clientscripts/global_en.js'
