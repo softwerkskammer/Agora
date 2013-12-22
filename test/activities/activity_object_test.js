@@ -86,8 +86,6 @@ describe('Activity', function () {
       startDate: '01.02.2013',
       startTime: '12:34'
     });
-    expect(activity.startDate()).to.equal('01.02.2013');
-    expect(activity.startTime()).to.equal('12:34');
     expect(activity.startMoment().format()).to.equal('2013-02-01T12:34:00+01:00');
   });
 
@@ -97,8 +95,6 @@ describe('Activity', function () {
       endDate: '01.08.2013',
       endTime: '12:34'
     });
-    expect(activity.endDate()).to.equal('01.08.2013');
-    expect(activity.endTime()).to.equal('12:34');
     expect(activity.endMoment().format()).to.equal('2013-08-01T12:34:00+02:00');
   });
 });

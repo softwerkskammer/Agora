@@ -67,7 +67,7 @@ describe('MailsenderAPI', function () {
     });
     var markdown = api.activityMarkdown(activity);
     expect(markdown).to.contain('description');
-    expect(markdown).to.contain('04.05.2013');
+    expect(markdown).to.contain('4. Mai 2013');
     expect(markdown).to.contain('12:21');
     expect(markdown).to.contain('location');
     expect(markdown).to.contain('Wegbeschreibung');

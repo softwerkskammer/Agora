@@ -28,7 +28,7 @@ block content
           mixin text('title', t("general.title"), announcement)
           mixin text('url', t("general.url"), announcement)
         .col-md-6
-          mixin date('thruDate', t("announcements.show_until"), announcement, announcement.thruDate())
+          mixin date('thruDate', t("announcements.show_until"), announcement, announcement.thruMoment().lang(language).format('L'))
       .row
         .col-md-12
           mixin hightextarea('message', t("announcements.text"), announcement)

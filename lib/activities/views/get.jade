@@ -25,11 +25,11 @@ block content
             a.btn.btn-default(href="/activities/edit/#{encodeURIComponent(activity.url())}", title=t("general.edit")): i.fa.fa-edit.fa-fw
         h2 #{activity.title()}
           br
-          small #{activity.startDate()} (#{activity.startTime()}
-            if (activity.endDate() && activity.endDate() !== activity.startDate())
-              |  #{t("activities.oclock")}) - #{activity.endDate()} (#{activity.endTime()} #{t("activities.oclock")})
+          small #{activity.startMoment().lang(language).format('LL')} (#{activity.startMoment().lang(language).format('LT')}
+            if (activity.isMultiDay())
+              | ) - #{activity.endMoment().lang(language).format('LL')} (#{activity.endMoment().lang(language).format('LT')})
             else 
-              |  - #{activity.endTime()} #{t("activities.oclock")})
+              |  - #{activity.endMoment().lang(language).format('LT')})
   .row
     .col-md-12
       !{activity.descriptionHTML()}

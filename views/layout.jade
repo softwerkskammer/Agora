@@ -40,7 +40,7 @@ html
         p(style="text-align: right; margin-top: 8px;").visible-xs.hidden-print
           a(href="/language/de?currentUrl=#{encodeURIComponent(currentUrl)}"): img(src="/img/flags/Germany.png", alt="Deutsch")
           | &nbsp;
-          a(href="/language/en?currentUrl=#{encodeURIComponent(currentUrl)}"): img(src="/img/flags/United-Kingdom.png", alt="English")
+          a(href="/language/en-gb?currentUrl=#{encodeURIComponent(currentUrl)}"): img(src="/img/flags/United-Kingdom.png", alt="English")
         if (statusmessage)
           mixin notificationsBlock(statusmessage)
         block content
@@ -55,7 +55,7 @@ html
               small: a(href='/announcements/') #{t("general.more")}…
           dl
             for announcement in latestNews
-              dt #{announcement.fromDate()}
+              dt #{announcement.fromMoment().lang(language).format('LL')}
               dd: a(href='/announcements/#{encodeURIComponent(announcement.url)}') #{announcement.title}
     mixin bottomNavbar
     

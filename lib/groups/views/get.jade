@@ -43,6 +43,6 @@ block content
             for post in blogposts
               h4 #{post.title}&nbsp;
                 if (post.date.isValid())
-                  small #{post.date.lang(language).format('D. MMMM YYYY')}
+                  small #{post.date.lang(language).format('LL')}
               p #{post.teaser}
               p.pull-right: a(href="/wiki/#{post.path}") #{t("groups.more")}

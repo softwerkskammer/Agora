@@ -79,7 +79,7 @@ describe('Announcement application', function () {
     request(app)
       .get('/' + url)
       .expect(200)
-      .expect(/<small>29.07.2013/)
+      .expect(/<small>29. Juli 2013/)
       .expect(/<h2>title/, function (err) {
         expect(getAnnouncement.calledWith(url)).to.be.true;
         done(err);
@@ -100,16 +100,11 @@ describe('Announcement application', function () {
       });
   });
 
-  //  it('shows a 404 if the url cannot be found in the store for the detail page', function (done) {
-  //    var link = dummyAnnouncement.url + '-does-not-exist';
-  //    console.log(link);
-  //
-  //    request(app)
-  //        .get('/' + link)
-  //        .expect(404, function (err) {
-  //          done(err);
-  //        });
-  //  });
+  it('shows a 404 if the url cannot be found in the store for the detail page', function (done) {
+    var link = dummyAnnouncement.url + '-does-not-exist';
+    request(app).get('/' + link).expect(404, function (err) { done(err); });
+
+  });
 
   it('allows to create a new announcement', function (done) {
     request(app)
