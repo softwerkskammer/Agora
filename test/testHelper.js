@@ -26,6 +26,7 @@ module.exports = function (internalAppName) {
       }
       app.use(beans.get('accessrights'));
       app.use(i18n.handle);
+      app.use(beans.get('expressViewHelper'));
       app.use('/', beans.get(appName)(express()));
 
       i18n.registerAppHelper(app);

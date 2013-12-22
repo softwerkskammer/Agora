@@ -49,8 +49,8 @@ block content
                 td: a.btn-sm(href="/activities/edit/#{encodeURIComponent(activity.url())}"): i.fa.fa-edit.fa-fw
                 td #{activity.title()}
                 td #{activity.url()}
-                td #{activity.startDate()}
-                td #{activity.endDate()}
+                td #{activity.startMoment().lang(language).format('L')}
+                td #{activity.endMoment().lang(language).format('L')}
                 td #{activity.location()}
                 td.ellipsis: .tooltiplabel(data-toggle="hover", data-placement="auto top", data-html="true", data-content="#{activity.descriptionHTML()}", data-title="#{activity.title()}") #{activity.description()}
                 td.ellipsis: .tooltiplabel(data-toggle="hover", data-placement="auto top", data-html="true", data-content="#{activity.directionHTML()}") #{activity.direction()}

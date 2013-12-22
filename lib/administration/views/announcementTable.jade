@@ -47,7 +47,7 @@ block content
                 td(class="span1"): a.btn-sm(href="/announcements/edit/#{encodeURIComponent(announcement.url)}"): i.fa.fa-edit.fa-fw
                 td.ellipsis #{announcement.title}
                 td #{announcement.url}
-                td #{announcement.fromDate()}
-                td #{announcement.thruDate()}
+                td #{announcement.fromMoment().lang(language).format('L')}
+                td #{announcement.thruMoment().lang(language).format('L')}
                 td.ellipsis: .tooltiplabel(data-toggle="hover", data-placement="auto top", data-html="true", data-content="#{announcement.messageHTML()}") #{announcement.message}
                 td #{announcement.author}

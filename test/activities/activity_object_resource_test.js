@@ -144,8 +144,8 @@ describe('Activity resource management', function () {
       });
       activity = activity.resetForClone();
       expect(activity.resourceNamed('default').registeredMembers()).to.be.empty;
-      expect(activity.startDate()).to.not.equal('04.04.2013');
-      expect(activity.endDate()).to.not.equal('05.04.2013');
+      expect(activity.startMoment().format('DD.MM.YYYY')).to.not.equal('04.04.2013');
+      expect(activity.endMoment().format('DD.MM.YYYY')).to.not.equal('05.04.2013');
       expect(!!activity.id()).to.be.false;
       expect(!!activity.url()).to.be.false;
     });
