@@ -70,12 +70,14 @@
     "blanket": "~1.1.5",
     "travis-cov": "~0.2.4"
   },
+  "config": {
+    "travis-cov": {
+      "threshold": "64"
+    }
+  },
   "scripts": {
     "start": "node start",
     "test": "grunt travis --verbose",
-    "travis-cov": {
-      "threshold": "64"
-    },
     "prepublish": "sh ./prepublish.sh"
   }
 }
