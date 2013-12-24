@@ -80,7 +80,7 @@ mixin loginMenu(forInline)
   if (accessrights.isRegistered())
     li.dropdown(class="#{forInline ? 'visible-xs' : ''}")
       a.dropdown-toggle(href="#", data-toggle="dropdown")
-        i.fa.fa-info-circle.fa-fw&nbsp;
+        i.fa.fa-info-circle.fa-fw &nbsp;
         | #{user.member.nickname} 
         b.caret
       ul.dropdown-menu
@@ -129,6 +129,6 @@ mixin externalUrl(url, text)
 mixin notificationsBlock(notificationmessage)
   #{notificationmessage.kill()}
   #notifications(class="alert alert-block hidden-print #{notificationmessage.type}")
-    button.close(type="button", data-dismiss="alert")&times;
+    button.close(type="button", data-dismiss="alert") &times;
     h4 #{t(notificationmessage.title)}
     | #{t(notificationmessage.text, notificationmessage.additionalArguments)}

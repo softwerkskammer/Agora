@@ -32,7 +32,7 @@ block content
               |  - #{activity.endMoment().lang(language).format('LT')})
   .row
     .col-md-12
-      !{activity.descriptionHTML()}
+      | !{activity.descriptionHTML()}
       hr
   .row
     .col-md-6
@@ -40,7 +40,7 @@ block content
       p #{activity.location()}
       if (activity.hasDirection())
         h4 #{t("activities.directions")}:
-        !{activity.directionHTML()}
+        | !{activity.directionHTML()}
       hr
       div.hidden-print
         mixin visitorCount(activity.visitors.length)

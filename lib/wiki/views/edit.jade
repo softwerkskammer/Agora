@@ -11,7 +11,7 @@ block content
       .row
         .col-md-12
           legend
-            params = {pageName: pageName, subdir: subdir}
+            -var params = {pageName: pageName, subdir: subdir}
             if page.content === ''
               | #{t("wiki.create", params)}
             else 

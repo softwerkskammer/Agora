@@ -1,6 +1,6 @@
 include ./mailheader-mixin
 
-doctype 5
+doctype html
 html
   .modal-dialog.cheatsheet
     .modal-content
@@ -14,4 +14,4 @@ html
             small: mixin mailattributes(mail) 
       .modal-body
         if (mail)
-          !{mail.getHtml()}
+          | !{mail.getHtml()}

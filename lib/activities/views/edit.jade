@@ -75,7 +75,7 @@ block content
           mixin textareaWithValue('description', t("general.description"), activity.description())
         .col-md-6
           .form-group
-            button.btn.btn-default.btn-xs.pull-right(type="button", onclick="fillUrlFromText('url', 'title')") 
+            button.btn.btn-default.btn-xs.pull-right(type="button", onclick="fillUrlFromText('url', 'title')")
               | #{t("activities.suggestion")}
             mixin controlLabel('url', t("activities.address_suffix"), t("activities.tooltip.address_suffix"))
             input.form-control(id='url', type='text', name='url', value=activity.url())
