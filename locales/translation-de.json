@@ -250,7 +250,8 @@
     "commit_template": "kein Commit-Kommentar",
     "searchresults": "Suchergebnis",
     "no_results": "Keine Ergebnisse",
-    "line": "Zeile"
+    "line": "Zeile",
+    "filename": "im Dateinamen"
   },
   "message": {
     "title": {

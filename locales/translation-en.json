@@ -250,7 +250,8 @@
     "commit_template": "no commit message",
     "searchresults": "Search Results",
     "no_results": "No results",
-    "line": "line"
+    "line": "line",
+    "filename": "part of filename"
   },
   "message": {
     "title": {

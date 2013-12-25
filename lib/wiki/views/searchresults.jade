@@ -14,7 +14,13 @@ block content
       else 
         dl
           each match in matches
-            dt
-              a(href="/wiki/#{match.pageName}") #{match.pageName}
-              |  (#{t("wiki.line")} #{match.line})
-            dd: em "#{match.text}"
+            if (match.line)
+              dt
+                a(href="/wiki/#{match.pageName}") #{match.pageName}
+                |  (#{t("wiki.line")} #{match.line})
+              dd: em "#{match.text}"
+            else
+              dt
+                a(href="/wiki/#{match.pageName}") #{match.pageName}
+                |  (#{t("wiki.filename")})
+
