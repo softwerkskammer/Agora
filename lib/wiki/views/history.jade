@@ -60,4 +60,4 @@ block content
         td #{item.date}
         td #{item.subject}
         td
-          a(href="/wiki/#{item.name}/#{item.hashRef}") #{item.hashRef || 'CURRENT'}
+          a(href="/wiki/#{item.name}?version=#{item.hashRef}") #{item.hashRef || 'CURRENT'}
