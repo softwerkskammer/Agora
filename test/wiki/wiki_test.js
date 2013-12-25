@@ -42,6 +42,16 @@ describe('Wiki application', function () {
       });
   });
 
+  it('normalizes page names', function (done) {
+    request(createApp())
+      .get('/global/Some%20Päg\'é')
+      .expect(200)
+      .end(function (err) {
+        expect(pageShow.calledWith('global/some-page', 'HEAD')).to.be.ok;
+        done(err);
+      });
+  });
+
   it('redirects to the group\'s index page when group directory is requested', function (done) {
     request(createApp())
       .get('/global/')
