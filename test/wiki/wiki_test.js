@@ -13,7 +13,7 @@ describe('Wiki application', function () {
 
   var pageShow;
   var content = "Hallo, ich bin der Dateiinhalt";
-  var nonExistingPage = 'global/nonExisting';
+  var nonExistingPage = 'global/nonexisting';
   beforeEach(function (done) {
     pageShow = sinon.stub(wikiAPI, 'showPage',
       function (completePageName, pageVersion, callback) {
@@ -30,23 +30,33 @@ describe('Wiki application', function () {
     done();
   });
 
-  it('shows the index page of a group when requested', function (done) {
+  it('shows an existing page in wiki "global" when requested', function (done) {
     request(createApp())
-      .get('/global/')
+      .get('/global/somepage')
       .expect(200)
       .expect(new RegExp(content))
-      .expect(/global/)
+      .expect(/in Wiki \"global\"/)
       .end(function (err) {
-        expect(pageShow.calledWith('global/index', 'HEAD')).to.be.ok;
+        expect(pageShow.calledWith('global/somepage', 'HEAD')).to.be.ok;
         done(err);
       });
   });
 
-  it('redirects to the index page of group "alle" when requested root', function (done) {
+  it('redirects to the group\'s index page when group directory is requested', function (done) {
+    request(createApp())
+      .get('/global/')
+      .expect(302)
+      .expect('Location', '/wiki/global/index')
+      .end(function (err) {
+        done(err);
+      });
+  });
+
+  it('redirects to the index page of group "alle" when root is requested', function (done) {
     request(createApp())
       .get('/')
       .expect(302)
-      .expect('Location', '/wiki/alle/')
+      .expect('Location', '/wiki/alle/index')
       .end(function (err) {
         done(err);
       });
