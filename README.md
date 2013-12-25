@@ -4,10 +4,10 @@ There is a companion project where the feature backlog lives. Go to the issues i
 
 ---
 
-Weekly video hangout
+Video hangout
 --------------------
 
-Every Friday at 21:00 Berlin Time via Google Hangout. Co-ordination via the mailinglist at [http://www.softwerkskammer.org/groups/neueplattform](http://www.softwerkskammer.org/groups/neueplattform)
+Co-ordination via the mailinglist at [http://www.softwerkskammer.org/groups/neueplattform](http://www.softwerkskammer.org/groups/neueplattform)
 
 What this is about
 ==================
@@ -23,7 +23,9 @@ Current Build Status
 
 System requirements for installation
 --------------------
-It is a node.js project. Therefore you need node.js installed. You need version 0.8 (at least 0.8.19) and npm 1.2. **Important:** node.js version 0.10 does not work!
+It is a node.js project. Therefore you need node.js installed. You should use version 0.10.x (currently 0.10.24). Currently we are still supporting version 0.8 (at least 0.8.19).
+
+At least npm 1.2 is required.
 
 Get it from [http://nodejs.org](http://nodejs.org)
 

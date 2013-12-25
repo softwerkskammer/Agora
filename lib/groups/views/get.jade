@@ -10,7 +10,7 @@ block content
       .page-header
         .btn-group.pull-right
           a.btn.btn-default(href="/wiki/#{group.id}/")
-            i.fa.fa-book.fa-fw 
+            i.fa.fa-book.fa-fw
             | &nbsp;#{t("wiki.wiki")}
           if (accessrights.canViewGroupDetails(group))
             a.btn.btn-default(href="/mailarchive/list/threaded/#{group.id}", title=t("mailarchive.archive"))
@@ -26,7 +26,7 @@ block content
         | 
         a(href="mailto:#{group.id}@softwerkskammer.org")
           | #{group.id}@softwerkskammer.org
-      |!{group.descriptionHTML()}
+      | !{group.descriptionHTML()}
 
       if (accessrights.canParticipateInGroup(group))
         if (userIsGroupMember)

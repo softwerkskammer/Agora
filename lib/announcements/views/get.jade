@@ -13,7 +13,7 @@ block content
           small #{announcement.fromMoment().lang(language).format('LL')}
       .row
         .col-md-8
-          !{announcement.messageHTML()}
+          | !{announcement.messageHTML()}
           p
             em
               if ('automatisch' === announcement.authorname)

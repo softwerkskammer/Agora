@@ -9,10 +9,10 @@ mixin visitorCount(anzahl)
 
 
 mixin subscriptionButtons(activity, resourceName, resourceRegistrationRenderer)
-  result = resourceRegistrationRenderer.htmlRepresentationOf(activity, resourceName, accessrights.memberId())
-  btnClass = result.isWithdrawal() ? 'btn-default' : 'btn-primary'
+  -var result = resourceRegistrationRenderer.htmlRepresentationOf(activity, resourceName, accessrights.memberId())
+  -var btnClass = result.isWithdrawal() ? 'btn-default' : 'btn-primary'
   if (activity.resourceNames().length === 1)
-    if (!result.representsButton()) 
+    if (!result.representsButton())
       | #{t(result.displayText)}
     else
       a(href="#{result.url}", class="btn #{btnClass}") #{t(result.displayText)}
@@ -20,7 +20,7 @@ mixin subscriptionButtons(activity, resourceName, resourceRegistrationRenderer)
     form.form-horizontal
       .form-group
         label.control-label.col-xs-6(style="text-align: left;") #{resourceName}:
-        if (!result.representsButton()) 
+        if (!result.representsButton())
           span.col-xs-6.control-label(style="text-align: center;") #{t(result.displayText)}
         else
           a(href="#{result.url}", class="btn col-xs-6 #{btnClass}") #{t(result.displayText)}
