@@ -77,12 +77,13 @@ describe('Activity application', function () {
     done();
   });
 
-  it('shows the list of activities', function (done) {
+  it('shows the list of activities with "webcal:" link', function (done) {
     request(createApp())
       .get('/')
       .expect(200)
       .expect(/Aktivitäten/)
       .expect(/href="urlOfTheActivity"/)
+      .expect(/href="webcal:\/\//)
       .expect(/Title of the Activity/)
       .expect(/1. Januar 2013/)
       .expect(/background-color: #123456/)
