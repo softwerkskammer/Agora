@@ -57,7 +57,7 @@
   },
   "devDependencies": {
     "grunt": "~0.4.1",
-    "grunt-contrib-jshint": "~0.7.x",
+    "grunt-contrib-jshint": "~0.8.x",
     "grunt-contrib-watch": "~0.5.3",
     "grunt-mocha-test": "~0.8.0",
     "grunt-recess": "~0.5.x",
