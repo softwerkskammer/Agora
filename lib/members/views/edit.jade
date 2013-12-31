@@ -56,7 +56,7 @@ block content
           mixin textWithValue('site', t("members.web"), member.site())
           mixin textWithValue('reference', t("members.reference"), member.reference())
           if (accessrights.isAdmin())
-            mixin checkbox('isAdmin', t("members.administrator"), member.isAdmin())
+            mixin checkbox('isAdmin', t("groups.contact"), member.isAdmin())
       if (accessrights.isRegistered())
         .row
           .col-md-12

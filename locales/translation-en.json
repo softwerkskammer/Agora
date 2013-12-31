@@ -227,7 +227,6 @@
     "interests": "Main focus of interest",
     "web": "Website / Blog",
     "reference": "How I got to know about Softwerkskammer",
-    "administrator": "Administrator",
     "authenticated_via": "Currently authenticated via",
     "authenticate": "Authenticate elsewhere",
     "send_email": "Send e-mail to __firstname__ __lastname__",
