@@ -5,7 +5,8 @@ var sinon = require('sinon').sandbox.create();
 
 var conf = require('../configureForTest');
 
-var activitiesCoreAPI = conf.get('beans').get('activitiesCoreAPI');
+var beans = conf.get('beans');
+var activitiesAPI = beans.get('activitiesAPI');
 
 var createApp = require('../testHelper')('activitiesApp').createApp;
 
@@ -17,7 +18,7 @@ describe('Activity application - on submit -', function () {
   });
 
   it('rejects an activity with invalid and different url', function (done) {
-    sinon.stub(activitiesCoreAPI, 'isValidUrl', function (nickname, callback) {
+    sinon.stub(activitiesAPI, 'isValidUrl', function (isReserved, nickname, callback) {
       callback(null, false);
     });
 
@@ -34,7 +35,6 @@ describe('Activity application - on submit -', function () {
   });
 
   it('rejects an activity with empty title', function (done) {
-
     request(createApp())
       .post('/submit')
       .send('url=uhu&previousUrl=uhu&location=X&startDate=02.07.2000&startTime=19:00&endDate=02.07.2000&endTime=21:00&resources[names]=x')
@@ -47,7 +47,7 @@ describe('Activity application - on submit -', function () {
   });
 
   it('rejects an activity with different but valid url and with empty title', function (done) {
-    sinon.stub(activitiesCoreAPI, 'isValidUrl', function (nickname, callback) {
+    sinon.stub(activitiesAPI, 'isValidUrl', function (isReserved, nickname, callback) {
       callback(null, true);
     });
 
@@ -63,10 +63,6 @@ describe('Activity application - on submit -', function () {
   });
 
   it('rejects an activity with two identical resource names', function (done) {
-    sinon.stub(activitiesCoreAPI, 'isValidUrl', function (nickname, callback) {
-      callback(null, true);
-    });
-
     request(createApp())
       .post('/submit')
       .send('url=uhu&previousUrl=uhu&location=X&title=bla&startDate=02.07.2000&startTime=19:00&endDate=02.07.2000&endTime=21:00')
@@ -79,10 +75,6 @@ describe('Activity application - on submit -', function () {
   });
 
   it('rejects an activity whose resource names are empty', function (done) {
-    sinon.stub(activitiesCoreAPI, 'isValidUrl', function (nickname, callback) {
-      callback(null, true);
-    });
-
     request(createApp())
       .post('/submit')
       .send('url=uhu&previousUrl=uhu&location=X&title=bla&startDate=02.07.2000&startTime=19:00&endDate=02.07.2000&endTime=21:00')
@@ -95,10 +87,6 @@ describe('Activity application - on submit -', function () {
   });
 
   it('rejects an activity whose resource limits are non-integral', function (done) {
-    sinon.stub(activitiesCoreAPI, 'isValidUrl', function (nickname, callback) {
-      callback(null, true);
-    });
-
     request(createApp())
       .post('/submit')
       .send('url=uhu&previousUrl=uhu&location=X&title=bla&startDate=02.07.2000&startTime=19:00&endDate=02.07.2000&endTime=21:00&resources[names]=test')

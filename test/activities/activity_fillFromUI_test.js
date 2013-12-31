@@ -79,6 +79,12 @@ describe('Activity (when filled from UI)', function () {
       done();
     });
 
+    it('with ID', function () {
+      var activity = new Activity().fillFromUI({assignedGroup: "My Group", title: "My Title", startDate: "01.02.2013", startTime: "20:15"});
+
+      expect(activity.id()).to.equal('My_Group_My_Title_Fri_Feb_01_2013_20_15_00_GMT+0100');
+    });
+
   });
 
   it('creates two resources with limits', function (done) {
