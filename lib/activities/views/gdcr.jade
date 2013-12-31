@@ -11,9 +11,9 @@ mixin activitylist(activities)
           a(href='#{encodeURIComponent(activity.url())}') #{activity.title()}
 
 mixin placeGroupLabels(activities)
-  counter = {}
+  -var counter = {}
   each activity in activities
-    group = activity.group
+    -var group = activity.group
     - counter[group.longName] = (counter[group.longName] === undefined) ? 0 : counter[group.longName] + 1;
     if (group.shortName)
       .label.group(style="background-color: #{activity.colorRGB}; top: #{(group.mapYrelative() || 0) + (counter[group.longName] * 4)}%; left: #{group.mapXrelative() || 2}%;")
