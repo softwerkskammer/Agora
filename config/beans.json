@@ -14,7 +14,7 @@
   "groupsAndMembersAPI": {"module": "./lib/groupsAndMembers/groupsAndMembersAPI"},
   "groupsAPI": {"module": "./lib/groups/groupsAPI"},
   "membersAPI": {"module": "./lib/members/membersAPI"},
-  "activitiesCoreAPI": {"module": "./lib/activities/activitiesCoreAPI"},
+  "calendarAPI": {"module": "./lib/activities/calendarAPI"},
   "activitiesAPI": {"module": "./lib/activities/activitiesAPI"},
   "icalAPI": {"module": "./lib/activities/icalAPI"},
   "announcementsAPI": {"module": "./lib/announcements/announcementsAPI"},
