@@ -164,7 +164,7 @@ describe('The persistence store', function () {
   describe('for Member', function () {
     var Member = conf.get('beans').get('member');
     var moment = require('moment-timezone');
-    var toPersist = new Member().initFromSessionUser({authenticationId: 'toPersist'});
+    var toPersist = new Member().initFromSessionUser({authenticationId: 'toPersist'}).state;
 
     var storeSampleData = function (done) {
       persistence.save(toPersist, done);

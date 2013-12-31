@@ -303,6 +303,8 @@
     "validation_error": "Validierungsfehler",
     "validation_text": "Offenbar hast Du einige Felder nicht wie vorgesehen ausgefüllt. Diese findest Du unten:",
     "failed": "Fehlgeschlagen",
-    "url_not_available": "Diese URL ist leider nicht verfügbar."
+    "url_not_available": "Diese URL ist leider nicht verfügbar.",
+    "nickname_not_available": "Dieser Nickname ist leider nicht verfügbar.",
+    "duplicate_email": "Diese Adresse ist schon registriert. Hast Du bereits ein Profil angelegt?"
   }
 }

@@ -3,19 +3,19 @@ extends ../../../views/layout
 include ../../../views/formComponents
 
 block title
-  | #{member.firstname} #{member.lastname} - #{t("members.profile")}
+  | #{member.firstname()} #{member.lastname()} - #{t("members.profile")}
 
 block content
   .row
     .col-md-12
       .page-header
         h2
-          | "#{member.nickname}"&nbsp;
+          | "#{member.nickname()}"&nbsp;
           .btn-group.pull-right
             if (accessrights.canEditMember(member))
-              a.btn.btn-default(href="/members/edit/#{encodeURIComponent(member.nickname)}"): i.fa.fa-edit.fa-fw
+              a.btn.btn-default(href="/members/edit/#{encodeURIComponent(member.nickname())}"): i.fa.fa-edit.fa-fw
           small
-            if (member.isAdmin)
+            if (member.isAdmin())
               | #{t("members.administrator")}
             else
               | #{t("members.profileview")}
@@ -23,27 +23,27 @@ block content
     .col-md-8
       p
         strong #{t("members.firstname")}:
-        |  #{member.firstname}
+        |  #{member.firstname()}
       p
         strong #{t("members.lastname")}:
-        |  #{member.lastname}
+        |  #{member.lastname()}
       p
-        strong #{t("members.twitter")}:
+        strong #{t("members.twitter")}:&nbsp;
         span.twitterify
-          | #{member.twitter}
+          | #{member.twitter()}
       p
         strong #{t("members.location")}:
-        |  #{member.location}
+        |  #{member.location()}
       p
         strong #{t("members.profession")}:
-        |  #{member.profession}
+        |  #{member.profession()}
       p
         strong #{t("members.interests")}:
-        |  #{member.interests}
+        |  #{member.interests()}
       p
-        strong #{t("members.web")}:
+        strong #{t("members.web")}:&nbsp;
         span.urlify
-          | #{member.site}
+          | #{member.site()}
 
       p &nbsp;
     .col-md-4
@@ -52,9 +52,9 @@ block content
 
   .row
     .col-md-12
-      a.btn.btn-primary(href="/mailsender/contactMember/#{encodeURIComponent(member.nickname)}")
+      a.btn.btn-primary(href="/mailsender/contactMember/#{encodeURIComponent(member.nickname())}")
         i.fa.fa-envelope
-        | &nbsp;#{t("members.send_email", {firstname: member.firstname, lastname: member.lastname})}
+        | &nbsp;#{t("members.send_email", {firstname: member.firstname(), lastname: member.lastname()})}
 
       h3 #{t("members.member_of")}:
       ul

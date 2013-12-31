@@ -81,10 +81,10 @@ mixin loginMenu(forInline)
     li.dropdown(class="#{forInline ? 'visible-xs' : ''}")
       a.dropdown-toggle(href="#", data-toggle="dropdown")
         i.fa.fa-info-circle.fa-fw &nbsp;
-        | #{user.member.nickname} 
+        | #{user.member.nickname()} 
         b.caret
       ul.dropdown-menu
-        li: a(href="/members/edit/#{encodeURIComponent(user.member.nickname)}")
+        li: a(href="/members/edit/#{encodeURIComponent(user.member.nickname())}")
           i.fa.fa-edit.fa-fw
           | &nbsp;#{t("members.edit")}
         li: a(href="/auth/logout")

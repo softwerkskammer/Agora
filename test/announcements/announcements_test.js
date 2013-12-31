@@ -9,6 +9,7 @@ var moment = require('moment-timezone');
 
 var beans = conf.get('beans');
 var Announcement = beans.get('announcement');
+var Member = beans.get('member');
 
 var dummyAnnouncement = new Announcement({
   title: 'title',
@@ -70,7 +71,7 @@ describe('Announcement application', function () {
   });
 
   it('shows the details of one announcement as retrieved from the store', function (done) {
-    var dummyMember = {nickname: "nickname", id: "member ID"};
+    var dummyMember = new Member({nickname: "nickname", id: "member ID"});
     sinonSandbox.stub(membersAPI, 'getMemberForId', function (id, callback) {
       callback(null, dummyMember);
     });

@@ -21,8 +21,10 @@ module.exports = function (internalAppName) {
     createApp: function (memberID) {
       var app = express();
       app.use(express.urlencoded());
+      var Member = beans.get('member');
+
       if (memberID) {
-        app.use(userMock({member: {id: memberID}}));
+        app.use(userMock({member: new Member({id: memberID})}));
       }
       app.use(beans.get('accessrights'));
       app.use(i18n.handle);

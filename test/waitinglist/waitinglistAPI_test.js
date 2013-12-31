@@ -24,12 +24,12 @@ describe('Waitinglist API', function () {
     activity1 = new Activity({id: "Meine Aktivität", url: "myActivity", resources: {"Meine Ressource": {_waitinglist: []}}});
 
     sinon.stub(membersAPI, 'getMemberForId', function (memberId, callback) {
-      if (memberId === member1.id) { return callback(null, member1); }
-      if (memberId === member2.id) { return callback(null, member2); }
+      if (memberId === member1.id()) { return callback(null, member1); }
+      if (memberId === member2.id()) { return callback(null, member2); }
     });
     sinon.stub(membersAPI, 'getMember', function (nickname, callback) {
-      if (nickname === member1.nickname) { return callback(null, member1); }
-      if (nickname === member2.nickname) { return callback(null, member2); }
+      if (nickname === member1.nickname()) { return callback(null, member1); }
+      if (nickname === member2.nickname()) { return callback(null, member2); }
     });
     sinon.stub(activitystore, 'getActivityForId', function (activity, callback) {
       return callback(null, activity1);

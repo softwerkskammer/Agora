@@ -3,22 +3,24 @@ var chai = require("chai");
 var expect = chai.expect;
 
 require('../configureForTest');
-var validation = require('nconf').get('beans').get('validation');
+var beans = require('nconf').get('beans');
+var validation = beans.get('validation');
+var Member = beans.get('member');
 
 describe('Validation', function () {
 
 
 
-  describe('isValidMember', function () {
+  describe('isValidForMember', function () {
     it('performs many checks simultaneously', function (done) {
-      var result = validation.isValidMember({});
+      var result = validation.isValidForMember({});
 
       expect(result.length).to.equal(9);
       done();
     });
 
-    it('does not validate a member without nickname', function (done) {
-      var result = validation.isValidMember({});
+    it('does not validate an empty body without nickname', function (done) {
+      var result = validation.isValidForMember({});
 
       expect(result).to.contain('Nickname ist ein Pflichtfeld.');
       done();

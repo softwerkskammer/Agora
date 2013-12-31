@@ -48,7 +48,7 @@ block content
           h4 #{t("groups.contacts")}
           .control-group
             each memberAdmin in organizersChecked
-              mixin checkbox('organizers', memberAdmin.member.nickname, memberAdmin.checked, memberAdmin.member.id)
+              mixin checkbox('organizers', memberAdmin.member.nickname(), memberAdmin.checked, memberAdmin.member.id())
         .col-md-6
           .row
             .col-md-6

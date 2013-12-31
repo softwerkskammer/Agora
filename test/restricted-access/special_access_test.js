@@ -8,6 +8,7 @@ var beans = conf.get('beans');
 var redirectRuleForNewUser = beans.get('redirectRuleForNewUser');
 var secureAdminOnly = beans.get('secureAdminOnly');
 var accessrights = beans.get('accessrights');
+var Member = beans.get('member');
 
 describe('redirection to registration page for authenticated but not yet registered users', function () {
 
@@ -138,7 +139,7 @@ describe('exceptions to the admin guard', function () {
       isAuthenticated: function () {return true; },
       originalUrl: '/members/edit/nick',
       user: {
-        member: {nickname: 'nick'}
+        member: new Member({nickname: 'nick'})
       }
     };
     var res = {locals: {}};
@@ -154,7 +155,7 @@ describe('exceptions to the admin guard', function () {
       isAuthenticated: function () {return true; },
       originalUrl: '/members/edit/nick%20name',
       user: {
-        member: {nickname: 'nick name'}
+        member: new Member({nickname: 'nick name'})
       }
     };
     var res = {locals: {}};
@@ -170,7 +171,7 @@ describe('exceptions to the admin guard', function () {
       isAuthenticated: function () {return true; },
       originalUrl: '/members/submit',
       user: {
-        member: {id: 'id'}
+        member: new Member({id: 'id'})
       },
       body: {id: 'id'}
     };
@@ -187,7 +188,7 @@ describe('exceptions to the admin guard', function () {
       isAuthenticated: function () {return true; },
       originalUrl: '/members/edit/nick',
       user: {
-        member: {nickname: 'nic'}
+        member: new Member({nickname: 'nic'})
       }
     };
     var res = {
@@ -207,7 +208,7 @@ describe('exceptions to the admin guard', function () {
       isAuthenticated: function () {return true; },
       originalUrl: '/members/edit/nick',
       user: {
-        member: {nickname: 'ick'}
+        member: new Member({nickname: 'ick'})
       }
     };
     var res = {
