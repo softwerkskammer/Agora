@@ -85,4 +85,20 @@ describe('Activities Core API', function () {
     });
   });
 
+  describe('checks the validity of URLs and', function () {
+    it('does not allow the URL \'edit\'', function (done) {
+      api.isValidUrl("edit", "^edit$", function (err, result) {
+        expect(result).to.be.false;
+        done(err);
+      });
+    });
+    it('allows the untrimmed URL \' edit \'', function (done) {
+      sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, null); });
+      api.isValidUrl(" edit ", "^edit$", function (err, result) {
+        expect(result).to.be.true;
+        done(err);
+      });
+    });
+  });
+
 });
