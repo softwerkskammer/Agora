@@ -8,12 +8,7 @@ var moment = require('moment-timezone');
 
 var beans = require('../configureForTest').get('beans');
 
-var Activity = beans.get('activity');
-var dummyActivity = new Activity({title: 'Title of the Activity', description: 'description', assignedGroup: 'assignedGroup',
-  location: 'location', direction: 'direction', startDate: '01.01.2013', url: 'urlOfTheActivity', color: 'aus Gruppe' });
-
 var activitiesAPI = beans.get('activitiesAPI');
-
 var activitystore = beans.get('activitystore');
 var groupsAPI = beans.get('groupsAPI');
 var membersAPI = beans.get('membersAPI');
@@ -22,6 +17,9 @@ var fieldHelpers = beans.get('fieldHelpers');
 var Activity = beans.get('activity');
 var Member = beans.get('member');
 var Group = beans.get('group');
+
+var dummyActivity = new Activity({title: 'Title of the Activity', description: 'description', assignedGroup: 'assignedGroup',
+  location: 'location', direction: 'direction', startDate: '01.01.2013', url: 'urlOfTheActivity', color: 'aus Gruppe' });
 
 var emptyActivity = new Activity({title: 'Title of the Activity', description: 'description1', assignedGroup: 'groupname',
   location: 'location1', direction: 'direction1', startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'), url: 'urlOfTheActivity',
