@@ -520,4 +520,13 @@ describe('Activity application', function () {
       });
   });
 
+  it('shows all activities that take place at the day of the global code retreat', function (done) {
+    request(createApp())
+      .get('/gdcr')
+      .expect(200)
+      .expect(/1 Coderetreats/, function (err) {
+        done(err);
+      });
+  });
+
 });
