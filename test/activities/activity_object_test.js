@@ -4,26 +4,11 @@ require('../configureForTest');
 var conf = require('nconf');
 var expect = require('chai').expect;
 
-var fieldHelpers = conf.get('beans').get('fieldHelpers');
 var Activity = conf.get('beans').get('activity');
 
 // TODO Activity.fillFromUI with null/undefined in startDate, startTime, endDate, endTime
 
 describe('Activity', function () {
-  it('converts a wellformed Activity to a calendar display event without colors given', function () {
-    var activity = new Activity({
-      title: 'Title',
-      startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('04.04.2013'),
-      endUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('05.04.2013'),
-      url: 'myURL'
-    });
-    var event = activity.asCalendarEvent();
-    expect('Title').to.equal(event.title);
-    expect(4).to.equal(event.dayOfWeek);
-    expect('/activities/myURL').to.equal(event.url);
-    expect('#353535').to.equal(event.color);
-  });
-
   it('fetches the group long name', function () {
     var activity = new Activity({
       url: 'myURL',
