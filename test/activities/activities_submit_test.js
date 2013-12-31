@@ -5,7 +5,8 @@ var sinon = require('sinon').sandbox.create();
 
 var conf = require('../configureForTest');
 
-var activitiesCoreAPI = conf.get('beans').get('activitiesCoreAPI');
+var beans = conf.get('beans');
+var activitiesAPI = beans.get('activitiesAPI');
 
 var createApp = require('../testHelper')('activitiesApp').createApp;
 
@@ -17,7 +18,7 @@ describe('Activity application - on submit -', function () {
   });
 
   it('rejects an activity with invalid and different url', function (done) {
-    sinon.stub(activitiesCoreAPI, 'isValidUrl', function (isReserved, nickname, callback) {
+    sinon.stub(activitiesAPI, 'isValidUrl', function (isReserved, nickname, callback) {
       callback(null, false);
     });
 
@@ -46,7 +47,7 @@ describe('Activity application - on submit -', function () {
   });
 
   it('rejects an activity with different but valid url and with empty title', function (done) {
-    sinon.stub(activitiesCoreAPI, 'isValidUrl', function (isReserved, nickname, callback) {
+    sinon.stub(activitiesAPI, 'isValidUrl', function (isReserved, nickname, callback) {
       callback(null, true);
     });
 
