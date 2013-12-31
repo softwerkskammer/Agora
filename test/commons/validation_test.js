@@ -5,7 +5,6 @@ var expect = chai.expect;
 require('../configureForTest');
 var beans = require('nconf').get('beans');
 var validation = beans.get('validation');
-var Member = beans.get('member');
 
 describe('Validation', function () {
 
