@@ -24,7 +24,7 @@ describe('Members store', function () {
     getByField.callsArgWith(1, null, sampleMember);
 
     store.getMember('nick', function (err, member) {
-      expect(member.nickname).to.equal(sampleMember.nickname);
+      expect(member.nickname()).to.equal(sampleMember.nickname);
       expect(getByField.calledWith({nickname: new RegExp()})).to.be.true;
       done(err);
     });
@@ -35,7 +35,7 @@ describe('Members store', function () {
     getById.callsArgWith(1, null, sampleMember);
 
     store.getMemberForId('id', function (err, member) {
-      expect(member.nickname).to.equal(sampleMember.nickname);
+      expect(member.nickname()).to.equal(sampleMember.nickname);
       expect(getById.calledWith('id')).to.be.true;
       done(err);
     });
@@ -46,8 +46,8 @@ describe('Members store', function () {
     listByIds.callsArgWith(2, null, sampleList);
 
     store.getMembersForIds(['id1', 'id2'], function (err, members) {
-      expect(members[0].nickname).to.equal(sampleMember.nickname);
-      expect(members[1].nickname).to.equal(sampleMember2.nickname);
+      expect(members[0].nickname()).to.equal(sampleMember.nickname);
+      expect(members[1].nickname()).to.equal(sampleMember2.nickname);
       expect(listByIds.calledWith(['id1', 'id2'])).to.be.true;
       done(err);
     });
@@ -58,7 +58,7 @@ describe('Members store', function () {
     getByField.callsArgWith(1, null, sampleMember);
 
     store.getMember('  nick  ', function (err, member) {
-      expect(member.nickname).to.equal(sampleMember.nickname);
+      expect(member.nickname()).to.equal(sampleMember.nickname);
       expect(getByField.calledWith({nickname: new RegExp()})).to.be.true;
       var regex = getByField.args[0][0].nickname;
       expect(regex.toString()).to.equal('/^nick$/i');
@@ -77,7 +77,7 @@ describe('Members store', function () {
       callback(null, null);
     });
     store.getMemberForEMail('nicks mail', function (err, member) {
-      expect(member.nickname).to.equal(sampleMember.nickname);
+      expect(member.nickname()).to.equal(sampleMember.nickname);
       done(err);
     });
   });
@@ -88,8 +88,8 @@ describe('Members store', function () {
     });
     store.getMembersForEMails(['nicks mail', 'nick2s mail'], function (err, members) {
       expect(members.length).to.equal(2);
-      expect(members[0].nickname).to.equal(sampleMember2.nickname);
-      expect(members[1].nickname).to.equal(sampleMember.nickname);
+      expect(members[0].nickname()).to.equal(sampleMember2.nickname);
+      expect(members[1].nickname()).to.equal(sampleMember.nickname);
       expect(members[0]).to.be.instanceOf(Member);
       done(err);
     });
@@ -100,7 +100,7 @@ describe('Members store', function () {
     getByField.callsArgWith(1, null, sampleMember);
 
     store.getMember('nick', function (err, member) {
-      expect(member.nickname).to.equal(sampleMember.nickname);
+      expect(member.nickname()).to.equal(sampleMember.nickname);
       expect(getByField.calledWith({nickname: new RegExp()})).to.be.true;
       var regex = getByField.args[0][0].nickname;
       expect(regex.test('nick')).to.be.true;
@@ -115,8 +115,8 @@ describe('Members store', function () {
     list.callsArgWith(1, null, sampleList);
 
     store.allMembers(function (err, members) {
-      expect(members[0].nickname).to.equal(sampleMember.nickname);
-      expect(members[1].nickname).to.equal(sampleMember2.nickname);
+      expect(members[0].nickname()).to.equal(sampleMember.nickname);
+      expect(members[1].nickname()).to.equal(sampleMember2.nickname);
       done(err);
     });
   });
@@ -126,7 +126,7 @@ describe('Members store', function () {
     save.callsArg(1);
 
     store.saveMember(sampleMember, function (err) {
-      expect(save.calledWith(sampleMember)).to.be.true;
+      expect(save.calledWith(sampleMember.state)).to.be.true;
       done(err);
     });
   });

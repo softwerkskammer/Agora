@@ -1,14 +1,15 @@
 "use strict";
 
 var conf = require('../configureForTest');
-var bean = conf.get('beans');
-var accessrights = bean.get('accessrights');
-var Activity = bean.get('activity');
+var beans = conf.get('beans');
+var accessrights = beans.get('accessrights');
+var Activity = beans.get('activity');
+var Member = beans.get('member');
 var expect = require('chai').expect;
 
 function createAccessrightsWithAdminSetTo(isAdmin, member) {
   var memberOfUser = member || {isAdmin: isAdmin};
-  var req = { isAuthenticated: function () { return true; }, user: {member: memberOfUser} };
+  var req = { isAuthenticated: function () { return true; }, user: {member: new Member(memberOfUser)} };
   var res = { locals: {} };
   accessrights(req, res, function () {});
   return res.locals.accessrights;
@@ -123,25 +124,25 @@ describe('Accessrights for Colors', function () {
 describe('Accessrights for Members', function () {
   it('disallows editing for non-admins', function () {
     var member = {id: 'id'};
-    var otherMember = {id: 'other'};
+    var otherMember = new Member({id: 'other'});
     expect(standardMember(member).canEditMember(otherMember)).to.be.false;
   });
 
   it('allows editing herself for non-admins', function () {
     var member = {id: 'id'};
-    expect(standardMember(member).canEditMember(member)).to.be.true;
+    expect(standardMember(member).canEditMember(new Member(member))).to.be.true;
   });
 
   it('disallows editing for admins', function () {
     var member = {isAdmin: true, id: 'id'};
-    var otherMember = {id: 'other'};
+    var otherMember = new Member({id: 'other'});
     expect(admin(member).canEditMember(otherMember)).to.be.false;
   });
 
   it('allows editing for superusers', function () {
     // 'superuserID' is set in configureForTest as one valid superuser Id
     var member = {id: 'superuserID'};
-    var otherMember = {id: 'other'};
+    var otherMember = new Member({id: 'other'});
     expect(standardMember(member).canEditMember(otherMember)).to.be.true;
   });
 });

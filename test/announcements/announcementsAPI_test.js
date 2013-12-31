@@ -2,9 +2,11 @@
 
 var expect = require('chai').expect;
 var conf = require('../configureForTest');
-var Announcement = conf.get('beans').get('announcement');
+var beans = conf.get('beans');
+var Announcement = beans.get('announcement');
 var sinon = require('sinon').sandbox.create();
-var membersAPI = conf.get('beans').get('membersAPI');
+var membersAPI = beans.get('membersAPI');
+var Member = beans.get('member');
 
 var announcementUrl = 'eineSchoeneUrl';
 var dummyAnnouncement = new Announcement({
@@ -16,9 +18,9 @@ var dummyAnnouncement = new Announcement({
   thruUnix: 1388448000 // moment.utc('31.12.2013', 'DD.MM.YYYY').unix()
 });
 
-var store = conf.get('beans').get('announcementstore');
+var store = beans.get('announcementstore');
 
-var announcementsAPI = conf.get('beans').get('announcementsAPI');
+var announcementsAPI = beans.get('announcementsAPI');
 
 describe('Announcements API', function () {
 
@@ -111,7 +113,7 @@ describe('Announcements API', function () {
   });
 
   it('displays member\'s nickname as author name', function (done) {
-    var dummyMember = {nickname: "nickname", id: "member ID"};
+    var dummyMember = new Member({nickname: "nickname", id: "member ID"});
     sinon.stub(membersAPI, 'getMemberForId', function (id, callback) {
       callback(null, dummyMember);
     });

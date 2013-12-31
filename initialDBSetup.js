@@ -66,7 +66,7 @@ async.parallel(
     console.log('Turning all existing users into admins...');
     membersPersistence.list({}, function (err, members) {
       async.map(members, function (member, callback) {
-        member.isAdmin = true;
+        member.state.isAdmin = true;
         callback(null, member);
       }, function (err, results) {
         if (err) { return logResult(err, "AAAAHHHHHHH"); }

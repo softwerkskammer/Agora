@@ -47,18 +47,18 @@ block content
           tbody
             for member in members
               tr
-                td: a.btn-sm(href="/members/edit/#{encodeURIComponent(member.nickname)}"): i.fa.fa-edit.fa-fw
-                td #{member.created}
-                td: a(href="/members/#{encodeURIComponent(member.nickname)}") #{member.nickname}
-                td #{member.firstname}
-                td #{member.lastname}
-                td #{member.location}
-                td #{member.email}
-                td #{member.twitter}
-                td #{member.profession}
-                td #{member.interests}
-                td #{member.site}
-                td #{member.reference}
+                td: a.btn-sm(href="/members/edit/#{encodeURIComponent(member.nickname())}"): i.fa.fa-edit.fa-fw
+                td #{member.created()}
+                td: a(href="/members/#{encodeURIComponent(member.nickname())}") #{member.nickname()}
+                td #{member.firstname()}
+                td #{member.lastname()}
+                td #{member.location()}
+                td #{member.email()}
+                td #{member.twitter()}
+                td #{member.profession()}
+                td #{member.interests()}
+                td #{member.site()}
+                td #{member.reference()}
                 td #{member.adminDisplayText()}
                 
     

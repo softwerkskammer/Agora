@@ -9,13 +9,14 @@ var persistence = beans.get('mailsPersistence');
 var membersAPI = beans.get('membersAPI');
 var mailarchiveAPI = beans.get('mailarchiveAPI');
 var Mail = beans.get('archivedMail');
+var Member = beans.get('member');
 
 describe('Mailarchive', function () {
   var sampleMail1 = new Mail({ id: 'Mail 1', subject: 'Mail 1' });
   var sampleMail2 = new Mail({ id: 'Mail 2', subject: 'Mail 2' });
   var memberID = 'memberID';
   var sampleMail3 = new Mail({ id: 'Mail 3', subject: 'Mail 3', from: {id: memberID} });
-  var sampleMember = {id: 'id'};
+  var sampleMember = new Member({id: 'id'});
   var sampleMailList = [sampleMail1, sampleMail2];
   var listByField;
   var getById;

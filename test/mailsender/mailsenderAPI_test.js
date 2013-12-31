@@ -3,7 +3,6 @@
 var expect = require('chai').expect;
 var sinon = require('sinon').sandbox.create();
 var beans = require('../configureForTest').get('beans');
-//var Message = beans.get('message');
 
 var membersAPI = beans.get('membersAPI');
 var groupsAPI = beans.get('groupsAPI');
@@ -11,6 +10,7 @@ var activitystore = beans.get('activitystore');
 
 var api = beans.get('mailsenderAPI');
 var Activity = beans.get('activity');
+var Member = beans.get('member');
 var fieldHelpers = beans.get('fieldHelpers');
 
 var emptyActivity = new Activity({title: 'Title of the Activity', description: 'description1', assignedGroup: 'assignedGroup',
@@ -27,7 +27,7 @@ describe('MailsenderAPI', function () {
     sinon.stub(activitystore, 'getActivity', function (activityURL, callback) {
       callback(null, emptyActivity);
     });
-    sinon.stub(membersAPI, 'getMember', function (nickname, callback) { callback(null, {}); });
+    sinon.stub(membersAPI, 'getMember', function (nickname, callback) { callback(null, new Member()); });
     done();
   });
 

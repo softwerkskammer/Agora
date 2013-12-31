@@ -20,7 +20,7 @@ var getSubscribedGroupsForUser;
 describe('Members application', function () {
 
   beforeEach(function (done) {
-    dummymember = new Member({nickname: 'hada', email: 'a@b.c', site: 'http://my.blog', firstname: 'Hans', lastname: 'Dampf'});
+    dummymember = new Member({id: 'memberID', nickname: 'hada', email: 'a@b.c', site: 'http://my.blog', firstname: 'Hans', lastname: 'Dampf', authentications: []});
     allMembers = sinon.stub(membersAPI, 'allMembers', function (callback) {
       callback(null, [dummymember]);
     });
@@ -57,14 +57,13 @@ describe('Members application', function () {
       .get('/hada')
       .expect(200)
       .expect(/Blog:(.+)http:\/\/my.blog/, function (err) {
-        expect(getMember.calledWith(dummymember.nickname)).to.be.true;
-        expect(getSubscribedGroupsForUser.calledWith(dummymember.email)).to.be.true;
+        expect(getMember.calledWith(dummymember.nickname())).to.be.true;
+        expect(getSubscribedGroupsForUser.calledWith(dummymember.email())).to.be.true;
         done(err);
       });
   });
 
   it('allows a member to edit her own data', function (done) {
-    dummymember.id = 'memberID';
     request(createApp('memberID'))
       .get('/edit/hada')
       .expect(200)
@@ -74,7 +73,6 @@ describe('Members application', function () {
   });
 
   it('does not allow a member to edit another member\'s data', function (done) {
-    dummymember.id = 'memberID';
     request(createApp('memberID1'))
       .get('/edit/hada')
       .expect(302)
@@ -82,8 +80,7 @@ describe('Members application', function () {
   });
 
   it('does not allow an admin member to edit another member\'s data', function (done) {
-    dummymember.id = 'memberID';
-    dummymember.isAdmin = true;
+    dummymember.state.isAdmin = true;
     request(createApp('memberID1'))
       .get('/edit/hada')
       .expect(302)
@@ -91,7 +88,6 @@ describe('Members application', function () {
   });
 
   it('allows a superuser member to edit another member\'s data', function (done) {
-    //dummymember.id = 'superuserID';
     request(createApp('superuserID'))
       .get('/edit/hada')
       .expect(200)
@@ -190,7 +186,6 @@ describe('Members application', function () {
       });
   });
 
-
   it('rejects a member with invalid and different nickname on submit', function (done) {
     sinon.stub(membersAPI, 'isValidNickname', function (nickname, callback) {
       callback(null, false);
@@ -207,7 +202,6 @@ describe('Members application', function () {
         done(err);
       });
   });
-
 
   it('rejects a member with invalid and different email address on submit', function (done) {
     sinon.stub(membersAPI, 'isValidEmail', function (nickname, callback) {

@@ -70,7 +70,7 @@ describe('Import of mails from files with mime messages', function () {
 
   it('includes member id from member API ', function (done) {
     mailimport(fileWithTextOnlyWithoutSenderName, 'group', function checkImportedObject(err, result) {
-      expect(result.from.id).to.equal(dummymember.id);
+      expect(result.from.id).to.equal(dummymember.id());
       done();
     });
   });

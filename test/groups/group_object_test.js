@@ -2,7 +2,9 @@
 
 var conf = require('../configureForTest');
 
-var Group = conf.get('beans').get('group');
+var beans = conf.get('beans');
+var Group = beans.get('group');
+var Member = beans.get('member');
 var expect = require('chai').expect;
 
 describe('Group object', function () {
@@ -37,22 +39,22 @@ describe('Group object', function () {
 
   it('should generate a list for the organizers based on members, two admins, only one in organizers', function (done) {
     var group = new Group({id: 'NeuePlattform', organizers: ['Hans', 'Heinz']});
-    var members = [{id: 'Hans', isAdmin: true}, {id: 'Karl', isAdmin: true}];
+    var members = [new Member({id: 'Hans', isAdmin: true}), new Member({id: 'Karl', isAdmin: true})];
     var checkedOrganizers = group.checkedOrganizers(members);
     expect(checkedOrganizers.length).to.equal(2);
-    expect(checkedOrganizers[0].member.id).to.contain('Hans');
+    expect(checkedOrganizers[0].member.id()).to.equal('Hans');
     expect(checkedOrganizers[0].checked).to.be.true;
-    expect(checkedOrganizers[1].member.id).to.contain('Karl');
+    expect(checkedOrganizers[1].member.id()).to.equal('Karl');
     expect(checkedOrganizers[1].checked).to.be.false;
     done();
   });
 
   it('should generate a list for the organizers based on members, one admin, but not in organizers', function (done) {
     var group = new Group({id: 'NeuePlattform', organizers: ['Hans', 'Heinz']});
-    var members = [{id: 'Hans', isAdmin: false}, {id: 'Karl', isAdmin: true}];
+    var members = [new Member({id: 'Hans', isAdmin: false}), new Member({id: 'Karl', isAdmin: true})];
     var checkedOrganizers = group.checkedOrganizers(members);
     expect(checkedOrganizers.length).to.equal(1);
-    expect(checkedOrganizers[0].member.id).to.contain('Karl');
+    expect(checkedOrganizers[0].member.id()).to.equal('Karl');
     expect(checkedOrganizers[0].checked).to.be.false;
     done();
   });

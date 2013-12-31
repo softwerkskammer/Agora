@@ -100,10 +100,10 @@ mixin colorPicker(name, object)
 // PICKERS END
 
 // SPECIAL
-mixin twitter(name, label, object)
+mixin twitter(name, label, value)
   .form-group
     label(class="control-label", for=name) #{label}:
     .input-group
       span.input-group-addon @
-      input.form-control(id=name, type='text', name=name, value=object[name])
+      input.form-control(id=name, type='text', name=name, value=value)
 
