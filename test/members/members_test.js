@@ -20,7 +20,7 @@ var getSubscribedGroupsForUser;
 describe('Members application', function () {
 
   beforeEach(function (done) {
-    dummymember = new Member({nickname: 'hada', email: 'a@b.c', site: 'http://my.blog', firstname: 'Hans', lastname: 'Dampf'});
+    dummymember = new Member({nickname: 'hada', email: 'a@b.c', site: 'http://my.blog', firstname: 'Hans', lastname: 'Dampf', authentications: []});
     allMembers = sinon.stub(membersAPI, 'allMembers', function (callback) {
       callback(null, [dummymember]);
     });
