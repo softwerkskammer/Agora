@@ -69,7 +69,7 @@ describe('Mail', function () {
   it('contains member ID if it is available', function () {
     var mail = new Mail({
       id: 'Mail 1',
-      from: new Member({id: 'id'})
+      from: {id: 'id'}
     });
     expect(mail.memberId()).to.equal('id');
   });

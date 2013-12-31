@@ -15,7 +15,7 @@ describe('Mailarchive', function () {
   var sampleMail1 = new Mail({ id: 'Mail 1', subject: 'Mail 1' });
   var sampleMail2 = new Mail({ id: 'Mail 2', subject: 'Mail 2' });
   var memberID = 'memberID';
-  var sampleMail3 = new Mail({ id: 'Mail 3', subject: 'Mail 3', from: new Member({id: memberID}) });
+  var sampleMail3 = new Mail({ id: 'Mail 3', subject: 'Mail 3', from: {id: memberID} });
   var sampleMember = new Member({id: 'id'});
   var sampleMailList = [sampleMail1, sampleMail2];
   var listByField;
