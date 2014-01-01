@@ -8,6 +8,14 @@ var Member = conf.get('beans').get('member');
 
 describe('Member initial filling', function () {
 
+  it('is correctly filled from small database record', function (done) {
+    var db_record = {id: 'ID', nickname: 'NICK'};
+    var member = new Member(db_record);
+    expect(member.id(), 'id').to.equal(db_record.id);
+    expect(member.nickname(), 'nickname').to.equal(db_record.nickname);
+    done();
+  });
+  
   it('is populated by Google OpenID record', function (done) {
     var userdata = JSON.parse('{' +
       '"authenticationId": "https://www.google.com/accounts/o8/id?id=someGoogelID", "profile": {' +
