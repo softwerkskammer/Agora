@@ -15,7 +15,7 @@ block content
             if (accessrights.canEditMember(member))
               a.btn.btn-default(href="/members/edit/#{encodeURIComponent(member.nickname())}"): i.fa.fa-edit.fa-fw
           small
-            if (member.isAdmin())
+            if (member.isContactperson())
               | #{t("groups.contact")}
             else
               | #{t("members.profileview")}
@@ -58,7 +58,7 @@ block content
 
       h3 #{t("members.member_of")}:
       ul
-        each group in subscribedGroups
+        each group in member.subscribedGroups
           li
             strong: a(href='../groups/#{group.id}') #{group.longName}&nbsp;
             if (group.organizers.indexOf(member.id()) > -1)
