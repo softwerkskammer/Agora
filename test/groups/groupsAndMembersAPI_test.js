@@ -57,11 +57,10 @@ describe('Groups and Members API (getUserWithHisGroups)', function () {
 
     systemUnderTest.getUserWithHisGroups('nickname', function (err, member) {
       expect(member).to.equal(dummymember);
-      var subscribedGroups = member.subscribedGroups;
-      expect(subscribedGroups).to.not.be.null;
-      expect(subscribedGroups.length).to.equal(2);
-      expect(subscribedGroups[0]).to.equal(GroupA);
-      expect(subscribedGroups[1]).to.equal(GroupB);
+      expect(member.subscribedGroups).to.not.be.null;
+      expect(member.subscribedGroups.length).to.equal(2);
+      expect(member.subscribedGroups[0]).to.equal(GroupA);
+      expect(member.subscribedGroups[1]).to.equal(GroupB);
       done(err);
     });
   });
