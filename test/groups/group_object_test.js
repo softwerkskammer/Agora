@@ -37,25 +37,15 @@ describe('Group object', function () {
     done();
   });
 
-  it('should generate a list for the organizers based on members, two admins, only one in organizers', function (done) {
+  it('should generate a list for the organizers based on members, only one in organizers', function (done) {
     var group = new Group({id: 'NeuePlattform', organizers: ['Hans', 'Heinz']});
-    var members = [new Member({id: 'Hans', isAdmin: true}), new Member({id: 'Karl', isAdmin: true})];
+    var members = [new Member({id: 'Hans'}), new Member({id: 'Karl'})];
     var checkedOrganizers = group.checkedOrganizers(members);
     expect(checkedOrganizers.length).to.equal(2);
     expect(checkedOrganizers[0].member.id()).to.equal('Hans');
     expect(checkedOrganizers[0].checked).to.be.true;
     expect(checkedOrganizers[1].member.id()).to.equal('Karl');
     expect(checkedOrganizers[1].checked).to.be.false;
-    done();
-  });
-
-  it('should generate a list for the organizers based on members, one admin, but not in organizers', function (done) {
-    var group = new Group({id: 'NeuePlattform', organizers: ['Hans', 'Heinz']});
-    var members = [new Member({id: 'Hans', isAdmin: false}), new Member({id: 'Karl', isAdmin: true})];
-    var checkedOrganizers = group.checkedOrganizers(members);
-    expect(checkedOrganizers.length).to.equal(1);
-    expect(checkedOrganizers[0].member.id()).to.equal('Karl');
-    expect(checkedOrganizers[0].checked).to.be.false;
     done();
   });
 
@@ -92,5 +82,21 @@ describe('Group object', function () {
     done();
   });
 
+  it('answers that a memberId is one of it\'s organizers', function () {
+    var group = new Group();
+    group.organizers = ['id'];
+    expect(group.isOrganizer('id')).to.be.true;
+  });
+
+  it('answers that a wrong memberId is not one of it\'s organizers', function () {
+    var group = new Group();
+    group.organizers = ['id'];
+    expect(group.isOrganizer('anotherId')).to.be.false;
+  });
+
+  it('answers that a memberId is not one of it\'s organizers if there are no organizers initialized', function () {
+    var group = new Group();
+    expect(group.isOrganizer('anotherId')).to.be.false;
+  });
 
 });

@@ -55,8 +55,9 @@ describe('Groups and Members API (getUserWithHisGroups)', function () {
       globalCallback(null, [GroupA, GroupB]);
     });
 
-    systemUnderTest.getUserWithHisGroups('nickname', function (err, member, subscribedGroups) {
+    systemUnderTest.getUserWithHisGroups('nickname', function (err, member) {
       expect(member).to.equal(dummymember);
+      var subscribedGroups = member.subscribedGroups;
       expect(subscribedGroups).to.not.be.null;
       expect(subscribedGroups.length).to.equal(2);
       expect(subscribedGroups[0]).to.equal(GroupA);

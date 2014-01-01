@@ -5,6 +5,7 @@ var beans = conf.get('beans');
 var accessrights = beans.get('accessrights');
 var Activity = beans.get('activity');
 var Member = beans.get('member');
+var Group = beans.get('group');
 var expect = require('chai').expect;
 
 function createAccessrightsWithAdminSetTo(isAdmin, member) {
@@ -26,8 +27,9 @@ function standardMember(member) {
   return createAccessrightsWithAdminSetTo(false, member);
 }
 
-function admin(member) {
-  return createAccessrightsWithAdminSetTo(true, member);
+function superuser() {
+  // 'superuserID' is set in configureForTest as one valid superuser Id
+  return standardMember({id: 'superuserID'});
 }
 
 describe('Accessrights for Activities', function () {
@@ -39,23 +41,23 @@ describe('Accessrights for Activities', function () {
     expect(standardMember().canCreateActivity()).to.be.true;
   });
 
-  it('allows the creation for admins', function () {
-    expect(admin().canCreateActivity()).to.be.true;
-  });
-
-  it('disallows editing other member\'s activity for non-admins', function () {
+  it('disallows editing other member\'s activity for normal user', function () {
     var activity = new Activity({owner: 'somebody'});
     expect(standardMember().canEditActivity(activity)).to.be.false;
   });
 
-  it('allows editing own activity for non-admins', function () {
-    var member = {isAdmin: false, id: 'id'};
+  it('allows editing own activity', function () {
     var activity = new Activity({owner: 'id'});
-    expect(standardMember(member).canEditActivity(activity)).to.be.true;
+    expect(standardMember({id: 'id'}).canEditActivity(activity)).to.be.true;
   });
 
-  it('allows editing for admins', function () {
-    expect(admin().canEditActivity()).to.be.true;
+  it('allows editing for contactpersons of activity\'s group', function () {
+    var group = new Group();
+    var activity = new Activity({owner: 'someOtherId'});
+    activity.group = group;
+    group.organizers = ['id'];
+
+    expect(standardMember({id: 'id'}).canEditActivity(activity)).to.be.true;
   });
 });
 
@@ -64,8 +66,8 @@ describe('Accessrights for Announcements', function () {
     expect(standardMember().canCreateAnnouncement()).to.be.false;
   });
 
-  it('allows the creation for admins', function () {
-    expect(admin().canCreateAnnouncement()).to.be.true;
+  it('allows the creation for superusers', function () {
+    expect(superuser().canCreateAnnouncement()).to.be.true;
   });
 
   it('disallows editing for non-admins', function () {
@@ -73,25 +75,31 @@ describe('Accessrights for Announcements', function () {
   });
 
   it('allows editing for admins', function () {
-    expect(admin().canEditAnnouncement()).to.be.true;
+    expect(superuser().canEditAnnouncement()).to.be.true;
   });
 });
 
 describe('Accessrights for Groups', function () {
-  it('disallows the creation for non-admins', function () {
-    expect(standardMember().canCreateGroup()).to.be.false;
+  it('disallows the creation for guests', function () {
+    expect(guest().canCreateGroup()).to.be.false;
   });
 
-  it('allows the creation for admins', function () {
-    expect(admin().canCreateGroup()).to.be.true;
+  it('allows the creation for members', function () {
+    expect(standardMember().canCreateGroup()).to.be.true;
   });
 
-  it('disallows editing for non-admins', function () {
-    expect(standardMember().canEditGroup()).to.be.false;
+  it('allows editing for contact persons', function () {
+    var group = new Group();
+    group.organizers = ['id'];
+    expect(standardMember({id: 'id'}).canEditGroup(group)).to.be.true;
   });
 
-  it('allows editing for admins', function () {
-    expect(admin().canEditGroup()).to.be.true;
+  it('allows editing for superusers', function () {
+    expect(superuser().canEditGroup()).to.be.true;
+  });
+
+  it('disallows guest to edit a group', function () {
+    expect(guest().canEditGroup(new Group())).to.be.false;
   });
 
   it('disallows guest to view group details', function () {
@@ -116,8 +124,8 @@ describe('Accessrights for Colors', function () {
     expect(standardMember().canCreateColor()).to.be.false;
   });
 
-  it('allows the creation for admins', function () {
-    expect(admin().canCreateColor()).to.be.true;
+  it('allows the creation for superusers', function () {
+    expect(superuser().canCreateColor()).to.be.true;
   });
 });
 
@@ -133,17 +141,9 @@ describe('Accessrights for Members', function () {
     expect(standardMember(member).canEditMember(new Member(member))).to.be.true;
   });
 
-  it('disallows editing for admins', function () {
-    var member = {isAdmin: true, id: 'id'};
-    var otherMember = new Member({id: 'other'});
-    expect(admin(member).canEditMember(otherMember)).to.be.false;
-  });
-
   it('allows editing for superusers', function () {
-    // 'superuserID' is set in configureForTest as one valid superuser Id
-    var member = {id: 'superuserID'};
     var otherMember = new Member({id: 'other'});
-    expect(standardMember(member).canEditMember(otherMember)).to.be.true;
+    expect(superuser().canEditMember(otherMember)).to.be.true;
   });
 });
 

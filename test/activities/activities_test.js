@@ -13,14 +13,23 @@ var Activity = beans.get('activity');
 var Member = beans.get('member');
 var Group = beans.get('group');
 
+var activitiesAPI = beans.get('activitiesAPI');
+var groupsAPI = beans.get('groupsAPI');
+
 var member1 = new Member({id: 'memberId1', nickname: 'participant1', email: 'nick1@b.c'});
 var member2 = new Member({id: 'memberId2', nickname: 'participant2', email: 'nick2@b.c'});
 var member3 = new Member({id: 'memberId3', nickname: 'participant3', email: 'nick3@b.c'});
 var member4 = new Member({id: 'memberId4', nickname: 'participant4', email: 'nick4@b.c'});
 
+var group = new Group({id: "groupname", longName: "Buxtehude"});
+
 var emptyActivity = new Activity({title: 'Title of the Activity', description: 'description1', assignedGroup: 'groupname',
   location: 'location1', direction: 'direction1', startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'),
   url: 'urlOfTheActivity', owner: 'owner' });
+emptyActivity.visitors = [ ];
+emptyActivity.colorRGB = '#123456';
+emptyActivity.group = group;
+
 var activityWithParticipants = new Activity({title: 'Interesting Activity', description: 'description2', assignedGroup: 'groupname',
   location: 'location2', direction: 'direction2', startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'), url: 'urlForInteresting',
   resources: {default: {_registeredMembers: [
@@ -28,6 +37,10 @@ var activityWithParticipants = new Activity({title: 'Interesting Activity', desc
     {memberId: 'memberId2'}
   ],
     _registrationOpen: true }} });
+activityWithParticipants.visitors = [ member1, member2 ];
+activityWithParticipants.colorRGB = '#123456';
+activityWithParticipants.group = new Group({id: 'group', longName: 'The name of the assigned Group'});
+
 var activityWithMultipleResources = new Activity({title: 'Interesting Activity', description: 'description2', assignedGroup: 'groupname',
   location: 'location2', direction: 'direction2', startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'), url: 'urlForMultiple',
   resources: {Einzelzimmer: {_registeredMembers: [
@@ -38,37 +51,31 @@ var activityWithMultipleResources = new Activity({title: 'Interesting Activity',
     {memberId: 'memberId4'}
   ],
     _registrationOpen: true}} });
+activityWithMultipleResources.visitors = [ member1, member2, member3, member4 ];
+activityWithMultipleResources.colorRGB = '#123456';
+activityWithMultipleResources.group = new Group({id: 'group', longName: 'The name of the assigned Group'});
 
-var group = new Group({id: "groupname", longName: "Buxtehude"});
-
-var activitiesAPI = beans.get('activitiesAPI');
-
-var groupsAPI = beans.get('groupsAPI');
-var membersAPI = beans.get('membersAPI');
+var enhancedActivity = new Activity({title: 'Title of the Activity', description: 'description1', assignedGroup: 'assignedGroup',
+  location: 'location1', direction: 'direction1', startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'), url: 'urlOfTheActivity' });
+enhancedActivity.colorRGB = '#123456';
+enhancedActivity.group = new Group({id: 'group', longName: 'The name of the assigned Group'});
+enhancedActivity.visitors = [];
 
 describe('Activity application', function () {
-  var allActivities;
-  var upcomingActivities;
-  var getActivity;
-  var getGroup;
-  var getMemberForId;
 
   beforeEach(function (done) {
-    allActivities = sinon.stub(activitystore, 'allActivities', function (callback) {callback(null, [emptyActivity]); });
-    upcomingActivities = sinon.stub(activitystore, 'upcomingActivities', function (callback) {callback(null, [emptyActivity]); });
+    sinon.stub(activitystore, 'upcomingActivities', function (callback) {callback(null, [emptyActivity]); });
     sinon.stub(activitiesAPI, 'getActivitiesForDisplay', function (fetcher, callback) {
-      var enhancedActivity = new Activity({title: 'Title of the Activity', description: 'description1', assignedGroup: 'assignedGroup',
-        location: 'location1', direction: 'direction1', startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'), url: 'urlOfTheActivity' });
-      enhancedActivity.colorRGB = '#123456';
-      enhancedActivity.group = {longName: 'The name of the assigned Group'};
       callback(null, [enhancedActivity]);
     });
-    getActivity = sinon.stub(activitystore, 'getActivity', function (url, callback) {
+    sinon.stub(activitiesAPI, 'getActivityWithGroupAndParticipants', function (url, callback) {
       callback(null, (url === 'urlOfTheActivity') ? emptyActivity : (url === 'urlForInteresting') ? activityWithParticipants :
         (url === 'urlForMultiple') ? activityWithMultipleResources : null);
     });
-    getGroup = sinon.stub(groupsAPI, 'getGroup', function (groupname, callback) { callback(null, group); });
-    getMemberForId = sinon.stub(membersAPI, 'getMemberForId', function (ids, callback) {callback(null, undefined); });
+    sinon.stub(activitystore, 'getActivity', function (url, callback) {
+      callback(null, (url === 'urlOfTheActivity') ? emptyActivity : (url === 'urlForInteresting') ? activityWithParticipants :
+        (url === 'urlForMultiple') ? activityWithMultipleResources : null);
+    });
     done();
   });
 
@@ -94,8 +101,6 @@ describe('Activity application', function () {
   });
 
   it('shows the details of an activity without participants', function (done) {
-    sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {callback(null, []); });
-
     request(createApp('guest'))
       .get('/' + 'urlOfTheActivity')
       .expect(200)
@@ -111,14 +116,7 @@ describe('Activity application', function () {
   });
 
   it('shows the details of an activity with Owner', function (done) {
-    sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {callback(null, []); });
-    getMemberForId.restore();
-    getMemberForId = sinon.stub(membersAPI, 'getMemberForId', function (ids, callback) {
-      callback(null,
-        new Member({id: 'ownerId', nickname: 'owner', email: 'owner@b.c'}));
-    });
-
-
+    emptyActivity.ownerNickname = 'owner';
     request(createApp('guest'))
       .get('/' + 'urlOfTheActivity')
       .expect(200)
@@ -129,10 +127,6 @@ describe('Activity application', function () {
   });
 
   it('shows the details of an activity with participants', function (done) {
-    sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {
-      callback(null, [ member1, member2 ]);
-    });
-
     request(createApp('guest'))
       .get('/' + 'urlForInteresting')
       .expect(200)
@@ -149,10 +143,6 @@ describe('Activity application', function () {
   describe('- when registration is open -', function () {
 
     it('shows the registration button for an activity with participants when a user is logged in who is not participant', function (done) {
-      sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {
-        callback(null, [ member1, member2 ]);
-      });
-
       request(createApp('memberId3'))
         .get('/' + 'urlForInteresting')
         .expect(200)
@@ -165,10 +155,6 @@ describe('Activity application', function () {
     });
 
     it('shows the registration button for an activity with participants when a user is logged in who already is participant', function (done) {
-      sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {
-        callback(null, [ member1, member2 ]);
-      });
-
       request(createApp('memberId1'))
         .get('/' + 'urlForInteresting')
         .expect(200)
@@ -181,10 +167,6 @@ describe('Activity application', function () {
     });
 
     it('shows the registration button for an activity with multiple resources where the current user has booked one resource', function (done) {
-      sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {
-        callback(null, [ member1, member2, member3, member4 ]);
-      });
-
       request(createApp('memberId1'))
         .get('/' + 'urlForMultiple')
         .expect(200)
@@ -203,9 +185,6 @@ describe('Activity application', function () {
   describe('- when registration is not open -', function () {
 
     it('shows the registration button for an activity with participants when a user is logged in who is not participant', function (done) {
-      sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {
-        callback(null, [ member1, member2 ]);
-      });
       activityWithParticipants.state.resources.default._registrationOpen = false;
 
       request(createApp('memberId3'))
@@ -219,9 +198,6 @@ describe('Activity application', function () {
     });
 
     it('shows that registration is not possible if registrationClosed and no limit set', function (done) {
-      sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {
-        callback(null, [ member1, member2 ]);
-      });
       activityWithParticipants.state.resources.default._registrationOpen = false;
 
       request(createApp('memberId3'))
@@ -233,9 +209,6 @@ describe('Activity application', function () {
     });
 
     it('shows that registration is somewhere else if registrationClosed and limit is "0"', function (done) {
-      sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {
-        callback(null, [ member1, member2 ]);
-      });
       activityWithParticipants.state.resources.default._registrationOpen = false;
       activityWithParticipants.state.resources.default._limit = 0;
 
@@ -248,9 +221,6 @@ describe('Activity application', function () {
     });
 
     it('shows that the event is full if registrationClosed and some limit set', function (done) {
-      sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {
-        callback(null, [ member1, member2 ]);
-      });
       activityWithParticipants.state.resources.default._registrationOpen = false;
       activityWithParticipants.state.resources.default._limit = 1;
 
@@ -263,9 +233,6 @@ describe('Activity application', function () {
     });
 
     it('shows the link to the waitinglist if registrationClosed and some limit set and waitinglist is enabled', function (done) {
-      sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {
-        callback(null, [ member1, member2 ]);
-      });
       activityWithParticipants.state.resources.default._registrationOpen = false;
       activityWithParticipants.state.resources.default._limit = 1;
       activityWithParticipants.state.resources.default._waitinglist = [];
@@ -279,9 +246,6 @@ describe('Activity application', function () {
     });
 
     it('shows the deregistration button for an activity with participants when a user is logged in who already is participant', function (done) {
-      sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {
-        callback(null, [ member1, member2 ]);
-      });
       activityWithParticipants.state.resources.default._registrationOpen = false;
 
       request(createApp('memberId1'))
@@ -296,9 +260,6 @@ describe('Activity application', function () {
     });
 
     it('shows the registration button for an activity with multiple resources where the current user has booked one resource', function (done) {
-      sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {
-        callback(null, [ member1, member2, member3, member4 ]);
-      });
       activityWithMultipleResources.state.resources.Einzelzimmer._registrationOpen = false;
       activityWithMultipleResources.state.resources.Doppelzimmer._registrationOpen = false;
 
@@ -317,9 +278,6 @@ describe('Activity application', function () {
     });
 
     it('shows that registration is not possible if registrationClosed and no limit set', function (done) {
-      sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {
-        callback(null, [ member1, member2 ]);
-      });
       activityWithMultipleResources.state.resources.Einzelzimmer._registrationOpen = false;
       activityWithMultipleResources.state.resources.Doppelzimmer._registrationOpen = false;
 
@@ -332,9 +290,6 @@ describe('Activity application', function () {
     });
 
     it('shows that registration is somewhere else if registrationClosed and limit is "0"', function (done) {
-      sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {
-        callback(null, [ member1, member2 ]);
-      });
       activityWithMultipleResources.state.resources.Einzelzimmer._registrationOpen = false;
       activityWithMultipleResources.state.resources.Doppelzimmer._registrationOpen = false;
       activityWithMultipleResources.state.resources.Einzelzimmer._limit = 0;
@@ -349,9 +304,6 @@ describe('Activity application', function () {
     });
 
     it('shows that the event is full if registrationClosed and some limit set', function (done) {
-      sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {
-        callback(null, [ member1, member2 ]);
-      });
       activityWithMultipleResources.state.resources.Einzelzimmer._registrationOpen = false;
       activityWithMultipleResources.state.resources.Doppelzimmer._registrationOpen = false;
       activityWithMultipleResources.state.resources.Einzelzimmer._limit = 2;
@@ -366,9 +318,6 @@ describe('Activity application', function () {
     });
 
     it('shows the link to the waitinglist if registrationClosed and some limit set and waitinglist is enabled', function (done) {
-      sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {
-        callback(null, [ member1, member2 ]);
-      });
       activityWithMultipleResources.state.resources.Einzelzimmer._registrationOpen = false;
       activityWithMultipleResources.state.resources.Doppelzimmer._registrationOpen = false;
       activityWithMultipleResources.state.resources.Einzelzimmer._limit = 2;
@@ -385,7 +334,6 @@ describe('Activity application', function () {
 
   });
 
-
   it('upcoming activities are exposed as iCalendar', function (done) {
     request(createApp())
       .get('/ical')
@@ -398,10 +346,8 @@ describe('Activity application', function () {
   });
 
   it('activity is exposed as iCalendar', function (done) {
-    var url = 'urlOfTheActivity';
-
     request(createApp())
-      .get('/ical/' + url)
+      .get('/ical/' + 'urlOfTheActivity')
       .expect(200)
       .expect('Content-Type', /text\/calendar/)
       .expect('Content-Disposition', /inline; filename=urlOfTheActivity.ics/)
@@ -411,10 +357,7 @@ describe('Activity application', function () {
   });
 
   it('shows a 404 if the id cannot be found in the store for the detail page', function (done) {
-    sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {callback(null, []); });
-    var link = emptyActivity.id + '4711';
-
-    request(createApp()).get('/' + link).expect(404, function (err) { done(err); });
+    request(createApp()).get('/' + emptyActivity.id + '4711').expect(404, function (err) { done(err); });
   });
 
   it('allows to create a new activity', function (done) {
@@ -495,23 +438,19 @@ describe('Activity application', function () {
   });
 
   it('shows no group name if no groups are available', function (done) {
-    getGroup.restore();
-    getGroup = sinon.stub(groupsAPI, 'getGroup', function (groupname, callback) { callback(null, null); });
-
-    sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) { callback(null, []); });
-
+    var backupGroup = emptyActivity.group;
+    emptyActivity.group = undefined;
     request(createApp('guest'))
       .get('/urlOfTheActivity')
       .expect(200)
       .end(function (err, res) {
         expect(res.text).to.not.contain('Veranstaltet von der Gruppe');
+        emptyActivity.group = backupGroup;
         done(err);
       });
   });
 
   it('shows the name of the assigned group if the group exists', function (done) {
-    sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) { callback(null, []); });
-
     request(createApp('guest'))
       .get('/urlOfTheActivity')
       .expect(200)

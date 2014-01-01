@@ -6,7 +6,7 @@ var beans = require('../configureForTest').get('beans');
 
 var membersAPI = beans.get('membersAPI');
 var groupsAPI = beans.get('groupsAPI');
-var activitystore = beans.get('activitystore');
+var activitiesAPI = beans.get('activitiesAPI');
 
 var api = beans.get('mailsenderAPI');
 var Activity = beans.get('activity');
@@ -24,7 +24,7 @@ describe('MailsenderAPI', function () {
   beforeEach(function (done) {
     var availableGroups = [];
     sinon.stub(groupsAPI, 'getAllAvailableGroups', function (callback) { callback(null, availableGroups); });
-    sinon.stub(activitystore, 'getActivity', function (activityURL, callback) {
+    sinon.stub(activitiesAPI, 'getActivityWithGroupAndParticipants', function (activityURL, callback) {
       callback(null, emptyActivity);
     });
     sinon.stub(membersAPI, 'getMember', function (nickname, callback) { callback(null, new Member()); });
@@ -37,7 +37,7 @@ describe('MailsenderAPI', function () {
   });
 
   it('collects data for showing the edit form for an activity', function (done) {
-    api.dataForShowingMessageForActivity(activityURL, function (err, result) {
+    api.dataForShowingMessageForActivity(activityURL, 'de', function (err, result) {
       expect(!!result.message).to.be.true;
       expect(!!result.regionalgroups).to.be.true;
       expect(!!result.themegroups).to.be.true;
