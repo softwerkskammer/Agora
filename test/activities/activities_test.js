@@ -55,18 +55,12 @@ activityWithMultipleResources.visitors = [ member1, member2, member3, member4 ];
 activityWithMultipleResources.colorRGB = '#123456';
 activityWithMultipleResources.group = new Group({id: 'group', longName: 'The name of the assigned Group'});
 
-var enhancedActivity = new Activity({title: 'Title of the Activity', description: 'description1', assignedGroup: 'assignedGroup',
-  location: 'location1', direction: 'direction1', startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'), url: 'urlOfTheActivity' });
-enhancedActivity.colorRGB = '#123456';
-enhancedActivity.group = new Group({id: 'group', longName: 'The name of the assigned Group'});
-enhancedActivity.visitors = [];
-
 describe('Activity application', function () {
 
   beforeEach(function (done) {
     sinon.stub(activitystore, 'upcomingActivities', function (callback) {callback(null, [emptyActivity]); });
     sinon.stub(activitiesAPI, 'getActivitiesForDisplay', function (fetcher, callback) {
-      callback(null, [enhancedActivity]);
+      callback(null, [emptyActivity]);
     });
     sinon.stub(activitiesAPI, 'getActivityWithGroupAndParticipants', function (url, callback) {
       callback(null, (url === 'urlOfTheActivity') ? emptyActivity : (url === 'urlForInteresting') ? activityWithParticipants :
@@ -94,8 +88,8 @@ describe('Activity application', function () {
       .expect(/Title of the Activity/)
       .expect(/1. Januar 2013/)
       .expect(/background-color: #123456/)
-      .expect(/href="\/groups\/assignedGroup"/)
-      .expect(/The name of the assigned Group/, function (err) {
+      .expect(/href="\/groups\/groupname"/)
+      .expect(/Buxtehude/, function (err) {
         done(err);
       });
   });
@@ -122,6 +116,7 @@ describe('Activity application', function () {
       .expect(200)
       .expect(/Angelegt von/)
       .expect(/owner/, function (err) {
+        delete emptyActivity.ownerNickname;
         done(err);
       });
   });

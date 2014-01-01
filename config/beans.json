@@ -84,7 +84,7 @@
   "sympaTransformer": {"module": "./lib/groups/sympaTransformer"},
   "redirectRuleForNewUser": {"module": "./lib/middleware/redirectRuleForNewUser"},
   "secureByLogin": {"module": "./lib/middleware/secureByLogin"},
-  "secureAdminOnly": {"module": "./lib/middleware/secureAdminOnly"},
+  "secureSuperuserOnly": {"module": "./lib/middleware/secureSuperuserOnly"},
   "announcementsInSidebar": {"module": "./lib/middleware/announcementsInSidebar"},
   "expressViewHelper": {"module": "./lib/middleware/expressViewHelper"},
   "accessrights": {"module": "./lib/middleware/accessrights"},

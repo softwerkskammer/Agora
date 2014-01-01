@@ -82,19 +82,19 @@ describe('Group object', function () {
     done();
   });
 
-  it('answers that a memberId is one of it\'s organizers', function () {
+  it('answers that a memberId is one of its organizers', function () {
     var group = new Group();
     group.organizers = ['id'];
     expect(group.isOrganizer('id')).to.be.true;
   });
 
-  it('answers that a wrong memberId is not one of it\'s organizers', function () {
+  it('answers that a wrong memberId is not one of its organizers', function () {
     var group = new Group();
     group.organizers = ['id'];
     expect(group.isOrganizer('anotherId')).to.be.false;
   });
 
-  it('answers that a memberId is not one of it\'s organizers if there are no organizers initialized', function () {
+  it('answers that a memberId is not one of its organizers if there are no organizers initialized', function () {
     var group = new Group();
     expect(group.isOrganizer('anotherId')).to.be.false;
   });
