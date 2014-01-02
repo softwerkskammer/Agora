@@ -60,7 +60,7 @@ block content
 
       .row
         .col-md-6
-          mixin textWithValue('title', t("activities.title"), activity.title(), t("activities.tooltip.title"))
+          mixin text('title', t("activities.title"), activity.title(), t("activities.tooltip.title"))
           .row
             .col-xs-6(style="padding-right:5px")
               .col-xs-6(style="padding-left:0px;padding-right:3px")
@@ -79,7 +79,7 @@ block content
               | #{t("activities.suggestion")}
             mixin controlLabel('url', t("activities.address_suffix"), t("activities.tooltip.address_suffix"))
             input.form-control(id='url', type='text', name='url', value=activity.url())
-          mixin textWithValue('location', t("activities.location"), activity.location())
+          mixin text('location', t("activities.location"), activity.location())
           mixin textareaWithValue('direction', t("activities.directions"), activity.direction())
           .form-group
             label.control-label(for="assignedGroup") #{t("groups.group")}:

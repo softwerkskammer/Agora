@@ -21,7 +21,7 @@ block content
             mixin checkbox('toParticipants', t("mailsender.to_participants"), false, 'toParticipants')
           if (message.receiver)
             mixin textReadonlyWithValue('nickname', t("mailsender.to_member"), message.receiver.nickname())
-          mixin textWithValue('subject', t("mailsender.subject"), message.subject)
+          mixin text('subject', t("mailsender.subject"), message.subject)
           mixin hightextarea('markdown', t("mailsender.contents"), message)
           mixin checkbox('sendCopyToSelf', t("mailsender.copy_to_self"), false)
           mixin hidden('htmlAddOn', message)
