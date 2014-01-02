@@ -33,7 +33,7 @@ block content
             mixin textReadonly('emailPrefix', t("groups.email_prefix"), group.emailPrefix)
           else
             mixin text('emailPrefix', t("groups.email_prefix"), group.emailPrefix, t("groups.tooltip.email_prefix"))
-          mixin colorPicker('color', group)
+          mixin colorPicker('color', group.color)
       .row
         .col-md-12
           mixin hightextarea('description', t("general.description"), group.description)

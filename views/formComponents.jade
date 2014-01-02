@@ -76,10 +76,10 @@ mixin time(name, label, value)
     label(class="control-label", for=name) &nbsp;
     input.form-control.timepicker(id=name, type='text', name=name, value=value)
 
-mixin colorPicker(name, object)
+mixin colorPicker(name, value)
   .form-group
     label.control-label(for="color") #{t("colors.color")}:
-    input#color.form-control(type="text", name=name, value=object[name])
+    input#color.form-control(type="text", name=name, value=value)
     script.
       $("#color").pickAColor();
 
