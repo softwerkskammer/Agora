@@ -85,7 +85,6 @@ module.exports = function (grunt) {
           'public/stylesheets/vendor/fullcalendar.css',
           'public/stylesheets/vendor/bootstrap-custom.css',
           'public/stylesheets/vendor/datepicker.css',
-          'public/stylesheets/vendor/bootstrap-timepicker.css',
           'public/stylesheets/vendor/bootstrap-markdown-custom.css',
           'public/stylesheets/vendor/font-awesome.min.css',
           'public/stylesheets/vendor/pick-a-color-custom.css',
@@ -116,7 +115,7 @@ module.exports = function (grunt) {
           'public/clientscripts/global/additional-methods-1.11.1.js',
           'public/clientscripts/global/messages_de.js',
           'public/clientscripts/global/methods_de.js',
-          'public/clientscripts/global/bootstrap-timepicker-patched.js',
+          'public/clientscripts/global/bootstrap-timepicker.js',
           'public/clientscripts/global/moment.min.js',
           'locales/frontend_de.js',
           'public/clientscripts/global/agora.js'
@@ -136,7 +135,7 @@ module.exports = function (grunt) {
           'public/clientscripts/global/pick-a-color.js',
           'public/clientscripts/global/jquery.validate-1.11.1.js',
           'public/clientscripts/global/additional-methods-1.11.1.js',
-          'public/clientscripts/global/bootstrap-timepicker-patched.js',
+          'public/clientscripts/global/bootstrap-timepicker.js',
           'public/clientscripts/global/moment.min.js',
           'locales/frontend_en.js',
           'public/clientscripts/global/agora.js'
