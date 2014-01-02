@@ -24,13 +24,13 @@ block content
       .row
         .col-md-6
           if (group.id)
-            mixin textReadonlyWithValue('id', t("general.name"), group.id)
+            mixin textReadonly('id', t("general.name"), group.id)
           else
             mixin text('id', t("general.name"), group.id, t("groups.tooltip.name"))
           mixin text('longName', t("general.title"), group.longName, t("groups.tooltip.title"))
         .col-md-6
           if (group.id)
-            mixin textReadonlyWithValue('emailPrefix', t("groups.email_prefix"), group.emailPrefix)
+            mixin textReadonly('emailPrefix', t("groups.email_prefix"), group.emailPrefix)
           else
             mixin text('emailPrefix', t("groups.email_prefix"), group.emailPrefix, t("groups.tooltip.email_prefix"))
           mixin colorPicker('color', group)
