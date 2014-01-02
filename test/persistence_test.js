@@ -12,7 +12,7 @@ var clearStore = function (done) {
 
 describe('The persistence store', function () {
 
-  beforeEach(clearStore);
+  beforeEach(clearStore); // if this fails, you need to start your mongo DB
 
   describe('in general', function () {
     var toPersist = {id: 'toPersist', name: 'Heinz'};
