@@ -12,7 +12,7 @@ var createApp = require('../testHelper')('groupsApp').createApp;
 
 describe('Groups application', function () {
 
-  before(function (done) {
+  before(function () {
     sinon.stub(sympa, 'getAllAvailableLists', function (callback) {
       return callback(null, ['GroupA']);
     });
@@ -51,56 +51,78 @@ describe('Groups application', function () {
       }
       return callback(null, null);
     });
-
-    done();
   });
 
-  after(function (done) {
+  after(function () {
     sinon.restore();
-    done();
   });
 
-  it('shows all available lists', function (done) {
-    request(createApp())
-      .get('/')
-      .expect(200)
-      .expect('Content-Type', /text\/html/)
-      .expect(/Gruppen/)
-      .expect(/Gruppe A/, done);
+  describe('index page', function () {
+
+    it('shows all available lists', function (done) {
+      request(createApp())
+        .get('/')
+        .expect(200)
+        .expect('Content-Type', /text\/html/)
+        .expect(/Gruppen/)
+        .expect(/Gruppe A/, done);
+    });
   });
 
-  it('returns false for checkgroupname when the group name already exists', function (done) {
-    request(createApp())
-      .get('/checkgroupname?id=GroupA')
-      .expect(200)
-      .expect(/false/, done);
+  describe('groupname check', function () {
+
+    it('returns false for checkgroupname when the group name already exists', function (done) {
+      request(createApp())
+        .get('/checkgroupname?id=GroupA')
+        .expect(200)
+        .expect(/false/, done);
+    });
+
+    it('returns true for checkgroupname when the group name does not exist', function (done) {
+      request(createApp())
+        .get('/checkgroupname?id=UnknownGroup')
+        .expect(200)
+        .expect(/true/, done);
+    });
+
+    it('allows dashes and underscores in the groupname', function (done) {
+      request(createApp())
+        .get('/checkgroupname?id=Un_known-Group')
+        .expect(200)
+        .expect(/true/, done);
+    });
   });
 
-  it('returns true for checkgroupname when the group name does not exist', function (done) {
-    request(createApp())
-      .get('/checkgroupname?id=UnknownGroup')
-      .expect(200)
-      .expect(/true/, done);
+  describe('group page', function () {
+
+    it('displays an existing group and membercount', function (done) {
+      request(createApp())
+        .get('/GroupA')
+        .expect(200)
+        .expect('Content-Type', /text\/html/)
+        .expect(/<title>Gruppe A/)
+        .expect(/Dies ist Gruppe A./)
+        .expect(/Themengruppe/)
+        .expect(/Mitglieder:/)
+        .expect(/Diese Gruppe hat&nbsp;2 Mitglieder./, done);
+    });
   });
 
-  it('allows dashes and underscores in the groupname', function (done) {
-    request(createApp())
-      .get('/checkgroupname?id=Un_known-Group')
-      .expect(200)
-      .expect(/true/, done);
-  });
+  describe('group creation', function () {
+    it('opens the group creation page', function (done) {
+      request(createApp('someMember'))
+        .get('/new')
+        .expect(200)
+        .expect('Content-Type', /text\/html/)
+        .expect(/Gruppe anlegen/, done);
+    });
 
-  it('displays an existing group and membercount', function (done) {
-    request(createApp())
-      .get('/GroupA')
-      .expect(200)
-      .expect('Content-Type', /text\/html/)
-      .expect(/<title>Gruppe A/)
-      .expect(/Dies ist Gruppe A./)
-      .expect(/Themengruppe/)
-      .expect(/Mitglieder:/)
-      .expect(/Diese Gruppe hat&nbsp;2 Mitglieder./, function (err) {
-        done(err);
-      });
+    it('lists all group members as possible contacts', function (done) {
+      request(createApp('theMemberThatCreatesTheGroup'))
+        .get('/new')
+        .expect(200)
+        .expect(/Ansprechpartner/)
+        .expect(/theMemberThatCreatesTheGroup/, done);
+    });
   });
 });
