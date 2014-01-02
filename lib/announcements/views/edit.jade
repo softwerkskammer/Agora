@@ -11,10 +11,10 @@ block title
 block content
   form(id='announcementform', action='/announcements/submit', method='post')
     if (announcement.id)
-      mixin hidden('id', announcement)
-    mixin hidden('fromUnix', announcement)
-    mixin hidden('previousUrl', announcement, 'url')
-    mixin hidden('author', announcement)
+      mixin hiddenWithValue('id', announcement.id)
+    mixin hiddenWithValue('fromUnix', announcement.fromUnix)
+    mixin hiddenWithValue('previousUrl', announcement.url)
+    mixin hiddenWithValue('author', announcement.author)
     fieldset
       .row
         .col-md-12
