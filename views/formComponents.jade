@@ -26,11 +26,11 @@ mixin textarea(name, label, value, tooltip)
     textarea.input-block-level(rows="7", id=name, type='text', name=name)
       | #{value}
 
-mixin hightextarea(name, label, object, tooltip)
+mixin hightextarea(name, label, value, tooltip)
   .form-group
     mixin controlLabel(name, label, tooltip)
     textarea.input-block-level(rows="15", id=name, type='text', name=name)
-      | #{object[name]}
+      | #{value}
 
 mixin checkbox(name, label, checked, optionalValue)
   .checkbox

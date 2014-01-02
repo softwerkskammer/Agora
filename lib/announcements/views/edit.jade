@@ -31,7 +31,7 @@ block content
           mixin date('thruDate', t("announcements.show_until"), announcement, announcement.thruMoment().lang(language).format('L'))
       .row
         .col-md-12
-          mixin hightextarea('message', t("announcements.text"), announcement)
+          mixin hightextarea('message', t("announcements.text"), announcement.message)
       .row
         .col-md-12
           button.btn.btn-primary.pull-right(type="submit") #{t("general.save")}

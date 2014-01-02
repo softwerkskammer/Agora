@@ -22,7 +22,7 @@ block content
           if (message.receiver)
             mixin textReadonly('nickname', t("mailsender.to_member"), message.receiver.nickname())
           mixin text('subject', t("mailsender.subject"), message.subject)
-          mixin hightextarea('markdown', t("mailsender.contents"), message)
+          mixin hightextarea('markdown', t("mailsender.contents"), message.markdown)
           mixin checkbox('sendCopyToSelf', t("mailsender.copy_to_self"), false)
           mixin hidden('htmlAddOn', message)
           input(id="successURL", type="hidden", name="successURL", value="#{successURL}")
