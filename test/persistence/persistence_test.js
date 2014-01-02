@@ -2,8 +2,8 @@
 
 var should = require('chai').should();
 var expect = require('chai').expect;
-var conf = require('./configureForTest');
-var persistence = require('../lib/persistence/persistence')('teststore');
+var conf = require('./../configureForTest');
+var persistence = require('../../lib/persistence/persistence')('teststore');
 var clearStore = function (done) {
   persistence.drop(function () {
     done(); // here we can ignore errors
@@ -12,7 +12,7 @@ var clearStore = function (done) {
 
 describe('The persistence store', function () {
 
-  beforeEach(clearStore);
+  beforeEach(clearStore); // if this fails, you need to start your mongo DB
 
   describe('in general', function () {
     var toPersist = {id: 'toPersist', name: 'Heinz'};
