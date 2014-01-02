@@ -8,7 +8,7 @@ var groupsPersistence = beans.get('groupsPersistence');
 var membersPersistence = beans.get('membersPersistence');
 var sympa = beans.get('sympaStub');
 
-var app = require('../../app').create();
+var createApp = require('../testHelper')('groupsApp').createApp;
 
 describe('Groups application', function () {
 
@@ -61,8 +61,8 @@ describe('Groups application', function () {
   });
 
   it('shows all available lists', function (done) {
-    request(app)
-      .get('/groups/')
+    request(createApp())
+      .get('/')
       .expect(200)
       .expect('Content-Type', /text\/html/)
       .expect(/Gruppen/)
@@ -70,29 +70,29 @@ describe('Groups application', function () {
   });
 
   it('returns false for checkgroupname when the group name already exists', function (done) {
-    request(app)
-      .get('/groups/checkgroupname?id=GroupA')
+    request(createApp())
+      .get('/checkgroupname?id=GroupA')
       .expect(200)
       .expect(/false/, done);
   });
 
   it('returns true for checkgroupname when the group name does not exist', function (done) {
-    request(app)
-      .get('/groups/checkgroupname?id=UnknownGroup')
+    request(createApp())
+      .get('/checkgroupname?id=UnknownGroup')
       .expect(200)
       .expect(/true/, done);
   });
 
   it('allows dashes and underscores in the groupname', function (done) {
-    request(app)
-      .get('/groups/checkgroupname?id=Un_known-Group')
+    request(createApp())
+      .get('/checkgroupname?id=Un_known-Group')
       .expect(200)
       .expect(/true/, done);
   });
 
   it('displays an existing group and membercount', function (done) {
-    request(app)
-      .get('/groups/GroupA')
+    request(createApp())
+      .get('/GroupA')
       .expect(200)
       .expect('Content-Type', /text\/html/)
       .expect(/<title>Gruppe A/)
