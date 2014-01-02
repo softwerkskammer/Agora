@@ -66,15 +66,15 @@ mixin hidden(name, value)
   input(id=name, type="hidden", name=name, value=value)
 
 // PICKERS
-mixin date(name, label, object, value, tooltip)
+mixin date(name, label, value, tooltip)
   .form-group
     mixin controlLabel(name, label, tooltip)
-    input.form-control.datepicker(id=name, type='text', name=name, value=(value ? value : object[name]))
+    input.form-control.datepicker(id=name, type='text', name=name, value=value)
 
-mixin time(name, label, object, value)
+mixin time(name, label, value)
   .form-group.bootstrap-timepicker
     label(class="control-label", for=name) &nbsp;
-    input.form-control.timepicker(id=name, type='text', name=name, value=(value ? value : object[name]))
+    input.form-control.timepicker(id=name, type='text', name=name, value=value)
 
 mixin colorPicker(name, object)
   .form-group

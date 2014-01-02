@@ -64,14 +64,14 @@ block content
           .row
             .col-xs-6(style="padding-right:5px")
               .col-xs-6(style="padding-left:0px;padding-right:3px")
-                mixin date('startDate', t("activities.start"), activity, activity.startMoment().lang(language).format('L'), t("activities.tooltip.startdate"))
+                mixin date('startDate', t("activities.start"), activity.startMoment().lang(language).format('L'), t("activities.tooltip.startdate"))
               .col-xs-6(style="padding-left:3px;padding-right:0px")
-                mixin time('startTime', '&nbsp;', activity, activity.startMoment().lang(language).format('LT'))
+                mixin time('startTime', '&nbsp;', activity.startMoment().lang(language).format('LT'))
             .col-xs-6(style="padding-left:5px")
               .col-xs-6(style="padding-left:0px;padding-right:3px")
-                mixin date('endDate', t("activities.end"), activity, activity.endMoment().lang(language).format('L'), t("activities.tooltip.end"))
+                mixin date('endDate', t("activities.end"), activity.endMoment().lang(language).format('L'), t("activities.tooltip.end"))
               #dates.col-xs-6(style="padding-left:3px;padding-right:0px")
-                mixin time('endTime', '&nbsp;', activity, activity.endMoment().lang(language).format('LT'))
+                mixin time('endTime', '&nbsp;', activity.endMoment().lang(language).format('LT'))
           mixin textarea('description', t("general.description"), activity.description())
         .col-md-6
           .form-group
