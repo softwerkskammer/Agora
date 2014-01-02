@@ -80,7 +80,6 @@ describe('Members application', function () {
   });
 
   it('does not allow an admin member to edit another member\'s data', function (done) {
-    dummymember.state.isAdmin = true;
     request(createApp('memberID1'))
       .get('/edit/hada')
       .expect(302)

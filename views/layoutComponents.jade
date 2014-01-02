@@ -53,7 +53,7 @@ mixin topNavbar
 
 
 mixin administrationMenu()
-  if (accessrights.isAdmin())
+  if (accessrights.isSuperuser())
     li#administration.dropdown.nav
       a.dropdown-toggle(href="#", data-toggle="dropdown")
         i.fa.fa-dashboard.fa-fw

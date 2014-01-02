@@ -10,13 +10,13 @@ block content
     .col-md-12
       .page-header
         h2
-          | "#{member.nickname()}"&nbsp;
+          | "#{member.nickname()}"
           .btn-group.pull-right
             if (accessrights.canEditMember(member))
               a.btn.btn-default(href="/members/edit/#{encodeURIComponent(member.nickname())}"): i.fa.fa-edit.fa-fw
           small
-            if (member.isAdmin())
-              | #{t("members.administrator")}
+            if (member.isContactperson())
+              | #{t("groups.contact")}
             else
               | #{t("members.profileview")}
   .row
@@ -58,5 +58,9 @@ block content
 
       h3 #{t("members.member_of")}:
       ul
-        each group in subscribedGroups
-          li: .group: strong: a(href='../groups/#{group.id}') #{group.longName}
+        each group in member.subscribedGroups
+          li
+            strong: a(href='../groups/#{group.id}') #{group.longName}&nbsp;
+            if (group.organizers.indexOf(member.id()) > -1)
+              span.label(style="background-color: #DF5353") #{t("groups.contact")}
+  

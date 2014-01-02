@@ -6,7 +6,7 @@ var expect = require('chai').expect;
 
 var beans = conf.get('beans');
 var redirectRuleForNewUser = beans.get('redirectRuleForNewUser');
-var secureAdminOnly = beans.get('secureAdminOnly');
+var secureSuperuserOnly = beans.get('secureSuperuserOnly');
 var accessrights = beans.get('accessrights');
 var Member = beans.get('member');
 
@@ -115,7 +115,7 @@ describe('exceptions to the admin guard', function () {
     var res = {locals: {}};
     accessrights(req, res, function () {});
     var next = sinon.spy();
-    secureAdminOnly(req, res, next);
+    secureSuperuserOnly(req, res, next);
     expect(next.called).to.be.true;
     done();
   });
@@ -129,7 +129,7 @@ describe('exceptions to the admin guard', function () {
     var res = {locals: {}};
     accessrights(req, res, function () {});
     var next = sinon.spy();
-    secureAdminOnly(req, res, next);
+    secureSuperuserOnly(req, res, next);
     expect(next.called).to.be.true;
     done();
   });
@@ -145,7 +145,7 @@ describe('exceptions to the admin guard', function () {
     var res = {locals: {}};
     accessrights(req, res, function () {});
     var next = sinon.spy();
-    secureAdminOnly(req, res, next);
+    secureSuperuserOnly(req, res, next);
     expect(next.called).to.be.true;
     done();
   });
@@ -161,7 +161,7 @@ describe('exceptions to the admin guard', function () {
     var res = {locals: {}};
     accessrights(req, res, function () {});
     var next = sinon.spy();
-    secureAdminOnly(req, res, next);
+    secureSuperuserOnly(req, res, next);
     expect(next.called).to.be.true;
     done();
   });
@@ -178,12 +178,12 @@ describe('exceptions to the admin guard', function () {
     var res = {locals: {}};
     accessrights(req, res, function () {});
     var next = sinon.spy();
-    secureAdminOnly(req, res, next);
+    secureSuperuserOnly(req, res, next);
     expect(next.called).to.be.true;
     done();
   });
 
-  it('does not allow registered users to edit other\'s profiles', function (done) {
+  it('does not allow registered users to edit others\' profiles (nicknames start identically)', function (done) {
     var req = {
       isAuthenticated: function () {return true; },
       originalUrl: '/members/edit/nick',
@@ -197,13 +197,13 @@ describe('exceptions to the admin guard', function () {
     };
     accessrights(req, res, function () {});
     var next = sinon.spy();
-    secureAdminOnly(req, res, next);
-    expect(/\/mustBeAdmin/.test(res.redirect.getCall(0).args[0])).to.be.true;
+    secureSuperuserOnly(req, res, next);
+    expect(/\/mustBeSuperuser/.test(res.redirect.getCall(0).args[0])).to.be.true;
     expect(next.called).to.be.false;
     done();
   });
 
-  it('does not allow registered users to edit other\'s profiles', function (done) {
+  it('does not allow registered users to edit others\' profiles (nicknames end identically)', function (done) {
     var req = {
       isAuthenticated: function () {return true; },
       originalUrl: '/members/edit/nick',
@@ -217,8 +217,8 @@ describe('exceptions to the admin guard', function () {
     };
     accessrights(req, res, function () {});
     var next = sinon.spy();
-    secureAdminOnly(req, res, next);
-    expect(/\/mustBeAdmin/.test(res.redirect.getCall(0).args[0])).to.be.true;
+    secureSuperuserOnly(req, res, next);
+    expect(/\/mustBeSuperuser/.test(res.redirect.getCall(0).args[0])).to.be.true;
     expect(next.called).to.be.false;
     done();
   });

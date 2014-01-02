@@ -31,6 +31,7 @@ describe('Server started in different process', function () {
   var serverShouldDeliverStartPage = function (done) {
     request({uri: base_uri}, function (req, resp) {
       should.exist(resp);
+      // status code of 500 may indicate that some nconf-property is not configured (example was superuser, is now fixed)
       resp.statusCode.should.equal(200);
       resp.body.should.contain('Softwerkskammer');
       done();

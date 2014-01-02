@@ -18,6 +18,4 @@ mixin memberlist(members, organizers)
           | </a>
         dd #{member.firstname()} #{member.lastname()}, #{member.location()}&nbsp;
           if (organizers && organizers.indexOf(member.id()) > -1)
-            a(href="/mailsender/contactMember/#{encodeURIComponent(member.nickname())}", title=t("mailsender.write")): span.label(style="background-color: #DF5353") #{t("groups.contact")} &nbsp;
-          if (!organizers && member.isAdmin())
-            a(href="/mailsender/contactMember/#{encodeURIComponent(member.nickname())}", title=t("mailsender.write")): span.label(style="background-color: #DF5353") #{t("members.administrator")}
+            a(href="/mailsender/contactMember/#{encodeURIComponent(member.nickname())}", title=t("mailsender.write")): span.label(style="background-color: #DF5353") #{t("groups.contact")}

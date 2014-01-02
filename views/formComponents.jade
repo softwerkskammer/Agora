@@ -25,6 +25,12 @@ mixin textReadonly(name, label, object)
     label(class="control-label", for=name) #{label}:
     input.form-control(id=name, type='text', name=name, value=object[name], placeholder=placeholder disabled)
 
+mixin textReadonlyWithValue(name, label, value)
+  .form-group
+    mixin hiddenWithValue(name, value)
+    label(class="control-label", for=name) #{label}:
+    input.form-control(id=name, type='text', name=name, value=value, placeholder=placeholder disabled)
+
 mixin textarea(name, label, object, tooltip)
   .form-group
     mixin controlLabel(name, label, tooltip)

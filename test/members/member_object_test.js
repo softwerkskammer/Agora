@@ -8,6 +8,14 @@ var Member = conf.get('beans').get('member');
 
 describe('Member initial filling', function () {
 
+  it('is correctly filled from small database record', function (done) {
+    var db_record = {id: 'ID', nickname: 'NICK'};
+    var member = new Member(db_record);
+    expect(member.id(), 'id').to.equal(db_record.id);
+    expect(member.nickname(), 'nickname').to.equal(db_record.nickname);
+    done();
+  });
+  
   it('is populated by Google OpenID record', function (done) {
     var userdata = JSON.parse('{' +
       '"authenticationId": "https://www.google.com/accounts/o8/id?id=someGoogelID", "profile": {' +
@@ -130,72 +138,6 @@ describe('Member twitter field autocorrection', function () {
     done();
   });
 
-});
-
-describe('Member isAdmin', function () {
-  it('has a boolean value for "isAdmin"', function (done) {
-    var member = new Member();
-    expect(member.isAdmin()).to.be.false;
-    done();
-  });
-
-  it('always has a boolean value vor "isAdmin"', function (done) {
-    var member = new Member();
-    expect(member.isAdmin()).to.be.false;
-    done();
-  });
-
-  it('is correctly filled from small database record', function (done) {
-    var db_record = {id: 'ID', nickname: 'NICK'};
-    var member = new Member(db_record);
-    expect(member.id(), 'id').to.equal(db_record.id);
-    expect(member.nickname(), 'nickname').to.equal(db_record.nickname);
-    expect(member.isAdmin()).to.be.false;
-    done();
-  });
-
-  it('is correctly filled as Admin from small database record', function (done) {
-    var db_record = {nickname: 'Nick', isAdmin: true};
-    var member = new Member(db_record);
-    expect(member.isAdmin()).to.be.true;
-    done();
-  });
-
-  it('is correctly filled as Admin from UI as String', function (done) {
-    var db_record = {nickname: 'Nick', isAdmin: false};
-    var member = new Member(db_record);
-    expect(member.isAdmin()).to.be.false;
-    member.setAdminFromInteger("1");
-    expect(member.isAdmin()).to.be.true;
-    done();
-  });
-
-  it('is correctly filled as not Admin from UI as String', function (done) {
-    var db_record = {nickname: 'Nick', isAdmin: true};
-    var member = new Member(db_record);
-    expect(member.isAdmin()).to.be.true;
-    member.setAdminFromInteger("0");
-    expect(member.isAdmin()).to.be.false;
-    done();
-  });
-
-  it('is correctly filled as Admin from UI as Integer', function (done) {
-    var db_record = {nickname: 'Nick', isAdmin: false};
-    var member = new Member(db_record);
-    expect(member.isAdmin()).to.be.false;
-    member.setAdminFromInteger(1);
-    expect(member.isAdmin()).to.be.true;
-    done();
-  });
-
-  it('is correctly filled as not Admin from UI as Integer', function (done) {
-    var db_record = {nickname: 'Nick', isAdmin: true};
-    var member = new Member(db_record);
-    expect(member.isAdmin()).to.be.true;
-    member.setAdminFromInteger(0);
-    expect(member.isAdmin()).to.be.false;
-    done();
-  });
 });
 
 describe('display functionalities', function () {

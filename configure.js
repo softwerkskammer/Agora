@@ -20,7 +20,7 @@ function createConfiguration() {
     mongoHost: 'localhost',
     mongoPort: '27017',
     publicUrlPrefix: "http://localhost:17124",
-    adminURLPattern: "/administration/|/new|/edit|/submit",
+    superuserURLPattern: "/administration/|/new|/edit|/submit",
     securedByLoginURLPattern: "/mailsender|/members|/(subscribe|unsubscribe)/|/mailarchive|/invitation|/addToWaitinglist",
     secret: "secret",
     beans: new beans('./config/beans.json')
