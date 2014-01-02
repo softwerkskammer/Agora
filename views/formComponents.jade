@@ -20,7 +20,7 @@ mixin textReadonly(name, label, value)
     label(class="control-label", for=name) #{label}:
     input.form-control(id=name, type='text', name=name, value=value, placeholder=placeholder disabled)
 
-mixin textareaWithValue(name, label, value, tooltip)
+mixin textarea(name, label, value, tooltip)
   .form-group
     mixin controlLabel(name, label, tooltip)
     textarea.input-block-level(rows="7", id=name, type='text', name=name)
