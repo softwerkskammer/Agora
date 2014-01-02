@@ -40,10 +40,10 @@ block content
           legend #{t("members.personal_data")}
       .row
         .col-md-6
-          mixin hiddenWithValue('id', member.id())
-          mixin hiddenWithValue('previousNickname', member.nickname())
-          mixin hiddenWithValue('previousEmail', accessrights.isRegistered() ? member.email() : '')
-          mixin hiddenWithValue('created', member.created())
+          mixin hidden('id', member.id())
+          mixin hidden('previousNickname', member.nickname())
+          mixin hidden('previousEmail', accessrights.isRegistered() ? member.email() : '')
+          mixin hidden('created', member.created())
           mixin text('nickname', t("members.nickname"), member.nickname())
           mixin text('firstname', t("members.firstname"), member.firstname())
           mixin text('lastname', t("members.lastname"), member.lastname())

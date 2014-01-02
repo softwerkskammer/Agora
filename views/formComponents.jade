@@ -16,7 +16,7 @@ mixin text(name, label, value, tooltip, placeholder)
 
 mixin textReadonly(name, label, value)
   .form-group
-    mixin hiddenWithValue(name, value)
+    mixin hidden(name, value)
     label(class="control-label", for=name) #{label}:
     input.form-control(id=name, type='text', name=name, value=value, placeholder=placeholder disabled)
 
@@ -62,10 +62,7 @@ mixin groupCheckboxes(checkboxName, regionalgroups, themegroups)
 
 
 
-mixin hidden(name, object, optionalAlternateValue)
-  input(id=name, type="hidden", name=name, value=object[(optionalAlternateValue ? optionalAlternateValue : name)])
-
-mixin hiddenWithValue(name, value)
+mixin hidden(name, value)
   input(id=name, type="hidden", name=name, value=value)
 
 // PICKERS

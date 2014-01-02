@@ -47,8 +47,8 @@ block title
 block content
   form(id='activityform', action='/activities/submit', method='post')
     if (activity.id())
-      mixin hiddenWithValue('id', activity.id())
-    mixin hiddenWithValue('previousUrl', activity.url())
+      mixin hidden('id', activity.id())
+    mixin hidden('previousUrl', activity.url())
     fieldset
       .row
         .col-md-12
@@ -103,7 +103,7 @@ block content
             each name in activity.resourceNames()
               - var resource = activity.resourceNamed(name)
               mixin resourceRow(name, resource.limit(), resource.isRegistrationOpen(), resource.hasWaitinglist())
-              mixin hiddenWithValue("resources[previousNames]", name)
+              mixin hidden("resources[previousNames]", name)
             .row.form-group
               .col-md-12
                 button.add.btn.btn-sm.btn-default(type="button")

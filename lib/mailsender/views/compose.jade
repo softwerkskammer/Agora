@@ -24,7 +24,7 @@ block content
           mixin text('subject', t("mailsender.subject"), message.subject)
           mixin hightextarea('markdown', t("mailsender.contents"), message.markdown)
           mixin checkbox('sendCopyToSelf', t("mailsender.copy_to_self"), false)
-          mixin hiddenWithValue('htmlAddOn', message.htmlAddOn)
+          mixin hidden('htmlAddOn', message.htmlAddOn)
           input(id="successURL", type="hidden", name="successURL", value="#{successURL}")
 
           button.btn.btn-primary.pull-right(type="submit") #{t("mailsender.send")}
