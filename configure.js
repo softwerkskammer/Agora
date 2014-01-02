@@ -2,7 +2,7 @@
 
 process.chdir(__dirname);
 var nconf = require('nconf');
-var beans = require('CoolBeans');
+var Beans = require('CoolBeans');
 
 function createConfiguration() {
 // create an nconf object, and initialize it with given values from
@@ -23,7 +23,7 @@ function createConfiguration() {
     superuserURLPattern: "/administration/|/new|/edit|/submit",
     securedByLoginURLPattern: "/mailsender|/members|/(subscribe|unsubscribe)/|/mailarchive|/invitation|/addToWaitinglist",
     secret: "secret",
-    beans: new beans('./config/beans.json')
+    beans: new Beans('./config/beans.json')
   });
 
   return nconf;

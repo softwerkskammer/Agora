@@ -72,7 +72,7 @@
   },
   "config": {
     "travis-cov": {
-      "threshold": "64"
+      "threshold": "72"
     }
   },
   "scripts": {
