@@ -26,13 +26,13 @@ block content
           if (group.id)
             mixin textReadonly('id', t("general.name"), group)
           else
-            mixin text('id', t("general.name"), group, t("groups.tooltip.name"))
-          mixin text('longName', t("general.title"), group, t("groups.tooltip.title"))
+            mixin textWithValue('id', t("general.name"), group.id, t("groups.tooltip.name"))
+          mixin textWithValue('longName', t("general.title"), group.longName, t("groups.tooltip.title"))
         .col-md-6
           if (group.id)
             mixin textReadonly('emailPrefix', t("groups.email_prefix"), group)
           else
-            mixin text('emailPrefix', t("groups.email_prefix"), group, t("groups.tooltip.email_prefix"))
+            mixin textWithValue('emailPrefix', t("groups.email_prefix"), group.emailPrefix, t("groups.tooltip.email_prefix"))
           mixin colorPicker('color', group)
       .row
         .col-md-12
@@ -52,10 +52,10 @@ block content
         .col-md-6
           .row
             .col-md-6
-              mixin text('mapX', t("groups.x_coord"), group, t("groups.tooltip.x_coord"))
+              mixin textWithValue('mapX', t("groups.x_coord"), group.mapX, t("groups.tooltip.x_coord"))
             .col-md-6
-              mixin text('mapY', t("groups.y_coord"), group, t("groups.tooltip.y_coord"))
-          mixin text('shortName', t("groups.map_label"), group, t("groups.tooltip.map_label"))
+              mixin textWithValue('mapY', t("groups.y_coord"), group.mapY, t("groups.tooltip.y_coord"))
+          mixin textWithValue('shortName', t("groups.map_label"), group.shortName, t("groups.tooltip.map_label"))
       .row
         .col-md-12
           if group.id

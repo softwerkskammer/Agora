@@ -17,7 +17,7 @@ block content
             else 
               | #{t("wiki.edit", params)}
           mixin hightextarea('content', t("wiki.contents"), page)
-          mixin text('comment', t("wiki.message"), page, t("wiki.commit_message"), t("wiki.commit_template"))
+          mixin textWithValue('comment', t("wiki.message"), page.comment, t("wiki.commit_message"), t("wiki.commit_template"))
           mixin hidden('metadata', page)
           input(id="subdir", type="hidden", name="subdir", value=subdir)
           button.btn.btn-primary.pull-right(type="submit") #{t("general.save")}
