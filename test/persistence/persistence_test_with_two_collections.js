@@ -3,10 +3,10 @@
 require('chai').should();
 
 var async = require('async');
-require('./configureForTest');
+require('./../configureForTest');
 
 var createTeststore = function (collectionName) {
-  return require('../lib/persistence/persistence')(collectionName);
+  return require('../../lib/persistence/persistence')(collectionName);
 };
 
 describe('The parallel persistence store', function () {

@@ -2,8 +2,8 @@
 
 var should = require('chai').should();
 var expect = require('chai').expect;
-var conf = require('./configureForTest');
-var persistence = require('../lib/persistence/persistence')('teststore');
+var conf = require('./../configureForTest');
+var persistence = require('../../lib/persistence/persistence')('teststore');
 var clearStore = function (done) {
   persistence.drop(function () {
     done(); // here we can ignore errors
