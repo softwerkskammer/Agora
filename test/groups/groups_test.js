@@ -11,7 +11,7 @@ var sympa = beans.get('sympaStub');
 
 var createApp = require('../testHelper')('groupsApp').createApp;
 
-var GroupA = new Group({id: 'GroupA', longName: 'Gruppe A', description: 'Dies ist Gruppe A.', type: 'Themengruppe', emailPrefix: 'Group-A'});
+var GroupA = new Group({id: 'GroupA', longName: 'Gruppe A', description: 'Dies ist Gruppe A.', type: 'Themengruppe', emailPrefix: 'Group-A', organizers: ['organizer']});
 
 describe('Groups application', function () {
 
@@ -54,8 +54,7 @@ describe('Groups application', function () {
   });
 
   describe('index page', function () {
-
-    it('shows all available lists', function (done) {
+    it('shows all available groups', function (done) {
       request(createApp())
         .get('/')
         .expect(200)
@@ -64,7 +63,7 @@ describe('Groups application', function () {
         .expect(/Gruppe A/, done);
     });
   });
-
+  
   describe('groupname check', function () {
 
     it('returns false for checkgroupname when the group name already exists', function (done) {
@@ -139,7 +138,7 @@ describe('Groups application', function () {
 
   describe('group editing', function () {
     it('opens the group editing page', function (done) {
-      request(createApp('someMember'))
+      request(createApp('organizer'))
         .get('/edit/GroupA')
         .expect(200)
         .expect('Content-Type', /text\/html/)
@@ -147,7 +146,7 @@ describe('Groups application', function () {
     });
 
     it('lists all group members as possible contacts', function (done) {
-      request(createApp('someMember'))
+      request(createApp('organizer'))
         .get('/edit/GroupA')
         .expect(200)
         .expect(/Ansprechpartner/)
@@ -155,5 +154,12 @@ describe('Groups application', function () {
         .expect(/hada/, done);
     });
 
+    it('disallows editing an existing group for non contact persons', function (done) {
+      request(createApp('someMember'))
+        .get('/edit/GroupA')
+        .expect(302)
+        .expect('location', /\/groups\/GroupA/, done);
+    });
   });
+
 });
