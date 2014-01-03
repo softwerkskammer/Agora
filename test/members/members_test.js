@@ -19,7 +19,7 @@ var getSubscribedGroupsForUser;
 
 describe('Members application', function () {
 
-  beforeEach(function (done) {
+  beforeEach(function () {
     dummymember = new Member({id: 'memberID', nickname: 'hada', email: 'a@b.c', site: 'http://my.blog', firstname: 'Hans', lastname: 'Dampf', authentications: []});
     allMembers = sinon.stub(membersAPI, 'allMembers', function (callback) {
       callback(null, [dummymember]);
@@ -33,12 +33,10 @@ describe('Members application', function () {
     sinon.stub(groupsAPI, 'getAllAvailableGroups', function (callback) {
       callback(null, []);
     });
-    done();
   });
 
-  afterEach(function (done) {
+  afterEach(function () {
     sinon.restore();
-    done();
   });
 
   it('shows the list of members as retrieved from the membersstore if the user is registered', function (done) {

@@ -18,7 +18,7 @@ var activity1;
 
 describe('Waitinglist API', function () {
 
-  beforeEach(function (done) {
+  beforeEach(function () {
     var member1 = new Member({id: "12345", nickname: "hansdampf"});
     var member2 = new Member({id: "abcxyz", nickname: "nickinick"});
     activity1 = new Activity({id: "Meine Aktivität", url: "myActivity", resources: {"Meine Ressource": {_waitinglist: []}}});
@@ -38,12 +38,10 @@ describe('Waitinglist API', function () {
     sinon.stub(activitystore, 'getActivity', function (activity, callback) {
       return callback(null, activity1);
     });
-    done();
   });
 
-  afterEach(function (done) {
+  afterEach(function () {
     sinon.restore();
-    done();
   });
 
   describe('- waitinglist - ', function () {

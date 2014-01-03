@@ -24,7 +24,7 @@ var announcementsAPI = beans.get('announcementsAPI');
 
 describe('Announcements API', function () {
 
-  beforeEach(function (done) {
+  beforeEach(function () {
     sinon.stub(store, 'saveAnnouncement', function (announcement, callback) {
       callback(null);
     });
@@ -37,32 +37,30 @@ describe('Announcements API', function () {
     sinon.stub(store, 'allAnnouncements', function (callback) {
       callback(null, [dummyAnnouncement]);
     });
-    done();
   });
 
-  afterEach(function (done) {
+  afterEach(function () {
     sinon.restore();
-    done();
   });
 
   it('returns the announcement for the given url', function (done) {
     announcementsAPI.getAnnouncement(announcementUrl, function (err, result) {
       expect(result).to.equal(dummyAnnouncement);
-      done();
+      done(err);
     });
   });
 
   it('returns null when url is not existing', function (done) {
     announcementsAPI.getAnnouncement('nichtExistierendeUrl', function (err, result) {
       expect(result).to.be.a('null');
-      done();
+      done(err);
     });
   });
 
   it('returns all announcements', function (done) {
     announcementsAPI.allAnnouncements(function (err, result) {
       expect(result).to.have.lengthOf(1);
-      done();
+      done(err);
     });
   });
 
@@ -74,21 +72,21 @@ describe('Announcements API', function () {
     expect(announcementsAPI.isReserved('submIt')).to.be.true;
     announcementsAPI.isValidUrl(' checkurl ', function (err, result) {
       expect(result).to.be.false;
-      done();
+      done(err);
     });
   });
 
   it('validates a valid url', function (done) {
     announcementsAPI.isValidUrl('thisIsAValidUrl', function (err, result) {
       expect(result).to.be.true;
-      done();
+      done(err);
     });
   });
 
   it('validates a invalid url', function (done) {
     announcementsAPI.isValidUrl('edit', function (err, result) {
       expect(result).to.be.false;
-      done();
+      done(err);
     });
   });
 
@@ -99,7 +97,7 @@ describe('Announcements API', function () {
     });
   });
 
-  it('converts a German date to unix timestamp when saving', function (done) {
+  it('converts a German date to unix timestamp when saving', function () {
     var object = {
       title: 'title',
       url: announcementUrl,
@@ -109,7 +107,6 @@ describe('Announcements API', function () {
     };
     var result = new Announcement(object);
     expect(result.thruUnix).to.equal(1388448000);
-    done();
   });
 
   it('displays member\'s nickname as author name', function (done) {

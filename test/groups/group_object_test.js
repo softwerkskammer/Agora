@@ -9,35 +9,31 @@ var expect = require('chai').expect;
 
 describe('Group object', function () {
 
-  it('should deliver two types of groups', function (done) {
+  it('should deliver two types of groups', function () {
     var allTypes = Group.allTypes();
     expect(allTypes.length).to.equal(2);
     expect(allTypes).to.contain('Themengruppe');
     expect(allTypes).to.contain('Regionalgruppe');
-    done();
   });
 
-  it('should deliver the group for Themengruppe', function (done) {
+  it('should deliver the group for Themengruppe', function () {
     var group = new Group({id: 'abc', type: 'Themengruppe'});
     expect(Group.thematicsFrom([group])).to.deep.equal([group]);
     expect(Group.regionalsFrom([group])).to.deep.equal([]);
-    done();
   });
 
-  it('should deliver the group for Regionalgruppe', function (done) {
+  it('should deliver the group for Regionalgruppe', function () {
     var group = new Group({id: 'abc', type: 'Regionalgruppe'});
     expect(Group.thematicsFrom([group])).to.deep.equal([]);
     expect(Group.regionalsFrom([group])).to.deep.equal([group]);
-    done();
   });
 
-  it('should transform the id to lowercase', function (done) {
+  it('should transform the id to lowercase', function () {
     var group = new Group({id: 'NeuePlattform'});
     expect(group.id).to.equal('neueplattform');
-    done();
   });
 
-  it('should generate a list for the organizers based on members, only one in organizers', function (done) {
+  it('should generate a list for the organizers based on members, only one in organizers', function () {
     var group = new Group({id: 'NeuePlattform', organizers: ['Hans', 'Heinz']});
     var members = [new Member({id: 'Hans'}), new Member({id: 'Karl'})];
     var checkedOrganizers = group.checkedOrganizers(members);
@@ -46,10 +42,9 @@ describe('Group object', function () {
     expect(checkedOrganizers[0].checked).to.be.true;
     expect(checkedOrganizers[1].member.id()).to.equal('Karl');
     expect(checkedOrganizers[1].checked).to.be.false;
-    done();
   });
 
-  it('descriptionHTMLFiltered should filter the description html by given matchOpenClosedTag', function (done) {
+  it('descriptionHTMLFiltered should filter the description html by given matchOpenClosedTag', function () {
     var descriptionHTML = function () {
       return '<a href="#">asda</a>description';
     };
@@ -57,10 +52,9 @@ describe('Group object', function () {
     group.descriptionHTML = descriptionHTML;
 
     expect(group.descriptionHTMLFiltered("a")).to.equal('description');
-    done();
   });
 
-  it('descriptionHTMLFiltered should filter the description html by given matchSingleClosedTag', function (done) {
+  it('descriptionHTMLFiltered should filter the description html by given matchSingleClosedTag', function () {
     var descriptionHTML = function () {
       return '<img src="#"/>description';
     };
@@ -68,10 +62,9 @@ describe('Group object', function () {
     group.descriptionHTML = descriptionHTML;
 
     expect(group.descriptionHTMLFiltered("img")).to.equal('description');
-    done();
   });
 
-  it('descriptionHTMLFiltered should filter the description html by given matchSingleTag', function (done) {
+  it('descriptionHTMLFiltered should filter the description html by given matchSingleTag', function () {
     var descriptionHTML = function () {
       return '<img src="#">description';
     };
@@ -79,7 +72,6 @@ describe('Group object', function () {
     group.descriptionHTML = descriptionHTML;
 
     expect(group.descriptionHTMLFiltered("img")).to.equal('description');
-    done();
   });
 
   it('answers that a memberId is one of its organizers', function () {

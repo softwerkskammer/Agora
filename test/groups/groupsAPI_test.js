@@ -251,7 +251,7 @@ describe('Groups API (createOrSaveGroup)', function () {
 });
 
 describe('Groups API (groupFromObject)', function () {
-  it('returns a new Group object if there is no valid group data', function (done) {
+  it('returns a new Group object if there is no valid group data', function () {
     var result = new Group({id: 'x'});
 
     expect(result).to.be.not.null;
@@ -260,10 +260,9 @@ describe('Groups API (groupFromObject)', function () {
     expect(result.longName).to.be.undefined;
     expect(result.description).to.be.undefined;
     expect(result.type).to.be.undefined;
-    done();
   });
 
-  it('returns a valid Group object if there is valid group data', function (done) {
+  it('returns a valid Group object if there is valid group data', function () {
     var result = new Group({ id: 'craftsmanswap', longName: 'Craftsman Swaps',
       description: 'A group for organizing CS',
       type: 'Themengruppe' });
@@ -274,7 +273,6 @@ describe('Groups API (groupFromObject)', function () {
     expect(result.longName).to.equal('Craftsman Swaps');
     expect(result.description).to.equal('A group for organizing CS');
     expect(result.type).to.equal('Themengruppe');
-    done();
   });
 });
 
@@ -319,7 +317,7 @@ describe('Groups API (isGroupNameAvailable)', function () {
 
     systemUnderTest.isGroupNameAvailable('Scha dar', function (err, result) {
       expect(result).to.be.false;
-      done();
+      done(err);
     });
   });
 
@@ -330,7 +328,7 @@ describe('Groups API (isGroupNameAvailable)', function () {
 
     systemUnderTest.isGroupNameAvailable('Schadar', function (err, result) {
       expect(result).to.be.true;
-      done();
+      done(err);
     });
   });
   it('rejects groupnames that contain reserved routes', function (done) {
@@ -343,7 +341,7 @@ describe('Groups API (isGroupNameAvailable)', function () {
 
     systemUnderTest.isGroupNameAvailable('edit', function (err, result) {
       expect(result).to.be.false;
-      done();
+      done(err);
     });
   });
 });

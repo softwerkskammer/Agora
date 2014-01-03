@@ -15,9 +15,8 @@ var member = new Member({id: 'ai di', nickname: 'nigg'});
 var app = require('../testHelper')('mailarchiveApp').createApp();
 
 describe('Mail content page', function () {
-  afterEach(function (done) {
+  afterEach(function () {
     sinonSandbox.restore();
-    done();
   });
 
   it('shows "page not found" error if no message is given', function (done) {
@@ -91,9 +90,8 @@ describe('Mail content page', function () {
 });
 
 describe('Mail index page', function () {
-  afterEach(function (done) {
+  afterEach(function () {
     sinonSandbox.restore();
-    done();
   });
 
   function stubMailHeaders(headers) {

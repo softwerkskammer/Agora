@@ -14,7 +14,7 @@ describe('Wiki application', function () {
   var pageShow;
   var content = "Hallo, ich bin der Dateiinhalt";
   var nonExistingPage = 'global/nonexisting';
-  beforeEach(function (done) {
+  beforeEach(function () {
     pageShow = sinon.stub(wikiAPI, 'showPage',
       function (completePageName, pageVersion, callback) {
         if (completePageName === nonExistingPage) {
@@ -22,12 +22,10 @@ describe('Wiki application', function () {
         }
         callback(null, content);
       });
-    done();
   });
 
-  afterEach(function (done) {
+  afterEach(function () {
     sinon.restore();
-    done();
   });
 
   it('shows an existing page in wiki "global" when requested', function (done) {

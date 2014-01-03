@@ -31,7 +31,7 @@ describe('Announcement application', function () {
   var allAnnouncementsUntilToday;
   var getAnnouncement;
 
-  beforeEach(function (done) {
+  beforeEach(function () {
     allAnnouncements = sinonSandbox.stub(announcementsAPI, 'allAnnouncements', function (callback) {
       return callback(null, [dummyAnnouncement]);
     });
@@ -41,12 +41,10 @@ describe('Announcement application', function () {
     getAnnouncement = sinonSandbox.stub(announcementsAPI, 'getAnnouncement', function (url, callback) {
       callback(null, (url === 'url') ? dummyAnnouncement : null);
     });
-    done();
   });
 
-  afterEach(function (done) {
+  afterEach(function () {
     sinonSandbox.restore();
-    done();
   });
 
   it('object is not valid, if the required fields are not filled', function () {

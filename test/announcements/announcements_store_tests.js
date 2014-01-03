@@ -22,16 +22,14 @@ describe('Announcement store', function () {
     author: 'Nicole'
   };
 
-  beforeEach(function (done) {
+  beforeEach(function () {
     sinon.stub(persistence, 'list', function (sortOrder, callback) {
       return callback(null, [announcement1, announcement2]);
     });
-    done();
   });
 
-  afterEach(function (done) {
+  afterEach(function () {
     sinon.restore();
-    done();
   });
 
   it('calls persistence.list for store.allAnnouncements and passes on the given callback', function (done) {

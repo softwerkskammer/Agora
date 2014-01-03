@@ -57,7 +57,7 @@ activityWithMultipleResources.group = new Group({id: 'group', longName: 'The nam
 
 describe('Activity application', function () {
 
-  beforeEach(function (done) {
+  beforeEach(function () {
     sinon.stub(activitystore, 'upcomingActivities', function (callback) {callback(null, [emptyActivity]); });
     sinon.stub(activitiesAPI, 'getActivitiesForDisplay', function (fetcher, callback) {
       callback(null, [emptyActivity]);
@@ -70,12 +70,10 @@ describe('Activity application', function () {
       callback(null, (url === 'urlOfTheActivity') ? emptyActivity : (url === 'urlForInteresting') ? activityWithParticipants :
         (url === 'urlForMultiple') ? activityWithMultipleResources : null);
     });
-    done();
   });
 
-  afterEach(function (done) {
+  afterEach(function () {
     sinon.restore();
-    done();
   });
 
   it('shows the list of activities with "webcal:" link', function (done) {
@@ -89,9 +87,7 @@ describe('Activity application', function () {
       .expect(/1. Januar 2013/)
       .expect(/background-color: #123456/)
       .expect(/href="\/groups\/groupname"/)
-      .expect(/Buxtehude/, function (err) {
-        done(err);
-      });
+      .expect(/Buxtehude/, done);
   });
 
   it('shows the details of an activity without participants', function (done) {
@@ -130,9 +126,7 @@ describe('Activity application', function () {
       .expect(/description2/)
       .expect(/location2/)
       .expect(/direction2/)
-      .expect(/Bislang haben 2 Mitglieder ihre Teilnahme zugesagt./, function (err) {
-        done(err);
-      });
+      .expect(/Bislang haben 2 Mitglieder ihre Teilnahme zugesagt./, done);
   });
 
   describe('- when registration is open -', function () {
@@ -144,9 +138,7 @@ describe('Activity application', function () {
         .expect(/Bislang haben 2 Mitglieder ihre Teilnahme zugesagt./)
         .expect(/href="subscribe\/urlForInteresting\/default" class=".*">Ich bin dabei!/)
         .expect(/participant1/)
-        .expect(/participant2/, function (err) {
-          done(err);
-        });
+        .expect(/participant2/, done);
     });
 
     it('shows the registration button for an activity with participants when a user is logged in who already is participant', function (done) {
@@ -156,9 +148,7 @@ describe('Activity application', function () {
         .expect(/Bislang haben 2 Mitglieder ihre Teilnahme zugesagt./)
         .expect(/href="unsubscribe\/urlForInteresting\/default" class=".*">Ich kann doch nicht/)
         .expect(/participant1/)
-        .expect(/participant2/, function (err) {
-          done(err);
-        });
+        .expect(/participant2/, done);
     });
 
     it('shows the registration button for an activity with multiple resources where the current user has booked one resource', function (done) {
@@ -171,9 +161,7 @@ describe('Activity application', function () {
         .expect(/participant1/)
         .expect(/participant2/)
         .expect(/participant3/)
-        .expect(/participant4/, function (err) {
-          done(err);
-        });
+        .expect(/participant4/, done);
     });
   });
 
@@ -187,9 +175,7 @@ describe('Activity application', function () {
         .expect(200)
         .expect(/Bislang haben 2 Mitglieder ihre Teilnahme zugesagt./)
         .expect(/participant1/)
-        .expect(/participant2/, function (err) {
-          done(err);
-        });
+        .expect(/participant2/, done);
     });
 
     it('shows that registration is not possible if registrationClosed and no limit set', function (done) {
@@ -198,9 +184,7 @@ describe('Activity application', function () {
       request(createApp('memberId3'))
         .get('/' + 'urlForInteresting')
         .expect(200)
-        .expect(/Anmeldung ist zur Zeit nicht möglich./, function (err) {
-          done(err);
-        });
+        .expect(/Anmeldung ist zur Zeit nicht möglich./, done);
     });
 
     it('shows that registration is somewhere else if registrationClosed and limit is "0"', function (done) {
@@ -210,9 +194,7 @@ describe('Activity application', function () {
       request(createApp('memberId3'))
         .get('/' + 'urlForInteresting')
         .expect(200)
-        .expect(/Anmeldung ist nicht über die Softwerkskammer möglich./, function (err) {
-          done(err);
-        });
+        .expect(/Anmeldung ist nicht über die Softwerkskammer möglich./, done);
     });
 
     it('shows that the event is full if registrationClosed and some limit set', function (done) {
@@ -222,9 +204,7 @@ describe('Activity application', function () {
       request(createApp('memberId3'))
         .get('/' + 'urlForInteresting')
         .expect(200)
-        .expect(/Alle Plätze sind belegt./, function (err) {
-          done(err);
-        });
+        .expect(/Alle Plätze sind belegt./, done);
     });
 
     it('shows the link to the waitinglist if registrationClosed and some limit set and waitinglist is enabled', function (done) {
@@ -235,9 +215,7 @@ describe('Activity application', function () {
       request(createApp('memberId3'))
         .get('/' + 'urlForInteresting')
         .expect(200)
-        .expect(/Auf die Warteliste/, function (err) {
-          done(err);
-        });
+        .expect(/Auf die Warteliste/, done);
     });
 
     it('shows the deregistration button for an activity with participants when a user is logged in who already is participant', function (done) {
@@ -249,9 +227,7 @@ describe('Activity application', function () {
         .expect(/Bislang haben 2 Mitglieder ihre Teilnahme zugesagt./)
         .expect(/href="unsubscribe\/urlForInteresting\/default" class=".*">Ich kann doch nicht/)
         .expect(/participant1/)
-        .expect(/participant2/, function (err) {
-          done(err);
-        });
+        .expect(/participant2/, done);
     });
 
     it('shows the registration button for an activity with multiple resources where the current user has booked one resource', function (done) {
@@ -267,9 +243,7 @@ describe('Activity application', function () {
         .expect(/participant1/)
         .expect(/participant2/)
         .expect(/participant3/)
-        .expect(/participant4/, function (err) {
-          done(err);
-        });
+        .expect(/participant4/, done);
     });
 
     it('shows that registration is not possible if registrationClosed and no limit set', function (done) {
@@ -279,9 +253,7 @@ describe('Activity application', function () {
       request(createApp('memberId3'))
         .get('/' + 'urlForMultiple')
         .expect(200)
-        .expect(/Anmeldung ist zur Zeit nicht möglich./, function (err) {
-          done(err);
-        });
+        .expect(/Anmeldung ist zur Zeit nicht möglich./, done);
     });
 
     it('shows that registration is somewhere else if registrationClosed and limit is "0"', function (done) {
@@ -293,9 +265,7 @@ describe('Activity application', function () {
       request(createApp('memberId3'))
         .get('/' + 'urlForMultiple')
         .expect(200)
-        .expect(/Anmeldung ist nicht über die Softwerkskammer möglich./, function (err) {
-          done(err);
-        });
+        .expect(/Anmeldung ist nicht über die Softwerkskammer möglich./, done);
     });
 
     it('shows that the event is full if registrationClosed and some limit set', function (done) {
@@ -307,9 +277,7 @@ describe('Activity application', function () {
       request(createApp('memberId3'))
         .get('/' + 'urlForMultiple')
         .expect(200)
-        .expect(/Alle Plätze sind belegt./, function (err) {
-          done(err);
-        });
+        .expect(/Alle Plätze sind belegt./, done);
     });
 
     it('shows the link to the waitinglist if registrationClosed and some limit set and waitinglist is enabled', function (done) {
@@ -322,9 +290,7 @@ describe('Activity application', function () {
       request(createApp('memberId3'))
         .get('/' + 'urlForMultiple')
         .expect(200)
-        .expect(/addToWaitinglist\/urlForMultiple\/Einzelzimmer.*Auf die Warteliste/, function (err) {
-          done(err);
-        });
+        .expect(/addToWaitinglist\/urlForMultiple\/Einzelzimmer.*Auf die Warteliste/, done);
     });
 
   });
@@ -337,7 +303,7 @@ describe('Activity application', function () {
       .expect('Content-Disposition', /inline; filename=events.ics/)
       .expect(/BEGIN:VCALENDAR/)
       .expect(/SUMMARY:Title of the Activity/)
-      .end(function (err) { done(err); });
+      .end(done);
   });
 
   it('activity is exposed as iCalendar', function (done) {
@@ -348,7 +314,7 @@ describe('Activity application', function () {
       .expect('Content-Disposition', /inline; filename=urlOfTheActivity.ics/)
       .expect(/BEGIN:VCALENDAR/)
       .expect(/SUMMARY:Title of the Activity/)
-      .end(function (err) { done(err); });
+      .end(done);
   });
 
   it('shows a 404 if the id cannot be found in the store for the detail page', function (done) {
@@ -362,9 +328,7 @@ describe('Activity application', function () {
     request(createApp('dummy'))
       .get('/new')
       .expect(200)
-      .expect(/activities/, function (err) {
-        done(err);
-      });
+      .expect(/activities/, done);
   });
 
   it('allows the owner to edit an activity', function (done) {
@@ -373,9 +337,7 @@ describe('Activity application', function () {
     request(createApp('owner'))
       .get('/edit/urlOfTheActivity')
       .expect(200)
-      .expect(/activities/, function (err) {
-        done(err);
-      });
+      .expect(/activities/, done);
   });
 
   it('disallows a member to edit another user\'s activity', function (done) {
@@ -427,9 +389,7 @@ describe('Activity application', function () {
       .expect(/groupA/)
       .expect(/groupB/)
       .expect(/groupC/)
-      .end(function (err) {
-        done(err);
-      });
+      .end(done);
   });
 
   it('shows no group name if no groups are available', function (done) {
@@ -449,18 +409,14 @@ describe('Activity application', function () {
     request(createApp('guest'))
       .get('/urlOfTheActivity')
       .expect(200)
-      .expect(/Veranstaltet von der Gruppe&nbsp;<a href="\/groups\/groupname">Buxtehude<\/a>/, function (err) {
-        done(err);
-      });
+      .expect(/Veranstaltet von der Gruppe&nbsp;<a href="\/groups\/groupname">Buxtehude<\/a>/, done);
   });
 
   it('shows all activities that take place at the day of the global code retreat', function (done) {
     request(createApp())
       .get('/gdcr')
       .expect(200)
-      .expect(/1 Coderetreats/, function (err) {
-        done(err);
-      });
+      .expect(/1 Coderetreats/, done);
   });
 
 });

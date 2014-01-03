@@ -20,21 +20,21 @@ describe('SWK Plattform server', function () {
     httpRequest({uri: base_uri}, function (req, resp) {
       should.exist(resp);
       resp.statusCode.should.equal(200);
-      done();
+      done(); // without error check
     });
   });
 
   it('responds with HTML on a GET for the home page', function (done) {
     httpRequest({uri: base_uri}, function (req, resp) {
       resp.headers['content-type'].should.contain('text/html');
-      done();
+      done(); // without error check
     });
   });
 
   it('shows "Softwerkskammer" on the home page', function (done) {
     httpRequest({uri: base_uri}, function (req, resp) {
       resp.body.should.contain('Softwerkskammer');
-      done();
+      done(); // without error check
     });
   });
 
@@ -44,7 +44,7 @@ describe('SWK Plattform server', function () {
       resp.statusCode.should.equal(200);
       resp.headers['content-type'].should.contain('text/css');
       resp.body.should.contain('color:');
-      done();
+      done(); // without error check
     });
   });
 
@@ -54,7 +54,7 @@ describe('SWK Plattform server', function () {
       resp.statusCode.should.equal(200);
       resp.headers['content-type'].should.contain('application/javascript');
       resp.body.should.contain('#memberform');
-      done();
+      done(); // without error check
     });
   });
 });

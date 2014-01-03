@@ -4,9 +4,9 @@ var should = require('chai').should();
 var expect = require('chai').expect;
 var conf = require('./../configureForTest');
 var persistence = require('../../lib/persistence/persistence')('teststore');
-var clearStore = function (done) {
+var clearStore = function (callback) {
   persistence.drop(function () {
-    done(); // here we can ignore errors
+    callback(); // here we can ignore errors
   });
 };
 
@@ -25,14 +25,14 @@ describe('The persistence store', function () {
     it('fails to save object without id', function (done) {
       persistence.save({}, function (err) {
         expect(err.message).to.equal("Given object has no valid id");
-        done();
+        done(); // error condition - do not pass err
       });
     });
 
     it('fails to save object with id null', function (done) {
       persistence.save({id : null}, function (err) {
         expect(err.message).to.equal("Given object has no valid id");
-        done();
+        done(); // error condition - do not pass err
       });
     });
 

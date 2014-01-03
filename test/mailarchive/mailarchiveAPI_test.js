@@ -22,7 +22,7 @@ describe('Mailarchive', function () {
   var getById;
   var idOfMailWithMember = 'id2';
 
-  beforeEach(function (done) {
+  beforeEach(function () {
     sinon.stub(membersAPI, 'getMemberForId',
       function (id, callback) {
         if (id === memberID) { return callback(null, sampleMember); }
@@ -37,12 +37,10 @@ describe('Mailarchive', function () {
     listByField = sinon.stub(persistence, 'listByField', function (searchObject, sortOrder, callback) {
       callback(null, sampleMailList);
     });
-    done();
   });
 
-  afterEach(function (done) {
+  afterEach(function () {
     sinon.restore();
-    done();
   });
 
   it('calls persistence.listByField from mailHeaders and passes on the given callback', function (done) {

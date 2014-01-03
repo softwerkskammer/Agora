@@ -13,9 +13,8 @@ var colorId = 'white';
 var dummyColor = new Color({id: colorId, color: '#FF'});
 
 describe('Color API', function () {
-  afterEach(function (done) {
+  afterEach(function () {
     sinonSandbox.restore();
-    done();
   });
 
   it('returns all colors', function (done) {
@@ -26,7 +25,7 @@ describe('Color API', function () {
     api.allColors(function (err, result) {
       expect(result).to.have.lengthOf(1);
       expect(result).to.contain(dummyColor);
-      done();
+      done(err);
     });
   });
 
@@ -35,10 +34,10 @@ describe('Color API', function () {
       callback(null);
     });
 
-    api.saveColor(dummyColor, function () {
+    api.saveColor(dummyColor, function (err) {
       expect(storeSpy.calledOnce, 'saveColor is called').to.be.true;
       expect(storeSpy.calledWith(dummyColor)).to.be.true;
-      done();
+      done(err);
     });
   });
 
@@ -47,10 +46,10 @@ describe('Color API', function () {
       callback(null, colors);
     });
 
-    api.saveColors([dummyColor], function () {
+    api.saveColors([dummyColor], function (err) {
       expect(storeSpy.calledOnce, 'saveColors is called').to.be.true;
       expect(storeSpy.calledWith([dummyColor])).to.be.true;
-      done();
+      done(err);
     });
   });
 });
