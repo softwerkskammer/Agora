@@ -20,6 +20,10 @@ var mailtransport = beans.get('mailtransport');
 var emptyActivity = new Activity({title: 'Title of the Activity', description: 'description1', assignedGroup: 'assignedGroup',
   location: 'location1', direction: 'direction1', startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'), url: 'urlOfTheActivity' });
 
+var sender = new Member();
+var message = new Message({subject: 'subject', markdown: 'mark down'}, sender);
+var sendmail;
+
 describe('MailsenderAPI', function () {
   var activityURL = 'acti_vi_ty';
   var nickname = 'nickyNamy';
@@ -30,7 +34,14 @@ describe('MailsenderAPI', function () {
     sinon.stub(activitiesAPI, 'getActivityWithGroupAndParticipants', function (activityURL, callback) {
       callback(null, emptyActivity);
     });
-    sinon.stub(membersAPI, 'getMember', function (nickname, callback) { callback(null, new Member()); });
+    sinon.stub(membersAPI, 'getMember', function (nickname, callback) { callback(null, new Member({email: 'email@mail.de'})); });
+    sendmail = sinon.stub(mailtransport, 'sendMail', function (transportobject, callback) {
+      if (!transportobject.bcc || transportobject.bcc.length === 0) {
+        // simulating the behaviour of nodemailer
+        return callback(new Error());
+      }
+      callback(null);
+    });
     done();
   });
 
@@ -93,38 +104,9 @@ describe('MailsenderAPI', function () {
     });
   });
 
-  describe('sending mail', function () {
-    var groupA = new Group({id: 'groupA'});
-    var groupB = new Group({id: 'groupB'});
-    var sender = new Member();
-
-    var sendmail;
-    beforeEach(function () {
-      sendmail = sinon.stub(mailtransport, 'sendMail', function (transportobject, callback) {
-        if (!transportobject.bcc || transportobject.bcc.length === 0) {
-          // simulating the behaviour of nodemailer
-          return callback(new Error());
-        }
-        callback(null);
-      });
-
-      sinon.stub(groupsAPI, 'getGroups', function (groupnames, callback) { callback(null, [groupA, groupB]); });
-      sinon.stub(groupsAndMembersAPI, 'addMembersToGroup', function (group, callback) {
-        if (group === groupA) { group.members = [new Member({email: 'memberA'})]; }
-        if (group === groupB) { group.members = [new Member({email: 'memberB'})]; }
-        group.membercount = 1;
-        callback(null, group);
-      });
-
-    });
-
-    afterEach(function () {
-      sinon.restore();
-    });
-
-    it('as reminder for activity sends to vistors of activity', function (done) {
+  describe('sending mail as reminder for activity', function () {
+    it('sends to vistors', function (done) {
       var emailAddress = 'emailAddress@e.mail';
-      var message = new Message({subject: 'subject', markdown: 'mark down'}, sender);
       emptyActivity.visitors = [new Member({email: emailAddress})];
 
       api.sendMailToParticipantsOf(activityURL, message, function (err) {
@@ -136,8 +118,7 @@ describe('MailsenderAPI', function () {
       });
     });
 
-    it('as reminder for activity does not send mail if no visitors', function (done) {
-      var message = new Message({subject: 'subject', markdown: 'mark down'}, sender);
+    it('not send mail if no visitors', function (done) {
       emptyActivity.visitors = [];
 
       api.sendMailToParticipantsOf(activityURL, message, function (err) {
@@ -145,10 +126,35 @@ describe('MailsenderAPI', function () {
         done();
       });
     });
+  });
 
-    it('as invitation for activity sends to members of selected groups', function (done) {
-      var message = new Message({subject: 'subject', markdown: 'mark down'}, sender);
+  describe('sending mail to distinct member', function () {
+    it('sends the email', function (done) {
+      api.sendMailToMember('nickname', message, function (err) {
+        expect(sendmail.calledOnce).to.be.ok;
+        var transportobject = sendmail.args[0][0];
+        expect(transportobject.bcc).to.contain('email@mail.de');
+        expect(transportobject.html).to.contain('mark down');
+        done(err);
+      });
+    });
+  });
 
+  describe('sending mail as invitation for activity ', function () {
+    var groupA = new Group({id: 'groupA'});
+    var groupB = new Group({id: 'groupB'});
+
+    beforeEach(function () {
+      sinon.stub(groupsAPI, 'getGroups', function (groupnames, callback) { callback(null, [groupA, groupB]); });
+      sinon.stub(groupsAndMembersAPI, 'addMembersToGroup', function (group, callback) {
+        if (group === groupA) { group.members = [new Member({email: 'memberA'})]; }
+        if (group === groupB) { group.members = [new Member({email: 'memberB'})]; }
+        group.membercount = 1;
+        callback(null, group);
+      });
+    });
+
+    it('sends to members of selected groups', function (done) {
       api.sendMailToInvitedGroups(['GroupA', 'GroupB'], message, function (err) {
         expect(sendmail.calledOnce).to.be.ok;
         var transportobject = sendmail.args[0][0];
