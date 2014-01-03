@@ -1,10 +1,10 @@
 extends ../../../views/layout
 
-mixin colorPickerForTable(id, name, object)
+mixin colorPickerForTable(id, name, value)
   .form-group
     label.col-xs-4.control-label(for="color#{id}") #{id}:
     .col-xs-8
-      input.form-control(id="color#{id}", type="text", name=id, value=object[name])
+      input.form-control(id="color#{id}", type="text", name=id, value=value)
     script.
       $("#color#{id}").pickAColor();
 
@@ -22,7 +22,7 @@ block content
           small  Farben
       form.form-horizontal(action='/administration/submitColors', method='post')
         for color in colors
-           mixin colorPickerForTable(color.id, 'color', color)
+           mixin colorPickerForTable(color.id, 'color', color.color)
         button.btn.btn-primary.pull-right(type="submit") Speichern
 
   form(id='newcolorform', action='/administration/submitNewColor', method='post')
