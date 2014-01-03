@@ -89,5 +89,6 @@
   "expressViewHelper": {"module": "./lib/middleware/expressViewHelper"},
   "accessrights": {"module": "./lib/middleware/accessrights"},
   "wikiSubdirs": {"module": "./lib/middleware/wikiSubdirs"},
-  "gitmech": {"module": "./lib/wiki/gitmech"}
+  "gitmech": {"module": "./lib/wiki/gitmech"},
+  "mailtransport": {"module": "./lib/mailsender/mailtransport"}
 }
