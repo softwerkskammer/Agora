@@ -38,9 +38,9 @@ describe('MailsenderAPI', function () {
 
   it('collects data for showing the edit form for an activity', function (done) {
     api.dataForShowingMessageForActivity(activityURL, 'de', function (err, result) {
-      expect(!!result.message).to.be.true;
-      expect(!!result.regionalgroups).to.be.true;
-      expect(!!result.themegroups).to.be.true;
+      expect(result.message).to.exist;
+      expect(result.regionalgroups).to.exist;
+      expect(result.themegroups).to.exist;
       expect(result.successURL).to.contain(activityURL);
       done();
     });
@@ -48,9 +48,9 @@ describe('MailsenderAPI', function () {
 
   it('collects data for showing the edit form for a member', function (done) {
     api.dataForShowingMessageToMember(nickname, function (err, result) {
-      expect(!!result.message).to.be.true;
-      expect(!!result.regionalgroups).to.be.false;
-      expect(!!result.themegroups).to.be.false;
+      expect(result.message).to.exist;
+      expect(result.regionalgroups).to.not.exist;
+      expect(result.themegroups).to.not.exist;
       expect(result.successURL).to.contain(nickname);
       done();
     });
