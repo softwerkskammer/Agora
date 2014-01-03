@@ -6,12 +6,14 @@ var beans = require('../configureForTest').get('beans');
 
 var membersAPI = beans.get('membersAPI');
 var groupsAPI = beans.get('groupsAPI');
+var groupsAndMembersAPI = beans.get('groupsAndMembersAPI');
 var activitiesAPI = beans.get('activitiesAPI');
 
 var api = beans.get('mailsenderAPI');
 var Activity = beans.get('activity');
 var Member = beans.get('member');
 var Message = beans.get('message');
+var Group = beans.get('group');
 var fieldHelpers = beans.get('fieldHelpers');
 var mailtransport = beans.get('mailtransport');
 
@@ -92,6 +94,10 @@ describe('MailsenderAPI', function () {
   });
 
   describe('sending mail', function () {
+    var groupA = new Group({id: 'groupA'});
+    var groupB = new Group({id: 'groupB'});
+    var sender = new Member();
+
     var sendmail;
     beforeEach(function () {
       sendmail = sinon.stub(mailtransport, 'sendMail', function (transportobject, callback) {
@@ -101,6 +107,15 @@ describe('MailsenderAPI', function () {
         }
         callback(null);
       });
+
+      sinon.stub(groupsAPI, 'getGroups', function (groupnames, callback) { callback(null, [groupA, groupB]); });
+      sinon.stub(groupsAndMembersAPI, 'addMembersToGroup', function (group, callback) {
+        if (group === groupA) { group.members = [new Member({email: 'memberA'})]; }
+        if (group === groupB) { group.members = [new Member({email: 'memberB'})]; }
+        group.membercount = 1;
+        callback(null, group);
+      });
+
     });
 
     afterEach(function () {
@@ -109,7 +124,7 @@ describe('MailsenderAPI', function () {
 
     it('as reminder for activity sends to vistors of activity', function (done) {
       var emailAddress = 'emailAddress@e.mail';
-      var message = new Message({subject: 'subject', markdown: 'mark down'}, new Member());
+      var message = new Message({subject: 'subject', markdown: 'mark down'}, sender);
       emptyActivity.visitors = [new Member({email: emailAddress})];
 
       api.sendMailToParticipantsOf(activityURL, message, function (err) {
@@ -122,7 +137,7 @@ describe('MailsenderAPI', function () {
     });
 
     it('as reminder for activity does not send mail if no visitors', function (done) {
-      var message = new Message({subject: 'subject', markdown: 'mark down'}, new Member());
+      var message = new Message({subject: 'subject', markdown: 'mark down'}, sender);
       emptyActivity.visitors = [];
 
       api.sendMailToParticipantsOf(activityURL, message, function (err) {
@@ -130,6 +145,20 @@ describe('MailsenderAPI', function () {
         done();
       });
     });
+
+    it('as invitation for activity sends to members of selected groups', function (done) {
+      var message = new Message({subject: 'subject', markdown: 'mark down'}, sender);
+
+      api.sendMailToInvitedGroups(['GroupA', 'GroupB'], message, function (err) {
+        expect(sendmail.calledOnce).to.be.ok;
+        var transportobject = sendmail.args[0][0];
+        expect(transportobject.bcc).to.contain('memberA');
+        expect(transportobject.bcc).to.contain('memberB');
+        expect(transportobject.html).to.contain('mark down');
+        done(err);
+      });
+    });
+
   });
 
 });
