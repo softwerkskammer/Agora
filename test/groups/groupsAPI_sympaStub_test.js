@@ -17,7 +17,7 @@ var systemUnderTest = beans.get('groupsAPI');
 describe('Groups API with SympaStub', function () {
   var saveGroupSpy;
 
-  before(function (done) {
+  before(function () {
     sinon.stub(groupstore, 'allGroups', function (callback) { callback(null, [Craftsmanswap, NeuePlattform]); });
     sinon.stub(groupstore, 'getGroup', function (name, callback) {
       if (name === 'craftsmanswap') {
@@ -29,12 +29,10 @@ describe('Groups API with SympaStub', function () {
       }
     });
     saveGroupSpy = sinon.stub(groupstore, 'saveGroup', function (group, callback) { callback(null); });
-    done();
   });
 
-  after(function (done) {
+  after(function () {
     sinon.restore();
-    done();
   });
 
 

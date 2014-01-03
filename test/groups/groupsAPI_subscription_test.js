@@ -18,7 +18,7 @@ describe('Groups API (updateSubscriptions)', function () {
   var subscribeSpy;
   var unsubscribeSpy;
 
-  beforeEach(function (done) {
+  beforeEach(function () {
     systemUnderTest.refreshCache();
     subscribeSpy = sinon.stub(sympaStub, 'addUserToList', function (email, list, callback) {
       callback();
@@ -26,14 +26,12 @@ describe('Groups API (updateSubscriptions)', function () {
     unsubscribeSpy = sinon.stub(sympaStub, 'removeUserFromList', function (email, list, callback) {
       callback();
     });
-    done();
   });
 
-  afterEach(function (done) {
+  afterEach(function () {
     sympaStub.addUserToList.restore();
     sympaStub.removeUserFromList.restore();
     sympaStub.getSubscribedListsForUser.restore();
-    done();
   });
 
   var setupSubscribedListsForUser = function (lists) {
@@ -182,53 +180,48 @@ describe('Groups API (updateSubscriptions)', function () {
 
 describe('Groups API (combineSubscribedAndAvailableGroups)', function () {
 
-  it('combines no subscribed and no available groups to an empty array', function (done) {
+  it('combines no subscribed and no available groups to an empty array', function () {
     var result = systemUnderTest.combineSubscribedAndAvailableGroups([], []);
 
     expect(result).to.be.not.null;
     expect(result.length).to.equal(0);
-    done();
   });
 
-  it('combines some subscribed but no available groups to an empty array', function (done) {
+  it('combines some subscribed but no available groups to an empty array', function () {
     var result = systemUnderTest.combineSubscribedAndAvailableGroups([GroupA, GroupB], []);
 
     expect(result).to.be.not.null;
     expect(result.length).to.equal(0);
-    done();
   });
 
-  it('combines no subscribed and one available group to indicate an unselected group', function (done) {
+  it('combines no subscribed and one available group to indicate an unselected group', function () {
     var result = systemUnderTest.combineSubscribedAndAvailableGroups([], [GroupA]);
 
     expect(result).to.be.not.null;
     expect(result.length).to.equal(1);
     expect(result[0].group, 'group').to.equal(GroupA);
     expect(result[0].selected, 'selected').to.be.false;
-    done();
   });
 
-  it('combines one subscribed and another available group to indicate an unselected group', function (done) {
+  it('combines one subscribed and another available group to indicate an unselected group', function () {
     var result = systemUnderTest.combineSubscribedAndAvailableGroups([GroupA], [GroupB]);
 
     expect(result).to.be.not.null;
     expect(result.length).to.equal(1);
     expect(result[0].group, 'group').to.equal(GroupB);
     expect(result[0].selected, 'selected').to.be.false;
-    done();
   });
 
-  it('combines one subscribed and the same available group to indicate a selected group', function (done) {
+  it('combines one subscribed and the same available group to indicate a selected group', function () {
     var result = systemUnderTest.combineSubscribedAndAvailableGroups([GroupA], [GroupA]);
 
     expect(result).to.be.not.null;
     expect(result.length).to.equal(1);
     expect(result[0].group, 'group').to.equal(GroupA);
     expect(result[0].selected, 'selected').to.be.true;
-    done();
   });
 
-  it('combines some subscribed and some available groups to indicate the correct selections', function (done) {
+  it('combines some subscribed and some available groups to indicate the correct selections', function () {
     var result = systemUnderTest.combineSubscribedAndAvailableGroups([GroupA], [GroupA, GroupB]);
 
     expect(result).to.be.not.null;
@@ -237,6 +230,5 @@ describe('Groups API (combineSubscribedAndAvailableGroups)', function () {
     expect(result[0].selected, 'selected').to.be.true;
     expect(result[1].group, 'group').to.equal(GroupB);
     expect(result[1].selected, 'selected').to.be.false;
-    done();
   });
 });

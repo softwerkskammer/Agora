@@ -22,14 +22,12 @@ var systemUnderTest = beans.get('groupsAndMembersAPI');
 
 describe('Groups and Members API (getUserWithHisGroups)', function () {
 
-  beforeEach(function (done) {
+  beforeEach(function () {
     sinon.stub(membersAPI, 'allMembers', function (callback) { callback(null, null); });
-    done();
   });
 
-  afterEach(function (done) {
+  afterEach(function () {
     sinon.restore();
-    done();
   });
 
   it('returns neither member nor groups when there is no member for the given nickname', function (done) {
@@ -43,7 +41,7 @@ describe('Groups and Members API (getUserWithHisGroups)', function () {
     systemUnderTest.getUserWithHisGroups('nickname', function (err, member, subscribedGroups) {
       expect(!!member).to.be.false;
       expect(!!subscribedGroups).to.be.false;
-      done();
+      done(err);
     });
   });
 
@@ -68,14 +66,12 @@ describe('Groups and Members API (getUserWithHisGroups)', function () {
 
 describe('Groups and Members API (getGroupAndMembersForList)', function () {
 
-  beforeEach(function (done) {
+  beforeEach(function () {
     sinon.stub(membersAPI, 'allMembers', function (callback) { callback(null, null); });
-    done();
   });
 
-  afterEach(function (done) {
+  afterEach(function () {
     sinon.restore();
-    done();
   });
 
   it('returns no group when there is no group and no sympa-list', function (done) {
@@ -142,9 +138,8 @@ describe('Groups and Members API (getGroupAndMembersForList)', function () {
 });
 
 describe('Groups and Members API (addMembercountToGroup)', function () {
-  afterEach(function (done) {
+  afterEach(function () {
     sinon.restore();
-    done();
   });
 
   it('returns no group when the group is null', function (done) {
@@ -181,14 +176,12 @@ describe('Groups and Members API (addMembercountToGroup)', function () {
 
 describe('Groups and Members API (addMembersToGroup)', function () {
 
-  beforeEach(function (done) {
+  beforeEach(function () {
     sinon.stub(membersAPI, 'allMembers', function (callback) { callback(null, null); });
-    done();
   });
 
-  afterEach(function (done) {
+  afterEach(function () {
     sinon.restore();
-    done();
   });
 
   it('returns no group when the group is null', function (done) {
@@ -248,31 +241,27 @@ describe('Groups and Members API (addMembersToGroup)', function () {
 
 describe('Groups and Members API (userIsInMemberList)', function () {
 
-  it('returns false if the user id is undefined', function (done) {
+  it('returns false if the user id is undefined', function () {
     var result = systemUnderTest.userIsInMemberList(undefined, [dummymember, dummymember2]);
 
     expect(result).to.be.false;
-    done();
   });
 
-  it('returns false if the member list is empty', function (done) {
+  it('returns false if the member list is empty', function () {
     var result = systemUnderTest.userIsInMemberList('hada', []);
 
     expect(result).to.be.false;
-    done();
   });
 
-  it('returns false if the user is not in the member list', function (done) {
+  it('returns false if the user is not in the member list', function () {
     var result = systemUnderTest.userIsInMemberList('trallala', [dummymember]);
 
     expect(result).to.be.false;
-    done();
   });
 
-  it('returns true if the user is in the member list', function (done) {
+  it('returns true if the user is in the member list', function () {
     var result = systemUnderTest.userIsInMemberList('hada', [dummymember, dummymember2]);
 
     expect(result).to.be.true;
-    done();
   });
 });

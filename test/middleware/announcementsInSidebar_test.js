@@ -26,9 +26,8 @@ describe('Announcements in Sidebar', function () {
     res = {locals: {}};
   });
 
-  afterEach(function (done) {
+  afterEach(function () {
     sinon.restore();
-    done();
   });
 
   it('shows the latest 3 news if there are no more than 3', function () {

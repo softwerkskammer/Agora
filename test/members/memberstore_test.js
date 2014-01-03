@@ -14,9 +14,8 @@ describe('Members store', function () {
   var sampleMember2 = {nickname: 'nick2', email: 'nick2s mail'};
   var sampleList = [sampleMember, sampleMember2];
 
-  afterEach(function (done) {
+  afterEach(function () {
     sinon.restore();
-    done();
   });
 
   it('calls persistence.getByField for store.getMember and passes on the given callback', function (done) {
@@ -134,7 +133,7 @@ describe('Members store', function () {
   it('returns an empty array when asked for all members for empty email list', function (done) {
     store.getMembersForEMails([], function (err, members) {
       expect(members).to.be.empty;
-      done();
+      done(err);
     });
   });
 

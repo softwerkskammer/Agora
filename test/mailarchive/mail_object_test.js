@@ -37,9 +37,8 @@ describe('Mail', function () {
     expect(mail.time.format()).to.equal(expectedTime.format());
   });
 
-  it('uses sender name as name to be displayed if it is available', function (done) {
+  it('uses sender name as name to be displayed if it is available', function () {
     expect(mailWithFrom.displayedSenderName()).to.equal('name');
-    done();
   });
 
   it('uses the display name of a real member if available', function () {

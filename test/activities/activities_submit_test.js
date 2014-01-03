@@ -12,15 +12,12 @@ var createApp = require('../testHelper')('activitiesApp').createApp;
 
 describe('Activity application - on submit -', function () {
 
-  afterEach(function (done) {
+  afterEach(function () {
     sinon.restore();
-    done();
   });
 
   it('rejects an activity with invalid and different url', function (done) {
-    sinon.stub(activitiesAPI, 'isValidUrl', function (isReserved, nickname, callback) {
-      callback(null, false);
-    });
+    sinon.stub(activitiesAPI, 'isValidUrl', function (isReserved, nickname, callback) { callback(null, false); });
 
     request(createApp())
       .post('/submit')
@@ -47,9 +44,7 @@ describe('Activity application - on submit -', function () {
   });
 
   it('rejects an activity with different but valid url and with empty title', function (done) {
-    sinon.stub(activitiesAPI, 'isValidUrl', function (isReserved, nickname, callback) {
-      callback(null, true);
-    });
+    sinon.stub(activitiesAPI, 'isValidUrl', function (isReserved, nickname, callback) { callback(null, true); });
 
     request(createApp())
       .post('/submit')

@@ -28,7 +28,7 @@ describe('MailsenderAPI', function () {
   var activityURL = 'acti_vi_ty';
   var nickname = 'nickyNamy';
 
-  beforeEach(function (done) {
+  beforeEach(function () {
     var availableGroups = [];
     sinon.stub(groupsAPI, 'getAllAvailableGroups', function (callback) { callback(null, availableGroups); });
     sinon.stub(activitiesAPI, 'getActivityWithGroupAndParticipants', function (activityURL, callback) {
@@ -42,12 +42,10 @@ describe('MailsenderAPI', function () {
       }
       callback(null);
     });
-    done();
   });
 
-  afterEach(function (done) {
+  afterEach(function () {
     sinon.restore();
-    done();
   });
 
   describe('preparing data', function () {
@@ -57,7 +55,7 @@ describe('MailsenderAPI', function () {
         expect(result.regionalgroups).to.exist;
         expect(result.themegroups).to.exist;
         expect(result.successURL).to.contain(activityURL);
-        done();
+        done(err);
       });
     });
 
@@ -67,7 +65,7 @@ describe('MailsenderAPI', function () {
         expect(result.regionalgroups).to.not.exist;
         expect(result.themegroups).to.not.exist;
         expect(result.successURL).to.contain(nickname);
-        done();
+        done(err);
       });
     });
   });
@@ -123,7 +121,7 @@ describe('MailsenderAPI', function () {
 
       api.sendMailToParticipantsOf(activityURL, message, function (err) {
         expect(err).to.exist;
-        done();
+        done(); // error condition - do not pass err
       });
     });
   });

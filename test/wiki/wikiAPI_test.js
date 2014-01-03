@@ -13,7 +13,7 @@ describe('Wiki API', function () {
   var content = "Hallo, ich bin der Dateiinhalt";
   var nonExistingPage = 'global/nonExisting';
 
-  beforeEach(function (done) {
+  beforeEach(function () {
     sinon.stub(Git, 'readFile', function (completePageName, pageVersion, callback) {
       if (completePageName === nonExistingPage + '.md') {
         return callback(new Error());
@@ -26,19 +26,17 @@ describe('Wiki API', function () {
     sinon.stub(Git, 'absPath', function (path) {
       return path;
     });
-    done();
   });
 
-  afterEach(function (done) {
+  afterEach(function () {
     sinon.restore();
-    done();
   });
 
   describe('(showPage)', function () {
     it('returns content for a requested existing page', function (done) {
       wikiAPI.showPage('pageName', '11', function (err, cont) {
         expect(content).to.equal(cont);
-        done();
+        done(err);
       });
     });
 
@@ -46,7 +44,7 @@ describe('Wiki API', function () {
       wikiAPI.showPage(nonExistingPage, '11', function (err, cont) {
         expect(err).to.exist;
         expect(cont).to.not.exist;
-        done();
+        done(); // error condition - do not pass err
       });
     });
   });
@@ -56,7 +54,7 @@ describe('Wiki API', function () {
       wikiAPI.pageEdit('pageName', function (err, cont, metadata) {
         expect('').to.equal(cont);
         expect(metadata).to.contain('NEW');
-        done();
+        done(err);
       });
     });
 
@@ -64,7 +62,7 @@ describe('Wiki API', function () {
       wikiAPI.pageEdit('README', function (err, cont, metadata) {
         expect(content).to.equal(cont);
         expect(metadata).to.be.empty;
-        done();
+        done(err);
       });
     });
   });
@@ -76,7 +74,7 @@ describe('Wiki API', function () {
 //This is an extra group because the Git.readFile mock has a different objective
 describe('WikiAPI (getBlogPosts)', function () {
 
-  beforeEach(function (done) {
+  beforeEach(function () {
     sinon.stub(Git, 'lsblogposts', function (groupname, callback) {
       if (groupname === 'internet') {
         callback(null, ['internet/blog_oktober2013.md', 'internet/blog_november2013.md']);
@@ -110,13 +108,11 @@ describe('WikiAPI (getBlogPosts)', function () {
       }
 
     });
-    done();
   });
 
-  afterEach(function (done) {
+  afterEach(function () {
     Git.readFile.restore();
     Git.lsblogposts.restore();
-    done();
   });
 
   it('returns two properly parsed blog posts for the group internet', function (done) {
@@ -135,14 +131,14 @@ describe('WikiAPI (getBlogPosts)', function () {
       expect(post2.path).to.equal("internet/blog_oktober2013");
       expect(post2.date.isSame(new moment("2013-10-01"))).to.be.true;
 
-      done();
+      done(err);
     });
   });
 
   it('returns no blog posts for the group alle', function (done) {
     wikiAPI.getBlogpostsForGroup("alle", function (err, result) {
       expect(result.length === 0).to.be.true;
-      done();
+      done(err);
     });
   });
 
@@ -153,7 +149,7 @@ describe('WikiAPI (getBlogPosts)', function () {
       expect(result[0].title).to.equal('1');
       expect(result[1].title).to.equal('3');
       expect(result[2].title).to.equal('2');
-      done();
+      done(err);
     });
   });
 });

@@ -30,7 +30,7 @@ var group = new Group({id: "groupname", longName: "Buxtehude"});
 
 describe('Activities API', function () {
 
-  beforeEach(function (done) {
+  beforeEach(function () {
     sinon.stub(activitystore, 'allActivities', function (callback) {callback(null, [dummyActivity]); });
 
     sinon.stub(groupsAPI, 'getAllAvailableGroups', function (callback) {
@@ -43,12 +43,10 @@ describe('Activities API', function () {
       result['assignedGroup'] = '#123456';
       callback(null, result);
     });
-    done();
   });
 
-  afterEach(function (done) {
+  afterEach(function () {
     sinon.restore();
-    done();
   });
 
   it('returns the queried activities and enhances them with their color and group name', function () {
@@ -116,11 +114,10 @@ describe('Activities API', function () {
       sinon.stub(activitystore, 'getActivityForId', function (id, callback) { callback(null, activity); });
 
       activitiesAPI.addVisitorTo('memberId', 'activity-url', 'Einzelzimmer', new moment(), function (err, statusTitle, statusText) {
-        expect(!!err, "Error: " + err).to.be.false;
         expect(!!statusTitle, "Status Title").to.be.false;
         expect(!!statusText, "Status Text").to.be.false;
         expect(activity.resourceNamed('Einzelzimmer').registeredMembers()).to.contain('memberId');
-        done();
+        done(err);
       });
     });
 
@@ -131,36 +128,25 @@ describe('Activities API', function () {
       sinon.stub(activitystore, 'getActivityForId', function (id, callback) { callback(null, activity); });
 
       activitiesAPI.addVisitorTo('memberId', 'activity-url', 'Einzelzimmer', new moment(), function (err, statusTitle, statusText) {
-        expect(!!err, "Error").to.be.false;
         expect(statusTitle, "Status Title").to.equal('activities.registration_not_now');
         expect(statusText, "Status Text").to.equal('activities.registration_not_possible');
         expect(activity.resourceNamed('Einzelzimmer').registeredMembers()).to.not.contain('memberId');
-        done();
+        done(err);
       });
     });
 
     it('succeeds when registration is not open but registrant is on waiting list and allowed to subscribe', function (done) {
       var tomorrow = moment();
       tomorrow.add('days', 1);
-      var activity = new Activity({
-        resources: {
-          Einzelzimmer: {
-            _registrationOpen: false,
-            _waitinglist: [
-              { _memberId: 'memberId', _registrationValidUntil: tomorrow.toDate() }
-            ]
-          }
-        }
-      });
+      var activity = new Activity({ resources: { Einzelzimmer: { _registrationOpen: false, _waitinglist: [{ _memberId: 'memberId', _registrationValidUntil: tomorrow.toDate() }] } } });
       sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, activity); });
       sinon.stub(activitystore, 'saveActivity', function (id, callback) { callback(null); });
 
       activitiesAPI.addVisitorTo('memberId', 'activity-url', 'Einzelzimmer', moment(), function (err, statusTitle, statusText) {
-        expect(!!err, "Error").to.be.false;
         expect(!!statusTitle, "Status Title").to.be.false;
         expect(!!statusText, "Status Text").to.be.false;
         expect(activity.resourceNamed('Einzelzimmer').registeredMembers()).to.contain('memberId');
-        done();
+        done(err);
       });
     });
 
@@ -169,7 +155,7 @@ describe('Activities API', function () {
 
       activitiesAPI.addVisitorTo('memberId', 'activity-url', 'Einzelzimmer', new moment(), function (err) {
         expect(!!err, "Error").to.be.true;
-        done();
+        done(); // error condition - do not pass err
       });
     });
   });
