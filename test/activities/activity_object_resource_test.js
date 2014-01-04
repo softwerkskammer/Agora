@@ -18,6 +18,11 @@ describe('Activity resource management', function () {
       expect(activity.resourceNames()).to.contain(defaultName);
     });
 
+    it('registration is allowed for the default resource if no resources are present on creation', function () {
+      var activity = new Activity();
+      expect(activity.resourceNamed(defaultName).isRegistrationOpen()).to.be.true;
+    });
+
     it('lists the name of all resources if resources are present on creation', function () {
       var activity = new Activity({resources: {Einzelzimmer: { _registeredMembers: []}, Doppelzimmer: { _registeredMembers: []}}});
       expect(activity.resourceNames().length).to.equal(2);
