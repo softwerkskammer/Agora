@@ -232,7 +232,7 @@ describe('Groups API (createOrSaveGroup)', function () {
   it('creates a new group and saves it if there is no group with the given name', function (done) {
 
     systemUnderTest.createOrSaveGroup(NonPersistentGroup, function (err, group) {
-      expect(group).to.equal(NonPersistentGroup);
+      expect(group).to.be.null; // would return an existingGroup, but Group is new
       expect(createListSpy.calledOnce).to.be.true;
       expect(saveGroupSpy.calledOnce).to.be.true;
       done(err);

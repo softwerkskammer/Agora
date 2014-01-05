@@ -296,8 +296,7 @@ describe('Groups and Members API (updateAdminlistSubscriptions)', function () {
   var unsubscribeSpy;
 
   beforeEach(function () {
-    groupA = new Group({id: 'groupA'});
-    groupA.organizers = [];
+    groupA = new Group({id: 'groupA', organizers: []});
     member = new Member({id: 'id', email: email});
     member.subscribedGroups = [groupA];
     subscribeSpy = sinon.stub(groupsAPI, 'addUserToList', function (email, list, callback) { callback(); });
@@ -358,3 +357,51 @@ describe('Groups and Members API (updateAdminlistSubscriptions)', function () {
 
 });
 
+describe('Groups and Members API (saveGroup)', function () {
+  var email = 'user@mail.com';
+  var groupA;
+  var member;
+  var createOrSaveGroupSpy;
+  var getMemberForIdSpy;
+  var subscribeSpy;
+
+  beforeEach(function () {
+    groupA = new Group({id: 'groupA', organizers: []});
+    member = new Member({id: 'id', email: email});
+    member.subscribedGroups = [groupA];
+    sinon.stub(groupsAPI, 'getSubscribedGroupsForUser', function (memberEmail, callback) { callback(null, [groupA]); });
+    createOrSaveGroupSpy = sinon.stub(groupsAPI, 'createOrSaveGroup', function (group, callback) { callback(); });
+    getMemberForIdSpy = sinon.stub(membersAPI, 'getMemberForId', function (memberID, callback) { callback(null, member); });
+    subscribeSpy = sinon.stub(groupsAPI, 'addUserToList', function (email, list, callback) { callback(); });
+  });
+
+  afterEach(function () {
+    sinon.restore();
+  });
+
+  it('calls groupAPI to perform saving', function (done) {
+    systemUnderTest.saveGroup(groupA, function (err) {
+      expect(createOrSaveGroupSpy.called, 'save in GroupsAPI is called').to.be.true;
+      done(err);
+    });
+  });
+
+  it('calls membersAPI to retrieve member if in organizers (and subscribes)', function (done) {
+    groupA.organizers.push('id');
+
+    systemUnderTest.saveGroup(groupA, function (err) {
+      expect(getMemberForIdSpy.called, 'getMemberForID in MembersAPI is called').to.be.true;
+      expect(subscribeSpy.called, 'subscribe in GroupsAPI is called').to.be.true;
+      done(err);
+    });
+  });
+
+  it('does not call membersAPI to retrieve member if not in organizers (and does not subscribe)', function (done) {
+    systemUnderTest.saveGroup(groupA, function (err) {
+      expect(getMemberForIdSpy.called, 'getMemberForID in MembersAPI is called').to.be.false;
+      expect(subscribeSpy.called, 'subscribe in GroupsAPI is called').to.be.false;
+      done(err);
+    });
+  });
+
+});

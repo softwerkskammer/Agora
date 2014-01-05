@@ -89,7 +89,7 @@ describe('Groups API with SympaStub', function () {
   it('can handle the creation of a new group', function (done) {
 
     systemUnderTest.createOrSaveGroup(NonPersistentGroup, function (err, group) {
-      expect(group).to.equal(NonPersistentGroup);
+      expect(group).to.be.null; // would return an existingGroup, but Group is new 
       expect(saveGroupSpy.calledOnce).to.be.true;
       done(err);
     });

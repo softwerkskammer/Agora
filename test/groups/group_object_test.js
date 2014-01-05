@@ -75,20 +75,37 @@ describe('Group object', function () {
   });
 
   it('answers that a memberId is one of its organizers', function () {
-    var group = new Group();
-    group.organizers = ['id'];
+    var group = new Group({id: 'groupA', organizers: 'id'});
     expect(group.isOrganizer('id')).to.be.true;
   });
 
   it('answers that a wrong memberId is not one of its organizers', function () {
-    var group = new Group();
-    group.organizers = ['id'];
+    var group = new Group({id: 'groupA', organizers: 'id'});
     expect(group.isOrganizer('anotherId')).to.be.false;
   });
 
   it('answers that a memberId is not one of its organizers if there are no organizers initialized', function () {
     var group = new Group();
     expect(group.isOrganizer('anotherId')).to.be.false;
+  });
+  
+  it('delivers the symmetric difference of organizers to no other group', function () {
+    var group = new Group({id: 'groupA', organizers: 'id'});
+    expect(Group.organizersOnlyInOneOf(group)).to.contain('id');
+  });
+
+  it('delivers the symmetric difference of organizers to another group (identical organizers)', function () {
+    var groupA = new Group({id: 'groupA', organizers: 'id'});
+    var groupB = new Group({id: 'groupB', organizers: 'id'});
+    expect(Group.organizersOnlyInOneOf(groupA, groupB)).to.not.contain('id');
+  });
+
+  it('delivers the symmetric difference of organizers to another group (additional organizers on both sides)', function () {
+    var groupA = new Group({id: 'groupA', organizers: 'id,idA'});
+    var groupB = new Group({id: 'groupB', organizers: 'id,idB'});
+    expect(Group.organizersOnlyInOneOf(groupA, groupB)).to.contain('idA');
+    expect(Group.organizersOnlyInOneOf(groupA, groupB)).to.contain('idB');
+    expect(Group.organizersOnlyInOneOf(groupA, groupB)).to.not.contain('id');
   });
 
 });
