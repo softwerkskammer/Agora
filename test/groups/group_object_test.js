@@ -89,7 +89,12 @@ describe('Group object', function () {
     expect(group.isOrganizer('anotherId')).to.be.false;
   });
   
-  it('delivers the symmetric difference of organizers to no other group', function () {
+  it('delivers the symmetric difference of organizers to no other group (first arg is undefined)', function () {
+    var group = new Group({id: 'groupA', organizers: 'id'});
+    expect(Group.organizersOnlyInOneOf(undefined, group)).to.contain('id');
+  });
+
+  it('delivers the symmetric difference of organizers to no other group (second arg is undefined)', function () {
     var group = new Group({id: 'groupA', organizers: 'id'});
     expect(Group.organizersOnlyInOneOf(group)).to.contain('id');
   });
