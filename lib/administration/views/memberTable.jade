@@ -37,12 +37,12 @@ block content
               th Vorname
               th Nachname
               th Ort/Region
-              th Email
-              th Twitter
-              th Beruf
+              th Wie&nbsp;ich&nbsp;von&nbsp;der&nbsp;Softwerkskammer&nbsp;erfahren&nbsp;habe
               th Interessenschwerpunkte
               th Website/Blog
-              th Wie&nbsp;ich&nbsp;von&nbsp;der&nbsp;Softwerkskammer&nbsp;erfahren&nbsp;habe
+              th Beruf
+              th Email
+              th Twitter
           tbody
             for member in members
               tr
@@ -52,11 +52,11 @@ block content
                 td #{member.firstname()}
                 td #{member.lastname()}
                 td #{member.location()}
-                td #{member.email()}
-                td #{member.twitter()}
-                td #{member.profession()}
+                td #{member.reference()}
                 td #{member.interests()}
                 td #{member.site()}
-                td #{member.reference()}
-                
-    
+                td #{member.profession()}
+                td #{member.email()}
+                td #{member.twitter()}
+
+
