@@ -1,17 +1,16 @@
 "use strict";
 
-var sinon = require('sinon');
+var sinon = require('sinon').sandbox.create();
 
 var expect = require('chai').expect;
 var conf = require('../configureForTest');
-
-var Group = conf.get('beans').get('group');
-
+var beans = conf.get('beans');
+var Group = beans.get('group');
 var GroupA = new Group({id: 'GroupA', longName: 'Gruppe A', description: 'Dies ist Gruppe A.', type: 'Themengruppe'});
 var GroupB = new Group({id: 'GroupB', longName: 'Gruppe B', description: 'Dies ist Gruppe B.', type: 'Regionalgruppe'});
 
-var sympaStub = conf.get('beans').get('sympaStub');
-var systemUnderTest = conf.get('beans').get('groupsAPI');
+var sympaStub = beans.get('sympaStub');
+var systemUnderTest = beans.get('groupsAPI');
 
 describe('Groups API (updateSubscriptions)', function () {
 
@@ -20,18 +19,12 @@ describe('Groups API (updateSubscriptions)', function () {
 
   beforeEach(function () {
     systemUnderTest.refreshCache();
-    subscribeSpy = sinon.stub(sympaStub, 'addUserToList', function (email, list, callback) {
-      callback();
-    });
-    unsubscribeSpy = sinon.stub(sympaStub, 'removeUserFromList', function (email, list, callback) {
-      callback();
-    });
+    subscribeSpy = sinon.stub(sympaStub, 'addUserToList', function (email, list, callback) { callback(); });
+    unsubscribeSpy = sinon.stub(sympaStub, 'removeUserFromList', function (email, list, callback) { callback(); });
   });
 
   afterEach(function () {
-    sympaStub.addUserToList.restore();
-    sympaStub.removeUserFromList.restore();
-    sympaStub.getSubscribedListsForUser.restore();
+    sinon.restore();
   });
 
   var setupSubscribedListsForUser = function (lists) {
@@ -232,3 +225,5 @@ describe('Groups API (combineSubscribedAndAvailableGroups)', function () {
     expect(result[1].selected, 'selected').to.be.false;
   });
 });
+
+
