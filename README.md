@@ -31,7 +31,7 @@ Get it from [http://nodejs.org](http://nodejs.org)
 
 Some modules are compiled during the installation. Therefore some software should be installed.
 
-* Python 2.7 in system path
+* Python 2.7 (not Python 3!) in system path
 * Git in system path
 * OS depending C++ compiler with headers and libraries
   * For Windows: Microsoft Windows SDK for Windows 7 and .NET Framework 4 [available here](http://www.microsoft.com/en-us/download/details.aspx?id=8279)
@@ -48,7 +48,7 @@ Preparations for use
 
             cmd.exe /E:ON /V:ON /T:0E /K "C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\SetEnv.cmd" /Release /X86
 
-  * Alternatively run `npm install` in the [Windows SDK Command Promt](http://msdn.microsoft.com/en-us/library/ms229859.aspx)
+  * Alternatively run `npm install` in the [Windows SDK Command Prompt](http://msdn.microsoft.com/en-us/library/ms229859.aspx)
   * If python 3 is the default version, the command line for `npm install` must be adopted with the right python version (2.7)
 
             npm install --python /usr/bin/python2
