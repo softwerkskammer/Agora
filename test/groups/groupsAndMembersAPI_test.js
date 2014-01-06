@@ -260,199 +260,22 @@ describe('Groups and Members API (addMembersToGroup)', function () {
 
 });
 
-describe('Groups and Members API (userIsInMemberList)', function () {
+describe('Groups and Members API (memberIsInMemberList)', function () {
 
   it('returns false if the user id is undefined', function () {
-    var result = groupsAndMembersAPI.userIsInMemberList(undefined, [dummymember, dummymember2]);
-
-    expect(result).to.be.false;
+    expect(groupsAndMembersAPI.memberIsInMemberList(undefined, [dummymember, dummymember2])).to.be.false;
   });
 
   it('returns false if the member list is empty', function () {
-    var result = groupsAndMembersAPI.userIsInMemberList('hada', []);
-
-    expect(result).to.be.false;
+    expect(groupsAndMembersAPI.memberIsInMemberList('hada', [])).to.be.false;
   });
 
   it('returns false if the user is not in the member list', function () {
-    var result = groupsAndMembersAPI.userIsInMemberList('trallala', [dummymember]);
-
-    expect(result).to.be.false;
+    expect(groupsAndMembersAPI.memberIsInMemberList('trallala', [dummymember])).to.be.false;
   });
 
   it('returns true if the user is in the member list', function () {
-    var result = groupsAndMembersAPI.userIsInMemberList('hada', [dummymember, dummymember2]);
-
-    expect(result).to.be.true;
+    expect(groupsAndMembersAPI.memberIsInMemberList('hada', [dummymember, dummymember2])).to.be.true;
   });
 });
 
-describe('Groups and Members API (updateAdminlistSubscriptions)', function () {
-  var email = 'user@mail.com';
-  var groupA;
-  var member;
-  var subscribedGroups = [];
-
-  var subscribeSpy;
-  var unsubscribeSpy;
-
-  beforeEach(function () {
-    groupA = new Group({id: 'groupA', organizers: []});
-    member = new Member({id: 'id', email: email});
-    subscribedGroups.push(groupA);
-    sinon.stub(membersAPI, 'getMemberForId', function (memberID, callback) { callback(null, member); });
-    sinon.stub(groupsAPI, 'getSubscribedGroupsForUser', function (memberEmail, callback) { callback(null, subscribedGroups); });
-    subscribeSpy = sinon.stub(groupsAPI, 'addUserToList', function (email, list, callback) { callback(); });
-    unsubscribeSpy = sinon.stub(groupsAPI, 'removeUserFromList', function (email, list, callback) { callback(); });
-  });
-
-  afterEach(function () {
-    sinon.restore();
-  });
-
-  it('subscribes a new contact person', function (done) {
-    sinon.stub(groupsAPI, 'getSympaUsersOfList', function (listname, callback) { callback(null, []); });
-    groupA.organizers.push(member.id());
-
-    groupsAndMembersAPI.updateAdminlistSubscriptions(member.id(), function (err) {
-      expect(subscribeSpy.called, 'subscribe is called').to.be.true;
-      expect(unsubscribeSpy.called, 'unsubscribe is called').to.be.false;
-      done(err);
-    });
-  });
-
-  it('unsubscribes an ex-contact person', function (done) {
-    sinon.stub(groupsAPI, 'getSympaUsersOfList', function (listname, callback) { callback(null, [email]); });
-    subscribedGroups = [];
-
-    groupsAndMembersAPI.updateAdminlistSubscriptions(member.id(), function (err) {
-      expect(subscribeSpy.called, 'subscribe is called').to.be.false;
-      expect(unsubscribeSpy.called, 'unsubscribe is called').to.be.true;
-      done(err);
-    });
-  });
-
-  it('does nothing if contact person is already subscribed', function (done) {
-    groupA.organizers.push(member.id());
-    sinon.stub(groupsAPI, 'getSympaUsersOfList', function (listname, callback) { callback(null, [email]); });
-
-    groupsAndMembersAPI.updateAdminlistSubscriptions(member.id(), function (err) {
-      expect(subscribeSpy.called, 'subscribe is called').to.be.false;
-      expect(unsubscribeSpy.called, 'unsubscribe is called').to.be.false;
-      done(err);
-    });
-  });
-
-  it('does nothing if non-contact person is not subscribed', function (done) {
-    sinon.stub(groupsAPI, 'getSympaUsersOfList', function (listname, callback) { callback(null, []); });
-    subscribedGroups = [];
-
-    groupsAndMembersAPI.updateAdminlistSubscriptions(member.id(), function (err) {
-      expect(subscribeSpy.called, 'subscribe is called').to.be.false;
-      expect(unsubscribeSpy.called, 'unsubscribe is called').to.be.false;
-      done(err);
-    });
-  });
-
-});
-
-describe('Groups and Members API (saveGroup)', function () {
-  var email = 'user@mail.com';
-  var groupA = new Group({id: 'groupA', organizers: []});
-  var member = new Member({id: 'id', email: email});
-  var createOrSaveGroupSpy;
-  var getMemberForIdSpy;
-  var addUserToListSpy;
-
-  beforeEach(function () {
-    sinon.stub(groupsAPI, 'getSubscribedGroupsForUser', function (memberEmail, callback) { callback(null, [groupA]); });
-    createOrSaveGroupSpy = sinon.stub(groupsAPI, 'createOrSaveGroup', function (group, callback) { callback(); });
-    sinon.stub(groupsAPI, 'getSympaUsersOfList', function (listname, callback) { callback(null, []); });
-    getMemberForIdSpy = sinon.stub(membersAPI, 'getMemberForId', function (memberID, callback) { callback(null, member); });
-    addUserToListSpy = sinon.stub(groupsAPI, 'addUserToList', function (email, list, callback) { callback(); });
-  });
-
-  afterEach(function () {
-    sinon.restore();
-    groupA.organizers = [];
-  });
-
-  it('calls groupAPI to perform saving', function (done) {
-    groupsAndMembersAPI.saveGroup(groupA, function (err) {
-      expect(createOrSaveGroupSpy.called, 'save in GroupsAPI is called').to.be.true;
-      done(err);
-    });
-  });
-
-  it('calls membersAPI to retrieve member if in organizers (and subscribes)', function (done) {
-    groupA.organizers.push('id');
-
-    groupsAndMembersAPI.saveGroup(groupA, function (err) {
-      expect(getMemberForIdSpy.called, 'getMemberForID in MembersAPI is called').to.be.true;
-      expect(addUserToListSpy.called, 'subscribe in GroupsAPI is called').to.be.true;
-      done(err);
-    });
-  });
-
-  it('does not call membersAPI to retrieve member if not in organizers (and does not subscribe)', function (done) {
-    groupsAndMembersAPI.saveGroup(groupA, function (err) {
-      expect(getMemberForIdSpy.called, 'getMemberForID in MembersAPI is called').to.be.false;
-      expect(addUserToListSpy.called, 'subscribe in GroupsAPI is called').to.be.false;
-      done(err);
-    });
-  });
-
-});
-
-describe('Groups and Members API (updateSubscriptions)', function () {
-  var email = 'user@mail.com';
-  var groupA = new Group({id: 'groupA', organizers: []});
-  var member = new Member({id: 'id', email: email});
-  var updateSubscriptionsSpy;
-  var getMemberForIdSpy;
-  var addUserToListSpy;
-  var removeUserFromListSpy;
-  var sympaUsers = [];
-
-  beforeEach(function () {
-    sinon.stub(groupsAPI, 'getSubscribedGroupsForUser', function (memberEmail, callback) { callback(null, [groupA]); });
-    updateSubscriptionsSpy = sinon.stub(groupsAPI, 'updateSubscriptions', function (memberEmail, oldEmail, subscriptions, callback) { callback(); });
-    sinon.stub(groupsAPI, 'getSympaUsersOfList', function (listname, callback) { callback(null, sympaUsers); });
-    getMemberForIdSpy = sinon.stub(membersAPI, 'getMemberForId', function (memberID, callback) { callback(null, member); });
-    addUserToListSpy = sinon.stub(groupsAPI, 'addUserToList', function (email, list, callback) { callback(); });
-    removeUserFromListSpy = sinon.stub(groupsAPI, 'removeUserFromList', function (email, list, callback) { callback(); });
-  });
-
-  afterEach(function () {
-    sinon.restore();
-    groupA.organizers = [];
-  });
-
-  it('calls groupAPI to perform saving', function (done) {
-    groupsAndMembersAPI.updateSubscriptions(member, '', [], function (err) {
-      expect(updateSubscriptionsSpy.called, 'updateSubscriptions in GroupsAPI is called').to.be.true;
-      done(err);
-    });
-  });
-
-  it('subscribes the member to the admin list if is organizer', function (done) {
-    groupA.organizers.push('id');
-
-    groupsAndMembersAPI.updateSubscriptions(member, '', ['groupA'], function (err) {
-      expect(addUserToListSpy.called, 'subscribe in GroupsAPI is called').to.be.true;
-      expect(addUserToListSpy.args[0][1]).to.equal('admins');
-      done(err);
-    });
-  });
-
-  it('unsubscribes the member from the admin list if not organizer anymore', function (done) {
-    sympaUsers.push(email);
-
-    groupsAndMembersAPI.updateSubscriptions(member, '', ['groupA'], function (err) {
-      expect(removeUserFromListSpy.called, 'subscribe in GroupsAPI is called').to.be.true;
-      expect(removeUserFromListSpy.args[0][1]).to.equal('admins');
-      done(err);
-    });
-  });
-
-});
