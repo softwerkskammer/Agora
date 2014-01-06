@@ -308,6 +308,7 @@ describe('Groups and Members API (updateAdminlistSubscriptions)', function () {
   });
 
   it('subscribes a new contact person', function (done) {
+    sinon.stub(groupsAPI, 'getSympaUsersOfList', function (listname, callback) { callback(null, []); });
     groupA.organizers.push(member.id());
 
     systemUnderTest.updateAdminlistSubscriptions(member, function (err) {
@@ -348,6 +349,8 @@ describe('Groups and Members API (updateAdminlistSubscriptions)', function () {
   });
 
   it('does nothing if non-contact person is not subscribed', function (done) {
+    sinon.stub(groupsAPI, 'getSympaUsersOfList', function (listname, callback) { callback(null, []); });
+
     systemUnderTest.updateAdminlistSubscriptions(member, function (err) {
       expect(subscribeSpy.called, 'subscribe is called').to.be.false;
       expect(unsubscribeSpy.called, 'unsubscribe is called').to.be.false;
@@ -371,6 +374,7 @@ describe('Groups and Members API (saveGroup)', function () {
     member.subscribedGroups = [groupA];
     sinon.stub(groupsAPI, 'getSubscribedGroupsForUser', function (memberEmail, callback) { callback(null, [groupA]); });
     createOrSaveGroupSpy = sinon.stub(groupsAPI, 'createOrSaveGroup', function (group, callback) { callback(); });
+    sinon.stub(groupsAPI, 'getSympaUsersOfList', function (listname, callback) { callback(null, []); });
     getMemberForIdSpy = sinon.stub(membersAPI, 'getMemberForId', function (memberID, callback) { callback(null, member); });
     subscribeSpy = sinon.stub(groupsAPI, 'addUserToList', function (email, list, callback) { callback(); });
   });

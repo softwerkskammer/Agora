@@ -58,9 +58,9 @@
                                 "constructorArgs": {
                                   "collectionName": "announcementstore"
                               }},
-  "waitinglistPersistence": {"module": "./lib/persistence/persistence",
+  "sympaPersistence": {"module": "./lib/persistence/persistence",
                                 "constructorArgs": {
-                                  "collectionName": "waitinglistStore"
+                                  "collectionName": "sympastore"
                               }},
 
   "group": {"module": "./lib/groups/group"},
