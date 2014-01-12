@@ -22,7 +22,6 @@ var dummyAnnouncement = new Announcement({
 
 var announcementsAPI = beans.get('announcementsAPI');
 var membersAPI = beans.get('membersAPI');
-var validation = beans.get('validation');
 
 var app = require('../testHelper')('announcementsApp').createApp();
 
@@ -45,15 +44,6 @@ describe('Announcement application', function () {
 
   afterEach(function () {
     sinonSandbox.restore();
-  });
-
-  it('object is not valid, if the required fields are not filled', function () {
-    var tmpAnnouncement = new Announcement({
-      title: 'title',
-      url: 'url'
-      // Other fields are missing
-    });
-    expect(validation.isValidAnnouncement(tmpAnnouncement)).to.equal.false;
   });
 
   it('shows the list of announcements as retrieved from the store', function (done) {
