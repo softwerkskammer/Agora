@@ -71,15 +71,12 @@
   },
   "config": {
     "travis-cov": {
-      "threshold": "72"
+      "threshold": "75"
     }
   },
   "scripts": {
     "start": "node start",
     "test": "grunt travis --verbose",
-    "travis-cov": {
-      "threshold": 75
-    },
     "prepublish": "sh ./prepublish.sh"
   }
 }
