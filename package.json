@@ -36,7 +36,7 @@
     "icalendar": "~0.6.5",
     "iconv": "2.x.x",
     "i18next": "~1.7.1",
-    "jade": "~1.0.x",
+    "jade": "~1.x.x",
     "lodash": "2.4.1",
     "mailparser": "~0.4.x",
     "marked": "0.2.10",
@@ -51,7 +51,6 @@
     "passport-github": "~0.1.3",
     "soap-sympa": "~0.0.1",
     "underscore.string": "~2.3.x",
-    "validator": "3.x.x",
     "winston": "~0.7.x",
     "winston-config": "~0.4.0"
   },
@@ -72,7 +71,7 @@
   },
   "config": {
     "travis-cov": {
-      "threshold": "72"
+      "threshold": "75"
     }
   },
   "scripts": {
