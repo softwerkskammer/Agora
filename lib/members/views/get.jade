@@ -3,47 +3,47 @@ extends ../../../views/layout
 include ../../../views/formComponents
 
 block title
-  | #{member.firstname} #{member.lastname} - Profil
+  | #{member.firstname()} #{member.lastname()} - #{t("members.profile")}
 
 block content
   .row
     .col-md-12
       .page-header
         h2
-          | "#{member.nickname}"&nbsp;
+          | "#{member.nickname()}"
           .btn-group.pull-right
             if (accessrights.canEditMember(member))
-              a.btn.btn-default(href="/members/edit/#{encodeURIComponent(member.nickname)}"): i.fa.fa-edit.fa-fw
+              a.btn.btn-default(href="/members/edit/#{encodeURIComponent(member.nickname())}"): i.fa.fa-edit.fa-fw
           small
-            if (member.isAdmin)
-              | Admin
+            if (member.isContactperson())
+              | #{t("groups.contact")}
             else
-              | Profilansicht
+              | #{t("members.profileview")}
   .row
     .col-md-8
       p
-        strong Vorname:
-        |  #{member.firstname}
+        strong #{t("members.firstname")}:
+        |  #{member.firstname()}
       p
-        strong Nachname:
-        |  #{member.lastname}
+        strong #{t("members.lastname")}:
+        |  #{member.lastname()}
       p
-        strong Twitter: 
+        strong #{t("members.twitter")}:&nbsp;
         span.twitterify
-          | #{member.twitter}
+          | #{member.twitter()}
       p
-        strong Ort / Region:
-        |  #{member.location}
+        strong #{t("members.location")}:
+        |  #{member.location()}
       p
-        strong Beruf:
-        |  #{member.profession}
+        strong #{t("members.profession")}:
+        |  #{member.profession()}
       p
-        strong Interessenschwerpunkte:
-        |  #{member.interests}
+        strong #{t("members.interests")}:
+        |  #{member.interests()}
       p
-        strong Website / Blog: 
+        strong #{t("members.web")}:&nbsp;
         span.urlify
-          | #{member.site}
+          | #{member.site()}
 
       p &nbsp;
     .col-md-4
@@ -52,11 +52,15 @@ block content
 
   .row
     .col-md-12
-      a.btn.btn-primary(href="/mailsender/contactMember/#{encodeURIComponent(member.nickname)}")
+      a.btn.btn-primary(href="/mailsender/contactMember/#{encodeURIComponent(member.nickname())}")
         i.fa.fa-envelope
-        | &nbsp;Eine Mail an #{member.firstname} #{member.lastname} senden
+        | &nbsp;#{t("members.send_email", {firstname: member.firstname(), lastname: member.lastname()})}
 
-      h3 Mitglied in:
+      h3 #{t("members.member_of")}:
       ul
-        each group in subscribedGroups
-          li: .group: strong: a(href='../groups/#{group.id}') #{group.longName}
+        each group in member.subscribedGroups
+          li
+            strong: a(href='../groups/#{group.id}') #{group.longName}&nbsp;
+            if (group.organizers.indexOf(member.id()) > -1)
+              span.label(style="background-color: #DF5353") #{t("groups.contact")}
+  

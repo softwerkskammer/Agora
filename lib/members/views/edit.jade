@@ -7,68 +7,64 @@ block scripts
 
 
 block title
-  | Profil&nbsp;
   - if (accessrights.isRegistered())
-    | bearbeiten
+    | #{t("members.edit")}
   - else
-    | anlegen
+    | #{t("members.create")}
 
 block content
   form(id='memberform', action='/members/submit',method='post')
     fieldset
       .row
         .col-md-12
-          
-          h2 
+          h2
             if (accessrights.isRegistered())
-              | "#{member.nickname}"
+              | "#{member.nickname()}"
             else
-              | Neues Mitglied
+              | #{t("members.new")}
             .btn-group.pull-right
               if (accessrights.isRegistered())
                 if (accessrights.isMember(member))
-                  a.btn.btn-default(href="/auth/logout", type="cancel") Abmelden
-                a.btn.btn-default(href="javascript:history.back()", type="cancel") Zurück
+                  a.btn.btn-default(href="/auth/logout", type="cancel") #{t("general.logout")}
+                a.btn.btn-default(href="javascript:history.back()", type="cancel") #{t("general.back")}
               else
-                a.btn.btn-danger(href="/auth/logout", type="cancel") Registrierung abbrechen
-              button.btn.btn-primary(type="submit") Speichern
+                a.btn.btn-danger(href="/auth/logout", type="cancel") #{t("members.cancel")}
+              button.btn.btn-primary(type="submit") #{t("general.save")}
 
       .row
         .col-md-12
-          legend Gruppenmitgliedschaft
+          legend #{t("members.group_membership")}
           mixin groupCheckboxes('newSubscriptions', regionalgroups, themegroups)
       .row
         .col-md-12
-          legend Persönliche Daten
+          legend #{t("members.personal_data")}
       .row
         .col-md-6
-          mixin hidden('id', member)
-          mixin hidden('previousNickname', member, 'nickname')
-          mixin hiddenWithValue('previousEmail', accessrights.isRegistered() ? member.email : '')
-          mixin hidden('created', member)
-          mixin text('nickname', 'Nickname', member)
-          mixin text('firstname', 'Vorname', member)
-          mixin text('lastname', 'Nachname', member)
-          mixin text('email', 'Email', member)
-          mixin twitter('twitter', 'Twitter', member)
+          mixin hidden('id', member.id())
+          mixin hidden('previousNickname', member.nickname())
+          mixin hidden('previousEmail', accessrights.isRegistered() ? member.email() : '')
+          mixin hidden('created', member.created())
+          mixin text('nickname', t("members.nickname"), member.nickname())
+          mixin text('firstname', t("members.firstname"), member.firstname())
+          mixin text('lastname', t("members.lastname"), member.lastname())
+          mixin text('email', t("members.email"), member.email())
+          mixin twitter('twitter', t("members.twitter"), member.twitter())
         .col-md-6
-          mixin text('location', 'Ort / Region', member)
-          mixin text('profession', 'Beruf', member)
-          mixin text('interests', 'Interessenschwerpunkte', member)
-          mixin text('site', 'Website / Blog', member)
-          mixin text('reference', 'Wie ich von der Softwerkskammer erfahren habe', member)
-          if (accessrights.isAdmin())
-            mixin checkbox('isAdmin', 'Administrator', !!member.isAdmin)
+          mixin text('location', t("members.location"), member.location())
+          mixin text('profession', t("members.profession"), member.profession())
+          mixin text('interests', t("members.interests"), member.interests())
+          mixin text('site', t("members.web"), member.site())
+          mixin text('reference', t("members.reference"), member.reference())
       if (accessrights.isRegistered())
         .row
           .col-md-12
-            legend Aktuell authentifiziert bei:
+            legend #{t("members.authenticated_via")}:
             ul
-              each auth in member.authentications
+              each auth in member.authentications()
                 li #{auth}
         if (accessrights.isMember(member))
           .row
             .col-md-6
               a.btn.btn-primary(data-toggle="modal", href="#login")
                 i.fa.fa-plus-square.fa-fw
-                | &nbsp;Anderswo authentifizieren
+                | &nbsp;#{t("members.authenticate")}

@@ -9,17 +9,19 @@
   "mailsenderApp": {"module": "./lib/mailsender"},
   "mailarchiveApp": {"module": "./lib/mailarchive"},
   "wikiApp": {"module": "./lib/wiki"},
+  "waitinglistApp": {"module": "./lib/waitinglist"},
 
   "groupsAndMembersAPI": {"module": "./lib/groupsAndMembers/groupsAndMembersAPI"},
   "groupsAPI": {"module": "./lib/groups/groupsAPI"},
   "membersAPI": {"module": "./lib/members/membersAPI"},
-  "activitiesCoreAPI": {"module": "./lib/activities/activitiesCoreAPI"},
+  "calendarAPI": {"module": "./lib/activities/calendarAPI"},
   "activitiesAPI": {"module": "./lib/activities/activitiesAPI"},
   "icalAPI": {"module": "./lib/activities/icalAPI"},
   "announcementsAPI": {"module": "./lib/announcements/announcementsAPI"},
   "mailsenderAPI": {"module": "./lib/mailsender/mailsenderAPI"},
   "colorAPI": {"module": "./lib/administration/colorAPI"},
   "mailarchiveAPI": {"module": "./lib/mailarchive/mailarchiveAPI"},
+  "waitinglistAPI": {"module": "./lib/waitinglist/waitinglistAPI"},
   "wikiAPI": {"module": "./lib/wiki/wikiAPI"},
 
   "groupstore": {"module": "./lib/groups/groupstore"},
@@ -56,13 +58,19 @@
                                 "constructorArgs": {
                                   "collectionName": "announcementstore"
                               }},
+  "sympaPersistence": {"module": "./lib/persistence/persistence",
+                                "constructorArgs": {
+                                  "collectionName": "sympastore"
+                              }},
 
   "group": {"module": "./lib/groups/group"},
   "member": {"module": "./lib/members/member"},
   "activity": {"module": "./lib/activities/activity"},
   "resources": {"module": "./lib/activities/resources"},
   "resource": {"module": "./lib/activities/resource"},
+  "resourceRegistrationRenderer": {"module": "./lib/activities/resourceRegistrationRenderer"},
   "announcement": {"module": "./lib/announcements/announcement"},
+  "waitinglistEntry": {"module": "./lib/waitinglist/waitinglistEntry"},
   "color": {"module": "./lib/administration/color"},
   "message": {"module": "./lib/mailsender/message"},
   "archivedMail": {"module": "./lib/mailarchive/archivedMail"},
@@ -76,10 +84,11 @@
   "sympaTransformer": {"module": "./lib/groups/sympaTransformer"},
   "redirectRuleForNewUser": {"module": "./lib/middleware/redirectRuleForNewUser"},
   "secureByLogin": {"module": "./lib/middleware/secureByLogin"},
-  "secureAdminOnly": {"module": "./lib/middleware/secureAdminOnly"},
+  "secureSuperuserOnly": {"module": "./lib/middleware/secureSuperuserOnly"},
   "announcementsInSidebar": {"module": "./lib/middleware/announcementsInSidebar"},
   "expressViewHelper": {"module": "./lib/middleware/expressViewHelper"},
   "accessrights": {"module": "./lib/middleware/accessrights"},
   "wikiSubdirs": {"module": "./lib/middleware/wikiSubdirs"},
-  "gitmech": {"module": "./lib/wiki/gitmech"}
+  "gitmech": {"module": "./lib/wiki/gitmech"},
+  "mailtransport": {"module": "./lib/mailsender/mailtransport"}
 }

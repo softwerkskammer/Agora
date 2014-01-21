@@ -5,10 +5,10 @@ mixin pageHeader(group, range)
         | #{range} &nbsp;
         span.caret
       ul.dropdown-menu
-        li: a(href="../threaded/#{encodeURIComponent(group)}") Threaded
-        li: a(href="../flat/#{encodeURIComponent(group)}") Flat
+        li: a(href="../threaded/#{encodeURIComponent(group)}") #{t("mailarchive.threaded")}
+        li: a(href="../flat/#{encodeURIComponent(group)}") #{t("mailarchive.unthreaded")}
   h2 #{group}&nbsp;
-    small Mailarchiv
+    small #{t("mailarchive.archive")}
 
 mixin mailattributes(mailHeader)
   if (!!mailHeader.memberNickname())

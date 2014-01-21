@@ -13,7 +13,7 @@ module.exports = function (grunt) {
       ' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */\n',
     // Task configuration.
     jshint: {
-      files: ['**/*.js', '**/*.json', '.jshintrc', '!node_modules/**/*.js', '!node_modules/**/*.json', '!public/**/*.js', '!public/**/*.json', '!frontendtests/lib/**/*.js', '!frontendtests/lib/**/*.json'],
+      files: ['**/*.js', '**/*.json', '.jshintrc', '!node_modules/**/*.js', '!node_modules/**/*.json', '!public/**/*.js', '!public/**/*.json', '!frontendtests/lib/**/*.js', '!frontendtests/lib/**/*.json', '!locales/*.js'],
       options: {
         jshintrc: '.jshintrc'
       }
@@ -73,6 +73,10 @@ module.exports = function (grunt) {
         src: ['public/stylesheets/less/bootstrap-markdown.less'],
         dest: 'public/stylesheets/vendor/bootstrap-markdown-custom.css'
       },
+      pickacolor: {
+        src: ['public/stylesheets/less/pick-a-color-patched.less'],
+        dest: 'public/stylesheets/vendor/pick-a-color-custom.css'
+      },
       cssconcat: {
         options: {
           compress: true
@@ -81,10 +85,9 @@ module.exports = function (grunt) {
           'public/stylesheets/vendor/fullcalendar.css',
           'public/stylesheets/vendor/bootstrap-custom.css',
           'public/stylesheets/vendor/datepicker.css',
-          'public/stylesheets/vendor/bootstrap-timepicker.css',
           'public/stylesheets/vendor/bootstrap-markdown-custom.css',
           'public/stylesheets/vendor/font-awesome.min.css',
-          'public/stylesheets/vendor/colorpicker.css',
+          'public/stylesheets/vendor/pick-a-color-custom.css',
           'public/stylesheets/vendor/shCoreDefault.css',
           'public/stylesheets/vendor/jquery.dataTables.css',
           'public/stylesheets/partials/agora.css'
@@ -96,7 +99,7 @@ module.exports = function (grunt) {
       options: {
         separator: ';'
       },
-      dist: {
+      de: {
         src: [
           'public/clientscripts/global/jquery-1.9.1.js',
           'public/clientscripts/global/respond.min.js',
@@ -105,16 +108,39 @@ module.exports = function (grunt) {
           'public/clientscripts/global/bootstrap-markdown-patched.js',
           'public/clientscripts/global/markdown.js',
           'public/clientscripts/global/fullcalendar.js',
-          'public/clientscripts/global/bootstrap-colorpicker.js',
+          'public/clientscripts/global/tinycolor-0.9.15.min.js',
+          'public/clientscripts/global/pick-a-color.js',
           'public/clientscripts/global/bootstrap-datepicker.de.js',
           'public/clientscripts/global/jquery.validate-1.11.1.js',
           'public/clientscripts/global/additional-methods-1.11.1.js',
           'public/clientscripts/global/messages_de.js',
           'public/clientscripts/global/methods_de.js',
-          'public/clientscripts/global/bootstrap-timepicker-patched.js',
+          'public/clientscripts/global/bootstrap-timepicker.js',
+          'public/clientscripts/global/moment.min.js',
+          'locales/frontend_de.js',
           'public/clientscripts/global/agora.js'
         ],
-        dest: 'public/clientscripts/global.js'
+        dest: 'public/clientscripts/global_de.js'
+      },
+      en: {
+        src: [
+          'public/clientscripts/global/jquery-1.9.1.js',
+          'public/clientscripts/global/respond.min.js',
+          'public/clientscripts/global/bootstrap.js',
+          'public/clientscripts/global/bootstrap-datepicker.js',
+          'public/clientscripts/global/bootstrap-markdown-patched.js',
+          'public/clientscripts/global/markdown.js',
+          'public/clientscripts/global/fullcalendar.js',
+          'public/clientscripts/global/tinycolor-0.9.15.min.js',
+          'public/clientscripts/global/pick-a-color.js',
+          'public/clientscripts/global/jquery.validate-1.11.1.js',
+          'public/clientscripts/global/additional-methods-1.11.1.js',
+          'public/clientscripts/global/bootstrap-timepicker.js',
+          'public/clientscripts/global/moment.min.js',
+          'locales/frontend_en.js',
+          'public/clientscripts/global/agora.js'
+        ],
+        dest: 'public/clientscripts/global_en.js'
       }
     }
   });

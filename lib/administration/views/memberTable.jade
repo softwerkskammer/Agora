@@ -6,10 +6,10 @@ block scripts
     $(document).ready(function() {
       $("#membertable").dataTable({
         "oLanguage": {
-          "sUrl": "/clientscripts/dataTables.german.txt"
+          "sUrl": "#{(language === 'de') ? "/clientscripts/dataTables.german.txt" : ""}"
         },
         "aoColumns": [
-          { "bSortable" : false }, { "sType": "date-eu" }, null, null, null, null, null, null, null, null, null, null, null
+          { "bSortable" : false }, { "sType": "date-eu" }, null, null, null, null, null, null, null, null, null, null
         ],
         "bPaginate": false,
         "bAutoWidth": false,
@@ -36,29 +36,27 @@ block content
               th Nickname
               th Vorname
               th Nachname
-              th Email
-              th Twitter
               th Ort/Region
-              th Beruf
+              th Wie&nbsp;ich&nbsp;von&nbsp;der&nbsp;Softwerkskammer&nbsp;erfahren&nbsp;habe
               th Interessenschwerpunkte
               th Website/Blog
-              th Wie&nbsp;ich&nbsp;von&nbsp;der&nbsp;Softwerkskammer&nbsp;erfahren&nbsp;habe
-              th Benutzertyp
+              th Beruf
+              th Email
+              th Twitter
           tbody
             for member in members
               tr
-                td: a.btn-sm(href="/members/edit/#{encodeURIComponent(member.nickname)}"): i.fa.fa-edit.fa-fw
-                td #{member.created}
-                td #{member.nickname}
-                td #{member.firstname}
-                td #{member.lastname}
-                td #{member.email}
-                td #{member.twitter}
-                td #{member.location}
-                td #{member.profession}
-                td #{member.interests}
-                td #{member.site}
-                td #{member.reference}
-                td #{member.adminDisplayText()}
-                
-    
+                td: a.btn-sm(href="/members/edit/#{encodeURIComponent(member.nickname())}"): i.fa.fa-edit.fa-fw
+                td #{member.created()}
+                td: a(href="/members/#{encodeURIComponent(member.nickname())}") #{member.nickname()}
+                td #{member.firstname()}
+                td #{member.lastname()}
+                td #{member.location()}
+                td #{member.reference()}
+                td #{member.interests()}
+                td #{member.site()}
+                td #{member.profession()}
+                td #{member.email()}
+                td #{member.twitter()}
+
+

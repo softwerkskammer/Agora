@@ -9,39 +9,28 @@ mixin controlLabel(name, label, tooltip)
     -else
       | #{label}:
 
-mixin text(name, label, object, tooltip, placeholder)
-  .form-group
-    mixin controlLabel(name, label, tooltip)
-    input.form-control(id=name, type='text', name=name, value=object[name], placeholder=placeholder)
-
-mixin textWithValue(name, label, value, tooltip, placeholder)
+mixin text(name, label, value, tooltip, placeholder)
   .form-group
     mixin controlLabel(name, label, tooltip)
     input.form-control(id=name, type='text', name=name, value=value, placeholder=placeholder)
 
-mixin textReadonly(name, label, object)
+mixin textReadonly(name, label, value)
   .form-group
-    mixin hidden(name, object)
+    mixin hidden(name, value)
     label(class="control-label", for=name) #{label}:
-    input.form-control(id=name, type='text', name=name, value=object[name], placeholder=placeholder disabled)
+    input.form-control(id=name, type='text', name=name, value=value, placeholder=placeholder disabled)
 
-mixin textarea(name, label, object, tooltip)
-  .form-group
-    mixin controlLabel(name, label, tooltip)
-    textarea.input-block-level(rows="7", id=name, type='text', name=name)
-      | #{object[name]}
-
-mixin textareaWithValue(name, label, value, tooltip)
+mixin textarea(name, label, value, tooltip)
   .form-group
     mixin controlLabel(name, label, tooltip)
     textarea.input-block-level(rows="7", id=name, type='text', name=name)
       | #{value}
 
-mixin hightextarea(name, label, object, tooltip)
+mixin hightextarea(name, label, value, tooltip)
   .form-group
     mixin controlLabel(name, label, tooltip)
     textarea.input-block-level(rows="15", id=name, type='text', name=name)
-      | #{object[name]}
+      | #{value}
 
 mixin checkbox(name, label, checked, optionalValue)
   .checkbox
@@ -61,61 +50,46 @@ mixin checkboxWithDescription(name, label, checked, description, optionalValue)
 mixin groupCheckboxes(checkboxName, regionalgroups, themegroups)
   .row
     .col-md-6
-      mixin controlLabel("Regionale Gruppen", "Regionale Gruppen")
+      mixin controlLabel(t("groups.regional"), t("groups.regional"))
       .form-group
         each markedGroup in regionalgroups
           mixin checkboxWithDescription(checkboxName, markedGroup.group.longName, markedGroup.selected, markedGroup.group.descriptionHTMLFiltered("img"), markedGroup.group.id)
     .col-md-6
-      mixin controlLabel("Themengruppen", "Themengruppen")
+      mixin controlLabel(t("groups.themed"), t("groups.themed"))
       .form-group
         each markedGroup in themegroups
           mixin checkboxWithDescription(checkboxName, markedGroup.group.longName, markedGroup.selected, markedGroup.group.descriptionHTMLFiltered("img"), markedGroup.group.id)
 
 
 
-mixin hidden(name, object, optionalAlternateValue)
-  input(id=name, type="hidden", name=name, value=object[(optionalAlternateValue ? optionalAlternateValue : name)])
-
-mixin hiddenWithValue(name, value)
+mixin hidden(name, value)
   input(id=name, type="hidden", name=name, value=value)
 
 // PICKERS
-mixin date(name, label, object, value, tooltip)
+mixin date(name, label, value, tooltip)
   .form-group
     mixin controlLabel(name, label, tooltip)
-    input.form-control.datepicker(id=name, type='text', name=name, value=(value ? value : object[name]))
+    input.form-control.datepicker(id=name, type='text', name=name, value=value)
 
-mixin time(name, label, object, value)
+mixin time(name, label, value)
   .form-group.bootstrap-timepicker
     label(class="control-label", for=name) &nbsp;
-    input.form-control.timepicker(id=name, type='text', name=name, value=(value ? value : object[name]))
+    input.form-control.timepicker(id=name, type='text', name=name, value=value)
 
-mixin colorPicker(name, object)
+mixin colorPicker(name, value)
   .form-group
-    label.control-label(for="color") Farbe:
-    #color.input-group(data-color="#{object[name]}", data-color-format="hex")
-      input#colorText.form-control(type="text", name=name, value=object[name])
-      span#colorSpan.input-group-addon(style="background-color: #{object[name]}")
+    label.control-label(for="color") #{t("colors.color")}:
+    input#color.form-control(type="text", name=name, value=value)
     script.
-      $("#color").colorpicker();
-      $("#colorText").on("change", function (event) {
-        $("#color").colorpicker("setValue", event.target.value);
-      });
-      $("#colorText").on("keyup", function (event) {
-        $("#color").colorpicker("setValue", event.target.value);
-      });
-      $("#color").colorpicker().on('changeColor', function(event) {
-        $("#colorText").val(event.color.toHex());
-        $("#colorSpan").css("background-color", event.color.toHex());
-      });
+      $("#color").pickAColor();
 
 // PICKERS END
 
 // SPECIAL
-mixin twitter(name, label, object)
+mixin twitter(name, label, value)
   .form-group
     label(class="control-label", for=name) #{label}:
     .input-group
       span.input-group-addon @
-      input.form-control(id=name, type='text', name=name, value=object[name])
+      input.form-control(id=name, type='text', name=name, value=value)
 

@@ -1,12 +1,18 @@
-doctype 5
+doctype html
 html
   head
     meta(charset="utf-8")
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
     meta(http-equiv="X-UA-Compatible", content="IE=edge")
     link(href="/stylesheets/screen.css", rel="stylesheet")
-
-    script(src="/clientscripts/global.js")
+    link(rel="apple-touch-icon", href="/img/apple-touch-icon-60x60-precomposed.png")
+    link(rel="apple-touch-icon", href="/img/apple-touch-icon-76x76-precomposed.png")
+    link(rel="apple-touch-icon", href="/img/apple-touch-icon-120x120-precomposed.png")
+    link(rel="apple-touch-icon", href="/img/apple-touch-icon-152x152-precomposed.png")
+    if (language === 'de')
+      script(src="/clientscripts/global_de.js")
+    else
+      script(src="/clientscripts/global_en.js")
     if (typeof(calViewYear) !== 'undefined')
       script.
         $(document).ready(function () {
@@ -35,23 +41,25 @@ html
 
     .row.main
       .col-md-8
+        p(style="text-align: right; margin-top: 8px;").visible-xs.hidden-print
+          a(href="/language/de?currentUrl=#{encodeURIComponent(currentUrl)}"): img(src="/img/flags/Germany.png", alt="Deutsch")
+          | &nbsp;
+          a(href="/language/en-gb?currentUrl=#{encodeURIComponent(currentUrl)}"): img(src="/img/flags/United-Kingdom.png", alt="English")
         if (statusmessage)
           mixin notificationsBlock(statusmessage)
         block content
       .col-md-4.hidden-print
         .page-header.visible-xs.visible-sm
           p &nbsp;
-          h2.visible-xs.visible-sm Aktivitäten
+          h2.visible-xs.visible-sm #{t("activities.activities")}
         #calendar
-        h2 Der Global Day of Coderetreat&nbsp;
-          small: a(href="/activities/gdcr") Übersicht
         if (latestNews)
-          h2 Das Neueste&nbsp;
+          h2 #{t("announcements.latest_news")}&nbsp;
             if (!!displayMoreNews)
-              small: a(href='/announcements/') Mehr…
+              small: a(href='/announcements/') #{t("general.more")}…
           dl
             for announcement in latestNews
-              dt #{announcement.fromDate()}
+              dt #{announcement.fromMoment().lang(language).format('LL')}
               dd: a(href='/announcements/#{encodeURIComponent(announcement.url)}') #{announcement.title}
     mixin bottomNavbar
     

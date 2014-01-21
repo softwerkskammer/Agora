@@ -5,6 +5,8 @@ var http = require('http');
 var path = require('path');
 var passport = require('passport');
 var MongoStore = require('connect-mongo')(express);
+var i18n = require('i18next');
+var jade = require("jade");
 
 function useApp(parent, url, factory) {
   function ensureRequestedUrlEndsWithSlash(req, res, next) {
@@ -27,6 +29,16 @@ var winston = require('winston-config').fromFileSync(path.join(__dirname, 'confi
 
 var appLogger = winston.loggers.get('application');
 var httpLogger = winston.loggers.get('http');
+
+// initialize i18n
+i18n.init({
+  ignoreRoutes: ['clientscripts/', 'fonts/', 'images/', 'img/', 'stylesheets/'],
+  supportedLngs: ['de', 'en'],
+  preload: ['de', 'en'],
+  fallbackLng: 'de',
+  resGetPath: 'locales/__ns__-__lng__.json'
+});
+
 
 var sessionStore = new MongoStore({
   db: 'swk',
@@ -53,6 +65,7 @@ module.exports = {
       app.use(express.logger({stream: winstonStream}));
       app.use(express.cookieParser());
       app.use(express.urlencoded());
+      app.use(i18n.handle);
       app.use(express.methodOverride());
       app.use(express.compress());
       app.use(express.static(path.join(__dirname, 'public')));
@@ -68,7 +81,7 @@ module.exports = {
       app.use(passport.session());
       app.use(beans.get('accessrights'));
       app.use(beans.get('secureByLogin'));
-      app.use(beans.get('secureAdminOnly'));
+      app.use(beans.get('secureSuperuserOnly'));
       app.use(beans.get('expressViewHelper'));
       app.use(beans.get('redirectRuleForNewUser'));
       app.use(beans.get('announcementsInSidebar'));
@@ -86,28 +99,29 @@ module.exports = {
     useApp(app, 'auth', beans.get('authenticationApp'));
     useApp(app, 'mailarchive', beans.get('mailarchiveApp'));
     useApp(app, 'wiki', beans.get('wikiApp'));
+    useApp(app, 'waitinglist', beans.get('waitinglistApp'));
 
-    app.configure('production', function () {
-      // Handle 404
-      app.use(function (req, res) {
-        appLogger.error('404 - requested url was ' + req.url);
-        res.render('errorPages/404.jade');
-      });
-
-      // Handle 500
-      app.use(function (error, req, res, next) {
-        appLogger.error(error.stack);
-        if (/InternalOpenIDError|BadRequestError|InternalOAuthError/.test(error.name)) {
-          return res.render('errorPages/authenticationError.jade', {error: error});
-        }
-        res.render('errorPages/500.jade', {error: error});
-        next; // needed for jshint
-      });
+    // Handle 404
+    app.use(function (req, res) {
+      appLogger.error('404 - requested url was ' + req.url);
+      res.render('errorPages/404.jade');
     });
 
-    app.configure('development', function () {
-      app.use(express.errorHandler());
+    // Handle 500
+    app.use(function (error, req, res, next) {
+      appLogger.error(error.stack);
+      if (/InternalOpenIDError|BadRequestError|InternalOAuthError/.test(error.name)) {
+        return res.render('errorPages/authenticationError.jade', {error: error});
+      }
+      res.render('errorPages/500.jade', {error: error});
+      next; // needed for jshint
     });
+
+    i18n.registerAppHelper(app);
+    i18n.addPostProcessor("jade", function (val, key, opts) {
+      return jade.compile(val, opts)();
+    });
+
     return app;
   },
 

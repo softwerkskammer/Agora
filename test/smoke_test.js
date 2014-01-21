@@ -31,21 +31,21 @@ describe('Server started in different process', function () {
   var serverShouldDeliverStartPage = function (done) {
     request({uri: base_uri}, function (req, resp) {
       should.exist(resp);
+      // status code of 500 may indicate that some nconf-property is not configured (example was superuser, is now fixed)
       resp.statusCode.should.equal(200);
       resp.body.should.contain('Softwerkskammer');
-      done();
+      done(); // without error check
     });
   };
 
-  beforeEach(function (done) {
+  beforeEach(function () {
     nconf.set('port', port);
-    done();
   });
 
   afterEach(function (done) {
     nconf.set('port', 17125);
     child.on("exit", function () {  // this callback does not receive an error value
-      done();
+      done(); // without error check
     });
     child.kill();
   });

@@ -1,7 +1,7 @@
 "use strict";
 
 var conf = require('../configureForTest');
-var sinon = require('sinon');
+var sinon = require('sinon').sandbox.create();
 
 var expect = require('chai').expect;
 
@@ -18,10 +18,8 @@ var systemUnderTest = conf.get('beans').get('groupsAPI');
 
 describe('Groups API (getSubscribedGroupsForUser)', function () {
 
-  afterEach(function (done) {
-    groupstore.groupsByLists.restore();
-    sympa.getSubscribedListsForUser.restore();
-    done();
+  afterEach(function () {
+    sinon.restore();
   });
 
   it('returns an empty array of groups for a user who is not subscribed anywhere', function (done) {
@@ -71,15 +69,12 @@ describe('Groups API (getSubscribedGroupsForUser)', function () {
 
 describe('Groups API (getAllAvailableGroups)', function () {
 
-  beforeEach(function (done) {
+  beforeEach(function () {
     systemUnderTest.refreshCache();
-    done();
   });
 
-  afterEach(function (done) {
-    groupstore.groupsByLists.restore();
-    sympa.getAllAvailableLists.restore();
-    done();
+  afterEach(function () {
+    sinon.restore();
   });
 
   it('returns an empty array of groups if there are no lists defined in sympa', function (done) {
@@ -140,14 +135,12 @@ describe('Groups API (getAllAvailableGroups)', function () {
 
 describe('Groups API (getSympaUsersOfList)', function () {
 
-  beforeEach(function (done) {
+  beforeEach(function () {
     systemUnderTest.refreshCache();
-    done();
   });
 
-  afterEach(function (done) {
-    sympa.getUsersOfList.restore();
-    done();
+  afterEach(function () {
+    sinon.restore();
   });
 
   it('returns an empty array of lists if there are no users subscribed to the list in sympa', function (done) {
@@ -178,7 +171,7 @@ describe('Groups API (getSympaUsersOfList)', function () {
 
 describe('Groups API (getGroup)', function () {
 
-  before(function (done) {
+  before(function () {
     sinon.stub(groupstore, 'getGroup', function (name, callback) {
       if (name === 'GroupA') {
         callback(null, GroupA);
@@ -188,12 +181,10 @@ describe('Groups API (getGroup)', function () {
         callback(null, null);
       }
     });
-    done();
   });
 
-  after(function (done) {
-    groupstore.getGroup.restore();
-    done();
+  after(function () {
+    sinon.restore();
   });
 
   it('returns null if there is no group with the given name', function (done) {
@@ -215,7 +206,14 @@ describe('Groups API (getGroup)', function () {
 
 describe('Groups API (createOrSaveGroup)', function () {
 
-  before(function (done) {
+  var createListSpy;
+  var saveGroupSpy;
+
+  beforeEach(function () {
+    systemUnderTest.refreshCache();
+    createListSpy = sinon.stub(sympa, 'createList', function (listname, prefix, callback) { callback(); });
+    saveGroupSpy = sinon.stub(groupstore, 'saveGroup', function (group, callback) { callback(null); });
+
     sinon.stub(groupstore, 'getGroup', function (name, callback) {
       if (name === 'groupa') {
         callback(null, GroupA);
@@ -225,34 +223,16 @@ describe('Groups API (createOrSaveGroup)', function () {
         callback(null, null);
       }
     });
-    done();
   });
 
-  after(function (done) {
-    groupstore.getGroup.restore();
-    done();
-  });
-
-  var createListSpy;
-  var saveGroupSpy;
-
-  beforeEach(function (done) {
-    systemUnderTest.refreshCache();
-    createListSpy = sinon.stub(sympa, 'createList', function (listname, prefix, callback) { callback(); });
-    saveGroupSpy = sinon.stub(groupstore, 'saveGroup', function (group, callback) { callback(null, group); });
-    done();
-  });
-
-  afterEach(function (done) {
-    sympa.createList.restore();
-    groupstore.saveGroup.restore();
-    done();
+  afterEach(function () {
+    sinon.restore();
   });
 
   it('creates a new group and saves it if there is no group with the given name', function (done) {
 
     systemUnderTest.createOrSaveGroup(NonPersistentGroup, function (err, group) {
-      expect(group).to.equal(NonPersistentGroup);
+      expect(group).to.be.null; // would return an existingGroup, but Group is new
       expect(createListSpy.calledOnce).to.be.true;
       expect(saveGroupSpy.calledOnce).to.be.true;
       done(err);
@@ -271,7 +251,7 @@ describe('Groups API (createOrSaveGroup)', function () {
 });
 
 describe('Groups API (groupFromObject)', function () {
-  it('returns a new Group object if there is no valid group data', function (done) {
+  it('returns a new Group object if there is no valid group data', function () {
     var result = new Group({id: 'x'});
 
     expect(result).to.be.not.null;
@@ -280,10 +260,9 @@ describe('Groups API (groupFromObject)', function () {
     expect(result.longName).to.be.undefined;
     expect(result.description).to.be.undefined;
     expect(result.type).to.be.undefined;
-    done();
   });
 
-  it('returns a valid Group object if there is valid group data', function (done) {
+  it('returns a valid Group object if there is valid group data', function () {
     var result = new Group({ id: 'craftsmanswap', longName: 'Craftsman Swaps',
       description: 'A group for organizing CS',
       type: 'Themengruppe' });
@@ -294,12 +273,11 @@ describe('Groups API (groupFromObject)', function () {
     expect(result.longName).to.equal('Craftsman Swaps');
     expect(result.description).to.equal('A group for organizing CS');
     expect(result.type).to.equal('Themengruppe');
-    done();
   });
 });
 
 describe('Groups API (isGroupNameAvailable)', function () {
-  before(function (done) {
+  before(function () {
     sinon.stub(groupstore, 'getGroup', function (name, callback) {
       if (name === 'GroupA') {
         callback(null, GroupA);
@@ -309,12 +287,10 @@ describe('Groups API (isGroupNameAvailable)', function () {
         callback(null, null);
       }
     });
-    done();
   });
 
-  after(function (done) {
-    groupstore.getGroup.restore();
-    done();
+  after(function () {
+    sinon.restore();
   });
 
   it('returns false when there is already a group of this name present', function (done) {
@@ -341,7 +317,7 @@ describe('Groups API (isGroupNameAvailable)', function () {
 
     systemUnderTest.isGroupNameAvailable('Scha dar', function (err, result) {
       expect(result).to.be.false;
-      done();
+      done(err);
     });
   });
 
@@ -352,7 +328,7 @@ describe('Groups API (isGroupNameAvailable)', function () {
 
     systemUnderTest.isGroupNameAvailable('Schadar', function (err, result) {
       expect(result).to.be.true;
-      done();
+      done(err);
     });
   });
   it('rejects groupnames that contain reserved routes', function (done) {
@@ -365,11 +341,12 @@ describe('Groups API (isGroupNameAvailable)', function () {
 
     systemUnderTest.isGroupNameAvailable('edit', function (err, result) {
       expect(result).to.be.false;
-      done();
+      done(err);
     });
   });
 });
 
+<<<<<<< HEAD
 describe('Groups API (getBlogPosts)', function () {
   
   it('returns two blog posts for internet', function (done) {
@@ -399,3 +376,6 @@ describe('Groups API (getBlogPosts)', function () {
     });
   });
 });
+=======
+
+>>>>>>> da1a73ea4d26a2e5e5592be7d5c55bbe97ea9ede

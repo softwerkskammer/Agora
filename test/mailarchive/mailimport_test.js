@@ -20,116 +20,114 @@ var fileWithInReplyTo = 'test/mailarchive/testfiles/mailWithInReplyTo';
 var fileWithoutMessageId = 'test/mailarchive/testfiles/mailWithoutMessageID';
 
 describe('Import of mails from files with mime messages', function () {
-  beforeEach(function (done) {
+  beforeEach(function () {
     sinonSandbox.stub(membersAPI, 'getMemberForEMail', function (emails, callback) {
       callback(null, dummymember);
     });
-    done();
   });
 
-  afterEach(function (done) {
+  afterEach(function () {
     sinonSandbox.restore();
-    done();
   });
 
   it('imports plain text from multipart message', function (done) {
     mailimport(fileWithTextAndHtml, 'group', function (err, result) {
       expect(err).to.equal(null);
       expect(result.text).to.contain('Plain text message 1');
-      done();
+      done(err);
     });
   });
 
   it('imports message ID from plain text message', function (done) {
     mailimport(fileWithTextOnlyWithoutSenderName, 'group', function (err, result) {
       expect(result.id).to.equal('message2@nomail.com');
-      done();
+      done(err);
     });
   });
 
   it('creates message ID from file content if it is missing', function (done) {
     mailimport(fileWithoutMessageId, 'group', function (err, result) {
       expect(result.id).to.match(/^mail-sha1-[\w]+@softwerkskammer\.org$/);
-      done();
+      done(err);
     });
   });
 
   it('imports plain text from plain text message', function (done) {
     mailimport(fileWithTextOnlyWithoutSenderName, 'group', function (err, result) {
       expect(result.text).to.contain('Plain text message 2');
-      done();
+      done(err);
     });
   });
 
   it('imports html from multipart message', function (done) {
-    mailimport(fileWithTextAndHtml, 'group', function checkImportedObject(err, result) {
+    mailimport(fileWithTextAndHtml, 'group', function (err, result) {
       expect(result.html).to.contain('<div>Html message 1</div>');
-      done();
+      done(err);
     });
   });
 
   it('includes member id from member API ', function (done) {
-    mailimport(fileWithTextOnlyWithoutSenderName, 'group', function checkImportedObject(err, result) {
-      expect(result.from.id).to.equal(dummymember.id);
-      done();
+    mailimport(fileWithTextOnlyWithoutSenderName, 'group', function (err, result) {
+      expect(result.from.id).to.equal(dummymember.id());
+      done(err);
     });
   });
 
   it('imports sender name', function (done) {
-    mailimport(fileWithTextAndHtml, 'group', function checkImportedObject(err, result) {
+    mailimport(fileWithTextAndHtml, 'group', function (err, result) {
       expect(result.from.name).to.equal('Heißen');
-      done();
+      done(err);
     });
   });
 
   it('imports sender name from address if the is not given specifically', function (done) {
-    mailimport(fileWithTextOnlyWithoutSenderName, 'group', function checkImportedObject(err, result) {
+    mailimport(fileWithTextOnlyWithoutSenderName, 'group', function (err, result) {
       expect(result.from.name).to.equal('some');
-      done();
+      done(err);
     });
   });
 
   it('imports date and time', function (done) {
-    mailimport(fileWithTextOnlyWithoutSenderName, 'group', function checkImportedObject(err, result) {
+    mailimport(fileWithTextOnlyWithoutSenderName, 'group', function (err, result) {
       expect(result.timeUnix).to.equal(moment('Mon, 25 Mar 2013 21:14:14 +0100').unix());
-      done();
+      done(err);
     });
   });
 
   it('uses current date and time if date is not available', function (done) {
     var beforeTestRunUnix = moment().unix() - 1;
-    mailimport(fileWithoutDate, 'group', function checkImportedObject(err, result) {
+    mailimport(fileWithoutDate, 'group', function (err, result) {
       var afterTestRunUnix = moment().unix() + 1;
       expect(result.timeUnix).to.be.greaterThan(beforeTestRunUnix);
       expect(result.timeUnix).to.be.lessThan(afterTestRunUnix);
-      done();
+      done(err);
     });
   });
   it('assigns given group', function (done) {
     mailimport(fileWithTextOnlyWithoutSenderName, 'group', function (err, result) {
       expect(result.group).to.equal('group');
-      done();
+      done(err);
     });
   });
 
   it('imports subject', function (done) {
     mailimport(fileWithTextOnlyWithoutSenderName, 'group', function (err, result) {
       expect(result.subject).to.equal('Mail 2');
-      done();
+      done(err);
     });
   });
 
   it('imports references', function (done) {
     mailimport(fileWithReferences, 'group', function (err, result) {
       expect(result.references).to.deep.equal(["message0@nomail.com", "message1@nomail.com"]);
-      done();
+      done(err);
     });
   });
 
   it('imports reply-to as reference if no references are available', function (done) {
     mailimport(fileWithInReplyTo, 'group', function (err, result) {
       expect(result.references).to.deep.equal(["message0@nomail.com"]);
-      done();
+      done(err);
     });
   });
 

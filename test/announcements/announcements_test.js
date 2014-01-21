@@ -9,6 +9,7 @@ var moment = require('moment-timezone');
 
 var beans = conf.get('beans');
 var Announcement = beans.get('announcement');
+var Member = beans.get('member');
 
 var dummyAnnouncement = new Announcement({
   title: 'title',
@@ -21,7 +22,6 @@ var dummyAnnouncement = new Announcement({
 
 var announcementsAPI = beans.get('announcementsAPI');
 var membersAPI = beans.get('membersAPI');
-var validation = beans.get('validation');
 
 var app = require('../testHelper')('announcementsApp').createApp();
 
@@ -30,7 +30,7 @@ describe('Announcement application', function () {
   var allAnnouncementsUntilToday;
   var getAnnouncement;
 
-  beforeEach(function (done) {
+  beforeEach(function () {
     allAnnouncements = sinonSandbox.stub(announcementsAPI, 'allAnnouncements', function (callback) {
       return callback(null, [dummyAnnouncement]);
     });
@@ -40,21 +40,10 @@ describe('Announcement application', function () {
     getAnnouncement = sinonSandbox.stub(announcementsAPI, 'getAnnouncement', function (url, callback) {
       callback(null, (url === 'url') ? dummyAnnouncement : null);
     });
-    done();
   });
 
-  afterEach(function (done) {
+  afterEach(function () {
     sinonSandbox.restore();
-    done();
-  });
-
-  it('object is not valid, if the required fields are not filled', function () {
-    var tmpAnnouncement = new Announcement({
-      title: 'title',
-      url: 'url'
-      // Other fields are missing
-    });
-    expect(validation.isValidAnnouncement(tmpAnnouncement)).to.equal.false;
   });
 
   it('shows the list of announcements as retrieved from the store', function (done) {
@@ -70,7 +59,7 @@ describe('Announcement application', function () {
   });
 
   it('shows the details of one announcement as retrieved from the store', function (done) {
-    var dummyMember = {nickname: "nickname", id: "member ID"};
+    var dummyMember = new Member({nickname: "nickname", id: "member ID"});
     sinonSandbox.stub(membersAPI, 'getMemberForId', function (id, callback) {
       callback(null, dummyMember);
     });
@@ -79,7 +68,7 @@ describe('Announcement application', function () {
     request(app)
       .get('/' + url)
       .expect(200)
-      .expect(/<small>29.07.2013/)
+      .expect(/<small>29. Juli 2013/)
       .expect(/<h2>title/, function (err) {
         expect(getAnnouncement.calledWith(url)).to.be.true;
         done(err);
@@ -100,16 +89,11 @@ describe('Announcement application', function () {
       });
   });
 
-  //  it('shows a 404 if the url cannot be found in the store for the detail page', function (done) {
-  //    var link = dummyAnnouncement.url + '-does-not-exist';
-  //    console.log(link);
-  //
-  //    request(app)
-  //        .get('/' + link)
-  //        .expect(404, function (err) {
-  //          done(err);
-  //        });
-  //  });
+  it('shows a 404 if the url cannot be found in the store for the detail page', function (done) {
+    var link = dummyAnnouncement.url + '-does-not-exist';
+    request(app).get('/' + link).expect(404, function (err) { done(err); });
+
+  });
 
   it('allows to create a new announcement', function (done) {
     request(app)

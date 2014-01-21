@@ -1,24 +1,11 @@
 extends ../layout
 
 block title
-  | 500 - Authentifizierungsproblem
+  | 500 - #{t("authentication.error")}
 block content
   .row
     .col-md-6
-      h3 Problem bei der Authentifizierung!
-      p Leider scheint bei der Authentifizierung etwas schief gegangen zu sein.
-        | Bitte 
-        a(href="/login") versuche es noch einmal.
-      p Sollte der Fehler wiederholt auftreten, lass uns bitte 
-        a(href="https://github.com/softwerkskammer/NeuePlattform-Implementierung/issues/") einen möglichst detaillierten Fehlerbericht zukommen:
-        ul
-          li Wie bist Du auf die Login Seite gegangen?
-          li Welche Authentifizierung hast Du gewählt?
-          li Wenn Du selbst eine URL eingegeben hast, welche war das?
-          li Betriebssystem und Browser inkl. Version.
-          li Datum / Uhrzeit
-          li Den Stacktrace unterhalb von "500"
-      p Das Agora-Team bittet um Entschuldigung.
+      !=t("authentication.error_text", { postProcess: "jade" })
     .col-md-6
       h3 500
         | #{error}

@@ -4,12 +4,12 @@ include ./mailheader-mixin
 
 
 block title
-  | #{group} mails 
+  | #{group} #{t("mailarchive.emails")}
 
 block content
   .row
     .col-md-12
       .page-header
-        mixin pageHeader(group, "Flat")
+        mixin pageHeader(group, t("mailarchive.unthreaded"))
       .panel.pre-scrollable
         mixin mailIndex(mailHeaders)

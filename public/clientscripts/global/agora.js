@@ -1,4 +1,4 @@
-/* global $, document, window*/
+/* global $, document, window, moment, today, monthNames, monthNamesShort, dayNames, dayNamesShort, datepicker_lang, datepicker_format */
 "use strict";
 
 var surroundWithLink = function (text) {
@@ -35,14 +35,14 @@ var initCalendar = function () {
         month: 'MMM yy'
       },
       buttonText: {
-        today: 'heute',
+        today: today,
         prev: '<i class="fa fa-chevron-left"></i>',
         next: '<i class="fa fa-chevron-right"></i>'
       },
-      monthNames: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'],
-      monthNamesShort: ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'],
-      dayNames: ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'],
-      dayNamesShort: ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'],
+      monthNames: monthNames,
+      monthNamesShort: monthNamesShort,
+      dayNames: dayNames,
+      dayNamesShort: dayNamesShort,
 
       events: '/activities/eventsForSidebar',
       eventMouseover: function (event) {
@@ -81,11 +81,11 @@ var resizePreScrollable = function () {
 var initPickers = function () {
   $('.datepicker').datepicker({
     autoclose: true,
-    format: 'dd.mm.yyyy',
+    format: datepicker_format,
     weekStart: 1,
     viewMode: 'days',
     minViewMode: 'days',
-    language: 'de'
+    language: datepicker_lang
   });
 
   $('.timepicker').timepicker({
@@ -123,10 +123,11 @@ var addHelpButtonToTextarea = function () {
           ]
         ],
         onPreview: function (e) {
-          $.post("/wiki/preview",
+          $.post("/preview",
             {data: e.getContent(), subdir: ($("#subdir").val() || $("#assignedGroup").val() || $('#id').val())},
             function (data) { $(".md-preview").html(data); }
           );
+          return ""; // to clearly indicate the loading...
         }
       }
     );
@@ -136,19 +137,9 @@ var addHelpButtonToTextarea = function () {
 var extendDataTables = function () {
   if (!$.fn.dataTableExt) { return; }
   $.extend($.fn.dataTableExt.oSort, {
-    "date-eu-pre": function (dateString) {
-      if (!dateString) { return 0; }
-      var date = dateString.replace(" ", "");
-      var eu_date = date.split('.');
-      if (eu_date.length < 2) { return 0; }
-      return (eu_date[2] + eu_date[1] + eu_date[0]) * 1;
-    },
-    "date-eu-asc": function (a, b) {
-      return ((a < b) ? -1 : ((a > b) ? 1 : 0));
-    },
-    "date-eu-desc": function (a, b) {
-      return ((a < b) ? 1 : ((a > b) ? -1 : 0));
-    }
+    "date-eu-pre": function (dateString) { return moment(dateString, 'DD.MM.YYYY HH:mm').unix(); },
+    "date-eu-asc": function (a, b) { return a - b; },
+    "date-eu-desc": function (a, b) { return b - a; }
   });
 };
 

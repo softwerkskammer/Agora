@@ -4,26 +4,11 @@ require('../configureForTest');
 var conf = require('nconf');
 var expect = require('chai').expect;
 
-var fieldHelpers = conf.get('beans').get('fieldHelpers');
 var Activity = conf.get('beans').get('activity');
 
 // TODO Activity.fillFromUI with null/undefined in startDate, startTime, endDate, endTime
 
 describe('Activity', function () {
-  it('converts a wellformed Activity to a calendar display event without colors given', function () {
-    var activity = new Activity({
-      title: 'Title',
-      startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('04.04.2013'),
-      endUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('05.04.2013'),
-      url: 'myURL'
-    });
-    var event = activity.asCalendarEvent();
-    expect('Title').to.equal(event.title);
-    expect(4).to.equal(event.dayOfWeek);
-    expect('/activities/myURL').to.equal(event.url);
-    expect('#353535').to.equal(event.color);
-  });
-
   it('fetches the group long name', function () {
     var activity = new Activity({
       url: 'myURL',
@@ -86,8 +71,6 @@ describe('Activity', function () {
       startDate: '01.02.2013',
       startTime: '12:34'
     });
-    expect(activity.startDate()).to.equal('01.02.2013');
-    expect(activity.startTime()).to.equal('12:34');
     expect(activity.startMoment().format()).to.equal('2013-02-01T12:34:00+01:00');
   });
 
@@ -97,8 +80,6 @@ describe('Activity', function () {
       endDate: '01.08.2013',
       endTime: '12:34'
     });
-    expect(activity.endDate()).to.equal('01.08.2013');
-    expect(activity.endTime()).to.equal('12:34');
     expect(activity.endMoment().format()).to.equal('2013-08-01T12:34:00+02:00');
   });
 });

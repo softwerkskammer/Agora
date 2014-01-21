@@ -1,19 +1,52 @@
 extends ../../../views/layout
 
 block scripts
-  script(src="/clientscripts/wiki_compare.js")
+  script.
+    $(document).ready(function () {
+      var checkboxes = $(".history td:first-child :checkbox");
+      var compareButton = $("#rev-compare");
+      function toggleCompareCheckboxes() {
+        var checkedCheckboxes = $(".history td:first-child :checked");
+        if (checkboxes.length === 1) {
+          checkboxes.hide();
+          compareButton.attr({"disabled": "disabled"});
+          return;
+        }
+        if (checkedCheckboxes.length === 2) {
+          checkboxes.hide().parents("tr").css({"color": "silver"});
+          checkedCheckboxes.show().parents("tr").css({"color": "black"});
+          compareButton.removeAttr("disabled");
+        } else {
+          checkboxes.show().parents("tr").css({"color": "black"});
+          compareButton.attr({"disabled": "disabled"});
+        }
+      }
+      toggleCompareCheckboxes();
+      checkboxes.on("click", function () {
+        toggleCompareCheckboxes();
+      });
+      compareButton.on("click", function () {
+        var checkedCheckboxes = $(".history td:first-child :checked");
+        if (checkedCheckboxes.length < 2) {
+          return false;
+        }
+        window.location.href = "/wiki/compare/" + $(this).data("subdir") + "/" + $(this).data("pagename") + "/" + checkedCheckboxes.map(function () { return $(this).val(); }).toArray().reverse().join("..");
+        return false;
+      });
+    });
+
 
 block title
-  | #{pageName} : #{subdir} Revisionen
+  | #{pageName} : #{subdir} - #{t("wiki.revisions")}
 
 block content
   .page-header
     .btn-group.pull-right
-      a.btn.btn-default(href="javascript:history.back()", type="cancel") Zurück
+      a.btn.btn-default(href="javascript:history.back()", type="cancel") #{t("general.back")}
       if (accessrights.isAuthenticated())
         button(id="rev-compare", data-pageName="#{pageName}", data-subdir="#{subdir}").btn.btn-default
           i.fa.fa-stethoscope.fa-fw
-          | &nbsp; Vergleichen…
+          | &nbsp; #{t("general.compare")}…
     h2 #{pageName}
       br
       small Wiki "#{subdir}"
@@ -26,8 +59,5 @@ block content
         td #{item.author}
         td #{item.date}
         td #{item.subject}
-        td 
-          a(href="/wiki/#{item.name}/#{item.hashRef}") #{item.hashRef || 'CURRENT'}
-
-  script.
-    Jingo.init();
+        td
+          a(href="/wiki/#{item.name}?version=#{item.hashRef}") #{item.hashRef || 'CURRENT'}

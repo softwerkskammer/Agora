@@ -1,19 +1,12 @@
 extends ../../../views/layout
 
-mixin colorPickerForTable(id, name, object)
+mixin colorPickerForTable(id, name, value)
   .form-group
-    label.col-md-6.control-label(for="color#{id}") #{id}:
-    #color.col-md-6.input-group.color(id="color#{id}", data-color="#{object[name]}", data-color-format="hex")
-      input.form-control(id="colorText#{id}", type="text", name=id, value=object[name])
-      span.input-group-addon: i(style="background-color: #{object[name]}") &nbsp;&nbsp;&nbsp;&nbsp;
+    label.col-xs-4.control-label(for="color#{id}") #{id}:
+    .col-xs-8
+      input.form-control(id="color#{id}", type="text", name=id, value=value)
     script.
-      $("#color#{id}").colorpicker();
-      $("#colorText#{id}").on("change", function (event) {
-        $("#color#{id}").colorpicker("setValue", event.target.value);
-      });
-      $("#colorText#{id}").on("keyup", function (event) {
-        $("#color#{id}").colorpicker("setValue", event.target.value);
-      });
+      $("#color#{id}").pickAColor();
 
 block title
   | Farben
@@ -27,11 +20,9 @@ block content
             a.pull-right.btn.btn-default(data-toggle="modal", href="#newcolor", title="Neue Farbe"): i.fa.fa-file-o.fa-fw
         h2 Verwaltung
           small  Farben
-  .row
-    .col-md-8
       form.form-horizontal(action='/administration/submitColors', method='post')
         for color in colors
-            mixin colorPickerForTable(color.id, 'color', color)
+           mixin colorPickerForTable(color.id, 'color', color.color)
         button.btn.btn-primary.pull-right(type="submit") Speichern
 
   form(id='newcolorform', action='/administration/submitNewColor', method='post')

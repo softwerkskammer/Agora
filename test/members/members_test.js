@@ -19,8 +19,8 @@ var getSubscribedGroupsForUser;
 
 describe('Members application', function () {
 
-  beforeEach(function (done) {
-    dummymember = new Member({nickname: 'hada', email: 'a@b.c', site: 'http://my.blog', firstname: 'Hans', lastname: 'Dampf'});
+  beforeEach(function () {
+    dummymember = new Member({id: 'memberID', nickname: 'hada', email: 'a@b.c', site: 'http://my.blog', firstname: 'Hans', lastname: 'Dampf', authentications: []});
     allMembers = sinon.stub(membersAPI, 'allMembers', function (callback) {
       callback(null, [dummymember]);
     });
@@ -33,12 +33,10 @@ describe('Members application', function () {
     sinon.stub(groupsAPI, 'getAllAvailableGroups', function (callback) {
       callback(null, []);
     });
-    done();
   });
 
-  afterEach(function (done) {
+  afterEach(function () {
     sinon.restore();
-    done();
   });
 
   it('shows the list of members as retrieved from the membersstore if the user is registered', function (done) {
@@ -57,14 +55,13 @@ describe('Members application', function () {
       .get('/hada')
       .expect(200)
       .expect(/Blog:(.+)http:\/\/my.blog/, function (err) {
-        expect(getMember.calledWith(dummymember.nickname)).to.be.true;
-        expect(getSubscribedGroupsForUser.calledWith(dummymember.email)).to.be.true;
+        expect(getMember.calledWith(dummymember.nickname())).to.be.true;
+        expect(getSubscribedGroupsForUser.calledWith(dummymember.email())).to.be.true;
         done(err);
       });
   });
 
   it('allows a member to edit her own data', function (done) {
-    dummymember.id = 'memberID';
     request(createApp('memberID'))
       .get('/edit/hada')
       .expect(200)
@@ -74,7 +71,6 @@ describe('Members application', function () {
   });
 
   it('does not allow a member to edit another member\'s data', function (done) {
-    dummymember.id = 'memberID';
     request(createApp('memberID1'))
       .get('/edit/hada')
       .expect(302)
@@ -82,8 +78,6 @@ describe('Members application', function () {
   });
 
   it('does not allow an admin member to edit another member\'s data', function (done) {
-    dummymember.id = 'memberID';
-    dummymember.isAdmin = true;
     request(createApp('memberID1'))
       .get('/edit/hada')
       .expect(302)
@@ -91,7 +85,6 @@ describe('Members application', function () {
   });
 
   it('allows a superuser member to edit another member\'s data', function (done) {
-    //dummymember.id = 'superuserID';
     request(createApp('superuserID'))
       .get('/edit/hada')
       .expect(200)
@@ -190,7 +183,6 @@ describe('Members application', function () {
       });
   });
 
-
   it('rejects a member with invalid and different nickname on submit', function (done) {
     sinon.stub(membersAPI, 'isValidNickname', function (nickname, callback) {
       callback(null, false);
@@ -202,12 +194,11 @@ describe('Members application', function () {
       .send('nickname=nickerinack')
       .send('previousNickname=bibabu')
       .expect(200)
-      .expect(/Validation Error/)
+      .expect(/Validierungsfehler/)
       .expect(/Dieser Nickname ist leider nicht verfügbar./, function (err) {
         done(err);
       });
   });
-
 
   it('rejects a member with invalid and different email address on submit', function (done) {
     sinon.stub(membersAPI, 'isValidEmail', function (nickname, callback) {
@@ -220,7 +211,7 @@ describe('Members application', function () {
       .send('email=here@there.org')
       .send('previousEmail=there@wherever.com')
       .expect(200)
-      .expect(/Validation Error/)
+      .expect(/Validierungsfehler/)
       .expect(/Diese Adresse ist schon registriert. Hast Du bereits ein Profil angelegt?/, function (err) {
         done(err);
       });
@@ -232,7 +223,7 @@ describe('Members application', function () {
       .post('/submit')
       .send('id=0815&&nickname=nuck&previousNickname=nuck&location=x&profession=y&reference=z&email=here@there.org&previousEmail=here@there.org')
       .expect(200)
-      .expect(/Validation Error/)
+      .expect(/Validierungsfehler/)
       .expect(/Vorname ist ein Pflichtfeld./)
       .expect(/Nachname ist ein Pflichtfeld./, function (err) {
         done(err);
@@ -252,7 +243,7 @@ describe('Members application', function () {
       .post('/submit')
       .send('id=0815&&nickname=nuckNew&previousNickname=nuck&lastname=x&location=x&profession=y&reference=z&email=hereNew@there.org&previousEmail=here@there.org')
       .expect(200)
-      .expect(/Validation Error/)
+      .expect(/Validierungsfehler/)
       .expect(/Vorname ist ein Pflichtfeld./, function (err) {
         done(err);
       });
@@ -274,7 +265,7 @@ describe('Members application', function () {
       .send('email=here@there.org')
       .send('previousEmail=there@wherever.com')
       .expect(200)
-      .expect(/Validation Error/)
+      .expect(/Validierungsfehler/)
       .expect(/Dieser Nickname ist leider nicht verfügbar./)
       .expect(/Diese Adresse ist schon registriert. Hast Du bereits ein Profil angelegt?/, function (err) {
         done(err);

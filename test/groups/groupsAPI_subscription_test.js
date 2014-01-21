@@ -1,39 +1,30 @@
 "use strict";
 
-var sinon = require('sinon');
+var sinon = require('sinon').sandbox.create();
 
 var expect = require('chai').expect;
 var conf = require('../configureForTest');
-
-var Group = conf.get('beans').get('group');
-
+var beans = conf.get('beans');
+var Group = beans.get('group');
 var GroupA = new Group({id: 'GroupA', longName: 'Gruppe A', description: 'Dies ist Gruppe A.', type: 'Themengruppe'});
 var GroupB = new Group({id: 'GroupB', longName: 'Gruppe B', description: 'Dies ist Gruppe B.', type: 'Regionalgruppe'});
 
-var sympaStub = conf.get('beans').get('sympaStub');
-var systemUnderTest = conf.get('beans').get('groupsAPI');
+var sympaStub = beans.get('sympaStub');
+var systemUnderTest = beans.get('groupsAPI');
 
 describe('Groups API (updateSubscriptions)', function () {
 
   var subscribeSpy;
   var unsubscribeSpy;
 
-  beforeEach(function (done) {
+  beforeEach(function () {
     systemUnderTest.refreshCache();
-    subscribeSpy = sinon.stub(sympaStub, 'addUserToList', function (email, list, callback) {
-      callback();
-    });
-    unsubscribeSpy = sinon.stub(sympaStub, 'removeUserFromList', function (email, list, callback) {
-      callback();
-    });
-    done();
+    subscribeSpy = sinon.stub(sympaStub, 'addUserToList', function (email, list, callback) { callback(); });
+    unsubscribeSpy = sinon.stub(sympaStub, 'removeUserFromList', function (email, list, callback) { callback(); });
   });
 
-  afterEach(function (done) {
-    sympaStub.addUserToList.restore();
-    sympaStub.removeUserFromList.restore();
-    sympaStub.getSubscribedListsForUser.restore();
-    done();
+  afterEach(function () {
+    sinon.restore();
   });
 
   var setupSubscribedListsForUser = function (lists) {
@@ -180,160 +171,50 @@ describe('Groups API (updateSubscriptions)', function () {
 
 });
 
-describe('Groups API (updateAdminListSubscription)', function () {
-
-  var subscribeSpy;
-  var unsubscribeSpy;
-
-  var adminList = conf.get('adminListName');
-
-  beforeEach(function (done) {
-    systemUnderTest.refreshCache();
-    subscribeSpy = sinon.stub(sympaStub, 'addUserToList', function (email, list, callback) {
-      callback();
-    });
-    unsubscribeSpy = sinon.stub(sympaStub, 'removeUserFromList', function (email, list, callback) {
-      callback();
-    });
-    done();
-  });
-
-  afterEach(function (done) {
-    sympaStub.addUserToList.restore();
-    sympaStub.removeUserFromList.restore();
-    sympaStub.getSubscribedListsForUser.restore();
-    done();
-  });
-
-  var setupSubscribedListsForUser = function (lists) {
-    sinon.stub(sympaStub, 'getSubscribedListsForUser', function (email, callback) {
-      callback(null, lists);
-    });
-  };
-
-  it('subscribes to admin list if admin and not already subscribed', function (done) {
-    setupSubscribedListsForUser([]);
-
-    systemUnderTest.updateAdminListSubscription('user@mail.com', true, function (err) {
-
-      expect(subscribeSpy.called, 'subscribe is called').to.be.true;
-      expect(unsubscribeSpy.called, 'unsubscribe is called').to.be.false;
-
-      done(err);
-    });
-  });
-
-  it('does not subscribe to admin list if admin and already subscribed', function (done) {
-    setupSubscribedListsForUser([adminList]);
-
-    systemUnderTest.updateAdminListSubscription('user@mail.com', true, function (err) {
-
-      expect(subscribeSpy.called, 'subscribe is called').to.be.false;
-      expect(unsubscribeSpy.called, 'unsubscribe is called').to.be.false;
-
-      done(err);
-    });
-  });
-
-  it('unsubscribes to admin list if not admin and already subscribed', function (done) {
-    setupSubscribedListsForUser([adminList]);
-
-    systemUnderTest.updateAdminListSubscription('user@mail.com', false, function (err) {
-
-      expect(subscribeSpy.called, 'subscribe is called').to.be.false;
-      expect(unsubscribeSpy.called, 'unsubscribe is called').to.be.true;
-
-      done(err);
-    });
-  });
-
-  it('does not unsubscribe to admin list if not admin and already unsubscribed', function (done) {
-    setupSubscribedListsForUser([]);
-
-    systemUnderTest.updateAdminListSubscription('user@mail.com', false, function (err) {
-
-      expect(subscribeSpy.called, 'subscribe is called').to.be.false;
-      expect(unsubscribeSpy.called, 'unsubscribe is called').to.be.false;
-
-      done(err);
-    });
-  });
-
-  it('neither subscribes or unsubscribes anything does if admin subscription has correct state (false)', function (done) {
-    setupSubscribedListsForUser(['a', 'b', 'c']);
-
-    systemUnderTest.updateAdminListSubscription('user@mail.com', false, function (err) {
-
-      expect(subscribeSpy.called, 'subscribe is called').to.be.false;
-      expect(unsubscribeSpy.called, 'unsubscribe is called').to.be.false;
-
-      done(err);
-    });
-  });
-
-  it('neither subscribes or unsubscribes anything does if admin subscription has correct state (true)', function (done) {
-    setupSubscribedListsForUser(['a', 'b', 'c', adminList]);
-
-    systemUnderTest.updateAdminListSubscription('user@mail.com', true, function (err) {
-
-      expect(subscribeSpy.called, 'subscribe is called').to.be.false;
-      expect(unsubscribeSpy.called, 'unsubscribe is called').to.be.false;
-
-      done(err);
-    });
-  });
-
-});
-
 describe('Groups API (combineSubscribedAndAvailableGroups)', function () {
 
-  it('combines no subscribed and no available groups to an empty array', function (done) {
+  it('combines no subscribed and no available groups to an empty array', function () {
     var result = systemUnderTest.combineSubscribedAndAvailableGroups([], []);
 
     expect(result).to.be.not.null;
     expect(result.length).to.equal(0);
-    done();
   });
 
-  it('combines some subscribed but no available groups to an empty array', function (done) {
+  it('combines some subscribed but no available groups to an empty array', function () {
     var result = systemUnderTest.combineSubscribedAndAvailableGroups([GroupA, GroupB], []);
 
     expect(result).to.be.not.null;
     expect(result.length).to.equal(0);
-    done();
   });
 
-  it('combines no subscribed and one available group to indicate an unselected group', function (done) {
+  it('combines no subscribed and one available group to indicate an unselected group', function () {
     var result = systemUnderTest.combineSubscribedAndAvailableGroups([], [GroupA]);
 
     expect(result).to.be.not.null;
     expect(result.length).to.equal(1);
     expect(result[0].group, 'group').to.equal(GroupA);
     expect(result[0].selected, 'selected').to.be.false;
-    done();
   });
 
-  it('combines one subscribed and another available group to indicate an unselected group', function (done) {
+  it('combines one subscribed and another available group to indicate an unselected group', function () {
     var result = systemUnderTest.combineSubscribedAndAvailableGroups([GroupA], [GroupB]);
 
     expect(result).to.be.not.null;
     expect(result.length).to.equal(1);
     expect(result[0].group, 'group').to.equal(GroupB);
     expect(result[0].selected, 'selected').to.be.false;
-    done();
   });
 
-  it('combines one subscribed and the same available group to indicate a selected group', function (done) {
+  it('combines one subscribed and the same available group to indicate a selected group', function () {
     var result = systemUnderTest.combineSubscribedAndAvailableGroups([GroupA], [GroupA]);
 
     expect(result).to.be.not.null;
     expect(result.length).to.equal(1);
     expect(result[0].group, 'group').to.equal(GroupA);
     expect(result[0].selected, 'selected').to.be.true;
-    done();
   });
 
-  it('combines some subscribed and some available groups to indicate the correct selections', function (done) {
+  it('combines some subscribed and some available groups to indicate the correct selections', function () {
     var result = systemUnderTest.combineSubscribedAndAvailableGroups([GroupA], [GroupA, GroupB]);
 
     expect(result).to.be.not.null;
@@ -342,6 +223,7 @@ describe('Groups API (combineSubscribedAndAvailableGroups)', function () {
     expect(result[0].selected, 'selected').to.be.true;
     expect(result[1].group, 'group').to.equal(GroupB);
     expect(result[1].selected, 'selected').to.be.false;
-    done();
   });
 });
+
+

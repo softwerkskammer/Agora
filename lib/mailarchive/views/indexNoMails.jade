@@ -4,11 +4,11 @@ include ./mailheader-mixin
 
 block title
   | #{group} 
-  | mails 
+  | #{t("mailarchive.emails")}
 
 block content
   .row
     .col-md-12
       .page-header
         mixin pageHeader(group)
-      h4 Keine Mails
+      h4 #{t("mailarchive.no_emails")}

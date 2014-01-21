@@ -1,0 +1,75 @@
+extends ../../../views/layout
+include  ../../../views/formComponents
+
+block scripts
+  script(src="/clientscripts/jquery.dataTables.min.js")
+  script.
+    $(document).ready(function() {
+      $("#waitinglisttable").dataTable({
+        "oLanguage": {
+          "sUrl": "#{(language === 'de') ? "/clientscripts/dataTables.german.txt" : ""}"
+        },
+        "aoColumns": [
+          { "bSortable" : false }, null, null, { "sType": "date-eu" }, { "sType": "date-eu" }
+        ],
+        "bPaginate": false,
+        "bAutoWidth": false,
+        "aaSorting": [[ 3, "asc" ]],
+        "bStateSave": true
+      });
+        $('.tooltiplabel').each(function(each) {$(this).popover()});
+    });
+
+block title
+  | #{t("activities.waitinglist")}
+block content
+  form(id='allowRegistrationForm', name='allowRegistrationForm', action='/waitinglist/allowRegistration',method='post')
+    mixin hidden("activityUrl", activity.url())
+    .row
+      .col-md-12
+        .page-header
+          h2 #{activity.title()}
+            small  #{t("activities.waitinglist")}
+        .panel.pre-scrollable
+          table.table.table-condensed.table-hover.table-striped#waitinglisttable
+            thead
+              tr
+                th #{t("activities.select")}
+                th #{t("members.nickname")}
+                th #{t("activities.resource")}
+                th #{t("activities.listed")}
+                th #{t("activities.register_until")}
+            tbody
+              for waitinglistEntry in waitinglist
+                - var checkboxid = '{"nickname": "' + waitinglistEntry.registrantNickname + '", "activityUrl": "' + activity.url() + '", "resourcename": "' + waitinglistEntry.resourceName() + '"}'
+                tr
+                  td: .checkbox(style="margin-top:0px;margin-bottom:0px;")
+                    label
+                      input(type='checkbox', name='selectedRow', value=checkboxid)
+
+                  td: a(href="/members/#{encodeURIComponent(waitinglistEntry.registrantNickname)}") #{waitinglistEntry.registrantNickname}
+                  td #{waitinglistEntry.resourceName()}
+                  td #{waitinglistEntry.registrationDate()}
+                  td #{waitinglistEntry.registrationValidUntil()}
+        .form-inline
+          | #{t("activities.activate_registration_1")}
+          input.form-control(id="registrationValidForHours", type="text", name="registrationValidForHours", style="width: 50px;")
+          |  #{t("activities.activate_registration_2")}
+          button.btn.btn-primary.pull-right(type="submit") #{t("activities.save_and_notify")}
+  if(accessrights.isSuperuser())
+    hr
+    form(id='waitinglistForm', action='/waitinglist/add',method='post')
+      mixin hidden("activityUrl", activity.url())
+      legend #{t("activities.waitinglist_new")}
+      .row
+        .col-sm-4
+          input.form-control(id='nickname', type='text', name='nickname', placeholder=t("members.nickname"))
+        .col-sm-4
+          if (activity.resourceNames().length > 2)
+            select#nickname.form-control(name="resourceName")
+              for resource in activity.resourceNames()
+                option(value=resourceName) #{resource}
+          else
+            input.form-control(disabled, id='resourceName', type='text', name='resourceName', placeholder='#{activity.resourceNames()[0]}')
+        .col-sm-4
+          button.btn.btn-primary.pull-right(type="submit") #{t("general.add")}

@@ -13,15 +13,13 @@ describe('Groups store', function () {
   var sampleGroup = {id: 'groupa'};
   var getById;
 
-  before(function (done) {
+  before(function () {
     getById = sinon.stub(persistence, 'getById');
     getById.callsArgWith(1, null, sampleGroup);
-    done();
   });
 
-  after(function (done) {
+  after(function () {
     persistence.getById.restore();
-    done();
   });
 
   it('retrieves groupnames given the intended case', function (done) {

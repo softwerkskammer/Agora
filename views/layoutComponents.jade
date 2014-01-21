@@ -7,29 +7,32 @@ mixin topNavbar
       i.fa.fa-bars.fa-lg
     if (!accessrights.isRegistered())
       a.btn.btn-default.navbar-toggle(href="https://github.com/softwerkskammer/Agora/issues",
-      title="Was funktioniert nicht, wie es soll?", target="_blank"): i.fa.fa-ambulance.fa-fw
+      title=t("general.what_does_not_work"), target="_blank"): i.fa.fa-ambulance.fa-fw
+
   .container.bottom
     .navbar-collapse.collapse.collapse-top
       ul.nav.navbar-nav.pull-right.hidden-xs
         mixin loginMenu
+        li: a(style="padding: 2px;", href="/language/de?currentUrl=#{encodeURIComponent(currentUrl)}"): img(src="/img/flags/Germany.png", alt="Deutsch")
+        li: a(style="padding: 2px;", href="/language/en-gb?currentUrl=#{encodeURIComponent(currentUrl)}"): img(src="/img/flags/United-Kingdom.png", alt="English")
       ul.nav.navbar-nav
         li#activities: a(href="/activities/upcoming")
           span.hidden-sm
             i.fa.fa-calendar.fa-fw
-            | &nbsp;Aktivitäten
+            | &nbsp;#{t("activities.activities")}
           span.visible-sm
             i.fa.fa-calendar.fa-fw
         li#groups: a(href="/groups")
           span.hidden-sm
             i.fa.fa-group.fa-fw
-            | &nbsp;Gruppen
+            | &nbsp;#{t("groups.groups")}
           span.visible-sm
             i.fa.fa-group.fa-fw
         li#wiki.dropdown
           a.dropdown-toggle(href="#", data-toggle="dropdown")
             span.hidden-sm
               i.fa.fa-book.fa-fw
-              | &nbsp;Wiki&nbsp;
+              | &nbsp;#{t("wiki.wiki")}&nbsp;
               b.caret
             span.visible-sm
               i.fa.fa-book.fa-fw
@@ -42,7 +45,7 @@ mixin topNavbar
           span.hidden-sm
             if (accessrights.isRegistered())
               i.fa.fa-user.fa-fw
-              | &nbsp;Mitglieder
+              | &nbsp;#{t("members.members")}
           span.visible-sm
             if (accessrights.isRegistered())
               i.fa.fa-user.fa-fw
@@ -50,55 +53,55 @@ mixin topNavbar
 
 
 mixin administrationMenu()
-  if (accessrights.isAdmin())
+  if (accessrights.isSuperuser())
     li#administration.dropdown.nav
       a.dropdown-toggle(href="#", data-toggle="dropdown")
         i.fa.fa-dashboard.fa-fw
-        | &nbsp;Verwaltung&nbsp;
+        | &nbsp;#{t("general.administration")}&nbsp;
         b.caret
       ul.dropdown-menu
         li: a(href="/administration/announcementTable")
           i.fa.fa-globe.fa-fw
-          | &nbsp;Nachrichten
+          | &nbsp;#{t("announcements.announcements")}
         li: a(href="/administration/activityTable")
           i.fa.fa-calendar.fa-fw
-          | &nbsp;Aktivitäten
+          | &nbsp;#{t("activities.activities")}
         li: a(href="/administration/groupTable")
           i.fa.fa-group.fa-fw
-          | &nbsp;Gruppen
+          | &nbsp;#{t("groups.groups")}
         li: a(href="/administration/memberTable")
           i.fa.fa-user.fa-fw
-          | &nbsp;Mitglieder
+          | &nbsp;#{t("members.members")}
         li: a(href="/administration/colors")
           i.fa.fa-eye.fa-fw
-          | &nbsp;Farben
+          | &nbsp;#{t("colors.colors")}
 
 mixin loginMenu(forInline)
   if (accessrights.isRegistered())
     li.dropdown(class="#{forInline ? 'visible-xs' : ''}")
       a.dropdown-toggle(href="#", data-toggle="dropdown")
-        i.fa.fa-info-circle.fa-fw&nbsp;
-        | #{user.member.nickname} 
+        i.fa.fa-info-circle.fa-fw &nbsp;
+        | #{user.member.nickname()} 
         b.caret
       ul.dropdown-menu
-        li: a(href="/members/edit/#{encodeURIComponent(user.member.nickname)}")
+        li: a(href="/members/edit/#{encodeURIComponent(user.member.nickname())}")
           i.fa.fa-edit.fa-fw
-          | &nbsp;Profil bearbeiten
+          | &nbsp;#{t("members.edit")}
         li: a(href="/auth/logout")
           i.fa.fa-sign-out.fa-fw
-          | &nbsp;Abmelden
+          | &nbsp;#{t("general.logout")}
         li: a(href="https://github.com/softwerkskammer/Agora/issues", target="_blank")
           i.fa.fa-ambulance.fa-fw
-          | &nbsp;Feedback
+          | &nbsp;#{t("general.feedback")}
         li: include ../version
   else
     li(class="#{forInline ? 'hidden' : ''}"): a.navbar-link(href="https://github.com/softwerkskammer/Agora/issues",
-    title="Was funktioniert nicht, wie es soll?", target="_blank")
+    title=t("general.what_does_not_work"), target="_blank")
       i.fa.fa-ambulance.fa-fw
-      | &nbsp;Feedback
+      | &nbsp;#{t("general.feedback")}
     li(class="#{forInline ? 'visible-xs' : ''}"): a.navbar-link(data-toggle="modal", href="#login")
       i.fa.fa-sign-in
-      | &nbsp;Anmelden
+      | &nbsp;#{t("general.login")}
 
 mixin navbar-inside
   .navbar-header
@@ -108,9 +111,9 @@ mixin navbar-inside
   .navbar-collapse.collapse.collapse-btom
     ul.nav.navbar-nav.pull-right
       mixin administrationMenu()
-      li: a(href="/help.html") Tipps & FAQs
-      li: a(href="/credits.html") Credits
-      li: a(href="/impressum.html") Impressum
+      li: a(href="/help.html") #{t("general.faq")}
+      li: a(href="/credits.html") #{t("general.credits")}
+      li: a(href="/impressum.html") #{t("general.legal_notice")}
 
 mixin bottomNavbar
   .navbar.navbar-default.navbar-bottom.hidden-print.visible-xs
@@ -126,7 +129,6 @@ mixin externalUrl(url, text)
 mixin notificationsBlock(notificationmessage)
   #{notificationmessage.kill()}
   #notifications(class="alert alert-block hidden-print #{notificationmessage.type}")
-    button.close(type="button", data-dismiss="alert")&times;
-    h4 #{notificationmessage.title}
-    | #{notificationmessage.text}
-    
+    button.close(type="button", data-dismiss="alert") &times;
+    h4 #{t(notificationmessage.title)}
+    | #{t(notificationmessage.text, notificationmessage.additionalArguments)}

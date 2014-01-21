@@ -63,20 +63,7 @@ async.parallel(
     console.log('Filling the database...');
     logResult(err, loggingmessages.join('\n'));
     console.log('were created.');
-    console.log('Turning all existing users into admins...');
-    membersPersistence.list({}, function (err, members) {
-      async.map(members, function (member, callback) {
-        member.isAdmin = true;
-        callback(null, member);
-      }, function (err, results) {
-        if (err) { return logResult(err, "AAAAHHHHHHH"); }
-        membersPersistence.saveAll(results, function (innerError) {
-          logResult(innerError, 'All existing users are now admins.');
-          console.log('Done!');
-          process.exit();
-        });
-      });
-    });
+    process.exit();
   }
 
 );
