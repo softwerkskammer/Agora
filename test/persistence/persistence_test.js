@@ -36,6 +36,37 @@ describe('The persistence store', function () {
       });
     });
 
+    it('fails to save-with-version object without id', function (done) {
+      persistence.saveWithVersion({}, function (err) {
+        expect(err.message).to.equal("Given object has no valid id");
+        done(); // error condition - do not pass err
+      });
+    });
+
+    it('fails to save-with-version object with id null', function (done) {
+      persistence.saveWithVersion({id : null}, function (err) {
+        expect(err.message).to.equal("Given object has no valid id");
+        done(); // error condition - do not pass err
+      });
+    });
+
+    it('fails to save-with-version object that is not yet in database', function (done) {
+      persistence.saveWithVersion({id : 123}, function (err) {
+        expect(err.message).to.equal("Object not found.");
+        //expect(result.version).to.equal(1);
+        done();
+      });
+    });
+
+//    it('fails to save-with-version an object that is not yet in database', function (done) {
+//      persistence.saveWithVersion({id : 123}, function (err) {
+//        expect(err.message).to.equal("Object not found.");
+//        //expect(result.version).to.equal(1);
+//        done();
+//      });
+//    });
+
+
     it('retrieves none for non-existing id', function (done) {
       persistence.getById('non-existing-id', function (err, result) {
         should.not.exist(result);
