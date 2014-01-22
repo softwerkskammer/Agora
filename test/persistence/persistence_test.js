@@ -30,7 +30,7 @@ describe('The persistence store', function () {
     });
 
     it('fails to save object with id null', function (done) {
-      persistence.save({id : null}, function (err) {
+      persistence.save({id: null}, function (err) {
         expect(err.message).to.equal("Given object has no valid id");
         done(); // error condition - do not pass err
       });
@@ -44,17 +44,19 @@ describe('The persistence store', function () {
     });
 
     it('fails to save-with-version object with id null', function (done) {
-      persistence.saveWithVersion({id : null}, function (err) {
+      persistence.saveWithVersion({id: null}, function (err) {
         expect(err.message).to.equal("Given object has no valid id");
         done(); // error condition - do not pass err
       });
     });
 
-    it('fails to save-with-version object that is not yet in database', function (done) {
-      persistence.saveWithVersion({id : 123}, function (err) {
-        expect(err.message).to.equal("Object not found.");
-        //expect(result.version).to.equal(1);
-        done();
+    it('on save-with-version, saves an object that is not yet in database and initializes version with 1', function (done) {
+      persistence.saveWithVersion({id: 123}, function (err) {
+        if (err) {return done(err); }
+        persistence.getById(123, function (err, result) {
+          expect(result.version).to.equal(1);
+          done(err);
+        });
       });
     });
 
