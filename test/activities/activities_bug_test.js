@@ -22,11 +22,11 @@ var getActivity = function (url, callback) {
   });
 };
 var saveActivity = function (activity, callback) {
-  persistence.save(activity.state, callback);
+  persistence.saveWithVersion(activity.state, callback);
 };
 
 
-describe('Activities', function () {
+describe('Activity', function () {
 
   beforeEach(function (done) { // if this fails, you need to start your mongo DB
     persistence.drop(function () {
@@ -37,7 +37,9 @@ describe('Activities', function () {
     });
   });
 
-  it('have a racing condition when saving two participants in quick succession', function (done) {
+  // Note: This test only shows the general mechanism of avoiding racing conditions with the help of version numbers.
+  // This does not mean that the activity code already implements this!
+  it('has a racing condition when saving two participants in quick succession', function (done) {
     // load activity for the first time:
     getActivity(activityUrl, function (err, activity1) {
       // add member to loaded instance:
@@ -52,13 +54,20 @@ describe('Activities', function () {
           getActivity(activityUrl, function (err, activity) {
             expect(activity.resourceNamed('default').registeredMembers(), "First registered member is stored").to.contain("memberId1");
             // save second instance:
-            saveActivity(activity2, function () {
-              // load the resulting activity
-              getActivity(activityUrl, function (err, activity) {
-                expect(activity.resourceNamed('default').registeredMembers(), "Second registered member is stored").to.contain("memberId2");
-                // Bug #578: This expectation should work
-                // expect(activity.resourceNamed('default').registeredMembers(), "First registered member is still there").to.contain("memberId1");
-                done(err);
+            saveActivity(activity2, function (err) {
+              expect(err.message).to.equal("Conflicting versions."); // Conflict is discovered
+              // repeat loading and adding:
+              getActivity(activityUrl, function (err, activity2) {
+                activity2.resourceNamed("default").addMemberId("memberId2", moment());
+                saveActivity(activity2, function () {
+                  // load the resulting activity
+                  getActivity(activityUrl, function (err, activity) {
+                    expect(activity.resourceNamed('default').registeredMembers(), "Second registered member is stored").to.contain("memberId2");
+                    // Bug #578: This expectation should work
+                    expect(activity.resourceNamed('default').registeredMembers(), "First registered member is still there").to.contain("memberId1");
+                    done(err);
+                  });
+                });
               });
             });
           });
