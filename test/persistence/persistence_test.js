@@ -60,14 +60,19 @@ describe('The persistence store', function () {
       });
     });
 
-//    it('fails to save-with-version an object that is not yet in database', function (done) {
-//      persistence.saveWithVersion({id : 123}, function (err) {
-//        expect(err.message).to.equal("Object not found.");
-//        //expect(result.version).to.equal(1);
-//        done();
-//      });
-//    });
-
+    it('on save-with-version, updates an object that is in database with same version', function (done) {
+      persistence.save({id: 123, data: "abc", version: 1}, function (err) {
+        if (err) {return done(err); }
+        persistence.saveWithVersion({id: 123, data: "def", version: 1}, function (err) {
+          if (err) {return done(err); }
+          persistence.getById(123, function (err, result) {
+            expect(result.data).to.equal("def");
+            expect(result.version).to.equal(2);
+            done(err);
+          });
+        });
+      });
+    });
 
     it('retrieves none for non-existing id', function (done) {
       persistence.getById('non-existing-id', function (err, result) {
