@@ -74,6 +74,22 @@ describe('The persistence store', function () {
       });
     });
 
+    it('on save-with-version, does not update an object that is in database with a different version', function (done) {
+      persistence.save({id: 123, data: "abc", version: 2}, function (err) {
+        if (err) {return done(err); }
+        var objectToSave = {id: 123, data: "def", version: 1};
+        persistence.saveWithVersion(objectToSave, function (err) {
+          expect(err.message).to.equal("Conflicting versions.");
+          persistence.getById(123, function (err, result) {
+            expect(result.data, "Data of object in database remains unchanged").to.equal("abc");
+            expect(result.version, "Version of object in database remains unchanged").to.equal(2);
+            expect(objectToSave.version, "Version of object to save remains unchanged").to.equal(1);
+            done(err);
+          });
+        });
+      });
+    });
+
     it('retrieves none for non-existing id', function (done) {
       persistence.getById('non-existing-id', function (err, result) {
         should.not.exist(result);
