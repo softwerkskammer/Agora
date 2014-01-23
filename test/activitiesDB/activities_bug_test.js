@@ -166,5 +166,19 @@ describe('Activities API', function () {
     });
   });
 
+  it('removeFromWaitinglist keeps the registrant that is in the database although it only reads an activity without registrant', function (done) {
+    // here, we save an activity after removing a member that is different from the member in the database.
+    // To mimick a racing condition, we return an activity without members for the first "getActivity".
+    activitiesAPI.removeFromWaitinglist("memberIdY", activityUrl, "default", function (err) {
+      if (err) { return done(err); }
+      getActivity(activityUrl, function (err, activity) {
+        if (err) { return done(err); }
+        expect(activity.resourceNamed('default').waitinglistEntries().length, "Waitinglist member is no longer in the database").to.equal(0);
+        expect(activity.resourceNamed('default').registeredMembers(), "First registered member is still there").to.contain("memberId1");
+        done(err);
+      });
+    });
+  });
+
 
 });
