@@ -89,15 +89,21 @@ describe('Activities API', function () {
   var invocation;
 
   beforeEach(function (done) { // if this fails, you need to start your mongo DB
-    activityWithoutRegistrant1 = new Activity({id: "activityId", title: 'Title of the Activity', description: 'description1', assignedGroup: 'groupname',
-      location: 'location1', direction: 'direction1', startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'),
-      url: activityUrl, owner: 'owner', resources: {default: {_registeredMembers: [{memberId: 'memberIdX'}], _waitinglist: [{_memberId: 'memberIdY'}], _registrationOpen: true  }}, version: 1});
+    activityWithoutRegistrant1 = new Activity({id: "activityId",
+      url: activityUrl, resources: {default: {_registeredMembers: [
+        {memberId: 'memberIdX'}
+      ], _waitinglist: [
+        {_memberId: 'memberIdY'}
+      ], _registrationOpen: true  }}, version: 1});
 
-    activityWithRegistrant1 = new Activity({id: "activityId", title: 'Title of the Activity', description: 'description1', assignedGroup: 'groupname',
-      location: 'location1', direction: 'direction1', startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'),
-      url: activityUrl, owner: 'owner', resources: {default: {_registeredMembers: [
-        {memberId: 'memberId1'}, {memberId: 'memberIdX'}
-      ], _waitinglist: [{_memberId: 'memberIdY'}], _registrationOpen: true  }}, version: 2});
+    activityWithRegistrant1 = new Activity({id: "activityId",
+      url: activityUrl, resources: {default: {_registeredMembers: [
+        {memberId: 'memberId1'},
+        {memberId: 'memberIdX'}
+      ], _waitinglist: [
+        {_memberId: 'memberIdY'}
+      ], _registrationOpen: true  }}, version: 2});
+
     invocation = 1;
 
     sinon.stub(activitystore, 'getActivity', function (url, callback) {
