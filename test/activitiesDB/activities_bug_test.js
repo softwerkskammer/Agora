@@ -84,34 +84,36 @@ describe('Persistence', function () {
 
 describe('Activities API', function () {
 
-  var activityWithoutRegistrant = new Activity({id: "activityId", title: 'Title of the Activity', description: 'description1', assignedGroup: 'groupname',
-    location: 'location1', direction: 'direction1', startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'),
-    url: activityUrl, owner: 'owner', resources: {default: {_registeredMembers: [], _registrationOpen: true  }}, version: 1});
-
-  var activityWithRegistrant = new Activity({id: "activityId", title: 'Title of the Activity', description: 'description1', assignedGroup: 'groupname',
-    location: 'location1', direction: 'direction1', startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'),
-    url: activityUrl, owner: 'owner', resources: {default: {_registeredMembers: [
-      {memberId: 'memberId1'}
-    ], _registrationOpen: true  }}, version: 2});
-
-  var invocation = 1;
+  var activityWithoutRegistrant1;
+  var activityWithRegistrant1;
+  var invocation;
 
   beforeEach(function (done) { // if this fails, you need to start your mongo DB
+    activityWithoutRegistrant1 = new Activity({id: "activityId", title: 'Title of the Activity', description: 'description1', assignedGroup: 'groupname',
+      location: 'location1', direction: 'direction1', startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'),
+      url: activityUrl, owner: 'owner', resources: {default: {_registeredMembers: [{memberId: 'memberIdX'}], _waitinglist: [], _registrationOpen: true  }}, version: 1});
+
+    activityWithRegistrant1 = new Activity({id: "activityId", title: 'Title of the Activity', description: 'description1', assignedGroup: 'groupname',
+      location: 'location1', direction: 'direction1', startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'),
+      url: activityUrl, owner: 'owner', resources: {default: {_registeredMembers: [
+        {memberId: 'memberId1'}, {memberId: 'memberIdX'}
+      ], _waitinglist: [], _registrationOpen: true  }}, version: 2});
+    invocation = 1;
 
     sinon.stub(activitystore, 'getActivity', function (url, callback) {
       // on the first invocation, getActivity returns an activity without registrant to mimick a racing condition.
       if (invocation === 1) {
         invocation = 2;
-        return callback(null, activityWithoutRegistrant);
+        return callback(null, activityWithoutRegistrant1);
       }
       // on subsequent invocations, getActivity returns an activity with registrant.
-      return callback(null, activityWithRegistrant);
+      return callback(null, activityWithRegistrant1);
     });
 
 
     persistence.drop(function () {
       // save our activity with one registrant
-      activitystore.saveActivity(activityWithRegistrant, function (err) {
+      activitystore.saveActivity(activityWithRegistrant1, function (err) {
         done(err);
       });
     });
@@ -121,14 +123,42 @@ describe('Activities API', function () {
     sinon.restore();
   });
 
-  it('keeps the registrant that is in the database although it only reads an activity without registrant', function (done) {
+  it('addVisitor keeps the registrant that is in the database although it only reads an activity without registrant', function (done) {
     // here, we save an activity with a member that is different from the member in the database.
     // To mimick a racing condition, we return an activity without members for the first "getActivity".
     activitiesAPI.addVisitorTo("memberId2", activityUrl, "default", moment(), function (err) {
       if (err) { return done(err); }
       getActivity(activityUrl, function (err, activity) {
         if (err) { return done(err); }
-        expect(activity.resourceNamed('default').registeredMembers(), "Second registered member is stored").to.contain("memberId2");
+        expect(activity.resourceNamed('default').registeredMembers(), "Second registered member is stored in the database").to.contain("memberId2");
+        expect(activity.resourceNamed('default').registeredMembers(), "First registered member is still there").to.contain("memberId1");
+        done(err);
+      });
+    });
+  });
+
+  it('removeVisitor keeps the registrant that is in the database although it only reads an activity without registrant', function (done) {
+    // here, we save an activity after removing a member that is different from the member in the database.
+    // To mimick a racing condition, we return an activity without members for the first "getActivity".
+    activitiesAPI.removeVisitorFrom("memberIdX", activityUrl, "default", function (err) {
+      if (err) { return done(err); }
+      getActivity(activityUrl, function (err, activity) {
+        if (err) { return done(err); }
+        expect(activity.resourceNamed('default').registeredMembers(), "Second removed member is no longer in the database").to.not.contain("memberIdX");
+        expect(activity.resourceNamed('default').registeredMembers(), "First registered member is still there").to.contain("memberId1");
+        done(err);
+      });
+    });
+  });
+
+  it('addVisitor keeps the registrant that is in the database although it only reads an activity without registrant', function (done) {
+    // here, we save an activity with a member that is different from the member in the database.
+    // To mimick a racing condition, we return an activity without members for the first "getActivity".
+    activitiesAPI.addVisitorTo("memberId2", activityUrl, "default", moment(), function (err) {
+      if (err) { return done(err); }
+      getActivity(activityUrl, function (err, activity) {
+        if (err) { return done(err); }
+        expect(activity.resourceNamed('default').registeredMembers(), "Second registered member is stored in the database").to.contain("memberId2");
         expect(activity.resourceNamed('default').registeredMembers(), "First registered member is still there").to.contain("memberId1");
         done(err);
       });
