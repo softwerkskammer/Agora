@@ -91,13 +91,13 @@ describe('Activities API', function () {
   beforeEach(function (done) { // if this fails, you need to start your mongo DB
     activityWithoutRegistrant1 = new Activity({id: "activityId", title: 'Title of the Activity', description: 'description1', assignedGroup: 'groupname',
       location: 'location1', direction: 'direction1', startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'),
-      url: activityUrl, owner: 'owner', resources: {default: {_registeredMembers: [{memberId: 'memberIdX'}], _waitinglist: [], _registrationOpen: true  }}, version: 1});
+      url: activityUrl, owner: 'owner', resources: {default: {_registeredMembers: [{memberId: 'memberIdX'}], _waitinglist: [{_memberId: 'memberIdY'}], _registrationOpen: true  }}, version: 1});
 
     activityWithRegistrant1 = new Activity({id: "activityId", title: 'Title of the Activity', description: 'description1', assignedGroup: 'groupname',
       location: 'location1', direction: 'direction1', startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'),
       url: activityUrl, owner: 'owner', resources: {default: {_registeredMembers: [
         {memberId: 'memberId1'}, {memberId: 'memberIdX'}
-      ], _waitinglist: [], _registrationOpen: true  }}, version: 2});
+      ], _waitinglist: [{_memberId: 'memberIdY'}], _registrationOpen: true  }}, version: 2});
     invocation = 1;
 
     sinon.stub(activitystore, 'getActivity', function (url, callback) {
@@ -151,14 +151,15 @@ describe('Activities API', function () {
     });
   });
 
-  it('addVisitor keeps the registrant that is in the database although it only reads an activity without registrant', function (done) {
+  it('addToWaitinglist keeps the registrant that is in the database although it only reads an activity without registrant', function (done) {
     // here, we save an activity with a member that is different from the member in the database.
     // To mimick a racing condition, we return an activity without members for the first "getActivity".
-    activitiesAPI.addVisitorTo("memberId2", activityUrl, "default", moment(), function (err) {
+    activitiesAPI.addToWaitinglist("memberId2", activityUrl, "default", moment(), function (err) {
       if (err) { return done(err); }
       getActivity(activityUrl, function (err, activity) {
         if (err) { return done(err); }
-        expect(activity.resourceNamed('default').registeredMembers(), "Second registered member is stored in the database").to.contain("memberId2");
+        expect(activity.resourceNamed('default').waitinglistEntries()[0].registrantId(), "Previous member is still in the waitinglist").to.equal("memberIdY");
+        expect(activity.resourceNamed('default').waitinglistEntries()[1].registrantId(), "Second member is stored in the waitinglist").to.equal("memberId2");
         expect(activity.resourceNamed('default').registeredMembers(), "First registered member is still there").to.contain("memberId1");
         done(err);
       });
