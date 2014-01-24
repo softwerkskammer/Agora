@@ -84,19 +84,19 @@ describe('Persistence', function () {
 
 describe('Activities API', function () {
 
-  var activityWithoutRegistrant1;
-  var activityWithRegistrant1;
+  var activityBeforeConcurrentAccess;
+  var activityAfterConcurrentAccess;
   var invocation;
 
   beforeEach(function (done) { // if this fails, you need to start your mongo DB
-    activityWithoutRegistrant1 = new Activity({id: "activityId",
+    activityBeforeConcurrentAccess = new Activity({id: "activityId",
       url: activityUrl, resources: {default: {_registeredMembers: [
         {memberId: 'memberIdX'}
       ], _waitinglist: [
         {_memberId: 'memberIdY'}
       ], _registrationOpen: true  }}, version: 1});
 
-    activityWithRegistrant1 = new Activity({id: "activityId",
+    activityAfterConcurrentAccess = new Activity({id: "activityId",
       url: activityUrl, resources: {default: {_registeredMembers: [
         {memberId: 'memberId1'},
         {memberId: 'memberIdX'}
@@ -110,16 +110,16 @@ describe('Activities API', function () {
       // on the first invocation, getActivity returns an activity without registrant to mimick a racing condition.
       if (invocation === 1) {
         invocation = 2;
-        return callback(null, activityWithoutRegistrant1);
+        return callback(null, activityBeforeConcurrentAccess);
       }
       // on subsequent invocations, getActivity returns an activity with registrant.
-      return callback(null, activityWithRegistrant1);
+      return callback(null, activityAfterConcurrentAccess);
     });
 
 
     persistence.drop(function () {
       // save our activity with one registrant
-      activitystore.saveActivity(activityWithRegistrant1, function (err) {
+      activitystore.saveActivity(activityAfterConcurrentAccess, function (err) {
         done(err);
       });
     });
