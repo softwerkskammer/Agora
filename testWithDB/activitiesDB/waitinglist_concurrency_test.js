@@ -1,7 +1,6 @@
 "use strict";
 
 var nconf = require('../configureForTestWithDB');
-var moment = require('moment-timezone');
 var expect = require('chai').expect;
 var sinon = require('sinon').sandbox.create();
 
