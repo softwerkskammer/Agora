@@ -1,0 +1,12 @@
+extends ../../../views/layout
+
+block title
+  | #{activity.title()} - #{t("activities.participants")}
+
+block content
+  .row
+    .col-md-12
+      .page-header
+        h2 #{activity.title()}
+          br
+          small #{t("activities.participants")}
