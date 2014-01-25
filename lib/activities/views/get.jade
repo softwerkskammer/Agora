@@ -45,12 +45,12 @@ block content
         | !{activity.directionHTML()}
       hr
       div.hidden-print
-        mixin visitorCount(activity.visitors.length)
+        mixin visitorCount(activity.participants.length)
         each resourceName in activity.resourceNames()
           mixin subscriptionButtons(activity, resourceName, resourceRegistrationRenderer)
-        if (accessrights.isRegistered() && activity.visitors.length > 0)
+        if (accessrights.isRegistered() && activity.participants.length > 0)
           h4 #{t("activities.accepted_by")}:
-          mixin memberlist(activity.visitors)
+          mixin memberlist(activity.participants)
 
       if (activity.group)
         hr.hidden-print

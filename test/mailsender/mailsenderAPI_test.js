@@ -103,9 +103,9 @@ describe('MailsenderAPI', function () {
   });
 
   describe('sending mail as reminder for activity', function () {
-    it('sends to vistors', function (done) {
+    it('sends to participants', function (done) {
       var emailAddress = 'emailAddress@e.mail';
-      emptyActivity.visitors = [new Member({email: emailAddress})];
+      emptyActivity.participants = [new Member({email: emailAddress})];
 
       api.sendMailToParticipantsOf(activityURL, message, function (err) {
         expect(sendmail.calledOnce).to.be.ok;
@@ -116,8 +116,8 @@ describe('MailsenderAPI', function () {
       });
     });
 
-    it('not send mail if no visitors', function (done) {
-      emptyActivity.visitors = [];
+    it('not send mail if no participants', function (done) {
+      emptyActivity.participants = [];
 
       api.sendMailToParticipantsOf(activityURL, message, function (err) {
         expect(err).to.exist;
