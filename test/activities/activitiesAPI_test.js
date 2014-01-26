@@ -81,9 +81,9 @@ describe('Activities API', function () {
     activitiesAPI.getActivityWithGroupAndParticipants('urlOfTheActivity', function (err, activity) {
       expect(!!activity, "Activity").to.be.true;
       expect(activity.group, "Group").to.equal(group);
-      expect(activity.visitors.length).to.equal(2);
-      expect(activity.visitors, "Visitors").to.contain(member1);
-      expect(activity.visitors, "Visitors").to.contain(member2);
+      expect(activity.participants.length).to.equal(2);
+      expect(activity.participants, "Participants").to.contain(member1);
+      expect(activity.participants, "Participants").to.contain(member2);
       expect(activity.ownerNickname, "Owner").to.equal('owner');
       done(err);
     });

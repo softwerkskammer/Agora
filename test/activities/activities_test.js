@@ -26,7 +26,7 @@ var group = new Group({id: "groupname", longName: "Buxtehude"});
 var emptyActivity = new Activity({title: 'Title of the Activity', description: 'description1', assignedGroup: 'groupname',
   location: 'location1', direction: 'direction1', startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'),
   url: 'urlOfTheActivity', owner: 'owner' });
-emptyActivity.visitors = [ ];
+emptyActivity.participants = [ ];
 emptyActivity.colorRGB = '#123456';
 emptyActivity.group = group;
 
@@ -37,7 +37,7 @@ var activityWithParticipants = new Activity({title: 'Interesting Activity', desc
     {memberId: 'memberId2'}
   ],
     _registrationOpen: true }} });
-activityWithParticipants.visitors = [ member1, member2 ];
+activityWithParticipants.participants = [ member1, member2 ];
 activityWithParticipants.colorRGB = '#123456';
 activityWithParticipants.group = new Group({id: 'group', longName: 'The name of the assigned Group'});
 
@@ -51,7 +51,7 @@ var activityWithMultipleResources = new Activity({title: 'Interesting Activity',
     {memberId: 'memberId4'}
   ],
     _registrationOpen: true}} });
-activityWithMultipleResources.visitors = [ member1, member2, member3, member4 ];
+activityWithMultipleResources.participants = [ member1, member2, member3, member4 ];
 activityWithMultipleResources.colorRGB = '#123456';
 activityWithMultipleResources.group = new Group({id: 'group', longName: 'The name of the assigned Group'});
 

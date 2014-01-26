@@ -1,0 +1,20 @@
+extends ../../../views/layout
+include ../../members/views/memberlist-mixin
+
+block title
+  | #{activity.title()} - #{t("activities.participants")}
+
+block content
+  .row
+    .col-md-12
+      .page-header
+        h2 #{activity.title()}
+          br
+          small #{t("activities.participants")}
+  .row
+    .col-md-12
+      each resourceName in activity.resourceNames()
+        -var participants = activity.participantsOf(resourceName)
+        h4 #{resourceName} (#{participants.length})
+        mixin memberlist(participants)
+        hr
