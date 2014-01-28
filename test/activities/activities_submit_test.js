@@ -21,7 +21,6 @@ describe('Activity application - on submit -', function () {
 
     request(createApp())
       .post('/submit')
-      //.send('')
       .send('url=uhu&resources[names]=x')
       .send('previousUrl=aha')
       .expect(200)
