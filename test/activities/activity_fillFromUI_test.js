@@ -19,6 +19,29 @@ function checkResourceNames(activity, resourceName1, resourceName2) {
 
 describe('Activity (when filled from UI)', function () {
 
+  it('does not change the activity\'s ID', function () {
+    var activity = new Activity({id: 'myId'}).fillFromUI({});
+    expect(activity.id()).to.equal('myId');
+  });
+
+  it('parses start date and time using default timezone', function () {
+    var activity = new Activity().fillFromUI({
+      url: 'myURL',
+      startDate: '01.02.2013',
+      startTime: '12:34'
+    });
+    expect(activity.startMoment().format()).to.equal('2013-02-01T12:34:00+01:00');
+  });
+
+  it('parses end date and time using default timezone', function () {
+    var activity = new Activity().fillFromUI({
+      url: 'myURL',
+      endDate: '01.08.2013',
+      endTime: '12:34'
+    });
+    expect(activity.endMoment().format()).to.equal('2013-08-01T12:34:00+02:00');
+  });
+
   describe('creates a resource', function () {
 
     it('without limit', function () {
