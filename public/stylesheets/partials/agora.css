@@ -89,6 +89,14 @@ td.fc-header-right {
     .btn {
         display: none !important;
     }
+    a,
+    a:visited {
+        text-decoration: none !important;
+    }
+
+    a[href]:after {
+        content: "" !important;
+    }
 }
 
 @media (min-width: 768px) {
