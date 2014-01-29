@@ -1,14 +1,13 @@
 "use strict";
 
 var express = require('express');
-var conf = require('./configureForTest');
 var userMock = require('./userMock');
 var i18n = require('i18next');
 var jade = require("jade");
-var beans = conf.get('beans');
 
-module.exports = function (internalAppName) {
+module.exports = function (internalAppName, configuredBeans) {
   var appName = internalAppName;
+  var beans = configuredBeans || require('./configureForTest').get('beans');
 
   i18n.init({
     supportedLngs: ['de'],
