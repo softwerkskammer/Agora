@@ -77,33 +77,33 @@ describe('WikiAPI (getBlogPosts)', function () {
   beforeEach(function () {
     sinon.stub(Git, 'lsblogposts', function (groupname, callback) {
       if (groupname === 'internet') {
-        callback(null, ['internet/blog_oktober2013.md', 'internet/blog_november2013.md']);
+        callback(null, ['internet/blog_20131001AgoraCodeKata.md', 'internet/blog_20131101LeanCoffeeTest.md']);
       } else if (groupname === 'alle') {
         callback(null, []);
       } else if (groupname === 'error') {
-        callback(null, ['error/blog_1.md', 'error/blog_2.md', 'error/blog_3.md', 'error/blog_4.md']);
+        callback(null, ['error/blog_20131001.md', 'error/blog_notadate.md', 'error/blog_20130501.md', 'error/blog_.md']);
       }
     });
     sinon.stub(Git, 'readFile', function (path, version, callback) {
-      if (path === "internet/blog_november2013.md") {
-        callback(null, "Lean Coffee November 2013, 2013-11-01\n" +
+      if (path === "internet/blog_20131101LeanCoffeeTest.md") {
+        callback(null, "#Lean Coffee November 2013\n" +
           "\n" +
           "Und beim nächsten Mal haben wir dann.\n" +
           "\n" +
           "Diesen Blog gemacht.");
-      } else if (path === "internet/blog_oktober2013.md") {
-        callback(null, "Agora Code-Kata Oktober 2013, 2013-10-01\n" +
+      } else if (path === "internet/blog_20131001AgoraCodeKata.md") {
+        callback(null, "#Agora Code-Kata Oktober 2013\n" +
           "\n" +
           "Weil viele uns weder JavaScript noch populäre JavaScript...\n" +
           "\n" +
           "Leider hatten wir vorher keine Anweisungen herumgeschickt, ...");
-      } else if (path === "error/blog_1.md") {
-        callback(null, "1, 2013-10-01");
-      } else if (path === "error/blog_2.md") {
-        callback(null, "2, not a date");
-      } else if (path === "error/blog_3.md") {
-        callback(null, "3, 2013-05-01");
-      } else if (path === "error/blog_4.md") {
+      } else if (path === "error/blog_20131001.md") {
+        callback(null, "#1");
+      } else if (path === "error/blog_notadate.md") {
+        callback(null, "#2");
+      } else if (path === "error/blog_20130501.md") {
+        callback(null, "#3");
+      } else if (path === "error/blog_.md") {
         callback(null, "");
       }
 
@@ -142,9 +142,9 @@ describe('WikiAPI (getBlogPosts)', function () {
     });
   });
 
-  it('sorts post without a date to the end and skips empty posts', function (done) {
+  it('sorts posts without a date and skips empty posts', function (done) {
     wikiAPI.getBlogpostsForGroup("error", function (err, result) {
-      expect(result.length === 3).to.be.true;
+      expect(result.length === 2).to.be.true;
 
       expect(result[0].title).to.equal('1');
       expect(result[1].title).to.equal('3');
