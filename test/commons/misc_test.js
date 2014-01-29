@@ -169,87 +169,54 @@ describe('differenceCaseInsensitive function', function () {
 
 });
 
-<<<<<<< HEAD
-
-describe('convertGitBlogPost', function () {
-  
-  it('returns a converted blog post', function () {
-    var input = {path: "internet/blog_oktober2013", 
-        text: "Lean Coffee November 2013,2013-11-01\n " +
-        "\n" +
-        "Und beim nächsten Mal haben wir dann.\n" +
-        "\n" +
-        "Diesen Blog gemacht."};
-    
-    var result = misc.convertGitBlogPost(input);
-    var expected = {"title": "Lean Coffee November 2013",
-      "date": new Date("2013-11-01"),
-      "teaser": "Und beim nächsten Mal haben wir dann.",
-      "path": "internet/blog_oktober2013"};
-    expect(result.title).to.equal(expected.title);
-    expect(result.date - expected.date === 0).to.be.true;
-    expect(result.teaser).to.equal(expected.teaser);
-    expect(result.text).to.equal(expected.text);
-=======
 describe('parseBlogPost', function () {
 
   it('returns a parsed blog post', function () {
-    var input = "Lean Coffee November 2013,2013-11-01\n " +
+    var post = "#Lean Coffee November 2013\n " +
       "\n" +
       "Und beim nächsten Mal haben wir dann.\n" +
       "\n" +
       "Diesen Blog gemacht.";
+    var path = "blog_2013-11-01LeanCoffeeTest";
 
-    var result = misc.parseBlogPost(input);
+    var result = misc.parseBlogPost(path, post);
+
     var expected = {"title": "Lean Coffee November 2013",
-      "date": new Date("2013-11-01"),
+      "date": moment("2013-11-01"),
       "teaser": "Und beim nächsten Mal haben wir dann."};
     expect(result.title).to.equal(expected.title);
     expect(result.date.isValid()).to.be.true;
-    expect(result.date.isSame(new moment("2013-11-01"))).to.be.true;
+    expect(result.date.isSame(expected.date)).to.be.true;
     expect(result.teaser).to.equal(expected.teaser);
   });
 
   it('returns undefined for empty input', function () {
-    var input = "";
+    var post = "";
+    var path = "";
 
-    var result = misc.parseBlogPost(input);
+    var result = misc.parseBlogPost(path, post);
 
     expect(result).to.be.undefined;
   });
 
-  it('returns future date if date is missing', function () {
-    var input = "Lean Coffee November 2013\n " +
-      "\n" +
-      "Und beim nächsten Mal haben wir dann.\n" +
-      "\n" +
-      "Diesen Blog gemacht.";
 
-    var result = misc.parseBlogPost(input);
+  it('returns undefined if the date is malformed', function () {
+    var post = "post";
+    var path = "blog_2000-01-0LeanCoffeeTest";
 
-    expect(result.date.isValid()).to.be.false;
-  });
+    var result = misc.parseBlogPost(path, post);
 
-  it('returns Invalid date if the date is malformed', function () {
-    var input = "Lean Coffee November 2013, not a date\n " +
-      "\n" +
-      "Und beim nächsten Mal haben wir dann.\n" +
-      "\n" +
-      "Diesen Blog gemacht.";
-
-    var result = misc.parseBlogPost(input);
-
-    expect(result.date.isValid()).to.be.false;
+    expect(result).to.be.undefined;
   });
 
   it('returns properly if body is missing', function () {
-    var input = "Lean Coffee November 2013, 2013-11-01";
+    var post = "#Lean Coffee November 2013";
+    var path = "blog_2013-11-01LeanCoffeeTest";
 
-    var result = misc.parseBlogPost(input);
+    var result = misc.parseBlogPost(path, post);
 
     expect(result.title).to.equal("Lean Coffee November 2013");
     expect(result.teaser).to.be.undefined;
     expect(result.date.isValid()).to.be.true;
->>>>>>> da1a73ea4d26a2e5e5592be7d5c55bbe97ea9ede
   });
 });
