@@ -264,6 +264,7 @@
     },
     "content": {
       "save_error": "Save failed.",
+      "save_error_retry": "Save failed. Please redo your changes and save again.",
       "query": "The query string you entered is too short.",
       "activities": {
         "saved": "Your activity has been saved.",
