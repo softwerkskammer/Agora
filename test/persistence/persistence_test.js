@@ -30,9 +30,63 @@ describe('The persistence store', function () {
     });
 
     it('fails to save object with id null', function (done) {
-      persistence.save({id : null}, function (err) {
+      persistence.save({id: null}, function (err) {
         expect(err.message).to.equal("Given object has no valid id");
         done(); // error condition - do not pass err
+      });
+    });
+
+    it('fails to save-with-version object without id', function (done) {
+      persistence.saveWithVersion({}, function (err) {
+        expect(err.message).to.equal("Given object has no valid id");
+        done(); // error condition - do not pass err
+      });
+    });
+
+    it('fails to save-with-version object with id null', function (done) {
+      persistence.saveWithVersion({id: null}, function (err) {
+        expect(err.message).to.equal("Given object has no valid id");
+        done(); // error condition - do not pass err
+      });
+    });
+
+    it('on save-with-version, saves an object that is not yet in database and initializes version with 1', function (done) {
+      persistence.saveWithVersion({id: 123}, function (err) {
+        if (err) {return done(err); }
+        persistence.getById(123, function (err, result) {
+          expect(result.version).to.equal(1);
+          done(err);
+        });
+      });
+    });
+
+    it('on save-with-version, updates an object that is in database with same version', function (done) {
+      persistence.save({id: 123, data: "abc", version: 1}, function (err) {
+        if (err) {return done(err); }
+        persistence.saveWithVersion({id: 123, data: "def", version: 1}, function (err) {
+          if (err) {return done(err); }
+          persistence.getById(123, function (err, result) {
+            expect(result.data).to.equal("def");
+            expect(result.version).to.equal(2);
+            done(err);
+          });
+        });
+      });
+    });
+
+    it('on save-with-version, does not update an object that is in database with a different version', function (done) {
+      persistence.save({id: 123, data: "abc", version: 2}, function (err) {
+        if (err) {return done(err); }
+        var objectToSave = {id: 123, data: "def", version: 1};
+        persistence.saveWithVersion(objectToSave, function (err) {
+          expect(err.message).to.equal("Conflicting versions.");
+          persistence.getById(123, function (err, result) {
+            expect(result.data, "Data of object in database remains unchanged").to.equal("abc");
+            expect(result.version, "Version of object in database remains unchanged").to.equal(2);
+            expect(objectToSave.version, "Version of object to save remains unchanged").to.equal(1);
+            done(err);
+          });
+        });
       });
     });
 

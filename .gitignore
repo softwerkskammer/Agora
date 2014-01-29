@@ -13,6 +13,7 @@ config/*.json*
 log/*.log
 version.jade
 test/tempbeans.json
+testWithDB/tempbeansWithDB.json
 
 npm-debug.log
 coverage.html
@@ -23,3 +24,4 @@ bootstrap-markdown-custom.css
 global_de.js
 global_en.js
 pick-a-color-custom.css
+build/config.gypi
