@@ -22,7 +22,9 @@ mixin mailIndex(mailHeaders)
     ul
       for mailHeader in mailHeaders
         li
-          div(id="messageDetails" + mailHeader.timeUnix, tabindex="-1").modal.fade
+          div(id="messageDetails" + mailHeader.timeUnix, tabindex="-1").modal.fade.bs-modal-lg
+            .modal-dialog.modal-lg
+              .modal-content
           a(data-toggle="modal", data-target="#messageDetails" + mailHeader.timeUnix, href="../../message/" + encodeURIComponent(mailHeader.id)) #{mailHeader.subject} 
           | (
           mixin mailattributes(mailHeader) 
