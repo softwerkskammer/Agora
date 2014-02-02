@@ -52,7 +52,9 @@
     "soap-sympa": "~0.0.1",
     "underscore.string": "~2.3.x",
     "winston": "~0.7.x",
-    "winston-config": "~0.4.0"
+    "winston-config": "~0.4.0",
+    "useragent": "~2.0.x",
+    "semver": "~2.2.x"
   },
   "devDependencies": {
     "blanket": "~1.1.5",
