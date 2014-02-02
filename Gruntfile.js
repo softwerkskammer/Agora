@@ -88,7 +88,7 @@ module.exports = function (grunt) {
       },
       de: {
         src: [
-          'public/clientscripts/global/jquery-1.9.1.js',
+          'public/clientscripts/global/jquery-2.1.0.js',
           'public/clientscripts/global/respond.min.js',
           'public/clientscripts/global/bootstrap.js',
           'public/clientscripts/global/bootstrap-datepicker.js',
@@ -111,7 +111,7 @@ module.exports = function (grunt) {
       },
       en: {
         src: [
-          'public/clientscripts/global/jquery-1.9.1.js',
+          'public/clientscripts/global/jquery-2.1.0.js',
           'public/clientscripts/global/respond.min.js',
           'public/clientscripts/global/bootstrap.js',
           'public/clientscripts/global/bootstrap-datepicker.js',
