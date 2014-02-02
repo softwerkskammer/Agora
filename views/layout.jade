@@ -31,7 +31,9 @@ html
   body
     include layoutComponents
     include loginComponent
-    #cheatsheet.modal.fade(tabindex="-1")
+    #cheatsheet.modal.bs-modal-lg.fade(tabindex="-1")
+      .modal-dialog.modal-lg
+        .modal-content
     img.visible-print(src="/img/Softwerkskammer_Header.png", alt="Softwerkskammer")
     p.visible-print &nbsp;
     .navbar.navbar-default.navbar-fixed-top.hidden-print.hidden-xs(role="navigation")

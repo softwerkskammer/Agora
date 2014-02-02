@@ -9,47 +9,47 @@ mixin topNavbar
       a.btn.btn-default.navbar-toggle(href="https://github.com/softwerkskammer/Agora/issues",
       title=t("general.what_does_not_work"), target="_blank"): i.fa.fa-ambulance.fa-fw
 
-  .container.bottom
-    .navbar-collapse.collapse.collapse-top
-      ul.nav.navbar-nav.pull-right.hidden-xs
-        mixin loginMenu
-        li: a(style="padding: 2px;", href="/language/de?currentUrl=#{encodeURIComponent(currentUrl)}"): img(src="/img/flags/Germany.png", alt="Deutsch")
-        li: a(style="padding: 2px;", href="/language/en-gb?currentUrl=#{encodeURIComponent(currentUrl)}"): img(src="/img/flags/United-Kingdom.png", alt="English")
-      ul.nav.navbar-nav
-        li#activities: a(href="/activities/upcoming")
+  
+  .navbar-collapse.collapse.collapse-top
+    ul.nav.navbar-nav.navbar-right.hidden-xs.bottom
+      mixin loginMenu
+      li: a(style="padding: 2px;", href="/language/de?currentUrl=#{encodeURIComponent(currentUrl)}"): img(src="/img/flags/Germany.png", alt="Deutsch")
+      li: a(style="padding: 2px;", href="/language/en-gb?currentUrl=#{encodeURIComponent(currentUrl)}"): img(src="/img/flags/United-Kingdom.png", alt="English")
+    ul.nav.navbar-nav.bottom
+      li#activities: a(href="/activities/upcoming")
+        span.hidden-sm
+          i.fa.fa-calendar.fa-fw
+          | &nbsp;#{t("activities.activities")}
+        span.visible-sm
+          i.fa.fa-calendar.fa-fw
+      li#groups: a(href="/groups")
+        span.hidden-sm
+          i.fa.fa-group.fa-fw
+          | &nbsp;#{t("groups.groups")}
+        span.visible-sm
+          i.fa.fa-group.fa-fw
+      li#wiki.dropdown
+        a.dropdown-toggle(href="#", data-toggle="dropdown")
           span.hidden-sm
-            i.fa.fa-calendar.fa-fw
-            | &nbsp;#{t("activities.activities")}
+            i.fa.fa-book.fa-fw
+            | &nbsp;#{t("wiki.wiki")}&nbsp;
+            b.caret
           span.visible-sm
-            i.fa.fa-calendar.fa-fw
-        li#groups: a(href="/groups")
-          span.hidden-sm
-            i.fa.fa-group.fa-fw
-            | &nbsp;#{t("groups.groups")}
-          span.visible-sm
-            i.fa.fa-group.fa-fw
-        li#wiki.dropdown
-          a.dropdown-toggle(href="#", data-toggle="dropdown")
-            span.hidden-sm
-              i.fa.fa-book.fa-fw
-              | &nbsp;#{t("wiki.wiki")}&nbsp;
-              b.caret
-            span.visible-sm
-              i.fa.fa-book.fa-fw
-              b.caret
-          ul.dropdown-menu
-            if (typeof(wikisubdirs) !== 'undefined')
-              for subdir in wikisubdirs
-                li: a(href="/wiki/#{subdir}/") #{subdir}
-        li#members: a(href="/members")
-          span.hidden-sm
-            if (accessrights.isRegistered())
-              i.fa.fa-user.fa-fw
-              | &nbsp;#{t("members.members")}
-          span.visible-sm
-            if (accessrights.isRegistered())
-              i.fa.fa-user.fa-fw
-        mixin loginMenu(true)
+            i.fa.fa-book.fa-fw
+            b.caret
+        ul.dropdown-menu
+          if (typeof(wikisubdirs) !== 'undefined')
+            for subdir in wikisubdirs
+              li: a(href="/wiki/#{subdir}/") #{subdir}
+      li#members: a(href="/members")
+        span.hidden-sm
+          if (accessrights.isRegistered())
+            i.fa.fa-user.fa-fw
+            | &nbsp;#{t("members.members")}
+        span.visible-sm
+          if (accessrights.isRegistered())
+            i.fa.fa-user.fa-fw
+      mixin loginMenu(true)
 
 
 mixin administrationMenu()
@@ -109,7 +109,7 @@ mixin navbar-inside
       span.sr-only Toggle
       i.fa.fa-bars.fa-lg
   .navbar-collapse.collapse.collapse-btom
-    ul.nav.navbar-nav.pull-right
+    ul.nav.navbar-nav.navbar-right
       mixin administrationMenu()
       li: a(href="/help.html") #{t("general.faq")}
       li: a(href="/credits.html") #{t("general.credits")}
