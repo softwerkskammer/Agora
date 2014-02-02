@@ -86,6 +86,7 @@ module.exports = {
       app.use(beans.get('redirectRuleForNewUser'));
       app.use(beans.get('announcementsInSidebar'));
       app.use(beans.get('wikiSubdirs'));
+      app.use(beans.get('detectBrowser'));
       app.use(app.router);
     });
 

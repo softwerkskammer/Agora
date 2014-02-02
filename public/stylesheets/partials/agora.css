@@ -1,13 +1,13 @@
-.container.bottom {
+.bottom {
     padding-top: 20px;
-    margin-right: 0px;
 }
 
 .navbar-brand.no-padding {
     padding-top: 0px;
     padding-bottom: 0px;
     padding-left: 0px;
-    padding-right: 0px
+    padding-right: 0px;
+    height: 60px;
 }
 
 .navbar {
@@ -100,10 +100,6 @@ td.fc-header-right {
 }
 
 @media (min-width: 768px) {
-    .modal-dialog.cheatsheet {
-        width: 80%;
-    }
-
     .navbar-nav > li > a {
         padding-top: 10px;
         padding-bottom: 10px;
@@ -124,9 +120,8 @@ td.fc-header-right {
 }
 
 @media (max-width: 767px) {
-    .container.bottom {
+    .bottom {
         padding-top: 0px;
-        margin-right: 0px;
     }
 
     .dl-horizontal dt {

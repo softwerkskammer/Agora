@@ -61,38 +61,25 @@ module.exports = function (grunt) {
     qunit: {
       files: ['frontendtests/*.html']
     },
-    recess: {
-      options: {
-        compile: true
-      },
-      bootstrap: {
-        src: ['public/stylesheets/less/bootstrap.less'],
-        dest: 'public/stylesheets/vendor/bootstrap-custom.css'
-      },
-      bootstrapmarkdown: {
-        src: ['public/stylesheets/less/bootstrap-markdown.less'],
-        dest: 'public/stylesheets/vendor/bootstrap-markdown-custom.css'
-      },
-      pickacolor: {
-        src: ['public/stylesheets/less/pick-a-color-patched.less'],
-        dest: 'public/stylesheets/vendor/pick-a-color-custom.css'
-      },
-      cssconcat: {
+    less: {
+      minify: {
         options: {
-          compress: true
+          cleancss: true,
+          report: 'min'
         },
-        src: [
-          'public/stylesheets/vendor/fullcalendar.css',
-          'public/stylesheets/vendor/bootstrap-custom.css',
-          'public/stylesheets/vendor/datepicker.css',
-          'public/stylesheets/vendor/bootstrap-markdown-custom.css',
-          'public/stylesheets/vendor/font-awesome.min.css',
-          'public/stylesheets/vendor/pick-a-color-custom.css',
-          'public/stylesheets/vendor/shCoreDefault.css',
-          'public/stylesheets/vendor/jquery.dataTables.css',
-          'public/stylesheets/partials/agora.css'
-        ],
-        dest: 'public/stylesheets/screen.css'
+        files: {
+          'public/stylesheets/screen.css': [
+            'public/stylesheets/vendor/fullcalendar.css',
+            'public/stylesheets/less/bootstrap.less',
+            'public/stylesheets/vendor/datepicker.css',
+            'public/stylesheets/less/bootstrap-markdown.less',
+            'public/stylesheets/vendor/font-awesome.min.css',
+            'public/stylesheets/less/pick-a-color-patched.less',
+            'public/stylesheets/vendor/shCoreDefault.css',
+            'public/stylesheets/vendor/jquery.dataTables.css',
+            'public/stylesheets/partials/agora.css'
+          ]
+        }
       }
     },
     concat: {
@@ -101,7 +88,7 @@ module.exports = function (grunt) {
       },
       de: {
         src: [
-          'public/clientscripts/global/jquery-1.9.1.js',
+          'public/clientscripts/global/jquery-2.1.0.js',
           'public/clientscripts/global/respond.min.js',
           'public/clientscripts/global/bootstrap.js',
           'public/clientscripts/global/bootstrap-datepicker.js',
@@ -124,7 +111,7 @@ module.exports = function (grunt) {
       },
       en: {
         src: [
-          'public/clientscripts/global/jquery-1.9.1.js',
+          'public/clientscripts/global/jquery-2.1.0.js',
           'public/clientscripts/global/respond.min.js',
           'public/clientscripts/global/bootstrap.js',
           'public/clientscripts/global/bootstrap-datepicker.js',
@@ -151,10 +138,10 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-mocha-test');
   grunt.loadNpmTasks('grunt-contrib-qunit');
   grunt.loadNpmTasks('grunt-contrib-concat');
-  grunt.loadNpmTasks('grunt-recess');
+  grunt.loadNpmTasks('grunt-contrib-less');
 
   // Default task.
-  grunt.registerTask('default', ['recess', 'concat', 'jshint', 'qunit', 'mochaTest']);
+  grunt.registerTask('default', ['less', 'concat', 'jshint', 'qunit', 'mochaTest']);
 
   // Travis-CI task
   grunt.registerTask('travis', ['default']);
