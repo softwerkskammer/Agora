@@ -89,11 +89,11 @@ module.exports = function (grunt) {
       de: {
         src: [
           'public/clientscripts/global/jquery-2.1.0.js',
-          'public/clientscripts/global/respond.min.js',
           'public/clientscripts/global/bootstrap.js',
           'public/clientscripts/global/bootstrap-datepicker.js',
           'public/clientscripts/global/bootstrap-markdown-patched.js',
           'public/clientscripts/global/markdown.js',
+          'node_modules/moment-timezone/node_modules/moment/min/moment.min.js',
           'public/clientscripts/global/fullcalendar.js',
           'public/clientscripts/global/tinycolor-0.9.15.min.js',
           'public/clientscripts/global/pick-a-color.js',
@@ -103,7 +103,6 @@ module.exports = function (grunt) {
           'public/clientscripts/global/messages_de.js',
           'public/clientscripts/global/methods_de.js',
           'public/clientscripts/global/bootstrap-timepicker.js',
-          'public/clientscripts/global/moment.min.js',
           'locales/frontend_de.js',
           'public/clientscripts/global/agora.js'
         ],
@@ -112,18 +111,17 @@ module.exports = function (grunt) {
       en: {
         src: [
           'public/clientscripts/global/jquery-2.1.0.js',
-          'public/clientscripts/global/respond.min.js',
           'public/clientscripts/global/bootstrap.js',
           'public/clientscripts/global/bootstrap-datepicker.js',
           'public/clientscripts/global/bootstrap-markdown-patched.js',
           'public/clientscripts/global/markdown.js',
+          'node_modules/moment-timezone/node_modules/moment/min/moment.min.js',
           'public/clientscripts/global/fullcalendar.js',
           'public/clientscripts/global/tinycolor-0.9.15.min.js',
           'public/clientscripts/global/pick-a-color.js',
           'public/clientscripts/global/jquery.validate-1.11.1.js',
           'public/clientscripts/global/additional-methods-1.11.1.js',
           'public/clientscripts/global/bootstrap-timepicker.js',
-          'public/clientscripts/global/moment.min.js',
           'locales/frontend_en.js',
           'public/clientscripts/global/agora.js'
         ],
