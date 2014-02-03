@@ -1,4 +1,4 @@
-/* global $, document, window, moment, today, monthNames, monthNamesShort, dayNames, dayNamesShort, datepicker_lang, datepicker_format */
+/* global $, document, window, moment, datepicker_lang, datepicker_format, fc_lang */
 "use strict";
 
 var surroundWithLink = function (text) {
@@ -27,33 +27,25 @@ var initCalendar = function () {
   // page is now ready, initialize the calendar...
   $('#calendar').each(function () {
     $(this).fullCalendar({
+      lang: fc_lang,
       aspectRatio: 1.2,
-      firstDay: 1,
       weekMode: 'variable',
-      timeFormat: 'H(:mm)',
+      timeFormat: 'H:mm',
       titleFormat: {
-        month: 'MMM yy'
+        month: 'MMM YY'
       },
       buttonText: {
-        today: today,
         prev: '<i class="fa fa-chevron-left"></i>',
         next: '<i class="fa fa-chevron-right"></i>'
       },
-      monthNames: monthNames,
-      monthNamesShort: monthNamesShort,
-      dayNames: dayNames,
-      dayNamesShort: dayNamesShort,
-
+      timezone: 'Europe/Berlin',
       events: '/activities/eventsForSidebar',
       eventMouseover: function (event) {
-        var placement = "left";
-        if (event.dayOfWeek < 4 && event.dayOfWeek > 0) {
-          placement = "right";
-        }
+        var day = event.start.day();
         $(this).tooltip({
-          title: event.startTime + ": " + event.title,
+          title: event.start.format('HH:mm') + ": " + event.title,
           trigger: "manual",
-          placement: placement
+          placement: (day < 4 && day > 0) ? "right" : "left"
         });
         $(this).tooltip('show');
       },
