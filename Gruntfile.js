@@ -77,7 +77,7 @@ module.exports = function (grunt) {
             'public/stylesheets/less/pick-a-color-patched.less',
             'public/stylesheets/vendor/shCoreDefault.css',
             'public/stylesheets/vendor/jquery.dataTables.css',
-            'public/stylesheets/partials/agora.css'
+            'public/stylesheets/partials/agora.less'
           ]
         }
       }
