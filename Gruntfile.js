@@ -77,7 +77,7 @@ module.exports = function (grunt) {
             'public/stylesheets/less/pick-a-color-patched.less',
             'public/stylesheets/vendor/shCoreDefault.css',
             'public/stylesheets/vendor/jquery.dataTables.css',
-            'public/stylesheets/partials/agora.css'
+            'public/stylesheets/partials/agora.less'
           ]
         }
       }
@@ -88,14 +88,16 @@ module.exports = function (grunt) {
       },
       de: {
         src: [
+          'locales/frontend_de.js',
           'public/clientscripts/global/jquery-2.1.0.js',
-          'public/clientscripts/global/respond.min.js',
           'public/clientscripts/global/bootstrap.js',
           'public/clientscripts/global/bootstrap-datepicker.js',
           'public/clientscripts/global/bootstrap-markdown-patched.js',
           'public/clientscripts/global/markdown.js',
+          'node_modules/moment-timezone/node_modules/moment/min/moment.min.js',
           'public/clientscripts/global/fullcalendar.js',
-          'public/clientscripts/global/tinycolor-0.9.15.min.js',
+          'public/clientscripts/global/de.js', // for fullcalendar
+          'public/clientscripts/global/tinycolor-0.9.15.min.js', // for pick-a-color
           'public/clientscripts/global/pick-a-color.js',
           'public/clientscripts/global/bootstrap-datepicker.de.js',
           'public/clientscripts/global/jquery.validate-1.11.1.js',
@@ -103,28 +105,26 @@ module.exports = function (grunt) {
           'public/clientscripts/global/messages_de.js',
           'public/clientscripts/global/methods_de.js',
           'public/clientscripts/global/bootstrap-timepicker.js',
-          'public/clientscripts/global/moment.min.js',
-          'locales/frontend_de.js',
           'public/clientscripts/global/agora.js'
         ],
         dest: 'public/clientscripts/global_de.js'
       },
       en: {
         src: [
+          'locales/frontend_en.js',
           'public/clientscripts/global/jquery-2.1.0.js',
-          'public/clientscripts/global/respond.min.js',
           'public/clientscripts/global/bootstrap.js',
           'public/clientscripts/global/bootstrap-datepicker.js',
           'public/clientscripts/global/bootstrap-markdown-patched.js',
           'public/clientscripts/global/markdown.js',
+          'node_modules/moment-timezone/node_modules/moment/min/moment.min.js',
           'public/clientscripts/global/fullcalendar.js',
-          'public/clientscripts/global/tinycolor-0.9.15.min.js',
+          'public/clientscripts/global/en-gb.js', // for fullcalendar
+          'public/clientscripts/global/tinycolor-0.9.15.min.js', // for pick-a-color
           'public/clientscripts/global/pick-a-color.js',
           'public/clientscripts/global/jquery.validate-1.11.1.js',
           'public/clientscripts/global/additional-methods-1.11.1.js',
           'public/clientscripts/global/bootstrap-timepicker.js',
-          'public/clientscripts/global/moment.min.js',
-          'locales/frontend_en.js',
           'public/clientscripts/global/agora.js'
         ],
         dest: 'public/clientscripts/global_en.js'

@@ -12,10 +12,11 @@ html
       script(src="/clientscripts/global_de.js")
     else
       script(src="/clientscripts/global_en.js")
-    if (typeof(calViewYear) !== 'undefined')
+    if (!!calViewYear)
       script.
         $(document).ready(function () {
-          $('#calendar').fullCalendar('gotoDate', #{calViewYear}, #{calViewMonth});      
+          var date = moment().year(#{calViewYear}).month(#{calViewMonth});
+          $('#calendar').fullCalendar('gotoDate', date);      
         });
     block scripts
 

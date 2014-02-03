@@ -11,7 +11,7 @@ var includeInThisContext = function (path) {
   vm.runInThisContext(code, path);
 };
 
-includeInThisContext(__dirname + "/../../public/clientscripts/global/moment.min.js");
+includeInThisContext(__dirname + "/../../node_modules/moment-timezone/node_modules/moment/min/moment.min.js");
 includeInThisContext(__dirname + "/../../public/clientscripts/activityDateModel.js");
 
 
