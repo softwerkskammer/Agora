@@ -64,6 +64,6 @@ block content
 
 block scripts
   script.
-    displayedActivityStart = $.fullCalendar.parseDate(#{activity.startMoment().unix()});
-    displayedActivityEnd = $.fullCalendar.parseDate(#{activity.endMoment().unix()});
+    displayedActivityStart = moment('#{activity.startMoment().toISOString()}');
+    displayedActivityEnd = moment('#{activity.endMoment().toISOString()}');
   
