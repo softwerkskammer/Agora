@@ -264,6 +264,7 @@
     },
     "content": {
       "save_error": "Das Speichern war nicht erfolgreich.",
+      "save_error_retry": "Das Speichern war nicht erfolgreich. Bitte führe Deine Änderungen nochmals durch und speichere erneut.",
       "query": "Dein eingegebener Suchtext ist zu kurz.",
       "activities": {
         "saved": "Deine Aktivität wurde gespeichert.",
