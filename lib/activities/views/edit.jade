@@ -8,13 +8,13 @@ mixin resourceRow(name, limit, isRegistrationOpen, hasWaitinglist)
     .col-xs-3.col-sm-2
       input.form-control(name="resources[limits]", value=limit, type="text", placeholder=t("unlimited"))
     .col-xs-3.col-sm-2
-      .checkbox
-        input(name="resources[isRegistrationOpen]", value=isRegistrationOpen, type="checkbox", checked=(isRegistrationOpen ? "true" : undefined))
-        | #{t("activities.possible")}
+      select(name="resources[isRegistrationOpen]")
+        option(value="yes", selected=(isRegistrationOpen ? true : false)) #{t("activities.possible")}
+        option(value="no", selected=(isRegistrationOpen ? false : true)) #{t("activities.impossible")}
     .col-xs-3.col-sm-2
-      .checkbox
-        input(name="resources[hasWaitinglist]", value=hasWaitinglist, type="checkbox", checked=(hasWaitinglist ? "true" : undefined))
-        | #{t("general.yes")}
+      select(name="resources[hasWaitinglist]")
+        option(value="yes", selected=(hasWaitinglist ? true : false)) #{t("general.yes")}
+        option(value="no", selected=(hasWaitinglist ? false : true)) #{t("general.no")}
 
 block scripts
   script(src="/clientscripts/activityDateModel.js")
