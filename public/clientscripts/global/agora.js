@@ -30,7 +30,7 @@ var initCalendar = function () {
       lang: fc_lang,
       aspectRatio: 1.2,
       weekMode: 'variable',
-      timeFormat: 'H:mm',
+      timeFormat: '',
       titleFormat: {
         month: 'MMM YY'
       },
