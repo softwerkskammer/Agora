@@ -26,18 +26,11 @@ describe('Activity resource management', function () {
     it('lists the names of all resources if resources are present on creation', function () {
       var activity = new Activity({resources: {Einzelzimmer: { _registeredMembers: []}, Doppelzimmer: { _registeredMembers: []}}});
       expect(activity.resourceNames().length).to.equal(2);
-      expect(activity.resourceNames()[0]).to.equal('Einzelzimmer');
-      expect(activity.resourceNames()[1]).to.equal('Doppelzimmer');
+      expect(activity.resourceNames()).to.contain('Einzelzimmer');
+      expect(activity.resourceNames()).to.contain('Doppelzimmer');
     });
 
-    it('lists the names of all resources in the order of creation', function () {
-      var activity = new Activity({resources: {Doppelzimmer: { _registeredMembers: []}, Einzelzimmer: { _registeredMembers: []}}});
-      expect(activity.resourceNames().length).to.equal(2);
-      expect(activity.resourceNames()[0]).to.equal('Doppelzimmer');
-      expect(activity.resourceNames()[1]).to.equal('Einzelzimmer');
-    });
-
-    it('reorders the resources if their order is changed via fillFromUI', function () {
+    it('orders the resources if their order is given via fillFromUI', function () {
       var activity = new Activity({resources: {Einzelzimmer: { _registeredMembers: []}, Doppelzimmer: { _registeredMembers: []}}});
       activity.fillFromUI({resources: {names: ["Doppelzimmer", "Einzelzimmer"], limits: ["", ""], previousNames: ["Einzelzimmer", "Doppelzimmer"]}});
       expect(activity.resourceNames().length).to.equal(2);
