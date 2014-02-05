@@ -142,4 +142,4 @@ Follow these [instructions](http://codebetter.com/glennblock/2013/01/17/debuggin
 Editing the stylesheets
 -----------------------
 
-Only edit the agora.css file inside the "partials" subfolder. Running `npm test` or `grunt default` will compile everything to screen.css.
+Only edit the agora.less file inside the "partials" subfolder. Running `npm test` or `grunt default` will compile everything to screen.css.
