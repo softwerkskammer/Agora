@@ -88,7 +88,7 @@ describe("Resources (fillFromUI)", function () {
     it("adds values if given", function () {
       var resources = new Resources({ name1: {}});
 
-      resources.fillFromUI({names: "name1", previousNames: "name1", limits: "10", isRegistrationOpen: "anything", hasWaitinglist: "someValue"});
+      resources.fillFromUI({names: "name1", previousNames: "name1", limits: "10", isRegistrationOpen: "yes", hasWaitinglist: "yes"});
 
       expect(resources.named('name1').limit()).to.equal(10);
       expect(resources.named('name1').isRegistrationOpen()).to.be.true;
