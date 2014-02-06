@@ -5,10 +5,6 @@ mixin topNavbar
     a.btn.btn-default.navbar-toggle(data-toggle="collapse", data-target=".collapse-top")
       span.sr-only Toggle
       i.fa.fa-bars.fa-lg
-    if (!accessrights.isRegistered())
-      a.btn.btn-default.navbar-toggle(href="https://github.com/softwerkskammer/Agora/issues",
-      title=t("general.what_does_not_work"), target="_blank"): i.fa.fa-ambulance.fa-fw
-
   
   .navbar-collapse.collapse.collapse-top
     ul.nav.navbar-nav.navbar-right.hidden-xs.bottom
@@ -95,13 +91,17 @@ mixin loginMenu(forInline)
           | &nbsp;#{t("general.feedback")}
         li: include ../version
   else
-    li(class="#{forInline ? 'hidden' : ''}"): a.navbar-link(href="https://github.com/softwerkskammer/Agora/issues",
-    title=t("general.what_does_not_work"), target="_blank")
+    li(class="#{forInline ? 'visible-xs' : ''}"): a.navbar-link(href="https://github.com/softwerkskammer/Agora/issues",
+      title=t("general.what_does_not_work"), target="_blank")
       i.fa.fa-ambulance.fa-fw
       | &nbsp;#{t("general.feedback")}
     li(class="#{forInline ? 'visible-xs' : ''}"): a.navbar-link(data-toggle="modal", href="#login")
       i.fa.fa-sign-in
       | &nbsp;#{t("general.login")}
+  li.visible-xs: span.pull-right
+    a(style="padding: 2px;", href="/language/de?currentUrl=#{encodeURIComponent(currentUrl)}"): img(src="/img/flags/Germany.png", alt="Deutsch")
+    a(style="padding: 2px;", href="/language/en-gb?currentUrl=#{encodeURIComponent(currentUrl)}"): img(src="/img/flags/United-Kingdom.png", alt="English")
+
 
 mixin navbar-inside
   .navbar-header
