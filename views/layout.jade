@@ -60,10 +60,6 @@ html
   
       .row.main
         .col-md-8
-          p(style="text-align: right; margin-top: 8px;").visible-xs.hidden-print
-            a(href="/language/de?currentUrl=#{encodeURIComponent(currentUrl)}"): img(src="/img/flags/Germany.png", alt="Deutsch")
-            | &nbsp;
-            a(href="/language/en-gb?currentUrl=#{encodeURIComponent(currentUrl)}"): img(src="/img/flags/United-Kingdom.png", alt="English")
           if (statusmessage)
             mixin notificationsBlock(statusmessage)
           block content
