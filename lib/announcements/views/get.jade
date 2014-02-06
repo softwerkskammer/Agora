@@ -1,4 +1,6 @@
 extends ../../../views/layout
+include ../../members/views/memberlist-mixin
+
 block title
   | #{announcement.title}
 
@@ -19,4 +21,4 @@ block content
               if ('automatisch' === announcement.authorname)
                 | #{t("announcements.automatic")}
               else
-                a(href="/members/#{encodeURIComponent(announcement.authorname)}") #{announcement.authorname}
+                mixin linkedMember(announcement.authorname)
