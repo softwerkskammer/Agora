@@ -34,15 +34,24 @@ block content
         else
           a.btn.btn-primary(href="subscribe/#{group.id}") #{t("groups.join")}
       .row
-        .col-md-6
-          h4 #{t("members.members")}:
-          mixin memberlistHeading(t("groups.has"), users.length)
-          mixin memberlist(users, organizers)
-        .col-md-6
-          if (blogposts.length > 0)
+        if (blogposts.length > 0)
+          .col-md-6
+            h4 #{t("members.members")}:
+            mixin memberlistHeading(t("groups.has"), users.length)
+            mixin memberlist(users, organizers)
+          .col-md-6
+            h4 #{t("wiki.blogposts")}
             for post in blogposts
-              h4 #{post.title}&nbsp;
-                if (post.date.isValid())
-                  small #{post.date.lang(language).format('LL')}
-              p #{post.teaser}
-              p.pull-right: a(href="/wiki/#{post.path}") #{t("groups.more")}
+              .panel.panel-default
+                .panel-heading
+                  h1.panel-title #{post.title}&nbsp;
+                    if (post.date.isValid())
+                      small.pull-right #{post.date.lang(language).format('LL')}
+                .panel-body
+                  p #{post.teaser}
+                    .pull-right: a(href="/wiki/#{post.path}") #{t("groups.more")}
+        else
+          .col-md-12
+            h4 #{t("members.members")}:
+            mixin memberlistHeading(t("groups.has"), users.length)
+            mixin memberlist(users, organizers)
