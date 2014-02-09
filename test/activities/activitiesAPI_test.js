@@ -51,7 +51,7 @@ describe('Activities API', function () {
 
   it('returns the queried activities and enhances them with their color and group name', function () {
     activitiesAPI.getActivitiesForDisplay(activitystore.allActivities, function (err, activities) {
-      expect(!!err).to.be.false;
+      expect(err).to.not.exist;
       expect(activities.length).to.equal(1);
       var activity = activities[0];
       expect(activity.title()).to.equal('Title of the Activity');
@@ -79,7 +79,7 @@ describe('Activities API', function () {
     });
 
     activitiesAPI.getActivityWithGroupAndParticipants('urlOfTheActivity', function (err, activity) {
-      expect(activity, "Activity").to.be.defined;
+      expect(activity, "Activity").to.exist;
       expect(activity.group, "Group").to.equal(group);
       expect(activity.participants.length).to.equal(2);
       expect(activity.participants, "Participants").to.contain(member1);
@@ -115,8 +115,8 @@ describe('Activities API', function () {
       sinon.stub(notifications, 'visitorRegistration');
 
       activitiesAPI.addVisitorTo('memberId', 'activity-url', 'Einzelzimmer', new moment(), function (err, statusTitle, statusText) {
-        expect(statusTitle, "Status Title").to.be.undefined;
-        expect(statusText, "Status Text").to.be.undefined;
+        expect(statusTitle, "Status Title").to.not.exist;
+        expect(statusText, "Status Text").to.not.exist;
         expect(activity.resourceNamed('Einzelzimmer').registeredMembers()).to.contain('memberId');
         done(err);
       });
@@ -164,8 +164,8 @@ describe('Activities API', function () {
       sinon.stub(notifications, 'visitorRegistration');
 
       activitiesAPI.addVisitorTo('memberId', 'activity-url', 'Einzelzimmer', moment(), function (err, statusTitle, statusText) {
-        expect(statusTitle, "Status Title").to.be.undefined;
-        expect(statusText, "Status Text").to.be.undefined;
+        expect(statusTitle, "Status Title").to.not.exist;
+        expect(statusText, "Status Text").to.not.exist;
         expect(activity.resourceNamed('Einzelzimmer').registeredMembers()).to.contain('memberId');
         done(err);
       });
@@ -175,7 +175,7 @@ describe('Activities API', function () {
       sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(new Error("error")); });
 
       activitiesAPI.addVisitorTo('memberId', 'activity-url', 'Einzelzimmer', new moment(), function (err) {
-        expect(err, "Error").to.be.defined;
+        expect(err, "Error").to.exist;
         done(); // error condition - do not pass err
       });
     });

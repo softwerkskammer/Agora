@@ -127,7 +127,7 @@ describe('The persistence store', function () {
     it('retrieves undefined if the id should be null', function (done) {
       storeSampleData(function () {
         persistence.getById(null, function (err, result) {
-          expect(!!err).to.be.false;
+          expect(err).to.not.exist;
           expect(result).to.be.undefined;
           done(err);
         });
@@ -137,7 +137,7 @@ describe('The persistence store', function () {
     it('retrieves undefined if some field should be null', function (done) {
       storeSampleData(function () {
         persistence.getByField({id: null}, function (err, result) {
-          expect(!!err).to.be.false;
+          expect(err).to.not.exist;
           expect(result).to.be.undefined;
           done(err);
         });
