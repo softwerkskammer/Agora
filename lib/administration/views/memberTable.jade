@@ -1,4 +1,5 @@
 extends ../../../views/layout
+include ../../members/views/memberlist-mixin
 
 block scripts
   script(src="/clientscripts/jquery.dataTables.min.js")
@@ -48,7 +49,7 @@ block content
               tr
                 td: a.btn-sm(href="/members/edit/#{encodeURIComponent(member.nickname())}"): i.fa.fa-edit.fa-fw
                 td #{member.created()}
-                td: a(href="/members/#{encodeURIComponent(member.nickname())}") #{member.nickname()}
+                td: mixin linkedMember(member.nickname())
                 td #{member.firstname()}
                 td #{member.lastname()}
                 td #{member.location()}

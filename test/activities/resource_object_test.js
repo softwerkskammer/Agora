@@ -176,25 +176,25 @@ describe('Resource', function () {
 
     it("allows registration if it is indicated", function () {
       var resource = new Resource();
-      resource.fillFromUI({isRegistrationOpen: "true"});
+      resource.fillFromUI({isRegistrationOpen: "yes"});
       expect(resource.isRegistrationOpen()).to.be.true;
     });
 
     it("removes 'registration allowed' if it is not indicated", function () {
       var resource = new Resource({ _registrationOpen: true });
-      resource.fillFromUI({isRegistrationOpen: ""});
+      resource.fillFromUI({isRegistrationOpen: "no"});
       expect(resource.isRegistrationOpen()).to.be.false;
     });
 
     it("adds a waitinglist if it is indicated", function () {
       var resource = new Resource();
-      resource.fillFromUI({hasWaitinglist: "someValue"});
+      resource.fillFromUI({hasWaitinglist: "yes"});
       expect(resource.hasWaitinglist()).to.be.true;
     });
 
     it("removes 'with waitinglist' if it is not indicated", function () {
       var resource = new Resource({ _withWaitinglist: true });
-      resource.fillFromUI({hasWaitinglist: ""});
+      resource.fillFromUI({hasWaitinglist: "no"});
       expect(resource.hasWaitinglist()).to.be.false;
     });
 

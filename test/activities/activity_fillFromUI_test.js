@@ -80,14 +80,14 @@ describe('Activity (when filled from UI)', function () {
     });
 
     it('with open registration', function () {
-      var activity = new Activity().fillFromUI({resources: {names: "Einzelzimmer", limits: "dudu", previousNames: "", isRegistrationOpen: "true"}});
+      var activity = new Activity().fillFromUI({resources: {names: "Einzelzimmer", limits: "dudu", previousNames: "", isRegistrationOpen: "yes"}});
 
       checkResourceNames(activity, "Einzelzimmer");
       expect(activity.resourceNamed("Einzelzimmer").isRegistrationOpen(), "Registration at resource").to.equal(true);
     });
 
     it('with closed registration', function () {
-      var activity = new Activity().fillFromUI({resources: {names: "Einzelzimmer", limits: "dudu", previousNames: "", isRegistrationOpen: undefined}});
+      var activity = new Activity().fillFromUI({resources: {names: "Einzelzimmer", limits: "dudu", previousNames: "", isRegistrationOpen: "no"}});
 
       checkResourceNames(activity, "Einzelzimmer");
       expect(activity.resourceNamed("Einzelzimmer").isRegistrationOpen(), "Registration at resource").to.equal(false);
@@ -98,6 +98,17 @@ describe('Activity (when filled from UI)', function () {
 
       expect(activity.id()).to.equal('My_Group_My_Title_Fri_Feb_01_2013_20_15_00_GMT+0100');
     });
+
+    it('with several resources where only one has open registration', function () {
+      var activity = new Activity().fillFromUI({resources: {names: ["R1", "R2", "R3", "R4"], limits: ["", "", "", ""],
+        previousNames: ["", "", "", ""], isRegistrationOpen: ["no", "no", "no", "yes"]}});
+
+      expect(activity.resourceNamed("R1").isRegistrationOpen(), "Registration at resource R1").to.equal(false);
+      expect(activity.resourceNamed("R2").isRegistrationOpen(), "Registration at resource R2").to.equal(false);
+      expect(activity.resourceNamed("R3").isRegistrationOpen(), "Registration at resource R3").to.equal(false);
+      expect(activity.resourceNamed("R4").isRegistrationOpen(), "Registration at resource R4").to.equal(true);
+    });
+
 
   });
 
@@ -120,7 +131,9 @@ describe('Activity (when filled from UI)', function () {
     });
 
     it('to a resource with registered members', function () {
-      var activity = new Activity({resources: {Einzelzimmer: { _registeredMembers: [{memberId: 'memberId'}]}}})
+      var activity = new Activity({resources: {Einzelzimmer: { _registeredMembers: [
+        {memberId: 'memberId'}
+      ]}}})
         .fillFromUI({resources: {names: "Einzelzimmer", limits: "10", previousNames: "Einzelzimmer"}});
 
       checkResourceNames(activity, "Einzelzimmer");
@@ -130,7 +143,10 @@ describe('Activity (when filled from UI)', function () {
     });
 
     it('to a resource with too many registered members', function () {
-      var activity = new Activity({resources: {Einzelzimmer: { _registeredMembers: [{memberId: 'memberId1'}, {memberId: 'memberId2'}]}}})
+      var activity = new Activity({resources: {Einzelzimmer: { _registeredMembers: [
+        {memberId: 'memberId1'},
+        {memberId: 'memberId2'}
+      ]}}})
         .fillFromUI({resources: {names: "Einzelzimmer", limits: "1", previousNames: "Einzelzimmer"}});
 
       checkResourceNames(activity, "Einzelzimmer");
@@ -169,7 +185,9 @@ describe('Activity (when filled from UI)', function () {
     });
 
     it('from a resource with registered members', function () {
-      var activity = new Activity({resources: {Einzelzimmer: { _registeredMembers: [{memberId: 'memberId'}], limit: 10}}})
+      var activity = new Activity({resources: {Einzelzimmer: { _registeredMembers: [
+        {memberId: 'memberId'}
+      ], limit: 10}}})
         .fillFromUI({resources: {names: "Einzelzimmer", limits: "", previousNames: "Einzelzimmer"}});
 
       checkResourceNames(activity, "Einzelzimmer");
@@ -197,14 +215,18 @@ describe('Activity (when filled from UI)', function () {
     });
 
     it('with limit and with registered members', function () {
-      var activity = new Activity({resources: {Einzelzimmer: { _registeredMembers: [{memberId: 'memberId'}], limit: 10}}})
+      var activity = new Activity({resources: {Einzelzimmer: { _registeredMembers: [
+        {memberId: 'memberId'}
+      ], limit: 10}}})
         .fillFromUI({resources: {names: "", limits: "", previousNames: "Einzelzimmer"}});
 
       expect(activity.resources().resourceNames().length, "Number of resource names").to.equal(0);
     });
 
     it('if only the limit is set and not the name', function () {
-      var activity = new Activity({resources: {Einzelzimmer: { _registeredMembers: [{memberId: 'memberId'}], limit: 10}}})
+      var activity = new Activity({resources: {Einzelzimmer: { _registeredMembers: [
+        {memberId: 'memberId'}
+      ], limit: 10}}})
         .fillFromUI({resources: {names: "", limits: "10", previousNames: "Einzelzimmer"}});
 
       expect(activity.resources().resourceNames().length, "Number of resource names").to.equal(0);
@@ -239,7 +261,9 @@ describe('Activity (when filled from UI)', function () {
     });
 
     it('with registered members, changing the limit', function () {
-      var activity = new Activity({resources: {Einzelzimmer: { _registeredMembers: [{memberId: 'memberId'}], limit: 10}}})
+      var activity = new Activity({resources: {Einzelzimmer: { _registeredMembers: [
+        {memberId: 'memberId'}
+      ], limit: 10}}})
         .fillFromUI({resources: {names: "Doppelzimmer", limits: "20", previousNames: "Einzelzimmer"}});
 
       checkResourceNames(activity, "Doppelzimmer");
@@ -253,7 +277,9 @@ describe('Activity (when filled from UI)', function () {
   describe('replaces', function () {
 
     it('one resource by removing one and adding a new one', function () {
-      var activity = new Activity({resources: {Einzelzimmer: { _registeredMembers: [{memberId: 'memberId1'}], limit: 10},
+      var activity = new Activity({resources: {Einzelzimmer: { _registeredMembers: [
+        {memberId: 'memberId1'}
+      ], limit: 10},
         Doppelzimmer: {_registeredMembers: ['memberId2'], limit: 20}}})
         .fillFromUI({resources: {names: ["Einzelzimmer", "", "Schlafsaal"], limits: ["10", "20", "30"], previousNames: ["Einzelzimmer", "Doppelzimmer", ""] }});
 
@@ -266,7 +292,9 @@ describe('Activity (when filled from UI)', function () {
     });
 
     it('two resources by renaming one, removing the second and adding a new one', function () {
-      var activity = new Activity({resources: {Einzelzimmer: { _registeredMembers: [{memberId: 'memberId1'}], limit: 10},
+      var activity = new Activity({resources: {Einzelzimmer: { _registeredMembers: [
+        {memberId: 'memberId1'}
+      ], limit: 10},
         Doppelzimmer: {_registeredMembers: ['memberId2'], limit: 20}}})
         .fillFromUI({resources: {names: ["Koje", "", "Schlafsaal"], limits: ["10", "20", "30"], previousNames: ["Einzelzimmer", "Doppelzimmer", ""] }});
 
@@ -281,8 +309,12 @@ describe('Activity (when filled from UI)', function () {
   });
 
   it('exchanges the names of two resources with registered members when the resource order is changed', function () {
-    var activity = new Activity({resources: {Einzelzimmer: { _registeredMembers: [{memberId: 'memberId1'}], limit: 10},
-      Doppelzimmer: {_registeredMembers: [{memberId: 'memberId2'}], limit: 20}}})
+    var activity = new Activity({resources: {Einzelzimmer: { _registeredMembers: [
+      {memberId: 'memberId1'}
+    ], limit: 10},
+      Doppelzimmer: {_registeredMembers: [
+        {memberId: 'memberId2'}
+      ], limit: 20}}})
       .fillFromUI({resources: {names: ["Doppelzimmer", "Einzelzimmer"], limits: ["10", "20"], previousNames: ["Einzelzimmer", "Doppelzimmer"] }});
 
     checkResourceNames(activity, "Doppelzimmer", "Einzelzimmer");

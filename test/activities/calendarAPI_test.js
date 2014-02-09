@@ -19,7 +19,7 @@ describe('Calendar API', function () {
     });
     var event = calendarAPI.asCalendarEvent(activity);
     expect('Title').to.equal(event.title);
-    expect(4).to.equal(event.dayOfWeek);
+    expect('2013-04-04T00:00:00+02:00').to.equal(event.start); // includes timezone offset!
     expect('/activities/myURL').to.equal(event.url);
     expect('#353535').to.equal(event.color);
   });

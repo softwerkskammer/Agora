@@ -19,7 +19,10 @@ module.exports = function (internalAppName, configuredBeans) {
   return {
     createApp: function (memberID) {
       var app = express();
+      app.use(express.cookieParser());
       app.use(express.urlencoded());
+      app.use(express.session({secret: 'secret', cookie: {maxAge: 10000}, store: null}));
+
       var Member = beans.get('member');
 
       if (memberID) {

@@ -22,6 +22,7 @@
     "credits": "Credits",
     "legal_notice": "Impressum",
     "yes": "ja",
+    "no": "nein",
     "members": {
       "one": "ein Mitglied",
       "none": "keine Mitglieder",
@@ -97,6 +98,7 @@
     "count": "Anzahl",
     "registration": "Anmeldung",
     "possible": "möglich",
+    "impossible": "nicht möglich",
     "suggestion": "Vorschlag",
     "subscribe_single": "Ich bin dabei!",
     "subscribe_multiple": "Anmelden",
@@ -234,6 +236,7 @@
     "has": "Die Softwerkskammer hat"
   },
   "wiki": {
+    "blogposts": "Blogartikel:",
     "overview": "Übersicht der Dateien in",
     "wiki": "Wiki",
     "subwiki": "Subwiki",
@@ -264,6 +267,7 @@
     },
     "content": {
       "save_error": "Das Speichern war nicht erfolgreich.",
+      "save_error_retry": "Das Speichern war nicht erfolgreich. Bitte führe Deine Änderungen nochmals durch und speichere erneut.",
       "query": "Dein eingegebener Suchtext ist zu kurz.",
       "activities": {
         "saved": "Deine Aktivität wurde gespeichert.",

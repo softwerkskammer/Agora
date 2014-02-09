@@ -1,5 +1,8 @@
 Agora
 =====
+
+This project comprises a web platform for a Community Server.
+
 There is a companion project where the feature backlog lives. Go to the issues in [https://github.com/softwerkskammer/Agora-Backlog/issues](https://github.com/softwerkskammer/Agora-Backlog/issues)
 
 ---
@@ -21,61 +24,48 @@ Current Build Status
 
 [![Build Status](https://travis-ci.org/softwerkskammer/Agora.png)](https://travis-ci.org/softwerkskammer/Agora)
 
-System requirements for installation
+System requirements and Installation
 --------------------
-It is a node.js project. Therefore you need node.js installed. You should use version 0.10.x (currently 0.10.24). Currently we are still supporting version 0.8 (at least 0.8.19).
 
-At least npm 1.2 is required.
+### Node.js
 
-Get it from [http://nodejs.org](http://nodejs.org)
+It is a node.js project. Therefore you need node.js installed. Get it from [http://nodejs.org](http://nodejs.org).
 
-Some modules are compiled during the installation. Therefore some software should be installed.
+You should use version 0.10.x (currently 0.10.24). Currently we are still supporting version 0.8 (you need at least 0.8.19).
+
+Your node.js installation must contain at least npm 1.2.
+
+### Additional Software
+
+Some modules are compiled during the installation. Therefore some additional software must be installed.
+
+#### Python
 
 * Python 2.7 (not Python 3!) in system path
-* Git in system path
-* OS depending C++ compiler with headers and libraries
-  * For Windows: Microsoft Windows SDK for Windows 7 and .NET Framework 4 [available here](http://www.microsoft.com/en-us/download/details.aspx?id=8279)
+* For Windows:
+  * Make sure that Python and node.js are both either 32 bit or 64 bit - mixed combinations will not work!
+  * Add an environment variable `PYTHON` that points to the Python executable.
+
+#### C++
+
+* Install a C++ compiler with headers and libraries (depending on your OS)
   * For Mac OS X: Install XCode from the App Store. In XCode's preferences (section "Downloads"), install the command line tools. When you have installed
     the stand alone version of the command line tools, you need to execute `sudo xcode-select -switch /usr/bin` before you are able to run `npm install`.
-* MongoDB (Version 2.4) [http://www.mongodb.org/downloads](http://www.mongodb.org/downloads)
+  * For Windows 7 and older: Microsoft Windows SDK for Windows 7 and .NET Framework 4 [available here](http://www.microsoft.com/en-us/download/details.aspx?id=8279)
+  * For Windows 8 (may also work for Windows 7):
+     * Microsoft Visual Studio C++ 2012 for Windows Desktop ([Express](http://go.microsoft.com/?linkid=9816758) version works well)
 
-Preparations for use
---------------------
+#### Git
 
-* Check out this project into some folder (let's call it *REPO* from now on)
-* In *REPO*, run `npm install`
-  * Under Windows this command must run from a shell set up for running Windows Microsoft Windows SDK compilers
+* Git must be in the system path
 
-            cmd.exe /E:ON /V:ON /T:0E /K "C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\SetEnv.cmd" /Release /X86
+#### MongoDB
 
-  * Alternatively run `npm install` in the [Windows SDK Command Prompt](http://msdn.microsoft.com/en-us/library/ms229859.aspx)
-  * If python 3 is the default version, the command line for `npm install` must be adopted with the right python version (2.7)
+* Install MongoDB (Version 2.4) [http://www.mongodb.org/downloads](http://www.mongodb.org/downloads)
 
-            npm install --python /usr/bin/python2
+#### Grunt-CLI
 
-* Install mongodb for you operating system from [http://www.mongodb.org/downloads](http://www.mongodb.org/downloads)
-* Start mongodb. If you only plan to use it for development, the default settings are ok. The app as well as the tests use these defaults if nothing different is configured.
-* (Optional) Instructions for authenticated use are [here](lib/persistence/README.md)
-
-The built-in wiki
------------------
-
-To set up the built in wiki follow [these instructions](lib/wiki/README.md) 
-
-Running the server
-------------------
-
-* If your installation is fresh, perform the db initializing script: In *REPO*, invoke `node initialDBSetup`
-* In *REPO*, invoke `npm start`
-* You can now access the application by entering [http://localhost:17124](http://localhost:17124) in your browser
-  * The port `17124` is the default and can be changed via the command line option `--port` or via the environment option 'port' to any wanted value
-* If your installation is fresh, you should create an account for yourself. After that, perform the initializing script again to give yourself admin priviliges.
-  * The default setup assumes you are running on localhost for authentication. If you are using an alternate hostname, you have to edit the configuration file `config/example-server-config.json`. Follow the instructions in there.
-
-Running the tests
------------------
-
-To run the tests, you need to install grunt-cli. We propose to install grunt-cli globally via the -g option of npm. To find out more about this option, see [https://npmjs.org/doc/global.html](https://npmjs.org/doc/global.html).:
+We propose to install grunt-cli globally via the -g option of npm. To find out more about this option, see [https://npmjs.org/doc/global.html](https://npmjs.org/doc/global.html).:
 
 * (Optional) To define the installation location of global npm packages on Unix-like Systems create a file called `.npmrc` with the following contents in your Home directory:
 
@@ -87,18 +77,69 @@ To run the tests, you need to install grunt-cli. We propose to install grunt-cli
 
         export PATH=GLOBALPATH/bin/:$PATH
 
-Now, you can run the tests in *REPO* with `npm test`
+#### Shell for `npm install`
+
+* You need a shell (a.k.a. command line window) that is able to access the stuff you just installed.
+
+* For Windows 7 and older:
+   * The shell must be set up for running the Microsoft C++ compiler, like so:
+
+            cmd.exe /E:ON /V:ON /T:0E /K "C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\SetEnv.cmd" /Release /X86
+
+* For Windows 7 or 8:
+   * Use the [Visual Studio Developer Command Prompt](http://msdn.microsoft.com/en-us/library/ms229859.aspx)
+
+Preparations for use
+--------------------
+
+* Check out this project into some folder (let's call it *REPO* from now on)
+* Open a shell as described above and go to *REPO*
+* Run `npm install`
+
+* If python 3 is the default version, the command line for `npm install` must be adapted to the right python version (2.7)
+
+            npm install --python /usr/bin/python2
+
+* Start mongodb. If you only plan to use it for development, the default settings are ok. The app as well as the tests use these defaults if you did not change the configuration.
+* (Optional) Instructions for authenticated use are [here](lib/persistence/README.md)
+
+The built-in wiki
+-----------------
+
+To set up the built-in wiki follow [these instructions](lib/wiki/README.md)
+
+Running the server
+------------------
+
+* Open a shell in *REPO*
+* If your installation is fresh, perform the db initialization script:
+   * Run `node initialDBSetup`
+* If your installation is fresh or you changed anything:
+   * Run `npm test` (this creates the CSS files and other static contents and performs jshint checking)
+
+* Run `npm start`
+
+* You can now access the application by entering [http://localhost:17124](http://localhost:17124) in your browser
+  * The port `17124` is the default and can be changed via the command line option `--port` or via the environment option 'port' to any desired value
+* If your installation is fresh, you should create an account for yourself by registering.
+  * The default setup assumes you are running on localhost for authentication. If you are using a different hostname, you have to edit the configuration file `config/example-server-config.json`. Follow the instructions in there.
+
+Running the tests
+-----------------
+
+You can run the tests in *REPO* with `npm test`
 
 For running specific tests only, you can use mocha in a command like
 `mocha -R spec test/announcements/` To install mocha, invoke `npm install -g mocha` or `sudo npm install -g mocha` 
 
 To run the style check (jshint) and the tests on every file change, use `grunt watch`
 
-Debugging the tests from IDE [Webstorm](http://www.jetbrains.com/webstorm/)
+Debugging the tests in the IDE [Webstorm](http://www.jetbrains.com/webstorm/)
 ----------
+
 Follow these [instructions](http://codebetter.com/glennblock/2013/01/17/debugging-mocha-unit-tests-with-webstorm-step-by-step/)
 
 Editing the stylesheets
 -----------------------
 
-Only edit the scss-files inside the "partials" subfolder. Running `npm test` or `grunt default` will compile the scss files to screen.css.
+Only edit the agora.less file inside the "partials" subfolder. Running `npm test` or `grunt default` will compile everything to screen.css.

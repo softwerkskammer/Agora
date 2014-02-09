@@ -1,5 +1,6 @@
 extends ../../../views/layout
 include  ../../../views/formComponents
+include ../../members/views/memberlist-mixin
 
 block scripts
   script(src="/clientscripts/jquery.dataTables.min.js")
@@ -47,7 +48,7 @@ block content
                     label
                       input(type='checkbox', name='selectedRow', value=checkboxid)
 
-                  td: a(href="/members/#{encodeURIComponent(waitinglistEntry.registrantNickname)}") #{waitinglistEntry.registrantNickname}
+                  td: mixin linkedMember(waitinglistEntry.registrantNickname)
                   td #{waitinglistEntry.resourceName()}
                   td #{waitinglistEntry.registrationDate()}
                   td #{waitinglistEntry.registrationValidUntil()}

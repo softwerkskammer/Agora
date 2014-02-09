@@ -34,7 +34,7 @@ block content
     .col-md-6
       mixin grouplist(t("groups.regional"), regionalgroups)
       mixin grouplist(t("groups.themed"), themegroups)
-    .col-md-6.visible-xs.visible-sm.groupsmap(style="position: relative; width: 100%; height: 100px; background-image:url('/img/map.svg'); background-size: 100% 100%; background-repeat: no-repeat;")
+    .col-md-6.hidden-md.hidden-lg.groupsmap(style="position: relative; width: 100%; height: 100px; background-image:url('/img/map.svg'); background-size: 100% 100%; background-repeat: no-repeat;")
       mixin placeGroupLabels(regionalgroups)
     .col-md-6.hidden-xs.hidden-sm.groupsmap(style="position: relative; width: 50%; height: 100px; background-image:url('/img/map.svg'); background-size: 100% 100%; background-repeat: no-repeat;")
       mixin placeGroupLabels(regionalgroups)
