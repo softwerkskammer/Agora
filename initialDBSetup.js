@@ -50,7 +50,7 @@ async.parallel(
       async.map(members, function (member, callback) {
         membersPersistence.getById(member.id, function (err, existingMember) {
           if (existingMember) {return callback(null, 'Member "' + member.nickname + '" (already existing)'); }
-          membersPersistence.save(new Member(member), function (err) {
+          membersPersistence.save(new Member(member).state, function (err) {
             callback(err, 'Member "' + member.id + '"');
           });
         });
