@@ -89,8 +89,8 @@ describe('Activity store', function () {
     sinon.stub(persistence, 'getByField', function (id, callback) { callback(new Error("error")); });
 
     store.getActivity(1234, function (err, result) {
-      expect(!!err).to.be.true;
-      expect(result).to.be.undefined;
+      expect(err).to.exist;
+      expect(result).to.not.exist;
       done(); // error condition - do not pass err
     });
   });

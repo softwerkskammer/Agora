@@ -53,7 +53,7 @@ describe('Activity resource management', function () {
     it('adds no default resource if there are no resources in the activity resources property', function () {
       var activity = new Activity({ resources: {}});
       expect(activity.resourceNames()).to.be.empty;
-      expect(!!activity.resourceNames()).to.be.true; // not undefined, not null
+      expect(activity.resourceNames()).to.exist; // not undefined, not null
     });
 
     it('indicates whether a given resource has a waitinglist', function () {
@@ -75,7 +75,7 @@ describe('Activity resource management', function () {
       var activity = new Activity();
       activity.resourceNamed(defaultName).addMemberId('memberID');
       expect(activity.state.resources[defaultName]._registeredMembers[0].memberId).to.equal('memberID');
-      expect(!!activity.state.resources[defaultName]._registeredMembers[0].registeredAt).to.be.true;
+      expect(activity.state.resources[defaultName]._registeredMembers[0].registeredAt).to.exist;
     });
 
     it('sets the timestamp for the added member to the given moment', function () {
@@ -160,8 +160,8 @@ describe('Activity resource management', function () {
       expect(activity.resourceNamed('default').registeredMembers()).to.be.empty;
       expect(activity.startMoment().format()).to.not.contain('2013-4-4');
       expect(activity.endMoment().format()).to.not.contain('2013-4-5');
-      expect(!!activity.id()).to.be.false;
-      expect(!!activity.url()).to.be.false;
+      expect(activity.id()).to.not.exist;
+      expect(activity.url()).to.not.exist;
     });
   });
 
