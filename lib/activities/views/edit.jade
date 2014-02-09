@@ -4,9 +4,9 @@ include  ../../../views/formComponents
 mixin resourceRow(name, limit, isRegistrationOpen, hasWaitinglist)
   .row.form-group
     .col-xs-3.col-sm-6
-      input.form-control(name="resources[names]", value=name, type="text", placeholder=t("label"))
+      input.form-control(name="resources[names]", value=name, type="text", placeholder=t("activities.label"))
     .col-xs-3.col-sm-2
-      input.form-control(name="resources[limits]", value=limit, type="text", placeholder=t("unlimited"))
+      input.form-control(name="resources[limits]", value=limit, type="text", placeholder=t("activities.unlimited"))
     .col-xs-3.col-sm-2
       select(name="resources[isRegistrationOpen]")
         option(value="yes", selected=(isRegistrationOpen ? true : false)) #{t("activities.possible")}
