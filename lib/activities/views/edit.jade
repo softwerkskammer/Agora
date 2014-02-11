@@ -54,7 +54,7 @@ block content
         .col-md-12
           legend
             if (activity.id())
-              |  #{t("activities.edit")}
+              |  #{t("activities.edit")}: "#{activity.title()}"
             else
               |  #{t("activities.create")}
 
