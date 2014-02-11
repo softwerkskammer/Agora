@@ -1,0 +1,24 @@
+extends ../../../views/layout
+include  ../../../views/formComponents
+
+block title
+  | #{t("activities.activity")}
+
+block content
+  form(id='activityform', action='/activities/submitAddOn', method='post')
+    mixin hidden('url', activity.url())
+    fieldset
+      .row
+        .col-md-12
+          legend #{t("activities.edit_addon")}: "#{activity.title()}"
+
+      .row
+        .col-md-12
+          .h4 #{t("activities.which_addon_to_collect")}:
+          mixin checkbox('home_address', t("activities.home_address"), activity.addOn().home_address)
+          mixin checkbox('billing_address', t("activities.billing_address"), activity.addOn().billing_address)
+          mixin checkbox('t_shirt_size', t("activities.t_shirt_size"), activity.addOn().t_shirt_size)
+      .row
+        .col-md-12
+          button.btn.btn-primary.pull-right(type="submit") #{t("general.save")}
+          a.btn.btn-default.pull-right(href="javascript:history.back()", type="cancel") #{t("general.back")}

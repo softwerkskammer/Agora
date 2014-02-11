@@ -63,6 +63,7 @@
     "new": "Neue Aktivität",
     "create": "Aktivität anlegen",
     "edit": "Aktivität bearbeiten",
+    "edit_addon": "Zusatzangaben für Aktivität bearbeiten",
     "new_copy": "Neu auf Basis dieser Aktivität",
     "upcoming": "Kommende",
     "past": "Vergangene",
@@ -112,6 +113,10 @@
     "waitinglist_not_possible": "Warteliste ist nicht möglich.",
     "no_waitinglist": "Es gibt keine Warteliste.",
     "full": "Alle Plätze sind belegt.",
+    "which_addon_to_collect": "Die folgenden Zusatzangaben werden bei der Registrierung erfragt",
+    "home_address": "Privatanschrift",
+    "billing_address": "Rechnungsanschrift",
+    "t_shirt_size": "T-Shirt-Größe",
     "tooltip": {
       "title": "Kurz und knackig für Übersichten",
       "start": "Enddatum und -uhrzeit werden automatisch verschoben (die Dauer bleibt gleich)",
@@ -271,6 +276,7 @@
       "query": "Dein eingegebener Suchtext ist zu kurz.",
       "activities": {
         "saved": "Deine Aktivität wurde gespeichert.",
+        "saved_addon": "Die Zusatzangaben für Deine Aktivität wurden gespeichert.",
         "participation_added": "Deine Teilnahme wurde eingetragen.",
         "participation_for_resource_added": "Deine Teilnahme wurde für \"__resourceName__\" eingetragen.",
         "participation_removed": "Schade, dass Du nicht dabei sein wirst.",
