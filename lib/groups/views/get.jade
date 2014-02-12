@@ -6,7 +6,7 @@ block title
 
 block content
   .row
-    .col-md-12
+    .col-md-6
       .page-header
         .btn-group.pull-right
           a.btn.btn-default(href="/wiki/#{group.id}/")
@@ -33,7 +33,18 @@ block content
         if (userIsGroupMember)
           a.btn.btn-primary(href="unsubscribe/#{group.id}") #{t("groups.leave")}
         else
-          a.btn.btn-primary(href="subscribe/#{group.id}") #{t("groups.join")}
+            a.btn.btn-primary(href="subscribe/#{group.id}") #{t("groups.join")}
+      .row
+        .col-md-12
+          h4 Mitglieder:
+          | Diese Gruppe hat
+          if (users.length === 1)
+            |  ein Mitglied.
+          else if (users.length === 0)
+            |  keine Mitglieder.
+          else
+            |  #{users.length} Mitglieder.
+          mixin memberlist(users, organizers)
       .row
         if (blogposts.length > 0)
           .col-md-6
