@@ -2,8 +2,11 @@
 
 var conf = require('../configureForTest');
 var misc = conf.get('beans').get('misc');
+var wikiAPI = conf.get('beans').get('wikiAPI');
 var expect = require('chai').expect;
 var moment = require('moment-timezone');
+
+
 
 describe('toArray function', function () {
 
@@ -179,7 +182,7 @@ describe('parseBlogPost', function () {
       "Diesen Blog gemacht.";
     var path = "blog_2013-11-01LeanCoffeeTest";
 
-    var result = misc.parseBlogPost(path, post);
+    var result = misc.parseBlogPost(path, post, wikiAPI.BLOG_ENTRY_REGEX);
 
     var expected = {"title": "Lean Coffee November 2013",
       "date": moment("2013-11-01"),
@@ -194,7 +197,7 @@ describe('parseBlogPost', function () {
     var post = "";
     var path = "";
 
-    var result = misc.parseBlogPost(path, post);
+    var result = misc.parseBlogPost(path, post, wikiAPI.BLOG_ENTRY_REGEX);
 
     expect(result).to.be.undefined;
   });
@@ -204,7 +207,7 @@ describe('parseBlogPost', function () {
     var post = "post";
     var path = "blog_2000-01-0LeanCoffeeTest";
 
-    var result = misc.parseBlogPost(path, post);
+    var result = misc.parseBlogPost(path, post, wikiAPI.BLOG_ENTRY_REGEX);
 
     expect(result).to.be.undefined;
   });
@@ -213,7 +216,7 @@ describe('parseBlogPost', function () {
     var post = "#Lean Coffee November 2013";
     var path = "blog_2013-11-01LeanCoffeeTest";
 
-    var result = misc.parseBlogPost(path, post);
+    var result = misc.parseBlogPost(path, post, wikiAPI.BLOG_ENTRY_REGEX);
 
     expect(result.title).to.equal("Lean Coffee November 2013");
     expect(result.teaser).to.be.undefined;

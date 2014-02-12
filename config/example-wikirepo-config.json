@@ -1,7 +1,5 @@
 // to use these values, strip "example-" from the filename, delete this comment and replace the below values
 // MUST BE AN ABSOLUTE PATH
 {
-  "wikipath": "/absolute/path/to/initialized/git-repo",
-  "blog_entry_file_pattern": "blog_*",
-  "blog_entry_regex": "blog_(\\d{4}-\\d{2}-\\d{2}).*"
+  "wikipath": "/absolute/path/to/initialized/git-repo"
 }
