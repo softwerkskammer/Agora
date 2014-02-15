@@ -44,6 +44,7 @@ block content
               th Beruf
               th Email
               th Twitter
+              th Authentifizierung
           tbody
             for member in members
               tr
@@ -59,5 +60,6 @@ block content
                 td #{member.profession()}
                 td #{member.email()}
                 td #{member.twitter()}
+                td #{member.authentications() ? member.authentications().join(", ") : ""}
 
 
