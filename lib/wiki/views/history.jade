@@ -59,6 +59,6 @@ block content
           input(type="checkbox", value="#{item.fullhash}")
         td: mixin linkedMember(item.author)
         td #{item.date}
-        td #{item.subject}
+        td #{item.comment}
         td
           a(href="/wiki/#{item.name}?version=#{item.hashRef}") #{item.hashRef || 'CURRENT'}
