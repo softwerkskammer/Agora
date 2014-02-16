@@ -87,6 +87,7 @@ module.exports = {
       app.use(beans.get('announcementsInSidebar'));
       app.use(beans.get('wikiSubdirs'));
       app.use(beans.get('detectBrowser'));
+      app.use(beans.get('secureAgainstClickjacking'));
       app.use(app.router);
     });
 
