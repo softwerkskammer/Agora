@@ -10,6 +10,7 @@ block title
 
 block content
   form(id='announcementform', action='/announcements/submit', method='post')
+    mixin hidden('_csrf', csrf_token)
     if (announcement.id)
       mixin hidden('id', announcement.id)
     mixin hidden('fromUnix', announcement.fromUnix)

@@ -88,6 +88,8 @@ module.exports = {
       app.use(beans.get('wikiSubdirs'));
       app.use(beans.get('detectBrowser'));
       app.use(beans.get('secureAgainstClickjacking'));
+      app.use(express.csrf());
+      app.use(beans.get('addCsrfTokenToLocals'));
       app.use(app.router);
     });
 

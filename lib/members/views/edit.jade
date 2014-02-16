@@ -14,6 +14,7 @@ block title
 
 block content
   form(id='memberform', action='/members/submit',method='post')
+    mixin hidden('_csrf', csrf_token)
     fieldset
       .row
         .col-md-12

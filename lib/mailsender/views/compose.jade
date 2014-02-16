@@ -10,6 +10,7 @@ block title
 
 block content
   form(id='mailform', action='/mailsender/send', method='post')
+    mixin hidden('_csrf', csrf_token)
     fieldset
       .row
         .col-md-12

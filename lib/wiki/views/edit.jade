@@ -7,6 +7,7 @@ block title
 
 block content
   form(action='/wiki/#{subdir}/#{pageName}', method='post')
+    mixin hidden('_csrf', csrf_token)
     fieldset
       .row
         .col-md-12
