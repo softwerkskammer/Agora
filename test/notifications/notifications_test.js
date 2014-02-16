@@ -39,6 +39,19 @@ describe('Notifications', function () {
     sinon.restore();
   });
 
+  it('creates a meaningful text and subject', function () {
+    activity.state.owner = 'hans';
+
+    notifications.visitorRegistration(activity, 'bob', 'Kaffeekranz');
+    expect(transport.sendMail.calledOnce).to.be.true;
+    var options = transport.sendMail.firstCall.args[0];
+    expect(options.subject).to.equal('Neue Anmeldung für Aktivität');
+    expect(options.html).to.contain('Für die Aktivität "Title of the Activity" (Kaffeekranz) hat sich ein neuer Besucher angemeldet:');
+    expect(options.html).to.contain('firstname of bob lastname of bob (nickbob)');
+    expect(options.html).to.contain('/activities/urlurl');
+  });
+
+
   it('triggers mail sending for group organizers and activity owner', function () {
     activity.state.owner = 'hans';
     group.organizers = ['alice'];
@@ -51,24 +64,7 @@ describe('Notifications', function () {
     expect(options.bcc).to.contain('alice@email.de');
     expect(options.bcc).to.not.contain('bob');
     expect(options.from).to.contain('Softwerkskammer Benachrichtigungen');
-    expect(options.subject).to.equal('Neue Anmeldung für Aktivität');
-    expect(options.text).to.contain('Für die Aktivität "Title of the Activity" (Kaffeekranz)');
-    expect(options.text).to.contain('neuer Besucher angemeldet:\n\nfirstname of bob lastname of bob (nickbob)');
-    expect(options.text).to.contain('/activities/urlurl');
   });
-
-  it('creates a meaningful text and subject', function () {
-    activity.state.owner = 'hans';
-
-    notifications.visitorRegistration(activity, 'bob', 'Kaffeekranz');
-    expect(transport.sendMail.calledOnce).to.be.true;
-    var options = transport.sendMail.firstCall.args[0];
-    expect(options.subject).to.equal('Neue Anmeldung für Aktivität');
-    expect(options.text).to.contain('Für die Aktivität "Title of the Activity" (Kaffeekranz)');
-    expect(options.text).to.contain('neuer Besucher angemeldet:\n\nfirstname of bob lastname of bob (nickbob)');
-    expect(options.text).to.contain('/activities/urlurl');
-  });
-
   it('triggers mail sending for only group organizers if activity has no owner', function () {
     group.organizers = ['alice'];
     group.members = [hans, alice, bob];
