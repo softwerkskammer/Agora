@@ -1,3 +1,9 @@
-//
-   Created by leider on 16.02.14.
-
+doctype html
+html
+  body
+    p Für die Aktivität "#{activity.title()}" (#{ressourceName}) #{content}: <br>
+      a(href="#{url}/members/#{encodeURIComponent(visitor.nickname())}") #{visitor.firstname()} #{visitor.lastname()} (#{visitor.nickname()})
+    p Damit hat die 
+      a(href="#{url}/activities/#{encodeURIComponent(activity.url())}") Aktivität 
+      |  jetzt #{count} Anmeldungen.
+ 
