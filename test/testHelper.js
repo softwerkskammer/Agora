@@ -17,13 +17,17 @@ module.exports = function (internalAppName, configuredBeans) {
   });
 
   return {
-    createApp: function (memberID, middleware) {
+    createApp: function (memberID /* add middleware list as dynamic params */) {
       var app = express();
       app.use(express.cookieParser());
       app.use(express.urlencoded());
       app.use(express.session({secret: 'secret', cookie: {maxAge: 10000}, store: null}));
-      if (middleware) {
-        app.use(middleware);
+
+      for (var i = 1; i < arguments.length; i++) {
+        var middleware = arguments[i];
+        if (middleware) {
+          app.use(middleware);
+        }
       }
 
       if (memberID) {
