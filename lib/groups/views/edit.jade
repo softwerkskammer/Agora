@@ -13,6 +13,7 @@ block title
 
 block content
   form(id='groupform', action='/groups/submit', method='post')
+    mixin hidden('_csrf', csrf_token)
     fieldset
       .row
         .col-md-12

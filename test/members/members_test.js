@@ -65,9 +65,7 @@ describe('Members application', function () {
     request(createApp('memberID'))
       .get('/edit/hada')
       .expect(200)
-      .expect(/Profil bearbeiten/, function (err) {
-        done(err);
-      });
+      .expect(/Profil bearbeiten/, done);
   });
 
   it('does not allow a member to edit another member\'s data', function (done) {
@@ -88,18 +86,14 @@ describe('Members application', function () {
     request(createApp('superuserID'))
       .get('/edit/hada')
       .expect(200)
-      .expect(/Profil bearbeiten/, function (err) {
-        done(err);
-      });
+      .expect(/Profil bearbeiten/, done);
   });
 
   it('validates a duplicate email address via ajax - email is same as previous', function (done) {
     request(app)
       .get('/checkemail?email=my.mail@yourmail.de&previousEmail=my.mail@yourmail.de')
       .expect(200)
-      .expect('true', function (err) {
-        done(err);
-      });
+      .expect('true', done);
   });
 
   it('validates a duplicate email address via ajax - email is valid and different to previous', function (done) {
@@ -109,9 +103,7 @@ describe('Members application', function () {
     request(app)
       .get('/checkemail?email=other@x.de&previousEmail=my.mail@yourmail.de')
       .expect(200)
-      .expect('true', function (err) {
-        done(err);
-      });
+      .expect('true', done);
   });
 
   it('validates a duplicate email address via ajax - email is invalid and different to previous', function (done) {
@@ -121,9 +113,7 @@ describe('Members application', function () {
     request(app)
       .get('/checkemail?email=other@x.de&previousEmail=my.mail@yourmail.de')
       .expect(200)
-      .expect('false', function (err) {
-        done(err);
-      });
+      .expect('false', done);
   });
 
   it('validates a duplicate email address via ajax - email query yields and error and email is different to previous', function (done) {
@@ -133,18 +123,14 @@ describe('Members application', function () {
     request(app)
       .get('/checkemail?email=other@x.de&previousEmail=my.mail@yourmail.de')
       .expect(200)
-      .expect('false', function (err) {
-        done(err);
-      });
+      .expect('false', done);
   });
 
   it('validates a duplicate nickname via ajax - nickname is same as previous', function (done) {
     request(app)
       .get('/checknickname?nickname=nickerinack&previousNickname=nickerinack')
       .expect(200)
-      .expect('true', function (err) {
-        done(err);
-      });
+      .expect('true', done);
   });
 
   it('validates a duplicate nickname via ajax - nickname is valid and different to previous', function (done) {
@@ -154,9 +140,7 @@ describe('Members application', function () {
     request(app)
       .get('/checknickname?nickname=nickerinack&previousNickname=bibabu')
       .expect(200)
-      .expect('true', function (err) {
-        done(err);
-      });
+      .expect('true', done);
   });
 
   it('validates a duplicate nickname via ajax - nickname is invalid and different to previous', function (done) {
@@ -166,9 +150,7 @@ describe('Members application', function () {
     request(app)
       .get('/checknickname?nickname=nickerinack&previousNickname=bibabu')
       .expect(200)
-      .expect('false', function (err) {
-        done(err);
-      });
+      .expect('false', done);
   });
 
   it('validates a duplicate nickname via ajax - nickname query yields and error and email is different to previous', function (done) {
@@ -178,9 +160,7 @@ describe('Members application', function () {
     request(app)
       .get('/checknickname?nickname=nickerinack&previousNickname=bibabu')
       .expect(200)
-      .expect('false', function (err) {
-        done(err);
-      });
+      .expect('false', done);
   });
 
   it('rejects a member with invalid and different nickname on submit', function (done) {
@@ -195,9 +175,7 @@ describe('Members application', function () {
       .send('previousNickname=bibabu')
       .expect(200)
       .expect(/Validierungsfehler/)
-      .expect(/Dieser Nickname ist leider nicht verfügbar./, function (err) {
-        done(err);
-      });
+      .expect(/Dieser Nickname ist leider nicht verfügbar./, done);
   });
 
   it('rejects a member with invalid and different email address on submit', function (done) {
@@ -212,9 +190,7 @@ describe('Members application', function () {
       .send('previousEmail=there@wherever.com')
       .expect(200)
       .expect(/Validierungsfehler/)
-      .expect(/Diese Adresse ist schon registriert. Hast Du bereits ein Profil angelegt?/, function (err) {
-        done(err);
-      });
+      .expect(/Diese Adresse ist schon registriert. Hast Du bereits ein Profil angelegt?/, done);
   });
 
   it('rejects a member with missing first and last name on submit', function (done) {
@@ -225,9 +201,7 @@ describe('Members application', function () {
       .expect(200)
       .expect(/Validierungsfehler/)
       .expect(/Vorname ist ein Pflichtfeld./)
-      .expect(/Nachname ist ein Pflichtfeld./, function (err) {
-        done(err);
-      });
+      .expect(/Nachname ist ein Pflichtfeld./, done);
   });
 
   it('rejects a member with missing first name who validly changed their nickname and mailaddress on submit', function (done) {
@@ -244,9 +218,7 @@ describe('Members application', function () {
       .send('id=0815&&nickname=nuckNew&previousNickname=nuck&lastname=x&location=x&profession=y&reference=z&email=hereNew@there.org&previousEmail=here@there.org')
       .expect(200)
       .expect(/Validierungsfehler/)
-      .expect(/Vorname ist ein Pflichtfeld./, function (err) {
-        done(err);
-      });
+      .expect(/Vorname ist ein Pflichtfeld./, done);
   });
 
   it('rejects a member with invalid nickname and email address on submit, giving two error messages', function (done) {
@@ -267,9 +239,7 @@ describe('Members application', function () {
       .expect(200)
       .expect(/Validierungsfehler/)
       .expect(/Dieser Nickname ist leider nicht verfügbar./)
-      .expect(/Diese Adresse ist schon registriert. Hast Du bereits ein Profil angelegt?/, function (err) {
-        done(err);
-      });
+      .expect(/Diese Adresse ist schon registriert. Hast Du bereits ein Profil angelegt?/, done);
   });
 
 });

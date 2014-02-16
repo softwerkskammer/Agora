@@ -46,6 +46,7 @@ block title
 
 block content
   form(id='activityform', action='/activities/submit', method='post')
+    mixin hidden('_csrf', csrf_token)
     if (activity.id())
       mixin hidden('id', activity.id())
     mixin hidden('previousUrl', activity.url())
