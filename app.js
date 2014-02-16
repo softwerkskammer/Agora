@@ -141,7 +141,7 @@ module.exports = {
 
   stop: function (done) {
     this.server.close(function () {
-      console.log('Server stopped');
+      appLogger.info('Server stopped');
       if (done) {
         done();
       }

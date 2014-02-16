@@ -67,8 +67,6 @@ describe('Wiki API', function () {
     });
   });
 
-
-
 });
 
 //This is an extra group because the Git.readFile mock has a different objective
@@ -152,4 +150,57 @@ describe('WikiAPI (getBlogPosts)', function () {
       done(err);
     });
   });
+});
+
+describe('Wiki API (daily digest)', function () {
+
+  var subdirs = ['dirA', 'dirB'];
+  var filesForDirA = ['dirA/fileA1', 'dirA/fileA2'];
+  var filesForDirB = ['dirB/fileB1', 'dirB/fileB2'];
+  var metadataA1 = {author: 'authorA1', fullhash: 'hashA1', date: '2014-01-11 18:45:29 +0100'};
+  var metadataA2 = {author: 'authorA2', fullhash: 'hashA2', date: '2014-01-10 18:45:29 +0100'};
+  var metadataB1 = {author: 'authorB1', fullhash: 'hashB1', date: '2014-01-11 18:45:29 +0100'};
+
+  beforeEach(function () {
+    sinon.stub(Git, 'lsdirs', function (callback) {
+      callback(null, subdirs);
+    });
+
+    sinon.stub(Git, 'ls', function (dirname, callback) {
+      if (dirname === 'dirA') { return callback(null, filesForDirA); }
+      if (dirname === 'dirB') { return callback(null, filesForDirB); }
+    });
+
+    sinon.stub(Git, 'latestChanges', function (filename, moment, callback) {
+      if (filename.indexOf('A1') > -1) { return callback(null, [metadataA1]); }
+      if (filename.indexOf('A2') > -1) { return callback(null, [metadataA2]); }
+      if (filename.indexOf('B1') > -1) { return callback(null, [metadataB1]); }
+      callback(null, []);
+    });
+
+    sinon.stub(Git, 'readFile', function (filename, tag, callback) {
+      callback(null);
+    });
+  });
+
+  afterEach(function () {
+    sinon.restore();
+  });
+
+  describe('Digest', function () {
+    it('finds all changed pages', function (done) {
+      wikiAPI.findPagesForDigestSince(moment(), function (err, pages) {
+        expect(pages.length).to.equal(2);
+        pages.forEach(function (page) {
+          if (page.dir === 'dirA') {
+            expect(page.files.length).to.equal(2);
+          } else {
+            expect(page.files.length).to.equal(1);
+          }
+        });
+        done(err);
+      });
+    });
+  });
+
 });

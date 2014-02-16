@@ -62,6 +62,10 @@
                                 "constructorArgs": {
                                   "collectionName": "sympastore"
                               }},
+  "settingsPersistence": {"module": "./lib/persistence/persistence",
+                                "constructorArgs": {
+                                  "collectionName": "settingsstore"
+                              }},
 
   "group": {"module": "./lib/groups/group"},
   "member": {"module": "./lib/members/member"},
@@ -77,6 +81,7 @@
   "mailThread": {"module": "./lib/mailarchive/mailThread"},
   "statusmessage": {"module": "./lib/commons/statusmessage"},
   "renderer": {"module": "./lib/commons/renderer"},
+  "wikiObjects": {"module": "./lib/wiki/wikiObjects"},
 
   "fieldHelpers": {"module": "./lib/commons/fieldHelpers"},
   "validation": {"module": "./lib/commons/validation"},
