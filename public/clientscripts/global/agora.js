@@ -35,8 +35,12 @@ var initCalendar = function () {
         month: 'MMM \'YY'
       },
       buttonText: {
-        prev: '<i class="fa fa-chevron-left"></i>',
-        next: '<i class="fa fa-chevron-right"></i>'
+        prev: '<i class="fa fa-caret-left"></i>',
+        next: '<i class="fa fa-caret-right"></i>'
+      },
+      buttonIcons: {
+        prev: null,
+        next: null
       },
       timezone: 'Europe/Berlin',
       events: '/activities/eventsForSidebar',
