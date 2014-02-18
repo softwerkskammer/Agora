@@ -95,7 +95,7 @@ module.exports = function (grunt) {
           'public/clientscripts/global/bootstrap-markdown-patched.js',
           'public/clientscripts/global/markdown.js',
           'node_modules/moment-timezone/node_modules/moment/min/moment.min.js',
-          'public/clientscripts/global/fullcalendar.js',
+          'public/clientscripts/global/fullcalendar-patched.js',
           'public/clientscripts/global/de.js', // for fullcalendar
           'public/clientscripts/global/tinycolor-0.9.15.min.js', // for pick-a-color
           'public/clientscripts/global/pick-a-color.js',
@@ -118,7 +118,7 @@ module.exports = function (grunt) {
           'public/clientscripts/global/bootstrap-markdown-patched.js',
           'public/clientscripts/global/markdown.js',
           'node_modules/moment-timezone/node_modules/moment/min/moment.min.js',
-          'public/clientscripts/global/fullcalendar.js',
+          'public/clientscripts/global/fullcalendar-patched.js',
           'public/clientscripts/global/en-gb.js', // for fullcalendar
           'public/clientscripts/global/tinycolor-0.9.15.min.js', // for pick-a-color
           'public/clientscripts/global/pick-a-color.js',
