@@ -32,7 +32,7 @@ var initCalendar = function () {
       weekMode: 'variable',
       timeFormat: '',
       titleFormat: {
-        month: 'MMM YY'
+        month: 'MMM \'YY'
       },
       buttonText: {
         prev: '<i class="fa fa-chevron-left"></i>',
