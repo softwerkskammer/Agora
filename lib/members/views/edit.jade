@@ -20,7 +20,7 @@ block content
         .col-md-12
           h2
             if (accessrights.isRegistered())
-              | "#{member.nickname()}"
+              | #{member.nickname()}
             else
               | #{t("members.new")}
             .btn-group.pull-right
