@@ -33,7 +33,6 @@ describe('Wiki application', function () {
       .get('/global/somepage')
       .expect(200)
       .expect(new RegExp(content))
-      .expect(/in Wiki \"global\"/)
       .end(function (err) {
         expect(pageShow.calledWith('global/somepage', 'HEAD')).to.be.ok;
         done(err);

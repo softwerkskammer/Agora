@@ -28,8 +28,7 @@ block content
         .btn-group.pull-right
           if (accessrights.isSuperuser())
             a.btn.btn-default(href="new/", title=t("groups.new")): i.fa.fa-file-o.fa-fw
-        h2 #{t("groups.groups")}&nbsp;
-          small #{t("general.all")}
+        h2 #{t("groups.groups")}
   .row
     .col-md-6
       mixin grouplist(t("groups.regional"), regionalgroups)
