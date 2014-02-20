@@ -65,6 +65,20 @@ describe('Groups API (getSubscribedGroupsForUser)', function () {
       done(err);
     });
   });
+
+  it('never returns the admin group subscription', function (done) {
+    var spy = sinon.stub(groupstore, 'groupsByLists', function (lists, globalCallback) {
+      globalCallback(null, []);
+    });
+    sinon.stub(sympa, 'getSubscribedListsForUser', function (email, callback) {
+      callback(null, ['GroupA', 'GroupB', conf.get('adminListName')]);
+    });
+
+    systemUnderTest.getSubscribedGroupsForUser('admin@softwerkskammer.de', function (err) {
+      expect(spy.calledWith(['GroupA', 'GroupB'])).to.be.true;
+      done(err);
+    });
+  });
 });
 
 describe('Groups API (getAllAvailableGroups)', function () {
