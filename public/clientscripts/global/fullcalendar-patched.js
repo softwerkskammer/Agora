@@ -1112,6 +1112,7 @@ function Header(calendar, options) {
 						else if (fcViews[buttonName]) {
 							buttonClick = function() {
 								button.removeClass(tm + '-state-hover'); // forget why
+                button.removeClass(":hover");
 								calendar.changeView(buttonName);
 							};
 						}
