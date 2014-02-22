@@ -72,7 +72,7 @@ module.exports = function (grunt) {
             'public/stylesheets/vendor/fullcalendar.css',
             'public/stylesheets/less/bootstrap.less',
             'public/stylesheets/vendor/datepicker.css',
-            'public/stylesheets/less/bootstrap-markdown.less',
+            'public/stylesheets/less/bootstrap-markdown-patched.less',
             'public/stylesheets/vendor/font-awesome.min.css',
             'public/stylesheets/less/pick-a-color-patched.less',
             'public/stylesheets/vendor/shCoreDefault-patched.css',

@@ -120,7 +120,7 @@ var addHelpButtonToTextarea = function () {
         ],
         onPreview: function (e) {
           $.post("/preview",
-            {data: e.getContent(), subdir: ($("#subdir").val() || $("#assignedGroup").val() || $('#id').val())},
+            {data: e.getContent(), subdir: ($("#subdir").val() || $("#assignedGroup").val() || $('#id').val()), _csrf: $("#_csrf").val()},
             function (data) { $(".md-preview").html(data); }
           );
           return ""; // to clearly indicate the loading...

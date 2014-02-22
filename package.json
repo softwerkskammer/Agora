@@ -67,7 +67,7 @@
     "grunt-contrib-less": "~0.9.0",
     "grunt-contrib-watch": "~0.5.3",
     "grunt-mocha-test": "~0.9",
-    "request": "~2.33",
+    "request": "~2.34",
     "sinon": "~1.8",
     "supertest": "~0.9",
     "travis-cov": "~0.2.4"
