@@ -105,21 +105,8 @@ module.exports = {
     useApp(app, 'wiki', beans.get('wikiApp'));
     useApp(app, 'waitinglist', beans.get('waitinglistApp'));
 
-    // Handle 404
-    app.use(function (req, res) {
-      appLogger.error('404 - requested url was ' + req.url);
-      res.render('errorPages/404.jade');
-    });
-
-    // Handle 500
-    app.use(function (error, req, res, next) {
-      appLogger.error(error.stack);
-      if (/InternalOpenIDError|BadRequestError|InternalOAuthError/.test(error.name)) {
-        return res.render('errorPages/authenticationError.jade', {error: error});
-      }
-      res.render('errorPages/500.jade', {error: error});
-      next; // needed for jshint
-    });
+    app.use(beans.get('handle404')(appLogger));
+    app.use(beans.get('handle500')(appLogger));
 
     i18n.registerAppHelper(app);
     i18n.addPostProcessor("jade", function (val, key, opts) {
