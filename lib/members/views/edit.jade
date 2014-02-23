@@ -38,6 +38,10 @@ block content
           mixin groupCheckboxes('newSubscriptions', regionalgroups, themegroups)
       .row
         .col-md-12
+          legend #{t("general.settings")}
+          mixin checkbox('notifyOnWikiChanges', t('members.notifyOnWikiChanges'), member.notifyOnWikiChanges())
+      .row
+        .col-md-12
           legend #{t("members.personal_data")}
       .row
         .col-md-6
