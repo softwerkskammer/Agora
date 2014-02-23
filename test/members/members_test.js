@@ -8,6 +8,8 @@ var beans = require('../configureForTest').get('beans');
 var Member = beans.get('member');
 var membersAPI = beans.get('membersAPI');
 var groupsAPI = beans.get('groupsAPI');
+var groupsAndMembersAPI = beans.get('groupsAndMembersAPI');
+var notifications = beans.get('notifications');
 var dummymember;
 
 var createApp = require('../testHelper')('membersApp').createApp;
@@ -69,13 +71,6 @@ describe('Members application', function () {
   });
 
   it('does not allow a member to edit another member\'s data', function (done) {
-    request(createApp('memberID1'))
-      .get('/edit/hada')
-      .expect(302)
-      .expect('location', /members\/hada/, done);
-  });
-
-  it('does not allow an admin member to edit another member\'s data', function (done) {
     request(createApp('memberID1'))
       .get('/edit/hada')
       .expect(302)
@@ -240,6 +235,44 @@ describe('Members application', function () {
       .expect(/Validierungsfehler/)
       .expect(/Dieser Nickname ist leider nicht verfügbar./)
       .expect(/Diese Adresse ist schon registriert. Hast Du bereits ein Profil angelegt?/, done);
+  });
+
+  it('saves an existing member and does not triggers notification sending', function (done) {
+    sinon.stub(membersAPI, 'isValidNickname', function (nickname, callback) { callback(null, true); });
+    sinon.stub(membersAPI, 'isValidEmail', function (nickname, callback) { callback(null, true); });
+    sinon.stub(groupsAndMembersAPI, 'updateSubscriptions', function (member, oldEmail, subscriptions, callback) { callback(); });
+    sinon.stub(membersAPI, 'saveMember', function (member, callback) { callback(null); });
+    var notificationCall = sinon.spy(notifications, 'newMemberRegistered', function () { });
+
+    // the following stub indicates that the member already exists 
+    sinon.stub(groupsAndMembersAPI, 'getUserWithHisGroups', function (nickname, callback) { callback(null, dummymember); });
+    request(createApp('memberID'))
+      .post('/submit')
+      .send('id=0815&firstname=A&lastname=B&location=x&profession=y&reference=z')
+      .send('nickname=nickerinack')
+      .send('email=here@there.org')
+      .expect(function () { return notificationCall.called; })// must not be called, should be false to indicate correctness
+      .expect(302)
+      .expect('location', /members\/nickerinack/, done);
+  });
+
+  it('saves a new member and does not triggers notification sending', function (done) {
+    sinon.stub(membersAPI, 'isValidNickname', function (nickname, callback) { callback(null, true); });
+    sinon.stub(membersAPI, 'isValidEmail', function (nickname, callback) { callback(null, true); });
+    sinon.stub(groupsAndMembersAPI, 'updateSubscriptions', function (member, oldEmail, subscriptions, callback) { callback(); });
+    sinon.stub(membersAPI, 'saveMember', function (member, callback) { callback(null); });
+    var notificationCall = sinon.spy(notifications, 'newMemberRegistered', function () { });
+
+    // the following stub indicates that the member not yet exists 
+    sinon.stub(groupsAndMembersAPI, 'getUserWithHisGroups', function (nickname, callback) { callback(null); });
+    request(createApp('memberID'))
+      .post('/submit')
+      .send('id=0815&firstname=A&lastname=B&location=x&profession=y&reference=z')
+      .send('nickname=nickerinack')
+      .send('email=here@there.org')
+      .expect(function () { return !notificationCall.called; })// must be called, should be false to indicate correctness
+      .expect(302)
+      .expect('location', /members\/nickerinack/, done);
   });
 
 });
