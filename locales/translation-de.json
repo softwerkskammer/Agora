@@ -32,7 +32,8 @@
     "gdcr_activities": "Aktivitäten zum GDCR",
     "gdcr_text": "Hier findest Du fast alle deutschsprachigen Veranstaltungen. Eine vollständige Übersicht findest Du auf",
     "feedback": "Feedback",
-    "what_does_not_work": "Was funktioniert nicht, wie es soll?"
+    "what_does_not_work": "Was funktioniert nicht, wie es soll?",
+    "settings": "Einstellungen"
   },
   "error": {
     "congratulations": "Herzlichen Glückwunsch!",
@@ -232,7 +233,8 @@
     "authenticated_via": "Aktuell authentifiziert bei",
     "authenticate": "Anderswo authentifizieren",
     "send_email": "Eine E-Mail an __firstname__ __lastname__ senden",
-    "has": "Die Softwerkskammer hat"
+    "has": "Die Softwerkskammer hat",
+    "notifyOnWikiChanges": "Benachrichtigen bei Änderungen im Wiki"
   },
   "wiki": {
     "blogposts": "Blogartikel:",

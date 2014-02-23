@@ -32,7 +32,8 @@
     "gdcr_activities": "Activities related to GDCR",
     "gdcr_text": "Here you find almost all german-speaking activities. You can find a full overview at",
     "feedback": "Feedback",
-    "what_does_not_work": "What does not work the way it should?"
+    "what_does_not_work": "What does not work the way it should?",
+    "settings": "Settings"
   },
   "error": {
     "congratulations": "Congratulations!",
@@ -232,7 +233,8 @@
     "authenticated_via": "Currently authenticated via",
     "authenticate": "Authenticate elsewhere",
     "send_email": "Send e-mail to __firstname__ __lastname__",
-    "has": "Softwerkskammer has"
+    "has": "Softwerkskammer has",
+    "notifyOnWikiChanges": "Notify on wiki changes"
   },
   "wiki": {
     "blogposts": "Blog Posts:",
