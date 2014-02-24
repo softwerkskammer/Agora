@@ -90,6 +90,7 @@ module.exports = {
       app.use(beans.get('secureAgainstClickjacking'));
       app.use(express.csrf());
       app.use(beans.get('addCsrfTokenToLocals'));
+      app.use(beans.get('serverpathRemover'));
       app.use(app.router);
     });
 

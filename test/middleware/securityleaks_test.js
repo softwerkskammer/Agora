@@ -5,6 +5,7 @@ var sinon = require('sinon').sandbox.create();
 var expect = require('chai').expect;
 
 var express = require('express');
+var passport = require('passport');
 var beans = require('../configureForTest').get('beans');
 
 var setupApp = require('../testHelper');
@@ -13,6 +14,7 @@ var groupsAPI = beans.get('groupsAPI');
 var groupsAndMembersAPI = beans.get('groupsAndMembersAPI');
 var Member = beans.get('member');
 var addCsrfTokenToLocals = beans.get('addCsrfTokenToLocals');
+var serverpathRemover = beans.get('serverpathRemover');
 
 
 describe('Security regarding', function () {
@@ -60,12 +62,14 @@ describe('Security regarding', function () {
 
     it('blocks updates that do not come with a csrf token', function (done) {
 
-      var app = setupApp('membersApp').createApp('memberId', express.csrf(), addCsrfTokenToLocals);
+      // we need to load accessrights and jade support code before the csrf handling
+      var app = setupApp('membersApp').createApp('memberId', beans.get('accessrights'), beans.get('serverpathRemover'), express.csrf(), addCsrfTokenToLocals);
 
       request(app)
         .post('/submit')
         .send('id=memberId&firstname=A&lastname=B&nickname=nuck&previousNickname=nuck&location=x&profession=y&reference=z&email=here@there.org&previousEmail=here@there.org')
-        .expect(403)
+        .expect(200)
+        .expect(/Du hast einen fünf-null-null gefunden./)
         .expect(/Error: Forbidden/, done);
     });
 
@@ -78,6 +82,43 @@ describe('Security regarding', function () {
       addCsrfTokenToLocals(req, res, next);
 
       expect(res.locals.csrf_token).to.equal(csrf_token);
+    });
+
+  });
+
+  describe('Information disclosure', function () {
+    beforeEach(function () {
+      sinon.stub(membersAPI, 'getMember', function (nickname, callback) { callback(null, null); });
+    });
+
+    afterEach(function () {
+      sinon.restore();
+    });
+
+    it('does not happen through paths in server error messages', function (done) {
+
+      var app = setupApp('mailsenderApp').createApp(null, serverpathRemover);
+
+      request(app)
+        .get('/contactMember/xyz')
+        .expect(200)
+        // node_modules and lib are preceded by an opening paren, thus the path preceding them is cut off:
+        .expect(/\(node_modules/)
+        .expect(/\(lib/)
+        // we are on the right page, btw:
+        .expect(/Du hast einen fünf-null-null gefunden./, done);
+
+    });
+
+    it('does not happen through paths in authentication error messages', function (done) {
+      var app = setupApp('authenticationApp').createApp(null, passport.initialize(), passport.session(), serverpathRemover);
+
+      request(app)
+        .get('/github/callback?code=_')
+        .expect(200)
+        .expect(/\(node_modules/)
+        .expect(/ node_modules/)
+        .expect(/Problem bei der Authentifizierung/, done);
     });
 
   });

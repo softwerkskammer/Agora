@@ -16,4 +16,4 @@ block content
         pre #{error}
       h4 Stacktrace:
       p
-        pre #{error.stack}
+        pre #{removeServerpaths(error.stack)}

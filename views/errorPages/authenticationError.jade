@@ -10,4 +10,4 @@ block content
       h3 500
         | #{error}
       h4 Stacktrace:
-      p #{error.stack}
+      p #{removeServerpaths(error.stack)}

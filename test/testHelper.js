@@ -21,6 +21,7 @@ module.exports = function (internalAppName, configuredBeans) {
       var app = express();
       app.use(express.cookieParser());
       app.use(express.urlencoded());
+      app.use(i18n.handle);
       app.use(express.session({secret: 'secret', cookie: {maxAge: 10000}, store: null}));
 
       for (var i = 1; i < arguments.length; i++) {
@@ -35,9 +36,13 @@ module.exports = function (internalAppName, configuredBeans) {
         app.use(userMock({member: new Member({id: memberID})}));
       }
       app.use(beans.get('accessrights'));
-      app.use(i18n.handle);
       app.use(beans.get('expressViewHelper'));
       app.use('/', beans.get(appName)(express()));
+
+      var appLogger = { error: function () {} };
+      app.use(beans.get('handle404')(appLogger));
+      app.use(beans.get('handle500')(appLogger));
+
 
       i18n.registerAppHelper(app);
       i18n.addPostProcessor("jade", function (val, key, opts) {
