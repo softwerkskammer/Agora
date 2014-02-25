@@ -10,14 +10,18 @@
           .col-md-12
             p #{t("authentication.authentication_text")}
         .row
-          .col-md-3
-            a.btn.btn-default(href="/auth/openid?openid_identifier=" + encodeURIComponent("https://www.google.com/accounts/o8/id") + "&returnTo=" + encodeURIComponent(returnUrl))
+          .col-md-4
+            a.btn.btn-default.btn-block(href="/auth/openid?openid_identifier=" + encodeURIComponent("https://www.google.com/accounts/o8/id") + "&returnTo=" + encodeURIComponent(returnUrl))
               img(src="/img/google.ico", alt="google")
               | &nbsp;Google
-          .col-md-3
-            a.btn.btn-default(href="/auth/github?returnTo=" + encodeURIComponent(returnUrl))
+          .col-md-4
+            a.btn.btn-default.btn-block(href="/auth/github?returnTo=" + encodeURIComponent(returnUrl))
               img(src="/img/github.ico", alt="github")
               | &nbsp;Github
+          .col-md-4
+            a.btn.btn-default.btn-block(href="/auth/openid?openid_identifier=" + encodeURIComponent("https://openid.stackexchange.com") + "&returnTo=" + encodeURIComponent(returnUrl))
+              img(src="/img/stackexchange.ico", alt="google")
+              | &nbsp;StackExchange
         .row
           .col-md-12
             form(action="/auth/openid", method="get")
