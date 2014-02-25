@@ -79,6 +79,7 @@ module.exports = {
       }
       app.use(passport.initialize());
       app.use(passport.session());
+      app.use(beans.get('serverpathRemover'));
       app.use(beans.get('accessrights'));
       app.use(beans.get('secureByLogin'));
       app.use(beans.get('secureSuperuserOnly'));
@@ -90,7 +91,6 @@ module.exports = {
       app.use(beans.get('secureAgainstClickjacking'));
       app.use(express.csrf());
       app.use(beans.get('addCsrfTokenToLocals'));
-      app.use(beans.get('serverpathRemover'));
       app.use(app.router);
     });
 

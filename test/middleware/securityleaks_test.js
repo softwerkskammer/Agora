@@ -68,8 +68,8 @@ describe('Security regarding', function () {
       request(app)
         .post('/submit')
         .send('id=memberId&firstname=A&lastname=B&nickname=nuck&previousNickname=nuck&location=x&profession=y&reference=z&email=here@there.org&previousEmail=here@there.org')
-        .expect(200)
-        .expect(/Du hast einen fünf-null-null gefunden./)
+        .expect(403)
+        .expect(/Du hast einen Fehler gefunden./)
         .expect(/Error: Forbidden/, done);
     });
 
@@ -101,12 +101,12 @@ describe('Security regarding', function () {
 
       request(app)
         .get('/contactMember/xyz')
-        .expect(200)
+        .expect(500)
         // node_modules and lib are preceded by an opening paren, thus the path preceding them is cut off:
         .expect(/\(node_modules/)
         .expect(/\(lib/)
         // we are on the right page, btw:
-        .expect(/Du hast einen fünf-null-null gefunden./, done);
+        .expect(/Du hast einen Fehler gefunden./, done);
 
     });
 
@@ -115,7 +115,7 @@ describe('Security regarding', function () {
 
       request(app)
         .get('/github/callback?code=_')
-        .expect(200)
+        .expect(500)
         .expect(/\(node_modules/)
         .expect(/ node_modules/)
         .expect(/Problem bei der Authentifizierung/, done);

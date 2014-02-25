@@ -1,7 +1,7 @@
 extends ../layout
 
 block title
-  | 500 - #{t("error.general")}
+  | #{status} - #{error}
 block content
   .row
     .col-md-6
@@ -11,7 +11,7 @@ block content
       !=t("error.error500_text", { postProcess: "jade" })
       p #{t("error.sorry")}
     .col-md-6
-      h3 500
+      h3 #{status}
       p
         pre #{error}
       h4 Stacktrace:
