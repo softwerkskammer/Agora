@@ -1,5 +1,5 @@
 /* ===================================================
- * bootstrap-markdown.js v2.1.0
+ * bootstrap-markdown.js v2.2.1
  * http://github.com/toopay/bootstrap-markdown
  * ===================================================
  * Copyright 2013 Taufan Aditya
@@ -16,11 +16,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * 
- *  
- *  !!! PATCHED -> Search line: "      this.$textarea.css('resize','none')"
- *  !!! PATCHED -> replaced glyphicons by fontawesome
- *  !!! PATCHED -> replaced btn-sm by btn-xs
- *  !!! PATCHED -> replaced btn-primary by btn-default in preview button
+ * search for PATCHED
+ * 
  * ========================================================== */
 
 !function ($) {
@@ -90,6 +87,7 @@
             var button = buttons[z],
               buttonToggle = '',
               buttonHandler = ns+'-'+button.name,
+              buttonIcon = button.icon instanceof Object ? button.icon[this.$options.iconlibrary] : button.icon,
               btnText = button.btnText ? button.btnText : '',
               btnClass = button.btnClass ? button.btnClass : 'btn',
               tabIndex = button.tabIndex ? button.tabIndex : '-1'
@@ -99,9 +97,9 @@
             }
 
             // Attach the button object
-            btnGroupContainer.append('<button class="'
+            btnGroupContainer.append('<button type="button" class="'
               +btnClass
-              +' btn-default btn-xs" title="'
+              +' btn-default btn-sm" title="'
               +button.title
               +'" tabindex="'
               +tabIndex
@@ -112,7 +110,7 @@
               +'"'
               +buttonToggle
               +'><span class="'
-              +button.icon
+              +buttonIcon
               +'"></span> '
               +btnText
               +'</button>')
@@ -136,7 +134,7 @@
         rowsVal = hasRows ? this.$textarea.attr('rows') : maxRows
 
       this.$textarea.attr('rows',rowsVal)
-      this.$textarea.css('resize','vertical')
+      this.$textarea.css('resize','vertical') // PATCHED
 
       this.$textarea
         .on('focus',    $.proxy(this.focus, this))
@@ -318,7 +316,14 @@
         content = callbackContent
       } else {
         // Set the content
-        content = (typeof markdown == 'object') ? markdown.toHTML(container.val()) : container.val()
+        var val = container.val();
+        if(typeof markdown == 'object') {
+          content = markdown.toHTML(val);
+        }else if(typeof marked == 'function') {
+          content = marked(val);
+        } else {
+          content = val;
+        }
       }
 
       // Build preview element
@@ -608,6 +613,9 @@
         }
       })
 
+      // Trigger the onFocus hook
+      options.onFocus(this);
+
       return this
     }
 
@@ -673,6 +681,7 @@
     savable:false,
     width: 'inherit',
     height: 'inherit',
+    iconlibrary: 'glyph',
 
     /* Buttons Properties */
     buttons: [
@@ -681,7 +690,7 @@
         data: [{
           name: 'cmdBold',
           title: 'Bold',
-          icon: 'fa fa-bold',
+          icon: { glyph: 'glyphicon glyphicon-bold', fa: 'fa fa-bold' },
           callback: function(e){
             // Give/remove ** surround the selection
             var chunk, cursor, selected = e.getSelection(), content = e.getContent()
@@ -710,7 +719,7 @@
         },{
           name: 'cmdItalic',
           title: 'Italic',
-          icon: 'fa fa-italic',
+          icon: { glyph: 'glyphicon glyphicon-italic', fa: 'fa fa-italic' },
           callback: function(e){
             // Give/remove * surround the selection
             var chunk, cursor, selected = e.getSelection(), content = e.getContent()
@@ -739,7 +748,7 @@
         },{
           name: 'cmdHeading',
           title: 'Heading',
-          icon: 'fa fa-font',
+          icon: { glyph: 'glyphicon glyphicon-header', fa: 'fa fa-font' },
           callback: function(e){
             // Append/remove ### surround the selection
             var chunk, cursor, selected = e.getSelection(), content = e.getContent(), pointer, prevChar
@@ -775,7 +784,7 @@
         data: [{
           name: 'cmdUrl',
           title: 'URL/Link',
-          icon: 'fa fa-link',
+          icon: { glyph: 'glyphicon glyphicon-globe', fa: 'fa fa-globe' },
           callback: function(e){
             // Give [] surround the selection and prepend the link
             var chunk, cursor, selected = e.getSelection(), content = e.getContent(), link
@@ -801,7 +810,7 @@
         },{
           name: 'cmdImage',
           title: 'Image',
-          icon: 'fa fa-picture-o',
+          icon: { glyph: 'glyphicon glyphicon-picture', fa: 'fa fa-picture-o' },
           callback: function(e){
             // Give ![] surround the selection and prepend the image link
             var chunk, cursor, selected = e.getSelection(), content = e.getContent(), link
@@ -833,7 +842,7 @@
         data: [{
           name: 'cmdList',
           title: 'List',
-          icon: 'fa fa-list-ul',
+          icon: { glyph: 'glyphicon glyphicon-list', fa: 'fa fa-list' },
           callback: function(e){
             // Prepend/Give - surround the selection
             var chunk, cursor, selected = e.getSelection(), content = e.getContent()
@@ -885,8 +894,8 @@
           toggle: true,
           title: 'Preview',
           btnText: 'Preview',
-          btnClass: 'btn btn-default btn-xs',
-          icon: 'fa fa-search',
+          btnClass: 'btn btn-primary btn-sm',
+          icon: { glyph: 'glyphicon glyphicon-search', fa: 'fa fa-search' },
           callback: function(e){
             // Check the preview mode and toggle based on this flag
             var isPreview = e.$isPreview,content
@@ -907,7 +916,8 @@
     onShow: function (e) {},
     onPreview: function (e) {},
     onSave: function (e) {},
-    onBlur: function (e) {}
+    onBlur: function (e) {},
+    onFocus: function (e) {},
   }
 
   $.fn.markdown.Constructor = Markdown
@@ -930,6 +940,7 @@
       $this.data('markdown').showEditor()
       return
     }
+
     $this.markdown($this.data())
   }
 
