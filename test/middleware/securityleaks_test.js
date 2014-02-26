@@ -5,7 +5,7 @@ var sinon = require('sinon').sandbox.create();
 var expect = require('chai').expect;
 
 var express = require('express');
-var passport = require('passport');
+//var passport = require('passport');
 var beans = require('../configureForTest').get('beans');
 
 var setupApp = require('../testHelper');
