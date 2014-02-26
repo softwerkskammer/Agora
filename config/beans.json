@@ -99,6 +99,9 @@
   "detectBrowser": {"module": "./lib/middleware/detectBrowser"},
   "secureAgainstClickjacking": {"module": "./lib/middleware/secureAgainstClickjacking"},
   "addCsrfTokenToLocals": {"module": "./lib/middleware/addCsrfTokenToLocals"},
+  "serverpathRemover": {"module": "./lib/middleware/serverpathRemover"},
+  "handle404": {"module": "./lib/middleware/handle404"},
+  "handle500": {"module": "./lib/middleware/handle500"},
   "gitmech": {"module": "./lib/wiki/gitmech"},
   "mailtransport": {"module": "./lib/mailsender/mailtransport"}
 }
