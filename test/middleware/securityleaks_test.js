@@ -110,16 +110,16 @@ describe('Security regarding', function () {
 
     });
 
-    it('does not happen through paths in authentication error messages', function (done) {
-      var app = setupApp('authenticationApp').createApp(null, passport.initialize(), passport.session(), serverpathRemover);
-
-      request(app)
-        .get('/github/callback?code=_')
-        .expect(500)
-        .expect(/\(node_modules/)
-        .expect(/ node_modules/)
-        .expect(/Problem bei der Authentifizierung/, done);
-    });
+//    it('does not happen through paths in authentication error messages', function (done) {
+//      var app = setupApp('authenticationApp').createApp(null, passport.initialize(), passport.session(), serverpathRemover);
+//
+//      request(app)
+//        .get('/github/callback?code=_')
+//        .expect(500)
+//        .expect(/\(node_modules/)
+//        .expect(/ node_modules/)
+//        .expect(/Problem bei der Authentifizierung/, done);
+//    });
 
   });
 
