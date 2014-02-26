@@ -13,7 +13,7 @@ block title
 
 block content
   form(id='groupform', action='/groups/submit', method='post')
-    mixin hidden('_csrf', csrf_token)
+    +hidden('_csrf', csrf_token)
     fieldset
       .row
         .col-md-12
@@ -25,19 +25,19 @@ block content
       .row
         .col-md-6
           if (group.id)
-            mixin textReadonly('id', t("general.name"), group.id)
+            +textReadonly('id', t("general.name"), group.id)
           else
-            mixin text('id', t("general.name"), group.id, t("groups.tooltip.name"))
-          mixin text('longName', t("general.title"), group.longName, t("groups.tooltip.title"))
+            +text('id', t("general.name"), group.id, t("groups.tooltip.name"))
+          +text('longName', t("general.title"), group.longName, t("groups.tooltip.title"))
         .col-md-6
           if (group.id)
-            mixin textReadonly('emailPrefix', t("groups.email_prefix"), group.emailPrefix)
+            +textReadonly('emailPrefix', t("groups.email_prefix"), group.emailPrefix)
           else
-            mixin text('emailPrefix', t("groups.email_prefix"), group.emailPrefix, t("groups.tooltip.email_prefix"))
-          mixin colorPicker('color', group.color)
+            +text('emailPrefix', t("groups.email_prefix"), group.emailPrefix, t("groups.tooltip.email_prefix"))
+          +colorPicker('color', group.color)
       .row
         .col-md-12
-          mixin hightextarea('description', t("general.description"), group.description)
+          +hightextarea('description', t("general.description"), group.description)
       .row
         .col-md-6
           .form-group
@@ -49,13 +49,13 @@ block content
           h4 #{t("groups.contacts")}
           .control-group
             each memberAdmin in organizersChecked
-              mixin checkbox('organizers', memberAdmin.member.nickname(), memberAdmin.checked, memberAdmin.member.id())
+              +checkbox('organizers', memberAdmin.member.nickname(), memberAdmin.checked, memberAdmin.member.id())
         .col-md-6
           .row
             .col-md-6
-              mixin text('mapX', t("groups.x_coord"), group.mapX, t("groups.tooltip.x_coord"))
+              +text('mapX', t("groups.x_coord"), group.mapX, t("groups.tooltip.x_coord"))
             .col-md-6
-              mixin text('mapY', t("groups.y_coord"), group.mapY, t("groups.tooltip.y_coord"))
+              +text('mapY', t("groups.y_coord"), group.mapY, t("groups.tooltip.y_coord"))
           mixin text('shortName', t("groups.map_label"), group.shortName, t("groups.tooltip.map_label"))
       .row
         .col-md-12

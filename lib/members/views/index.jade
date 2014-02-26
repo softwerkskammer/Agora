@@ -9,5 +9,5 @@ block content
     .col-md-12
       .page-header
         h2 #{t("members.members")}
-      mixin memberlistHeading(t("members.has"), members.length)
-      mixin memberlist(members)
+      +memberlistHeading(t("members.has"), members.length)
+      +memberlist(members)

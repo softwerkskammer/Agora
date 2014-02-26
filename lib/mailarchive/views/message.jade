@@ -9,7 +9,7 @@ html
     else
       h3 #{mail.subject}
         br
-        small: mixin mailattributes(mail) 
+        small: +mailattributes(mail) 
   .modal-body
     if (mail)
       | !{mail.getHtml()}

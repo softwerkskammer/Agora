@@ -7,7 +7,7 @@ block title
 
 block content
   form(action='/wiki/#{subdir}/#{pageName}', method='post')
-    mixin hidden('_csrf', csrf_token)
+    +hidden('_csrf', csrf_token)
     fieldset
       .row
         .col-md-12
@@ -17,9 +17,9 @@ block content
               | #{t("wiki.create", params)}
             else 
               | #{t("wiki.edit", params)}
-          mixin hightextarea('content', t("wiki.contents"), page.content)
-          mixin text('comment', t("wiki.message"), page.comment, t("wiki.commit_message"), t("wiki.commit_template"))
-          mixin hidden('metadata', page.metadata)
+          +hightextarea('content', t("wiki.contents"), page.content)
+          +text('comment', t("wiki.message"), page.comment, t("wiki.commit_message"), t("wiki.commit_template"))
+          +hidden('metadata', page.metadata)
           input(id="subdir", type="hidden", name="subdir", value=subdir)
           button.btn.btn-primary.pull-right(type="submit") #{t("general.save")}
           a.btn.btn-default.pull-right(href="javascript:history.back()", type="cancel") #{t("general.back")}
