@@ -56,14 +56,14 @@ html
       img.visible-print(src="/img/Softwerkskammer_Header.png", alt="Softwerkskammer")
       p.visible-print &nbsp;
       .navbar.navbar-default.navbar-fixed-top.hidden-print.hidden-xs(role="navigation")
-        mixin topNavbar
+        +topNavbar
       .navbar.navbar-default.navbar-top.hidden-print.visible-xs(role="navigation")
-        mixin topNavbar
+        +topNavbar
   
       .row.main
         .col-md-8
           if (statusmessage)
-            mixin notificationsBlock(statusmessage)
+            +notificationsBlock(statusmessage)
           block content
         .col-md-4.hidden-print
           .page-header.visible-xs.visible-sm
@@ -78,5 +78,5 @@ html
               for announcement in latestNews
                 dt #{announcement.fromMoment().lang(language).format('LL')}
                 dd: a(href='/announcements/#{encodeURIComponent(announcement.url)}') #{announcement.title}
-      mixin bottomNavbar
+      +bottomNavbar
   
