@@ -12,8 +12,6 @@ var Diff = beans.get('gitDiff');
 describe('Wiki Objects', function () {
 
   it('is a structure representing changes', function () {
-    var metadata = [new Metadata({ author: 'metaauthor' })];
-
     var dirWithChangedFiles = new DirectoryWithChangedFiles({dir: 'directory', files: []});
     dirWithChangedFiles.addFile(new FileWithChangelist({file: 'name1', changelist: [
       new Metadata({ author: 'metaauthor1' }),
