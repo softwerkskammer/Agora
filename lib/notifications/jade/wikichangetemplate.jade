@@ -40,7 +40,7 @@ html
   body
     h2 Es gibt Änderungen im Wiki auf folgenden Seiten:
     each directory in directories
-      h3 Verzeichnis "#{directory.dir}"
+      h3 Wiki "#{directory.dir}"
       each file in directory.sortedFiles()
         h4 Seite: 
           a(href="#{url}/wiki/#{directory.dir}/#{file.file}") #{file.file}
