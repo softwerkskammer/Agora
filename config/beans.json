@@ -82,6 +82,7 @@
   "statusmessage": {"module": "./lib/commons/statusmessage"},
   "renderer": {"module": "./lib/commons/renderer"},
   "wikiObjects": {"module": "./lib/wiki/wikiObjects"},
+  "gitDiff": {"module": "./lib/wiki/gitDiff"},
 
   "fieldHelpers": {"module": "./lib/commons/fieldHelpers"},
   "validation": {"module": "./lib/commons/validation"},

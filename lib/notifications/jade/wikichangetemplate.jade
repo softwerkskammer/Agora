@@ -44,6 +44,7 @@ html
       each file in directory.sortedFiles()
         h4 Seite: 
           a(href="#{url}/wiki/#{directory.dir}/#{file.file}") #{file.file}
+        p Mit Änderungen von: #{file.authorsString()}
         div
         table.compare
           each line in file.diff.asLines()
