@@ -13,7 +13,7 @@ module.exports = function (grunt) {
       ' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */\n',
     // Task configuration.
     jshint: {
-      files: ['**/*.js', '**/*.json', '.jshintrc', '!node_modules/**/*.js', '!node_modules/**/*.json', '!public/**/*.js', '!public/**/*.json', '!frontendtests/lib/**/*.js', '!frontendtests/lib/**/*.json', '!locales/*.js'],
+      files: ['**/*.js', '**/*.json', '.jshintrc', '!coverage/**/*.js', '!coverage/**/*.json', '!node_modules/**/*.js', '!node_modules/**/*.json', '!public/**/*.js', '!public/**/*.json', '!frontendtests/lib/**/*.js', '!frontendtests/lib/**/*.json', '!locales/*.js'],
       options: {
         jshintrc: '.jshintrc'
       }
@@ -129,9 +129,32 @@ module.exports = function (grunt) {
         ],
         dest: 'public/clientscripts/global_en.js'
       }
+    },
+    mocha_istanbul: {
+      coverage: {
+        src: 'test', // the folder, not the files,
+        options: {
+          mask: '**/*.js'
+        }
+      },
+      coveralls: {
+        src: 'test', // the folder, not the files
+        options: {
+          coverage: true
+        }
+      }
     }
   });
 
+  grunt.event.on('coverage', function (lcov, done) {
+    require('coveralls').handleInput(lcov, function (err) {
+      if (err) {
+        return done(err);
+      }
+      done();
+    });
+  });
+  
   // These plugins provide necessary tasks.
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
@@ -139,11 +162,13 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-qunit');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-less');
+  grunt.loadNpmTasks('grunt-mocha-istanbul');
 
   // Default task.
-  grunt.registerTask('default', ['less', 'concat', 'jshint', 'qunit', 'mochaTest']);
+  grunt.registerTask('default', ['less', 'concat', 'jshint', 'qunit', 'mochaTest', 'coverage']);
 
   // Travis-CI task
   grunt.registerTask('travis', ['default']);
-
+  grunt.registerTask('coveralls', ['mocha_istanbul:coveralls']);
+  grunt.registerTask('coverage', ['mocha_istanbul:coverage']);
 };

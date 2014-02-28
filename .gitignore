@@ -25,3 +25,4 @@ global_de.js
 global_en.js
 pick-a-color-custom.css
 build/config.gypi
+coverage
