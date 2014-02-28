@@ -58,17 +58,14 @@
     "winston-config": "~0.4.0"
   },
   "devDependencies": {
-    "blanket": "~1.1.5",
     "chai": "~1.8",
-    "coveralls": "~2.8",
     "grunt": "~0.4.1",
     "grunt-contrib-concat": "~0.3.0",
     "grunt-contrib-jshint": "~0.8",
     "grunt-contrib-qunit": "~0.4",
     "grunt-contrib-less": "~0.9.0",
     "grunt-contrib-watch": "~0.5.3",
-    "grunt-mocha-istanbul": "~0.1",
-    "grunt-mocha-test": "~0.9",
+    "grunt-mocha-istanbul": "leider/grunt-mocha-istanbul",
     "request": "~2.34",
     "sinon": "~1.8",
     "supertest": "~0.9",
