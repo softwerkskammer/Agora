@@ -14,7 +14,7 @@ block title
 
 block content
   form(id='memberform', action='/members/submit',method='post')
-    +hidden('_csrf', csrf_token)
+    +csrf
     fieldset
       .row
         .col-md-12

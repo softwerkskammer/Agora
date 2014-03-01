@@ -46,7 +46,7 @@ block title
 
 block content
   form(id='activityform', action='/activities/submit', method='post')
-    +hidden('_csrf', csrf_token)
+    +csrf
     if (activity.id())
       +hidden('id', activity.id())
     +hidden('previousUrl', activity.url())

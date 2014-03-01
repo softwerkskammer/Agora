@@ -10,7 +10,7 @@ block title
 
 block content
   form(id='announcementform', action='/announcements/submit', method='post')
-    +hidden('_csrf', csrf_token)
+    +csrf
     if (announcement.id)
       +hidden('id', announcement.id)
     +hidden('fromUnix', announcement.fromUnix)
