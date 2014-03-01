@@ -92,4 +92,7 @@ mixin checkboxWithDescription(name, label, checked, description, optionalValue)
         span.popover-highlight(rel="tooltip-in-body", data-content="#{description}") #{label}
       -else
         | #{label}
+        
+mixin csrf
+  +hidden('_csrf', csrf_token)
 
