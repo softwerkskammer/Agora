@@ -13,7 +13,7 @@ module.exports = function (grunt) {
       ' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */\n',
     // Task configuration.
     jshint: {
-      files: ['**/*.js', '**/*.json', '.jshintrc', '!node_modules/**/*.js', '!node_modules/**/*.json', '!public/**/*.js', '!public/**/*.json', '!frontendtests/lib/**/*.js', '!frontendtests/lib/**/*.json', '!locales/*.js'],
+      files: ['**/*.js', '**/*.json', '.jshintrc', '!coverage/**/*.js', '!coverage/**/*.json', '!node_modules/**/*.js', '!node_modules/**/*.json', '!public/**/*.js', '!public/**/*.json', '!frontendtests/lib/**/*.js', '!frontendtests/lib/**/*.json', '!locales/*.js'],
       options: {
         jshintrc: '.jshintrc'
       }
@@ -21,42 +21,6 @@ module.exports = function (grunt) {
     watch: {
       files: ['<%= jshint.files %>', '**/*.jade'],
       tasks: ['default']
-    },
-    mochaTest: {
-      test: {
-        options: {
-          reporter: 'spec',
-          // Require blanket wrapper here to instrument other required
-          // files on the fly. 
-          //
-          // NB. We cannot require blanket directly as it
-          // detects that we are not running mocha cli and loads differently.
-          //
-          // NNB. As mocha is 'clever' enough to only run the tests once for
-          // each file the following coverage task does not actually run any
-          // tests which is why the coverage instrumentation has to be done here
-          require: 'blanket',
-          colors: true
-        },
-        src: ['test/**/*.js']
-      },
-      coverage: {
-        options: {
-          reporter: 'html-cov',
-          // use the quiet flag to suppress the mocha console output
-          quiet: true,
-          // specify a destination file to capture the mocha
-          // output (the quiet option does not suppress this)
-          captureFile: 'coverage.html'
-        },
-        src: ['test/**/*.js']
-      },
-      'travis-cov': {
-        options: {
-          reporter: 'travis-cov'
-        },
-        src: ['test/**/*.js']
-      }
     },
     qunit: {
       files: ['frontendtests/*.html']
@@ -129,21 +93,37 @@ module.exports = function (grunt) {
         ],
         dest: 'public/clientscripts/global_en.js'
       }
+    },
+    mocha_istanbul: {
+      coverage: {
+        src: 'test', // the folder, not the files,
+        options: {
+          mask: '**/*.js',
+          reporter: 'spec'
+        }
+      }
+    },
+    mocha_istanbul_check: {
+      options: {
+        lines: 75,
+        statements: 73
+      }
     }
   });
 
   // These plugins provide necessary tasks.
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-mocha-test');
   grunt.loadNpmTasks('grunt-contrib-qunit');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-less');
+  grunt.loadNpmTasks('grunt-mocha-istanbul');
 
   // Default task.
-  grunt.registerTask('default', ['less', 'concat', 'jshint', 'qunit', 'mochaTest']);
+  grunt.registerTask('default', ['less', 'concat', 'jshint', 'qunit', 'coverage', 'check-coverage']);
 
   // Travis-CI task
   grunt.registerTask('travis', ['default']);
-
+  grunt.registerTask('coverage', ['mocha_istanbul:coverage']);
+  grunt.registerTask('check-coverage', ['mocha_istanbul_check']);
 };
