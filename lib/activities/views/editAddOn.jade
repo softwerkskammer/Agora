@@ -6,6 +6,7 @@ block title
 
 block content
   form(id='activityform', action='/activities/submitAddOn', method='post')
+    +csrf
     +hidden('url', activity.url())
     fieldset
       .row
