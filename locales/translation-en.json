@@ -118,6 +118,7 @@
     "home_address": "Home address",
     "billing_address": "Billing address",
     "t_shirt_size": "T-Shirt size",
+    "roommate": "If you booked a twin room: With whom would you like to share the room?",
     "tooltip": {
       "title": "Short and concise for overviews",
       "startdate": "End date and time will be shifted automatically (the duration remains the same)",

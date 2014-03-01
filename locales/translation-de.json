@@ -118,6 +118,7 @@
     "home_address": "Privatanschrift",
     "billing_address": "Rechnungsanschrift",
     "t_shirt_size": "T-Shirt-Größe",
+    "roommate": "Wenn Du ein Doppelzimmer gebucht hast: Mit wem möchtest Du das Zimmer teilen?",
     "tooltip": {
       "title": "Kurz und knackig für Übersichten",
       "start": "Enddatum und -uhrzeit werden automatisch verschoben (die Dauer bleibt gleich)",
