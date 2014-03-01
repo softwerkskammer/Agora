@@ -36,7 +36,7 @@
     "icalendar": "~0.6.5",
     "iconv": "2.x",
     "i18next": "~1.7.1",
-    "jade": "~1.x",
+    "jade": "~1.2",
     "jquery": "2.1",
     "lodash": "2.4.1",
     "mailparser": "~0.4",
@@ -58,7 +58,6 @@
     "winston-config": "~0.4.0"
   },
   "devDependencies": {
-    "blanket": "~1.1.5",
     "chai": "~1.8",
     "grunt": "~0.4.1",
     "grunt-contrib-concat": "~0.3.0",
@@ -66,16 +65,10 @@
     "grunt-contrib-qunit": "~0.4",
     "grunt-contrib-less": "~0.9.0",
     "grunt-contrib-watch": "~0.5.3",
-    "grunt-mocha-test": "~0.9",
-    "request": "~2.33",
+    "grunt-mocha-istanbul": "~0.2",
+    "request": "~2.34",
     "sinon": "~1.8",
-    "supertest": "~0.9",
-    "travis-cov": "~0.2.4"
-  },
-  "config": {
-    "travis-cov": {
-      "threshold": "75"
-    }
+    "supertest": "~0.9"
   },
   "scripts": {
     "start": "node start",

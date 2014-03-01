@@ -32,7 +32,8 @@
     "gdcr_activities": "Aktivitäten zum GDCR",
     "gdcr_text": "Hier findest Du fast alle deutschsprachigen Veranstaltungen. Eine vollständige Übersicht findest Du auf",
     "feedback": "Feedback",
-    "what_does_not_work": "Was funktioniert nicht, wie es soll?"
+    "what_does_not_work": "Was funktioniert nicht, wie es soll?",
+    "settings": "Einstellungen"
   },
   "error": {
     "congratulations": "Herzlichen Glückwunsch!",
@@ -40,12 +41,12 @@
     "missing_page": "Fehlende Seite",
     "page_is_missing": "Diese Seite fehlt.",
     "found404": "Du hast einen vier-null-vier gefunden.",
-    "found500": "Du hast einen fünf-null-null gefunden.",
+    "found500": "Du hast einen Fehler gefunden.",
     "click_links": "Am Besten klickst Du auf einen unserer Links im Header.",
     "detailed_report": "einen möglichst detaillierten Fehlerbericht zukommen",
     "os_browser": "Betriebssystem und Browser inkl. Version.",
     "datetime": "Datum / Uhrzeit",
-    "stacktrace500": "Den Stacktrace unterhalb von \"500\"",
+    "stacktrace500": "Den Stacktrace",
     "error500_text": [
       "p Bitte lass uns ",
       "  a(href=\"https://github.com/softwerkskammer/NeuePlattform-Implementierung/issues/\") $t(error.detailed_report):",
@@ -224,7 +225,6 @@
     "member_of": "Mitglied in",
     "personal_data": "Persönliche Daten",
     "profile": "Profil",
-    "profileview": "Profilansicht",
     "nickname": "Nickname",
     "firstname": "Vorname",
     "lastname": "Nachname",
@@ -238,7 +238,8 @@
     "authenticated_via": "Aktuell authentifiziert bei",
     "authenticate": "Anderswo authentifizieren",
     "send_email": "Eine E-Mail an __firstname__ __lastname__ senden",
-    "has": "Die Softwerkskammer hat"
+    "has": "Die Softwerkskammer hat",
+    "notifyOnWikiChanges": "Benachrichtigen bei Änderungen im Wiki"
   },
   "wiki": {
     "blogposts": "Blogartikel:",
@@ -250,8 +251,8 @@
     "all_pages": "Alle Seiten in",
     "revisions": "Revisionen",
     "search": "Wiki durchsuchen",
-    "create": "Wiki-Seite \"__pageName__\" $t(wiki.in) \"__subdir__\" anlegen",
-    "edit": "Wiki-Seite \"__pageName__\" $t(wiki.in) \"__subdir__\" bearbeiten",
+    "create": "Wiki-Seite \"__subdir__/__pageName__\" anlegen",
+    "edit": "Wiki-Seite \"__subdir__/__pageName__\" bearbeiten",
     "contents": "Inhalt",
     "message": "Kommentar",
     "commit_message": "Commit-Kommentar",

@@ -3,6 +3,8 @@ html
   head
     meta(charset="utf-8")
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    link(href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,400italic,600italic", rel="stylesheet", type="text/css")
+    link(href="http://fonts.googleapis.com/css?family=Source+Code+Pro:400,600", rel="stylesheet", type="text/css")
     link(href="/stylesheets/screen.css", rel="stylesheet")
     link(rel="apple-touch-icon", href="/img/apple-touch-icon-60x60-precomposed.png")
     link(rel="apple-touch-icon", href="/img/apple-touch-icon-76x76-precomposed.png")
@@ -54,14 +56,14 @@ html
       img.visible-print(src="/img/Softwerkskammer_Header.png", alt="Softwerkskammer")
       p.visible-print &nbsp;
       .navbar.navbar-default.navbar-fixed-top.hidden-print.hidden-xs(role="navigation")
-        mixin topNavbar
+        +topNavbar
       .navbar.navbar-default.navbar-top.hidden-print.visible-xs(role="navigation")
-        mixin topNavbar
+        +topNavbar
   
       .row.main
         .col-md-8
           if (statusmessage)
-            mixin notificationsBlock(statusmessage)
+            +notificationsBlock(statusmessage)
           block content
         .col-md-4.hidden-print
           .page-header.visible-xs.visible-sm
@@ -76,5 +78,5 @@ html
               for announcement in latestNews
                 dt #{announcement.fromMoment().lang(language).format('LL')}
                 dd: a(href='/announcements/#{encodeURIComponent(announcement.url)}') #{announcement.title}
-      mixin bottomNavbar
+      +bottomNavbar
   

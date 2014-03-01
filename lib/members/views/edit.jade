@@ -14,12 +14,13 @@ block title
 
 block content
   form(id='memberform', action='/members/submit',method='post')
+    +hidden('_csrf', csrf_token)
     fieldset
       .row
         .col-md-12
           h2
             if (accessrights.isRegistered())
-              | "#{member.nickname()}"
+              | #{member.nickname()}
             else
               | #{t("members.new")}
             .btn-group.pull-right
@@ -34,27 +35,31 @@ block content
       .row
         .col-md-12
           legend #{t("members.group_membership")}
-          mixin groupCheckboxes('newSubscriptions', regionalgroups, themegroups)
+          +groupCheckboxes('newSubscriptions', regionalgroups, themegroups)
+      .row
+        .col-md-12
+          legend #{t("general.settings")}
+          +checkbox('notifyOnWikiChanges', t('members.notifyOnWikiChanges'), member.notifyOnWikiChanges())
       .row
         .col-md-12
           legend #{t("members.personal_data")}
       .row
         .col-md-6
-          mixin hidden('id', member.id())
-          mixin hidden('previousNickname', member.nickname())
-          mixin hidden('previousEmail', accessrights.isRegistered() ? member.email() : '')
-          mixin hidden('created', member.created())
-          mixin text('nickname', t("members.nickname"), member.nickname())
-          mixin text('firstname', t("members.firstname"), member.firstname())
-          mixin text('lastname', t("members.lastname"), member.lastname())
-          mixin text('email', t("members.email"), member.email())
-          mixin twitter('twitter', t("members.twitter"), member.twitter())
+          +hidden('id', member.id())
+          +hidden('previousNickname', member.nickname())
+          +hidden('previousEmail', accessrights.isRegistered() ? member.email() : '')
+          +hidden('created', member.created())
+          +text('nickname', t("members.nickname"), member.nickname())
+          +text('firstname', t("members.firstname"), member.firstname())
+          +text('lastname', t("members.lastname"), member.lastname())
+          +text('email', t("members.email"), member.email())
+          +twitter('twitter', t("members.twitter"), member.twitter())
         .col-md-6
-          mixin text('location', t("members.location"), member.location())
-          mixin text('profession', t("members.profession"), member.profession())
-          mixin text('interests', t("members.interests"), member.interests())
-          mixin text('site', t("members.web"), member.site())
-          mixin text('reference', t("members.reference"), member.reference())
+          +text('location', t("members.location"), member.location())
+          +text('profession', t("members.profession"), member.profession())
+          +text('interests', t("members.interests"), member.interests())
+          +text('site', t("members.web"), member.site())
+          +text('reference', t("members.reference"), member.reference())
       if (accessrights.isRegistered())
         .row
           .col-md-12

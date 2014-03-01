@@ -48,9 +48,9 @@ block content
         button(id="rev-compare", data-pageName="#{pageName}", data-subdir="#{subdir}").btn.btn-default
           i.fa.fa-stethoscope.fa-fw
           | &nbsp; #{t("general.compare")}…
-    h2 #{pageName}
+    h2 #{subdir}/#{pageName}
       br
-      small Wiki "#{subdir}"
+      small #{t("wiki.revisions")}
 
   table.history.table.table-striped.table-bordered.table-hover.table-condensed
     each item in items
@@ -59,6 +59,6 @@ block content
           input(type="checkbox", value="#{item.fullhash}")
         td: mixin linkedMember(item.author)
         td #{item.date}
-        td #{item.subject}
+        td #{item.comment}
         td
           a(href="/wiki/#{item.name}?version=#{item.hashRef}") #{item.hashRef || 'CURRENT'}

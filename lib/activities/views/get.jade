@@ -46,12 +46,12 @@ block content
         | !{activity.directionHTML()}
       hr
       div.hidden-print
-        mixin visitorCount(activity.participants.length)
+        +visitorCount(activity.participants.length)
         each resourceName in activity.resourceNames()
-          mixin subscriptionButtons(activity, resourceName, resourceRegistrationRenderer)
+          +subscriptionButtons(activity, resourceName, resourceRegistrationRenderer)
         if (accessrights.isRegistered() && activity.participants.length > 0)
           h4 #{t("activities.accepted_by")}:
-          mixin memberlist(activity.participants)
+          +memberlist(activity.participants)
 
       if (activity.group)
         hr.hidden-print
@@ -61,7 +61,7 @@ block content
             | &nbsp;- #{t("activities.created_by")}&nbsp;
             a(href="/members/#{activity.ownerNickname}") #{activity.ownerNickname}
     .col-md-6
-      mixin map(activity.location(), '100%', '450px')
+      +map(activity.location(), '100%', '450px')
 
 block scripts
   script.

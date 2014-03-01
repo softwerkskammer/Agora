@@ -38,8 +38,8 @@ block content
         if (blogposts.length > 0)
           .col-md-6
             h4 #{t("members.members")}:
-            mixin memberlistHeading(t("groups.has"), users.length)
-            mixin memberlist(users, organizers)
+            +memberlistHeading(t("groups.has"), users.length)
+            +memberlist(users, organizers)
           .col-md-6
             h4 #{t("wiki.blogposts")}
             for post in blogposts
@@ -54,5 +54,5 @@ block content
         else
           .col-md-12
             h4 #{t("members.members")}:
-            mixin memberlistHeading(t("groups.has"), users.length)
-            mixin memberlist(users, organizers)
+            +memberlistHeading(t("groups.has"), users.length)
+            +memberlist(users, organizers)

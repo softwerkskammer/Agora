@@ -62,6 +62,10 @@
                                 "constructorArgs": {
                                   "collectionName": "sympastore"
                               }},
+  "settingsPersistence": {"module": "./lib/persistence/persistence",
+                                "constructorArgs": {
+                                  "collectionName": "settingsstore"
+                              }},
 
   "group": {"module": "./lib/groups/group"},
   "member": {"module": "./lib/members/member"},
@@ -77,6 +81,8 @@
   "mailThread": {"module": "./lib/mailarchive/mailThread"},
   "statusmessage": {"module": "./lib/commons/statusmessage"},
   "renderer": {"module": "./lib/commons/renderer"},
+  "wikiObjects": {"module": "./lib/wiki/wikiObjects"},
+  "gitDiff": {"module": "./lib/wiki/gitDiff"},
 
   "fieldHelpers": {"module": "./lib/commons/fieldHelpers"},
   "validation": {"module": "./lib/commons/validation"},
@@ -92,6 +98,11 @@
   "accessrights": {"module": "./lib/middleware/accessrights"},
   "wikiSubdirs": {"module": "./lib/middleware/wikiSubdirs"},
   "detectBrowser": {"module": "./lib/middleware/detectBrowser"},
+  "secureAgainstClickjacking": {"module": "./lib/middleware/secureAgainstClickjacking"},
+  "addCsrfTokenToLocals": {"module": "./lib/middleware/addCsrfTokenToLocals"},
+  "serverpathRemover": {"module": "./lib/middleware/serverpathRemover"},
+  "handle404": {"module": "./lib/middleware/handle404"},
+  "handle500": {"module": "./lib/middleware/handle500"},
   "gitmech": {"module": "./lib/wiki/gitmech"},
   "mailtransport": {"module": "./lib/mailsender/mailtransport"}
 }

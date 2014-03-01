@@ -9,7 +9,7 @@ block content
   .row
     .col-md-12
       .page-header
-        mixin pageHeader(group, t("mailarchive.threaded"))
+        +pageHeader(group, t("mailarchive.threaded"))
       .panel-group.pre-scrollable#mails
         - var mailNumber = 0;
         for mailHeader in mailHeaders
@@ -19,8 +19,8 @@ block content
                 h4.panel-title
                   a.accordion-toggle(data-toggle="collapse", data-parent="#mails", href="#collapse" + mailNumber) #{mailHeader.subject}
                 | (
-                mixin mailattributes(mailHeader)
+                +mailattributes(mailHeader)
                 | )
               .panel-collapse.collapse(id="collapse" + mailNumber)
                 .panel-body
-                  mixin mailIndex([mailHeader])
+                  +mailIndex([mailHeader])

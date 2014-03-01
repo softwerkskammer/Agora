@@ -32,7 +32,8 @@
     "gdcr_activities": "Activities related to GDCR",
     "gdcr_text": "Here you find almost all german-speaking activities. You can find a full overview at",
     "feedback": "Feedback",
-    "what_does_not_work": "What does not work the way it should?"
+    "what_does_not_work": "What does not work the way it should?",
+    "settings": "Settings"
   },
   "error": {
     "congratulations": "Congratulations!",
@@ -40,12 +41,12 @@
     "missing_page": "Missing Page",
     "page_is_missing": "This page is missing.",
     "found404": "You found a four-zero-four.",
-    "found500": "You found a five-zero-zero.",
+    "found500": "You found an error.",
     "click_links": "I'd suggest you click on one of the links in the header.",
     "detailed_report": "give us a detailed error report",
     "os_browser": "Operating system and browser, including versions.",
     "datetime": "Date and time",
-    "stacktrace500": "The Stacktrace below \"500\"",
+    "stacktrace500": "The Stacktrace",
     "error500_text": [
       "p Please ",
       "  a(href=\"https://github.com/softwerkskammer/NeuePlattform-Implementierung/issues/\") $t(error.detailed_report):",
@@ -224,7 +225,6 @@
     "member_of": "Member of",
     "personal_data": "Personal Data",
     "profile": "Profile",
-    "profileview": "Profile View",
     "nickname": "Nickname",
     "firstname": "First name",
     "lastname": "Last name",
@@ -238,7 +238,8 @@
     "authenticated_via": "Currently authenticated via",
     "authenticate": "Authenticate elsewhere",
     "send_email": "Send e-mail to __firstname__ __lastname__",
-    "has": "Softwerkskammer has"
+    "has": "Softwerkskammer has",
+    "notifyOnWikiChanges": "Notify on wiki changes"
   },
   "wiki": {
     "blogposts": "Blog Posts:",
@@ -250,8 +251,8 @@
     "all_pages": "All pages in",
     "revisions": "Revisions",
     "search": "Search wiki",
-    "create": "$t(general.create) wiki-page \"__pageName__\" $t(wiki.in) \"__subdir__\"",
-    "edit": "$t(general.edit) wiki-page \"__pageName__\" $t(wiki.in) \"__subdir__\"",
+    "create": "$t(general.create) wiki-page \"__subdir__/__pageName__\"",
+    "edit": "$t(general.edit) wiki-page \"__subdir__/__pageName__\"",
     "contents": "Contents",
     "message": "Message",
     "commit_message": "Commit Message",

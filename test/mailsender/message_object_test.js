@@ -100,3 +100,31 @@ describe('Message Object to TransportObject', function () {
   
 });
 
+describe('Message Object\'s buttons', function () {
+  
+  it('handles one button', function () {
+    var message = new Message();
+    var button = {text: 'text', url: 'url'};
+    message.addToButtons(button);
+    expect(message.buttons).to.deep.equal([button]);
+  });
+  
+  it('handles two buttons', function () {
+    var message = new Message();
+    var button1 = {text: 'text', url: 'url'};
+    var button2 = {text: 'text2', url: 'url2'};
+    message.addToButtons(button1);
+    message.addToButtons(button2);
+    expect(message.buttons).to.deep.equal([button1, button2]);
+  });
+  
+  it('handles two buttons already an array', function () {
+    var message = new Message();
+    var button1 = {text: 'text', url: 'url'};
+    var button2 = {text: 'text2', url: 'url2'};
+    message.addToButtons([button1, button2]);
+    expect(message.buttons).to.deep.equal([button1, button2]);
+  });
+  
+});
+

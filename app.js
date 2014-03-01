@@ -79,6 +79,7 @@ module.exports = {
       }
       app.use(passport.initialize());
       app.use(passport.session());
+      app.use(beans.get('serverpathRemover'));
       app.use(beans.get('accessrights'));
       app.use(beans.get('secureByLogin'));
       app.use(beans.get('secureSuperuserOnly'));
@@ -87,6 +88,9 @@ module.exports = {
       app.use(beans.get('announcementsInSidebar'));
       app.use(beans.get('wikiSubdirs'));
       app.use(beans.get('detectBrowser'));
+      app.use(beans.get('secureAgainstClickjacking'));
+      app.use(express.csrf());
+      app.use(beans.get('addCsrfTokenToLocals'));
       app.use(app.router);
     });
 
@@ -102,21 +106,8 @@ module.exports = {
     useApp(app, 'wiki', beans.get('wikiApp'));
     useApp(app, 'waitinglist', beans.get('waitinglistApp'));
 
-    // Handle 404
-    app.use(function (req, res) {
-      appLogger.error('404 - requested url was ' + req.url);
-      res.render('errorPages/404.jade');
-    });
-
-    // Handle 500
-    app.use(function (error, req, res, next) {
-      appLogger.error(error.stack);
-      if (/InternalOpenIDError|BadRequestError|InternalOAuthError/.test(error.name)) {
-        return res.render('errorPages/authenticationError.jade', {error: error});
-      }
-      res.render('errorPages/500.jade', {error: error});
-      next; // needed for jshint
-    });
+    app.use(beans.get('handle404')(appLogger));
+    app.use(beans.get('handle500')(appLogger));
 
     i18n.registerAppHelper(app);
     i18n.addPostProcessor("jade", function (val, key, opts) {
@@ -141,7 +132,7 @@ module.exports = {
 
   stop: function (done) {
     this.server.close(function () {
-      console.log('Server stopped');
+      appLogger.info('Server stopped');
       if (done) {
         done();
       }

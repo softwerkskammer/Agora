@@ -32,11 +32,15 @@ var initCalendar = function () {
       weekMode: 'variable',
       timeFormat: '',
       titleFormat: {
-        month: 'MMM YY'
+        month: 'MMM \'YY'
       },
       buttonText: {
-        prev: '<i class="fa fa-chevron-left"></i>',
-        next: '<i class="fa fa-chevron-right"></i>'
+        prev: '<i class="fa fa-caret-left"></i>',
+        next: '<i class="fa fa-caret-right"></i>'
+      },
+      buttonIcons: {
+        prev: null,
+        next: null
       },
       timezone: 'Europe/Berlin',
       events: '/activities/eventsForSidebar',
@@ -116,11 +120,12 @@ var addHelpButtonToTextarea = function () {
         ],
         onPreview: function (e) {
           $.post("/preview",
-            {data: e.getContent(), subdir: ($("#subdir").val() || $("#assignedGroup").val() || $('#id').val())},
+            {data: e.getContent(), subdir: ($("#subdir").val() || $("#assignedGroup").val() || $('#id').val()), _csrf: $("#_csrf").val()},
             function (data) { $(".md-preview").html(data); }
           );
           return ""; // to clearly indicate the loading...
-        }
+        },
+        iconlibrary: 'fa'
       }
     );
   });
