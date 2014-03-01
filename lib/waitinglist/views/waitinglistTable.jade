@@ -25,7 +25,7 @@ block title
   | #{t("activities.waitinglist")}
 block content
   form(id='allowRegistrationForm', name='allowRegistrationForm', action='/waitinglist/allowRegistration',method='post')
-    +hidden('_csrf', csrf_token)
+    +csrf
     +hidden("activityUrl", activity.url())
     .row
       .col-md-12
@@ -61,7 +61,7 @@ block content
   if(accessrights.isSuperuser())
     hr
     form(id='waitinglistForm', action='/waitinglist/add',method='post')
-      +hidden('_csrf', csrf_token)
+      +csrf
       +hidden("activityUrl", activity.url())
       legend #{t("activities.waitinglist_new")}
       .row
