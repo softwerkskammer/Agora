@@ -68,8 +68,7 @@
     "grunt-mocha-istanbul": "~0.2",
     "request": "~2.34",
     "sinon": "~1.8",
-    "supertest": "~0.9",
-    "travis-cov": "~0.2.4"
+    "supertest": "~0.9"
   },
   "config": {
     "travis-cov": {
