@@ -70,11 +70,6 @@
     "sinon": "~1.8",
     "supertest": "~0.9"
   },
-  "config": {
-    "travis-cov": {
-      "threshold": "75"
-    }
-  },
   "scripts": {
     "start": "node start",
     "test": "grunt travis --verbose",
