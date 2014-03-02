@@ -115,6 +115,20 @@ block content
                   | &nbsp;#{t("activities.resource")}
       .row
         .col-md-12
+          #addonConfig
+            legend #{t("activities.which_addon_to_collect")}
+      .row
+        .col-md-6
+          +textarea('addon_information', t("activities.addon_information"), activity.addonConfig().addon_information)
+        .col-md-6
+          +checkbox('home_address', t("activities.home_address"), activity.addonConfig().home_address)
+          +checkbox('billing_address', t("activities.billing_address"), activity.addonConfig().billing_address)
+          +checkbox('t_shirt_size', t("activities.t_shirt_size"), activity.addonConfig().t_shirt_size)
+          +checkbox('roommate', t("activities.roommate"), activity.addonConfig().roommate)
+
+
+      .row
+        .col-md-12
           .btn-group.pull-right
             a.btn.btn-default(href="javascript:history.back()", type="cancel") #{t("general.back")}
             button.btn.btn-primary(type="submit") #{t("general.save")}

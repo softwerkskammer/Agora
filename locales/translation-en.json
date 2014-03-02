@@ -64,8 +64,6 @@
     "new": "New activity",
     "create": "Create activity",
     "edit": "Edit activity",
-    "edit_addon_config": "Edit additional information for activity",
-    "addon": "Additional Information",
     "new_copy": "New (based on this activity)",
     "upcoming": "Upcoming",
     "past": "Past",
@@ -115,11 +113,13 @@
     "waitinglist_not_possible": "Waiting list is currently not available.",
     "no_waitinglist": "There is no waiting list.",
     "full": "All spots are taken.",
+    "addon": "Additional Information",
+    "addon_required": "Additional information is required…",
     "which_addon_to_collect": "The following additional information will be queried upon registration",
     "home_address": "Home address",
     "billing_address": "Billing address",
     "t_shirt_size": "T-Shirt size",
-    "roommate": "If you booked a twin room: With whom would you like to share the room?",
+    "roommate": "With whom would you like to share the room? (Twin room only)",
     "tooltip": {
       "title": "Short and concise for overviews",
       "startdate": "End date and time will be shifted automatically (the duration remains the same)",
@@ -279,13 +279,15 @@
       "query": "The query string you entered is too short.",
       "activities": {
         "saved": "Your activity has been saved.",
-        "saved_addon_config": "The additional information for your activity has been saved.",
         "participation_added": "Your participation has been registered.",
         "participation_for_resource_added": "Your participation in \"__resourceName__\" has been registered.",
         "participation_removed": "What a pity that you will not participate.",
         "participation_for_resource_removed": "What a pity that you will not participate in \"__resourceName__\".",
         "waitinglist_added": "You have been added to the waiting list.",
         "waitinglist_removed": "You have been removed from the waiting list."
+      },
+      "addon": {
+        "saved": "Your additional information has been saved."
       },
       "announcements": {
         "saved": "Your announcement has been saved."

@@ -64,8 +64,6 @@
     "new": "Neue Aktivität",
     "create": "Aktivität anlegen",
     "edit": "Aktivität bearbeiten",
-    "edit_addon_config": "Zusatzangaben für Aktivität bearbeiten",
-    "addon": "Zusatzangaben",
     "new_copy": "Neu auf Basis dieser Aktivität",
     "upcoming": "Kommende",
     "past": "Vergangene",
@@ -115,11 +113,13 @@
     "waitinglist_not_possible": "Warteliste ist nicht möglich.",
     "no_waitinglist": "Es gibt keine Warteliste.",
     "full": "Alle Plätze sind belegt.",
+    "addon": "Zusatzangaben",
+    "addon_required": "Zusatzangaben erforderlich…",
     "which_addon_to_collect": "Die folgenden Zusatzangaben werden bei der Registrierung erfragt",
     "home_address": "Privatanschrift",
     "billing_address": "Rechnungsanschrift",
     "t_shirt_size": "T-Shirt-Größe",
-    "roommate": "Wenn Du ein Doppelzimmer gebucht hast: Mit wem möchtest Du das Zimmer teilen?",
+    "roommate": "Mit wem möchtest Du das Zimmer teilen (nicht bei Einzelzimmer)?",
     "tooltip": {
       "title": "Kurz und knackig für Übersichten",
       "start": "Enddatum und -uhrzeit werden automatisch verschoben (die Dauer bleibt gleich)",
@@ -279,13 +279,15 @@
       "query": "Dein eingegebener Suchtext ist zu kurz.",
       "activities": {
         "saved": "Deine Aktivität wurde gespeichert.",
-        "saved_addon_config": "Die Zusatzangaben für Deine Aktivität wurden gespeichert.",
         "participation_added": "Deine Teilnahme wurde eingetragen.",
         "participation_for_resource_added": "Deine Teilnahme wurde für \"__resourceName__\" eingetragen.",
         "participation_removed": "Schade, dass Du nicht dabei sein wirst.",
         "participation_for_resource_removed": "Schade, dass Du bei \"__resourceName__\" nicht dabei sein wirst.",
         "waitinglist_added": "Du bist jetzt auf der Warteliste.",
         "waitinglist_removed": "Du bist jetzt nicht mehr auf der Warteliste."
+      },
+      "addon": {
+        "saved": "Deine Zusatzinformationen wurde gespeichert."
       },
       "announcements": {
         "saved": "Deine Nachricht wurde gespeichert."
