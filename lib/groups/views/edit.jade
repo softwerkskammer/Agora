@@ -17,12 +17,10 @@ block content
     fieldset
       .row
         .col-md-12
-          .btn-group.pull-right
-            a.btn.btn-default(href="javascript:history.back()", type="cancel") #{t("general.back")}
-            if group.id
-              button.btn.btn-primary(type="submit") #{t("general.save")}
-            else
-              button.btn.btn-primary(type="submit") #{t("general.create")}
+          if group.id
+            +submitButtons("general.save")
+          else
+            +submitButtons("general.create")
           legend
             if (group.id)
               |  #{t("groups.edit", {groupId: group.id})}
@@ -65,12 +63,10 @@ block content
           mixin text('shortName', t("groups.map_label"), group.shortName, t("groups.tooltip.map_label"))
       .row
         .col-md-12
-          .btn-group.pull-right
-            a.btn.btn-default(href="javascript:history.back()", type="cancel") #{t("general.back")}
-            if group.id
-              button.btn.btn-primary(type="submit") #{t("general.save")}
-            else
-              button.btn.btn-primary(type="submit") #{t("general.create")}
+          if group.id
+            +submitButtons("general.save")
+          else
+            +submitButtons("general.create")
 
 block scripts
   script(src="/clientscripts/check-groupform.js")

@@ -14,9 +14,7 @@ block content
     fieldset
       .row
         .col-md-12
-          .btn-group.pull-right
-            a.btn.btn-default(href="javascript:history.back()", type="cancel") #{t("general.back")}
-            button.btn.btn-primary(type="submit") #{t("mailsender.send")}
+          +submitButtons("mailsender.send")
           legend
             | #{t("mailsender.write")}
           if (regionalgroups)
@@ -30,6 +28,4 @@ block content
           +checkbox('sendCopyToSelf', t("mailsender.copy_to_self"), false)
           +hidden('buttons', JSON.stringify(message.buttons))
           input(id="successURL", type="hidden", name="successURL", value="#{successURL}")
-          .btn-group.pull-right
-            a.btn.btn-default(href="javascript:history.back()", type="cancel") #{t("general.back")}
-            button.btn.btn-primary(type="submit") #{t("mailsender.send")}
+          +submitButtons("mailsender.send")

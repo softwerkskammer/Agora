@@ -53,9 +53,7 @@ block content
     fieldset
       .row
         .col-md-12
-          .btn-group.pull-right
-            a.btn.btn-default(href="javascript:history.back()", type="cancel") #{t("general.back")}
-            button.btn.btn-primary(type="submit") #{t("general.save")}
+          +submitButtons("general.save")
           legend
             if (activity.id())
               |  #{t("activities.edit")}
@@ -115,6 +113,4 @@ block content
                   | &nbsp;#{t("activities.resource")}
       .row
         .col-md-12
-          .btn-group.pull-right
-            a.btn.btn-default(href="javascript:history.back()", type="cancel") #{t("general.back")}
-            button.btn.btn-primary(type="submit") #{t("general.save")}
+          +submitButtons("general.save")
