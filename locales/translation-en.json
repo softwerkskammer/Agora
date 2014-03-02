@@ -114,6 +114,7 @@
     "no_waitinglist": "There is no waiting list.",
     "full": "All spots are taken.",
     "addon": "Additional Information",
+    "addon_information": "Informations inside the dialog",
     "addon_required": "Additional information is required…",
     "which_addon_to_collect": "The following additional information will be queried upon registration",
     "home_address": "Home address",

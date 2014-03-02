@@ -114,6 +114,7 @@
     "no_waitinglist": "Es gibt keine Warteliste.",
     "full": "Alle Plätze sind belegt.",
     "addon": "Zusatzangaben",
+    "addon_information": "Informationstext für den Dialog",
     "addon_required": "Zusatzangaben erforderlich…",
     "which_addon_to_collect": "Die folgenden Zusatzangaben werden bei der Registrierung erfragt",
     "home_address": "Privatanschrift",

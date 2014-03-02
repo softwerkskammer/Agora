@@ -65,10 +65,10 @@ html
           if (statusmessage)
             +notificationsBlock(statusmessage)
           block content
+          p &nbsp;
         .col-md-4.hidden-print
           .page-header.visible-xs.visible-sm
-            p &nbsp;
-            h2.visible-xs.visible-sm #{t("activities.activities")}
+            h2 #{t("activities.activities")}
           #calendar
           if (latestNews)
             h2 #{t("announcements.latest_news")}&nbsp;
