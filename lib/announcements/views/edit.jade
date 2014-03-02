@@ -19,6 +19,9 @@ block content
     fieldset
       .row
         .col-md-12
+          .btn-group.pull-right
+            a.btn.btn-default(href="javascript:history.back()", type="cancel") #{t("general.back")}
+            button.btn.btn-primary(type="submit") #{t("general.save")}
           legend
             if (announcement.id)
               | #{t("announcements.edit")}
@@ -35,5 +38,6 @@ block content
           +hightextarea('message', t("announcements.text"), announcement.message)
       .row
         .col-md-12
-          button.btn.btn-primary.pull-right(type="submit") #{t("general.save")}
-          a.btn.btn-default.pull-right(href="javascript:history.back()", type="cancel") #{t("general.back")}
+          .btn-group.pull-right
+            a.btn.btn-default(href="javascript:history.back()", type="cancel") #{t("general.back")}
+            button.btn.btn-primary(type="submit") #{t("general.save")}
