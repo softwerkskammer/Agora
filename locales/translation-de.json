@@ -64,7 +64,7 @@
     "new": "Neue Aktivität",
     "create": "Aktivität anlegen",
     "edit": "Aktivität bearbeiten",
-    "edit_addon": "Zusatzangaben für Aktivität bearbeiten",
+    "edit_addon_config": "Zusatzangaben für Aktivität bearbeiten",
     "addon": "Zusatzangaben",
     "new_copy": "Neu auf Basis dieser Aktivität",
     "upcoming": "Kommende",
@@ -279,7 +279,7 @@
       "query": "Dein eingegebener Suchtext ist zu kurz.",
       "activities": {
         "saved": "Deine Aktivität wurde gespeichert.",
-        "saved_addon": "Die Zusatzangaben für Deine Aktivität wurden gespeichert.",
+        "saved_addon_config": "Die Zusatzangaben für Deine Aktivität wurden gespeichert.",
         "participation_added": "Deine Teilnahme wurde eingetragen.",
         "participation_for_resource_added": "Deine Teilnahme wurde für \"__resourceName__\" eingetragen.",
         "participation_removed": "Schade, dass Du nicht dabei sein wirst.",

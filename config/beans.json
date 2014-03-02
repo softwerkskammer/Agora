@@ -72,7 +72,7 @@
   "activity": {"module": "./lib/activities/activity"},
   "resources": {"module": "./lib/activities/resources"},
   "resource": {"module": "./lib/activities/resource"},
-  "addOnInfoOfMember": {"module": "./lib/activities/addOnInfoOfMember"},
+  "addon": {"module": "./lib/activities/addon"},
   "resourceRegistrationRenderer": {"module": "./lib/activities/resourceRegistrationRenderer"},
   "announcement": {"module": "./lib/announcements/announcement"},
   "waitinglistEntry": {"module": "./lib/waitinglist/waitinglistEntry"},

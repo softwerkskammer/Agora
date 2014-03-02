@@ -19,11 +19,11 @@ block content
     .col-md-12
       .page-header
         .btn-group.pull-right
-          if (canEditAddOn)
-            a.btn.btn-success(data-toggle="modal", data-target="#addOn", href="/activities/addOn/#{encodeURIComponent(activity.url())}", title=t("activities.addon")): i.fa.fa-tag.fa-fw
+          if (canEditAddon)
+            a.btn.btn-success(data-toggle="modal", data-target="#addOn", href="/activities/addon/#{encodeURIComponent(activity.url())}", title=t("activities.addon")): i.fa.fa-tag.fa-fw
           if (accessrights.canEditActivity(activity))
             a.btn.btn-default(href="/activities/participants/#{encodeURIComponent(activity.url())}", title=t("activities.participants")): i.fa.fa-list-ol.fa-fw
-            a.btn.btn-default(href="/activities/editAddOn/#{encodeURIComponent(activity.url())}", title=t("activities.edit_addon")): i.fa.fa-tags.fa-fw
+            a.btn.btn-default(href="/activities/editAddonConfig/#{encodeURIComponent(activity.url())}", title=t("activities.edit_addon_config")): i.fa.fa-tags.fa-fw
           a.btn.btn-default(href="/activities/ical/#{encodeURIComponent(activity.url())}", title=t("activities.export")): i.fa.fa-calendar.fa-fw
           if (accessrights.canCreateActivity())
             a.btn.btn-default(href="/activities/newLike/#{encodeURIComponent(activity.url())}", title=t("activities.new_copy")): i.fa.fa-copy.fa-fw

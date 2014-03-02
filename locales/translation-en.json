@@ -64,7 +64,7 @@
     "new": "New activity",
     "create": "Create activity",
     "edit": "Edit activity",
-    "edit_addon": "Edit additional information for activity",
+    "edit_addon_config": "Edit additional information for activity",
     "addon": "Additional Information",
     "new_copy": "New (based on this activity)",
     "upcoming": "Upcoming",
@@ -279,7 +279,7 @@
       "query": "The query string you entered is too short.",
       "activities": {
         "saved": "Your activity has been saved.",
-        "saved_addon": "The additional information for your activity has been saved.",
+        "saved_addon_config": "The additional information for your activity has been saved.",
         "participation_added": "Your participation has been registered.",
         "participation_for_resource_added": "Your participation in \"__resourceName__\" has been registered.",
         "participation_removed": "What a pity that you will not participate.",
