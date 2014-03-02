@@ -1,0 +1,29 @@
+include  ../../../views/formComponents
+
+doctype html
+html
+  head
+    script.
+      $(document).ready(addHelpButtonToTextarea);
+  body
+    .modal-header
+      button.close(type="button", data-dismiss="modal", aria-hidden="true") #{t("general.close")}&nbsp;&times
+      h3 #{t("activities.addon")}
+    .modal-body
+      p Hier bla bla bla wegen Anmelden und so weiter...
+      form(id='addOnForUser', action='/activities/addOnFilled', method='post')
+        +csrf
+        +hidden('url', url)
+        fieldset
+          .row
+            .col-md-12
+              if (addonConfig.home_address)
+                +textarea('home_address', t("activities.home_address"), addon.homeAddress())
+              if (addonConfig.billing_address)
+                +textarea('billing_address', t("activities.billing_address"), addon.billingAddress())
+              if (addonConfig.t_shirt_size)
+                +text('t_shirt_size', t("activities.t_shirt_size"), addon.tShirtSize())
+              if (addonConfig.roommate)
+                +text('roommate', t("activities.roommate"), addon.roommate())
+              button.btn.btn-primary.pull-right(type="submit") #{t("general.save")}
+    

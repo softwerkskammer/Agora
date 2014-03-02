@@ -74,6 +74,9 @@ mixin twitter(name, label, value)
       input.form-control(id=name, type='text', name=name, value=value)
 
 // GENERAL
+mixin csrf
+  +hidden('_csrf', csrf_token)
+
 mixin controlLabel(name, label, tooltip)
   label.control-label(for=name)
     -if (typeof(tooltip) !== 'undefined')
@@ -93,6 +96,4 @@ mixin checkboxWithDescription(name, label, checked, description, optionalValue)
       -else
         | #{label}
         
-mixin csrf
-  +hidden('_csrf', csrf_token)
 

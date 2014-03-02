@@ -65,6 +65,7 @@
     "create": "Create activity",
     "edit": "Edit activity",
     "edit_addon": "Edit additional information for activity",
+    "addon": "Additional Information",
     "new_copy": "New (based on this activity)",
     "upcoming": "Upcoming",
     "past": "Past",
