@@ -17,13 +17,14 @@ html
         fieldset
           .row
             .col-md-12
-              if (addonConfig.home_address)
+              | !{addonConfig.addonInformationHTML()}
+              if (addonConfig.homeAddress())
                 +textarea('homeAddress', t("activities.home_address"), addon.homeAddress())
-              if (addonConfig.billing_address)
+              if (addonConfig.billingAddress())
                 +textarea('billingAddress', t("activities.billing_address"), addon.billingAddress())
-              if (addonConfig.t_shirt_size)
+              if (addonConfig.tShirtSize())
                 +text('tShirtSize', t("activities.t_shirt_size"), addon.tShirtSize())
-              if (addonConfig.roommate)
+              if (addonConfig.roommate())
                 +text('roommate', t("activities.roommate"), addon.roommate())
               button.btn.btn-primary.pull-right(type="submit") #{t("general.save")}
     

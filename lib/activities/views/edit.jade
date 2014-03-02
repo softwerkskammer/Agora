@@ -117,12 +117,12 @@ block content
             legend #{t("activities.which_addon_to_collect")}
       .row
         .col-md-6
-          +textarea('addon_information', t("activities.addon_information"), activity.addonConfig().addon_information)
+          +textarea('addonInformation', t("activities.addon_information"), activity.addonConfig().addonInformation())
         .col-md-6
-          +checkbox('home_address', t("activities.home_address"), activity.addonConfig().home_address)
-          +checkbox('billing_address', t("activities.billing_address"), activity.addonConfig().billing_address)
-          +checkbox('t_shirt_size', t("activities.t_shirt_size"), activity.addonConfig().t_shirt_size)
-          +checkbox('roommate', t("activities.roommate"), activity.addonConfig().roommate)
+          +checkbox('homeAddress', t("activities.home_address"), activity.addonConfig().homeAddress())
+          +checkbox('billingAddress', t("activities.billing_address"), activity.addonConfig().billingAddress())
+          +checkbox('tShirtSize', t("activities.t_shirt_size"), activity.addonConfig().tShirtSize())
+          +checkbox('roommate', t("activities.roommate"), activity.addonConfig().roommate())
 
 
       .row
