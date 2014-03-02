@@ -11,6 +11,9 @@ block content
     fieldset
       .row
         .col-md-12
+          .btn-group.pull-right
+            a.btn.btn-default(href="javascript:history.back()", type="cancel") #{t("general.back")}
+            button.btn.btn-primary(type="submit") #{t("general.save")}
           legend
             -var params = {pageName: pageName, subdir: subdir}
             if page.content === ''
@@ -21,5 +24,6 @@ block content
           +text('comment', t("wiki.message"), page.comment, t("wiki.commit_message"), t("wiki.commit_template"))
           +hidden('metadata', page.metadata)
           input(id="subdir", type="hidden", name="subdir", value=subdir)
-          button.btn.btn-primary.pull-right(type="submit") #{t("general.save")}
-          a.btn.btn-default.pull-right(href="javascript:history.back()", type="cancel") #{t("general.back")}
+          .btn-group.pull-right
+            a.btn.btn-default(href="javascript:history.back()", type="cancel") #{t("general.back")}
+            button.btn.btn-primary(type="submit") #{t("general.save")}
