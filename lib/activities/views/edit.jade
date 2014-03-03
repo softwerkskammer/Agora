@@ -98,7 +98,6 @@ block content
           .row
             .col-md-12
               #resources
-                legend #{t("activities.resources")}
                 .row
                   .col-xs-3.col-sm-6
                     +controlLabel("bezeichnung", t("activities.resourcelabel"), t("activities.tooltip.resourcelabel"))
@@ -121,7 +120,7 @@ block content
           .row
             .col-md-12
               #addonConfig
-                legend #{t("activities.which_addon_to_collect")}
+              p #{t("activities.which_addon_to_collect")}
           .row
             .col-md-6
               +textarea('addonInformation', t("activities.addon_information"), activity.addonConfig().addonInformation())
@@ -134,4 +133,5 @@ block content
 
       .row
         .col-md-12
+          hr
           +submitButtons("general.save")
