@@ -3,15 +3,16 @@ include  ../../../views/formComponents
 doctype html
 html
   head
+    script(src="/clientscripts/check-addonform.js")
     script.
       $(document).ready(addHelpButtonToTextarea);
   body
     .modal-header
       button.close(type="button", data-dismiss="modal", aria-hidden="true") #{t("general.close")}&nbsp;&times
       h3 #{t("activities.addon")}
-    .modal-body
+    .modal-body#addon
       p Hier bla bla bla wegen Anmelden und so weiter...
-      form(id='addOnForUser', action='/activities/submitAddon', method='post')
+      form#addonform(action='/activities/submitAddon', method='post')
         +csrf
         +hidden('url', url)
         fieldset
