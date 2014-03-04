@@ -125,9 +125,9 @@ block content
             .col-md-6
               +textarea('addonInformation', t("activities.addon_information"), activity.addonConfig().addonInformation())
             .col-md-6
-              +checkbox('homeAddress', t("activities.home_address"), activity.addonConfig().homeAddress())
-              +checkbox('billingAddress', t("activities.billing_address"), activity.addonConfig().billingAddress())
-              +checkbox('tShirtSize', t("activities.t_shirt_size"), activity.addonConfig().tShirtSize())
+              +checkbox('homeAddress', t("activities.home_address") + " (*)", activity.addonConfig().homeAddress())
+              +checkbox('billingAddress', t("activities.billing_address")+ " (*)", activity.addonConfig().billingAddress())
+              +checkbox('tShirtSize', t("activities.t_shirt_size")+ " (*)", activity.addonConfig().tShirtSize())
               +checkbox('roommate', t("activities.roommate"), activity.addonConfig().roommate())
 
 

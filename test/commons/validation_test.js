@@ -377,7 +377,7 @@ describe('Validation', function () {
     };
 
     it('performs many checks simultaneously', function () {
-      expect(result({}).length).to.equal(4);
+      expect(result({}).length).to.equal(3);
     });
 
     it('checks that homeAddress is set', function () {
@@ -396,12 +396,6 @@ describe('Validation', function () {
       expect(result({})).to.contain('T-Shirt Grösse ist ein Pflichtfeld');
       expect(result({tShirtSize: null})).to.contain('T-Shirt Grösse ist ein Pflichtfeld');
       expect(result({tShirtSize: 'n'})).to.not.contain('T-Shirt Grösse ist ein Pflichtfeld');
-    });
-
-    it('checks that roommate is set', function () {
-      expect(result({})).to.contain('Zimmergenosse ist ein Pflichtfeld');
-      expect(result({roommate: null})).to.contain('Zimmergenosse ist ein Pflichtfeld');
-      expect(result({roommate: 'n'})).to.not.contain('Zimmergenosse ist ein Pflichtfeld');
     });
 
   });

@@ -23,7 +23,10 @@ test("T-Shirt-Size is mandatory", 3, function () {
   checkFieldMandatory("#tShirtSize");
 });
 
-test("Roommate is mandatory", 3, function () {
-  checkFieldMandatory("#roommate");
+test("Roommate is not mandatory", 1, function () {
+  initValidator();
+  var field = $("#roommate");
+  field.val("");
+  equal(addon_validator.element(field), true);
 });
 

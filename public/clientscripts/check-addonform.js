@@ -10,8 +10,7 @@ var initValidator = function () {
     rules: {
       homeAddress: "required",
       billingAddress: "required",
-      tShirtSize: "required",
-      roommate: "required"
+      tShirtSize: "required"
     },
     errorElement: "span",
     errorClass: "help-block",
@@ -25,7 +24,7 @@ var initValidator = function () {
 
   addon_validator.form();
 
-  ['#homeAddress', '#billingAddress', '#tShirtSize', '#roommate'].forEach(function (each) {
+  ['#homeAddress', '#billingAddress', '#tShirtSize'].forEach(function (each) {
     $(each).on("change", function () {
       addon_validator.element(each);
     });
