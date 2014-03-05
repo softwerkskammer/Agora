@@ -117,6 +117,7 @@
     "addon": "Zusatzangaben",
     "addon_information": "Informationstext für den Dialog",
     "addon_required": "Zusatzangaben erforderlich…",
+    "edit_addon": "Zusatzangaben bearbeiten…",
     "which_addon_to_collect": "Die folgenden Zusatzangaben werden bei der Registrierung erfragt. Alle Felder mit (*) sind Pflichtfelder.",
     "home_address": "Privatanschrift",
     "billing_address": "Rechnungsanschrift",

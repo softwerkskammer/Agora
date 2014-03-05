@@ -117,6 +117,7 @@
     "addon": "Additional Information",
     "addon_information": "Informations inside the dialog",
     "addon_required": "Additional information is required…",
+    "edit_addon": "Edit Additional Information…",
     "which_addon_to_collect": "The following additional information will be queried upon registration. Each field marked with (*) is mandatory.",
     "home_address": "Home address",
     "billing_address": "Billing address",
