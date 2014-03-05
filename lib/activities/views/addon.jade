@@ -4,25 +4,22 @@ doctype html
 html
   head
     script(src="/clientscripts/check-addonform.js")
-    script.
-      $(document).ready(addHelpButtonToTextarea);
   body
     .modal-header
       button.close(type="button", data-dismiss="modal", aria-hidden="true") #{t("general.close")}&nbsp;&times
       h3 #{t("activities.addon")}
     .modal-body#addon
-      p Hier bla bla bla wegen Anmelden und so weiter...
-      form#addonform(action='/activities/submitAddon', method='post')
-        +csrf
-        +hidden('url', url)
-        fieldset
-          .row
-            .col-md-12
-              | !{addonConfig.addonInformationHTML()}
+      .row
+        .col-md-12
+          | !{addonConfig.addonInformationHTML()}
+          form#addonform(action='/activities/submitAddon', method='post')
+            +csrf
+            +hidden('url', url)
+            fieldset
               if (addonConfig.homeAddress())
-                +textarea('homeAddress', t("activities.home_address"), addon.homeAddress())
+                +textareaPure('homeAddress', t("activities.home_address"), addon.homeAddress())
               if (addonConfig.billingAddress())
-                +textarea('billingAddress', t("activities.billing_address"), addon.billingAddress())
+                +textareaPure('billingAddress', t("activities.billing_address"), addon.billingAddress())
               if (addonConfig.tShirtSize())
                 +text('tShirtSize', t("activities.t_shirt_size"), addon.tShirtSize())
               if (addonConfig.roommate())
