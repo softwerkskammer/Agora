@@ -181,4 +181,17 @@ describe('Activities API', function () {
     });
   });
 
+  describe('addon', function () {
+
+    it('is never undefined', function (done) {
+      sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, new Activity({})); });
+      activitiesAPI.addonForMember(null, 'unknown member id', function (err, addon, addonConfig) {
+        expect(addon).to.exist;
+        expect(addonConfig).to.exist;
+        done();
+      });
+    });
+
+  });
+
 });
