@@ -105,7 +105,7 @@ module.exports = function (grunt) {
     },
     mocha_istanbul_check: {
       options: {
-        lines: 75,
+        lines: 77,
         statements: 73
       }
     }

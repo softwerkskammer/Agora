@@ -23,6 +23,26 @@ describe('Activity\'s Addon Configuration', function () {
     expect(activity.hasAddonConfig()).to.be.true;
   });
 
+  it('adds the addonConfig edited from UI', function () {
+    var activity = new Activity();
+    expect(activity.hasAddonConfig()).to.be.false;
+    activity.fillAddonConfig({homeAddress: 'home sweet home'});
+    expect(activity.hasAddonConfig()).to.be.true;
+  });
+
+  it('adds the addonConfig edited from UI - even if only the information is filled', function () {
+    var activity = new Activity();
+    expect(activity.hasAddonConfig()).to.be.false;
+    activity.fillAddonConfig({addonInformation: 'info'});
+    expect(activity.hasAddonConfig()).to.be.true;
+  });
+
+  it('removes the addonConfig edited from UI', function () {
+    var activity = new Activity({ _addonConfig: {}, assignedGroup: 'group' });
+    expect(activity.hasAddonConfig()).to.be.true;
+    activity.fillAddonConfig({});
+    expect(activity.hasAddonConfig()).to.be.false;
+  });
 });
 
 describe('Activity\'s Addon for Member', function () {
@@ -39,4 +59,5 @@ describe('Activity\'s Addon for Member', function () {
     var activity = new Activity({ _addons: {memberOne: addonOne, memberTwo: addonTwo} });
     expect(activity.addonForMember('memberOne').homeAddress()).to.equal(addonOne.homeAddress);
   });
+  
 });
