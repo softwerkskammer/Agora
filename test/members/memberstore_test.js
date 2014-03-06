@@ -18,17 +18,6 @@ describe('Members store', function () {
     sinon.restore();
   });
 
-  it('calls persistence.getByField for store.getMember and passes on the given callback', function (done) {
-    var getByField = sinon.stub(persistence, 'getByField');
-    getByField.callsArgWith(1, null, sampleMember);
-
-    store.getMember('nick', function (err, member) {
-      expect(member.nickname()).to.equal(sampleMember.nickname);
-      expect(getByField.calledWith({nickname: new RegExp()})).to.be.true;
-      done(err);
-    });
-  });
-
   it('calls persistence.getById for store.getMemberForId and passes on the given callback', function (done) {
     var getById = sinon.stub(persistence, 'getById');
     getById.callsArgWith(1, null, sampleMember);
@@ -58,7 +47,7 @@ describe('Members store', function () {
 
     store.getMember('  nick  ', function (err, member) {
       expect(member.nickname()).to.equal(sampleMember.nickname);
-      expect(getByField.calledWith({nickname: new RegExp()})).to.be.true;
+      expect(getByField.called).to.be.true;
       var regex = getByField.args[0][0].nickname;
       expect(regex.toString()).to.equal('/^nick$/i');
       done(err);
@@ -100,7 +89,7 @@ describe('Members store', function () {
 
     store.getMember('nick', function (err, member) {
       expect(member.nickname()).to.equal(sampleMember.nickname);
-      expect(getByField.calledWith({nickname: new RegExp()})).to.be.true;
+      expect(getByField.called).to.be.true;
       var regex = getByField.args[0][0].nickname;
       expect(regex.test('nick')).to.be.true;
       expect(regex.test('nICk')).to.be.true;
