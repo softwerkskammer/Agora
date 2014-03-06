@@ -21,7 +21,11 @@ html
               if (addonConfig.billingAddress())
                 +textareaPure('billingAddress', t("activities.billing_address"), addon.billingAddress())
               if (addonConfig.tShirtSize())
-                +text('tShirtSize', t("activities.t_shirt_size"), addon.tShirtSize())
+                .form-group
+                  label.control-label(for="tShirtSize") #{t("activities.t_shirt_size")}:
+                  select#tShirtSize.form-control(name="tShirtSize")
+                    for item in ['', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL']
+                      option(selected=addon.tShirtSize() === item) #{item}
               if (addonConfig.roommate())
                 +text('roommate', t("activities.roommate"), addon.roommate())
               button.btn.btn-primary.pull-right(type="submit") #{t("general.save")}
