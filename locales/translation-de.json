@@ -1,5 +1,6 @@
 {
   "general": {
+    "general": "Allgemein",
     "all": "Alle",
     "create": "Anlegen",
     "edit": "Bearbeiten",
@@ -113,6 +114,15 @@
     "waitinglist_not_possible": "Warteliste ist nicht möglich.",
     "no_waitinglist": "Es gibt keine Warteliste.",
     "full": "Alle Plätze sind belegt.",
+    "addon": "Zusatzangaben",
+    "addon_information": "Informationstext für den Dialog",
+    "addon_required": "Zusatzangaben erforderlich…",
+    "edit_addon": "Zusatzangaben bearbeiten…",
+    "which_addon_to_collect": "Die folgenden Zusatzangaben werden bei der Registrierung erfragt. Alle Felder mit * sind Pflichtfelder.",
+    "home_address": "Privatanschrift",
+    "billing_address": "Rechnungsanschrift",
+    "t_shirt_size": "T-Shirt-Größe",
+    "roommate": "Mit wem möchtest Du das Zimmer teilen (nicht bei Einzelzimmer)?",
     "tooltip": {
       "title": "Kurz und knackig für Übersichten",
       "start": "Enddatum und -uhrzeit werden automatisch verschoben (die Dauer bleibt gleich)",
@@ -278,6 +288,9 @@
         "participation_for_resource_removed": "Schade, dass Du bei \"__resourceName__\" nicht dabei sein wirst.",
         "waitinglist_added": "Du bist jetzt auf der Warteliste.",
         "waitinglist_removed": "Du bist jetzt nicht mehr auf der Warteliste."
+      },
+      "addon": {
+        "saved": "Deine Zusatzinformationen wurden gespeichert."
       },
       "announcements": {
         "saved": "Deine Nachricht wurde gespeichert."

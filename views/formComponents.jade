@@ -9,16 +9,22 @@ mixin textReadonly(name, label, value)
     label(class="control-label", for=name) #{label}:
     input.form-control(id=name, type='text', name=name, value=value, placeholder=placeholder disabled)
 
+mixin textareaPure(name, label, value)
+  .form-group
+    +controlLabel(name, label)
+    textarea.form-control(rows="4", id=name, type='text', name=name)
+      | #{value}
+
 mixin textarea(name, label, value, tooltip)
   .form-group
     +controlLabel(name, label, tooltip)
-    textarea.input-block-level(rows="7", id=name, type='text', name=name)
+    textarea(rows="7", id=name, type='text', name=name)
       | #{value}
 
 mixin hightextarea(name, label, value, tooltip)
   .form-group
     +controlLabel(name, label, tooltip)
-    textarea.input-block-level(rows="15", id=name, type='text', name=name)
+    textarea(rows="15", id=name, type='text', name=name)
       | #{value}
 
 mixin checkbox(name, label, checked, optionalValue)
@@ -78,6 +84,9 @@ mixin twitter(name, label, value)
       input.form-control(id=name, type='text', name=name, value=value)
 
 // GENERAL
+mixin csrf
+  +hidden('_csrf', csrf_token)
+
 mixin controlLabel(name, label, tooltip)
   label.control-label(for=name)
     -if (typeof(tooltip) !== 'undefined')
@@ -97,6 +106,4 @@ mixin checkboxWithDescription(name, label, checked, description, optionalValue)
       -else
         | #{label}
         
-mixin csrf
-  +hidden('_csrf', csrf_token)
 

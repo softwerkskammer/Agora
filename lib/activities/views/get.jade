@@ -12,6 +12,9 @@ block opengraph
   meta(property="og:title", content=activity.title())
 
 block content
+  #addOn(tabindex="-1").modal.fade
+    .modal-dialog
+      .modal-content
   .row
     .col-md-12
       .page-header
@@ -32,8 +35,16 @@ block content
               | ) - #{activity.endMoment().lang(language).format('LL')} (#{activity.endMoment().lang(language).format('LT')})
             else 
               |  - #{activity.endMoment().lang(language).format('LT')})
-  .row
-    .col-md-12
+      if (canEditAddon)
+        if (addonAlreadyFilled)
+          a.btn.btn-default.pull-right(data-toggle="modal", data-target="#addOn", href="/activities/addon/#{encodeURIComponent(activity.url())}")
+            i.fa.fa-tags.fa-fw
+            | &nbsp;#{t("activities.edit_addon")}
+        else
+          a.btn.btn-success.pull-right(data-toggle="modal", data-target="#addOn", href="/activities/addon/#{encodeURIComponent(activity.url())}")
+            i.fa.fa-tags.fa-fw
+            | &nbsp;#{t("activities.addon_required")}
+        .clearfix
       | !{activity.descriptionHTML()}
       hr
   .row

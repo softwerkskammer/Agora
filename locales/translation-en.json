@@ -1,5 +1,6 @@
 {
   "general": {
+    "general": "General",
     "all": "All",
     "create": "Create",
     "edit": "Edit",
@@ -113,6 +114,15 @@
     "waitinglist_not_possible": "Waiting list is currently not available.",
     "no_waitinglist": "There is no waiting list.",
     "full": "All spots are taken.",
+    "addon": "Additional Information",
+    "addon_information": "Informations inside the dialog",
+    "addon_required": "Additional information is required…",
+    "edit_addon": "Edit Additional Information…",
+    "which_addon_to_collect": "The following additional information will be queried upon registration. Each field marked with * is mandatory.",
+    "home_address": "Home address",
+    "billing_address": "Billing address",
+    "t_shirt_size": "T-Shirt size",
+    "roommate": "With whom would you like to share the room? (Twin room only)",
     "tooltip": {
       "title": "Short and concise for overviews",
       "startdate": "End date and time will be shifted automatically (the duration remains the same)",
@@ -278,6 +288,9 @@
         "participation_for_resource_removed": "What a pity that you will not participate in \"__resourceName__\".",
         "waitinglist_added": "You have been added to the waiting list.",
         "waitinglist_removed": "You have been removed from the waiting list."
+      },
+      "addon": {
+        "saved": "Your additional information has been saved."
       },
       "announcements": {
         "saved": "Your announcement has been saved."
