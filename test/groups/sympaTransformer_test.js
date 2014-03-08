@@ -1,6 +1,6 @@
 "use strict";
 
-var conf = require('./../configureForTest');
+var conf = require('./../../testutil/configureForTest');
 var expect = require('chai').expect;
 
 var systemUnderTest = conf.get('beans').get('sympaTransformer');

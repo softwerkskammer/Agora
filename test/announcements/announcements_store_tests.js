@@ -3,7 +3,7 @@
 var expect = require('chai').expect;
 var sinon = require('sinon').sandbox.create();
 
-var beans = require('../configureForTest').get('beans');
+var beans = require('../../testutil/configureForTest').get('beans');
 var persistence = beans.get('announcementsPersistence');
 var store = beans.get('announcementstore');
 

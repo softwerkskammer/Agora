@@ -4,7 +4,7 @@ var request = require('supertest');
 var sinon = require('sinon').sandbox.create();
 var expect = require('chai').expect;
 
-var beans = require('../configureForTest').get('beans');
+var beans = require('../../testutil/configureForTest').get('beans');
 var Member = beans.get('member');
 var membersAPI = beans.get('membersAPI');
 var groupsAPI = beans.get('groupsAPI');
@@ -12,7 +12,7 @@ var groupsAndMembersAPI = beans.get('groupsAndMembersAPI');
 var notifications = beans.get('notifications');
 var dummymember;
 
-var createApp = require('../testHelper')('membersApp').createApp;
+var createApp = require('../../testutil/testHelper')('membersApp').createApp;
 var app = createApp();
 
 var allMembers;

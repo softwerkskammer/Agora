@@ -5,18 +5,7 @@ var fs = require('fs');
 
 nconf.set('port', '17125');
 
-var winston = require('winston');
-winston.loggers = {
-  add: function () {},
-  get: function () {
-    var dummyLogger = {
-      warn: function () {},
-      info: function () {},
-      error: function () {}
-    };
-    return dummyLogger;
-  }
-};
+require('./shutupWinston')();
 
 // sympa:
 nconf.set('swkTrustedAppName', null);
@@ -29,12 +18,12 @@ nconf.set('superuser', ['superuserID']);
 
 // beans:
 var productionBeans = require('../config/beans.json');
-var testBeans = require('../config/testbeans.json');
+var testBeans = require('../config/testbeansWithDB.json');
 for (var bean in testBeans) {
   productionBeans[bean] = testBeans[bean];
 }
-fs.writeFileSync('./test/tempbeans.json', JSON.stringify(productionBeans));
+fs.writeFileSync('./testutil/tempbeansWithDB.json', JSON.stringify(productionBeans));
 
-nconf.set('beans', new Beans('./test/tempbeans.json'));
+nconf.set('beans', new Beans('./testutil/tempbeansWithDB.json'));
 
 module.exports = nconf;

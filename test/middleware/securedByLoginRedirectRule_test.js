@@ -1,6 +1,6 @@
 "use strict";
 
-var conf = require('../configureForTest');
+var conf = require('../../testutil/configureForTest');
 var securedByLoginURLRegex = new RegExp(conf.get('securedByLoginURLPattern'));
 var expect = require('chai').expect;
 

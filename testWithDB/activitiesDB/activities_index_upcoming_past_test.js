@@ -7,12 +7,12 @@ var sinon = require('sinon').sandbox.create();
 var expect = require('chai').expect;
 
 
-var beans = require('../configureForTestWithDB').get('beans');
+var beans = require('../../testutil/configureForTestWithDB').get('beans');
 var activitystore = beans.get('activitystore');
 var persistence = beans.get('activitiesPersistence');
 var Activity = beans.get('activity');
 
-var createApp = require('../../test/testHelper')('activitiesApp', beans).createApp;
+var createApp = require('../../testutil/testHelper')('activitiesApp', beans).createApp;
 
 
 describe('Activity application with DB - shows activities -', function () {

@@ -6,9 +6,9 @@ var expect = require('chai').expect;
 
 var express = require('express');
 //var passport = require('passport');
-var beans = require('../configureForTest').get('beans');
+var beans = require('../../testutil/configureForTest').get('beans');
 
-var setupApp = require('../testHelper');
+var setupApp = require('../../testutil/testHelper');
 var membersAPI = beans.get('membersAPI');
 var groupsAPI = beans.get('groupsAPI');
 var groupsAndMembersAPI = beans.get('groupsAndMembersAPI');

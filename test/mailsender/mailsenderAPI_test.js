@@ -2,7 +2,7 @@
 
 var expect = require('chai').expect;
 var sinon = require('sinon').sandbox.create();
-var beans = require('../configureForTest').get('beans');
+var beans = require('../../testutil/configureForTest').get('beans');
 
 var membersAPI = beans.get('membersAPI');
 var groupsAPI = beans.get('groupsAPI');

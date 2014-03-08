@@ -1,6 +1,6 @@
 "use strict";
 
-require('../configureForTest');
+require('../../testutil/configureForTest');
 var expect = require('chai').expect;
 
 var beans = require('nconf').get('beans');

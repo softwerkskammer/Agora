@@ -95,18 +95,23 @@ module.exports = function (grunt) {
       }
     },
     mocha_istanbul: {
-      coverage: {
+      test: {
         src: 'test', // the folder, not the files,
+        options: {
+          mask: '**/*.js',
+          reporter: 'spec',
+          check: {
+            lines: 77,
+            statements: 73
+          }
+        }
+      },
+      testWithDB: {
+        src: 'testWithDB', // the folder, not the files,
         options: {
           mask: '**/*.js',
           reporter: 'spec'
         }
-      }
-    },
-    mocha_istanbul_check: {
-      options: {
-        lines: 77,
-        statements: 73
       }
     }
   });
@@ -120,10 +125,10 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-mocha-istanbul');
 
   // Default task.
-  grunt.registerTask('default', ['less', 'concat', 'jshint', 'qunit', 'coverage', 'check-coverage']);
+  grunt.registerTask('default', ['less', 'concat', 'jshint', 'qunit', 'testWithDB', 'test']);
 
   // Travis-CI task
   grunt.registerTask('travis', ['default']);
-  grunt.registerTask('coverage', ['mocha_istanbul:coverage']);
-  grunt.registerTask('check-coverage', ['mocha_istanbul_check']);
+  grunt.registerTask('test', ['mocha_istanbul:test']);
+  grunt.registerTask('testWithDB', ['mocha_istanbul:testWithDB']);
 };

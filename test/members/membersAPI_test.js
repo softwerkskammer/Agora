@@ -2,7 +2,7 @@
 
 var expect = require('chai').expect;
 var sinon = require('sinon');
-var conf = require('../configureForTest');
+var conf = require('../../testutil/configureForTest');
 var Member = conf.get('beans').get('member');
 
 var memberstore = conf.get('beans').get('memberstore');

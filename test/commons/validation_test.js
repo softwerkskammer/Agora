@@ -2,7 +2,7 @@
 var chai = require("chai");
 var expect = chai.expect;
 
-require('../configureForTest');
+require('../../testutil/configureForTest');
 var beans = require('nconf').get('beans');
 var validation = beans.get('validation');
 var AddonConfig = beans.get('addon').AddonConfig;

@@ -1,6 +1,6 @@
 "use strict";
 
-require('../configureForTest');
+require('../../testutil/configureForTest');
 var conf = require('nconf');
 var expect = require('chai').expect;
 var sinon = require('sinon').sandbox.create();

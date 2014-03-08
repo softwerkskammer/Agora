@@ -6,7 +6,7 @@ var moment = require('moment-timezone');
 
 //var util = require('util');
 
-var beans = require('../configureForTest').get('beans');
+var beans = require('../../testutil/configureForTest').get('beans');
 
 var activitiesAPI = beans.get('activitiesAPI');
 var activitystore = beans.get('activitystore');

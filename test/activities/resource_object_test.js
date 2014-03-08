@@ -1,6 +1,6 @@
 "use strict";
 
-require('../configureForTest');
+require('../../testutil/configureForTest');
 var moment = require('moment-timezone');
 var conf = require('nconf');
 var expect = require('chai').expect;

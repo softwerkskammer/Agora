@@ -2,7 +2,7 @@
 
 var expect = require('chai').expect;
 
-var beans = require('../configureForTest').get('beans');
+var beans = require('../../testutil/configureForTest').get('beans');
 
 var calendarAPI = beans.get('calendarAPI');
 var fieldHelpers = beans.get('fieldHelpers');

@@ -5,6 +5,8 @@ var fs = require('fs');
 
 nconf.set('port', '17125');
 
+require('./shutupWinston')();
+
 // sympa:
 nconf.set('swkTrustedAppName', null);
 nconf.set('swkTrustedAppPwd', null);
@@ -16,12 +18,12 @@ nconf.set('superuser', ['superuserID']);
 
 // beans:
 var productionBeans = require('../config/beans.json');
-var testBeans = require('../config/testbeansWithDB.json');
+var testBeans = require('../config/testbeans.json');
 for (var bean in testBeans) {
   productionBeans[bean] = testBeans[bean];
 }
-fs.writeFileSync('./testWithDB/tempbeansWithDB.json', JSON.stringify(productionBeans));
+fs.writeFileSync('./testutil/tempbeans.json', JSON.stringify(productionBeans));
 
-nconf.set('beans', new Beans('./testWithDB/tempbeansWithDB.json'));
+nconf.set('beans', new Beans('./testutil/tempbeans.json'));
 
 module.exports = nconf;

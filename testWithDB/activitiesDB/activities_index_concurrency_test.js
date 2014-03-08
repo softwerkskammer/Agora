@@ -4,7 +4,7 @@ var request = require('supertest');
 var sinon = require('sinon').sandbox.create();
 var expect = require('chai').expect;
 
-var conf = require('../configureForTestWithDB');
+var conf = require('../../testutil/configureForTestWithDB');
 
 var beans = conf.get('beans');
 var fieldHelpers = beans.get('fieldHelpers');
@@ -12,7 +12,7 @@ var activitystore = beans.get('activitystore');
 var persistence = beans.get('activitiesPersistence');
 var Activity = beans.get('activity');
 
-var createApp = require('../../test/testHelper')('activitiesApp', beans).createApp;
+var createApp = require('../../testutil/testHelper')('activitiesApp', beans).createApp;
 
 var getActivity = function (url, callback) {
   persistence.getByField({url: url}, function (err, activityState) {
