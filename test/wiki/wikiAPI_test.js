@@ -3,7 +3,7 @@
 var sinon = require('sinon').sandbox.create();
 var expect = require('chai').expect;
 
-var beans = require('../configureForTest').get('beans');
+var beans = require('../../testutil/configureForTest').get('beans');
 var wikiAPI = beans.get('wikiAPI');
 var moment = require('moment-timezone');
 var Git = beans.get('gitmech');

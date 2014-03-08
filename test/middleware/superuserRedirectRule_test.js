@@ -1,6 +1,6 @@
 "use strict";
 
-var conf = require('../configureForTest');
+var conf = require('../../testutil/configureForTest');
 var superuserURLRegex = new RegExp(conf.get('superuserURLPattern'));
 var expect = require('chai').expect;
 

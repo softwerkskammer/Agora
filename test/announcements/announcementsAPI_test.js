@@ -1,7 +1,7 @@
 "use strict";
 
 var expect = require('chai').expect;
-var conf = require('../configureForTest');
+var conf = require('../../testutil/configureForTest');
 var beans = conf.get('beans');
 var Announcement = beans.get('announcement');
 var sinon = require('sinon').sandbox.create();

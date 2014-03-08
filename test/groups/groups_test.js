@@ -3,13 +3,13 @@
 var request = require('supertest');
 var sinon = require('sinon').sandbox.create();
 
-var beans = require('../configureForTest').get('beans');
+var beans = require('../../testutil/configureForTest').get('beans');
 var groupsPersistence = beans.get('groupsPersistence');
 var membersPersistence = beans.get('membersPersistence');
 var Group = beans.get('group');
 var sympa = beans.get('sympaStub');
 
-var createApp = require('../testHelper')('groupsApp').createApp;
+var createApp = require('../../testutil/testHelper')('groupsApp').createApp;
 
 var GroupA = new Group({id: 'GroupA', longName: 'Gruppe A', description: 'Dies ist Gruppe A.', type: 'Themengruppe', emailPrefix: 'Group-A', organizers: ['organizer']});
 

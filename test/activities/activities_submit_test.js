@@ -3,12 +3,12 @@
 var request = require('supertest');
 var sinon = require('sinon').sandbox.create();
 
-var conf = require('../configureForTest');
+var conf = require('../../testutil/configureForTest');
 
 var beans = conf.get('beans');
 var activitiesAPI = beans.get('activitiesAPI');
 
-var createApp = require('../testHelper')('activitiesApp').createApp;
+var createApp = require('../../testutil/testHelper')('activitiesApp').createApp;
 
 describe('Activity application - on submit -', function () {
 

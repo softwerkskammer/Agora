@@ -1,7 +1,7 @@
 "use strict";
 var should = require('chai').should();
 var httpRequest = require('request');
-var conf = require('./configureForTest');
+var conf = require('./../testutil/configureForTest');
 
 var base_uri = "http://localhost:" + parseInt(conf.get('port'), 10);
 

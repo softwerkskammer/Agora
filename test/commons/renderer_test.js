@@ -2,7 +2,7 @@
 var chai = require("chai");
 var expect = chai.expect;
 
-require('../configureForTest');
+require('../../testutil/configureForTest');
 var Renderer = require('nconf').get('beans').get('renderer');
 
 describe("Renderer", function () {

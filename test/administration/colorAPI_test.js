@@ -3,7 +3,7 @@
 var expect = require('chai').expect;
 var sinon = require('sinon');
 var sinonSandbox = sinon.sandbox.create();
-var conf = require('../configureForTest');
+var conf = require('../../testutil/configureForTest');
 
 var Color = conf.get('beans').get('color');
 var store = conf.get('beans').get('colorstore');

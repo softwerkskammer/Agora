@@ -1,6 +1,6 @@
 "use strict";
 
-var beans = require('../configureForTest').get('beans');
+var beans = require('../../testutil/configureForTest').get('beans');
 var expect = require('chai').expect;
 
 var mailThread = beans.get('mailThread');

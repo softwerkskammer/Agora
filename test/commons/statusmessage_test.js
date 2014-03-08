@@ -1,6 +1,6 @@
 "use strict";
 
-var conf = require('../configureForTest');
+var conf = require('../../testutil/configureForTest');
 var statusmessage = conf.get('beans').get('statusmessage');
 var expect = require('chai').expect;
 

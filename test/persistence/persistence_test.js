@@ -2,7 +2,7 @@
 
 var should = require('chai').should();
 var expect = require('chai').expect;
-var conf = require('./../configureForTest');
+var conf = require('./../../testutil/configureForTest');
 var persistence = require('../../lib/persistence/persistence')('teststore');
 var clearStore = function (callback) {
   persistence.drop(function () {

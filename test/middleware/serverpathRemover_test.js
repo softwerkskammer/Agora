@@ -2,7 +2,7 @@
 
 var expect = require('chai').expect;
 
-var beans = require('../configureForTest').get('beans');
+var beans = require('../../testutil/configureForTest').get('beans');
 var serverpathRemover = beans.get('serverpathRemover');
 
 describe('serverpathRemover removes any paths', function () {

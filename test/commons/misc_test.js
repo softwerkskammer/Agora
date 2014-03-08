@@ -1,6 +1,6 @@
 "use strict";
 
-var conf = require('../configureForTest');
+var conf = require('../../testutil/configureForTest');
 var misc = conf.get('beans').get('misc');
 var expect = require('chai').expect;
 var moment = require('moment-timezone');

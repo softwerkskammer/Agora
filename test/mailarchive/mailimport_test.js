@@ -5,7 +5,7 @@ var sinon = require('sinon');
 var sinonSandbox = sinon.sandbox.create();
 var moment = require('moment-timezone');
 
-var beans = require('../configureForTest').get('beans');
+var beans = require('../../testutil/configureForTest').get('beans');
 var membersAPI = beans.get('membersAPI');
 var Member = beans.get('member');
 var dummymember = new Member({sessionUser: {authenticationId: 'hada'}});

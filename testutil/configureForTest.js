@@ -22,8 +22,8 @@ var testBeans = require('../config/testbeans.json');
 for (var bean in testBeans) {
   productionBeans[bean] = testBeans[bean];
 }
-fs.writeFileSync('./test/tempbeans.json', JSON.stringify(productionBeans));
+fs.writeFileSync('./testutil/tempbeans.json', JSON.stringify(productionBeans));
 
-nconf.set('beans', new Beans('./test/tempbeans.json'));
+nconf.set('beans', new Beans('./testutil/tempbeans.json'));
 
 module.exports = nconf;

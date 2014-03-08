@@ -4,9 +4,9 @@ var request = require('supertest');
 var sinon = require('sinon').sandbox.create();
 var expect = require('chai').expect;
 
-var createApp = require('../testHelper')('activitiesApp').createApp;
+var createApp = require('../../testutil/testHelper')('activitiesApp').createApp;
 
-var beans = require('../configureForTest').get('beans');
+var beans = require('../../testutil/configureForTest').get('beans');
 var fieldHelpers = beans.get('fieldHelpers');
 var activitystore = beans.get('activitystore');
 var Activity = beans.get('activity');
