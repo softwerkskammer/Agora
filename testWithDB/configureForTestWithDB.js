@@ -5,18 +5,7 @@ var fs = require('fs');
 
 nconf.set('port', '17125');
 
-var winston = require('winston');
-winston.loggers = {
-  add: function () {},
-  get: function () {
-    var dummyLogger = {
-      warn: function () {},
-      info: function () {},
-      error: function () {}
-    };
-    return dummyLogger;
-  }
-};
+require('../test/shutupWinston')();
 
 // sympa:
 nconf.set('swkTrustedAppName', null);
