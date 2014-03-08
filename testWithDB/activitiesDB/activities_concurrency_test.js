@@ -9,6 +9,7 @@ var beans = nconf.get('beans');
 var persistence = beans.get('activitiesPersistence');
 var activitystore = beans.get('activitystore');
 var activitiesAPI = beans.get('activitiesAPI');
+var notifications = beans.get('notifications');
 
 var Activity = beans.get('activity');
 
@@ -62,6 +63,11 @@ describe('Activities API', function () {
         done(err);
       });
     });
+
+    sinon.stub(notifications, 'visitorRegistration');
+    sinon.stub(notifications, 'visitorUnregistration');
+    sinon.stub(notifications, 'waitinglistAddition');
+    sinon.stub(notifications, 'waitinglistRemoval');
   });
 
   afterEach(function () {
