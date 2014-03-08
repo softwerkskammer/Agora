@@ -1,0 +1,19 @@
+{
+  "sympa": {},
+  "groupsPersistence": {"module": "./lib/persistence/persistence",
+    "constructorArgs": {
+      "collectionName": "teststore"
+    }},
+  "membersPersistence": {"module": "./test/persistence/testpersistence"},
+  "activitiesPersistence": {"module": "./lib/persistence/persistence",
+    "constructorArgs": {
+      "collectionName": "teststore"
+    }},
+  "announcementsPersistence": {"module": "./test/persistence/testpersistence"},
+  "mailsPersistence": {"module": "./test/persistence/testpersistence"},
+  "colorsPersistence": {"module": "./test/persistence/testpersistence"},
+  "sympaPersistence": {"module": "./lib/persistence/persistence",
+    "constructorArgs": {
+      "collectionName": "teststore"
+    }}
+}
