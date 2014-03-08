@@ -73,10 +73,11 @@ mixin bottomNavbar
 
 mixin notificationsBlock(notificationmessage)
   #{notificationmessage.kill()}
-  #notifications(class="alert alert-block hidden-print #{notificationmessage.type}")
+  -var contents = notificationmessage.contents()
+  #notifications(class="alert alert-block hidden-print #{contents.type}")
     button.close(type="button", data-dismiss="alert") &times;
-    h4 #{t(notificationmessage.title)}
-    | #{t(notificationmessage.text, notificationmessage.additionalArguments)}
+    h4 #{t(contents.title)}
+    | #{t(contents.text, contents.additionalArguments)}
 
 mixin topNavbar
   .navbar-header

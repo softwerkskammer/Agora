@@ -21,7 +21,7 @@ describe('Statusmessage', function () {
   it('is in res when recreated from object', function () {
     var locals = {};
     statusmessage.fromObject({type: 'alert-success'}).putIntoSession({session: {}}, {locals: locals});
-    expect(locals.statusmessage.type).to.equal('alert-success');
+    expect(locals.statusmessage.contents().type).to.equal('alert-success');
   });
   
 });
