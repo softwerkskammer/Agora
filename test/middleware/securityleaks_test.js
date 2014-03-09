@@ -70,7 +70,7 @@ describe('Security regarding', function () {
         .send('id=memberId&firstname=A&lastname=B&nickname=nuck&previousNickname=nuck&location=x&profession=y&reference=z&email=here@there.org&previousEmail=here@there.org')
         .expect(403)
         .expect(/Du hast einen Fehler gefunden./)
-        .expect(/Error: Forbidden/, done);
+        .expect(/Error: invalid csrf token/, done);
     });
 
     it('csrf middleware adds the csrf token to res.locals', function () {
