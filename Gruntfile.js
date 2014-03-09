@@ -98,17 +98,19 @@ module.exports = function (grunt) {
       test: {
         src: 'test', // the folder, not the files,
         options: {
+          root: 'lib',
           mask: '**/*.js',
           reporter: 'spec',
           check: {
-            lines: 77,
-            statements: 73
+            lines: 76,
+            statements: 72
           }
         }
       },
       testWithDB: {
         src: 'testWithDB', // the folder, not the files,
         options: {
+          root: 'lib',
           mask: '**/*.js',
           reporter: 'spec'
         }
