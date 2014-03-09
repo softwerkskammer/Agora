@@ -257,6 +257,13 @@
     "all_pages": "All pages in",
     "revisions": "Revisions",
     "search": "Search wiki",
+    "rename": "Rename wiki-page \"__pageName__\"",
+    "newname": "New Name",
+    "rename_info": [
+      "h3 Attention: Links",
+      "p Renaming the page will not adapt links to the page.",
+      "p Please search for the old page name and change found links accordingly."
+    ],
     "create": "$t(general.create) wiki-page \"__subdir__/__pageName__\"",
     "edit": "$t(general.edit) wiki-page \"__subdir__/__pageName__\"",
     "contents": "Contents",

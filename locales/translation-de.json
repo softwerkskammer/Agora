@@ -257,6 +257,13 @@
     "all_pages": "Alle Seiten in",
     "revisions": "Revisionen",
     "search": "Wiki durchsuchen",
+    "rename": "Wiki-Seite \"__pageName__\" umbenennen",
+    "newname": "Neuer Name",
+    "rename_info": [
+      "h3 Achtung: Verweise",
+      "p Das Umbennen einer Seite ändert nicht die Verweise auf sie.",
+      "p Bitte Suche nach dem Seitennamen und passe die Verweise manuell an."
+    ],
     "create": "Wiki-Seite \"__subdir__/__pageName__\" anlegen",
     "edit": "Wiki-Seite \"__subdir__/__pageName__\" bearbeiten",
     "contents": "Inhalt",

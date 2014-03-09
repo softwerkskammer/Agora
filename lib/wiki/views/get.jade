@@ -10,14 +10,15 @@ block content
       .modal-content
         .modal-header
           button.close(type="button", data-dismiss="modal", aria-hidden="true") &times;
-          h3 Seite umbenennen
+          h3 #{t("wiki.rename", {pageName: pageName})}
         .modal-body
           .row
             .col-md-12
+              !=t("wiki.rename_info", { postProcess: "jade" }) 
               form#addonform(action='/wiki/rename/#{subdir}/#{pageName}', method='post')
                 +csrf
                 fieldset
-                  +text('newName', 'Neuer Name', '')
+                  +text('newName', t("wiki.newname"), '')
                   button.btn.btn-primary.pull-right(type="submit") #{t("general.save")}
 
 
