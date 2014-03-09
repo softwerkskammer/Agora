@@ -6,6 +6,7 @@ var beans = require('nconf').get('beans');
 var mailsPersistence = beans.get('mailsPersistence');
 var groupsPersistence = beans.get('groupsPersistence');
 var activitiesPersistence = beans.get('activitiesPersistence');
+var Git = beans.get('gitmech');
 
 var really = process.argv[2];
 
@@ -15,7 +16,8 @@ if (!really || really !== 'really') {
 }
 
 var oldId = "socrates2014";
-var newId = "socrates2014orga";
+var newId = "socrates-orga";
+var newPrefix = "SoCraTes Orga";
 
 function closeDBsAndExit() {
   groupsPersistence.closeDB();
@@ -31,11 +33,11 @@ function handle(err) {
   }
 }
 
-
 // change the group's id:
 groupsPersistence.getById(oldId, function (err, group) {
   handle(err);
   group.id = newId;
+  group.emailPrefix = newPrefix;
   groupsPersistence.update(group, oldId, function (err) {
     handle(err);
     // change each activity that belongs to the group:
@@ -55,7 +57,10 @@ groupsPersistence.getById(oldId, function (err, group) {
               },
               function (err) {
                 handle(err);
-                closeDBsAndExit();
+                Git.mv(oldId, newId, 'Group rename: ' + oldId + ' -> ' + newId, 'Nicole <Nicole@softwerkskammer.org>', function (err) {
+                  handle(err);
+                  closeDBsAndExit();
+                });
               });
           });
         });
@@ -67,7 +72,7 @@ groupsPersistence.getById(oldId, function (err, group) {
  What else must be done when renaming a group?
 
  - rename the group in sympa (in the user interface)
- - rename the wiki directory (adapt all links??)
+ - adapt all wiki-links??
 
  */
 
