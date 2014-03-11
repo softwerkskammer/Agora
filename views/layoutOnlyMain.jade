@@ -1,0 +1,7 @@
+extends commonLayout
+block specific
+  .col-md-12
+    if (statusmessage)
+      +notificationsBlock(statusmessage)
+    block content
+    p &nbsp;
