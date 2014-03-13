@@ -2,7 +2,7 @@
 
 var sinon = require('sinon').sandbox.create();
 var expect = require('chai').expect;
-
+var _ = require('lodash');
 var beans = require('../../testutil/configureForTest').get('beans');
 var wikiAPI = beans.get('wikiAPI');
 var moment = require('moment-timezone');
@@ -79,7 +79,8 @@ describe('WikiAPI (getBlogPosts)', function () {
       } else if (groupname === 'alle') {
         callback(null, []);
       } else if (groupname === 'error') {
-        callback(null, ['error/blog_2013-10-01.md', 'error/blog_notadate.md', 'error/blog_2013-05-01.md', 'error/blog_.md']);
+        callback(null, ['error/blog_2013-10-01.md', 'error/blog_notadate.md', 'error/blog_2013-05-01.md', 
+          'error/blog_2013-05-1.md', 'error/blog_2013-5-01.md', 'error/blog_.md']);
       }
     });
     sinon.stub(Git, 'readFile', function (path, version, callback) {
@@ -101,6 +102,10 @@ describe('WikiAPI (getBlogPosts)', function () {
         callback(null, "#2");
       } else if (path === "error/blog_2013-05-01.md") {
         callback(null, "#3");
+      } else if (path === "error/blog_2013-05-1.md") {
+        callback(null, "#4");
+      } else if (path === "error/blog_2013-5-01.md") {
+        callback(null, "#5");
       } else if (path === "error/blog_.md") {
         callback(null, "");
       }
@@ -142,10 +147,12 @@ describe('WikiAPI (getBlogPosts)', function () {
 
   it('skips empty posts and posts without proper date', function (done) {
     wikiAPI.getBlogpostsForGroup("error", function (err, result) {
-      expect(result.length === 2).to.be.true;
-
-      expect(result[0].title).to.equal('1');
-      expect(result[1].title).to.equal('3');
+      expect(result.length).to.equal(4);
+      var titles = _.pluck(result, 'title');
+      expect(titles).to.contain('1');
+      expect(titles).to.contain('3');
+      expect(titles).to.contain('4');
+      expect(titles).to.contain('5');
       done(err);
     });
   });
