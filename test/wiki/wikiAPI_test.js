@@ -84,7 +84,7 @@ describe('WikiAPI (getBlogPosts)', function () {
     });
     sinon.stub(Git, 'readFile', function (path, version, callback) {
       if (path === "internet/blog_2013-11-01LeanCoffeeTest.md") {
-        callback(null, "#Lean Coffee November 2013\n" +
+        callback(null, "####   Lean Coffee November 2013\n" +
           "\n" +
           "Und beim nächsten Mal haben wir dann.\n" +
           "\n" +
