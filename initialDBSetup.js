@@ -4,6 +4,7 @@ require('./configure'); // initializing parameters
 var beans = require('nconf').get('beans');
 var membersPersistence = beans.get('membersPersistence');
 var groupsPersistence = beans.get('groupsPersistence');
+var sympaPersistence = beans.get('sympaPersistence');
 var Group = beans.get('group');
 var Member = beans.get('member');
 
@@ -23,6 +24,22 @@ function logResult(err, message) {
 
 async.parallel(
   [
+    function createLists(callback) {
+      var lists = [
+        {id: 'alle'},
+        {id: 'commercial'},
+        {id: 'neueplattform'},
+        {id: 'craftsmanswap'},
+        {id: 'internet'}
+      ];
+      async.map(lists, function (list, callback) {
+        sympaPersistence.save({"id" : list.id, "users": []}, function (err) {
+          callback(err, 'List "' + list.id + '"');
+        });
+      }, function (err, results) {
+        callback(err, results.join(', '));
+      });
+    },
     function createGroups(callback) {
       var groups = [
         {id: 'alle', emailPrefix: 'alleAlle', description: 'D-Scription', shortName: 'Alle', longName: 'Alle', type: 'Themengruppe', color: '#ff0000', mapX: '100', mapY: '100'},
