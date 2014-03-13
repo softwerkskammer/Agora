@@ -79,8 +79,7 @@ describe('WikiAPI (getBlogPosts)', function () {
       } else if (groupname === 'alle') {
         callback(null, []);
       } else if (groupname === 'error') {
-        callback(null, ['error/blog_2013-10-01.md', 'error/blog_notadate.md', 'error/blog_2013-05-01.md', 
-          'error/blog_2013-05-1.md', 'error/blog_2013-5-01.md', 'error/blog_.md']);
+        callback(null, ['error/blog_2013-10-01.md', 'error/blog_notadate.md', 'error/blog_2013-05-01.md', 'error/blog_2013-05-1.md', 'error/blog_2013-5-01.md', 'error/blog_.md']);
       }
     });
     sinon.stub(Git, 'readFile', function (path, version, callback) {
