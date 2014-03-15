@@ -101,7 +101,7 @@ var highlightCurrentSection = function () {
 };
 
 var addHelpButtonToTextarea = function () {
-  $('textarea').each(function () {
+  $('.md-textarea').each(function () {
     $(this).markdown({
         additionalButtons: [
           [

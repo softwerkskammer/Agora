@@ -73,8 +73,6 @@ block content
 mixin memberSubmitButtons
   .btn-group.pull-right
     if (accessrights.isRegistered())
-      if (accessrights.isMember(member))
-        a.btn.btn-default(href="/auth/logout", type="cancel") #{t("general.logout")}
       a.btn.btn-default(href="javascript:history.back()", type="cancel") #{t("general.back")}
     else
       a.btn.btn-danger(href="/auth/logout", type="cancel") #{t("members.cancel")}

@@ -18,13 +18,13 @@ mixin textareaPure(name, label, value)
 mixin textarea(name, label, value, tooltip)
   .form-group
     +controlLabel(name, label, tooltip)
-    textarea(rows="7", id=name, type='text', name=name)
+    textarea.md-textarea(rows="7", id=name, type='text', name=name)
       | #{value}
 
 mixin hightextarea(name, label, value, tooltip)
   .form-group
     +controlLabel(name, label, tooltip)
-    textarea(rows="15", id=name, type='text', name=name)
+    textarea.md-textarea(rows="15", id=name, type='text', name=name)
       | #{value}
 
 mixin checkbox(name, label, checked, optionalValue)

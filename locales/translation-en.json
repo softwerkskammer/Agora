@@ -218,7 +218,10 @@
     "subject": "Subject",
     "contents": "Contents",
     "copy_to_self": "Send a copy to myself",
-    "send": "Send"
+    "send": "Send",
+    "resign": "Write Resignement E-Mail",
+    "why-resign": "Why do you want to resign",
+    "notes-resign": "Please let us know what you think about this site"
   },
   "members": {
     "overview": "Members Overview",
@@ -245,7 +248,8 @@
     "authenticate": "Authenticate elsewhere",
     "send_email": "Send e-mail to __firstname__ __lastname__",
     "has": "Softwerkskammer has",
-    "notifyOnWikiChanges": "Notify on wiki changes"
+    "notifyOnWikiChanges": "Notify on wiki changes",
+    "resign": "Resign…"
   },
   "wiki": {
     "blogposts": "Blog Posts:",
