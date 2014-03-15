@@ -56,8 +56,7 @@ module.exports = function (grunt) {
           'node_modules/jquery/dist/jquery.js',
           'public/clientscripts/global/bootstrap.js',
           'public/clientscripts/global/bootstrap-datepicker.js',
-          'public/clientscripts/global/bootstrap-markdown-patched.js',
-          'public/clientscripts/global/markdown.js',
+          'public/clientscripts/global/bootstrap-markdown.js',
           'node_modules/moment-timezone/node_modules/moment/min/moment.min.js',
           'public/clientscripts/global/fullcalendar-patched.js',
           'public/clientscripts/global/de.js', // for fullcalendar
@@ -79,8 +78,7 @@ module.exports = function (grunt) {
           'node_modules/jquery/dist/jquery.js',
           'public/clientscripts/global/bootstrap.js',
           'public/clientscripts/global/bootstrap-datepicker.js',
-          'public/clientscripts/global/bootstrap-markdown-patched.js',
-          'public/clientscripts/global/markdown.js',
+          'public/clientscripts/global/bootstrap-markdown.js',
           'node_modules/moment-timezone/node_modules/moment/min/moment.min.js',
           'public/clientscripts/global/fullcalendar-patched.js',
           'public/clientscripts/global/en-gb.js', // for fullcalendar

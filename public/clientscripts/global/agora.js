@@ -125,7 +125,8 @@ var addHelpButtonToTextarea = function () {
           );
           return ""; // to clearly indicate the loading...
         },
-        iconlibrary: 'fa'
+        iconlibrary: 'fa',
+        resize: 'vertical'
       }
     );
   });

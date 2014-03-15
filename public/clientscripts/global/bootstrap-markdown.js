@@ -1,5 +1,5 @@
 /* ===================================================
- * bootstrap-markdown.js v2.2.1
+ * bootstrap-markdown.js v2.3.1
  * http://github.com/toopay/bootstrap-markdown
  * ===================================================
  * Copyright 2013 Taufan Aditya
@@ -15,9 +15,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
- * search for PATCHED
- * 
  * ========================================================== */
 
 !function ($) {
@@ -134,7 +131,9 @@
         rowsVal = hasRows ? this.$textarea.attr('rows') : maxRows
 
       this.$textarea.attr('rows',rowsVal)
-      this.$textarea.css('resize','vertical') // PATCHED
+      if (this.$options.resize) {
+        this.$textarea.css('resize',this.$options.resize)
+      }
 
       this.$textarea
         .on('focus',    $.proxy(this.focus, this))
@@ -196,14 +195,27 @@
           'class': 'md-header btn-toolbar'
         })
 
-        // Build the main buttons
-        if (options.buttons.length > 0) {
-          editorHeader = this.__buildButtons(options.buttons, editorHeader)
+        // Merge the main & additional button groups together
+        var allBtnGroups = []
+        if (options.buttons.length > 0) allBtnGroups = allBtnGroups.concat(options.buttons[0])
+        if (options.additionalButtons.length > 0) allBtnGroups = allBtnGroups.concat(options.additionalButtons[0])
+
+        // Reduce and/or reorder the button groups
+        if (options.reorderButtonGroups.length > 0) {
+          allBtnGroups = allBtnGroups
+            .filter(function(btnGroup) {
+              return options.reorderButtonGroups.indexOf(btnGroup.name) > -1
+            })
+            .sort(function(a, b) {
+              if (options.reorderButtonGroups.indexOf(a.name) < options.reorderButtonGroups.indexOf(b.name)) return -1
+              if (options.reorderButtonGroups.indexOf(a.name) > options.reorderButtonGroups.indexOf(b.name)) return 1
+              return 0
+            })
         }
 
-        // Build the additional buttons
-        if (options.additionalButtons.length > 0) {
-          editorHeader = this.__buildButtons(options.additionalButtons, editorHeader)
+        // Build the buttons
+        if (allBtnGroups.length > 0) {
+          editorHeader = this.__buildButtons([allBtnGroups], editorHeader)
         }
 
         editor.append(editorHeader)
@@ -260,16 +272,27 @@
           editor.append(editorFooter)
         }
 
-        // Set width/height
-        $.each(['height','width'],function(k,attr){
-          if (options[attr] != 'inherit') {
-            if (jQuery.isNumeric(options[attr])) {
-              editor.css(attr,options[attr]+'px')
-            } else {
-              editor.addClass(options[attr])
-            }
+        // Set width
+        if (options.width && options.width !== 'inherit') {
+          if (jQuery.isNumeric(options.width)) {
+            editor.css('display', 'table')
+            textarea.css('width', options.width + 'px')
+          } else {
+            editor.addClass(options.width)
           }
-        })
+        }
+
+        // Set height
+        if (options.height && options.height !== 'inherit') {
+          if (jQuery.isNumeric(options.height)) {
+            var height = options.height
+            if (editorHeader) height = Math.max(0, height - editorHeader.outerHeight())
+            if (editorFooter) height = Math.max(0, height - editorFooter.outerHeight())
+            textarea.css('height', height + 'px')
+          } else {
+            editor.addClass(options.height)
+          }
+        }
 
         // Reference
         this.$editor     = editor
@@ -336,6 +359,12 @@
         // Otherwise, just append it after textarea
         container.parent().append(replacementContainer)
       }
+
+      // Set the preview element dimensions
+      replacementContainer.css({
+        width: container.outerWidth() + 'px',
+        height: container.outerHeight() + 'px'
+      })
 
       // Hide the last-active textarea
       container.hide()
@@ -681,6 +710,7 @@
     savable:false,
     width: 'inherit',
     height: 'inherit',
+    resize: 'none',
     iconlibrary: 'glyph',
 
     /* Buttons Properties */
@@ -911,6 +941,7 @@
       }]
     ],
     additionalButtons:[], // Place to hook more buttons by code
+    reorderButtonGroups:[],
 
     /* Events hook */
     onShow: function (e) {},
