@@ -60,7 +60,7 @@
   },
   "devDependencies": {
     "chai": "~1.8",
-    "grunt": "~0.4.1",
+    "grunt": "~0.4",
     "grunt-contrib-concat": "~0.3.0",
     "grunt-contrib-jshint": "~0.9",
     "grunt-contrib-qunit": "~0.4",
