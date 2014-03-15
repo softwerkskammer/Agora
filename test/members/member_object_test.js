@@ -1,6 +1,7 @@
 "use strict";
 
 var conf = require('nconf');
+
 var expect = require('chai').expect;
 require('../../testutil/configureForTest');
 
@@ -14,7 +15,7 @@ describe('Member initial filling', function () {
     expect(member.id(), 'id').to.equal(db_record.id);
     expect(member.nickname(), 'nickname').to.equal(db_record.nickname);
   });
-  
+
   it('is populated by Google OpenID record', function () {
     var userdata = JSON.parse('{' +
       '"authenticationId": "https://www.google.com/accounts/o8/id?id=someGoogelID", "profile": {' +
@@ -130,5 +131,17 @@ describe('display functionalities', function () {
     var db_record = {nickname: 'Nick'};
     var member = new Member(db_record);
     expect(member.asGitAuthor()).to.equal('Nick <Nick@softwerkskammer.org>');
+  });
+});
+
+describe('utility functions', function () {
+  it('gives superuser email addresses', function () {
+    var member = new Member({id: 'superuserID', email: 'email1'});
+    expect(Member.superuserEmails([ member ])).to.contain('email1');
+  });
+  
+  it('gives wikichange email addresses', function () {
+    var member = new Member({notifyOnWikiChanges: true, email: 'email1'});
+    expect(Member.wikiNotificationMembers([ member ])).to.contain('email1');
   });
 });
