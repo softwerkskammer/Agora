@@ -29,6 +29,7 @@
   },
   "dependencies": {
     "async": "~0.2.9",
+    "bootstrap-timepicker": "git://github.com/jdewit/bootstrap-timepicker.git#v0.2.6",
     "connect-ensure-login": "0.1.1",
     "connect-mongo": "0.4",
     "CoolBeans": "0.0.9",

@@ -67,7 +67,7 @@ module.exports = function (grunt) {
           'node_modules/jquery-validation/additional-methods.js',
           'node_modules/jquery-validation/localization/messages_de.js',
           'node_modules/jquery-validation/localization/methods_de.js',
-          'public/clientscripts/global/bootstrap-timepicker.js',
+          'node_modules/bootstrap-timepicker/js/bootstrap-timepicker.js',
           'public/clientscripts/global/agora.js'
         ],
         dest: 'public/clientscripts/global_de.js'
@@ -86,7 +86,7 @@ module.exports = function (grunt) {
           'public/clientscripts/global/pick-a-color.js',
           'node_modules/jquery-validation/jquery.validate.js',
           'node_modules/jquery-validation/additional-methods.js',
-          'public/clientscripts/global/bootstrap-timepicker.js',
+          'node_modules/bootstrap-timepicker/js/bootstrap-timepicker.js',
           'public/clientscripts/global/agora.js'
         ],
         dest: 'public/clientscripts/global_en.js'
