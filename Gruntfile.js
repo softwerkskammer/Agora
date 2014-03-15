@@ -35,7 +35,7 @@ module.exports = function (grunt) {
           'public/stylesheets/screen.css': [
             'public/stylesheets/vendor/fullcalendar.css',
             'public/stylesheets/less/bootstrap.less',
-            'public/stylesheets/vendor/datepicker.css',
+            'public/stylesheets/vendor/datepicker3.css',
             'public/stylesheets/less/bootstrap-markdown-patched.less',
             'public/stylesheets/vendor/font-awesome.min.css',
             'public/stylesheets/less/pick-a-color-patched.less',
