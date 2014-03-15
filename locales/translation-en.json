@@ -249,7 +249,7 @@
     "send_email": "Send e-mail to __firstname__ __lastname__",
     "has": "Softwerkskammer has",
     "notifyOnWikiChanges": "Notify on wiki changes",
-    "resign": "Resign…"
+    "resign": "Resign"
   },
   "wiki": {
     "blogposts": "Blog Posts:",
