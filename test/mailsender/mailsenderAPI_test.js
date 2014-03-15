@@ -107,7 +107,7 @@ describe('MailsenderAPI', function () {
       var emailAddress = 'emailAddress@e.mail';
       emptyActivity.participants = [new Member({email: emailAddress})];
 
-      api.sendMailToParticipantsOf(activityURL, message, function (statusmessage) {
+      api.sendMailToParticipantsOf(activityURL, message, function () {
         expect(sendmail.calledOnce).to.be.ok;
         var transportobject = sendmail.args[0][0];
         expect(transportobject.bcc).to.contain(emailAddress);
@@ -128,7 +128,7 @@ describe('MailsenderAPI', function () {
 
   describe('sending mail to distinct member', function () {
     it('sends the email', function (done) {
-      api.sendMailToMember('nickname', message, function (statusmessage) {
+      api.sendMailToMember('nickname', message, function () {
         expect(sendmail.calledOnce).to.be.ok;
         var transportobject = sendmail.args[0][0];
         expect(transportobject.bcc).to.contain('email@mail.de');
@@ -153,7 +153,7 @@ describe('MailsenderAPI', function () {
     });
 
     it('sends to members of selected groups', function (done) {
-      api.sendMailToInvitedGroups(['GroupA', 'GroupB'], message, function (statusmessage) {
+      api.sendMailToInvitedGroups(['GroupA', 'GroupB'], message, function () {
         expect(sendmail.calledOnce).to.be.ok;
         var transportobject = sendmail.args[0][0];
         expect(transportobject.bcc).to.contain('memberA');
