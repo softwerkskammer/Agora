@@ -107,12 +107,12 @@ describe('MailsenderAPI', function () {
       var emailAddress = 'emailAddress@e.mail';
       emptyActivity.participants = [new Member({email: emailAddress})];
 
-      api.sendMailToParticipantsOf(activityURL, message, function (err) {
+      api.sendMailToParticipantsOf(activityURL, message, function (statusmessage) {
         expect(sendmail.calledOnce).to.be.ok;
         var transportobject = sendmail.args[0][0];
         expect(transportobject.bcc).to.contain(emailAddress);
         expect(transportobject.html).to.contain('mark down');
-        done(err);
+        done();
       });
     });
 
@@ -128,12 +128,12 @@ describe('MailsenderAPI', function () {
 
   describe('sending mail to distinct member', function () {
     it('sends the email', function (done) {
-      api.sendMailToMember('nickname', message, function (err) {
+      api.sendMailToMember('nickname', message, function (statusmessage) {
         expect(sendmail.calledOnce).to.be.ok;
         var transportobject = sendmail.args[0][0];
         expect(transportobject.bcc).to.contain('email@mail.de');
         expect(transportobject.html).to.contain('mark down');
-        done(err);
+        done();
       });
     });
   });
@@ -153,13 +153,13 @@ describe('MailsenderAPI', function () {
     });
 
     it('sends to members of selected groups', function (done) {
-      api.sendMailToInvitedGroups(['GroupA', 'GroupB'], message, function (err) {
+      api.sendMailToInvitedGroups(['GroupA', 'GroupB'], message, function (statusmessage) {
         expect(sendmail.calledOnce).to.be.ok;
         var transportobject = sendmail.args[0][0];
         expect(transportobject.bcc).to.contain('memberA');
         expect(transportobject.bcc).to.contain('memberB');
         expect(transportobject.html).to.contain('mark down');
-        done(err);
+        done();
       });
     });
 
