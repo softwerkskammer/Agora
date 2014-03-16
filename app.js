@@ -17,9 +17,15 @@ var i18n = require('i18next');
 var jade = require("jade");
 
 function useApp(parent, url, factory) {
+  function ensureRequestedUrlEndsWithSlash(req, res, next) {
+    if (!(/\/$/).test(req.url)) { return res.redirect(req.url + '/'); }
+    next();
+  }
+
   var child = factory(express());
   child.locals.pretty = true;
-  parent.use('/' + url, child);
+  parent.get('/' + url, ensureRequestedUrlEndsWithSlash);
+  parent.use('/' + url + '/', child);
   return child;
 }
 
