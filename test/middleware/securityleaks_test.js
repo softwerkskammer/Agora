@@ -4,7 +4,7 @@ var request = require('supertest');
 var sinon = require('sinon').sandbox.create();
 var expect = require('chai').expect;
 
-var express = require('express');
+var csurf = require('csurf');
 //var passport = require('passport');
 var beans = require('../../testutil/configureForTest').get('beans');
 
@@ -53,7 +53,7 @@ describe('Security regarding', function () {
     });
 
     it('creates a CSRF token and adds it to the edit form', function (done) {
-      var app = setupApp('membersApp').createApp('memberId', express.csrf());
+      var app = setupApp('membersApp').createApp('memberId', csurf());
 
       request(app)
         .get('/edit/hada')
@@ -63,7 +63,7 @@ describe('Security regarding', function () {
     it('blocks updates that do not come with a csrf token', function (done) {
 
       // we need to load accessrights and jade support code before the csrf handling
-      var app = setupApp('membersApp').createApp('memberId', beans.get('accessrights'), beans.get('serverpathRemover'), express.csrf(), addCsrfTokenToLocals);
+      var app = setupApp('membersApp').createApp('memberId', beans.get('accessrights'), beans.get('serverpathRemover'), csurf(), addCsrfTokenToLocals);
 
       request(app)
         .post('/submit')

@@ -19,10 +19,10 @@ module.exports = function (internalAppName, configuredBeans) {
   return {
     createApp: function (memberID /* add middleware list as dynamic params */) {
       var app = express();
-      app.use(express.cookieParser());
-      app.use(express.urlencoded());
+      app.use(require('cookie-parser')());
+      app.use(require('body-parser').urlencoded());
       app.use(i18n.handle);
-      app.use(express.session({secret: 'secret', cookie: {maxAge: 10000}, store: null}));
+      app.use(require('express-session')({secret: 'secret', cookie: {maxAge: 10000}}));
 
       for (var i = 1; i < arguments.length; i++) {
         var middleware = arguments[i];
