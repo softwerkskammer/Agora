@@ -10,7 +10,6 @@ var cookieParser = require('cookie-parser');
 var favicon = require('static-favicon');
 var morgan = require('morgan');
 var bodyparser = require('body-parser');
-var methodOverride = require('method-override');
 var compress = require('compression');
 var csurf = require('csurf');
 var serveStatic = require('serve-static');
