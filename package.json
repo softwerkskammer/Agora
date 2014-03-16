@@ -25,7 +25,7 @@
   ],
   "main": "",
   "engines": {
-    "node": ">0.8"
+    "node": ">0.10"
   },
   "dependencies": {
     "async": "~0.2.9",
