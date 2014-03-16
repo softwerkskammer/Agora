@@ -31,9 +31,9 @@ System requirements and Installation
 
 It is a node.js project. Therefore you need node.js installed. Get it from [http://nodejs.org](http://nodejs.org).
 
-You should use version 0.10.x (currently 0.10.24). Currently we are still supporting version 0.8 (you need at least 0.8.19).
+You need a current 0.10.x version to run the software.
 
-Your node.js installation must contain at least npm 1.2.
+Your node.js installation must contain at least npm 1.3.
 
 ### Additional Software
 
@@ -129,6 +129,7 @@ Running the tests
 
 You can run the tests in *REPO* with `npm test`
 
+####Optional
 For running specific tests only, you can use mocha in a command like
 `mocha -R spec test/announcements/` To install mocha, invoke `npm install -g mocha` or `sudo npm install -g mocha` 
 
