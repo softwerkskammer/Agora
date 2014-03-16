@@ -16,12 +16,8 @@ version.jade
 
 npm-debug.log
 screen.css
-global.js
-bootstrap-custom.css
-bootstrap-markdown-custom.css
 global_de.js
 global_en.js
-pick-a-color-custom.css
 build/config.gypi
 coverage
 tempbeans.json
