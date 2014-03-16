@@ -79,9 +79,9 @@ module.exports = {
     var sevenDays = 86400 * 1000 * 7;
     if (conf.get('dontUsePersistentSessions')) {
       // TODO: Umbau als CoolBean mit SessionStore als InMemoryStore von Express statt if Konstrukt (leider)
-      app.use(expressSession({secret: conf.get('secret'), cookie: {maxAge: sevenDays}}));
+      app.use(expressSession({key: 'softwerkskammer.org', secret: conf.get('secret'), cookie: {maxAge: sevenDays}}));
     } else {
-      app.use(expressSession({secret: conf.get('secret'), cookie: {maxAge: sevenDays}, store: sessionStore}));
+      app.use(expressSession({key: 'softwerkskammer.org', secret: conf.get('secret'), cookie: {maxAge: sevenDays}, store: sessionStore}));
     }
     app.use(passport.initialize());
     app.use(passport.session());
