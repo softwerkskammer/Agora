@@ -72,7 +72,6 @@ module.exports = {
     app.use(morgan({stream: winstonStream}));
     app.use(cookieParser());
     app.use(bodyparser.urlencoded());
-    app.use(methodOverride());
     app.use(compress());
     app.use(serveStatic(path.join(__dirname, 'public')));
 
