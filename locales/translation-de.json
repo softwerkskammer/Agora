@@ -218,7 +218,10 @@
     "subject": "Betreff",
     "contents": "Inhalt",
     "copy_to_self": "Eine Kopie an mich senden",
-    "send": "Senden"
+    "send": "Senden",
+    "resign": "Austrittsmail schreiben",
+    "why-resign": "Warum willst Du austreten",
+    "notes-resign": "Was möchtest Du uns mitteilen (Anregungen, Kritik, Lob)"
   },
   "members": {
     "overview": "Übersicht der Mitglieder",
@@ -245,7 +248,8 @@
     "authenticate": "Anderswo authentifizieren",
     "send_email": "Eine E-Mail an __firstname__ __lastname__ senden",
     "has": "Die Softwerkskammer hat",
-    "notifyOnWikiChanges": "Benachrichtigen bei Änderungen im Wiki"
+    "notifyOnWikiChanges": "Benachrichtigen bei Änderungen im Wiki",
+    "resign": "Austreten"
   },
   "wiki": {
     "blogposts": "Blogartikel:",

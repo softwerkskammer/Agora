@@ -36,6 +36,9 @@ mixin loginMenu(forInline)
         li: a(href="/auth/logout")
           i.fa.fa-sign-out.fa-fw
           | &nbsp;#{t("general.logout")}
+        li: a(href="/mailsender/resign/#{encodeURIComponent(user.member.nickname())}")
+          i.fa.fa-ban.fa-fw
+          | &nbsp;#{t("members.resign")}
         li: a(href="https://github.com/softwerkskammer/Agora/issues", target="_blank")
           i.fa.fa-ambulance.fa-fw
           | &nbsp;#{t("general.feedback")}

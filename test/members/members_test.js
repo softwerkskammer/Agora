@@ -251,7 +251,7 @@ describe('Members application', function () {
       .send('id=0815&firstname=A&lastname=B&location=x&profession=y&reference=z')
       .send('nickname=nickerinack')
       .send('email=here@there.org')
-      .expect(function () { return notificationCall.called; })// must not be called, should be false to indicate correctness
+      .expect(function () { return notificationCall.called; }) // must return false to indicate correctness (thx supertest)
       .expect(302)
       .expect('location', /members\/nickerinack/, done);
   });
@@ -270,7 +270,7 @@ describe('Members application', function () {
       .send('id=0815&firstname=A&lastname=B&location=x&profession=y&reference=z')
       .send('nickname=nickerinack')
       .send('email=here@there.org')
-      .expect(function () { return !notificationCall.called; })// must be called, should be false to indicate correctness
+      .expect(function () { return !notificationCall.called; }) // must return false to indicate correctness (thx supertest)
       .expect(302)
       .expect('location', /members\/nickerinack/, done);
   });

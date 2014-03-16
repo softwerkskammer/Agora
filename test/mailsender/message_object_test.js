@@ -8,6 +8,13 @@ var Message = beans.get('message');
 var Member = beans.get('member');
 
 describe('Message Object\'s bcc', function () {
+  it('can handle "null" groups', function () {
+    var message = new Message();
+    var groups = [null];
+    message.setBccToGroupMemberAddresses(groups);
+    expect(message.bcc).to.be.empty;
+  });
+
   it('is not filled by empty groups', function () {
     var message = new Message();
     var groups = [];
@@ -61,6 +68,13 @@ describe('Message Object\'s bcc', function () {
     ];
     message.setBccToGroupMemberAddresses(groups);
     expect(message.bcc).to.deep.equal(['heinz', 'hans', 'elfriede']);
+  });
+
+  it('can handle "null" members', function () {
+    var message = new Message();
+    var members = [null];
+    message.setBccToMemberAddresses(members);
+    expect(message.bcc).to.be.empty;
   });
 
   it('is not filled by empty members', function () {
