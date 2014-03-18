@@ -1,6 +1,6 @@
 "use strict";
 
-var conf = require('../configureForTest');
+var conf = require('../../testutil/configureForTest');
 var beans = conf.get('beans');
 var detectBrowser = beans.get('detectBrowser');
 var expect = require('chai').expect;
@@ -8,9 +8,10 @@ var expect = require('chai').expect;
 describe('Detecting Browser', function () {
 
   function checkUserAgent(string) {
-    var res = {locals: {}};
     var req = {headers: {'user-agent': string}};
-    detectBrowser(req, res, function () {});
+    var res = {locals: {}};
+    var next = function () {};
+    detectBrowser(req, res, next);
     return res.locals.browserIsTooOld;
   }
 

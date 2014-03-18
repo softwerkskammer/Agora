@@ -1,67 +1,109 @@
-extends ../../../views/layout
-
-include ../../../views/layoutComponents
+extends ../../../views/layoutOnlyMain
 
 mixin defItem(title, url, text)
   dt #{title}:
-  dd: mixin externalUrl(url, text)
+  dd: a(href=url, target="_blank")
+    i.fa.fa-external-link
+    | &nbsp;#{text}
+
+mixin externalUrl(url, text)
+  a(href=url, target="_blank")
+    i.fa.fa-external-link
+    | &nbsp;#{text}
+
 
 block title
   | Credits
 block content
   .row
-    .col-md-6
-      h2 Server
-      dl.dl-horizontal
-        mixin defItem('Uberspace', 'http://uberspace.de', 'Webhoster')
-        mixin defItem('Node.js', 'http://nodejs.org', 'Plattform')
-        mixin defItem('MongoDB Treiber', 'http://mongodb.github.io/node-mongodb-native/contents.html', 'Persistenz')
-        mixin defItem('Async', 'https://github.com/caolan/async', 'Funktionale Erweiterungen')
-        mixin defItem('Express', 'http://expressjs.com/api.html', 'Applikationsframework')
-        mixin defItem('Winston', 'https://github.com/flatiron/winston', 'Logging')
-        mixin defItem('Winston-Config', 'https://github.com/triplem/winston-config', 'Logging Einfach')
-        mixin defItem('Lo-Dash "_"', 'http://lodash.com', 'Funktionale Erweiterungen')
-        mixin defItem('Underscore String "_s"', 'http://epeli.github.com/underscore.string/', 'String Erweiterungen')
-        mixin defItem('Moment', 'http://momentjs.com/', 'Datum und Uhrzeit leicht gemacht')
-        mixin defItem('Marked.js', 'https://github.com/chjj/marked', 'Markdown nach HTML')
-        mixin defItem('Node-syntaxhighlighter.js', 'https://github.com/thlorenz/node-syntaxhighlighter', 'Syntax Highlighting in markdown')
-        mixin defItem('Connect-Mongo', 'https://github.com/kcbanner/connect-mongo/', 'Persistente Sessions')
-    .col-md-6
-      h2 Frontend
-      dl.dl-horizontal
-        mixin defItem('Twitter Bootstrap', 'http://twitter.github.io/bootstrap/index.html', 'UI Basis')
-        mixin defItem('JQuery', 'http://api.jquery.com', 'API Referenz')
-        mixin defItem('JQuery Validation', 'http://docs.jquery.com/Plugins/Validation/', 'Frontend Validierung')
-        mixin defItem('Bootstrap-Markdown', 'http://toopay.github.com/bootstrap-markdown/', 'Markdown Editor für Textareas')
-        mixin defItem('Tiny Color', 'https://github.com/bgrins/TinyColor', 'Farben auswählen im Bootstrap Stil')
-        mixin defItem('Full Calendar', 'http://arshaw.com/fullcalendar/', 'Der Kalender')
-        mixin defItem('Font-Awesome', 'http://fortawesome.github.com/Font-Awesome/', 'Bessere Icons für Buttons etc.')
+    .col-md-4
+      h2 Backend
 
-  .row
-    .col-md-6
+      h4 Infrastruktur / Framework / Middleware
+      dl.dl-horizontal
+        +defItem('Uberspace', 'http://uberspace.de', 'Webhoster')
+        +defItem('Node.js', 'http://nodejs.org', 'Plattform')
+        +defItem('Express', 'http://expressjs.com/api.html', 'Applikationsframework')
+        +defItem('Passport', 'http://passportjs.org/', 'Authorisierung in Express')
+        +defItem('nconf', 'https://github.com/flatiron/nconf', 'Variablen konfigurierbar setzen')
+        +defItem('Cool Beans', 'https://github.com/dhughes/CoolBeans', 'Dependency Injection à la Spring')
+        +defItem('MongoDB Treiber', 'http://mongodb.github.io/node-mongodb-native/contents.html', 'Persistenz')
+        +defItem('Connect-Mongo', 'https://github.com/kcbanner/connect-mongo/', 'Persistente Sessions')
+        +defItem('Winston', 'https://github.com/flatiron/winston', 'Logging')
+        +defItem('Winston-Config', 'https://github.com/triplem/winston-config', 'Logging Einfach')
+
+      h4 Express Middleware
+      dl.dl-horizontal
+        +defItem('Body Parser', 'https://github.com/expressjs/body-parser', 'HTML-Form Aufbereitung')
+        +defItem('Compression', 'https://github.com/expressjs/compression', 'Komprimieren der HTTP-Streams')
+        +defItem('Cookie Parser', 'https://github.com/expressjs/cookie-parser', 'Notwendig für Sessionverwaltung')
+        +defItem('Csurf', 'https://github.com/expressjs/csurf', 'Verhindern von Cross-Site-Request-Forging')
+        +defItem('Express Session', 'https://github.com/expressjs/session', 'Sessionunterstützung')
+        +defItem('Morgan', 'https://github.com/expressjs/morgan', 'Für Logging')
+        +defItem('Serve Static', 'https://github.com/expressjs/serve-static', 'Zum Übermitteln statischer Dateien')
+        +defItem('Static Favicon', 'https://github.com/expressjs/favicon', 'Übermitteln von Favicons')
+
+      h4 Allgemeine Bibliotheken
+      dl.dl-horizontal
+        +defItem('Async', 'https://github.com/caolan/async', 'Funktionale Erweiterungen, asynchron')
+        +defItem('Lo-Dash "_"', 'http://lodash.com', 'Funktionale Erweiterungen, synchron')
+        +defItem('"_s"', 'http://epeli.github.com/underscore.string/', 'String Erweiterungen')
+        +defItem('Moment', 'http://momentjs.com/', 'Datum und Uhrzeit leicht gemacht')
+        +defItem('icalendar', 'https://github.com/tritech/node-icalendar', 'Einfaches Erstellen von vcal/ical Dateien')
+        +defItem('Mailparser', 'https://github.com/andris9/mailparser', 'Mime Mails dekodieren - für das Mailarchiv')
+        +defItem('Nodemailer', 'https://github.com/andris9/Nodemailer', 'Mails versenden')
+        +defItem('Node-html-Encoder', 'https://github.com/minchenkov/node-html-encoder', 'Text sicher enkodieren')
+        +defItem('Useragent', 'https://github.com/3rd-Eden/useragent', 'Browsererkennung')
+
+    .col-md-4
+      h2 UI
+      h4 Frontend Basis
+      dl.dl-horizontal
+        +defItem('Twitter Bootstrap', 'http://getbootstrap.com', 'UI Basis Framework')
+        +defItem('JQuery', 'http://jquery.com', 'DOM Manipulation')
+        +defItem('JQuery Validation', 'https://github.com/jzaefferer/jquery-validation', 'Frontend Validierung')
+        +defItem('Font-Awesome', 'http://fortawesome.github.com/Font-Awesome/', 'Bessere Icons für Buttons etc.')
+      
+      h4 Frontend Widgets
+      dl.dl-horizontal
+        +defItem('Bootstrap-Markdown', 'http://toopay.github.com/bootstrap-markdown/', 'Markdown Editor für Textareas')
+        +defItem('Pick-A-Color', 'https://github.com/lauren/pick-a-color/', 'Farben auswählen im Bootstrap Stil')
+        +defItem('Tiny Color', 'https://github.com/bgrins/TinyColor', 'Farben konvertieren - für pick-a-color')
+        +defItem('Full Calendar', 'http://arshaw.com/fullcalendar/', 'Der Kalender')
+        +defItem('Bootstrap-Datepicker', 'https://github.com/eternicode/bootstrap-datepicker', 'Datumseingabe')
+        +defItem('Bootstrap-Timepicker', 'https://github.com/jdewit/bootstrap-timepicker', 'Zeiteingabe')
+        +defItem('Datatables', 'http://www.datatables.net/', 'Für Administration')
+
+      h4 Backend Rendering
+      dl.dl-horizontal
+        +defItem('jade', 'http://jade-lang.com/', 'Template Engine')
+        +defItem('Marked', 'https://github.com/chjj/marked', 'Markdown nach HTML')
+        +defItem('Syntaxhighlighter', 'https://github.com/thlorenz/node-syntaxhighlighter', 'Syntax Highlighting in markdown')
+        +defItem('iconv', 'https://github.com/bnoordhuis/node-iconv', 'Text Recoding')
+        +defItem('i18next', 'https://github.com/jamuhl/i18next-node', 'Internationalisierung')
+
       .well
         h3 Credits
         p.
           Diese Site ist freie Software und ihre Entstehung wäre ohne das Vorhandensein freier Software undenkbar. An dieser
           Stelle möchten wir uns ausdrücklich bei allen bedanken, die ihre Arbeit uneigennützig zur freien Verwendung zulassen,
           indem wir diese Arbeit hier erwähnen.
-    .col-md-6
+    .col-md-4
       h2 Dev/Build/Test
       dl.dl-horizontal
-        mixin defItem('Grunt', 'http://gruntjs.com', 'Build-Runner')
-        mixin defItem('JSHint', 'http://www.jshint.com', 'Metrik/Qualitäts/Style Checker')
-        mixin defItem('JSHint (grunt)', 'https://github.com/gruntjs/grunt-contrib-jshint', 'Grunt Integration für JSHint')
-        mixin defItem('Grunt Watch', 'https://github.com/gruntjs/grunt-contrib-watch', 'Automatisch Grunt starten bei Änderungen')
-        mixin defItem('Mocha', 'http://visionmedia.github.io/mocha/', 'Test Framework')
-        mixin defItem('Grunt Mocha Test', 'https://github.com/pghalliday/grunt-mocha-test', 'Grunt Integration für Mocha')
-        mixin defItem('QUnit', 'http://qunitjs.com', 'Test Framework (Frontend)')
-        mixin defItem('Grunt QUnit', 'https://github.com/gruntjs/grunt-contrib-qunit', 'Grunt Integration für QUnit')
-        mixin defItem('Grunt Less', 'https://github.com/gruntjs/grunt-contrib-less', 'Grunt Integration für LESS Compilierung')
-        mixin defItem('Grunt Concat', 'https://github.com/gruntjs/grunt-contrib-concat', 'Grunt Concatenierung für JS-Files')
-        mixin defItem('Blanket', 'http://blanketjs.org', 'Coverage (rudimentär)')
-        mixin defItem('Travis Cov', 'https://github.com/alex-seville/travis-cov', 'Coverage als Test, so dass Builds fehlschlagen')
-        mixin defItem('Chai', 'http://chaijs.com', 'BDD TDD Assertion Library')
-        mixin defItem('Sinon', 'http://sinonjs.org', 'Mock Framework')
-        mixin defItem('Request', 'http://github.com/mikeal/request.git', 'Für Integrationstests')
-        mixin defItem('Supertest', 'https://github.com/visionmedia/supertest', 'Einfache Integrationstests')
+        +defItem('Grunt', 'http://gruntjs.com', 'Build-Runner')
+        +defItem('JSHint (grunt)', 'https://github.com/gruntjs/grunt-contrib-jshint', 'Grunt Integration für JSHint')
+        +defItem('Grunt Watch', 'https://github.com/gruntjs/grunt-contrib-watch', 'Automatisch Grunt starten bei Änderungen')
+        +defItem('Grunt QUnit', 'https://github.com/gruntjs/grunt-contrib-qunit', 'Grunt Integration für QUnit')
+        +defItem('Grunt Less', 'https://github.com/gruntjs/grunt-contrib-less', 'Grunt Integration für LESS Compilierung')
+        +defItem('Grunt Concat', 'https://github.com/gruntjs/grunt-contrib-concat', 'Grunt Concatenierung für JS-Files')
+        +defItem('Grunt Mocha Istanbul', 'https://github.com/pocesar/grunt-mocha-istanbul', 'Mocha Tests im Grunt + Coverage')
+        +defItem('Chai', 'http://chaijs.com', 'BDD TDD Assertion Library')
+        +defItem('Sinon', 'http://sinonjs.org', 'Mock Framework')
+        +defItem('Request', 'http://github.com/mikeal/request.git', 'Für Integrationstests')
+        +defItem('Supertest', 'https://github.com/visionmedia/supertest', 'Einfache Integrationstests')
+        +defItem('JSHint', 'http://www.jshint.com', 'Metrik/Qualitäts/Style Checker')
+        +defItem('Mocha', 'http://visionmedia.github.io/mocha/', 'Test Framework')
+        +defItem('QUnit', 'http://qunitjs.com', 'Test Framework (Frontend)')
+      
 

@@ -1,6 +1,6 @@
 "use strict";
 
-require('../configureForTest');
+require('../../testutil/configureForTest');
 
 var beans = require('nconf').get('beans');
 var expect = require('chai').expect;
@@ -8,6 +8,13 @@ var Message = beans.get('message');
 var Member = beans.get('member');
 
 describe('Message Object\'s bcc', function () {
+  it('can handle "null" groups', function () {
+    var message = new Message();
+    var groups = [null];
+    message.setBccToGroupMemberAddresses(groups);
+    expect(message.bcc).to.be.empty;
+  });
+
   it('is not filled by empty groups', function () {
     var message = new Message();
     var groups = [];
@@ -63,6 +70,13 @@ describe('Message Object\'s bcc', function () {
     expect(message.bcc).to.deep.equal(['heinz', 'hans', 'elfriede']);
   });
 
+  it('can handle "null" members', function () {
+    var message = new Message();
+    var members = [null];
+    message.setBccToMemberAddresses(members);
+    expect(message.bcc).to.be.empty;
+  });
+
   it('is not filled by empty members', function () {
     var message = new Message();
     var members = [];
@@ -96,6 +110,34 @@ describe('Message Object to TransportObject', function () {
     var message = new Message({}, member);
     var transportObject = message.toTransportObject('dummy');
     expect(transportObject.replyTo).to.equal('"Hans Dampf" <E-Mail>');
+  });
+  
+});
+
+describe('Message Object\'s buttons', function () {
+  
+  it('handles one button', function () {
+    var message = new Message();
+    var button = {text: 'text', url: 'url'};
+    message.addToButtons(button);
+    expect(message.buttons).to.deep.equal([button]);
+  });
+  
+  it('handles two buttons', function () {
+    var message = new Message();
+    var button1 = {text: 'text', url: 'url'};
+    var button2 = {text: 'text2', url: 'url2'};
+    message.addToButtons(button1);
+    message.addToButtons(button2);
+    expect(message.buttons).to.deep.equal([button1, button2]);
+  });
+  
+  it('handles two buttons already an array', function () {
+    var message = new Message();
+    var button1 = {text: 'text', url: 'url'};
+    var button2 = {text: 'text2', url: 'url2'};
+    message.addToButtons([button1, button2]);
+    expect(message.buttons).to.deep.equal([button1, button2]);
   });
   
 });

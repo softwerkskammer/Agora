@@ -27,7 +27,7 @@
   vertical-align: baseline !important;
   width: auto !important;
   box-sizing: content-box !important;
-  font-family: Consolas, "Liberation Mono", Courier, monospace !important;
+/* PATCHED - we want to use the styles of bootstrap -  font-family: Consolas, "Liberation Mono", Courier, monospace !important; */
 
   font-weight: normal !important;
   font-style: normal !important;

@@ -6,13 +6,13 @@ var sinonSandbox = sinon.sandbox.create();
 var expect = require('chai').expect;
 var moment = require('moment-timezone');
 
-var beans = require('../configureForTest').get('beans');
+var beans = require('../../testutil/configureForTest').get('beans');
 var mailarchiveAPI = beans.get('mailarchiveAPI');
 var Mail = beans.get('archivedMail');
 var Member = beans.get('member');
 var member = new Member({id: 'ai di', nickname: 'nigg'});
 
-var app = require('../testHelper')('mailarchiveApp').createApp();
+var app = require('../../testutil/testHelper')('mailarchiveApp').createApp();
 
 describe('Mail content page', function () {
   afterEach(function () {

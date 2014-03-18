@@ -1,5 +1,5 @@
 /* ===================================================
- * bootstrap-markdown.js v2.1.0
+ * bootstrap-markdown.js v2.3.1
  * http://github.com/toopay/bootstrap-markdown
  * ===================================================
  * Copyright 2013 Taufan Aditya
@@ -15,12 +15,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
- *  
- *  !!! PATCHED -> Search line: "      this.$textarea.css('resize','none')"
- *  !!! PATCHED -> replaced glyphicons by fontawesome
- *  !!! PATCHED -> replaced btn-sm by btn-xs
- *  !!! PATCHED -> replaced btn-primary by btn-default in preview button
  * ========================================================== */
 
 !function ($) {
@@ -90,6 +84,7 @@
             var button = buttons[z],
               buttonToggle = '',
               buttonHandler = ns+'-'+button.name,
+              buttonIcon = button.icon instanceof Object ? button.icon[this.$options.iconlibrary] : button.icon,
               btnText = button.btnText ? button.btnText : '',
               btnClass = button.btnClass ? button.btnClass : 'btn',
               tabIndex = button.tabIndex ? button.tabIndex : '-1'
@@ -99,9 +94,9 @@
             }
 
             // Attach the button object
-            btnGroupContainer.append('<button class="'
+            btnGroupContainer.append('<button type="button" class="'
               +btnClass
-              +' btn-default btn-xs" title="'
+              +' btn-default btn-sm" title="'
               +button.title
               +'" tabindex="'
               +tabIndex
@@ -112,7 +107,7 @@
               +'"'
               +buttonToggle
               +'><span class="'
-              +button.icon
+              +buttonIcon
               +'"></span> '
               +btnText
               +'</button>')
@@ -136,7 +131,9 @@
         rowsVal = hasRows ? this.$textarea.attr('rows') : maxRows
 
       this.$textarea.attr('rows',rowsVal)
-      this.$textarea.css('resize','vertical')
+      if (this.$options.resize) {
+        this.$textarea.css('resize',this.$options.resize)
+      }
 
       this.$textarea
         .on('focus',    $.proxy(this.focus, this))
@@ -198,14 +195,27 @@
           'class': 'md-header btn-toolbar'
         })
 
-        // Build the main buttons
-        if (options.buttons.length > 0) {
-          editorHeader = this.__buildButtons(options.buttons, editorHeader)
+        // Merge the main & additional button groups together
+        var allBtnGroups = []
+        if (options.buttons.length > 0) allBtnGroups = allBtnGroups.concat(options.buttons[0])
+        if (options.additionalButtons.length > 0) allBtnGroups = allBtnGroups.concat(options.additionalButtons[0])
+
+        // Reduce and/or reorder the button groups
+        if (options.reorderButtonGroups.length > 0) {
+          allBtnGroups = allBtnGroups
+            .filter(function(btnGroup) {
+              return options.reorderButtonGroups.indexOf(btnGroup.name) > -1
+            })
+            .sort(function(a, b) {
+              if (options.reorderButtonGroups.indexOf(a.name) < options.reorderButtonGroups.indexOf(b.name)) return -1
+              if (options.reorderButtonGroups.indexOf(a.name) > options.reorderButtonGroups.indexOf(b.name)) return 1
+              return 0
+            })
         }
 
-        // Build the additional buttons
-        if (options.additionalButtons.length > 0) {
-          editorHeader = this.__buildButtons(options.additionalButtons, editorHeader)
+        // Build the buttons
+        if (allBtnGroups.length > 0) {
+          editorHeader = this.__buildButtons([allBtnGroups], editorHeader)
         }
 
         editor.append(editorHeader)
@@ -262,16 +272,27 @@
           editor.append(editorFooter)
         }
 
-        // Set width/height
-        $.each(['height','width'],function(k,attr){
-          if (options[attr] != 'inherit') {
-            if (jQuery.isNumeric(options[attr])) {
-              editor.css(attr,options[attr]+'px')
-            } else {
-              editor.addClass(options[attr])
-            }
+        // Set width
+        if (options.width && options.width !== 'inherit') {
+          if (jQuery.isNumeric(options.width)) {
+            editor.css('display', 'table')
+            textarea.css('width', options.width + 'px')
+          } else {
+            editor.addClass(options.width)
           }
-        })
+        }
+
+        // Set height
+        if (options.height && options.height !== 'inherit') {
+          if (jQuery.isNumeric(options.height)) {
+            var height = options.height
+            if (editorHeader) height = Math.max(0, height - editorHeader.outerHeight())
+            if (editorFooter) height = Math.max(0, height - editorFooter.outerHeight())
+            textarea.css('height', height + 'px')
+          } else {
+            editor.addClass(options.height)
+          }
+        }
 
         // Reference
         this.$editor     = editor
@@ -318,7 +339,14 @@
         content = callbackContent
       } else {
         // Set the content
-        content = (typeof markdown == 'object') ? markdown.toHTML(container.val()) : container.val()
+        var val = container.val();
+        if(typeof markdown == 'object') {
+          content = markdown.toHTML(val);
+        }else if(typeof marked == 'function') {
+          content = marked(val);
+        } else {
+          content = val;
+        }
       }
 
       // Build preview element
@@ -331,6 +359,12 @@
         // Otherwise, just append it after textarea
         container.parent().append(replacementContainer)
       }
+
+      // Set the preview element dimensions
+      replacementContainer.css({
+        width: container.outerWidth() + 'px',
+        height: container.outerHeight() + 'px'
+      })
 
       // Hide the last-active textarea
       container.hide()
@@ -608,6 +642,9 @@
         }
       })
 
+      // Trigger the onFocus hook
+      options.onFocus(this);
+
       return this
     }
 
@@ -673,6 +710,8 @@
     savable:false,
     width: 'inherit',
     height: 'inherit',
+    resize: 'none',
+    iconlibrary: 'glyph',
 
     /* Buttons Properties */
     buttons: [
@@ -681,7 +720,7 @@
         data: [{
           name: 'cmdBold',
           title: 'Bold',
-          icon: 'fa fa-bold',
+          icon: { glyph: 'glyphicon glyphicon-bold', fa: 'fa fa-bold' },
           callback: function(e){
             // Give/remove ** surround the selection
             var chunk, cursor, selected = e.getSelection(), content = e.getContent()
@@ -710,7 +749,7 @@
         },{
           name: 'cmdItalic',
           title: 'Italic',
-          icon: 'fa fa-italic',
+          icon: { glyph: 'glyphicon glyphicon-italic', fa: 'fa fa-italic' },
           callback: function(e){
             // Give/remove * surround the selection
             var chunk, cursor, selected = e.getSelection(), content = e.getContent()
@@ -739,7 +778,7 @@
         },{
           name: 'cmdHeading',
           title: 'Heading',
-          icon: 'fa fa-font',
+          icon: { glyph: 'glyphicon glyphicon-header', fa: 'fa fa-font' },
           callback: function(e){
             // Append/remove ### surround the selection
             var chunk, cursor, selected = e.getSelection(), content = e.getContent(), pointer, prevChar
@@ -775,7 +814,7 @@
         data: [{
           name: 'cmdUrl',
           title: 'URL/Link',
-          icon: 'fa fa-link',
+          icon: { glyph: 'glyphicon glyphicon-globe', fa: 'fa fa-globe' },
           callback: function(e){
             // Give [] surround the selection and prepend the link
             var chunk, cursor, selected = e.getSelection(), content = e.getContent(), link
@@ -801,7 +840,7 @@
         },{
           name: 'cmdImage',
           title: 'Image',
-          icon: 'fa fa-picture-o',
+          icon: { glyph: 'glyphicon glyphicon-picture', fa: 'fa fa-picture-o' },
           callback: function(e){
             // Give ![] surround the selection and prepend the image link
             var chunk, cursor, selected = e.getSelection(), content = e.getContent(), link
@@ -833,7 +872,7 @@
         data: [{
           name: 'cmdList',
           title: 'List',
-          icon: 'fa fa-list-ul',
+          icon: { glyph: 'glyphicon glyphicon-list', fa: 'fa fa-list' },
           callback: function(e){
             // Prepend/Give - surround the selection
             var chunk, cursor, selected = e.getSelection(), content = e.getContent()
@@ -885,8 +924,8 @@
           toggle: true,
           title: 'Preview',
           btnText: 'Preview',
-          btnClass: 'btn btn-default btn-xs',
-          icon: 'fa fa-search',
+          btnClass: 'btn btn-primary btn-sm',
+          icon: { glyph: 'glyphicon glyphicon-search', fa: 'fa fa-search' },
           callback: function(e){
             // Check the preview mode and toggle based on this flag
             var isPreview = e.$isPreview,content
@@ -902,12 +941,14 @@
       }]
     ],
     additionalButtons:[], // Place to hook more buttons by code
+    reorderButtonGroups:[],
 
     /* Events hook */
     onShow: function (e) {},
     onPreview: function (e) {},
     onSave: function (e) {},
-    onBlur: function (e) {}
+    onBlur: function (e) {},
+    onFocus: function (e) {},
   }
 
   $.fn.markdown.Constructor = Markdown
@@ -930,6 +971,7 @@
       $this.data('markdown').showEditor()
       return
     }
+
     $this.markdown($this.data())
   }
 

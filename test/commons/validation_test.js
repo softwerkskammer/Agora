@@ -2,9 +2,10 @@
 var chai = require("chai");
 var expect = chai.expect;
 
-require('../configureForTest');
+require('../../testutil/configureForTest');
 var beans = require('nconf').get('beans');
 var validation = beans.get('validation');
+var AddonConfig = beans.get('addon').AddonConfig;
 
 describe('Validation', function () {
 
@@ -365,6 +366,36 @@ describe('Validation', function () {
       expect(result({})).to.contain('HTML-Text ist ein Pflichtfeld.');
       expect(result({markdown: null})).to.contain('HTML-Text ist ein Pflichtfeld.');
       expect(result({markdown: 'n'})).to.not.contain('HTML-Text ist ein Pflichtfeld.');
+    });
+
+  });
+
+  describe('isValidForAddon', function () {
+    var addonConfig = new AddonConfig({homeAddress: true, billingAddress: true, tShirtSize: true, roommate: true});
+    var result = function (object) {
+      return validation.isValidForAddon(object, addonConfig);
+    };
+
+    it('performs many checks simultaneously', function () {
+      expect(result({}).length).to.equal(3);
+    });
+
+    it('checks that homeAddress is set', function () {
+      expect(result({})).to.contain('Privatanschrift ist ein Pflichtfeld');
+      expect(result({homeAddress: null})).to.contain('Privatanschrift ist ein Pflichtfeld');
+      expect(result({homeAddress: 'n'})).to.not.contain('Privatanschrift ist ein Pflichtfeld');
+    });
+
+    it('checks that billingAddress is set', function () {
+      expect(result({})).to.contain('Rechnungsanschrift ist ein Pflichtfeld');
+      expect(result({billingAddress: null})).to.contain('Rechnungsanschrift ist ein Pflichtfeld');
+      expect(result({billingAddress: 'n'})).to.not.contain('Rechnungsanschrift ist ein Pflichtfeld');
+    });
+
+    it('checks that tShirtSize is set', function () {
+      expect(result({})).to.contain('T-Shirt Grösse ist ein Pflichtfeld');
+      expect(result({tShirtSize: null})).to.contain('T-Shirt Grösse ist ein Pflichtfeld');
+      expect(result({tShirtSize: 'n'})).to.not.contain('T-Shirt Grösse ist ein Pflichtfeld');
     });
 
   });

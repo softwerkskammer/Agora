@@ -1,6 +1,6 @@
 "use strict";
 
-var nconf = require('../configureForTestWithDB');
+var nconf = require('../../testutil/configureForTestWithDB');
 var expect = require('chai').expect;
 
 var beans = nconf.get('beans');

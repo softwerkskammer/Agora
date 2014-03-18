@@ -21,7 +21,7 @@ function createConfiguration() {
     mongoPort: '27017',
     publicUrlPrefix: "http://localhost:17124",
     superuserURLPattern: "/administration/|/new|/edit|/submit",
-    securedByLoginURLPattern: "/mailsender|/members|/(subscribe|unsubscribe)/|/mailarchive|/invitation|/addToWaitinglist",
+    securedByLoginURLPattern: "/mailsender|/members|/(subscribe|unsubscribe)/|/mailarchive|/invitation|/addToWaitinglist|/addon|/submitAddon|/wiki/socrates.*/",
     secret: "secret",
     beans: new Beans('./config/beans.json')
   });

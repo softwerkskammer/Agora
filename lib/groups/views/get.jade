@@ -16,6 +16,7 @@ block content
             a.btn.btn-default(href="/mailarchive/list/threaded/#{group.id}", title=t("mailarchive.archive"))
               i.fa.fa-archive.fa-fw
               | &nbsp;#{t("mailarchive.archive")}
+          a.btn.btn-default(href="#{webcalURL}", title=t("activities.export_subscribe")): i.fa.fa-calendar.fa-fw
           if (accessrights.canEditGroup(group))
             a.btn.btn-default(href="/groups/edit/#{group.id}", title=t("general.edit")): i.fa.fa-edit
         h2 #{group.longName} 
@@ -37,8 +38,8 @@ block content
         if (blogposts.length > 0)
           .col-md-6
             h4 #{t("members.members")}:
-            mixin memberlistHeading(t("groups.has"), users.length)
-            mixin memberlist(users, organizers)
+            +memberlistHeading(t("groups.has"), users.length)
+            +memberlist(users, organizers)
           .col-md-6
             h4 #{t("wiki.blogposts")}
             for post in blogposts
@@ -53,5 +54,5 @@ block content
         else
           .col-md-12
             h4 #{t("members.members")}:
-            mixin memberlistHeading(t("groups.has"), users.length)
-            mixin memberlist(users, organizers)
+            +memberlistHeading(t("groups.has"), users.length)
+            +memberlist(users, organizers)

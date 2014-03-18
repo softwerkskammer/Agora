@@ -1,6 +1,6 @@
 "use strict";
 
-var conf = require('../configureForTest');
+var conf = require('../../testutil/configureForTest');
 var sinon = require('sinon').sandbox.create();
 
 var expect = require('chai').expect;
@@ -62,6 +62,20 @@ describe('Groups API (getSubscribedGroupsForUser)', function () {
       expect(validLists.length).to.equal(2);
       expect(validLists[0]).to.equal(GroupA);
       expect(validLists[1]).to.equal(GroupB);
+      done(err);
+    });
+  });
+
+  it('never returns the admin group subscription', function (done) {
+    var spy = sinon.stub(groupstore, 'groupsByLists', function (lists, globalCallback) {
+      globalCallback(null, []);
+    });
+    sinon.stub(sympa, 'getSubscribedListsForUser', function (email, callback) {
+      callback(null, ['GroupA', 'GroupB', conf.get('adminListName')]);
+    });
+
+    systemUnderTest.getSubscribedGroupsForUser('admin@softwerkskammer.de', function (err) {
+      expect(spy.calledWith(['GroupA', 'GroupB'])).to.be.true;
       done(err);
     });
   });

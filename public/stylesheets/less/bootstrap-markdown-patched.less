@@ -3,6 +3,8 @@
  *
  * @author Taufan Aditya @taufanaditya
  * @copyright 2013 Taufan Aditya
+ *
+ * search for PATCHED
  */
 
 @import "variables.less"; // Point this into your bootstrap variables
@@ -15,7 +17,11 @@
   > .md-header, .md-footer {
     display: block;
     padding: 6px 4px;
-    background: @body-bg;
+    background: @panel-default-heading-bg;
+  }
+
+  > .md-header {
+    margin: 0;
   }
 
   > .md-preview {
@@ -23,11 +29,12 @@
     border-top: 1px dashed @table-border-color;
     border-bottom: 1px dashed @table-border-color;
     min-height: 10px;
+    overflow: auto;
   }
 
   > textarea {
     font-family: @font-family-monospace;
-    font-size: @font-size-base;
+    font-size: @font-size-small;  // PATCHED
     outline: 0;
     outline: thin dotted  \9; /* IE6-9 */
     margin: 0;
@@ -39,7 +46,7 @@
     border-bottom: 1px dashed @table-border-color;
     border-radius: 0;
     box-shadow: none;
-    background: @body-bg;
+    background: @body-bg; // PATCHED
     &:focus {
       box-shadow: none;
       background: @input-bg;

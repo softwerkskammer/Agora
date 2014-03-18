@@ -1,35 +1,30 @@
-// GENERAL
-mixin controlLabel(name, label, tooltip)
-  label.control-label(for=name)
-    -if (typeof(tooltip) !== 'undefined')
-      span.tooltiplabel(data-toggle="tooltip", data-original-title="#{tooltip}") #{label}:&nbsp;
-        i.fa.fa-question-circle
-      script.
-        $('.tooltiplabel').each(function(each) {$(this).tooltip()})
-    -else
-      | #{label}:
-
 mixin text(name, label, value, tooltip, placeholder)
   .form-group
-    mixin controlLabel(name, label, tooltip)
+    +controlLabel(name, label, tooltip)
     input.form-control(id=name, type='text', name=name, value=value, placeholder=placeholder)
 
 mixin textReadonly(name, label, value)
   .form-group
-    mixin hidden(name, value)
+    +hidden(name, value)
     label(class="control-label", for=name) #{label}:
     input.form-control(id=name, type='text', name=name, value=value, placeholder=placeholder disabled)
 
+mixin textareaPure(name, label, value)
+  .form-group
+    +controlLabel(name, label)
+    textarea.form-control(rows="4", id=name, type='text', name=name)
+      | #{value}
+
 mixin textarea(name, label, value, tooltip)
   .form-group
-    mixin controlLabel(name, label, tooltip)
-    textarea.input-block-level(rows="7", id=name, type='text', name=name)
+    +controlLabel(name, label, tooltip)
+    textarea.md-textarea(rows="7", id=name, type='text', name=name)
       | #{value}
 
 mixin hightextarea(name, label, value, tooltip)
   .form-group
-    mixin controlLabel(name, label, tooltip)
-    textarea.input-block-level(rows="15", id=name, type='text', name=name)
+    +controlLabel(name, label, tooltip)
+    textarea.md-textarea(rows="15", id=name, type='text', name=name)
       | #{value}
 
 mixin checkbox(name, label, checked, optionalValue)
@@ -38,28 +33,23 @@ mixin checkbox(name, label, checked, optionalValue)
       input(type='checkbox', name=name, value=optionalValue, checked=(checked ? "true" : undefined))
       | #{label}
 
-mixin checkboxWithDescription(name, label, checked, description, optionalValue)
-  .checkbox
-    label
-      input(type='checkbox', name=name, value=optionalValue, checked=(checked ? "true" : undefined))
-      -if (!!description)
-        span.popover-highlight(rel="tooltip-in-body", data-content="#{description}") #{label}
-      -else
-        | #{label}
-
 mixin groupCheckboxes(checkboxName, regionalgroups, themegroups)
   .row
     .col-md-6
-      mixin controlLabel(t("groups.regional"), t("groups.regional"))
+      +controlLabel(t("groups.regional"), t("groups.regional"))
       .form-group
         each markedGroup in regionalgroups
-          mixin checkboxWithDescription(checkboxName, markedGroup.group.longName, markedGroup.selected, markedGroup.group.descriptionHTMLFiltered("img"), markedGroup.group.id)
+          +checkboxWithDescription(checkboxName, markedGroup.group.longName, markedGroup.selected, markedGroup.group.descriptionHTMLFiltered("img"), markedGroup.group.id)
     .col-md-6
-      mixin controlLabel(t("groups.themed"), t("groups.themed"))
+      +controlLabel(t("groups.themed"), t("groups.themed"))
       .form-group
         each markedGroup in themegroups
-          mixin checkboxWithDescription(checkboxName, markedGroup.group.longName, markedGroup.selected, markedGroup.group.descriptionHTMLFiltered("img"), markedGroup.group.id)
+          +checkboxWithDescription(checkboxName, markedGroup.group.longName, markedGroup.selected, markedGroup.group.descriptionHTMLFiltered("img"), markedGroup.group.id)
 
+mixin submitButtons(submitTextToken)
+  .btn-group.pull-right
+    a.btn.btn-default(href="javascript:history.back()", type="cancel") #{t("general.back")}
+    button.btn.btn-primary(type="submit") #{t(submitTextToken)}
 
 
 mixin hidden(name, value)
@@ -68,7 +58,7 @@ mixin hidden(name, value)
 // PICKERS
 mixin date(name, label, value, tooltip)
   .form-group
-    mixin controlLabel(name, label, tooltip)
+    +controlLabel(name, label, tooltip)
     input.form-control.datepicker(id=name, type='text', name=name, value=value)
 
 mixin time(name, label, value)
@@ -92,4 +82,28 @@ mixin twitter(name, label, value)
     .input-group
       span.input-group-addon @
       input.form-control(id=name, type='text', name=name, value=value)
+
+// GENERAL
+mixin csrf
+  +hidden('_csrf', csrf_token)
+
+mixin controlLabel(name, label, tooltip)
+  label.control-label(for=name)
+    -if (typeof(tooltip) !== 'undefined')
+      span.tooltiplabel(data-toggle="tooltip", data-original-title="#{tooltip}") #{label}:&nbsp;
+        i.fa.fa-question-circle
+      script.
+        $('.tooltiplabel').each(function(each) {$(this).tooltip()})
+    -else
+      | #{label}:
+
+mixin checkboxWithDescription(name, label, checked, description, optionalValue)
+  .checkbox
+    label
+      input(type='checkbox', name=name, value=optionalValue, checked=(checked ? "true" : undefined))
+      -if (!!description)
+        span.popover-highlight(rel="tooltip-in-body", data-content="#{description}") #{label}
+      -else
+        | #{label}
+        
 

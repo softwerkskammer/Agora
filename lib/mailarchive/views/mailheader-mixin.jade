@@ -10,13 +10,6 @@ mixin pageHeader(group, range)
   h2 #{group}&nbsp;
     small #{t("mailarchive.archive")}
 
-mixin mailattributes(mailHeader)
-  if (!!mailHeader.memberNickname())
-    a(href="/members/" + encodeURIComponent(mailHeader.memberNickname())) #{mailHeader.displayedSenderName()}
-  else
-    | #{mailHeader.displayedSenderName()}
-  | , #{mailHeader.displayedTime}
-
 mixin mailIndex(mailHeaders)
   if(!!mailHeaders)
     ul
@@ -27,6 +20,14 @@ mixin mailIndex(mailHeaders)
               .modal-content
           a(data-toggle="modal", data-target="#messageDetails" + mailHeader.timeUnix, href="../../message/" + encodeURIComponent(mailHeader.id)) #{mailHeader.subject} 
           | (
-          mixin mailattributes(mailHeader) 
+          +mailattributes(mailHeader) 
           | )
-          mixin mailIndex(mailHeader.sortedResponses())
+          +mailIndex(mailHeader.sortedResponses())
+
+mixin mailattributes(mailHeader)
+  if (!!mailHeader.memberNickname())
+    a(href="/members/" + encodeURIComponent(mailHeader.memberNickname())) #{mailHeader.displayedSenderName()}
+  else
+    | #{mailHeader.displayedSenderName()}
+  | , #{mailHeader.displayedTime}
+

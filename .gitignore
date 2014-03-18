@@ -10,18 +10,15 @@ config/*.json*
 !config/example*.json
 !config/beans.json
 !config/testbeans.json
+!config/testbeansWithDB.json
 log/*.log
 version.jade
-test/tempbeans.json
-testWithDB/tempbeansWithDB.json
 
 npm-debug.log
-coverage.html
 screen.css
-global.js
-bootstrap-custom.css
-bootstrap-markdown-custom.css
 global_de.js
 global_en.js
-pick-a-color-custom.css
 build/config.gypi
+coverage
+tempbeans.json
+tempbeansWithDB.json

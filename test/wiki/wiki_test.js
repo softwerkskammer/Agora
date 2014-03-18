@@ -4,10 +4,10 @@ var request = require('supertest');
 var sinon = require('sinon').sandbox.create();
 var expect = require('chai').expect;
 
-var beans = require('../configureForTest').get('beans');
+var beans = require('../../testutil/configureForTest').get('beans');
 var wikiAPI = beans.get('wikiAPI');
 
-var createApp = require('../testHelper')('wikiApp').createApp;
+var createApp = require('../../testutil/testHelper')('wikiApp').createApp;
 
 describe('Wiki application', function () {
 
@@ -33,7 +33,6 @@ describe('Wiki application', function () {
       .get('/global/somepage')
       .expect(200)
       .expect(new RegExp(content))
-      .expect(/in Wiki \"global\"/)
       .end(function (err) {
         expect(pageShow.calledWith('global/somepage', 'HEAD')).to.be.ok;
         done(err);

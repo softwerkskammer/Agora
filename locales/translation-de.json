@@ -1,8 +1,10 @@
 {
   "general": {
+    "general": "Allgemein",
     "all": "Alle",
     "create": "Anlegen",
     "edit": "Bearbeiten",
+    "rename": "Umbenennen",
     "add": "Hinzufügen",
     "save": "Speichern",
     "back": "Zurück",
@@ -32,7 +34,8 @@
     "gdcr_activities": "Aktivitäten zum GDCR",
     "gdcr_text": "Hier findest Du fast alle deutschsprachigen Veranstaltungen. Eine vollständige Übersicht findest Du auf",
     "feedback": "Feedback",
-    "what_does_not_work": "Was funktioniert nicht, wie es soll?"
+    "what_does_not_work": "Was funktioniert nicht, wie es soll?",
+    "settings": "Einstellungen"
   },
   "error": {
     "congratulations": "Herzlichen Glückwunsch!",
@@ -40,12 +43,12 @@
     "missing_page": "Fehlende Seite",
     "page_is_missing": "Diese Seite fehlt.",
     "found404": "Du hast einen vier-null-vier gefunden.",
-    "found500": "Du hast einen fünf-null-null gefunden.",
+    "found500": "Du hast einen Fehler gefunden.",
     "click_links": "Am Besten klickst Du auf einen unserer Links im Header.",
     "detailed_report": "einen möglichst detaillierten Fehlerbericht zukommen",
     "os_browser": "Betriebssystem und Browser inkl. Version.",
     "datetime": "Datum / Uhrzeit",
-    "stacktrace500": "Den Stacktrace unterhalb von \"500\"",
+    "stacktrace500": "Den Stacktrace",
     "error500_text": [
       "p Bitte lass uns ",
       "  a(href=\"https://github.com/softwerkskammer/NeuePlattform-Implementierung/issues/\") $t(error.detailed_report):",
@@ -112,6 +115,15 @@
     "waitinglist_not_possible": "Warteliste ist nicht möglich.",
     "no_waitinglist": "Es gibt keine Warteliste.",
     "full": "Alle Plätze sind belegt.",
+    "addon": "Zusatzangaben",
+    "addon_information": "Informationstext für den Dialog",
+    "addon_required": "Zusatzangaben erforderlich…",
+    "edit_addon": "Zusatzangaben bearbeiten…",
+    "which_addon_to_collect": "Die folgenden Zusatzangaben werden bei der Registrierung erfragt. Alle Felder mit * sind Pflichtfelder.",
+    "home_address": "Privatanschrift",
+    "billing_address": "Rechnungsanschrift",
+    "t_shirt_size": "T-Shirt-Größe",
+    "roommate": "Mit wem möchtest Du das Zimmer teilen (nicht bei Einzelzimmer)?",
     "tooltip": {
       "title": "Kurz und knackig für Übersichten",
       "start": "Enddatum und -uhrzeit werden automatisch verschoben (die Dauer bleibt gleich)",
@@ -206,7 +218,10 @@
     "subject": "Betreff",
     "contents": "Inhalt",
     "copy_to_self": "Eine Kopie an mich senden",
-    "send": "Senden"
+    "send": "Senden",
+    "resign": "Austrittsmail schreiben",
+    "why-resign": "Warum willst Du austreten",
+    "notes-resign": "Was möchtest Du uns mitteilen (Anregungen, Kritik, Lob)"
   },
   "members": {
     "overview": "Übersicht der Mitglieder",
@@ -219,7 +234,6 @@
     "member_of": "Mitglied in",
     "personal_data": "Persönliche Daten",
     "profile": "Profil",
-    "profileview": "Profilansicht",
     "nickname": "Nickname",
     "firstname": "Vorname",
     "lastname": "Nachname",
@@ -233,7 +247,9 @@
     "authenticated_via": "Aktuell authentifiziert bei",
     "authenticate": "Anderswo authentifizieren",
     "send_email": "Eine E-Mail an __firstname__ __lastname__ senden",
-    "has": "Die Softwerkskammer hat"
+    "has": "Die Softwerkskammer hat",
+    "notifyOnWikiChanges": "Benachrichtigen bei Änderungen im Wiki",
+    "resign": "Austreten"
   },
   "wiki": {
     "blogposts": "Blogartikel:",
@@ -245,8 +261,15 @@
     "all_pages": "Alle Seiten in",
     "revisions": "Revisionen",
     "search": "Wiki durchsuchen",
-    "create": "Wiki-Seite \"__pageName__\" $t(wiki.in) \"__subdir__\" anlegen",
-    "edit": "Wiki-Seite \"__pageName__\" $t(wiki.in) \"__subdir__\" bearbeiten",
+    "rename": "Wiki-Seite \"__pageName__\" umbenennen",
+    "newname": "Neuer Name",
+    "rename_info": [
+      "h3 Achtung: Verweise",
+      "p Das Umbennen einer Seite ändert nicht die Verweise auf sie.",
+      "p Bitte Suche nach dem Seitennamen und passe die Verweise manuell an."
+    ],
+    "create": "Wiki-Seite \"__subdir__/__pageName__\" anlegen",
+    "edit": "Wiki-Seite \"__subdir__/__pageName__\" bearbeiten",
     "contents": "Inhalt",
     "message": "Kommentar",
     "commit_message": "Commit-Kommentar",
@@ -277,6 +300,9 @@
         "participation_for_resource_removed": "Schade, dass Du bei \"__resourceName__\" nicht dabei sein wirst.",
         "waitinglist_added": "Du bist jetzt auf der Warteliste.",
         "waitinglist_removed": "Du bist jetzt nicht mehr auf der Warteliste."
+      },
+      "addon": {
+        "saved": "Deine Zusatzinformationen wurden gespeichert."
       },
       "announcements": {
         "saved": "Deine Nachricht wurde gespeichert."

@@ -3,7 +3,7 @@
 require('chai').should();
 
 var async = require('async');
-require('./../configureForTest');
+require('./../../testutil/configureForTest');
 
 var createTeststore = function (collectionName) {
   return require('../../lib/persistence/persistence')(collectionName);

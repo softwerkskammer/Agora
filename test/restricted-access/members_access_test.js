@@ -1,7 +1,7 @@
 "use strict";
 
 var request = require('supertest');
-require('../configureForTest');
+require('../../testutil/configureForTest');
 
 var app = require('../../app').create();
 

@@ -16,5 +16,5 @@ block content
       each resourceName in activity.resourceNames()
         -var participants = activity.participantsOf(resourceName)
         h4 #{resourceName} (#{participants.length})
-        mixin memberlist(participants)
+        +memberlist(participants)
         hr

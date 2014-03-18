@@ -1,8 +1,10 @@
 {
   "general": {
+    "general": "General",
     "all": "All",
     "create": "Create",
     "edit": "Edit",
+    "rename": "Rename",
     "add": "Add",
     "save": "Save",
     "back": "Back",
@@ -32,7 +34,8 @@
     "gdcr_activities": "Activities related to GDCR",
     "gdcr_text": "Here you find almost all german-speaking activities. You can find a full overview at",
     "feedback": "Feedback",
-    "what_does_not_work": "What does not work the way it should?"
+    "what_does_not_work": "What does not work the way it should?",
+    "settings": "Settings"
   },
   "error": {
     "congratulations": "Congratulations!",
@@ -40,12 +43,12 @@
     "missing_page": "Missing Page",
     "page_is_missing": "This page is missing.",
     "found404": "You found a four-zero-four.",
-    "found500": "You found a five-zero-zero.",
+    "found500": "You found an error.",
     "click_links": "I'd suggest you click on one of the links in the header.",
     "detailed_report": "give us a detailed error report",
     "os_browser": "Operating system and browser, including versions.",
     "datetime": "Date and time",
-    "stacktrace500": "The Stacktrace below \"500\"",
+    "stacktrace500": "The Stacktrace",
     "error500_text": [
       "p Please ",
       "  a(href=\"https://github.com/softwerkskammer/NeuePlattform-Implementierung/issues/\") $t(error.detailed_report):",
@@ -112,6 +115,15 @@
     "waitinglist_not_possible": "Waiting list is currently not available.",
     "no_waitinglist": "There is no waiting list.",
     "full": "All spots are taken.",
+    "addon": "Additional Information",
+    "addon_information": "Informations inside the dialog",
+    "addon_required": "Additional information is required…",
+    "edit_addon": "Edit Additional Information…",
+    "which_addon_to_collect": "The following additional information will be queried upon registration. Each field marked with * is mandatory.",
+    "home_address": "Home address",
+    "billing_address": "Billing address",
+    "t_shirt_size": "T-Shirt size",
+    "roommate": "With whom would you like to share the room? (Twin room only)",
     "tooltip": {
       "title": "Short and concise for overviews",
       "startdate": "End date and time will be shifted automatically (the duration remains the same)",
@@ -206,7 +218,10 @@
     "subject": "Subject",
     "contents": "Contents",
     "copy_to_self": "Send a copy to myself",
-    "send": "Send"
+    "send": "Send",
+    "resign": "Write Resignement E-Mail",
+    "why-resign": "Why do you want to resign",
+    "notes-resign": "Please let us know what you think about this site"
   },
   "members": {
     "overview": "Members Overview",
@@ -219,7 +234,6 @@
     "member_of": "Member of",
     "personal_data": "Personal Data",
     "profile": "Profile",
-    "profileview": "Profile View",
     "nickname": "Nickname",
     "firstname": "First name",
     "lastname": "Last name",
@@ -233,7 +247,9 @@
     "authenticated_via": "Currently authenticated via",
     "authenticate": "Authenticate elsewhere",
     "send_email": "Send e-mail to __firstname__ __lastname__",
-    "has": "Softwerkskammer has"
+    "has": "Softwerkskammer has",
+    "notifyOnWikiChanges": "Notify on wiki changes",
+    "resign": "Resign"
   },
   "wiki": {
     "blogposts": "Blog Posts:",
@@ -245,8 +261,15 @@
     "all_pages": "All pages in",
     "revisions": "Revisions",
     "search": "Search wiki",
-    "create": "$t(general.create) wiki-page \"__pageName__\" $t(wiki.in) \"__subdir__\"",
-    "edit": "$t(general.edit) wiki-page \"__pageName__\" $t(wiki.in) \"__subdir__\"",
+    "rename": "Rename wiki-page \"__pageName__\"",
+    "newname": "New Name",
+    "rename_info": [
+      "h3 Attention: Links",
+      "p Renaming the page will not adapt links to the page.",
+      "p Please search for the old page name and change found links accordingly."
+    ],
+    "create": "$t(general.create) wiki-page \"__subdir__/__pageName__\"",
+    "edit": "$t(general.edit) wiki-page \"__subdir__/__pageName__\"",
     "contents": "Contents",
     "message": "Message",
     "commit_message": "Commit Message",
@@ -277,6 +300,9 @@
         "participation_for_resource_removed": "What a pity that you will not participate in \"__resourceName__\".",
         "waitinglist_added": "You have been added to the waiting list.",
         "waitinglist_removed": "You have been removed from the waiting list."
+      },
+      "addon": {
+        "saved": "Your additional information has been saved."
       },
       "announcements": {
         "saved": "Your announcement has been saved."

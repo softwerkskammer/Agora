@@ -10,7 +10,7 @@ block content
     .col-md-12
       .page-header
         h2
-          | "#{member.nickname()}"
+          | #{member.nickname()}
           .btn-group.pull-right
             if (accessrights.canEditMember(member))
               a.btn.btn-default(href="/members/edit/#{encodeURIComponent(member.nickname())}"): i.fa.fa-edit.fa-fw
@@ -18,7 +18,7 @@ block content
             if (member.isContactperson())
               | #{t("groups.contact")}
             else
-              | #{t("members.profileview")}
+              | #{t("members.profile")}
   .row
     .col-md-8
       p

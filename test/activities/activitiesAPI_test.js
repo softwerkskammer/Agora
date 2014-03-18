@@ -6,7 +6,7 @@ var moment = require('moment-timezone');
 
 //var util = require('util');
 
-var beans = require('../configureForTest').get('beans');
+var beans = require('../../testutil/configureForTest').get('beans');
 
 var activitiesAPI = beans.get('activitiesAPI');
 var activitystore = beans.get('activitystore');
@@ -17,6 +17,7 @@ var fieldHelpers = beans.get('fieldHelpers');
 var Activity = beans.get('activity');
 var Member = beans.get('member');
 var Group = beans.get('group');
+var notifications = beans.get('notifications');
 
 var dummyActivity = new Activity({title: 'Title of the Activity', description: 'description', assignedGroup: 'assignedGroup',
   location: 'location', direction: 'direction', startDate: '01.01.2013', url: 'urlOfTheActivity', color: 'aus Gruppe' });
@@ -26,7 +27,6 @@ var emptyActivity = new Activity({title: 'Title of the Activity', description: '
   owner: 'ownerId'});
 
 var group = new Group({id: "groupname", longName: "Buxtehude"});
-
 
 describe('Activities API', function () {
 
@@ -51,7 +51,7 @@ describe('Activities API', function () {
 
   it('returns the queried activities and enhances them with their color and group name', function () {
     activitiesAPI.getActivitiesForDisplay(activitystore.allActivities, function (err, activities) {
-      expect(!!err).to.be.false;
+      expect(err).to.not.exist;
       expect(activities.length).to.equal(1);
       var activity = activities[0];
       expect(activity.title()).to.equal('Title of the Activity');
@@ -79,7 +79,7 @@ describe('Activities API', function () {
     });
 
     activitiesAPI.getActivityWithGroupAndParticipants('urlOfTheActivity', function (err, activity) {
-      expect(!!activity, "Activity").to.be.true;
+      expect(activity, "Activity").to.exist;
       expect(activity.group, "Group").to.equal(group);
       expect(activity.participants.length).to.equal(2);
       expect(activity.participants, "Participants").to.contain(member1);
@@ -112,11 +112,28 @@ describe('Activities API', function () {
       sinon.stub(activitystore, 'saveActivity', function (id, callback) { callback(null); });
       sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, activity); });
       sinon.stub(activitystore, 'getActivityForId', function (id, callback) { callback(null, activity); });
+      sinon.stub(notifications, 'visitorRegistration');
 
       activitiesAPI.addVisitorTo('memberId', 'activity-url', 'Einzelzimmer', new moment(), function (err, statusTitle, statusText) {
-        expect(!!statusTitle, "Status Title").to.be.false;
-        expect(!!statusText, "Status Text").to.be.false;
+        expect(statusTitle, "Status Title").to.not.exist;
+        expect(statusText, "Status Text").to.not.exist;
         expect(activity.resourceNamed('Einzelzimmer').registeredMembers()).to.contain('memberId');
+        done(err);
+      });
+    });
+
+    it('notifies of the registration', function (done) {
+      var activity = new Activity({resources: {Einzelzimmer: {_registrationOpen: true}}});
+      sinon.stub(activitystore, 'saveActivity', function (id, callback) { callback(null); });
+      sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, activity); });
+      sinon.stub(activitystore, 'getActivityForId', function (id, callback) { callback(null, activity); });
+      sinon.stub(notifications, 'visitorRegistration');
+
+      activitiesAPI.addVisitorTo('memberId', 'activity-url', 'Einzelzimmer', new moment(), function (err) {
+        expect(notifications.visitorRegistration.calledOnce).to.be.true;
+        expect(notifications.visitorRegistration.firstCall.args[0]).to.deep.equal(activity);
+        expect(notifications.visitorRegistration.firstCall.args[1]).to.deep.equal('memberId');
+        expect(notifications.visitorRegistration.firstCall.args[2]).to.deep.equal('Einzelzimmer');
         done(err);
       });
     });
@@ -138,13 +155,17 @@ describe('Activities API', function () {
     it('succeeds when registration is not open but registrant is on waiting list and allowed to subscribe', function (done) {
       var tomorrow = moment();
       tomorrow.add('days', 1);
-      var activity = new Activity({ resources: { Einzelzimmer: { _registrationOpen: false, _waitinglist: [{ _memberId: 'memberId', _registrationValidUntil: tomorrow.toDate() }] } } });
+      var activity = new Activity({ resources: { Einzelzimmer: { _registrationOpen: false, _waitinglist: [
+        { _memberId: 'memberId', _registrationValidUntil: tomorrow.toDate() }
+      ]}}});
+
       sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, activity); });
       sinon.stub(activitystore, 'saveActivity', function (id, callback) { callback(null); });
+      sinon.stub(notifications, 'visitorRegistration');
 
       activitiesAPI.addVisitorTo('memberId', 'activity-url', 'Einzelzimmer', moment(), function (err, statusTitle, statusText) {
-        expect(!!statusTitle, "Status Title").to.be.false;
-        expect(!!statusText, "Status Text").to.be.false;
+        expect(statusTitle, "Status Title").to.not.exist;
+        expect(statusText, "Status Text").to.not.exist;
         expect(activity.resourceNamed('Einzelzimmer').registeredMembers()).to.contain('memberId');
         done(err);
       });
@@ -154,10 +175,23 @@ describe('Activities API', function () {
       sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(new Error("error")); });
 
       activitiesAPI.addVisitorTo('memberId', 'activity-url', 'Einzelzimmer', new moment(), function (err) {
-        expect(!!err, "Error").to.be.true;
+        expect(err, "Error").to.exist;
         done(); // error condition - do not pass err
       });
     });
+  });
+
+  describe('addon', function () {
+
+    it('is never undefined', function (done) {
+      sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, new Activity({})); });
+      activitiesAPI.addonForMember(null, 'unknown member id', function (err, addon, addonConfig) {
+        expect(addon).to.exist;
+        expect(addonConfig).to.exist;
+        done();
+      });
+    });
+
   });
 
 });

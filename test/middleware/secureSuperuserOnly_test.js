@@ -1,6 +1,6 @@
 "use strict";
 
-var conf = require('../configureForTest');
+var conf = require('../../testutil/configureForTest');
 
 var redirectIfNotSuperuser = conf.get('beans').get('secureSuperuserOnly');
 //var expect = require('chai').expect;

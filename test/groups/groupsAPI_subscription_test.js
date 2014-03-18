@@ -3,7 +3,7 @@
 var sinon = require('sinon').sandbox.create();
 
 var expect = require('chai').expect;
-var conf = require('../configureForTest');
+var conf = require('../../testutil/configureForTest');
 var beans = conf.get('beans');
 var Group = beans.get('group');
 var GroupA = new Group({id: 'GroupA', longName: 'Gruppe A', description: 'Dies ist Gruppe A.', type: 'Themengruppe'});

@@ -1,53 +1,3 @@
-mixin topNavbar
-  .navbar-header
-    a.navbar-brand.no-padding(href="/")
-      img(src="/img/SoftwerkskammerWappenLinks.png", alt="Softwerkskammer")
-    a.btn.btn-default.navbar-toggle(data-toggle="collapse", data-target=".collapse-top")
-      span.sr-only Toggle
-      i.fa.fa-bars.fa-lg
-  
-  .navbar-collapse.collapse.collapse-top
-    ul.nav.navbar-nav.navbar-right.hidden-xs.bottom
-      mixin loginMenu
-      li: a(style="padding: 2px;", href="/language/de?currentUrl=#{encodeURIComponent(currentUrl)}"): img(src="/img/flags/Germany.png", alt="Deutsch")
-      li: a(style="padding: 2px;", href="/language/en-gb?currentUrl=#{encodeURIComponent(currentUrl)}"): img(src="/img/flags/United-Kingdom.png", alt="English")
-    ul.nav.navbar-nav.bottom
-      li#activities: a(href="/activities/upcoming")
-        span.hidden-sm
-          i.fa.fa-calendar.fa-fw
-          | &nbsp;#{t("activities.activities")}
-        span.visible-sm
-          i.fa.fa-calendar.fa-fw
-      li#groups: a(href="/groups")
-        span.hidden-sm
-          i.fa.fa-group.fa-fw
-          | &nbsp;#{t("groups.groups")}
-        span.visible-sm
-          i.fa.fa-group.fa-fw
-      li#wiki.dropdown
-        a.dropdown-toggle(href="#", data-toggle="dropdown")
-          span.hidden-sm
-            i.fa.fa-book.fa-fw
-            | &nbsp;#{t("wiki.wiki")}&nbsp;
-            b.caret
-          span.visible-sm
-            i.fa.fa-book.fa-fw
-            b.caret
-        ul.dropdown-menu
-          if (typeof(wikisubdirs) !== 'undefined')
-            for subdir in wikisubdirs
-              li: a(href="/wiki/#{subdir}/") #{subdir}
-      li#members: a(href="/members")
-        span.hidden-sm
-          if (accessrights.isRegistered())
-            i.fa.fa-user.fa-fw
-            | &nbsp;#{t("members.members")}
-        span.visible-sm
-          if (accessrights.isRegistered())
-            i.fa.fa-user.fa-fw
-      mixin loginMenu(true)
-
-
 mixin administrationMenu()
   if (accessrights.isSuperuser())
     li#administration.dropdown.nav
@@ -86,6 +36,9 @@ mixin loginMenu(forInline)
         li: a(href="/auth/logout")
           i.fa.fa-sign-out.fa-fw
           | &nbsp;#{t("general.logout")}
+        li: a(href="/mailsender/resign/#{encodeURIComponent(user.member.nickname())}")
+          i.fa.fa-ban.fa-fw
+          | &nbsp;#{t("members.resign")}
         li: a(href="https://github.com/softwerkskammer/Agora/issues", target="_blank")
           i.fa.fa-ambulance.fa-fw
           | &nbsp;#{t("general.feedback")}
@@ -110,25 +63,70 @@ mixin navbar-inside
       i.fa.fa-bars.fa-lg
   .navbar-collapse.collapse.collapse-btom
     ul.nav.navbar-nav.navbar-right
-      mixin administrationMenu()
+      +administrationMenu()
       li: a(href="/help.html") #{t("general.faq")}
       li: a(href="/credits.html") #{t("general.credits")}
       li: a(href="/impressum.html") #{t("general.legal_notice")}
 
 mixin bottomNavbar
   .navbar.navbar-default.bottom.hidden-print.visible-xs
-    mixin navbar-inside
+    +navbar-inside
   .navbar.navbar-default.navbar-fixed-bottom.hidden-print.hidden-xs
-    mixin navbar-inside
-
-mixin externalUrl(url, text)
-  a(href=url, target="_blank")
-    i.fa.fa-external-link
-    | &nbsp;#{text}
+    +navbar-inside
 
 mixin notificationsBlock(notificationmessage)
   #{notificationmessage.kill()}
-  #notifications(class="alert alert-block hidden-print #{notificationmessage.type}")
+  -var contents = notificationmessage.contents()
+  #notifications(class="alert alert-block hidden-print #{contents.type}")
     button.close(type="button", data-dismiss="alert") &times;
-    h4 #{t(notificationmessage.title)}
-    | #{t(notificationmessage.text, notificationmessage.additionalArguments)}
+    h4 #{t(contents.title)}
+    | #{t(contents.text, contents.additionalArguments)}
+
+mixin topNavbar
+  .navbar-header
+    a.navbar-brand.no-padding(href="/")
+      img(src="/img/SoftwerkskammerWappenLinks.png", alt="Softwerkskammer")
+    a.btn.btn-default.navbar-toggle(data-toggle="collapse", data-target=".collapse-top")
+      span.sr-only Toggle
+      i.fa.fa-bars.fa-lg
+
+  .navbar-collapse.collapse.collapse-top
+    ul.nav.navbar-nav.navbar-right.hidden-xs.bottom
+      +loginMenu
+      li: a(style="padding: 2px;", href="/language/de?currentUrl=#{encodeURIComponent(currentUrl)}"): img(src="/img/flags/Germany.png", alt="Deutsch")
+      li: a(style="padding: 2px;", href="/language/en-gb?currentUrl=#{encodeURIComponent(currentUrl)}"): img(src="/img/flags/United-Kingdom.png", alt="English")
+    ul.nav.navbar-nav.bottom
+      li#activities: a(href="/activities/upcoming")
+        span.hidden-sm
+          i.fa.fa-calendar.fa-fw
+          | &nbsp;#{t("activities.activities")}
+        span.visible-sm
+          i.fa.fa-calendar.fa-fw
+      li#groups: a(href="/groups")
+        span.hidden-sm
+          i.fa.fa-group.fa-fw
+          | &nbsp;#{t("groups.groups")}
+        span.visible-sm
+          i.fa.fa-group.fa-fw
+      li#wiki.dropdown
+        a.dropdown-toggle(href="#", data-toggle="dropdown")
+          span.hidden-sm
+            i.fa.fa-book.fa-fw
+            | &nbsp;#{t("wiki.wiki")}&nbsp;
+            b.caret
+          span.visible-sm
+            i.fa.fa-book.fa-fw
+            b.caret
+        ul.dropdown-menu
+          if (typeof(wikisubdirs) !== 'undefined')
+            for subdir in wikisubdirs
+              li: a(href="/wiki/#{subdir}/") #{subdir}
+      li#members: a(href="/members")
+        span.hidden-sm
+          if (accessrights.isRegistered())
+            i.fa.fa-user.fa-fw
+            | &nbsp;#{t("members.members")}
+        span.visible-sm
+          if (accessrights.isRegistered())
+            i.fa.fa-user.fa-fw
+      +loginMenu(true)

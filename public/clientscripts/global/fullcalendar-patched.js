@@ -30,7 +30,7 @@ var defaults = {
 	header: {
 		left: 'title',
 		center: '',
-		right: 'today prev,next'
+		right: 'prev today next'
 	},
 	weekends: true,
 	weekNumbers: false,
@@ -1085,14 +1085,16 @@ function Header(calendar, options) {
 		element.remove();
 	}
 	
-	
+	// *** PATCHED BOOTSTRAP L&F
 	function renderSection(position) {
-		var e = $("<td class='fc-header-" + position + "'/>");
+		var td = $("<td class='fc-header-" + position + "'/>");
+    var e = $('<div class="btn-group" />');
+      td.append(e);
 		var buttonStr = options.header[position];
 		if (buttonStr) {
 			$.each(buttonStr.split(' '), function(i) {
 				if (i > 0) {
-					e.append("<span class='fc-header-space'/>");
+					// e.append("<span class='fc-header-space'/>");
 				}
 				var prevButton;
 				$.each(this.split(','), function(j, buttonName) {
@@ -1128,56 +1130,28 @@ function Header(calendar, options) {
 								html = "<span class='fc-icon fc-icon-" + normalIcon + "'></span>";
 							}
 							else {
-								html = htmlEscape(text || buttonName);
+								html = text;
 							}
 
 							var button = $(
-								"<span class='fc-button fc-button-" + buttonName + " " + tm + "-state-default'>" +
+								"<span class='btn btn-default fc-button-" + buttonName + "'>" +
 									html +
 								"</span>"
 								)
 								.click(function() {
-									if (!button.hasClass(tm + '-state-disabled')) {
+									if (!button.hasClass('disabled')) {
 										buttonClick();
 									}
 								})
-								.mousedown(function() {
-									button
-										.not('.' + tm + '-state-active')
-										.not('.' + tm + '-state-disabled')
-										.addClass(tm + '-state-down');
-								})
-								.mouseup(function() {
-									button.removeClass(tm + '-state-down');
-								})
-								.hover(
-									function() {
-										button
-											.not('.' + tm + '-state-active')
-											.not('.' + tm + '-state-disabled')
-											.addClass(tm + '-state-hover');
-									},
-									function() {
-										button
-											.removeClass(tm + '-state-hover')
-											.removeClass(tm + '-state-down');
-									}
-								)
 								.appendTo(e);
 							disableTextSelection(button);
-							if (!prevButton) {
-								button.addClass(tm + '-corner-left');
-							}
 							prevButton = button;
 						}
 					}
 				});
-				if (prevButton) {
-					prevButton.addClass(tm + '-corner-right');
-				}
 			});
 		}
-		return e;
+		return td;
 	}
 	
 	
@@ -1201,13 +1175,13 @@ function Header(calendar, options) {
 	
 	function disableButton(buttonName) {
 		element.find('span.fc-button-' + buttonName)
-			.addClass(tm + '-state-disabled');
+			.addClass('disabled');
 	}
 	
 	
 	function enableButton(buttonName) {
 		element.find('span.fc-button-' + buttonName)
-			.removeClass(tm + '-state-disabled');
+			.removeClass('disabled');
 	}
 
 

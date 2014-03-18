@@ -1,6 +1,3 @@
-mixin linkedMember(nickname)
-  a(href="/members/#{encodeURIComponent(nickname)}") #{nickname}
-
 mixin memberlistHeading(firstPart, count)
   | #{firstPart}&nbsp;
   if (count === 1)
@@ -15,10 +12,14 @@ mixin memberlist(members, organizers)
     dl.dl-horizontal
       for member in members
         dt: .member
-          mixin linkedMember(member.nickname())
+          +linkedMember(member.nickname())
           | &nbsp; <a href="#" rel="tooltip" data-content="#{member.nickname()}" title="<div style='height: 128px;'><img src=#{member.avatarUrl(128)}/></div>" >
           img.hidden-print(src=member.avatarUrl(16))
           | </a>
         dd #{member.firstname()} #{member.lastname()}, #{member.location()}&nbsp;
           if (organizers && organizers.indexOf(member.id()) > -1)
             a(href="/mailsender/contactMember/#{encodeURIComponent(member.nickname())}", title=t("mailsender.write")): span.label(style="background-color: #DF5353") #{t("groups.contact")}
+
+mixin linkedMember(nickname)
+  a(href="/members/#{encodeURIComponent(nickname)}") #{nickname}
+

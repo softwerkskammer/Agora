@@ -1,4 +1,4 @@
-extends ../../../views/layout
+extends ../../../views/layoutOnlyMain
 include ../../members/views/memberlist-mixin
 
 block scripts
@@ -10,7 +10,7 @@ block scripts
           "sUrl": "#{(language === 'de') ? "/clientscripts/dataTables.german.txt" : ""}"
         },
         "aoColumns": [
-          { "bSortable" : false }, { "sType": "date-eu" }, null, null, null, null, null, null, null, null, null, null
+          { "bSortable" : false }, { "sType": "date-eu" }, null, null, null, null, null, null, null, null, null, null, null, null
         ],
         "bPaginate": false,
         "bAutoWidth": false,
@@ -44,6 +44,8 @@ block content
               th Beruf
               th Email
               th Twitter
+              th Wiki-Changes
+              th Authentifizierung
           tbody
             for member in members
               tr
@@ -59,5 +61,7 @@ block content
                 td #{member.profession()}
                 td #{member.email()}
                 td #{member.twitter()}
+                td #{member.notifyOnWikiChanges()}
+                td #{member.authentications() ? member.authentications().join(", ") : ""}
 
 

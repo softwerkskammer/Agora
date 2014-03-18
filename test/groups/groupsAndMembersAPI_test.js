@@ -1,7 +1,7 @@
 "use strict";
 
 var sinon = require('sinon').sandbox.create();
-var beans = require('../configureForTest').get('beans');
+var beans = require('../../testutil/configureForTest').get('beans');
 
 var expect = require('chai').expect;
 
@@ -101,7 +101,7 @@ describe('Groups and Members API (getGroupAndMembersForList)', function () {
     sinon.stub(groupsAPI, 'getGroup', function (groupname, callback) { callback(null, null); });
 
     groupsAndMembersAPI.getGroupAndMembersForList('unbekannteListe', function (err, group) {
-      expect(!!group).to.be.false;
+      expect(group).to.not.exist;
       done(err);
     });
   });
@@ -116,7 +116,7 @@ describe('Groups and Members API (getGroupAndMembersForList)', function () {
     sinon.stub(groupsAPI, 'getGroup', function (groupname, callback) { callback(null, null); });
 
     groupsAndMembersAPI.getGroupAndMembersForList('sympaListWithoutGroup', function (err, group) {
-      expect(!!group).to.be.false;
+      expect(group).to.not.exist;
       done(err);
     });
   });
@@ -165,14 +165,14 @@ describe('Groups and Members API (addMembercountToGroup)', function () {
 
   it('returns no group when the group is null', function (done) {
     groupsAndMembersAPI.addMembercountToGroup(null, function (err, group) {
-      expect(!!group).to.be.false;
+      expect(group).to.not.exist;
       done(err);
     });
   });
 
   it('returns no group when the group is undefined', function (done) {
     groupsAndMembersAPI.addMembercountToGroup(undefined, function (err, group) {
-      expect(!!group).to.be.false;
+      expect(group).to.not.exist;
       done(err);
     });
   });
@@ -210,7 +210,7 @@ describe('Groups and Members API (addMembersToGroup)', function () {
     sinon.stub(membersAPI, 'getMembersForEMails', function () {});
 
     groupsAndMembersAPI.addMembersToGroup(null, function (err, group) {
-      expect(!!group).to.be.false;
+      expect(group).to.not.exist;
       done(err);
     });
   });
@@ -220,7 +220,7 @@ describe('Groups and Members API (addMembersToGroup)', function () {
     sinon.stub(membersAPI, 'getMembersForEMails', function () {});
 
     groupsAndMembersAPI.addMembersToGroup(undefined, function (err, group) {
-      expect(!!group).to.be.false;
+      expect(group).to.not.exist;
       done(err);
     });
   });

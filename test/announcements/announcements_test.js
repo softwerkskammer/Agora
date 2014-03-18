@@ -1,6 +1,6 @@
 /*global describe, it */
 "use strict";
-var conf = require('../configureForTest');
+var conf = require('../../testutil/configureForTest');
 
 var request = require('supertest');
 var sinonSandbox = require('sinon').sandbox.create();
@@ -23,7 +23,7 @@ var dummyAnnouncement = new Announcement({
 var announcementsAPI = beans.get('announcementsAPI');
 var membersAPI = beans.get('membersAPI');
 
-var app = require('../testHelper')('announcementsApp').createApp();
+var app = require('../../testutil/testHelper')('announcementsApp').createApp();
 
 describe('Announcement application', function () {
   var allAnnouncements;
