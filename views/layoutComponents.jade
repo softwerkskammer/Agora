@@ -43,7 +43,7 @@ mixin loginMenu(forInline)
           i.fa.fa-ambulance.fa-fw
           | &nbsp;#{t("general.feedback")}
         li: include ../version
-  else
+  else if (!accessrights.isAuthenticated())
     li(class="#{forInline ? 'visible-xs' : ''}"): a.navbar-link(href="https://github.com/softwerkskammer/Agora/issues",
       title=t("general.what_does_not_work"), target="_blank")
       i.fa.fa-ambulance.fa-fw

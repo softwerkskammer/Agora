@@ -10,8 +10,9 @@ var store = beans.get('memberstore');
 var Member = beans.get('member');
 
 describe('Members store', function () {
-  var sampleMember = {nickname: 'nick', email: 'nicks mail'};
-  var sampleMember2 = {nickname: 'nick2', email: 'nick2s mail'};
+  var sampleMember = {nickname: 'nick', email: 'nicks mail', firstname: 'first', lastname: 'a'};
+  var sampleMember2 = {nickname: 'nick2', email: 'nick2s mail', firstname: 'first', lastname: 'b'};
+
   var sampleList = [sampleMember, sampleMember2];
 
   afterEach(function () {
@@ -76,8 +77,8 @@ describe('Members store', function () {
     });
     store.getMembersForEMails(['nicks mail', 'nick2s mail'], function (err, members) {
       expect(members.length).to.equal(2);
-      expect(members[0].nickname()).to.equal(sampleMember2.nickname);
-      expect(members[1].nickname()).to.equal(sampleMember.nickname);
+      expect(members[0].nickname()).to.equal(sampleMember.nickname);
+      expect(members[1].nickname()).to.equal(sampleMember2.nickname);
       expect(members[0]).to.be.instanceOf(Member);
       done(err);
     });
@@ -105,6 +106,26 @@ describe('Members store', function () {
     store.allMembers(function (err, members) {
       expect(members[0].nickname()).to.equal(sampleMember.nickname);
       expect(members[1].nickname()).to.equal(sampleMember2.nickname);
+      done(err);
+    });
+  });
+
+  it('sorts case insensitive by lastname', function (done) {
+    var adonis = { lastname: 'Adonis', firstname: 'Zaza' };
+    var betti = { lastname: 'Betti', firstname: 'Andi' };
+    var dave = { lastname: 'Dave', firstname: 'Dave' };
+    var betti_low = { lastname: 'betti', firstname: 'Bodo' };
+    var adonis_low = { lastname: 'adonis', firstname: 'Abbu' };
+
+    var list = sinon.stub(persistence, 'list');
+    list.callsArgWith(1, null, [adonis, betti, dave, betti_low, adonis_low]);
+
+    store.allMembers(function (err, members) {
+      expect(members[0].lastname()).to.equal(adonis_low.lastname);
+      expect(members[1].lastname()).to.equal(adonis.lastname);
+      expect(members[2].lastname()).to.equal(betti.lastname);
+      expect(members[3].lastname()).to.equal(betti_low.lastname);
+      expect(members[4].lastname()).to.equal(dave.lastname);
       done(err);
     });
   });
