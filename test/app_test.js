@@ -1,7 +1,9 @@
 "use strict";
 var should = require('chai').should();
 var httpRequest = require('request');
+var sinon = require('sinon').sandbox.create();
 var conf = require('./../testutil/configureForTest');
+var groupsAPI = conf.get('beans').get('groupsAPI');
 
 var base_uri = "http://localhost:" + parseInt(conf.get('port'), 10);
 
@@ -9,10 +11,12 @@ var app = require('../app.js');
 
 describe('SWK Plattform server', function () {
   beforeEach(function (done) {
+    sinon.stub(groupsAPI, 'getAllAvailableGroups', function (callback) {return callback(null, []); });
     app.start(done);
   });
 
   afterEach(function (done) {
+    sinon.restore();
     app.stop(done);
   });
 
