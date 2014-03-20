@@ -28,7 +28,10 @@ describe('Groups application', function () {
     });
 
     sinon.stub(membersPersistence, 'list', function (sortorder, callback) {
-      callback(null, null);
+      callback(null, [
+        { nickname: 'hada', firstname: 'Hans', lastname: 'Dampf', email: 'hans@aol.com' },
+        { nickname: 'pepe', firstname: 'Peter', lastname: 'Meyer', email: 'peter@google.de' }
+      ]);
     });
 
     sinon.stub(membersPersistence, 'listByField', function (email, sortOrder, callback) {
