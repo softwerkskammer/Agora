@@ -24,6 +24,31 @@ Current Build Status
 
 [![Build Status](https://travis-ci.org/softwerkskammer/Agora.png)](https://travis-ci.org/softwerkskammer/Agora)
 
+
+New and easy local installation via vagrant
+===========================================
+Vagrant is an easy way to set up virtual machines inside your OS with everything needed to get our server up and running.
+
+Just follow these steps:
+
+1. Download and install Oracle VirtualBox from here: https://www.virtualbox.org
+1. Download and install Vagrant from here: http://www.vagrantup.com
+1. Checkout or copy the following file to your machine: `https://github.com/softwerkskammer/Agora/blob/master/Vagrantfile`
+1. Open a shell in the directory you've put the `Vagrantfile`
+1. Perform `vagrant up` - (this will download and provision the virtual machine)
+1. You can then log into the VM via `vagrant ssh`
+
+To retrieve our software we propose that you fork this repository and then check it out locally inside the VM via `git clone <URL_TO_REPO>`
+
+Once retrieved perform the following commands inside the directory of the cloned repo:
+
+1. `npm install` - this will fetch all dependencies needed
+1. `node initialDBSetup` - this will create some sample data to start with
+1. `npm test` - will create a few necessary files and perform a complete test suite. *This must end successfully!*
+1. `node start` - will start the server
+
+Now go to you local machine, open a browser and open `http://localhost:17124`
+
 System requirements and Installation
 --------------------
 
