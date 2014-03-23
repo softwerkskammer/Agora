@@ -118,6 +118,23 @@ describe('Members store', function () {
     });
   });
 
+  it('sorts "naturally" by lastname - includes numbers', function (done) {
+    var tata1 = { lastname: 'Tata1', firstname: 'Egal' };
+    var tata10 = { lastname: 'Tata10', firstname: 'Egal' };
+    var tata2 = { lastname: 'Tata2', firstname: 'Egal' };
+
+    sinon.stub(persistence, 'list', function (sortorder, callback) {
+      callback(null, [tata1, tata10, tata2]);
+    });
+
+    store.allMembers(function (err, members) {
+      expect(members[0].lastname()).to.equal(tata1.lastname);
+      expect(members[1].lastname()).to.equal(tata2.lastname);
+      expect(members[2].lastname()).to.equal(tata10.lastname);
+      done(err);
+    });
+  });
+
   it('calls persistence.save for store.saveMember and passes on the given callback', function (done) {
     var save = sinon.stub(persistence, 'save', function (member, callback) { callback(); });
 
