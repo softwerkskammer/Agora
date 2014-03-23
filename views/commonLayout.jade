@@ -10,10 +10,7 @@ html
     link(rel="apple-touch-icon", href="/img/apple-touch-icon-76x76-precomposed.png")
     link(rel="apple-touch-icon", href="/img/apple-touch-icon-120x120-precomposed.png")
     link(rel="apple-touch-icon", href="/img/apple-touch-icon-152x152-precomposed.png")
-    if (language === 'de')
-      script(src="/clientscripts/global_de.js")
-    else
-      script(src="/clientscripts/global_en.js")
+    script(src="/clientscripts/global_" + language + ".js")
     if (!!calViewYear)
       script.
         $(document).ready(function () {
