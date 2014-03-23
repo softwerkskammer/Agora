@@ -1,22 +1,68 @@
 extends ../../../views/layout
 
+mixin placeGroupLabels(groupsOfAKind)
+  each group in groupsOfAKind
+    if (group.mapX && group.mapY && group.shortName)
+      .label.group(style="background-color: #{group.color}; top: #{group.mapYrelative()}%; left: #{group.mapXrelative()}%;")
+        span(rel="tooltip-in-body", data-title="<h4>#{group.longName}</h4>", data-content="#{group.descriptionHTMLFiltered('img')}")
+          a.group(href="/groups/#{group.id}") #{group.shortName}
+
 block title
   | #{t("general.welcome")}
 block content
   .row
     .col-md-12
-      h2 Schön, dass Du vorbeischaust.
+      .page-header
+        h3 Softwerkskammer <br>
+          small Software Craftsmanship Communities in Deutschland, Österreich und der Schweiz.
+      .panel.panel-default
+        .panel-heading
+          h4.panel-title Aktuelles
+        .panel-body
+          .row
+            .col-md-3
+              a(href="http://socrates-conference.de"): img(src="http://www.socrates-conference.de/static/img/socrates2014_logo_40perc.png", width="150px")
+            .col-md-9
+              a(href="http://socrates-conference.de")
+                h3 SoCraTes 2014 <br>
+                  small.
+                    4th International Software Craftsmanship and Testing Conference<br>
+                    August 7-10 2014, Soltau, Germany
+          .row
+            .col-md-12
+              span.pull-right Zur Softwerkskammer-Gruppe 
+                a(href="/groups/socrates2014") SoCraTes 2014
+              .clearfix
+
+  .row
+    .col-md-6
+      h4 Über uns
       p.
         Die Softwerkskammer hat sich 2011 gegründet, um den Austausch Interessierter zum Thema Software Craftsmanship
         zu vereinfachen.
-      p. 
-        Diese Site ist unsere zentrale Anlaufstelle für die lokalen Software Craftsmanship Communities in Deutschland, Österreich und der Schweiz.
+      p.
         Hierüber organisieren die lokalen Communities (die Softwerkskammern) ihre Treffen und andere Events wie
         CodeRetreats oder OpenSpaces oder tauschen sich einfach nur via Mailingliste aus.
       p Was wir in den nächsten Wochen veranstalten, findest Du unter Aktivitäten.
+      h4 Wenn…
+      ul
+        li Softwareentwicklung für Dich eine Leidenschaft bedeutet.
+        li.
+          Du Teil der deutschsprachigen Software Craftsmanship Community und Teil einer lokalen Softwerkskammer
+          sein möchtest.
+        li.
+          Du Dich mit Gleichgesinnten zum Thema Software Craftsmanship und allen damit zusammenhängenden Themen
+          wie Clean Code, TDD etc. austauschen möchtest.
+      p Dann ist die Softwerkskammer etwas für Dich!
+
+    .col-md-6.hidden-md.hidden-lg.groupsmap(style="position: relative; width: 100%; height: 100px; background-image:url('/img/map.svg'); background-size: 100% 100%; background-repeat: no-repeat;")
+      +placeGroupLabels(regionalgroups)
+    .col-md-6.hidden-xs.hidden-sm.groupsmap(style="position: relative; width: 50%; height: 100px; background-image:url('/img/map.svg'); background-size: 100% 100%; background-repeat: no-repeat;")
+      +placeGroupLabels(regionalgroups)
   .row
-    .col-md-6
-      h2 Wir sind …
+    .col-md-12
+      hr
+      h4 Wir sind …
       p.
         … ein Zusammenschluss von Communities of Professionals, die über den ganzen deutschsprachigen Raum verteilt sind. Uns geht es darum, gute Software
         zu entwickeln, und zwar im Hinblick auf alle Aspekte.
@@ -29,14 +75,10 @@ block content
       p
         strong Kurz: 
         | Wir wollen die richtige Software entwickeln, und wir wollen die Software richtig entwickeln.
-    .col-md-6
-      h2 Die Softwerkskammer ist etwas für Dich, wenn
-      ul
-        li Softwareentwicklung für Dich eine Leidenschaft bedeutet.
-        li.
-          Du Teil der deutschsprachigen Software Craftsmanship Community und Teil einer lokalen Softwerkskammer
-          sein möchtest.
-        li.
-          Du Dich mit Gleichgesinnten zum Thema Software Craftsmanship und allen damit zusammenhängenden Themen
-          wie Clean Code, TDD etc. austauschen möchtest.
-      
+
+  script.
+    function adjustMapsize() {
+      $('.groupsmap').each(function() {$(this).height(1.289 * $(this).width()); })
+    }
+    $(document).ready(adjustMapsize);
+    $.event.add(window, "resize", adjustMapsize);
