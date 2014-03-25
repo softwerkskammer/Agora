@@ -61,6 +61,7 @@
     "serve-static": "~1.0",
     "soap-sympa": "~0.0.1",
     "static-favicon": "~1.0",
+    "stripe": "~2.4",
     "underscore.string": "~2.3",
     "useragent": "~2.0",
     "winston": "~0.7",

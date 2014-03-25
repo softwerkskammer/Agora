@@ -303,6 +303,7 @@
       "query": "The query string you entered is too short.",
       "activities": {
         "saved": "Your activity has been saved.",
+        "credit_card_paid": "Your credit card payment of __amount__ has been transferred.",
         "participation_added": "Your participation has been registered.",
         "participation_for_resource_added": "Your participation in \"__resourceName__\" has been registered.",
         "participation_removed": "What a pity that you will not participate.",
