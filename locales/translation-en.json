@@ -136,6 +136,14 @@
       "waitinglist": "Should the resource have a waiting list?"
     }
   },
+  "payment": {
+    "title": "Payment",
+    "iban": "IBAN",
+    "bic": "BIC",
+    "amount": "Amount",
+    "receiver": "Receiver",
+    "transferred": "I have transferred the money"
+  },
   "announcements": {
     "latest_news": "Latest News",
     "announcements": "Announcements",

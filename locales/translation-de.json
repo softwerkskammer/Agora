@@ -136,6 +136,14 @@
       "waitinglist": "Soll die Ressource eine Warteliste bekommen?"
     }
   },
+  "payment": {
+    "title": "Zahlung",
+    "iban": "IBAN",
+    "bic": "BIC",
+    "amount": "Betrag",
+    "receiver": "Empfänger",
+    "transferred": "Ich habe überwiesen"
+  },
   "announcements": {
     "latest_news": "Das Neueste",
     "announcements": "Nachrichten",
