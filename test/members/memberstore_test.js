@@ -20,9 +20,9 @@ describe('Members store', function () {
   });
 
   it('calls persistence.getById for store.getMemberForId and passes on the given callback', function (done) {
-    var getById = sinon.stub(persistence, 'getById');
-    getById.callsArgWith(1, null, sampleMember);
-
+    var getById = sinon.stub(persistence, 'getById', function (field, callback) {
+      callback(null, sampleMember);
+    });
     store.getMemberForId('id', function (err, member) {
       expect(member.nickname()).to.equal(sampleMember.nickname);
       expect(getById.calledWith('id')).to.be.true;
@@ -31,26 +31,14 @@ describe('Members store', function () {
   });
 
   it('calls persistence.listByIds for store.getMembersForIds and passes on the given callback', function (done) {
-    var listByIds = sinon.stub(persistence, 'listByIds');
-    listByIds.callsArgWith(2, null, sampleList);
+    var listByIds = sinon.stub(persistence, 'listByIds', function (searchObject, sortOrder, callback) {
+      callback(null, sampleList);
+    });
 
     store.getMembersForIds(['id1', 'id2'], function (err, members) {
       expect(members[0].nickname()).to.equal(sampleMember.nickname);
       expect(members[1].nickname()).to.equal(sampleMember2.nickname);
       expect(listByIds.calledWith(['id1', 'id2'])).to.be.true;
-      done(err);
-    });
-  });
-
-  it('calls persistence.getByField trimmed for store.getMember and passes on the given callback', function (done) {
-    var getByField = sinon.stub(persistence, 'getByField');
-    getByField.callsArgWith(1, null, sampleMember);
-
-    store.getMember('  nick  ', function (err, member) {
-      expect(member.nickname()).to.equal(sampleMember.nickname);
-      expect(getByField.called).to.be.true;
-      var regex = getByField.args[0][0].nickname;
-      expect(regex.toString()).to.equal('/^nick$/i');
       done(err);
     });
   });
@@ -70,10 +58,10 @@ describe('Members store', function () {
       done(err);
     });
   });
-
+  
   it('calls persistence.getByField for each member for store.getMembersForEMails and passes on the given callback', function (done) {
     sinon.stub(persistence, 'listByField', function (searchObject, sortOrder, callback) {
-      callback(null, [sampleMember2, sampleMember]);
+      callback(null, sampleList);
     });
     store.getMembersForEMails(['nicks mail', 'nick2s mail'], function (err, members) {
       expect(members.length).to.equal(2);
@@ -85,23 +73,22 @@ describe('Members store', function () {
   });
 
   it('calls persistence.getByField with an appropriate regex', function (done) {
-    var getByField = sinon.stub(persistence, 'getByField');
-    getByField.callsArgWith(1, null, sampleMember);
-
+    var getByField = sinon.stub(persistence, 'getByField', function (field, callback) {
+      callback(null, sampleMember);
+    });
     store.getMember('nick', function (err, member) {
       expect(member.nickname()).to.equal(sampleMember.nickname);
       expect(getByField.called).to.be.true;
       var regex = getByField.args[0][0].nickname;
-      expect(regex.test('nick')).to.be.true;
-      expect(regex.test('nICk')).to.be.true;
-      expect(regex.test('nICklaus')).to.be.false;
+      expect(regex.toString()).to.equal('/^nick$/i');
       done(err);
     });
   });
 
   it('calls persistence.list for store.allMembers and passes on the given callback', function (done) {
-    var list = sinon.stub(persistence, 'list');
-    list.callsArgWith(1, null, sampleList);
+    sinon.stub(persistence, 'list', function (sortorder, callback) {
+      callback(null, sampleList);
+    });
 
     store.allMembers(function (err, members) {
       expect(members[0].nickname()).to.equal(sampleMember.nickname);
@@ -117,8 +104,9 @@ describe('Members store', function () {
     var betti_low = { lastname: 'betti', firstname: 'Bodo' };
     var adonis_low = { lastname: 'adonis', firstname: 'Abbu' };
 
-    var list = sinon.stub(persistence, 'list');
-    list.callsArgWith(1, null, [adonis, betti, dave, betti_low, adonis_low]);
+    sinon.stub(persistence, 'list', function (sortorder, callback) {
+      callback(null, [adonis, betti, dave, betti_low, adonis_low]);
+    });
 
     store.allMembers(function (err, members) {
       expect(members[0].lastname()).to.equal(adonis_low.lastname);
@@ -130,9 +118,25 @@ describe('Members store', function () {
     });
   });
 
+  it('sorts "naturally" by lastname - includes numbers', function (done) {
+    var tata1 = { lastname: 'Tata1', firstname: 'Egal' };
+    var tata10 = { lastname: 'Tata10', firstname: 'Egal' };
+    var tata2 = { lastname: 'Tata2', firstname: 'Egal' };
+
+    sinon.stub(persistence, 'list', function (sortorder, callback) {
+      callback(null, [tata1, tata10, tata2]);
+    });
+
+    store.allMembers(function (err, members) {
+      expect(members[0].lastname()).to.equal(tata1.lastname);
+      expect(members[1].lastname()).to.equal(tata2.lastname);
+      expect(members[2].lastname()).to.equal(tata10.lastname);
+      done(err);
+    });
+  });
+
   it('calls persistence.save for store.saveMember and passes on the given callback', function (done) {
-    var save = sinon.stub(persistence, 'save');
-    save.callsArg(1);
+    var save = sinon.stub(persistence, 'save', function (member, callback) { callback(); });
 
     store.saveMember(sampleMember, function (err) {
       expect(save.calledWith(sampleMember.state)).to.be.true;
