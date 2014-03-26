@@ -22,3 +22,4 @@ build/config.gypi
 coverage
 tempbeans.json
 tempbeansWithDB.json
+.vagrant
