@@ -1,5 +1,23 @@
-extends ../../../views/layout
+extends ../../../views/layoutOnlyMain
 include ../../members/views/memberlist-mixin
+
+block scripts
+  script(src="/clientscripts/jquery.dataTables.min.js")
+  script.
+    $(document).ready(function() {
+      $("#membertable").dataTable({
+        "oLanguage": {
+          "sUrl": "#{(language === 'de') ? "/clientscripts/dataTables.german.txt" : ""}"
+        },
+        "aoColumns": [
+          { "sType": "date-eu" }, null, null, null, null
+        ],
+        "bPaginate": false,
+        "bAutoWidth": false,
+        "aaSorting": [[ 0 , "asc" ]],
+        "bStateSave": true
+      });
+    });
 
 block title
   | #{activity.title()} - #{t("activities.participants")}
@@ -13,8 +31,26 @@ block content
           small #{t("activities.participants")}
   .row
     .col-md-12
+      
       each resourceName in activity.resourceNames()
         -var participants = activity.participantsOf(resourceName)
         h4 #{resourceName} (#{participants.length})
-        +memberlist(participants)
+        .panel.pre-scrollable
+          table.table.table-condensed.table-hover.table-striped#membertable
+            thead
+              tr
+                th Registriert
+                th Nickname
+                th Vorname
+                th Nachname
+                th Ort/Region
+            tbody
+              for member in participants
+                tr
+                  td #{member.registeredAt.lang(language).format('L')}
+                  td: mixin linkedMember(member.nickname())
+                  td #{member.firstname()}
+                  td #{member.lastname()}
+                  td #{member.location()}
+
         hr
