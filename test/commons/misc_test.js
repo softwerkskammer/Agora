@@ -221,6 +221,7 @@ describe('parseBlogPost', function () {
     expect(parseTitle("    #   Lean Coffee November 2013")).to.equal("Lean Coffee November 2013");
     expect(parseTitle("       Lean Coffee November 2013")).to.equal("Lean Coffee November 2013");
     expect(parseTitle("    ##   Lean# Coffee November 2013")).to.equal("Lean# Coffee November 2013");
+    expect(parseTitle("#Lean Coffee November 2013======")).to.equal("Lean Coffee November 2013");
   });
 
   it('can parse a multitude of date variants', function () {

@@ -90,7 +90,7 @@ describe('WikiAPI (getBlogPosts)', function () {
           "\n" +
           "Diesen Blog gemacht.");
       } else if (path === "internet/blog_2013-10-01AgoraCodeKata.md") {
-        callback(null, "Agora Code-Kata Oktober 2013\n" +
+        callback(null, "#Agora Code-Kata Oktober 2013=====\n" +
           "\n" +
           "Weil viele uns weder JavaScript noch populäre JavaScript...\n" +
           "\n" +
