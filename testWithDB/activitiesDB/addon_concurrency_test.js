@@ -1,7 +1,6 @@
 "use strict";
 
 var nconf = require('../../testutil/configureForTestWithDB');
-var moment = require('moment-timezone');
 var expect = require('chai').expect;
 var sinon = require('sinon').sandbox.create();
 
@@ -10,7 +9,6 @@ var persistence = beans.get('activitiesPersistence');
 var activitystore = beans.get('activitystore');
 var addonAPI = beans.get('addonAPI');
 var stripeAPI = beans.get('stripeAPI');
-var notifications = beans.get('notifications');
 
 var Activity = beans.get('activity');
 
@@ -28,6 +26,7 @@ describe('Addon API', function () {
   var activityBeforeConcurrentAccess;
   var activityAfterConcurrentAccess;
   var invocation;
+  var chargedCreditCard;
 
   beforeEach(function (done) { // if this fails, you need to start your mongo DB
     activityBeforeConcurrentAccess = new Activity({id: "activityId",
@@ -48,8 +47,9 @@ describe('Addon API', function () {
       return callback(null, activityAfterConcurrentAccess);
     });
 
+    chargedCreditCard = 0;
     sinon.stub(stripeAPI, 'transaction', function () {
-      return { charges: { create: function (charge, callback) { callback(null, {}); } } };
+      return { charges: { create: function (charge, callback) { chargedCreditCard++; callback(null, { charged: chargedCreditCard }); } } };
     });
 
     persistence.drop(function () {
@@ -88,6 +88,7 @@ describe('Addon API', function () {
         if (err) { return done(err); }
         expect(activity.addonForMember('memberIdRace').homeAddress(), 'Previous member is still in the waitinglist').to.equal('At Home');
         expect(activity.addonForMember('memberIdNew').creditCardPaid(), 'Second member is stored in the waitinglist').to.not.be.undefined;
+        expect(chargedCreditCard, 'We withdrew money only once despite the racing condition').to.equal(1);
         done(err);
       });
     });
