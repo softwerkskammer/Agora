@@ -9,6 +9,7 @@ var beans = nconf.get('beans');
 var persistence = beans.get('activitiesPersistence');
 var activitystore = beans.get('activitystore');
 var addonAPI = beans.get('addonAPI');
+var stripeAPI = beans.get('stripeAPI');
 var notifications = beans.get('notifications');
 
 var Activity = beans.get('activity');
@@ -30,10 +31,10 @@ describe('Addon API', function () {
 
   beforeEach(function (done) { // if this fails, you need to start your mongo DB
     activityBeforeConcurrentAccess = new Activity({id: "activityId",
-      url: activityUrl, _addons: {}, version: 1});
+                                                    url: activityUrl, _addons: {}, version: 1});
 
     activityAfterConcurrentAccess = new Activity({id: "activityId",
-      url: activityUrl, _addons: { memberIdRace: {homeAddress: "At Home"}}, version: 2});
+                                                   url: activityUrl, _addons: { memberIdRace: {homeAddress: "At Home"}}, version: 2});
 
     invocation = 1;
 
@@ -47,6 +48,9 @@ describe('Addon API', function () {
       return callback(null, activityAfterConcurrentAccess);
     });
 
+    sinon.stub(stripeAPI, 'transaction', function () {
+      return { charges: { create: function (charge, callback) { callback(null, {}); } } };
+    });
 
     persistence.drop(function () {
       // empty the store and then save our activity with one registrant
@@ -74,7 +78,7 @@ describe('Addon API', function () {
     });
   });
 
-  /*
+
   it('payWithCreditCard keeps the member addon info that is in the database although it only reads an activity without member addon info', function (done) {
     // here, we save an activity after removing a member that is different from the member in the database.
     // To mimick a racing condition, we return an activity without members for the first "getActivity".
@@ -88,7 +92,7 @@ describe('Addon API', function () {
       });
     });
   });
-  */
+
 
   it('payWithTransfer keeps the member addon info that is in the database although it only reads an activity without member addon info', function (done) {
     // here, we save an activity with a member that is different from the member in the database.
