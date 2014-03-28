@@ -14,6 +14,10 @@ var Activity = beans.get('activity');
 
 describe('addon', function () {
 
+  afterEach(function () {
+    sinon.restore();
+  });
+
   it('is never undefined', function (done) {
     sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, new Activity({})); });
     addonAPI.addonForMember(null, 'unknown member id', function (err, addon, addonConfig) {
