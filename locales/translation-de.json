@@ -148,6 +148,10 @@
     "transferred": "Ich habe überwiesen",
     "credit_card": "Kreditkarte",
     "handling_fee": "Bearbeitungsgebühr",
+    "card_number": "Kartennummer",
+    "cvc_code": "Prüfziffer",
+    "valid_until_month": "Gültig bis Monat",
+    "valid_until_year": "Gültig bis Jahr",
     "charge_credit_card": "Meine Kreditkarte belasten"
   },
   "announcements": {

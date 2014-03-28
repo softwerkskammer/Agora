@@ -148,6 +148,10 @@
     "transferred": "I have transferred the money",
     "credit_card": "Credit Card",
     "handling_fee": "Handling fee",
+    "card_number": "Card number",
+    "cvc_code": "CVC code",
+    "valid_until_month": "Valid until month",
+    "valid_until_year": "Valid until year",
     "charge_credit_card": "Charge my credit card"
   },
   "announcements": {
