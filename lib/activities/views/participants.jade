@@ -5,7 +5,7 @@ block scripts
   script(src="/clientscripts/jquery.dataTables.min.js")
   script.
     $(document).ready(function() {
-      $("#membertable").dataTable({
+      $(".membertable").dataTable({
         "oLanguage": {
           "sUrl": "#{(language === 'de') ? "/clientscripts/dataTables.german.txt" : ""}"
         },
@@ -14,8 +14,9 @@ block scripts
         ],
         "bPaginate": false,
         "bAutoWidth": false,
+        "bFilter": false,
         "aaSorting": [[ 0 , "asc" ]],
-        "bStateSave": true
+        "bStateSave": true  
       });
     });
 
@@ -36,7 +37,7 @@ block content
         -var participants = activity.participantsOf(resourceName)
         h4 #{resourceName} (#{participants.length})
         .panel.pre-scrollable
-          table.table.table-condensed.table-hover.table-striped#membertable
+          table.table.table-condensed.table-hover.table-striped.membertable
             thead
               tr
                 th Registriert
