@@ -138,11 +138,17 @@
   },
   "payment": {
     "title": "Payment",
+    "how_to_pay": "Choose how you'd like to pay.",
+    "how_to_pay_detail": "The event requires a deposit upon registration. Please decide how you'd like to pay. You can either send the money via bank transfer (to a German account) or you can pay via credit card (an additional handling fee will be charged).",
+    "money_transfer": "Money Transfer",
     "iban": "IBAN",
     "bic": "BIC",
     "amount": "Amount",
     "receiver": "Receiver",
-    "transferred": "I have transferred the money"
+    "transferred": "I have transferred the money",
+    "credit_card": "Credit Card",
+    "handling_fee": "Handling fee",
+    "charge_credit_card": "Charge my credit card"
   },
   "announcements": {
     "latest_news": "Latest News",

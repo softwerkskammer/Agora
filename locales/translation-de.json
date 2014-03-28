@@ -125,7 +125,7 @@
     "billing_address": "Rechnungsanschrift",
     "t_shirt_size": "T-Shirt-Größe",
     "roommate": "Mit wem möchtest Du das Zimmer teilen (nicht bei Einzelzimmer)?",
-    "tooltip": {
+      "tooltip": {
       "title": "Kurz und knackig für Übersichten",
       "start": "Enddatum und -uhrzeit werden automatisch verschoben (die Dauer bleibt gleich)",
       "end": "Hiermit kannst Du die Dauer verändern",
@@ -138,11 +138,17 @@
   },
   "payment": {
     "title": "Zahlung",
+    "how_to_pay": "Wähle, wie Du bezahlen möchtest.",
+    "how_to_pay_detail": "Die Veranstaltung erfordert eine Anzahlung bei Anmeldung. Bitte entscheide Dich, wie Du die Zahlung leisten möchtest. Du kannst das Geld entweder auf ein deutsches Konto überweisen oder gegen Gebühr mit Kreditkarte bezahlen.",
+    "money_transfer": "Überweisung",
     "iban": "IBAN",
     "bic": "BIC",
     "amount": "Betrag",
     "receiver": "Empfänger",
-    "transferred": "Ich habe überwiesen"
+    "transferred": "Ich habe überwiesen",
+    "credit_card": "Kreditkarte",
+    "handling_fee": "Bearbeitungsgebühr",
+    "charge_credit_card": "Meine Kreditkarte belasten"
   },
   "announcements": {
     "latest_news": "Das Neueste",
