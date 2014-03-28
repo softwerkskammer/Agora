@@ -99,6 +99,7 @@ describe('Activity application', function () {
       .expect(/description1/)
       .expect(/location1/)
       .expect(/direction1/)
+      .expect(/script src="https:\/\/maps.googleapis.com\/maps\/api\/js\?sensor=false"/)
       .expect(/Bislang gibt es keine Teinahmezusagen./, function (err, res) {
         expect(res.text).to.not.contain('Angelegt von');
         done(err);
