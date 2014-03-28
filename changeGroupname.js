@@ -71,7 +71,10 @@ groupsPersistence.getById(oldId, function (err, group) {
 /*
  What else must be done when renaming a group?
 
- - rename the group in sympa (in the user interface)
+ - rename the group in sympa:
+   - Rename List
+   - Edit List Config -> List Definition -> Subject of the list
+   - Edit List Config -> Sending/Receiving Setup -> Subject tagging (custom_subject)
  - adapt all wiki-links??
 
  */
