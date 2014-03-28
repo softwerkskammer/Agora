@@ -152,7 +152,8 @@
     "cvc_code": "Prüfziffer",
     "valid_until_month": "Gültig bis Monat",
     "valid_until_year": "Gültig bis Jahr",
-    "charge_credit_card": "Meine Kreditkarte belasten"
+    "charge_credit_card": "Meine Kreditkarte belasten",
+    "payment_done": "Du hast schon bezahlt."
   },
   "announcements": {
     "latest_news": "Das Neueste",

@@ -152,7 +152,8 @@
     "cvc_code": "CVC code",
     "valid_until_month": "Valid until month",
     "valid_until_year": "Valid until year",
-    "charge_credit_card": "Charge my credit card"
+    "charge_credit_card": "Charge my credit card",
+    "payment_done": "You have already paid."
   },
   "announcements": {
     "latest_news": "Latest News",
