@@ -5,6 +5,7 @@ var beans = require('nconf').get('beans');
 var expect = require('chai').expect;
 
 var Activity = beans.get('activity');
+var AddonConfig = beans.get('addon').AddonConfig;
 
 describe('Activity\'s Addon Configuration', function () {
 
@@ -38,4 +39,14 @@ describe('Activity\'s Addon Configuration', function () {
     activity.fillAddonConfig({});
     expect(activity.hasAddonConfig()).to.be.false;
   });
+
+});
+
+describe('Addon Configuration', function () {
+  it('has a default deposit of 100 and a default fee of 3.2', function () {
+    var addonConfig = new AddonConfig();
+    expect(addonConfig.deposit()).to.equal(100);
+    expect(addonConfig.fee()).to.equal(3.2);
+  });
+
 });
