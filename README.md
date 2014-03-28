@@ -33,12 +33,12 @@ Just follow these steps:
 
 1. Download and install Oracle VirtualBox from here: https://www.virtualbox.org
 1. Download and install Vagrant from here: http://www.vagrantup.com
-1. Checkout or copy the following file to your machine: `https://github.com/softwerkskammer/Agora/blob/master/Vagrantfile`
-1. Open a shell in the directory you've put the `Vagrantfile`
+1. Clone or fork and clone the repo if you plan to make contributions (forking is a must if you want to contribute)
+1. Open a shell inside the checkout directory
 1. Perform `vagrant up` - (this will download and provision the virtual machine)
 1. You can then log into the VM via `vagrant ssh`
-
-To retrieve our software we propose that you fork this repository and then check it out locally inside the VM via `git clone <URL_TO_REPO>`
+1. You will find the sources inside the VM in a directory `/vagrant`
+1. So `cd /vagrant`
 
 Once retrieved perform the following commands inside the directory of the cloned repo:
 

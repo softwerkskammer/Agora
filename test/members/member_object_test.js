@@ -77,11 +77,11 @@ describe('Member initial filling', function () {
     expect(member.displayName()).to.equal('Hans Dampf');
   });
 
-  it('constructs avatar from mail address using gravatar URL', function () {
+  it('constructs avatar from mail address using gravatar URL with https', function () {
     var email = 'member@mail.com';
     var db_record = {nickname: 'Nick', email: email};
     var member = new Member(db_record);
-    expect(member.avatarUrl(10)).to.contain('http://www.gravatar.com/avatar/');
+    expect(member.avatarUrl(10)).to.contain('https://www.gravatar.com/avatar/');
     expect(member.avatarUrl(10)).to.contain('?d=blank&s=10');
   });
 
