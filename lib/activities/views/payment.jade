@@ -51,42 +51,34 @@ block content
         .panel-heading
           h4.panel-title #{t("payment.money_transfer")}
         .panel-body
+          .row
+            .col-md-8
+              p <b>#{t("payment.amount")}:</b> 
+                span.pull-right #{addonConfig.deposit().toFixed(2).replace(".", ",")} €
+              p <b>#{t("payment.bic")}:</b> 
+                span.pull-right #{addonConfig.bic()}
+              p <b>#{t("payment.iban")}:</b> 
+                span.pull-right #{addonConfig.iban()}
+              p <b>#{t("payment.receiver")}:</b> 
+                span.pull-right #{addonConfig.paymentReceiver()}
           form.form-horizontal(action='/activities/payment/submitTransfer', method='post')
             +csrf
             +hidden('url', activity.url())
-            .form-group
-              label.col-sm-4.control-label #{t("payment.amount")}:
-              .col-sm-8
-                p.form-control-static #{addonConfig.deposit()} €
-            .form-group
-              label.col-sm-4.control-label #{t("payment.bic")}:
-              .col-sm-8
-                p.form-control-static #{addonConfig.bic()}
-            .form-group
-              label.col-sm-4.control-label #{t("payment.iban")}:
-              .col-sm-8
-                p.form-control-static #{addonConfig.iban()}
-            .form-group
-              label.col-sm-4.control-label #{t("payment.receiver")}:
-              .col-sm-8
-                p.form-control-static #{addonConfig.paymentReceiver()}
             button.btn.btn-primary.pull-right(type="submit") #{t("payment.transferred")}
     .col-md-6
       .panel.panel-default
         .panel-heading
           h4.panel-title #{t("payment.credit_card")}
         .panel-body
+          .row
+            .col-md-8
+              p <b>#{t("payment.amount")}:</b> 
+                span.pull-right #{addonConfig.deposit().toFixed(2).replace(".", ",")} €
+              p <b>#{t("payment.handling_fee")}:</b>
+                span.pull-right #{addonConfig.fee().toFixed(2).replace(".", ",")} €
           form#paymentform(action='/activities/payment/submitCreditCard', method='post')
             +csrf
             +hidden('url', activity.url())
-            .form-group
-              label.col-sm-4.control-label #{t("payment.amount")}:
-              .col-sm-8
-                p.form-control-static #{addonConfig.deposit()} €
-            .form-group
-              label.col-sm-4.control-label #{t("payment.handling_fee")}:
-              .col-sm-8
-                p.form-control-static #{addonConfig.fee()} €
             .form-group
               label.control-label(for="cardnumber") #{t("payment.card_number")}:
               input.form-control(type='text', autocomplete='off', data-stripe='number', placeholder='Card Number')
