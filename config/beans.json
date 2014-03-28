@@ -16,6 +16,7 @@
   "membersAPI": {"module": "./lib/members/membersAPI"},
   "calendarAPI": {"module": "./lib/activities/calendarAPI"},
   "activitiesAPI": {"module": "./lib/activities/activitiesAPI"},
+  "addonAPI": {"module": "./lib/activities/addonAPI"},
   "icalAPI": {"module": "./lib/activities/icalAPI"},
   "announcementsAPI": {"module": "./lib/announcements/announcementsAPI"},
   "mailsenderAPI": {"module": "./lib/mailsender/mailsenderAPI"},
