@@ -186,6 +186,23 @@ describe('Resource', function () {
       expect(resource.isRegistrationOpen()).to.be.false;
     });
 
+    it("allows unsubscription if it is indicated", function () {
+      var resource = new Resource();
+      resource.fillFromUI({canUnsubscribe: "yes"});
+      expect(resource.canUnsubscribe()).to.be.true;
+    });
+
+    it("disallows unsubscription if it is indicated", function () {
+      var resource = new Resource({ _canUnsubscribe: true });
+      resource.fillFromUI({canUnsubscribe: "no"});
+      expect(resource.canUnsubscribe()).to.be.false;
+    });
+
+    it("defaults unsubscription to true if not set", function () {
+      var resource = new Resource();
+      expect(resource.canUnsubscribe()).to.be.true;
+    });
+
     it("adds a waitinglist if it is indicated", function () {
       var resource = new Resource();
       resource.fillFromUI({hasWaitinglist: "yes"});
@@ -235,7 +252,7 @@ describe('Resource', function () {
       resource.addMemberId('12345');
       expect(resource.isAlreadyRegistered('12345')).to.be.true;
       resource.addToWaitinglist('12345', moment());
-      
+
       expect(resource.waitinglistEntryFor('12345')).to.not.exist;
     });
   });

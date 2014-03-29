@@ -101,6 +101,7 @@
     "resourcelabel": "$t(activities.label)",
     "count": "Count",
     "registration": "Registration",
+    "deregistration": "De-registration",
     "possible": "possible",
     "impossible": "impossible",
     "suggestion": "Suggestion",
@@ -133,6 +134,7 @@
       "resourcelabel": "Name of the unit that can be booked (e.g. Single Room, Twin Room)",
       "count": "Maximal participant count (No limit if field is empty, registration impossible if 0)",
       "registration": "Here you can allow or block registration",
+      "deregistration": "Here you can allow or block de-registration",
       "waitinglist": "Should the resource have a waiting list?"
     }
   },

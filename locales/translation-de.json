@@ -101,6 +101,7 @@
     "resourcelabel": "$t(activities.label)",
     "count": "Anzahl",
     "registration": "Anmeldung",
+    "deregistration": "Abmeldung",
     "possible": "möglich",
     "impossible": "nicht möglich",
     "suggestion": "Vorschlag",
@@ -125,7 +126,7 @@
     "billing_address": "Rechnungsanschrift",
     "t_shirt_size": "T-Shirt-Größe",
     "roommate": "Mit wem möchtest Du das Zimmer teilen (nicht bei Einzelzimmer)?",
-      "tooltip": {
+    "tooltip": {
       "title": "Kurz und knackig für Übersichten",
       "start": "Enddatum und -uhrzeit werden automatisch verschoben (die Dauer bleibt gleich)",
       "end": "Hiermit kannst Du die Dauer verändern",
@@ -133,6 +134,7 @@
       "resourcelabel": "Name der zu buchenden Einheit (z. B. Einzelzimmer, Doppelzimmer)",
       "count": "Maximale Teilnehmerzahl (keine Beschränkung bei leerem Feld, keine Registrierung möglich bei 0)",
       "registration": "Hiermit lässt sich die Registrierung freigeben oder sperren",
+      "deregistration": "Hiermit lässt sich die Möglichkeit zur Abmeldung freigeben oder sperren",
       "waitinglist": "Soll die Ressource eine Warteliste bekommen?"
     }
   },
