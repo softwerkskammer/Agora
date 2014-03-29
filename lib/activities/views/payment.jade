@@ -1,102 +1,110 @@
-extends ../../../views/layout
 include ../../../views/formComponents
 
-block scripts
-  script(type="text/javascript", src="https://js.stripe.com/v2/")
-  script.
-    Stripe.setPublishableKey('#{paymentKey}');
-    $(document).ready(function() {
-      $("#charge-error").hide()
-      $('#paymentform').submit(function(event) {
+doctype html
+html
+  head
+    script.
+      Stripe.setPublishableKey('#{paymentKey}');
+      function connectHandlers() {
         $("#charge-error").hide()
-        var $form = $(this);
-        // Disable the submit button to prevent repeated clicks
-        $form.find('button').prop('disabled', true);
-        Stripe.card.createToken($form, stripeResponseHandler);
-        // Prevent the form from submitting with the default action
-        return false;
+        $('#paymentform').submit(function(event) {
+          $("#charge-error").hide()
+          var $form = $(this);
+          // Disable the submit button to prevent repeated clicks
+          $form.find('button').prop('disabled', true);
+          Stripe.card.createToken($form, stripeResponseHandler);
+          // Prevent the form from submitting with the default action
+          return false;
         });
-    });
-    function stripeResponseHandler(status, response) {
-      if (response.error) {
-        // show the errors on the form
-        $("#charge-error").show()
-        $("#charge-error").text(response.error.message);
-        $(".submit-button").removeAttr("disabled");
-      } else {
-        var form$ = $("#paymentform");
-        // response contains id, last4, and card type
-        // insert into the form so it gets submitted to the server
-        form$.append("<input type='hidden' name='stripeId' value='" + response['id'] + "'/>");
-        // and submit
-        form$.get(0).submit();
-      }
-    }
-
-block title
-  | #{t("payment.title")}
-
-block content
-  #charge-error.alert.alert-danger
-  h2 #{activity.title()} - #{t("payment.title")}
-    br
-    small #{t("payment.how_to_pay")}
-  .row
-    .col-md-12
-      p.
-        #{t("payment.how_to_pay_detail")}
-  .row
-    .col-md-6
-      .panel.panel-default
-        .panel-heading
-          h4.panel-title #{t("payment.money_transfer")}
-        .panel-body
-          .row
-            .col-md-8
-              p <b>#{t("payment.amount")}:</b> 
+      };
+      function stripeResponseHandler(status, response) {
+        if (response.error) {
+          // show the errors on the form
+          $("#charge-error").show()
+          $("#charge-error").text(response.error.message);
+          $(".submit-button").removeAttr("disabled");
+        } else {
+          var form$ = $("#paymentform");
+          // response contains id, last4, and card type
+          // insert into the form so it gets submitted to the server
+          form$.append("<input type='hidden' name='stripeId' value='" + response['id'] + "'/>");
+          // and submit
+          form$.get(0).submit();
+        }
+      };
+      
+      $(document).bind('DOMSubtreeModified', function (e) {
+        if ($(e.target).attr('id') === 'paymentbody') { connectHandlers(); }
+      });
+      $(document).ready(connectHandlers);
+  
+  
+  body
+    .modal-header
+      button.close(type="button", data-dismiss="modal", aria-hidden="true") #{t("general.close")}&nbsp;&times
+      h3 #{activity.title()} - #{t("payment.title")}
+        br
+        small #{t("payment.how_to_pay")}
+    .modal-body#paymentbody
+      #charge-error.alert.alert-danger
+      .row
+        .col-md-12
+          p.
+            #{t("payment.how_to_pay_detail")}
+      .row
+        .col-md-6
+          .panel.panel-default
+            .panel-heading
+              h4.panel-title #{t("payment.money_transfer")}
+            .panel-body
+              p 
+                b #{t("payment.amount")}: 
                 span.pull-right #{addonConfig.deposit().toFixed(2).replace(".", ",")} €
-              p <b>#{t("payment.bic")}:</b> 
+              p 
+                b #{t("payment.bic")}: 
                 span.pull-right #{addonConfig.bic()}
-              p <b>#{t("payment.iban")}:</b> 
+              p 
+                b #{t("payment.iban")}: 
                 span.pull-right #{addonConfig.iban()}
-              p <b>#{t("payment.receiver")}:</b> 
+              p 
+                b #{t("payment.receiver")}: 
                 span.pull-right #{addonConfig.paymentReceiver()}
-          if (addon.paymentDone())
-            if (addon.moneyTransferred()) 
-              b.pull-right #{t("payment.payment_done")}
-          else
-            form.form-horizontal(action='/activities/payment/submitTransfer', method='post')
-              +csrf
-              +hidden('url', activity.url())
-              button.btn.btn-primary.pull-right(type="submit") #{t("payment.transferred")}
-    .col-md-6
-      .panel.panel-default
-        .panel-heading
-          h4.panel-title #{t("payment.credit_card")}
-        .panel-body
-          .row
-            .col-md-8
-              p <b>#{t("payment.amount")}:</b> 
+              if (addon.paymentDone())
+                if (addon.moneyTransferred())
+                  b.pull-right #{t("payment.payment_done")}
+              else
+                form.form-horizontal(action='/activities/payment/submitTransfer', method='post')
+                  +csrf
+                  +hidden('url', activity.url())
+                  button.btn.btn-primary.pull-right(type="submit") #{t("payment.transferred")}
+        .col-md-6
+          .panel.panel-default
+            .panel-heading
+              h4.panel-title #{t("payment.credit_card")}
+            .panel-body
+              p 
+                b #{t("payment.amount")}: 
                 span.pull-right #{addonConfig.deposit().toFixed(2).replace(".", ",")} €
-              p <b>#{t("payment.handling_fee")}:</b>
+              p 
+                b #{t("payment.handling_fee")}:
                 span.pull-right #{addonConfig.fee().toFixed(2).replace(".", ",")} €
-          if (addon.paymentDone())
-            if (addon.creditCardPaid())
-              b.pull-right #{t("payment.payment_done")}
-          else
-            form#paymentform(action='/activities/payment/submitCreditCard', method='post')
-              +csrf
-              +hidden('url', activity.url())
-              .form-group
-                label.control-label(for="cardnumber") #{t("payment.card_number")}:
-                input.form-control(type='text', autocomplete='off', data-stripe='number', placeholder='Card Number')
-              .form-group
-                label.control-label(for="cvc") #{t("payment.cvc_code")}:
-                input.form-control(type='text', autocomplete='off', data-stripe='cvc', placeholder='CVC Code')
-              .form-group
-                label.control-label(for="month") #{t("payment.valid_until_month")}:
-                input.form-control(type='text', data-stripe='exp-month', placeholder='MM')
-              .form-group
-                label.control-label(for="year") #{t("payment.valid_until_year")}:
-                input.form-control(type='text', data-stripe='exp-year', placeholder='YYYY')
-              button.btn.btn-primary.submit-button.pull-right(type="submit") #{t("payment.charge_credit_card")}
+              if (addon.paymentDone())
+                if (addon.creditCardPaid())
+                  b.pull-right #{t("payment.payment_done")}
+              else
+                form#paymentform(action='/activities/payment/submitCreditCard', method='post')
+                  +csrf
+                  +hidden('url', activity.url())
+                  .form-group
+                    label.control-label(for="cardnumber") #{t("payment.card_number")}:
+                    input.form-control(type='text', autocomplete='off', data-stripe='number', placeholder='Card Number')
+                  .form-group
+                    label.control-label(for="cvc") #{t("payment.cvc_code")}:
+                    input.form-control(type='text', autocomplete='off', data-stripe='cvc', placeholder='CVC Code')
+                  .form-group
+                    label.control-label(for="month") #{t("payment.valid_until_month")}:
+                    input.form-control(type='text', data-stripe='exp-month', placeholder='MM')
+                  .form-group
+                    label.control-label(for="year") #{t("payment.valid_until_year")}:
+                    input.form-control(type='text', data-stripe='exp-year', placeholder='YYYY')
+                  button.btn.btn-primary.submit-button.pull-right(type="submit") #{t("payment.charge_credit_card")}

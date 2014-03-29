@@ -3,6 +3,8 @@ include ../../members/views/memberlist-mixin
 include ../../../views/googlemaps-component
 include ../../../views/formComponents
 include activities-mixins
+block scripts
+  script(type="text/javascript", src="https://js.stripe.com/v2/")
 
 block title
   | #{activity.title()} - #{t("activities.activities")}
@@ -13,6 +15,9 @@ block opengraph
 
 block content
   #addOn(tabindex="-1").modal.fade
+    .modal-dialog
+      .modal-content
+  #payment(tabindex="-1").modal.fade
     .modal-dialog
       .modal-content
   .row
@@ -38,11 +43,11 @@ block content
       if (canEditAddon)
         .btn-group.pull-right
           if (activity.addonForMember(user.member.id()).paymentDone())
-            a.btn.btn-default(href="/activities/payment/#{encodeURIComponent(activity.url())}")
+            a.btn.btn-default(data-toggle="modal", data-target="#payment", href="/activities/payment/#{encodeURIComponent(activity.url())}")
               i.fa.fa-money.fa-fw
               | &nbsp; #{t("payment.title")}…
           else
-            a.btn.btn-warning(href="/activities/payment/#{encodeURIComponent(activity.url())}")
+            a.btn.btn-warning(data-toggle="modal", data-target="#payment", href="/activities/payment/#{encodeURIComponent(activity.url())}")
               i.fa.fa-money.fa-fw
               | &nbsp; #{t("payment.title")}…
           if (addonAlreadyFilled)
