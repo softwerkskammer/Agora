@@ -47,7 +47,7 @@ block content
         #{t("payment.how_to_pay_detail")}
   .row
     .col-md-6
-      .panel(class=(addon.moneyTransferred() ? "panel-success" : "panel-default"))
+      .panel.panel-default
         .panel-heading
           h4.panel-title #{t("payment.money_transfer")}
         .panel-body
@@ -61,15 +61,16 @@ block content
                 span.pull-right #{addonConfig.iban()}
               p <b>#{t("payment.receiver")}:</b> 
                 span.pull-right #{addonConfig.paymentReceiver()}
-          -if (addon.paymentDone())
-            b.pull-right #{t("payment.payment_done")}
-          -else
+          if (addon.paymentDone())
+            if (addon.moneyTransferred()) 
+              b.pull-right #{t("payment.payment_done")}
+          else
             form.form-horizontal(action='/activities/payment/submitTransfer', method='post')
               +csrf
               +hidden('url', activity.url())
               button.btn.btn-primary.pull-right(type="submit") #{t("payment.transferred")}
     .col-md-6
-      .panel(class=(addon.creditCardPaid() ? "panel-success" : "panel-default"))
+      .panel.panel-default
         .panel-heading
           h4.panel-title #{t("payment.credit_card")}
         .panel-body
@@ -79,9 +80,10 @@ block content
                 span.pull-right #{addonConfig.deposit().toFixed(2).replace(".", ",")} €
               p <b>#{t("payment.handling_fee")}:</b>
                 span.pull-right #{addonConfig.fee().toFixed(2).replace(".", ",")} €
-          -if (addon.paymentDone())
-            b.pull-right #{t("payment.payment_done")}
-          -else
+          if (addon.paymentDone())
+            if (addon.creditCardPaid())
+              b.pull-right #{t("payment.payment_done")}
+          else
             form#paymentform(action='/activities/payment/submitCreditCard', method='post')
               +csrf
               +hidden('url', activity.url())
