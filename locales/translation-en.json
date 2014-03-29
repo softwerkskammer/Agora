@@ -109,6 +109,7 @@
     "subscribe_multiple": "Subscribe",
     "unsubscribe_single": "I cannot participate…",
     "unsubscribe_multiple": "Unsubscribe",
+    "unsubscribe_not_possible": "Unsubsciption not possible. - Please contact us.",
     "registration_not_here": "Registration is not possible via Softwerkskammer.",
     "registration_not_now": "Registration is currently not allowed.",
     "registration_not_possible": "Registration is not yet available, or all spots are taken.",
