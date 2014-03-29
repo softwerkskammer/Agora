@@ -130,6 +130,17 @@ describe('Activity resource management', function () {
       expect(activity.resourceNamed('Doppelzimmer').registeredMembers()).to.be.empty;
     });
 
+    it('does not remove a registered member from a desired resource if "unsubscription is not allowed"', function () {
+      var activity = new Activity(
+        {url: 'myURL', resources: {
+          Doppelzimmer: { _registeredMembers: [
+            {memberId: 'memberID'}
+          ], _canUnsubscribe: false }
+        }});
+      activity.resourceNamed('Doppelzimmer').removeMemberId('memberID');
+      expect(activity.resourceNamed('Doppelzimmer').registeredMembers()).to.contain('memberID');
+    });
+
     it('does not do anything if the desired resource does not exist', function () {
       var activity = new Activity(
         {url: 'myURL', resources: {
