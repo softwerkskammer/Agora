@@ -80,8 +80,12 @@ html
         .col-md-6
           .panel.panel-default
             .panel-heading
-              h4.panel-title #{t("payment.credit_card")}
+              h4.panel-title #{t("payment.credit_card")} &nbsp;
+                small powered by 
+                  a(href="http://stripe.com") stripe
             .panel-body
+              p.pull-right: img(src="/img/creditcards.png")
+              .clearfix
               p 
                 b #{t("payment.amount")}: 
                 span.pull-right #{addonConfig.deposit().toFixed(2).replace(".", ",")} €
