@@ -1,0 +1,58 @@
+extends ../../../views/layoutOnlyMain
+include ../../members/views/memberlist-mixin
+
+mixin localdate(momentOrNull)
+  | #{momentOrNull ? momentOrNull.lang(language).format('L') : '-'}
+
+block scripts
+  script(src="/clientscripts/jquery.dataTables.min.js")
+  script.
+    $(document).ready(function() {
+      $(".addontable").dataTable({
+        "oLanguage": {
+          "sUrl": "#{(language === 'de') ? "/clientscripts/dataTables.german.txt" : ""}"
+        },
+        "aoColumns": [
+          null, null, null, null, null, null, { "sType": "date-eu" }, { "sType": "date-eu" }
+        ],
+        "bPaginate": false,
+        "bAutoWidth": false,
+        "bFilter": false,
+        "aaSorting": [[ 0 , "asc" ]],
+        "bStateSave": true  
+      });
+    });
+
+block title
+  | #{activity.title()} - Verwaltung
+
+block content
+  .row
+    .col-md-12
+      .page-header
+        h2 #{activity.title()} - Verwaltung
+  .row
+    .col-md-12
+      .panel.pre-scrollable
+        table.table.table-condensed.table-hover.table-striped.addontable
+          thead
+            tr
+              th Nickname
+              th Vorname
+              th Nachname
+              th Ort/Region
+              th T-Shirt
+              th Zimmer mit
+              th Überwiesen
+              th Kreditkarte
+          tbody
+            for line in addonLines
+              tr
+                td: mixin linkedMember(line.nickname())
+                td #{line.firstname()}
+                td #{line.lastname()}
+                td #{line.location()}
+                td #{line.addon.tShirtSize()}
+                td #{line.addon.roommate()}
+                td: mixin localdate(line.addon.moneyTransferredMoment())
+                td: mixin localdate(line.addon.creditCardPaidMoment())
