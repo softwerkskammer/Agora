@@ -49,7 +49,7 @@ describe('Addon API', function () {
 
     chargedCreditCard = 0;
     sinon.stub(stripeAPI, 'transaction', function () {
-      return { charges: { create: function (charge, callback) { chargedCreditCard++; callback(null, { charged: chargedCreditCard }); } } };
+      return { charges: { create: function (charge, callback) { chargedCreditCard++; callback(null, {}); } } };
     });
 
     persistence.drop(function () {
