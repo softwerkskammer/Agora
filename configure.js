@@ -20,8 +20,8 @@ function createConfiguration() {
     mongoHost: 'localhost',
     mongoPort: '27017',
     publicUrlPrefix: "http://localhost:17124",
-    superuserURLPattern: "/administration/|/new|/edit|/submit",
-    securedByLoginURLPattern: "/mailsender|/members|/(subscribe|unsubscribe)/|/mailarchive|/invitation|/addToWaitinglist|/addon|/submitAddon|/wiki/socrates.*/",
+    superuserURLPattern: "/administration/|/new|/edit|/submit|/paymentReceived|/addons|/participants",
+    securedByLoginURLPattern: "/mailsender|/members|/(subscribe|unsubscribe)/|/mailarchive|/invitation|/addToWaitinglist|/addon|/submitAddon|/wiki/socrates.*/|/payment",
     secret: "secret",
     beans: new Beans('./config/beans.json')
   });
