@@ -9,16 +9,19 @@ var beans = require('../../testutil/configureForTest').get('beans');
 
 var addonAPI = beans.get('addonAPI');
 var stripeAPI = beans.get('stripeAPI');
+var membersAPI = beans.get('membersAPI');
 var activitystore = beans.get('activitystore');
 
 var Activity = beans.get('activity');
+var Member = beans.get('member');
 
 describe('Addon API', function () {
 
   var savedActivity;
 
   beforeEach(function () {
-    sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, new Activity({})); });
+    sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, new Activity({title: "Expensive Activity", _addonConfig: {deposit: 50}})); });
+    sinon.stub(membersAPI, 'getMemberForId', function (id, callback) { callback(null, new Member({firstname: 'Hans', lastname: 'Dampf', nickname: 'hada'})); });
 
     savedActivity = null;
     sinon.stub(activitystore, 'saveActivity', function (activity, callback) {
@@ -27,7 +30,9 @@ describe('Addon API', function () {
     });
 
     sinon.stub(stripeAPI, 'transaction', function () {
-      return { charges: { create: function (charge, callback) { callback(null, { amount: 123456 }); } } };
+      return { charges: { create: function (charge, callback) {
+        callback(null, charge);
+      } } };
     });
   });
 
@@ -44,7 +49,7 @@ describe('Addon API', function () {
   });
 
   it('saveAddon enhances activity with UI input and saves it', function (done) {
-    var uiInputObject = { homeAddress: 'At home', billingAddress: 'At work', tShirtSize: 'XL', roommate: 'My best friend'};
+    var uiInputObject = { homeAddress: 'At home', billingAddress: 'At work', tShirtSize: 'XL', roommate: 'My best friend' };
     addonAPI.saveAddon('activity', 'member', uiInputObject, function (err) {
       expect(savedActivity.addonForMember('member').homeAddress()).to.equal('At home');
       expect(savedActivity.addonForMember('member').billingAddress()).to.equal('At work');
@@ -66,7 +71,8 @@ describe('Addon API', function () {
     addonAPI.payWithCreditCard('activity', 'member', 'stripe-id', function (err, charge) {
       expect(savedActivity.addonForMember('member').moneyTransferred()).to.be.falsy;
       expect(savedActivity.addonForMember('member').creditCardPaid()).to.be.truthy;
-      expect(charge.amount).to.equal(123456);
+      expect(charge.amount).to.equal(5175); // amount is in cents
+      expect(charge.description).to.equal('Expensive Activity deposit for Hans Dampf (hada)');
       done(err);
     });
   });
