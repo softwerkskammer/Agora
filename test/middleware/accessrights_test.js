@@ -4,6 +4,7 @@ var conf = require('../../testutil/configureForTest');
 var beans = conf.get('beans');
 var accessrights = beans.get('accessrights');
 var Activity = beans.get('activity');
+var Announcement = beans.get('announcement');
 var Member = beans.get('member');
 var Group = beans.get('group');
 var expect = require('chai').expect;
@@ -55,7 +56,7 @@ describe('Accessrights for Activities', function () {
 
     expect(standardMember({id: 'id'}).canEditActivity(activity)).to.be.true;
   });
-  
+
   it('disallows editing for contactpersons of other group', function () {
     var group = new Group();
     group.organizers = ['id'];
@@ -77,7 +78,11 @@ describe('Accessrights for Announcements', function () {
   });
 
   it('disallows editing for members', function () {
-    expect(standardMember().canEditAnnouncement()).to.be.false;
+    expect(standardMember().canEditAnnouncement(new Announcement({url: 'url', author: 'author'}))).to.be.false;
+  });
+
+  it('allows editing for authors', function () {
+    expect(standardMember({id: 'authorX'}).canEditAnnouncement(new Announcement({url: 'url', author: 'authorX'}))).to.be.true;
   });
 
   it('allows editing for superusers', function () {

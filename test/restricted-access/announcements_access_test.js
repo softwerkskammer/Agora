@@ -12,7 +12,7 @@ describe('Announcements application security for normal visitors does not allow 
   });
 
   it('/edit', function (done) {
-    request(app).get('/announcements/edit/AnnA').expect(302).expect('location', /mustBeSuperuser/, done);
+    request(app).get('/announcements/edit/AnnA').expect(302).expect('location', /login/, done);
   });
 
   it('/submit', function (done) {

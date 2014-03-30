@@ -16,7 +16,7 @@ describe('Activities application security for normal visitors does not allow to 
   });
 
   it('/edit', function (done) {
-    request(app).get('/activities/edit/EventA').expect(302).expect('location', /mustBeSuperuser/, done);
+    request(app).get('/activities/edit/EventA').expect(302).expect('location', /login/, done);
   });
 
   it('/submit', function (done) {
@@ -32,11 +32,11 @@ describe('Activities application security for normal visitors does not allow to 
   });
 
   it('/payment', function (done) {
-    request(app).post('/activities/payment/someActivity').expect(302).expect('location', /login/, done);
+    request(app).get('/activities/payment/someActivity').expect(302).expect('location', /login/, done);
   });
 
   it('/paymentReceived', function (done) {
-    request(app).post('/activities/paymentReceived/someActivity').expect(302).expect('location', /mustBeSuperuser/, done);
+    request(app).get('/activities/paymentReceived/someActivity').expect(302).expect('location', /mustBeSuperuser/, done);
   });
 
   it('/subscribe', function (done) {

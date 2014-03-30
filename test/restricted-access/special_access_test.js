@@ -175,42 +175,4 @@ describe('exceptions to the admin guard', function () {
     expect(next.called).to.be.true;
   });
 
-  it('does not allow registered users to edit others\' profiles (nicknames start identically)', function () {
-    var req = {
-      isAuthenticated: function () {return true; },
-      originalUrl: '/members/edit/nick',
-      user: {
-        member: new Member({nickname: 'nic'})
-      }
-    };
-    var res = {
-      locals: {},
-      redirect: sinon.spy()
-    };
-    accessrights(req, res, function () {});
-    var next = sinon.spy();
-    secureSuperuserOnly(req, res, next);
-    expect(/\/mustBeSuperuser/.test(res.redirect.getCall(0).args[0])).to.be.true;
-    expect(next.called).to.be.false;
-  });
-
-  it('does not allow registered users to edit others\' profiles (nicknames end identically)', function () {
-    var req = {
-      isAuthenticated: function () {return true; },
-      originalUrl: '/members/edit/nick',
-      user: {
-        member: new Member({nickname: 'ick'})
-      }
-    };
-    var res = {
-      locals: {},
-      redirect: sinon.spy()
-    };
-    accessrights(req, res, function () {});
-    var next = sinon.spy();
-    secureSuperuserOnly(req, res, next);
-    expect(/\/mustBeSuperuser/.test(res.redirect.getCall(0).args[0])).to.be.true;
-    expect(next.called).to.be.false;
-  });
-
 });
