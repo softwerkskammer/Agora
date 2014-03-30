@@ -9,8 +9,10 @@ var persistence = beans.get('activitiesPersistence');
 var activitystore = beans.get('activitystore');
 var addonAPI = beans.get('addonAPI');
 var stripeAPI = beans.get('stripeAPI');
+var membersAPI = beans.get('membersAPI');
 
 var Activity = beans.get('activity');
+var Member = beans.get('member');
 
 var activityUrl = 'urlOfTheActivity';
 
@@ -51,6 +53,7 @@ describe('Addon API', function () {
     sinon.stub(stripeAPI, 'transaction', function () {
       return { charges: { create: function (charge, callback) { chargedCreditCard++; callback(null, {}); } } };
     });
+    sinon.stub(membersAPI, 'getMemberForId', function (id, callback) { callback(null, new Member({firstname: 'Hans', lastname: 'Dampf', nickname: 'hada'})); });
 
     persistence.drop(function () {
       // empty the store and then save our activity with one registrant
