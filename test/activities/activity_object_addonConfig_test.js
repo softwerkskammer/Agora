@@ -45,9 +45,13 @@ describe('Activity\'s Addon Configuration', function () {
 });
 
 describe('Addon Configuration', function () {
-  it('has a default deposit of 100 and a default fee of 3.2', function () {
+  it('has no default deposit and default fee', function () {
     var addonConfig = new AddonConfig();
-    expect(addonConfig.deposit()).to.equal(100);
+    expect(addonConfig.deposit()).to.not.exist;
+  });
+
+  it('has fee of 3.2 for a deposit of 100', function () {
+    var addonConfig = new AddonConfig({deposit: 100});
     expect(addonConfig.fee()).to.equal(3.2);
   });
 

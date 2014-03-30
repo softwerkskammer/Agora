@@ -40,24 +40,15 @@ block content
               | ) - #{activity.endMoment().lang(language).format('LL')} (#{activity.endMoment().lang(language).format('LT')})
             else 
               |  - #{activity.endMoment().lang(language).format('LT')})
-      if (canEditAddon)
-        .btn-group.pull-right
-          if (activity.addonForMember(user.member.id()).paymentDone())
-            a.btn.btn-default(data-toggle="modal", data-target="#payment", href="/activities/payment/#{encodeURIComponent(activity.url())}")
-              i.fa.fa-money.fa-fw
-              | &nbsp; #{t("payment.title")}…
-          else
-            a.btn.btn-warning(data-toggle="modal", data-target="#payment", href="/activities/payment/#{encodeURIComponent(activity.url())}")
-              i.fa.fa-money.fa-fw
-              | &nbsp; #{t("payment.title")}…
-          if (addonAlreadyFilled)
-            a.btn.btn-default(data-toggle="modal", data-target="#addOn", href="/activities/addon/#{encodeURIComponent(activity.url())}")
-              i.fa.fa-tags.fa-fw
-              | &nbsp;#{t("activities.edit_addon")}
-          else
-            a.btn.btn-warning(data-toggle="modal", data-target="#addOn", href="/activities/addon/#{encodeURIComponent(activity.url())}")
-              i.fa.fa-tags.fa-fw
-              | &nbsp;#{t("activities.addon_required")}
+      .btn-group.pull-right
+        if (hasToBePaid)
+          a.btn(class="#{paymentAlreadyDone ? 'btn-default' : 'btn-warning'}", data-toggle="modal", data-target="#payment", href="/activities/payment/#{encodeURIComponent(activity.url())}")
+            i.fa.fa-money.fa-fw
+            | &nbsp; #{t("payment.title")}…
+        if (canEditAddon)
+          a.btn(class="#{addonAlreadyFilled ? 'btn-default' : 'btn-warning'}", data-toggle="modal", data-target="#addOn", href="/activities/addon/#{encodeURIComponent(activity.url())}")
+            i.fa.fa-tags.fa-fw
+            | &nbsp;#{t("activities.edit_addon")}
         .clearfix
       | !{activity.descriptionHTML()}
       hr

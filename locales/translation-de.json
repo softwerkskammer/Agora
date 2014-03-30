@@ -118,6 +118,7 @@
     "waitinglist_not_possible": "Warteliste ist nicht möglich.",
     "no_waitinglist": "Es gibt keine Warteliste.",
     "full": "Alle Plätze sind belegt.",
+    "deposit": "Vorabzahlung",
     "addon": "Zusatzangaben",
     "addon_information": "Informationstext für den Dialog",
     "addon_required": "Zusatzangaben erforderlich…",

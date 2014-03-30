@@ -118,6 +118,7 @@
     "waitinglist_not_possible": "Waiting list is currently not available.",
     "no_waitinglist": "There is no waiting list.",
     "full": "All spots are taken.",
+    "deposit": "Deposit",
     "addon": "Additional Information",
     "addon_information": "Informations inside the dialog",
     "addon_required": "Additional information is required…",
