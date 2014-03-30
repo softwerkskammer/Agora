@@ -74,7 +74,7 @@ describe('Members application', function () {
     request(createApp('memberID1'))
       .get('/edit/hada')
       .expect(302)
-      .expect('location', /members\/hada/, done);
+      .expect('location', /members/, done);
   });
 
   it('allows a superuser member to edit another member\'s data', function (done) {

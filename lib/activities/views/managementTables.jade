@@ -1,0 +1,110 @@
+extends ../../../views/layoutOnlyMain
+include ../../members/views/memberlist-mixin
+
+mixin localdate(momentOrNull)
+  | #{momentOrNull ? momentOrNull.lang(language).format('L') : '-'}
+
+mixin buttonOrDate(momentOrNull, activityUrl, nickname)
+  if (momentOrNull)
+    | #{momentOrNull.lang(language).format('L')}
+  else
+    a.btn.btn-primary.btn-xs.btn-block(href="#{'/activities/paymentReceived/' + encodeURIComponent(activityUrl) + '/' + encodeURIComponent(nickname)}") Erhalten… 
+
+block scripts
+  script(src="/clientscripts/jquery.dataTables.min.js")
+  script.
+    $(document).ready(function() {
+      $(".addontable").dataTable({
+        "oLanguage": {
+          "sUrl": "#{(language === 'de') ? "/clientscripts/dataTables.german.txt" : ""}"
+        },
+        "aoColumns": [
+          null, null, null, null, null, null, { "sType": "date-eu" }, { "sType": "date-eu" }, { "sType": "date-eu" }
+        ],
+        "bPaginate": false,
+        "bAutoWidth": false,
+        "bFilter": false,
+        "aaSorting": [[ 0 , "asc" ]],
+        "bStateSave": true  
+      });
+    });
+    $(document).ready(function() {
+      $(".membertable").dataTable({
+        "oLanguage": {
+          "sUrl": "#{(language === 'de') ? "/clientscripts/dataTables.german.txt" : ""}"
+        },
+        "aoColumns": [
+          { "sType": "date-eu" }, null, null, null, null
+        ],
+        "bPaginate": false,
+        "bAutoWidth": false,
+        "bFilter": false,
+        "aaSorting": [[ 0 , "asc" ]],
+        "bStateSave": true  
+      });
+    });
+
+
+block title
+  | #{activity.title()} - Verwaltung
+
+block content
+  .row
+    .col-md-12
+      .page-header
+        h2 #{activity.title()} - Verwaltung
+  ul.nav.nav-tabs
+    li.active: a(href="#main", data-toggle="tab") #{t("activities.participants")}
+    li: a(href="#addons", data-toggle="tab") Zahlung
+  .row
+    .col-md-12
+      .tab-content
+        .tab-pane.active#main
+          each resourceName in activity.resourceNames()
+            -var participants = activity.participantsOf(resourceName)
+            h4 #{resourceName} (#{participants.length})
+            .panel.pre-scrollable
+              table.table.table-condensed.table-hover.table-striped.membertable
+                thead
+                  tr
+                    th Registriert
+                    th Nickname
+                    th Vorname
+                    th Nachname
+                    th Ort/Region
+                tbody
+                  for member in participants
+                    tr
+                      td #{member.registeredAt.lang(language).format('L')}
+                      td: mixin linkedMember(member.nickname())
+                      td #{member.firstname()}
+                      td #{member.lastname()}
+                      td #{member.location()}
+            hr
+
+        .tab-pane#addons
+          .panel.pre-scrollable
+            table.table.table-condensed.table-hover.table-striped.addontable
+              thead
+                tr
+                  th Nickname
+                  th Vorname
+                  th Nachname
+                  th Ort/Region
+                  th T-Shirt
+                  th Zimmer mit
+                  th Überwiesen
+                  th Kreditkarte
+                  th Zahlungseingang
+              tbody
+                for line in addonLines
+                  tr
+                    td: mixin linkedMember(line.nickname())
+                    td #{line.firstname()}
+                    td #{line.lastname()}
+                    td #{line.location()}
+                    td #{line.addon.tShirtSize()}
+                    td #{line.addon.roommate()}
+                    td: mixin localdate(line.addon.moneyTransferredMoment())
+                    td: mixin localdate(line.addon.creditCardPaidMoment())
+                    td: mixin buttonOrDate(line.addon.paymentReceivedMoment(), activity.url(), line.nickname())

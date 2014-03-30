@@ -1,17 +1,21 @@
-extends ../../../views/layout
+extends ../../../views/layoutOnlyMain
 include  ../../../views/formComponents
 
-mixin resourceRow(name, limit, isRegistrationOpen, hasWaitinglist)
+mixin resourceRow(name, limit, isRegistrationOpen, canUnsubscribe, hasWaitinglist)
   .row.form-group
-    .col-xs-3.col-sm-6
+    .col-xs-3.col-sm-4
       input.form-control(name="resources[names]", value=name, type="text", placeholder=t("activities.label"))
     .col-xs-3.col-sm-2
       input.form-control(name="resources[limits]", value=limit, type="text", placeholder=t("activities.unlimited"))
-    .col-xs-3.col-sm-2
+    .col-xs-2.col-sm-2
       select.form-control(name="resources[isRegistrationOpen]")
         option(value="yes", selected=(isRegistrationOpen ? true : false)) #{t("activities.possible")}
         option(value="no", selected=(isRegistrationOpen ? false : true)) #{t("activities.impossible")}
-    .col-xs-3.col-sm-2
+    .col-xs-2.col-sm-2
+      select.form-control(name="resources[canUnsubscribe]")
+        option(value="yes", selected=(canUnsubscribe ? true : false)) #{t("activities.possible")}
+        option(value="no", selected=(canUnsubscribe ? false : true)) #{t("activities.impossible")}
+    .col-xs-2.col-sm-2
       select.form-control(name="resources[hasWaitinglist]")
         option(value="yes", selected=(hasWaitinglist ? true : false)) #{t("general.yes")}
         option(value="no", selected=(hasWaitinglist ? false : true)) #{t("general.no")}
@@ -29,7 +33,7 @@ block scripts
         });
     });
   script#resource-template(type="text/html")
-    +resourceRow(undefined, undefined, true, false)
+    +resourceRow(undefined, undefined, true, true, false)
   script.
     function fillUrlFromText (urlId, textId) {
       var title = document.getElementById(textId).value;
@@ -99,17 +103,19 @@ block content
             .col-md-12
               #resources
                 .row
-                  .col-xs-3.col-sm-6
+                  .col-xs-3.col-sm-4
                     +controlLabel("bezeichnung", t("activities.resourcelabel"), t("activities.tooltip.resourcelabel"))
                   .col-xs-3.col-sm-2
                     +controlLabel("anzahl", t("activities.count"), t("activities.tooltip.count"))
-                  .col-xs-3.col-sm-2
+                  .col-xs-2.col-sm-2
                     +controlLabel("registrierung", t("activities.registration"), t("activities.tooltip.registration"))
-                  .col-xs-3.col-sm-2
+                  .col-xs-2.col-sm-2
+                    +controlLabel("registrierung", t("activities.deregistration"), t("activities.tooltip.registration"))
+                  .col-xs-2.col-sm-2
                     +controlLabel("registrierung", t("activities.waitinglist"), t("activities.tooltip.waitinglist"))
                 each name in activity.resourceNames()
                   - var resource = activity.resourceNamed(name)
-                  +resourceRow(name, resource.limit(), resource.isRegistrationOpen(), resource.hasWaitinglist())
+                  +resourceRow(name, resource.limit(), resource.isRegistrationOpen(), resource.canUnsubscribe(), resource.hasWaitinglist())
                   +hidden("resources[previousNames]", name)
                 .row.form-group
                   .col-md-12
@@ -125,6 +131,7 @@ block content
             .col-md-6
               +textarea('addonInformation', t("activities.addon_information"), activity.addonConfig().addonInformation())
             .col-md-6
+              +text('deposit', t("activities.deposit"), activity.addonConfig().deposit())
               +checkbox('homeAddress', t("activities.home_address") + " *", activity.addonConfig().homeAddress())
               +checkbox('billingAddress', t("activities.billing_address")+ " *", activity.addonConfig().billingAddress())
               +checkbox('tShirtSize', t("activities.t_shirt_size")+ " *", activity.addonConfig().tShirtSize())

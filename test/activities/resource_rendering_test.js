@@ -14,7 +14,7 @@ describe('ResourceRegistrationRenderer', function () {
   var resource = new Resource({});
   var activity = new Activity({});
   var resourceNamesList;
-  
+
   function resultForState(state) {
     sinon.stub(resource, 'registrationStateFor', function () { return  state; });
     return resourceRegistrationRenderer.htmlRepresentationOf(activity, 'resourceName');
@@ -29,6 +29,12 @@ describe('ResourceRegistrationRenderer', function () {
 
   afterEach(function () {
     sinon.restore();
+  });
+
+  it('gives values for state "fixed"', function () {
+    var result = resultForState(Resource.fixed);
+    expect(result.url).to.not.exist;
+    expect(result.displayText).to.equal('activities.unsubscribe_not_possible');
   });
 
   it('gives values for state "registered" if only 1 resource', function () {
@@ -92,11 +98,18 @@ describe('ResourceRegistrationRenderer', function () {
 describe('Resource', function () {
 
   describe('rendering cases with existing user', function () {
-    it('indicates to render the "leave" button if the user is registered', function () {
+    it('indicates to render the "leave" button if the user is registered and "unsubscription possible"', function () {
       var resource = new Resource({ _registeredMembers: [
         {memberId: 'memberID'}
       ]});
       expect(resource.registrationStateFor('memberID')).to.equal(Resource.registered);
+    });
+
+    it('indicates to render the "leave" button if the user is registered and "unsubscription not possible"', function () {
+      var resource = new Resource({ _registeredMembers: [
+        {memberId: 'memberID'}
+      ], _canUnsubscribe: false});
+      expect(resource.registrationStateFor('memberID')).to.equal(Resource.fixed);
     });
 
     it('indicates to render the "enter" button if registration is possible', function () {

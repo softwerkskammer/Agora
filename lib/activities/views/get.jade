@@ -3,6 +3,8 @@ include ../../members/views/memberlist-mixin
 include ../../../views/googlemaps-component
 include ../../../views/formComponents
 include activities-mixins
+block scripts
+  script(type="text/javascript", src="https://js.stripe.com/v2/")
 
 block title
   | #{activity.title()} - #{t("activities.activities")}
@@ -15,12 +17,15 @@ block content
   #addOn(tabindex="-1").modal.fade
     .modal-dialog
       .modal-content
+  #payment(tabindex="-1").modal.fade
+    .modal-dialog
+      .modal-content
   .row
     .col-md-12
       .page-header
         .btn-group.pull-right
           if (accessrights.canEditActivity(activity))
-            a.btn.btn-default(href="/activities/participants/#{encodeURIComponent(activity.url())}", title=t("activities.participants")): i.fa.fa-list-ol.fa-fw
+            a.btn.btn-default(href="/activities/addons/#{encodeURIComponent(activity.url())}", title=t("activities.participants")): i.fa.fa-list-ol.fa-fw
           a.btn.btn-default(href="/activities/ical/#{encodeURIComponent(activity.url())}", title=t("activities.export")): i.fa.fa-calendar.fa-fw
           if (accessrights.canCreateActivity())
             a.btn.btn-default(href="/activities/newLike/#{encodeURIComponent(activity.url())}", title=t("activities.new_copy")): i.fa.fa-copy.fa-fw
@@ -35,15 +40,15 @@ block content
               | ) - #{activity.endMoment().lang(language).format('LL')} (#{activity.endMoment().lang(language).format('LT')})
             else 
               |  - #{activity.endMoment().lang(language).format('LT')})
-      if (canEditAddon)
-        if (addonAlreadyFilled)
-          a.btn.btn-default.pull-right(data-toggle="modal", data-target="#addOn", href="/activities/addon/#{encodeURIComponent(activity.url())}")
+      .btn-group.pull-right
+        if (hasToBePaid)
+          a.btn(class="#{paymentAlreadyDone ? 'btn-default' : 'btn-warning'}", data-toggle="modal", data-target="#payment", href="/activities/payment/#{encodeURIComponent(activity.url())}")
+            i.fa.fa-money.fa-fw
+            | &nbsp; #{t("payment.title")}…
+        if (canEditAddon)
+          a.btn(class="#{addonAlreadyFilled ? 'btn-default' : 'btn-warning'}", data-toggle="modal", data-target="#addOn", href="/activities/addon/#{encodeURIComponent(activity.url())}")
             i.fa.fa-tags.fa-fw
             | &nbsp;#{t("activities.edit_addon")}
-        else
-          a.btn.btn-success.pull-right(data-toggle="modal", data-target="#addOn", href="/activities/addon/#{encodeURIComponent(activity.url())}")
-            i.fa.fa-tags.fa-fw
-            | &nbsp;#{t("activities.addon_required")}
         .clearfix
       | !{activity.descriptionHTML()}
       hr

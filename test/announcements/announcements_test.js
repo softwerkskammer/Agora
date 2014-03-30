@@ -23,7 +23,7 @@ var dummyAnnouncement = new Announcement({
 var announcementsAPI = beans.get('announcementsAPI');
 var membersAPI = beans.get('membersAPI');
 
-var app = require('../../testutil/testHelper')('announcementsApp').createApp();
+var createApp = require('../../testutil/testHelper')('announcementsApp').createApp;
 
 describe('Announcement application', function () {
   var allAnnouncements;
@@ -47,7 +47,7 @@ describe('Announcement application', function () {
   });
 
   it('shows the list of announcements as retrieved from the store', function (done) {
-    request(app)
+    request(createApp())
       .get('/')
       .expect(200)
       .expect(/Nachrichten/)
@@ -65,7 +65,7 @@ describe('Announcement application', function () {
     });
     var url = 'url';
 
-    request(app)
+    request(createApp())
       .get('/' + url)
       .expect(200)
       .expect(/<small>29. Juli 2013/)
@@ -75,11 +75,11 @@ describe('Announcement application', function () {
       });
   });
 
-  it('shows a thruDate when editing an announcement having a thruDate', function (done) {
+  it('shows a thruDate when editing an announcement having a thruDate for a registered member being the author', function (done) {
     dummyAnnouncement.id = 1234;
     var url = 'url';
 
-    request(app)
+    request(createApp('author'))
       .get('/edit/' + url)
       .expect(200)
       .expect(/<input id="thruDate" type="text" name="thruDate" value="31.12.2013"/)
@@ -91,12 +91,12 @@ describe('Announcement application', function () {
 
   it('shows a 404 if the url cannot be found in the store for the detail page', function (done) {
     var link = dummyAnnouncement.url + '-does-not-exist';
-    request(app).get('/' + link).expect(404, function (err) { done(err); });
+    request(createApp()).get('/' + link).expect(404, function (err) { done(err); });
 
   });
 
-  it('allows to create a new announcement', function (done) {
-    request(app)
+  it('allows to create a new announcement for a registered member', function (done) {
+    request(createApp('somebody'))
       .get('/new')
       .expect(200)
       .expect(/announcements/, function (err) {

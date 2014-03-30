@@ -93,6 +93,20 @@ describe('Activity (when filled from UI)', function () {
       expect(activity.resourceNamed("Einzelzimmer").isRegistrationOpen(), "Registration at resource").to.equal(false);
     });
 
+    it('with unsubscription possible', function () {
+      var activity = new Activity().fillFromUI({resources: {names: "Einzelzimmer", limits: "dudu", previousNames: "", canUnsubscribe: "yes"}});
+
+      checkResourceNames(activity, "Einzelzimmer");
+      expect(activity.resourceNamed("Einzelzimmer").canUnsubscribe(), "Unsubscription at resource").to.equal(true);
+    });
+
+    it('with unsubscription not possible', function () {
+      var activity = new Activity().fillFromUI({resources: {names: "Einzelzimmer", limits: "dudu", previousNames: "", canUnsubscribe: "no"}});
+
+      checkResourceNames(activity, "Einzelzimmer");
+      expect(activity.resourceNamed("Einzelzimmer").canUnsubscribe(), "Unsubscription at resource").to.equal(false);
+    });
+
     it('with ID', function () {
       var activity = new Activity().fillFromUI({assignedGroup: "My Group", title: "My Title", startDate: "01.02.2013", startTime: "20:15"});
 
