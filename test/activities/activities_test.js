@@ -15,6 +15,7 @@ var Group = beans.get('group');
 
 var activitiesAPI = beans.get('activitiesAPI');
 var groupsAPI = beans.get('groupsAPI');
+var addonAPI = beans.get('addonAPI');
 
 var member1 = new Member({id: 'memberId1', nickname: 'participant1', email: 'nick1@b.c'});
 var member2 = new Member({id: 'memberId2', nickname: 'participant2', email: 'nick2@b.c'});
@@ -355,6 +356,55 @@ describe('Activity application', function () {
 
     request(createApp())
       .get('/edit/urlOfTheActivity')
+      .expect(302)
+      .expect('location', /activities\/urlOfTheActivity/, done);
+  });
+
+  it('allows the owner to manage an activity\'s addons', function (done) {
+    sinon.stub(groupsAPI, 'getSubscribedGroupsForUser', function (email, callback) { callback(null, []); });
+
+    request(createApp('owner'))
+      .get('/addons/urlOfTheActivity')
+      .expect(200)
+      .expect(/activities/, done);
+  });
+
+  it('disallows a member to manage another user\'s activity\'s addons', function (done) {
+    sinon.stub(groupsAPI, 'getAllAvailableGroups', function (callback) { callback(null, []); });
+
+    request(createApp('owner1'))
+      .get('/addons/urlOfTheActivity')
+      .expect(302)
+      .expect('location', /activities\/urlOfTheActivity/, done);
+  });
+
+  it('disallows a guest to manage any addons', function (done) {
+    sinon.stub(groupsAPI, 'getAllAvailableGroups', function (callback) { callback(null, []); });
+
+    request(createApp())
+      .get('/addons/urlOfTheActivity')
+      .expect(302)
+      .expect('location', /activities\/urlOfTheActivity/, done);
+  });
+
+  it('allows the owner to mark payments', function (done) {
+    sinon.stub(addonAPI, 'submitPaymentReceived', function (url, nick, callback) { callback(null); });
+    request(createApp('owner'))
+      .get('/paymentReceived/urlOfTheActivity/someUser')
+      .expect(302)
+      .expect('location', /activities\/addons\/urlOfTheActivity/, done);
+  });
+
+  it('disallows a member to mark another user\'s activity\'s payments', function (done) {
+    request(createApp('owner1'))
+      .get('/paymentReceived/urlOfTheActivity/someUser')
+      .expect(302)
+      .expect('location', /activities\/urlOfTheActivity/, done);
+  });
+
+  it('disallows a guest to mark any payments', function (done) {
+    request(createApp())
+      .get('/paymentReceived/urlOfTheActivity/someUser')
       .expect(302)
       .expect('location', /activities\/urlOfTheActivity/, done);
   });
