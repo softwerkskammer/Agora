@@ -65,3 +65,38 @@ describe('SecuredByLoginURLRedirect Rule (wiki/socrates.*)', function () {
   });
 
 });
+
+describe('SecuredByLoginURLRedirect Rule (*/new)', function () {
+
+  it('secures URLs with activities/new', function () {
+    var url = 'http://host/activities/new';
+    expect(securedByLoginURLRegex.test(url)).to.be.true;
+  });
+
+  it('secures URLs with announcements/new', function () {
+    var url = 'http://host/announcements/new';
+    expect(securedByLoginURLRegex.test(url)).to.be.true;
+  });
+
+  it('secures URLs with groups/new', function () {
+    var url = 'http://host/groups/new';
+    expect(securedByLoginURLRegex.test(url)).to.be.true;
+  });
+
+  it('does secure members/new', function () {
+    var url = 'http://host/members/new';
+    expect(securedByLoginURLRegex.test(url)).to.be.true;
+  });
+
+  it('does secure something/new', function () {
+    var url = 'http://host/something/new';
+    expect(securedByLoginURLRegex.test(url)).to.be.true;
+  });
+
+  it('secures URLs with something/new/something', function () {
+    var url = 'http://host/something/new/something';
+    expect(securedByLoginURLRegex.test(url)).to.be.true;
+  });
+
+});
+
