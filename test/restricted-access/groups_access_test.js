@@ -16,7 +16,7 @@ describe('Groups application security for normal visitors does not allow to acce
   });
 
   it('/submit', function (done) {
-    request(app).post('/groups/submit').expect(302).expect('location', /mustBeSuperuser/, done);
+    request(app).post('/groups/submit').expect(302).expect('location', /login/, done);
   });
 
   it('/subscribe', function (done) {

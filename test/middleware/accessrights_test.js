@@ -70,7 +70,7 @@ describe('Accessrights for Activities', function () {
 
 describe('Accessrights for Announcements', function () {
   it('disallows the creation for members', function () {
-    expect(standardMember().canCreateAnnouncement()).to.be.false;
+    expect(standardMember().canCreateAnnouncement()).to.be.true;
   });
 
   it('allows the creation for superusers', function () {

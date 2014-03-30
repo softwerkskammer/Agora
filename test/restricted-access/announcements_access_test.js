@@ -16,7 +16,7 @@ describe('Announcements application security for normal visitors does not allow 
   });
 
   it('/submit', function (done) {
-    request(app).post('/announcements/submit').expect(302).expect('location', /mustBeSuperuser/, done);
+    request(app).post('/announcements/submit').expect(302).expect('location', /login/, done);
   });
 
 });

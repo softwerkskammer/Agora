@@ -20,7 +20,7 @@ describe('Activities application security for normal visitors does not allow to 
   });
 
   it('/submit', function (done) {
-    request(app).post('/activities/submit').expect(302).expect('location', /mustBeSuperuser/, done);
+    request(app).post('/activities/submit').expect(302).expect('location', /login/, done);
   });
 
   it('/addon', function (done) {
