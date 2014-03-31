@@ -54,6 +54,7 @@ describe('Addon API', function () {
       return { charges: { create: function (charge, callback) { chargedCreditCard++; callback(null, {}); } } };
     });
     sinon.stub(membersAPI, 'getMemberForId', function (id, callback) { callback(null, new Member({firstname: 'Hans', lastname: 'Dampf', nickname: 'hada'})); });
+    sinon.stub(membersAPI, 'getMember', function (nick, callback) { callback(null, new Member({id: 'memberIdNew', firstname: 'Hans', lastname: 'Dampf', nickname: 'hada'})); });
 
     persistence.drop(function () {
       // empty the store and then save our activity with one registrant
@@ -74,8 +75,8 @@ describe('Addon API', function () {
       if (err) { return done(err); }
       getActivity(activityUrl, function (err, activity) {
         if (err) { return done(err); }
-        expect(activity.addonForMember('memberIdRace').homeAddress(), 'Previous member is still in the waitinglist').to.equal('At Home');
-        expect(activity.addonForMember('memberIdNew').roommate(), 'Second member is stored in the waitinglist').to.equal('A nice guy');
+        expect(activity.addonForMember('memberIdRace').homeAddress(), 'Previous member has still her addon').to.equal('At Home');
+        expect(activity.addonForMember('memberIdNew').roommate(), 'Second member has her addon').to.equal('A nice guy');
         done(err);
       });
     });
@@ -89,8 +90,8 @@ describe('Addon API', function () {
       if (err) { return done(err); }
       getActivity(activityUrl, function (err, activity) {
         if (err) { return done(err); }
-        expect(activity.addonForMember('memberIdRace').homeAddress(), 'Previous member is still in the waitinglist').to.equal('At Home');
-        expect(activity.addonForMember('memberIdNew').creditCardPaid(), 'Second member is stored in the waitinglist').to.not.be.undefined;
+        expect(activity.addonForMember('memberIdRace').homeAddress(), 'Previous member has still her addon').to.equal('At Home');
+        expect(activity.addonForMember('memberIdNew').creditCardPaid(), 'Second member has her addon').to.not.be.undefined;
         expect(chargedCreditCard, 'We withdrew money only once despite the racing condition').to.equal(1);
         done(err);
       });
@@ -105,8 +106,23 @@ describe('Addon API', function () {
       if (err) { return done(err); }
       getActivity(activityUrl, function (err, activity) {
         if (err) { return done(err); }
-        expect(activity.addonForMember('memberIdRace').homeAddress(), 'Previous member is still in the waitinglist').to.equal('At Home');
-        expect(activity.addonForMember('memberIdNew').moneyTransferred(), 'Second member is stored in the waitinglist').to.not.be.undefined;
+        expect(activity.addonForMember('memberIdRace').homeAddress(), 'Previous member has still her addon').to.equal('At Home');
+        expect(activity.addonForMember('memberIdNew').moneyTransferred(), 'Second member has her addon').to.not.be.undefined;
+        done(err);
+      });
+    });
+  });
+
+  
+  it('submitPaymentReceived keeps the member addon info that is in the database although it only reads an activity without member addon info', function (done) {
+    // here, we save an activity with a member that is different from the member in the database.
+    // To mimick a racing condition, we return an activity without members for the first "getActivity".
+    addonAPI.submitPaymentReceived(activityUrl, 'newNick', function (err) {
+      if (err) { return done(err); }
+      getActivity(activityUrl, function (err, activity) {
+        if (err) { return done(err); }
+        expect(activity.addonForMember('memberIdRace').homeAddress(), 'Previous member has still her addon').to.equal('At Home');
+        expect(activity.addonForMember('memberIdNew').paymentReceivedMoment(), 'Second member has her addon').to.not.be.undefined;
         done(err);
       });
     });
