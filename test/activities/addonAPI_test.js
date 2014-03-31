@@ -71,7 +71,7 @@ describe('Addon API', function () {
     addonAPI.payWithCreditCard('activity', 'member', 'stripe-id', function (err, charge) {
       expect(savedActivity.addonForMember('member').moneyTransferred()).to.be.falsy;
       expect(savedActivity.addonForMember('member').creditCardPaid()).to.be.truthy;
-      expect(charge.amount).to.equal(5175); // amount is in cents
+      expect(charge.amount).to.equal(5180); // amount is in cents
       expect(charge.description).to.equal('Expensive Activity deposit for Hans Dampf (hada)');
       done(err);
     });

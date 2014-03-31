@@ -50,9 +50,14 @@ describe('Addon Configuration', function () {
     expect(addonConfig.deposit()).to.not.exist;
   });
 
-  it('has fee of 3.2 for a deposit of 100', function () {
+  it('has fee of 3.3 for a deposit of 100', function () {
     var addonConfig = new AddonConfig({deposit: 100});
-    expect(addonConfig.fee()).to.equal(3.2);
+    expect(addonConfig.fee().toFixed(2)).to.equal('3.30');
+  });
+
+  it('has a total of 103.3 for a deposit of 100', function () {
+    var addonConfig = new AddonConfig({deposit: 100});
+    expect(addonConfig.stripeTotal()).to.equal(103.3);
   });
 
 });
