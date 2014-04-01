@@ -68,11 +68,11 @@ describe('Addon API', function () {
   });
 
   it('payWithCreditCard enhances activity with money transfer info and saves it', function (done) {
-    addonAPI.payWithCreditCard('activity', 'member', 'stripe-id', function (err, charge) {
+    addonAPI.payWithCreditCard('activity', 'member', 'stripe-id', function (err, message) {
       expect(savedActivity.addonForMember('member').moneyTransferred()).to.be.falsy;
       expect(savedActivity.addonForMember('member').creditCardPaid()).to.be.truthy;
-      expect(charge.amount).to.equal(5180); // amount is in cents
-      expect(charge.description).to.equal('Expensive Activity deposit for Hans Dampf (hada)');
+      expect(message).to.exist;
+      expect(err).to.not.exist;
       done(err);
     });
   });

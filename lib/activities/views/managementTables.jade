@@ -63,7 +63,7 @@ block content
           each resourceName in activity.resourceNames()
             -var participants = activity.participantsOf(resourceName)
             h4 #{resourceName} (#{participants.length})
-            .panel.pre-scrollable
+            .panel
               table.table.table-condensed.table-hover.table-striped.membertable
                 thead
                   tr
@@ -83,7 +83,7 @@ block content
             hr
 
         .tab-pane#addons
-          .panel.pre-scrollable
+          .panel
             table.table.table-condensed.table-hover.table-striped.addontable
               thead
                 tr
