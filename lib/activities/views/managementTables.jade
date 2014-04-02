@@ -4,11 +4,11 @@ include ../../members/views/memberlist-mixin
 mixin localdate(momentOrNull)
   | #{momentOrNull ? momentOrNull.lang(language).format('L') : '-'}
 
-mixin buttonOrDate(momentOrNull, activityUrl, nickname)
+mixin buttonOrDate(momentOrNull, paymentDone, activityUrl, nickname)
   if (momentOrNull)
     | #{momentOrNull.lang(language).format('L')}
-  else
-    a.btn.btn-primary.btn-xs.btn-block(href="#{'/activities/paymentReceived/' + encodeURIComponent(activityUrl) + '/' + encodeURIComponent(nickname)}") Erhalten… 
+  else if paymentDone
+    a.btn.btn-primary.btn-xs.btn-block(href="#{'/activities/paymentReceived/' + encodeURIComponent(activityUrl) + '/' + encodeURIComponent(nickname)}") Erhalten…
 
 block scripts
   script(src="/clientscripts/jquery.dataTables.min.js")
@@ -24,7 +24,7 @@ block scripts
         "bPaginate": false,
         "bAutoWidth": false,
         "bFilter": false,
-        "aaSorting": [[ 0 , "asc" ]],
+        "aaSorting": [[ 2 , "asc" ]],
         "bStateSave": true  
       });
     });
@@ -54,12 +54,12 @@ block content
       .page-header
         h2 #{activity.title()} - Verwaltung
   ul.nav.nav-tabs
-    li.active: a(href="#main", data-toggle="tab") #{t("activities.participants")}
-    li: a(href="#addons", data-toggle="tab") Zahlung
+    li: a(href="#main", data-toggle="tab") #{t("activities.participants")}
+    li.active: a(href="#addons", data-toggle="tab") Zahlung
   .row
     .col-md-12
       .tab-content
-        .tab-pane.active#main
+        .tab-pane#main
           each resourceName in activity.resourceNames()
             -var participants = activity.participantsOf(resourceName)
             h4 #{resourceName} (#{participants.length} von #{activity.resourceNamed(resourceName).limit() || 'unbegrenzt'})
@@ -82,7 +82,7 @@ block content
                       td #{member.location()}
             hr
 
-        .tab-pane#addons
+        .tab-pane.active#addons
           .panel
             table.table.table-condensed.table-hover.table-striped.addontable
               thead
@@ -107,4 +107,4 @@ block content
                     td #{line.addon.roommate()}
                     td: mixin localdate(line.addon.moneyTransferredMoment())
                     td: mixin localdate(line.addon.creditCardPaidMoment())
-                    td: mixin buttonOrDate(line.addon.paymentReceivedMoment(), activity.url(), line.nickname())
+                    td: mixin buttonOrDate(line.addon.paymentReceivedMoment(), line.addon.paymentDone(), activity.url(), line.nickname())
