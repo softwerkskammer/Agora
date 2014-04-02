@@ -7,7 +7,7 @@ mixin localdate(momentOrNull)
 mixin buttonOrDate(momentOrNull, paymentDone, activityUrl, nickname)
   if (momentOrNull)
     | #{momentOrNull.lang(language).format('L')}
-  else if paymentDone
+  else
     a.btn.btn-primary.btn-xs.btn-block(id="#{encodeURIComponent(nickname) + '-button'}",
       href="javascript:paymentDone(\"#{'/activities/paymentReceived/' + encodeURIComponent(activityUrl) + '/' + encodeURIComponent(nickname)}\", \"#{encodeURIComponent(nickname) + '-button'}\")") Erhalten…
 
@@ -15,8 +15,8 @@ block scripts
   script(src="/clientscripts/jquery.dataTables.min.js")
   script.
     function paymentDone(url, buttonid) {
-      $.get(url, function( data ) {
-        $('#' + buttonid).parent().html(data)
+      $.ajax({ url: url }).done(function(data) {
+        $('#' + buttonid).parent().html(data);
       });
     }
   script.
@@ -60,6 +60,7 @@ block content
     .col-md-12
       .page-header
         h2 #{activity.title()} - Verwaltung
+          a.btn.pull-right.btn-default(href="#{'/activities/' + encodeURIComponent(activity.url())}") Zurück
   ul.nav.nav-tabs
     li: a(href="#main", data-toggle="tab") #{t("activities.participants")}
     li.active: a(href="#addons", data-toggle="tab") Zahlung

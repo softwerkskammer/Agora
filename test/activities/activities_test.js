@@ -391,8 +391,8 @@ describe('Activity application', function () {
     sinon.stub(addonAPI, 'submitPaymentReceived', function (url, nick, callback) { callback(null); });
     request(createApp('owner'))
       .get('/paymentReceived/urlOfTheActivity/someUser')
-      .expect(302)
-      .expect('location', /activities\/addons\/urlOfTheActivity/, done);
+      .expect(200)
+      .expect(/[0-9][0-9].[0-9][0-9].[0-9][0-9][0-9][0-9]/, done);
   });
 
   it('disallows a member to mark another user\'s activity\'s payments', function (done) {
