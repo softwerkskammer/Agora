@@ -8,6 +8,7 @@ var expect = require('chai').expect;
 var beans = conf.get('beans');
 var Resource = beans.get('resource');
 var Activity = beans.get('activity');
+var Member = beans.get('member');
 
 describe('Resource', function () {
   describe('registration matters', function () {
@@ -257,4 +258,22 @@ describe('Resource', function () {
     });
   });
 
+  describe('- registration date -', function () {
+    var resource;
+    beforeEach(function () {
+      resource = new Resource();
+    });
+
+    it('returns undefined if the member is not registered', function () {
+      expect(resource.registrationDateOf(new Member())).to.be.undefined;
+    });
+
+    it('returns the registration date if the member is registered', function () {
+      var momentOfRegistration = moment("2014-03-03");
+      resource.addMemberId('12345', momentOfRegistration);
+
+      expect(resource.registrationDateOf(new Member({id: '12345'})).format()).to.equal(momentOfRegistration.format());
+    });
+
+  });
 });

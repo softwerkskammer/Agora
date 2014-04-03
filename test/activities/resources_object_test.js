@@ -2,10 +2,12 @@
 
 require('../../testutil/configureForTest');
 var expect = require('chai').expect;
+var moment = require('moment-timezone');
 
 var beans = require('nconf').get('beans');
 
 var Resources = beans.get('resources');
+var Member = beans.get('member');
 
 describe("Resources (fillFromUI)", function () {
   describe("adding / removing children", function () {
@@ -105,4 +107,36 @@ describe("Resources (fillFromUI)", function () {
       expect(resources.named('name1').hasWaitinglist()).to.be.false;
     });
   });
+
+  describe('- registration dates -', function () {
+    var resources;
+    beforeEach(function () {
+      resources = new Resources({resource1: {}, resource2: {}});
+    });
+
+    it('returns an empty array if the member is not registered', function () {
+      expect(resources.registrationDatesOf(new Member({id: '12345'})).length).to.equal(0);
+    });
+
+    it('returns the registration date if the member is registered in one resource', function () {
+      var momentOfRegistration = moment("2014-03-03");
+      resources.named('resource1').addMemberId('12345', momentOfRegistration);
+
+      expect(resources.registrationDatesOf(new Member({id: '12345'})).length).to.equal(1);
+      expect(resources.registrationDatesOf(new Member({id: '12345'}))[0].format()).to.equal(momentOfRegistration.format());
+    });
+
+    it('returns the registration dates if the member is registered in several resources', function () {
+      var momentOfRegistration = moment("2014-03-03");
+      var momentOfRegistration2 = moment("2014-03-03");
+      resources.named('resource1').addMemberId('12345', momentOfRegistration);
+      resources.named('resource2').addMemberId('12345', momentOfRegistration2);
+
+      expect(resources.registrationDatesOf(new Member({id: '12345'})).length).to.equal(2);
+      expect(resources.registrationDatesOf(new Member({id: '12345'}))[0].format()).to.equal(momentOfRegistration.format());
+      expect(resources.registrationDatesOf(new Member({id: '12345'}))[1].format()).to.equal(momentOfRegistration2.format());
+    });
+
+  });
+
 });
