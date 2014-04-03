@@ -95,6 +95,7 @@ block content
             table.table.table-condensed.table-hover.table-striped.addontable
               thead
                 tr
+                  th Registriert
                   th Nickname
                   th Vorname
                   th Nachname
@@ -107,6 +108,7 @@ block content
               tbody
                 for line in addonLines
                   tr
+                    td #{formatDates(activity.resources().registrationDatesOf(line.member))}
                     td: mixin linkedMember(line.member.nickname())
                     td #{line.member.firstname()}
                     td #{line.member.lastname()}
