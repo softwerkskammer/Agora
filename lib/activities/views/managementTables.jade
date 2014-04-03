@@ -107,12 +107,12 @@ block content
               tbody
                 for line in addonLines
                   tr
-                    td: mixin linkedMember(line.nickname())
-                    td #{line.firstname()}
-                    td #{line.lastname()}
-                    td #{line.location()}
+                    td: mixin linkedMember(line.member.nickname())
+                    td #{line.member.firstname()}
+                    td #{line.member.lastname()}
+                    td #{line.member.location()}
                     td #{line.addon.tShirtSize()}
                     td #{line.addon.roommate()}
                     td: mixin localdate(line.addon.moneyTransferredMoment())
                     td: mixin localdate(line.addon.creditCardPaidMoment())
-                    td: mixin buttonOrDate(line.addon.paymentReceivedMoment(), line.addon.paymentDone(), activity.url(), line.nickname())
+                    td: mixin buttonOrDate(line.addon.paymentReceivedMoment(), line.addon.paymentDone(), activity.url(), line.member.nickname())
