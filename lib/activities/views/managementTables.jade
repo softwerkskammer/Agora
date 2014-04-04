@@ -26,12 +26,12 @@ block scripts
           "sUrl": "#{(language === 'de') ? "/clientscripts/dataTables.german.txt" : ""}"
         },
         "aoColumns": [
-          { "sType": "date-eu" }, null, null, null, null, null, null, { "sType": "date-eu" }, { "sType": "date-eu" }, { "sType": "date-eu" }
+          { "sType": "date-eu" }, null, null, null, null, null, null, null, { "sType": "date-eu" }, { "sType": "date-eu" }, { "sType": "date-eu" }
         ],
         "bPaginate": false,
         "bAutoWidth": false,
         "bFilter": false,
-        "aaSorting": [[ 3 , "asc" ]],
+        "aaSorting": [[ 4 , "asc" ]],
         "bStateSave": true  
       });
     });
@@ -96,6 +96,7 @@ block content
               thead
                 tr
                   th Registriert
+                  th Ressourcen
                   th Nickname
                   th Vorname
                   th Nachname
@@ -108,7 +109,8 @@ block content
               tbody
                 for line in addonLines
                   tr
-                    td #{formatDates(activity.resources().registrationDatesOf(line.member))}
+                    td #{formatList(formatDates(activity.resources().registrationDatesOf(line.member)))}
+                    td #{formatList(activity.resources().resourceNamesOf(line.member))}
                     td: mixin linkedMember(line.member.nickname())
                     td #{line.member.firstname()}
                     td #{line.member.lastname()}
