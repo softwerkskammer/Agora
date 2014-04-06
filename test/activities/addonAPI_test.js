@@ -28,12 +28,6 @@ describe('Addon API', function () {
       savedActivity = activity;
       callback(null);
     });
-
-    sinon.stub(stripeAPI, 'transaction', function () {
-      return { charges: { create: function (charge, callback) {
-        callback(null, charge);
-      } } };
-    });
   });
 
   afterEach(function () {
@@ -68,12 +62,37 @@ describe('Addon API', function () {
   });
 
   it('payWithCreditCard enhances activity with money transfer info and saves it', function (done) {
+    sinon.stub(stripeAPI, 'transaction', function () { return { charges: { create: function (charge, callback) {callback(null, charge); }}}; });
+
     addonAPI.payWithCreditCard('activity', 'member', 'stripe-id', function (err, message) {
       expect(savedActivity.addonForMember('member').moneyTransferred()).to.be.falsy;
       expect(savedActivity.addonForMember('member').creditCardPaid()).to.be.truthy;
       expect(message).to.exist;
       expect(err).to.not.exist;
       done(err);
+    });
+  });
+
+  it('payWithCreditCard shows a status message if the returned error contains a message', function (done) {
+    sinon.stub(stripeAPI, 'transaction', function () { return { charges: { create: function (charge, callback) {callback({message: "General problem"}); }}}; });
+
+    addonAPI.payWithCreditCard('activity', 'member', 'stripe-id', function (err, message) {
+      expect(savedActivity).to.be.null;
+      expect(message).to.exist;
+      expect(message.contents().type).to.equal('alert-danger');
+      expect(err).to.not.exist;
+      done(err);
+    });
+  });
+
+  it('payWithCreditCard shows a normal error if the returned error contains no message', function (done) {
+    sinon.stub(stripeAPI, 'transaction', function () { return { charges: { create: function (charge, callback) {callback({}); }}}; });
+
+    addonAPI.payWithCreditCard('activity', 'member', 'stripe-id', function (err, message) {
+      expect(savedActivity).to.be.null;
+      expect(message).to.not.exist;
+      expect(err).to.exist;
+      done(); // error case - do not pass error to done()
     });
   });
 });
