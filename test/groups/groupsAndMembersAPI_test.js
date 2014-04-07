@@ -26,61 +26,142 @@ describe('Groups and Members API (getUserWithHisGroups or getMemberWithHisGroups
     sinon.restore();
   });
 
-  it('returns no member when there is no member for the given nickname', function (done) {
-    sinon.stub(membersAPI, 'getMember', function (nickname, callback) {
-      callback(null, null);
+  describe('- getUserWithHisGroups -', function () {
+    it('returns no member when there is no member for the given nickname', function (done) {
+      sinon.stub(membersAPI, 'getMember', function (nickname, callback) {
+        callback(null, null);
+      });
+
+      groupsAndMembersAPI.getUserWithHisGroups('nickname', function (err, member) {
+        expect(member).to.not.exist;
+        done(err);
+      });
     });
 
-    groupsAndMembersAPI.getUserWithHisGroups('nickname', function (err, member) {
-      expect(member).to.not.exist;
-      done(err);
+    it('returns the member and his groups when there is a member for the given nickname', function (done) {
+      sinon.stub(membersAPI, 'getMember', function (nickname, callback) {
+        callback(null, dummymember);
+      });
+      sinon.stub(groupsAPI, 'getSubscribedGroupsForUser', function (userMail, globalCallback) {
+        globalCallback(null, [GroupA, GroupB]);
+      });
+
+      groupsAndMembersAPI.getUserWithHisGroups('nickname', function (err, member) {
+        expect(member).to.equal(dummymember);
+        expect(member.subscribedGroups).to.not.be.null;
+        expect(member.subscribedGroups.length).to.equal(2);
+        expect(member.subscribedGroups[0]).to.equal(GroupA);
+        expect(member.subscribedGroups[1]).to.equal(GroupB);
+        done(err);
+      });
     });
   });
 
-  it('returns the member and his groups when there is a member for the given nickname', function (done) {
-    sinon.stub(membersAPI, 'getMember', function (nickname, callback) {
-      callback(null, dummymember);
-    });
-    sinon.stub(groupsAPI, 'getSubscribedGroupsForUser', function (userMail, globalCallback) {
-      globalCallback(null, [GroupA, GroupB]);
+  describe('- getAllUsersWithTheirGroups -', function () {
+    it('returns no members when there are no members', function (done) {
+      sinon.stub(membersAPI, 'allMembers', function (callback) {
+        callback(null, []);
+      });
+
+      groupsAndMembersAPI.getAllUsersWithTheirGroups(function (err, members) {
+        expect(members).to.be.empty;
+        done(err);
+      });
     });
 
-    groupsAndMembersAPI.getUserWithHisGroups('nickname', function (err, member) {
-      expect(member).to.equal(dummymember);
-      expect(member.subscribedGroups).to.not.be.null;
-      expect(member.subscribedGroups.length).to.equal(2);
-      expect(member.subscribedGroups[0]).to.equal(GroupA);
-      expect(member.subscribedGroups[1]).to.equal(GroupB);
-      done(err);
+    it('returns a member and his groups when there is a member who has groups', function (done) {
+      sinon.stub(membersAPI, 'allMembers', function (callback) {
+        callback(null, [dummymember]);
+      });
+      sinon.stub(groupsAPI, 'getSubscribedGroupsForUser', function (userMail, globalCallback) {
+        globalCallback(null, [GroupA, GroupB]);
+      });
+
+      groupsAndMembersAPI.getAllUsersWithTheirGroups(function (err, members) {
+        expect(members.length).to.equal(1);
+        expect(members[0]).to.equal(dummymember);
+        expect(members[0].subscribedGroups).to.not.be.null;
+        expect(members[0].subscribedGroups.length).to.equal(2);
+        expect(members[0].subscribedGroups[0]).to.equal(GroupA);
+        expect(members[0].subscribedGroups[1]).to.equal(GroupB);
+        done(err);
+      });
+    });
+
+    it('returns a member without groups when there is a member who has no groups', function (done) {
+      sinon.stub(membersAPI, 'allMembers', function (callback) {
+        callback(null, [dummymember]);
+      });
+      sinon.stub(groupsAPI, 'getSubscribedGroupsForUser', function (userMail, globalCallback) {
+        globalCallback(null, []);
+      });
+
+      groupsAndMembersAPI.getAllUsersWithTheirGroups(function (err, members) {
+        expect(members.length).to.equal(1);
+        expect(members[0]).to.equal(dummymember);
+        expect(members[0].subscribedGroups).to.not.be.null;
+        expect(members[0].subscribedGroups.length).to.equal(0);
+        done(err);
+      });
+    });
+
+    it('returns a member with and one without groups', function (done) {
+      sinon.stub(membersAPI, 'allMembers', function (callback) {
+        callback(null, [dummymember, dummymember2]);
+      });
+
+      var memberCount = 1;
+      sinon.stub(groupsAPI, 'getSubscribedGroupsForUser', function (userMail, globalCallback) {
+        if (memberCount === 1) {
+          memberCount++;
+          return globalCallback(null, []);
+        }
+        return globalCallback(null, [GroupA, GroupB]);
+      });
+
+      groupsAndMembersAPI.getAllUsersWithTheirGroups(function (err, members) {
+        expect(members.length).to.equal(2);
+        expect(members[0]).to.equal(dummymember);
+        expect(members[0].subscribedGroups).to.not.be.null;
+        expect(members[0].subscribedGroups.length).to.equal(0);
+        expect(members[1]).to.equal(dummymember2);
+        expect(members[1].subscribedGroups).to.not.be.null;
+        expect(members[1].subscribedGroups.length).to.equal(2);
+        expect(members[1].subscribedGroups[0]).to.equal(GroupA);
+        expect(members[1].subscribedGroups[1]).to.equal(GroupB);
+        done(err);
+      });
     });
   });
 
-  it('returns no member when there is no member for the given memberID', function (done) {
-    sinon.stub(membersAPI, 'getMemberForId', function (memberID, callback) {
-      callback(null, null);
+  describe('- getMemberWithHisGroupsByMemberId -', function () {
+    it('returns no member when there is no member for the given memberID', function (done) {
+      sinon.stub(membersAPI, 'getMemberForId', function (memberID, callback) {
+        callback(null, null);
+      });
+
+      groupsAndMembersAPI.getMemberWithHisGroupsByMemberId('id', function (err, member) {
+        expect(member).to.not.exist;
+        done(err);
+      });
     });
 
-    groupsAndMembersAPI.getMemberWithHisGroupsByMemberId('id', function (err, member) {
-      expect(member).to.not.exist;
-      done(err);
-    });
-  });
+    it('returns the member and his groups when there is a member for the given memberID', function (done) {
+      sinon.stub(membersAPI, 'getMemberForId', function (memberID, callback) {
+        callback(null, dummymember);
+      });
+      sinon.stub(groupsAPI, 'getSubscribedGroupsForUser', function (userMail, globalCallback) {
+        globalCallback(null, [GroupA, GroupB]);
+      });
 
-  it('returns the member and his groups when there is a member for the given memberID', function (done) {
-    sinon.stub(membersAPI, 'getMemberForId', function (memberID, callback) {
-      callback(null, dummymember);
-    });
-    sinon.stub(groupsAPI, 'getSubscribedGroupsForUser', function (userMail, globalCallback) {
-      globalCallback(null, [GroupA, GroupB]);
-    });
-
-    groupsAndMembersAPI.getMemberWithHisGroupsByMemberId('id', function (err, member) {
-      expect(member).to.equal(dummymember);
-      expect(member.subscribedGroups).to.not.be.null;
-      expect(member.subscribedGroups.length).to.equal(2);
-      expect(member.subscribedGroups[0]).to.equal(GroupA);
-      expect(member.subscribedGroups[1]).to.equal(GroupB);
-      done(err);
+      groupsAndMembersAPI.getMemberWithHisGroupsByMemberId('id', function (err, member) {
+        expect(member).to.equal(dummymember);
+        expect(member.subscribedGroups).to.not.be.null;
+        expect(member.subscribedGroups.length).to.equal(2);
+        expect(member.subscribedGroups[0]).to.equal(GroupA);
+        expect(member.subscribedGroups[1]).to.equal(GroupB);
+        done(err);
+      });
     });
   });
 });
