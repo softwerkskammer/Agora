@@ -42,6 +42,13 @@ describe('Activity\'s Addon Configuration', function () {
     expect(activity.hasAddonConfig()).to.be.false;
   });
 
+  it('deletes the deposit from the addonConfig if it is not set via the UI', function () {
+    var activity = new Activity({_addonConfig: {} });
+    expect(activity.addonConfig().deposit()).to.be.falsy;
+    activity.fillAddonConfig({deposit: 100});
+    expect(activity.addonConfig().deposit()).to.be.truthy;
+  });
+
 });
 
 describe('Addon Configuration', function () {
