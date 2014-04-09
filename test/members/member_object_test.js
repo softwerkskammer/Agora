@@ -144,4 +144,16 @@ describe('utility functions', function () {
     var member = new Member({notifyOnWikiChanges: true, email: 'email1'});
     expect(Member.wikiNotificationMembers([ member ])).to.contain('email1');
   });
+  
+  it('can tell if the member is member of a group', function () {
+    var member = new Member();
+    member.subscribedGroups = [{id: 'group'}, {id: 'anotherGroup'}];
+    expect(member.isInGroup("group")).to.be.true;
+  });
+
+  it('can tell if the member is not member of a group', function () {
+    var member = new Member();
+    member.subscribedGroups = [{id: 'anotherGroup'}];
+    expect(member.isInGroup("group")).to.be.false;
+  });
 });

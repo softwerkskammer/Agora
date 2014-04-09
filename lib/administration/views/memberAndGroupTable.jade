@@ -1,0 +1,44 @@
+extends ../../../views/layoutOnlyMain
+include ../../members/views/memberlist-mixin
+
+block scripts
+  script(src="/clientscripts/jquery.dataTables.min.js")
+  script.
+    $(document).ready(function() {
+          $("#memberandgrouptable").dataTable({
+            "oLanguage": {
+              "sUrl": "#{(language === 'de') ? "/clientscripts/dataTables.german.txt" : ""}"
+            },
+        "bPaginate": false,
+        "bAutoWidth": false,
+        "aaSorting": [[ 1 , "desc" ]],
+        "bStateSave": true
+      });
+    });
+block title
+  | Übersicht der Mitglieder und ihrer Gruppen
+
+block content
+  .row
+    .col-md-12
+      .page-header
+        h2 Verwaltung
+          small  Mitglieder und Gruppen
+      .panel.pre-scrollable
+        table.table.table-condensed.table-hover.table-striped#memberandgrouptable
+          thead
+            tr
+              th Name
+              th Nickname
+              for group in groups
+                th #{group.shortName || group.longName.substring(0, 4) + "…"}
+          tbody
+            for member in members
+              tr
+                td #{member.firstname() + " " + member.lastname()}
+                td: mixin linkedMember(member.nickname())
+                for group in groups
+                  if member.isInGroup(group.id)
+                    td.center: i.fa.fa-check
+                  else
+                    td.center &nbsp;
