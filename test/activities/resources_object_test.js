@@ -126,11 +126,43 @@ describe("Resources (fillFromUI)", function () {
       expect(resources.registrationDatesOf(new Member({id: '12345'}))[0].format()).to.equal(momentOfRegistration.format());
     });
 
-    it('returns the registration dates if the member is registered in several resources', function () {
+    it('returns the registration date if the member is registered in one resource but not in another one', function () {
+      var momentOfRegistration = moment("2014-03-03");
+      var momentOfRegistration2 = moment("2014-03-04");
+      resources.named('resource1').addMemberId('12345', momentOfRegistration);
+      resources.named('resource2').addMemberId('otherMember', momentOfRegistration2);
+
+      expect(resources.registrationDatesOf(new Member({id: '12345'})).length).to.equal(1);
+      expect(resources.registrationDatesOf(new Member({id: '12345'}))[0].format()).to.equal(momentOfRegistration.format());
+    });
+
+    it('returns the registration dates if the member is registered in several resources (even if it is the same day)', function () {
       var momentOfRegistration = moment("2014-03-03");
       var momentOfRegistration2 = moment("2014-03-03");
       resources.named('resource1').addMemberId('12345', momentOfRegistration);
       resources.named('resource2').addMemberId('12345', momentOfRegistration2);
+
+      expect(resources.registrationDatesOf(new Member({id: '12345'})).length).to.equal(2);
+      expect(resources.registrationDatesOf(new Member({id: '12345'}))[0].format()).to.equal(momentOfRegistration.format());
+      expect(resources.registrationDatesOf(new Member({id: '12345'}))[1].format()).to.equal(momentOfRegistration2.format());
+    });
+
+    it('sorts the registration dates (direction 1)', function () {
+      var momentOfRegistration = moment("2014-03-03");
+      var momentOfRegistration2 = moment("2014-03-04");
+      resources.named('resource1').addMemberId('12345', momentOfRegistration); // the earlier date comes first
+      resources.named('resource2').addMemberId('12345', momentOfRegistration2);
+
+      expect(resources.registrationDatesOf(new Member({id: '12345'})).length).to.equal(2);
+      expect(resources.registrationDatesOf(new Member({id: '12345'}))[0].format()).to.equal(momentOfRegistration.format());
+      expect(resources.registrationDatesOf(new Member({id: '12345'}))[1].format()).to.equal(momentOfRegistration2.format());
+    });
+
+    it('sorts the registration dates (direction 2)', function () {
+      var momentOfRegistration = moment("2014-03-03");
+      var momentOfRegistration2 = moment("2014-03-04");
+      resources.named('resource1').addMemberId('12345', momentOfRegistration2); // the later date comes first
+      resources.named('resource2').addMemberId('12345', momentOfRegistration);
 
       expect(resources.registrationDatesOf(new Member({id: '12345'})).length).to.equal(2);
       expect(resources.registrationDatesOf(new Member({id: '12345'}))[0].format()).to.equal(momentOfRegistration.format());
