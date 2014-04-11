@@ -78,7 +78,7 @@ describe("Resources (fillFromUI)", function () {
   });
 
   describe("integration test", function () {
-    
+
     it("adheres to values in constructor", function () {
       var resources = new Resources({ name1: {_limit: 20, _registrationOpen: true, _waitinglist: []}});
 
@@ -202,4 +202,51 @@ describe("Resources (fillFromUI)", function () {
 
   });
 
+
+  describe('- registration offset -', function () {
+    var resources;
+    beforeEach(function () {
+      resources = new Resources({resource1: {}, resource2: {}});
+    });
+
+    var today = moment();
+    var twoDaysAgo = today.subtract('days', 2);
+    var fiveDaysAgo = today.subtract('days', 5);
+    var member = new Member({id: '12345'});
+
+    it('is not too far in the past', function () {
+      resources.named('resource1').addMemberId('12345', twoDaysAgo);
+
+      expect(resources.memberIsRegisteredForMoreDaysThan(8, member)).to.be.false;
+    });
+    it('is not too far in the past for two resources', function () {
+      resources.named('resource1').addMemberId('12345', twoDaysAgo);
+      resources.named('resource2').addMemberId('12345', fiveDaysAgo);
+
+      expect(resources.memberIsRegisteredForMoreDaysThan(8, member)).to.be.false;
+    });
+    it('is too far in the past', function () {
+      resources.named('resource1').addMemberId('12345', twoDaysAgo);
+
+      expect(resources.memberIsRegisteredForMoreDaysThan(1, member)).to.be.true;
+    });
+    it('is too far in the past for two resources', function () {
+      resources.named('resource1').addMemberId('12345', twoDaysAgo);
+      resources.named('resource2').addMemberId('12345', fiveDaysAgo);
+
+      expect(resources.memberIsRegisteredForMoreDaysThan(1, member)).to.be.true;
+    });
+    it('is too far in the past for one of two resources (direction 1)', function () {
+      resources.named('resource1').addMemberId('12345', twoDaysAgo);
+      resources.named('resource2').addMemberId('12345', fiveDaysAgo);
+
+      expect(resources.memberIsRegisteredForMoreDaysThan(3, member)).to.be.true;
+    });
+    it('is too far in the past for one of two resources (direction 2)', function () {
+      resources.named('resource1').addMemberId('12345', fiveDaysAgo);
+      resources.named('resource2').addMemberId('12345', twoDaysAgo);
+
+      expect(resources.memberIsRegisteredForMoreDaysThan(3, member)).to.be.true;
+    });
+  });
 });
