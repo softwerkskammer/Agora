@@ -22,3 +22,39 @@ describe('Activity\'s Addon for Member', function () {
   });
   
 });
+
+describe('Activity knows about member entered Addon information', function () {
+  var addonOne = {homeAddress: 'homeOne'};
+  var addonTwo = {homeAddress: 'homeOne', billingAddress: 'billingOne'};
+
+  it('returns true if there is no addon configuration', function () {
+    var activity = new Activity({ _addons: {memberOne: addonOne} });
+
+    expect(activity.memberEnteredAddonInformation('memberOne')).to.be.true;
+  });
+  it('returns true if addon configuration is empty', function () {
+    var activity = new Activity({ _addons: {memberOne: addonOne}, _addonConfig: {} });
+
+    expect(activity.memberEnteredAddonInformation('memberOne')).to.be.true;
+  });
+  it('returns true if member filled in an optional field', function () {
+    var activity = new Activity({ _addons: {memberOne: addonOne}, _addonConfig: {homeAddress: false} });
+
+    expect(activity.memberEnteredAddonInformation('memberOne')).to.be.true;
+  });
+  it('returns true if member filled in all mandatory fields', function () {
+    var activity = new Activity({ _addons: {memberOne: addonOne}, _addonConfig: {homeAddress: true} });
+
+    expect(activity.memberEnteredAddonInformation('memberOne')).to.be.true;
+  });
+  it('returns false if member did not fill in all mandatory fields (1 of 2)', function () {
+    var activity = new Activity({ _addons: {memberOne: addonOne}, _addonConfig: {homeAddress: true, billingAddress: true} });
+
+    expect(activity.memberEnteredAddonInformation('memberOne')).to.be.falsy;
+  });
+  it('returns false if member did not fill in all mandatory fields (2 of 3)', function () {
+    var activity = new Activity({ _addons: {memberOne: addonTwo}, _addonConfig: {homeAddress: true, billingAddress: true, tShirtSize: true} });
+
+    expect(activity.memberEnteredAddonInformation('memberOne')).to.be.falsy;
+  });
+});
