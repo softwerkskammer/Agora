@@ -136,7 +136,7 @@ block content
                   th Ort/Region
               tbody
                 for line in addonLines
-                  if(!activity.addonForMember(line.member.id()).paymentDone() && activity.resources().memberIsRegisteredForMoreDaysThan(7, line.member))
+                  if(!activity.addonForMember(line.member.id()).paymentReceivedMoment() && activity.resources().memberIsRegisteredForMoreDaysThan(7, line.member))
                     tr
                       td #{line.member.registeredAt.lang(language).format('L')}
                       td: mixin linkedMember(line.member.nickname())
