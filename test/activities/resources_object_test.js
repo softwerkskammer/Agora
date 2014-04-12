@@ -178,15 +178,15 @@ describe("Resources (fillFromUI)", function () {
     });
 
     it('returns an empty array if the member is not registered', function () {
-      expect(resources.resourceNamesOf(new Member({id: '12345'})).length).to.equal(0);
+      expect(resources.resourceNamesOf('12345').length).to.equal(0);
     });
 
     it('returns the resource name if the member is registered in one resource', function () {
       var momentOfRegistration = moment("2014-03-03");
       resources.named('resource1').addMemberId('12345', momentOfRegistration);
 
-      expect(resources.resourceNamesOf(new Member({id: '12345'})).length).to.equal(1);
-      expect(resources.resourceNamesOf(new Member({id: '12345'}))[0]).to.equal('resource1');
+      expect(resources.resourceNamesOf('12345').length).to.equal(1);
+      expect(resources.resourceNamesOf('12345')[0]).to.equal('resource1');
     });
 
     it('returns the resource names if the member is registered in several resources', function () {
@@ -195,9 +195,9 @@ describe("Resources (fillFromUI)", function () {
       resources.named('resource1').addMemberId('12345', momentOfRegistration);
       resources.named('resource2').addMemberId('12345', momentOfRegistration2);
 
-      expect(resources.resourceNamesOf(new Member({id: '12345'})).length).to.equal(2);
-      expect(resources.resourceNamesOf(new Member({id: '12345'}))[0]).to.equal('resource1');
-      expect(resources.resourceNamesOf(new Member({id: '12345'}))[1]).to.equal('resource2');
+      expect(resources.resourceNamesOf('12345').length).to.equal(2);
+      expect(resources.resourceNamesOf('12345')[0]).to.equal('resource1');
+      expect(resources.resourceNamesOf('12345')[1]).to.equal('resource2');
     });
 
   });

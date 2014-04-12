@@ -112,7 +112,7 @@ block content
                 for line in addonLines
                   tr
                     td #{formatList(formatDates(activity.resources().registrationDatesOf(line.member.id())))}
-                    td #{formatList(activity.resources().resourceNamesOf(line.member))}
+                    td #{formatList(activity.resources().resourceNamesOf(line.member.id()))}
                     td: mixin linkedMember(line.member.nickname())
                     td #{line.member.firstname()}
                     td #{line.member.lastname()}
