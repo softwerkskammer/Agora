@@ -50,6 +50,21 @@ block scripts
         "bStateSave": true  
       });
     });
+    $(document).ready(function() {
+      $(".missingtable").dataTable({
+        "oLanguage": {
+          "sUrl": "#{(language === 'de') ? "/clientscripts/dataTables.german.txt" : ""}"
+        },
+        "aoColumns": [
+          { "sType": "date-eu" }, null, null, null, null, null, null
+        ],
+        "bPaginate": false,
+        "bAutoWidth": false,
+        "bFilter": false,
+        "aaSorting": [[ 0 , "asc" ]],
+        "bStateSave": true
+      });
+    });
 
 
 block title
@@ -64,8 +79,7 @@ block content
   ul.nav.nav-tabs
     li: a(href="#main", data-toggle="tab") #{t("activities.participants")}
     li.active: a(href="#addons", data-toggle="tab") Zahlung
-    li: a(href="#notPaid", data-toggle="tab") Nicht gezahlt
-    li: a(href="#noAddon", data-toggle="tab") Keine Zusatzangaben
+    li: a(href="#notPaidOrNoAddon", data-toggle="tab") Versäumnisse
   .row
     .col-md-12
       .tab-content
@@ -123,44 +137,32 @@ block content
                     td: mixin localdate(line.addon.creditCardPaidMoment())
                     td: mixin buttonOrDate(line.addon.paymentReceivedMoment(), line.addon.paymentDone(), activity.url(), line.member.nickname())
 
-        .tab-pane#notPaid
+        .tab-pane#notPaidOrNoAddon
           .panel
-            table.table.table-condensed.table-hover.table-striped.membertable
-              h4 Folgende Teilnehmer haben seit mindestens 7 Tagen nicht gezahlt:
+            table.table.table-condensed.table-hover.table-striped.missingtable
+              h4 Folgende Teilnehmer haben seit mindestens 7 Tagen nicht gezahlt bzw. die Zusatzinformationen nicht eingetragen:
               thead
                 tr
                   th Registriert
+                  th Zahlung fehlt
+                  th Zusatzangaben fehlen
                   th Nickname
                   th Vorname
                   th Nachname
                   th Ort/Region
               tbody
                 for line in addonLines
-                  if(!activity.addonForMember(line.member.id()).paymentReceivedMoment() && activity.resources().memberIsRegisteredForMoreDaysThan(7, line.member))
+                  if((!activity.addonForMember(line.member.id()).paymentReceivedMoment() || !activity.memberEnteredAddonInformation(line.member.id())) && activity.resources().memberIsRegisteredForMoreDaysThan(7, line.member))
                     tr
                       td #{line.member.registeredAt.lang(language).format('L')}
-                      td: mixin linkedMember(line.member.nickname())
-                      td #{line.member.firstname()}
-                      td #{line.member.lastname()}
-                      td #{line.member.location()}
-          hr
-
-        .tab-pane#noAddon
-          .panel
-            table.table.table-condensed.table-hover.table-striped.membertable
-              h4 Folgende Teilnehmer haben seit mindestens 7 Tagen die Zusatzinformationen nicht eingetragen:
-              thead
-                tr
-                  th Registriert
-                  th Nickname
-                  th Vorname
-                  th Nachname
-                  th Ort/Region
-              tbody
-                for line in addonLines
-                  if(!activity.memberEnteredAddonInformation(line.member.id()) && activity.resources().memberIsRegisteredForMoreDaysThan(7, line.member))
-                    tr
-                      td #{line.member.registeredAt.lang(language).format('L')}
+                      if activity.addonForMember(line.member.id()).paymentReceivedMoment()
+                        td.center &nbsp;
+                      else
+                        td.center: i.fa.fa-exclamation-triangle
+                      if activity.memberEnteredAddonInformation(line.member.id())
+                        td.center &nbsp;
+                      else
+                        td.center: i.fa.fa-exclamation-triangle
                       td: mixin linkedMember(line.member.nickname())
                       td #{line.member.firstname()}
                       td #{line.member.lastname()}
