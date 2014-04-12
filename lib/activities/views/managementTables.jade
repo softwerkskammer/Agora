@@ -111,7 +111,7 @@ block content
               tbody
                 for line in addonLines
                   tr
-                    td #{formatList(formatDates(activity.resources().registrationDatesOf(line.member)))}
+                    td #{formatList(formatDates(activity.resources().registrationDatesOf(line.member.id())))}
                     td #{formatList(activity.resources().resourceNamesOf(line.member))}
                     td: mixin linkedMember(line.member.nickname())
                     td #{line.member.firstname()}
