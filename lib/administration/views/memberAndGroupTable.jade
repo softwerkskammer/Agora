@@ -38,7 +38,6 @@ block content
                 td #{member.firstname() + " " + member.lastname()}
                 td: mixin linkedMember(member.nickname())
                 for group in groups
-                  if member.isInGroup(group.id)
-                    td.center: i.fa.fa-check
-                  else
-                    td.center &nbsp;
+                  td.center
+                    if member.isInGroup(group.id)
+                      i.fa.fa-check
