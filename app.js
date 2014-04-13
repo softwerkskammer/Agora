@@ -23,7 +23,9 @@ function useApp(parent, url, factory) {
   }
 
   var child = factory(express());
-  child.locals.pretty = true;
+  if (process.env.NODE_ENV !== 'production') {
+    child.locals.pretty = true;
+  }
   parent.get('/' + url, ensureRequestedUrlEndsWithSlash);
   parent.use('/' + url + '/', child);
   return child;
