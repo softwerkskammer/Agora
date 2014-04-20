@@ -80,6 +80,7 @@ block content
     li: a(href="#main", data-toggle="tab") #{t("activities.participants")}
     li.active: a(href="#addons", data-toggle="tab") Zahlung
     li: a(href="#notPaidOrNoAddon", data-toggle="tab") Versäumnisse
+    li: a(href="#groupMembership", data-toggle="tab") Gruppenmitgliedschaft
   .row
     .col-md-12
       .tab-content
@@ -168,3 +169,26 @@ block content
                       td #{line.member.lastname()}
                       td #{line.member.location()}
             hr
+
+        .tab-pane#groupMembership
+          h4 Teilnehmer, die nicht in der Gruppe angemeldet sind
+          .panel
+            table.table.table-condensed.table-hover.table-striped.membertable
+              thead
+                tr
+                  th Registriert
+                  th Nickname
+                  th Vorname
+                  th Nachname
+                  th Ort/Region
+              tbody
+                for line in addonLines
+                  if !containsMember(activity.group, line.member)
+                    tr
+                      td #{line.member.registeredAt.lang(language).format('L')}
+                      td: mixin linkedMember(line.member.nickname())
+                      td #{line.member.firstname()}
+                      td #{line.member.lastname()}
+                      td #{line.member.location()}
+          hr
+
