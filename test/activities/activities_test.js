@@ -344,8 +344,6 @@ describe('Activity application', function () {
   });
 
   it('disallows a member to edit another user\'s activity', function (done) {
-    sinon.stub(groupsAPI, 'getAllAvailableGroups', function (callback) { callback(null, []); });
-
     request(createApp('owner1'))
       .get('/edit/urlOfTheActivity')
       .expect(302)
@@ -353,8 +351,6 @@ describe('Activity application', function () {
   });
 
   it('disallows a guest to edit any user\'s activity', function (done) {
-    sinon.stub(groupsAPI, 'getAllAvailableGroups', function (callback) { callback(null, []); });
-
     request(createApp())
       .get('/edit/urlOfTheActivity')
       .expect(302)
@@ -362,7 +358,6 @@ describe('Activity application', function () {
   });
 
   it('allows the owner to manage an activity\'s addons', function (done) {
-    sinon.stub(groupsAPI, 'getSubscribedGroupsForUser', function (email, callback) { callback(null, []); });
     sinon.stub(groupsAndMembersAPI, 'addMembersToGroup', function (group, callback) { group.members = []; callback(null); });
 
     request(createApp('owner'))
@@ -372,8 +367,6 @@ describe('Activity application', function () {
   });
 
   it('disallows a member to manage another user\'s activity\'s addons', function (done) {
-    sinon.stub(groupsAPI, 'getAllAvailableGroups', function (callback) { callback(null, []); });
-
     request(createApp('owner1'))
       .get('/addons/urlOfTheActivity')
       .expect(302)
@@ -381,8 +374,6 @@ describe('Activity application', function () {
   });
 
   it('disallows a guest to manage any addons', function (done) {
-    sinon.stub(groupsAPI, 'getAllAvailableGroups', function (callback) { callback(null, []); });
-
     request(createApp())
       .get('/addons/urlOfTheActivity')
       .expect(302)
