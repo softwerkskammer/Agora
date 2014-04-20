@@ -1,4 +1,5 @@
 extends ../../../views/layout
+include  ../../../views/formComponents
 
 mixin colorPickerForTable(id, name, value)
   .form-group
@@ -21,11 +22,13 @@ block content
         h2 Verwaltung
           small  Farben
       form.form-horizontal(action='/administration/submitColors', method='post')
+        +csrf
         for color in colors
            mixin colorPickerForTable(color.id, 'color', color.color)
         button.btn.btn-primary.pull-right(type="submit") Speichern
 
   form(id='newcolorform', action='/administration/submitNewColor', method='post')
+    +csrf
     fieldset
     #newcolor.modal.fade
       .modal-dialog
