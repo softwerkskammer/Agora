@@ -57,7 +57,7 @@ describe('Security regarding', function () {
 
       request(app)
         .get('/edit/hada')
-        .expect(/input id="_csrf" type="hidden"/, done);
+        .expect(/input type="hidden" name="_csrf"/, done);
     });
 
     it('blocks updates that do not come with a csrf token', function (done) {
