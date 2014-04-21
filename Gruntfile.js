@@ -21,6 +21,7 @@ module.exports = function (grunt) {
     jslint: {
       server: {
         src: [
+          '*.js',
           'lib/**/*.js'
         ],
         directives: {

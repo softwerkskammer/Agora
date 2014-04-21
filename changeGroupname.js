@@ -43,7 +43,8 @@ groupsPersistence.getById(oldId, function (err, group) {
     // change each activity that belongs to the group:
     activitiesPersistence.listByField({assignedGroup: oldId}, {}, function (err, results) {
       handle(err);
-      async.each(results, function (each, callback) {
+      async.each(results,
+        function (each, callback) {
           each.assignedGroup = newId;
           activitiesPersistence.save(each, callback);
         },
@@ -51,7 +52,8 @@ groupsPersistence.getById(oldId, function (err, group) {
           handle(err);
           // change each archived email that belongs to the group:
           mailsPersistence.listByField({group: oldId}, {}, function (err, results) {
-            async.each(results, function (each, callback) {
+            async.each(results,
+              function (each, callback) {
                 each.group = newId;
                 mailsPersistence.save(each, callback);
               },
@@ -72,9 +74,9 @@ groupsPersistence.getById(oldId, function (err, group) {
  What else must be done when renaming a group?
 
  - rename the group in sympa:
-   - Rename List
-   - Edit List Config -> List Definition -> Subject of the list
-   - Edit List Config -> Sending/Receiving Setup -> Subject tagging (custom_subject)
+ - Rename List
+ - Edit List Config -> List Definition -> Subject of the list
+ - Edit List Config -> Sending/Receiving Setup -> Subject tagging (custom_subject)
  - adapt all wiki-links??
 
  */

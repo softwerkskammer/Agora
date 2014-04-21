@@ -31,7 +31,8 @@ activitystore.allActivities(function (err, activities) {
   });
 
   persistence.list({startUnix: 1}, function (err, results) {
-    async.each(results, function (each, callback) {
+    async.each(results,
+      function (each, callback) {
         var activity = _.find(activities, function (activity) { return activity.id() === each._activityId; });
         if (!activity) { return callback(); }
         var resource = activity.resourceNamed(each._resourceName);

@@ -1,3 +1,4 @@
+/*jslint stupid: true */
 "use strict";
 
 var express = require('express');
