@@ -41,7 +41,8 @@ module.exports = function (grunt) {
       servertests: {
         src: [
           'test/**/*.js',
-          'testWithDB/**/*.js'
+          'testWithDB/**/*.js',
+          'testutil/**/*.js'
         ],
         directives: {
           ass: true,
