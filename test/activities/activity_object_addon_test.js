@@ -2,7 +2,7 @@
 
 require('../../testutil/configureForTest');
 var beans = require('nconf').get('beans');
-var expect = require('chai').expect;
+var expect = require('must');
 
 var Activity = beans.get('activity');
 
@@ -12,15 +12,14 @@ describe('Activity\'s Addon for Member', function () {
 
   it('is never undefined', function () {
     var activity = new Activity();
-    expect(activity.addonForMember('memberOne')).to.exist;
+    expect(activity.addonForMember('memberOne')).to.exist();
   });
-
 
   it('is finds the right addon', function () {
     var activity = new Activity({ _addons: {memberOne: addonOne, memberTwo: addonTwo} });
     expect(activity.addonForMember('memberOne').homeAddress()).to.equal(addonOne.homeAddress);
   });
-  
+
 });
 
 describe('Activity knows about member entered Addon information', function () {
@@ -30,31 +29,31 @@ describe('Activity knows about member entered Addon information', function () {
   it('returns true if there is no addon configuration', function () {
     var activity = new Activity({ _addons: {memberOne: addonOne} });
 
-    expect(activity.memberEnteredAddonInformation('memberOne')).to.be.true;
+    expect(activity.memberEnteredAddonInformation('memberOne')).to.be(true);
   });
   it('returns true if addon configuration is empty', function () {
     var activity = new Activity({ _addons: {memberOne: addonOne}, _addonConfig: {} });
 
-    expect(activity.memberEnteredAddonInformation('memberOne')).to.be.true;
+    expect(activity.memberEnteredAddonInformation('memberOne')).to.be(true);
   });
   it('returns true if member filled in an optional field', function () {
     var activity = new Activity({ _addons: {memberOne: addonOne}, _addonConfig: {homeAddress: false} });
 
-    expect(activity.memberEnteredAddonInformation('memberOne')).to.be.true;
+    expect(activity.memberEnteredAddonInformation('memberOne')).to.be(true);
   });
   it('returns true if member filled in all mandatory fields', function () {
     var activity = new Activity({ _addons: {memberOne: addonOne}, _addonConfig: {homeAddress: true} });
 
-    expect(activity.memberEnteredAddonInformation('memberOne')).to.be.true;
+    expect(activity.memberEnteredAddonInformation('memberOne')).to.be(true);
   });
   it('returns false if member did not fill in all mandatory fields (1 of 2)', function () {
     var activity = new Activity({ _addons: {memberOne: addonOne}, _addonConfig: {homeAddress: true, billingAddress: true} });
 
-    expect(activity.memberEnteredAddonInformation('memberOne')).to.be.falsy;
+    expect(activity.memberEnteredAddonInformation('memberOne')).to.be.falsy();
   });
   it('returns false if member did not fill in all mandatory fields (2 of 3)', function () {
     var activity = new Activity({ _addons: {memberOne: addonTwo}, _addonConfig: {homeAddress: true, billingAddress: true, tShirtSize: true} });
 
-    expect(activity.memberEnteredAddonInformation('memberOne')).to.be.falsy;
+    expect(activity.memberEnteredAddonInformation('memberOne')).to.be.falsy();
   });
 });

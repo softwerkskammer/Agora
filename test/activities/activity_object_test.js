@@ -2,7 +2,7 @@
 
 require('../../testutil/configureForTest');
 var conf = require('nconf');
-var expect = require('chai').expect;
+var expect = require('must');
 
 var Activity = conf.get('beans').get('activity');
 
@@ -96,13 +96,13 @@ describe('Activity\'s description', function () {
 describe('Activity\'s direction', function () {
   it('knows that it doesn\'t contain direction', function () {
     var activity = new Activity();
-    expect(activity.hasDirection()).to.be.false;
+    expect(activity.hasDirection()).to.be(false);
   });
 
   it('knows that it contains direction', function () {
     var activity = new Activity({
       direction: 'direction'
     });
-    expect(activity.hasDirection()).to.be.true;
+    expect(activity.hasDirection()).to.be(true);
   });
 });

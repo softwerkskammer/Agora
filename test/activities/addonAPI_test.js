@@ -1,7 +1,7 @@
 "use strict";
 
 var sinon = require('sinon').sandbox.create();
-var expect = require('chai').expect;
+var expect = require('must');
 
 //var util = require('util');
 
@@ -36,8 +36,8 @@ describe('Addon API', function () {
 
   it('addon and addonConfig are never undefined', function (done) {
     addonAPI.addonForMember(null, 'unknown member id', function (err, addon, addonConfig) {
-      expect(addon).to.exist;
-      expect(addonConfig).to.exist;
+      expect(addon).to.exist();
+      expect(addonConfig).to.exist();
       done();
     });
   });
@@ -55,8 +55,8 @@ describe('Addon API', function () {
 
   it('payWithTransfer enhances activity with money transfer info and saves it', function (done) {
     addonAPI.payWithTransfer('activity', 'member', function (err) {
-      expect(savedActivity.addonForMember('member').moneyTransferred()).to.be.truthy;
-      expect(savedActivity.addonForMember('member').creditCardPaid()).to.be.falsy;
+      expect(savedActivity.addonForMember('member').moneyTransferred()).to.be.truthy();
+      expect(savedActivity.addonForMember('member').creditCardPaid()).to.be.falsy();
       done(err);
     });
   });
@@ -65,10 +65,10 @@ describe('Addon API', function () {
     sinon.stub(stripeAPI, 'transaction', function () { return { charges: { create: function (charge, callback) {callback(null, charge); }}}; });
 
     addonAPI.payWithCreditCard('activity', 'member', 'stripe-id', function (err, message) {
-      expect(savedActivity.addonForMember('member').moneyTransferred()).to.be.falsy;
-      expect(savedActivity.addonForMember('member').creditCardPaid()).to.be.truthy;
-      expect(message).to.exist;
-      expect(err).to.not.exist;
+      expect(savedActivity.addonForMember('member').moneyTransferred()).to.be.falsy();
+      expect(savedActivity.addonForMember('member').creditCardPaid()).to.be.truthy();
+      expect(message).to.exist();
+      expect(err).to.not.exist();
       done(err);
     });
   });
@@ -77,10 +77,10 @@ describe('Addon API', function () {
     sinon.stub(stripeAPI, 'transaction', function () { return { charges: { create: function (charge, callback) {callback({message: "General problem"}); }}}; });
 
     addonAPI.payWithCreditCard('activity', 'member', 'stripe-id', function (err, message) {
-      expect(savedActivity).to.be.null;
-      expect(message).to.exist;
+      expect(savedActivity).to.be(null);
+      expect(message).to.exist();
       expect(message.contents().type).to.equal('alert-danger');
-      expect(err).to.not.exist;
+      expect(err).to.not.exist();
       done(err);
     });
   });
@@ -89,9 +89,9 @@ describe('Addon API', function () {
     sinon.stub(stripeAPI, 'transaction', function () { return { charges: { create: function (charge, callback) {callback({}); }}}; });
 
     addonAPI.payWithCreditCard('activity', 'member', 'stripe-id', function (err, message) {
-      expect(savedActivity).to.be.null;
-      expect(message).to.not.exist;
-      expect(err).to.exist;
+      expect(savedActivity).to.be(null);
+      expect(message).to.not.exist();
+      expect(err).to.exist();
       done(); // error case - do not pass error to done()
     });
   });

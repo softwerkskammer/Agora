@@ -34,7 +34,7 @@ emptyActivity.group = group;
 
 var activityWithParticipants = new Activity({title: 'Interesting Activity', description: 'description2', assignedGroup: 'groupname',
   location: 'location2', direction: 'direction2', startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'), url: 'urlForInteresting',
-  resources: {default: {_registeredMembers: [
+  resources: {'default': {_registeredMembers: [
     {memberId: 'memberId1'},
     {memberId: 'memberId2'}
   ],
@@ -58,19 +58,24 @@ activityWithMultipleResources.colorRGB = '#123456';
 activityWithMultipleResources.group = new Group({id: 'group', longName: 'The name of the assigned Group'});
 
 describe('Activity application', function () {
-
   beforeEach(function () {
     sinon.stub(activitystore, 'upcomingActivities', function (callback) {callback(null, [emptyActivity]); });
     sinon.stub(activitiesAPI, 'getActivitiesForDisplay', function (fetcher, callback) {
       callback(null, [emptyActivity]);
     });
+
+    function activityToReturnFor(url) {
+      if (url === 'urlOfTheActivity') { return emptyActivity; }
+      if (url === 'urlForInteresting') { return activityWithParticipants; }
+      if (url === 'urlForMultiple') { return activityWithMultipleResources; }
+      return null;
+    }
+
     sinon.stub(activitiesAPI, 'getActivityWithGroupAndParticipants', function (url, callback) {
-      callback(null, (url === 'urlOfTheActivity') ? emptyActivity : (url === 'urlForInteresting') ? activityWithParticipants :
-        (url === 'urlForMultiple') ? activityWithMultipleResources : null);
+      callback(null, activityToReturnFor(url));
     });
     sinon.stub(activitystore, 'getActivity', function (url, callback) {
-      callback(null, (url === 'urlOfTheActivity') ? emptyActivity : (url === 'urlForInteresting') ? activityWithParticipants :
-        (url === 'urlForMultiple') ? activityWithMultipleResources : null);
+      callback(null, activityToReturnFor(url));
     });
   });
 
@@ -86,7 +91,7 @@ describe('Activity application', function () {
       .expect(/href="urlOfTheActivity"/)
       .expect(/href="webcal:\/\//)
       .expect(/Title of the Activity/)
-      .expect(/1. Januar 2013/)
+      .expect(/1\. Januar 2013/)
       .expect(/background-color: #123456/)
       .expect(/href="\/groups\/groupname"/)
       .expect(/Buxtehude/, done);
@@ -96,13 +101,13 @@ describe('Activity application', function () {
     request(createApp('guest'))
       .get('/' + 'urlOfTheActivity')
       .expect(200)
-      .expect(/<small>1. Januar 2013/)
+      .expect(/<small>1\. Januar 2013/)
       .expect(/<h2>Title of the Activity/)
       .expect(/description1/)
       .expect(/location1/)
       .expect(/direction1/)
-      .expect(/script src="https:\/\/maps.googleapis.com\/maps\/api\/js\?sensor=false"/)
-      .expect(/Bislang gibt es keine Teilnahmezusagen./, function (err, res) {
+      .expect(/script src="https:\/\/maps\.googleapis\.com\/maps\/api\/js\?sensor=false"/)
+      .expect(/Bislang gibt es keine Teilnahmezusagen\./, function (err, res) {
         expect(res.text).to.not.contain('Angelegt von');
         done(err);
       });
@@ -124,12 +129,12 @@ describe('Activity application', function () {
     request(createApp('guest'))
       .get('/' + 'urlForInteresting')
       .expect(200)
-      .expect(/<small>1. Januar 2013/)
+      .expect(/<small>1\. Januar 2013/)
       .expect(/<h2>Interesting Activity/)
       .expect(/description2/)
       .expect(/location2/)
       .expect(/direction2/)
-      .expect(/Bislang haben 2 Mitglieder ihre Teilnahme zugesagt./, done);
+      .expect(/Bislang haben 2 Mitglieder ihre Teilnahme zugesagt\./, done);
   });
 
   describe('- when registration is open -', function () {
@@ -138,8 +143,8 @@ describe('Activity application', function () {
       request(createApp('memberId3'))
         .get('/' + 'urlForInteresting')
         .expect(200)
-        .expect(/Bislang haben 2 Mitglieder ihre Teilnahme zugesagt./)
-        .expect(/href="subscribe\/urlForInteresting\/default" class=".*">Ich bin dabei!/)
+        .expect(/Bislang haben 2 Mitglieder ihre Teilnahme zugesagt\./)
+        .expect(/href="subscribe\/urlForInteresting\/default" class="(\S|\s)*">Ich bin dabei!/)
         .expect(/participant1/)
         .expect(/participant2/, done);
     });
@@ -148,8 +153,8 @@ describe('Activity application', function () {
       request(createApp('memberId1'))
         .get('/' + 'urlForInteresting')
         .expect(200)
-        .expect(/Bislang haben 2 Mitglieder ihre Teilnahme zugesagt./)
-        .expect(/href="unsubscribe\/urlForInteresting\/default" class=".*">Ich kann doch nicht/)
+        .expect(/Bislang haben 2 Mitglieder ihre Teilnahme zugesagt\./)
+        .expect(/href="unsubscribe\/urlForInteresting\/default" class="(\S|\s)*">Ich kann doch nicht/)
         .expect(/participant1/)
         .expect(/participant2/, done);
     });
@@ -158,9 +163,9 @@ describe('Activity application', function () {
       request(createApp('memberId1'))
         .get('/' + 'urlForMultiple')
         .expect(200)
-        .expect(/Bislang haben 4 Mitglieder ihre Teilnahme zugesagt./)
-        .expect(/href="unsubscribe\/urlForMultiple\/Einzelzimmer" class=".*">Absagen/)
-        .expect(/href="subscribe\/urlForMultiple\/Doppelzimmer" class=".*">Anmelden/)
+        .expect(/Bislang haben 4 Mitglieder ihre Teilnahme zugesagt\./)
+        .expect(/href="unsubscribe\/urlForMultiple\/Einzelzimmer" class="(\S|\s)*">Absagen/)
+        .expect(/href="subscribe\/urlForMultiple\/Doppelzimmer" class="(\S|\s)*">Anmelden/)
         .expect(/participant1/)
         .expect(/participant2/)
         .expect(/participant3/)
@@ -171,49 +176,49 @@ describe('Activity application', function () {
   describe('- when registration is not open -', function () {
 
     it('shows the registration button for an activity with participants when a user is logged in who is not participant', function (done) {
-      activityWithParticipants.state.resources.default._registrationOpen = false;
+      activityWithParticipants.state.resources['default']._registrationOpen = false;
 
       request(createApp('memberId3'))
         .get('/' + 'urlForInteresting')
         .expect(200)
-        .expect(/Bislang haben 2 Mitglieder ihre Teilnahme zugesagt./)
+        .expect(/Bislang haben 2 Mitglieder ihre Teilnahme zugesagt\./)
         .expect(/participant1/)
         .expect(/participant2/, done);
     });
 
     it('shows that registration is not possible if registrationClosed and no limit set', function (done) {
-      activityWithParticipants.state.resources.default._registrationOpen = false;
+      activityWithParticipants.state.resources['default']._registrationOpen = false;
 
       request(createApp('memberId3'))
         .get('/' + 'urlForInteresting')
         .expect(200)
-        .expect(/Anmeldung ist zur Zeit nicht möglich./, done);
+        .expect(/Anmeldung ist zur Zeit nicht möglich\./, done);
     });
 
     it('shows that registration is somewhere else if registrationClosed and limit is "0"', function (done) {
-      activityWithParticipants.state.resources.default._registrationOpen = false;
-      activityWithParticipants.state.resources.default._limit = 0;
+      activityWithParticipants.state.resources['default']._registrationOpen = false;
+      activityWithParticipants.state.resources['default']._limit = 0;
 
       request(createApp('memberId3'))
         .get('/' + 'urlForInteresting')
         .expect(200)
-        .expect(/Anmeldung ist nicht über die Softwerkskammer möglich./, done);
+        .expect(/Anmeldung ist nicht über die Softwerkskammer möglich\./, done);
     });
 
     it('shows that the event is full if registrationClosed and some limit set', function (done) {
-      activityWithParticipants.state.resources.default._registrationOpen = false;
-      activityWithParticipants.state.resources.default._limit = 1;
+      activityWithParticipants.state.resources['default']._registrationOpen = false;
+      activityWithParticipants.state.resources['default']._limit = 1;
 
       request(createApp('memberId3'))
         .get('/' + 'urlForInteresting')
         .expect(200)
-        .expect(/Alle Plätze sind belegt./, done);
+        .expect(/Alle Plätze sind belegt\./, done);
     });
 
     it('shows the link to the waitinglist if registrationClosed and some limit set and waitinglist is enabled', function (done) {
-      activityWithParticipants.state.resources.default._registrationOpen = false;
-      activityWithParticipants.state.resources.default._limit = 1;
-      activityWithParticipants.state.resources.default._waitinglist = [];
+      activityWithParticipants.state.resources['default']._registrationOpen = false;
+      activityWithParticipants.state.resources['default']._limit = 1;
+      activityWithParticipants.state.resources['default']._waitinglist = [];
 
       request(createApp('memberId3'))
         .get('/' + 'urlForInteresting')
@@ -222,13 +227,13 @@ describe('Activity application', function () {
     });
 
     it('shows the deregistration button for an activity with participants when a user is logged in who already is participant', function (done) {
-      activityWithParticipants.state.resources.default._registrationOpen = false;
+      activityWithParticipants.state.resources['default']._registrationOpen = false;
 
       request(createApp('memberId1'))
         .get('/' + 'urlForInteresting')
         .expect(200)
-        .expect(/Bislang haben 2 Mitglieder ihre Teilnahme zugesagt./)
-        .expect(/href="unsubscribe\/urlForInteresting\/default" class=".*">Ich kann doch nicht/)
+        .expect(/Bislang haben 2 Mitglieder ihre Teilnahme zugesagt\./)
+        .expect(/href="unsubscribe\/urlForInteresting\/default" class="(\S|\s)*">Ich kann doch nicht/)
         .expect(/participant1/)
         .expect(/participant2/, done);
     });
@@ -240,9 +245,9 @@ describe('Activity application', function () {
       request(createApp('memberId1'))
         .get('/' + 'urlForMultiple')
         .expect(200)
-        .expect(/Bislang haben 4 Mitglieder ihre Teilnahme zugesagt./)
-        .expect(/href="unsubscribe\/urlForMultiple\/Einzelzimmer" class=".*">Absagen/)
-        .expect(/Doppelzimmer:<\/label>.*Anmeldung ist zur Zeit nicht möglich./)
+        .expect(/Bislang haben 4 Mitglieder ihre Teilnahme zugesagt\./)
+        .expect(/href="unsubscribe\/urlForMultiple\/Einzelzimmer" class="(\S|\s)*">Absagen/)
+        .expect(/Doppelzimmer:<\/label>(\S|\s)*Anmeldung ist zur Zeit nicht möglich\./)
         .expect(/participant1/)
         .expect(/participant2/)
         .expect(/participant3/)
@@ -256,7 +261,7 @@ describe('Activity application', function () {
       request(createApp('memberId3'))
         .get('/' + 'urlForMultiple')
         .expect(200)
-        .expect(/Anmeldung ist zur Zeit nicht möglich./, done);
+        .expect(/Anmeldung ist zur Zeit nicht möglich\./, done);
     });
 
     it('shows that registration is somewhere else if registrationClosed and limit is "0"', function (done) {
@@ -268,7 +273,7 @@ describe('Activity application', function () {
       request(createApp('memberId3'))
         .get('/' + 'urlForMultiple')
         .expect(200)
-        .expect(/Anmeldung ist nicht über die Softwerkskammer möglich./, done);
+        .expect(/Anmeldung ist nicht über die Softwerkskammer möglich\./, done);
     });
 
     it('shows that the event is full if registrationClosed and some limit set', function (done) {
@@ -280,7 +285,7 @@ describe('Activity application', function () {
       request(createApp('memberId3'))
         .get('/' + 'urlForMultiple')
         .expect(200)
-        .expect(/Alle Plätze sind belegt./, done);
+        .expect(/Alle Plätze sind belegt\./, done);
     });
 
     it('shows the link to the waitinglist if registrationClosed and some limit set and waitinglist is enabled', function (done) {
@@ -293,7 +298,7 @@ describe('Activity application', function () {
       request(createApp('memberId3'))
         .get('/' + 'urlForMultiple')
         .expect(200)
-        .expect(/addToWaitinglist\/urlForMultiple\/Einzelzimmer.*Auf die Warteliste/, done);
+        .expect(/addToWaitinglist\/urlForMultiple\/Einzelzimmer(\S|\s)*Auf die Warteliste/, done);
     });
 
   });
@@ -303,7 +308,7 @@ describe('Activity application', function () {
       .get('/ical')
       .expect(200)
       .expect('Content-Type', /text\/calendar/)
-      .expect('Content-Disposition', /inline; filename=events.ics/)
+      .expect('Content-Disposition', /inline; filename=events\.ics/)
       .expect(/BEGIN:VCALENDAR/)
       .expect(/SUMMARY:Title of the Activity/)
       .end(done);
@@ -314,7 +319,7 @@ describe('Activity application', function () {
       .get('/ical/' + 'urlOfTheActivity')
       .expect(200)
       .expect('Content-Type', /text\/calendar/)
-      .expect('Content-Disposition', /inline; filename=urlOfTheActivity.ics/)
+      .expect('Content-Disposition', /inline; filename=urlOfTheActivity\.ics/)
       .expect(/BEGIN:VCALENDAR/)
       .expect(/SUMMARY:Title of the Activity/)
       .end(done);
@@ -358,7 +363,10 @@ describe('Activity application', function () {
   });
 
   it('allows the owner to manage an activity\'s addons', function (done) {
-    sinon.stub(groupsAndMembersAPI, 'addMembersToGroup', function (group, callback) { group.members = []; callback(null); });
+    sinon.stub(groupsAndMembersAPI, 'addMembersToGroup', function (group, callback) {
+      group.members = [];
+      callback(null);
+    });
 
     request(createApp('owner'))
       .get('/addons/urlOfTheActivity')
@@ -385,7 +393,7 @@ describe('Activity application', function () {
     request(createApp('owner'))
       .get('/paymentReceived/urlOfTheActivity/someUser')
       .expect(200)
-      .expect(/[0-9][0-9].[0-9][0-9].[0-9][0-9][0-9][0-9]/, done);
+      .expect(/[0-9][0-9]\.[0-9][0-9]\.[0-9][0-9][0-9][0-9]/, done);
   });
 
   it('disallows a member to mark another user\'s activity\'s payments', function (done) {

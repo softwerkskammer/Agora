@@ -1,6 +1,6 @@
 "use strict";
 
-var expect = require('chai').expect;
+var expect = require('must');
 var sinon = require('sinon').sandbox.create();
 
 var conf = require('../../testutil/configureForTest');
@@ -48,7 +48,7 @@ describe('Activity store', function () {
     var url = activity1.url;
     store.getActivity(url, function (err, activity) {
       expect(activity.title()).to.equal(activity1.title);
-      expect(getByField.calledWith({url: url})).to.be.true;
+      expect(getByField.calledWith({url: url})).to.be(true);
       expect(activity.descriptionHTML()).to.contain('bli');
       done(err);
     });
@@ -58,7 +58,7 @@ describe('Activity store', function () {
     var id = 'id';
     store.getActivityForId(id, function (err, activity) {
       expect(activity.title()).to.equal(activity1.title);
-      expect(getById.calledWith(id)).to.be.true;
+      expect(getById.calledWith(id)).to.be(true);
       expect(activity.descriptionHTML()).to.contain('bli');
       done(err);
     });
@@ -79,7 +79,7 @@ describe('Activity store', function () {
     sinon.stub(persistence, 'getByField', function (id, callback) { callback(); });
 
     store.getActivity(1234, function (err, result) {
-      expect(result).to.be.a('null');
+      expect(result).to.be(null);
       done(err);
     });
   });
@@ -89,8 +89,8 @@ describe('Activity store', function () {
     sinon.stub(persistence, 'getByField', function (id, callback) { callback(new Error("error")); });
 
     store.getActivity(1234, function (err, result) {
-      expect(err).to.exist;
-      expect(result).to.not.exist;
+      expect(err).to.exist();
+      expect(result).to.not.exist();
       done(); // error condition - do not pass err
     });
   });
@@ -100,7 +100,7 @@ describe('Activity store', function () {
     sinon.stub(persistence, 'list', function (sortOrder, callback) { callback(null, [ {url: "activityUrl"} ]); });
 
     store.allActivities(function (err, result) {
-      expect(result).to.have.lengthOf(1);
+      expect(result).to.have.length(1);
       expect(result[0].url()).to.equal("activityUrl");
       done(err);
     });
@@ -108,14 +108,14 @@ describe('Activity store', function () {
 
   it('returns upcoming activities', function (done) {
     store.upcomingActivities(function (err, result) {
-      expect(result).to.have.lengthOf(2);
+      expect(result).to.have.length(2);
       done(err);
     });
   });
 
   it('returns past activities', function (done) {
     store.pastActivities(function (err, result) {
-      expect(result).to.have.lengthOf(2);
+      expect(result).to.have.length(2);
       done(err);
     });
   });

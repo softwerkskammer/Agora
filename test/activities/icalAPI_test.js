@@ -1,6 +1,5 @@
 "use strict";
 
-
 require('../../testutil/configureForTest');
 var expect = require('chai').expect;
 
@@ -19,7 +18,7 @@ describe('ICalendar', function () {
     description: 'foo',
     location: 'bar'
   });
-  
+
   var activityWithCRLFs = new Activity().fillFromUI({
     title: 'Title',
     startDate: '4.4.2013',
@@ -46,11 +45,11 @@ describe('ICalendar', function () {
   it('render location', function () {
     expect(icalAPI.activityAsICal(activity).toString()).to.match(/LOCATION:bar/);
   });
-  
+
   it('renders url', function () {
     expect(icalAPI.activityAsICal(activity).toString()).to.match(/URL:http:\/\/localhost:17124\/activities\/myURL/);
   });
-  
+
   it('CRLFs in description are transformed to \\n', function () {
     expect(icalAPI.activityAsICal(activityWithCRLFs).toString()).to.match(/DESCRIPTION:foo\\nbar/);
   });
@@ -58,5 +57,5 @@ describe('ICalendar', function () {
   it('CRLFs in location are transformed to \\n', function () {
     expect(icalAPI.activityAsICal(activityWithCRLFs).toString()).to.match(/LOCATION:musterstr\\nkarlsruhe/);
   });
-  
+
 });

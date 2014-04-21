@@ -25,7 +25,7 @@ describe('Activity application - on submit -', function () {
       .send('previousUrl=aha')
       .expect(200)
       .expect(/Validierungsfehler/)
-      .expect(/Diese URL ist leider nicht verfügbar./, function (err) {
+      .expect(/Diese URL ist leider nicht verfügbar\./, function (err) {
         done(err);
       });
   });
@@ -37,7 +37,7 @@ describe('Activity application - on submit -', function () {
       .send('title=')
       .expect(200)
       .expect(/Validierungsfehler/)
-      .expect(/Titel ist ein Pflichtfeld./, function (err) {
+      .expect(/Titel ist ein Pflichtfeld\./, function (err) {
         done(err);
       });
   });
@@ -51,7 +51,7 @@ describe('Activity application - on submit -', function () {
       .send('title=')
       .expect(200)
       .expect(/Validierungsfehler/)
-      .expect(/Titel ist ein Pflichtfeld./, function (err) {
+      .expect(/Titel ist ein Pflichtfeld\./, function (err) {
         done(err);
       });
   });
@@ -63,7 +63,7 @@ describe('Activity application - on submit -', function () {
       .send('resources[names]=Doppelzimmer&resources[names]=Doppelzimmer')
       .expect(200)
       .expect(/Validierungsfehler/)
-      .expect(/Die Bezeichnungen der Ressourcen müssen eindeutig sein./, function (err) {
+      .expect(/Die Bezeichnungen der Ressourcen müssen eindeutig sein\./, function (err) {
         done(err);
       });
   });
@@ -75,7 +75,7 @@ describe('Activity application - on submit -', function () {
       .send('resources[names]=&resources[names]=')
       .expect(200)
       .expect(/Validierungsfehler/)
-      .expect(/Es muss mindestens eine Ressourcenbezeichnung angegeben werden./, function (err) {
+      .expect(/Es muss mindestens eine Ressourcenbezeichnung angegeben werden\./, function (err) {
         done(err);
       });
   });
@@ -87,7 +87,7 @@ describe('Activity application - on submit -', function () {
       .send('resources[limits]=&resources[limits]=7,5&resources[limits]=hallo')
       .expect(200)
       .expect(/Validierungsfehler/)
-      .expect(/Die Ressourcenbeschränkungen dürfen nur aus Ziffern bestehen./, function (err) {
+      .expect(/Die Ressourcenbeschränkungen dürfen nur aus Ziffern bestehen\./, function (err) {
         done(err);
       });
   });

@@ -1,7 +1,7 @@
 "use strict";
 
 require('../../testutil/configureForTest');
-var expect = require('chai').expect;
+var expect = require('must');
 var moment = require('moment-timezone');
 
 var beans = require('nconf').get('beans');
@@ -83,8 +83,8 @@ describe("Resources (fillFromUI)", function () {
       var resources = new Resources({ name1: {_limit: 20, _registrationOpen: true, _waitinglist: []}});
 
       expect(resources.named('name1').limit()).to.equal(20);
-      expect(resources.named('name1').isRegistrationOpen()).to.be.true;
-      expect(resources.named('name1').hasWaitinglist()).to.be.true;
+      expect(resources.named('name1').isRegistrationOpen()).to.be(true);
+      expect(resources.named('name1').hasWaitinglist()).to.be(true);
     });
 
     it("adds values if given", function () {
@@ -93,8 +93,8 @@ describe("Resources (fillFromUI)", function () {
       resources.fillFromUI({names: "name1", previousNames: "name1", limits: "10", isRegistrationOpen: "yes", hasWaitinglist: "yes"});
 
       expect(resources.named('name1').limit()).to.equal(10);
-      expect(resources.named('name1').isRegistrationOpen()).to.be.true;
-      expect(resources.named('name1').hasWaitinglist()).to.be.true;
+      expect(resources.named('name1').isRegistrationOpen()).to.be(true);
+      expect(resources.named('name1').hasWaitinglist()).to.be(true);
     });
 
     it("removes value if not given", function () {
@@ -102,9 +102,9 @@ describe("Resources (fillFromUI)", function () {
 
       resources.fillFromUI({names: "name1", limits: "", previousNames: "name1"});
 
-      expect(resources.named('name1').limit()).to.be.undefined;
-      expect(resources.named('name1').isRegistrationOpen()).to.be.false;
-      expect(resources.named('name1').hasWaitinglist()).to.be.false;
+      expect(resources.named('name1').limit()).to.be(undefined);
+      expect(resources.named('name1').isRegistrationOpen()).to.be(false);
+      expect(resources.named('name1').hasWaitinglist()).to.be(false);
     });
   });
 
@@ -217,36 +217,36 @@ describe("Resources (fillFromUI)", function () {
     it('is not too far in the past', function () {
       resources.named('resource1').addMemberId('12345', twoDaysAgo);
 
-      expect(resources.memberIsRegisteredForMoreDaysThan(8, member)).to.be.false;
+      expect(resources.memberIsRegisteredForMoreDaysThan(8, member)).to.be(false);
     });
     it('is not too far in the past for two resources', function () {
       resources.named('resource1').addMemberId('12345', twoDaysAgo);
       resources.named('resource2').addMemberId('12345', fiveDaysAgo);
 
-      expect(resources.memberIsRegisteredForMoreDaysThan(8, member)).to.be.false;
+      expect(resources.memberIsRegisteredForMoreDaysThan(8, member)).to.be(false);
     });
     it('is too far in the past', function () {
       resources.named('resource1').addMemberId('12345', twoDaysAgo);
 
-      expect(resources.memberIsRegisteredForMoreDaysThan(1, member)).to.be.true;
+      expect(resources.memberIsRegisteredForMoreDaysThan(1, member)).to.be(true);
     });
     it('is too far in the past for two resources', function () {
       resources.named('resource1').addMemberId('12345', twoDaysAgo);
       resources.named('resource2').addMemberId('12345', fiveDaysAgo);
 
-      expect(resources.memberIsRegisteredForMoreDaysThan(1, member)).to.be.true;
+      expect(resources.memberIsRegisteredForMoreDaysThan(1, member)).to.be(true);
     });
     it('is too far in the past for one of two resources (direction 1)', function () {
       resources.named('resource1').addMemberId('12345', twoDaysAgo);
       resources.named('resource2').addMemberId('12345', fiveDaysAgo);
 
-      expect(resources.memberIsRegisteredForMoreDaysThan(3, member)).to.be.true;
+      expect(resources.memberIsRegisteredForMoreDaysThan(3, member)).to.be(true);
     });
     it('is too far in the past for one of two resources (direction 2)', function () {
       resources.named('resource1').addMemberId('12345', fiveDaysAgo);
       resources.named('resource2').addMemberId('12345', twoDaysAgo);
 
-      expect(resources.memberIsRegisteredForMoreDaysThan(3, member)).to.be.true;
+      expect(resources.memberIsRegisteredForMoreDaysThan(3, member)).to.be(true);
     });
   });
 });
