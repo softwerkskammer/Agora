@@ -2,7 +2,7 @@
 
 var request = require('supertest');
 var sinon = require('sinon').sandbox.create();
-var expect = require('chai').expect;
+var expect = require('must');
 
 var beans = require('../../testutil/configureForTest').get('beans');
 var wikiAPI = beans.get('wikiAPI');
@@ -34,7 +34,7 @@ describe('Wiki application', function () {
       .expect(200)
       .expect(new RegExp(content))
       .end(function (err) {
-        expect(pageShow.calledWith('global/somepage', 'HEAD')).to.be.ok;
+        expect(pageShow.calledWith('global/somepage', 'HEAD')).to.be(true);
         done(err);
       });
   });
@@ -44,7 +44,7 @@ describe('Wiki application', function () {
       .get('/global/Some%20Päg\'é')
       .expect(200)
       .end(function (err) {
-        expect(pageShow.calledWith('global/some-page', 'HEAD')).to.be.ok;
+        expect(pageShow.calledWith('global/some-page', 'HEAD')).to.be(true);
         done(err);
       });
   });

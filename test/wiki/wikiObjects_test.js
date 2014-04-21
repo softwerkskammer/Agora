@@ -1,6 +1,6 @@
 "use strict";
 
-var expect = require('chai').expect;
+var expect = require('must');
 
 var beans = require('../../testutil/configureForTest').get('beans');
 var wikiObjects = beans.get('wikiObjects');
