@@ -1,7 +1,7 @@
 "use strict";
 
 var sinon = require('sinon').sandbox.create();
-var expect = require('chai').expect;
+var expect = require('must');
 
 var beans = require('../../testutil/configureForTest').get('beans');
 
@@ -43,7 +43,7 @@ describe('Notifications', function () {
     activity.state.owner = 'hans';
 
     notifications.visitorRegistration(activity, 'bob', 'Kaffeekranz');
-    expect(transport.sendMail.calledOnce).to.be.true;
+    expect(transport.sendMail.calledOnce).to.be(true);
     var options = transport.sendMail.firstCall.args[0];
     expect(options.subject).to.equal('Neue Anmeldung für Aktivität');
     expect(options.html).to.contain('Für die Aktivität "Title of the Activity" (Kaffeekranz) hat sich ein neuer Besucher angemeldet:');
@@ -58,7 +58,7 @@ describe('Notifications', function () {
     group.members = [hans, alice, bob];
 
     notifications.visitorRegistration(activity, 'bob', 'Kaffeekranz');
-    expect(transport.sendMail.calledOnce).to.be.true;
+    expect(transport.sendMail.calledOnce).to.be(true);
     var options = transport.sendMail.firstCall.args[0];
     expect(options.bcc).to.contain('hans@email.de');
     expect(options.bcc).to.contain('alice@email.de');
@@ -70,7 +70,7 @@ describe('Notifications', function () {
     group.members = [hans, alice, bob];
 
     notifications.visitorRegistration(activity, 'bob', 'Kaffeekranz');
-    expect(transport.sendMail.calledOnce).to.be.true;
+    expect(transport.sendMail.calledOnce).to.be(true);
     var options = transport.sendMail.firstCall.args[0];
     expect(options.bcc).to.equal('alice@email.de');
     expect(options.bcc).to.not.contain('bob');
@@ -81,7 +81,7 @@ describe('Notifications', function () {
     group.members = [hans, alice, bob];
 
     notifications.visitorRegistration(activity, 'bob', 'Kaffeekranz');
-    expect(transport.sendMail.called).to.be.false;
+    expect(transport.sendMail.called).to.be(false);
   });
 
 });
