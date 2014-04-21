@@ -12,12 +12,6 @@ module.exports = function (grunt) {
       '* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>;' +
       ' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */\n',
     // Task configuration.
-    jshint: {
-      files: ['**/*.js', '**/*.json', '.jshintrc', '!coverage/**/*.js', '!coverage/**/*.json', '!node_modules/**/*.js', '!node_modules/**/*.json', '!public/**/*.js', '!public/**/*.json', '!frontendtests/lib/**/*.js', '!frontendtests/lib/**/*.json', '!locales/*.js'],
-      options: {
-        jshintrc: '.jshintrc'
-      }
-    },
     jslint: {
       server: {
         src: [
@@ -160,7 +154,6 @@ module.exports = function (grunt) {
   });
 
   // These plugins provide necessary tasks.
-  grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-qunit');
   grunt.loadNpmTasks('grunt-contrib-concat');
@@ -169,7 +162,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-jslint');
 
   // Default task.
-  grunt.registerTask('default', ['less', 'concat', 'jslint:server', 'jslint:servertests', 'jshint', 'qunit', 'mocha_istanbul']);
+  grunt.registerTask('default', ['less', 'concat', 'jslint', 'qunit', 'mocha_istanbul']);
 
   // Travis-CI task
   grunt.registerTask('travis', ['default']);
