@@ -1,7 +1,7 @@
 "use strict";
 
 var conf = require('./../../testutil/configureForTest');
-var expect = require('chai').expect;
+var expect = require('must');
 
 var systemUnderTest = conf.get('beans').get('sympaTransformer');
 
@@ -11,28 +11,33 @@ describe('Sympa-Transformer ', function () {
 
     var result = systemUnderTest.stripMailSuffixes([]);
 
-    expect(result).to.not.be.null;
+    expect(result).to.not.be(null);
     expect(result.length).to.equal(0);
   });
 
   it('returns a list with an object with a transformed email address', function () {
 
-    var result = systemUnderTest.stripMailSuffixes([{ listAddress: 'list@softwerkskammer.de'}]);
+    var result = systemUnderTest.stripMailSuffixes([
+      { listAddress: 'list@softwerkskammer.de'}
+    ]);
 
-    expect(result).to.not.be.null;
+    expect(result).to.not.be(null);
     expect(result.length).to.equal(1);
     expect(result[0]).to.equal('list');
   });
 
   it('transforms a whole list of arbitrary email addresses', function () {
 
-    var result = systemUnderTest.stripMailSuffixes([{ listAddress: 'list@softwerkskammer.de'},
-      { listAddress: 'mygroup@tolledomain.com'},
-      { listAddress: 'infolist@meinefirma.co.uk'},
-      { listAddress: 'otherlist@sonstwo.org'}
-    ]);
+    var result = systemUnderTest.stripMailSuffixes(
+      [
+        { listAddress: 'list@softwerkskammer.de'},
+        { listAddress: 'mygroup@tolledomain.com'},
+        { listAddress: 'infolist@meinefirma.co.uk'},
+        { listAddress: 'otherlist@sonstwo.org'}
+      ]
+    );
 
-    expect(result).to.not.be.null;
+    expect(result).to.not.be(null);
     expect(result.length).to.equal(4);
     expect(result[0]).to.equal('list');
     expect(result[1]).to.equal('mygroup');
@@ -40,25 +45,24 @@ describe('Sympa-Transformer ', function () {
     expect(result[3]).to.equal('otherlist');
   });
 
-
   it('transforms a null input to an empty array', function () {
     var result = systemUnderTest.inputItemToArray(null);
 
-    expect(result).to.not.be.null;
+    expect(result).to.not.be(null);
     expect(result.length).to.equal(0);
   });
 
   it('transforms a null input item to an empty array', function () {
     var result = systemUnderTest.inputItemToArray({ item: null });
 
-    expect(result).to.not.be.null;
+    expect(result).to.not.be(null);
     expect(result.length).to.equal(0);
   });
 
   it('transforms a single input item to an array with that item', function () {
     var result = systemUnderTest.inputItemToArray({ item: 'Test' });
 
-    expect(result).to.not.be.null;
+    expect(result).to.not.be(null);
     expect(result.length).to.equal(1);
     expect(result[0]).to.equal('Test');
   });
@@ -66,7 +70,7 @@ describe('Sympa-Transformer ', function () {
   it('transforms an array of input items to the same array', function () {
     var result = systemUnderTest.inputItemToArray({ item: [ 'Test1', 'Test2' ] });
 
-    expect(result).to.not.be.null;
+    expect(result).to.not.be(null);
     expect(result.length).to.equal(2);
     expect(result[0]).to.equal('Test1');
     expect(result[1]).to.equal('Test2');

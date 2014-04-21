@@ -66,7 +66,7 @@ describe('Groups application', function () {
         .expect(/Gruppe A/, done);
     });
   });
-  
+
   describe('groupname check', function () {
 
     it('returns false for checkgroupname when the group name already exists', function (done) {
@@ -99,10 +99,10 @@ describe('Groups application', function () {
         .expect(200)
         .expect('Content-Type', /text\/html/)
         .expect(/<title>Gruppe A/)
-        .expect(/Dies ist Gruppe A./)
+        .expect(/Dies ist Gruppe A\./)
         .expect(/Themengruppe/)
         .expect(/Mitglieder:/)
-        .expect(/Diese Gruppe hat&nbsp;2 Mitglieder./, done);
+        .expect(/Diese Gruppe hat&nbsp;2 Mitglieder\./, done);
     });
 
     it('displays an existing group and its members if somebody is logged in', function (done) {
@@ -111,10 +111,10 @@ describe('Groups application', function () {
         .expect(200)
         .expect('Content-Type', /text\/html/)
         .expect(/<title>Gruppe A/)
-        .expect(/Dies ist Gruppe A./)
+        .expect(/Dies ist Gruppe A\./)
         .expect(/Themengruppe/)
         .expect(/Mitglieder:/)
-        .expect(/Diese Gruppe hat&nbsp;2 Mitglieder./)
+        .expect(/Diese Gruppe hat&nbsp;2 Mitglieder\./)
         .expect(/Peter Meyer/)
         .expect(/Hans Dampf/, done);
     });

@@ -3,7 +3,7 @@
 var sinon = require('sinon').sandbox.create();
 var beans = require('../../testutil/configureForTest').get('beans');
 
-var expect = require('chai').expect;
+var expect = require('must');
 
 var Member = beans.get('member');
 
@@ -33,7 +33,7 @@ describe('Groups and Members API (getUserWithHisGroups or getMemberWithHisGroups
       });
 
       groupsAndMembersAPI.getUserWithHisGroups('nickname', function (err, member) {
-        expect(member).to.not.exist;
+        expect(member).to.not.exist();
         done(err);
       });
     });
@@ -48,7 +48,7 @@ describe('Groups and Members API (getUserWithHisGroups or getMemberWithHisGroups
 
       groupsAndMembersAPI.getUserWithHisGroups('nickname', function (err, member) {
         expect(member).to.equal(dummymember);
-        expect(member.subscribedGroups).to.not.be.null;
+        expect(member.subscribedGroups).to.not.be(null);
         expect(member.subscribedGroups.length).to.equal(2);
         expect(member.subscribedGroups[0]).to.equal(GroupA);
         expect(member.subscribedGroups[1]).to.equal(GroupB);
@@ -64,7 +64,7 @@ describe('Groups and Members API (getUserWithHisGroups or getMemberWithHisGroups
       });
 
       groupsAndMembersAPI.getAllUsersWithTheirGroups(function (err, members) {
-        expect(members).to.be.empty;
+        expect(members).to.be.empty();
         done(err);
       });
     });
@@ -80,7 +80,7 @@ describe('Groups and Members API (getUserWithHisGroups or getMemberWithHisGroups
       groupsAndMembersAPI.getAllUsersWithTheirGroups(function (err, members) {
         expect(members.length).to.equal(1);
         expect(members[0]).to.equal(dummymember);
-        expect(members[0].subscribedGroups).to.not.be.null;
+        expect(members[0].subscribedGroups).to.not.be(null);
         expect(members[0].subscribedGroups.length).to.equal(2);
         expect(members[0].subscribedGroups[0]).to.equal(GroupA);
         expect(members[0].subscribedGroups[1]).to.equal(GroupB);
@@ -99,7 +99,7 @@ describe('Groups and Members API (getUserWithHisGroups or getMemberWithHisGroups
       groupsAndMembersAPI.getAllUsersWithTheirGroups(function (err, members) {
         expect(members.length).to.equal(1);
         expect(members[0]).to.equal(dummymember);
-        expect(members[0].subscribedGroups).to.not.be.null;
+        expect(members[0].subscribedGroups).to.not.be(null);
         expect(members[0].subscribedGroups.length).to.equal(0);
         done(err);
       });
@@ -113,7 +113,7 @@ describe('Groups and Members API (getUserWithHisGroups or getMemberWithHisGroups
       var memberCount = 1;
       sinon.stub(groupsAPI, 'getSubscribedGroupsForUser', function (userMail, globalCallback) {
         if (memberCount === 1) {
-          memberCount++;
+          memberCount = memberCount + 1;
           return globalCallback(null, []);
         }
         return globalCallback(null, [GroupA, GroupB]);
@@ -122,10 +122,10 @@ describe('Groups and Members API (getUserWithHisGroups or getMemberWithHisGroups
       groupsAndMembersAPI.getAllUsersWithTheirGroups(function (err, members) {
         expect(members.length).to.equal(2);
         expect(members[0]).to.equal(dummymember);
-        expect(members[0].subscribedGroups).to.not.be.null;
+        expect(members[0].subscribedGroups).to.not.be(null);
         expect(members[0].subscribedGroups.length).to.equal(0);
         expect(members[1]).to.equal(dummymember2);
-        expect(members[1].subscribedGroups).to.not.be.null;
+        expect(members[1].subscribedGroups).to.not.be(null);
         expect(members[1].subscribedGroups.length).to.equal(2);
         expect(members[1].subscribedGroups[0]).to.equal(GroupA);
         expect(members[1].subscribedGroups[1]).to.equal(GroupB);
@@ -141,7 +141,7 @@ describe('Groups and Members API (getUserWithHisGroups or getMemberWithHisGroups
       });
 
       groupsAndMembersAPI.getMemberWithHisGroupsByMemberId('id', function (err, member) {
-        expect(member).to.not.exist;
+        expect(member).to.not.exist();
         done(err);
       });
     });
@@ -156,7 +156,7 @@ describe('Groups and Members API (getUserWithHisGroups or getMemberWithHisGroups
 
       groupsAndMembersAPI.getMemberWithHisGroupsByMemberId('id', function (err, member) {
         expect(member).to.equal(dummymember);
-        expect(member.subscribedGroups).to.not.be.null;
+        expect(member.subscribedGroups).to.not.be(null);
         expect(member.subscribedGroups.length).to.equal(2);
         expect(member.subscribedGroups[0]).to.equal(GroupA);
         expect(member.subscribedGroups[1]).to.equal(GroupB);
@@ -182,7 +182,7 @@ describe('Groups and Members API (getGroupAndMembersForList)', function () {
     sinon.stub(groupsAPI, 'getGroup', function (groupname, callback) { callback(null, null); });
 
     groupsAndMembersAPI.getGroupAndMembersForList('unbekannteListe', function (err, group) {
-      expect(group).to.not.exist;
+      expect(group).to.not.exist();
       done(err);
     });
   });
@@ -197,7 +197,7 @@ describe('Groups and Members API (getGroupAndMembersForList)', function () {
     sinon.stub(groupsAPI, 'getGroup', function (groupname, callback) { callback(null, null); });
 
     groupsAndMembersAPI.getGroupAndMembersForList('sympaListWithoutGroup', function (err, group) {
-      expect(group).to.not.exist;
+      expect(group).to.not.exist();
       done(err);
     });
   });
@@ -213,7 +213,7 @@ describe('Groups and Members API (getGroupAndMembersForList)', function () {
 
     groupsAndMembersAPI.getGroupAndMembersForList('GroupA', function (err, group) {
       expect(group).to.equal(GroupA);
-      expect(group.members).to.not.be.null;
+      expect(group.members).to.not.be(null);
       expect(group.members.length).to.equal(0);
       done(err);
     });
@@ -230,7 +230,7 @@ describe('Groups and Members API (getGroupAndMembersForList)', function () {
 
     groupsAndMembersAPI.getGroupAndMembersForList('GroupA', function (err, group) {
       expect(group).to.equal(GroupA);
-      expect(group.members).to.not.be.null;
+      expect(group.members).to.not.be(null);
       expect(group.members.length).to.equal(1);
       expect(group.members[0]).to.equal(dummymember);
       done(err);
@@ -246,14 +246,14 @@ describe('Groups and Members API (addMembercountToGroup)', function () {
 
   it('returns no group when the group is null', function (done) {
     groupsAndMembersAPI.addMembercountToGroup(null, function (err, group) {
-      expect(group).to.not.exist;
+      expect(group).to.not.exist();
       done(err);
     });
   });
 
   it('returns no group when the group is undefined', function (done) {
     groupsAndMembersAPI.addMembercountToGroup(undefined, function (err, group) {
-      expect(group).to.not.exist;
+      expect(group).to.not.exist();
       done(err);
     });
   });
@@ -287,21 +287,21 @@ describe('Groups and Members API (addMembersToGroup)', function () {
   });
 
   it('returns no group when the group is null', function (done) {
-    sinon.stub(groupsAPI, 'getSympaUsersOfList', function () {});
-    sinon.stub(membersAPI, 'getMembersForEMails', function () {});
+    sinon.stub(groupsAPI, 'getSympaUsersOfList', function () { return undefined; });
+    sinon.stub(membersAPI, 'getMembersForEMails', function () { return undefined; });
 
     groupsAndMembersAPI.addMembersToGroup(null, function (err, group) {
-      expect(group).to.not.exist;
+      expect(group).to.not.exist();
       done(err);
     });
   });
 
   it('returns no group when the group is undefined', function (done) {
-    sinon.stub(groupsAPI, 'getSympaUsersOfList', function () {});
-    sinon.stub(membersAPI, 'getMembersForEMails', function () {});
+    sinon.stub(groupsAPI, 'getSympaUsersOfList', function () { return undefined; });
+    sinon.stub(membersAPI, 'getMembersForEMails', function () { return undefined; });
 
     groupsAndMembersAPI.addMembersToGroup(undefined, function (err, group) {
-      expect(group).to.not.exist;
+      expect(group).to.not.exist();
       done(err);
     });
   });
@@ -314,7 +314,7 @@ describe('Groups and Members API (addMembersToGroup)', function () {
 
     groupsAndMembersAPI.addMembersToGroup(GroupA, function (err, group) {
       expect(group).to.equal(GroupA);
-      expect(group.members).to.not.be.null;
+      expect(group.members).to.not.be(null);
       expect(group.members.length).to.equal(0);
       expect(group.membercount).to.equal(0);
       delete group.members;
@@ -330,7 +330,7 @@ describe('Groups and Members API (addMembersToGroup)', function () {
 
     groupsAndMembersAPI.addMembersToGroup(GroupA, function (err, group) {
       expect(group).to.equal(GroupA);
-      expect(group.members).to.not.be.null;
+      expect(group.members).to.not.be(null);
       expect(group.members.length).to.equal(1);
       expect(group.membercount).to.equal(1);
       expect(group.members[0]).to.equal(dummymember);
@@ -344,19 +344,19 @@ describe('Groups and Members API (addMembersToGroup)', function () {
 describe('Groups and Members API (memberIsInMemberList)', function () {
 
   it('returns false if the user id is undefined', function () {
-    expect(groupsAndMembersAPI.memberIsInMemberList(undefined, [dummymember, dummymember2])).to.be.false;
+    expect(groupsAndMembersAPI.memberIsInMemberList(undefined, [dummymember, dummymember2])).to.be(false);
   });
 
   it('returns false if the member list is empty', function () {
-    expect(groupsAndMembersAPI.memberIsInMemberList('hada', [])).to.be.false;
+    expect(groupsAndMembersAPI.memberIsInMemberList('hada', [])).to.be(false);
   });
 
   it('returns false if the user is not in the member list', function () {
-    expect(groupsAndMembersAPI.memberIsInMemberList('trallala', [dummymember])).to.be.false;
+    expect(groupsAndMembersAPI.memberIsInMemberList('trallala', [dummymember])).to.be(false);
   });
 
   it('returns true if the user is in the member list', function () {
-    expect(groupsAndMembersAPI.memberIsInMemberList('hada', [dummymember, dummymember2])).to.be.true;
+    expect(groupsAndMembersAPI.memberIsInMemberList('hada', [dummymember, dummymember2])).to.be(true);
   });
 });
 

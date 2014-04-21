@@ -3,7 +3,7 @@
 var conf = require('../../testutil/configureForTest');
 var sinon = require('sinon').sandbox.create();
 
-var expect = require('chai').expect;
+var expect = require('must');
 
 var Group = conf.get('beans').get('group');
 
@@ -29,7 +29,7 @@ describe('Groups API (getSubscribedGroupsForUser)', function () {
     sinon.stub(sympa, 'getSubscribedListsForUser', function (email, callback) { callback(null, []); });
 
     systemUnderTest.getSubscribedGroupsForUser('me@bla.com', function (err, validLists) {
-      expect(validLists).to.not.be.null;
+      expect(validLists).to.not.be(null);
       expect(validLists.length).to.equal(0);
       done(err);
     });
@@ -42,7 +42,7 @@ describe('Groups API (getSubscribedGroupsForUser)', function () {
     sinon.stub(sympa, 'getSubscribedListsForUser', function (email, callback) { callback(null, ['GroupA']); });
 
     systemUnderTest.getSubscribedGroupsForUser('GroupAuser@softwerkskammer.de', function (err, validLists) {
-      expect(validLists).to.not.be.null;
+      expect(validLists).to.not.be(null);
       expect(validLists.length).to.equal(1);
       expect(validLists[0]).to.equal(GroupA);
       done(err);
@@ -58,7 +58,7 @@ describe('Groups API (getSubscribedGroupsForUser)', function () {
     });
 
     systemUnderTest.getSubscribedGroupsForUser('GroupAandBuser@softwerkskammer.de', function (err, validLists) {
-      expect(validLists).to.not.be.null;
+      expect(validLists).to.not.be(null);
       expect(validLists.length).to.equal(2);
       expect(validLists[0]).to.equal(GroupA);
       expect(validLists[1]).to.equal(GroupB);
@@ -75,7 +75,7 @@ describe('Groups API (getSubscribedGroupsForUser)', function () {
     });
 
     systemUnderTest.getSubscribedGroupsForUser('admin@softwerkskammer.de', function (err) {
-      expect(spy.calledWith(['GroupA', 'GroupB'])).to.be.true;
+      expect(spy.calledWith(['GroupA', 'GroupB'])).to.be(true);
       done(err);
     });
   });
@@ -98,7 +98,7 @@ describe('Groups API (getAllAvailableGroups)', function () {
     sinon.stub(sympa, 'getAllAvailableLists', function (callback) { callback(null, []); });
 
     systemUnderTest.getAllAvailableGroups(function (err, lists) {
-      expect(lists).to.not.be.null;
+      expect(lists).to.not.be(null);
       expect(lists.length).to.equal(0);
       done(err);
     });
@@ -111,7 +111,7 @@ describe('Groups API (getAllAvailableGroups)', function () {
     sinon.stub(sympa, 'getAllAvailableLists', function (callback) { callback(null, ['unknownGroup']); });
 
     systemUnderTest.getAllAvailableGroups(function (err, lists) {
-      expect(lists).to.not.be.null;
+      expect(lists).to.not.be(null);
       expect(lists.length).to.equal(0);
       done(err);
     });
@@ -124,7 +124,7 @@ describe('Groups API (getAllAvailableGroups)', function () {
     sinon.stub(sympa, 'getAllAvailableLists', function (callback) { callback(null, ['GroupA', 'unknownGroup']); });
 
     systemUnderTest.getAllAvailableGroups(function (err, lists) {
-      expect(lists).to.not.be.null;
+      expect(lists).to.not.be(null);
       expect(lists.length).to.equal(1);
       expect(lists[0]).to.equal(GroupA);
       done(err);
@@ -138,7 +138,7 @@ describe('Groups API (getAllAvailableGroups)', function () {
     sinon.stub(sympa, 'getAllAvailableLists', function (callback) { callback(null, ['GroupA', 'GroupB']); });
 
     systemUnderTest.getAllAvailableGroups(function (err, lists) {
-      expect(lists).to.not.be.null;
+      expect(lists).to.not.be(null);
       expect(lists.length).to.equal(2);
       expect(lists[0]).to.equal(GroupA);
       expect(lists[1]).to.equal(GroupB);
@@ -161,7 +161,7 @@ describe('Groups API (getSympaUsersOfList)', function () {
     sinon.stub(sympa, 'getUsersOfList', function (groupname, callback) { callback(null, []); });
 
     systemUnderTest.getSympaUsersOfList('groupname', function (err, lists) {
-      expect(lists).to.not.be.null;
+      expect(lists).to.not.be(null);
       expect(lists.length).to.equal(0);
       done(err);
     });
@@ -173,7 +173,7 @@ describe('Groups API (getSympaUsersOfList)', function () {
     });
 
     systemUnderTest.getSympaUsersOfList('groupname', function (err, users) {
-      expect(users).to.not.be.null;
+      expect(users).to.not.be(null);
       expect(users.length).to.equal(3);
       expect(users[0]).to.equal('user1@mail1.de');
       expect(users[1]).to.equal('user2@mail2.de');
@@ -204,7 +204,7 @@ describe('Groups API (getGroup)', function () {
   it('returns null if there is no group with the given name', function (done) {
 
     systemUnderTest.getGroup('groupname', function (err, group) {
-      expect(group).to.be.null;
+      expect(group).to.be(null);
       done(err);
     });
   });
@@ -246,9 +246,9 @@ describe('Groups API (createOrSaveGroup)', function () {
   it('creates a new group and saves it if there is no group with the given name', function (done) {
 
     systemUnderTest.createOrSaveGroup(NonPersistentGroup, function (err, group) {
-      expect(group).to.be.null; // would return an existingGroup, but Group is new
-      expect(createListSpy.calledOnce).to.be.true;
-      expect(saveGroupSpy.calledOnce).to.be.true;
+      expect(group).to.be(null); // would return an existingGroup, but Group is new
+      expect(createListSpy.calledOnce).to.be(true);
+      expect(saveGroupSpy.calledOnce).to.be(true);
       done(err);
     });
   });
@@ -257,8 +257,8 @@ describe('Groups API (createOrSaveGroup)', function () {
 
     systemUnderTest.createOrSaveGroup(GroupA, function (err, group) {
       expect(group).to.equal(GroupA);
-      expect(createListSpy.called).to.be.false;
-      expect(saveGroupSpy.calledOnce).to.be.true;
+      expect(createListSpy.called).to.be(false);
+      expect(saveGroupSpy.calledOnce).to.be(true);
       done(err);
     });
   });
@@ -268,12 +268,12 @@ describe('Groups API (groupFromObject)', function () {
   it('returns a new Group object if there is no valid group data', function () {
     var result = new Group({id: 'x'});
 
-    expect(result).to.be.not.null;
+    expect(result).to.not.be(null);
     expect(result).to.be.instanceOf(Group);
     expect(result.id).to.equal('x');
-    expect(result.longName).to.be.undefined;
-    expect(result.description).to.be.undefined;
-    expect(result.type).to.be.undefined;
+    expect(result.longName).to.be(undefined);
+    expect(result.description).to.be(undefined);
+    expect(result.type).to.be(undefined);
   });
 
   it('returns a valid Group object if there is valid group data', function () {
@@ -281,7 +281,7 @@ describe('Groups API (groupFromObject)', function () {
       description: 'A group for organizing CS',
       type: 'Themengruppe' });
 
-    expect(result).to.be.not.null;
+    expect(result).to.not.be(null);
     expect(result).to.be.instanceOf(Group);
     expect(result.id).to.equal('craftsmanswap');
     expect(result.longName).to.equal('Craftsman Swaps');
@@ -309,52 +309,52 @@ describe('Groups API (isGroupNameAvailable)', function () {
 
   it('returns false when there is already a group of this name present', function (done) {
     systemUnderTest.isGroupNameAvailable("GroupA", function (err, result) {
-      expect(result).to.be.not.null;
-      expect(result).to.be.false;
+      expect(result).to.not.be(null);
+      expect(result).to.be(false);
       done(err);
     });
   });
 
   it('returns true when there is no group of this name present', function (done) {
     systemUnderTest.isGroupNameAvailable("MyGroup", function (err, result) {
-      expect(result).to.be.not.null;
-      expect(result).to.be.true;
+      expect(result).to.not.be(null);
+      expect(result).to.be(true);
       done(err);
     });
   });
 
   it('rejects groupnames that contain special characters', function (done) {
-    expect(systemUnderTest.isReserved('Sch adar')).to.be.true;
-    expect(systemUnderTest.isReserved('Sch/adar')).to.be.true;
-    expect(systemUnderTest.isReserved('Schad\nar')).to.be.true;
-    expect(systemUnderTest.isReserved('Schad@r')).to.be.true;
+    expect(systemUnderTest.isReserved('Sch adar')).to.be(true);
+    expect(systemUnderTest.isReserved('Sch/adar')).to.be(true);
+    expect(systemUnderTest.isReserved('Schad\nar')).to.be(true);
+    expect(systemUnderTest.isReserved('Schad@r')).to.be(true);
 
     systemUnderTest.isGroupNameAvailable('Scha dar', function (err, result) {
-      expect(result).to.be.false;
+      expect(result).to.be(false);
       done(err);
     });
   });
 
   it('allows groupnames that contain alphanumeric characters only', function (done) {
 
-    expect(systemUnderTest.isReserved('Schad_r')).to.be.false;
-    expect(systemUnderTest.isReserved('Schadar')).to.be.false;
+    expect(systemUnderTest.isReserved('Schad_r')).to.be(false);
+    expect(systemUnderTest.isReserved('Schadar')).to.be(false);
 
     systemUnderTest.isGroupNameAvailable('Schadar', function (err, result) {
-      expect(result).to.be.true;
+      expect(result).to.be(true);
       done(err);
     });
   });
   it('rejects groupnames that contain reserved routes', function (done) {
 
-    expect(systemUnderTest.isReserved('new')).to.be.true;
-    expect(systemUnderTest.isReserved('submit')).to.be.true;
-    expect(systemUnderTest.isReserved('administration')).to.be.true;
-    expect(systemUnderTest.isReserved('edit')).to.be.true;
-    expect(systemUnderTest.isReserved('checkgroupname')).to.be.true;
+    expect(systemUnderTest.isReserved('new')).to.be(true);
+    expect(systemUnderTest.isReserved('submit')).to.be(true);
+    expect(systemUnderTest.isReserved('administration')).to.be(true);
+    expect(systemUnderTest.isReserved('edit')).to.be(true);
+    expect(systemUnderTest.isReserved('checkgroupname')).to.be(true);
 
     systemUnderTest.isGroupNameAvailable('edit', function (err, result) {
-      expect(result).to.be.false;
+      expect(result).to.be(false);
       done(err);
     });
   });

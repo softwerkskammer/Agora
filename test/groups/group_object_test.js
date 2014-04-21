@@ -5,7 +5,7 @@ var conf = require('../../testutil/configureForTest');
 var beans = conf.get('beans');
 var Group = beans.get('group');
 var Member = beans.get('member');
-var expect = require('chai').expect;
+var expect = require('must');
 
 describe('Group object', function () {
 
@@ -14,14 +14,14 @@ describe('Group object', function () {
     it('reads a single organizer into an array', function () {
       var group = new Group({id: 'group', organizers: 'id'});
 
-      expect(group.organizers).to.be.an('Array');
+      expect(group.organizers).to.be.an.array();
       expect(group.organizers).to.contain('id');
     });
 
     it('reads two organizers into an array', function () {
       var group = new Group({id: 'group', organizers: 'idA,idB'});
 
-      expect(group.organizers).to.be.an('Array');
+      expect(group.organizers).to.be.an.array();
       expect(group.organizers).to.contain('idA');
       expect(group.organizers).to.contain('idB');
     });
@@ -29,7 +29,7 @@ describe('Group object', function () {
     it('leaves an organizers array as-is', function () {
       var group = new Group({id: 'group', organizers: ['idA', 'idB'] });
 
-      expect(group.organizers).to.be.an('Array');
+      expect(group.organizers).to.be.an.array();
       expect(group.organizers).to.contain('idA');
       expect(group.organizers).to.contain('idB');
     });
@@ -49,14 +49,14 @@ describe('should deliver', function () {
 
   it('the group for Themengruppe', function () {
     var group = new Group({id: 'abc', type: 'Themengruppe'});
-    expect(Group.thematicsFrom([group])).to.deep.equal([group]);
-    expect(Group.regionalsFrom([group])).to.deep.equal([]);
+    expect(Group.thematicsFrom([group])).to.eql([group]);
+    expect(Group.regionalsFrom([group])).to.eql([]);
   });
 
   it('the group for Regionalgruppe', function () {
     var group = new Group({id: 'abc', type: 'Regionalgruppe'});
-    expect(Group.thematicsFrom([group])).to.deep.equal([]);
-    expect(Group.regionalsFrom([group])).to.deep.equal([group]);
+    expect(Group.thematicsFrom([group])).to.eql([]);
+    expect(Group.regionalsFrom([group])).to.eql([group]);
   });
 
 });
@@ -106,26 +106,26 @@ it('should generate a list for the organizers based on members, only one in orga
   var checkedOrganizers = group.checkedOrganizers(members);
   expect(checkedOrganizers.length).to.equal(2);
   expect(checkedOrganizers[0].member.id()).to.equal('Hans');
-  expect(checkedOrganizers[0].checked).to.be.true;
+  expect(checkedOrganizers[0].checked).to.be(true);
   expect(checkedOrganizers[1].member.id()).to.equal('Karl');
-  expect(checkedOrganizers[1].checked).to.be.false;
+  expect(checkedOrganizers[1].checked).to.be(false);
 });
 
 describe('answers that a', function () {
 
   it('memberId is one of its organizers', function () {
     var group = new Group({id: 'groupA', organizers: 'id'});
-    expect(group.isOrganizer('id')).to.be.true;
+    expect(group.isOrganizer('id')).to.be(true);
   });
 
   it('wrong memberId is not one of its organizers', function () {
     var group = new Group({id: 'groupA', organizers: 'id'});
-    expect(group.isOrganizer('anotherId')).to.be.false;
+    expect(group.isOrganizer('anotherId')).to.be(false);
   });
 
   it('memberId is not one of its organizers if there are no organizers initialized', function () {
     var group = new Group();
-    expect(group.isOrganizer('anotherId')).to.be.false;
+    expect(group.isOrganizer('anotherId')).to.be(false);
   });
 
 });

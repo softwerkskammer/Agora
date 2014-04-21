@@ -2,7 +2,7 @@
 
 var conf = require('../../testutil/configureForTest');
 var sinon = require('sinon');
-var expect = require('chai').expect;
+var expect = require('must');
 
 var persistence = conf.get('beans').get('groupsPersistence');
 
@@ -26,7 +26,7 @@ describe('Groups store', function () {
     var queriedId = 'groupA';
     store.getGroup(queriedId, function (err, group) {
       expect(group.id).to.equal(sampleGroup.id);
-      expect(getById.calledWith(new RegExp('^' + queriedId + '$', 'i'))).to.be.true;
+      expect(getById.calledWith(new RegExp('^' + queriedId + '$', 'i'))).to.be(true);
       done(err);
     });
   });
@@ -35,7 +35,7 @@ describe('Groups store', function () {
     var queriedId = 'GRouPA';
     store.getGroup(queriedId, function (err, group) {
       expect(group.id).to.equal(sampleGroup.id);
-      expect(getById.calledWith(new RegExp('^' + queriedId + '$', 'i'))).to.be.true;
+      expect(getById.calledWith(new RegExp('^' + queriedId + '$', 'i'))).to.be(true);
       done(err);
     });
   });
