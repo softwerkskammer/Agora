@@ -1,6 +1,5 @@
-/*global describe, it */
 "use strict";
-var expect = require('chai').expect;
+var expect = require('must');
 var sinon = require('sinon').sandbox.create();
 
 var beans = require('../../testutil/configureForTest').get('beans');

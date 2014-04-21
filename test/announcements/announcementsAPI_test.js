@@ -1,6 +1,6 @@
 "use strict";
 
-var expect = require('chai').expect;
+var expect = require('must');
 var conf = require('../../testutil/configureForTest');
 var beans = conf.get('beans');
 var Announcement = beans.get('announcement');
@@ -52,40 +52,40 @@ describe('Announcements API', function () {
 
   it('returns null when url is not existing', function (done) {
     announcementsAPI.getAnnouncement('nichtExistierendeUrl', function (err, result) {
-      expect(result).to.be.a('null');
+      expect(result).to.be(null);
       done(err);
     });
   });
 
   it('returns all announcements', function (done) {
     announcementsAPI.allAnnouncements(function (err, result) {
-      expect(result).to.have.lengthOf(1);
+      expect(result).to.have.length(1);
       done(err);
     });
   });
 
   it('rejects urls that are reserved', function (done) {
-    expect(announcementsAPI.isReserved('edit')).to.be.true;
-    expect(announcementsAPI.isReserved('eDit')).to.be.true;
-    expect(announcementsAPI.isReserved('neW')).to.be.true;
-    expect(announcementsAPI.isReserved('checkurl')).to.be.true;
-    expect(announcementsAPI.isReserved('submIt')).to.be.true;
+    expect(announcementsAPI.isReserved('edit')).to.be(true);
+    expect(announcementsAPI.isReserved('eDit')).to.be(true);
+    expect(announcementsAPI.isReserved('neW')).to.be(true);
+    expect(announcementsAPI.isReserved('checkurl')).to.be(true);
+    expect(announcementsAPI.isReserved('submIt')).to.be(true);
     announcementsAPI.isValidUrl(' checkurl ', function (err, result) {
-      expect(result).to.be.false;
+      expect(result).to.be(false);
       done(err);
     });
   });
 
   it('validates a valid url', function (done) {
     announcementsAPI.isValidUrl('thisIsAValidUrl', function (err, result) {
-      expect(result).to.be.true;
+      expect(result).to.be(true);
       done(err);
     });
   });
 
   it('validates a invalid url', function (done) {
     announcementsAPI.isValidUrl('edit', function (err, result) {
-      expect(result).to.be.false;
+      expect(result).to.be(false);
       done(err);
     });
   });
