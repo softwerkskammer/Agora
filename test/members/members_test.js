@@ -2,7 +2,7 @@
 
 var request = require('supertest');
 var sinon = require('sinon').sandbox.create();
-var expect = require('chai').expect;
+var expect = require('must');
 
 var beans = require('../../testutil/configureForTest').get('beans');
 var Member = beans.get('member');
@@ -47,7 +47,7 @@ describe('Members application', function () {
       .expect(200)
       .expect(/href="\/members\/hada"/)
       .expect(/Hans Dampf/, function (err) {
-        expect(allMembers.calledOnce).to.be.ok;
+        expect(allMembers.calledOnce).to.be(true);
         done(err);
       });
   });
@@ -56,9 +56,9 @@ describe('Members application', function () {
     request(createApp('hada'))
       .get('/hada')
       .expect(200)
-      .expect(/Blog:(.+)http:\/\/my.blog/, function (err) {
-        expect(getMember.calledWith(dummymember.nickname())).to.be.true;
-        expect(getSubscribedGroupsForUser.calledWith(dummymember.email())).to.be.true;
+      .expect(/http:\/\/my\.blog/, function (err) {
+        expect(getMember.calledWith(dummymember.nickname())).to.be(true);
+        expect(getSubscribedGroupsForUser.calledWith(dummymember.email())).to.be(true);
         done(err);
       });
   });
@@ -170,7 +170,7 @@ describe('Members application', function () {
       .send('previousNickname=bibabu')
       .expect(200)
       .expect(/Validierungsfehler/)
-      .expect(/Dieser Nickname ist leider nicht verfügbar./, done);
+      .expect(/Dieser Nickname ist leider nicht verfügbar\./, done);
   });
 
   it('rejects a member with invalid and different email address on submit', function (done) {
@@ -185,7 +185,7 @@ describe('Members application', function () {
       .send('previousEmail=there@wherever.com')
       .expect(200)
       .expect(/Validierungsfehler/)
-      .expect(/Diese Adresse ist schon registriert. Hast Du bereits ein Profil angelegt?/, done);
+      .expect(/Diese Adresse ist schon registriert\. Hast Du bereits ein Profil angelegt?/, done);
   });
 
   it('rejects a member with missing first and last name on submit', function (done) {
@@ -195,8 +195,8 @@ describe('Members application', function () {
       .send('id=0815&&nickname=nuck&previousNickname=nuck&location=x&profession=y&reference=z&email=here@there.org&previousEmail=here@there.org')
       .expect(200)
       .expect(/Validierungsfehler/)
-      .expect(/Vorname ist ein Pflichtfeld./)
-      .expect(/Nachname ist ein Pflichtfeld./, done);
+      .expect(/Vorname ist ein Pflichtfeld\./)
+      .expect(/Nachname ist ein Pflichtfeld\./, done);
   });
 
   it('rejects a member with missing first name who validly changed their nickname and mailaddress on submit', function (done) {
@@ -213,7 +213,7 @@ describe('Members application', function () {
       .send('id=0815&&nickname=nuckNew&previousNickname=nuck&lastname=x&location=x&profession=y&reference=z&email=hereNew@there.org&previousEmail=here@there.org')
       .expect(200)
       .expect(/Validierungsfehler/)
-      .expect(/Vorname ist ein Pflichtfeld./, done);
+      .expect(/Vorname ist ein Pflichtfeld\./, done);
   });
 
   it('rejects a member with invalid nickname and email address on submit, giving two error messages', function (done) {
@@ -233,8 +233,8 @@ describe('Members application', function () {
       .send('previousEmail=there@wherever.com')
       .expect(200)
       .expect(/Validierungsfehler/)
-      .expect(/Dieser Nickname ist leider nicht verfügbar./)
-      .expect(/Diese Adresse ist schon registriert. Hast Du bereits ein Profil angelegt?/, done);
+      .expect(/Dieser Nickname ist leider nicht verfügbar\./)
+      .expect(/Diese Adresse ist schon registriert\. Hast Du bereits ein Profil angelegt?/, done);
   });
 
   it('saves an existing member and does not triggers notification sending', function (done) {
@@ -242,7 +242,7 @@ describe('Members application', function () {
     sinon.stub(membersAPI, 'isValidEmail', function (nickname, callback) { callback(null, true); });
     sinon.stub(groupsAndMembersAPI, 'updateSubscriptions', function (member, oldEmail, subscriptions, callback) { callback(); });
     sinon.stub(membersAPI, 'saveMember', function (member, callback) { callback(null); });
-    var notificationCall = sinon.spy(notifications, 'newMemberRegistered', function () { });
+    var notificationCall = sinon.spy(notifications, 'newMemberRegistered', function () { return undefined; });
 
     // the following stub indicates that the member already exists 
     sinon.stub(groupsAndMembersAPI, 'getUserWithHisGroups', function (nickname, callback) { callback(null, dummymember); });
@@ -261,7 +261,7 @@ describe('Members application', function () {
     sinon.stub(membersAPI, 'isValidEmail', function (nickname, callback) { callback(null, true); });
     sinon.stub(groupsAndMembersAPI, 'updateSubscriptions', function (member, oldEmail, subscriptions, callback) { callback(); });
     sinon.stub(membersAPI, 'saveMember', function (member, callback) { callback(null); });
-    var notificationCall = sinon.spy(notifications, 'newMemberRegistered', function () { });
+    var notificationCall = sinon.spy(notifications, 'newMemberRegistered', function () { return undefined; });
 
     // the following stub indicates that the member not yet exists 
     sinon.stub(groupsAndMembersAPI, 'getUserWithHisGroups', function (nickname, callback) { callback(null); });
