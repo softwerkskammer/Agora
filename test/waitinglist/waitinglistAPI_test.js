@@ -1,7 +1,7 @@
 "use strict";
 
 var sinon = require('sinon').sandbox.create();
-var expect = require('chai').expect;
+var expect = require('must');
 var moment = require('moment-timezone');
 var _ = require('lodash');
 
@@ -46,7 +46,7 @@ describe('Waitinglist API', function () {
 
     it('returns an empty list when the waitinglist is empty', function (done) {
       waitinglistAPI.waitinglistFor('myActivity', function (err, waitinglist) {
-        expect(waitinglist).to.be.empty;
+        expect(waitinglist).to.be.empty();
         done(err);
       });
     });
@@ -58,8 +58,8 @@ describe('Waitinglist API', function () {
         expect(waitinglist.length).to.equal(1);
         expect(waitinglist[0].registrantNickname).to.equal('hansdampf');
         expect(waitinglist[0].resourceName()).to.equal('Meine Ressource');
-        expect(waitinglist[0].registrationDate()).to.not.be.undefined;
-        expect(waitinglist[0].registrationValidUntil()).to.be.undefined;
+        expect(waitinglist[0].registrationDate()).to.not.be(undefined);
+        expect(waitinglist[0].registrationValidUntil()).to.be(undefined);
         done(err);
       });
     });
@@ -79,8 +79,7 @@ describe('Waitinglist API', function () {
 
   describe('- when saving a waitinglist entry -', function () {
 
-    beforeEach(function () {
-    });
+    beforeEach(function () { return undefined; });
 
     it('succeeds no matter whether registration is open or not', function (done) {
       var state = {resources: {Einzelzimmer: {_waitinglist: [
@@ -110,7 +109,7 @@ describe('Waitinglist API', function () {
 
       var args = {nickname: 'memberId', activityUrl: 'activity-url', resourcename: 'Einzelzimmer'};
       waitinglistAPI.saveWaitinglistEntry(args, function (err) {
-        expect(err, "Error").to.exist;
+        expect(err, "Error").to.exist();
         done(); // error condition - do not pass err
       });
     });
@@ -121,7 +120,7 @@ describe('Waitinglist API', function () {
 
       var args = {nickname: 'memberId', activityUrl: 'activity-url', resourcename: 'Einzelzimmer'};
       waitinglistAPI.saveWaitinglistEntry(args, function (err) {
-        expect(err, "Error").to.exist;
+        expect(err, "Error").to.exist();
         done(); // error condition - do not pass err
       });
     });
@@ -180,8 +179,8 @@ describe('Waitinglist API', function () {
 
       var args = {nickname: 'memberId', activityUrl: 'activity-url', resourcename: 'Einzelzimmer'};
       waitinglistAPI.allowRegistrationForWaitinglistEntry(args, function (err) {
-        expect(mailNotification, "Notification was not sent").to.be.undefined;
-        expect(err, "Error").to.exist;
+        expect(mailNotification, "Notification was not sent").to.be(undefined);
+        expect(err, "Error").to.exist();
         done(); // error condition - do not pass err
       });
     });
@@ -202,8 +201,8 @@ describe('Waitinglist API', function () {
 
       var args = {nickname: 'memberId', activityUrl: 'activity-url', resourcename: 'Einzelzimmer'};
       waitinglistAPI.allowRegistrationForWaitinglistEntry(args, function (err) {
-        expect(savedActivity, "Activity was not saved").to.be.undefined;
-        expect(mailNotification, "Notification was not sent").to.be.undefined;
+        expect(savedActivity, "Activity was not saved").to.be(undefined);
+        expect(mailNotification, "Notification was not sent").to.be(undefined);
         var waitinglistMembers = waitinglistMembersOf(activity, 'Einzelzimmer');
         expect(waitinglistMembers, "Activity remains unchanged: memberId was not added").to.not.contain('memberId');
         expect(waitinglistMembers, "Activity remains unchanged: otherId is still there").to.contain('otherId');
@@ -217,8 +216,8 @@ describe('Waitinglist API', function () {
 
       var args = {nickname: 'memberId', activityUrl: 'activity-url', resourcename: 'Einzelzimmer'};
       waitinglistAPI.allowRegistrationForWaitinglistEntry(args, function (err) {
-        expect(mailNotification, "Notification was not sent").to.be.undefined;
-        expect(err, "Error").to.exist;
+        expect(mailNotification, "Notification was not sent").to.be(undefined);
+        expect(err, "Error").to.exist();
         done(); // error condition - do not pass err
       });
     });
@@ -229,8 +228,8 @@ describe('Waitinglist API', function () {
 
       var args = {nickname: 'memberId', activityUrl: 'activity-url', resourcename: 'Einzelzimmer'};
       waitinglistAPI.allowRegistrationForWaitinglistEntry(args, function (err) {
-        expect(mailNotification, "Notification was not sent").to.be.undefined;
-        expect(err, "Error").to.exist;
+        expect(mailNotification, "Notification was not sent").to.be(undefined);
+        expect(err, "Error").to.exist();
         done(); // error condition - do not pass err
       });
     });

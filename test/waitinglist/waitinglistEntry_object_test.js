@@ -2,7 +2,7 @@
 
 require('../../testutil/configureForTest');
 var beans = require('nconf').get('beans');
-var expect = require('chai').expect;
+var expect = require('must');
 
 var WaitinglistEntry = beans.get('waitinglistEntry');
 var moment = require('moment-timezone');
@@ -17,10 +17,10 @@ describe('Waitinglist Entry', function () {
 
   it('without argument yields undefined for each query', function () {
 
-    expect(entryWithoutParam.registrantId()).to.be.undefined;
-    expect(entryWithoutParam.resourceName()).to.be.undefined;
-    expect(entryWithoutParam.registrationDate()).to.be.undefined;
-    expect(entryWithoutParam.registrationValidUntil()).to.be.undefined;
+    expect(entryWithoutParam.registrantId()).to.be(undefined);
+    expect(entryWithoutParam.resourceName()).to.be(undefined);
+    expect(entryWithoutParam.registrationDate()).to.be(undefined);
+    expect(entryWithoutParam.registrationValidUntil()).to.be(undefined);
   });
 
   it('returns the id of the registrant', function () {
@@ -36,18 +36,18 @@ describe('Waitinglist Entry', function () {
   });
 
   it('initially has no registration validity limit', function () {
-    expect(entryWithParam.registrationValidUntil()).to.be.undefined;
+    expect(entryWithParam.registrationValidUntil()).to.be(undefined);
   });
 
   it('has a registration validity limit when it is set', function () {
     entryWithParam.setRegistrationValidityFor("3");
-    expect(entryWithParam.registrationValidUntil()).to.not.be.undefined;
+    expect(entryWithParam.registrationValidUntil()).to.not.be(undefined);
   });
 
   it('can remove the registration validity limit after setting it', function () {
     entryWithParam.setRegistrationValidityFor("3");
     entryWithParam.setRegistrationValidityFor();
-    expect(entryWithParam.registrationValidUntil()).to.be.undefined;
+    expect(entryWithParam.registrationValidUntil()).to.be(undefined);
   });
 
 });
