@@ -21,6 +21,7 @@ module.exports = function (internalAppName, configuredBeans) {
       var i;
       var middleware;
       var app = express();
+      app.enable('view cache');
       app.use(require('cookie-parser')());
       app.use(require('body-parser').urlencoded());
       app.use(i18n.handle);
