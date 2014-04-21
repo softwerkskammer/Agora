@@ -1,6 +1,6 @@
 "use strict";
 
-var expect = require('chai').expect;
+var expect = require('must');
 
 var sinon = require('sinon').sandbox.create();
 
@@ -25,7 +25,7 @@ describe('Members store', function () {
     });
     store.getMemberForId('id', function (err, member) {
       expect(member.nickname()).to.equal(sampleMember.nickname);
-      expect(getById.calledWith('id')).to.be.true;
+      expect(getById.calledWith('id')).to.be(true);
       done(err);
     });
   });
@@ -38,7 +38,7 @@ describe('Members store', function () {
     store.getMembersForIds(['id1', 'id2'], function (err, members) {
       expect(members[0].nickname()).to.equal(sampleMember.nickname);
       expect(members[1].nickname()).to.equal(sampleMember2.nickname);
-      expect(listByIds.calledWith(['id1', 'id2'])).to.be.true;
+      expect(listByIds.calledWith(['id1', 'id2'])).to.be(true);
       done(err);
     });
   });
@@ -58,7 +58,7 @@ describe('Members store', function () {
       done(err);
     });
   });
-  
+
   it('calls persistence.getByField for each member for store.getMembersForEMails and passes on the given callback', function (done) {
     sinon.stub(persistence, 'listByField', function (searchObject, sortOrder, callback) {
       callback(null, sampleList);
@@ -78,7 +78,7 @@ describe('Members store', function () {
     });
     store.getMember('nick', function (err, member) {
       expect(member.nickname()).to.equal(sampleMember.nickname);
-      expect(getByField.called).to.be.true;
+      expect(getByField.called).to.be(true);
       var regex = getByField.args[0][0].nickname;
       expect(regex.toString()).to.equal('/^nick$/i');
       done(err);
@@ -139,14 +139,14 @@ describe('Members store', function () {
     var save = sinon.stub(persistence, 'save', function (member, callback) { callback(); });
 
     store.saveMember(sampleMember, function (err) {
-      expect(save.calledWith(sampleMember.state)).to.be.true;
+      expect(save.calledWith(sampleMember.state)).to.be(true);
       done(err);
     });
   });
 
   it('returns an empty array when asked for all members for empty email list', function (done) {
     store.getMembersForEMails([], function (err, members) {
-      expect(members).to.be.empty;
+      expect(members).to.be.empty();
       done(err);
     });
   });

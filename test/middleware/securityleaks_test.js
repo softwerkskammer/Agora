@@ -2,7 +2,7 @@
 
 var request = require('supertest');
 var sinon = require('sinon').sandbox.create();
-var expect = require('chai').expect;
+var expect = require('must');
 
 var csurf = require('csurf');
 //var passport = require('passport');
@@ -69,7 +69,7 @@ describe('Security regarding', function () {
         .post('/submit')
         .send('id=memberId&firstname=A&lastname=B&nickname=nuck&previousNickname=nuck&location=x&profession=y&reference=z&email=here@there.org&previousEmail=here@there.org')
         .expect(403)
-        .expect(/Du hast einen Fehler gefunden./)
+        .expect(/Du hast einen Fehler gefunden\./)
         .expect(/Error: invalid csrf token/, done);
     });
 
@@ -77,7 +77,7 @@ describe('Security regarding', function () {
       var csrf_token = "csrf token";
       var req = { csrfToken: function () { return csrf_token; } };
       var res = {locals: {}};
-      var next = function () {};
+      var next = function () { return undefined; };
 
       addCsrfTokenToLocals(req, res, next);
 
@@ -106,7 +106,7 @@ describe('Security regarding', function () {
         .expect(/\(node_modules/)
         .expect(/\(lib/)
         // we are on the right page, btw:
-        .expect(/Du hast einen Fehler gefunden./, done);
+        .expect(/Du hast einen Fehler gefunden\./, done);
 
     });
 

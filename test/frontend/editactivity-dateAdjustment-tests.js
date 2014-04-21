@@ -1,7 +1,8 @@
-/* global describe, it, activityDateModel, moment*/
+/*global activityDateModel: false, moment: false */
+/*jslint stupid: true */
 "use strict";
 
-var expect = require('chai').expect;
+var expect = require('must');
 
 // load a normal Javascript file into the node environment:
 var fs = require('fs');
@@ -14,7 +15,6 @@ var includeInThisContext = function (path) {
 includeInThisContext(__dirname + "/../../node_modules/moment-timezone/node_modules/moment/min/moment.min.js");
 includeInThisContext(__dirname + "/../../public/clientscripts/activityDateModel.js");
 
-
 var utc = function (dateString, timeString) {
   return moment.utc(dateString + " " + timeString, 'D.M.YYYY H:m');
 };
@@ -23,7 +23,6 @@ function assertMoment(moment, date, time) {
   expect(moment.format('DD.MM.YYYY')).to.equal(date);
   expect(moment.format('HH:mm')).to.equal(time);
 }
-
 
 describe("Activity Date Model", function () {
 
@@ -53,7 +52,6 @@ describe("Activity Date Model", function () {
 
   });
 
-
   it("moves EndDate backward if StartDate contains a different date and is moved backward", function () {
     var model = activityDateModel("01.09.2013", "12:15");
 
@@ -62,7 +60,7 @@ describe("Activity Date Model", function () {
     assertMoment(result, "14.08.2013", "14:15");
   });
 
-// Time
+  // Time
 
   it("moves EndTime forward if StartTime contains the same time and is moved forward", function () {
     var model = activityDateModel("07.09.2013", "12:15");
@@ -139,7 +137,6 @@ describe("Activity Date Model", function () {
     assertMoment(result, "27.10.2013", "03:15");
   });
 });
-
 
 describe("Input formatter", function () {
 

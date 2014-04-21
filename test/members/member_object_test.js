@@ -2,7 +2,7 @@
 
 var conf = require('nconf');
 
-var expect = require('chai').expect;
+var expect = require('must');
 require('../../testutil/configureForTest');
 
 var Member = conf.get('beans').get('member');
@@ -36,8 +36,8 @@ describe('Member initial filling', function () {
       '"_json" : { "html_url" :"https://github.com/hansdampf", "blog" : "http://hada.wordpress.com" }}}');
 
     var member = new Member().initFromSessionUser(userdata);
-    expect(member.firstname(), 'firstname').to.not.exist;
-    expect(member.lastname(), 'lastname').to.not.exist;
+    expect(member.firstname(), 'firstname').not.to.exist();
+    expect(member.lastname(), 'lastname').not.to.exist();
     expect(member.site(), 'site').to.equal('https://github.com/hansdampf, http://hada.wordpress.com');
   });
 
@@ -49,8 +49,8 @@ describe('Member initial filling', function () {
       '"_json" : { "html_url" :"https://github.com/hansdampf", "blog" : "undefined" }}}');
 
     var member = new Member().initFromSessionUser(userdata);
-    expect(member.firstname(), 'firstname').to.not.exist;
-    expect(member.lastname(), 'lastname').to.not.exist;
+    expect(member.firstname(), 'firstname').not.to.exist();
+    expect(member.lastname(), 'lastname').not.to.exist();
     expect(member.site(), 'site').to.equal('https://github.com/hansdampf');
   });
 
@@ -63,12 +63,12 @@ describe('Member initial filling', function () {
       lastname: 'User'
     };
     var member = new Member(record);
-    expect(member.twitter(), 'twitter').to.not.exist;
-    expect(member.location(), 'location').to.not.exist;
-    expect(member.profession(), 'profession').to.not.exist;
-    expect(member.interests(), 'interest').to.not.exist;
-    expect(member.site(), 'site').to.not.exist;
-    expect(member.reference(), 'reference').to.not.exist;
+    expect(member.twitter(), 'twitter').not.to.exist();
+    expect(member.location(), 'location').not.to.exist();
+    expect(member.profession(), 'profession').not.to.exist();
+    expect(member.interests(), 'interest').not.to.exist();
+    expect(member.site(), 'site').not.to.exist();
+    expect(member.reference(), 'reference').not.to.exist();
   });
 
   it('shows the full name as display-name', function () {
@@ -139,21 +139,26 @@ describe('utility functions', function () {
     var member = new Member({id: 'superuserID', email: 'email1'});
     expect(Member.superuserEmails([ member ])).to.contain('email1');
   });
-  
+
   it('gives wikichange email addresses', function () {
     var member = new Member({notifyOnWikiChanges: true, email: 'email1'});
     expect(Member.wikiNotificationMembers([ member ])).to.contain('email1');
   });
-  
+
   it('can tell if the member is member of a group', function () {
     var member = new Member();
-    member.subscribedGroups = [{id: 'group'}, {id: 'anotherGroup'}];
-    expect(member.isInGroup("group")).to.be.true;
+    member.subscribedGroups = [
+      {id: 'group'},
+      {id: 'anotherGroup'}
+    ];
+    expect(member.isInGroup("group")).to.be(true);
   });
 
   it('can tell if the member is not member of a group', function () {
     var member = new Member();
-    member.subscribedGroups = [{id: 'anotherGroup'}];
-    expect(member.isInGroup("group")).to.be.false;
+    member.subscribedGroups = [
+      {id: 'anotherGroup'}
+    ];
+    expect(member.isInGroup("group")).to.be(false);
   });
 });

@@ -2,7 +2,7 @@
 
 require('../../testutil/configureForTest');
 var conf = require('nconf');
-var expect = require('chai').expect;
+var expect = require('must');
 var sinon = require('sinon').sandbox.create();
 
 var beans = conf.get('beans');
@@ -16,7 +16,7 @@ describe('ResourceRegistrationRenderer', function () {
   var resourceNamesList;
 
   function resultForState(state) {
-    sinon.stub(resource, 'registrationStateFor', function () { return  state; });
+    sinon.stub(resource, 'registrationStateFor', function () { return state; });
     return resourceRegistrationRenderer.htmlRepresentationOf(activity, 'resourceName');
   }
 
@@ -33,7 +33,7 @@ describe('ResourceRegistrationRenderer', function () {
 
   it('gives values for state "fixed"', function () {
     var result = resultForState(Resource.fixed);
-    expect(result.url).to.not.exist;
+    expect(result.url).to.not.exist();
     expect(result.displayText).to.equal('activities.unsubscribe_not_possible');
   });
 
@@ -65,13 +65,13 @@ describe('ResourceRegistrationRenderer', function () {
 
   it('gives values for state "registrationElsewhere"', function () {
     var result = resultForState(Resource.registrationElsewhere);
-    expect(result.url).to.not.exist;
+    expect(result.url).to.not.exist();
     expect(result.displayText).to.equal('activities.registration_not_here');
   });
 
   it('gives values for state "registrationClosed"', function () {
     var result = resultForState(Resource.registrationClosed);
-    expect(result.url).to.not.exist;
+    expect(result.url).to.not.exist();
     expect(result.displayText).to.equal('activities.registration_not_now');
   });
 
@@ -89,7 +89,7 @@ describe('ResourceRegistrationRenderer', function () {
 
   it('gives values for state "full"', function () {
     var result = resultForState(Resource.full);
-    expect(result.url).to.not.exist;
+    expect(result.url).to.not.exist();
     expect(result.displayText).to.equal('activities.full');
   });
 

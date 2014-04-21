@@ -1,3 +1,4 @@
+/*jslint stupid: true */
 "use strict";
 var nconf = require('../configure');
 var Beans = require('CoolBeans');
@@ -19,8 +20,11 @@ nconf.set('superuser', ['superuserID']);
 // beans:
 var productionBeans = require('../config/beans.json');
 var testBeans = require('../config/testbeans.json');
-for (var bean in testBeans) {
-  productionBeans[bean] = testBeans[bean];
+var bean;
+for (bean in testBeans) {
+  if (testBeans.hasOwnProperty(bean)) {
+    productionBeans[bean] = testBeans[bean];
+  }
 }
 fs.writeFileSync('./testutil/tempbeans.json', JSON.stringify(productionBeans));
 

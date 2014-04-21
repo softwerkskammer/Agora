@@ -1,7 +1,7 @@
 "use strict";
 
 var nconf = require('../../testutil/configureForTestWithDB');
-var expect = require('chai').expect;
+var expect = require('must');
 
 var beans = nconf.get('beans');
 var persistence = beans.get('activitiesPersistence');

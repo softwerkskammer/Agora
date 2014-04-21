@@ -2,7 +2,7 @@
 
 var conf = require('../../testutil/configureForTest');
 var misc = conf.get('beans').get('misc');
-var expect = require('chai').expect;
+var expect = require('must');
 var moment = require('moment-timezone');
 var wikiAPI = conf.get('beans').get('wikiAPI');
 
@@ -185,17 +185,17 @@ describe('parseBlogPost', function () {
       "date": moment("2013-11-01"),
       "teaser": "Und beim nächsten Mal haben wir dann."};
     expect(result.title).to.equal(expected.title);
-    expect(result.date.isValid()).to.be.true;
-    expect(result.date.isSame(expected.date)).to.be.true;
+    expect(result.date.isValid()).to.be(true);
+    expect(result.date.isSame(expected.date)).to.be(true);
     expect(result.teaser).to.equal(expected.teaser);
   });
 
   it('returns undefined for empty input', function () {
-    expect(misc.parseBlogPost("", "", wikiAPI.BLOG_ENTRY_REGEX)).to.be.undefined;
+    expect(misc.parseBlogPost("", "", wikiAPI.BLOG_ENTRY_REGEX)).to.be(undefined);
   });
 
   it('returns undefined if the date in the path is malformed', function () {
-    expect(misc.parseBlogPost("blog_2000-01-0LeanCoffeeTest.md", "post", wikiAPI.BLOG_ENTRY_REGEX)).to.be.undefined;
+    expect(misc.parseBlogPost("blog_2000-01-0LeanCoffeeTest.md", "post", wikiAPI.BLOG_ENTRY_REGEX)).to.be(undefined);
   });
 
   it('returns properly if body is missing', function () {
@@ -205,8 +205,8 @@ describe('parseBlogPost', function () {
     var result = misc.parseBlogPost(path, post, wikiAPI.BLOG_ENTRY_REGEX);
 
     expect(result.title).to.equal("Lean Coffee November 2013");
-    expect(result.teaser).to.be.undefined;
-    expect(result.date.isValid()).to.be.true;
+    expect(result.teaser).to.be(undefined);
+    expect(result.date.isValid()).to.be(true);
   });
 
   it('can parse a multitude of titles', function () {
@@ -229,8 +229,8 @@ describe('parseBlogPost', function () {
       return misc.parseBlogPost("blog_" + datestring + "LeanCoffeeTest.md", "#Lean", wikiAPI.BLOG_ENTRY_REGEX).date;
     }
 
-    expect(parseDate("2013-02-01").isSame(date)).to.be.true;
-    expect(parseDate("2013-02-1").isSame(date)).to.be.true;
-    expect(parseDate("2013-2-1").isSame(date)).to.be.true;
+    expect(parseDate("2013-02-01").isSame(date)).to.be(true);
+    expect(parseDate("2013-02-1").isSame(date)).to.be(true);
+    expect(parseDate("2013-2-1").isSame(date)).to.be(true);
   });
 });

@@ -2,7 +2,7 @@
 
 require('../../testutil/configureForTest');
 var moment = require('moment-timezone');
-var expect = require('chai').expect;
+var expect = require('must');
 
 var beans = require('nconf').get('beans');
 var Activity = beans.get('activity');
@@ -13,40 +13,40 @@ describe('Activity\'s Addon Configuration', function () {
 
   it('answers false if questioned for existence when not existing', function () {
     var activity = new Activity({ });
-    expect(activity.hasAddonConfig()).to.be.false;
+    expect(activity.hasAddonConfig()).to.be(false);
   });
 
   it('answers true if questioned for existence when existing', function () {
     var activity = new Activity({ _addonConfig: {} });
-    expect(activity.hasAddonConfig()).to.be.true;
+    expect(activity.hasAddonConfig()).to.be(true);
   });
 
   it('adds the addonConfig edited from UI', function () {
     var activity = new Activity();
-    expect(activity.hasAddonConfig()).to.be.false;
+    expect(activity.hasAddonConfig()).to.be(false);
     activity.fillAddonConfig({homeAddress: 'home sweet home'});
-    expect(activity.hasAddonConfig()).to.be.true;
+    expect(activity.hasAddonConfig()).to.be(true);
   });
 
   it('adds the addonConfig edited from UI - even if only the information is filled', function () {
     var activity = new Activity();
-    expect(activity.hasAddonConfig()).to.be.false;
+    expect(activity.hasAddonConfig()).to.be(false);
     activity.fillAddonConfig({addonInformation: 'info'});
-    expect(activity.hasAddonConfig()).to.be.true;
+    expect(activity.hasAddonConfig()).to.be(true);
   });
 
   it('removes the addonConfig edited from UI', function () {
     var activity = new Activity({ _addonConfig: {} });
-    expect(activity.hasAddonConfig()).to.be.true;
+    expect(activity.hasAddonConfig()).to.be(true);
     activity.fillAddonConfig({});
-    expect(activity.hasAddonConfig()).to.be.false;
+    expect(activity.hasAddonConfig()).to.be(false);
   });
 
   it('deletes the deposit from the addonConfig if it is not set via the UI', function () {
     var activity = new Activity({_addonConfig: {} });
-    expect(activity.addonConfig().deposit()).to.be.falsy;
+    expect(activity.addonConfig().deposit()).to.be.falsy();
     activity.fillAddonConfig({deposit: 100});
-    expect(activity.addonConfig().deposit()).to.be.truthy;
+    expect(activity.addonConfig().deposit()).to.be.truthy();
   });
 
 });
@@ -54,7 +54,7 @@ describe('Activity\'s Addon Configuration', function () {
 describe('Addon Configuration', function () {
   it('has no default deposit and default fee', function () {
     var addonConfig = new AddonConfig();
-    expect(addonConfig.deposit()).to.not.exist;
+    expect(addonConfig.deposit()).to.not.exist();
   });
 
   it('has fee of 3.3 for a deposit of 100', function () {
@@ -72,10 +72,10 @@ describe('Addon Configuration', function () {
 describe('Addon', function () {
   it('initially has no addresses, T-Shirt size or roommate', function () {
     var addon = new Addon();
-    expect(addon.homeAddress()).to.be.undefined;
-    expect(addon.billingAddress()).to.be.undefined;
-    expect(addon.tShirtSize()).to.be.undefined;
-    expect(addon.roommate()).to.be.undefined;
+    expect(addon.homeAddress()).to.be(undefined);
+    expect(addon.billingAddress()).to.be(undefined);
+    expect(addon.tShirtSize()).to.be(undefined);
+    expect(addon.roommate()).to.be(undefined);
   });
 
   it('is filled from the UI', function () {
@@ -99,8 +99,8 @@ describe('Addon', function () {
     var earlier = moment().subtract(1, 'second');
     addon.noteMoneyTransfer();
     var later = moment().add(1, 'second');
-    expect(earlier.isBefore(addon.moneyTransferred()), 'Earlier is before money transfer').to.be.true;
-    expect(later.isAfter(addon.moneyTransferred()), 'Later is after money transfer').to.be.true;
+    expect(earlier.isBefore(addon.moneyTransferred()), 'Earlier is before money transfer').to.be(true);
+    expect(later.isAfter(addon.moneyTransferred()), 'Later is after money transfer').to.be(true);
   });
 
   it('sets credit card payment to now', function () {
@@ -108,30 +108,30 @@ describe('Addon', function () {
     var earlier = moment().subtract(1, 'second');
     addon.noteCreditCardPayment();
     var later = moment().add(1, 'second');
-    expect(earlier.isBefore(addon.creditCardPaid()), 'Earlier is before credit card payment').to.be.true;
-    expect(later.isAfter(addon.creditCardPaid()), 'Later is after credit card payment').to.be.true;
+    expect(earlier.isBefore(addon.creditCardPaid()), 'Earlier is before credit card payment').to.be(true);
+    expect(later.isAfter(addon.creditCardPaid()), 'Later is after credit card payment').to.be(true);
   });
 
   it('says that payment is done when money transfer was chosen', function () {
     var addon = new Addon();
-    expect(addon.paymentDone()).to.be.false;
+    expect(addon.paymentDone()).to.be(false);
 
     addon.noteMoneyTransfer();
-    expect(addon.paymentDone()).to.be.true;
+    expect(addon.paymentDone()).to.be(true);
 
     addon.noteCreditCardPayment();
-    expect(addon.paymentDone()).to.be.true;
+    expect(addon.paymentDone()).to.be(true);
   });
 
   it('says that payment is done when credit card payment was chosen', function () {
     var addon = new Addon();
-    expect(addon.paymentDone()).to.be.false;
+    expect(addon.paymentDone()).to.be(false);
 
     addon.noteCreditCardPayment();
-    expect(addon.paymentDone()).to.be.true;
+    expect(addon.paymentDone()).to.be(true);
 
     addon.noteMoneyTransfer();
-    expect(addon.paymentDone()).to.be.true;
+    expect(addon.paymentDone()).to.be(true);
   });
 
 

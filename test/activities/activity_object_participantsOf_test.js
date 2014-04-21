@@ -2,7 +2,7 @@
 
 require('../../testutil/configureForTest');
 var conf = require('nconf');
-var expect = require('chai').expect;
+var expect = require('must');
 
 var Activity = conf.get('beans').get('activity');
 var Member = conf.get('beans').get('member');

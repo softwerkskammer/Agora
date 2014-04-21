@@ -1,6 +1,6 @@
 "use strict";
 
-var expect = require('chai').expect;
+var expect = require('must');
 var sinon = require('sinon').sandbox.create();
 var beans = require('../../testutil/configureForTest').get('beans');
 
@@ -57,9 +57,9 @@ describe('MailsenderAPI', function () {
   describe('preparing data', function () {
     it('for showing the edit form for an activity', function (done) {
       api.dataForShowingMessageForActivity(activityURL, 'de', function (err, result) {
-        expect(result.message).to.exist;
-        expect(result.regionalgroups).to.exist;
-        expect(result.themegroups).to.exist;
+        expect(result.message).to.exist();
+        expect(result.regionalgroups).to.exist();
+        expect(result.themegroups).to.exist();
         expect(result.successURL).to.contain(activityURL);
         done(err);
       });
@@ -67,9 +67,9 @@ describe('MailsenderAPI', function () {
 
     it('for showing the edit form for a member', function (done) {
       api.dataForShowingMessageToMember(nickname, function (err, result) {
-        expect(result.message).to.exist;
-        expect(result.regionalgroups).to.not.exist;
-        expect(result.themegroups).to.not.exist;
+        expect(result.message).to.exist();
+        expect(result.regionalgroups).not.to.exist();
+        expect(result.themegroups).not.to.exist();
         expect(result.successURL).to.contain(nickname);
         done(err);
       });
@@ -114,7 +114,7 @@ describe('MailsenderAPI', function () {
       emptyActivity.participants = [new Member({email: emailAddress})];
 
       api.sendMailToParticipantsOf(activityURL, message, function (err, statusmessage) {
-        expect(sendmail.calledOnce).to.be.ok;
+        expect(sendmail.calledOnce).to.be(true);
         var transportobject = sendmail.args[0][0];
         expect(transportobject.bcc).to.contain(emailAddress);
         expect(transportobject.html).to.contain('mark down');
@@ -125,7 +125,7 @@ describe('MailsenderAPI', function () {
 
     it('does not send mail if no participants', function (done) {
       api.sendMailToParticipantsOf(activityURL, message, function (err, statusmessage) {
-        expect(sendmail.calledOnce).to.be.ok;
+        expect(sendmail.calledOnce).to.be(true);
         expect(statusmessage.contents().type).to.equal('alert-danger');
         done();
       });
@@ -133,8 +133,8 @@ describe('MailsenderAPI', function () {
 
     it('does not send mail if activity canot be found', function (done) {
       api.sendMailToParticipantsOf(null, message, function (err, statusmessage) {
-        expect(sendmail.calledOnce).to.not.be.ok;
-        expect(err).to.exist;
+        expect(sendmail.calledOnce).to.not.be(true);
+        expect(err).to.exist();
         expect(statusmessage.contents().type).to.equal('alert-danger');
         done();
       });
@@ -144,7 +144,7 @@ describe('MailsenderAPI', function () {
   describe('sending mail to distinct member', function () {
     it('sends the email', function (done) {
       api.sendMailToMember('nickname', message, function (err, statusmessage) {
-        expect(sendmail.calledOnce).to.be.ok;
+        expect(sendmail.calledOnce).to.be(true);
         var transportobject = sendmail.args[0][0];
         expect(transportobject.bcc).to.contain('email@mail.de');
         expect(transportobject.html).to.contain('mark down');
@@ -155,7 +155,7 @@ describe('MailsenderAPI', function () {
 
     it('does not send the email if member cannot be found', function (done) {
       api.sendMailToMember(null, message, function (err, statusmessage) {
-        expect(err).to.not.exist;
+        expect(err).not.to.exist();
         expect(statusmessage.contents().type).to.equal('alert-danger');
         done();
       });
@@ -163,7 +163,7 @@ describe('MailsenderAPI', function () {
 
     it('does not send the email if finding member causes error', function (done) {
       api.sendMailToMember('broken', message, function (err, statusmessage) {
-        expect(err).to.exist;
+        expect(err).to.exist();
         expect(statusmessage.contents().type).to.equal('alert-danger');
         done();
       });
@@ -181,7 +181,7 @@ describe('MailsenderAPI', function () {
       var markdown = '';
       var member = new Member({nickname: 'nick', firstname: 'first', lastname: 'last'});
       api.sendResignment(markdown, member, function (err, statusmessage) {
-        expect(sendmail.calledOnce).to.be.ok;
+        expect(sendmail.calledOnce).to.be(true);
         var transportobject = sendmail.args[0][0];
         expect(transportobject.from).to.contain('first last');
         expect(transportobject.subject).to.contain('Austrittswunsch');
@@ -193,7 +193,7 @@ describe('MailsenderAPI', function () {
 
     it('does not send the email if member cannot be found', function (done) {
       api.sendMailToMember(null, message, function (err, statusmessage) {
-        expect(err).to.not.exist;
+        expect(err).not.to.exist();
         expect(statusmessage.contents().type).to.equal('alert-danger');
         done();
       });
@@ -201,7 +201,7 @@ describe('MailsenderAPI', function () {
 
     it('does not send the email if finding member causes error', function (done) {
       api.sendMailToMember('broken', message, function (err, statusmessage) {
-        expect(err).to.exist;
+        expect(err).to.exist();
         expect(statusmessage.contents().type).to.equal('alert-danger');
         done();
       });
@@ -229,7 +229,7 @@ describe('MailsenderAPI', function () {
         callback(null, group);
       });
       api.sendMailToInvitedGroups(['GroupA', 'GroupB'], message, function (err, statusmessage) {
-        expect(sendmail.calledOnce).to.be.ok;
+        expect(sendmail.calledOnce).to.be(true);
         var transportobject = sendmail.args[0][0];
         expect(transportobject.bcc).to.contain('memberA');
         expect(transportobject.bcc).to.contain('memberB');
@@ -241,8 +241,8 @@ describe('MailsenderAPI', function () {
 
     it('does not send to members if no groups selected', function (done) {
       api.sendMailToInvitedGroups([], message, function (err, statusmessage) {
-        expect(sendmail.calledOnce).to.not.be.ok;
-        expect(err).to.not.exist;
+        expect(sendmail.calledOnce).to.not.be(true);
+        expect(err).not.to.exist();
         expect(statusmessage.contents().type).to.equal('alert-danger');
         done();
       });
@@ -250,8 +250,8 @@ describe('MailsenderAPI', function () {
 
     it('does not send to members if finding groups causes error', function (done) {
       api.sendMailToInvitedGroups(null, message, function (err, statusmessage) {
-        expect(sendmail.calledOnce).to.not.be.ok;
-        expect(err).to.exist;
+        expect(sendmail.calledOnce).to.not.be(true);
+        expect(err).to.exist();
         expect(statusmessage.contents().type).to.equal('alert-danger');
         done();
       });
@@ -263,8 +263,8 @@ describe('MailsenderAPI', function () {
       });
 
       api.sendMailToInvitedGroups(['GroupA', 'GroupB'], message, function (err, statusmessage) {
-        expect(sendmail.calledOnce).to.not.be.ok;
-        expect(err).to.exist;
+        expect(sendmail.calledOnce).to.not.be(true);
+        expect(err).to.exist();
         expect(statusmessage.contents().type).to.equal('alert-danger');
         done();
       });

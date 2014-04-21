@@ -3,7 +3,7 @@
 var sinon = require('sinon').sandbox.create();
 var beans = require('../../testutil/configureForTest').get('beans');
 
-var expect = require('chai').expect;
+var expect = require('must');
 
 var Member = beans.get('member');
 var Group = beans.get('group');
@@ -42,8 +42,8 @@ describe('Groups and Members API (Subscriptions)', function () {
       sinon.stub(groupsAPI, 'getSympaUsersOfList', function (listname, callback) { callback(null, []); });
 
       groupsAndMembersAPI.updateAdminlistSubscriptions(member.id(), function (err) {
-        expect(addUserToListSpy.called, 'subscribe is called').to.be.true;
-        expect(removeUserFromListSpy.called, 'unsubscribe is called').to.be.false;
+        expect(addUserToListSpy.called, 'subscribe is called').to.be(true);
+        expect(removeUserFromListSpy.called, 'unsubscribe is called').to.be(false);
         done(err);
       });
     });
@@ -52,8 +52,8 @@ describe('Groups and Members API (Subscriptions)', function () {
       sinon.stub(groupsAPI, 'getSympaUsersOfList', function (listname, callback) { callback(null, [email]); });
 
       groupsAndMembersAPI.updateAdminlistSubscriptions(member.id(), function (err) {
-        expect(addUserToListSpy.called, 'subscribe is called').to.be.false;
-        expect(removeUserFromListSpy.called, 'unsubscribe is called').to.be.true;
+        expect(addUserToListSpy.called, 'subscribe is called').to.be(false);
+        expect(removeUserFromListSpy.called, 'unsubscribe is called').to.be(true);
         done(err);
       });
     });
@@ -64,8 +64,8 @@ describe('Groups and Members API (Subscriptions)', function () {
       sinon.stub(groupsAPI, 'getSympaUsersOfList', function (listname, callback) { callback(null, [email]); });
 
       groupsAndMembersAPI.updateAdminlistSubscriptions(member.id(), function (err) {
-        expect(addUserToListSpy.called, 'subscribe is called').to.be.false;
-        expect(removeUserFromListSpy.called, 'unsubscribe is called').to.be.false;
+        expect(addUserToListSpy.called, 'subscribe is called').to.be(false);
+        expect(removeUserFromListSpy.called, 'unsubscribe is called').to.be(false);
         done(err);
       });
     });
@@ -74,8 +74,8 @@ describe('Groups and Members API (Subscriptions)', function () {
       sinon.stub(groupsAPI, 'getSympaUsersOfList', function (listname, callback) { callback(null, []); });
 
       groupsAndMembersAPI.updateAdminlistSubscriptions(member.id(), function (err) {
-        expect(addUserToListSpy.called, 'subscribe is called').to.be.false;
-        expect(removeUserFromListSpy.called, 'unsubscribe is called').to.be.false;
+        expect(addUserToListSpy.called, 'subscribe is called').to.be(false);
+        expect(removeUserFromListSpy.called, 'unsubscribe is called').to.be(false);
         done(err);
       });
     });
@@ -93,7 +93,7 @@ describe('Groups and Members API (Subscriptions)', function () {
 
     it('calls groupAPI to perform saving', function (done) {
       groupsAndMembersAPI.saveGroup(groupA, function (err) {
-        expect(createOrSaveGroupSpy.called, 'save in GroupsAPI is called').to.be.true;
+        expect(createOrSaveGroupSpy.called, 'save in GroupsAPI is called').to.be(true);
         done(err);
       });
     });
@@ -102,8 +102,8 @@ describe('Groups and Members API (Subscriptions)', function () {
       groupA.organizers.push('id');
 
       groupsAndMembersAPI.saveGroup(groupA, function (err) {
-        expect(getMemberForIdSpy.called, 'getMemberForID in MembersAPI is called').to.be.true;
-        expect(addUserToListSpy.called, 'subscribe in GroupsAPI is called').to.be.true;
+        expect(getMemberForIdSpy.called, 'getMemberForID in MembersAPI is called').to.be(true);
+        expect(addUserToListSpy.called, 'subscribe in GroupsAPI is called').to.be(true);
         expect(addUserToListSpy.args[0][1]).to.equal('admins');
         done(err);
       });
@@ -111,8 +111,8 @@ describe('Groups and Members API (Subscriptions)', function () {
 
     it('does not call membersAPI to retrieve member if not in organizers (and does not subscribe)', function (done) {
       groupsAndMembersAPI.saveGroup(groupA, function (err) {
-        expect(getMemberForIdSpy.called, 'getMemberForID in MembersAPI is called').to.be.false;
-        expect(addUserToListSpy.called, 'subscribe in GroupsAPI is called').to.be.false;
+        expect(getMemberForIdSpy.called, 'getMemberForID in MembersAPI is called').to.be(false);
+        expect(addUserToListSpy.called, 'subscribe in GroupsAPI is called').to.be(false);
         done(err);
       });
     });
@@ -131,7 +131,7 @@ describe('Groups and Members API (Subscriptions)', function () {
 
     it('calls groupAPI to perform saving', function (done) {
       groupsAndMembersAPI.updateSubscriptions(member, '', [], function (err) {
-        expect(updateSubscriptionsSpy.called, 'updateSubscriptions in GroupsAPI is called').to.be.true;
+        expect(updateSubscriptionsSpy.called, 'updateSubscriptions in GroupsAPI is called').to.be(true);
         done(err);
       });
     });
@@ -140,7 +140,7 @@ describe('Groups and Members API (Subscriptions)', function () {
       groupA.organizers.push('id');
 
       groupsAndMembersAPI.updateSubscriptions(member, '', ['groupA'], function (err) {
-        expect(addUserToListSpy.called, 'subscribe in GroupsAPI is called').to.be.true;
+        expect(addUserToListSpy.called, 'subscribe in GroupsAPI is called').to.be(true);
         expect(addUserToListSpy.args[0][1]).to.equal('admins');
         done(err);
       });
@@ -150,7 +150,7 @@ describe('Groups and Members API (Subscriptions)', function () {
       sympaUsers.push(email);
 
       groupsAndMembersAPI.updateSubscriptions(member, '', ['groupA'], function (err) {
-        expect(removeUserFromListSpy.called, 'subscribe in GroupsAPI is called').to.be.true;
+        expect(removeUserFromListSpy.called, 'subscribe in GroupsAPI is called').to.be(true);
         expect(removeUserFromListSpy.args[0][1]).to.equal('admins');
         done(err);
       });
@@ -171,7 +171,7 @@ describe('Groups and Members API (Subscriptions)', function () {
 
     it('calls groupAPI to perform saving and subscribes only to groupA', function (done) {
       groupsAndMembersAPI.subscribeMemberToGroup(member, 'groupA', function (err) {
-        expect(addUserToListSpy.calledOnce, 'subscribe in GroupsAPI is called').to.be.true;
+        expect(addUserToListSpy.calledOnce, 'subscribe in GroupsAPI is called').to.be(true);
         expect(addUserToListSpy.args[0][1]).to.equal('groupA');
         done(err);
       });
@@ -181,7 +181,7 @@ describe('Groups and Members API (Subscriptions)', function () {
       groupA.organizers.push('id');
       subscribedGroups.push(groupA);
       groupsAndMembersAPI.subscribeMemberToGroup(member, 'groupA', function (err) {
-        expect(addUserToListSpy.calledTwice, 'subscribe in GroupsAPI is called twice').to.be.true;
+        expect(addUserToListSpy.calledTwice, 'subscribe in GroupsAPI is called twice').to.be(true);
         expect(addUserToListSpy.args[0][1]).to.equal('groupA');
         expect(addUserToListSpy.args[1][1]).to.equal('admins'); // 2nd call
         done(err);
@@ -190,7 +190,7 @@ describe('Groups and Members API (Subscriptions)', function () {
 
     it('calls groupAPI to perform saving and unsubscribes only from groupA', function (done) {
       groupsAndMembersAPI.unsubscribeMemberFromGroup(member, 'groupA', function (err) {
-        expect(removeUserFromListSpy.calledOnce, 'unsubscribe in GroupsAPI is called').to.be.true;
+        expect(removeUserFromListSpy.calledOnce, 'unsubscribe in GroupsAPI is called').to.be(true);
         expect(removeUserFromListSpy.args[0][1]).to.equal('groupA');
         done(err);
       });
@@ -200,7 +200,7 @@ describe('Groups and Members API (Subscriptions)', function () {
       groupA.organizers.push('id');
       sympaUsers.push(email);
       groupsAndMembersAPI.unsubscribeMemberFromGroup(member, 'groupA', function (err) {
-        expect(removeUserFromListSpy.calledTwice, 'unsubscribe in GroupsAPI is called twice').to.be.true;
+        expect(removeUserFromListSpy.calledTwice, 'unsubscribe in GroupsAPI is called twice').to.be(true);
         expect(removeUserFromListSpy.args[0][1]).to.equal('groupA');
         expect(removeUserFromListSpy.args[1][1]).to.equal('admins'); // 2nd call
         done(err);

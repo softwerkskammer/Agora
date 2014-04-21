@@ -18,13 +18,13 @@ module.exports = function (grunt) {
         jshintrc: '.jshintrc'
       }
     },
-    jslint: { // configure the task
-      // lint your project's server code
+    jslint: {
       server: {
-        src: [ // some example files
+        src: [
+          '*.js',
           'lib/**/*.js'
         ],
-        directives: { // example directives
+        directives: {
           indent: 2,
           node: true,
           nomen: true,
@@ -33,8 +33,30 @@ module.exports = function (grunt) {
           vars: true
         },
         options: {
-          edition: 'latest', // specify an edition of jslint or use 'dir/mycustom-jslint.js' for own path
-          errorsOnly: true, // only display errors
+          edition: 'latest',
+          errorsOnly: true,
+          failOnError: true
+        }
+      },
+      servertests: {
+        src: [
+          'test/**/*.js',
+          'testWithDB/**/*.js',
+          'testutil/**/*.js'
+        ],
+        directives: {
+          ass: true,
+          indent: 2,
+          node: true,
+          nomen: true,
+          todo: true,
+          unparam: true,
+          vars: true,
+          predef: ['afterEach', 'after', 'beforeEach', 'before', 'describe', 'it']
+        },
+        options: {
+          edition: 'latest',
+          errorsOnly: true,
           failOnError: true
         }
       }
@@ -147,7 +169,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-jslint');
 
   // Default task.
-  grunt.registerTask('default', ['less', 'concat', 'jslint:server', 'jshint', 'qunit', 'mocha_istanbul']);
+  grunt.registerTask('default', ['less', 'concat', 'jslint:server', 'jslint:servertests', 'jshint', 'qunit', 'mocha_istanbul']);
 
   // Travis-CI task
   grunt.registerTask('travis', ['default']);

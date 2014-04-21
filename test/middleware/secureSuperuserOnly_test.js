@@ -3,7 +3,6 @@
 var conf = require('../../testutil/configureForTest');
 
 var redirectIfNotSuperuser = conf.get('beans').get('secureSuperuserOnly');
-//var expect = require('chai').expect;
 
 describe('redirectIfNotSuperuser', function () {
 

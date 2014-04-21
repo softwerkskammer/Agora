@@ -3,7 +3,7 @@
 var request = require('supertest');
 var sinon = require('sinon');
 var sinonSandbox = sinon.sandbox.create();
-var expect = require('chai').expect;
+var expect = require('must');
 var moment = require('moment-timezone');
 
 var beans = require('../../testutil/configureForTest').get('beans');
@@ -33,7 +33,7 @@ describe('Mail content page', function () {
       .get('/message/mailID')
       .expect(200)
       .expect(/Keine E-Mails/, function (err) {
-        expect(mailForId.calledOnce).to.be.ok;
+        expect(mailForId.calledOnce).to.be(true);
         done(err);
       });
   });
@@ -49,7 +49,7 @@ describe('Mail content page', function () {
       .get('/message/mailID')
       .expect(200)
       .expect(/<div>Html message 1<\/div>/, function (err) {
-        expect(mailForId.calledOnce).to.be.ok;
+        expect(mailForId.calledOnce).to.be(true);
         done(err);
       });
   });
@@ -64,8 +64,8 @@ describe('Mail content page', function () {
     request(app)
       .get('/message/mailID')
       .expect(200)
-      .expect(/<div>Html message 1: ...@... Tel: ...<\/div>/, function (err) {
-        expect(mailForId.calledOnce).to.be.ok;
+      .expect(/<div>Html message 1: \.\.\.@\.\.\. Tel: \.\.\.<\/div>/, function (err) {
+        expect(mailForId.calledOnce).to.be(true);
         done(err);
       });
   });
@@ -82,7 +82,7 @@ describe('Mail content page', function () {
       .get('/message/mailID')
       .expect(200)
       .expect(/href="\/members\/nigg"/, function (err) {
-        expect(mailForId.calledOnce).to.be.ok;
+        expect(mailForId.calledOnce).to.be(true);
         done(err);
       });
   });
@@ -176,7 +176,7 @@ describe('Mail index page', function () {
   });
 
   it('references sender member page if available', function (done) {
-    var displayedMailHeader = new Mail({
+    displayedMailHeader = new Mail({
       id: 'Mail 1'
     });
     stubMailHeaders([displayedMailHeader]);
@@ -191,12 +191,12 @@ describe('Mail index page', function () {
   });
 
   it('references sender member page inside the thread', function (done) {
-    var displayedMailHeader1 = new Mail({id: 'Mail 1', subject: 'Mail 1', references: [],
-      group: "group"
-    });
-    var displayedMailHeader2 = new Mail({id: 'Mail 2', subject: 'Mail 2', references: ['Mail 1'],
-      from: {name: 'Sender Name 2', id: 'sender ID'}, group: 'group'
-    });
+    var displayedMailHeader1 = new Mail(
+      {id: 'Mail 1', subject: 'Mail 1', references: [], group: "group" }
+    );
+    var displayedMailHeader2 = new Mail(
+      {id: 'Mail 2', subject: 'Mail 2', references: ['Mail 1'], from: {name: 'Sender Name 2', id: 'sender ID'}, group: 'group' }
+    );
     stubMailHeaders([displayedMailHeader1, displayedMailHeader2]);
     displayedMailHeader1.member = member;
 

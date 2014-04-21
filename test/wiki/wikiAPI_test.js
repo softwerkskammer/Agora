@@ -1,7 +1,7 @@
 "use strict";
 
 var sinon = require('sinon').sandbox.create();
-var expect = require('chai').expect;
+var expect = require('must');
 var _ = require('lodash');
 var beans = require('../../testutil/configureForTest').get('beans');
 var wikiAPI = beans.get('wikiAPI');
@@ -42,8 +42,8 @@ describe('Wiki API', function () {
 
     it('returns an error if the requested page is not found', function (done) {
       wikiAPI.showPage(nonExistingPage, '11', function (err, cont) {
-        expect(err).to.exist;
-        expect(cont).to.not.exist;
+        expect(err).to.exist();
+        expect(cont).to.not.exist();
         done(); // error condition - do not pass err
       });
     });
@@ -61,7 +61,7 @@ describe('Wiki API', function () {
     it('returns the content of the file to edit if it exists', function (done) {
       wikiAPI.pageEdit('README', function (err, cont, metadata) {
         expect(content).to.equal(cont);
-        expect(metadata).to.be.empty;
+        expect(metadata).to.be.empty();
         done(err);
       });
     });
@@ -119,19 +119,19 @@ describe('WikiAPI (getBlogPosts)', function () {
 
   it('returns two properly parsed blog posts for the group internet', function (done) {
     wikiAPI.getBlogpostsForGroup("internet", function (err, result) {
-      expect(result.length === 2).to.be.true;
+      expect(result.length === 2).to.be(true);
 
       var post1 = result[0];
       expect(post1.title).to.equal("Lean Coffee November 2013");
       expect(post1.teaser).to.equal("Und beim nächsten Mal haben wir dann.");
       expect(post1.path).to.equal("internet/blog_2013-11-01LeanCoffeeTest");
-      expect(post1.date.isSame(new moment("2013-11-01"))).to.be.true;
+      expect(post1.date.isSame(moment("2013-11-01"))).to.be(true);
 
       var post2 = result[1];
       expect(post2.title).to.equal("Agora Code-Kata Oktober 2013");
       expect(post2.teaser).to.equal("Weil viele uns weder JavaScript noch populäre JavaScript...");
       expect(post2.path).to.equal("internet/blog_2013-10-01AgoraCodeKata");
-      expect(post2.date.isSame(new moment("2013-10-01"))).to.be.true;
+      expect(post2.date.isSame(moment("2013-10-01"))).to.be(true);
 
       done(err);
     });
@@ -139,7 +139,7 @@ describe('WikiAPI (getBlogPosts)', function () {
 
   it('returns no blog posts if there are none', function (done) {
     wikiAPI.getBlogpostsForGroup("alle", function (err, result) {
-      expect(result.length === 0).to.be.true;
+      expect(result.length === 0).to.be(true);
       done(err);
     });
   });

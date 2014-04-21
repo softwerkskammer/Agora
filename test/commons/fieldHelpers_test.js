@@ -2,7 +2,7 @@
 
 var conf = require('../../testutil/configureForTest');
 var fieldHelpers = conf.get('beans').get('fieldHelpers');
-var expect = require('chai').expect;
+var expect = require('must');
 
 describe('Activity application', function () {
 
@@ -215,7 +215,7 @@ describe('parseToMomentUsingTimezone function', function () {
 
   it('returns undefined without date', function () {
     var result = fieldHelpers.parseToMomentUsingTimezone(undefined, undefined, 'Europe/Berlin');
-    expect(result).to.be.undefined;
+    expect(result).to.be(undefined);
   });
 
 });

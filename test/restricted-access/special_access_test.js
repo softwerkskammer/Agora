@@ -2,7 +2,7 @@
 
 var conf = require('../../testutil/configureForTest');
 var sinon = require('sinon');
-var expect = require('chai').expect;
+var expect = require('must');
 
 var beans = conf.get('beans');
 var redirectRuleForNewUser = beans.get('redirectRuleForNewUser');
@@ -83,7 +83,7 @@ describe('redirection to registration page for registered users', function () {
     };
     var next = sinon.spy();
     redirectRuleForNewUser(req, {}, next);
-    expect(next.called).to.be.true;
+    expect(next.called).to.be(true);
   });
 
 });
@@ -96,7 +96,7 @@ describe('redirection to registration page for anonymous users', function () {
     };
     var next = sinon.spy();
     redirectRuleForNewUser(req, {}, next);
-    expect(next.called).to.be.true;
+    expect(next.called).to.be(true);
   });
 
 });
@@ -110,10 +110,10 @@ describe('exceptions to the admin guard', function () {
       user: {}
     };
     var res = {locals: {}};
-    accessrights(req, res, function () {});
+    accessrights(req, res, function () { return undefined; });
     var next = sinon.spy();
     secureSuperuserOnly(req, res, next);
-    expect(next.called).to.be.true;
+    expect(next.called).to.be(true);
   });
 
   it('allows anonymous users to save their profile', function () {
@@ -123,10 +123,10 @@ describe('exceptions to the admin guard', function () {
       user: {}
     };
     var res = {locals: {}};
-    accessrights(req, res, function () {});
+    accessrights(req, res, function () { return undefined; });
     var next = sinon.spy();
     secureSuperuserOnly(req, res, next);
-    expect(next.called).to.be.true;
+    expect(next.called).to.be(true);
   });
 
   it('allows registered users to edit their profile', function () {
@@ -138,10 +138,10 @@ describe('exceptions to the admin guard', function () {
       }
     };
     var res = {locals: {}};
-    accessrights(req, res, function () {});
+    accessrights(req, res, function () { return undefined; });
     var next = sinon.spy();
     secureSuperuserOnly(req, res, next);
-    expect(next.called).to.be.true;
+    expect(next.called).to.be(true);
   });
 
   it('allows registered users to edit their profile even with blanks in nickname', function () {
@@ -153,10 +153,10 @@ describe('exceptions to the admin guard', function () {
       }
     };
     var res = {locals: {}};
-    accessrights(req, res, function () {});
+    accessrights(req, res, function () { return undefined; });
     var next = sinon.spy();
     secureSuperuserOnly(req, res, next);
-    expect(next.called).to.be.true;
+    expect(next.called).to.be(true);
   });
 
   it('allows registered users to save their profile', function () {
@@ -169,10 +169,10 @@ describe('exceptions to the admin guard', function () {
       body: {id: 'id'}
     };
     var res = {locals: {}};
-    accessrights(req, res, function () {});
+    accessrights(req, res, function () { return undefined; });
     var next = sinon.spy();
     secureSuperuserOnly(req, res, next);
-    expect(next.called).to.be.true;
+    expect(next.called).to.be(true);
   });
 
 });

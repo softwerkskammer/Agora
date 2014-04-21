@@ -1,10 +1,9 @@
-/*global describe, it */
 "use strict";
 var conf = require('../../testutil/configureForTest');
 
 var request = require('supertest');
 var sinonSandbox = require('sinon').sandbox.create();
-var expect = require('chai').expect;
+var expect = require('must');
 var moment = require('moment-timezone');
 
 var beans = conf.get('beans');
@@ -26,12 +25,11 @@ var membersAPI = beans.get('membersAPI');
 var createApp = require('../../testutil/testHelper')('announcementsApp').createApp;
 
 describe('Announcement application', function () {
-  var allAnnouncements;
   var allAnnouncementsUntilToday;
   var getAnnouncement;
 
   beforeEach(function () {
-    allAnnouncements = sinonSandbox.stub(announcementsAPI, 'allAnnouncements', function (callback) {
+    sinonSandbox.stub(announcementsAPI, 'allAnnouncements', function (callback) {
       return callback(null, [dummyAnnouncement]);
     });
     allAnnouncementsUntilToday = sinonSandbox.stub(announcementsAPI, 'allAnnouncementsUntilToday', function (callback) {
@@ -53,7 +51,7 @@ describe('Announcement application', function () {
       .expect(/Nachrichten/)
       .expect(/href="url"/)
       .expect(/title/, function (err) {
-        expect(allAnnouncementsUntilToday.calledOnce).to.be.ok;
+        expect(allAnnouncementsUntilToday.calledOnce).to.be(true);
         done(err);
       });
   });
@@ -68,9 +66,9 @@ describe('Announcement application', function () {
     request(createApp())
       .get('/' + url)
       .expect(200)
-      .expect(/<small>29. Juli 2013/)
+      .expect(/<small>29\. Juli 2013/)
       .expect(/<h2>title/, function (err) {
-        expect(getAnnouncement.calledWith(url)).to.be.true;
+        expect(getAnnouncement.calledWith(url)).to.be(true);
         done(err);
       });
   });
@@ -82,9 +80,9 @@ describe('Announcement application', function () {
     request(createApp('author'))
       .get('/edit/' + url)
       .expect(200)
-      .expect(/<input id="thruDate" type="text" name="thruDate" value="31.12.2013"/)
+      .expect(/<input id="thruDate" type="text" name="thruDate" value="31\.12\.2013"/)
       .expect(/<legend>Nachricht bearbeiten/, function (err) {
-        expect(getAnnouncement.calledWith(url)).to.be.true;
+        expect(getAnnouncement.calledWith(url)).to.be(true);
         done(err);
       });
   });
