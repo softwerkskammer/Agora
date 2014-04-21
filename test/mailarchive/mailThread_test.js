@@ -1,7 +1,7 @@
 "use strict";
 
 var beans = require('../../testutil/configureForTest').get('beans');
-var expect = require('chai').expect;
+var expect = require('must');
 
 var mailThread = beans.get('mailThread');
 var Mail = beans.get('archivedMail');
@@ -9,13 +9,13 @@ var Mail = beans.get('archivedMail');
 describe('mail thread builder', function () {
   it('returns empty array given an empty array', function () {
     var threadedMails = mailThread([]);
-    expect(threadedMails).to.deep.equal([]);
+    expect(threadedMails).to.eql([]);
   });
 
   it('returns single mail given a single mail', function () {
     var mail1 = new Mail({id: 'Mail 1'});
     var threadedMails = mailThread([mail1]);
-    expect(threadedMails).to.deep.equal([mail1]);
+    expect(threadedMails).to.eql([mail1]);
   });
 
   it('builds a thread from two related mails', function () {
@@ -23,13 +23,13 @@ describe('mail thread builder', function () {
     var mail2 = new Mail({id: 'Mail 2', references: ['Mail 1']});
     var threadedMails = mailThread([mail1, mail2]);
     mail1.responses = [mail2];
-    expect(threadedMails).to.deep.equal([mail1]);
+    expect(threadedMails).to.eql([mail1]);
   });
 
   it('recognizes mail with references to not existing mail ids only as not a thread root', function () {
     var mail2 = new Mail({id: 'Mail 2', references: ['Mail 1']});
     var threadedMails = mailThread([mail2]);
-    expect(threadedMails).to.deep.equal([mail2]);
+    expect(threadedMails).to.eql([mail2]);
   });
 
   it('adds thread modification time to leaf mails', function () {

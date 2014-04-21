@@ -1,7 +1,7 @@
 "use strict";
 
 require('../../testutil/configureForTest');
-var expect = require('chai').expect;
+var expect = require('must');
 var moment = require('moment-timezone');
 
 var beans = require('nconf').get('beans');
@@ -20,12 +20,6 @@ describe('Mail', function () {
   var mailWithFrom = new Mail({
     id: 'Mail 1',
     from: {name: 'name', address: 'local@domain'}
-  });
-
-  it('throws an error if given object has no valid id', function () {
-    function newMail() { new Mail({}); }
-
-    expect(newMail).to.throw(Error, /message has no valid id/);
   });
 
   it('restores time from unix time', function () {
@@ -48,7 +42,7 @@ describe('Mail', function () {
   });
 
   it('has a nickname of "null" if no member', function () {
-    expect(mailWithFrom.memberNickname()).to.be.null;
+    expect(mailWithFrom.memberNickname()).to.be(null);
   });
 
   it('uses the nickname of a real member if available', function () {
@@ -90,7 +84,7 @@ describe('Mail', function () {
       {timeUnix: 1}
     ];
 
-    expect(mail.sortedResponses()).to.deep.equal([
+    expect(mail.sortedResponses()).to.eql([
       {timeUnix: 1},
       {timeUnix: 2},
       {timeUnix: 3}

@@ -1,6 +1,6 @@
 "use strict";
 
-var expect = require('chai').expect;
+var expect = require('must');
 var sinon = require('sinon');
 var sinonSandbox = sinon.sandbox.create();
 var moment = require('moment-timezone');
@@ -98,8 +98,8 @@ describe('Import of mails from files with mime messages', function () {
     var beforeTestRunUnix = moment().unix() - 1;
     mailimport(fileWithoutDate, 'group', function (err, result) {
       var afterTestRunUnix = moment().unix() + 1;
-      expect(result.timeUnix).to.be.greaterThan(beforeTestRunUnix);
-      expect(result.timeUnix).to.be.lessThan(afterTestRunUnix);
+      expect(result.timeUnix).to.be.gt(beforeTestRunUnix);
+      expect(result.timeUnix).to.be.lt(afterTestRunUnix);
       done(err);
     });
   });
@@ -119,14 +119,14 @@ describe('Import of mails from files with mime messages', function () {
 
   it('imports references', function (done) {
     mailimport(fileWithReferences, 'group', function (err, result) {
-      expect(result.references).to.deep.equal(["message0@nomail.com", "message1@nomail.com"]);
+      expect(result.references).to.eql(["message0@nomail.com", "message1@nomail.com"]);
       done(err);
     });
   });
 
   it('imports reply-to as reference if no references are available', function (done) {
     mailimport(fileWithInReplyTo, 'group', function (err, result) {
-      expect(result.references).to.deep.equal(["message0@nomail.com"]);
+      expect(result.references).to.eql(["message0@nomail.com"]);
       done(err);
     });
   });
