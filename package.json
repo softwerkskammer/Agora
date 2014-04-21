@@ -68,7 +68,6 @@
     "winston-config": "~0.4.0"
   },
   "devDependencies": {
-    "chai": "~1.9",
     "grunt": "~0.4",
     "grunt-contrib-concat": "~0.4.0",
     "grunt-contrib-jshint": "~0.10",

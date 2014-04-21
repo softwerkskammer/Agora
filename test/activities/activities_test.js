@@ -2,7 +2,7 @@
 
 var request = require('supertest');
 var sinon = require('sinon').sandbox.create();
-var expect = require('chai').expect;
+var expect = require('must');
 
 var createApp = require('../../testutil/testHelper')('activitiesApp').createApp;
 
