@@ -1,6 +1,6 @@
 "use strict";
 
-var expect = require('chai').expect;
+var expect = require('must');
 var sinon = require('sinon');
 var sinonSandbox = sinon.sandbox.create();
 var conf = require('../../testutil/configureForTest');
@@ -23,7 +23,7 @@ describe('Color API', function () {
     });
 
     api.allColors(function (err, result) {
-      expect(result).to.have.lengthOf(1);
+      expect(result).to.have.length(1);
       expect(result).to.contain(dummyColor);
       done(err);
     });
@@ -35,8 +35,8 @@ describe('Color API', function () {
     });
 
     api.saveColor(dummyColor, function (err) {
-      expect(storeSpy.calledOnce, 'saveColor is called').to.be.true;
-      expect(storeSpy.calledWith(dummyColor)).to.be.true;
+      expect(storeSpy.calledOnce, 'saveColor is called').to.be(true);
+      expect(storeSpy.calledWith(dummyColor)).to.be(true);
       done(err);
     });
   });
@@ -47,8 +47,8 @@ describe('Color API', function () {
     });
 
     api.saveColors([dummyColor], function (err) {
-      expect(storeSpy.calledOnce, 'saveColors is called').to.be.true;
-      expect(storeSpy.calledWith([dummyColor])).to.be.true;
+      expect(storeSpy.calledOnce, 'saveColors is called').to.be(true);
+      expect(storeSpy.calledWith([dummyColor])).to.be(true);
       done(err);
     });
   });

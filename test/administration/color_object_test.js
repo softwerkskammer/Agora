@@ -2,7 +2,7 @@
 
 require('../../testutil/configureForTest');
 var conf = require('nconf');
-var expect = require('chai').expect;
+var expect = require('must');
 
 var Color = conf.get('beans').get('color');
 
