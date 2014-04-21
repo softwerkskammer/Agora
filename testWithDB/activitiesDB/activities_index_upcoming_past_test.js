@@ -4,8 +4,7 @@ var moment = require('moment-timezone');
 
 var request = require('supertest');
 var sinon = require('sinon').sandbox.create();
-var expect = require('chai').expect;
-
+var expect = require('must');
 
 var beans = require('../../testutil/configureForTestWithDB').get('beans');
 var activitystore = beans.get('activitystore');
@@ -13,7 +12,6 @@ var persistence = beans.get('activitiesPersistence');
 var Activity = beans.get('activity');
 
 var createApp = require('../../testutil/testHelper')('activitiesApp', beans).createApp;
-
 
 describe('Activity application with DB - shows activities -', function () {
 
@@ -46,7 +44,6 @@ describe('Activity application with DB - shows activities -', function () {
       });
     });
   });
-
 
   afterEach(function () {
     sinon.restore();

@@ -18,13 +18,12 @@ module.exports = function (grunt) {
         jshintrc: '.jshintrc'
       }
     },
-    jslint: { // configure the task
-      // lint your project's server code
+    jslint: {
       server: {
-        src: [ // some example files
+        src: [
           'lib/**/*.js'
         ],
-        directives: { // example directives
+        directives: {
           indent: 2,
           node: true,
           nomen: true,
@@ -33,16 +32,17 @@ module.exports = function (grunt) {
           vars: true
         },
         options: {
-          edition: 'latest', // specify an edition of jslint or use 'dir/mycustom-jslint.js' for own path
-          errorsOnly: true, // only display errors
+          edition: 'latest',
+          errorsOnly: true,
           failOnError: true
         }
       },
       servertests: {
-        src: [ // some example files
-          'test/**/*.js'
+        src: [
+          'test/**/*.js',
+          'testWithDB/**/*.js'
         ],
-        directives: { // example directives
+        directives: {
           ass: true,
           indent: 2,
           node: true,
@@ -53,8 +53,8 @@ module.exports = function (grunt) {
           predef: ['afterEach', 'after', 'beforeEach', 'before', 'describe', 'it']
         },
         options: {
-          edition: 'latest', // specify an edition of jslint or use 'dir/mycustom-jslint.js' for own path
-          errorsOnly: true, // only display errors
+          edition: 'latest',
+          errorsOnly: true,
           failOnError: true
         }
       }

@@ -2,7 +2,7 @@
 
 var nconf = require('../../testutil/configureForTestWithDB');
 var moment = require('moment-timezone');
-var expect = require('chai').expect;
+var expect = require('must');
 var sinon = require('sinon').sandbox.create();
 
 var beans = nconf.get('beans');
@@ -14,7 +14,6 @@ var notifications = beans.get('notifications');
 var Activity = beans.get('activity');
 
 var activityUrl = 'urlOfTheActivity';
-
 
 var getActivity = function (url, callback) {
   persistence.getByField({url: url}, function (err, activityState) {
@@ -29,20 +28,26 @@ describe('Activities API', function () {
   var invocation;
 
   beforeEach(function (done) { // if this fails, you need to start your mongo DB
-    activityBeforeConcurrentAccess = new Activity({id: "activityId",
-      url: activityUrl, resources: {default: {_registeredMembers: [
-        {memberId: 'memberIdX'}
-      ], _waitinglist: [
-        {_memberId: 'memberIdY'}
-      ], _registrationOpen: true  }}, version: 1});
+    activityBeforeConcurrentAccess = new Activity(
+      {id: "activityId", url: activityUrl, resources: {
+        'default': { _registeredMembers: [
+          {memberId: 'memberIdX'}
+        ], _waitinglist: [
+          {_memberId: 'memberIdY'}
+        ], _registrationOpen: true  }
+      }, version: 1}
+    );
 
-    activityAfterConcurrentAccess = new Activity({id: "activityId",
-      url: activityUrl, resources: {default: {_registeredMembers: [
-        {memberId: 'memberId1'},
-        {memberId: 'memberIdX'}
-      ], _waitinglist: [
-        {_memberId: 'memberIdY'}
-      ], _registrationOpen: true  }}, version: 2});
+    activityAfterConcurrentAccess = new Activity(
+      {id: "activityId", url: activityUrl, resources: {
+        'default': {_registeredMembers: [
+          {memberId: 'memberId1'},
+          {memberId: 'memberIdX'}
+        ], _waitinglist: [
+          {_memberId: 'memberIdY'}
+        ], _registrationOpen: true  }
+      }, version: 2}
+    );
 
     invocation = 1;
 
@@ -55,7 +60,6 @@ describe('Activities API', function () {
       // on subsequent invocations, getActivity returns an activity with registrant.
       return callback(null, activityAfterConcurrentAccess);
     });
-
 
     persistence.drop(function () {
       // save our activity with one registrant
@@ -130,6 +134,5 @@ describe('Activities API', function () {
       });
     });
   });
-
 
 });

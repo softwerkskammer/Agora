@@ -1,7 +1,7 @@
 "use strict";
 
 var nconf = require('../../testutil/configureForTestWithDB');
-var expect = require('chai').expect;
+var expect = require('must');
 var sinon = require('sinon').sandbox.create();
 
 var beans = nconf.get('beans');
@@ -16,7 +16,6 @@ var Member = beans.get('member');
 
 var activityUrl = 'urlOfTheActivity';
 
-
 var getActivity = function (url, callback) {
   persistence.getByField({url: url}, function (err, activityState) {
     callback(err, new Activity(activityState));
@@ -30,17 +29,23 @@ describe('Waitinglist API', function () {
   var invocation;
 
   beforeEach(function (done) { // if this fails, you need to start your mongo DB
-    activityBeforeConcurrentAccess = new Activity({id: "activityId",
-      url: activityUrl, resources: {default: {_registeredMembers: [], _waitinglist: [
-        {_memberId: 'memberIdWaiting'}
-      ], _registrationOpen: true  }}, version: 1});
+    activityBeforeConcurrentAccess = new Activity(
+      {id: "activityId", url: activityUrl, resources: {
+        'default': {_registeredMembers: [], _waitinglist: [
+          {_memberId: 'memberIdWaiting'}
+        ], _registrationOpen: true }
+      }, version: 1}
+    );
 
-    activityAfterConcurrentAccess = new Activity({id: "activityId",
-      url: activityUrl, resources: {default: {_registeredMembers: [
-        {memberId: 'memberId1'}
-      ], _waitinglist: [
-        {_memberId: 'memberIdWaiting'}
-      ], _registrationOpen: true  }}, version: 2});
+    activityAfterConcurrentAccess = new Activity(
+      {id: "activityId", url: activityUrl, resources: {
+        'default': {_registeredMembers: [
+          {memberId: 'memberId1'}
+        ], _waitinglist: [
+          {_memberId: 'memberIdWaiting'}
+        ], _registrationOpen: true  }
+      }, version: 2}
+    );
 
     invocation = 1;
 
@@ -103,7 +108,7 @@ describe('Waitinglist API', function () {
       if (err) { return done(err); }
       getActivity(activityUrl, function (err, activity) {
         if (err) { return done(err); }
-        expect(activity.resourceNamed('default').waitinglistEntries()[0].canSubscribe(), "Waiting member is now allowed to subscribe").to.be.true;
+        expect(activity.resourceNamed('default').waitinglistEntries()[0].canSubscribe(), "Waiting member is now allowed to subscribe").to.be(true);
         expect(activity.resourceNamed('default').registeredMembers(), "First registered member is still there").to.contain("memberId1");
         done(err);
       });

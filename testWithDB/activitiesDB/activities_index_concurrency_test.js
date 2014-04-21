@@ -2,7 +2,7 @@
 
 var request = require('supertest');
 var sinon = require('sinon').sandbox.create();
-var expect = require('chai').expect;
+var expect = require('must');
 
 var conf = require('../../testutil/configureForTestWithDB');
 
@@ -19,7 +19,6 @@ var getActivity = function (url, callback) {
     callback(err, new Activity(activityState));
   });
 };
-
 
 describe('Activity application with DB - on submit -', function () {
 
@@ -53,7 +52,6 @@ describe('Activity application with DB - on submit -', function () {
       return callback(null, activityAfterConcurrentAccess);
     });
 
-
     persistence.drop(function () {
       // save our activity with one registrant
       activitystore.saveActivity(activityAfterConcurrentAccess, function (err) {
@@ -61,7 +59,6 @@ describe('Activity application with DB - on submit -', function () {
       });
     });
   });
-
 
   afterEach(function () {
     sinon.restore();
