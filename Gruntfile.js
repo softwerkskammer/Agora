@@ -37,6 +37,26 @@ module.exports = function (grunt) {
           errorsOnly: true, // only display errors
           failOnError: true
         }
+      },
+      servertests: {
+        src: [ // some example files
+          'test/**/*.js'
+        ],
+        directives: { // example directives
+          ass: true,
+          indent: 2,
+          node: true,
+          nomen: true,
+          todo: true,
+          unparam: true,
+          vars: true,
+          predef: ['afterEach', 'after', 'beforeEach', 'before', 'describe', 'it']
+        },
+        options: {
+          edition: 'latest', // specify an edition of jslint or use 'dir/mycustom-jslint.js' for own path
+          errorsOnly: true, // only display errors
+          failOnError: true
+        }
       }
     },
     watch: {
@@ -147,7 +167,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-jslint');
 
   // Default task.
-  grunt.registerTask('default', ['less', 'concat', 'jslint:server', 'jshint', 'qunit', 'mocha_istanbul']);
+  grunt.registerTask('default', ['less', 'concat', 'jslint:server', 'jslint:servertests', 'jshint', 'qunit', 'mocha_istanbul']);
 
   // Travis-CI task
   grunt.registerTask('travis', ['default']);
