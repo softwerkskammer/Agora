@@ -25,12 +25,11 @@ var membersAPI = beans.get('membersAPI');
 var createApp = require('../../testutil/testHelper')('announcementsApp').createApp;
 
 describe('Announcement application', function () {
-  var allAnnouncements;
   var allAnnouncementsUntilToday;
   var getAnnouncement;
 
   beforeEach(function () {
-    allAnnouncements = sinonSandbox.stub(announcementsAPI, 'allAnnouncements', function (callback) {
+    sinonSandbox.stub(announcementsAPI, 'allAnnouncements', function (callback) {
       return callback(null, [dummyAnnouncement]);
     });
     allAnnouncementsUntilToday = sinonSandbox.stub(announcementsAPI, 'allAnnouncementsUntilToday', function (callback) {
