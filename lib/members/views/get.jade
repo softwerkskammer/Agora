@@ -16,9 +16,9 @@ block content
               a.btn.btn-default(href="/members/edit/#{encodeURIComponent(member.nickname())}"): i.fa.fa-edit.fa-fw
           small
             if (member.isContactperson())
-              | #{t("groups.contact")}
+              | &nbsp;#{t("groups.contact")}
             else
-              | #{t("members.profile")}
+              | &nbsp;#{t("members.profile")}
   .row
     .col-md-8
       p
