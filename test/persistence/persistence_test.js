@@ -1,7 +1,6 @@
 "use strict";
 
-var should = require('chai').should();
-var expect = require('chai').expect;
+var expect = require('must');
 var conf = require('./../../testutil/configureForTest');
 var persistence = require('../../lib/persistence/persistence')('teststore');
 var clearStore = function (callback) {
@@ -92,7 +91,7 @@ describe('The persistence store', function () {
 
     it('retrieves none for non-existing id', function (done) {
       persistence.getById('non-existing-id', function (err, result) {
-        should.not.exist(result);
+        expect(result).not.to.exist();
         done(err);
       });
     });
@@ -100,8 +99,8 @@ describe('The persistence store', function () {
     it('retrieves one for existing id', function (done) {
       storeSampleData(function () {
         persistence.getById('toPersist', function (err, result) {
-          result.id.should.equal('toPersist');
-          result.name.should.equal('Heinz');
+          expect(result.id).to.equal('toPersist');
+          expect(result.name).to.equal('Heinz');
           done(err);
         });
       });
@@ -109,7 +108,7 @@ describe('The persistence store', function () {
 
     it('retrieves an empty list when no data is inserted', function (done) {
       persistence.list({}, function (err, result) {
-        result.length.should.equal(0);
+        expect(result).to.have.length(0);
         done(err);
       });
     });
@@ -117,8 +116,8 @@ describe('The persistence store', function () {
     it('retrieves all', function (done) {
       storeSampleData(function () {
         persistence.list({}, function (err, result) {
-          result.length.should.equal(1);
-          result[0].name.should.equal('Heinz');
+          expect(result).to.have.length(1);
+          expect(result[0].name).to.equal('Heinz');
           done(err);
         });
       });
@@ -127,8 +126,8 @@ describe('The persistence store', function () {
     it('retrieves undefined if the id should be null', function (done) {
       storeSampleData(function () {
         persistence.getById(null, function (err, result) {
-          expect(err).to.not.exist;
-          expect(result).to.be.undefined;
+          expect(err).not.to.exist();
+          expect(result).to.be(undefined);
           done(err);
         });
       });
@@ -137,8 +136,8 @@ describe('The persistence store', function () {
     it('retrieves undefined if some field should be null', function (done) {
       storeSampleData(function () {
         persistence.getByField({id: null}, function (err, result) {
-          expect(err).to.not.exist;
-          expect(result).to.be.undefined;
+          expect(err).not.to.exist();
+          expect(result).to.be(undefined);
           done(err);
         });
       });
@@ -169,15 +168,15 @@ describe('The persistence store', function () {
     it('retrieves all members in ascending order', function (done) {
       storeSampleData(function () {
         persistence.list({lastname: 1, firstname: 1}, function (err, result) {
-          result.length.should.equal(4);
-          result[0].firstname.should.equal('Anna');
-          result[0].lastname.should.equal('Albers');
-          result[1].firstname.should.equal('Max');
-          result[1].lastname.should.equal('Albers');
-          result[2].firstname.should.equal('Heinz');
-          result[2].lastname.should.equal('Meier');
-          result[3].firstname.should.equal('Peter');
-          result[3].lastname.should.equal('Paulsen');
+          expect(result).to.have.length(4);
+          expect(result[0].firstname).to.equal('Anna');
+          expect(result[0].lastname).to.equal('Albers');
+          expect(result[1].firstname).to.equal('Max');
+          expect(result[1].lastname).to.equal('Albers');
+          expect(result[2].firstname).to.equal('Heinz');
+          expect(result[2].lastname).to.equal('Meier');
+          expect(result[3].firstname).to.equal('Peter');
+          expect(result[3].lastname).to.equal('Paulsen');
           done(err);
         });
       });
@@ -186,11 +185,11 @@ describe('The persistence store', function () {
     it('retrieves those members whose IDs are contained in the list', function (done) {
       storeSampleData(function () {
         persistence.listByIds(['3', '4', '6', 'test'], {lastname: 1, firstname: 1}, function (err, result) {
-          result.length.should.equal(2);
-          result[0].firstname.should.equal('Anna');
-          result[0].lastname.should.equal('Albers');
-          result[1].firstname.should.equal('Peter');
-          result[1].lastname.should.equal('Paulsen');
+          expect(result).to.have.length(2);
+          expect(result[0].firstname).to.equal('Anna');
+          expect(result[0].lastname).to.equal('Albers');
+          expect(result[1].firstname).to.equal('Peter');
+          expect(result[1].lastname).to.equal('Paulsen');
           done(err);
         });
       });
@@ -199,15 +198,15 @@ describe('The persistence store', function () {
     it('stores all objects with one call', function (done) {
       storeSampleDataAtOnce(function () {
         persistence.list({lastname: 1, firstname: 1}, function (err, result) {
-          result.length.should.equal(4);
-          result[0].firstname.should.equal('Anna');
-          result[0].lastname.should.equal('Albers');
-          result[1].firstname.should.equal('Max');
-          result[1].lastname.should.equal('Albers');
-          result[2].firstname.should.equal('Heinz');
-          result[2].lastname.should.equal('Meier');
-          result[3].firstname.should.equal('Peter');
-          result[3].lastname.should.equal('Paulsen');
+          expect(result).to.have.length(4);
+          expect(result[0].firstname).to.equal('Anna');
+          expect(result[0].lastname).to.equal('Albers');
+          expect(result[1].firstname).to.equal('Max');
+          expect(result[1].lastname).to.equal('Albers');
+          expect(result[2].firstname).to.equal('Heinz');
+          expect(result[2].lastname).to.equal('Meier');
+          expect(result[3].firstname).to.equal('Peter');
+          expect(result[3].lastname).to.equal('Paulsen');
           done(err);
         });
       });
@@ -229,9 +228,9 @@ describe('The persistence store', function () {
       var today = moment().format('DD.MM.YY');
       storeSampleData(function () {
         persistence.getById('toPersist', function (err, result) {
-          result.id.should.equal('toPersist');
-          should.exist(result.created);
-          result.created.should.equal(today);
+          expect(result.id).to.equal('toPersist');
+          expect(result.created).to.exist();
+          expect(result.created).to.equal(today);
           done(err);
         });
       });
