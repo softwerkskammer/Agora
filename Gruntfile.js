@@ -18,6 +18,27 @@ module.exports = function (grunt) {
         jshintrc: '.jshintrc'
       }
     },
+    jslint: { // configure the task
+      // lint your project's server code
+      server: {
+        src: [ // some example files
+          'lib/**/*.js'
+        ],
+        directives: { // example directives
+          indent: 2,
+          node: true,
+          nomen: true,
+          todo: true,
+          unparam: true,
+          vars: true
+        },
+        options: {
+          edition: 'latest', // specify an edition of jslint or use 'dir/mycustom-jslint.js' for own path
+          errorsOnly: true, // only display errors
+          failOnError: true
+        }
+      }
+    },
     watch: {
       files: ['<%= jshint.files %>', '**/*.jade'],
       tasks: ['default']
@@ -93,6 +114,14 @@ module.exports = function (grunt) {
       }
     },
     mocha_istanbul: {
+      testWithDB: {
+        src: 'testWithDB', // the folder, not the files,
+        options: {
+          root: 'lib',
+          mask: '**/*.js',
+          reporter: 'spec'
+        }
+      },
       test: {
         src: 'test', // the folder, not the files,
         options: {
@@ -103,14 +132,6 @@ module.exports = function (grunt) {
             lines: 78,
             statements: 74
           }
-        }
-      },
-      testWithDB: {
-        src: 'testWithDB', // the folder, not the files,
-        options: {
-          root: 'lib',
-          mask: '**/*.js',
-          reporter: 'spec'
         }
       }
     }
@@ -123,12 +144,11 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-mocha-istanbul');
+  grunt.loadNpmTasks('grunt-jslint');
 
   // Default task.
-  grunt.registerTask('default', ['less', 'concat', 'jshint', 'qunit', 'testWithDB', 'test']);
+  grunt.registerTask('default', ['less', 'concat', 'jslint:server', 'jshint', 'qunit', 'mocha_istanbul']);
 
   // Travis-CI task
   grunt.registerTask('travis', ['default']);
-  grunt.registerTask('test', ['mocha_istanbul:test']);
-  grunt.registerTask('testWithDB', ['mocha_istanbul:testWithDB']);
 };
