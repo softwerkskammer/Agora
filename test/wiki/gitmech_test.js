@@ -197,5 +197,102 @@ describe('the gitmech module', function () {
         done();
       });
     });
+
+    it('"mv" calls also commit when successful', function (done) {
+      var commitcalled = false;
+      sinon.stub(gitExec, 'command', function (args, callback) {
+        if (args[0] === 'mv') { callback(null); }
+        if (args[0] === 'commit') {
+          commitcalled = true;
+          callback(null);
+        }
+      });
+      Git.mv('oldpath', 'newpath', 'message', 'author', function (err) {
+        expect(err).to.be(null);
+        expect(commitcalled).to.be(true);
+        done();
+      });
+    });
+
+    it('"mv" does not call commit when failing', function (done) {
+      var commitcalled = false;
+      sinon.stub(gitExec, 'command', function (args, callback) {
+        if (args[0] === 'mv') { callback(new Error()); }
+        if (args[0] === 'commit') {
+          commitcalled = true;
+          callback(null);
+        }
+      });
+      Git.mv('oldpath', 'newpath', 'message', 'author', function (err) {
+        expect(err).to.exist();
+        expect(commitcalled).to.be(false);
+        done();
+      });
+    });
+
+    it('"mv" handles "commit" errors', function (done) {
+      var commitcalled = false;
+      sinon.stub(gitExec, 'command', function (args, callback) {
+        if (args[0] === 'mv') { callback(null); }
+        if (args[0] === 'commit') {
+          commitcalled = true;
+          callback(new Error());
+        }
+      });
+      Git.mv('oldpath', 'newpath', 'message', 'author', function (err) {
+        expect(err).to.exist();
+        expect(commitcalled).to.be(true);
+        done();
+      });
+    });
+
+    it('"rm" calls also commit when successful', function (done) {
+      var commitcalled = false;
+      sinon.stub(gitExec, 'command', function (args, callback) {
+        if (args[0] === 'rm') { callback(null); }
+        if (args[0] === 'commit') {
+          commitcalled = true;
+          callback(null);
+        }
+      });
+      Git.rm('path', 'message', 'author', function (err) {
+        expect(err).to.be(null);
+        expect(commitcalled).to.be(true);
+        done();
+      });
+    });
+
+    it('"rm" does not call commit when failing', function (done) {
+      var commitcalled = false;
+      sinon.stub(gitExec, 'command', function (args, callback) {
+        if (args[0] === 'rm') { callback(new Error()); }
+        if (args[0] === 'commit') {
+          commitcalled = true;
+          callback(null);
+        }
+      });
+      Git.rm('path', 'message', 'author', function (err) {
+        expect(err).to.exist();
+        expect(commitcalled).to.be(false);
+        done();
+      });
+    });
+
+    it('"rm" handles "commit" errors', function (done) {
+      var commitcalled = false;
+      sinon.stub(gitExec, 'command', function (args, callback) {
+        if (args[0] === 'rm') { callback(null); }
+        if (args[0] === 'commit') {
+          commitcalled = true;
+          callback(new Error());
+        }
+      });
+      Git.rm('path', 'message', 'author', function (err) {
+        expect(err).to.exist();
+        expect(commitcalled).to.be(true);
+        done();
+      });
+    });
+
   });
 });
