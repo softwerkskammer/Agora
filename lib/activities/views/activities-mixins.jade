@@ -24,3 +24,14 @@ mixin subscriptionButtons(activity, resourceName, resourceRegistrationRenderer)
           span.col-xs-6.control-label(style="text-align: center;") #{t(result.displayText)}
         else
           a(href="#{result.url}", class="btn col-xs-6 #{btnClass}") #{t(result.displayText)}
+
+mixin activityList(activities)
+  dl.dl-horizontal
+    for activity in activities
+      dt
+        | #{activity.startMoment().lang(language).format('LL')}
+      dd
+        a(href='/groups/#{activity.assignedGroup()}')
+          span.label(style="background-color: #{activity.colorRGB}") #{activity.groupName()}
+        | &nbsp;
+        a(href='#{encodeURIComponent(activity.url())}') #{activity.title()}

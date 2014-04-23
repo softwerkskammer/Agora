@@ -1,4 +1,5 @@
 extends ../../../views/layout
+include activities-mixins
 
 block title
   | #{t("activities.activities")}
@@ -21,12 +22,4 @@ block content
           if (accessrights.canCreateActivity())
             a.btn.btn-default(href="new/", title=t("activities.new")): i.fa.fa-file-o.fa-fw
         h2 #{t("activities.activities")}
-      dl.dl-horizontal
-        for activity in activities
-          dt
-            | #{activity.startMoment().lang(language).format('LL')} 
-          dd
-            a(href='/groups/#{activity.assignedGroup()}')
-              span.label(style="background-color: #{activity.colorRGB}") #{activity.groupName()}
-            |  &nbsp;
-            a(href='#{encodeURIComponent(activity.url())}') #{activity.title()}
+      +activityList(activities)
