@@ -107,5 +107,6 @@
   "handle404": {"module": "./lib/middleware/handle404"},
   "handle500": {"module": "./lib/middleware/handle500"},
   "gitmech": {"module": "./lib/wiki/gitmech"},
+  "gitExec": {"module": "./lib/wiki/gitExec"},
   "mailtransport": {"module": "./lib/mailsender/mailtransport"}
 }
