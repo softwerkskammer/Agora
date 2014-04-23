@@ -169,6 +169,7 @@ describe('differenceCaseInsensitive function', function () {
   });
 
 });
+
 describe('parseBlogPost', function () {
 
   it('returns a parsed blog post', function () {
@@ -182,7 +183,7 @@ describe('parseBlogPost', function () {
     var result = misc.parseBlogPost(path, post, wikiAPI.BLOG_ENTRY_REGEX);
 
     var expected = {"title": "Lean Coffee November 2013",
-      "date": moment("2013-11-01"),
+      "date": moment("2013-11-01", 'YYYY-MM-DD'),
       "teaser": "Und beim nächsten Mal haben wir dann."};
     expect(result.title).to.equal(expected.title);
     expect(result.date.isValid()).to.be(true);
@@ -224,7 +225,7 @@ describe('parseBlogPost', function () {
   });
 
   it('can parse a multitude of date variants', function () {
-    var date = moment('2013-02-01');
+    var date = moment('2013-02-01', 'YYYY-MM-DD');
     function parseDate(datestring) {
       return misc.parseBlogPost("blog_" + datestring + "LeanCoffeeTest.md", "#Lean", wikiAPI.BLOG_ENTRY_REGEX).date;
     }

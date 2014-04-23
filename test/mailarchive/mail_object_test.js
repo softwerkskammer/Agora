@@ -23,7 +23,7 @@ describe('Mail', function () {
   });
 
   it('restores time from unix time', function () {
-    var expectedTime = moment('01 Jan 2010 21:14:14 +0100');
+    var expectedTime = moment('01 Jan 2010 21:14:14 +0100', 'DD MMM YYYY HH:mm:ss Z');
     var mail = new Mail({
       id: 'Mail 1',
       timeUnix: expectedTime.unix()

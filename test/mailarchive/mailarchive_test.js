@@ -132,7 +132,7 @@ describe('Mail index page', function () {
       });
   });
 
-  var mailTime = moment('01 Jan 2010 21:14:14 +0100');
+  var mailTime = moment('01 Jan 2010 21:14:14 +0100', 'DD MMM YYYY HH:mm:ss Z');
   mailTime.lang('de');
   var displayedMailHeader = new Mail({
     from: {name: 'Sender Name'},
