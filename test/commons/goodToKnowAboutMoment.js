@@ -6,11 +6,11 @@ var moment = require('moment-timezone');
 
 
 describe('Moment', function () {
-  var jan1 = moment('2014-01-01');
-  var jan2 = moment('2014-01-02');
-  var jan3 = moment('2014-01-03');
-  var jan4 = moment('2014-01-04');
-  var jan5 = moment('2014-01-05');
+  var jan1 = moment('2014-01-01', 'YYYY-MM-DD');
+  var jan2 = moment('2014-01-02', 'YYYY-MM-DD');
+  var jan3 = moment('2014-01-03', 'YYYY-MM-DD');
+  var jan4 = moment('2014-01-04', 'YYYY-MM-DD');
+  var jan5 = moment('2014-01-05', 'YYYY-MM-DD');
 
   describe('ordering:', function () {
     it('JavaScript array sort does not sort at all!', function () {
