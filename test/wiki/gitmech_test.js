@@ -111,7 +111,7 @@ describe('the gitmech module', function () {
       });
     });
 
-    it('produces sensible metadata via "latestChanges" for sening change emails', function (done) {
+    it('produces sensible metadata via "latestChanges" for sending change emails', function (done) {
       sinon.stub(gitExec, 'command', function (args, callback) {
         if (args[0] === 'log') {
           callback(null, new Buffer('60ca4ed\n' +
