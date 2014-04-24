@@ -3,8 +3,6 @@ include ../../members/views/memberlist-mixin
 include ../../../views/googlemaps-component
 include ../../../views/formComponents
 include activities-mixins
-block scripts
-  script(type="text/javascript", src="https://js.stripe.com/v2/")
 
 block title
   | #{activity.title()} - #{t("activities.activities")}
@@ -79,6 +77,7 @@ block content
       +map(activity.location(), '100%', '450px')
 
 block scripts
+  script(type="text/javascript", src="https://js.stripe.com/v2/")
   script.
     displayedActivityStart = moment('#{activity.startMoment().toISOString()}');
     displayedActivityEnd = moment('#{activity.endMoment().toISOString()}');
