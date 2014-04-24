@@ -167,10 +167,6 @@ describe('Wiki API (daily digest)', function () {
   var metadataB1 = {author: 'authorB1', fullhash: 'hashB1', date: '2014-01-11 18:45:29 +0100'};
 
   beforeEach(function () {
-    sinon.stub(Git, 'lsdirs', function (callback) {
-      callback(null, subdirs);
-    });
-
     sinon.stub(Git, 'ls', function (dirname, callback) {
       if (dirname === 'dirA') { return callback(null, filesForDirA); }
       if (dirname === 'dirB') { return callback(null, filesForDirB); }
@@ -194,6 +190,10 @@ describe('Wiki API (daily digest)', function () {
 
   describe('Digest', function () {
     it('finds all changed pages', function (done) {
+      sinon.stub(Git, 'lsdirs', function (callback) {
+        callback(null, subdirs);
+      });
+
       wikiAPI.findPagesForDigestSince(moment(), function (err, pages) {
         expect(pages.length).to.equal(2);
         pages.forEach(function (page) {
@@ -206,6 +206,16 @@ describe('Wiki API (daily digest)', function () {
         done(err);
       });
     });
-  });
 
+    it('handles an error correctly', function (done) {
+      sinon.stub(Git, 'lsdirs', function (callback) {
+        callback(new Error());
+      });
+
+      wikiAPI.findPagesForDigestSince(moment(), function (err) {
+        expect(err).to.exist();
+        done();
+      });
+    });
+  });
 });
