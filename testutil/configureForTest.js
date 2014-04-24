@@ -18,7 +18,7 @@ nconf.set('dontUsePersistentSessions', true);
 nconf.set('superuser', ['superuserID']);
 
 //wiki:
-nconf.set('wikipath', 'path');
+nconf.set('wikipath', '.');
 
 // beans:
 var productionBeans = require('../config/beans.json');
