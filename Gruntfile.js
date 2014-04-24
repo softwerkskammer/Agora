@@ -135,7 +135,7 @@ module.exports = function (grunt) {
         options: {
           root: 'lib',
           mask: '**/*.js',
-          reporter: 'dot'
+          reporter: 'spec'
         }
       },
       test: {
@@ -143,7 +143,7 @@ module.exports = function (grunt) {
         options: {
           root: 'lib',
           mask: '**/*.js',
-          reporter: 'dot',
+          reporter: 'spec',
           check: {
             lines: 78,
             statements: 74
