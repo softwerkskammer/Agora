@@ -194,6 +194,10 @@ describe('Wiki API (daily digest)', function () {
         callback(null, subdirs);
       });
 
+      sinon.stub(Git, 'diff', function (path, revisions, callback) {
+        callback(null, '');
+      });
+
       wikiAPI.findPagesForDigestSince(moment(), function (err, pages) {
         expect(pages.length).to.equal(2);
         pages.forEach(function (page) {

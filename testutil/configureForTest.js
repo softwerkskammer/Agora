@@ -17,6 +17,9 @@ nconf.set('dontUsePersistentSessions', true);
 
 nconf.set('superuser', ['superuserID']);
 
+//wiki:
+nconf.set('wikipath', 'path');
+
 // beans:
 var productionBeans = require('../config/beans.json');
 var testBeans = require('../config/testbeans.json');
@@ -26,6 +29,7 @@ for (bean in testBeans) {
     productionBeans[bean] = testBeans[bean];
   }
 }
+
 fs.writeFileSync('./testutil/tempbeans.json', JSON.stringify(productionBeans));
 
 nconf.set('beans', new Beans('./testutil/tempbeans.json'));
