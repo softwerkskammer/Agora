@@ -293,6 +293,142 @@ describe('the gitmech module', function () {
         done();
       });
     });
+  });
 
+  describe(' - searching', function () {
+    it('finds in file contents', function (done) {
+      sinon.stub(gitExec, 'command', function (args, callback) {
+        if (args[0] === 'grep') {
+          callback(null, new Buffer('global/index.md:8:Dies ist der Index [für] das [[andreas:test]] -dudelo\n' +
+            'global/veran.md:12:[UK Tester Forums - Test Management Forum](http://uktmf.com/index.php?q=node/5271)                                             | London                  | 5.2.             \n' +
+            'global/veran.md:16:[Belgium Testing Days](http://btdconf.com/)                                                                                    | Brügge                  | 17.3. - 20.3.    \n' +
+            'global/veran.md:20:[SIGIST (Specialist Group in Software Testing) Spring Conference](http://www.bcs.org/category/9264)                            | London                  | 11.3.            '));
+        }
+        if (args[0] === 'ls-files') {
+          callback();
+        }
+      });
+      Git.grep('test', function (err, chunks) {
+        expect(chunks).to.have.length(4);
+        expect(chunks).to.contain('global/veran.md:16:[Belgium Testing Days](http://btdconf.com/)                                                                                    | Brügge                  | 17.3. - 20.3.    ');
+        done();
+      });
+    });
+
+    it('finds in file names', function (done) {
+      sinon.stub(gitExec, 'command', function (args, callback) {
+        if (args[0] === 'grep') {
+          callback();
+        }
+        if (args[0] === 'ls-files') {
+          callback(null, new Buffer('andex.md\n' +
+            'andreas.md\n' +
+            'andreastest.md'));
+        }
+      });
+      Git.grep('test', function (err, chunks) {
+        expect(chunks).to.have.length(3);
+        expect(chunks).to.contain('andex.md');
+        done();
+      });
+    });
+
+    it('handles errors in grep search', function (done) {
+      sinon.stub(gitExec, 'command', function (args, callback) {
+        if (args[0] === 'grep') { callback(new Error()); }
+      });
+      Git.grep('test', function (err) {
+        expect(err).to.exist();
+        done();
+      });
+    });
+
+    it('handles errors in file search', function (done) {
+      sinon.stub(gitExec, 'command', function (args, callback) {
+        if (args[0] === 'grep') { callback(); }
+        if (args[0] === 'ls-files') { callback(new Error()); }
+      });
+      Git.grep('test', function (err) {
+        expect(err).to.exist();
+        done();
+      });
+    });
+  });
+
+  describe(' - listing files', function () {
+    it('"ls" - converts the data to an array of single non empty lines', function (done) {
+      sinon.stub(gitExec, 'command', function (args, callback) {
+        if (args[0] === 'ls-tree') {
+          callback(null, new Buffer('andex.md\n' +
+            '\n' +
+            'andreastest.md'));
+        }
+      });
+      Git.ls('subdir', function (err, lines) {
+        expect(err).to.not.exist();
+        expect(lines).to.have.length(2);
+        done();
+      });
+    });
+
+    it('"ls" - handles errors correct', function (done) {
+      sinon.stub(gitExec, 'command', function (args, callback) {
+        if (args[0] === 'ls-tree') { callback(new Error()); }
+      });
+      Git.ls('subdir', function (err) {
+        expect(err).to.exist();
+        done();
+      });
+    });
+
+    it('"lsdirs" - converts the data to an array of single non empty lines', function (done) {
+      sinon.stub(gitExec, 'command', function (args, callback) {
+        if (args[0] === 'ls-tree') {
+          callback(null, new Buffer('andex.md\n' +
+            '\n' +
+            'andreastest.md'));
+        }
+      });
+      Git.lsdirs(function (err, lines) {
+        expect(err).to.not.exist();
+        expect(lines).to.have.length(2);
+        done();
+      });
+    });
+
+    it('"lsdirs" - handles errors correct', function (done) {
+      sinon.stub(gitExec, 'command', function (args, callback) {
+        if (args[0] === 'ls-tree') { callback(new Error()); }
+      });
+      Git.lsdirs(function (err) {
+        expect(err).to.exist();
+        done();
+      });
+    });
+
+    it('"lsblogposts" - converts the data to an array of single non empty lines', function (done) {
+      sinon.stub(gitExec, 'command', function (args, callback) {
+        if (args[0] === 'ls-files') {
+          callback(null, new Buffer('andex.md\n' +
+            '\n' +
+            'andreastest.md'));
+        }
+      });
+      Git.lsblogposts('group', 'pattern', function (err, lines) {
+        expect(err).to.not.exist();
+        expect(lines).to.have.length(2);
+        done();
+      });
+    });
+
+    it('"lsblogposts" - handles errors correct', function (done) {
+      sinon.stub(gitExec, 'command', function (args, callback) {
+        if (args[0] === 'ls-files') { callback(new Error()); }
+      });
+      Git.lsblogposts('group', 'pattern', function (err) {
+        expect(err).to.exist();
+        done();
+      });
+    });
   });
 });
