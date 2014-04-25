@@ -25,7 +25,7 @@ mixin subscriptionButtons(activity, resourceName, resourceRegistrationRenderer)
         else
           a(href="#{result.url}", class="btn col-xs-6 #{btnClass}") #{t(result.displayText)}
 
-mixin activityList(activities)
+mixin activityList(activities, member)
   dl.dl-horizontal
     for activity in activities
       dt
@@ -35,3 +35,5 @@ mixin activityList(activities)
           span.label(style="background-color: #{activity.colorRGB}") #{activity.groupName()}
         | &nbsp;
         a(href='/activities/#{encodeURIComponent(activity.url())}') #{activity.title()}
+        if (member && activity.allRegisteredMembers().indexOf(member.id()) > -1)
+          | &nbsp;(Angemeldet)
