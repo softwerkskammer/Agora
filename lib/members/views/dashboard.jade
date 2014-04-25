@@ -1,0 +1,26 @@
+extends ../../../views/layoutOnlyMain
+include ../../../views/formComponents
+include ../../activities/views/activities-mixins
+block title
+  | Dashboard
+block content
+  .row
+    .col-md-4
+      +my_groups()
+    .col-md-4
+      +my_activities()
+    .col-md-4
+
+mixin my_groups()
+  h3 #{t("members.member_of")}
+  ul
+    each group in member.subscribedGroups
+      li
+        strong: a(href='../groups/#{group.id}') #{group.longName}
+        | &nbsp;
+        if (group.organizers.indexOf(member.id()) > -1)
+          span.label(style="background-color: #DF5353") #{t("groups.contact")}
+
+mixin my_activities()
+  h3 Kommende Aktivitäten
+  +activityList(activities, member)
