@@ -11,26 +11,29 @@ var activitystore = beans.get('activitystore');
 var persistence = beans.get('activitiesPersistence');
 var Activity = beans.get('activity');
 
+var util = require('util');
+
 var createApp = require('../../testutil/testHelper')('activitiesApp', beans).createApp;
 
 describe('Activity application with DB - shows activities for Group-Ids -', function () {
 
-  var tomorrow = moment().add(1, 'days');
+  var tomorrow_early = moment().add(1, 'days');
+  var tomorrow_late = moment().add(1, 'days').add(1, 'hours');
   var day_after_tomorrow = moment().add(2, 'days');
   var yesterday = moment().subtract(1, 'days');
 
   var futureActivity1 = new Activity({id: "futureActivity1", title: 'Future Activity 1', description: 'description1', assignedGroup: 'groupname1',
-    location: 'location1', direction: 'direction1', startUnix: tomorrow.unix(), endUnix: day_after_tomorrow.unix(),
+    location: 'location1', direction: 'direction1', startUnix: tomorrow_early.unix(), endUnix: day_after_tomorrow.unix(),
     url: 'url_future', owner: 'owner', resources: {Veranstaltung: {_registeredMembers: [], _registrationOpen: true }}, version: 1});
   var futureActivity2 = new Activity({id: "futureActivity2", title: 'Future Activity 2', description: 'description1', assignedGroup: 'groupname2',
-    location: 'location1', direction: 'direction1', startUnix: tomorrow.unix(), endUnix: day_after_tomorrow.unix(),
-    url: 'url_future', owner: 'owner', resources: {Veranstaltung: {_registeredMembers: [], _registrationOpen: true }}, version: 1});
+    location: 'location1', direction: 'direction1', startUnix: tomorrow_late.unix(), endUnix: day_after_tomorrow.unix(),
+    url: 'url_future', owner: 'owner', resources: {Veranstaltung: {_registeredMembers: ['memberId'], _registrationOpen: true }}, version: 1});
 
   var currentActivity1 = new Activity({id: "currentActivity1", title: 'Current Activity 1', description: 'description1', assignedGroup: 'groupname1',
-    location: 'location1', direction: 'direction1', startUnix: yesterday.unix(), endUnix: tomorrow.unix(),
+    location: 'location1', direction: 'direction1', startUnix: yesterday.unix(), endUnix: tomorrow_early.unix(),
     url: 'url_current', owner: 'owner', resources: {Veranstaltung: {_registeredMembers: [], _registrationOpen: true }}, version: 1});
   var currentActivity2 = new Activity({id: "currentActivity2", title: 'Current Activity 2', description: 'description1', assignedGroup: 'groupname2',
-    location: 'location1', direction: 'direction1', startUnix: yesterday.unix(), endUnix: tomorrow.unix(),
+    location: 'location1', direction: 'direction1', startUnix: yesterday.unix(), endUnix: tomorrow_early.unix(),
     url: 'url_current', owner: 'owner', resources: {Veranstaltung: {_registeredMembers: [], _registrationOpen: true }}, version: 1});
 
   beforeEach(function (done) { // if this fails, you need to start your mongo DB
@@ -61,6 +64,17 @@ describe('Activity application with DB - shows activities for Group-Ids -', func
       expect(activities.length).to.equal(2);
       expect(activities[0].title()).to.equal('Current Activity 1');
       expect(activities[1].title()).to.equal('Future Activity 1');
+      done(err);
+    });
+  });
+
+  it('shows current and future activities of Group 1 and activities with subscribed member', function (done) {
+
+    activitystore.upcomingActivitiesForGroupIdsAndMemberId(['groupname1'], 'memberId', function (err, activities) {
+      expect(activities.length).to.equal(3);
+      expect(activities[0].title()).to.equal('Current Activity 1');
+      expect(activities[1].title()).to.equal('Future Activity 1');
+      expect(activities[2].title()).to.equal('Future Activity 2');
       done(err);
     });
   });
