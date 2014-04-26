@@ -1,6 +1,7 @@
 extends ../../../views/layoutOnlyMain
 include ../../../views/formComponents
 include ../../activities/views/activities-mixins
+
 block title
   | Dashboard
 block content
@@ -16,7 +17,7 @@ mixin my_groups()
   ul
     each group in member.subscribedGroups
       li
-        strong: a(href='../groups/#{group.id}') #{group.longName}
+        strong: a(href='/groups/#{group.id}') #{group.longName}
         | &nbsp;
         if (group.organizers.indexOf(member.id()) > -1)
           span.label(style="background-color: #DF5353") #{t("groups.contact")}

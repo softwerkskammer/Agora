@@ -60,7 +60,7 @@ block content
       ul
         each group in member.subscribedGroups
           li
-            strong: a(href='../groups/#{group.id}') #{group.longName}&nbsp;
+            strong: a(href='/groups/#{group.id}') #{group.longName}&nbsp;
             if (group.organizers.indexOf(member.id()) > -1)
               span.label(style="background-color: #DF5353") #{t("groups.contact")}
   
