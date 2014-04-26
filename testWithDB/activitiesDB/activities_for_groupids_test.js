@@ -24,7 +24,7 @@ describe('Activity application with DB - shows activities for Group-Ids -', func
 
   var futureActivity1 = new Activity({id: "futureActivity1", title: 'Future Activity 1', description: 'description1', assignedGroup: 'groupname1',
     location: 'location1', direction: 'direction1', startUnix: tomorrow_early.unix(), endUnix: day_after_tomorrow.unix(),
-    url: 'url_future', owner: 'owner', resources: {Veranstaltung: {_registeredMembers: [], _registrationOpen: true }}, version: 1});
+    url: 'url_future', owner: 'owner', resources: {Veranstaltung: {_registeredMembers: ['memberId2'], _registrationOpen: true }}, version: 1});
   var futureActivity2 = new Activity({id: "futureActivity2", title: 'Future Activity 2', description: 'description1', assignedGroup: 'groupname2',
     location: 'location1', direction: 'direction1', startUnix: tomorrow_late.unix(), endUnix: day_after_tomorrow.unix(),
     url: 'url_future', owner: 'owner', resources: {Veranstaltung: {_registeredMembers: ['memberId'], _registrationOpen: true }}, version: 1});
