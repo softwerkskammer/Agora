@@ -87,4 +87,12 @@ describe('Activity application with DB - shows activities for Group-Ids -', func
     });
   });
 
+  it('returns and empty list if no matching activities are found', function (done) {
+
+    activitystore.upcomingActivitiesForGroupIdsAndRegisteredMemberId([], 'unknownMemberId', function (err, activities) {
+      expect(activities.length).to.equal(0);
+      done(err);
+    });
+  });
+
 });
