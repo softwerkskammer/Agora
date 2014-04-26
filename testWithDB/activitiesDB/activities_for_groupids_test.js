@@ -78,7 +78,7 @@ describe('Activity application with DB - shows activities for Group-Ids -', func
 
   it('shows current and future activities of Group 1 and activities with subscribed member', function (done) {
 
-    activitystore.upcomingActivitiesForGroupIdsAndMemberId(['groupname1'], 'memberId', function (err, activities) {
+    activitystore.upcomingActivitiesForGroupIdsAndRegisteredMemberId(['groupname1'], 'memberId', function (err, activities) {
       expect(activities.length).to.equal(3);
       expect(activities[0].title()).to.equal('Current Activity 1');
       expect(activities[1].title()).to.equal('Future Activity 1');
