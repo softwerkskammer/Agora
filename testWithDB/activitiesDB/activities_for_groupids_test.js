@@ -87,6 +87,16 @@ describe('Activity application with DB - shows activities for Group-Ids -', func
     });
   });
 
+  it('shows current and future activities of activities with subscribed member', function (done) {
+
+    activitystore.upcomingActivitiesForGroupIdsAndRegisteredMemberId([], 'memberId', function (err, activities) {
+      expect(activities.length).to.equal(2);
+      expect(activities[0].title()).to.equal('Current Activity 1');
+      expect(activities[1].title()).to.equal('Future Activity 2');
+      done(err);
+    });
+  });
+
   it('returns and empty list if no matching activities are found', function (done) {
 
     activitystore.upcomingActivitiesForGroupIdsAndRegisteredMemberId([], 'unknownMemberId', function (err, activities) {
