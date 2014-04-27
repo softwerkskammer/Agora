@@ -9,6 +9,7 @@ var Member = beans.get('member');
 var membersAPI = beans.get('membersAPI');
 var groupsAPI = beans.get('groupsAPI');
 var groupsAndMembersAPI = beans.get('groupsAndMembersAPI');
+var activitiesAPI = beans.get('activitiesAPI');
 var notifications = beans.get('notifications');
 var dummymember;
 
@@ -30,6 +31,9 @@ describe('Members application', function () {
       callback(null, dummymember);
     });
     getSubscribedGroupsForUser = sinon.stub(groupsAPI, 'getSubscribedGroupsForUser', function (email, callback) {
+      callback(null, []);
+    });
+    sinon.stub(activitiesAPI, 'getPastActivitiesOfMember', function (member, callback) {
       callback(null, []);
     });
     sinon.stub(groupsAPI, 'getAllAvailableGroups', function (callback) {

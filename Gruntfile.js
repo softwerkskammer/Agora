@@ -133,7 +133,7 @@ module.exports = function (grunt) {
       testWithDB: {
         src: 'testWithDB', // the folder, not the files,
         options: {
-          root: 'lib',
+          root: 'testWithDB', // to make istanbul _not instrument_ our production code
           mask: '**/*.js',
           reporter: 'dot' // set to 'spec' if you like it more verbose
         }
