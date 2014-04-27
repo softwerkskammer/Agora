@@ -36,7 +36,7 @@ describe('Activity application with DB - shows activities for Group-Ids -', func
     url: 'url_current', owner: 'owner', resources: {Veranstaltung: {_registeredMembers: [{memberId: 'memberId'}], _registrationOpen: true }}, version: 1});
   var currentActivity2 = new Activity({id: "currentActivity2", title: 'Current Activity 2', description: 'description1', assignedGroup: 'groupname2',
     location: 'location1', direction: 'direction1', startUnix: yesterday.unix(), endUnix: tomorrow_early.unix(),
-    url: 'url_current', owner: 'owner', resources: {Veranstaltung: {_registeredMembers: [], _registrationOpen: true }}, version: 1});
+    url: 'url_current', owner: 'owner', resources: {Veranstaltung: {}}, version: 1}); // resource has no registered members!
 
   var pastActivity1 = new Activity({id: "pastActivity1", title: 'Past Activity 1', description: 'description1', assignedGroup: 'groupname',
     location: 'location1', direction: 'direction1', startUnix: day_before_yesterday.unix(), endUnix: yesterday.unix(),
