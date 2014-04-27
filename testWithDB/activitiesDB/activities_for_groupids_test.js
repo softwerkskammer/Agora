@@ -1,4 +1,3 @@
-/*global xdescribe */
 "use strict";
 
 var moment = require('moment-timezone');
@@ -16,7 +15,7 @@ var util = require('util');
 
 var createApp = require('../../testutil/testHelper')('activitiesApp', beans).createApp;
 
-xdescribe('Activity application with DB - shows activities for Group-Ids -', function () {
+describe('Activity application with DB - shows activities for Group-Ids -', function () {
 
   var tomorrow_early = moment().add(1, 'days');
   var tomorrow_late = moment().add(1, 'days').add(1, 'hours');

@@ -133,7 +133,7 @@ module.exports = function (grunt) {
       testWithDB: {
         src: 'testWithDB', // the folder, not the files,
         options: {
-          root: 'lib',
+          root: 'testWithDB', // to make istanbul _not instrument_ our production code
           mask: '**/*.js',
           reporter: 'spec'
         }
@@ -159,6 +159,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-mocha-istanbul');
+  grunt.loadNpmTasks('grunt-mocha-test');
   grunt.loadNpmTasks('grunt-jslint');
 
   // Default task.
