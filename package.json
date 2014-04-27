@@ -82,7 +82,7 @@
   },
   "scripts": {
     "start": "node start",
-    "test": "grunt travis --verbose",
+    "test": "grunt",
     "prepublish": "sh ./prepublish.sh"
   }
 }
