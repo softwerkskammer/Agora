@@ -1,6 +1,7 @@
 extends ../../../views/layout
 
 include ../../../views/formComponents
+include ../../activities/views/activities-mixins
 
 block title
   | #{member.firstname()} #{member.lastname()} - #{t("members.profile")}
@@ -63,4 +64,6 @@ block content
             strong: a(href='/groups/#{group.id}') #{group.longName}&nbsp;
             if (group.organizers.indexOf(member.id()) > -1)
               span.label(style="background-color: #DF5353") #{t("groups.contact")}
-  
+
+      h3 #{t("members.participated_in")}
+      +activityList(pastActivities)
