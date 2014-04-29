@@ -74,7 +74,8 @@ module.exports = function (grunt) {
       },
       clienttests: {
         src: [
-          'frontendtests/*.js'
+          'frontendtests/*.js',
+          'frontendtests/fixtures/*.js'
         ],
         directives: {
           indent: 2,
