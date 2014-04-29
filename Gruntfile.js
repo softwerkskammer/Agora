@@ -208,11 +208,15 @@ module.exports = function (grunt) {
             if (dest.match(/activityform/)) {
               return require('./frontendtests/locals-for-jade/activity-locals');
             }
+            if (dest.match(/announcementform/)) {
+              return require('./frontendtests/locals-for-jade/announcement-locals');
+            }
           }
         },
         files: {
           "frontendtests/fixtures/addonform.html": "lib/activities/views/addon.jade",
-          "frontendtests/fixtures/activityform.html": "lib/activities/views/edit.jade"
+          "frontendtests/fixtures/activityform.html": "lib/activities/views/edit.jade",
+          "frontendtests/fixtures/announcementform.html": "lib/announcements/views/edit.jade"
         }
       }
     }
