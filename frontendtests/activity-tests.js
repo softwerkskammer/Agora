@@ -1,9 +1,8 @@
-/*global activity_validator, initValidator */
+/*global activity_validator */
 (function () {
   "use strict";
 
   var checkFieldMandatory = function (fieldname) {
-    initValidator();
     var field = $(fieldname);
     field.val("");
     field.trigger("change");
@@ -30,7 +29,6 @@
   });
 
   test("start and end must not be identical", 3, function () {
-    initValidator();
     $("#startDate").val("23.09.2011");
     $("#endDate").val("23.09.2011");
     $("#startTime").val("12:11");

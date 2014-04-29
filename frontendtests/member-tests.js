@@ -1,4 +1,4 @@
-/*global member_validator, initValidator*/
+/*global member_validator */
 (function () {
   "use strict";
 
@@ -18,7 +18,6 @@
   });
 
   test("A nickname 'NochNichtVorhanden' is valid", 2, function () {
-    initValidator();
     var nickname = $("#nickname");
     stop();
     nickname.val("NochNichtVorhanden");
@@ -33,7 +32,6 @@
   });
 
   test("Nickname is mandatory and must have at least two letters", 4, function () {
-    initValidator();
     var nickname = $("#nickname");
     nickname.val("");
     equal(member_validator.element(nickname), false);
@@ -44,7 +42,6 @@
   });
 
   test("Nickname checking via Ajax is triggered", 3, function () {
-    initValidator();
     var nickname = $("#nickname");
     member_validator.element(nickname);
     stop();
@@ -59,7 +56,6 @@
   });
 
   var checkFieldMandatory = function (fieldname) {
-    initValidator();
     var field = $(fieldname);
     field.val("");
     equal(member_validator.element(field), false);

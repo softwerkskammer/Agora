@@ -1,12 +1,14 @@
-/* global $, document, nicknameIsNotAvailable, contentsOfNickname, emailAlreadyTaken */
-"use strict";
+/*global nicknameIsNotAvailable, contentsOfNickname, emailAlreadyTaken */
 var member_validator;
+(function () {
+  "use strict";
 
-var initValidator = function () {
+  var initValidator = function () {
 
     // DO NOT FORGET TO KEEP THIS FILE IN SYNC WITH /lib/commons/validation.js
 
-    member_validator = $("#memberform").validate({
+    member_validator = $("#memberform").validate(
+      {
         rules: {
           nickname: {
             required: true,
@@ -56,21 +58,15 @@ var initValidator = function () {
           $(element).parent().removeClass("has-error");
         }
       }
-    )
-    ;
+    );
 
     member_validator.form();
 
     ['#nickname', '#lastname', '#firstname', "#email", "#profession", "#location", "#reference"].forEach(function (each) {
-      $(each).on("change", function () {
+      $(each).on("change", "keyup", function () {
         member_validator.element(each);
       });
-      $(each).keyup(function () {
-        member_validator.element(each);
-      });
-
     });
-
-  }
-  ;
-$(document).ready(initValidator);
+  };
+  $(document).ready(initValidator);
+}());

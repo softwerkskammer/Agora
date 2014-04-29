@@ -1,9 +1,8 @@
-/*global addon_validator, initValidator*/
+/*global addon_validator */
 (function () {
   "use strict";
 
   var checkFieldMandatory = function (fieldname) {
-    initValidator();
     var field = $(fieldname);
     field.val("");
     equal(addon_validator.element(field), false);
@@ -25,7 +24,6 @@
   });
 
   test("Roommate is not mandatory", 1, function () {
-    initValidator();
     var field = $("#roommate");
     field.val("");
     equal(addon_validator.element(field), true);
