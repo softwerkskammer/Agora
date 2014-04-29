@@ -79,6 +79,7 @@ module.exports = function (grunt) {
         directives: {
           indent: 2,
           browser: true,
+          es5: true,
           vars: true,
           predef: ['test', 'equal', 'deepEqual', 'start', 'stop', '$']
         },

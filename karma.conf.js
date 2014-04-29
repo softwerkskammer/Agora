@@ -13,10 +13,7 @@ module.exports = function (config) {
       "public/clientscripts/activityDateModel.js",
       "public/clientscripts/activityform-dateAdapter.js",
       "frontendtests/fixtures/*.js",
-      "public/clientscripts/check-addonform.js",
-      "public/clientscripts/check-activityform.js",
-      "public/clientscripts/check-groupform.js",
-      "public/clientscripts/check-memberform.js",
+      "public/clientscripts/check-*.js",
       "frontendtests/*.js"
     ],
 
