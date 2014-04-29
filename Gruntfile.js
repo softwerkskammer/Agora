@@ -217,6 +217,9 @@ module.exports = function (grunt) {
             if (dest.match(/mailform/)) {
               return require('./frontendtests/locals-for-jade/mailsender-locals');
             }
+            if (dest.match(/memberform/)) {
+              return require('./frontendtests/locals-for-jade/member-locals');
+            }
           }
         },
         files: {
@@ -224,7 +227,8 @@ module.exports = function (grunt) {
           "frontendtests/fixtures/activityform.html": "lib/activities/views/edit.jade",
           "frontendtests/fixtures/announcementform.html": "lib/announcements/views/edit.jade",
           "frontendtests/fixtures/groupform.html": "lib/groups/views/edit.jade",
-          "frontendtests/fixtures/mailform.html": "lib/mailsender/views/compose.jade"
+          "frontendtests/fixtures/mailform.html": "lib/mailsender/views/compose.jade",
+          "frontendtests/fixtures/memberform.html": "lib/members/views/edit.jade"
         }
       }
     }

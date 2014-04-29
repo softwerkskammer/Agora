@@ -3,7 +3,8 @@ module.exports = {
   t: function (string) { return string; },
   accessrights: {
     isRegistered: function () { return true; },
-    isSuperuser: function () { return true; }
+    isSuperuser: function () { return true; },
+    isMember: function () { return true; }
   },
   user: {
     member: {
