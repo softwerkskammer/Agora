@@ -53,6 +53,22 @@ module.exports = function (grunt) {
           errorsOnly: true,
           failOnError: true
         }
+      },
+      client: {
+        src: [
+          'public/clientscripts/global/agora.js'
+        ],
+        directives: {
+          indent: 2,
+          browser: true,
+          vars: true,
+          predef: ['$']
+        },
+        options: {
+          edition: 'latest',
+          errorsOnly: true,
+          failOnError: true
+        }
       }
     },
     watch: {

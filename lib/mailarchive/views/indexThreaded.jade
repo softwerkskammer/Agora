@@ -10,7 +10,7 @@ block content
     .col-md-12
       .page-header
         +pageHeader(group, t("mailarchive.threaded"))
-      .panel-group.pre-scrollable#mails
+      #mails.panel-group.scrollable-box
         - var mailNumber = 0;
         for mailHeader in mailHeaders
           - mailNumber = mailNumber + 1;
