@@ -72,7 +72,6 @@
     "grunt-contrib-concat": "~0.4.0",
     "grunt-contrib-qunit": "~0.4",
     "grunt-contrib-less": "~0.11.0",
-    "grunt-contrib-watch": "~0.6",
     "grunt-jslint": "~1.1",
     "grunt-karma": "~0.8",
     "grunt-mocha-istanbul": "~1.1",

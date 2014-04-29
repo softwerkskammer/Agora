@@ -91,10 +91,6 @@ module.exports = function (grunt) {
         }
       }
     },
-    watch: {
-      files: ['<%= jshint.files %>', '**/*.jade'],
-      tasks: ['default']
-    },
     karma: {
       options: {
         configFile: 'karma.conf.js'
@@ -201,7 +197,6 @@ module.exports = function (grunt) {
   });
 
   // These plugins provide necessary tasks.
-  grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-mocha-istanbul');
