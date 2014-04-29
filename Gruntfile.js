@@ -69,6 +69,22 @@ module.exports = function (grunt) {
           errorsOnly: true,
           failOnError: true
         }
+      },
+      clienttests: {
+        src: [
+          'frontendtests/*.js'
+        ],
+        directives: {
+          indent: 2,
+          browser: true,
+          vars: true,
+          predef: ['test', 'equal', '$']
+        },
+        options: {
+          edition: '2013-08-26',
+          errorsOnly: true,
+          failOnError: true
+        }
       }
     },
     watch: {
