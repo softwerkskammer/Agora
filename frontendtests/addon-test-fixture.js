@@ -2,7 +2,7 @@
 (function () {
   "use strict";
 
-  document.body.innerHTML = '\
+  document.body.innerHTML += '\
 <form id="addonform" method="post" novalidate="novalidate">\
   <textarea id="homeAddress" type="text" name="homeAddress"></textarea>\
   <textarea id="billingAddress" type="text" name="billingAddress"></textarea>\

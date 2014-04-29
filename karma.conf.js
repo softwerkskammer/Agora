@@ -10,8 +10,13 @@ module.exports = function (config) {
     files: [
       "public/clientscripts/global_de.js",
       "frontendtests/addon-test-fixture.js",
+      "frontendtests/activity-test-fixture.js",
       "public/clientscripts/check-addonform.js",
-      "frontendtests/addon-tests.js"
+      "frontendtests/addon-tests.js",
+      "public/clientscripts/activityDateModel.js",
+      "public/clientscripts/activityform-dateAdapter.js",
+      "public/clientscripts/check-activityform.js",
+      "frontendtests/activity-tests.js"
     ],
 
     // list of files to exclude

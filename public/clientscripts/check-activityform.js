@@ -1,4 +1,4 @@
-/* global $, document, activityDateModel, jQuery, endMustBeAfterBegin, urlIsNotAvailable */
+/*global $, activityDateModel, endMustBeAfterBegin, urlIsNotAvailable */
 "use strict";
 var activity_validator;
 
@@ -13,7 +13,7 @@ $(document).ready(function () {
     return endDate !== "" && endTime !== "" && dateAndTime.end.diff(dateAndTime.start, 'minutes') > 0;
   };
 
-  jQuery.validator.addMethod("dateAndTime", validateDateAndTime, jQuery.format(endMustBeAfterBegin));
+  $.validator.addMethod("dateAndTime", validateDateAndTime, $.format(endMustBeAfterBegin));
 
 });
 
@@ -82,10 +82,7 @@ var initValidator = function () {
   activity_validator.form();
 
   ['#title', '#location', "#startDate", "#startTime", "#endDate", "#endTime", "#url"].forEach(function (each) {
-    $(each).on("change", function () {
-      activity_validator.element(each);
-    });
-    $(each).keyup(function () {
+    $(each).on("change", "keyup", function () {
       activity_validator.element(each);
     });
   });

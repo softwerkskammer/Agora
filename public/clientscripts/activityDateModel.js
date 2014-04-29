@@ -40,7 +40,7 @@ var activityDateModel = function (initialDate, initialTime) {
 
       oldStartDate = currentTimes.start;
 
-      return currentTimes.end.add(offset, 'minutes');
+      return currentTimes.end ? currentTimes.end.add(offset, 'minutes') : null;
     },
 
     createDateAndTimeStrings: function (endMoment) {
