@@ -1,4 +1,3 @@
-/*jslint es5: true */
 (function () {
   "use strict";
 
