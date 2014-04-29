@@ -28,7 +28,7 @@ block content
       .page-header
         h2 Verwaltung
           small  Mitglieder
-      .panel.pre-scrollable
+      .table-responsive
         table.table.table-condensed.table-hover.table-striped#membertable
           thead
             tr
@@ -63,5 +63,3 @@ block content
                 td #{member.twitter()}
                 td #{member.notifyOnWikiChanges()}
                 td #{member.authentications() ? member.authentications().join(", ") : ""}
-
-
