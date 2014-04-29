@@ -12,18 +12,12 @@ module.exports = function (config) {
       "frontendtests/lib/jquery.mockjax.js",
       "public/clientscripts/activityDateModel.js",
       "public/clientscripts/activityform-dateAdapter.js",
-      "frontendtests/addon-test-fixture.js",
-      "frontendtests/activity-test-fixture.js",
-      "frontendtests/group-test-fixture.js",
-      "frontendtests/member-test-fixture.js",
+      "frontendtests/fixtures/*.js",
       "public/clientscripts/check-addonform.js",
       "public/clientscripts/check-activityform.js",
       "public/clientscripts/check-groupform.js",
       "public/clientscripts/check-memberform.js",
-      "frontendtests/addon-tests.js",
-      "frontendtests/activity-tests.js",
-      "frontendtests/group-tests.js",
-      "frontendtests/member-tests.js"
+      "frontendtests/*.js"
     ],
 
     // list of files to exclude

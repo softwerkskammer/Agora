@@ -91,9 +91,6 @@ module.exports = function (grunt) {
       files: ['<%= jshint.files %>', '**/*.jade'],
       tasks: ['default']
     },
-    qunit: {
-      files: ['frontendtests/*.html']
-    },
     karma: {
       options: {
         configFile: 'karma.conf.js'
@@ -201,14 +198,13 @@ module.exports = function (grunt) {
 
   // These plugins provide necessary tasks.
   grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-contrib-qunit');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-mocha-istanbul');
   grunt.loadNpmTasks('grunt-jslint');
   grunt.loadNpmTasks('grunt-karma');
   // Default task.
-  grunt.registerTask('default', ['less', 'concat', 'jslint', 'qunit', 'karma:once', 'mocha_istanbul']);
+  grunt.registerTask('default', ['less', 'concat', 'jslint', 'karma:once', 'mocha_istanbul']);
 
   // Travis-CI task
   grunt.registerTask('travis', ['default']);
