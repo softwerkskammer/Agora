@@ -13,6 +13,7 @@ config/*.json*
 !config/testbeansWithDB.json
 log/*.log
 version.jade
+frontendtests/fixtures/*.html
 
 npm-debug.log
 screen.css

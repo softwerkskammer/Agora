@@ -15,7 +15,7 @@ var announcement_validator;
             url: "/announcements/checkurl",
             data: {
               previousUrl: function () {
-                return $("#previousUrl").val();
+                return $("#announcementform [name=previousUrl]").val();
               }
             }
           }
@@ -40,11 +40,14 @@ var announcement_validator;
 
     announcement_validator.form();
 
-    ['#title', '#url', "#author", "thruDate"].forEach(function (each) {
-      $(each).on("change", "keyup", function () {
-        announcement_validator.element(each);
-      });
-    });
+    ['#announcementform [name=title]', '#announcementform [name=url]', "#announcementform [name=author]",
+      "announcementform [name=thruDate]"].forEach(
+      function (each) {
+        $(each).on("change", "keyup", function () {
+          announcement_validator.element(each);
+        });
+      }
+    );
   };
 
   $(document).ready(initValidator);

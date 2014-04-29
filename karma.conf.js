@@ -12,7 +12,8 @@ module.exports = function (config) {
       "frontendtests/lib/jquery.mockjax.js",
       "public/clientscripts/activityDateModel.js",
       "public/clientscripts/activityform-dateAdapter.js",
-      "frontendtests/fixtures/*.js",
+      "frontendtests/fixtures/*.html",
+      "frontendtests/fixtures/*-fixture.js",
       "public/clientscripts/check-*.js",
       "frontendtests/*.js"
     ],
@@ -35,7 +36,7 @@ module.exports = function (config) {
     // level of logging
     // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
     // CLI --log-level debug
-    logLevel: config.LOG_WARN,
+    logLevel: config.LOG_ERROR,
 
     // enable / disable watching file and executing tests whenever any file changes
     // CLI --auto-watch --no-auto-watch
@@ -65,9 +66,6 @@ module.exports = function (config) {
     reportSlowerThan: 500,
 
     preprocessors: {
-      // source files, that you wanna generate coverage for
-      // do not include tests or libraries
-      // (these files will be instrumented by Istanbul)
       '**/*.html': ['html2js']
     },
 

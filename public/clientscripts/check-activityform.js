@@ -6,10 +6,10 @@ var activity_validator;
   $(document).ready(function () {
 
     var validateDateAndTime = function () {
-      var startDate = $('#startDate').val();
-      var startTime = $('#startTime').val();
-      var endDate = $('#endDate').val();
-      var endTime = $('#endTime').val();
+      var startDate = $('#activityform [name=startDate]').val();
+      var startTime = $('#activityform [name=startTime]').val();
+      var endDate = $('#activityform [name=endDate]').val();
+      var endTime = $('#activityform [name=endTime]').val();
       var dateAndTime = activityDateModel(startDate, startTime).convertInputs(startDate, startTime, endDate, endTime);
       return endDate !== "" && endTime !== "" && dateAndTime.end.diff(dateAndTime.start, 'minutes') > 0;
     };
@@ -52,7 +52,7 @@ var activity_validator;
       },
       errorPlacement: function (error, element) {
         if (element.attr("name") === "endDate" || element.attr("name") === "endTime") {
-          error.insertAfter("#dates");
+          error.insertAfter("#activityform [name=dates]");
         } else {
           error.insertAfter(element);
         }
@@ -61,31 +61,34 @@ var activity_validator;
       errorClass: "help-block",
       highlight: function (element) {
         if ($(element).attr("name") === "endDate" || $(element).attr("name") === "endTime") {
-          $("#dates").parent().addClass("has-error");
+          $("#activityform [name=dates]").parent().addClass("has-error");
         } else {
           $(element).parent().addClass("has-error");
         }
       },
       unhighlight: function (element) {
         if ($(element).attr("name") === "endDate" || $(element).attr("name") === "endTime") {
-          $("#dates").parent().removeClass("has-error");
+          $("#activityform [name=dates]").parent().removeClass("has-error");
         } else {
           $(element).parent().removeClass("has-error");
         }
       }
     });
 
-    $("#endDate").datepicker().on('changeDate', function () {
-      activity_validator.element($('#endDate'));
+    $("#activityform [name=endDate]").datepicker().on('changeDate', function () {
+      activity_validator.element($('#activityform [name=endDate]'));
     });
 
     activity_validator.form();
 
-    ['#title', '#location', "#startDate", "#startTime", "#endDate", "#endTime", "#url"].forEach(function (each) {
-      $(each).on("change", "keyup", function () {
-        activity_validator.element(each);
-      });
-    });
+    ['#activityform [name=title]', '#activityform [name=location]', "#activityform [name=startDate]", "#activityform [name=startTime]",
+      "#activityform [name=endDate]", "#activityform [name=endTime]", "#activityform [name=url]"].forEach(
+      function (each) {
+        $(each).on("change", "keyup", function () {
+          activity_validator.element(each);
+        });
+      }
+    );
   };
 
   $(document).ready(initValidator);

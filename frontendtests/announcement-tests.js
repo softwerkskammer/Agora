@@ -13,7 +13,7 @@
   });
 
   test("A url 'ann1' is valid", 2, function () {
-    var url = $("#url");
+    var url = $("#announcementform [name=url]");
     stop();
     url.val("ann1");
     // trigger validation
@@ -27,7 +27,7 @@
   });
 
   test("A url 'NochNichtVorhanden' is valid", 2, function () {
-    var url = $("#url");
+    var url = $("#announcementform [name=url]");
     stop();
     url.val("NochNichtVorhanden");
     // trigger validation
@@ -50,15 +50,15 @@
   };
 
   test("Title is mandatory", 3, function () {
-    checkFieldMandatory("#title");
+    checkFieldMandatory("#announcementform [name=title]");
   });
 
   test("Url is mandatory", 3, function () {
-    checkFieldMandatory("#url");
+    checkFieldMandatory("#announcementform [name=url]");
   });
 
   test("ThruDate is mandatory", 3, function () {
-    checkFieldMandatory("#thruDate");
+    checkFieldMandatory("#announcementform [name=thruDate]");
   });
 
 }());

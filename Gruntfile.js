@@ -12,6 +12,7 @@ module.exports = function (grunt) {
       '* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>;' +
       ' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */\n',
     // Task configuration.
+    clean: ['coverage', 'frontendtests/fixtures/*.html'],
     jslint: {
       server: {
         src: [
@@ -36,7 +37,8 @@ module.exports = function (grunt) {
         src: [
           'test/**/*.js',
           'testWithDB/**/*.js',
-          'testutil/**/*.js'
+          'testutil/**/*.js',
+          'locals-for-jade/*.js'
         ],
         directives: {
           ass: true,
@@ -81,6 +83,7 @@ module.exports = function (grunt) {
           indent: 2,
           browser: true,
           es5: true,
+          nomen: true,
           vars: true,
           predef: ['test', 'equal', 'deepEqual', 'start', 'stop', '$']
         },
@@ -193,17 +196,42 @@ module.exports = function (grunt) {
           }
         }
       }
+    },
+    jade: {
+      compile: {
+        options: {
+          pretty: true,
+          data: function (dest, src) {
+            if (dest.match(/addonform/)) {
+              return require('./frontendtests/locals-for-jade/addon-locals');
+            }
+            if (dest.match(/activityform/)) {
+              return require('./frontendtests/locals-for-jade/activity-locals');
+            }
+          }
+        },
+        files: {
+          "frontendtests/fixtures/addonform.html": "lib/activities/views/addon.jade",
+          "frontendtests/fixtures/activityform.html": "lib/activities/views/edit.jade"
+        }
+      }
     }
   });
 
   // These plugins provide necessary tasks.
+  grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-contrib-jade');
   grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-mocha-istanbul');
   grunt.loadNpmTasks('grunt-jslint');
   grunt.loadNpmTasks('grunt-karma');
+
+  // Combo task for frontendtests
+  grunt.registerTask('frontendtests', ['clean', 'jade', 'karma:once']);
+
   // Default task.
-  grunt.registerTask('default', ['less', 'concat', 'jslint', 'karma:once', 'mocha_istanbul']);
+  grunt.registerTask('default', ['less', 'concat', 'jslint', 'frontendtests', 'mocha_istanbul']);
 
   // Travis-CI task
   grunt.registerTask('travis', ['default']);

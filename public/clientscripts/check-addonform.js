@@ -23,8 +23,7 @@ var addon_validator;
     });
 
     addon_validator.form();
-
-    ['#homeAddress', '#billingAddress', '#tShirtSize'].forEach(function (each) {
+    ['#addonform [name=homeAddress]', '#addonform [name=billingAddress]', '#addonform [name=tShirtSize]'].forEach(function (each) {
       $(each).on("change", "keyup", function () {
         addon_validator.element(each);
       });
