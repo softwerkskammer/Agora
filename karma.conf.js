@@ -9,14 +9,18 @@ module.exports = function (config) {
     // list of files / patterns to load in the browser
     files: [
       "public/clientscripts/global_de.js",
-      "frontendtests/addon-test-fixture.js",
-      "frontendtests/activity-test-fixture.js",
-      "public/clientscripts/check-addonform.js",
-      "frontendtests/addon-tests.js",
+      "frontendtests/lib/jquery.mockjax.js",
       "public/clientscripts/activityDateModel.js",
       "public/clientscripts/activityform-dateAdapter.js",
+      "frontendtests/addon-test-fixture.js",
+      "frontendtests/activity-test-fixture.js",
+      "frontendtests/group-test-fixture.js",
+      "public/clientscripts/check-addonform.js",
       "public/clientscripts/check-activityform.js",
-      "frontendtests/activity-tests.js"
+      "public/clientscripts/check-groupform.js",
+      "frontendtests/addon-tests.js",
+      "frontendtests/activity-tests.js",
+      "frontendtests/group-tests.js"
     ],
 
     // list of files to exclude
@@ -37,7 +41,7 @@ module.exports = function (config) {
     // level of logging
     // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
     // CLI --log-level debug
-    logLevel: config.LOG_INFO,
+    logLevel: config.LOG_WARN,
 
     // enable / disable watching file and executing tests whenever any file changes
     // CLI --auto-watch --no-auto-watch

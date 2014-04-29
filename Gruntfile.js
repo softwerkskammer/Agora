@@ -78,7 +78,7 @@ module.exports = function (grunt) {
           indent: 2,
           browser: true,
           vars: true,
-          predef: ['test', 'equal', '$']
+          predef: ['test', 'equal', 'deepEqual', 'start', 'stop', '$']
         },
         options: {
           edition: '2013-08-26',
