@@ -1,4 +1,4 @@
-/*global groups_validator */
+/*global groups_validator, groupnameAlreadyTaken, prefixAlreadyTaken */
 (function () {
   "use strict";
 
@@ -54,7 +54,7 @@
     $(document).ajaxStop(function () {
       $(document).unbind("ajaxStop");
       equal(groups_validator.element(groupname), false);
-      equal(groups_validator.errorList[0].message, 'Dieser Gruppenname ist bereits vergeben.');
+      equal(groups_validator.errorList[0].message, groupnameAlreadyTaken);
       start();
     });
   });
@@ -94,7 +94,7 @@
     $(document).ajaxStop(function () {
       $(document).unbind("ajaxStop");
       equal(groups_validator.element(prefix), false);
-      equal(groups_validator.errorList[0].message, 'Dieses Präfix ist bereits vergeben.');
+      equal(groups_validator.errorList[0].message, prefixAlreadyTaken);
       start();
     });
   });

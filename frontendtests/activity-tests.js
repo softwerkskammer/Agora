@@ -1,4 +1,4 @@
-/*global activity_validator */
+/*global activity_validator, endMustBeAfterBegin */
 (function () {
   "use strict";
 
@@ -37,7 +37,7 @@
 
     equal(activity_validator.element("#endDate"), false);
     equal(activity_validator.element("#endTime"), false);
-    equal(activity_validator.errorList[0].message, 'Das Ende muss gefüllt sein und nach dem Beginn liegen.');
+    equal(activity_validator.errorList[0].message, endMustBeAfterBegin);
   });
 
 }());

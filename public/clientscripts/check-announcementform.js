@@ -21,7 +21,6 @@ var announcement_validator;
           }
         },
         title: "required",
-        author: "required",
         thruDate: "required"
       },
       messages: {

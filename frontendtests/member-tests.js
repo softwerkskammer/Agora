@@ -1,4 +1,4 @@
-/*global member_validator */
+/*global member_validator, nicknameIsNotAvailable */
 (function () {
   "use strict";
 
@@ -50,7 +50,7 @@
     $(document).ajaxStop(function () {
       $(document).unbind("ajaxStop");
       equal(member_validator.element(nickname), false);
-      equal(member_validator.errorList[0].message, 'Dieser Nickname ist leider nicht verfügbar.');
+      equal(member_validator.errorList[0].message, nicknameIsNotAvailable);
       start();
     });
   });

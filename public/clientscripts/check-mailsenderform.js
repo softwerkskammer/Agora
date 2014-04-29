@@ -1,6 +1,6 @@
+var mail_validator;
 (function () {
   "use strict";
-  var mail_validator;
 
   var initValidator = function () {
 
