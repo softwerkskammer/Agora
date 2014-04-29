@@ -15,12 +15,15 @@ module.exports = function (config) {
       "frontendtests/addon-test-fixture.js",
       "frontendtests/activity-test-fixture.js",
       "frontendtests/group-test-fixture.js",
+      "frontendtests/member-test-fixture.js",
       "public/clientscripts/check-addonform.js",
       "public/clientscripts/check-activityform.js",
       "public/clientscripts/check-groupform.js",
+      "public/clientscripts/check-memberform.js",
       "frontendtests/addon-tests.js",
       "frontendtests/activity-tests.js",
-      "frontendtests/group-tests.js"
+      "frontendtests/group-tests.js",
+      "frontendtests/member-tests.js"
     ],
 
     // list of files to exclude
