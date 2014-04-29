@@ -25,10 +25,7 @@ var initValidator = function () {
   addon_validator.form();
 
   ['#homeAddress', '#billingAddress', '#tShirtSize'].forEach(function (each) {
-    $(each).on("change", function () {
-      addon_validator.element(each);
-    });
-    $(each).keyup(function () {
+    $(each).on("change", "keyup", function () {
       addon_validator.element(each);
     });
   });

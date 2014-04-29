@@ -78,6 +78,20 @@ module.exports = function (grunt) {
     qunit: {
       files: ['frontendtests/*.html']
     },
+    karma: {
+      options: {
+        configFile: 'karma.conf.js'
+      },
+      once: {
+        browsers: ['PhantomJS'],
+        runnerPort: 6666,
+        singleRun: true
+      },
+      continuous: {
+        browsers: ['Chrome'],
+        autoWatch: true
+      }
+    },
     less: {
       minify: {
         options: {
@@ -176,9 +190,9 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-mocha-istanbul');
   grunt.loadNpmTasks('grunt-jslint');
-
+  grunt.loadNpmTasks('grunt-karma');
   // Default task.
-  grunt.registerTask('default', ['less', 'concat', 'jslint', 'qunit', 'mocha_istanbul']);
+  grunt.registerTask('default', ['less', 'concat', 'jslint', 'qunit', 'karma:once', 'mocha_istanbul']);
 
   // Travis-CI task
   grunt.registerTask('travis', ['default']);
