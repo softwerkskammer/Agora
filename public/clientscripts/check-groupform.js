@@ -57,11 +57,14 @@ var groups_validator;
 
     groups_validator.form();
 
-    ["#id", "#longName", "#description", "#type", "#emailPrefix"].forEach(function (each) {
-      $(each).on("change", "keyup", function () {
-        groups_validator.element(each);
-      });
-    });
+    ["#groupform [name=id]", "#groupform [name=longName]", "#groupform [name=description]", "#groupform [name=type]",
+      "#groupform [name=emailPrefix]"].forEach(
+      function (each) {
+        $(each).on("change", "keyup", function () {
+          groups_validator.element(each);
+        });
+      }
+    );
     $.extend($.validator.messages, {
       alphanumeric: contentsOfAlphanumeric
     });

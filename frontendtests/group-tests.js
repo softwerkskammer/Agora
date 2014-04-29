@@ -32,7 +32,7 @@
   });
 
   test("A groupname 'NochNichtVorhanden' is valid", 2, function () {
-    var groupname = $("#id");
+    var groupname = $("#groupform [name=id]");
     stop();
     groupname.val("NochNichtVorhanden");
     // trigger validation
@@ -46,7 +46,7 @@
   });
 
   test("A groupname 'groupa' is invalid", 3, function () {
-    var groupname = $("#id");
+    var groupname = $("#groupform [name=id]");
     groups_validator.element(groupname);
     stop();
     groupname.val("groupa");
@@ -60,19 +60,19 @@
   });
 
   test("A prefix less than 5 letters is invalid", 1, function () {
-    var prefix = $("#emailPrefix");
+    var prefix = $("#groupform [name=emailPrefix]");
     prefix.val("Much");
     equal(groups_validator.element(prefix), false);
   });
 
   test("A prefix longer than 15 letters is invalid", 1, function () {
-    var prefix = $("#emailPrefix");
+    var prefix = $("#groupform [name=emailPrefix]");
     prefix.val("MuchTooMuchText1");
     equal(groups_validator.element(prefix), false);
   });
 
   test("A prefix 'Valid' is valid", 2, function () {
-    var prefix = $("#emailPrefix");
+    var prefix = $("#groupform [name=emailPrefix]");
     stop();
     prefix.val("Valid");
     // trigger validation
@@ -86,7 +86,7 @@
   });
 
   test("A prefix 'groupa' is invalid", 3, function () {
-    var prefix = $("#emailPrefix");
+    var prefix = $("#groupform [name=emailPrefix]");
     groups_validator.element(prefix);
     stop();
     prefix.val("groupa");
