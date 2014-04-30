@@ -6,10 +6,8 @@
   $.mockjax({
     url: "/members/checknickname",
     response: function (formdata) {
-      var nick = formdata.data.nickname.trim(),
-        nicknames = ["Nick", "Nack"];
       this.responseText = "true";
-      if ($.inArray(nick, nicknames) !== -1) {
+      if ($.inArray(formdata.data.nickname, ["Nick", "Nack"]) !== -1) {
         this.responseText = "false";
       }
     },
@@ -41,12 +39,11 @@
     equal(member_validator.errorList[0].message, 'Geben Sie bitte mindestens 2 Zeichen ein.');
   });
 
-  test("Nickname checking via Ajax is triggered", 3, function () {
+  test("Nickname checking via Ajax is triggered", 2, function () {
     var nickname = $("#memberform [name=nickname]");
-    member_validator.element(nickname);
     stop();
     nickname.val("Nick");
-    equal(member_validator.element(nickname), true);
+    nickname.trigger("change");
     $(document).ajaxStop(function () {
       $(document).unbind("ajaxStop");
       equal(member_validator.element(nickname), false);
