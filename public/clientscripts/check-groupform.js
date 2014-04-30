@@ -57,12 +57,17 @@ var groups_validator;
 
     groups_validator.form();
 
+    var handler = function (each) {
+      return function () {
+        groups_validator.element(each);
+      };
+    };
+
     ["#groupform [name=id]", "#groupform [name=longName]", "#groupform [name=description]", "#groupform [name=type]",
       "#groupform [name=emailPrefix]"].forEach(
       function (each) {
-        $(each).on("change", "keyup", function () {
-          groups_validator.element(each);
-        });
+        $(each).on("change", handler(each));
+        $(each).keyup(handler(each));
       }
     );
     $.extend($.validator.messages, {

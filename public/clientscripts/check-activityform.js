@@ -52,7 +52,7 @@ var activity_validator;
       },
       errorPlacement: function (error, element) {
         if (element.attr("name") === "endDate" || element.attr("name") === "endTime") {
-          error.insertAfter("#activityform [name=dates]");
+          error.insertAfter("#dates");
         } else {
           error.insertAfter(element);
         }
@@ -61,14 +61,14 @@ var activity_validator;
       errorClass: "help-block",
       highlight: function (element) {
         if ($(element).attr("name") === "endDate" || $(element).attr("name") === "endTime") {
-          $("#activityform [name=dates]").parent().addClass("has-error");
+          $("#dates").parent().addClass("has-error");
         } else {
           $(element).parent().addClass("has-error");
         }
       },
       unhighlight: function (element) {
         if ($(element).attr("name") === "endDate" || $(element).attr("name") === "endTime") {
-          $("#activityform [name=dates]").parent().removeClass("has-error");
+          $("#dates").parent().removeClass("has-error");
         } else {
           $(element).parent().removeClass("has-error");
         }
@@ -81,12 +81,17 @@ var activity_validator;
 
     activity_validator.form();
 
+    var handler = function (each) {
+      return function () {
+        activity_validator.element(each);
+      };
+    };
+
     ['#activityform [name=title]', '#activityform [name=location]', "#activityform [name=startDate]", "#activityform [name=startTime]",
       "#activityform [name=endDate]", "#activityform [name=endTime]", "#activityform [name=url]"].forEach(
       function (each) {
-        $(each).on("change", "keyup", function () {
-          activity_validator.element(each);
-        });
+        $(each).on("change", handler(each));
+        $(each).keyup(handler(each));
       }
     );
   };

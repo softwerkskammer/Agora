@@ -36,7 +36,7 @@
     stop();
     groupname.val("NochNichtVorhanden");
     // trigger validation
-    groups_validator.element(groupname);
+    groupname.trigger("change");
     $(document).ajaxStop(function () {
       $(document).unbind("ajaxStop");
       equal(groups_validator.element(groupname), true);
@@ -76,7 +76,7 @@
     stop();
     prefix.val("Valid");
     // trigger validation
-    groups_validator.element(prefix);
+    prefix.trigger("change");
     $(document).ajaxStop(function () {
       $(document).unbind("ajaxStop");
       equal(groups_validator.element(prefix), true);
@@ -90,6 +90,7 @@
     groups_validator.element(prefix);
     stop();
     prefix.val("groupa");
+    prefix.trigger("change");
     equal(groups_validator.element(prefix), true);
     $(document).ajaxStop(function () {
       $(document).unbind("ajaxStop");

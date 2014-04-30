@@ -31,7 +31,7 @@ var member_validator;
               url: "/members/checkemail",
               data: {
                 previousEmail: function () {
-                  return $("#previousEmail").val();
+                  return $("#memberform [name=previousEmail]").val();
                 }
               }
             }
@@ -62,11 +62,19 @@ var member_validator;
 
     member_validator.form();
 
-    ['#nickname', '#lastname', '#firstname', "#email", "#profession", "#location", "#reference"].forEach(function (each) {
-      $(each).on("change", "keyup", function () {
+    var handler = function (each) {
+      return function () {
         member_validator.element(each);
-      });
-    });
+      };
+    };
+
+    ['#memberform [name=nickname]', '#memberform [name=lastname]', '#memberform [name=firstname]', "#memberform [name=email]",
+      "#memberform [name=profession]", "#memberform [name=location]", "#memberform [name=reference]"].forEach(
+      function (each) {
+        $(each).on("change", handler(each));
+        $(each).keyup(handler(each));
+      }
+    );
   };
   $(document).ready(initValidator);
 }());

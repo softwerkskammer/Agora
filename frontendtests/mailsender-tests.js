@@ -12,11 +12,11 @@
   };
 
   test("Subject is mandatory", 3, function () {
-    checkFieldMandatory("#subject");
+    checkFieldMandatory("#mailform [name=subject]");
   });
 
   test("Markdown is mandatory", 3, function () {
-    checkFieldMandatory("#markdown");
+    checkFieldMandatory("#mailform [name=markdown]");
   });
 
 }());

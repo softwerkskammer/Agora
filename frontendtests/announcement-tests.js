@@ -17,7 +17,7 @@
     stop();
     url.val("ann1");
     // trigger validation
-    announcement_validator.element(url);
+    url.trigger("change");
     $(document).ajaxStop(function () {
       $(document).unbind("ajaxStop");
       equal(announcement_validator.element(url), true);
@@ -31,7 +31,7 @@
     stop();
     url.val("NochNichtVorhanden");
     // trigger validation
-    announcement_validator.element(url);
+    url.trigger("change");
     $(document).ajaxStop(function () {
       $(document).unbind("ajaxStop");
       equal(announcement_validator.element(url), false);

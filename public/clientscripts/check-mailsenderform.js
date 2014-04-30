@@ -23,10 +23,15 @@ var mail_validator;
 
     mail_validator.form();
 
-    ['#subject', '#markdown'].forEach(function (each) {
-      $(each).on("change", "keyup", function () {
+    var handler = function (each) {
+      return function () {
         mail_validator.element(each);
-      });
+      };
+    };
+
+    ["#mailform [name=subject]", "#mailform [name=markdown]"].forEach(function (each) {
+      $(each).on("change", handler(each));
+      $(each).keyup(handler(each));
     });
   };
 

@@ -18,11 +18,11 @@
   });
 
   test("A nickname 'NochNichtVorhanden' is valid", 2, function () {
-    var nickname = $("#nickname");
+    var nickname = $("#memberform [name=nickname]");
     stop();
     nickname.val("NochNichtVorhanden");
     // trigger validation
-    member_validator.element(nickname);
+    nickname.trigger("change");
     $(document).ajaxStop(function () {
       $(document).unbind("ajaxStop");
       equal(member_validator.element(nickname), true);
@@ -32,7 +32,7 @@
   });
 
   test("Nickname is mandatory and must have at least two letters", 4, function () {
-    var nickname = $("#nickname");
+    var nickname = $("#memberform [name=nickname]");
     nickname.val("");
     equal(member_validator.element(nickname), false);
     equal(member_validator.errorList[0].message, 'Dieses Feld ist ein Pflichtfeld.');
@@ -42,7 +42,7 @@
   });
 
   test("Nickname checking via Ajax is triggered", 3, function () {
-    var nickname = $("#nickname");
+    var nickname = $("#memberform [name=nickname]");
     member_validator.element(nickname);
     stop();
     nickname.val("Nick");
@@ -65,22 +65,22 @@
   };
 
   test("Firstname is mandatory", 3, function () {
-    checkFieldMandatory("#firstname");
+    checkFieldMandatory("#memberform [name=firstname]");
   });
 
   test("Lastname is mandatory", 3, function () {
-    checkFieldMandatory("#lastname");
+    checkFieldMandatory("#memberform [name=lastname]");
   });
 
   test("Location is mandatory", 3, function () {
-    checkFieldMandatory("#location");
+    checkFieldMandatory("#memberform [name=location]");
   });
 
   test("Reference is mandatory", 3, function () {
-    checkFieldMandatory("#reference");
+    checkFieldMandatory("#memberform [name=reference]");
   });
 
   test("Profession is mandatory", 3, function () {
-    checkFieldMandatory("#profession");
+    checkFieldMandatory("#memberform [name=profession]");
   });
 }());

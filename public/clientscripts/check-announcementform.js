@@ -40,12 +40,17 @@ var announcement_validator;
 
     announcement_validator.form();
 
+    var handler = function (each) {
+      return function () {
+        announcement_validator.element(each);
+      };
+    };
+
     ['#announcementform [name=title]', '#announcementform [name=url]', "#announcementform [name=author]",
       "announcementform [name=thruDate]"].forEach(
       function (each) {
-        $(each).on("change", "keyup", function () {
-          announcement_validator.element(each);
-        });
+        $(each).on("change", handler(each));
+        $(each).keyup(handler(each));
       }
     );
   };
