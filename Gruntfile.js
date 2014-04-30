@@ -82,13 +82,12 @@ module.exports = function (grunt) {
         directives: {
           indent: 2,
           browser: true,
-          es5: true,
           nomen: true,
           vars: true,
           predef: ['test', 'equal', 'deepEqual', 'start', 'stop', '$']
         },
         options: {
-          edition: '2013-08-26',
+          edition: 'latest',
           errorsOnly: true,
           failOnError: true
         }
