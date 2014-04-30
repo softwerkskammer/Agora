@@ -1,4 +1,4 @@
-mixin administrationMenu()
+mixin administrationMenu
   if (accessrights.isSuperuser())
     li#administration.dropdown.nav
       a.dropdown-toggle(href="#", data-toggle="dropdown")
@@ -60,16 +60,16 @@ mixin loginMenu(forInline)
 
 
 mixin navbar-inside
+  .navbar-collapse.collapse.collapse-btom
+    ul.nav.navbar-nav.navbar-right
+      +administrationMenu
+      li: a(href="/help.html") #{t("general.faq")}
+      li: a(href="/credits.html") #{t("general.credits")}
+      li: a(href="/impressum.html") #{t("general.legal_notice")}
   .navbar-header
     a.btn.btn-default.navbar-toggle(data-toggle="collapse", data-target=".collapse-btom")
       span.sr-only Toggle
       i.fa.fa-bars.fa-lg
-  .navbar-collapse.collapse.collapse-btom
-    ul.nav.navbar-nav.navbar-right
-      +administrationMenu()
-      li: a(href="/help.html") #{t("general.faq")}
-      li: a(href="/credits.html") #{t("general.credits")}
-      li: a(href="/impressum.html") #{t("general.legal_notice")}
 
 mixin bottomNavbar
   .navbar.navbar-default.bottom.hidden-print.visible-xs

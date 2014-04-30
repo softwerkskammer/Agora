@@ -2,65 +2,82 @@ module.exports = function (grunt) {
   // See http://www.jshint.com/docs/#strict
   "use strict";
 
+  // set up common objects for jslint
+  var jsLintStandardOptions = { edition: 'latest', errorsOnly: true, failOnError: true };
+
+  var serverDirectives = function () {
+    return { indent: 2, node: true, nomen: true, todo: true, unparam: true, vars: true };
+  };
+  var jsLintServerDirectives = serverDirectives();
+  var jsLintServerTestDirectives = serverDirectives();
+  jsLintServerTestDirectives.ass = true;
+  jsLintServerTestDirectives.predef = ['afterEach', 'after', 'beforeEach', 'before', 'describe', 'it'];
+
   // Project configuration.
   grunt.initConfig({
-    // Metadata.
-    pkg: grunt.file.readJSON('package.json'),
-    banner: '/*! <%= pkg.title || pkg.name %> - v<%= pkg.version %> - ' +
-      '<%= grunt.template.today("yyyy-mm-dd") %>\n' +
-      '<%= pkg.homepage ? "* " + pkg.homepage + "\\n" : "" %>' +
-      '* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>;' +
-      ' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */\n',
     // Task configuration.
+    clean: ['coverage', 'frontendtests/fixtures/*.html'],
     jslint: {
       server: {
         src: [
           '*.js',
           'lib/**/*.js'
         ],
-        directives: {
-          indent: 2,
-          node: true,
-          nomen: true,
-          todo: true,
-          unparam: true,
-          vars: true
-        },
-        options: {
-          edition: 'latest',
-          errorsOnly: true,
-          failOnError: true
-        }
+        directives: jsLintServerDirectives,
+        options: jsLintStandardOptions
       },
       servertests: {
         src: [
           'test/**/*.js',
           'testWithDB/**/*.js',
-          'testutil/**/*.js'
+          'testutil/**/*.js',
+          'locals-for-jade/*.js'
+        ],
+        directives: jsLintServerTestDirectives,
+        options: jsLintStandardOptions
+      },
+      client: {
+        src: [
+          'public/clientscripts/global/agora.js',
+          'public/clientscripts/check-*.js',
+          'public/clientscripts/activity*.js'
         ],
         directives: {
-          ass: true,
           indent: 2,
-          node: true,
-          nomen: true,
-          todo: true,
-          unparam: true,
+          browser: true,
           vars: true,
-          predef: ['afterEach', 'after', 'beforeEach', 'before', 'describe', 'it']
+          predef: ['$']
         },
-        options: {
-          edition: 'latest',
-          errorsOnly: true,
-          failOnError: true
-        }
+        options: jsLintStandardOptions
+      },
+      clienttests: {
+        src: [
+          'frontendtests/*.js',
+          'frontendtests/fixtures/*.js'
+        ],
+        directives: {
+          indent: 2,
+          browser: true,
+          vars: true,
+          nomen: true,
+          predef: ['test', 'equal', 'deepEqual', 'start', 'stop', '$']
+        },
+        options: jsLintStandardOptions
       }
     },
-    watch: {
-      files: ['<%= jshint.files %>', '**/*.jade'],
-      tasks: ['default']
-    },
-    qunit: {
-      files: ['frontendtests/*.html']
+    karma: {
+      options: {
+        configFile: 'karma.conf.js'
+      },
+      once: {
+        browsers: ['PhantomJS'],
+        runnerPort: 6666,
+        singleRun: true
+      },
+      continuous: {
+        browsers: ['Chrome'],
+        autoWatch: true
+      }
     },
     less: {
       minify: {
@@ -150,19 +167,58 @@ module.exports = function (grunt) {
           }
         }
       }
+    },
+    jade: {
+      compile: {
+        options: {
+          pretty: true,
+          data: function (dest) {
+            if (dest.match(/addonform/)) {
+              return require('./frontendtests/locals-for-jade/addon-locals');
+            }
+            if (dest.match(/activityform/)) {
+              return require('./frontendtests/locals-for-jade/activity-locals');
+            }
+            if (dest.match(/announcementform/)) {
+              return require('./frontendtests/locals-for-jade/announcement-locals');
+            }
+            if (dest.match(/groupform/)) {
+              return require('./frontendtests/locals-for-jade/group-locals');
+            }
+            if (dest.match(/mailform/)) {
+              return require('./frontendtests/locals-for-jade/mailsender-locals');
+            }
+            if (dest.match(/memberform/)) {
+              return require('./frontendtests/locals-for-jade/member-locals');
+            }
+          }
+        },
+        files: {
+          "frontendtests/fixtures/addonform.html": "lib/activities/views/addon.jade",
+          "frontendtests/fixtures/activityform.html": "lib/activities/views/edit.jade",
+          "frontendtests/fixtures/announcementform.html": "lib/announcements/views/edit.jade",
+          "frontendtests/fixtures/groupform.html": "lib/groups/views/edit.jade",
+          "frontendtests/fixtures/mailform.html": "lib/mailsender/views/compose.jade",
+          "frontendtests/fixtures/memberform.html": "lib/members/views/edit.jade"
+        }
+      }
     }
   });
 
   // These plugins provide necessary tasks.
-  grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-contrib-qunit');
+  grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-contrib-jade');
   grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-mocha-istanbul');
   grunt.loadNpmTasks('grunt-jslint');
+  grunt.loadNpmTasks('grunt-karma');
+
+  // Combo task for frontendtests
+  grunt.registerTask('frontendtests', ['clean', 'jade', 'karma:once']);
 
   // Default task.
-  grunt.registerTask('default', ['less', 'concat', 'jslint', 'qunit', 'mocha_istanbul']);
+  grunt.registerTask('default', ['less', 'concat', 'jslint', 'frontendtests', 'mocha_istanbul']);
 
   // Travis-CI task
   grunt.registerTask('travis', ['default']);

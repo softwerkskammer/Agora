@@ -24,7 +24,7 @@ block content
       .page-header
         h2 Verwaltung
           small  Mitglieder und Gruppen
-      .panel.pre-scrollable
+      .table-responsive
         table.table.table-condensed.table-hover.table-striped#memberandgrouptable
           thead
             tr
@@ -40,4 +40,4 @@ block content
                 for group in groups
                   td.center
                     if member.isInGroup(group.id)
-                      i.fa.fa-check
+                      i.fa.fa-check &nbsp;

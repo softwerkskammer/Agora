@@ -1,12 +1,14 @@
-/* global $, document, nicknameIsNotAvailable, contentsOfNickname, emailAlreadyTaken */
-"use strict";
+/*global nicknameIsNotAvailable, contentsOfNickname, emailAlreadyTaken */
 var member_validator;
+(function () {
+  "use strict";
 
-var initValidator = function () {
+  var initValidator = function () {
 
     // DO NOT FORGET TO KEEP THIS FILE IN SYNC WITH /lib/commons/validation.js
 
-    member_validator = $("#memberform").validate({
+    member_validator = $("#memberform").validate(
+      {
         rules: {
           nickname: {
             required: true,
@@ -29,7 +31,7 @@ var initValidator = function () {
               url: "/members/checkemail",
               data: {
                 previousEmail: function () {
-                  return $("#previousEmail").val();
+                  return $("#memberform [name=previousEmail]").val();
                 }
               }
             }
@@ -56,21 +58,23 @@ var initValidator = function () {
           $(element).parent().removeClass("has-error");
         }
       }
-    )
-    ;
+    );
 
     member_validator.form();
 
-    ['#nickname', '#lastname', '#firstname', "#email", "#profession", "#location", "#reference"].forEach(function (each) {
-      $(each).on("change", function () {
+    var handler = function (each) {
+      return function () {
         member_validator.element(each);
-      });
-      $(each).keyup(function () {
-        member_validator.element(each);
-      });
+      };
+    };
 
-    });
-
-  }
-  ;
-$(document).ready(initValidator);
+    ['#memberform [name=nickname]', '#memberform [name=lastname]', '#memberform [name=firstname]', "#memberform [name=email]",
+      "#memberform [name=profession]", "#memberform [name=location]", "#memberform [name=reference]"].forEach(
+      function (each) {
+        $(each).on("change", handler(each));
+        $(each).keyup(handler(each));
+      }
+    );
+  };
+  $(document).ready(initValidator);
+}());

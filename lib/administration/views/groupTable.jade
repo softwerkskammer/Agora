@@ -30,7 +30,7 @@ block content
           small  Gruppen
   .row
     .col-md-12
-      .panel.pre-scrollable
+      .table-responsive
         table.table.table-condensed.table-hover.table-striped#grouptable
           thead
             tr
@@ -49,4 +49,3 @@ block content
                 td #{group.emailPrefix}
                 td.ellipsis: .tooltiplabel(data-toggle="hover", data-placement="auto top", data-html="true", data-content="#{group.descriptionHTML()}"):   #{group.description}
                 td #{group.type}
-                  
