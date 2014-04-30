@@ -1,4 +1,4 @@
-/*global moment, datepicker_lang, datepicker_format, fc_lang */
+/*global moment, datepicker_lang, datepicker_format, fc_lang, URI */
 
 var surroundWithLink, surroundTwitterName, surroundEmail, displayedActivityStart, displayedActivityEnd;
 (function () {
@@ -96,9 +96,9 @@ var surroundWithLink, surroundTwitterName, surroundEmail, displayedActivityStart
   };
 
   var highlightCurrentSection = function () {
-    var loc = window.location.href; // returns the full URL
-    $('li').filter(function () {
-      return this.id && new RegExp(this.id).test(loc);
+    var result = URI.parse(window.location.href); // full URL
+    $('[data-agoranav]').filter(function () {
+      return new RegExp('^\/' + $(this).attr('data-agoranav')).test(result.path);
     }).first().addClass('active');
   };
 

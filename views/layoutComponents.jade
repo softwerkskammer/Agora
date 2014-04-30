@@ -1,6 +1,6 @@
 mixin administrationMenu
   if (accessrights.isSuperuser())
-    li#administration.dropdown.nav
+    li(data-agoranav='administration').dropdown.nav
       a.dropdown-toggle(href="#", data-toggle="dropdown")
         i.fa.fa-dashboard.fa-fw
         | &nbsp;#{t("general.administration")}&nbsp;
@@ -99,19 +99,19 @@ mixin topNavbar
       li: a(style="padding: 2px;", href="/language/de?currentUrl=#{encodeURIComponent(currentUrl)}"): img(src="/img/flags/Germany.png", alt="Deutsch")
       li: a(style="padding: 2px;", href="/language/en-gb?currentUrl=#{encodeURIComponent(currentUrl)}"): img(src="/img/flags/United-Kingdom.png", alt="English")
     ul.nav.navbar-nav.bottom
-      li#activities: a(href="/activities/upcoming")
+      li(data-agoranav='activities'): a(href="/activities/upcoming")
         span.hidden-sm
           i.fa.fa-calendar.fa-fw
           | &nbsp;#{t("activities.activities")}
         span.visible-sm
           i.fa.fa-calendar.fa-fw
-      li#groups: a(href="/groups")
+      li(data-agoranav='groups'): a(href="/groups")
         span.hidden-sm
           i.fa.fa-group.fa-fw
           | &nbsp;#{t("groups.groups")}
         span.visible-sm
           i.fa.fa-group.fa-fw
-      li#wiki.dropdown
+      li(data-agoranav='wiki').dropdown
         a.dropdown-toggle(href="#", data-toggle="dropdown")
           span.hidden-sm
             i.fa.fa-book.fa-fw
@@ -124,7 +124,7 @@ mixin topNavbar
           if (typeof(wikisubdirs) !== 'undefined')
             for subdir in wikisubdirs
               li: a(href="/wiki/#{subdir}/") #{subdir}
-      li#members: a(href="/members")
+      li(data-agoranav='members'): a(href="/members")
         span.hidden-sm
           if (accessrights.isRegistered())
             i.fa.fa-user.fa-fw
