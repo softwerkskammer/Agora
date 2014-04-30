@@ -2,15 +2,19 @@ module.exports = function (grunt) {
   // See http://www.jshint.com/docs/#strict
   "use strict";
 
+  // set up common objects for jslint
+  var jsLintStandardOptions = { edition: 'latest', errorsOnly: true, failOnError: true };
+
+  var serverDirectives = function () {
+    return { indent: 2, node: true, nomen: true, todo: true, unparam: true, vars: true };
+  };
+  var jsLintServerDirectives = serverDirectives();
+  var jsLintServerTestDirectives = serverDirectives();
+  jsLintServerTestDirectives.ass = true;
+  jsLintServerTestDirectives.predef = ['afterEach', 'after', 'beforeEach', 'before', 'describe', 'it'];
+
   // Project configuration.
   grunt.initConfig({
-    // Metadata.
-    pkg: grunt.file.readJSON('package.json'),
-    banner: '/*! <%= pkg.title || pkg.name %> - v<%= pkg.version %> - ' +
-      '<%= grunt.template.today("yyyy-mm-dd") %>\n' +
-      '<%= pkg.homepage ? "* " + pkg.homepage + "\\n" : "" %>' +
-      '* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>;' +
-      ' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */\n',
     // Task configuration.
     clean: ['coverage', 'frontendtests/fixtures/*.html'],
     jslint: {
@@ -19,19 +23,8 @@ module.exports = function (grunt) {
           '*.js',
           'lib/**/*.js'
         ],
-        directives: {
-          indent: 2,
-          node: true,
-          nomen: true,
-          todo: true,
-          unparam: true,
-          vars: true
-        },
-        options: {
-          edition: 'latest',
-          errorsOnly: true,
-          failOnError: true
-        }
+        directives: jsLintServerDirectives,
+        options: jsLintStandardOptions
       },
       servertests: {
         src: [
@@ -40,21 +33,8 @@ module.exports = function (grunt) {
           'testutil/**/*.js',
           'locals-for-jade/*.js'
         ],
-        directives: {
-          ass: true,
-          indent: 2,
-          node: true,
-          nomen: true,
-          todo: true,
-          unparam: true,
-          vars: true,
-          predef: ['afterEach', 'after', 'beforeEach', 'before', 'describe', 'it']
-        },
-        options: {
-          edition: 'latest',
-          errorsOnly: true,
-          failOnError: true
-        }
+        directives: jsLintServerTestDirectives,
+        options: jsLintStandardOptions
       },
       client: {
         src: [
@@ -68,11 +48,7 @@ module.exports = function (grunt) {
           vars: true,
           predef: ['$']
         },
-        options: {
-          edition: 'latest',
-          errorsOnly: true,
-          failOnError: true
-        }
+        options: jsLintStandardOptions
       },
       clienttests: {
         src: [
@@ -82,15 +58,11 @@ module.exports = function (grunt) {
         directives: {
           indent: 2,
           browser: true,
-          nomen: true,
           vars: true,
+          nomen: true,
           predef: ['test', 'equal', 'deepEqual', 'start', 'stop', '$']
         },
-        options: {
-          edition: 'latest',
-          errorsOnly: true,
-          failOnError: true
-        }
+        options: jsLintStandardOptions
       }
     },
     karma: {
@@ -200,7 +172,7 @@ module.exports = function (grunt) {
       compile: {
         options: {
           pretty: true,
-          data: function (dest, src) {
+          data: function (dest) {
             if (dest.match(/addonform/)) {
               return require('./frontendtests/locals-for-jade/addon-locals');
             }
