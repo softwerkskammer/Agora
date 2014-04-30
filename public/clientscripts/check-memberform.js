@@ -17,7 +17,7 @@ var member_validator;
               url: "/members/checknickname",
               data: {
                 previousNickname: function () {
-                  return $("#previousNickname").val();
+                  return $("#memberform [name=previousNickname]").val();
                 }
               }
             }

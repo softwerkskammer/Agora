@@ -1,30 +1,30 @@
 mixin text(name, label, value, tooltip, placeholder)
   .form-group
     +controlLabel(name, label, tooltip)
-    input.form-control(id=name, type='text', name=name, value=value, placeholder=placeholder)
+    input.form-control(itype='text', name=name, value=value, placeholder=placeholder)
 
 mixin textReadonly(name, label, value)
   .form-group
     +hidden(name, value)
     label(class="control-label", for=name) #{label}:
-    input.form-control(id=name, type='text', name=name, value=value, placeholder=placeholder disabled)
+    input.form-control(type='text', name=name, value=value, placeholder=placeholder disabled)
 
 mixin textareaPure(name, label, value)
   .form-group
     +controlLabel(name, label)
-    textarea.form-control(rows="4", id=name, type='text', name=name)
+    textarea.form-control(rows="4", type='text', name=name)
       | #{value}
 
 mixin textarea(name, label, value, tooltip)
   .form-group
     +controlLabel(name, label, tooltip)
-    textarea.md-textarea(rows="7", id=name, type='text', name=name)
+    textarea.md-textarea(rows="7", type='text', name=name)
       | #{value}
 
 mixin hightextarea(name, label, value, tooltip)
   .form-group
     +controlLabel(name, label, tooltip)
-    textarea.md-textarea(rows="15", id=name, type='text', name=name)
+    textarea.md-textarea(rows="15", type='text', name=name)
       | #{value}
 
 mixin checkbox(name, label, checked, optionalValue)
@@ -53,18 +53,18 @@ mixin submitButtons(submitTextToken)
 
 
 mixin hidden(name, value)
-  input(type="hidden", name=name, id=name, value=value)
+  input(type="hidden", name=name, value=value)
 
 // PICKERS
 mixin date(name, label, value, tooltip)
   .form-group
     +controlLabel(name, label, tooltip)
-    input.form-control.datepicker(id=name, type='text', name=name, value=value)
+    input.form-control.datepicker(type='text', name=name, value=value)
 
 mixin time(name, label, value)
   .form-group.bootstrap-timepicker
     label(class="control-label", for=name) &nbsp;
-    input.form-control.timepicker(id=name, type='text', name=name, value=value)
+    input.form-control.timepicker(type='text', name=name, value=value)
 
 mixin colorPicker(name, value)
   .form-group
@@ -81,7 +81,7 @@ mixin twitter(name, label, value)
     label(class="control-label", for=name) #{label}:
     .input-group
       span.input-group-addon @
-      input.form-control(id=name, type='text', name=name, value=value)
+      input.form-control(type='text', name=name, value=value)
 
 // GENERAL
 mixin csrf

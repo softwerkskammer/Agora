@@ -30,7 +30,7 @@ var activity_validator;
             url: "/activities/checkurl",
             data: {
               previousUrl: function () {
-                return $("#previousUrl").val();
+                return $("#activityform [name=previousUrl]").val();
               }
             }
           }
