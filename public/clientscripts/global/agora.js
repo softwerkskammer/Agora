@@ -1,4 +1,4 @@
-/*global moment, datepicker_lang, datepicker_format, fc_lang */
+/*global moment, datepicker_lang, datepicker_format, fc_lang, URI */
 
 var surroundWithLink, surroundTwitterName, surroundEmail, displayedActivityStart, displayedActivityEnd;
 (function () {
@@ -96,9 +96,9 @@ var surroundWithLink, surroundTwitterName, surroundEmail, displayedActivityStart
   };
 
   var highlightCurrentSection = function () {
-    var loc = window.location.href; // returns the full URL
-    $('li').filter(function () {
-      return this.id && new RegExp(this.id).test(loc);
+    var result = URI.parse(window.location.href); // full URL
+    $('[data-agoranav]').filter(function () {
+      return new RegExp('^\/' + $(this).attr('data-agoranav')).test(result.path);
     }).first().addClass('active');
   };
 
@@ -123,7 +123,7 @@ var surroundWithLink, surroundTwitterName, surroundEmail, displayedActivityStart
           ],
           onPreview: function (e) {
             $.post("/preview",
-              {data: e.getContent(), subdir: ($("#subdir").val() || $("#assignedGroup").val() || $('#id').val()), "_csrf": $("#_csrf").val()},
+              {data: e.getContent(), subdir: ($("[name=subdir]").val() || $("[name=assignedGroup]").val() || $('[name=id]').val()), "_csrf": $("[name=_csrf]").val()},
               function (data) { $(".md-preview").html(data); });
             return ""; // to clearly indicate the loading...
           },

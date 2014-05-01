@@ -64,6 +64,7 @@
     "stripe": "~2.4",
     "underscore.string": "~2.3",
     "useragent": "~2.0",
+    "URIjs": "~1.13",
     "winston": "~0.7",
     "winston-config": "~0.4.0"
   },

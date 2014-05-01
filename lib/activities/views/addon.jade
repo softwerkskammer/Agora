@@ -1,4 +1,4 @@
-include  ../../../views/formComponents
+include  activities-forms
 
 doctype html
 html
@@ -12,21 +12,4 @@ html
       .row
         .col-md-12
           | !{addonConfig.addonInformationHTML()}
-          form#addonform(action='/activities/submitAddon', method='post')
-            +csrf
-            +hidden('url', url)
-            fieldset
-              if (addonConfig.homeAddress())
-                +textareaPure('homeAddress', t("activities.home_address"), addon.homeAddress())
-              if (addonConfig.billingAddress())
-                +textareaPure('billingAddress', t("activities.billing_address"), addon.billingAddress())
-              if (addonConfig.tShirtSize())
-                .form-group
-                  label.control-label(for="tShirtSize") #{t("activities.t_shirt_size")}:
-                  select#tShirtSize.form-control(name="tShirtSize")
-                    for item in ['', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL', 'Ladies\' XS', 'Ladies\' S', 'Ladies\' M', 'Ladies\' L', 'Ladies\' XL', 'Ladies\' XXL' ]
-                      option(selected=addon.tShirtSize() === item) #{item}
-              if (addonConfig.roommate())
-                +text('roommate', t("activities.roommate"), addon.roommate())
-              button.btn.btn-primary.pull-right(type="submit") #{t("general.save")}
-    
+          +addonform(addon)
