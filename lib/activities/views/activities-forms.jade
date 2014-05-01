@@ -1,0 +1,131 @@
+include  ../../../views/formComponents
+
+mixin addonform(addon)
+  form#addonform(action='/activities/submitAddon', method='post')
+    +csrf
+    +hidden('url', url)
+    fieldset
+      if (addonConfig.homeAddress())
+        +textareaPure('homeAddress', t("activities.home_address"), addon.homeAddress())
+      if (addonConfig.billingAddress())
+        +textareaPure('billingAddress', t("activities.billing_address"), addon.billingAddress())
+      if (addonConfig.tShirtSize())
+        .form-group
+          label.control-label(for="tShirtSize") #{t("activities.t_shirt_size")}:
+          select#tShirtSize.form-control(name="tShirtSize")
+            for item in ['', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL', 'Ladies\' XS', 'Ladies\' S', 'Ladies\' M', 'Ladies\' L', 'Ladies\' XL', 'Ladies\' XXL' ]
+              option(selected=addon.tShirtSize() === item) #{item}
+      if (addonConfig.roommate())
+        +text('roommate', t("activities.roommate"), addon.roommate())
+      button.btn.btn-primary.pull-right(type="submit") #{t("general.save")}
+
+mixin activityform(activity, groups)
+  form(id='activityform', action='/activities/submit', method='post')
+    +csrf
+    if (activity.id())
+      +hidden('id', activity.id())
+    +hidden('previousUrl', activity.url())
+    fieldset
+      .row
+        .col-md-12
+          +submitButtons("general.save")
+          legend
+            if (activity.id())
+              | #{t("activities.edit")}
+            else
+              | #{t("activities.create")}
+          ul.nav.nav-tabs
+            li.active: a(href="#main", data-toggle="tab") #{t("general.general")}
+            li: a(href="#ressources", data-toggle="tab") #{t("activities.resources")}
+            li: a(href="#addon", data-toggle="tab") #{t("activities.addon")}
+      .tab-content
+        .tab-pane.active#main
+          .row
+            .col-md-6
+              +text('title', t("activities.title"), activity.title(), t("activities.tooltip.title"))
+              .row
+                .col-xs-6(style="padding-right:5px")
+                  .col-xs-6(style="padding-left:0px;padding-right:3px")
+                    +date('startDate', t("activities.start"), activity.startMoment().lang(language).format('L'), t("activities.tooltip.startdate"))
+                  .col-xs-6(style="padding-left:3px;padding-right:0px")
+                    +time('startTime', '&nbsp;', activity.startMoment().lang(language).format('LT'))
+                .col-xs-6(style="padding-left:5px")
+                  .col-xs-6(style="padding-left:0px;padding-right:3px")
+                    +date('endDate', t("activities.end"), activity.endMoment().lang(language).format('L'), t("activities.tooltip.end"))
+                  #dates.col-xs-6(style="padding-left:3px;padding-right:0px")
+                    +time('endTime', '&nbsp;', activity.endMoment().lang(language).format('LT'))
+              +textarea('description', t("general.description"), activity.description())
+            .col-md-6
+              .form-group
+                button.btn.btn-default.btn-xs.pull-right(type="button", onclick="fillUrlFromText('url', 'title')")
+                  | #{t("activities.suggestion")}
+                +controlLabel('url', t("activities.address_suffix"), t("activities.tooltip.address_suffix"))
+                input.form-control(id='url', type='text', name='url', value=activity.url())
+              +text('location', t("activities.location"), activity.location())
+              +textarea('direction', t("activities.directions"), activity.direction())
+              .form-group
+                label.control-label(for="assignedGroup") #{t("groups.group")}:
+                select#assignedGroup.form-control(name="assignedGroup")
+                  for group in groups
+                    option(value=group.id, selected = (activity.assignedGroup() != undefined && activity.assignedGroup() == group.id)) #{group.longName}
+        .tab-pane#ressources
+          .row
+            .col-md-12
+              #resources
+                .row
+                  .col-xs-3.col-sm-4
+                    +controlLabel("bezeichnung", t("activities.resourcelabel"), t("activities.tooltip.resourcelabel"))
+                  .col-xs-3.col-sm-2
+                    +controlLabel("anzahl", t("activities.count"), t("activities.tooltip.count"))
+                  .col-xs-2.col-sm-2
+                    +controlLabel("registrierung", t("activities.registration"), t("activities.tooltip.registration"))
+                  .col-xs-2.col-sm-2
+                    +controlLabel("registrierung", t("activities.deregistration"), t("activities.tooltip.registration"))
+                  .col-xs-2.col-sm-2
+                    +controlLabel("registrierung", t("activities.waitinglist"), t("activities.tooltip.waitinglist"))
+                each name in activity.resourceNames()
+                  - var resource = activity.resourceNamed(name)
+                  +resourceRow(name, resource.limit(), resource.isRegistrationOpen(), resource.canUnsubscribe(), resource.hasWaitinglist())
+                  +hidden("resources[previousNames]", name)
+                .row.form-group
+                  .col-md-12
+                    button.add.btn.btn-sm.btn-default(type="button")
+                      i.fa.fa-plus
+                      | &nbsp;#{t("activities.resource")}
+        .tab-pane#addon
+          .row
+            .col-md-12
+              #addonConfig
+              p #{t("activities.which_addon_to_collect")}
+          .row
+            .col-md-6
+              +textarea('addonInformation', t("activities.addon_information"), activity.addonConfig().addonInformation())
+            .col-md-6
+              +text('deposit', t("activities.deposit"), activity.addonConfig().deposit())
+              +checkbox('homeAddress', t("activities.home_address") + " *", activity.addonConfig().homeAddress())
+              +checkbox('billingAddress', t("activities.billing_address")+ " *", activity.addonConfig().billingAddress())
+              +checkbox('tShirtSize', t("activities.t_shirt_size")+ " *", activity.addonConfig().tShirtSize())
+              +checkbox('roommate', t("activities.roommate"), activity.addonConfig().roommate())
+      .row
+        .col-md-12
+          hr
+          +submitButtons("general.save")
+
+mixin resourceRow(name, limit, isRegistrationOpen, canUnsubscribe, hasWaitinglist)
+  .row.form-group
+    .col-xs-3.col-sm-4
+      input.form-control(name="resources[names]", value=name, type="text", placeholder=t("activities.label"))
+    .col-xs-3.col-sm-2
+      input.form-control(name="resources[limits]", value=limit, type="text", placeholder=t("activities.unlimited"))
+    .col-xs-2.col-sm-2
+      select.form-control(name="resources[isRegistrationOpen]")
+        option(value="yes", selected=(isRegistrationOpen ? true : false)) #{t("activities.possible")}
+        option(value="no", selected=(isRegistrationOpen ? false : true)) #{t("activities.impossible")}
+    .col-xs-2.col-sm-2
+      select.form-control(name="resources[canUnsubscribe]")
+        option(value="yes", selected=(canUnsubscribe ? true : false)) #{t("activities.possible")}
+        option(value="no", selected=(canUnsubscribe ? false : true)) #{t("activities.impossible")}
+    .col-xs-2.col-sm-2
+      select.form-control(name="resources[hasWaitinglist]")
+        option(value="yes", selected=(hasWaitinglist ? true : false)) #{t("general.yes")}
+        option(value="no", selected=(hasWaitinglist ? false : true)) #{t("general.no")}

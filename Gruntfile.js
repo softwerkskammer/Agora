@@ -31,7 +31,7 @@ module.exports = function (grunt) {
           'test/**/*.js',
           'testWithDB/**/*.js',
           'testutil/**/*.js',
-          'locals-for-jade/*.js'
+          'frontendtests/fixtures/locals.js'
         ],
         directives: jsLintServerTestDirectives,
         options: jsLintStandardOptions
@@ -53,7 +53,7 @@ module.exports = function (grunt) {
       clienttests: {
         src: [
           'frontendtests/*.js',
-          'frontendtests/fixtures/*.js'
+          'frontendtests/fixtures/fixtures.js'
         ],
         directives: {
           indent: 2,
@@ -175,33 +175,11 @@ module.exports = function (grunt) {
         options: {
           pretty: true,
           data: function (dest) {
-            if (dest.match(/addonform/)) {
-              return require('./frontendtests/locals-for-jade/addon-locals');
-            }
-            if (dest.match(/activityform/)) {
-              return require('./frontendtests/locals-for-jade/activity-locals');
-            }
-            if (dest.match(/announcementform/)) {
-              return require('./frontendtests/locals-for-jade/announcement-locals');
-            }
-            if (dest.match(/groupform/)) {
-              return require('./frontendtests/locals-for-jade/group-locals');
-            }
-            if (dest.match(/mailform/)) {
-              return require('./frontendtests/locals-for-jade/mailsender-locals');
-            }
-            if (dest.match(/memberform/)) {
-              return require('./frontendtests/locals-for-jade/member-locals');
-            }
+            return require('./frontendtests/fixtures/locals');
           }
         },
         files: {
-          "frontendtests/fixtures/addonform.html": "lib/activities/views/addon.jade",
-          "frontendtests/fixtures/activityform.html": "lib/activities/views/edit.jade",
-          "frontendtests/fixtures/announcementform.html": "lib/announcements/views/edit.jade",
-          "frontendtests/fixtures/groupform.html": "lib/groups/views/edit.jade",
-          "frontendtests/fixtures/mailform.html": "lib/mailsender/views/compose.jade",
-          "frontendtests/fixtures/memberform.html": "lib/members/views/edit.jade"
+          "frontendtests/fixtures/forms.html": "frontendtests/fixtures/forms.jade"
         }
       }
     }

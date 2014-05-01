@@ -12,8 +12,8 @@ module.exports = function (config) {
       "frontendtests/lib/jquery.mockjax.js",
       "public/clientscripts/activityDateModel.js",
       "public/clientscripts/activityform-dateAdapter.js",
-      "frontendtests/fixtures/*.html",
-      "frontendtests/fixtures/*-fixture.js",
+      "frontendtests/fixtures/forms.html",
+      "frontendtests/fixtures/fixtures.js",
       "public/clientscripts/check-*.js",
       "frontendtests/*.js"
     ],

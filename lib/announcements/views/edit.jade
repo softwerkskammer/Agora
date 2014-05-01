@@ -1,6 +1,6 @@
 extends ../../../views/layout
 
-include  ../../../views/formComponents
+include announcements-forms
 
 block scripts
   script(src="/clientscripts/check-announcementform.js")
@@ -9,31 +9,4 @@ block title
   | #{t("announcements.announcement")}
 
 block content
-  form(id='announcementform', action='/announcements/submit', method='post')
-    +csrf
-    if (announcement.id)
-      +hidden('id', announcement.id)
-    +hidden('fromUnix', announcement.fromUnix)
-    +hidden('previousUrl', announcement.url)
-    +hidden('author', announcement.author)
-    fieldset
-      .row
-        .col-md-12
-          +submitButtons("general.save")
-          legend
-            if (announcement.id)
-              | #{t("announcements.edit")}
-            else
-              |  #{t("announcements.create")}
-      .row
-        .col-md-6
-          +text('title', t("general.title"), announcement.title)
-          +text('url', t("general.url"), announcement.url)
-        .col-md-6
-          +date('thruDate', t("announcements.show_until"), announcement.thruMoment().lang(language).format('L'))
-      .row
-        .col-md-12
-          +hightextarea('message', t("announcements.text"), announcement.message)
-      .row
-        .col-md-12
-          +submitButtons("general.save")
+  +announcementform(announcement)
