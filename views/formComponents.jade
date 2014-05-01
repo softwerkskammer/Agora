@@ -1,31 +1,16 @@
-mixin text(name, label, value, tooltip, placeholder)
+mixin text(name, label, value, tooltip, placeholder, readonly)
   .form-group
     +controlLabel(name, label, tooltip)
-    input.form-control(itype='text', name=name, value=value, placeholder=placeholder)
-
-mixin textReadonly(name, label, value)
-  .form-group
-    +hidden(name, value)
-    label(class="control-label", for=name) #{label}:
-    input.form-control(type='text', name=name, value=value, placeholder=placeholder disabled)
+    input.form-control(id=name, type='text', name=name, value=value, placeholder=placeholder, disabled=readonly)
 
 mixin textareaPure(name, label, value)
-  .form-group
-    +controlLabel(name, label)
-    textarea.form-control(rows="4", type='text', name=name)
-      | #{value}
+  +textareaInternal("form-control", "4", name, label, value)
 
 mixin textarea(name, label, value, tooltip)
-  .form-group
-    +controlLabel(name, label, tooltip)
-    textarea.md-textarea(rows="7", type='text', name=name)
-      | #{value}
+  +textareaInternal("md-textarea", "7", name, label, value, tooltip)
 
 mixin hightextarea(name, label, value, tooltip)
-  .form-group
-    +controlLabel(name, label, tooltip)
-    textarea.md-textarea(rows="15", type='text', name=name)
-      | #{value}
+  +textareaInternal("md-textarea", "15", name, label, value, tooltip)
 
 mixin checkbox(name, label, checked, optionalValue)
   .checkbox
@@ -59,29 +44,29 @@ mixin hidden(name, value)
 mixin date(name, label, value, tooltip)
   .form-group
     +controlLabel(name, label, tooltip)
-    input.form-control.datepicker(type='text', name=name, value=value)
+    input.form-control.datepicker(id=name, type='text', name=name, value=value)
 
 mixin time(name, label, value)
   .form-group.bootstrap-timepicker
-    label(class="control-label", for=name) &nbsp;
-    input.form-control.timepicker(type='text', name=name, value=value)
+    +controlLabel(name, "&nbsp")
+    input.form-control.timepicker(id=name, type='text', name=name, value=value)
 
 mixin colorPicker(name, value)
   .form-group
-    label.control-label(for="color") #{t("colors.color")}:
-    input#color.form-control(type="text", name=name, value=value)
+    +controlLabel(name, t("colors.color"))
+    input.form-control.colorpicker(id=name, type="text", name=name, value=value)
     script.
-      $("#color").pickAColor();
+      $(".colorpicker").pickAColor();
 
 // PICKERS END
 
 // SPECIAL
 mixin twitter(name, label, value)
   .form-group
-    label(class="control-label", for=name) #{label}:
+    +controlLabel(name, label)
     .input-group
       span.input-group-addon @
-      input.form-control(type='text', name=name, value=value)
+      input.form-control(id=name, type='text', name=name, value=value)
 
 // GENERAL
 mixin csrf
@@ -89,11 +74,11 @@ mixin csrf
 
 mixin controlLabel(name, label, tooltip)
   label.control-label(for=name)
-    -if (typeof(tooltip) !== 'undefined')
+    -if (tooltip)
       span.tooltiplabel(data-toggle="tooltip", data-original-title="#{tooltip}") #{label}:&nbsp;
         i.fa.fa-question-circle
       script.
-        $('.tooltiplabel').each(function(each) {$(this).tooltip()})
+        $('.tooltiplabel').each(function() {$(this).tooltip()})
     -else
       | #{label}:
 
@@ -101,9 +86,14 @@ mixin checkboxWithDescription(name, label, checked, description, optionalValue)
   .checkbox
     label
       input(type='checkbox', name=name, value=optionalValue, checked=(checked ? "true" : undefined))
-      -if (!!description)
+      -if (description)
         span.popover-highlight(rel="tooltip-in-body", data-content="#{description}") #{label}
       -else
         | #{label}
-        
+
+mixin textareaInternal(classname, rowCount, name, label, value, tooltip)
+  .form-group
+    +controlLabel(name, label, tooltip)
+    textarea(class=classname, id=name, rows=rowCount, type='text', name=name) #{value}
+
 

@@ -80,7 +80,7 @@ describe('Announcement application', function () {
     request(createApp('author'))
       .get('/edit/' + url)
       .expect(200)
-      .expect(/<input type="text" name="thruDate" value="31\.12\.2013"/)
+      .expect(/<input id="thruDate" type="text" name="thruDate" value="31\.12\.2013"/)
       .expect(/<legend>Nachricht bearbeiten/, function (err) {
         expect(getAnnouncement.calledWith(url)).to.be(true);
         done(err);

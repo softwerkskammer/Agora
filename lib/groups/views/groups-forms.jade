@@ -17,16 +17,10 @@ mixin groupform(group, allTypes, organizersChecked)
               |  #{t("groups.create")}
       .row
         .col-md-6
-          if (group.id)
-            +textReadonly('id', t("general.name"), group.id)
-          else
-            +text('id', t("general.name"), group.id, t("groups.tooltip.name"))
+          +text('id', t("general.name"), group.id, t("groups.tooltip.name"), "", group.id)
           +text('longName', t("general.title"), group.longName, t("groups.tooltip.title"))
         .col-md-6
-          if (group.id)
-            +textReadonly('emailPrefix', t("groups.email_prefix"), group.emailPrefix)
-          else
-            +text('emailPrefix', t("groups.email_prefix"), group.emailPrefix, t("groups.tooltip.email_prefix"))
+          +text('emailPrefix', t("groups.email_prefix"), group.emailPrefix, t("groups.tooltip.email_prefix"), "", group.id)
           +colorPicker('color', group.color)
       .row
         .col-md-12
