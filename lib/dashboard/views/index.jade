@@ -1,6 +1,7 @@
 extends ../../../views/layoutOnlyMain
 include ../../activities/views/activities-mixins
 include ../../wiki/views/wiki-mixins
+include ../../mailarchive/views/mailheader-mixin
 
 block title
   | Dashboard
@@ -20,17 +21,15 @@ mixin my_groups
         -var group = member.subscribedGroups[j]
           .col-sm-4
             .panel.panel-default
-              .panel-heading(style="background-color: #{group.color};color: #FFFFFF")
-                b #{group.longName}
+              .panel-heading(style="background-color: #{group.color};")
+                a(style="color: #FFFFFF;", href="/groups/#{group.id}"): b #{group.longName}
               .panel-body
                 +blogposts-inline(postsByGroup[group.id])
-                if (changesByGroup[group.id].length > 0)
-                  h4 Wiki Changes
-                ul.list-unstyled
-                  each changes in changesByGroup[group.id]
-                    li
-                      a(href="/wiki/#{changes.dirname()}/#{changes.pureName()}") #{changes.pureName()}
-                      small: span.pull-right #{changes.date().lang(language).format('L')}
+                +wikichanges(changesByGroup[group.id])
+                hr
+                if (mailsByGroup[group.id].length > 0)
+                  h4 Latest from Mailarchive
+                  +mailIndex(mailsByGroup[group.id])
 
 mixin my_activities
   .panel.panel-default

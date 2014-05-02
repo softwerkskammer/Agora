@@ -111,6 +111,7 @@ module.exports = {
     useApp(app, 'mailarchive', beans.get('mailarchiveApp'));
     useApp(app, 'wiki', beans.get('wikiApp'));
     useApp(app, 'waitinglist', beans.get('waitinglistApp'));
+    useApp(app, 'dashboard', beans.get('dashboardApp'));
 
     app.use(beans.get('handle404')(appLogger));
     app.use(beans.get('handle500')(appLogger));

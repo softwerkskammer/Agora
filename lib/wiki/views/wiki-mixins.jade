@@ -16,4 +16,13 @@ mixin blogposts-inline(posts)
     p #{post.teaser}
       span.pull-right: a(href="/wiki/#{post.path}") #{t("groups.more")}
     hr
-      
+
+mixin wikichanges(changesList)
+  if (changesList.length > 0)
+    h4 Wiki Changes
+    ul.list-unstyled
+      each changes in changesList
+        li
+          a(href="/wiki/#{changes.dirname()}/#{changes.pureName()}") #{changes.pureName()}
+          small: span.pull-right #{changes.date().lang(language).format('L')}
+
