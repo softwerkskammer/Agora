@@ -1,0 +1,19 @@
+mixin blogposts-panel(posts)
+  h4 #{t("wiki.blogposts")}
+  for post in posts
+    .panel.panel-default
+      .panel-heading
+        h1.panel-title #{post.title}&nbsp;
+          small.pull-right #{post.date.lang(language).format('LL')}
+      .panel-body
+        p #{post.teaser}
+          .pull-right: a(href="/wiki/#{post.path}") #{t("groups.more")}
+
+mixin blogposts-inline(posts)
+  for post in posts
+    h4 #{post.title}&nbsp;
+      small.pull-right #{post.date.lang(language).format('L')}
+    p #{post.teaser}
+      span.pull-right: a(href="/wiki/#{post.path}") #{t("groups.more")}
+    hr
+      
