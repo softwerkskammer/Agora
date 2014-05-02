@@ -1,64 +1,49 @@
 extends ../../../views/layoutOnlyMain
-include ../../../views/formComponents
 include ../../activities/views/activities-mixins
+include ../../wiki/views/wiki-mixins
 
 block title
   | Dashboard
 block content
   .row
-    .col-md-8
-      +my_activities()
-    .col-md-4
-  .row
-    .col-md-8
-      +my_groups()
-    .col-md-4
-  +groupPanels()
+    .col-sm-6
+      +my_activities
+    .col-sm-6
+      .well: p Hier muss dann nochmal was sein
+  +my_groups
 
-mixin my_groups()
-  h3 #{t("members.member_of")}
-  ul
-    each group in member.subscribedGroups
-      li
-        strong: a(href='/groups/#{group.id}') #{group.longName}
-        | &nbsp;
-        if (group.organizers.indexOf(member.id()) > -1)
-          span.label(style="background-color: #DF5353") #{t("groups.contact")}
-
-mixin groupPanels()
+mixin my_groups
   -var n = member.subscribedGroups.length
   -for(var i = 0; i < n; i += 3)
     .row
       -for(var j = i; j < Math.min(n, 3+i); j++)
         -var group = member.subscribedGroups[j]
-          .col-md-4
+          .col-sm-4
             .panel.panel-default
               .panel-heading(style="background-color: #{group.color};color: #FFFFFF")
                 b #{group.longName}
               .panel-body
-                p Dies ist der Body
+                +blogposts-inline(postsByGroup[group.id])
+                if (changesByGroup[group.id].length > 0)
+                  h4 Wiki Changes
+                ul.list-unstyled
+                  each changes in changesByGroup[group.id]
+                    li
+                      a(href="/wiki/#{changes.dirname()}/#{changes.pureName()}") #{changes.pureName()}
+                      small: span.pull-right #{changes.date().lang(language).format('L')}
 
-mixin my_activities()
+mixin my_activities
   .panel.panel-default
     .panel-heading
       b Kommende Aktivitäten
-    table.table.table-condensed.table-hover
-      tr
-        th &nbsp;
-        th Datum
-        th Titel
-        th Gruppe
+    ul.list-group
       each activity in activities
         -var angemeldet = (member && activity.allRegisteredMembers().indexOf(member.id()) > -1)
-        tr
-          td
-            if (angemeldet)
-              i.fa.fa-check.fa-fw.text-success.tooltipify(data-toggle="tooltip" title="Du bist angemeldet.")
-            else
-              i.fa.fa-question.fa-fw.tooltipify(data-toggle="tooltip" title="Du bist noch nicht angemeldet.")
-          td #{activity.startMoment().lang(language).format('LL')}
-          td
-            a(href='/activities/#{encodeURIComponent(activity.url())}') #{activity.title()}
-          td(style="color: #{activity.colorRGB};")
-            | #{activity.groupName()}
-                                     
+        li.list-group-item
+          if (angemeldet)
+            i.fa.fa-check.fa-fw.text-success.tooltipify(data-toggle="tooltip" title="Du bist angemeldet.")
+          else
+            i.fa.fa-question.fa-fw.tooltipify(data-toggle="tooltip" title="Du bist nicht angemeldet.")
+          | &nbsp; #{activity.startMoment().lang(language).format('L')} &nbsp; 
+          a(href='/activities/#{encodeURIComponent(activity.url())}') #{activity.title()}
+          span.pull-right(style="color: #{activity.colorRGB};") #{activity.groupName()}
