@@ -2,7 +2,7 @@
 
 var request = require('supertest');
 var sinon = require('sinon');
-var sinonSandbox = sinon.sandbox.create();
+var sinon = sinon.sandbox.create();
 var expect = require('must');
 var moment = require('moment-timezone');
 
@@ -16,7 +16,7 @@ var app = require('../../testutil/testHelper')('mailarchiveApp').createApp();
 
 describe('Mail content page', function () {
   afterEach(function () {
-    sinonSandbox.restore();
+    sinon.restore();
   });
 
   it('shows "page not found" error if no message is given', function (done) {
@@ -28,7 +28,7 @@ describe('Mail content page', function () {
   });
 
   it('shows text "Keine E-Mails" if mail is not found', function (done) {
-    var mailForId = sinonSandbox.stub(mailarchiveAPI, 'mailForId', function (id, callback) {callback(null, undefined); });
+    var mailForId = sinon.stub(mailarchiveAPI, 'mailForId', function (id, callback) {callback(null, undefined); });
     request(app)
       .get('/message/mailID')
       .expect(200)
@@ -44,7 +44,7 @@ describe('Mail content page', function () {
       "id": "<message1@nomail.com>"
     });
 
-    var mailForId = sinonSandbox.stub(mailarchiveAPI, 'mailForId', function (id, callback) {callback(null, displayedMail); });
+    var mailForId = sinon.stub(mailarchiveAPI, 'mailForId', function (id, callback) {callback(null, displayedMail); });
     request(app)
       .get('/message/mailID')
       .expect(200)
@@ -60,7 +60,7 @@ describe('Mail content page', function () {
       "id": '<message1@nomail.com>'
     });
 
-    var mailForId = sinonSandbox.stub(mailarchiveAPI, 'mailForId', function (id, callback) {callback(null, displayedMail); });
+    var mailForId = sinon.stub(mailarchiveAPI, 'mailForId', function (id, callback) {callback(null, displayedMail); });
     request(app)
       .get('/message/mailID')
       .expect(200)
@@ -76,7 +76,7 @@ describe('Mail content page', function () {
     });
     displayedMail.member = member;
 
-    var mailForId = sinonSandbox.stub(mailarchiveAPI, 'mailForId', function (id, callback) {callback(null, displayedMail); });
+    var mailForId = sinon.stub(mailarchiveAPI, 'mailForId', function (id, callback) {callback(null, displayedMail); });
 
     request(app)
       .get('/message/mailID')
@@ -91,12 +91,12 @@ describe('Mail content page', function () {
 
 describe('Mail index page', function () {
   afterEach(function () {
-    sinonSandbox.restore();
+    sinon.restore();
   });
 
   function stubMailHeaders(headers) {
-    sinonSandbox.stub(mailarchiveAPI, 'threadedMails', function (group, callback) {callback(null, headers); });
-    sinonSandbox.stub(mailarchiveAPI, 'unthreadedMails', function (group, callback) {callback(null, headers); });
+    sinon.stub(mailarchiveAPI, 'threadedMails', function (group, callback) {callback(null, headers); });
+    sinon.stub(mailarchiveAPI, 'unthreadedMails', function (group, callback) {callback(null, headers); });
   }
 
   it('shows group name in the title', function (done) {
@@ -170,7 +170,7 @@ describe('Mail index page', function () {
     request(app)
       .get('/list/threaded/group')
       .expect(200)
-      .expect(new RegExp(mailTime.format("LLLL")), function (err) {
+      .expect(new RegExp(mailTime.format("L")), function (err) {
         done(err);
       });
   });

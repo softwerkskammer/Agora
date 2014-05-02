@@ -89,7 +89,7 @@ describe('Import of mails from files with mime messages', function () {
 
   it('imports date and time', function (done) {
     mailimport(fileWithTextOnlyWithoutSenderName, 'group', function (err, result) {
-      expect(result.timeUnix).to.equal(moment('Mon, 25 Mar 2013 21:14:14 +0100').unix());
+      expect(result.timeUnix).to.equal(moment('Mon, 25 Mar 2013 21:14:14 +0100', 'ddd, DD MMM YYYY HH:mm:ss ZZ', 'en').unix());
       done(err);
     });
   });

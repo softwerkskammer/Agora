@@ -29,5 +29,5 @@ mixin mailattributes(mailHeader)
     a(href="/members/" + encodeURIComponent(mailHeader.memberNickname())) #{mailHeader.displayedSenderName()}
   else
     | #{mailHeader.displayedSenderName()}
-  | , #{mailHeader.displayedTime}
+  | , #{mailHeader.time && mailHeader.time.lang(language).format("L")}
 
