@@ -5,7 +5,7 @@ include ../../mailarchive/views/mailheader-mixin
 block scripts
   script.
     $(document).ready(function () {
-      $('a.chevron').click(function() {$(this).find('i').toggleClass('fa-chevron-down fa-chevron-right')});
+      $('a.chevron').click(function() {$(this).find('i').toggleClass('fa-toggle-down fa-toggle-right')});
     });
 
 block title
@@ -20,25 +20,29 @@ block content
 
 mixin my_groups
   -var n = member.subscribedGroups.length
-  -for(var i = 0; i < n; i += 3)
-    .row
-      -for(var j = i; j < Math.min(n, 3+i); j++)
-        -var group = member.subscribedGroups[j]
-          .col-sm-4
-            -var panelid = group.id + '-grouppanel'
-            .panel.panel-default(id="#{panelid}")
-              .panel-heading(style="background-color: #{group.color}; color: #FFFFFF;")
-                b #{group.longName}
-                a(style="color: #FFFFFF;", href="/groups/#{group.id}"): span.pull-right: i.fa.fa-group.fa-fw
-              .panel-body
-                +wikichangesOrBlogs(postsByGroup[group.id], panelid, 'blogs', 'Blogposts')
-                +wikichangesOrBlogs(changesByGroup[group.id], panelid, 'changes', 'Wiki-Changes')
-                if (mailsByGroup[group.id].length > 0)
-                  h4: a.chevron(data-toggle="collapse", data-target="##{panelid} .mails")
-                    i.fa.fa-chevron-down.fa-fw.blog
-                    | Latest from Mailarchive
-                  .mails.collapse.in
-                    +mailIndex(mailsByGroup[group.id])
+  .row
+    -for(var i = 0; i < 3; i += 1)
+      if (i <= n)
+        .col-sm-4
+          -for(var j = i; j < n; j += 3)
+            -var group = member.subscribedGroups[j]
+              -var panelid = group.id + '-grouppanel'
+              .panel.panel-default
+                .panel-heading(style="background-color: #{group.color}; color: #FFFFFF;")
+                  a.inherit-color.chevron(data-toggle="collapse", data-target="##{panelid}"): b
+                    i.fa.fa-toggle-down.fa-fw.blog
+                  | &nbsp;#{group.longName}
+                  a.inherit-color(href="/groups/#{group.id}"): span.pull-right: i.fa.fa-group.fa-fw.tooltipify(data-toggle="tooltip" title="Go to group.")
+                .panel-body.collapse.in(id="#{panelid}")
+                  +wikichangesOrBlogs(postsByGroup[group.id], panelid, 'blogs', 'Blogposts')
+                  +wikichangesOrBlogs(changesByGroup[group.id], panelid, 'changes', 'Wiki-Changes')
+                  if (mailsByGroup[group.id].length > 0)
+                    h5
+                      a.chevron(data-toggle="collapse", data-target="##{panelid} .mails")
+                        i.fa.fa-toggle-down.fa-fw.blog
+                      | &nbsp;Latest from Mailarchive
+                    .mails.collapse.in
+                      +mailIndex(mailsByGroup[group.id])
 
 mixin my_activities
   .panel.panel-default
@@ -58,9 +62,10 @@ mixin my_activities
 
 mixin wikichangesOrBlogs(items, panelid, prefix, title)
   if (items.length > 0)
-    h4: a.chevron(data-toggle="collapse", data-target="##{panelid} .#{prefix}")
-      i.fa.fa-chevron-down.fa-fw.blog
-      | #{title}
+    h5
+      a.chevron(data-toggle="collapse", data-target="##{panelid} .#{prefix}")
+        i.fa.fa-toggle-down.fa-fw.blog
+      | &nbsp;#{title}
     div(class="#{prefix} collapse in")
       ul.list-unstyled
         each item in items
@@ -70,5 +75,5 @@ mixin wikichangesOrBlogs(items, panelid, prefix, title)
                 .modal-content
             a(data-toggle="modal", data-target="##{item.dialogId()}", href="#{item.dialogUrl()}") #{item.pureName()}
             small.pull-right #{item.date().lang(language).format('L')}&nbsp;
-              a(href="#{item.url()}", title="go to item's page"): i.fa.fa-book.fa-fw
+              a(href="#{item.url()}"): i.fa.fa-book.fa-fw.tooltipify(data-toggle="tooltip" title="Go to item's page.")
     hr
