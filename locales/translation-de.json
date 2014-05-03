@@ -137,7 +137,9 @@
       "count": "Maximale Teilnehmerzahl (keine Beschränkung bei leerem Feld, keine Registrierung möglich bei 0)",
       "registration": "Hiermit lässt sich die Registrierung freigeben oder sperren",
       "deregistration": "Hiermit lässt sich die Möglichkeit zur Abmeldung freigeben oder sperren",
-      "waitinglist": "Soll die Ressource eine Warteliste bekommen?"
+      "waitinglist": "Soll die Ressource eine Warteliste bekommen?",
+      "registered": "Du bist angemeldet.",
+      "unknown": "Du bist nicht angemeldet."
     }
   },
   "payment": {
@@ -223,7 +225,8 @@
       "email_prefix": "steht innerhalb [] vor dem Subject in gesendeten E-Mails",
       "x_coord": "Waagerechte Position auf der Karte",
       "y_coord": "Senkrechte Position auf der Karte",
-      "map_label": "Label, das in der Karte angezeigt wird"
+      "map_label": "Label, das in der Karte angezeigt wird",
+      "gotogroup": "Zur Gruppenseite."
     }
   },
   "mailarchive": {
@@ -231,7 +234,8 @@
     "emails": "E-Mails",
     "no_emails": "Keine E-Mails",
     "threaded": "Threaded",
-    "unthreaded": "Flat"
+    "unthreaded": "Flat",
+    "recent": "$t(mailarchive.archive) - Neueste"
   },
   "mailsender": {
     "notification": "Nachricht",
@@ -277,7 +281,7 @@
     "resign": "Austreten"
   },
   "wiki": {
-    "blogposts": "Blogartikel:",
+    "blogposts": "Blogartikel",
     "overview": "Übersicht der Dateien in",
     "wiki": "Wiki",
     "subwiki": "Subwiki",
@@ -302,7 +306,11 @@
     "searchresults": "Suchergebnis",
     "no_results": "Keine Ergebnisse",
     "line": "Zeile",
-    "filename": "im Dateinamen"
+    "filename": "im Dateinamen",
+    "changes": "Wiki Änderungen",
+    "tooltip": {
+      "gotopage": "Zur Seite."
+    }
   },
   "message": {
     "title": {

@@ -137,7 +137,9 @@
       "count": "Maximal participant count (No limit if field is empty, registration impossible if 0)",
       "registration": "Here you can allow or block registration",
       "deregistration": "Here you can allow or block de-registration",
-      "waitinglist": "Should the resource have a waiting list?"
+      "waitinglist": "Should the resource have a waiting list?",
+      "registered": "You are registered.",
+      "unknown": "You are not registered."
     }
   },
   "payment": {
@@ -223,7 +225,8 @@
       "email_prefix": "surrounded by [], it prefixes the subject of e-mails sent via the group",
       "x_coord": "Horizontal position on the map",
       "y_coord": "Vertical position on the map",
-      "map_label": "Label that is displayed in the map"
+      "map_label": "Label that is displayed in the map",
+      "gotogroup": "Go to group's page."
     }
   },
   "mailarchive": {
@@ -231,7 +234,8 @@
     "emails": "E-mails",
     "no_emails": "No e-mails",
     "threaded": "Threaded",
-    "unthreaded": "Flat"
+    "unthreaded": "Flat",
+    "recent": "$t(mailarchive.archive) - Recent"
   },
   "mailsender": {
     "notification": "Notification",
@@ -277,7 +281,7 @@
     "resign": "Resign"
   },
   "wiki": {
-    "blogposts": "Blog Posts:",
+    "blogposts": "Blog Posts",
     "overview": "Overview of files in",
     "wiki": "Wiki",
     "subwiki": "Subwiki",
@@ -302,7 +306,11 @@
     "searchresults": "Search Results",
     "no_results": "No results",
     "line": "line",
-    "filename": "part of filename"
+    "filename": "part of filename",
+    "changes": "Wiki Changes",
+    "tooltip": {
+      "gotopage": "Go to page."
+    }
   },
   "message": {
     "title": {

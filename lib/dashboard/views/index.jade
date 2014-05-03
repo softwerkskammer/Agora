@@ -32,15 +32,15 @@ mixin my_groups
                   a.inherit-color.chevron(data-toggle="collapse", data-target="##{panelid}"): b
                     i.fa.fa-toggle-down.fa-fw.blog
                   | &nbsp;#{group.longName}
-                  a.inherit-color(href="/groups/#{group.id}"): span.pull-right: i.fa.fa-group.fa-fw.tooltipify(data-toggle="tooltip" title="Go to group.")
+                  a.inherit-color(href="/groups/#{group.id}"): span.pull-right: i.fa.fa-group.fa-fw.tooltipify(data-toggle="tooltip" title="#{t('groups.tooltip.gotogroup')}")
                 .panel-body.collapse.in(id="#{panelid}")
-                  +wikichangesOrBlogs(postsByGroup[group.id], panelid, 'blogs', 'Blogposts')
-                  +wikichangesOrBlogs(changesByGroup[group.id], panelid, 'changes', 'Wiki-Changes')
+                  +wikichangesOrBlogs(postsByGroup[group.id], panelid, 'blogs', t("wiki.blogposts"))
+                  +wikichangesOrBlogs(changesByGroup[group.id], panelid, 'changes', t("wiki.changes"))
                   if (mailsByGroup[group.id].length > 0)
                     h5
                       a.chevron(data-toggle="collapse", data-target="##{panelid} .mails")
                         i.fa.fa-toggle-down.fa-fw.blog
-                      | &nbsp;Latest from Mailarchive
+                      | &nbsp;#{t("mailarchive.recent")}
                     .mails.collapse.in
                       +mailIndex(mailsByGroup[group.id])
 
@@ -53,9 +53,9 @@ mixin my_activities
         -var angemeldet = (member && activity.allRegisteredMembers().indexOf(member.id()) > -1)
         li.list-group-item
           if (angemeldet)
-            i.fa.fa-check.fa-fw.text-success.tooltipify(data-toggle="tooltip" title="Du bist angemeldet.")
+            i.fa.fa-check.fa-fw.text-success.tooltipify(data-toggle="tooltip" title="#{t('activities.tooltip.registered')}")
           else
-            i.fa.fa-question.fa-fw.tooltipify(data-toggle="tooltip" title="Du bist nicht angemeldet.")
+            i.fa.fa-question.fa-fw.tooltipify(data-toggle="tooltip" title="#{t('activities.tooltip.unknown')}")
           | &nbsp; #{activity.startMoment().lang(language).format('L')} &nbsp; 
           a(href='/activities/#{encodeURIComponent(activity.url())}') #{activity.title()}
           span.pull-right(style="color: #{activity.colorRGB};") #{activity.groupName()}
@@ -75,5 +75,5 @@ mixin wikichangesOrBlogs(items, panelid, prefix, title)
                 .modal-content
             a(data-toggle="modal", data-target="##{item.dialogId()}", href="#{item.dialogUrl()}") #{item.pureName()}
             small.pull-right #{item.date().lang(language).format('L')}&nbsp;
-              a(href="#{item.url()}"): i.fa.fa-book.fa-fw.tooltipify(data-toggle="tooltip" title="Go to item's page.")
+              a(href="#{item.url()}"): i.fa.fa-book.fa-fw.tooltipify(data-toggle="tooltip" title="#{t('wiki.tooltip.gotopage')}")
     hr
