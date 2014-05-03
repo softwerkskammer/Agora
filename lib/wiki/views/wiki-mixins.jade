@@ -1,28 +1,11 @@
 mixin blogposts-panel(posts)
   h4 #{t("wiki.blogposts")}
-  for post in posts
+  each post in posts
     .panel.panel-default
       .panel-heading
-        h1.panel-title #{post.title}&nbsp;
+        h1.panel-title #{post.title}
           small.pull-right #{post.date.lang(language).format('LL')}
       .panel-body
         p #{post.teaser}
-          .pull-right: a(href="/wiki/#{post.path}") #{t("groups.more")}
-
-mixin blogposts-inline(posts)
-  for post in posts
-    h4 #{post.title}&nbsp;
-      small.pull-right #{post.date.lang(language).format('L')}
-    p #{post.teaser}
-      span.pull-right: a(href="/wiki/#{post.path}") #{t("groups.more")}
-    hr
-
-mixin wikichanges(changesList)
-  if (changesList.length > 0)
-    h4 Wiki Changes
-    ul.list-unstyled
-      each changes in changesList
-        li
-          a(href="/wiki/#{changes.dirname()}/#{changes.pureName()}") #{changes.pureName()}
-          small: span.pull-right #{changes.date().lang(language).format('L')}
+          small.pull-right: a(href="#{post.url}") #{t("groups.more")}
 
