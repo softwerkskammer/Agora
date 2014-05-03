@@ -4,8 +4,8 @@ mixin blogposts-panel(posts)
     .panel.panel-default
       .panel-heading
         h1.panel-title #{post.title}
-          small.pull-right #{post.date.lang(language).format('LL')}
+          small.pull-right #{post.date().lang(language).format('LL')}
       .panel-body
         p #{post.teaser}
-          small.pull-right: a(href="#{post.url}") #{t("groups.more")}
+          small.pull-right: a(href="#{post.url()}") #{t("groups.more")}
 

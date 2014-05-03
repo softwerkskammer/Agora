@@ -11,9 +11,9 @@ mixin pageHeader(group, range)
     small #{t("mailarchive.archive")}
 
 mixin mailIndex(mailHeaders)
-  if(mailHeaders)
+  if (mailHeaders)
     ul.list-unstyled
-      for mailHeader in mailHeaders
+      each mailHeader in mailHeaders
         li
           div(id="messageDetails" + mailHeader.timeUnix, tabindex="-1").modal.fade.bs-modal-lg
             .modal-dialog.modal-lg

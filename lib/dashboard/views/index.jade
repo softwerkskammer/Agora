@@ -27,8 +27,9 @@ mixin my_groups
           .col-sm-4
             -var panelid = group.id + '-grouppanel'
             .panel.panel-default(id="#{panelid}")
-              .panel-heading(style="background-color: #{group.color};")
-                a(style="color: #FFFFFF;", href="/groups/#{group.id}"): b #{group.longName}
+              .panel-heading(style="background-color: #{group.color}; color: #FFFFFF;")
+                b #{group.longName}
+                a(style="color: #FFFFFF;", href="/groups/#{group.id}"): span.pull-right: i.fa.fa-group.fa-fw
               .panel-body
                 +wikichangesOrBlogs(postsByGroup[group.id], panelid, 'blogs', 'Blogposts')
                 +wikichangesOrBlogs(changesByGroup[group.id], panelid, 'changes', 'Wiki-Changes')
@@ -64,6 +65,10 @@ mixin wikichangesOrBlogs(items, panelid, prefix, title)
       ul.list-unstyled
         each item in items
           li
-            a(href="#{item.url()}") #{item.pureName()}
-            small.pull-right #{item.date().lang(language).format('L')}
+            div(id="#{item.dialogId()}", tabindex="-1").modal.fade.bs-modal-lg
+              .modal-dialog.modal-lg
+                .modal-content
+            a(data-toggle="modal", data-target="##{item.dialogId()}", href="#{item.dialogUrl()}") #{item.pureName()}
+            small.pull-right #{item.date().lang(language).format('L')}&nbsp;
+              a(href="#{item.url()}", title="go to item's page"): i.fa.fa-book.fa-fw
     hr
