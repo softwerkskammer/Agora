@@ -38,17 +38,18 @@ describe('the gitmech module', function () {
             '7f91fc607da7947e62b2d8a52088ee0ce29a88c8\n' +
             'leider\n' +
             '2014-03-01 18:36:29 +0100\n' +
-            'no comment\n'));
+            'no comment\n' +
+            'path/file.md\n\n'));
         }
       });
       Git.log('path', 'HEAD', 1, function (err, metadatas) {
         var metadata = metadatas[0];
         expect(metadatas).to.have.length(1);
-        expect(metadata.name).to.equal('path');
+        expect(metadata.name).to.equal('path/file.md');
         expect(metadata.hashRef).to.equal('HEAD');
         expect(metadata.fullhash).to.equal('7f91fc607da7947e62b2d8a52088ee0ce29a88c8');
         expect(metadata.author).to.equal('leider');
-        expect(metadata.date).to.equal('2014-03-01 18:36:29 +0100');
+        expect(metadata.datestring).to.equal('2014-03-01 18:36:29 +0100');
         expect(metadata.comment).to.equal('no comment');
         done();
       });
@@ -62,43 +63,84 @@ describe('the gitmech module', function () {
             'leider\n' +
             '2014-03-01 18:36:29 +0100\n' +
             'no comment\n' +
+            'path/file.md\n\n' +
             '7f91fc6\n' +
             '7f91fc607da7947e62b2d8a52088ee0ce29a88c8\n' +
             'leider\n' +
             '2014-03-01 18:36:29 +0100\n' +
             'no comment\n' +
+            'path/file.md\n\n' +
             '16e441b\n' +
             '16e441b7db64acf4980a067047b0d9fb5cf9bb3e\n' +
             'trauerleider\n' +
             '2014-02-15 16:18:44 +0100\n' +
             'no comment\n' +
+            'path/file.md\n\n' +
             'a5967c3\n' +
             'a5967c3594f637618798b6687e0a36ae2873b60d\n' +
             'trauerleider\n' +
             '2014-02-06 21:10:33 +0100\n' +
             'no comment\n' +
+            'path/file.md\n\n' +
             '3d38d9d\n' +
             '3d38d9dad4d205ceedb4861bc0cfe292e245c307\n' +
             'trauerleider\n' +
             '2013-12-08 12:53:42 +0100\n' +
-            'no comment\n'));
+            'no comment\n' +
+            'path/file.md\n\n'));
         }
       });
       Git.log('path', 'HEAD', 1, function (err, metadatas) {
         var metadata = metadatas[0];
         expect(metadatas).to.have.length(5);
 
-        expect(metadata.name).to.equal('path');
+        expect(metadata.name).to.equal('path/file.md');
         expect(metadata.hashRef).to.equal('HEAD');
         expect(metadata.fullhash).to.equal('7f91fc607da7947e62b2d8a52088ee0ce29a88c8');
         expect(metadata.author).to.equal('leider');
-        expect(metadata.date).to.equal('2014-03-01 18:36:29 +0100');
+        expect(metadata.datestring).to.equal('2014-03-01 18:36:29 +0100');
         expect(metadata.comment).to.equal('no comment');
 
         expect(metadatas[1].hashRef).to.equal('7f91fc6');
         expect(metadatas[2].hashRef).to.equal('16e441b');
         expect(metadatas[3].hashRef).to.equal('a5967c3');
         expect(metadatas[4].hashRef).to.equal('3d38d9d');
+        done();
+      });
+    });
+
+    it('can handle renames via "git log" for viewing the history', function (done) {
+      sinon.stub(gitExec, 'command', function (args, callback) {
+        if (args[0] === 'log') {
+          callback(null, new Buffer('7f91fc6\n' +
+            '7f91fc607da7947e62b2d8a52088ee0ce29a88c8\n' +
+            'leider\n' +
+            '2014-03-01 18:36:29 +0100\n' +
+            'rename: "blog_vonheute" -> "blog_2014-03-19_der_blog"\n' +
+            'craftsmanswap/blog_2014-03-19_der_blog.md\n' +
+            'craftsmanswap/blog_vonheute.md\n\n' +
+            '7f91fc6\n' +
+            '7f91fc607da7947e62b2d8a52088ee0ce29a88c8\n' +
+            'leider\n' +
+            '2014-03-01 18:36:29 +0100\n' +
+            'no comment\n' +
+            'path/file.md\n\n'));
+        }
+      });
+      Git.log('path', 'HEAD', 1, function (err, metadatas) {
+        var metadata = metadatas[0];
+        expect(metadatas).to.have.length(2);
+
+        expect(metadata.name).to.equal('craftsmanswap/blog_2014-03-19_der_blog.md');
+        expect(metadata.hashRef).to.equal('HEAD');
+        expect(metadata.fullhash).to.equal('7f91fc607da7947e62b2d8a52088ee0ce29a88c8');
+        expect(metadata.author).to.equal('leider');
+        expect(metadata.datestring).to.equal('2014-03-01 18:36:29 +0100');
+        expect(metadata.comment).to.equal('rename: "blog_vonheute" -> "blog_2014-03-19_der_blog"');
+
+        metadata = metadatas[1];
+        expect(metadata.name).to.equal('path/file.md');
+        expect(metadata.hashRef).to.equal('7f91fc6');
         done();
       });
     });

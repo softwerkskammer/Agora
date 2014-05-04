@@ -24,4 +24,8 @@ describe('Wiki Objects', function () {
     expect(dirWithChangedFiles.sortedFiles()[1].authorsString()).to.equal('metaauthor1,metaauthor12');
   });
 
+  it('(metadata) converts filenames', function () {
+    var meta = new Metadata({name: 'path/file.md'});
+    expect(meta.pureName()).to.equal('file');
+  });
 });

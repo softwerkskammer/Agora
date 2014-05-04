@@ -10,6 +10,7 @@
   "mailarchiveApp": {"module": "./lib/mailarchive"},
   "wikiApp": {"module": "./lib/wiki"},
   "waitinglistApp": {"module": "./lib/waitinglist"},
+  "dashboardApp": {"module": "./lib/dashboard"},
 
   "groupsAndMembersAPI": {"module": "./lib/groupsAndMembers/groupsAndMembersAPI"},
   "groupsAPI": {"module": "./lib/groups/groupsAPI"},
@@ -25,6 +26,7 @@
   "mailarchiveAPI": {"module": "./lib/mailarchive/mailarchiveAPI"},
   "waitinglistAPI": {"module": "./lib/waitinglist/waitinglistAPI"},
   "wikiAPI": {"module": "./lib/wiki/wikiAPI"},
+  "dashboardAPI": {"module": "./lib/dashboard/dashboardAPI"},
 
   "groupstore": {"module": "./lib/groups/groupstore"},
   "memberstore": {"module": "./lib/members/memberstore"},

@@ -1,0 +1,11 @@
+mixin blogposts-panel(posts)
+  h4 #{t("wiki.blogposts")}:
+  each post in posts
+    .panel.panel-default
+      .panel-heading
+        h1.panel-title #{post.title}
+          small.pull-right #{post.date().lang(language).format('LL')}
+      .panel-body
+        p #{post.teaser}
+          small.pull-right: a(href="#{post.url()}") #{t("groups.more")}
+
