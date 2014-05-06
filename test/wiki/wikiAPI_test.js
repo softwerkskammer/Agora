@@ -114,7 +114,7 @@ describe('WikiAPI (getBlogPosts)', function () {
         callback(null, ['error/blog_2013-10-01.md', 'error/blog_notadate.md', 'error/blog_2013-05-01.md', 'error/blog_2013-05-1.md', 'error/blog_2013-5-01.md', 'error/blog_.md']);
       }
     });
-    sinon.stub(Git, 'readFile', function (path, version, callback) {
+    sinon.stub(Git, 'readFileFs', function (path, callback) {
       if (path === "internet/blog_2013-11-01LeanCoffeeTest.md") {
         callback(null, "####   Lean Coffee November 2013\n" +
           "\n" +
@@ -145,8 +145,7 @@ describe('WikiAPI (getBlogPosts)', function () {
   });
 
   afterEach(function () {
-    Git.readFile.restore();
-    Git.lsblogposts.restore();
+    sinon.restore();
   });
 
   it('returns two properly parsed blog posts for the group internet', function (done) {
