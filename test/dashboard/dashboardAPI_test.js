@@ -97,7 +97,7 @@ describe('Dashboard API', function () {
         }
         callback(null, changedFiles);
       });
-      sinon.stub(mailarchiveAPI, 'unthreadedMails', function (groupid, callback) {
+      sinon.stub(mailarchiveAPI, 'unthreadedMailsYoungerThan', function (groupid, age, callback) {
         if (groupid === CRASH_MAILS) {
           return callback(new Error());
         }
