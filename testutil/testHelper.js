@@ -1,9 +1,9 @@
 "use strict";
 
 var express = require('express');
-var userMock = require('./userMock');
+var userStub = require('./userStub');
 var i18n = require('i18next');
-var jade = require("jade");
+var jade = require('jade');
 
 module.exports = function (internalAppName, configuredBeans) {
   var appName = internalAppName;
@@ -36,7 +36,7 @@ module.exports = function (internalAppName, configuredBeans) {
 
       if (memberID) {
         var Member = beans.get('member');
-        app.use(userMock({member: new Member({id: memberID})}));
+        app.use(userStub({member: new Member({id: memberID})}));
       }
       app.use(beans.get('accessrights'));
       app.use(beans.get('expressViewHelper'));
