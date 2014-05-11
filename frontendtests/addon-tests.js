@@ -2,30 +2,39 @@
 (function () {
   "use strict";
 
-  var checkFieldMandatory = function (fieldname) {
-    var field = $(fieldname);
-    field.val("");
-    equal(addon_validator.element(field), false);
-    equal(addon_validator.errorList[0].message, 'Dieses Feld ist ein Pflichtfeld.');
-    field.val("S");
-    equal(addon_validator.element(field), true);
-  };
+  describe("Addon Form", function () {
 
-  test("HomeAddress is mandatory", 3, function () {
-    checkFieldMandatory("#addonform [name=homeAddress]");
-  });
+    var checkFieldMandatory = function (fieldname) {
+      var field = $(fieldname);
+      field.val("");
+      expect(addon_validator.element(field)).toBe(false);
+      expect(addon_validator.errorList[0].message).toBe('Dieses Feld ist ein Pflichtfeld.');
+      field.val("S"); // to make it select a t-shirt size
+      expect(addon_validator.element(field)).toBe(true);
+    };
 
-  test("BillingAddress is mandatory", 3, function () {
-    checkFieldMandatory("#addonform [name=billingAddress]");
-  });
+    beforeEach(function (done) {
+      $(function () {
+        jasmine.Ajax.install();
+        done();
+      });
+    });
 
-  test("T-Shirt-Size is mandatory", 3, function () {
-    checkFieldMandatory("#addonform [name=tShirtSize]");
-  });
+    afterEach(function () {
+      jasmine.Ajax.uninstall();
+    });
 
-  test("Roommate is not mandatory", 1, function () {
-    var field = $("#addonform [name=roommate]");
-    field.val("");
-    equal(addon_validator.element(field), true);
+    it("checks that 'homeAddress' is mandatory", function () {
+      checkFieldMandatory("#addonform [name=homeAddress]");
+    });
+
+    it("checks that 'billingAddress' is mandatory", function () {
+      checkFieldMandatory("#addonform [name=billingAddress]");
+    });
+
+    it("checks that 'tShirtSize' is mandatory", function () {
+      checkFieldMandatory("#addonform [name=tShirtSize]");
+    });
+
   });
 }());

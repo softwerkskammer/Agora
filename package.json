@@ -83,6 +83,7 @@
     "karma-coverage": "~0.2",
     "karma-html2js-preprocessor": "~0.1",
     "karma-qunit": "~0.1",
+    "karma-jasmine": "~0.2",
     "karma-phantomjs-launcher": "~0.1.4",
     "must": "~0.11",
     "qunitjs": "~1.12",
