@@ -84,7 +84,6 @@
     "karma-jasmine": "~0.2",
     "karma-phantomjs-launcher": "~0.1.4",
     "must": "~0.11",
-    "qunitjs": "~1.12",
     "request": "~2.34",
     "sinon": "~1.9",
     "supertest": "~0.11"
