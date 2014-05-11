@@ -68,6 +68,7 @@
     "create": "Create activity",
     "edit": "Edit activity",
     "new_copy": "New (based on this activity)",
+    "upcoming_activities": "$t(activities.upcoming) $t(activities.activities)",
     "upcoming": "Upcoming",
     "past": "Past",
     "export": "Export to calendar",
@@ -371,5 +372,10 @@
     "url_not_available": "This URL is not available.",
     "nickname_not_available": "This nickname is not available.",
     "duplicate_email": "This email address is already registered. Maybe you already have a profile?"
+  },
+  "dashboard": {
+    "description": [
+      "p Your personal view to softwerkskammer. We show your groups and their upcoming activities."
+    ]
   }
 }

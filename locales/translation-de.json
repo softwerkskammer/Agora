@@ -68,6 +68,7 @@
     "create": "Aktivität anlegen",
     "edit": "Aktivität bearbeiten",
     "new_copy": "Neu auf Basis dieser Aktivität",
+    "upcoming_activities": "$t(activities.upcoming) $t(activities.activities)",
     "upcoming": "Kommende",
     "past": "Vergangene",
     "export": "Für Kalender exportieren",
@@ -371,5 +372,10 @@
     "url_not_available": "Diese URL ist leider nicht verfügbar.",
     "nickname_not_available": "Dieser Nickname ist leider nicht verfügbar.",
     "duplicate_email": "Diese Adresse ist schon registriert. Hast Du bereits ein Profil angelegt?"
+  },
+  "dashboard": {
+    "description": [
+      "p Deine persönliche Softwerkskammer. Wir zeigen Dir hier Deine Gruppen und deren Aktivitäten."
+    ]
   }
 }

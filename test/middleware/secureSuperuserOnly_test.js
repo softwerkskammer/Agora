@@ -1,15 +1,37 @@
 "use strict";
 
+var expect = require('must');
 var conf = require('../../testutil/configureForTest');
 
 var redirectIfNotSuperuser = conf.get('beans').get('secureSuperuserOnly');
 
 describe('redirectIfNotSuperuser', function () {
 
-  it('does not care about case of escaped umlauts in URL when editing a member profile', function (done) {
-    var originalUrl = '/members/edit/Nicol%c3%a4ZumTesten';
+  it('happpens when a normal user wants to access administraton pages', function (done) {
+    var originalUrl = '/administration/something';
 
-    var req = { originalUrl: originalUrl, user: {member: { nickname: function () { return 'NicoläZumTesten'; }}} };
+    var req = { originalUrl: originalUrl };
+
+    var accessrights = {};
+    accessrights.isAuthenticated = function () { return true; };
+    accessrights.isSuperuser = function () { return false; };
+
+    var res = { locals: { accessrights: accessrights } };
+    // we do want the redirection to be invoked:
+    res.redirect = function (args) {
+      expect(args).to.exist();
+      done();
+    };
+
+    redirectIfNotSuperuser(req, res, function () {
+      done(new Error('We should have hit the redirect'));
+    });
+  });
+
+  it('does not happpen when a normal user wants to access a page wiht "administatrion" as part of the URL', function (done) {
+    var originalUrl = '/member/administration/';
+
+    var req = { originalUrl: originalUrl };
 
     var accessrights = {};
     accessrights.isAuthenticated = function () { return true; };
@@ -17,8 +39,13 @@ describe('redirectIfNotSuperuser', function () {
 
     var res = { locals: { accessrights: accessrights } };
     // we do not want the redirection to be invoked:
-    res.redirect = function () { done(new Error('URL escaping did not match - possibly because of case sensitive comparison.')); };
+    res.redirect = function (args) {
+      expect(args).to.exist();
+      done(new Error('We should not have hit the redirect'));
+    };
 
-    redirectIfNotSuperuser(req, res, done);
+    redirectIfNotSuperuser(req, res, function () {
+      done();
+    });
   });
 });
