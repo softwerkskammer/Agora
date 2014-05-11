@@ -2,7 +2,7 @@
 (function () {
   "use strict";
 
-  describe("Addon Form", function () {
+  describe("Mailsender Form", function () {
 
     var checkFieldMandatory = function (fieldname) {
       var field = $(fieldname);

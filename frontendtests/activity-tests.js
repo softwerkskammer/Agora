@@ -58,6 +58,17 @@
       expect(activity_validator.element(url)).toBe(true);
     });
 
+    it("checks that a url call also sends the previousURl", function () {
+      jasmine.Ajax.stubRequest("/activities/checkurl?url=test3&previousUrl=previous").andReturn({responseText: "true"});
+      var previousUrl = $("#activityform [name=previousUrl]");
+      previousUrl.val("previous");
+      url.val("test3");
+      // trigger validation
+      url.trigger("change");
+
+      expect(activity_validator.element(url)).toBe(true);
+    });
+
     it("checks that 'title' is mandatory", function () {
       checkFieldMandatory("#activityform [name=title]");
     });

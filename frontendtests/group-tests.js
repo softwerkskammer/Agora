@@ -2,7 +2,7 @@
 (function () {
   "use strict";
 
-  describe("Announcements Form", function () {
+  describe("Group Form", function () {
     var id = $("#groupform [name=id]");
     var emailPrefix = $("#groupform [name=emailPrefix]");
 

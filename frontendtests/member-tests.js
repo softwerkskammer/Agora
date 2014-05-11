@@ -1,83 +1,127 @@
-/*global member_validator, nicknameIsNotAvailable */
+/*global member_validator, nicknameIsNotAvailable, emailAlreadyTaken */
 (function () {
   "use strict";
 
-  // mocking the ajax request
-  $.mockjax({
-    url: "/members/checknickname",
-    response: function (formdata) {
-      this.responseText = "true";
-      if ($.inArray(formdata.data.nickname, ["Nick", "Nack"]) !== -1) {
-        this.responseText = "false";
-      }
-    },
-    responseTime: 50,
-    logging: false
-  });
-
-  test("A nickname 'NochNichtVorhanden' is valid", 2, function () {
+  describe("Member Form", function () {
     var nickname = $("#memberform [name=nickname]");
-    stop();
-    nickname.val("NochNichtVorhanden");
-    // trigger validation
-    nickname.trigger("change");
-    $(document).ajaxStop(function () {
-      $(document).unbind("ajaxStop");
-      equal(member_validator.element(nickname), true);
-      deepEqual(member_validator.errorList, []);
-      start();
+    var email = $("#memberform [name=email]");
+
+    var checkFieldMandatory = function (fieldname, value) {
+      var field = $(fieldname);
+      field.val("");
+      expect(member_validator.element(field)).toBe(false);
+      expect(member_validator.errorList[0].message).toBe('Dieses Feld ist ein Pflichtfeld.');
+      field.val(value || "a");
+      expect(member_validator.element(field)).toBe(true);
+    };
+
+    beforeEach(function (done) {
+      $(function () {
+        nickname.val("");
+        nickname.trigger("change");
+        email.val("");
+        email.trigger("change");
+        jasmine.Ajax.install();
+        done();
+      });
     });
-  });
 
-  test("Nickname is mandatory and must have at least two letters", 4, function () {
-    var nickname = $("#memberform [name=nickname]");
-    nickname.val("");
-    equal(member_validator.element(nickname), false);
-    equal(member_validator.errorList[0].message, 'Dieses Feld ist ein Pflichtfeld.');
-    nickname.val("a");
-    equal(member_validator.element(nickname), false);
-    equal(member_validator.errorList[0].message, 'Geben Sie bitte mindestens 2 Zeichen ein.');
-  });
-
-  test("Nickname checking via Ajax is triggered", 2, function () {
-    var nickname = $("#memberform [name=nickname]");
-    stop();
-    nickname.val("Nick");
-    nickname.trigger("change");
-    $(document).ajaxStop(function () {
-      $(document).unbind("ajaxStop");
-      equal(member_validator.element(nickname), false);
-      equal(member_validator.errorList[0].message, nicknameIsNotAvailable);
-      start();
+    afterEach(function () {
+      jasmine.Ajax.uninstall();
     });
-  });
 
-  var checkFieldMandatory = function (fieldname) {
-    var field = $(fieldname);
-    field.val("");
-    equal(member_validator.element(field), false);
-    equal(member_validator.errorList[0].message, 'Dieses Feld ist ein Pflichtfeld.');
-    field.val("a");
-    equal(member_validator.element(field), true);
-  };
+    it("checks that a nickname check response is handled for 'true'", function () {
+      jasmine.Ajax.stubRequest("/members/checknickname?nickname=nick1&previousNickname=").andReturn({responseText: "true"});
+      nickname.val("nick1");
+      // trigger validation
+      nickname.trigger("change");
 
-  test("Firstname is mandatory", 3, function () {
-    checkFieldMandatory("#memberform [name=firstname]");
-  });
+      expect(member_validator.element(nickname)).toBe(true);
+      expect(member_validator.errorList).toEqual([]);
+    });
 
-  test("Lastname is mandatory", 3, function () {
-    checkFieldMandatory("#memberform [name=lastname]");
-  });
+    it("checks that a nickname check response is handled for 'false'", function () {
+      jasmine.Ajax.stubRequest("/members/checknickname?nickname=nick2&previousNickname=").andReturn({responseText: "false"});
+      nickname.val("nick2");
+      // trigger validation
+      nickname.trigger("change");
 
-  test("Location is mandatory", 3, function () {
-    checkFieldMandatory("#memberform [name=location]");
-  });
+      expect(member_validator.element(nickname)).toBe(false);
+      expect(member_validator.errorList).toContain(jasmine.objectContaining({message: nicknameIsNotAvailable}));
+    });
 
-  test("Reference is mandatory", 3, function () {
-    checkFieldMandatory("#memberform [name=reference]");
-  });
+    it("checks that a nickname check also sends the previousNickname", function () {
+      jasmine.Ajax.stubRequest("/members/checknickname?nickname=nick3&previousNickname=previous").andReturn({responseText: "true"});
+      var previousNickname = $("#memberform [name=previousNickname]");
+      previousNickname.val("previous");
+      nickname.val("nick3");
+      // trigger validation
+      nickname.trigger("change");
 
-  test("Profession is mandatory", 3, function () {
-    checkFieldMandatory("#memberform [name=profession]");
+      expect(member_validator.element(nickname)).toBe(true);
+    });
+
+    it("checks that a email check response is handled for 'true'", function () {
+      jasmine.Ajax.stubRequest("/members/checkemail?email=mail1@a.de&previousEmail=").andReturn({responseText: "true"});
+      email.val("mail1@a.de");
+      // trigger validation
+      email.trigger("change");
+
+      expect(member_validator.element(email)).toBe(true);
+      expect(member_validator.errorList).toEqual([]);
+    });
+
+    it("checks that a email check response is handled for 'false'", function () {
+      jasmine.Ajax.stubRequest("/members/checkemail?email=mail2%40a.de&previousEmail=").andReturn({responseText: "false"});
+      email.val("mail2@a.de");
+      // trigger validation
+      email.trigger("change");
+
+      expect(member_validator.element(email)).toBe(false);
+      expect(member_validator.errorList).toContain(jasmine.objectContaining({message: emailAlreadyTaken}));
+    });
+
+    it("checks that a email check also sends the previousEmail", function () {
+      jasmine.Ajax.stubRequest("/members/checkemail?email=mail3@a.de&previousEmail=previous").andReturn({responseText: "true"});
+      var previousEmail = $("#memberform [name=previousEmail]");
+      previousEmail.val("previous");
+      email.val("mail3@a.de");
+      // trigger validation
+      email.trigger("change");
+    });
+
+    it("checks that 'firstname' is mandatory", function () {
+      checkFieldMandatory("#memberform [name=firstname]");
+    });
+
+    it("checks that 'lastname' is mandatory", function () {
+      checkFieldMandatory("#memberform [name=lastname]");
+    });
+
+    it("checks that 'location' is mandatory", function () {
+      checkFieldMandatory("#memberform [name=location]");
+    });
+
+    it("checks that 'reference' is mandatory", function () {
+      checkFieldMandatory("#memberform [name=reference]");
+    });
+
+    it("checks that 'profession' is mandatory", function () {
+      checkFieldMandatory("#memberform [name=profession]");
+    });
+
+    it("checks that 'email' is mandatory", function () {
+      checkFieldMandatory("#memberform [name=email]", "l@b.de");
+    });
+
+    it("checks that 'nickname' is mandatory", function () {
+      checkFieldMandatory("#memberform [name=nickname]", "onetwo");
+    });
+
+    it("checks that 'nickname' has at least two characters", function () {
+      nickname.val("a");
+      expect(member_validator.element(nickname)).toBe(false);
+      expect(member_validator.errorList).toContain(jasmine.objectContaining({message: 'Geben Sie bitte mindestens 2 Zeichen ein.'}));
+    });
   });
 }());

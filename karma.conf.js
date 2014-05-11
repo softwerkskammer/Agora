@@ -4,12 +4,11 @@ module.exports = function (config) {
     // base path, that will be used to resolve files and exclude
     basePath: '',
 
-    frameworks: ['qunit', 'jasmine'],
+    frameworks: [ 'jasmine'],
 
     // list of files / patterns to load in the browser
     files: [
       "public/clientscripts/global_de.js",
-      "frontendtests/lib/jquery.mockjax.js",
       "frontendtests/lib/mock-ajax.js",
       "public/clientscripts/activityDateModel.js",
       "public/clientscripts/activityform-dateAdapter.js",
@@ -71,7 +70,6 @@ module.exports = function (config) {
     },
 
     plugins: [
-      'karma-qunit',
       'karma-jasmine',
       'karma-phantomjs-launcher',
       'karma-chrome-launcher',
