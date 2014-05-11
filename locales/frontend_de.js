@@ -1,11 +1,9 @@
 var endMustBeAfterBegin = "Das Ende muss gefüllt sein und nach dem Beginn liegen.";
 var urlIsNotAvailable = "Diese URL ist leider nicht verfügbar.";
-var contentsOfPrefixForEMail = "Präfix für E-Mails darf nur Zahlen, Buchstaben, Leerzeichen und Bindestriche enthalten.";
-var contentsOfEMailAddress = "E-Mail-Adresse darf nur Zahlen, Buchstaben, Bindestrich und Unterstrich enthalten.";
+var contentsOfPrefixForEMail = "Erlaubt sind nur Zahlen, Buchstaben, Bindestrich und Leerzeichen.";
 var groupnameAlreadyTaken = "Dieser Gruppenname ist bereits vergeben.";
 var prefixAlreadyTaken = "Dieses Präfix ist bereits vergeben.";
-var contentsOfName = "Name darf nur Buchstaben, Zahlen und Unterstrich enthalten.";
-var contentsOfAlphanumeric = "Erlaubt sind nur Zahlen, Buchstaben und der Unterstrich.";
+var contentsOfAlphanumeric = "Erlaubt sind nur Zahlen, Buchstaben, Bindestrich und Unterstrich.";
 var nicknameIsNotAvailable = "Dieser Nickname ist leider nicht verfügbar.";
 var contentsOfNickname = "Nickname darf nur Buchstaben, Zahlen und Unterstrich enthalten.";
 var emailAlreadyTaken = "Diese Adresse ist schon registriert. Hast Du bereits ein Profil angelegt?";

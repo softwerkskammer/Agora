@@ -1,4 +1,4 @@
-/*global groups_validator, groupnameAlreadyTaken, prefixAlreadyTaken, contentsOfName*/
+/*global groups_validator, groupnameAlreadyTaken, prefixAlreadyTaken, contentsOfAlphanumeric, contentsOfPrefixForEMail*/
 (function () {
   "use strict";
 
@@ -74,20 +74,62 @@
       checkFieldMandatory("#groupform [name=id]", "aa");
     });
 
+    it("checks that 'id' shorter than 2 letters is invalid", function () {
+      id.val("A");
+      expect(groups_validator.element(id)).toBe(false);
+    });
+
+    it("checks that 'id' longer than 20 letters is invalid", function () {
+      id.val("MuchTooMuchText123456");
+      expect(groups_validator.element(id)).toBe(false);
+    });
+
+    it("checks that 'id' checks for forbidden characters", function () {
+      id.val("1234%");
+      expect(groups_validator.element(id)).toBe(false);
+      expect(groups_validator.errorList).toContain(jasmine.objectContaining({message: contentsOfAlphanumeric}));
+      id.val("äöü");
+      expect(groups_validator.element(id)).toBe(false);
+      expect(groups_validator.errorList).toContain(jasmine.objectContaining({message: contentsOfAlphanumeric}));
+      id.val("12 34");
+      expect(groups_validator.element(id)).toBe(false);
+      expect(groups_validator.errorList).toContain(jasmine.objectContaining({message: contentsOfAlphanumeric}));
+    });
+
+    it("checks that 'id' checks for forbidden characters", function () {
+      id.val("123ab_-");
+      expect(groups_validator.element(id)).toBe(true);
+    });
+
     it("checks that 'emailPrefix' is mandatory", function () {
       checkFieldMandatory("#groupform [name=emailPrefix]", "12345");
     });
 
     it("checks that a 'emailPrefix' shorter than 5 letters is invalid", function () {
-      var prefix = $("#groupform [name=emailPrefix]");
-      prefix.val("Much");
+      emailPrefix.val("Much");
       expect(groups_validator.element(emailPrefix)).toBe(false);
     });
 
     it("checks that a 'emailPrefix' longer than 15 letters is invalid", function () {
-      var prefix = $("#groupform [name=emailPrefix]");
-      prefix.val("MuchTooMuchText1");
+      emailPrefix.val("MuchTooMuchText1");
       expect(groups_validator.element(emailPrefix)).toBe(false);
+    });
+
+    it("checks that 'emailPrefix' checks for forbidden characters", function () {
+      emailPrefix.val("1234%");
+      expect(groups_validator.element(emailPrefix)).toBe(false);
+      expect(groups_validator.errorList).toContain(jasmine.objectContaining({message: contentsOfPrefixForEMail}));
+      emailPrefix.val("äöüÄÖÜ");
+      expect(groups_validator.element(emailPrefix)).toBe(false);
+      expect(groups_validator.errorList).toContain(jasmine.objectContaining({message: contentsOfPrefixForEMail}));
+      emailPrefix.val("12_34");
+      expect(groups_validator.element(emailPrefix)).toBe(false);
+      expect(groups_validator.errorList).toContain(jasmine.objectContaining({message: contentsOfPrefixForEMail}));
+    });
+
+    it("checks that 'emailPrefix' checks for forbidden characters", function () {
+      emailPrefix.val("123ab -");
+      expect(groups_validator.element(emailPrefix)).toBe(true);
     });
 
     it("checks that 'longName' is mandatory", function () {
