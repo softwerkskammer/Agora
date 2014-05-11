@@ -20,7 +20,6 @@ function createConfiguration() {
     mongoHost: 'localhost',
     mongoPort: '27017',
     publicUrlPrefix: "http://localhost:17124",
-    superuserURLPattern: "/administration/",
     securedByLoginURLPattern: "/mailsender|/members|/new|/edit|/submit|(subscribe|unsubscribe)/|/mailarchive|/invitation|/addToWaitinglist|/removeFromWaitinglist|/addon|/submitAddon|/wiki/socrates.*/|/payment|dashboard",
     secret: "secret",
     beans: new Beans('./config/beans.json')
