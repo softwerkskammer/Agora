@@ -28,7 +28,7 @@ describe('redirectIfNotSuperuser', function () {
     });
   });
 
-  it('does not happpen when a normal user wants to access a page wiht "administatrion" as part of the URL', function (done) {
+  it('does not happpen when a normal user wants to access a page with "administatrion" as part of the URL', function (done) {
     var originalUrl = '/member/administration/';
 
     var req = { originalUrl: originalUrl };

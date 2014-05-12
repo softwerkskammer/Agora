@@ -2,21 +2,35 @@
 (function () {
   "use strict";
 
-  var checkFieldMandatory = function (fieldname) {
-    var field = $(fieldname);
-    field.val("");
-    equal(mail_validator.element(field), false);
-    equal(mail_validator.errorList[0].message, 'Dieses Feld ist ein Pflichtfeld.');
-    field.val("a");
-    equal(mail_validator.element(field), true);
-  };
+  describe("Mailsender Form", function () {
 
-  test("Subject is mandatory", 3, function () {
-    checkFieldMandatory("#mailform [name=subject]");
+    var checkFieldMandatory = function (fieldname) {
+      var field = $(fieldname);
+      field.val("");
+      expect(mail_validator.element(field)).toBe(false);
+      expect(mail_validator.errorList[0].message).toBe('Dieses Feld ist ein Pflichtfeld.');
+      field.val("a"); // to make it select a t-shirt size
+      expect(mail_validator.element(field)).toBe(true);
+    };
+
+    beforeEach(function (done) {
+      $(function () {
+        jasmine.Ajax.install();
+        done();
+      });
+    });
+
+    afterEach(function () {
+      jasmine.Ajax.uninstall();
+    });
+
+    it("checks that 'subject' is mandatory", function () {
+      checkFieldMandatory("#mailform [name=subject]");
+    });
+
+    it("checks that 'markdown' is mandatory", function () {
+      checkFieldMandatory("#mailform [name=markdown]");
+    });
+
   });
-
-  test("Markdown is mandatory", 3, function () {
-    checkFieldMandatory("#mailform [name=markdown]");
-  });
-
 }());

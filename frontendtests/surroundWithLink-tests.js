@@ -2,58 +2,60 @@
 (function () {
   "use strict";
 
-  test("A text starting with 'http' is surrounded with a link consisting of the text", 1, function () {
-    var text = "http://my.link";
-    var result = surroundWithLink(text);
-    equal(result, "<a href=\"http://my.link\" target=\"_blank\"><i class=\"fa fa-external-link\"/> http://my.link</a>");
+  describe("surround with link", function () {
+    beforeEach(function (done) {
+      $(function () {
+        done();
+      });
+    });
+
+    it("surrounds a text starting with 'http' with a link consisting of the text", function () {
+      var result = surroundWithLink("http://my.link");
+      expect(result).toEqual("<a href=\"http://my.link\" target=\"_blank\"><i class=\"fa fa-external-link\"/> http://my.link</a>");
+    });
+
+    it("surrounds each link in a text with two 'http' links", function () {
+      var result = surroundWithLink("http://my.link, http://your.link");
+      expect(result).toEqual("<a href=\"http://my.link\" target=\"_blank\"><i class=\"fa fa-external-link\"/> http://my.link</a>, <a href=\"http://your.link\" target=\"_blank\"><i class=\"fa fa-external-link\"/> http://your.link</a>");
+    });
+
+    it("surrounds only links in a text", function () {
+      var result = surroundWithLink("http://my.link, your.link");
+      expect(result).toEqual("<a href=\"http://my.link\" target=\"_blank\"><i class=\"fa fa-external-link\"/> http://my.link</a>, your.link");
+    });
+
+    it("links an element inside class 'urlify'", function () {
+      expect($("#first").html()).toEqual("<a href=\"http://my.first.link\" target=\"_blank\"><i class=\"fa fa-external-link\"></i> http://my.first.link</a>");
+    });
+
+    it("links two elements inside class 'urlify'", function () {
+      expect($("#second").html()).toEqual("<a href=\"http://my.first.link\" target=\"_blank\"><i class=\"fa fa-external-link\"></i> http://my.first.link</a>, <a href=\"http://my.first.link.again\" target=\"_blank\"><i class=\"fa fa-external-link\"></i> http://my.first.link.again</a>");
+    });
+
+    it("links one of two elements inside class 'urlify'", function () {
+      expect($("#third").html()).toEqual("<a href=\"http://my.first.link\" target=\"_blank\"><i class=\"fa fa-external-link\"></i> http://my.first.link</a>, my.first.link.again");
+    });
   });
 
-  test("A text with two URLs starting with 'http' and separated with comma both with a link", 1, function () {
-    var text = "http://my.link, http://your.link";
-    var result = surroundWithLink(text);
-    equal(result, "<a href=\"http://my.link\" target=\"_blank\"><i class=\"fa fa-external-link\"/> http://my.link</a>, <a href=\"http://your.link\" target=\"_blank\"><i class=\"fa fa-external-link\"/> http://your.link</a>");
+  describe("surround twittername", function () {
+    it("surrounds a text and prepends an '@'", function () {
+      var result = surroundTwitterName("softwerkskammer");
+      expect(result).toEqual("<a href=\"http://twitter.com/softwerkskammer\" target=\"_blank\">@softwerkskammer</a>");
+    });
+
+    it("surrounds a text inside class 'twitterify' and prepends an '@'", function () {
+      expect($("#fourth").html()).toEqual("<a href=\"http://twitter.com/softwerkskammer\" target=\"_blank\">@softwerkskammer</a>");
+    });
   });
 
-  test("A text with one URLs and one normal text separated with commas only one link", 1, function () {
-    var text = "http://my.link, your.link";
-    var result = surroundWithLink(text);
-    equal(result, "<a href=\"http://my.link\" target=\"_blank\"><i class=\"fa fa-external-link\"/> http://my.link</a>, your.link");
-  });
+  describe("surround email", function () {
+    it("surrounds a text with a 'mailto:' link", function () {
+      var result = surroundEmail("softwerks@kammer");
+      expect(result).toEqual("<a href=\"mailto:softwerks@kammer\">softwerks@kammer</a>");
+    });
 
-  test("A twittername is modified to link to twitter and prepend an '@", 1, function () {
-    var text = "softwerkskammer";
-    var result = surroundTwitterName(text);
-    equal(result, "<a href=\"http://twitter.com/softwerkskammer\" target=\"_blank\">@softwerkskammer</a>");
-  });
-
-  test("An emailaddress is modified to a mailto-link", 1, function () {
-    var text = "softwerks@kammer";
-    var result = surroundEmail(text);
-    equal(result, "<a href=\"mailto:softwerks@kammer\">softwerks@kammer</a>");
-  });
-
-  test("One link inside class 'urlify' is linked", 1, function () {
-    var first = $("#first");
-    equal(first.html(), "<a href=\"http://my.first.link\" target=\"_blank\"><i class=\"fa fa-external-link\"></i> http://my.first.link</a>");
-  });
-
-  test("Two links inside class 'urlify' are linked", 1, function () {
-    var second = $("#second");
-    equal(second.html(), "<a href=\"http://my.first.link\" target=\"_blank\"><i class=\"fa fa-external-link\"></i> http://my.first.link</a>, <a href=\"http://my.first.link.again\" target=\"_blank\"><i class=\"fa fa-external-link\"></i> http://my.first.link.again</a>");
-  });
-
-  test("One link and one non-link inside class 'urlify' are linked accordingly", 1, function () {
-    var third = $("#third");
-    equal(third.html(), "<a href=\"http://my.first.link\" target=\"_blank\"><i class=\"fa fa-external-link\"></i> http://my.first.link</a>, my.first.link.again");
-  });
-
-  test("One text in class 'twitterify' is linked to twitter", 1, function () {
-    var fourth = $("#fourth");
-    equal(fourth.html(), "<a href=\"http://twitter.com/softwerkskammer\" target=\"_blank\">@softwerkskammer</a>");
-  });
-
-  test("One text in class 'mailtoify' is linked to mailto", 1, function () {
-    var fifth = $("#fifth");
-    equal(fifth.html(), "<a href=\"mailto:softwerks@kammer.de\">softwerks@kammer.de</a>");
+    it("surrounds a text inside class 'mailtoify' with a 'mailto:' link", function () {
+      expect($("#fifth").html()).toEqual("<a href=\"mailto:softwerks@kammer.de\">softwerks@kammer.de</a>");
+    });
   });
 }());

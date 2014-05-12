@@ -13,7 +13,7 @@ var groups_validator;
 
     $.validator.addMethod("alnumdashunderscore", function (value, element) {
       return this.optional(element) || /^[a-z0-9_\-]+$/i.test(value);
-    }, contentsOfEMailAddress);
+    }, contentsOfAlphanumeric);
 
     groups_validator = $("#groupform").validate({
       rules: {
@@ -38,8 +38,7 @@ var groups_validator;
       },
       messages: {
         id: {
-          remote: $.validator.format(groupnameAlreadyTaken),
-          alphanumeric: $.validator.format(contentsOfName)
+          remote: $.validator.format(groupnameAlreadyTaken)
         },
         emailPrefix: {
           remote: $.validator.format(prefixAlreadyTaken)
@@ -70,9 +69,6 @@ var groups_validator;
         $(each).keyup(handler(each));
       }
     );
-    $.extend($.validator.messages, {
-      alphanumeric: contentsOfAlphanumeric
-    });
 
   };
   $(document).ready(initValidator);
