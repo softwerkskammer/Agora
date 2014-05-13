@@ -65,6 +65,21 @@ block scripts
         "bStateSave": false
       });
     });
+    $(document).ready(function() {
+      $(".tshirttable").dataTable({
+        "oLanguage": {
+          "sUrl": "#{(language === 'de') ? "/clientscripts/dataTables.german.txt" : ""}"
+        },
+        "aoColumns": [
+          null, null
+        ],
+        "bPaginate": false,
+        "bAutoWidth": false,
+        "bFilter": false,
+        "aaSorting": [],
+        "bStateSave": false
+      });
+    });
 
 
 block title
@@ -81,6 +96,7 @@ block content
     li.active: a(href="#addons", data-toggle="tab") Zahlung
     li: a(href="#notPaidOrNoAddon", data-toggle="tab") Versäumnisse
     li: a(href="#groupMembership", data-toggle="tab") Gruppenmitgliedschaft
+    li: a(href="#tshirtSizes", data-toggle="tab") T-Shirt-Bestellungen
   .row
     .col-md-12
       .tab-content
@@ -190,5 +206,20 @@ block content
                       td #{line.member.firstname()}
                       td #{line.member.lastname()}
                       td #{line.member.location()}
+          hr
+
+        .tab-pane#tshirtSizes
+          h4 Verteilungen der T-Shirt-Größen
+          .panel
+            table.table.table-condensed.table-hover.table-striped.tshirttable
+              thead
+                tr
+                  th T-Shirt-Größe
+                  th Anzahl
+              tbody
+                for tshirtsize in tshirtsizes
+                  tr
+                    td #{tshirtsize.size}
+                    td #{tshirtsize.count}
           hr
 
