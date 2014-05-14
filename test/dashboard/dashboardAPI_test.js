@@ -165,4 +165,57 @@ describe('Dashboard API', function () {
 
   });
 
+  describe('partitions groups to columns by height', function () {
+    it('for less than three groups', function () {
+      var group1 = {id: 1};
+      var group2 = {id: 2};
+      var groups = [ group1, group2 ];
+      var linesPerGroup = {1: 5, 2: 2};
+      var result = dashboardAPI.groupsByColumns(groups, linesPerGroup);
+      expect(result).to.have.length(3);
+      expect(result[0]).to.contain(group1);
+      expect(result[1]).to.contain(group2);
+      expect(result[2]).to.be.empty();
+    });
+
+    it('for three groups of equal height', function () {
+      var group1 = {id: 1};
+      var group2 = {id: 2};
+      var group3 = {id: 3};
+      var groups = [ group1, group2, group3 ];
+      var linesPerGroup = {1: 2, 2: 2, 3: 2};
+      var result = dashboardAPI.groupsByColumns(groups, linesPerGroup);
+      expect(result).to.have.length(3);
+      expect(result[0]).to.contain(group1);
+      expect(result[1]).to.contain(group2);
+      expect(result[2]).to.contain(group3);
+    });
+
+    it('for three groups of different height (case 1)', function () {
+      var group1 = {id: 1};
+      var group2 = {id: 2};
+      var group3 = {id: 3};
+      var groups = [ group1, group2, group3 ];
+      var linesPerGroup = {1: 3, 2: 2, 3: 1};
+      var result = dashboardAPI.groupsByColumns(groups, linesPerGroup);
+      expect(result).to.have.length(3);
+      expect(result[0]).to.contain(group1);
+      expect(result[1]).to.contain(group2);
+      expect(result[2]).to.contain(group3);
+    });
+
+    it('for three groups of different height (case 2)', function () {
+      var group1 = {id: 1};
+      var group2 = {id: 2};
+      var group3 = {id: 3};
+      var groups = [ group1, group2, group3 ];
+      var linesPerGroup = {1: 1, 2: 2, 3: 3};
+      var result = dashboardAPI.groupsByColumns(groups, linesPerGroup);
+      expect(result).to.have.length(3);
+      expect(result[0]).to.contain(group1);
+      expect(result[0]).to.contain(group2);
+      expect(result[1]).to.contain(group3);
+      expect(result[2]).to.be.empty();
+    });
+  });
 });
