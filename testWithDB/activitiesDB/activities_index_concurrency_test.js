@@ -24,7 +24,6 @@ describe('Activity application with DB - on submit -', function () {
 
   var activityBeforeConcurrentAccess;
   var activityAfterConcurrentAccess;
-  var invocation;
 
   beforeEach(function (done) { // if this fails, you need to start your mongo DB
 
@@ -40,16 +39,8 @@ describe('Activity application with DB - on submit -', function () {
         {memberId: 'memberId1'}
       ], _registrationOpen: true }}, version: 2});
 
-    invocation = 1;
-
     sinon.stub(activitystore, 'getActivity', function (url, callback) {
-      // on the first invocation, getActivity returns an activity without registrant to mimick a racing condition.
-      if (invocation === 1) {
-        invocation = 2;
-        return callback(null, activityBeforeConcurrentAccess);
-      }
-      // on subsequent invocations, getActivity returns an activity with registrant.
-      return callback(null, activityAfterConcurrentAccess);
+      return callback(null, activityBeforeConcurrentAccess);
     });
 
     persistence.drop(function () {
