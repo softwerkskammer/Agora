@@ -98,6 +98,7 @@
   "addCsrfTokenToLocals": {"module": "./lib/middleware/addCsrfTokenToLocals"},
   "announcementsInSidebar": {"module": "./lib/middleware/announcementsInSidebar"},
   "detectBrowser": {"module": "./lib/middleware/detectBrowser"},
+  "expressSessionConfigurator": {"module": "./lib/middleware/expressSessionConfigurator"},
   "expressViewHelper": {"module": "./lib/middleware/expressViewHelper"},
   "gitExec": {"module": "./lib/wiki/gitExec"},
   "gitmech": {"module": "./lib/wiki/gitmech"},

@@ -2,11 +2,9 @@
 "use strict";
 
 var express = require('express');
-var expressSession = require('express-session');
 var http = require('http');
 var path = require('path');
 var passport = require('passport');
-var MongoStore = require('connect-mongo')(expressSession);
 var cookieParser = require('cookie-parser');
 var favicon = require('static-favicon');
 var morgan = require('morgan');
@@ -50,14 +48,6 @@ i18n.init({
   resGetPath: 'locales/__ns__-__lng__.json'
 });
 
-var sessionStore = new MongoStore({
-  db: 'swk',
-  host: conf.get('mongoHost'),
-  port: parseInt(conf.get('mongoPort'), 10),
-  username: conf.get('mongoUser'),
-  password: conf.get('mongoPass')
-});
-
 // stream the log messages of express to winston, remove line breaks on message
 var winstonStream = {
   write: function (message) {
@@ -77,13 +67,7 @@ module.exports = {
     app.use(compress());
     app.use(serveStatic(path.join(__dirname, 'public')));
 
-    var sevenDays = 86400 * 1000 * 7;
-    if (conf.get('dontUsePersistentSessions')) {
-      // TODO: Umbau als CoolBean mit SessionStore als InMemoryStore von Express statt if Konstrukt (leider)
-      app.use(expressSession({key: 'softwerkskammer.org', secret: conf.get('secret'), cookie: {maxAge: sevenDays}}));
-    } else {
-      app.use(expressSession({key: 'softwerkskammer.org', secret: conf.get('secret'), cookie: {maxAge: sevenDays}, store: sessionStore}));
-    }
+    app.use(beans.get('expressSessionConfigurator'));
     app.use(passport.initialize());
     app.use(passport.session());
     app.use(i18n.handle);
