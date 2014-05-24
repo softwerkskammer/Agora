@@ -21,6 +21,4 @@ global_de.js
 global_en.js
 build/config.gypi
 coverage
-tempbeans.json
-tempbeansWithDB.json
 .vagrant
