@@ -86,7 +86,8 @@
     "must": "~0.11",
     "request": "~2.36",
     "sinon": "~1.10",
-    "supertest": "~0.12"
+    "supertest": "~0.12",
+    "utils-merge": "~1.0"
   },
   "scripts": {
     "start": "node start",
