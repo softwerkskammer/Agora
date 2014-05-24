@@ -40,7 +40,7 @@ module.exports = function (internalAppName, configuredBeans) {
       }
       app.use(beans.get('accessrights'));
       app.use(beans.get('expressViewHelper'));
-      app.use('/', beans.get(appName)(express()));
+      app.use('/', beans.get(appName));
 
       var appLogger = { error: function () { return undefined; } };
       app.use(beans.get('handle404')(appLogger));

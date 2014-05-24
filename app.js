@@ -15,13 +15,12 @@ var serveStatic = require('serve-static');
 var i18n = require('i18next');
 var jade = require("jade");
 
-function useApp(parent, url, factory) {
+function useApp(parent, url, child) {
   function ensureRequestedUrlEndsWithSlash(req, res, next) {
     if (!(/\/$/).test(req.url)) { return res.redirect(req.url + '/'); }
     next();
   }
 
-  var child = factory(express());
   if (process.env.NODE_ENV !== 'production') {
     child.locals.pretty = true;
   }
