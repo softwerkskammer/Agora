@@ -2,7 +2,7 @@
 (function () {
   "use strict";
 
-  describe("Announcements Form", function () {
+  describe("Activitiy Form", function () {
     var url = $("#activityform [name=url]");
 
     var checkFieldMandatory = function (fieldname) {

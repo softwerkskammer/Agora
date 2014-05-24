@@ -174,7 +174,7 @@ module.exports = function (grunt) {
       compile: {
         options: {
           pretty: true,
-          data: function (dest) {
+          data: function () {
             return require('./frontendtests/fixtures/locals');
           }
         },
