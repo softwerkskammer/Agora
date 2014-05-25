@@ -21,6 +21,7 @@ module.exports = function (internalAppName, configuredBeans) {
       var i;
       var middleware;
       var app = express();
+      app.locals.pretty = true;
       app.enable('view cache');
       app.use(require('cookie-parser')());
       app.use(require('body-parser').urlencoded());
@@ -40,7 +41,7 @@ module.exports = function (internalAppName, configuredBeans) {
       }
       app.use(beans.get('accessrights'));
       app.use(beans.get('expressViewHelper'));
-      app.use('/', beans.get(appName)(express()));
+      app.use('/', beans.get(appName));
 
       var appLogger = { error: function () { return undefined; } };
       app.use(beans.get('handle404')(appLogger));
