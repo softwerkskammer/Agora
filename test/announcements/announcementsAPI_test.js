@@ -43,20 +43,6 @@ describe('Announcements API', function () {
     sinon.restore();
   });
 
-  it('returns the announcement for the given url', function (done) {
-    announcementsAPI.getAnnouncement(announcementUrl, function (err, result) {
-      expect(result).to.equal(dummyAnnouncement);
-      done(err);
-    });
-  });
-
-  it('returns null when url is not existing', function (done) {
-    announcementsAPI.getAnnouncement('nichtExistierendeUrl', function (err, result) {
-      expect(result).to.be(null);
-      done(err);
-    });
-  });
-
   it('returns all announcements', function (done) {
     announcementsAPI.allAnnouncements(function (err, result) {
       expect(result).to.have.length(1);

@@ -20,6 +20,7 @@ var dummyAnnouncement = new Announcement({
 });
 
 var announcementsAPI = beans.get('announcementsAPI');
+var announcementstore = beans.get('announcementstore');
 var membersAPI = beans.get('membersAPI');
 
 var createApp = require('../../testutil/testHelper')('announcementsApp').createApp;
@@ -35,7 +36,7 @@ describe('Announcement application', function () {
     allAnnouncementsUntilToday = sinonSandbox.stub(announcementsAPI, 'allAnnouncementsUntilToday', function (callback) {
       return callback(null, [dummyAnnouncement]);
     });
-    getAnnouncement = sinonSandbox.stub(announcementsAPI, 'getAnnouncement', function (url, callback) {
+    getAnnouncement = sinonSandbox.stub(announcementstore, 'getAnnouncement', function (url, callback) {
       callback(null, (url === 'url') ? dummyAnnouncement : null);
     });
   });
