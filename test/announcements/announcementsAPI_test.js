@@ -34,20 +34,10 @@ describe('Announcements API', function () {
       }
       callback(null, null);
     });
-    sinon.stub(store, 'allAnnouncements', function (callback) {
-      callback(null, [dummyAnnouncement]);
-    });
   });
 
   afterEach(function () {
     sinon.restore();
-  });
-
-  it('returns all announcements', function (done) {
-    announcementsAPI.allAnnouncements(function (err, result) {
-      expect(result).to.have.length(1);
-      done(err);
-    });
   });
 
   it('rejects urls that are reserved', function (done) {

@@ -30,7 +30,7 @@ describe('Announcement application', function () {
   var getAnnouncement;
 
   beforeEach(function () {
-    sinonSandbox.stub(announcementsAPI, 'allAnnouncements', function (callback) {
+    sinonSandbox.stub(announcementstore, 'allAnnouncements', function (callback) {
       return callback(null, [dummyAnnouncement]);
     });
     allAnnouncementsUntilToday = sinonSandbox.stub(announcementsAPI, 'allAnnouncementsUntilToday', function (callback) {
