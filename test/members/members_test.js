@@ -246,7 +246,7 @@ describe('Members application', function () {
     sinon.stub(membersAPI, 'isValidNickname', function (nickname, callback) { callback(null, true); });
     sinon.stub(membersAPI, 'isValidEmail', function (nickname, callback) { callback(null, true); });
     sinon.stub(groupsAndMembersAPI, 'updateSubscriptions', function (member, oldEmail, subscriptions, callback) { callback(); });
-    sinon.stub(membersAPI, 'saveMember', function (member, callback) { callback(null); });
+    sinon.stub(memberstore, 'saveMember', function (member, callback) { callback(null); });
     var notificationCall = sinon.spy(notifications, 'newMemberRegistered', function () { return undefined; });
 
     // the following stub indicates that the member already exists 
@@ -265,7 +265,7 @@ describe('Members application', function () {
     sinon.stub(membersAPI, 'isValidNickname', function (nickname, callback) { callback(null, true); });
     sinon.stub(membersAPI, 'isValidEmail', function (nickname, callback) { callback(null, true); });
     sinon.stub(groupsAndMembersAPI, 'updateSubscriptions', function (member, oldEmail, subscriptions, callback) { callback(); });
-    sinon.stub(membersAPI, 'saveMember', function (member, callback) { callback(null); });
+    sinon.stub(memberstore, 'saveMember', function (member, callback) { callback(null); });
     var notificationCall = sinon.spy(notifications, 'newMemberRegistered', function () { return undefined; });
 
     // the following stub indicates that the member not yet exists 
