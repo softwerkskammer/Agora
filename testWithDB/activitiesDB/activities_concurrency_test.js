@@ -21,7 +21,7 @@ var getActivity = function (url, callback) {
   });
 };
 
-describe('Activities API', function () {
+describe('Activities API with DB', function () {
 
   var activityBeforeConcurrentAccess;
   var activityAfterConcurrentAccess;

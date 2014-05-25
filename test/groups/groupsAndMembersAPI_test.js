@@ -16,6 +16,7 @@ var GroupA = new Group({id: 'GroupA', longName: 'Gruppe A', description: 'Dies i
 var GroupB = new Group({id: 'GroupB', longName: 'Gruppe B', description: 'Dies ist Gruppe B.', type: 'Regionalgruppe'});
 
 var membersAPI = beans.get('membersAPI');
+var memberstore = beans.get('memberstore');
 var groupsAPI = beans.get('groupsAPI');
 
 var groupsAndMembersAPI = beans.get('groupsAndMembersAPI');
@@ -28,7 +29,7 @@ describe('Groups and Members API (getUserWithHisGroups or getMemberWithHisGroups
 
   describe('- getUserWithHisGroups -', function () {
     it('returns no member when there is no member for the given nickname', function (done) {
-      sinon.stub(membersAPI, 'getMember', function (nickname, callback) {
+      sinon.stub(memberstore, 'getMember', function (nickname, callback) {
         callback(null, null);
       });
 
@@ -39,7 +40,7 @@ describe('Groups and Members API (getUserWithHisGroups or getMemberWithHisGroups
     });
 
     it('returns the member and his groups when there is a member for the given nickname', function (done) {
-      sinon.stub(membersAPI, 'getMember', function (nickname, callback) {
+      sinon.stub(memberstore, 'getMember', function (nickname, callback) {
         callback(null, dummymember);
       });
       sinon.stub(groupsAPI, 'getSubscribedGroupsForUser', function (userMail, globalCallback) {

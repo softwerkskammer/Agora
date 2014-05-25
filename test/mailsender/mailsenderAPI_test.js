@@ -5,6 +5,7 @@ var sinon = require('sinon').sandbox.create();
 var beans = require('../../testutil/configureForTest').get('beans');
 
 var membersAPI = beans.get('membersAPI');
+var memberstore = beans.get('memberstore');
 var groupsAPI = beans.get('groupsAPI');
 var groupsAndMembersAPI = beans.get('groupsAndMembersAPI');
 var activitiesAPI = beans.get('activitiesAPI');
@@ -36,7 +37,7 @@ describe('MailsenderAPI', function () {
       if (activityURL === null) { return callback(new Error()); }
       callback(null, emptyActivity);
     });
-    sinon.stub(membersAPI, 'getMember', function (nickname, callback) {
+    sinon.stub(memberstore, 'getMember', function (nickname, callback) {
       if (nickname === null) { return callback(null); }
       if (nickname === 'broken') { return callback(new Error()); }
       callback(null, new Member({email: 'email@mail.de'}));

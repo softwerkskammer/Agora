@@ -10,6 +10,7 @@ var activitystore = beans.get('activitystore');
 var addonAPI = beans.get('addonAPI');
 var stripeAPI = beans.get('stripeAPI');
 var membersAPI = beans.get('membersAPI');
+var memberstore = beans.get('memberstore');
 
 var Activity = beans.get('activity');
 var Member = beans.get('member');
@@ -22,7 +23,7 @@ var getActivity = function (url, callback) {
   });
 };
 
-describe('Addon API', function () {
+describe('Addon API with DB', function () {
 
   var activityBeforeConcurrentAccess;
   var activityAfterConcurrentAccess;
@@ -56,7 +57,7 @@ describe('Addon API', function () {
       } } };
     });
     sinon.stub(membersAPI, 'getMemberForId', function (id, callback) { callback(null, new Member({firstname: 'Hans', lastname: 'Dampf', nickname: 'hada'})); });
-    sinon.stub(membersAPI, 'getMember', function (nick, callback) { callback(null, new Member({id: 'memberIdNew', firstname: 'Hans', lastname: 'Dampf', nickname: 'hada'})); });
+    sinon.stub(memberstore, 'getMember', function (nick, callback) { callback(null, new Member({id: 'memberIdNew', firstname: 'Hans', lastname: 'Dampf', nickname: 'hada'})); });
 
     persistence.drop(function () {
       // empty the store and then save our activity with one registrant

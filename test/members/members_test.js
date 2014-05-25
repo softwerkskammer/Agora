@@ -7,6 +7,7 @@ var expect = require('must');
 var beans = require('../../testutil/configureForTest').get('beans');
 var Member = beans.get('member');
 var membersAPI = beans.get('membersAPI');
+var memberstore = beans.get('memberstore');
 var groupsAPI = beans.get('groupsAPI');
 var groupsAndMembersAPI = beans.get('groupsAndMembersAPI');
 var activitiesAPI = beans.get('activitiesAPI');
@@ -27,7 +28,7 @@ describe('Members application', function () {
     allMembers = sinon.stub(membersAPI, 'allMembers', function (callback) {
       callback(null, [dummymember]);
     });
-    getMember = sinon.stub(membersAPI, 'getMember', function (nickname, callback) {
+    getMember = sinon.stub(memberstore, 'getMember', function (nickname, callback) {
       callback(null, dummymember);
     });
     getSubscribedGroupsForUser = sinon.stub(groupsAPI, 'getSubscribedGroupsForUser', function (email, callback) {

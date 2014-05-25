@@ -3,13 +3,12 @@
 var sinon = require('sinon').sandbox.create();
 var expect = require('must');
 
-//var util = require('util');
-
 var beans = require('../../testutil/configureForTest').get('beans');
 
 var addonAPI = beans.get('addonAPI');
 var stripeAPI = beans.get('stripeAPI');
 var membersAPI = beans.get('membersAPI');
+var memberstore = beans.get('memberstore');
 var activitystore = beans.get('activitystore');
 
 var Activity = beans.get('activity');

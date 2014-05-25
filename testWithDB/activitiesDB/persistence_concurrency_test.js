@@ -12,7 +12,7 @@ var getEntry = function (callback) {
 };
 
 
-describe('Persistence', function () {
+describe('Persistence with DB', function () {
 
   var emptyRecord = {id: 'id', url: 'url', entries: []};
 
