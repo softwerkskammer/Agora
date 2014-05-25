@@ -19,7 +19,6 @@ var dummyAnnouncement = new Announcement({
   thruUnix: 1388448000 // 31.12.2013
 });
 
-var announcementsAPI = beans.get('announcementsAPI');
 var announcementstore = beans.get('announcementstore');
 var membersAPI = beans.get('membersAPI');
 
@@ -33,7 +32,7 @@ describe('Announcement application', function () {
     sinonSandbox.stub(announcementstore, 'allAnnouncements', function (callback) {
       return callback(null, [dummyAnnouncement]);
     });
-    allAnnouncementsUntilToday = sinonSandbox.stub(announcementsAPI, 'allAnnouncementsUntilToday', function (callback) {
+    allAnnouncementsUntilToday = sinonSandbox.stub(announcementstore, 'allAnnouncementsUntilToday', function (callback) {
       return callback(null, [dummyAnnouncement]);
     });
     getAnnouncement = sinonSandbox.stub(announcementstore, 'getAnnouncement', function (url, callback) {
