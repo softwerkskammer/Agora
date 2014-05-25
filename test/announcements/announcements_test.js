@@ -20,7 +20,7 @@ var dummyAnnouncement = new Announcement({
 });
 
 var announcementstore = beans.get('announcementstore');
-var membersAPI = beans.get('membersAPI');
+var memberstore = beans.get('memberstore');
 
 var createApp = require('../../testutil/testHelper')('announcementsApp').createApp;
 
@@ -58,7 +58,7 @@ describe('Announcement application', function () {
 
   it('shows the details of one announcement as retrieved from the store', function (done) {
     var dummyMember = new Member({nickname: "nickname", id: "member ID"});
-    sinonSandbox.stub(membersAPI, 'getMemberForId', function (id, callback) {
+    sinonSandbox.stub(memberstore, 'getMemberForId', function (id, callback) {
       callback(null, dummyMember);
     });
     var url = 'url';

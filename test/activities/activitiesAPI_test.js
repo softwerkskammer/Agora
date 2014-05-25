@@ -13,6 +13,7 @@ var activitiesAPI = beans.get('activitiesAPI');
 var activitystore = beans.get('activitystore');
 var groupsAPI = beans.get('groupsAPI');
 var membersAPI = beans.get('membersAPI');
+var memberstore = beans.get('memberstore');
 
 var fieldHelpers = beans.get('fieldHelpers');
 var Activity = beans.get('activity');
@@ -73,7 +74,7 @@ describe('Activities API', function () {
     sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {
       callback(null, [ member1, member2 ]);
     });
-    sinon.stub(membersAPI, 'getMemberForId', function (id, callback) {
+    sinon.stub(memberstore, 'getMemberForId', function (id, callback) {
       callback(null, owner);
     });
     sinon.stub(groupsAPI, 'getGroup', function (groupname, callback) {

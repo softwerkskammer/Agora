@@ -137,7 +137,7 @@ describe('Groups and Members API (getUserWithHisGroups or getMemberWithHisGroups
 
   describe('- getMemberWithHisGroupsByMemberId -', function () {
     it('returns no member when there is no member for the given memberID', function (done) {
-      sinon.stub(membersAPI, 'getMemberForId', function (memberID, callback) {
+      sinon.stub(memberstore, 'getMemberForId', function (memberID, callback) {
         callback(null, null);
       });
 
@@ -148,7 +148,7 @@ describe('Groups and Members API (getUserWithHisGroups or getMemberWithHisGroups
     });
 
     it('returns the member and his groups when there is a member for the given memberID', function (done) {
-      sinon.stub(membersAPI, 'getMemberForId', function (memberID, callback) {
+      sinon.stub(memberstore, 'getMemberForId', function (memberID, callback) {
         callback(null, dummymember);
       });
       sinon.stub(groupsAPI, 'getSubscribedGroupsForUser', function (userMail, globalCallback) {

@@ -11,7 +11,6 @@ var beans = require('../../testutil/configureForTest').get('beans');
 var waitinglistAPI = beans.get('waitinglistAPI');
 
 var activitystore = beans.get('activitystore');
-var membersAPI = beans.get('membersAPI');
 var memberstore = beans.get('memberstore');
 var mailsenderAPI = beans.get('mailsenderAPI');
 var Member = beans.get('member');
@@ -36,7 +35,7 @@ describe('Waitinglist API', function () {
       var member2 = new Member({id: "abcxyz", nickname: "nickinick"});
       activity1 = new Activity({id: "Meine Aktivität", url: "myActivity", resources: {"Meine Ressource": {_waitinglist: []}}});
 
-      sinon.stub(membersAPI, 'getMemberForId', function (memberId, callback) {
+      sinon.stub(memberstore, 'getMemberForId', function (memberId, callback) {
         if (memberId === member1.id()) { return callback(null, member1); }
         if (memberId === member2.id()) { return callback(null, member2); }
       });

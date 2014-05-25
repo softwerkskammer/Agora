@@ -5,7 +5,7 @@ var conf = require('../../testutil/configureForTest');
 var beans = conf.get('beans');
 var Announcement = beans.get('announcement');
 var sinon = require('sinon').sandbox.create();
-var membersAPI = beans.get('membersAPI');
+var memberstore = beans.get('memberstore');
 var Member = beans.get('member');
 
 var announcementUrl = 'eineSchoeneUrl';
@@ -87,7 +87,7 @@ describe('Announcements API', function () {
 
   it('displays member\'s nickname as author name', function (done) {
     var dummyMember = new Member({nickname: "nickname", id: "member ID"});
-    sinon.stub(membersAPI, 'getMemberForId', function (id, callback) {
+    sinon.stub(memberstore, 'getMemberForId', function (id, callback) {
       callback(null, dummyMember);
     });
     announcementsAPI.getAuthorName(dummyAnnouncement, function (err, name) {

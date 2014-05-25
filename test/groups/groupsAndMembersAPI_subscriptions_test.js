@@ -7,7 +7,7 @@ var expect = require('must');
 
 var Member = beans.get('member');
 var Group = beans.get('group');
-var membersAPI = beans.get('membersAPI');
+var memberstore = beans.get('memberstore');
 var groupsAPI = beans.get('groupsAPI');
 var groupsAndMembersAPI = beans.get('groupsAndMembersAPI');
 
@@ -22,7 +22,7 @@ describe('Groups and Members API (Subscriptions)', function () {
   var subscribedGroups = [];
 
   beforeEach(function () {
-    getMemberForIdSpy = sinon.stub(membersAPI, 'getMemberForId', function (memberID, callback) { callback(null, member); });
+    getMemberForIdSpy = sinon.stub(memberstore, 'getMemberForId', function (memberID, callback) { callback(null, member); });
     addUserToListSpy = sinon.stub(groupsAPI, 'addUserToList', function (email, list, callback) { callback(); });
     removeUserFromListSpy = sinon.stub(groupsAPI, 'removeUserFromList', function (email, list, callback) { callback(); });
     sinon.stub(groupsAPI, 'getSubscribedGroupsForUser', function (memberEmail, callback) { callback(null, subscribedGroups); });

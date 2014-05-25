@@ -9,7 +9,6 @@ var persistence = beans.get('activitiesPersistence');
 var activitystore = beans.get('activitystore');
 var addonAPI = beans.get('addonAPI');
 var stripeAPI = beans.get('stripeAPI');
-var membersAPI = beans.get('membersAPI');
 var memberstore = beans.get('memberstore');
 
 var Activity = beans.get('activity');
@@ -56,7 +55,7 @@ describe('Addon API with DB', function () {
         callback(null, {});
       } } };
     });
-    sinon.stub(membersAPI, 'getMemberForId', function (id, callback) { callback(null, new Member({firstname: 'Hans', lastname: 'Dampf', nickname: 'hada'})); });
+    sinon.stub(memberstore, 'getMemberForId', function (id, callback) { callback(null, new Member({firstname: 'Hans', lastname: 'Dampf', nickname: 'hada'})); });
     sinon.stub(memberstore, 'getMember', function (nick, callback) { callback(null, new Member({id: 'memberIdNew', firstname: 'Hans', lastname: 'Dampf', nickname: 'hada'})); });
 
     persistence.drop(function () {
