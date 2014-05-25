@@ -175,7 +175,7 @@ describe('MailsenderAPI', function () {
     var superuser = new Member({id: 'superuserID', email: 'email@super.user'});
 
     beforeEach(function () {
-      sinon.stub(membersAPI, 'allMembers', function (callback) { callback(null, [superuser]); });
+      sinon.stub(memberstore, 'allMembers', function (callback) { callback(null, [superuser]); });
     });
 
     it('sends the email', function (done) {

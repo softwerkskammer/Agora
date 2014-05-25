@@ -25,7 +25,7 @@ describe('Members application', function () {
 
   beforeEach(function () {
     dummymember = new Member({id: 'memberID', nickname: 'hada', email: 'a@b.c', site: 'http://my.blog', firstname: 'Hans', lastname: 'Dampf', authentications: []});
-    allMembers = sinon.stub(membersAPI, 'allMembers', function (callback) {
+    allMembers = sinon.stub(memberstore, 'allMembers', function (callback) {
       callback(null, [dummymember]);
     });
     getMember = sinon.stub(memberstore, 'getMember', function (nickname, callback) {

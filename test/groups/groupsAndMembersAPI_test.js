@@ -60,7 +60,7 @@ describe('Groups and Members API (getUserWithHisGroups or getMemberWithHisGroups
 
   describe('- getAllUsersWithTheirGroups -', function () {
     it('returns no members when there are no members', function (done) {
-      sinon.stub(membersAPI, 'allMembers', function (callback) {
+      sinon.stub(memberstore, 'allMembers', function (callback) {
         callback(null, []);
       });
 
@@ -71,7 +71,7 @@ describe('Groups and Members API (getUserWithHisGroups or getMemberWithHisGroups
     });
 
     it('returns a member and his groups when there is a member who has groups', function (done) {
-      sinon.stub(membersAPI, 'allMembers', function (callback) {
+      sinon.stub(memberstore, 'allMembers', function (callback) {
         callback(null, [dummymember]);
       });
       sinon.stub(groupsAPI, 'getSubscribedGroupsForUser', function (userMail, globalCallback) {
@@ -90,7 +90,7 @@ describe('Groups and Members API (getUserWithHisGroups or getMemberWithHisGroups
     });
 
     it('returns a member without groups when there is a member who has no groups', function (done) {
-      sinon.stub(membersAPI, 'allMembers', function (callback) {
+      sinon.stub(memberstore, 'allMembers', function (callback) {
         callback(null, [dummymember]);
       });
       sinon.stub(groupsAPI, 'getSubscribedGroupsForUser', function (userMail, globalCallback) {
@@ -107,7 +107,7 @@ describe('Groups and Members API (getUserWithHisGroups or getMemberWithHisGroups
     });
 
     it('returns a member with and one without groups', function (done) {
-      sinon.stub(membersAPI, 'allMembers', function (callback) {
+      sinon.stub(memberstore, 'allMembers', function (callback) {
         callback(null, [dummymember, dummymember2]);
       });
 
@@ -170,7 +170,7 @@ describe('Groups and Members API (getUserWithHisGroups or getMemberWithHisGroups
 describe('Groups and Members API (getGroupAndMembersForList)', function () {
 
   beforeEach(function () {
-    sinon.stub(membersAPI, 'allMembers', function (callback) { callback(null, null); });
+    sinon.stub(memberstore, 'allMembers', function (callback) { callback(null, null); });
   });
 
   afterEach(function () {
@@ -280,7 +280,7 @@ describe('Groups and Members API (addMembercountToGroup)', function () {
 describe('Groups and Members API (addMembersToGroup)', function () {
 
   beforeEach(function () {
-    sinon.stub(membersAPI, 'allMembers', function (callback) { callback(null, null); });
+    sinon.stub(memberstore, 'allMembers', function (callback) { callback(null, null); });
   });
 
   afterEach(function () {
