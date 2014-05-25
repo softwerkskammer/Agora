@@ -1,8 +1,7 @@
 "use strict";
 
 var request = require('supertest');
-var sinon = require('sinon');
-var sinon = sinon.sandbox.create();
+var sinon = require('sinon').sandbox.create();
 var expect = require('must');
 var moment = require('moment-timezone');
 
@@ -105,7 +104,7 @@ describe('Mail index page', function () {
     request(app)
       .get('/list/threaded/group')
       .expect(200)
-      .expect(/<title>+group\s+E-Mails/, function (err) {
+      .expect(/<title>+\s+group+\s+E-Mails/, function (err) {
         done(err);
       });
   });
