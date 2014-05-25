@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 var conf = require('../../testutil/configureForTest');
 
 var request = require('supertest');
@@ -57,7 +57,7 @@ describe('Announcement application', function () {
   });
 
   it('shows the details of one announcement as retrieved from the store', function (done) {
-    var dummyMember = new Member({nickname: "nickname", id: "member ID"});
+    var dummyMember = new Member({nickname: 'nickname', id: 'member ID'});
     sinonSandbox.stub(membersAPI, 'getMemberForId', function (id, callback) {
       callback(null, dummyMember);
     });

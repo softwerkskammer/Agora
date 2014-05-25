@@ -3,10 +3,10 @@ extends ../../../views/layout
 include  ../../../views/formComponents
 
 block scripts
-  script(src="/clientscripts/check-mailsenderform.js")
+  script(src='/clientscripts/check-mailsenderform.js')
 
 block title
-  | #{t("mailsender.notification")}
+  | #{t('mailsender.notification')}
 
 block content
   form(id='mailform', action='/mailsender/resign', method='post')
@@ -14,14 +14,14 @@ block content
     fieldset
       .row
         .col-md-12
-          +submitButtons("mailsender.send")
+          +submitButtons('mailsender.send')
           legend
-            | #{t("mailsender.resign")}
+            | #{t('mailsender.resign')}
           p Schade, dass Du aus der Softwerkskammer austreten möchtest.
           p.
             Wir respektieren diesen Wunsch und werden ihn umgehend erfüllen. Es wäre schön, wenn Du Dir noch die Zeit nimmst,
             die untenstehenden Fragen zu beantworten.
           +hidden('nickname', nickname)
-          +textareaPure('why', t("mailsender.why-resign"), why)
-          +textareaPure('notes', t("mailsender.notes-resign"), notes)
-          +submitButtons("mailsender.send")
+          +textareaPure('why', t('mailsender.why-resign'), why)
+          +textareaPure('notes', t('mailsender.notes-resign'), notes)
+          +submitButtons('mailsender.send')

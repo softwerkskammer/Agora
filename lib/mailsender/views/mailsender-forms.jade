@@ -6,18 +6,18 @@ mixin mailform(message, regionalgroups, themegroups)
     fieldset
       .row
         .col-md-12
-          +submitButtons("mailsender.send")
+          +submitButtons('mailsender.send')
           legend
-            | #{t("mailsender.write")}
+            | #{t('mailsender.write')}
           if (regionalgroups)
             +groupCheckboxes('invitedGroups', regionalgroups, themegroups)
-            h4 #{t("mailsender.others")}
-            +checkbox('toParticipants', t("mailsender.to_participants"), false, 'toParticipants')
+            h4 #{t('mailsender.others')}
+            +checkbox('toParticipants', t('mailsender.to_participants'), false, 'toParticipants')
           if (message.receiver)
-            +text('nickname', t("mailsender.to_member"), message.receiver.nickname(), "", "", true)
-          +text('subject', t("mailsender.subject"), message.subject)
-          +hightextarea('markdown', t("mailsender.contents"), message.markdown)
-          +checkbox('sendCopyToSelf', t("mailsender.copy_to_self"), false)
+            +text('nickname', t('mailsender.to_member'), message.receiver.nickname(), '', '', true)
+          +text('subject', t('mailsender.subject'), message.subject)
+          +hightextarea('markdown', t('mailsender.contents'), message.markdown)
+          +checkbox('sendCopyToSelf', t('mailsender.copy_to_self'), false)
           +hidden('buttons', JSON.stringify(message.buttons))
-          input(id="successURL", type="hidden", name="successURL", value="#{successURL}")
-          +submitButtons("mailsender.send")
+          input(id='successURL', type='hidden', name='successURL', value=successURL)
+          +submitButtons('mailsender.send')

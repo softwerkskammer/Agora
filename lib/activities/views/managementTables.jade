@@ -8,11 +8,11 @@ mixin buttonOrDate(momentOrNull, paymentDone, activityUrl, nickname)
   if (momentOrNull)
     | #{momentOrNull.lang(language).format('L')}
   else
-    a.btn.btn-primary.btn-xs.btn-block(id="#{encodeURIComponent(nickname) + '-button'}",
-      href="javascript:paymentDone(\"#{'/activities/paymentReceived/' + encodeURIComponent(activityUrl) + '/' + encodeURIComponent(nickname)}\", \"#{encodeURIComponent(nickname) + '-button'}\")") Erhalten…
+    a.btn.btn-primary.btn-xs.btn-block(id='#{encodeURIComponent(nickname) + "-button"}',
+      href='javascript:paymentDone(\'#{"/activities/paymentReceived/" + encodeURIComponent(activityUrl) + "/" + encodeURIComponent(nickname)}\', \'#{encodeURIComponent(nickname) + "-button"}\')') Erhalten…
 
 block scripts
-  script(src="/clientscripts/jquery.dataTables.min.js")
+  script(src='/clientscripts/jquery.dataTables.min.js')
   script.
     function paymentDone(url, buttonid) {
       $.ajax({ url: url }).done(function(data) {
@@ -21,7 +21,7 @@ block scripts
     }
   script.
     $(document).ready(function() {
-      $(".addontable").dataTable({
+      $('.addontable').dataTable({
         "oLanguage": {
           "sUrl": "#{(language === 'de') ? "/clientscripts/dataTables.german.txt" : ""}"
         },
@@ -90,13 +90,13 @@ block content
     .col-md-12
       .page-header
         h2 #{activity.title()} - Verwaltung
-          a.btn.pull-right.btn-default(href="#{'/activities/' + encodeURIComponent(activity.url())}") Zurück
+          a.btn.pull-right.btn-default(href='#{"/activities/" + encodeURIComponent(activity.url())}') Zurück
   ul.nav.nav-tabs
-    li: a(href="#main", data-toggle="tab") #{t("activities.participants")}
-    li.active: a(href="#addons", data-toggle="tab") Zahlung
-    li: a(href="#notPaidOrNoAddon", data-toggle="tab") Versäumnisse
-    li: a(href="#groupMembership", data-toggle="tab") Gruppenmitgliedschaft
-    li: a(href="#tshirtSizes", data-toggle="tab") T-Shirt-Bestellungen
+    li: a(href='#main', data-toggle='tab') #{t('activities.participants')}
+    li.active: a(href='#addons', data-toggle='tab') Zahlung
+    li: a(href='#notPaidOrNoAddon', data-toggle='tab') Versäumnisse
+    li: a(href='#groupMembership', data-toggle='tab') Gruppenmitgliedschaft
+    li: a(href='#tshirtSizes', data-toggle='tab') T-Shirt-Bestellungen
   .row
     .col-md-12
       .tab-content

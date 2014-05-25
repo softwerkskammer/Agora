@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var request = require('supertest');
 var sinon = require('sinon').sandbox.create();
@@ -23,7 +23,7 @@ var member2 = new Member({id: 'memberId2', nickname: 'participant2', email: 'nic
 var member3 = new Member({id: 'memberId3', nickname: 'participant3', email: 'nick3@b.c'});
 var member4 = new Member({id: 'memberId4', nickname: 'participant4', email: 'nick4@b.c'});
 
-var group = new Group({id: "groupname", longName: "Buxtehude"});
+var group = new Group({id: 'groupname', longName: 'Buxtehude'});
 
 var emptyActivity = new Activity({title: 'Title of the Activity', description: 'description1', assignedGroup: 'groupname',
   location: 'location1', direction: 'direction1', startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'),

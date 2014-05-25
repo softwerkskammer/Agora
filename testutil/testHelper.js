@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var express = require('express');
 var userStub = require('./userStub');
@@ -48,7 +48,7 @@ module.exports = function (internalAppName, configuredBeans) {
       app.use(beans.get('handle500')(appLogger));
 
       i18n.registerAppHelper(app);
-      i18n.addPostProcessor("jade", function (val, key, opts) {
+      i18n.addPostProcessor('jade', function (val, key, opts) {
         return jade.compile(val, opts)();
       });
       return app;

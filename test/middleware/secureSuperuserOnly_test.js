@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var expect = require('must');
 var conf = require('../../testutil/configureForTest');

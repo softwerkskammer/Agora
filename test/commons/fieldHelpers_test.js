@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var conf = require('../../testutil/configureForTest');
 var fieldHelpers = conf.get('beans').get('fieldHelpers');

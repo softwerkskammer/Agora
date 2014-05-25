@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var conf = require('../../testutil/configureForTest');
 var statusmessage = conf.get('beans').get('statusmessage');

@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var expect = require('must');
 var conf = require('../../testutil/configureForTest');
@@ -110,7 +110,7 @@ describe('Announcements API', function () {
   });
 
   it('displays member\'s nickname as author name', function (done) {
-    var dummyMember = new Member({nickname: "nickname", id: "member ID"});
+    var dummyMember = new Member({nickname: 'nickname', id: 'member ID'});
     sinon.stub(membersAPI, 'getMemberForId', function (id, callback) {
       callback(null, dummyMember);
     });

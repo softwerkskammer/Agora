@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var expect = require('must');
 var sinon = require('sinon').sandbox.create();
@@ -66,10 +66,10 @@ describe('Activity store', function () {
 
   it('returns an activity object for the given id although the persistence only returns a JS object', function (done) {
     getByField.restore();
-    sinon.stub(persistence, 'getByField', function (id, callback) { return callback(null, {url: "activityUrl"}); });
+    sinon.stub(persistence, 'getByField', function (id, callback) { return callback(null, {url: 'activityUrl'}); });
 
-    store.getActivity("activityUrl", function (err, result) {
-      expect(result.url()).to.equal("activityUrl");
+    store.getActivity('activityUrl', function (err, result) {
+      expect(result.url()).to.equal('activityUrl');
       done(err);
     });
   });
@@ -86,7 +86,7 @@ describe('Activity store', function () {
 
   it('returns undefined when persistence yields an error', function (done) {
     getByField.restore();
-    sinon.stub(persistence, 'getByField', function (id, callback) { callback(new Error("error")); });
+    sinon.stub(persistence, 'getByField', function (id, callback) { callback(new Error('error')); });
 
     store.getActivity(1234, function (err, result) {
       expect(err).to.exist();
@@ -97,11 +97,11 @@ describe('Activity store', function () {
 
   it('returns all activites although the persistence only returns JS objects', function (done) {
     list.restore();
-    sinon.stub(persistence, 'list', function (sortOrder, callback) { callback(null, [ {url: "activityUrl"} ]); });
+    sinon.stub(persistence, 'list', function (sortOrder, callback) { callback(null, [ {url: 'activityUrl'} ]); });
 
     store.allActivities(function (err, result) {
       expect(result).to.have.length(1);
-      expect(result[0].url()).to.equal("activityUrl");
+      expect(result[0].url()).to.equal('activityUrl');
       done(err);
     });
   });

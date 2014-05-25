@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var sinon = require('sinon').sandbox.create();
 var expect = require('must');
@@ -20,7 +20,7 @@ describe('Addon API', function () {
   var savedActivity;
 
   beforeEach(function () {
-    sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, new Activity({title: "Expensive Activity", _addonConfig: {deposit: 50}})); });
+    sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, new Activity({title: 'Expensive Activity', _addonConfig: {deposit: 50}})); });
     sinon.stub(membersAPI, 'getMemberForId', function (id, callback) { callback(null, new Member({firstname: 'Hans', lastname: 'Dampf', nickname: 'hada'})); });
 
     savedActivity = null;
@@ -74,7 +74,7 @@ describe('Addon API', function () {
   });
 
   it('payWithCreditCard shows a status message if the returned error contains a message', function (done) {
-    sinon.stub(stripeAPI, 'transaction', function () { return { charges: { create: function (charge, callback) {callback({message: "General problem"}); }}}; });
+    sinon.stub(stripeAPI, 'transaction', function () { return { charges: { create: function (charge, callback) {callback({message: 'General problem'}); }}}; });
 
     addonAPI.payWithCreditCard('activity', 'member', 'stripe-id', function (err, message) {
       expect(savedActivity).to.be(null);

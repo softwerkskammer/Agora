@@ -1,11 +1,11 @@
-"use strict";
+'use strict';
 var expect = require('must');
 var httpRequest = require('request');
 var sinon = require('sinon').sandbox.create();
 var conf = require('./../testutil/configureForTest');
 var groupsAPI = conf.get('beans').get('groupsAPI');
 
-var base_uri = "http://localhost:" + parseInt(conf.get('port'), 10);
+var base_uri = 'http://localhost:' + parseInt(conf.get('port'), 10);
 
 var app = require('../app.js');
 

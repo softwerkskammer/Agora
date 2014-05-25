@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var nconf = require('../../testutil/configureForTestWithDB');
 var expect = require('must');
@@ -30,7 +30,7 @@ describe('Waitinglist API', function () {
 
   beforeEach(function (done) { // if this fails, you need to start your mongo DB
     activityBeforeConcurrentAccess = new Activity(
-      {id: "activityId", url: activityUrl, resources: {
+      {id: 'activityId', url: activityUrl, resources: {
         'default': {_registeredMembers: [], _waitinglist: [
           {_memberId: 'memberIdWaiting'}
         ], _registrationOpen: true }
@@ -38,7 +38,7 @@ describe('Waitinglist API', function () {
     );
 
     activityAfterConcurrentAccess = new Activity(
-      {id: "activityId", url: activityUrl, resources: {
+      {id: 'activityId', url: activityUrl, resources: {
         'default': {_registeredMembers: [
           {memberId: 'memberId1'}
         ], _waitinglist: [
@@ -89,13 +89,13 @@ describe('Waitinglist API', function () {
   it('saveWaitinglistEntry keeps the registrant that is in the database although it only reads an activity without registrant', function (done) {
     // here, we save an activity with a member that is different from the member in the database.
     // To mimick a racing condition, we return an activity without members for the first "getActivity".
-    waitinglistAPI.saveWaitinglistEntry({nickname: "nick", activityUrl: activityUrl, resourcename: "default"}, function (err) {
+    waitinglistAPI.saveWaitinglistEntry({nickname: 'nick', activityUrl: activityUrl, resourcename: 'default'}, function (err) {
       if (err) { return done(err); }
       getActivity(activityUrl, function (err, activity) {
         if (err) { return done(err); }
-        expect(activity.resourceNamed('default').waitinglistEntries()[0].registrantId(), "Waiting member is still in the waitinglist").to.equal("memberIdWaiting");
-        expect(activity.resourceNamed('default').waitinglistEntries()[1].registrantId(), "New member is stored in the waitinglist").to.equal("memberIdNew");
-        expect(activity.resourceNamed('default').registeredMembers(), "First registered member is still there").to.contain("memberId1");
+        expect(activity.resourceNamed('default').waitinglistEntries()[0].registrantId(), 'Waiting member is still in the waitinglist').to.equal('memberIdWaiting');
+        expect(activity.resourceNamed('default').waitinglistEntries()[1].registrantId(), 'New member is stored in the waitinglist').to.equal('memberIdNew');
+        expect(activity.resourceNamed('default').registeredMembers(), 'First registered member is still there').to.contain('memberId1');
         done(err);
       });
     });
@@ -103,13 +103,13 @@ describe('Waitinglist API', function () {
 
   it('allowRegistrationForWaitinglistEntry keeps the registrant that is in the database although it only reads an activity without registrant', function (done) {
     // here, we save an activity after removing a member that is different from the member in the database.
-    // To mimick a racing condition, we return an activity without members for the first "getActivity".
-    waitinglistAPI.allowRegistrationForWaitinglistEntry({nickname: "waiting", activityUrl: activityUrl, resourcename: "default", hoursstring: "10"}, function (err) {
+    // To mimick a racing condition, we return an activity without members for the first 'getActivity'.
+    waitinglistAPI.allowRegistrationForWaitinglistEntry({nickname: 'waiting', activityUrl: activityUrl, resourcename: 'default', hoursstring: '10'}, function (err) {
       if (err) { return done(err); }
       getActivity(activityUrl, function (err, activity) {
         if (err) { return done(err); }
-        expect(activity.resourceNamed('default').waitinglistEntries()[0].canSubscribe(), "Waiting member is now allowed to subscribe").to.be(true);
-        expect(activity.resourceNamed('default').registeredMembers(), "First registered member is still there").to.contain("memberId1");
+        expect(activity.resourceNamed('default').waitinglistEntries()[0].canSubscribe(), 'Waiting member is now allowed to subscribe').to.be(true);
+        expect(activity.resourceNamed('default').registeredMembers(), 'First registered member is still there').to.contain('memberId1');
         done(err);
       });
     });

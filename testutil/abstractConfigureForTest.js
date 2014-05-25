@@ -1,5 +1,5 @@
 /*jslint stupid: true */
-"use strict";
+'use strict';
 
 module.exports = function (testBeansFilename) {
 

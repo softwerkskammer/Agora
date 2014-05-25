@@ -1,24 +1,24 @@
 mixin pageHeader(group, range)
   .btn-group.pull-right
     .btn-group
-      a.btn.btn-default.dropdown-toggle(data-toggle="dropdown")
+      a.btn.btn-default.dropdown-toggle(data-toggle='dropdown')
         | #{range} &nbsp;
         span.caret
       ul.dropdown-menu
-        li: a(href="../threaded/#{encodeURIComponent(group)}") #{t("mailarchive.threaded")}
-        li: a(href="../flat/#{encodeURIComponent(group)}") #{t("mailarchive.unthreaded")}
+        li: a(href='../threaded/#{encodeURIComponent(group)}') #{t('mailarchive.threaded')}
+        li: a(href='../flat/#{encodeURIComponent(group)}') #{t('mailarchive.unthreaded')}
   h2 #{group}&nbsp;
-    small #{t("mailarchive.archive")}
+    small #{t('mailarchive.archive')}
 
 mixin mailIndex(mailHeaders)
   if (mailHeaders)
     ul.list-unstyled
       each mailHeader in mailHeaders
         li
-          div(id="messageDetails" + mailHeader.timeUnix, tabindex="-1").modal.fade.bs-modal-lg
+          div(id='messageDetails' + mailHeader.timeUnix, tabindex='-1').modal.fade.bs-modal-lg
             .modal-dialog.modal-lg
               .modal-content
-          a(data-toggle="modal", data-target="#messageDetails" + mailHeader.timeUnix, href="/mailarchive/message/" + encodeURIComponent(mailHeader.id)) #{mailHeader.subject}
+          a(data-toggle='modal', data-target='#messageDetails' + mailHeader.timeUnix, href='/mailarchive/message/' + encodeURIComponent(mailHeader.id)) #{mailHeader.subject}
           small
             +mailattributes(mailHeader) 
           +mailIndex(mailHeader.sortedResponses())
@@ -26,9 +26,9 @@ mixin mailIndex(mailHeaders)
 mixin mailattributes(mailHeader)
   span.pull-right
     if (mailHeader.memberNickname())
-      a(href="/members/" + encodeURIComponent(mailHeader.memberNickname())) #{mailHeader.displayedSenderName()}
+      a(href='/members/' + encodeURIComponent(mailHeader.memberNickname())) #{mailHeader.displayedSenderName()}
     else
       | #{mailHeader.displayedSenderName()}
-    | , #{mailHeader.time && mailHeader.time.lang(language).format("L")}
+    | , #{mailHeader.time && mailHeader.time.lang(language).format('L')}
   .clearfix
 

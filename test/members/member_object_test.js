@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var conf = require('nconf');
 
@@ -151,7 +151,7 @@ describe('utility functions', function () {
       {id: 'group'},
       {id: 'anotherGroup'}
     ];
-    expect(member.isInGroup("group")).to.be(true);
+    expect(member.isInGroup('group')).to.be(true);
   });
 
   it('can tell if the member is not member of a group', function () {
@@ -159,6 +159,6 @@ describe('utility functions', function () {
     member.subscribedGroups = [
       {id: 'anotherGroup'}
     ];
-    expect(member.isInGroup("group")).to.be(false);
+    expect(member.isInGroup('group')).to.be(false);
   });
 });

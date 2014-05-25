@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var expect = require('must');
 var beans = require('../../testutil/configureForTest').get('beans');

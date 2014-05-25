@@ -4,7 +4,7 @@ html
     p Es hat sich ein neues Mitglied registriert:
 
     strong #{member.firstname()} #{member.lastname()} (
-      a(href="#{url}/members/#{encodeURIComponent(member.nickname())}") #{member.nickname()}
+      a(href='#{url}/members/#{encodeURIComponent(member.nickname())}') #{member.nickname()}
       | )
     br
     if (member.twitter())

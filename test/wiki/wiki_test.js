@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var request = require('supertest');
 var sinon = require('sinon').sandbox.create();
@@ -12,7 +12,7 @@ var createApp = require('../../testutil/testHelper')('wikiApp').createApp;
 describe('Wiki application', function () {
 
   var pageShow;
-  var content = "Hallo, ich bin der Dateiinhalt";
+  var content = 'Hallo, ich bin der Dateiinhalt';
   var nonExistingPage = 'global/nonexisting';
   beforeEach(function () {
     pageShow = sinon.stub(wikiAPI, 'showPage',

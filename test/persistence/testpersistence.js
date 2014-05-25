@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 module.exports = {
   list: function () {throw new Error('Testpersistence - function list not implemented'); },

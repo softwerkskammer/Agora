@@ -2,10 +2,10 @@ extends ../../../views/layoutOnlyMain
 include ../../members/views/memberlist-mixin
 
 block scripts
-  script(src="/clientscripts/jquery.dataTables.min.js")
+  script(src='/clientscripts/jquery.dataTables.min.js')
   script.
     $(document).ready(function() {
-      $("#membertable").dataTable({
+      $('#membertable').dataTable({
         "oLanguage": {
           "sUrl": "#{(language === 'de') ? "/clientscripts/dataTables.german.txt" : ""}"
         },
@@ -49,7 +49,7 @@ block content
           tbody
             for member in members
               tr
-                td: a.btn-sm(href="/members/edit/#{encodeURIComponent(member.nickname())}"): i.fa.fa-edit.fa-fw
+                td: a.btn-sm(href='/members/edit/#{encodeURIComponent(member.nickname())}'): i.fa.fa-edit.fa-fw
                 td #{member.created()}
                 td: mixin linkedMember(member.nickname())
                 td #{member.firstname()}
@@ -62,4 +62,4 @@ block content
                 td #{member.email()}
                 td #{member.twitter()}
                 td #{member.notifyOnWikiChanges()}
-                td #{member.authentications() ? member.authentications().join(", ") : ""}
+                td #{member.authentications() ? member.authentications().join(', ') : ''}

@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var sinon = require('sinon').sandbox.create();
 var expect = require('must');
@@ -31,9 +31,9 @@ describe('Waitinglist API', function () {
   describe('- waitinglist - ', function () {
 
     beforeEach(function () {
-      var member1 = new Member({id: "12345", nickname: "hansdampf"});
-      var member2 = new Member({id: "abcxyz", nickname: "nickinick"});
-      activity1 = new Activity({id: "Meine Aktivität", url: "myActivity", resources: {"Meine Ressource": {_waitinglist: []}}});
+      var member1 = new Member({id: '12345', nickname: 'hansdampf'});
+      var member2 = new Member({id: 'abcxyz', nickname: 'nickinick'});
+      activity1 = new Activity({id: 'Meine Aktivität', url: 'myActivity', resources: {'Meine Ressource': {_waitinglist: []}}});
 
       sinon.stub(membersAPI, 'getMemberForId', function (memberId, callback) {
         if (memberId === member1.id()) { return callback(null, member1); }
@@ -52,7 +52,7 @@ describe('Waitinglist API', function () {
     });
 
     it('returns one entry with its member nickname when the waitinglist contains one entry', function (done) {
-      activity1.resourceNamed("Meine Ressource").addToWaitinglist('12345', moment());
+      activity1.resourceNamed('Meine Ressource').addToWaitinglist('12345', moment());
 
       waitinglistAPI.waitinglistFor('myActivity', function (err, waitinglist) {
         expect(waitinglist.length).to.equal(1);
@@ -65,8 +65,8 @@ describe('Waitinglist API', function () {
     });
 
     it('returns two entries with their member nicknames when the waitinglist contains two entries', function (done) {
-      activity1.resourceNamed("Meine Ressource").addToWaitinglist('12345', moment());
-      activity1.resourceNamed("Meine Ressource").addToWaitinglist('abcxyz', moment());
+      activity1.resourceNamed('Meine Ressource').addToWaitinglist('12345', moment());
+      activity1.resourceNamed('Meine Ressource').addToWaitinglist('abcxyz', moment());
 
       waitinglistAPI.waitinglistFor('myActivity', function (err, waitinglist) {
         expect(waitinglist.length).to.equal(2);
@@ -104,23 +104,23 @@ describe('Waitinglist API', function () {
     });
 
     it('gives an error when activity could not be loaded', function (done) {
-      sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(new Error("error")); });
+      sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(new Error('error')); });
       sinon.stub(membersAPI, 'getMember', function (nickname, callback) { callback(null, new Member({id: 'memberId', nickname: 'hansdampf'})); });
 
       var args = {nickname: 'memberId', activityUrl: 'activity-url', resourcename: 'Einzelzimmer'};
       waitinglistAPI.saveWaitinglistEntry(args, function (err) {
-        expect(err, "Error").to.exist();
+        expect(err, 'Error').to.exist();
         done(); // error condition - do not pass err
       });
     });
 
     it('gives an error when member could not be loaded', function (done) {
       sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, new Activity()); });
-      sinon.stub(membersAPI, 'getMember', function (id, callback) { callback(new Error("error")); });
+      sinon.stub(membersAPI, 'getMember', function (id, callback) { callback(new Error('error')); });
 
       var args = {nickname: 'memberId', activityUrl: 'activity-url', resourcename: 'Einzelzimmer'};
       waitinglistAPI.saveWaitinglistEntry(args, function (err) {
-        expect(err, "Error").to.exist();
+        expect(err, 'Error').to.exist();
         done(); // error condition - do not pass err
       });
     });
@@ -172,15 +172,15 @@ describe('Waitinglist API', function () {
       ]}}};
       var activity = new Activity(state);
       sinon.stub(activitystore, 'saveActivity', function (activityToSave, callback) {
-        callback(new Error("Some problem during save"));
+        callback(new Error('Some problem during save'));
       });
       sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, activity); });
       sinon.stub(membersAPI, 'getMember', function (nickname, callback) { callback(null, new Member({id: 'memberId', nickname: 'hansdampf'})); });
 
       var args = {nickname: 'memberId', activityUrl: 'activity-url', resourcename: 'Einzelzimmer'};
       waitinglistAPI.allowRegistrationForWaitinglistEntry(args, function (err) {
-        expect(mailNotification, "Notification was not sent").to.be(undefined);
-        expect(err, "Error").to.exist();
+        expect(mailNotification, 'Notification was not sent').to.be(undefined);
+        expect(err, 'Error').to.exist();
         done(); // error condition - do not pass err
       });
     });
@@ -201,35 +201,35 @@ describe('Waitinglist API', function () {
 
       var args = {nickname: 'memberId', activityUrl: 'activity-url', resourcename: 'Einzelzimmer'};
       waitinglistAPI.allowRegistrationForWaitinglistEntry(args, function (err) {
-        expect(savedActivity, "Activity was not saved").to.be(undefined);
-        expect(mailNotification, "Notification was not sent").to.be(undefined);
+        expect(savedActivity, 'Activity was not saved').to.be(undefined);
+        expect(mailNotification, 'Notification was not sent').to.be(undefined);
         var waitinglistMembers = waitinglistMembersOf(activity, 'Einzelzimmer');
-        expect(waitinglistMembers, "Activity remains unchanged: memberId was not added").to.not.contain('memberId');
-        expect(waitinglistMembers, "Activity remains unchanged: otherId is still there").to.contain('otherId');
+        expect(waitinglistMembers, 'Activity remains unchanged: memberId was not added').to.not.contain('memberId');
+        expect(waitinglistMembers, 'Activity remains unchanged: otherId is still there').to.contain('otherId');
         done(err);
       });
     });
 
     it('gives an error when activity could not be loaded', function (done) {
-      sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(new Error("error")); });
+      sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(new Error('error')); });
       sinon.stub(membersAPI, 'getMember', function (nickname, callback) { callback(null, new Member({id: 'memberId', nickname: 'hansdampf'})); });
 
       var args = {nickname: 'memberId', activityUrl: 'activity-url', resourcename: 'Einzelzimmer'};
       waitinglistAPI.allowRegistrationForWaitinglistEntry(args, function (err) {
-        expect(mailNotification, "Notification was not sent").to.be(undefined);
-        expect(err, "Error").to.exist();
+        expect(mailNotification, 'Notification was not sent').to.be(undefined);
+        expect(err, 'Error').to.exist();
         done(); // error condition - do not pass err
       });
     });
 
     it('gives an error when member could not be loaded', function (done) {
       sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, new Activity()); });
-      sinon.stub(membersAPI, 'getMember', function (id, callback) { callback(new Error("error")); });
+      sinon.stub(membersAPI, 'getMember', function (id, callback) { callback(new Error('error')); });
 
       var args = {nickname: 'memberId', activityUrl: 'activity-url', resourcename: 'Einzelzimmer'};
       waitinglistAPI.allowRegistrationForWaitinglistEntry(args, function (err) {
-        expect(mailNotification, "Notification was not sent").to.be(undefined);
-        expect(err, "Error").to.exist();
+        expect(mailNotification, 'Notification was not sent').to.be(undefined);
+        expect(err, 'Error').to.exist();
         done(); // error condition - do not pass err
       });
     });
