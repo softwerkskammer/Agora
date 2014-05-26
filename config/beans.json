@@ -89,6 +89,7 @@
   "waitinglistEntry": {"module": "./lib/waitinglist/waitinglistEntry"},
   "wikiObjects": {"module": "./lib/wiki/wikiObjects"},
 
+  "constants": {"module": "./lib/commons/constants"},
   "fieldHelpers": {"module": "./lib/commons/fieldHelpers"},
   "misc": {"module": "./lib/commons/misc"},
   "notifications": {"module": "./lib/notifications"},
