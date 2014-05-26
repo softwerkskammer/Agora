@@ -2,6 +2,7 @@
 
 var expect = require('must');
 var conf = require('./../../testutil/configureForTest');
+var CONFLICTING_VERSIONS = conf.get('beans').get('constants').CONFLICTING_VERSIONS;
 var persistence = require('../../lib/persistence/persistence')('teststore');
 var clearStore = function (callback) {
   persistence.drop(function () {
@@ -78,7 +79,7 @@ describe('The persistence store', function () {
         if (err) {return done(err); }
         var objectToSave = {id: 123, data: "def", version: 1};
         persistence.saveWithVersion(objectToSave, function (err) {
-          expect(err.message).to.equal("Conflicting versions.");
+          expect(err.message).to.equal(CONFLICTING_VERSIONS);
           persistence.getById(123, function (err, result) {
             expect(result.data, "Data of object in database remains unchanged").to.equal("abc");
             expect(result.version, "Version of object in database remains unchanged").to.equal(2);

@@ -6,6 +6,7 @@ var expect = require('must');
 var beans = nconf.get('beans');
 var persistence = beans.get('activitiesPersistence');
 
+var CONFLICTING_VERSIONS = beans.get('constants').CONFLICTING_VERSIONS;
 
 var getEntry = function (callback) {
   persistence.getByField({url: 'url'}, callback);
@@ -44,7 +45,7 @@ describe('Persistence with DB', function () {
             expect(entry.entries, "First entry is stored").to.contain("entry1");
             // save second instance:
             persistence.saveWithVersion(entry2, function (err) {
-              expect(err.message).to.equal("Conflicting versions."); // Conflict is discovered
+              expect(err.message).to.equal(CONFLICTING_VERSIONS); // Conflict is discovered
               // repeat loading and adding:
               getEntry(function (err, entry2) {
                 entry2.entries.push("entry2");
