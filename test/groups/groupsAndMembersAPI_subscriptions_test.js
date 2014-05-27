@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var sinon = require('sinon').sandbox.create();
 var beans = require('../../testutil/configureForTest').get('beans');

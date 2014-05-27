@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var expect = require('must');
 var sinon = require('sinon');
@@ -119,14 +119,14 @@ describe('Import of mails from files with mime messages', function () {
 
   it('imports references', function (done) {
     mailimport(fileWithReferences, 'group', function (err, result) {
-      expect(result.references).to.eql(["message0@nomail.com", "message1@nomail.com"]);
+      expect(result.references).to.eql(['message0@nomail.com', 'message1@nomail.com']);
       done(err);
     });
   });
 
   it('imports reply-to as reference if no references are available', function (done) {
     mailimport(fileWithInReplyTo, 'group', function (err, result) {
-      expect(result.references).to.eql(["message0@nomail.com"]);
+      expect(result.references).to.eql(['message0@nomail.com']);
       done(err);
     });
   });

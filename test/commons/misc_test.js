@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var conf = require('../../testutil/configureForTest');
 var misc = conf.get('beans').get('misc');
@@ -43,19 +43,19 @@ describe('toArray function', function () {
 describe('toLowerCaseRegExp function', function () {
 
   it('transforms a string to a regexp', function () {
-    var result = misc.toLowerCaseRegExp("string");
-    expect(result.toString()).to.equal("/^string$/i");
-    expect("String").to.match(result);
+    var result = misc.toLowerCaseRegExp('string');
+    expect(result.toString()).to.equal('/^string$/i');
+    expect('String').to.match(result);
   });
 
   it('is case insensitive', function () {
-    var result = misc.toLowerCaseRegExp("StrInG");
-    expect("StRing").to.match(result);
+    var result = misc.toLowerCaseRegExp('StrInG');
+    expect('StRing').to.match(result);
   });
 
   it('escapes special regexp characters', function () {
-    var result = misc.toLowerCaseRegExp("All of these should be escaped: \\ ^ $ * + ? . ( ) | { } [ ]");
-    expect(result.toString()).to.equal("/^All of these should be escaped: \\\\ \\^ \\$ \\* \\+ \\? \\. \\( \\) \\| \\{ \\} \\[ \\]$/i");
+    var result = misc.toLowerCaseRegExp('All of these should be escaped: \\ ^ $ * + ? . ( ) | { } [ ]');
+    expect(result.toString()).to.equal('/^All of these should be escaped: \\\\ \\^ \\$ \\* \\+ \\? \\. \\( \\) \\| \\{ \\} \\[ \\]$/i');
   });
 });
 
@@ -63,8 +63,8 @@ describe('arrayToLowerCaseRegExp function', function () {
 
   it('concatenates multiple strings', function () {
     var result = misc.arrayToLowerCaseRegExp(['StrInG', 'strong']);
-    expect("StRing").to.match(result);
-    expect("strong").to.match(result);
+    expect('StRing').to.match(result);
+    expect('strong').to.match(result);
   });
 
   it('concatenates multiple strings rsulting in regex', function () {

@@ -3,10 +3,10 @@ extends ../../../views/layout
 include announcements-forms
 
 block scripts
-  script(src="/clientscripts/check-announcementform.js")
+  script(src='/clientscripts/check-announcementform.js')
 
 block title
-  | #{t("announcements.announcement")}
+  | #{t('announcements.announcement')}
 
 block content
   +announcementform(announcement)

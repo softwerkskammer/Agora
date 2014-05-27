@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var request = require('supertest');
 var sinon = require('sinon').sandbox.create();
@@ -27,12 +27,12 @@ describe('Activity application with DB - on submit -', function () {
 
   beforeEach(function (done) { // if this fails, you need to start your mongo DB
 
-    activityBeforeConcurrentAccess = new Activity({id: "activityId", title: 'Title of the Activity', description: 'description1', assignedGroup: 'groupname',
+    activityBeforeConcurrentAccess = new Activity({id: 'activityId', title: 'Title of the Activity', description: 'description1', assignedGroup: 'groupname',
       location: 'location1', direction: 'direction1', startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'),
       url: 'urlOfTheActivity', owner: 'owner',
       resources: {Veranstaltung: {_registeredMembers: [], _registrationOpen: true }}, version: 1});
 
-    activityAfterConcurrentAccess = new Activity({id: "activityId", title: 'Title of the Activity', description: 'description1', assignedGroup: 'groupname',
+    activityAfterConcurrentAccess = new Activity({id: 'activityId', title: 'Title of the Activity', description: 'description1', assignedGroup: 'groupname',
       location: 'location1', direction: 'direction1', startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'),
       url: 'urlOfTheActivity', owner: 'owner',
       resources: {Veranstaltung: {_registeredMembers: [
@@ -64,10 +64,10 @@ describe('Activity application with DB - on submit -', function () {
       .expect(/Redirecting to \/activities\/edit\/urlOfTheActivity/, function (err) {
         if (err) { return done(err); }
         // check that activity did not get changed on the database
-        getActivity("urlOfTheActivity", function (err, activity) {
+        getActivity('urlOfTheActivity', function (err, activity) {
           if (err) { return done(err); }
-          expect(activity.resourceNamed('Veranstaltung').registeredMembers(), "Registered member is still there").to.contain("memberId1");
-          expect(activity.location(), "Old location was not overwritten").to.equal('location1');
+          expect(activity.resourceNamed('Veranstaltung').registeredMembers(), 'Registered member is still there').to.contain('memberId1');
+          expect(activity.location(), 'Old location was not overwritten').to.equal('location1');
           done(err);
         });
       });

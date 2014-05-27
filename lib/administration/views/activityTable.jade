@@ -1,10 +1,10 @@
 extends ../../../views/layoutOnlyMain
 
 block scripts
-  script(src="/clientscripts/jquery.dataTables.min.js")
+  script(src='/clientscripts/jquery.dataTables.min.js')
   script.
     $(document).ready(function() {
-      $("#activitytable").dataTable({
+      $('#activitytable').dataTable({
         "oLanguage": {
           "sUrl": "#{(language === 'de') ? "/clientscripts/dataTables.german.txt" : ""}"
         },
@@ -46,12 +46,12 @@ block content
           tbody
             for activity in activities
               tr
-                td: a.btn-sm(href="/activities/edit/#{encodeURIComponent(activity.url())}"): i.fa.fa-edit.fa-fw
+                td: a.btn-sm(href='/activities/edit/#{encodeURIComponent(activity.url())}'): i.fa.fa-edit.fa-fw
                 td #{activity.title()}
                 td #{activity.url()}
                 td #{activity.startMoment().lang(language).format('L')}
                 td #{activity.endMoment().lang(language).format('L')}
                 td #{activity.location()}
-                td.ellipsis: .tooltiplabel(data-toggle="hover", data-placement="auto top", data-html="true", data-content="#{activity.descriptionHTML()}", data-title="#{activity.title()}") #{activity.description()}
-                td.ellipsis: .tooltiplabel(data-toggle="hover", data-placement="auto top", data-html="true", data-content="#{activity.directionHTML()}") #{activity.direction()}
+                td.ellipsis: .tooltiplabel(data-toggle='hover', data-placement='auto top', data-html='true', data-content='#{activity.descriptionHTML()}', data-title='#{activity.title()}') #{activity.description()}
+                td.ellipsis: .tooltiplabel(data-toggle='hover', data-placement='auto top', data-html='true', data-content='#{activity.directionHTML()}') #{activity.direction()}
                 td #{activity.groupName()}

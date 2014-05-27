@@ -4,61 +4,61 @@ include ../../members/views/memberlist-mixin
 block scripts
   script.
     $(document).ready(function () {
-      var checkboxes = $(".history td:first-child :checkbox");
-      var compareButton = $("#rev-compare");
+      var checkboxes = $('.history td:first-child :checkbox');
+      var compareButton = $('#rev-compare');
       function toggleCompareCheckboxes() {
-        var checkedCheckboxes = $(".history td:first-child :checked");
+        var checkedCheckboxes = $('.history td:first-child :checked');
         if (checkboxes.length === 1) {
           checkboxes.hide();
-          compareButton.attr({"disabled": "disabled"});
+          compareButton.attr({'disabled': 'disabled'});
           return;
         }
         if (checkedCheckboxes.length === 2) {
-          checkboxes.hide().parents("tr").css({"color": "silver"});
-          checkedCheckboxes.show().parents("tr").css({"color": "black"});
-          compareButton.removeAttr("disabled");
+          checkboxes.hide().parents('tr').css({'color': 'silver'});
+          checkedCheckboxes.show().parents('tr').css({'color': 'black'});
+          compareButton.removeAttr('disabled');
         } else {
-          checkboxes.show().parents("tr").css({"color": "black"});
-          compareButton.attr({"disabled": "disabled"});
+          checkboxes.show().parents('tr').css({'color': 'black'});
+          compareButton.attr({'disabled': 'disabled'});
         }
       }
       toggleCompareCheckboxes();
-      checkboxes.on("click", function () {
+      checkboxes.on('click', function () {
         toggleCompareCheckboxes();
       });
-      compareButton.on("click", function () {
-        var checkedCheckboxes = $(".history td:first-child :checked");
+      compareButton.on('click', function () {
+        var checkedCheckboxes = $('.history td:first-child :checked');
         if (checkedCheckboxes.length < 2) {
           return false;
         }
-        window.location.href = "/wiki/compare/" + $(this).data("subdir") + "/" + $(this).data("pagename") + "/" + checkedCheckboxes.map(function () { return $(this).val(); }).toArray().reverse().join("..");
+        window.location.href = '/wiki/compare/' + $(this).data('subdir') + '/' + $(this).data('pagename') + '/' + checkedCheckboxes.map(function () { return $(this).val(); }).toArray().reverse().join('..');
         return false;
       });
     });
 
 
 block title
-  | #{pageName} : #{subdir} - #{t("wiki.revisions")}
+  | #{pageName} : #{subdir} - #{t('wiki.revisions')}
 
 block content
   .page-header
     .btn-group.pull-right
-      a.btn.btn-default(href="javascript:history.back()", type="cancel") #{t("general.back")}
+      a.btn.btn-default(href='javascript:history.back()', type='cancel') #{t('general.back')}
       if (accessrights.isAuthenticated())
-        button(id="rev-compare", data-pageName="#{pageName}", data-subdir="#{subdir}").btn.btn-default
+        button(id='rev-compare', data-pageName=pageName, data-subdir=subdir).btn.btn-default
           i.fa.fa-stethoscope.fa-fw
-          | &nbsp; #{t("general.compare")}…
+          | &nbsp; #{t('general.compare')}…
     h2 #{subdir}/#{pageName}
       br
-      small #{t("wiki.revisions")}
+      small #{t('wiki.revisions')}
 
   table.history.table.table-striped.table-bordered.table-hover.table-condensed
     each item in items
       tr
         td
-          input(type="checkbox", value="#{item.fullhash}")
-        td: mixin linkedMember(item.author)
+          input(type='checkbox', value=item.fullhash)
+        td: +linkedMember(item.author)
         td #{item.date().lang(language).format('ll')}
         td #{item.comment}
         td
-          a(href="#{item.url()}?version=#{item.hashRef}") #{item.hashRef || 'CURRENT'}
+          a(href='#{item.url()}?version=#{item.hashRef}') #{item.hashRef || 'CURRENT'}

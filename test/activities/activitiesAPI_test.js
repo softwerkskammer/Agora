@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var sinon = require('sinon').sandbox.create();
 var expect = require('must');
@@ -27,7 +27,7 @@ var emptyActivity = new Activity({title: 'Title of the Activity', description: '
   location: 'location1', direction: 'direction1', startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'), url: 'urlOfTheActivity',
   owner: 'ownerId'});
 
-var group = new Group({id: "groupname", longName: "Buxtehude"});
+var group = new Group({id: 'groupname', longName: 'Buxtehude'});
 
 var waitinglistMembersOf = function (activity, resourceName) {
   return _.pluck(_.pluck(activity.resourceNamed(resourceName).waitinglistEntries(), 'state'), '_memberId');
@@ -66,9 +66,9 @@ describe('Activities API', function () {
   });
 
   it('returns an activity and enhances it with its group and visitors', function (done) {
-    var member1 = new Member({id: 'memberId1', nickname: 'participant1', email: "a@b.c"});
-    var member2 = new Member({id: 'memberId2', nickname: 'participant2', email: "a@b.c"});
-    var owner = new Member({id: 'ownerId', nickname: 'owner', email: "a@b.c"});
+    var member1 = new Member({id: 'memberId1', nickname: 'participant1', email: 'a@b.c'});
+    var member2 = new Member({id: 'memberId2', nickname: 'participant2', email: 'a@b.c'});
+    var owner = new Member({id: 'ownerId', nickname: 'owner', email: 'a@b.c'});
     sinon.stub(activitystore, 'getActivity', function (activityId, callback) { callback(null, emptyActivity); });
     sinon.stub(memberstore, 'getMembersForIds', function (ids, callback) {
       callback(null, [ member1, member2 ]);
@@ -84,26 +84,26 @@ describe('Activities API', function () {
     });
 
     activitiesAPI.getActivityWithGroupAndParticipants('urlOfTheActivity', function (err, activity) {
-      expect(activity, "Activity").to.exist();
-      expect(activity.group, "Group").to.equal(group);
+      expect(activity, 'Activity').to.exist();
+      expect(activity.group, 'Group').to.equal(group);
       expect(activity.participants.length).to.equal(2);
-      expect(activity.participants, "Participants").to.contain(member1);
-      expect(activity.participants, "Participants").to.contain(member2);
-      expect(activity.ownerNickname, "Owner").to.equal('owner');
+      expect(activity.participants, 'Participants').to.contain(member1);
+      expect(activity.participants, 'Participants').to.contain(member2);
+      expect(activity.ownerNickname, 'Owner').to.equal('owner');
       done(err);
     });
   });
 
   describe('checks the validity of URLs and', function () {
     it('does not allow the URL \'edit\'', function (done) {
-      activitiesAPI.isValidUrl("edit", "^edit$", function (err, result) {
+      activitiesAPI.isValidUrl('edit', '^edit$', function (err, result) {
         expect(result).to.be(false);
         done(err);
       });
     });
     it('allows the untrimmed URL \' edit \'', function (done) {
       sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, null); });
-      activitiesAPI.isValidUrl(" edit ", "^edit$", function (err, result) {
+      activitiesAPI.isValidUrl(' edit ', '^edit$', function (err, result) {
         expect(result).to.be(true);
         done(err);
       });
@@ -120,8 +120,8 @@ describe('Activities API', function () {
       sinon.stub(notifications, 'visitorRegistration');
 
       activitiesAPI.addVisitorTo('memberId', 'activity-url', 'Einzelzimmer', moment(), function (err, statusTitle, statusText) {
-        expect(statusTitle, "Status Title").to.not.exist();
-        expect(statusText, "Status Text").to.not.exist();
+        expect(statusTitle, 'Status Title').to.not.exist();
+        expect(statusText, 'Status Text').to.not.exist();
         expect(activity.resourceNamed('Einzelzimmer').registeredMembers()).to.contain('memberId');
         done(err);
       });
@@ -150,8 +150,8 @@ describe('Activities API', function () {
       sinon.stub(activitystore, 'getActivityForId', function (id, callback) { callback(null, activity); });
 
       activitiesAPI.addVisitorTo('memberId', 'activity-url', 'Einzelzimmer', moment(), function (err, statusTitle, statusText) {
-        expect(statusTitle, "Status Title").to.equal('activities.registration_not_now');
-        expect(statusText, "Status Text").to.equal('activities.registration_not_possible');
+        expect(statusTitle, 'Status Title').to.equal('activities.registration_not_now');
+        expect(statusText, 'Status Text').to.equal('activities.registration_not_possible');
         expect(activity.resourceNamed('Einzelzimmer').registeredMembers()).to.not.contain('memberId');
         done(err);
       });
@@ -169,18 +169,18 @@ describe('Activities API', function () {
       sinon.stub(notifications, 'visitorRegistration');
 
       activitiesAPI.addVisitorTo('memberId', 'activity-url', 'Einzelzimmer', moment(), function (err, statusTitle, statusText) {
-        expect(statusTitle, "Status Title").to.not.exist();
-        expect(statusText, "Status Text").to.not.exist();
+        expect(statusTitle, 'Status Title').to.not.exist();
+        expect(statusText, 'Status Text').to.not.exist();
         expect(activity.resourceNamed('Einzelzimmer').registeredMembers()).to.contain('memberId');
         done(err);
       });
     });
 
     it('gives an error when activity could not be loaded', function (done) {
-      sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(new Error("error")); });
+      sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(new Error('error')); });
 
       activitiesAPI.addVisitorTo('memberId', 'activity-url', 'Einzelzimmer', moment(), function (err) {
-        expect(err, "Error").to.exist();
+        expect(err, 'Error').to.exist();
         done(); // error condition - do not pass err
       });
     });
@@ -245,10 +245,10 @@ describe('Activities API', function () {
     });
 
     it('gives an error when activity could not be loaded', function (done) {
-      sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(new Error("error")); });
+      sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(new Error('error')); });
 
       activitiesAPI.removeVisitorFrom('memberId', 'activity-url', 'Einzelzimmer', function (err) {
-        expect(err, "Error").to.exist();
+        expect(err, 'Error').to.exist();
         done(); // error condition - do not pass err
       });
     });
@@ -264,8 +264,8 @@ describe('Activities API', function () {
       sinon.stub(notifications, 'waitinglistAddition');
 
       activitiesAPI.addToWaitinglist('memberId', 'activity-url', 'Einzelzimmer', moment(), function (err, statusTitle, statusText) {
-        expect(statusTitle, "Status Title").to.not.exist();
-        expect(statusText, "Status Text").to.not.exist();
+        expect(statusTitle, 'Status Title').to.not.exist();
+        expect(statusText, 'Status Text').to.not.exist();
         var waitinglistMembers = waitinglistMembersOf(activity, 'Einzelzimmer');
         expect(waitinglistMembers).to.contain('memberId');
         done(err);
@@ -295,8 +295,8 @@ describe('Activities API', function () {
       sinon.stub(activitystore, 'getActivityForId', function (id, callback) { callback(null, activity); });
 
       activitiesAPI.addToWaitinglist('memberId', 'activity-url', 'Einzelzimmer', moment(), function (err, statusTitle, statusText) {
-        expect(statusTitle, "Status Title").to.equal('activities.waitinglist_not_possible');
-        expect(statusText, "Status Text").to.equal('activities.no_waitinglist');
+        expect(statusTitle, 'Status Title').to.equal('activities.waitinglist_not_possible');
+        expect(statusText, 'Status Text').to.equal('activities.no_waitinglist');
         var waitinglistMembers = waitinglistMembersOf(activity, 'Einzelzimmer');
         expect(waitinglistMembers).to.not.contain('memberId');
         done(err);
@@ -304,10 +304,10 @@ describe('Activities API', function () {
     });
 
     it('gives an error when activity could not be loaded', function (done) {
-      sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(new Error("error")); });
+      sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(new Error('error')); });
 
       activitiesAPI.addToWaitinglist('memberId', 'activity-url', 'Einzelzimmer', moment(), function (err) {
-        expect(err, "Error").to.exist();
+        expect(err, 'Error').to.exist();
         done(); // error condition - do not pass err
       });
     });
@@ -355,10 +355,10 @@ describe('Activities API', function () {
     });
 
     it('gives an error when activity could not be loaded', function (done) {
-      sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(new Error("error")); });
+      sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(new Error('error')); });
 
       activitiesAPI.removeFromWaitinglist('memberId', 'activity-url', 'Einzelzimmer', function (err) {
-        expect(err, "Error").to.exist();
+        expect(err, 'Error').to.exist();
         done(); // error condition - do not pass err
       });
     });

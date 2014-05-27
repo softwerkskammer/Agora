@@ -11,21 +11,21 @@ mixin announcementform(announcement)
     fieldset
       .row
         .col-md-12
-          +submitButtons("general.save")
+          +submitButtons('general.save')
           legend
             if (announcement.id)
-              | #{t("announcements.edit")}
+              | #{t('announcements.edit')}
             else
-              |  #{t("announcements.create")}
+              |  #{t('announcements.create')}
       .row
         .col-md-6
-          +text('title', t("general.title"), announcement.title)
-          +text('url', t("general.url"), announcement.url)
+          +text('title', t('general.title'), announcement.title)
+          +text('url', t('general.url'), announcement.url)
         .col-md-6
-          +date('thruDate', t("announcements.show_until"), announcement.thruMoment().lang(language).format('L'))
+          +date('thruDate', t('announcements.show_until'), announcement.thruMoment().lang(language).format('L'))
       .row
         .col-md-12
-          +hightextarea('message', t("announcements.text"), announcement.message)
+          +hightextarea('message', t('announcements.text'), announcement.message)
       .row
         .col-md-12
-          +submitButtons("general.save")
+          +submitButtons('general.save')

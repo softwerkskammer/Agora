@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var request = require('supertest');
 var sinon = require('sinon').sandbox.create();
@@ -74,7 +74,7 @@ describe('Security regarding', function () {
     });
 
     it('csrf middleware adds the csrf token to res.locals', function () {
-      var csrf_token = "csrf token";
+      var csrf_token = 'csrf token';
       var req = { csrfToken: function () { return csrf_token; } };
       var res = {locals: {}};
       var next = function () { return undefined; };

@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var sinon = require('sinon').sandbox.create();
 

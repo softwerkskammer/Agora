@@ -2,7 +2,7 @@ extends ../../../views/layoutOnlyMain
 
 mixin defItem(title, url, text)
   dt #{title}:
-  dd: a(href=url, target="_blank")
+  dd: a(href=url, target='_blank')
     i.fa.fa-external-link
     | &nbsp;#{text}
 

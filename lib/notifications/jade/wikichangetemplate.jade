@@ -3,7 +3,7 @@ html
   head
     style.
       body {
-        font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+        font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif;
         font-size: 12px;
         line-height: 1.2;
       }
@@ -43,7 +43,7 @@ html
       h3 Wiki "#{directory.dir}"
       each file in directory.sortedFiles()
         h4 Seite: 
-          a(href="#{url}/wiki/#{directory.dir}/#{file.file}") #{file.file}
+          a(href='#{url}/wiki/#{directory.dir}/#{file.file}') #{file.file}
         p Mit Änderungen von: #{file.authorsString()}
         div
         table.compare
@@ -51,5 +51,5 @@ html
             tr
               td.ln #{line.ldln}
               td.ln #{line.rdln}
-              td(class="#{line.class}") #{line.text}
+              td(class=line.class) #{line.text}
       hr

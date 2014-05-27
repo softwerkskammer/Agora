@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 require('../../testutil/configureForTest');
 var conf = require('nconf');
@@ -32,14 +32,14 @@ describe('Activity resource management', function () {
 
     it('orders the resources if their order is given via fillFromUI', function () {
       var activity = new Activity({resources: {Einzelzimmer: { _registeredMembers: []}, Doppelzimmer: { _registeredMembers: []}}});
-      activity.fillFromUI({resources: {names: ["Doppelzimmer", "Einzelzimmer"], limits: ["", ""], previousNames: ["Einzelzimmer", "Doppelzimmer"]}});
+      activity.fillFromUI({resources: {names: ['Doppelzimmer', 'Einzelzimmer'], limits: ['', ''], previousNames: ['Einzelzimmer', 'Doppelzimmer']}});
       expect(activity.resourceNames().length).to.equal(2);
       expect(activity.resourceNames()[0]).to.equal('Doppelzimmer');
       expect(activity.resourceNames()[1]).to.equal('Einzelzimmer');
     });
 
     it('ignores resources that do not contain something valid on creation', function () {
-      var activity = new Activity({resources: {Einzelzimmer: null, Doppelzimmer: undefined, Heuboden: ""}});
+      var activity = new Activity({resources: {Einzelzimmer: null, Doppelzimmer: undefined, Heuboden: ''}});
       expect(activity.resourceNames()).to.be.empty();
     });
 
@@ -326,9 +326,9 @@ describe('Activity resource management', function () {
     });
   });
 
-  describe("- when talking about participant numbers -", function () {
+  describe('- when talking about participant numbers -', function () {
 
-    it("knows when a resource is full and when not", function () {
+    it('knows when a resource is full and when not', function () {
       var activity = new Activity({url: 'url', resources: {
         Teilnehmer: { _registeredMembers: [], _limit: 1}
       }});
@@ -340,7 +340,7 @@ describe('Activity resource management', function () {
       expect(activity.resourceNamed('Teilnehmer').isFull()).to.be(true);
     });
 
-    it("knows how many free slots are in a resource", function () {
+    it('knows how many free slots are in a resource', function () {
       var activity = new Activity({url: 'url', resources: {
         Teilnehmer: { _registeredMembers: [], _limit: 10}
       }});

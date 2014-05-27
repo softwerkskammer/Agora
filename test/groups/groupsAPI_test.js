@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var conf = require('../../testutil/configureForTest');
 var sinon = require('sinon').sandbox.create();
@@ -308,7 +308,7 @@ describe('Groups API (isGroupNameAvailable)', function () {
   });
 
   it('returns false when there is already a group of this name present', function (done) {
-    systemUnderTest.isGroupNameAvailable("GroupA", function (err, result) {
+    systemUnderTest.isGroupNameAvailable('GroupA', function (err, result) {
       expect(result).to.not.be(null);
       expect(result).to.be(false);
       done(err);
@@ -316,7 +316,7 @@ describe('Groups API (isGroupNameAvailable)', function () {
   });
 
   it('returns true when there is no group of this name present', function (done) {
-    systemUnderTest.isGroupNameAvailable("MyGroup", function (err, result) {
+    systemUnderTest.isGroupNameAvailable('MyGroup', function (err, result) {
       expect(result).to.not.be(null);
       expect(result).to.be(true);
       done(err);

@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var conf = require('../../testutil/configureForTest');
 
@@ -75,7 +75,7 @@ describe('descriptionHTMLFiltered should filter the description html by given', 
     var group = new Group();
     group.descriptionHTML = descriptionHTML;
 
-    expect(group.descriptionHTMLFiltered("a")).to.equal('description');
+    expect(group.descriptionHTMLFiltered('a')).to.equal('description');
   });
 
   it('matchSingleClosedTag', function () {
@@ -85,7 +85,7 @@ describe('descriptionHTMLFiltered should filter the description html by given', 
     var group = new Group();
     group.descriptionHTML = descriptionHTML;
 
-    expect(group.descriptionHTMLFiltered("img")).to.equal('description');
+    expect(group.descriptionHTMLFiltered('img')).to.equal('description');
   });
 
   it('matchSingleTag', function () {
@@ -95,7 +95,7 @@ describe('descriptionHTMLFiltered should filter the description html by given', 
     var group = new Group();
     group.descriptionHTML = descriptionHTML;
 
-    expect(group.descriptionHTMLFiltered("img")).to.equal('description');
+    expect(group.descriptionHTMLFiltered('img')).to.equal('description');
   });
 
 });

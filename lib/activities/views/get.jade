@@ -5,17 +5,17 @@ include ../../../views/formComponents
 include activities-mixins
 
 block title
-  | #{activity.title()} - #{t("activities.activities")}
+  | #{activity.title()} - #{t('activities.activities')}
 
 block opengraph
-  meta(property="og:description", content=activity.descriptionPlain().substring(0,500))
-  meta(property="og:title", content=activity.title())
+  meta(property='og:description', content=activity.descriptionPlain().substring(0,500))
+  meta(property='og:title', content=activity.title())
 
 block content
-  #addOn(tabindex="-1").modal.fade
+  #addOn(tabindex='-1').modal.fade
     .modal-dialog
       .modal-content
-  #payment(tabindex="-1").modal.fade
+  #payment(tabindex='-1').modal.fade
     .modal-dialog
       .modal-content
   .row
@@ -23,14 +23,14 @@ block content
       .page-header
         .btn-group.pull-right
           if (accessrights.canEditActivity(activity))
-            a.btn.btn-default(href="/activities/addons/#{encodeURIComponent(activity.url())}", title=t("activities.participants")): i.fa.fa-list-ol.fa-fw
-          a.btn.btn-default(href="/activities/ical/#{encodeURIComponent(activity.url())}", title=t("activities.export")): i.fa.fa-calendar.fa-fw
+            a.btn.btn-default(href='/activities/addons/#{encodeURIComponent(activity.url())}', title=t('activities.participants')): i.fa.fa-list-ol.fa-fw
+          a.btn.btn-default(href='/activities/ical/#{encodeURIComponent(activity.url())}', title=t('activities.export')): i.fa.fa-calendar.fa-fw
           if (accessrights.canCreateActivity())
-            a.btn.btn-default(href="/activities/newLike/#{encodeURIComponent(activity.url())}", title=t("activities.new_copy")): i.fa.fa-copy.fa-fw
+            a.btn.btn-default(href='/activities/newLike/#{encodeURIComponent(activity.url())}', title=t('activities.new_copy')): i.fa.fa-copy.fa-fw
           if (accessrights.canEditActivity(activity))
-            a.btn.btn-default(href="/waitinglist/#{encodeURIComponent(activity.url())}", title=t("activities.waitinglist")): i.fa.fa-clock-o.fa-fw
-            a.btn.btn-default(href="/mailsender/invitation/#{encodeURIComponent(activity.url())}", title=t("activities.invitation")): i.fa.fa-envelope-o.fa-fw
-            a.btn.btn-default(href="/activities/edit/#{encodeURIComponent(activity.url())}", title=t("general.edit")): i.fa.fa-edit.fa-fw
+            a.btn.btn-default(href='/waitinglist/#{encodeURIComponent(activity.url())}', title=t('activities.waitinglist')): i.fa.fa-clock-o.fa-fw
+            a.btn.btn-default(href='/mailsender/invitation/#{encodeURIComponent(activity.url())}', title=t('activities.invitation')): i.fa.fa-envelope-o.fa-fw
+            a.btn.btn-default(href='/activities/edit/#{encodeURIComponent(activity.url())}', title=t('general.edit')): i.fa.fa-edit.fa-fw
         h2 #{activity.title()}
           br
           small #{activity.startMoment().lang(language).format('LL')} (#{activity.startMoment().lang(language).format('LT')}
@@ -40,22 +40,22 @@ block content
               |  - #{activity.endMoment().lang(language).format('LT')})
       .btn-group.pull-right
         if (hasToBePaid)
-          a.btn(class="#{paymentAlreadyDone ? 'btn-default' : 'btn-warning'}", data-toggle="modal", data-target="#payment", href="/activities/payment/#{encodeURIComponent(activity.url())}")
+          a.btn(class='#{paymentAlreadyDone ? "btn-default" : "btn-warning"}', data-toggle='modal', data-target='#payment', href='/activities/payment/#{encodeURIComponent(activity.url())}')
             i.fa.fa-money.fa-fw
-            | &nbsp; #{t("payment.title")}…
+            | &nbsp; #{t('payment.title')}…
         if (canEditAddon)
-          a.btn(class="#{addonAlreadyFilled ? 'btn-default' : 'btn-warning'}", data-toggle="modal", data-target="#addOn", href="/activities/addon/#{encodeURIComponent(activity.url())}")
+          a.btn(class='#{addonAlreadyFilled ? "btn-default" : "btn-warning"}', data-toggle='modal', data-target='#addOn', href='/activities/addon/#{encodeURIComponent(activity.url())}')
             i.fa.fa-tags.fa-fw
-            | &nbsp;#{t("activities.edit_addon")}
+            | &nbsp;#{t('activities.edit_addon')}
       .clearfix
       | !{activity.descriptionHTML()}
       hr
   .row
     .col-md-6
-      h3 #{t("general.address")}:
+      h3 #{t('general.address')}:
       p #{activity.location()}
       if (activity.hasDirection())
-        h4 #{t("activities.directions")}:
+        h4 #{t('activities.directions')}:
         | !{activity.directionHTML()}
       hr
       div.hidden-print
@@ -63,21 +63,21 @@ block content
         each resourceName in activity.resourceNames()
           +subscriptionButtons(activity, resourceName, resourceRegistrationRenderer)
         if (accessrights.isRegistered() && activity.participants.length > 0)
-          h4 #{t("activities.accepted_by")}:
+          h4 #{t('activities.accepted_by')}:
           +memberlist(activity.participants)
 
       if (activity.group)
         hr.hidden-print
-        p.hidden-print #{t("activities.organized_by")}&nbsp;
-          a(href="/groups/#{activity.group.id}") #{activity.group.longName}
+        p.hidden-print #{t('activities.organized_by')}&nbsp;
+          a(href='/groups/#{activity.group.id}') #{activity.group.longName}
           if(activity.ownerNickname)
-            | &nbsp;- #{t("activities.created_by")}&nbsp;
-            a(href="/members/#{activity.ownerNickname}") #{activity.ownerNickname}
+            | &nbsp;- #{t('activities.created_by')}&nbsp;
+            a(href='/members/#{activity.ownerNickname}') #{activity.ownerNickname}
     .col-md-6
       +map(activity.location(), '100%', '450px')
 
 block scripts
-  script(type="text/javascript", src="https://js.stripe.com/v2/")
+  script(type='text/javascript', src='https://js.stripe.com/v2/')
   script.
     displayedActivityStart = moment('#{activity.startMoment().toISOString()}');
     displayedActivityEnd = moment('#{activity.endMoment().toISOString()}');

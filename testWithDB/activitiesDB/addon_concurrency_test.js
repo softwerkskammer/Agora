@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var nconf = require('../../testutil/configureForTestWithDB');
 var expect = require('must');
@@ -30,11 +30,11 @@ describe('Addon API with DB', function () {
   var chargedCreditCard;
 
   beforeEach(function (done) { // if this fails, you need to start your mongo DB
-    activityBeforeConcurrentAccess = new Activity({id: "activityId",
+    activityBeforeConcurrentAccess = new Activity({id: 'activityId',
       url: activityUrl, _addons: {}, version: 1});
 
-    activityAfterConcurrentAccess = new Activity({id: "activityId",
-      url: activityUrl, _addons: { memberIdRace: {homeAddress: "At Home"}}, version: 2});
+    activityAfterConcurrentAccess = new Activity({id: 'activityId',
+      url: activityUrl, _addons: { memberIdRace: {homeAddress: 'At Home'}}, version: 2});
 
     invocation = 1;
 
