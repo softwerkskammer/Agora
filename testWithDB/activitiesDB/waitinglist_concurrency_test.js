@@ -8,6 +8,7 @@ var beans = nconf.get('beans');
 var persistence = beans.get('activitiesPersistence');
 var activitystore = beans.get('activitystore');
 var membersAPI = beans.get('membersAPI');
+var memberstore = beans.get('memberstore');
 var mailsenderAPI = beans.get('mailsenderAPI');
 var waitinglistAPI = beans.get('waitinglistAPI');
 
@@ -22,7 +23,7 @@ var getActivity = function (url, callback) {
   });
 };
 
-describe('Waitinglist API', function () {
+describe('Waitinglist API with DB', function () {
 
   var activityBeforeConcurrentAccess;
   var activityAfterConcurrentAccess;
@@ -59,7 +60,7 @@ describe('Waitinglist API', function () {
       return callback(null, activityAfterConcurrentAccess);
     });
 
-    sinon.stub(membersAPI, 'getMember', function (nickname, callback) {
+    sinon.stub(memberstore, 'getMember', function (nickname, callback) {
       if (nickname === 'nick') {
         return callback(null, new Member({id: 'memberIdNew'}));
       }

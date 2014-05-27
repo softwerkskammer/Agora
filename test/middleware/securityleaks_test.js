@@ -9,7 +9,7 @@ var csurf = require('csurf');
 var beans = require('../../testutil/configureForTest').get('beans');
 
 var setupApp = require('../../testutil/testHelper');
-var membersAPI = beans.get('membersAPI');
+var memberstore = beans.get('memberstore');
 var groupsAPI = beans.get('groupsAPI');
 var groupsAndMembersAPI = beans.get('groupsAndMembersAPI');
 var Member = beans.get('member');
@@ -22,7 +22,7 @@ describe('Security regarding', function () {
   describe('Clickjacking:', function () {
 
     beforeEach(function () {
-      sinon.stub(membersAPI, 'allMembers', function (callback) { callback(null, []); });
+      sinon.stub(memberstore, 'allMembers', function (callback) { callback(null, []); });
     });
 
     afterEach(function () {
@@ -88,7 +88,7 @@ describe('Security regarding', function () {
 
   describe('Information disclosure', function () {
     beforeEach(function () {
-      sinon.stub(membersAPI, 'getMember', function (nickname, callback) { callback(null, null); });
+      sinon.stub(memberstore, 'getMember', function (nickname, callback) { callback(null, null); });
     });
 
     afterEach(function () {
