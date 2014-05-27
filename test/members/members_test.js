@@ -7,6 +7,7 @@ var expect = require('must');
 var beans = require('../../testutil/configureForTest').get('beans');
 var Member = beans.get('member');
 var membersAPI = beans.get('membersAPI');
+var memberstore = beans.get('memberstore');
 var groupsAPI = beans.get('groupsAPI');
 var groupsAndMembersAPI = beans.get('groupsAndMembersAPI');
 var activitiesAPI = beans.get('activitiesAPI');
@@ -24,10 +25,10 @@ describe('Members application', function () {
 
   beforeEach(function () {
     dummymember = new Member({id: 'memberID', nickname: 'hada', email: 'a@b.c', site: 'http://my.blog', firstname: 'Hans', lastname: 'Dampf', authentications: []});
-    allMembers = sinon.stub(membersAPI, 'allMembers', function (callback) {
+    allMembers = sinon.stub(memberstore, 'allMembers', function (callback) {
       callback(null, [dummymember]);
     });
-    getMember = sinon.stub(membersAPI, 'getMember', function (nickname, callback) {
+    getMember = sinon.stub(memberstore, 'getMember', function (nickname, callback) {
       callback(null, dummymember);
     });
     getSubscribedGroupsForUser = sinon.stub(groupsAPI, 'getSubscribedGroupsForUser', function (email, callback) {
@@ -245,7 +246,7 @@ describe('Members application', function () {
     sinon.stub(membersAPI, 'isValidNickname', function (nickname, callback) { callback(null, true); });
     sinon.stub(membersAPI, 'isValidEmail', function (nickname, callback) { callback(null, true); });
     sinon.stub(groupsAndMembersAPI, 'updateSubscriptions', function (member, oldEmail, subscriptions, callback) { callback(); });
-    sinon.stub(membersAPI, 'saveMember', function (member, callback) { callback(null); });
+    sinon.stub(memberstore, 'saveMember', function (member, callback) { callback(null); });
     var notificationCall = sinon.spy(notifications, 'newMemberRegistered', function () { return undefined; });
 
     // the following stub indicates that the member already exists 
@@ -264,7 +265,7 @@ describe('Members application', function () {
     sinon.stub(membersAPI, 'isValidNickname', function (nickname, callback) { callback(null, true); });
     sinon.stub(membersAPI, 'isValidEmail', function (nickname, callback) { callback(null, true); });
     sinon.stub(groupsAndMembersAPI, 'updateSubscriptions', function (member, oldEmail, subscriptions, callback) { callback(); });
-    sinon.stub(membersAPI, 'saveMember', function (member, callback) { callback(null); });
+    sinon.stub(memberstore, 'saveMember', function (member, callback) { callback(null); });
     var notificationCall = sinon.spy(notifications, 'newMemberRegistered', function () { return undefined; });
 
     // the following stub indicates that the member not yet exists 

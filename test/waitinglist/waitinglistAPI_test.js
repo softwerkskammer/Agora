@@ -11,7 +11,7 @@ var beans = require('../../testutil/configureForTest').get('beans');
 var waitinglistAPI = beans.get('waitinglistAPI');
 
 var activitystore = beans.get('activitystore');
-var membersAPI = beans.get('membersAPI');
+var memberstore = beans.get('memberstore');
 var mailsenderAPI = beans.get('mailsenderAPI');
 var Member = beans.get('member');
 var Activity = beans.get('activity');
@@ -35,7 +35,7 @@ describe('Waitinglist API', function () {
       var member2 = new Member({id: 'abcxyz', nickname: 'nickinick'});
       activity1 = new Activity({id: 'Meine Aktivität', url: 'myActivity', resources: {'Meine Ressource': {_waitinglist: []}}});
 
-      sinon.stub(membersAPI, 'getMemberForId', function (memberId, callback) {
+      sinon.stub(memberstore, 'getMemberForId', function (memberId, callback) {
         if (memberId === member1.id()) { return callback(null, member1); }
         if (memberId === member2.id()) { return callback(null, member2); }
       });
@@ -92,7 +92,7 @@ describe('Waitinglist API', function () {
         callback(null);
       });
       sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, activity); });
-      sinon.stub(membersAPI, 'getMember', function (nickname, callback) { callback(null, new Member({id: 'memberId', nickname: 'hansdampf'})); });
+      sinon.stub(memberstore, 'getMember', function (nickname, callback) { callback(null, new Member({id: 'memberId', nickname: 'hansdampf'})); });
 
       var args = {nickname: 'memberId', activityUrl: 'activity-url', resourcename: 'Einzelzimmer'};
       waitinglistAPI.saveWaitinglistEntry(args, function (err) {
@@ -105,7 +105,7 @@ describe('Waitinglist API', function () {
 
     it('gives an error when activity could not be loaded', function (done) {
       sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(new Error('error')); });
-      sinon.stub(membersAPI, 'getMember', function (nickname, callback) { callback(null, new Member({id: 'memberId', nickname: 'hansdampf'})); });
+      sinon.stub(memberstore, 'getMember', function (nickname, callback) { callback(null, new Member({id: 'memberId', nickname: 'hansdampf'})); });
 
       var args = {nickname: 'memberId', activityUrl: 'activity-url', resourcename: 'Einzelzimmer'};
       waitinglistAPI.saveWaitinglistEntry(args, function (err) {
@@ -116,7 +116,7 @@ describe('Waitinglist API', function () {
 
     it('gives an error when member could not be loaded', function (done) {
       sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, new Activity()); });
-      sinon.stub(membersAPI, 'getMember', function (id, callback) { callback(new Error('error')); });
+      sinon.stub(memberstore, 'getMember', function (id, callback) { callback(new Error('error')); });
 
       var args = {nickname: 'memberId', activityUrl: 'activity-url', resourcename: 'Einzelzimmer'};
       waitinglistAPI.saveWaitinglistEntry(args, function (err) {
@@ -150,7 +150,7 @@ describe('Waitinglist API', function () {
         callback(null);
       });
       sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, activity); });
-      sinon.stub(membersAPI, 'getMember', function (nickname, callback) { callback(null, new Member({id: 'memberId', nickname: 'hansdampf'})); });
+      sinon.stub(memberstore, 'getMember', function (nickname, callback) { callback(null, new Member({id: 'memberId', nickname: 'hansdampf'})); });
 
       var args = {nickname: 'memberId', activityUrl: 'activity-url', resourcename: 'Einzelzimmer'};
       waitinglistAPI.allowRegistrationForWaitinglistEntry(args, function (err) {
@@ -175,7 +175,7 @@ describe('Waitinglist API', function () {
         callback(new Error('Some problem during save'));
       });
       sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, activity); });
-      sinon.stub(membersAPI, 'getMember', function (nickname, callback) { callback(null, new Member({id: 'memberId', nickname: 'hansdampf'})); });
+      sinon.stub(memberstore, 'getMember', function (nickname, callback) { callback(null, new Member({id: 'memberId', nickname: 'hansdampf'})); });
 
       var args = {nickname: 'memberId', activityUrl: 'activity-url', resourcename: 'Einzelzimmer'};
       waitinglistAPI.allowRegistrationForWaitinglistEntry(args, function (err) {
@@ -197,7 +197,7 @@ describe('Waitinglist API', function () {
         callback(null);
       });
       sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, activity); });
-      sinon.stub(membersAPI, 'getMember', function (nickname, callback) { callback(null, new Member({id: 'memberId', nickname: 'hansdampf'})); });
+      sinon.stub(memberstore, 'getMember', function (nickname, callback) { callback(null, new Member({id: 'memberId', nickname: 'hansdampf'})); });
 
       var args = {nickname: 'memberId', activityUrl: 'activity-url', resourcename: 'Einzelzimmer'};
       waitinglistAPI.allowRegistrationForWaitinglistEntry(args, function (err) {
@@ -212,7 +212,7 @@ describe('Waitinglist API', function () {
 
     it('gives an error when activity could not be loaded', function (done) {
       sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(new Error('error')); });
-      sinon.stub(membersAPI, 'getMember', function (nickname, callback) { callback(null, new Member({id: 'memberId', nickname: 'hansdampf'})); });
+      sinon.stub(memberstore, 'getMember', function (nickname, callback) { callback(null, new Member({id: 'memberId', nickname: 'hansdampf'})); });
 
       var args = {nickname: 'memberId', activityUrl: 'activity-url', resourcename: 'Einzelzimmer'};
       waitinglistAPI.allowRegistrationForWaitinglistEntry(args, function (err) {
@@ -224,7 +224,7 @@ describe('Waitinglist API', function () {
 
     it('gives an error when member could not be loaded', function (done) {
       sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, new Activity()); });
-      sinon.stub(membersAPI, 'getMember', function (id, callback) { callback(new Error('error')); });
+      sinon.stub(memberstore, 'getMember', function (id, callback) { callback(new Error('error')); });
 
       var args = {nickname: 'memberId', activityUrl: 'activity-url', resourcename: 'Einzelzimmer'};
       waitinglistAPI.allowRegistrationForWaitinglistEntry(args, function (err) {

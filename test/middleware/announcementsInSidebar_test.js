@@ -3,12 +3,12 @@
 var conf = require('../../testutil/configureForTest');
 var beans = conf.get('beans');
 var announcementsInSidebar = beans.get('announcementsInSidebar');
-var api = beans.get('announcementsAPI');
+var store = beans.get('announcementstore');
 var expect = require('must');
 var sinon = require('sinon').sandbox.create();
 
-function mockAnouncementsApi(announcements) {
-  sinon.stub(api, 'allAnnouncementsUntilToday', function (callback) {
+function stubAnouncements(announcements) {
+  sinon.stub(store, 'allAnnouncementsUntilToday', function (callback) {
     callback(null, announcements);
   });
 }
@@ -32,13 +32,13 @@ describe('Announcements in Sidebar', function () {
   });
 
   it('shows the latest 3 news if there are no more than 3', function () {
-    mockAnouncementsApi([ annOne, annTwo, annThree ]);
+    stubAnouncements([ annOne, annTwo, annThree ]);
     announcementsInSidebar({}, res, next);
     expect(res.locals.latestNews.length).to.equal(3);
   });
 
   it('shows only the latest 5 news if there are more than 5', function () {
-    mockAnouncementsApi([ annOne, annTwo, annThree, annFour, annFive, annSix ]);
+    stubAnouncements([ annOne, annTwo, annThree, annFour, annFive, annSix ]);
     announcementsInSidebar({}, res, next);
     expect(res.locals.latestNews.length).to.equal(5);
     expect(res.locals.latestNews).to.include(annOne);
@@ -46,7 +46,7 @@ describe('Announcements in Sidebar', function () {
   });
 
   it('shows only the latest 5 in the order of the persistence', function () {
-    mockAnouncementsApi([ annSix, annOne, annTwo, annThree, annFour, annFive ]);
+    stubAnouncements([ annSix, annOne, annTwo, annThree, annFour, annFive ]);
     announcementsInSidebar({}, res, next);
     expect(res.locals.latestNews.length).to.equal(5);
     expect(res.locals.latestNews).to.include(annOne);
@@ -54,7 +54,7 @@ describe('Announcements in Sidebar', function () {
   });
 
   it('signals to show the "more"-link if there are more than 5', function () {
-    mockAnouncementsApi([ annOne, annTwo, annThree, annFour, annFive, annSix ]);
+    stubAnouncements([ annOne, annTwo, annThree, annFour, annFive, annSix ]);
     announcementsInSidebar({}, res, next);
     expect(res.locals.displayMoreNews).to.be(true);
   });

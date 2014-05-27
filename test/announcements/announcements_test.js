@@ -19,8 +19,8 @@ var dummyAnnouncement = new Announcement({
   thruUnix: 1388448000 // 31.12.2013
 });
 
-var announcementsAPI = beans.get('announcementsAPI');
-var membersAPI = beans.get('membersAPI');
+var announcementstore = beans.get('announcementstore');
+var memberstore = beans.get('memberstore');
 
 var createApp = require('../../testutil/testHelper')('announcementsApp').createApp;
 
@@ -29,13 +29,13 @@ describe('Announcement application', function () {
   var getAnnouncement;
 
   beforeEach(function () {
-    sinonSandbox.stub(announcementsAPI, 'allAnnouncements', function (callback) {
+    sinonSandbox.stub(announcementstore, 'allAnnouncements', function (callback) {
       return callback(null, [dummyAnnouncement]);
     });
-    allAnnouncementsUntilToday = sinonSandbox.stub(announcementsAPI, 'allAnnouncementsUntilToday', function (callback) {
+    allAnnouncementsUntilToday = sinonSandbox.stub(announcementstore, 'allAnnouncementsUntilToday', function (callback) {
       return callback(null, [dummyAnnouncement]);
     });
-    getAnnouncement = sinonSandbox.stub(announcementsAPI, 'getAnnouncement', function (url, callback) {
+    getAnnouncement = sinonSandbox.stub(announcementstore, 'getAnnouncement', function (url, callback) {
       callback(null, (url === 'url') ? dummyAnnouncement : null);
     });
   });
@@ -57,8 +57,8 @@ describe('Announcement application', function () {
   });
 
   it('shows the details of one announcement as retrieved from the store', function (done) {
-    var dummyMember = new Member({nickname: 'nickname', id: 'member ID'});
-    sinonSandbox.stub(membersAPI, 'getMemberForId', function (id, callback) {
+    var dummyMember = new Member({nickname: "nickname", id: "member ID"});
+    sinonSandbox.stub(memberstore, 'getMemberForId', function (id, callback) {
       callback(null, dummyMember);
     });
     var url = 'url';

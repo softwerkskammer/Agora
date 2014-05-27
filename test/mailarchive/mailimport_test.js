@@ -6,7 +6,7 @@ var sinonSandbox = sinon.sandbox.create();
 var moment = require('moment-timezone');
 
 var beans = require('../../testutil/configureForTest').get('beans');
-var membersAPI = beans.get('membersAPI');
+var memberstore = beans.get('memberstore');
 var Member = beans.get('member');
 var dummymember = new Member({sessionUser: {authenticationId: 'hada'}});
 
@@ -21,7 +21,7 @@ var fileWithoutMessageId = 'test/mailarchive/testfiles/mailWithoutMessageID';
 
 describe('Import of mails from files with mime messages', function () {
   beforeEach(function () {
-    sinonSandbox.stub(membersAPI, 'getMemberForEMail', function (emails, callback) {
+    sinonSandbox.stub(memberstore, 'getMemberForEMail', function (emails, callback) {
       callback(null, dummymember);
     });
   });

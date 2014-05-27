@@ -6,7 +6,7 @@ var sinon = require('sinon').sandbox.create();
 
 var beans = require('../../testutil/configureForTest').get('beans');
 var persistence = beans.get('mailsPersistence');
-var membersAPI = beans.get('membersAPI');
+var memberstore = beans.get('memberstore');
 var mailarchiveAPI = beans.get('mailarchiveAPI');
 var Mail = beans.get('archivedMail');
 var Member = beans.get('member');
@@ -23,7 +23,7 @@ describe('Mailarchive', function () {
   var idOfMailWithMember = 'id2';
 
   beforeEach(function () {
-    sinon.stub(membersAPI, 'getMemberForId',
+    sinon.stub(memberstore, 'getMemberForId',
       function (id, callback) {
         if (id === memberID) { return callback(null, sampleMember); }
         callback(null, null);

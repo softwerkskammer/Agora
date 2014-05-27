@@ -12,7 +12,7 @@ var beans = require('../../testutil/configureForTest').get('beans');
 var activitiesAPI = beans.get('activitiesAPI');
 var activitystore = beans.get('activitystore');
 var groupsAPI = beans.get('groupsAPI');
-var membersAPI = beans.get('membersAPI');
+var memberstore = beans.get('memberstore');
 
 var fieldHelpers = beans.get('fieldHelpers');
 var Activity = beans.get('activity');
@@ -70,10 +70,10 @@ describe('Activities API', function () {
     var member2 = new Member({id: 'memberId2', nickname: 'participant2', email: 'a@b.c'});
     var owner = new Member({id: 'ownerId', nickname: 'owner', email: 'a@b.c'});
     sinon.stub(activitystore, 'getActivity', function (activityId, callback) { callback(null, emptyActivity); });
-    sinon.stub(membersAPI, 'getMembersForIds', function (ids, callback) {
+    sinon.stub(memberstore, 'getMembersForIds', function (ids, callback) {
       callback(null, [ member1, member2 ]);
     });
-    sinon.stub(membersAPI, 'getMemberForId', function (id, callback) {
+    sinon.stub(memberstore, 'getMemberForId', function (id, callback) {
       callback(null, owner);
     });
     sinon.stub(groupsAPI, 'getGroup', function (groupname, callback) {

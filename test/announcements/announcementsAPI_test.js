@@ -5,7 +5,7 @@ var conf = require('../../testutil/configureForTest');
 var beans = conf.get('beans');
 var Announcement = beans.get('announcement');
 var sinon = require('sinon').sandbox.create();
-var membersAPI = beans.get('membersAPI');
+var memberstore = beans.get('memberstore');
 var Member = beans.get('member');
 
 var announcementUrl = 'eineSchoeneUrl';
@@ -34,34 +34,10 @@ describe('Announcements API', function () {
       }
       callback(null, null);
     });
-    sinon.stub(store, 'allAnnouncements', function (callback) {
-      callback(null, [dummyAnnouncement]);
-    });
   });
 
   afterEach(function () {
     sinon.restore();
-  });
-
-  it('returns the announcement for the given url', function (done) {
-    announcementsAPI.getAnnouncement(announcementUrl, function (err, result) {
-      expect(result).to.equal(dummyAnnouncement);
-      done(err);
-    });
-  });
-
-  it('returns null when url is not existing', function (done) {
-    announcementsAPI.getAnnouncement('nichtExistierendeUrl', function (err, result) {
-      expect(result).to.be(null);
-      done(err);
-    });
-  });
-
-  it('returns all announcements', function (done) {
-    announcementsAPI.allAnnouncements(function (err, result) {
-      expect(result).to.have.length(1);
-      done(err);
-    });
   });
 
   it('rejects urls that are reserved', function (done) {
@@ -111,7 +87,7 @@ describe('Announcements API', function () {
 
   it('displays member\'s nickname as author name', function (done) {
     var dummyMember = new Member({nickname: 'nickname', id: 'member ID'});
-    sinon.stub(membersAPI, 'getMemberForId', function (id, callback) {
+    sinon.stub(memberstore, 'getMemberForId', function (id, callback) {
       callback(null, dummyMember);
     });
     announcementsAPI.getAuthorName(dummyAnnouncement, function (err, name) {
