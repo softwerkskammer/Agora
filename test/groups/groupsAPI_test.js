@@ -183,41 +183,6 @@ describe('Groups API (getSympaUsersOfList)', function () {
   });
 });
 
-describe('Groups API (getGroup)', function () {
-
-  before(function () {
-    sinon.stub(groupstore, 'getGroup', function (name, callback) {
-      if (name === 'GroupA') {
-        callback(null, GroupA);
-      } else if (name === 'GroupB') {
-        callback(null, GroupB);
-      } else {
-        callback(null, null);
-      }
-    });
-  });
-
-  after(function () {
-    sinon.restore();
-  });
-
-  it('returns null if there is no group with the given name', function (done) {
-
-    systemUnderTest.getGroup('groupname', function (err, group) {
-      expect(group).to.be(null);
-      done(err);
-    });
-  });
-
-  it('returns the group if there is a group with the given name', function (done) {
-
-    systemUnderTest.getGroup('GroupA', function (err, group) {
-      expect(group).to.equal(GroupA);
-      done(err);
-    });
-  });
-});
-
 describe('Groups API (createOrSaveGroup)', function () {
 
   var createListSpy;
