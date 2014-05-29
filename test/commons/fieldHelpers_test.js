@@ -218,4 +218,11 @@ describe('parseToMomentUsingTimezone function', function () {
     expect(result).to.be(undefined);
   });
 
+  it('returns unix timestamps with correct offsets', function () {
+    var berlinMoment = fieldHelpers.parseToMomentUsingTimezone('2.8.2013', '12:34:56', 'Europe/Berlin');
+    var utcMoment = fieldHelpers.parseToMomentUsingTimezone('2.8.2013', '12:34:56', 'UTC');
+    var twoHoursInSeconds = 2 * 60 * 60;
+    expect(berlinMoment.unix() + twoHoursInSeconds).to.equal(utcMoment.unix());
+  });
+
 });

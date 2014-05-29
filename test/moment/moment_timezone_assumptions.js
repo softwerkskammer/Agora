@@ -23,16 +23,16 @@ describe('moment-timezone', function () {
     expect(utcMoment.unix()).to.equal(berlinMoment.unix());
   });
 
-  it('shifts the time (and thus possibly the date) when switching from winter to summer', function () {
+  it('does not shift the time when switching from winter to summer anymore', function () {
     var result = moment.tz('2013-11-30 23:30', 'Europe/Berlin');
     result.month(7); // set to August (!)
-    expect(result.format(), 'Resulting date is 31st, not 30th!').to.equal('2013-08-31T00:30:00+02:00');
+    expect(result.format(), 'Resulting date is 30th').to.equal('2013-08-30T23:30:00+02:00');
   });
 
-  it('time shift is especially nasty when it shifts the month after setting the month', function () {
+  it('does not shift the month after setting the month anymore', function () {
     var result = moment.tz('2013-01-31 23:30', 'Europe/Berlin');
     result.month(7); // set to August (!)
-    expect(result.format(), 'Resulting month is September, not August!').to.equal('2013-09-01T00:30:00+02:00');
+    expect(result.format(), 'Resulting month is August').to.equal('2013-08-31T23:30:00+02:00');
   });
 
 });

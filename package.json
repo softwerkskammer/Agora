@@ -48,7 +48,7 @@
     "lodash": "2.4.1",
     "mailparser": "~0.4",
     "marked": "~0.3",
-    "moment-timezone": "0.0.3",
+    "moment-timezone": "0.0.6",
     "mongodb": "~1.4",
     "morgan": "~1.0",
     "nodemailer": "~0.6",
