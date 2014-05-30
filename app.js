@@ -1,5 +1,5 @@
 /*jslint stupid: true */
-"use strict";
+'use strict';
 
 var express = require('express');
 var http = require('http');
@@ -13,7 +13,7 @@ var compress = require('compression');
 var csurf = require('csurf');
 var serveStatic = require('serve-static');
 var i18n = require('i18next');
-var jade = require("jade");
+var jade = require('jade');
 
 function useApp(parent, url, child) {
   function ensureRequestedUrlEndsWithSlash(req, res, next) {
@@ -50,7 +50,7 @@ i18n.init({
 // stream the log messages of express to winston, remove line breaks on message
 var winstonStream = {
   write: function (message) {
-    httpLogger.info(message.replace(/(\r\n|\n|\r)/gm, ""));
+    httpLogger.info(message.replace(/(\r\n|\n|\r)/gm, ''));
   }
 };
 
@@ -100,7 +100,7 @@ module.exports = {
     app.use(beans.get('handle500')(appLogger));
 
     i18n.registerAppHelper(app);
-    i18n.addPostProcessor("jade", function (val, key, opts) {
+    i18n.addPostProcessor('jade', function (val, key, opts) {
       return jade.compile(val, opts)();
     });
 
@@ -114,18 +114,14 @@ module.exports = {
     this.server = http.createServer(app);
     this.server.listen(port, function () {
       appLogger.info('Server running at port ' + port + ' in ' + process.env.NODE_ENV + ' MODE');
-      if (done) {
-        done();
-      }
+      if (done) { done(); }
     });
   },
 
   stop: function (done) {
     this.server.close(function () {
       appLogger.info('Server stopped');
-      if (done) {
-        done();
-      }
+      if (done) { done(); }
     });
   }
 };
