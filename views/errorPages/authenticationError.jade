@@ -1,11 +1,11 @@
 extends ../layout
 
 block title
-  | #{status} - #{t("authentication.error")}
+  | #{status} - #{t('authentication.error')}
 block content
   .row
     .col-md-6
-      !=t("authentication.error_text", { postProcess: "jade" })
+      !=t('authentication.error_text', { postProcess: 'jade' })
     .col-md-6
       h3 #{status}
       p #{error}
