@@ -120,4 +120,21 @@ describe('Announcement application', function () {
     expect(dummyAnnouncement.fromUnix).to.equal(now);
   });
 
+  describe('url check', function () {
+
+    it('returns false for checkurl when the url already exists', function (done) {
+      request(createApp())
+        .get('/checkurl?url=url&previousUrl=x')
+        .expect(200)
+        .expect(/false/, done);
+    });
+
+    it('returns true for checkurl when the url does not exist', function (done) {
+      request(createApp())
+        .get('/checkurl?url=UnknownURL&previousUrl=x')
+        .expect(200)
+        .expect(/true/, done);
+    });
+  });
+
 });

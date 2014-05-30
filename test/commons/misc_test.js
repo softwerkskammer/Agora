@@ -169,3 +169,62 @@ describe('differenceCaseInsensitive function', function () {
   });
 
 });
+
+describe('validate function', function () {
+  it('returns true if the new value is identical to the previous value', function (done) {
+    misc.validate('abc', 'abc', undefined, function (result) {
+      expect(result).to.equal('true');
+      done();
+    });
+  });
+
+  it('returns true if the new value is different to the previous value and the validator returns true', function (done) {
+    var validator = function (value, callback) { callback(null, true); };
+
+    misc.validate('def', 'abc', validator, function (result) {
+      expect(result).to.equal('true');
+      done();
+    });
+  });
+
+  it('returns false if the new value is different to the previous value and the validator returns false', function (done) {
+    var validator = function (value, callback) { callback(null, false); };
+
+    misc.validate('def', 'abc', validator, function (result) {
+      expect(result).to.equal('false');
+      done();
+    });
+  });
+
+  it('returns false if the new value is different to the previous value and the validator returns an error', function (done) {
+    var validator = function (value, callback) { callback(new Error('Error!')); };
+
+    misc.validate('def', 'abc', validator, function (result) {
+      expect(result).to.equal('false');
+      done();
+    });
+  });
+
+  it('trims the new value', function (done) {
+    misc.validate(' abc ', 'abc', undefined, function (result) {
+      expect(result).to.equal('true');
+      done();
+    });
+  });
+
+  it('trims the previous value', function (done) {
+    misc.validate('abc', ' abc ', undefined, function (result) {
+      expect(result).to.equal('true');
+      done();
+    });
+  });
+
+  it('works with two null values', function (done) {
+    misc.validate(null, null, undefined, function (result) {
+      expect(result).to.equal('true');
+      done();
+    });
+  });
+
+
+});
