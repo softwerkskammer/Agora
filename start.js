@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
-require("./configure"); // initializing parameters
+require('./configure'); // initializing parameters
 require('./app.js').start();

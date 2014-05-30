@@ -1,5 +1,5 @@
 module.exports = function (config) {
-  "use strict";
+  'use strict';
   config.set({
     // base path, that will be used to resolve files and exclude
     basePath: '',
@@ -8,14 +8,14 @@ module.exports = function (config) {
 
     // list of files / patterns to load in the browser
     files: [
-      "public/clientscripts/global_de.js",
-      "frontendtests/lib/mock-ajax.js",
-      "public/clientscripts/activityDateModel.js",
-      "public/clientscripts/activityform-dateAdapter.js",
-      "frontendtests/fixtures/forms.html",
-      "frontendtests/fixtures/fixtures.js",
-      "public/clientscripts/check-*.js",
-      "frontendtests/*.js"
+      'public/clientscripts/global_de.js',
+      'frontendtests/lib/mock-ajax.js',
+      'public/clientscripts/activityDateModel.js',
+      'public/clientscripts/activityform-dateAdapter.js',
+      'frontendtests/fixtures/forms.html',
+      'frontendtests/fixtures/fixtures.js',
+      'public/clientscripts/check-*.js',
+      'frontendtests/*.js'
     ],
 
     // list of files to exclude

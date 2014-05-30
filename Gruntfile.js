@@ -1,6 +1,6 @@
 module.exports = function (grunt) {
   // See http://www.jshint.com/docs/#strict
-  "use strict";
+  'use strict';
 
   // set up common objects for jslint
   var jsLintStandardOptions = { edition: 'latest', errorsOnly: true, failOnError: true };
