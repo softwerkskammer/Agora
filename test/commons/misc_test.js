@@ -205,4 +205,26 @@ describe('validate function', function () {
     });
   });
 
+  it('trims the new value', function (done) {
+    misc.validate(' abc ', 'abc', undefined, function (result) {
+      expect(result).to.equal('true');
+      done();
+    });
+  });
+
+  it('trims the previous value', function (done) {
+    misc.validate('abc', ' abc ', undefined, function (result) {
+      expect(result).to.equal('true');
+      done();
+    });
+  });
+
+  it('works with two null values', function (done) {
+    misc.validate(null, null, undefined, function (result) {
+      expect(result).to.equal('true');
+      done();
+    });
+  });
+
+
 });
