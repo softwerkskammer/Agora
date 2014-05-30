@@ -158,6 +158,10 @@ var surroundWithLink, surroundTwitterName, surroundEmail, displayedActivityStart
   };
 
   var initTooltipsAndHovers = function () {
+    $("[rel=tooltip]").each(function () {
+      $(this).popover({html: true, trigger: "hover", delay: {hide: 50}});
+    });
+    
     $("[rel=tooltip-in-body]").each(function () {
       $(this).popover({container: "body", html: true, trigger: "hover", delay: {hide: 50}});
     });
