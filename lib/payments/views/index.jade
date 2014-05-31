@@ -1,0 +1,22 @@
+extends ../../../views/layout
+include  ../../../views/formComponents
+
+
+block title
+  | #{t('payments.overview')}
+
+block content
+  .row
+    .col-md-12
+      .page-header
+        h2 #{t('payments.title')}
+  .row
+    .col-md-12
+      h3 #{t('payments.submit')}
+      .col-md-4
+        form(id='paymentform', action='/payments/setAmount', method='post')
+          +csrf
+          +text('amount', t('payments.amount'))
+          button.btn.btn-primary.pull-right(type='submit') #{t('payments.pay')}
+
+  h3 #{t('payments.transferred')}

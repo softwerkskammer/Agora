@@ -162,6 +162,14 @@
     "charge_credit_card": "Charge my credit card",
     "payment_done": "You have already paid."
   },
+  "payments": {
+    "overview": "Payments",
+    "title": "Payments",
+    "amount": "Amount",
+    "submit": "Submit Payment",
+    "transferred": "Transferred Payments",
+    "pay": "Pay"
+  },
   "announcements": {
     "latest_news": "Latest News",
     "announcements": "Announcements",

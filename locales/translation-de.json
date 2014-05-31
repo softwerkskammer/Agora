@@ -162,6 +162,14 @@
     "charge_credit_card": "Meine Kreditkarte belasten",
     "payment_done": "Du hast schon bezahlt."
   },
+  "payments": {
+    "overview": "Zahlungen",
+    "title": "Zahlungen",
+    "amount": "Betrag",
+    "submit": "Zahlung durchführen",
+    "transferred": "Geleistete Zahlungen",
+    "pay": "Bezahlen"
+  },
   "announcements": {
     "latest_news": "Das Neueste",
     "announcements": "Nachrichten",

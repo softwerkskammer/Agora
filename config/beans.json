@@ -8,6 +8,7 @@
   "mailarchiveApp": {"module": "./lib/mailarchive"},
   "mailsenderApp": {"module": "./lib/mailsender"},
   "membersApp": {"module": "./lib/members"},
+  "paymentsApp": {"module": "./lib/payments"},
   "siteApp": {"module": "./lib/site"},
   "waitinglistApp": {"module": "./lib/waitinglist"},
   "wikiApp": {"module": "./lib/wiki"},
@@ -24,6 +25,7 @@
   "mailarchiveAPI": {"module": "./lib/mailarchive/mailarchiveAPI"},
   "mailsenderAPI": {"module": "./lib/mailsender/mailsenderAPI"},
   "membersAPI": {"module": "./lib/members/membersAPI"},
+  "paymentService": {"module": "./lib/payments/paymentService"},
   "stripeAPI": {"module": "./lib/activities/stripeAPI"},
   "waitinglistAPI": {"module": "./lib/waitinglist/waitinglistAPI"},
   "wikiAPI": {"module": "./lib/wiki/wikiAPI"},
@@ -70,7 +72,7 @@
     "module": "./lib/persistence/persistence",
     "constructorArgs": { "collectionName": "sympastore" }
   },
-  
+
   "activity": {"module": "./lib/activities/activity"},
   "addon": {"module": "./lib/activities/addon"},
   "announcement": {"module": "./lib/announcements/announcement"},
@@ -81,6 +83,7 @@
   "mailThread": {"module": "./lib/mailarchive/mailThread"},
   "member": {"module": "./lib/members/member"},
   "message": {"module": "./lib/mailsender/message"},
+  "paymentInfo": {"module": "./lib/payments/paymentInfo"},
   "renderer": {"module": "./lib/commons/renderer"},
   "resource": {"module": "./lib/activities/resource"},
   "resources": {"module": "./lib/activities/resources"},
@@ -94,7 +97,7 @@
   "misc": {"module": "./lib/commons/misc"},
   "notifications": {"module": "./lib/notifications"},
   "validation": {"module": "./lib/commons/validation"},
-  
+
   "accessrights": {"module": "./lib/middleware/accessrights"},
   "addCsrfTokenToLocals": {"module": "./lib/middleware/addCsrfTokenToLocals"},
   "announcementsInSidebar": {"module": "./lib/middleware/announcementsInSidebar"},
