@@ -8,7 +8,7 @@ mixin buttonOrDate(momentOrNull, paymentDone, activityUrl, nickname)
   if (momentOrNull)
     | #{momentOrNull.lang(language).format('L')}
   else
-    a.btn.btn-primary.btn-xs.btn-block(id='#{encodeURIComponent(nickname) + "-button"}',
+    a.btn.btn-primary.btn-xs.btn-block(id=#{encodeURIComponent(nickname) + "-button"}',
       href='javascript:paymentDone(\'#{"/activities/paymentReceived/" + encodeURIComponent(activityUrl) + "/" + encodeURIComponent(nickname)}\', \'#{encodeURIComponent(nickname) + "-button"}\')') Erhalten…
 
 block scripts
@@ -22,62 +22,62 @@ block scripts
   script.
     $(document).ready(function() {
       $('.addontable').dataTable({
-        "oLanguage": {
-          "sUrl": "#{(language === 'de') ? "/clientscripts/dataTables.german.txt" : ""}"
+        oLanguage: {
+          sUrl: tableLangUrl
         },
-        "aoColumns": [
-          { "sType": "date-eu" }, null, null, null, null, null, null, null, { "sType": "date-eu" }, { "sType": "date-eu" }, { "sType": "date-eu" }
+        aoColumns: [
+          { sType: 'date-eu' }, null, null, null, null, null, null, null, { sType: 'date-eu' }, { sType: 'date-eu' }, { sType: 'date-eu' }
         ],
-        "bPaginate": false,
-        "bAutoWidth": false,
-        "bFilter": false,
-        "aaSorting": [[ 4 , "asc" ]],
-        "bStateSave": false
+        bPaginate: false,
+        bAutoWidth: false,
+        bFilter: false,
+        aaSorting: [[ 4 , 'asc' ]],
+        bStateSave: false
       });
     });
     $(document).ready(function() {
-      $(".membertable").dataTable({
-        "oLanguage": {
-          "sUrl": "#{(language === 'de') ? "/clientscripts/dataTables.german.txt" : ""}"
+      $('.membertable').dataTable({
+        oLanguage: {
+          sUrl: tableLangUrl
         },
-        "aoColumns": [
-          { "sType": "date-eu" }, null, null, null, null
+        aoColumns: [
+          { sType: 'date-eu' }, null, null, null, null
         ],
-        "bPaginate": false,
-        "bAutoWidth": false,
-        "bFilter": false,
-        "aaSorting": [[ 0 , "asc" ]],
-        "bStateSave": false
+        bPaginate: false,
+        bAutoWidth: false,
+        bFilter: false,
+        aaSorting: [[ 0 , 'asc' ]],
+        bStateSave: false
       });
     });
     $(document).ready(function() {
-      $(".missingtable").dataTable({
-        "oLanguage": {
-          "sUrl": "#{(language === 'de') ? "/clientscripts/dataTables.german.txt" : ""}"
+      $('.missingtable').dataTable({
+        oLanguage: {
+          sUrl: tableLangUrl
         },
-        "aoColumns": [
-          { "sType": "date-eu" }, null, null, null, null, null, null
+        aoColumns: [
+          { sType: 'date-eu' }, null, null, null, null, null, null
         ],
-        "bPaginate": false,
-        "bAutoWidth": false,
-        "bFilter": false,
-        "aaSorting": [[ 0 , "asc" ]],
-        "bStateSave": false
+        bPaginate: false,
+        bAutoWidth: false,
+        bFilter: false,
+        aaSorting: [[ 0 , 'asc' ]],
+        bStateSave: false
       });
     });
     $(document).ready(function() {
-      $(".tshirttable").dataTable({
-        "oLanguage": {
-          "sUrl": "#{(language === 'de') ? "/clientscripts/dataTables.german.txt" : ""}"
+      $('.tshirttable').dataTable({
+        oLanguage: {
+          sUrl: tableLangUrl
         },
-        "aoColumns": [
+        aoColumns: [
           null, null
         ],
-        "bPaginate": false,
-        "bAutoWidth": false,
-        "bFilter": false,
-        "aaSorting": [],
-        "bStateSave": false
+        bPaginate: false,
+        bAutoWidth: false,
+        bFilter: false,
+        aaSorting: [],
+        bStateSave: false
       });
     });
 
