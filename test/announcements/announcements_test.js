@@ -2,7 +2,7 @@
 var conf = require('../../testutil/configureForTest');
 
 var request = require('supertest');
-var sinonSandbox = require('sinon').sandbox.create();
+var sinon = require('sinon').sandbox.create();
 var expect = require('must');
 var moment = require('moment-timezone');
 
@@ -29,19 +29,19 @@ describe('Announcement application', function () {
   var getAnnouncement;
 
   beforeEach(function () {
-    sinonSandbox.stub(announcementstore, 'allAnnouncements', function (callback) {
+    sinon.stub(announcementstore, 'allAnnouncements', function (callback) {
       return callback(null, [dummyAnnouncement]);
     });
-    allAnnouncementsUntilToday = sinonSandbox.stub(announcementstore, 'allAnnouncementsUntilToday', function (callback) {
+    allAnnouncementsUntilToday = sinon.stub(announcementstore, 'allAnnouncementsUntilToday', function (callback) {
       return callback(null, [dummyAnnouncement]);
     });
-    getAnnouncement = sinonSandbox.stub(announcementstore, 'getAnnouncement', function (url, callback) {
+    getAnnouncement = sinon.stub(announcementstore, 'getAnnouncement', function (url, callback) {
       callback(null, (url === 'url') ? dummyAnnouncement : null);
     });
   });
 
   afterEach(function () {
-    sinonSandbox.restore();
+    sinon.restore();
   });
 
   it('shows the list of announcements as retrieved from the store', function (done) {
@@ -58,7 +58,7 @@ describe('Announcement application', function () {
 
   it('shows the details of one announcement as retrieved from the store', function (done) {
     var dummyMember = new Member({nickname: "nickname", id: "member ID"});
-    sinonSandbox.stub(memberstore, 'getMemberForId', function (id, callback) {
+    sinon.stub(memberstore, 'getMemberForId', function (id, callback) {
       callback(null, dummyMember);
     });
     var url = 'url';
