@@ -1,0 +1,15 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Restricted-Access" type="mocha-javascript-test-runner" factoryName="Mocha">
+    <node-options />
+    <working-directory>$PROJECT_DIR$</working-directory>
+    <pass-parent-env>true</pass-parent-env>
+    <envs>
+      <env name="reporter" value="spec" />
+    </envs>
+    <ui>BDD</ui>
+    <extra-mocha-options />
+    <test-directory>$PROJECT_DIR$/test/restricted-access</test-directory>
+    <recursive>true</recursive>
+    <method />
+  </configuration>
+</component>
