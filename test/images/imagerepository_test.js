@@ -46,19 +46,28 @@ describe("the image repository - ", function () {
     // Given
     var tempUuid = 'ourtempuuid';
     var fileContent = "Our tempfile Content";
+    var tmpFilePath = api.directory() + '/' + tempUuid;
 
     /*jslint node: true, stupid: true */
-    fs.writeSync(api.directory() + '/' + tempUuid, new Buffer(fileContent));
+    fs.writeFile(tmpFilePath, fileContent, {}, function(err) {
+      fs.readFileSync(tmpFilePath).toString().must.be.equal(fileContent);
+    });
 
     // When
     api.retrieveImage(tempUuid, function (err, imageStream) {
-      err.must.be.falsy();
+      expect(err).to.be.falsy();
       imageStream.must.be.an.instanceof(stream.Readable);
 
       var content = '';
 
-      imageStream.resume();
-      imageStream.on('data', function (chunk) { content += content; })
+      imageStream.on('data', function (chunk) {
+        content += chunk;
+      });
+
+      imageStream.on('error', function (e) {
+        done(e);
+      });
+
       imageStream.on('end', function () {
         content.must.be.equal(fileContent);
         done();
