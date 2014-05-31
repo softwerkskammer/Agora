@@ -49,10 +49,12 @@ describe("the image repository", function () {
       });
     });
 
-    it('should store an image and return a uuid', function (done) {
+    it('should store an image and return a uuid with the given extension', function (done) {
       api.storeImage(pathToExistingImage, function (err, uuid) {
         expect(err).to.be.falsy();
         expect(uuid).to.exist();
+        //noinspection JSLint
+        expect(uuid).to.match(/[^\.]\.\w+$/);
         done();
       });
     });
