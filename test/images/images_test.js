@@ -16,7 +16,7 @@ describe('/images', function () {
 
   beforeEach(function () {
     imageId = '8fe5861b-53cb-49db-929f-81eb77b4d05c';
-    sinonSandbox.stub(imageRepository, 'storeImage', function (callback) {
+    sinonSandbox.stub(imageRepository, 'storeImage', function (stream, callback) {
       return callback(null, imageId);
     });
   });
