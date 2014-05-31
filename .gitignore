@@ -1,7 +1,6 @@
 /.settings
 /.c9revisions/
 *.sublime*
-*.iml
 /node_modules/
 *~
 .DS_Store
