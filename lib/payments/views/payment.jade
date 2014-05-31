@@ -98,6 +98,8 @@ html
                 else
                   form#paymentform(action='/payments/submitCreditCard', method='post')
                     +csrf
+                    +hidden('amount', paymentInfo.amount())
+                    +hidden('description', paymentInfo.description())
                     .form-group
                       label.control-label(for='cardnumber') #{t('payment.card_number')}:
                       input.form-control(type='text', autocomplete='off', data-stripe='number', placeholder='Card Number')
