@@ -9,7 +9,7 @@ describe("the image repository", function () {
   it('should retrieve the document folder from nconf', function () {
     var directoryForUploads = '/tmp';
     conf.set('imageDirectory', directoryForUploads);
-    
+
     expect(api.directory).to.equal(directoryForUploads);
   });
 });
