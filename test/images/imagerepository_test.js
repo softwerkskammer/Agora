@@ -2,6 +2,7 @@
 
 var conf = require('../../testutil/configureForTest');
 var expect = require('must');
+var fs = require('fs');
 var api = require('../../lib/images/imagerepositoryAPI');
 
 var directoryForUploads = '/tmp';
@@ -31,6 +32,12 @@ describe("the image repository - ", function () {
   });
 
   it('storeImage should store an image and return a uuid', function (done) {
-    done();
+    var iconStream = fs.createReadStream(__dirname + '/sample_image.ico');
+    api.storeImage(iconStream, function (err, uuid) {
+      expect(err).to.be.falsy();
+      expect(uuid).to.exist();
+      expect(uuid).to.not.be.empty();
+      done();
+    });
   });
 });
