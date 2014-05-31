@@ -1,8 +1,6 @@
-.idea
 /.settings
 /.c9revisions/
 *.sublime*
-*.iml
 /node_modules/
 *~
 .DS_Store
@@ -22,3 +20,5 @@ global_en.js
 build/config.gypi
 coverage
 .vagrant
+.idea/dictionaries
+workspace.xml

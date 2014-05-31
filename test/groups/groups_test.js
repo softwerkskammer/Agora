@@ -50,6 +50,11 @@ describe('Groups application', function () {
       if (list.test('GroupA')) { return callback(null, GroupA); }
       return callback(null, null);
     });
+
+    sinon.stub(groupsPersistence, 'getByField', function (list, callback) {
+      if (list.emailPrefix.test('Group-A')) { return callback(null, GroupA); }
+      return callback(null, null);
+    });
   });
 
   after(function () {
@@ -86,6 +91,44 @@ describe('Groups application', function () {
     it('allows dashes and underscores in the groupname', function (done) {
       request(createApp())
         .get('/checkgroupname?id=Un_known-Group')
+        .expect(200)
+        .expect(/true/, done);
+    });
+
+    it('allows an empty groupname', function (done) {
+      request(createApp())
+        .get('/checkgroupname?id=')
+        .expect(200)
+        .expect(/true/, done);
+    });
+  });
+
+  describe('eMail-Prefix check', function () {
+
+    it('returns false for checkemailprefix when the prefix already exists', function (done) {
+      request(createApp())
+        .get('/checkemailprefix?emailPrefix=Group-A')
+        .expect(200)
+        .expect(/false/, done);
+    });
+
+    it('returns true for checkemailprefix when the prefix does not exist', function (done) {
+      request(createApp())
+        .get('/checkemailprefix?emailPrefix=UnknownPrefix')
+        .expect(200)
+        .expect(/true/, done);
+    });
+
+    it('allows dashes and underscores in the prefix', function (done) {
+      request(createApp())
+        .get('/checkemailprefix?emailPrefix=Un_known-Prefix')
+        .expect(200)
+        .expect(/true/, done);
+    });
+
+    it('allows an empty prefix', function (done) {
+      request(createApp())
+        .get('/checkemailprefix?emailPrefix=')
         .expect(200)
         .expect(/true/, done);
     });
