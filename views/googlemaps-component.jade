@@ -1,6 +1,6 @@
 mixin map(location, width, height)
-  #map.hidden-print(style="width: #{width}; height: #{height}")
-  script(src="https://maps.googleapis.com/maps/api/js?sensor=false", type="text/javascript")
+  #map.hidden-print(style='width: #{width}; height: #{height}')
+  script(src='https://maps.googleapis.com/maps/api/js?sensor=false', type='text/javascript')
   script.
     $(document).ready(function () {
       var mapOptions = {
@@ -15,27 +15,27 @@ mixin map(location, width, height)
       var styles = [
         {
           stylers: [
-            { hue: "##c8cf7e" },
+            { hue: '##c8cf7e' },
             { saturation: -50 }
           ]
         },{
-          featureType: "road",
-          elementType: "geometry",
+          featureType: 'road',
+          elementType: 'geometry',
           stylers: [
             { lightness: 20 },
-            { visibility: "simplified" }
+            { visibility: 'simplified' }
           ]
         },{
-          featureType: "poi.business",
-          elementType: "labels",
+          featureType: 'poi.business',
+          elementType: 'labels',
           stylers: [
-            { visibility: "off" }
+            { visibility: 'off' }
           ]
         }
       ];
       map.setOptions({styles: styles});
       var geocoder = new google.maps.Geocoder();
-      geocoder.geocode( { 'address': "#{location}", region: 'de'}, function(results, status) {
+      geocoder.geocode( { 'address': '#{location}', region: 'de'}, function(results, status) {
         if (status == google.maps.GeocoderStatus.OK) {
           map.setCenter(results[0].geometry.location);
           var marker = new google.maps.Marker({

@@ -1,73 +1,74 @@
 mixin administrationMenu
   if (accessrights.isSuperuser())
     li(data-agoranav='administration').dropdown.nav
-      a.dropdown-toggle(href="#", data-toggle="dropdown")
+      a.dropdown-toggle(href='#', data-toggle='dropdown')
         i.fa.fa-dashboard.fa-fw
-        | &nbsp;#{t("general.administration")}&nbsp;
+        | &nbsp;#{t('general.administration')}&nbsp;
         b.caret
       ul.dropdown-menu
-        li: a(href="/administration/announcementTable")
+        li: a(href='/administration/announcementTable')
           i.fa.fa-globe.fa-fw
-          | &nbsp;#{t("announcements.announcements")}
-        li: a(href="/administration/activityTable")
+          | &nbsp;#{t('announcements.announcements')}
+        li: a(href='/administration/activityTable')
           i.fa.fa-calendar.fa-fw
-          | &nbsp;#{t("activities.activities")}
-        li: a(href="/administration/groupTable")
+          | &nbsp;#{t('activities.activities')}
+        li: a(href='/administration/groupTable')
           i.fa.fa-group.fa-fw
-          | &nbsp;#{t("groups.groups")}
-        li: a(href="/administration/memberTable")
+          | &nbsp;#{t('groups.groups')}
+        li: a(href='/administration/memberTable')
           i.fa.fa-user.fa-fw
-          | &nbsp;#{t("members.members")}
-        li: a(href="/administration/memberAndGroupTable")
+          | &nbsp;#{t('members.members')}
+        li: a(href='/administration/memberAndGroupTable')
           i.fa.fa-retweet.fa-fw
-          | &nbsp;#{t("members.members") + " & " + t("groups.groups")}
-        li: a(href="/administration/colors")
+          | &nbsp;#{t('members.members') + ' & ' + t('groups.groups')}
+        li: a(href='/administration/colors')
           i.fa.fa-eye.fa-fw
-          | &nbsp;#{t("colors.colors")}
+          | &nbsp;#{t('colors.colors')}
 
 mixin loginMenu(forInline)
+  -var inlineClass = forInline ? 'visible-xs' : ''
   if (accessrights.isRegistered())
-    li.dropdown(class="#{forInline ? 'visible-xs' : ''}")
-      a.dropdown-toggle(href="#", data-toggle="dropdown")
+    li.dropdown(class=inlineClass)
+      a.dropdown-toggle(href='#', data-toggle='dropdown')
         i.fa.fa-info-circle.fa-fw &nbsp;
         | #{user.member.nickname()} 
         b.caret
       ul.dropdown-menu
-        li: a(href="/members/edit/#{encodeURIComponent(user.member.nickname())}")
+        li: a(href='/members/edit/#{encodeURIComponent(user.member.nickname())}')
           i.fa.fa-edit.fa-fw
-          | &nbsp;#{t("members.edit")}
-        li: a(href="/auth/logout")
+          | &nbsp;#{t('members.edit')}
+        li: a(href='/auth/logout')
           i.fa.fa-sign-out.fa-fw
-          | &nbsp;#{t("general.logout")}
-        li: a(href="/mailsender/resign/#{encodeURIComponent(user.member.nickname())}")
+          | &nbsp;#{t('general.logout')}
+        li: a(href='/mailsender/resign/#{encodeURIComponent(user.member.nickname())}')
           i.fa.fa-ban.fa-fw
-          | &nbsp;#{t("members.resign")}
-        li: a(href="https://github.com/softwerkskammer/Agora/issues", target="_blank")
+          | &nbsp;#{t('members.resign')}
+        li: a(href='https://github.com/softwerkskammer/Agora/issues', target='_blank')
           i.fa.fa-ambulance.fa-fw
-          | &nbsp;#{t("general.feedback")}
+          | &nbsp;#{t('general.feedback')}
         li: include ../version
   else if (!accessrights.isAuthenticated())
-    li(class="#{forInline ? 'visible-xs' : ''}"): a.navbar-link(href="https://github.com/softwerkskammer/Agora/issues",
-      title=t("general.what_does_not_work"), target="_blank")
+    li(class=inlineClass): a.navbar-link(href='https://github.com/softwerkskammer/Agora/issues',
+      title=t('general.what_does_not_work'), target='_blank')
       i.fa.fa-ambulance.fa-fw
-      | &nbsp;#{t("general.feedback")}
-    li(class="#{forInline ? 'visible-xs' : ''}"): a.navbar-link(data-toggle="modal", href="#login")
+      | &nbsp;#{t('general.feedback')}
+    li(class=inlineClass): a.navbar-link(data-toggle='modal', href='#login')
       i.fa.fa-sign-in
-      | &nbsp;#{t("general.login")}
+      | &nbsp;#{t('general.login')}
   li.visible-xs: span.pull-right
-    a(style="padding: 2px;", href="/language/de?currentUrl=#{encodeURIComponent(currentUrl)}"): img(src="/img/flags/Germany.png", alt="Deutsch")
-    a(style="padding: 2px;", href="/language/en-gb?currentUrl=#{encodeURIComponent(currentUrl)}"): img(src="/img/flags/United-Kingdom.png", alt="English")
+    a(style='padding: 2px;', href='/language/de?currentUrl=#{encodeURIComponent(currentUrl)}'): img(src='/img/flags/Germany.png', alt='Deutsch')
+    a(style='padding: 2px;', href='/language/en-gb?currentUrl=#{encodeURIComponent(currentUrl)}'): img(src='/img/flags/United-Kingdom.png', alt='English')
 
 
 mixin navbar-inside
   .navbar-collapse.collapse.collapse-btom
     ul.nav.navbar-nav.navbar-right
       +administrationMenu
-      li: a(href="/help.html") #{t("general.faq")}
-      li: a(href="/credits.html") #{t("general.credits")}
-      li: a(href="/impressum.html") #{t("general.legal_notice")}
+      li: a(href='/help.html') #{t('general.faq')}
+      li: a(href='/credits.html') #{t('general.credits')}
+      li: a(href='/impressum.html') #{t('general.legal_notice')}
   .navbar-header
-    a.btn.btn-default.navbar-toggle(data-toggle="collapse", data-target=".collapse-btom")
+    a.btn.btn-default.navbar-toggle(data-toggle='collapse', data-target='.collapse-btom')
       span.sr-only Toggle
       i.fa.fa-bars.fa-lg
 
@@ -80,55 +81,55 @@ mixin bottomNavbar
 mixin notificationsBlock(notificationmessage)
   #{notificationmessage.kill()}
   -var contents = notificationmessage.contents()
-  #notifications(class="alert alert-block hidden-print #{contents.type}")
-    button.close(type="button", data-dismiss="alert") &times;
+  #notifications(class='alert alert-block hidden-print #{contents.type}')
+    button.close(type='button', data-dismiss='alert') &times;
     h4 #{t(contents.title)}
     | #{t(contents.text, contents.additionalArguments)}
 
 mixin topNavbar
   .navbar-header
-    a.navbar-brand.no-padding(href="/")
-      img(src="/img/SoftwerkskammerWappenLinks.png", alt="Softwerkskammer")
-    a.btn.btn-default.navbar-toggle(data-toggle="collapse", data-target=".collapse-top")
+    a.navbar-brand.no-padding(href='/')
+      img(src='/img/SoftwerkskammerWappenLinks.png', alt='Softwerkskammer')
+    a.btn.btn-default.navbar-toggle(data-toggle='collapse', data-target='.collapse-top')
       span.sr-only Toggle
       i.fa.fa-bars.fa-lg
 
   .navbar-collapse.collapse.collapse-top
     ul.nav.navbar-nav.navbar-right.hidden-xs.bottom
       +loginMenu
-      li: a(style="padding: 2px;", href="/language/de?currentUrl=#{encodeURIComponent(currentUrl)}"): img(src="/img/flags/Germany.png", alt="Deutsch")
-      li: a(style="padding: 2px;", href="/language/en-gb?currentUrl=#{encodeURIComponent(currentUrl)}"): img(src="/img/flags/United-Kingdom.png", alt="English")
+      li: a(style='padding: 2px;', href='/language/de?currentUrl=#{encodeURIComponent(currentUrl)}'): img(src='/img/flags/Germany.png', alt='Deutsch')
+      li: a(style='padding: 2px;', href='/language/en-gb?currentUrl=#{encodeURIComponent(currentUrl)}'): img(src='/img/flags/United-Kingdom.png', alt='English')
     ul.nav.navbar-nav.bottom
-      li(data-agoranav='activities'): a(href="/activities/upcoming")
+      li(data-agoranav='activities'): a(href='/activities/upcoming')
         span.hidden-sm
           i.fa.fa-calendar.fa-fw
-          | &nbsp;#{t("activities.activities")}
+          | &nbsp;#{t('activities.activities')}
         span.visible-sm
           i.fa.fa-calendar.fa-fw
-      li(data-agoranav='groups'): a(href="/groups")
+      li(data-agoranav='groups'): a(href='/groups')
         span.hidden-sm
           i.fa.fa-group.fa-fw
-          | &nbsp;#{t("groups.groups")}
+          | &nbsp;#{t('groups.groups')}
         span.visible-sm
           i.fa.fa-group.fa-fw
       li(data-agoranav='wiki').dropdown
-        a.dropdown-toggle(href="#", data-toggle="dropdown")
+        a.dropdown-toggle(href='#', data-toggle='dropdown')
           span.hidden-sm
             i.fa.fa-book.fa-fw
-            | &nbsp;#{t("wiki.wiki")}&nbsp;
+            | &nbsp;#{t('wiki.wiki')}&nbsp;
             b.caret
           span.visible-sm
             i.fa.fa-book.fa-fw
             b.caret
         ul.dropdown-menu
-          if (typeof(wikisubdirs) !== 'undefined')
+          if (wikisubdirs)
             for subdir in wikisubdirs
-              li: a(href="/wiki/#{subdir}/") #{subdir}
-      li(data-agoranav='members'): a(href="/members")
+              li: a(href='/wiki/#{subdir}/') #{subdir}
+      li(data-agoranav='members'): a(href='/members')
         span.hidden-sm
           if (accessrights.isRegistered())
             i.fa.fa-user.fa-fw
-            | &nbsp;#{t("members.members")}
+            | &nbsp;#{t('members.members')}
         span.visible-sm
           if (accessrights.isRegistered())
             i.fa.fa-user.fa-fw
