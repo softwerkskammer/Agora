@@ -3,6 +3,7 @@
 var conf = require('../../testutil/configureForTest');
 var expect = require('must');
 var fs = require('fs');
+var stream = require('stream');
 var api = require('../../lib/images/imagerepositoryAPI');
 
 var directoryForUploads = '/tmp';
@@ -39,5 +40,31 @@ describe("the image repository - ", function () {
       expect(uuid).to.not.be.empty();
       done();
     });
+  });
+
+  it('retrieveImage should return a readable stream of an image stored with given uuid', function (done) {
+    // Given
+    var tempUuid = 'ourtempuuid';
+    var fileContent = "Our tempfile Content";
+
+    /*jslint node: true, stupid: true */
+    fs.writeSync(api.directory() + '/' + tempUuid, new Buffer(fileContent));
+
+    // When
+    api.retrieveImage(tempUuid, function (err, imageStream) {
+      err.must.be.falsy();
+      imageStream.must.be.an.instanceof(stream.Readable);
+
+      var content = '';
+
+      imageStream.resume();
+      imageStream.on('data', function (chunk) { content += content; })
+      imageStream.on('end', function () {
+        content.must.be.equal(fileContent);
+        done();
+      })
+
+    });
+
   });
 });
