@@ -95,6 +95,7 @@ module.exports = {
     useApp(app, 'wiki', beans.get('wikiApp'));
     useApp(app, 'waitinglist', beans.get('waitinglistApp'));
     useApp(app, 'dashboard', beans.get('dashboardApp'));
+    useApp(app, 'images', beans.get('imagesApp'));
 
     app.use(beans.get('handle404')(appLogger));
     app.use(beans.get('handle500')(appLogger));
