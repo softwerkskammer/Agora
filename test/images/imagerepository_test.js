@@ -8,9 +8,7 @@ var api = require('../../lib/images/imagerepositoryAPI');
 
 var directoryForUploads = '/tmp';
 
-// Given
-var tempImageUuid = 'ourtempuuid';
-var tmpFilePath = api.directory() + '/' + tempImageUuid;
+var filesToUnlink = [];
 
 describe("the image repository - ", function () {
   before(function () {
@@ -39,6 +37,7 @@ describe("the image repository - ", function () {
   it('storeImage should store an image and return a uuid', function (done) {
     var iconStream = fs.createReadStream(__dirname + '/sample_image.ico');
     api.storeImage(iconStream, function (err, uuid) {
+      filesToUnlink.push(api.directory() + '/' + uuid);
       expect(err).to.be.falsy();
       expect(uuid).to.exist();
       expect(uuid).to.not.be.empty();
@@ -56,6 +55,10 @@ describe("the image repository - ", function () {
   it('retrieveImage should return a readable stream of an image stored with given uuid', function (done) {
     // Given
     var tmpFileContent = "Our tempfile Content";
+    var tempImageUuid = 'ourtempuuid';
+    var tmpFilePath = api.directory() + '/' + tempImageUuid;
+
+    filesToUnlink.push(tmpFilePath);
     createTempFileWithContent(tmpFilePath, tmpFileContent);
 
     // When
@@ -84,6 +87,10 @@ describe("the image repository - ", function () {
   });
 
   after(function cleanUpFiles(done) {
-    fs.unlink(tmpFilePath, done);
+    filesToUnlink.forEach(function (file) {
+      /*jslint node: true, stupid: true */
+      fs.unlinkSync(file);
+    });
+    done();
   });
 });
