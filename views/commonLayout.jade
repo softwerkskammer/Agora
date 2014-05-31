@@ -1,19 +1,19 @@
 doctype html
 html
   head
-    meta(charset="utf-8")
-    meta(name="viewport", content="width=device-width, initial-scale=1.0")
-    link(href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,400italic,600italic", rel="stylesheet", type="text/css")
-    link(href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400,600", rel="stylesheet", type="text/css")
-    link(href="/stylesheets/screen.css", rel="stylesheet")
-    link(rel="apple-touch-icon", href="/img/apple-touch-icon-60x60-precomposed.png")
-    link(rel="apple-touch-icon", href="/img/apple-touch-icon-76x76-precomposed.png")
-    link(rel="apple-touch-icon", href="/img/apple-touch-icon-120x120-precomposed.png")
-    link(rel="apple-touch-icon", href="/img/apple-touch-icon-152x152-precomposed.png")
+    meta(charset='utf-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    link(href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,400italic,600italic', rel='stylesheet', type='text/css')
+    link(href='https://fonts.googleapis.com/css?family=Source+Code+Pro:400,600', rel='stylesheet', type='text/css')
+    link(href='/stylesheets/screen.css', rel='stylesheet')
+    link(rel='apple-touch-icon', href='/img/apple-touch-icon-60x60-precomposed.png')
+    link(rel='apple-touch-icon', href='/img/apple-touch-icon-76x76-precomposed.png')
+    link(rel='apple-touch-icon', href='/img/apple-touch-icon-120x120-precomposed.png')
+    link(rel='apple-touch-icon', href='/img/apple-touch-icon-152x152-precomposed.png')
     if (language === 'de')
-      script(src="/clientscripts/global_de.js")
+      script(src='/clientscripts/global_de.js')
     else
-      script(src="/clientscripts/global_en.js")
+      script(src='/clientscripts/global_en.js')
     if (!!calViewYear)
       script.
         $(document).ready(function () {
@@ -25,9 +25,9 @@ html
     title
       block title
       | &nbsp;- SWK
-    meta(property="og:image", content="https://raw.github.com/softwerkskammer/softwerkskammer-logos/master/Wappen%20mit%20Text/Softwerkskammer_WappenMitText.png")
-    meta(property="og:type", content="website")
-    meta(property="og:site_name", content="Softwerkskammer")
+    meta(property='og:image', content='https://raw.github.com/softwerkskammer/softwerkskammer-logos/master/Wappen%20mit%20Text/Softwerkskammer_WappenMitText.png')
+    meta(property='og:type', content='website')
+    meta(property='og:site_name', content='Softwerkskammer')
     block opengraph
     
   body
@@ -35,29 +35,29 @@ html
       .alert.alert-block.alert-warning
         h2 Please note that we no longer support Internet Explorer versions 7 or 8.
         p We follow the example of 
-          a(href="https://help.github.com/articles/supported-browsers") github 
+          a(href='https://help.github.com/articles/supported-browsers') github 
           | .
         p We recommend upgrading to the latest 
-          a(href="https://ie.microsoft.com/") Internet Explorer
+          a(href='https://ie.microsoft.com/') Internet Explorer
           | , 
-          a(href="https://chrome.google.com") Google Chrome
+          a(href='https://chrome.google.com') Google Chrome
           | , or 
-          a(href="https://mozilla.org/firefox/") Firefox
+          a(href='https://mozilla.org/firefox/') Firefox
           | .
         p If you are using IE 9 or later, make sure you 
-          a(href="http://windows.microsoft.com/en-US/windows7/webpages-look-incorrect-in-Internet-Explorer") turn off "Compatibility View"
+          a(href='http://windows.microsoft.com/en-US/windows7/webpages-look-incorrect-in-Internet-Explorer') turn off "Compatibility View"
           | .
     else
       include layoutComponents
       include loginComponent
-      #cheatsheet.modal.bs-modal-lg.fade(tabindex="-1")
+      #cheatsheet.modal.bs-modal-lg.fade(tabindex='-1')
         .modal-dialog.modal-lg
           .modal-content
-      img.visible-print(src="/img/Softwerkskammer_Header.png", alt="Softwerkskammer")
+      img.visible-print(src='/img/Softwerkskammer_Header.png', alt='Softwerkskammer')
       p.visible-print &nbsp;
-      .navbar.navbar-default.navbar-fixed-top.hidden-print.hidden-xs(role="navigation")
+      .navbar.navbar-default.navbar-fixed-top.hidden-print.hidden-xs(role='navigation')
         +topNavbar
-      .navbar.navbar-default.navbar-top.hidden-print.visible-xs(role="navigation")
+      .navbar.navbar-default.navbar-top.hidden-print.visible-xs(role='navigation')
         +topNavbar
   
       .row.main

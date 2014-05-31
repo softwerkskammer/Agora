@@ -2,13 +2,13 @@
 
 var surroundWithLink, surroundTwitterName, surroundEmail, displayedActivityStart, displayedActivityEnd;
 (function () {
-  "use strict";
+  'use strict';
 
   surroundWithLink = function (text) {
     // shamelessly stolen from http://stackoverflow.com/questions/1500260/detect-urls-in-text-with-javascript
     var urlRegex = /(\b(https?|ftp|file):\/\/[\-A-Z0-9+&@#\/%?=~_|!:,.;]*[\-A-Z0-9+&@#\/%=~_|])/ig;
     return text.replace(urlRegex, function (url) {
-      return "<a href=\"" + url + "\" target=\"_blank\">" + "<i class=\"fa fa-external-link\"/> " + url + "</a>";
+      return '<a href="' + url + '" target="_blank">' + '<i class="fa fa-external-link"/> ' + url + '</a>';
     });
   };
 
@@ -16,11 +16,11 @@ var surroundWithLink, surroundTwitterName, surroundEmail, displayedActivityStart
     if (twittername.trim().length === 0) {
       return twittername;
     }
-    return "<a href=\"http://twitter.com/" + twittername + "\" target=\"_blank\">@" + twittername + "</a>";
+    return '<a href="http://twitter.com/' + twittername + '" target="_blank">@' + twittername + '</a>';
   };
 
   surroundEmail = function (email) {
-    return "<a href=\"mailto:" + email + "\">" + email + "</a>";
+    return '<a href="mailto:' + email + '">' + email + '</a>';
   };
 
   var initCalendar = function () {
@@ -47,9 +47,9 @@ var surroundWithLink, surroundTwitterName, surroundEmail, displayedActivityStart
         eventMouseover: function (event) {
           var day = event.start.day();
           $(this).tooltip({
-            title: event.start.format('HH:mm') + ": " + event.title,
-            trigger: "manual",
-            placement: (day < 4 && day > 0) ? "right" : "left"
+            title: event.start.format('HH:mm') + ': ' + event.title,
+            trigger: 'manual',
+            placement: (day < 4 && day > 0) ? 'right' : 'left'
           });
           $(this).tooltip('show');
         },
@@ -109,23 +109,23 @@ var surroundWithLink, surroundTwitterName, surroundEmail, displayedActivityStart
           additionalButtons: [
             [
               {
-                name: "groupCustom",
+                name: 'groupCustom',
                 data: [
                   {
-                    name: "cmdHelp",
-                    title: "Help",
-                    icon: "fa fa-question-circle",
-                    callback: function () { $("#cheatsheet").modal({remote: "/cheatsheet.html"}); }
+                    name: 'cmdHelp',
+                    title: 'Help',
+                    icon: 'fa fa-question-circle',
+                    callback: function () { $('#cheatsheet').modal({remote: '/cheatsheet.html'}); }
                   }
                 ]
               }
             ]
           ],
           onPreview: function (e) {
-            $.post("/preview",
-              {data: e.getContent(), subdir: ($("[name=subdir]").val() || $("[name=assignedGroup]").val() || $('[name=id]').val()), "_csrf": $("[name=_csrf]").val()},
-              function (data) { $(".md-preview").html(data); });
-            return ""; // to clearly indicate the loading...
+            $.post('/preview',
+              {data: e.getContent(), subdir: ($('[name=subdir]').val() || $('[name=assignedGroup]').val() || $('[name=id]').val()), '_csrf': $('[name=_csrf]').val()},
+              function (data) { $('.md-preview').html(data); });
+            return ''; // to clearly indicate the loading...
           },
           iconlibrary: 'fa',
           resize: 'vertical'
@@ -137,9 +137,9 @@ var surroundWithLink, surroundTwitterName, surroundEmail, displayedActivityStart
   var extendDataTables = function () {
     if (!$.fn.dataTableExt) { return; }
     $.extend($.fn.dataTableExt.oSort, {
-      "date-eu-pre": function (dateString) { return moment(dateString, 'DD.MM.YYYY HH:mm').unix(); },
-      "date-eu-asc": function (a, b) { return a - b; },
-      "date-eu-desc": function (a, b) { return b - a; }
+      'date-eu-pre': function (dateString) { return moment(dateString, 'DD.MM.YYYY HH:mm').unix(); },
+      'date-eu-asc': function (a, b) { return a - b; },
+      'date-eu-desc': function (a, b) { return b - a; }
     });
   };
 
@@ -158,17 +158,17 @@ var surroundWithLink, surroundTwitterName, surroundEmail, displayedActivityStart
   };
 
   var initTooltipsAndHovers = function () {
-    $("[rel=tooltip]").each(function () {
-      $(this).popover({html: true, trigger: "hover", delay: {hide: 50}});
+    $('[rel=tooltip]').each(function () {
+      $(this).popover({html: true, trigger: 'hover', delay: {hide: 50}});
     });
 
-    $("[rel=tooltip-in-body]").each(function () {
-      $(this).popover({container: "body", html: true, trigger: "hover", delay: {hide: 50}});
+    $('[rel=tooltip-in-body]').each(function () {
+      $(this).popover({container: 'body', html: true, trigger: 'hover', delay: {hide: 50}});
     });
 
     $('.tooltipify').each(function () {
       $(this).tooltip();
-      $(this).addClass("popover-highlight");
+      $(this).addClass('popover-highlight');
     });
   };
 
@@ -196,7 +196,7 @@ var surroundWithLink, surroundTwitterName, surroundEmail, displayedActivityStart
   };
 
   patchBootstrapPopover();
-  $.event.add(window, "resize", adaptScrollableBox);
+  $.event.add(window, 'resize', adaptScrollableBox);
   $(document).ready(highlightCurrentSection);
   $(document).ready(addHelpButtonToTextarea);
   $(document).ready(initPickers);

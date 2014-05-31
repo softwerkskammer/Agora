@@ -72,7 +72,7 @@
     "grunt": "~0.4",
     "grunt-contrib-clean": "~0.5",
     "grunt-contrib-concat": "~0.4.0",
-    "grunt-contrib-jade": "git://github.com/leider/grunt-contrib-jade.git#new-jade",
+    "grunt-contrib-jade": "~0.12",
     "grunt-contrib-less": "~0.11.0",
     "grunt-jslint": "~1.1",
     "grunt-karma": "~0.8",

@@ -5,16 +5,16 @@ block scripts
   script.
     $(document).ready(function() {
       $('#activitytable').dataTable({
-        "oLanguage": {
-          "sUrl": "#{(language === 'de') ? "/clientscripts/dataTables.german.txt" : ""}"
+        oLanguage: {
+          sUrl: tableLangUrl
         },
-        "aoColumns": [
-          { "bSortable" : false }, null, null, { "sType": "date-eu" }, { "sType": "date-eu" }, null, null, null, null
+        aoColumns: [
+          { bSortable : false }, null, null, { sType: 'date-eu' }, { sType: 'date-eu' }, null, null, null, null
         ],
-        "bPaginate": false,
-        "bAutoWidth": false,
-        "aaSorting": [[ 1, "asc" ]],
-        "bStateSave": true
+        bPaginate: false,
+        bAutoWidth: false,
+        aaSorting: [[ 1, 'asc' ]],
+        bStateSave: true
       });
       $('.tooltiplabel').each(function(each) {$(this).popover()});
     });

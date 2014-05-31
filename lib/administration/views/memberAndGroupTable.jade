@@ -6,13 +6,13 @@ block scripts
   script.
     $(document).ready(function() {
           $('#memberandgrouptable').dataTable({
-            "oLanguage": {
-              "sUrl": "#{(language === 'de') ? "/clientscripts/dataTables.german.txt" : ""}"
+            oLanguage: {
+              sUrl: tableLangUrl
             },
-        "bPaginate": false,
-        "bAutoWidth": false,
-        "aaSorting": [[ 1 , "desc" ]],
-        "bStateSave": true
+        bPaginate: false,
+        bAutoWidth: false,
+        aaSorting: [[ 1 , 'desc' ]],
+        bStateSave: true
       });
     });
 block title

@@ -2,12 +2,12 @@ extends ../../../views/layout
 include ./memberlist-mixin
 
 block title
-  | #{t("members.overview")}
+  | #{t('members.overview')}
 
 block content
   .row
     .col-md-12
       .page-header
-        h2 #{t("members.members")}
-      +memberlistHeading(t("members.has"), members.length)
+        h2 #{t('members.members')}
+      +memberlistHeading(t('members.has'), members.length)
       +memberlist(members)
