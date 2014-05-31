@@ -1,5 +1,5 @@
 /*jslint stupid: true */
-"use strict";
+'use strict';
 
 var express = require('express');
 var http = require('http');
@@ -13,7 +13,7 @@ var compress = require('compression');
 var csurf = require('csurf');
 var serveStatic = require('serve-static');
 var i18n = require('i18next');
-var jade = require("jade");
+var jade = require('jade');
 
 function useApp(parent, url, child) {
   function ensureRequestedUrlEndsWithSlash(req, res, next) {
