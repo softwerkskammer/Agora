@@ -6,7 +6,7 @@ var fs = require('fs');
 var stream = require('stream');
 var api = require('../../lib/images/imagerepositoryAPI');
 
-var directoryForUploads = '/tmp';
+var directoryForUploads = require('os').tmpdir();
 
 var filesToUnlink = [];
 
