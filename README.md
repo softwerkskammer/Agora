@@ -34,7 +34,7 @@ Just follow these steps:
 1. Download and install Oracle VirtualBox from here: https://www.virtualbox.org
 1. Download and install Vagrant from here: http://www.vagrantup.com
 1. Check your version of Vagrant with `vagrant --version`. 1.5.1 and above are known to work.
-1. Clone or fork and clone the repo if you plan to make contributions (forking is a must if you want to contribute)
+1. Clone, or if you plan to make contributions, fork and clone the repo (forking is a must if you want to contribute)
 1. Open a shell inside the checkout directory
 1. Perform `vagrant up` - (this will download and provision the virtual machine)
 1. You can then log into the VM via `vagrant ssh`
