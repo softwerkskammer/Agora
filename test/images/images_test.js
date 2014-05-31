@@ -10,32 +10,34 @@ var imageRepository = beans.get('imagerepositoryAPI');
 
 var createApp = require('../../testutil/testHelper')('imagesApp').createApp;
 
+var OK = 200;
 var CREATED = 201;
 
 describe('/images', function () {
-  var imagePath = 'test/images/fixtures/image.jpg';
-  var imageId;
+  var storedImageId = 'image.jpg';
+  var imagePath = 'test/images/fixtures/' + storedImageId;
+  var generatedImageId;
   var storedImagePath;
-
-  beforeEach(function () {
-    imageId = '8fe5861b-53cb-49db-929f-81eb77b4d05c';
-    sinon.stub(imageRepository, 'storeImage', function (imagePath, callback) {
-      storedImagePath = imagePath;
-      callback(null, imageId);
-    });
-  });
 
   afterEach(function () {
     sinon.restore();
   });
 
   describe('POST /', function () {
+    beforeEach(function () {
+      generatedImageId = '8fe5861b-53cb-49db-929f-81eb77b4d05c';
+      sinon.stub(imageRepository, 'storeImage', function (imagePath, callback) {
+        storedImagePath = imagePath;
+        callback(null, generatedImageId);
+      });
+    });
+
     it('responds with the image Location', function (done) {
       request(createApp())
         .post('/')
         .attach('image', imagePath)
         .expect(CREATED)
-        .expect('Location', '/images/' + imageId, done);
+        .expect('Location', '/images/' + generatedImageId, done);
     });
 
     it('stores the image to the imagerepository', function (done) {
@@ -47,6 +49,21 @@ describe('/images', function () {
           done();
         });
     });
-
   });
+
+  describe('GET /{imageId}', function () {
+    it('responds with the image', function (done) {
+      sinon.stub(imageRepository, 'retrieveImage', function (imageId, callback) {
+        if (storedImageId === imageId) {
+          callback(null, imagePath);
+        }
+      });
+
+      request(createApp())
+        .get('/'  + storedImageId)
+        .expect(OK)
+        .expect('Content-Type', 'image/jpeg', done);
+    });
+  });
+
 });
