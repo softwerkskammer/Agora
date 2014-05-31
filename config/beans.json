@@ -5,6 +5,7 @@
   "authenticationApp": {"module": "./lib/authentication"},
   "dashboardApp": {"module": "./lib/dashboard"},
   "groupsApp": {"module": "./lib/groups"},
+  "imagesApp": {"module": "./lib/images"},
   "mailarchiveApp": {"module": "./lib/mailarchive"},
   "mailsenderApp": {"module": "./lib/mailsender"},
   "membersApp": {"module": "./lib/members"},
@@ -32,6 +33,7 @@
   "announcementstore": {"module": "./lib/announcements/announcementstore"},
   "colorstore": {"module": "./lib/administration/colorstore"},
   "groupstore": {"module": "./lib/groups/groupstore"},
+  "imageRepository": {"module": "./lib/images/imageRepository"},
   "memberstore": {"module": "./lib/members/memberstore"},
 
   "sympa": {"module": "./lib/groups/sympa"},
