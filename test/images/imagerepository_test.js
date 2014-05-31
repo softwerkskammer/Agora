@@ -8,14 +8,13 @@ var stream = require('stream');
 var api = require('../../lib/images/imagerepositoryAPI');
 
 var directoryForUploads = require('os').tmpdir();
-var existingFileForStoreImageTest = 'sample_image.ico';
 
-var filesToUnlink = [];
+var pathToExistingImage = '/sample/tmp/file.jpg';
 
 describe("the image repository - ", function () {
   beforeEach(function () {
     var files = {};
-    files[existingFileForStoreImageTest] = "Content_of_sample_image.ico";
+    files[pathToExistingImage] = "Content_of_sample_image";
     mock(files);
   });
   afterEach(mock.restore);
@@ -37,20 +36,17 @@ describe("the image repository - ", function () {
     });
   });
 
-  it('storeImage should expect a readable stream and throw an error if it is not provided', function (done) {
-    api.storeImage('not a readable stream at all', function (err) {
+  it('storeImage should expect an existing file and throw an error if it is not provided', function (done) {
+    api.storeImage('/tmp/file/that/does/not/exist.png', function (err) {
       err.must.be.an.instanceof(Error);
       done();
     });
   });
 
   it('storeImage should store an image and return a uuid', function (done) {
-    var iconStream = fs.createReadStream(existingFileForStoreImageTest);
-    api.storeImage(iconStream, function (err, uuid) {
-      filesToUnlink.push(api.directory() + '/' + uuid);
+    api.storeImage(pathToExistingImage, function (err, uuid) {
       expect(err).to.be.falsy();
       expect(uuid).to.exist();
-      expect(uuid).to.not.be.empty();
       done();
     });
   });
@@ -62,37 +58,22 @@ describe("the image repository - ", function () {
     });
   }
 
-  it('retrieveImage should return a readable stream of an image stored with given uuid', function (done) {
+  it('retrieveImage should return a file of an image stored with given uuid', function (done) {
     // Given
     var tmpFileContent = "Our tempfile Content";
     var tempImageUuid = 'ourtempuuid';
     var tmpFilePath = api.directory() + '/' + tempImageUuid;
 
-    filesToUnlink.push(tmpFilePath);
     createTempFileWithContent(tmpFilePath, tmpFileContent);
 
     // When
-    api.retrieveImage(tempImageUuid, function (err, imageStream) {
+    api.retrieveImage(tempImageUuid, function (err, imageFile) {
       expect(err).to.be.falsy();
-      imageStream.must.be.an.instanceof(stream.Readable);
-
-      var bufferOfImageStream = '';
-
-      imageStream.on('data', function (chunkOfImageStream) {
-        bufferOfImageStream += chunkOfImageStream;
-      });
-
-      imageStream.on('error', function (e) {
-        done(e);
-      });
-
-      imageStream.on('end', function () {
-        // Then expect
-        bufferOfImageStream.must.be.equal(tmpFileContent);
+      fs.exists(imageFile, function (exists) {
+        // Expect
+        exists.must.be.true();
         done();
       });
-
     });
-
   });
 });
