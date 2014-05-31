@@ -3,14 +3,24 @@
 var conf = require('../../testutil/configureForTest');
 var expect = require('must');
 var fs = require('fs');
+var mock = require('mock-fs');
 var stream = require('stream');
 var api = require('../../lib/images/imagerepositoryAPI');
 
 var directoryForUploads = require('os').tmpdir();
+var existingFileForStoreImageTest = 'sample_image.ico';
 
 var filesToUnlink = [];
 
 describe("the image repository - ", function () {
+  beforeEach(function () {
+    var files = {};
+    files[existingFileForStoreImageTest] = "Content_of_sample_image.ico";
+    mock(files);
+  });
+  afterEach(mock.restore);
+
+
   before(function () {
     conf.set('imageDirectory', directoryForUploads);
   });
@@ -35,7 +45,7 @@ describe("the image repository - ", function () {
   });
 
   it('storeImage should store an image and return a uuid', function (done) {
-    var iconStream = fs.createReadStream(__dirname + '/sample_image.ico');
+    var iconStream = fs.createReadStream(existingFileForStoreImageTest);
     api.storeImage(iconStream, function (err, uuid) {
       filesToUnlink.push(api.directory() + '/' + uuid);
       expect(err).to.be.falsy();
@@ -84,13 +94,5 @@ describe("the image repository - ", function () {
 
     });
 
-  });
-
-  after(function cleanUpFiles(done) {
-    filesToUnlink.forEach(function (file) {
-      /*jslint node: true, stupid: true */
-      fs.unlinkSync(file);
-    });
-    done();
   });
 });
