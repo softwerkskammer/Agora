@@ -67,7 +67,8 @@
     "useragent": "~2.0",
     "URIjs": "~1.13",
     "winston": "~0.7",
-    "winston-config": "~0.4.0"
+    "winston-config": "~0.4.0",
+    "node-uuid": "~1.4.1"
   },
   "devDependencies": {
     "grunt": "~0.4",
@@ -88,7 +89,8 @@
     "request": "~2.36",
     "sinon": "~1.10",
     "supertest": "~0.12",
-    "utils-merge": "~1.0"
+    "utils-merge": "~1.0",
+    "mock-fs": "~2.3.1"
   },
   "scripts": {
     "start": "node start",

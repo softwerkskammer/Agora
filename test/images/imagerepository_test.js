@@ -1,13 +1,26 @@
 'use strict';
 
-require('../../testutil/configureForTest');
+var conf = require('../../testutil/configureForTest');
 var expect = require('must');
+var fs = require('fs');
+var mock = require('mock-fs');
+var stream = require('stream');
 var api = require('../../lib/images/imagerepositoryAPI');
-var conf = require('nconf');
 
-var directoryForUploads = '/tmp';
+var directoryForUploads = require('os').tmpdir();
+var existingFileForStoreImageTest = 'sample_image.ico';
+
+var filesToUnlink = [];
 
 describe("the image repository - ", function () {
+  beforeEach(function () {
+    var files = {};
+    files[existingFileForStoreImageTest] = "Content_of_sample_image.ico";
+    mock(files);
+  });
+  afterEach(mock.restore);
+
+
   before(function () {
     conf.set('imageDirectory', directoryForUploads);
   });
@@ -32,6 +45,54 @@ describe("the image repository - ", function () {
   });
 
   it('storeImage should store an image and return a uuid', function (done) {
-    done();
+    var iconStream = fs.createReadStream(existingFileForStoreImageTest);
+    api.storeImage(iconStream, function (err, uuid) {
+      filesToUnlink.push(api.directory() + '/' + uuid);
+      expect(err).to.be.falsy();
+      expect(uuid).to.exist();
+      expect(uuid).to.not.be.empty();
+      done();
+    });
+  });
+
+  function createTempFileWithContent(tmpFilePath, fileContent) {
+    /*jslint node: true, stupid: true */
+    fs.writeFile(tmpFilePath, fileContent, {}, function (err) {
+      fs.readFileSync(tmpFilePath).toString().must.be.equal(fileContent);
+    });
+  }
+
+  it('retrieveImage should return a readable stream of an image stored with given uuid', function (done) {
+    // Given
+    var tmpFileContent = "Our tempfile Content";
+    var tempImageUuid = 'ourtempuuid';
+    var tmpFilePath = api.directory() + '/' + tempImageUuid;
+
+    filesToUnlink.push(tmpFilePath);
+    createTempFileWithContent(tmpFilePath, tmpFileContent);
+
+    // When
+    api.retrieveImage(tempImageUuid, function (err, imageStream) {
+      expect(err).to.be.falsy();
+      imageStream.must.be.an.instanceof(stream.Readable);
+
+      var bufferOfImageStream = '';
+
+      imageStream.on('data', function (chunkOfImageStream) {
+        bufferOfImageStream += chunkOfImageStream;
+      });
+
+      imageStream.on('error', function (e) {
+        done(e);
+      });
+
+      imageStream.on('end', function () {
+        // Then expect
+        bufferOfImageStream.must.be.equal(tmpFileContent);
+        done();
+      });
+
+    });
+
   });
 });
