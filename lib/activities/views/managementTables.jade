@@ -8,7 +8,7 @@ mixin buttonOrDate(momentOrNull, paymentDone, activityUrl, nickname)
   if (momentOrNull)
     | #{momentOrNull.lang(language).format('L')}
   else
-    a.btn.btn-primary.btn-xs.btn-block(id=#{encodeURIComponent(nickname) + "-button"}',
+    a.btn.btn-primary.btn-xs.btn-block(id='#{encodeURIComponent(nickname) + "-button"}',
       href='javascript:paymentDone(\'#{"/activities/paymentReceived/" + encodeURIComponent(activityUrl) + "/" + encodeURIComponent(nickname)}\', \'#{encodeURIComponent(nickname) + "-button"}\')') Erhalten…
 
 block scripts
