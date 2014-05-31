@@ -5,7 +5,7 @@ var sinonSandbox = require('sinon').sandbox.create();
 var expect = require('must');
 
 var beans = conf.get('beans');
-var imageRepository = beans.get('imageRepository');
+var imageRepository = beans.get('imagerepositoryAPI');
 
 var createApp = require('../../testutil/testHelper')('imagesApp').createApp;
 
@@ -20,6 +20,7 @@ describe('/images', function () {
       return callback(null, imageId);
     });
   });
+
   describe('POST /', function () {
 //    it('writes to the imageRepository', function (done) {
 //      request(createApp())
