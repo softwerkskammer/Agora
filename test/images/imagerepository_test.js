@@ -42,26 +42,30 @@ describe("the image repository - ", function () {
     });
   });
 
-  it('retrieveImage should return a readable stream of an image stored with given uuid', function (done) {
-    // Given
-    var tempUuid = 'ourtempuuid';
-    var fileContent = "Our tempfile Content";
-    var tmpFilePath = api.directory() + '/' + tempUuid;
-
+  function createTempFileWithContent(tmpFilePath, fileContent) {
     /*jslint node: true, stupid: true */
-    fs.writeFile(tmpFilePath, fileContent, {}, function(err) {
+    fs.writeFile(tmpFilePath, fileContent, {}, function (err) {
       fs.readFileSync(tmpFilePath).toString().must.be.equal(fileContent);
     });
+  }
+
+  it('retrieveImage should return a readable stream of an image stored with given uuid', function (done) {
+    // Given
+    var tempImageUuid = 'ourtempuuid';
+    var tmpFileContent = "Our tempfile Content";
+    var tmpFilePath = api.directory() + '/' + tempImageUuid;
+
+    createTempFileWithContent(tmpFilePath, tmpFileContent);
 
     // When
-    api.retrieveImage(tempUuid, function (err, imageStream) {
+    api.retrieveImage(tempImageUuid, function (err, imageStream) {
       expect(err).to.be.falsy();
       imageStream.must.be.an.instanceof(stream.Readable);
 
-      var content = '';
+      var bufferOfImageStream = '';
 
-      imageStream.on('data', function (chunk) {
-        content += chunk;
+      imageStream.on('data', function (chunkOfImageStream) {
+        bufferOfImageStream += chunkOfImageStream;
       });
 
       imageStream.on('error', function (e) {
@@ -69,9 +73,10 @@ describe("the image repository - ", function () {
       });
 
       imageStream.on('end', function () {
-        content.must.be.equal(fileContent);
+        // Then expect
+        bufferOfImageStream.must.be.equal(tmpFileContent);
         done();
-      })
+      });
 
     });
 
