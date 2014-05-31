@@ -53,8 +53,7 @@ describe("the image repository", function () {
       api.storeImage(pathToExistingImage, function (err, uuid) {
         expect(err).to.be.falsy();
         expect(uuid).to.exist();
-        //noinspection JSLint
-        expect(uuid).to.match(/[^\.]\.\w+$/);
+        expect(uuid).to.match(/\w\.\w+$/);
         done();
       });
     });
