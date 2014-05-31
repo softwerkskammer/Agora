@@ -1,9 +1,8 @@
 'use strict';
 
-require('../../testutil/configureForTest');
+var conf = require('../../testutil/configureForTest');
 var expect = require('must');
 var api = require('../../lib/images/imagerepositoryAPI');
-var conf = require('nconf');
 
 var directoryForUploads = '/tmp';
 
