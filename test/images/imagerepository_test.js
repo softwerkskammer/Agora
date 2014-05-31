@@ -32,9 +32,7 @@ describe("the image repository", function () {
 
 
   it('should retrieve the document folder from nconf', function () {
-
     expect(api.directory()).to.equal(directoryForUploads);
-
   });
 
   describe('storeImage', function () {
