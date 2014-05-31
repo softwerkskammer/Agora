@@ -8,6 +8,10 @@ var api = require('../../lib/images/imagerepositoryAPI');
 
 var directoryForUploads = '/tmp';
 
+// Given
+var tempImageUuid = 'ourtempuuid';
+var tmpFilePath = api.directory() + '/' + tempImageUuid;
+
 describe("the image repository - ", function () {
   before(function () {
     conf.set('imageDirectory', directoryForUploads);
@@ -51,10 +55,7 @@ describe("the image repository - ", function () {
 
   it('retrieveImage should return a readable stream of an image stored with given uuid', function (done) {
     // Given
-    var tempImageUuid = 'ourtempuuid';
     var tmpFileContent = "Our tempfile Content";
-    var tmpFilePath = api.directory() + '/' + tempImageUuid;
-
     createTempFileWithContent(tmpFilePath, tmpFileContent);
 
     // When
@@ -80,5 +81,9 @@ describe("the image repository - ", function () {
 
     });
 
+  });
+
+  after(function cleanUpFiles(done) {
+    fs.unlink(tmpFilePath, done);
   });
 });
