@@ -7,16 +7,16 @@ block scripts
   script.
     $(document).ready(function() {
       $('#waitinglisttable').dataTable({
-        "oLanguage": {
-          "sUrl": "#{(language === 'de') ? "/clientscripts/dataTables.german.txt" : ""}"
+        oLanguage: {
+          sUrl: tableLangUrl
         },
-        "aoColumns": [
-          { "bSortable" : false }, null, null, { "sType": "date-eu" }, { "sType": "date-eu" }, null
+        aoColumns: [
+          { bSortable : false }, null, null, { sType: 'date-eu' }, { sType: 'date-eu' }, null
         ],
-        "bPaginate": false,
-        "bAutoWidth": false,
-        "aaSorting": [[ 3, "asc" ]],
-        "bStateSave": true
+        bPaginate: false,
+        bAutoWidth: false,
+        aaSorting: [[ 3, 'asc' ]],
+        bStateSave: true
       });
         $('.tooltiplabel').each(function(each) {$(this).popover()});
     });
@@ -58,7 +58,7 @@ block content
                 - var checkboxid = '{"nickname": "' + waitinglistEntry.registrantNickname + '", "activityUrl": "' + activity.url() + '", "resourcename": "' + waitinglistEntry.resourceName() + '"}';
                 - count++;
                 tr
-                  td: .checkbox(style="margin-top:0px;margin-bottom:0px;")
+                  td: .checkbox(style='margin-top:0px;margin-bottom:0px;')
                     label
                       input(type='checkbox', name='selectedRow', value=checkboxid)
 
