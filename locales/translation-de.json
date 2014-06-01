@@ -338,6 +338,7 @@
         "saved": "Deine Aktivität wurde gespeichert.",
         "credit_card_paid": "Deine Kreditkartenzahlung in Höhe von __amount__ ist erfolgt.",
         "credit_card_not_paid": "Deine Kreditkartenzahlung ist nicht erfolgt. Grund: \"__reason__\"",
+        "transfer_paid": "Deine Überweisungsbestätigung wurde gespeichert.",
         "participation_added": "Deine Teilnahme wurde eingetragen.",
         "participation_for_resource_added": "Deine Teilnahme wurde für \"__resourceName__\" eingetragen.",
         "participation_removed": "Schade, dass Du nicht dabei sein wirst.",

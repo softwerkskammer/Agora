@@ -338,6 +338,7 @@
         "saved": "Your activity has been saved.",
         "credit_card_paid": "Your credit card payment of __amount__ has been transferred.",
         "credit_card_not_paid": "Your credit card payment has not been successful. Reason: \"__reason__\"",
+        "transfer_paid": "Your money transfer confirmation was saved.",
         "participation_added": "Your participation has been registered.",
         "participation_for_resource_added": "Your participation in \"__resourceName__\" has been registered.",
         "participation_removed": "What a pity that you will not participate.",
