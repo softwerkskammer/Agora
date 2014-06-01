@@ -21,4 +21,4 @@ build/config.gypi
 coverage
 .vagrant
 .idea/dictionaries
-workspace.xml
+.idea/workspace.xml
