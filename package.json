@@ -55,6 +55,7 @@
     "nodemailer": "~0.6",
     "node-html-encoder": "~0.0.2",
     "node-syntaxhighlighter": "0.8",
+    "node-uuid": "~1.4.1",
     "nconf": "~0.6.7",
     "passport": "~0.2",
     "passport-openid": "~0.3.1",
@@ -67,8 +68,7 @@
     "useragent": "~2.0",
     "URIjs": "~1.13",
     "winston": "~0.7",
-    "winston-config": "~0.4.0",
-    "node-uuid": "~1.4.1"
+    "winston-config": "~0.4.0"
   },
   "devDependencies": {
     "grunt": "~0.4",
@@ -85,12 +85,12 @@
     "karma-html2js-preprocessor": "~0.1",
     "karma-jasmine": "~0.2",
     "karma-phantomjs-launcher": "~0.1.4",
+    "mock-fs": "~2.3.1",
     "must": "~0.11",
     "request": "~2.36",
     "sinon": "~1.10",
     "supertest": "~0.12",
-    "utils-merge": "~1.0",
-    "mock-fs": "~2.3.1"
+    "utils-merge": "~1.0"
   },
   "scripts": {
     "start": "node start",
