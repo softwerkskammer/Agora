@@ -1,9 +1,9 @@
 extends ../../../views/layout
 include  ../../../views/formComponents
+include paymentFormComponents
 
-
-block title
-  | #{t('payments.overview')}
+block scripts
+  +stripeScript
 
 block content
   .row
@@ -17,6 +17,11 @@ block content
         form(id='paymentform', action='/payments/setAmount', method='post')
           +csrf
           +text('amount', t('payments.amount'))
+          +text('description', 'Beschreibung')
           button.btn.btn-primary.pull-right(type='submit') #{t('payments.pay')}
+
+  +paymentMoneyTransfer(111, paymentInfo)
+
+  +paymentCreditCard(150, 7, paymentInfo)
 
   h3 #{t('payments.transferred')}
