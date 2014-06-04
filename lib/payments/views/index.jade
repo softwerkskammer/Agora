@@ -13,15 +13,17 @@ block content
   .row
     .col-md-12
       h3 #{t('payments.submit')}
-      .col-md-4
-        form(id='paymentform', action='/payments/setAmount', method='post')
-          +csrf
-          +text('amount', t('payments.amount'))
-          +text('description', 'Beschreibung')
-          button.btn.btn-primary.pull-right(type='submit') #{t('payments.pay')}
+      .panel.panel-default
+        .panel-heading
+          h4.panel-title Input
+        .panel-body
+          .col-md-4
+            +text('amount', t('payments.amount'))
+          .col-md-8
+            +text('description', 'Beschreibung')
 
-  +paymentMoneyTransfer(111, paymentInfo)
-
-  +paymentCreditCard(150, 7, paymentInfo)
+  .row
+    +paymentMoneyTransfer(111, paymentInfo)
+    +paymentCreditCard(150, 7, paymentInfo)
 
   h3 #{t('payments.transferred')}
