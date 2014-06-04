@@ -134,3 +134,20 @@ describe('Activity application with DB - shows activities for Group-Ids -', func
   });
 
 });
+
+describe('Activity application with DB - without activities -', function () {
+
+  beforeEach(function (done) { // if this fails, you need to start your mongo DB
+    persistence.drop(done);
+  });
+
+  it('returns an empty list if there are no activities at all', function (done) {
+
+    activitystore.activitiesForGroupIdsAndRegisteredMemberId([], 'unknownMemberId', true, function (err, activities) {
+      expect(err).to.not.exist();
+      expect(activities.length).to.equal(0);
+      done(err);
+    });
+  });
+
+});
