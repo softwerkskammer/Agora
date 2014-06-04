@@ -66,4 +66,12 @@ describe('/images', function () {
     });
   });
 
+  describe('GET /', function () {
+    it('renders the upload form', function (done) {
+      request(createApp())
+        .get('/')
+        .expect(OK, done);
+    });
+  });
+
 });
