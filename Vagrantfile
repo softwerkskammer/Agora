@@ -22,14 +22,14 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
 
   # forward NodeJS remote debug port
-  # config.vm.network "forwarded_port", guest: 5858, host: 5858
+  config.vm.network "forwarded_port", guest: 5858, host: 5858
 
   # forward mongodb ports from host to guest
-  # config.vm.network "forwarded_port", guest: 27017, host: 27017
-  # config.vm.network "forwarded_port", guest: 28017, host: 28017
+  config.vm.network "forwarded_port", guest: 27017, host: 27017
+  config.vm.network "forwarded_port", guest: 28017, host: 28017
 
   # forward application port (http) from host to guest
-  # config.vm.network "forwarded_port", guest: 17124, host: 17124
+  config.vm.network "forwarded_port", guest: 17124, host: 17124
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
@@ -38,7 +38,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Create a public network, which generally matched to bridged network.
   # Bridged networks make the machine appear as another physical device on
   # your network.
-  config.vm.network "public_network"
+  # config.vm.network "public_network"
 
   # If true, then any SSH connections made will enable agent forwarding.
   # Default value: false
