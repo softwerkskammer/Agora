@@ -7,12 +7,12 @@ block specific
     p &nbsp;
   .col-md-4.hidden-print
     .page-header.visible-xs.visible-sm
-      h2 #{t("activities.activities")}
+      h2 #{t('activities.activities')}
     #calendar
     if (latestNews)
-      h2 #{t("announcements.latest_news")}&nbsp;
+      h2 #{t('announcements.latest_news')}&nbsp;
         if (!!displayMoreNews)
-          small: a(href='/announcements/') #{t("general.more")}…
+          small: a(href='/announcements/') #{t('general.more')}…
       dl
         for announcement in latestNews
           dt #{announcement.fromMoment().lang(language).format('LL')}
