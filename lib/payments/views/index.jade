@@ -6,6 +6,18 @@ block scripts
   +stripeScript
 
 block content
+  script.
+    function amountHandler() {
+      var amount = parseFloat($('.amountInput').val().replace(',', '.'));
+
+      $('.amount').each(function () {
+        $(this).html(amount.toFixed(2).replace('.', ',') + ' €');
+      });
+
+      $.get('/payments/calcFee/' + amount, null, function (fee) {
+        $('.fee').each(function () { $(this).html(fee); });
+      });
+    }
   .row
     .col-md-12
       .page-header
@@ -17,10 +29,14 @@ block content
         .panel-heading
           h4.panel-title Input
         .panel-body
-          .col-md-4
-            +text('amount', t('payments.amount'))
-          .col-md-8
-            +text('description', 'Beschreibung')
+
+          .row
+            .col-md-4
+              +controlLabel('amount', t('payments.amount'))
+              input.amountInput.form-control(id='amount', type='text', name='amount', onkeyup='amountHandler()')
+            .col-md-8
+              +text('description', 'Beschreibung')
+
 
   .row
     +paymentMoneyTransfer(111, paymentInfo)

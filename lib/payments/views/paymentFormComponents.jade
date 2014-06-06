@@ -45,7 +45,7 @@ mixin paymentMoneyTransfer(amount, paymentInfo)
         .panel-body
           p
             b #{t('payment.amount')}:
-            span.pull-right #{amount.toFixed(2).replace('.', ',')} €
+            span.amount.pull-right #{amount.toFixed(2).replace('.', ',')} €
           p
             b #{t('payment.bic')}:
             span.pull-right #{paymentInfo.bic()}
@@ -70,17 +70,17 @@ mixin paymentCreditCard(amount, fee, paymentInfo)
       .panel.panel-default
         .panel-heading
           h4.panel-title #{t('payment.credit_card')} &nbsp;
-            small powered by
+            small powered by&nbsp;
               a(href='http://stripe.com') stripe
         .panel-body
           p.pull-right: img(src='/img/creditcards.png')
           .clearfix
           p
             b #{t('payment.amount')}:
-            span.pull-right #{amount.toFixed(2).replace('.', ',')} €
+            span.amount.pull-right #{amount.toFixed(2).replace('.', ',')} €
           p
             b #{t('payment.handling_fee')}:
-            span.pull-right #{fee.toFixed(2).replace('.', ',')} €
+            span.fee.pull-right #{fee.toFixed(2).replace('.', ',')} €
           if (paymentInfo.paymentDone())
             if (paymentInfo.creditCardPaid())
               b.pull-right #{t('payment.payment_done')}
