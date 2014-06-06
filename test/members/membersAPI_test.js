@@ -24,20 +24,26 @@ describe('MembersAPI', function () {
     memberstore.getMember.restore();
   });
 
-  it('rejects nicknames that are reserved for URLs', function (done) {
+  it('regards various nicknames as reserved words, ignoring the case', function () {
     expect(api.isReserved('edit')).to.be(true);
     expect(api.isReserved('eDit')).to.be(true);
     expect(api.isReserved('neW')).to.be(true);
     expect(api.isReserved('checknicKName')).to.be(true);
     expect(api.isReserved('submIt')).to.be(true);
+    expect(api.isReserved('administration')).to.be(true);
+    expect(api.isReserved('.')).to.be(true);
+    expect(api.isReserved('..')).to.be(true);
+  });
+
+  it('accepts untrimmed versions of reserved words', function (done) {
     api.isValidNickname(' checknicKName ', function (err, result) {
-      expect(result).to.be(false);
+      expect(result).to.be(true);
       done(err);
     });
   });
 
-  it('rejects nicknames that already exist', function (done) {
-    api.isValidNickname('hada', function (err, result) {
+  it('rejects nicknames that already exist, ignoring case', function (done) {
+    api.isValidNickname('haDa', function (err, result) {
       expect(result).to.be(false);
       done(err);
     });
@@ -51,25 +57,20 @@ describe('MembersAPI', function () {
   });
 
   it('accepts nicknames that contain other nicknames', function (done) {
-    api.isValidNickname('Schadar', function (err, result) {
+    api.isValidNickname('Sc' + 'hada' + 'r', function (err, result) {
       expect(result).to.be(true);
       done(err);
     });
   });
 
-  it('rejects nicknames that already exist, even with blanks and different case', function (done) {
-    api.isValidNickname(' haDa ', function (err, result) {
-      expect(result).to.be(false);
+  it('accepts untrimmed versions of nicknames that already exist', function (done) {
+    api.isValidNickname(' hada ', function (err, result) {
+      expect(result).to.be(true);
       done(err);
     });
   });
 
-  it('rejects nicknames ".." and "."', function () {
-    expect(api.isReserved('..')).to.be(true);
-    expect(api.isReserved('.')).to.be(true);
-  });
-
-  it('tolerates nicknames containing ".." and "."', function () {
+  it('accepts nicknames containing ".." and "."', function () {
     expect(api.isReserved('a..')).to.be(false);
     expect(api.isReserved('a.')).to.be(false);
     expect(api.isReserved('..a')).to.be(false);
