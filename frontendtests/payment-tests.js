@@ -14,7 +14,7 @@
 
     beforeEach(function (done) {
       $(function () { done(); }); // just to wait for the form to be loaded
-    })
+    });
 
     it('checks that "description" is mandatory', function () {
       checkFieldMandatory('#paymentform [name=description]');
