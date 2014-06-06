@@ -40,26 +40,31 @@ describe('Announcements API', function () {
     sinon.restore();
   });
 
-  it('rejects urls that are reserved', function (done) {
+  it('rejects urls that are reserved', function () {
     expect(announcementsAPI.isReserved('edit')).to.be(true);
     expect(announcementsAPI.isReserved('eDit')).to.be(true);
     expect(announcementsAPI.isReserved('neW')).to.be(true);
     expect(announcementsAPI.isReserved('checkurl')).to.be(true);
     expect(announcementsAPI.isReserved('submIt')).to.be(true);
+    expect(announcementsAPI.isReserved('administration')).to.be(true);
+  });
+
+  it('accepts untrimmed versions of reserved words', function (done) {
     announcementsAPI.isValidUrl(' checkurl ', function (err, result) {
-      expect(result).to.be(false);
+      expect(result).to.be(true);
       done(err);
     });
   });
 
-  it('validates a valid url', function (done) {
+
+  it('accepts a valid url', function (done) {
     announcementsAPI.isValidUrl('thisIsAValidUrl', function (err, result) {
       expect(result).to.be(true);
       done(err);
     });
   });
 
-  it('validates a invalid url', function (done) {
+  it('reject an invalid url', function (done) {
     announcementsAPI.isValidUrl('edit', function (err, result) {
       expect(result).to.be(false);
       done(err);
