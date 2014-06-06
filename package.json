@@ -55,6 +55,7 @@
     "node-html-encoder": "~0.0.2",
     "node-syntaxhighlighter": "0.8",
     "nconf": "~0.6.7",
+    "numeral": "~1.5",
     "passport": "~0.2",
     "passport-openid": "~0.3.1",
     "passport-github": "~0.1.3",

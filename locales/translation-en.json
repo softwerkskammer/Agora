@@ -36,7 +36,8 @@
     "gdcr_text": "Here you find almost all german-speaking activities. You can find a full overview at",
     "feedback": "Feedback",
     "what_does_not_work": "What does not work the way it should?",
-    "settings": "Settings"
+    "settings": "Settings",
+    "separator": "."
   },
   "error": {
     "congratulations": "Congratulations!",

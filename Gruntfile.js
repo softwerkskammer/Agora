@@ -108,6 +108,7 @@ module.exports = function (grunt) {
         src: [
           'locales/frontend_de.js',
           'node_modules/jquery/dist/jquery.js',
+          'public/clientscripts/global/autoNumeric.js',
           'public/clientscripts/global/bootstrap.js',
           'public/clientscripts/global/bootstrap-datepicker.js',
           'public/clientscripts/global/bootstrap-markdown.js',
@@ -131,6 +132,7 @@ module.exports = function (grunt) {
         src: [
           'locales/frontend_en.js',
           'node_modules/jquery/dist/jquery.js',
+          'public/clientscripts/global/autoNumeric.js',
           'public/clientscripts/global/bootstrap.js',
           'public/clientscripts/global/bootstrap-datepicker.js',
           'public/clientscripts/global/bootstrap-markdown.js',

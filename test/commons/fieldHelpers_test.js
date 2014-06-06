@@ -226,3 +226,24 @@ describe('parseToMomentUsingTimezone function', function () {
   });
 
 });
+
+describe('formatNumberWithCurrentLocale', function () {
+
+  it('formats for "de"', function () {
+    var res = {locals: {language: 'de' }};
+    var result = fieldHelpers.formatNumberWithCurrentLocale(res, 22);
+    expect(result).to.equal('22,00');
+  });
+
+  it('formats for "en"', function () {
+    var res = {locals: {language: 'en-gb' }};
+    var result = fieldHelpers.formatNumberWithCurrentLocale(res, 22);
+    expect(result).to.equal('22.00');
+  });
+
+  it('formats "undefined"', function () {
+    var res = {locals: {language: 'en-gb' }};
+    var result = fieldHelpers.formatNumberWithCurrentLocale(res, undefined);
+    expect(result).to.equal('0.00');
+  });
+});

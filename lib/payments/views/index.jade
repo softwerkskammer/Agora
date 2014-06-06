@@ -1,24 +1,19 @@
 extends ../../../views/layout
-include  ../../../views/formComponents
 include paymentFormComponents
 
 block scripts
   +stripeScript
+  script(src='/clientscripts/check-paymentform.js')
+
 
 block content
-  script.
-    function amountHandler() {
-      var amount = parseFloat($('.amountInput').val().replace(',', '.'));
-
-      $.get('/payments/calcFee/' + amount, null, function (fee) {
-        $('.fee').each(function () { $(this).html(fee); });
-      });
-    }
   .row
     .col-md-12
       .page-header
         h2 #{t('payments.title')}
 
   .row
-    +paymentMoneyTransfer(paymentInfo)
-    +paymentCreditCard(paymentInfo)
+    .col-md-6
+      +paymentMoneyTransfer(paymentInfo)
+    .col-md-6
+      +paymentCreditCard(paymentInfo, undefined, undefined, placeholder)

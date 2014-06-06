@@ -36,7 +36,8 @@
     "gdcr_text": "Hier findest Du fast alle deutschsprachigen Veranstaltungen. Eine vollständige Übersicht findest Du auf",
     "feedback": "Feedback",
     "what_does_not_work": "Was funktioniert nicht, wie es soll?",
-    "settings": "Einstellungen"
+    "settings": "Einstellungen",
+    "separator": ","
   },
   "error": {
     "congratulations": "Herzlichen Glückwunsch!",
