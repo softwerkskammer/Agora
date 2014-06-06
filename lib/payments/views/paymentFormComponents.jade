@@ -77,10 +77,16 @@ mixin paymentCreditCard(paymentInfo, amount, fee)
         .clearfix
         p
           b #{t('payment.amount')}:
-          span.amount.pull-right #{amount.toFixed(2).replace('.', ',')} €
+          if(amount)
+            span.amount.pull-right #{amount.toFixed(2).replace('.', ',')} €
+          else
+            span.amount.pull-right
         p
           b #{t('payment.handling_fee')}:
-          span.fee.pull-right #{fee.toFixed(2).replace('.', ',')} €
+          if(fee)
+            span.fee.pull-right #{fee.toFixed(2).replace('.', ',')} €
+          else
+            span.fee.pull-right
         if (paymentInfo.paymentDone())
           if (paymentInfo.creditCardPaid())
             b.pull-right #{t('payment.payment_done')}
