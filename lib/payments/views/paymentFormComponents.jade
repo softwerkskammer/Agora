@@ -35,7 +35,8 @@ mixin stripeScript
       if ($(e.target).attr('id') === 'paymentbody') { connectHandlers(); }
     });
     $(document).ready(connectHandlers);
-  
+
+
 mixin paymentMoneyTransfer(paymentInfo, amount)
   .col-md-6
     .panel.panel-default
@@ -75,27 +76,29 @@ mixin paymentCreditCard(paymentInfo, amount, fee)
       .panel-body
         p.pull-right: img(src='/img/creditcards.png')
         .clearfix
-        p
-          b #{t('payment.amount')}:
-          if(amount)
-            span.amount.pull-right #{amount.toFixed(2).replace('.', ',')} €
-          else
-            span.amount.pull-right
-        p
-          b #{t('payment.handling_fee')}:
-          if(fee)
-            span.fee.pull-right #{fee.toFixed(2).replace('.', ',')} €
-          else
-            span.fee.pull-right
         if (paymentInfo.paymentDone())
           if (paymentInfo.creditCardPaid())
             b.pull-right #{t('payment.payment_done')}
         else
           form#paymentform(action='/payments/submitCreditCard', method='post')
             +csrf
-            +hidden('amount', amount)
-            +hidden('fee', fee)
-            +hidden('description', paymentInfo.description())
+            .form-group
+              label.control-label(for='description') #{t('payment.description')}:
+              input.form-control(type='text', autocomplete='off', placeholder='Description')
+            if(amount)
+              b #{t('payment.amount')}:
+              span.amount.pull-right #{amount.toFixed(2).replace('.', ',')} €
+              +hidden('amount', amount)
+            else
+              .form-group
+                label.control-label(for='amount') #{t('payment.amount')}:
+                input.amountInput.form-control(type='text', autocomplete='off', placeholder='0,00 €', onkeyup='amountHandler()')
+            b #{t('payment.handling_fee')}:
+            if(fee)
+              span.fee.pull-right #{fee.toFixed(2).replace('.', ',')} €
+            else
+              span.fee.pull-right
+          p
             .form-group
               label.control-label(for='cardnumber') #{t('payment.card_number')}:
               input.form-control(type='text', autocomplete='off', data-stripe='number', placeholder='Card Number')
