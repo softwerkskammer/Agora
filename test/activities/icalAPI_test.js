@@ -47,7 +47,7 @@ describe('ICalendar', function () {
   });
 
   it('renders url', function () {
-    expect(icalAPI.activityAsICal(activity).toString()).to.match(/URL:http:\/\/localhost:17124\/activities\/myURL/);
+    expect(icalAPI.activityAsICal(activity).toString()).to.match(/URL:http:\/\/localhost:17125\/activities\/myURL/);
   });
 
   it('CRLFs in description are transformed to \\n', function () {
