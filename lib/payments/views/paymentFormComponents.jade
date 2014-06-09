@@ -100,7 +100,7 @@ mixin paymentCreditCard(paymentInfo, amount, fee, placeholder)
             span.fee.pull-right #{fee} €
           else
             span.fee.pull-right
-        p
+          p
           .form-group
             label.control-label(for='cardnumber') #{t('payment.card_number')}:
             input.form-control(type='text', autocomplete='off', data-stripe='number', placeholder='Card Number')
