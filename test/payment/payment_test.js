@@ -53,7 +53,7 @@ describe('Payment application', function () {
         .get('/calcFee/600,55')
         .expect(200)
         .end(function (err, res) {
-          expect(res.text).to.be('18,23 €'); // XXX
+          expect(res.text).to.be('18,25 €');
           done(err);
         });
     });
