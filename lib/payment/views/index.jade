@@ -6,12 +6,14 @@ block scripts
   +stripeScript
   script(src='/clientscripts/check-paymentform.js')
 
+block title
+  | #{t('payment.title')}
 
 block content
   .row
     .col-md-12
       .page-header
-        h2 #{t('payments.title')}
+        h2 #{t('payment.title')}
 
   .row
     .col-md-6

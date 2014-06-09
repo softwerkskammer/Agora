@@ -38,7 +38,7 @@ mixin stripeScript
     
     function amountHandler() {
       var amount = $('#amount').autoNumeric('get');
-        $.get('/payments/calcFee/' + amount, null, function (fee) {
+        $.get('/payment/calcFee/' + amount, null, function (fee) {
         $('.fee').each(function () { $(this).html(fee); });
       });
     }
@@ -67,7 +67,7 @@ mixin paymentMoneyTransfer(paymentInfo, amount)
           if (paymentInfo.moneyTransferred())
             b.pull-right #{t('payment.payment_done')}
         else
-          form.form-horizontal(action='/payments/submitTransfer', method='post')
+          form.form-horizontal(action='/payment/submitTransfer', method='post')
             +csrf
             +hidden('amount', amount)
             button.btn.btn-primary.pull-right(type='submit') #{t('payment.transferred')}
@@ -85,7 +85,7 @@ mixin paymentCreditCard(paymentInfo, amount, fee, placeholder)
         if (paymentInfo.creditCardPaid())
           b.pull-right #{t('payment.payment_done')}
       else
-        form#paymentform(action='/payments/submitCreditCard', method='post')
+        form#paymentform(action='/payment/submitCreditCard', method='post')
           +csrf
           +text('description', t('payment.description'), paymentInfo.description, undefined, t('payment.description'))
           if(amount)
