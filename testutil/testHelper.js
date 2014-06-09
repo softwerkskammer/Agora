@@ -26,7 +26,7 @@ module.exports = function (internalAppName, configuredBeans) {
       app.use(require('cookie-parser')());
       app.use(require('body-parser').urlencoded());
       app.use(i18n.handle);
-      app.use(require('express-session')({secret: 'secret', cookie: {maxAge: 10000}}));
+      app.use(beans.get('expressSessionConfigurator'));
 
       for (i = 1; i < arguments.length; i = i + 1) {
         middleware = arguments[i];
