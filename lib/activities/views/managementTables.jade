@@ -157,7 +157,7 @@ block content
         .tab-pane#notPaidOrNoAddon
           .panel
             table.table.table-condensed.table-hover.table-striped.missingtable
-              h4 Folgende Teilnehmer haben seit mindestens 7 Tagen nicht gezahlt bzw. die Zusatzinformationen nicht eingetragen:
+              h4 Folgende Teilnehmer haben noch nicht gezahlt bzw. die Zusatzinformationen nicht eingetragen:
               thead
                 tr
                   th Registriert
@@ -169,7 +169,7 @@ block content
                   th Ort/Region
               tbody
                 for line in addonLines
-                  if((!activity.addonForMember(line.member.id()).paymentReceivedMoment() || !activity.memberEnteredAddonInformation(line.member.id())) && activity.resources().memberIsRegisteredForMoreDaysThan(7, line.member))
+                  if((!activity.addonForMember(line.member.id()).paymentReceivedMoment() || !activity.memberEnteredAddonInformation(line.member.id())) && activity.resources().memberIsRegisteredForMoreDaysThan(0, line.member))
                     tr
                       td #{line.member.registeredAt.lang(language).format('L')}
                       if activity.addonForMember(line.member.id()).paymentReceivedMoment()
