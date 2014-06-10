@@ -166,8 +166,8 @@ module.exports = function (grunt) {
           mask: '**/*.js',
           reporter: 'dot', // set to 'spec' if you like it more verbose
           check: {
-            lines: 78,
-            statements: 74
+            lines: 80,
+            statements: 76
           }
         }
       }
