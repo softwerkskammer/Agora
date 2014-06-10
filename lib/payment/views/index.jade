@@ -2,7 +2,6 @@ extends ../../../views/layout
 include paymentFormComponents
 
 block scripts
-  script(type='text/javascript', src='https://js.stripe.com/v2/')
   +stripeScript
   script(src='/clientscripts/check-paymentform.js')
 
