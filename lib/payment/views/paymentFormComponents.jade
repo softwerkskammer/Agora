@@ -1,6 +1,7 @@
 include ../../../views/formComponents
 
 mixin stripeScript
+  script(type='text/javascript', src='https://js.stripe.com/v2/')
   script.
     Stripe.setPublishableKey('#{paymentKey}');
     function connectHandlers() {
@@ -79,6 +80,7 @@ mixin paymentCreditCard(paymentInfo, amount, fee, placeholder)
         small powered by&nbsp;
           a(href='http://stripe.com') stripe
     .panel-body
+      #charge-error.alert.alert-danger
       p.pull-right: img(src='/img/creditcards.png')
       .clearfix
       if (paymentInfo.paymentDone())
