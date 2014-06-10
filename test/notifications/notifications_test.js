@@ -5,7 +5,7 @@ var expect = require('must');
 
 var beans = require('../../testutil/configureForTest').get('beans');
 
-var groupsAndMembersAPI = beans.get('groupsAndMembersAPI');
+var groupsAndMembersService = beans.get('groupsAndMembersService');
 var memberstore = beans.get('memberstore');
 
 var Activity = beans.get('activity');
@@ -25,7 +25,7 @@ describe('Notifications', function () {
   beforeEach(function () {
     group = new Group({id: 'groupname', longName: 'Buxtehude'});
     activity = new Activity({title: 'Title of the Activity', assignedGroup: 'groupname', url: 'urlurl'});
-    sinon.stub(groupsAndMembersAPI, 'getGroupAndMembersForList', function (groupID, callback) { callback(null, group); });
+    sinon.stub(groupsAndMembersService, 'getGroupAndMembersForList', function (groupID, callback) { callback(null, group); });
     sinon.stub(memberstore, 'getMemberForId', function (memberID, callback) {
       if (memberID === 'hans') { return callback(null, hans); }
       if (memberID === 'alice') { return callback(null, alice); }

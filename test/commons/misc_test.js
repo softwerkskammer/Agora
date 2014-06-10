@@ -4,7 +4,7 @@ var conf = require('../../testutil/configureForTest');
 var misc = conf.get('beans').get('misc');
 var expect = require('must');
 var moment = require('moment-timezone');
-var wikiAPI = conf.get('beans').get('wikiAPI');
+var wikiService = conf.get('beans').get('wikiService');
 
 describe('toArray function', function () {
 

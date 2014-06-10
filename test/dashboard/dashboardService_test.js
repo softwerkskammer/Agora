@@ -8,14 +8,14 @@ var expect = require('must');
 
 var moment = require('moment-timezone');
 
-var wikiAPI = beans.get('wikiAPI');
-var groupsAndMembersAPI = beans.get('groupsAndMembersAPI');
-var activitiesAPI = beans.get('activitiesAPI');
-var mailarchiveAPI = beans.get('mailarchiveAPI');
+var wikiService = beans.get('wikiService');
+var groupsAndMembersService = beans.get('groupsAndMembersService');
+var activitiesService = beans.get('activitiesService');
+var mailarchiveService = beans.get('mailarchiveService');
 
-var dashboardAPI = beans.get('dashboardAPI');
+var dashboardService = beans.get('dashboardService');
 
-describe('Dashboard API', function () {
+describe('Dashboard Service', function () {
   var NOT_FOUND = 'notfound';
   var CRASH_ACTIVITY = 'crash activity';
   var member;
@@ -26,7 +26,7 @@ describe('Dashboard API', function () {
     member = {membername: 'membername'};
     activity1 = {activity: 1};
     activity2 = {activity: 2};
-    sinon.stub(groupsAndMembersAPI, 'getUserWithHisGroups', function (nickname, callback) {
+    sinon.stub(groupsAndMembersService, 'getUserWithHisGroups', function (nickname, callback) {
       if (nickname === NOT_FOUND) {
         return callback(null, null);
       }
@@ -35,7 +35,7 @@ describe('Dashboard API', function () {
       }
       callback(null, member);
     });
-    sinon.stub(activitiesAPI, 'getUpcomingActivitiesOfMemberAndHisGroups', function (member, callback) {
+    sinon.stub(activitiesService, 'getUpcomingActivitiesOfMemberAndHisGroups', function (member, callback) {
       if (member === CRASH_ACTIVITY) {
         return callback(new Error());
       }
@@ -47,8 +47,8 @@ describe('Dashboard API', function () {
     sinon.restore();
   });
 
-  it('collects information from other APIs when no subscribed groups exist', function (done) {
-    dashboardAPI.dataForDashboard('nick', function (err, result) {
+  it('collects information from other Services when no subscribed groups exist', function (done) {
+    dashboardService.dataForDashboard('nick', function (err, result) {
       expect(result.member).to.equal(member);
       expect(result.activities).to.contain(activity1);
       expect(result.activities).to.contain(activity2);
@@ -60,14 +60,14 @@ describe('Dashboard API', function () {
   });
 
   it('handles the error when no member for nickname found', function (done) {
-    dashboardAPI.dataForDashboard(NOT_FOUND, function (err) {
+    dashboardService.dataForDashboard(NOT_FOUND, function (err) {
       expect(err).to.exist();
       done();
     });
   });
 
   it('handles the error when searching activities fails', function (done) {
-    dashboardAPI.dataForDashboard(CRASH_ACTIVITY, function (err) {
+    dashboardService.dataForDashboard(CRASH_ACTIVITY, function (err) {
       expect(err).to.exist();
       done();
     });
@@ -85,19 +85,19 @@ describe('Dashboard API', function () {
     var mails = [mail1, mail2];
 
     beforeEach(function () {
-      sinon.stub(wikiAPI, 'getBlogpostsForGroup', function (groupid, callback) {
+      sinon.stub(wikiService, 'getBlogpostsForGroup', function (groupid, callback) {
         if (groupid === CRASH_BLOG) {
           return callback(new Error());
         }
         callback(null, blogs);
       });
-      sinon.stub(wikiAPI, 'listChangedFilesinDirectory', function (groupid, callback) {
+      sinon.stub(wikiService, 'listChangedFilesinDirectory', function (groupid, callback) {
         if (groupid === CRASH_CHANGE) {
           return callback(new Error());
         }
         callback(null, changedFiles);
       });
-      sinon.stub(mailarchiveAPI, 'unthreadedMailsYoungerThan', function (groupid, age, callback) {
+      sinon.stub(mailarchiveService, 'unthreadedMailsYoungerThan', function (groupid, age, callback) {
         if (groupid === CRASH_MAILS) {
           return callback(new Error());
         }
@@ -109,7 +109,7 @@ describe('Dashboard API', function () {
       member.subscribedGroups = [
         {id: 'group'}
       ];
-      dashboardAPI.dataForDashboard('nick', function (err, result) {
+      dashboardService.dataForDashboard('nick', function (err, result) {
         expect(result.postsByGroup).to.have.keys(['group']);
         expect(result.postsByGroup.group).to.contain('blog1');
         expect(result.postsByGroup.group).to.contain('blog2');
@@ -124,7 +124,7 @@ describe('Dashboard API', function () {
       member.subscribedGroups = [
         {id: 'group'}
       ];
-      dashboardAPI.dataForDashboard('nick', function (err, result) {
+      dashboardService.dataForDashboard('nick', function (err, result) {
         expect(result.mailsByGroup).to.have.keys(['group']);
         expect(result.mailsByGroup.group).to.contain(mail1);
         expect(result.mailsByGroup.group).to.contain(mail2);
@@ -137,7 +137,7 @@ describe('Dashboard API', function () {
       member.subscribedGroups = [
         {id: CRASH_BLOG}
       ];
-      dashboardAPI.dataForDashboard('nick', function (err) {
+      dashboardService.dataForDashboard('nick', function (err) {
         expect(err).to.exist();
         done();
       });
@@ -147,7 +147,7 @@ describe('Dashboard API', function () {
       member.subscribedGroups = [
         {id: CRASH_CHANGE}
       ];
-      dashboardAPI.dataForDashboard('nick', function (err) {
+      dashboardService.dataForDashboard('nick', function (err) {
         expect(err).to.exist();
         done();
       });
@@ -157,7 +157,7 @@ describe('Dashboard API', function () {
       member.subscribedGroups = [
         {id: CRASH_MAILS}
       ];
-      dashboardAPI.dataForDashboard('nick', function (err) {
+      dashboardService.dataForDashboard('nick', function (err) {
         expect(err).to.exist();
         done();
       });
@@ -171,7 +171,7 @@ describe('Dashboard API', function () {
       var group2 = {id: 2};
       var groups = [ group1, group2 ];
       var linesPerGroup = {1: 5, 2: 2};
-      var result = dashboardAPI.groupsByColumns(groups, linesPerGroup);
+      var result = dashboardService.groupsByColumns(groups, linesPerGroup);
       expect(result).to.have.length(3);
       expect(result[0]).to.contain(group1);
       expect(result[1]).to.contain(group2);
@@ -184,7 +184,7 @@ describe('Dashboard API', function () {
       var group3 = {id: 3};
       var groups = [ group1, group2, group3 ];
       var linesPerGroup = {1: 2, 2: 2, 3: 2};
-      var result = dashboardAPI.groupsByColumns(groups, linesPerGroup);
+      var result = dashboardService.groupsByColumns(groups, linesPerGroup);
       expect(result).to.have.length(3);
       expect(result[0]).to.contain(group1);
       expect(result[1]).to.contain(group2);
@@ -197,7 +197,7 @@ describe('Dashboard API', function () {
       var group3 = {id: 3};
       var groups = [ group1, group2, group3 ];
       var linesPerGroup = {1: 3, 2: 2, 3: 1};
-      var result = dashboardAPI.groupsByColumns(groups, linesPerGroup);
+      var result = dashboardService.groupsByColumns(groups, linesPerGroup);
       expect(result).to.have.length(3);
       expect(result[0]).to.contain(group1);
       expect(result[1]).to.contain(group2);
@@ -210,7 +210,7 @@ describe('Dashboard API', function () {
       var group3 = {id: 3};
       var groups = [ group1, group2, group3 ];
       var linesPerGroup = {1: 1, 2: 2, 3: 3};
-      var result = dashboardAPI.groupsByColumns(groups, linesPerGroup);
+      var result = dashboardService.groupsByColumns(groups, linesPerGroup);
       expect(result).to.have.length(3);
       expect(result[0]).to.contain(group1);
       expect(result[0]).to.contain(group2);

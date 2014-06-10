@@ -10,8 +10,8 @@ var beans = require('../../testutil/configureForTest').get('beans');
 
 var setupApp = require('../../testutil/testHelper');
 var memberstore = beans.get('memberstore');
-var groupsAPI = beans.get('groupsAPI');
-var groupsAndMembersAPI = beans.get('groupsAndMembersAPI');
+var groupsService = beans.get('groupsService');
+var groupsAndMembersService = beans.get('groupsAndMembersService');
 var Member = beans.get('member');
 var addCsrfTokenToLocals = beans.get('addCsrfTokenToLocals');
 var serverpathRemover = beans.get('serverpathRemover');
@@ -44,8 +44,8 @@ describe('Security regarding', function () {
     beforeEach(function () {
       var dummymember = new Member({id: 'memberId', nickname: 'hada', email: 'a@b.c', site: 'http://my.blog',
         firstname: 'Hans', lastname: 'Dampf', authentications: [], subscribedGroups: []});
-      sinon.stub(groupsAPI, 'getAllAvailableGroups', function (callback) { callback(null, []); });
-      sinon.stub(groupsAndMembersAPI, 'getUserWithHisGroups', function (nickname, callback) { callback(null, dummymember); });
+      sinon.stub(groupsService, 'getAllAvailableGroups', function (callback) { callback(null, []); });
+      sinon.stub(groupsAndMembersService, 'getUserWithHisGroups', function (nickname, callback) { callback(null, dummymember); });
     });
 
     afterEach(function () {

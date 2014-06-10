@@ -4,13 +4,13 @@ var expect = require('must');
 var sinon = require('sinon').sandbox.create();
 var beans = require('../../testutil/configureForTest').get('beans');
 
-var membersAPI = beans.get('membersAPI');
+var membersService = beans.get('membersService');
 var memberstore = beans.get('memberstore');
-var groupsAPI = beans.get('groupsAPI');
-var groupsAndMembersAPI = beans.get('groupsAndMembersAPI');
-var activitiesAPI = beans.get('activitiesAPI');
+var groupsService = beans.get('groupsService');
+var groupsAndMembersService = beans.get('groupsAndMembersService');
+var activitiesService = beans.get('activitiesService');
 
-var api = beans.get('mailsenderAPI');
+var api = beans.get('mailsenderService');
 var Activity = beans.get('activity');
 var Member = beans.get('member');
 var Message = beans.get('message');
@@ -24,7 +24,7 @@ var sender = new Member();
 var message = new Message({subject: 'subject', markdown: 'mark down'}, sender);
 var sendmail;
 
-describe('MailsenderAPI', function () {
+describe('MailsenderService', function () {
   var activityURL = 'acti_vi_ty';
   var nickname = 'nickyNamy';
 
@@ -32,8 +32,8 @@ describe('MailsenderAPI', function () {
     var availableGroups = [];
     emptyActivity = new Activity({title: 'Title of the Activity', description: 'description1', assignedGroup: 'assignedGroup',
       location: 'location1', direction: 'direction1', startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'), url: 'urlOfTheActivity' });
-    sinon.stub(groupsAPI, 'getAllAvailableGroups', function (callback) { callback(null, availableGroups); });
-    sinon.stub(activitiesAPI, 'getActivityWithGroupAndParticipants', function (activityURL, callback) {
+    sinon.stub(groupsService, 'getAllAvailableGroups', function (callback) { callback(null, availableGroups); });
+    sinon.stub(activitiesService, 'getActivityWithGroupAndParticipants', function (activityURL, callback) {
       if (activityURL === null) { return callback(new Error()); }
       callback(null, emptyActivity);
     });
@@ -214,7 +214,7 @@ describe('MailsenderAPI', function () {
     var groupB = new Group({id: 'groupB'});
 
     beforeEach(function () {
-      sinon.stub(groupsAPI, 'getGroups', function (groupnames, callback) {
+      sinon.stub(groupsService, 'getGroups', function (groupnames, callback) {
         if (groupnames === null) { return callback(new Error()); }
         if (groupnames.length === 0) { return callback(null, []); }
         callback(null, [groupA, groupB]);
@@ -222,7 +222,7 @@ describe('MailsenderAPI', function () {
     });
 
     it('sends to members of selected groups', function (done) {
-      sinon.stub(groupsAndMembersAPI, 'addMembersToGroup', function (group, callback) {
+      sinon.stub(groupsAndMembersService, 'addMembersToGroup', function (group, callback) {
         if (group === null) { return callback(null); }
         if (group === groupA) { group.members = [new Member({email: 'memberA'})]; }
         if (group === groupB) { group.members = [new Member({email: 'memberB'})]; }
@@ -259,7 +259,7 @@ describe('MailsenderAPI', function () {
     });
 
     it('does not send to members if filling groups with members causes error', function (done) {
-      sinon.stub(groupsAndMembersAPI, 'addMembersToGroup', function (group, callback) {
+      sinon.stub(groupsAndMembersService, 'addMembersToGroup', function (group, callback) {
         callback(new Error());
       });
 

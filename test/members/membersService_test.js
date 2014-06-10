@@ -7,9 +7,9 @@ var Member = conf.get('beans').get('member');
 
 var memberstore = conf.get('beans').get('memberstore');
 
-var api = conf.get('beans').get('membersAPI');
+var api = conf.get('beans').get('membersService');
 
-describe('MembersAPI', function () {
+describe('MembersService', function () {
 
   beforeEach(function () {
     sinon.stub(memberstore, 'getMember', function (nickname, callback) {

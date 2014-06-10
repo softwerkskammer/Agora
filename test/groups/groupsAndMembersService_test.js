@@ -16,12 +16,12 @@ var GroupA = new Group({id: 'GroupA', longName: 'Gruppe A', description: 'Dies i
 var GroupB = new Group({id: 'GroupB', longName: 'Gruppe B', description: 'Dies ist Gruppe B.', type: 'Regionalgruppe'});
 
 var memberstore = beans.get('memberstore');
-var groupsAPI = beans.get('groupsAPI');
+var groupsService = beans.get('groupsService');
 var groupstore = beans.get('groupstore');
 
-var groupsAndMembersAPI = beans.get('groupsAndMembersAPI');
+var groupsAndMembersService = beans.get('groupsAndMembersService');
 
-describe('Groups and Members API (getUserWithHisGroups or getMemberWithHisGroupsByMemberId)', function () {
+describe('Groups and Members Service (getUserWithHisGroups or getMemberWithHisGroupsByMemberId)', function () {
 
   afterEach(function () {
     sinon.restore();
@@ -33,7 +33,7 @@ describe('Groups and Members API (getUserWithHisGroups or getMemberWithHisGroups
         callback(null, null);
       });
 
-      groupsAndMembersAPI.getUserWithHisGroups('nickname', function (err, member) {
+      groupsAndMembersService.getUserWithHisGroups('nickname', function (err, member) {
         expect(member).to.not.exist();
         done(err);
       });
@@ -43,11 +43,11 @@ describe('Groups and Members API (getUserWithHisGroups or getMemberWithHisGroups
       sinon.stub(memberstore, 'getMember', function (nickname, callback) {
         callback(null, dummymember);
       });
-      sinon.stub(groupsAPI, 'getSubscribedGroupsForUser', function (userMail, globalCallback) {
+      sinon.stub(groupsService, 'getSubscribedGroupsForUser', function (userMail, globalCallback) {
         globalCallback(null, [GroupA, GroupB]);
       });
 
-      groupsAndMembersAPI.getUserWithHisGroups('nickname', function (err, member) {
+      groupsAndMembersService.getUserWithHisGroups('nickname', function (err, member) {
         expect(member).to.equal(dummymember);
         expect(member.subscribedGroups).to.not.be(null);
         expect(member.subscribedGroups.length).to.equal(2);
@@ -64,7 +64,7 @@ describe('Groups and Members API (getUserWithHisGroups or getMemberWithHisGroups
         callback(null, []);
       });
 
-      groupsAndMembersAPI.getAllUsersWithTheirGroups(function (err, members) {
+      groupsAndMembersService.getAllUsersWithTheirGroups(function (err, members) {
         expect(members).to.be.empty();
         done(err);
       });
@@ -74,11 +74,11 @@ describe('Groups and Members API (getUserWithHisGroups or getMemberWithHisGroups
       sinon.stub(memberstore, 'allMembers', function (callback) {
         callback(null, [dummymember]);
       });
-      sinon.stub(groupsAPI, 'getSubscribedGroupsForUser', function (userMail, globalCallback) {
+      sinon.stub(groupsService, 'getSubscribedGroupsForUser', function (userMail, globalCallback) {
         globalCallback(null, [GroupA, GroupB]);
       });
 
-      groupsAndMembersAPI.getAllUsersWithTheirGroups(function (err, members) {
+      groupsAndMembersService.getAllUsersWithTheirGroups(function (err, members) {
         expect(members.length).to.equal(1);
         expect(members[0]).to.equal(dummymember);
         expect(members[0].subscribedGroups).to.not.be(null);
@@ -93,11 +93,11 @@ describe('Groups and Members API (getUserWithHisGroups or getMemberWithHisGroups
       sinon.stub(memberstore, 'allMembers', function (callback) {
         callback(null, [dummymember]);
       });
-      sinon.stub(groupsAPI, 'getSubscribedGroupsForUser', function (userMail, globalCallback) {
+      sinon.stub(groupsService, 'getSubscribedGroupsForUser', function (userMail, globalCallback) {
         globalCallback(null, []);
       });
 
-      groupsAndMembersAPI.getAllUsersWithTheirGroups(function (err, members) {
+      groupsAndMembersService.getAllUsersWithTheirGroups(function (err, members) {
         expect(members.length).to.equal(1);
         expect(members[0]).to.equal(dummymember);
         expect(members[0].subscribedGroups).to.not.be(null);
@@ -112,7 +112,7 @@ describe('Groups and Members API (getUserWithHisGroups or getMemberWithHisGroups
       });
 
       var memberCount = 1;
-      sinon.stub(groupsAPI, 'getSubscribedGroupsForUser', function (userMail, globalCallback) {
+      sinon.stub(groupsService, 'getSubscribedGroupsForUser', function (userMail, globalCallback) {
         if (memberCount === 1) {
           memberCount = memberCount + 1;
           return globalCallback(null, []);
@@ -120,7 +120,7 @@ describe('Groups and Members API (getUserWithHisGroups or getMemberWithHisGroups
         return globalCallback(null, [GroupA, GroupB]);
       });
 
-      groupsAndMembersAPI.getAllUsersWithTheirGroups(function (err, members) {
+      groupsAndMembersService.getAllUsersWithTheirGroups(function (err, members) {
         expect(members.length).to.equal(2);
         expect(members[0]).to.equal(dummymember);
         expect(members[0].subscribedGroups).to.not.be(null);
@@ -141,7 +141,7 @@ describe('Groups and Members API (getUserWithHisGroups or getMemberWithHisGroups
         callback(null, null);
       });
 
-      groupsAndMembersAPI.getMemberWithHisGroupsByMemberId('id', function (err, member) {
+      groupsAndMembersService.getMemberWithHisGroupsByMemberId('id', function (err, member) {
         expect(member).to.not.exist();
         done(err);
       });
@@ -151,11 +151,11 @@ describe('Groups and Members API (getUserWithHisGroups or getMemberWithHisGroups
       sinon.stub(memberstore, 'getMemberForId', function (memberID, callback) {
         callback(null, dummymember);
       });
-      sinon.stub(groupsAPI, 'getSubscribedGroupsForUser', function (userMail, globalCallback) {
+      sinon.stub(groupsService, 'getSubscribedGroupsForUser', function (userMail, globalCallback) {
         globalCallback(null, [GroupA, GroupB]);
       });
 
-      groupsAndMembersAPI.getMemberWithHisGroupsByMemberId('id', function (err, member) {
+      groupsAndMembersService.getMemberWithHisGroupsByMemberId('id', function (err, member) {
         expect(member).to.equal(dummymember);
         expect(member.subscribedGroups).to.not.be(null);
         expect(member.subscribedGroups.length).to.equal(2);
@@ -167,7 +167,7 @@ describe('Groups and Members API (getUserWithHisGroups or getMemberWithHisGroups
   });
 });
 
-describe('Groups and Members API (getGroupAndMembersForList)', function () {
+describe('Groups and Members Service (getGroupAndMembersForList)', function () {
 
   beforeEach(function () {
     sinon.stub(memberstore, 'allMembers', function (callback) { callback(null, null); });
@@ -179,17 +179,17 @@ describe('Groups and Members API (getGroupAndMembersForList)', function () {
 
   it('returns no group when there is no group and no sympa-list', function (done) {
     sinon.stub(memberstore, 'getMembersForEMails', function (member, callback) { callback(); });
-    sinon.stub(groupsAPI, 'getSympaUsersOfList', function (err, callback) { callback(null, []); });
+    sinon.stub(groupsService, 'getSympaUsersOfList', function (err, callback) { callback(null, []); });
     sinon.stub(groupstore, 'getGroup', function (groupname, callback) { callback(null, null); });
 
-    groupsAndMembersAPI.getGroupAndMembersForList('unbekannteListe', function (err, group) {
+    groupsAndMembersService.getGroupAndMembersForList('unbekannteListe', function (err, group) {
       expect(group).to.not.exist();
       done(err);
     });
   });
 
   it('returns no group when there is no group but a sympa-list', function (done) {
-    sinon.stub(groupsAPI, 'getSympaUsersOfList', function (err, callback) {
+    sinon.stub(groupsService, 'getSympaUsersOfList', function (err, callback) {
       callback(null, ['user1@mail1.com', 'user2@mail2.com']);
     });
     sinon.stub(memberstore, 'getMembersForEMails', function (member, callback) {
@@ -197,14 +197,14 @@ describe('Groups and Members API (getGroupAndMembersForList)', function () {
     });
     sinon.stub(groupstore, 'getGroup', function (groupname, callback) { callback(null, null); });
 
-    groupsAndMembersAPI.getGroupAndMembersForList('sympaListWithoutGroup', function (err, group) {
+    groupsAndMembersService.getGroupAndMembersForList('sympaListWithoutGroup', function (err, group) {
       expect(group).to.not.exist();
       done(err);
     });
   });
 
   it('returns the group with the given name and an empty list of subscribed users when there is no sympa-list or when there are no subscribers', function (done) {
-    sinon.stub(groupsAPI, 'getSympaUsersOfList', function (err, callback) { callback(null, []); });
+    sinon.stub(groupsService, 'getSympaUsersOfList', function (err, callback) { callback(null, []); });
     sinon.stub(groupstore, 'getGroup', function (groupname, callback) {
       callback(null, GroupA);
     });
@@ -212,7 +212,7 @@ describe('Groups and Members API (getGroupAndMembersForList)', function () {
       callback(null, []);
     });
 
-    groupsAndMembersAPI.getGroupAndMembersForList('GroupA', function (err, group) {
+    groupsAndMembersService.getGroupAndMembersForList('GroupA', function (err, group) {
       expect(group).to.equal(GroupA);
       expect(group.members).to.not.be(null);
       expect(group.members.length).to.equal(0);
@@ -221,7 +221,7 @@ describe('Groups and Members API (getGroupAndMembersForList)', function () {
   });
 
   it('returns the group with the given name and a list of one subscribed user when there is one subscriber in sympa', function (done) {
-    sinon.stub(groupsAPI, 'getSympaUsersOfList', function (err, callback) { callback(null, ['user@email.com']); });
+    sinon.stub(groupsService, 'getSympaUsersOfList', function (err, callback) { callback(null, ['user@email.com']); });
     sinon.stub(groupstore, 'getGroup', function (groupname, callback) {
       callback(null, GroupA);
     });
@@ -229,7 +229,7 @@ describe('Groups and Members API (getGroupAndMembersForList)', function () {
       callback(null, [dummymember]);
     });
 
-    groupsAndMembersAPI.getGroupAndMembersForList('GroupA', function (err, group) {
+    groupsAndMembersService.getGroupAndMembersForList('GroupA', function (err, group) {
       expect(group).to.equal(GroupA);
       expect(group.members).to.not.be(null);
       expect(group.members.length).to.equal(1);
@@ -240,36 +240,36 @@ describe('Groups and Members API (getGroupAndMembersForList)', function () {
 
 });
 
-describe('Groups and Members API (addMembercountToGroup)', function () {
+describe('Groups and Members Service (addMembercountToGroup)', function () {
   afterEach(function () {
     sinon.restore();
   });
 
   it('returns no group when the group is null', function (done) {
-    groupsAndMembersAPI.addMembercountToGroup(null, function (err, group) {
+    groupsAndMembersService.addMembercountToGroup(null, function (err, group) {
       expect(group).to.not.exist();
       done(err);
     });
   });
 
   it('returns no group when the group is undefined', function (done) {
-    groupsAndMembersAPI.addMembercountToGroup(undefined, function (err, group) {
+    groupsAndMembersService.addMembercountToGroup(undefined, function (err, group) {
       expect(group).to.not.exist();
       done(err);
     });
   });
 
   it('adds zero to group if there are no subscribers', function (done) {
-    sinon.stub(groupsAPI, 'getSympaUsersOfList', function (err, callback) { callback(null, []); });
-    groupsAndMembersAPI.addMembercountToGroup({}, function (err, group) {
+    sinon.stub(groupsService, 'getSympaUsersOfList', function (err, callback) { callback(null, []); });
+    groupsAndMembersService.addMembercountToGroup({}, function (err, group) {
       expect(group.membercount).to.equal(0);
       done(err);
     });
   });
 
   it('adds the number of subscribers to the group', function (done) {
-    sinon.stub(groupsAPI, 'getSympaUsersOfList', function (err, callback) { callback(null, ['1', '2', '4']); });
-    groupsAndMembersAPI.addMembercountToGroup({}, function (err, group) {
+    sinon.stub(groupsService, 'getSympaUsersOfList', function (err, callback) { callback(null, ['1', '2', '4']); });
+    groupsAndMembersService.addMembercountToGroup({}, function (err, group) {
       expect(group.membercount).to.equal(3);
       done(err);
     });
@@ -277,7 +277,7 @@ describe('Groups and Members API (addMembercountToGroup)', function () {
 
 });
 
-describe('Groups and Members API (addMembersToGroup)', function () {
+describe('Groups and Members Service (addMembersToGroup)', function () {
 
   beforeEach(function () {
     sinon.stub(memberstore, 'allMembers', function (callback) { callback(null, null); });
@@ -288,32 +288,32 @@ describe('Groups and Members API (addMembersToGroup)', function () {
   });
 
   it('returns no group when the group is null', function (done) {
-    sinon.stub(groupsAPI, 'getSympaUsersOfList', function () { return undefined; });
+    sinon.stub(groupsService, 'getSympaUsersOfList', function () { return undefined; });
     sinon.stub(memberstore, 'getMembersForEMails', function () { return undefined; });
 
-    groupsAndMembersAPI.addMembersToGroup(null, function (err, group) {
+    groupsAndMembersService.addMembersToGroup(null, function (err, group) {
       expect(group).to.not.exist();
       done(err);
     });
   });
 
   it('returns no group when the group is undefined', function (done) {
-    sinon.stub(groupsAPI, 'getSympaUsersOfList', function () { return undefined; });
+    sinon.stub(groupsService, 'getSympaUsersOfList', function () { return undefined; });
     sinon.stub(memberstore, 'getMembersForEMails', function () { return undefined; });
 
-    groupsAndMembersAPI.addMembersToGroup(undefined, function (err, group) {
+    groupsAndMembersService.addMembersToGroup(undefined, function (err, group) {
       expect(group).to.not.exist();
       done(err);
     });
   });
 
   it('returns the group with an empty list of subscribed users when there are no subscribers', function (done) {
-    sinon.stub(groupsAPI, 'getSympaUsersOfList', function (err, callback) { callback(null, []); });
+    sinon.stub(groupsService, 'getSympaUsersOfList', function (err, callback) { callback(null, []); });
     sinon.stub(memberstore, 'getMembersForEMails', function (member, callback) {
       callback(null, []);
     });
 
-    groupsAndMembersAPI.addMembersToGroup(GroupA, function (err, group) {
+    groupsAndMembersService.addMembersToGroup(GroupA, function (err, group) {
       expect(group).to.equal(GroupA);
       expect(group.members).to.not.be(null);
       expect(group.members.length).to.equal(0);
@@ -324,12 +324,12 @@ describe('Groups and Members API (addMembersToGroup)', function () {
   });
 
   it('returns the group with a list of one subscribed user when there is one subscriber in sympa', function (done) {
-    sinon.stub(groupsAPI, 'getSympaUsersOfList', function (err, callback) { callback(null, ['user@email.com']); });
+    sinon.stub(groupsService, 'getSympaUsersOfList', function (err, callback) { callback(null, ['user@email.com']); });
     sinon.stub(memberstore, 'getMembersForEMails', function (member, callback) {
       callback(null, [dummymember]);
     });
 
-    groupsAndMembersAPI.addMembersToGroup(GroupA, function (err, group) {
+    groupsAndMembersService.addMembersToGroup(GroupA, function (err, group) {
       expect(group).to.equal(GroupA);
       expect(group.members).to.not.be(null);
       expect(group.members.length).to.equal(1);
@@ -342,22 +342,22 @@ describe('Groups and Members API (addMembersToGroup)', function () {
 
 });
 
-describe('Groups and Members API (memberIsInMemberList)', function () {
+describe('Groups and Members Service (memberIsInMemberList)', function () {
 
   it('returns false if the user id is undefined', function () {
-    expect(groupsAndMembersAPI.memberIsInMemberList(undefined, [dummymember, dummymember2])).to.be(false);
+    expect(groupsAndMembersService.memberIsInMemberList(undefined, [dummymember, dummymember2])).to.be(false);
   });
 
   it('returns false if the member list is empty', function () {
-    expect(groupsAndMembersAPI.memberIsInMemberList('hada', [])).to.be(false);
+    expect(groupsAndMembersService.memberIsInMemberList('hada', [])).to.be(false);
   });
 
   it('returns false if the user is not in the member list', function () {
-    expect(groupsAndMembersAPI.memberIsInMemberList('trallala', [dummymember])).to.be(false);
+    expect(groupsAndMembersService.memberIsInMemberList('trallala', [dummymember])).to.be(false);
   });
 
   it('returns true if the user is in the member list', function () {
-    expect(groupsAndMembersAPI.memberIsInMemberList('hada', [dummymember, dummymember2])).to.be(true);
+    expect(groupsAndMembersService.memberIsInMemberList('hada', [dummymember, dummymember2])).to.be(true);
   });
 });
 

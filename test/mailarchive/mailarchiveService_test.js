@@ -7,7 +7,7 @@ var sinon = require('sinon').sandbox.create();
 var beans = require('../../testutil/configureForTest').get('beans');
 var persistence = beans.get('mailsPersistence');
 var memberstore = beans.get('memberstore');
-var mailarchiveAPI = beans.get('mailarchiveAPI');
+var mailarchiveService = beans.get('mailarchiveService');
 var Mail = beans.get('archivedMail');
 var Member = beans.get('member');
 
@@ -44,7 +44,7 @@ describe('Mailarchive', function () {
   });
 
   it('calls persistence.listByField from mailHeaders and passes on the given callback', function (done) {
-    mailarchiveAPI.unthreadedMails('group', function (err, mails) {
+    mailarchiveService.unthreadedMails('group', function (err, mails) {
       expect(listByField.calledWith({group: 'group'}, {timeUnix: -1})).to.be(true);
       expect(mails).to.eql(sampleMailList);
       done(err);
@@ -52,7 +52,7 @@ describe('Mailarchive', function () {
   });
 
   it('calls persistence.getById from mailForId and passes on the given callback', function (done) {
-    mailarchiveAPI.mailForId('id', function (err, mail) {
+    mailarchiveService.mailForId('id', function (err, mail) {
       expect(getById.calledWith('id')).to.be(true);
       expect(mail).to.eql(sampleMail1);
       done(err);
@@ -60,7 +60,7 @@ describe('Mailarchive', function () {
   });
 
   it('adds member data to the mail', function (done) {
-    mailarchiveAPI.mailForId(idOfMailWithMember, function (err, mail) {
+    mailarchiveService.mailForId(idOfMailWithMember, function (err, mail) {
       expect(getById.calledWith(idOfMailWithMember)).to.be(true);
       expect(mail.member).to.eql(sampleMember);
       done(err);

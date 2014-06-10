@@ -14,9 +14,9 @@ var NonPersistentGroup = new Group({id: 'Group C', longName: 'Gruppe C', descrip
 var groupstore = conf.get('beans').get('groupstore');
 var sympa = conf.get('beans').get('sympaStub');
 
-var systemUnderTest = conf.get('beans').get('groupsAPI');
+var systemUnderTest = conf.get('beans').get('groupsService');
 
-describe('Groups API (getSubscribedGroupsForUser)', function () {
+describe('Groups Service (getSubscribedGroupsForUser)', function () {
 
   afterEach(function () {
     sinon.restore();
@@ -81,7 +81,7 @@ describe('Groups API (getSubscribedGroupsForUser)', function () {
   });
 });
 
-describe('Groups API (getAllAvailableGroups)', function () {
+describe('Groups Service (getAllAvailableGroups)', function () {
 
   beforeEach(function () {
     systemUnderTest.refreshCache();
@@ -147,7 +147,7 @@ describe('Groups API (getAllAvailableGroups)', function () {
   });
 });
 
-describe('Groups API (getSympaUsersOfList)', function () {
+describe('Groups Service (getSympaUsersOfList)', function () {
 
   beforeEach(function () {
     systemUnderTest.refreshCache();
@@ -183,7 +183,7 @@ describe('Groups API (getSympaUsersOfList)', function () {
   });
 });
 
-describe('Groups API (createOrSaveGroup)', function () {
+describe('Groups Service (createOrSaveGroup)', function () {
 
   var createListSpy;
   var saveGroupSpy;
@@ -229,7 +229,7 @@ describe('Groups API (createOrSaveGroup)', function () {
   });
 });
 
-describe('Groups API (groupFromObject)', function () {
+describe('Groups Service (groupFromObject)', function () {
   it('returns a new Group object if there is no valid group data', function () {
     var result = new Group({id: 'x'});
 
@@ -255,7 +255,7 @@ describe('Groups API (groupFromObject)', function () {
   });
 });
 
-describe('Groups API (isGroupNameAvailable)', function () {
+describe('Groups Service (isGroupNameAvailable)', function () {
   before(function () {
     sinon.stub(groupstore, 'getGroup', function (name, callback) {
       if (name === 'GroupA') {
