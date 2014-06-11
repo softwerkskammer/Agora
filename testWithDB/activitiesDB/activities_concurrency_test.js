@@ -8,7 +8,7 @@ var sinon = require('sinon').sandbox.create();
 var beans = nconf.get('beans');
 var persistence = beans.get('activitiesPersistence');
 var activitystore = beans.get('activitystore');
-var activitiesAPI = beans.get('activitiesAPI');
+var activitiesService = beans.get('activitiesService');
 var notifications = beans.get('notifications');
 
 var Activity = beans.get('activity');
@@ -21,7 +21,7 @@ var getActivity = function (url, callback) {
   });
 };
 
-describe('Activities API with DB', function () {
+describe('Activities Service with DB', function () {
 
   var activityBeforeConcurrentAccess;
   var activityAfterConcurrentAccess;
@@ -81,7 +81,7 @@ describe('Activities API with DB', function () {
   it('addVisitor keeps the registrant that is in the database although it only reads an activity without registrant', function (done) {
     // here, we save an activity with a member that is different from the member in the database.
     // To mimick a racing condition, we return an activity without members for the first "getActivity".
-    activitiesAPI.addVisitorTo('memberId2', activityUrl, 'default', moment(), function (err) {
+    activitiesService.addVisitorTo('memberId2', activityUrl, 'default', moment(), function (err) {
       if (err) { return done(err); }
       getActivity(activityUrl, function (err, activity) {
         if (err) { return done(err); }
@@ -95,7 +95,7 @@ describe('Activities API with DB', function () {
   it('removeVisitor keeps the registrant that is in the database although it only reads an activity without registrant', function (done) {
     // here, we save an activity after removing a member that is different from the member in the database.
     // To mimick a racing condition, we return an activity without members for the first 'getActivity'.
-    activitiesAPI.removeVisitorFrom('memberIdX', activityUrl, 'default', function (err) {
+    activitiesService.removeVisitorFrom('memberIdX', activityUrl, 'default', function (err) {
       if (err) { return done(err); }
       getActivity(activityUrl, function (err, activity) {
         if (err) { return done(err); }
@@ -109,7 +109,7 @@ describe('Activities API with DB', function () {
   it('addToWaitinglist keeps the registrant that is in the database although it only reads an activity without registrant', function (done) {
     // here, we save an activity with a member that is different from the member in the database.
     // To mimick a racing condition, we return an activity without members for the first "getActivity".
-    activitiesAPI.addToWaitinglist('memberId2', activityUrl, 'default', moment(), function (err) {
+    activitiesService.addToWaitinglist('memberId2', activityUrl, 'default', moment(), function (err) {
       if (err) { return done(err); }
       getActivity(activityUrl, function (err, activity) {
         if (err) { return done(err); }
@@ -124,7 +124,7 @@ describe('Activities API with DB', function () {
   it('removeFromWaitinglist keeps the registrant that is in the database although it only reads an activity without registrant', function (done) {
     // here, we save an activity after removing a member that is different from the member in the database.
     // To mimick a racing condition, we return an activity without members for the first "getActivity".
-    activitiesAPI.removeFromWaitinglist('memberIdY', activityUrl, 'default', function (err) {
+    activitiesService.removeFromWaitinglist('memberIdY', activityUrl, 'default', function (err) {
       if (err) { return done(err); }
       getActivity(activityUrl, function (err, activity) {
         if (err) { return done(err); }

@@ -6,7 +6,7 @@ var expect = require('must');
 var moment = require('moment-timezone');
 
 var beans = require('../../testutil/configureForTest').get('beans');
-var mailarchiveAPI = beans.get('mailarchiveAPI');
+var mailarchiveService = beans.get('mailarchiveService');
 var Mail = beans.get('archivedMail');
 var Member = beans.get('member');
 var member = new Member({id: 'ai di', nickname: 'nigg'});
@@ -27,7 +27,7 @@ describe('Mail content page', function () {
   });
 
   it('shows text "Keine E-Mails" if mail is not found', function (done) {
-    var mailForId = sinon.stub(mailarchiveAPI, 'mailForId', function (id, callback) {callback(null, undefined); });
+    var mailForId = sinon.stub(mailarchiveService, 'mailForId', function (id, callback) {callback(null, undefined); });
     request(app)
       .get('/message/mailID')
       .expect(200)
@@ -43,7 +43,7 @@ describe('Mail content page', function () {
       'id': '<message1@nomail.com>'
     });
 
-    var mailForId = sinon.stub(mailarchiveAPI, 'mailForId', function (id, callback) {callback(null, displayedMail); });
+    var mailForId = sinon.stub(mailarchiveService, 'mailForId', function (id, callback) {callback(null, displayedMail); });
     request(app)
       .get('/message/mailID')
       .expect(200)
@@ -59,7 +59,7 @@ describe('Mail content page', function () {
       'id': '<message1@nomail.com>'
     });
 
-    var mailForId = sinon.stub(mailarchiveAPI, 'mailForId', function (id, callback) {callback(null, displayedMail); });
+    var mailForId = sinon.stub(mailarchiveService, 'mailForId', function (id, callback) {callback(null, displayedMail); });
     request(app)
       .get('/message/mailID')
       .expect(200)
@@ -75,7 +75,7 @@ describe('Mail content page', function () {
     });
     displayedMail.member = member;
 
-    var mailForId = sinon.stub(mailarchiveAPI, 'mailForId', function (id, callback) {callback(null, displayedMail); });
+    var mailForId = sinon.stub(mailarchiveService, 'mailForId', function (id, callback) {callback(null, displayedMail); });
 
     request(app)
       .get('/message/mailID')
@@ -94,8 +94,8 @@ describe('Mail index page', function () {
   });
 
   function stubMailHeaders(headers) {
-    sinon.stub(mailarchiveAPI, 'threadedMails', function (group, callback) {callback(null, headers); });
-    sinon.stub(mailarchiveAPI, 'unthreadedMails', function (group, callback) {callback(null, headers); });
+    sinon.stub(mailarchiveService, 'threadedMails', function (group, callback) {callback(null, headers); });
+    sinon.stub(mailarchiveService, 'unthreadedMails', function (group, callback) {callback(null, headers); });
   }
 
   it('shows group name in the title', function (done) {

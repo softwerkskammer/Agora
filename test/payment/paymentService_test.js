@@ -6,7 +6,7 @@ var expect = require('must');
 var beans = require('../../testutil/configureForTest').get('beans');
 
 var paymentService = beans.get('paymentService');
-var stripeAPI = beans.get('stripeAPI');
+var stripeService = beans.get('stripeService');
 var memberstore = beans.get('memberstore');
 var Member = beans.get('member');
 
@@ -29,7 +29,7 @@ describe('Payment Service', function () {
     });
 
     it('executes save callback', function (done) {
-      sinon.stub(stripeAPI, 'transaction', function () { return { charges: { create: function (charge, callback) {callback(null, charge); }}}; });
+      sinon.stub(stripeService, 'transaction', function () { return { charges: { create: function (charge, callback) {callback(null, charge); }}}; });
 
       paymentService.payWithCreditCard(saveCreditCardPayment, 100, 'Credit Card Payment', 'member', 'stripe-id', function (err, message) {
         expect(invoked).to.be.true();
@@ -40,7 +40,7 @@ describe('Payment Service', function () {
     });
 
     it('shows a status message if the returned error contains a message', function (done) {
-      sinon.stub(stripeAPI, 'transaction', function () { return { charges: { create: function (charge, callback) {callback({message: 'General problem'}); }}}; });
+      sinon.stub(stripeService, 'transaction', function () { return { charges: { create: function (charge, callback) {callback({message: 'General problem'}); }}}; });
 
       paymentService.payWithCreditCard(saveCreditCardPayment, 100, 'Credit Card Payment', 'member', 'stripe-id', function (err, message) {
         expect(invoked).to.be.false();
@@ -52,7 +52,7 @@ describe('Payment Service', function () {
     });
 
     it('shows a normal error if the returned error contains no message', function (done) {
-      sinon.stub(stripeAPI, 'transaction', function () { return { charges: { create: function (charge, callback) {callback({}); }}}; });
+      sinon.stub(stripeService, 'transaction', function () { return { charges: { create: function (charge, callback) {callback({}); }}}; });
 
       paymentService.payWithCreditCard(saveCreditCardPayment, 100, 'Credit Card Payment', 'member', 'stripe-id', function (err, message) {
         expect(invoked).to.be.false();
@@ -64,7 +64,7 @@ describe('Payment Service', function () {
 
     /* TODO!
     it('shows a normal error if the method is invoked with amount being NaN', function (done) {
-      sinon.stub(stripeAPI, 'transaction', function () { return { charges: { create: function (charge, callback) {callback({}); }}}; });
+      sinon.stub(stripeService, 'transaction', function () { return { charges: { create: function (charge, callback) {callback({}); }}}; });
 
       paymentService.payWithCreditCard(saveCreditCardPayment, NaN, 'Credit Card Payment', 'member', 'stripe-id', function (err, message) {
         expect(invoked).to.be.false();
@@ -76,7 +76,7 @@ describe('Payment Service', function () {
     });
 
     it('shows a normal error if the method is invoked with amount being undefined', function (done) {
-      sinon.stub(stripeAPI, 'transaction', function () { return { charges: { create: function (charge, callback) {callback({}); }}}; });
+      sinon.stub(stripeService, 'transaction', function () { return { charges: { create: function (charge, callback) {callback({}); }}}; });
 
       paymentService.payWithCreditCard(saveCreditCardPayment, undefined, 'Credit Card Payment', 'member', 'stripe-id', function (err, message) {
         expect(invoked).to.be.false();
@@ -89,7 +89,7 @@ describe('Payment Service', function () {
     */
 
     it('shows a normal error if the method is invoked with amount being null', function (done) {
-      sinon.stub(stripeAPI, 'transaction', function () { return { charges: { create: function (charge, callback) {callback({}); }}}; });
+      sinon.stub(stripeService, 'transaction', function () { return { charges: { create: function (charge, callback) {callback({}); }}}; });
 
       paymentService.payWithCreditCard(saveCreditCardPayment, null, 'Credit Card Payment', 'member', 'stripe-id', function (err, message) {
         expect(invoked).to.be.false();

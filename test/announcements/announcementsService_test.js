@@ -20,9 +20,9 @@ var dummyAnnouncement = new Announcement({
 
 var store = beans.get('announcementstore');
 
-var announcementsAPI = beans.get('announcementsAPI');
+var announcementsService = beans.get('announcementsService');
 
-describe('Announcements API', function () {
+describe('Announcements Service', function () {
 
   beforeEach(function () {
     sinon.stub(store, 'saveAnnouncement', function (announcement, callback) {
@@ -41,16 +41,16 @@ describe('Announcements API', function () {
   });
 
   it('rejects urls that are reserved', function () {
-    expect(announcementsAPI.isReserved('edit')).to.be(true);
-    expect(announcementsAPI.isReserved('eDit')).to.be(true);
-    expect(announcementsAPI.isReserved('neW')).to.be(true);
-    expect(announcementsAPI.isReserved('checkurl')).to.be(true);
-    expect(announcementsAPI.isReserved('submIt')).to.be(true);
-    expect(announcementsAPI.isReserved('administration')).to.be(true);
+    expect(announcementsService.isReserved('edit')).to.be(true);
+    expect(announcementsService.isReserved('eDit')).to.be(true);
+    expect(announcementsService.isReserved('neW')).to.be(true);
+    expect(announcementsService.isReserved('checkurl')).to.be(true);
+    expect(announcementsService.isReserved('submIt')).to.be(true);
+    expect(announcementsService.isReserved('administration')).to.be(true);
   });
 
   it('accepts untrimmed versions of reserved words', function (done) {
-    announcementsAPI.isValidUrl(' checkurl ', function (err, result) {
+    announcementsService.isValidUrl(' checkurl ', function (err, result) {
       expect(result).to.be(true);
       done(err);
     });
@@ -58,21 +58,21 @@ describe('Announcements API', function () {
 
 
   it('accepts a valid url', function (done) {
-    announcementsAPI.isValidUrl('thisIsAValidUrl', function (err, result) {
+    announcementsService.isValidUrl('thisIsAValidUrl', function (err, result) {
       expect(result).to.be(true);
       done(err);
     });
   });
 
   it('reject an invalid url', function (done) {
-    announcementsAPI.isValidUrl('edit', function (err, result) {
+    announcementsService.isValidUrl('edit', function (err, result) {
       expect(result).to.be(false);
       done(err);
     });
   });
 
   it('creates an id out of the fields `author`, `title` and `timeUnix` when saving', function (done) {
-    announcementsAPI.saveAnnouncement(dummyAnnouncement, function (err) {
+    announcementsService.saveAnnouncement(dummyAnnouncement, function (err) {
       expect(dummyAnnouncement).to.have.property('id', 'author_title_1372464000');
       done(err);
     });
@@ -95,7 +95,7 @@ describe('Announcements API', function () {
     sinon.stub(memberstore, 'getMemberForId', function (id, callback) {
       callback(null, dummyMember);
     });
-    announcementsAPI.getAuthorName(dummyAnnouncement, function (err, name) {
+    announcementsService.getAuthorName(dummyAnnouncement, function (err, name) {
       expect(name).to.equal('nickname');
       done(err);
     });
@@ -103,7 +103,7 @@ describe('Announcements API', function () {
 
   it('displays "automatisch" as author name when the authorname is empty', function (done) {
     dummyAnnouncement.author = '';
-    announcementsAPI.getAuthorName(dummyAnnouncement, function (err, name) {
+    announcementsService.getAuthorName(dummyAnnouncement, function (err, name) {
       expect(name).to.equal('automatisch');
       done(err);
     });
@@ -111,7 +111,7 @@ describe('Announcements API', function () {
 
   it('displays "automatisch" as author name when there is no author', function (done) {
     dummyAnnouncement.author = null;
-    announcementsAPI.getAuthorName(dummyAnnouncement, function (err, name) {
+    announcementsService.getAuthorName(dummyAnnouncement, function (err, name) {
       expect(name).to.equal('automatisch');
       done(err);
     });

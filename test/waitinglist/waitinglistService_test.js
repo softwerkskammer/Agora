@@ -8,11 +8,11 @@ var _ = require('lodash');
 //var util = require('util');
 
 var beans = require('../../testutil/configureForTest').get('beans');
-var waitinglistAPI = beans.get('waitinglistAPI');
+var waitinglistService = beans.get('waitinglistService');
 
 var activitystore = beans.get('activitystore');
 var memberstore = beans.get('memberstore');
-var mailsenderAPI = beans.get('mailsenderAPI');
+var mailsenderService = beans.get('mailsenderService');
 var Member = beans.get('member');
 var Activity = beans.get('activity');
 
@@ -22,7 +22,7 @@ var waitinglistMembersOf = function (activity, resourceName) {
   return _.pluck(_.pluck(activity.resourceNamed(resourceName).waitinglistEntries(), 'state'), '_memberId');
 };
 
-describe('Waitinglist API', function () {
+describe('Waitinglist Service', function () {
 
   afterEach(function () {
     sinon.restore();
@@ -45,7 +45,7 @@ describe('Waitinglist API', function () {
     });
 
     it('returns an empty list when the waitinglist is empty', function (done) {
-      waitinglistAPI.waitinglistFor('myActivity', function (err, waitinglist) {
+      waitinglistService.waitinglistFor('myActivity', function (err, waitinglist) {
         expect(waitinglist).to.be.empty();
         done(err);
       });
@@ -54,7 +54,7 @@ describe('Waitinglist API', function () {
     it('returns one entry with its member nickname when the waitinglist contains one entry', function (done) {
       activity1.resourceNamed('Meine Ressource').addToWaitinglist('12345', moment());
 
-      waitinglistAPI.waitinglistFor('myActivity', function (err, waitinglist) {
+      waitinglistService.waitinglistFor('myActivity', function (err, waitinglist) {
         expect(waitinglist.length).to.equal(1);
         expect(waitinglist[0].registrantNickname).to.equal('hansdampf');
         expect(waitinglist[0].resourceName()).to.equal('Meine Ressource');
@@ -68,7 +68,7 @@ describe('Waitinglist API', function () {
       activity1.resourceNamed('Meine Ressource').addToWaitinglist('12345', moment());
       activity1.resourceNamed('Meine Ressource').addToWaitinglist('abcxyz', moment());
 
-      waitinglistAPI.waitinglistFor('myActivity', function (err, waitinglist) {
+      waitinglistService.waitinglistFor('myActivity', function (err, waitinglist) {
         expect(waitinglist.length).to.equal(2);
         expect(waitinglist[0].registrantNickname).to.equal('hansdampf');
         expect(waitinglist[1].registrantNickname).to.equal('nickinick');
@@ -95,7 +95,7 @@ describe('Waitinglist API', function () {
       sinon.stub(memberstore, 'getMember', function (nickname, callback) { callback(null, new Member({id: 'memberId', nickname: 'hansdampf'})); });
 
       var args = {nickname: 'memberId', activityUrl: 'activity-url', resourcename: 'Einzelzimmer'};
-      waitinglistAPI.saveWaitinglistEntry(args, function (err) {
+      waitinglistService.saveWaitinglistEntry(args, function (err) {
         var waitinglistMembers = waitinglistMembersOf(savedActivity, 'Einzelzimmer');
         expect(waitinglistMembers).to.contain('memberId');
         expect(waitinglistMembers).to.contain('otherId');
@@ -108,7 +108,7 @@ describe('Waitinglist API', function () {
       sinon.stub(memberstore, 'getMember', function (nickname, callback) { callback(null, new Member({id: 'memberId', nickname: 'hansdampf'})); });
 
       var args = {nickname: 'memberId', activityUrl: 'activity-url', resourcename: 'Einzelzimmer'};
-      waitinglistAPI.saveWaitinglistEntry(args, function (err) {
+      waitinglistService.saveWaitinglistEntry(args, function (err) {
         expect(err, 'Error').to.exist();
         done(); // error condition - do not pass err
       });
@@ -119,7 +119,7 @@ describe('Waitinglist API', function () {
       sinon.stub(memberstore, 'getMember', function (id, callback) { callback(new Error('error')); });
 
       var args = {nickname: 'memberId', activityUrl: 'activity-url', resourcename: 'Einzelzimmer'};
-      waitinglistAPI.saveWaitinglistEntry(args, function (err) {
+      waitinglistService.saveWaitinglistEntry(args, function (err) {
         expect(err, 'Error').to.exist();
         done(); // error condition - do not pass err
       });
@@ -132,7 +132,7 @@ describe('Waitinglist API', function () {
 
     beforeEach(function () {
       mailNotification = undefined;
-      sinon.stub(mailsenderAPI, 'sendRegistrationAllowed', function (member, activity, entry, callback) {
+      sinon.stub(mailsenderService, 'sendRegistrationAllowed', function (member, activity, entry, callback) {
         mailNotification = {member: member, activity: activity, entry: entry};
         callback(null);
       });
@@ -153,7 +153,7 @@ describe('Waitinglist API', function () {
       sinon.stub(memberstore, 'getMember', function (nickname, callback) { callback(null, new Member({id: 'memberId', nickname: 'hansdampf'})); });
 
       var args = {nickname: 'memberId', activityUrl: 'activity-url', resourcename: 'Einzelzimmer'};
-      waitinglistAPI.allowRegistrationForWaitinglistEntry(args, function (err) {
+      waitinglistService.allowRegistrationForWaitinglistEntry(args, function (err) {
         var waitinglistMembers = waitinglistMembersOf(savedActivity, 'Einzelzimmer');
         expect(waitinglistMembers).to.contain('memberId');
         expect(waitinglistMembers).to.contain('otherId');
@@ -178,7 +178,7 @@ describe('Waitinglist API', function () {
       sinon.stub(memberstore, 'getMember', function (nickname, callback) { callback(null, new Member({id: 'memberId', nickname: 'hansdampf'})); });
 
       var args = {nickname: 'memberId', activityUrl: 'activity-url', resourcename: 'Einzelzimmer'};
-      waitinglistAPI.allowRegistrationForWaitinglistEntry(args, function (err) {
+      waitinglistService.allowRegistrationForWaitinglistEntry(args, function (err) {
         expect(mailNotification, 'Notification was not sent').to.be(undefined);
         expect(err, 'Error').to.exist();
         done(); // error condition - do not pass err
@@ -200,7 +200,7 @@ describe('Waitinglist API', function () {
       sinon.stub(memberstore, 'getMember', function (nickname, callback) { callback(null, new Member({id: 'memberId', nickname: 'hansdampf'})); });
 
       var args = {nickname: 'memberId', activityUrl: 'activity-url', resourcename: 'Einzelzimmer'};
-      waitinglistAPI.allowRegistrationForWaitinglistEntry(args, function (err) {
+      waitinglistService.allowRegistrationForWaitinglistEntry(args, function (err) {
         expect(savedActivity, 'Activity was not saved').to.be(undefined);
         expect(mailNotification, 'Notification was not sent').to.be(undefined);
         var waitinglistMembers = waitinglistMembersOf(activity, 'Einzelzimmer');
@@ -215,7 +215,7 @@ describe('Waitinglist API', function () {
       sinon.stub(memberstore, 'getMember', function (nickname, callback) { callback(null, new Member({id: 'memberId', nickname: 'hansdampf'})); });
 
       var args = {nickname: 'memberId', activityUrl: 'activity-url', resourcename: 'Einzelzimmer'};
-      waitinglistAPI.allowRegistrationForWaitinglistEntry(args, function (err) {
+      waitinglistService.allowRegistrationForWaitinglistEntry(args, function (err) {
         expect(mailNotification, 'Notification was not sent').to.be(undefined);
         expect(err, 'Error').to.exist();
         done(); // error condition - do not pass err
@@ -227,7 +227,7 @@ describe('Waitinglist API', function () {
       sinon.stub(memberstore, 'getMember', function (id, callback) { callback(new Error('error')); });
 
       var args = {nickname: 'memberId', activityUrl: 'activity-url', resourcename: 'Einzelzimmer'};
-      waitinglistAPI.allowRegistrationForWaitinglistEntry(args, function (err) {
+      waitinglistService.allowRegistrationForWaitinglistEntry(args, function (err) {
         expect(mailNotification, 'Notification was not sent').to.be(undefined);
         expect(err, 'Error').to.exist();
         done(); // error condition - do not pass err

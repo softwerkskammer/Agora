@@ -5,7 +5,7 @@ var expect = require('must');
 
 var beans = require('nconf').get('beans');
 var Activity = beans.get('activity');
-var icalAPI = beans.get('icalAPI');
+var icalService = beans.get('icalService');
 
 describe('ICalendar', function () {
   var activity = new Activity().fillFromUI({
@@ -31,31 +31,31 @@ describe('ICalendar', function () {
   });
 
   it('start date conversion', function () {
-    expect(icalAPI.activityAsICal(activity).toString()).to.match(/DTSTART:20130404T150000Z/);
+    expect(icalService.activityAsICal(activity).toString()).to.match(/DTSTART:20130404T150000Z/);
   });
 
   it('end date conversion', function () {
-    expect(icalAPI.activityAsICal(activity).toString()).to.match(/DTEND:20130405T160000Z/);
+    expect(icalService.activityAsICal(activity).toString()).to.match(/DTEND:20130405T160000Z/);
   });
 
   it('render description', function () {
-    expect(icalAPI.activityAsICal(activity).toString()).to.match(/DESCRIPTION:foo/);
+    expect(icalService.activityAsICal(activity).toString()).to.match(/DESCRIPTION:foo/);
   });
 
   it('render location', function () {
-    expect(icalAPI.activityAsICal(activity).toString()).to.match(/LOCATION:bar/);
+    expect(icalService.activityAsICal(activity).toString()).to.match(/LOCATION:bar/);
   });
 
   it('renders url', function () {
-    expect(icalAPI.activityAsICal(activity).toString()).to.match(/URL:http:\/\/localhost:17125\/activities\/myURL/);
+    expect(icalService.activityAsICal(activity).toString()).to.match(/URL:http:\/\/localhost:17125\/activities\/myURL/);
   });
 
   it('CRLFs in description are transformed to \\n', function () {
-    expect(icalAPI.activityAsICal(activityWithCRLFs).toString()).to.match(/DESCRIPTION:foo\\nbar/);
+    expect(icalService.activityAsICal(activityWithCRLFs).toString()).to.match(/DESCRIPTION:foo\\nbar/);
   });
 
   it('CRLFs in location are transformed to \\n', function () {
-    expect(icalAPI.activityAsICal(activityWithCRLFs).toString()).to.match(/LOCATION:musterstr\\nkarlsruhe/);
+    expect(icalService.activityAsICal(activityWithCRLFs).toString()).to.match(/LOCATION:musterstr\\nkarlsruhe/);
   });
 
 });

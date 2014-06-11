@@ -4,11 +4,11 @@ var expect = require('must');
 
 var beans = require('../../testutil/configureForTest').get('beans');
 
-var calendarAPI = beans.get('calendarAPI');
+var calendarService = beans.get('calendarService');
 var fieldHelpers = beans.get('fieldHelpers');
 var Activity = beans.get('activity');
 
-describe('Calendar API', function () {
+describe('Calendar Service', function () {
 
   it('converts a wellformed Activity to a calendar display event without colors given', function () {
     var activity = new Activity({
@@ -17,7 +17,7 @@ describe('Calendar API', function () {
       endUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('05.04.2013'),
       url: 'myURL'
     });
-    var event = calendarAPI.asCalendarEvent(activity);
+    var event = calendarService.asCalendarEvent(activity);
     expect('Title').to.equal(event.title);
     expect('2013-04-04T00:00:00+02:00').to.equal(event.start); // includes timezone offset!
     expect('/activities/myURL').to.equal(event.url);

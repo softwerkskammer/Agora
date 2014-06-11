@@ -4,11 +4,11 @@ var sinon = require('sinon').sandbox.create();
 var expect = require('must');
 var _ = require('lodash');
 var beans = require('../../testutil/configureForTest').get('beans');
-var wikiAPI = beans.get('wikiAPI');
+var wikiService = beans.get('wikiService');
 var moment = require('moment-timezone');
 var Git = beans.get('gitmech');
 
-describe('Wiki API', function () {
+describe('Wiki Service', function () {
 
   var content = 'Hallo, ich bin der Dateiinhalt';
   var nonExistingPage = 'global/nonExisting';
@@ -34,14 +34,14 @@ describe('Wiki API', function () {
 
   describe('(showPage)', function () {
     it('returns content for a requested existing page', function (done) {
-      wikiAPI.showPage('pageName', '11', function (err, cont) {
+      wikiService.showPage('pageName', '11', function (err, cont) {
         expect(content).to.equal(cont);
         done(err);
       });
     });
 
     it('returns an error if the requested page is not found', function (done) {
-      wikiAPI.showPage(nonExistingPage, '11', function (err, cont) {
+      wikiService.showPage(nonExistingPage, '11', function (err, cont) {
         expect(err).to.exist();
         expect(cont).to.not.exist();
         done(); // error condition - do not pass err
@@ -51,7 +51,7 @@ describe('Wiki API', function () {
 
   describe('(editPage)', function () {
     it('indicates that the file is none existent', function (done) {
-      wikiAPI.pageEdit('pageName', function (err, cont, metadata) {
+      wikiService.pageEdit('pageName', function (err, cont, metadata) {
         expect('').to.equal(cont);
         expect(metadata).to.contain('NEW');
         done(err);
@@ -59,7 +59,7 @@ describe('Wiki API', function () {
     });
 
     it('returns the content of the file to edit if it exists', function (done) {
-      wikiAPI.pageEdit('README', function (err, cont, metadata) {
+      wikiService.pageEdit('README', function (err, cont, metadata) {
         expect(content).to.equal(cont);
         expect(metadata).to.be.empty();
         done(err);
@@ -69,7 +69,7 @@ describe('Wiki API', function () {
 
 });
 
-describe('WikiAPI (list for dashboard)', function () {
+describe('WikiService (list for dashboard)', function () {
   beforeEach(function () {
     var metadatas = [
       {'name': 'craftsmanswap/index.md', 'hashRef': 'HEAD', 'fullhash': 'baa6d36a37f0f04e1e88b4b57f0d89893789686c', 'author': 'leider', 'datestring': '2014-04-30 17:25:48 +0200', 'comment': 'no comment'},
@@ -90,7 +90,7 @@ describe('WikiAPI (list for dashboard)', function () {
   });
 
   it('removes duplicate entries and blogposts for the dashboard', function (done) {
-    wikiAPI.listChangedFilesinDirectory('craftsmanswap', function (err, metadata) {
+    wikiService.listChangedFilesinDirectory('craftsmanswap', function (err, metadata) {
       expect(metadata).to.have.length(2);
       expect(metadata[0].name).to.equal('craftsmanswap/index.md');
       expect(metadata[0].datestring).to.equal('2014-04-30 17:25:48 +0200');
@@ -102,7 +102,7 @@ describe('WikiAPI (list for dashboard)', function () {
 
 });
 //This is an extra group because the Git.readFile mock has a different objective
-describe('WikiAPI (getBlogPosts)', function () {
+describe('WikiService (getBlogPosts)', function () {
 
   beforeEach(function () {
     sinon.stub(Git, 'lsblogposts', function (groupname, pattern, callback) {
@@ -149,7 +149,7 @@ describe('WikiAPI (getBlogPosts)', function () {
   });
 
   it('returns two properly parsed blog posts for the group internet', function (done) {
-    wikiAPI.getBlogpostsForGroup('internet', function (err, result) {
+    wikiService.getBlogpostsForGroup('internet', function (err, result) {
       expect(result.length === 2).to.be(true);
 
       var post1 = result[0];
@@ -169,14 +169,14 @@ describe('WikiAPI (getBlogPosts)', function () {
   });
 
   it('returns no blog posts if there are none', function (done) {
-    wikiAPI.getBlogpostsForGroup('alle', function (err, result) {
+    wikiService.getBlogpostsForGroup('alle', function (err, result) {
       expect(result.length === 0).to.be(true);
       done(err);
     });
   });
 
   it('skips empty posts and posts without proper date', function (done) {
-    wikiAPI.getBlogpostsForGroup('error', function (err, result) {
+    wikiService.getBlogpostsForGroup('error', function (err, result) {
       expect(result.length).to.equal(4);
       var titles = _.pluck(result, 'title');
       expect(titles).to.contain('1');
@@ -188,7 +188,7 @@ describe('WikiAPI (getBlogPosts)', function () {
   });
 });
 
-describe('WikiAPI (parseBlogPost)', function () {
+describe('WikiService (parseBlogPost)', function () {
 
   it('returns a parsed blog post', function () {
     var post = '#Lean Coffee November 2013\n ' +
@@ -198,7 +198,7 @@ describe('WikiAPI (parseBlogPost)', function () {
       'Diesen Blog gemacht.';
     var path = 'blog_2013-11-01LeanCoffeeTest.md';
 
-    var result = wikiAPI.parseBlogPost(path, post, wikiAPI.BLOG_ENTRY_REGEX);
+    var result = wikiService.parseBlogPost(path, post, wikiService.BLOG_ENTRY_REGEX);
 
     var expected = {'title': 'Lean Coffee November 2013',
       'date': moment('2013-11-01', 'YYYY-MM-DD'),
@@ -210,18 +210,18 @@ describe('WikiAPI (parseBlogPost)', function () {
   });
 
   it('returns undefined for empty input', function () {
-    expect(wikiAPI.parseBlogPost('', '', wikiAPI.BLOG_ENTRY_REGEX)).to.be(undefined);
+    expect(wikiService.parseBlogPost('', '', wikiService.BLOG_ENTRY_REGEX)).to.be(undefined);
   });
 
   it('returns undefined if the date in the path is malformed', function () {
-    expect(wikiAPI.parseBlogPost('blog_2000-01-0LeanCoffeeTest.md', 'post', wikiAPI.BLOG_ENTRY_REGEX)).to.be(undefined);
+    expect(wikiService.parseBlogPost('blog_2000-01-0LeanCoffeeTest.md', 'post', wikiService.BLOG_ENTRY_REGEX)).to.be(undefined);
   });
 
   it('returns properly if body is missing', function () {
     var post = '#Lean Coffee November 2013';
     var path = 'blog_2013-11-01LeanCoffeeTest.md';
 
-    var result = wikiAPI.parseBlogPost(path, post, wikiAPI.BLOG_ENTRY_REGEX);
+    var result = wikiService.parseBlogPost(path, post, wikiService.BLOG_ENTRY_REGEX);
 
     expect(result.title).to.equal('Lean Coffee November 2013');
     expect(result.teaser).to.be(undefined);
@@ -230,7 +230,7 @@ describe('WikiAPI (parseBlogPost)', function () {
 
   it('can parse a multitude of titles', function () {
     function parseTitle(post) {
-      return wikiAPI.parseBlogPost('blog_2013-11-01LeanCoffeeTest.md', post, wikiAPI.BLOG_ENTRY_REGEX).title;
+      return wikiService.parseBlogPost('blog_2013-11-01LeanCoffeeTest.md', post, wikiService.BLOG_ENTRY_REGEX).title;
     }
 
     expect(parseTitle('#Lean Coffee November 2013')).to.equal('Lean Coffee November 2013');
@@ -245,7 +245,7 @@ describe('WikiAPI (parseBlogPost)', function () {
   it('can parse a multitude of date variants', function () {
     var date = moment('2013-02-01', 'YYYY-MM-DD');
     function parseDate(datestring) {
-      return wikiAPI.parseBlogPost('blog_' + datestring + 'LeanCoffeeTest.md', '#Lean', wikiAPI.BLOG_ENTRY_REGEX).date();
+      return wikiService.parseBlogPost('blog_' + datestring + 'LeanCoffeeTest.md', '#Lean', wikiService.BLOG_ENTRY_REGEX).date();
     }
 
     expect(parseDate('2013-02-01').isSame(date)).to.be(true);
@@ -255,7 +255,7 @@ describe('WikiAPI (parseBlogPost)', function () {
 });
 
 
-describe('Wiki API (daily digest)', function () {
+describe('Wiki Service (daily digest)', function () {
 
   var subdirs = ['dirA', 'dirB'];
   var filesForDirA = ['dirA/fileA1', 'dirA/fileA2'];
@@ -296,7 +296,7 @@ describe('Wiki API (daily digest)', function () {
         callback(null, '');
       });
 
-      wikiAPI.findPagesForDigestSince(moment(), function (err, pages) {
+      wikiService.findPagesForDigestSince(moment(), function (err, pages) {
         expect(pages.length).to.equal(2);
         pages.forEach(function (page) {
           if (page.dir === 'dirA') {
@@ -314,7 +314,7 @@ describe('Wiki API (daily digest)', function () {
         callback(new Error());
       });
 
-      wikiAPI.findPagesForDigestSince(moment(), function (err) {
+      wikiService.findPagesForDigestSince(moment(), function (err) {
         expect(err).to.exist();
         done();
       });

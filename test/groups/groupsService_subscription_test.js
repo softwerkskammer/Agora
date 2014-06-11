@@ -10,9 +10,9 @@ var GroupA = new Group({id: 'GroupA', longName: 'Gruppe A', description: 'Dies i
 var GroupB = new Group({id: 'GroupB', longName: 'Gruppe B', description: 'Dies ist Gruppe B.', type: 'Regionalgruppe'});
 
 var sympaStub = beans.get('sympaStub');
-var systemUnderTest = beans.get('groupsAPI');
+var systemUnderTest = beans.get('groupsService');
 
-describe('Groups API (updateSubscriptions)', function () {
+describe('Groups Service (updateSubscriptions)', function () {
 
   var subscribeSpy;
   var unsubscribeSpy;
@@ -171,7 +171,7 @@ describe('Groups API (updateSubscriptions)', function () {
 
 });
 
-describe('Groups API (combineSubscribedAndAvailableGroups)', function () {
+describe('Groups Service (combineSubscribedAndAvailableGroups)', function () {
 
   it('combines no subscribed and no available groups to an empty array', function () {
     var result = systemUnderTest.combineSubscribedAndAvailableGroups([], []);

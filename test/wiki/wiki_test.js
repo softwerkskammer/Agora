@@ -5,7 +5,7 @@ var sinon = require('sinon').sandbox.create();
 var expect = require('must');
 
 var beans = require('../../testutil/configureForTest').get('beans');
-var wikiAPI = beans.get('wikiAPI');
+var wikiService = beans.get('wikiService');
 
 var createApp = require('../../testutil/testHelper')('wikiApp').createApp;
 
@@ -15,7 +15,7 @@ describe('Wiki application', function () {
   var content = 'Hallo, ich bin der Dateiinhalt';
   var nonExistingPage = 'global/nonexisting';
   beforeEach(function () {
-    pageShow = sinon.stub(wikiAPI, 'showPage',
+    pageShow = sinon.stub(wikiService, 'showPage',
       function (completePageName, pageVersion, callback) {
         if (completePageName === nonExistingPage) {
           return callback(new Error());

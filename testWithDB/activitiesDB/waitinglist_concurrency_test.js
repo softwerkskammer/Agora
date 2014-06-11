@@ -7,10 +7,10 @@ var sinon = require('sinon').sandbox.create();
 var beans = nconf.get('beans');
 var persistence = beans.get('activitiesPersistence');
 var activitystore = beans.get('activitystore');
-var membersAPI = beans.get('membersAPI');
+var membersService = beans.get('membersService');
 var memberstore = beans.get('memberstore');
-var mailsenderAPI = beans.get('mailsenderAPI');
-var waitinglistAPI = beans.get('waitinglistAPI');
+var mailsenderService = beans.get('mailsenderService');
+var waitinglistService = beans.get('waitinglistService');
 
 var Activity = beans.get('activity');
 var Member = beans.get('member');
@@ -23,7 +23,7 @@ var getActivity = function (url, callback) {
   });
 };
 
-describe('Waitinglist API with DB', function () {
+describe('Waitinglist Service with DB', function () {
 
   var activityBeforeConcurrentAccess;
   var activityAfterConcurrentAccess;
@@ -70,7 +70,7 @@ describe('Waitinglist API with DB', function () {
       return callback(new Error('Member ' + nickname + ' not found.'));
     });
 
-    sinon.stub(mailsenderAPI, 'sendRegistrationAllowed', function (member, activity, entry, callback) {
+    sinon.stub(mailsenderService, 'sendRegistrationAllowed', function (member, activity, entry, callback) {
       // we don't want to send an email
       return callback(null);
     });
@@ -90,7 +90,7 @@ describe('Waitinglist API with DB', function () {
   it('saveWaitinglistEntry keeps the registrant that is in the database although it only reads an activity without registrant', function (done) {
     // here, we save an activity with a member that is different from the member in the database.
     // To mimick a racing condition, we return an activity without members for the first "getActivity".
-    waitinglistAPI.saveWaitinglistEntry({nickname: 'nick', activityUrl: activityUrl, resourcename: 'default'}, function (err) {
+    waitinglistService.saveWaitinglistEntry({nickname: 'nick', activityUrl: activityUrl, resourcename: 'default'}, function (err) {
       if (err) { return done(err); }
       getActivity(activityUrl, function (err, activity) {
         if (err) { return done(err); }
@@ -105,7 +105,7 @@ describe('Waitinglist API with DB', function () {
   it('allowRegistrationForWaitinglistEntry keeps the registrant that is in the database although it only reads an activity without registrant', function (done) {
     // here, we save an activity after removing a member that is different from the member in the database.
     // To mimick a racing condition, we return an activity without members for the first 'getActivity'.
-    waitinglistAPI.allowRegistrationForWaitinglistEntry({nickname: 'waiting', activityUrl: activityUrl, resourcename: 'default', hoursstring: '10'}, function (err) {
+    waitinglistService.allowRegistrationForWaitinglistEntry({nickname: 'waiting', activityUrl: activityUrl, resourcename: 'default', hoursstring: '10'}, function (err) {
       if (err) { return done(err); }
       getActivity(activityUrl, function (err, activity) {
         if (err) { return done(err); }
