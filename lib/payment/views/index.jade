@@ -2,8 +2,6 @@ extends ../../../views/layout
 include paymentFormComponents
 
 block scripts
-  +stripeScript
-  script(src='/clientscripts/check-paymentform.js')
 
 block title
   | #{t('payment.title')}
@@ -18,4 +16,4 @@ block content
     .col-md-6
       +paymentMoneyTransfer(paymentInfo)
     .col-md-6
-      +paymentCreditCard(paymentInfo, undefined, undefined, placeholder)
+      +paymentCreditCard(paymentInfo, placeholder, '/payment/submitCreditCard')
