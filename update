@@ -1,5 +1,4 @@
 git pull
 npm install
 npm update
-grunt less
-grunt concat
+grunt deploy_production
