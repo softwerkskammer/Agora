@@ -87,7 +87,7 @@ describe('Addon Service with DB', function () {
   it('payWithCreditCard keeps the member addon info that is in the database although it only reads an activity without member addon info', function (done) {
     // here, we save an activity after removing a member that is different from the member in the database.
     // To mimick a racing condition, we return an activity without members for the first "getActivity".
-    addonService.payWithCreditCard(activityUrl, 'memberIdNew', 'stripe-id', function (err) {
+    addonService.payWithCreditCard(activityUrl, 20, 'memberIdNew', 'stripe-id', '', function (err) {
       if (err) { return done(err); }
       getActivity(activityUrl, function (err, activity) {
         if (err) { return done(err); }

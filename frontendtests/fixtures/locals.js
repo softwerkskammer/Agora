@@ -68,5 +68,8 @@ module.exports = {
   },
   regionalgroups: [],
   themegroups: [],
-  paymentInfo: {paymentDone: function () { return false; }}
+  paymentInfo: {
+    paymentDone: function () { return false; },
+    paymentKey: function () { return 'paymentKey'; }
+  }
 };
