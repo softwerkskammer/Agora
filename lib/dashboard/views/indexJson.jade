@@ -1,6 +1,5 @@
 extends ../../../views/layoutOnlyMain
 include ../../activities/views/activities-mixins
-include ../../mailarchive/views/mailheader-mixin
 
 block scripts
   script.
@@ -21,6 +20,28 @@ block content
         .panel-body
           !=t('dashboard.description', { postProcess: 'jade' })
   +my_groups
+
+mixin mailIndex(mailHeaders)
+  if (mailHeaders)
+    ul.list-unstyled
+      each mailHeader in mailHeaders
+        li
+          div(id='messageDetails' + mailHeader.timeUnix, tabindex='-1').modal.fade.bs-modal-lg
+            .modal-dialog.modal-lg
+              .modal-content
+          a(data-toggle='modal', data-target='#messageDetails' + mailHeader.timeUnix, href='/mailarchive/message/' + encodeURIComponent(mailHeader.id)) #{mailHeader.subject}
+          small
+            +mailattributes(mailHeader)
+          +mailIndex(mailHeader.sortedResponses)
+
+mixin mailattributes(mailHeader)
+  span.pull-right
+    if (mailHeader.memberNickname)
+      a(href='/members/' + encodeURIComponent(mailHeader.memberNickname)) #{mailHeader.displayedSenderName}
+    else
+      | #{mailHeader.displayedSenderName}
+    | , #{mailHeader.time}
+  .clearfix
 
 mixin my_groups
   each groups in groupsPerColumn
