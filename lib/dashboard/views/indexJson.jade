@@ -50,15 +50,15 @@ mixin my_activities
       b #{t('activities.upcoming_activities')}
     ul.list-group
       each activity in activities
-        -var angemeldet = (member && activity.allRegisteredMembers().indexOf(member.id()) > -1)
+        -var angemeldet = (memberId && activity.allRegisteredMembers.indexOf(memberId) > -1)
         li.list-group-item
           if (angemeldet)
             i.fa.fa-check.fa-fw.text-success.tooltipify(data-toggle='tooltip' title=t('activities.tooltip.registered'))
           else
             i.fa.fa-question.fa-fw.tooltipify(data-toggle='tooltip' title=t('activities.tooltip.unknown'))
-          | &nbsp; #{activity.startMoment().lang(language).format('L')} &nbsp; 
-          a(href='/activities/#{encodeURIComponent(activity.url())}') #{activity.title()}
-          span.pull-right(style='color: #{activity.colorRGB};') #{activity.groupName()}
+          | &nbsp; #{activity.startMoment} &nbsp;
+          a(href='/activities/#{encodeURIComponent(activity.url)}') #{activity.title}
+          span.pull-right(style='color: #{activity.colorRGB};') #{activity.groupName}
 
 mixin wikichangesOrBlogs(items, panelid, prefix, title)
   if (items.length > 0)
