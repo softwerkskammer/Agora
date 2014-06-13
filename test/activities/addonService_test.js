@@ -62,7 +62,7 @@ describe('Addon Service', function () {
   it('payWithCreditCard enhances activity with money transfer info and saves it', function (done) {
     sinon.stub(stripeService, 'transaction', function () { return { charges: { create: function (charge, callback) {callback(null, charge); }}}; });
 
-    addonService.payWithCreditCard('activity', 'member', 'stripe-id', function (err, message) {
+    addonService.payWithCreditCard('activity', 10, 'member', 'stripe-id', function (err, message) {
       expect(savedActivity.addonForMember('member').moneyTransferred()).to.be.falsy();
       expect(savedActivity.addonForMember('member').creditCardPaid()).to.be.truthy();
       expect(message).to.exist();
@@ -74,7 +74,7 @@ describe('Addon Service', function () {
   it('payWithCreditCard shows a status message if the returned error contains a message', function (done) {
     sinon.stub(stripeService, 'transaction', function () { return { charges: { create: function (charge, callback) {callback({message: 'General problem'}); }}}; });
 
-    addonService.payWithCreditCard('activity', 'member', 'stripe-id', function (err, message) {
+    addonService.payWithCreditCard('activity', 10, 'member', 'stripe-id', function (err, message) {
       expect(savedActivity).to.be(null);
       expect(message).to.exist();
       expect(message.contents().type).to.equal('alert-danger');
@@ -86,7 +86,7 @@ describe('Addon Service', function () {
   it('payWithCreditCard shows a normal error if the returned error contains no message', function (done) {
     sinon.stub(stripeService, 'transaction', function () { return { charges: { create: function (charge, callback) {callback({}); }}}; });
 
-    addonService.payWithCreditCard('activity', 'member', 'stripe-id', function (err, message) {
+    addonService.payWithCreditCard('activity', 10, 'member', 'stripe-id', function (err, message) {
       expect(savedActivity).to.be(null);
       expect(message).to.not.exist();
       expect(err).to.exist();

@@ -90,7 +90,7 @@ mixin paymentCreditCard(paymentInfo, placeholder, actionUrl, amount, fee, id)
         if (fee)
           p
             b #{t('payment.handling_fee')}:
-            span.fee.pull-right #{fee} €
+            span.fee.pull-right #{fee}
         if (paymentInfo.creditCardPaid())
           b.pull-right #{t('payment.payment_done')}
       else
@@ -101,6 +101,7 @@ mixin paymentCreditCard(paymentInfo, placeholder, actionUrl, amount, fee, id)
             p
               b #{t('payment.amount')}:
               span.amount.pull-right #{amount} €
+              +hidden('amount', amount)
           else
             +text('description', t('payment.description'), paymentInfo.description, undefined, t('payment.description'))
             +currency('amount', t('payment.amount'), '', undefined, placeholder + ' €')
