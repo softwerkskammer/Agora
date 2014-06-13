@@ -70,10 +70,10 @@ mixin wikichangesOrBlogs(items, panelid, prefix, title)
       ul.list-unstyled
         each item in items
           li
-            div(id=item.dialogId(), tabindex='-1').modal.fade.bs-modal-lg
+            div(id=item.dialogId, tabindex='-1').modal.fade.bs-modal-lg
               .modal-dialog.modal-lg
                 .modal-content
-            a(data-toggle='modal', data-target='##{item.dialogId()}', href=item.dialogUrl()) #{item.pureName()}
-            small.pull-right #{item.date().lang(language).format('L')}&nbsp;
-              a(href=item.url()): i.fa.fa-book.fa-fw.tooltipify(data-toggle='tooltip' title=t('wiki.tooltip.gotopage'))
+            a(data-toggle='modal', data-target='##{item.dialogId}', href=item.dialogUrl) #{item.pureName}
+            small.pull-right #{item.date}&nbsp;
+              a(href=item.url): i.fa.fa-book.fa-fw.tooltipify(data-toggle='tooltip' title=t('wiki.tooltip.gotopage'))
     hr
