@@ -19,4 +19,4 @@ html
           .col-md-6
             +paymentMoneyTransfer(paymentInfo, '/activities/payment/submitTransfer', addonConfig.deposit(), activity.url())
           .col-md-6
-            +paymentCreditCard(paymentInfo, '+', '/activities/payment/submitCreditCard', addonConfig.deposit(), fee, activity.url())
+            +paymentCreditCard(paymentInfo, 'notNeededWhenAmountIsGiven', '/activities/payment/submitCreditCard', addonConfig.deposit(), fee, activity.title(), activity.url())
