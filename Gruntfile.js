@@ -212,7 +212,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-jslint');
   grunt.loadNpmTasks('grunt-karma');
 
-  grunt.registerTask('frontendtests', ['clean', 'jade', 'uglify:production_de', 'karma:once', 'uglify:development_de', 'karma:once']);
+  grunt.registerTask('frontendtests', ['clean', 'jade', 'less', 'uglify:production_de', 'karma:once', 'uglify:development_de', 'karma:once']);
   grunt.registerTask('tests', ['jslint', 'frontendtests', 'mocha_istanbul']);
   grunt.registerTask('deploy_development', ['less', 'uglify:development_de', 'uglify:development_en']);
 
