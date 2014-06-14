@@ -1,10 +1,10 @@
-"use strict";
+'use strict';
 
 var conf = require('../../testutil/configureForTest');
 var misc = conf.get('beans').get('misc');
 var expect = require('must');
 var moment = require('moment-timezone');
-var wikiAPI = conf.get('beans').get('wikiAPI');
+var wikiService = conf.get('beans').get('wikiService');
 
 describe('toArray function', function () {
 
@@ -43,19 +43,19 @@ describe('toArray function', function () {
 describe('toLowerCaseRegExp function', function () {
 
   it('transforms a string to a regexp', function () {
-    var result = misc.toLowerCaseRegExp("string");
-    expect(result.toString()).to.equal("/^string$/i");
-    expect("String").to.match(result);
+    var result = misc.toLowerCaseRegExp('string');
+    expect(result.toString()).to.equal('/^string$/i');
+    expect('String').to.match(result);
   });
 
   it('is case insensitive', function () {
-    var result = misc.toLowerCaseRegExp("StrInG");
-    expect("StRing").to.match(result);
+    var result = misc.toLowerCaseRegExp('StrInG');
+    expect('StRing').to.match(result);
   });
 
   it('escapes special regexp characters', function () {
-    var result = misc.toLowerCaseRegExp("All of these should be escaped: \\ ^ $ * + ? . ( ) | { } [ ]");
-    expect(result.toString()).to.equal("/^All of these should be escaped: \\\\ \\^ \\$ \\* \\+ \\? \\. \\( \\) \\| \\{ \\} \\[ \\]$/i");
+    var result = misc.toLowerCaseRegExp('All of these should be escaped: \\ ^ $ * + ? . ( ) | { } [ ]');
+    expect(result.toString()).to.equal('/^All of these should be escaped: \\\\ \\^ \\$ \\* \\+ \\? \\. \\( \\) \\| \\{ \\} \\[ \\]$/i');
   });
 });
 
@@ -63,8 +63,8 @@ describe('arrayToLowerCaseRegExp function', function () {
 
   it('concatenates multiple strings', function () {
     var result = misc.arrayToLowerCaseRegExp(['StrInG', 'strong']);
-    expect("StRing").to.match(result);
-    expect("strong").to.match(result);
+    expect('StRing').to.match(result);
+    expect('strong').to.match(result);
   });
 
   it('concatenates multiple strings rsulting in regex', function () {
@@ -144,28 +144,87 @@ describe('differenceCaseInsensitive function', function () {
 
     it('concatenates simple parts', function () {
       var result = misc.toFullQualifiedUrl('prefix', 'lastComponent');
-      expect(result).to.equal('http://localhost:17124/prefix/lastComponent');
+      expect(result).to.equal('http://localhost:17125/prefix/lastComponent');
     });
 
     it('concatenates parts with leading "/"', function () {
       var result = misc.toFullQualifiedUrl('/prefix', '/lastComponent');
-      expect(result).to.equal('http://localhost:17124/prefix/lastComponent');
+      expect(result).to.equal('http://localhost:17125/prefix/lastComponent');
     });
 
     it('concatenates parts with trailing "/"', function () {
       var result = misc.toFullQualifiedUrl('prefix/', 'lastComponent/');
-      expect(result).to.equal('http://localhost:17124/prefix/lastComponent');
+      expect(result).to.equal('http://localhost:17125/prefix/lastComponent');
     });
 
     it('concatenates parts with inside "/"', function () {
       var result = misc.toFullQualifiedUrl('pre/fix', 'last/Component');
-      expect(result).to.equal('http://localhost:17124/pre/fix/last/Component');
+      expect(result).to.equal('http://localhost:17125/pre/fix/last/Component');
     });
 
     it('removes only one trailing and one leading "/"', function () {
       var result = misc.toFullQualifiedUrl('//pre/fix//', '//last/Component//');
-      expect(result).to.equal('http://localhost:17124//pre/fix///last/Component/');
+      expect(result).to.equal('http://localhost:17125//pre/fix///last/Component/');
     });
   });
+
+});
+
+describe('validate function', function () {
+  it('returns true if the new value is identical to the previous value', function (done) {
+    misc.validate('abc', 'abc', undefined, function (result) {
+      expect(result).to.equal('true');
+      done();
+    });
+  });
+
+  it('returns true if the new value is different to the previous value and the validator returns true', function (done) {
+    var validator = function (value, callback) { callback(null, true); };
+
+    misc.validate('def', 'abc', validator, function (result) {
+      expect(result).to.equal('true');
+      done();
+    });
+  });
+
+  it('returns false if the new value is different to the previous value and the validator returns false', function (done) {
+    var validator = function (value, callback) { callback(null, false); };
+
+    misc.validate('def', 'abc', validator, function (result) {
+      expect(result).to.equal('false');
+      done();
+    });
+  });
+
+  it('returns false if the new value is different to the previous value and the validator returns an error', function (done) {
+    var validator = function (value, callback) { callback(new Error('Error!')); };
+
+    misc.validate('def', 'abc', validator, function (result) {
+      expect(result).to.equal('false');
+      done();
+    });
+  });
+
+  it('trims the new value', function (done) {
+    misc.validate(' abc ', 'abc', undefined, function (result) {
+      expect(result).to.equal('true');
+      done();
+    });
+  });
+
+  it('trims the previous value', function (done) {
+    misc.validate('abc', ' abc ', undefined, function (result) {
+      expect(result).to.equal('true');
+      done();
+    });
+  });
+
+  it('works with two null values', function (done) {
+    misc.validate(null, null, undefined, function (result) {
+      expect(result).to.equal('true');
+      done();
+    });
+  });
+
 
 });

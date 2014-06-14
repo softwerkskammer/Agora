@@ -1,0 +1,22 @@
+extends ../../../views/layout
+
+include  ../../../views/formComponents
+
+block title
+  | Gallery
+
+block content
+  .row
+    .col-md-12
+      .page-header
+        h2 Gallery
+
+  .row
+    .col-md-6
+      form(role='form',method='POST',action='?_csrf=' + encodeURIComponent(csrf_token),enctype='multipart/form-data')
+        +csrf
+        .form-group
+          label(for='imageFile')
+            | Your image
+          input#imageFile(name='imageFile',type='file',accept='image/*')
+          button.btn.btn-primary(type='submit') #{t('general.save')}

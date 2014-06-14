@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 require('../../testutil/configureForTest');
 var beans = require('nconf').get('beans');
@@ -24,15 +24,15 @@ describe('Waitinglist Entry', function () {
   });
 
   it('returns the id of the registrant', function () {
-    expect(entryWithParam.registrantId()).to.equal("12345");
+    expect(entryWithParam.registrantId()).to.equal('12345');
   });
 
   it('returns the resource name', function () {
-    expect(entryWithParam.resourceName()).to.equal("Meine Ressource");
+    expect(entryWithParam.resourceName()).to.equal('Meine Ressource');
   });
 
   it('returns the registration date', function () {
-    expect(entryWithParam.registrationDate()).to.equal("23.02.2013 17:44");
+    expect(entryWithParam.registrationDate()).to.equal('23.02.2013 17:44');
   });
 
   it('initially has no registration validity limit', function () {
@@ -40,12 +40,12 @@ describe('Waitinglist Entry', function () {
   });
 
   it('has a registration validity limit when it is set', function () {
-    entryWithParam.setRegistrationValidityFor("3");
+    entryWithParam.setRegistrationValidityFor('3');
     expect(entryWithParam.registrationValidUntil()).to.not.be(undefined);
   });
 
   it('can remove the registration validity limit after setting it', function () {
-    entryWithParam.setRegistrationValidityFor("3");
+    entryWithParam.setRegistrationValidityFor('3');
     entryWithParam.setRegistrationValidityFor();
     expect(entryWithParam.registrationValidUntil()).to.be(undefined);
   });

@@ -7,46 +7,48 @@ mixin groupform(group, allTypes, organizersChecked)
       .row
         .col-md-12
           if group.id
-            +submitButtons("general.save")
+            +submitButtons('general.save')
           else
-            +submitButtons("general.create")
+            +submitButtons('general.create')
           legend
             if (group.id)
-              |  #{t("groups.edit", {groupId: group.id})}
+              |  #{t('groups.edit', {groupId: group.id})}
             else
-              |  #{t("groups.create")}
+              |  #{t('groups.create')}
       .row
         .col-md-6
-          +text('id', t("general.name"), group.id, t("groups.tooltip.name"), "", group.id)
-          +text('longName', t("general.title"), group.longName, t("groups.tooltip.title"))
+          +text('id', t('general.name'), group.id, t('groups.tooltip.name'), '', group.id)
+          +text('longName', t('general.title'), group.longName, t('groups.tooltip.title'))
+          input.form-control.currency(type='text', data-a-sign='  €', data-p-sign='s', data-a-dec=',', data-a-sep='')
+          script $('.currency').autoNumeric('init');
         .col-md-6
-          +text('emailPrefix', t("groups.email_prefix"), group.emailPrefix, t("groups.tooltip.email_prefix"), "", group.id)
+          +text('emailPrefix', t('groups.email_prefix'), group.emailPrefix, t('groups.tooltip.email_prefix'), '', group.id)
           +colorPicker('color', group.color)
       .row
         .col-md-12
-          +hightextarea('description', t("general.description"), group.description)
+          +hightextarea('description', t('general.description'), group.description)
       .row
         .col-md-6
           .form-group
-            label.control-label(for="type") #{t("groups.type")}:
-            select#type.form-control(name="type")
+            label.control-label(for='type') #{t('groups.type')}:
+            select#type.form-control(name='type')
               for item in allTypes
                 option(selected=group.type === item) #{item}
 
-          h4 #{t("groups.contacts")}
+          h4 #{t('groups.contacts')}
           .control-group
             each memberAdmin in organizersChecked
               +checkbox('organizers', memberAdmin.member.nickname(), memberAdmin.checked, memberAdmin.member.id())
         .col-md-6
           .row
             .col-md-6
-              +text('mapX', t("groups.x_coord"), group.mapX, t("groups.tooltip.x_coord"))
+              +text('mapX', t('groups.x_coord'), group.mapX, t('groups.tooltip.x_coord'))
             .col-md-6
-              +text('mapY', t("groups.y_coord"), group.mapY, t("groups.tooltip.y_coord"))
-          mixin text('shortName', t("groups.map_label"), group.shortName, t("groups.tooltip.map_label"))
+              +text('mapY', t('groups.y_coord'), group.mapY, t('groups.tooltip.y_coord'))
+          mixin text('shortName', t('groups.map_label'), group.shortName, t('groups.tooltip.map_label'))
       .row
         .col-md-12
           if group.id
-            +submitButtons("general.save")
+            +submitButtons('general.save')
           else
-            +submitButtons("general.create")
+            +submitButtons('general.create')

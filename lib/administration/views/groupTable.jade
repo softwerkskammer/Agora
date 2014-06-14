@@ -1,20 +1,20 @@
 extends ../../../views/layoutOnlyMain
 
 block scripts
-  script(src="/clientscripts/jquery.dataTables.min.js")
+  script(src='/clientscripts/jquery.dataTables.min.js')
   script.
     $(document).ready(function() {
-      $("#grouptable").dataTable({
-        "oLanguage": {
-          "sUrl": "#{(language === 'de') ? "/clientscripts/dataTables.german.txt" : ""}"
+      $('#grouptable').dataTable({
+        oLanguage: {
+          sUrl: tableLangUrl
         },
-        "aoColumns": [
-          { "bSortable" : false }, null, null, null, null, null
+        aoColumns: [
+          { bSortable : false }, null, null, null, null, null
         ],
-        "bPaginate": false,
-        "bAutoWidth": false,
-        "aaSorting": [[ 1, "asc" ]],
-        "bStateSave": true
+        bPaginate: false,
+        bAutoWidth: false,
+        aaSorting: [[ 1, 'asc' ]],
+        bStateSave: true
       });
       $('.tooltiplabel').each(function(each) {$(this).popover()});
     });
@@ -43,9 +43,9 @@ block content
           tbody
             for group in groups
               tr
-                td: a.btn-sm(href="/groups/edit/#{encodeURIComponent(group.id)}"): i.fa.fa-edit.fa-fw
+                td: a.btn-sm(href='/groups/edit/#{encodeURIComponent(group.id)}'): i.fa.fa-edit.fa-fw
                 th #{group.id}
                 td #{group.longName}
                 td #{group.emailPrefix}
-                td.ellipsis: .tooltiplabel(data-toggle="hover", data-placement="auto top", data-html="true", data-content="#{group.descriptionHTML()}"):   #{group.description}
+                td.ellipsis: .tooltiplabel(data-toggle='hover', data-placement='auto top', data-html='true', data-content='#{group.descriptionHTML()}'):   #{group.description}
                 td #{group.type}

@@ -8,11 +8,11 @@ mixin buttonOrDate(momentOrNull, paymentDone, activityUrl, nickname)
   if (momentOrNull)
     | #{momentOrNull.lang(language).format('L')}
   else
-    a.btn.btn-primary.btn-xs.btn-block(id="#{encodeURIComponent(nickname) + '-button'}",
-      href="javascript:paymentDone(\"#{'/activities/paymentReceived/' + encodeURIComponent(activityUrl) + '/' + encodeURIComponent(nickname)}\", \"#{encodeURIComponent(nickname) + '-button'}\")") Erhalten…
+    a.btn.btn-primary.btn-xs.btn-block(id='#{encodeURIComponent(nickname) + "-button"}',
+      href='javascript:paymentDone(\'#{"/activities/paymentReceived/" + encodeURIComponent(activityUrl) + "/" + encodeURIComponent(nickname)}\', \'#{encodeURIComponent(nickname) + "-button"}\')') Erhalten…
 
 block scripts
-  script(src="/clientscripts/jquery.dataTables.min.js")
+  script(src='/clientscripts/jquery.dataTables.min.js')
   script.
     function paymentDone(url, buttonid) {
       $.ajax({ url: url }).done(function(data) {
@@ -21,63 +21,63 @@ block scripts
     }
   script.
     $(document).ready(function() {
-      $(".addontable").dataTable({
-        "oLanguage": {
-          "sUrl": "#{(language === 'de') ? "/clientscripts/dataTables.german.txt" : ""}"
+      $('.addontable').dataTable({
+        oLanguage: {
+          sUrl: tableLangUrl
         },
-        "aoColumns": [
-          { "sType": "date-eu" }, null, null, null, null, null, null, null, { "sType": "date-eu" }, { "sType": "date-eu" }, { "sType": "date-eu" }
+        aoColumns: [
+          { sType: 'date-eu' }, null, null, null, null, null, null, null, { sType: 'date-eu' }, { sType: 'date-eu' }, { sType: 'date-eu' }
         ],
-        "bPaginate": false,
-        "bAutoWidth": false,
-        "bFilter": false,
-        "aaSorting": [[ 4 , "asc" ]],
-        "bStateSave": false
+        bPaginate: false,
+        bAutoWidth: false,
+        bFilter: false,
+        aaSorting: [[ 4 , 'asc' ]],
+        bStateSave: false
       });
     });
     $(document).ready(function() {
-      $(".membertable").dataTable({
-        "oLanguage": {
-          "sUrl": "#{(language === 'de') ? "/clientscripts/dataTables.german.txt" : ""}"
+      $('.membertable').dataTable({
+        oLanguage: {
+          sUrl: tableLangUrl
         },
-        "aoColumns": [
-          { "sType": "date-eu" }, null, null, null, null
+        aoColumns: [
+          { sType: 'date-eu' }, null, null, null, null
         ],
-        "bPaginate": false,
-        "bAutoWidth": false,
-        "bFilter": false,
-        "aaSorting": [[ 0 , "asc" ]],
-        "bStateSave": false
+        bPaginate: false,
+        bAutoWidth: false,
+        bFilter: false,
+        aaSorting: [[ 0 , 'asc' ]],
+        bStateSave: false
       });
     });
     $(document).ready(function() {
-      $(".missingtable").dataTable({
-        "oLanguage": {
-          "sUrl": "#{(language === 'de') ? "/clientscripts/dataTables.german.txt" : ""}"
+      $('.missingtable').dataTable({
+        oLanguage: {
+          sUrl: tableLangUrl
         },
-        "aoColumns": [
-          { "sType": "date-eu" }, null, null, null, null, null, null
+        aoColumns: [
+          { sType: 'date-eu' }, null, null, null, null, null, null
         ],
-        "bPaginate": false,
-        "bAutoWidth": false,
-        "bFilter": false,
-        "aaSorting": [[ 0 , "asc" ]],
-        "bStateSave": false
+        bPaginate: false,
+        bAutoWidth: false,
+        bFilter: false,
+        aaSorting: [[ 0 , 'asc' ]],
+        bStateSave: false
       });
     });
     $(document).ready(function() {
-      $(".tshirttable").dataTable({
-        "oLanguage": {
-          "sUrl": "#{(language === 'de') ? "/clientscripts/dataTables.german.txt" : ""}"
+      $('.tshirttable').dataTable({
+        oLanguage: {
+          sUrl: tableLangUrl
         },
-        "aoColumns": [
+        aoColumns: [
           null, null
         ],
-        "bPaginate": false,
-        "bAutoWidth": false,
-        "bFilter": false,
-        "aaSorting": [],
-        "bStateSave": false
+        bPaginate: false,
+        bAutoWidth: false,
+        bFilter: false,
+        aaSorting: [],
+        bStateSave: false
       });
     });
 
@@ -90,13 +90,13 @@ block content
     .col-md-12
       .page-header
         h2 #{activity.title()} - Verwaltung
-          a.btn.pull-right.btn-default(href="#{'/activities/' + encodeURIComponent(activity.url())}") Zurück
+          a.btn.pull-right.btn-default(href='#{"/activities/" + encodeURIComponent(activity.url())}') Zurück
   ul.nav.nav-tabs
-    li: a(href="#main", data-toggle="tab") #{t("activities.participants")}
-    li.active: a(href="#addons", data-toggle="tab") Zahlung
-    li: a(href="#notPaidOrNoAddon", data-toggle="tab") Versäumnisse
-    li: a(href="#groupMembership", data-toggle="tab") Gruppenmitgliedschaft
-    li: a(href="#tshirtSizes", data-toggle="tab") T-Shirt-Bestellungen
+    li: a(href='#main', data-toggle='tab') #{t('activities.participants')}
+    li.active: a(href='#addons', data-toggle='tab') Zahlung
+    li: a(href='#notPaidOrNoAddon', data-toggle='tab') Versäumnisse
+    li: a(href='#groupMembership', data-toggle='tab') Gruppenmitgliedschaft
+    li: a(href='#tshirtSizes', data-toggle='tab') T-Shirt-Bestellungen
   .row
     .col-md-12
       .tab-content
@@ -157,7 +157,7 @@ block content
         .tab-pane#notPaidOrNoAddon
           .panel
             table.table.table-condensed.table-hover.table-striped.missingtable
-              h4 Folgende Teilnehmer haben seit mindestens 7 Tagen nicht gezahlt bzw. die Zusatzinformationen nicht eingetragen:
+              h4 Folgende Teilnehmer haben noch nicht gezahlt bzw. die Zusatzinformationen nicht eingetragen:
               thead
                 tr
                   th Registriert
@@ -169,7 +169,7 @@ block content
                   th Ort/Region
               tbody
                 for line in addonLines
-                  if((!activity.addonForMember(line.member.id()).paymentReceivedMoment() || !activity.memberEnteredAddonInformation(line.member.id())) && activity.resources().memberIsRegisteredForMoreDaysThan(7, line.member))
+                  if((!activity.addonForMember(line.member.id()).paymentReceivedMoment() || !activity.memberEnteredAddonInformation(line.member.id())) && activity.resources().memberIsRegisteredForMoreDaysThan(0, line.member))
                     tr
                       td #{line.member.registeredAt.lang(language).format('L')}
                       if activity.addonForMember(line.member.id()).paymentReceivedMoment()

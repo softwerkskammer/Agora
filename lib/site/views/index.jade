@@ -3,12 +3,12 @@ extends ../../../views/layout
 mixin placeGroupLabels(groupsOfAKind)
   each group in groupsOfAKind
     if (group.mapX && group.mapY && group.shortName)
-      .label.group(style="background-color: #{group.color}; top: #{group.mapYrelative()}%; left: #{group.mapXrelative()}%;")
-        span(rel="tooltip-in-body", data-title="<h4>#{group.longName}</h4>", data-content="#{group.descriptionHTMLFiltered('img')}")
-          a.group(href="/groups/#{group.id}") #{group.shortName}
+      .label.group(style='background-color: #{group.color}; top: #{group.mapYrelative()}%; left: #{group.mapXrelative()}%;')
+        span(rel='tooltip-in-body', data-title='<h4>#{group.longName}</h4>', data-content=group.descriptionHTMLFiltered('img'))
+          a.group(href='/groups/#{group.id}') #{group.shortName}
 
 block title
-  | #{t("general.welcome")}
+  | #{t('general.welcome')}
 block content
   .row
     .col-md-12
@@ -21,17 +21,18 @@ block content
         .panel-body
           .row
             .col-md-3
-              a(href="http://socrates-conference.de"): img(src="/img/socrates2014_logo_40perc.png", width="150px")
+              a(href='http://socrates-conference.de'): img(src='/img/socrates2014_logo_40perc.png', width='150')
             .col-md-9
-              a(href="http://socrates-conference.de")
-                h3 SoCraTes 2014 </a> <br>
-                  small.
-                    4th International Software Craftsmanship and Testing Conference<br>
-                    August 7-10 2014, Soltau, Germany
+              h3
+                a(href='http://socrates-conference.de') SoCraTes 2014
+                br
+                small.
+                  4th International Software Craftsmanship and Testing Conference<br>
+                  August 7-10 2014, Soltau, Germany
           .row
             .col-md-12
               span.pull-right Zur Softwerkskammer-Gruppe 
-                a(href="/groups/socrates2014") SoCraTes 2014
+                a(href='/groups/socrates2014') SoCraTes 2014
               .clearfix
 
   .row
@@ -55,9 +56,9 @@ block content
           wie Clean Code, TDD etc. austauschen möchtest,
       p Dann ist die Softwerkskammer etwas für Dich!
 
-    .col-md-6.hidden-md.hidden-lg.groupsmap(style="position: relative; width: 100%; height: 100px; background-image:url('/img/map.svg'); background-size: 100% 100%; background-repeat: no-repeat;")
+    .col-md-6.hidden-md.hidden-lg.groupsmap(style='position: relative; width: 100%; height: 100px; background-image:url("/img/map.svg"); background-size: 100% 100%; background-repeat: no-repeat;')
       +placeGroupLabels(regionalgroups)
-    .col-md-6.hidden-xs.hidden-sm.groupsmap(style="position: relative; width: 50%; height: 100px; background-image:url('/img/map.svg'); background-size: 100% 100%; background-repeat: no-repeat;")
+    .col-md-6.hidden-xs.hidden-sm.groupsmap(style='position: relative; width: 50%; height: 100px; background-image:url("/img/map.svg"); background-size: 100% 100%; background-repeat: no-repeat;')
       +placeGroupLabels(regionalgroups)
   .row
     .col-md-12
@@ -81,4 +82,4 @@ block content
       $('.groupsmap').each(function() {$(this).height(1.289 * $(this).width()); })
     }
     $(document).ready(adjustMapsize);
-    $.event.add(window, "resize", adjustMapsize);
+    $.event.add(window, 'resize', adjustMapsize);

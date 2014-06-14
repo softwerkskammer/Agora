@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 process.chdir(__dirname);
 var nconf = require('nconf');
@@ -14,14 +14,15 @@ function createConfiguration() {
   nconf.file('authentication', './config/authentication-config.json');
   nconf.file('mail', './config/mailsender-config.json');
   nconf.file('wiki', './config/wikirepo-config.json');
+  nconf.file('images', './config/images-config.json');
   nconf.defaults({
     adminListName: "admins",
     port: '17124',
     mongoHost: 'localhost',
     mongoPort: '27017',
-    publicUrlPrefix: "http://localhost:17124",
-    securedByLoginURLPattern: "/mailsender|/members|/new|/edit|/submit|(subscribe|unsubscribe)/|/mailarchive|/invitation|/addToWaitinglist|/removeFromWaitinglist|/addon|/submitAddon|/wiki/socrates.*/|/payment|dashboard",
-    secret: "secret",
+    publicUrlPrefix: 'http://localhost:17124',
+    securedByLoginURLPattern: '/mailsender|/members|/new|/edit|/submit|(subscribe|unsubscribe)/|/mailarchive|/invitation|/addToWaitinglist|/removeFromWaitinglist|/addon|/submitAddon|/wiki/socrates.*/|/payment|dashboard',
+    secret: 'secret',
     beans: new Beans('./config/beans.json')
   });
 

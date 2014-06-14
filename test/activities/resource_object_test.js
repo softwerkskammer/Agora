@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 require('../../testutil/configureForTest');
 var moment = require('moment-timezone');
@@ -163,58 +163,58 @@ describe('Resource', function () {
 
   });
 
-  describe("(fillFromUI)", function () {
+  describe('(fillFromUI)', function () {
 
-    it("adds a limit if it is given", function () {
+    it('adds a limit if it is given', function () {
       var resource = new Resource();
-      resource.fillFromUI({limit: "10"});
+      resource.fillFromUI({limit: '10'});
       expect(resource.limit()).to.equal(10);
     });
 
-    it("removes a limit if it is not given", function () {
+    it('removes a limit if it is not given', function () {
       var resource = new Resource({ limit: 10 });
-      resource.fillFromUI({limit: ""});
+      resource.fillFromUI({limit: ''});
       expect(resource.limit()).to.be(undefined);
     });
 
-    it("allows registration if it is indicated", function () {
+    it('allows registration if it is indicated', function () {
       var resource = new Resource();
-      resource.fillFromUI({isRegistrationOpen: "yes"});
+      resource.fillFromUI({isRegistrationOpen: 'yes'});
       expect(resource.isRegistrationOpen()).to.be(true);
     });
 
-    it("removes 'registration allowed' if it is not indicated", function () {
+    it('removes "registration allowed" if it is not indicated', function () {
       var resource = new Resource({ _registrationOpen: true });
-      resource.fillFromUI({isRegistrationOpen: "no"});
+      resource.fillFromUI({isRegistrationOpen: 'no'});
       expect(resource.isRegistrationOpen()).to.be(false);
     });
 
-    it("allows unsubscription if it is indicated", function () {
+    it('allows unsubscription if it is indicated', function () {
       var resource = new Resource();
-      resource.fillFromUI({canUnsubscribe: "yes"});
+      resource.fillFromUI({canUnsubscribe: 'yes'});
       expect(resource.canUnsubscribe()).to.be(true);
     });
 
-    it("disallows unsubscription if it is indicated", function () {
+    it('disallows unsubscription if it is indicated', function () {
       var resource = new Resource({ _canUnsubscribe: true });
-      resource.fillFromUI({canUnsubscribe: "no"});
+      resource.fillFromUI({canUnsubscribe: 'no'});
       expect(resource.canUnsubscribe()).to.be(false);
     });
 
-    it("defaults unsubscription to true if not set", function () {
+    it('defaults unsubscription to true if not set', function () {
       var resource = new Resource();
       expect(resource.canUnsubscribe()).to.be(true);
     });
 
-    it("adds a waitinglist if it is indicated", function () {
+    it('adds a waitinglist if it is indicated', function () {
       var resource = new Resource();
-      resource.fillFromUI({hasWaitinglist: "yes"});
+      resource.fillFromUI({hasWaitinglist: 'yes'});
       expect(resource.hasWaitinglist()).to.be(true);
     });
 
-    it("removes 'with waitinglist' if it is not indicated", function () {
+    it('removes "with waitinglist" if it is not indicated', function () {
       var resource = new Resource({ _withWaitinglist: true });
-      resource.fillFromUI({hasWaitinglist: "no"});
+      resource.fillFromUI({hasWaitinglist: 'no'});
       expect(resource.hasWaitinglist()).to.be(false);
     });
 
@@ -223,11 +223,11 @@ describe('Resource', function () {
   describe('- canSubscribe -', function () {
     var activity1;
     beforeEach(function () {
-      activity1 = new Activity({id: "Meine Aktivität", url: "myActivity", resources: {"Meine Ressource": {_waitinglist: []}}});
+      activity1 = new Activity({id: 'Meine Aktivität', url: 'myActivity', resources: {'Meine Ressource': {_waitinglist: []}}});
     });
 
     it('does not allow to subscribe if the registration is not allowed for the waiting list member', function () {
-      var resource = activity1.resourceNamed("Meine Ressource");
+      var resource = activity1.resourceNamed('Meine Ressource');
       resource.addToWaitinglist('12345', moment());
       resource.waitinglistEntryFor('12345').setRegistrationValidityFor();
 
@@ -235,7 +235,7 @@ describe('Resource', function () {
     });
 
     it('does not allow to subscribe if the registration timeslot is already past', function () {
-      var resource = activity1.resourceNamed("Meine Ressource");
+      var resource = activity1.resourceNamed('Meine Ressource');
       resource.addToWaitinglist('12345', moment());
       resource.waitinglistEntryFor('12345').setRegistrationValidityFor('-1');
 
@@ -243,7 +243,7 @@ describe('Resource', function () {
     });
 
     it('allows to subscribe if the end of the registration timeslot is not reached yet', function () {
-      var resource = activity1.resourceNamed("Meine Ressource");
+      var resource = activity1.resourceNamed('Meine Ressource');
       resource.addToWaitinglist('12345', moment());
       resource.waitinglistEntryFor('12345').setRegistrationValidityFor('1');
 
@@ -251,7 +251,7 @@ describe('Resource', function () {
     });
 
     it('does not add a member to waitinglist if this member is already registered', function () {
-      var resource = activity1.resourceNamed("Meine Ressource");
+      var resource = activity1.resourceNamed('Meine Ressource');
       resource.addMemberId('12345');
       expect(resource.isAlreadyRegistered('12345')).to.be(true);
       resource.addToWaitinglist('12345', moment());
@@ -271,7 +271,7 @@ describe('Resource', function () {
     });
 
     it('returns the registration date if the member is registered', function () {
-      var momentOfRegistration = moment("2014-03-03");
+      var momentOfRegistration = moment('2014-03-03');
       resource.addMemberId('12345', momentOfRegistration);
 
       expect(resource.registrationDateOf('12345').format()).to.equal(momentOfRegistration.format());

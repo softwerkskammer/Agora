@@ -6,20 +6,20 @@ mixin grouplist(title, groupsOfAKind)
     ul.list-unstyled
       each group in groupsOfAKind
         li
-          span.label(style="background-color: #{group.color}; min-width:32px; text-align:right; display:inline-block") #{group.membercount}
+          span.label(style='background-color: #{group.color}; min-width:32px; text-align:right; display:inline-block') #{group.membercount}
           | &nbsp;&nbsp;
-          span.popover-highlight(rel="tooltip-in-body", data-content="#{group.descriptionHTMLFiltered('img')}")
-            strong: a(href="#{group.id}") #{group.longName}
+          span.popover-highlight(rel='tooltip-in-body', data-content=group.descriptionHTMLFiltered('img'))
+            strong: a(href='#{group.id}') #{group.longName}
 
 mixin placeGroupLabels(groupsOfAKind)
     each group in groupsOfAKind
       if (group.mapX && group.mapY && group.shortName)
-        .label.group(style="background-color: #{group.color}; top: #{group.mapYrelative()}%; left: #{group.mapXrelative()}%;")
-          span(rel="tooltip-in-body", data-title="<h4>#{group.longName}</h4>", data-content="#{group.descriptionHTMLFiltered('img')}")
-            a.group(href="#{group.id}") #{group.shortName}
+        .label.group(style='background-color: #{group.color}; top: #{group.mapYrelative()}%; left: #{group.mapXrelative()}%;')
+          span(rel='tooltip-in-body', data-title='<h4>#{group.longName}</h4>', data-content=group.descriptionHTMLFiltered('img'))
+            a.group(href='#{group.id}') #{group.shortName}
 
 block title
-  | #{t("groups.overview")}
+  | #{t('groups.overview')}
 
 block content
   .row
@@ -27,20 +27,20 @@ block content
       .page-header
         .btn-group.pull-right
           if (accessrights.isSuperuser())
-            a.btn.btn-default(href="new/", title=t("groups.new")): i.fa.fa-file-o.fa-fw
-        h2 #{t("groups.groups")}
+            a.btn.btn-default(href='new/', title=t('groups.new')): i.fa.fa-file-o.fa-fw
+        h2 #{t('groups.groups')}
   .row
     .col-md-6
-      +grouplist(t("groups.regional"), regionalgroups)
-      +grouplist(t("groups.themed"), themegroups)
-    .col-md-6.hidden-md.hidden-lg.groupsmap(style="position: relative; width: 100%; height: 100px; background-image:url('/img/map.svg'); background-size: 100% 100%; background-repeat: no-repeat;")
+      +grouplist(t('groups.regional'), regionalgroups)
+      +grouplist(t('groups.themed'), themegroups)
+    .col-md-6.hidden-md.hidden-lg.groupsmap(style='position: relative; width: 100%; height: 100px; background-image:url("/img/map.svg"); background-size: 100% 100%; background-repeat: no-repeat;')
       +placeGroupLabels(regionalgroups)
-    .col-md-6.hidden-xs.hidden-sm.groupsmap(style="position: relative; width: 50%; height: 100px; background-image:url('/img/map.svg'); background-size: 100% 100%; background-repeat: no-repeat;")
+    .col-md-6.hidden-xs.hidden-sm.groupsmap(style='position: relative; width: 50%; height: 100px; background-image:url("/img/map.svg"); background-size: 100% 100%; background-repeat: no-repeat;')
       +placeGroupLabels(regionalgroups)
   script.
     function adjustMapsize() {
       $('.groupsmap').each(function() {$(this).height(1.289 * $(this).width()); })
     }
     $(document).ready(adjustMapsize);
-    $.event.add(window, "resize", adjustMapsize);
+    $.event.add(window, 'resize', adjustMapsize);
 

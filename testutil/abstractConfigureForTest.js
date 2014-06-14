@@ -1,34 +1,42 @@
-/*jslint stupid: true */
-"use strict";
+'use strict';
 
 module.exports = function (testBeansFilename) {
 
-  var nconf = require('../configure');
+  var nconf = require('nconf');
   var merge = require('utils-merge');
   var Beans = require('CoolBeans');
-  nconf.set('port', '17125');
-
   require('./shutupWinston')();
-
-  // sympa:
-  nconf.set('swkTrustedAppName', null);
-  nconf.set('swkTrustedAppPwd', null);
-  nconf.set('swkRemoteAppUser', null);
-
-  nconf.set('dontUsePersistentSessions', true);
-
-  nconf.set('superuser', ['superuserID']);
-
-  //wiki:
-  nconf.set('wikipath', '.');
 
   // beans:
   var productionBeans = require('../config/beans.json');
   var testBeans = require('../config/' + testBeansFilename);
   merge(productionBeans, testBeans);
 
-  nconf.set('beans', new Beans(productionBeans));
+  nconf.overrides({
+    port: '17125',
+    swkTrustedAppName: null,
+    swkTrustedAppPwd: null,
+    swkRemoteAppUser: null,
+    dontUsePersistentSessions: true,
+    superuser: 'superuserID',
+    wikipath: '.',
+    beans: new Beans(productionBeans),
+    transport: null,
+    'transport-options': null,
+    'sender-address': null,
+    publicUrlPrefix: 'http://localhost:17125',
+    secret: 'secret',
+    githubClientID : null,
+    githubClientSecret : null,
+    publicPaymentKey: null,
+    secretPaymentKey: null,
+    paymentBic      : 'paymentBic',
+    paymentIban     : 'paymentIban',
+    paymentReceiver : 'paymentReceiver'
 
-  return nconf;
+  });
+
+  return require('../configure');
 
 };
+

@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 require('../../testutil/configureForTest');
 var beans = require('nconf').get('beans');

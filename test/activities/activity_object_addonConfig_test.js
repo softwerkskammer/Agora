@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 require('../../testutil/configureForTest');
 var moment = require('moment-timezone');
@@ -57,14 +57,9 @@ describe('Addon Configuration', function () {
     expect(addonConfig.deposit()).to.not.exist();
   });
 
-  it('has fee of 3.3 for a deposit of 100', function () {
+  it('provides a given deposit of 100', function () {
     var addonConfig = new AddonConfig({deposit: 100});
-    expect(addonConfig.fee().toFixed(2)).to.equal('3.30');
-  });
-
-  it('has a total of 103.3 for a deposit of 100', function () {
-    var addonConfig = new AddonConfig({deposit: 100});
-    expect(addonConfig.stripeTotal()).to.equal(103.3);
+    expect(addonConfig.deposit()).to.equal(100);
   });
 
 });
@@ -80,16 +75,16 @@ describe('Addon', function () {
 
   it('is filled from the UI', function () {
     var addon = new Addon();
-    addon.fillFromUI({ homeAddress: "At home", billingAddress: "At work", tShirtSize: "XXXXL", roommate: "My best friend"});
-    expect(addon.homeAddress()).to.equal("At home");
-    expect(addon.billingAddress()).to.equal("At work");
-    expect(addon.tShirtSize()).to.equal("XXXXL");
-    expect(addon.roommate()).to.equal("My best friend");
+    addon.fillFromUI({ homeAddress: 'At home', billingAddress: 'At work', tShirtSize: 'XXXXL', roommate: 'My best friend'});
+    expect(addon.homeAddress()).to.equal('At home');
+    expect(addon.billingAddress()).to.equal('At work');
+    expect(addon.tShirtSize()).to.equal('XXXXL');
+    expect(addon.roommate()).to.equal('My best friend');
   });
 
   it('does not change payments when filled from the UI', function () {
     var addon = new Addon({moneyTransferred: 1, creditCardPaid: 2});
-    addon.fillFromUI({ homeAddress: "At home", billingAddress: "At work", tShirtSize: "XXXXL", roommate: "My best friend"});
+    addon.fillFromUI({ homeAddress: 'At home', billingAddress: 'At work', tShirtSize: 'XXXXL', roommate: 'My best friend'});
     expect(addon.moneyTransferred()).to.equal(1);
     expect(addon.creditCardPaid()).to.equal(2);
   });

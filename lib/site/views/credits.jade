@@ -2,7 +2,7 @@ extends ../../../views/layoutOnlyMain
 
 mixin defItem(title, url, text)
   dt #{title}:
-  dd: a(href=url, target="_blank")
+  dd: a(href=url, target='_blank')
     i.fa.fa-external-link
     | &nbsp;#{text}
 
@@ -88,7 +88,7 @@ block content
         +defItem('Grunt', 'http://gruntjs.com', 'Build-Runner')
         +defItem('JSLint (grunt)', 'https://github.com/stephenmathieson/grunt-jslint', 'Grunt Integration für JSLint')
         +defItem('Grunt Less', 'https://github.com/gruntjs/grunt-contrib-less', 'Grunt Integration für LESS Compilierung')
-        +defItem('Grunt Concat', 'https://github.com/gruntjs/grunt-contrib-concat', 'Grunt Concatenierung für JS-Files')
+        +defItem('Grunt Uglify', 'https://github.com/gruntjs/grunt-contrib-uglify', 'Grunt Minifizierung für JS-Files')
         +defItem('Grunt Mocha Istanbul', 'https://github.com/pocesar/grunt-mocha-istanbul', 'Mocha Tests im Grunt + Coverage')
         +defItem('Must', 'https://github.com/moll/js-must', 'BDD TDD Assertion Library')
         +defItem('Sinon', 'http://sinonjs.org', 'Mock Framework')
@@ -97,6 +97,6 @@ block content
         +defItem('JSLint', 'http://www.jslint.com', 'Metrik/Qualitäts/Style Checker')
         +defItem('Mocha', 'http://visionmedia.github.io/mocha/', 'Test Framework')
         +defItem('Karma', 'http://karma-runner.github.io/', 'Test runner für Frontendtests')
-        +defItem('Karma QJasmine', 'https://github.com/karma-runner/karma-jasmine', 'Jasmine Tests mit Karma ausführen')
+        +defItem('Karma Jasmine', 'https://github.com/karma-runner/karma-jasmine', 'Jasmine Tests mit Karma ausführen')
         +defItem('Karma Coverage', 'https://github.com/karma-runner/karma-coverage', 'Code Coverage bei Frontendtests erfassen')
 

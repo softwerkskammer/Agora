@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var request = require('supertest');
 var sinon = require('sinon').sandbox.create();
@@ -6,7 +6,7 @@ var sinon = require('sinon').sandbox.create();
 var conf = require('../../testutil/configureForTest');
 
 var beans = conf.get('beans');
-var activitiesAPI = beans.get('activitiesAPI');
+var activitiesService = beans.get('activitiesService');
 
 var createApp = require('../../testutil/testHelper')('activitiesApp').createApp;
 
@@ -17,7 +17,7 @@ describe('Activity application - on submit -', function () {
   });
 
   it('rejects an activity with invalid and different url', function (done) {
-    sinon.stub(activitiesAPI, 'isValidUrl', function (isReserved, nickname, callback) { callback(null, false); });
+    sinon.stub(activitiesService, 'isValidUrl', function (isReserved, nickname, callback) { callback(null, false); });
 
     request(createApp())
       .post('/submit')
@@ -43,7 +43,7 @@ describe('Activity application - on submit -', function () {
   });
 
   it('rejects an activity with different but valid url and with empty title', function (done) {
-    sinon.stub(activitiesAPI, 'isValidUrl', function (isReserved, nickname, callback) { callback(null, true); });
+    sinon.stub(activitiesService, 'isValidUrl', function (isReserved, nickname, callback) { callback(null, true); });
 
     request(createApp())
       .post('/submit')

@@ -3,11 +3,11 @@ include  ../../../views/formComponents
 
 mixin colorPickerForTable(id, name, value)
   .form-group
-    label.col-xs-4.control-label(for="color#{id}") #{id}:
+    label.col-xs-4.control-label(for='color#{id}') #{id}:
     .col-xs-8
-      input.form-control(id="color#{id}", type="text", name=id, value=value)
+      input.form-control(id='color#{id}', type='text', name=id, value=value)
     script.
-      $("#color#{id}").pickAColor();
+      $('#color#{id}').pickAColor();
 
 block title
   | Farben
@@ -18,14 +18,14 @@ block content
       .page-header
         .btn-group.pull-right
           if (accessrights.canCreateColor())
-            a.pull-right.btn.btn-default(data-toggle="modal", href="#newcolor", title="Neue Farbe"): i.fa.fa-file-o.fa-fw
+            a.pull-right.btn.btn-default(data-toggle='modal', href='#newcolor', title='Neue Farbe'): i.fa.fa-file-o.fa-fw
         h2 Verwaltung
           small  Farben
       form.form-horizontal(action='/administration/submitColors', method='post')
         +csrf
         for color in colors
            mixin colorPickerForTable(color.id, 'color', color.color)
-        button.btn.btn-primary.pull-right(type="submit") Speichern
+        button.btn.btn-primary.pull-right(type='submit') Speichern
 
   form(id='newcolorform', action='/administration/submitNewColor', method='post')
     +csrf
@@ -34,17 +34,17 @@ block content
       .modal-dialog
         .modal-content
           .modal-header
-            button.close(type="button", data-dismiss="modal", aria-hidden="true") &times;
+            button.close(type='button', data-dismiss='modal', aria-hidden='true') &times;
             h3 Neue Farbe
           .modal-body
             .row
               .col-md-12
                 .control-group
-                  label(class="control-label", for='id') Name (keine Leerzeichen!):
-                  input(id='id', class="input-block-level input-xlarge", type='text', name='id')
-                input(id='color', type="hidden", name='color', value='#9c4141')
+                  label(class='control-label', for='id') Name (keine Leerzeichen!):
+                  input(id='id', class='input-block-level input-xlarge', type='text', name='id')
+                input(id='color', type='hidden', name='color', value='#9c4141')
           .modal-footer
-            button.btn.btn-primary(type="submit") Anlegen
+            button.btn.btn-primary(type='submit') Anlegen
   script.
     $('#newcolor').on('shown', function () {
       $('#id').focus();

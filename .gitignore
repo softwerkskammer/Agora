@@ -1,8 +1,6 @@
-.idea
 /.settings
 /.c9revisions/
 *.sublime*
-*.iml
 /node_modules/
 *~
 .DS_Store
@@ -22,3 +20,12 @@ global_en.js
 build/config.gypi
 coverage
 .vagrant
+
+coverage.html
+public/clientscripts/global.js
+public/stylesheets/vendor/bootstrap-custom.css
+public/stylesheets/vendor/bootstrap-markdown-custom.css
+test/tempbeans.json
+
+.idea/dictionaries
+.idea/workspace.xml

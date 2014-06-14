@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var conf = require('../../testutil/configureForTest');
 var fieldHelpers = conf.get('beans').get('fieldHelpers');
@@ -218,4 +218,32 @@ describe('parseToMomentUsingTimezone function', function () {
     expect(result).to.be(undefined);
   });
 
+  it('returns unix timestamps with correct offsets', function () {
+    var berlinMoment = fieldHelpers.parseToMomentUsingTimezone('2.8.2013', '12:34:56', 'Europe/Berlin');
+    var utcMoment = fieldHelpers.parseToMomentUsingTimezone('2.8.2013', '12:34:56', 'UTC');
+    var twoHoursInSeconds = 2 * 60 * 60;
+    expect(berlinMoment.unix() + twoHoursInSeconds).to.equal(utcMoment.unix());
+  });
+
+});
+
+describe('formatNumberWithCurrentLocale', function () {
+
+  it('formats for "de"', function () {
+    var res = {locals: {language: 'de' }};
+    var result = fieldHelpers.formatNumberWithCurrentLocale(res, 22);
+    expect(result).to.equal('22,00');
+  });
+
+  it('formats for "en"', function () {
+    var res = {locals: {language: 'en-gb' }};
+    var result = fieldHelpers.formatNumberWithCurrentLocale(res, 22);
+    expect(result).to.equal('22.00');
+  });
+
+  it('formats "undefined"', function () {
+    var res = {locals: {language: 'en-gb' }};
+    var result = fieldHelpers.formatNumberWithCurrentLocale(res, undefined);
+    expect(result).to.equal('0.00');
+  });
 });

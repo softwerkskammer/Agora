@@ -1,14 +1,14 @@
-"use strict";
+'use strict';
 var moment = require('moment-timezone');
 
 var addonConfig = {
-  addonInformation: function () { return "addonInformation"; },
-  addonInformationHTML: function () { return "addonInformationHTML"; },
-  homeAddress: function () { return "yes"; },
-  billingAddress: function () { return "yes"; },
-  tShirtSize: function () { return "yes"; },
-  roommate: function () { return "yes"; },
-  deposit: function () { return ""; }
+  addonInformation: function () { return 'addonInformation'; },
+  addonInformationHTML: function () { return 'addonInformationHTML'; },
+  homeAddress: function () { return 'yes'; },
+  billingAddress: function () { return 'yes'; },
+  tShirtSize: function () { return 'yes'; },
+  roommate: function () { return 'yes'; },
+  deposit: function () { return ''; }
 };
 
 module.exports = {
@@ -33,10 +33,10 @@ module.exports = {
   groups: [],
   addonConfig: addonConfig,
   addon: {
-    homeAddress: function () { return ""; },
-    billingAddress: function () { return ""; },
-    tShirtSize: function () { return ""; },
-    roommate: function () { return ""; }
+    homeAddress: function () { return ''; },
+    billingAddress: function () { return ''; },
+    tShirtSize: function () { return ''; },
+    roommate: function () { return ''; }
   },
   announcement: {
     id: '',
@@ -67,5 +67,9 @@ module.exports = {
     authentications: function () { return []; }
   },
   regionalgroups: [],
-  themegroups: []
+  themegroups: [],
+  paymentInfo: {
+    paymentDone: function () { return false; },
+    paymentKey: function () { return 'paymentKey'; }
+  }
 };

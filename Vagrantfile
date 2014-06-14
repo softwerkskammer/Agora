@@ -20,6 +20,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # within the machine from a port on the host machine. In the example below,
   # accessing "localhost:8080" will access port 80 on the guest machine.
 
+
+  # forward NodeJS remote debug port
+  config.vm.network "forwarded_port", guest: 5858, host: 5858
+
   # forward mongodb ports from host to guest
   config.vm.network "forwarded_port", guest: 27017, host: 27017
   config.vm.network "forwarded_port", guest: 28017, host: 28017

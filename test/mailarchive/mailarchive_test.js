@@ -1,13 +1,12 @@
-"use strict";
+'use strict';
 
 var request = require('supertest');
-var sinon = require('sinon');
-var sinon = sinon.sandbox.create();
+var sinon = require('sinon').sandbox.create();
 var expect = require('must');
 var moment = require('moment-timezone');
 
 var beans = require('../../testutil/configureForTest').get('beans');
-var mailarchiveAPI = beans.get('mailarchiveAPI');
+var mailarchiveService = beans.get('mailarchiveService');
 var Mail = beans.get('archivedMail');
 var Member = beans.get('member');
 var member = new Member({id: 'ai di', nickname: 'nigg'});
@@ -28,7 +27,7 @@ describe('Mail content page', function () {
   });
 
   it('shows text "Keine E-Mails" if mail is not found', function (done) {
-    var mailForId = sinon.stub(mailarchiveAPI, 'mailForId', function (id, callback) {callback(null, undefined); });
+    var mailForId = sinon.stub(mailarchiveService, 'mailForId', function (id, callback) {callback(null, undefined); });
     request(app)
       .get('/message/mailID')
       .expect(200)
@@ -40,11 +39,11 @@ describe('Mail content page', function () {
 
   it('shows html if message contains html', function (done) {
     var displayedMail = new Mail({
-      "html": "<div>Html message 1</div>",
-      "id": "<message1@nomail.com>"
+      'html': '<div>Html message 1</div>',
+      'id': '<message1@nomail.com>'
     });
 
-    var mailForId = sinon.stub(mailarchiveAPI, 'mailForId', function (id, callback) {callback(null, displayedMail); });
+    var mailForId = sinon.stub(mailarchiveService, 'mailForId', function (id, callback) {callback(null, displayedMail); });
     request(app)
       .get('/message/mailID')
       .expect(200)
@@ -56,11 +55,11 @@ describe('Mail content page', function () {
 
   it('filters mail addresses and phone numbers from html', function (done) {
     var displayedMail = new Mail({
-      "html": '<div>Html message 1: mail@somewhere.org Tel: +49 (123) 45 67 89</div>',
-      "id": '<message1@nomail.com>'
+      'html': '<div>Html message 1: mail@somewhere.org Tel: +49 (123) 45 67 89</div>',
+      'id': '<message1@nomail.com>'
     });
 
-    var mailForId = sinon.stub(mailarchiveAPI, 'mailForId', function (id, callback) {callback(null, displayedMail); });
+    var mailForId = sinon.stub(mailarchiveService, 'mailForId', function (id, callback) {callback(null, displayedMail); });
     request(app)
       .get('/message/mailID')
       .expect(200)
@@ -76,7 +75,7 @@ describe('Mail content page', function () {
     });
     displayedMail.member = member;
 
-    var mailForId = sinon.stub(mailarchiveAPI, 'mailForId', function (id, callback) {callback(null, displayedMail); });
+    var mailForId = sinon.stub(mailarchiveService, 'mailForId', function (id, callback) {callback(null, displayedMail); });
 
     request(app)
       .get('/message/mailID')
@@ -95,8 +94,8 @@ describe('Mail index page', function () {
   });
 
   function stubMailHeaders(headers) {
-    sinon.stub(mailarchiveAPI, 'threadedMails', function (group, callback) {callback(null, headers); });
-    sinon.stub(mailarchiveAPI, 'unthreadedMails', function (group, callback) {callback(null, headers); });
+    sinon.stub(mailarchiveService, 'threadedMails', function (group, callback) {callback(null, headers); });
+    sinon.stub(mailarchiveService, 'unthreadedMails', function (group, callback) {callback(null, headers); });
   }
 
   it('shows group name in the title', function (done) {
@@ -105,7 +104,7 @@ describe('Mail index page', function () {
     request(app)
       .get('/list/threaded/group')
       .expect(200)
-      .expect(/<title>+group\s+E-Mails/, function (err) {
+      .expect(/<title>\s*group\s*E-Mails/, function (err) {
         done(err);
       });
   });
@@ -170,7 +169,7 @@ describe('Mail index page', function () {
     request(app)
       .get('/list/threaded/group')
       .expect(200)
-      .expect(new RegExp(mailTime.format("L")), function (err) {
+      .expect(new RegExp(mailTime.format('L')), function (err) {
         done(err);
       });
   });
@@ -192,7 +191,7 @@ describe('Mail index page', function () {
 
   it('references sender member page inside the thread', function (done) {
     var displayedMailHeader1 = new Mail(
-      {id: 'Mail 1', subject: 'Mail 1', references: [], group: "group" }
+      {id: 'Mail 1', subject: 'Mail 1', references: [], group: 'group' }
     );
     var displayedMailHeader2 = new Mail(
       {id: 'Mail 2', subject: 'Mail 2', references: ['Mail 1'], from: {name: 'Sender Name 2', id: 'sender ID'}, group: 'group' }

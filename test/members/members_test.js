@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var request = require('supertest');
 var sinon = require('sinon').sandbox.create();
@@ -6,10 +6,11 @@ var expect = require('must');
 
 var beans = require('../../testutil/configureForTest').get('beans');
 var Member = beans.get('member');
-var membersAPI = beans.get('membersAPI');
-var groupsAPI = beans.get('groupsAPI');
-var groupsAndMembersAPI = beans.get('groupsAndMembersAPI');
-var activitiesAPI = beans.get('activitiesAPI');
+var membersService = beans.get('membersService');
+var memberstore = beans.get('memberstore');
+var groupsService = beans.get('groupsService');
+var groupsAndMembersService = beans.get('groupsAndMembersService');
+var activitiesService = beans.get('activitiesService');
 var notifications = beans.get('notifications');
 var dummymember;
 
@@ -24,19 +25,19 @@ describe('Members application', function () {
 
   beforeEach(function () {
     dummymember = new Member({id: 'memberID', nickname: 'hada', email: 'a@b.c', site: 'http://my.blog', firstname: 'Hans', lastname: 'Dampf', authentications: []});
-    allMembers = sinon.stub(membersAPI, 'allMembers', function (callback) {
+    allMembers = sinon.stub(memberstore, 'allMembers', function (callback) {
       callback(null, [dummymember]);
     });
-    getMember = sinon.stub(membersAPI, 'getMember', function (nickname, callback) {
+    getMember = sinon.stub(memberstore, 'getMember', function (nickname, callback) {
       callback(null, dummymember);
     });
-    getSubscribedGroupsForUser = sinon.stub(groupsAPI, 'getSubscribedGroupsForUser', function (email, callback) {
+    getSubscribedGroupsForUser = sinon.stub(groupsService, 'getSubscribedGroupsForUser', function (email, callback) {
       callback(null, []);
     });
-    sinon.stub(activitiesAPI, 'getPastActivitiesOfMember', function (member, callback) {
+    sinon.stub(activitiesService, 'getPastActivitiesOfMember', function (member, callback) {
       callback(null, []);
     });
-    sinon.stub(groupsAPI, 'getAllAvailableGroups', function (callback) {
+    sinon.stub(groupsService, 'getAllAvailableGroups', function (callback) {
       callback(null, []);
     });
   });
@@ -88,82 +89,8 @@ describe('Members application', function () {
       .expect(/Profil bearbeiten/, done);
   });
 
-  it('validates a duplicate email address via ajax - email is same as previous', function (done) {
-    request(app)
-      .get('/checkemail?email=my.mail@yourmail.de&previousEmail=my.mail@yourmail.de')
-      .expect(200)
-      .expect('true', done);
-  });
-
-  it('validates a duplicate email address via ajax - email is valid and different to previous', function (done) {
-    sinon.stub(membersAPI, 'isValidEmail', function (mail, callback) {
-      callback(null, true);
-    });
-    request(app)
-      .get('/checkemail?email=other@x.de&previousEmail=my.mail@yourmail.de')
-      .expect(200)
-      .expect('true', done);
-  });
-
-  it('validates a duplicate email address via ajax - email is invalid and different to previous', function (done) {
-    sinon.stub(membersAPI, 'isValidEmail', function (mail, callback) {
-      callback(null, false);
-    });
-    request(app)
-      .get('/checkemail?email=other@x.de&previousEmail=my.mail@yourmail.de')
-      .expect(200)
-      .expect('false', done);
-  });
-
-  it('validates a duplicate email address via ajax - email query yields and error and email is different to previous', function (done) {
-    sinon.stub(membersAPI, 'isValidEmail', function (mail, callback) {
-      callback(new Error());
-    });
-    request(app)
-      .get('/checkemail?email=other@x.de&previousEmail=my.mail@yourmail.de')
-      .expect(200)
-      .expect('false', done);
-  });
-
-  it('validates a duplicate nickname via ajax - nickname is same as previous', function (done) {
-    request(app)
-      .get('/checknickname?nickname=nickerinack&previousNickname=nickerinack')
-      .expect(200)
-      .expect('true', done);
-  });
-
-  it('validates a duplicate nickname via ajax - nickname is valid and different to previous', function (done) {
-    sinon.stub(membersAPI, 'isValidNickname', function (nickname, callback) {
-      callback(null, true);
-    });
-    request(app)
-      .get('/checknickname?nickname=nickerinack&previousNickname=bibabu')
-      .expect(200)
-      .expect('true', done);
-  });
-
-  it('validates a duplicate nickname via ajax - nickname is invalid and different to previous', function (done) {
-    sinon.stub(membersAPI, 'isValidNickname', function (nickname, callback) {
-      callback(null, false);
-    });
-    request(app)
-      .get('/checknickname?nickname=nickerinack&previousNickname=bibabu')
-      .expect(200)
-      .expect('false', done);
-  });
-
-  it('validates a duplicate nickname via ajax - nickname query yields and error and email is different to previous', function (done) {
-    sinon.stub(membersAPI, 'isValidNickname', function (nickname, callback) {
-      callback(new Error());
-    });
-    request(app)
-      .get('/checknickname?nickname=nickerinack&previousNickname=bibabu')
-      .expect(200)
-      .expect('false', done);
-  });
-
   it('rejects a member with invalid and different nickname on submit', function (done) {
-    sinon.stub(membersAPI, 'isValidNickname', function (nickname, callback) {
+    sinon.stub(membersService, 'isValidNickname', function (nickname, callback) {
       callback(null, false);
     });
 
@@ -178,7 +105,7 @@ describe('Members application', function () {
   });
 
   it('rejects a member with invalid and different email address on submit', function (done) {
-    sinon.stub(membersAPI, 'isValidEmail', function (nickname, callback) {
+    sinon.stub(membersService, 'isValidEmail', function (nickname, callback) {
       callback(null, false);
     });
 
@@ -205,10 +132,10 @@ describe('Members application', function () {
 
   it('rejects a member with missing first name who validly changed their nickname and mailaddress on submit', function (done) {
     // attention: This combination is required to prove the invocations of the callbacks in case of no error!
-    sinon.stub(membersAPI, 'isValidNickname', function (nickname, callback) {
+    sinon.stub(membersService, 'isValidNickname', function (nickname, callback) {
       callback(null, true);
     });
-    sinon.stub(membersAPI, 'isValidEmail', function (nickname, callback) {
+    sinon.stub(membersService, 'isValidEmail', function (nickname, callback) {
       callback(null, true);
     });
 
@@ -221,10 +148,10 @@ describe('Members application', function () {
   });
 
   it('rejects a member with invalid nickname and email address on submit, giving two error messages', function (done) {
-    sinon.stub(membersAPI, 'isValidNickname', function (nickname, callback) {
+    sinon.stub(membersService, 'isValidNickname', function (nickname, callback) {
       callback(null, false);
     });
-    sinon.stub(membersAPI, 'isValidEmail', function (nickname, callback) {
+    sinon.stub(membersService, 'isValidEmail', function (nickname, callback) {
       callback(null, false);
     });
 
@@ -242,14 +169,14 @@ describe('Members application', function () {
   });
 
   it('saves an existing member and does not triggers notification sending', function (done) {
-    sinon.stub(membersAPI, 'isValidNickname', function (nickname, callback) { callback(null, true); });
-    sinon.stub(membersAPI, 'isValidEmail', function (nickname, callback) { callback(null, true); });
-    sinon.stub(groupsAndMembersAPI, 'updateSubscriptions', function (member, oldEmail, subscriptions, callback) { callback(); });
-    sinon.stub(membersAPI, 'saveMember', function (member, callback) { callback(null); });
+    sinon.stub(membersService, 'isValidNickname', function (nickname, callback) { callback(null, true); });
+    sinon.stub(membersService, 'isValidEmail', function (nickname, callback) { callback(null, true); });
+    sinon.stub(groupsAndMembersService, 'updateSubscriptions', function (member, oldEmail, subscriptions, callback) { callback(); });
+    sinon.stub(memberstore, 'saveMember', function (member, callback) { callback(null); });
     var notificationCall = sinon.spy(notifications, 'newMemberRegistered', function () { return undefined; });
 
     // the following stub indicates that the member already exists 
-    sinon.stub(groupsAndMembersAPI, 'getUserWithHisGroups', function (nickname, callback) { callback(null, dummymember); });
+    sinon.stub(groupsAndMembersService, 'getUserWithHisGroups', function (nickname, callback) { callback(null, dummymember); });
     request(createApp('memberID'))
       .post('/submit')
       .send('id=0815&firstname=A&lastname=B&location=x&profession=y&reference=z')
@@ -261,14 +188,14 @@ describe('Members application', function () {
   });
 
   it('saves a new member and does not triggers notification sending', function (done) {
-    sinon.stub(membersAPI, 'isValidNickname', function (nickname, callback) { callback(null, true); });
-    sinon.stub(membersAPI, 'isValidEmail', function (nickname, callback) { callback(null, true); });
-    sinon.stub(groupsAndMembersAPI, 'updateSubscriptions', function (member, oldEmail, subscriptions, callback) { callback(); });
-    sinon.stub(membersAPI, 'saveMember', function (member, callback) { callback(null); });
+    sinon.stub(membersService, 'isValidNickname', function (nickname, callback) { callback(null, true); });
+    sinon.stub(membersService, 'isValidEmail', function (nickname, callback) { callback(null, true); });
+    sinon.stub(groupsAndMembersService, 'updateSubscriptions', function (member, oldEmail, subscriptions, callback) { callback(); });
+    sinon.stub(memberstore, 'saveMember', function (member, callback) { callback(null); });
     var notificationCall = sinon.spy(notifications, 'newMemberRegistered', function () { return undefined; });
 
     // the following stub indicates that the member not yet exists 
-    sinon.stub(groupsAndMembersAPI, 'getUserWithHisGroups', function (nickname, callback) { callback(null); });
+    sinon.stub(groupsAndMembersService, 'getUserWithHisGroups', function (nickname, callback) { callback(null); });
     request(createApp('memberID'))
       .post('/submit')
       .send('id=0815&firstname=A&lastname=B&location=x&profession=y&reference=z')

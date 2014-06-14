@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 require('../../testutil/configureForTest');
 var expect = require('must');
@@ -69,7 +69,7 @@ describe('Mail', function () {
 
   it('sets member ID to null if it is not available', function () {
     var mail = new Mail({
-      id: "Mail 1"
+      id: 'Mail 1'
     });
     expect(mail.memberId()).to.equal(null);
   });

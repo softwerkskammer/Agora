@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var request = require('supertest');
 var sinon = require('sinon').sandbox.create();
@@ -13,17 +13,17 @@ var Activity = beans.get('activity');
 var Member = beans.get('member');
 var Group = beans.get('group');
 
-var activitiesAPI = beans.get('activitiesAPI');
-var groupsAPI = beans.get('groupsAPI');
-var groupsAndMembersAPI = beans.get('groupsAndMembersAPI');
-var addonAPI = beans.get('addonAPI');
+var activitiesService = beans.get('activitiesService');
+var groupsService = beans.get('groupsService');
+var groupsAndMembersService = beans.get('groupsAndMembersService');
+var addonService = beans.get('addonService');
 
 var member1 = new Member({id: 'memberId1', nickname: 'participant1', email: 'nick1@b.c'});
 var member2 = new Member({id: 'memberId2', nickname: 'participant2', email: 'nick2@b.c'});
 var member3 = new Member({id: 'memberId3', nickname: 'participant3', email: 'nick3@b.c'});
 var member4 = new Member({id: 'memberId4', nickname: 'participant4', email: 'nick4@b.c'});
 
-var group = new Group({id: "groupname", longName: "Buxtehude"});
+var group = new Group({id: 'groupname', longName: 'Buxtehude'});
 
 var emptyActivity = new Activity({title: 'Title of the Activity', description: 'description1', assignedGroup: 'groupname',
   location: 'location1', direction: 'direction1', startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'),
@@ -60,7 +60,7 @@ activityWithMultipleResources.group = new Group({id: 'group', longName: 'The nam
 describe('Activity application', function () {
   beforeEach(function () {
     sinon.stub(activitystore, 'upcomingActivities', function (callback) {callback(null, [emptyActivity]); });
-    sinon.stub(activitiesAPI, 'getActivitiesForDisplay', function (fetcher, callback) {
+    sinon.stub(activitiesService, 'getActivitiesForDisplay', function (fetcher, callback) {
       callback(null, [emptyActivity]);
     });
 
@@ -71,7 +71,7 @@ describe('Activity application', function () {
       return null;
     }
 
-    sinon.stub(activitiesAPI, 'getActivityWithGroupAndParticipants', function (url, callback) {
+    sinon.stub(activitiesService, 'getActivityWithGroupAndParticipants', function (url, callback) {
       callback(null, activityToReturnFor(url));
     });
     sinon.stub(activitystore, 'getActivity', function (url, callback) {
@@ -330,7 +330,7 @@ describe('Activity application', function () {
   });
 
   it('allows to create a new activity', function (done) {
-    sinon.stub(groupsAPI, 'getSubscribedGroupsForUser', function (email, callback) { callback(null, []); });
+    sinon.stub(groupsService, 'getSubscribedGroupsForUser', function (email, callback) { callback(null, []); });
 
     // in the test setup anybody can create an activity because the middleware is not plugged in
     request(createApp('dummy'))
@@ -340,7 +340,7 @@ describe('Activity application', function () {
   });
 
   it('allows the owner to edit an activity', function (done) {
-    sinon.stub(groupsAPI, 'getSubscribedGroupsForUser', function (email, callback) { callback(null, []); });
+    sinon.stub(groupsService, 'getSubscribedGroupsForUser', function (email, callback) { callback(null, []); });
 
     request(createApp('owner'))
       .get('/edit/urlOfTheActivity')
@@ -363,7 +363,7 @@ describe('Activity application', function () {
   });
 
   it('allows the owner to manage an activity\'s addons', function (done) {
-    sinon.stub(groupsAndMembersAPI, 'addMembersToGroup', function (group, callback) {
+    sinon.stub(groupsAndMembersService, 'addMembersToGroup', function (group, callback) {
       group.members = [];
       callback(null);
     });
@@ -389,7 +389,7 @@ describe('Activity application', function () {
   });
 
   it('allows the owner to mark payments', function (done) {
-    sinon.stub(addonAPI, 'submitPaymentReceived', function (url, nick, callback) { callback(null); });
+    sinon.stub(addonService, 'submitPaymentReceived', function (url, nick, callback) { callback(null); });
     request(createApp('owner'))
       .get('/paymentReceived/urlOfTheActivity/someUser')
       .expect(200)
@@ -414,8 +414,8 @@ describe('Activity application', function () {
     var groupA = new Group({id: 'groupA', longName: 'groupA'});
     var groupB = new Group({id: 'groupB', longName: 'groupB'});
     var groupC = new Group({id: 'groupC', longName: 'groupC'});
-    sinon.stub(groupsAPI, 'getAllAvailableGroups', function (callback) { callback(null, [groupA, groupB, groupC]); });
-    sinon.stub(groupsAPI, 'getSubscribedGroupsForUser', function (email, callback) { callback(null, [groupA, groupB]); });
+    sinon.stub(groupsService, 'getAllAvailableGroups', function (callback) { callback(null, [groupA, groupB, groupC]); });
+    sinon.stub(groupsService, 'getSubscribedGroupsForUser', function (email, callback) { callback(null, [groupA, groupB]); });
 
     request(createApp('owner'))
       .get('/new')
@@ -432,8 +432,8 @@ describe('Activity application', function () {
     var groupA = new Group({id: 'groupA', longName: 'groupA'});
     var groupB = new Group({id: 'groupB', longName: 'groupB'});
     var groupC = new Group({id: 'groupC', longName: 'groupC'});
-    sinon.stub(groupsAPI, 'getAllAvailableGroups', function (callback) { callback(null, [groupA, groupB, groupC]); });
-    sinon.stub(groupsAPI, 'getSubscribedGroupsForUser', function (email, callback) { callback(null, [groupA, groupB]); });
+    sinon.stub(groupsService, 'getAllAvailableGroups', function (callback) { callback(null, [groupA, groupB, groupC]); });
+    sinon.stub(groupsService, 'getSubscribedGroupsForUser', function (email, callback) { callback(null, [groupA, groupB]); });
 
     request(createApp('superuserID'))
       .get('/new')
@@ -469,6 +469,23 @@ describe('Activity application', function () {
       .get('/gdcr')
       .expect(200)
       .expect(/1 Coderetreats/, done);
+  });
+
+  describe('url check', function () {
+
+    it('returns false for checkurl when the url already exists', function (done) {
+      request(createApp())
+        .get('/checkurl?url=urlOfTheActivity&previousUrl=x')
+        .expect(200)
+        .expect(/false/, done);
+    });
+
+    it('returns true for checkurl when the url does not exist', function (done) {
+      request(createApp())
+        .get('/checkurl?url=UnknownURL&previousUrl=x')
+        .expect(200)
+        .expect(/true/, done);
+    });
   });
 
 });

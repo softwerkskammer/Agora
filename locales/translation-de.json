@@ -36,7 +36,8 @@
     "gdcr_text": "Hier findest Du fast alle deutschsprachigen Veranstaltungen. Eine vollständige Übersicht findest Du auf",
     "feedback": "Feedback",
     "what_does_not_work": "Was funktioniert nicht, wie es soll?",
-    "settings": "Einstellungen"
+    "settings": "Einstellungen",
+    "separator": ","
   },
   "error": {
     "congratulations": "Herzlichen Glückwunsch!",
@@ -147,6 +148,7 @@
     "title": "Zahlung",
     "how_to_pay": "Wähle, wie Du bezahlen möchtest.",
     "how_to_pay_detail": "Die Veranstaltung erfordert eine Anzahlung bei Anmeldung. Bitte entscheide Dich, wie Du die Zahlung leisten möchtest. Du kannst das Geld entweder auf ein deutsches Konto überweisen oder gegen Gebühr mit Kreditkarte bezahlen.",
+    "description": "Beschreibung",
     "money_transfer": "Überweisung",
     "iban": "IBAN",
     "bic": "BIC",
@@ -330,6 +332,7 @@
         "saved": "Deine Aktivität wurde gespeichert.",
         "credit_card_paid": "Deine Kreditkartenzahlung in Höhe von __amount__ ist erfolgt.",
         "credit_card_not_paid": "Deine Kreditkartenzahlung ist nicht erfolgt. Grund: \"__reason__\"",
+        "transfer_paid": "Deine Überweisungsbestätigung wurde gespeichert.",
         "participation_added": "Deine Teilnahme wurde eingetragen.",
         "participation_for_resource_added": "Deine Teilnahme wurde für \"__resourceName__\" eingetragen.",
         "participation_removed": "Schade, dass Du nicht dabei sein wirst.",

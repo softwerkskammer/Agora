@@ -1,20 +1,20 @@
 extends ../../../views/layoutOnlyMain
 
 block scripts
-  script(src="/clientscripts/jquery.dataTables.min.js")
+  script(src='/clientscripts/jquery.dataTables.min.js')
   script.
     $(document).ready(function() {
-      $("#announcementtable").dataTable({
-        "oLanguage": {
-          "sUrl": "#{(language === 'de') ? "/clientscripts/dataTables.german.txt" : ""}"
+      $('#announcementtable').dataTable({
+        'oLanguage': {
+          'sUrl': tableLangUrl
         },
-        "aoColumns": [
-          { "bSortable" : false }, null, null, { "sType": "date-eu" }, { "sType": "date-eu" }, null, null
+        aoColumns: [
+          { bSortable : false }, null, null, { sType: 'date-eu' }, { sType: 'date-eu' }, null, null
         ],
-        "bPaginate": false,
-        "bAutoWidth": false,
-        "aaSorting": [[ 1, "asc" ]],
-        "bStateSave": true
+        bPaginate: false,
+        bAutoWidth: false,
+        aaSorting: [[ 1, 'asc' ]],
+        bStateSave: true
       });
       $('.tooltiplabel').each(function(each) {$(this).popover()});
     });
@@ -44,10 +44,10 @@ block content
           tbody
             for announcement in announcements
               tr
-                td(class="span1"): a.btn-sm(href="/announcements/edit/#{encodeURIComponent(announcement.url)}"): i.fa.fa-edit.fa-fw
+                td(class='span1'): a.btn-sm(href='/announcements/edit/#{encodeURIComponent(announcement.url)}'): i.fa.fa-edit.fa-fw
                 td.ellipsis #{announcement.title}
                 td #{announcement.url}
                 td #{announcement.fromMoment().lang(language).format('L')}
                 td #{announcement.thruMoment().lang(language).format('L')}
-                td.ellipsis: .tooltiplabel(data-toggle="hover", data-placement="auto top", data-html="true", data-content="#{announcement.messageHTML()}") #{announcement.message}
+                td.ellipsis: .tooltiplabel(data-toggle='hover', data-placement='auto top', data-html='true', data-content='#{announcement.messageHTML()}') #{announcement.message}
                 td #{announcement.author}

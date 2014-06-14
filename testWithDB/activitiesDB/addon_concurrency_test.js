@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var nconf = require('../../testutil/configureForTestWithDB');
 var expect = require('must');
@@ -7,9 +7,9 @@ var sinon = require('sinon').sandbox.create();
 var beans = nconf.get('beans');
 var persistence = beans.get('activitiesPersistence');
 var activitystore = beans.get('activitystore');
-var addonAPI = beans.get('addonAPI');
-var stripeAPI = beans.get('stripeAPI');
-var membersAPI = beans.get('membersAPI');
+var addonService = beans.get('addonService');
+var stripeService = beans.get('stripeService');
+var memberstore = beans.get('memberstore');
 
 var Activity = beans.get('activity');
 var Member = beans.get('member');
@@ -22,7 +22,7 @@ var getActivity = function (url, callback) {
   });
 };
 
-describe('Addon API', function () {
+describe('Addon Service with DB', function () {
 
   var activityBeforeConcurrentAccess;
   var activityAfterConcurrentAccess;
@@ -30,11 +30,11 @@ describe('Addon API', function () {
   var chargedCreditCard;
 
   beforeEach(function (done) { // if this fails, you need to start your mongo DB
-    activityBeforeConcurrentAccess = new Activity({id: "activityId",
+    activityBeforeConcurrentAccess = new Activity({id: 'activityId',
       url: activityUrl, _addons: {}, version: 1});
 
-    activityAfterConcurrentAccess = new Activity({id: "activityId",
-      url: activityUrl, _addons: { memberIdRace: {homeAddress: "At Home"}}, version: 2});
+    activityAfterConcurrentAccess = new Activity({id: 'activityId',
+      url: activityUrl, _addons: { memberIdRace: {homeAddress: 'At Home'}}, version: 2});
 
     invocation = 1;
 
@@ -49,14 +49,14 @@ describe('Addon API', function () {
     });
 
     chargedCreditCard = 0;
-    sinon.stub(stripeAPI, 'transaction', function () {
+    sinon.stub(stripeService, 'transaction', function () {
       return { charges: { create: function (charge, callback) {
         chargedCreditCard = chargedCreditCard + 1;
         callback(null, {});
       } } };
     });
-    sinon.stub(membersAPI, 'getMemberForId', function (id, callback) { callback(null, new Member({firstname: 'Hans', lastname: 'Dampf', nickname: 'hada'})); });
-    sinon.stub(membersAPI, 'getMember', function (nick, callback) { callback(null, new Member({id: 'memberIdNew', firstname: 'Hans', lastname: 'Dampf', nickname: 'hada'})); });
+    sinon.stub(memberstore, 'getMemberForId', function (id, callback) { callback(null, new Member({firstname: 'Hans', lastname: 'Dampf', nickname: 'hada'})); });
+    sinon.stub(memberstore, 'getMember', function (nick, callback) { callback(null, new Member({id: 'memberIdNew', firstname: 'Hans', lastname: 'Dampf', nickname: 'hada'})); });
 
     persistence.drop(function () {
       // empty the store and then save our activity with one registrant
@@ -73,7 +73,7 @@ describe('Addon API', function () {
   it('saveAddon keeps the member addon info that is in the database although it only reads an activity without member addon info', function (done) {
     // here, we save an activity with a member that is different from the member in the database.
     // To mimick a racing condition, we return an activity without members for the first "getActivity".
-    addonAPI.saveAddon(activityUrl, 'memberIdNew', {roommate: 'A nice guy'}, function (err) {
+    addonService.saveAddon(activityUrl, 'memberIdNew', {roommate: 'A nice guy'}, function (err) {
       if (err) { return done(err); }
       getActivity(activityUrl, function (err, activity) {
         if (err) { return done(err); }
@@ -87,7 +87,7 @@ describe('Addon API', function () {
   it('payWithCreditCard keeps the member addon info that is in the database although it only reads an activity without member addon info', function (done) {
     // here, we save an activity after removing a member that is different from the member in the database.
     // To mimick a racing condition, we return an activity without members for the first "getActivity".
-    addonAPI.payWithCreditCard(activityUrl, 'memberIdNew', 'stripe-id', function (err) {
+    addonService.payWithCreditCard(activityUrl, 20, 'memberIdNew', 'stripe-id', '', function (err) {
       if (err) { return done(err); }
       getActivity(activityUrl, function (err, activity) {
         if (err) { return done(err); }
@@ -102,7 +102,7 @@ describe('Addon API', function () {
   it('payWithTransfer keeps the member addon info that is in the database although it only reads an activity without member addon info', function (done) {
     // here, we save an activity with a member that is different from the member in the database.
     // To mimick a racing condition, we return an activity without members for the first "getActivity".
-    addonAPI.payWithTransfer(activityUrl, 'memberIdNew', function (err) {
+    addonService.payWithTransfer(activityUrl, 'memberIdNew', function (err) {
       if (err) { return done(err); }
       getActivity(activityUrl, function (err, activity) {
         if (err) { return done(err); }
@@ -116,7 +116,7 @@ describe('Addon API', function () {
   it('submitPaymentReceived keeps the member addon info that is in the database although it only reads an activity without member addon info', function (done) {
     // here, we save an activity with a member that is different from the member in the database.
     // To mimick a racing condition, we return an activity without members for the first "getActivity".
-    addonAPI.submitPaymentReceived(activityUrl, 'newNick', function (err) {
+    addonService.submitPaymentReceived(activityUrl, 'newNick', function (err) {
       if (err) { return done(err); }
       getActivity(activityUrl, function (err, activity) {
         if (err) { return done(err); }

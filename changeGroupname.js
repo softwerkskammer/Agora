@@ -15,9 +15,9 @@ if (!really || really !== 'really') {
   process.exit();
 }
 
-var oldId = "socrates2014";
-var newId = "socrates-orga";
-var newPrefix = "SoCraTes Orga";
+var oldId = 'socrates2014';
+var newId = 'socrates-orga';
+var newPrefix = 'SoCraTes Orga';
 
 function closeDBsAndExit() {
   groupsPersistence.closeDB();

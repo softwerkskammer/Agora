@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var expect = require('must');
 var sinon = require('sinon');
@@ -6,7 +6,7 @@ var sinonSandbox = sinon.sandbox.create();
 var moment = require('moment-timezone');
 
 var beans = require('../../testutil/configureForTest').get('beans');
-var membersAPI = beans.get('membersAPI');
+var memberstore = beans.get('memberstore');
 var Member = beans.get('member');
 var dummymember = new Member({sessionUser: {authenticationId: 'hada'}});
 
@@ -21,7 +21,7 @@ var fileWithoutMessageId = 'test/mailarchive/testfiles/mailWithoutMessageID';
 
 describe('Import of mails from files with mime messages', function () {
   beforeEach(function () {
-    sinonSandbox.stub(membersAPI, 'getMemberForEMail', function (emails, callback) {
+    sinonSandbox.stub(memberstore, 'getMemberForEMail', function (emails, callback) {
       callback(null, dummymember);
     });
   });
@@ -66,7 +66,7 @@ describe('Import of mails from files with mime messages', function () {
     });
   });
 
-  it('includes member id from member API ', function (done) {
+  it('includes member id from member Service ', function (done) {
     mailimport(fileWithTextOnlyWithoutSenderName, 'group', function (err, result) {
       expect(result.from.id).to.equal(dummymember.id());
       done(err);
@@ -119,14 +119,14 @@ describe('Import of mails from files with mime messages', function () {
 
   it('imports references', function (done) {
     mailimport(fileWithReferences, 'group', function (err, result) {
-      expect(result.references).to.eql(["message0@nomail.com", "message1@nomail.com"]);
+      expect(result.references).to.eql(['message0@nomail.com', 'message1@nomail.com']);
       done(err);
     });
   });
 
   it('imports reply-to as reference if no references are available', function (done) {
     mailimport(fileWithInReplyTo, 'group', function (err, result) {
-      expect(result.references).to.eql(["message0@nomail.com"]);
+      expect(result.references).to.eql(['message0@nomail.com']);
       done(err);
     });
   });

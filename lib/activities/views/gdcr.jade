@@ -5,9 +5,9 @@ mixin activitylist(activities)
     for activity in activities
       li
         a(href='/groups/#{activity.assignedGroup()}')
-          span.label(style="background-color: #{activity.colorRGB}") #{activity.groupName()}
+          span.label(style='background-color: #{activity.colorRGB}') #{activity.groupName()}
         | &nbsp;
-        span.popover-highlight(rel="tooltip-in-body", data-content="#{activity.descriptionHTML().substring(0,500)}")
+        span.popover-highlight(rel='tooltip-in-body', data-content='#{activity.descriptionHTML().substring(0,500)}')
           a(href='#{encodeURIComponent(activity.url())}') #{activity.title()}
 
 mixin placeGroupLabels(activities)
@@ -16,28 +16,28 @@ mixin placeGroupLabels(activities)
     -var group = activity.group
     - counter[group.longName] = (counter[group.longName] === undefined) ? 0 : counter[group.longName] + 1;
     if (group.shortName)
-      .label.group(style="background-color: #{activity.colorRGB}; top: #{(group.mapYrelative() || 0) + (counter[group.longName] * 4)}%; left: #{group.mapXrelative() || 2}%;")
-        span(rel="tooltip-in-body", data-title="<h4>#{activity.title()}</h4>", data-content="#{activity.descriptionHTML().substring(0,500)}")
-          a.group(href="#{encodeURIComponent(activity.url())}") #{group.shortName}
+      .label.group(style='background-color: #{activity.colorRGB}; top: #{(group.mapYrelative() || 0) + (counter[group.longName] * 4)}%; left: #{group.mapXrelative() || 2}%;')
+        span(rel='tooltip-in-body', data-title='<h4>#{activity.title()}</h4>', data-content='#{activity.descriptionHTML().substring(0,500)}')
+          a.group(href='#{encodeURIComponent(activity.url())}') #{group.shortName}
 
 
 block title
-  | #{t("general.gdcr")}
+  | #{t('general.gdcr')}
 
 block content
   .row
     .col-md-12
       .page-header
-        h2 #{t("general.gdcr_activities")}
-      p  #{t("general.gdcr_text")}&nbsp;
+        h2 #{t('general.gdcr_activities')}
+      p  #{t('general.gdcr_text')}&nbsp;
         span.urlify http://gdcr.coderetreat.org/
       h2 #{activities.length) Coderetreats
   .row
     .col-md-6
       +activitylist(activities)
-    .col-md-6.visible-xs.visible-sm.groupsmap(style="position: relative; width: 100%; height: 100px; background-image:url('/img/map.svg'); background-size: 100% 100%; background-repeat: no-repeat;")
+    .col-md-6.visible-xs.visible-sm.groupsmap(style='position: relative; width: 100%; height: 100px; background-image:url("/img/map.svg"); background-size: 100% 100%; background-repeat: no-repeat;')
       +placeGroupLabels(activities)
-    .col-md-6.hidden-xs.hidden-sm.groupsmap(style="position: relative; width: 50%; height: 100px; background-image:url('/img/map.svg'); background-size: 100% 100%; background-repeat: no-repeat;")
+    .col-md-6.hidden-xs.hidden-sm.groupsmap(style='position: relative; width: 50%; height: 100px; background-image:url("/img/map.svg"); background-size: 100% 100%; background-repeat: no-repeat;')
       +placeGroupLabels(activities)
 
   script.
@@ -45,4 +45,4 @@ block content
       $('.groupsmap').each(function() {$(this).height(1.289 * $(this).width()); })
     }
     $(document).ready(adjustMapsize);
-    $.event.add(window, "resize", adjustMapsize);
+    $.event.add(window, 'resize', adjustMapsize);

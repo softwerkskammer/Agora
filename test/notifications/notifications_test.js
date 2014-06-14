@@ -1,12 +1,12 @@
-"use strict";
+'use strict';
 
 var sinon = require('sinon').sandbox.create();
 var expect = require('must');
 
 var beans = require('../../testutil/configureForTest').get('beans');
 
-var groupsAndMembersAPI = beans.get('groupsAndMembersAPI');
-var membersAPI = beans.get('membersAPI');
+var groupsAndMembersService = beans.get('groupsAndMembersService');
+var memberstore = beans.get('memberstore');
 
 var Activity = beans.get('activity');
 var Member = beans.get('member');
@@ -25,8 +25,8 @@ describe('Notifications', function () {
   beforeEach(function () {
     group = new Group({id: 'groupname', longName: 'Buxtehude'});
     activity = new Activity({title: 'Title of the Activity', assignedGroup: 'groupname', url: 'urlurl'});
-    sinon.stub(groupsAndMembersAPI, 'getGroupAndMembersForList', function (groupID, callback) { callback(null, group); });
-    sinon.stub(membersAPI, 'getMemberForId', function (memberID, callback) {
+    sinon.stub(groupsAndMembersService, 'getGroupAndMembersForList', function (groupID, callback) { callback(null, group); });
+    sinon.stub(memberstore, 'getMemberForId', function (memberID, callback) {
       if (memberID === 'hans') { return callback(null, hans); }
       if (memberID === 'alice') { return callback(null, alice); }
       if (memberID === 'bob') { return callback(null, bob); }

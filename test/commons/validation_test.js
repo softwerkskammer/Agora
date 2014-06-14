@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 var expect = require('must');
 
 require('../../testutil/configureForTest');
@@ -175,25 +175,25 @@ describe('Validation', function () {
     });
 
     it('does not validate start and end of activity input when end date is before start date', function () {
-      var result = validation.isValidForActivity({ startDate: "01.01.2013", startTime: "12:00", endDate: "01.10.2012", endTime: "12:00" });
+      var result = validation.isValidForActivity({ startDate: '01.01.2013', startTime: '12:00', endDate: '01.10.2012', endTime: '12:00' });
 
       expect(result).to.contain('Start muss vor Ende liegen.');
     });
 
     it('does not validate start and end of activity input when end time is before start time', function () {
-      var result = validation.isValidForActivity({ startDate: "01.01.2013", startTime: "12:00", endDate: "01.01.2013", endTime: "11:00" });
+      var result = validation.isValidForActivity({ startDate: '01.01.2013', startTime: '12:00', endDate: '01.01.2013', endTime: '11:00' });
 
       expect(result).to.contain('Start muss vor Ende liegen.');
     });
 
     it('does not validate start and end of activity input when end time is same as start time', function () {
-      var result = validation.isValidForActivity({ startDate: "01.01.2013", startTime: "12:00", endDate: "01.01.2013", endTime: "12:00" });
+      var result = validation.isValidForActivity({ startDate: '01.01.2013', startTime: '12:00', endDate: '01.01.2013', endTime: '12:00' });
 
       expect(result).to.contain('Start muss vor Ende liegen.');
     });
 
     it('validates start and end of activity input when end is after start', function () {
-      var result = validation.isValidForActivity({ startDate: "01.01.2013", startTime: "12:00", endDate: "01.01.2013", endTime: "13:00" });
+      var result = validation.isValidForActivity({ startDate: '01.01.2013', startTime: '12:00', endDate: '01.01.2013', endTime: '13:00' });
 
       expect(result).to.not.contain('Start muss vor Ende liegen.');
     });

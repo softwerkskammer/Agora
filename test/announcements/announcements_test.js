@@ -1,8 +1,8 @@
-"use strict";
+'use strict';
 var conf = require('../../testutil/configureForTest');
 
 var request = require('supertest');
-var sinonSandbox = require('sinon').sandbox.create();
+var sinon = require('sinon').sandbox.create();
 var expect = require('must');
 var moment = require('moment-timezone');
 
@@ -19,8 +19,8 @@ var dummyAnnouncement = new Announcement({
   thruUnix: 1388448000 // 31.12.2013
 });
 
-var announcementsAPI = beans.get('announcementsAPI');
-var membersAPI = beans.get('membersAPI');
+var announcementstore = beans.get('announcementstore');
+var memberstore = beans.get('memberstore');
 
 var createApp = require('../../testutil/testHelper')('announcementsApp').createApp;
 
@@ -29,19 +29,19 @@ describe('Announcement application', function () {
   var getAnnouncement;
 
   beforeEach(function () {
-    sinonSandbox.stub(announcementsAPI, 'allAnnouncements', function (callback) {
+    sinon.stub(announcementstore, 'allAnnouncements', function (callback) {
       return callback(null, [dummyAnnouncement]);
     });
-    allAnnouncementsUntilToday = sinonSandbox.stub(announcementsAPI, 'allAnnouncementsUntilToday', function (callback) {
+    allAnnouncementsUntilToday = sinon.stub(announcementstore, 'allAnnouncementsUntilToday', function (callback) {
       return callback(null, [dummyAnnouncement]);
     });
-    getAnnouncement = sinonSandbox.stub(announcementsAPI, 'getAnnouncement', function (url, callback) {
+    getAnnouncement = sinon.stub(announcementstore, 'getAnnouncement', function (url, callback) {
       callback(null, (url === 'url') ? dummyAnnouncement : null);
     });
   });
 
   afterEach(function () {
-    sinonSandbox.restore();
+    sinon.restore();
   });
 
   it('shows the list of announcements as retrieved from the store', function (done) {
@@ -58,7 +58,7 @@ describe('Announcement application', function () {
 
   it('shows the details of one announcement as retrieved from the store', function (done) {
     var dummyMember = new Member({nickname: "nickname", id: "member ID"});
-    sinonSandbox.stub(membersAPI, 'getMemberForId', function (id, callback) {
+    sinon.stub(memberstore, 'getMemberForId', function (id, callback) {
       callback(null, dummyMember);
     });
     var url = 'url';
@@ -118,6 +118,23 @@ describe('Announcement application', function () {
     var dummyAnnouncement = new Announcement();
     var now = moment.utc().unix();
     expect(dummyAnnouncement.fromUnix).to.equal(now);
+  });
+
+  describe('url check', function () {
+
+    it('returns false for checkurl when the url already exists', function (done) {
+      request(createApp())
+        .get('/checkurl?url=url&previousUrl=x')
+        .expect(200)
+        .expect(/false/, done);
+    });
+
+    it('returns true for checkurl when the url does not exist', function (done) {
+      request(createApp())
+        .get('/checkurl?url=UnknownURL&previousUrl=x')
+        .expect(200)
+        .expect(/true/, done);
+    });
   });
 
 });

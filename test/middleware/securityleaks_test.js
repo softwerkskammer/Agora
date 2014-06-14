@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var request = require('supertest');
 var sinon = require('sinon').sandbox.create();
@@ -9,9 +9,9 @@ var csurf = require('csurf');
 var beans = require('../../testutil/configureForTest').get('beans');
 
 var setupApp = require('../../testutil/testHelper');
-var membersAPI = beans.get('membersAPI');
-var groupsAPI = beans.get('groupsAPI');
-var groupsAndMembersAPI = beans.get('groupsAndMembersAPI');
+var memberstore = beans.get('memberstore');
+var groupsService = beans.get('groupsService');
+var groupsAndMembersService = beans.get('groupsAndMembersService');
 var Member = beans.get('member');
 var addCsrfTokenToLocals = beans.get('addCsrfTokenToLocals');
 var serverpathRemover = beans.get('serverpathRemover');
@@ -22,7 +22,7 @@ describe('Security regarding', function () {
   describe('Clickjacking:', function () {
 
     beforeEach(function () {
-      sinon.stub(membersAPI, 'allMembers', function (callback) { callback(null, []); });
+      sinon.stub(memberstore, 'allMembers', function (callback) { callback(null, []); });
     });
 
     afterEach(function () {
@@ -44,8 +44,8 @@ describe('Security regarding', function () {
     beforeEach(function () {
       var dummymember = new Member({id: 'memberId', nickname: 'hada', email: 'a@b.c', site: 'http://my.blog',
         firstname: 'Hans', lastname: 'Dampf', authentications: [], subscribedGroups: []});
-      sinon.stub(groupsAPI, 'getAllAvailableGroups', function (callback) { callback(null, []); });
-      sinon.stub(groupsAndMembersAPI, 'getUserWithHisGroups', function (nickname, callback) { callback(null, dummymember); });
+      sinon.stub(groupsService, 'getAllAvailableGroups', function (callback) { callback(null, []); });
+      sinon.stub(groupsAndMembersService, 'getUserWithHisGroups', function (nickname, callback) { callback(null, dummymember); });
     });
 
     afterEach(function () {
@@ -74,7 +74,7 @@ describe('Security regarding', function () {
     });
 
     it('csrf middleware adds the csrf token to res.locals', function () {
-      var csrf_token = "csrf token";
+      var csrf_token = 'csrf token';
       var req = { csrfToken: function () { return csrf_token; } };
       var res = {locals: {}};
       var next = function () { return undefined; };
@@ -88,7 +88,7 @@ describe('Security regarding', function () {
 
   describe('Information disclosure', function () {
     beforeEach(function () {
-      sinon.stub(membersAPI, 'getMember', function (nickname, callback) { callback(null, null); });
+      sinon.stub(memberstore, 'getMember', function (nickname, callback) { callback(null, null); });
     });
 
     afterEach(function () {

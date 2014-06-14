@@ -3,13 +3,13 @@ extends ../../../views/layout
 include groups-forms
 
 block scripts
-  script(src="/clientscripts/check-groupform.js")
+  script(src='/clientscripts/check-groupform.js')
 
 block title
   if (group.id)
-    | #{t("groups.edit", {groupId: group.id})}
+    | #{t('groups.edit', {groupId: group.id})}
   else
-    |  #{t("groups.create")}
+    |  #{t('groups.create')}
 
 block content
   +groupform(group, allTypes, organizersChecked)

@@ -3,13 +3,13 @@ extends ../../../views/layout
 include ./mailheader-mixin
 
 block title
-  | #{group} #{t("mailarchive.emails")}
+  | #{group} #{t('mailarchive.emails')}
 
 block content
   .row
     .col-md-12
       .page-header
-        +pageHeader(group, t("mailarchive.threaded"))
+        +pageHeader(group, t('mailarchive.threaded'))
       #mails.panel-group.scrollable-box
         - var mailNumber = 0;
         for mailHeader in mailHeaders
@@ -17,9 +17,9 @@ block content
             .panel.panel-default
               .panel-heading
                 h4.panel-title
-                  a.accordion-toggle(data-toggle="collapse", data-parent="#mails", href="#collapse" + mailNumber) #{mailHeader.subject}
+                  a.accordion-toggle(data-toggle='collapse', data-parent='#mails', href='#collapse' + mailNumber) #{mailHeader.subject}
                   small
                     +mailattributes(mailHeader)
-              .panel-collapse.collapse(id="collapse" + mailNumber)
+              .panel-collapse.collapse(id='collapse' + mailNumber)
                 .panel-body
                   +mailIndex([mailHeader])
