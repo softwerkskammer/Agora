@@ -13,8 +13,8 @@ var pathToExistingImage = '/sample/tmp/file.jpg';
 
 function createTempFileWithContent(tmpFilePath, fileContent) {
   /*jslint node: true, stupid: true */
-  fs.writeFile(tmpFilePath, fileContent, {}, function (err) {
-    fs.readFileSync(tmpFilePath).toString().must.be.equal(fileContent);
+  service.fs().writeFile(tmpFilePath, fileContent, {}, function (err) {
+    service.fs().readFileSync(tmpFilePath).toString().must.be.equal(fileContent);
   });
 }
 
@@ -22,9 +22,11 @@ describe("the gallery repository", function () {
   beforeEach(function resetMockedFs() {
     var files = {};
     files[pathToExistingImage] = "Content_of_sample_image";
-    mock(files);
+    var mockedFs = mock.fs(files);
+    service.fs = function fs() {
+      return mockedFs;
+    };
   });
-  afterEach(mock.restore);
 
   beforeEach(function setImageDirectory() {
     conf.set('imageDirectory', directoryForUploads);
@@ -81,7 +83,7 @@ describe("the gallery repository", function () {
       // When
       service.retrieveImage(tempImageUuid, function (err, imageFile) {
         expect(err).to.be.falsy();
-        fs.exists(imageFile, function (exists) {
+        service.fs().exists(imageFile, function (exists) {
           // Expect
           exists.must.be.true();
           done();
