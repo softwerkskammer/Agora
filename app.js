@@ -26,6 +26,7 @@ function useApp(parent, url, child) {
   }
   parent.get('/' + url, ensureRequestedUrlEndsWithSlash);
   parent.use('/' + url + '/', child);
+  child.path = url;
   return child;
 }
 
