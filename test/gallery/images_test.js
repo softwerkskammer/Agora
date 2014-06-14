@@ -33,11 +33,12 @@ describe('/gallery', function () {
     });
 
     it('responds with the image Location', function (done) {
-      request(createApp())
+      var app = createApp();
+      request(app)
         .post('/')
         .attach('imageFile', imagePath)
         .expect(CREATED)
-        .expect('Location', '/gallery/' + generatedImageId, done);
+        .expect('Location', app.path() + '/' + generatedImageId, done);
     });
 
     it('stores the image to the imagerepository', function (done) {
