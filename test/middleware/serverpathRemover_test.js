@@ -34,7 +34,7 @@ describe('serverpathRemover removes any paths', function () {
 
   it('copes with long strings', function () {
     var original = 'Error: Empfänger wurde nicht gefunden.\n' +
-      'at /Users/user/Developer/GitRepositories/Agora/lib/mailsender/mailsenderAPI.js:76:37\n' +
+      'at /Users/user/Developer/GitRepositories/Agora/lib/mailsender/mailsenderService.js:76:37\n' +
       'at toMember (/Users/user/Developer/GitRepositories/Agora/lib/members/memberstore.js:12:3)\n' +
       'at bound (/Users/user/Developer/GitRepositories/Agora/node_modules/lodash/dist/lodash.js:957:21)\n' +
       'at /Users/user/Developer/GitRepositories/Agora/lib/persistence/persistence.js:51:11\n' +
@@ -46,7 +46,7 @@ describe('serverpathRemover removes any paths', function () {
       'at MongoReply.parseBody (/Users/user/Developer/GitRepositories/Agora/node_modules/mongodb/lib/mongodb/responses/mongo_reply.js:68:5)';
 
     var shortened = 'Error: Empfänger wurde nicht gefunden.\n' +
-      'at lib/mailsender/mailsenderAPI.js:76:37\n' +
+      'at lib/mailsender/mailsenderService.js:76:37\n' +
       'at toMember (lib/members/memberstore.js:12:3)\n' +
       'at bound (node_modules/lodash/dist/lodash.js:957:21)\n' +
       'at lib/persistence/persistence.js:51:11\n' +

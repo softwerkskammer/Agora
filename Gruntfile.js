@@ -13,6 +13,52 @@ module.exports = function (grunt) {
   jsLintServerTestDirectives.ass = true;
   jsLintServerTestDirectives.predef = ['afterEach', 'after', 'beforeEach', 'before', 'describe', 'it'];
 
+  // filesets for uglify
+  var files_de = {
+    'public/clientscripts/global_de.js': [
+      'locales/frontend_de.js',
+      'node_modules/jquery/dist/jquery.js',
+      'public/clientscripts/global/autoNumeric.js',
+      'public/clientscripts/global/bootstrap.js',
+      'public/clientscripts/global/bootstrap-datepicker.js',
+      'public/clientscripts/global/bootstrap-markdown.js',
+      'node_modules/moment-timezone/node_modules/moment/moment.js',
+      'public/clientscripts/global/fullcalendar-patched.js',
+      'public/clientscripts/global/de.js', // for fullcalendar
+      'public/clientscripts/global/tinycolor.js', // for pick-a-color
+      'public/clientscripts/global/pick-a-color.js',
+      'public/clientscripts/global/bootstrap-datepicker.de.js',
+      'node_modules/jquery-validation/jquery.validate.js',
+      'node_modules/jquery-validation/additional-methods.js',
+      'node_modules/jquery-validation/localization/messages_de.js',
+      'node_modules/jquery-validation/localization/methods_de.js',
+      'node_modules/bootstrap-timepicker/js/bootstrap-timepicker.js',
+      'node_modules/URIjs/src/URI.js',
+      'public/clientscripts/global/agora.js'
+    ]
+  };
+
+  var files_en = {
+    'public/clientscripts/global_en.js': [
+      'locales/frontend_en.js',
+      'node_modules/jquery/dist/jquery.js',
+      'public/clientscripts/global/autoNumeric.js',
+      'public/clientscripts/global/bootstrap.js',
+      'public/clientscripts/global/bootstrap-datepicker.js',
+      'public/clientscripts/global/bootstrap-markdown.js',
+      'node_modules/moment-timezone/node_modules/moment.js',
+      'public/clientscripts/global/fullcalendar-patched.js',
+      'public/clientscripts/global/en-gb.js', // for fullcalendar
+      'public/clientscripts/global/tinycolor.min.js', // for pick-a-color
+      'public/clientscripts/global/pick-a-color.js',
+      'node_modules/jquery-validation/jquery.validate.js',
+      'node_modules/jquery-validation/additional-methods.js',
+      'node_modules/bootstrap-timepicker/js/bootstrap-timepicker.js',
+      'node_modules/URIjs/src/URI.js',
+      'public/clientscripts/global/agora.js'
+    ]
+  };
+
   // Project configuration.
   grunt.initConfig({
     // Task configuration.
@@ -60,7 +106,7 @@ module.exports = function (grunt) {
           browser: true,
           vars: true,
           nomen: true,
-          predef: ['test', 'equal', 'deepEqual', 'start', 'stop', '$', 'describe', 'expect', 'beforeEach', 'afterEach', 'jasmine', 'it']
+          predef: ['$', 'describe', 'expect', 'beforeEach', 'afterEach', 'jasmine', 'it']
         },
         options: jsLintStandardOptions
       }
@@ -100,54 +146,26 @@ module.exports = function (grunt) {
         }
       }
     },
-    concat: {
-      options: {
-        separator: ';'
+    uglify: {
+      development_de: {
+        options: {
+          mangle: false,
+          beautify: true
+        },
+        files: files_de
       },
-      de: {
-        src: [
-          'locales/frontend_de.js',
-          'node_modules/jquery/dist/jquery.js',
-          'public/clientscripts/global/bootstrap.js',
-          'public/clientscripts/global/bootstrap-datepicker.js',
-          'public/clientscripts/global/bootstrap-markdown.js',
-          'node_modules/moment-timezone/node_modules/moment/min/moment.min.js',
-          'public/clientscripts/global/fullcalendar-patched.js',
-          'public/clientscripts/global/de.js', // for fullcalendar
-          'public/clientscripts/global/tinycolor-0.9.15.min.js', // for pick-a-color
-          'public/clientscripts/global/pick-a-color.js',
-          'public/clientscripts/global/bootstrap-datepicker.de.js',
-          'node_modules/jquery-validation/jquery.validate.js',
-          'node_modules/jquery-validation/additional-methods.js',
-          'node_modules/jquery-validation/localization/messages_de.js',
-          'node_modules/jquery-validation/localization/methods_de.js',
-          'node_modules/bootstrap-timepicker/js/bootstrap-timepicker.js',
-          'node_modules/URIjs/src/URI.min.js',
-          'public/clientscripts/global/agora.js'
-        ],
-        dest: 'public/clientscripts/global_de.js'
+      development_en: {
+        options: { beautify: true },
+        files: files_en
       },
-      en: {
-        src: [
-          'locales/frontend_en.js',
-          'node_modules/jquery/dist/jquery.js',
-          'public/clientscripts/global/bootstrap.js',
-          'public/clientscripts/global/bootstrap-datepicker.js',
-          'public/clientscripts/global/bootstrap-markdown.js',
-          'node_modules/moment-timezone/node_modules/moment/min/moment.min.js',
-          'public/clientscripts/global/fullcalendar-patched.js',
-          'public/clientscripts/global/en-gb.js', // for fullcalendar
-          'public/clientscripts/global/tinycolor-0.9.15.min.js', // for pick-a-color
-          'public/clientscripts/global/pick-a-color.js',
-          'node_modules/jquery-validation/jquery.validate.js',
-          'node_modules/jquery-validation/additional-methods.js',
-          'node_modules/bootstrap-timepicker/js/bootstrap-timepicker.js',
-          'node_modules/URIjs/src/URI.min.js',
-          'public/clientscripts/global/agora.js'
-        ],
-        dest: 'public/clientscripts/global_en.js'
+      production_de: {
+        files: files_de
+      },
+      production_en: {
+        files: files_en
       }
     },
+
     mocha_istanbul: {
       testWithDB: {
         src: 'testWithDB', // the folder, not the files,
@@ -164,8 +182,8 @@ module.exports = function (grunt) {
           mask: '**/*.js',
           reporter: 'dot', // set to 'spec' if you like it more verbose
           check: {
-            lines: 78,
-            statements: 74
+            lines: 80,
+            statements: 76
           }
         }
       }
@@ -187,19 +205,22 @@ module.exports = function (grunt) {
 
   // These plugins provide necessary tasks.
   grunt.loadNpmTasks('grunt-contrib-clean');
-  grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-jade');
   grunt.loadNpmTasks('grunt-contrib-less');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-mocha-istanbul');
   grunt.loadNpmTasks('grunt-jslint');
   grunt.loadNpmTasks('grunt-karma');
 
-  // Combo task for frontendtests
-  grunt.registerTask('frontendtests', ['clean', 'jade', 'karma:once']);
+  grunt.registerTask('frontendtests', ['clean', 'jade', 'less', 'uglify:production_de', 'karma:once', 'uglify:development_de', 'karma:once']);
+  grunt.registerTask('tests', ['jslint', 'frontendtests', 'mocha_istanbul']);
+  grunt.registerTask('deploy_development', ['less', 'uglify:development_de', 'uglify:development_en']);
 
   // Default task.
-  grunt.registerTask('default', ['less', 'concat', 'jslint', 'frontendtests', 'mocha_istanbul']);
+  grunt.registerTask('default', ['tests', 'deploy_development']);
 
   // Travis-CI task
   grunt.registerTask('travis', ['default']);
+
+  grunt.registerTask('deploy_production', ['less', 'uglify:production_de', 'uglify:production_en']);
 };

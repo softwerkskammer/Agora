@@ -4,7 +4,7 @@ var conf = require('../../testutil/configureForTest');
 var misc = conf.get('beans').get('misc');
 var expect = require('must');
 var moment = require('moment-timezone');
-var wikiAPI = conf.get('beans').get('wikiAPI');
+var wikiService = conf.get('beans').get('wikiService');
 
 describe('toArray function', function () {
 
@@ -144,27 +144,27 @@ describe('differenceCaseInsensitive function', function () {
 
     it('concatenates simple parts', function () {
       var result = misc.toFullQualifiedUrl('prefix', 'lastComponent');
-      expect(result).to.equal('http://localhost:17124/prefix/lastComponent');
+      expect(result).to.equal('http://localhost:17125/prefix/lastComponent');
     });
 
     it('concatenates parts with leading "/"', function () {
       var result = misc.toFullQualifiedUrl('/prefix', '/lastComponent');
-      expect(result).to.equal('http://localhost:17124/prefix/lastComponent');
+      expect(result).to.equal('http://localhost:17125/prefix/lastComponent');
     });
 
     it('concatenates parts with trailing "/"', function () {
       var result = misc.toFullQualifiedUrl('prefix/', 'lastComponent/');
-      expect(result).to.equal('http://localhost:17124/prefix/lastComponent');
+      expect(result).to.equal('http://localhost:17125/prefix/lastComponent');
     });
 
     it('concatenates parts with inside "/"', function () {
       var result = misc.toFullQualifiedUrl('pre/fix', 'last/Component');
-      expect(result).to.equal('http://localhost:17124/pre/fix/last/Component');
+      expect(result).to.equal('http://localhost:17125/pre/fix/last/Component');
     });
 
     it('removes only one trailing and one leading "/"', function () {
       var result = misc.toFullQualifiedUrl('//pre/fix//', '//last/Component//');
-      expect(result).to.equal('http://localhost:17124//pre/fix///last/Component/');
+      expect(result).to.equal('http://localhost:17125//pre/fix///last/Component/');
     });
   });
 

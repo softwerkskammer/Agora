@@ -66,7 +66,7 @@ describe('Import of mails from files with mime messages', function () {
     });
   });
 
-  it('includes member id from member API ', function (done) {
+  it('includes member id from member Service ', function (done) {
     mailimport(fileWithTextOnlyWithoutSenderName, 'group', function (err, result) {
       expect(result.from.id).to.equal(dummymember.id());
       done(err);
