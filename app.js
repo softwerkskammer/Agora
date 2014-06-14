@@ -96,7 +96,7 @@ module.exports = {
     useApp(app, 'waitinglist', beans.get('waitinglistApp'));
     useApp(app, 'dashboard', beans.get('dashboardApp'));
     useApp(app, 'payment', beans.get('paymentApp'));
-    useApp(app, 'images', beans.get('imagesApp'));
+    useApp(app, 'gallery', beans.get('galleryApp'));
 
     app.use(beans.get('handle404')(appLogger));
     app.use(beans.get('handle500')(appLogger));

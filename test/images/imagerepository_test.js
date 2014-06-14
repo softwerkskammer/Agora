@@ -5,7 +5,7 @@ var expect = require('must');
 var fs = require('fs');
 var mock = require('mock-fs');
 var stream = require('stream');
-var api = require('../../lib/images/imagerepositoryAPI');
+var api = require('.././imagerepositoryAPI');
 
 var directoryForUploads = require('os').tmpdir();
 
