@@ -6,16 +6,16 @@ var sinon = require('sinon').sandbox.create();
 var expect = require('must');
 
 var beans = conf.get('beans');
-var imageRepository = beans.get('imagerepositoryAPI');
+var galleryrepository = beans.get('galleryrepositoryService');
 
-var createApp = require('../../testutil/testHelper')('imagesApp').createApp;
+var createApp = require('../../testutil/testHelper')('galleryApp').createApp;
 
 var OK = 200;
 var CREATED = 201;
 
-describe('/images', function () {
+describe('/gallery', function () {
   var storedImageId = 'image.jpg';
-  var imagePath = 'test/images/fixtures/' + storedImageId;
+  var imagePath = __dirname + '/fixtures/' + storedImageId;
   var generatedImageId;
   var storedImagePath;
 
@@ -26,7 +26,7 @@ describe('/images', function () {
   describe('POST /', function () {
     beforeEach(function () {
       generatedImageId = '8fe5861b-53cb-49db-929f-81eb77b4d05c';
-      sinon.stub(imageRepository, 'storeImage', function (imagePath, callback) {
+      sinon.stub(galleryrepository, 'storeImage', function (imagePath, callback) {
         storedImagePath = imagePath;
         callback(null, generatedImageId);
       });
@@ -35,15 +35,15 @@ describe('/images', function () {
     it('responds with the image Location', function (done) {
       request(createApp())
         .post('/')
-        .attach('image', imagePath)
+        .attach('imageFile', imagePath)
         .expect(CREATED)
-        .expect('Location', '/images/' + generatedImageId, done);
+        .expect('Location', '/gallery/' + generatedImageId, done);
     });
 
     it('stores the image to the imagerepository', function (done) {
       request(createApp())
         .post('/')
-        .attach('image', imagePath)
+        .attach('imageFile', imagePath)
         .end(function () {
           expect(storedImagePath).to.match(/\/tmp\/[0-9a-z\-]+\.jpg/);
           done();
@@ -53,7 +53,7 @@ describe('/images', function () {
 
   describe('GET /{imageId}', function () {
     it('responds with the image', function (done) {
-      sinon.stub(imageRepository, 'retrieveImage', function (imageId, callback) {
+      sinon.stub(galleryrepository, 'retrieveImage', function (imageId, callback) {
         if (storedImageId === imageId) {
           callback(null, imagePath);
         }
