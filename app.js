@@ -64,7 +64,7 @@ module.exports = {
     app.use(cookieParser());
     app.use(bodyparser.urlencoded());
     app.use(compress());
-    app.use(serveStatic(path.join(__dirname, 'public')));
+    app.use(serveStatic(path.join(__dirname, 'public'), { maxAge: 600 * 1000 })); // ten minutes
 
     app.use(beans.get('expressSessionConfigurator'));
     app.use(passport.initialize());
