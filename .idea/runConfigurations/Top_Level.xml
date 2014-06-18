@@ -8,7 +8,9 @@
     <extra-mocha-options />
     <test-directory>$PROJECT_DIR$/test</test-directory>
     <recursive>false</recursive>
+    <RunnerSettings RunnerId="MochaDebugRunner" />
     <RunnerSettings RunnerId="RunnerForMochaJavaScript" />
+    <ConfigurationWrapper RunnerId="MochaDebugRunner" />
     <ConfigurationWrapper RunnerId="RunnerForMochaJavaScript" />
     <method />
   </configuration>
