@@ -27,6 +27,13 @@ var createApp = require('../../testutil/testHelper')('announcementsApp').createA
 describe('Announcement application', function () {
   var allAnnouncementsUntilToday;
   var getAnnouncement;
+  var appWithoutUser;
+  var appWithAuthor;
+
+  before(function () {
+    appWithoutUser = request(createApp());
+    appWithAuthor = request(createApp('author'));
+  });
 
   beforeEach(function () {
     sinonSandbox.stub(announcementstore, 'allAnnouncements', function (callback) {
@@ -45,7 +52,7 @@ describe('Announcement application', function () {
   });
 
   it('shows the list of announcements as retrieved from the store', function (done) {
-    request(createApp())
+    appWithoutUser
       .get('/')
       .expect(200)
       .expect(/Nachrichten/)
@@ -63,7 +70,7 @@ describe('Announcement application', function () {
     });
     var url = 'url';
 
-    request(createApp())
+    appWithoutUser
       .get('/' + url)
       .expect(200)
       .expect(/<small>29\. Juli 2013/)
@@ -77,7 +84,7 @@ describe('Announcement application', function () {
     dummyAnnouncement.id = 1234;
     var url = 'url';
 
-    request(createApp('author'))
+    appWithAuthor
       .get('/edit/' + url)
       .expect(200)
       .expect(/<input id="thruDate" type="text" name="thruDate" value="31\.12\.2013"/)
@@ -89,17 +96,16 @@ describe('Announcement application', function () {
 
   it('shows a 404 if the url cannot be found in the store for the detail page', function (done) {
     var link = dummyAnnouncement.url + '-does-not-exist';
-    request(createApp()).get('/' + link).expect(404, function (err) { done(err); });
-
+    appWithoutUser
+      .get('/' + link)
+      .expect(404, done);
   });
 
   it('allows to create a new announcement for a registered member', function (done) {
-    request(createApp('somebody'))
+    appWithAuthor
       .get('/new')
       .expect(200)
-      .expect(/announcements/, function (err) {
-        done(err);
-      });
+      .expect(/announcements/, done);
   });
 
   it('keeps a unix timestamp, if thruDate is already a unix timestamp', function () {
@@ -123,14 +129,14 @@ describe('Announcement application', function () {
   describe('url check', function () {
 
     it('returns false for checkurl when the url already exists', function (done) {
-      request(createApp())
+      appWithoutUser
         .get('/checkurl?url=url&previousUrl=x')
         .expect(200)
         .expect(/false/, done);
     });
 
     it('returns true for checkurl when the url does not exist', function (done) {
-      request(createApp())
+      appWithoutUser
         .get('/checkurl?url=UnknownURL&previousUrl=x')
         .expect(200)
         .expect(/true/, done);

@@ -46,7 +46,7 @@ module.exports = function (grunt) {
       'public/clientscripts/global/bootstrap.js',
       'public/clientscripts/global/bootstrap-datepicker.js',
       'public/clientscripts/global/bootstrap-markdown.js',
-      'node_modules/moment-timezone/node_modules/moment.js',
+      'node_modules/moment-timezone/node_modules/moment/moment.js',
       'public/clientscripts/global/fullcalendar-patched.js',
       'public/clientscripts/global/en-gb.js', // for fullcalendar
       'public/clientscripts/global/tinycolor.min.js', // for pick-a-color
