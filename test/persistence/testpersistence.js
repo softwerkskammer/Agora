@@ -9,7 +9,7 @@ module.exports = {
 
   listByField: function () {throw new Error('Testpersistence - function listByField not implemented'); },
 
-  listByFieldWithOptions: function (searchObject, options, sortOrder, callback) {callback(null, []); },
+  listByFieldWithOptions: function () { throw new Error('Testpersistence - function listByFieldWithOptions not implemented'); },
 
   getById: function () {throw new Error('Testpersistence - function getById not implemented'); },
 
