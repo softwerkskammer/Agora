@@ -29,6 +29,7 @@
   "stripeService": {"module": "./lib/activities/stripeService"},
   "waitinglistService": {"module": "./lib/waitinglist/waitinglistService"},
   "wikiService": {"module": "./lib/wiki/wikiService"},
+  "avatarProvider": {"module": "./lib/commons/avatarProvider"},
 
   "activitystore": {"module": "./lib/activities/activitystore"},
   "announcementstore": {"module": "./lib/announcements/announcementstore"},
