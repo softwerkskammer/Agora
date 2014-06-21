@@ -86,6 +86,7 @@ module.exports = {
     app.use('/', beans.get('siteApp'));
     useApp(app, 'administration', beans.get('administrationApp'));
     useApp(app, 'activities', beans.get('activitiesApp'));
+    useApp(app, 'activityresults', beans.get('activityresultsApp'));
     useApp(app, 'members', beans.get('membersApp'));
     useApp(app, 'groups', beans.get('groupsApp'));
     useApp(app, 'announcements', beans.get('announcementsApp'));
@@ -97,7 +98,6 @@ module.exports = {
     useApp(app, 'dashboard', beans.get('dashboardApp'));
     useApp(app, 'payment', beans.get('paymentApp'));
     useApp(app, 'gallery', beans.get('galleryApp'));
-    useApp(app, 'activityresults', beans.get('activityresultsApp'));
 
     app.use(beans.get('handle404')(appLogger));
     app.use(beans.get('handle500')(appLogger));
