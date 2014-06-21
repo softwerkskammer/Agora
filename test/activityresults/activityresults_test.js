@@ -15,7 +15,7 @@ var CREATED = 201;
 
 var NOT_FOUND = 404;
 
-function ActivityResult() { }
+var ActivityResult = beans.get('activityresult');
 
 describe('/activityresults', function () {
   afterEach(function () {
