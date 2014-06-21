@@ -97,6 +97,7 @@ module.exports = {
     useApp(app, 'dashboard', beans.get('dashboardApp'));
     useApp(app, 'payment', beans.get('paymentApp'));
     useApp(app, 'gallery', beans.get('galleryApp'));
+    useApp(app, 'activityresults', beans.get('activityresultsApp'));
 
     app.use(beans.get('handle404')(appLogger));
     app.use(beans.get('handle500')(appLogger));

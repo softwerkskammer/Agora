@@ -1,5 +1,6 @@
 {
   "activitiesApp": {"module": "./lib/activities"},
+  "activityresultsApp" : {"module": "./lib/activityresults"},
   "administrationApp": {"module": "./lib/administration"},
   "announcementsApp": {"module": "./lib/announcements"},
   "authenticationApp": {"module": "./lib/authentication"},

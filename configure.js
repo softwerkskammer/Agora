@@ -15,6 +15,7 @@ function createConfiguration() {
   nconf.file('mail', './config/mailsender-config.json');
   nconf.file('wiki', './config/wikirepo-config.json');
   nconf.file('images', './config/images-config.json');
+  nconf.file('activityresults', './config/activityresults-config.json');
   nconf.defaults({
     adminListName: "admins",
     port: '17124',
