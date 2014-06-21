@@ -13,6 +13,10 @@ describe('An activity result', function () {
     expect(activityResult.id).to.be('hackergarten2_2');
   });
 
+  it('should have an empty constructor', function () {
+    expect((new ActivityResult()).id).to.be.falsy();
+  });
+
   it('should have a list of photo urls', function () {
     var activityResult = new ActivityResult({
       id: 'hackergarten2_2',
