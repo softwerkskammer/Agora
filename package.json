@@ -91,7 +91,8 @@
     "request": "~2.36",
     "sinon": "~1.10",
     "supertest": "~0.13",
-    "utils-merge": "~1.0"
+    "utils-merge": "~1.0",
+    "should": "^4.0.4"
   },
   "scripts": {
     "start": "node start",
