@@ -15,6 +15,8 @@ var CREATED = 201;
 
 var NOT_FOUND = 404;
 
+function ActivityResult() { }
+
 describe('/activityresults', function () {
   afterEach(function () {
     sinon.restore();
@@ -29,14 +31,28 @@ describe('/activityresults', function () {
   });
 
   describe('GET /{activityResultName}', function () {
-    it('should return a NOT FOUND if the activityResult is unknown', function (done) {
+    it('should return a NOT FOUND if the activity result is unknown', function (done) {
       sinon.stub(activityresultsService, 'getActivityResultByName', function (activityResultName, callback) {
         callback(new Error('There is no such activity result!'));
       });
 
       request(createApp())
-        .get('/unknown-activity')
+        .get('/unknown-activity-result')
         .expect(NOT_FOUND, done);
     });
+
+    it('should render the results if the activity result is known', function (done) {
+      sinon.stub(activityresultsService, 'getActivityResultByName', function (activityResultName, callback) {
+        callback(null, new ActivityResult());
+      });
+
+      request(createApp())
+        .get('/known-activity-results')
+        .expect(200, done);
+    });
+  });
+
+  describe('POST /', function () {
+    it('should validate the activityresultName parameter');
   });
 });
