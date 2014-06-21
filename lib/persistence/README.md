@@ -10,7 +10,7 @@ Setting up mongodb for authentication
   1. Then create the admin user with
 
             db.addUser("<admin-username>", "<admin-password>")
-  1. The switch the database to `swk`, which is the database for the app
+  1. Then switch the database to `swk`, which is the database for the app (needs to be changed if you altered the name)
 
             use swk
             db.addUser("<app-username>", "<app-password>")
