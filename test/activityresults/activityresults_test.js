@@ -6,6 +6,7 @@ var sinon = require('sinon').sandbox.create();
 var expect = require('must');
 
 var beans = conf.get('beans');
+var activityresultsService = beans.get('activityresultsService');
 
 var createApp = require('../../testutil/testHelper')('activityresultsApp').createApp;
 
