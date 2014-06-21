@@ -35,6 +35,7 @@
   "waitinglistService": {"module": "./lib/waitinglist/waitinglistService"},
   "wikiService": {"module": "./lib/wiki/wikiService"},
 
+  "activityresultstore": {"module": "./lib/activityresults/activityresultstore"},
   "activitystore": {"module": "./lib/activities/activitystore"},
   "announcementstore": {"module": "./lib/announcements/announcementstore"},
   "colorstore": {"module": "./lib/administration/colorstore"},
