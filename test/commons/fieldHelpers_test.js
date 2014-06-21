@@ -6,7 +6,6 @@ var expect = require('must');
 
 describe('Activity application', function () {
 
-  // tested function is currently not used in production anymore (28.4.2013, leider)
   it('removes all special characters from the id string', function () {
     var id = fieldHelpers.createLinkFrom(['assignedGroup', 'title', 'startDate']);
     expect(id).to.equal('assignedGroup_title_startDate');
