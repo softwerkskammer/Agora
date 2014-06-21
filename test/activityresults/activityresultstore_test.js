@@ -4,7 +4,7 @@ var expect = require('must');
 var sinon = require('sinon').sandbox.create();
 
 var conf = require('../../testutil/configureForTest');
-var persistence = conf.get('beans').get('activityResultsPersistence');
+var persistence = conf.get('beans').get('activityresultsPersistence');
 var store = conf.get('beans').get('activityresultstore');
 
 describe('ActivityResult store', function () {
@@ -34,5 +34,12 @@ describe('ActivityResult store', function () {
     sinon.restore();
   });
 
-
+  describe('the getAcitvityResultById method', function () {
+    it('should return the activityResult for an id', function (done) {
+      store.getActivityResultById(activityResult1.id, function (err, activityResult) {
+        activityResult.should.have.property('id', activityResult1.id);
+        done();
+      });
+    });
+  });
 });

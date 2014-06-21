@@ -50,7 +50,7 @@
     "module": "./lib/persistence/persistence",
     "constructorArgs": { "collectionName": "activitystore" }
   },
-  "activityResultsPersistence": {
+  "activityresultsPersistence": {
     "module": "./lib/persistence/persistence",
     "constructorArgs": { "collectionName": "activityresultstore" }
   },
