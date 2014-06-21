@@ -37,7 +37,16 @@
     "feedback": "Feedback",
     "what_does_not_work": "What does not work the way it should?",
     "settings": "Settings",
-    "separator": "."
+    "separator": ".",
+    "goodbye_text": [
+      "h2 Great, you've been here.",
+      "p Take care - see you soon!",
+      "hr",
+      "p.text-right Or maybe you want to return? ",
+      "  a.btn.btn-primary(data-toggle='modal', href='#login')",
+      "    i.fa.fa-sign-in.fa-fw",
+      "    | &nbsp;$t(general.login)"
+    ]
   },
   "error": {
     "congratulations": "Congratulations!",
@@ -196,7 +205,15 @@
       "    li $t(error.datetime)",
       "    li $t(error.stacktrace500)",
       "p $t(error.sorry)"
-    ]
+    ],
+    "required_text": [
+      "h3 You need to be logged-in to access this page!",
+      "p You wanted to access a protected page inside the members section. To do that you need to authenticate yourself.",
+      "p If this is an application error, we apologize and would love to get ",
+      "  a(href='https://github.com/softwerkskammer/Agora/issues/') feedback.",
+      "p The Agora-Team is begging your pardon."
+    ],
+    "please_authenticate": "Please, authenticate yourself!"
   },
   "colors": {
     "colors": "Colours",
