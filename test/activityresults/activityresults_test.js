@@ -13,6 +13,8 @@ var createApp = require('../../testutil/testHelper')('activityresultsApp').creat
 var OK = 200;
 var CREATED = 201;
 
+var NOT_FOUND = 404;
+
 describe('/activityresults', function () {
   afterEach(function () {
     sinon.restore();
@@ -26,4 +28,15 @@ describe('/activityresults', function () {
     });
   });
 
+  describe('GET /{activityResultName}', function () {
+    it('should return a NOT FOUND if the activityResult is unknown', function (done) {
+      sinon.stub(activityresultsService, 'getActivityResultByName', function (activityResultName, callback) {
+        callback(new Error('There is no such activity result!'));
+      });
+
+      request(createApp())
+        .get('/unknown-activity')
+        .expect(NOT_FOUND, done);
+    });
+  });
 });

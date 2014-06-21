@@ -1,0 +1,20 @@
+extends ../../../views/layout
+
+include  ../../../views/formComponents
+
+block title
+  | Hier gibt es noch keine Ergebnisse
+
+block content
+  .row
+    .col-md-12
+      .page-header
+        h2 Hier gibt es noch keine Ergebnisse
+
+  .row
+    .col-md-6
+      form(role='form',method='POST',action=createUri)
+        +csrf
+        .form-group
+          input(name='activityResultName',type='hidden',value='#{activityResultName}')
+          button.btn.btn-primary(type='submit') Jetzt anlegen
