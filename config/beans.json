@@ -84,6 +84,7 @@
   },
   
   "activity": {"module": "./lib/activities/activity"},
+  "activityresult": {"module": "./lib/activityresults/activityresult"},
   "addon": {"module": "./lib/activities/addon"},
   "announcement": {"module": "./lib/announcements/announcement"},
   "archivedMail": {"module": "./lib/mailarchive/archivedMail"},
