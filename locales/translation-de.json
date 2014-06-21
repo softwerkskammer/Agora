@@ -37,7 +37,16 @@
     "feedback": "Feedback",
     "what_does_not_work": "Was funktioniert nicht, wie es soll?",
     "settings": "Einstellungen",
-    "separator": ","
+    "separator": ",",
+    "goodbye_text": [
+      "h2 Schön, dass Du hier warst.",
+      "p Mach's gut - bis zum nächsten Mal!",
+      "hr",
+      "p.text-right Oder magst Du nochmal reinschauen? ",
+      "  a.btn.btn-primary(data-toggle='modal', href='#login')",
+      "    i.fa.fa-sign-in.fa-fw",
+      "    | &nbsp;$t(general.login)"
+    ]
   },
   "error": {
     "congratulations": "Herzlichen Glückwunsch!",
@@ -196,7 +205,15 @@
       "    li $t(error.datetime)",
       "    li $t(error.stacktrace500)",
       "p $t(error.sorry)"
-    ]
+    ],
+    "required_text": [
+      "h3 Um auf diese Seite zuzugreifen, musst Du angemeldet sein!",
+      "p Du wolltest auf eine Seite im Mitgliederbereich zugreifen. Dazu musst Du Dich authentifizieren.",
+      "p Sollte dies ein Fehler in der Anwendung sein, bitten wir um ",
+      "  a(href='https://github.com/softwerkskammer/Agora/issues/') Rückmeldung.",
+      "p Das Agora-Team bittet um Entschuldigung."
+    ],
+    "please_authenticate": "Bitte authentifiziere Dich!"
   },
   "colors": {
     "colors": "Farben",
