@@ -3,5 +3,6 @@
   "mongoHost": "localhost",
   "mongoPort": "27017",
   "mongoUser": "appUser",
-  "mongoPass": "appPass"
+  "mongoPass": "appPass",
+  "mongoDB": "customDBname"
 }
