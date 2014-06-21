@@ -49,6 +49,10 @@
     "module": "./lib/persistence/persistence",
     "constructorArgs": { "collectionName": "activitystore" }
   },
+  "activityResultsPersistence": {
+    "module": "./lib/persistence/persistence",
+    "constructorArgs": { "collectionName": "activityresultstore" }
+  },
   "announcementsPersistence": {
     "module": "./lib/persistence/persistence",
     "constructorArgs": { "collectionName": "announcementstore" }
