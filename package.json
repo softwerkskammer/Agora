@@ -89,10 +89,10 @@
     "mock-fs": "~2.3.1",
     "must": "~0.12",
     "request": "~2.36",
+    "should": "^4.0.4",
     "sinon": "~1.10",
     "supertest": "~0.13",
-    "utils-merge": "~1.0",
-    "should": "^4.0.4"
+    "utils-merge": "~1.0"
   },
   "scripts": {
     "start": "node start",
