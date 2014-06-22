@@ -23,8 +23,8 @@ describe('ActivityResult store', function () {
 
   describe('the getActivityResultById method', function () {
     it('should return the activityResult for an id', function (done) {
-      store.getActivityResultById(activityResult.id, function (err, activityResult) {
-        activityResult.should.have.property('id', activityResult.id);
+      store.getActivityResultById(activityResult.id, function (err, returnedActivityResult) {
+        expect(returnedActivityResult.id).to.equal(activityResult.id);
         done();
       });
     });
