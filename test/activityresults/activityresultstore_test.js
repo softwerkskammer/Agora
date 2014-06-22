@@ -21,7 +21,7 @@ describe('ActivityResult store', function () {
     sinon.restore();
   });
 
-  describe('the getAcitvityResultById method', function () {
+  describe('the getActivityResultById method', function () {
     it('should return the activityResult for an id', function (done) {
       store.getActivityResultById(activityResult.id, function (err, activityResult) {
         activityResult.should.have.property('id', activityResult.id);
