@@ -8,12 +8,12 @@ var persistence = conf.get('beans').get('activityresultsPersistence');
 var store = conf.get('beans').get('activityresultstore');
 
 describe('ActivityResult store', function () {
-  var activityResult1 = {id: 'Hackergarten1', photos: [{uri: '/path/to/image1.jpg'}]};
+  var activityResult = {id: 'Hackergarten2', photos: [{uri: '/path/to/image1.jpg'}]};
   var getById;
 
   beforeEach(function () {
     getById = sinon.stub(persistence, 'getById', function (object, callback) {
-      return callback(null, activityResult1);
+      return callback(null, activityResult);
     });
   });
 
@@ -23,8 +23,8 @@ describe('ActivityResult store', function () {
 
   describe('the getAcitvityResultById method', function () {
     it('should return the activityResult for an id', function (done) {
-      store.getActivityResultById(activityResult1.id, function (err, activityResult) {
-        activityResult.should.have.property('id', activityResult1.id);
+      store.getActivityResultById(activityResult.id, function (err, activityResult) {
+        activityResult.should.have.property('id', activityResult.id);
         done();
       });
     });
