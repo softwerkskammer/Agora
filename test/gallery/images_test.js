@@ -51,9 +51,7 @@ describe('/gallery', function () {
         });
     });
 
-    it('rejects empty images', function (done) {
-      done();
-    });
+    it('rejects empty images');
   });
 
   describe('GET /{imageId}', function () {
