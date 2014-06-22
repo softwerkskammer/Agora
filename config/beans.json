@@ -15,7 +15,6 @@
   "waitinglistApp": {"module": "./lib/waitinglist"},
   "wikiApp": {"module": "./lib/wiki"},
 
-  "activityresultsService": {"module": "./lib/activityresults/activityresultsService"},
   "activitiesService": {"module": "./lib/activities/activitiesService"},
   "activityresultsService": {"module": "./lib/activityresults/activityresultsService"},
   "addonService": {"module": "./lib/activities/addonService"},
