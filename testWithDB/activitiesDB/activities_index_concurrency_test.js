@@ -55,7 +55,7 @@ describe('Activity application with DB - on submit -', function () {
     sinon.restore();
   });
 
-  it('rejects an activity with invalid and different url', function (done) {
+  it('rejects an activity if there is a race condition on save', function (done) {
 
     request(createApp('memberId'))
       .post('/submit')
