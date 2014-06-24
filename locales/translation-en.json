@@ -31,6 +31,19 @@
       "none": "no members",
       "count": "__count__ members"
     },
+    "current": "Current Activities",
+    "communities": "Software Craftsmanship Communities in Germany, Austria and Switzerland.",
+    "to_group": "To Softwerkskammer-Group",
+    "register_here": "Register here!",
+    "about_us_text": [
+      "h4 About us",
+      "p.",
+      "  Softwerkskammer founded itself in 2011 in order to simplify the exchange of experiences among people interested in Software Craftsmanship.",
+      "p.",
+      "  The local communities use it to organise their meetings and other events like Code Retreats or Open Spaces,",
+      "  or they simply share ideas or discuss interesting things on their mailing list.",
+      "p Look at the Activities menu to find out what we're up to over the next few weeks."
+    ],
     "gdcr": "Global Day of Coderetreat",
     "gdcr_activities": "Activities related to GDCR",
     "gdcr_text": "Here you find almost all german-speaking activities. You can find a full overview at",
