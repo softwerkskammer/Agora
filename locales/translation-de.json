@@ -31,6 +31,20 @@
       "none": "keine Mitglieder",
       "count": "__count__ Mitglieder"
     },
+    "current": "Aktuelles",
+    "communities": "Software Craftsmanship Communities in Deutschland, Österreich und der Schweiz.",
+    "to_group": "Zur Softwerkskammer-Gruppe",
+    "register_here": "Hier anmelden!",
+    "about_us_text": [
+      "h4 Über uns",
+      "p.",
+      "  Die Softwerkskammer hat sich 2011 gegründet, um den Austausch Interessierter zum Thema Software Craftsmanship",
+      "  zu vereinfachen.",
+      "p.",
+      "  Hierüber organisieren die lokalen Communities (die Softwerkskammern) ihre Treffen und andere Events wie",
+      "  CodeRetreats oder OpenSpaces oder tauschen sich einfach nur via Mailingliste aus.",
+      "p Was wir in den nächsten Wochen veranstalten, findest Du unter Aktivitäten."
+    ],
     "gdcr": "Der Global Day of Coderetreat",
     "gdcr_activities": "Aktivitäten zum GDCR",
     "gdcr_text": "Hier findest Du fast alle deutschsprachigen Veranstaltungen. Eine vollständige Übersicht findest Du auf",
