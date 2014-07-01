@@ -170,3 +170,13 @@ describe('Accessrights for Members', function () {
   });
 });
 
+describe('Accessrights for activityresults', function () {
+  it('allows creation for superusers', function () {
+    expect(superuser().canCreateActivityResult()).to.be(true);
+  });
+
+  it('disallows creation for other users', function () {
+    var member = {id: 'id'};
+    expect(standardMember(member).canCreateActivityResult()).to.be(false);
+  });
+});

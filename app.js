@@ -86,6 +86,7 @@ module.exports = {
     app.use('/', beans.get('siteApp'));
     useApp(app, 'administration', beans.get('administrationApp'));
     useApp(app, 'activities', beans.get('activitiesApp'));
+    useApp(app, 'activityresults', beans.get('activityresultsApp'));
     useApp(app, 'members', beans.get('membersApp'));
     useApp(app, 'groups', beans.get('groupsApp'));
     useApp(app, 'announcements', beans.get('announcementsApp'));

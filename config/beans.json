@@ -1,5 +1,6 @@
 {
   "activitiesApp": {"module": "./lib/activities"},
+  "activityresultsApp" : {"module": "./lib/activityresults"},
   "administrationApp": {"module": "./lib/administration"},
   "announcementsApp": {"module": "./lib/announcements"},
   "authenticationApp": {"module": "./lib/authentication"},
@@ -15,6 +16,7 @@
   "wikiApp": {"module": "./lib/wiki"},
 
   "activitiesService": {"module": "./lib/activities/activitiesService"},
+  "activityresultsService": {"module": "./lib/activityresults/activityresultsService"},
   "addonService": {"module": "./lib/activities/addonService"},
   "announcementsService": {"module": "./lib/announcements/announcementsService"},
   "calendarService": {"module": "./lib/activities/calendarService"},
@@ -32,6 +34,7 @@
   "waitinglistService": {"module": "./lib/waitinglist/waitinglistService"},
   "wikiService": {"module": "./lib/wiki/wikiService"},
 
+  "activityresultstore": {"module": "./lib/activityresults/activityresultstore"},
   "activitystore": {"module": "./lib/activities/activitystore"},
   "announcementstore": {"module": "./lib/announcements/announcementstore"},
   "colorstore": {"module": "./lib/administration/colorstore"},
@@ -45,6 +48,10 @@
   "activitiesPersistence": {
     "module": "./lib/persistence/persistence",
     "constructorArgs": { "collectionName": "activitystore" }
+  },
+  "activityresultsPersistence": {
+    "module": "./lib/persistence/persistence",
+    "constructorArgs": { "collectionName": "activityresultstore" }
   },
   "announcementsPersistence": {
     "module": "./lib/persistence/persistence",
@@ -76,6 +83,7 @@
   },
   
   "activity": {"module": "./lib/activities/activity"},
+  "activityresult": {"module": "./lib/activityresults/activityresult"},
   "addon": {"module": "./lib/activities/addon"},
   "announcement": {"module": "./lib/announcements/announcement"},
   "archivedMail": {"module": "./lib/mailarchive/archivedMail"},

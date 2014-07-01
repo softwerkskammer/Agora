@@ -50,6 +50,8 @@ describe('/gallery', function () {
           done();
         });
     });
+
+    it('rejects empty images');
   });
 
   describe('GET /{imageId}', function () {
