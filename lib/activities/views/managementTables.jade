@@ -252,8 +252,13 @@ block content
               tbody
                 for line in addonLinesOfUnsubscribedMembers
                   tr
-                    td: mixin linkedMember(line.member.nickname())
-                    td #{line.member.firstname()}
-                    td #{line.member.lastname()}
+                    if line.member
+                      td: mixin linkedMember(line.member.nickname())
+                      td #{line.member.firstname()}
+                      td #{line.member.lastname()}
+                    else
+                      td gelöscht
+                      td &nbsp;
+                      td &nbsp;
                     td #{line.addon.paymentReceivedMoment() && line.addon.paymentReceivedMoment().lang(language).format('L')}
           hr
