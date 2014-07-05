@@ -28,10 +28,10 @@ module.exports = function (grunt) {
       'public/clientscripts/global/tinycolor.js', // for pick-a-color
       'public/clientscripts/global/pick-a-color.js',
       'public/clientscripts/global/bootstrap-datepicker.de.js',
-      'node_modules/jquery-validation/jquery.validate.js',
-      'node_modules/jquery-validation/additional-methods.js',
-      'node_modules/jquery-validation/localization/messages_de.js',
-      'node_modules/jquery-validation/localization/methods_de.js',
+      'node_modules/jquery-validation/dist/jquery.validate.js',
+      'node_modules/jquery-validation/dist/additional-methods.js',
+      'node_modules/jquery-validation/src/localization/messages_de.js',
+      'node_modules/jquery-validation/src/localization/methods_de.js',
       'node_modules/bootstrap-timepicker/js/bootstrap-timepicker.js',
       'node_modules/URIjs/src/URI.js',
       'public/clientscripts/global/agora.js'
@@ -51,7 +51,7 @@ module.exports = function (grunt) {
       'public/clientscripts/global/en-gb.js', // for fullcalendar
       'public/clientscripts/global/tinycolor.min.js', // for pick-a-color
       'public/clientscripts/global/pick-a-color.js',
-      'node_modules/jquery-validation/jquery.validate.js',
+      'node_modules/jquery-validation/dist/jquery.validate.js',
       'node_modules/jquery-validation/additional-methods.js',
       'node_modules/bootstrap-timepicker/js/bootstrap-timepicker.js',
       'node_modules/URIjs/src/URI.js',

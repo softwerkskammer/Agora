@@ -14,7 +14,7 @@ var activity_validator;
       return endDate !== "" && endTime !== "" && dateAndTime.end.diff(dateAndTime.start, 'minutes') > 0;
     };
 
-    $.validator.addMethod("dateAndTime", validateDateAndTime, $.format(endMustBeAfterBegin));
+    $.validator.addMethod("dateAndTime", validateDateAndTime, $.validator.format(endMustBeAfterBegin));
 
   });
 
