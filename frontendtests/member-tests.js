@@ -7,12 +7,7 @@
     var email = $('#memberform [name=email]');
 
     var checkFieldMandatory = function (fieldname, value) {
-      var field = $(fieldname);
-      field.val('');
-      expect(member_validator.element(field)).to.be(false);
-      expect(member_validator.errorList[0].message).to.be('Dieses Feld ist ein Pflichtfeld.');
-      field.val(value || 'a');
-      expect(member_validator.element(field)).to.be(true);
+      testglobals.mandatoryChecker(member_validator, fieldname, value);
     };
 
     it('checks that a nickname check response is handled for "true"', function () {

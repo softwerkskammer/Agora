@@ -5,12 +5,7 @@
   describe('Mailsender Form', function () {
 
     var checkFieldMandatory = function (fieldname) {
-      var field = $(fieldname);
-      field.val('');
-      expect(mail_validator.element(field)).to.be(false);
-      expect(mail_validator.errorList[0].message).to.be('Dieses Feld ist ein Pflichtfeld.');
-      field.val('a'); // to make it select a t-shirt size
-      expect(mail_validator.element(field)).to.be(true);
+      testglobals.mandatoryChecker(mail_validator, fieldname);
     };
 
     it('checks that "subject" is mandatory', function () {

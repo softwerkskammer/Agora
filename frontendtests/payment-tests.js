@@ -4,12 +4,7 @@
 
   describe('Payment Form', function () {
     var checkFieldMandatory = function (fieldname) {
-      var field = $(fieldname);
-      field.val('');
-      expect(addon_validator.element(field)).to.be(false);
-      expect(addon_validator.errorList[0].message).to.be('Dieses Feld ist ein Pflichtfeld.');
-      field.val('a');
-      expect(addon_validator.element(field)).to.be(true);
+      testglobals.mandatoryChecker(addon_validator, fieldname);
     };
 
     it('checks that "description" is mandatory', function () {

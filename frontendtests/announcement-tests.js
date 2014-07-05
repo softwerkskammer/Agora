@@ -6,12 +6,7 @@
     var url = $('#announcementform [name=url]');
 
     var checkFieldMandatory = function (fieldname) {
-      var field = $(fieldname);
-      field.val('');
-      expect(announcement_validator.element(field)).to.be(false);
-      expect(announcement_validator.errorList[0].message).to.be('Dieses Feld ist ein Pflichtfeld.');
-      field.val('a');
-      expect(announcement_validator.element(field)).to.be(true);
+      testglobals.mandatoryChecker(announcement_validator, fieldname);
     };
 
     it('checks that a url check response is handled for "true"', function () {

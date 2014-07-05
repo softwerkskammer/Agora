@@ -7,12 +7,7 @@
     var emailPrefix = $('#groupform [name=emailPrefix]');
 
     var checkFieldMandatory = function (fieldname, value) {
-      var field = $(fieldname);
-      field.val('');
-      expect(groups_validator.element(field)).to.be(false);
-      expect(groups_validator.errorList[0].message).to.be('Dieses Feld ist ein Pflichtfeld.');
-      field.val(value || 'a');
-      expect(groups_validator.element(field)).to.be(true);
+      testglobals.mandatoryChecker(groups_validator, fieldname, value);
     };
 
     it('checks that a groupname check response is handled for "true"', function () {

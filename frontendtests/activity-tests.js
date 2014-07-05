@@ -6,12 +6,7 @@
     var url = $('#activityform [name=url]');
 
     var checkFieldMandatory = function (fieldname) {
-      var field = $(fieldname);
-      field.val('');
-      expect(activity_validator.element(field)).to.be(false);
-      expect(activity_validator.errorList[0].message).to.be('Dieses Feld ist ein Pflichtfeld.');
-      field.val('a');
-      expect(activity_validator.element(field)).to.be(true);
+      testglobals.mandatoryChecker(activity_validator, fieldname);
     };
 
     it('checks that a url check response is handled for "true"', function () {
