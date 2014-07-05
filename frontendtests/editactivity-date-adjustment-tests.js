@@ -8,8 +8,8 @@
   };
 
   function assertMoment(moment, date, time) {
-    expect(moment.format('DD.MM.YYYY')).toEqual(date);
-    expect(moment.format('HH:mm')).toEqual(time);
+    expect(moment.format('DD.MM.YYYY')).to.equal(date);
+    expect(moment.format('HH:mm')).to.equal(time);
   }
 
   describe('Activity Date Model', function () {
@@ -112,8 +112,8 @@
 
     it('creates end strings for the inputs', function () {
       var result = activityDateModel().createDateAndTimeStrings(utc('06.11.2013', '18:15'));
-      expect(result.endDate).toEqual('06.11.2013');
-      expect(result.endTime).toEqual('18:15');
+      expect(result.endDate).to.equal('06.11.2013');
+      expect(result.endTime).to.equal('18:15');
     });
 
   });
@@ -123,8 +123,8 @@
     it('does everything together', function () {
       var model = activityDateModel('07.09.2013', '12:15');
       var result = model.determineNewEnd('08.09.2013', '12:15', '09.09.2013', '14:15');
-      expect(result.endDate).toEqual('10.09.2013');
-      expect(result.endTime).toEqual('14:15');
+      expect(result.endDate).to.equal('10.09.2013');
+      expect(result.endTime).to.equal('14:15');
     });
 
   });

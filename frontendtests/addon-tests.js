@@ -7,22 +7,11 @@
     var checkFieldMandatory = function (fieldname) {
       var field = $(fieldname);
       field.val('');
-      expect(addon_validator.element(field)).toBe(false);
-      expect(addon_validator.errorList[0].message).toBe('Dieses Feld ist ein Pflichtfeld.');
+      expect(addon_validator.element(field)).to.be(false);
+      expect(addon_validator.errorList[0].message).to.be('Dieses Feld ist ein Pflichtfeld.');
       field.val('S'); // to make it select a t-shirt size
-      expect(addon_validator.element(field)).toBe(true);
+      expect(addon_validator.element(field)).to.be(true);
     };
-
-    beforeEach(function (done) {
-      $(function () {
-        jasmine.Ajax.install();
-        done();
-      });
-    });
-
-    afterEach(function () {
-      jasmine.Ajax.uninstall();
-    });
 
     it('checks that "homeAddress" is mandatory', function () {
       checkFieldMandatory('#addonform [name=homeAddress]');
