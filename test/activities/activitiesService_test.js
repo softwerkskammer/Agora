@@ -34,6 +34,15 @@ var waitinglistMembersOf = function (activity, resourceName) {
   return _.pluck(_.pluck(activity.resourceNamed(resourceName).waitinglistEntries(), 'state'), '_memberId');
 };
 
+var activityWithEinzelzimmer = function (ressource) {
+  var state = {resources: {Einzelzimmer: ressource}};
+  var activity = new Activity(state);
+  sinon.stub(activitystore, 'saveActivity', function (id, callback) { callback(null); });
+  sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, activity); });
+  sinon.stub(activitystore, 'getActivityForId', function (id, callback) { callback(null, activity); });
+  return activity;
+};
+
 describe('Activities Service', function () {
 
   beforeEach(function () {
@@ -114,10 +123,7 @@ describe('Activities Service', function () {
   describe('- when adding a visitor -', function () {
 
     it('succeeds when registration is open', function (done) {
-      var activity = new Activity({resources: {Einzelzimmer: {_registrationOpen: true}}});
-      sinon.stub(activitystore, 'saveActivity', function (id, callback) { callback(null); });
-      sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, activity); });
-      sinon.stub(activitystore, 'getActivityForId', function (id, callback) { callback(null, activity); });
+      var activity = activityWithEinzelzimmer({_registrationOpen: true});
       sinon.stub(notifications, 'visitorRegistration');
 
       activitiesService.addVisitorTo('memberId', 'activity-url', 'Einzelzimmer', moment(), function (err, statusTitle, statusText) {
@@ -129,10 +135,7 @@ describe('Activities Service', function () {
     });
 
     it('notifies of the registration', function (done) {
-      var activity = new Activity({resources: {Einzelzimmer: {_registrationOpen: true}}});
-      sinon.stub(activitystore, 'saveActivity', function (id, callback) { callback(null); });
-      sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, activity); });
-      sinon.stub(activitystore, 'getActivityForId', function (id, callback) { callback(null, activity); });
+      var activity = activityWithEinzelzimmer({_registrationOpen: true});
       sinon.stub(notifications, 'visitorRegistration');
 
       activitiesService.addVisitorTo('memberId', 'activity-url', 'Einzelzimmer', moment(), function (err) {
@@ -145,10 +148,7 @@ describe('Activities Service', function () {
     });
 
     it('gives a status message when registration is not open', function (done) {
-      var activity = new Activity({resources: {Einzelzimmer: {_registrationOpen: false}}});
-
-      sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, activity); });
-      sinon.stub(activitystore, 'getActivityForId', function (id, callback) { callback(null, activity); });
+      var activity = activityWithEinzelzimmer({_registrationOpen: false});
 
       activitiesService.addVisitorTo('memberId', 'activity-url', 'Einzelzimmer', moment(), function (err, statusTitle, statusText) {
         expect(statusTitle, 'Status Title').to.equal('activities.registration_not_now');
@@ -161,12 +161,9 @@ describe('Activities Service', function () {
     it('succeeds when registration is not open but registrant is on waiting list and allowed to subscribe', function (done) {
       var tomorrow = moment();
       tomorrow.add('days', 1);
-      var activity = new Activity({ resources: { Einzelzimmer: { _registrationOpen: false, _waitinglist: [
+      var activity = activityWithEinzelzimmer({ _registrationOpen: false, _waitinglist: [
         { _memberId: 'memberId', _registrationValidUntil: tomorrow.toDate() }
-      ]}}});
-
-      sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, activity); });
-      sinon.stub(activitystore, 'saveActivity', function (id, callback) { callback(null); });
+      ]});
       sinon.stub(notifications, 'visitorRegistration');
 
       activitiesService.addVisitorTo('memberId', 'activity-url', 'Einzelzimmer', moment(), function (err, statusTitle, statusText) {
@@ -190,14 +187,10 @@ describe('Activities Service', function () {
   describe('- when removing a visitor -', function () {
 
     it('succeeds when registration is open', function (done) {
-      var state = {resources: {Einzelzimmer: {_registrationOpen: true, _registeredMembers: [
+      var activity = activityWithEinzelzimmer({_registrationOpen: true, _registeredMembers: [
         {memberId: 'memberId'},
         {memberId: 'otherId'}
-      ]}}};
-      var activity = new Activity(state);
-      sinon.stub(activitystore, 'saveActivity', function (id, callback) { callback(null); });
-      sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, activity); });
-      sinon.stub(activitystore, 'getActivityForId', function (id, callback) { callback(null, activity); });
+      ]});
       sinon.stub(notifications, 'visitorUnregistration');
 
       activitiesService.removeVisitorFrom('memberId', 'activity-url', 'Einzelzimmer', function (err) {
@@ -208,14 +201,10 @@ describe('Activities Service', function () {
     });
 
     it('succeeds when registration is not open', function (done) {
-      var state = {resources: {Einzelzimmer: {_registrationOpen: false, _registeredMembers: [
+      var activity = activityWithEinzelzimmer({_registrationOpen: false, _registeredMembers: [
         {memberId: 'memberId'},
         {memberId: 'otherId'}
-      ]}}};
-      var activity = new Activity(state);
-      sinon.stub(activitystore, 'saveActivity', function (id, callback) { callback(null); });
-      sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, activity); });
-      sinon.stub(activitystore, 'getActivityForId', function (id, callback) { callback(null, activity); });
+      ]});
       sinon.stub(notifications, 'visitorUnregistration');
 
       activitiesService.removeVisitorFrom('memberId', 'activity-url', 'Einzelzimmer', function (err) {
@@ -226,14 +215,10 @@ describe('Activities Service', function () {
     });
 
     it('notifies of the unregistration', function (done) {
-      var state = {resources: {Einzelzimmer: {_registrationOpen: true, _registeredMembers: [
+      var activity = activityWithEinzelzimmer({_registrationOpen: true, _registeredMembers: [
         {memberId: 'memberId'},
         {memberId: 'otherId'}
-      ]}}};
-      var activity = new Activity(state);
-      sinon.stub(activitystore, 'saveActivity', function (id, callback) { callback(null); });
-      sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, activity); });
-      sinon.stub(activitystore, 'getActivityForId', function (id, callback) { callback(null, activity); });
+      ]});
       sinon.stub(notifications, 'visitorUnregistration');
 
       activitiesService.removeVisitorFrom('memberId', 'activity-url', 'Einzelzimmer', function (err) {
@@ -258,10 +243,7 @@ describe('Activities Service', function () {
   describe('- when adding somebody to the waitinglist -', function () {
 
     it('succeeds when resource has a waitinglist', function (done) {
-      var activity = new Activity({resources: {Einzelzimmer: {_waitinglist: []}}});
-      sinon.stub(activitystore, 'saveActivity', function (id, callback) { callback(null); });
-      sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, activity); });
-      sinon.stub(activitystore, 'getActivityForId', function (id, callback) { callback(null, activity); });
+      var activity = activityWithEinzelzimmer({_waitinglist: []});
       sinon.stub(notifications, 'waitinglistAddition');
 
       activitiesService.addToWaitinglist('memberId', 'activity-url', 'Einzelzimmer', moment(), function (err, statusTitle, statusText) {
@@ -274,10 +256,7 @@ describe('Activities Service', function () {
     });
 
     it('notifies of the waitinglist addition', function (done) {
-      var activity = new Activity({resources: {Einzelzimmer: {_waitinglist: []}}});
-      sinon.stub(activitystore, 'saveActivity', function (id, callback) { callback(null); });
-      sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, activity); });
-      sinon.stub(activitystore, 'getActivityForId', function (id, callback) { callback(null, activity); });
+      var activity = activityWithEinzelzimmer({_waitinglist: []});
       sinon.stub(notifications, 'waitinglistAddition');
 
       activitiesService.addToWaitinglist('memberId', 'activity-url', 'Einzelzimmer', moment(), function (err) {
@@ -290,10 +269,7 @@ describe('Activities Service', function () {
     });
 
     it('gives a status message when there is no waitinglist', function (done) {
-      var activity = new Activity({resources: {Einzelzimmer: {}}});
-
-      sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, activity); });
-      sinon.stub(activitystore, 'getActivityForId', function (id, callback) { callback(null, activity); });
+      var activity = activityWithEinzelzimmer({});
 
       activitiesService.addToWaitinglist('memberId', 'activity-url', 'Einzelzimmer', moment(), function (err, statusTitle, statusText) {
         expect(statusTitle, 'Status Title').to.equal('activities.waitinglist_not_possible');
@@ -317,14 +293,10 @@ describe('Activities Service', function () {
   describe('- when removing a waitinglist member -', function () {
 
     it('succeeds no matter whether registration is open or not', function (done) {
-      var state = {resources: {Einzelzimmer: {_waitinglist: [
+      var activity = activityWithEinzelzimmer({_waitinglist: [
         {_memberId: 'memberId'},
         {_memberId: 'otherId'}
-      ]}}};
-      var activity = new Activity(state);
-      sinon.stub(activitystore, 'saveActivity', function (id, callback) { callback(null); });
-      sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, activity); });
-      sinon.stub(activitystore, 'getActivityForId', function (id, callback) { callback(null, activity); });
+      ]});
       sinon.stub(notifications, 'waitinglistRemoval');
 
       activitiesService.removeFromWaitinglist('memberId', 'activity-url', 'Einzelzimmer', function (err) {
@@ -336,14 +308,10 @@ describe('Activities Service', function () {
     });
 
     it('notifies of the waitinglist removal', function (done) {
-      var state = {resources: {Einzelzimmer: {_registrationOpen: true, _registeredMembers: [
+      var activity = activityWithEinzelzimmer({_registrationOpen: true, _registeredMembers: [
         {memberId: 'memberId'},
         {memberId: 'otherId'}
-      ]}}};
-      var activity = new Activity(state);
-      sinon.stub(activitystore, 'saveActivity', function (id, callback) { callback(null); });
-      sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, activity); });
-      sinon.stub(activitystore, 'getActivityForId', function (id, callback) { callback(null, activity); });
+      ]});
       sinon.stub(notifications, 'waitinglistRemoval');
 
       activitiesService.removeFromWaitinglist('memberId', 'activity-url', 'Einzelzimmer', function (err) {
