@@ -148,5 +148,36 @@ describe('Addon Service', function () {
       expect(addonService.tshirtSizes(addonLines).L.count).to.be(1);
     });
   });
+
+  describe('addon lines for unsubscribed participants that entered addons or payment', function () {
+
+    afterEach(function () {
+      sinon.restore();
+    });
+
+    it('returns an empty array if there are no unsubscribed participants with addon information', function (done) {
+      var activityWithParticipants = new Activity({ _addons: {memberOne: {homeAddress: 'homeOne'}, memberTwo: {homeAddress: 'homeTwo'}} });
+      activityWithParticipants.participants = [new Member({id: 'memberOne'}), new Member({id: 'memberTwo'})];
+
+      addonService.addonLinesOfUnsubscribedMembers(activityWithParticipants, function (err, addonLines) {
+        expect(addonLines.length).to.equal(0);
+        done(err);
+      });
+    });
+
+    it('returns the array of unsubscribed participants with addon information', function (done) {
+      sinon.stub(memberstore, 'getMemberForId', function (id, callback) { callback(null, new Member({id: 'memberTwo'})); });
+
+      var activityWithParticipants = new Activity({ _addons: {memberOne: {homeAddress: 'homeOne'}, memberTwo: {homeAddress: 'homeTwo'}} });
+      activityWithParticipants.participants = [new Member({id: 'memberOne'})];
+
+      addonService.addonLinesOfUnsubscribedMembers(activityWithParticipants, function (err, addonLines) {
+        expect(addonLines.length).to.equal(1);
+        expect(addonLines[0].member.id()).to.equal('memberTwo');
+        expect(addonLines[0].addon.homeAddress()).to.equal('homeTwo');
+        done(err);
+      });
+    });
+  });
 });
 

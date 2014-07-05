@@ -17,6 +17,7 @@ var activitiesService = beans.get('activitiesService');
 var groupsService = beans.get('groupsService');
 var groupsAndMembersService = beans.get('groupsAndMembersService');
 var addonService = beans.get('addonService');
+var memberstore = beans.get('memberstore');
 
 var member1 = new Member({id: 'memberId1', nickname: 'participant1', email: 'nick1@b.c'});
 var member2 = new Member({id: 'memberId2', nickname: 'participant2', email: 'nick2@b.c'});
@@ -367,6 +368,7 @@ describe('Activity application', function () {
       group.members = [];
       callback(null);
     });
+    sinon.stub(memberstore, 'getMemberForId', function (id, callback) { callback(null, new Member({})); });
 
     request(createApp('owner'))
       .get('/addons/urlOfTheActivity')

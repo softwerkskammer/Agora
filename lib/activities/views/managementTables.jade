@@ -86,7 +86,7 @@ block scripts
           sUrl: tableLangUrl
         },
         aoColumns: [
-          null, null, null, null, null
+          null, null, null, null
         ],
         bPaginate: false,
         bAutoWidth: false,
@@ -245,18 +245,15 @@ block content
             table.table.table-condensed.table-hover.table-striped.unsubscribedtable
               thead
                 tr
-                  th Registriert
                   th Nickname
                   th Vorname
                   th Nachname
                   th Zahlungseingang
               tbody
-                for line in addonLines
+                for line in addonLinesOfUnsubscribedMembers
                   tr
-                    td #{line.member.registeredAt.lang(language).format('L')}
                     td: mixin linkedMember(line.member.nickname())
                     td #{line.member.firstname()}
                     td #{line.member.lastname()}
                     td #{line.addon.paymentReceivedMoment() && line.addon.paymentReceivedMoment().lang(language).format('L')}
           hr
-
