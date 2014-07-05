@@ -4,43 +4,46 @@
 
   describe('Activitiy Form', function () {
     var url = $('#activityform [name=url]');
+    var sandbox = sinon.sandbox;
+
+    afterEach(function () {
+      activity_validator.resetForm();
+      sandbox.restore();
+    });
 
     var checkFieldMandatory = function (fieldname) {
       testglobals.mandatoryChecker(activity_validator, fieldname);
     };
 
     it('checks that a url check response is handled for "true"', function () {
-      sinon.stub($, 'ajax').yieldsTo('success', true);
+      sandbox.stub($, 'ajax').yieldsTo('success', true);
 
-      url.val('test1');
+      url.val('test');
       // trigger validation
       url.trigger('change');
 
       expect(activity_validator.element(url)).to.be(true);
       expect(activity_validator.errorList).to.be.empty();
-      $.ajax.restore();
     });
 
     it('checks that a url check response is handled for "false"', function () {
-      sinon.stub($, 'ajax').yieldsTo('success', false);
-      url.val('test2');
+      sandbox.stub($, 'ajax').yieldsTo('success', false);
+      url.val('test');
       // trigger validation
       url.trigger('change');
 
       expect(activity_validator.element(url)).to.be(false);
       expect(activity_validator.errorList[0]).to.have.ownProperty('message', urlIsNotAvailable);
-      $.ajax.restore();
     });
 
     it('checks that a url call also sends the previousURl', function () {
-      var spy = sinon.spy($, 'ajax');
+      var spy = sandbox.spy($, 'ajax');
       var previousUrl = $('#activityform [name=previousUrl]');
       previousUrl.val('previous');
-      url.val('test3');
+      url.val('test');
       // trigger validation
       url.trigger('change');
       expect(spy.args[0][0].data.previousUrl()).to.equal('previous');
-      $.ajax.restore();
     });
 
     it('checks that "title" is mandatory', function () {

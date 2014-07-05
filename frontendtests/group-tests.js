@@ -6,52 +6,56 @@
     var id = $('#groupform [name=id]');
     var emailPrefix = $('#groupform [name=emailPrefix]');
 
+    var sandbox = sinon.sandbox;
+
+    afterEach(function () {
+      id.val('gri');
+      groups_validator.resetForm();
+      sandbox.restore();
+    });
+
     var checkFieldMandatory = function (fieldname, value) {
       testglobals.mandatoryChecker(groups_validator, fieldname, value);
     };
 
     it('checks that a groupname check response is handled for "true"', function () {
-      sinon.stub($, 'ajax').yieldsTo('success', true);
+      sandbox.stub($, 'ajax').yieldsTo('success', true);
       id.val('group1');
       // trigger validation
       id.trigger('change');
 
       expect(groups_validator.element(id)).to.be(true);
       expect(groups_validator.errorList).to.be.empty();
-      $.ajax.restore();
     });
 
     it('checks that a groupname check response is handled for "false"', function () {
-      sinon.stub($, 'ajax').yieldsTo('success', false);
+      sandbox.stub($, 'ajax').yieldsTo('success', false);
       id.val('group2');
       // trigger validation
       id.trigger('change');
 
       expect(groups_validator.element(id)).to.be(false);
       expect(groups_validator.errorList[0]).to.have.ownProperty('message', groupnameAlreadyTaken);
-      $.ajax.restore();
     });
 
     it('checks that a prefix check response is handled for "true"', function () {
-      sinon.stub($, 'ajax').yieldsTo('success', true);
-      emailPrefix.val('prefix1');
+      sandbox.stub($, 'ajax').yieldsTo('success', true);
+      emailPrefix.val('prefix');
       // trigger validation
       emailPrefix.trigger('change');
 
       expect(groups_validator.element(emailPrefix)).to.be(true);
       expect(groups_validator.errorList).to.be.empty();
-      $.ajax.restore();
     });
 
     it('checks that a prefix check response is handled for "false"', function () {
-      sinon.stub($, 'ajax').yieldsTo('success', false);
-      emailPrefix.val('prefix2');
+      sandbox.stub($, 'ajax').yieldsTo('success', false);
+      emailPrefix.val('prefix1');
       // trigger validation
       emailPrefix.trigger('change');
 
       expect(groups_validator.element(emailPrefix)).to.be(false);
       expect(groups_validator.errorList[0]).to.have.ownProperty('message', prefixAlreadyTaken);
-      $.ajax.restore();
     });
 
     it('checks that "id" is mandatory', function () {
