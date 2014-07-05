@@ -6,67 +6,41 @@
     var url = $('#activityform [name=url]');
 
     var checkFieldMandatory = function (fieldname) {
-      var field = $(fieldname);
-      field.val('');
-      expect(activity_validator.element(field)).toBe(false);
-      expect(activity_validator.errorList[0].message).toBe('Dieses Feld ist ein Pflichtfeld.');
-      field.val('a');
-      expect(activity_validator.element(field)).toBe(true);
+      testglobals.mandatoryChecker(activity_validator, fieldname);
     };
 
-    beforeEach(function (done) {
-      $(function () {
-        url.val('');
-        url.trigger('change');
-        jasmine.Ajax.install();
-        done();
-      });
-    });
-
-    afterEach(function () {
-      jasmine.Ajax.uninstall();
-    });
-
     it('checks that a url check response is handled for "true"', function () {
-      jasmine.Ajax.stubRequest('/activities/checkurl?previousUrl=&url=test1').andReturn({responseText: 'true'});
+      sinon.stub($, 'ajax').yieldsTo('success', true);
+
       url.val('test1');
       // trigger validation
       url.trigger('change');
 
-      expect(activity_validator.element(url)).toBe(true);
-      expect(activity_validator.errorList).toEqual([]);
+      expect(activity_validator.element(url)).to.be(true);
+      expect(activity_validator.errorList).to.be.empty();
+      $.ajax.restore();
     });
 
     it('checks that a url check response is handled for "false"', function () {
-      jasmine.Ajax.stubRequest('/activities/checkurl?previousUrl=&url=test2').andReturn({responseText: 'false'});
+      sinon.stub($, 'ajax').yieldsTo('success', false);
       url.val('test2');
       // trigger validation
       url.trigger('change');
 
-      expect(activity_validator.element(url)).toBe(false);
-      expect(activity_validator.errorList).toContain(jasmine.objectContaining({message: urlIsNotAvailable}));
+      expect(activity_validator.element(url)).to.be(false);
+      expect(activity_validator.errorList[0]).to.have.ownProperty('message', urlIsNotAvailable);
+      $.ajax.restore();
     });
 
     it('checks that a url call also sends the previousURl', function () {
-      jasmine.Ajax.stubRequest('/activities/checkurl?url=test3&previousUrl=previous').andReturn({responseText: 'true'});
+      var spy = sinon.spy($, 'ajax');
       var previousUrl = $('#activityform [name=previousUrl]');
       previousUrl.val('previous');
       url.val('test3');
       // trigger validation
       url.trigger('change');
-
-      expect(activity_validator.element(url)).toBe(true);
-    });
-
-    it('checks that a url call also sends the previousURl', function () {
-      jasmine.Ajax.stubRequest('/activities/checkurl?url=test3&previousUrl=previous').andReturn({responseText: 'true'});
-      var previousUrl = $('#activityform [name=previousUrl]');
-      previousUrl.val('previous');
-      url.val('test3');
-      // trigger validation
-      url.trigger('change');
-
-      expect(activity_validator.element(url)).toBe(true);
+      expect(spy.args[0][0].data.previousUrl()).to.equal('previous');
+      $.ajax.restore();
     });
 
     it('checks that "title" is mandatory', function () {
@@ -92,9 +66,9 @@
       $('#activityform [name=endTime]').val('12:11');
       $('#activityform [name=startTime]').trigger('change');
 
-      expect(activity_validator.element('#activityform [name=endDate]')).toBe(false);
-      expect(activity_validator.element('#activityform [name=endTime]')).toBe(false);
-      expect(activity_validator.errorList).toContain(jasmine.objectContaining({message: endMustBeAfterBegin}));
+      expect(activity_validator.element('#activityform [name=endDate]')).to.be(false);
+      expect(activity_validator.element('#activityform [name=endTime]')).to.be(false);
+      expect(activity_validator.errorList[0]).to.have.ownProperty('message', endMustBeAfterBegin);
     });
 
   });

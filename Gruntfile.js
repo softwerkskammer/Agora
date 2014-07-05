@@ -106,7 +106,7 @@ module.exports = function (grunt) {
           browser: true,
           vars: true,
           nomen: true,
-          predef: ['$', 'describe', 'expect', 'beforeEach', 'afterEach', 'jasmine', 'it']
+          predef: ['$', 'describe', 'expect', 'beforeEach', 'afterEach', 'sinon', 'it', 'testglobals']
         },
         options: jsLintStandardOptions
       }
