@@ -22,6 +22,12 @@ var waitinglistMembersOf = function (activity, resourceName) {
   return _.pluck(_.pluck(activity.resourceNamed(resourceName).waitinglistEntries(), 'state'), '_memberId');
 };
 
+var activityWithEinzelzimmer = function (resource) {
+  var state = {url: 'activity-url', resources: {Einzelzimmer: resource }};
+  var activity = new Activity(state);
+  sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, activity); });
+  return activity;
+}
 describe('Waitinglist Service', function () {
 
   afterEach(function () {
@@ -82,16 +88,14 @@ describe('Waitinglist Service', function () {
     beforeEach(function () { return undefined; });
 
     it('succeeds no matter whether registration is open or not', function (done) {
-      var state = {resources: {Einzelzimmer: {_waitinglist: [
+      activityWithEinzelzimmer({_waitinglist: [
         {_memberId: 'otherId'}
-      ]}}};
-      var activity = new Activity(state);
+      ]});
       var savedActivity;
       sinon.stub(activitystore, 'saveActivity', function (activityToSave, callback) {
         savedActivity = activityToSave;
         callback(null);
       });
-      sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, activity); });
       sinon.stub(memberstore, 'getMember', function (nickname, callback) { callback(null, new Member({id: 'memberId', nickname: 'hansdampf'})); });
 
       var args = {nickname: 'memberId', activityUrl: 'activity-url', resourcename: 'Einzelzimmer'};
@@ -139,17 +143,15 @@ describe('Waitinglist Service', function () {
     });
 
     it('succeeds no matter whether registration is open or not', function (done) {
-      var state = {url: 'activity-url', resources: {Einzelzimmer: {_waitinglist: [
+      activityWithEinzelzimmer({_waitinglist: [
         {_memberId: 'memberId'},
         {_memberId: 'otherId'}
-      ]}}};
-      var activity = new Activity(state);
+      ]});
       var savedActivity;
       sinon.stub(activitystore, 'saveActivity', function (activityToSave, callback) {
         savedActivity = activityToSave;
         callback(null);
       });
-      sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, activity); });
       sinon.stub(memberstore, 'getMember', function (nickname, callback) { callback(null, new Member({id: 'memberId', nickname: 'hansdampf'})); });
 
       var args = {nickname: 'memberId', activityUrl: 'activity-url', resourcename: 'Einzelzimmer'};
@@ -166,15 +168,13 @@ describe('Waitinglist Service', function () {
     });
 
     it('gives an error and does not notify when save failed', function (done) {
-      var state = {resources: {Einzelzimmer: {_waitinglist: [
+      activityWithEinzelzimmer({_waitinglist: [
         {_memberId: 'memberId'},
         {_memberId: 'otherId'}
-      ]}}};
-      var activity = new Activity(state);
+      ]});
       sinon.stub(activitystore, 'saveActivity', function (activityToSave, callback) {
         callback(new Error('Some problem during save'));
       });
-      sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, activity); });
       sinon.stub(memberstore, 'getMember', function (nickname, callback) { callback(null, new Member({id: 'memberId', nickname: 'hansdampf'})); });
 
       var args = {nickname: 'memberId', activityUrl: 'activity-url', resourcename: 'Einzelzimmer'};
@@ -187,16 +187,14 @@ describe('Waitinglist Service', function () {
 
 
     it('does not change anything when member is not in waitinglist', function (done) {
-      var state = {resources: {Einzelzimmer: {_waitinglist: [
+      var activity = activityWithEinzelzimmer({_waitinglist: [
         {_memberId: 'otherId'}
-      ]}}};
-      var activity = new Activity(state);
+      ]});
       var savedActivity;
       sinon.stub(activitystore, 'saveActivity', function (activityToSave, callback) {
         savedActivity = activityToSave;
         callback(null);
       });
-      sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, activity); });
       sinon.stub(memberstore, 'getMember', function (nickname, callback) { callback(null, new Member({id: 'memberId', nickname: 'hansdampf'})); });
 
       var args = {nickname: 'memberId', activityUrl: 'activity-url', resourcename: 'Einzelzimmer'};
