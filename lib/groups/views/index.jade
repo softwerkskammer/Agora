@@ -10,6 +10,12 @@ mixin grouplist(title, groupsOfAKind)
           | &nbsp;&nbsp;
           span.popover-highlight(rel='tooltip-in-body', data-content=group.descriptionHTMLFiltered('img'))
             strong: a(href='#{group.id}') #{group.longName}
+          | &nbsp;&nbsp;
+          span.tooltiplabel(data-toggle='tooltip', data-original-title=t('wiki.gotowiki'))
+            a(href='/wiki/#{group.id}/'): i.fa.fa-book.fa-fw
+    script.
+      $('.tooltiplabel').each(function() {$(this).tooltip()})
+
 
 mixin placeGroupLabels(groupsOfAKind)
     each group in groupsOfAKind
