@@ -4,8 +4,8 @@
 
   describe('Mailsender Form', function () {
 
-    var checkFieldMandatory = function (fieldname) {
-      testglobals.mandatoryChecker(mail_validator, fieldname);
+    var checkFieldMandatory = function (selector) {
+      testglobals.mandatoryChecker(mail_validator, selector);
     };
 
     it('checks that "subject" is mandatory', function () {

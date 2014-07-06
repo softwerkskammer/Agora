@@ -13,69 +13,44 @@
       sandbox.restore();
     });
 
-    var checkFieldMandatory = function (fieldname, value) {
-      testglobals.mandatoryChecker(member_validator, fieldname, value);
+    var checkFieldMandatory = function (selector, value) {
+      testglobals.mandatoryChecker(member_validator, selector, value);
+    };
+
+    var checkFieldWithPositiveAjaxResponse = function (field, value) {
+      testglobals.checkFieldWithPositiveAjaxResponse(sandbox, member_validator, field, value);
+    };
+
+    var checkFieldWithNegativeAjaxResponse = function (field, message, value) {
+      testglobals.checkFieldWithNegativeAjaxResponse(sandbox, member_validator, field, message, value);
+    };
+
+    var checkThatPreviousValueIsSent = function (field, previousField, value) {
+      testglobals.checkThatPreviousValueIsSent(sandbox, field, previousField, value);
     };
 
     it('checks that a nickname check response is handled for "true"', function () {
-      sandbox.stub($, 'ajax').yieldsTo('success', true);
-      nickname.val('nick');
-      // trigger validation
-      nickname.trigger('change');
-
-      expect(member_validator.element(nickname)).to.be(true);
-      expect(member_validator.errorList).to.be.empty();
+      checkFieldWithPositiveAjaxResponse(nickname);
     });
 
     it('checks that a nickname check response is handled for "false"', function () {
-      sandbox.stub($, 'ajax').yieldsTo('success', false);
-      nickname.val('nick');
-      // trigger validation
-      nickname.trigger('change');
-
-      expect(member_validator.element(nickname)).to.be(false);
-      expect(member_validator.errorList[0]).to.have.ownProperty('message', nicknameIsNotAvailable);
+      checkFieldWithNegativeAjaxResponse(nickname, nicknameIsNotAvailable);
     });
 
     it('checks that a nickname check also sends the previousNickname', function () {
-      var spy = sandbox.spy($, 'ajax');
-      var previousNickname = $('#memberform [name=previousNickname]');
-      previousNickname.val('previous');
-      nickname.val('nick');
-      // trigger validation
-      nickname.trigger('change');
-
-      expect(spy.args[0][0].data.previousNickname()).to.equal('previous');
+      checkThatPreviousValueIsSent(nickname, $('#memberform [name=previousNickname]'));
     });
 
     it('checks that a email check response is handled for "true"', function () {
-      sandbox.stub($, 'ajax').yieldsTo('success', true);
-      email.val('mail@a.de');
-      // trigger validation
-      email.trigger('change');
-
-      expect(member_validator.element(email)).to.be(true);
-      expect(member_validator.errorList).to.be.empty();
+      checkFieldWithPositiveAjaxResponse(email, 'a@b.c');
     });
 
     it('checks that a email check response is handled for "false"', function () {
-      sandbox.stub($, 'ajax').yieldsTo('success', false);
-      email.val('mail@a.de');
-      // trigger validation
-      email.trigger('change');
-
-      expect(member_validator.element(email)).to.be(false);
-      expect(member_validator.errorList[0]).to.have.ownProperty('message', emailAlreadyTaken);
+      checkFieldWithNegativeAjaxResponse(email, emailAlreadyTaken, 'a@b.c');
     });
 
     it('checks that a email check also sends the previousEmail', function () {
-      var spy = sandbox.spy($, 'ajax');
-      var previousEmail = $('#memberform [name=previousEmail]');
-      previousEmail.val('previous');
-      email.val('mail@a.de');
-      // trigger validation
-      email.trigger('change');
-      expect(spy.args[0][0].data.previousEmail()).to.equal('previous');
+      checkThatPreviousValueIsSent(email, $('#memberform [name=previousEmail]'), 'a@b.c');
     });
 
     it('checks that "firstname" is mandatory', function () {

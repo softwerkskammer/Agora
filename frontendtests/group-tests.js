@@ -13,48 +13,32 @@
       sandbox.restore();
     });
 
-    var checkFieldMandatory = function (fieldname, value) {
-      testglobals.mandatoryChecker(groups_validator, fieldname, value);
+    var checkFieldMandatory = function (selector, value) {
+      testglobals.mandatoryChecker(groups_validator, selector, value);
+    };
+
+    var checkFieldWithPositiveAjaxResponse = function (field) {
+      testglobals.checkFieldWithPositiveAjaxResponse(sandbox, groups_validator, field);
+    };
+
+    var checkFieldWithNegativeAjaxResponse = function (field, message) {
+      testglobals.checkFieldWithNegativeAjaxResponse(sandbox, groups_validator, field, message);
     };
 
     it('checks that a groupname check response is handled for "true"', function () {
-      sandbox.stub($, 'ajax').yieldsTo('success', true);
-      id.val('group');
-      // trigger validation
-      id.trigger('change');
-
-      expect(groups_validator.element(id)).to.be(true);
-      expect(groups_validator.errorList).to.be.empty();
+      checkFieldWithPositiveAjaxResponse(id);
     });
 
     it('checks that a groupname check response is handled for "false"', function () {
-      sandbox.stub($, 'ajax').yieldsTo('success', false);
-      id.val('group');
-      // trigger validation
-      id.trigger('change');
-
-      expect(groups_validator.element(id)).to.be(false);
-      expect(groups_validator.errorList[0]).to.have.ownProperty('message', groupnameAlreadyTaken);
+      checkFieldWithNegativeAjaxResponse(id, groupnameAlreadyTaken);
     });
 
     it('checks that a prefix check response is handled for "true"', function () {
-      sandbox.stub($, 'ajax').yieldsTo('success', true);
-      emailPrefix.val('prefix');
-      // trigger validation
-      emailPrefix.trigger('change');
-
-      expect(groups_validator.element(emailPrefix)).to.be(true);
-      expect(groups_validator.errorList).to.be.empty();
+      checkFieldWithPositiveAjaxResponse(emailPrefix);
     });
 
     it('checks that a prefix check response is handled for "false"', function () {
-      sandbox.stub($, 'ajax').yieldsTo('success', false);
-      emailPrefix.val('prefix');
-      // trigger validation
-      emailPrefix.trigger('change');
-
-      expect(groups_validator.element(emailPrefix)).to.be(false);
-      expect(groups_validator.errorList[0]).to.have.ownProperty('message', prefixAlreadyTaken);
+      checkFieldWithNegativeAjaxResponse(emailPrefix, prefixAlreadyTaken);
     });
 
     it('checks that "id" is mandatory', function () {

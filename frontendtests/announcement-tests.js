@@ -11,39 +11,32 @@
       sandbox.restore();
     });
 
-    var checkFieldMandatory = function (fieldname) {
-      testglobals.mandatoryChecker(announcement_validator, fieldname);
+    var checkFieldMandatory = function (selector) {
+      testglobals.mandatoryChecker(announcement_validator, selector);
+    };
+
+    var checkFieldWithPositiveAjaxResponse = function (field) {
+      testglobals.checkFieldWithPositiveAjaxResponse(sandbox, announcement_validator, field);
+    };
+
+    var checkFieldWithNegativeAjaxResponse = function (field, message) {
+      testglobals.checkFieldWithNegativeAjaxResponse(sandbox, announcement_validator, field, message);
+    };
+
+    var checkThatPreviousValueIsSent = function (field, previousField) {
+      testglobals.checkThatPreviousValueIsSent(sandbox, field, previousField);
     };
 
     it('checks that a url check response is handled for "true"', function () {
-      sandbox.stub($, 'ajax').yieldsTo('success', true);
-      url.val('test');
-      // trigger validation
-      url.trigger('change');
-
-      expect(announcement_validator.element(url)).to.be(true);
-      expect(announcement_validator.errorList).to.be.empty();
+      checkFieldWithPositiveAjaxResponse(url);
     });
 
     it('checks that a url check response is handled for "false"', function () {
-      sandbox.stub($, 'ajax').yieldsTo('success', false);
-      url.val('test');
-      // trigger validation
-      url.trigger('change');
-
-      expect(announcement_validator.element(url)).to.be(false);
-      expect(announcement_validator.errorList[0]).to.have.ownProperty('message', urlIsNotAvailable);
+      checkFieldWithNegativeAjaxResponse(url, urlIsNotAvailable);
     });
 
     it('checks that a url call also sends the previousURl', function () {
-      var spy = sandbox.spy($, 'ajax');
-      var previousUrl = $('#announcementform [name=previousUrl]');
-      previousUrl.val('previous');
-      url.val('test');
-      // trigger validation
-      url.trigger('change');
-
-      expect(spy.args[0][0].data.previousUrl()).to.equal('previous');
+      checkThatPreviousValueIsSent(url, $('#announcementform [name=previousUrl]'));
     });
 
     it('checks that "title" is mandatory', function () {

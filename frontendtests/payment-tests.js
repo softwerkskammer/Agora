@@ -3,8 +3,8 @@
   'use strict';
 
   describe('Payment Form', function () {
-    var checkFieldMandatory = function (fieldname) {
-      testglobals.mandatoryChecker(addon_validator, fieldname);
+    var checkFieldMandatory = function (selector) {
+      testglobals.mandatoryChecker(addon_validator, selector);
     };
 
     it('checks that "description" is mandatory', function () {
