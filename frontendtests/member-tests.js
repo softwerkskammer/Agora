@@ -6,7 +6,7 @@
     var nickname = $('#memberform [name=nickname]');
     var email = $('#memberform [name=email]');
 
-    var sandbox = sinon.sandbox;
+    var sandbox = sinon.sandbox.create();
 
     afterEach(function () {
       member_validator.resetForm();

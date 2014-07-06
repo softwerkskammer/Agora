@@ -4,7 +4,7 @@
 
   describe('Activitiy Form', function () {
     var url = $('#activityform [name=url]');
-    var sandbox = sinon.sandbox;
+    var sandbox = sinon.sandbox.create();
 
     afterEach(function () {
       activity_validator.resetForm();

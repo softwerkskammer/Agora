@@ -4,7 +4,7 @@
 
   describe('Announcements Form', function () {
     var url = $('#announcementform [name=url]');
-    var sandbox = sinon.sandbox;
+    var sandbox = sinon.sandbox.create();
 
     afterEach(function () {
       announcement_validator.resetForm();

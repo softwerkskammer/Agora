@@ -43,7 +43,6 @@ module.exports = {
     thruMoment: function () { return moment(); }
   },
   group: {
-    id: ''
   },
   allTypes: ['Themengruppe', 'Regionalgruppe'],
   organizersChecked: [],

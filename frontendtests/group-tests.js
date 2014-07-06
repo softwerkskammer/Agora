@@ -6,10 +6,9 @@
     var id = $('#groupform [name=id]');
     var emailPrefix = $('#groupform [name=emailPrefix]');
 
-    var sandbox = sinon.sandbox;
+    var sandbox = sinon.sandbox.create();
 
     afterEach(function () {
-      id.val('gri');
       groups_validator.resetForm();
       sandbox.restore();
     });
@@ -20,7 +19,7 @@
 
     it('checks that a groupname check response is handled for "true"', function () {
       sandbox.stub($, 'ajax').yieldsTo('success', true);
-      id.val('group1');
+      id.val('group');
       // trigger validation
       id.trigger('change');
 
@@ -30,7 +29,7 @@
 
     it('checks that a groupname check response is handled for "false"', function () {
       sandbox.stub($, 'ajax').yieldsTo('success', false);
-      id.val('group2');
+      id.val('group');
       // trigger validation
       id.trigger('change');
 
@@ -50,7 +49,7 @@
 
     it('checks that a prefix check response is handled for "false"', function () {
       sandbox.stub($, 'ajax').yieldsTo('success', false);
-      emailPrefix.val('prefix1');
+      emailPrefix.val('prefix');
       // trigger validation
       emailPrefix.trigger('change');
 
