@@ -79,5 +79,7 @@ describe('/activityresults', function () {
         .send({ activityResultName: '' })
         .expect(BAD_REQUEST, done);
     });
+
+    it('should reject requests with existing activityResultName');
   });
 });
