@@ -124,7 +124,7 @@ Preparations for use
 
 * If python 3 is the default version, the command line for `npm install` must be adapted to the right python version (2.7)
 
-            npm install --python /usr/bin/python2
+            npm install --python=/usr/bin/python2
 
 * Start mongodb. If you only plan to use it for development, the default settings are ok. The app as well as the tests use these defaults if you did not change the configuration.
 * (Optional) Instructions for authenticated use are [here](lib/persistence/README.md)
