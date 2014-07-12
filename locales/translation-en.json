@@ -75,7 +75,7 @@
     "stacktrace500": "The Stacktrace",
     "error500_text": [
       "p Please ",
-      "  a(href=\"https://github.com/softwerkskammer/NeuePlattform-Implementierung/issues/\") $t(error.detailed_report):",
+      "  a(href=\"https://github.com/softwerkskammer/Agora/issues/\") $t(error.detailed_report):",
       "  ul",
       "    li What did you do?",
       "    li $t(error.os_browser)",
@@ -209,7 +209,7 @@
       "  | Please ",
       "  a(href=\"/login\") try again.",
       "p If the error occurs repeatedly, please ",
-      "  a(href=\"https://github.com/softwerkskammer/NeuePlattform-Implementierung/issues/\") $t(error.detailed_report):",
+      "  a(href=\"https://github.com/softwerkskammer/Agora/issues/\") $t(error.detailed_report):",
       "  ul",
       "    li How did you access the login page?",
       "    li Which authentication did you choose?",
