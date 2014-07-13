@@ -1,6 +1,17 @@
 var testglobals = {};
 (function () {
   'use strict';
+
+  function performAsXHR(callback) {
+    var requests = [];
+    var xhr = sinon.useFakeXMLHttpRequest();
+    xhr.onCreate = function (xhr) {
+      requests.push(xhr);
+    };
+    callback(requests);
+    xhr.restore();
+  }
+
   testglobals.mandatoryChecker = function (validator, selector, optionalValue) {
     var field = $(selector);
     field.val('');
@@ -10,33 +21,38 @@ var testglobals = {};
     expect(validator.element(field)).to.be(true);
   };
 
-  testglobals.checkFieldWithPositiveAjaxResponse = function (sandbox, validator, field, value) {
-    sandbox.stub($, 'ajax').yieldsTo('success', true);
-    field.val(value || 'value');
-    // trigger validation
-    field.trigger('change');
+  testglobals.checkFieldWithPositiveAjaxResponse = function (validator, field, value) {
+    performAsXHR(function (requests) {
+      field.val(value || 'value');
+      field.trigger('change'); // triggers validation
 
-    expect(validator.element(field)).to.be(true);
-    expect(validator.errorList).to.be.empty();
+      requests[0].respond(200, { "Content-Type": "text/plain" }, 'true');
+
+      expect(validator.element(field)).to.be(true);
+      expect(validator.errorList).to.be.empty();
+    });
   };
 
-  testglobals.checkFieldWithNegativeAjaxResponse = function (sandbox, validator, field, message, value) {
-    sandbox.stub($, 'ajax').yieldsTo('success', false);
-    field.val(value || 'value');
-    // trigger validation
-    field.trigger('change');
+  testglobals.checkFieldWithNegativeAjaxResponse = function (validator, field, message, value) {
+    performAsXHR(function (requests) {
+      field.val(value || 'value');
+      field.trigger('change'); // triggers validation
 
-    expect(validator.element(field)).to.be(false);
-    expect(validator.errorList[0]).to.have.ownProperty('message', message);
+      requests[0].respond(200, { "Content-Type": "text/plain" }, 'false');
+
+      expect(validator.element(field)).to.be(false);
+      expect(validator.errorList[0]).to.have.ownProperty('message', message);
+    });
   };
 
-  testglobals.checkThatPreviousValueIsSent = function (sandbox, field, previousField, value) {
-    var spy = sandbox.spy($, 'ajax');
+  testglobals.checkThatPreviousValueIsSent = function (field, previousField, value) {
+    var spy = sinon.spy($, 'ajax');
     previousField.val('previous');
     field.val(value || 'test');
     // trigger validation
     field.trigger('change');
     expect(spy.args[0][0].data[previousField[0].name]()).to.equal('previous');
+    spy.restore();
   };
 
 }());

@@ -6,11 +6,8 @@
     var id = $('#groupform [name=id]');
     var emailPrefix = $('#groupform [name=emailPrefix]');
 
-    var sandbox = sinon.sandbox.create();
-
     afterEach(function () {
       groups_validator.resetForm();
-      sandbox.restore();
     });
 
     var checkFieldMandatory = function (selector, value) {
@@ -18,11 +15,11 @@
     };
 
     var checkFieldWithPositiveAjaxResponse = function (field) {
-      testglobals.checkFieldWithPositiveAjaxResponse(sandbox, groups_validator, field);
+      testglobals.checkFieldWithPositiveAjaxResponse(groups_validator, field);
     };
 
     var checkFieldWithNegativeAjaxResponse = function (field, message) {
-      testglobals.checkFieldWithNegativeAjaxResponse(sandbox, groups_validator, field, message);
+      testglobals.checkFieldWithNegativeAjaxResponse(groups_validator, field, message);
     };
 
     it('checks that a groupname check response is handled for "true"', function () {

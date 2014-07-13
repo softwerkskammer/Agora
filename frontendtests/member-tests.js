@@ -6,11 +6,8 @@
     var nickname = $('#memberform [name=nickname]');
     var email = $('#memberform [name=email]');
 
-    var sandbox = sinon.sandbox.create();
-
     afterEach(function () {
       member_validator.resetForm();
-      sandbox.restore();
     });
 
     var checkFieldMandatory = function (selector, value) {
@@ -18,15 +15,15 @@
     };
 
     var checkFieldWithPositiveAjaxResponse = function (field, value) {
-      testglobals.checkFieldWithPositiveAjaxResponse(sandbox, member_validator, field, value);
+      testglobals.checkFieldWithPositiveAjaxResponse(member_validator, field, value);
     };
 
     var checkFieldWithNegativeAjaxResponse = function (field, message, value) {
-      testglobals.checkFieldWithNegativeAjaxResponse(sandbox, member_validator, field, message, value);
+      testglobals.checkFieldWithNegativeAjaxResponse(member_validator, field, message, value);
     };
 
     var checkThatPreviousValueIsSent = function (field, previousField, value) {
-      testglobals.checkThatPreviousValueIsSent(sandbox, field, previousField, value);
+      testglobals.checkThatPreviousValueIsSent(field, previousField, value);
     };
 
     it('checks that a nickname check response is handled for "true"', function () {
