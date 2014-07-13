@@ -359,6 +359,7 @@
     "content": {
       "save_error": "Das Speichern war nicht erfolgreich.",
       "save_error_retry": "Das Speichern war nicht erfolgreich. Bitte führe Deine Änderungen nochmals durch und speichere erneut.",
+      "save_error_reason": "Das Speichern war nicht erfolgreich. Grund: __err__",
       "query": "Dein eingegebener Suchtext ist zu kurz.",
       "activities": {
         "saved": "Deine Aktivität wurde gespeichert.",
@@ -383,7 +384,9 @@
         "saved_single": "Die neue Farbe wurde gespeichert."
       },
       "groups": {
-        "saved": "Deine Gruppe wurde gespeichert."
+        "saved": "Deine Gruppe wurde gespeichert.",
+        "subscribed": "Du bist jetzt Mitglied in der Gruppe und wirst in wenigen Momenten eine Begrüßungs-E-Mail erhalten.",
+        "unsubscribed": "Du bist jetzt nicht mehr Mitglied in der Gruppe und wirst in wenigen Momenten eine Bestätigungs-E-Mail erhalten."
       },
       "mailsender": {
         "error_reason": "Deine __type__ wurde nicht gesendet. Grund: __err__",
