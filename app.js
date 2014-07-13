@@ -62,7 +62,7 @@ module.exports = {
     app.use(favicon(path.join(__dirname, 'public/img/Softwerkskammer16x16.ico')));
     app.use(morgan({stream: winstonStream}));
     app.use(cookieParser());
-    app.use(bodyparser.urlencoded());
+    app.use(bodyparser.urlencoded({extended: true}));
     app.use(compress());
     app.use(serveStatic(path.join(__dirname, 'public'), { maxAge: 600 * 1000 })); // ten minutes
 

@@ -11,6 +11,7 @@ describe('Configuration sets Persistent Store only if configured', function () {
   it('to RAM Store', function () {
     var req = {
       originalUrl: '/something',
+      headers: {},
       cookies: {},
       signedCookies: {}
     };
