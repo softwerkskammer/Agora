@@ -17,7 +17,7 @@ module.exports = function (grunt) {
   var files_de = {
     'public/clientscripts/global_de.js': [
       'locales/frontend_de.js',
-      'node_modules/jquery/dist/jquery.js',
+      'bower_components/jquery/dist/jquery.js',
       'public/clientscripts/global/autoNumeric.js',
       'public/clientscripts/global/bootstrap.js',
       'public/clientscripts/global/bootstrap-datepicker.js',
@@ -28,11 +28,11 @@ module.exports = function (grunt) {
       'public/clientscripts/global/tinycolor.js', // for pick-a-color
       'public/clientscripts/global/pick-a-color.js',
       'public/clientscripts/global/bootstrap-datepicker.de.js',
-      'node_modules/jquery-validation/dist/jquery.validate.js',
-      'node_modules/jquery-validation/dist/additional-methods.js',
-      'node_modules/jquery-validation/src/localization/messages_de.js',
-      'node_modules/jquery-validation/src/localization/methods_de.js',
-      'node_modules/bootstrap-timepicker/js/bootstrap-timepicker.js',
+      'bower_components/jquery-validation/dist/jquery.validate.js',
+      'bower_components/jquery-validation/dist/additional-methods.js',
+      'bower_components/jquery-validation/src/localization/messages_de.js',
+      'bower_components/jquery-validation/src/localization/methods_de.js',
+      'bower_components/bootstrap-timepicker/js/bootstrap-timepicker.js',
       'node_modules/URIjs/src/URI.js',
       'public/clientscripts/global/agora.js'
     ]
@@ -41,7 +41,7 @@ module.exports = function (grunt) {
   var files_en = {
     'public/clientscripts/global_en.js': [
       'locales/frontend_en.js',
-      'node_modules/jquery/dist/jquery.js',
+      'bower_components/jquery/dist/jquery.js',
       'public/clientscripts/global/autoNumeric.js',
       'public/clientscripts/global/bootstrap.js',
       'public/clientscripts/global/bootstrap-datepicker.js',
@@ -49,11 +49,11 @@ module.exports = function (grunt) {
       'node_modules/moment-timezone/node_modules/moment/moment.js',
       'public/clientscripts/global/fullcalendar-patched.js',
       'public/clientscripts/global/en-gb.js', // for fullcalendar
-      'public/clientscripts/global/tinycolor.min.js', // for pick-a-color
+      'public/clientscripts/global/tinycolor.js', // for pick-a-color
       'public/clientscripts/global/pick-a-color.js',
-      'node_modules/jquery-validation/dist/jquery.validate.js',
-      'node_modules/jquery-validation/additional-methods.js',
-      'node_modules/bootstrap-timepicker/js/bootstrap-timepicker.js',
+      'bower_components/jquery-validation/dist/jquery.validate.js',
+      'bower_components/jquery-validation/dist/additional-methods.js',
+      'bower_components/bootstrap-timepicker/js/bootstrap-timepicker.js',
       'node_modules/URIjs/src/URI.js',
       'public/clientscripts/global/agora.js'
     ]
@@ -197,13 +197,16 @@ module.exports = function (grunt) {
           }
         },
         files: {
-          "frontendtests/fixtures/forms.html": "frontendtests/fixtures/forms.jade"
+          'frontendtests/fixtures/forms.html': 'frontendtests/fixtures/forms.jade'
         }
       }
+    },
+    'bower-install-simple': {
     }
   });
 
   // These plugins provide necessary tasks.
+  grunt.loadNpmTasks('grunt-bower-install-simple');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-jade');
   grunt.loadNpmTasks('grunt-contrib-less');
@@ -212,9 +215,9 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-jslint');
   grunt.loadNpmTasks('grunt-karma');
 
-  grunt.registerTask('frontendtests', ['clean', 'jade', 'less', 'uglify:production_de', 'karma:once', 'uglify:development_de', 'karma:once']);
+  grunt.registerTask('frontendtests', ['bower-install-simple', 'clean', 'jade', 'less', 'uglify:production_de', 'karma:once', 'uglify:development_de', 'karma:once']);
   grunt.registerTask('tests', ['jslint', 'frontendtests', 'mocha_istanbul']);
-  grunt.registerTask('deploy_development', ['less', 'uglify:development_de', 'uglify:development_en']);
+  grunt.registerTask('deploy_development', ['bower-install-simple', 'less', 'uglify:development_de', 'uglify:development_en']);
 
   // Default task.
   grunt.registerTask('default', ['tests', 'deploy_development']);
@@ -222,5 +225,5 @@ module.exports = function (grunt) {
   // Travis-CI task
   grunt.registerTask('travis', ['default']);
 
-  grunt.registerTask('deploy_production', ['less', 'uglify:production_de', 'uglify:production_en']);
+  grunt.registerTask('deploy_production', ['bower-install-simple', 'less', 'uglify:production_de', 'uglify:production_en']);
 };

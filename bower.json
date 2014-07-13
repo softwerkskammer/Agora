@@ -1,0 +1,12 @@
+{
+  "name": "agora-bower",
+  "version": "1.0.0",
+  "dependencies": {
+    "bootstrap-timepicker": "0.2.6",
+    "jquery": "2.1.1",
+    "jquery-validation": "1.13.0"
+  },
+  "resolutions": {
+    "jquery": "2.1.1"
+  }
+}

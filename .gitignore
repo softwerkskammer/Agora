@@ -12,6 +12,7 @@ config/*.json*
 log/*.log
 version.jade
 frontendtests/fixtures/*.html
+bower_components
 
 npm-debug.log
 screen.css
