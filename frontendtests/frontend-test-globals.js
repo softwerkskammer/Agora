@@ -2,13 +2,16 @@ var testglobals = {};
 (function () {
   'use strict';
 
-  function performAsXHR(callback) {
+  function performAsXHR(field, value, requestChecker) {
     var requests = [];
     var xhr = sinon.useFakeXMLHttpRequest();
-    xhr.onCreate = function (xhr) {
-      requests.push(xhr);
+    xhr.onCreate = function (request) {
+      requests.push(request);
     };
-    callback(requests);
+    field.val(value || 'value');
+    field.trigger('change'); // triggers validation
+
+    requestChecker(requests[0]);
     xhr.restore();
   }
 
@@ -21,38 +24,31 @@ var testglobals = {};
     expect(validator.element(field)).to.be(true);
   };
 
-  testglobals.checkFieldWithPositiveAjaxResponse = function (validator, field, value) {
-    performAsXHR(function (requests) {
-      field.val(value || 'value');
-      field.trigger('change'); // triggers validation
-
-      requests[0].respond(200, { "Content-Type": "text/plain" }, 'true');
+  testglobals.checkFieldWithPositiveAjaxResponse = function (validator, field, value, urlRegexp) {
+    performAsXHR(field, value, function (request) {
+      request.respond(200, { "Content-Type": "text/plain" }, 'true');
 
       expect(validator.element(field)).to.be(true);
       expect(validator.errorList).to.be.empty();
+      expect(request.url).to.match(urlRegexp);
     });
   };
 
-  testglobals.checkFieldWithNegativeAjaxResponse = function (validator, field, message, value) {
-    performAsXHR(function (requests) {
-      field.val(value || 'value');
-      field.trigger('change'); // triggers validation
-
-      requests[0].respond(200, { "Content-Type": "text/plain" }, 'false');
+  testglobals.checkFieldWithNegativeAjaxResponse = function (validator, field, message, value, urlRegexp) {
+    performAsXHR(field, value, function (request) {
+      request.respond(200, { "Content-Type": "text/plain" }, 'false');
 
       expect(validator.element(field)).to.be(false);
       expect(validator.errorList[0]).to.have.ownProperty('message', message);
+      expect(request.url).to.match(urlRegexp);
     });
   };
 
   testglobals.checkThatPreviousValueIsSent = function (field, previousField, value) {
-    var spy = sinon.spy($, 'ajax');
     previousField.val('previous');
-    field.val(value || 'test');
-    // trigger validation
-    field.trigger('change');
-    expect(spy.args[0][0].data[previousField[0].name]()).to.equal('previous');
-    spy.restore();
+    performAsXHR(field, value, function (request) {
+      expect(request.url).to.match('&' + previousField[0].name + '=previous');
+    });
   };
 
 }());

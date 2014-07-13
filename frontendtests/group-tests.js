@@ -14,28 +14,28 @@
       testglobals.mandatoryChecker(groups_validator, selector, value);
     };
 
-    var checkFieldWithPositiveAjaxResponse = function (field) {
-      testglobals.checkFieldWithPositiveAjaxResponse(groups_validator, field);
+    var checkFieldWithPositiveAjaxResponse = function (field, urlRegexp) {
+      testglobals.checkFieldWithPositiveAjaxResponse(groups_validator, field, undefined, urlRegexp);
     };
 
-    var checkFieldWithNegativeAjaxResponse = function (field, message) {
-      testglobals.checkFieldWithNegativeAjaxResponse(groups_validator, field, message);
+    var checkFieldWithNegativeAjaxResponse = function (field, message, urlRegexp) {
+      testglobals.checkFieldWithNegativeAjaxResponse(groups_validator, field, message, undefined, urlRegexp);
     };
 
     it('checks that a groupname check response is handled for "true"', function () {
-      checkFieldWithPositiveAjaxResponse(id);
+      checkFieldWithPositiveAjaxResponse(id, /groups\/checkgroupname\?id=value/);
     });
 
     it('checks that a groupname check response is handled for "false"', function () {
-      checkFieldWithNegativeAjaxResponse(id, groupnameAlreadyTaken);
+      checkFieldWithNegativeAjaxResponse(id, groupnameAlreadyTaken, /groups\/checkgroupname\?id=value/);
     });
 
     it('checks that a prefix check response is handled for "true"', function () {
-      checkFieldWithPositiveAjaxResponse(emailPrefix);
+      checkFieldWithPositiveAjaxResponse(emailPrefix, /groups\/checkemailprefix\?emailPrefix=value/);
     });
 
     it('checks that a prefix check response is handled for "false"', function () {
-      checkFieldWithNegativeAjaxResponse(emailPrefix, prefixAlreadyTaken);
+      checkFieldWithNegativeAjaxResponse(emailPrefix, prefixAlreadyTaken, /groups\/checkemailprefix\?emailPrefix=value/);
     });
 
     it('checks that "id" is mandatory', function () {

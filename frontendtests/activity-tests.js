@@ -14,11 +14,11 @@
     };
 
     var checkFieldWithPositiveAjaxResponse = function (field) {
-      testglobals.checkFieldWithPositiveAjaxResponse(activity_validator, field);
+      testglobals.checkFieldWithPositiveAjaxResponse(activity_validator, field, undefined, /activities\/checkurl\?url=value/);
     };
 
     var checkFieldWithNegativeAjaxResponse = function (field, message) {
-      testglobals.checkFieldWithNegativeAjaxResponse(activity_validator, field, message);
+      testglobals.checkFieldWithNegativeAjaxResponse(activity_validator, field, message, undefined, /activities\/checkurl\?url=value/);
     };
 
     var checkThatPreviousValueIsSent = function (field, previousField) {
