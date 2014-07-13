@@ -33,7 +33,7 @@ module.exports = function (testBeansFilename) {
     paymentBic      : 'paymentBic',
     paymentIban     : 'paymentIban',
     paymentReceiver : 'paymentReceiver',
-    fqdn            : 'localhost'
+    domainname      : 'localhost'
 
   });
 

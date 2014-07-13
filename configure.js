@@ -24,7 +24,7 @@ function createConfiguration() {
     securedByLoginURLPattern: '/mailsender|/members|/new|/edit|/submit|(subscribe|unsubscribe)/|/mailarchive|/invitation|/addToWaitinglist|/removeFromWaitinglist|/addon|/submitAddon|/wiki/socrates.*/|/payment|dashboard',
     secret: 'secret',
     beans: new Beans('./config/beans.json'),
-    fqdn: 'softwerkskammer.org'
+    domainname: 'localhost'
   });
 
   return nconf;
