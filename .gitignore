@@ -22,3 +22,6 @@ coverage
 .vagrant
 .idea/dictionaries
 .idea/workspace.xml
+.idea/Agora.iml
+.idea/jsLibraryMappings.xml
+
