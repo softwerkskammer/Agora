@@ -48,7 +48,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # the path on the host to the actual folder. The second argument is
   # the path on the guest to mount the folder. And the optional third
   # argument is a set of non-required options.
-  # config.vm.synced_folder "../data", "/vagrant_data"
+  config.vm.synced_folder "./local/gallery", "/var/local/agora/gallery"
 
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
@@ -138,5 +138,9 @@ apt-get install -y nodejs nodejs-legacy npm mongodb g++ git python fontconfig
 
 # install grunt-cli using npm
 npm install -g grunt-cli
+
+# create directory for image files stored in gallery microservice
+mkdir --verbose --parents /var/local/agora/gallery
+chown --verbose vagrant:vagrant /var/local/agora/gallery
 SCRIPT
 end
