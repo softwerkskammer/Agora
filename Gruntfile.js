@@ -141,6 +141,7 @@ module.exports = function (grunt) {
             'public/stylesheets/less/pick-a-color-patched.less',
             'public/stylesheets/vendor/shCoreDefault-patched.css',
             'public/stylesheets/vendor/jquery.dataTables.css',
+            'public/stylesheets/partials/activityresults.less',
             'public/stylesheets/partials/agora.less'
           ]
         }
