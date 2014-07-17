@@ -21,7 +21,9 @@ build/config.gypi
 coverage
 .vagrant
 .idea/dictionaries
+.idea/modules.xml
+.idea/libraries
 .idea/workspace.xml
-.idea/Agora.iml
+.idea/*.iml
 .idea/jsLibraryMappings.xml
 

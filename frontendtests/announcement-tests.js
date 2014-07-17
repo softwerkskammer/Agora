@@ -4,11 +4,9 @@
 
   describe('Announcements Form', function () {
     var url = $('#announcementform [name=url]');
-    var sandbox = sinon.sandbox.create();
 
     afterEach(function () {
       announcement_validator.resetForm();
-      sandbox.restore();
     });
 
     var checkFieldMandatory = function (selector) {
@@ -16,15 +14,15 @@
     };
 
     var checkFieldWithPositiveAjaxResponse = function (field) {
-      testglobals.checkFieldWithPositiveAjaxResponse(sandbox, announcement_validator, field);
+      testglobals.checkFieldWithPositiveAjaxResponse(announcement_validator, field, undefined, /announcements\/checkurl\?url=value/);
     };
 
     var checkFieldWithNegativeAjaxResponse = function (field, message) {
-      testglobals.checkFieldWithNegativeAjaxResponse(sandbox, announcement_validator, field, message);
+      testglobals.checkFieldWithNegativeAjaxResponse(announcement_validator, field, message, undefined, /announcements\/checkurl\?url=value/);
     };
 
     var checkThatPreviousValueIsSent = function (field, previousField) {
-      testglobals.checkThatPreviousValueIsSent(sandbox, field, previousField);
+      testglobals.checkThatPreviousValueIsSent(field, previousField);
     };
 
     it('checks that a url check response is handled for "true"', function () {

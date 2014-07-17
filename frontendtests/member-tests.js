@@ -6,35 +6,32 @@
     var nickname = $('#memberform [name=nickname]');
     var email = $('#memberform [name=email]');
 
-    var sandbox = sinon.sandbox.create();
-
     afterEach(function () {
       member_validator.resetForm();
-      sandbox.restore();
     });
 
     var checkFieldMandatory = function (selector, value) {
       testglobals.mandatoryChecker(member_validator, selector, value);
     };
 
-    var checkFieldWithPositiveAjaxResponse = function (field, value) {
-      testglobals.checkFieldWithPositiveAjaxResponse(sandbox, member_validator, field, value);
+    var checkFieldWithPositiveAjaxResponse = function (field, value, urlRegexp) {
+      testglobals.checkFieldWithPositiveAjaxResponse(member_validator, field, value, urlRegexp);
     };
 
-    var checkFieldWithNegativeAjaxResponse = function (field, message, value) {
-      testglobals.checkFieldWithNegativeAjaxResponse(sandbox, member_validator, field, message, value);
+    var checkFieldWithNegativeAjaxResponse = function (field, message, value, urlRegexp) {
+      testglobals.checkFieldWithNegativeAjaxResponse(member_validator, field, message, value, urlRegexp);
     };
 
     var checkThatPreviousValueIsSent = function (field, previousField, value) {
-      testglobals.checkThatPreviousValueIsSent(sandbox, field, previousField, value);
+      testglobals.checkThatPreviousValueIsSent(field, previousField, value);
     };
 
     it('checks that a nickname check response is handled for "true"', function () {
-      checkFieldWithPositiveAjaxResponse(nickname);
+      checkFieldWithPositiveAjaxResponse(nickname, undefined, /members\/checknickname\?nickname=value/);
     });
 
     it('checks that a nickname check response is handled for "false"', function () {
-      checkFieldWithNegativeAjaxResponse(nickname, nicknameIsNotAvailable);
+      checkFieldWithNegativeAjaxResponse(nickname, nicknameIsNotAvailable, undefined, /members\/checknickname\?nickname=value/);
     });
 
     it('checks that a nickname check also sends the previousNickname', function () {
@@ -42,11 +39,11 @@
     });
 
     it('checks that a email check response is handled for "true"', function () {
-      checkFieldWithPositiveAjaxResponse(email, 'a@b.c');
+      checkFieldWithPositiveAjaxResponse(email, 'a@b.c', /members\/checkemail\?email=a%40b\.c/);
     });
 
     it('checks that a email check response is handled for "false"', function () {
-      checkFieldWithNegativeAjaxResponse(email, emailAlreadyTaken, 'a@b.c');
+      checkFieldWithNegativeAjaxResponse(email, emailAlreadyTaken, 'a@b.c', /members\/checkemail\?email=a%40b\.c/);
     });
 
     it('checks that a email check also sends the previousEmail', function () {
