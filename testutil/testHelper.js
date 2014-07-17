@@ -41,6 +41,7 @@ module.exports = function (internalAppName, configuredBeans) {
       }
       app.use(beans.get('accessrights'));
       app.use(beans.get('expressViewHelper'));
+      app.use(beans.get("serverpathRemover"));
       app.use('/', beans.get(appName));
 
       var appLogger = { error: function () { return undefined; } };
