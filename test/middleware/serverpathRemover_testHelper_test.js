@@ -27,7 +27,6 @@ describe("serverpathRemover used as a test bean", function () {
     };
     var createApp = require('../../testutil/testHelper')('testapp', wrappedTestBeans).createApp;
     request(createApp()).get("/").end(function () {
-      console.dir(resLocals);
       expect(resLocals.removeServerpaths).to.exist();
       done();
     });
