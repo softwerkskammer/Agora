@@ -134,7 +134,16 @@ sed /etc/apt/sources.list -e 's|http://us.archive.ubuntu.com/|http://de.archive.
 apt-get update
 
 # install needed packages
-apt-get install -y nodejs nodejs-legacy npm mongodb g++ git python fontconfig
+apt-get install --yes \
+  nodejs \
+  nodejs-legacy \
+  npm \
+  mongodb \
+  g++
+  git \
+  python \
+  fontconfig \
+  imagemagick
 
 # install grunt-cli using npm
 npm install -g grunt-cli
