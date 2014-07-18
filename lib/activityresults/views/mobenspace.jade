@@ -12,37 +12,22 @@ block content
 
   .row.row-without-negative-margin
     .col-xs-3.col-without-padding.noisy_blue
-      p(style="text-align: center")
-        | #Hopper
-      img(src='/gallery/fef400b5-2a1f-4f6d-86b7-d5b5716711ba.JPG', width=100, height=100, style="margin-top: 0px;")
-      img(src='/gallery/73120aa1-80b1-4f2f-a342-4b03abc665e5.JPG', width=100, height=100, style="margin-top: 13px;")
-      img(src='/gallery/a24a1d14-8936-403f-91d7-c6ba36343cc7.JPG', width=100, height=100, style="margin-top: 12px;")
-      img(src='/gallery/cba13ad5-43fc-485d-a73b-7adb0138debe.JPG', width=100, height=100, style="margin-top: 20px;")
+      p(style="text-align: center")= columns[0].columnTitle
+      each img in columns[0].images
+        img(src=img.uri, width=100, height=100, style="margin-top: " + img['margin-top']+ ";")
 
     .col-xs-3.col-without-padding.noisy_green
-      p(style="text-align: center")
-        | #Liskov
-      img(src='/gallery/5ca87f1d-0de0-4371-9de0-1c755fc1b9c1.JPG', width=100, height=100, style="margin-top: 20px;")
-      img(src='/gallery/250b1910-663c-4bb1-a0d6-4d5ed89d040d.JPG', width=100, height=100, style="margin-top: 10px;")
-      img(src='/gallery/e63b12ee-48ef-4126-af2c-9f87dd68bf4b.JPG', width=100, height=100, style="margin-top: 10px;")
+      p(style="text-align: center")= columns[1].columnTitle
+      each img in columns[1].images
+        img(src=img.uri, width=100, height=100, style="margin-top: " + img['margin-top']+ ";")
 
     .col-xs-3.col-without-padding.noisy_red
-      p(style="text-align: center")
-        | #Lovelace
-      img(src='/gallery/9aa23ef0-6565-457f-8d91-9922f22ba292.JPG', width=100, height=100, style="margin-top: 15px;")
-      img(src='/gallery/e766dcbc-e2da-4e72-928f-d67b9717f261.JPG', width=100, height=100, style="margin-top: 10px;")
-      img(src='/gallery/ad1f8bea-1785-4912-9b88-96f3cbe4b978.JPG', width=100, height=100, style="margin-top: 10px;")
-
-      img(src='/gallery/9afcfea0-1aa4-41c1-9f8c-6dba1e16d6c4.JPG', width=100, height=100, style="margin-top: 10px;")
+      p(style="text-align: center")= columns[2].columnTitle
+      each img in columns[2].images
+        img(src=img.uri, width=100, height=100, style="margin-top: " + img['margin-top']+ ";")
 
     .col-xs-3.col-without-padding.noisy_yellow
-      p(style="text-align: center")
-        | #Elsewhere
-      img(src='/gallery/9475905d-b979-4296-af47-ac0164788a1a.JPG', width=100, height=100, style="margin-top: 30px;")
-      img(src='/gallery/fdd09e6d-baf1-4c44-a767-a786d22002bd.JPG', width=100, height=100, style="margin-top: 10px;")
-      img(src='/gallery/85f9a5c1-46a5-470d-b3d2-fda330537457.JPG', width=100, height=100, style="margin-top: 10px;")
-
-      img(src='/gallery/1806f88e-8ed7-4b3e-92bd-3173c9965541.JPG', width=100, height=100, style="margin-top: 10px;")
-      img(src='/gallery/fc7ea3d4-9e4d-46cf-885c-2f9a98bfa058.JPG', width=100, height=100, style="margin-top: 10px;")
-      img(src='/gallery/627adb49-b7ef-4765-94b9-d094463007a6.JPG', width=100, height=100, style="margin-top: 10px;")
+      p(style="text-align: center")= columns[3].columnTitle
+      each img in columns[3].images
+        img(src=img.uri, width=100, height=100, style="margin-top: " + img['margin-top']+ ";")
 
