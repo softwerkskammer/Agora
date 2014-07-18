@@ -5,7 +5,7 @@ var userStub = require('./userStub');
 var i18n = require('i18next');
 var jade = require('jade');
 
-module.exports = function (internalAppName, configuredBeans) {
+module.exports = function (internalAppName, configuredBeans, testDoneCallback) {
   var appName = internalAppName;
   var beans = configuredBeans || require('./configureForTest').get('beans');
 
@@ -45,7 +45,16 @@ module.exports = function (internalAppName, configuredBeans) {
 
       var appLogger = { error: function () { return undefined; } };
       app.use(beans.get('handle404')(appLogger));
-      app.use(beans.get('handle500')(appLogger));
+      if (testDoneCallback) {
+        app.use(function (err, req, res, next) {
+          if (err) {
+            testDoneCallback(err);
+          }
+          next();
+        });
+      } else {
+        app.use(beans.get('handle500')(appLogger));
+      }
 
       i18n.registerAppHelper(app);
       i18n.addPostProcessor('jade', function (val, key, opts) {
