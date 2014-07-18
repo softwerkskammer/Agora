@@ -1,0 +1,13 @@
+extends ../../../views/layoutOnlyMain
+
+include  ../../../views/formComponents
+
+block title
+  = activityResultName + " / Upload"
+
+block content
+  .row
+    .col-md-12
+      button.btn.btn-primary#btn-record
+        span.glyphicon.glyphicon-camera &nbsp;
+        span RECORD
