@@ -47,9 +47,7 @@ module.exports = function (internalAppName, configuredBeans, testDoneCallback) {
       app.use(beans.get('handle404')(appLogger));
       if (testDoneCallback) {
         app.use(function (err, req, res, next) {
-          if (err) {
-            testDoneCallback(err);
-          }
+          if (err) { return testDoneCallback(err); }
           next();
         });
       } else {
