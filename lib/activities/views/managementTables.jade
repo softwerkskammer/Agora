@@ -1,5 +1,6 @@
 extends ../../../views/layoutOnlyMain
 include ../../members/views/memberlist-mixin
+include ../../../views/format-mixin
 
 mixin localdate(momentOrNull)
   | #{momentOrNull ? momentOrNull.lang(language).format('L') : '-'}
@@ -159,7 +160,7 @@ block content
                 for line in addonLines
                   tr
                     td #{formatList(formatDates(activity.resources().registrationDatesOf(line.member.id())))}
-                    td #{formatList(activity.resources().resourceNamesOf(line.member.id()))}
+                    td: +formatAsBulletList(activity.resources().resourceNamesOf(line.member.id()))
                     td: +linkedMember(line.member.nickname())
                     td #{line.member.firstname()}
                     td #{line.member.lastname()}
