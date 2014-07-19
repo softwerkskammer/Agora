@@ -109,7 +109,7 @@ block content
           a.btn.pull-right.btn-default(href='#{"/activities/" + encodeURIComponent(activity.url())}') Zurück
   ul.nav.nav-tabs
     li: a(href='#main', data-toggle='tab') #{t('activities.participants')}
-    li.active: a(href='#addons', data-toggle='tab') Zahlung
+    li.active: a(href='#addons', data-toggle='tab') Zahlungen
     li: a(href='#notPaidOrNoAddon', data-toggle='tab') Versäumnisse
     li: a(href='#groupMembership', data-toggle='tab') Gruppenmitgliedschaft
     li: a(href='#tshirtSizes', data-toggle='tab') T-Shirt-Bestellungen
@@ -141,6 +141,7 @@ block content
             hr
 
         .tab-pane.active#addons
+          h4 Alle Teilnehmer mit Zahlungen
           .panel
             table.table.table-condensed.table-hover.table-striped.addontable
               thead
@@ -172,9 +173,9 @@ block content
                     td: +buttonOrDate(line.addon.paymentReceivedMoment(), line.addon.paymentDone(), activity.url(), line.member.nickname())
 
         .tab-pane#notPaidOrNoAddon
+          h4 Teilnehmer, die noch nicht gezahlt bzw. die Zusatzinformationen nicht eingetragen haben
           .panel
             table.table.table-condensed.table-hover.table-striped.missingtable
-              h4 Folgende Teilnehmer haben noch nicht gezahlt bzw. die Zusatzinformationen nicht eingetragen:
               thead
                 tr
                   th Registriert
