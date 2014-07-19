@@ -4,6 +4,6 @@ mixin formatAsBulletList(list)
       li #{entry}
 
 mixin formatAsLines(list)
-  ul.align-with-table-header
-    for entry in list
-      li #{entry}
+  for entry in list
+    | #{entry}
+    br
