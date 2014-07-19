@@ -96,6 +96,21 @@ block scripts
         bStateSave: false
       });
     });
+    $(document).ready(function() {
+      $('.addressestable').dataTable({
+      oLanguage: {
+      sUrl: tableLangUrl
+      },
+      aoColumns: [
+      null, null, null, null, null
+      ],
+      bPaginate: false,
+      bAutoWidth: false,
+      bFilter: false,
+      aaSorting: [[ 1 , 'asc' ]],
+      bStateSave: false
+      });
+    });
 
 
 block title
@@ -114,6 +129,7 @@ block content
     li: a(href='#groupMembership', data-toggle='tab') Gruppenmitgliedschaft
     li: a(href='#tshirtSizes', data-toggle='tab') T-Shirt-Bestellungen
     li: a(href='#unsubscribed', data-toggle='tab') Abgemeldete
+    li: a(href='#addresses', data-toggle='tab') Adressen
   .row
     .col-md-12
       .tab-content
@@ -263,4 +279,25 @@ block content
                       td &nbsp;
                       td &nbsp;
                     td #{line.addon.paymentReceivedMoment() && line.addon.paymentReceivedMoment().lang(language).format('L')}
+          hr
+
+        .tab-pane#addresses
+          h4 Adressen der Teilnehmer
+          .panel
+            table.table.table-condensed.table-hover.table-striped.addressestable
+              thead
+                tr
+                  th Vorname
+                  th Nachname
+                  th Heimatadresse
+                  th Rechnungsadresse
+                  th Ressourcen
+              tbody
+                for line in addonLines
+                  tr
+                    td #{line.member.firstname()}
+                    td #{line.member.lastname()}
+                    td #{line.addon.homeAddress()}
+                    td #{line.addon.billingAddress()}
+                    td: +formatAsBulletList(activity.resources().resourceNamesOf(line.member.id()))
           hr
