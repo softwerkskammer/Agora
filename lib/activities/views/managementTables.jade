@@ -1,5 +1,6 @@
 extends ../../../views/layoutOnlyMain
 include ../../members/views/memberlist-mixin
+include ../../../views/format-mixin
 
 mixin localdate(momentOrNull)
   | #{momentOrNull ? momentOrNull.lang(language).format('L') : '-'}
@@ -95,6 +96,21 @@ block scripts
         bStateSave: false
       });
     });
+    $(document).ready(function() {
+      $('.addressestable').dataTable({
+      oLanguage: {
+      sUrl: tableLangUrl
+      },
+      aoColumns: [
+      null, null, null, null, null
+      ],
+      bPaginate: false,
+      bAutoWidth: false,
+      bFilter: false,
+      aaSorting: [[ 1 , 'asc' ]],
+      bStateSave: false
+      });
+    });
 
 
 block title
@@ -108,11 +124,12 @@ block content
           a.btn.pull-right.btn-default(href='#{"/activities/" + encodeURIComponent(activity.url())}') Zurück
   ul.nav.nav-tabs
     li: a(href='#main', data-toggle='tab') #{t('activities.participants')}
-    li.active: a(href='#addons', data-toggle='tab') Zahlung
+    li.active: a(href='#addons', data-toggle='tab') Zahlungen
     li: a(href='#notPaidOrNoAddon', data-toggle='tab') Versäumnisse
     li: a(href='#groupMembership', data-toggle='tab') Gruppenmitgliedschaft
     li: a(href='#tshirtSizes', data-toggle='tab') T-Shirt-Bestellungen
     li: a(href='#unsubscribed', data-toggle='tab') Abgemeldete
+    li: a(href='#addresses', data-toggle='tab') Adressen
   .row
     .col-md-12
       .tab-content
@@ -140,6 +157,7 @@ block content
             hr
 
         .tab-pane.active#addons
+          h4 Alle Teilnehmer mit Zahlungen
           .panel
             table.table.table-condensed.table-hover.table-striped.addontable
               thead
@@ -159,7 +177,7 @@ block content
                 for line in addonLines
                   tr
                     td #{formatList(formatDates(activity.resources().registrationDatesOf(line.member.id())))}
-                    td #{formatList(activity.resources().resourceNamesOf(line.member.id()))}
+                    td: +formatAsBulletList(activity.resources().resourceNamesOf(line.member.id()))
                     td: +linkedMember(line.member.nickname())
                     td #{line.member.firstname()}
                     td #{line.member.lastname()}
@@ -171,9 +189,9 @@ block content
                     td: +buttonOrDate(line.addon.paymentReceivedMoment(), line.addon.paymentDone(), activity.url(), line.member.nickname())
 
         .tab-pane#notPaidOrNoAddon
+          h4 Teilnehmer, die noch nicht gezahlt bzw. die Zusatzinformationen nicht eingetragen haben
           .panel
             table.table.table-condensed.table-hover.table-striped.missingtable
-              h4 Folgende Teilnehmer haben noch nicht gezahlt bzw. die Zusatzinformationen nicht eingetragen:
               thead
                 tr
                   th Registriert
@@ -261,4 +279,25 @@ block content
                       td &nbsp;
                       td &nbsp;
                     td #{line.addon.paymentReceivedMoment() && line.addon.paymentReceivedMoment().lang(language).format('L')}
+          hr
+
+        .tab-pane#addresses
+          h4 Adressen der Teilnehmer
+          .panel
+            table.table.table-condensed.table-hover.table-striped.addressestable
+              thead
+                tr
+                  th Vorname
+                  th Nachname
+                  th Heimatadresse
+                  th Rechnungsadresse
+                  th Ressourcen
+              tbody
+                for line in addonLines
+                  tr
+                    td #{line.member.firstname()}
+                    td #{line.member.lastname()}
+                    td: +formatAsLines(line.addon.homeAddressLines())
+                    td: +formatAsLines(line.addon.billingAddressLines())
+                    td: +formatAsBulletList(activity.resources().resourceNamesOf(line.member.id()))
           hr
