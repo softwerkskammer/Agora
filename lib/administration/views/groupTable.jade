@@ -1,21 +1,11 @@
 extends ../../../views/layoutOnlyMain
+include ../../../views/dataTables-mixin
 
 block scripts
   script(src='/clientscripts/jquery.dataTables.min.js')
+  +dataTable('#grouptable', "[[ 1, 'asc' ]]", "[{ bSortable : false }, null, null, null, null, null]", true)
   script.
     $(document).ready(function() {
-      $('#grouptable').dataTable({
-        oLanguage: {
-          sUrl: tableLangUrl
-        },
-        aoColumns: [
-          { bSortable : false }, null, null, null, null, null
-        ],
-        bPaginate: false,
-        bAutoWidth: false,
-        aaSorting: [[ 1, 'asc' ]],
-        bStateSave: true
-      });
       $('.tooltiplabel').each(function(each) {$(this).popover()});
     });
 

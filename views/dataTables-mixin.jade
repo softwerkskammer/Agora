@@ -1,5 +1,5 @@
 
-mixin dataTable(clazz, sorting, columns)
+mixin dataTable(clazz, sorting, columns, saveState)
   script.
     $(document).ready(function() {
       $('#{clazz}').dataTable({
@@ -11,6 +11,6 @@ mixin dataTable(clazz, sorting, columns)
         bAutoWidth: false,
         bFilter: false,
         aaSorting: #{sorting},
-        bStateSave: false
+        bStateSave: #{!!saveState}
       });
     });
