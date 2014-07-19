@@ -133,7 +133,7 @@ block content
                   for member in participants
                     tr
                       td #{member.registeredAt.lang(language).format('L')}
-                      td: mixin linkedMember(member.nickname())
+                      td: +linkedMember(member.nickname())
                       td #{member.firstname()}
                       td #{member.lastname()}
                       td #{member.location()}
@@ -160,15 +160,15 @@ block content
                   tr
                     td #{formatList(formatDates(activity.resources().registrationDatesOf(line.member.id())))}
                     td #{formatList(activity.resources().resourceNamesOf(line.member.id()))}
-                    td: mixin linkedMember(line.member.nickname())
+                    td: +linkedMember(line.member.nickname())
                     td #{line.member.firstname()}
                     td #{line.member.lastname()}
                     td #{line.member.location()}
                     td #{line.addon.tShirtSize()}
                     td #{line.addon.roommate()}
-                    td: mixin localdate(line.addon.moneyTransferredMoment())
-                    td: mixin localdate(line.addon.creditCardPaidMoment())
-                    td: mixin buttonOrDate(line.addon.paymentReceivedMoment(), line.addon.paymentDone(), activity.url(), line.member.nickname())
+                    td: +localdate(line.addon.moneyTransferredMoment())
+                    td: +localdate(line.addon.creditCardPaidMoment())
+                    td: +buttonOrDate(line.addon.paymentReceivedMoment(), line.addon.paymentDone(), activity.url(), line.member.nickname())
 
         .tab-pane#notPaidOrNoAddon
           .panel
@@ -196,7 +196,7 @@ block content
                         td.center &nbsp;
                       else
                         td.center: i.fa.fa-exclamation-triangle
-                      td: mixin linkedMember(line.member.nickname())
+                      td: +linkedMember(line.member.nickname())
                       td #{line.member.firstname()}
                       td #{line.member.lastname()}
                       td #{line.member.location()}
@@ -218,7 +218,7 @@ block content
                   if !containsMember(activity.group, line.member)
                     tr
                       td #{line.member.registeredAt.lang(language).format('L')}
-                      td: mixin linkedMember(line.member.nickname())
+                      td: +linkedMember(line.member.nickname())
                       td #{line.member.firstname()}
                       td #{line.member.lastname()}
                       td #{line.member.location()}
@@ -253,7 +253,7 @@ block content
                 for line in addonLinesOfUnsubscribedMembers
                   tr
                     if line.member
-                      td: mixin linkedMember(line.member.nickname())
+                      td: +linkedMember(line.member.nickname())
                       td #{line.member.firstname()}
                       td #{line.member.lastname()}
                     else
