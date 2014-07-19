@@ -27,7 +27,8 @@ var activityWithEinzelzimmer = function (resource) {
   var activity = new Activity(state);
   sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, activity); });
   return activity;
-}
+};
+
 describe('Waitinglist Service', function () {
 
   afterEach(function () {
