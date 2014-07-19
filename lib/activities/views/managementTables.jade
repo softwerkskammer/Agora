@@ -297,7 +297,7 @@ block content
                   tr
                     td #{line.member.firstname()}
                     td #{line.member.lastname()}
-                    td #{line.addon.homeAddress()}
-                    td #{line.addon.billingAddress()}
+                    td: +formatAsLines(line.addon.homeAddressLines())
+                    td: +formatAsLines(line.addon.billingAddressLines())
                     td: +formatAsBulletList(activity.resources().resourceNamesOf(line.member.id()))
           hr
