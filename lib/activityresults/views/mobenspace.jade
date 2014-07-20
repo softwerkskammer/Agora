@@ -14,20 +14,24 @@ block content
     .col-xs-3.col-without-padding.noisy_blue
       p(style="text-align: center")= columns[0].columnTitle
       each img in columns[0].images
-        img(src=img.uri + '?size=thumb', width=100, height=100, style="margin-top: " + img['margin-top']+ ";")
+        a(href=img.uri)
+          img(src=img.uri + '?size=thumb', width=100, height=100, style="margin-top: " + img['margin-top']+ ";")
 
     .col-xs-3.col-without-padding.noisy_green
       p(style="text-align: center")= columns[1].columnTitle
       each img in columns[1].images
-        img(src=img.uri + '?size=thumb', width=100, height=100, style="margin-top: " + img['margin-top']+ ";")
+        a(href=img.uri)
+          img(src=img.uri + '?size=thumb', width=100, height=100, style="margin-top: " + img['margin-top']+ ";")
 
     .col-xs-3.col-without-padding.noisy_red
       p(style="text-align: center")= columns[2].columnTitle
       each img in columns[2].images
-        img(src=img.uri + '?size=thumb', width=100, height=100, style="margin-top: " + img['margin-top']+ ";")
+        a(href=img.uri)
+          img(src=img.uri + '?size=thumb', width=100, height=100, style="margin-top: " + img['margin-top']+ ";")
 
     .col-xs-3.col-without-padding.noisy_yellow
       p(style="text-align: center")= columns[3].columnTitle
       each img in columns[3].images
-        img(src=img.uri + '?size=thumb', width=100, height=100, style="margin-top: " + img['margin-top']+ ";")
+        a(href=img.uri)
+          img(src=img.uri + '?size=thumb', width=100, height=100, style="margin-top: " + img['margin-top']+ ";")
 
