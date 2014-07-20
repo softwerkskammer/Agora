@@ -4,10 +4,6 @@ include ../../../views/dataTables-mixin
 block scripts
   script(src='/clientscripts/jquery.dataTables.min.js')
   +dataTable('#activitytable', "[[ 1, 'asc' ]]", "[{ bSortable : false }, null, null, { sType: 'date-eu' }, { sType: 'date-eu' }, null, null, null, null]", true)
-  script.
-    $(document).ready(function() {
-      $('.tooltiplabel').each(function(each) {$(this).popover()});
-    });
 
 block title
   | Übersicht der Gruppen
@@ -42,6 +38,6 @@ block content
                 td #{activity.startMoment().lang(language).format('L')}
                 td #{activity.endMoment().lang(language).format('L')}
                 td #{activity.location()}
-                td.ellipsis: .tooltiplabel(data-toggle='hover', data-placement='auto top', data-html='true', data-content='#{activity.descriptionHTML()}', data-title='#{activity.title()}') #{activity.description()}
-                td.ellipsis: .tooltiplabel(data-toggle='hover', data-placement='auto top', data-html='true', data-content='#{activity.directionHTML()}') #{activity.direction()}
+                td.ellipsis: span(rel='tooltip', data-placement='left', data-content='#{activity.descriptionHTML()}', data-title='<h4>#{activity.title()}</h4>') #{activity.description()}
+                td.ellipsis: span(rel='tooltip', data-placement='left', data-content='#{activity.directionHTML()}') #{activity.direction()}
                 td #{activity.groupName()}

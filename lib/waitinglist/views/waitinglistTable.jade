@@ -7,10 +7,6 @@ block scripts
   script(src='/clientscripts/jquery.dataTables.min.js')
   +dataTable('#waitinglisttable', "[[ 3, 'asc' ]]", "[{ bSortable : false }, null, null, { sType: 'date-eu' }, { sType: 'date-eu' }, null]", true)
   script.
-    $(document).ready(function() {
-      $('.tooltiplabel').each(function(each) {$(this).popover()});
-    });
-  script.
     function removeFromWaitinglist(activityUrl, resourceName, nickname, buttonid) {
       $.ajax({ 
       type: 'post', 
