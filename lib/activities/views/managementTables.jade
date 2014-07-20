@@ -14,19 +14,19 @@ mixin buttonOrDate(momentOrNull, paymentDone, activityUrl, nickname)
       href='javascript:paymentDone(\'#{"/activities/paymentReceived/" + encodeURIComponent(activityUrl) + "/" + encodeURIComponent(nickname)}\', \'#{encodeURIComponent(nickname) + "-button"}\')') Erhalten…
 
 block scripts
-  script(src='/clientscripts/jquery.dataTables.min.js')
+  +dataTableImport
   script.
     function paymentDone(url, buttonid) {
       $.ajax({ url: url }).done(function(data) {
         $('#' + buttonid).parent().html(data);
       });
     }
-  +dataTable('.addontable', "[[ 4 , 'asc' ]]", "[{ sType: 'date-eu' }, null, null, null, null, null, null, null, { sType: 'date-eu' }, { sType: 'date-eu' }, { sType: 'date-eu' }]")
-  +dataTable('.membertable', "[[ 0 , 'asc' ]]", "[{ sType: 'date-eu' }, null, null, null, null]")
-  +dataTable('.missingtable', "[[ 0 , 'asc' ]]", "[{ sType: 'date-eu' }, null, null, null, null, null, null]")
-  +dataTable('.tshirttable', "[]", "[null, null]")
-  +dataTable('.unsubscribedtable', "[]", "[null, null, null, null]")
-  +dataTable('.addressestable', "[[ 1 , 'asc' ]]", "[null, null, null, null, null]")
+  +dataTable('.addontable', '[ 4, "asc" ]', '[{targets: [0,8,9,10], type: "date-eu"}]')
+  +dataTable('.membertable', '[ 0, "asc" ]', '[{targets: 0, type: "date-eu"}]')
+  +dataTable('.missingtable', '[ 0, "asc" ]', '[{targets: 0, type: "date-eu"}]')
+  +dataTable('.tshirttable', '[]', '[]')
+  +dataTable('.unsubscribedtable', '[]', '[]')
+  +dataTable('.addressestable', '[]', '[]')
 
 block title
   | #{activity.title()} - Verwaltung

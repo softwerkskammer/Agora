@@ -2,12 +2,8 @@ extends ../../../views/layoutOnlyMain
 include ../../../views/dataTables-mixin
 
 block scripts
-  script(src='/clientscripts/jquery.dataTables.min.js')
-  +dataTable('#grouptable', "[[ 1, 'asc' ]]", "[{ bSortable : false }, null, null, null, null, null]", true)
-  script.
-    $(document).ready(function() {
-      $('.tooltiplabel').each(function(each) {$(this).popover()});
-    });
+  +dataTableImport
+  +dataTable('#grouptable', '[ 1, "asc" ]', '[{targets: 0, sortable: false}]', true)
 
 block title
   | Übersicht der Gruppen
@@ -34,8 +30,8 @@ block content
             for group in groups
               tr
                 td: a.btn-sm(href='/groups/edit/#{encodeURIComponent(group.id)}'): i.fa.fa-edit.fa-fw
-                th #{group.id}
+                td: b #{group.id}
                 td #{group.longName}
                 td #{group.emailPrefix}
-                td.ellipsis: .tooltiplabel(data-toggle='hover', data-placement='auto top', data-html='true', data-content='#{group.descriptionHTML()}'):   #{group.description}
+                td.ellipsis: span(rel='tooltip', data-placement='left', data-content='#{group.descriptionHTML()}') #{group.description}
                 td #{group.type}
