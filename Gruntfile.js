@@ -23,7 +23,7 @@ module.exports = function (grunt) {
       'bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js',
       'bower_components/bootstrap-markdown/js/bootstrap-markdown.js',
       'node_modules/moment-timezone/node_modules/moment/moment.js',
-      'frontend/patched_js/fullcalendar-patched.js',
+      'frontend/3rd_party_js/fullcalendar-patched.js',
       'bower_components/fullcalendar/dist/lang/de.js', // for fullcalendar
       'bower_components/tinycolor/tinycolor.js', // for pick-a-color
       'bower_components/pick-a-color/src/js/pick-a-color.js',
@@ -34,7 +34,7 @@ module.exports = function (grunt) {
       'bower_components/jquery-validation/src/localization/methods_de.js',
       'bower_components/bootstrap-timepicker/js/bootstrap-timepicker.js',
       'node_modules/URIjs/src/URI.js',
-      'frontend/custom_js/agora.js'
+      'frontend/javascript/agora.js'
     ]
   };
 
@@ -47,7 +47,7 @@ module.exports = function (grunt) {
       'bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js',
       'bower_components/bootstrap-markdown/js/bootstrap-markdown.js',
       'node_modules/moment-timezone/node_modules/moment/moment.js',
-      'frontend/patched_js/fullcalendar-patched.js',
+      'frontend/3rd_party_js/fullcalendar-patched.js',
       'bower_components/fullcalendar/dist/lang/en-gb.js', // for fullcalendar
       'bower_components/tinycolor/tinycolor.js', // for pick-a-color
       'bower_components/pick-a-color/src/js/pick-a-color.js',
@@ -55,7 +55,7 @@ module.exports = function (grunt) {
       'bower_components/jquery-validation/dist/additional-methods.js',
       'bower_components/bootstrap-timepicker/js/bootstrap-timepicker.js',
       'node_modules/URIjs/src/URI.js',
-      'frontend/custom_js/agora.js'
+      'frontend/javascript/agora.js'
     ]
   };
 
@@ -96,20 +96,20 @@ module.exports = function (grunt) {
         flatten: true
       },
       customJS: {
-        cwd: 'frontend/custom_js/',
+        cwd: 'frontend/javascript/',
         src: ['*', '!agora.js'],
         dest: 'public/clientscripts',
         expand: true,
         flatten: false
       },
       patchedJS: {
-        src: 'frontend/patched_js/dataTables*',
+        src: 'frontend/3rd_party_js/dataTables*',
         dest: 'public/clientscripts',
         expand: true,
         flatten: true
       },
       customLESS: {
-        src: 'frontend/custom_less/*',
+        src: 'frontend/less/*',
         dest: 'build/stylesheets/less',
         expand: true,
         flatten: true
@@ -191,10 +191,10 @@ module.exports = function (grunt) {
             'build/stylesheets/less/bootstrap-markdown-patched.less',
             'bower_components/font-awesome/css/font-awesome.css',
             'build/stylesheets/less/pick-a-color-patched.less',
-            'frontend/custom_css/shCoreDefault-patched.css',
+            'frontend/3rd_party_css/shCoreDefault-patched.css',
             'bower_components/datatables/media/css/jquery.dataTables.css',
-            'frontend/custom_css/dataTables.bootstrap.css',
-            'frontend/custom_css/dataTables.fontAwesome.css',
+            'frontend/3rd_party_css/dataTables.bootstrap.css',
+            'frontend/3rd_party_css/dataTables.fontAwesome.css',
             'build/stylesheets/less/agora.less'
           ]
         }
