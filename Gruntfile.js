@@ -136,9 +136,7 @@ module.exports = function (grunt) {
       },
       client: {
         src: [
-          'public/clientscripts/global/agora.js',
-          'public/clientscripts/check-*.js',
-          'public/clientscripts/activity*.js'
+          'frontend/javascript/*.js'
         ],
         directives: {
           indent: 2,
