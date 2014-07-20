@@ -14,7 +14,7 @@ mixin buttonOrDate(momentOrNull, paymentDone, activityUrl, nickname)
       href='javascript:paymentDone(\'#{"/activities/paymentReceived/" + encodeURIComponent(activityUrl) + "/" + encodeURIComponent(nickname)}\', \'#{encodeURIComponent(nickname) + "-button"}\')') Erhalten…
 
 block scripts
-  script(src='/clientscripts/jquery.dataTables.min.js')
+  +dataTableImport
   script.
     function paymentDone(url, buttonid) {
       $.ajax({ url: url }).done(function(data) {

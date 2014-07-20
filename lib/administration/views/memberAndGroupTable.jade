@@ -3,8 +3,9 @@ include ../../members/views/memberlist-mixin
 include ../../../views/dataTables-mixin
 
 block scripts
-  script(src='/clientscripts/jquery.dataTables.min.js')
-  +dataTable('#memberandgrouptable', "[[ 1 , 'desc' ]]", "[null, null, null, null]", true)
+  +dataTableImport
+  +dataTable('#memberandgrouptable', '[ 1, "desc" ]', '[]', true)
+
 
 block title
   | Übersicht der Mitglieder und ihrer Gruppen

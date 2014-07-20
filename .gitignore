@@ -28,3 +28,6 @@ coverage
 .idea/*.iml
 .idea/jsLibraryMappings.xml
 
+jquery.dataTables.min.js
+public/images
+jquery.dataTables.css

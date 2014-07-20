@@ -1,16 +1,20 @@
 
-mixin dataTable(clazz, sorting, columns, saveState)
+mixin dataTableImport
+  script(src='/clientscripts/jquery.dataTables.min.js')
+  script(src='/clientscripts/dataTables.bootstrap.js')
+
+mixin dataTable(clazz, sorting, columns, stateSaveAndSearch)
   script.
     $(document).ready(function() {
       $('#{clazz}').dataTable({
-        oLanguage: {
-          sUrl: tableLangUrl
+        language: {
+          url: tableLangUrl
         },
-        aoColumns: #{columns},
-        bPaginate: false,
-        bAutoWidth: false,
-        bFilter: false,
-        aaSorting: #{sorting},
-        bStateSave: #{!!saveState}
+        columnDefs: !{columns},
+        order: !{sorting},
+        paging: false,
+        autoWidth: false,
+        searching: #{stateSaveAndSearch},
+        stateSave: #{stateSaveAndSearch}
       });
     });

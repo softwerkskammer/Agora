@@ -4,7 +4,7 @@ include ../../members/views/memberlist-mixin
 include ../../../views/dataTables-mixin
 
 block scripts
-  script(src='/clientscripts/jquery.dataTables.min.js')
+  +dataTableImport
   +dataTable('#waitinglisttable', "[[ 3, 'asc' ]]", "[{ bSortable : false }, null, null, { sType: 'date-eu' }, { sType: 'date-eu' }, null]", true)
   script.
     function removeFromWaitinglist(activityUrl, resourceName, nickname, buttonid) {

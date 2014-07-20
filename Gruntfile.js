@@ -63,6 +63,26 @@ module.exports = function (grunt) {
   grunt.initConfig({
     // Task configuration.
     clean: ['coverage', 'frontendtests/fixtures/*.html'],
+    copy: {
+      datatablesJS: {
+        expand: true,
+        src: 'bower_components/datatables/media/js/*.min.js',
+        dest: 'public/clientscripts',
+        flatten: true
+      },
+      datatablesCSS: {
+        expand: true,
+        src: 'bower_components/datatables/media/css/jquery.dataTables.css',
+        dest: 'public/stylesheets/vendor',
+        flatten: true
+      },
+      datatablesImages: {
+        expand: true,
+        src: 'bower_components/datatables/media/images/*',
+        dest: 'public/images/',
+        flatten: true
+      }
+    },
     jslint: {
       server: {
         src: [
@@ -141,6 +161,8 @@ module.exports = function (grunt) {
             'public/stylesheets/less/pick-a-color-patched.less',
             'public/stylesheets/vendor/shCoreDefault-patched.css',
             'public/stylesheets/vendor/jquery.dataTables.css',
+            'public/stylesheets/vendor/dataTables.bootstrap.css',
+            'public/stylesheets/vendor/dataTables.fontAwesome.css',
             'public/stylesheets/partials/agora.less'
           ]
         }
@@ -208,6 +230,7 @@ module.exports = function (grunt) {
   // These plugins provide necessary tasks.
   grunt.loadNpmTasks('grunt-bower-install-simple');
   grunt.loadNpmTasks('grunt-contrib-clean');
+  grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-jade');
   grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-contrib-uglify');
@@ -215,15 +238,16 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-jslint');
   grunt.loadNpmTasks('grunt-karma');
 
-  grunt.registerTask('frontendtests', ['bower-install-simple', 'clean', 'jade', 'less', 'uglify:production_de', 'karma:once', 'uglify:development_de', 'karma:once']);
+  grunt.registerTask('prepare', ['bower-install-simple', 'less', 'copy']);
+  grunt.registerTask('frontendtests', ['prepare', 'clean', 'jade', 'uglify:production_de', 'karma:once', 'uglify:development_de', 'karma:once']);
   grunt.registerTask('tests', ['jslint', 'frontendtests', 'mocha_istanbul']);
-  grunt.registerTask('deploy_development', ['bower-install-simple', 'less', 'uglify:development_de', 'uglify:development_en']);
+  grunt.registerTask('deploy_development', ['prepare', 'uglify:development_de', 'uglify:development_en']);
 
   // Default task.
-  grunt.registerTask('default', ['tests', 'deploy_development']);
+  grunt.registerTask('default', ['tests', 'uglify:development_en']);
 
   // Travis-CI task
   grunt.registerTask('travis', ['default']);
 
-  grunt.registerTask('deploy_production', ['bower-install-simple', 'less', 'uglify:production_de', 'uglify:production_en']);
+  grunt.registerTask('deploy_production', ['prepare', 'uglify:production_de', 'uglify:production_en']);
 };
