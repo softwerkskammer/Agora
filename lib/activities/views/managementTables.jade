@@ -1,6 +1,7 @@
 extends ../../../views/layoutOnlyMain
 include ../../members/views/memberlist-mixin
 include ../../../views/format-mixin
+include ../../../views/dataTables-mixin
 
 mixin localdate(momentOrNull)
   | #{momentOrNull ? momentOrNull.lang(language).format('L') : '-'}
@@ -20,98 +21,12 @@ block scripts
         $('#' + buttonid).parent().html(data);
       });
     }
-  script.
-    $(document).ready(function() {
-      $('.addontable').dataTable({
-        oLanguage: {
-          sUrl: tableLangUrl
-        },
-        aoColumns: [
-          { sType: 'date-eu' }, null, null, null, null, null, null, null, { sType: 'date-eu' }, { sType: 'date-eu' }, { sType: 'date-eu' }
-        ],
-        bPaginate: false,
-        bAutoWidth: false,
-        bFilter: false,
-        aaSorting: [[ 4 , 'asc' ]],
-        bStateSave: false
-      });
-    });
-    $(document).ready(function() {
-      $('.membertable').dataTable({
-        oLanguage: {
-          sUrl: tableLangUrl
-        },
-        aoColumns: [
-          { sType: 'date-eu' }, null, null, null, null
-        ],
-        bPaginate: false,
-        bAutoWidth: false,
-        bFilter: false,
-        aaSorting: [[ 0 , 'asc' ]],
-        bStateSave: false
-      });
-    });
-    $(document).ready(function() {
-      $('.missingtable').dataTable({
-        oLanguage: {
-          sUrl: tableLangUrl
-        },
-        aoColumns: [
-          { sType: 'date-eu' }, null, null, null, null, null, null
-        ],
-        bPaginate: false,
-        bAutoWidth: false,
-        bFilter: false,
-        aaSorting: [[ 0 , 'asc' ]],
-        bStateSave: false
-      });
-    });
-    $(document).ready(function() {
-      $('.tshirttable').dataTable({
-        oLanguage: {
-          sUrl: tableLangUrl
-        },
-        aoColumns: [
-          null, null
-        ],
-        bPaginate: false,
-        bAutoWidth: false,
-        bFilter: false,
-        aaSorting: [],
-        bStateSave: false
-      });
-    });
-    $(document).ready(function() {
-      $('.unsubscribedtable').dataTable({
-        oLanguage: {
-          sUrl: tableLangUrl
-        },
-        aoColumns: [
-          null, null, null, null
-        ],
-        bPaginate: false,
-        bAutoWidth: false,
-        bFilter: false,
-        aaSorting: [],
-        bStateSave: false
-      });
-    });
-    $(document).ready(function() {
-      $('.addressestable').dataTable({
-      oLanguage: {
-      sUrl: tableLangUrl
-      },
-      aoColumns: [
-      null, null, null, null, null
-      ],
-      bPaginate: false,
-      bAutoWidth: false,
-      bFilter: false,
-      aaSorting: [[ 1 , 'asc' ]],
-      bStateSave: false
-      });
-    });
-
+  +dataTable('.addontable', "[[ 4 , 'asc' ]]", "[{ sType: 'date-eu' }, null, null, null, null, null, null, null, { sType: 'date-eu' }, { sType: 'date-eu' }, { sType: 'date-eu' }]")
+  +dataTable('.membertable', "[[ 0 , 'asc' ]]", "[{ sType: 'date-eu' }, null, null, null, null]")
+  +dataTable('.missingtable', "[[ 0 , 'asc' ]]", "[{ sType: 'date-eu' }, null, null, null, null, null, null]")
+  +dataTable('.tshirttable', "[]", "[null, null]")
+  +dataTable('.unsubscribedtable', "[]", "[null, null, null, null]")
+  +dataTable('.addressestable', "[[ 1 , 'asc' ]]", "[null, null, null, null, null]")
 
 block title
   | #{activity.title()} - Verwaltung

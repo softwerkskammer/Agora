@@ -1,20 +1,11 @@
 extends ../../../views/layoutOnlyMain
 include ../../members/views/memberlist-mixin
+include ../../../views/dataTables-mixin
 
 block scripts
   script(src='/clientscripts/jquery.dataTables.min.js')
-  script.
-    $(document).ready(function() {
-          $('#memberandgrouptable').dataTable({
-            oLanguage: {
-              sUrl: tableLangUrl
-            },
-        bPaginate: false,
-        bAutoWidth: false,
-        aaSorting: [[ 1 , 'desc' ]],
-        bStateSave: true
-      });
-    });
+  +dataTable('#memberandgrouptable', "[[ 1 , 'desc' ]]", "[null, null, null, null]", true)
+
 block title
   | Übersicht der Mitglieder und ihrer Gruppen
 

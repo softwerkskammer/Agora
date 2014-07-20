@@ -1,0 +1,16 @@
+
+mixin dataTable(clazz, sorting, columns, saveState)
+  script.
+    $(document).ready(function() {
+      $('#{clazz}').dataTable({
+        oLanguage: {
+          sUrl: tableLangUrl
+        },
+        aoColumns: #{columns},
+        bPaginate: false,
+        bAutoWidth: false,
+        bFilter: false,
+        aaSorting: #{sorting},
+        bStateSave: #{!!saveState}
+      });
+    });
