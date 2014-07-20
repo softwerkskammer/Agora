@@ -102,6 +102,12 @@ module.exports = function (grunt) {
         expand: true,
         flatten: false
       },
+      patchedJS: {
+        src: 'frontend/patched_js/dataTables*',
+        dest: 'public/clientscripts',
+        expand: true,
+        flatten: true
+      },
       customLESS: {
         src: 'frontend/custom_less/*',
         dest: 'build/stylesheets/less',
