@@ -59,7 +59,10 @@
       "  a.btn.btn-primary(data-toggle='modal', href='#login')",
       "    i.fa.fa-sign-in.fa-fw",
       "    | &nbsp;$t(general.login)"
-    ]
+    ],
+    "are_you_sure": "Are you sure?",
+    "no": "No",
+    "delete": "Delete"
   },
   "error": {
     "congratulations": "Congratulations!",
@@ -282,7 +285,12 @@
     "send": "Send",
     "resign": "Write Resignement E-Mail",
     "why-resign": "Why do you want to resign",
-    "notes-resign": "Please let us know what you think about this site"
+    "notes-resign": "Please let us know what you think about this site",
+    "resign_info": [
+      "p We are sorry that you want to leave.",
+      "p We are respecting this and will remove your account as soon as possible. We would be glad if you answered the following questions.",
+      "p Account removal is a manual process and sending this form will triger an email to us administators."
+    ]
   },
   "members": {
     "overview": "Members Overview",
@@ -311,7 +319,8 @@
     "send_email": "Send e-mail to __firstname__ __lastname__",
     "has": "Softwerkskammer has",
     "notifyOnWikiChanges": "Notify on wiki changes",
-    "resign": "Resign"
+    "resign": "Resign",
+    "delete": "Delete Member"
   },
   "wiki": {
     "blogposts": "Blog Posts",
@@ -393,7 +402,9 @@
         "success": "Your __type__ is on its way."
       },
       "members": {
-        "saved": "The profile has been saved."
+        "saved": "The profile has been saved.",
+        "deleted": "The profile has been deleted.",
+        "hasSubscriptions": "The user is still subscribed to some groups."
       },
       "wiki": {
         "conflict": "Your changes have been saved. You may have overwritten changes of another user. Please double check.",
