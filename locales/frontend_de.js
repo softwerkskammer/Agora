@@ -10,4 +10,4 @@ var emailAlreadyTaken = 'Diese Adresse ist schon registriert. Hast Du bereits ei
 var datepicker_lang = 'de';
 var datepicker_format = 'dd.mm.yyyy';
 var fc_lang = 'de';
-var tableLangUrl = '/clientscripts/dataTables.german.txt';
+var tableLangUrl = '/clientscripts/dataTables.german.json';

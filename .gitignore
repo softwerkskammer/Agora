@@ -34,3 +34,5 @@ jquery.dataTables.css
 build
 public/fonts
 bootstrap.js
+activity*.js
+check-*.js

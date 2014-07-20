@@ -95,6 +95,13 @@ module.exports = function (grunt) {
         expand: true,
         flatten: true
       },
+      customJS: {
+        cwd: 'frontend/custom_js/',
+        src: ['*', '!agora.js'],
+        dest: 'public/clientscripts',
+        expand: true,
+        flatten: false
+      },
       customLESS: {
         src: 'frontend/custom_less/*',
         dest: 'build/stylesheets/less',
