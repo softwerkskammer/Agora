@@ -6,6 +6,15 @@ block title
   = activityResultName
 
 block content
+  #detail-overlay(style='z-index: 100; position: fixed; background: #000; height: 100%; width: 100%;')
+    p(style='color: #fff; padding: 0.5em 0.5em; text-transform: uppercase; text-align: center;')
+      a(href='#')
+        | Close
+    div
+      img(id='image-detail', src='/gallery/9475905d-b979-4296-af47-ac0164788a1a.JPG', style='width: 100%;')
+      #prev-img(style='position: absolute; top: 0; height: 100%; width: 40%; background: red; opacity: 0.1;')
+      #next-img(style='position: absolute; top: 0; right: 0; height: 100%; width: 40%; background: blue; opacity: 0.1;')
+
   .row
     .col-md-12
       h2(style='margin-top: 5px;')= activityResultName
@@ -34,4 +43,36 @@ block content
       each img in columns[3].images
         a(href=img.uri)
           img(src=img.uri + '?size=thumb', width=100, height=100, style="margin-top: " + img['margin-top']+ ";")
+
+  script(type='text/javascript').
+    jQuery(function() {
+
+    $('#detail-overlay').find('a').click(function(e) {
+      $('#detail-overlay').css('display', 'none');
+    })
+
+    // TODO Implement
+    function previousImage(currentImage) {
+      console.log(currentImage);
+      return '/gallery/fdd09e6d-baf1-4c44-a767-a786d22002bd.JPG';
+    }
+
+    // TODO Implement
+    function nextImage(currentImage) {
+      console.log(currentImage);
+      return '/gallery/1806f88e-8ed7-4b3e-92bd-3173c9965541.JPG';
+    }
+
+    $('#prev-img').click(function(e) {
+      var $image = $('#image-detail');
+      var currentImage = $image.attr('src');
+      $image.attr('src', previousImage(currentImage));
+    });
+    $('#next-img').click(function(e) {
+      var $image = $('#image-detail');
+      var currentImage = $image.attr('src');
+      $image.attr('src', nextImage(currentImage));
+    });
+
+    });
 
