@@ -20,14 +20,14 @@ module.exports = function (grunt) {
       'bower_components/jquery/dist/jquery.js',
       'bower_components/autoNumeric/autoNumeric.js',
       'bower_components/bootstrap/dist/js/bootstrap.js',
-      'public/clientscripts/global/bootstrap-datepicker.js',
-      'public/clientscripts/global/bootstrap-markdown.js',
+      'bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js',
+      'bower_components/bootstrap-markdown/js/bootstrap-markdown.js',
       'node_modules/moment-timezone/node_modules/moment/moment.js',
       'frontend/patched_js/fullcalendar-patched.js',
       'bower_components/fullcalendar/dist/lang/de.js', // for fullcalendar
-      'public/clientscripts/global/tinycolor.js', // for pick-a-color
-      'public/clientscripts/global/pick-a-color.js',
-      'public/clientscripts/global/bootstrap-datepicker.de.js',
+      'bower_components/tinycolor/tinycolor.js', // for pick-a-color
+      'bower_components/pick-a-color/src/js/pick-a-color.js',
+      'bower_components/bootstrap-datepicker/js/locales/bootstrap-datepicker.de.js',
       'bower_components/jquery-validation/dist/jquery.validate.js',
       'bower_components/jquery-validation/dist/additional-methods.js',
       'bower_components/jquery-validation/src/localization/messages_de.js',
@@ -44,13 +44,13 @@ module.exports = function (grunt) {
       'bower_components/jquery/dist/jquery.js',
       'bower_components/autoNumeric/autoNumeric.js',
       'bower_components/bootstrap/dist/js/bootstrap.js',
-      'public/clientscripts/global/bootstrap-datepicker.js',
-      'public/clientscripts/global/bootstrap-markdown.js',
+      'bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js',
+      'bower_components/bootstrap-markdown/js/bootstrap-markdown.js',
       'node_modules/moment-timezone/node_modules/moment/moment.js',
       'frontend/patched_js/fullcalendar-patched.js',
       'bower_components/fullcalendar/dist/lang/en-gb.js', // for fullcalendar
-      'public/clientscripts/global/tinycolor.js', // for pick-a-color
-      'public/clientscripts/global/pick-a-color.js',
+      'bower_components/tinycolor/tinycolor.js', // for pick-a-color
+      'bower_components/pick-a-color/src/js/pick-a-color.js',
       'bower_components/jquery-validation/dist/jquery.validate.js',
       'bower_components/jquery-validation/dist/additional-methods.js',
       'bower_components/bootstrap-timepicker/js/bootstrap-timepicker.js',
