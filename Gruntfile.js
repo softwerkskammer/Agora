@@ -65,21 +65,46 @@ module.exports = function (grunt) {
     clean: ['coverage', 'frontendtests/fixtures/*.html'],
     copy: {
       datatablesJS: {
-        expand: true,
         src: 'bower_components/datatables/media/js/*.min.js',
         dest: 'public/clientscripts',
-        flatten: true
-      },
-      datatablesCSS: {
         expand: true,
-        src: 'bower_components/datatables/media/css/jquery.dataTables.css',
-        dest: 'public/stylesheets/vendor',
         flatten: true
       },
       datatablesImages: {
-        expand: true,
         src: 'bower_components/datatables/media/images/*',
         dest: 'public/images/',
+        expand: true,
+        flatten: true
+      },
+      bootstrapJS: {
+        src: 'node_modules/bootstrap/dist/js/bootstrap.js',
+        dest: 'public/clientscripts/global',
+        expand: true,
+        flatten: true
+      },
+      bootstrapFONTS: {
+        src: 'node_modules/bootstrap/dist/fonts/*',
+        dest: 'public/fonts',
+        expand: true,
+        flatten: true
+      },
+      bootstrapLESS: {
+        cwd: 'node_modules/bootstrap/less/',
+        src: ['**', '!variables.less'],
+        dest: 'build/stylesheets/less',
+        expand: true,
+        flatten: false
+      },
+      fontawesomeFONTS: {
+        src: 'bower_components/font-awesome/fonts/*',
+        dest: 'public/fonts',
+        expand: true,
+        flatten: true
+      },
+      customLESS: {
+        src: 'frontend/custom_less/*',
+        dest: 'build/stylesheets/less',
+        expand: true,
         flatten: true
       }
     },
@@ -153,17 +178,17 @@ module.exports = function (grunt) {
         },
         files: {
           'public/stylesheets/screen.css': [
-            'public/stylesheets/vendor/fullcalendar.css',
-            'public/stylesheets/less/bootstrap.less',
-            'public/stylesheets/vendor/datepicker3.css',
-            'public/stylesheets/less/bootstrap-markdown-patched.less',
-            'public/stylesheets/vendor/font-awesome.min.css',
-            'public/stylesheets/less/pick-a-color-patched.less',
-            'public/stylesheets/vendor/shCoreDefault-patched.css',
-            'public/stylesheets/vendor/jquery.dataTables.css',
-            'public/stylesheets/vendor/dataTables.bootstrap.css',
-            'public/stylesheets/vendor/dataTables.fontAwesome.css',
-            'public/stylesheets/partials/agora.less'
+            'frontend/custom_css/fullcalendar.css',
+            'build/stylesheets/less/bootstrap.less',
+            'frontend/custom_css/datepicker3.css',
+            'build/stylesheets/less/bootstrap-markdown-patched.less',
+            'bower_components/font-awesome/css/font-awesome.css',
+            'build/stylesheets/less/pick-a-color-patched.less',
+            'frontend/custom_css/shCoreDefault-patched.css',
+            'bower_components/datatables/media/css/jquery.dataTables.css',
+            'frontend/custom_css/dataTables.bootstrap.css',
+            'frontend/custom_css/dataTables.fontAwesome.css',
+            'build/stylesheets/less/agora.less'
           ]
         }
       }
@@ -238,7 +263,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-jslint');
   grunt.loadNpmTasks('grunt-karma');
 
-  grunt.registerTask('prepare', ['bower-install-simple', 'less', 'copy']);
+  grunt.registerTask('prepare', ['bower-install-simple', 'copy', 'less']);
   grunt.registerTask('frontendtests', ['prepare', 'clean', 'jade', 'uglify:production_de', 'karma:once', 'uglify:development_de', 'karma:once']);
   grunt.registerTask('tests', ['jslint', 'frontendtests', 'mocha_istanbul']);
   grunt.registerTask('deploy_development', ['prepare', 'uglify:development_de', 'uglify:development_en']);

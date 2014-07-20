@@ -31,3 +31,6 @@ coverage
 jquery.dataTables.min.js
 public/images
 jquery.dataTables.css
+build
+public/fonts
+bootstrap.js
