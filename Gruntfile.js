@@ -18,13 +18,13 @@ module.exports = function (grunt) {
     'public/clientscripts/global_de.js': [
       'locales/frontend_de.js',
       'bower_components/jquery/dist/jquery.js',
-      'public/clientscripts/global/autoNumeric.js',
-      'public/clientscripts/global/bootstrap.js',
+      'bower_components/autoNumeric/autoNumeric.js',
+      'bower_components/bootstrap/dist/js/bootstrap.js',
       'public/clientscripts/global/bootstrap-datepicker.js',
       'public/clientscripts/global/bootstrap-markdown.js',
       'node_modules/moment-timezone/node_modules/moment/moment.js',
-      'public/clientscripts/global/fullcalendar-patched.js',
-      'public/clientscripts/global/de.js', // for fullcalendar
+      'frontend/patched_js/fullcalendar-patched.js',
+      'bower_components/fullcalendar/dist/lang/de.js', // for fullcalendar
       'public/clientscripts/global/tinycolor.js', // for pick-a-color
       'public/clientscripts/global/pick-a-color.js',
       'public/clientscripts/global/bootstrap-datepicker.de.js',
@@ -34,7 +34,7 @@ module.exports = function (grunt) {
       'bower_components/jquery-validation/src/localization/methods_de.js',
       'bower_components/bootstrap-timepicker/js/bootstrap-timepicker.js',
       'node_modules/URIjs/src/URI.js',
-      'public/clientscripts/global/agora.js'
+      'frontend/custom_js/agora.js'
     ]
   };
 
@@ -42,20 +42,20 @@ module.exports = function (grunt) {
     'public/clientscripts/global_en.js': [
       'locales/frontend_en.js',
       'bower_components/jquery/dist/jquery.js',
-      'public/clientscripts/global/autoNumeric.js',
-      'public/clientscripts/global/bootstrap.js',
+      'bower_components/autoNumeric/autoNumeric.js',
+      'bower_components/bootstrap/dist/js/bootstrap.js',
       'public/clientscripts/global/bootstrap-datepicker.js',
       'public/clientscripts/global/bootstrap-markdown.js',
       'node_modules/moment-timezone/node_modules/moment/moment.js',
-      'public/clientscripts/global/fullcalendar-patched.js',
-      'public/clientscripts/global/en-gb.js', // for fullcalendar
+      'frontend/patched_js/fullcalendar-patched.js',
+      'bower_components/fullcalendar/dist/lang/en-gb.js', // for fullcalendar
       'public/clientscripts/global/tinycolor.js', // for pick-a-color
       'public/clientscripts/global/pick-a-color.js',
       'bower_components/jquery-validation/dist/jquery.validate.js',
       'bower_components/jquery-validation/dist/additional-methods.js',
       'bower_components/bootstrap-timepicker/js/bootstrap-timepicker.js',
       'node_modules/URIjs/src/URI.js',
-      'public/clientscripts/global/agora.js'
+      'frontend/custom_js/agora.js'
     ]
   };
 
@@ -76,20 +76,14 @@ module.exports = function (grunt) {
         expand: true,
         flatten: true
       },
-      bootstrapJS: {
-        src: 'node_modules/bootstrap/dist/js/bootstrap.js',
-        dest: 'public/clientscripts/global',
-        expand: true,
-        flatten: true
-      },
       bootstrapFONTS: {
-        src: 'node_modules/bootstrap/dist/fonts/*',
+        src: 'bower_components/bootstrap/dist/fonts/*',
         dest: 'public/fonts',
         expand: true,
         flatten: true
       },
       bootstrapLESS: {
-        cwd: 'node_modules/bootstrap/less/',
+        cwd: 'bower_components/bootstrap/less/',
         src: ['**', '!variables.less'],
         dest: 'build/stylesheets/less',
         expand: true,
@@ -178,9 +172,9 @@ module.exports = function (grunt) {
         },
         files: {
           'public/stylesheets/screen.css': [
-            'frontend/custom_css/fullcalendar.css',
+            'bower_components/fullcalendar/dist/fullcalendar.css',
             'build/stylesheets/less/bootstrap.less',
-            'frontend/custom_css/datepicker3.css',
+            'bower_components/bootstrap-datepicker/css/datepicker3.css',
             'build/stylesheets/less/bootstrap-markdown-patched.less',
             'bower_components/font-awesome/css/font-awesome.css',
             'build/stylesheets/less/pick-a-color-patched.less',

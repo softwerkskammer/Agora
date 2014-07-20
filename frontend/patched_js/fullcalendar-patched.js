@@ -1,5 +1,5 @@
 /*!
- * FullCalendar v2.0.1
+ * FullCalendar v2.0.2
  * Docs & License: http://arshaw.com/fullcalendar/
  * (c) 2013 Adam Shaw
  * 
@@ -9,7 +9,7 @@
 
 (function(factory) {
   if (typeof define === 'function' && define.amd) {
-    define([ 'jquery', 'moment' ], factory);
+    define([ 'jquery', '../../bower_components/moment/moment' ], factory);
   }
   else {
     factory(jQuery, moment);
@@ -169,7 +169,7 @@
 
   ;;
 
-  var fc = $.fullCalendar = { version: "2.0.1" };
+var fc = $.fullCalendar = { version: "2.0.2" };
   var fcViews = fc.views = {};
 
 
@@ -1310,11 +1310,21 @@
 
     function fetchEventSource(source, fetchID) {
       _fetchEventSource(source, function(events) {
+			var isArraySource = $.isArray(source.events);
+			var i;
+			var event;
+
         if (fetchID == currentFetchID) {
 
           if (events) {
-            for (var i=0; i<events.length; i++) {
-              var event = buildEvent(events[i], source);
+					for (i=0; i<events.length; i++) {
+						event = events[i];
+
+						// event array sources have already been convert to Event Objects
+						if (!isArraySource) {
+							event = buildEvent(event, source);
+						}
+
               if (event) {
                 cache.push(event);
               }
@@ -1448,6 +1458,7 @@
     function addEventSource(sourceInput) {
       var source = buildEventSource(sourceInput);
       if (source) {
+			sources.push(source);
         pendingSourceCnt++;
         fetchEventSource(source, currentFetchID); // will eventually call reportEvents
       }
@@ -1475,6 +1486,14 @@
       }
 
       if (source) {
+
+			// for array sources, we convert to standard Event Objects up front
+			if ($.isArray(source.events)) {
+				source.events = $.map(source.events, function(eventInput) {
+					return buildEvent(eventInput, source);
+				});
+			}
+
         for (i=0; i<normalizers.length; i++) {
           normalizers[i].call(t, source);
         }
@@ -1573,30 +1592,31 @@
 
 
     function removeEvents(filter) {
+		var eventID;
       var i;
-      if (!filter) { // remove all
-        cache = [];
-        // clear all array sources
-        for (i=0; i<sources.length; i++) {
-          if ($.isArray(sources[i].events)) {
-            sources[i].events = [];
+
+		if (filter == null) { // null or undefined. remove all events
+			filter = function() { return true; }; // will always match
           }
-        }
-      }else{
-        if (!$.isFunction(filter)) { // an event ID
-          var id = filter + '';
-          filter = function(e) {
-            return e._id == id;
+		else if (!$.isFunction(filter)) { // an event ID
+			eventID = filter + '';
+			filter = function(event) {
+				return event._id == eventID;
           };
         }
-        cache = $.grep(cache, filter, true);
-        // remove events from array sources
+
+		// Purge event(s) from our local cache
+		cache = $.grep(cache, filter, true); // inverse=true
+
+		// Remove events from array sources.
+		// This works because they have been converted to official Event Objects up front.
+		// (and as a result, event._id has been calculated).
         for (i=0; i<sources.length; i++) {
           if ($.isArray(sources[i].events)) {
             sources[i].events = $.grep(sources[i].events, filter, true);
           }
         }
-      }
+
       reportEvents(cache);
     }
 
@@ -1605,7 +1625,7 @@
       if ($.isFunction(filter)) {
         return $.grep(cache, filter);
       }
-      else if (filter) { // an event ID
+		else if (filter != null) { // not null, not undefined. an event ID
         filter += '';
         return $.grep(cache, function(e) {
           return e._id == filter;
