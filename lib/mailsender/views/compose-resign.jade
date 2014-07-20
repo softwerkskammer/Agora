@@ -17,10 +17,7 @@ block content
           +submitButtons('mailsender.send')
           legend
             | #{t('mailsender.resign')}
-          p Schade, dass Du aus der Softwerkskammer austreten möchtest.
-          p.
-            Wir respektieren diesen Wunsch und werden ihn umgehend erfüllen. Es wäre schön, wenn Du Dir noch die Zeit nimmst,
-            die untenstehenden Fragen zu beantworten.
+          !=t('mailsender.resign_info', { postProcess: 'jade' })
           +hidden('nickname', nickname)
           +textareaPure('why', t('mailsender.why-resign'), why)
           +textareaPure('notes', t('mailsender.notes-resign'), notes)

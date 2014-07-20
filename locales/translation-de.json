@@ -60,7 +60,10 @@
       "  a.btn.btn-primary(data-toggle='modal', href='#login')",
       "    i.fa.fa-sign-in.fa-fw",
       "    | &nbsp;$t(general.login)"
-    ]
+    ],
+    "are_you_sure": "Bist Du sicher?",
+    "no": "Nein",
+    "delete": "Löschen"
   },
   "error": {
     "congratulations": "Herzlichen Glückwunsch!",
@@ -283,7 +286,12 @@
     "send": "Senden",
     "resign": "Austrittsmail schreiben",
     "why-resign": "Warum willst Du austreten",
-    "notes-resign": "Was möchtest Du uns mitteilen (Anregungen, Kritik, Lob)"
+    "notes-resign": "Was möchtest Du uns mitteilen (Anregungen, Kritik, Lob)",
+    "resign_info": [
+      "p Schade, dass Du aus der Softwerkskammer austreten möchtest.",
+      "p Wir respektieren diesen Wunsch und werden ihn umgehend erfüllen. Es wäre schön, wenn Du Dir noch die Zeit nimmst, die untenstehenden Fragen zu beantworten.",
+      "p Das Senden dieses Formulars schickt eine E-Mail an uns Adminsitratoren und wir werden dann manuell Deinen Account löschen."
+    ]
   },
   "members": {
     "overview": "Übersicht der Mitglieder",
@@ -312,7 +320,8 @@
     "send_email": "Eine E-Mail an __firstname__ __lastname__ senden",
     "has": "Die Softwerkskammer hat",
     "notifyOnWikiChanges": "Benachrichtigen bei Änderungen im Wiki",
-    "resign": "Austreten"
+    "resign": "Austreten",
+    "delete": "Miglied löschen"
   },
   "wiki": {
     "blogposts": "Blogartikel",
@@ -394,7 +403,9 @@
         "success": "Deine __type__ ist unterwegs."
       },
       "members": {
-        "saved": "Das Profil wurde gespeichert."
+        "saved": "Das Profil wurde gespeichert.",
+        "deleted": "Das Profil wurde gelöscht.",
+        "hasSubscriptions": "Der User ist noch Mitglied in Gruppen."
       },
       "wiki": {
         "conflict": "Deine Änderungen wurden gespeichert. Du hast allerdings Änderungen eines anderen Benutzers überschrieben. Bitte überprüfe nochmals die Wikiseite.",
