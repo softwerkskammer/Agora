@@ -14,7 +14,7 @@ mixin dataTable(clazz, sorting, columns, stateSaveAndSearch)
         order: !{sorting},
         paging: false,
         autoWidth: false,
-        searching: #{stateSaveAndSearch},
-        stateSave: #{stateSaveAndSearch}
+        searching: true,
+        stateSave: #{!!stateSaveAndSearch}
       });
     });
