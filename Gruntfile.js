@@ -18,23 +18,23 @@ module.exports = function (grunt) {
     'public/clientscripts/global_de.js': [
       'locales/frontend_de.js',
       'bower_components/jquery/dist/jquery.js',
-      'public/clientscripts/global/autoNumeric.js',
-      'public/clientscripts/global/bootstrap.js',
-      'public/clientscripts/global/bootstrap-datepicker.js',
-      'public/clientscripts/global/bootstrap-markdown.js',
+      'bower_components/autoNumeric/autoNumeric.js',
+      'bower_components/bootstrap/dist/js/bootstrap.js',
+      'bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js',
+      'bower_components/bootstrap-markdown/js/bootstrap-markdown.js',
       'node_modules/moment-timezone/node_modules/moment/moment.js',
-      'public/clientscripts/global/fullcalendar-patched.js',
-      'public/clientscripts/global/de.js', // for fullcalendar
-      'public/clientscripts/global/tinycolor.js', // for pick-a-color
-      'public/clientscripts/global/pick-a-color.js',
-      'public/clientscripts/global/bootstrap-datepicker.de.js',
+      'frontend/3rd_party_js/fullcalendar-patched.js',
+      'bower_components/fullcalendar/dist/lang/de.js', // for fullcalendar
+      'bower_components/tinycolor/tinycolor.js', // for pick-a-color
+      'bower_components/pick-a-color/src/js/pick-a-color.js',
+      'bower_components/bootstrap-datepicker/js/locales/bootstrap-datepicker.de.js',
       'bower_components/jquery-validation/dist/jquery.validate.js',
       'bower_components/jquery-validation/dist/additional-methods.js',
       'bower_components/jquery-validation/src/localization/messages_de.js',
       'bower_components/jquery-validation/src/localization/methods_de.js',
       'bower_components/bootstrap-timepicker/js/bootstrap-timepicker.js',
       'node_modules/URIjs/src/URI.js',
-      'public/clientscripts/global/agora.js'
+      'frontend/javascript/agora.js'
     ]
   };
 
@@ -42,20 +42,20 @@ module.exports = function (grunt) {
     'public/clientscripts/global_en.js': [
       'locales/frontend_en.js',
       'bower_components/jquery/dist/jquery.js',
-      'public/clientscripts/global/autoNumeric.js',
-      'public/clientscripts/global/bootstrap.js',
-      'public/clientscripts/global/bootstrap-datepicker.js',
-      'public/clientscripts/global/bootstrap-markdown.js',
+      'bower_components/autoNumeric/autoNumeric.js',
+      'bower_components/bootstrap/dist/js/bootstrap.js',
+      'bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js',
+      'bower_components/bootstrap-markdown/js/bootstrap-markdown.js',
       'node_modules/moment-timezone/node_modules/moment/moment.js',
-      'public/clientscripts/global/fullcalendar-patched.js',
-      'public/clientscripts/global/en-gb.js', // for fullcalendar
-      'public/clientscripts/global/tinycolor.js', // for pick-a-color
-      'public/clientscripts/global/pick-a-color.js',
+      'frontend/3rd_party_js/fullcalendar-patched.js',
+      'bower_components/fullcalendar/dist/lang/en-gb.js', // for fullcalendar
+      'bower_components/tinycolor/tinycolor.js', // for pick-a-color
+      'bower_components/pick-a-color/src/js/pick-a-color.js',
       'bower_components/jquery-validation/dist/jquery.validate.js',
       'bower_components/jquery-validation/dist/additional-methods.js',
       'bower_components/bootstrap-timepicker/js/bootstrap-timepicker.js',
       'node_modules/URIjs/src/URI.js',
-      'public/clientscripts/global/agora.js'
+      'frontend/javascript/agora.js'
     ]
   };
 
@@ -65,21 +65,53 @@ module.exports = function (grunt) {
     clean: ['coverage', 'frontendtests/fixtures/*.html'],
     copy: {
       datatablesJS: {
-        expand: true,
         src: 'bower_components/datatables/media/js/*.min.js',
         dest: 'public/clientscripts',
-        flatten: true
-      },
-      datatablesCSS: {
         expand: true,
-        src: 'bower_components/datatables/media/css/jquery.dataTables.css',
-        dest: 'public/stylesheets/vendor',
         flatten: true
       },
       datatablesImages: {
-        expand: true,
         src: 'bower_components/datatables/media/images/*',
         dest: 'public/images/',
+        expand: true,
+        flatten: true
+      },
+      bootstrapFONTS: {
+        src: 'bower_components/bootstrap/dist/fonts/*',
+        dest: 'public/fonts',
+        expand: true,
+        flatten: true
+      },
+      bootstrapLESS: {
+        cwd: 'bower_components/bootstrap/less/',
+        src: ['**', '!variables.less'],
+        dest: 'build/stylesheets/less',
+        expand: true,
+        flatten: false
+      },
+      fontawesomeFONTS: {
+        src: 'bower_components/font-awesome/fonts/*',
+        dest: 'public/fonts',
+        expand: true,
+        flatten: true
+      },
+      customJS: {
+        cwd: 'frontend/javascript/',
+        src: ['*', '!agora.js'],
+        dest: 'public/clientscripts',
+        expand: true,
+        flatten: false
+      },
+      patchedJS: {
+        src: 'frontend/3rd_party_js/dataTables*',
+        dest: 'public/clientscripts',
+        expand: true,
+        flatten: true
+      },
+      customLESS: {
+        src: 'frontend/less/*',
+        dest: 'build/stylesheets/less',
+        expand: true,
         flatten: true
       }
     },
@@ -104,9 +136,7 @@ module.exports = function (grunt) {
       },
       client: {
         src: [
-          'public/clientscripts/global/agora.js',
-          'public/clientscripts/check-*.js',
-          'public/clientscripts/activity*.js'
+          'frontend/javascript/*.js'
         ],
         directives: {
           indent: 2,
@@ -153,17 +183,17 @@ module.exports = function (grunt) {
         },
         files: {
           'public/stylesheets/screen.css': [
-            'public/stylesheets/vendor/fullcalendar.css',
-            'public/stylesheets/less/bootstrap.less',
-            'public/stylesheets/vendor/datepicker3.css',
-            'public/stylesheets/less/bootstrap-markdown-patched.less',
-            'public/stylesheets/vendor/font-awesome.min.css',
-            'public/stylesheets/less/pick-a-color-patched.less',
-            'public/stylesheets/vendor/shCoreDefault-patched.css',
-            'public/stylesheets/vendor/jquery.dataTables.css',
-            'public/stylesheets/vendor/dataTables.bootstrap.css',
-            'public/stylesheets/vendor/dataTables.fontAwesome.css',
-            'public/stylesheets/partials/agora.less'
+            'bower_components/fullcalendar/dist/fullcalendar.css',
+            'build/stylesheets/less/bootstrap.less',
+            'bower_components/bootstrap-datepicker/css/datepicker3.css',
+            'build/stylesheets/less/bootstrap-markdown-patched.less',
+            'bower_components/font-awesome/css/font-awesome.css',
+            'build/stylesheets/less/pick-a-color-patched.less',
+            'frontend/3rd_party_css/shCoreDefault-patched.css',
+            'bower_components/datatables/media/css/jquery.dataTables.css',
+            'frontend/3rd_party_css/dataTables.bootstrap.css',
+            'frontend/3rd_party_css/dataTables.fontAwesome.css',
+            'build/stylesheets/less/agora.less'
           ]
         }
       }
@@ -238,7 +268,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-jslint');
   grunt.loadNpmTasks('grunt-karma');
 
-  grunt.registerTask('prepare', ['bower-install-simple', 'less', 'copy']);
+  grunt.registerTask('prepare', ['bower-install-simple', 'copy', 'less']);
   grunt.registerTask('frontendtests', ['prepare', 'clean', 'jade', 'uglify:production_de', 'karma:once', 'uglify:development_de', 'karma:once']);
   grunt.registerTask('tests', ['jslint', 'frontendtests', 'mocha_istanbul']);
   grunt.registerTask('deploy_development', ['prepare', 'uglify:development_de', 'uglify:development_en']);
