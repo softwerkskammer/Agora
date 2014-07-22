@@ -21,6 +21,8 @@ module.exports = {
 
   saveValueObject: function () {throw new Error('Testpersistence - function saveValueObject not implemented'); },
 
+  remove: function () {throw new Error('Testpersistence - function remove not implemented'); },
+
   drop: function () {throw new Error('Testpersistence - function drop not implemented'); }
 };
 

@@ -145,7 +145,7 @@ describe('The persistence store', function () {
 
     it('removes an object having an id', function (done) {
       storeSampleData(function () {
-        persistence.remove(toPersist, function (err) {
+        persistence.remove('toPersist', function (err) {
           persistence.getById('toPersist', function (err, result) {
             expect(result).to.be.undefined();
             done(err);
@@ -155,12 +155,9 @@ describe('The persistence store', function () {
     });
 
     it('cannot remove an object with no id', function (done) {
-      var testobject = {name: 'name'};
-      persistence.save(testobject, function () {
-        persistence.remove(testobject, function (err) {
-          expect(err.message).to.equal('Given object has no valid id');
-          done();
-        });
+      persistence.remove(undefined, function (err) {
+        expect(err.message).to.equal('Given object has no valid id');
+        done();
       });
     });
 
