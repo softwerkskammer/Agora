@@ -60,7 +60,7 @@ module.exports = {
     app.set('view engine', 'jade');
     app.set('views', path.join(__dirname, 'views'));
     app.use(favicon(path.join(__dirname, 'public/img/Softwerkskammer16x16.ico')));
-    app.use(morgan({stream: winstonStream}));
+    app.use(morgan('combined', {stream: winstonStream}));
     app.use(cookieParser());
     app.use(bodyparser.urlencoded({extended: true}));
     app.use(compress());
