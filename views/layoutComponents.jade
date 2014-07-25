@@ -21,9 +21,6 @@ mixin administrationMenu
         li: a(href='/administration/memberAndGroupTable')
           i.fa.fa-retweet.fa-fw
           | &nbsp;#{t('members.members') + ' & ' + t('groups.groups')}
-        li: a(href='/administration/colors')
-          i.fa.fa-eye.fa-fw
-          | &nbsp;#{t('colors.colors')}
 
 mixin loginMenu(forInline)
   -var inlineClass = forInline ? 'visible-xs' : ''
