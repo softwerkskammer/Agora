@@ -66,12 +66,30 @@ describe('MailsenderService', function () {
       });
     });
 
+    it('URIescapes the url for an activity', function (done) {
+      var url = 'some%20thing';
+      var encodedURL = encodeURIComponent(url);
+      mailsenderService.dataForShowingMessageForActivity(url, 'de', function (err, result) {
+        expect(result.successURL).to.contain(encodedURL);
+        done(err);
+      });
+    });
+
     it('for showing the edit form for a member', function (done) {
       mailsenderService.dataForShowingMessageToMember(nickname, function (err, result) {
         expect(result.message).to.exist();
         expect(result.regionalgroups).not.to.exist();
         expect(result.themegroups).not.to.exist();
         expect(result.successURL).to.contain(nickname);
+        done(err);
+      });
+    });
+
+    it('URIescapes the nickname for a member', function (done) {
+      var nick = 'some%20thing';
+      var encodedNick = encodeURIComponent(nick);
+      mailsenderService.dataForShowingMessageToMember(nick, function (err, result) {
+        expect(result.successURL).to.contain(encodedNick);
         done(err);
       });
     });
