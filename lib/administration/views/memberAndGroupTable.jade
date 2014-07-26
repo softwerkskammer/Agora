@@ -23,7 +23,7 @@ block content
               th Name
               th Nickname
               for group in groups
-                th #{group.shortName || group.longName.substring(0, 4) + '…'}
+                th !{group.shortName || group.longName.substring(0, 4) + '&hellip;'}
           tbody
             for member in members
               tr

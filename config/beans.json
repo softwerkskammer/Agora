@@ -17,7 +17,6 @@
   "addonService": {"module": "./lib/activities/addonService"},
   "announcementsService": {"module": "./lib/announcements/announcementsService"},
   "calendarService": {"module": "./lib/activities/calendarService"},
-  "colorService": {"module": "./lib/administration/colorService"},
   "dashboardService": {"module": "./lib/dashboard/dashboardService"},
   "groupsService": {"module": "./lib/groups/groupsService"},
   "groupsAndMembersService": {"module": "./lib/groupsAndMembers/groupsAndMembersService"},
@@ -33,7 +32,6 @@
 
   "activitystore": {"module": "./lib/activities/activitystore"},
   "announcementstore": {"module": "./lib/announcements/announcementstore"},
-  "colorstore": {"module": "./lib/administration/colorstore"},
   "groupstore": {"module": "./lib/groups/groupstore"},
   "memberstore": {"module": "./lib/members/memberstore"},
 
@@ -48,10 +46,6 @@
   "announcementsPersistence": {
     "module": "./lib/persistence/persistence",
     "constructorArgs": { "collectionName": "announcementstore" }
-  },
-  "colorsPersistence": {
-    "module": "./lib/persistence/persistence",
-    "constructorArgs": { "collectionName": "colorstore" }
   },
   "groupsPersistence": {
     "module": "./lib/persistence/persistence",
@@ -78,7 +72,6 @@
   "addon": {"module": "./lib/activities/addon"},
   "announcement": {"module": "./lib/announcements/announcement"},
   "archivedMail": {"module": "./lib/mailarchive/archivedMail"},
-  "color": {"module": "./lib/administration/color"},
   "gitDiff": {"module": "./lib/wiki/gitDiff"},
   "group": {"module": "./lib/groups/group"},
   "mailThread": {"module": "./lib/mailarchive/mailThread"},
