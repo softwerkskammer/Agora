@@ -94,7 +94,7 @@ describe('Administration application', function () {
       .expect(200)
       .expect(/<h2>Verwaltung<small> Aktivitäten /)
       .expect(/Title of the Activity/)
-      .expect(/25\.07\.2014/, done);
+      .expect(/01\.01\.2013/, done);
   });
 
   it('shows the table for announcements', function (done) {
