@@ -47,6 +47,7 @@ describe('ActivityResult service', function () {
     it('should add an image to an activityresult', function (done) {
       sinon.stub(persistence, 'save', function (object, callback) {
         expect(object.photos).to.have.length(2);
+        callback();
       });
 
       service.addPhotoToActivityResult('Hackergarten2', {uri: 'my_uri'}, function (err) {
