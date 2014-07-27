@@ -6,7 +6,7 @@ block title
   = activityResultName
 
 block content
-  #detail-overlay(style='z-index: 100; position: fixed; background: #000; height: 100%; width: 100%;')
+  #detail-overlay(style='z-index: 100; position: fixed; background: #000; height: 100%; width: 100%; display: none;')
     p(style='color: #fff; padding: 0.5em 0.5em; text-transform: uppercase; text-align: center;')
       a(href='#', style='color: white;')
         span(class='glyphicon glyphicon-remove')
@@ -26,30 +26,39 @@ block content
     .col-md-12
       h2(style='margin-top: 5px;')= activityResultName
 
+  .row
+    .col-md-12
+      h3(style='margin-top: 5px;')= 'Friday'
+
   .row.row-without-negative-margin
-    .col-xs-3.col-without-padding.noisy_blue
-      p(style="text-align: center")= columns[0].columnTitle
-      each img in columns[0].images
-        a(href=img.uri)
-          img(src=img.uri + '?size=thumb', width=100, height=100, style="margin-top: " + img['margin-top']+ ";")
+    .table-row
+      .col-xs-3.col-without-padding.venue.noisy_blue
+        p(style="text-align: center")= columns[0].columnTitle
+        each img in columns[0].images
+          a(href=img.uri)
+            img(src=img.uri + '?size=thumb', style="margin-top: " + img['margin-top']+ ";")
 
-    .col-xs-3.col-without-padding.noisy_green
-      p(style="text-align: center")= columns[1].columnTitle
-      each img in columns[1].images
-        a(href=img.uri)
-          img(src=img.uri + '?size=thumb', width=100, height=100, style="margin-top: " + img['margin-top']+ ";")
+      .col-xs-3.col-without-padding.venue.noisy_green
+        p(style="text-align: center")= columns[1].columnTitle
+        each img in columns[1].images
+          a(href=img.uri)
+            img(src=img.uri + '?size=thumb', style="margin-top: " + img['margin-top']+ ";")
 
-    .col-xs-3.col-without-padding.noisy_red
-      p(style="text-align: center")= columns[2].columnTitle
-      each img in columns[2].images
-        a(href=img.uri)
-          img(src=img.uri + '?size=thumb', width=100, height=100, style="margin-top: " + img['margin-top']+ ";")
+      .col-xs-3.col-without-padding.venue.noisy_red
+        p(style="text-align: center")= columns[2].columnTitle
+        each img in columns[2].images
+          a(href=img.uri)
+            img(src=img.uri + '?size=thumb', style="margin-top: " + img['margin-top']+ ";")
 
-    .col-xs-3.col-without-padding.noisy_yellow
-      p(style="text-align: center")= columns[3].columnTitle
-      each img in columns[3].images
-        a(href=img.uri)
-          img(src=img.uri + '?size=thumb', width=100, height=100, style="margin-top: " + img['margin-top']+ ";")
+      .col-xs-3.col-without-padding.venue.noisy_yellow
+        p(style="text-align: center")= columns[3].columnTitle
+        each img in columns[3].images
+          a(href=img.uri)
+            img(src=img.uri + '?size=thumb', style="margin-top: " + img['margin-top']+ ";")
+
+  .row
+    .col-md-12
+      h3(style='margin-top: 5px;')= 'Thursday'
 
   script(type='text/javascript').
     jQuery(function() {
