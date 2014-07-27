@@ -6,6 +6,7 @@ var sinon = require('sinon').sandbox.create();
 var conf = require('../../testutil/configureForTest');
 var persistence = conf.get('beans').get('activityresultsPersistence');
 var service = conf.get('beans').get('activityresultsService');
+var ActivityResult = conf.get('beans').get('activityresult');
 
 describe('ActivityResult service', function () {
   var activityResult = {id: 'Hackergarten2', photos: [{uri: '/path/to/image1.jpg'}]};
@@ -39,6 +40,12 @@ describe('ActivityResult service', function () {
         expect(err).to.exist();
         expect(activityResult).to.be.null();
         done();
+      });
+    });
+
+    it('return an activitymodel instance', function () {
+      service.getActivityResultByName(activityResult.id, function (err, model) {
+        expect(model).to.be.an.instanceOf(ActivityResult);
       });
     });
   });
