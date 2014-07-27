@@ -17,21 +17,38 @@ var BAD_REQUEST = 400;
 var NOT_FOUND = 404;
 
 var ActivityResult = beans.get('activityresult');
+var galleryRepository = beans.get('galleryrepositoryService');
 
 describe('/activityresults/:result/upload', function () {
   afterEach(function () {
     sinon.restore();
   });
 
+  beforeEach(function () {
+    sinon.stub(activityresultsService, 'getActivityResultByName', function (activityResultName, callback) {
+      callback(null, new ActivityResult({ id: "foo", name: "foobar"}));
+    });
+  })
+
   describe("GET /", function () {
     it("should return the RECORD page", function (done) {
-      sinon.stub(activityresultsService, 'getActivityResultByName', function (activityResultName, callback) {
-        callback(null, new ActivityResult({ id: "foo", name: "foobar"}));
+      request(createApp()).get("/foo/upload").expect(200, done);
+    });
+  });
+
+  describe("POST /", function () {
+    it("should store the image via gallery service and redirect to edit", function (done) {
+      var galleryCalled = false;
+      sinon.stub(galleryRepository, 'storeImage', function (tmpFile, callback) {
+        callback(null, "my-custom-image-id");
       });
 
-
-
-      request(createApp()).get("/foo/upload").expect(200, done);
+      request(createApp())
+        .post('/foo/upload')
+        .attach('image', __filename)
+        .expect(303)
+        .expect('Location', /\/foo\/photo\/[^\/]+\/edit/)
+        .end(done);
     });
   });
 });
