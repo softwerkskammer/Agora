@@ -28,13 +28,21 @@ describe('/activityresults/:result/photo/:photo', function () {
   });
 
   it('should save a photos time, tags and title', function (done) {
+    sinon.stub(activityresultsService, 'updatePhotoOfActivityResult', function (activityResultName, photoId, data, callback) {
+      expect(data.timestamp).to.eql(new Date('2015-05-4 02:03'));
+      expect(data.tags).to.eql(['a', 'b']);
+      callback();
+    });
+
     request(createApp())
       .post('/foo/photo/' + photoId + '/edit')
-      .field('title', 'My adventures with the softwerkskammer')
-      .field('time', '02:03')
-      .field('date', '2015-05-04')
-      .field('tag', 'a')
-      .field('tag', 'b')
+      .type('form')
+      .send({
+        'title': 'My adventures with the softwerkskammer',
+        'time': '02:03',
+        'date': '2015-05-04',
+        'tag': ['a', 'b']
+      })
       .expect(303)
       .expect('Location', '/foo')
       .end(done);
