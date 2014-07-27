@@ -21,7 +21,7 @@ describe('ActivityResult service', function () {
     sinon.restore();
   });
 
-  describe('the getActivityResultById method', function () {
+  describe('the getActivityResultByName method', function () {
     it('should return the activityResult for an id', function (done) {
       service.getActivityResultByName(activityResult.id, function (err, returnedActivityResult) {
         expect(returnedActivityResult.id).to.equal(activityResult.id);
@@ -39,6 +39,18 @@ describe('ActivityResult service', function () {
         expect(err).to.exist();
         expect(activityResult).to.be.null();
         done();
+      });
+    });
+  });
+
+  describe('addPhotoToActivityResult', function () {
+    it('should add an image to an activityresult', function (done) {
+      sinon.stub(persistence, 'save', function (object, callback) {
+        expect(object.photos).to.have.length(2);
+      });
+
+      service.addPhotoToActivityResult('Hackergarten2', {uri: 'my_uri'}, function (err) {
+        done(err);
       });
     });
   });
