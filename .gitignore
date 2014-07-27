@@ -9,6 +9,7 @@ config/*.json*
 !config/beans.json
 !config/testbeans.json
 !config/testbeansWithDB.json
+local/
 log/*.log
 version.jade
 frontendtests/fixtures/*.html
