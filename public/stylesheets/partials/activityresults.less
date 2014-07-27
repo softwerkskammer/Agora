@@ -52,7 +52,7 @@
 }
 
 .venue {
-  img {
+  img.thumb {
     box-shadow: 1px 1px 3px rgba(30, 30, 30, 0.8);
     box-sizing: border-box;
     margin: 7%;
@@ -67,12 +67,14 @@
 }
 
 #prev-img, #next-img {
+  display: block;
   position: absolute;
   top: 0;
   height: 100%;
   width: 100%;
   background: #fff;
   opacity: 0.7;
+  color: #000;
 
   .glyphicon {
     font-size: 3em;
