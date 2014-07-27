@@ -5,9 +5,9 @@ var sinon = require('sinon').sandbox.create();
 
 var conf = require('../../testutil/configureForTest');
 var persistence = conf.get('beans').get('activityresultsPersistence');
-var store = conf.get('beans').get('activityresultstore');
+var service = conf.get('beans').get('activityresultsService');
 
-describe('ActivityResult store', function () {
+describe('ActivityResult service', function () {
   var activityResult = {id: 'Hackergarten2', photos: [{uri: '/path/to/image1.jpg'}]};
   var getById;
 
@@ -23,7 +23,7 @@ describe('ActivityResult store', function () {
 
   describe('the getActivityResultById method', function () {
     it('should return the activityResult for an id', function (done) {
-      store.getActivityResultById(activityResult.id, function (err, returnedActivityResult) {
+      service.getActivityResultByName(activityResult.id, function (err, returnedActivityResult) {
         expect(returnedActivityResult.id).to.equal(activityResult.id);
         done();
       });
@@ -35,7 +35,7 @@ describe('ActivityResult store', function () {
         return callback(new Error('not found'), null);
       });
 
-      store.getActivityResultById('non-existing-id', function (err, activityResult) {
+      service.getActivityResultByName('non-existing-id', function (err, activityResult) {
         expect(err).to.exist();
         expect(activityResult).to.be.null();
         done();
