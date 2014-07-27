@@ -1,4 +1,4 @@
-extends ../../../views/minimalLayout
+extends ../../../views/layoutOnlyMain
 
 include  ../../../views/formComponents
 
@@ -30,7 +30,7 @@ block content
     .col-md-12
       h3(style='margin-top: 5px;')= 'Friday'
 
-  .row.row-without-negative-margin
+  .row
     .table-row
       .col-xs-3.col-without-padding.venue.noisy_blue
         p(style="text-align: center")= columns[0].columnTitle
