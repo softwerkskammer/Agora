@@ -28,7 +28,7 @@ describe('/activityresults/:result/upload', function () {
     sinon.stub(activityresultsService, 'getActivityResultByName', function (activityResultName, callback) {
       callback(null, new ActivityResult({ id: "foo", name: "foobar"}));
     });
-  })
+  });
 
   describe("GET /", function () {
     it("should return the RECORD page", function (done) {
@@ -38,16 +38,16 @@ describe('/activityresults/:result/upload', function () {
 
   describe("POST /", function () {
     it("should store the image via gallery service and redirect to edit", function (done) {
-      var galleryCalled = false;
       sinon.stub(galleryRepository, 'storeImage', function (tmpFile, callback) {
         callback(null, "my-custom-image-id");
       });
 
+      //noinspection JSLint
       request(createApp())
         .post('/foo/upload')
         .attach('image', __filename)
         .expect(303)
-        .expect('Location', /\/foo\/photo\/[^\/]+\/edit/)
+        .expect('Location', /\/foo\/photo\/[\w+|\-]+\/edit/)
         .end(done);
     });
   });

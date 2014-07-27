@@ -50,3 +50,49 @@
   cursor: inherit;
   display: block;
 }
+
+.thumbnail-container {
+  max-width: 400px
+}
+
+#thumbnail {
+  max-width: 100%
+}
+
+.date-container {
+  padding-top: 5px;
+  input {
+    display: inline;
+    width: 48%;
+  }
+
+  #input-date {
+    float: left;
+  }
+  #input-time {
+    float: right;
+  }
+}
+
+ul.tag-list {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  li {
+    margin: 0;
+    padding: 0;
+    margin-bottom: 5px;
+  }
+  input:checked + label {
+    background-color: rgba(255, 0, 0, 0.5);
+  }
+  input[type="checkbox"] {
+    display: none;
+  }
+  label,label:active {
+    text-transform: uppercase;
+    font-weight: bold;
+    width: 100%;
+    background-image: url('/images/noisy_overlay.png');
+  }
+}
