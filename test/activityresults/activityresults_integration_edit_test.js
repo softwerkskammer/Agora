@@ -20,11 +20,22 @@ describe('/activityresults/:result/photo/:photo', function () {
   var photoId = 'photo_id';
   beforeEach(function () {
     sinon.stub(activityresultsService, 'getActivityResultByName', function (activityResultName, callback) {
-      callback(null, new ActivityResult({ id: "foo", name: "foobar", photos: [{id: photoId}]}));
+      callback(null, new ActivityResult({ id: "foo", name: "foobar", photos: [{id: photoId, title: 'mishka'}]}));
     });
     sinon.stub(activityresultsService, 'addPhotoToActivityResult', function (activityResultName, photo, callback) {
       callback();
     });
+  });
+
+  it('should have old values set', function (done) {
+    request(createApp())
+      .get("/foo/photo/" + photoId + '/edit')
+      .expect(function (res) {
+        if (res.text.indexOf('mishka') === -1) {
+          return 'Title not found';
+        }
+      })
+      .end(done);
   });
 
   it('should save a photos time, tags and title', function (done) {

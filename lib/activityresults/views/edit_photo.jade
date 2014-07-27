@@ -11,7 +11,7 @@ block content
     .row
       .col-md-4.thumbnail-container
         h4 Step #1: Look at the preview
-        img#thumbnail(src="http://placehold.it/400x300")
+        img#thumbnail(src=photo.uri)
         label(for="input-date") Step #2: Adjust the time this photo was taken
         .form-group.date-container
           input#input-date.form-control(type="date",name='date')
@@ -33,7 +33,7 @@ block content
         h4 Step #4: Give it a name
         .form-group
           label(for="text-title") Title
-          input.form-control#text-title(type="text",name="title")
+          input.form-control#text-title(type="text",name="title",value=photo.title)
 
      .row
        .col-md-2.col-md-offset-6(style="text-align:right")
