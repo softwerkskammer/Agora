@@ -59,6 +59,6 @@ describe('Activity result', function () {
 
       activityResult.updatePhotoById('my_photo_id', {date: 'thendate'});
       expect(activityResult.getPhotoById('my_photo_id')).to.have.property('date', 'thendate');
-    })
+    });
   });
 });
