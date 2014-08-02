@@ -54,6 +54,7 @@
     "node-cache": "1.0.0",
     "node-html-encoder": "0.0.2",
     "node-syntaxhighlighter": "0.8.1",
+    "node-uuid": "~1.4.1",
     "nodemailer": "1.0.3",
     "numeral": "1.5.3",
     "passport": "0.2.0",
