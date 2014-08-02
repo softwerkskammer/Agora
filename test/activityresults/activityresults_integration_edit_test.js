@@ -40,7 +40,7 @@ describe('/activityresults/:result/photo/:photo', function () {
 
   it('should save a photos time, tags and title', function (done) {
     sinon.stub(activityresultsService, 'updatePhotoOfActivityResult', function (activityResultName, photoId, data, callback) {
-      expect(data.timestamp).to.eql(new Date('2015-05-4 02:03'));
+      expect(data.title).to.eql('My adventures with the softwerkskammer');
       expect(data.tags).to.eql(['a', 'b']);
       callback();
     });
