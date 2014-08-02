@@ -1,0 +1,20 @@
+
+mixin dataTableImport
+  script(src='/clientscripts/jquery.dataTables.min.js')
+  script(src='/clientscripts/dataTables.bootstrap.js')
+
+mixin dataTable(clazz, sorting, columns, stateSaveAndSearch)
+  script.
+    $(document).ready(function() {
+      $('#{clazz}').dataTable({
+        language: {
+          url: tableLangUrl
+        },
+        columnDefs: !{columns},
+        order: !{sorting},
+        paging: false,
+        autoWidth: false,
+        searching: true,
+        stateSave: #{!!stateSaveAndSearch}
+      });
+    });

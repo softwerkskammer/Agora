@@ -144,6 +144,16 @@ describe('Members store', function () {
     });
   });
 
+  it('calls persistence.remove for store.removeMember and passes on the given callback', function (done) {
+    var remove = sinon.stub(persistence, 'remove', function (memberId, callback) { callback(); });
+    var member = new Member(sampleMember);
+    member.state.id = 'I D';
+    store.removeMember(member, function (err) {
+      expect(remove.calledWith('I D')).to.be(true);
+      done(err);
+    });
+  });
+
   it('returns an empty array when asked for all members for empty email list', function (done) {
     store.getMembersForEMails([], function (err, members) {
       expect(members).to.be.empty();

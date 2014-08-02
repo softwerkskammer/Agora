@@ -31,13 +31,38 @@
       "none": "no members",
       "count": "__count__ members"
     },
+    "current": "Current Activities",
+    "communities": "Software Craftsmanship Communities in Germany, Austria and Switzerland.",
+    "to_group": "To Softwerkskammer-Group",
+    "register_here": "Register here!",
+    "about_us_text": [
+      "h4 About us",
+      "p.",
+      "  Softwerkskammer founded itself in 2011 in order to simplify the exchange of experiences among people interested in Software Craftsmanship.",
+      "p.",
+      "  The local communities use it to organise their meetings and other events like Code Retreats or Open Spaces,",
+      "  or they simply share ideas or discuss interesting things on their mailing list.",
+      "p Look at the Activities menu to find out what we're up to over the next few weeks."
+    ],
     "gdcr": "Global Day of Coderetreat",
     "gdcr_activities": "Activities related to GDCR",
     "gdcr_text": "Here you find almost all german-speaking activities. You can find a full overview at",
     "feedback": "Feedback",
     "what_does_not_work": "What does not work the way it should?",
     "settings": "Settings",
-    "separator": "."
+    "separator": ".",
+    "goodbye_text": [
+      "h2 Great, you've been here.",
+      "p Take care - see you soon!",
+      "hr",
+      "p.text-right Or maybe you want to return? ",
+      "  a.btn.btn-primary(data-toggle='modal', href='#login')",
+      "    i.fa.fa-sign-in.fa-fw",
+      "    | &nbsp;$t(general.login)"
+    ],
+    "are_you_sure": "Are you sure?",
+    "no": "No",
+    "delete": "Delete"
   },
   "error": {
     "congratulations": "Congratulations!",
@@ -53,7 +78,7 @@
     "stacktrace500": "The Stacktrace",
     "error500_text": [
       "p Please ",
-      "  a(href=\"https://github.com/softwerkskammer/NeuePlattform-Implementierung/issues/\") $t(error.detailed_report):",
+      "  a(href=\"https://github.com/softwerkskammer/Agora/issues/\") $t(error.detailed_report):",
       "  ul",
       "    li What did you do?",
       "    li $t(error.os_browser)",
@@ -187,7 +212,7 @@
       "  | Please ",
       "  a(href=\"/login\") try again.",
       "p If the error occurs repeatedly, please ",
-      "  a(href=\"https://github.com/softwerkskammer/NeuePlattform-Implementierung/issues/\") $t(error.detailed_report):",
+      "  a(href=\"https://github.com/softwerkskammer/Agora/issues/\") $t(error.detailed_report):",
       "  ul",
       "    li How did you access the login page?",
       "    li Which authentication did you choose?",
@@ -196,7 +221,15 @@
       "    li $t(error.datetime)",
       "    li $t(error.stacktrace500)",
       "p $t(error.sorry)"
-    ]
+    ],
+    "required_text": [
+      "h3 You need to be logged-in to access this page!",
+      "p You wanted to access a protected page inside the members section. To do that you need to authenticate yourself.",
+      "p If this is an application error, we apologize and would love to get ",
+      "  a(href='https://github.com/softwerkskammer/Agora/issues/') feedback.",
+      "p The Agora-Team is begging your pardon."
+    ],
+    "please_authenticate": "Please, authenticate yourself!"
   },
   "colors": {
     "colors": "Colours",
@@ -252,7 +285,12 @@
     "send": "Send",
     "resign": "Write Resignement E-Mail",
     "why-resign": "Why do you want to resign",
-    "notes-resign": "Please let us know what you think about this site"
+    "notes-resign": "Please let us know what you think about this site",
+    "resign_info": [
+      "p We are sorry that you want to leave.",
+      "p We are respecting this and will remove your account as soon as possible. We would be glad if you answered the following questions.",
+      "p Account removal is a manual process and sending this form will triger an email to us administators."
+    ]
   },
   "members": {
     "overview": "Members Overview",
@@ -281,12 +319,14 @@
     "send_email": "Send e-mail to __firstname__ __lastname__",
     "has": "Softwerkskammer has",
     "notifyOnWikiChanges": "Notify on wiki changes",
-    "resign": "Resign"
+    "resign": "Resign",
+    "delete": "Delete Member"
   },
   "wiki": {
     "blogposts": "Blog Posts",
     "overview": "Overview of files in",
     "wiki": "Wiki",
+    "gotowiki": "Go to Wiki",
     "subwiki": "Subwiki",
     "comparison_of": "Comparison of",
     "in": "in Wiki",
@@ -327,6 +367,7 @@
     "content": {
       "save_error": "Save failed.",
       "save_error_retry": "Save failed. Please redo your changes and save again.",
+      "save_error_reason": "Save failed. Reason: __err__",
       "query": "The query string you entered is too short.",
       "activities": {
         "saved": "Your activity has been saved.",
@@ -351,7 +392,9 @@
         "saved_single": "The new color has been saved."
       },
       "groups": {
-        "saved": "Your group has been saved."
+        "saved": "Your group has been saved.",
+        "subscribed": "You are now a member of this group. You will receive a welcome-email in a few moments.",
+        "unsubscribed": "You are not a member of this group any more. You will receive a goodbye-email in a few moments."
       },
       "mailsender": {
         "error_reason": "Your __type__ has not been sent. Reason: __err__",
@@ -359,7 +402,9 @@
         "success": "Your __type__ is on its way."
       },
       "members": {
-        "saved": "The profile has been saved."
+        "saved": "The profile has been saved.",
+        "deleted": "The profile has been deleted.",
+        "hasSubscriptions": "The user is still subscribed to some groups."
       },
       "wiki": {
         "conflict": "Your changes have been saved. You may have overwritten changes of another user. Please double check.",

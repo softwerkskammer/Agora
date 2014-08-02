@@ -13,6 +13,7 @@ local/
 log/*.log
 version.jade
 frontendtests/fixtures/*.html
+bower_components
 
 npm-debug.log
 screen.css
@@ -29,4 +30,16 @@ public/stylesheets/vendor/bootstrap-markdown-custom.css
 test/tempbeans.json
 
 .idea/dictionaries
+.idea/modules.xml
+.idea/libraries
 .idea/workspace.xml
+.idea/*.iml
+.idea/jsLibraryMappings.xml
+
+jquery.dataTables.min.js
+public/images
+jquery.dataTables.css
+build
+public/fonts
+bootstrap.js
+public/clientscripts

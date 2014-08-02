@@ -5,57 +5,36 @@
   describe('Announcements Form', function () {
     var url = $('#announcementform [name=url]');
 
-    var checkFieldMandatory = function (fieldname) {
-      var field = $(fieldname);
-      field.val('');
-      expect(announcement_validator.element(field)).toBe(false);
-      expect(announcement_validator.errorList[0].message).toBe('Dieses Feld ist ein Pflichtfeld.');
-      field.val('a');
-      expect(announcement_validator.element(field)).toBe(true);
+    afterEach(function () {
+      announcement_validator.resetForm();
+    });
+
+    var checkFieldMandatory = function (selector) {
+      testglobals.mandatoryChecker(announcement_validator, selector);
     };
 
-    beforeEach(function (done) {
-      $(function () {
-        url.val('');
-        url.trigger('change');
-        jasmine.Ajax.install();
-        done();
-      });
-    });
+    var checkFieldWithPositiveAjaxResponse = function (field) {
+      testglobals.checkFieldWithPositiveAjaxResponse(announcement_validator, field, undefined, /announcements\/checkurl\?url=value/);
+    };
 
-    afterEach(function () {
-      jasmine.Ajax.uninstall();
-    });
+    var checkFieldWithNegativeAjaxResponse = function (field, message) {
+      testglobals.checkFieldWithNegativeAjaxResponse(announcement_validator, field, message, undefined, /announcements\/checkurl\?url=value/);
+    };
+
+    var checkThatPreviousValueIsSent = function (field, previousField) {
+      testglobals.checkThatPreviousValueIsSent(field, previousField);
+    };
 
     it('checks that a url check response is handled for "true"', function () {
-      jasmine.Ajax.stubRequest('/announcements/checkurl?previousUrl=&url=test1').andReturn({responseText: 'true'});
-      url.val('test1');
-      // trigger validation
-      url.trigger('change');
-
-      expect(announcement_validator.element(url)).toBe(true);
-      expect(announcement_validator.errorList).toEqual([]);
+      checkFieldWithPositiveAjaxResponse(url);
     });
 
     it('checks that a url check response is handled for "false"', function () {
-      jasmine.Ajax.stubRequest('/announcements/checkurl?previousUrl=&url=test2').andReturn({responseText: 'false'});
-      url.val('test2');
-      // trigger validation
-      url.trigger('change');
-
-      expect(announcement_validator.element(url)).toBe(false);
-      expect(announcement_validator.errorList).toContain(jasmine.objectContaining({message: urlIsNotAvailable}));
+      checkFieldWithNegativeAjaxResponse(url, urlIsNotAvailable);
     });
 
     it('checks that a url call also sends the previousURl', function () {
-      jasmine.Ajax.stubRequest('/announcements/checkurl?url=test3&previousUrl=previous').andReturn({responseText: 'true'});
-      var previousUrl = $('#announcementform [name=previousUrl]');
-      previousUrl.val('previous');
-      url.val('test3');
-      // trigger validation
-      url.trigger('change');
-
-      expect(announcement_validator.element(url)).toBe(true);
+      checkThatPreviousValueIsSent(url, $('#announcementform [name=previousUrl]'));
     });
 
     it('checks that "title" is mandatory', function () {

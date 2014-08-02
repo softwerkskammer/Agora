@@ -1,25 +1,11 @@
 extends ../../../views/layout
 include  ../../../views/formComponents
 include ../../members/views/memberlist-mixin
+include ../../../views/dataTables-mixin
 
 block scripts
-  script(src='/clientscripts/jquery.dataTables.min.js')
-  script.
-    $(document).ready(function() {
-      $('#waitinglisttable').dataTable({
-        oLanguage: {
-          sUrl: tableLangUrl
-        },
-        aoColumns: [
-          { bSortable : false }, null, null, { sType: 'date-eu' }, { sType: 'date-eu' }, null
-        ],
-        bPaginate: false,
-        bAutoWidth: false,
-        aaSorting: [[ 3, 'asc' ]],
-        bStateSave: true
-      });
-        $('.tooltiplabel').each(function(each) {$(this).popover()});
-    });
+  +dataTableImport
+  +dataTable('#waitinglisttable', "[[ 3, 'asc' ]]", "[{ bSortable : false }, null, null, { sType: 'date-eu' }, { sType: 'date-eu' }, null]", true)
   script.
     function removeFromWaitinglist(activityUrl, resourceName, nickname, buttonid) {
       $.ajax({ 

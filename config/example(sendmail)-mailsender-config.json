@@ -1,6 +1,1 @@
-// to use this variant, strip "example(sendmail)-" from the filename and delete this comment
-{
-  "transport": "sendmail",
-  "transport-options": {},
-  "sender-address": "info@my-domain.org"
-}
+NOT SUPPORTED ANYMORE!

@@ -7,8 +7,8 @@ var expect = require('must');
 
 var Member = beans.get('member');
 
-var dummymember = new Member().initFromSessionUser({authenticationId: 'hada'});
-var dummymember2 = new Member().initFromSessionUser({authenticationId: 'hada2'});
+var dummymember = new Member().initFromSessionUser({authenticationId: 'hada', profile: {emails: [{value: 'email'}]}});
+var dummymember2 = new Member().initFromSessionUser({authenticationId: 'hada2', profile: {emails: [{value: 'email'}]}});
 
 var Group = beans.get('group');
 

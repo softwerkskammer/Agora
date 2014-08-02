@@ -21,7 +21,6 @@ describe('The persistence store', function () {
       persistence.save(toPersist, done);
     };
 
-
     it('fails to save object without id', function (done) {
       persistence.save({}, function (err) {
         expect(err.message).to.equal('Given object has no valid id');
@@ -141,6 +140,24 @@ describe('The persistence store', function () {
           expect(result).to.be(undefined);
           done(err);
         });
+      });
+    });
+
+    it('removes an object having an id', function (done) {
+      storeSampleData(function () {
+        persistence.remove('toPersist', function (err) {
+          persistence.getById('toPersist', function (err, result) {
+            expect(result).to.be.undefined();
+            done(err);
+          });
+        });
+      });
+    });
+
+    it('cannot remove an object with no id', function (done) {
+      persistence.remove(undefined, function (err) {
+        expect(err.message).to.equal('Given object has no valid id');
+        done();
       });
     });
 

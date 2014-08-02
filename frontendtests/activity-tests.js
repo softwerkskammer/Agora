@@ -5,68 +5,36 @@
   describe('Activitiy Form', function () {
     var url = $('#activityform [name=url]');
 
-    var checkFieldMandatory = function (fieldname) {
-      var field = $(fieldname);
-      field.val('');
-      expect(activity_validator.element(field)).toBe(false);
-      expect(activity_validator.errorList[0].message).toBe('Dieses Feld ist ein Pflichtfeld.');
-      field.val('a');
-      expect(activity_validator.element(field)).toBe(true);
+    afterEach(function () {
+      activity_validator.resetForm();
+    });
+
+    var checkFieldMandatory = function (selector) {
+      testglobals.mandatoryChecker(activity_validator, selector);
     };
 
-    beforeEach(function (done) {
-      $(function () {
-        url.val('');
-        url.trigger('change');
-        jasmine.Ajax.install();
-        done();
-      });
-    });
+    var checkFieldWithPositiveAjaxResponse = function (field) {
+      testglobals.checkFieldWithPositiveAjaxResponse(activity_validator, field, undefined, /activities\/checkurl\?url=value/);
+    };
 
-    afterEach(function () {
-      jasmine.Ajax.uninstall();
-    });
+    var checkFieldWithNegativeAjaxResponse = function (field, message) {
+      testglobals.checkFieldWithNegativeAjaxResponse(activity_validator, field, message, undefined, /activities\/checkurl\?url=value/);
+    };
+
+    var checkThatPreviousValueIsSent = function (field, previousField) {
+      testglobals.checkThatPreviousValueIsSent(field, previousField);
+    };
 
     it('checks that a url check response is handled for "true"', function () {
-      jasmine.Ajax.stubRequest('/activities/checkurl?previousUrl=&url=test1').andReturn({responseText: 'true'});
-      url.val('test1');
-      // trigger validation
-      url.trigger('change');
-
-      expect(activity_validator.element(url)).toBe(true);
-      expect(activity_validator.errorList).toEqual([]);
+      checkFieldWithPositiveAjaxResponse(url);
     });
 
     it('checks that a url check response is handled for "false"', function () {
-      jasmine.Ajax.stubRequest('/activities/checkurl?previousUrl=&url=test2').andReturn({responseText: 'false'});
-      url.val('test2');
-      // trigger validation
-      url.trigger('change');
-
-      expect(activity_validator.element(url)).toBe(false);
-      expect(activity_validator.errorList).toContain(jasmine.objectContaining({message: urlIsNotAvailable}));
+      checkFieldWithNegativeAjaxResponse(url, urlIsNotAvailable);
     });
 
     it('checks that a url call also sends the previousURl', function () {
-      jasmine.Ajax.stubRequest('/activities/checkurl?url=test3&previousUrl=previous').andReturn({responseText: 'true'});
-      var previousUrl = $('#activityform [name=previousUrl]');
-      previousUrl.val('previous');
-      url.val('test3');
-      // trigger validation
-      url.trigger('change');
-
-      expect(activity_validator.element(url)).toBe(true);
-    });
-
-    it('checks that a url call also sends the previousURl', function () {
-      jasmine.Ajax.stubRequest('/activities/checkurl?url=test3&previousUrl=previous').andReturn({responseText: 'true'});
-      var previousUrl = $('#activityform [name=previousUrl]');
-      previousUrl.val('previous');
-      url.val('test3');
-      // trigger validation
-      url.trigger('change');
-
-      expect(activity_validator.element(url)).toBe(true);
+      checkThatPreviousValueIsSent(url, $('#activityform [name=previousUrl]'));
     });
 
     it('checks that "title" is mandatory', function () {
@@ -92,9 +60,9 @@
       $('#activityform [name=endTime]').val('12:11');
       $('#activityform [name=startTime]').trigger('change');
 
-      expect(activity_validator.element('#activityform [name=endDate]')).toBe(false);
-      expect(activity_validator.element('#activityform [name=endTime]')).toBe(false);
-      expect(activity_validator.errorList).toContain(jasmine.objectContaining({message: endMustBeAfterBegin}));
+      expect(activity_validator.element('#activityform [name=endDate]')).to.be(false);
+      expect(activity_validator.element('#activityform [name=endTime]')).to.be(false);
+      expect(activity_validator.errorList[0]).to.have.ownProperty('message', endMustBeAfterBegin);
     });
 
   });

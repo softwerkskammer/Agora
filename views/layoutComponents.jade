@@ -21,9 +21,6 @@ mixin administrationMenu
         li: a(href='/administration/memberAndGroupTable')
           i.fa.fa-retweet.fa-fw
           | &nbsp;#{t('members.members') + ' & ' + t('groups.groups')}
-        li: a(href='/administration/colors')
-          i.fa.fa-eye.fa-fw
-          | &nbsp;#{t('colors.colors')}
 
 mixin loginMenu(forInline)
   -var inlineClass = forInline ? 'visible-xs' : ''
@@ -56,8 +53,8 @@ mixin loginMenu(forInline)
       i.fa.fa-sign-in
       | &nbsp;#{t('general.login')}
   li.visible-xs: span.pull-right
-    a(style='padding: 2px;', href='/language/de?currentUrl=#{encodeURIComponent(currentUrl)}'): img(src='/img/flags/Germany.png', alt='Deutsch')
-    a(style='padding: 2px;', href='/language/en-gb?currentUrl=#{encodeURIComponent(currentUrl)}'): img(src='/img/flags/United-Kingdom.png', alt='English')
+    a(style='padding: 2px;', href='/language/de?currentUrl=#{encodeURIComponent(currentUrl)}'): img(src='/img/flags/Germany.png', alt='Deutsch', width='35', height='24')
+    a(style='padding: 2px;', href='/language/en-gb?currentUrl=#{encodeURIComponent(currentUrl)}'): img(src='/img/flags/United-Kingdom.png', alt='English', width='35', height='24')
 
 
 mixin navbar-inside
@@ -89,7 +86,7 @@ mixin notificationsBlock(notificationmessage)
 mixin topNavbar
   .navbar-header
     a.navbar-brand.no-padding(href='/')
-      img(src='/img/SoftwerkskammerWappenLinks.png', alt='Softwerkskammer')
+      img(src='/img/SoftwerkskammerWappenLinks.png', alt='Softwerkskammer', width='234', height='60')
     a.btn.btn-default.navbar-toggle(data-toggle='collapse', data-target='.collapse-top')
       span.sr-only Toggle
       i.fa.fa-bars.fa-lg
@@ -97,8 +94,8 @@ mixin topNavbar
   .navbar-collapse.collapse.collapse-top
     ul.nav.navbar-nav.navbar-right.hidden-xs.bottom
       +loginMenu
-      li: a(style='padding: 2px;', href='/language/de?currentUrl=#{encodeURIComponent(currentUrl)}'): img(src='/img/flags/Germany.png', alt='Deutsch')
-      li: a(style='padding: 2px;', href='/language/en-gb?currentUrl=#{encodeURIComponent(currentUrl)}'): img(src='/img/flags/United-Kingdom.png', alt='English')
+      li: a(style='padding: 2px;', href='/language/de?currentUrl=#{encodeURIComponent(currentUrl)}'): img(src='/img/flags/Germany.png', alt='Deutsch', width='35', height='24')
+      li: a(style='padding: 2px;', href='/language/en-gb?currentUrl=#{encodeURIComponent(currentUrl)}'): img(src='/img/flags/United-Kingdom.png', alt='English', width='35', height='24')
     ul.nav.navbar-nav.bottom
       li(data-agoranav='activities'): a(href='/activities/upcoming')
         span.hidden-sm

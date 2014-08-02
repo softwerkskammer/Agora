@@ -6,7 +6,6 @@ var expect = require('must');
 
 describe('Activity application', function () {
 
-  // tested function is currently not used in production anymore (28.4.2013, leider)
   it('removes all special characters from the id string', function () {
     var id = fieldHelpers.createLinkFrom(['assignedGroup', 'title', 'startDate']);
     expect(id).to.equal('assignedGroup_title_startDate');
@@ -198,9 +197,14 @@ describe('parseToMomentUsingTimezone function', function () {
     expect(result.format()).to.equal('2013-08-02T03:04:00+02:00');
   });
 
-  it('parses future time in summer', function () {
+  it('parses near future time in summer', function () {
+    var result = fieldHelpers.parseToMomentUsingTimezone('2.8.2033', '3:04', 'Europe/Berlin');
+    expect(result.format()).to.equal('2033-08-02T03:04:00+02:00');
+  });
+
+  it('parses far future time in summer', function () {
     var result = fieldHelpers.parseToMomentUsingTimezone('2.8.2113', '3:04', 'Europe/Berlin');
-    expect(result.format()).to.equal('2113-08-02T03:04:00+02:00');
+    expect(result.format()).to.equal('2113-08-02T03:04:00+01:00'); // not in data of moment-timezone
   });
 
   it('parses date with null time', function () {

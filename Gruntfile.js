@@ -17,45 +17,45 @@ module.exports = function (grunt) {
   var files_de = {
     'public/clientscripts/global_de.js': [
       'locales/frontend_de.js',
-      'node_modules/jquery/dist/jquery.js',
-      'public/clientscripts/global/autoNumeric.js',
-      'public/clientscripts/global/bootstrap.js',
-      'public/clientscripts/global/bootstrap-datepicker.js',
-      'public/clientscripts/global/bootstrap-markdown.js',
+      'bower_components/jquery/dist/jquery.js',
+      'bower_components/autoNumeric/autoNumeric.js',
+      'bower_components/bootstrap/dist/js/bootstrap.js',
+      'bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js',
+      'bower_components/bootstrap-markdown/js/bootstrap-markdown.js',
       'node_modules/moment-timezone/node_modules/moment/moment.js',
-      'public/clientscripts/global/fullcalendar-patched.js',
-      'public/clientscripts/global/de.js', // for fullcalendar
-      'public/clientscripts/global/tinycolor.js', // for pick-a-color
-      'public/clientscripts/global/pick-a-color.js',
-      'public/clientscripts/global/bootstrap-datepicker.de.js',
-      'node_modules/jquery-validation/jquery.validate.js',
-      'node_modules/jquery-validation/additional-methods.js',
-      'node_modules/jquery-validation/localization/messages_de.js',
-      'node_modules/jquery-validation/localization/methods_de.js',
-      'node_modules/bootstrap-timepicker/js/bootstrap-timepicker.js',
+      'frontend/3rd_party_js/fullcalendar-patched.js',
+      'bower_components/fullcalendar/dist/lang/de.js', // for fullcalendar
+      'bower_components/tinycolor/tinycolor.js', // for pick-a-color
+      'bower_components/pick-a-color/src/js/pick-a-color.js',
+      'bower_components/bootstrap-datepicker/js/locales/bootstrap-datepicker.de.js',
+      'bower_components/jquery-validation/dist/jquery.validate.js',
+      'bower_components/jquery-validation/dist/additional-methods.js',
+      'bower_components/jquery-validation/src/localization/messages_de.js',
+      'bower_components/jquery-validation/src/localization/methods_de.js',
+      'bower_components/bootstrap-timepicker/js/bootstrap-timepicker.js',
       'node_modules/URIjs/src/URI.js',
-      'public/clientscripts/global/agora.js'
+      'frontend/javascript/agora.js'
     ]
   };
 
   var files_en = {
     'public/clientscripts/global_en.js': [
       'locales/frontend_en.js',
-      'node_modules/jquery/dist/jquery.js',
-      'public/clientscripts/global/autoNumeric.js',
-      'public/clientscripts/global/bootstrap.js',
-      'public/clientscripts/global/bootstrap-datepicker.js',
-      'public/clientscripts/global/bootstrap-markdown.js',
-      'node_modules/moment-timezone/node_modules/moment.js',
-      'public/clientscripts/global/fullcalendar-patched.js',
-      'public/clientscripts/global/en-gb.js', // for fullcalendar
-      'public/clientscripts/global/tinycolor.min.js', // for pick-a-color
-      'public/clientscripts/global/pick-a-color.js',
-      'node_modules/jquery-validation/jquery.validate.js',
-      'node_modules/jquery-validation/additional-methods.js',
-      'node_modules/bootstrap-timepicker/js/bootstrap-timepicker.js',
+      'bower_components/jquery/dist/jquery.js',
+      'bower_components/autoNumeric/autoNumeric.js',
+      'bower_components/bootstrap/dist/js/bootstrap.js',
+      'bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js',
+      'bower_components/bootstrap-markdown/js/bootstrap-markdown.js',
+      'node_modules/moment-timezone/node_modules/moment/moment.js',
+      'frontend/3rd_party_js/fullcalendar-patched.js',
+      'bower_components/fullcalendar/dist/lang/en-gb.js', // for fullcalendar
+      'bower_components/tinycolor/tinycolor.js', // for pick-a-color
+      'bower_components/pick-a-color/src/js/pick-a-color.js',
+      'bower_components/jquery-validation/dist/jquery.validate.js',
+      'bower_components/jquery-validation/dist/additional-methods.js',
+      'bower_components/bootstrap-timepicker/js/bootstrap-timepicker.js',
       'node_modules/URIjs/src/URI.js',
-      'public/clientscripts/global/agora.js'
+      'frontend/javascript/agora.js'
     ]
   };
 
@@ -63,6 +63,58 @@ module.exports = function (grunt) {
   grunt.initConfig({
     // Task configuration.
     clean: ['coverage', 'frontendtests/fixtures/*.html'],
+    copy: {
+      datatablesJS: {
+        src: 'bower_components/datatables/media/js/*.min.js',
+        dest: 'public/clientscripts',
+        expand: true,
+        flatten: true
+      },
+      datatablesImages: {
+        src: 'bower_components/datatables/media/images/*',
+        dest: 'public/images/',
+        expand: true,
+        flatten: true
+      },
+      bootstrapFONTS: {
+        src: 'bower_components/bootstrap/dist/fonts/*',
+        dest: 'public/fonts',
+        expand: true,
+        flatten: true
+      },
+      bootstrapLESS: {
+        cwd: 'bower_components/bootstrap/less/',
+        src: ['**', '!variables.less'],
+        dest: 'build/stylesheets/less',
+        expand: true,
+        flatten: false
+      },
+      fontawesomeFONTS: {
+        src: 'bower_components/font-awesome/fonts/*',
+        dest: 'public/fonts',
+        expand: true,
+        flatten: true
+      },
+      customJS: {
+        cwd: 'frontend/javascript/',
+        src: ['*', '!agora.js'],
+        dest: 'public/clientscripts',
+        expand: true,
+        flatten: false
+      },
+      patchedJS: {
+        src: 'frontend/3rd_party_js/dataTables*',
+        dest: 'public/clientscripts',
+        expand: true,
+        flatten: true
+      },
+      customLESS: {
+        src: 'frontend/less/*',
+        dest: 'build/stylesheets/less',
+        expand: true,
+        flatten: true
+      }
+    },
     jslint: {
       server: {
         src: [
@@ -84,9 +136,7 @@ module.exports = function (grunt) {
       },
       client: {
         src: [
-          'public/clientscripts/global/agora.js',
-          'public/clientscripts/check-*.js',
-          'public/clientscripts/activity*.js'
+          'frontend/javascript/*.js'
         ],
         directives: {
           indent: 2,
@@ -106,7 +156,7 @@ module.exports = function (grunt) {
           browser: true,
           vars: true,
           nomen: true,
-          predef: ['$', 'describe', 'expect', 'beforeEach', 'afterEach', 'jasmine', 'it']
+          predef: ['$', 'describe', 'expect', 'beforeEach', 'afterEach', 'sinon', 'it', 'testglobals']
         },
         options: jsLintStandardOptions
       }
@@ -133,16 +183,18 @@ module.exports = function (grunt) {
         },
         files: {
           'public/stylesheets/screen.css': [
-            'public/stylesheets/vendor/fullcalendar.css',
-            'public/stylesheets/less/bootstrap.less',
-            'public/stylesheets/vendor/datepicker3.css',
-            'public/stylesheets/less/bootstrap-markdown-patched.less',
-            'public/stylesheets/vendor/font-awesome.min.css',
-            'public/stylesheets/less/pick-a-color-patched.less',
-            'public/stylesheets/vendor/shCoreDefault-patched.css',
-            'public/stylesheets/vendor/jquery.dataTables.css',
-            'public/stylesheets/partials/activityresults.less',
-            'public/stylesheets/partials/agora.less'
+            'bower_components/fullcalendar/dist/fullcalendar.css',
+            'build/stylesheets/less/bootstrap.less',
+            'bower_components/bootstrap-datepicker/css/datepicker3.css',
+            'build/stylesheets/less/bootstrap-markdown-patched.less',
+            'bower_components/font-awesome/css/font-awesome.css',
+            'build/stylesheets/less/pick-a-color-patched.less',
+            'frontend/3rd_party_css/shCoreDefault-patched.css',
+            'bower_components/datatables/media/css/jquery.dataTables.css',
+            'frontend/3rd_party_css/dataTables.bootstrap.css',
+            'frontend/3rd_party_css/dataTables.fontAwesome.css',
+            'build/stylesheets/less/agora.less',
+            'build/stylesheets/less/activityresults.less'
           ]
         }
       }
@@ -198,14 +250,18 @@ module.exports = function (grunt) {
           }
         },
         files: {
-          "frontendtests/fixtures/forms.html": "frontendtests/fixtures/forms.jade"
+          'frontendtests/fixtures/forms.html': 'frontendtests/fixtures/forms.jade'
         }
       }
+    },
+    'bower-install-simple': {
     }
   });
 
   // These plugins provide necessary tasks.
+  grunt.loadNpmTasks('grunt-bower-install-simple');
   grunt.loadNpmTasks('grunt-contrib-clean');
+  grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-jade');
   grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-contrib-uglify');
@@ -213,15 +269,16 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-jslint');
   grunt.loadNpmTasks('grunt-karma');
 
-  grunt.registerTask('frontendtests', ['clean', 'jade', 'less', 'uglify:production_de', 'karma:once', 'uglify:development_de', 'karma:once']);
+  grunt.registerTask('prepare', ['bower-install-simple', 'copy', 'less']);
+  grunt.registerTask('frontendtests', ['prepare', 'clean', 'jade', 'uglify:production_de', 'karma:once', 'uglify:development_de', 'karma:once']);
   grunt.registerTask('tests', ['jslint', 'frontendtests', 'mocha_istanbul']);
-  grunt.registerTask('deploy_development', ['less', 'uglify:development_de', 'uglify:development_en']);
+  grunt.registerTask('deploy_development', ['prepare', 'uglify:development_de', 'uglify:development_en']);
 
   // Default task.
-  grunt.registerTask('default', ['tests', 'deploy_development']);
+  grunt.registerTask('default', ['tests', 'uglify:development_en']);
 
   // Travis-CI task
   grunt.registerTask('travis', ['default']);
 
-  grunt.registerTask('deploy_production', ['less', 'uglify:production_de', 'uglify:production_en']);
+  grunt.registerTask('deploy_production', ['prepare', 'uglify:production_de', 'uglify:production_en']);
 };

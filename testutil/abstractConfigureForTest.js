@@ -32,7 +32,8 @@ module.exports = function (testBeansFilename) {
     secretPaymentKey: null,
     paymentBic      : 'paymentBic',
     paymentIban     : 'paymentIban',
-    paymentReceiver : 'paymentReceiver'
+    paymentReceiver : 'paymentReceiver',
+    domainname      : 'localhost'
 
   });
 

@@ -1,23 +1,10 @@
 extends ../../../views/layoutOnlyMain
 include ../../members/views/memberlist-mixin
+include ../../../views/dataTables-mixin
 
 block scripts
-  script(src='/clientscripts/jquery.dataTables.min.js')
-  script.
-    $(document).ready(function() {
-      $('#membertable').dataTable({
-        oLanguage: {
-          sUrl: tableLangUrl
-        },
-        aoColumns: [
-          { bSortable : false }, { sType: 'date-eu' }, null, null, null, null, null, null, null, null, null, null, null, null
-        ],
-        bPaginate: false,
-        bAutoWidth: false,
-        aaSorting: [[ 1 , 'desc' ]],
-        bStateSave: true
-      });
-    });
+  +dataTableImport
+  +dataTable('#membertable', '[ 1, "desc" ]', '[{targets: 0, sortable: false}, {targets: [1], type: "date-eu"}]', true)
 
 block title
   | Übersicht der Mitglieder
@@ -56,7 +43,7 @@ block content
                 td #{member.lastname()}
                 td #{member.location()}
                 td #{member.reference()}
-                td #{member.interests()}
+                td.ellipsis: span(rel='tooltip', data-placement='left', data-content='#{member.interests()}') #{member.interests()}
                 td #{member.site()}
                 td #{member.profession()}
                 td #{member.email()}

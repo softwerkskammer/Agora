@@ -22,7 +22,7 @@ describe('Activity\'s Addon for Member', function () {
 
 });
 
-describe('Activity knows about member entered Addon information', function () {
+describe('Activity knows about Addon information entered by member', function () {
   var addonOne = {homeAddress: 'homeOne'};
   var addonTwo = {homeAddress: 'homeOne', billingAddress: 'billingOne'};
 
@@ -55,5 +55,18 @@ describe('Activity knows about member entered Addon information', function () {
     var activity = new Activity({ _addons: {memberOne: addonTwo}, _addonConfig: {homeAddress: true, billingAddress: true, tShirtSize: true} });
 
     expect(activity.memberEnteredAddonInformation('memberOne')).to.be.falsy();
+  });
+});
+
+describe('Activity knows which members entered Addon information', function () {
+  var addonOne = {homeAddress: 'homeOne'};
+  var addonTwo = {homeAddress: 'homeOne', billingAddress: 'billingOne'};
+
+  it('returns the members whose addon information has been stored', function () {
+    var activity = new Activity({ _addons: {memberOne: addonOne, memberTwo: addonTwo} });
+
+    expect(activity.memberIdsOfAddons().length).to.equal(2);
+    expect(activity.memberIdsOfAddons()).to.contain('memberOne');
+    expect(activity.memberIdsOfAddons()).to.contain('memberTwo');
   });
 });

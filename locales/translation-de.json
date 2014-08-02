@@ -31,13 +31,39 @@
       "none": "keine Mitglieder",
       "count": "__count__ Mitglieder"
     },
+    "current": "Aktuelles",
+    "communities": "Software Craftsmanship Communities in Deutschland, Österreich und der Schweiz.",
+    "to_group": "Zur Softwerkskammer-Gruppe",
+    "register_here": "Hier anmelden!",
+    "about_us_text": [
+      "h4 Über uns",
+      "p.",
+      "  Die Softwerkskammer hat sich 2011 gegründet, um den Austausch Interessierter zum Thema Software Craftsmanship",
+      "  zu vereinfachen.",
+      "p.",
+      "  Hierüber organisieren die lokalen Communities (die Softwerkskammern) ihre Treffen und andere Events wie",
+      "  CodeRetreats oder OpenSpaces oder tauschen sich einfach nur via Mailingliste aus.",
+      "p Was wir in den nächsten Wochen veranstalten, findest Du unter Aktivitäten."
+    ],
     "gdcr": "Der Global Day of Coderetreat",
     "gdcr_activities": "Aktivitäten zum GDCR",
     "gdcr_text": "Hier findest Du fast alle deutschsprachigen Veranstaltungen. Eine vollständige Übersicht findest Du auf",
     "feedback": "Feedback",
     "what_does_not_work": "Was funktioniert nicht, wie es soll?",
     "settings": "Einstellungen",
-    "separator": ","
+    "separator": ",",
+    "goodbye_text": [
+      "h2 Schön, dass Du hier warst.",
+      "p Mach's gut - bis zum nächsten Mal!",
+      "hr",
+      "p.text-right Oder magst Du nochmal reinschauen? ",
+      "  a.btn.btn-primary(data-toggle='modal', href='#login')",
+      "    i.fa.fa-sign-in.fa-fw",
+      "    | &nbsp;$t(general.login)"
+    ],
+    "are_you_sure": "Bist Du sicher?",
+    "no": "Nein",
+    "delete": "Löschen"
   },
   "error": {
     "congratulations": "Herzlichen Glückwunsch!",
@@ -53,7 +79,7 @@
     "stacktrace500": "Den Stacktrace",
     "error500_text": [
       "p Bitte lass uns ",
-      "  a(href=\"https://github.com/softwerkskammer/NeuePlattform-Implementierung/issues/\") $t(error.detailed_report):",
+      "  a(href=\"https://github.com/softwerkskammer/Agora/issues/\") $t(error.detailed_report):",
       "  ul",
       "    li Was hast Du getan?",
       "    li $t(error.os_browser)",
@@ -187,7 +213,7 @@
       "  | Bitte ",
       "  a(href=\"/login\") versuche es noch einmal.",
       "p Sollte der Fehler wiederholt auftreten, lass uns bitte ",
-      "  a(href=\"https://github.com/softwerkskammer/NeuePlattform-Implementierung/issues/\") $t(error.detailed_report):",
+      "  a(href=\"https://github.com/softwerkskammer/Agora/issues/\") $t(error.detailed_report):",
       "  ul",
       "    li Wie bist Du auf die Login Seite gegangen?",
       "    li Welche Authentifizierung hast Du gewählt?",
@@ -196,7 +222,15 @@
       "    li $t(error.datetime)",
       "    li $t(error.stacktrace500)",
       "p $t(error.sorry)"
-    ]
+    ],
+    "required_text": [
+      "h3 Um auf diese Seite zuzugreifen, musst Du angemeldet sein!",
+      "p Du wolltest auf eine Seite im Mitgliederbereich zugreifen. Dazu musst Du Dich authentifizieren.",
+      "p Sollte dies ein Fehler in der Anwendung sein, bitten wir um ",
+      "  a(href='https://github.com/softwerkskammer/Agora/issues/') Rückmeldung.",
+      "p Das Agora-Team bittet um Entschuldigung."
+    ],
+    "please_authenticate": "Bitte authentifiziere Dich!"
   },
   "colors": {
     "colors": "Farben",
@@ -252,7 +286,12 @@
     "send": "Senden",
     "resign": "Austrittsmail schreiben",
     "why-resign": "Warum willst Du austreten",
-    "notes-resign": "Was möchtest Du uns mitteilen (Anregungen, Kritik, Lob)"
+    "notes-resign": "Was möchtest Du uns mitteilen (Anregungen, Kritik, Lob)",
+    "resign_info": [
+      "p Schade, dass Du aus der Softwerkskammer austreten möchtest.",
+      "p Wir respektieren diesen Wunsch und werden ihn umgehend erfüllen. Es wäre schön, wenn Du Dir noch die Zeit nimmst, die untenstehenden Fragen zu beantworten.",
+      "p Das Senden dieses Formulars schickt eine E-Mail an uns Adminsitratoren und wir werden dann manuell Deinen Account löschen."
+    ]
   },
   "members": {
     "overview": "Übersicht der Mitglieder",
@@ -281,12 +320,14 @@
     "send_email": "Eine E-Mail an __firstname__ __lastname__ senden",
     "has": "Die Softwerkskammer hat",
     "notifyOnWikiChanges": "Benachrichtigen bei Änderungen im Wiki",
-    "resign": "Austreten"
+    "resign": "Austreten",
+    "delete": "Miglied löschen"
   },
   "wiki": {
     "blogposts": "Blogartikel",
     "overview": "Übersicht der Dateien in",
     "wiki": "Wiki",
+    "gotowiki": "Zum Wiki",
     "subwiki": "Subwiki",
     "comparison_of": "Vergleich von",
     "in": "in Wiki",
@@ -327,6 +368,7 @@
     "content": {
       "save_error": "Das Speichern war nicht erfolgreich.",
       "save_error_retry": "Das Speichern war nicht erfolgreich. Bitte führe Deine Änderungen nochmals durch und speichere erneut.",
+      "save_error_reason": "Das Speichern war nicht erfolgreich. Grund: __err__",
       "query": "Dein eingegebener Suchtext ist zu kurz.",
       "activities": {
         "saved": "Deine Aktivität wurde gespeichert.",
@@ -351,7 +393,9 @@
         "saved_single": "Die neue Farbe wurde gespeichert."
       },
       "groups": {
-        "saved": "Deine Gruppe wurde gespeichert."
+        "saved": "Deine Gruppe wurde gespeichert.",
+        "subscribed": "Du bist jetzt Mitglied in der Gruppe und wirst in wenigen Momenten eine Begrüßungs-E-Mail erhalten.",
+        "unsubscribed": "Du bist jetzt nicht mehr Mitglied in der Gruppe und wirst in wenigen Momenten eine Bestätigungs-E-Mail erhalten."
       },
       "mailsender": {
         "error_reason": "Deine __type__ wurde nicht gesendet. Grund: __err__",
@@ -359,7 +403,9 @@
         "success": "Deine __type__ ist unterwegs."
       },
       "members": {
-        "saved": "Das Profil wurde gespeichert."
+        "saved": "Das Profil wurde gespeichert.",
+        "deleted": "Das Profil wurde gelöscht.",
+        "hasSubscriptions": "Der User ist noch Mitglied in Gruppen."
       },
       "wiki": {
         "conflict": "Deine Änderungen wurden gespeichert. Du hast allerdings Änderungen eines anderen Benutzers überschrieben. Bitte überprüfe nochmals die Wikiseite.",

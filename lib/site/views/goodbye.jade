@@ -1,12 +1,6 @@
 extends ../../../views/layout
-
+block title
+  | Good-Bye
 block content
   .jumbotron
-    h2 Schön, dass Du hier warst.
-    p Mach's gut - bis zum nächsten Mal!
-    hr
-    p.text-right Oder magst Du nochmal reinschauen? 
-     a.btn.btn-primary(data-toggle='modal', href='#login')
-      i.fa.fa-sign-in.fa-fw
-      | &nbsp;Anmelden
-
+    !=t('general.goodbye_text', { postProcess: 'jade' })

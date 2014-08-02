@@ -6,88 +6,48 @@
     var nickname = $('#memberform [name=nickname]');
     var email = $('#memberform [name=email]');
 
-    var checkFieldMandatory = function (fieldname, value) {
-      var field = $(fieldname);
-      field.val('');
-      expect(member_validator.element(field)).toBe(false);
-      expect(member_validator.errorList[0].message).toBe('Dieses Feld ist ein Pflichtfeld.');
-      field.val(value || 'a');
-      expect(member_validator.element(field)).toBe(true);
+    afterEach(function () {
+      member_validator.resetForm();
+    });
+
+    var checkFieldMandatory = function (selector, value) {
+      testglobals.mandatoryChecker(member_validator, selector, value);
     };
 
-    beforeEach(function (done) {
-      $(function () {
-        nickname.val('');
-        nickname.trigger('change');
-        email.val('');
-        email.trigger('change');
-        jasmine.Ajax.install();
-        done();
-      });
-    });
+    var checkFieldWithPositiveAjaxResponse = function (field, value, urlRegexp) {
+      testglobals.checkFieldWithPositiveAjaxResponse(member_validator, field, value, urlRegexp);
+    };
 
-    afterEach(function () {
-      jasmine.Ajax.uninstall();
-    });
+    var checkFieldWithNegativeAjaxResponse = function (field, message, value, urlRegexp) {
+      testglobals.checkFieldWithNegativeAjaxResponse(member_validator, field, message, value, urlRegexp);
+    };
+
+    var checkThatPreviousValueIsSent = function (field, previousField, value) {
+      testglobals.checkThatPreviousValueIsSent(field, previousField, value);
+    };
 
     it('checks that a nickname check response is handled for "true"', function () {
-      jasmine.Ajax.stubRequest('/members/checknickname?nickname=nick1&previousNickname=').andReturn({responseText: 'true'});
-      nickname.val('nick1');
-      // trigger validation
-      nickname.trigger('change');
-
-      expect(member_validator.element(nickname)).toBe(true);
-      expect(member_validator.errorList).toEqual([]);
+      checkFieldWithPositiveAjaxResponse(nickname, undefined, /members\/checknickname\?nickname=value/);
     });
 
     it('checks that a nickname check response is handled for "false"', function () {
-      jasmine.Ajax.stubRequest('/members/checknickname?nickname=nick2&previousNickname=').andReturn({responseText: 'false'});
-      nickname.val('nick2');
-      // trigger validation
-      nickname.trigger('change');
-
-      expect(member_validator.element(nickname)).toBe(false);
-      expect(member_validator.errorList).toContain(jasmine.objectContaining({message: nicknameIsNotAvailable}));
+      checkFieldWithNegativeAjaxResponse(nickname, nicknameIsNotAvailable, undefined, /members\/checknickname\?nickname=value/);
     });
 
     it('checks that a nickname check also sends the previousNickname', function () {
-      jasmine.Ajax.stubRequest('/members/checknickname?nickname=nick3&previousNickname=previous').andReturn({responseText: 'true'});
-      var previousNickname = $('#memberform [name=previousNickname]');
-      previousNickname.val('previous');
-      nickname.val('nick3');
-      // trigger validation
-      nickname.trigger('change');
-
-      expect(member_validator.element(nickname)).toBe(true);
+      checkThatPreviousValueIsSent(nickname, $('#memberform [name=previousNickname]'));
     });
 
     it('checks that a email check response is handled for "true"', function () {
-      jasmine.Ajax.stubRequest('/members/checkemail?email=mail1@a.de&previousEmail=').andReturn({responseText: 'true'});
-      email.val('mail1@a.de');
-      // trigger validation
-      email.trigger('change');
-
-      expect(member_validator.element(email)).toBe(true);
-      expect(member_validator.errorList).toEqual([]);
+      checkFieldWithPositiveAjaxResponse(email, 'a@b.c', /members\/checkemail\?email=a%40b\.c/);
     });
 
     it('checks that a email check response is handled for "false"', function () {
-      jasmine.Ajax.stubRequest('/members/checkemail?email=mail2%40a.de&previousEmail=').andReturn({responseText: 'false'});
-      email.val('mail2@a.de');
-      // trigger validation
-      email.trigger('change');
-
-      expect(member_validator.element(email)).toBe(false);
-      expect(member_validator.errorList).toContain(jasmine.objectContaining({message: emailAlreadyTaken}));
+      checkFieldWithNegativeAjaxResponse(email, emailAlreadyTaken, 'a@b.c', /members\/checkemail\?email=a%40b\.c/);
     });
 
     it('checks that a email check also sends the previousEmail', function () {
-      jasmine.Ajax.stubRequest('/members/checkemail?email=mail3@a.de&previousEmail=previous').andReturn({responseText: 'true'});
-      var previousEmail = $('#memberform [name=previousEmail]');
-      previousEmail.val('previous');
-      email.val('mail3@a.de');
-      // trigger validation
-      email.trigger('change');
+      checkThatPreviousValueIsSent(email, $('#memberform [name=previousEmail]'), 'a@b.c');
     });
 
     it('checks that "firstname" is mandatory', function () {
@@ -120,8 +80,8 @@
 
     it('checks that "nickname" has at least two characters', function () {
       nickname.val('a');
-      expect(member_validator.element(nickname)).toBe(false);
-      expect(member_validator.errorList).toContain(jasmine.objectContaining({message: 'Geben Sie bitte mindestens 2 Zeichen ein.'}));
+      expect(member_validator.element(nickname)).to.be(false);
+      expect(member_validator.errorList[0]).to.have.ownProperty('message', 'Geben Sie bitte mindestens 2 Zeichen ein.');
     });
   });
 }());

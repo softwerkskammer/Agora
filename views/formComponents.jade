@@ -22,11 +22,17 @@ mixin textarea(name, label, value, tooltip)
 mixin hightextarea(name, label, value, tooltip)
   +textareaInternal('md-textarea', '15', name, label, value, tooltip)
 
-mixin checkbox(name, label, checked, optionalValue)
+mixin checkboxWithDescription(name, label, checked, description, optionalValue)
   .checkbox
     label
       input(type='checkbox', name=name, value=optionalValue, checked=(checked ? 'true' : undefined))
-      | #{label}
+      -if (description)
+        span.popover-highlight(rel='tooltip-in-body', data-content=description) #{label}
+      -else
+        | #{label}
+
+mixin checkbox(name, label, checked, optionalValue)
+  +checkboxWithDescription(name, label, checked, undefined, optionalValue)
 
 mixin groupCheckboxes(checkboxName, regionalgroups, themegroups)
   .row
@@ -85,21 +91,12 @@ mixin csrf
 mixin controlLabel(name, label, tooltip)
   label.control-label(for=name)
     -if (tooltip)
-      span.tooltiplabel(data-toggle='tooltip', data-original-title=tooltip) #{label}:&nbsp;
+      span.tooltiplabel(data-original-title=tooltip) #{label}:&nbsp;
         i.fa.fa-question-circle
       script.
         $('.tooltiplabel').each(function() {$(this).tooltip()})
     -else
       | #{label}:
-
-mixin checkboxWithDescription(name, label, checked, description, optionalValue)
-  .checkbox
-    label
-      input(type='checkbox', name=name, value=optionalValue, checked=(checked ? 'true' : undefined))
-      -if (description)
-        span.popover-highlight(rel='tooltip-in-body', data-content=description) #{label}
-      -else
-        | #{label}
 
 mixin textareaInternal(classname, rowCount, name, label, value, tooltip)
   .form-group

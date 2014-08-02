@@ -9,7 +9,7 @@ module.exports = {
 
   listByField: function () {throw new Error('Testpersistence - function listByField not implemented'); },
 
-  listByFieldWithOptions: function (searchObject, options, sortOrder, callback) {callback(null, []); },
+  listByFieldWithOptions: function () { throw new Error('Testpersistence - function listByFieldWithOptions not implemented'); },
 
   getById: function () {throw new Error('Testpersistence - function getById not implemented'); },
 
@@ -20,6 +20,8 @@ module.exports = {
   saveAll: function () {throw new Error('Testpersistence - function saveAll not implemented'); },
 
   saveValueObject: function () {throw new Error('Testpersistence - function saveValueObject not implemented'); },
+
+  remove: function () {throw new Error('Testpersistence - function remove not implemented'); },
 
   drop: function () {throw new Error('Testpersistence - function drop not implemented'); }
 };
