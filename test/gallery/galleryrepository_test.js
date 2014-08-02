@@ -18,6 +18,45 @@ function createTempFileWithContent(tmpFilePath, fileContent) {
   });
 }
 
+describe("the gallery repository on real files", function () {
+
+  beforeEach(function useRealFilesystem() {
+    service.fs = function fs() {
+      return require('fs');
+    };
+  });
+
+  it('stores the original image', function (done) {
+    var storedImageId = 'image.jpg';
+    var imagePath = __dirname + '/fixtures/' + storedImageId;
+    service.storeImage(imagePath, function (err, imageId) {
+      service.retrieveImage(imageId, function (err, imageFile) {
+        expect(err).to.be.falsy();
+        done();
+      });
+    });
+  });
+
+  it('provides scaled images', function (done) {
+    var storedImageId = 'image.jpg';
+    var imagePath = __dirname + '/fixtures/' + storedImageId;
+    service.storeImage(imagePath, function (err, imageId) {
+      service.retrieveScaledImage(imageId, 100, 100, function (err, imageFile) {
+        expect(err).to.be.falsy();
+        done();
+      });
+    });
+  });
+
+  it('returns err for invalid imageId', function (done) {
+    service.retrieveImage('invalidId', function (err, imageFile) {
+      expect(err).to.exist();
+      done();
+    });
+  });
+
+});
+
 describe("the gallery repository", function () {
   beforeEach(function resetMockedFs() {
     var files = {};
