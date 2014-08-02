@@ -48,6 +48,18 @@ describe("the gallery repository on real files", function () {
     });
   });
 
+  it('provides exif data for a given image', function (done) {
+    var storedImageId = 'exif_image.jpg';
+    var imagePath = __dirname + '/fixtures/' + storedImageId;
+    service.storeImage(imagePath, function (err, imageId) {
+      service.getMetadataForImage(imageId, function (err, metadata) {
+        expect(err).to.be.falsy();
+        expect(metadata.exif).to.have.property("dateTimeOriginal");
+        done();
+      });
+    });
+  });
+
   it('returns err for invalid imageId', function (done) {
     service.retrieveImage('invalidId', function (err, imageFile) {
       expect(err).to.exist();
