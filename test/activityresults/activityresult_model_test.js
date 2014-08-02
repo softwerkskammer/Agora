@@ -3,7 +3,6 @@
 require('../../testutil/configureForTest');
 var conf = require('nconf');
 var expect = require('must');
-var should = require('should');
 
 var ActivityResult = conf.get('beans').get('activityresult');
 
@@ -26,9 +25,13 @@ describe('Activity result', function () {
       ]
     });
 
-    activityResult.photos.should.containEql({uri: '/path/to/image1.jpg'});
-    activityResult.photos.should.containEql({uri: '/path/to/image2.jpg'});
+    expect(activityResult.photos[0]).to.eql({uri: '/path/to/image1.jpg'});
+    expect(activityResult.photos[1]).to.eql({uri: '/path/to/image2.jpg'});
 
+  });
+
+  it('should have a created_by field', function () {
+    expect(new ActivityResult({created_by: 'me'})).to.have.property('created_by', 'me');
   });
 
   describe('photo subdocument', function () {

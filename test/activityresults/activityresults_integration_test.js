@@ -76,7 +76,7 @@ describe('/activityresults', function () {
 
   describe('POST /', function () {
     it('should create a new activity result', function (done) {
-      var app = createApp();
+      var app = createApp(1);
       var activityResultName = 'NewActivityResult';
       request(app)
         .post('/')
@@ -87,14 +87,14 @@ describe('/activityresults', function () {
     });
 
     it('should reject request without activityResultName parameter', function (done) {
-      request(createApp())
+      request(createApp(1))
         .post('/')
         .type('form')
         .expect(BAD_REQUEST, done);
     });
 
     it('should reject request with empty activityResultName parameter', function (done) {
-      request(createApp())
+      request(createApp(1))
         .post('/')
         .type('form')
         .send({ activityResultName: '' })
