@@ -6,10 +6,98 @@ block title
   = activityResultName
 
 block content
-  .row
-    .col-md-12
-      .page-header
-        h2= activityResultName
+  #detail-overlay(style='z-index: 100; position: fixed; background: #000; height: 100%; width: 100%; display: none; left: 0px; top: 0px;')
+    p(style='color: #fff; padding: 0.5em 0.5em; text-transform: uppercase; text-align: center;')
+      a.close-centered(href='#', style='color: white;')
+        span(class='glyphicon glyphicon-remove')
+        | &nbsp;Close
+    div(style='text-align: center; height: 100%;')
+      .prev-img
+        img(src='/gallery/fdd09e6d-baf1-4c44-a767-a786d22002bd.JPG?size=thumb')
+        a#prev-img
+          span(class='glyphicon glyphicon-chevron-up')
+      img.current-img(id='image-detail', src='/gallery/9475905d-b979-4296-af47-ac0164788a1a.JPG', style='margin-bottom: 1em; margin-top: 1em; max-height: 30%; max-width: 100%;')
+      .next-img
+        img(src='/gallery/1806f88e-8ed7-4b3e-92bd-3173c9965541.JPG?size=thumb')
+        a#next-img(href='#')
+          span(class='glyphicon glyphicon-chevron-down')
 
   .row
-    .col-md-6
+    .col-md-12
+      h2(style='margin-top: 5px;')= activityResultName
+
+  .row
+    .col-md-12
+      h3(style='margin-top: 5px;')= 'Friday'
+
+  .row.timeline
+    .table-row
+      .col-xs-3.col-without-padding.venue.noisy_blue
+        p(style="text-align: center")= columns[0].columnTitle
+        each img in columns[0].images
+          a(href=img.uri)
+            img.thumb(src=img.uri + '?size=thumb', style="margin-top: " + img['margin-top']+ ";")
+
+      .col-xs-3.col-without-padding.venue.noisy_green
+        p(style="text-align: center")= columns[1].columnTitle
+        each img in columns[1].images
+          a(href=img.uri)
+            img.thumb(src=img.uri + '?size=thumb', style="margin-top: " + img['margin-top']+ ";")
+
+      .col-xs-3.col-without-padding.venue.noisy_red
+        p(style="text-align: center")= columns[2].columnTitle
+        each img in columns[2].images
+          a(href=img.uri)
+            img.thumb(src=img.uri + '?size=thumb', style="margin-top: " + img['margin-top']+ ";")
+
+      .col-xs-3.col-without-padding.venue.noisy_yellow
+        p(style="text-align: center")= columns[3].columnTitle
+        each img in columns[3].images
+          a(href=img.uri)
+            img.thumb(src=img.uri + '?size=thumb', style="margin-top: " + img['margin-top']+ ";")
+
+  .row
+    .col-md-12
+      h3(style='margin-top: 5px;')= 'Thursday'
+
+  script(type='text/javascript').
+    jQuery(function() {
+
+    $('#detail-overlay').find('a.close-centered').click(function(e) {
+      $('#detail-overlay').css('display', 'none');
+    });
+
+    $('.timeline a').click(function(ev) {
+      $('.current-img').attr('src', this.href);
+      $('#detail-overlay').fadeIn();
+      return false;
+    });
+
+    function previousImage(currentImage) {
+      var currentThumb = $('img.thumb').filter(function(index, thumbnail){
+        return thumbnail.src.indexOf(currentImage) !== -1;
+      })
+      return currentThumb.parent().prev('a').attr('href');
+    }
+
+    function nextImage(currentImage) {
+      var currentThumb = $('img.thumb').filter(function(index, thumbnail){
+        return thumbnail.src.indexOf(currentImage) !== -1;
+      })
+      return currentThumb.parent().next('a').attr('href');
+    }
+
+    $('#prev-img').click(function(e) {
+      var $image = $('#image-detail');
+      var currentImage = $image.attr('src');
+      $image.attr('src', previousImage(currentImage));
+      return false;
+    });
+    $('#next-img').click(function(e) {
+      var $image = $('#image-detail');
+      var currentImage = $image.attr('src');
+      $image.attr('src', nextImage(currentImage));
+      return false;
+    });
+
+    });
