@@ -19,6 +19,7 @@ function createConfiguration() {
   nconf.defaults({
     adminListName: "admins",
     port: '17124',
+    imageDirectory: "/var/local/agora/gallery",
     mongoHost: 'localhost',
     mongoPort: '27017',
     mongoDB: 'swk',
