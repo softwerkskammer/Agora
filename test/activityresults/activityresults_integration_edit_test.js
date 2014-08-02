@@ -45,7 +45,7 @@ describe('/activityresults/:result/photo/:photo', function () {
       callback();
     });
 
-    request(createApp())
+    request(createApp(1))
       .post('/foo/photo/' + photoId + '/edit')
       .type('form')
       .send({
