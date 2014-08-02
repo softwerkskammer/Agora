@@ -46,7 +46,7 @@
     "lodash": "2.4.1",
     "mailparser": "0.4.4",
     "marked": "0.3.2",
-    "moment-timezone": "0.2.0",
+    "moment-timezone": "git://github.com/leider/moment-timezone",
     "mongodb": "1.4.7",
     "morgan": "1.2.0",
     "multiparty": "~3.2.7",
