@@ -1,0 +1,40 @@
+extends ../../../views/layoutOnlyMain
+
+include  ../../../views/formComponents
+
+block title
+  = activityResultName + " / Edit Photo"
+
+block content
+  form(role="form",method="post")
+    +csrf
+    .row
+      .col-md-4.thumbnail-container
+        h4 Step #1: Look at the preview
+        img#thumbnail(src=photo.uri)
+        label(for="input-date") Step #2: Adjust the time this photo was taken
+        .form-group.date-container
+          input#input-date.form-control(type="date",name='date')
+          input#input-time.form-control(type="time",name='time')
+      .col-md-4
+        h4 Step #3: Pick yourself some tags!
+        ul.tag-list
+          li
+            input#tag-hopper(type="checkbox",name="tag",value="hopper")
+            label.btn.btn-default(for="tag-hopper") # Hopper
+          li
+            input#tag-lovelace(type="checkbox",name="tag",value="lovelace")
+            label.btn.btn-default(for="tag-lovelace") # Lovelace
+          li
+            input#tag-liskov(type="checkbox",name="tag",value="liskov")
+            label.btn.btn-default(for="tag-liskov") # Liskov
+    .row
+      .col-md-8
+        h4 Step #4: Give it a name
+        .form-group
+          label(for="text-title") Title
+          input.form-control#text-title(type="text",name="title",value=photo.title)
+
+     .row
+       .col-md-2.col-md-offset-6(style="text-align:right")
+         button.btn.btn-default(type="submit") Step #5: Submit

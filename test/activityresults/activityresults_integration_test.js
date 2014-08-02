@@ -13,6 +13,7 @@ var createApp = require('../../testutil/testHelper')('activityresultsApp').creat
 var OK = 200;
 var CREATED = 201;
 
+var BAD_REQUEST = 400;
 var NOT_FOUND = 404;
 
 var ActivityResult = beans.get('activityresult');
@@ -26,7 +27,7 @@ describe('/activityresults', function () {
     it('should return an OK', function (done) {
       request(createApp())
         .get('/')
-        .expect(OK, done);
+        .expect(NOT_FOUND, done);
     });
   });
 
@@ -48,11 +49,37 @@ describe('/activityresults', function () {
 
       request(createApp())
         .get('/known-activity-results')
-        .expect(200, done);
+        .expect(OK, done);
     });
   });
 
   describe('POST /', function () {
-    it('should validate the activityresultName parameter');
+    it('should create a new activity result', function (done) {
+      var app = createApp();
+      var activityResultName = 'NewActivityResult';
+      request(app)
+        .post('/')
+        .type('form')
+        .send({ activityResultName: activityResultName })
+        .expect('Location', app.path() + '/' + activityResultName)
+        .expect(CREATED, done);
+    });
+
+    it('should reject request without activityResultName parameter', function (done) {
+      request(createApp())
+        .post('/')
+        .type('form')
+        .expect(BAD_REQUEST, done);
+    });
+
+    it('should reject request with empty activityResultName parameter', function (done) {
+      request(createApp())
+        .post('/')
+        .type('form')
+        .send({ activityResultName: '' })
+        .expect(BAD_REQUEST, done);
+    });
+
+    it('should reject requests with existing activityResultName');
   });
 });

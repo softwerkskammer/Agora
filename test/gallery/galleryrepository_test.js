@@ -38,37 +38,8 @@ describe("the gallery repository", function () {
   });
 
   describe('storeImage', function () {
-    it('should call a callback as result', function (done) {
-      service.storeImage(null, function (err) {
-        done();
-      });
-    });
-
-    it('should expect an existing file and throw an error if it is not provided', function (done) {
-      service.storeImage('/tmp/file/that/does/not/exist.png', function (err) {
-        err.must.be.an.instanceof(Error);
-        done();
-      });
-    });
-
-    it('should store an image and return a uuid with the given extension', function (done) {
-      service.storeImage(pathToExistingImage, function (err, uuid) {
-        expect(err).to.be.falsy();
-        expect(uuid).to.exist();
-        expect(uuid).to.match(/\w\.\w+$/);
-        done();
-      });
-    });
-
-    it('should fail if the target directory is not set', function (done) {
-      var pathThatDoesNotExist = '/path/does/not/exist';
-      conf.set('imageDirectory', pathThatDoesNotExist);
-      service.storeImage(pathToExistingImage, function (err, uuid) {
-        expect(err).to.exist();
-        expect(err.message).to.include(pathThatDoesNotExist);
-        done();
-      });
-    });
+    // Because the implementation relies on the Image Magick CLI tools,
+    it('is not unit tested');
   });
 
   describe('retrieveImage', function () {
