@@ -139,7 +139,7 @@ apt-get install --yes \
   nodejs-legacy \
   npm \
   mongodb \
-  g++
+  g++ \
   git \
   python \
   fontconfig \

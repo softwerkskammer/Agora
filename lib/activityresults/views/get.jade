@@ -13,12 +13,12 @@ block content
         | &nbsp;Close
     div(style='text-align: center; height: 100%;')
       .prev-img
-        img(src='/gallery/fdd09e6d-baf1-4c44-a767-a786d22002bd.JPG?size=thumb')
+        img(src='/gallery/fdd09e6d-baf1-4c44-a767-a786d22002bd.JPG?size=thumb', width='100', height='100')
         a#prev-img
           span(class='glyphicon glyphicon-chevron-up')
       img.current-img(id='image-detail', src='/gallery/9475905d-b979-4296-af47-ac0164788a1a.JPG', style='margin-bottom: 1em; margin-top: 1em; max-height: 30%; max-width: 100%;')
       .next-img
-        img(src='/gallery/1806f88e-8ed7-4b3e-92bd-3173c9965541.JPG?size=thumb')
+        img(src='/gallery/1806f88e-8ed7-4b3e-92bd-3173c9965541.JPG?size=thumb', width='100', height='100')
         a#next-img(href='#')
           span(class='glyphicon glyphicon-chevron-down')
 
@@ -68,7 +68,9 @@ block content
     });
 
     $('.timeline a').click(function(ev) {
-      $('.current-img').attr('src', this.href);
+      setPreviousImage(previousImage(this.href));
+      setCurrentImage(this.href);
+      setNextImage(nextImage(this.href));
       $('#detail-overlay').fadeIn();
       return false;
     });
@@ -83,20 +85,52 @@ block content
     function nextImage(currentImage) {
       var currentThumb = $('img.thumb').filter(function(index, thumbnail){
         return thumbnail.src.indexOf(currentImage) !== -1;
-      })
+      });
       return currentThumb.parent().next('a').attr('href');
+    }
+
+    function setPreviousImage(previousImage) {
+      if(undefined === previousImage){
+        $('.prev-img').addClass('disabled')
+      } else {
+        $('.prev-img').removeClass('disabled')
+        $('.prev-img img').attr('src', previousImage + '?size=thumb');
+      }
+    }
+
+    function setCurrentImage(currentImage) {
+      $('#image-detail').attr('src', currentImage);
+    }
+
+    function setNextImage(nextImage){
+      if(undefined === nextImage){
+        $('.next-img').addClass('disabled')
+      } else {
+        $('.next-img').removeClass('disabled')
+        $('.next-img img').attr('src', nextImage + '?size=thumb');
+      }
     }
 
     $('#prev-img').click(function(e) {
       var $image = $('#image-detail');
       var currentImage = $image.attr('src');
-      $image.attr('src', previousImage(currentImage));
+      var predecessor = previousImage(currentImage);
+      if(predecessor){
+        setPreviousImage(previousImage(predecessor));
+        setCurrentImage(predecessor);
+        setNextImage(currentImage);
+      }
       return false;
     });
     $('#next-img').click(function(e) {
       var $image = $('#image-detail');
       var currentImage = $image.attr('src');
-      $image.attr('src', nextImage(currentImage));
+      var successor = nextImage(currentImage);
+      if(successor) {
+        setPreviousImage(currentImage);
+        setCurrentImage(successor);
+        setNextImage(nextImage(successor));
+      }
       return false;
     });
 
