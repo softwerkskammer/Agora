@@ -25,6 +25,8 @@ function createConfiguration() {
     mongoDB: 'swk',
     publicUrlPrefix: 'http://localhost:17124',
     securedByLoginURLPattern:
+      '/activityresults|' +
+      '/gallery|' +
       '/mailsender|' +
       '/members|' +
       '/new|' +
