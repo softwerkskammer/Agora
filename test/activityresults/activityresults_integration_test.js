@@ -62,7 +62,7 @@ describe('/activityresults', function () {
         .type('form')
         .send({ activityResultName: activityResultName })
         .expect('Location', app.path() + '/' + activityResultName)
-        .expect(CREATED, done);
+        .expect(303, done);
     });
 
     it('should reject request without activityResultName parameter', function (done) {
