@@ -24,7 +24,22 @@ function createConfiguration() {
     mongoPort: '27017',
     mongoDB: 'swk',
     publicUrlPrefix: 'http://localhost:17124',
-    securedByLoginURLPattern: '/mailsender|/members|/new|/edit|/submit|(subscribe|unsubscribe)/|/mailarchive|/invitation|/addToWaitinglist|/removeFromWaitinglist|/addon|/submitAddon|/wiki/socrates.*/|/payment|dashboard',
+    securedByLoginURLPattern:
+      '/mailsender|' +
+      '/members|' +
+      '/new|' +
+      '/edit|' +
+      '/submit|' +
+      '(subscribe|unsubscribe)/|' +
+      '/mailarchive|' +
+      '/invitation|' +
+      '/addToWaitinglist|' +
+      '/removeFromWaitinglist|' +
+      '/addon|' +
+      '/submitAddon|' +
+      '/wiki/socrates.*/|' +
+      '/payment|' +
+      'dashboard',
     secret: 'secret',
     beans: new Beans('./config/beans.json'),
     domainname: 'localhost'
