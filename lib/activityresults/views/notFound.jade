@@ -16,5 +16,10 @@ block content
       form(role='form',method='POST',action=createUri)
         +csrf
         .form-group
-          input(name='activityResultName',type='hidden',value='#{activityResultName}')
+          label(for='inputName') Name
+          input.form-control#inputName(name='activityResultName',type='text',readonly='readonly',value='#{activityResultName}')
+        .form-group
+          label(for='inputTag') Tags (comma-separated)
+          input.form-control#inputTags(name='tags',type='text')
+        .form-group
           button.btn.btn-primary(type='submit') Jetzt anlegen

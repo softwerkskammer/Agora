@@ -100,7 +100,7 @@ describe('/activityresults', function () {
       request(app)
         .post('/')
         .type('form')
-        .send({ activityResultName: "MyActivityResult", tags: ['myFirstTag', 'mySecondTag'] })
+        .send({ activityResultName: "MyActivityResult", tags: 'myFirstTag,mySecondTag' })
         .expect(303)
         .end(function (err) {
           if (err) {
