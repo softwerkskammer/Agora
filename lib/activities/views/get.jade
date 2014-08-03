@@ -33,11 +33,11 @@ block content
             a.btn.btn-default(href='/activities/edit/#{encodeURIComponent(activity.url())}', title=t('general.edit')): i.fa.fa-edit.fa-fw
         h2 #{activity.title()}
           br
-          small #{activity.startMoment().lang(language).format('LL')} (#{activity.startMoment().lang(language).format('LT')}
+          small #{activity.startMoment().locale(language).format('LL')} (#{activity.startMoment().locale(language).format('LT')}
             if (activity.isMultiDay())
-              | ) - #{activity.endMoment().lang(language).format('LL')} (#{activity.endMoment().lang(language).format('LT')})
+              | ) - #{activity.endMoment().locale(language).format('LL')} (#{activity.endMoment().locale(language).format('LT')})
             else 
-              |  - #{activity.endMoment().lang(language).format('LT')})
+              |  - #{activity.endMoment().locale(language).format('LT')})
       .btn-group.pull-right
         if (hasToBePaid)
           a.btn(class='#{paymentAlreadyDone ? "btn-default" : "btn-warning"}', data-toggle='modal', data-target='#payment', href='/activities/payment/#{encodeURIComponent(activity.url())}')
