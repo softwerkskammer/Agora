@@ -210,8 +210,8 @@ describe('Resources (fillFromUI)', function () {
     });
 
     var today = moment();
-    var twoDaysAgo = today.subtract('days', 2);
-    var fiveDaysAgo = today.subtract('days', 5);
+    var twoDaysAgo = today.subtract(2, 'days');
+    var fiveDaysAgo = today.subtract(5, 'days');
     var member = new Member({id: '12345'});
 
     it('is not too far in the past', function () {

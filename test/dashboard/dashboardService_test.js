@@ -81,7 +81,7 @@ describe('Dashboard Service', function () {
     var changedFiles = ['change1', 'change2'];
     var mail1 = {name: 'mail1', time: moment()};
     var mail2 = {name: 'mail2', time: moment()};
-    var veryOldMail = {name: 'mail3', time: moment().subtract('months', 12)};
+    var veryOldMail = {name: 'mail3', time: moment().subtract(12, 'months')};
     var mails = [mail1, mail2];
 
     beforeEach(function () {

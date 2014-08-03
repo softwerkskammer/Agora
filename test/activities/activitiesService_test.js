@@ -160,7 +160,7 @@ describe('Activities Service', function () {
 
     it('succeeds when registration is not open but registrant is on waiting list and allowed to subscribe', function (done) {
       var tomorrow = moment();
-      tomorrow.add('days', 1);
+      tomorrow.add(1, 'days');
       var activity = activityWithEinzelzimmer({ _registrationOpen: false, _waitinglist: [
         { _memberId: 'memberId', _registrationValidUntil: tomorrow.toDate() }
       ]});
