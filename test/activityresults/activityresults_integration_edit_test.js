@@ -20,7 +20,7 @@ describe('/activityresults/:result/photo/:photo', function () {
   var photoId = 'photo_id';
   beforeEach(function () {
     sinon.stub(activityresultsService, 'getActivityResultByName', function (activityResultName, callback) {
-      callback(null, new ActivityResult({ id: "foo", name: "foobar", photos: [{id: photoId, title: 'mishka'}]}));
+      callback(null, new ActivityResult({ id: "foo", name: "foobar", created_by: 1, photos: [{id: photoId, title: 'mishka', uploaded_by: 1}]}));
     });
     sinon.stub(activityresultsService, 'addPhotoToActivityResult', function (activityResultName, photo, callback) {
       callback();
@@ -28,7 +28,7 @@ describe('/activityresults/:result/photo/:photo', function () {
   });
 
   it('should have old values set', function (done) {
-    request(createApp())
+    request(createApp(1))
       .get("/foo/photo/" + photoId + '/edit')
       .expect(function (res) {
         if (res.text.indexOf('mishka') === -1) {
@@ -38,6 +38,12 @@ describe('/activityresults/:result/photo/:photo', function () {
       .end(done);
   });
 
+  it('should not let me edit a photo i didnt upload', function (done) {
+    request(createApp(2))
+      .get("/foo/photo/" + photoId + '/edit')
+      .expect(403, done);
+  });
+
   it('should save a photos time, tags and title', function (done) {
     sinon.stub(activityresultsService, 'updatePhotoOfActivityResult', function (activityResultName, photoId, data, callback) {
       expect(data.title).to.eql('My adventures with the softwerkskammer');
@@ -45,7 +51,7 @@ describe('/activityresults/:result/photo/:photo', function () {
       callback();
     });
 
-    request(createApp())
+    request(createApp(1))
       .post('/foo/photo/' + photoId + '/edit')
       .type('form')
       .send({
@@ -57,5 +63,24 @@ describe('/activityresults/:result/photo/:photo', function () {
       .expect(303)
       .expect('Location', '/foo')
       .end(done);
+  });
+
+  it('should not let me save changes to a photo if i didnt upload it', function (done) {
+    sinon.stub(activityresultsService, 'updatePhotoOfActivityResult', function (activityResultName, photoId, data, callback) {
+      expect(data.title).to.eql('My adventures with the softwerkskammer');
+      expect(data.tags).to.eql(['a', 'b']);
+      callback();
+    });
+
+    request(createApp(2))
+      .post('/foo/photo/' + photoId + '/edit')
+      .type('form')
+      .send({
+        'title': 'My adventures with the softwerkskammer',
+        'time': '02:03',
+        'date': '2015-05-04',
+        'tag': ['a', 'b']
+      })
+      .expect(403, done);
   });
 });

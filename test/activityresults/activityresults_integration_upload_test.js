@@ -43,7 +43,7 @@ describe('/activityresults/:result/upload', function () {
       });
 
       //noinspection JSLint
-      request(createApp())
+      request(createApp(1))
         .post('/foo/upload')
         .attach('image', __filename)
         .expect(303)
