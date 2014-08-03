@@ -6,17 +6,20 @@ block title
   = activityResultName
 
 block content
-  #detail-overlay(style='z-index: 100; position: fixed; background: #000; height: 100%; width: 100%; display: none; left: 0px; top: 0px;')
-    p(style='color: #fff; padding: 0.5em 0.5em; text-transform: uppercase; text-align: center;')
-      a.close-centered(href='#', style='color: white;')
-        span(class='glyphicon glyphicon-remove')
-        | &nbsp;Close
+  #detail-overlay.noisy_red
+    .header.noisy_red
+      p.close
+        a.close-centered(href='#', style='color: white;')
+          span(class='glyphicon glyphicon-remove')
+          | &nbsp;Close
+      p.tag
+        | #lovelace
     div(style='text-align: center; height: 100%;')
       .prev-img
         img(src='/gallery/fdd09e6d-baf1-4c44-a767-a786d22002bd.JPG?size=thumb', width='100', height='100')
         a#prev-img
           span(class='glyphicon glyphicon-chevron-up')
-      img.current-img(id='image-detail', src='/gallery/9475905d-b979-4296-af47-ac0164788a1a.JPG', style='margin-bottom: 1em; margin-top: 1em; max-height: 30%; max-width: 100%;')
+      img#image-detail.current-img(src='/gallery/9475905d-b979-4296-af47-ac0164788a1a.JPG')
       .next-img
         img(src='/gallery/1806f88e-8ed7-4b3e-92bd-3173c9965541.JPG?size=thumb', width='100', height='100')
         a#next-img(href='#')
@@ -75,9 +78,12 @@ block content
     .table-row
       each column, columnIndex in columns
         .col-xs-3.col-without-padding.venue(class=getBackgroundForIndex(columnIndex))
-          p(style="text-align: center")= column.columnTitle
+          p= column.columnTitle
+
+      each column, columnIndex in columns
+        .col-xs-3.col-without-padding.venue(class=getBackgroundForIndex(columnIndex))
           each img in column.images
-            a(href=img.uri)
+            a.thumb(href=img.uri)
               img.thumb(src=img.uri + '?size=thumb', style="margin-top: " + img['margin-top']+ ";")
 
   .row
@@ -91,7 +97,7 @@ block content
       $('#detail-overlay').css('display', 'none');
     });
 
-    $('.timeline a').click(function(ev) {
+    $('.timeline a.thumb').click(function(ev) {
       setPreviousImage(previousImage(this.href));
       setCurrentImage(this.href);
       setNextImage(nextImage(this.href));
