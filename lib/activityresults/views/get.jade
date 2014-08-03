@@ -31,7 +31,7 @@ block content
       form(role='form',method='POST',action=recordImagePath + '?_csrf=' + encodeURIComponent(csrf_token),enctype='multipart/form-data')
         +csrf
         div
-          span.btn.btn-primary.btn-file(style="width: 100%")
+          span.btn.btn-primary.btn-file.record(style="width: 100%")
             i.glyphicon.glyphicon-camera &nbsp;
             span RECORD
             input#input-file(type="file",accept="image/*",name="image")
@@ -56,7 +56,14 @@ block content
         $("#input-file").on("change", function () {
           getPreview(this.files, function (imagedata) {
             $("img#preview").attr("src", imagedata);
-            $("#previewContainer").css("display", "block");
+            $("#previewContainer").slideDown();
+          });
+          $('.record').hide();
+        });
+
+        $('#btn-cancel').click(function () {
+          $('#previewContainer').slideUp(200, function() {
+            $('.record').slideDown();
           });
         });
 
