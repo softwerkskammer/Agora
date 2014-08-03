@@ -34,6 +34,10 @@ describe('Activity result', function () {
     expect(new ActivityResult({created_by: 'me'})).to.have.property('created_by', 'me');
   });
 
+  it('should have a field of defined tags for an activityResult', function () {
+    expect(new ActivityResult({tags: ['1', '2']}).tags).to.be.eql(['1', '2']);
+  });
+
   describe('photo subdocument', function () {
     it('should be retrievable by id', function () {
       var activityResult = new ActivityResult({
