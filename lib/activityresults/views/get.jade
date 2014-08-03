@@ -103,7 +103,7 @@ block content
     }
 
     function venueNameOfImage(image) {
-      return thumbnailOfImage(image).parents('.venue').siblings('.' + venueColorOfImage(image)).find('.tag').text();
+      return thumbnailOfImage(image).parents('table').find('th.venue.' + venueColorOfImage(image)).find('.tag').text();
     }
 
     $('.timeline a.thumb').click(function(ev) {
