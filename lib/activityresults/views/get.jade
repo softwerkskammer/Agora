@@ -28,7 +28,7 @@ block content
 
   .row
     .col-md-12
-      form(role='form',method='POST',action='?_csrf=' + encodeURIComponent(csrf_token),enctype='multipart/form-data')
+      form(role='form',method='POST',action=recordImagePath + '?_csrf=' + encodeURIComponent(csrf_token),enctype='multipart/form-data')
         +csrf
         div
           span.btn.btn-primary.btn-file(style="width: 100%")
@@ -38,7 +38,7 @@ block content
         div#previewContainer(style="display: none")
           img#preview(style="max-width: 100%")
           div
-            button(type="submit").btn.btn-success SUBMIT
+            button(type="submit").btn.btn-success.pull-right SUBMIT
             span#btn-cancel.btn.btn-warning CANCEL
 
 
