@@ -70,26 +70,25 @@ block content
           });
         });
 
-  .row
-    .col-md-12
-      h3(style='margin-top: 5px;')= 'Friday'
+  each columns, title in days
+    .row
+      .col-md-12
+        h3(style='margin-top: 5px;')= title
 
-  table.row.timeline
-    tr.table-row
-      each column, columnIndex in columns
-        th.col-xs-3.col-without-padding.venue(class=getBackgroundForIndex(columnIndex))
-          p.tag= '#' + column.columnTitle
+        - var i = 0;
+        table.row.timeline
+          tr.table-row
+            each column, columnTitle in columns
+              th.col-xs-3.col-without-padding.venue(class=getBackgroundForIndex(i++))
+                p.tag= '#' + columnTitle
 
-    tr.table-row(style='display: table-row')
-      each column, columnIndex in columns
-        td.col-xs-3.col-without-padding.venue(class=getBackgroundForIndex(columnIndex))
-          each img in column.images
-            a.thumb(href=img.uri)
-              img.thumb(src=img.uri + '?size=thumb', style="margin-top: " + img['margin-top']+ ";")
-
-  .row
-    .col-md-12
-      h3(style='margin-top: 5px;')= 'Thursday'
+          - i = 0;
+          tr.table-row(style='display: table-row')
+            each column in columns
+              td.col-xs-3.col-without-padding.venue(class=getBackgroundForIndex(i++))
+                each img in column
+                  a.thumb(href=img.uri)
+                    img.thumb(src=img.uri + '?size=thumb', style="margin-top: " + img['margin-top']+ ";")
 
   script(type='text/javascript').
     jQuery(function() {
