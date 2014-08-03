@@ -12,14 +12,32 @@ block content
     .row
       .col-xs-12.col-md-3.thumbnail-container
         img#thumbnail(src=photo.uri + '?size=thumb')
+<<<<<<< HEAD
       .col-xs-12.col-md-6
         ul.tag-list.row
           +tagButton('Berlin')
+          +tagButton('Böhmesaal')
+          +tagButton('Bremen')
+          +tagButton('Dortmund')
+          +tagButton('Dresden')
+          +tagButton('Düsseldorf')
+          +tagButton('Erfurt')
+          +tagButton('Hamburg')
+          +tagButton('Hannover')
+          +tagButton('Köln')
+          +tagButton('Potsdam')
+          +tagButton('Stuttgart')
+          +tagButton('Wiesbaden')
+
+=======
+      .col-md-4
+        h4 Step #2: Pick a room
+        ul.tag-list
           each availableTag, i in activityResult.tags
             li
               input(type="radio",name="tag",value=availableTag,id="tag-"+i)
               label.btn.btn-default(for="tag-" + i) # #{availableTag}
-
+>>>>>>> Incorporated tags in edit_photo view
     .row
       .col-md-8
         .form-group
