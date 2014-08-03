@@ -5,6 +5,10 @@
   padding-right: 0;
 }
 
+.black-background {
+  background: #000;
+}
+
 .noisy_blue {
   background: url("/images/noisy_overlay.png") repeat #5C9BB3;
   overflow: hidden;
@@ -51,7 +55,83 @@
   display: block;
 }
 
+.timeline {
+  th {
+    font-weight: normal;
+  }
+
+  td {
+    vertical-align: top;
+  }
+}
+
+#detail-overlay {
+  z-index: 100;
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  display: none;
+  left: 0px;
+  top: 0px;
+
+  .header {
+  }
+
+  .slideshow {
+    text-align: center;
+    height: 100%;
+  }
+
+  .close {
+    height: 2em;
+    background: none repeat scroll 0 0 #000;
+    color: #fff;
+    float: inherit;
+    font-size: 1em;
+    font-weight: inherit;
+    opacity: 1;
+    padding: 0.5em;
+    text-align: center;
+    text-shadow: inherit;
+    text-transform: uppercase;
+  }
+
+  .tag {
+    color: #fff;
+    font-size: 2em;
+    font-style: italic;
+    text-align: center;
+  }
+
+  #image-detail {
+    background: #fff;
+    box-shadow: 0 0 20px #fff;
+    margin-bottom: 1em;
+    margin-top: 1em;
+    max-width: 100%;
+    padding: 5px;
+  }
+}
+
+@media (min-height: 651px) { #detail-overlay #image-detail {
+  max-height: 50%;
+} }
+
+@media (max-height: 650px) { #detail-overlay #image-detail {
+  max-height: 45%;
+} }
+
+@media (max-height: 650px) { #detail-overlay #image-detail {
+  max-height: 40%;
+} }
+
+@media (max-height: 550px) { #detail-overlay #image-detail {
+  max-height: 35%;
+} }
+
 .venue {
+  text-align: center;
+
   img.thumb {
     box-shadow: 1px 1px 3px rgba(30, 30, 30, 0.8);
     box-sizing: border-box;
@@ -82,10 +162,14 @@
   }
 }
 
-.disabled #prev-img, .disabled #next-img {
-  background: #000;
-  opacity: 1;
-  color: #444;
+.disabled {
+  * {
+    opacity: 0;
+  }
+
+  #prev-img, #next-img {
+    opacity: 0;
+  }
 }
 
 .thumbnail-container {
@@ -121,15 +205,15 @@ ul.tag-list {
     margin-bottom: 5px;
   }
   input:checked + label {
-    background-color: rgba(255, 0, 0, 0.5);
+    color: @btn-primary-color;
+    border-color: @btn-primary-border;
+    background-color: @btn-primary-bg;
   }
   input[type="radio"] {
     display: none;
   }
   label,label:active {
-    text-transform: uppercase;
     font-weight: bold;
     width: 100%;
-    background-image: url('/images/noisy_overlay.png');
   }
 }

@@ -6,17 +6,20 @@ block title
   = activityResultName
 
 block content
-  #detail-overlay(style='z-index: 100; position: fixed; background: #000; height: 100%; width: 100%; display: none; left: 0px; top: 0px;')
-    p(style='color: #fff; padding: 0.5em 0.5em; text-transform: uppercase; text-align: center;')
-      a.close-centered(href='#', style='color: white;')
-        span(class='glyphicon glyphicon-remove')
-        | &nbsp;Close
-    div(style='text-align: center; height: 100%;')
+  #detail-overlay.noisy_red
+    .header
+      p.close
+        a.close-centered(href='#', style='color: white;')
+          span(class='glyphicon glyphicon-remove')
+          | &nbsp;Close
+      p.tag
+        | #lovelace
+    .slideshow
       .prev-img
         img(src='/gallery/fdd09e6d-baf1-4c44-a767-a786d22002bd.JPG?size=thumb', width='100', height='100')
         a#prev-img
           span(class='glyphicon glyphicon-chevron-up')
-      img.current-img(id='image-detail', src='/gallery/9475905d-b979-4296-af47-ac0164788a1a.JPG', style='margin-bottom: 1em; margin-top: 1em; max-height: 30%; max-width: 100%;')
+      img#image-detail.current-img(src='/gallery/9475905d-b979-4296-af47-ac0164788a1a.JPG')
       .next-img
         img(src='/gallery/1806f88e-8ed7-4b3e-92bd-3173c9965541.JPG?size=thumb', width='100', height='100')
         a#next-img(href='#')
@@ -28,15 +31,60 @@ block content
 
   .row
     .col-md-12
+      form(role='form',method='POST',action=recordImagePath + '?_csrf=' + encodeURIComponent(csrf_token),enctype='multipart/form-data')
+        +csrf
+        div
+          span.btn.btn-primary.btn-file.record(style="width: 100%")
+            i.glyphicon.glyphicon-camera &nbsp;
+            span RECORD
+            input#input-file(type="file",accept="image/*",name="image")
+        div#previewContainer(style="display: none")
+          img#preview(style="max-width: 100%")
+          div
+            button(type="submit").btn.btn-success.pull-right SUBMIT
+            span#btn-cancel.btn.btn-warning CANCEL
+
+
+      script.
+        function getPreview(files, callback) {
+          if(!files || !files[0])
+            return null;
+          var reader = new FileReader();
+          reader.onload = function (e) {
+            callback(e.target.result);
+          };
+          reader.readAsDataURL(files[0]);
+        }
+
+        $("#input-file").on("change", function () {
+          getPreview(this.files, function (imagedata) {
+            $("img#preview").attr("src", imagedata);
+            $("#previewContainer").slideDown();
+          });
+          $('.record').hide();
+        });
+
+        $('#btn-cancel').click(function () {
+          $('#previewContainer').slideUp(200, function() {
+            $('.record').slideDown();
+          });
+        });
+
+  .row
+    .col-md-12
       h3(style='margin-top: 5px;')= 'Friday'
 
-  .row.timeline
-    .table-row
+  table.row.timeline
+    tr.table-row
       each column, columnIndex in columns
-        .col-xs-3.col-without-padding.venue(class=getBackgroundForIndex(columnIndex))
-          p(style="text-align: center")= column.columnTitle
+        th.col-xs-3.col-without-padding.venue(class=getBackgroundForIndex(columnIndex))
+          p.tag= '#' + column.columnTitle
+
+    tr.table-row(style='display: table-row')
+      each column, columnIndex in columns
+        td.col-xs-3.col-without-padding.venue(class=getBackgroundForIndex(columnIndex))
           each img in column.images
-            a(href=img.uri)
+            a.thumb(href=img.uri)
               img.thumb(src=img.uri + '?size=thumb', style="margin-top: " + img['margin-top']+ ";")
 
   .row
@@ -50,26 +98,39 @@ block content
       $('#detail-overlay').css('display', 'none');
     });
 
-    $('.timeline a').click(function(ev) {
+    function venueColorOfImage(image) {
+      return thumbnailOfImage(image).parents('.venue').attr('class').match(/noisy_\w+/)[0]
+    }
+
+    function venueNameOfImage(image) {
+      return thumbnailOfImage(image).parents('table').find('th.venue.' + venueColorOfImage(image)).find('.tag').text();
+    }
+
+    $('.timeline a.thumb').click(function(ev) {
+      var $detailOverlay = $('#detail-overlay');
+      $detailOverlay
+        .removeClass('noisy_blue noisy_red noisy_green noisy_yellow')
+        .addClass(venueColorOfImage(this.href));
+      $detailOverlay.find('.tag').text(venueNameOfImage(this.href));
       setPreviousImage(previousImage(this.href));
       setCurrentImage(this.href);
       setNextImage(nextImage(this.href));
-      $('#detail-overlay').fadeIn();
+      $detailOverlay.fadeIn();
       return false;
     });
 
+    function thumbnailOfImage(image) {
+      return $('img.thumb').filter(function(index, thumbnail){
+        return thumbnail.src.indexOf(image) !== -1;
+      });
+    }
+
     function previousImage(currentImage) {
-      var currentThumb = $('img.thumb').filter(function(index, thumbnail){
-        return thumbnail.src.indexOf(currentImage) !== -1;
-      })
-      return currentThumb.parent().prev('a').attr('href');
+      return thumbnailOfImage(currentImage).parent().prev('a').attr('href');
     }
 
     function nextImage(currentImage) {
-      var currentThumb = $('img.thumb').filter(function(index, thumbnail){
-        return thumbnail.src.indexOf(currentImage) !== -1;
-      });
-      return currentThumb.parent().next('a').attr('href');
+      return thumbnailOfImage(currentImage).parent().next('a').attr('href');
     }
 
     function setPreviousImage(previousImage) {

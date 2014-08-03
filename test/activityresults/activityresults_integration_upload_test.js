@@ -30,12 +30,6 @@ describe('/activityresults/:result/upload', function () {
     });
   });
 
-  describe("GET /", function () {
-    it("should return the RECORD page", function (done) {
-      request(createApp()).get("/foo/upload").expect(200, done);
-    });
-  });
-
   describe("POST /", function () {
     it("should store the image via gallery service and redirect to edit", function (done) {
       sinon.stub(galleryRepository, 'storeImage', function (tmpFile, callback) {
