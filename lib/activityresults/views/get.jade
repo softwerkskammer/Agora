@@ -74,14 +74,15 @@ block content
     .col-md-12
       h3(style='margin-top: 5px;')= 'Friday'
 
-  .row.timeline
-    .table-row
+  table.row.timeline
+    tr.table-row
       each column, columnIndex in columns
-        .col-xs-3.col-without-padding.venue(class=getBackgroundForIndex(columnIndex))
+        th.col-xs-3.col-without-padding.venue(class=getBackgroundForIndex(columnIndex))
           p.tag= '#' + column.columnTitle
 
+    tr.table-row(style='display: table-row')
       each column, columnIndex in columns
-        .col-xs-3.col-without-padding.venue(class=getBackgroundForIndex(columnIndex))
+        td.col-xs-3.col-without-padding.venue(class=getBackgroundForIndex(columnIndex))
           each img in column.images
             a.thumb(href=img.uri)
               img.thumb(src=img.uri + '?size=thumb', style="margin-top: " + img['margin-top']+ ";")
