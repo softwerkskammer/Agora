@@ -12,6 +12,9 @@ var createApp = require('../../testutil/testHelper')('activityresultsApp').creat
 var ActivityResult = beans.get('activityresult');
 var galleryRepository = beans.get('galleryrepositoryService');
 
+var MEMBER_ID = 1;
+var OTHER_MEMBER_ID = 2;
+
 describe('/activityresults/:result/photo/:photo', function () {
   afterEach(function () {
     sinon.restore();
@@ -20,7 +23,7 @@ describe('/activityresults/:result/photo/:photo', function () {
   var photoId = 'photo_id';
   beforeEach(function () {
     sinon.stub(activityresultsService, 'getActivityResultByName', function (activityResultName, callback) {
-      callback(null, new ActivityResult({ id: "foo", name: "foobar", created_by: 1, photos: [{id: photoId, title: 'mishka', uploaded_by: 1}]}));
+      callback(null, new ActivityResult({ id: "foo", name: "foobar", created_by: MEMBER_ID, photos: [{id: photoId, title: 'mishka', uploaded_by: MEMBER_ID}]}));
     });
     sinon.stub(activityresultsService, 'addPhotoToActivityResult', function (activityResultName, photo, callback) {
       callback();
@@ -28,7 +31,7 @@ describe('/activityresults/:result/photo/:photo', function () {
   });
 
   it('should have old values set', function (done) {
-    request(createApp(1))
+    request(createApp(MEMBER_ID))
       .get("/foo/photo/" + photoId + '/edit')
       .expect(function (res) {
         if (res.text.indexOf('mishka') === -1) {
@@ -39,7 +42,7 @@ describe('/activityresults/:result/photo/:photo', function () {
   });
 
   it('should not let me edit a photo i didnt upload', function (done) {
-    request(createApp(2))
+    request(createApp(OTHER_MEMBER_ID))
       .get("/foo/photo/" + photoId + '/edit')
       .expect(403, done);
   });
@@ -51,7 +54,7 @@ describe('/activityresults/:result/photo/:photo', function () {
       callback();
     });
 
-    request(createApp(1))
+    request(createApp(MEMBER_ID))
       .post('/foo/photo/' + photoId + '/edit')
       .type('form')
       .send({
@@ -72,7 +75,7 @@ describe('/activityresults/:result/photo/:photo', function () {
       callback();
     });
 
-    request(createApp(2))
+    request(createApp(OTHER_MEMBER_ID))
       .post('/foo/photo/' + photoId + '/edit')
       .type('form')
       .send({

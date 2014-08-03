@@ -18,6 +18,8 @@ var NOT_FOUND = 404;
 
 var ActivityResult = beans.get('activityresult');
 
+var MEMBER_ID = 1;
+
 describe('/activityresults', function () {
   afterEach(function () {
     sinon.restore();
@@ -76,7 +78,7 @@ describe('/activityresults', function () {
 
   describe('POST /', function () {
     it('should create a new activity result', function (done) {
-      var app = createApp(1);
+      var app = createApp(MEMBER_ID);
       var activityResultName = 'NewActivityResult';
       request(app)
         .post('/')
@@ -87,14 +89,14 @@ describe('/activityresults', function () {
     });
 
     it('should reject request without activityResultName parameter', function (done) {
-      request(createApp(1))
+      request(createApp(MEMBER_ID))
         .post('/')
         .type('form')
         .expect(BAD_REQUEST, done);
     });
 
     it('should reject request with empty activityResultName parameter', function (done) {
-      request(createApp(1))
+      request(createApp(MEMBER_ID))
         .post('/')
         .type('form')
         .send({ activityResultName: '' })
