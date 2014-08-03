@@ -67,17 +67,22 @@
   .header {
   }
 
+  .slideshow {
+    text-align: center;
+    height: 100%;
+  }
+
   .close {
     height: 2em;
     background: none repeat scroll 0 0 #000;
     color: #fff;
-    float: unset;
+    float: inherit;
     font-size: 1em;
-    font-weight: unset;
+    font-weight: inherit;
     opacity: 1;
     padding: 0.5em;
     text-align: center;
-    text-shadow: unset;
+    text-shadow: inherit;
     text-transform: uppercase;
   }
 
@@ -93,11 +98,26 @@
     box-shadow: 0 0 20px #fff;
     margin-bottom: 1em;
     margin-top: 1em;
-    max-height: 30%;
     max-width: 100%;
     padding: 5px;
   }
 }
+
+@media (min-height: 651px) { #detail-overlay #image-detail {
+  max-height: 50%;
+} }
+
+@media (max-height: 650px) { #detail-overlay #image-detail {
+  max-height: 45%;
+} }
+
+@media (max-height: 650px) { #detail-overlay #image-detail {
+  max-height: 40%;
+} }
+
+@media (max-height: 550px) { #detail-overlay #image-detail {
+  max-height: 35%;
+} }
 
 .venue {
   text-align: center;
