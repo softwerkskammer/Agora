@@ -7,7 +7,7 @@ block title
 
 block content
   #detail-overlay.noisy_red
-    .header.noisy_red
+    .header
       p.close
         a.close-centered(href='#', style='color: white;')
           span(class='glyphicon glyphicon-remove')
@@ -78,7 +78,7 @@ block content
     .table-row
       each column, columnIndex in columns
         .col-xs-3.col-without-padding.venue(class=getBackgroundForIndex(columnIndex))
-          p= column.columnTitle
+          p.tag= '#' + column.columnTitle
 
       each column, columnIndex in columns
         .col-xs-3.col-without-padding.venue(class=getBackgroundForIndex(columnIndex))
@@ -97,26 +97,39 @@ block content
       $('#detail-overlay').css('display', 'none');
     });
 
+    function venueColorOfImage(image) {
+      return thumbnailOfImage(image).parents('.venue').attr('class').match(/noisy_\w+/)[0]
+    }
+
+    function venueNameOfImage(image) {
+      return thumbnailOfImage(image).parents('.venue').siblings('.' + venueColorOfImage(image)).find('.tag').text();
+    }
+
     $('.timeline a.thumb').click(function(ev) {
+      var $detailOverlay = $('#detail-overlay');
+      $detailOverlay
+        .removeClass('noisy_blue noisy_red noisy_green noisy_yellow')
+        .addClass(venueColorOfImage(this.href));
+      $detailOverlay.find('.tag').text(venueNameOfImage(this.href));
       setPreviousImage(previousImage(this.href));
       setCurrentImage(this.href);
       setNextImage(nextImage(this.href));
-      $('#detail-overlay').fadeIn();
+      $detailOverlay.fadeIn();
       return false;
     });
 
+    function thumbnailOfImage(image) {
+      return $('img.thumb').filter(function(index, thumbnail){
+        return thumbnail.src.indexOf(image) !== -1;
+      });
+    }
+
     function previousImage(currentImage) {
-      var currentThumb = $('img.thumb').filter(function(index, thumbnail){
-        return thumbnail.src.indexOf(currentImage) !== -1;
-      })
-      return currentThumb.parent().prev('a').attr('href');
+      return thumbnailOfImage(currentImage).parent().prev('a').attr('href');
     }
 
     function nextImage(currentImage) {
-      var currentThumb = $('img.thumb').filter(function(index, thumbnail){
-        return thumbnail.src.indexOf(currentImage) !== -1;
-      });
-      return currentThumb.parent().next('a').attr('href');
+      return thumbnailOfImage(currentImage).parent().next('a').attr('href');
     }
 
     function setPreviousImage(previousImage) {
