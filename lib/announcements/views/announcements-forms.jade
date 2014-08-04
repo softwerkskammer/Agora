@@ -22,7 +22,7 @@ mixin announcementform(announcement)
           +text('title', t('general.title'), announcement.title)
           +text('url', t('general.url'), announcement.url)
         .col-md-6
-          +date('thruDate', t('announcements.show_until'), announcement.thruMoment().lang(language).format('L'))
+          +date('thruDate', t('announcements.show_until'), announcement.thruMoment().locale(language).format('L'))
       .row
         .col-md-12
           +hightextarea('message', t('announcements.text'), announcement.message)

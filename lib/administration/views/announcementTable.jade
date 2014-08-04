@@ -33,7 +33,7 @@ block content
                 td(class='span1'): a.btn-sm(href='/announcements/edit/#{encodeURIComponent(announcement.url)}'): i.fa.fa-edit.fa-fw
                 td.ellipsis #{announcement.title}
                 td #{announcement.url}
-                td #{announcement.fromMoment().lang(language).format('L')}
-                td #{announcement.thruMoment().lang(language).format('L')}
+                td #{announcement.fromMoment().locale(language).format('L')}
+                td #{announcement.thruMoment().locale(language).format('L')}
                 td.ellipsis: span(rel='tooltip', data-placement='left', data-content='#{announcement.messageHTML()}') #{announcement.message}
                 td #{announcement.author}

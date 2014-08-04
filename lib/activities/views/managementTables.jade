@@ -4,11 +4,11 @@ include ../../../views/format-mixin
 include ../../../views/dataTables-mixin
 
 mixin localdate(momentOrNull)
-  | #{momentOrNull ? momentOrNull.lang(language).format('L') : '-'}
+  | #{momentOrNull ? momentOrNull.locale(language).format('L') : '-'}
 
 mixin buttonOrDate(momentOrNull, paymentDone, activityUrl, nickname)
   if (momentOrNull)
-    | #{momentOrNull.lang(language).format('L')}
+    | #{momentOrNull.locale(language).format('L')}
   else
     a.btn.btn-primary.btn-xs.btn-block(id='#{encodeURIComponent(nickname) + "-button"}',
       href='javascript:paymentDone(\'#{"/activities/paymentReceived/" + encodeURIComponent(activityUrl) + "/" + encodeURIComponent(nickname)}\', \'#{encodeURIComponent(nickname) + "-button"}\')') Erhalten…
@@ -63,7 +63,7 @@ block content
                 tbody
                   for member in participants
                     tr
-                      td #{member.registeredAt.lang(language).format('L')}
+                      td #{member.registeredAt.locale(language).format('L')}
                       td: +linkedMember(member.nickname())
                       td #{member.firstname()}
                       td #{member.lastname()}
@@ -119,7 +119,7 @@ block content
                 for line in addonLines
                   if((!activity.addonForMember(line.member.id()).paymentReceivedMoment() || !activity.memberEnteredAddonInformation(line.member.id())) && activity.resources().memberIsRegisteredForMoreDaysThan(0, line.member))
                     tr
-                      td #{line.member.registeredAt.lang(language).format('L')}
+                      td #{line.member.registeredAt.locale(language).format('L')}
                       if activity.addonForMember(line.member.id()).paymentReceivedMoment()
                         td.center &nbsp;
                       else
@@ -149,7 +149,7 @@ block content
                 for line in addonLines
                   if !containsMember(activity.group, line.member)
                     tr
-                      td #{line.member.registeredAt.lang(language).format('L')}
+                      td #{line.member.registeredAt.locale(language).format('L')}
                       td: +linkedMember(line.member.nickname())
                       td #{line.member.firstname()}
                       td #{line.member.lastname()}
@@ -192,7 +192,7 @@ block content
                       td gelöscht
                       td &nbsp;
                       td &nbsp;
-                    td #{line.addon.paymentReceivedMoment() && line.addon.paymentReceivedMoment().lang(language).format('L')}
+                    td #{line.addon.paymentReceivedMoment() && line.addon.paymentReceivedMoment().locale(language).format('L')}
           hr
 
         .tab-pane#addresses

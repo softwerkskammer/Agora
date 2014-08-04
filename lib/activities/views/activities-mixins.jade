@@ -29,7 +29,7 @@ mixin activityList(activities, member)
   dl.dl-horizontal
     for activity in activities
       dt
-        | #{activity.startMoment().lang(language).format('LL')}
+        | #{activity.startMoment().locale(language).format('LL')}
       dd
         a(href='/groups/#{activity.assignedGroup()}')
           span.label(style='background-color: #{activity.colorRGB}') #{activity.groupName()}

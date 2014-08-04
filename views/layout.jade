@@ -15,5 +15,5 @@ block specific
           small: a(href='/announcements/') #{t('general.more')}…
       dl
         for announcement in latestNews
-          dt #{announcement.fromMoment().lang(language).format('LL')}
+          dt #{announcement.fromMoment().locale(language).format('LL')}
           dd: a(href='/announcements/#{encodeURIComponent(announcement.url)}') #{announcement.title}
