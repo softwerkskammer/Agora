@@ -70,10 +70,11 @@ block content
           });
         });
 
+  hr
   each columns, title in days
     .row
       .col-md-12
-        h3(style='margin-top: 5px;')= title
+        h3(style='margin-top: 5px;')= moment(title*1000).format("dddd, l")
 
         - var i = 0;
         table.row.timeline
@@ -88,6 +89,7 @@ block content
               td.col-xs-3.col-without-padding.venue(class=getBackgroundForIndex(i++))
                 each img in column
                   a.thumb(href=img.uri)
+                    span.small #{img.title}
                     img.thumb(src=img.uri + '?size=thumb', style="margin-top: " + img['margin-top']+ ";")
 
   script(type='text/javascript').
