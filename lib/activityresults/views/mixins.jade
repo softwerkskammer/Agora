@@ -1,0 +1,5 @@
+mixin tagButton(tagValue)
+  - var inputId = 'tag-'+tagValue;
+  li
+    input(id=inputId,type="radio",name="tag",value=tagValue)
+    label.btn.btn-default(for=inputId) ##{tagValue}

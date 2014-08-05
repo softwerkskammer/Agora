@@ -1,6 +1,7 @@
 extends ../../../views/layoutOnlyMain
 
 include  ../../../views/formComponents
+include ./mixins
 
 block title
   = activityResultName + " / Edit Photo"
@@ -13,15 +14,20 @@ block content
         img#thumbnail(src=photo.uri + '?size=thumb')
       .col-xs-6
         ul.tag-list
-          li
-            input#tag-hopper(type="radio",name="tag",value="hopper")
-            label.btn.btn-default(for="tag-hopper") #Hopper
-          li
-            input#tag-lovelace(type="radio",name="tag",value="lovelace")
-            label.btn.btn-default(for="tag-lovelace") #Lovelace
-          li
-            input#tag-liskov(type="radio",name="tag",value="liskov")
-            label.btn.btn-default(for="tag-liskov") #Liskov
+          +tagButton('Berlin')
+          +tagButton('Böhmesaal')
+          +tagButton('Bremen')
+          +tagButton('Dortmund')
+          +tagButton('Dresden')
+          +tagButton('Düsseldorf')
+          +tagButton('Erfurt')
+          +tagButton('Hamburg')
+          +tagButton('Hannover')
+          +tagButton('Köln')
+          +tagButton('Potsdam')
+          +tagButton('Stuttgart')
+          +tagButton('Wiesbaden')
+
     .row
       .col-md-8
         .form-group
