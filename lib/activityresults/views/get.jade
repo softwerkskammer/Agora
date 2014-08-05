@@ -1,6 +1,7 @@
 extends ../../../views/layoutOnlyMain
 
 include  ../../../views/formComponents
+include ./mixins
 
 block title
   = activityResultName
@@ -90,7 +91,8 @@ block content
                 each img in column
                   a.thumb(href=img.uri)
                     img.thumb(src=img.uri + '?size=thumb', alt=img.title, title=img.title)
-                    span.small(style="color: black") #{shortenTitle(img.title)} - #{moment(img.timestamp).format("LT")}
+                    span.small(style="color: black")
+                      +thumbnailInfos(img)
 
   script(type='text/javascript').
     jQuery(function() {
