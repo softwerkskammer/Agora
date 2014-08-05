@@ -79,7 +79,6 @@
     "grunt-karma": "0.8.3",
     "grunt-mocha-istanbul": "git://github.com/leider/grunt-mocha-istanbul#peerDependency",
     "karma": "0.12.20",
-    "karma-chrome-launcher": "0.1.4",
     "karma-coverage": "0.2.5",
     "karma-html2js-preprocessor": "0.1.0",
     "karma-mocha": "0.1.6",
