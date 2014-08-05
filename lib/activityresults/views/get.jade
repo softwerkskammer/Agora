@@ -89,7 +89,7 @@ block content
               td.col-xs-3.col-without-padding.venue(class=getBackgroundForIndex(i++))
                 each img in column
                   a.thumb(href=img.uri)
-                    img.thumb(src=img.uri + '?size=thumb', style="margin-top: " + img['margin-top']+ ";", alt=img.title, title=img.title)
+                    img.thumb(src=img.uri + '?size=thumb', alt=img.title, title=img.title)
                     span.small(style="color: black") #{shortenTitle(img.title)} - #{moment(img.timestamp).format("LT")}
 
   script(type='text/javascript').
