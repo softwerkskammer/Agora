@@ -4,7 +4,7 @@ include  ../../../views/formComponents
 include ./mixins
 
 block title
-  = activityResultName + " / Edit Photo"
+  = activityResult.id + " / Edit Photo"
 
 block content
   form(role="form",method="post")
