@@ -37,3 +37,4 @@ bootstrap.js
 public/clientscripts
 lib/mailarchive/imported.log
 coverageWithDB
+karma-coverage

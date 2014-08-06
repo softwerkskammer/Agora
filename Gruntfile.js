@@ -59,7 +59,7 @@ module.exports = function (grunt) {
   };
 
   grunt.initConfig({
-    clean: ['coverage', 'coverageWithDB', 'frontendtests/fixtures/*.html'],
+    clean: ['coverage', 'coverageWithDB', 'karma-coverage', 'frontendtests/fixtures/*.html'],
     copy: {
       datatablesJS: {
         src: 'bower_components/datatables/media/js/*.min.js',
@@ -166,10 +166,6 @@ module.exports = function (grunt) {
         browsers: ['PhantomJS'],
         runnerPort: 6666,
         singleRun: true
-      },
-      continuous: {
-        browsers: ['Chrome'],
-        autoWatch: true
       }
     },
     less: {
@@ -244,12 +240,21 @@ module.exports = function (grunt) {
       }
     },
     istanbul_check_coverage: {
-      default: {
+      server: {
         options: {
           coverageFolder: 'coverage*',
           check: {
             lines: 81,
             statements: 77
+          }
+        }
+      },
+      frontend: {
+        options: {
+          coverageFolder: 'karmacoverage',
+          check: {
+            lines: 94,
+            statements: 94
           }
         }
       }
@@ -283,8 +288,8 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-karma');
 
   grunt.registerTask('prepare', ['bower-install-simple', 'copy', 'less']);
-  grunt.registerTask('frontendtests', ['prepare', 'clean', 'jade', 'uglify:production_de', 'karma:once', 'uglify:development_de', 'karma:once']);
-  grunt.registerTask('tests', ['jslint', 'frontendtests', 'mocha_istanbul', 'istanbul_check_coverage']);
+  grunt.registerTask('frontendtests', ['prepare', 'clean', 'jade', 'uglify:production_de', 'karma:once', 'uglify:development_de', 'karma:once', 'istanbul_check_coverage:frontend']);
+  grunt.registerTask('tests', ['jslint', 'frontendtests', 'mocha_istanbul', 'istanbul_check_coverage:server']);
   grunt.registerTask('deploy_development', ['prepare', 'uglify:development_de', 'uglify:development_en']);
 
   // Default task.

@@ -33,7 +33,7 @@
     header: {
       left: 'title',
       center: '',
-		right: 'prev today next'
+		right: 'today prev,next'
     },
     weekends: true,
     weekNumbers: false,

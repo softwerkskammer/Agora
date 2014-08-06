@@ -29,6 +29,11 @@ var surroundWithLink, surroundTwitterName, surroundEmail, displayedActivityStart
       $(this).fullCalendar({
         lang: fc_lang,
         aspectRatio: 1.2,
+        header: {
+          left: 'title',
+          center: '',
+          right: 'prev today next'
+        },
         weekMode: 'variable',
         timeFormat: '',
         titleFormat: {
