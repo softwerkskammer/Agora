@@ -57,7 +57,7 @@ mixin my_activities
             i.fa.fa-check.fa-fw.text-success.tooltipify(data-toggle='tooltip' title=t('activities.tooltip.registered'))
           else
             i.fa.fa-question.fa-fw.tooltipify(data-toggle='tooltip' title=t('activities.tooltip.unknown'))
-          | &nbsp; #{activity.startMoment().lang(language).format('L')} &nbsp; 
+          | &nbsp; #{activity.startMoment().locale(language).format('L')} &nbsp; 
           a(href='/activities/#{encodeURIComponent(activity.url())}') #{activity.title()}
           span.pull-right(style='color: #{activity.colorRGB};') #{activity.groupName()}
 
@@ -75,6 +75,6 @@ mixin wikichangesOrBlogs(items, panelid, prefix, title)
               .modal-dialog.modal-lg
                 .modal-content
             a(data-toggle='modal', data-target='##{item.dialogId()}', href=item.dialogUrl()) #{item.pureName()}
-            small.pull-right #{item.date().lang(language).format('L')}&nbsp;
+            small.pull-right #{item.date().locale(language).format('L')}&nbsp;
               a(href=item.url()): i.fa.fa-book.fa-fw.tooltipify(data-toggle='tooltip' title=t('wiki.tooltip.gotopage'))
     hr

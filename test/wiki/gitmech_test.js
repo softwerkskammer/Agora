@@ -288,12 +288,23 @@ describe('the gitmech module', function () {
       });
     });
 
-    it('handles errors in grep search', function (done) {
+    it('handles errors in grep search with more than two lines', function (done) {
       sinon.stub(gitExec, 'command', function (args, callback) {
-        if (args[0] === 'grep') { callback(new Error()); }
+        if (args[0] === 'grep') { callback(new Error("line1\nline2\nline3")); }
       });
       Git.grep('test', function (err) {
         expect(err).to.exist();
+        done();
+      });
+    });
+
+    it('handles errors in grep search with less than two lines', function (done) {
+      sinon.stub(gitExec, 'command', function (args, callback) {
+        if (args[0] === 'grep') { callback(new Error("line1\nline2")); }
+      });
+      Git.grep('test', function (err, result) {
+        expect(err).to.not.exist();
+        expect(result).to.eql([]);
         done();
       });
     });

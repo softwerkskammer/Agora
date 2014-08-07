@@ -12,7 +12,7 @@ block content
           if (accessrights.canEditAnnouncement(announcement))
             a.btn.btn-default(href='/announcements/edit/#{encodeURIComponent(announcement.url)}', title=t('general.edit')): i.fa.fa-edit.fa-fw
         h2 #{announcement.title}&nbsp;
-          small #{announcement.fromMoment().lang(language).format('LL')}
+          small #{announcement.fromMoment().locale(language).format('LL')}
       .row
         .col-md-8
           | !{announcement.messageHTML()}

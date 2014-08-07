@@ -1,5 +1,4 @@
 module.exports = function (grunt) {
-  // See http://www.jshint.com/docs/#strict
   'use strict';
 
   // set up common objects for jslint
@@ -59,10 +58,8 @@ module.exports = function (grunt) {
     ]
   };
 
-  // Project configuration.
   grunt.initConfig({
-    // Task configuration.
-    clean: ['coverage', 'frontendtests/fixtures/*.html'],
+    clean: ['coverage', 'coverageWithDB', 'karma-coverage', 'frontendtests/fixtures/*.html'],
     copy: {
       datatablesJS: {
         src: 'bower_components/datatables/media/js/*.min.js',
@@ -169,10 +166,6 @@ module.exports = function (grunt) {
         browsers: ['PhantomJS'],
         runnerPort: 6666,
         singleRun: true
-      },
-      continuous: {
-        browsers: ['Chrome'],
-        autoWatch: true
       }
     },
     less: {
@@ -221,22 +214,48 @@ module.exports = function (grunt) {
 
     mocha_istanbul: {
       testWithDB: {
-        src: 'testWithDB', // the folder, not the files,
+        src: 'testWithDB',
         options: {
-          root: 'testWithDB', // to make istanbul _not instrument_ our production code
+          coverageFolder: 'coverageWithDB',
+          excludes: ['**/activitystore.js'],
+          timeout: 6000,
+          slow: 100,
           mask: '**/*.js',
-          reporter: 'dot' // set to 'spec' if you like it more verbose
+          root: 'lib',
+          reporter: 'dot'
         }
       },
       test: {
-        src: 'test', // the folder, not the files,
+        src: 'test',
         options: {
-          root: 'lib',
+          timeout: 6000,
+          slow: 100,
           mask: '**/*.js',
-          reporter: 'dot', // set to 'spec' if you like it more verbose
+          root: 'lib',
+          reporter: 'dot',
           check: {
             lines: 80,
             statements: 76
+          }
+        }
+      }
+    },
+    istanbul_check_coverage: {
+      server: {
+        options: {
+          coverageFolder: 'coverage*',
+          check: {
+            lines: 81,
+            statements: 77
+          }
+        }
+      },
+      frontend: {
+        options: {
+          coverageFolder: 'karmacoverage',
+          check: {
+            lines: 94,
+            statements: 94
           }
         }
       }
@@ -270,8 +289,8 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-karma');
 
   grunt.registerTask('prepare', ['bower-install-simple', 'copy', 'less']);
-  grunt.registerTask('frontendtests', ['prepare', 'clean', 'jade', 'uglify:production_de', 'karma:once', 'uglify:development_de', 'karma:once']);
-  grunt.registerTask('tests', ['jslint', 'frontendtests', 'mocha_istanbul']);
+  grunt.registerTask('frontendtests', ['prepare', 'clean', 'jade', 'uglify:production_de', 'karma:once', 'uglify:development_de', 'karma:once', 'istanbul_check_coverage:frontend']);
+  grunt.registerTask('tests', ['jslint', 'frontendtests', 'mocha_istanbul', 'istanbul_check_coverage:server']);
   grunt.registerTask('deploy_development', ['prepare', 'uglify:development_de', 'uglify:development_en']);
 
   // Default task.

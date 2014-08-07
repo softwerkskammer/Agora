@@ -22,7 +22,7 @@ module.exports = function (config) {
     ],
 
     // possible values: 'dots', 'progress'
-    reporters: ['dots'],
+    reporters: ['dots', 'coverage'],
 
     // web server port
     // CLI --port 9876
@@ -65,17 +65,27 @@ module.exports = function (config) {
     reportSlowerThan: 500,
 
     preprocessors: {
+      // source files, that you wanna generate coverage for
+      // do not include tests or libraries
+      // (these files will be instrumented by Istanbul)
+      'public/clientscripts/ac*.js': ['coverage'],
+      'public/clientscripts/ch*.js': ['coverage'],
       '**/*.html': ['html2js']
     },
 
+    coverageReporter: {
+      type: 'json',
+      dir: 'karma-coverage/',
+      subdir: '.'
+    },
+
     plugins: [
-      'karma-jasmine',
+      'karma-coverage',
+      'karma-html2js-preprocessor',
       'karma-mocha',
       'karma-must',
-      'karma-sinon',
       'karma-phantomjs-launcher',
-      'karma-chrome-launcher',
-      'karma-html2js-preprocessor'
+      'karma-sinon'
     ]
   });
 };

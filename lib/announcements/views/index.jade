@@ -15,6 +15,6 @@ block content
   
       dl.dl-horizontal
         for announcement in announcements
-          dt #{announcement.fromMoment().lang(language).format('LL')}
+          dt #{announcement.fromMoment().locale(language).format('LL')}
           dd
             a(href='#{encodeURIComponent(announcement.url)}') #{announcement.title}
