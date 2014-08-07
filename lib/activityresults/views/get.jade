@@ -33,7 +33,7 @@ block content
 
   .row
     .col-md-12
-      form(role='form',method='POST',action=recordImagePath + '?_csrf=' + encodeURIComponent(csrf_token),enctype='multipart/form-data')
+      form(id='recordForm',role='form',method='POST',action=recordImagePath + '?_csrf=' + encodeURIComponent(csrf_token),enctype='multipart/form-data')
         +csrf
         div
           span.btn.btn-primary.btn-file.record(style="width: 100%")
@@ -181,6 +181,10 @@ block content
         setNextImage(nextImage(successor));
       }
       return false;
+    });
+
+    $('#recordForm').on('submit', function() {
+      $('#recordForm button[type="submit"]').prepend($('<i class="fa fa-spinner fa-spin"/>&nbsp;'));
     });
 
     });
