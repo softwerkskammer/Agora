@@ -169,6 +169,13 @@
       "unknown": "You are not registered."
     }
   },
+  "activityresults": {
+    "cancel": "CANCEL",
+    "done": "Done",
+    "photoTitlePlaceholder": "What's on this photo?",
+    "record_image": "Record",
+    "submit": "SUBMIT"
+  },
   "payment": {
     "title": "Payment",
     "how_to_pay": "Choose how you'd like to pay.",
