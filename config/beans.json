@@ -34,7 +34,6 @@
   "wikiService": {"module": "./lib/wiki/wikiService"},
   "avatarProvider": {"module": "./lib/commons/avatarProvider"},
 
-  "activityresultstore": {"module": "./lib/activityresults/activityresultstore"},
   "activitystore": {"module": "./lib/activities/activitystore"},
   "announcementstore": {"module": "./lib/announcements/announcementstore"},
   "groupstore": {"module": "./lib/groups/groupstore"},
