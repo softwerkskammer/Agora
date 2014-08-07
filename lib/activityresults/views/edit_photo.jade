@@ -31,11 +31,11 @@ block content
     .row
       .col-md-8
         .form-group
-          input.form-control#text-title(type="text",name="title",value=photo.title,placeholder='What\'s on this photo?')
+          input.form-control#text-title(type="text",name="title",value=photo.title,placeholder=t('activityresults.photoTitlePlaceholder'))
 
      .row
        .col-md-2.col-md-offset-6(style="text-align:right")
          button.btn.btn-primary(type="submit")
           span.glyphicon.glyphicon-ok
             | &nbsp;
-          | Done
+          = t('activityresults.done')
