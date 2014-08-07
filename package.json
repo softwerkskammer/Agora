@@ -68,8 +68,7 @@
     "URIjs": "1.13.2",
     "useragent": "2.0.9",
     "winston": "0.7.3",
-    "winston-config": "0.4.2",
-    "moment": "~2.8.1"
+    "winston-config": "0.4.2"
   },
   "devDependencies": {
     "grunt": "0.4.5",
