@@ -86,10 +86,10 @@ block content
 
           - i = 0;
           tr.table-row(style='display: table-row')
-            each column in columns
+            each column, columnTitle in columns
               td.col-xs-3.col-without-padding.venue(class=getBackgroundForIndex(i++))
                 each img in column
-                  a.thumb(href=img.uri)
+                  a.thumb(href=img.uri, data-columntitle='#'+columnTitle)
                     img.thumb(src=img.uri + '?size=thumb', alt=img.title, title=img.title)
                     span.small(style="color: black")
                       +thumbnailInfos(img)
@@ -106,7 +106,7 @@ block content
     }
 
     function venueNameOfImage(image) {
-      return thumbnailOfImage(image).parents('table').find('th.venue.' + venueColorOfImage(image)).find('.tag').text();
+      return thumbnailOfImage(image).parents('a').data('columntitle');
     }
 
     $('.timeline a.thumb').click(function(ev) {
