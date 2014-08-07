@@ -11,7 +11,7 @@ mixin thumbnailInfos(img)
 
 mixin tagButton(tagValue)
   - var inputId = 'tag-'+tagValue;
-  li
+  li.col-md-4.col-xs-6
     input(id=inputId,type="radio",name="tag",value=tagValue)
     label.btn.btn-default(for=inputId) ##{tagValue}
   

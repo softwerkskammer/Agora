@@ -10,10 +10,10 @@ block content
   form(role="form",method="post")
     +csrf
     .row
-      .col-xs-6.thumbnail-container
+      .col-xs-12.col-md-3.thumbnail-container
         img#thumbnail(src=photo.uri + '?size=thumb')
-      .col-xs-6
-        ul.tag-list
+      .col-xs-12.col-md-6
+        ul.tag-list.row
           +tagButton('Berlin')
           +tagButton('Böhmesaal')
           +tagButton('Bremen')
