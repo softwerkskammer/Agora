@@ -95,11 +95,21 @@ block content
                       +thumbnailInfos(img)
 
   script(type='text/javascript').
+    var ESC_KEY = 27;
     jQuery(function() {
 
-    $('#detail-overlay').find('a.close-centered').click(function(e) {
-      $('#detail-overlay').css('display', 'none');
-    });
+      function closeOverlay() {
+        $('#detail-overlay').css('display', 'none');
+      }
+
+      $(window).on("keydown", function (evt) {
+        if(evt.keyCode == ESC_KEY && $('#detail-overlay').attr('display') !== 'none') {
+          closeOverlay();
+          evt.preventDefault();
+        }
+      });
+
+    $('#detail-overlay').find('a.close-centered').click(closeOverlay);
 
     function venueColorOfImage(image) {
       return thumbnailOfImage(image).parents('.venue').attr('class').match(/noisy_\w+/)[0]
