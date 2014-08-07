@@ -20,7 +20,8 @@ block content
         img(width='100', height='100')
         a#prev-img
           span(class='glyphicon glyphicon-chevron-up')
-      img#image-detail.current-img
+      a#image-detail-link
+        img#image-detail.current-img
       .next-img
         img(width='100', height='100')
         a#next-img(href='#')
@@ -146,7 +147,8 @@ block content
     }
 
     function setCurrentImage(currentImage) {
-      $('#image-detail').attr('src', currentImage);
+      $('#image-detail').attr('src', currentImage + '?size=preview');
+      $('#image-detail-link').attr('href', currentImage);
     }
 
     function setNextImage(nextImage){
