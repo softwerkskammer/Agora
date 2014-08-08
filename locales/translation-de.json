@@ -170,6 +170,13 @@
       "unknown": "Du bist nicht angemeldet."
     }
   },
+  "activityresults": {
+    "cancel": "Abbrechen",
+    "done": "Fertig",
+    "record_image": "Aufzeichnen",
+    "submit": "Weiter",
+    "photoTitlePlaceholder": "Was kann man hier sehen?"
+  },
   "payment": {
     "title": "Zahlung",
     "how_to_pay": "Wähle, wie Du bezahlen möchtest.",

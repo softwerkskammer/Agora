@@ -186,7 +186,8 @@ module.exports = function (grunt) {
             'bower_components/datatables/media/css/jquery.dataTables.css',
             'frontend/3rd_party_css/dataTables.bootstrap.css',
             'frontend/3rd_party_css/dataTables.fontAwesome.css',
-            'build/stylesheets/less/agora.less'
+            'build/stylesheets/less/agora.less',
+            'build/stylesheets/less/activityresults.less'
           ]
         }
       }

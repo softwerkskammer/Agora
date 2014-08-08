@@ -20,6 +20,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # within the machine from a port on the host machine. In the example below,
   # accessing "localhost:8080" will access port 80 on the guest machine.
 
+
+  # forward NodeJS remote debug port
+  config.vm.network "forwarded_port", guest: 5858, host: 5858
+
   # forward mongodb ports from host to guest
   config.vm.network "forwarded_port", guest: 27017, host: 27017
   config.vm.network "forwarded_port", guest: 28017, host: 28017
@@ -44,7 +48,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # the path on the host to the actual folder. The second argument is
   # the path on the guest to mount the folder. And the optional third
   # argument is a set of non-required options.
-  # config.vm.synced_folder "../data", "/vagrant_data"
+  config.vm.synced_folder "./local/gallery", "/var/local/agora/gallery"
 
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
@@ -130,9 +134,22 @@ sed /etc/apt/sources.list -e 's|http://us.archive.ubuntu.com/|http://de.archive.
 apt-get update
 
 # install needed packages
-apt-get install -y nodejs nodejs-legacy npm mongodb g++ git python fontconfig
+apt-get install --yes \
+  nodejs \
+  nodejs-legacy \
+  npm \
+  mongodb \
+  g++ \
+  git \
+  python \
+  fontconfig \
+  imagemagick
 
 # install grunt-cli using npm
 npm install -g grunt-cli
+
+# create directory for image files stored in gallery microservice
+mkdir --verbose --parents /var/local/agora/gallery
+chown --verbose vagrant:vagrant /var/local/agora/gallery
 SCRIPT
 end
