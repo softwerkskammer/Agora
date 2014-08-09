@@ -105,7 +105,6 @@ block content
     function resizeColumns(totalWidth) {
       var columns = $('.timeline td, .timeline th');
       var newColumnWidth = Math.round(totalWidth/numColsPerScreen)+"px";
-      console.log("Setting column width to "+newColumnWidth);
       columns.css('width', newColumnWidth);
       columns.css('min-width', newColumnWidth);
     }
