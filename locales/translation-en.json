@@ -170,11 +170,11 @@
     }
   },
   "activityresults": {
-    "cancel": "CANCEL",
+    "cancel": "Cancel",
     "done": "Done",
-    "photoTitlePlaceholder": "What's on this photo?",
     "record_image": "Record",
-    "submit": "SUBMIT"
+    "submit": "Submit",
+    "photoTitlePlaceholder": "What's on this photo?"
   },
   "payment": {
     "title": "Payment",
