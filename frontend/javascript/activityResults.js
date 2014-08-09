@@ -1,48 +1,51 @@
-'use strict';
+/*global FileReader */
 
-/**
- * Created by raimo on 09.08.14.
- */
-function getPreview(files, callback) {
-  if (!files || !files[0]) {
-    return null;
+(function () {
+  'use strict';
+  function getPreview(files, callback) {
+    if (!files || !files[0]) {
+      return null;
+    }
+    var reader = new FileReader();
+    reader.onload = function (e) {
+      callback(e.target.result);
+    };
+    reader.readAsDataURL(files[0]);
   }
-  var reader = new FileReader();
-  reader.onload = function (e) {
-    callback(e.target.result);
-  };
-  reader.readAsDataURL(files[0]);
-}
 
-$("#input-file").on("change", function () {
-  getPreview(this.files, function (imagedata) {
-    $("img#preview").attr("src", imagedata);
-    $("#previewContainer").slideDown();
+  var numColsPerScreen = 3;
+
+  function resizeColumns(totalWidth) {
+    var columns = $('.timeline td, .timeline th');
+    var newColumnWidth = Math.max(200, totalWidth / numColsPerScreen) + 'px';
+    columns.css('width', newColumnWidth);
+    columns.css('min-width', newColumnWidth);
+  }
+
+  $(function () {
+    $("#input-file").on("change", function () {
+      getPreview(this.files, function (imagedata) {
+        $("img#preview").attr("src", imagedata);
+        $("#previewContainer").slideDown();
+      });
+      $('.record').hide();
+    });
+
+    $('#btn-cancel').click(function () {
+      $('#previewContainer').slideUp(200, function () {
+        $('.record').slideDown();
+      });
+    });
+
+    $('#recordForm').on('submit', function () {
+      $('#recordForm button[type="submit"]').prepend($('<i class="fa fa-spinner fa-spin"/>&nbsp;'));
+    });
   });
-  $('.record').hide();
-});
 
-$('#btn-cancel').click(function () {
-  $('#previewContainer').slideUp(200, function () {
-    $('.record').slideDown();
+  $(function () {
+    resizeColumns($(window).width());
+    $(window).resize(function () {
+      resizeColumns($(window).width());
+    });
   });
-});
-
-$('#recordForm').on('submit', function () {
-  $('#recordForm button[type="submit"]').prepend($('<i class="fa fa-spinner fa-spin"/>&nbsp;'));
-});
-
-var numColsPerScreen = 5;
-function resizeColumns(totalWidth) {
-  var columns = $('.timeline td, .timeline th');
-  var newColumnWidth = Math.round(totalWidth/numColsPerScreen)+"px";
-  columns.css('width', newColumnWidth);
-  columns.css('min-width', newColumnWidth);
-}
-
-$(function () {
-  resizeColumns(window.screen.availWidth);
-  $(window).resize(function () {
-    resizeColumns(window.screen.availWidth);
-  });
-});
+}());
