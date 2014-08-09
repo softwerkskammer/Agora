@@ -74,10 +74,11 @@ block content
         });
 
   hr
-  each columns, title in days
+  each timestamp in dayTimeStamps
+    - var columns = days[timestamp]
     .row
       .col-md-12(style='overflow-x: auto')
-        h3(style='margin-top: 5px;')= moment(title*1000).lang(language).format("dddd, l")
+        h3(style='margin-top: 5px;')= moment(timestamp*1000).lang(language).format("dddd, l")
 
         - var i = 0;
         table.row.timeline
