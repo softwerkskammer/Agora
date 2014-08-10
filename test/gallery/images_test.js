@@ -41,16 +41,6 @@ describe('/gallery', function () {
         .expect('Location', app.path() + '/' + generatedImageId, done);
     });
 
-    it('stores the image to the imagerepository', function (done) {
-      request(createApp())
-        .post('/')
-        .attach('imageFile', imagePath)
-        .end(function () {
-          expect(storedImagePath).to.match(/\/tmp\/[0-9a-z\-]+\.jpg/);
-          done();
-        });
-    });
-
     it('rejects empty images');
   });
 
