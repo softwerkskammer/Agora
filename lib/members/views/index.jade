@@ -1,13 +1,18 @@
 extends ../../../views/layout
 include ./memberlist-mixin
+include ./tagcloud
 
 block title
   | #{t('members.overview')}
 
 block content
+  .page-header
+    h2 #{t('members.members')}
+  +memberlistHeading(t('members.has'), members.length)
   .row
-    .col-md-12
-      .page-header
-        h2 #{t('members.members')}
-      +memberlistHeading(t('members.has'), members.length)
+    .col-md-6
       +memberlist(members)
+    .col-md-6
+        #tag-cloud
+        +tagCloud(wordList)
+

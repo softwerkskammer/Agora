@@ -12,7 +12,8 @@
     "fullcalendar": "2.0.2",
     "jquery": "2.1.1",
     "jquery-validation": "1.13.0",
-    "pick-a-color": "1.2.3"
+    "pick-a-color": "1.2.3",
+    "jqcloud2": "2.0.1"
   },
   "resolutions": {
     "bootstrap": "3.2.0",

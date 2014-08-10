@@ -62,7 +62,8 @@ async.parallel(
         {id: 'auth01', nickname: 'Testi', firstname: 'Ich', lastname: 'Tester', email: 'test@me.de', location: 'Hier', profession: 'Testbeauftragter', reference: '-', authentications: ['auth01']},
         {id: 'auth02', nickname: 'Schumi', firstname: 'Michael', lastname: 'Schumacher', email: 'michael@schumacher.de', location: 'Hürth', profession: 'Ex-Rennfahrer', reference: '-', authentications: ['auth02']},
         {id: 'auth03', nickname: 'Balli', firstname: 'Michael', lastname: 'Ballack', email: 'michael@ballack.de', location: 'Görlitz', profession: 'Ex-Fußballer', reference: '-', authentications: ['auth03']},
-        {id: 'auth04', nickname: 'Jamie', firstname: 'James', lastname: 'Hetfield', email: 'james@hetfield.com', location: 'Downey, LA', profession: 'Musiker', reference: '-', authentications: ['auth04']}
+        {id: 'auth04', nickname: 'Jamie', firstname: 'James', lastname: 'Hetfield', email: 'james@hetfield.com', location: 'Downey, LA', profession: 'Musiker', reference: '-', authentications: ['auth04']},
+        {id: 'auth05', nickname: 'leider', firstname: 'Andreas', lastname: 'Leidig', email: 'andreas@leidig.com', location: 'Jöhlingen', profession: 'SoCra', interests: 'clean code tag1 skiing smoking ', reference: '-', authentications: ['auth05']}
       ];
       async.map(members, function (member, callback) {
         membersPersistence.getById(member.id, function (err, existingMember) {
