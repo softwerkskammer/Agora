@@ -6,6 +6,9 @@ include ./mixins
 block title
   = activityResultName
 
+block scripts
+  script(src='/clientscripts/activityResults.js')
+
 block content
   #detail-overlay.noisy_red
     .header
@@ -47,38 +50,12 @@ block content
             button(type="submit").btn.btn-success.pull-right= t('activityresults.submit')
             span#btn-cancel.btn.btn-warning= t('activityresults.cancel')
 
-
-      script.
-        function getPreview(files, callback) {
-          if(!files || !files[0])
-            return null;
-          var reader = new FileReader();
-          reader.onload = function (e) {
-            callback(e.target.result);
-          };
-          reader.readAsDataURL(files[0]);
-        }
-
-        $("#input-file").on("change", function () {
-          getPreview(this.files, function (imagedata) {
-            $("img#preview").attr("src", imagedata);
-            $("#previewContainer").slideDown();
-          });
-          $('.record').hide();
-        });
-
-        $('#btn-cancel').click(function () {
-          $('#previewContainer').slideUp(200, function() {
-            $('.record').slideDown();
-          });
-        });
-
   hr
   each timestamp in dayTimeStamps
     - var columns = days[timestamp]
+    h3(style='margin-top: 5px;')= moment(timestamp*1000).lang(language).format("dddd, l")
     .row
       .col-md-12(style='overflow-x: auto')
-        h3(style='margin-top: 5px;')= moment(timestamp*1000).lang(language).format("dddd, l")
 
         - var i = 0;
         table.row.timeline
@@ -96,23 +73,3 @@ block content
                     img.thumb(src=img.uri + '?size=thumb', alt=img.title, title=img.title)
                     span.small(style="color: black")
                       +thumbnailInfos(img)
-
-  script(type='text/javascript').
-    $('#recordForm').on('submit', function() {
-      $('#recordForm button[type="submit"]').prepend($('<i class="fa fa-spinner fa-spin"/>&nbsp;'));
-    });
-
-    var numColsPerScreen = 5;
-    function resizeColumns(totalWidth) {
-      var columns = $('.timeline td, .timeline th');
-      var newColumnWidth = Math.round(totalWidth/numColsPerScreen)+"px";
-      columns.css('width', newColumnWidth);
-      columns.css('min-width', newColumnWidth);
-    }
-
-    $(function() {
-      resizeColumns(window.screen.availWidth);
-      $(window).resize(function () {
-        resizeColumns(window.screen.availWidth);
-      });
-    })
