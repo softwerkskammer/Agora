@@ -32,6 +32,7 @@ module.exports = function (grunt) {
       'bower_components/jquery-validation/src/localization/messages_de.js',
       'bower_components/jquery-validation/src/localization/methods_de.js',
       'bower_components/bootstrap-timepicker/js/bootstrap-timepicker.js',
+      'bower_components/jqcloud2/dist/jqcloud.min.js',
       'node_modules/URIjs/src/URI.js',
       'frontend/javascript/agora.js'
     ]
@@ -53,6 +54,7 @@ module.exports = function (grunt) {
       'bower_components/jquery-validation/dist/jquery.validate.js',
       'bower_components/jquery-validation/dist/additional-methods.js',
       'bower_components/bootstrap-timepicker/js/bootstrap-timepicker.js',
+      'bower_components/jqcloud2/dist/jqcloud.min.js',
       'node_modules/URIjs/src/URI.js',
       'frontend/javascript/agora.js'
     ]
@@ -187,7 +189,8 @@ module.exports = function (grunt) {
             'frontend/3rd_party_css/dataTables.bootstrap.css',
             'frontend/3rd_party_css/dataTables.fontAwesome.css',
             'build/stylesheets/less/agora.less',
-            'build/stylesheets/less/activityresults.less'
+            'build/stylesheets/less/activityresults.less',
+            'bower_components/jqcloud2/dist/jqcloud.css'
           ]
         }
       }
