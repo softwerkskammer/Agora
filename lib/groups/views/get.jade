@@ -32,7 +32,7 @@ block content
 
       if (accessrights.canParticipateInGroup(group))
         if (userIsGroupMember)
-          a.btn.btn-primary(href='unsubscribe/#{group.id}') #{t('groups.leave')}
+          a.btn.btn-default(href='unsubscribe/#{group.id}') #{t('groups.leave')}
         else
           a.btn.btn-primary(href='subscribe/#{group.id}') #{t('groups.join')}
       .row
