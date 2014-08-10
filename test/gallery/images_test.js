@@ -17,7 +17,6 @@ describe('/gallery', function () {
   var storedImageId = 'image.jpg';
   var imagePath = __dirname + '/fixtures/' + storedImageId;
   var generatedImageId;
-  var storedImagePath;
 
   afterEach(function () {
     sinon.restore();
@@ -27,7 +26,6 @@ describe('/gallery', function () {
     beforeEach(function () {
       generatedImageId = '8fe5861b-53cb-49db-929f-81eb77b4d05c';
       sinon.stub(galleryrepository, 'storeImage', function (imagePath, callback) {
-        storedImagePath = imagePath;
         callback(null, generatedImageId);
       });
     });
