@@ -387,7 +387,8 @@
         "participation_removed": "Schade, dass Du nicht dabei sein wirst.",
         "participation_for_resource_removed": "Schade, dass Du bei \"__resourceName__\" nicht dabei sein wirst.",
         "waitinglist_added": "Du bist jetzt auf der Warteliste.",
-        "waitinglist_removed": "Du bist jetzt nicht mehr auf der Warteliste."
+        "waitinglist_removed": "Du bist jetzt nicht mehr auf der Warteliste.",
+        "does_not_exist": "Die Aktivität existiert nicht."
       },
       "addon": {
         "saved": "Deine Zusatzinformationen wurden gespeichert."

@@ -386,7 +386,8 @@
         "participation_removed": "What a pity that you will not participate.",
         "participation_for_resource_removed": "What a pity that you will not participate in \"__resourceName__\".",
         "waitinglist_added": "You have been added to the waiting list.",
-        "waitinglist_removed": "You have been removed from the waiting list."
+        "waitinglist_removed": "You have been removed from the waiting list.",
+        "does_not_exist": "The activity does not exist."
       },
       "addon": {
         "saved": "Your additional information has been saved."
