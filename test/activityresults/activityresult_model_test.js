@@ -79,5 +79,21 @@ describe('Activity result', function () {
 
       expect(activityResult.getDistinctPresentTags()).to.be.a.permutationOf(['tagA', 'tagC', 'tagD']);
     });
+
+    it('should not collect undefined tags', function () {
+      var activityResult = new ActivityResult({
+        'id': 'dontcare',
+        'photos': [
+          {
+            'tags': ['tagA', 'tagC']
+          },
+          {
+            'tags': null
+          }
+        ]
+      });
+
+      expect(activityResult.getDistinctPresentTags()).to.be.a.permutationOf(['tagA', 'tagC']);
+    });
   });
 });
