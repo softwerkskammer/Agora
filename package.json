@@ -73,6 +73,7 @@
   "devDependencies": {
     "grunt": "0.4.5",
     "grunt-bower-install-simple": "0.9.3",
+    "grunt-cli": "~0.1.13",
     "grunt-contrib-clean": "0.5.0",
     "grunt-contrib-copy": "0.5.0",
     "grunt-contrib-jade": "0.12.0",
@@ -94,8 +95,7 @@
     "request": "2.39.0",
     "sinon": "1.10.3",
     "supertest": "0.13.0",
-    "utils-merge": "1.0.0",
-    "grunt-cli": "~0.1.13"
+    "utils-merge": "1.0.0"
   },
   "scripts": {
     "start": "node start",
