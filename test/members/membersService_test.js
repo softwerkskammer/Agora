@@ -104,5 +104,66 @@ describe('MembersService', function () {
       done();
     });
   });
+
+  describe('"toWordList"', function () {
+    it('trims simple interest strings', function () {
+      var members = [];
+      members.push(new Member({interests: 'Heinz, Becker'}));
+      var result = membersService.toWordList(members);
+      expect(result[0]).to.include('Heinz');
+      expect(result[1]).to.include('Becker');
+    });
+
+    it('adds tags inside one member', function () {
+      var members = [];
+      members.push(new Member({interests: 'Heinz, Heinz'}));
+      var result = membersService.toWordList(members);
+      expect(result).to.have.length(1);
+      expect(result[0]).to.eql({text: 'Heinz', weight: 2});
+    });
+
+    it('uses the most common writing', function () {
+      var members = [];
+      members.push(new Member({interests: 'Heinz, heinz, HeInZ, Heinz, Heinz, heinz'}));
+      var result = membersService.toWordList(members);
+      expect(result).to.have.length(1);
+      expect(result[0]).to.eql({text: 'Heinz', weight: 6});
+    });
+
+    it('adds tags of two members', function () {
+      var members = [];
+      members.push(new Member({interests: ' Heinz'}));
+      members.push(new Member({interests: 'Heinz  '}));
+      var result = membersService.toWordList(members);
+      expect(result).to.have.length(1);
+      expect(result[0]).to.eql({text: 'Heinz', weight: 2});
+    });
+
+    it('handles empty interests tags', function () {
+      var members = [];
+      members.push(new Member({}));
+      members.push(new Member({interests: 'Heinz  '}));
+      var result = membersService.toWordList(members);
+      expect(result).to.have.length(1);
+      expect(result[0]).to.eql({text: 'Heinz', weight: 1});
+    });
+
+    it('ignores differences in upper lower case', function () {
+      var members = [];
+      members.push(new Member({interests: ' heInz'}));
+      members.push(new Member({interests: 'Heinz  '}));
+      var result = membersService.toWordList(members);
+      expect(result).to.have.length(1);
+      expect(result[0]).to.eql({text: 'heInz', weight: 2});
+    });
+
+    it('ignores " and \'', function () {
+      var members = [];
+      members.push(new Member({interests: ' "H\'ei"nz"'}));
+      var result = membersService.toWordList(members);
+      expect(result).to.have.length(1);
+      expect(result[0]).to.eql({text: 'Heinz', weight: 1});
+    });
+  });
 });
 
