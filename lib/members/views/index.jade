@@ -1,6 +1,5 @@
 extends ../../../views/layout
 include ./memberlist-mixin
-include ./tagcloud
 
 block title
   | #{t('members.overview')}
@@ -13,6 +12,5 @@ block content
     .col-md-6
       +memberlist(members)
     .col-md-6
-        #tag-cloud
-        +tagCloud(wordList)
+      +tagCloud(members)
 

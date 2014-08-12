@@ -1,6 +1,0 @@
-mixin tagCloud(wordList)
-    script.
-        var jsonString = '!{JSON.stringify(wordList)}';
-        $(document).ready(function() {
-          $("#tag-cloud").jQCloud(JSON.parse(jsonString));
-        });
