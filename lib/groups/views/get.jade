@@ -28,6 +28,8 @@ block content
         | 
         a(href='mailto:#{group.id}@softwerkskammer.org')
           | #{group.id}@softwerkskammer.org
+  .row
+    .col-md-6
       | !{group.descriptionHTML()}
 
       if (accessrights.canParticipateInGroup(group))
@@ -35,16 +37,18 @@ block content
           a.btn.btn-default(href='unsubscribe/#{group.id}') #{t('groups.leave')}
         else
           a.btn.btn-primary(href='subscribe/#{group.id}') #{t('groups.join')}
-      .row
-        if (blogposts.length > 0)
-          .col-md-6
-            h4 #{t('members.members')}:
-            +memberlistHeading(t('groups.has'), users.length)
-            +memberlist(users, organizers)
-          .col-md-6
-            +blogposts-panel(blogposts)
-        else
-          .col-md-12
-            h4 #{t('members.members')}:
-            +memberlistHeading(t('groups.has'), users.length)
-            +memberlist(users, organizers)
+    .col-md-6
+      +tagCloud(users, group)
+  .row
+    if (blogposts.length > 0)
+      .col-md-6
+        h4 #{t('members.members')}:
+        +memberlistHeading(t('groups.has'), users.length)
+        +memberlist(users, organizers)
+      .col-md-6
+        +blogposts-panel(blogposts)
+    else
+      .col-md-12
+        h4 #{t('members.members')}:
+        +memberlistHeading(t('groups.has'), users.length)
+        +memberlist(users, organizers)

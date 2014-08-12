@@ -24,3 +24,35 @@ mixin memberlist(members, organizers)
 mixin linkedMember(nickname)
   a(href='/members/#{encodeURIComponent(nickname)}') #{nickname}
 
+mixin tagCloud(members, group)
+  #tag-cloud
+  script.
+    var 
+      jsonString = '!{JSON.stringify(tagclouddata(members))}';
+    $(document).ready(function() {
+      $("#tag-cloud").jQCloud(
+      JSON.parse(jsonString), 
+      {
+        steps: 7,
+        autoResize: true,
+        removeOverflowing: true,
+        fontSize: function(width, height, weight) {
+          var 
+            max = Math.min(width * 0.1, 60), 
+            min = Math.min(width * 0.02, 10);
+          return Math.round(min + (max - min) * 1.0 / (this.options.steps-1) * (weight - 1)) + 'px';
+        },
+        colors: function(weight) {
+          var
+            start = tinycolor("#{group ? group.color : '#cb6868'}"),
+            seventy = tinycolor.lighten(tinycolor.desaturate(start, 30), 10),
+            hundred = tinycolor.lighten(tinycolor.desaturate(seventy, 30), 10),
+            gradient = tinygradient([
+              {color: start, pos: 0},
+              {color: seventy, pos: 0.8},
+              {color: hundred, pos: 1}
+            ]);
+          return gradient.hsv(this.options.steps, true).map(function(tinycolor) { return tinycolor.toHexString(); })[this.options.steps - weight];
+        }
+      });
+    });
