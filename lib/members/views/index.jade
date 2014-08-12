@@ -7,10 +7,10 @@ block title
 block content
   .page-header
     h2 #{t('members.members')}
-  +memberlistHeading(t('members.has'), members.length)
   .row
-    .col-md-6
-      +memberlist(members)
-    .col-md-6
+    .col-md-6.col-md-push-6
       +tagCloud(members)
+    .col-md-6.col-md-pull-6
+      +memberlistHeading(t('members.has'), members.length)
+      +memberlist(members)
 
