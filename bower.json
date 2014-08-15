@@ -11,7 +11,7 @@
     "font-awesome": "4.1.0",
     "fullcalendar": "2.0.2",
     "jquery": "2.1.1",
-    "jquery.qrcode": "~0.9.1"
+    "jquery.qrcode": "~0.9.1",
     "jquery-validation": "1.13.0",
     "pick-a-color": "1.2.3",
     "tinygradient": "0.2.0"
