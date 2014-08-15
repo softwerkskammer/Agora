@@ -172,6 +172,7 @@
   "activityresults": {
     "cancel": "Cancel",
     "done": "Done",
+    "nothing_to_see_here": "There is nothing here yet",
     "record_image": "Record",
     "submit": "Submit",
     "photoTitlePlaceholder": "What's on this photo?"

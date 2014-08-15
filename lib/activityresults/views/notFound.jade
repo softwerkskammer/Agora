@@ -3,13 +3,13 @@ extends ../../../views/layout
 include  ../../../views/formComponents
 
 block title
-  | Hier gibt es (noch) nichts zu sehen
+  =t('activityresults.nothing_to_see_here')
 
 block content
   .row
     .col-md-12
       .page-header
-        h2 Hier gibt es (noch) nichts zu sehen
+        h2= t('activityresults.nothing_to_see_here')
 
   .row
     .col-md-6
@@ -22,4 +22,4 @@ block content
           label(for='inputTag') Tags (comma-separated)
           input.form-control#inputTags(name='tags',type='text')
         .form-group
-          button.btn.btn-primary(type='submit') Jetzt anlegen
+          button.btn.btn-primary(type='submit') =t('activityresults.submit')
