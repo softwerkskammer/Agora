@@ -95,5 +95,21 @@ describe('Activity result', function () {
 
       expect(activityResult.getDistinctPresentTags()).to.be.a.permutationOf(['tagA', 'tagC']);
     });
+
+    it('should not collect undefined tags', function () {
+      var activityResult = new ActivityResult({
+        'id': 'dontcare',
+        'photos': [
+          {
+            'tags': ['tagA', 'tagC']
+          },
+          {
+            'tags': [undefined]
+          }
+        ]
+      });
+
+      expect(activityResult.getDistinctPresentTags()).to.be.a.permutationOf(['tagA', 'tagC']);
+    });
   });
 });
