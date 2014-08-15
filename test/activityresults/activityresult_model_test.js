@@ -34,6 +34,10 @@ describe('Activity result', function () {
     expect(new ActivityResult({created_by: 'me'})).to.have.property('created_by', 'me');
   });
 
+  it('should have a field of defined tags for an activityResult', function () {
+    expect(new ActivityResult({tags: ['1', '2']}).tags).to.be.eql(['1', '2']);
+  });
+
   describe('photo subdocument', function () {
     it('should be retrievable by id', function () {
       var activityResult = new ActivityResult({
@@ -62,6 +66,54 @@ describe('Activity result', function () {
 
       activityResult.updatePhotoById('my_photo_id', {date: 'thendate'});
       expect(activityResult.getPhotoById('my_photo_id')).to.have.property('date', 'thendate');
+    });
+
+    it('should collect all distinct tags present', function () {
+      var activityResult = new ActivityResult({
+        'id': 'dontcare',
+        'photos': [
+          {
+            'tags': ['tagA', 'tagC']
+          },
+          {
+            'tags': ['tagA', 'tagD']
+          }
+        ]
+      });
+
+      expect(activityResult.getDistinctPresentTags()).to.be.a.permutationOf(['tagA', 'tagC', 'tagD']);
+    });
+
+    it('should not collect undefined tags', function () {
+      var activityResult = new ActivityResult({
+        'id': 'dontcare',
+        'photos': [
+          {
+            'tags': ['tagA', 'tagC']
+          },
+          {
+            'tags': null
+          }
+        ]
+      });
+
+      expect(activityResult.getDistinctPresentTags()).to.be.a.permutationOf(['tagA', 'tagC']);
+    });
+
+    it('should not collect undefined tags', function () {
+      var activityResult = new ActivityResult({
+        'id': 'dontcare',
+        'photos': [
+          {
+            'tags': ['tagA', 'tagC']
+          },
+          {
+            'tags': [undefined]
+          }
+        ]
+      });
+
+      expect(activityResult.getDistinctPresentTags()).to.be.a.permutationOf(['tagA', 'tagC']);
     });
   });
 });

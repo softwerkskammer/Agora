@@ -14,20 +14,8 @@ block content
         img#thumbnail(src=photo.uri + '?size=thumb')
       .col-xs-12.col-md-6
         ul.tag-list.row
-          +tagButton('Berlin')
-          +tagButton('Böhmesaal')
-          +tagButton('Bremen')
-          +tagButton('Dortmund')
-          +tagButton('Dresden')
-          +tagButton('Düsseldorf')
-          +tagButton('Erfurt')
-          +tagButton('Hamburg')
-          +tagButton('Hannover')
-          +tagButton('Köln')
-          +tagButton('Potsdam')
-          +tagButton('Stuttgart')
-          +tagButton('Wiesbaden')
-
+          each availableTag, i in activityResult.tags
+            +tagButton(availableTag)
     .row
       .col-md-8
         .form-group
