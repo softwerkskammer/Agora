@@ -173,6 +173,7 @@
   "activityresults": {
     "cancel": "Abbrechen",
     "done": "Fertig",
+    "nothing_to_see_here": "Hier gibt es noch nichts zu sehen",
     "record_image": "Aufzeichnen",
     "submit": "Weiter",
     "photoTitlePlaceholder": "Was kann man hier sehen?"
