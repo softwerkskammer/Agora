@@ -46,6 +46,7 @@ describe('Security regarding', function () {
         firstname: 'Hans', lastname: 'Dampf', authentications: [], subscribedGroups: []});
       sinon.stub(groupsService, 'getAllAvailableGroups', function (callback) { callback(null, []); });
       sinon.stub(groupsAndMembersService, 'getUserWithHisGroups', function (nickname, callback) { callback(null, dummymember); });
+      sinon.stub(memberstore, 'allMembers', function (callback) { callback(null, [dummymember]); });
     });
 
     afterEach(function () {

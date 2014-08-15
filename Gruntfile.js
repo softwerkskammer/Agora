@@ -17,6 +17,8 @@ module.exports = function (grunt) {
     'public/clientscripts/global_de.js': [
       'locales/frontend_de.js',
       'bower_components/jquery/dist/jquery.js',
+      'bower_components/select2/select2.js',
+      'bower_components/select2/select2_locale_de.js',
       'bower_components/autoNumeric/autoNumeric.js',
       'bower_components/bootstrap/dist/js/bootstrap.js',
       'bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js',
@@ -44,6 +46,7 @@ module.exports = function (grunt) {
     'public/clientscripts/global_en.js': [
       'locales/frontend_en.js',
       'bower_components/jquery/dist/jquery.js',
+      'bower_components/select2/select2.js',
       'bower_components/autoNumeric/autoNumeric.js',
       'bower_components/bootstrap/dist/js/bootstrap.js',
       'bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js',
@@ -116,6 +119,13 @@ module.exports = function (grunt) {
         dest: 'build/stylesheets/less',
         expand: true,
         flatten: true
+      },
+      select2images: {
+        cwd: 'bower_components/select2/',
+        src: ['*.png', '*.gif'],
+        dest: 'public/stylesheets',
+        expand: true,
+        flatten: false
       }
     },
     jslint: {
@@ -192,6 +202,8 @@ module.exports = function (grunt) {
             'bower_components/datatables/media/css/jquery.dataTables.css',
             'frontend/3rd_party_css/dataTables.bootstrap.css',
             'frontend/3rd_party_css/dataTables.fontAwesome.css',
+            'bower_components/select2/select2.css',
+            'bower_components/select2-bootstrap-css/select2-bootstrap.css',
             'build/stylesheets/less/agora.less',
             'build/stylesheets/less/activityresults.less'
           ]
