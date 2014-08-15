@@ -7,6 +7,7 @@ var expect = require('must');
 
 var beans = conf.get('beans');
 var activityresultsService = beans.get('activityresultsService');
+var activityresultsPersistence = beans.get('activityresultsPersistence');
 
 var createApp = require('../../testutil/testHelper')('activityresultsApp').createApp;
 
@@ -88,6 +89,28 @@ describe('/activityresults', function () {
         .send({ activityResultName: activityResultName })
         .expect('Location', app.path() + '/' + activityResultName)
         .expect(303, done);
+    });
+
+    it('should create a new activity result with tags', function (done) {
+      var theResult;
+      sinon.stub(activityresultsPersistence, 'save', function (activityResult, callback) {
+        theResult = activityResult;
+        callback(null, activityResult);
+      });
+
+      var app = createApp(1);
+      request(app)
+        .post('/')
+        .type('form')
+        .send({ activityResultName: "MyActivityResult", tags: 'myFirstTag,mySecondTag' })
+        .expect(303)
+        .end(function (err) {
+          if (err) {
+            done(err);
+          }
+          expect(theResult.tags).to.eql(['myFirstTag', 'mySecondTag']);
+          done();
+        });
     });
 
     it('should reject request without activityResultName parameter', function (done) {
