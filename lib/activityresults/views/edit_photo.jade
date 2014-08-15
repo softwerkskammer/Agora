@@ -14,12 +14,8 @@ block content
         img#thumbnail(src=photo.uri + '?size=thumb')
       .col-xs-12.col-md-6
         ul.tag-list.row
-          +tagButton('Berlin')
           each availableTag, i in activityResult.tags
-            li
-              input(type="radio",name="tag",value=availableTag,id="tag-"+i)
-              label.btn.btn-default(for="tag-" + i) # #{availableTag}
-
+            +tagButton(availableTag)
     .row
       .col-md-8
         .form-group
