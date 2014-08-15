@@ -140,6 +140,22 @@
   }
 }
 
+@media all {
+  .page-break	{ display: none; }
+}
+
+@media print {
+  .page-break	{ display: block; page-break-before: always; }
+}
+
+.page {
+  margin: 0 auto;
+  text-align: center;
+  > * {
+    margin-top: 50px;
+  }
+}
+
 .prev-img, .next-img {
   position: relative;
   width: 100px;
