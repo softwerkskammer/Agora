@@ -9,7 +9,7 @@ var beans = conf.get('beans');
 var activityresultsService = beans.get('activityresultsService');
 var activityresultsPersistence = beans.get('activityresultsPersistence');
 
-var removeServerpathsDummay = require('../../testutil/removeServerpathsDummyInTests');
+var removeServerpathsDummy = require('../../testutil/removeServerpathsDummyInTests');
 
 var createApp = require('../../testutil/testHelper')('activityresultsApp').createApp;
 
@@ -99,14 +99,14 @@ describe('/activityresults', function () {
     });
 
     it('should reject request without activityResultName parameter', function (done) {
-      request(createApp(MEMBER_ID, removeServerpathsDummay))
+      request(createApp(MEMBER_ID, removeServerpathsDummy))
         .post('/')
         .type('form')
         .expect(500, done);
     });
 
     it('should reject request with empty activityResultName parameter', function (done) {
-      request(createApp(MEMBER_ID, removeServerpathsDummay))
+      request(createApp(MEMBER_ID, removeServerpathsDummy))
         .post('/')
         .type('form')
         .send({ activityResultName: '' })

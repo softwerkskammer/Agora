@@ -11,9 +11,7 @@ describe("the gallery repository on real files", function () {
     var storedImageId = 'image.jpg';
     var imagePath = __dirname + '/fixtures/' + storedImageId;
     service.storeImage(imagePath, function (err, imageId) {
-      service.retrieveScaledImage(imageId, undefined, undefined, function (err) {
-        done(err);
-      });
+      service.retrieveScaledImage(imageId, undefined, undefined, done);
     });
   });
 
@@ -21,9 +19,7 @@ describe("the gallery repository on real files", function () {
     var storedImageId = 'image.jpg';
     var imagePath = __dirname + '/fixtures/' + storedImageId;
     service.storeImage(imagePath, function (err, imageId) {
-      service.retrieveScaledImage(imageId, 100, 100, function (err) {
-        done(err);
-      });
+      service.retrieveScaledImage(imageId, 100, 100, done);
     });
   });
 
