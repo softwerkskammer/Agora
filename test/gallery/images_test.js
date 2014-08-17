@@ -1,12 +1,11 @@
 'use strict';
-var stream = require('stream');
 var conf = require('../../testutil/configureForTest');
 var request = require('supertest');
 var sinon = require('sinon').sandbox.create();
 var expect = require('must');
 
 var beans = conf.get('beans');
-var galleryrepository = beans.get('galleryrepositoryService');
+var galleryService = beans.get('galleryService');
 
 var createApp = require('../../testutil/testHelper')('galleryApp').createApp;
 
@@ -25,7 +24,7 @@ describe('/gallery', function () {
   describe('POST /', function () {
     beforeEach(function () {
       generatedImageId = '8fe5861b-53cb-49db-929f-81eb77b4d05c';
-      sinon.stub(galleryrepository, 'storeImage', function (imagePath, callback) {
+      sinon.stub(galleryService, 'storeImage', function (imagePath, callback) {
         callback(null, generatedImageId);
       });
     });
@@ -39,12 +38,11 @@ describe('/gallery', function () {
         .expect('Location', app.path() + '/' + generatedImageId, done);
     });
 
-    it('rejects empty images');
   });
 
   describe('GET /{imageId}', function () {
     it('responds with the image', function (done) {
-      sinon.stub(galleryrepository, 'retrieveImage', function (imageId, callback) {
+      sinon.stub(galleryService, 'retrieveScaledImage', function (imageId, width, height, callback) {
         if (storedImageId === imageId) {
           callback(null, imagePath);
         }

@@ -10,7 +10,7 @@ var activityresultsService = beans.get('activityresultsService');
 var createApp = require('../../testutil/testHelper')('activityresultsApp').createApp;
 
 var ActivityResult = beans.get('activityresult');
-var galleryRepository = beans.get('galleryrepositoryService');
+var galleryService = beans.get('galleryService');
 
 var MEMBER_ID = 1;
 var OTHER_MEMBER_ID = 2;

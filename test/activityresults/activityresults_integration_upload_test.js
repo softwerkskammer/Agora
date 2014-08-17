@@ -17,7 +17,7 @@ var BAD_REQUEST = 400;
 var NOT_FOUND = 404;
 
 var ActivityResult = beans.get('activityresult');
-var galleryRepository = beans.get('galleryrepositoryService');
+var galleryService = beans.get('galleryService');
 
 describe('/activityresults/:result/upload', function () {
   afterEach(function () {
@@ -32,7 +32,7 @@ describe('/activityresults/:result/upload', function () {
 
   describe("POST /", function () {
     it("should store the image via gallery service and redirect to edit", function (done) {
-      sinon.stub(galleryRepository, 'storeImage', function (tmpFile, callback) {
+      sinon.stub(galleryService, 'storeImage', function (tmpFile, callback) {
         callback(null, "my-custom-image-id");
       });
 
