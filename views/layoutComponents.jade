@@ -1,10 +1,9 @@
 mixin administrationMenu
   if (accessrights.isSuperuser())
     li(data-agoranav='administration').dropdown.nav
-      a.dropdown-toggle(href='#', data-toggle='dropdown')
+      a(href='#')
         i.fa.fa-dashboard.fa-fw
         | &nbsp;#{t('general.administration')}&nbsp;
-        b.caret
       ul.dropdown-menu
         li: a(href='/administration/announcementTable')
           i.fa.fa-globe.fa-fw
@@ -26,10 +25,9 @@ mixin loginMenu(forInline)
   -var inlineClass = forInline ? 'visible-xs' : ''
   if (accessrights.isRegistered())
     li.dropdown(class=inlineClass)
-      a.dropdown-toggle(href='#', data-toggle='dropdown')
+      a(href='#')
         i.fa.fa-info-circle.fa-fw &nbsp;
         | #{user.member.nickname()} 
-        b.caret
       ul.dropdown-menu
         li: a(href='/members/edit/#{encodeURIComponent(user.member.nickname())}')
           i.fa.fa-edit.fa-fw
@@ -83,7 +81,7 @@ mixin notificationsBlock(notificationmessage)
     h4 #{t(contents.title)}
     | #{t(contents.text, contents.additionalArguments)}
 
-mixin topNavbar
+mixin topNavbar(xs)
   .navbar-header
     a.navbar-brand.no-padding(href='/')
       img(src='/img/SoftwerkskammerWappenLinks.png', alt='Softwerkskammer', width='234', height='60')
@@ -92,42 +90,31 @@ mixin topNavbar
       i.fa.fa-bars.fa-lg
 
   .navbar-collapse.collapse.collapse-top
-    ul.nav.navbar-nav.navbar-right.hidden-xs.bottom
-      +loginMenu
-      li: a(style='padding: 2px;', href='/language/de?currentUrl=#{encodeURIComponent(currentUrl)}'): img(src='/img/flags/Germany.png', alt='Deutsch', width='35', height='24')
-      li: a(style='padding: 2px;', href='/language/en-gb?currentUrl=#{encodeURIComponent(currentUrl)}'): img(src='/img/flags/United-Kingdom.png', alt='English', width='35', height='24')
+    if (!xs)
+      ul.nav.navbar-nav.navbar-right.bottom
+        +loginMenu
+        li: a(style='padding: 2px;', href='/language/de?currentUrl=#{encodeURIComponent(currentUrl)}'): img(src='/img/flags/Germany.png', alt='Deutsch', width='35', height='24')
+        li: a(style='padding: 2px;', href='/language/en-gb?currentUrl=#{encodeURIComponent(currentUrl)}'): img(src='/img/flags/United-Kingdom.png', alt='English', width='35', height='24')
     ul.nav.navbar-nav.bottom
       li(data-agoranav='activities'): a(href='/activities/upcoming')
-        span.hidden-sm
-          i.fa.fa-calendar.fa-fw
-          | &nbsp;#{t('activities.activities')}
-        span.visible-sm
-          i.fa.fa-calendar.fa-fw
+        i.fa.fa-calendar.fa-fw
+        span.hidden-sm &nbsp;#{t('activities.activities')}
       li(data-agoranav='groups'): a(href='/groups')
-        span.hidden-sm
-          i.fa.fa-group.fa-fw
-          | &nbsp;#{t('groups.groups')}
-        span.visible-sm
-          i.fa.fa-group.fa-fw
-      li(data-agoranav='wiki').dropdown
-        a.dropdown-toggle(href='#', data-toggle='dropdown')
-          span.hidden-sm
-            i.fa.fa-book.fa-fw
-            | &nbsp;#{t('wiki.wiki')}&nbsp;
-            b.caret
-          span.visible-sm
-            i.fa.fa-book.fa-fw
-            b.caret
+        i.fa.fa-group.fa-fw
+        span.hidden-sm &nbsp;#{t('groups.groups')}
+      li(data-agoranav='wiki')
+        a(href='#')
+          i.fa.fa-book.fa-fw
+          span.hidden-sm &nbsp;#{t('wiki.wiki')}&nbsp;
         ul.dropdown-menu
-          if (wikisubdirs)
-            for subdir in wikisubdirs
-              li: a(href='/wiki/#{subdir}/') #{subdir}
+          if (structuredWikisubdirs)
+            for wikisubdirs, key in structuredWikisubdirs
+              li: a(href='#') #{t('groups.' + key)}
+                ul.dropdown-menu
+                  for subdir in wikisubdirs
+                    li: a(href='/wiki/#{subdir}/') #{subdir}
       li(data-agoranav='members'): a(href='/members')
-        span.hidden-sm
-          if (accessrights.isRegistered())
-            i.fa.fa-user.fa-fw
-            | &nbsp;#{t('members.members')}
-        span.visible-sm
-          if (accessrights.isRegistered())
-            i.fa.fa-user.fa-fw
+        if (accessrights.isRegistered())
+          i.fa.fa-user.fa-fw
+          span.hidden-sm &nbsp;#{t('members.members')}
       +loginMenu(true)
