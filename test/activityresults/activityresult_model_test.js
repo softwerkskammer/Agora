@@ -102,11 +102,11 @@ describe('Activity result', function () {
       var activityResult = new ActivityResult({
         id: 'dontcare',
         photos: [
-          { id: 'name.jpg', uri: '/galery/name.jpg'}
+          { id: 'name.jpg', uri: '/gallery/legacyname.jpg'}
         ]
       });
 
-      expect(activityResult.uriForPhoto('name.jpg')).to.eql('/gallery/name.jpg');
+      expect(activityResult.uriForPhoto('name.jpg')).to.eql('/gallery/legacyname.jpg');
     });
 
     it('displays a uri based on the id', function () {
