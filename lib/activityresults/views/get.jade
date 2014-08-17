@@ -4,7 +4,7 @@ include  ../../../views/formComponents
 include ./mixins
 
 block title
-  = activityResultName
+  | #{activityResult.id}
 
 block scripts
   script(src='/clientscripts/activityResults.js')
@@ -33,7 +33,7 @@ block content
 
   .row
     .col-md-12
-      h2(style='margin-top: 5px;')= activityResultName
+      h2(style='margin-top: 5px;') #{activityResult.id}
 
   .row
     .col-md-12
@@ -69,7 +69,7 @@ block content
             each column, columnTitle in columns
               td.col-without-padding.venue(class=getBackgroundForIndex(i++))
                 each img in column
-                  a.thumb(href=img.uri, data-columntitle='#'+columnTitle)
-                    img.thumb(src=img.uri + '?size=thumb', alt=img.title, title=img.title)
+                  a.thumb(href=activityResult.uriForPhoto(img.id), data-columntitle='#'+columnTitle)
+                    img.thumb(src=activityResult.uriForPhoto(img.id) + '?size=thumb', alt=img.title, title=img.title)
                     span.small(style="color: black")
                       +thumbnailInfos(img)

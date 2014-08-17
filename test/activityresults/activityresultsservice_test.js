@@ -52,12 +52,14 @@ describe('ActivityResult service', function () {
 
   describe('addPhotoToActivityResult', function () {
     it('should add an image to an activityresult', function (done) {
-      sinon.stub(persistence, 'save', function (object, callback) {
-        expect(object.photos).to.have.length(2);
+      var saveStub = sinon.stub(persistence, 'save', function (object, callback) {
         callback();
       });
 
-      service.addPhotoToActivityResult('Hackergarten2', {uri: 'my_uri'}, function (err) {
+      service.addPhotoToActivityResult('Hackergarten2', undefined, 'my_uri', 'memberId', function (err) {
+        expect(saveStub.called).to.be(true);
+        var objectToSave = saveStub.args[0][0];
+        expect(objectToSave.photos).to.have.length(2);
         done(err);
       });
     });

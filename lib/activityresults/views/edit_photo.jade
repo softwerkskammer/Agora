@@ -1,29 +1,34 @@
 extends ../../../views/layoutOnlyMain
 
 include  ../../../views/formComponents
-include ./mixins
+
+mixin tagButton(tagValue)
+  - var inputId = 'tag-'+tagValue;
+  li.col-md-4.col-xs-6
+    input(id=inputId,type="radio",name="tag",value=tagValue)
+    label.btn.btn-default(for=inputId) ##{tagValue}
 
 block title
-  = activityResult.id + " / Edit Photo"
+  = activityResult.id + ' / Edit Photo'
 
 block content
-  form(role="form",method="post")
+  form(role='form', method='post')
     +csrf
     .row
       .col-xs-12.col-md-3.thumbnail-container
-        img#thumbnail(src=photo.uri + '?size=thumb')
+        img#thumbnail(src=activityResult.uriForPhoto(photo.id) + '?size=thumb')
       .col-xs-12.col-md-6
         ul.tag-list.row
-          each availableTag, i in activityResult.tags
+          each availableTag in activityResult.tags
             +tagButton(availableTag)
     .row
       .col-md-8
         .form-group
-          input.form-control#text-title(type="text",name="title",value=photo.title,placeholder=t('activityresults.photoTitlePlaceholder'))
+          input.form-control#text-title(type='text', name='title', value=photo.title, placeholder=t('activityresults.photoTitlePlaceholder'))
 
-     .row
-       .col-md-2.col-md-offset-6(style="text-align:right")
-         button.btn.btn-primary(type="submit")
-          span.glyphicon.glyphicon-ok
-            | &nbsp;
-          = t('activityresults.done')
+      .row
+        .col-md-2.col-md-offset-6(style='text-align:right')
+          button.btn.btn-primary(type='submit')
+            span.glyphicon.glyphicon-ok
+              | &nbsp;
+            = t('activityresults.done')
