@@ -2,9 +2,9 @@ mixin thumbnailInfos(img)
   - var shortTitle = shortenTitle(img.title);
   - var timestamp = img.timestamp;
   if (img.title && img.title.length > 0 && timestamp)
-    | #{shortTitle} - #{moment(img.timestamp).lang(language).format("LT")}
+    | #{shortTitle} - #{moment(img.timestamp).lang(language).format('LT')}
   else if (img.title && img.title.length > 0)
     | #{shortTitle}
   else if (timestamp)
-    #{moment(img.timestamp).lang(language).format("LT")}
+    #{moment(img.timestamp).lang(language).format('LT')}
 

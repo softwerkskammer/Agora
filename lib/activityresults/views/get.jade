@@ -23,13 +23,13 @@ block content
       .prev-img
         img(width='100', height='100')
         a#prev-img
-          span(class='glyphicon glyphicon-chevron-up')
+          span.glyphicon.glyphicon-chevron-up
       a#image-detail-link
         img#image-detail.current-img
       .next-img
         img(width='100', height='100')
         a#next-img(href='#')
-          span(class='glyphicon glyphicon-chevron-down')
+          span.glyphicon.glyphicon-chevron-down
 
   .row
     .col-md-12
@@ -37,23 +37,23 @@ block content
 
   .row
     .col-md-12
-      form(id='recordForm',role='form',method='POST',action=recordImagePath + '?_csrf=' + encodeURIComponent(csrf_token),enctype='multipart/form-data')
+      form(id='recordForm', role='form', method='POST', action=recordImagePath + '?_csrf=' + encodeURIComponent(csrf_token), enctype='multipart/form-data')
         +csrf
         div
-          span.btn.btn-primary.btn-file.record(style="width: 100%")
+          span.btn.btn-primary.btn-file.record(style='width: 100%')
             i.glyphicon.glyphicon-camera &nbsp;
             span= t('activityresults.record_image')
-            input#input-file(type="file",accept="image/*",name="image")
-        div#previewContainer(style="display: none")
-          img#preview(style="max-width: 100%")
+            input#input-file(type='file', accept='image/*', name='image')
+        div#previewContainer(style='display: none')
+          img#preview(style='max-width: 100%')
           div
-            button(type="submit").btn.btn-success.pull-right= t('activityresults.submit')
+            button(type='submit').btn.btn-success.pull-right= t('activityresults.submit')
             span#btn-cancel.btn.btn-warning= t('activityresults.cancel')
 
   hr
   each timestamp in dayTimeStamps
     - var columns = days[timestamp]
-    h3(style='margin-top: 5px;')= moment(timestamp*1000).lang(language).format("dddd, l")
+    h3(style='margin-top: 5px;')= moment(timestamp*1000).lang(language).format('dddd, l')
     .row
       .col-md-12(style='overflow-x: auto')
 
@@ -69,7 +69,7 @@ block content
             each column, columnTitle in columns
               td.col-without-padding.venue(class=getBackgroundForIndex(i++))
                 each img in column
-                  a.thumb(href=activityResult.uriForPhoto(img.id), data-columntitle='#'+columnTitle)
+                  a.thumb(href=activityResult.uriForPhoto(img.id), data-columntitle='#' +columnTitle)
                     img.thumb(src=activityResult.uriForPhoto(img.id) + '?size=thumb', alt=img.title, title=img.title)
-                    span.small(style="color: black")
+                    span.small(style='color: black')
                       +thumbnailInfos(img)
