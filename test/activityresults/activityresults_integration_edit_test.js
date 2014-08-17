@@ -10,7 +10,7 @@ var activityresultsService = beans.get('activityresultsService');
 var createApp = require('../../testutil/testHelper')('activityresultsApp').createApp;
 
 var ActivityResult = beans.get('activityresult');
-var galleryRepository = beans.get('galleryrepositoryService');
+var galleryService = beans.get('galleryService');
 
 var MEMBER_ID = 1;
 var OTHER_MEMBER_ID = 2;
@@ -23,7 +23,7 @@ describe('/activityresults/:result/photo/:photo', function () {
   var photoId = 'photo_id';
   beforeEach(function () {
     sinon.stub(activityresultsService, 'getActivityResultByName', function (activityResultName, callback) {
-      callback(null, new ActivityResult({ id: "foo", name: "foobar", created_by: MEMBER_ID, photos: [{id: photoId, title: 'mishka', uploaded_by: MEMBER_ID}]}));
+      callback(null, new ActivityResult({ id: 'foo', name: 'foobar', created_by: MEMBER_ID, photos: [{id: photoId, title: 'mishka', uploaded_by: MEMBER_ID}]}));
     });
     sinon.stub(activityresultsService, 'addPhotoToActivityResult', function (activityResultName, photo, callback) {
       callback();
@@ -32,7 +32,7 @@ describe('/activityresults/:result/photo/:photo', function () {
 
   it('should have old values set', function (done) {
     request(createApp(MEMBER_ID))
-      .get("/foo/photo/" + photoId + '/edit')
+      .get('/foo/photo/' + photoId + '/edit')
       .expect(function (res) {
         if (res.text.indexOf('mishka') === -1) {
           return 'Title not found';
@@ -41,10 +41,10 @@ describe('/activityresults/:result/photo/:photo', function () {
       .end(done);
   });
 
-  it('should not let me edit a photo i didnt upload', function (done) {
+  it('should not let me edit a photo I didn\'t upload', function (done) {
     request(createApp(OTHER_MEMBER_ID))
-      .get("/foo/photo/" + photoId + '/edit')
-      .expect(403, done);
+      .get('/foo/photo/' + photoId + '/edit')
+      .expect(302, done);
   });
 
   it('should save a photos time, tags and title', function (done) {
@@ -63,12 +63,12 @@ describe('/activityresults/:result/photo/:photo', function () {
         'date': '2015-05-04',
         'tag': ['a', 'b']
       })
-      .expect(303)
+      .expect(302)
       .expect('Location', '/foo')
       .end(done);
   });
 
-  it('should not let me save changes to a photo if i didnt upload it', function (done) {
+  it('should not let me save changes to a photo if I didn\'t upload it', function (done) {
     sinon.stub(activityresultsService, 'updatePhotoOfActivityResult', function (activityResultName, photoId, data, callback) {
       expect(data.title).to.eql('My adventures with the softwerkskammer');
       expect(data.tags).to.eql(['a', 'b']);
@@ -84,6 +84,6 @@ describe('/activityresults/:result/photo/:photo', function () {
         'date': '2015-05-04',
         'tag': ['a', 'b']
       })
-      .expect(403, done);
+      .expect(302, done);
   });
 });

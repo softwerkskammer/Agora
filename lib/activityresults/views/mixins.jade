@@ -1,16 +1,10 @@
 mixin thumbnailInfos(img)
   - var shortTitle = shortenTitle(img.title);
   - var timestamp = img.timestamp;
-  - if (img.title && img.title.length > 0 && timestamp) {
-  | #{shortTitle} - #{moment(img.timestamp).lang(language).format("LT")}
-  - } else if (img.title && img.title.length > 0) {
-  = shortTitle
-  - } else if (timestamp) {
-  = moment(img.timestamp).lang(language).format("LT")
-  - }
+  if (img.title && img.title.length > 0 && timestamp)
+    | #{shortTitle} - #{moment(img.timestamp).lang(language).format('LT')}
+  else if (img.title && img.title.length > 0)
+    | #{shortTitle}
+  else if (timestamp)
+    #{moment(img.timestamp).lang(language).format('LT')}
 
-mixin tagButton(tagValue)
-  - var inputId = 'tag-'+tagValue;
-  li.col-md-4.col-xs-6
-    input(id=inputId,type="radio",name="tag",value=tagValue)
-    label.btn.btn-default(for=inputId) ##{tagValue}

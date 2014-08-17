@@ -24,7 +24,7 @@
   "groupsService": {"module": "./lib/groups/groupsService"},
   "groupsAndMembersService": {"module": "./lib/groupsAndMembers/groupsAndMembersService"},
   "icalService": {"module": "./lib/activities/icalService"},
-  "galleryrepositoryService": {"module": "./lib/gallery/galleryrepositoryService"},
+  "galleryService": {"module": "./lib/gallery/galleryService"},
   "mailarchiveService": {"module": "./lib/mailarchive/mailarchiveService"},
   "mailsenderService": {"module": "./lib/mailsender/mailsenderService"},
   "membersService": {"module": "./lib/members/membersService"},

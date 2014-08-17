@@ -39,6 +39,7 @@ module.exports = function (internalAppName, configuredBeans) {
         var Member = beans.get('member');
         app.use(userStub({member: new Member({id: memberID})}));
       }
+
       app.use(beans.get('accessrights'));
       app.use(beans.get('expressViewHelper'));
       app.use('/', beans.get(appName));
