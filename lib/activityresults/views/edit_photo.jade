@@ -19,7 +19,7 @@ block content
         img#thumbnail(src=activityResult.uriForPhoto(photo.id) + '?size=thumb')
       .col-xs-12.col-md-6
         ul.tag-list.row
-          each availableTag in activityResult.tags
+          each availableTag in activityResult.tags()
             +tagButton(availableTag)
     .row
       .col-md-8

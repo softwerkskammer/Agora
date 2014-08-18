@@ -4,7 +4,7 @@ include  ../../../views/formComponents
 include ./mixins
 
 block title
-  | #{activityResult.id}
+  | #{activityResult.id()}
 
 block scripts
   script(src='/clientscripts/activityResults.js')
@@ -33,7 +33,7 @@ block content
 
   .row
     .col-md-12
-      h2(style='margin-top: 5px;') #{activityResult.id}
+      h2(style='margin-top: 5px;') #{activityResult.id()}
 
   .row
     .col-md-12
