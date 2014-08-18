@@ -1,10 +1,9 @@
 extends ../../../views/layoutOnlyMain
 
 include  ../../../views/formComponents
-include ./mixins
 
 block title
-  | #{activityResult.id}
+  | #{activityResult.id()}
 
 block scripts
   script(src='/clientscripts/activityResults.js')
@@ -33,7 +32,7 @@ block content
 
   .row
     .col-md-12
-      h2(style='margin-top: 5px;') #{activityResult.id}
+      h2(style='margin-top: 5px;') #{activityResult.id()}
 
   .row
     .col-md-12
@@ -52,8 +51,8 @@ block content
 
   hr
   each timestamp in dayTimeStamps
-    - var columns = days[timestamp]
-    h3(style='margin-top: 5px;')= moment(timestamp*1000).lang(language).format('dddd, l')
+    - var columns = days[timestamp.valueOf()]
+    h3(style='margin-top: 5px;')= timestamp.locale(language).format('dddd, l')
     .row
       .col-md-12(style='overflow-x: auto')
 
@@ -69,7 +68,6 @@ block content
             each column, columnTitle in columns
               td.col-without-padding.venue(class=getBackgroundForIndex(i++))
                 each img in column
-                  a.thumb(href=activityResult.uriForPhoto(img.id), data-columntitle='#' +columnTitle)
-                    img.thumb(src=activityResult.uriForPhoto(img.id) + '?size=thumb', alt=img.title, title=img.title)
-                    span.small(style='color: black')
-                      +thumbnailInfos(img)
+                  a.thumb(href=img.uri(), data-columntitle='#' +columnTitle)
+                    img.thumb(src=img.uri() + '?size=thumb', alt=img.title(), title=img.title())
+                    span.small(style='color: black') #{img.thumbnailInfos(language)}

@@ -25,7 +25,7 @@ describe('ActivityResult service', function () {
   describe('the getActivityResultByName method', function () {
     it('should return the activityResult for an id', function (done) {
       service.getActivityResultByName(activityResult.id, function (err, returnedActivityResult) {
-        expect(returnedActivityResult.id).to.equal(activityResult.id);
+        expect(returnedActivityResult.id()).to.equal(activityResult.id);
         done();
       });
     });
@@ -38,7 +38,7 @@ describe('ActivityResult service', function () {
 
       service.getActivityResultByName('non-existing-id', function (err, activityResult) {
         expect(err).to.exist();
-        expect(activityResult).to.be.null();
+        expect(activityResult).to.be(undefined);
         done();
       });
     });

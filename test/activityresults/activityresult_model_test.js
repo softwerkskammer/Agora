@@ -9,11 +9,11 @@ var ActivityResult = conf.get('beans').get('activityresult');
 describe('Activity result', function () {
   it('should have an id', function () {
     var activityResult = new ActivityResult({id: "hackergarten2_2"});
-    expect(activityResult.id).to.be('hackergarten2_2');
+    expect(activityResult.id()).to.be('hackergarten2_2');
   });
 
-  it('should have an empty constructor', function () {
-    expect((new ActivityResult()).id).to.be.falsy();
+  it('should not have an empty constructor', function () {
+    expect((new ActivityResult({})).id()).to.be.falsy();
   });
 
   it('should have a list of photo ids', function () {
@@ -25,17 +25,17 @@ describe('Activity result', function () {
       ]
     });
 
-    expect(activityResult.photos[0]).to.eql({id: 'image1.jpg'});
-    expect(activityResult.photos[1]).to.eql({id: 'image2.jpg'});
+    expect(activityResult.photos()[0].state).to.eql({id: 'image1.jpg'});
+    expect(activityResult.photos()[1].state).to.eql({id: 'image2.jpg'});
 
   });
 
-  it('should have a created_by field', function () {
-    expect(new ActivityResult({created_by: 'me'})).to.have.property('created_by', 'me');
+  it('should have a created_by function', function () {
+    expect(new ActivityResult({created_by: 'me'}).created_by()).to.eql('me');
   });
 
   it('should have a field of defined tags for an activityResult', function () {
-    expect(new ActivityResult({tags: ['1', '2']}).tags).to.be.eql(['1', '2']);
+    expect(new ActivityResult({tags: ['1', '2']}).tags()).to.be.eql(['1', '2']);
   });
 
   describe('photo subdocument', function () {
@@ -43,23 +43,23 @@ describe('Activity result', function () {
       var activityResult = new ActivityResult({
         id: 'whatever',
         photos: [
-          { id: 'my_photo_id', date: 'thedate' }
+          { id: 'my_photo_id' }
         ]
       });
 
-      expect(activityResult.getPhotoById('my_photo_id')).to.have.property('date', 'thedate');
+      expect(activityResult.getPhotoById('my_photo_id')).to.exist();
     });
 
     it('should be updatable by id', function () {
       var activityResult = new ActivityResult({
         id: 'whatever',
         photos: [
-          { id: 'my_photo_id', date: 'thedate' }
+          { id: 'my_photo_id', title: 'Title' }
         ]
       });
 
-      activityResult.updatePhotoById('my_photo_id', {date: 'newdate'});
-      expect(activityResult.getPhotoById('my_photo_id')).to.have.property('date', 'newdate');
+      activityResult.updatePhotoById('my_photo_id', {title: 'newTitle'});
+      expect(activityResult.getPhotoById('my_photo_id').title()).to.eql('newTitle');
     });
 
     it('should collect all distinct tags present', function () {
@@ -106,7 +106,7 @@ describe('Activity result', function () {
         ]
       });
 
-      expect(activityResult.uriForPhoto('name.jpg')).to.eql('/gallery/legacyname.jpg');
+      expect(activityResult.getPhotoById('name.jpg').uri()).to.eql('/gallery/legacyname.jpg');
     });
 
     it('displays a uri based on the id', function () {
@@ -117,7 +117,7 @@ describe('Activity result', function () {
         ]
       });
 
-      expect(activityResult.uriForPhoto('name.jpg')).to.eql('/gallery/name.jpg');
+      expect(activityResult.getPhotoById('name.jpg').uri()).to.eql('/gallery/name.jpg');
     });
   });
 });
