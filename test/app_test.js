@@ -5,6 +5,7 @@ var sinon = require('sinon').sandbox.create();
 var conf = require('./../testutil/configureForTest');
 var beans = conf.get('beans');
 var groupsService = beans.get('groupsService');
+var groupstore = conf.get('beans').get('groupstore');
 var announcementstore = beans.get('announcementstore');
 
 var base_uri = 'http://localhost:' + parseInt(conf.get('port'), 10);
@@ -13,6 +14,7 @@ var app = require('../app.js');
 
 describe('SWK Plattform server', function () {
   beforeEach(function (done) {
+    sinon.stub(groupstore, 'allGroups', function (callback) {return callback(null, []); });
     sinon.stub(groupsService, 'getAllAvailableGroups', function (callback) {return callback(null, []); });
     sinon.stub(announcementstore, 'allAnnouncementsUntilToday', function (callback) {return callback(null, []); });
     app.start(done);

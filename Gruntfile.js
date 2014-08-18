@@ -24,6 +24,8 @@ module.exports = function (grunt) {
       'bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js',
       'bower_components/bootstrap-markdown/js/bootstrap-markdown.js',
       'node_modules/moment-timezone/node_modules/moment/moment.js',
+      'frontend/3rd_party_js/jquery.smartmenus.js',
+      'frontend/3rd_party_js/jquery.smartmenus.bootstrap.js',
       'frontend/3rd_party_js/fullcalendar-patched.js',
       'bower_components/fullcalendar/dist/lang/de.js', // for fullcalendar
       'bower_components/tinycolor/tinycolor.js', // for pick-a-color
@@ -52,6 +54,8 @@ module.exports = function (grunt) {
       'bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js',
       'bower_components/bootstrap-markdown/js/bootstrap-markdown.js',
       'node_modules/moment-timezone/node_modules/moment/moment.js',
+      'frontend/3rd_party_js/jquery.smartmenus.js',
+      'frontend/3rd_party_js/jquery.smartmenus.bootstrap.js',
       'frontend/3rd_party_js/fullcalendar-patched.js',
       'bower_components/fullcalendar/dist/lang/en-gb.js', // for fullcalendar
       'bower_components/tinycolor/tinycolor.js', // for pick-a-color
@@ -199,6 +203,7 @@ module.exports = function (grunt) {
             'bower_components/font-awesome/css/font-awesome.css',
             'build/stylesheets/less/pick-a-color-patched.less',
             'frontend/3rd_party_css/shCoreDefault-patched.css',
+            'frontend/3rd_party_css/jquery.smartmenus.bootstrap.css',
             'bower_components/datatables/media/css/jquery.dataTables.css',
             'frontend/3rd_party_css/dataTables.bootstrap.css',
             'frontend/3rd_party_css/dataTables.fontAwesome.css',
