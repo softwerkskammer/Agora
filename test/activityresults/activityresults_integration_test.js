@@ -46,14 +46,14 @@ describe('/activityresults', function () {
   });
 
   describe('GET /{activityResultName}', function () {
-    it('should return an 404 if the activity result is unknown', function (done) {
+    it('should return an 200 if the activity result is unknown to create a new one', function (done) {
       sinon.stub(activityresultsService, 'getActivityResultByName', function (activityResultName, callback) {
         callback();
       });
 
       request(createApp())
         .get('/unknown-activity-result')
-        .expect(404, done);
+        .expect(200, done);
     });
 
     it('should render the results if the activity result is known', function (done) {
@@ -90,10 +90,10 @@ describe('/activityresults', function () {
       request(app)
         .post('/')
         .type('form')
-        .send({ activityResultName: "MyActivityResult", tags: 'myFirstTag,mySecondTag' })
+        .send({ activityResultName: 'MyActivityResult', tags: 'myFirstTag,mySecondTag' })
         .expect(302)
         .end(function (err) {
-          expect(theResult.tags()).to.eql(['myFirstTag', 'mySecondTag']);
+          expect(theResult.tags).to.eql(['myFirstTag', 'mySecondTag']);
           done(err);
         });
     });

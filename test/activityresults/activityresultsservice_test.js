@@ -59,7 +59,7 @@ describe('ActivityResult service', function () {
       service.addPhotoToActivityResult('Hackergarten2', undefined, 'my_uri', 'memberId', function (err) {
         expect(saveStub.called).to.be(true);
         var objectToSave = saveStub.args[0][0];
-        expect(objectToSave.photos()).to.have.length(2);
+        expect(objectToSave.photos).to.have.length(2);
         done(err);
       });
     });
