@@ -297,6 +297,7 @@ module.exports = function (grunt) {
       }
     },
     'bower-install-simple': {
+      default: {}
     }
   });
 
