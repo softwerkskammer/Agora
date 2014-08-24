@@ -1,5 +1,5 @@
 /*!
- * FullCalendar v2.0.2
+ * FullCalendar v2.0.3
  * Docs & License: http://arshaw.com/fullcalendar/
  * (c) 2013 Adam Shaw
  * 
@@ -33,7 +33,7 @@
     header: {
       left: 'title',
       center: '',
-		right: 'today prev,next'
+      right: 'today prev,next'
     },
     weekends: true,
     weekNumbers: false,
@@ -169,7 +169,7 @@
 
   ;;
 
-var fc = $.fullCalendar = { version: "2.0.2" };
+  var fc = $.fullCalendar = { version: "2.0.3" };
   var fcViews = fc.views = {};
 
 
@@ -387,26 +387,34 @@ var fc = $.fullCalendar = { version: "2.0.2" };
     // -----------------------------------------------------------------------------------
     // Apply overrides to the current language's data
 
-    var langData = createObject( // make a cheap clone
-      moment.langData(options.lang)
-    );
+
+    // Returns moment's internal locale data. If doesn't exist, returns English.
+    // Works with moment-pre-2.8
+    function getLocaleData(langCode) {
+      var f = moment.localeData || moment.langData;
+      return f.call(moment, langCode) ||
+        f.call(moment, 'en'); // the newer localData could return null, so fall back to en
+    }
+
+
+    var localeData = createObject(getLocaleData(options.lang)); // make a cheap copy
 
     if (options.monthNames) {
-      langData._months = options.monthNames;
+      localeData._months = options.monthNames;
     }
     if (options.monthNamesShort) {
-      langData._monthsShort = options.monthNamesShort;
+      localeData._monthsShort = options.monthNamesShort;
     }
     if (options.dayNames) {
-      langData._weekdays = options.dayNames;
+      localeData._weekdays = options.dayNames;
     }
     if (options.dayNamesShort) {
-      langData._weekdaysShort = options.dayNamesShort;
+      localeData._weekdaysShort = options.dayNamesShort;
     }
     if (options.firstDay != null) {
-      var _week = createObject(langData._week); // _week: { dow: # }
+      var _week = createObject(localeData._week); // _week: { dow: # }
       _week.dow = options.firstDay;
-      langData._week = _week;
+      localeData._week = _week;
     }
 
 
@@ -439,7 +447,12 @@ var fc = $.fullCalendar = { version: "2.0.2" };
         mom = fc.moment.parseZone.apply(null, arguments); // let the input decide the zone
       }
 
-      mom._lang = langData;
+      if ('_locale' in mom) { // moment 2.8 and above
+        mom._locale = localeData;
+      }
+      else { // pre-moment-2.8
+        mom._lang = localeData;
+      }
 
       return mom;
     };
@@ -527,7 +540,7 @@ var fc = $.fullCalendar = { version: "2.0.2" };
 
       // a function that returns a formatStr // TODO: in future, precompute this
       if (typeof formatStr === 'function') {
-        formatStr = formatStr.call(t, options, langData);
+        formatStr = formatStr.call(t, options, localeData);
       }
 
       return formatRange(m1, m2, formatStr, null, options.isRTL);
@@ -539,7 +552,7 @@ var fc = $.fullCalendar = { version: "2.0.2" };
 
       // a function that returns a formatStr // TODO: in future, precompute this
       if (typeof formatStr === 'function') {
-        formatStr = formatStr.call(t, options, langData);
+        formatStr = formatStr.call(t, options, localeData);
       }
 
       return formatDate(mom, formatStr);
@@ -951,13 +964,13 @@ var fc = $.fullCalendar = { version: "2.0.2" };
 
 
     function prevYear() {
-      date.add('years', -1);
+      date.add(-1, 'years');
       renderView();
     }
 
 
     function nextYear() {
-      date.add('years', 1);
+      date.add(1, 'years');
       renderView();
     }
 
@@ -1192,7 +1205,8 @@ var fc = $.fullCalendar = { version: "2.0.2" };
       }
       return td;
     }
-    
+
+
     function updateTitle(html) {
       element.find('h2')
         .html(html);
@@ -1213,13 +1227,13 @@ var fc = $.fullCalendar = { version: "2.0.2" };
     // *** PATCHED BOOTSTRAP L&F
     function disableButton(buttonName) {
       element.find('span.fc-button-' + buttonName)
-			.addClass('disabled');
+        .addClass('disabled');
     }
 
     // *** PATCHED BOOTSTRAP L&F
     function enableButton(buttonName) {
       element.find('span.fc-button-' + buttonName)
-			.removeClass('disabled');
+        .removeClass('disabled');
     }
 
 
@@ -1310,20 +1324,20 @@ var fc = $.fullCalendar = { version: "2.0.2" };
 
     function fetchEventSource(source, fetchID) {
       _fetchEventSource(source, function(events) {
-			var isArraySource = $.isArray(source.events);
-			var i;
-			var event;
+        var isArraySource = $.isArray(source.events);
+        var i;
+        var event;
 
         if (fetchID == currentFetchID) {
 
           if (events) {
-					for (i=0; i<events.length; i++) {
-						event = events[i];
+            for (i=0; i<events.length; i++) {
+              event = events[i];
 
-						// event array sources have already been convert to Event Objects
-						if (!isArraySource) {
-							event = buildEvent(event, source);
-						}
+              // event array sources have already been convert to Event Objects
+              if (!isArraySource) {
+                event = buildEvent(event, source);
+              }
 
               if (event) {
                 cache.push(event);
@@ -1458,7 +1472,7 @@ var fc = $.fullCalendar = { version: "2.0.2" };
     function addEventSource(sourceInput) {
       var source = buildEventSource(sourceInput);
       if (source) {
-			sources.push(source);
+        sources.push(source);
         pendingSourceCnt++;
         fetchEventSource(source, currentFetchID); // will eventually call reportEvents
       }
@@ -1487,12 +1501,12 @@ var fc = $.fullCalendar = { version: "2.0.2" };
 
       if (source) {
 
-			// for array sources, we convert to standard Event Objects up front
-			if ($.isArray(source.events)) {
-				source.events = $.map(source.events, function(eventInput) {
-					return buildEvent(eventInput, source);
-				});
-			}
+        // for array sources, we convert to standard Event Objects up front
+        if ($.isArray(source.events)) {
+          source.events = $.map(source.events, function(eventInput) {
+            return buildEvent(eventInput, source);
+          });
+        }
 
         for (i=0; i<normalizers.length; i++) {
           normalizers[i].call(t, source);
@@ -1592,30 +1606,30 @@ var fc = $.fullCalendar = { version: "2.0.2" };
 
 
     function removeEvents(filter) {
-		var eventID;
+      var eventID;
       var i;
 
-		if (filter == null) { // null or undefined. remove all events
-			filter = function() { return true; }; // will always match
-          }
-		else if (!$.isFunction(filter)) { // an event ID
-			eventID = filter + '';
-			filter = function(event) {
-				return event._id == eventID;
-          };
-        }
+      if (filter == null) { // null or undefined. remove all events
+        filter = function() { return true; }; // will always match
+      }
+      else if (!$.isFunction(filter)) { // an event ID
+        eventID = filter + '';
+        filter = function(event) {
+          return event._id == eventID;
+        };
+      }
 
-		// Purge event(s) from our local cache
-		cache = $.grep(cache, filter, true); // inverse=true
+      // Purge event(s) from our local cache
+      cache = $.grep(cache, filter, true); // inverse=true
 
-		// Remove events from array sources.
-		// This works because they have been converted to official Event Objects up front.
-		// (and as a result, event._id has been calculated).
-        for (i=0; i<sources.length; i++) {
-          if ($.isArray(sources[i].events)) {
-            sources[i].events = $.grep(sources[i].events, filter, true);
-          }
+      // Remove events from array sources.
+      // This works because they have been converted to official Event Objects up front.
+      // (and as a result, event._id has been calculated).
+      for (i=0; i<sources.length; i++) {
+        if ($.isArray(sources[i].events)) {
+          sources[i].events = $.grep(sources[i].events, filter, true);
         }
+      }
 
       reportEvents(cache);
     }
@@ -1625,7 +1639,7 @@ var fc = $.fullCalendar = { version: "2.0.2" };
       if ($.isFunction(filter)) {
         return $.grep(cache, filter);
       }
-		else if (filter != null) { // not null, not undefined. an event ID
+      else if (filter != null) { // not null, not undefined. an event ID
         filter += '';
         return $.grep(cache, function(e) {
           return e._id == filter;
@@ -2665,12 +2679,15 @@ var fc = $.fullCalendar = { version: "2.0.2" };
   // If the dates are the same as far as the format string is concerned, just return a single
   // rendering of one date, without any separator.
   function formatRange(date1, date2, formatStr, separator, isRTL) {
+    var localeData;
 
     date1 = fc.moment.parseZone(date1);
     date2 = fc.moment.parseZone(date2);
 
+    localeData = (date1.localeData || date1.lang).call(date1); // works with moment-pre-2.8
+
     // Expand localized format strings, like "LL" -> "MMMM D YYYY"
-    formatStr = date1.lang().longDateFormat(formatStr) || formatStr;
+    formatStr = localeData.longDateFormat(formatStr) || formatStr;
     // BTW, this is not important for `formatDate` because it is impossible to put custom tokens
     // or non-zero areas in Moment's localized format strings.
 
@@ -2835,14 +2852,14 @@ var fc = $.fullCalendar = { version: "2.0.2" };
 
 
     function incrementDate(date, delta) {
-      return date.clone().stripTime().add('months', delta).startOf('month');
+      return date.clone().stripTime().add(delta, 'months').startOf('month');
     }
 
 
     function render(date) {
 
       t.intervalStart = date.clone().stripTime().startOf('month');
-      t.intervalEnd = t.intervalStart.clone().add('months', 1);
+      t.intervalEnd = t.intervalStart.clone().add(1, 'months');
 
       t.start = t.intervalStart.clone();
       t.start = t.skipHiddenDays(t.start); // move past the first week if no visible days
@@ -2851,14 +2868,14 @@ var fc = $.fullCalendar = { version: "2.0.2" };
 
       t.end = t.intervalEnd.clone();
       t.end = t.skipHiddenDays(t.end, -1, true); // move in from the last week if no visible days
-      t.end.add('days', (7 - t.end.weekday()) % 7); // move to end of week if not already
+      t.end.add((7 - t.end.weekday()) % 7, 'days'); // move to end of week if not already
       t.end = t.skipHiddenDays(t.end, -1, true); // move in from the last invisible days of the week
 
       var rowCnt = Math.ceil( // need to ceil in case there are hidden days
         t.end.diff(t.start, 'weeks', true) // returnfloat=true
       );
       if (t.opt('weekMode') == 'fixed') {
-        t.end.add('weeks', 6 - rowCnt);
+        t.end.add(6 - rowCnt, 'weeks');
         rowCnt = 6;
       }
 
@@ -2888,14 +2905,14 @@ var fc = $.fullCalendar = { version: "2.0.2" };
 
 
     function incrementDate(date, delta) {
-      return date.clone().stripTime().add('weeks', delta).startOf('week');
+      return date.clone().stripTime().add(delta, 'weeks').startOf('week');
     }
 
 
     function render(date) {
 
       t.intervalStart = date.clone().stripTime().startOf('week');
-      t.intervalEnd = t.intervalStart.clone().add('weeks', 1);
+      t.intervalEnd = t.intervalStart.clone().add(1, 'weeks');
 
       t.start = t.skipHiddenDays(t.intervalStart);
       t.end = t.skipHiddenDays(t.intervalEnd, -1, true);
@@ -2931,7 +2948,7 @@ var fc = $.fullCalendar = { version: "2.0.2" };
 
 
     function incrementDate(date, delta) {
-      var out = date.clone().stripTime().add('days', delta);
+      var out = date.clone().stripTime().add(delta, 'days');
       out = t.skipHiddenDays(out, delta < 0 ? -1 : 1);
       return out;
     }
@@ -2940,7 +2957,7 @@ var fc = $.fullCalendar = { version: "2.0.2" };
     function render(date) {
 
       t.start = t.intervalStart = date.clone().stripTime();
-      t.end = t.intervalEnd = t.start.clone().add('days', 1);
+      t.end = t.intervalEnd = t.start.clone().add(1, 'days');
 
       t.title = calendar.formatDate(t.start, t.opt('titleFormat'));
 
@@ -3341,7 +3358,7 @@ var fc = $.fullCalendar = { version: "2.0.2" };
 
 
     function defaultSelectionEnd(start) {
-      return start.clone().stripTime().add('days', 1);
+      return start.clone().stripTime().add(1, 'days');
     }
 
 
@@ -3510,14 +3527,14 @@ var fc = $.fullCalendar = { version: "2.0.2" };
 
 
     function incrementDate(date, delta) {
-      return date.clone().stripTime().add('weeks', delta).startOf('week');
+      return date.clone().stripTime().add(delta, 'weeks').startOf('week');
     }
 
 
     function render(date) {
 
       t.intervalStart = date.clone().stripTime().startOf('week');
-      t.intervalEnd = t.intervalStart.clone().add('weeks', 1);
+      t.intervalEnd = t.intervalStart.clone().add(1, 'weeks');
 
       t.start = t.skipHiddenDays(t.intervalStart);
       t.end = t.skipHiddenDays(t.intervalEnd, -1, true);
@@ -3553,7 +3570,7 @@ var fc = $.fullCalendar = { version: "2.0.2" };
 
 
     function incrementDate(date, delta) {
-      var out = date.clone().stripTime().add('days', delta);
+      var out = date.clone().stripTime().add(delta, 'days');
       out = t.skipHiddenDays(out, delta < 0 ? -1 : 1);
       return out;
     }
@@ -3562,7 +3579,7 @@ var fc = $.fullCalendar = { version: "2.0.2" };
     function render(date) {
 
       t.start = t.intervalStart = date.clone().stripTime();
-      t.end = t.intervalEnd = t.start.clone().add('days', 1);
+      t.end = t.intervalEnd = t.start.clone().add(1, 'days');
 
       t.title = calendar.formatDate(t.start, t.opt('titleFormat'));
 
@@ -4211,7 +4228,7 @@ var fc = $.fullCalendar = { version: "2.0.2" };
       for (var i=0; i<colCnt; i++) { // loop through the day columns
 
         var dayStart = cellToDate(0, i);
-        var dayEnd = dayStart.clone().add('days', 1);
+        var dayEnd = dayStart.clone().add(1, 'days');
 
         var stretchStart = dayStart < overlayStart ? overlayStart : dayStart; // the max of the two
         var stretchEnd = dayEnd < overlayEnd ? dayEnd : overlayEnd; // the min of the two
@@ -4377,7 +4394,7 @@ var fc = $.fullCalendar = { version: "2.0.2" };
         return start.clone().add(slotDuration);
       }
       else {
-        return start.clone().add('days', 1);
+        return start.clone().add(1, 'days');
       }
     }
 
@@ -4957,8 +4974,8 @@ var fc = $.fullCalendar = { version: "2.0.2" };
               if (!cell.row) { // on full-days
 
                 renderDayOverlay(
-                  event.start.clone().add('days', dayDelta),
-                  getEventEnd(event).add('days', dayDelta)
+                  event.start.clone().add(dayDelta, 'days'),
+                  getEventEnd(event).add(dayDelta, 'days')
                 );
 
                 resetElement();
@@ -5003,7 +5020,7 @@ var fc = $.fullCalendar = { version: "2.0.2" };
           }
           else { // changed!
 
-            var eventStart = event.start.clone().add('days', dayDelta); // already assumed to have a stripped time
+            var eventStart = event.start.clone().add(dayDelta, 'days'); // already assumed to have a stripped time
             var snapTime;
             var snapIndex;
             if (!allDay) {
@@ -5123,12 +5140,12 @@ var fc = $.fullCalendar = { version: "2.0.2" };
 
             // compute new dates
             if (isAllDay) {
-              eventStart = event.start.clone().stripTime().add('days', dayDelta);
+              eventStart = event.start.clone().stripTime().add(dayDelta, 'days');
               eventEnd = eventStart.clone().add(calendar.defaultAllDayEventDuration);
             }
             else {
-              eventStart = event.start.clone().add(snapDelta * snapDuration).add('days', dayDelta);
-              eventEnd = getEventEnd(event).add(snapDelta * snapDuration).add('days', dayDelta);
+              eventStart = event.start.clone().add(snapDelta * snapDuration).add(dayDelta, 'days');
+              eventEnd = getEventEnd(event).add(snapDelta * snapDuration).add(dayDelta, 'days');
             }
 
             updateUI();
@@ -5809,7 +5826,7 @@ var fc = $.fullCalendar = { version: "2.0.2" };
       while (
         isHiddenDayHash[(out.day() + (isExclusive ? inc : 0) + 7) % 7]
         ) {
-        out.add('days', inc);
+        out.add(inc, 'days');
       }
       return out;
     }
@@ -5863,7 +5880,7 @@ var fc = $.fullCalendar = { version: "2.0.2" };
 
     // day offset -> date
     function dayOffsetToDate(dayOffset) {
-      return t.start.clone().add('days', dayOffset);
+      return t.start.clone().add(dayOffset, 'days');
     }
 
 
@@ -6569,10 +6586,10 @@ var fc = $.fullCalendar = { version: "2.0.2" };
               var origCellDate = cellToDate(origCell);
               var cellDate = cellToDate(cell);
               dayDelta = cellDate.diff(origCellDate, 'days');
-              eventStart = event.start.clone().add('days', dayDelta);
+              eventStart = event.start.clone().add(dayDelta, 'days');
               renderDayOverlay(
                 eventStart,
-                getEventEnd(event).add('days', dayDelta)
+                getEventEnd(event).add(dayDelta, 'days')
               );
             }
             else {
@@ -6652,7 +6669,7 @@ var fc = $.fullCalendar = { version: "2.0.2" };
               cellOffsetToDayOffset(cellOffset) -
               cellOffsetToDayOffset(origCellOffset);
 
-            eventEnd = getEventEnd(event).add('days', dayDelta); // assumed to already have a stripped time
+            eventEnd = getEventEnd(event).add(dayDelta, 'days'); // assumed to already have a stripped time
 
             if (dayDelta) {
               eventCopy.end = eventEnd;
@@ -6845,7 +6862,7 @@ var fc = $.fullCalendar = { version: "2.0.2" };
             dates = [ cellToDate(origCell), cellToDate(cell) ].sort(dateCompare);
             renderSelection(
               dates[0],
-              dates[1].clone().add('days', 1) // make exclusive
+              dates[1].clone().add(1, 'days') // make exclusive
             );
           }else{
             dates = null;
@@ -6859,7 +6876,7 @@ var fc = $.fullCalendar = { version: "2.0.2" };
             }
             reportSelection(
               dates[0],
-              dates[1].clone().add('days', 1), // make exclusive
+              dates[1].clone().add(1, 'days'), // make exclusive
               ev
             );
           }
