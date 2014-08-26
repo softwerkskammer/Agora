@@ -11,7 +11,6 @@ var morgan = require('morgan');
 var bodyparser = require('body-parser');
 var compress = require('compression');
 var csurf = require('csurf');
-var serveStatic = require('serve-static');
 var i18n = require('i18next');
 var jade = require('jade');
 
@@ -64,7 +63,7 @@ module.exports = {
     app.use(cookieParser());
     app.use(bodyparser.urlencoded({extended: true}));
     app.use(compress());
-    app.use(serveStatic(path.join(__dirname, 'public'), { maxAge: 600 * 1000 })); // ten minutes
+    app.use(express.static(path.join(__dirname, 'public'), { maxAge: 600 * 1000 })); // ten minutes
 
     app.use(beans.get('expressSessionConfigurator'));
     app.use(passport.initialize());
