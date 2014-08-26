@@ -54,7 +54,9 @@ var surroundWithLink, surroundTwitterName, surroundEmail, displayedActivityStart
           $(this).tooltip({
             title: event.start.format('HH:mm') + ': ' + event.title,
             trigger: 'manual',
-            placement: (day < 4 && day > 0) ? 'right' : 'left'
+            placement: (day < 4 && day > 0) ? 'right' : 'left',
+            container: 'body',
+            template: '<div class="tooltip" role="tooltip" style="max-width: 120px"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>'
           });
           $(this).tooltip('show');
         },
