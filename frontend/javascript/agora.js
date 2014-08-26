@@ -56,7 +56,7 @@ var surroundWithLink, surroundTwitterName, surroundEmail, displayedActivityStart
             trigger: 'manual',
             placement: (day < 4 && day > 0) ? 'right' : 'left',
             container: 'body',
-            template: '<div class="tooltip" role="tooltip" style="max-width: 120px"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>'
+            template: '<div class="tooltip" role="tooltip" style="max-width: 130px"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>'
           });
           $(this).tooltip('show');
         },
