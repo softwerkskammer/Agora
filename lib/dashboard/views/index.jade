@@ -38,10 +38,10 @@ mixin my_groups
               +wikichangesOrBlogs(postsByGroup[group.id], panelid, 'blogs', t('wiki.blogposts'))
               +wikichangesOrBlogs(changesByGroup[group.id], panelid, 'changes', t('wiki.changes'))
               if (mailsByGroup[group.id].length > 0)
-              h5
-              a.chevron(data-toggle='collapse', data-target='##{panelid} .mails')
-                i.fa.fa-toggle-down.fa-fw.blog
-                | &nbsp;#{t('mailarchive.recent')}
+                h5
+                  a.chevron(data-toggle='collapse', data-target='##{panelid} .mails')
+                    i.fa.fa-toggle-down.fa-fw.blog
+                    | &nbsp;#{t('mailarchive.recent')}
                 .mails.collapse.in
                   +mailIndex(mailsByGroup[group.id])
 
