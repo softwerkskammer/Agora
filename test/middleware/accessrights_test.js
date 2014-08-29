@@ -32,7 +32,6 @@ function superuser() {
 }
 
 describe('Accessrights for Activities', function () {
-  var now = moment().unix();
   var nextWeek = moment().add(1, 'weeks').unix();
   var lastWeek = moment().subtract(1, 'weeks').unix();
   it('disallows the creation for guests', function () {
