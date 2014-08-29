@@ -19,12 +19,15 @@ mixin mailIndex(mailHeaders)
             .modal-dialog.modal-lg
               .modal-content
           a(data-toggle='modal', data-target='#messageDetails' + mailHeader.timeUnix, href='/mailarchive/message/' + encodeURIComponent(mailHeader.id)) #{mailHeader.subject}
+          | 
+          a(href='/mailarchive/puremessage/'+ encodeURIComponent(mailHeader.id))
+            i.fa.fa-external-link-square
           small
             +mailattributes(mailHeader) 
           +mailIndex(mailHeader.sortedResponses())
 
-mixin mailattributes(mailHeader)
-  span.pull-right
+mixin mailattributes(mailHeader, noPullRight)
+  span(class = noPullRight ? '' : 'pull-right')
     if (mailHeader.memberNickname())
       a(href='/members/' + encodeURIComponent(mailHeader.memberNickname())) #{mailHeader.displayedSenderName()}
     else
