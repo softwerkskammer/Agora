@@ -93,6 +93,7 @@
     "new": "New activity",
     "create": "Create activity",
     "edit": "Edit activity",
+    "delete": "Delete activity",
     "new_copy": "New (based on this activity)",
     "upcoming_activities": "$t(activities.upcoming) $t(activities.activities)",
     "upcoming": "Upcoming",
@@ -389,7 +390,8 @@
         "participation_for_resource_removed": "What a pity that you will not participate in \"__resourceName__\".",
         "waitinglist_added": "You have been added to the waiting list.",
         "waitinglist_removed": "You have been removed from the waiting list.",
-        "does_not_exist": "The activity does not exist."
+        "does_not_exist": "The activity does not exist.",
+        "deleted": "Die Aktivität wurde gelöscht."
       },
       "addon": {
         "saved": "Your additional information has been saved."

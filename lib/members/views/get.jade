@@ -7,29 +7,16 @@ block title
   | #{member.firstname()} #{member.lastname()} - #{t('members.profile')}
 
 block content
-  #reallyDelete.modal.fade(tabindex='-1')
-    .modal-dialog
-      .modal-content
-        .modal-header
-          button.close(type='button', data-dismiss='modal', aria-hidden='true') &times;
-          h3 #{t('members.delete')}
-        .modal-body
-          p #{t('general.are_you_sure')}
-          .btn-group
-            button.btn.btn-default(type='cancel', data-dismiss='modal', aria-hidden='true') #{t('general.no')}
-            a.btn.btn-danger(href='/members/delete/#{encodeURIComponent(member.nickname())}')
-              i.fa.fa-trash-o.fa-fw &nbsp;
-              | #{t('general.delete')}
   .row
     .col-md-12
       .page-header
+        .btn-group.pull-right
+          if (accessrights.canEditMember(member))
+            a.btn.btn-default(href='/members/edit/#{encodeURIComponent(member.nickname())}'): i.fa.fa-edit.fa-fw
+          if (accessrights.canDeleteMember(member))
+            +reallyDeleteModal('members.delete', '/members/delete/' +encodeURIComponent(member.nickname()))
         h2
           | #{member.nickname()}
-          .btn-group.pull-right
-            if (accessrights.canEditMember(member))
-              a.btn.btn-default(href='/members/edit/#{encodeURIComponent(member.nickname())}'): i.fa.fa-edit.fa-fw
-            if (accessrights.canDeleteMember(member))
-              button.btn.btn-danger(data-toggle='modal', data-target='#reallyDelete'): i.fa.fa-trash-o.fa-fw
           small
             if (member.isContactperson())
               | &nbsp;#{t('groups.contact')}

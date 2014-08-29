@@ -94,6 +94,7 @@
     "new": "Neue Aktivität",
     "create": "Aktivität anlegen",
     "edit": "Aktivität bearbeiten",
+    "delete": "Aktivität löschen",
     "new_copy": "Neu auf Basis dieser Aktivität",
     "upcoming_activities": "$t(activities.upcoming) $t(activities.activities)",
     "upcoming": "Kommende",
@@ -330,7 +331,7 @@
     "has": "Die Softwerkskammer hat",
     "notifyOnWikiChanges": "Benachrichtigen bei Änderungen im Wiki",
     "resign": "Austreten",
-    "delete": "Miglied löschen"
+    "delete": "Mitglied löschen"
   },
   "wiki": {
     "blogposts": "Blogartikel",
@@ -390,7 +391,8 @@
         "participation_for_resource_removed": "Schade, dass Du bei \"__resourceName__\" nicht dabei sein wirst.",
         "waitinglist_added": "Du bist jetzt auf der Warteliste.",
         "waitinglist_removed": "Du bist jetzt nicht mehr auf der Warteliste.",
-        "does_not_exist": "Die Aktivität existiert nicht."
+        "does_not_exist": "Die Aktivität existiert nicht.",
+        "deleted": "Die Aktivität wurde gelöscht."
       },
       "addon": {
         "saved": "Deine Zusatzinformationen wurden gespeichert."
