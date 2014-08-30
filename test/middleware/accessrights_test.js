@@ -1,6 +1,8 @@
 'use strict';
 
 var conf = require('../../testutil/configureForTest');
+var moment = require('moment-timezone');
+
 var beans = conf.get('beans');
 var accessrights = beans.get('accessrights');
 var Activity = beans.get('activity');
@@ -30,6 +32,8 @@ function superuser() {
 }
 
 describe('Accessrights for Activities', function () {
+  var nextWeek = moment().add(1, 'weeks').unix();
+  var lastWeek = moment().subtract(1, 'weeks').unix();
   it('disallows the creation for guests', function () {
     expect(guest().canCreateActivity()).to.be(false);
   });
@@ -65,6 +69,31 @@ describe('Accessrights for Activities', function () {
     activity.group = new Group();
 
     expect(standardMember({id: 'id'}).canEditActivity(activity)).to.be(false);
+  });
+
+  it('allows deletion of any activity for superusers', function () {
+    var activity = new Activity({owner: 'someOtherId', startUnix: lastWeek});
+
+    expect(superuser().canDeleteActivity(activity)).to.be(true);
+  });
+
+  it('allows deletion of future activity for owner', function () {
+    var activity = new Activity({owner: 'someOtherId', startUnix: nextWeek});
+
+    expect(standardMember({id: 'someOtherId'}).canDeleteActivity(activity)).to.be(true);
+  });
+
+  it('disallows deletion of past activity even for owner', function () {
+    var activity = new Activity({owner: 'someOtherId', startUnix: lastWeek});
+
+    expect(standardMember({id: 'someOtherId'}).canDeleteActivity(activity)).to.be(false);
+  });
+
+  it('disallows deletion of activity for all others', function () {
+    var activity = new Activity({owner: 'someOtherId'});
+
+    expect(standardMember({id: 'id'}).canDeleteActivity(activity)).to.be(false);
+    expect(guest().canDeleteActivity(activity)).to.be(false);
   });
 });
 

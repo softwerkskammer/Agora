@@ -4,8 +4,10 @@ var expect = require('must');
 var sinon = require('sinon').sandbox.create();
 
 var conf = require('../../testutil/configureForTest');
-var persistence = conf.get('beans').get('activitiesPersistence');
-var store = conf.get('beans').get('activitystore');
+var beans = conf.get('beans');
+var persistence = beans.get('activitiesPersistence');
+var store = beans.get('activitystore');
+var Activity = beans.get('activity');
 
 describe('Activity store', function () {
   var activity1 = {title: 'CodingDojo1', url: 'CodingDojo1', description: 'bli'};
@@ -116,6 +118,16 @@ describe('Activity store', function () {
   it('returns past activities', function (done) {
     store.pastActivities(function (err, result) {
       expect(result).to.have.length(2);
+      done(err);
+    });
+  });
+
+  it('calls persistence.remove for store.removeActivity and passes on the given callback', function (done) {
+    var remove = sinon.stub(persistence, 'remove', function (memberId, callback) { callback(); });
+    var activity = new Activity(activity1);
+    activity.state.id = 'I D';
+    store.removeActivity(activity, function (err) {
+      expect(remove.calledWith('I D')).to.be(true);
       done(err);
     });
   });
