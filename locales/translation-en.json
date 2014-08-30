@@ -391,7 +391,7 @@
         "waitinglist_added": "You have been added to the waiting list.",
         "waitinglist_removed": "You have been removed from the waiting list.",
         "does_not_exist": "The activity does not exist.",
-        "deleted": "Die Aktivität wurde gelöscht."
+        "deleted": "The activity is history."
       },
       "addon": {
         "saved": "Your additional information has been saved."
