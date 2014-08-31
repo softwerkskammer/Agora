@@ -168,7 +168,8 @@
       "waitinglist": "Should the resource have a waiting list?",
       "registered": "You are registered.",
       "unknown": "You are not registered."
-    }
+    },
+    "previous_gdcr": "Previous GDCRs"
   },
   "activityresults": {
     "cancel": "Cancel",

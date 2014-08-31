@@ -169,7 +169,8 @@
       "waitinglist": "Soll die Ressource eine Warteliste bekommen?",
       "registered": "Du bist angemeldet.",
       "unknown": "Du bist nicht angemeldet."
-    }
+    },
+    "previous_gdcr": "Vergangene GDCRs"
   },
   "activityresults": {
     "cancel": "Abbrechen",
