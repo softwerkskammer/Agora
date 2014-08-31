@@ -22,15 +22,19 @@ mixin placeGroupLabels(activities)
 
 
 block title
-  | #{t('general.gdcr')}
+  | #{t('general.gdcr')} #{year}
 
 block content
   .row
     .col-md-12
       .page-header
-        h2 #{t('general.gdcr_activities')}
+        h2 #{t('general.gdcr_activities')} #{year}
       p  #{t('general.gdcr_text')}&nbsp;
         span.urlify http://gdcr.coderetreat.org/
+      if previousYears.length > 0
+        h3 #{t('activities.previous_gdcr')}
+        each year in previousYears
+          p: a(href='/activities/gdcr' + year) #{year}
       h2 #{activities.length) Coderetreats
   .row
     .col-md-6
@@ -46,3 +50,10 @@ block content
     }
     $(document).ready(adjustMapsize);
     $.event.add(window, 'resize', adjustMapsize);
+
+block scripts
+  if (activities.length > 0)
+    script.
+      displayedActivityStart = moment('#{activities[0].startMoment().toISOString()}');
+      displayedActivityEnd = moment('#{activities[0].endMoment().toISOString()}');
+//- cannot write "#{activity.startMoment()}" as we need to produce a string to eval in the client  
