@@ -4,7 +4,10 @@
     "constructorArgs": {
       "collectionName": "teststore"
     }},
-  "membersPersistence": {"module": "./test/persistence/testpersistence"},
+  "membersPersistence": {"module": "./lib/persistence/persistence",
+    "constructorArgs": {
+      "collectionName": "teststore"
+    }},
   "activitiesPersistence": {"module": "./lib/persistence/persistence",
     "constructorArgs": {
       "collectionName": "teststore"
