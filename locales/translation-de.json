@@ -330,6 +330,7 @@
     "authenticate": "Anderswo authentifizieren",
     "send_email": "Eine E-Mail an __firstname__ __lastname__ senden",
     "has": "Die Softwerkskammer hat",
+    "has_by_interests": "Mit diesem Schlagwort gibt es",
     "notifyOnWikiChanges": "Benachrichtigen bei Änderungen im Wiki",
     "resign": "Austreten",
     "delete": "Mitglied löschen"
