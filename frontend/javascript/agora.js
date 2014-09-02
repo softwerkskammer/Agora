@@ -24,52 +24,47 @@ var surroundWithLink, surroundTwitterName, surroundEmail, displayedActivityStart
   };
 
   var initCalendar = function () {
-    // page is now ready, initialize the calendar...
-    $('#calendar').each(function () {
-      $(this).fullCalendar({
-        lang: fc_lang,
-        aspectRatio: 1.2,
-        header: {
-          left: 'title',
-          center: '',
-          right: 'prev today next'
-        },
-        weekMode: 'variable',
-        timeFormat: '',
-        titleFormat: {
-          month: 'MMM \'YY'
-        },
-        buttonText: {
-          prev: '<i class="fa fa-caret-left"></i>',
-          next: '<i class="fa fa-caret-right"></i>'
-        },
-        buttonIcons: {
-          prev: null,
-          next: null
-        },
-        timezone: 'Europe/Berlin',
-        events: '/activities/eventsForSidebar',
-        eventMouseover: function (event) {
-          var day = event.start.day();
-          $(this).tooltip({
-            title: event.start.format('HH:mm') + ': ' + event.title,
-            trigger: 'manual',
-            placement: (day < 4 && day > 0) ? 'right' : 'left',
-            container: 'body',
-            template: '<div class="tooltip" role="tooltip" style="max-width: 130px"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>'
-          });
-          $(this).tooltip('show');
-        },
-        eventMouseout: function () {
-          $(this).tooltip('destroy');
-        },
-
-        eventAfterAllRender: function () {
-          if (displayedActivityStart) {
-            this.select(displayedActivityStart, displayedActivityEnd, true);
-          }
+    $('#calendar').fullCalendar({
+      bootstrap: true,
+      fontawesome: true,
+      lang: fc_lang,
+      aspectRatio: 1.2,
+      height: 'auto',
+      header: {
+        left: 'title',
+        center: '',
+        right: 'prev,today,next'
+      },
+      fixedWeekCount: false,
+      timeFormat: '',
+      titleFormat: {
+        month: 'MMM \'YY'
+      },
+      buttonIcons: {
+        prev: 'fa-caret-left',
+        next: 'fa-caret-right'
+      },
+      timezone: 'Europe/Berlin',
+      events: '/activities/eventsForSidebar',
+      eventMouseover: function (event) {
+        var day = event.start.day();
+        $(this).tooltip({
+          title: event.start.format('HH:mm') + ': ' + event.title,
+          trigger: 'manual',
+          placement: (day < 4 && day > 0) ? 'right' : 'left',
+          container: 'body',
+          template: '<div class="tooltip" role="tooltip" style="max-width: 130px"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>'
+        });
+        $(this).tooltip('show');
+      },
+      eventMouseout: function () {
+        $(this).tooltip('destroy');
+      },
+      eventAfterAllRender: function () {
+        if (displayedActivityStart) {
+          this.calendar.select(displayedActivityStart, displayedActivityEnd);
         }
-      });
+      }
     });
   };
 
