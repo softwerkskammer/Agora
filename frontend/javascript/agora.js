@@ -1,8 +1,16 @@
 /*global moment, datepicker_lang, datepicker_format, fc_lang, URI */
 
-var surroundWithLink, surroundTwitterName, surroundEmail, displayedActivityStart, displayedActivityEnd;
+var surroundInterestsWithLinks, surroundWithLink, surroundTwitterName, surroundEmail, displayedActivityStart, displayedActivityEnd;
 (function () {
   'use strict';
+
+  surroundInterestsWithLinks = function (string) {
+    var interests = string.split(',').map(function (each) {
+      var interest = each.trim();
+      return '<a href="/members/interests/' + encodeURIComponent(interest) + '">' + each + '</a>';
+    });
+    return interests.join();
+  };
 
   surroundWithLink = function (text) {
     // shamelessly stolen from http://stackoverflow.com/questions/1500260/detect-urls-in-text-with-javascript
@@ -156,6 +164,10 @@ var surroundWithLink, surroundTwitterName, surroundEmail, displayedActivityStart
 
     $('.mailtoify').each(function () {
       $(this).html(surroundEmail(this.innerHTML));
+    });
+
+    $('.interestify').each(function () {
+      $(this).html(surroundInterestsWithLinks(this.innerHTML));
     });
   };
 

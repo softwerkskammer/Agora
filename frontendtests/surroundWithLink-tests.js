@@ -3,12 +3,6 @@
   'use strict';
 
   describe('surround with link', function () {
-    beforeEach(function (done) {
-      $(function () {
-        done();
-      });
-    });
-
     it('surrounds a text starting with "http" with a link consisting of the text', function () {
       var result = surroundWithLink('http://my.link');
       expect(result).to.equal('<a href="http://my.link" target="_blank"><i class="fa fa-external-link"/> http://my.link</a>');
