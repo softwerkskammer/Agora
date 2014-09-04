@@ -33,6 +33,7 @@ describe('Validation', function () {
       expect(result({})).to.contain('URL ist ein Pflichtfeld.');
       expect(result({url: null})).to.contain('URL ist ein Pflichtfeld.');
       expect(result({url: 'n'})).to.not.contain('URL ist ein Pflichtfeld.');
+      expect(result({url: '/'})).to.contain('URL darf kein "/" enthalten.');
     });
 
   });
