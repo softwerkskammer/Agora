@@ -50,6 +50,13 @@ describe('MembersService', function () {
     });
   });
 
+  it('rejects nicknames that contain an "/"', function (done) {
+    membersService.isValidNickname('ha/ha', function (err, result) {
+      expect(result).to.be(false);
+      done(err);
+    });
+  });
+
   it('accepts nicknames that do not exist', function (done) {
     membersService.isValidNickname('haha', function (err, result) {
       expect(result).to.be(true);

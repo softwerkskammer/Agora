@@ -287,6 +287,10 @@ describe('Validation', function () {
       expect(result({nickname: 'n'})).to.not.contain('Nickname ist ein Pflichtfeld.');
     });
 
+    it('checks that nickname does not contain a "/"', function () {
+      expect(result({nickname: '/'})).to.contain('Nickname darf kein "/" enthalten.');
+    });
+
     it('checks that nickname is longer than 2 letters', function () {
       expect(result({nickname: null})).to.contain('Nickname muss mindestens 2 Zeichen enthalten.');
       expect(result({nickname: 'n'})).to.contain('Nickname muss mindestens 2 Zeichen enthalten.');
