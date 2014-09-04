@@ -111,10 +111,18 @@ describe('Activities Service', function () {
         done(err);
       });
     });
+
     it('allows the untrimmed URL \' edit \'', function (done) {
       sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, null); });
       activitiesService.isValidUrl(' edit ', '^edit$', function (err, result) {
         expect(result).to.be(true);
+        done(err);
+      });
+    });
+
+    it('does not allow a URL containing a "/"', function (done) {
+      activitiesService.isValidUrl('', 'legal/egal', function (err, result) {
+        expect(result).to.be(false);
         done(err);
       });
     });

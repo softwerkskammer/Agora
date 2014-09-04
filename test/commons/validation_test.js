@@ -51,6 +51,12 @@ describe('Validation', function () {
       expect(result).to.contain('Titel ist ein Pflichtfeld.');
     });
 
+    it('does not validate activity url with "/"', function () {
+      var result = validation.isValidForActivity({url: '/'});
+
+      expect(result).to.contain('URL darf kein "/" enthalten.');
+    });
+
     it('does not validate resource names of activity input without resources', function () {
       var result = validation.isValidForActivity({});
 

@@ -57,8 +57,6 @@ mixin activityform(activity, groups)
               +textarea('description', t('general.description'), activity.description())
             .col-md-6
               .form-group
-                button.btn.btn-default.btn-xs.pull-right(type='button', onclick='fillUrlFromText()')
-                  | #{t('activities.suggestion')}
                 +controlLabel('url', t('activities.address_suffix'), t('activities.tooltip.address_suffix'))
                 input.form-control#url(type='text', name='url', value=activity.url())
               +text('location', t('activities.location'), activity.location())
