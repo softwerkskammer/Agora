@@ -251,3 +251,27 @@ describe('formatNumberWithCurrentLocale', function () {
     expect(result).to.equal('0.00');
   });
 });
+
+describe('containsSlash', function () {
+
+  it('detects a leading slash', function () {
+    expect(fieldHelpers.containsSlash('/lo')).to.be(true);
+  });
+
+  it('detects an inline slash', function () {
+    expect(fieldHelpers.containsSlash('hal/lo')).to.be(true);
+  });
+
+  it('detects a trailing slash', function () {
+    expect(fieldHelpers.containsSlash('hal/')).to.be(true);
+  });
+
+  it('detects a double slash', function () {
+    expect(fieldHelpers.containsSlash('hal//')).to.be(true);
+  });
+
+  it('detects no slash', function () {
+    expect(fieldHelpers.containsSlash('hallo')).to.be(false);
+  });
+
+});
