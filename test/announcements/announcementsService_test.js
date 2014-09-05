@@ -64,7 +64,14 @@ describe('Announcements Service', function () {
     });
   });
 
-  it('reject an invalid url', function (done) {
+  it('rejects an url with "/"', function (done) {
+    announcementsService.isValidUrl('valid/', function (err, result) {
+      expect(result).to.be(false);
+      done(err);
+    });
+  });
+
+  it('rejects an invalid url', function (done) {
     announcementsService.isValidUrl('edit', function (err, result) {
       expect(result).to.be(false);
       done(err);

@@ -15,15 +15,6 @@ block scripts
     });
   script#resource-template(type='text/html')
     +resourceRow(undefined, undefined, true, true, false)
-  script.
-    function fillUrlFromText () {
-      var title = document.getElementById('title').value;
-      var urlContent = encodeURIComponent(title.replace(/^\s\s*/, '').replace(/\s\s*$/, '').replace(/[ #,!?ßöäü:"']/gi, '_'));
-      var urlInput = $('#url');
-      urlInput.val(urlContent);
-      urlInput.change();
-      urlInput.focus();
-    }
 
 block title
   | #{t('activities.activity')}

@@ -33,6 +33,7 @@ describe('Validation', function () {
       expect(result({})).to.contain('URL ist ein Pflichtfeld.');
       expect(result({url: null})).to.contain('URL ist ein Pflichtfeld.');
       expect(result({url: 'n'})).to.not.contain('URL ist ein Pflichtfeld.');
+      expect(result({url: '/'})).to.contain('URL darf kein "/" enthalten.');
     });
 
   });
@@ -48,6 +49,12 @@ describe('Validation', function () {
       var result = validation.isValidForActivity({});
 
       expect(result).to.contain('Titel ist ein Pflichtfeld.');
+    });
+
+    it('does not validate activity url with "/"', function () {
+      var result = validation.isValidForActivity({url: '/'});
+
+      expect(result).to.contain('URL darf kein "/" enthalten.');
     });
 
     it('does not validate resource names of activity input without resources', function () {
@@ -285,6 +292,10 @@ describe('Validation', function () {
       expect(result({})).to.contain('Nickname ist ein Pflichtfeld.');
       expect(result({nickname: null})).to.contain('Nickname ist ein Pflichtfeld.');
       expect(result({nickname: 'n'})).to.not.contain('Nickname ist ein Pflichtfeld.');
+    });
+
+    it('checks that nickname does not contain a "/"', function () {
+      expect(result({nickname: '/'})).to.contain('Nickname darf kein "/" enthalten.');
     });
 
     it('checks that nickname is longer than 2 letters', function () {
