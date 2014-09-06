@@ -33,6 +33,7 @@ mixin tagCloud(members, group)
       $("#tag-cloud").jQCloud(
       JSON.parse(jsonString), 
       {
+        shape: 'rectangular',
         steps: 7,
         autoResize: true,
         removeOverflowing: false,

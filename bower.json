@@ -14,14 +14,13 @@
     "jquery": "2.1.1",
     "jquery.qrcode": "~0.9.1",
     "jquery-validation": "1.13.0",
-    "pick-a-color": "1.2.3",
+    "mjolnic-bootstrap-colorpicker": "2.0.0",
     "select2": "3.5.1",
     "select2-bootstrap-css": "1.4.1",
     "tinygradient": "0.2.0"
   },
   "resolutions": {
     "bootstrap": "3.2.0",
-    "jquery": "2.1.1",
-    "tinycolor": "0.11.x"
+    "jquery": "2.1.1"
   }
 }

@@ -28,8 +28,8 @@ module.exports = function (grunt) {
       'frontend/3rd_party_js/jquery.smartmenus.bootstrap.js',
       'frontend/3rd_party_js/fullcalendar-patched.js',
       'bower_components/fullcalendar/dist/lang/de.js', // for fullcalendar
-      'bower_components/tinycolor/tinycolor.js', // for pick-a-color
-      'bower_components/pick-a-color/src/js/pick-a-color.js',
+      'bower_components/tinycolor/tinycolor.js',
+      'bower_components/mjolnic-bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js',
       'bower_components/bootstrap-datepicker/js/locales/bootstrap-datepicker.de.js',
       'bower_components/jquery-validation/dist/jquery.validate.js',
       'bower_components/jquery-validation/dist/additional-methods.js',
@@ -58,8 +58,8 @@ module.exports = function (grunt) {
       'frontend/3rd_party_js/jquery.smartmenus.bootstrap.js',
       'frontend/3rd_party_js/fullcalendar-patched.js',
       'bower_components/fullcalendar/dist/lang/en-gb.js', // for fullcalendar
-      'bower_components/tinycolor/tinycolor.js', // for pick-a-color
-      'bower_components/pick-a-color/src/js/pick-a-color.js',
+      'bower_components/tinycolor/tinycolor.js',
+      'bower_components/mjolnic-bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js',
       'bower_components/jquery-validation/dist/jquery.validate.js',
       'bower_components/jquery-validation/dist/additional-methods.js',
       'bower_components/jquery.qrcode/dist/jquery.qrcode.js',
@@ -85,6 +85,13 @@ module.exports = function (grunt) {
         dest: 'public/images/',
         expand: true,
         flatten: true
+      },
+      colorpickerImages: {
+        cwd: 'bower_components/mjolnic-bootstrap-colorpicker/dist/img',
+        src: ['**'],
+        dest: 'public/img/',
+        expand: true,
+        flatten: false
       },
       bootstrapFONTS: {
         src: 'bower_components/bootstrap/dist/fonts/*',
@@ -201,7 +208,6 @@ module.exports = function (grunt) {
             'bower_components/bootstrap-datepicker/css/datepicker3.css',
             'build/stylesheets/less/bootstrap-markdown-patched.less',
             'bower_components/font-awesome/css/font-awesome.css',
-            'build/stylesheets/less/pick-a-color-patched.less',
             'frontend/3rd_party_css/shCoreDefault-patched.css',
             'frontend/3rd_party_css/jquery.smartmenus.bootstrap.css',
             'bower_components/datatables/media/css/jquery.dataTables.css',
@@ -209,6 +215,7 @@ module.exports = function (grunt) {
             'frontend/3rd_party_css/dataTables.fontAwesome.css',
             'bower_components/select2/select2.css',
             'bower_components/select2-bootstrap-css/select2-bootstrap.css',
+            'bower_components/mjolnic-bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css',
             'build/stylesheets/less/agora.less',
             'build/stylesheets/less/activityresults.less'
           ]
