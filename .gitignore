@@ -43,6 +43,7 @@ build
 public/fonts
 bootstrap.js
 public/clientscripts
+public/img/bootstrap-colorpicker
 lib/mailarchive/imported.log
 coverageWithDB
 karma-coverage

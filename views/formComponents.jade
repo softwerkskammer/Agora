@@ -82,9 +82,11 @@ mixin time(name, value)
 mixin colorPicker(name, value)
   .form-group
     +controlLabel(name, t('colors.color'))
-    input.form-control.colorpicker(id=name, type='text', name=name, value=value)
+    .input-group.c-picker
+      span.input-group-addon: i
+      input.form-control(id=name, type='text', name=name, value=value placeholder='#HEXHEX')
     script.
-      $('.colorpicker').pickAColor();
+      $('.c-picker').colorpicker();
 
 // PICKERS END
 
