@@ -121,7 +121,7 @@ describe('MembersService', function () {
       expect(result[1]).to.include('Becker');
     });
 
-    it('adds tags inside one member', function () {
+    it('sums tags inside one member', function () {
       var members = [];
       members.push(new Member({interests: 'Heinz, Heinz'}));
       var result = membersService.toWordList(members);
@@ -137,7 +137,7 @@ describe('MembersService', function () {
       expect(result[0]).to.eql({text: 'Heinz', weight: 6, link: '/members/interests?interest=Heinz'});
     });
 
-    it('adds tags of two members', function () {
+    it('sums tags of two members', function () {
       var members = [];
       members.push(new Member({interests: ' Heinz'}));
       members.push(new Member({interests: 'Heinz  '}));
