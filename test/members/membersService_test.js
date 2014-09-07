@@ -172,5 +172,59 @@ describe('MembersService', function () {
       expect(result[0]).to.eql({text: 'Heinz', weight: 1, link: '/members/interests?interest=Heinz'});
     });
   });
+
+  describe('"toUngroupedWordList"', function () {
+    it('trims simple interest strings and sorts them', function () {
+      var members = [];
+      members.push(new Member({interests: 'Heinz, Becker'}));
+      var result = membersService.toUngroupedWordList(members);
+      expect(result[0]).to.include('Becker');
+      expect(result[1]).to.include('Heinz');
+    });
+
+    it('sums tags inside one member', function () {
+      var members = [];
+      members.push(new Member({interests: 'Heinz, Heinz'}));
+      var result = membersService.toUngroupedWordList(members);
+      expect(result).to.have.length(1);
+      expect(result[0]).to.eql({text: 'Heinz', weight: 2, link: '/members/interests?interest=Heinz'});
+    });
+
+    it('returns one entry for each writing', function () {
+      var members = [];
+      members.push(new Member({interests: 'Heinz, heinz, HeInZ, Heinz, Heinz, heinz'}));
+      var result = membersService.toUngroupedWordList(members);
+      expect(result).to.have.length(3);
+      expect(result[0]).to.eql({text: 'HeInZ', weight: 1, link: '/members/interests?interest=HeInZ'});
+      expect(result[1]).to.eql({text: 'Heinz', weight: 3, link: '/members/interests?interest=Heinz'});
+      expect(result[2]).to.eql({text: 'heinz', weight: 2, link: '/members/interests?interest=heinz'});
+    });
+
+    it('sums tags of two members', function () {
+      var members = [];
+      members.push(new Member({interests: ' Heinz'}));
+      members.push(new Member({interests: 'Heinz  '}));
+      var result = membersService.toUngroupedWordList(members);
+      expect(result).to.have.length(1);
+      expect(result[0]).to.eql({text: 'Heinz', weight: 2, link: '/members/interests?interest=Heinz'});
+    });
+
+    it('handles empty interests tags', function () {
+      var members = [];
+      members.push(new Member({}));
+      members.push(new Member({interests: 'Heinz  '}));
+      var result = membersService.toUngroupedWordList(members);
+      expect(result).to.have.length(1);
+      expect(result[0]).to.eql({text: 'Heinz', weight: 1, link: '/members/interests?interest=Heinz'});
+    });
+
+    it('ignores " and \'', function () {
+      var members = [];
+      members.push(new Member({interests: ' "H\'ei"nz"'}));
+      var result = membersService.toUngroupedWordList(members);
+      expect(result).to.have.length(1);
+      expect(result[0]).to.eql({text: 'Heinz', weight: 1, link: '/members/interests?interest=Heinz'});
+    });
+  });
 });
 
