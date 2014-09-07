@@ -13,7 +13,7 @@
 
     it('removes " and \' and ( and ) from the url parameter', function () {
       var result = surroundInterestsWithLinks('a"b\'c(d)');
-      expect(result).to.equal('<a href="/members/interests?interest=abcd">a"b\'c(d)</a>');
+      expect(result).to.equal('<a href="/members/interests?interest=a%22b\'c(d)">a"b\'c(d)</a>');
     });
 
     it('surrounds a text inside class "interestify"', function () {

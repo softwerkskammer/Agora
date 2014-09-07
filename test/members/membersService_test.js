@@ -155,21 +155,21 @@ describe('MembersService', function () {
       expect(result[0]).to.eql({text: 'Heinz', weight: 1, link: '/members/interests?interest=Heinz'});
     });
 
-    it('ignores " and \'', function () {
+    it('keeps " and \'', function () {
       var members = [];
       members.push(new Member({interests: ' "H\'ei"nz"'}));
       var result = membersService.toWordList(members);
       expect(result).to.have.length(1);
-      expect(result[0]).to.eql({text: 'Heinz', weight: 1, link: '/members/interests?interest=Heinz'});
+      expect(result[0]).to.eql({text: '"H\'ei"nz"', weight: 1, link: '/members/interests?interest="H\'ei"nz"'});
     });
 
-    it('ignores ( and )', function () {
+    it('keeps ( and )', function () {
       var members = [];
       members.push(new Member({interests: 'Patterns (nicht nur im Code, sondern vor allem beim Lernen)'}));
       var result = membersService.toWordList(members);
       expect(result).to.have.length(2);
-      expect(result[0]).to.eql({text: 'Patterns nicht nur im Code', weight: 1, link: '/members/interests?interest=Patterns nicht nur im Code'});
-      expect(result[1]).to.eql({text: 'sondern vor allem beim Lernen', weight: 1, link: '/members/interests?interest=sondern vor allem beim Lernen'});
+      expect(result[0]).to.eql({text: 'Patterns (nicht nur im Code', weight: 1, link: '/members/interests?interest=Patterns (nicht nur im Code'});
+      expect(result[1]).to.eql({text: 'sondern vor allem beim Lernen)', weight: 1, link: '/members/interests?interest=sondern vor allem beim Lernen)'});
     });
   });
 
@@ -218,12 +218,21 @@ describe('MembersService', function () {
       expect(result[0]).to.eql({text: 'Heinz', weight: 1, link: '/members/interests?interest=Heinz'});
     });
 
-    it('ignores " and \'', function () {
+    it('keeps " and \'', function () {
       var members = [];
       members.push(new Member({interests: ' "H\'ei"nz"'}));
       var result = membersService.toUngroupedWordList(members);
       expect(result).to.have.length(1);
-      expect(result[0]).to.eql({text: 'Heinz', weight: 1, link: '/members/interests?interest=Heinz'});
+      expect(result[0]).to.eql({text: '"H\'ei"nz"', weight: 1, link: '/members/interests?interest="H\'ei"nz"'});
+    });
+
+    it('keeps ( and )', function () {
+      var members = [];
+      members.push(new Member({interests: 'Patterns (nicht nur im Code, sondern vor allem beim Lernen)'}));
+      var result = membersService.toUngroupedWordList(members);
+      expect(result).to.have.length(2);
+      expect(result[0]).to.eql({text: 'Patterns (nicht nur im Code', weight: 1, link: '/members/interests?interest=Patterns (nicht nur im Code'});
+      expect(result[1]).to.eql({text: 'sondern vor allem beim Lernen)', weight: 1, link: '/members/interests?interest=sondern vor allem beim Lernen)'});
     });
   });
 });
