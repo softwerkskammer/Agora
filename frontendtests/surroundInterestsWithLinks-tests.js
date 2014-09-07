@@ -10,6 +10,12 @@
       var result = surroundInterestsWithLinks('a, b, a b, a;b ,cb');
       expect(result).to.equal(expected);
     });
+
+    it('removes " and \' and ( and ) from the url parameter', function () {
+      var result = surroundInterestsWithLinks('a"b\'c(d)');
+      expect(result).to.equal('<a href="/members/interests?interest=a%22b\'c(d)">a"b\'c(d)</a>');
+    });
+
     it('surrounds a text inside class "interestify"', function () {
       expect($('#sixth').html()).to.equal(expected);
     });
