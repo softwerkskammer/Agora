@@ -6,7 +6,7 @@ var surroundInterestsWithLinks, surroundWithLink, surroundTwitterName, surroundE
 
   surroundInterestsWithLinks = function (string) {
     var interests = string.split(',').map(function (each) {
-      var interest = each.trim();
+      var interest = each.replace(/['"()]/g, '').trim();
       return '<a href="/members/interests?interest=' + encodeURIComponent(interest) + '">' + each + '</a>';
     });
     return interests.join();
