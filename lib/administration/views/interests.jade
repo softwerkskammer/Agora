@@ -1,0 +1,19 @@
+extends ../../../views/layoutOnlyMain
+
+
+block title
+  | Übersicht der Interessen
+
+block content
+  .row
+    .col-md-12
+      .page-header
+        h2 Verwaltung
+          small  Interessen
+  .row
+    .col-md-12
+      h4 #{interests.length} Interessen:
+
+      for interest in interests
+        p
+          a(href='#{interest.link}') #{interest.text} (#{interest.weight})
