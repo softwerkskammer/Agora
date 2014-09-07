@@ -155,15 +155,6 @@ describe('MembersService', function () {
       expect(result[0]).to.eql({text: 'Heinz', weight: 1, link: '/members/interests?interest=Heinz'});
     });
 
-    it('ignores differences in upper lower case', function () {
-      var members = [];
-      members.push(new Member({interests: ' heInz'}));
-      members.push(new Member({interests: 'Heinz  '}));
-      var result = membersService.toWordList(members);
-      expect(result).to.have.length(1);
-      expect(result[0]).to.eql({text: 'heInz', weight: 2, link: '/members/interests?interest=heInz'});
-    });
-
     it('ignores " and \'', function () {
       var members = [];
       members.push(new Member({interests: ' "H\'ei"nz"'}));
