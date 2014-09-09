@@ -55,7 +55,7 @@
     "node-html-encoder": "0.0.2",
     "node-syntaxhighlighter": "0.8.1",
     "node-uuid": "~1.4.1",
-    "nodemailer": "1.2.1",
+    "nodemailer": "1.2.2",
     "numeral": "1.5.3",
     "passport": "0.2.0",
     "passport-github": "0.1.5",
