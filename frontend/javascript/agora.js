@@ -1,8 +1,14 @@
 /*global moment, datepicker_lang, datepicker_format, fc_lang, URI */
 
-var surroundInterestsWithLinks, surroundWithLink, surroundTwitterName, surroundEmail, displayedActivityStart, displayedActivityEnd;
+var interestify, surroundInterestsWithLinks, surroundWithLink, surroundTwitterName, surroundEmail, displayedActivityStart, displayedActivityEnd;
 (function () {
   'use strict';
+
+  interestify = function () {
+    $('.interestify').each(function () {
+      $(this).html(surroundInterestsWithLinks(this.innerHTML));
+    });
+  };
 
   surroundInterestsWithLinks = function (string) {
     var interests = string.split(',').map(function (each) {
@@ -165,10 +171,7 @@ var surroundInterestsWithLinks, surroundWithLink, surroundTwitterName, surroundE
     $('.mailtoify').each(function () {
       $(this).html(surroundEmail(this.innerHTML));
     });
-
-    $('.interestify').each(function () {
-      $(this).html(surroundInterestsWithLinks(this.innerHTML));
-    });
+    interestify();
   };
 
   var initTooltipsAndHovers = function () {

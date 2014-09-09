@@ -126,7 +126,7 @@ describe('MembersService', function () {
       members.push(new Member({interests: 'Heinz, Heinz'}));
       var result = membersService.toWordList(members);
       expect(result).to.have.length(1);
-      expect(result[0]).to.eql({text: 'Heinz', weight: 2, link: '/members/interests?interest=Heinz'});
+      expect(result[0]).to.eql({text: 'Heinz', weight: 2, html: {class: 'interestify'}});
     });
 
     it('uses the most common writing', function () {
@@ -134,7 +134,7 @@ describe('MembersService', function () {
       members.push(new Member({interests: 'Heinz, heinz, HeInZ, Heinz, Heinz, heinz'}));
       var result = membersService.toWordList(members);
       expect(result).to.have.length(1);
-      expect(result[0]).to.eql({text: 'Heinz', weight: 6, link: '/members/interests?interest=Heinz'});
+      expect(result[0]).to.eql({text: 'Heinz', weight: 6, html: {class: 'interestify'}});
     });
 
     it('sums tags of two members', function () {
@@ -143,7 +143,7 @@ describe('MembersService', function () {
       members.push(new Member({interests: 'Heinz  '}));
       var result = membersService.toWordList(members);
       expect(result).to.have.length(1);
-      expect(result[0]).to.eql({text: 'Heinz', weight: 2, link: '/members/interests?interest=Heinz'});
+      expect(result[0]).to.eql({text: 'Heinz', weight: 2, html: {class: 'interestify'}});
     });
 
     it('handles empty interests tags', function () {
@@ -152,7 +152,7 @@ describe('MembersService', function () {
       members.push(new Member({interests: 'Heinz  '}));
       var result = membersService.toWordList(members);
       expect(result).to.have.length(1);
-      expect(result[0]).to.eql({text: 'Heinz', weight: 1, link: '/members/interests?interest=Heinz'});
+      expect(result[0]).to.eql({text: 'Heinz', weight: 1, html: {class: 'interestify'}});
     });
 
     it('keeps " and \'', function () {
@@ -160,7 +160,7 @@ describe('MembersService', function () {
       members.push(new Member({interests: ' "H\'ei"nz"'}));
       var result = membersService.toWordList(members);
       expect(result).to.have.length(1);
-      expect(result[0]).to.eql({text: '"H\'ei"nz"', weight: 1, link: '/members/interests?interest="H\'ei"nz"'});
+      expect(result[0]).to.eql({text: '"H\'ei"nz"', weight: 1, html: {class: 'interestify'}});
     });
 
     it('keeps ( and )', function () {
@@ -168,8 +168,8 @@ describe('MembersService', function () {
       members.push(new Member({interests: 'Patterns (nicht nur im Code, sondern vor allem beim Lernen)'}));
       var result = membersService.toWordList(members);
       expect(result).to.have.length(2);
-      expect(result[0]).to.eql({text: 'Patterns (nicht nur im Code', weight: 1, link: '/members/interests?interest=Patterns (nicht nur im Code'});
-      expect(result[1]).to.eql({text: 'sondern vor allem beim Lernen)', weight: 1, link: '/members/interests?interest=sondern vor allem beim Lernen)'});
+      expect(result[0]).to.eql({text: 'Patterns (nicht nur im Code', weight: 1, html: {class: 'interestify'}});
+      expect(result[1]).to.eql({text: 'sondern vor allem beim Lernen)', weight: 1, html: {class: 'interestify'}});
     });
   });
 
@@ -187,7 +187,7 @@ describe('MembersService', function () {
       members.push(new Member({interests: 'Heinz, Heinz'}));
       var result = membersService.toUngroupedWordList(members);
       expect(result).to.have.length(1);
-      expect(result[0]).to.eql({text: 'Heinz', weight: 2, link: '/members/interests?interest=Heinz'});
+      expect(result[0]).to.eql({text: 'Heinz', weight: 2, html: {class: 'interestify'}});
     });
 
     it('returns one entry for each writing', function () {
@@ -195,9 +195,9 @@ describe('MembersService', function () {
       members.push(new Member({interests: 'Heinz, heinz, HeInZ, Heinz, Heinz, heinz'}));
       var result = membersService.toUngroupedWordList(members);
       expect(result).to.have.length(3);
-      expect(result[0]).to.eql({text: 'HeInZ', weight: 1, link: '/members/interests?interest=HeInZ'});
-      expect(result[1]).to.eql({text: 'Heinz', weight: 3, link: '/members/interests?interest=Heinz'});
-      expect(result[2]).to.eql({text: 'heinz', weight: 2, link: '/members/interests?interest=heinz'});
+      expect(result[0]).to.eql({text: 'HeInZ', weight: 1, html: {class: 'interestify'}});
+      expect(result[1]).to.eql({text: 'Heinz', weight: 3, html: {class: 'interestify'}});
+      expect(result[2]).to.eql({text: 'heinz', weight: 2, html: {class: 'interestify'}});
     });
 
     it('sums tags of two members', function () {
@@ -206,7 +206,7 @@ describe('MembersService', function () {
       members.push(new Member({interests: 'Heinz  '}));
       var result = membersService.toUngroupedWordList(members);
       expect(result).to.have.length(1);
-      expect(result[0]).to.eql({text: 'Heinz', weight: 2, link: '/members/interests?interest=Heinz'});
+      expect(result[0]).to.eql({text: 'Heinz', weight: 2, html: {class: 'interestify'}});
     });
 
     it('handles empty interests tags', function () {
@@ -215,7 +215,7 @@ describe('MembersService', function () {
       members.push(new Member({interests: 'Heinz  '}));
       var result = membersService.toUngroupedWordList(members);
       expect(result).to.have.length(1);
-      expect(result[0]).to.eql({text: 'Heinz', weight: 1, link: '/members/interests?interest=Heinz'});
+      expect(result[0]).to.eql({text: 'Heinz', weight: 1, html: {class: 'interestify'}});
     });
 
     it('keeps " and \'', function () {
@@ -223,7 +223,7 @@ describe('MembersService', function () {
       members.push(new Member({interests: ' "H\'ei"nz"'}));
       var result = membersService.toUngroupedWordList(members);
       expect(result).to.have.length(1);
-      expect(result[0]).to.eql({text: '"H\'ei"nz"', weight: 1, link: '/members/interests?interest="H\'ei"nz"'});
+      expect(result[0]).to.eql({text: '"H\'ei"nz"', weight: 1, html: {class: 'interestify'}});
     });
 
     it('keeps ( and )', function () {
@@ -231,8 +231,8 @@ describe('MembersService', function () {
       members.push(new Member({interests: 'Patterns (nicht nur im Code, sondern vor allem beim Lernen)'}));
       var result = membersService.toUngroupedWordList(members);
       expect(result).to.have.length(2);
-      expect(result[0]).to.eql({text: 'Patterns (nicht nur im Code', weight: 1, link: '/members/interests?interest=Patterns (nicht nur im Code'});
-      expect(result[1]).to.eql({text: 'sondern vor allem beim Lernen)', weight: 1, link: '/members/interests?interest=sondern vor allem beim Lernen)'});
+      expect(result[0]).to.eql({text: 'Patterns (nicht nur im Code', weight: 1, html: {class: 'interestify'}});
+      expect(result[1]).to.eql({text: 'sondern vor allem beim Lernen)', weight: 1, html: {class: 'interestify'}});
     });
   });
 });
