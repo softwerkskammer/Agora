@@ -27,11 +27,9 @@ mixin linkedMember(nickname)
 mixin tagCloud(members, group)
   #tag-cloud
   script.
-    var 
-      jsonString = '!{JSON.stringify(tagclouddata(members))}';
     $(document).ready(function() {
       $("#tag-cloud").jQCloud(
-      JSON.parse(jsonString), 
+        !{JSON.stringify(tagclouddata(members))}, 
       {
         shape: 'rectangular',
         steps: 7,
