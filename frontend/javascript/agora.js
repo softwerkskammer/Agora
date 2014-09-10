@@ -6,14 +6,17 @@ var interestify, surroundInterestsWithLinks, surroundWithLink, surroundTwitterNa
 
   interestify = function () {
     $('.interestify').each(function () {
-      $(this).html(surroundInterestsWithLinks(this.innerHTML));
+      $(this).html(surroundInterestsWithLinks(this.innerHTML, ''));
+    });
+    $('.interestify-case-sensitive').each(function () {
+      $(this).html(surroundInterestsWithLinks(this.innerHTML, '&casesensitive=true'));
     });
   };
 
-  surroundInterestsWithLinks = function (string) {
+  surroundInterestsWithLinks = function (string, casesensitive) {
     var interests = string.split(',').map(function (each) {
       var interest = each.trim();
-      return '<a href="/members/interests?interest=' + encodeURIComponent(interest) + '">' + each + '</a>';
+      return '<a href="/members/interests?interest=' + encodeURIComponent(interest) + (casesensitive || '') + '">' + each + '</a>';
     });
     return interests.join();
   };

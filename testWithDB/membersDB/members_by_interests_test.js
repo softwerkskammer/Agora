@@ -21,7 +21,7 @@ describe('Members application with DB', function () {
   });
 
   it('finds a member by simple interest', function (done) {
-    memberstore.getMembersWithInterest('a', function (err, members) {
+    memberstore.getMembersWithInterest('a', 'i', function (err, members) {
       expect(members).to.have.length(1);
       expect(members[0].id()).to.be('id');
       done(err);
@@ -29,7 +29,7 @@ describe('Members application with DB', function () {
   });
 
   it('finds a member by interest with umlaut and "+"', function (done) {
-    memberstore.getMembersWithInterest('ü+p', function (err, members) {
+    memberstore.getMembersWithInterest('ü+p', 'i', function (err, members) {
       expect(members).to.have.length(1);
       expect(members[0].id()).to.be('id');
       done(err);
@@ -37,7 +37,7 @@ describe('Members application with DB', function () {
   });
 
   it('finds a member by interest with spaces (case 1)', function (done) {
-    memberstore.getMembersWithInterest('c d e', function (err, members) {
+    memberstore.getMembersWithInterest('c d e', 'i', function (err, members) {
       expect(members).to.have.length(1);
       expect(members[0].id()).to.be('id');
       done(err);
@@ -45,7 +45,7 @@ describe('Members application with DB', function () {
   });
 
   it('finds a member by interest with spaces (case 2)', function (done) {
-    memberstore.getMembersWithInterest('f g h', function (err, members) {
+    memberstore.getMembersWithInterest('f g h', 'i', function (err, members) {
       expect(members).to.have.length(1);
       expect(members[0].id()).to.be('id');
       done(err);
@@ -53,7 +53,14 @@ describe('Members application with DB', function () {
   });
 
   it('does not find a member by partial matches of an interest', function (done) {
-    memberstore.getMembersWithInterest('b', function (err, members) {
+    memberstore.getMembersWithInterest('b', 'i', function (err, members) {
+      expect(members).to.have.length(0);
+      done(err);
+    });
+  });
+
+  it('does not find a member when searching case sensitive', function (done) {
+    memberstore.getMembersWithInterest('Bb', '', function (err, members) {
       expect(members).to.have.length(0);
       done(err);
     });
