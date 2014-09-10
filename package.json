@@ -64,7 +64,6 @@
     "soap-sympa": "0.0.1",
     "stripe": "2.8.0",
     "underscore.string": "2.3.3",
-    "URIjs": "1.13.2",
     "useragent": "2.0.9",
     "winston": "0.7.3",
     "winston-config": "0.4.2"

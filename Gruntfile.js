@@ -12,63 +12,47 @@ module.exports = function (grunt) {
   jsLintServerTestDirectives.ass = true;
   jsLintServerTestDirectives.predef = ['afterEach', 'after', 'beforeEach', 'before', 'describe', 'it'];
 
+  var commonJSfiles = [
+    'bower_components/jquery/dist/jquery.js',
+    'bower_components/select2/select2.js',
+    'bower_components/autoNumeric/autoNumeric.js',
+    'bower_components/bootstrap/dist/js/bootstrap.js',
+    'bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js',
+    'bower_components/bootstrap-markdown/js/bootstrap-markdown.js',
+    'node_modules/moment-timezone/node_modules/moment/moment.js',
+    'frontend/3rd_party_js/jquery.smartmenus.js',
+    'frontend/3rd_party_js/jquery.smartmenus.bootstrap.js',
+    'frontend/3rd_party_js/fullcalendar-patched.js',
+    'bower_components/tinycolor/tinycolor.js',
+    'bower_components/mjolnic-bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js',
+    'bower_components/jquery-validation/dist/jquery.validate.js',
+    'bower_components/jquery-validation/dist/additional-methods.js',
+    'bower_components/jquery.qrcode/dist/jquery.qrcode.js',
+    'bower_components/bootstrap-timepicker/js/bootstrap-timepicker.js',
+    'bower_components/jqcloud2/dist/jqcloud.js',
+    'bower_components/tinygradient/tinygradient.js',
+    'bower_components/URIjs/src/URI.js'
+  ];
+
   // filesets for uglify
   var files_de = {
-    'public/clientscripts/global_de.js': [
-      'locales/frontend_de.js',
-      'bower_components/jquery/dist/jquery.js',
-      'bower_components/select2/select2.js',
-      'bower_components/select2/select2_locale_de.js',
-      'bower_components/autoNumeric/autoNumeric.js',
-      'bower_components/bootstrap/dist/js/bootstrap.js',
-      'bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js',
-      'bower_components/bootstrap-markdown/js/bootstrap-markdown.js',
-      'node_modules/moment-timezone/node_modules/moment/moment.js',
-      'frontend/3rd_party_js/jquery.smartmenus.js',
-      'frontend/3rd_party_js/jquery.smartmenus.bootstrap.js',
-      'frontend/3rd_party_js/fullcalendar-patched.js',
-      'bower_components/fullcalendar/dist/lang/de.js', // for fullcalendar
-      'bower_components/tinycolor/tinycolor.js',
-      'bower_components/mjolnic-bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js',
-      'bower_components/bootstrap-datepicker/js/locales/bootstrap-datepicker.de.js',
-      'bower_components/jquery-validation/dist/jquery.validate.js',
-      'bower_components/jquery-validation/dist/additional-methods.js',
+    'public/clientscripts/global_de.js': commonJSfiles.concat([
       'bower_components/jquery-validation/src/localization/messages_de.js',
       'bower_components/jquery-validation/src/localization/methods_de.js',
-      'bower_components/jquery.qrcode/dist/jquery.qrcode.js',
-      'bower_components/bootstrap-timepicker/js/bootstrap-timepicker.js',
-      'bower_components/jqcloud2/dist/jqcloud.js',
-      'bower_components/tinygradient/tinygradient.js',
-      'node_modules/URIjs/src/URI.js',
+      'bower_components/bootstrap-datepicker/js/locales/bootstrap-datepicker.de.js',
+      'bower_components/select2/select2_locale_de.js',
+      'bower_components/fullcalendar/dist/lang/de.js',
+      'locales/frontend_de.js',
       'frontend/javascript/agora.js'
-    ]
+    ])
   };
 
   var files_en = {
-    'public/clientscripts/global_en.js': [
+    'public/clientscripts/global_en.js': commonJSfiles.concat([
+      'bower_components/fullcalendar/dist/lang/en-gb.js',
       'locales/frontend_en.js',
-      'bower_components/jquery/dist/jquery.js',
-      'bower_components/select2/select2.js',
-      'bower_components/autoNumeric/autoNumeric.js',
-      'bower_components/bootstrap/dist/js/bootstrap.js',
-      'bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js',
-      'bower_components/bootstrap-markdown/js/bootstrap-markdown.js',
-      'node_modules/moment-timezone/node_modules/moment/moment.js',
-      'frontend/3rd_party_js/jquery.smartmenus.js',
-      'frontend/3rd_party_js/jquery.smartmenus.bootstrap.js',
-      'frontend/3rd_party_js/fullcalendar-patched.js',
-      'bower_components/fullcalendar/dist/lang/en-gb.js', // for fullcalendar
-      'bower_components/tinycolor/tinycolor.js',
-      'bower_components/mjolnic-bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js',
-      'bower_components/jquery-validation/dist/jquery.validate.js',
-      'bower_components/jquery-validation/dist/additional-methods.js',
-      'bower_components/jquery.qrcode/dist/jquery.qrcode.js',
-      'bower_components/bootstrap-timepicker/js/bootstrap-timepicker.js',
-      'bower_components/jqcloud2/dist/jqcloud.js',
-      'bower_components/tinygradient/tinygradient.js',
-      'node_modules/URIjs/src/URI.js',
       'frontend/javascript/agora.js'
-    ]
+    ])
   };
 
   grunt.initConfig({

@@ -17,7 +17,8 @@
     "mjolnic-bootstrap-colorpicker": "2.0.0",
     "select2": "3.5.1",
     "select2-bootstrap-css": "1.4.1",
-    "tinygradient": "0.2.0"
+    "tinygradient": "0.2.0",
+    "URIjs": "1.14.0"
   },
   "resolutions": {
     "bootstrap": "3.2.0",
