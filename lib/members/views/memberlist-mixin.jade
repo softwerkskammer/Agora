@@ -24,11 +24,11 @@ mixin memberlist(members, organizers)
 mixin linkedMember(nickname)
   a(href='/members/#{encodeURIComponent(nickname)}') #{nickname}
 
-mixin tagCloud(members, group)
+mixin tagCloud(members, startcolor)
   #tag-cloud
   script.
     $(document).ready(function() {
-      $("#tag-cloud").jQCloud(
+      $('#tag-cloud').jQCloud(
         !{JSON.stringify(tagclouddata(members))}, 
       {
         afterCloudRender: interestify,
