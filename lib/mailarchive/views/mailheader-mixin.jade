@@ -13,18 +13,22 @@ mixin pageHeader(group, range)
 mixin mailIndex(mailHeaders)
   if (mailHeaders)
     ul.list-unstyled
-      each mailHeader in mailHeaders
-        li
-          div(id='messageDetails' + mailHeader.timeUnix, tabindex='-1').modal.fade.bs-modal-lg
-            .modal-dialog.modal-lg
-              .modal-content
-          a(data-toggle='modal', data-target='#messageDetails' + mailHeader.timeUnix, href='/mailarchive/message/' + encodeURIComponent(mailHeader.id)) #{mailHeader.subject}
+      +internalMailIndex(mailHeaders)
+
+mixin internalMailIndex(mailHeaders)
+  if (mailHeaders)
+    each mailHeader in mailHeaders
+      div(id='messageDetails' + mailHeader.timeUnix, tabindex='-1').modal.fade.bs-modal-lg
+        .modal-dialog.modal-lg
+          .modal-content
+      li.dashboard-line
+        a(data-toggle='modal', data-target='#messageDetails' + mailHeader.timeUnix, href='/mailarchive/message/' + encodeURIComponent(mailHeader.id)) #{mailHeader.subject}
           | 
-          a(href='/mailarchive/puremessage/'+ encodeURIComponent(mailHeader.id))
-            i.fa.fa-external-link-square
-          small
-            +mailattributes(mailHeader) 
-          +mailIndex(mailHeader.sortedResponses())
+        a(href='/mailarchive/puremessage/'+ encodeURIComponent(mailHeader.id))
+          i.fa.fa-external-link-square
+        small
+          +mailattributes(mailHeader)
+      +internalMailIndex(mailHeader.sortedResponses())
 
 mixin mailattributes(mailHeader, noPullRight)
   span(class = noPullRight ? '' : 'pull-right')
