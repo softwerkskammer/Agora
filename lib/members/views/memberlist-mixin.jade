@@ -44,9 +44,9 @@ mixin tagCloud(members, startcolor)
         },
         colors: function(weight) {
           var
-            start = tinycolor("#{group ? group.color : '#cb6868'}"),
-            seventy = tinycolor.lighten(tinycolor.desaturate(start, 30), 10),
-            hundred = tinycolor.lighten(tinycolor.desaturate(seventy, 30), 10),
+            start = tinycolor('#{startcolor}'),
+            seventy = tinycolor(start.toHexString()).desaturate(30).lighten(10),
+            hundred = tinycolor(seventy.toHexString()).desaturate(30).lighten(10),
             gradient = tinygradient([
               {color: start, pos: 0},
               {color: seventy, pos: 0.8},
