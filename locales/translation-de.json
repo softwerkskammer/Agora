@@ -63,7 +63,8 @@
     ],
     "are_you_sure": "Bist Du sicher?",
     "no": "Nein",
-    "delete": "Löschen"
+    "delete": "Löschen",
+    "guest": "Gast"
   },
   "error": {
     "congratulations": "Herzlichen Glückwunsch!",

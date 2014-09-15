@@ -62,7 +62,8 @@
     ],
     "are_you_sure": "Are you sure?",
     "no": "No",
-    "delete": "Delete"
+    "delete": "Delete",
+    "guest": "Guest"
   },
   "error": {
     "congratulations": "Congratulations!",
