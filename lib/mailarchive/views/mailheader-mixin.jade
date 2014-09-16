@@ -22,10 +22,10 @@ mixin internalMailIndex(mailHeaders)
         .modal-dialog.modal-lg
           .modal-content
       li.dashboard-line
-        a(data-toggle='modal', data-target='#messageDetails' + mailHeader.timeUnix, href='/mailarchive/message/' + encodeURIComponent(mailHeader.id)) #{mailHeader.subject}
-          | 
         a(href='/mailarchive/puremessage/'+ encodeURIComponent(mailHeader.id))
-          i.fa.fa-external-link-square
+          i.fa.fa-external-link-square.tooltipify(data-toggle='tooltip' title=t('mailarchive.open_as_distinct_page'))
+        | &nbsp;
+        a(data-toggle='modal', data-target='#messageDetails' + mailHeader.timeUnix, href='/mailarchive/message/' + encodeURIComponent(mailHeader.id)) #{mailHeader.subject}
         small
           +mailattributes(mailHeader)
       +internalMailIndex(mailHeader.sortedResponses())
