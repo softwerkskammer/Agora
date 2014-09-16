@@ -63,7 +63,8 @@
     ],
     "are_you_sure": "Bist Du sicher?",
     "no": "Nein",
-    "delete": "Löschen"
+    "delete": "Löschen",
+    "guest": "Gast"
   },
   "error": {
     "congratulations": "Herzlichen Glückwunsch!",
@@ -282,7 +283,8 @@
     "no_emails": "Keine E-Mails",
     "threaded": "Threaded",
     "unthreaded": "Flat",
-    "recent": "$t(mailarchive.archive) - Neueste"
+    "recent": "$t(mailarchive.archive) - Neueste",
+    "open_as_distinct_page": "Als eigene Seite öffnen"
   },
   "mailsender": {
     "notification": "Nachricht",

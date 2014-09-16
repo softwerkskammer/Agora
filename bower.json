@@ -12,7 +12,7 @@
     "fullcalendar": "2.1.1",
     "jqcloud2": "2.0.1",
     "jquery": "2.1.1",
-    "jquery.qrcode": "~0.9.1",
+    "jquery.qrcode": "0.10.1",
     "jquery-validation": "1.13.0",
     "mjolnic-bootstrap-colorpicker": "2.0.0",
     "select2": "3.5.1",

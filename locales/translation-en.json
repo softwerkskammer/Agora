@@ -62,7 +62,8 @@
     ],
     "are_you_sure": "Are you sure?",
     "no": "No",
-    "delete": "Delete"
+    "delete": "Delete",
+    "guest": "Guest"
   },
   "error": {
     "congratulations": "Congratulations!",
@@ -281,7 +282,8 @@
     "no_emails": "No e-mails",
     "threaded": "Threaded",
     "unthreaded": "Flat",
-    "recent": "$t(mailarchive.archive) - Recent"
+    "recent": "$t(mailarchive.archive) - Recent",
+    "open_as_distinct_page": "Open as distinct page"
   },
   "mailsender": {
     "notification": "Notification",
