@@ -288,7 +288,11 @@ module.exports = function (grunt) {
       }
     },
     'bower-install-simple': {
-      default: {}
+      default: {
+        options: {
+          directory: 'bower_components'
+        }
+      }
     }
   });
 
