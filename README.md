@@ -161,10 +161,11 @@ For running specific tests only, you can use mocha in a command like
 
 To run the style check (jshint) and the tests on every file change, use `grunt watch`
 
-Debugging the tests in the IDE [Webstorm](http://www.jetbrains.com/webstorm/)
+We are using WebStorm as IDE [Webstorm](http://www.jetbrains.com/webstorm/)
 ----------
+![WebStorm Logo](http://www.jetbrains.com/webstorm/documentation/docs/logo_webstorm.png)
 
-Follow these [instructions](http://codebetter.com/glennblock/2013/01/17/debugging-mocha-unit-tests-with-webstorm-step-by-step/)
+Feel free to ask us for a community licence if you are contributing.
 
 Editing the stylesheets
 -----------------------
