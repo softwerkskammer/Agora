@@ -20,9 +20,7 @@ function createConfiguration() {
     adminListName: "admins",
     port: '17124',
     imageDirectory: "/tmp",
-    mongoHost: 'localhost',
-    mongoPort: '27017',
-    mongoDB: 'swk',
+    mongoURL: 'mongodb://localhost:27017/swk',
     publicUrlPrefix: 'http://localhost:17124',
     securedByLoginURLPattern:
       '/activityresults|' +
