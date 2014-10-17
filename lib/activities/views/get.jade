@@ -75,6 +75,10 @@ block content
           if(accessrights.isRegistered() && activity.ownerNickname)
             | &nbsp;- #{t('activities.created_by')}&nbsp;
             a(href='/members/#{activity.ownerNickname}') #{activity.ownerNickname}
+          if(accessrights.isRegistered() && editors && editors.length > 0)
+            | &nbsp;- #{t('activities.editors')}:&nbsp;
+            each editor in editors
+              a(href='/members/#{editor}') #{editor}&nbsp;
     .col-md-6
       +map(activity.location(), '100%', '450px')
 
