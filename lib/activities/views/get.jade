@@ -72,7 +72,7 @@ block content
         hr.hidden-print
         p.hidden-print #{t('activities.organized_by')}&nbsp;
           a(href='/groups/#{activity.group.id}') #{activity.group.longName}
-          if(activity.ownerNickname)
+          if(accessrights.isRegistered() && activity.ownerNickname)
             | &nbsp;- #{t('activities.created_by')}&nbsp;
             a(href='/members/#{activity.ownerNickname}') #{activity.ownerNickname}
     .col-md-6
