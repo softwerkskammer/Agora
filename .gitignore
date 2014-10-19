@@ -48,3 +48,4 @@ lib/mailarchive/imported.log
 coverageWithDB
 karma-coverage
 .idea/libraries/softwerkskammer_agora_node_modules.xml
+.idea
