@@ -106,3 +106,29 @@ describe('Activity\'s direction', function () {
     expect(activity.hasDirection()).to.be(true);
   });
 });
+
+describe('Activity\'s editorIds', function () {
+  it('returns an empty array if there are no editors in constructor object', function () {
+    var activity = new Activity();
+    expect(activity.editorIds()).to.eql([]);
+  });
+
+  it('returns the editorIds that are contained in constructor object', function () {
+    var activity = new Activity({
+      editorIds: ['abc', 'def']
+    });
+    expect(activity.editorIds()).to.eql(['abc', 'def']);
+  });
+
+  it('returns an empty array if there are no editorIds passed via fillFromUI', function () {
+    var activity = new Activity();
+    activity.fillFromUI({});
+    expect(activity.editorIds()).to.eql([]);
+  });
+
+  it('returns the editorIds that are passed via fillFromUI', function () {
+    var activity = new Activity();
+    activity.fillFromUI({}, ['abc', 'def']);
+    expect(activity.editorIds()).to.eql(['abc', 'def']);
+  });
+});
