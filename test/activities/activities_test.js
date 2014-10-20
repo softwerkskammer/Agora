@@ -531,7 +531,7 @@ describe('Activity application', function () {
       request(createApp('memberId1'))
         .get('/urlForEditors')
         .expect(200)
-        .expect(/Editoren:&nbsp;<a href="\/members\/participant1">participant1<\/a>&nbsp;<a href="\/members\/participant3">participant3<\/a><\/p>/, done);
+        .expect(/Editoren:&nbsp;<a href="\/members\/participant1">participant1<\/a>&nbsp;<a href="\/members\/participant3">participant3<\/a>\s*<\/p>/, done);
     });
 
     it('allows editing by the owner, displays the current editors and the possible editors (all participants but not the owner)', function (done) {
