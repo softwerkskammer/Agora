@@ -25,6 +25,10 @@ module.exports = function (internalAppName, configuredBeans) {
       app.enable('view cache');
       app.use(require('cookie-parser')());
       app.use(require('body-parser').urlencoded({extended: true}));
+      app.use(function (req, res, next) {
+        res.locals.removeServerpaths = function (msg) { return msg; };
+        next();
+      });
       app.use(i18n.handle);
       app.use(beans.get('expressSessionConfigurator'));
 
