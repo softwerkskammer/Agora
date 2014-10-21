@@ -3,6 +3,7 @@
 var request = require('supertest');
 var sinon = require('sinon').sandbox.create();
 var expect = require('must');
+var _ = require('lodash');
 
 var createApp = require('../../testutil/testHelper')('activitiesApp').createApp;
 
@@ -19,10 +20,10 @@ var groupsAndMembersService = beans.get('groupsAndMembersService');
 var addonService = beans.get('addonService');
 var memberstore = beans.get('memberstore');
 
-var member1 = new Member({id: 'memberId1', nickname: 'participant1', email: 'nick1@b.c'});
-var member2 = new Member({id: 'memberId2', nickname: 'participant2', email: 'nick2@b.c'});
-var member3 = new Member({id: 'memberId3', nickname: 'participant3', email: 'nick3@b.c'});
-var member4 = new Member({id: 'memberId4', nickname: 'participant4', email: 'nick4@b.c'});
+var member1 = new Member({id: 'memberId1', nickname: 'participant1', email: 'nick1@b.c', firstname: 'Firstname1', lastname: 'Lastname1'});
+var member2 = new Member({id: 'memberId2', nickname: 'participant2', email: 'nick2@b.c', firstname: 'Firstname2', lastname: 'Lastname2'});
+var member3 = new Member({id: 'memberId3', nickname: 'participant3', email: 'nick3@b.c', firstname: 'Firstname3', lastname: 'Lastname3'});
+var member4 = new Member({id: 'memberId4', nickname: 'participant4', email: 'nick4@b.c', firstname: 'Firstname4', lastname: 'Lastname4'});
 
 var group = new Group({id: 'groupname', longName: 'Buxtehude'});
 
@@ -58,17 +59,39 @@ activityWithMultipleResources.participants = [ member1, member2, member3, member
 activityWithMultipleResources.colorRGB = '#123456';
 activityWithMultipleResources.group = new Group({id: 'group', longName: 'The name of the assigned Group'});
 
+var activityWithEditors = new Activity({title: 'Activity with Editors', description: 'description5', assignedGroup: 'groupname5',
+  location: 'location5', direction: 'direction5', startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'), url: 'urlForEditors',
+  owner: 'memberId4',
+  editorIds: ['memberId1', 'memberId3'],
+  resources: {'default': {_registeredMembers: [
+    {memberId: 'memberId1'},
+    {memberId: 'memberId2'},
+    {memberId: 'memberId3'},
+    {memberId: 'memberId4'}
+  ],
+    _registrationOpen: true }} });
+activityWithEditors.participants = [ member1, member2, member3, member4 ];
+activityWithEditors.colorRGB = '#123456';
+activityWithEditors.group = new Group({id: 'group', longName: 'The name of the group with editors'});
+activityWithEditors.ownerNickname = 'participant4';
+
+
 describe('Activity application', function () {
   beforeEach(function () {
     sinon.stub(activitystore, 'upcomingActivities', function (callback) {callback(null, [emptyActivity]); });
     sinon.stub(activitiesService, 'getActivitiesForDisplay', function (fetcher, callback) {
       callback(null, [emptyActivity]);
     });
+    sinon.stub(memberstore, 'getMembersForIds', function (ids, callback) {
+      var members = _.map(ids, function (id) { return id === 'memberId1' ? member1 : (id === 'memberId2' ? member2 : (id === 'memberId3' ? member3 : (id === 'memberId4' ? member4 : undefined))); });
+      callback(null, members);
+    });
 
     function activityToReturnFor(url) {
       if (url === 'urlOfTheActivity') { return emptyActivity; }
       if (url === 'urlForInteresting') { return activityWithParticipants; }
       if (url === 'urlForMultiple') { return activityWithMultipleResources; }
+      if (url === 'urlForEditors') { return activityWithEditors; }
       return null;
     }
 
@@ -490,4 +513,49 @@ describe('Activity application', function () {
     });
   });
 
+
+  describe('- when editors are being utilized -', function () {
+    it('does not show the names of the editors for a guest visitor', function (done) {
+      request(createApp())
+        .get('/urlForEditors')
+        .expect(200)
+        .end(function (err, res) {
+          expect(res.text).to.not.contain('Editoren:');
+          expect(res.text).to.not.contain('participant1');
+          expect(res.text).to.not.contain('participant3');
+          done(err);
+        });
+    });
+
+    it('shows the names of the editors for a registered member', function (done) {
+      request(createApp('memberId1'))
+        .get('/urlForEditors')
+        .expect(200)
+        .expect(/Editoren:&nbsp;<a href="\/members\/participant1">participant1<\/a>&nbsp;<a href="\/members\/participant3">participant3<\/a>\s*<\/p>/, done);
+    });
+
+    it('allows editing by the owner, displays the current editors and the possible editors (all participants but not the owner)', function (done) {
+      sinon.stub(groupsService, 'getSubscribedGroupsForUser', function (user, callback) { callback(null, []); });
+
+      request(createApp('memberId4'))
+        .get('/edit/urlForEditors')
+        .expect(200)
+        .expect(/value="Firstname1 Lastname1 \(participant1\),Firstname3 Lastname3 \(participant3\)"/)
+        .expect(/tags: \["Firstname1 Lastname1 \(participant1\)","Firstname2 Lastname2 \(participant2\)","Firstname3 Lastname3 \(participant3\)"\]/)
+        .end(done);
+    });
+
+    it('allows editing by an editor, displays the current editors and the possible editors (all participants but not the owner)', function (done) {
+      sinon.stub(groupsService, 'getSubscribedGroupsForUser', function (user, callback) { callback(null, []); });
+
+      request(createApp('memberId1'))
+        .get('/edit/urlForEditors')
+        .expect(200)
+        .expect(/value="Firstname1 Lastname1 \(participant1\),Firstname3 Lastname3 \(participant3\)"/)
+        .expect(/tags: \["Firstname1 Lastname1 \(participant1\)","Firstname2 Lastname2 \(participant2\)","Firstname3 Lastname3 \(participant3\)"\]/)
+        .end(done);
+    });
+
+
+  });
 });
