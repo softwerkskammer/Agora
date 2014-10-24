@@ -140,5 +140,23 @@ describe('Message Object\'s buttons', function () {
     expect(message.buttons).to.eql([button1, button2]);
   });
 
+  describe('removeAllButFirst function', function () {
+    it('removes no buttons if only one', function () {
+      var message = new Message();
+      var button = {text: 'text', url: 'url'};
+      message.addToButtons(button);
+      message.removeAllButFirstButton();
+      expect(message.buttons).to.eql([button]);
+    });
+
+    it('removes buttons if more than one', function () {
+      var message = new Message();
+      var button1 = {text: 'text', url: 'url'};
+      var button2 = {text: 'text2', url: 'url2'};
+      message.addToButtons([button1, button2]);
+      message.removeAllButFirstButton();
+      expect(message.buttons).to.eql([button1]);
+    });
+  });
 });
 
