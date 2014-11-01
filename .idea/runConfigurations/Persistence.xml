@@ -11,7 +11,9 @@
     <test-directory>$PROJECT_DIR$/test/persistence</test-directory>
     <recursive>true</recursive>
     <RunnerSettings RunnerId="RunnerForMochaJavaScript" />
+    <RunnerSettings RunnerId="debuggableProgram" />
     <ConfigurationWrapper RunnerId="RunnerForMochaJavaScript" />
+    <ConfigurationWrapper RunnerId="debuggableProgram" />
     <method />
   </configuration>
 </component>
