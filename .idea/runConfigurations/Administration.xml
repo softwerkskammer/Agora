@@ -6,7 +6,7 @@
     <envs />
     <ui>BDD</ui>
     <extra-mocha-options />
-    <test-directory>$PROJECT_DIR$/test/administration</test-directory>
+    <test-directory>$PROJECT_DIR$/softwerkskammer/test/administration</test-directory>
     <recursive>true</recursive>
     <RunnerSettings RunnerId="RunnerForMochaJavaScript" />
     <ConfigurationWrapper RunnerId="RunnerForMochaJavaScript" />

@@ -8,8 +8,10 @@
     </envs>
     <ui>BDD</ui>
     <extra-mocha-options />
-    <test-directory>$PROJECT_DIR$/test/mailarchive</test-directory>
+    <test-directory>$PROJECT_DIR$/softwerkskammer/test/mailarchive</test-directory>
     <recursive>true</recursive>
+    <RunnerSettings RunnerId="RunnerForMochaJavaScript" />
+    <ConfigurationWrapper RunnerId="RunnerForMochaJavaScript" />
     <method />
   </configuration>
 </component>

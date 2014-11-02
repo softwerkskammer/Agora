@@ -96,8 +96,8 @@
     "utils-merge": "1.0.0"
   },
   "scripts": {
-    "start": "node start",
+    "start": "node softwerkskammer/start",
     "test": "grunt tests",
-    "prepublish": "sh ./prepublish.sh"
+    "prepublish": "sh softwerkskammer/prepublish.sh"
   }
 }

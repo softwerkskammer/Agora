@@ -8,8 +8,10 @@
     </envs>
     <ui>BDD</ui>
     <extra-mocha-options />
-    <test-directory>$PROJECT_DIR$/test/restricted-access</test-directory>
+    <test-directory>$PROJECT_DIR$/softwerkskammer/test/restricted-access</test-directory>
     <recursive>true</recursive>
+    <RunnerSettings RunnerId="RunnerForMochaJavaScript" />
+    <ConfigurationWrapper RunnerId="RunnerForMochaJavaScript" />
     <method />
   </configuration>
 </component>

@@ -8,8 +8,12 @@
     </envs>
     <ui>BDD</ui>
     <extra-mocha-options />
-    <test-directory>$PROJECT_DIR$/test/wiki</test-directory>
+    <test-directory>$PROJECT_DIR$/softwerkskammer/test/wiki</test-directory>
     <recursive>true</recursive>
+    <RunnerSettings RunnerId="RunnerForMochaJavaScript" />
+    <RunnerSettings RunnerId="debuggableProgram" />
+    <ConfigurationWrapper RunnerId="RunnerForMochaJavaScript" />
+    <ConfigurationWrapper RunnerId="debuggableProgram" />
     <method />
   </configuration>
 </component>

@@ -1,0 +1,14 @@
+extends ../../../views/layout
+
+include mailheader-mixin
+
+block title
+  | #{group} 
+  | #{t('mailarchive.emails')}
+
+block content
+  .row
+    .col-md-12
+      .page-header
+        +pageHeader(group)
+      h4 #{t('mailarchive.no_emails')}

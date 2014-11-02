@@ -1,10 +1,10 @@
 {
   "sympa": {},
-  "groupsPersistence": {"module": "./test/persistence/testpersistence"},
-  "membersPersistence": {"module": "./test/persistence/testpersistence"},
-  "activitiesPersistence": {"module": "./test/persistence/testpersistence"},
-  "activityresultsPersistence": {"module": "./test/persistence/testpersistence"},
-  "announcementsPersistence": {"module": "./test/persistence/testpersistence"},
-  "mailsPersistence": {"module": "./test/persistence/testpersistence"},
-  "sympaPersistence": {"module": "./test/persistence/testpersistence"}
+  "groupsPersistence": {"module": "./softwerkskammer/test/persistence/testpersistence"},
+  "membersPersistence": {"module": "./softwerkskammer/test/persistence/testpersistence"},
+  "activitiesPersistence": {"module": "./softwerkskammer/test/persistence/testpersistence"},
+  "activityresultsPersistence": {"module": "./softwerkskammer/test/persistence/testpersistence"},
+  "announcementsPersistence": {"module": "./softwerkskammer/test/persistence/testpersistence"},
+  "mailsPersistence": {"module": "./softwerkskammer/test/persistence/testpersistence"},
+  "sympaPersistence": {"module": "./softwerkskammer/test/persistence/testpersistence"}
 }

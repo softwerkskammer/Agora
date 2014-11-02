@@ -1,19 +1,21 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Groups" type="mocha-javascript-test-runner" factoryName="Mocha">
     <node-options />
-    <working-directory>$PROJECT_DIR$</working-directory>
+    <working-directory>$PROJECT_DIR$/softwerkskammer</working-directory>
     <pass-parent-env>true</pass-parent-env>
     <envs>
       <env name="reporter" value="spec" />
     </envs>
     <ui>BDD</ui>
     <extra-mocha-options />
-    <test-directory>$PROJECT_DIR$/test/groups</test-directory>
+    <test-directory>$PROJECT_DIR$/softwerkskammer/test/groups</test-directory>
     <recursive>true</recursive>
     <RunnerSettings RunnerId="MochaDebugRunner" />
     <RunnerSettings RunnerId="RunnerForMochaJavaScript" />
+    <RunnerSettings RunnerId="debuggableProgram" />
     <ConfigurationWrapper RunnerId="MochaDebugRunner" />
     <ConfigurationWrapper RunnerId="RunnerForMochaJavaScript" />
+    <ConfigurationWrapper RunnerId="debuggableProgram" />
     <method />
   </configuration>
 </component>

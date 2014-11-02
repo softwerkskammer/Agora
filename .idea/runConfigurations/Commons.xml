@@ -8,7 +8,7 @@
     </envs>
     <ui>BDD</ui>
     <extra-mocha-options />
-    <test-directory>$PROJECT_DIR$/test/commons</test-directory>
+    <test-directory>$PROJECT_DIR$/softwerkskammer/test/commons</test-directory>
     <recursive>true</recursive>
     <RunnerSettings RunnerId="MochaDebugRunner" />
     <RunnerSettings RunnerId="RunnerForMochaJavaScript" />
