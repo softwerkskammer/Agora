@@ -1,21 +1,21 @@
 {
   "sympa": {},
-  "groupsPersistence": {"module": "./lib/persistence/persistence",
+  "groupsPersistence": {"module": "./softwerkskammer/lib/persistence/persistence",
     "constructorArgs": {
       "collectionName": "teststore"
     }},
-  "membersPersistence": {"module": "./lib/persistence/persistence",
+  "membersPersistence": {"module": "./softwerkskammer/lib/persistence/persistence",
     "constructorArgs": {
       "collectionName": "teststore"
     }},
-  "activitiesPersistence": {"module": "./lib/persistence/persistence",
+  "activitiesPersistence": {"module": "./softwerkskammer/lib/persistence/persistence",
     "constructorArgs": {
       "collectionName": "teststore"
     }},
-  "announcementsPersistence": {"module": "./test/persistence/testpersistence"},
-  "mailsPersistence": {"module": "./test/persistence/testpersistence"},
-  "colorsPersistence": {"module": "./test/persistence/testpersistence"},
-  "sympaPersistence": {"module": "./lib/persistence/persistence",
+  "announcementsPersistence": {"module": "./softwerkskammer/test/persistence/testpersistence"},
+  "mailsPersistence": {"module": "./softwerkskammer/test/persistence/testpersistence"},
+  "colorsPersistence": {"module": "./softwerkskammer/lib/persistence/testpersistence"},
+  "sympaPersistence": {"module": "./softwerkskammer/lib/persistence/persistence",
     "constructorArgs": {
       "collectionName": "teststore"
     }}

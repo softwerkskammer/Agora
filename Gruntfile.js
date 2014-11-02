@@ -2,10 +2,10 @@ module.exports = function (grunt) {
   'use strict';
 
   // set up common objects for jslint
-  var jsLintStandardOptions = { edition: 'latest', errorsOnly: true, failOnError: true };
+  var jsLintStandardOptions = {edition: 'latest', errorsOnly: true, failOnError: true};
 
   var serverDirectives = function () {
-    return { indent: 2, node: true, nomen: true, todo: true, unparam: true, vars: true };
+    return {indent: 2, node: true, nomen: true, todo: true, unparam: true, vars: true};
   };
   var jsLintServerDirectives = serverDirectives();
   var jsLintServerTestDirectives = serverDirectives();
@@ -20,9 +20,9 @@ module.exports = function (grunt) {
     'bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js',
     'bower_components/bootstrap-markdown/js/bootstrap-markdown.js',
     'node_modules/moment-timezone/node_modules/moment/moment.js',
-    'frontend/3rd_party_js/jquery.smartmenus.js',
-    'frontend/3rd_party_js/jquery.smartmenus.bootstrap.js',
-    'frontend/3rd_party_js/fullcalendar-patched.js',
+    'softwerkskammer/frontend/3rd_party_js/jquery.smartmenus.js',
+    'softwerkskammer/frontend/3rd_party_js/jquery.smartmenus.bootstrap.js',
+    'softwerkskammer/frontend/3rd_party_js/fullcalendar-patched.js',
     'bower_components/tinycolor/tinycolor.js',
     'bower_components/mjolnic-bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js',
     'bower_components/jquery-validation/dist/jquery.validate.js',
@@ -36,89 +36,95 @@ module.exports = function (grunt) {
 
   // filesets for uglify
   var files_de = {
-    'public/clientscripts/global_de.js': commonJSfiles.concat([
+    'softwerkskammer/public/clientscripts/global_de.js': commonJSfiles.concat([
       'bower_components/jquery-validation/src/localization/messages_de.js',
       'bower_components/jquery-validation/src/localization/methods_de.js',
       'bower_components/bootstrap-datepicker/js/locales/bootstrap-datepicker.de.js',
       'bower_components/select2/select2_locale_de.js',
       'bower_components/fullcalendar/dist/lang/de.js',
-      'locales/frontend_de.js',
-      'frontend/javascript/agora.js'
+      'softwerkskammer/locales/frontend_de.js',
+      'softwerkskammer/frontend/javascript/agora.js'
     ])
   };
 
   var files_en = {
-    'public/clientscripts/global_en.js': commonJSfiles.concat([
+    'softwerkskammer/public/clientscripts/global_en.js': commonJSfiles.concat([
       'bower_components/fullcalendar/dist/lang/en-gb.js',
-      'locales/frontend_en.js',
-      'frontend/javascript/agora.js'
+      'softwerkskammer/locales/frontend_en.js',
+      'softwerkskammer/frontend/javascript/agora.js'
     ])
   };
 
   grunt.initConfig({
-    clean: ['coverage', 'coverageWithDB', 'karma-coverage', 'frontendtests/fixtures/*.html', 'bower_components'],
+    clean: {
+      bower_components: ['bower_components'],
+      build: ['softwerkskammer/build', 'softwerkskammer/frontendtests/fixtures/*.html'],
+      coverage: ['softwerkskammer/coverage', 'softwerkskammer/coverageWithDB', 'softwerkskammer/karma-coverage'],
+      public: ['softwerkskammer/public/clientscripts', 'softwerkskammer/public/fonts', 'softwerkskammer/public/img/bootstrap-colorpicker', 'softwerkskammer/public/images', 'softwerkskammer/public/stylesheets'],
+      options: {force: true}
+    },
     copy: {
       datatablesJS: {
         src: 'bower_components/datatables/media/js/*.min.js',
-        dest: 'public/clientscripts',
+        dest: 'softwerkskammer/public/clientscripts',
         expand: true,
         flatten: true
       },
       datatablesImages: {
         src: 'bower_components/datatables/media/images/*',
-        dest: 'public/images/',
+        dest: 'softwerkskammer/public/images/',
         expand: true,
         flatten: true
       },
       colorpickerImages: {
         cwd: 'bower_components/mjolnic-bootstrap-colorpicker/dist/img',
         src: ['**'],
-        dest: 'public/img/',
+        dest: 'softwerkskammer/public/img/',
         expand: true,
         flatten: false
       },
       bootstrapFONTS: {
         src: 'bower_components/bootstrap/dist/fonts/*',
-        dest: 'public/fonts',
+        dest: 'softwerkskammer/public/fonts',
         expand: true,
         flatten: true
       },
       bootstrapLESS: {
         cwd: 'bower_components/bootstrap/less/',
         src: ['**', '!variables.less'],
-        dest: 'build/stylesheets/less',
+        dest: 'softwerkskammer/build/stylesheets/less',
         expand: true,
         flatten: false
       },
       fontawesomeFONTS: {
         src: 'bower_components/font-awesome/fonts/*',
-        dest: 'public/fonts',
+        dest: 'softwerkskammer/public/fonts',
         expand: true,
         flatten: true
       },
       customJS: {
-        cwd: 'frontend/javascript/',
+        cwd: 'softwerkskammer/frontend/javascript/',
         src: ['*', '!agora.js'],
-        dest: 'public/clientscripts',
+        dest: 'softwerkskammer/public/clientscripts',
         expand: true,
         flatten: false
       },
       patchedJS: {
-        src: 'frontend/3rd_party_js/dataTables*',
-        dest: 'public/clientscripts',
+        src: 'softwerkskammer/frontend/3rd_party_js/dataTables*',
+        dest: 'softwerkskammer/public/clientscripts',
         expand: true,
         flatten: true
       },
       customLESS: {
-        src: 'frontend/less/*',
-        dest: 'build/stylesheets/less',
+        src: 'softwerkskammer/frontend/less/*',
+        dest: 'softwerkskammer/build/stylesheets/less',
         expand: true,
         flatten: true
       },
       select2images: {
         cwd: 'bower_components/select2/',
         src: ['*.png', '*.gif'],
-        dest: 'public/stylesheets',
+        dest: 'softwerkskammer/public/stylesheets',
         expand: true,
         flatten: false
       }
@@ -126,25 +132,25 @@ module.exports = function (grunt) {
     jslint: {
       server: {
         src: [
-          '*.js',
-          'lib/**/*.js'
+          'softwerkskammer/*.js',
+          'softwerkskammer/lib/**/*.js'
         ],
         directives: jsLintServerDirectives,
         options: jsLintStandardOptions
       },
       servertests: {
         src: [
-          'test/**/*.js',
-          'testWithDB/**/*.js',
-          'testutil/**/*.js',
-          'frontendtests/fixtures/locals.js'
+          'softwerkskammer/test/**/*.js',
+          'softwerkskammer/testWithDB/**/*.js',
+          'softwerkskammer/testutil/**/*.js',
+          'softwerkskammer/frontendtests/fixtures/locals.js'
         ],
         directives: jsLintServerTestDirectives,
         options: jsLintStandardOptions
       },
       client: {
         src: [
-          'frontend/javascript/*.js'
+          'softwerkskammer/frontend/javascript/*.js'
         ],
         directives: {
           indent: 2,
@@ -156,8 +162,8 @@ module.exports = function (grunt) {
       },
       clienttests: {
         src: [
-          'frontendtests/*.js',
-          'frontendtests/fixtures/fixtures.js'
+          'softwerkskammer/frontendtests/*.js',
+          'softwerkskammer/frontendtests/fixtures/fixtures.js'
         ],
         directives: {
           indent: 2,
@@ -186,22 +192,22 @@ module.exports = function (grunt) {
           report: 'min'
         },
         files: {
-          'public/stylesheets/screen.css': [
+          'softwerkskammer/public/stylesheets/screen.css': [
             'bower_components/fullcalendar/dist/fullcalendar.css',
-            'build/stylesheets/less/bootstrap.less',
+            'softwerkskammer/build/stylesheets/less/bootstrap.less',
             'bower_components/bootstrap-datepicker/css/datepicker3.css',
-            'build/stylesheets/less/bootstrap-markdown-patched.less',
+            'softwerkskammer/build/stylesheets/less/bootstrap-markdown-patched.less',
             'bower_components/font-awesome/css/font-awesome.css',
-            'frontend/3rd_party_css/shCoreDefault-patched.css',
-            'frontend/3rd_party_css/jquery.smartmenus.bootstrap.css',
+            'softwerkskammer/frontend/3rd_party_css/shCoreDefault-patched.css',
+            'softwerkskammer/frontend/3rd_party_css/jquery.smartmenus.bootstrap.css',
             'bower_components/datatables/media/css/jquery.dataTables.css',
-            'frontend/3rd_party_css/dataTables.bootstrap.css',
-            'frontend/3rd_party_css/dataTables.fontAwesome.css',
+            'softwerkskammer/frontend/3rd_party_css/dataTables.bootstrap.css',
+            'softwerkskammer/frontend/3rd_party_css/dataTables.fontAwesome.css',
             'bower_components/select2/select2.css',
             'bower_components/select2-bootstrap-css/select2-bootstrap.css',
             'bower_components/mjolnic-bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css',
-            'build/stylesheets/less/agora.less',
-            'build/stylesheets/less/activityresults.less'
+            'softwerkskammer/build/stylesheets/less/agora.less',
+            'softwerkskammer/build/stylesheets/less/activityresults.less'
           ]
         }
       }
@@ -215,7 +221,7 @@ module.exports = function (grunt) {
         files: files_de
       },
       development_en: {
-        options: { beautify: true },
+        options: {beautify: true},
         files: files_en
       },
       production_de: {
@@ -228,24 +234,25 @@ module.exports = function (grunt) {
 
     mocha_istanbul: {
       testWithDB: {
-        src: 'testWithDB',
+        src: 'softwerkskammer/testWithDB',
         options: {
-          coverageFolder: 'coverageWithDB',
+          coverageFolder: 'softwerkskammer/coverageWithDB',
           excludes: ['**/activitystore.js'],
           timeout: 6000,
           slow: 100,
           mask: '**/*.js',
-          root: 'lib',
+          root: 'softwerkskammer/lib',
           reporter: 'dot'
         }
       },
       test: {
-        src: 'test',
+        src: 'softwerkskammer/test',
         options: {
+          coverageFolder: 'softwerkskammer/coverage',
           timeout: 6000,
           slow: 100,
           mask: '**/*.js',
-          root: 'lib',
+          root: 'softwerkskammer/lib',
           reporter: 'dot',
           check: {
             lines: 80,
@@ -257,7 +264,7 @@ module.exports = function (grunt) {
     istanbul_check_coverage: {
       server: {
         options: {
-          coverageFolder: 'coverage*',
+          coverageFolder: 'softwerkskammer/coverage*',
           check: {
             lines: 81,
             statements: 77
@@ -266,7 +273,7 @@ module.exports = function (grunt) {
       },
       frontend: {
         options: {
-          coverageFolder: 'karma-coverage',
+          coverageFolder: 'softwerkskammer/karma-coverage',
           check: {
             lines: 94,
             statements: 94
@@ -279,11 +286,11 @@ module.exports = function (grunt) {
         options: {
           pretty: true,
           data: function () {
-            return require('./frontendtests/fixtures/locals');
+            return require('./softwerkskammer/frontendtests/fixtures/locals');
           }
         },
         files: {
-          'frontendtests/fixtures/forms.html': 'frontendtests/fixtures/forms.jade'
+          'softwerkskammer/frontendtests/fixtures/forms.html': 'softwerkskammer/frontendtests/fixtures/forms.jade'
         }
       }
     },

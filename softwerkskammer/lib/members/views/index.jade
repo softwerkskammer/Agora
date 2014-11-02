@@ -1,0 +1,16 @@
+extends ../../../views/layout
+include memberlist-mixin
+
+block title
+  | #{t('members.overview')}
+
+block content
+  .page-header
+    h2 #{t('members.members')}
+  .row
+    .col-md-6.col-md-push-6
+      +tagCloud(members, '#cb6868')
+    .col-md-6.col-md-pull-6
+      +memberlistHeading(t('members.has'), members.length)
+      +memberlist(members)
+

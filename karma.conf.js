@@ -8,13 +8,13 @@ module.exports = function (config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'public/clientscripts/global_de.js',
-      'public/clientscripts/activityDateModel.js',
-      'public/clientscripts/activityform-dateAdapter.js',
-      'frontendtests/fixtures/forms.html',
-      'frontendtests/fixtures/fixtures.js',
-      'public/clientscripts/check-*.js',
-      'frontendtests/*.js'
+      'softwerkskammer/public/clientscripts/global_de.js',
+      'softwerkskammer/public/clientscripts/activityDateModel.js',
+      'softwerkskammer/public/clientscripts/activityform-dateAdapter.js',
+      'softwerkskammer/frontendtests/fixtures/forms.html',
+      'softwerkskammer/frontendtests/fixtures/fixtures.js',
+      'softwerkskammer/public/clientscripts/check-*.js',
+      'softwerkskammer/frontendtests/*.js'
     ],
 
     // list of files to exclude
@@ -68,14 +68,14 @@ module.exports = function (config) {
       // source files, that you wanna generate coverage for
       // do not include tests or libraries
       // (these files will be instrumented by Istanbul)
-      'public/clientscripts/ac*.js': ['coverage'],
-      'public/clientscripts/ch*.js': ['coverage'],
+      'softwerkskammer/public/clientscripts/ac*.js': ['coverage'],
+      'softwerkskammer/public/clientscripts/ch*.js': ['coverage'],
       '**/*.html': ['html2js']
     },
 
     coverageReporter: {
       type: 'json',
-      dir: 'karma-coverage/',
+      dir: 'softwerkskammer/karma-coverage/',
       subdir: '.'
     },
 
