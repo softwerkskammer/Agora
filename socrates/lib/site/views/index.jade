@@ -1,0 +1,59 @@
+extends ../../../views/commonLayout
+
+block title 
+  | SoCraTes 2014 - 4th International Software Craftsmanship and Testing Conference, August 7-10 2014, Soltau, Germany
+block content
+  
+  include include_wide_header
+  .row
+    .col-sm-8
+      .page-header
+        h1 
+          | What is it about?&nbsp;
+          span.text-muted Some key facts.
+      p.lead This event is about the sustainable creation of useful software in a responsible way.
+      
+      h2 It's about People
+      
+      p.lead Everyone who is concerned with coding, testing, code quality, software craftsmanship, and/or if &hellip;
+      ul.square
+        li you are passionate about software development and testing.
+        li you have already heard of Software Craftsmanship or even already are part of the growing community.
+        li you want to share your knowlege, experience and expertise.
+      
+      h2 It's about Action
+      p.lead The event will be run as a non-profit, low-costevent. It is a joint-effort of all
+        a(href='http://www.softwerkskammer.org', target='_blank') Softwerkskammer
+        | groups, the community of all German-speaking Software Craftsmanship groups.
+        | It will be much like a retreat. We will be there for 48 hours to
+        | collaborate and share ideas. There will be:
+      ul
+      li Highly collaborative interactions
+      li A self-organized Open Space, with &hellip;
+        ul class="square">
+          li hands-on coding sessions
+          li sessions focused on discussion<
+          li interactive talks
+          li lots more
+      p
+        a.btn.btn-primary(href='schedule.html', role='button')
+          span.glyphicon.glyphicon-time
+          |  Checkout the full schedule
+    .col-sm-4.col-md-3.col-md-offset-1
+      include include_sponsor_logos
+      .conference-sidebar
+        h3 Partner conferences
+        p 
+          a(href='http://socratesuk.org/') SoCraTes UK 2014
+          small
+            br 
+            | 12–15 June, Farncombe Estate
+            br
+            | United Kingdom
+        p 
+          a(href='http://2014.itakeunconf.com/') I T.A.K.E. Unconference
+          small
+            br 
+            | 29-30 May, Bucharest
+            br 
+            | Romania

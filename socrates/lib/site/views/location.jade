@@ -1,0 +1,62 @@
+extends ../../../views/commonLayout
+block title 
+  | SoCraTes 2014 Location
+block content
+  .page-header
+    h1
+      | The Location&nbsp;
+      span.text-muted a lovely place.
+    .row.featurette
+      .col-md-7
+        p.lead Out in the country, at the lovely Hotelpark Soltau, approximately one hour from Hamburg.
+        p.
+          It offers great facilities for community-centered events with included accommodation. We have rented the 
+          whole facility, so we can concentrate on what we like to do most.
+        p
+          a(href='http://www.hotel-park-soltau.de/')
+            Website (German only) 
+            i.fa.fa-external-link
+      .col-md-5
+        .google-map
+          #map-canvas(style='width: 95%; height: 300px;')
+          small 
+            | Show 
+            a(href='https://goo.gl/maps/xpaf3', rel='nofollow' target='_blank') Location
+            |  on a larger map
+    hr.featurette-divider
+    .row.featurette
+      .col-md-7
+        h2.featurette-heading
+          | A relaxing atmosphere&nbsp;
+          span.text-muted to get you focused.
+        p.lead.
+          You will definitely not only hang around in the meeting rooms. Since we have rented the whole
+          facility there will be many places to meet and discuss in a relaxed way.
+      .col-md-5
+        img.featurette-image.img-responsive(src='img/location/soltau-inner-yard.jpg', alt='Soltau inner yard')
+    h2 Housekeeping
+    h3 Rooms
+    p.
+      Some of the venue's rooms are twin rooms. An important aspect of SoCraTes is
+      its closedness where everything happens in the same location. Therefore, we
+      can only accept as many participants as there are beds available.
+    p
+      a(href='https://www.softwerkskammer.org/activities/socrates-2014') When you register
+      |, you can let us know whom you'd be willing to share a room with. Even if you don't know
+      | anybody just yet, we will do all we can to find a suitable roommate for you.
+      | After registration you'll be able to access the 
+      a(href='https://www.softwerkskammer.org/wiki/socrates2014/index') SoCraTes Wiki
+      |, where you can get to know other participants before the conference, share information about Taxi- and 
+      | Ride sharing and other organisational matters.
+
+    script(type="text/javascript", src='https://maps.googleapis.com/maps/api/js?key=AIzaSyBHet1NLP9NBFGt-q-x42TE00L4EDTJnXU&sensor=false')
+    script.
+      function initialize() {
+        var mapOptions = {
+          center: new google.maps.LatLng(53.00172, 9.85902),
+          zoom: 16,
+      mapTypeId: google.maps.MapTypeId.HYBRID
+      };
+      var map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+      }
+      google.maps.event.addDomListener(window, 'load', initialize);

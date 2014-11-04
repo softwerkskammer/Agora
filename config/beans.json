@@ -1,4 +1,6 @@
 {
+  "socratesSiteApp": {"module": "./socrates/lib/site"},
+  
   "activitiesApp": {"module": "./softwerkskammer/lib/activities"},
   "activityresultsApp" : {"module": "./softwerkskammer/lib/activityresults"},
   "administrationApp": {"module": "./softwerkskammer/lib/administration"},

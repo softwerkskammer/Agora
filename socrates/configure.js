@@ -11,17 +11,17 @@ function createConfiguration() {
   var configdir = '../config/';
   nconf.file('mongo', configdir + 'mongo-config.json');
   nconf.file('sympa', configdir + 'sympa-config.json');
-  nconf.file('server', configdir + 'server-config.json');
+  nconf.file('server', configdir + 'socrates-server-config.json');
   nconf.file('authentication', configdir + 'authentication-config.json');
   nconf.file('mail', configdir + 'mailsender-config.json');
-  nconf.file('wiki', configdir + 'wikirepo-config.json');
+  nconf.file('wiki', configdir + 'socrates-wikirepo-config.json');
   nconf.file('activityresults', configdir + 'activityresults-config.json');
   nconf.defaults({
     adminListName: "admins",
-    port: '17124',
+    port: '17125',
     imageDirectory: "/tmp",
     mongoURL: 'mongodb://localhost:27017/swk',
-    publicUrlPrefix: 'http://localhost:17124',
+    publicUrlPrefix: 'http://localhost:17125',
     securedByLoginURLPattern:
       '/activityresults|' +
       '/gallery|' +
