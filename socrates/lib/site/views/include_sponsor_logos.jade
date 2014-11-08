@@ -1,0 +1,10 @@
+mixin sponsor-sidebar(sponsors)
+  .sponsor-sidebar
+    h3 Sponsors
+    p We are glad to be supported by the following sponsors.
+      br
+      a(href='sponsoring.html') Want to become a Sponsor too?
+  
+    each sponsor in sponsors
+      .sponsorlogo
+        a(href=sponsor.url, target='_blank'): img(src='/logos/' + sponsor.logo, alt=sponsor.name)
