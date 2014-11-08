@@ -7,7 +7,6 @@ var path = require('path');
 var favicon = require('serve-favicon');
 var morgan = require('morgan');
 var compress = require('compression');
-var i18n = require('i18next');
 var jade = require('jade');
 
 function useApp(parent, url, child) {
@@ -33,15 +32,6 @@ var winston = require('winston-config').fromFileSync(path.join(__dirname, '../co
 var appLogger = winston.loggers.get('socrates');
 var httpLogger = winston.loggers.get('socrates-http');
 
-// initialize i18n
-i18n.init({
-  ignoreRoutes: ['clientscripts/', 'fonts/', 'images/', 'img/', 'stylesheets/'],
-  supportedLngs: ['de', 'en'],
-  preload: ['de', 'en'],
-  fallbackLng: 'de',
-  resGetPath: 'locales/__ns__-__lng__.json'
-});
-
 // stream the log messages of express to winston, remove line breaks on message
 var winstonStream = {
   write: function (message) {
@@ -54,22 +44,22 @@ module.exports = {
     var app = express();
     app.set('view engine', 'jade');
     app.set('views', path.join(__dirname, 'views'));
-    app.use(favicon(path.join(__dirname, 'static/favicon.ico')));
+    app.use(favicon(path.join(__dirname, 'public/img/favicon.ico')));
     app.use(morgan('combined', {stream: winstonStream}));
     app.use(compress());
-    app.use(express.static(path.join(__dirname, 'static'), { maxAge: 600 * 1000 })); // ten minutes
+    app.use(express.static(path.join(__dirname, 'public'), {maxAge: 600 * 1000})); // ten minutes
 
     app.use(beans.get('detectBrowser'));
+
+    app.use(function (req, res, next) {
+      res.locals.publicUrlPrefix = conf.get('publicUrlPrefix');
+      next();
+    });
 
     app.use('/', beans.get('socratesSiteApp'));
 
     app.use(beans.get('handle404')(appLogger));
     app.use(beans.get('handle500')(appLogger));
-
-    i18n.registerAppHelper(app);
-    i18n.addPostProcessor('jade', function (val, key, opts) {
-      return jade.compile(val, opts)();
-    });
 
     return app;
   },

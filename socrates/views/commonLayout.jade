@@ -1,58 +1,78 @@
 doctype html
 html
   head
+    base(href=publicUrlPrefix +'/')
     meta(charset='utf-8')
     meta(name='viewport', content='width=device-width, initial-scale=1.0')
-    link(href='http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css', rel='stylesheet')
-    link(href='http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css', rel='stylesheet')
     link(href='http://fonts.googleapis.com/css?family=PT+Serif+Caption', rel='stylesheet', type='text/css')
-    link(href='http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css', rel='stylesheet')
-    link(href='css/styles.css', rel='stylesheet')
+    link(href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,400italic,600italic', rel='stylesheet', type='text/css')
+    link(href='https://fonts.googleapis.com/css?family=Source+Code+Pro:400,600', rel='stylesheet', type='text/css')
+    link(href='stylesheets/screen.css', rel='stylesheet')
+    link(rel='apple-touch-icon', href='/img/apple-touch-icon-60x60-precomposed.png')
+    link(rel='apple-touch-icon', href='/img/apple-touch-icon-76x76-precomposed.png')
+    link(rel='apple-touch-icon', href='/img/apple-touch-icon-120x120-precomposed.png')
+    link(rel='apple-touch-icon', href='/img/apple-touch-icon-152x152-precomposed.png')
+    script(src='clientscripts/global.js')
     title
       block title
     block extrahead
 body(role='document')
-  block navigation
-    .navbar.navbar-inverse.navbar-fixed-top(role='navigation')
-      .container
-        .navbar-header
-          button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-collapse')
-            span.sr-only Toggle navigation
-            span.icon-bar
-            span.icon-bar
-            span.icon-bar
-          a.navbar-brand(href='/') SoCraTes 2014
-        .navbar-collapse.collapse
-          ul.nav.navbar-nav
-            li: a(href='https://www.softwerkskammer.org/activities/socrates-2014') Registration
-            li: a(href='schedule.html') Schedule
-            li: a(href='location.html') Location
-            li: a(href='history.html') History
-            li: a(href='values.html') SoCraTes' Values
-            li: a(href='contact.html') Contact
-  .container
-    block content
-    footer
-      p.pull-right
-        a(href='impressum.html') Impressum
-        br
-        br
-        span.twitter
-          a.twitter-share-button(href='https://twitter.com/share', data-via='socrates_2014' data-size='large', data-hashtags='socrates14') Tweet
-          a.twitter-follow-button(href='https://twitter.com/socrates_2014', data-show-count='false', data-size='large') Follow @socrates_2014 
-        script.
-          !function (d, s, id) {
-            var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https';
-            if (!d.getElementById(id)) {
-              js = d.createElement(s);
-              js.id = id;
-              js.src = p + '://platform.twitter.com/widgets.js';
-              fjs.parentNode.insertBefore(js, fjs);
-            }
-          }(document, 'script', 'twitter-wjs');
-      p.text-muted This event is brought to you by:
-      p(style='margin-top:10px;'): a(href='http://softwerkskammer.org', target='_blank')
-        img(src='img/SoftwerkskammerWappenLinks.png', alt='Softwerkskammer')
-  script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js')
-  script(src='http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js')
-                      
+  if (browserIsTooOld)
+    .alert.alert-block.alert-warning
+      h2 Please note that we no longer support Internet Explorer versions 7 or 8.
+      p We follow the example of 
+        a(href='https://help.github.com/articles/supported-browsers') github 
+        | .
+      p We recommend upgrading to the latest 
+        a(href='https://ie.microsoft.com/') Internet Explorer
+        | , 
+        a(href='https://chrome.google.com') Google Chrome
+        | , or 
+        a(href='https://mozilla.org/firefox/') Firefox
+        | .
+      p If you are using IE 9 or later, make sure you 
+        a(href='http://windows.microsoft.com/en-US/windows7/webpages-look-incorrect-in-Internet-Explorer') turn off "Compatibility View"
+        | .
+  else
+    block navigation
+      .navbar.navbar-inverse.navbar-fixed-top(role='navigation')
+        .container
+          .navbar-header
+            button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-collapse')
+              span.sr-only Toggle navigation
+              span.icon-bar
+              span.icon-bar
+              span.icon-bar
+            a.navbar-brand(href='/') SoCraTes 2014
+          .navbar-collapse.collapse
+            ul.nav.navbar-nav
+              li: a(href='https://www.softwerkskammer.org/activities/socrates-2014') Registration
+              li: a(href='schedule.html') Schedule
+              li: a(href='location.html') Location
+              li: a(href='history.html') History
+              li: a(href='values.html') SoCraTes' Values
+              li: a(href='contact.html') Contact
+    .container
+      block content
+      footer
+        p.pull-right
+          a(href='impressum.html') Impressum
+          br
+          br
+          span.twitter
+            a.twitter-share-button(href='https://twitter.com/share', data-via='socrates_2014' data-size='large', data-hashtags='socrates14') Tweet
+            a.twitter-follow-button(href='https://twitter.com/socrates_2014', data-show-count='false', data-size='large') Follow @socrates_2014 
+          script.
+            !function (d, s, id) {
+              var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https';
+              if (!d.getElementById(id)) {
+                js = d.createElement(s);
+                js.id = id;
+                js.src = p + '://platform.twitter.com/widgets.js';
+                fjs.parentNode.insertBefore(js, fjs);
+              }
+            }(document, 'script', 'twitter-wjs');
+        p.text-muted This event is brought to you by:
+        p(style='margin-top:10px;'): a(href='http://softwerkskammer.org', target='_blank')
+          img(src='img/SoftwerkskammerWappenLinks.png', alt='Softwerkskammer')
+                        

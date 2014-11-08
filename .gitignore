@@ -32,3 +32,7 @@ softwerkskammer/public/img/bootstrap-colorpicker
 softwerkskammer/public/images
 softwerkskammer/public/stylesheets
 softwerkskammer/*coverage*
+socrates/build
+socrates/public/clientscripts
+socrates/public/fonts
+socrates/public/stylesheets
