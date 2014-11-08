@@ -48,16 +48,8 @@ module.exports = {
     app.use(morgan('combined', {stream: winstonStream}));
     app.use(compress());
     app.use(express.static(path.join(__dirname, 'public'), {maxAge: 600 * 1000})); // ten minutes
-
     app.use(beans.get('detectBrowser'));
-
-    app.use(function (req, res, next) {
-      res.locals.publicUrlPrefix = conf.get('publicUrlPrefix');
-      next();
-    });
-
     app.use('/', beans.get('socratesSiteApp'));
-
     app.use(beans.get('handle404')(appLogger));
     app.use(beans.get('handle500')(appLogger));
 

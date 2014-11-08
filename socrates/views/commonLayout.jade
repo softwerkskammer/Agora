@@ -1,18 +1,17 @@
 doctype html
 html
   head
-    base(href=publicUrlPrefix +'/')
     meta(charset='utf-8')
     meta(name='viewport', content='width=device-width, initial-scale=1.0')
     link(href='http://fonts.googleapis.com/css?family=PT+Serif+Caption', rel='stylesheet', type='text/css')
     link(href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,400italic,600italic', rel='stylesheet', type='text/css')
     link(href='https://fonts.googleapis.com/css?family=Source+Code+Pro:400,600', rel='stylesheet', type='text/css')
-    link(href='stylesheets/screen.css', rel='stylesheet')
+    link(href='/stylesheets/screen.css', rel='stylesheet')
     link(rel='apple-touch-icon', href='/img/apple-touch-icon-60x60-precomposed.png')
     link(rel='apple-touch-icon', href='/img/apple-touch-icon-76x76-precomposed.png')
     link(rel='apple-touch-icon', href='/img/apple-touch-icon-120x120-precomposed.png')
     link(rel='apple-touch-icon', href='/img/apple-touch-icon-152x152-precomposed.png')
-    script(src='clientscripts/global.js')
+    script(src='/clientscripts/global.js')
     title
       block title
     block extrahead
@@ -72,6 +71,6 @@ body(role='document')
               }
             }(document, 'script', 'twitter-wjs');
         p.text-muted This event is brought to you by:
-        p(style='margin-top:10px;'): a(href='http://softwerkskammer.org', target='_blank')
+        p(style='margin-top:10px;'): a(href='https://softwerkskammer.org', target='_blank')
           img(src='img/SoftwerkskammerWappenLinks.png', alt='Softwerkskammer')
                         
