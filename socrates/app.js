@@ -30,8 +30,8 @@ var beans = conf.get('beans');
 // initialize winston and two concrete loggers
 var winston = require('winston-config').fromFileSync(path.join(__dirname, '../config/winston-config.json'));
 
-var appLogger = winston.loggers.get('application');
-var httpLogger = winston.loggers.get('http');
+var appLogger = winston.loggers.get('socrates');
+var httpLogger = winston.loggers.get('socrates-http');
 
 // initialize i18n
 i18n.init({

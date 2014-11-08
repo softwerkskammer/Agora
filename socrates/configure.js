@@ -15,31 +15,10 @@ function createConfiguration() {
   nconf.file('authentication', configdir + 'authentication-config.json');
   nconf.file('mail', configdir + 'mailsender-config.json');
   nconf.file('wiki', configdir + 'socrates-wikirepo-config.json');
-  nconf.file('activityresults', configdir + 'activityresults-config.json');
   nconf.defaults({
-    adminListName: "admins",
-    port: '17125',
-    imageDirectory: "/tmp",
+    port: '17224',
     mongoURL: 'mongodb://localhost:27017/swk',
-    publicUrlPrefix: 'http://localhost:17125',
-    securedByLoginURLPattern:
-      '/activityresults|' +
-      '/gallery|' +
-      '/mailsender|' +
-      '/members|' +
-      '/new|' +
-      '/edit|' +
-      '/submit|' +
-      '(subscribe|unsubscribe)/|' +
-      '/mailarchive|' +
-      '/invitation|' +
-      '/addToWaitinglist|' +
-      '/removeFromWaitinglist|' +
-      '/addon|' +
-      '/submitAddon|' +
-      '/wiki/socrates.*/|' +
-      '/payment|' +
-      'dashboard',
+    publicUrlPrefix: 'http://localhost:17224',
     secret: 'secret',
     beans: new Beans(configdir + 'beans.json'),
     domainname: 'localhost'
