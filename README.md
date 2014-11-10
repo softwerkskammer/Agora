@@ -44,9 +44,9 @@ Just follow these steps:
 Once retrieved perform the following commands inside the directory of the cloned repo:
 
 1. `npm install` - this will fetch all dependencies needed
-1. `node initialDBSetup` - this will create some sample data to start with
+1. `node softwerkskammer/initialDBSetup` - this will create some sample data to start with
 1. `npm test` - will create a few necessary files and perform a complete test suite. *This must end successfully!*
-1. `node start` - will start the server
+1. `node start-softwerkskammer` or `node start-socrates`- will start the server
 
 Now go to you local machine, open a browser and open `http://localhost:17124`
 
