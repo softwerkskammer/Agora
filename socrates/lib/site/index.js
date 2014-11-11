@@ -48,4 +48,8 @@ app.get('/contact.html', function (req, res) {
   res.render('contact');
 });
 
+app.get('/sponsoring.html', function (req, res) {
+  res.render('sponsoring');
+});
+
 module.exports = app;

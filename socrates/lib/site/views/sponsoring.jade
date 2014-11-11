@@ -1,0 +1,98 @@
+extends ../../../views/commonLayout
+
+block title 
+  | Schedule - SoCraTes
+block content
+  .row(style: 'font-size: smaller')
+    .col-xs-4
+      img.center-block(style='margin-top: 20px', src='/img/socrates2015_logo.png', 
+        alt='SoCraTes Conference 2015 - Software Craftsmanship and Testing')
+
+      div(align='center')
+        h2 SoCraTes 2015
+        br
+        h4: small 5th International Conference on Software Craftsmanship and Testing
+        h4: small 27 - 30 August 2015, Soltau, Germany
+    
+        h3 Information for Sponsors
+    
+        p &nbsp;
+    
+        p Contact: 
+          span.mailtoify sponsoring@socrates-conference.de
+    .col-xs-4
+      h4 Why we want you
+      p Thank you for your interest in making SoCraTes 2015 happen!
+      p.
+        We invite you to sponsor the conference and help make this event brilliant. Our financial backers make a
+        huge difference to the event and help make sure it's affordable for our attendees.
+
+      .well
+        h4 About the event
+        p.
+          The fourth annual Software Craftsmanship and Testing Conference will take place from 27 - 30 August 2015 
+          in Soltau near Hamburg, Germany.
+        p This year, up to 200 people can participate - we scale up after two years of being fully booked.
+        p.
+          The event will be community-driven and low-price. A two-day OpenSpace will be followed by a Code Retreat and 
+          other workshops. SoCraTes is an international non-profit conference for craftsmen by craftsmen.
+    .col-xs-4
+      h4 What you will get
+      p For sponsorings of 750 &euro; or more we offer the following:
+      ul.square.outside
+        li Your logo on our website
+        li Our logo for your marketing activities
+        li Mention at the beginning and end of the conference
+      p and depending on the amount you choose to invest
+      ul.square.outside
+        li Guaranteed participant <b>slots </b>(the slots themselves will still need to be payed for at the Hotel)
+        li Your printed <b>logo </b>on a pinboard in the main room of the conference
+        li A short <b>video </b>sequence at the beginning of the conference
+        li Your company name in <b>mailings</b>
+      .panel.panel-default
+        .panel-heading
+          h4 The Packages
+        table.table.table-condensed(style='font-size: small;')
+          tr
+            th
+            th Basic <br> (750 &euro;)
+            th Comfort <br> (1500 &euro;)
+            th Premium <br> (2500 &euro;)
+          tr  
+            th Slots
+            td One
+            td Three
+            td Five
+          tr  
+            th Logo Size
+            td A3
+            td A2
+            td A1 or Roll-Up
+          tr  
+            th Video
+            td None
+            td 20 sec
+            td 40 sec
+          tr  
+            th Mailings
+            td No
+            td Yes
+            td Yes
+          tr.no-print
+            th
+            td: a(href='mailto:sponsoring@socrates-conference.de?subject=Sponsoring%20SoCraTes%202014%20Basic%20Package') I am interested!
+            td: a(href='mailto:sponsoring@socrates-conference.de?subject=Sponsoring%20SoCraTes%202014%20Comfort%20Package') I am interested!
+            td: a(href='mailto:sponsoring@socrates-conference.de?subject=Sponsoring%20SoCraTes%202014%20Premium%20Package') I am interested!
+  .row
+    hr
+    div(align="center")
+      h4: small P.S.
+      p: small In addition to the above packages, you can also sponsor a dedicated workshop or Coderetreat<br>
+        | that will take place on Sunday, 30 August 2015, right after the main conference.<br>
+        a(href='mailto:sponsoring@socrates-conference.de?subject=I am interested in sponsoring a SoCraTes sunday workshop') Contact us
+        |, if you're interested in sponsoring a dedicated session on Sunday.
+
+      p: small If you're interested in sponsoring SoCraTes 2015, but are not interested in one of the above packages,<br>
+        | please #{''}
+        a(href="mailto:sponsoring@socrates-conference.de">contact us)
+        |, and we'll try our best to work something out with you.
