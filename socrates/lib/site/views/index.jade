@@ -1,12 +1,16 @@
 extends ../../../views/commonLayout
-include mixins
 
 block title 
   | SoCraTes 2015 - 5th International Software Craftsmanship and Testing Conference, 27-30 August 2015, Soltau, Germany
+block before-container
+  .jumbotron
+    .container
+      img(src='img/socrates2015_logo.png', alt='SoCraTes Conference 2015 - Software Craftsmanship and Testing')
+      h1 SoCraTes 2015
+      p 5th International Software Craftsmanship and Testing Conference in Germany
+      p 27 - 30 August 2015, Soltau, Germany
 block content
-  
-  include include_wide_header
-  .row
+  .row(style='position:relative;')
     .col-sm-8
       .page-header
         h1 
@@ -40,28 +44,35 @@ block content
         a.btn.btn-primary(href='schedule.html', role='button')
           span.glyphicon.glyphicon-time
           |  Check out the full schedule
+    .col-sm-8(style='position:absolute; bottom:0;')
+      .row
+        .col-sm-12
+          hr
+          h4 Partner Conferences
+      .row
+        .col-sm-4
+          h5
+            a(href='http://socrates.shiki.es/') SoCraTes Canaries 2015
+            br
+            small 26 Feb - 1 Mar, Teneriffa
+        .col-sm-4
+          h5
+            a(href='http://socratesuk.org/') SoCraTes UK 2015
+            br
+            small 4 - 7 June, Farncombe Estate
+        .col-sm-4
+          h5
+            a(href='http://2015.itakeunconf.com/') I T.A.K.E. Unconference
+            br
+            small 28 - 29 May, Bucharest
+
+
+
     .col-sm-4.col-md-3.col-md-offset-1
-      +sponsor-sidebar(sponsors)
-      .conference-sidebar
-        h3 Partner conferences
-        p 
-          a(href='http://socrates.shiki.es/') SoCraTes Canaries 2015
-          small
-            br 
-            | 26 Feb - 1 Mar, Teneriffa
-            br
-            | Canary Islands
-        p
-          a(href='http://socratesuk.org/') SoCraTes UK 2015
-          small
-            br
-            | 4-7 June, Farncombe Estate
-            br
-            | United Kingdom
-        p
-          a(href='http://2015.itakeunconf.com/') I T.A.K.E. Unconference
-          small
-            br 
-            | 28-29 May, Bucharest
-            br 
-            | Romania
+      .sidebar
+        h3 Sponsors
+          small  in 2014
+        each sponsor, index in sponsors
+          a(href=sponsor.url, target='_blank'): img(src='logos/' + sponsor.logo, alt=sponsor.name, width='160px')
+          if (index < sponsors.length -1)
+            hr
