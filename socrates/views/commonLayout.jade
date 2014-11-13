@@ -1,3 +1,20 @@
+mixin contactbuttons
+  a.btn.btn-info(href='impressum.html', title='Impressum')
+    i.fa.fa-fw.fa-info #{''}
+    span.hidden-xs Impressum
+  a.btn.btn-info(href='mailto:info@socrates-conference.de', title='E-Mail')
+    i.fa.fa-fw.fa-envelope #{''}
+    span.hidden-xs E-Mail
+  .btn-group.dropup
+    a.btn.btn-info(href='https://twitter.com/intent/tweet?text=SoCraTes+2015+will+take+place+from+27+to+30+August.+More+at&url=http%3A%2F%2Fsocrates-conference.de%2F&hashtags=socrates_15&via=socrates_2015', title='Tweet')
+      i.fa.fa-fw.fa-twitter #{''}
+      span.hidden-xs Tweet
+    a.btn.btn-info.dropdown-toggle(type='button', data-toggle='dropdown')
+      i.fa.fa-caret-up
+    ul.dropdown-menu(role='menu')
+      li: a(href='https://twitter.com/intent/user?screen_name=socrates_2015') Show Tweets
+      li: a(href='https://twitter.com/intent/follow?screen_name=socrates_2015') Follow
+
 doctype html
 html
   head
@@ -36,7 +53,7 @@ body(role='document')
     block navigation
       .navbar.navbar-inverse.navbar-fixed-top(role='navigation')
         ul.nav.navbar-nav.navbar-right.hidden-xs(style='margin-right: 5px;')
-          a.btn.btn-primary.navbar-btn(href='sponsoring.html')
+          a.btn.btn-info.navbar-btn(href='sponsoring.html')
             i.fa.fa-fw.fa-thumbs-o-up
             |  Sponsor us
         .container
@@ -63,27 +80,18 @@ body(role='document')
         .row
           .col-sm-12
             hr(style='margin: 0px')
-        div
-          .navbar-brand(style='height: 50px; padding: 0;')
+        .row
+          .col-sm-6
             h5 This event is brought to you by:
             a(href='https://softwerkskammer.org', target='_blank')
               img(src='https://softwerkskammer.org/img/SoftwerkskammerWappenLinks.png', alt='Softwerkskammer')
-          .pull-right
-            div(style='margin-bottom: 0px; padding-top:20px')
-              h6(style='text-align: right') Information and Contact:
-              .btn-group
-                a.btn.btn-primary(href='impressum.html', title='Impressum') 
-                  i.fa.fa-fw.fa-info #{''}
-                  span.hidden-xs Impressum
-                a.btn.btn-primary(href='mailto:info@socrates-conference.de', title='E-Mail') 
-                  i.fa.fa-fw.fa-envelope #{''}
-                  span.hidden-xs E-Mail
-                .btn-group.dropup
-                  a.btn.btn-primary(href='https://twitter.com/intent/tweet?text=SoCraTes+2015+will+take+place+from+27+to+30+August.+More+at&url=http%3A%2F%2Fsocrates-conference.de%2F&hashtags=socrates_15&via=socrates_2015', title='Tweet')
-                    i.fa.fa-fw.fa-twitter #{''}
-                    span.hidden-xs Tweet
-                  a.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown')
-                    i.fa.fa-caret-up
-                  ul.dropdown-menu(role='menu')
-                    li: a(href='https://twitter.com/intent/user?screen_name=socrates_2015') Show Tweets
-                    li: a(href='https://twitter.com/intent/follow?screen_name=socrates_2015') Follow
+          .col-sm-6.hidden-xs
+            .pull-right(style='margin-bottom: 0px;')
+              h5(style='text-align: right') Information and Contact:
+                .btn-group(style='padding-top: 30px;')
+                  +contactbuttons
+          .col-xs-12.visible-xs
+            div(style='margin-bottom: 5px;')
+              h5 Information and Contact:
+                .btn-group
+                  +contactbuttons
