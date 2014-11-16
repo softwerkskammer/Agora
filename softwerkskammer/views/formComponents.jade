@@ -84,7 +84,7 @@ mixin colorPicker(name, value)
     +controlLabel(name, t('colors.color'))
     .input-group.c-picker
       span.input-group-addon: i
-      input.form-control(id=name, type='text', name=name, value=value placeholder='#HEXHEX')
+      input.form-control(id=name, type='text', name=name, value=value)
     script.
       $('.c-picker').colorpicker();
 

@@ -20,6 +20,8 @@ function Group(object) {
     this.mapX = object.mapX;
     this.mapY = object.mapY;
     this.shortName = object.shortName;
+  } else {
+    this.color = '#FF00FF';
   }
 }
 
