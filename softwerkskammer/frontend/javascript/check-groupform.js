@@ -1,4 +1,7 @@
 /*global contentsOfPrefixForEMail, contentsOfEMailAddress, groupnameAlreadyTaken, contentsOfName, prefixAlreadyTaken, contentsOfAlphanumeric */
+
+// THE ORIGINAL OF THIS FILE IS IN frontend/javascript
+
 var groups_validator;
 (function () {
   "use strict";

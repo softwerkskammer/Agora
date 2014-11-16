@@ -1,4 +1,7 @@
 var addon_validator;
+
+// THE ORIGINAL OF THIS FILE IS IN frontend/javascript
+
 (function () {
   "use strict";
 

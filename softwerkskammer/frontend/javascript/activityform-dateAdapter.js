@@ -2,6 +2,8 @@
 (function () {
   "use strict";
 
+  // THE ORIGINAL OF THIS FILE IS IN frontend/javascript
+
   var dateAdapter = function () {
 
     var dateCalc = activityDateModel($('#startDate').val(), $('#startTime').val());
