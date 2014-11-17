@@ -11,7 +11,6 @@ var Group = beans.get('group');
 var misc = beans.get('misc');
 var sponsors = require('./sponsors.json');
 var app = misc.expressAppIn(__dirname);
-app.locals.pretty = true;
 
 app.get('/', function (req, res, next) {
   res.render('index', {sponsors: sponsors});
