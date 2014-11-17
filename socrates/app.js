@@ -39,6 +39,7 @@ module.exports = {
     app.use(express.static(path.join(__dirname, 'public'), {maxAge: 600 * 1000})); // ten minutes
     app.use(beans.get('detectBrowser'));
     app.use('/', beans.get('socratesSiteApp'));
+    app.use('/registration/', beans.get('socratesRegistrationApp'));
     app.use(beans.get('handle404')(appLogger));
     app.use(beans.get('handle500')(appLogger));
 
