@@ -1,4 +1,7 @@
 /*global urlIsNotAvailable */
+
+// THE ORIGINAL OF THIS FILE IS IN frontend/javascript
+
 var announcement_validator;
 (function () {
   "use strict";

@@ -213,7 +213,7 @@ describe('Validation', function () {
     };
 
     it('performs many checks simultaneously', function () {
-      expect(result({}).length).to.equal(9);
+      expect(result({}).length).to.equal(10);
     });
 
     it('checks that id is set', function () {
@@ -265,6 +265,11 @@ describe('Validation', function () {
     it('checks that longName is set', function () {
       expect(result({longName: null})).to.contain('Titel ist ein Pflichtfeld.');
       expect(result({longName: 'nn'})).to.not.contain('Titel ist ein Pflichtfeld.');
+    });
+
+    it('checks that color is set', function () {
+      expect(result({color: null})).to.contain('Farbe ist ein Pflichtfeld.');
+      expect(result({color: 'x'})).to.not.contain('Farbe ist ein Pflichtfeld.');
     });
 
     it('checks that description is set', function () {

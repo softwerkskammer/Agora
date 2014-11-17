@@ -1,4 +1,7 @@
 /*global activityDateModel, endMustBeAfterBegin, urlIsNotAvailable */
+
+// THE ORIGINAL OF THIS FILE IS IN frontend/javascript
+
 var activity_validator;
 (function () {
   "use strict";

@@ -1,4 +1,7 @@
 /*global nicknameIsNotAvailable, contentsOfNickname, emailAlreadyTaken */
+
+// THE ORIGINAL OF THIS FILE IS IN frontend/javascript
+
 var member_validator;
 (function () {
   "use strict";

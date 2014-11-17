@@ -3,6 +3,8 @@ var activityDateModel;
 (function () {
   "use strict";
 
+  // THE ORIGINAL OF THIS FILE IS IN frontend/javascript
+
   activityDateModel = function (initialDate, initialTime) {
 
     var toUtc = function (dateString, timeString) {

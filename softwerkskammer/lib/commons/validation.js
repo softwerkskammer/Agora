@@ -49,6 +49,7 @@ module.exports = {
     validator.check(group.emailPrefix, 'Präfix für E-Mails muss mindestens 5 und höchstens 15 Zeichen enthalten.').len(5, 15);
     validator.check(group.emailPrefix, 'Präfix für E-Mails darf nur Zahlen, Buchstaben, Leerzeichen und Bindestriche enthalten.').regex(/^[a-z0-9 \-]+$/i);
     validator.check(group.longName, 'Titel ist ein Pflichtfeld.').notEmpty();
+    validator.check(group.color, 'Farbe ist ein Pflichtfeld.').notEmpty();
     validator.check(group.description, 'Beschreibung ist ein Pflichtfeld.').notEmpty();
     validator.check(group.type, 'Gruppenart ist ein Pflichtfeld.').notEmpty();
     return validator.getErrors();
