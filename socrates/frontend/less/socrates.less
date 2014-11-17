@@ -10,10 +10,6 @@
 /* grey -> #E8E8E8                      */
 @import "variables.less";
 
-body {
-  padding-top: 50px;
-}
-
 ul.square {
   list-style-type: square;
 }
@@ -51,7 +47,16 @@ dd {
   margin-bottom: 50px;
 }
 
+@media (max-width: 767px) {
+  .navbar {
+    margin-bottom: 0px;
+  }
+}
 @media (min-width: 768px) {
+  body {
+    padding-top: 50px;
+  }
+
   .pull-right-sm {
     float: right
   }

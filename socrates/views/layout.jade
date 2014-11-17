@@ -1,0 +1,86 @@
+extends commonLayout
+mixin contactbuttons
+  a.btn.btn-info(href='impressum.html', title='Impressum')
+    i.fa.fa-fw.fa-info #{''}
+    span.hidden-xs Impressum
+  a.btn.btn-info(href='mailto:info@socrates-conference.de', title='E-Mail')
+    i.fa.fa-fw.fa-envelope #{''}
+    span.hidden-xs E-Mail
+  .btn-group.dropup
+    a.btn.btn-info(href='https://twitter.com/intent/tweet?text=SoCraTes+2015+will+take+place+from+27+to+30+August.+More+at&url=http%3A%2F%2Fsocrates-conference.de%2F&hashtags=socrates_15&via=socrates_2015', title='Tweet')
+      i.fa.fa-fw.fa-twitter #{''}
+      span.hidden-xs Tweet
+    a.btn.btn-info.dropdown-toggle(type='button', data-toggle='dropdown')
+      i.fa.fa-caret-up
+    ul.dropdown-menu(role='menu')
+      li: a(href='https://twitter.com/intent/user?screen_name=socrates_2015') Show Tweets
+      li: a(href='https://twitter.com/intent/follow?screen_name=socrates_2015') Follow
+mixin navbar
+  ul.nav.navbar-nav.navbar-right.hidden-xs(style='margin-right: 5px;')
+    a.btn.btn-info.navbar-btn(href='sponsoring.html')
+      i.fa.fa-fw.fa-thumbs-o-up
+      | Sponsor us
+  .container
+    .navbar-header
+      button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-collapse')
+        span.sr-only Toggle navigation
+        span.icon-bar
+        span.icon-bar
+        span.icon-bar
+      .navbar-brand(style='padding-top: 5px; padding-right: 0px;', title='SoCraTes 2015')
+        a(href='/'): img(src='../img/socrates2015_logo.png', height='40px')
+    .navbar-collapse.collapse
+      ul.nav.navbar-nav
+        li: a.serif(href='/', style='padding-left: 0px') SoCraTes 2015
+        li: a(href='schedule.html') Schedule
+        li: a(href='location.html') Location
+        li: a(href='history.html') History
+        li: a(href='values.html') SoCraTes' Values
+block specific
+  body(role='document')
+    if (browserIsTooOld)
+      .alert.alert-block.alert-warning
+        h2 Please note that we no longer support Internet Explorer versions 7 or 8.
+        p We follow the example of #{''}
+          a(href='https://help.github.com/articles/supported-browsers') github 
+          | .
+        p We recommend upgrading to the latest 
+          a(href='https://ie.microsoft.com/') Internet Explorer #{''}
+          | , 
+          a(href='https://chrome.google.com') Google Chrome #{''}
+          | , or 
+          a(href='https://mozilla.org/firefox/') Firefox #{''}
+          | .
+        p If you are using IE 9 or later, make sure you #{''}
+          a(href='http://windows.microsoft.com/en-US/windows7/webpages-look-incorrect-in-Internet-Explorer') turn off "Compatibility View"
+          | .
+    else
+      block navigation
+        .navbar.navbar-inverse.navbar-fixed-top.hidden-print.hidden-xs(role='navigation')
+          +navbar
+        .navbar.navbar-inverse.navbar-top.hidden-print.visible-xs(role='navigation')
+          +navbar
+
+      block before-container
+      .container
+        block content
+      footer(style='margin-top: 10px')
+        .container
+          .row
+            .col-sm-12
+              hr(style='margin: 0px')
+          .row
+            .col-sm-6
+              h5 This event is brought to you by:
+              a(href='https://softwerkskammer.org', target='_blank')
+                img(src='https://softwerkskammer.org/img/SoftwerkskammerWappenLinks.png', alt='Softwerkskammer')
+            .col-sm-6.hidden-xs
+              .pull-right(style='margin-bottom: 5px;')
+                h5(style='text-align: right') Information and Contact:
+                .btn-group(style='padding-top: 30px;')
+                  +contactbuttons
+            .col-xs-12.visible-xs
+              div(style='margin-bottom: 5px;')
+                h5 Information and Contact:
+                .btn-group
+                  +contactbuttons
