@@ -13,7 +13,13 @@ var sponsors = require('./sponsors.json');
 var app = misc.expressAppIn(__dirname);
 
 app.get('/', function (req, res, next) {
-  res.render('index', {sponsors: sponsors});
+  res.render('index', {sponsors: sponsors, swkPublicUrl: 'http://localhost:17124/', currentUrl: 'http://localhost:17224/loggedIn'});
+});
+
+app.get('/loggedIn', function (req, res, next) {
+  var token = req.query.id_token;
+  console.log(token);
+  res.redirect('/');
 });
 
 app.get('/robots.txt', function (req, res, next) {

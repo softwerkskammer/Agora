@@ -1,6 +1,5 @@
 extends ../../../views/layout
-
-block title 
+block title
   | SoCraTes 2015 - 5th International Software Craftsmanship and Testing Conference, 27-30 August 2015, Soltau, Germany
 block before-container
   .jumbotron.stage-background
@@ -10,16 +9,18 @@ block before-container
       p 5th International Software Craftsmanship and Testing Conference in Germany
       p 27 - 30 August 2015, Soltau, Germany
 block content
+  include ../../../views/loginComponent
   .row
     .col-sm-8
       .row
         .col-xs-12
           .page-header
-            h1 
+            h1
               | What is it about?&nbsp;
               small Some key facts.
           p.lead This event is about the sustainable creation of useful software in a responsible way.
-          
+          a.btn.btn-default(data-toggle='modal', href='#login') hallo
+
           h2 It's about People
           
           p.lead Everyone who is concerned with coding, testing, code quality, software craftsmanship, and/or if&nbsp;&hellip;
