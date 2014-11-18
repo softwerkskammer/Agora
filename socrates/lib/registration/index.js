@@ -20,15 +20,21 @@ app.get('/participate', function (req, res) {
       billingaddress: 'Same',
       tshirtsize: 'L'
     },
-    room: 'double'
+    room: 'double',
+    nights: 2
   };
   var roomOptions = [
-    {id: 'single', name: 'Single'},
-    {id: 'juniorAlone', name: 'Junior Exclusive'},
-    {id: 'junior', name: 'Junior shared with', shareable: true},
-    {id: 'double', name: 'Double shared with', shareable: true}
+    {id: 'single', name: 'Single', two: 214, three: 329, four: 412},
+    {id: 'double', name: 'Double shared …', shareable: true, two: 174, three: 269, four: 332},
+    {id: 'junior', name: 'Junior shared …', shareable: true, two: 168, three: 260, four: 320},
+    {id: 'juniorAlone', name: 'Junior (exclusive)', two: 236, three: 362, four: 456}
   ];
   res.render('participate', {participation: participation, roomOptions: roomOptions});
+});
+
+app.post('/participate', function (req, res) {
+  console.log(req.body);
+  res.redirect('participate');
 });
 
 module.exports = app;

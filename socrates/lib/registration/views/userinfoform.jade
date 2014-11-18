@@ -2,19 +2,44 @@ mixin userinfoform(user)
   .row
     .col-sm-12
       legend
-        h4 Please Enter / Review your personal Data 
+        h4 Personal Data
+      .well
+        p.
+          In order to participate at the event, we need you to provide us the following information. Please fill in all mandatory fields. 
+        p.
+          The home address is required by the hotel. It needs to be the address where you are registered, not your company's. In case you
+          want a different address on the invoice of the hotel, fill in the billing address.
   .row
     .col-sm-6
       +text('nickname', 'Nickname', user.nickname)
       +text('firstname', 'First name', user.firstname)
       +text('lastname', 'Last name', user.lastname)
+      +textareaPure('address', 'Home Address', user.address)
+    .col-sm-6
       +text('email', 'E-Mail', user.email)
       +twitter('twitter', 'Twitter', user.twitter)
-    .col-sm-6
-      +textareaPure('address', 'Private Address', user.address)
-      +textareaPure('billingaddress', 'Billing Address', user.billingaddress)
-      .form-group
-        label.control-label(for='tShirtSize') T-Shirt Size:
-        select#tShirtSize.form-control(name='tShirtSize')
-          for item in ['', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL', 'Ladies\' XS', 'Ladies\' S', 'Ladies\' M', 'Ladies\' L', 'Ladies\' XL', 'Ladies\' XXL' ]
-            option(selected=user.tshirtsize === item) #{item}
+      .row
+        .col-sm-6
+          .form-group
+            label.control-label(for='tShirtSizeMale') T-Shirt (Male):
+            select#tShirtSizeMale.form-control(name='tShirtSize')
+              for item in ['', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL' ]
+                option(selected=user.tshirtsize === item) #{item}
+        .col-sm-6
+          .form-group
+            label.control-label(for='tShirtSizeFemale') T-Shirt (Female):
+            select#tShirtSizeFemale.form-control(name='tShirtSize')
+              for item in ['', 'Ladies\' XS', 'Ladies\' S', 'Ladies\' M', 'Ladies\' L', 'Ladies\' XL', 'Ladies\' XXL' ]
+                option(selected=user.tshirtsize === item) #{item}
+      +textareaPure('billingaddress', 'Billing Address (if different)', user.billingaddress)
+  script.
+    $('#tShirtSizeMale').on('change', function (e) {
+      if ($(this).val() !== '') {
+        $('#tShirtSizeFemale').val('');    
+      }
+    });
+    $('#tShirtSizeFemale').on('change', function (e) {
+      if ($(this).val() !== '') {
+        $('#tShirtSizeMale').val('');    
+      }
+    });

@@ -2,23 +2,59 @@ mixin participationinfoform(participation, roomOptions)
   .row
     .col-sm-12
       legend
-        h4 Choose your room / options
-  .row
-    .col-sm-6
-      .form-group
-        +controlLabel('room', 'Room', 'You choose a bed in a room, not the whole room')
-        for option in roomOptions
-          .radio
-            label
-              input(type='radio', name="roomOptions", value=option.id, checked=(participation.room === option.id))
-              | #{option.name}
-            if (option.shareable)
-              | #{''} 
-              input(type='text', name=option.id + '.shareWith', placeholder='other person')
-    .col-sm-6
-      .form-group
-        +controlLabel('', 'Optional')
-        +checkbox('additionalOne', 'Additional night Sat-Sun', false)
-        +checkbox('additionalActivity', 'Sunday Code Retreat / Workshop', false)
-        +checkbox('additionalTwo', 'Additional night Sun-Mon', false)
-
+        h4 Room / Options
+      .well
+        p.
+          We offer three kinds of rooms. Please choose the room you want and tell us how long you will be our guest. The
+          option "Sunday evening" means that you want to participate in the code retreat or one of the workshops 
+        ul
+          li Single bed room
+          li Double bed room, can only be occupied shared
+          li Junior double bed room (one 160cm bed), can be occupied exclusive or shared
+        p If you share a room please provide the name of your mate.
+        p All prices are per person.
+      .table-responsive
+        table.table.table-striped.table-condensed.table-bordered
+          thead
+            tr
+              th Room | I will leave
+              th.text-right Sat evening
+              th.text-right Sun morning
+              th.text-right Sun evening*
+              th.text-right Mon morning
+          tbody
+            for option in roomOptions
+              tr
+                th #{option.name}
+                td.text-right
+                  .radio-inline
+                    input(type='radio', name='nightsOptions', value=option.id + 2)
+                    | #{option.two}&nbsp;€
+                td.text-right
+                  .radio-inline
+                    input(type='radio', name='nightsOptions', value=option.id + 3)
+                    | #{option.three}&nbsp;€
+                td.text-right
+                  .radio-inline
+                    input(type='radio', name='nightsOptions', value=option.id + 4)
+                    | #{option.three}&nbsp;€
+                td.text-right
+                  .radio-inline
+                    input(type='radio', name='nightsOptions', value=option.id + 5)
+                    | #{option.four}&nbsp;€
+      .row(style='margin-top:-15px; margin-bottom:15px')
+        .col-xs-12
+          small * including participation in Sunday Code Retreat or Workshop
+      .row#roommate
+        .col-sm-3.col-xs-6
+          label(style='height: 35px; padding-top: 6px; padding-left: 6px;') … shared with:
+        .col-sm-9.col-xs-6
+          input.form-control(type='text', name='shareWith', placeholder='name of roommate')
+  script.
+    $(':radio').on('change', function() {
+      if ($(this).val().match(/junior\d|double\d/)) {
+        $('#roommate').show();
+      } else {
+        $('#roommate').hide();
+      }
+    });
