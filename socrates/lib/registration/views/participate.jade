@@ -1,57 +1,8 @@
 include  ../../../views/formComponents
+include userinfoform
+include participationinfoform
+  
 extends ../../../views/simpleLayout
-mixin participationform(participation)
-  form#participationform(action='/registration/participate', method='post')
-    +csrf
-    if (participation.id)
-      +hidden('id', participation.id)
-    fieldset
-      .row
-        .col-sm-12
-          legend
-            h4 Please Enter / Review your personal Data 
-      .row
-        .col-sm-6
-          +text('nickname', 'Nickname', participation.user.nickname)
-          +text('firstname', 'First name', participation.user.firstname)
-          +text('lastname', 'Last name', participation.user.lastname)
-          +text('email', 'E-Mail', participation.user.email)
-          +twitter('twitter', 'Twitter', participation.user.twitter)
-        .col-sm-6
-          +textareaPure('address', 'Private Address', participation.user.address)
-          +textareaPure('billingaddress', 'Billing Address', participation.user.billingaddress)
-          .form-group
-            label.control-label(for='tShirtSize') T-Shirt Size:
-            select#tShirtSize.form-control(name='tShirtSize')
-              for item in ['', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL', 'Ladies\' XS', 'Ladies\' S', 'Ladies\' M', 'Ladies\' L', 'Ladies\' XL', 'Ladies\' XXL' ]
-                option(selected=participation.user.tshirtsize === item) #{item}
-
-      .row
-        .col-sm-12
-          legend
-            h4 Choose your room / options
-      .row
-        .col-sm-6
-          .form-group
-            +controlLabel('room', 'Room', 'You choose a bed in a room, not the whole room')
-            for option in roomOptions
-              .radio
-                label
-                  input(type='radio', name="roomOptions", value=option.id, checked=(participation.room === option.id))
-                  | #{option.name}
-                if (option.shareable)
-                  | #{''} 
-                  input(type='text', name=option.id + '.shareWith', placeholder='other person')
-        .col-sm-6
-          .form-group
-            +controlLabel('', 'Optional')
-            +checkbox('additionalOne', 'Additional night Sat-Sun', false)
-            +checkbox('additionalActivity', 'Sunday Code Retreat / Workshop', false)
-            +checkbox('additionalTwo', 'Additional night Sun-Mon', false)
-
-      .row(style='margin-bottom: 10px')
-        .col-sm-12
-          button.pull-right.btn.btn-primary(type='submit') I really do want to participate!
 
 block title 
   | Registration - SoCraTes
@@ -61,4 +12,14 @@ block content
   .well
     p.
       Here goes information about the registration process.
-  +participationform(participation)
+  form#participationform(action='/registration/participate', method='post')
+    +csrf
+    if (participation.id)
+      +hidden('id', participation.id)
+    fieldset
+      +userinfoform(participation.user)
+      +participationinfoform(participation, roomOptions)
+
+      .row(style='margin-bottom: 10px')
+        .col-sm-12
+          button.pull-right.btn.btn-primary(type='submit') I really do want to participate!

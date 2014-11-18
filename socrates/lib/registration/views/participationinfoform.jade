@@ -1,0 +1,24 @@
+mixin participationinfoform(participation, roomOptions)
+  .row
+    .col-sm-12
+      legend
+        h4 Choose your room / options
+  .row
+    .col-sm-6
+      .form-group
+        +controlLabel('room', 'Room', 'You choose a bed in a room, not the whole room')
+        for option in roomOptions
+          .radio
+            label
+              input(type='radio', name="roomOptions", value=option.id, checked=(participation.room === option.id))
+              | #{option.name}
+            if (option.shareable)
+              | #{''} 
+              input(type='text', name=option.id + '.shareWith', placeholder='other person')
+    .col-sm-6
+      .form-group
+        +controlLabel('', 'Optional')
+        +checkbox('additionalOne', 'Additional night Sat-Sun', false)
+        +checkbox('additionalActivity', 'Sunday Code Retreat / Workshop', false)
+        +checkbox('additionalTwo', 'Additional night Sun-Mon', false)
+
