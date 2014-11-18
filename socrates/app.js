@@ -4,9 +4,12 @@
 var express = require('express');
 var http = require('http');
 var path = require('path');
+var cookieParser = require('cookie-parser');
 var favicon = require('serve-favicon');
 var morgan = require('morgan');
+var bodyparser = require('body-parser');
 var compress = require('compression');
+var csurf = require('csurf');
 var jade = require('jade');
 
 var conf = require('nconf');
@@ -35,10 +38,17 @@ module.exports = {
     app.set('views', path.join(__dirname, 'views'));
     app.use(favicon(path.join(__dirname, 'public/img/favicon.ico')));
     app.use(morgan('combined', {stream: winstonStream}));
+    app.use(cookieParser());
+    app.use(bodyparser.urlencoded({extended: true}));
     app.use(compress());
     app.use(express.static(path.join(__dirname, 'public'), {maxAge: 600 * 1000})); // ten minutes
+    app.use(beans.get('expressSessionConfigurator'));
     app.use(beans.get('detectBrowser'));
+    app.use(beans.get('secureAgainstClickjacking'));
+    app.use(csurf());
+    app.use(beans.get('addCsrfTokenToLocals'));
     app.use('/', beans.get('socratesSiteApp'));
+    app.use('/registration/', beans.get('socratesRegistrationApp'));
     app.use(beans.get('handle404')(appLogger));
     app.use(beans.get('handle500')(appLogger));
 
