@@ -16,6 +16,7 @@ function createConfiguration() {
   nconf.file('mail', configdir + 'mailsender-config.json');
   nconf.file('wiki', configdir + 'wikirepo-config.json');
   nconf.file('activityresults', configdir + 'activityresults-config.json');
+  nconf.file('crossite', configdir + 'crosssite-config.json');
   nconf.defaults({
     adminListName: "admins",
     port: '17124',
@@ -42,7 +43,10 @@ function createConfiguration() {
       'dashboard',
     secret: 'secret',
     beans: new Beans(configdir + 'beans.json'),
-    domainname: 'localhost'
+    domainname: 'localhost',
+    softwerkskammerURL: 'http://localhost:17124',
+    socratesURL: 'http://localhost:17224',
+    jwt_secret: 'my_very_secret'
   });
 
   return nconf;

@@ -2,38 +2,22 @@
 
 var passport = require('passport');
 var winston = require('winston');
+var jwt = require('jwt-simple');
 var logger = winston.loggers.get('authorization');
 
 var conf = require('nconf');
 var beans = conf.get('beans');
 var membersService = beans.get('membersService');
-var memberstore = beans.get('memberstore');
 var misc = beans.get('misc');
 
 var urlPrefix = conf.get('publicUrlPrefix');
+var jwt_secret = conf.get('jwt_secret');
 
 function findOrCreateUser(req, authenticationId, profile, done) {
-  process.nextTick(function () {
-    if (!req.user) {
-      return memberstore.getMemberForAuthentication(authenticationId, function (err, member) {
-        if (err) { return done(err); }
-        if (!member) { return done(null, { authenticationId: authenticationId, profile: profile }); }
-        done(null, {authenticationId: authenticationId, member: member});
-      });
-    }
-    var memberOfSession = req.user.member;
-    return memberstore.getMemberForAuthentication(authenticationId, function (err, member) {
-      if (err) { return done(err); }
-      if (member && memberOfSession.id() !== member.id()) { return done(new Error('Unter dieser Authentifizierung existiert schon ein Mitglied.')); }
-      if (member && memberOfSession.id() === member.id()) { return done(null, {authenticationId: authenticationId, member: member}); }
-      // no member found
-      memberOfSession.addAuthentication(authenticationId);
-      memberstore.saveMember(memberOfSession, function (err) {
-        if (err) { return done(err); }
-        done(null, {authenticationId: authenticationId, member: memberOfSession});
-      });
-    });
-  });
+  if (req.session.socrates_returnTo) {
+    return done(null, {authenticationId: authenticationId});
+  }
+  process.nextTick(membersService.findOrCreateMemberFor(req.user, authenticationId, profile, done));
 }
 
 function findOrCreateUserByOAuth(req, accessToken, refreshToken, profile, done) {
@@ -41,8 +25,8 @@ function findOrCreateUserByOAuth(req, accessToken, refreshToken, profile, done) 
 }
 
 function createProviderAuthenticationRoutes(app, provider) {
-  function authenticate(provider) {
-    return passport.authenticate(provider, { successReturnToOrRedirect: '/', failureRedirect: '/login' });
+  function authenticate() {
+    return passport.authenticate(provider, {successReturnToOrRedirect: '/', failureRedirect: '/login'});
   }
 
   function setReturnOnSuccess(req, res, next) {
@@ -52,65 +36,63 @@ function createProviderAuthenticationRoutes(app, provider) {
     next();
   }
 
-  app.get('/' + provider, setReturnOnSuccess, authenticate(provider));
-  app.get('/' + provider + '/callback', authenticate(provider));
+  app.get('/' + provider, setReturnOnSuccess, authenticate());
+  app.get('/' + provider + '/callback', authenticate());
+
+  function setReturnViaIdentityProviderOnSuccess(req, res, next) {
+    req.session.returnTo = '/auth/idp_return_point';
+    req.session.callingAppReturnTo = conf.get('socratesURL') + '/' + req.param('returnTo', '/');
+    next();
+  }
+
+  function redirectToCallingApp(req, res) {
+    var returnTo = req.session.callingAppReturnTo;
+    delete req.session.callingAppReturnTo;
+    var jwt_token = jwt.encode({userId: req.user.authenticationId}, jwt_secret);
+    delete req.user;
+    delete req._passport.session.user;
+    res.redirect(returnTo + '?id_token=' + jwt_token);
+  }
+
+  app.get('/idp/' + provider, setReturnViaIdentityProviderOnSuccess, authenticate());
+  app.get('/idp_return_point', redirectToCallingApp);
 }
 
-function setupStrategies(app) {
-  function setupOpenID(app) {
-    var OpenIDStrategy = require('passport-openid').Strategy;
-    passport.use(new OpenIDStrategy(
-      { // openID can always be used
-        returnURL: urlPrefix + '/auth/openid/callback',
-        realm: urlPrefix,
-        profile: true,
+function setupOpenID(app) {
+  var OpenIDStrategy = require('passport-openid').Strategy;
+  passport.use(new OpenIDStrategy(
+    { // openID can always be used
+      returnURL: urlPrefix + '/auth/openid/callback',
+      realm: urlPrefix,
+      profile: true,
+      passReqToCallback: true
+    },
+    findOrCreateUser
+  ));
+  createProviderAuthenticationRoutes(app, 'openid');
+}
+
+function setupGitHub(app) {
+  var githubClientID = conf.get('githubClientID');
+  if (githubClientID) {
+    var GitHubStrategy = require('passport-github').Strategy;
+    var strat = new GitHubStrategy(
+      {
+        clientID: githubClientID,
+        clientSecret: conf.get('githubClientSecret'),
+        callbackURL: urlPrefix + '/auth/github/callback',
+        customHeaders: {'User-Agent': 'agora node server'},
         passReqToCallback: true
       },
-      findOrCreateUser
-    ));
-    createProviderAuthenticationRoutes(app, 'openid');
+      findOrCreateUserByOAuth
+    );
+    strat._oauth2.useAuthorizationHeaderforGET(true);
+    passport.use(strat);
+    createProviderAuthenticationRoutes(app, 'github');
   }
-
-  function setupGitHub(app) {
-    var githubClientID = conf.get('githubClientID');
-    if (githubClientID) {
-      var GitHubStrategy = require('passport-github').Strategy;
-      var strat = new GitHubStrategy(
-        {
-          clientID: githubClientID,
-          clientSecret: conf.get('githubClientSecret'),
-          callbackURL: urlPrefix + '/auth/github/callback',
-          customHeaders: {'User-Agent': 'agora node server'},
-          passReqToCallback: true
-        },
-        findOrCreateUserByOAuth
-      );
-      strat._oauth2.useAuthorizationHeaderforGET(true);
-      passport.use(strat);
-      createProviderAuthenticationRoutes(app, 'github');
-    }
-  }
-
-  setupOpenID(app);
-  setupGitHub(app);
 }
 
 var app = misc.expressAppIn(__dirname);
-
-function serializeUser(user, done) {
-  done(null, user);
-}
-
-function deserializeUser(user, done) {
-  if (user.profile) { return done(null, user); } // new user
-  memberstore.getMemberForAuthentication(user.authenticationId, function (err, member) {
-    if (err) { return done(err); }
-    done(null, {authenticationId: user.authenticationId, member: member});
-  });
-}
-
-passport.serializeUser(serializeUser);
-passport.deserializeUser(deserializeUser);
 
 app.get('/logout', function (req, res) {
   req.logout();
@@ -120,6 +102,7 @@ app.get('/logout', function (req, res) {
   }
   res.redirect('/goodbye.html');
 });
-setupStrategies(app);
+setupOpenID(app);
+setupGitHub(app);
 
 module.exports = app;
