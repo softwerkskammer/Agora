@@ -2,6 +2,7 @@
 
 var passport = require('passport');
 var winston = require('winston');
+var jwt = require('jwt-simple');
 var logger = winston.loggers.get('authorization');
 
 var conf = require('nconf');
@@ -10,6 +11,7 @@ var membersService = beans.get('membersService');
 var misc = beans.get('misc');
 
 var urlPrefix = conf.get('publicUrlPrefix');
+var jwt_secret = conf.get('jwt_secret');
 
 function findOrCreateUser(req, authenticationId, profile, done) {
   if (req.session.socrates_returnTo) {
@@ -46,11 +48,10 @@ function createProviderAuthenticationRoutes(app, provider) {
   function redirectToCallingApp(req, res) {
     var returnTo = req.session.callingAppReturnTo;
     delete req.session.callingAppReturnTo;
-
-    var jwt_token = {userId: req.user.authenticationId};
+    var jwt_token = jwt.encode({userId: req.user.authenticationId}, jwt_secret);
     delete req.user;
     delete req._passport.session.user;
-    res.redirect(returnTo + '?id_token=' + JSON.stringify(jwt_token));
+    res.redirect(returnTo + '?id_token=' + jwt_token);
   }
 
   app.get('/idp/' + provider, setReturnViaIdentityProviderOnSuccess, authenticate());

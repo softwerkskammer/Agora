@@ -3,6 +3,8 @@
 var path = require('path');
 var async = require('async');
 var fs = require('fs');
+var jwt = require('jwt-simple');
+
 var conf = require('nconf');
 var beans = conf.get('beans');
 var Renderer = beans.get('renderer');
@@ -11,6 +13,8 @@ var groupsAndMembers = beans.get('groupsAndMembersService');
 var Group = beans.get('group');
 var misc = beans.get('misc');
 var sponsors = require('./sponsors.json');
+var jwt_secret = conf.get('jwt_secret');
+
 var app = misc.expressAppIn(__dirname);
 
 app.get('/', function (req, res, next) {
@@ -18,7 +22,7 @@ app.get('/', function (req, res, next) {
 });
 
 app.get('/loggedIn', function (req, res, next) {
-  var token = req.query.id_token;
+  var token = jwt.decode(req.query.id_token, jwt_secret);
   console.log(token);
   res.redirect('/');
 });
