@@ -21,7 +21,9 @@ function createConfiguration() {
     publicUrlPrefix: 'http://localhost:17224',
     secret: 'secret',
     beans: new Beans(configdir + 'beans.json'),
-    domainname: 'localhost'
+    domainname: 'localhost',
+    softwerkskammerURL: 'http://localhost:17124',
+    socratesURL: 'http://localhost:17224'
   });
 
   return nconf;

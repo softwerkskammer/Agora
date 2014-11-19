@@ -3,7 +3,8 @@
 var path = require('path');
 var async = require('async');
 var fs = require('fs');
-var beans = require('nconf').get('beans');
+var conf = require('nconf');
+var beans = conf.get('beans');
 var Renderer = beans.get('renderer');
 var groupsService = beans.get('groupsService');
 var groupsAndMembers = beans.get('groupsAndMembersService');
@@ -13,7 +14,7 @@ var sponsors = require('./sponsors.json');
 var app = misc.expressAppIn(__dirname);
 
 app.get('/', function (req, res, next) {
-  res.render('index', {sponsors: sponsors, swkPublicUrl: 'http://localhost:17124', currentUrl: 'http://localhost:17224/loggedIn'});
+  res.render('index', {sponsors: sponsors, swkPublicUrl: conf.get('softwerkskammerURL'), currentUrl: 'loggedIn'});
 });
 
 app.get('/loggedIn', function (req, res, next) {

@@ -13,16 +13,14 @@ function isReserved(nickname) {
 
 function wordList(members, groupingFunction) {
   return _(members).map(function (member) {
-    return member.interests() && member.interests().split(',').map(function (interest) {
-      return interest.trim();
-    });
+    return member.interests() && member.interests().split(',').map(function (interest) {return interest.trim(); });
   })
     .flatten() // now we have all words in one collection
     .compact() // remove empty strings
     .groupBy(groupingFunction) // prepare counting by grouping
     .transform(function (result, words) {
       var mainWord = _(words).groupBy().max(function (word) { return word.length; }).uniq().value()[0]; // choose the most common form
-      return result.push({text: mainWord, weight: words.length, html: {class: 'interestify'} });
+      return result.push({text: mainWord, weight: words.length, html: {class: 'interestify'}});
     }, []); // create the final structure
 }
 
@@ -63,6 +61,32 @@ module.exports = {
     return wordList(members)
       .sortBy('text')
       .value();
+  },
+
+  findOrCreateMemberFor: function (user, authenticationId, profile, done) {
+    return function () {
+      if (!user) {
+        return store.getMemberForAuthentication(authenticationId, function (err, member) {
+          if (err) { return done(err); }
+          if (!member) { return done(null, {authenticationId: authenticationId, profile: profile}); }
+          done(null, {authenticationId: authenticationId, member: member});
+        });
+      }
+      var memberOfSession = user.member;
+      return store.getMemberForAuthentication(authenticationId, function (err, member) {
+        if (err) { return done(err); }
+        if (member && memberOfSession.id() !== member.id()) { return done(new Error('Unter dieser Authentifizierung existiert schon ein Mitglied.')); }
+        if (member && memberOfSession.id() === member.id()) {
+          return done(null, {authenticationId: authenticationId, member: member});
+        }
+        // no member found
+        memberOfSession.addAuthentication(authenticationId);
+        store.saveMember(memberOfSession, function (err) {
+          if (err) { return done(err); }
+          done(null, {authenticationId: authenticationId, member: memberOfSession});
+        });
+      });
+    };
   },
 
   isReserved: isReserved

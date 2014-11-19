@@ -4,7 +4,6 @@
 var express = require('express');
 var http = require('http');
 var path = require('path');
-var passport = require('passport');
 var cookieParser = require('cookie-parser');
 var favicon = require('serve-favicon');
 var morgan = require('morgan');
@@ -66,8 +65,7 @@ module.exports = {
     app.use(express.static(path.join(__dirname, 'public'), { maxAge: 600 * 1000 })); // ten minutes
 
     app.use(beans.get('expressSessionConfigurator'));
-    app.use(passport.initialize());
-    app.use(passport.session());
+    app.use(beans.get('passportInitializer'));
     app.use(i18n.handle);
     app.use(beans.get('serverpathRemover'));
     app.use(beans.get('accessrights'));
