@@ -52,8 +52,31 @@ function createProviderAuthenticationRoutes(app, provider) {
     next();
   }
 
+  function authenticateViaIdentityProvider(provider) {
+      return passport.authenticate(provider, { successReturnToOrRedirect: '/', failureRedirect: '/idp_login_error' });
+  }
+
+
+    function setReturnViaIdentityProviderOnSuccess(req, res, next) {
+        req.session.returnTo = '/auth/idp_return_point';
+        req.session.socrates_returnTo = req.param('returnTo', 'http://localhost:17224/loggedIn');
+        next();
+  }
+
+    function zweiterSchritt(req, res, next) {
+        var returnTo = req.session.socrates_returnTo;
+        delete req.session.socrates_returnTo;
+
+        var jwt_token = { userId: req.user.authenticationId };
+
+        res.redirect(returnTo + '?id_token=' + JSON.stringify(jwt_token) );
+    }
+
   app.get('/' + provider, setReturnOnSuccess, authenticate(provider));
   app.get('/' + provider + '/callback', authenticate(provider));
+  app.get('/idp/' + provider, setReturnViaIdentityProviderOnSuccess, authenticateViaIdentityProvider(provider));
+  app.get('/idp/' + provider + '/callback', authenticateViaIdentityProvider(provider));
+    app.get('/idp_return_point', zweiterSchritt);
 }
 
 function setupStrategies(app) {
