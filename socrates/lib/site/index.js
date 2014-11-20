@@ -4,6 +4,7 @@ var path = require('path');
 var async = require('async');
 var fs = require('fs');
 var jwt = require('jwt-simple');
+var passport = require('passport');
 
 var conf = require('nconf');
 var beans = conf.get('beans');
@@ -20,8 +21,14 @@ app.get('/', function (req, res, next) {
 
 app.get('/loggedIn', function (req, res, next) {
   var token = jwt.decode(req.query.id_token, jwt_secret);
-  console.log(token);
-  res.redirect('/');
+  if (!token.userId) {
+    return next(new Error("Authentication failed."));
+  }
+  req._passport.session.user = {authenticationId: token.userId};
+  passport.authenticate('session')(req, res, function () {
+    console.log("Hallo " + req.user.member.displayName());
+    res.redirect('/');
+  });
 });
 
 app.get('/robots.txt', function (req, res, next) {
