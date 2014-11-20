@@ -1,4 +1,6 @@
 extends commonLayout
+include layoutComponents
+
 mixin contactbuttons
   a.btn.btn-info(href='impressum.html', title='Impressum')
     i.fa.fa-fw.fa-info #{''}
@@ -30,6 +32,9 @@ mixin navbar
       .navbar-brand(style='padding-top: 5px; padding-right: 0px;', title='SoCraTes 2015')
         a(href='/'): img(src='../img/socrates2015_logo.png', height='40px')
     .navbar-collapse.collapse
+      if (!xs)
+        ul.nav.navbar-nav.navbar-right.bottom
+          +loginMenu
       ul.nav.navbar-nav
         li: a.serif(href='/', style='padding-left: 0px') SoCraTes 2015
         li: a(href='schedule.html') Schedule

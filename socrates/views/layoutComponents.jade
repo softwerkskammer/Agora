@@ -1,0 +1,8 @@
+mixin loginMenu(forInline)
+   li.dropdown(class=forInline ? 'visible-xs' : '')
+      a(href='#')
+         i.fa.fa-info-circle.fa-fw &nbsp;
+         if accessrights.isRegistered()
+           | #{user.member.nickname()}
+         else
+           | Guest
