@@ -58,6 +58,10 @@ function memberSubmitted(req, res, next) {
   });
 }
 
+function tagsFor(members) {
+  return _(membersService.toWordList(members)).pluck('text').sortBy().value();
+}
+
 var app = misc.expressAppIn(__dirname);
 
 app.get('/', function (req, res, next) {
@@ -65,7 +69,7 @@ app.get('/', function (req, res, next) {
     if (err) { return next(err); }
     async.each(members, membersService.getImage, function (err) {
       if (err) { return next(err); }
-      res.render('index', { members: members, wordList: membersService.toWordList(members) });
+      res.render('index', {members: members, wordList: membersService.toWordList(members)});
     });
   });
 });
@@ -76,11 +80,14 @@ app.get('/interests', function (req, res, next) {
     if (err) { return next(err); }
     async.each(members, membersService.getImage, function (err) {
       if (err) { return next(err); }
-      res.render('indexForTag', { interest: req.query.interest, members: members, wordList: membersService.toWordList(members) });
+      res.render('indexForTag', {
+        interest: req.query.interest,
+        members: members,
+        wordList: membersService.toWordList(members)
+      });
     });
   });
 });
-
 
 app.get('/checknickname', function (req, res) {
   misc.validate(req.query.nickname, req.query.previousNickname, membersService.isValidNickname, res.end);
@@ -95,24 +102,32 @@ app.get('/new', function (req, res, next) {
     return res.redirect('/members/');
   }
   async.parallel(
-    { allGroups: function (callback) { groupsService.getAllAvailableGroups(callback); },
+    {
+      allGroups: function (callback) { groupsService.getAllAvailableGroups(callback); },
       alle: function (callback) { groupstore.getGroup('alle', callback); },
-      commercial: function (callback) { groupstore.getGroup('commercial', callback); } },
+      commercial: function (callback) { groupstore.getGroup('commercial', callback); },
+      allMembers: function (callback) { memberstore.allMembers(callback); }
+    },
     function (err, results) {
       if (err) { return next(err); }
-      var groups = results.allGroups;
-      var regionalGroups = groupsService.combineSubscribedAndAvailableGroups([results.alle, results.commercial], Group.regionalsFrom(groups));
-      var thematicGroups = groupsService.combineSubscribedAndAvailableGroups([results.alle, results.commercial], Group.thematicsFrom(groups));
-      res.render('edit', { member: memberForNew(req), regionalgroups: regionalGroups, themegroups: thematicGroups});
+      var allGroups = results.allGroups;
+      res.render('edit', {
+        member: memberForNew(req),
+        regionalgroups: groupsService.combineSubscribedAndAvailableGroups([results.alle, results.commercial], Group.regionalsFrom(allGroups)),
+        themegroups: groupsService.combineSubscribedAndAvailableGroups([results.alle, results.commercial], Group.thematicsFrom(allGroups)),
+        tags: tagsFor(results.allMembers)
+      });
     }
   );
 });
 
 app.get('/edit/:nickname', function (req, res, next) {
   async.parallel(
-    { member: function (callback) { groupsAndMembersService.getUserWithHisGroups(req.params.nickname, callback); },
+    {
+      member: function (callback) { groupsAndMembersService.getUserWithHisGroups(req.params.nickname, callback); },
       allGroups: function (callback) { groupsService.getAllAvailableGroups(callback); },
-      allMembers: function (callback) { memberstore.allMembers(callback); } },
+      allMembers: function (callback) { memberstore.allMembers(callback); }
+    },
     function (err, results) {
       if (err) { return next(err); }
       var member = results.member;
@@ -121,10 +136,12 @@ app.get('/edit/:nickname', function (req, res, next) {
         return res.redirect('/members/' + encodeURIComponent(member.nickname()));
       }
       var allGroups = results.allGroups;
-      var tags = _(membersService.toWordList(results.allMembers)).pluck('text').sortBy().value();
-      var regionalGroups = groupsService.combineSubscribedAndAvailableGroups(member.subscribedGroups, Group.regionalsFrom(allGroups));
-      var thematicGroups = groupsService.combineSubscribedAndAvailableGroups(member.subscribedGroups, Group.thematicsFrom(allGroups));
-      res.render('edit', { member: member, regionalgroups: regionalGroups, themegroups: thematicGroups, tags: tags});
+      res.render('edit', {
+        member: member,
+        regionalgroups: groupsService.combineSubscribedAndAvailableGroups(member.subscribedGroups, Group.regionalsFrom(allGroups)),
+        themegroups: groupsService.combineSubscribedAndAvailableGroups(member.subscribedGroups, Group.thematicsFrom(allGroups)),
+        tags: tagsFor(results.allMembers)
+      });
     }
   );
 });
@@ -181,7 +198,7 @@ app.get('/:nickname', function (req, res, next) {
     if (err || !member) { return next(err); }
     activitiesService.getPastActivitiesOfMember(member, function (err, activities) {
       if (err) { return next(err); }
-      res.render('get', { member: member, pastActivities: activities, subscribedGroups: subscribedGroups });
+      res.render('get', {member: member, pastActivities: activities, subscribedGroups: subscribedGroups});
     });
   });
 });
