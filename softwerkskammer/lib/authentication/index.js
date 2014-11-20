@@ -14,7 +14,7 @@ var urlPrefix = conf.get('publicUrlPrefix');
 var jwt_secret = conf.get('jwt_secret');
 
 function findOrCreateUser(req, authenticationId, profile, done) {
-  if (req.session.socrates_returnTo) {
+  if (req.session.callingAppReturnTo) {
     return done(null, {authenticationId: authenticationId});
   }
   process.nextTick(membersService.findOrCreateMemberFor(req.user, authenticationId, profile, done));
