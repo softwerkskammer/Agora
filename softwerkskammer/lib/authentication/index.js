@@ -14,7 +14,7 @@ var urlPrefix = conf.get('publicUrlPrefix');
 var jwt_secret = conf.get('jwt_secret');
 
 function findOrCreateUser(req, authenticationId, profile, done) {
-  if (req.session.callingAppReturnTo) {
+  if (req.session.callingAppReturnTo) { // we're invoked from another app -> don't add a member to the session
     return done(null, {authenticationId: authenticationId});
   }
   process.nextTick(membersService.findOrCreateMemberFor(req.user, authenticationId, profile, done));
@@ -25,6 +25,7 @@ function findOrCreateUserByOAuth(req, accessToken, refreshToken, profile, done) 
 }
 
 function createProviderAuthenticationRoutes(app, provider) {
+
   function authenticate() {
     return passport.authenticate(provider, {successReturnToOrRedirect: '/', failureRedirect: '/login'});
   }

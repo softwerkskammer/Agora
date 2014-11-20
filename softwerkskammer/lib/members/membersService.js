@@ -65,10 +65,10 @@ module.exports = {
 
   findOrCreateMemberFor: function (user, authenticationId, profile, done) {
     return function () {
-      if (!user) {
+      if (!user) { // not currently logged in
         return store.getMemberForAuthentication(authenticationId, function (err, member) {
           if (err) { return done(err); }
-          if (!member) { return done(null, {authenticationId: authenticationId, profile: profile}); }
+          if (!member) { return done(null, {authenticationId: authenticationId, profile: profile}); } // no member found -> add profile for /new page
           done(null, {authenticationId: authenticationId, member: member});
         });
       }
@@ -76,10 +76,8 @@ module.exports = {
       return store.getMemberForAuthentication(authenticationId, function (err, member) {
         if (err) { return done(err); }
         if (member && memberOfSession.id() !== member.id()) { return done(new Error('Unter dieser Authentifizierung existiert schon ein Mitglied.')); }
-        if (member && memberOfSession.id() === member.id()) {
-          return done(null, {authenticationId: authenticationId, member: member});
-        }
-        // no member found
+        if (member && memberOfSession.id() === member.id()) { return done(null, {authenticationId: authenticationId, member: member}); }
+        // no member found:
         memberOfSession.addAuthentication(authenticationId);
         store.saveMember(memberOfSession, function (err) {
           if (err) { return done(err); }
