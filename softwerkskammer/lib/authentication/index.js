@@ -13,7 +13,7 @@ var misc = beans.get('misc');
 var urlPrefix = conf.get('publicUrlPrefix');
 var jwt_secret = conf.get('jwt_secret');
 
-function findOrCreateUser(req, authenticationId, profile, done) {
+function createSessionObject(req, authenticationId, profile, done) {
   if (req.session.callingAppReturnTo) { // we're invoked from another app -> don't add a member to the session
     return done(null, {authenticationId: authenticationId});
   }
@@ -24,8 +24,8 @@ function findOrCreateUser(req, authenticationId, profile, done) {
   }));
 }
 
-function findOrCreateUserByOAuth(req, accessToken, refreshToken, profile, done) {
-  findOrCreateUser(req, profile.provider + ':' + profile.id, profile, done);
+function createSessionObjectByOAuth(req, accessToken, refreshToken, profile, done) {
+  createSessionObject(req, profile.provider + ':' + profile.id, profile, done);
 }
 
 function createProviderAuthenticationRoutes(app, provider) {
@@ -72,7 +72,7 @@ function setupOpenID(app) {
       profile: true,
       passReqToCallback: true
     },
-    findOrCreateUser
+    createSessionObject
   ));
   createProviderAuthenticationRoutes(app, 'openid');
 }
@@ -89,7 +89,7 @@ function setupGitHub(app) {
         customHeaders: {'User-Agent': 'agora node server'},
         passReqToCallback: true
       },
-      findOrCreateUserByOAuth
+      createSessionObjectByOAuth
     );
     strat._oauth2.useAuthorizationHeaderforGET(true);
     passport.use(strat);
