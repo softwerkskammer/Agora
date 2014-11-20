@@ -13,7 +13,7 @@ var misc = beans.get('misc');
 var urlPrefix = conf.get('publicUrlPrefix');
 var jwt_secret = conf.get('jwt_secret');
 
-function createSessionObject(req, authenticationId, profile, done) {
+function createUserObject(req, authenticationId, profile, done) {
   if (req.session.callingAppReturnTo) { // we're invoked from another app -> don't add a member to the session
     return done(null, {authenticationId: authenticationId});
   }
@@ -24,8 +24,8 @@ function createSessionObject(req, authenticationId, profile, done) {
   }));
 }
 
-function createSessionObjectByOAuth(req, accessToken, refreshToken, profile, done) {
-  createSessionObject(req, profile.provider + ':' + profile.id, profile, done);
+function createUserObjectFromGithub(req, accessToken, refreshToken, profile, done) {
+  createUserObject(req, profile.provider + ':' + profile.id, profile, done);
 }
 
 function createProviderAuthenticationRoutes(app, provider) {
@@ -72,16 +72,16 @@ function setupOpenID(app) {
       profile: true,
       passReqToCallback: true
     },
-    createSessionObject
+    createUserObject
   ));
   createProviderAuthenticationRoutes(app, 'openid');
 }
 
-function setupGitHub(app) {
+function setupGithub(app) {
   var githubClientID = conf.get('githubClientID');
   if (githubClientID) {
-    var GitHubStrategy = require('passport-github').Strategy;
-    var strat = new GitHubStrategy(
+    var GithubStrategy = require('passport-github').Strategy;
+    var strategy = new GithubStrategy(
       {
         clientID: githubClientID,
         clientSecret: conf.get('githubClientSecret'),
@@ -89,10 +89,10 @@ function setupGitHub(app) {
         customHeaders: {'User-Agent': 'agora node server'},
         passReqToCallback: true
       },
-      createSessionObjectByOAuth
+      createUserObjectFromGithub
     );
-    strat._oauth2.useAuthorizationHeaderforGET(true);
-    passport.use(strat);
+    strategy._oauth2.useAuthorizationHeaderforGET(true);
+    passport.use(strategy);
     createProviderAuthenticationRoutes(app, 'github');
   }
 }
@@ -108,6 +108,6 @@ app.get('/logout', function (req, res) {
   res.redirect('/goodbye.html');
 });
 setupOpenID(app);
-setupGitHub(app);
+setupGithub(app);
 
 module.exports = app;
