@@ -1,0 +1,7 @@
+{
+  "socratesSiteApp": {"module": "./socrates/lib/site"},
+  "socratesRegistrationApp": {"module": "./socrates/lib/registration"},
+  
+  "accessrights": {"module": "./socrates/lib/middleware/accessrights"},
+  "expressViewHelper": {"module": "./socrates/lib/middleware/expressViewHelper"}
+}

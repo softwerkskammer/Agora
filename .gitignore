@@ -19,6 +19,7 @@ bower_components
 config/*.json*
 !config/example*.json
 !config/beans.json
+!config/beans-socrates.json
 !config/testbeans.json
 !config/testbeansWithDB.json
 
