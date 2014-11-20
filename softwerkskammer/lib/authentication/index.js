@@ -17,7 +17,11 @@ function findOrCreateUser(req, authenticationId, profile, done) {
   if (req.session.callingAppReturnTo) { // we're invoked from another app -> don't add a member to the session
     return done(null, {authenticationId: authenticationId});
   }
-  process.nextTick(membersService.findOrCreateMemberFor(req.user, authenticationId, profile, done));
+  process.nextTick(membersService.findMemberFor(req.user, authenticationId, function (err, member) {
+    if (err) { return done(err); }
+    if (!member) { return done(null, {authenticationId: authenticationId, profile: profile}); }
+    return done(null, {authenticationId: authenticationId, member: member});
+  }));
 }
 
 function findOrCreateUserByOAuth(req, accessToken, refreshToken, profile, done) {
