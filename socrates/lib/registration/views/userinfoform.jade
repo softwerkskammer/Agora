@@ -1,4 +1,4 @@
-mixin userinfoform(user)
+mixin userinfoform(member, user)
   .row
     .col-sm-12
       legend
@@ -11,13 +11,13 @@ mixin userinfoform(user)
           want a different address on the invoice of the hotel, fill in the billing address.
   .row
     .col-sm-6
-      +text('nickname', 'Nickname', user.nickname)
-      +text('firstname', 'First name', user.firstname)
-      +text('lastname', 'Last name', user.lastname)
-      +textareaPure('address', 'Home Address', user.address)
+      +text('nickname', 'Nickname', member.nickname())
+      +text('firstname', 'First name', member.firstname())
+      +text('lastname', 'Last name', member.lastname())
+      +textareaPure('privateaddress', 'Home Address', user.privateaddress)
     .col-sm-6
-      +text('email', 'E-Mail', user.email)
-      +twitter('twitter', 'Twitter', user.twitter)
+      +text('email', 'E-Mail', member.email())
+      +twitter('twitter', 'Twitter', member.twitter())
       .row
         .col-sm-6
           .form-group

@@ -10,13 +10,9 @@ var app = misc.expressAppIn(__dirname);
 
 app.get('/participate', function (req, res) {
   var participation = {
+    member: req.user.member,
     user: {
-      nickname: 'Nick',
-      firstname: 'First',
-      lastname: 'Last',
-      email: 'First.Last@somedomain.de',
-      twitter: 'firstlast',
-      address: 'Morgenstr. 41\n76131 Karlsruhe\nDeutschland',
+      privateaddress: 'Morgenstr. 41\n76131 Karlsruhe\nDeutschland',
       billingaddress: 'Same',
       tshirtsize: 'L'
     },
