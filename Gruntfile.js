@@ -96,6 +96,12 @@ module.exports = function (grunt) {
         expand: true,
         flatten: false
       },
+      bootstrapMarkdownLESS: {
+        src: 'bower_components/bootstrap-markdown/less/*',
+        dest: 'softwerkskammer/build/stylesheets/less',
+        expand: true,
+        flatten: true
+      },
       fontawesomeFONTS: {
         src: 'bower_components/font-awesome/fonts/*',
         dest: 'softwerkskammer/public/fonts',
@@ -208,7 +214,7 @@ module.exports = function (grunt) {
             'bower_components/bootstrap-datepicker/css/datepicker3.css',
             'softwerkskammer/build/stylesheets/less/bootstrap-markdown-patched.less',
             'bower_components/font-awesome/css/font-awesome.css',
-            'softwerkskammer/frontend/3rd_party_css/shCoreDefault-patched.css',
+            'node_modules/node-syntaxhighlighter/lib/styles/shCoreDefault.css',
             'bower_components/smartmenus/dist/addons/bootstrap/jquery.smartmenus.bootstrap.css',
             'bower_components/datatables/media/css/jquery.dataTables.css',
             'softwerkskammer/frontend/3rd_party_css/dataTables.bootstrap.css',
