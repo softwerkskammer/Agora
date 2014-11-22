@@ -71,6 +71,18 @@ module.exports = function (grunt) {
         expand: true,
         flatten: true
       },
+      datatablesResponsiveJS: {
+        src: 'bower_components/datatables-responsive/js/*.js',
+        dest: 'softwerkskammer/public/clientscripts',
+        expand: true,
+        flatten: true
+      },
+      datatablesResponsiveCSS: {
+        src: 'bower_components/datatables-responsive/css/*.css',
+        dest: 'softwerkskammer/public/stylesheets',
+        expand: true,
+        flatten: true
+      },
       datatablesImages: {
         src: 'bower_components/datatables/media/images/*',
         dest: 'softwerkskammer/public/images/',
