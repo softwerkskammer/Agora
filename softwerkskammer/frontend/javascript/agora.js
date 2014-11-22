@@ -1,4 +1,4 @@
-/*global moment, datepicker_lang, datepicker_format, fc_lang, URI */
+/*global moment, datepicker_lang, datepicker_format, fc_lang, URI, help */
 
 var interestify, surroundInterestsWithLinks, surroundWithLink, surroundTwitterName, surroundEmail, displayedActivityStart, displayedActivityEnd;
 (function () {
@@ -142,7 +142,11 @@ var interestify, surroundInterestsWithLinks, surroundWithLink, surroundTwitterNa
           ],
           onPreview: function (e) {
             $.post('/preview',
-              {data: e.getContent(), subdir: ($('[name=subdir]').val() || $('[name=assignedGroup]').val() || $('[name=id]').val()), '_csrf': $('[name=_csrf]').val()},
+              {
+                data: e.getContent(),
+                subdir: ($('[name=subdir]').val() || $('[name=assignedGroup]').val() || $('[name=id]').val()),
+                '_csrf': $('[name=_csrf]').val()
+              },
               function (data) { $('.md-preview').html(data); });
             return ''; // to clearly indicate the loading...
           },
