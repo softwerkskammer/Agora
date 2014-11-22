@@ -1,0 +1,14 @@
+Index: 	jquery.smartmenus.bootstrap.js
+===================================================================
+--- jquery.smartmenus.bootstrap.js	(revision )
++++ jquery.smartmenus.bootstrap.js	(revision )
+@@ -27,7 +27,8 @@
+ 						collapsibleShowFunction: null,
+ 						collapsibleHideFunction: null,
+ 						rightToLeftSubMenus: $this.hasClass('navbar-right'),
+-						bottomToTopSubMenus: $this.closest('.navbar').hasClass('navbar-fixed-bottom')
++						bottomToTopSubMenus: $this.closest('.navbar').hasClass('navbar-fixed-bottom'),
++						hideOnClick: false
+ 					})
+ 					// set Bootstrap's "active" class to SmartMenus "current" items (should someone decide to enable markCurrentItem: true)
+ 					.find('a.current').parent().addClass('active');

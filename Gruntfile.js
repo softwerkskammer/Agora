@@ -20,8 +20,8 @@ module.exports = function (grunt) {
     'bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js',
     'bower_components/bootstrap-markdown/js/bootstrap-markdown.js',
     'node_modules/moment-timezone/node_modules/moment/moment.js',
-    'softwerkskammer/frontend/3rd_party_js/jquery.smartmenus.js',
-    'softwerkskammer/frontend/3rd_party_js/jquery.smartmenus.bootstrap.js',
+    'bower_components/smartmenus/dist/jquery.smartmenus.js',
+    'softwerkskammer/build/javascript/jquery.smartmenus.bootstrap-patched.js',
     'softwerkskammer/frontend/3rd_party_js/fullcalendar-patched.js',
     'bower_components/tinycolor/tinycolor.js',
     'bower_components/mjolnic-bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js',
@@ -129,6 +129,16 @@ module.exports = function (grunt) {
         flatten: false
       }
     },
+    patch: {
+      smartmenus: {
+        options: {
+          patch: 'softwerkskammer/frontend/3rd_party_js/jquery.smartmenus.bootstrap.js.patch'
+        },
+        files: {
+          'softwerkskammer/build/javascript/jquery.smartmenus.bootstrap-patched.js': 'bower_components/smartmenus/dist/addons/bootstrap/jquery.smartmenus.bootstrap.js'
+        }
+      }
+    },
     jslint: {
       server: {
         src: [
@@ -199,7 +209,7 @@ module.exports = function (grunt) {
             'softwerkskammer/build/stylesheets/less/bootstrap-markdown-patched.less',
             'bower_components/font-awesome/css/font-awesome.css',
             'softwerkskammer/frontend/3rd_party_css/shCoreDefault-patched.css',
-            'softwerkskammer/frontend/3rd_party_css/jquery.smartmenus.bootstrap.css',
+            'bower_components/smartmenus/dist/addons/bootstrap/jquery.smartmenus.bootstrap.css',
             'bower_components/datatables/media/css/jquery.dataTables.css',
             'softwerkskammer/frontend/3rd_party_css/dataTables.bootstrap.css',
             'softwerkskammer/frontend/3rd_party_css/dataTables.fontAwesome.css',
@@ -313,8 +323,9 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-mocha-istanbul');
   grunt.loadNpmTasks('grunt-jslint');
   grunt.loadNpmTasks('grunt-karma');
+  grunt.loadNpmTasks('grunt-patch');
 
-  grunt.registerTask('prepare', ['bower-install-simple', 'copy', 'less']);
+  grunt.registerTask('prepare', ['bower-install-simple', 'copy', 'patch', 'less']);
   grunt.registerTask('frontendtests', ['clean', 'prepare', 'jade', 'uglify:production_de', 'karma:once', 'uglify:development_de', 'karma:once', 'istanbul_check_coverage:frontend']);
   grunt.registerTask('tests', ['jslint', 'frontendtests', 'mocha_istanbul', 'istanbul_check_coverage:server']);
   grunt.registerTask('deploy_development', ['prepare', 'uglify:development_de', 'uglify:development_en']);
