@@ -11,3 +11,4 @@ var datepicker_lang = 'de';
 var datepicker_format = 'dd.mm.yyyy';
 var fc_lang = 'de';
 var tableLangUrl = '/clientscripts/dataTables.german.json';
+var help = 'Hilfe';

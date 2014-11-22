@@ -132,7 +132,7 @@ var interestify, surroundInterestsWithLinks, surroundWithLink, surroundTwitterNa
                 data: [
                   {
                     name: 'cmdHelp',
-                    title: 'Help',
+                    title: help,
                     icon: 'fa fa-question-circle',
                     callback: function () { $('#cheatsheet').modal({remote: '/cheatsheet.html'}); }
                   }
@@ -147,6 +147,7 @@ var interestify, surroundInterestsWithLinks, surroundWithLink, surroundTwitterNa
             return ''; // to clearly indicate the loading...
           },
           iconlibrary: 'fa',
+          language: datepicker_lang,
           resize: 'vertical'
         }
       );

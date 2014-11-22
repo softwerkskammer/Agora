@@ -11,3 +11,4 @@ var datepicker_lang = 'en';
 var datepicker_format = 'dd/mm/yyyy';
 var fc_lang = 'en-gb';
 var tableLangUrl = '';
+var help = 'Help';
