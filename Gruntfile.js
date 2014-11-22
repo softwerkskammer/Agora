@@ -22,7 +22,7 @@ module.exports = function (grunt) {
     'node_modules/moment-timezone/node_modules/moment/moment.js',
     'bower_components/smartmenus/dist/jquery.smartmenus.js',
     'softwerkskammer/build/javascript/jquery.smartmenus.bootstrap-patched.js',
-    'softwerkskammer/frontend/3rd_party_js/fullcalendar-patched.js',
+    'softwerkskammer/build/javascript/fullcalendar-patched.js',
     'bower_components/tinycolor/tinycolor.js',
     'bower_components/mjolnic-bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js',
     'bower_components/jquery-validation/dist/jquery.validate.js',
@@ -142,6 +142,14 @@ module.exports = function (grunt) {
         },
         files: {
           'softwerkskammer/build/javascript/jquery.smartmenus.bootstrap-patched.js': 'bower_components/smartmenus/dist/addons/bootstrap/jquery.smartmenus.bootstrap.js'
+        }
+      },
+      fullcalendar: {
+        options: {
+          patch: 'softwerkskammer/frontend/3rd_party_js/fullcalendar.js.patch'
+        },
+        files: {
+          'softwerkskammer/build/javascript/fullcalendar-patched.js': 'bower_components/fullcalendar/dist/fullcalendar.js'
         }
       }
     },
