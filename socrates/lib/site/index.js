@@ -47,7 +47,6 @@ app.get('/loggedIn', function (req, res, next) {
 
     req._passport.session.user = userObject;
     passport.authenticate('session')(req, res, function () {
-      console.log("Hallo " + req.user.member.displayName());
       res.redirect('/');
     });
   });

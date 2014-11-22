@@ -1,0 +1,13 @@
+include  ../../../views/formComponents
+include userinfoform
+
+extends ../../../views/simpleLayout
+
+block title
+  - if (accessrights.isRegistered())
+    | members.edit
+  - else
+    | members.create
+
+block content
+  +memberinfoform(member)

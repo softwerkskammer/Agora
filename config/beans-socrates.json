@@ -3,5 +3,6 @@
   "socratesRegistrationApp": {"module": "./socrates/lib/registration"},
   
   "accessrights": {"module": "./socrates/lib/middleware/accessrights"},
-  "expressViewHelper": {"module": "./socrates/lib/middleware/expressViewHelper"}
+  "expressViewHelper": {"module": "./socrates/lib/middleware/expressViewHelper"},
+  "redirectRuleForNewUser": {"module": "./socrates/lib/middleware/redirectRuleForNewUser"}
 }

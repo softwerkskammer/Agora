@@ -5,6 +5,7 @@ var beans = require('nconf').get('beans');
 var misc = beans.get('misc');
 var validation = beans.get('validation');
 var statusmessage = beans.get('statusmessage');
+var Member = beans.get('member');
 
 var app = misc.expressAppIn(__dirname);
 
@@ -31,6 +32,17 @@ app.get('/participate', function (req, res) {
 app.post('/participate', function (req, res) {
   console.log(req.body);
   res.redirect('participate');
+});
+
+app.get('/newmember', function (req, res, next) {
+  if (req.user.member) {
+    // return res.redirect('/');
+    console.log("Found member: " + req.user.member);
+  }
+  res.render('member', {
+    member: new Member().initFromSessionUser(req.user)
+  });
+
 });
 
 module.exports = app;

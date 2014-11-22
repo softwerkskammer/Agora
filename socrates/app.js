@@ -46,6 +46,7 @@ module.exports = {
     app.use(beans.get('passportInitializer'));
     app.use(beans.get('accessrights'));
     app.use(beans.get('expressViewHelper'));
+    app.use(beans.get('redirectRuleForNewUser'));
     app.use(beans.get('detectBrowser'));
     app.use(beans.get('secureAgainstClickjacking'));
     app.use(csurf());
