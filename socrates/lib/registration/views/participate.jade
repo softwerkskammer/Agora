@@ -14,7 +14,8 @@ block content
     if (participation.id)
       +hidden('id', participation.id)
     fieldset
-      +userinfoform(participation.member, participation.user)
+      +memberinfoform(participation.member)
+      +userinfoform(participation.user)
       +participationinfoform(participation, roomOptions)
 
       .row(style='margin-bottom: 10px')
