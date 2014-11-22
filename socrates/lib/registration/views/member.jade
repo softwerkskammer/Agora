@@ -10,4 +10,16 @@ block title
     | members.create
 
 block content
-  +memberinfoform(member)
+  form#memberform(action='/registration/submitmember',method='post')
+    +csrf
+    +memberinfoform(member)
+    +memberSubmitButtons
+
+mixin memberSubmitButtons
+  .btn-group.pull-right
+    if (accessrights.isRegistered())
+      a.btn.btn-default(href='javascript:history.back()', type='cancel') Back
+    else
+      a.btn.btn-danger(href='/auth/logout', type='cancel') Cancel
+    button.btn.btn-primary(type='submit') Save
+

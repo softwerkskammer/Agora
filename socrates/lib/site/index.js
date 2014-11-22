@@ -16,6 +16,13 @@ app.get('/', function (req, res, next) {
   res.render('index', {sponsors: sponsors, swkPublicUrl: conf.get('softwerkskammerURL'), currentUrl: 'auth/loggedIn'});
 });
 
+app.get('/goodbye.html', function (req, res) {
+  if (req.user && req.user.member) {
+    return res.redirect('/');
+  }
+  res.render('goodbye');
+});
+
 app.get('/robots.txt', function (req, res, next) {
   fs.readFile(path.join(__dirname, 'views', 'robots.txt'), 'utf8', function (err, data) {
     if (err) { return next(err); }

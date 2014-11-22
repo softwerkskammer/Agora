@@ -43,5 +43,13 @@ app.get('/loggedIn', function (req, res, next) {
   });
 });
 
+app.get('/logout', function (req, res) {
+  req.logout();
+  if (req.isAuthenticated && req.isAuthenticated()) {
+    logger.info('Had to log out twice. IE problem?' + (req.user ? ' - User was: ' + req.user.authenticationId : ''));
+    req.logout();
+  }
+  res.redirect('/goodbye.html');
+});
 
 module.exports = app;
