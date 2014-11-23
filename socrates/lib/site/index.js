@@ -54,10 +54,6 @@ app.get('/values.html', function (req, res) {
   res.render('values');
 });
 
-app.get('/contact.html', function (req, res) {
-  res.render('contact');
-});
-
 app.get('/sponsoring.html', function (req, res) {
   res.render('sponsoring');
 });

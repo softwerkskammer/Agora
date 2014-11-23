@@ -33,8 +33,8 @@ module.exports = function (testBeansFilename) {
     paymentBic      : 'paymentBic',
     paymentIban     : 'paymentIban',
     paymentReceiver : 'paymentReceiver',
-    domainname      : 'localhost'
-
+    domainname      : 'localhost',
+    imageDirectory  : null
   });
 
   return require('../configure');

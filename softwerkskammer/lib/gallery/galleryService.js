@@ -25,7 +25,7 @@ function scaledImageId(id, width, height) {
 }
 
 function fullPath(name) {
-  return path.join(conf.get('imageDirectory'), name);
+  return path.join(conf.get('imageDirectory') || conf.get('TMPDIR') || '/tmp/', name);
 }
 
 module.exports = {

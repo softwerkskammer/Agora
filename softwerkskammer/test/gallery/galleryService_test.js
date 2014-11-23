@@ -5,7 +5,7 @@ var expect = require('must');
 var beans = require('nconf').get('beans');
 var service = beans.get('galleryService');
 
-describe("the gallery repository on real files", function () {
+describe('the gallery repository on real files', function () {
 
   it('stores the original image', function (done) {
     var storedImageId = 'image.jpg';
