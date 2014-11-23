@@ -93,6 +93,38 @@ describe('The persistence store', function () {
       });
     });
 
+    describe('on update', function () {
+      it('replaces old object with new object', function (done) {
+        storeSampleData(function () {
+          persistence.update({id: 'toPersist', firstname: 'Peter'}, 'toPersist', function (err) {
+            if (err) { done(err); }
+            persistence.getById('toPersist', function (err, result) {
+              expect(result.id).to.equal('toPersist');
+              expect(result.name).to.be.undefined();
+              expect(result.firstname).to.equal('Peter');
+              done(err);
+            });
+          });
+        });
+      });
+
+      it('replaces old object with new object even if id\'s differ', function (done) {
+        storeSampleData(function () {
+          persistence.update({id: 'toPersist2', name: 'Heinz'}, 'toPersist', function (err) {
+            if (err) { done(err); }
+            persistence.getById('toPersist', function (err, result) {
+              expect(result).to.be.undefined();
+              persistence.getById('toPersist2', function (err, result) {
+                expect(result.id).to.equal('toPersist2');
+                expect(result.name).to.equal('Heinz');
+                done(err);
+              });
+            });
+          });
+        });
+      });
+    });
+
     describe('on getById', function () {
       it('retrieves none for non-existing id', function (done) {
         persistence.getById('non-existing-id', function (err, result) {
