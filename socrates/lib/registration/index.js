@@ -34,14 +34,14 @@ app.post('/participate', function (req, res) {
   res.redirect('participate');
 });
 
-app.get('/newmember', function (req, res, next) {
+app.get('/editmember', function (req, res, next) {
   if (req.user.member) {
     // return res.redirect('/');
-    console.log("Found member: " + req.user.member);
+    console.log("Found member: " + req.user.member.displayName());
   }
-  res.render('member', {
-    member: new Member().initFromSessionUser(req.user)
-  });
+
+  var member = req.user.member || new Member().initFromSessionUser(req.user);
+  res.render('member', {member: member});
 
 });
 

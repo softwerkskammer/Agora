@@ -47,7 +47,7 @@ app.get('/loggedIn', function (req, res, next) {
           res.redirect('/');
         });
       }
-      res.redirect('/registration/newmember');
+      res.redirect('/registration/editmember');
     });
   });
 });
