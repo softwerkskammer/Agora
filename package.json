@@ -82,6 +82,7 @@
     "grunt-jslint": "1.1.12",
     "grunt-karma": "0.9.0",
     "grunt-mocha-istanbul": "2.2.0",
+    "grunt-patch": "0.1.7",
     "karma": "0.12.24",
     "karma-coverage": "0.2.6",
     "karma-html2js-preprocessor": "0.1.0",

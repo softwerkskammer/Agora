@@ -19,10 +19,11 @@ module.exports = function (grunt) {
     'bower_components/bootstrap/dist/js/bootstrap.js',
     'bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js',
     'bower_components/bootstrap-markdown/js/bootstrap-markdown.js',
+    'softwerkskammer/frontend/3rd_party_js/bootstrap-markdown.de.js',
     'node_modules/moment-timezone/node_modules/moment/moment.js',
-    'softwerkskammer/frontend/3rd_party_js/jquery.smartmenus.js',
-    'softwerkskammer/frontend/3rd_party_js/jquery.smartmenus.bootstrap.js',
-    'softwerkskammer/frontend/3rd_party_js/fullcalendar-patched.js',
+    'bower_components/smartmenus/dist/jquery.smartmenus.js',
+    'softwerkskammer/build/javascript/jquery.smartmenus.bootstrap-patched.js',
+    'softwerkskammer/build/javascript/fullcalendar-patched.js',
     'bower_components/tinycolor/tinycolor.js',
     'bower_components/mjolnic-bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js',
     'bower_components/jquery-validation/dist/jquery.validate.js',
@@ -70,6 +71,18 @@ module.exports = function (grunt) {
         expand: true,
         flatten: true
       },
+      datatablesResponsiveJS: {
+        src: 'bower_components/datatables-responsive/js/*.js',
+        dest: 'softwerkskammer/public/clientscripts',
+        expand: true,
+        flatten: true
+      },
+      datatablesResponsiveCSS: {
+        src: 'bower_components/datatables-responsive/css/*.css',
+        dest: 'softwerkskammer/public/stylesheets',
+        expand: true,
+        flatten: true
+      },
       datatablesImages: {
         src: 'bower_components/datatables/media/images/*',
         dest: 'softwerkskammer/public/images/',
@@ -95,6 +108,12 @@ module.exports = function (grunt) {
         dest: 'softwerkskammer/build/stylesheets/less',
         expand: true,
         flatten: false
+      },
+      bootstrapMarkdownLESS: {
+        src: 'bower_components/bootstrap-markdown/less/*',
+        dest: 'softwerkskammer/build/stylesheets/less',
+        expand: true,
+        flatten: true
       },
       fontawesomeFONTS: {
         src: 'bower_components/font-awesome/fonts/*',
@@ -127,6 +146,24 @@ module.exports = function (grunt) {
         dest: 'softwerkskammer/public/stylesheets',
         expand: true,
         flatten: false
+      }
+    },
+    patch: {
+      smartmenus: {
+        options: {
+          patch: 'softwerkskammer/frontend/3rd_party_js/jquery.smartmenus.bootstrap.js.patch'
+        },
+        files: {
+          'softwerkskammer/build/javascript/jquery.smartmenus.bootstrap-patched.js': 'bower_components/smartmenus/dist/addons/bootstrap/jquery.smartmenus.bootstrap.js'
+        }
+      },
+      fullcalendar: {
+        options: {
+          patch: 'softwerkskammer/frontend/3rd_party_js/fullcalendar.js.patch'
+        },
+        files: {
+          'softwerkskammer/build/javascript/fullcalendar-patched.js': 'bower_components/fullcalendar/dist/fullcalendar.js'
+        }
       }
     },
     jslint: {
@@ -198,8 +235,8 @@ module.exports = function (grunt) {
             'bower_components/bootstrap-datepicker/css/datepicker3.css',
             'softwerkskammer/build/stylesheets/less/bootstrap-markdown-patched.less',
             'bower_components/font-awesome/css/font-awesome.css',
-            'softwerkskammer/frontend/3rd_party_css/shCoreDefault-patched.css',
-            'softwerkskammer/frontend/3rd_party_css/jquery.smartmenus.bootstrap.css',
+            'node_modules/node-syntaxhighlighter/lib/styles/shCoreDefault.css',
+            'bower_components/smartmenus/dist/addons/bootstrap/jquery.smartmenus.bootstrap.css',
             'bower_components/datatables/media/css/jquery.dataTables.css',
             'softwerkskammer/frontend/3rd_party_css/dataTables.bootstrap.css',
             'softwerkskammer/frontend/3rd_party_css/dataTables.fontAwesome.css',
@@ -313,8 +350,9 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-mocha-istanbul');
   grunt.loadNpmTasks('grunt-jslint');
   grunt.loadNpmTasks('grunt-karma');
+  grunt.loadNpmTasks('grunt-patch');
 
-  grunt.registerTask('prepare', ['bower-install-simple', 'copy', 'less']);
+  grunt.registerTask('prepare', ['bower-install-simple', 'copy', 'patch', 'less']);
   grunt.registerTask('frontendtests', ['clean', 'prepare', 'jade', 'uglify:production_de', 'karma:once', 'uglify:development_de', 'karma:once', 'istanbul_check_coverage:frontend']);
   grunt.registerTask('tests', ['jslint', 'frontendtests', 'mocha_istanbul', 'istanbul_check_coverage:server']);
   grunt.registerTask('deploy_development', ['prepare', 'uglify:development_de', 'uglify:development_en']);

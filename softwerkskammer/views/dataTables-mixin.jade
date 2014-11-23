@@ -2,11 +2,14 @@
 mixin dataTableImport
   script(src='/clientscripts/jquery.dataTables.min.js')
   script(src='/clientscripts/dataTables.bootstrap.js')
+  script(src='/clientscripts/dataTables.responsive.js')
+  link(href='/stylesheets/dataTables.responsive.css', rel='stylesheet')
 
 mixin dataTable(clazz, sorting, columns, stateSaveAndSearch)
   script.
     $(document).ready(function() {
       $('#{clazz}').dataTable({
+        responsive:true,
         language: {
           url: tableLangUrl
         },
