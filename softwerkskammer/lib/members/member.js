@@ -20,6 +20,9 @@ Member.prototype.fillFromUI = function (object) {
   this.state.interests = object.interests;
   this.state.reference = object.reference;
   this.state.notifyOnWikiChanges = !!object.notifyOnWikiChanges;
+  this.state.socratesOnly = !!object.socratesOnly;
+
+  return this;
 };
 
 Member.prototype.setSite = function (siteUrl) {
@@ -30,7 +33,7 @@ Member.prototype.displayName = function () {
   return this.firstname() + ' ' + this.lastname();
 };
 
-Member.prototype.initFromSessionUser = function (sessionUser) {
+Member.prototype.initFromSessionUser = function (sessionUser, socratesOnly) {
   // this is THE ONLY VALID WAY to create and initialize a new user in real life (not tests) 
   if (!sessionUser || this.id()) {
     return this;
@@ -50,6 +53,7 @@ Member.prototype.initFromSessionUser = function (sessionUser) {
     if (profile._json && fieldHelpers.isFilled(profile._json.blog)) {
       this.state.site += (this.site() ? ', ' : '') + fieldHelpers.addPrefixTo('http://', profile._json.blog, 'https://');
     }
+    this.state.socratesOnly = !!socratesOnly;
   }
   return this;
 };
@@ -145,6 +149,10 @@ Member.prototype.isInGroup = function (groupId) {
 
 Member.prototype.isSuperuser = function () {
   return Member.isSuperuser(this.id());
+};
+
+Member.prototype.socratesOnly = function () {
+  return this.state.socratesOnly;
 };
 
 Member.isSuperuser = function (id) {

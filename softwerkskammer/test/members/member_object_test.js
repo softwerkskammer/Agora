@@ -95,35 +95,47 @@ describe('Member initial filling', function () {
 
 describe('Member twitter field autocorrection', function () {
   it('is autocorrecting the twittername removing leading @', function () {
-    var member = new Member();
-    member.fillFromUI({twitter: '@twitter'});
+    var member = new Member().fillFromUI({twitter: '@twitter'});
     expect(member.twitter(), 'twitter').to.equal('twitter');
   });
 
   it('is not autocorrecting the twittername when already no leading @', function () {
-    var member = new Member();
-    member.fillFromUI({twitter: 'twitter'});
+    var member = new Member().fillFromUI({twitter: 'twitter'});
     expect(member.twitter(), 'twitter').to.equal('twitter');
   });
 
   it('is adding http:// when not provided', function () {
-    var member = new Member();
-    member.fillFromUI({site: 'twitter'});
+    var member = new Member().fillFromUI({site: 'twitter'});
     expect(member.site(), 'site').to.equal('http://twitter');
   });
 
   it('is not adding http:// when already provided', function () {
-    var member = new Member();
-    member.fillFromUI({site: 'http://twitter'});
+    var member = new Member().fillFromUI({site: 'http://twitter'});
     expect(member.site(), 'site').to.equal('http://twitter');
   });
 
   it('is not adding http:// when already https:// provided', function () {
-    var member = new Member();
-    member.fillFromUI({site: 'https://twitter'});
+    var member = new Member().fillFromUI({site: 'https://twitter'});
     expect(member.site(), 'site').to.equal('https://twitter');
   });
 
+});
+
+describe('filling socratesOnly from UI', function () {
+  it('sets socratesOnly to false if the field is not provided from UI', function () {
+    var member = new Member().fillFromUI({});
+    expect(member.socratesOnly()).to.be.false();
+  });
+
+  it('sets socratesOnly to false if false is provided from UI', function () {
+    var member = new Member().fillFromUI({ socratesOnly: false });
+    expect(member.socratesOnly()).to.be.false();
+  });
+
+  it('sets socratesOnly to true if true is provided from UI', function () {
+    var member = new Member().fillFromUI({ socratesOnly: true });
+    expect(member.socratesOnly()).to.be.true();
+  });
 });
 
 describe('display functionalities', function () {

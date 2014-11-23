@@ -40,7 +40,7 @@ app.get('/editmember', function (req, res, next) {
     console.log("Found member: " + req.user.member.displayName());
   }
 
-  var member = req.user.member || new Member().initFromSessionUser(req.user);
+  var member = req.user.member || new Member().initFromSessionUser(req.user, true);
   res.render('member', {member: member});
 
 });
