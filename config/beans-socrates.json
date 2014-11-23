@@ -2,7 +2,18 @@
   "authenticationApp": {"module": "./socrates/lib/authentication"},
   "socratesSiteApp": {"module": "./socrates/lib/site"},
   "socratesRegistrationApp": {"module": "./socrates/lib/registration"},
-  
+
+  "participantService": {"module": "./socrates/lib/participants/participantService"},
+
+  "participantstore": {"module": "./socrates/lib/participants/participantstore"},
+
+  "participantsPersistence": {
+    "module": "./softwerkskammer/lib/persistence/persistence",
+    "constructorArgs": { "collectionName": "participantstore" }
+  },
+
+  "participant": {"module": "./socrates/lib/participants/participant"},
+
   "accessrights": {"module": "./socrates/lib/middleware/accessrights"},
   "expressViewHelper": {"module": "./socrates/lib/middleware/expressViewHelper"},
   "redirectRuleForNewUser": {"module": "./socrates/lib/middleware/redirectRuleForNewUser"}
