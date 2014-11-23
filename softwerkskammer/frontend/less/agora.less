@@ -1,6 +1,7 @@
 @import "variables";
 @import "mixins";
 
+// adapt syntaxhighlighted code in textboxes to bootstrap *BEGIN*
 .syntaxhighlighter a,
 .syntaxhighlighter div,
 .syntaxhighlighter code,
@@ -11,7 +12,7 @@
 .syntaxhighlighter table thead,
 .syntaxhighlighter table caption,
 .syntaxhighlighter textarea {
-  font-family: @font-family-monospace!important;
+  font-family: @font-family-monospace !important;
 }
 
 .gutter {
@@ -21,6 +22,9 @@
 pre code {
   white-space: nowrap;
 }
+
+// adapt syntaxhighlight *END*
+
 .bottom {
   padding-top: 20px;
   margin-bottom: 0px;
@@ -46,10 +50,13 @@ pre code {
   margin-top: 0px;
 }
 
+// fullcalendar *BEGIN*
 .fc-content {
   white-space: normal !important;
   max-height: 30px;
 }
+
+// fullcalendar *END*
 
 .verySmall {
   font-size: .8em;
@@ -67,6 +74,7 @@ pre code {
   max-width: 120px;
 }
 
+// wiki page compare *BEGIN*
 .compare {
   font-family: Consolas, monospace;
   font-size: 12px;
@@ -96,6 +104,8 @@ pre code {
   text-align: right;
   border-bottom-color: transparent;
 }
+
+// wiki page compare *END*
 
 .main {
   margin-right: auto;
