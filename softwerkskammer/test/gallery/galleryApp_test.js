@@ -7,7 +7,7 @@ var expect = require('must');
 var beans = conf.get('beans');
 var galleryService = beans.get('galleryService');
 
-var createApp = require('../../testutil/testHelper')('galleryApp').createApp;
+var app = require('../../testutil/testHelper')('galleryApp').createApp();
 
 var OK = 200;
 var CREATED = 201;
@@ -30,7 +30,6 @@ describe('/gallery', function () {
     });
 
     it('responds with the image Location', function (done) {
-      var app = createApp();
       request(app)
         .post('/')
         .attach('imageFile', imagePath)
@@ -48,7 +47,7 @@ describe('/gallery', function () {
         }
       });
 
-      request(createApp())
+      request(app)
         .get('/'  + storedImageId)
         .expect(OK)
         .expect('Content-Type', 'image/jpeg', done);
@@ -57,7 +56,7 @@ describe('/gallery', function () {
 
   describe('GET /', function () {
     it('renders the upload form', function (done) {
-      request(createApp())
+      request(app)
         .get('/')
         .expect(OK, done);
     });

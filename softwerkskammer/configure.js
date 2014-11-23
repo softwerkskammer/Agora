@@ -18,9 +18,8 @@ function createConfiguration() {
   nconf.file('activityresults', configdir + 'activityresults-config.json');
   nconf.file('crossite', configdir + 'crosssite-config.json');
   nconf.defaults({
-    adminListName: "admins",
+    adminListName: 'admins',
     port: '17124',
-    imageDirectory: "/tmp",
     mongoURL: 'mongodb://localhost:27017/swk',
     publicUrlPrefix: 'http://localhost:17124',
     securedByLoginURLPattern:
