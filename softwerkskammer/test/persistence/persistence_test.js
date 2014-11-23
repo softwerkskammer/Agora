@@ -21,146 +21,157 @@ describe('The persistence store', function () {
       persistence.save(toPersist, done);
     };
 
-    it('fails to save object without id', function (done) {
-      persistence.save({}, function (err) {
-        expect(err.message).to.equal('Given object has no valid id');
-        done(); // error condition - do not pass err
+    describe('on save', function () {
+      it('fails to save object without id', function (done) {
+        persistence.save({}, function (err) {
+          expect(err.message).to.equal('Given object has no valid id');
+          done(); // error condition - do not pass err
+        });
       });
-    });
 
-    it('fails to save object with id null', function (done) {
-      persistence.save({id: null}, function (err) {
-        expect(err.message).to.equal('Given object has no valid id');
-        done(); // error condition - do not pass err
-      });
-    });
-
-    it('fails to save-with-version object without id', function (done) {
-      persistence.saveWithVersion({}, function (err) {
-        expect(err.message).to.equal('Given object has no valid id');
-        done(); // error condition - do not pass err
-      });
-    });
-
-    it('fails to save-with-version object with id null', function (done) {
-      persistence.saveWithVersion({id: null}, function (err) {
-        expect(err.message).to.equal('Given object has no valid id');
-        done(); // error condition - do not pass err
-      });
-    });
-
-    it('on save-with-version, saves an object that is not yet in database and initializes version with 1', function (done) {
-      persistence.saveWithVersion({id: 123}, function (err) {
-        if (err) {return done(err); }
-        persistence.getById(123, function (err, result) {
-          expect(result.version).to.equal(1);
-          done(err);
+      it('fails to save object with id null', function (done) {
+        persistence.save({id: null}, function (err) {
+          expect(err.message).to.equal('Given object has no valid id');
+          done(); // error condition - do not pass err
         });
       });
     });
 
-    it('on save-with-version, updates an object that is in database with same version', function (done) {
-      persistence.save({id: 123, data: 'abc', version: 1}, function (err) {
-        if (err) {return done(err); }
-        persistence.saveWithVersion({id: 123, data: 'def', version: 1}, function (err) {
+    describe('on save-with-version', function () {
+      it('fails to save-with-version object without id', function (done) {
+        persistence.saveWithVersion({}, function (err) {
+          expect(err.message).to.equal('Given object has no valid id');
+          done(); // error condition - do not pass err
+        });
+      });
+
+      it('fails to save-with-version object with id null', function (done) {
+        persistence.saveWithVersion({id: null}, function (err) {
+          expect(err.message).to.equal('Given object has no valid id');
+          done(); // error condition - do not pass err
+        });
+      });
+
+      it('on save-with-version, saves an object that is not yet in database and initializes version with 1', function (done) {
+        persistence.saveWithVersion({id: 123}, function (err) {
           if (err) {return done(err); }
           persistence.getById(123, function (err, result) {
-            expect(result.data).to.equal('def');
-            expect(result.version).to.equal(2);
+            expect(result.version).to.equal(1);
             done(err);
+          });
+        });
+      });
+
+      it('on save-with-version, updates an object that is in database with same version', function (done) {
+        persistence.save({id: 123, data: 'abc', version: 1}, function (err) {
+          if (err) {return done(err); }
+          persistence.saveWithVersion({id: 123, data: 'def', version: 1}, function (err) {
+            if (err) {return done(err); }
+            persistence.getById(123, function (err, result) {
+              expect(result.data).to.equal('def');
+              expect(result.version).to.equal(2);
+              done(err);
+            });
+          });
+        });
+      });
+
+      it('on save-with-version, does not update an object that is in database with a different version', function (done) {
+        persistence.save({id: 123, data: 'abc', version: 2}, function (err) {
+          if (err) {return done(err); }
+          var objectToSave = {id: 123, data: 'def', version: 1};
+          persistence.saveWithVersion(objectToSave, function (err) {
+            expect(err.message).to.equal(CONFLICTING_VERSIONS);
+            persistence.getById(123, function (err, result) {
+              expect(result.data, 'Data of object in database remains unchanged').to.equal('abc');
+              expect(result.version, 'Version of object in database remains unchanged').to.equal(2);
+              expect(objectToSave.version, 'Version of object to save remains unchanged').to.equal(1);
+              done(err);
+            });
           });
         });
       });
     });
 
-    it('on save-with-version, does not update an object that is in database with a different version', function (done) {
-      persistence.save({id: 123, data: 'abc', version: 2}, function (err) {
-        if (err) {return done(err); }
-        var objectToSave = {id: 123, data: 'def', version: 1};
-        persistence.saveWithVersion(objectToSave, function (err) {
-          expect(err.message).to.equal(CONFLICTING_VERSIONS);
-          persistence.getById(123, function (err, result) {
-            expect(result.data, 'Data of object in database remains unchanged').to.equal('abc');
-            expect(result.version, 'Version of object in database remains unchanged').to.equal(2);
-            expect(objectToSave.version, 'Version of object to save remains unchanged').to.equal(1);
-            done(err);
-          });
-        });
-      });
-    });
-
-    it('retrieves none for non-existing id', function (done) {
-      persistence.getById('non-existing-id', function (err, result) {
-        expect(result).not.to.exist();
-        done(err);
-      });
-    });
-
-    it('retrieves one for existing id', function (done) {
-      storeSampleData(function () {
-        persistence.getById('toPersist', function (err, result) {
-          expect(result.id).to.equal('toPersist');
-          expect(result.name).to.equal('Heinz');
+    describe('on getById', function () {
+      it('retrieves none for non-existing id', function (done) {
+        persistence.getById('non-existing-id', function (err, result) {
+          expect(result).not.to.exist();
           done(err);
         });
       });
-    });
 
-    it('retrieves an empty list when no data is inserted', function (done) {
-      persistence.list({}, function (err, result) {
-        expect(result).to.have.length(0);
-        done(err);
-      });
-    });
-
-    it('retrieves all', function (done) {
-      storeSampleData(function () {
-        persistence.list({}, function (err, result) {
-          expect(result).to.have.length(1);
-          expect(result[0].name).to.equal('Heinz');
-          done(err);
-        });
-      });
-    });
-
-    it('retrieves undefined if the id should be null', function (done) {
-      storeSampleData(function () {
-        persistence.getById(null, function (err, result) {
-          expect(err).not.to.exist();
-          expect(result).to.be(undefined);
-          done(err);
-        });
-      });
-    });
-
-    it('retrieves undefined if some field should be null', function (done) {
-      storeSampleData(function () {
-        persistence.getByField({id: null}, function (err, result) {
-          expect(err).not.to.exist();
-          expect(result).to.be(undefined);
-          done(err);
-        });
-      });
-    });
-
-    it('removes an object having an id', function (done) {
-      storeSampleData(function () {
-        persistence.remove('toPersist', function (err) {
+      it('retrieves one for existing id', function (done) {
+        storeSampleData(function () {
           persistence.getById('toPersist', function (err, result) {
-            expect(result).to.be.undefined();
+            expect(result.id).to.equal('toPersist');
+            expect(result.name).to.equal('Heinz');
+            done(err);
+          });
+        });
+      });
+
+      it('retrieves undefined if the id should be null', function (done) {
+        storeSampleData(function () {
+          persistence.getById(null, function (err, result) {
+            expect(err).not.to.exist();
+            expect(result).to.be(undefined);
             done(err);
           });
         });
       });
     });
 
-    it('cannot remove an object with no id', function (done) {
-      persistence.remove(undefined, function (err) {
-        expect(err.message).to.equal('Given object has no valid id');
-        done();
+    describe('on list', function () {
+      it('retrieves an empty list when no data is inserted', function (done) {
+        persistence.list({}, function (err, result) {
+          expect(result).to.have.length(0);
+          done(err);
+        });
+      });
+
+      it('retrieves all', function (done) {
+        storeSampleData(function () {
+          persistence.list({}, function (err, result) {
+            expect(result).to.have.length(1);
+            expect(result[0].name).to.equal('Heinz');
+            done(err);
+          });
+        });
       });
     });
 
+    describe('on getByField', function () {
+      it('retrieves undefined if some field should be null', function (done) {
+        storeSampleData(function () {
+          persistence.getByField({id: null}, function (err, result) {
+            expect(err).not.to.exist();
+            expect(result).to.be(undefined);
+            done(err);
+          });
+        });
+      });
+    });
+
+    describe('on remove', function () {
+      it('removes an object having an id', function (done) {
+        storeSampleData(function () {
+          persistence.remove('toPersist', function (err) {
+            persistence.getById('toPersist', function (err, result) {
+              expect(result).to.be.undefined();
+              done(err);
+            });
+          });
+        });
+      });
+
+      it('cannot remove an object with no id', function (done) {
+        persistence.remove(undefined, function (err) {
+          expect(err.message).to.equal('Given object has no valid id');
+          done();
+        });
+      });
+    });
   });
 
   describe('for many objects', function () {
