@@ -40,6 +40,19 @@ module.exports = {
     return validator.getErrors();
   },
 
+  // TODO rearrange this? Translate messages to English!
+  isValidForSoCraTesMember: function (memberInput) {
+    var validator = new Validator();
+    validator.check(memberInput.nickname, 'Nickname ist ein Pflichtfeld.').notEmpty();
+    validator.check(memberInput.nickname, 'Nickname muss mindestens 2 Zeichen enthalten.').len(2);
+    validator.check(memberInput.nickname, 'Nickname darf kein "/" enthalten.').noSlash();
+    validator.check(memberInput.firstname, 'Vorname ist ein Pflichtfeld.').notEmpty();
+    validator.check(memberInput.lastname, 'Nachname ist ein Pflichtfeld.').notEmpty();
+    validator.check(memberInput.email, 'E-Mail ist ein Pflichtfeld.').notEmpty();
+    validator.check(memberInput.email, 'E-Mail muss gültig sein.').isEmail();
+    return validator.getErrors();
+  },
+
   isValidGroup: function (group) {
     var validator = new Validator();
     validator.check(group.id, 'Name ist ein Pflichtfeld.').notEmpty();

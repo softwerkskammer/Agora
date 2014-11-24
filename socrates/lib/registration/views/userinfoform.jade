@@ -5,9 +5,14 @@ mixin memberinfoform(member)
         h4 Personal Data
       .well
         p.
-          In order to participate at the event, we need you to provide us with the following information. Please fill in all mandatory fields.
+          In order to participate in the event, we need you to provide us with the following information. Please fill in all mandatory fields.
   .row
     .col-sm-6
+      +hidden('id', member.id())
+      +hidden('previousNickname', member.nickname())
+      +hidden('previousEmail', accessrights.isRegistered() ? member.email() : '')
+      +hidden('created', member.created())
+      +hidden('socratesOnly', member.socratesOnly())
       +text('nickname', 'Nickname', member.nickname())
       +text('firstname', 'First name', member.firstname())
       +text('lastname', 'Last name', member.lastname())
