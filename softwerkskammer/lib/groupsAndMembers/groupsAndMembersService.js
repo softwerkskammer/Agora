@@ -1,17 +1,18 @@
 'use strict';
 
+var async = require('async');
+var winston = require('winston');
+var logger = winston.loggers.get('sympa');
+var _ = require('lodash');
+
 var conf = require('nconf');
 var beans = conf.get('beans');
-var async = require('async');
 var membersService = beans.get('membersService');
 var memberstore = beans.get('memberstore');
 var groupsService = beans.get('groupsService');
 var groupstore = beans.get('groupstore');
 var Group = beans.get('group');
-var winston = require('winston');
-var logger = winston.loggers.get('sympa');
 var misc = beans.get('misc');
-var _ = require('lodash');
 
 var getUsersOfList = function (listname, globalCallback) {
   async.parallel(
