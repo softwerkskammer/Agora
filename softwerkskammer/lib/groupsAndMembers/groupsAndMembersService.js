@@ -13,6 +13,7 @@ var groupsService = beans.get('groupsService');
 var groupstore = beans.get('groupstore');
 var Group = beans.get('group');
 var misc = beans.get('misc');
+var Member = beans.get('member');
 
 var getUsersOfList = function (listname, globalCallback) {
   async.parallel(
@@ -166,6 +167,34 @@ module.exports = {
     groupsService.removeUserFromList(member.email(), groupname, function (err) {
       if (err) { return callback(err); }
       self.updateAdminlistSubscriptions(member.id(), callback);
+    });
+  },
+
+  updateAndSaveSubmittedMember: function (sessionUser, memberformData, accessrights, notifyNewMemberRegistration, callback) {
+    var self = this;
+    self.getUserWithHisGroups(memberformData.previousNickname, function (err, persistentMember) {
+      if (err) { return callback(err); }
+      if (persistentMember && !accessrights.canEditMember(persistentMember)) {
+        return callback(null);
+      }
+      var member = persistentMember || new Member().initFromSessionUser(sessionUser);
+      var oldEmail = persistentMember ? member.email() : memberformData.previousEmail;
+      member.addAuthentication(memberformData.id);
+      member.fillFromUI(memberformData);
+      memberstore.saveMember(member, function (err) {
+        if (err) { return callback(err); }
+        if (!sessionUser.member || sessionUser.member.id() === member.id()) {
+          sessionUser.member = member;
+          delete sessionUser.profile;
+        }
+        var subscriptions = misc.toArray(memberformData.newSubscriptions);
+        if (!persistentMember) { // new member
+          notifyNewMemberRegistration(member, subscriptions);
+        }
+        return self.updateSubscriptions(member, oldEmail, subscriptions, function (err) {
+          return callback(err, member.nickname());
+        });
+      });
     });
   }
 

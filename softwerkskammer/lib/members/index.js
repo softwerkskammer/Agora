@@ -20,41 +20,21 @@ var misc = beans.get('misc');
 var statusmessage = beans.get('statusmessage');
 var notifications = beans.get('notifications');
 
-function memberForNew(req) {
-  return new Member().initFromSessionUser(req.user);
-}
-
-function saveMember(persistentMember, req, res, next) {
-  if (persistentMember && !res.locals.accessrights.canEditMember(persistentMember)) {
-    return res.redirect('/members');
-  }
-  var member = persistentMember || memberForNew(req);
-  var oldEmail = persistentMember ? member.email() : req.body.previousEmail;
-  member.addAuthentication(req.body.id);
-  member.fillFromUI(req.body);
-  memberstore.saveMember(member, function (err) {
-    if (err) { return next(err); }
-    if (!req.user.member || req.user.member.id() === member.id()) {
-      req.user.member = member;
-      delete req.user.profile;
-    }
-    var subscriptions = misc.toArray(req.body.newSubscriptions);
-    if (!persistentMember) { // new member
-      // must be done here, not in Service to avoid circular deps
-      notifications.newMemberRegistered(member, subscriptions);
-    }
-    return groupsAndMembersService.updateSubscriptions(member, oldEmail, subscriptions, function (err) {
-      if (err) { return next(err); }
-      statusmessage.successMessage('message.title.save_successful', 'message.content.members.saved').putIntoSession(req);
-      return res.redirect('/members/' + encodeURIComponent(member.nickname()));
-    });
-  });
-}
-
 function memberSubmitted(req, res, next) {
-  groupsAndMembersService.getUserWithHisGroups(req.body.previousNickname, function (err, member) {
+  function notifyNewMemberRegistration(member, subscriptions) {
+    // must be done here, not in Service to avoid circular deps
+    notifications.newMemberRegistered(member, subscriptions);
+  }
+
+  groupsAndMembersService.updateAndSaveSubmittedMember(req.user, req.body, res.locals.accessrights, notifyNewMemberRegistration, function (err, nickname) {
     if (err) { return next(err); }
-    saveMember(member, req, res, next);
+
+    if (nickname) {
+      statusmessage.successMessage('message.title.save_successful', 'message.content.members.saved').putIntoSession(req);
+      return res.redirect('/members/' + encodeURIComponent(nickname));
+    }
+
+    return res.redirect('/members');
   });
 }
 
@@ -112,7 +92,7 @@ app.get('/new', function (req, res, next) {
       if (err) { return next(err); }
       var allGroups = results.allGroups;
       res.render('edit', {
-        member: memberForNew(req),
+        member: new Member().initFromSessionUser(req.user),
         regionalgroups: groupsService.combineSubscribedAndAvailableGroups([results.alle, results.commercial], Group.regionalsFrom(allGroups)),
         themegroups: groupsService.combineSubscribedAndAvailableGroups([results.alle, results.commercial], Group.thematicsFrom(allGroups)),
         tags: tagsFor(results.allMembers)
