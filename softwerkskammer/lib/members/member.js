@@ -54,8 +54,8 @@ Member.prototype.initFromSessionUser = function (sessionUser, socratesOnly) {
     if (profile._json && fieldHelpers.isFilled(profile._json.blog)) {
       this.state.site += (this.site() ? ', ' : '') + fieldHelpers.addPrefixTo('http://', profile._json.blog, 'https://');
     }
-    this.state.socratesOnly = !!socratesOnly;
   }
+  this.state.socratesOnly = !!socratesOnly;
   return this;
 };
 
