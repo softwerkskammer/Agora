@@ -25,7 +25,12 @@ module.exports = function accessrights(req, res, next) {
 
     isMember: function (member) {
       return this.isAuthenticated() && this.memberId() === member.id();
+    },
+
+    canEditMember: function (member) {
+      return this.isMember(member);
     }
+
   };
   next();
 };

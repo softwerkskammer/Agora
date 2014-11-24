@@ -53,6 +53,7 @@ app.post('/submitmember', function (req, res, next) {
     function notifyNewMemberRegistration(member, subscriptions) {
       // must be done here, not in Service to avoid circular deps
       // TODO notifications.newMemberRegistered(member, subscriptions);
+      return;
     }
 
     groupsAndMembersService.updateAndSaveSubmittedMember(req.user, req.body, res.locals.accessrights, notifyNewMemberRegistration, function (err, nickname) {
@@ -80,8 +81,7 @@ app.post('/submitmember', function (req, res, next) {
         validation.checkValidity(req.body.previousEmail, req.body.email, validityChecker, 'validation.duplicate_email', callback);
       },
       function (callback) {
-        var errors = validation.isValidForSoCraTesMember(req.body);
-        callback(null, errors);
+        return callback(null, validation.isValidForSoCraTesMember(req.body));
       }
     ],
     function (err, errorMessages) {
