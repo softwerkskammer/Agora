@@ -9,20 +9,21 @@ function Member(object) {
 }
 
 Member.prototype.fillFromUI = function (object) {
-  this.state.nickname = object.nickname;
-  this.state.firstname = object.firstname;
-  this.state.lastname = object.lastname;
-  this.state.email = object.email;
-  this.state.twitter = fieldHelpers.removePrefixFrom('@', object.twitter);
-  this.state.site = fieldHelpers.addPrefixTo('http://', object.site, 'https://');
-  this.state.location = object.location;
-  this.state.profession = object.profession;
-  this.state.interests = object.interests;
-  this.state.reference = object.reference;
-  this.state.notifyOnWikiChanges = !!object.notifyOnWikiChanges;
-  this.state.socratesOnly = !!object.socratesOnly;
+  var self = this;
+  _.each(['nickname', 'firstname', 'lastname', 'email', 'location', 'profession', 'interests', 'reference'], function (property) {
+    if (object.hasOwnProperty(property)) { self.state[property] = object[property]; }
+  });
+  _.each(['notifyOnWikiChanges', 'socratesOnly'], function (property) {
+    if (object.hasOwnProperty(property)) { self.state[property] = !!object[property]; }
+  });
+  if (object.hasOwnProperty('twitter')) {
+    self.state.twitter = fieldHelpers.removePrefixFrom('@', object.twitter);
+  }
+  if (object.hasOwnProperty('site')) {
+    self.state.site = fieldHelpers.addPrefixTo('http://', object.site, 'https://');
+  }
 
-  return this;
+  return self;
 };
 
 Member.prototype.setSite = function (siteUrl) {

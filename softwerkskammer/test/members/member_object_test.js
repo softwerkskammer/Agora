@@ -122,9 +122,9 @@ describe('Member twitter field autocorrection', function () {
 });
 
 describe('filling socratesOnly from UI', function () {
-  it('sets socratesOnly to false if the field is not provided from UI', function () {
+  it('sets socratesOnly to undefined if the field is not provided from UI', function () {
     var member = new Member().fillFromUI({});
-    expect(member.socratesOnly()).to.be.false();
+    expect(member.socratesOnly()).to.be.undefined();
   });
 
   it('sets socratesOnly to false if false is provided from UI', function () {
