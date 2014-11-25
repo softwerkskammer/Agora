@@ -1,0 +1,24 @@
+extends ../../../views/layout
+
+include  ../../../views/formComponents
+
+block scripts
+  script(src='/clientscripts/check-mailsenderform.js')
+
+block title
+  | #{t('mailsender.notification')}
+
+block content
+  form(id='mailform', action='/registration/submitresign', method='post')
+    +csrf
+    fieldset
+      .row
+        .col-md-12
+          +submitButtons('mailsender.send')
+          legend
+            | #{t('mailsender.resign')}
+          !=t('mailsender.resign_info', { postProcess: 'jade' })
+          +hidden('nickname', nickname)
+          +textareaPure('why', t('mailsender.why-resign'), why)
+          +textareaPure('notes', t('mailsender.notes-resign'), notes)
+          +submitButtons('mailsender.send')

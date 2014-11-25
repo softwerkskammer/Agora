@@ -15,7 +15,7 @@ mixin loginMenu(forInline)
             i.fa.fa-sign-out.fa-fw
             | &nbsp;#{t('general.logout')}
           if user.member.socratesOnly()
-            li: a(href='/mailsender/resign/#{encodeURIComponent(user.member.nickname())}')
+            li: a(href='/registration/resign')
               i.fa.fa-ban.fa-fw
               | &nbsp;#{t('members.resign')}
         else
