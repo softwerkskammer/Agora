@@ -42,7 +42,7 @@ function createConfiguration() {
       'dashboard',
     secret: 'secret',
     beans: new Beans(configdir + 'beans.json'),
-    domainname: 'localhost',
+    emaildomainname: 'localhost',
     softwerkskammerURL: 'http://localhost:17124',
     socratesURL: 'http://localhost:17224',
     jwt_secret: 'my_very_secret'

@@ -29,7 +29,7 @@ function createConfiguration() {
     publicUrlPrefix: 'http://localhost:17224',
     secret: 'secret',
     beans: new Beans(swkBeans),
-    domainname: 'localhost',
+    emaildomainname: 'localhost',
     softwerkskammerURL: 'http://localhost:17124',
     socratesURL: 'http://localhost:17224',
     jwt_secret: 'my_very_secret'
