@@ -3,12 +3,12 @@
     .modal-content
       .modal-header
         button.close(type='button', data-dismiss='modal', aria-hidden='true') &times;
-        h3 authentication.authentication
+        h3 #{t('authentication.authentication')}
       .modal-body
         -var returnUrl = currentUrl ||  '/'
         .row
           .col-md-12
-            p authentication.authentication_text
+            p #{t('authentication.authentication_text')}
         .row
           .col-md-4
             a.btn.btn-default.btn-block(href=swkPublicUrl + '/auth/idp/openid?openid_identifier=' + encodeURIComponent('https://www.google.com/accounts/o8/id') + '&returnTo=' + encodeURIComponent(returnUrl))
@@ -29,9 +29,9 @@
               input(type='hidden', name='returnTo', value=returnUrl)
               .panel.panel-default
                 .panel-heading
-                  a.accordion-toggle(href='#openIDinput', data-toggle='collapse') authentication.alternative_url:
+                  a.accordion-toggle(href='#openIDinput', data-toggle='collapse') #{t('authentication.alternative_url')}:
                 #openIDinput.collapse.panel-collapse
                   .input-group
                     input.form-control(id='openid_identifier', type='text', name='openid_identifier')
                     .input-group-btn
-                      button.btn.btn-default(type='submit') authentication.authenticate
+                      button.btn.btn-default(type='submit') #{t('authentication.authenticate')}
