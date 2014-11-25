@@ -46,7 +46,6 @@ describe('Groups and Members Service', function () {
 
       it('returns an error when the submitted member is a new member and saving the member caused an error', function (done) {
         sinon.stub(groupsAndMembersService, 'getUserWithHisGroups', function (nickname, callback) { callback(null, null); });
-
         sinon.stub(memberstore, 'saveMember', function (member, callback) { callback(new Error('some error')); });
 
         groupsAndMembersService.updateAndSaveSubmittedMember(undefined, {previousNickname: "nick"}, undefined, undefined, function (err, nickname) {
@@ -82,11 +81,12 @@ describe('Groups and Members Service', function () {
         var sessionUser = {authenticationId: 'member authentication id'};
         var accessrights = {canEditMember: function () { return true; }};
 
-        groupsAndMembersService.updateAndSaveSubmittedMember(sessionUser, memberformData, accessrights, function () {}, function (err, nickname) {
-          expect(nickname).to.equal('nick in memberform');
-          expect(sessionUser.member.id()).to.equal('member authentication id');
-          done(err);
-        });
+        groupsAndMembersService.updateAndSaveSubmittedMember(sessionUser, memberformData, accessrights, function () { return; },
+          function (err, nickname) {
+            expect(nickname).to.equal('nick in memberform');
+            expect(sessionUser.member.id()).to.equal('member authentication id');
+            done(err);
+          });
       });
     });
 
