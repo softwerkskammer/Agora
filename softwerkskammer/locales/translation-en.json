@@ -52,7 +52,7 @@
     "settings": "Settings",
     "separator": ".",
     "goodbye_text": [
-      "h2 Great, you've been here.",
+      "h2 Great you've been here.",
       "p Take care - see you soon!",
       "hr",
       "p.text-right Or maybe you want to return? ",
@@ -301,8 +301,8 @@
     "notes-resign": "Please let us know what you think about this site",
     "resign_info": [
       "p We are sorry that you want to leave.",
-      "p We are respecting this and will remove your account as soon as possible. We would be glad if you answered the following questions.",
-      "p Account removal is a manual process and sending this form will triger an email to us administators."
+      "p We are respecting this and will remove your account as soon as possible. We would be thankful if you answered the following questions.",
+      "p Account removal is a manual process and sending this form will trigger an email to the administators."
     ]
   },
   "members": {
