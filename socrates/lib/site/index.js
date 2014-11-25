@@ -13,7 +13,7 @@ var sponsors = require('./sponsors.json');
 var app = misc.expressAppIn(__dirname);
 
 app.get('/', function (req, res, next) {
-  res.render('index', {sponsors: sponsors, swkPublicUrl: conf.get('softwerkskammerURL'), currentUrl: 'auth/loggedIn'});
+  res.render('index', {sponsors: sponsors});
 });
 
 app.get('/goodbye.html', function (req, res) {

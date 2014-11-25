@@ -1,6 +1,7 @@
 'use strict';
 
-var beans = require('nconf').get('beans');
+var conf = require('nconf');
+var beans = conf.get('beans');
 var statusmessage = beans.get('statusmessage');
 
 module.exports = function expressViewHelper(req, res, next) {
@@ -11,6 +12,7 @@ module.exports = function expressViewHelper(req, res, next) {
   }
   res.locals.user = req.user;
   req.i18n.setLng('en');
-//  res.locals.currentUrl = req.url;
+  res.locals.currentUrl = 'auth/loggedIn';
+  res.locals.swkPublicUrl = conf.get('softwerkskammerURL');
   next();
 };
