@@ -8,7 +8,7 @@ var beans = require('nconf').get('beans');
 var persistence = beans.get('waitinglistPersistence');
 var activitystore = beans.get('activitystore');
 var memberstore = beans.get('memberstore');
-var sympaCache = beans.get('sympaCache');
+var groupsService = beans.get('groupsService');
 
 var async = require('async');
 
@@ -23,9 +23,9 @@ if (!really || really !== 'really') {
 memberstore.allMembers(function (err, members) {
   async.each(members,
     function (member, callback) {
-      sympaCache.getSubscribedListsForUser(member.email(), function (err, lists) {
+      groupsService.getSubscribedGroupsForUser(member.email(), function (err, lists) {
         // set to true if member is only in socrates list
-        member.state.socratesOnly = lists.length === 1 && lists[0] === 'socrates2014';
+        member.state.socratesOnly = lists.length === 1 && lists[0].id === 'socrates2014';
         if (member.state.socratesOnly) {
           console.log("Socrates-only: " + member.displayName());
         }
