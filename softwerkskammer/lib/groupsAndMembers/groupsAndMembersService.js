@@ -62,6 +62,38 @@ var addGroupsToMember = function (member, callback) {
   });
 };
 
+var updateAndSaveSubmittedMember = function (self, sessionUser, memberformData, accessrights, notifyNewMemberRegistration, updateSubscriptions, callback) {
+  self.getUserWithHisGroups(memberformData.previousNickname, function (err, persistentMember) {
+    if (err) { return callback(err); }
+    if (persistentMember && !accessrights.canEditMember(persistentMember)) {
+      return callback(null);
+    }
+    var member = persistentMember || new Member().initFromSessionUser(sessionUser);
+    var oldEmail = persistentMember ? member.email() : memberformData.previousEmail;
+    member.addAuthentication(memberformData.id);
+    member.fillFromUI(memberformData);
+    memberstore.saveMember(member, function (err) {
+      if (err) { return callback(err); }
+      if (!sessionUser.member || sessionUser.member.id() === member.id()) {
+        sessionUser.member = member;
+        delete sessionUser.profile;
+      }
+
+      if (updateSubscriptions) {
+
+        var subscriptions = misc.toArray(memberformData.newSubscriptions);
+        if (!persistentMember) { // new member
+          notifyNewMemberRegistration(member, subscriptions);
+        }
+        return self.updateSubscriptions(member, oldEmail, subscriptions, function (err) {
+          return callback(err, member.nickname());
+        });
+      }
+      return callback(null, member.nickname());
+    });
+  });
+};
+
 module.exports = {
   getUserWithHisGroups: function (nickname, callback) {
     memberstore.getMember(nickname, function (err, member) {
@@ -170,32 +202,12 @@ module.exports = {
     });
   },
 
-  updateAndSaveSubmittedMember: function (sessionUser, memberformData, accessrights, notifyNewMemberRegistration, callback) {
-    var self = this;
-    self.getUserWithHisGroups(memberformData.previousNickname, function (err, persistentMember) {
-      if (err) { return callback(err); }
-      if (persistentMember && !accessrights.canEditMember(persistentMember)) {
-        return callback(null);
-      }
-      var member = persistentMember || new Member().initFromSessionUser(sessionUser);
-      var oldEmail = persistentMember ? member.email() : memberformData.previousEmail;
-      member.addAuthentication(memberformData.id);
-      member.fillFromUI(memberformData);
-      memberstore.saveMember(member, function (err) {
-        if (err) { return callback(err); }
-        if (!sessionUser.member || sessionUser.member.id() === member.id()) {
-          sessionUser.member = member;
-          delete sessionUser.profile;
-        }
-        var subscriptions = misc.toArray(memberformData.newSubscriptions);
-        if (!persistentMember) { // new member
-          notifyNewMemberRegistration(member, subscriptions);
-        }
-        return self.updateSubscriptions(member, oldEmail, subscriptions, function (err) {
-          return callback(err, member.nickname());
-        });
-      });
-    });
+  updateAndSaveSubmittedMemberWithoutSubscriptions: function (sessionUser, memberformData, accessrights, notifyNewMemberRegistration, callback) {
+    updateAndSaveSubmittedMember(this, sessionUser, memberformData, accessrights, notifyNewMemberRegistration, false, callback);
+  },
+
+  updateAndSaveSubmittedMemberWithSubscriptions: function (sessionUser, memberformData, accessrights, notifyNewMemberRegistration, callback) {
+    updateAndSaveSubmittedMember(this, sessionUser, memberformData, accessrights, notifyNewMemberRegistration, true, callback);
   }
 
 };

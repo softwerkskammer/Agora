@@ -12,7 +12,6 @@ var statusmessage = beans.get('statusmessage');
 var Member = beans.get('member');
 var groupsAndMembersService = beans.get('groupsAndMembersService');
 var mailsenderService = beans.get('mailsenderService');
-var sympaCache = beans.get('sympaCache');
 
 var app = misc.expressAppIn(__dirname);
 
@@ -58,25 +57,14 @@ app.post('/submitmember', function (req, res, next) {
       return notifications.newMemberRegistered(member, subscriptions);
     }
 
-    function updateAndSave() {
-      groupsAndMembersService.updateAndSaveSubmittedMember(req.user, req.body, res.locals.accessrights, notifyNewMemberRegistration, function (err, nickname) {
-        if (err) { return next(err); }
-        if (nickname) {
-          statusmessage.successMessage('message.title.save_successful', 'message.content.members.saved').putIntoSession(req);
-          return res.redirect('/');
-        }
+    return groupsAndMembersService.updateAndSaveSubmittedMemberWithoutSubscriptions(req.user, req.body, res.locals.accessrights, notifyNewMemberRegistration, function (err, nickname) {
+      if (err) { return next(err); }
+      if (nickname) {
+        statusmessage.successMessage('message.title.save_successful', 'message.content.members.saved').putIntoSession(req);
         return res.redirect('/');
-      });
-    }
-
-    if (req.user.member) {
-      // an existing member -> rescue his subscriptions!
-      return sympaCache.getSubscribedListsForUser(req.user.member.email(), function (err, subscribedLists) {
-        req.body.newSubscriptions = subscribedLists;
-        updateAndSave();
-      });
-    }
-    return updateAndSave();
+      }
+      return res.redirect('/');
+    });
   }
 
   async.parallel(
