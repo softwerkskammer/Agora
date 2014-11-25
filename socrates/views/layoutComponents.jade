@@ -14,9 +14,10 @@ mixin loginMenu(forInline)
           li: a(href='/auth/logout')
             i.fa.fa-sign-out.fa-fw
             | &nbsp;#{t('general.logout')}
-          li: a(href='/mailsender/resign/#{encodeURIComponent(user.member.nickname())}')
-            i.fa.fa-ban.fa-fw
-            | &nbsp;#{t('members.resign')}
+          if user.member.socratesOnly()
+            li: a(href='/mailsender/resign/#{encodeURIComponent(user.member.nickname())}')
+              i.fa.fa-ban.fa-fw
+              | &nbsp;#{t('members.resign')}
         else
           li: a.navbar-link(data-toggle='modal', href='#login')
             i.fa.fa-sign-in.fa-fw
