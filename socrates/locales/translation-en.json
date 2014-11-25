@@ -40,7 +40,7 @@
     "settings": "Settings",
     "separator": ".",
     "goodbye_text": [
-      "h2 Great, you've been here.",
+      "h2 Great you've been here.",
       "p Take care - see you soon!",
       "hr",
       "p.text-right Or maybe you want to return? ",
