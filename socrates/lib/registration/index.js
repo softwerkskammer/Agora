@@ -6,11 +6,13 @@ var _ = require('lodash');
 var beans = require('nconf').get('beans');
 var misc = beans.get('misc');
 var membersService = beans.get('membersService');
+var notifications = beans.get('notifications');
 var validation = beans.get('validation');
 var statusmessage = beans.get('statusmessage');
 var Member = beans.get('member');
 var groupsAndMembersService = beans.get('groupsAndMembersService');
 var mailsenderService = beans.get('mailsenderService');
+var sympaCache = beans.get('sympaCache');
 
 var app = misc.expressAppIn(__dirname);
 
@@ -53,20 +55,28 @@ app.post('/submitmember', function (req, res, next) {
   function memberSubmitted(req, res, next) {
     function notifyNewMemberRegistration(member, subscriptions) {
       // must be done here, not in Service to avoid circular deps
-      // TODO notifications.newMemberRegistered(member, subscriptions);
-      return;
+      return notifications.newMemberRegistered(member, subscriptions);
     }
 
-    groupsAndMembersService.updateAndSaveSubmittedMember(req.user, req.body, res.locals.accessrights, notifyNewMemberRegistration, function (err, nickname) {
-      if (err) { return next(err); }
-
-      if (nickname) {
-        // TODO statusmessage.successMessage('message.title.save_successful', 'message.content.members.saved').putIntoSession(req);
+    function updateAndSave() {
+      groupsAndMembersService.updateAndSaveSubmittedMember(req.user, req.body, res.locals.accessrights, notifyNewMemberRegistration, function (err, nickname) {
+        if (err) { return next(err); }
+        if (nickname) {
+          statusmessage.successMessage('message.title.save_successful', 'message.content.members.saved').putIntoSession(req);
+          return res.redirect('/');
+        }
         return res.redirect('/');
-      }
+      });
+    }
 
-      return res.redirect('/');
-    });
+    if (req.user.member) {
+      // an existing member -> rescue his subscriptions!
+      return sympaCache.getSubscribedListsForUser(req.user.member.email(), function (err, subscribedLists) {
+        req.body.newSubscriptions = subscribedLists;
+        updateAndSave();
+      });
+    }
+    return updateAndSave();
   }
 
   async.parallel(
