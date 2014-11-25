@@ -1,0 +1,15 @@
+extends ../layout
+
+block title
+  | #{t('validation.validation_error')}
+block content
+  .col-md-12
+    .page-header
+      h2 #{t('validation.failed')}
+        small  #{t('validation.validation')}
+      p #{t('validation.validation_text')}
+    ul
+      for error in errors
+        li #{t(error)}
+    p
+      a.btn.btn-default(href='javascript:history.back()') #{t('general.back')}

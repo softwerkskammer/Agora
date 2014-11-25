@@ -5,9 +5,9 @@ extends ../../../views/simpleLayout
 
 block title
   - if (accessrights.isRegistered())
-    | members.edit
+    | #{t('members.edit')}
   - else
-    | members.create
+    | #{t('members.create')}
 
 block content
   form#memberform(action='/registration/submitmember',method='post')
@@ -18,8 +18,8 @@ block content
 mixin memberSubmitButtons
   .btn-group.pull-right
     if (accessrights.isRegistered())
-      a.btn.btn-default(href='javascript:history.back()', type='cancel') Back
+      a.btn.btn-default(href='javascript:history.back()', type='cancel') #{t('general.back')}
     else
-      a.btn.btn-danger(href='/auth/logout', type='cancel') Cancel
-    button.btn.btn-primary(type='submit') Save
+      a.btn.btn-danger(href='/auth/logout', type='cancel') #{t('members.cancel')}
+    button.btn.btn-primary(type='submit') #{t('general.save')}
 
