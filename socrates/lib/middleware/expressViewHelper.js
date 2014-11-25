@@ -10,6 +10,7 @@ module.exports = function expressViewHelper(req, res, next) {
     }
   }
   res.locals.user = req.user;
+  req.i18n.setLng('en');
 //  res.locals.currentUrl = req.url;
   next();
 };
