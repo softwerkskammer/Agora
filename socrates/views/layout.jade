@@ -33,7 +33,7 @@ mixin navbar
         a(href='/'): img(src='../img/socrates2015_logo.png', height='40px')
     .navbar-collapse.collapse
       if (!xs)
-        ul.nav.navbar-nav.navbar-right.bottom
+        ul.nav.navbar-nav.navbar-right.bottom(style='margin-right: 10px;')
           +loginMenu
       ul.nav.navbar-nav
         li: a.serif(href='/', style='padding-left: 0px') SoCraTes 2015

@@ -9,6 +9,8 @@ module.exports = function (grunt) {
     'socrates/public/clientscripts/global.js': [
       'bower_components/jquery/dist/jquery.js',
       'bower_components/bootstrap/dist/js/bootstrap.js',
+      'bower_components/smartmenus/dist/jquery.smartmenus.js',
+      'socrates/build/javascript/jquery.smartmenus.bootstrap-patched.js',
       'bower_components/URIjs/src/URI.js',
       'socrates/frontend/javascript/socrates.js'
     ]
@@ -46,6 +48,16 @@ module.exports = function (grunt) {
         dest: 'socrates/build/stylesheets/less',
         expand: true,
         flatten: true
+      }
+    },
+    patch: {
+      smartmenus: {
+        options: {
+          patch: 'softwerkskammer/frontend/3rd_party_js/jquery.smartmenus.bootstrap.js.patch'
+        },
+        files: {
+          'socrates/build/javascript/jquery.smartmenus.bootstrap-patched.js': 'bower_components/smartmenus/dist/addons/bootstrap/jquery.smartmenus.bootstrap.js'
+        }
       }
     },
     jslint: {
@@ -87,6 +99,7 @@ module.exports = function (grunt) {
           'socrates/public/stylesheets/screen.css': [
             'socrates/build/stylesheets/less/bootstrap.less',
             'bower_components/font-awesome/css/font-awesome.css',
+            'bower_components/smartmenus/dist/addons/bootstrap/jquery.smartmenus.bootstrap.css',
             'socrates/build/stylesheets/less/socrates.less'
           ]
         }
@@ -121,8 +134,9 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-jslint');
+  grunt.loadNpmTasks('grunt-patch');
 
-  grunt.registerTask('prepare', ['bower-install-simple', 'copy', 'less', 'jslint']);
+  grunt.registerTask('prepare', ['jslint', 'bower-install-simple', 'copy', 'patch', 'less']);
   grunt.registerTask('deploy_development', ['prepare', 'uglify:development']);
   grunt.registerTask('deploy_production', ['prepare', 'uglify:production']);
 

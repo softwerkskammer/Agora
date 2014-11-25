@@ -6,3 +6,21 @@ mixin loginMenu(forInline)
            | #{user.member.nickname()}
          else
            | Guest
+      ul.dropdown-menu
+        if accessrights.isRegistered()
+          li: a(href='/registration/editmember')
+            i.fa.fa-edit.fa-fw
+            | &nbsp;#{t('members.edit')}
+          li: a(href='/auth/logout')
+            i.fa.fa-sign-out.fa-fw
+            | &nbsp;#{t('general.logout')}
+          li: a(href='/mailsender/resign/#{encodeURIComponent(user.member.nickname())}')
+            i.fa.fa-ban.fa-fw
+            | &nbsp;#{t('members.resign')}
+        else
+          li: a.navbar-link(data-toggle='modal', href='#login')
+            i.fa.fa-sign-in.fa-fw
+            | &nbsp;#{t('general.login')}
+        li: a.navbar-link(href='https://github.com/softwerkskammer/Agora/issues', title=t('general.what_does_not_work'), target='_blank')
+          i.fa.fa-ambulance.fa-fw
+          | &nbsp;#{t('general.feedback')}
