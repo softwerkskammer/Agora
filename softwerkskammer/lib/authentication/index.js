@@ -47,6 +47,9 @@ function createProviderAuthenticationRoutes(app, provider) {
   function setReturnViaIdentityProviderOnSuccess(req, res, next) {
     req.session.returnTo = '/auth/idp_return_point';
     req.session.callingAppReturnTo = conf.get('socratesURL') + '/' + req.param('returnTo', '/');
+    if (req.user && req.user.member) { // save current member info -> restore it later
+      req.session.currentAgoraUser = {authenticationId: req.user.authenticationId};
+    }
     next();
   }
 
@@ -54,8 +57,12 @@ function createProviderAuthenticationRoutes(app, provider) {
     var returnTo = req.session.callingAppReturnTo;
     delete req.session.callingAppReturnTo;
     var jwt_token = jwt.encode({userId: req.user.authenticationId}, jwt_secret);
-    delete req.user;
-    delete req._passport.session.user;
+    if (req.session.currentAgoraUser) { // restore current member info:
+      req._passport.session.user = req.session.currentAgoraUser;
+      delete req.session.currentAgoraUser;
+    } else { // log out:
+      delete req._passport.session.user;
+    }
     res.redirect(returnTo + '?id_token=' + jwt_token);
   }
 
