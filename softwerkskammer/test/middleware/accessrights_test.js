@@ -20,7 +20,7 @@ function guest() {
 
 function standardMember(member) {
   var memberOfUser = member || {};
-  var req = { isAuthenticated: function () { return true; }, user: {member: new Member(memberOfUser)} };
+  var req = { user: {member: new Member(memberOfUser)} };
   var res = { locals: {} };
   accessrights(req, res, function () { return undefined; });
   return res.locals.accessrights;
