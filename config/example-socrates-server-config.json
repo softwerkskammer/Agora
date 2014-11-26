@@ -2,5 +2,5 @@
 {
   "publicUrlPrefix": "http://www.socrates-conference.de",
   "secret": "secret",
-  "domainname": "socrates-conference.de"
+  "sessionkey": "socrates-conference.de"
 }

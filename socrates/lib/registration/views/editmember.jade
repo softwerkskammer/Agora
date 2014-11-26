@@ -1,0 +1,25 @@
+include  ../../../views/formComponents
+include userinfoform
+
+extends ../../../views/simpleLayout
+
+block title
+  - if (accessrights.isRegistered())
+    | #{t('members.edit')}
+  - else
+    | #{t('members.create')}
+
+block content
+  form#memberform(action='/registration/submitmember',method='post')
+    +csrf
+    +memberinfoform(member)
+    +memberSubmitButtons
+
+mixin memberSubmitButtons
+  .btn-group.pull-right
+    if (accessrights.isRegistered())
+      a.btn.btn-default(href='javascript:history.back()', type='cancel') #{t('general.back')}
+    else
+      a.btn.btn-danger(href='/auth/logout', type='cancel') #{t('members.cancel')}
+    button.btn.btn-primary(type='submit') #{t('general.save')}
+

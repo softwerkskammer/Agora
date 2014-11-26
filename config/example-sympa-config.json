@@ -2,5 +2,6 @@
 {
   "swkTrustedAppName": "dummyapp",
   "swkTrustedAppPwd": "dummypwd",
-  "swkRemoteAppUser": "dummyuser"
+  "swkRemoteAppUser": "dummyuser",
+  "emaildomainname": "softwerkskammer.org"
 }

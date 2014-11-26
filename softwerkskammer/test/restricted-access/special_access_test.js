@@ -105,7 +105,6 @@ describe('exceptions to the admin guard', function () {
 
   it('allows anonymous users to create their profile', function () {
     var req = {
-      isAuthenticated: function () {return true; },
       originalUrl: '/members/new',
       user: {}
     };
@@ -118,7 +117,6 @@ describe('exceptions to the admin guard', function () {
 
   it('allows anonymous users to save their profile', function () {
     var req = {
-      isAuthenticated: function () {return true; },
       originalUrl: '/members/submit',
       user: {}
     };
@@ -131,7 +129,6 @@ describe('exceptions to the admin guard', function () {
 
   it('allows registered users to edit their profile', function () {
     var req = {
-      isAuthenticated: function () {return true; },
       originalUrl: '/members/edit/nick',
       user: {
         member: new Member({nickname: 'nick'})
@@ -146,7 +143,6 @@ describe('exceptions to the admin guard', function () {
 
   it('allows registered users to edit their profile even with blanks in nickname', function () {
     var req = {
-      isAuthenticated: function () {return true; },
       originalUrl: '/members/edit/nick%20name',
       user: {
         member: new Member({nickname: 'nick name'})
@@ -161,7 +157,6 @@ describe('exceptions to the admin guard', function () {
 
   it('allows registered users to save their profile', function () {
     var req = {
-      isAuthenticated: function () {return true; },
       originalUrl: '/members/submit',
       user: {
         member: new Member({id: 'id'})

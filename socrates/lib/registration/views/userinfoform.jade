@@ -1,23 +1,46 @@
-mixin userinfoform(user)
+mixin memberinfoform(member)
   .row
     .col-sm-12
       legend
         h4 Personal Data
       .well
-        p.
-          In order to participate at the event, we need you to provide us the following information. Please fill in all mandatory fields. 
-        p.
-          The home address is required by the hotel. It needs to be the address where you are registered, not your company's. In case you
-          want a different address on the invoice of the hotel, fill in the billing address.
+        - if (accessrights.isRegistered())
+          - if (member.socratesOnly())
+            p.
+              Here you can edit your information.
+          - else
+            p.
+              Here you find the information from your Softwerkskammer account that is used by SoCraTes. If you change anything here, it is changed in
+              Softwerkskammer as well.
+        - else
+          p.
+            In order to participate in the event, we need you to provide us with the following information. Please fill in all mandatory fields.
+
   .row
     .col-sm-6
-      +text('nickname', 'Nickname', user.nickname)
-      +text('firstname', 'First name', user.firstname)
-      +text('lastname', 'Last name', user.lastname)
-      +textareaPure('address', 'Home Address', user.address)
+      +hidden('id', member.id())
+      +hidden('previousNickname', member.nickname())
+      +hidden('previousEmail', accessrights.isRegistered() ? member.email() : '')
+      +hidden('created', member.created())
+      +hidden('socratesOnly', member.socratesOnly())
+      +text('nickname', 'Nickname', member.nickname())
+      +text('firstname', 'First name', member.firstname())
+      +text('lastname', 'Last name', member.lastname())
     .col-sm-6
-      +text('email', 'E-Mail', user.email)
-      +twitter('twitter', 'Twitter', user.twitter)
+      +text('email', 'E-Mail', member.email())
+      +twitter('twitter', 'Twitter', member.twitter())
+
+mixin userinfoform(user)
+  .row
+    .col-sm-12
+      p.
+        The home address is required by the hotel. It needs to be the address where you are registered, not your company's. In case you
+        want a different address on the invoice of the hotel, fill in the billing address.
+  .row
+    .col-sm-6
+      +textareaPure('privateaddress', 'Home Address', user.privateaddress)
+      +textareaPure('billingaddress', 'Billing Address (if different)', user.billingaddress)
+    .col-sm-6
       .row
         .col-sm-6
           .form-group
@@ -25,13 +48,11 @@ mixin userinfoform(user)
             select#tShirtSizeMale.form-control(name='tShirtSize')
               for item in ['', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL' ]
                 option(selected=user.tshirtsize === item) #{item}
-        .col-sm-6
           .form-group
             label.control-label(for='tShirtSizeFemale') T-Shirt (Female):
             select#tShirtSizeFemale.form-control(name='tShirtSize')
               for item in ['', 'Ladies\' XS', 'Ladies\' S', 'Ladies\' M', 'Ladies\' L', 'Ladies\' XL', 'Ladies\' XXL' ]
                 option(selected=user.tshirtsize === item) #{item}
-      +textareaPure('billingaddress', 'Billing Address (if different)', user.billingaddress)
   script.
     $('#tShirtSizeMale').on('change', function (e) {
       if ($(this).val() !== '') {

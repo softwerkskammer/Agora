@@ -70,6 +70,34 @@
         "maxsize": 10485760,
         "level": "info"
       }
+    },
+    "socrates": {
+      "console": {
+        "level": "info",
+        "colorize": true
+      },
+      "file": {
+        "timestamp": true,
+        "json": false,
+        "filename": "log/socrates-server.log",
+        "maxFiles": 5,
+        "maxsize": 10485760,
+        "level": "info"
+      }
+    },
+    "socrates-http": {
+      "console": {
+        "level": "warn",
+        "colorize": true
+      },
+      "file": {
+        "timestamp": true,
+        "json": false,
+        "filename": "log/socrates-http.log",
+        "maxFiles": 5,
+        "maxsize": 10485760,
+        "level": "info"
+      }
     }
   }
 }

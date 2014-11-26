@@ -26,6 +26,7 @@ module.exports = function (testBeansFilename) {
     'sender-address': null,
     publicUrlPrefix: 'http://localhost:17125',
     secret: 'secret',
+    sessionkey: 'testsession',
     githubClientID : null,
     githubClientSecret : null,
     publicPaymentKey: null,
@@ -33,7 +34,7 @@ module.exports = function (testBeansFilename) {
     paymentBic      : 'paymentBic',
     paymentIban     : 'paymentIban',
     paymentReceiver : 'paymentReceiver',
-    domainname      : 'localhost',
+    emaildomainname      : 'localhost',
     imageDirectory  : null
   });
 

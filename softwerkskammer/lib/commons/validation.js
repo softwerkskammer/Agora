@@ -12,6 +12,16 @@ var fieldHelpers = beans.get('fieldHelpers');
 
 var Validator = require('./internal/validationHelper');
 
+function checkSoCraTesMemberFields(validator, memberInput) {
+  validator.check(memberInput.nickname, 'validation.nickname_required').notEmpty();
+  validator.check(memberInput.nickname, 'validation.nickname_min_2_chars').len(2);
+  validator.check(memberInput.nickname, 'validation.nickname_no_slash').noSlash();
+  validator.check(memberInput.firstname, 'validation.firstname_required').notEmpty();
+  validator.check(memberInput.lastname, 'validation.lastname_required').notEmpty();
+  validator.check(memberInput.email, 'validation.email_required').notEmpty();
+  validator.check(memberInput.email, 'validation.email_valid').isEmail();
+}
+
 module.exports = {
   checkValidity: function (oldValue, newValue, checkFunction, errorMessage, callback) {
     if (newValue !== oldValue) {
@@ -27,16 +37,16 @@ module.exports = {
 
   isValidForMember: function (memberInput) {
     var validator = new Validator();
-    validator.check(memberInput.nickname, 'Nickname ist ein Pflichtfeld.').notEmpty();
-    validator.check(memberInput.nickname, 'Nickname muss mindestens 2 Zeichen enthalten.').len(2);
-    validator.check(memberInput.nickname, 'Nickname darf kein "/" enthalten.').noSlash();
-    validator.check(memberInput.firstname, 'Vorname ist ein Pflichtfeld.').notEmpty();
-    validator.check(memberInput.lastname, 'Nachname ist ein Pflichtfeld.').notEmpty();
-    validator.check(memberInput.email, 'E-Mail ist ein Pflichtfeld.').notEmpty();
-    validator.check(memberInput.email, 'E-Mail muss gültig sein.').isEmail();
-    validator.check(memberInput.location, 'Ort / Region ist ein Pflichtfeld.').notEmpty();
-    validator.check(memberInput.reference, 'Wie ich von... ist ein Pflichtfeld.').notEmpty();
-    validator.check(memberInput.profession, 'Beruf ist ein Pflichtfeld.').notEmpty();
+    checkSoCraTesMemberFields(validator, memberInput);
+    validator.check(memberInput.location, 'validation.city_required').notEmpty();
+    validator.check(memberInput.reference, 'validation.reference_required').notEmpty();
+    validator.check(memberInput.profession, 'validation.profession_required').notEmpty();
+    return validator.getErrors();
+  },
+
+  isValidForSoCraTesMember: function (memberInput) {
+    var validator = new Validator();
+    checkSoCraTesMemberFields(validator, memberInput);
     return validator.getErrors();
   },
 
@@ -90,13 +100,13 @@ module.exports = {
   isValidForAddon: function (addon, addonConfig) {
     var validator = new Validator();
     if (addonConfig.homeAddress()) {
-      validator.check(addon.homeAddress, 'Privatanschrift ist ein Pflichtfeld').notEmpty();
+      validator.check(addon.homeAddress, 'validation.homeaddress_required').notEmpty();
     }
     if (addonConfig.billingAddress()) {
-      validator.check(addon.billingAddress, 'Rechnungsanschrift ist ein Pflichtfeld').notEmpty();
+      validator.check(addon.billingAddress, 'validation.billingaddress_required').notEmpty();
     }
     if (addonConfig.tShirtSize()) {
-      validator.check(addon.tShirtSize, 'T-Shirt Grösse ist ein Pflichtfeld').notEmpty();
+      validator.check(addon.tShirtSize, 'validation.tshirtsize_required').notEmpty();
     }
     return validator.getErrors();
   },

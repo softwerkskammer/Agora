@@ -13,7 +13,7 @@ describe('redirectIfNotSuperuser', function () {
     var req = { originalUrl: originalUrl };
 
     var accessrights = {};
-    accessrights.isAuthenticated = function () { return true; };
+    accessrights.isRegistered = function () { return true; };
     accessrights.isSuperuser = function () { return false; };
 
     var res = { locals: { accessrights: accessrights } };
@@ -34,7 +34,7 @@ describe('redirectIfNotSuperuser', function () {
     var req = { originalUrl: originalUrl };
 
     var accessrights = {};
-    accessrights.isAuthenticated = function () { return true; };
+    accessrights.isRegistered = function () { return true; };
     accessrights.isSuperuser = function () { return false; };
 
     var res = { locals: { accessrights: accessrights } };

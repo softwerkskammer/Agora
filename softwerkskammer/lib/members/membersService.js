@@ -63,28 +63,19 @@ module.exports = {
       .value();
   },
 
-  findOrCreateMemberFor: function (user, authenticationId, profile, done) {
+  findMemberFor: function (user, authenticationId, callback) {
     return function () {
-      if (!user) {
-        return store.getMemberForAuthentication(authenticationId, function (err, member) {
-          if (err) { return done(err); }
-          if (!member) { return done(null, {authenticationId: authenticationId, profile: profile}); }
-          done(null, {authenticationId: authenticationId, member: member});
-        });
+      if (!user) { // not currently logged in
+        return store.getMemberForAuthentication(authenticationId, callback);
       }
       var memberOfSession = user.member;
       return store.getMemberForAuthentication(authenticationId, function (err, member) {
-        if (err) { return done(err); }
-        if (member && memberOfSession.id() !== member.id()) { return done(new Error('Unter dieser Authentifizierung existiert schon ein Mitglied.')); }
-        if (member && memberOfSession.id() === member.id()) {
-          return done(null, {authenticationId: authenticationId, member: member});
-        }
-        // no member found
+        if (err) { return callback(err); }
+        if (member && memberOfSession.id() !== member.id()) { return callback(new Error('Unter dieser Authentifizierung existiert schon ein Mitglied.')); }
+        if (member && memberOfSession.id() === member.id()) { return callback(null, member); }
+        // no member found:
         memberOfSession.addAuthentication(authenticationId);
-        store.saveMember(memberOfSession, function (err) {
-          if (err) { return done(err); }
-          done(null, {authenticationId: authenticationId, member: memberOfSession});
-        });
+        store.saveMember(memberOfSession, function (err) { callback(err, memberOfSession); });
       });
     };
   },

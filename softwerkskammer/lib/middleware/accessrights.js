@@ -8,19 +8,15 @@ module.exports = function accessrights(req, res, next) {
     req: req,
 
     member: function () {
-      return this.req.user.member;
+      return this.req.user && this.req.user.member;
     },
 
     memberId: function () {
       return this.isRegistered() ? this.member().id() : null;
     },
 
-    isAuthenticated: function () {
-      return !!this.req.isAuthenticated && this.req.isAuthenticated();
-    },
-
     isRegistered: function () {
-      return this.isAuthenticated() && !!this.member();
+      return !!this.member();
     },
 
     isSuperuser: function () {
@@ -70,7 +66,7 @@ module.exports = function accessrights(req, res, next) {
     },
 
     isMember: function (member) {
-      return this.isAuthenticated() && this.memberId() === member.id();
+      return this.isRegistered() && this.memberId() === member.id();
     },
 
     canCreateColor: function () {
@@ -78,11 +74,11 @@ module.exports = function accessrights(req, res, next) {
     },
 
     canViewGroupDetails: function () {
-      return this.isAuthenticated();
+      return this.isRegistered();
     },
 
     canParticipateInGroup: function () {
-      return this.isAuthenticated();
+      return this.isRegistered();
     }
 
   };

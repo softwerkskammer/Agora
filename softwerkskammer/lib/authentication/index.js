@@ -13,18 +13,23 @@ var misc = beans.get('misc');
 var urlPrefix = conf.get('publicUrlPrefix');
 var jwt_secret = conf.get('jwt_secret');
 
-function findOrCreateUser(req, authenticationId, profile, done) {
-  if (req.session.socrates_returnTo) {
+function createUserObject(req, authenticationId, profile, done) {
+  if (req.session.callingAppReturnTo) { // we're invoked from another app -> don't add a member to the session
     return done(null, {authenticationId: authenticationId});
   }
-  process.nextTick(membersService.findOrCreateMemberFor(req.user, authenticationId, profile, done));
+  process.nextTick(membersService.findMemberFor(req.user, authenticationId, function (err, member) {
+    if (err) { return done(err); }
+    if (!member) { return done(null, {authenticationId: authenticationId, profile: profile}); }
+    return done(null, {authenticationId: authenticationId, member: member});
+  }));
 }
 
-function findOrCreateUserByOAuth(req, accessToken, refreshToken, profile, done) {
-  findOrCreateUser(req, profile.provider + ':' + profile.id, profile, done);
+function createUserObjectFromGithub(req, accessToken, refreshToken, profile, done) {
+  createUserObject(req, profile.provider + ':' + profile.id, profile, done);
 }
 
 function createProviderAuthenticationRoutes(app, provider) {
+
   function authenticate() {
     return passport.authenticate(provider, {successReturnToOrRedirect: '/', failureRedirect: '/login'});
   }
@@ -42,6 +47,9 @@ function createProviderAuthenticationRoutes(app, provider) {
   function setReturnViaIdentityProviderOnSuccess(req, res, next) {
     req.session.returnTo = '/auth/idp_return_point';
     req.session.callingAppReturnTo = conf.get('socratesURL') + '/' + req.param('returnTo', '/');
+    if (req.user && req.user.member) { // save current member info -> restore it later
+      req.session.currentAgoraUser = {authenticationId: req.user.authenticationId};
+    }
     next();
   }
 
@@ -49,8 +57,12 @@ function createProviderAuthenticationRoutes(app, provider) {
     var returnTo = req.session.callingAppReturnTo;
     delete req.session.callingAppReturnTo;
     var jwt_token = jwt.encode({userId: req.user.authenticationId}, jwt_secret);
-    delete req.user;
-    delete req._passport.session.user;
+    if (req.session.currentAgoraUser) { // restore current member info:
+      req._passport.session.user = req.session.currentAgoraUser;
+      delete req.session.currentAgoraUser;
+    } else { // log out:
+      delete req._passport.session.user;
+    }
     res.redirect(returnTo + '?id_token=' + jwt_token);
   }
 
@@ -67,16 +79,16 @@ function setupOpenID(app) {
       profile: true,
       passReqToCallback: true
     },
-    findOrCreateUser
+    createUserObject
   ));
   createProviderAuthenticationRoutes(app, 'openid');
 }
 
-function setupGitHub(app) {
+function setupGithub(app) {
   var githubClientID = conf.get('githubClientID');
   if (githubClientID) {
-    var GitHubStrategy = require('passport-github').Strategy;
-    var strat = new GitHubStrategy(
+    var GithubStrategy = require('passport-github').Strategy;
+    var strategy = new GithubStrategy(
       {
         clientID: githubClientID,
         clientSecret: conf.get('githubClientSecret'),
@@ -84,10 +96,10 @@ function setupGitHub(app) {
         customHeaders: {'User-Agent': 'agora node server'},
         passReqToCallback: true
       },
-      findOrCreateUserByOAuth
+      createUserObjectFromGithub
     );
-    strat._oauth2.useAuthorizationHeaderforGET(true);
-    passport.use(strat);
+    strategy._oauth2.useAuthorizationHeaderforGET(true);
+    passport.use(strategy);
     createProviderAuthenticationRoutes(app, 'github');
   }
 }
@@ -103,6 +115,6 @@ app.get('/logout', function (req, res) {
   res.redirect('/goodbye.html');
 });
 setupOpenID(app);
-setupGitHub(app);
+setupGithub(app);
 
 module.exports = app;

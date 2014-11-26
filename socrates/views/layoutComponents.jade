@@ -1,0 +1,36 @@
+mixin loginMenu(forInline)
+   li.dropdown(class=forInline ? 'visible-xs' : '')
+      a(href='#')
+         i.fa.fa-info-circle.fa-fw &nbsp;
+         if accessrights.isRegistered()
+           | #{user.member.nickname()}
+         else
+           | Guest
+      ul.dropdown-menu
+        if accessrights.isRegistered()
+          li: a(href='/registration/editmember')
+            i.fa.fa-edit.fa-fw
+            | &nbsp;#{t('members.edit')}
+          li: a(href='/auth/logout')
+            i.fa.fa-sign-out.fa-fw
+            | &nbsp;#{t('general.logout')}
+          if user.member.socratesOnly()
+            li: a(href='/registration/resign')
+              i.fa.fa-ban.fa-fw
+              | &nbsp;#{t('members.resign')}
+        else
+          li: a(data-toggle='modal', href='#login')
+            i.fa.fa-sign-in.fa-fw
+            | &nbsp;#{t('general.login')}
+        li: a(href='https://github.com/softwerkskammer/Agora/issues', title=t('general.what_does_not_work'), target='_blank')
+          i.fa.fa-ambulance.fa-fw
+          | &nbsp;#{t('general.feedback')}
+
+mixin notificationsBlock(notificationmessage)
+  #{notificationmessage.kill()}
+  -var contents = notificationmessage.contents()
+  #notifications(class='alert alert-block hidden-print #{contents.type}')
+    button.close(type='button', data-dismiss='alert') &times;
+    h4 #{t(contents.title)}
+    | #{t(contents.text, contents.additionalArguments)}
+

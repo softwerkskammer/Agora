@@ -35,18 +35,6 @@
     "communities": "Software Craftsmanship Communities in Germany, Austria and Switzerland.",
     "to_group": "To Softwerkskammer-Group",
     "register_here": "Register here!",
-    "about_us_text": [
-      "h4 About us",
-      "p.",
-      "  Softwerkskammer founded itself in 2011 in order to simplify the exchange of experiences among people interested in Software Craftsmanship.",
-      "p.",
-      "  The local communities use it to organise their meetings and other events like Code Retreats or Open Spaces,",
-      "  or they simply share ideas or discuss interesting things on their mailing list.",
-      "p Look at the Activities menu to find out what we're up to over the next few weeks."
-    ],
-    "gdcr": "Global Day of Coderetreat",
-    "gdcr_activities": "Activities related to GDCR",
-    "gdcr_text": "Here you find almost all german-speaking activities. You can find a full overview at",
     "feedback": "Feedback",
     "what_does_not_work": "What does not work the way it should?",
     "settings": "Settings",
@@ -156,21 +144,7 @@
     "home_address": "Home address",
     "billing_address": "Billing address",
     "t_shirt_size": "T-Shirt size",
-    "roommate": "With whom would you like to share the room? (Twin room only)",
-    "tooltip": {
-      "title": "Short and concise for overviews",
-      "startdate": "End date and time will be shifted automatically (the duration remains the same)",
-      "end": "Here you can alter the duration",
-      "address_suffix": "Used for links within this site",
-      "resourcelabel": "Name of the unit that can be booked (e.g. Single Room, Twin Room)",
-      "count": "Maximal participant count (No limit if field is empty, registration impossible if 0)",
-      "registration": "Here you can allow or block registration",
-      "deregistration": "Here you can allow or block de-registration",
-      "waitinglist": "Should the resource have a waiting list?",
-      "registered": "You are registered.",
-      "unknown": "You are not registered."
-    },
-    "previous_gdcr": "Previous GDCRs"
+    "roommate": "With whom would you like to share the room? (Twin room only)"
   },
   "activityresults": {
     "cancel": "Cancel",
@@ -199,17 +173,6 @@
     "valid_until_year": "Valid until year",
     "charge_credit_card": "Charge my credit card",
     "payment_done": "You have already paid."
-  },
-  "announcements": {
-    "latest_news": "Latest News",
-    "announcements": "Announcements",
-    "announcement": "Announcement",
-    "new": "New Announcement",
-    "create": "Create announcement",
-    "edit": "Edit announcement",
-    "show_until": "Show until (and including)",
-    "text": "Announcement text",
-    "automatic": "automatic"
   },
   "authentication": {
     "authentication": "Authentication",
@@ -241,41 +204,6 @@
       "p The Agora-Team is begging your pardon."
     ],
     "please_authenticate": "Please, authenticate yourself!"
-  },
-  "colors": {
-    "colors": "Colours",
-    "color": "Colour"
-  },
-  "groups": {
-    "overview": "Groups Overview",
-    "group": "Group",
-    "groups": "Groups",
-    "other": "Others",
-    "regional": "Regional Groups",
-    "themed": "Themed Groups",
-    "type": "Group type",
-    "new": "New Group",
-    "create": "Create group",
-    "more": "read more…",
-    "edit": "Edit group \"__groupId__\"",
-    "join": "Join Group",
-    "leave": "Leave Group",
-    "has": "This group has",
-    "contact": "Contact person",
-    "contacts": "Contact persons",
-    "email_prefix": "Prefix for e-mail-subjects",
-    "x_coord": "X-coord.",
-    "y_coord": "Y-coord.",
-    "map_label": "Label in map",
-    "tooltip": {
-      "name": "The e-mail address \"@softwerkskammer.org\" where the group can be reached.",
-      "title": "Name of the group used in the website, also realname for e-mails sent by the group",
-      "email_prefix": "surrounded by [], it prefixes the subject of e-mails sent via the group",
-      "x_coord": "Horizontal position on the map",
-      "y_coord": "Vertical position on the map",
-      "map_label": "Label that is displayed in the map",
-      "gotogroup": "Go to group's page."
-    }
   },
   "mailarchive": {
     "archive": "Mail Archive",
@@ -403,10 +331,6 @@
       "announcements": {
         "saved": "Your announcement has been saved."
       },
-      "colors": {
-        "saved": "Your colors have been saved.",
-        "saved_single": "The new color has been saved."
-      },
       "groups": {
         "saved": "Your group has been saved.",
         "subscribed": "You are now a member of this group. You will receive a welcome-email in a few moments.",
@@ -449,10 +373,5 @@
     "homeaddress_required": "Home address is required.",
     "billingaddress_required": "Billing address is required.",
     "tshirtsize_required": "T-Shirt size is required."
-  },
-  "dashboard": {
-    "description": [
-      "p Your personal view to softwerkskammer. It shows your groups and their upcoming activities."
-    ]
   }
 }

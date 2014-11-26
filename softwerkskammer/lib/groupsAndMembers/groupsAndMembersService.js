@@ -1,17 +1,19 @@
 'use strict';
 
+var async = require('async');
+var winston = require('winston');
+var logger = winston.loggers.get('sympa');
+var _ = require('lodash');
+
 var conf = require('nconf');
 var beans = conf.get('beans');
-var async = require('async');
 var membersService = beans.get('membersService');
 var memberstore = beans.get('memberstore');
 var groupsService = beans.get('groupsService');
 var groupstore = beans.get('groupstore');
 var Group = beans.get('group');
-var winston = require('winston');
-var logger = winston.loggers.get('sympa');
 var misc = beans.get('misc');
-var _ = require('lodash');
+var Member = beans.get('member');
 
 var getUsersOfList = function (listname, globalCallback) {
   async.parallel(
@@ -57,6 +59,38 @@ var addGroupsToMember = function (member, callback) {
       member.subscribedGroups = subscribedGroups;
     }
     callback(err, member);
+  });
+};
+
+var updateAndSaveSubmittedMember = function (self, sessionUser, memberformData, accessrights, notifyNewMemberRegistration, updateSubscriptions, callback) {
+  self.getUserWithHisGroups(memberformData.previousNickname, function (err, persistentMember) {
+    if (err) { return callback(err); }
+    if (persistentMember && !accessrights.canEditMember(persistentMember)) {
+      return callback(null);
+    }
+    var member = persistentMember || new Member().initFromSessionUser(sessionUser);
+    var oldEmail = persistentMember ? member.email() : memberformData.previousEmail;
+    member.addAuthentication(memberformData.id);
+    member.fillFromUI(memberformData);
+    memberstore.saveMember(member, function (err) {
+      if (err) { return callback(err); }
+      if (!sessionUser.member || sessionUser.member.id() === member.id()) {
+        sessionUser.member = member;
+        delete sessionUser.profile;
+      }
+
+      if (updateSubscriptions) {
+
+        var subscriptions = misc.toArray(memberformData.newSubscriptions);
+        if (!persistentMember) { // new member
+          notifyNewMemberRegistration(member, subscriptions);
+        }
+        return self.updateSubscriptions(member, oldEmail, subscriptions, function (err) {
+          return callback(err, member.nickname());
+        });
+      }
+      return callback(null, member.nickname());
+    });
   });
 };
 
@@ -166,6 +200,14 @@ module.exports = {
       if (err) { return callback(err); }
       self.updateAdminlistSubscriptions(member.id(), callback);
     });
+  },
+
+  updateAndSaveSubmittedMemberWithoutSubscriptions: function (sessionUser, memberformData, accessrights, notifyNewMemberRegistration, callback) {
+    updateAndSaveSubmittedMember(this, sessionUser, memberformData, accessrights, notifyNewMemberRegistration, false, callback);
+  },
+
+  updateAndSaveSubmittedMemberWithSubscriptions: function (sessionUser, memberformData, accessrights, notifyNewMemberRegistration, callback) {
+    updateAndSaveSubmittedMember(this, sessionUser, memberformData, accessrights, notifyNewMemberRegistration, true, callback);
   }
 
 };

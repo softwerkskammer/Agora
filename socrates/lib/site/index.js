@@ -3,28 +3,24 @@
 var path = require('path');
 var async = require('async');
 var fs = require('fs');
-var jwt = require('jwt-simple');
 
 var conf = require('nconf');
 var beans = conf.get('beans');
 var Renderer = beans.get('renderer');
-var groupsService = beans.get('groupsService');
-var groupsAndMembers = beans.get('groupsAndMembersService');
-var Group = beans.get('group');
 var misc = beans.get('misc');
 var sponsors = require('./sponsors.json');
-var jwt_secret = conf.get('jwt_secret');
 
 var app = misc.expressAppIn(__dirname);
 
 app.get('/', function (req, res, next) {
-  res.render('index', {sponsors: sponsors, swkPublicUrl: conf.get('softwerkskammerURL'), currentUrl: 'loggedIn'});
+  res.render('index', {sponsors: sponsors});
 });
 
-app.get('/loggedIn', function (req, res, next) {
-  var token = jwt.decode(req.query.id_token, jwt_secret);
-  console.log(token);
-  res.redirect('/');
+app.get('/goodbye.html', function (req, res) {
+  if (req.user && req.user.member) {
+    return res.redirect('/');
+  }
+  res.render('goodbye');
 });
 
 app.get('/robots.txt', function (req, res, next) {
