@@ -77,6 +77,12 @@ module.exports = function (grunt) {
         expand: true,
         flatten: true
       },
+      datatablesBootstrapAndGermanJS: {
+        src: 'softwerkskammer/frontend/3rd_party_js/dataTables*',
+        dest: 'softwerkskammer/public/clientscripts',
+        expand: true,
+        flatten: true
+      },
       datatablesResponsiveCSS: {
         src: 'bower_components/datatables-responsive/css/*.css',
         dest: 'softwerkskammer/public/stylesheets',
@@ -127,12 +133,6 @@ module.exports = function (grunt) {
         dest: 'softwerkskammer/public/clientscripts',
         expand: true,
         flatten: false
-      },
-      patchedJS: {
-        src: 'softwerkskammer/frontend/3rd_party_js/dataTables*',
-        dest: 'softwerkskammer/public/clientscripts',
-        expand: true,
-        flatten: true
       },
       customLESS: {
         src: 'softwerkskammer/frontend/less/*',
