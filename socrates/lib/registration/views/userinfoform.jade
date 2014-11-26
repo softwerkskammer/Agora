@@ -4,8 +4,18 @@ mixin memberinfoform(member)
       legend
         h4 Personal Data
       .well
-        p.
-          In order to participate in the event, we need you to provide us with the following information. Please fill in all mandatory fields.
+        - if (accessrights.isRegistered())
+          - if (member.socratesOnly())
+            p.
+              Here you can edit your information.
+          - else
+            p.
+              Here you find the information from your Softwerkskammer account that is used by SoCraTes. If you change anything here, it is changed in
+              Softwerkskammer as well.
+        - else
+          p.
+            In order to participate in the event, we need you to provide us with the following information. Please fill in all mandatory fields.
+
   .row
     .col-sm-6
       +hidden('id', member.id())
