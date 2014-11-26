@@ -355,7 +355,7 @@
   "validation": {
     "validation": "Validation",
     "validation_error": "Validation Error",
-    "validation_text": "It seems as if some of the fields were incorrectly filled. You find them below:",
+    "validation_text": "It seems as if some of the fields were filled improperly. These are the problems we discovered:",
     "failed": "Failed",
     "url_not_available": "This URL is not available.",
     "nickname_not_available": "This nickname is not available.",
