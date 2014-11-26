@@ -46,9 +46,19 @@ Once retrieved perform the following commands inside the directory of the cloned
 1. `npm install` - this will fetch all dependencies needed
 1. `node softwerkskammer/initialDBSetup` - this will create some sample data to start with
 1. `npm test` - will create a few necessary files and perform a complete test suite. *This must end successfully!*
-1. `node start-softwerkskammer` or `node start-socrates`- will start the server
 
-Now go to you local machine, open a browser and open `http://localhost:17124`
+Now you can decide which app you want to start:
+
+* Start softwerkskammer
+
+    * `node start-softwerkskammer` - will start the server
+    * Now go to your local machine, open a browser and use `http://localhost:17124`
+
+* Start socrates
+
+    * `./build-socrates.sh` in order to build some css, js etc.
+    * `node start-socrates`- will start the server
+    * Now go to your local machine, open a browser and use `http://localhost:17224`
 
 System requirements and Installation
 --------------------
