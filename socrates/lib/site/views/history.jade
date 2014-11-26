@@ -10,51 +10,49 @@ block content
             | The Archives #{''}
             i.fa.fa-fw.fa-caret-down
           ul.dropdown-menu(role='menu')
-            li: a(href='http://www.softwerkskammer.org/wiki/socrates2014/index', target='_blank') 2014 
-            li: a(href='http://www.softwerkskammer.org/wiki/socrates2013/index', target='_blank') 2013 
-            li: a(href='http://www.softwerkskammer.org/wiki/socrates2012/index', target='_blank') 2012 
-            li: a(href='http://www.softwerkskammer.org/wiki/socrates2011/index', target='_blank') 2011 
+            +bloglink('http://www.softwerkskammer.org/wiki/socrates2014/index', '2014')
+            +bloglink('http://www.softwerkskammer.org/wiki/socrates2013/index', '2013')
+            +bloglink('http://www.softwerkskammer.org/wiki/socrates2012/index', '2012') 
+            +bloglink('http://www.softwerkskammer.org/wiki/socrates2011/index', '2011') 
         h1
-          | The history&nbsp;
+          | History&nbsp;
           small from 2011 to today.
 
       p.extraspace
         img.img-responsive(src='img/socrates2012_history_wall.jpg')
         small.pull-right Image courtesy of 
-          a(href='http://www.softwareleid.de/', target='_blank') Christoph Pater #{''}
-            i.fa.fa-external-link
+          +extlink('http://www.softwareleid.de/', 'Christoph Pater')
 
   .row
     .col-md-12
-      p.lead.
-        Back in 2011, the first &ldquo;Software Craftsmanship and Testing (un)conference&rdquo; 
-        took place in Germany. Since then, the community and the event grew larger.
-      p
-        | Markus Gärtner has written 
-        a(href='http://www.shino.de/2014/03/03/socrates-2014/', target='_blank')
-          | a nice blog post 
-          i.fa.fa-external-link
-        |  which sums up some details why and how SoCraTes was established. He graciously allowed us to quote the following parts of it:
+      .well
+        p.
+          Back in 2011, the first &ldquo;Software Craftsmanship and Testing (un)conference&rdquo; 
+          took place in Germany. Since then, the community and the event grew larger.
+        p
+          | Markus Gärtner has written a nice #{''}
+          +extlink('http://www.shino.de/2014/03/03/socrates-2014/', 'blog post') 
+          |  which sums up some details why and how SoCraTes was established. He graciously allowed us to quote the following parts of it:
       h3 2010 #{''}
         small The Beginning
       p
-        a(href='https://twitter.com/leiderleider') Andreas Leidig
+        +extlink('https://twitter.com/leiderleider', 'Andreas Leidig')
         |  and #{''}
-        a(href='https://twitter.com/NicoleRauch') Nicole Rauch
+        +extlink('https://twitter.com/NicoleRauch', 'Nicole Rauch')
         |  started the whole thing way back in late 2010. They wanted to get a discussion going regarding a conference 
         |  on Software Craftsmanship in Germany. We decided to meet up during #{''}
-        a(href='http://www.xpdays.de') XP Days Germany
+        +extlink('http://www.xpdays.de', 'XP Days Germany')
         |  in 2010, and see what we could do. We quickly agreed on an unconference format, two days, somewhere laid back. 
         |  Some folks had organized the German Agile Coach Camp and #{''}
-        a(href='https://twitter.com/Play4Agile') Play4Agile
+        +extlink('https://twitter.com/Play4Agile', 'Play4Agile')
         |  in Rückersbach close to Frankfurt. We decided on that spot as well, and organized everything for 2011. 
       p
         | Early on, we figured that we will need outside support. That was when we started to reach out to other craftsmen, like #{''}
-        a(href='https://twitter.com/slagyr') Micah Martin
+        +extlink('https://twitter.com/slagyr', 'Micah Martin')
         |, #{''}
-        a(href='https://twitter.com/ade_oshineye') Adewale Oshineye
+        +extlink('https://twitter.com/ade_oshineye', 'Adewale Oshineye')
         |, #{''}
-        a(href='https://twitter.com/SandroMancuso') Sandro Mancuso
+        +extlink('https://twitter.com/SandroMancuso', 'Sandro Mancuso')
         |, and many, many more. We had around 10-20 participants from outside Germany with us at the first SoCraTes. All the tales
         |  they told us on how they were running things in London, Israel, Finland, you-name-it engaged us. It felt good to be around so
         |  many like-minded folks, and receive outside inspiration.
@@ -72,7 +70,7 @@ block content
       p
         | One year later, we came back for SoCraTes 2012. Since the first conference we had established 10 user groups all 
         | over Germany on Software Craftsmanship, all organized under the banner of #{''}
-        a(href='http://softwerkskammer.org') Softwerkskammer
+        +extlink('http://softwerkskammer.org', 'Softwerkskammer')
         |. There was one in Hamburg, one in Karlsruhe, one in Munich, one in Nürnberg, one in Berlin, one in Frankfurt, one 
         | in Dortmund, one in Düsseldorf, and one shared around Münster, Osnabrück, and Bielefeld. We created a timeline of 
         | events that had happened in the various local communities since our first get-together.

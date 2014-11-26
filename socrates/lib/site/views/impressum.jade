@@ -17,10 +17,6 @@ block content
       address
         strong E-Mail:
         |  benjamin (at) ambestengestern (dot) de
-      p Quelle: 
-        em Impressum von #{''}
-          a(rel='nofollow', href='http://www.e-recht24.de') eRecht24
-          |  speziell für Privatpersonen erzeugt.
       h4 Haftungsausschluss:
       p: strong Haftung für Inhalte
       p.
@@ -63,4 +59,5 @@ block content
        der Seiten behalten sich ausdrücklich rechtliche Schritte im Falle der unverlangten Zusendung von Werbeinformationen, 
        etwa durch Spam-Mails, vor.
       p: em Quellen: #{''}
-        a(href='http://www.e-recht24.de/muster-disclaimer.htm', target='_blank') eRecht24 Disclaimer
+        | Impressum von eRecht24 speziell für Privatpersonen erzeugt. #{''}
+        +extlink('http://www.e-recht24.de/muster-disclaimer.htm', 'eRecht24 Disclaimer')
