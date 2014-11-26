@@ -25,3 +25,12 @@ mixin loginMenu(forInline)
         li: a(href='https://github.com/softwerkskammer/Agora/issues', title=t('general.what_does_not_work'), target='_blank')
           i.fa.fa-ambulance.fa-fw
           | &nbsp;#{t('general.feedback')}
+
+mixin notificationsBlock(notificationmessage)
+  #{notificationmessage.kill()}
+  -var contents = notificationmessage.contents()
+  #notifications(class='alert alert-block hidden-print #{contents.type}')
+    button.close(type='button', data-dismiss='alert') &times;
+    h4 #{t(contents.title)}
+    | #{t(contents.text, contents.additionalArguments)}
+
