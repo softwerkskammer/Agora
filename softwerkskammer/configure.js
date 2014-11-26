@@ -41,6 +41,7 @@ function createConfiguration() {
       '/payment|' +
       'dashboard',
     secret: 'secret',
+    sessionkey: 'softwerkskammer.org',
     beans: new Beans(configdir + 'beans.json'),
     emaildomainname: 'localhost',
     softwerkskammerURL: 'http://localhost:17124',

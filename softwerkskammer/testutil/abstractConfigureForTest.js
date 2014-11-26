@@ -26,6 +26,7 @@ module.exports = function (testBeansFilename) {
     'sender-address': null,
     publicUrlPrefix: 'http://localhost:17125',
     secret: 'secret',
+    sessionkey: 'testsession',
     githubClientID : null,
     githubClientSecret : null,
     publicPaymentKey: null,

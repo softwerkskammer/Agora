@@ -28,6 +28,7 @@ function createConfiguration() {
     mongoURL: 'mongodb://localhost:27017/swk',
     publicUrlPrefix: 'http://localhost:17224',
     secret: 'secret',
+    sessionkey: 'socrates-conference.de',
     beans: new Beans(swkBeans),
     emaildomainname: 'localhost',
     softwerkskammerURL: 'http://localhost:17124',
