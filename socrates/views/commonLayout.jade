@@ -1,3 +1,8 @@
+mixin bloglink(url, author)
+  li: +extlink(url, author)
+mixin extlink(url, text)
+  a(href=url, target='_blank') #{text}
+
 doctype html
 html
   head
@@ -16,3 +21,4 @@ html
       block title
     block extrahead
 block specific
+
