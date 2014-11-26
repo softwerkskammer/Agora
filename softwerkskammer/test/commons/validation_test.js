@@ -1,12 +1,29 @@
 'use strict';
 var expect = require('must');
+var _ = require('lodash');
+var i18n = require('i18next');
 
 require('../../testutil/configureForTest');
 var beans = require('nconf').get('beans');
 var validation = beans.get('validation');
 var AddonConfig = beans.get('addon').AddonConfig;
 
+function translateMessages(messages) {
+  return _.map(messages, function (message) {
+    return i18n.t(message);
+  });
+}
+
 describe('Validation', function () {
+
+  before(function () {
+    i18n.init({
+      supportedLngs: ['de'],
+      preload: ['de'],
+      fallbackLng: 'de',
+      resGetPath: 'locales/__ns__-__lng__.json'
+    });
+  });
 
   describe('isValidAnnouncement', function () {
     var result = function (object) {
@@ -64,37 +81,37 @@ describe('Validation', function () {
     });
 
     it('does not validate resource names of activity input without resource names', function () {
-      var result = validation.isValidForActivity({ resources: {} });
+      var result = validation.isValidForActivity({resources: {}});
 
       expect(result).to.contain('Es muss mindestens eine Ressourcenbezeichnung angegeben werden.');
     });
 
     it('does not validate resource names of activity input with an empty resource name', function () {
-      var result = validation.isValidForActivity({ resources: {names: ''} });
+      var result = validation.isValidForActivity({resources: {names: ''}});
 
       expect(result).to.contain('Es muss mindestens eine Ressourcenbezeichnung angegeben werden.');
     });
 
     it('does not validate resource names of activity input with an empty resource name array', function () {
-      var result = validation.isValidForActivity({ resources: {names: []} });
+      var result = validation.isValidForActivity({resources: {names: []}});
 
       expect(result).to.contain('Es muss mindestens eine Ressourcenbezeichnung angegeben werden.');
     });
 
     it('does not validate resource names of activity input with several empty resource names', function () {
-      var result = validation.isValidForActivity({ resources: {names: ['', '']} });
+      var result = validation.isValidForActivity({resources: {names: ['', '']}});
 
       expect(result).to.contain('Es muss mindestens eine Ressourcenbezeichnung angegeben werden.');
     });
 
     it('validates resource names of activity input with a non-empty resource name', function () {
-      var result = validation.isValidForActivity({ resources: { names: 'hello'} });
+      var result = validation.isValidForActivity({resources: {names: 'hello'}});
 
       expect(result).to.not.contain('Es muss mindestens eine Ressourcenbezeichnung angegeben werden.');
     });
 
     it('validates resource names of activity input with at least one non-empty resource name', function () {
-      var result = validation.isValidForActivity({ resources: { names: ['', 'hello', '']} });
+      var result = validation.isValidForActivity({resources: {names: ['', 'hello', '']}});
 
       expect(result).to.not.contain('Es muss mindestens eine Ressourcenbezeichnung angegeben werden.');
     });
@@ -108,49 +125,49 @@ describe('Validation', function () {
     });
 
     it('validates resource limits of activity input without resource limits', function () {
-      var result = validation.isValidForActivity({ resources: {} });
+      var result = validation.isValidForActivity({resources: {}});
 
       expect(result).to.not.contain('Die Ressourcenbeschränkungen dürfen nur aus Ziffern bestehen.');
     });
 
     it('validates resource limits of activity input with an empty resource limit', function () {
-      var result = validation.isValidForActivity({ resources: {limits: ''} });
+      var result = validation.isValidForActivity({resources: {limits: ''}});
 
       expect(result).to.not.contain('Die Ressourcenbeschränkungen dürfen nur aus Ziffern bestehen.');
     });
 
     it('validates resource limits of activity input with an empty resource limit array', function () {
-      var result = validation.isValidForActivity({ resources: {limits: []} });
+      var result = validation.isValidForActivity({resources: {limits: []}});
 
       expect(result).to.not.contain('Die Ressourcenbeschränkungen dürfen nur aus Ziffern bestehen.');
     });
 
     it('validates resource limits of activity input with several empty resource limits', function () {
-      var result = validation.isValidForActivity({ resources: {limits: ['', '']} });
+      var result = validation.isValidForActivity({resources: {limits: ['', '']}});
 
       expect(result).to.not.contain('Die Ressourcenbeschränkungen dürfen nur aus Ziffern bestehen.');
     });
 
     it('validates resource limits of activity input with an int resource limit', function () {
-      var result = validation.isValidForActivity({ resources: { limits: '10'} });
+      var result = validation.isValidForActivity({resources: {limits: '10'}});
 
       expect(result).to.not.contain('Die Ressourcenbeschränkungen dürfen nur aus Ziffern bestehen.');
     });
 
     it('validates resource limits of activity input with at least one int resource limit', function () {
-      var result = validation.isValidForActivity({ resources: { limits: ['', '-77', '']} });
+      var result = validation.isValidForActivity({resources: {limits: ['', '-77', '']}});
 
       expect(result).to.not.contain('Die Ressourcenbeschränkungen dürfen nur aus Ziffern bestehen.');
     });
 
     it('does not validate resource limits of activity input with a non-int decimal resource limit', function () {
-      var result = validation.isValidForActivity({ resources: { limits: '7.5'} });
+      var result = validation.isValidForActivity({resources: {limits: '7.5'}});
 
       expect(result).to.contain('Die Ressourcenbeschränkungen dürfen nur aus Ziffern bestehen.');
     });
 
     it('does not validate resource limits of activity input with a textual resource limit', function () {
-      var result = validation.isValidForActivity({ resources: { limits: 'abc'} });
+      var result = validation.isValidForActivity({resources: {limits: 'abc'}});
 
       expect(result).to.contain('Die Ressourcenbeschränkungen dürfen nur aus Ziffern bestehen.');
     });
@@ -158,49 +175,69 @@ describe('Validation', function () {
     //////
 
     it('does not validate uniqueness of activity input with two identical resource names', function () {
-      var result = validation.isValidForActivity({ resources: { names: ['a', 'a']} });
+      var result = validation.isValidForActivity({resources: {names: ['a', 'a']}});
 
       expect(result).to.contain('Die Bezeichnungen der Ressourcen müssen eindeutig sein.');
     });
 
     it('validates uniqueness of activity input with one resource name', function () {
-      var result = validation.isValidForActivity({ resources: { names: 'a'} });
+      var result = validation.isValidForActivity({resources: {names: 'a'}});
 
       expect(result).to.not.contain('Die Bezeichnungen der Ressourcen müssen eindeutig sein.');
     });
 
     it('validates uniqueness of activity input with two different resource names', function () {
-      var result = validation.isValidForActivity({ resources: { names: ['a', 'b']} });
+      var result = validation.isValidForActivity({resources: {names: ['a', 'b']}});
 
       expect(result).to.not.contain('Die Bezeichnungen der Ressourcen müssen eindeutig sein.');
     });
 
     it('validates uniqueness of activity input with two empty resource names', function () {
-      var result = validation.isValidForActivity({ resources: { names: ['', '']} });
+      var result = validation.isValidForActivity({resources: {names: ['', '']}});
 
       expect(result).to.not.contain('Die Bezeichnungen der Ressourcen müssen eindeutig sein.');
     });
 
     it('does not validate start and end of activity input when end date is before start date', function () {
-      var result = validation.isValidForActivity({ startDate: '01.01.2013', startTime: '12:00', endDate: '01.10.2012', endTime: '12:00' });
+      var result = validation.isValidForActivity({
+        startDate: '01.01.2013',
+        startTime: '12:00',
+        endDate: '01.10.2012',
+        endTime: '12:00'
+      });
 
       expect(result).to.contain('Start muss vor Ende liegen.');
     });
 
     it('does not validate start and end of activity input when end time is before start time', function () {
-      var result = validation.isValidForActivity({ startDate: '01.01.2013', startTime: '12:00', endDate: '01.01.2013', endTime: '11:00' });
+      var result = validation.isValidForActivity({
+        startDate: '01.01.2013',
+        startTime: '12:00',
+        endDate: '01.01.2013',
+        endTime: '11:00'
+      });
 
       expect(result).to.contain('Start muss vor Ende liegen.');
     });
 
     it('does not validate start and end of activity input when end time is same as start time', function () {
-      var result = validation.isValidForActivity({ startDate: '01.01.2013', startTime: '12:00', endDate: '01.01.2013', endTime: '12:00' });
+      var result = validation.isValidForActivity({
+        startDate: '01.01.2013',
+        startTime: '12:00',
+        endDate: '01.01.2013',
+        endTime: '12:00'
+      });
 
       expect(result).to.contain('Start muss vor Ende liegen.');
     });
 
     it('validates start and end of activity input when end is after start', function () {
-      var result = validation.isValidForActivity({ startDate: '01.01.2013', startTime: '12:00', endDate: '01.01.2013', endTime: '13:00' });
+      var result = validation.isValidForActivity({
+        startDate: '01.01.2013',
+        startTime: '12:00',
+        endDate: '01.01.2013',
+        endTime: '13:00'
+      });
 
       expect(result).to.not.contain('Start muss vor Ende liegen.');
     });
@@ -286,7 +323,7 @@ describe('Validation', function () {
 
   describe('isValidForMember', function () {
     var result = function (object) {
-      return validation.isValidForMember(object);
+      return translateMessages(validation.isValidForMember(object));
     };
 
     it('performs many checks simultaneously', function () {
@@ -388,7 +425,7 @@ describe('Validation', function () {
   describe('isValidForAddon', function () {
     var addonConfig = new AddonConfig({homeAddress: true, billingAddress: true, tShirtSize: true, roommate: true});
     var result = function (object) {
-      return validation.isValidForAddon(object, addonConfig);
+      return translateMessages(validation.isValidForAddon(object, addonConfig));
     };
 
     it('performs many checks simultaneously', function () {
@@ -396,21 +433,21 @@ describe('Validation', function () {
     });
 
     it('checks that homeAddress is set', function () {
-      expect(result({})).to.contain('Privatanschrift ist ein Pflichtfeld');
-      expect(result({homeAddress: null})).to.contain('Privatanschrift ist ein Pflichtfeld');
-      expect(result({homeAddress: 'n'})).to.not.contain('Privatanschrift ist ein Pflichtfeld');
+      expect(result({})).to.contain('Privatanschrift ist ein Pflichtfeld.');
+      expect(result({homeAddress: null})).to.contain('Privatanschrift ist ein Pflichtfeld.');
+      expect(result({homeAddress: 'n'})).to.not.contain('Privatanschrift ist ein Pflichtfeld.');
     });
 
     it('checks that billingAddress is set', function () {
-      expect(result({})).to.contain('Rechnungsanschrift ist ein Pflichtfeld');
-      expect(result({billingAddress: null})).to.contain('Rechnungsanschrift ist ein Pflichtfeld');
-      expect(result({billingAddress: 'n'})).to.not.contain('Rechnungsanschrift ist ein Pflichtfeld');
+      expect(result({})).to.contain('Rechnungsanschrift ist ein Pflichtfeld.');
+      expect(result({billingAddress: null})).to.contain('Rechnungsanschrift ist ein Pflichtfeld.');
+      expect(result({billingAddress: 'n'})).to.not.contain('Rechnungsanschrift ist ein Pflichtfeld.');
     });
 
     it('checks that tShirtSize is set', function () {
-      expect(result({})).to.contain('T-Shirt Grösse ist ein Pflichtfeld');
-      expect(result({tShirtSize: null})).to.contain('T-Shirt Grösse ist ein Pflichtfeld');
-      expect(result({tShirtSize: 'n'})).to.not.contain('T-Shirt Grösse ist ein Pflichtfeld');
+      expect(result({})).to.contain('T-Shirt-Größe ist ein Pflichtfeld.');
+      expect(result({tShirtSize: null})).to.contain('T-Shirt-Größe ist ein Pflichtfeld.');
+      expect(result({tShirtSize: 'n'})).to.not.contain('T-Shirt-Größe ist ein Pflichtfeld.');
     });
 
   });

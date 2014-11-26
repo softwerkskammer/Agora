@@ -436,7 +436,20 @@
     "failed": "Fehlgeschlagen",
     "url_not_available": "Diese URL ist leider nicht verfügbar.",
     "nickname_not_available": "Dieser Nickname ist leider nicht verfügbar.",
-    "duplicate_email": "Diese Adresse ist schon registriert. Hast Du bereits ein Profil angelegt?"
+    "duplicate_email": "Diese Adresse ist schon registriert. Hast Du bereits ein Profil angelegt?",
+    "nickname_required": "Nickname ist ein Pflichtfeld.",
+    "nickname_min_2_chars": "Nickname muss mindestens 2 Zeichen enthalten.",
+    "nickname_no_slash": "Nickname darf kein \"/\" enthalten.",
+    "firstname_required": "Vorname ist ein Pflichtfeld.",
+    "lastname_required": "Nachname ist ein Pflichtfeld.",
+    "email_required": "E-Mail ist ein Pflichtfeld.",
+    "email_valid": "E-Mail muss gültig sein.",
+    "city_required": "Ort / Region ist ein Pflichtfeld.",
+    "profession_required": "Beruf ist ein Pflichtfeld.",
+    "reference_required": "Wie ich von... ist ein Pflichtfeld.",
+    "homeaddress_required": "Privatanschrift ist ein Pflichtfeld.",
+    "billingaddress_required": "Rechnungsanschrift ist ein Pflichtfeld.",
+    "tshirtsize_required": "T-Shirt-Größe ist ein Pflichtfeld."
   },
   "dashboard": {
     "description": [
