@@ -71,7 +71,7 @@ var member_validator;
       };
     };
 
-    ['#memberform [name=nickname]', '#memberform [name=lastname]', '#memberform [name=firstname]', "#memberform [name=email]",
+    ["#memberform [name=nickname]", "#memberform [name=lastname]", "#memberform [name=firstname]", "#memberform [name=email]",
       "#memberform [name=profession]", "#memberform [name=location]", "#memberform [name=reference]"].forEach(
       function (each) {
         $(each).on("change", handler(each));

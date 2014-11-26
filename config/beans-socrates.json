@@ -2,6 +2,7 @@
   "authenticationApp": {"module": "./socrates/lib/authentication"},
   "socratesSiteApp": {"module": "./socrates/lib/site"},
   "socratesRegistrationApp": {"module": "./socrates/lib/registration"},
+  "socratesMembersApp": {"module": "./socrates/lib/members"},
 
   "participantService": {"module": "./socrates/lib/participants/participantService"},
 

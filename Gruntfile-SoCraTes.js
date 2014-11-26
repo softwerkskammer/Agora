@@ -11,7 +11,10 @@ module.exports = function (grunt) {
       'bower_components/bootstrap/dist/js/bootstrap.js',
       'bower_components/smartmenus/dist/jquery.smartmenus.js',
       'socrates/build/javascript/jquery.smartmenus.bootstrap-patched.js',
+      'bower_components/jquery-validation/dist/jquery.validate.js',
+      'bower_components/jquery-validation/dist/additional-methods.js',
       'bower_components/URIjs/src/URI.js',
+      'socrates/locales/frontend_en.js',
       'socrates/frontend/javascript/socrates.js'
     ]
   };
@@ -46,6 +49,12 @@ module.exports = function (grunt) {
       customLESS: {
         src: 'socrates/frontend/less/*',
         dest: 'socrates/build/stylesheets/less',
+        expand: true,
+        flatten: true
+      },
+      customJS: {
+        src: 'softwerkskammer/frontend/javascript/check-member*',
+        dest: 'socrates/public/clientscripts',
         expand: true,
         flatten: true
       }

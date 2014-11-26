@@ -3,6 +3,9 @@ include userinfoform
 
 extends ../../../views/simpleLayout
 
+block scripts
+  script(src='/clientscripts/check-memberform.js')
+
 block title
   - if (accessrights.isRegistered())
     | #{t('members.edit')}
