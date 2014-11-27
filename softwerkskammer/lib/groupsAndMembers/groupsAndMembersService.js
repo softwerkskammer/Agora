@@ -79,12 +79,11 @@ var updateAndSaveSubmittedMember = function (self, sessionUser, memberformData, 
         delete sessionUser.profile;
       }
 
+      var subscriptions = misc.toArray(memberformData.newSubscriptions);
+      if (!persistentMember) { // new member
+        notifyNewMemberRegistration(member, subscriptions);
+      }
       if (updateSubscriptions) {
-
-        var subscriptions = misc.toArray(memberformData.newSubscriptions);
-        if (!persistentMember) { // new member
-          notifyNewMemberRegistration(member, subscriptions);
-        }
         return self.updateSubscriptions(member, oldEmail, subscriptions, function (err) {
           return callback(err, member.nickname());
         });
