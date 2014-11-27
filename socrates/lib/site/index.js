@@ -3,17 +3,18 @@
 var path = require('path');
 var async = require('async');
 var fs = require('fs');
+var _ = require('lodash');
 
 var conf = require('nconf');
 var beans = conf.get('beans');
 var Renderer = beans.get('renderer');
 var misc = beans.get('misc');
-var sponsors = require('./sponsors.json');
+var sponsorpairs = require('./sponsorpairs');
 
 var app = misc.expressAppIn(__dirname);
 
-app.get('/', function (req, res, next) {
-  res.render('index', {sponsors: sponsors});
+app.get('/', function (req, res) {
+  res.render('index', {sponsors: sponsorpairs()});
 });
 
 app.get('/goodbye.html', function (req, res) {
