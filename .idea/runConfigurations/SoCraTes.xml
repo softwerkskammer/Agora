@@ -1,0 +1,9 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="SoCraTes" type="NodeJSConfigurationType" factoryName="Node.js" path-to-node="$usr-local-bin$/node" path-to-js-file="start-socrates.js" working-dir="$PROJECT_DIR$">
+    <RunnerSettings RunnerId="Basic" />
+    <RunnerSettings RunnerId="debuggableProgram" />
+    <ConfigurationWrapper RunnerId="Basic" />
+    <ConfigurationWrapper RunnerId="debuggableProgram" />
+    <method />
+  </configuration>
+</component>
