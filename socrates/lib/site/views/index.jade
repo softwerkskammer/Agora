@@ -77,11 +77,23 @@ block content
 
 
 
-    .col-sm-4.col-md-3.col-md-offset-1
+    .col-sm-4.logocolumn
       .sidebar
-        h3 Sponsors
-          small  in 2014
-        each sponsor, index in sponsors
-          a(href=sponsor.url, target='_blank'): img(src='logos/' + sponsor.logo, alt=sponsor.name, width='160px')
-          if (index < sponsors.length -1)
-            hr.sponsorline
+        .page-header
+          h2 Sponsors
+            small  in 2014
+        each pair, index in sponsors
+          .row
+            +sponsorCol(pair.first)
+            if (pair.second)
+              hr.sponsorline.hidden-lg
+              +sponsorCol(pair.second)
+          if (index < sponsors.length - 1)
+            .row
+              hr.sponsorline.hidden-lg
+              .col-lg-12.visible-lg-block
+                hr
+
+mixin sponsorCol(sponsor)
+  .col-lg-6
+    a(href=sponsor.url, target='_blank'): img(src='logos/' + sponsor.logo, alt=sponsor.name, width='160px')
