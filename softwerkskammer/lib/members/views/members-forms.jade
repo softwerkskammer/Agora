@@ -52,7 +52,7 @@ mixin memberform(member, regionalgroups, themegroups, tags)
         if (accessrights.isMember(member))
           .row
             .col-md-6
-              a.btn.btn-primary(data-toggle='modal', href='#login')
+              a.btn.btn-primary(data-toggle='modal', data-target='#login', href='/loginDialog?returnUrl=' + encodeURIComponent(currentUrl ||  '/'))
                 i.fa.fa-plus-square.fa-fw
                 | &nbsp;#{t('members.authenticate')}
       .row

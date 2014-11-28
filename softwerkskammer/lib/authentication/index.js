@@ -3,6 +3,7 @@
 var passport = require('passport');
 var winston = require('winston');
 var jwt = require('jwt-simple');
+var moment = require('moment-timezone');
 var logger = winston.loggers.get('authorization');
 
 var conf = require('nconf');
@@ -46,7 +47,7 @@ function createProviderAuthenticationRoutes(app, provider) {
 
   function setReturnViaIdentityProviderOnSuccess(req, res, next) {
     req.session.returnTo = '/auth/idp_return_point';
-    req.session.callingAppReturnTo = conf.get('socratesURL') + '/' + req.param('returnTo', '/');
+    req.session.callingAppReturnTo = req.param('returnTo', '/');
     if (req.user && req.user.member) { // save current member info -> restore it later
       req.session.currentAgoraUser = {authenticationId: req.user.authenticationId};
     }
@@ -56,14 +57,18 @@ function createProviderAuthenticationRoutes(app, provider) {
   function redirectToCallingApp(req, res) {
     var returnTo = req.session.callingAppReturnTo;
     delete req.session.callingAppReturnTo;
-    var jwt_token = jwt.encode({userId: req.user.authenticationId}, jwt_secret);
+    var jwt_token = jwt.encode({
+      userId: req.user.authenticationId,
+      returnTo: returnTo,
+      expires: moment().add(30, 'seconds').toJSON()
+    }, jwt_secret);
     if (req.session.currentAgoraUser) { // restore current member info:
       req._passport.session.user = req.session.currentAgoraUser;
       delete req.session.currentAgoraUser;
     } else { // log out:
       delete req._passport.session.user;
     }
-    res.redirect(returnTo + '?id_token=' + jwt_token);
+    res.redirect(conf.get('socratesURL') + '/auth/loggedIn' + '?id_token=' + jwt_token);
   }
 
   app.get('/idp/' + provider, setReturnViaIdentityProviderOnSuccess, authenticate());
