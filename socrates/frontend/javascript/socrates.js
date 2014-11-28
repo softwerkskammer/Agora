@@ -1,12 +1,13 @@
-/*global URI, screen */
+/*global URI, screen, datepicker_lang, help */
 /*jslint nomen: true*/
 (function () {
   'use strict';
   var highlightCurrentSection = function () {
     var result = URI.parse(window.location.href); // full URL
-    $('ul.navbar-nav li a').filter(function () {
-      return this.href.match(new RegExp(result.path + '$'));
-    }).first().parent().addClass('active');
+    var selections = $('[data-nav]').filter(function () {
+      return new RegExp('^\/' + $(this).attr('data-nav')).test(result.path);
+    });
+    (selections.length > 0 ? selections : $('[data-nav-index]')).first().addClass('active');
   };
 
   var surroundWithLink = function (text) {
@@ -91,7 +92,45 @@
     window.__twitterIntentHandler = true;
   };
 
+  var addHelpButtonToTextarea = function () {
+    $('.md-textarea').each(function () {
+      $(this).markdown(
+        {
+          additionalButtons: [
+            [
+              {
+                name: 'groupCustom',
+                data: [
+                  {
+                    name: 'cmdHelp',
+                    title: help,
+                    icon: 'fa fa-question-circle',
+                    callback: function () { $('#cheatsheet').modal({remote: '/cheatsheet.html'}); }
+                  }
+                ]
+              }
+            ]
+          ],
+          onPreview: function (e) {
+            $.post('/preview',
+              {
+                data: e.getContent(),
+                subdir: ($('[name=subdir]').val() || $('[name=assignedGroup]').val() || $('[name=id]').val()),
+                '_csrf': $('[name=_csrf]').val()
+              },
+              function (data) { $('.md-preview').html(data); });
+            return ''; // to clearly indicate the loading...
+          },
+          iconlibrary: 'fa',
+          language: datepicker_lang,
+          resize: 'vertical'
+        }
+      );
+    });
+  };
+
   $(document).ready(createLinks);
   $(document).ready(highlightCurrentSection);
   $(document).ready(twitterUtil);
+  $(document).ready(addHelpButtonToTextarea);
 }());

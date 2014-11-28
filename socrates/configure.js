@@ -6,8 +6,8 @@ var Beans = require('CoolBeans');
 var merge = require('utils-merge');
 
 function createConfiguration() {
-// create an nconf object, and initialize it with given values from
-// the environment variables and/or from the command line
+  // create an nconf object, and initialize it with given values from
+  // the environment variables and/or from the command line
   nconf.argv().env();
   var configdir = '../config/';
   nconf.file('mongo', configdir + 'mongo-config.json');
@@ -27,6 +27,8 @@ function createConfiguration() {
     port: '17224',
     mongoURL: 'mongodb://localhost:27017/swk',
     publicUrlPrefix: 'http://localhost:17224',
+    securedByLoginURLPattern: '/wiki',
+
     secret: 'secret',
     sessionkey: 'socrates-conference.de',
     beans: new Beans(swkBeans),

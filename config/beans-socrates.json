@@ -3,6 +3,7 @@
   "socratesSiteApp": {"module": "./socrates/lib/site"},
   "socratesRegistrationApp": {"module": "./socrates/lib/registration"},
   "socratesMembersApp": {"module": "./socrates/lib/members"},
+  "socratesWikiApp": {"module": "./socrates/lib/wiki"},
 
   "participantService": {"module": "./socrates/lib/participants/participantService"},
 
@@ -17,5 +18,6 @@
 
   "accessrights": {"module": "./socrates/lib/middleware/accessrights"},
   "expressViewHelper": {"module": "./socrates/lib/middleware/expressViewHelper"},
-  "redirectRuleForNewUser": {"module": "./socrates/lib/middleware/redirectRuleForNewUser"}
+  "redirectRuleForNewUser": {"module": "./socrates/lib/middleware/redirectRuleForNewUser"},
+  "socratesWikiSubdirs": {"module": "./socrates/lib/middleware/wikiSubdirs"}
 }
