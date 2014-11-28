@@ -1,4 +1,5 @@
 @import "variables.less";
+@import "mixins.less";
 
 ul.square {
   list-style-type: square;
@@ -33,7 +34,7 @@ ul.outside {
   }
 }
 
-form {
+.relaxed {
   padding-top: 15px;
 }
 
@@ -119,3 +120,58 @@ dd {
     display: none !important;
   }
 }
+
+// adapt syntaxhighlighted code in textboxes to bootstrap *BEGIN*
+.syntaxhighlighter a,
+.syntaxhighlighter div,
+.syntaxhighlighter code,
+.syntaxhighlighter table,
+.syntaxhighlighter table td,
+.syntaxhighlighter table tr,
+.syntaxhighlighter table tbody,
+.syntaxhighlighter table thead,
+.syntaxhighlighter table caption,
+.syntaxhighlighter textarea {
+  font-family: @font-family-monospace !important;
+}
+
+.gutter {
+  .clearfix();
+}
+
+pre code {
+  white-space: nowrap;
+}
+
+// wiki page compare *BEGIN*
+.compare {
+  font-family: Consolas, monospace;
+  font-size: 12px;
+}
+
+.compare td {
+  padding: 0 3px;
+  border-top-width: 0
+}
+
+.compare .gd {
+  background-color: #ffdddd;
+}
+
+.compare .gc {
+  color: #999999;
+  background-color: #EAF2F5;
+}
+
+.compare .gi {
+  background-color: #ddffdd;
+}
+
+.compare .ln {
+  color: #999999;
+  background-color: #EAF2F5;
+  text-align: right;
+  border-bottom-color: transparent;
+}
+
+// wiki page compare *END*

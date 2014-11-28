@@ -9,7 +9,7 @@ block title
 block content
   .page-header
     h1 Participate in SoCraTes 2015
-  form#participationform(action='/registration/participate', method='post')
+  form#participationform.relaxed(action='/registration/participate', method='post')
     +csrf
     if (participation.id)
       +hidden('id', participation.id)

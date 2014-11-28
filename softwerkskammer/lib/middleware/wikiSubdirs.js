@@ -5,7 +5,7 @@ var async = require('async');
 var beans = require('nconf').get('beans');
 var Git = beans.get('gitmech');
 var Group = beans.get('group');
-var groupstore = require('nconf').get('beans').get('groupstore');
+var groupstore = beans.get('groupstore');
 
 module.exports = function subdirs(req, res, next) {
   async.parallel(
