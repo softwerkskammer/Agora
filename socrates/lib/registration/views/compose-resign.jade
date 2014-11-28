@@ -1,15 +1,12 @@
 extends ../../../views/layout
 
 include  ../../../views/formComponents
-
-block scripts
-  script(src='/clientscripts/check-mailsenderform.js')
-
+  
 block title
-  | #{t('mailsender.notification')}
+  | #{t('mailsender.resign')}
 
 block content
-  form(id='mailform', action='/registration/submitresign', method='post')
+  form.relaxed(id='mailform', action='/registration/submitresign', method='post')
     +csrf
     fieldset
       .row
