@@ -60,7 +60,7 @@ function createProviderAuthenticationRoutes(app, provider) {
     var jwt_token = jwt.encode({
       userId: req.user.authenticationId,
       returnTo: returnTo,
-      expires: moment().add(30, 'seconds').toJSON()
+      expires: moment().add(5, 'seconds').toJSON()
     }, jwt_secret);
     if (req.session.currentAgoraUser) { // restore current member info:
       req._passport.session.user = req.session.currentAgoraUser;
