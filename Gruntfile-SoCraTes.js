@@ -9,6 +9,7 @@ module.exports = function (grunt) {
     'socrates/public/clientscripts/global.js': [
       'bower_components/jquery/dist/jquery.js',
       'bower_components/bootstrap/dist/js/bootstrap.js',
+      'bower_components/bootstrap-markdown/js/bootstrap-markdown.js',
       'bower_components/smartmenus/dist/jquery.smartmenus.js',
       'socrates/build/javascript/jquery.smartmenus.bootstrap-patched.js',
       'bower_components/jquery-validation/dist/jquery.validate.js',
@@ -39,6 +40,12 @@ module.exports = function (grunt) {
         dest: 'socrates/build/stylesheets/less',
         expand: true,
         flatten: false
+      },
+      bootstrapMarkdownLESS: {
+        src: 'bower_components/bootstrap-markdown/less/*',
+        dest: 'socrates/build/stylesheets/less',
+        expand: true,
+        flatten: true
       },
       fontawesomeFONTS: {
         src: 'bower_components/font-awesome/fonts/*',
@@ -108,7 +115,9 @@ module.exports = function (grunt) {
           'socrates/public/stylesheets/screen.css': [
             'socrates/build/stylesheets/less/bootstrap.less',
             'bower_components/font-awesome/css/font-awesome.css',
+            'node_modules/node-syntaxhighlighter/lib/styles/shCoreDefault.css',
             'bower_components/smartmenus/dist/addons/bootstrap/jquery.smartmenus.bootstrap.css',
+            'socrates/build/stylesheets/less/bootstrap-markdown-patched.less',
             'socrates/build/stylesheets/less/socrates.less'
           ]
         }

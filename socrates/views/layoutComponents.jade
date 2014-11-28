@@ -1,29 +1,29 @@
 mixin loginMenu(forInline)
-   li.dropdown(class=forInline ? 'visible-xs' : '')
-      a(href='#')
-         i.fa.fa-info-circle.fa-fw &nbsp;
-         if accessrights.isRegistered()
-           | #{user.member.nickname()}
-         else
-           | Guest
+  li.dropdown(class=forInline ? 'visible-xs' : '')
+    a(href='#')
+      span.glyphicon.glyphicon-info-sign 
+      if accessrights.isRegistered()
+       | #{' ' + user.member.nickname()}
+      else
+       |  Guest
       ul.dropdown-menu
         if accessrights.isRegistered()
           li: a(href='/registration/editmember')
-            i.fa.fa-edit.fa-fw
+            span.glyphicon.glyphicon-edit
             | &nbsp;#{t('members.edit')}
           li: a(href='/auth/logout')
-            i.fa.fa-sign-out.fa-fw
+            span.glyphicon.glyphicon-log-out
             | &nbsp;#{t('general.logout')}
-          if user.member.socratesOnly()
+          if user.member.socratesOnly() || true
             li: a(href='/registration/resign')
-              i.fa.fa-ban.fa-fw
+              span.glyphicon.glyphicon-ban-circle
               | &nbsp;#{t('members.resign')}
         else
           li: a(data-toggle='modal', href='#login')
-            i.fa.fa-sign-in.fa-fw
+            span.glyphicon.glyphicon-log-in
             | &nbsp;#{t('general.login')}
         li: a(href='https://github.com/softwerkskammer/Agora/issues', title=t('general.what_does_not_work'), target='_blank')
-          i.fa.fa-ambulance.fa-fw
+          span.glyphicon.glyphicon-send
           | &nbsp;#{t('general.feedback')}
 
 mixin notificationsBlock(notificationmessage)
@@ -33,4 +33,84 @@ mixin notificationsBlock(notificationmessage)
     button.close(type='button', data-dismiss='alert') &times;
     h4 #{t(contents.title)}
     | #{t(contents.text, contents.additionalArguments)}
+
+mixin contactbuttons
+  a.btn.btn-info(href='impressum.html', title='Impressum')
+    i.fa.fa-fw.fa-info #{''}
+    span.hidden-xs Impressum
+  a.btn.btn-info(href='mailto:info@socrates-conference.de', title='E-Mail')
+    i.fa.fa-fw.fa-envelope #{''}
+    span.hidden-xs E-Mail
+  .btn-group.dropup
+    a.btn.btn-info(href='https://twitter.com/intent/tweet?text=SoCraTes+2015+will+take+place+from+27+to+30+August.+More+at&url=http%3A%2F%2Fsocrates-conference.de%2F&hashtags=socrates_15&via=socrates_2015', title='Tweet')
+      i.fa.fa-fw.fa-twitter #{''}
+      span.hidden-xs Tweet
+    a.btn.btn-info.dropdown-toggle(type='button', data-toggle='dropdown')
+      i.fa.fa-caret-up
+    ul.dropdown-menu(role='menu')
+      li: a(href='https://twitter.com/intent/user?screen_name=socrates_2015') Show Tweets
+      li: a(href='https://twitter.com/intent/follow?screen_name=socrates_2015') Follow
+
+mixin navbar
+  ul.nav.navbar-nav.navbar-right.hidden-xs(style='margin-right: 5px;')
+    a.btn.btn-info.navbar-btn(href='/sponsoring.html')
+      span.glyphicon.glyphicon-thumbs-up
+      |  Sponsor us
+  .container
+    .navbar-header
+      button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-collapse')
+        span.sr-only Toggle navigation
+        span.icon-bar
+        span.icon-bar
+        span.icon-bar
+      .navbar-brand(style='padding-top: 5px; padding-right: 0px;', title='SoCraTes 2015')
+        a(href='/'): img(src='/img/socrates2015_logo.png', height='40px')
+    .navbar-collapse.collapse
+      if (!xs)
+        ul.nav.navbar-nav.navbar-right.bottom(style='margin-right: 10px;')
+          +loginMenu
+      ul.nav.navbar-nav
+        li(data-nav-index=''): a.serif(href='/', style='padding-left: 0px') SoCraTes 2015
+        li(data-nav='schedule.html'): a(href='/schedule.html')
+          span.glyphicon.glyphicon-calendar
+          span.hidden-sm  Schedule
+        li(data-nav='location.html'): a(href='/location.html')
+          span.glyphicon.glyphicon-globe
+          span.hidden-sm  Location
+        li(data-nav='history.html'): a(href='/history.html')
+          span.glyphicon.glyphicon-time
+          span.hidden-sm  History
+        li(data-nav='values.html'): a(href='/values.html')
+          span.glyphicon.glyphicon-gift
+          span.hidden-sm  Values
+        li(data-nav='wiki')
+          a(href='#')
+            span.glyphicon.glyphicon-book
+            span.hidden-sm  #{t('wiki.wiki')}
+          ul.dropdown-menu
+            if (wikisubdirs)
+              for subdir in wikisubdirs
+                li: a(href='/wiki/#{subdir}/') #{subdir}
+      
+mixin footer
+  footer(style='margin-top: 10px')
+    .container
+      .row
+        .col-sm-12
+          hr(style='margin: 0px')
+      .row
+        .col-sm-6
+          h5 This event is brought to you by:
+          a(href='https://softwerkskammer.org', target='_blank')
+            img(src='https://softwerkskammer.org/img/SoftwerkskammerWappenLinks.png', alt='Softwerkskammer')
+        .col-sm-6.hidden-xs
+          .pull-right(style='margin-bottom: 5px;')
+            h5(style='text-align: right') Information and Contact:
+            .btn-group(style='padding-top: 30px;')
+              +contactbuttons
+        .col-xs-12.visible-xs
+          div(style='margin-bottom: 5px;')
+            h5 Information and Contact:
+            .btn-group
+              +contactbuttons
 

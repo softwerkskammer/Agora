@@ -56,16 +56,19 @@ module.exports = {
     app.use(beans.get('passportInitializer'));
     app.use(i18n.handle);
     app.use(beans.get('accessrights'));
+    app.use(beans.get('secureByLogin'));
     app.use(beans.get('expressViewHelper'));
     app.use(beans.get('redirectRuleForNewUser'));
     app.use(beans.get('detectBrowser'));
     app.use(beans.get('secureAgainstClickjacking'));
+    app.use(beans.get('socratesWikiSubdirs'));
     app.use(csurf());
     app.use(beans.get('addCsrfTokenToLocals'));
     app.use('/', beans.get('socratesSiteApp'));
     app.use('/registration/', beans.get('socratesRegistrationApp'));
     app.use('/auth/', beans.get('authenticationApp'));
     app.use('/members/', beans.get('socratesMembersApp'));
+    app.use('/wiki/', beans.get('socratesWikiApp'));
     app.use(beans.get('handle404')(appLogger));
     app.use(beans.get('handle500')(appLogger));
 

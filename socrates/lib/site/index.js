@@ -55,4 +55,16 @@ app.get('/sponsoring.html', function (req, res) {
   res.render('sponsoring');
 });
 
+app.post('/preview', function (req, res) {
+  res.send(Renderer.render(req.body.data, req.body.subdir));
+});
+
+app.get('/login', function (req, res) {
+  res.render('authenticationRequired');
+});
+
+app.get('/cheatsheet.html', function (req, res) {
+  res.render('lazyMarkdownCheatsheet');
+});
+
 module.exports = app;
