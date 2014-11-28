@@ -41,11 +41,6 @@ app.post('/participate', function (req, res) {
 });
 
 app.get('/editmember', function (req, res) {
-  if (req.user.member) {
-    // return res.redirect('/');
-    console.log("Found member: " + req.user.member.displayName());
-  }
-
   var member = req.user.member || new Member().initFromSessionUser(req.user, true);
   res.render('editmember', {member: member});
 });

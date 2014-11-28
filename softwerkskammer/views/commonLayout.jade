@@ -49,7 +49,9 @@ html
           | .
     else
       include layoutComponents
-      include loginComponent
+      #login.modal.fade(tabindex='-1')
+        .modal-dialog
+          .modal-content
       #cheatsheet.modal.bs-modal-lg.fade(tabindex='-1')
         .modal-dialog.modal-lg
           .modal-content

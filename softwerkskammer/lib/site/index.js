@@ -55,6 +55,10 @@ app.get('/login', function (req, res) {
   res.render('authenticationRequired');
 });
 
+app.get('/loginDialog', function (req, res) {
+  res.render('loginDialog', {returnUrl: req.query.returnUrl});
+});
+
 app.get('/mustBeSuperuser', function (req, res) {
   res.render('superuserRightsRequired', {requestedPage: req.query.page});
 });

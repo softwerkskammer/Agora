@@ -3,6 +3,7 @@
 var jwt = require('jwt-simple');
 var passport = require('passport');
 var winston = require('winston');
+var moment = require('moment-timezone');
 var logger = winston.loggers.get('authorization');
 
 var conf = require('nconf');
@@ -23,7 +24,10 @@ app.get('/loggedIn', function (req, res, next) {
 
   function createUserObject(token, callback) {
     if (!token.userId) {
-      return callback(new Error("Authentication failed."));
+      return callback(new Error('Authentication failed.'));
+    }
+    if (moment(token.expires).isBefore(moment())) {
+      return callback(new Error('Authentication failed (expired token).'));
     }
     // load member and participant:
     // TODO (siehe membersService.findMemberFor ??)
@@ -32,19 +36,21 @@ app.get('/loggedIn', function (req, res, next) {
       // no member: this person+auth is unknown in SWK
       if (!member) { return callback(null, {authenticationId: token.userId, profile: token.profile}); }
       // no participant: this person+auth is known in SWK but not in SoCraTes
-      return callback(null, {authenticationId: token.userId, member: member});
+      return callback(null, {authenticationId: token.userId, member: member}, token.returnTo);
     });
   }
 
-  createUserObject(getTokenFrom(req), function (err, userObject) {
+  createUserObject(getTokenFrom(req), function (err, userObject, returnTo) {
     if (err) { return next(err); }
-
+    if ('/login' === returnTo) {
+      returnTo = req.session.returnTo;
+    }
     req._passport.session.user = userObject;
     passport.authenticate('session')(req, res, function () {
       if (req.user.member) {
         return participantService.createParticipantIfNecessaryFor(req.user.member.id(), function (err) {
           if (err) { return next(err); }
-          res.redirect('/');
+          res.redirect(returnTo);
         });
       }
       res.redirect('/registration/editmember');

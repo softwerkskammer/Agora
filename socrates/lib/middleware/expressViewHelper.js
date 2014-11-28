@@ -13,7 +13,7 @@ module.exports = function expressViewHelper(req, res, next) {
   }
   res.locals.user = req.user;
   req.i18n.setLng(res.locals.language);
-  res.locals.currentUrl = 'auth/loggedIn';
+  res.locals.currentUrl = req.url;
   res.locals.swkPublicUrl = conf.get('softwerkskammerURL');
   next();
 };

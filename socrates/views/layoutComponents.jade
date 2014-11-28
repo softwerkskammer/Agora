@@ -19,7 +19,7 @@ mixin loginMenu(forInline)
               span.glyphicon.glyphicon-ban-circle
               | &nbsp;#{t('members.resign')}
         else
-          li: a(data-toggle='modal', href='#login')
+          li: a.btn.btn-primary(data-toggle='modal', data-target='#login', href='/loginDialog?returnUrl=' + encodeURIComponent(currentUrl ||  '/'))
             span.glyphicon.glyphicon-log-in
             | &nbsp;#{t('general.login')}
         li: a(href='https://github.com/softwerkskammer/Agora/issues', title=t('general.what_does_not_work'), target='_blank')
