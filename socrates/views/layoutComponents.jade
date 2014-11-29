@@ -52,10 +52,6 @@ mixin contactbuttons
       li: a(href='https://twitter.com/intent/follow?screen_name=socrates_2015') Follow
 
 mixin navbar
-  ul.nav.navbar-nav.navbar-right.hidden-xs(style='margin-right: 5px;')
-    a.btn.btn-info.navbar-btn(href='/sponsoring.html')
-      span.glyphicon.glyphicon-thumbs-up
-      |  Sponsor us
   .container
     .navbar-header
       button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-collapse')
@@ -67,24 +63,24 @@ mixin navbar
         a(href='/'): img(src='/img/socrates2015_logo.png', height='40px')
     .navbar-collapse.collapse
       if (!xs)
-        ul.nav.navbar-nav.navbar-right.bottom(style='margin-right: 10px;')
+        ul.nav.navbar-nav.navbar-right
           +loginMenu
       ul.nav.navbar-nav
-        li(data-nav-index=''): a.serif(href='/', style='padding-left: 0px') SoCraTes 2015
-        li(data-nav='schedule.html'): a(href='/schedule.html')
+        li(data-nav-index=''): a.serif(href='/', title='Home', style='padding-left: 0px') SoCraTes 2015
+        li(data-nav='schedule.html'): a(href='/schedule.html', title='Schedule')
           span.glyphicon.glyphicon-calendar
           span.hidden-sm  Schedule
-        li(data-nav='location.html'): a(href='/location.html')
+        li(data-nav='location.html'): a(href='/location.html', title='Location')
           span.glyphicon.glyphicon-globe
           span.hidden-sm  Location
-        li(data-nav='history.html'): a(href='/history.html')
+        li(data-nav='history.html'): a(href='/history.html', title='History')
           span.glyphicon.glyphicon-time
           span.hidden-sm  History
-        li(data-nav='values.html'): a(href='/values.html')
+        li(data-nav='values.html'): a(href='/values.html', title='Values')
           span.glyphicon.glyphicon-gift
           span.hidden-sm  Values
         li(data-nav='wiki')
-          a(href='#')
+          a(href='#', title='Wiki')
             span.glyphicon.glyphicon-book
             span.hidden-sm  #{t('wiki.wiki')}
           ul.dropdown-menu

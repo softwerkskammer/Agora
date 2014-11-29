@@ -1,6 +1,28 @@
 @import "variables.less";
 @import "mixins.less";
 
+.container {
+  width: inherit;
+  @media (min-width: @screen-md-min) {
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+}
+
+.sponsorbutton {
+  margin-top: -15px;
+  @media (min-width: @screen-sm-min) {
+    margin-top: -30px;
+  }
+}
+
+.sidebar {
+  text-align: center;
+  @media (min-width: @screen-sm-min) {
+    text-align: right;
+  }
+}
+
 ul.square {
   list-style-type: square;
 }
@@ -81,10 +103,6 @@ dd {
     float: right
   }
 
-  .sidebar {
-    text-align: right;
-  }
-
   .sponsorline {
     width: 160px;
     margin-right: 0px;
@@ -142,6 +160,8 @@ dd {
 pre code {
   white-space: nowrap;
 }
+
+// adapt syntaxhighlighted code in textboxes to bootstrap *END*
 
 // wiki page compare *BEGIN*
 .compare {
