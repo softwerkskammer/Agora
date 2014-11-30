@@ -86,7 +86,7 @@ describe('Members store', function () {
   });
 
   it('calls persistence.list for store.allMembers and passes on the given callback', function (done) {
-    sinon.stub(persistence, 'list', function (sortorder, callback) {
+    sinon.stub(persistence, 'listByField', function (criteria, sortorder, callback) {
       callback(null, sampleList);
     });
 
@@ -104,7 +104,7 @@ describe('Members store', function () {
     var betti_low = { lastname: 'betti', firstname: 'Bodo' };
     var adonis_low = { lastname: 'adonis', firstname: 'Abbu' };
 
-    sinon.stub(persistence, 'list', function (sortorder, callback) {
+    sinon.stub(persistence, 'listByField', function (criteria, sortorder, callback) {
       callback(null, [adonis, betti, dave, betti_low, adonis_low]);
     });
 
@@ -123,7 +123,7 @@ describe('Members store', function () {
     var tata10 = { lastname: 'Tata10', firstname: 'Egal' };
     var tata2 = { lastname: 'Tata2', firstname: 'Egal' };
 
-    sinon.stub(persistence, 'list', function (sortorder, callback) {
+    sinon.stub(persistence, 'listByField', function (criteria, sortorder, callback) {
       callback(null, [tata1, tata10, tata2]);
     });
 
