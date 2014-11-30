@@ -23,7 +23,7 @@ var toMemberList = function (callback, err, result) {
 
 module.exports = {
   allMembers: function (callback) {
-    persistence.list({lastname: 1, firstname: 1}, _.partial(toMemberList, callback));
+    persistence.listByField({'socratesOnly': false}, {lastname: 1, firstname: 1}, _.partial(toMemberList, callback));
   },
 
   getMembersForEMails: function (emails, callback) {
