@@ -1,40 +1,35 @@
 'use strict';
 
 require('./configure'); // initializing parameters
-var _ = require('underscore');
 var async = require('async');
-var moment = require('moment-timezone');
 var beans = require('nconf').get('beans');
-var persistence = beans.get('waitinglistPersistence');
-var activitystore = beans.get('activitystore');
 var memberstore = beans.get('memberstore');
-var groupsService = beans.get('groupsService');
-
-var async = require('async');
+var groupsAndMembersService = beans.get('groupsAndMembersService');
 
 var really = process.argv[2];
-
+var doSave = process.argv[3] === 'doSave';
 if (!really || really !== 'really') {
-  console.log('If you really want to migrate the db, append "really" to the command line.');
+  console.log('If you want to test the migration, append "really" to the command line.');
+  console.log('If you really want to save, append "doSave" after "really" to the command line.');
   process.exit();
 }
 
 // set "socratesOnly" to false for all members.
-memberstore.allMembers(function (err, members) {
+groupsAndMembersService.getAllUsersWithTheirGroups(function (err, members) {
   async.each(members,
     function (member, callback) {
-      groupsService.getSubscribedGroupsForUser(member.email(), function (err, lists) {
-        // set to true if member is only in socrates list
-        member.state.socratesOnly = lists.length === 1 && lists[0].id === 'socrates2014';
-        if (member.state.socratesOnly) {
-          console.log("Socrates-only: " + member.displayName());
-        }
-        memberstore.saveMember(member, callback);
-      });
+      // set to true if member is only in socrates list
+      member.state.socratesOnly = member.subscribedGroups.length === 1 && member.subscribedGroups[0].id === 'socrates2014';
+      if (member.state.socratesOnly) {
+        console.log('Socrates-only: ' + member.displayName());
+      }
+      if (doSave) {
+        return memberstore.saveMember(member, callback);
+      }
+      callback(null, null);
     },
     function (err) {
       if (err) { console.log(err); }
       process.exit();
     });
 });
-
