@@ -112,7 +112,7 @@ module.exports = {
 
   parseBlogPost: function (path, post) {
     var blogpost = new wikiObjects.Blogpost(path, post);
-    return blogpost.valid ? blogpost : undefined;
+    return blogpost.isValid() ? blogpost : undefined;
   },
 
   getBlogpostsForGroup: function (groupname, callback) {

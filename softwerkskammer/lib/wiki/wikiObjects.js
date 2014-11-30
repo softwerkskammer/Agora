@@ -5,6 +5,14 @@ var path = require('path');
 
 var BLOG_ENTRY_REGEX = /blog_(\d{4}-\d{1,2}-\d{1,2})/;
 
+var pathFunctions = function (name) {
+  return {
+    dialogUrl: function () { return '/wiki/modal/' + this.dialogId('/'); },
+    url: function () { return '/wiki/' + this.dialogId('/'); },
+    dialogId: function (separator) { return path.dirname(name) + (separator || '-') + path.basename(name, '.md'); }
+  };
+};
+
 function Metadata(object) {
   this.name = object.name;
   this.hashRef = object.hashRef;
@@ -12,6 +20,11 @@ function Metadata(object) {
   this.author = object.author;
   this.datestring = object.date;
   this.comment = object.comment;
+
+  var pf = pathFunctions(this.name);
+  this.dialogId = pf.dialogId;
+  this.dialogUrl = pf.dialogUrl;
+  this.url = pf.url;
 }
 
 Metadata.prototype.date = function () {
@@ -22,45 +35,25 @@ Metadata.prototype.pureName = function () {
   return path.basename(this.name, '.md');
 };
 
-Metadata.prototype.url = function () {
-  return '/wiki/' + path.dirname(this.name) + '/' + this.pureName();
-};
+function Blogpost(name, post) {
+  this.name = name;
 
-Metadata.prototype.dialogUrl = function () {
-  return '/wiki/modal/' + path.dirname(this.name) + '/' + this.pureName();
-};
+  var titleAndBody = post.split('\n');
+  this.title = titleAndBody[0].replace(/^(#|\s)*/, '');
+  this.teaser = titleAndBody[2];
 
-Metadata.prototype.dialogId = function () {
-  return path.dirname(this.name) + '-' + this.pureName();
-};
+  var match = name.match(BLOG_ENTRY_REGEX);
+  this.datestring = match && match[1];
 
-function Blogpost(path, post) {
-  var splitLines = post.split('\n');
-  var title = splitLines[0];
-  var teaser = splitLines[2];
-
-  var match = path.match(BLOG_ENTRY_REGEX);
-
-  this.valid = false;
-  if (match === null) {
-    return;
-  }
-
-  if (!moment(match[1], 'YYYY-MM-DD').isValid()) {
-    return;
-  }
-
-  if (title === '' || title === undefined) {
-    return;
-  }
-
-  this.valid = true;
-  this.title = title.replace(/^(#|\s)*/, '');
-  this.datestring = match[1];
-  this.path = path.substring(0, path.length - 3);
-  this.name = path;
-  this.teaser = teaser;
+  var pf = pathFunctions(this.name);
+  this.dialogId = pf.dialogId;
+  this.dialogUrl = pf.dialogUrl;
+  this.url = pf.url;
 }
+
+Blogpost.prototype.isValid = function () {
+  return !!this.title && this.date().isValid();
+};
 
 Blogpost.prototype.date = function () {
   return moment(this.datestring, 'YYYY-MM-DD');
@@ -68,18 +61,6 @@ Blogpost.prototype.date = function () {
 
 Blogpost.prototype.pureName = function () {
   return this.title;
-};
-
-Blogpost.prototype.url = function () {
-  return '/wiki/' + path.dirname(this.name) + '/' + path.basename(this.name, '.md');
-};
-
-Blogpost.prototype.dialogUrl = function () {
-  return '/wiki/modal/' + path.dirname(this.name) + '/' + path.basename(this.name, '.md');
-};
-
-Blogpost.prototype.dialogId = function () {
-  return path.dirname(this.name) + '-' + path.basename(this.name, '.md');
 };
 
 function FileWithChangelist(object) {

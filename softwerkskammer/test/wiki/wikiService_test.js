@@ -72,13 +72,62 @@ describe('Wiki Service', function () {
 describe('WikiService (list for dashboard)', function () {
   beforeEach(function () {
     var metadatas = [
-      {'name': 'craftsmanswap/index.md', 'hashRef': 'HEAD', 'fullhash': 'baa6d36a37f0f04e1e88b4b57f0d89893789686c', 'author': 'leider', 'datestring': '2014-04-30 17:25:48 +0200', 'comment': 'no comment'},
-      {'name': 'craftsmanswap/index.md', 'hashRef': 'e6eb66c', 'fullhash': 'e6eb66c3f666888da4b0da3f9207d88e996e8bf5', 'author': 'leider', 'datestring': '2014-04-30 17:25:37 +0200', 'comment': 'no comment'},
-      {'name': 'craftsmanswap/blog_2014-03-19_der_blog.md', 'hashRef': '643e958', 'fullhash': '643e958937540da5907f7d32d87647cb5773e626', 'author': 'leider', 'datestring': '2014-03-27 22:39:03 +0100', 'comment': 'no comment'},
-      {'name': 'craftsmanswap/blog_2014-03-19_der_blog.md', 'hashRef': 'a3ab0d7', 'fullhash': 'a3ab0d79e3958e21b0367bc952a04596e7892739', 'author': 'leider', 'datestring': '2014-03-27 22:38:04 +0100', 'comment': 'no comment'},
-      {'name': 'craftsmanswap/index.md', 'hashRef': 'f327d71', 'fullhash': 'f327d711e3e8f0104cde2902198512444af46df3', 'author': 'leider', 'datestring': '2014-03-09 14:37:59 +0100', 'comment': 'no comment'},
-      {'name': 'craftsmanswap/blog_vonmorgen.md', 'hashRef': '370dd3c', 'fullhash': '370dd3ce2e09fe74a78be8f8a10d36e7a3d8975b', 'author': 'trauerleider', 'datestring': '2014-02-13 08:26:01 +0100', 'comment': 'no comment'},
-      {'name': 'craftsmanswap/index.md', 'hashRef': '2c0a379', 'fullhash': '2c0a379a5497d0998ac2ffcad4cc4261fb0a19c3', 'author': 'leider', 'datestring': '2013-12-21 23:06:13 +0100', 'comment': 'no comment'}
+      {
+        'name': 'craftsmanswap/index.md',
+        'hashRef': 'HEAD',
+        'fullhash': 'baa6d36a37f0f04e1e88b4b57f0d89893789686c',
+        'author': 'leider',
+        'datestring': '2014-04-30 17:25:48 +0200',
+        'comment': 'no comment'
+      },
+      {
+        'name': 'craftsmanswap/index.md',
+        'hashRef': 'e6eb66c',
+        'fullhash': 'e6eb66c3f666888da4b0da3f9207d88e996e8bf5',
+        'author': 'leider',
+        'datestring': '2014-04-30 17:25:37 +0200',
+        'comment': 'no comment'
+      },
+      {
+        'name': 'craftsmanswap/blog_2014-03-19_der_blog.md',
+        'hashRef': '643e958',
+        'fullhash': '643e958937540da5907f7d32d87647cb5773e626',
+        'author': 'leider',
+        'datestring': '2014-03-27 22:39:03 +0100',
+        'comment': 'no comment'
+      },
+      {
+        'name': 'craftsmanswap/blog_2014-03-19_der_blog.md',
+        'hashRef': 'a3ab0d7',
+        'fullhash': 'a3ab0d79e3958e21b0367bc952a04596e7892739',
+        'author': 'leider',
+        'datestring': '2014-03-27 22:38:04 +0100',
+        'comment': 'no comment'
+      },
+      {
+        'name': 'craftsmanswap/index.md',
+        'hashRef': 'f327d71',
+        'fullhash': 'f327d711e3e8f0104cde2902198512444af46df3',
+        'author': 'leider',
+        'datestring': '2014-03-09 14:37:59 +0100',
+        'comment': 'no comment'
+      },
+      {
+        'name': 'craftsmanswap/blog_vonmorgen.md',
+        'hashRef': '370dd3c',
+        'fullhash': '370dd3ce2e09fe74a78be8f8a10d36e7a3d8975b',
+        'author': 'trauerleider',
+        'datestring': '2014-02-13 08:26:01 +0100',
+        'comment': 'no comment'
+      },
+      {
+        'name': 'craftsmanswap/index.md',
+        'hashRef': '2c0a379',
+        'fullhash': '2c0a379a5497d0998ac2ffcad4cc4261fb0a19c3',
+        'author': 'leider',
+        'datestring': '2013-12-21 23:06:13 +0100',
+        'comment': 'no comment'
+      }
     ];
     sinon.stub(Git, 'log', function (path, version, howMany, callback) {
       callback(null, metadatas);
@@ -116,13 +165,15 @@ describe('WikiService (getBlogPosts)', function () {
     });
     sinon.stub(Git, 'readFileFs', function (path, callback) {
       if (path === 'internet/blog_2013-11-01LeanCoffeeTest.md') {
-        callback(null, '####   Lean Coffee November 2013\n' +
+        callback(null,
+          '####   Lean Coffee November 2013\n' +
           '\n' +
           'Und beim nächsten Mal haben wir dann.\n' +
           '\n' +
           'Diesen Blog gemacht.');
       } else if (path === 'internet/blog_2013-10-01AgoraCodeKata.md') {
-        callback(null, 'Agora Code-Kata Oktober 2013\n' +
+        callback(null,
+          'Agora Code-Kata Oktober 2013\n' +
           '\n' +
           'Weil viele uns weder JavaScript noch populäre JavaScript...\n' +
           '\n' +
@@ -155,13 +206,13 @@ describe('WikiService (getBlogPosts)', function () {
       var post1 = result[0];
       expect(post1.title).to.equal('Lean Coffee November 2013');
       expect(post1.teaser).to.equal('Und beim nächsten Mal haben wir dann.');
-      expect(post1.path).to.equal('internet/blog_2013-11-01LeanCoffeeTest');
+      expect(post1.dialogId()).to.equal('internet-blog_2013-11-01LeanCoffeeTest');
       expect(post1.date().isSame(moment('2013-11-01'))).to.be(true);
 
       var post2 = result[1];
       expect(post2.title).to.equal('Agora Code-Kata Oktober 2013');
       expect(post2.teaser).to.equal('Weil viele uns weder JavaScript noch populäre JavaScript...');
-      expect(post2.path).to.equal('internet/blog_2013-10-01AgoraCodeKata');
+      expect(post2.dialogId()).to.equal('internet-blog_2013-10-01AgoraCodeKata');
       expect(post2.date().isSame(moment('2013-10-01'))).to.be(true);
 
       done(err);
@@ -190,70 +241,14 @@ describe('WikiService (getBlogPosts)', function () {
 
 describe('WikiService (parseBlogPost)', function () {
 
-  it('returns a parsed blog post', function () {
-    var post = '#Lean Coffee November 2013\n ' +
-      '\n' +
-      'Und beim nächsten Mal haben wir dann.\n' +
-      '\n' +
-      'Diesen Blog gemacht.';
-    var path = 'blog_2013-11-01LeanCoffeeTest.md';
-
-    var result = wikiService.parseBlogPost(path, post, wikiService.BLOG_ENTRY_REGEX);
-
-    var expected = {'title': 'Lean Coffee November 2013',
-      'date': moment('2013-11-01', 'YYYY-MM-DD'),
-      'teaser': 'Und beim nächsten Mal haben wir dann.'};
-    expect(result.title).to.equal(expected.title);
-    expect(result.date().isValid()).to.be(true);
-    expect(result.date().isSame(expected.date)).to.be(true);
-    expect(result.teaser).to.equal(expected.teaser);
+  it('returns undefined when Blogpost invalid', function () {
+    expect(wikiService.parseBlogPost('', '')).to.be.undefined();
   });
 
-  it('returns undefined for empty input', function () {
-    expect(wikiService.parseBlogPost('', '', wikiService.BLOG_ENTRY_REGEX)).to.be(undefined);
-  });
-
-  it('returns undefined if the date in the path is malformed', function () {
-    expect(wikiService.parseBlogPost('blog_2000-01-0LeanCoffeeTest.md', 'post', wikiService.BLOG_ENTRY_REGEX)).to.be(undefined);
-  });
-
-  it('returns properly if body is missing', function () {
-    var post = '#Lean Coffee November 2013';
-    var path = 'blog_2013-11-01LeanCoffeeTest.md';
-
-    var result = wikiService.parseBlogPost(path, post, wikiService.BLOG_ENTRY_REGEX);
-
-    expect(result.title).to.equal('Lean Coffee November 2013');
-    expect(result.teaser).to.be(undefined);
-    expect(result.date().isValid()).to.be(true);
-  });
-
-  it('can parse a multitude of titles', function () {
-    function parseTitle(post) {
-      return wikiService.parseBlogPost('blog_2013-11-01LeanCoffeeTest.md', post, wikiService.BLOG_ENTRY_REGEX).title;
-    }
-
-    expect(parseTitle('#Lean Coffee November 2013')).to.equal('Lean Coffee November 2013');
-    expect(parseTitle('#####Lean Coffee November 2013')).to.equal('Lean Coffee November 2013');
-    expect(parseTitle('#####   Lean Coffee November 2013')).to.equal('Lean Coffee November 2013');
-    expect(parseTitle('    #####   Lean Coffee November 2013')).to.equal('Lean Coffee November 2013');
-    expect(parseTitle('    #   Lean Coffee November 2013')).to.equal('Lean Coffee November 2013');
-    expect(parseTitle('       Lean Coffee November 2013')).to.equal('Lean Coffee November 2013');
-    expect(parseTitle('    ##   Lean# Coffee November 2013')).to.equal('Lean# Coffee November 2013');
-  });
-
-  it('can parse a multitude of date variants', function () {
-    var date = moment('2013-02-01', 'YYYY-MM-DD');
-    function parseDate(datestring) {
-      return wikiService.parseBlogPost('blog_' + datestring + 'LeanCoffeeTest.md', '#Lean', wikiService.BLOG_ENTRY_REGEX).date();
-    }
-
-    expect(parseDate('2013-02-01').isSame(date)).to.be(true);
-    expect(parseDate('2013-02-1').isSame(date)).to.be(true);
-    expect(parseDate('2013-2-1').isSame(date)).to.be(true);
+  it('returns the Blogpost if it is valid', function () {
+    expect(wikiService.parseBlogPost('blog_2013-11-01LeanCoffeeTest.md', '#Lean Coffee November 2013')).to.not.be.undefined();
   });
 });
-
 
 describe('Wiki Service (daily digest)', function () {
 
