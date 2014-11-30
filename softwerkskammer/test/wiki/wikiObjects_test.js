@@ -46,7 +46,7 @@ describe('BlogPost', function () {
   var datum = moment('2013-02-01', 'YYYY-MM-DD');
 
   it('returns a parsed blog post', function () {
-    var post = '#Lean Coffee Februar 2013\n ' +
+    var post = '#Lean Coffee _Februar_ 2013\n ' +
       '\n' +
       'Und beim nächsten Mal haben wir dann.\n' +
       '\n' +
@@ -55,7 +55,7 @@ describe('BlogPost', function () {
 
     var result = new Blogpost(path, post);
 
-    expect(result.title).is('Lean Coffee Februar 2013');
+    expect(result.title).is('Lean Coffee _Februar_ 2013');
     expect(result.date().isSame(datum)).to.be.true();
     expect(result.teaser).is('Und beim nächsten Mal haben wir dann.');
   });
@@ -88,6 +88,19 @@ describe('BlogPost', function () {
     expect(parseTitle('    #   Lean Coffee 2013')).is('Lean Coffee 2013');
     expect(parseTitle('       Lean Coffee 2013')).is('Lean Coffee 2013');
     expect(parseTitle('    ##   Lean# Coffee 2013')).is('Lean# Coffee 2013');
+  });
+
+  it('can parse a multitude of content', function () {
+    function parse(post) { return new Blogpost('blog_2013-02-01LeanCoffeeTest.md', post); }
+
+    expect(parse('#Lean\n\nblank').title).is('Lean');
+    expect(parse('#Lean\n\nblank').teaser).is('blank');
+
+    expect(parse('#Lean\nblitz\nblank').title).is('Lean');
+    expect(parse('#Lean\nblitz\nblank').teaser).is('blitz\nblank');
+
+    expect(parse('Lean\n====\n\nblank').title).is('Lean');
+    expect(parse('Lean\n====\n\nblank').teaser).is('blank');
   });
 
   it('can parse a multitude of date variants', function () {

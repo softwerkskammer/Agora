@@ -69,4 +69,28 @@ describe('Renderer', function () {
     expect(Renderer.render('```unknown \n ```')).to.match(/class="lang-unknown"/);
   });
 
+  it('splits a text into header and remainder if "header" is paragraph', function () {
+    var result = Renderer.titleAndRenderedTail('Hallo\n\nDresden');
+    expect(result).to.have.property('title', 'Hallo');
+    expect(result).to.have.property('body', '<p>Dresden</p>\n');
+  });
+
+  it('splits a text into header and remainder if header is really header', function () {
+    var result = Renderer.titleAndRenderedTail('##Hallo\n\nDresden');
+    expect(result).to.have.property('title', 'Hallo');
+    expect(result).to.have.property('body', '<p>Dresden</p>\n');
+  });
+
+  it('splits a text into header and remainder if header is really header', function () {
+    var result = Renderer.titleAndRenderedTail('Hallo\n----\nDresden');
+    expect(result).to.have.property('title', 'Hallo');
+    expect(result).to.have.property('body', '<p>Dresden</p>\n');
+  });
+
+  it('splits a text into header and remainder if header has nested markdown', function () {
+    var result = Renderer.titleAndRenderedTail('##Hallo *kursiv* jj\n\nDresden');
+    expect(result).to.have.property('title', 'Hallo *kursiv* jj');
+    expect(result).to.have.property('body', '<p>Dresden</p>\n');
+  });
+
 });

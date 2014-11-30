@@ -1,7 +1,11 @@
 'use strict';
 var moment = require('moment-timezone');
 var _ = require('lodash');
+var _s = require('underscore.string');
 var path = require('path');
+
+var beans = require('nconf').get('beans');
+var Renderer = beans.get('renderer');
 
 var BLOG_ENTRY_REGEX = /blog_(\d{4}-\d{1,2}-\d{1,2})/;
 
@@ -37,10 +41,8 @@ Metadata.prototype.pureName = function () {
 
 function Blogpost(name, post) {
   this.name = name;
-
-  var titleAndBody = post.split('\n');
-  this.title = titleAndBody[0].replace(/^(#|\s)*/, '');
-  this.teaser = titleAndBody[2];
+  this.title = Renderer.firstTokentextOf(post).replace(/^(#|\s)*/, '');
+  this.teaser = Renderer.secondTokentextOf(post);
 
   var match = name.match(BLOG_ENTRY_REGEX);
   this.datestring = match && match[1];
