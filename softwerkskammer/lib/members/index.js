@@ -38,8 +38,10 @@ function memberSubmitted(req, res, next) {
   });
 }
 
-function tagsFor(members) {
-  return _(membersService.toWordList(members)).pluck('text').sortBy().value();
+function tagsFor(callback) {
+  memberstore.allMembers(function (err, members) {
+    callback(err, _(membersService.toWordList(members)).pluck('text').sortBy().value());
+  });
 }
 
 var app = misc.expressAppIn(__dirname);
@@ -86,7 +88,7 @@ app.get('/new', function (req, res, next) {
       allGroups: function (callback) { groupsService.getAllAvailableGroups(callback); },
       alle: function (callback) { groupstore.getGroup('alle', callback); },
       commercial: function (callback) { groupstore.getGroup('commercial', callback); },
-      allMembers: function (callback) { memberstore.allMembers(callback); }
+      allTags: function (callback) { tagsFor(callback); }
     },
     function (err, results) {
       if (err) { return next(err); }
@@ -95,7 +97,7 @@ app.get('/new', function (req, res, next) {
         member: new Member().initFromSessionUser(req.user),
         regionalgroups: groupsService.combineSubscribedAndAvailableGroups([results.alle, results.commercial], Group.regionalsFrom(allGroups)),
         themegroups: groupsService.combineSubscribedAndAvailableGroups([results.alle, results.commercial], Group.thematicsFrom(allGroups)),
-        tags: tagsFor(results.allMembers)
+        tags: results.allTags
       });
     }
   );
@@ -106,7 +108,7 @@ app.get('/edit/:nickname', function (req, res, next) {
     {
       member: function (callback) { groupsAndMembersService.getUserWithHisGroups(req.params.nickname, callback); },
       allGroups: function (callback) { groupsService.getAllAvailableGroups(callback); },
-      allMembers: function (callback) { memberstore.allMembers(callback); }
+      allTags: function (callback) { return tagsFor(callback); }
     },
     function (err, results) {
       if (err) { return next(err); }
@@ -120,7 +122,7 @@ app.get('/edit/:nickname', function (req, res, next) {
         member: member,
         regionalgroups: groupsService.combineSubscribedAndAvailableGroups(member.subscribedGroups, Group.regionalsFrom(allGroups)),
         themegroups: groupsService.combineSubscribedAndAvailableGroups(member.subscribedGroups, Group.thematicsFrom(allGroups)),
-        tags: tagsFor(results.allMembers)
+        tags: results.allTags
       });
     }
   );
