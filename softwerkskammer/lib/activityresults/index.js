@@ -63,11 +63,11 @@ app.get('/:activityResultName/photo/:photoId/edit', function (req, res, next) {
       photo: activityResult.getPhotoById(req.params.photoId)
     };
 
-    if (model.photo.uploaded_by() && model.photo.uploaded_by() !== req.user.member.id()) {
-      return res.redirect(app.path() + req.params.activityResultName);
+    if (model.photo && model.photo.uploaded_by && model.photo.uploaded_by() === req.user.member.id()) {
+      return res.render('edit_photo', model);
     }
+    return res.redirect(app.path() + req.params.activityResultName);
 
-    return res.render('edit_photo', model);
   });
 });
 
