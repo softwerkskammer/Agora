@@ -23,7 +23,11 @@ app.post('/', function (req, res, next) {
   }
   var tags = (req.body.tags || '').split(',');
 
-  activityresultsPersistence.save(new ActivityResult({id: activityResultName, tags: tags, created_by: req.user.member.id }).state, function (err) {
+  activityresultsPersistence.save(new ActivityResult({
+    id: activityResultName,
+    tags: tags,
+    created_by: req.user.member.id
+  }).state, function (err) {
     if (err) { return next(err); }
     res.redirect(app.path() + activityResultName);
   });
@@ -112,7 +116,7 @@ app.get('/:activityResultName', function (req, res, next) {
       });
     }
 
-    function groupByDay(photo) {
+    function unixTimeOfDay(photo) {
       return photo.time().startOf('day').valueOf();
     }
 
@@ -120,11 +124,11 @@ app.get('/:activityResultName', function (req, res, next) {
       return photo.tags()[0] || 'Everywhere';
     }
 
-    function sortbyTimestamp(photo) {
+    function timestamp(photo) {
       return photo.time();
     }
 
-    var groupedByDay = _(activityResult.photos()).sortBy(sortbyTimestamp).groupBy(groupByDay).value();
+    var groupedByDay = _(activityResult.photos()).sortBy(timestamp).groupBy(unixTimeOfDay).value();
 
     var dayTimeStamps = _(groupedByDay).keys().map(function (timestamp) { return moment(parseInt(timestamp, 10)); }).reverse().value();
 
