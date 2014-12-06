@@ -17,16 +17,7 @@ html
   body
     .page
       img(src='/img/SoftwerkskammerWappenLinks.png', alt='Softwerkskammer', width='234', height='60')
-      h1 Session Snap for <em>#{activityResult.id}</em>
+      h1 Session Snap for <em>#{activityResult.id()}</em>
       h2 Share your session results and <br/>see what others did at <i>softwerkskammer.org</i>
       .qrcode-container
-        #qrMain
-
-    script(type='text/javascript').
-     $(function() {
-      $('#qrMain').qrcode({
-        text: '#{activityResultUrl}',
-        size: 300,
-        ecLevel: 'H'
-      });
-     });
+        img(height = '300px', src='/qrcode/#{encodeURIComponent(activityResultUrl)}')
