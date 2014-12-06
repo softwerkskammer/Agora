@@ -64,7 +64,27 @@ var Renderer = {
     var rendered = marked(evalTags(content, subdir));
     return rendered.replace(/<table>/g, '<table class="table table-condensed table-hover table-striped">').replace(/<img src=/g, '<img class="img-responsive" src=');
   },
-  normalize: normalize
+  normalize: normalize,
+  firstTokentextOf: function (content, subdir) {
+    var tokens = marked.lexer(evalTags(content, subdir));
+    return tokens[0] ? tokens[0].text : '';
+  },
+  secondTokentextOf: function (content, subdir) {
+    var tokens = marked.lexer(evalTags(content, subdir));
+    return tokens[1] ? tokens[1].text : undefined;
+  },
+  titleAndRenderedTail: function (content, subdir) {
+    var tokens = marked.lexer(evalTags(content, subdir));
+    if (tokens.length === 0) {
+      return {title: '', body: ''};
+    }
+    var title = tokens.shift();
+    var rendered = marked.parser(tokens);
+    return {
+      title: title.text,
+      body: rendered.replace(/<table>/g, '<table class="table table-condensed table-hover table-striped">').replace(/<img src=/g, '<img class="img-responsive" src=')
+    };
+  }
 };
 
 module.exports = Renderer;

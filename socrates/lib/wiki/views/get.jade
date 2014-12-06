@@ -33,7 +33,7 @@ block content
       form.hidden-print.form-search.pull-right(action='/wiki/search', method='post')
         +csrf
         input.form-control(type='text', name='searchtext', placeholder=t('wiki.search'))
-
+      h2 #{title}
   .row
     .col-md-12
       | !{content}

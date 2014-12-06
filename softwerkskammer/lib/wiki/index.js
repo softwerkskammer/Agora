@@ -14,8 +14,10 @@ function showPage(subdir, pageName, pageVersion, req, res, next) {
       if (req.user) { return res.redirect('/wiki/edit/' + completePageName); }
       return next();
     }
+    var headerAndBody = Renderer.titleAndRenderedTail(content, subdir);
     res.render('get', {
-      content: Renderer.render(content, subdir),
+      content: headerAndBody.body,
+      title: headerAndBody.title,
       pageName: normalizedPageName,
       subdir: subdir,
       canEdit: pageVersion === 'HEAD' && req.user
