@@ -24,7 +24,6 @@ module.exports = function accessrights(req, res, next) {
     },
 
     canCreateActivityResult: function () {
-      // TODO Nutzerkreis erweitern; Superuser sind nur Nicole und der Leider.
       return this.isSuperuser();
     },
 
@@ -67,10 +66,6 @@ module.exports = function accessrights(req, res, next) {
 
     isMember: function (member) {
       return this.isRegistered() && this.memberId() === member.id();
-    },
-
-    canCreateColor: function () {
-      return this.isSuperuser();
     },
 
     canViewGroupDetails: function () {
