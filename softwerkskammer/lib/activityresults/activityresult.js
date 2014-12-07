@@ -3,7 +3,7 @@ var _ = require('lodash');
 var moment = require('moment-timezone');
 
 function Photo(data) {
-  this.state = data;
+  this.state = data || {};
 }
 
 Photo.prototype.id = function () {
