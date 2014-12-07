@@ -102,37 +102,9 @@ app.get('/:activityResultName', function (req, res, next) {
   activityresultsService.getActivityResultByName(activityResultName, function (err, activityResult) {
     if (err) { return next(err); }
     if (!activityResult) {
-      return res.render('notFound', {
-        createUri: app.path(),
-        activityResultName: activityResultName
-      });
+      return res.render('get', {activityResult: activityResult});
     }
-
-    function unixTimeOfDay(photo) {
-      return photo.time().startOf('day').valueOf();
-    }
-
-    function groupByFirstTag(photo) {
-      return photo.tags()[0] || 'Everywhere';
-    }
-
-    function timestamp(photo) {
-      return photo.time();
-    }
-
-    var groupedByDay = _(activityResult.photos()).sortBy(timestamp).groupBy(unixTimeOfDay).value();
-
-    var dayTimeStamps = _(groupedByDay).keys().map(function (timestamp) { return moment(parseInt(timestamp, 10)); }).reverse().value();
-
-    var groupedByTag = _.transform(groupedByDay, function (intermediatePhotosGroupedByDay, photosOfDay, currentDay) {
-      intermediatePhotosGroupedByDay[currentDay] = _.groupBy(photosOfDay, groupByFirstTag);
-    });
-
-    res.render('get', {
-      activityResult: activityResult,
-      days: groupedByTag,
-      dayTimeStamps: dayTimeStamps
-    });
+    return res.render('create', {activityResultName: activityResultName});
   });
 });
 

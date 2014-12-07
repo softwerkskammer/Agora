@@ -32,17 +32,17 @@ block content
                   button.btn.btn-primary(type='submit') #{t('activityresults.submit')}
                 img#preview(style='max-width: 100%; padding-top: 15px;')
           h2(style='margin-top: 5px;') #{activityResult.id()}
-    each timestamp in dayTimeStamps
-      h3(style='margin-top: 5px;') #{timestamp.locale(language).format('dddd, LL')}
+    each days in activityResult.photosByDay()
+      h3(style='margin-top: 5px;') #{days.day.locale(language).format('dddd, LL')}
       .row
         .col-md-12(style='overflow-x: auto')
           table
             tr.table-row
-              each column, columnTitle in days[timestamp.valueOf()]
+              each column, columnTitle in days.photosByTag
                 th(style='padding-right: 15px;') #{columnTitle}
   
             tr.table-row
-              each column in days[timestamp.valueOf()]
+              each column in days.photosByTag
                 td(style='vertical-align: top;padding-right: 15px;')
                   each photo in column
                     a(href=photo.uri()): img(src=photo.uri() + '?size=thumb', width='100%', alt=photo.title(), title=photo.title())

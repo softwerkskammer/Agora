@@ -72,4 +72,22 @@ ActivityResult.prototype.getDistinctPresentTags = function () {
   return _(this.state.photos).pluck('tags').flatten().uniq().compact().value();
 };
 
+ActivityResult.prototype.photosByDay = function () {
+  var groupedByDay = _(this.photos()).sortBy(function (photo) {
+    return photo.time();
+  }).groupBy(function (photo) {
+    return photo.time().startOf('day').valueOf();
+  }).value();
+
+  return _.transform(groupedByDay, function (result, photosOfDay, currentDayAsUnix) {
+    result.push({
+      day: moment(parseInt(currentDayAsUnix, 10)),
+      photosByTag: _.groupBy(photosOfDay, function groupByFirstTag(photo) {
+        return photo.tags()[0] || 'Everywhere';
+      })
+    });
+  }, []).reverse();
+
+};
+
 module.exports = ActivityResult;

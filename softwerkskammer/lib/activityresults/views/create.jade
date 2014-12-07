@@ -3,15 +3,15 @@ extends ../../../views/layout
 include  ../../../views/formComponents
 
 block title
-  =t('activityresults.nothing_to_see_here')
+  | #{t('activityresults.new')}
 
 block content
   .row
     .col-md-12
       .page-header
-        h2= t('activityresults.new')
+        h2 #{t('activityresults.new')}
 
-      form(role='form',method='POST',action=createUri)
+      form(role='form',method='POST',action='/activityresults/')
         +csrf
         +text('activityResultName', 'Name', activityResultName, '', '', true)
         +textWithTags('tags', 'Tags', '', [])
