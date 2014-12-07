@@ -6,12 +6,12 @@ block title
   = activityResult.id() + ' / Edit Photo'
 
 block content
-  form(role='form', method='post')
-    +csrf
-    .row
-      .col-xs-12.col-sm-6
-        img(width='100%', src=photo.uri() + '?size=thumb', style='padding-bottom: 20px;')
-      .col-xs-12.col-sm-6
+  .row
+    .col-xs-12.col-sm-6
+      img(width='100%', src=photo.uri() + '?size=thumb', style='padding-bottom: 20px;')
+    .col-xs-12.col-sm-6
+      form(role='form', method='post')
+        +csrf
         +text('title', 'Title', photo.title(), '', t('activityresults.photoTitlePlaceholder'))
         +multiselect('tags', 'Tags', photo.tags(), activityResult.tags())
         .col-xs-6(style='padding-left:0px;padding-right:3px')
@@ -19,3 +19,5 @@ block content
         .col-xs-6(style='padding-left:0px;padding-right:3px')
           +time('time', photo.time().locale(language).format('LT'))
         +submitButtons('general.save')
+      if (accessrights.canDeletePhoto(photo))
+        +reallyDeleteModal('activityresults.deletePhoto', '/activityresults/' + activityResult.id() + '/photo/' + photo.id() + '/delete')

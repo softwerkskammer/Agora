@@ -122,7 +122,7 @@ describe('Activity result', function () {
     });
   });
 
-  describe.only('preparation for display', function () {
+  describe('preparation for display', function () {
 
     it('creates a list of "day" objects', function () {
       var activityResult = new ActivityResult({

@@ -64,6 +64,10 @@ ActivityResult.prototype.updatePhotoById = function (id, data) {
   _.assign(this.getPhotoById(id).state, data);
 };
 
+ActivityResult.prototype.deletePhotoById = function (id) {
+  _.remove(this.state.photos, {id: id});
+};
+
 ActivityResult.prototype.addPhoto = function (photo) {
   this.state.photos.push(photo);
 };

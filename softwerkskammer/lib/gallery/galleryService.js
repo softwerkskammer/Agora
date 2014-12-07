@@ -6,6 +6,10 @@ var magick = require('imagemagick');
 var uuid = require('node-uuid');
 var path = require('path');
 var fs = require('fs');
+var glob = require('glob');
+var async = require('async');
+
+var widths = {thumb: 400, preview: 1080};
 
 function autoOrient(sourceImagePath, targetPath, callback) {
   magick.convert([sourceImagePath, '-auto-orient', targetPath], function (err) {
@@ -13,15 +17,9 @@ function autoOrient(sourceImagePath, targetPath, callback) {
   });
 }
 
-function scale(sourceImagePath, targetPath, width, height, callback) {
-  magick.convert([sourceImagePath, '-quality', '75', '-scale', width + (height ? '!x' + height + '!' : ''), targetPath], function (err) {
-    callback(err, targetPath);
-  });
-}
-
-function scaledImageId(id, width, height) {
+function scaledImageId(id, width) {
   var ext = path.extname(id);
-  return path.basename(id, ext) + '_' + width + 'x' + height + ext;
+  return path.basename(id, ext) + '_' + width + ext;
 }
 
 function fullPath(name) {
@@ -29,6 +27,13 @@ function fullPath(name) {
 }
 
 module.exports = {
+  deleteImage: function deleteImage(id, callback) {
+    var pattern = path.basename(id, path.extname(id)) + '*';
+    glob(fullPath(pattern), function (err, files) {
+      async.each(files, fs.unlink, callback);
+    });
+  },
+
   storeImage: function storeImage(tmpImageFilePath, callback) {
     var id = uuid.v4() + path.extname(tmpImageFilePath);
     autoOrient(tmpImageFilePath, fullPath(id), function (err) { callback(err, id); });
@@ -38,15 +43,18 @@ module.exports = {
     magick.readMetadata(fullPath(id), callback);
   },
 
-  retrieveScaledImage: function retrieveScaledImage(id, width, height, callback) {
-    var scaledImagePath = fullPath(width ? scaledImageId(id, width, height) : id);
+  retrieveScaledImage: function retrieveScaledImage(id, thumbOrPreview, callback) {
+    var width = widths[thumbOrPreview];
+    var scaledImagePath = fullPath(width ? scaledImageId(id, width) : id);
 
     fs.exists(scaledImagePath, function (exists) {
       var sourceImagePath = fullPath(id);
       if (exists || !width) {
         return callback(null, scaledImagePath);
       }
-      scale(sourceImagePath, scaledImagePath, width, height, callback);
+      magick.convert([sourceImagePath, '-quality', '75', '-scale', width, scaledImagePath], function (err) {
+        callback(err, scaledImagePath);
+      });
     });
   }
 

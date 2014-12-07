@@ -50,7 +50,8 @@ block content
                       span(style='display:inline-block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 70%;') #{photo.title()}
                       if (accessrights.canEditPhoto(photo))
                         span &nbsp;
-                          a.pull-right(href=activityResult.id() + '/photo/' + photo.id() + '/edit', title=t('general.edit')) 
+                          a.pull-right(href='/activityresults/' + activityResult.id() + '/photo/' + photo.id() + '/edit', title=t('general.edit')) 
                             i.fa.fa-fw.fa-edit
                       span.pull-right #{photo.time().locale(language).format('LT')}
-      hr
+
+    hr

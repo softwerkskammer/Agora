@@ -58,17 +58,35 @@ app.post('/:activityResultName/upload', function (req, res, next) {
   });
 });
 
+app.get('/:activityResultName/photo/:photoId/delete', function (req, res, next) {
+  var activityResultName = req.params.activityResultName;
+  if (!res.locals.accessrights.canDeletePhoto()) {
+    return res.redirect(app.path() + activityResultName);
+  }
+  var photoId = req.params.photoId;
+  activityresultsService.getActivityResultByName(activityResultName, function (err, activityResult) {
+    activityresultsService.deletePhotoOfActivityResult(activityResult, photoId, function (err) {
+      if (err) { return next(err); }
+      galleryService.deleteImage(photoId, function (err) {
+        if (err) {return next(err); }
+        return res.redirect(app.path() + activityResultName);
+      });
+    });
+  });
+});
+
 app.get('/:activityResultName/photo/:photoId/edit', function (req, res, next) {
-  activityresultsService.getActivityResultByName(req.params.activityResultName, function (err, activityResult) {
+  var activityResultName = req.params.activityResultName;
+  activityresultsService.getActivityResultByName(activityResultName, function (err, activityResult) {
     if (err || !activityResult) { return next(err); }
     var model = {
       activityResult: activityResult,
       photo: activityResult.getPhotoById(req.params.photoId)
     };
-    if (res.locals.accessrights.canEditPhoto(model.photo)) {
+    if (model.photo && res.locals.accessrights.canEditPhoto(model.photo)) {
       return res.render('edit_photo', model);
     }
-    return res.redirect(app.path() + req.params.activityResultName);
+    return res.redirect(app.path() + activityResultName);
   });
 });
 

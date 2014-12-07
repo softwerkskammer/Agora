@@ -38,5 +38,10 @@ module.exports = {
   updatePhotoOfActivityResult: function (activityResult, photoId, data, callback) {
     activityResult.updatePhotoById(photoId, data);
     persistence.save(activityResult.state, callback);
+  },
+
+  deletePhotoOfActivityResult: function (activityResult, photoId, callback) {
+    activityResult.deletePhotoById(photoId);
+    persistence.save(activityResult.state, callback);
   }
 };

@@ -8,24 +8,21 @@ var service = beans.get('galleryService');
 describe('the gallery repository on real files', function () {
 
   it('stores the original image', function (done) {
-    var storedImageId = 'image.jpg';
-    var imagePath = __dirname + '/fixtures/' + storedImageId;
+    var imagePath = __dirname + '/fixtures/image.jpg';
     service.storeImage(imagePath, function (err, imageId) {
-      service.retrieveScaledImage(imageId, undefined, undefined, done);
+      service.retrieveScaledImage(imageId, undefined, done);
     });
   });
 
   it('provides scaled images', function (done) {
-    var storedImageId = 'image.jpg';
-    var imagePath = __dirname + '/fixtures/' + storedImageId;
+    var imagePath = __dirname + '/fixtures/image.jpg';
     service.storeImage(imagePath, function (err, imageId) {
-      service.retrieveScaledImage(imageId, 100, 100, done);
+      service.retrieveScaledImage(imageId, 'thumb', done);
     });
   });
 
   it('provides exif data for a given image', function (done) {
-    var storedImageId = 'exif_image.jpg';
-    var imagePath = __dirname + '/fixtures/' + storedImageId;
+    var imagePath = __dirname + '/fixtures/exif_image.jpg';
     service.storeImage(imagePath, function (err, imageId) {
       service.getMetadataForImage(imageId, function (err, metadata) {
         expect(metadata.exif).to.have.property('dateTimeOriginal');
@@ -35,7 +32,7 @@ describe('the gallery repository on real files', function () {
   });
 
   it('returns err for invalid imageId', function (done) {
-    service.retrieveScaledImage('invalidId', 12, undefined, function (err) {
+    service.retrieveScaledImage('invalidId', 'thumb', function (err) {
       expect(err).to.exist();
       done();
     });

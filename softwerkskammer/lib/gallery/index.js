@@ -10,10 +10,7 @@ var galleryService = beans.get('galleryService');
 var app = misc.expressAppIn(__dirname);
 
 app.get('/:imageId', function (req, res, next) {
-  var widths = {thumb: 400, preview: 1080};
-
-  galleryService.retrieveScaledImage(req.params.imageId, widths[req.query.size],
-    undefined,
+  galleryService.retrieveScaledImage(req.params.imageId, req.query.size,
     function sendImage(err, imagePath) {
       if (err) { return next(err); }
       res.sendFile(imagePath);
