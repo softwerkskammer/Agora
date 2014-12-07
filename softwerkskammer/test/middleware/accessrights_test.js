@@ -171,16 +171,6 @@ describe('Accessrights for Groups', function () {
   });
 });
 
-describe('Accessrights for Colors', function () {
-  it('disallows the creation for members', function () {
-    expect(standardMember().canCreateColor()).to.be(false);
-  });
-
-  it('allows the creation for superusers', function () {
-    expect(superuser().canCreateColor()).to.be(true);
-  });
-});
-
 describe('Accessrights for Members', function () {
   it('disallows editing others for members', function () {
     var member = {id: 'id'};

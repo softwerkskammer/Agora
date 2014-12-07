@@ -22,7 +22,7 @@ block content
     .col-md-12
       .page-header
         .pull-right.visible-print
-          img(src='/activities/qrcode/#{encodeURIComponent(activity.url())}')
+          img(height='80px', src='/qrcode/#{encodeURIComponent(activity.url())}')
         .btn-group.pull-right
           if (accessrights.canEditActivity(activity))
             a.btn.btn-default(href='/activities/addons/#{encodeURIComponent(activity.url())}', title=t('activities.participants')): i.fa.fa-list-ol.fa-fw
@@ -62,7 +62,7 @@ block content
         h4 #{t('activities.directions')}:
         | !{activity.directionHTML()}
       hr
-      div.hidden-print
+      .hidden-print
         +visitorCount(activity.participants.length)
         each resourceName in activity.resourceNames()
           +subscriptionButtons(activity, resourceName, resourceRegistrationRenderer)

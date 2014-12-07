@@ -115,10 +115,4 @@ describe('/activityresults', function () {
 
   });
 
-  it('should have a route for printing out posters with qrcodes', function (done) {
-    stubGreenReturnForActivityResultService();
-    request(createApp(MEMBER_ID))
-      .get('/known-activity-result/print')
-      .expect(200, done);
-  });
 });

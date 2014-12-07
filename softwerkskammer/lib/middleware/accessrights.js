@@ -24,7 +24,6 @@ module.exports = function accessrights(req, res, next) {
     },
 
     canCreateActivityResult: function () {
-      // TODO Nutzerkreis erweitern; Superuser sind nur Nicole und der Leider.
       return this.isSuperuser();
     },
 
@@ -69,16 +68,16 @@ module.exports = function accessrights(req, res, next) {
       return this.isRegistered() && this.memberId() === member.id();
     },
 
-    canCreateColor: function () {
-      return this.isSuperuser();
-    },
-
     canViewGroupDetails: function () {
       return this.isRegistered();
     },
 
     canParticipateInGroup: function () {
       return this.isRegistered();
+    },
+
+    canEditPhoto: function (photo) {
+      return this.isSuperuser() || (photo && photo.uploaded_by && photo.uploaded_by() === this.memberId());
     }
 
   };

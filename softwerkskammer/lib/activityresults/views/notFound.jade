@@ -9,17 +9,10 @@ block content
   .row
     .col-md-12
       .page-header
-        h2= t('activityresults.nothing_to_see_here')
+        h2= t('activityresults.new')
 
-  .row
-    .col-md-6
       form(role='form',method='POST',action=createUri)
         +csrf
-        .form-group
-          label(for='inputName') Name
-          input.form-control#inputName(name='activityResultName',type='text',readonly='readonly',value='#{activityResultName}')
-        .form-group
-          label(for='inputTag') Tags (comma-separated)
-          input.form-control#inputTags(name='tags',type='text')
-        .form-group
-          button.btn.btn-primary(type='submit')= t('activityresults.submit')
+        +text('activityResultName', 'Name', activityResultName, '', '', true)
+        +textWithTags('tags', 'Tags', '', [])
+        +submitButtons('activityresults.submit')

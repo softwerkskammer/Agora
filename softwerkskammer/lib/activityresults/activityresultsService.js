@@ -1,5 +1,4 @@
 'use strict';
-var logger = require('winston').loggers.get('application');
 var beans = require('nconf').get('beans');
 var moment = require('moment-timezone');
 
@@ -18,10 +17,7 @@ module.exports = {
   addPhotoToActivityResult: function (activityResultName, metadata, imageUri, memberId, callback) {
     var date;
     if (metadata && metadata.exif) {
-      date = metadata.exif.dateTime ||
-        metadata.exif.dateTimeOriginal ||
-        metadata.exif.dateTimeDigitized ||
-        new Date();
+      date = metadata.exif.dateTime || metadata.exif.dateTimeOriginal || metadata.exif.dateTimeDigitized || new Date();
     } else {
       date = new Date();
     }
@@ -39,10 +35,8 @@ module.exports = {
     });
   },
 
-  updatePhotoOfActivityResult: function (activityResultName, photoId, data, callback) {
-    this.getActivityResultByName(activityResultName, function (err, activityResult) {
-      activityResult.updatePhotoById(photoId, data);
-      persistence.save(activityResult.state, callback);
-    });
+  updatePhotoOfActivityResult: function (activityResult, photoId, data, callback) {
+    activityResult.updatePhotoById(photoId, data);
+    persistence.save(activityResult.state, callback);
   }
 };

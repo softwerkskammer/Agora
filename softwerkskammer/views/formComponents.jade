@@ -16,6 +16,16 @@ mixin textWithTags(name, label, value, tags)
         tokenSeparators: [',', ', ']
       });
 
+mixin multiselect(name, label, value, tags)
+  .form-group
+    +controlLabel(name, label, tooltip)
+    select.form-control(multiple, id=name, name=name, value=value)
+      each tag in tags
+        option(selected = value.indexOf(tag) > -1) #{tag}
+    script.
+      $(#{name}).select2();
+
+
 mixin currency(name, label, value, tooltip, placeholder, readonly)
   .form-group
     if (readonly)

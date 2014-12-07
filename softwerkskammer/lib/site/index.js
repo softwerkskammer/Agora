@@ -3,7 +3,10 @@
 var path = require('path');
 var async = require('async');
 var fs = require('fs');
-var beans = require('nconf').get('beans');
+var qrimage = require('qr-image');
+
+var conf = require('nconf');
+var beans = conf.get('beans');
 var Renderer = beans.get('renderer');
 var groupsService = beans.get('groupsService');
 var groupsAndMembers = beans.get('groupsAndMembersService');
@@ -78,6 +81,13 @@ app.get('/language/:isoCode', function (req, res) {
 
 app.post('/preview', function (req, res) {
   res.send(Renderer.render(req.body.data, req.body.subdir));
+});
+
+app.get('/qrcode/:url', function (req, res) {
+  var url = conf.get('publicUrlPrefix') + app.path() + req.params.url;
+  var img = qrimage.image(url, {size: 5});
+  res.type('png');
+  img.pipe(res);
 });
 
 module.exports = app;

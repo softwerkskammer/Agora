@@ -9,65 +9,48 @@ block scripts
   script(src='/clientscripts/activityResults.js')
 
 block content
-  #detail-overlay.noisy_red
-    .header
-      p.close
-        a.close-centered(href='#', style='color: white;')
-          span(class='glyphicon glyphicon-remove')
-          | &nbsp;
-          = t('general.close')
-      p.tag
-        | #lovelace
-    .slideshow
-      .prev-img
-        img(width='100', height='100')
-        a#prev-img
-          span.glyphicon.glyphicon-chevron-up
-      a#image-detail-link
-        img#image-detail.current-img
-      .next-img
-        img(width='100', height='100')
-        a#next-img(href='#')
-          span.glyphicon.glyphicon-chevron-down
-
-  .row
-    .col-md-12
-      h2(style='margin-top: 5px;') #{activityResult.id()}
-
-  .row
-    .col-md-12
-      form(id='recordForm', role='form', method='POST', action=recordImagePath + '?_csrf=' + encodeURIComponent(csrf_token), enctype='multipart/form-data')
-        +csrf
-        div
-          span.btn.btn-primary.btn-file.record(style='width: 100%')
-            i.glyphicon.glyphicon-camera &nbsp;
-            span= t('activityresults.record_image')
-            input#input-file(type='file', accept='image/*', name='image')
-        div#previewContainer(style='display: none')
-          img#preview(style='max-width: 100%')
-          div
-            button(type='submit').btn.btn-success.pull-right= t('activityresults.submit')
-            span#btn-cancel.btn.btn-warning= t('activityresults.cancel')
-
-  hr
-  each timestamp in dayTimeStamps
-    - var columns = days[timestamp.valueOf()]
-    h3(style='margin-top: 5px;')= timestamp.locale(language).format('dddd, l')
+  .visible-print
+    h1 #{activityResult.id()} #{''}
+      small Session Snap
+    h3 Share your session results and see what others did at softwerkskammer.org
+    p(style='text-align:center;')
+      img(height='300px', src='/qrcode/#{encodeURIComponent(activityResultUrl)}')
+  .hidden-print
     .row
-      .col-md-12(style='overflow-x: auto')
-
-        - var i = 0;
-        table.row.timeline
-          tr.table-row
-            each column, columnTitle in columns
-              th.col-without-padding.venue(class=getBackgroundForIndex(i++))
-                p.tag= '#' + columnTitle
-
-          - i = 0;
-          tr.table-row(style='display: table-row')
-            each column, columnTitle in columns
-              td.col-without-padding.venue(class=getBackgroundForIndex(i++))
-                each img in column
-                  a.thumb(href=img.uri(), data-columntitle='#' +columnTitle)
-                    img.thumb(src=img.uri() + '?size=thumb', alt=img.title(), title=img.title())
-                    span.small(style='color: black') #{img.thumbnailInfos(language)}
+      .col-md-12
+        .page-header
+          .pull-right
+            form(id='recordForm', role='form', method='POST', action=recordImagePath + '?_csrf=' + encodeURIComponent(csrf_token), enctype='multipart/form-data')
+              #selectFile
+                span.btn.btn-primary.btn-file(style='width: 100%')
+                  i.fa.fa-fw.fa-camera
+                  |  #{t('activityresults.record_image')}
+                  input#input-file(type='file', accept='image/*', name='image')
+              #previewContainer(style='display: none')
+                .btn-group.pull-right
+                  span#btn-cancel.btn.btn-default #{t('activityresults.cancel')}
+                  button.btn.btn-primary(type='submit') #{t('activityresults.submit')}
+                img#preview(style='max-width: 100%; padding-top: 15px;')
+          h2(style='margin-top: 5px;') #{activityResult.id()}
+    each timestamp in dayTimeStamps
+      h3(style='margin-top: 5px;') #{timestamp.locale(language).format('dddd, l')}
+      .row
+        .col-md-12(style='overflow-x: auto')
+          table
+            tr.table-row
+              each column, columnTitle in days[timestamp.valueOf()]
+                th(style='padding-right: 15px;') #{columnTitle}
+  
+            tr.table-row
+              each column in days[timestamp.valueOf()]
+                td(style='vertical-align: top;padding-right: 15px;')
+                  each photo in column
+                    a(href=photo.uri()): img(src=photo.uri() + '?size=thumb', width='100%', alt=photo.title(), title=photo.title())
+                    p.small
+                      span(style='display:inline-block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 70%;') #{photo.title()}
+                      if (accessrights.canEditPhoto(photo))
+                        span &nbsp;
+                          a.pull-right(href=activityResult.id() + '/photo/' + photo.id() + '/edit', title=t('general.edit')) 
+                            i.fa.fa-fw.fa-edit
+                      span.pull-right #{photo.time().locale(language).format('LT')}
+      hr
