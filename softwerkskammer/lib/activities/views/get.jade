@@ -22,7 +22,7 @@ block content
     .col-md-12
       .page-header
         .pull-right.visible-print
-          img(height='80px', src='/qrcode/#{encodeURIComponent(activity.url())}')
+          img(height='80px', src='/qrcode/#{encodeURIComponent("/activities/" + activity.url())}')
         .btn-group.pull-right
           if (accessrights.canEditActivity(activity))
             a.btn.btn-default(href='/activities/addons/#{encodeURIComponent(activity.url())}', title=t('activities.participants')): i.fa.fa-list-ol.fa-fw

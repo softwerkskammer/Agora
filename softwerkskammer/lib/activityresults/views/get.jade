@@ -14,13 +14,13 @@ block content
       small Session Snap
     h3 Share your session results and see what others did at softwerkskammer.org
     p(style='text-align:center;')
-      img(height='300px', src='/qrcode/#{encodeURIComponent(activityResultUrl)}')
+      img(height='300px', src='/qrcode/#{encodeURIComponent("/activityresults/" + activityResult.id())}')
   .hidden-print
     .row
       .col-md-12
         .page-header
           .pull-right
-            form(id='recordForm', role='form', method='POST', action=recordImagePath + '?_csrf=' + encodeURIComponent(csrf_token), enctype='multipart/form-data')
+            form(id='recordForm', role='form', method='POST', action='/activityresults/' + encodeURIComponent(activityResult.id()) + '/upload' + '?_csrf=' + encodeURIComponent(csrf_token), enctype='multipart/form-data')
               #selectFile
                 span.btn.btn-primary.btn-file(style='width: 100%')
                   i.fa.fa-fw.fa-camera
@@ -33,7 +33,7 @@ block content
                 img#preview(style='max-width: 100%; padding-top: 15px;')
           h2(style='margin-top: 5px;') #{activityResult.id()}
     each timestamp in dayTimeStamps
-      h3(style='margin-top: 5px;') #{timestamp.locale(language).format('dddd, l')}
+      h3(style='margin-top: 5px;') #{timestamp.locale(language).format('dddd, LL')}
       .row
         .col-md-12(style='overflow-x: auto')
           table

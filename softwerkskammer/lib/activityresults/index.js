@@ -130,13 +130,8 @@ app.get('/:activityResultName', function (req, res, next) {
 
     res.render('get', {
       activityResult: activityResult,
-      recordImagePath: app.path() + activityResultName + '/upload',
       days: groupedByTag,
-      dayTimeStamps: dayTimeStamps,
-      getBackgroundForIndex: function getBackgroundForIndex(i) {
-        var colors = ['blue', 'green', 'red', 'yellow'];
-        return 'noisy_' + colors[i % 4];
-      }
+      dayTimeStamps: dayTimeStamps
     });
   });
 });
