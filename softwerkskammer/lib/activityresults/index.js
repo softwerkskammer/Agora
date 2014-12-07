@@ -119,7 +119,7 @@ app.get('/:activityResultName', function (req, res, next) {
   var activityResultName = req.params.activityResultName;
   activityresultsService.getActivityResultByName(activityResultName, function (err, activityResult) {
     if (err) { return next(err); }
-    if (!activityResult) {
+    if (activityResult) {
       return res.render('get', {activityResult: activityResult});
     }
     return res.render('create', {activityResultName: activityResultName});
