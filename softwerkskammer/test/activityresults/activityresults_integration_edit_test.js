@@ -61,7 +61,7 @@ describe('/activityresults/:result/photo/:photo', function () {
         'title': 'My adventures with the softwerkskammer',
         'time': '02:03',
         'date': '2015-05-04',
-        'tag': ['a', 'b']
+        'tags': ['a', 'b']
       })
       .expect(302)
       .expect('Location', '/foo')
@@ -82,7 +82,7 @@ describe('/activityresults/:result/photo/:photo', function () {
         'title': 'My adventures with the softwerkskammer',
         'time': '02:03',
         'date': '2015-05-04',
-        'tag': ['a', 'b']
+        'tags': ['a', 'b']
       })
       .expect(302, done);
   });

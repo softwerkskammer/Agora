@@ -74,6 +74,10 @@ module.exports = function accessrights(req, res, next) {
 
     canParticipateInGroup: function () {
       return this.isRegistered();
+    },
+
+    canEditPhoto: function (photo) {
+      return this.isSuperuser() || (photo && photo.uploaded_by && photo.uploaded_by() === this.memberId());
     }
 
   };

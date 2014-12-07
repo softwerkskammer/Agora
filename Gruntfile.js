@@ -231,8 +231,7 @@ module.exports = function (grunt) {
             'bower_components/select2/select2.css',
             'bower_components/select2-bootstrap-css/select2-bootstrap.css',
             'bower_components/mjolnic-bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css',
-            'softwerkskammer/build/stylesheets/less/agora.less',
-            'softwerkskammer/build/stylesheets/less/activityresults.less'
+            'softwerkskammer/build/stylesheets/less/agora.less'
           ]
         }
       }

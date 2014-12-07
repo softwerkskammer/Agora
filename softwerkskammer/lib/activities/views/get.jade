@@ -62,7 +62,7 @@ block content
         h4 #{t('activities.directions')}:
         | !{activity.directionHTML()}
       hr
-      div.hidden-print
+      .hidden-print
         +visitorCount(activity.participants.length)
         each resourceName in activity.resourceNames()
           +subscriptionButtons(activity, resourceName, resourceRegistrationRenderer)

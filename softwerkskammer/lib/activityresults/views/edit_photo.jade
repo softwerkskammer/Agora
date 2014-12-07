@@ -2,12 +2,6 @@ extends ../../../views/layoutOnlyMain
 
 include  ../../../views/formComponents
 
-mixin tagButton(tagValue)
-  - var inputId = 'tag-'+tagValue;
-  li.col-md-4.col-xs-6
-    input(id=inputId, type='radio', name='tag', value=tagValue)
-    label.btn.btn-default(for=inputId) ##{tagValue}
-
 block title
   = activityResult.id() + ' / Edit Photo'
 
@@ -15,20 +9,13 @@ block content
   form(role='form', method='post')
     +csrf
     .row
-      .col-xs-12.col-md-3.thumbnail-container
-        img#thumbnail(src=photo.uri() + '?size=thumb')
-      .col-xs-12.col-md-6
-        ul.tag-list.row
-          each availableTag in activityResult.tags()
-            +tagButton(availableTag)
-    .row
-      .col-md-8
-        .form-group
-          input.form-control#text-title(type='text', name='title', value=photo.title(), placeholder=t('activityresults.photoTitlePlaceholder'))
-
-      .row
-        .col-md-2.col-md-offset-6(style='text-align:right')
-          button.btn.btn-primary(type='submit')
-            span.glyphicon.glyphicon-ok
-              | &nbsp;
-            = t('activityresults.done')
+      .col-xs-12.col-sm-6
+        img(width='100%', src=photo.uri() + '?size=thumb', style='padding-bottom: 20px;')
+      .col-xs-12.col-sm-6
+        +text('title', 'Title', photo.title(), '', t('activityresults.photoTitlePlaceholder'))
+        +multiselect('tags', 'Tags', photo.tags(), activityResult.tags())
+        .col-xs-6(style='padding-left:0px;padding-right:3px')
+          +date('date', 'Date', photo.time().locale(language).format('L'))
+        .col-xs-6(style='padding-left:0px;padding-right:3px')
+          +time('time', photo.time().locale(language).format('LT'))
+        +submitButtons('general.save')

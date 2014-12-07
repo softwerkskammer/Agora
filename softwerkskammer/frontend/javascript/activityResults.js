@@ -3,29 +3,16 @@
 // THE ORIGINAL OF THIS FILE IS IN frontend/javascript
 
 (function () {
-  'use strict';
-  function getPreview(files, callback) {
-    if (!files || !files[0]) { return null; }
-    var reader = new FileReader();
-    reader.onload = function (e) { callback(e.target.result); };
-    reader.readAsDataURL(files[0]);
-  }
-
-  var numColsPerScreen = 3;
-
-  function resizeColumns(totalWidth) {
-    var columns = $('.timeline td, .timeline th');
-    var newColumnWidth = Math.max(200, totalWidth / numColsPerScreen) + 'px';
-    columns.css('width', newColumnWidth);
-    columns.css('min-width', newColumnWidth);
-  }
-
+  "use strict";
   $(function () {
     $("#input-file").on("change", function () {
-      getPreview(this.files, function (imagedata) {
-        $("img#preview").attr("src", imagedata);
+      if (!this.files || !this.files[0]) { return null; }
+      var reader = new FileReader();
+      reader.onload = function (event) {
+        $("img#preview").attr("src", event.target.result);
         $("#previewContainer").slideDown();
-      });
+      };
+      reader.readAsDataURL(this.files[0]);
       $('#selectFile').hide();
     });
 
@@ -36,11 +23,20 @@
     });
 
     $("#recordForm").on("submit", function () {
-      $('#recordForm button[type="submit"]').prepend($('<i class="fa fa-fw fa-spinner fa-spin"/>&nbsp;'));
+      $("#recordForm button[type='submit']").prepend($("<i class='fa fa-fw fa-spinner fa-spin'/>&nbsp;"));
     });
   });
 
   $(function () {
+    var numColsPerScreen = 3;
+
+    function resizeColumns(totalWidth) {
+      var columns = $("td, th");
+      var newColumnWidth = Math.max(200, totalWidth / numColsPerScreen) + "px";
+      columns.css("max-width", newColumnWidth);
+      columns.css("min-width", newColumnWidth);
+    }
+
     resizeColumns($(window).width());
     $(window).resize(function () {
       resizeColumns($(window).width());
