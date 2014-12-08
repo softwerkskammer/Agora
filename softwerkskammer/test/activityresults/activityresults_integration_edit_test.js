@@ -25,9 +25,6 @@ describe('/activityresults/:result/photo/:photo', function () {
     sinon.stub(activityresultsService, 'getActivityResultByName', function (activityResultName, callback) {
       callback(null, new ActivityResult({ id: 'foo', name: 'foobar', created_by: MEMBER_ID, photos: [{id: photoId, title: 'mishka', uploaded_by: MEMBER_ID}]}));
     });
-    sinon.stub(activityresultsService, 'addPhotoToActivityResult', function (activityResultName, photo, callback) {
-      callback();
-    });
   });
 
   it('should have old values set', function (done) {
@@ -48,7 +45,7 @@ describe('/activityresults/:result/photo/:photo', function () {
   });
 
   it('should save a photos time, tags and title', function (done) {
-    sinon.stub(activityresultsService, 'updatePhotoOfActivityResult', function (activityResultName, photoId, data, callback) {
+    sinon.stub(activityresultsService, 'updatePhotoOfActivityResult', function (activityResultName, photoId, data, accessrights, callback) {
       expect(data.title).to.eql('My adventures with the softwerkskammer');
       expect(data.tags).to.eql(['a', 'b']);
       callback();
@@ -69,7 +66,7 @@ describe('/activityresults/:result/photo/:photo', function () {
   });
 
   it('should not let me save changes to a photo if I didn\'t upload it', function (done) {
-    sinon.stub(activityresultsService, 'updatePhotoOfActivityResult', function (activityResultName, photoId, data, callback) {
+    sinon.stub(activityresultsService, 'updatePhotoOfActivityResult', function (activityResultName, photoId, data, accessrights, callback) {
       expect(data.title).to.eql('My adventures with the softwerkskammer');
       expect(data.tags).to.eql(['a', 'b']);
       callback();

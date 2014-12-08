@@ -84,7 +84,7 @@ app.post('/preview', function (req, res) {
 });
 
 app.get('/qrcode/:url', function (req, res) {
-  var url = conf.get('publicUrlPrefix') + app.path() + req.params.url;
+  var url = conf.get('publicUrlPrefix') + req.params.url;
   var img = qrimage.image(url, {size: 5});
   res.type('png');
   img.pipe(res);

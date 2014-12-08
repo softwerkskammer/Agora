@@ -10,7 +10,6 @@ var galleryService = beans.get('galleryService');
 var app = require('../../testutil/testHelper')('galleryApp').createApp();
 
 var OK = 200;
-var CREATED = 201;
 
 describe('/gallery', function () {
   var storedImageId = 'image.jpg';
@@ -21,7 +20,7 @@ describe('/gallery', function () {
   });
 
   it('GET /{imageId} responds with the image', function (done) {
-    sinon.stub(galleryService, 'retrieveScaledImage', function (imageId, width, height, callback) {
+    sinon.stub(galleryService, 'retrieveScaledImage', function (imageId, width, callback) {
       if (storedImageId === imageId) {
         callback(null, imagePath);
       }
