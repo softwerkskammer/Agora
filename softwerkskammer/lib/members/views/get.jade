@@ -52,7 +52,7 @@ block content
     .col-md-4
       p
         img(src=member.avatarUrl(200))
-
+        a(href='/members/editphoto/#{encodeURIComponent(member.nickname())}') Photo bearbeiten
   .row
     .col-md-12
       a.btn.btn-primary(href='/mailsender/contactMember/#{encodeURIComponent(member.nickname())}')

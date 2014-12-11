@@ -17,6 +17,13 @@ function autoOrient(sourceImagePath, targetPath, callback) {
   });
 }
 
+function convert(sourceImagePath, targetPath, params, callback) {
+  console.log(targetPath);
+  magick.convert([sourceImagePath, '-rotate', params.angle, '-resize', parseInt(params.scale * 100, 10) + '%', '-crop', params.geometry, targetPath], function (err) {
+    callback(err);
+  });
+}
+
 function scaledImageId(id, width) {
   var ext = path.extname(id);
   return path.basename(id, ext) + '_' + width + ext;
@@ -32,6 +39,12 @@ module.exports = {
     glob(fullPath(pattern), function (err, files) {
       async.each(files, fs.unlink, callback);
     });
+  },
+
+  storeAvatar: function storeAvatar(tmpImageFilePath, nickname, params, callback) {
+    var id = nickname + path.extname(tmpImageFilePath);
+    console.log(params);
+    convert(tmpImageFilePath, fullPath(id), params, callback);
   },
 
   storeImage: function storeImage(tmpImageFilePath, callback) {

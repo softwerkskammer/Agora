@@ -1,0 +1,52 @@
+extends ../../../views/layout
+include ../../../views/formComponents
+
+block scripts
+  script.
+    $(function () {
+      $("#recordForm").on("submit", function () {
+        $("#recordForm button[type='submit']").prepend($("<i class='fa fa-fw fa-spinner fa-spin'/>&nbsp;"));
+      });
+      $("img#preview").on("load", function () {
+        var preview = $("img#preview");
+        preview.guillotine({
+          width: 200,
+          height: 200,
+          onChange: function(data, action) {
+            for(var key in data) {
+              $('input[name="' + key + '"]').val(data[key]);
+            }
+          }
+        });
+        preview.guillotine('fit');
+        $("#rotate-left").click(function() {preview.guillotine('rotateLeft')});
+        $("#rotate-right").click(function() {preview.guillotine('rotateRight')});
+        $("#zoom-in").click(function() {preview.guillotine('zoomIn')});
+        $("#zoom-out").click(function() {preview.guillotine('zoomOut')});
+        $("#fit").click(function() {preview.guillotine('fit')});
+      });
+    });
+
+block title
+  | #{t('members.edit')}
+
+block content
+  .row
+    .col-md-6
+      p Softwerkskammer is currently using this gravatar photo:
+      p: img(src=member.avatarUrl(200))
+      p To change this photo you can either change the primary picture at the 
+        a(href='http://gravatar.com') Gravatar Website
+        |  or upload a custom picture here.
+      p If you delete the custom picture, your Gravatar picture will be shown.
+    .col-md-6
+      form(id='recordForm', role='form', method='POST', action='/members/submitavatar' + '?_csrf=' + encodeURIComponent(csrf_token), enctype='multipart/form-data')
+        +imageUpload(true)
+        +hidden('nickname', member.nickname())
+        +hidden('scale')
+        +hidden('angle')
+        +hidden('x')
+        +hidden('y')
+        +hidden('h')
+        +hidden('w')
+        

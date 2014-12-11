@@ -5,6 +5,8 @@
     "create": "Anlegen",
     "edit": "Bearbeiten",
     "rename": "Umbenennen",
+    "cancel": "Abbrechen",
+    "submit": "Weiter",
     "add": "Hinzufügen",
     "save": "Speichern",
     "back": "Zurück",
@@ -21,6 +23,7 @@
     "logout": "Abmelden",
     "overview": "Übersicht",
     "administration": "Verwaltung",
+    "photo": "Photo",
     "faq": "Tipps & FAQs",
     "credits": "Credits",
     "legal_notice": "Impressum",
@@ -174,12 +177,9 @@
     "previous_gdcr": "Vergangene GDCRs"
   },
   "activityresults": {
-    "cancel": "Abbrechen",
     "done": "Fertig",
     "new": "Neue Session Snap Sammlung",
     "deletePhoto": "Photo löschen",
-    "record_image": "Aufzeichnen",
-    "submit": "Weiter",
     "photoTitlePlaceholder": "Was kann man hier sehen?"
   },
   "payment": {

@@ -5,6 +5,8 @@
     "create": "Create",
     "edit": "Edit",
     "rename": "Rename",
+    "cancel": "Cancel",
+    "submit": "Submit",
     "add": "Add",
     "save": "Save",
     "back": "Back",
@@ -21,6 +23,7 @@
     "logout": "Log out",
     "overview": "Overview",
     "administration": "Administration",
+    "photo": "Photo",
     "faq": "Hints & FAQs",
     "credits": "Credits",
     "legal_notice": "Legal Notice",
@@ -173,12 +176,9 @@
     "previous_gdcr": "Previous GDCRs"
   },
   "activityresults": {
-    "cancel": "Cancel",
     "done": "Done",
     "new": "New Session Snap Collection",
-    "record_image": "Record",
     "deletePhoto": "Delete Photo",
-    "submit": "Submit",
     "photoTitlePlaceholder": "What's on this photo?"
   },
   "payment": {
