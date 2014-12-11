@@ -1,11 +1,16 @@
 'use strict';
 
+var _ = require('lodash');
+var path = require('path');
+var fs = require('fs');
+var mimetypes = require('mime-types');
+
 var conf = require('nconf');
 var beans = conf.get('beans');
 var store = beans.get('memberstore');
 var avatarProvider = beans.get('avatarProvider');
 var fieldHelpers = beans.get('fieldHelpers');
-var _ = require('lodash');
+var galleryService = beans.get('galleryService');
 
 function isReserved(nickname) {
   return new RegExp('^edit$|^new$|^checknickname$|^submit$|^administration$|^[.][.]$|^[.]$|\\+', 'i').test(nickname);
@@ -40,16 +45,42 @@ module.exports = {
     });
   },
 
-  getImage: function (member, callback) {
-    var imageDataFromCache = avatarProvider.imageDataFromCache(member);
-    if (imageDataFromCache) {
-      member.setAvatarData(imageDataFromCache);
-      return callback();
-    }
-    avatarProvider.imageDataFromGravatar(member, function (data) {
-      member.setAvatarData(data);
-      callback();
+  saveCustomAvatarForNickname: function (nickname, files, params, callback) {
+    galleryService.storeAvatar(files.image[0].path, nickname, params, function (err, filename) {
+      if (err) { return callback(err); }
+      store.getMember(nickname, function (err, member) {
+        if (err) { return callback(err); }
+        member.state.customAvatarExtension = path.extname(filename);
+        store.saveMember(member, callback);
+      });
     });
+
+  },
+
+  deleteCustomAvatarForNickname: function (nickname, callback) {
+    store.getMember(nickname, function (err, member) {
+      if (err) { return callback(err); }
+      delete member.state.customAvatarExtension;
+      store.saveMember(member, function (err) {
+        if (err) { return callback(err); }
+        galleryService.deleteAvatar(nickname, function (err) {
+          callback(err);
+        });
+      });
+    });
+  },
+
+  getImage: function (member, callback) {
+    if (member.hasCustomAvatarExtension()) {
+      return galleryService.loadAvatar(member.nickname(), 16, function (err, result) {
+        if (err) { return callback(err); }
+        fs.readFile(result, function (err, data) {
+          member.setAvatarData({image: 'data:' + mimetypes.lookup(result) + ';base64,' + new Buffer(data).toString('base64'), hasNoData: false});
+          callback(err);
+        });
+      });
+    }
+    avatarProvider.getImage(member, callback);
   },
 
   toWordList: function (members) {

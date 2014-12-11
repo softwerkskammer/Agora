@@ -20,7 +20,6 @@ var activitystore = beans.get('activitystore');
 var misc = beans.get('misc');
 var statusmessage = beans.get('statusmessage');
 var notifications = beans.get('notifications');
-var galleryService = beans.get('galleryService');
 
 function memberSubmitted(req, res, next) {
   function notifyNewMemberRegistration(member, subscriptions) {
@@ -149,16 +148,6 @@ app.get('/delete/:nickname', function (req, res, next) {
   });
 });
 
-app.get('/editphoto/:nickname', function (req, res) {
-  var nicknameOfEditMember = req.params.nickname;
-  memberstore.getMember(nicknameOfEditMember, function (err, member) {
-    if (!res.locals.accessrights.canEditMember(member)) {
-      return res.redirect('/members/' + encodeURIComponent(member.nickname()));
-    }
-    res.render('editphoto', {member: member});
-  });
-});
-
 app.post('/submit', function (req, res, next) {
   async.parallel(
     [
@@ -187,6 +176,17 @@ app.post('/submit', function (req, res, next) {
   );
 });
 
+app.get('/editavatar/:nickname', function (req, res, next) {
+  var nicknameOfEditMember = req.params.nickname;
+  memberstore.getMember(nicknameOfEditMember, function (err, member) {
+    if (err) { return next(err); }
+    if (!res.locals.accessrights.canEditMember(member)) {
+      return res.redirect('/members/' + encodeURIComponent(member.nickname()));
+    }
+    res.render('editavatar', {member: member});
+  });
+});
+
 app.post('/submitavatar', function (req, res, next) {
   new Form().parse(req, function (err, fields, files) {
     var nickname = fields.nickname[0];
@@ -197,11 +197,27 @@ app.post('/submitavatar', function (req, res, next) {
       geometry: fields.w[0] + 'x' + fields.h[0] + '+' + fields.x[0] + '+' + fields.y[0],
       scale: fields.scale[0],
       angle: fields.angle[0]
-    }
-    galleryService.storeAvatar(files.image[0].path, nickname, params, function (err) {
-      res.redirect('/members/' + nickname); // Es fehlen Prüfungen im Frontend
+    };
+    membersService.saveCustomAvatarForNickname(nickname, files, params, function (err) {
+      if (err) { return next(err); }
+      res.redirect('/members/editavatar/' + encodeURIComponent(nickname)); // Es fehlen Prüfungen im Frontend
     });
   });
+});
+
+app.get('/deleteAvatarFor/:nickname', function (req, res, next) {
+  var nicknameOfEditMember = req.params.nickname;
+  memberstore.getMember(nicknameOfEditMember, function (err, member) {
+    if (err) { return next(err); }
+    if (res.locals.accessrights.canEditMember(member)) {
+      return membersService.deleteCustomAvatarForNickname(nicknameOfEditMember, function (err) {
+        if (err) { return next(err); }
+        res.redirect('/members/editavatar/' + encodeURIComponent(nicknameOfEditMember));
+      });
+    }
+    res.redirect('/members/' + encodeURIComponent(nicknameOfEditMember));
+  });
+
 });
 
 app.get('/:nickname', function (req, res, next) {

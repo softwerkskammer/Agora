@@ -66,7 +66,8 @@
     "are_you_sure": "Are you sure?",
     "no": "No",
     "delete": "Delete",
-    "guest": "Guest"
+    "guest": "Guest",
+    "deletePhoto": "Delete Photo"
   },
   "error": {
     "congratulations": "Congratulations!",
@@ -176,9 +177,7 @@
     "previous_gdcr": "Previous GDCRs"
   },
   "activityresults": {
-    "done": "Done",
     "new": "New Session Snap Collection",
-    "deletePhoto": "Delete Photo",
     "photoTitlePlaceholder": "What's on this photo?"
   },
   "payment": {

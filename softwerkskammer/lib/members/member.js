@@ -10,7 +10,7 @@ function Member(object) {
 
 Member.prototype.fillFromUI = function (object) {
   var self = this;
-  _.each(['nickname', 'firstname', 'lastname', 'email', 'location', 'profession', 'interests', 'reference'], function (property) {
+  _.each(['nickname', 'firstname', 'lastname', 'email', 'location', 'profession', 'interests', 'reference', 'customAvatarExtension'], function (property) {
     if (object.hasOwnProperty(property)) { self.state[property] = object[property]; }
   });
   _.each(['notifyOnWikiChanges', 'socratesOnly'], function (property) {
@@ -60,6 +60,9 @@ Member.prototype.initFromSessionUser = function (sessionUser, socratesOnly) {
 };
 
 Member.prototype.avatarUrl = function (size) {
+  if (this.hasCustomAvatarExtension()) {
+    return '/gallery/avatarFor/' + this.nickname() + this.state.customAvatarExtension;
+  }
   return fieldHelpers.avatarUrl(this.email(), size);
 };
 
@@ -70,6 +73,10 @@ Member.prototype.setAvatarData = function (data) {
 
 Member.prototype.inlineAvatar = function () {
   return this.avatarImage || '';
+};
+
+Member.prototype.hasCustomAvatarExtension = function () {
+  return !!this.state.customAvatarExtension;
 };
 
 Member.prototype.asGitAuthor = function () {
@@ -145,7 +152,7 @@ Member.prototype.isContactperson = function () {
 };
 
 Member.prototype.isInGroup = function (groupId) {
-  return !!this.subscribedGroups && _.some(this.subscribedGroups, {id: groupId });
+  return !!this.subscribedGroups && _.some(this.subscribedGroups, {id: groupId});
 };
 
 Member.prototype.isSuperuser = function () {

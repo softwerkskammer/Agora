@@ -1,5 +1,6 @@
 extends ../../../views/layout
 include ../../../views/formComponents
+include ../../../views/imageUpload
 
 block scripts
   script.
@@ -32,16 +33,18 @@ block title
 
 block content
   .row
-    .col-md-6
-      p Softwerkskammer is currently using this gravatar photo:
-      p: img(src=member.avatarUrl(200))
-      p To change this photo you can either change the primary picture at the 
-        a(href='http://gravatar.com') Gravatar Website
-        |  or upload a custom picture here.
-      p If you delete the custom picture, your Gravatar picture will be shown.
-    .col-md-6
+    .col-md-12
+      legend
+        | Photo
+      p.
+        This is your current avatar. If it is a custom one, you can delete it and then we try to show your Gravatar.com avatar.
+        Use the Button to upload a new photo and replace the current one.
+      p
+        img(src=member.avatarUrl(200))
+        if member.hasCustomAvatarExtension()
+          +reallyDeleteModal('general.deletePhoto', '/members/deleteAvatarFor/' + member.nickname())
       form(id='recordForm', role='form', method='POST', action='/members/submitavatar' + '?_csrf=' + encodeURIComponent(csrf_token), enctype='multipart/form-data')
-        +imageUpload(true)
+        +imageUpload({withbuttons: true, imgstyle: 'width: 200px; height:200px;'})
         +hidden('nickname', member.nickname())
         +hidden('scale')
         +hidden('angle')
@@ -49,4 +52,3 @@ block content
         +hidden('y')
         +hidden('h')
         +hidden('w')
-        

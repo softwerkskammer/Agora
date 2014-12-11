@@ -67,7 +67,8 @@
     "are_you_sure": "Bist Du sicher?",
     "no": "Nein",
     "delete": "Löschen",
-    "guest": "Gast"
+    "guest": "Gast",
+    "deletePhoto": "Photo löschen"
   },
   "error": {
     "congratulations": "Herzlichen Glückwunsch!",
@@ -177,9 +178,7 @@
     "previous_gdcr": "Vergangene GDCRs"
   },
   "activityresults": {
-    "done": "Fertig",
     "new": "Neue Session Snap Sammlung",
-    "deletePhoto": "Photo löschen",
     "photoTitlePlaceholder": "Was kann man hier sehen?"
   },
   "payment": {

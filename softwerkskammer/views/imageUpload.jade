@@ -1,0 +1,43 @@
+mixin imageUpload(options)
+  - options = options || {}
+  - btnGroupClasses = options.buttonsright ? ['pull-right'] : []
+  - previewStyle = options.buttonsright ? 'max-width: 100%;' : ''
+  #selectFile
+    span.btn.btn-primary.btn-file
+      i.fa.fa-fw.fa-camera
+      |  #{t('general.photo')}
+      input#input-file(type='file', accept='image/*', name='image')
+  #previewContainer(style='display: none')
+    .btn-group(class=btnGroupClasses)
+      span#btn-cancel.btn.btn-default #{t('general.cancel')}
+      button.btn.btn-primary(type='submit') #{t('general.submit')}
+    .clearfix
+    div
+      div(style='margin-top: 5px;' + options.imgstyle)
+        img#preview(style=previewStyle)
+        .clearfix
+        if options.withbuttons
+          .btn-group(style='display: table; margin-left: auto; margin-right: auto; margin-top: 5px')
+            span#rotate-left.btn.btn-sm.btn-default: i.fa.fa-fw.fa-rotate-left
+            span#zoom-in.btn.btn-sm.btn-default: i.fa.fa-fw.fa-search-plus
+            span#fit.btn.btn-sm.btn-default: i.fa.fa-fw.fa-arrows-alt
+            span#zoom-out.btn.btn-sm.btn-default: i.fa.fa-fw.fa-search-minus
+            span#rotate-right.btn.btn-sm.btn-default: i.fa.fa-fw.fa-rotate-right
+  script.
+    $("#input-file").on("change", function () {
+      if (!this.files || !this.files[0]) { return null; }
+      var reader = new FileReader();
+      reader.onload = function (event) {
+        $("img#preview").attr("src", event.target.result);
+        $("#previewContainer").slideDown();
+      };
+      reader.readAsDataURL(this.files[0]);
+      $('#selectFile').hide();
+    });
+    $("#btn-cancel").click(function () {
+      $("#previewContainer").slideUp(200, function () {
+        $("#selectFile").show();
+        $("#input-file").val(null);
+      });
+    });
+
