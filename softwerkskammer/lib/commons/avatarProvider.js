@@ -1,6 +1,6 @@
 'use strict';
 
-var request = require('request').defaults({ encoding: null });
+var request = require('request').defaults({encoding: null});
 var conf = require('nconf');
 var NodeCache = require('node-cache');
 var fieldHelpers = conf.get('beans').get('fieldHelpers');
@@ -12,11 +12,22 @@ function avatarUrl(member) {
 }
 
 module.exports = {
+  getImage: function (member, callback) {
+    var imageData = this.imageDataFromCache(member);
+    if (imageData) {
+      member.setAvatarData(imageData);
+      return callback();
+    }
+    this.imageDataFromGravatar(member, function (data) {
+      member.setAvatarData(data);
+      callback();
+    });
+  },
 
   imageDataFromCache: function (member) {
     var url = avatarUrl(member);
     return imageCache.get(url)[url];
-  },
+  }, // public for stubbing in test
 
   imageDataFromGravatar: function (member, callback) {
     var url = avatarUrl(member);
@@ -29,6 +40,6 @@ module.exports = {
       imageCache.set(url, data);
       callback(data);
     });
-  }
+  } // public for stubbing in test
 };
 
