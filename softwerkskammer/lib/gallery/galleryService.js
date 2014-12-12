@@ -19,7 +19,10 @@ function autoOrient(sourceImagePath, targetPath, callback) {
 }
 
 function convert(sourceImagePath, targetPath, params, callback) {
-  magick.convert([sourceImagePath, '-rotate', params.angle, '-resize', parseFloat(params.scale * 100) + '%', '-crop', params.geometry, targetPath], function (err) {
+  var angle = params.angle || '0';
+  var scale = params.scale || '1';
+  var geometry = params.geometry || '100x100+0+0';
+  magick.convert([sourceImagePath, '-rotate', angle, '-resize', parseFloat(scale * 100) + '%', '-crop', geometry, targetPath], function (err) {
     callback(err, targetPath);
   });
 }
@@ -47,12 +50,15 @@ function representsImage(file) {
   return file.match(/jpg$|jpeg$|png$/);
 }
 
+function deleteAllImagesMatching(pattern, callback) {
+  glob(fullPath(pattern), function (err, files) {
+    async.each(_.filter(files, representsImage), fs.unlink, callback);
+  });
+}
+
 module.exports = {
   deleteImage: function (id, callback) {
-    var pattern = path.basename(id, path.extname(id)) + '*';
-    glob(fullPath(pattern), function (err, files) {
-      async.each(files, fs.unlink, callback);
-    });
+    deleteAllImagesMatching(path.basename(id, path.extname(id)) + '*', callback);
   },
 
   storeAvatar: function (tmpImageFilePath, nickname, params, callback) {
@@ -60,7 +66,7 @@ module.exports = {
     convert(tmpImageFilePath, fullPath(id), params, callback);
   },
 
-  loadAvatar: function (nickname, width, callback) {
+  scaleAndReturnFullImagePath: function (nickname, width, callback) {
     glob(fullPath(nickname + '*'), function (err, files) {
       if (err) { return callback(err); }
       var imageFile = _.find(files, representsImage);
@@ -69,9 +75,7 @@ module.exports = {
   },
 
   deleteAvatar: function (nickname, callback) {
-    glob(fullPath(nickname + '*'), function (err, files) {
-      async.each(_.filter(files, representsImage), fs.unlink, callback);
-    });
+    deleteAllImagesMatching(nickname + '*', callback);
   },
 
   storeImage: function (tmpImageFilePath, callback) {

@@ -72,7 +72,7 @@ module.exports = {
 
   getImage: function (member, callback) {
     if (member.hasCustomAvatarExtension()) {
-      return galleryService.loadAvatar(member.nickname(), 16, function (err, result) {
+      return galleryService.scaleAndReturnFullImagePath(member.nickname(), 16, function (err, result) {
         if (err) { return callback(err); }
         fs.readFile(result, function (err, data) {
           member.setAvatarData({image: 'data:' + mimetypes.lookup(result) + ';base64,' + new Buffer(data).toString('base64'), hasNoData: false});

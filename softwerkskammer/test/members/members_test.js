@@ -85,8 +85,28 @@ describe('Members application', function () {
   it('allows a superuser member to edit another member\'s data', function (done) {
     request(createApp('superuserID'))
       .get('/edit/hada')
+      .expect(200, done);
+  });
+
+  it('allows a member to edit her own avatar', function (done) {
+    request(createApp('memberID'))
+      .get('/editavatar/hada')
       .expect(200)
+      .expect(/<img src="https:\/\/www\.gravatar\.com\/avatar\/5d60d4e28066df254d5452f92c910092\?d=blank&amp;s=200">/)
       .expect(/Profil bearbeiten/, done);
+  });
+
+  it('does not allow a member to edit another member\'s avatar', function (done) {
+    request(createApp('memberID1'))
+      .get('/editavatar/hada')
+      .expect(302)
+      .expect('location', /members/, done);
+  });
+
+  it('allows a superuser member to edit another member\'s avatar', function (done) {
+    request(createApp('superuserID'))
+      .get('/editavatar/hada')
+      .expect(200, done);
   });
 
   it('rejects a member with invalid and different nickname on submit', function (done) {
