@@ -3,7 +3,7 @@
 var beans = require('nconf').get('beans');
 var misc = beans.get('misc');
 var membersService = beans.get('membersService');
-var memberstore = beans.get('memberstore');
+var participantService = beans.get('participantService');
 
 var app = misc.expressAppIn(__dirname);
 
@@ -16,7 +16,7 @@ app.get('/checkemail', function (req, res) {
 });
 
 app.get('/:nickname', function (req, res, next) {
-  memberstore.getMember(req.params.nickname, function (err, member) {
+  participantService.getMemberIfParticipantExists(req.params.nickname, function (err, member) {
     if (err || !member) { return next(err); }
     res.render('get', {member: member});
   });
