@@ -27,7 +27,10 @@ function createConfiguration() {
     port: '17224',
     mongoURL: 'mongodb://localhost:27017/swk',
     publicUrlPrefix: 'http://localhost:17224',
-    securedByLoginURLPattern: '/wiki',
+    securedByLoginURLPattern:
+      '/wiki|' +
+      '/mailsender|' +
+      '/members',
 
     secret: 'secret',
     sessionkey: 'socrates-conference.de',
