@@ -23,8 +23,16 @@ module.exports = function accessrights(req, res, next) {
       return this.isRegistered() && this.memberId() === member.id();
     },
 
+    isSuperuser: function () {
+      return false; // we do not have a superuser mechanism yet
+    },
+
     canEditMember: function (member) {
       return this.isMember(member);
+    },
+
+    canDeleteMember: function (member) {
+      return this.isSuperuser() && !this.isMember(member);
     }
 
   };

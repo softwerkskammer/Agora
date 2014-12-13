@@ -15,6 +15,16 @@ module.exports = {
       }
       return callback(null);
     });
+  },
+
+  getMemberIfParticipantExists: function (nickname, callback) {
+    memberstore.getMember(nickname, function (err, member) {
+      if (err || !member) { return callback(err); }
+      participantstore.getParticipant(member.id(), function (err, participant) {
+        if (err || !participant) { return callback(err); }
+        callback(null, member);
+      });
+    });
   }
 
 };
