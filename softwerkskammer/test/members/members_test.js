@@ -100,19 +100,19 @@ describe('Members application', function () {
     request(createApp('memberID'))
       .get('/hada')
       .expect(200)
-      .expect(/<img src="https:\/\/www\.gravatar\.com\/avatar\/5d60d4e28066df254d5452f92c910092\?d=mm&amp;s=200"\/>/)
+      .expect(/<img src="https:\/\/www\.gravatar\.com\/avatar\/5d60d4e28066df254d5452f92c910092\?d=mm&amp;s=200"/)
       .expect(/<input id="input-file" type="file" accept="image\/\*" name="image"\/>/, done);
   });
 
   it('does not allow a member to edit another member\'s avatar', function (done) {
     function noFileInput(res) {
-      if (res.text.match(/<input id="input-file" type="file" accept="image\/\*" name="image"\/>/)) { return 'hasFileInput'; }
+      if (res.text.match(/<input id="input-file" type="file" accept="image\/\*" name="image"/)) { return 'hasFileInput'; }
     }
 
     request(createApp('memberID1'))
       .get('/hada')
       .expect(200)
-      .expect(/<img src="https:\/\/www\.gravatar\.com\/avatar\/5d60d4e28066df254d5452f92c910092\?d=mm&amp;s=200"\/>/)
+      .expect(/<img src="https:\/\/www\.gravatar\.com\/avatar\/5d60d4e28066df254d5452f92c910092\?d=mm&amp;s=200"/)
       .expect(noFileInput)
       .end(done);
   });

@@ -51,7 +51,11 @@ block content
 
       p &nbsp;
     .col-md-4
-      +avatar
+      if(accessrights.canEditMember(member))
+        +avatar
+      else
+        div(style='width: 200px')
+          img(src=member.avatarUrl())
   .row
     .col-md-12
       a.btn.btn-primary(href='/mailsender/contactMember/#{encodeURIComponent(member.nickname())}')

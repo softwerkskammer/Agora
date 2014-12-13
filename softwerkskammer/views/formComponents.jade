@@ -143,4 +143,5 @@ mixin reallyDeleteModal(header, urlForButton, extraclasses)
               | #{t('general.delete')}
   span.btn.btn-danger(data-toggle='modal', data-target='#reallyDelete', class=extraclasses)
     i.fa.fa-trash-o.fa-fw
-    | &nbsp; #{t('general.delete')}
+    if (extraclasses)
+      | &nbsp; #{t('general.delete')}
