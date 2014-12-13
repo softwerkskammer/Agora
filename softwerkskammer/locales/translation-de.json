@@ -23,7 +23,7 @@
     "logout": "Abmelden",
     "overview": "Übersicht",
     "administration": "Verwaltung",
-    "photo": "Photo",
+    "photo": "Neues Photo",
     "faq": "Tipps & FAQs",
     "credits": "Credits",
     "legal_notice": "Impressum",
@@ -67,8 +67,8 @@
     "are_you_sure": "Bist Du sicher?",
     "no": "Nein",
     "delete": "Löschen",
-    "guest": "Gast",
-    "deletePhoto": "Photo löschen"
+    "new": "Neu",
+    "guest": "Gast"
   },
   "error": {
     "congratulations": "Herzlichen Glückwunsch!",
@@ -457,5 +457,13 @@
     "description": [
       "p Deine persönliche Softwerkskammer. Wir zeigen Dir hier Deine Gruppen und ihre Aktivitäten."
     ]
+  },
+  "photo": {
+    "rotate-left": "Linksherum drehen",
+    "rotate-right": "Rechtsherum drehen",
+    "zoom-in": "Vergrößern",
+    "zoom-out": "Verkleinern",
+    "replace": "Ersetzen",
+    "delete": "Photo löschen"
   }
 }

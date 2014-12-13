@@ -1,15 +1,7 @@
-/*global FileReader */
-
 // THE ORIGINAL OF THIS FILE IS IN frontend/javascript
 
 (function () {
   "use strict";
-  $(function () {
-    $("#recordForm").on("submit", function () {
-      $("#recordForm button[type='submit']").prepend($("<i class='fa fa-fw fa-spinner fa-spin'/>&nbsp;"));
-    });
-  });
-
   $(function () {
     var numColsPerScreen = 3;
 

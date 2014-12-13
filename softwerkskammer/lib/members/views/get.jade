@@ -2,6 +2,7 @@ extends ../../../views/layout
 
 include ../../../views/formComponents
 include ../../activities/views/activities-mixins
+include editavatar
 
 block title
   | #{member.firstname()} #{member.lastname()} - #{t('members.profile')}
@@ -50,12 +51,7 @@ block content
 
       p &nbsp;
     .col-md-4
-      div
-        img(src=member.avatarUrl())
-      if (accessrights.canEditMember(member))
-        a.btn.btn-default(href='/members/editavatar/#{encodeURIComponent(member.nickname())}')
-          i.fa.fa-edit.fa-fw
-          |  #{t('members.edit_avatar')}
+      +avatar
   .row
     .col-md-12
       a.btn.btn-primary(href='/mailsender/contactMember/#{encodeURIComponent(member.nickname())}')

@@ -23,7 +23,7 @@
     "logout": "Log out",
     "overview": "Overview",
     "administration": "Administration",
-    "photo": "Photo",
+    "photo": "New Photo",
     "faq": "Hints & FAQs",
     "credits": "Credits",
     "legal_notice": "Legal Notice",
@@ -67,7 +67,7 @@
     "no": "No",
     "delete": "Delete",
     "guest": "Guest",
-    "deletePhoto": "Delete Photo"
+    "new": "New"
   },
   "error": {
     "congratulations": "Congratulations!",
@@ -456,5 +456,13 @@
     "description": [
       "p Your personal view to softwerkskammer. It shows your groups and their upcoming activities."
     ]
+  },
+  "photo": {
+    "rotate-left": "Rotate Left",
+    "rotate-right": "Rotate Right",
+    "zoom-in": "Zoom-in",
+    "zoom-out": "Zoom-out",
+    "replace": "Replace",
+    "delete": "Delete Photo"
   }
 }
