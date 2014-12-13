@@ -153,17 +153,6 @@ module.exports = function (grunt) {
         }
       }
     },
-    istanbul_check_coverage: {
-      server: {
-        options: {
-          coverageFolder: 'socrates/coverage*',
-          check: {
-            lines: 60,
-            statements: 60
-          }
-        }
-      }
-    },
 
     'bower-install-simple': {
       default: {
@@ -185,7 +174,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-patch');
 
   grunt.registerTask('prepare', ['jslint', 'bower-install-simple', 'copy', 'patch', 'less']);
-  grunt.registerTask('tests', ['prepare', 'mocha_istanbul', 'istanbul_check_coverage:server']);
+  grunt.registerTask('tests', ['prepare', 'mocha_istanbul']);
   grunt.registerTask('deploy_development', ['prepare', 'uglify:development']);
   grunt.registerTask('deploy_production', ['prepare', 'uglify:production']);
 
