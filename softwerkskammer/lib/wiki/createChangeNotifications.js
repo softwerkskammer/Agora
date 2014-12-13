@@ -42,7 +42,8 @@ persistence.getByField({id: 'lastWikiNotifications'}, function (err, result) {
           logger.error(err);
           process.exit();
         }
-        logger.info("Wiki-Changes Options: " + stringifiedOptions);
+        logger.info("Wiki-Changes notified at: " + lastNotified);
+        logger.info("Options returned: " + !!stringifiedOptions);
         process.exit();
       });
     });
