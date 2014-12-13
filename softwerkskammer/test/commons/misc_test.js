@@ -25,7 +25,7 @@ describe('toArray function', function () {
   });
 
   it('transforms an array to the same array', function () {
-    var result = misc.toArray([ 'Test1', 'Test2' ]);
+    var result = misc.toArray(['Test1', 'Test2']);
     expect(result.length).to.equal(2);
     expect(result[0]).to.equal('Test1');
     expect(result[1]).to.equal('Test2');
@@ -226,5 +226,22 @@ describe('validate function', function () {
     });
   });
 
+});
 
+describe('represents image', function () {
+  it('accepts a full name', function () {
+    expect(misc.representsImage('file.jpg')).to.be.true();
+  });
+
+  it('accepts an extension (without .)', function () {
+    expect(misc.representsImage('jpg')).to.be.true();
+  });
+
+  it('accepts an extension (with .)', function () {
+    expect(misc.representsImage('.jpg')).to.be.true();
+  });
+
+  it('does not accept a word doc', function () {
+    expect(misc.representsImage('.doc')).to.be.false();
+  });
 });

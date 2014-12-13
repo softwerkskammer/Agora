@@ -9,6 +9,7 @@ var fs = require('fs');
 var glob = require('glob');
 var async = require('async');
 var _ = require('lodash');
+var misc = conf.get('beans').get('misc');
 
 var widths = {thumb: 400, preview: 1080};
 
@@ -47,7 +48,7 @@ function scaleImage(id, width, callback) {
 }
 
 function representsImage(file) {
-  return file.match(/jpg$|jpeg$|png$/);
+  return misc.representsImage(file);
 }
 
 function deleteAllImagesMatching(pattern, callback) {
