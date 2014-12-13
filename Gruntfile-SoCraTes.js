@@ -136,6 +136,35 @@ module.exports = function (grunt) {
       }
     },
 
+    mocha_istanbul: {
+      test: {
+        src: 'socrates/test',
+        options: {
+          coverageFolder: 'socrates/coverage',
+          timeout: 6000,
+          slow: 100,
+          mask: '**/*.js',
+          root: 'socrates/lib',
+          reporter: 'dot',
+          check: {
+            lines: 60,
+            statements: 60
+          }
+        }
+      }
+    },
+    istanbul_check_coverage: {
+      server: {
+        options: {
+          coverageFolder: 'socrates/coverage*',
+          check: {
+            lines: 60,
+            statements: 60
+          }
+        }
+      }
+    },
+
     'bower-install-simple': {
       default: {
         options: {
@@ -151,13 +180,15 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-mocha-istanbul');
   grunt.loadNpmTasks('grunt-jslint');
   grunt.loadNpmTasks('grunt-patch');
 
   grunt.registerTask('prepare', ['jslint', 'bower-install-simple', 'copy', 'patch', 'less']);
+  grunt.registerTask('tests', ['prepare', 'mocha_istanbul', 'istanbul_check_coverage:server']);
   grunt.registerTask('deploy_development', ['prepare', 'uglify:development']);
   grunt.registerTask('deploy_production', ['prepare', 'uglify:production']);
 
   // Default task.
-  grunt.registerTask('default', ['deploy_development']);
+  grunt.registerTask('default', ['tests', 'uglify:development']);
 };

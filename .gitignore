@@ -21,6 +21,7 @@ config/*.json*
 !config/beans.json
 !config/beans-socrates.json
 !config/testbeans.json
+!config/testbeans-socrates.json
 !config/testbeansWithDB.json
 
 *.log
@@ -38,3 +39,4 @@ socrates/public/clientscripts
 socrates/public/fonts
 socrates/public/stylesheets
 local
+socrates/coverage

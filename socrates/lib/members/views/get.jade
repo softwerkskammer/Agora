@@ -1,0 +1,35 @@
+extends ../../../views/layout
+
+include ../../../views/formComponents
+
+block title
+  | #{member.firstname()} #{member.lastname()} - #{t('members.profile')}
+
+block content
+  .row
+    .col-md-12
+      .page-header
+        .btn-group.pull-right
+          if (accessrights.canDeleteMember(member))
+            +reallyDeleteModal('members.delete', '/members/delete/' +encodeURIComponent(member.nickname()))
+        h2
+          | #{member.nickname()}
+          small
+            | &nbsp;#{t('members.profile')}
+  .row
+    .col-md-8
+      p
+        strong #{t('members.firstname')}:
+        |  #{member.firstname()}
+      p
+        strong #{t('members.lastname')}:
+        |  #{member.lastname()}
+      p
+        strong #{t('members.twitter')}:&nbsp;
+        span.twitterify
+          | #{member.twitter()}
+
+      p &nbsp;
+    .col-md-4
+      p
+        img(src=member.avatarUrl(200))
