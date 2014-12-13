@@ -1,29 +1,48 @@
 'use strict';
+var path = require('path');
 require('../../configure'); // initializing parameters
 var beans = require('nconf').get('beans');
 var wikiService = beans.get('wikiService');
 var notifications = beans.get('notifications');
 var persistence = beans.get('settingsPersistence');
 var moment = require('moment-timezone');
+var util = require('util');
+
+// initialize winston and two concrete loggers
+/*jslint stupid: true */
+var winston = require('winston-config').fromFileSync(path.join(__dirname, '../../../config/winston-config.json'));
+/*jslint stupid: false */
+var logger = winston.loggers.get('scripts');
 
 persistence.getByField({id: 'lastWikiNotifications'}, function (err, result) {
   if (err) {
-    console.log(err);
+    logger.error(err);
     process.exit();
   }
   var yesterday = moment().subtract(1, 'days');
   var lastNotified = result || {id: 'lastWikiNotifications', moment: yesterday.toDate()};
+  logger.info("Last notified: " + util.inspect(result));
   wikiService.findPagesForDigestSince(moment(lastNotified.moment), function (err, changes) {
-    if (err || changes.length === 0) {
-      console.log('no changes to report');
+    if (err) {
+      logger.error(err);
+      process.exit();
+    }
+    if (changes.length === 0) {
+      logger.info('no changes to report');
       process.exit();
     }
     notifications.wikiChanges(changes, function (err, stringifiedOptions) {
-      if (err) { console.log(err); }
+      if (err) {
+        logger.error(err);
+        process.exit();
+      }
       lastNotified.moment = moment().toDate();
       persistence.save(lastNotified, function (err) {
-        if (err) { console.log(err); }
-        console.log(stringifiedOptions);
+        if (err) {
+          logger.error(err);
+          process.exit();
+        }
+        logger.info("Wiki-Changes Options: " + stringifiedOptions);
         process.exit();
       });
     });
