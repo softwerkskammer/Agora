@@ -1,6 +1,7 @@
 'use strict';
 var conf = require('nconf');
 var fieldHelpers = conf.get('beans').get('fieldHelpers');
+var avatarProvider = conf.get('beans').get('avatarProvider');
 var moment = require('moment-timezone');
 var _ = require('lodash');
 
@@ -63,7 +64,7 @@ Member.prototype.avatarUrl = function (size) {
   if (this.hasCustomAvatar()) {
     return '/gallery/avatarFor/' + this.customAvatar();
   }
-  return fieldHelpers.avatarUrl(this.email(), size);
+  return avatarProvider.avatarUrl(this.email(), size || 200);
 };
 
 Member.prototype.setAvatarData = function (data) {
