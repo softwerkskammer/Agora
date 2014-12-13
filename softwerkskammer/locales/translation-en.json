@@ -5,6 +5,8 @@
     "create": "Create",
     "edit": "Edit",
     "rename": "Rename",
+    "cancel": "Cancel",
+    "submit": "Submit",
     "add": "Add",
     "save": "Save",
     "back": "Back",
@@ -21,6 +23,7 @@
     "logout": "Log out",
     "overview": "Overview",
     "administration": "Administration",
+    "photo": "New Photo",
     "faq": "Hints & FAQs",
     "credits": "Credits",
     "legal_notice": "Legal Notice",
@@ -63,7 +66,8 @@
     "are_you_sure": "Are you sure?",
     "no": "No",
     "delete": "Delete",
-    "guest": "Guest"
+    "guest": "Guest",
+    "new": "New"
   },
   "error": {
     "congratulations": "Congratulations!",
@@ -173,12 +177,7 @@
     "previous_gdcr": "Previous GDCRs"
   },
   "activityresults": {
-    "cancel": "Cancel",
-    "done": "Done",
     "new": "New Session Snap Collection",
-    "record_image": "Record",
-    "deletePhoto": "Delete Photo",
-    "submit": "Submit",
     "photoTitlePlaceholder": "What's on this photo?"
   },
   "payment": {
@@ -311,6 +310,7 @@
     "members": "Members",
     "create": "Create Profile",
     "edit": "Edit Profile",
+    "edit_avatar": "Edit Photo",
     "new": "New Member",
     "cancel": "Cancel registration",
     "group_membership": "Group Membership",
@@ -335,7 +335,8 @@
     "has_by_interests": "For this phrase we have",
     "notifyOnWikiChanges": "Notify on wiki changes",
     "resign": "Resign",
-    "delete": "Delete Member"
+    "delete": "Delete Member",
+    "avatar_info_text": "This is your current avatar. If it is a custom one, you can delete it and then we try to show your Gravatar.com avatar. Use the Button to upload a new photo and replace the current one."
   },
   "wiki": {
     "blogposts": "Blog Posts",
@@ -455,5 +456,13 @@
     "description": [
       "p Your personal view to softwerkskammer. It shows your groups and their upcoming activities."
     ]
+  },
+  "photo": {
+    "rotate-left": "Rotate Left",
+    "rotate-right": "Rotate Right",
+    "zoom-in": "Zoom-in",
+    "zoom-out": "Zoom-out",
+    "replace": "Replace",
+    "delete": "Delete Photo"
   }
 }

@@ -1,25 +1,41 @@
 'use strict';
 
-var request = require('request').defaults({ encoding: null });
+var crypto = require('crypto');
+var request = require('request').defaults({encoding: null});
 var conf = require('nconf');
 var NodeCache = require('node-cache');
 var fieldHelpers = conf.get('beans').get('fieldHelpers');
 
 var imageCache = new NodeCache({stdTTL: 60 * 60}); // one hour
 
-function avatarUrl(member) {
-  return fieldHelpers.avatarUrl(member.email(), 16);
-}
-
 module.exports = {
+  avatarUrl: function (emailAddress, size) {
+    function md5() {
+      return emailAddress ? crypto.createHash('md5').update(emailAddress).digest('hex') : '';
+    }
 
-  imageDataFromCache: function (member) {
-    var url = avatarUrl(member);
-    return imageCache.get(url)[url];
+    return 'https://www.gravatar.com/avatar/' + md5() + '?d=' + (size === 16 ? 'blank' : 'mm') + '&s=' + size;
   },
 
+  getImage: function (member, callback) {
+    var imageData = this.imageDataFromCache(member);
+    if (imageData) {
+      member.setAvatarData(imageData);
+      return callback();
+    }
+    this.imageDataFromGravatar(member, function (data) {
+      member.setAvatarData(data);
+      callback();
+    });
+  },
+
+  imageDataFromCache: function (member) {
+    var url = this.avatarUrl(member.email(), 16);
+    return imageCache.get(url)[url];
+  }, // public for stubbing in test
+
   imageDataFromGravatar: function (member, callback) {
-    var url = avatarUrl(member);
+    var url = this.avatarUrl(member.email(), 16);
     request.get(url, function (error, response, body) {
       if (error) {
         return callback({image: null, hasNoImage: true});
@@ -29,6 +45,6 @@ module.exports = {
       imageCache.set(url, data);
       callback(data);
     });
-  }
+  } // public for stubbing in test
 };
 

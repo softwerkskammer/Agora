@@ -5,6 +5,11 @@ var express = require('express');
 var path = require('path');
 var conf = require('nconf');
 var moment = require('moment-timezone');
+var mimetypes = require('mime-types');
+
+var imageExtensions = _(mimetypes.extensions)
+  .filter(function (value, key) { return key.match(/^image/); })
+  .flatten().value();
 
 function regexEscape(string) {
   return string.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
@@ -30,7 +35,7 @@ module.exports = {
     if (!elem) { return []; }
     if (elem instanceof Array) { return elem; }
     if (typeof elem === 'string') { return elem.split(','); }
-    return [ elem ];
+    return [elem];
   },
 
   toLowerCaseRegExp: function (string) {
@@ -75,6 +80,11 @@ module.exports = {
       if (err) { return callback('false'); }
       callback(result.toString());
     });
+  },
+
+  representsImage: function (filenameOrExtension) {
+    var extension = filenameOrExtension.indexOf('.') < 1 ? filenameOrExtension : path.extname(filenameOrExtension);
+    return imageExtensions.indexOf(extension.replace(/\./, '')) > -1;
   },
 
   regexEscape: regexEscape

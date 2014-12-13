@@ -14,6 +14,7 @@ module.exports = function (grunt) {
 
   var commonJSfiles = [
     'bower_components/jquery/dist/jquery.js',
+    'bower_components/jquery-guillotine/js/jquery.guillotine.js',
     'bower_components/select2/select2.js',
     'bower_components/autoNumeric/autoNumeric.js',
     'bower_components/bootstrap/dist/js/bootstrap.js',
@@ -231,6 +232,7 @@ module.exports = function (grunt) {
             'bower_components/select2/select2.css',
             'bower_components/select2-bootstrap-css/select2-bootstrap.css',
             'bower_components/mjolnic-bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css',
+            'bower_components/jquery-guillotine/css/jquery.guillotine.css',
             'softwerkskammer/build/stylesheets/less/agora.less'
           ]
         }

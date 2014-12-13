@@ -82,14 +82,14 @@ describe('Member initial filling', function () {
     var db_record = {nickname: 'Nick', email: email};
     var member = new Member(db_record);
     expect(member.avatarUrl(10)).to.contain('https://www.gravatar.com/avatar/');
-    expect(member.avatarUrl(10)).to.contain('?d=blank&s=10');
+    expect(member.avatarUrl(10)).to.contain('?d=mm&s=10');
   });
 
-  it('uses size 32 if no size is given', function () {
+  it('uses size 200 if no size is given', function () {
     var email = 'member@mail.com';
     var db_record = {nickname: 'Nick', email: email};
     var member = new Member(db_record);
-    expect(member.avatarUrl()).to.contain('?d=blank&s=32');
+    expect(member.avatarUrl()).to.contain('?d=mm&s=200');
   });
 });
 

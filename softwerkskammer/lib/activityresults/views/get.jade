@@ -1,6 +1,7 @@
 extends ../../../views/layoutOnlyMain
 
 include  ../../../views/formComponents
+include  ../../../views/imageUpload
 
 block title
   | #{activityResult.id()}
@@ -21,16 +22,7 @@ block content
         .page-header
           .pull-right
             form(id='recordForm', role='form', method='POST', action='/activityresults/' + encodeURIComponent(activityResult.id()) + '/upload' + '?_csrf=' + encodeURIComponent(csrf_token), enctype='multipart/form-data')
-              #selectFile
-                span.btn.btn-primary.btn-file(style='width: 100%')
-                  i.fa.fa-fw.fa-camera
-                  |  #{t('activityresults.record_image')}
-                  input#input-file(type='file', accept='image/*', name='image')
-              #previewContainer(style='display: none')
-                .btn-group.pull-right
-                  span#btn-cancel.btn.btn-default #{t('activityresults.cancel')}
-                  button.btn.btn-primary(type='submit') #{t('activityresults.submit')}
-                img#preview(style='max-width: 100%; padding-top: 15px;')
+              +imageUpload
           h2(style='margin-top: 5px;') #{activityResult.id()}
     each days in activityResult.photosByDay()
       h3(style='margin-top: 5px;') #{days.day.locale(language).format('dddd, LL')}

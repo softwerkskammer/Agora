@@ -1,15 +1,10 @@
 'use strict';
 
 var _s = require('underscore.string');
-var crypto = require('crypto');
 var moment = require('moment-timezone');
 var numeral = require('numeral');
 numeral.language('de', require('numeral/languages/de'));
 numeral.language('en-gb', require('numeral/languages/en-gb'));
-
-function md5(text) {
-  return text ? crypto.createHash('md5').update(text).digest('hex') : '';
-}
 
 module.exports = {
   isFilled: function (someValue) {
@@ -35,10 +30,6 @@ module.exports = {
 
   createLinkFrom: function (fieldArray) {
     return fieldArray.join('_').replace(/[ #,!?ßöäü:"']/g, '_');
-  },
-
-  avatarUrl: function (emailAddress, size) {
-    return 'https://www.gravatar.com/avatar/' + md5(emailAddress) + '?d=blank&s=' + (size || 32);
   },
 
   replaceMailAddresses: function (text) {

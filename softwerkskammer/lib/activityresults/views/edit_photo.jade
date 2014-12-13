@@ -20,4 +20,4 @@ block content
           +time('time', photo.time().locale(language).format('LT'))
         +submitButtons('general.save')
       if (accessrights.canDeletePhoto(photo))
-        +reallyDeleteModal('activityresults.deletePhoto', '/activityresults/' + activityResult.id() + '/photo/' + photo.id() + '/delete')
+        +reallyDeleteModal('photo.delete', '/activityresults/' + activityResult.id() + '/photo/' + photo.id() + '/delete')

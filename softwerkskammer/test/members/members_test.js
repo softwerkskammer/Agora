@@ -24,7 +24,15 @@ var getSubscribedGroupsForUser;
 describe('Members application', function () {
 
   beforeEach(function () {
-    dummymember = new Member({id: 'memberID', nickname: 'hada', email: 'a@b.c', site: 'http://my.blog', firstname: 'Hans', lastname: 'Dampf', authentications: []});
+    dummymember = new Member({
+      id: 'memberID',
+      nickname: 'hada',
+      email: 'a@b.c',
+      site: 'http://my.blog',
+      firstname: 'Hans',
+      lastname: 'Dampf',
+      authentications: []
+    });
     allMembers = sinon.stub(memberstore, 'allMembers', function (callback) {
       callback(null, [dummymember]);
     });
@@ -85,8 +93,35 @@ describe('Members application', function () {
   it('allows a superuser member to edit another member\'s data', function (done) {
     request(createApp('superuserID'))
       .get('/edit/hada')
+      .expect(200, done);
+  });
+
+  it('allows a member to edit her own avatar', function (done) {
+    request(createApp('memberID'))
+      .get('/hada')
       .expect(200)
-      .expect(/Profil bearbeiten/, done);
+      .expect(/<img src="https:\/\/www\.gravatar\.com\/avatar\/5d60d4e28066df254d5452f92c910092\?d=mm&amp;s=200"/)
+      .expect(/<input id="input-file" type="file" accept="image\/\*" name="image"\/>/, done);
+  });
+
+  it('does not allow a member to edit another member\'s avatar', function (done) {
+    function noFileInput(res) {
+      if (res.text.match(/<input id="input-file" type="file" accept="image\/\*" name="image"/)) { return 'hasFileInput'; }
+    }
+
+    request(createApp('memberID1'))
+      .get('/hada')
+      .expect(200)
+      .expect(/<img src="https:\/\/www\.gravatar\.com\/avatar\/5d60d4e28066df254d5452f92c910092\?d=mm&amp;s=200"/)
+      .expect(noFileInput)
+      .end(done);
+  });
+
+  it('allows a superuser member to edit another member\'s avatar', function (done) {
+    request(createApp('superuserID'))
+      .get('/hada')
+      .expect(200)
+      .expect(/<input id="input-file" type="file" accept="image\/\*" name="image"\/>/, done);
   });
 
   it('rejects a member with invalid and different nickname on submit', function (done) {
@@ -120,7 +155,6 @@ describe('Members application', function () {
   });
 
   it('rejects a member with missing first and last name on submit', function (done) {
-
     request(app)
       .post('/submit')
       .send('id=0815&&nickname=nuck&previousNickname=nuck&location=x&profession=y&reference=z&email=here@there.org&previousEmail=here@there.org')

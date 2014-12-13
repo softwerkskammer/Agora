@@ -2,6 +2,7 @@ extends ../../../views/layout
 
 include ../../../views/formComponents
 include ../../activities/views/activities-mixins
+include editavatar
 
 block title
   | #{member.firstname()} #{member.lastname()} - #{t('members.profile')}
@@ -50,9 +51,11 @@ block content
 
       p &nbsp;
     .col-md-4
-      p
-        img(src=member.avatarUrl(200))
-
+      if(accessrights.canEditMember(member))
+        +avatar
+      else
+        div(style='width: 200px')
+          img(src=member.avatarUrl())
   .row
     .col-md-12
       a.btn.btn-primary(href='/mailsender/contactMember/#{encodeURIComponent(member.nickname())}')
