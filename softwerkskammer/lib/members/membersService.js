@@ -46,11 +46,11 @@ module.exports = {
   },
 
   saveCustomAvatarForNickname: function (nickname, files, params, callback) {
-    galleryService.storeAvatar(files.image[0].path, nickname, params, function (err, filename) {
+    store.getMember(nickname, function (err, member) {
       if (err) { return callback(err); }
-      store.getMember(nickname, function (err, member) {
+      galleryService.storeAvatar(files.image[0].path, params, function (err, filename) {
         if (err) { return callback(err); }
-        member.state.customAvatarExtension = path.extname(filename);
+        member.state.customAvatar = filename;
         store.saveMember(member, callback);
       });
     });
@@ -59,11 +59,12 @@ module.exports = {
 
   deleteCustomAvatarForNickname: function (nickname, callback) {
     store.getMember(nickname, function (err, member) {
-      if (err) { return callback(err); }
-      delete member.state.customAvatarExtension;
+      if (err || !member.hasCustomAvatar()) { return callback(err); }
+      var avatar = member.customAvatar();
+      delete member.state.customAvatar;
       store.saveMember(member, function (err) {
         if (err) { return callback(err); }
-        galleryService.deleteAvatar(nickname, function (err) {
+        galleryService.deleteAvatar(avatar, function (err) {
           callback(err);
         });
       });
@@ -71,8 +72,8 @@ module.exports = {
   },
 
   getImage: function (member, callback) {
-    if (member.hasCustomAvatarExtension()) {
-      return galleryService.scaleAndReturnFullImagePath(member.nickname(), 16, function (err, result) {
+    if (member.hasCustomAvatar()) {
+      return galleryService.retrieveScaledImage(member.customAvatar(), 'mini', function (err, result) {
         if (err) { return callback(err); }
         fs.readFile(result, function (err, data) {
           member.setAvatarData({image: 'data:' + mimetypes.lookup(result) + ';base64,' + new Buffer(data).toString('base64'), hasNoData: false});

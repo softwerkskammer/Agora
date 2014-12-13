@@ -10,7 +10,7 @@ function Member(object) {
 
 Member.prototype.fillFromUI = function (object) {
   var self = this;
-  _.each(['nickname', 'firstname', 'lastname', 'email', 'location', 'profession', 'interests', 'reference', 'customAvatarExtension'], function (property) {
+  _.each(['nickname', 'firstname', 'lastname', 'email', 'location', 'profession', 'interests', 'reference', 'customAvatar'], function (property) {
     if (object.hasOwnProperty(property)) { self.state[property] = object[property]; }
   });
   _.each(['notifyOnWikiChanges', 'socratesOnly'], function (property) {
@@ -60,8 +60,8 @@ Member.prototype.initFromSessionUser = function (sessionUser, socratesOnly) {
 };
 
 Member.prototype.avatarUrl = function (size) {
-  if (this.hasCustomAvatarExtension()) {
-    return '/gallery/avatarFor/' + this.nickname() + this.state.customAvatarExtension;
+  if (this.hasCustomAvatar()) {
+    return '/gallery/avatarFor/' + this.customAvatar();
   }
   return fieldHelpers.avatarUrl(this.email(), size);
 };
@@ -75,8 +75,12 @@ Member.prototype.inlineAvatar = function () {
   return this.avatarImage || '';
 };
 
-Member.prototype.hasCustomAvatarExtension = function () {
-  return !!this.state.customAvatarExtension;
+Member.prototype.hasCustomAvatar = function () {
+  return !!this.state.customAvatar;
+};
+
+Member.prototype.customAvatar = function () {
+  return this.state.customAvatar;
 };
 
 Member.prototype.asGitAuthor = function () {

@@ -11,7 +11,7 @@ var async = require('async');
 var _ = require('lodash');
 var misc = conf.get('beans').get('misc');
 
-var widths = {thumb: 400, preview: 1080};
+var widths = {mini: 16, thumb: 400};
 
 function autoOrient(sourceImagePath, targetPath, callback) {
   magick.convert([sourceImagePath, '-auto-orient', targetPath], function (err) {
@@ -62,17 +62,9 @@ module.exports = {
     deleteAllImagesMatching(path.basename(id, path.extname(id)) + '*', callback);
   },
 
-  storeAvatar: function (tmpImageFilePath, nickname, params, callback) {
-    var id = nickname + path.extname(tmpImageFilePath);
-    convert(tmpImageFilePath, fullPath(id), params, callback);
-  },
-
-  scaleAndReturnFullImagePath: function (nickname, width, callback) {
-    glob(fullPath(nickname + '*'), function (err, files) {
-      if (err) { return callback(err); }
-      var imageFile = _.find(files, representsImage);
-      scaleImage(path.basename(imageFile), width, callback);
-    });
+  storeAvatar: function (tmpImageFilePath, params, callback) {
+    var id = uuid.v4() + path.extname(tmpImageFilePath);
+    convert(tmpImageFilePath, fullPath(id), params, function (err) { callback(err, id); });
   },
 
   deleteAvatar: function (nickname, callback) {
@@ -84,12 +76,11 @@ module.exports = {
     autoOrient(tmpImageFilePath, fullPath(id), function (err) { callback(err, id); });
   },
 
-  getMetadataForImage: function getMetadataForImage(id, callback) {
+  getMetadataForImage: function (id, callback) {
     magick.readMetadata(fullPath(id), callback);
   },
 
-  retrieveScaledImage: function retrieveScaledImage(id, thumbOrPreview, callback) {
-    scaleImage(id, widths[thumbOrPreview], callback);
+  retrieveScaledImage: function (id, miniOrThumb, callback) {
+    scaleImage(id, widths[miniOrThumb], callback);
   }
-
 };

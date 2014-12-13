@@ -17,7 +17,7 @@ function sendImage(res, next) {
 }
 
 app.get('/avatarFor/:nickname', function (req, res, next) {
-  galleryService.scaleAndReturnFullImagePath(req.params.nickname, undefined, sendImage(res, next));
+  galleryService.retrieveScaledImage(req.params.nickname, undefined, sendImage(res, next));
 });
 
 app.get('/:imageId', function (req, res, next) {

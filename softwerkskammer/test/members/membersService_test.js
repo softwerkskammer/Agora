@@ -229,7 +229,7 @@ describe('MembersService', function () {
       membersService.saveCustomAvatarForNickname('hada', files, params, function (err) {
         expect(saveMember.called).to.be(true);
         var mem = saveMember.args[0][0];
-        expect(mem.hasCustomAvatarExtension()).to.be.true();
+        expect(mem.hasCustomAvatar()).to.be.true();
         done(err);
       });
     });
@@ -237,12 +237,12 @@ describe('MembersService', function () {
     it('removes information from member about a deleted avatar', function (done) {
       var files = {image: [{path: imagePath}]};
       var params = {};
-      member.state.customAvatarExtension = '.jpg';
+      member.state.customAvatar = 'assa.jpg';
       membersService.saveCustomAvatarForNickname('hada', files, params, function () {
         membersService.deleteCustomAvatarForNickname('hada', function (err) {
           expect(saveMember.called).to.be(true);
           var mem = saveMember.args[0][0];
-          expect(mem.hasCustomAvatarExtension()).to.be.false();
+          expect(mem.hasCustomAvatar()).to.be.false();
           done(err);
         });
       });

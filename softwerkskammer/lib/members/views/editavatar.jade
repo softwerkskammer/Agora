@@ -41,7 +41,7 @@ block content
         Use the Button to upload a new photo and replace the current one.
       p
         img(src=member.avatarUrl(200))
-        if member.hasCustomAvatarExtension()
+        if member.hasCustomAvatar()
           +reallyDeleteModal('general.deletePhoto', '/members/deleteAvatarFor/' + member.nickname())
       form(id='recordForm', role='form', method='POST', action='/members/submitavatar' + '?_csrf=' + encodeURIComponent(csrf_token), enctype='multipart/form-data')
         +imageUpload({withbuttons: true, imgstyle: 'width: 200px; height:200px;'})
