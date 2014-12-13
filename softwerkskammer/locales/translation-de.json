@@ -311,6 +311,7 @@
     "members": "Mitglieder",
     "create": "Profil anlegen",
     "edit": "Profil bearbeiten",
+    "edit_avatar": "Photo bearbeiten",
     "new": "Neues Mitglied",
     "cancel": "Registrierung abbrechen",
     "group_membership": "Gruppenmitgliedschaft",
@@ -335,7 +336,8 @@
     "has_by_interests": "Mit diesem Schlagwort gibt es",
     "notifyOnWikiChanges": "Benachrichtigen bei Änderungen im Wiki",
     "resign": "Austreten",
-    "delete": "Mitglied löschen"
+    "delete": "Mitglied löschen",
+    "avatar_info_text": "Dies ist Dein aktueller Avatar. Sofern er ein von Dir hochgeladener ist, kannst Du ihn löschen und wir werden versuchen, Deinen Gravatar.com Avatar zu zeigen. Mit dem Button kannst Du ein neues Photo hochladen."
   },
   "wiki": {
     "blogposts": "Blogartikel",

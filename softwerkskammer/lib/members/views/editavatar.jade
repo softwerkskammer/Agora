@@ -29,18 +29,16 @@ block scripts
     });
 
 block title
-  | #{t('members.edit')}
+  | #{t('members.edit_avatar')}
 
 block content
   .row
     .col-md-12
       legend
-        | Photo
-      p.
-        This is your current avatar. If it is a custom one, you can delete it and then we try to show your Gravatar.com avatar.
-        Use the Button to upload a new photo and replace the current one.
+        | Avatar
+      p !{t('members.avatar_info_text')}
       p
-        img(src=member.avatarUrl(200))
+        img(src=member.avatarUrl())
         if member.hasCustomAvatar()
           +reallyDeleteModal('general.deletePhoto', '/members/deleteAvatarFor/' + member.nickname())
       form(id='recordForm', role='form', method='POST', action='/members/submitavatar' + '?_csrf=' + encodeURIComponent(csrf_token), enctype='multipart/form-data')

@@ -310,6 +310,7 @@
     "members": "Members",
     "create": "Create Profile",
     "edit": "Edit Profile",
+    "edit_avatar": "Edit Photo",
     "new": "New Member",
     "cancel": "Cancel registration",
     "group_membership": "Group Membership",
@@ -334,7 +335,8 @@
     "has_by_interests": "For this phrase we have",
     "notifyOnWikiChanges": "Notify on wiki changes",
     "resign": "Resign",
-    "delete": "Delete Member"
+    "delete": "Delete Member",
+    "avatar_info_text": "This is your current avatar. If it is a custom one, you can delete it and then we try to show your Gravatar.com avatar. Use the Button to upload a new photo and replace the current one."
   },
   "wiki": {
     "blogposts": "Blog Posts",

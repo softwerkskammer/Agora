@@ -50,9 +50,12 @@ block content
 
       p &nbsp;
     .col-md-4
-      p
-        img(src=member.avatarUrl(200))
-        a(href='/members/editavatar/#{encodeURIComponent(member.nickname())}') Photo bearbeiten
+      div
+        img(src=member.avatarUrl())
+      if (accessrights.canEditMember(member))
+        a.btn.btn-default(href='/members/editavatar/#{encodeURIComponent(member.nickname())}')
+          i.fa.fa-edit.fa-fw
+          |  #{t('members.edit_avatar')}
   .row
     .col-md-12
       a.btn.btn-primary(href='/mailsender/contactMember/#{encodeURIComponent(member.nickname())}')
