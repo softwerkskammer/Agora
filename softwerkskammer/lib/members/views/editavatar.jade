@@ -15,20 +15,20 @@ mixin avatar
         div
           div(style='margin-top: 5px; width: 200px; height:200px;')
             img#preview(style=previewStyle)
-            .clearfix
-            .btn-group(style='display: table; margin-left: auto; margin-right: auto; margin-top: 5px;')
-              span#rotate-left.btn.btn-xs.btn-default(title=t('photo.rotate-left')): i.fa.fa-fw.fa-rotate-left
-              span#zoom-in.btn.btn-xs.btn-default(title=t('photo.zoom-in')): i.fa.fa-fw.fa-search-plus
-              span#fit.btn.btn-xs.btn-default(title=t('photo.fit')): i.fa.fa-fw.fa-arrows-alt
-              span#zoom-out.btn.btn-xs.btn-default(title=t('photo.zoom-out')): i.fa.fa-fw.fa-search-minus
-              span#rotate-right.btn.btn-xs.btn-default(title=t('photo.rotate-right')): i.fa.fa-fw.fa-rotate-right
-            .btn-group(style='display: table; margin-left: auto; margin-right: auto; margin-top: 5px;')
-              span#btn-cancel.btn.btn-xs.btn-danger(title=t('general.cancel'))
-                i.fa.fa-fw.fa-times
-                | &nbsp; #{t('general.cancel')}
-              button.btn.btn-xs.btn-primary(type='submit', title=t('general.save'))
-                i.fa.fa-fw.fa-check
-                | &nbsp; #{t('general.save')}
+          .clearfix
+          .btn-group(style='display: table; margin-left: auto; margin-right: auto; margin-top: 5px;')
+            span#rotate-left.btn.btn-xs.btn-default(title=t('photo.rotate-left')): i.fa.fa-fw.fa-rotate-left
+            span#zoom-in.btn.btn-xs.btn-default(title=t('photo.zoom-in')): i.fa.fa-fw.fa-search-plus
+            span#fit.btn.btn-xs.btn-default(title=t('photo.fit')): i.fa.fa-fw.fa-arrows-alt
+            span#zoom-out.btn.btn-xs.btn-default(title=t('photo.zoom-out')): i.fa.fa-fw.fa-search-minus
+            span#rotate-right.btn.btn-xs.btn-default(title=t('photo.rotate-right')): i.fa.fa-fw.fa-rotate-right
+          .btn-group(style='display: table; margin-left: auto; margin-right: auto; margin-top: 5px; margin-bottom: 25px;')
+            span#btn-cancel.btn.btn-xs.btn-danger(title=t('general.cancel'))
+              i.fa.fa-fw.fa-times
+              | &nbsp; #{t('general.cancel')}
+            button.btn.btn-xs.btn-primary(type='submit', title=t('general.save'))
+              i.fa.fa-fw.fa-check
+              | &nbsp; #{t('general.save')}
       +imageScripts
 
       +hidden('nickname', member.nickname())
