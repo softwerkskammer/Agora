@@ -14,6 +14,7 @@ var winston = require('winston-config').fromFileSync(path.join(__dirname, '../..
 /*jslint stupid: false */
 var logger = winston.loggers.get('scripts');
 
+logger.info('== Wiki Changes ==========================================================================');
 persistence.getByField({id: 'lastWikiNotifications'}, function (err, result) {
   if (err) {
     logger.error(err);
@@ -29,7 +30,6 @@ persistence.getByField({id: 'lastWikiNotifications'}, function (err, result) {
     }
     if (changes.length === 0) {
       logger.info('no changes to report');
-      process.exit();
     }
     notifications.wikiChanges(changes, function (err, stringifiedOptions) {
       if (err) {
@@ -43,7 +43,7 @@ persistence.getByField({id: 'lastWikiNotifications'}, function (err, result) {
           process.exit();
         }
         logger.info("Wiki-Changes notified at: " + lastNotified);
-        logger.info("Options returned: " + !!stringifiedOptions);
+        logger.info("Options were returned: " + !!stringifiedOptions);
         process.exit();
       });
     });
