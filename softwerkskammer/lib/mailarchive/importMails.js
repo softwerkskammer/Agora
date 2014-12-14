@@ -5,11 +5,17 @@ var fieldHelpers = conf.get('beans').get('fieldHelpers');
 var memberstore = conf.get('beans').get('memberstore');
 var moment = require('moment-timezone');
 
+var path = require('path');
+/*jslint stupid: true */
+var winston = require('winston-config').fromFileSync(path.join(__dirname, '../../../config/winston-config.json'));
+/*jslint stupid: false */
+var logger = winston.loggers.get('scripts');
+
 var MailParser = require('mailparser').MailParser;
 var fs = require('fs');
 var crypto = require('crypto');
 
-module.exports = function (file, group, logger, done) {
+module.exports = function (file, group, done) {
   function date(parsedObject) {
     if (fieldHelpers.isFilled(parsedObject.headers.date)) {
       return moment(parsedObject.headers.date, 'ddd, DD MMM YYYY HH:mm:ss ZZ', 'en');

@@ -11,7 +11,7 @@ var winston = require('winston-config').fromFileSync(path.join(__dirname, '../..
 var logger = winston.loggers.get('scripts');
 
 logger.info('== Import Mails ==========================================================================');
-require('./importMails')(file, group, logger, function (err, mailDbObject) {
+require('./importMails')(file, group, function (err, mailDbObject) {
   if (err) {
     logger.error(err);
     persistence.closeDB();
