@@ -8,7 +8,6 @@ var persistence = beans.get('settingsPersistence');
 var moment = require('moment-timezone');
 var util = require('util');
 
-// initialize winston and two concrete loggers
 /*jslint stupid: true */
 var winston = require('winston-config').fromFileSync(path.join(__dirname, '../../../config/winston-config.json'));
 /*jslint stupid: false */

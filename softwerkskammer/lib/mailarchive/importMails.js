@@ -9,11 +9,12 @@ var MailParser = require('mailparser').MailParser;
 var fs = require('fs');
 var crypto = require('crypto');
 
-module.exports = function (file, group, done) {
+module.exports = function (file, group, logger, done) {
   function date(parsedObject) {
     if (fieldHelpers.isFilled(parsedObject.headers.date)) {
       return moment(parsedObject.headers.date, 'ddd, DD MMM YYYY HH:mm:ss ZZ', 'en');
     }
+    logger.info('No date found in eMail with subject: ' + parsedObject.subject);
     return moment();
   }
 
@@ -44,6 +45,7 @@ module.exports = function (file, group, done) {
     if (fieldHelpers.isFilled(parsedObject.inReplyTo)) {
       return [parsedObject.inReplyTo[0]];
     }
+    logger.info('No references found for eMail with subject: ' + parsedObject.subject);
     return null;
   }
 
@@ -60,6 +62,7 @@ module.exports = function (file, group, done) {
   });
 
   mailparser.on('end', function (parsedObject) {
+    logger.info('Starting to parse eMail');
     var mailDbObject = {};
     mailDbObject.group = group;
     mailDbObject.subject = parsedObject.subject;
@@ -75,12 +78,19 @@ module.exports = function (file, group, done) {
       name: name(from)
     };
     memberstore.getMemberForEMail(from.address, function (err, member) {
-      if (err) { return done(err); }
+      if (err) {
+        logger.error('Could not get member for eMail: ' + err);
+        return done(err);
+      }
       if (member) { mailDbObject.from.id = member.id(); }
       assignMessageId(parsedObject, mailDbObject, function () {
+        logger.info('Message ID assigned to eMail: ' + mailDbObject.id);
         done(null, mailDbObject);
       });
     });
   });
+
+  logger.info('Before creating read stream');
   fs.createReadStream(file).pipe(mailparser);
+  logger.info('After creating read stream');
 };
