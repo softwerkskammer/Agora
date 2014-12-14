@@ -13,17 +13,15 @@ var logger = winston.loggers.get('scripts');
 logger.info('== Import Mails ==========================================================================');
 require('./importMails')(file, group, function (err, mailDbObject) {
   if (err) {
-    logger.error(err);
+    logger.error('Error during import, exiting process: ' + err);
     persistence.closeDB();
-    logger.info('Error, want to exit process here');
-    // process.exit(); ???
+    process.exit();
   } else {
     persistence.save(mailDbObject, function (err) {
-      if (err) { logger.error(err); }
+      if (err) { logger.error('Error during save: ' + err); }
       logger.info('Subject of eMail: ' + mailDbObject.subject);
       persistence.closeDB();
-      logger.info('Saved, want to exit process here');
-      // process.exit(); ???
+      process.exit();
     });
   }
 });
