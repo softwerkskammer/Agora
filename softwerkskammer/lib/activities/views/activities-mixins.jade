@@ -5,7 +5,7 @@ mixin visitorCount(number)
     else if (number === 1)
       |  #{t('activities.one_participant')}
     else
-      |  #{t('activities.count_participants', {count: number})}
+      |  #{t('activities.count_participants', {count: '' + number})}
 
 
 mixin subscriptionButtons(activity, resourceName, resourceRegistrationRenderer)
