@@ -21,7 +21,7 @@ persistence.getByField({id: 'lastWikiNotifications'}, function (err, result) {
   }
   var yesterday = moment().subtract(1, 'days');
   var lastNotified = result || {id: 'lastWikiNotifications', moment: yesterday.toDate()};
-  logger.info("Last notified: " + util.inspect(result));
+  logger.info("Last notified: " + util.inspect(result.moment));
   wikiService.findPagesForDigestSince(moment(lastNotified.moment), function (err, changes) {
     if (err) {
       logger.error(err);
@@ -41,7 +41,7 @@ persistence.getByField({id: 'lastWikiNotifications'}, function (err, result) {
           logger.error(err);
           process.exit();
         }
-        logger.info("Wiki-Changes notified at: " + lastNotified);
+        logger.info("Wiki-Changes notified at: " + lastNotified.moment);
         logger.info("Options were returned: " + !!stringifiedOptions);
         process.exit();
       });
