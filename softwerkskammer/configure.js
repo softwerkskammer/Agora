@@ -4,11 +4,10 @@ process.chdir(__dirname);
 var _ = require('lodash');
 var Beans = require('CoolBeans');
 var simpleConfigure = require('simple-configure');
+var path = require('path');
 
 function createConfiguration() {
-  console.log('create configuration');
-
-  var configdir = __dirname + '../config/';
+  var configdir = path.normalize(__dirname + '/../config/');
 
   // first, set the default values
   simpleConfigure.addProperties({
