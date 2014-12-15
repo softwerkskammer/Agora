@@ -1,29 +1,22 @@
 'use strict';
 
 process.chdir(__dirname);
-var nconf = require('nconf');
+var _ = require('lodash');
 var Beans = require('CoolBeans');
+var simpleConfigure = require('simple-configure');
 
 function createConfiguration() {
-// create an nconf object, and initialize it with given values from
-// the environment variables and/or from the command line
-  nconf.argv().env();
-  var configdir = '../config/';
-  nconf.file('mongo', configdir + 'mongo-config.json');
-  nconf.file('sympa', configdir + 'sympa-config.json');
-  nconf.file('server', configdir + 'server-config.json');
-  nconf.file('authentication', configdir + 'authentication-config.json');
-  nconf.file('mail', configdir + 'mailsender-config.json');
-  nconf.file('wiki', configdir + 'wikirepo-config.json');
-  nconf.file('activityresults', configdir + 'activityresults-config.json');
-  nconf.file('crossite', configdir + 'crosssite-config.json');
-  nconf.defaults({
+  console.log('create configuration');
+
+  var configdir = __dirname + '../config/';
+
+  // first, set the default values
+  simpleConfigure.addProperties({
     adminListName: 'admins',
     port: '17124',
     mongoURL: 'mongodb://localhost:27017/swk',
     publicUrlPrefix: 'http://localhost:17124',
-    securedByLoginURLPattern:
-      '/activityresults|' +
+    securedByLoginURLPattern: '/activityresults|' +
       '/gallery|' +
       '/mailsender|' +
       '/members|' +
@@ -49,7 +42,18 @@ function createConfiguration() {
     jwt_secret: 'my_very_secret'
   });
 
-  return nconf;
+  // then, add properties from config files:
+  var files = ['mongo-config.json',
+    'sympa-config.json',
+    'server-config.json',
+    'authentication-config.json',
+    'mailsender-config.json',
+    'wikirepo-config.json',
+    'activityresults-config.json',
+    'crosssite-config.json'];
+  simpleConfigure.addFiles(_.map(files, function (file) { return configdir + file; }));
+
+  return simpleConfigure;
 }
 module.exports = createConfiguration();
 

@@ -1,7 +1,7 @@
 'use strict';
 var path = require('path');
 require('../../configure'); // initializing parameters
-var beans = require('nconf').get('beans');
+var beans = require('simple-configure').get('beans');
 var wikiService = beans.get('wikiService');
 var notifications = beans.get('notifications');
 var persistence = beans.get('settingsPersistence');

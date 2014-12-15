@@ -1,7 +1,7 @@
 'use strict';
 
 var _ = require('lodash');
-var conf = require('nconf');
+var conf = require('simple-configure');
 
 module.exports = function (sympaClient) {
 

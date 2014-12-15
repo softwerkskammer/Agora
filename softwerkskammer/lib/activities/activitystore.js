@@ -1,7 +1,7 @@
 /*global emit */
 'use strict';
 
-var beans = require('nconf').get('beans');
+var beans = require('simple-configure').get('beans');
 var _ = require('lodash');
 var misc = beans.get('misc');
 var moment = require('moment-timezone');

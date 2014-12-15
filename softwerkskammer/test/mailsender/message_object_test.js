@@ -2,7 +2,7 @@
 
 require('../../testutil/configureForTest');
 
-var beans = require('nconf').get('beans');
+var beans = require('simple-configure').get('beans');
 var expect = require('must');
 var Message = beans.get('message');
 var Member = beans.get('member');

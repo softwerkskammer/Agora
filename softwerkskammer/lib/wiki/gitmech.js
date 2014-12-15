@@ -1,7 +1,7 @@
 'use strict';
 
 var Fs = require('fs');
-var conf = require('nconf');
+var conf = require('simple-configure');
 var _ = require('lodash');
 var workTree = conf.get('wikipath');
 var beans = conf.get('beans');

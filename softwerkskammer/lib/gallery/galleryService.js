@@ -1,6 +1,6 @@
 'use strict';
 
-var conf = require('nconf');
+var conf = require('simple-configure');
 var logger = require('winston').loggers.get('application');
 var magick = require('imagemagick');
 var uuid = require('node-uuid');

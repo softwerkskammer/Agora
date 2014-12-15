@@ -2,7 +2,7 @@
 
 var _ = require('lodash');
 var moment = require('moment-timezone');
-var WaitinglistEntry = require('nconf').get('beans').get('waitinglistEntry');
+var WaitinglistEntry = require('simple-configure').get('beans').get('waitinglistEntry');
 
 function Resource(resourceObject, resourceName) {
   this.resourceName = resourceName;

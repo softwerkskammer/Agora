@@ -8,7 +8,7 @@ var beans = conf.get('beans');
 var wikiSubdirs = beans.get('wikiSubdirs');
 var Git = beans.get('gitmech');
 var Group = beans.get('group');
-var groupstore = require('nconf').get('beans').get('groupstore');
+var groupstore = require('simple-configure').get('beans').get('groupstore');
 
 describe('Wikisubdirs', function () {
   var allGroups = [

@@ -2,7 +2,7 @@
 
 module.exports = function (testBeansFilename) {
 
-  var nconf = require('nconf');
+  var nconf = require('simple-configure');
   var merge = require('utils-merge');
   var Beans = require('CoolBeans');
   require('./shutupWinston')();
@@ -12,7 +12,7 @@ module.exports = function (testBeansFilename) {
   var testBeans = require('../../config/' + testBeansFilename);
   merge(productionBeans, testBeans);
 
-  nconf.overrides({
+  nconf.addProperties({
     port: '17125',
     swkTrustedAppName: null,
     swkTrustedAppPwd: null,
@@ -38,7 +38,6 @@ module.exports = function (testBeansFilename) {
     imageDirectory  : null
   });
 
-  return require('../configure');
-
+  return nconf;
 };
 

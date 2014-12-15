@@ -3,7 +3,7 @@ var moment = require('moment-timezone');
 var async = require('async');
 var _ = require('lodash');
 
-var beans = require('nconf').get('beans');
+var beans = require('simple-configure').get('beans');
 var misc = beans.get('misc');
 var membersService = beans.get('membersService');
 var notifications = beans.get('notifications');

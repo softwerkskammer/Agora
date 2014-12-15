@@ -1,6 +1,6 @@
 'use strict';
 
-var Resource = require('nconf').get('beans').get('resource');
+var Resource = require('simple-configure').get('beans').get('resource');
 
 function RenderingInformation(url, displayText) {
   this.url = url;

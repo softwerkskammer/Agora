@@ -5,7 +5,7 @@ var async = require('async');
 var fs = require('fs');
 var qrimage = require('qr-image');
 
-var conf = require('nconf');
+var conf = require('simple-configure');
 var beans = conf.get('beans');
 var Renderer = beans.get('renderer');
 var groupsService = beans.get('groupsService');

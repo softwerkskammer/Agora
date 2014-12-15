@@ -4,7 +4,7 @@ require('../../testutil/configureForTest');
 var expect = require('must');
 var moment = require('moment-timezone');
 
-var beans = require('nconf').get('beans');
+var beans = require('simple-configure').get('beans');
 var Mail = beans.get('archivedMail');
 var Member = beans.get('member');
 

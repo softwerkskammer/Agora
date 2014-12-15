@@ -1,6 +1,6 @@
 /*jslint regexp: true*/
 'use strict';
-var conf = require('nconf');
+var conf = require('simple-configure');
 var fieldHelpers = conf.get('beans').get('fieldHelpers');
 var memberstore = conf.get('beans').get('memberstore');
 var moment = require('moment-timezone');

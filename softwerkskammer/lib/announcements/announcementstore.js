@@ -1,9 +1,9 @@
 'use strict';
-var conf = require('nconf');
+var conf = require('simple-configure');
 var _ = require('lodash');
 var moment = require('moment-timezone');
 
-var beans = require('nconf').get('beans');
+var beans = require('simple-configure').get('beans');
 var persistence = beans.get('announcementsPersistence');
 var Announcement = beans.get('announcement');
 var misc = beans.get('misc');

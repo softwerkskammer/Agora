@@ -3,7 +3,7 @@
 var moment = require('moment-timezone');
 var _ = require('lodash');
 
-var beans = require('nconf').get('beans');
+var beans = require('simple-configure').get('beans');
 var Resources = beans.get('resources');
 var Addon = beans.get('addon').Addon;
 var AddonConfig = beans.get('addon').AddonConfig;

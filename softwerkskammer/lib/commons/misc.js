@@ -3,7 +3,7 @@
 var _ = require('lodash');
 var express = require('express');
 var path = require('path');
-var conf = require('nconf');
+var conf = require('simple-configure');
 var moment = require('moment-timezone');
 var mimetypes = require('mime-types');
 

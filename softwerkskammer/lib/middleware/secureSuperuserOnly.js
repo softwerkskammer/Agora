@@ -1,6 +1,6 @@
 'use strict';
 
-var conf = require('nconf');
+var conf = require('simple-configure');
 var logger = require('winston').loggers.get('authorization');
 
 module.exports = function redirectIfNotSuperuser(req, res, next) {

@@ -1,6 +1,6 @@
 'use strict';
 
-var conf = require('nconf');
+var conf = require('simple-configure');
 
 function Participant(object) {
   this.state = object || {};

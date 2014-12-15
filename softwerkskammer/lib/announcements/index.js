@@ -1,7 +1,7 @@
 'use strict';
 var moment = require('moment-timezone');
 
-var beans = require('nconf').get('beans');
+var beans = require('simple-configure').get('beans');
 var misc = beans.get('misc');
 var validation = beans.get('validation');
 var statusmessage = beans.get('statusmessage');

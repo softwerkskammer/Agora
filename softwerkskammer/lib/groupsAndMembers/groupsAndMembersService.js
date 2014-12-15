@@ -5,7 +5,7 @@ var winston = require('winston');
 var logger = winston.loggers.get('sympa');
 var _ = require('lodash');
 
-var conf = require('nconf');
+var conf = require('simple-configure');
 var beans = conf.get('beans');
 var membersService = beans.get('membersService');
 var memberstore = beans.get('memberstore');

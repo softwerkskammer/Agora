@@ -2,7 +2,7 @@
 
 require('./configure'); // initializing parameters
 var async = require('async');
-var beans = require('nconf').get('beans');
+var beans = require('simple-configure').get('beans');
 var memberstore = beans.get('memberstore');
 var groupsAndMembersService = beans.get('groupsAndMembersService');
 

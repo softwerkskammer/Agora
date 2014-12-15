@@ -1,6 +1,6 @@
 'use strict';
 
-var conf = require('nconf');
+var conf = require('simple-configure');
 var beans = conf.get('beans');
 
 var misc = beans.get('misc');

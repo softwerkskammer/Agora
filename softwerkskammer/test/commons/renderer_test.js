@@ -2,7 +2,7 @@
 var expect = require('must');
 
 require('../../testutil/configureForTest');
-var Renderer = require('nconf').get('beans').get('renderer');
+var Renderer = require('simple-configure').get('beans').get('renderer');
 
 describe('Renderer', function () {
   describe('should render bracket tags', function () {

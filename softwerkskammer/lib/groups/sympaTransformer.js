@@ -1,6 +1,6 @@
 'use strict';
 
-var conf = require('nconf');
+var conf = require('simple-configure');
 var misc = conf.get('beans').get('misc');
 
 var stripMailSuffix = function (item) {

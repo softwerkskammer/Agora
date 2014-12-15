@@ -4,7 +4,7 @@ var _ = require('lodash');
 var i18n = require('i18next');
 
 require('../../testutil/configureForTest');
-var beans = require('nconf').get('beans');
+var beans = require('simple-configure').get('beans');
 var validation = beans.get('validation');
 var AddonConfig = beans.get('addon').AddonConfig;
 

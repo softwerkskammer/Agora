@@ -3,7 +3,7 @@
 require('../../testutil/configureForTest');
 var expect = require('must');
 
-var beans = require('nconf').get('beans');
+var beans = require('simple-configure').get('beans');
 var Activity = beans.get('activity');
 var icalService = beans.get('icalService');
 

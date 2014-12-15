@@ -2,7 +2,7 @@
 
 var crypto = require('crypto');
 var request = require('request').defaults({encoding: null});
-var conf = require('nconf');
+var conf = require('simple-configure');
 var NodeCache = require('node-cache');
 var fieldHelpers = conf.get('beans').get('fieldHelpers');
 

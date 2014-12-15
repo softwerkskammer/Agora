@@ -3,7 +3,7 @@
 var _ = require('lodash');
 var async = require('async');
 
-var conf = require('nconf');
+var conf = require('simple-configure');
 
 var beans = conf.get('beans');
 var groupsService = beans.get('groupsService');

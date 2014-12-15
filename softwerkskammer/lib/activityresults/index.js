@@ -2,7 +2,7 @@
 
 var Form = require('multiparty').Form;
 
-var nconf = require('nconf');
+var nconf = require('simple-configure');
 var beans = nconf.get('beans');
 var ActivityResult = beans.get('activityresult');
 var activityresultsPersistence = beans.get('activityresultsPersistence');

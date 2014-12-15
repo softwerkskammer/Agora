@@ -5,7 +5,7 @@ var Path = require('path');
 var ChildProcess = require('child_process');
 var Fs = require('fs');
 
-var conf = require('nconf');
+var conf = require('simple-configure');
 var gitCommands = [];
 var workTree = conf.get('wikipath');
 var gitENOENT = /fatal: (Path '([^']+)' does not exist in '([0-9a-f]{40})'|ambiguous argument '([^']+)': unknown revision or path not in the working tree.)/;

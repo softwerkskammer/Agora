@@ -1,6 +1,6 @@
 'use strict';
 
-var conf = require('nconf');
+var conf = require('simple-configure');
 var store = conf.get('beans').get('announcementstore');
 var _ = require('lodash');
 

@@ -1,7 +1,7 @@
 'use strict';
 
 var _ = require('lodash');
-var beans = require('nconf').get('beans');
+var beans = require('simple-configure').get('beans');
 
 var persistence = beans.get('sympaPersistence');
 

@@ -1,6 +1,6 @@
 'use strict';
 
-var nconf = require('nconf');
+var nconf = require('simple-configure');
 var moment = require('moment-timezone');
 
 

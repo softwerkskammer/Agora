@@ -2,7 +2,7 @@
 
 var _ = require('lodash');
 var async = require('async');
-var beans = require('nconf').get('beans');
+var beans = require('simple-configure').get('beans');
 var Git = beans.get('gitmech');
 var Group = beans.get('group');
 var groupstore = beans.get('groupstore');

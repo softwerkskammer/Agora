@@ -1,7 +1,7 @@
 'use strict';
 
 process.chdir(__dirname);
-var nconf = require('nconf');
+var nconf = require('simple-configure');
 var Beans = require('CoolBeans');
 var merge = require('utils-merge');
 

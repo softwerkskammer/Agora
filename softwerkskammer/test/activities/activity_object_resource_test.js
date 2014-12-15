@@ -1,7 +1,7 @@
 'use strict';
 
 require('../../testutil/configureForTest');
-var conf = require('nconf');
+var conf = require('simple-configure');
 var expect = require('must');
 var moment = require('moment-timezone');
 

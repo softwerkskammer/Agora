@@ -2,7 +2,7 @@
 
 var conf = require('../../testutil/configureForTest');
 var expect = require('must');
-var beans = require('nconf').get('beans');
+var beans = require('simple-configure').get('beans');
 var fs = require('fs');
 var path = require('path');
 

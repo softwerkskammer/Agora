@@ -5,7 +5,7 @@ var path = require('path');
 var fs = require('fs');
 var mimetypes = require('mime-types');
 
-var conf = require('nconf');
+var conf = require('simple-configure');
 var beans = conf.get('beans');
 var store = beans.get('memberstore');
 var avatarProvider = beans.get('avatarProvider');

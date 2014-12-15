@@ -4,7 +4,7 @@ var moment = require('moment-timezone');
 var async = require('async');
 var _ = require('lodash');
 
-var conf = require('nconf');
+var conf = require('simple-configure');
 var beans = conf.get('beans');
 var misc = beans.get('misc');
 var CONFLICTING_VERSIONS = beans.get('constants').CONFLICTING_VERSIONS;

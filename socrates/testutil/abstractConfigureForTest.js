@@ -2,7 +2,7 @@
 
 module.exports = function (firstTestBeansFilename, secondTestBeansFilename) {
 
-  var nconf = require('nconf');
+  var nconf = require('simple-configure');
   var merge = require('utils-merge');
   var Beans = require('CoolBeans');
   require('../../softwerkskammer/testutil/shutupWinston')();

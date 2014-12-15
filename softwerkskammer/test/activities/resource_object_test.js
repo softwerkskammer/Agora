@@ -2,7 +2,7 @@
 
 require('../../testutil/configureForTest');
 var moment = require('moment-timezone');
-var conf = require('nconf');
+var conf = require('simple-configure');
 var expect = require('must');
 
 var beans = conf.get('beans');

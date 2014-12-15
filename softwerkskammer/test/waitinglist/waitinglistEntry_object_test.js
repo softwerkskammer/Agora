@@ -1,7 +1,7 @@
 'use strict';
 
 require('../../testutil/configureForTest');
-var beans = require('nconf').get('beans');
+var beans = require('simple-configure').get('beans');
 var expect = require('must');
 
 var WaitinglistEntry = beans.get('waitinglistEntry');

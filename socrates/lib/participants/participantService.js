@@ -1,6 +1,6 @@
 'use strict';
 
-var beans = require('nconf').get('beans');
+var beans = require('simple-configure').get('beans');
 var memberstore = beans.get('memberstore');
 var participantstore = beans.get('participantstore');
 var Participant = beans.get('participant');

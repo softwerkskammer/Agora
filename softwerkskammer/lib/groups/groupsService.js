@@ -1,6 +1,6 @@
 'use strict';
 var _ = require('lodash');
-var conf = require('nconf');
+var conf = require('simple-configure');
 var logger = require('winston').loggers.get('application');
 var async = require('async');
 

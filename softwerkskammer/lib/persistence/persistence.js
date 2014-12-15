@@ -1,5 +1,5 @@
 'use strict';
-var conf = require('nconf');
+var conf = require('simple-configure');
 var async = require('async');
 var ourDB;
 var logger = require('winston').loggers.get('transactions');

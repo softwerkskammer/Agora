@@ -3,7 +3,7 @@
 var _ = require('lodash');
 var jade = require('jade');
 var path = require('path');
-var beans = require('nconf').get('beans');
+var beans = require('simple-configure').get('beans');
 var misc = beans.get('misc');
 var Renderer = beans.get('renderer');
 
