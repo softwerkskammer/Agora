@@ -29,6 +29,7 @@ persistence.getByField({id: 'lastWikiNotifications'}, function (err, result) {
     }
     if (changes.length === 0) {
       logger.info('no changes to report');
+      process.exit();
     }
     notifications.wikiChanges(changes, function (err, stringifiedOptions) {
       if (err) {
