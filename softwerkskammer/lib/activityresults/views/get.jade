@@ -24,7 +24,7 @@ block content
     each days in activityResult.photosByDay()
       h3 #{days.day.locale(language).format('dddd, LL')}
       .row.photo-day
-        each column, columnTitle in days.photosByTag
+        each photosOfTag, tagTitle in days.photosByTag
           .col-xs-12.photo-room
             h4 #{columnTitle}
             div(style='overflow: auto;white-space: nowrap;')
