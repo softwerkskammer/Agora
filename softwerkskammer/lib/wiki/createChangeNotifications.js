@@ -16,7 +16,7 @@ var logger = winston.loggers.get('scripts');
 logger.info('== Wiki Changes ==========================================================================');
 persistence.getByField({id: 'lastWikiNotifications'}, function (err, result) {
   if (err) {
-    logger.error(err);
+    logger.error('Error when reading lastWikiNotifications: ' + err);
     persistence.closeDB();
     process.exit();
   }
@@ -25,7 +25,7 @@ persistence.getByField({id: 'lastWikiNotifications'}, function (err, result) {
   logger.info("Last notified: " + util.inspect(result.moment));
   wikiService.findPagesForDigestSince(moment(lastNotified.moment), function (err, changes) {
     if (err) {
-      logger.error(err);
+      logger.error("Error when finding pages for Digest: " + err);
       persistence.closeDB();
       process.exit();
     }
