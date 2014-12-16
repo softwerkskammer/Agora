@@ -62,10 +62,11 @@ describe('ActivityResult service', function () {
     sinon.stub(galleryService, 'storeImage', function (path, callback) { callback(null, path); });
     sinon.stub(galleryService, 'getMetadataForImage', function (path, callback) { callback(null); });
 
-    service.addPhotoToActivityResult('Hackergarten2', {path: 'my_uri'}, 'memberId', function (err) {
+    service.addPhotoToActivityResult('Hackergarten2', {path: 'my_uri'}, 'memberId', function (err, imageUri) {
       expect(saveStub.called).to.be(true);
       var objectToSave = saveStub.args[0][0];
       expect(objectToSave.photos).to.have.length(2);
+      expect(imageUri).to.be('my_uri');
       done(err);
     });
   });

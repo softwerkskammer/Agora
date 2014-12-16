@@ -5,7 +5,7 @@ mixin memberlistHeading(firstPart, count)
   else if (count === 0)
     | #{t('general.members.none')}.
   else
-    | #{t('general.members.count', {count: count})}.
+    | #{t('general.members.count', {count: '' + count})}.
 
 mixin memberlist(members, organizers)
   if (accessrights.isRegistered())
