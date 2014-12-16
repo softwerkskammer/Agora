@@ -15,11 +15,13 @@ var logger = winston.loggers.get('scripts');
 
 logger.info('== Wiki Changes ==========================================================================');
 persistence.getByField({id: 'lastWikiNotifications'}, function (err, result) {
+  logger.info('Read the lastWikiNotifications');
   if (err) {
     logger.error('Error when reading lastWikiNotifications: ' + err);
     persistence.closeDB();
     process.exit();
   }
+  logger.info('No error when reading lastWikiNotifications');
   var yesterday = moment().subtract(1, 'days');
   var lastNotified = result || {id: 'lastWikiNotifications', moment: yesterday.toDate()};
   logger.info("Last notified: " + util.inspect(result.moment));
@@ -48,8 +50,8 @@ persistence.getByField({id: 'lastWikiNotifications'}, function (err, result) {
           persistence.closeDB();
           process.exit();
         }
-        logger.info("Wiki-Changes notified at: " + lastNotified.moment);
-        logger.info("Options were returned: " + !!stringifiedOptions);
+        logger.info('Wiki-Changes notified at: ' + lastNotified.moment);
+        logger.info('Options were returned: ' + !!stringifiedOptions);
         persistence.closeDB();
         console.log('wiki-changes were reported'); // for cron mail
         process.exit();
