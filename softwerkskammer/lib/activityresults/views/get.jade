@@ -26,9 +26,9 @@ block content
       .row.photo-day
         each photosOfTag, tagTitle in days.photosByTag
           .col-xs-12.photo-room
-            h4 #{columnTitle}
+            h4 #{tagTitle}
             div(style='overflow: auto;white-space: nowrap;')
-              each photo in column
+              each photo in photosOfTag
                 div(style='display: inline-block; margin-right: 5px')
                   a(href=photo.uri()): img(src=photo.uri() + '?size=thumb', width='300px', alt=photo.title(), title=photo.title())
                   p.small
