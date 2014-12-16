@@ -31,6 +31,7 @@ persistence.getByField({id: 'lastWikiNotifications'}, function (err, result) {
     }
     if (changes.length === 0) {
       logger.info('no changes to report');
+      console.log('no changes to report'); // for cron mail
       persistence.closeDB();
       process.exit();
     }
@@ -50,6 +51,7 @@ persistence.getByField({id: 'lastWikiNotifications'}, function (err, result) {
         logger.info("Wiki-Changes notified at: " + lastNotified.moment);
         logger.info("Options were returned: " + !!stringifiedOptions);
         persistence.closeDB();
+        console.log('wiki-changes were reported'); // for cron mail
         process.exit();
       });
     });
