@@ -35,7 +35,9 @@ module.exports = {
             timestamp: moment.min(moment(), moment(date)).toDate(),
             uploaded_by: memberId
           });
-          persistence.save(activityResult.state, callback);
+          persistence.save(activityResult.state, function (err) {
+            callback(err, imageUri);
+          });
         });
       }
     ], callback);
