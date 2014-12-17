@@ -1,34 +1,26 @@
 'use strict';
 
 process.chdir(__dirname);
-var nconf = require('nconf');
+var _ = require('lodash');
+var conf = require('simple-configure');
 var Beans = require('CoolBeans');
 var merge = require('utils-merge');
+var path = require('path');
 
 function createConfiguration() {
-  // create an nconf object, and initialize it with given values from
-  // the environment variables and/or from the command line
-  nconf.argv().env();
-  var configdir = '../config/';
-  nconf.file('mongo', configdir + 'mongo-config.json');
-  nconf.file('sympa', configdir + 'sympa-config.json');
-  nconf.file('server', configdir + 'socrates-server-config.json');
-  nconf.file('authentication', configdir + 'authentication-config.json');
-  nconf.file('mail', configdir + 'mailsender-config.json');
-  nconf.file('wiki', configdir + 'socrates-wikirepo-config.json');
-  nconf.file('crossite', configdir + 'crosssite-config.json');
+  var configdir = path.normalize(__dirname + '/../config/');
 
+  // first, set the default values
   // beans:
   var swkBeans = require(configdir + 'beans.json');
   var socratesBeans = require(configdir + 'beans-socrates.json');
   merge(swkBeans, socratesBeans);
 
-  nconf.defaults({
+  conf.addProperties({
     port: '17224',
     mongoURL: 'mongodb://localhost:27017/swk',
     publicUrlPrefix: 'http://localhost:17224',
-    securedByLoginURLPattern:
-      '/wiki|' +
+    securedByLoginURLPattern: '/wiki|' +
       '/mailsender|' +
       '/members',
 
@@ -41,7 +33,18 @@ function createConfiguration() {
     jwt_secret: 'my_very_secret'
   });
 
-  return nconf;
+  // then, add properties from config files:
+  var files = ['mongo-config.json',
+    'sympa-config.json',
+    'socrates-server-config.json',
+    'authentication-config.json',
+    'mailsender-config.json',
+    'socrates-wikirepo-config.json',
+    'activityresults-config.json',
+    'crosssite-config.json'];
+  conf.addFiles(_.map(files, function (file) { return configdir + file; }));
+
+  return conf;
 }
 module.exports = createConfiguration();
 

@@ -1,7 +1,8 @@
 'use strict';
-var conf = require('nconf');
-var fieldHelpers = conf.get('beans').get('fieldHelpers');
-var avatarProvider = conf.get('beans').get('avatarProvider');
+var conf = require('simple-configure');
+var beans = conf.get('beans');
+var fieldHelpers = beans.get('fieldHelpers');
+var avatarProvider = beans.get('avatarProvider');
 var moment = require('moment-timezone');
 var _ = require('lodash');
 

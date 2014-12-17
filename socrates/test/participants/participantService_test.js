@@ -2,9 +2,8 @@
 
 var expect = require('must');
 var sinon = require('sinon').sandbox.create();
-var conf = require('../../testutil/configureForTest');
 
-var beans = conf.get('beans');
+var beans = require('../../testutil/configureForTest').get('beans');
 var participantService = beans.get('participantService');
 
 var memberstore = beans.get('memberstore');
@@ -44,7 +43,7 @@ describe('MembersService', function () {
 
     it('returns an error if getParticipant returns an error', function (done) {
       sinon.stub(memberstore, 'getMember', function (nick, cb) { cb(null, expectedMember); });
-      sinon.stub(participantstore, 'getParticipant', function (nick, cb) { cb(error); });  // TODO removing this should fail the test
+      sinon.stub(participantstore, 'getParticipant', function (nick, cb) { cb(error); });
 
       participantService.getMemberIfParticipantExists('irrelevant', function (err, member) {
         expect(err).to.eql(error);
@@ -55,7 +54,7 @@ describe('MembersService', function () {
 
     it('returns no member if getParticipant returns no participant', function (done) {
       sinon.stub(memberstore, 'getMember', function (nick, cb) { cb(null, expectedMember); });
-      sinon.stub(participantstore, 'getParticipant', function (nick, cb) { cb(null); });  // TODO removing this should fail the test
+      sinon.stub(participantstore, 'getParticipant', function (nick, cb) { cb(null); });
 
       participantService.getMemberIfParticipantExists('irrelevant', function (err, member) {
         expect(member).to.be.falsy();
@@ -65,7 +64,7 @@ describe('MembersService', function () {
 
     it('returns a member if getMember and getParticipant both return a valid result', function (done) {
       sinon.stub(memberstore, 'getMember', function (nick, cb) { cb(null, expectedMember); });
-      sinon.stub(participantstore, 'getParticipant', function (nick, cb) { cb(null, participant); }); // TODO removing this should fail the test
+      sinon.stub(participantstore, 'getParticipant', function (nick, cb) { cb(null, participant); });
 
       participantService.getMemberIfParticipantExists('irrelevant', function (err, member) {
         expect(member).to.eql(expectedMember);

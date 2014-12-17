@@ -1,6 +1,6 @@
 'use strict';
 var _ = require('lodash');
-var beans = require('nconf').get('beans');
+var beans = require('simple-configure').get('beans');
 var misc = beans.get('misc');
 var Renderer = beans.get('renderer');
 var fieldHelpers = beans.get('fieldHelpers');

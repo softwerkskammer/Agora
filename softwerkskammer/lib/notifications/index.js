@@ -2,7 +2,7 @@
 
 var _ = require('lodash');
 var async = require('async');
-var conf = require('nconf');
+var conf = require('simple-configure');
 var beans = conf.get('beans');
 var groupsAndMembers = beans.get('groupsAndMembersService');
 var memberstore = beans.get('memberstore');

@@ -1,7 +1,7 @@
 'use strict';
 
 require('./configure'); // initializing parameters
-var beans = require('nconf').get('beans');
+var beans = require('simple-configure').get('beans');
 var membersPersistence = beans.get('membersPersistence');
 var groupsPersistence = beans.get('groupsPersistence');
 var sympaPersistence = beans.get('sympaPersistence');

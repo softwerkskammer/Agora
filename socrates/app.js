@@ -12,7 +12,7 @@ var csurf = require('csurf');
 var jade = require('jade');
 var i18n = require('i18next');
 
-var conf = require('nconf');
+var conf = require('simple-configure');
 var beans = conf.get('beans');
 
 // initialize winston and two concrete loggers

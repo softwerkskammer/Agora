@@ -1,7 +1,7 @@
 'use strict';
 
 var async = require('async');
-var beans = require('nconf').get('beans');
+var beans = require('simple-configure').get('beans');
 var moment = require('moment-timezone');
 
 var persistence = beans.get('activityresultsPersistence');

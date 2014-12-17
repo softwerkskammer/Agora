@@ -3,7 +3,7 @@
 var _ = require('lodash');
 var icalendar = require('icalendar');
 
-var beans = require('nconf').get('beans');
+var beans = require('simple-configure').get('beans');
 var misc = beans.get('misc');
 
 function activityAsICal(activity) {

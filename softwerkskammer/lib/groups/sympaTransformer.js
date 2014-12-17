@@ -1,7 +1,6 @@
 'use strict';
 
-var conf = require('nconf');
-var misc = conf.get('beans').get('misc');
+var misc = require('simple-configure').get('beans').get('misc');
 
 var stripMailSuffix = function (item) {
   var index = item.listAddress.search('@');

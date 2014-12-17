@@ -1,9 +1,8 @@
 'use strict';
 
-var nconf = require('../../testutil/configureForTestWithDB');
 var expect = require('must');
 
-var beans = nconf.get('beans');
+var beans = require('../../testutil/configureForTestWithDB').get('beans');
 var persistence = beans.get('activitiesPersistence');
 
 var CONFLICTING_VERSIONS = beans.get('constants').CONFLICTING_VERSIONS;

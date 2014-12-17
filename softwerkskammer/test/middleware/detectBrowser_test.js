@@ -1,7 +1,6 @@
 'use strict';
 
-var conf = require('../../testutil/configureForTest');
-var beans = conf.get('beans');
+var beans = require('../../testutil/configureForTest').get('beans');
 var detectBrowser = beans.get('detectBrowser');
 var expect = require('must');
 

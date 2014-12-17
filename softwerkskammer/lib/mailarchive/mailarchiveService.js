@@ -1,6 +1,6 @@
 'use strict';
 
-var beans = require('nconf').get('beans');
+var beans = require('simple-configure').get('beans');
 var _ = require('lodash');
 var persistence = beans.get('mailsPersistence');
 var Mail = beans.get('archivedMail');

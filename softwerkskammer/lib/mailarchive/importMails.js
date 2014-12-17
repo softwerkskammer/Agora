@@ -1,9 +1,9 @@
 /*jslint regexp: true*/
 'use strict';
-var conf = require('nconf');
-var fieldHelpers = conf.get('beans').get('fieldHelpers');
-var memberstore = conf.get('beans').get('memberstore');
 var moment = require('moment-timezone');
+var beans = require('simple-configure').get('beans');
+var fieldHelpers = beans.get('fieldHelpers');
+var memberstore = beans.get('memberstore');
 
 var path = require('path');
 /*jslint stupid: true */

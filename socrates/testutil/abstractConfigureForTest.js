@@ -2,10 +2,15 @@
 
 module.exports = function (firstTestBeansFilename, secondTestBeansFilename) {
 
-  var nconf = require('nconf');
+  var conf = require('simple-configure');
   var merge = require('utils-merge');
   var Beans = require('CoolBeans');
   require('../../softwerkskammer/testutil/shutupWinston')();
+
+  // first, set the normal configuration (important e.g. for mongoDB)
+  require('../configure');
+
+  // then, overwrite what needs to be changed:
 
   // beans:
   var productionBeans = require('../../config/beans.json');
@@ -16,7 +21,7 @@ module.exports = function (firstTestBeansFilename, secondTestBeansFilename) {
   merge(productionBeans, firstTestBeans);
   merge(productionBeans, secondTestBeans);
 
-  nconf.overrides({
+  conf.addProperties({
     port: '17225',
     swkTrustedAppName: null,
     swkTrustedAppPwd: null,
@@ -42,6 +47,5 @@ module.exports = function (firstTestBeansFilename, secondTestBeansFilename) {
     imageDirectory  : null
   });
 
-  return require('../configure');
-
+  return conf;
 };

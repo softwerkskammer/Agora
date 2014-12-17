@@ -2,7 +2,7 @@
 
 require('./configure'); // initializing parameters
 var _ = require('lodash');
-var beans = require('nconf').get('beans');
+var beans = require('simple-configure').get('beans');
 var activitystore = beans.get('activitystore');
 
 var really = process.argv[2];

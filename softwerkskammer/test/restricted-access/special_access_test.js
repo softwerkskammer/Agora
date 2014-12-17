@@ -1,10 +1,9 @@
 'use strict';
 
-var conf = require('../../testutil/configureForTest');
 var sinon = require('sinon');
 var expect = require('must');
 
-var beans = conf.get('beans');
+var beans = require('../../testutil/configureForTest').get('beans');
 var redirectRuleForNewUser = beans.get('redirectRuleForNewUser');
 var secureSuperuserOnly = beans.get('secureSuperuserOnly');
 var accessrights = beans.get('accessrights');

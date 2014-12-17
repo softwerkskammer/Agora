@@ -1,11 +1,10 @@
 'use strict';
 
-var nconf = require('../../testutil/configureForTestWithDB');
 var moment = require('moment-timezone');
 var expect = require('must');
 var sinon = require('sinon').sandbox.create();
 
-var beans = nconf.get('beans');
+var beans = require('../../testutil/configureForTestWithDB').get('beans');
 var persistence = beans.get('activitiesPersistence');
 var activitystore = beans.get('activitystore');
 var activitiesService = beans.get('activitiesService');

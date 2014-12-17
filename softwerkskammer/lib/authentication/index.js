@@ -6,7 +6,7 @@ var jwt = require('jwt-simple');
 var moment = require('moment-timezone');
 var logger = winston.loggers.get('authorization');
 
-var conf = require('nconf');
+var conf = require('simple-configure');
 var beans = conf.get('beans');
 var membersService = beans.get('membersService');
 var misc = beans.get('misc');

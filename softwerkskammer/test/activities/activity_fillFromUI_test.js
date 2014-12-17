@@ -1,10 +1,8 @@
 'use strict';
 
-require('../../testutil/configureForTest');
-var conf = require('nconf');
 var expect = require('must');
 
-var Activity = conf.get('beans').get('activity');
+var Activity = require('../../testutil/configureForTest').get('beans').get('activity');
 
 function checkResourceNames(activity, resourceName1, resourceName2) {
   if (resourceName2) {

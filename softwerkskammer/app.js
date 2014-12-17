@@ -26,7 +26,7 @@ function useApp(parent, url, child) {
   return child;
 }
 
-var conf = require('nconf');
+var conf = require('simple-configure');
 var beans = conf.get('beans');
 
 // initialize winston and two concrete loggers

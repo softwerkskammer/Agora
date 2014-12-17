@@ -1,11 +1,10 @@
 'use strict';
 
-require('../../testutil/configureForTest');
-var conf = require('nconf');
 var expect = require('must');
 
-var Activity = conf.get('beans').get('activity');
-var Member = conf.get('beans').get('member');
+var beans = require('../../testutil/configureForTest').get('beans');
+var Activity = beans.get('activity');
+var Member = beans.get('member');
 
 var member1 = new Member({id: 'memberId1'});
 var member2 = new Member({id: 'memberId2'});

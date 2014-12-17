@@ -1,12 +1,11 @@
 'use strict';
 
-var conf = require('../../testutil/configureForTest');
 var sinon = require('sinon');
 var expect = require('must');
 
-var persistence = conf.get('beans').get('groupsPersistence');
-
-var store = conf.get('beans').get('groupstore');
+var beans = require('../../testutil/configureForTest').get('beans');
+var persistence = beans.get('groupsPersistence');
+var store = beans.get('groupstore');
 
 describe('Groups store', function () {
 

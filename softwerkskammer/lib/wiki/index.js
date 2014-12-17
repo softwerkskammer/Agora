@@ -1,6 +1,6 @@
 'use strict';
 
-var beans = require('nconf').get('beans');
+var beans = require('simple-configure').get('beans');
 var Renderer = beans.get('renderer');
 var wikiService = beans.get('wikiService');
 var statusmessage = beans.get('statusmessage');

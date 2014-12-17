@@ -2,7 +2,7 @@
 
 require('./configure'); // initializing parameters
 var async = require('async');
-var beans = require('nconf').get('beans');
+var beans = require('simple-configure').get('beans');
 var mailsPersistence = beans.get('mailsPersistence');
 var groupsPersistence = beans.get('groupsPersistence');
 var activitiesPersistence = beans.get('activitiesPersistence');

@@ -1,10 +1,9 @@
 'use strict';
 var _ = require('lodash');
-var conf = require('nconf');
-var logger = require('winston').loggers.get('application');
 var async = require('async');
 
-var beans = conf.get('beans');
+var logger = require('winston').loggers.get('application');
+var beans = require('simple-configure').get('beans');
 var PaymentInfo = beans.get('paymentInfo');
 var misc = beans.get('misc');
 var memberstore = beans.get('memberstore');

@@ -1,6 +1,6 @@
 'use strict';
 
-var nconf = require('nconf');
+var conf = require('simple-configure');
 var moment = require('moment-timezone');
 
 
@@ -10,20 +10,20 @@ function PaymentInfo(state) {
 }
 
 PaymentInfo.prototype.bic = function () {
-  return nconf.get('paymentBic');
+  return conf.get('paymentBic');
 };
 
 PaymentInfo.prototype.iban = function () {
-  return nconf.get('paymentIban');
+  return conf.get('paymentIban');
 };
 
 PaymentInfo.prototype.paymentReceiver = function () {
-  return nconf.get('paymentReceiver');
+  return conf.get('paymentReceiver');
 };
 
 
 PaymentInfo.prototype.paymentKey = function () {
-  return nconf.get('publicPaymentKey');
+  return conf.get('publicPaymentKey');
 };
 
 

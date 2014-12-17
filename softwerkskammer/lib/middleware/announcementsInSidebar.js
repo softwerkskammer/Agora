@@ -1,7 +1,6 @@
 'use strict';
 
-var conf = require('nconf');
-var store = conf.get('beans').get('announcementstore');
+var store = require('simple-configure').get('beans').get('announcementstore');
 var _ = require('lodash');
 
 module.exports = function latestNews(req, res, next) {

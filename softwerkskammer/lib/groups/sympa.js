@@ -1,5 +1,5 @@
 'use strict';
-var conf = require('nconf');
+var conf = require('simple-configure');
 var soap = require('soap-sympa');
 var transformer = conf.get('beans').get('sympaTransformer');
 var url = __dirname + '/sympa.wsdl';

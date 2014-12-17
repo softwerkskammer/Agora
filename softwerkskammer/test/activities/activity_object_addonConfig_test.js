@@ -4,7 +4,7 @@ require('../../testutil/configureForTest');
 var moment = require('moment-timezone');
 var expect = require('must');
 
-var beans = require('nconf').get('beans');
+var beans = require('simple-configure').get('beans');
 var Activity = beans.get('activity');
 var AddonConfig = beans.get('addon').AddonConfig;
 var Addon = beans.get('addon').Addon;

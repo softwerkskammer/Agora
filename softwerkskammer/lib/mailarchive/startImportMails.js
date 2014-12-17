@@ -1,7 +1,6 @@
 'use strict';
 var path = require('path');
-var conf = require('../../configure');
-var persistence = conf.get('beans').get('mailsPersistence');
+var persistence = require('../../configure').get('beans').get('mailsPersistence');
 var file = process.argv[2];
 var group = process.argv[3].replace(/@softwerkskammer\.org/g, ''); // remove trailing domain
 

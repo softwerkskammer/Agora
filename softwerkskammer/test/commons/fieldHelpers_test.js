@@ -1,7 +1,6 @@
 'use strict';
 
-var conf = require('../../testutil/configureForTest');
-var fieldHelpers = conf.get('beans').get('fieldHelpers');
+var fieldHelpers = require('../../testutil/configureForTest').get('beans').get('fieldHelpers');
 var expect = require('must');
 
 describe('Activity application', function () {

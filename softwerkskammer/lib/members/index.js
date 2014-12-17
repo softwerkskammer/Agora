@@ -4,8 +4,7 @@ var async = require('async');
 var _ = require('lodash');
 var Form = require('multiparty').Form;
 
-var conf = require('nconf');
-var beans = conf.get('beans');
+var beans = require('simple-configure').get('beans');
 var validation = beans.get('validation');
 var Member = beans.get('member');
 var Group = beans.get('group');

@@ -1,7 +1,6 @@
 'use strict';
 
-var conf = require('nconf');
-var beans = conf.get('beans');
+var beans = require('simple-configure').get('beans');
 var async = require('async');
 var _ = require('lodash');
 var moment = require('moment-timezone');
@@ -9,7 +8,7 @@ var moment = require('moment-timezone');
 var wikiService = beans.get('wikiService');
 var groupsAndMembersService = beans.get('groupsAndMembersService');
 var activitiesService = beans.get('activitiesService');
-var mailarchiveService = conf.get('beans').get('mailarchiveService');
+var mailarchiveService = beans.get('mailarchiveService');
 
 function groupsByColumns(groups, linesPerGroup) {
   var result = [

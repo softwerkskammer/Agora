@@ -1,8 +1,8 @@
 'use strict';
 
 var expect = require('must');
-var conf = require('./../../testutil/configureForTest');
-var CONFLICTING_VERSIONS = conf.get('beans').get('constants').CONFLICTING_VERSIONS;
+var beans = require('./../../testutil/configureForTest').get('beans');
+var CONFLICTING_VERSIONS = beans.get('constants').CONFLICTING_VERSIONS;
 var persistence = require('../../lib/persistence/persistence')('teststore');
 var clearStore = function (callback) {
   persistence.drop(function () {
@@ -276,7 +276,7 @@ describe('The persistence store', function () {
   });
 
   describe('for Member', function () {
-    var Member = conf.get('beans').get('member');
+    var Member = beans.get('member');
     var moment = require('moment-timezone');
     var toPersist = new Member().initFromSessionUser({authenticationId: 'toPersist'}).state;
 

@@ -1,5 +1,5 @@
 'use strict';
-var conf = require('nconf');
+var conf = require('simple-configure');
 var expressSession = require('express-session');
 var sevenDays = 86400 * 1000 * 7;
 

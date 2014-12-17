@@ -4,7 +4,7 @@ var _ = require('lodash');
 var _s = require('underscore.string');
 var path = require('path');
 
-var beans = require('nconf').get('beans');
+var beans = require('simple-configure').get('beans');
 var Renderer = beans.get('renderer');
 
 var BLOG_ENTRY_REGEX = /blog_(\d{4}-\d{1,2}-\d{1,2})/;

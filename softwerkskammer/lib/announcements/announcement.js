@@ -1,7 +1,7 @@
 'use strict';
 
 var moment = require('moment-timezone');
-var beans = require('nconf').get('beans');
+var beans = require('simple-configure').get('beans');
 var Renderer = beans.get('renderer');
 
 function Announcement(object) {

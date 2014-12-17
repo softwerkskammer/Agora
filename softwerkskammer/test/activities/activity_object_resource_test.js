@@ -1,11 +1,9 @@
 'use strict';
 
-require('../../testutil/configureForTest');
-var conf = require('nconf');
 var expect = require('must');
 var moment = require('moment-timezone');
 
-var Activity = conf.get('beans').get('activity');
+var Activity = require('../../testutil/configureForTest').get('beans').get('activity');
 
 var defaultName = 'Veranstaltung';
 

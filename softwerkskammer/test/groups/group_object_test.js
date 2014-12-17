@@ -1,8 +1,6 @@
 'use strict';
 
-var conf = require('../../testutil/configureForTest');
-
-var beans = conf.get('beans');
+var beans = require('../../testutil/configureForTest').get('beans');
 var Group = beans.get('group');
 var Member = beans.get('member');
 var expect = require('must');

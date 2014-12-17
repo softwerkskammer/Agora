@@ -1,11 +1,9 @@
 'use strict';
 
-require('../../testutil/configureForTest');
-var conf = require('nconf');
 var expect = require('must');
 var sinon = require('sinon').sandbox.create();
 
-var beans = conf.get('beans');
+var beans = require('../../testutil/configureForTest').get('beans');
 var Resource = beans.get('resource');
 var resourceRegistrationRenderer = beans.get('resourceRegistrationRenderer');
 var Activity = beans.get('activity');

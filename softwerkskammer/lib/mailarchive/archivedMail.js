@@ -4,7 +4,7 @@ var _ = require('lodash');
 var moment = require('moment-timezone');
 var Encoder = require('node-html-encoder').Encoder;
 var encoder = new Encoder('entity');
-var fieldHelpers = require('nconf').get('beans').get('fieldHelpers');
+var fieldHelpers = require('simple-configure').get('beans').get('fieldHelpers');
 
 function ArchivedMail(object) {
   this.id = object.id;

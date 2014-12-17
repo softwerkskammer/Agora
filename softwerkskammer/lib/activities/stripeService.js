@@ -1,7 +1,7 @@
 'use strict';
 
 var stripe = require('stripe');
-var conf = require('nconf');
+var conf = require('simple-configure');
 
 module.exports = {
 
