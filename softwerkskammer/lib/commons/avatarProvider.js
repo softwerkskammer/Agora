@@ -2,9 +2,8 @@
 
 var crypto = require('crypto');
 var request = require('request').defaults({encoding: null});
-var conf = require('simple-configure');
 var NodeCache = require('node-cache');
-var fieldHelpers = conf.get('beans').get('fieldHelpers');
+var fieldHelpers = require('simple-configure').get('beans').get('fieldHelpers');
 
 var imageCache = new NodeCache({stdTTL: 60 * 60}); // one hour
 

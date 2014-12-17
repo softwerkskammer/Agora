@@ -2,7 +2,7 @@
 
 module.exports = function (firstTestBeansFilename, secondTestBeansFilename) {
 
-  var nconf = require('simple-configure');
+  var conf = require('simple-configure');
   var merge = require('utils-merge');
   var Beans = require('CoolBeans');
   require('../../softwerkskammer/testutil/shutupWinston')();
@@ -21,7 +21,7 @@ module.exports = function (firstTestBeansFilename, secondTestBeansFilename) {
   merge(productionBeans, firstTestBeans);
   merge(productionBeans, secondTestBeans);
 
-  nconf.addProperties({
+  conf.addProperties({
     port: '17225',
     swkTrustedAppName: null,
     swkTrustedAppPwd: null,
@@ -47,5 +47,5 @@ module.exports = function (firstTestBeansFilename, secondTestBeansFilename) {
     imageDirectory  : null
   });
 
-  return nconf;
+  return conf;
 };

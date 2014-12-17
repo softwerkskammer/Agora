@@ -3,9 +3,7 @@
 var request = require('supertest');
 var sinon = require('sinon').sandbox.create();
 
-var conf = require('../../testutil/configureForTest');
-
-var beans = conf.get('beans');
+var beans = require('../../testutil/configureForTest').get('beans');
 var activitiesService = beans.get('activitiesService');
 
 var createApp = require('../../testutil/testHelper')('activitiesApp').createApp;

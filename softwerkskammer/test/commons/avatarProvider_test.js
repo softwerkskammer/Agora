@@ -2,10 +2,10 @@
 
 var expect = require('must');
 var sinon = require('sinon').sandbox.create();
-var conf = require('../../testutil/configureForTest');
 
-var Member = conf.get('beans').get('member');
-var avatarProvider = conf.get('beans').get('avatarProvider');
+var beans = require('../../testutil/configureForTest').get('beans');
+var Member = beans.get('member');
+var avatarProvider = beans.get('avatarProvider');
 
 describe('AvatarProvider', function () {
 

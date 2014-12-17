@@ -3,8 +3,7 @@
 var sinon = require('sinon').sandbox.create();
 
 var expect = require('must');
-var conf = require('../../testutil/configureForTest');
-var beans = conf.get('beans');
+var beans = require('../../testutil/configureForTest').get('beans');
 var Group = beans.get('group');
 var GroupA = new Group({id: 'GroupA', longName: 'Gruppe A', description: 'Dies ist Gruppe A.', type: 'Themengruppe'});
 var GroupB = new Group({id: 'GroupB', longName: 'Gruppe B', description: 'Dies ist Gruppe B.', type: 'Regionalgruppe'});

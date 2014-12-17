@@ -1,20 +1,20 @@
 'use strict';
 
-var conf = require('../../testutil/configureForTest');
 var sinon = require('sinon').sandbox.create();
-
 var expect = require('must');
 
-var Group = conf.get('beans').get('group');
+var conf = require('../../testutil/configureForTest');
+var beans = conf.get('beans');
+var Group = beans.get('group');
 
 var GroupA = new Group({id: 'GroupA', longName: 'Gruppe A', description: 'Dies ist Gruppe A.', type: 'Themengruppe', emailPrefix: 'PREFIX'});
 var GroupB = new Group({id: 'GroupB', longName: 'Gruppe B', description: 'Dies ist Gruppe B.', type: 'Regionalgruppe'});
 var NonPersistentGroup = new Group({id: 'Group C', longName: 'Gruppe C', description: 'Dies ist Gruppe C.', type: 'Regionalgruppe'});
 
-var groupstore = conf.get('beans').get('groupstore');
-var sympa = conf.get('beans').get('sympaStub');
+var groupstore = beans.get('groupstore');
+var sympa = beans.get('sympaStub');
 
-var systemUnderTest = conf.get('beans').get('groupsService');
+var systemUnderTest = beans.get('groupsService');
 
 describe('Groups Service (getSubscribedGroupsForUser)', function () {
 

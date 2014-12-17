@@ -1,12 +1,11 @@
 'use strict';
-var conf = require('../../testutil/configureForTest');
 
 var request = require('supertest');
 var sinonSandbox = require('sinon').sandbox.create();
 var expect = require('must');
 var moment = require('moment-timezone');
 
-var beans = conf.get('beans');
+var beans = require('../../testutil/configureForTest').get('beans');
 var Announcement = beans.get('announcement');
 var Member = beans.get('member');
 

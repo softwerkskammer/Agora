@@ -1,7 +1,6 @@
 'use strict';
 
-var conf = require('simple-configure');
-var beans = conf.get('beans');
+var beans = require('simple-configure').get('beans');
 var logger = require('winston').loggers.get('transactions');
 var _ = require('lodash');
 var async = require('async');

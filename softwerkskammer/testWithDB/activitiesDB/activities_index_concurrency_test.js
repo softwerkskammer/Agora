@@ -4,9 +4,7 @@ var request = require('supertest');
 var sinon = require('sinon').sandbox.create();
 var expect = require('must');
 
-var conf = require('../../testutil/configureForTestWithDB');
-
-var beans = conf.get('beans');
+var beans = require('../../testutil/configureForTestWithDB').get('beans');
 var fieldHelpers = beans.get('fieldHelpers');
 var activitystore = beans.get('activitystore');
 var persistence = beans.get('activitiesPersistence');

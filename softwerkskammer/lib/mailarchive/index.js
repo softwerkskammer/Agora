@@ -1,7 +1,6 @@
 'use strict';
 
-var conf = require('simple-configure');
-var beans = conf.get('beans');
+var beans = require('simple-configure').get('beans');
 var mailarchiveService = beans.get('mailarchiveService');
 var misc = beans.get('misc');
 

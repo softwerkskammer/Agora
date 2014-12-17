@@ -1,14 +1,13 @@
 'use strict';
 
-var conf = require('../../testutil/configureForTest');
 var sinon = require('sinon').sandbox.create();
 var expect = require('must');
 
-var beans = conf.get('beans');
+var beans = require('../../testutil/configureForTest').get('beans');
 var wikiSubdirs = beans.get('wikiSubdirs');
 var Git = beans.get('gitmech');
 var Group = beans.get('group');
-var groupstore = require('simple-configure').get('beans').get('groupstore');
+var groupstore = beans.get('groupstore');
 
 describe('Wikisubdirs', function () {
   var allGroups = [

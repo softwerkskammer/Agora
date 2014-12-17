@@ -1,7 +1,6 @@
 'use strict';
 
-var conf = require('../../testutil/configureForTest');
-var statusmessage = conf.get('beans').get('statusmessage');
+var statusmessage = require('../../testutil/configureForTest').get('beans').get('statusmessage');
 var expect = require('must');
 
 describe('Statusmessage', function () {

@@ -1,11 +1,9 @@
 'use strict';
 
-require('../../testutil/configureForTest');
 var moment = require('moment-timezone');
-var conf = require('simple-configure');
 var expect = require('must');
 
-var ActivityResult = conf.get('beans').get('activityresult');
+var ActivityResult = require('../../testutil/configureForTest').get('beans').get('activityresult');
 
 describe('Activity result', function () {
   it('should have an id', function () {

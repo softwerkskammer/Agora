@@ -1,11 +1,8 @@
 'use strict';
 
-var conf = require('simple-configure');
-
 var expect = require('must');
-require('../../testutil/configureForTest');
 
-var Member = conf.get('beans').get('member');
+var Member = require('../../testutil/configureForTest').get('beans').get('member');
 
 describe('Member initial filling', function () {
 

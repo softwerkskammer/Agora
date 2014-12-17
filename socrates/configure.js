@@ -2,7 +2,7 @@
 
 process.chdir(__dirname);
 var _ = require('lodash');
-var simpleConfigure = require('simple-configure');
+var conf = require('simple-configure');
 var Beans = require('CoolBeans');
 var merge = require('utils-merge');
 var path = require('path');
@@ -16,7 +16,7 @@ function createConfiguration() {
   var socratesBeans = require(configdir + 'beans-socrates.json');
   merge(swkBeans, socratesBeans);
 
-  simpleConfigure.addProperties({
+  conf.addProperties({
     port: '17224',
     mongoURL: 'mongodb://localhost:27017/swk',
     publicUrlPrefix: 'http://localhost:17224',
@@ -42,9 +42,9 @@ function createConfiguration() {
     'socrates-wikirepo-config.json',
     'activityresults-config.json',
     'crosssite-config.json'];
-  simpleConfigure.addFiles(_.map(files, function (file) { return configdir + file; }));
+  conf.addFiles(_.map(files, function (file) { return configdir + file; }));
 
-  return simpleConfigure;
+  return conf;
 }
 module.exports = createConfiguration();
 

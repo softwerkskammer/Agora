@@ -1,8 +1,7 @@
 'use strict';
 
 var moment = require('moment-timezone');
-var nconf = require('simple-configure');
-var beans = nconf.get('beans');
+var beans = require('simple-configure').get('beans');
 var Renderer = beans.get('renderer');
 
 function Addon(object) {

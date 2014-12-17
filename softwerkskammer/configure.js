@@ -3,14 +3,14 @@
 process.chdir(__dirname);
 var _ = require('lodash');
 var Beans = require('CoolBeans');
-var simpleConfigure = require('simple-configure');
+var conf = require('simple-configure');
 var path = require('path');
 
 function createConfiguration() {
   var configdir = path.normalize(__dirname + '/../config/');
 
   // first, set the default values
-  simpleConfigure.addProperties({
+  conf.addProperties({
     adminListName: 'admins',
     port: '17124',
     mongoURL: 'mongodb://localhost:27017/swk',
@@ -50,9 +50,9 @@ function createConfiguration() {
     'wikirepo-config.json',
     'activityresults-config.json',
     'crosssite-config.json'];
-  simpleConfigure.addFiles(_.map(files, function (file) { return configdir + file; }));
+  conf.addFiles(_.map(files, function (file) { return configdir + file; }));
 
-  return simpleConfigure;
+  return conf;
 }
 module.exports = createConfiguration();
 

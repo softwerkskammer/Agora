@@ -1,6 +1,5 @@
 'use strict';
 
-var conf = require('./../../testutil/configureForTest');
 var expect = require('must');
 var sinon = require('sinon').sandbox.create();
 var proxyquireStrict = require('proxyquire').noCallThru();

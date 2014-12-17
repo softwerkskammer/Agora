@@ -2,8 +2,7 @@
 
 var expect = require('must');
 var sinon = require('sinon').sandbox.create();
-var conf = require('../../testutil/configureForTest');
-var beans = conf.get('beans');
+var beans = require('../../testutil/configureForTest').get('beans');
 
 var Member = beans.get('member');
 var memberstore = beans.get('memberstore');

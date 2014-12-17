@@ -1,9 +1,8 @@
 'use strict';
 
-var conf = require('./../../testutil/configureForTest');
 var expect = require('must');
 
-var systemUnderTest = conf.get('beans').get('sympaTransformer');
+var systemUnderTest = require('./../../testutil/configureForTest').get('beans').get('sympaTransformer');
 
 describe('Sympa-Transformer ', function () {
 

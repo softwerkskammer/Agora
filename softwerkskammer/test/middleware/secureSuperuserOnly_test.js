@@ -1,9 +1,8 @@
 'use strict';
 
 var expect = require('must');
-var conf = require('../../testutil/configureForTest');
 
-var redirectIfNotSuperuser = conf.get('beans').get('secureSuperuserOnly');
+var redirectIfNotSuperuser = require('../../testutil/configureForTest').get('beans').get('secureSuperuserOnly');
 
 describe('redirectIfNotSuperuser', function () {
 

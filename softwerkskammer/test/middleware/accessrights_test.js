@@ -1,9 +1,8 @@
 'use strict';
 
-var conf = require('../../testutil/configureForTest');
 var moment = require('moment-timezone');
 
-var beans = conf.get('beans');
+var beans = require('../../testutil/configureForTest').get('beans');
 var accessrights = beans.get('accessrights');
 var Activity = beans.get('activity');
 var Announcement = beans.get('announcement');

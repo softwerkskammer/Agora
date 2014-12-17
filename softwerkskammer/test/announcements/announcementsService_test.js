@@ -1,10 +1,10 @@
 'use strict';
 
 var expect = require('must');
-var conf = require('../../testutil/configureForTest');
-var beans = conf.get('beans');
-var Announcement = beans.get('announcement');
 var sinon = require('sinon').sandbox.create();
+
+var beans = require('../../testutil/configureForTest').get('beans');
+var Announcement = beans.get('announcement');
 var memberstore = beans.get('memberstore');
 var Member = beans.get('member');
 

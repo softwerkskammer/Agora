@@ -1,5 +1,4 @@
 'use strict';
-var conf = require('simple-configure');
 var _ = require('lodash');
 var moment = require('moment-timezone');
 

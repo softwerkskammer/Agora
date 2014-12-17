@@ -4,16 +4,17 @@ var conf = require('simple-configure');
 var logger = require('winston').loggers.get('application');
 var async = require('async');
 
-var validation = conf.get('beans').get('validation');
-var groupstore = conf.get('beans').get('groupstore');
-var misc = conf.get('beans').get('misc');
+var beans = conf.get('beans');
+var validation = beans.get('validation');
+var groupstore = beans.get('groupstore');
+var misc = beans.get('misc');
 
 var sympaClient;
 //Just checking if remote has been configured
 if (conf.get('swkTrustedAppName') || conf.get('swkTrustedAppPwd')) {
-  sympaClient = conf.get('beans').get('sympa');
+  sympaClient = beans.get('sympa');
 } else {
-  sympaClient = conf.get('beans').get('sympaStub');
+  sympaClient = beans.get('sympaStub');
 }
 
 var sympaCache = require('./sympaCache')(sympaClient);
