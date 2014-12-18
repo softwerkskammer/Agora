@@ -39,15 +39,11 @@
     "what_does_not_work": "What does not work the way it should?",
     "settings": "Settings",
     "separator": ".",
-    "goodbye_text": [
+    "goodbye_text_top": [
       "h2 Great you've been here.",
-      "p Take care - see you soon!",
-      "hr",
-      "p.text-right Or maybe you want to return? ",
-      "  a.btn.btn-primary(data-toggle='modal', data-target='#login', href='/loginDialog?returnUrl=' + encodeURIComponent(currentUrl ||  '/'))",
-      "    i.fa.fa-sign-in.fa-fw",
-      "    | &nbsp;$t(general.login)"
+      "p Take care - see you soon!"
     ],
+    "goodbye_text_bottom": "Or maybe you want to return?",
     "are_you_sure": "Are you sure?",
     "no": "No",
     "delete": "Delete",
