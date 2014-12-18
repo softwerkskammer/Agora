@@ -94,7 +94,11 @@ mixin footer
       .row
         .col-sm-12
           hr(style='margin: 0px')
-          .pull-right(style='margin-top: 10px; margin-bottom: 5px;')
-            .btn-group
-              +contactbuttons
+          .row(style='margin-top: 10px')
+            .col-sm-6
+              p.count
+            .col-sm-6
+              .pull-right(style='margin-bottom: 5px;')
+                .btn-group
+                  +contactbuttons
 
