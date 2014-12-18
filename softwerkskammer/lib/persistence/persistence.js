@@ -2,7 +2,9 @@
 var conf = require('simple-configure');
 var async = require('async');
 var ourDB;
-var logger = require('winston').loggers.get('transactions');
+var loggers = require('winston').loggers;
+var logger = loggers.get('transactions');
+var scriptLogger = loggers.get('scripts');
 
 var CONFLICTING_VERSIONS = conf.get('beans').get('constants').CONFLICTING_VERSIONS;
 var DBSTATE = {OPEN: 'OPEN', CLOSED: 'CLOSED', OPENING: 'OPENING'};
@@ -11,12 +13,27 @@ var ourDBConnectionState = DBSTATE.CLOSED;
 module.exports = function (collectionName) {
   var persistence;
 
+  function logInfo(logMessage) {
+    if (collectionName === 'settingsstore') {
+      scriptLogger.info(logMessage);
+    }
+  }
+
   function performInDB(callback) {
+    logInfo('In performInDB');
     if (ourDBConnectionState === DBSTATE.OPEN) {
+      logInfo('connection is open');
       return callback(null, ourDB);
     }
+    logInfo('connection is not open, opening it');
     persistence.openDB();
-    setTimeout(function () {performInDB(callback); }, 5);
+    logInfo('opened connection, now trying again with timeout');
+    setTimeout(function () {
+      logInfo('before retry');
+      performInDB(callback);
+      logInfo('after retry');
+    }, 5);
+    logInfo('retry timeout is expired');
   }
 
   persistence = {
@@ -51,9 +68,13 @@ module.exports = function (collectionName) {
     },
 
     getByField: function (fieldAsObject, callback) {
+      logInfo('In getByField');
       performInDB(function (err, db) {
+        logInfo('In performInDB callback');
         if (err) { return callback(err); }
+        logInfo('No error occurred. collectionName: ' + collectionName + ' fieldAsObject: ' + fieldAsObject);
         db.collection(collectionName).find(fieldAsObject).toArray(function (err, result) {
+          logInfo('In dbCollection callback, result: ' + result);
           if (err) { return callback(err); }
           callback(null, result[0]);
         });
@@ -148,17 +169,26 @@ module.exports = function (collectionName) {
     },
 
     openDB: function () {
+      logInfo('In openDB');
       if (ourDBConnectionState !== DBSTATE.CLOSED) {
+        logInfo('connection state was not closed, but ' + ourDBConnectionState + '. Returning.');
         return;
       }
 
+      logInfo('Setting connection state to OPENING');
       ourDBConnectionState = DBSTATE.OPENING;
 
       var MongoClient = require('mongodb').MongoClient;
+      logInfo('Connecting to Mongo');
       MongoClient.connect(conf.get('mongoURL'), function (err, db) {
-        if (err) { return logger.error(err); }
+        logInfo('In connect callback');
+        if (err) {
+          logInfo('An error occurred: ' + err);
+          return logger.error(err);
+        }
         ourDB = db;
         ourDBConnectionState = DBSTATE.OPEN;
+        logInfo('DB state is now OPEN, db = ' + db);
       });
     },
 
