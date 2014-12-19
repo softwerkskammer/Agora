@@ -118,7 +118,7 @@ var interestify, surroundInterestsWithLinks, surroundWithLink, surroundTwitterNa
     var result = URI.parse(window.location.href); // full URL
     $('[data-agoranav]').filter(function () {
       return new RegExp('^\/' + $(this).attr('data-agoranav')).test(result.path);
-    }).first().addClass('active');
+    }).addClass('active');
   };
 
   var addHelpButtonToTextarea = function () {
