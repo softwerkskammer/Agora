@@ -70,6 +70,7 @@ module.exports = {
     app.use('/registration/', beans.get('socratesRegistrationApp'));
     app.use('/auth/', beans.get('authenticationApp'));
     app.use('/members/', beans.get('socratesMembersApp'));
+    app.use('/participants/', beans.get('socratesParticipantsApp'));
     app.use('/wiki/', beans.get('socratesWikiApp'));
     app.use(beans.get('handle404')(appLogger));
     app.use(beans.get('handle500')(appLogger));

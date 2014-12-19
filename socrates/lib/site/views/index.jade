@@ -104,6 +104,13 @@ block content
               hr.sponsorline.hidden-lg
               .col-lg-12.visible-lg-block
                 hr
+  script.
+    $(document).ready(function () {
+      $.ajax({url: '/participants/count'}).done(function (count) {
+        $('.count').text(count + ' people are interested in SoCraTes!');
+      });
+    });
+
 
 mixin sponsorCol(sponsor)
   .col-lg-6

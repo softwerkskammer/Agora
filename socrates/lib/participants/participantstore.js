@@ -14,7 +14,7 @@ var toParticipantList = function (callback, err, result) {
 
 module.exports = {
   allParticipants: function (callback) {
-    persistence.list(_.partial(toParticipantList, callback));
+    persistence.list({}, _.partial(toParticipantList, callback));
   },
 
   getParticipant: function (id, callback) {
