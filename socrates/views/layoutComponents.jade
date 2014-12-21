@@ -5,7 +5,7 @@ mixin loginMenu(forInline)
       if accessrights.isRegistered()
        | #{' ' + user.member.nickname()}
       else
-       |  Guest
+       |  #{t('general.guest')}
       ul.dropdown-menu
         if accessrights.isRegistered()
           li: a(href='/registration/editmember')
@@ -27,31 +27,14 @@ mixin loginMenu(forInline)
           | &nbsp;#{t('general.feedback')}
 
 mixin notificationsBlock(notificationmessage)
-  #{notificationmessage.kill()}
+  -notificationmessage.kill()
   -var contents = notificationmessage.contents()
   #notifications(class='alert alert-block hidden-print #{contents.type}')
     button.close(type='button', data-dismiss='alert') &times;
     h4 #{t(contents.title)}
     | #{t(contents.text, contents.additionalArguments)}
 
-mixin contactbuttons
-  a.btn.btn-info(href='/impressum.html', title='Impressum')
-    i.fa.fa-fw.fa-info #{''}
-    span.hidden-xs Impressum
-  a.btn.btn-info(href='mailto:info@socrates-conference.de', title='E-Mail')
-    i.fa.fa-fw.fa-envelope #{''}
-    span.hidden-xs E-Mail
-  .btn-group.dropup
-    a.btn.btn-info(href='https://twitter.com/intent/tweet?text=SoCraTes+2015+will+take+place+from+27+to+30+August.+More+at&url=http%3A%2F%2Fsocrates-conference.de%2F&hashtags=socrates_15&via=socrates_2015', title='Tweet')
-      i.fa.fa-fw.fa-twitter #{''}
-      span.hidden-xs Tweet
-    a.btn.btn-info.dropdown-toggle(type='button', data-toggle='dropdown')
-      i.fa.fa-caret-up
-    ul.dropdown-menu(role='menu')
-      li: a(href='https://twitter.com/intent/user?screen_name=socrates_2015') Show Tweets
-      li: a(href='https://twitter.com/intent/follow?screen_name=socrates_2015') Follow
-
-mixin navbar
+mixin navbar(xs)
   .container
     .navbar-header
       button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-collapse')
@@ -87,6 +70,7 @@ mixin navbar
             if (wikisubdirs)
               for subdir in wikisubdirs
                 li: a(href='/wiki/#{subdir}/') #{subdir}
+        +loginMenu(true)
       
 mixin footer
   footer(style='margin-top: 10px')
@@ -102,3 +86,19 @@ mixin footer
                 .btn-group
                   +contactbuttons
 
+mixin contactbuttons
+  a.btn.btn-info(href='/impressum.html', title='Impressum')
+    i.fa.fa-fw.fa-info
+    span.hidden-xs #{' ' + t('general.legal_notice')}
+  a.btn.btn-info(href='mailto:info@socrates-conference.de', title='E-Mail')
+    i.fa.fa-fw.fa-envelope
+    span.hidden-xs #{' ' + t('members.email')}
+  .btn-group.dropup
+    a.btn.btn-info(href='https://twitter.com/intent/tweet?text=SoCraTes+2015+will+take+place+from+27+to+30+August.+More+at&url=http%3A%2F%2Fsocrates-conference.de%2F&hashtags=socrates_15&via=socrates_2015', title='Tweet')
+      i.fa.fa-fw.fa-twitter
+      span.hidden-xs #{' ' + t('general.tweet')}
+    a.btn.btn-info.dropdown-toggle(type='button', data-toggle='dropdown')
+      i.fa.fa-caret-up
+    ul.dropdown-menu(role='menu')
+      li: a(href='https://twitter.com/intent/user?screen_name=socrates_2015') #{t('general.show_tweets')}
+      li: a(href='https://twitter.com/intent/follow?screen_name=socrates_2015') #{t('general.follow')}

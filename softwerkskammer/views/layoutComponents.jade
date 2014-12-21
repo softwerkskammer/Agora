@@ -79,7 +79,7 @@ mixin bottomNavbar
     +navbar-inside
 
 mixin notificationsBlock(notificationmessage)
-  #{notificationmessage.kill()}
+  -notificationmessage.kill()
   -var contents = notificationmessage.contents()
   #notifications(class='alert alert-block hidden-print #{contents.type}')
     button.close(type='button', data-dismiss='alert') &times;

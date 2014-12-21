@@ -128,7 +128,8 @@ mixin textareaInternal(classname, rowCount, name, label, value, tooltip)
     textarea(class=classname, id=name, rows=rowCount, type='text', name=name) #{value}
 
 mixin reallyDeleteModal(header, urlForButton, extraclasses)
-  #reallyDelete.modal.fade(tabindex='-1')
+  -var theID = 'reallyDelete' + header.replace('\.', '')
+  .modal.fade(id=theID, tabindex='-1')
     .modal-dialog
       .modal-content
         .modal-header
@@ -141,7 +142,7 @@ mixin reallyDeleteModal(header, urlForButton, extraclasses)
             a.btn.btn-danger(href=urlForButton)
               i.fa.fa-trash-o.fa-fw &nbsp;
               | #{t('general.delete')}
-  span.btn.btn-danger(data-toggle='modal', data-target='#reallyDelete', class=extraclasses)
+  span.btn.btn-danger(data-toggle='modal', data-target='#' + theID, class=extraclasses)
     i.fa.fa-trash-o.fa-fw
     if (extraclasses)
       | &nbsp; #{t('general.delete')}
