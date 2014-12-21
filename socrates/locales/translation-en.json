@@ -223,13 +223,13 @@
     "contents": "Contents",
     "copy_to_self": "Send a copy to myself",
     "send": "Send",
-    "resign": "Write Resignment E-Mail",
+    "resign": "Write Resignment E-mail",
     "why-resign": "Why do you want to resign",
     "notes-resign": "Please let us know what you think about this site",
     "resign_info": [
       "p We are sorry that you want to leave.",
       "p We are respecting this and will remove your account as soon as possible. We would be thankful if you answered the following questions.",
-      "p Account removal is a manual process and sending this form will trigger an email to the administators."
+      "p Account removal is a manual process and sending this form will trigger an e-mail to the administators."
     ]
   },
   "members": {
@@ -247,7 +247,7 @@
     "nickname": "Nickname",
     "firstname": "First name",
     "lastname": "Last name",
-    "email": "E-Mail",
+    "email": "E-mail",
     "twitter": "Twitter",
     "location": "City / Region",
     "profession": "Profession",
@@ -332,12 +332,12 @@
       },
       "groups": {
         "saved": "Your group has been saved.",
-        "subscribed": "You are now a member of this group. You will receive a welcome-email in a few moments.",
-        "unsubscribed": "You are not a member of this group any more. You will receive a goodbye-email in a few moments."
+        "subscribed": "You are now a member of this group. You will receive a welcome-e-mail in a few moments.",
+        "unsubscribed": "You are not a member of this group any more. You will receive a goodbye-e-mail in a few moments."
       },
       "mailsender": {
         "error_reason": "Your __type__ has not been sent. Reason: __err__",
-        "error_no_recipient": "Your E-mail has not been sent. No recipient given.",
+        "error_no_recipient": "Your e-mail has not been sent. No recipient given.",
         "success": "Your __type__ is on its way."
       },
       "members": {
@@ -358,14 +358,14 @@
     "failed": "Failed",
     "url_not_available": "This URL is not available.",
     "nickname_not_available": "This nickname is not available.",
-    "duplicate_email": "This email address is already registered. Maybe you already have a profile?",
+    "duplicate_email": "This e-mail address is already registered. Maybe you already have a profile?",
     "nickname_required": "Nickname is required.",
     "nickname_min_2_chars": "Nickname must contain at least 2 characters.",
     "nickname_no_slash": "Nickname must not contain a \"/\".",
     "firstname_required": "First name is required.",
     "lastname_required": "Last name is required.",
-    "email_required": "E-Mail is required.",
-    "email_valid": "E-Mail must be valid.",
+    "email_required": "E-mail is required.",
+    "email_valid": "E-mail must be valid.",
     "city_required": "City / Region is required.",
     "profession_required": "Profession is required.",
     "reference_required": "How I got to know... is required.",
