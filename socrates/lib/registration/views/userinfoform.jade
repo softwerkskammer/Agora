@@ -1,20 +1,19 @@
-mixin memberinfoform(member)
+mixin memberinfoform(member, newmember_text)
   .row
     .col-sm-12
       legend
-        h4 Personal Data
+        h4 #{t('members.personal_data')}
       .well
         - if (accessrights.isRegistered())
           - if (member.socratesOnly())
             p.
-              Here you can edit your information.
+              #{t('members.edit_socrates_only')}
           - else
             p.
-              Here you find the information from your Softwerkskammer account that is used by SoCraTes. If you change anything here, it is changed in
-              Softwerkskammer as well.
+              #{t('members.edit_socrates_softwerkskammer')}
         - else
           p.
-            In order to participate in the event, we need you to provide us with the following information. Please fill in all mandatory fields.
+            #{t(newmember_text)}
 
   .row
     .col-sm-6

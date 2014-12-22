@@ -261,7 +261,11 @@
     "has_by_interests": "For this phrase we have",
     "notifyOnWikiChanges": "Notify on wiki changes",
     "resign": "Resign",
-    "delete": "Delete Member"
+    "delete": "Delete Member",
+    "edit_socrates_only": "Here you can edit your information.",
+    "edit_socrates_softwerkskammer": "Here you find the information from your Softwerkskammer account that is used by SoCraTes. If you change anything here, it is changed in Softwerkskammer as well.",
+    "edit_preregistration": "In order to keep you informed about the SoCraTes conference, we need you to provide us with the following information. Please fill in all mandatory fields.",
+    "edit_registration": "In order to participate in the event, we need you to provide us with the following information. Please fill in all mandatory fields."
   },
   "wiki": {
     "blogposts": "Blog Posts",
