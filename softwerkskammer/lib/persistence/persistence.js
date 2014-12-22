@@ -15,25 +15,21 @@ module.exports = function (collectionName) {
 
   function logInfo(logMessage) {
     if (collectionName === 'settingsstore') {
+      console.log(logMessage);
       scriptLogger.info(logMessage);
     }
   }
 
   function performInDB(callback) {
-    logInfo('In performInDB');
     if (ourDBConnectionState === DBSTATE.OPEN) {
       logInfo('connection is open');
       return callback(null, ourDB);
     }
-    logInfo('connection is not open, opening it');
+    logInfo('connection is ' + ourDBConnectionState + ', opening it and retrying');
     persistence.openDB();
-    logInfo('opened connection, now trying again with timeout');
     setTimeout(function () {
-      logInfo('before retry');
       performInDB(callback);
-      logInfo('after retry');
-    }, 5);
-    logInfo('retry timeout is expired');
+    }, 100);
   }
 
   persistence = {
@@ -169,9 +165,8 @@ module.exports = function (collectionName) {
     },
 
     openDB: function () {
-      logInfo('In openDB');
       if (ourDBConnectionState !== DBSTATE.CLOSED) {
-        logInfo('connection state was not closed, but ' + ourDBConnectionState + '. Returning.');
+        logInfo('connection state is ' + ourDBConnectionState + '. Returning.');
         return;
       }
 
@@ -192,14 +187,17 @@ module.exports = function (collectionName) {
       });
     },
 
-    closeDB: function () {
+    closeDB: function (callback) {
       if (ourDBConnectionState === DBSTATE.CLOSED) {
+        if (callback) { callback(); }
         return;
       }
       performInDB(function () {
         ourDB.close();
         ourDB = undefined;
         ourDBConnectionState = DBSTATE.CLOSED;
+        logInfo('connection closed');
+        if (callback) { callback(); }
       });
     }
   };
