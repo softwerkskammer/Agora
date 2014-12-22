@@ -96,7 +96,5 @@ module.exports = function (file, group, done) {
     });
   });
 
-  logger.info('Before creating read stream');
   fs.createReadStream(file).pipe(mailparser);
-  logger.info('After creating read stream');
 };

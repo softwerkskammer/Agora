@@ -1,6 +1,5 @@
 'use strict';
 var path = require('path');
-var persistence = require('../../configure').get('beans').get('mailsPersistence');
 var file = process.argv[2];
 var group = process.argv[3].replace(/@softwerkskammer\.org/g, ''); // remove trailing domain
 
@@ -9,18 +8,22 @@ var winston = require('winston-config').fromFileSync(path.join(__dirname, '../..
 /*jslint stupid: false */
 var logger = winston.loggers.get('scripts');
 
+var persistence = require('../../configure').get('beans').get('mailsPersistence');
+
+function closeAndExit() {
+  return persistence.closeDB(function () { process.exit(); });
+}
+
 logger.info('== Import Mails ==========================================================================');
 require('./importMails')(file, group, function (err, mailDbObject) {
   if (err) {
     logger.error('Error during import, exiting process: ' + err);
-    persistence.closeDB();
-    process.exit();
-  } else {
-    persistence.save(mailDbObject, function (err) {
-      if (err) { logger.error('Error during save: ' + err); }
-      logger.info('Subject of eMail: ' + mailDbObject.subject);
-      persistence.closeDB();
-      process.exit();
-    });
+    return closeAndExit();
   }
+
+  persistence.save(mailDbObject, function (err) {
+    if (err) { logger.error('Error during save: ' + err); }
+    logger.info('Subject of eMail: ' + mailDbObject.subject);
+    return closeAndExit();
+  });
 });
