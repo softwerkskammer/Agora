@@ -15,7 +15,6 @@ module.exports = function (collectionName) {
 
   function logInfo(logMessage) {
     if (collectionName === 'settingsstore') {
-      console.log(logMessage);
       scriptLogger.info(logMessage);
     }
   }
@@ -64,13 +63,9 @@ module.exports = function (collectionName) {
     },
 
     getByField: function (fieldAsObject, callback) {
-      logInfo('In getByField');
       performInDB(function (err, db) {
-        logInfo('In performInDB callback');
         if (err) { return callback(err); }
-        logInfo('No error occurred. collectionName: ' + collectionName + ' fieldAsObject: ' + fieldAsObject);
         db.collection(collectionName).find(fieldAsObject).toArray(function (err, result) {
-          logInfo('In dbCollection callback, result: ' + result);
           if (err) { return callback(err); }
           callback(null, result[0]);
         });

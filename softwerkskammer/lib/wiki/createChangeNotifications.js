@@ -24,7 +24,6 @@ function closeAndExit() {
 
 logger.info('== Wiki Changes ==========================================================================');
 persistence.getByField({id: 'lastWikiNotifications'}, function (err, result) {
-  logger.info('Read the lastWikiNotifications');
   if (err) {
     logger.error('Error when reading lastWikiNotifications: ' + err);
     return closeAndExit();
@@ -55,7 +54,6 @@ persistence.getByField({id: 'lastWikiNotifications'}, function (err, result) {
           return closeAndExit();
         }
         logger.info('Wiki-Changes notified at: ' + lastNotified.moment);
-        logger.info('Options were returned: ' + !!stringifiedOptions);
         console.log('wiki-changes were reported'); // for cron mail
         return closeAndExit();
       });
