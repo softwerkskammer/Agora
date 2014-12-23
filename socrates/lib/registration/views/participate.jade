@@ -14,7 +14,7 @@ block content
     if (participation.id)
       +hidden('id', participation.id)
     fieldset
-      +memberinfoform(participation.member)
+      +memberinfoform(participation.member, 'members.edit_registration')
       +userinfoform(participation.user)
       +participationinfoform(participation, roomOptions)
 

@@ -15,7 +15,7 @@ block title
 block content
   form#memberform.relaxed(action='/registration/submitmember',method='post')
     +csrf
-    +memberinfoform(member)
+    +memberinfoform(member, 'members.edit_preregistration')
     +memberSubmitButtons
 
 mixin memberSubmitButtons
