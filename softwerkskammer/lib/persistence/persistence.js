@@ -174,6 +174,7 @@ module.exports = function (collectionName) {
         logInfo('In connect callback');
         if (err) {
           logInfo('An error occurred: ' + err);
+          ourDBConnectionState = DBSTATE.CLOSED;
           return logger.error(err);
         }
         ourDB = db;
