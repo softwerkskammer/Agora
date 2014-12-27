@@ -1,6 +1,7 @@
 'use strict';
 
 require('./configure'); // initializing parameters
+var _ = require('lodash');
 var async = require('async');
 var beans = require('simple-configure').get('beans');
 var memberstore = beans.get('memberstore');
@@ -19,7 +20,12 @@ groupsAndMembersService.getAllUsersWithTheirGroups(function (err, members) {
   async.each(members,
     function (member, callback) {
       // set to true if member is only in socrates list
-      member.state.socratesOnly = member.subscribedGroups.length === 1 && member.subscribedGroups[0].id === 'socrates2014';
+      var groups = _(member.subscribedGroups).pluck('id').filter(function (groupId) {
+        return groupId !== 'alle' && groupId !== 'commercial';
+      }).value();
+
+      member.state.socratesOnly = groups.length === 1 && groups[0] === 'socrates2014';
+
       if (member.state.socratesOnly) {
         console.log('Socrates-only: ' + member.displayName());
       }
