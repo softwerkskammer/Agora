@@ -112,10 +112,11 @@ mixin topNavbar(xs)
         ul.dropdown-menu
           if (structuredWikisubdirs)
             for wikisubdirs, key in structuredWikisubdirs
-              li: a(href='#') #{t('groups.' + key)}
-                ul.dropdown-menu
-                  for subdir in wikisubdirs
-                    li: a(href='/wiki/#{subdir}/') #{subdir}
+              if (wikisubdirs.length)
+                li: a(href='#') #{t('groups.' + key)}
+                  ul.dropdown-menu
+                    for subdir in wikisubdirs
+                      li: a(href='/wiki/#{subdir}/') #{subdir}
       li(data-agoranav='members'): a(href='/members')
         if (accessrights.isRegistered())
           i.fa.fa-user.fa-fw
