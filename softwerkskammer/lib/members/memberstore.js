@@ -26,6 +26,10 @@ module.exports = {
     persistence.listByField({'socratesOnly': false}, {lastname: 1, firstname: 1}, _.partial(toMemberList, callback));
   },
 
+  socratesOnlyMembers: function (callback) {
+    persistence.listByField({'socratesOnly': true}, {lastname: 1, firstname: 1}, _.partial(toMemberList, callback));
+  },
+
   getMembersForEMails: function (emails, callback) {
     if (emails.length === 0) { return callback(null, []); }
     persistence.listByField({email: misc.arrayToLowerCaseRegExp(emails)}, {}, _.partial(toMemberList, callback));

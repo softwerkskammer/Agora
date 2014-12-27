@@ -5,7 +5,7 @@ var _ = require('lodash');
 var async = require('async');
 var beans = require('simple-configure').get('beans');
 var participantService = beans.get('participantService');
-var groupsAndMembersService = beans.get('groupsAndMembersService');
+var memberstore = beans.get('memberstore');
 
 var really = process.argv[2];
 var doSave = process.argv[3] === 'doSave';
@@ -16,17 +16,13 @@ if (!really || really !== 'really') {
 }
 
 var count = 1;
-groupsAndMembersService.getAllUsersWithTheirGroups(function (err, members) {
+memberstore.socratesOnlyMembers(function (err, members) {
   async.each(members,
     function (member, callback) {
-      // set to true if member is in SoCraTes group
-      var isSocratesVisitor = _.pluck(member.subscribedGroups, 'id').indexOf('socrates2014') > -1;
-      if (isSocratesVisitor) {
-        console.log('Socrates-Visitor + ' + count + ': ' + member.displayName());
-        count = count + 1;
-        if (doSave) {
-          return participantService.createParticipantIfNecessaryFor(member.id(), callback);
-        }
+      console.log('Socrates-Only ' + count + ': ' + member.displayName());
+      count = count + 1;
+      if (doSave) {
+        return participantService.createParticipantIfNecessaryFor(member.id(), callback);
       }
       callback(null, null);
     },
