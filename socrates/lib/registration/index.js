@@ -9,7 +9,6 @@ var membersService = beans.get('membersService');
 var notifications = beans.get('notifications');
 var validation = beans.get('validation');
 var statusmessage = beans.get('statusmessage');
-var Member = beans.get('member');
 var groupsAndMembersService = beans.get('groupsAndMembersService');
 var mailsenderService = beans.get('mailsenderService');
 
@@ -38,11 +37,6 @@ app.get('/participate', function (req, res) {
 app.post('/participate', function (req, res) {
   console.log(req.body);
   res.redirect('participate');
-});
-
-app.get('/editmember', function (req, res) {
-  var member = req.user.member || new Member().initFromSessionUser(req.user, true);
-  res.render('editmember', {member: member});
 });
 
 app.post('/submitmember', function (req, res, next) {

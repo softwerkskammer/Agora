@@ -4,6 +4,7 @@ var beans = require('simple-configure').get('beans');
 var misc = beans.get('misc');
 var membersService = beans.get('membersService');
 var participantService = beans.get('participantService');
+var Member = beans.get('member');
 
 var app = misc.expressAppIn(__dirname);
 
@@ -20,6 +21,11 @@ app.get('/:nickname', function (req, res, next) {
     if (err || !member) { return next(err); }
     res.render('get', {member: member});
   });
+});
+
+app.get('/edit', function (req, res) {
+  var member = req.user.member || new Member().initFromSessionUser(req.user, true);
+  res.render('edit', {member: member});
 });
 
 module.exports = app;
