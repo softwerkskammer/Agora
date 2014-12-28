@@ -44,10 +44,13 @@ app.post('/submit', function (req, res, next) {
 
     return groupsAndMembersService.updateAndSaveSubmittedMemberWithoutSubscriptions(req.user, req.body, res.locals.accessrights, notifyNewMemberRegistration, function (err, nickname) {
       if (err) { return next(err); }
-      if (nickname) {
-        statusmessage.successMessage('message.title.save_successful', 'message.content.members.saved').putIntoSession(req);
-      }
-      return res.redirect('/');
+      participantService.createParticipantIfNecessaryFor(req.user.member.id(), function (err) {
+        if (err) { return next(err); }
+        if (nickname) {
+          statusmessage.successMessage('message.title.save_successful', 'message.content.members.saved').putIntoSession(req);
+        }
+        return res.redirect('/');
+      });
     });
   }
 
@@ -77,5 +80,6 @@ app.post('/submit', function (req, res, next) {
   );
 
 });
+
 
 module.exports = app;
