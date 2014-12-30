@@ -202,7 +202,7 @@ describe('Members application', function () {
       .expect(/Diese Adresse ist schon registriert\. Hast Du bereits ein Profil angelegt?/, done);
   });
 
-  it('saves an existing member and does not triggers notification sending', function (done) {
+  it('saves an existing member and does not trigger notification sending', function (done) {
     sinon.stub(membersService, 'isValidNickname', function (nickname, callback) { callback(null, true); });
     sinon.stub(membersService, 'isValidEmail', function (nickname, callback) { callback(null, true); });
     sinon.stub(groupsAndMembersService, 'updateSubscriptions', function (member, oldEmail, subscriptions, callback) { callback(); });
@@ -221,14 +221,14 @@ describe('Members application', function () {
       .expect('location', /members\/nickerinack/, done);
   });
 
-  it('saves a new member and does not triggers notification sending', function (done) {
+  it('saves a new member and does not trigger notification sending', function (done) {
     sinon.stub(membersService, 'isValidNickname', function (nickname, callback) { callback(null, true); });
     sinon.stub(membersService, 'isValidEmail', function (nickname, callback) { callback(null, true); });
     sinon.stub(groupsAndMembersService, 'updateSubscriptions', function (member, oldEmail, subscriptions, callback) { callback(); });
     sinon.stub(memberstore, 'saveMember', function (member, callback) { callback(null); });
     var notificationCall = sinon.spy(notifications, 'newMemberRegistered', function () { return undefined; });
 
-    // the following stub indicates that the member not yet exists 
+    // the following stub indicates that the member does not exist yet
     sinon.stub(groupsAndMembersService, 'getUserWithHisGroups', function (nickname, callback) { callback(null); });
     request(createApp('memberID'))
       .post('/submit')
