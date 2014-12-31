@@ -67,7 +67,8 @@
     "no": "No",
     "delete": "Delete",
     "guest": "Guest",
-    "new": "New"
+    "new": "New",
+    "none": "none"
   },
   "error": {
     "congratulations": "Congratulations!",
