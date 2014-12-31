@@ -51,14 +51,17 @@ mixin loginMenu(forInline)
         i.fa.fa-ambulance.fa-fw
         | &nbsp;#{t('general.feedback')}
       li: include ../version
-      if language === 'de'
-        li: a(href='/language/en-gb?currentUrl=#{encodeURIComponent(currentUrl)}')
-          img.fa-fw(src='/img/flags/United-Kingdom.png', height='16')
-          | &nbsp;switch to English
-      else
-        li: a(href='/language/de?currentUrl=#{encodeURIComponent(currentUrl)}')
-          img.fa-fw(src='/img/flags/Germany.png', height='16') 
-          | &nbsp;auf Deutsch umschalten
+      +language
+
+mixin language
+  if language === 'de'
+    li: a(href='/language/en-gb?currentUrl=#{encodeURIComponent(currentUrl)}')
+      img.fa-fw(src='/img/flags/United-Kingdom.png', height='16')
+      | &nbsp;switch to English
+  else
+    li: a(href='/language/de?currentUrl=#{encodeURIComponent(currentUrl)}')
+      img.fa-fw(src='/img/flags/Germany.png', height='16')
+      | &nbsp;auf Deutsch umschalten
 
 mixin navbar-inside
   .navbar-collapse.collapse.collapse-btom
