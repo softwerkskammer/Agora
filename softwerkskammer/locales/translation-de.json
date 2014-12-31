@@ -68,7 +68,8 @@
     "no": "Nein",
     "delete": "Löschen",
     "new": "Neu",
-    "guest": "Gast"
+    "guest": "Gast",
+    "none": "keine"
   },
   "error": {
     "congratulations": "Herzlichen Glückwunsch!",

@@ -51,14 +51,17 @@ mixin loginMenu(forInline)
         i.fa.fa-ambulance.fa-fw
         | &nbsp;#{t('general.feedback')}
       li: include ../version
-      if language === 'de'
-        li: a(href='/language/en-gb?currentUrl=#{encodeURIComponent(currentUrl)}')
-          img.fa-fw(src='/img/flags/United-Kingdom.png', height='16')
-          | &nbsp;switch to English
-      else
-        li: a(href='/language/de?currentUrl=#{encodeURIComponent(currentUrl)}')
-          img.fa-fw(src='/img/flags/Germany.png', height='16') 
-          | &nbsp;auf Deutsch umschalten
+  if language === 'de'
+    +languageEntry(forInline, 'en-gb', 'switch to English', 'United-Kingdom.png')
+  else
+    +languageEntry(forInline, 'de', 'auf Deutsch umschalten', 'Germany.png')
+
+mixin languageEntry(forInline, lang, title, img)
+  li(class=forInline ? 'visible-xs' : '')
+    a.no-left-margin(href='/language/' + lang + '?currentUrl=#{encodeURIComponent(currentUrl)}', title=title)
+      img.fa-fw(src='/img/flags/' + img, height='16', style='vertical-align: baseline;')
+      if(forInline)
+        | &nbsp;#{title}
 
 mixin navbar-inside
   .navbar-collapse.collapse.collapse-btom
@@ -112,13 +115,17 @@ mixin topNavbar(xs)
         ul.dropdown-menu
           if (structuredWikisubdirs)
             for wikisubdirs, key in structuredWikisubdirs
-              if (wikisubdirs.length)
-                li: a(href='#') #{t('groups.' + key)}
-                  ul.dropdown-menu
+              li
+                a(href='#') #{t('groups.' + key)}
+                ul.dropdown-menu
+                  if (wikisubdirs.length)
                     for subdir in wikisubdirs
                       li: a(href='/wiki/#{subdir}/') #{subdir}
+                  else
+                    li: a(href='#') <i>#{t('general.none')}</i>
       li(data-agoranav='members'): a(href='/members')
         if (accessrights.isRegistered())
           i.fa.fa-user.fa-fw
           span.hidden-sm &nbsp;#{t('members.members')}
       +loginMenu(true)
+
