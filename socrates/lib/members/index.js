@@ -23,13 +23,6 @@ app.get('/checkemail', function (req, res) {
   misc.validate(req.query.email, req.query.previousEmail, membersService.isValidEmail, res.end);
 });
 
-app.get('/:nickname', function (req, res, next) {
-  participantService.getMemberIfParticipantExists(req.params.nickname, function (err, member) {
-    if (err || !member) { return next(err); }
-    res.render('get', {member: member});
-  });
-});
-
 app.get('/edit', function (req, res) {
   var member = req.user.member || new Member().initFromSessionUser(req.user, true);
   res.render('edit', {member: member});
@@ -81,5 +74,12 @@ app.post('/submit', function (req, res, next) {
 
 });
 
+
+app.get('/:nickname', function (req, res, next) {
+  participantService.getMemberIfParticipantExists(req.params.nickname, function (err, member) {
+    if (err || !member) { return next(err); }
+    res.render('get', {member: member});
+  });
+});
 
 module.exports = app;
