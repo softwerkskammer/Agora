@@ -101,7 +101,7 @@
   },
   "scripts": {
     "start": "node softwerkskammer/start",
-    "test": "grunt tests",
+    "test": "grunt tests; grunt --gruntfile Gruntfile-SoCraTes.js tests",
     "prepublish": "sh softwerkskammer/prepublish.sh"
   }
 }

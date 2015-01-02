@@ -2,11 +2,11 @@
 
 module.exports = function redirectRuleForNewUser(req, res, next) {
   function proceed() {
-    return (/\/registration\/editmember|\/registration\/submitmember|\/auth\/logout|clientscripts|stylesheets|img|fonts|checknickname|checkemail/).test(req.originalUrl);
+    return (/\/members\/edit|\/members\/submit|\/auth\/logout|clientscripts|stylesheets|img|fonts|checknickname|checkemail/).test(req.originalUrl);
   }
 
   if (req.user && !req.user.member && !proceed()) {
-    return res.redirect('/registration/editmember');
+    return res.redirect('/members/edit');
   }
   next();
 };

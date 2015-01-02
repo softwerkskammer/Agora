@@ -349,8 +349,5 @@ module.exports = function (grunt) {
   // Default task.
   grunt.registerTask('default', ['tests', 'uglify:development_en']);
 
-  // Travis-CI task
-  grunt.registerTask('travis', ['default']);
-
   grunt.registerTask('deploy_production', ['prepare', 'uglify:production_de', 'uglify:production_en']);
 };
