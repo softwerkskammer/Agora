@@ -10,6 +10,8 @@ block content
     .col-md-12
       .page-header
         .btn-group.pull-right
+          if (accessrights.canEditMember(member))
+            a.btn.btn-default(href='/members/edit'): i.fa.fa-edit.fa-fw
           if (accessrights.canDeleteMember(member))
             +reallyDeleteModal('members.delete', '/members/delete/' +encodeURIComponent(member.nickname()))
         h2
