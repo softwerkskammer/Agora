@@ -62,7 +62,7 @@
     "passport": "0.2.1",
     "passport-github": "0.1.5",
     "passport-openid": "0.3.1",
-    "qr-image": "2.0.0",
+    "qr-image": "3.0.2",
     "serve-favicon": "2.1.7",
     "simple-configure": "0.1.4",
     "soap-sympa": "0.0.1",
