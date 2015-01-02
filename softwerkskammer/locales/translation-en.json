@@ -289,6 +289,8 @@
   },
   "mailsender": {
     "notification": "Notification",
+    "invitation": "Invitation",
+    "reminder": "Reminder",
     "write": "Compose Notification",
     "others": "Sonstige",
     "to_member": "To member",

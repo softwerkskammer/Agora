@@ -10,6 +10,8 @@ block content
     .col-md-12
       .page-header
         .btn-group.pull-right
+          if (accessrights.canEditMember(member))
+            a.btn.btn-default(href='/members/edit'): i.fa.fa-edit.fa-fw
           if (accessrights.canDeleteMember(member))
             +reallyDeleteModal('members.delete', '/members/delete/' +encodeURIComponent(member.nickname()))
         h2
@@ -33,3 +35,9 @@ block content
     .col-md-4
       p
         img(src=member.avatarUrl(200))
+
+  .row
+    .col-md-12
+      a.btn.btn-primary(href='/mailsender/contactMember/#{encodeURIComponent(member.nickname())}')
+        i.fa.fa-envelope
+        | &nbsp;#{t('members.send_email', {firstname: member.firstname(), lastname: member.lastname()})}

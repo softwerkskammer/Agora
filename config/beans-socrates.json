@@ -3,6 +3,7 @@
   "socratesSiteApp": {"module": "./socrates/lib/site"},
   "socratesRegistrationApp": {"module": "./socrates/lib/registration"},
   "socratesMembersApp": {"module": "./socrates/lib/members"},
+  "socratesMailsenderApp": {"module": "./socrates/lib/mailsender"},
   "socratesParticipantsApp": {"module": "./socrates/lib/participants"},
   "socratesWikiApp": {"module": "./socrates/lib/wiki"},
 
