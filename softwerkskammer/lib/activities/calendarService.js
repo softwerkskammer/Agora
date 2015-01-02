@@ -20,6 +20,7 @@ module.exports = {
 
   asCalendarEvent: function (activity, groupsColors) {
     return {
+      allDay: true, // to make the calender _not_ show the time inside the event
       start: activity.startMoment().format(),
       end: activity.endMoment().format(),
       url: '/activities/' + encodeURIComponent(activity.url()),

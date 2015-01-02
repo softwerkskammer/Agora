@@ -53,7 +53,6 @@ var interestify, surroundInterestsWithLinks, surroundWithLink, surroundTwitterNa
         right: 'prev,today,next'
       },
       fixedWeekCount: false,
-      timeFormat: '',
       titleFormat: {
         month: 'MMM \'YY'
       },
