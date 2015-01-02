@@ -3,6 +3,10 @@ Index: bower_components/fullcalendar/dist/fullcalendar.js
 --- bower_components/fullcalendar/dist/fullcalendar.js	(revision )
 +++ bower_components/fullcalendar/dist/fullcalendar.js	(revision )
 
+@@ -4684,1 +4684,1 @@
+-						timeHtml + ' ' + titleHtml   //
++						titleHtml   //
+
 @@ -7762,11 +7762,14 @@
  							customText = smartProperty(options.buttonText, buttonName);
  
