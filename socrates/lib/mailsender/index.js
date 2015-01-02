@@ -8,6 +8,8 @@ var statusmessage = beans.get('statusmessage');
 var mailsenderService = beans.get('mailsenderService');
 var Message = beans.get('message');
 
+var app = misc.expressAppIn(__dirname);
+
 function messageSubmitted(req, res, next) {
   var errors = validation.isValidMessage(req.body);
   if (errors.length !== 0) { return res.render('../../../views/errorPages/validationError', {errors: errors}); }
@@ -27,7 +29,6 @@ function messageSubmitted(req, res, next) {
   res.redirect(req.body.successURL);
 }
 
-var app = misc.expressAppIn(__dirname);
 
 app.get('/contactMember/:nickname', function (req, res, next) {
   mailsenderService.dataForShowingMessageToMember(req.params.nickname, function (err, result) {
