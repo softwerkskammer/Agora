@@ -68,7 +68,7 @@ module.exports = function (grunt) {
         flatten: true
       },
       customJS: {
-        src: 'softwerkskammer/frontend/javascript/check-member*',
+        src: ['softwerkskammer/frontend/javascript/check-member*', 'socrates/frontend/javascript/check-*'],
         dest: 'socrates/public/clientscripts',
         expand: true,
         flatten: true
