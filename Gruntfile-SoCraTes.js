@@ -4,6 +4,14 @@ module.exports = function (grunt) {
   // set up common objects for jslint
   var jsLintStandardOptions = {edition: 'latest', errorsOnly: true, failOnError: true};
 
+  var serverDirectives = function () {
+    return {indent: 2, node: true, nomen: true, todo: true, unparam: true, vars: true};
+  };
+  var jsLintServerDirectives = serverDirectives();
+  var jsLintServerTestDirectives = serverDirectives();
+  jsLintServerTestDirectives.ass = true;
+  jsLintServerTestDirectives.predef = ['afterEach', 'after', 'beforeEach', 'before', 'describe', 'it'];
+
   // filesets for uglify
   var files = {
     'socrates/public/clientscripts/global.js': [
@@ -82,14 +90,15 @@ module.exports = function (grunt) {
           'socrates/*.js',
           'socrates/lib/**/*.js'
         ],
-        directives: {
-          indent: 2,
-          node: true,
-          nomen: true,
-          todo: true,
-          unparam: true,
-          vars: true
-        },
+        directives: jsLintServerDirectives,
+        options: jsLintStandardOptions
+      },
+      servertests: {
+        src: [
+          'socrates/test/**/*.js',
+          'socrates/testutil/**/*.js'
+        ],
+        directives: jsLintServerTestDirectives,
         options: jsLintStandardOptions
       },
       client: {

@@ -4,16 +4,13 @@ mixin memberinfoform(member, newmember_text)
       legend
         h4 #{t('members.personal_data')}
       .well
-        - if (accessrights.isRegistered())
-          - if (member.socratesOnly())
-            p.
-              #{t('members.edit_socrates_only')}
-          - else
-            p.
-              #{t('members.edit_socrates_softwerkskammer')}
-        - else
-          p.
-            #{t(newmember_text)}
+        if (accessrights.isRegistered())
+          if (member.socratesOnly())
+            p #{t('members.edit_socrates_only')}
+          else
+            p #{t('members.edit_socrates_softwerkskammer')}
+        else
+          p #{t(newmember_text)}
 
   .row
     .col-sm-6

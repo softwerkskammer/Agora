@@ -1,5 +1,5 @@
 include  ../../../views/formComponents
-include userinfoform
+include ../../registration/views/userinfoform
 
 extends ../../../views/simpleLayout
 
@@ -13,7 +13,7 @@ block title
     | #{t('members.create')}
 
 block content
-  form#memberform.relaxed(action='/registration/submitmember',method='post')
+  form#memberform.relaxed(action='/members/submit',method='post')
     +csrf
     +memberinfoform(member, 'members.edit_preregistration')
     +memberSubmitButtons

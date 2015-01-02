@@ -8,7 +8,7 @@ mixin loginMenu(forInline)
        |  #{t('general.guest')}
       ul.dropdown-menu
         if accessrights.isRegistered()
-          li: a(href='/registration/editmember')
+          li: a(href='/members/edit')
             span.glyphicon.glyphicon-edit
             | &nbsp;#{t('members.edit')}
           li: a(href='/auth/logout')
@@ -67,9 +67,11 @@ mixin navbar(xs)
             span.glyphicon.glyphicon-book
             span.hidden-sm  #{t('wiki.wiki')}
           ul.dropdown-menu
-            if (wikisubdirs)
+            if (wikisubdirs && wikisubdirs.length)
               for subdir in wikisubdirs
                 li: a(href='/wiki/#{subdir}/') #{subdir}
+            else
+              li: a(href='/') <i>none</i>
         +loginMenu(true)
       
 mixin footer

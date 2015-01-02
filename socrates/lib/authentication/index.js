@@ -53,7 +53,7 @@ app.get('/loggedIn', function (req, res, next) {
           res.redirect(returnTo);
         });
       }
-      res.redirect('/registration/editmember');
+      res.redirect('/members/edit');
     });
   });
 });

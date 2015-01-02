@@ -10,7 +10,7 @@ var memberstore = beans.get('memberstore');
 var participantstore = beans.get('participantstore');
 var Member = beans.get('member');
 
-describe('MembersService', function () {
+describe('ParticipantService', function () {
 
   var expectedMember = new Member({id: 'stubbed_member'});
   var participant = {id: 'stubbed_participant'};
