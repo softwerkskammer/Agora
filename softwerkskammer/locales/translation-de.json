@@ -290,6 +290,8 @@
   },
   "mailsender": {
     "notification": "Nachricht",
+    "invitation": "Einladung",
+    "reminder": "Erinnerung",
     "write": "Nachricht schreiben",
     "others": "Sonstige",
     "to_member": "An Mitglied",
