@@ -126,3 +126,6 @@ module.exports.paymentMarked = function (activity, memberId) {
     sendMail(receivers, 'Payment Receipt / Zahlungseingang', jade.renderFile(filename, renderingOptions));
   });
 };
+
+// this is only exported for reuse in socratesNotifications.
+module.exports._sendMail = sendMail;
