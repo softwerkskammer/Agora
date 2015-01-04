@@ -26,14 +26,11 @@ function sendMail(emailAddresses, subject, html, callback) {
     generateTextFromHTML: true
   };
 
-  var stringifiedOptions = JSON.stringify(mailoptions);
   transport.sendMail(mailoptions, function (err) {
-    if (callback) {
-      if (err) { return callback(err); }
-      return callback(null, stringifiedOptions);
-    }
+    if (callback) { return callback(err); }
+
     if (err) { return logger.error(err); }
-    logger.info('Notification sent. Content: ' + stringifiedOptions);
+    logger.info('Notification sent. Content: ' + JSON.stringify(mailoptions));
   });
 }
 

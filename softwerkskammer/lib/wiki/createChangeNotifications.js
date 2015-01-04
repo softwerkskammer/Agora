@@ -42,7 +42,7 @@ persistence.getByField({id: 'lastWikiNotifications'}, function (err, result) {
       console.log('no changes to report'); // for cron mail
       return closeAndExit();
     }
-    notifications.wikiChanges(changes, function (err, stringifiedOptions) {
+    notifications.wikiChanges(changes, function (err) {
       if (err) {
         logger.error(err);
         return closeAndExit();
