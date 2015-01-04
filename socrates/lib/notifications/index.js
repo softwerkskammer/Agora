@@ -12,6 +12,11 @@ var jade = require('jade');
 var path = require('path');
 
 function sendMail(emailAddresses, subject, html, callback) {
+  if (!emailAddresses || emailAddresses.length === 0) {
+    if (callback) { return callback(null); }
+    return;
+  }
+
   var fromName = 'Softwerkskammer Benachrichtigungen';
   var mailoptions = {
     from: '"' + fromName + '" <' + conf.get('sender-address') + '>',
@@ -34,9 +39,9 @@ function sendMail(emailAddresses, subject, html, callback) {
 
 module.exports.newSoCraTesMemberRegistered = function (member) {
   memberstore.allMembers(function (err, members) {
-    if (err || !members) {return logger.error(err); }
+    if (err || !members) { return logger.error(err); }
     participantstore.allParticipants(function (err, participants) {
-      if (err || !participants) {return logger.error(err); }
+      if (err || !participants) { return logger.error(err); }
       var renderingOptions = {
         pretty: true,
         member: member,
