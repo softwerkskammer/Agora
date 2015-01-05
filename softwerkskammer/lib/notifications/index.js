@@ -13,6 +13,11 @@ var jade = require('jade');
 var path = require('path');
 
 function sendMail(emailAddresses, subject, html, callback) {
+  if (!emailAddresses || emailAddresses.length === 0) {
+    if (callback) { return callback(null); }
+    return;
+  }
+
   var fromName = 'Softwerkskammer Benachrichtigungen';
   var mailoptions = {
     from: '"' + fromName + '" <' + conf.get('sender-address') + '>',
@@ -22,14 +27,11 @@ function sendMail(emailAddresses, subject, html, callback) {
     generateTextFromHTML: true
   };
 
-  var stringifiedOptions = JSON.stringify(mailoptions);
   transport.sendMail(mailoptions, function (err) {
-    if (callback) {
-      if (err) { return callback(err); }
-      return callback(null, stringifiedOptions);
-    }
+    if (callback) { return callback(err); }
+
     if (err) { return logger.error(err); }
-    logger.info('Notification sent. Content: ' + stringifiedOptions);
+    logger.info('Notification sent. Content: ' + JSON.stringify(mailoptions));
   });
 }
 
@@ -124,3 +126,6 @@ module.exports.paymentMarked = function (activity, memberId) {
     sendMail(receivers, 'Payment Receipt / Zahlungseingang', jade.renderFile(filename, renderingOptions));
   });
 };
+
+// this is only exported for reuse in socratesNotifications.
+module.exports._sendMail = sendMail;

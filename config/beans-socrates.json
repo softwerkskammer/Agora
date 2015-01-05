@@ -21,5 +21,6 @@
   "accessrights": {"module": "./socrates/lib/middleware/accessrights"},
   "expressViewHelper": {"module": "./socrates/lib/middleware/expressViewHelper"},
   "redirectRuleForNewUser": {"module": "./socrates/lib/middleware/redirectRuleForNewUser"},
-  "socratesWikiSubdirs": {"module": "./socrates/lib/middleware/wikiSubdirs"}
+  "socratesWikiSubdirs": {"module": "./socrates/lib/middleware/wikiSubdirs"},
+  "socratesNotifications": {"module": "./socrates/lib/notifications"}
 }

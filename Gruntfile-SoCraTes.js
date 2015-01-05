@@ -156,8 +156,8 @@ module.exports = function (grunt) {
           root: 'socrates/lib',
           reporter: 'dot',
           check: {
-            lines: 60,
-            statements: 60
+            lines: 80,
+            statements: 80
           }
         }
       }
