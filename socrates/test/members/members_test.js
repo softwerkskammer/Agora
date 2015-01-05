@@ -9,7 +9,7 @@ var userWithoutMember = require('../../testutil/userWithoutMember');
 var membersService = beans.get('membersService');
 var memberstore = beans.get('memberstore');
 var participantstore = beans.get('participantstore');
-var notifications = beans.get('notifications');
+var socratesNotifications = beans.get('socratesNotifications');
 var groupsAndMembersService = beans.get('groupsAndMembersService');
 var Member = beans.get('member');
 var Participant = beans.get('participant');
@@ -217,7 +217,7 @@ describe('SoCraTes members application', function () {
       sinon.stub(membersService, 'isValidEmail', function (nickname, callback) { callback(null, true); });
       sinon.stub(memberstore, 'saveMember', function (member, callback) { callback(null); });
       var participantSave = sinon.stub(participantstore, 'saveParticipant', function (participant, callback) { callback(null); });
-      var notificationCall = sinon.stub(notifications, 'newMemberRegistered', function () { return undefined; });
+      var notificationCall = sinon.stub(socratesNotifications, 'newSoCraTesMemberRegistered', function () { return undefined; });
 
       // the following stub indicates that the member already exists
       sinon.stub(groupsAndMembersService, 'getUserWithHisGroups', function (nickname, callback) { callback(null, softwerkskammerMember); });
@@ -241,7 +241,7 @@ describe('SoCraTes members application', function () {
       sinon.stub(membersService, 'isValidEmail', function (nickname, callback) { callback(null, true); });
       sinon.stub(memberstore, 'saveMember', function (member, callback) { callback(null); });
       var participantSave = sinon.stub(participantstore, 'saveParticipant', function (participant, callback) { callback(null); });
-      var notificationCall = sinon.stub(notifications, 'newMemberRegistered', function () { return undefined; });
+      var notificationCall = sinon.stub(socratesNotifications, 'newSoCraTesMemberRegistered', function () { return undefined; });
 
       // the following stub indicates that the member already exists
       sinon.stub(groupsAndMembersService, 'getUserWithHisGroups', function (nickname, callback) { callback(null, socratesMember); });
@@ -266,7 +266,7 @@ describe('SoCraTes members application', function () {
       sinon.stub(memberstore, 'allMembers', function (callback) { callback(null, [softwerkskammerMember, socratesMember]); });
       sinon.stub(memberstore, 'saveMember', function (member, callback) { callback(null); });
       var participantSave = sinon.stub(participantstore, 'saveParticipant', function (participant, callback) { callback(null); });
-      var notificationCall = sinon.stub(notifications, 'newMemberRegistered', function () { return undefined; });
+      var notificationCall = sinon.stub(socratesNotifications, 'newSoCraTesMemberRegistered', function () { return undefined; });
 
       // the following stub indicates that the member does not exist yet
       sinon.stub(groupsAndMembersService, 'getUserWithHisGroups', function (nickname, callback) { callback(null); });

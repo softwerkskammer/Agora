@@ -8,7 +8,7 @@ var misc = beans.get('misc');
 var membersService = beans.get('membersService');
 var participantService = beans.get('participantService');
 var Member = beans.get('member');
-var notifications = beans.get('notifications');
+var socratesNotifications = beans.get('socratesNotifications');
 var groupsAndMembersService = beans.get('groupsAndMembersService');
 var statusmessage = beans.get('statusmessage');
 var validation = beans.get('validation');
@@ -32,7 +32,7 @@ app.post('/submit', function (req, res, next) {
   function memberSubmitted(req, res, next) {
     function notifyNewMemberRegistration(member, subscriptions) {
       // must be done here, not in Service to avoid circular deps
-      return notifications.newMemberRegistered(member, subscriptions);
+      return socratesNotifications.newSoCraTesMemberRegistered(member, subscriptions);
     }
 
     return groupsAndMembersService.updateAndSaveSubmittedMemberWithoutSubscriptions(req.user, req.body, res.locals.accessrights, notifyNewMemberRegistration, function (err, nickname) {
