@@ -1,3 +1,3 @@
 #!/bin/sh
-grunt --gruntfile Gruntfile-Socrates.js deploy_production
+grunt --gruntfile Gruntfile-SoCraTes.js deploy_production
 
