@@ -349,5 +349,5 @@ module.exports = function (grunt) {
   // Default task.
   grunt.registerTask('default', ['tests', 'uglify:development_en']);
 
-  grunt.registerTask('deploy_production', ['prepare', 'uglify:production_de', 'uglify:production_en']);
+  grunt.registerTask('deploy_production', ['clean', 'prepare', 'uglify:production_de', 'uglify:production_en']);
 };

@@ -1,11 +1,6 @@
 extends ../../../views/layout
 
-mixin placeGroupLabels(groupsOfAKind)
-  each group in groupsOfAKind
-    if (group.mapX && group.mapY && group.shortName)
-      .label.group(style='background-color: #{group.color}; top: #{group.mapYrelative()}%; left: #{group.mapXrelative()}%;')
-        span(rel='tooltip-in-body', data-title='<h4>#{group.longName}</h4>', data-content=group.descriptionHTMLFiltered('img'))
-          a.group(href='/groups/#{group.id}') #{group.shortName}
+include ../../groups/views/group-mixins
 
 block title
   | #{t('general.welcome')}
@@ -50,7 +45,7 @@ block content
           li sicherstellen, dass unsere Ergebnisse eine hohe interne und externe Qualität besitzen
           li flexible, leicht änderbare Software herstellen
         p
-          strong Kurz: 
+          strong Kurz:
           | Wir wollen die richtige Software entwickeln, und wir wollen die Software richtig entwickeln.
 
   script.

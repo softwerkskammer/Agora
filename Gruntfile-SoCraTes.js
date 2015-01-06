@@ -185,7 +185,7 @@ module.exports = function (grunt) {
   grunt.registerTask('prepare', ['jslint', 'bower-install-simple', 'copy', 'patch', 'less']);
   grunt.registerTask('tests', ['prepare', 'mocha_istanbul']);
   grunt.registerTask('deploy_development', ['prepare', 'uglify:development']);
-  grunt.registerTask('deploy_production', ['prepare', 'uglify:production']);
+  grunt.registerTask('deploy_production', ['clean', 'prepare', 'uglify:production']);
 
   // Default task.
   grunt.registerTask('default', ['tests', 'uglify:development']);
