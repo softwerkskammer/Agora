@@ -19,4 +19,4 @@ mixin placeGroupLabels(groupsOfAKind)
     if (group.mapX && group.mapY && group.shortName)
       .label.group(style='background-color: #{group.color}; top: #{group.mapYrelative()}%; left: #{group.mapXrelative()}%;')
         span(rel='tooltip-in-body', data-title='<h4>#{group.longName}</h4>', data-content=group.descriptionHTMLFiltered('img'))
-          a.group(href='#{group.id}') #{group.shortName}
+          a.group(href='/groups/#{group.id}') #{group.shortName}
