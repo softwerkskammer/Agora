@@ -83,8 +83,8 @@ app.post('/preview', function (req, res) {
   res.send(Renderer.render(req.body.data, req.body.subdir));
 });
 
-app.get('/qrcode/:url', function (req, res) {
-  var url = conf.get('publicUrlPrefix') + req.params.url;
+app.get('/qrcode', function (req, res) {
+  var url = conf.get('publicUrlPrefix') + req.query.url;
   var img = qrimage.image(url, {type: 'svg'});
   res.type('svg');
   img.pipe(res);

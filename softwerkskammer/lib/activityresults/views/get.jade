@@ -12,7 +12,7 @@ block content
       small Session Snap
     h3 Share your session results and see what others did at softwerkskammer.org
     p(style='text-align:center;')
-      img(height='300px', src='/qrcode/#{encodeURIComponent("/activityresults/" + activityResult.id())}')
+      img(height='300px', src='/qrcode?url=#{encodeURIComponent("/activityresults/" + activityResult.id())}')
   .hidden-print
     .row
       .col-xs-12
