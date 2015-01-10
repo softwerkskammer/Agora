@@ -14,7 +14,7 @@ mixin authentication(returnUrl)
          | &nbsp;StackExchange
    .row
      .col-md-12
-       form(action=swkPublicUrl + '/auth/openid', method='get')
+       form(action=swkPublicUrl + '/auth/idp/openid', method='get')
          p &nbsp;
          input(type='hidden', name='returnTo', value=returnUrl)
          .panel.panel-default
