@@ -34,6 +34,6 @@ mixin activityList(activities, member)
         a(href='/groups/#{activity.assignedGroup()}')
           span.label(style='background-color: #{activity.colorRGB}') #{activity.groupName()}
         | &nbsp;
-        a(href='/activities/#{encodeURIComponent(activity.url())}') #{activity.title()}
+        a(href=activity.fullyQualifiedUrl()) #{activity.title()}
         if (member && activity.allRegisteredMembers().indexOf(member.id()) > -1)
           | &nbsp;(Angemeldet)

@@ -8,7 +8,7 @@ mixin activitylist(activities)
           span.label(style='background-color: #{activity.colorRGB}') #{activity.groupName()}
         | &nbsp;
         span.popover-highlight(rel='tooltip-in-body', data-content='#{activity.descriptionHTML().substring(0,500)}')
-          a(href='#{encodeURIComponent(activity.url())}') #{activity.title()}
+          a(href=activity.fullyQualifiedUrl()) #{activity.title()}
 
 mixin placeGroupLabels(activities)
   -var counter = {}
@@ -18,7 +18,7 @@ mixin placeGroupLabels(activities)
     if (group.shortName)
       .label.group(style='background-color: #{activity.colorRGB}; top: #{(group.mapYrelative() || 0) + (counter[group.longName] * 4)}%; left: #{group.mapXrelative() || 2}%;')
         span(rel='tooltip-in-body', data-title='<h4>#{activity.title()}</h4>', data-content='#{activity.descriptionHTML().substring(0,500)}')
-          a.group(href='#{encodeURIComponent(activity.url())}') #{group.shortName}
+          a.group(href=activity.fullyQualifiedUrl()) #{group.shortName}
 
 
 block title

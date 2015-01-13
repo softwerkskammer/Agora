@@ -57,8 +57,8 @@ mixin my_activities
             i.fa.fa-check.fa-fw.text-success.tooltipify(data-toggle='tooltip' title=t('activities.tooltip.registered'))
           else
             i.fa.fa-question.fa-fw.tooltipify(data-toggle='tooltip' title=t('activities.tooltip.unknown'))
-          | &nbsp; #{activity.startMoment().locale(language).format('L')} &nbsp; 
-          a(href='/activities/#{encodeURIComponent(activity.url())}') #{activity.title()}
+          | &nbsp; #{activity.startMoment().locale(language).format('L')} &nbsp;
+          a(href=activity.fullyQualifiedUrl()) #{activity.title()}
           span.pull-right(style='color: #{activity.colorRGB};') #{activity.groupName()}
 
 mixin wikichangesOrBlogs(items, panelid, prefix, title)

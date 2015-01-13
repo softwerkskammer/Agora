@@ -4,6 +4,7 @@ var path = require('path');
 var async = require('async');
 var fs = require('fs');
 var qrimage = require('qr-image');
+var _s = require('underscore.string');
 
 var conf = require('simple-configure');
 var beans = conf.get('beans');
@@ -84,8 +85,9 @@ app.post('/preview', function (req, res) {
 });
 
 app.get('/qrcode', function (req, res) {
-  var url = conf.get('publicUrlPrefix') + req.query.url;
-  var img = qrimage.image(url, {type: 'svg'});
+  var url = req.query.url;
+  var fullUrl = _s.startsWith(url, 'http') ? url : conf.get('publicUrlPrefix') + url;
+  var img = qrimage.image(fullUrl, {type: 'svg'});
   res.type('svg');
   img.pipe(res);
 });
