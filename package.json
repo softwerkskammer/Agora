@@ -49,7 +49,7 @@
     "mailparser": "0.4.6",
     "marked": "0.3.2",
     "mime-types": "2.0.7",
-    "moment-timezone": "0.2.5",
+    "moment-timezone": "0.3.0",
     "mongodb": "2.0.12",
     "morgan": "1.5.1",
     "multiparty": "4.1.0",
