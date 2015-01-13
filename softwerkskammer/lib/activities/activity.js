@@ -3,7 +3,8 @@
 var moment = require('moment-timezone');
 var _ = require('lodash');
 
-var beans = require('simple-configure').get('beans');
+var conf = require('simple-configure');
+var beans = conf.get('beans');
 var Resources = beans.get('resources');
 var Addon = beans.get('addon').Addon;
 var AddonConfig = beans.get('addon').AddonConfig;
@@ -38,6 +39,10 @@ Activity.prototype.id = function () {
 
 Activity.prototype.url = function () {
   return this.state.url ? this.state.url.trim() : undefined;
+};
+
+Activity.prototype.fullyQualifiedUrl = function () {
+  return this.state.url ? conf.get('publicUrlPrefix') + '/activities/' + encodeURIComponent(this.state.url.trim()) : undefined;
 };
 
 Activity.prototype.title = function () {

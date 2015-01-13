@@ -32,7 +32,7 @@ describe('Calendar Service', function () {
       var event = activities[0];
       expect('Title').to.equal(event.title);
       expect('2013-04-04T00:00:00+02:00').to.equal(event.start); // includes timezone offset!
-      expect('/activities/myURL').to.equal(event.url);
+      expect(event.url).to.match('/activities/myURL$');
       expect('#353535').to.equal(event.color);
       done();
     });

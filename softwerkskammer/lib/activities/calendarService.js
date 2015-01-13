@@ -13,7 +13,7 @@ module.exports = {
       return {
         start: activity.startMoment().format(),
         end: activity.endMoment().format(),
-        url: '/activities/' + encodeURIComponent(activity.url()),
+        url: activity.fullyQualifiedUrl(),
         title: activity.title(),
         className: 'verySmall',
         color: activity.colorFrom(groupsColors)
