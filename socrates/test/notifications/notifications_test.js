@@ -7,7 +7,7 @@ var beans = require('../../testutil/configureForTest').get('beans');
 var notifications = beans.get('socratesNotifications');
 
 var memberstore = beans.get('memberstore');
-var participantstore = beans.get('participantstore');
+var subscriberstore = beans.get('subscriberstore');
 
 var Member = beans.get('member');
 var transport = beans.get('mailtransport');
@@ -52,7 +52,7 @@ describe('Notifications', function () {
 
   it('creates a meaningful text and subject', function () {
     sinon.stub(memberstore, "allMembers", function (callback) { callback(null, [hans, alice, bob, superman]); });
-    sinon.stub(participantstore, "allParticipants", function (callback) { callback(null, ["p1", "p2", "p3"]); });
+    sinon.stub(subscriberstore, "allSubscribers", function (callback) { callback(null, ["p1", "p2", "p3"]); });
 
     notifications.newSoCraTesMemberRegistered(hans);
     expect(transport.sendMail.calledOnce).to.be(true);
@@ -67,7 +67,7 @@ describe('Notifications', function () {
 
   it('triggers mail sending for superusers', function () {
     sinon.stub(memberstore, "allMembers", function (callback) { callback(null, [hans, alice, bob, superman]); });
-    sinon.stub(participantstore, "allParticipants", function (callback) { callback(null, ["p1", "p2", "p3"]); });
+    sinon.stub(subscriberstore, "allSubscribers", function (callback) { callback(null, ["p1", "p2", "p3"]); });
 
     notifications.newSoCraTesMemberRegistered(hans);
     expect(transport.sendMail.calledOnce).to.be(true);
@@ -81,7 +81,7 @@ describe('Notifications', function () {
 
   it('does not trigger mail sending if there are no superusers', function () {
     sinon.stub(memberstore, "allMembers", function (callback) { callback(null, [hans, alice, bob]); });
-    sinon.stub(participantstore, "allParticipants", function (callback) { callback(null, ["p1", "p2", "p3"]); });
+    sinon.stub(subscriberstore, "allSubscribers", function (callback) { callback(null, ["p1", "p2", "p3"]); });
 
     notifications.newSoCraTesMemberRegistered(hans);
     expect(transport.sendMail.called).to.be(false);
