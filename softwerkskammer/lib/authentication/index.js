@@ -29,7 +29,7 @@ function createUserObjectFromGithub(req, accessToken, refreshToken, profile, don
   createUserObject(req, profile.provider + ':' + profile.id, profile, done);
 }
 function createUserObjectFromGooglePlus(req, accessToken, refreshToken, profile, done) {
-  createUserObject(req, profile.provider + ':' + profile.id, profile, done);
+  createUserObject(req, profile._json.url, profile._json, done);
 }
 
 function createProviderAuthenticationRoutes(app, provider) {
