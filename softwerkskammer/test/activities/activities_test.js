@@ -112,7 +112,7 @@ describe('Activity application', function () {
       .get('/')
       .expect(200)
       .expect(/Aktivitäten/)
-      .expect(/href="\/activities\/urlOfTheActivity"/)
+      .expect(/\/activities\/urlOfTheActivity"/)
       .expect(/href="webcal:\/\//)
       .expect(/Title of the Activity/)
       .expect(/1\. Januar 2013/)

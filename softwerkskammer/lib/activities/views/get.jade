@@ -22,7 +22,7 @@ block content
     .col-md-12
       .page-header
         .pull-right.visible-print
-          img(height='80px', src='/qrcode?url=#{encodeURIComponent("/activities/" + activity.url())}')
+          img(height='80px', src='/qrcode?url=#{encodeURIComponent(activity.fullyQualifiedUrl())}')
         .btn-group.pull-right
           if (accessrights.canEditActivity(activity))
             a.btn.btn-default(href='/activities/addons/#{encodeURIComponent(activity.url())}', title=t('activities.participants')): i.fa.fa-list-ol.fa-fw
@@ -40,7 +40,7 @@ block content
           small #{activity.startMoment().locale(language).format('LL')} (#{activity.startMoment().locale(language).format('LT')}
             if (activity.isMultiDay())
               | ) - #{activity.endMoment().locale(language).format('LL')} (#{activity.endMoment().locale(language).format('LT')})
-            else 
+            else
               |  - #{activity.endMoment().locale(language).format('LT')})
       .btn-group.pull-right
         if (hasToBePaid)
@@ -90,4 +90,4 @@ block scripts
   script.
     displayedActivityStart = moment('#{activity.startMoment().toISOString()}');
     displayedActivityEnd = moment('#{activity.endMoment().toISOString()}');
-//- cannot write "#{activity.startMoment()}" as we need to produce a string to eval in the client  
+//- cannot write "#{activity.startMoment()}" as we need to produce a string to eval in the client

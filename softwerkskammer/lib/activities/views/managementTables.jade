@@ -35,7 +35,7 @@ block content
     .col-md-12
       .page-header
         h2 #{activity.title()} - Verwaltung
-          a.btn.pull-right.btn-default(href='#{"/activities/" + encodeURIComponent(activity.url())}') Zurück
+          a.btn.pull-right.btn-default(href=activity.fullyQualifiedUrl()) Zurück
   ul.nav.nav-tabs
     li: a(href='#main', data-toggle='tab') #{t('activities.participants')}
     li.active: a(href='#addons', data-toggle='tab') Zahlungen

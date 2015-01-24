@@ -8,8 +8,8 @@ block scripts
   +dataTable('#waitinglisttable', "[[ 3, 'asc' ]]", "[{ bSortable : false }, null, null, { sType: 'date-eu' }, { sType: 'date-eu' }, null]", true)
   script.
     function removeFromWaitinglist(activityUrl, resourceName, nickname, buttonid) {
-      $.ajax({ 
-      type: 'post', 
+      $.ajax({
+      type: 'post',
       url: '/waitinglist/remove',
       data: {_csrf: '#{csrf_token}', activityUrl: activityUrl, resourceName: resourceName, nickname: nickname} }).success(function() {
         $('#' + buttonid).parent().parent().remove();
@@ -27,7 +27,7 @@ block content
         .page-header
           h2 #{activity.title()}
             small  #{t('activities.waitinglist')}
-            a.btn.pull-right.btn-default(href='#{"/activities/" + encodeURIComponent(activity.url())}') Zurück
+            a.btn.pull-right.btn-default(href=activity.fullyQualifiedUrl()) Zurück
         .panel.scrollable-box
           table.table.table-condensed.table-hover.table-striped#waitinglisttable
             thead
