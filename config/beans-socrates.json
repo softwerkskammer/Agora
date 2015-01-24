@@ -4,19 +4,19 @@
   "socratesRegistrationApp": {"module": "./socrates/lib/registration"},
   "socratesMembersApp": {"module": "./socrates/lib/members"},
   "socratesMailsenderApp": {"module": "./socrates/lib/mailsender"},
-  "socratesParticipantsApp": {"module": "./socrates/lib/participants"},
+  "socratesSubscribersApp": {"module": "./socrates/lib/subscribers"},
   "socratesWikiApp": {"module": "./socrates/lib/wiki"},
 
-  "participantService": {"module": "./socrates/lib/participants/participantService"},
+  "subscriberService": {"module": "./socrates/lib/subscribers/subscriberService"},
 
-  "participantstore": {"module": "./socrates/lib/participants/participantstore"},
+  "subscriberstore": {"module": "./socrates/lib/subscribers/subscriberstore"},
 
-  "participantsPersistence": {
+  "subscribersPersistence": {
     "module": "./softwerkskammer/lib/persistence/persistence",
     "constructorArgs": { "collectionName": "participantstore" }
   },
 
-  "participant": {"module": "./socrates/lib/participants/participant"},
+  "subscriber": {"module": "./socrates/lib/subscribers/subscriber"},
 
   "accessrights": {"module": "./socrates/lib/middleware/accessrights"},
   "expressViewHelper": {"module": "./socrates/lib/middleware/expressViewHelper"},

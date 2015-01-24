@@ -4,7 +4,7 @@ require('./configure'); // initializing parameters
 var _ = require('lodash');
 var async = require('async');
 var beans = require('simple-configure').get('beans');
-var participantService = beans.get('participantService');
+var subscriberService = beans.get('subscriberService');
 var memberstore = beans.get('memberstore');
 
 var really = process.argv[2];
@@ -22,7 +22,7 @@ memberstore.socratesOnlyMembers(function (err, members) {
       console.log('Socrates-Only ' + count + ': ' + member.displayName());
       count = count + 1;
       if (doSave) {
-        return participantService.createParticipantIfNecessaryFor(member.id(), callback);
+        return subscriberService.createSubscriberIfNecessaryFor(member.id(), callback);
       }
       callback(null, null);
     },

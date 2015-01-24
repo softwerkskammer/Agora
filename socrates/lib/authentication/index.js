@@ -11,7 +11,7 @@ var beans = conf.get('beans');
 var misc = beans.get('misc');
 var jwt_secret = conf.get('jwt_secret');
 
-var participantService = beans.get('participantService');
+var subscriberService = beans.get('subscriberService');
 var memberstore = beans.get('memberstore');
 
 var app = misc.expressAppIn(__dirname);
@@ -48,7 +48,7 @@ app.get('/loggedIn', function (req, res, next) {
     req._passport.session.user = userObject;
     passport.authenticate('session')(req, res, function () {
       if (req.user.member) {
-        return participantService.createParticipantIfNecessaryFor(req.user.member.id(), function (err) {
+        return subscriberService.createSubscriberIfNecessaryFor(req.user.member.id(), function (err) {
           if (err) { return next(err); }
           res.redirect(returnTo);
         });

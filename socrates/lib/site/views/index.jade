@@ -106,7 +106,7 @@ block content
                 hr
   script.
     $(document).ready(function () {
-      $.ajax({url: '/participants/count'}).done(function (count) {
+      $.ajax({url: '/subscribers/count'}).done(function (count) {
         $('.count').text(count + ' people are interested in SoCraTes!');
       });
     });
