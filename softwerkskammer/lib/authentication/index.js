@@ -28,6 +28,9 @@ function createUserObject(req, authenticationId, profile, done) {
 function createUserObjectFromGithub(req, accessToken, refreshToken, profile, done) {
   createUserObject(req, profile.provider + ':' + profile.id, profile, done);
 }
+function createUserObjectFromGooglePlus(req, accessToken, refreshToken, profile, done) {
+  createUserObject(req, profile.provider + ':' + profile.id, profile, done);
+}
 
 function createProviderAuthenticationRoutes(app, provider) {
 
@@ -109,6 +112,31 @@ function setupGithub(app) {
   }
 }
 
+function setupGooglePlus(app) {
+  var googlePlusClientID = conf.get('googlePlusClientID');
+  if (googlePlusClientID) {
+    var GooglePlusStrategy = require('passport-openidconnect').Strategy;
+    var strategy = new GooglePlusStrategy(
+      {
+        authorizationURL: 'https://accounts.google.com/o/oauth2/auth',
+        tokenURL: 'https://www.googleapis.com/oauth2/v3/token',
+        clientID: googlePlusClientID,
+        clientSecret: conf.get('googlePlusClientSecret'),
+        callbackURL: urlPrefix + '/auth/openidconnect/callback',
+        userInfoURL: 'https://www.googleapis.com/plus/v1/people/me',
+
+        scope: 'email profile',
+        skipUserProfile: false,
+
+        passReqToCallback: true
+      },
+      createUserObjectFromGooglePlus
+    );
+    passport.use(strategy);
+    createProviderAuthenticationRoutes(app, strategy.name);
+  }
+}
+
 var app = misc.expressAppIn(__dirname);
 
 app.get('/logout', function (req, res) {
@@ -121,5 +149,6 @@ app.get('/logout', function (req, res) {
 });
 setupOpenID(app);
 setupGithub(app);
+setupGooglePlus(app);
 
 module.exports = app;
