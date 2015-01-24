@@ -71,7 +71,7 @@ module.exports = {
     app.use('/auth/', beans.get('authenticationApp'));
     app.use('/mailsender/', beans.get('socratesMailsenderApp'));
     app.use('/members/', beans.get('socratesMembersApp'));
-    app.use('/participants/', beans.get('socratesParticipantsApp'));
+    app.use('/subscribers/', beans.get('socratesSubscribersApp'));
     app.use('/wiki/', beans.get('socratesWikiApp'));
     app.use(beans.get('handle404')(appLogger));
     app.use(beans.get('handle500')(appLogger));

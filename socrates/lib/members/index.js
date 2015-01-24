@@ -6,7 +6,7 @@ var async = require('async');
 var beans = require('simple-configure').get('beans');
 var misc = beans.get('misc');
 var membersService = beans.get('membersService');
-var participantService = beans.get('participantService');
+var subscriberService = beans.get('subscriberService');
 var Member = beans.get('member');
 var socratesNotifications = beans.get('socratesNotifications');
 var groupsAndMembersService = beans.get('groupsAndMembersService');
@@ -37,7 +37,7 @@ app.post('/submit', function (req, res, next) {
 
     return groupsAndMembersService.updateAndSaveSubmittedMemberWithoutSubscriptions(req.user, req.body, res.locals.accessrights, notifyNewMemberRegistration, function (err, nickname) {
       if (err) { return next(err); }
-      participantService.createParticipantIfNecessaryFor(req.user.member.id(), function (err) {
+      subscriberService.createSubscriberIfNecessaryFor(req.user.member.id(), function (err) {
         if (err) { return next(err); }
         if (nickname) {
           statusmessage.successMessage('message.title.save_successful', 'message.content.members.saved').putIntoSession(req);
@@ -76,7 +76,7 @@ app.post('/submit', function (req, res, next) {
 
 
 app.get('/:nickname', function (req, res, next) {
-  participantService.getMemberIfParticipantExists(req.params.nickname, function (err, member) {
+  subscriberService.getMemberIfSubscriberExists(req.params.nickname, function (err, member) {
     if (err || !member) { return next(err); }
     res.render('get', {member: member});
   });
