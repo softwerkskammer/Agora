@@ -1,8 +1,8 @@
 'use strict';
 
 var beans = require('simple-configure').get('beans');
-var Addon = beans.get('addon');
-var Payment = beans.get('payment');
+var Addon = beans.get('socratesAddon');
+var Payment = beans.get('socratesPayment');
 
 function Subscriber(object) {
   this.state = object || {};

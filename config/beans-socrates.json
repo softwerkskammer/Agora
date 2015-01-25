@@ -16,8 +16,8 @@
     "constructorArgs": { "collectionName": "participantstore" }
   },
 
-  "addon": {"module": "./socrates/lib/subscribers/addon"},
-  "payment": {"module": "./socrates/lib/subscribers/payment"},
+  "socratesAddon": {"module": "./socrates/lib/subscribers/addon"},
+  "socratesPayment": {"module": "./socrates/lib/subscribers/payment"},
   "subscriber": {"module": "./socrates/lib/subscribers/subscriber"},
 
   "accessrights": {"module": "./socrates/lib/middleware/accessrights"},
