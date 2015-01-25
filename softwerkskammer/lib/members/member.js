@@ -46,7 +46,7 @@ Member.prototype.initFromSessionUser = function (sessionUser, socratesOnly) {
 
   var profile = sessionUser.profile;
   if (profile) {
-    this.state.email = fieldHelpers.valueOrFallback(profile.emails[0].value, this.email());
+    this.state.email = fieldHelpers.valueOrFallback(profile.emails && profile.emails[0] && profile.emails[0].value, this.email());
     var name = profile.name;
     if (name) {
       this.state.firstname = fieldHelpers.valueOrFallback(name.givenName, this.firstname());
