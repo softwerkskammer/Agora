@@ -75,7 +75,10 @@ module.exports = {
       return galleryService.retrieveScaledImage(member.customAvatar(), 'mini', function (err, result) {
         if (err) { return callback(err); }
         fs.readFile(result, function (err, data) {
-          member.setAvatarData({image: 'data:' + mimetypes.lookup(result) + ';base64,' + new Buffer(data).toString('base64'), hasNoData: false});
+          member.setAvatarData({
+            image: 'data:' + mimetypes.lookup(result) + ';base64,' + new Buffer(data).toString('base64'),
+            hasNoData: false
+          });
           callback(err);
         });
       });
@@ -94,11 +97,24 @@ module.exports = {
       .value();
   },
 
-  findMemberFor: function (user, authenticationId, callback) {
+  findMemberFor: function (user, authenticationId, legacyAuthenticationId, callback) {
     return function () {
       if (!user) { // not currently logged in
-        return store.getMemberForAuthentication(authenticationId, callback);
+        return store.getMemberForAuthentication(authenticationId, function (err, member) {
+          if (err) { return callback(err); }
+          // we found a member:
+          if (member) { return callback(null, member); }
+          // no member: let's try again with the legacy id
+          store.getMemberForAuthentication(legacyAuthenticationId, function (err, member) {
+            if (err || !member) {return callback(err); }
+            // add the new authentication id to the member
+            member.addAuthentication(authenticationId);
+            store.saveMember(member, function (err) { callback(err, member); });
+          });
+        });
       }
+
+      // logged in -> we don't care about the legacy id
       var memberOfSession = user.member;
       return store.getMemberForAuthentication(authenticationId, function (err, member) {
         if (err) { return callback(err); }
