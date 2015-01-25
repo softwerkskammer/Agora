@@ -26,7 +26,7 @@ mixin memberinfoform(member, newmember_text)
       +text('email', 'E-Mail', member.email())
       +twitter('twitter', 'Twitter', member.twitter())
 
-mixin userinfoform(user)
+mixin userinfoform(addon)
   .row
     .col-sm-12
       p.
@@ -34,8 +34,8 @@ mixin userinfoform(user)
         want a different address on the invoice of the hotel, fill in the billing address.
   .row
     .col-sm-6
-      +textareaPure('privateaddress', 'Home Address', user.privateaddress)
-      +textareaPure('billingaddress', 'Billing Address (if different)', user.billingaddress)
+      +textareaPure('homeAddress', 'Home Address', addon.homeAddress())
+      +textareaPure('billingAddress', 'Billing Address (if different)', addon.billingAddress())
     .col-sm-6
       .row
         .col-sm-6
@@ -43,12 +43,12 @@ mixin userinfoform(user)
             label.control-label(for='tShirtSizeMale') T-Shirt (Male):
             select#tShirtSizeMale.form-control(name='tShirtSize')
               for item in ['', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL' ]
-                option(selected=user.tshirtsize === item) #{item}
+                option(selected=addon.tShirtSize() === item) #{item}
           .form-group
             label.control-label(for='tShirtSizeFemale') T-Shirt (Female):
             select#tShirtSizeFemale.form-control(name='tShirtSize')
               for item in ['', 'Ladies\' XS', 'Ladies\' S', 'Ladies\' M', 'Ladies\' L', 'Ladies\' XL', 'Ladies\' XXL' ]
-                option(selected=user.tshirtsize === item) #{item}
+                option(selected=addon.tShirtSize() === item) #{item}
   script.
     $('#tShirtSizeMale').on('change', function (e) {
       if ($(this).val() !== '') {
