@@ -62,6 +62,7 @@
     "passport": "0.2.1",
     "passport-github": "0.1.5",
     "passport-openid": "0.3.1",
+    "passport-openidconnect": "git://github.com/NicoleRauch/passport-openidconnect#master",
     "qr-image": "3.0.2",
     "serve-favicon": "2.2.0",
     "simple-configure": "0.1.4",
@@ -101,7 +102,7 @@
   },
   "scripts": {
     "start": "node softwerkskammer/start",
-    "test": "grunt tests; grunt --gruntfile Gruntfile-SoCraTes.js tests",
+    "test": "grunt tests && grunt --gruntfile Gruntfile-SoCraTes.js tests",
     "prepublish": "git log -1 --pretty=\"format:a(href='https://github.com/softwerkskammer/Agora/commit/%H', target='_blank')%n i.fa.fa-github.fa-fw%n | &nbsp;Version: %h\" > softwerkskammer/version.jade"
   }
 }

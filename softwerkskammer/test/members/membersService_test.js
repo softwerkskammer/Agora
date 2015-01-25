@@ -270,44 +270,94 @@ describe('MembersService', function () {
         if (auth === 'newAuth') {
           return callback();
         }
+        if (auth === 'errorAuth') {
+          return callback(new Error('error in getMemberForAuthentication'));
+        }
         callback(null, member);
       });
     });
 
-    it('performs a "simple" lookup in persistence if the user is not logged in', function (done) {
-      membersService.findMemberFor(null, 'newAuth', function (err) {
+    it('returns no member if nobody is logged in and if the authentication is not known', function (done) {
+      membersService.findMemberFor(null, 'newAuth', undefined, function (err, returnedMember) {
+        expect(returnedMember).to.not.exist();
         done(err);
       })();
     });
 
-    it('adds the new authentication to the sessionmember if user is logged in and authentication not known yet', function (done) {
-      var mem = new Member();
-      mem.state.id = 'different ID';
-      var user = {member: mem};
-      membersService.findMemberFor(user, 'newAuth', function (err) {
+    it('returns an error if nobody is logged in and if there is an error in getMemberForAuthentication', function (done) {
+      membersService.findMemberFor(null, 'errorAuth', undefined, function (err, returnedMember) {
+        expect(returnedMember).to.not.exist();
+        expect(err).to.exist();
+        done();
+      })();
+    });
+
+    it('returns a member if nobody is logged in and if his authentication is known', function (done) {
+      membersService.findMemberFor(null, 'knownAuth', undefined, function (err, returnedMember) {
+        expect(returnedMember).to.be(member);
+        done(err);
+      })();
+    });
+
+    it('returns a member if nobody is logged in and if the authentication is not known but the legacy authentication is', function (done) {
+      membersService.findMemberFor(null, 'newAuth', 'knownAuth', function (err, returnedMember) {
+        expect(returnedMember).to.be(member);
         expect(saveMember.called).to.be(true);
-        expect(saveMember.args[0][0]).is(mem);
-        expect(mem.authentications()).to.contain('newAuth');
+        expect(saveMember.args[0][0]).is(member);
+        expect(member.authentications()).to.contain('newAuth');
+        done(err);
+      })();
+    });
+
+    it('returns an error if nobody is logged in and if the authentication is not known and getMemberForAuthentication returns an error for the legacy authentication', function (done) {
+      membersService.findMemberFor(null, 'newAuth', 'errorAuth', function (err, returnedMember) {
+        expect(returnedMember).to.not.exist();
+        expect(err).to.exist();
+        done();
+      })();
+    });
+
+    it('adds the new authentication to the sessionmember if user is logged in and authentication not known yet', function (done) {
+      var differentMember = new Member();
+      differentMember.state.id = 'different ID';
+      var user = {member: differentMember};
+      membersService.findMemberFor(user, 'newAuth', undefined, function (err, returnedMember) {
+        expect(returnedMember).to.be(differentMember);
+        expect(saveMember.called).to.be(true);
+        expect(saveMember.args[0][0]).is(differentMember);
+        expect(differentMember.authentications()).to.contain('newAuth');
 
         done(err);
+      })();
+    });
+
+    it('returns an error if user is logged in and getMemberForAuthentication returns an error', function (done) {
+      var differentMember = new Member();
+      differentMember.state.id = 'different ID';
+      var user = {member: differentMember};
+      membersService.findMemberFor(user, 'errorAuth', undefined, function (err, returnedMember) {
+        expect(returnedMember).to.not.exist();
+        expect(err).to.exist();
+        done();
       })();
     });
 
     it('simply returns the found member if the authentication is already known', function (done) {
       member.state.id = 'ID';
       var user = {member: member};
-      membersService.findMemberFor(user, 'authID', function (err, returnedMember) {
-        expect(member).to.be(returnedMember);
+      membersService.findMemberFor(user, 'authID', undefined, function (err, returnedMember) {
+        expect(returnedMember).to.be(member);
         done(err);
       })();
     });
 
     it('returns an error if the found member is not the logged in member', function (done) {
       member.state.id = 'ID';
-      var mem = new Member();
-      mem.state.id = 'different ID';
-      var user = {member: mem};
-      membersService.findMemberFor(user, 'authID', function (err) {
+      var differentMember = new Member();
+      differentMember.state.id = 'different ID';
+      var user = {member: differentMember};
+      membersService.findMemberFor(user, 'authID', undefined, function (err, returnedMember) {
+        expect(returnedMember).to.not.exist();
         expect(err).to.exist();
         done();
       })();

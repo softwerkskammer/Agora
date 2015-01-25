@@ -14,19 +14,27 @@ var misc = beans.get('misc');
 var urlPrefix = conf.get('publicUrlPrefix');
 var jwt_secret = conf.get('jwt_secret');
 
-function createUserObject(req, authenticationId, profile, done) {
+function createUserObject(req, authenticationId, legacyAuthenticationId, profile, done) {
   if (req.session.callingAppReturnTo) { // we're invoked from another app -> don't add a member to the session
     return done(null, {authenticationId: authenticationId});
   }
-  process.nextTick(membersService.findMemberFor(req.user, authenticationId, function (err, member) {
+  process.nextTick(membersService.findMemberFor(req.user, authenticationId, legacyAuthenticationId, function (err, member) {
     if (err) { return done(err); }
     if (!member) { return done(null, {authenticationId: authenticationId, profile: profile}); }
     return done(null, {authenticationId: authenticationId, member: member});
   }));
 }
 
+function createUserObjectFromOpenID(req, authenticationId, profile, done) {
+  createUserObject(req, authenticationId, undefined, profile, done);
+}
+
 function createUserObjectFromGithub(req, accessToken, refreshToken, profile, done) {
-  createUserObject(req, profile.provider + ':' + profile.id, profile, done);
+  createUserObject(req, profile.provider + ':' + profile.id, undefined, profile, done);
+}
+
+function createUserObjectFromGooglePlus(req, iss, sub, profile, jwtClaims, accessToken, refreshToken, params, done) {
+  createUserObject(req, profile._json.url, jwtClaims.openid_id, profile._json, done);
 }
 
 function createProviderAuthenticationRoutes(app, provider) {
@@ -84,7 +92,7 @@ function setupOpenID(app) {
       profile: true,
       passReqToCallback: true
     },
-    createUserObject
+    createUserObjectFromOpenID
   ));
   createProviderAuthenticationRoutes(app, 'openid');
 }
@@ -109,6 +117,38 @@ function setupGithub(app) {
   }
 }
 
+function setupGooglePlus(app) {
+  var googlePlusClientID = conf.get('googlePlusClientID');
+  if (googlePlusClientID) {
+    var GooglePlusStrategy = require('passport-openidconnect').Strategy;
+
+    var strategy = new GooglePlusStrategy(
+      {
+        authorizationURL: 'https://accounts.google.com/o/oauth2/auth',
+        tokenURL: 'https://www.googleapis.com/oauth2/v3/token',
+        clientID: googlePlusClientID,
+        clientSecret: conf.get('googlePlusClientSecret'),
+        callbackURL: urlPrefix + '/auth/openidconnect/callback',
+        userInfoURL: 'https://www.googleapis.com/plus/v1/people/me',
+
+        scope: 'email profile',
+        skipUserProfile: false,
+
+        passReqToCallback: true
+      },
+      createUserObjectFromGooglePlus
+    );
+    strategy.authorizationParams = function (options) {
+      return {
+        "openid.realm": urlPrefix
+      };
+    };
+
+    passport.use(strategy);
+    createProviderAuthenticationRoutes(app, strategy.name);
+  }
+}
+
 var app = misc.expressAppIn(__dirname);
 
 app.get('/logout', function (req, res) {
@@ -121,5 +161,6 @@ app.get('/logout', function (req, res) {
 });
 setupOpenID(app);
 setupGithub(app);
+setupGooglePlus(app);
 
 module.exports = app;
