@@ -69,20 +69,6 @@ describe('Addon Service with DB', function () {
     sinon.restore();
   });
 
-  it('saveAddon keeps the member addon info that is in the database although it only reads an activity without member addon info', function (done) {
-    // here, we save an activity with a member that is different from the member in the database.
-    // To mimick a racing condition, we return an activity without members for the first "getActivity".
-    addonService.saveAddon(activityUrl, 'memberIdNew', {roommate: 'A nice guy'}, function (err) {
-      if (err) { return done(err); }
-      getActivity(activityUrl, function (err, activity) {
-        if (err) { return done(err); }
-        expect(activity.addonForMember('memberIdRace').homeAddress(), 'Previous member has still her addon').to.equal('At Home');
-        expect(activity.addonForMember('memberIdNew').roommate(), 'Second member has her addon').to.equal('A nice guy');
-        done(err);
-      });
-    });
-  });
-
   it('payWithCreditCard keeps the member addon info that is in the database although it only reads an activity without member addon info', function (done) {
     // here, we save an activity after removing a member that is different from the member in the database.
     // To mimick a racing condition, we return an activity without members for the first "getActivity".

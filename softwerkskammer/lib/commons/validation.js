@@ -97,20 +97,6 @@ module.exports = {
     return validator.getErrors();
   },
 
-  isValidForAddon: function (addon, addonConfig) {
-    var validator = new Validator();
-    if (addonConfig.homeAddress()) {
-      validator.check(addon.homeAddress, 'validation.homeaddress_required').notEmpty();
-    }
-    if (addonConfig.billingAddress()) {
-      validator.check(addon.billingAddress, 'validation.billingaddress_required').notEmpty();
-    }
-    if (addonConfig.tShirtSize()) {
-      validator.check(addon.tShirtSize, 'validation.tshirtsize_required').notEmpty();
-    }
-    return validator.getErrors();
-  },
-
   isValidAnnouncement: function (announcement) {
     var validator = new Validator();
     validator.check(announcement.title, 'Titel ist ein Pflichtfeld.').notEmpty();

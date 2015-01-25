@@ -67,21 +67,6 @@ module.exports = {
     });
   },
 
-  saveAddon: function (activityUrl, memberId, uiInputObject, callback) {
-    var self = this;
-    activitystore.getActivity(activityUrl, function (err, activity) {
-      if (err || !activity) { return callback(err); }
-      activity.addonForMember(memberId).fillFromUI(uiInputObject);
-      activitystore.saveActivity(activity, function (err) {
-        if (err && err.message === CONFLICTING_VERSIONS) {
-          // we try again because of a racing condition during save:
-          return self.saveAddon(activityUrl, memberId, uiInputObject, callback);
-        }
-        callback(err);
-      });
-    });
-  },
-
   payWithCreditCard: function (activityUrl, amount, memberId, stripeId, description, callback) {
     var savePayment = _.partial(saveCreditCardPayment, activityUrl, memberId);
     paymentService.payWithCreditCard(savePayment, amount, description, memberId, stripeId, callback);

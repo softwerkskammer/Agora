@@ -244,53 +244,14 @@ app.post('/payment/submitCreditCard', function (req, res, next) {
   });
 });
 
-app.get('/addon/:url', function (req, res, next) {
-  var url = req.params.url;
-  addonService.addonForMember(url, req.user.member.id(), function (err, addon, addonConfig) {
-    if (err) { return next(err); }
-    res.render('addon', { url: url, addon: addon, addonConfig: addonConfig });
-  });
-});
-
-app.post('/submitAddon', function (req, res, next) {
-  var url = req.body.url;
-  activitiesService.getActivityWithGroupAndParticipants(url, function (err, activity) {
-    var errors = validation.isValidForAddon(req.body, activity.addonConfig());
-    var realErrors = _.filter(_.flatten(errors), function (message) { return !!message; });
-    if (realErrors.length > 0) {
-      return res.render('../../../views/errorPages/validationError', {errors: realErrors});
-    }
-    addonService.saveAddon(url, req.user.member.id(), req.body, function (err) {
-      if (err) { return next(err); }
-      statusmessage.successMessage('message.title.save_successful', 'message.content.addon.saved').putIntoSession(req);
-      res.redirect('/activities/' + encodeURIComponent(url));
-    });
-  });
-});
-
 app.get('/:url', function (req, res, next) {
   activitiesService.getActivityWithGroupAndParticipants(req.params.url, function (err, activity) {
-    var canEditAddon = false;
-    var addonAlreadyFilled = false;
-    var hasToBePaid = false;
-    var paymentAlreadyDone = false;
     if (err || !activity) { return next(err); }
-    if (req.user) {
-      var memberID = req.user.member.id();
-      addonAlreadyFilled = validation.isValidForAddon(activity.addonForMember(memberID).state, activity.addonConfig()).length === 0;
-      canEditAddon = activity.hasAddonConfig() && _.find(activity.participants, function (participant) {
-        return participant.id() === memberID;
-      });
-      hasToBePaid = canEditAddon && !!activity.addonConfig().deposit();
-      paymentAlreadyDone = activity.addonForMember(memberID).paymentDone();
-    }
     memberstore.getMembersForIds(activity.editorIds(), function (err, editors) {
       if (err || !editors) { return next(err); }
       var editorNicknames = _.map(editors, function (editor) { return editor.nickname(); });
       res.render('get', { activity: activity, editorNicknames: editorNicknames, resourceRegistrationRenderer: resourceRegistrationRenderer,
-        calViewYear: activity.year(), calViewMonth: activity.month(),
-        canEditAddon: canEditAddon, addonAlreadyFilled: addonAlreadyFilled,
-        hasToBePaid: hasToBePaid, paymentAlreadyDone: paymentAlreadyDone});
+        calViewYear: activity.year(), calViewMonth: activity.month()});
     });
   });
 });
