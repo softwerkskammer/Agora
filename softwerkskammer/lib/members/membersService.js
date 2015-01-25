@@ -105,12 +105,15 @@ module.exports = {
           // we found a member:
           if (member) { return callback(null, member); }
           // no member: let's try again with the legacy id
-          store.getMemberForAuthentication(legacyAuthenticationId, function (err, member) {
-            if (err || !member) {return callback(err); }
-            // add the new authentication id to the member
-            member.addAuthentication(authenticationId);
-            store.saveMember(member, function (err) { callback(err, member); });
-          });
+          if (legacyAuthenticationId) {
+            return store.getMemberForAuthentication(legacyAuthenticationId, function (err, member) {
+              if (err || !member) {return callback(err); }
+              // add the new authentication id to the member
+              member.addAuthentication(authenticationId);
+              store.saveMember(member, function (err) { callback(err, member); });
+            });
+          }
+          return callback(null);
         });
       }
 
