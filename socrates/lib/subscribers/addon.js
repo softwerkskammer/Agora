@@ -1,7 +1,7 @@
 'use strict';
 
 function Addon(object) {
-  this.state = object || {}; // this must be *the* object that is referenced by subscriber.state._addon
+  this.state = object; // this must be *the* object that is referenced by subscriber.state._addon
   return this;
 }
 
