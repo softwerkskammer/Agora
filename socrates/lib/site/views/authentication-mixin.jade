@@ -1,7 +1,7 @@
 mixin authentication(returnUrl)
    .row
      .col-md-4
-       a.btn.btn-default.btn-block(href=swkPublicUrl + '/auth/openidconnect?returnTo=' + encodeURIComponent(returnUrl))
+       a.btn.btn-default.btn-block(href=swkPublicUrl + '/auth/idp/openidconnect?returnTo=' + encodeURIComponent(returnUrl))
          img(src='/img/googleplus.ico', alt='google', width='16', height='16')
          | &nbsp;Google
      .col-md-4
