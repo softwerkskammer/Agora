@@ -12,6 +12,7 @@ var misc = beans.get('misc');
 var jwt_secret = conf.get('jwt_secret');
 
 var subscriberService = beans.get('subscriberService');
+var membersService = beans.get('membersService');
 var memberstore = beans.get('memberstore');
 
 var app = misc.expressAppIn(__dirname);
@@ -29,15 +30,14 @@ app.get('/loggedIn', function (req, res, next) {
     if (moment(token.expires).isBefore(moment())) {
       return callback(new Error('Authentication failed (expired token).'));
     }
-    // load member and participant:
-    // TODO (siehe membersService.findMemberFor ??)
-    memberstore.getMemberForAuthentication(token.userId, function (err, member) {
+    // load member and subscriber:
+    membersService.findMemberFor(null, token.userId, undefined, function (err, member) {
       if (err) { return callback(err); }
       // no member: this person+auth is unknown in SWK
       if (!member) { return callback(null, {authenticationId: token.userId, profile: token.profile}); }
       // no participant: this person+auth is known in SWK but not in SoCraTes
       return callback(null, {authenticationId: token.userId, member: member}, token.returnTo);
-    });
+    })();
   }
 
   createUserObject(getTokenFrom(req), function (err, userObject, returnTo) {
