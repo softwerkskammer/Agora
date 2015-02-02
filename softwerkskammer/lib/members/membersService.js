@@ -10,6 +10,7 @@ var store = beans.get('memberstore');
 var avatarProvider = beans.get('avatarProvider');
 var fieldHelpers = beans.get('fieldHelpers');
 var galleryService = beans.get('galleryService');
+var logger = require('winston').loggers.get('authorization');
 
 function isReserved(nickname) {
   return new RegExp('^edit$|^new$|^checknickname$|^submit$|^administration$|^[.][.]$|^[.]$|\\+', 'i').test(nickname);
@@ -99,6 +100,7 @@ module.exports = {
 
   findMemberFor: function (user, authenticationId, legacyAuthenticationId, callback) {
     return function () {
+      logger.info("membersService.findMemberFor: authenticationId: " + authenticationId + " legacy id: " + legacyAuthenticationId);
       if (!user) { // not currently logged in
         return store.getMemberForAuthentication(authenticationId, function (err, member) {
           if (err) { return callback(err); }
