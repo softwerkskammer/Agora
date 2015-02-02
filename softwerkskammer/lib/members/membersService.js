@@ -108,16 +108,19 @@ module.exports = {
           if (legacyAuthenticationId) {
             return store.getMemberForAuthentication(legacyAuthenticationId, function (err, member) {
               if (err || !member) {return callback(err); }
-              // add the new authentication id to the member
-              member.addAuthentication(authenticationId);
-              store.saveMember(member, function (err) { callback(err, member); });
+              if (authenticationId) {
+                // add the new authentication id to the member
+                member.addAuthentication(authenticationId);
+                return store.saveMember(member, function (err) { callback(err, member); });
+              }
+              callback(null, member);
             });
           }
           return callback(null);
         });
       }
 
-      // logged in -> we don't care about the legacy id
+      // logged in -> we don't care about the legacy id, we only want to add a new authentication provider to our profile
       var memberOfSession = user.member;
       return store.getMemberForAuthentication(authenticationId, function (err, member) {
         if (err) { return callback(err); }
