@@ -35,7 +35,7 @@ app.get('/loggedIn', function (req, res, next) {
       if (err) { return callback(err); }
       // no member: this person+auth is unknown in SWK
       if (!member) { return callback(null, {authenticationId: token.userId, profile: token.profile}); }
-      // no participant: this person+auth is known in SWK but not in SoCraTes
+      // add the member to the session user
       return callback(null, {authenticationId: token.userId, member: member}, token.returnTo);
     })();
   }
