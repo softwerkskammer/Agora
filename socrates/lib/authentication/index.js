@@ -2,9 +2,8 @@
 
 var jwt = require('jwt-simple');
 var passport = require('passport');
-var winston = require('winston');
 var moment = require('moment-timezone');
-var logger = winston.loggers.get('authorization');
+var logger = require('winston').loggers.get('authorization');
 
 var conf = require('simple-configure');
 var beans = conf.get('beans');
