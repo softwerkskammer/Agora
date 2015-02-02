@@ -16,7 +16,7 @@ var jwt_secret = conf.get('jwt_secret');
 
 function createUserObject(req, authenticationId, legacyAuthenticationId, profile, done) {
   if (req.session.callingAppReturnTo) { // we're invoked from another app -> don't add a member to the session
-    return done(null, { authenticationId: { newId: authenticationId, oldId: legacyAuthenticationId } });
+    return done(null, { authenticationId: { newId: authenticationId, oldId: legacyAuthenticationId, profile: profile } });
   }
   process.nextTick(membersService.findMemberFor(req.user, authenticationId, legacyAuthenticationId, function (err, member) {
     if (err) { return done(err); }
@@ -68,6 +68,7 @@ function createProviderAuthenticationRoutes(app, provider) {
     var jwt_token = jwt.encode({
       userId: req.user.authenticationId.newId,
       oldUserId: req.user.authenticationId.oldId,
+      profile: req.user.authenticationId.profile,
       returnTo: returnTo,
       expires: moment().add(5, 'seconds').toJSON()
     }, jwt_secret);
