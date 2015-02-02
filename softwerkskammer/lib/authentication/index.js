@@ -34,7 +34,7 @@ function createUserObjectFromGithub(req, accessToken, refreshToken, profile, don
 }
 
 function createUserObjectFromGooglePlus(req, iss, sub, profile, jwtClaims, accessToken, refreshToken, params, done) {
-  createUserObject(req, profile._json.url, jwtClaims.openid_id, profile._json, done);
+  createUserObject(req, "https://plus.google.com/" + sub, jwtClaims.openid_id, profile._json, done);
 }
 
 function createProviderAuthenticationRoutes(app, provider) {
