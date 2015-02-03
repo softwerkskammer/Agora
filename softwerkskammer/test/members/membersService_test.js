@@ -267,7 +267,7 @@ describe('MembersService', function () {
       saveMember = sinon.stub(memberstore, 'saveMember', function (member, callback) { callback(); });
 
       sinon.stub(memberstore, 'getMemberForAuthentication', function (auth, callback) {
-        if (auth === 'newAuth') {
+        if (!auth || auth === 'newAuth') {
           return callback();
         }
         if (auth === 'errorAuth') {
@@ -277,9 +277,34 @@ describe('MembersService', function () {
       });
     });
 
+    it('returns no member if nobody is logged in and if both authentications are undefined', function (done) {
+      membersService.findMemberFor(null, undefined, undefined, function (err, returnedMember) {
+        expect(returnedMember).to.not.exist();
+        expect(saveMember.called).to.be(false);
+        done(err);
+      })();
+    });
+
+    it('returns no member if nobody is logged in and if the new authentication is undefined while the old one is unknown', function (done) {
+      membersService.findMemberFor(null, undefined, 'newAuth', function (err, returnedMember) {
+        expect(returnedMember).to.not.exist();
+        expect(saveMember.called).to.be(false);
+        done(err);
+      })();
+    });
+
+    it('returns a member if nobody is logged in and if the new authentication is undefined but the old one is known', function (done) {
+      membersService.findMemberFor(null, undefined, 'knownAuth', function (err, returnedMember) {
+        expect(returnedMember).to.be(member);
+        expect(saveMember.called).to.be(false); // also, we do not save the 'undefined' authentication id to the member
+        done(err);
+      })();
+    });
+
     it('returns no member if nobody is logged in and if the authentication is not known', function (done) {
       membersService.findMemberFor(null, 'newAuth', undefined, function (err, returnedMember) {
         expect(returnedMember).to.not.exist();
+        expect(saveMember.called).to.be(false);
         done(err);
       })();
     });
@@ -287,6 +312,7 @@ describe('MembersService', function () {
     it('returns an error if nobody is logged in and if there is an error in getMemberForAuthentication', function (done) {
       membersService.findMemberFor(null, 'errorAuth', undefined, function (err, returnedMember) {
         expect(returnedMember).to.not.exist();
+        expect(saveMember.called).to.be(false);
         expect(err).to.exist();
         done();
       })();
@@ -295,6 +321,7 @@ describe('MembersService', function () {
     it('returns a member if nobody is logged in and if his authentication is known', function (done) {
       membersService.findMemberFor(null, 'knownAuth', undefined, function (err, returnedMember) {
         expect(returnedMember).to.be(member);
+        expect(saveMember.called).to.be(false);
         done(err);
       })();
     });
@@ -312,6 +339,7 @@ describe('MembersService', function () {
     it('returns an error if nobody is logged in and if the authentication is not known and getMemberForAuthentication returns an error for the legacy authentication', function (done) {
       membersService.findMemberFor(null, 'newAuth', 'errorAuth', function (err, returnedMember) {
         expect(returnedMember).to.not.exist();
+        expect(saveMember.called).to.be(false);
         expect(err).to.exist();
         done();
       })();
@@ -337,6 +365,7 @@ describe('MembersService', function () {
       var user = {member: differentMember};
       membersService.findMemberFor(user, 'errorAuth', undefined, function (err, returnedMember) {
         expect(returnedMember).to.not.exist();
+        expect(saveMember.called).to.be(false);
         expect(err).to.exist();
         done();
       })();
@@ -347,6 +376,7 @@ describe('MembersService', function () {
       var user = {member: member};
       membersService.findMemberFor(user, 'authID', undefined, function (err, returnedMember) {
         expect(returnedMember).to.be(member);
+        expect(saveMember.called).to.be(false);
         done(err);
       })();
     });
@@ -358,6 +388,7 @@ describe('MembersService', function () {
       var user = {member: differentMember};
       membersService.findMemberFor(user, 'authID', undefined, function (err, returnedMember) {
         expect(returnedMember).to.not.exist();
+        expect(saveMember.called).to.be(false);
         expect(err).to.exist();
         done();
       })();

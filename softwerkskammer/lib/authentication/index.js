@@ -1,10 +1,9 @@
 'use strict';
 
 var passport = require('passport');
-var winston = require('winston');
 var jwt = require('jwt-simple');
 var moment = require('moment-timezone');
-var logger = winston.loggers.get('authorization');
+var logger = require('winston').loggers.get('authorization');
 
 var conf = require('simple-configure');
 var beans = conf.get('beans');
@@ -16,7 +15,7 @@ var jwt_secret = conf.get('jwt_secret');
 
 function createUserObject(req, authenticationId, legacyAuthenticationId, profile, done) {
   if (req.session.callingAppReturnTo) { // we're invoked from another app -> don't add a member to the session
-    return done(null, { authenticationId: { newId: authenticationId, oldId: legacyAuthenticationId } });
+    return done(null, { authenticationId: { newId: authenticationId, oldId: legacyAuthenticationId, profile: profile } });
   }
   process.nextTick(membersService.findMemberFor(req.user, authenticationId, legacyAuthenticationId, function (err, member) {
     if (err) { return done(err); }
@@ -34,7 +33,7 @@ function createUserObjectFromGithub(req, accessToken, refreshToken, profile, don
 }
 
 function createUserObjectFromGooglePlus(req, iss, sub, profile, jwtClaims, accessToken, refreshToken, params, done) {
-  createUserObject(req, profile._json.url, jwtClaims.openid_id, profile._json, done);
+  createUserObject(req, "https://plus.google.com/" + sub, jwtClaims.openid_id, profile._json, done);
 }
 
 function createProviderAuthenticationRoutes(app, provider) {
@@ -68,6 +67,7 @@ function createProviderAuthenticationRoutes(app, provider) {
     var jwt_token = jwt.encode({
       userId: req.user.authenticationId.newId,
       oldUserId: req.user.authenticationId.oldId,
+      profile: req.user.authenticationId.profile,
       returnTo: returnTo,
       expires: moment().add(5, 'seconds').toJSON()
     }, jwt_secret);

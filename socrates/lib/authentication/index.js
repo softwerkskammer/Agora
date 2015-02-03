@@ -2,9 +2,8 @@
 
 var jwt = require('jwt-simple');
 var passport = require('passport');
-var winston = require('winston');
 var moment = require('moment-timezone');
-var logger = winston.loggers.get('authorization');
+var logger = require('winston').loggers.get('authorization');
 
 var conf = require('simple-configure');
 var beans = conf.get('beans');
@@ -35,7 +34,7 @@ app.get('/loggedIn', function (req, res, next) {
       if (err) { return callback(err); }
       // no member: this person+auth is unknown in SWK
       if (!member) { return callback(null, {authenticationId: token.userId, profile: token.profile}); }
-      // no participant: this person+auth is known in SWK but not in SoCraTes
+      // add the member to the session user
       return callback(null, {authenticationId: token.userId, member: member}, token.returnTo);
     })();
   }
