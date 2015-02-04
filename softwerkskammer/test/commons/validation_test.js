@@ -421,35 +421,4 @@ describe('Validation', function () {
     });
 
   });
-
-  describe('isValidForAddon', function () {
-    var addonConfig = new AddonConfig({homeAddress: true, billingAddress: true, tShirtSize: true, roommate: true});
-    var result = function (object) {
-      return translateMessages(validation.isValidForAddon(object, addonConfig));
-    };
-
-    it('performs many checks simultaneously', function () {
-      expect(result({}).length).to.equal(3);
-    });
-
-    it('checks that homeAddress is set', function () {
-      expect(result({})).to.contain('Privatanschrift ist ein Pflichtfeld.');
-      expect(result({homeAddress: null})).to.contain('Privatanschrift ist ein Pflichtfeld.');
-      expect(result({homeAddress: 'n'})).to.not.contain('Privatanschrift ist ein Pflichtfeld.');
-    });
-
-    it('checks that billingAddress is set', function () {
-      expect(result({})).to.contain('Rechnungsanschrift ist ein Pflichtfeld.');
-      expect(result({billingAddress: null})).to.contain('Rechnungsanschrift ist ein Pflichtfeld.');
-      expect(result({billingAddress: 'n'})).to.not.contain('Rechnungsanschrift ist ein Pflichtfeld.');
-    });
-
-    it('checks that tShirtSize is set', function () {
-      expect(result({})).to.contain('T-Shirt-Größe ist ein Pflichtfeld.');
-      expect(result({tShirtSize: null})).to.contain('T-Shirt-Größe ist ein Pflichtfeld.');
-      expect(result({tShirtSize: 'n'})).to.not.contain('T-Shirt-Größe ist ein Pflichtfeld.');
-    });
-
-  });
-
 });

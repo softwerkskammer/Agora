@@ -31,13 +31,6 @@ module.exports = {
     addonConfig: function () {return addonConfig; }
   },
   groups: [],
-  addonConfig: addonConfig,
-  addon: {
-    homeAddress: function () { return ''; },
-    billingAddress: function () { return ''; },
-    tShirtSize: function () { return ''; },
-    roommate: function () { return ''; }
-  },
   announcement: {
     id: '',
     thruMoment: function () { return moment(); }

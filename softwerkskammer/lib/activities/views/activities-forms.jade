@@ -1,24 +1,5 @@
 include  ../../../views/formComponents
 
-mixin addonform(addon)
-  form#addonform(action='/activities/submitAddon', method='post')
-    +csrf
-    +hidden('url', url)
-    fieldset
-      if (addonConfig.homeAddress())
-        +textareaPure('homeAddress', t('activities.home_address'), addon.homeAddress())
-      if (addonConfig.billingAddress())
-        +textareaPure('billingAddress', t('activities.billing_address'), addon.billingAddress())
-      if (addonConfig.tShirtSize())
-        .form-group
-          label.control-label(for='tShirtSize') #{t('activities.t_shirt_size')}:
-          select#tShirtSize.form-control(name='tShirtSize')
-            for item in ['', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL', 'Ladies\' XS', 'Ladies\' S', 'Ladies\' M', 'Ladies\' L', 'Ladies\' XL', 'Ladies\' XXL' ]
-              option(selected=addon.tShirtSize() === item) #{item}
-      if (addonConfig.roommate())
-        +text('roommate', t('activities.roommate'), addon.roommate())
-      button.btn.btn-primary.pull-right(type='submit') #{t('general.save')}
-
 mixin activityform(activity, groups)
   form(id='activityform', action='/activities/submit', method='post')
     +csrf
@@ -37,7 +18,6 @@ mixin activityform(activity, groups)
           ul.nav.nav-tabs
             li.active: a(href='#main', data-toggle='tab') #{t('general.general')}
             li: a(href='#ressources', data-toggle='tab') #{t('activities.resources')}
-            li: a(href='#addon', data-toggle='tab') #{t('activities.addon')}
       .tab-content
         .tab-pane.active#main
           .row
@@ -91,20 +71,6 @@ mixin activityform(activity, groups)
                     button.add.btn.btn-sm.btn-default(type='button')
                       i.fa.fa-plus
                       | &nbsp;#{t('activities.resource')}
-        .tab-pane#addon
-          .row
-            .col-md-12
-              #addonConfig
-              p #{t('activities.which_addon_to_collect')}
-          .row
-            .col-md-6
-              +textarea('addonInformation', t('activities.addon_information'), activity.addonConfig().addonInformation())
-            .col-md-6
-              +text('deposit', t('activities.deposit'), activity.addonConfig().deposit())
-              +checkbox('homeAddress', t('activities.home_address') + ' *', activity.addonConfig().homeAddress())
-              +checkbox('billingAddress', t('activities.billing_address')+ ' *', activity.addonConfig().billingAddress())
-              +checkbox('tShirtSize', t('activities.t_shirt_size')+ ' *', activity.addonConfig().tShirtSize())
-              +checkbox('roommate', t('activities.roommate'), activity.addonConfig().roommate())
       .row
         .col-md-12
           hr

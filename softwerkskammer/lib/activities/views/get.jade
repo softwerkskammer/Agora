@@ -42,15 +42,6 @@ block content
               | ) - #{activity.endMoment().locale(language).format('LL')} (#{activity.endMoment().locale(language).format('LT')})
             else
               |  - #{activity.endMoment().locale(language).format('LT')})
-      .btn-group.pull-right
-        if (hasToBePaid)
-          a.btn(class='#{paymentAlreadyDone ? "btn-default" : "btn-warning"}', data-toggle='modal', data-target='#payment', href='/activities/payment/#{encodeURIComponent(activity.url())}')
-            i.fa.fa-money.fa-fw
-            | &nbsp; #{t('payment.title')}…
-        if (canEditAddon)
-          a.btn(class='#{addonAlreadyFilled ? "btn-default" : "btn-warning"}', data-toggle='modal', data-target='#addOn', href='/activities/addon/#{encodeURIComponent(activity.url())}')
-            i.fa.fa-tags.fa-fw
-            | &nbsp;#{t('activities.edit_addon')}
       .clearfix
       | !{activity.descriptionHTML()}
       hr

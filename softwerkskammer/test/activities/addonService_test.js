@@ -41,17 +41,6 @@ describe('Addon Service', function () {
       });
     });
 
-    it('saveAddon enhances activity with UI input and saves it', function (done) {
-      var uiInputObject = { homeAddress: 'At home', billingAddress: 'At work', tShirtSize: 'XL', roommate: 'My best friend' };
-      addonService.saveAddon('activity', 'member', uiInputObject, function (err) {
-        expect(savedActivity.addonForMember('member').homeAddress()).to.equal('At home');
-        expect(savedActivity.addonForMember('member').billingAddress()).to.equal('At work');
-        expect(savedActivity.addonForMember('member').tShirtSize()).to.equal('XL');
-        expect(savedActivity.addonForMember('member').roommate()).to.equal('My best friend');
-        done(err);
-      });
-    });
-
     it('payWithTransfer enhances activity with money transfer info and saves it', function (done) {
       addonService.payWithTransfer('activity', 'member', function (err) {
         expect(savedActivity.addonForMember('member').moneyTransferred()).to.be.truthy();
