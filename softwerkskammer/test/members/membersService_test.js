@@ -111,7 +111,7 @@ describe('MembersService', function () {
 
     it('uses the most common writing', function () {
       var members = [];
-      members.push(new Member({interests: 'Heinz, heinz, HeInZ, Heinz, Heinz, heinz'}));
+      members.push(new Member({interests: 'heinz, Heinz, HeInZ, Heinz, Heinz, heinz'}));
       var result = membersService.toWordList(members);
       expect(result).to.have.length(1);
       expect(result[0]).to.eql({text: 'Heinz', weight: 6, html: {class: 'interestify'}});

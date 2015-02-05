@@ -3,7 +3,7 @@
 module.exports = function (firstTestBeansFilename, secondTestBeansFilename) {
 
   var conf = require('simple-configure');
-  var merge = require('utils-merge');
+  var _ = require('lodash');
   var Beans = require('CoolBeans');
   require('../../softwerkskammer/testutil/shutupWinston')();
 
@@ -17,9 +17,7 @@ module.exports = function (firstTestBeansFilename, secondTestBeansFilename) {
   var secondProductionBeans = require('../../config/beans-socrates.json');
   var firstTestBeans = require('../../config/' + firstTestBeansFilename);
   var secondTestBeans = require('../../config/' + secondTestBeansFilename);
-  merge(productionBeans, secondProductionBeans);
-  merge(productionBeans, firstTestBeans);
-  merge(productionBeans, secondTestBeans);
+  _.assign(productionBeans, secondProductionBeans, firstTestBeans, secondTestBeans);
 
   conf.addProperties({
     port: '17225',

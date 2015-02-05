@@ -24,7 +24,8 @@ function wordList(members, groupingFunction) {
     .compact() // remove empty strings
     .groupBy(groupingFunction) // prepare counting by grouping
     .transform(function (result, words) {
-      var mainWord = _(words).groupBy().max(function (word) { return word.length; }).uniq().value()[0]; // choose the most common form
+      var max = _(words).groupBy().max(function (word) { return word.length; });
+      var mainWord = _.uniq(max)[0]; // choose the most common form
       return result.push({text: mainWord, weight: words.length, html: {class: 'interestify'}});
     }, []); // create the final structure
 }
@@ -100,7 +101,7 @@ module.exports = {
 
   findMemberFor: function (user, authenticationId, legacyAuthenticationId, callback) {
     return function () {
-      logger.info("membersService.findMemberFor: authenticationId: " + authenticationId + " legacy id: " + legacyAuthenticationId);
+      logger.info('membersService.findMemberFor: authenticationId: ' + authenticationId + ' legacy id: ' + legacyAuthenticationId);
       if (!user) { // not currently logged in
         return store.getMemberForAuthentication(authenticationId, function (err, member) {
           if (err) { return callback(err); }

@@ -44,7 +44,7 @@ function createProviderAuthenticationRoutes(app, provider) {
 
   function setReturnOnSuccess(req, res, next) {
     if (req.session.returnTo === undefined) {
-      req.session.returnTo = req.param('returnTo', '/');
+      req.session.returnTo = req.query.returnTo || '/';
     }
     next();
   }
@@ -54,7 +54,7 @@ function createProviderAuthenticationRoutes(app, provider) {
 
   function setReturnViaIdentityProviderOnSuccess(req, res, next) {
     req.session.returnTo = '/auth/idp_return_point';
-    req.session.callingAppReturnTo = req.param('returnTo', '/');
+    req.session.callingAppReturnTo = req.query.returnTo || '/';
     if (req.user && req.user.member) { // save current member info -> restore it later
       req.session.currentAgoraUser = {authenticationId: req.user.authenticationId};
     }
