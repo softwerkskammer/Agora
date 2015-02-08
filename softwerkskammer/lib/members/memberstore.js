@@ -11,7 +11,7 @@ var toMember = _.partial(misc.toObject, Member);
 
 var sortCaseInsensitive = function (objectlist) {
   return objectlist.sort(function (a, b) {
-    return _s.naturalCmp(a.lastname + ' ' + a.firstname, b.lastname + ' ' + b.firstname);
+    return _s.naturalCmp(a.lastname.toLowerCase() + ' ' + a.firstname.toLowerCase(), b.lastname.toLowerCase() + ' ' + b.firstname.toLowerCase());
   });
 
 };

@@ -4,7 +4,6 @@ process.chdir(__dirname);
 var _ = require('lodash');
 var conf = require('simple-configure');
 var Beans = require('CoolBeans');
-var merge = require('utils-merge');
 var path = require('path');
 
 function createConfiguration() {
@@ -14,7 +13,7 @@ function createConfiguration() {
   // beans:
   var swkBeans = require(configdir + 'beans.json');
   var socratesBeans = require(configdir + 'beans-socrates.json');
-  merge(swkBeans, socratesBeans);
+  _.assign(swkBeans, socratesBeans);
 
   conf.addProperties({
     port: '17224',

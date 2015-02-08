@@ -3,7 +3,6 @@
 var _ = require('lodash');
 var async = require('async');
 var conf = require('simple-configure');
-var merge = require('utils-merge');
 
 var beans = conf.get('beans');
 var groupsAndMembers = beans.get('groupsAndMembersService');
@@ -58,14 +57,15 @@ function activityParticipation(activity, visitorID, ressourceName, content, type
         organizersEmails.push(results.owner.email());
       }
       if (_.isEmpty(organizersEmails)) { return; }
-      var renderingOptions = merge(defaultRenderingOptions, {
+      var renderingOptions = {
         activity: activity,
         ressourceName: ressourceName,
         content: content,
         count: activity.resourceNamed(ressourceName).registeredMembers().length,
         totalcount: activity.allRegisteredMembers().length,
         visitor: results.visitor
-      });
+      };
+      _.defaults(renderingOptions, defaultRenderingOptions);
       var filename = path.join(__dirname, 'jade/activitytemplate.jade');
       sendMail(organizersEmails, type, jade.renderFile(filename, renderingOptions));
     }
@@ -91,9 +91,10 @@ module.exports.waitinglistRemoval = function (activity, visitorID, resourceName)
 module.exports.wikiChanges = function (changes, callback) {
   memberstore.allMembers(function (err, members) {
     if (err) { return callback(err); }
-    var renderingOptions = merge(defaultRenderingOptions, {
+    var renderingOptions = {
       directories: _.sortBy(changes, 'dir')
-    });
+    };
+    _.defaults(renderingOptions, defaultRenderingOptions);
     var filename = path.join(__dirname, 'jade/wikichangetemplate.jade');
     var receivers = _.union(Member.superuserEmails(members), Member.wikiNotificationMembers(members));
     sendMail(receivers, 'Wiki Änderungen', jade.renderFile(filename, renderingOptions), callback);
@@ -102,11 +103,12 @@ module.exports.wikiChanges = function (changes, callback) {
 
 module.exports.newMemberRegistered = function (member, subscriptions) {
   memberstore.allMembers(function (err, members) {
-    var renderingOptions = merge(defaultRenderingOptions, {
+    var renderingOptions = {
       member: member,
       groups: subscriptions,
       count: members.length
-    });
+    };
+    _.defaults(renderingOptions, defaultRenderingOptions);
     var filename = path.join(__dirname, 'jade/newmembertemplate.jade');
     var receivers = Member.superuserEmails(members);
     sendMail(receivers, 'Neues Mitglied', jade.renderFile(filename, renderingOptions));
@@ -116,10 +118,11 @@ module.exports.newMemberRegistered = function (member, subscriptions) {
 module.exports.paymentMarked = function (activity, memberId) {
   memberstore.getMemberForId(memberId, function (err, member) {
     if (err || !member) { return; }
-    var renderingOptions = merge(defaultRenderingOptions, {
+    var renderingOptions = {
       member: member,
       activity: activity
-    });
+    };
+    _.defaults(renderingOptions, defaultRenderingOptions);
     var filename = path.join(__dirname, 'jade/paymenttemplate.jade');
     var receivers = [member.email()];
     sendMail(receivers, 'Payment Receipt / Zahlungseingang', jade.renderFile(filename, renderingOptions));

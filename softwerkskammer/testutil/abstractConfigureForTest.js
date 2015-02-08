@@ -3,7 +3,7 @@
 module.exports = function (testBeansFilename) {
 
   var conf = require('simple-configure');
-  var merge = require('utils-merge');
+  var _ = require('lodash');
   var Beans = require('CoolBeans');
   require('./shutupWinston')();
 
@@ -15,7 +15,7 @@ module.exports = function (testBeansFilename) {
   // beans:
   var productionBeans = require('../../config/beans.json');
   var testBeans = require('../../config/' + testBeansFilename);
-  merge(productionBeans, testBeans);
+  _.assign(productionBeans, testBeans);
 
   conf.addProperties({
     port: '17125',
