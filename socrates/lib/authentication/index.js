@@ -13,6 +13,7 @@ var jwt_secret = conf.get('jwt_secret');
 var subscriberService = beans.get('subscriberService');
 var membersService = beans.get('membersService');
 var memberstore = beans.get('memberstore');
+var statusmessage = beans.get('statusmessage');
 
 var app = misc.expressAppIn(__dirname);
 
@@ -47,8 +48,12 @@ app.get('/loggedIn', function (req, res, next) {
     req._passport.session.user = userObject;
     passport.authenticate('session')(req, res, function () {
       if (req.user.member) {
-        return subscriberService.createSubscriberIfNecessaryFor(req.user.member.id(), function (err) {
+        return subscriberService.createSubscriberIfNecessaryFor(req.user.member.id(), function (err, subscriberAlreadyExists) {
           if (err) { return next(err); }
+          if (!subscriberAlreadyExists) {
+            delete req.session.statusmessage; // If the subscriber was not an SWK member, SWK added a "profile saved" message to the session.
+            statusmessage.successMessage('general.welcome', 'general.thanks_for_interest').putIntoSession(req);
+          }
           res.redirect(returnTo);
         });
       }
