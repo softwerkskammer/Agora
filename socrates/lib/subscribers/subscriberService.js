@@ -9,11 +9,11 @@ module.exports = {
 
   createSubscriberIfNecessaryFor: function (id, callback) {
     subscriberstore.getSubscriber(id, function (err, particip) {
-      if (err) { return callback(err); }
+      if (err) { return callback(err, true); }
       if (!particip) {
         return subscriberstore.saveSubscriber(new Subscriber({id: id}), callback);
       }
-      return callback(null);
+      return callback(null, true);
     });
   },
 
