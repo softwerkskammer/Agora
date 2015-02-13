@@ -1,0 +1,39 @@
+mixin visitorCount(number)
+  p
+    if (number === 0)
+      |  #{t('activities.no_participants')}
+    else if (number === 1)
+      |  #{t('activities.one_participant')}
+    else
+      |  #{t('activities.count_participants', {count: '' + number})}
+
+
+mixin subscriptionButtons(activity, resourceName, resourceRegistrationRenderer)
+  -var result = resourceRegistrationRenderer.htmlRepresentationOf(activity, resourceName, accessrights.memberId())
+  -var btnClass = result.isWithdrawal() ? 'btn-default' : 'btn-primary'
+  if (activity.resourceNames().length === 1)
+    if (!result.representsButton())
+      | #{t(result.displayText)}
+    else
+      a(href='#{result.url}', class='btn #{btnClass}') #{t(result.displayText)}
+  else
+    form.form-horizontal
+      .form-group
+        label.control-label.col-xs-6(style='text-align: left;') #{resourceName}:
+        if (!result.representsButton())
+          span.col-xs-6.control-label(style='text-align: center;') #{t(result.displayText)}
+        else
+          a(href='#{result.url}', class='btn col-xs-6 #{btnClass}') #{t(result.displayText)}
+
+mixin activityList(activities, member)
+  dl.dl-horizontal
+    for activity in activities
+      dt
+        | #{activity.startMoment().locale(language).format('LL')}
+      dd
+        a(href='/groups/#{activity.assignedGroup()}')
+          span.label(style='background-color: #{activity.colorRGB}') #{activity.groupName()}
+        | &nbsp;
+        a(href=activity.fullyQualifiedUrl()) #{activity.title()}
+        if (member && activity.allRegisteredMembers().indexOf(member.id()) > -1)
+          | &nbsp;(Angemeldet)

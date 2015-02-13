@@ -24,7 +24,10 @@ module.exports = function (grunt) {
       'bower_components/jquery-validation/dist/additional-methods.js',
       'bower_components/URIjs/src/URI.js',
       'socrates/locales/frontend_en.js',
-      'socrates/frontend/javascript/socrates.js'
+      'socrates/frontend/javascript/socrates.js',
+      'softwerkskammer/frontend/javascript/activityDateModel.js',
+      'softwerkskammer/frontend/javascript/activityform-dateAdapter.js',
+      'socrates/frontend/javascript/check-activityform.js'
     ]
   };
 

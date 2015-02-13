@@ -74,4 +74,8 @@ app.get('/cheatsheet.html', function (req, res) {
   res.render('lazyMarkdownCheatsheet');
 });
 
+app.get('/mustBeSuperuser', function (req, res) {
+  res.render('superuserRightsRequired', {requestedPage: req.query.page});
+});
+
 module.exports = app;
