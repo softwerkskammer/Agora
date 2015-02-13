@@ -10,12 +10,12 @@ module.exports = function accessrights(req, res, next) {
       return this.req.user && this.req.user.member;
     },
 
-    memberId: function () {
-      return this.isRegistered() ? this.member().id() : null;
-    },
-
     isRegistered: function () {
       return !!this.member();
+    },
+
+    memberId: function () {
+      return this.isRegistered() ? this.member().id() : null;
     },
 
     isSuperuser: function () {
