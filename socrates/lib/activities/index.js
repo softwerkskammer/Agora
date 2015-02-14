@@ -51,8 +51,11 @@ app.get('/new', function (req, res, next) {
     title: 'SoCraTes ',
     url: 'socrates-',
     resources: {
-      single: {_canUnsubscribe: false}, bed_in_double: {_canUnsubscribe: false}, junior: {_canUnsubscribe: false},
-      bed_in_junior: {_canUnsubscribe: false}, waitinglist: {_canUnsubscribe: false, _waitinglist: true}
+      single: {_canUnsubscribe: false},
+      bed_in_double: {_canUnsubscribe: false},
+      junior: {_canUnsubscribe: false},
+      bed_in_junior: {_canUnsubscribe: false},
+      waitinglist: {_canUnsubscribe: false, _waitinglist: true}
     }
   });
   res.render('edit', {activity: activity});
