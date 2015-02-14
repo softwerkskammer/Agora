@@ -13,6 +13,8 @@ var sympaClient;
 //Just checking if remote has been configured
 if (conf.get('swkTrustedAppName') || conf.get('swkTrustedAppPwd')) {
   sympaClient = beans.get('sympa');
+} else if (conf.get('ezmlmDomain')) {
+  sympaClient = require('./ezmlmAdapter');
 } else {
   sympaClient = beans.get('sympaStub');
 }
