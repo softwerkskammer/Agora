@@ -261,6 +261,9 @@ app.post('/payment/submitCreditCard', function (req, res, next) {
 app.get('/:url', function (req, res, next) {
   activitiesService.getActivityWithGroupAndParticipants(req.params.url, function (err, activity) {
     if (err || !activity) { return next(err); }
+    if (activity.isSoCraTes()) {
+      return res.redirect(activity.fullyQualifiedUrl());
+    }
     memberstore.getMembersForIds(activity.editorIds(), function (err, editors) {
       if (err || !editors) { return next(err); }
       var editorNicknames = _.map(editors, function (editor) { return editor.nickname(); });
