@@ -12,7 +12,7 @@ var ezmlmStub = {
 };
 var ezmlmAdapter = proxyquireStrict('../../lib/groups/ezmlmAdapter', {'ezmlm-node': function () { return ezmlmStub; }});
 
-describe.only('The ezmlm adapter', function () {
+describe('The ezmlm adapter', function () {
 
   afterEach(function () {
     sinon.restore();
