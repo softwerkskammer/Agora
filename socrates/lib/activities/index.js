@@ -48,8 +48,6 @@ function activitySubmitted(req, res, next) {
 app.get('/new', function (req, res, next) {
   // or should we simply attach the start date's year to these fixed strings??
   var activity = new Activity({
-    title: 'SoCraTes ',
-    url: 'socrates-',
     resources: {
       single: {_canUnsubscribe: false},
       bed_in_double: {_canUnsubscribe: false},
@@ -72,6 +70,11 @@ app.get('/edit/:url', function (req, res, next) {
 });
 
 app.post('/submit', function (req, res, next) {
+  var year = req.body.startDate.split('/')[2];
+  req.body.title = 'SoCraTes ' + year;
+  req.body.url = 'socrates-' + year;
+  req.body.location = 'Soltau, Germany'; // important because it shows up in the iCal data :-)
+  req.body.assignedGroup = 'G'; // required by SWK code
 
   async.parallel(
     [
@@ -81,9 +84,6 @@ app.post('/submit', function (req, res, next) {
         validation.checkValidity(req.body.previousUrl.trim(), req.body.url.trim(), validityChecker, req.i18n.t('validation.url_not_available'), callback);
       },
       function (callback) {
-        // add the unused fields that are required for the SWK activity
-        req.body.location = 'Soltau, Germany'; // important because it shows up in the iCal data :-)
-        req.body.assignedGroup = 'G';
         var errors = validation.isValidForActivity(req.body);
         return callback(null, errors);
       }

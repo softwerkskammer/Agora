@@ -12,12 +12,11 @@ mixin activityform(activity, groups)
           +submitButtons('general.save')
           legend
             if (activity.id())
-              | #{t('activities.edit')}
+              | Edit SoCraTes
             else
-              | #{t('activities.create')}
+              | Create SoCraTes
           .row
             .col-md-6
-              +text('title', t('activities.title'), activity.title(), t('activities.tooltip.title'))
               .row
                 .col-xs-6(style='padding-right:5px')
                   .col-xs-6(style='padding-left:0px;padding-right:3px')
@@ -31,14 +30,12 @@ mixin activityform(activity, groups)
                     +time('endTime', activity.endMoment().locale(language).format('LT'))
             .col-md-6
               .form-group
-                +controlLabel('url', t('activities.address_suffix'), t('activities.tooltip.address_suffix'))
-                input.form-control#url(type='text', name='url', value=activity.url())
                 +textarea('description', t('general.description'), activity.description())
           .row
             .col-md-12
               .row
                 .col-xs-3.col-sm-4
-                  +controlLabel('bezeichnung', t('activities.resourcelabel'), t('activities.tooltip.resourcelabel'))
+                  +controlLabel('bezeichnung', t('activities.resourcelabel'))
                 .col-xs-3.col-sm-2
                   +controlLabel('anzahl', t('activities.count'), t('activities.tooltip.count'))
                 .col-xs-2.col-sm-2
