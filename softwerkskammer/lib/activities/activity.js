@@ -42,7 +42,7 @@ Activity.prototype.url = function () {
 };
 
 Activity.prototype.fullyQualifiedUrl = function () {
-  return this.state.url ? conf.get('publicUrlPrefix') + '/activities/' + encodeURIComponent(this.state.url.trim()) : undefined;
+  return this.url() ? conf.get('publicUrlPrefix') + '/activities/' + encodeURIComponent(this.url()) : undefined;
 };
 
 Activity.prototype.title = function () {
