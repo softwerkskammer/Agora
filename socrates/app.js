@@ -25,7 +25,7 @@ var httpLogger = winston.loggers.get('socrates-http');
 
 // initialize i18n
 i18n.init({
-  ignoreRoutes: ['clientscripts/', 'fonts/', 'images/', 'img/', 'stylesheets/'],
+  ignoreRoutes: ['/clientscripts/', '/fonts/', '/images/', '/img/', '/stylesheets/'],
   supportedLngs: ['en'],
   preload: ['en'],
   fallbackLng: 'en',
