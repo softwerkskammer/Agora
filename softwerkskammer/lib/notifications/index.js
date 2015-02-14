@@ -33,15 +33,15 @@ function sendMail(emailAddresses, subject, html, callback) {
     generateTextFromHTML: true
   };
 
-  transport.sendMail(mailoptions, function (err) {
-    if (callback) { return callback(err); }
+  if (callback) { return transport.sendMail(mailoptions, callback); }
 
+  transport.sendMail(mailoptions, function (err) {
     if (err) { return logger.error(err); }
     logger.info('Notification sent. Content: ' + JSON.stringify(mailoptions));
   });
 }
 
-function activityParticipation(activity, visitorID, ressourceName, content, type) {
+function activityParticipation(activity, visitorID, ressourceName, content, type, callback) {
   async.parallel(
     {
       group: function (callback) { groupsAndMembers.getGroupAndMembersForList(activity.assignedGroup(), callback); },
@@ -67,25 +67,25 @@ function activityParticipation(activity, visitorID, ressourceName, content, type
       };
       _.defaults(renderingOptions, defaultRenderingOptions);
       var filename = path.join(__dirname, 'jade/activitytemplate.jade');
-      sendMail(organizersEmails, type, jade.renderFile(filename, renderingOptions));
+      sendMail(organizersEmails, type, jade.renderFile(filename, renderingOptions), callback);
     }
   );
 }
 
-module.exports.visitorRegistration = function (activity, visitorID, resourceName) {
-  activityParticipation(activity, visitorID, resourceName, 'hat sich ein neuer Besucher angemeldet', 'Neue Anmeldung für Aktivität');
+module.exports.visitorRegistration = function (activity, visitorID, resourceName, callback) {
+  activityParticipation(activity, visitorID, resourceName, 'hat sich ein neuer Besucher angemeldet', 'Neue Anmeldung für Aktivität', callback);
 };
 
-module.exports.visitorUnregistration = function (activity, visitorID, resourceName) {
-  activityParticipation(activity, visitorID, resourceName, 'hat sich ein Besucher abgemeldet', 'Abmeldung für Aktivität');
+module.exports.visitorUnregistration = function (activity, visitorID, resourceName, callback) {
+  activityParticipation(activity, visitorID, resourceName, 'hat sich ein Besucher abgemeldet', 'Abmeldung für Aktivität', callback);
 };
 
-module.exports.waitinglistAddition = function (activity, visitorID, resourceName) {
-  activityParticipation(activity, visitorID, resourceName, 'hat sich jemand auf die Warteliste eingetragen', 'Zugang auf Warteliste');
+module.exports.waitinglistAddition = function (activity, visitorID, resourceName, callback) {
+  activityParticipation(activity, visitorID, resourceName, 'hat sich jemand auf die Warteliste eingetragen', 'Zugang auf Warteliste', callback);
 };
 
-module.exports.waitinglistRemoval = function (activity, visitorID, resourceName) {
-  activityParticipation(activity, visitorID, resourceName, 'hat sich jemand von der Warteliste entfernt', 'Streichung aus Warteliste');
+module.exports.waitinglistRemoval = function (activity, visitorID, resourceName, callback) {
+  activityParticipation(activity, visitorID, resourceName, 'hat sich jemand von der Warteliste entfernt', 'Streichung aus Warteliste', callback);
 };
 
 module.exports.wikiChanges = function (changes, callback) {
