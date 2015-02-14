@@ -9,17 +9,16 @@ var validation = beans.get('validation');
 var groupstore = beans.get('groupstore');
 var misc = beans.get('misc');
 
-var sympaClient;
+var sympaCache;
 //Just checking if remote has been configured
 if (conf.get('swkTrustedAppName') || conf.get('swkTrustedAppPwd')) {
-  sympaClient = beans.get('sympa');
+  sympaCache = require('./sympaCache')(beans.get('sympa'));
 } else if (conf.get('ezmlmHomedir')) {
-  sympaClient = require('./ezmlmAdapter');
+  sympaCache = require('./ezmlmAdapter');
 } else {
-  sympaClient = beans.get('sympaStub');
+  sympaCache = beans.get('sympaStub');
 }
 
-var sympaCache = require('./sympaCache')(sympaClient);
 
 var isReserved = function (groupname) {
   return new RegExp('^edit$|^new$|^checkgroupname$|^submit$|^administration$|[^\\w-]', 'i').test(groupname);
@@ -27,7 +26,9 @@ var isReserved = function (groupname) {
 
 module.exports = {
   refreshCache: function () {
-    sympaCache = require('./sympaCache')(sympaClient);
+    if (conf.get('swkTrustedAppName') || conf.get('swkTrustedAppPwd')) {
+      sympaCache = require('./sympaCache')(beans.get('sympa'));
+    }
   },
 
   getSubscribedGroupsForUser: function (userMail, globalCallback) {
