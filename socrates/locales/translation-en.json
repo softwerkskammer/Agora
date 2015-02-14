@@ -144,7 +144,15 @@
     "home_address": "Home address",
     "billing_address": "Billing address",
     "t_shirt_size": "T-Shirt size",
-    "roommate": "With whom would you like to share the room? (Twin room only)"
+    "roommate": "With whom would you like to share the room? (Twin room only)",
+    "tooltip": {
+      "start": "End date and time are shifted automatically (the duration remains the same)",
+      "end": "Here you can adjust the duration",
+      "count": "Maximal number of participants (no limit if field is empty, registration impossible if 0)",
+      "registration": "Here you can enable or disable registration",
+      "deregistration": "Here you can enable or disable unsubscription",
+      "waitinglist": "Should the resource have a waiting list?"
+    }
   },
   "activityresults": {
     "cancel": "Cancel",
