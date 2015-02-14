@@ -105,7 +105,13 @@ app.get('/checkurl', function (req, res) {
 app.get('/:url', function (req, res, next) {
   activitiesService.getActivityWithGroupAndParticipants(req.params.url, function (err, activity) {
     if (err || !activity) { return next(err); }
-    res.render('get', {activity: activity});
+    var roomOptions = [
+      {id: 'single', name: 'Single', two: 200, three: 270, threePlus: 300, four: 370},
+      {id: 'double', name: 'Double shared …', shareable: true, two: 160, three: 210, threePlus: 240, four: 290},
+      {id: 'junior', name: 'Junior shared …', shareable: true, two: 151, three: 197, threePlus: 227, four: 272},
+      {id: 'juniorAlone', name: 'Junior (exclusive)', two: 242, three: 333, threePlus: 363, four: 454}
+    ];
+    res.render('get', {activity: activity, roomOptions: roomOptions});
   });
 });
 

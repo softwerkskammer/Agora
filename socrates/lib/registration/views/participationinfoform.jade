@@ -1,17 +1,16 @@
-mixin participationinfoform(participation, roomOptions)
+mixin participationinfoform(roomOptions)
   .row
     .col-sm-12
       legend
         h4 Room / Options
       .well
         p.
-          We offer three kinds of rooms. Please choose the room you'd like and tell us how long you will be our guest. If you
-          stay at least until Sunday evening, we assume that you want to participate in the Coderetreat or one of the workshops on Sunday.
+          We offer three kinds of rooms. Please choose the room you'd like and tell us for how long you will be our guest.
         ul
           li Single bed room
-          li Double bed room, can only be occupied shared
-          li Junior double bed room (one 160cm bed), can be occupied exclusive or shared
-        p If you share a room please provide the name of your mate.
+          li Double bed room, can only be shared
+          li Junior double bed room (one 160cm bed), can be shared or occupied exclusively
+        p If you stay at least until Sunday evening, we assume that you want to participate in the Coderetreat or in one of the workshops on Sunday.
         p All prices are per person.
       .table-responsive
         table.table.table-striped.table-condensed.table-bordered
@@ -37,7 +36,7 @@ mixin participationinfoform(participation, roomOptions)
                 td.text-right
                   .radio-inline
                     input(type='radio', name='nightsOptions', value=option.id + 4)
-                    | #{option.three}&nbsp;€
+                    | #{option.threePlus}&nbsp;€
                 td.text-right
                   .radio-inline
                     input(type='radio', name='nightsOptions', value=option.id + 5)
@@ -45,16 +44,3 @@ mixin participationinfoform(participation, roomOptions)
       .row(style='margin-top:-15px; margin-bottom:15px')
         .col-xs-12
           small * including participation in Sunday Coderetreat or Workshop
-      .row#roommate
-        .col-sm-3.col-xs-6
-          label(style='height: 35px; padding-top: 6px; padding-left: 6px;') … shared with:
-        .col-sm-9.col-xs-6
-          input.form-control(type='text', name='shareWith', placeholder='name of roommate')
-  script.
-    $(':radio').on('change', function() {
-      if ($(this).val().match(/junior\d|double\d/)) {
-        $('#roommate').show();
-      } else {
-        $('#roommate').hide();
-      }
-    });
