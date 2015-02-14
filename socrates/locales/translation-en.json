@@ -50,7 +50,8 @@
     "are_you_sure": "Are you sure?",
     "no": "No",
     "delete": "Delete",
-    "guest": "Guest"
+    "guest": "Guest",
+    "thanks_for_interest": "Thank you for stating your interest in the SoCraTes conference."
   },
   "error": {
     "congratulations": "Congratulations!",
