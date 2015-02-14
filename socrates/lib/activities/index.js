@@ -50,8 +50,10 @@ app.get('/new', function (req, res, next) {
   var activity = new Activity({
     title: 'SoCraTes ',
     url: 'socrates-',
-    resources: {single: {_canUnsubscribe: false}, bed_in_double: {_canUnsubscribe: false}, junior: {_canUnsubscribe: false},
-      bed_in_junior: {_canUnsubscribe: false}, waitinglist: {_canUnsubscribe: false, _waitinglist: true}}
+    resources: {
+      single: {_canUnsubscribe: false}, bed_in_double: {_canUnsubscribe: false}, junior: {_canUnsubscribe: false},
+      bed_in_junior: {_canUnsubscribe: false}, waitinglist: {_canUnsubscribe: false, _waitinglist: true}
+    }
   });
   res.render('edit', {activity: activity});
 });
@@ -100,17 +102,7 @@ app.get('/checkurl', function (req, res) {
 app.get('/:url', function (req, res, next) {
   activitiesService.getActivityWithGroupAndParticipants(req.params.url, function (err, activity) {
     if (err || !activity) { return next(err); }
-    memberstore.getMembersForIds(activity.editorIds(), function (err, editors) {
-      if (err || !editors) { return next(err); }
-      var editorNicknames = _.map(editors, function (editor) { return editor.nickname(); });
-      res.render('get', {
-        activity: activity,
-        editorNicknames: editorNicknames,
-        resourceRegistrationRenderer: resourceRegistrationRenderer,
-        calViewYear: activity.year(),
-        calViewMonth: activity.month()
-      });
-    });
+    res.render('get', {activity: activity});
   });
 });
 
@@ -126,6 +118,5 @@ app.get('/ical/:url', function (req, res, next) {
     sendCalendarStringNamedToResult(icalService.activityAsICal(activity), activity.url(), res);
   });
 });
-
 
 module.exports = app;

@@ -98,7 +98,7 @@ describe('Activity store', function () {
 
   it('returns all activites although the persistence only returns JS objects', function (done) {
     list.restore();
-    sinon.stub(persistence, 'list', function (sortOrder, callback) { callback(null, [ {url: 'activityUrl'} ]); });
+    sinon.stub(persistence, 'list', function (sortOrder, callback) { callback(null, [{url: 'activityUrl'}]); });
 
     store.allActivities(function (err, result) {
       expect(result).to.have.length(1);
