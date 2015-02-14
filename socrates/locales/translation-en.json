@@ -111,7 +111,7 @@
     "label": "Label",
     "unlimited": "unlimited",
     "title": "Title",
-    "startdate": "Start",
+    "start": "Start",
     "end": "End",
     "address_suffix": "Address-Suffix",
     "location": "Event location",
