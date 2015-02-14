@@ -238,6 +238,18 @@ describe('Groups and Members Service (getGroupAndMembersForList)', function () {
     });
   });
 
+  it('fails gracefully if groupsService has an error', function (done) {
+    sinon.stub(groupsService, 'getSympaUsersOfList', function (err, callback) { callback(new Error()); });
+    sinon.stub(groupstore, 'getGroup', function (groupname, callback) {
+      callback(null, GroupA);
+    });
+
+    groupsAndMembersService.getGroupAndMembersForList('GroupA', function (err) {
+      expect(err).to.exist();
+      done();
+    });
+  });
+
 });
 
 describe('Groups and Members Service (addMembercountToGroup)', function () {
