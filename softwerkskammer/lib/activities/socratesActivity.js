@@ -17,6 +17,10 @@ SoCraTesActivity.prototype.startMoment = function () {
   return this.activity.startMoment();
 };
 
+SoCraTesActivity.prototype.endMoment = function () {
+  return this.activity.endMoment();
+};
+
 SoCraTesActivity.prototype.fullyQualifiedUrl = function () {
   return this.activity.state.url ? conf.get('socratesURL') + '/activities/' + encodeURIComponent(this.activity.state.url.trim()) : undefined;
 };

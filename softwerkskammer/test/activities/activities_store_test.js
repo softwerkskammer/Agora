@@ -13,7 +13,13 @@ var SoCraTesActivity = beans.get('socratesActivity');
 describe('Activity store', function () {
   var activity1 = {title: 'CodingDojo1', url: 'CodingDojo1', description: 'bli'};
   var activity2 = {title: 'CodingDojo2', url: 'CodingDojo2', description: 'bla'};
-  var socrates = {title: 'SoCraTes', url: 'socrates-url', isSoCraTes: true, startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.02.2014')};
+  var socrates = {
+    title: 'SoCraTes',
+    url: 'socrates-url',
+    isSoCraTes: true,
+    startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.02.2014'),
+    endUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('15.02.2014')
+  };
   var sampleList;
   var getByField;
   var getById;
@@ -162,6 +168,7 @@ describe('Activity store', function () {
         expect(activity.title(), 'title').to.equal('SoCraTes');
         expect(activity.startMoment().toString(), 'start').to.equal("Sat Feb 01 2014 00:00:00 GMT+0100");
         expect(activity.fullyQualifiedUrl(), 'url').to.equal('https://socrates.com:12345/activities/socrates-url');
+        expect(activity.endMoment().toString(), 'start').to.equal("Sat Feb 15 2014 00:00:00 GMT+0100");
         expect(activity.allRegisteredMembers(), 'participants').to.eql([]);
         expect(activity.assignedGroup(), 'group').to.be(undefined);
         expect(activity.groupName(), 'groupName').to.be(undefined);
