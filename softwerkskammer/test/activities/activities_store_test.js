@@ -8,13 +8,16 @@ var fieldHelpers = beans.get('fieldHelpers');
 var persistence = beans.get('activitiesPersistence');
 var store = beans.get('activitystore');
 var Activity = beans.get('activity');
+var Resource = beans.get('resource');
 var SoCraTesActivity = beans.get('socratesActivity');
 
 describe('Activity store', function () {
   var activity1 = {title: 'CodingDojo1', url: 'CodingDojo1', description: 'bli'};
   var activity2 = {title: 'CodingDojo2', url: 'CodingDojo2', description: 'bla'};
   var socrates = {
+    id: 'socratesId',
     title: 'SoCraTes',
+    description: 'Coolest event ever :-)',
     url: 'socrates-url',
     isSoCraTes: true,
     startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.02.2014'),
@@ -163,17 +166,28 @@ describe('Activity store', function () {
       });
     });
 
-    it('that shows all required data for the overview and the calendar', function (done) {
+    it('that shows all required data for the overview and the calendar in SWK and for display and edit in SoCraTes', function (done) {
       store.getActivityForId(id, function (err, activity) {
-        expect(activity.title(), 'title').to.equal('SoCraTes');
-        expect(activity.startMoment().toString(), 'start').to.equal("Sat Feb 01 2014 00:00:00 GMT+0100");
-        expect(activity.fullyQualifiedUrl(), 'url').to.equal('https://socrates.com:12345/activities/socrates-url');
-        expect(activity.endMoment().toString(), 'start').to.equal("Sat Feb 15 2014 00:00:00 GMT+0100");
-        expect(activity.allRegisteredMembers(), 'participants').to.eql([]);
-        expect(activity.assignedGroup(), 'group').to.be(undefined);
-        expect(activity.groupName(), 'groupName').to.be(undefined);
-        expect(activity.colorFrom(), 'color').to.equal('#3771C8'); // fixed SoCraTes color
-        expect(activity.groupFrom(), 'groupFrom').to.equal(undefined);
+        expect(activity.id()).to.equal('socratesId');
+        expect(activity.title()).to.equal('SoCraTes');
+        expect(activity.startMoment().toString()).to.equal("Sat Feb 01 2014 00:00:00 GMT+0100");
+        expect(activity.endMoment().toString()).to.equal("Sat Feb 15 2014 00:00:00 GMT+0100");
+        expect(activity.fullyQualifiedUrl()).to.equal('https://socrates.com:12345/activities/socrates-url');
+        expect(activity.url()).to.equal('socrates-url');
+        expect(activity.allRegisteredMembers()).to.eql([]);
+        expect(activity.resourceNames()).to.eql(['Veranstaltung']);
+        expect(activity.resourceNamed('Veranstaltung')).to.eql(new Resource({
+          _registeredMembers: [],
+          _registrationOpen: true
+        }, 'Veranstaltung'));
+        expect(activity.isMultiDay()).to.be(true);
+        expect(activity.description()).to.be('Coolest event ever :-)');
+        expect(activity.descriptionHTML()).to.be('<p>Coolest event ever :-)</p>\n');
+        expect(activity.assignedGroup()).to.be('G');
+        expect(activity.groupName()).to.be(undefined);
+        expect(activity.owner()).to.be(undefined);
+        expect(activity.colorFrom()).to.equal('#3771C8'); // fixed SoCraTes color
+        expect(activity.groupFrom()).to.equal(undefined);
         done(err);
       });
     });
