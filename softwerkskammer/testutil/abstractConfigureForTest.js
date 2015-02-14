@@ -40,7 +40,8 @@ module.exports = function (testBeansFilename) {
     paymentIban: 'paymentIban',
     paymentReceiver: 'paymentReceiver',
     emaildomainname: 'localhost',
-    imageDirectory: null
+    imageDirectory: null,
+    socratesURL: 'https://socrates.com:12345'
   });
 
   return conf;

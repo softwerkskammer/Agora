@@ -30,8 +30,8 @@ function activitySubmitted(req, res, next) {
   activitiesService.getActivityWithGroupAndParticipants(req.body.previousUrl, function (err, activity) {
     if (err) { return next(err); }
     if (!activity) { activity = new Activity({owner: req.user.member.id()}); }
+    req.body.isSoCraTes = true; // mark activity as SoCraTes-only
     activity.fillFromUI(req.body);
-    activity._state._isSoCraTes = true; // HACK: Introduce this nicely... and handle it appropriately in Softwerkskammer!
     activitystore.saveActivity(activity, function (err) {
       if (err && err.message === CONFLICTING_VERSIONS) {
         // we try again because of a racing condition during save:

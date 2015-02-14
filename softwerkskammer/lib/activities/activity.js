@@ -105,6 +105,9 @@ Activity.prototype.fillFromUI = function (object, editorIds) {
   if (object.resources) {
     this.resources().fillFromUI(object.resources);
   }
+
+  self.state.isSoCraTes = object.isSoCraTes;
+
   self.fillAddonConfig(object);
   return self;
 };

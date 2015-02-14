@@ -4,19 +4,24 @@ var expect = require('must');
 var sinon = require('sinon').sandbox.create();
 
 var beans = require('../../testutil/configureForTest').get('beans');
+var fieldHelpers = beans.get('fieldHelpers');
 var persistence = beans.get('activitiesPersistence');
 var store = beans.get('activitystore');
 var Activity = beans.get('activity');
+var SoCraTesActivity = beans.get('socratesActivity');
 
 describe('Activity store', function () {
   var activity1 = {title: 'CodingDojo1', url: 'CodingDojo1', description: 'bli'};
   var activity2 = {title: 'CodingDojo2', url: 'CodingDojo2', description: 'bla'};
-  var sampleList = [activity1, activity2];
+  var socrates = {title: 'SoCraTes', url: 'socrates-url', isSoCraTes: true, startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.02.2014')};
+  var sampleList;
   var getByField;
   var getById;
   var list;
 
   beforeEach(function () {
+    sampleList = [activity1, activity2];
+
     list = sinon.stub(persistence, 'list', function (sortOrder, callback) {
       return callback(null, sampleList);
     });
@@ -26,7 +31,10 @@ describe('Activity store', function () {
     getByField = sinon.stub(persistence, 'getByField', function (object, callback) {
       return callback(null, activity1);
     });
-    getById = sinon.stub(persistence, 'getById', function (object, callback) {
+    getById = sinon.stub(persistence, 'getById', function (id, callback) {
+      if (id === 'socrates') {
+        return callback(null, socrates);
+      }
       return callback(null, activity1);
     });
   });
@@ -131,5 +139,37 @@ describe('Activity store', function () {
     });
   });
 
+  describe('builds a SoCraTesActivity', function () {
+    var id = 'socrates';
+    it('on fetching a single activity - when the isSoCraTes flag is set', function (done) {
+      store.getActivityForId(id, function (err, activity) {
+        expect(activity).to.be.a(SoCraTesActivity);
+        done(err);
+      });
+    });
 
+    it('on fetching all activities - when the isSoCraTes flag is set', function (done) {
+      sampleList = [socrates];
+
+      store.allActivities(function (err, activities) {
+        expect(activities[0]).to.be.a(SoCraTesActivity);
+        done(err);
+      });
+    });
+
+    it('that shows all required data for the overview and the calendar', function (done) {
+      store.getActivityForId(id, function (err, activity) {
+        expect(activity.title(), 'title').to.equal('SoCraTes');
+        expect(activity.startMoment().toString(), 'start').to.equal("Sat Feb 01 2014 00:00:00 GMT+0100");
+        expect(activity.fullyQualifiedUrl(), 'url').to.equal('https://socrates.com:12345/activities/socrates-url');
+        expect(activity.allRegisteredMembers(), 'participants').to.eql([]);
+        expect(activity.assignedGroup(), 'group').to.be(undefined);
+        expect(activity.groupName(), 'groupName').to.be(undefined);
+        expect(activity.colorFrom(), 'color').to.equal('#3771C8'); // fixed SoCraTes color
+        expect(activity.groupFrom(), 'groupFrom').to.equal(undefined);
+        done(err);
+      });
+    });
+
+  });
 });

@@ -9,9 +9,24 @@ var moment = require('moment-timezone');
 var logger = require('winston').loggers.get('transactions');
 var persistence = beans.get('activitiesPersistence');
 var Activity = beans.get('activity');
+var SoCraTesActivity = beans.get('socratesActivity');
 
-var toActivity = _.partial(misc.toObject, Activity);
-var toActivityList = _.partial(misc.toObjectList, Activity);
+var toActivity = function (callback, err, jsobject) {
+  if (jsobject && jsobject.isSoCraTes) {
+    return misc.toObject(SoCraTesActivity, callback, err, jsobject);
+  }
+  return misc.toObject(Activity, callback, err, jsobject);
+};
+
+var toActivityList = function (callback, err, jsobjects) {
+  if (err) { return callback(err); }
+  callback(null, _.map(jsobjects, function (each) {
+    if (each && each.isSoCraTes) {
+      return new SoCraTesActivity(each);
+    }
+    return new Activity(each);
+  }));
+};
 
 var allActivitiesByDateRange = function (rangeFrom, rangeTo, sortOrder, callback) {
   persistence.listByField({
