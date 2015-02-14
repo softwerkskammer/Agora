@@ -18,6 +18,10 @@ SoCraTesActivity.prototype.id = function () {
   return this.activity.id();
 };
 
+SoCraTesActivity.prototype.isSoCraTes = function () {
+  return this.activity.isSoCraTes(); // should always be true
+};
+
 SoCraTesActivity.prototype.title = function () {
   return this.activity.title();
 };

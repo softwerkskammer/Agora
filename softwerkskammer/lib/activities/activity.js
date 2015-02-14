@@ -175,6 +175,10 @@ Activity.prototype.copyFrom = function (originalActivity) {
   return this;
 };
 
+Activity.prototype.isSoCraTes = function () {
+  return this.state.isSoCraTes;
+};
+
 Activity.prototype.descriptionHTML = function () {
   return Renderer.render(this.description(), this.assignedGroup());
 };

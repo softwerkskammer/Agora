@@ -61,7 +61,11 @@ function activitySubmitted(req, res, next) {
 function activitiesForDisplay(activitiesFetcher, next, res, title) {
   return activitiesService.getActivitiesForDisplay(activitiesFetcher, function (err, activities) {
     if (err) { next(err); }
-    res.render('index', { activities: activities, range: title, webcalURL: conf.get('publicUrlPrefix').replace('http', 'webcal') + '/activities/ical' });
+    res.render('index', {
+      activities: activities,
+      range: title,
+      webcalURL: conf.get('publicUrlPrefix').replace('http', 'webcal') + '/activities/ical'
+    });
   });
 }
 
@@ -81,8 +85,13 @@ function renderGdcrFor(gdcrDate, res, next) {
   return activitiesService.getActivitiesForDisplay(gdcrActivities, function (err, activities) {
     if (err) { next(err); }
     var gdcrYear = gdcrDate.year();
-    res.render('gdcr', { calViewYear: gdcrYear, calViewMonth: gdcrDate.month(),
-      activities: activities, year: String(gdcrYear), previousYears: _.range(2013, gdcrYear).map(function (year) { return String(year); })});
+    res.render('gdcr', {
+      calViewYear: gdcrYear,
+      calViewMonth: gdcrDate.month(),
+      activities: activities,
+      year: String(gdcrYear),
+      previousYears: _.range(2013, gdcrYear).map(function (year) { return String(year); })
+    });
   });
 }
 app.get('/gdcr2013', function (req, res, next) {
@@ -154,7 +163,12 @@ function renderActivityCombinedWithGroups(res, next, activity) {
       var editorNames = _.map(editors, editorNameOf);
       _.remove(activity.participants || [], function (participant) { return participant.nickname() === activity.ownerNickname; });
       var participantNames = _.map(activity.participants || [], editorNameOf);
-      res.render('edit', { activity: activity, groups: groups, editorNames: editorNames, participantNames: participantNames });
+      res.render('edit', {
+        activity: activity,
+        groups: groups,
+        editorNames: editorNames,
+        participantNames: participantNames
+      });
     });
   };
 
@@ -250,8 +264,13 @@ app.get('/:url', function (req, res, next) {
     memberstore.getMembersForIds(activity.editorIds(), function (err, editors) {
       if (err || !editors) { return next(err); }
       var editorNicknames = _.map(editors, function (editor) { return editor.nickname(); });
-      res.render('get', { activity: activity, editorNicknames: editorNicknames, resourceRegistrationRenderer: resourceRegistrationRenderer,
-        calViewYear: activity.year(), calViewMonth: activity.month()});
+      res.render('get', {
+        activity: activity,
+        editorNicknames: editorNicknames,
+        resourceRegistrationRenderer: resourceRegistrationRenderer,
+        calViewYear: activity.year(),
+        calViewMonth: activity.month()
+      });
     });
   });
 });
@@ -347,9 +366,11 @@ app.get('/addons/:url', function (req, res, next) {
           if (err) { return next(err); }
           var tshirtSizes = addonService.tshirtSizes(addonLines);
 
-          res.render('managementTables', {activity: activity, addonLines: addonLines,
+          res.render('managementTables', {
+            activity: activity, addonLines: addonLines,
             addonLinesOfUnsubscribedMembers: addonLinesOfUnsubscribedMembers, tshirtsizes: tshirtSizes,
-            containsMember: containsMember, formatDates: formatDates, formatList: formatList});
+            containsMember: containsMember, formatDates: formatDates, formatList: formatList
+          });
         });
       });
     });
