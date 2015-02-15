@@ -32,7 +32,6 @@ block content
               |  - #{activity.endMoment().locale(language).format('LT')})
       .clearfix
       | !{activity.descriptionHTML()}
-      hr
   .row
     .col-md-12
       +participationinfoform(roomOptions)
@@ -43,9 +42,6 @@ block content
     .col-md-6
       .hidden-print
         // +visitorCount(activity.participants.length)
-        if (accessrights.isRegistered() && activity.participants.length > 0)
-          h4 #{t('activities.accepted_by')}:
-          +memberlist(activity.participants)
 
 block scripts
   script.
