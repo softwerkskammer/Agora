@@ -35,7 +35,7 @@ SoCraTesActivity.prototype.endMoment = function () {
 };
 
 SoCraTesActivity.prototype.fullyQualifiedUrl = function () {
-  return this.activity.url() ? conf.get('socratesURL') + '/activities/' + encodeURIComponent(this.activity.url()) : undefined;
+  return conf.get('socratesURL');
 };
 
 SoCraTesActivity.prototype.url = function () {
