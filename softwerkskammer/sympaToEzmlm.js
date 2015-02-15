@@ -1,5 +1,7 @@
 'use strict';
 
+// To use this make sure that you have setup the sympa-variables and the ezmlm-variables correctly 
+
 require('./configure'); // initializing parameters
 var proxyquire = require('proxyquire');
 var async = require('async');
