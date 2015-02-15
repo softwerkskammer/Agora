@@ -7,6 +7,8 @@ var membersService = beans.get('membersService');
 var mailsenderService = beans.get('mailsenderService');
 var subscriberstore = beans.get('subscriberstore');
 var activitiesService = beans.get('activitiesService');
+var icalService = beans.get('icalService');
+var activitystore = beans.get('activitystore');
 
 var app = misc.expressAppIn(__dirname);
 
@@ -25,6 +27,22 @@ app.get('/', function (req, res, next) {
     res.render('get', {activity: activity, roomOptions: roomOptions});
   });
 });
+
+app.get('/ical', function (req, res, next) {
+  function sendCalendarStringNamedToResult(ical, filename, res) {
+    res.type('text/calendar; charset=utf-8');
+    res.header('Content-Disposition', 'inline; filename=' + filename + '.ics');
+    res.send(ical.toString());
+  }
+
+  activitystore.getActivity(currentUrl, function (err, activity) {
+    if (err || !activity) { return next(err); }
+    sendCalendarStringNamedToResult(icalService.activityAsICal(activity), activity.url(), res);
+  });
+});
+
+
+// TODO noch nicht freigeschaltete Funktionalitäten:
 
 app.get('/participate', function (req, res, next) {
   if (!req.user.member) {return next(); }

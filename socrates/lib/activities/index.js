@@ -1,28 +1,19 @@
 'use strict';
 
-var moment = require('moment-timezone');
 var async = require('async');
 var _ = require('lodash');
 
-var conf = require('simple-configure');
-var beans = conf.get('beans');
+var beans = require('simple-configure').get('beans');
 var misc = beans.get('misc');
 var CONFLICTING_VERSIONS = beans.get('constants').CONFLICTING_VERSIONS;
 var activitiesService = beans.get('activitiesService');
-var icalService = beans.get('icalService');
-var groupsService = beans.get('groupsService');
-var groupsAndMembersService = beans.get('groupsAndMembersService');
 var activitystore = beans.get('activitystore');
-var memberstore = beans.get('memberstore');
-var paymentService = beans.get('paymentService');
-var fieldHelpers = beans.get('fieldHelpers');
 
 var Activity = beans.get('activity');
 var validation = beans.get('validation');
 var statusmessage = beans.get('statusmessage');
-var resourceRegistrationRenderer = beans.get('resourceRegistrationRenderer');
 
-var reservedURLs = '^ical$|^new$|^edit$|^submit$|^checkurl$|^subscribe$|^unsubscribe$|^addToWaitinglist$|^removeFromWaitinglist$|^socrates-$\\+';
+var reservedURLs = '^new$|^edit$|^submit$|^checkurl$\\+';
 
 var app = misc.expressAppIn(__dirname);
 
@@ -99,19 +90,6 @@ app.post('/submit', function (req, res, next) {
 
 app.get('/checkurl', function (req, res) {
   misc.validate(req.query.url, req.query.previousUrl, _.partial(activitiesService.isValidUrl, reservedURLs), res.end);
-});
-
-app.get('/ical/:url', function (req, res, next) {
-  function sendCalendarStringNamedToResult(ical, filename, res) {
-    res.type('text/calendar; charset=utf-8');
-    res.header('Content-Disposition', 'inline; filename=' + filename + '.ics');
-    res.send(ical.toString());
-  }
-
-  activitystore.getActivity(req.params.url, function (err, activity) {
-    if (err || !activity) { return next(err); }
-    sendCalendarStringNamedToResult(icalService.activityAsICal(activity), activity.url(), res);
-  });
 });
 
 module.exports = app;
