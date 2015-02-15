@@ -3,14 +3,22 @@
 // To use this make sure that you have setup the sympa-variables and the ezmlm-variables correctly 
 
 require('./configure'); // initializing parameters
+var fs = require('fs');
+var exec = require('child_process').exec;
 var proxyquire = require('proxyquire');
 var async = require('async');
 var beans = require('simple-configure').get('beans');
 var groupsService = beans.get('groupsService');
 var ezmlmAdapter;
+var perform;
+var backupdir = 'sympalisten';
 
-var really = process.argv[2];
-var doSave = process.argv[3] === 'doSave';
+var fqhomedir = process.argv[2];
+if (!fqhomedir || fqhomedir === 'really') {
+  console.log('You must append your home directory as fully qualified path.');
+}
+var really = process.argv[3];
+var doSave = process.argv[4] === 'doSave';
 
 if (!really || really !== 'really') {
   console.log('If you really want to rename the group, append "really" to the command line.');
@@ -20,6 +28,7 @@ if (!really || really !== 'really') {
 
 if (doSave) {
   ezmlmAdapter = beans.get('ezmlmAdapter');
+  perform = function (commandline, callback) { exec(commandline, {cwd: fqhomedir}, callback); };
 } else {
   var ezmlmStub = {
     defaultOptions: {},
@@ -30,7 +39,11 @@ if (doSave) {
       callback();
     }
   };
-
+  perform = function (commandline, callback) {
+    console.log(commandline);
+    exec(commandline, {cwd: fqhomedir}, callback);
+  };
+  //perform = function (commandline, callback) { callback(); };
   ezmlmAdapter = proxyquire('./lib/groups/ezmlmAdapter', {'ezmlm-node': function () { return ezmlmStub; }});
 }
 
@@ -43,20 +56,24 @@ function handle(err) {
 
 groupsService.getAllAvailableGroups(function (err, groups) {
   handle(err);
-  async.each(groups, function (group, callback) {
-    var list = group.id;
-    ezmlmAdapter.createList(list, group.emailPrefix, function (err) {
-      if (err) { return callback(err); }
-      console.log('ezmlm create list: "' + list + '" prefixed: "' + group.emailPrefix + '"');
-      groupsService.getSympaUsersOfList(list, function (err, users) {
-        var userlist = users.join(',');
-        console.log('ezmlm subscribe users: "' + userlist + '" to list: "' + list + '"');
-        ezmlmAdapter.addUserToList(userlist, list, callback);
+  perform('mkdir ' + backupdir, function () {
+    async.each(groups, function (group, callback) {
+      var list = group.id;
+      perform('mv .qmail-' + list + '* ' + backupdir, function () {
+        ezmlmAdapter.createList(list, group.emailPrefix, function (err) {
+          if (err) { return callback(err); }
+          console.log('ezmlm create list: "' + list + '" prefixed: "' + group.emailPrefix + '"');
+          groupsService.getSympaUsersOfList(list, function (err, users) {
+            var userlist = users.join(',');
+            console.log('ezmlm subscribe users: "' + userlist + '" to list: "' + list + '"');
+            ezmlmAdapter.addUserToList(userlist, list, callback);
+          });
+        });
       });
+    }, function (err) {
+      handle(err);
+      process.exit();
     });
-  }, function (err) {
-    handle(err);
-    process.exit();
   });
 });
 
