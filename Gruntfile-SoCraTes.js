@@ -27,10 +27,7 @@ module.exports = function (grunt) {
       'bower_components/bootstrap-timepicker/js/bootstrap-timepicker.js',
       'bower_components/URIjs/src/URI.js',
       'socrates/locales/frontend_en.js',
-      'socrates/frontend/javascript/socrates.js',
-      'softwerkskammer/frontend/javascript/activityDateModel.js',
-      'softwerkskammer/frontend/javascript/activityform-dateAdapter.js',
-      'socrates/frontend/javascript/check-activityform.js'
+      'socrates/frontend/javascript/socrates.js'
     ]
   };
 
@@ -74,7 +71,10 @@ module.exports = function (grunt) {
         flatten: true
       },
       customJS: {
-        src: ['softwerkskammer/frontend/javascript/check-member*', 'socrates/frontend/javascript/check-*'],
+        src: ['socrates/frontend/javascript/check-*',
+          'softwerkskammer/frontend/javascript/check-member*',
+          'softwerkskammer/frontend/javascript/activityDateModel.js',
+          'softwerkskammer/frontend/javascript/activityform-dateAdapter.js'],
         dest: 'socrates/public/clientscripts',
         expand: true,
         flatten: true
