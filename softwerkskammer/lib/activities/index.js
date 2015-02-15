@@ -370,9 +370,13 @@ app.get('/addons/:url', function (req, res, next) {
           var tshirtSizes = addonService.tshirtSizes(addonLines);
 
           res.render('managementTables', {
-            activity: activity, addonLines: addonLines,
-            addonLinesOfUnsubscribedMembers: addonLinesOfUnsubscribedMembers, tshirtsizes: tshirtSizes,
-            containsMember: containsMember, formatDates: formatDates, formatList: formatList
+            activity: activity,
+            addonLines: addonLines,
+            addonLinesOfUnsubscribedMembers: addonLinesOfUnsubscribedMembers,
+            tshirtsizes: tshirtSizes,
+            containsMember: containsMember,
+            formatDates: formatDates,
+            formatList: formatList
           });
         });
       });
