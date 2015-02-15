@@ -18,6 +18,7 @@ describe('Activity store', function () {
     id: 'socratesId',
     title: 'SoCraTes',
     description: 'Coolest event ever :-)',
+    location: 'Right next door',
     url: 'socrates-url',
     isSoCraTes: true,
     startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.02.2014'),
@@ -183,6 +184,7 @@ describe('Activity store', function () {
         expect(activity.isMultiDay()).to.be(true);
         expect(activity.description()).to.be('Coolest event ever :-)');
         expect(activity.descriptionHTML()).to.be('<p>Coolest event ever :-)</p>\n');
+        expect(activity.location()).to.be('Right next door');
         expect(activity.assignedGroup()).to.be('G');
         expect(activity.groupName()).to.be(undefined);
         expect(activity.owner()).to.be(undefined);

@@ -54,6 +54,10 @@ SoCraTesActivity.prototype.descriptionHTML = function () {
   return this.activity.descriptionHTML();
 };
 
+SoCraTesActivity.prototype.location = function () {
+  return this.activity.location();
+};
+
 SoCraTesActivity.prototype.allRegisteredMembers = function () {
   return this.activity.allRegisteredMembers();
 };
