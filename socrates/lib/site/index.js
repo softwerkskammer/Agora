@@ -4,8 +4,11 @@ var path = require('path');
 var async = require('async');
 var fs = require('fs');
 var _ = require('lodash');
+var qrimage = require('qr-image');
+var _s = require('underscore.string');
 
-var beans = require('simple-configure').get('beans');
+var conf = require('simple-configure');
+var beans = conf.get('beans');
 var Renderer = beans.get('renderer');
 var misc = beans.get('misc');
 var sponsorpairs = require('./sponsorpairs');
@@ -76,6 +79,14 @@ app.get('/cheatsheet.html', function (req, res) {
 
 app.get('/mustBeSuperuser', function (req, res) {
   res.render('superuserRightsRequired', {requestedPage: req.query.page});
+});
+
+app.get('/qrcode', function (req, res) {
+  var url = req.query.url;
+  var fullUrl = _s.startsWith(url, 'http') ? url : conf.get('publicUrlPrefix') + url;
+  var img = qrimage.image(fullUrl, {type: 'svg'});
+  res.type('svg');
+  img.pipe(res);
 });
 
 module.exports = app;
