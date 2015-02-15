@@ -22,7 +22,7 @@ function createConfiguration() {
     securedByLoginURLPattern: '/wiki|' +
       '/mailsender|' +
       '/members',
-    securedBySuperuserURLPattern: '^\/activities\/new|^\/activities\/edit',
+    securedBySuperuserURLPattern: '^/activities',
     secret: 'secret',
     sessionkey: 'socrates-conference.de',
     beans: new Beans(swkBeans),
