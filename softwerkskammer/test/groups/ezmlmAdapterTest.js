@@ -2,7 +2,7 @@
 
 var expect = require('must');
 var sinon = require('sinon').sandbox.create();
-var proxyquireStrict = require('proxyquire').noCallThru();
+var proxyquire = require('proxyquire');
 
 var ezmlmStub = {
   allLists: null,
@@ -10,7 +10,7 @@ var ezmlmStub = {
   subscribeUserToList: null,
   unsubscribeUserFromList: null
 };
-var ezmlmAdapter = proxyquireStrict('../../lib/groups/ezmlmAdapter', {'ezmlm-node': function () { return ezmlmStub; }});
+var ezmlmAdapter = proxyquire('../../lib/groups/ezmlmAdapter', {'ezmlm-node': function () { return ezmlmStub; }});
 
 describe('The ezmlm adapter', function () {
 
