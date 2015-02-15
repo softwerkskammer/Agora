@@ -13,7 +13,7 @@ var sympaCache;
 if (conf.get('swkTrustedAppName') || conf.get('swkTrustedAppPwd')) {
   sympaCache = require('./sympaCache')(beans.get('sympa'));
 } else if (conf.get('ezmlmHomedir')) {
-  sympaCache = require('./ezmlmAdapter');
+  sympaCache = beans.get('ezmlmAdapter');
 } else {
   sympaCache = beans.get('sympaStub');
 }
