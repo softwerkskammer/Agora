@@ -30,7 +30,7 @@ function activitySubmitted(req, res, next) {
   activitiesService.getActivityWithGroupAndParticipants(req.body.previousUrl, function (err, activity) {
     if (err) { return next(err); }
     if (!activity) { activity = new Activity({owner: req.user.member.id()}); }
-    req.body.isSoCraTes = true; // mark activity as SoCraTes-only
+    req.body.isSoCraTes = true; // mark activity as SoCraTes activity (important for SWK)
     activity.fillFromUI(req.body);
     activitystore.saveActivity(activity, function (err) {
       if (err && err.message === CONFLICTING_VERSIONS) {
@@ -40,13 +40,12 @@ function activitySubmitted(req, res, next) {
       }
       if (err) { return next(err); }
       statusmessage.successMessage('message.title.save_successful', 'message.content.activities.saved').putIntoSession(req);
-      res.redirect('/activities/' + encodeURIComponent(activity.url()));
+      res.redirect('/registration/');
     });
   });
 }
 
 app.get('/new', function (req, res, next) {
-  // or should we simply attach the start date's year to these fixed strings??
   var activity = new Activity({
     resources: {
       single: {_canUnsubscribe: false},
@@ -63,7 +62,7 @@ app.get('/edit/:url', function (req, res, next) {
   activitiesService.getActivityWithGroupAndParticipants(req.params.url, function (err, activity) {
     if (err || activity === null) { return next(err); }
     if (!res.locals.accessrights.canEditActivity(activity)) {
-      return res.redirect('/activities/' + encodeURIComponent(req.params.url));
+      return res.redirect('/registration/');
     }
     res.render('edit', {activity: activity});
   });
@@ -100,19 +99,6 @@ app.post('/submit', function (req, res, next) {
 
 app.get('/checkurl', function (req, res) {
   misc.validate(req.query.url, req.query.previousUrl, _.partial(activitiesService.isValidUrl, reservedURLs), res.end);
-});
-
-app.get('/:url', function (req, res, next) {
-  activitiesService.getActivityWithGroupAndParticipants(req.params.url, function (err, activity) {
-    if (err || !activity) { return next(err); }
-    var roomOptions = [
-      {id: 'single', name: 'Single', two: 200, three: 270, threePlus: 300, four: 370},
-      {id: 'double', name: 'Double shared …', shareable: true, two: 160, three: 210, threePlus: 240, four: 290},
-      {id: 'junior', name: 'Junior shared …', shareable: true, two: 151, three: 197, threePlus: 227, four: 272},
-      {id: 'juniorAlone', name: 'Junior (exclusive)', two: 242, three: 333, threePlus: 363, four: 454}
-    ];
-    res.render('get', {activity: activity, roomOptions: roomOptions});
-  });
 });
 
 app.get('/ical/:url', function (req, res, next) {

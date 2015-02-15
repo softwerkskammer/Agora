@@ -6,8 +6,25 @@ var misc = beans.get('misc');
 var membersService = beans.get('membersService');
 var mailsenderService = beans.get('mailsenderService');
 var subscriberstore = beans.get('subscriberstore');
+var activitiesService = beans.get('activitiesService');
 
 var app = misc.expressAppIn(__dirname);
+
+var currentYear = 2015;
+var currentUrl = 'socrates-' + currentYear;
+
+app.get('/', function (req, res, next) {
+  activitiesService.getActivityWithGroupAndParticipants(currentUrl, function (err, activity) {
+    if (err || !activity) { return next(err); }
+    var roomOptions = [
+      {id: 'single', name: 'Single', two: 200, three: 270, threePlus: 300, four: 370},
+      {id: 'double', name: 'Double shared …', shareable: true, two: 160, three: 210, threePlus: 240, four: 290},
+      {id: 'junior', name: 'Junior shared …', shareable: true, two: 151, three: 197, threePlus: 227, four: 272},
+      {id: 'juniorAlone', name: 'Junior (exclusive)', two: 242, three: 333, threePlus: 363, four: 454}
+    ];
+    res.render('get', {activity: activity, roomOptions: roomOptions});
+  });
+});
 
 app.get('/participate', function (req, res, next) {
   if (!req.user.member) {return next(); }
