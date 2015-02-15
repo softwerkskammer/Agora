@@ -4,7 +4,7 @@ require('./configure'); // initializing parameters
 var proxyquire = require('proxyquire');
 var async = require('async');
 var beans = require('simple-configure').get('beans');
-var sympa = beans.get('sympa');
+var groupsService = beans.get('groupsService');
 var ezmlmAdapter;
 
 var really = process.argv[2];
@@ -39,13 +39,14 @@ function handle(err) {
   }
 }
 
-sympa.getAllAvailableLists(function (err, lists) {
+groupsService.getAllAvailableGroups(function (err, groups) {
   handle(err);
-  async.each(lists, function (list, callback) {
-    ezmlmAdapter.createList(list, list, function (err) {
+  async.each(groups, function (group, callback) {
+    var list = group.id;
+    ezmlmAdapter.createList(list, group.emailPrefix, function (err) {
       if (err) { return callback(err); }
-      console.log('ezmlm create list: "' + list + '"');
-      sympa.getUsersOfList(list, function (err, users) {
+      console.log('ezmlm create list: "' + list + '" prefixed: "' + group.emailPrefix + '"');
+      groupsService.getSympaUsersOfList(list, function (err, users) {
         var userlist = users.join(',');
         console.log('ezmlm subscribe users: "' + userlist + '" to list: "' + list + '"');
         ezmlmAdapter.addUserToList(userlist, list, callback);
