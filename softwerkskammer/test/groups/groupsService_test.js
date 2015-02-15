@@ -7,9 +7,27 @@ var conf = require('../../testutil/configureForTest');
 var beans = conf.get('beans');
 var Group = beans.get('group');
 
-var GroupA = new Group({id: 'GroupA', longName: 'Gruppe A', description: 'Dies ist Gruppe A.', type: 'Themengruppe', emailPrefix: 'PREFIX'});
-var GroupB = new Group({id: 'GroupB', longName: 'Gruppe B', description: 'Dies ist Gruppe B.', type: 'Regionalgruppe'});
-var NonPersistentGroup = new Group({id: 'Group C', longName: 'Gruppe C', description: 'Dies ist Gruppe C.', type: 'Regionalgruppe'});
+var GroupA = new Group({
+  id: 'GroupA',
+  longName: 'Gruppe A',
+  description: 'Dies ist Gruppe A.',
+  type: 'Themengruppe',
+  emailPrefix: 'PREFIX',
+  color: '#FFFFFF'
+});
+var GroupB = new Group({
+  id: 'GroupB',
+  longName: 'Gruppe B',
+  description: 'Dies ist Gruppe B.',
+  type: 'Regionalgruppe',
+  color: '#AAAAAA'
+});
+var NonPersistentGroup = new Group({
+  id: 'Group C',
+  longName: 'Gruppe C',
+  description: 'Dies ist Gruppe C.',
+  type: 'Regionalgruppe'
+});
 
 var groupstore = beans.get('groupstore');
 var sympa = beans.get('sympaStub');
@@ -77,6 +95,17 @@ describe('Groups Service (getSubscribedGroupsForUser)', function () {
     systemUnderTest.getSubscribedGroupsForUser('admin@softwerkskammer.de', function (err) {
       expect(spy.calledWith(['GroupA', 'GroupB'])).to.be(true);
       done(err);
+    });
+  });
+
+  it('handles errors in retrieving lists', function (done) {
+    sinon.stub(sympa, 'getSubscribedListsForUser', function (email, callback) {
+      callback(new Error(), null);
+    });
+
+    systemUnderTest.getSubscribedGroupsForUser('admin@softwerkskammer.de', function (err) {
+      expect(err).to.exist();
+      done();
     });
   });
 });
@@ -242,9 +271,11 @@ describe('Groups Service (groupFromObject)', function () {
   });
 
   it('returns a valid Group object if there is valid group data', function () {
-    var result = new Group({ id: 'craftsmanswap', longName: 'Craftsman Swaps',
+    var result = new Group({
+      id: 'craftsmanswap', longName: 'Craftsman Swaps',
       description: 'A group for organizing CS',
-      type: 'Themengruppe' });
+      type: 'Themengruppe'
+    });
 
     expect(result).to.not.be(null);
     expect(result).to.be.instanceOf(Group);
@@ -252,6 +283,34 @@ describe('Groups Service (groupFromObject)', function () {
     expect(result.longName).to.equal('Craftsman Swaps');
     expect(result.description).to.equal('A group for organizing CS');
     expect(result.type).to.equal('Themengruppe');
+  });
+});
+
+describe('Groups Service (allGroupColors)', function () {
+  afterEach(function () {
+    sinon.restore();
+  });
+
+  it('returns an object with group id and color', function (done) {
+    sinon.stub(groupstore, 'groupsByLists', function (lists, globalCallback) {
+      globalCallback(null, [GroupA, GroupB]);
+    });
+    sinon.stub(sympa, 'getAllAvailableLists', function (callback) { callback(null, ['GroupA', 'GroupB']); });
+
+    systemUnderTest.allGroupColors(function (err, colorMap) {
+      expect(colorMap).to.have.ownProperty('groupa', '#FFFFFF');
+      expect(colorMap).to.have.ownProperty('groupb', '#AAAAAA');
+      done();
+    });
+  });
+
+  it('handles an error gracefully', function (done) {
+    sinon.stub(sympa, 'getAllAvailableLists', function (callback) { callback(new Error()); });
+
+    systemUnderTest.allGroupColors(function (err) {
+      expect(err).to.exist();
+      done();
+    });
   });
 });
 
