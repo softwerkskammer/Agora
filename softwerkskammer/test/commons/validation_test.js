@@ -6,7 +6,6 @@ var i18n = require('i18next');
 require('../../testutil/configureForTest');
 var beans = require('simple-configure').get('beans');
 var validation = beans.get('validation');
-var AddonConfig = beans.get('addon').AddonConfig;
 
 function translateMessages(messages) {
   return _.map(messages, function (message) {

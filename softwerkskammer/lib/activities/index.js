@@ -9,7 +9,6 @@ var beans = conf.get('beans');
 var misc = beans.get('misc');
 var CONFLICTING_VERSIONS = beans.get('constants').CONFLICTING_VERSIONS;
 var activitiesService = beans.get('activitiesService');
-var addonService = beans.get('addonService');
 var calendarService = beans.get('calendarService');
 var icalService = beans.get('icalService');
 var groupsService = beans.get('groupsService');
@@ -227,37 +226,6 @@ app.get('/checkurl', function (req, res) {
   misc.validate(req.query.url, req.query.previousUrl, _.partial(activitiesService.isValidUrl, reservedURLs), res.end);
 });
 
-app.get('/payment/:url', function (req, res, next) {
-  activitystore.getActivity(req.params.url, function (err, activity) {
-    if (err || !activity) { return next(err); }
-    var addonConfig = activity.addonConfig();
-    res.render('payment', {
-      activity: activity,
-      addonConfig: addonConfig,
-      fee: fieldHelpers.formatNumberWithCurrentLocale(res, paymentService.calcFee(addonConfig.deposit())) + ' €',
-      paymentInfo: new PaymentInfo(activity.addonForMember(req.user.member.id()).state)
-    });
-  });
-});
-
-app.post('/payment/submitTransfer', function (req, res, next) {
-  var url = req.body.id;
-  addonService.payWithTransfer(url, req.user.member.id(), function (err) {
-    if (err) { return next(err); }
-    statusmessage.successMessage('message.title.save_successful', 'message.content.activities.transfer_paid').putIntoSession(req);
-    res.redirect('/activities/' + encodeURIComponent(url));
-  });
-});
-
-app.post('/payment/submitCreditCard', function (req, res, next) {
-  var url = req.body.id;
-  addonService.payWithCreditCard(url, parseFloat(req.body.amount.replace(',', '.')), req.user.member.id(), req.body.stripeId, req.body.description, function (err, message) {
-    if (err) { return next(err); }
-    message.putIntoSession(req);
-    res.redirect('/activities/' + encodeURIComponent(url));
-  });
-});
-
 app.get('/:url', function (req, res, next) {
   activitiesService.getActivityWithGroupAndParticipants(req.params.url, function (err, activity) {
     if (err || !activity) { return next(err); }
@@ -341,60 +309,6 @@ app.get('/removeFromWaitinglist/:activityUrl/:resourceName', function (req, res,
       statusmessage.successMessage('message.title.save_successful', 'message.content.activities.waitinglist_removed').putIntoSession(req);
     }
     res.redirect('/activities/' + encodeURIComponent(req.params.activityUrl));
-  });
-});
-
-app.get('/addons/:url', function (req, res, next) {
-  activitiesService.getActivityWithGroupAndParticipants(req.params.url, function (err, activity) {
-    if (!res.locals.accessrights.canEditActivity(activity)) {
-      return res.redirect('/activities/' + encodeURIComponent(req.params.url));
-    }
-    groupsAndMembersService.addMembersToGroup(activity.group, function (err) {
-      if (err) { return next(err); }
-
-      addonService.addonLinesOf(activity, function (err, addonLines) {
-        if (err) { return next(err); }
-
-        var containsMember = function (group, member) {
-          return _.some(group.members, function (memberInGroup) { return memberInGroup.id() === member.id(); });
-        };
-        var formatDates = function (dates) {
-          return _(dates).map(function (date) { return date.locale(res.locals.language).format('L'); }).uniq().value();
-        };
-        var formatList = function (list) {
-          return list.join(', ');
-        };
-
-        addonService.addonLinesOfUnsubscribedMembers(activity, function (err, addonLinesOfUnsubscribedMembers) {
-          if (err) { return next(err); }
-          var tshirtSizes = addonService.tshirtSizes(addonLines);
-
-          res.render('managementTables', {
-            activity: activity,
-            addonLines: addonLines,
-            addonLinesOfUnsubscribedMembers: addonLinesOfUnsubscribedMembers,
-            tshirtsizes: tshirtSizes,
-            containsMember: containsMember,
-            formatDates: formatDates,
-            formatList: formatList
-          });
-        });
-      });
-    });
-  });
-});
-
-app.get('/paymentReceived/:activityUrl/:nickname', function (req, res) {
-  var url = req.params.activityUrl;
-  activitystore.getActivity(url, function (err, activity) {
-    if (err || !activity) { return res.send('Error: ' + err); }
-    if (!res.locals.accessrights.canEditActivity(activity)) {
-      return res.redirect('/activities/' + encodeURIComponent(url));
-    }
-    addonService.submitPaymentReceived(url, req.params.nickname, function (err) {
-      if (err) { return res.send('Error: ' + err); }
-      res.send(moment().locale(res.locals.language).format('L'));
-    });
   });
 });
 
