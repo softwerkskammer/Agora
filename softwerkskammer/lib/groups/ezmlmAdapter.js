@@ -3,7 +3,7 @@
 var _ = require('lodash');
 var async = require('async');
 var conf = require('simple-configure');
-var ezmlm = require('ezmlm-node')(conf.get('ezmlmHomedir'), conf.get('emaildomainname'), conf.get('ezmlmrc'));
+var ezmlm = require('ezmlm-node')(conf.get('ezmlmHomedir'), conf.get('emaildomainname'), conf.get('listownerAddress'), conf.get('ezmlmrc'));
 
 module.exports = {
 

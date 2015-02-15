@@ -38,7 +38,7 @@
     "csurf": "1.6.6",
     "express": "4.11.2",
     "express-session": "1.10.2",
-    "ezmlm-node": "1.0.3",
+    "ezmlm-node": "1.0.4",
     "glob": "4.3.5",
     "i18next": "1.7.9",
     "icalendar": "0.7.1",
