@@ -272,7 +272,8 @@ describe('Groups Service (groupFromObject)', function () {
 
   it('returns a valid Group object if there is valid group data', function () {
     var result = new Group({
-      id: 'craftsmanswap', longName: 'Craftsman Swaps',
+      id: 'craftsmanswap',
+      longName: 'Craftsman Swaps',
       description: 'A group for organizing CS',
       type: 'Themengruppe'
     });
