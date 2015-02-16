@@ -18,7 +18,7 @@ module.exports = function expressViewHelper(req, res, next) {
   res.locals.user = req.user;
   res.locals.currentUrl = req.url;
   if (!req.i18n) {
-    logger.info('No i18n for ' + req.path);
+    logger.error('No i18n for ' + req.path);
   } else {
     req.i18n.setLng(res.locals.language);
   }

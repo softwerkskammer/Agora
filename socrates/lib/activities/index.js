@@ -36,7 +36,7 @@ function activitySubmitted(req, res, next) {
   });
 }
 
-app.get('/new', function (req, res, next) {
+app.get('/new', function (req, res) {
   var activity = new Activity({
     resources: {
       single: {_canUnsubscribe: false},

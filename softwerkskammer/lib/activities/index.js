@@ -191,6 +191,9 @@ app.get('/newLike/:url', function (req, res, next) {
 app.get('/edit/:url', function (req, res, next) {
   activitiesService.getActivityWithGroupAndParticipants(req.params.url, function (err, activity) {
     if (err || activity === null) { return next(err); }
+    if (activity.isSoCraTes()) {
+      return res.redirect(activity.fullyQualifiedUrl());
+    }
     if (!res.locals.accessrights.canEditActivity(activity)) {
       return res.redirect('/activities/' + encodeURIComponent(req.params.url));
     }

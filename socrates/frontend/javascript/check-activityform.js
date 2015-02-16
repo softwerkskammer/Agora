@@ -27,27 +27,10 @@ var activity_validator;
 
     activity_validator = $("#activityform").validate({
       rules: {
-        url: {
-          required: true,
-          remote: {
-            url: "/activities/checkurl",
-            data: {
-              previousUrl: function () {
-                return $("#activityform [name=previousUrl]").val();
-              }
-            }
-          }
-        },
-        title: "required",
         startDate: "required",
         startTime: "required",
         endDate: "dateAndTime",
         endTime: "dateAndTime"
-      },
-      messages: {
-        url: {
-          remote: $.validator.format(urlIsNotAvailable)
-        }
       },
       errorPlacement: function (error, element) {
         if (element.attr("name") === "endDate" || element.attr("name") === "endTime") {
@@ -86,8 +69,7 @@ var activity_validator;
       };
     };
 
-    ['#activityform [name=title]', "#activityform [name=startDate]", "#activityform [name=startTime]",
-      "#activityform [name=endDate]", "#activityform [name=endTime]", "#activityform [name=url]"].forEach(
+    ["#activityform [name=startDate]", "#activityform [name=startTime]", "#activityform [name=endDate]", "#activityform [name=endTime]"].forEach(
       function (each) {
         $(each).on("change", handler(each));
         $(each).keyup(handler(each));
