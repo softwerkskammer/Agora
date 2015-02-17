@@ -22,7 +22,10 @@ describe('Activity store', function () {
     url: 'socrates-url',
     isSoCraTes: true,
     startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.02.2014'),
-    endUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('15.02.2014')
+    endUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('15.02.2014'),
+    owner: {nickname: "ownerNick"},
+    assignedGroup: "assignedGroup",
+    group: {groupLongName: "longName"}
   };
   var sampleList;
   var getByField;
@@ -186,8 +189,8 @@ describe('Activity store', function () {
         expect(activity.descriptionHTML()).to.be('<p>Coolest event ever :-)</p>\n');
         expect(activity.location()).to.be('Right next door');
         expect(activity.assignedGroup()).to.be('G');
+        expect(activity.owner()).to.eql({nickname: "ownerNick"});
         expect(activity.groupName()).to.be(undefined);
-        expect(activity.owner()).to.be(undefined);
         expect(activity.colorFrom()).to.equal('#3771C8'); // fixed SoCraTes color
         expect(activity.groupFrom()).to.equal(undefined);
         done(err);
