@@ -18,6 +18,10 @@ var reservedURLs = '^new$|^edit$|^submit$|^checkurl$\\+';
 var app = misc.expressAppIn(__dirname);
 
 function activitySubmitted(req, res, next) {
+  if (req.body.previousUrl && req.body.url !== req.body.previousUrl) {
+    statusmessage.errorMessage('message.title.conflict', 'To create a new SoCraTes activity for a different year, please use "New".').putIntoSession(req);
+    return res.redirect('/registration/');
+  }
   activitiesService.getActivityWithGroupAndParticipants(req.body.previousUrl, function (err, activity) {
     if (err) { return next(err); }
     if (!activity) { activity = new Activity({owner: req.user.member.id()}); }
