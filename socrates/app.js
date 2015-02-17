@@ -25,7 +25,7 @@ var httpLogger = winston.loggers.get('socrates-http');
 
 // initialize i18n
 i18n.init({
-  ignoreRoutes: ['clientscripts/', 'fonts/', 'images/', 'img/', 'stylesheets/'],
+  ignoreRoutes: ['/clientscripts/', '/fonts/', '/images/', '/img/', '/stylesheets/'],
   supportedLngs: ['en'],
   preload: ['en'],
   fallbackLng: 'en',
@@ -59,6 +59,7 @@ module.exports = {
     app.use(beans.get('serverpathRemover'));
     app.use(beans.get('accessrights'));
     app.use(beans.get('secureByLogin'));
+    app.use(beans.get('secureSuperuserOnly'));
     app.use(beans.get('expressViewHelper'));
     app.use(beans.get('redirectRuleForNewUser'));
     app.use(beans.get('detectBrowser'));
@@ -67,6 +68,7 @@ module.exports = {
     app.use(csurf());
     app.use(beans.get('addCsrfTokenToLocals'));
     app.use('/', beans.get('socratesSiteApp'));
+    app.use('/activities/', beans.get('socratesActivitiesApp'));
     app.use('/registration/', beans.get('socratesRegistrationApp'));
     app.use('/auth/', beans.get('authenticationApp'));
     app.use('/mailsender/', beans.get('socratesMailsenderApp'));

@@ -10,12 +10,12 @@ module.exports = function accessrights(req, res, next) {
       return this.req.user && this.req.user.member;
     },
 
-    memberId: function () {
-      return this.isRegistered() ? this.member().id() : null;
-    },
-
     isRegistered: function () {
       return !!this.member();
+    },
+
+    memberId: function () {
+      return this.isRegistered() ? this.member().id() : null;
     },
 
     isMember: function (member) {
@@ -23,7 +23,7 @@ module.exports = function accessrights(req, res, next) {
     },
 
     isSuperuser: function () {
-      return false; // we do not have a superuser mechanism yet
+      return Member.isSuperuser(this.memberId()); // same superusers as in SWK
     },
 
     canEditMember: function (member) {
@@ -32,6 +32,18 @@ module.exports = function accessrights(req, res, next) {
 
     canDeleteMember: function (member) {
       return this.isSuperuser() && !this.isMember(member);
+    },
+
+    canCreateActivity: function () {
+      return this.isSuperuser();
+    },
+
+    canEditActivity: function (activity) {
+      return this.isSuperuser();
+    },
+
+    canDeleteActivity: function (activity) {
+      return this.isSuperuser();
     }
 
   };

@@ -1,4 +1,4 @@
-/*global URI, screen, datepicker_lang, help */
+/*global screen, moment, datepicker_lang, datepicker_format, URI, help */
 /*jslint nomen: true*/
 (function () {
   'use strict';
@@ -129,8 +129,39 @@
     });
   };
 
-  $(document).ready(createLinks);
+  var initPickers = function () {
+    $('.datepicker').datepicker({
+      autoclose: true,
+      format: datepicker_format,
+      weekStart: 1,
+      viewMode: 'days',
+      minViewMode: 'days',
+      language: datepicker_lang
+    });
+
+    $('.timepicker').timepicker({
+      template: false,
+      minuteStep: 15,
+      showSeconds: false,
+      showMeridian: false
+    });
+
+  };
+
+  var extendDataTables = function () {
+    if (!$.fn.dataTableExt) { return; }
+    $.extend($.fn.dataTableExt.oSort, {
+      'date-eu-pre': function (dateString) { return moment(dateString, 'DD.MM.YYYY HH:mm').unix(); },
+      'date-eu-asc': function (a, b) { return a - b; },
+      'date-eu-desc': function (a, b) { return b - a; }
+    });
+  };
+
   $(document).ready(highlightCurrentSection);
-  $(document).ready(twitterUtil);
   $(document).ready(addHelpButtonToTextarea);
+  $(document).ready(initPickers);
+  $(document).ready(extendDataTables);
+  $(document).ready(createLinks);
+
+  $(document).ready(twitterUtil);
 }());

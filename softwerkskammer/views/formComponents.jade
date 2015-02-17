@@ -4,6 +4,10 @@ mixin text(name, label, value, tooltip, placeholder, readonly)
       +hidden(name, value)
     +controlLabel(name, label, tooltip)
     input.form-control(id=name, type='text', name=name, value=value, placeholder=placeholder, disabled=readonly)
+    script.
+      $(#{name}).on('blur', function () {
+        $(this).val($(this).val().trim());
+      });
 
 mixin textWithTags(name, label, value, tags)
   .form-group

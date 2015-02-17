@@ -17,11 +17,14 @@ module.exports = function (grunt) {
     'socrates/public/clientscripts/global.js': [
       'bower_components/jquery/dist/jquery.js',
       'bower_components/bootstrap/dist/js/bootstrap.js',
+      'bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js',
       'bower_components/bootstrap-markdown/js/bootstrap-markdown.js',
+      'node_modules/moment-timezone/node_modules/moment/moment.js',
       'bower_components/smartmenus/dist/jquery.smartmenus.js',
       'socrates/build/javascript/jquery.smartmenus.bootstrap-patched.js',
       'bower_components/jquery-validation/dist/jquery.validate.js',
       'bower_components/jquery-validation/dist/additional-methods.js',
+      'bower_components/bootstrap-timepicker/js/bootstrap-timepicker.js',
       'bower_components/URIjs/src/URI.js',
       'socrates/locales/frontend_en.js',
       'socrates/frontend/javascript/socrates.js'
@@ -68,7 +71,10 @@ module.exports = function (grunt) {
         flatten: true
       },
       customJS: {
-        src: ['softwerkskammer/frontend/javascript/check-member*', 'socrates/frontend/javascript/check-*'],
+        src: ['socrates/frontend/javascript/check-*',
+          'softwerkskammer/frontend/javascript/check-member*',
+          'softwerkskammer/frontend/javascript/activityDateModel.js',
+          'softwerkskammer/frontend/javascript/activityform-dateAdapter.js'],
         dest: 'socrates/public/clientscripts',
         expand: true,
         flatten: true

@@ -9,15 +9,32 @@ var moment = require('moment-timezone');
 var logger = require('winston').loggers.get('transactions');
 var persistence = beans.get('activitiesPersistence');
 var Activity = beans.get('activity');
+var SoCraTesActivity = beans.get('socratesActivity');
 
-var toActivity = _.partial(misc.toObject, Activity);
-var toActivityList = _.partial(misc.toObjectList, Activity);
+var toActivity = function (callback, err, jsobject) {
+  if (jsobject && jsobject.isSoCraTes) {
+    return misc.toObject(SoCraTesActivity, callback, err, jsobject);
+  }
+  return misc.toObject(Activity, callback, err, jsobject);
+};
+
+var toActivityList = function (callback, err, jsobjects) {
+  if (err) { return callback(err); }
+  callback(null, _.map(jsobjects, function (each) {
+    if (each && each.isSoCraTes) {
+      return new SoCraTesActivity(each);
+    }
+    return new Activity(each);
+  }));
+};
 
 var allActivitiesByDateRange = function (rangeFrom, rangeTo, sortOrder, callback) {
-  persistence.listByField({ $and: [
-    {endUnix: { $gt: rangeFrom }},
-    {endUnix: { $lt: rangeTo }}
-  ]}, sortOrder, _.partial(toActivityList, callback));
+  persistence.listByField({
+    $and: [
+      {endUnix: {$gt: rangeFrom}},
+      {endUnix: {$lt: rangeTo}}
+    ]
+  }, sortOrder, _.partial(toActivityList, callback));
 };
 
 var allActivitiesByDateRangeInAscendingOrder = function (rangeFrom, rangeTo, callback) {
@@ -71,10 +88,12 @@ module.exports = {
   upcomingActivitiesForGroupIds: function (groupIds, callback) {
     var start = moment().unix();
 
-    persistence.listByField({ $and: [
-      {endUnix: { $gt: start }},
-      {assignedGroup: { $in: groupIds }}
-    ]}, {startUnix: 1}, _.partial(toActivityList, callback));
+    persistence.listByField({
+      $and: [
+        {endUnix: {$gt: start}},
+        {assignedGroup: {$in: groupIds}}
+      ]
+    }, {startUnix: 1}, _.partial(toActivityList, callback));
   },
 
   activitiesForGroupIdsAndRegisteredMemberId: function (groupIds, memberId, upcoming, callback) {
@@ -109,7 +128,7 @@ module.exports = {
     };
 
     var now = moment().unix();
-    var query = upcoming ? {endUnix: { $gt: now }} : {endUnix: { $lt: now }};
+    var query = upcoming ? {endUnix: {$gt: now}} : {endUnix: {$lt: now}};
     var parameters = {out: {inline: 1}, scope: {memberId: memberId, groupIds: groupIds}, query: query, jsMode: true};
 
     persistence.mapReduce(map, reduce, parameters, function (err, collection) {

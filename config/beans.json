@@ -17,7 +17,6 @@
 
   "activitiesService": {"module": "./softwerkskammer/lib/activities/activitiesService"},
   "activityresultsService": {"module": "./softwerkskammer/lib/activityresults/activityresultsService"},
-  "addonService": {"module": "./softwerkskammer/lib/activities/addonService"},
   "announcementsService": {"module": "./softwerkskammer/lib/announcements/announcementsService"},
   "calendarService": {"module": "./softwerkskammer/lib/activities/calendarService"},
   "dashboardService": {"module": "./softwerkskammer/lib/dashboard/dashboardService"},
@@ -77,8 +76,8 @@
   },
   
   "activity": {"module": "./softwerkskammer/lib/activities/activity"},
+  "socratesActivity": {"module": "./softwerkskammer/lib/activities/socratesActivity"},
   "activityresult": {"module": "./softwerkskammer/lib/activityresults/activityresult"},
-  "addon": {"module": "./softwerkskammer/lib/activities/addon"},
   "announcement": {"module": "./softwerkskammer/lib/announcements/announcement"},
   "archivedMail": {"module": "./softwerkskammer/lib/mailarchive/archivedMail"},
   "gitDiff": {"module": "./softwerkskammer/lib/wiki/gitDiff"},

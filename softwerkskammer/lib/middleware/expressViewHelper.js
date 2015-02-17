@@ -3,6 +3,7 @@
 var beans = require('simple-configure').get('beans');
 var statusmessage = beans.get('statusmessage');
 var membersService = beans.get('membersService');
+var logger = require('winston').loggers.get('application');
 
 module.exports = function expressViewHelper(req, res, next) {
   res.locals.language = 'de';
@@ -16,7 +17,11 @@ module.exports = function expressViewHelper(req, res, next) {
   }
   res.locals.user = req.user;
   res.locals.currentUrl = req.url;
-  req.i18n.setLng(res.locals.language);
+  if (!req.i18n) {
+    logger.error('No i18n for ' + req.path);
+  } else {
+    req.i18n.setLng(res.locals.language);
+  }
   res.locals.tagclouddata = membersService.toWordList;
   next();
 };

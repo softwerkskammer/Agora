@@ -9,7 +9,6 @@ var beans = conf.get('beans');
 var misc = beans.get('misc');
 var CONFLICTING_VERSIONS = beans.get('constants').CONFLICTING_VERSIONS;
 var activitiesService = beans.get('activitiesService');
-var addonService = beans.get('addonService');
 var calendarService = beans.get('calendarService');
 var icalService = beans.get('icalService');
 var groupsService = beans.get('groupsService');
@@ -61,7 +60,11 @@ function activitySubmitted(req, res, next) {
 function activitiesForDisplay(activitiesFetcher, next, res, title) {
   return activitiesService.getActivitiesForDisplay(activitiesFetcher, function (err, activities) {
     if (err) { next(err); }
-    res.render('index', { activities: activities, range: title, webcalURL: conf.get('publicUrlPrefix').replace('http', 'webcal') + '/activities/ical' });
+    res.render('index', {
+      activities: activities,
+      range: title,
+      webcalURL: conf.get('publicUrlPrefix').replace('http', 'webcal') + '/activities/ical'
+    });
   });
 }
 
@@ -81,8 +84,13 @@ function renderGdcrFor(gdcrDate, res, next) {
   return activitiesService.getActivitiesForDisplay(gdcrActivities, function (err, activities) {
     if (err) { next(err); }
     var gdcrYear = gdcrDate.year();
-    res.render('gdcr', { calViewYear: gdcrYear, calViewMonth: gdcrDate.month(),
-      activities: activities, year: String(gdcrYear), previousYears: _.range(2013, gdcrYear).map(function (year) { return String(year); })});
+    res.render('gdcr', {
+      calViewYear: gdcrYear,
+      calViewMonth: gdcrDate.month(),
+      activities: activities,
+      year: String(gdcrYear),
+      previousYears: _.range(2013, gdcrYear).map(function (year) { return String(year); })
+    });
   });
 }
 app.get('/gdcr2013', function (req, res, next) {
@@ -154,7 +162,12 @@ function renderActivityCombinedWithGroups(res, next, activity) {
       var editorNames = _.map(editors, editorNameOf);
       _.remove(activity.participants || [], function (participant) { return participant.nickname() === activity.ownerNickname; });
       var participantNames = _.map(activity.participants || [], editorNameOf);
-      res.render('edit', { activity: activity, groups: groups, editorNames: editorNames, participantNames: participantNames });
+      res.render('edit', {
+        activity: activity,
+        groups: groups,
+        editorNames: editorNames,
+        participantNames: participantNames
+      });
     });
   };
 
@@ -178,6 +191,9 @@ app.get('/newLike/:url', function (req, res, next) {
 app.get('/edit/:url', function (req, res, next) {
   activitiesService.getActivityWithGroupAndParticipants(req.params.url, function (err, activity) {
     if (err || activity === null) { return next(err); }
+    if (activity.isSoCraTes()) {
+      return res.redirect(activity.fullyQualifiedUrl());
+    }
     if (!res.locals.accessrights.canEditActivity(activity)) {
       return res.redirect('/activities/' + encodeURIComponent(req.params.url));
     }
@@ -213,45 +229,22 @@ app.get('/checkurl', function (req, res) {
   misc.validate(req.query.url, req.query.previousUrl, _.partial(activitiesService.isValidUrl, reservedURLs), res.end);
 });
 
-app.get('/payment/:url', function (req, res, next) {
-  activitystore.getActivity(req.params.url, function (err, activity) {
-    if (err || !activity) { return next(err); }
-    var addonConfig = activity.addonConfig();
-    res.render('payment', {
-      activity: activity,
-      addonConfig: addonConfig,
-      fee: fieldHelpers.formatNumberWithCurrentLocale(res, paymentService.calcFee(addonConfig.deposit())) + ' €',
-      paymentInfo: new PaymentInfo(activity.addonForMember(req.user.member.id()).state)
-    });
-  });
-});
-
-app.post('/payment/submitTransfer', function (req, res, next) {
-  var url = req.body.id;
-  addonService.payWithTransfer(url, req.user.member.id(), function (err) {
-    if (err) { return next(err); }
-    statusmessage.successMessage('message.title.save_successful', 'message.content.activities.transfer_paid').putIntoSession(req);
-    res.redirect('/activities/' + encodeURIComponent(url));
-  });
-});
-
-app.post('/payment/submitCreditCard', function (req, res, next) {
-  var url = req.body.id;
-  addonService.payWithCreditCard(url, parseFloat(req.body.amount.replace(',', '.')), req.user.member.id(), req.body.stripeId, req.body.description, function (err, message) {
-    if (err) { return next(err); }
-    message.putIntoSession(req);
-    res.redirect('/activities/' + encodeURIComponent(url));
-  });
-});
-
 app.get('/:url', function (req, res, next) {
   activitiesService.getActivityWithGroupAndParticipants(req.params.url, function (err, activity) {
     if (err || !activity) { return next(err); }
+    if (activity.isSoCraTes()) {
+      return res.redirect(activity.fullyQualifiedUrl());
+    }
     memberstore.getMembersForIds(activity.editorIds(), function (err, editors) {
       if (err || !editors) { return next(err); }
       var editorNicknames = _.map(editors, function (editor) { return editor.nickname(); });
-      res.render('get', { activity: activity, editorNicknames: editorNicknames, resourceRegistrationRenderer: resourceRegistrationRenderer,
-        calViewYear: activity.year(), calViewMonth: activity.month()});
+      res.render('get', {
+        activity: activity,
+        editorNicknames: editorNicknames,
+        resourceRegistrationRenderer: resourceRegistrationRenderer,
+        calViewYear: activity.year(),
+        calViewMonth: activity.month()
+      });
     });
   });
 });
@@ -319,54 +312,6 @@ app.get('/removeFromWaitinglist/:activityUrl/:resourceName', function (req, res,
       statusmessage.successMessage('message.title.save_successful', 'message.content.activities.waitinglist_removed').putIntoSession(req);
     }
     res.redirect('/activities/' + encodeURIComponent(req.params.activityUrl));
-  });
-});
-
-app.get('/addons/:url', function (req, res, next) {
-  activitiesService.getActivityWithGroupAndParticipants(req.params.url, function (err, activity) {
-    if (!res.locals.accessrights.canEditActivity(activity)) {
-      return res.redirect('/activities/' + encodeURIComponent(req.params.url));
-    }
-    groupsAndMembersService.addMembersToGroup(activity.group, function (err) {
-      if (err) { return next(err); }
-
-      addonService.addonLinesOf(activity, function (err, addonLines) {
-        if (err) { return next(err); }
-
-        var containsMember = function (group, member) {
-          return _.some(group.members, function (memberInGroup) { return memberInGroup.id() === member.id(); });
-        };
-        var formatDates = function (dates) {
-          return _(dates).map(function (date) { return date.locale(res.locals.language).format('L'); }).uniq().value();
-        };
-        var formatList = function (list) {
-          return list.join(', ');
-        };
-
-        addonService.addonLinesOfUnsubscribedMembers(activity, function (err, addonLinesOfUnsubscribedMembers) {
-          if (err) { return next(err); }
-          var tshirtSizes = addonService.tshirtSizes(addonLines);
-
-          res.render('managementTables', {activity: activity, addonLines: addonLines,
-            addonLinesOfUnsubscribedMembers: addonLinesOfUnsubscribedMembers, tshirtsizes: tshirtSizes,
-            containsMember: containsMember, formatDates: formatDates, formatList: formatList});
-        });
-      });
-    });
-  });
-});
-
-app.get('/paymentReceived/:activityUrl/:nickname', function (req, res) {
-  var url = req.params.activityUrl;
-  activitystore.getActivity(url, function (err, activity) {
-    if (err || !activity) { return res.send('Error: ' + err); }
-    if (!res.locals.accessrights.canEditActivity(activity)) {
-      return res.redirect('/activities/' + encodeURIComponent(url));
-    }
-    addonService.submitPaymentReceived(url, req.params.nickname, function (err) {
-      if (err) { return res.send('Error: ' + err); }
-      res.send(moment().locale(res.locals.language).format('L'));
-    });
   });
 });
 

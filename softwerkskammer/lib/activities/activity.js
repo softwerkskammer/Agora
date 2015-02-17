@@ -6,8 +6,6 @@ var _ = require('lodash');
 var conf = require('simple-configure');
 var beans = conf.get('beans');
 var Resources = beans.get('resources');
-var Addon = beans.get('addon').Addon;
-var AddonConfig = beans.get('addon').AddonConfig;
 var fieldHelpers = beans.get('fieldHelpers');
 var Renderer = beans.get('renderer');
 
@@ -42,7 +40,7 @@ Activity.prototype.url = function () {
 };
 
 Activity.prototype.fullyQualifiedUrl = function () {
-  return this.state.url ? conf.get('publicUrlPrefix') + '/activities/' + encodeURIComponent(this.state.url.trim()) : undefined;
+  return this.url() ? conf.get('publicUrlPrefix') + '/activities/' + encodeURIComponent(this.url()) : undefined;
 };
 
 Activity.prototype.title = function () {
@@ -105,49 +103,9 @@ Activity.prototype.fillFromUI = function (object, editorIds) {
   if (object.resources) {
     this.resources().fillFromUI(object.resources);
   }
-  self.fillAddonConfig(object);
-  return self;
-};
 
-Activity.prototype.fillAddonConfig = function (object) {
-  var self = this;
+  self.state.isSoCraTes = object.isSoCraTes;
 
-  function setOrDeleteBoolean(fieldname) {
-    if (object[fieldname]) {
-      self.state._addonConfig[fieldname] = true;
-    } else {
-      delete self.state._addonConfig[fieldname];
-    }
-  }
-
-  function setOrDeleteAddonInformation() {
-    if (object.addonInformation) {
-      self.state._addonConfig.addonInformation = object.addonInformation;
-    } else {
-      delete self.state._addonConfig.addonInformation;
-    }
-  }
-
-  function setOrDeleteDeposit() {
-    if (object.deposit) {
-      self.state._addonConfig.deposit = parseInt(object.deposit, 10);
-    } else {
-      delete self.state._addonConfig.deposit;
-    }
-  }
-
-  if (!self.state._addonConfig) {
-    self.state._addonConfig = {};
-  }
-  setOrDeleteBoolean('homeAddress');
-  setOrDeleteBoolean('billingAddress');
-  setOrDeleteBoolean('tShirtSize');
-  setOrDeleteBoolean('roommate');
-  setOrDeleteAddonInformation();
-  setOrDeleteDeposit();
-  if (Object.keys(self.state._addonConfig).length === 0) {
-    delete self.state._addonConfig;
-  }
   return self;
 };
 
@@ -170,6 +128,10 @@ Activity.prototype.copyFrom = function (originalActivity) {
   this.state.resources = {};
   this.resources().copyFrom(originalActivity.resources());
   return this;
+};
+
+Activity.prototype.isSoCraTes = function () {
+  return this.state.isSoCraTes;
 };
 
 Activity.prototype.descriptionHTML = function () {
@@ -216,38 +178,6 @@ Activity.prototype.allRegisteredMembers = function () {
 
 Activity.prototype.allWaitinglistEntries = function () {
   return this.resources().allWaitinglistEntries();
-};
-
-// Addon configuration:
-
-// Which addon information should be collected from the participants?
-Activity.prototype.addonConfig = function () {
-  return new AddonConfig(this.state._addonConfig);
-};
-
-Activity.prototype.hasAddonConfig = function () {
-  return !!this.state._addonConfig;
-};
-
-// Addon information as entered by the participants:
-Activity.prototype.addonForMember = function (memberId) {
-  if (!this.state._addons[memberId]) {
-    this.state._addons[memberId] = {};
-  }
-  return new Addon(this.state._addons[memberId]);
-};
-
-Activity.prototype.memberIdsOfAddons = function () {
-  return Object.keys(this.state._addons);
-};
-
-Activity.prototype.memberEnteredAddonInformation = function (memberId) {
-  if (!this.hasAddonConfig()) { return true; }
-  var addonConfig = this.addonConfig();
-  var addonForMember = this.addonForMember(memberId);
-  return (!addonConfig.homeAddress() || addonForMember.homeAddress()) &&
-    (!addonConfig.billingAddress() || addonForMember.billingAddress()) &&
-    (!addonConfig.tShirtSize() || addonForMember.tShirtSize());
 };
 
 // Display Dates and Times

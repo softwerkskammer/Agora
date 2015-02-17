@@ -4,19 +4,37 @@ var expect = require('must');
 var sinon = require('sinon').sandbox.create();
 
 var beans = require('../../testutil/configureForTest').get('beans');
+var fieldHelpers = beans.get('fieldHelpers');
 var persistence = beans.get('activitiesPersistence');
 var store = beans.get('activitystore');
 var Activity = beans.get('activity');
+var Resource = beans.get('resource');
+var SoCraTesActivity = beans.get('socratesActivity');
 
 describe('Activity store', function () {
   var activity1 = {title: 'CodingDojo1', url: 'CodingDojo1', description: 'bli'};
   var activity2 = {title: 'CodingDojo2', url: 'CodingDojo2', description: 'bla'};
-  var sampleList = [activity1, activity2];
+  var socrates = {
+    id: 'socratesId',
+    title: 'SoCraTes',
+    description: 'Coolest event ever :-)',
+    location: 'Right next door',
+    url: 'socrates-url',
+    isSoCraTes: true,
+    startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.02.2014'),
+    endUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('15.02.2014'),
+    owner: {nickname: "ownerNick"},
+    assignedGroup: "assignedGroup",
+    group: {groupLongName: "longName"}
+  };
+  var sampleList;
   var getByField;
   var getById;
   var list;
 
   beforeEach(function () {
+    sampleList = [activity1, activity2];
+
     list = sinon.stub(persistence, 'list', function (sortOrder, callback) {
       return callback(null, sampleList);
     });
@@ -26,7 +44,10 @@ describe('Activity store', function () {
     getByField = sinon.stub(persistence, 'getByField', function (object, callback) {
       return callback(null, activity1);
     });
-    getById = sinon.stub(persistence, 'getById', function (object, callback) {
+    getById = sinon.stub(persistence, 'getById', function (id, callback) {
+      if (id === 'socrates') {
+        return callback(null, socrates);
+      }
       return callback(null, activity1);
     });
   });
@@ -98,7 +119,7 @@ describe('Activity store', function () {
 
   it('returns all activites although the persistence only returns JS objects', function (done) {
     list.restore();
-    sinon.stub(persistence, 'list', function (sortOrder, callback) { callback(null, [ {url: 'activityUrl'} ]); });
+    sinon.stub(persistence, 'list', function (sortOrder, callback) { callback(null, [{url: 'activityUrl'}]); });
 
     store.allActivities(function (err, result) {
       expect(result).to.have.length(1);
@@ -131,5 +152,50 @@ describe('Activity store', function () {
     });
   });
 
+  describe('builds a SoCraTesActivity', function () {
+    var id = 'socrates';
+    it('on fetching a single activity - when the isSoCraTes flag is set', function (done) {
+      store.getActivityForId(id, function (err, activity) {
+        expect(activity).to.be.a(SoCraTesActivity);
+        done(err);
+      });
+    });
 
+    it('on fetching all activities - when the isSoCraTes flag is set', function (done) {
+      sampleList = [socrates];
+
+      store.allActivities(function (err, activities) {
+        expect(activities[0]).to.be.a(SoCraTesActivity);
+        done(err);
+      });
+    });
+
+    it('that shows all required data for the overview and the calendar in SWK and for display and edit in SoCraTes', function (done) {
+      store.getActivityForId(id, function (err, activity) {
+        expect(activity.id()).to.equal('socratesId');
+        expect(activity.title()).to.equal('SoCraTes');
+        expect(activity.startMoment().toString()).to.equal("Sat Feb 01 2014 00:00:00 GMT+0100");
+        expect(activity.endMoment().toString()).to.equal("Sat Feb 15 2014 00:00:00 GMT+0100");
+        expect(activity.fullyQualifiedUrl()).to.equal('https://socrates.com:12345');
+        expect(activity.url()).to.equal('socrates-url');
+        expect(activity.allRegisteredMembers()).to.eql([]);
+        expect(activity.resourceNames()).to.eql(['Veranstaltung']);
+        expect(activity.resourceNamed('Veranstaltung')).to.eql(new Resource({
+          _registeredMembers: [],
+          _registrationOpen: true
+        }, 'Veranstaltung'));
+        expect(activity.isMultiDay()).to.be(true);
+        expect(activity.description()).to.be('Coolest event ever :-)');
+        expect(activity.descriptionHTML()).to.be('<p>Coolest event ever :-)</p>\n');
+        expect(activity.location()).to.be('Right next door');
+        expect(activity.assignedGroup()).to.be('G');
+        expect(activity.owner()).to.eql({nickname: "ownerNick"});
+        expect(activity.groupName()).to.be(undefined);
+        expect(activity.colorFrom()).to.equal('#3771C8'); // fixed SoCraTes color
+        expect(activity.groupFrom()).to.equal(undefined);
+        done(err);
+      });
+    });
+
+  });
 });

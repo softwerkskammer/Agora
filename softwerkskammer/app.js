@@ -39,7 +39,7 @@ var httpLogger = winston.loggers.get('http');
 
 // initialize i18n
 i18n.init({
-  ignoreRoutes: ['clientscripts/', 'fonts/', 'images/', 'img/', 'stylesheets/'],
+  ignoreRoutes: ['/clientscripts/', '/fonts/', '/images/', '/img/', '/stylesheets/'],
   supportedLngs: ['de', 'en'],
   preload: ['de', 'en'],
   fallbackLng: 'de',
