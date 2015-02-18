@@ -1,6 +1,7 @@
 extends ../../../views/layout
 include ../../members/views/memberlist-mixin
 include ../../wiki/views/wiki-mixins
+include ../../activities/views/activities-mixins
 
 block title
     | #{group.longName}
@@ -39,6 +40,10 @@ block content
           a.btn.btn-primary(href='subscribe/#{group.id}') #{t('groups.join')}
     .col-md-6
       +tagCloud(users, group.color)
+  .row
+    .col-md-12
+      h4 #{t('activities.upcoming_activities')}:
+      +activityList(upcomingGroupActivities)
   .row
     if (blogposts.length > 0)
       .col-md-6

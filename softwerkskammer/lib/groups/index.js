@@ -9,6 +9,7 @@ var groupsService = beans.get('groupsService');
 var wikiService = beans.get('wikiService');
 var Group = beans.get('group');
 var groupsAndMembers = beans.get('groupsAndMembersService');
+var activitystore = beans.get('activitystore');
 var statusmessage = beans.get('statusmessage');
 
 var app = misc.expressAppIn(__dirname);
@@ -31,15 +32,22 @@ app.get('/', function (req, res, next) {
     async.map(groups, function (group, callback) { groupsAndMembers.addMembercountToGroup(group, callback); },
       function (err, groupsWithMembers) {
         if (err) { return next(err); }
-        res.render('index', {regionalgroups: Group.regionalsFrom(groupsWithMembers), themegroups: Group.thematicsFrom(groupsWithMembers)});
+        res.render('index', {
+          regionalgroups: Group.regionalsFrom(groupsWithMembers),
+          themegroups: Group.thematicsFrom(groupsWithMembers)
+        });
       });
   });
 });
 
 app.get('/new', function (req, res) {
-  res.render('edit', { group: new Group(), allTypes: Group.allTypes(), organizersChecked: [
-    {member: req.user.member, checked: true}
-  ] });
+  res.render('edit', {
+    group: new Group(),
+    allTypes: Group.allTypes(),
+    organizersChecked: [
+      {member: req.user.member, checked: true}
+    ]
+  });
 });
 
 app.post('/submit', function (req, res, next) {
@@ -98,11 +106,19 @@ app.get('/:groupname', function (req, res, next) {
   groupsAndMembers.getGroupAndMembersForList(req.params.groupname, function (err, group) {
     if (err || !group) { return next(err); }
     wikiService.getBlogpostsForGroup(req.params.groupname, function (err, blogposts) {
-      res.render('get', {group: group, users: group.members,
-        userIsGroupMember: groupsAndMembers.memberIsInMemberList(registeredUserId(req), group.members),
-        organizers: group.organizers,
-        blogposts: blogposts,
-        webcalURL: conf.get('publicUrlPrefix').replace('http', 'webcal') + '/activities/icalForGroup/' + group.id});
+      if (err) { return next(err); }
+      activitystore.upcomingActivitiesForGroupIds([group.id], function (err, activities) {
+        if (err) { return next(err); }
+        res.render('get', {
+          group: group,
+          users: group.members,
+          userIsGroupMember: groupsAndMembers.memberIsInMemberList(registeredUserId(req), group.members),
+          organizers: group.organizers,
+          blogposts: blogposts,
+          webcalURL: conf.get('publicUrlPrefix').replace('http', 'webcal') + '/activities/icalForGroup/' + group.id,
+          upcomingGroupActivities: activities || []
+        });
+      });
     });
   });
 });
