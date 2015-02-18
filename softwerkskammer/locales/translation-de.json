@@ -104,6 +104,7 @@
     "new_copy": "Neu auf Basis dieser Aktivität",
     "upcoming_activities": "$t(activities.upcoming) $t(activities.activities)",
     "upcoming": "Kommende",
+    "upcoming_activities": "Kommende Aktivitäten",
     "past": "Vergangene",
     "export": "Für Kalender exportieren",
     "export_subscribe": "$t(activities.export). Zum Abo: URL in Kalenderprogramm abonnieren",
