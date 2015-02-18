@@ -6,12 +6,22 @@ var sinon = require('sinon').sandbox.create();
 var beans = require('../../testutil/configureForTest').get('beans');
 var groupsPersistence = beans.get('groupsPersistence');
 var membersPersistence = beans.get('membersPersistence');
+var activitystore = beans.get('activitystore');
 var Group = beans.get('group');
+var Activity = beans.get('activity');
 var sympa = beans.get('sympaStub');
+var fieldHelpers = beans.get('fieldHelpers');
 
 var createApp = require('../../testutil/testHelper')('groupsApp').createApp;
 
-var GroupA = new Group({id: 'GroupA', longName: 'Gruppe A', description: 'Dies ist Gruppe A.', type: 'Themengruppe', emailPrefix: 'Group-A', organizers: ['organizer']});
+var GroupA = new Group({
+  id: 'GroupA',
+  longName: 'Gruppe A',
+  description: 'Dies ist Gruppe A.',
+  type: 'Themengruppe',
+  emailPrefix: 'Group-A',
+  organizers: ['organizer']
+});
 
 describe('Groups application', function () {
 
@@ -29,15 +39,15 @@ describe('Groups application', function () {
 
     sinon.stub(membersPersistence, 'list', function (sortorder, callback) {
       callback(null, [
-        { nickname: 'hada', firstname: 'Hans', lastname: 'Dampf', email: 'hans@aol.com' },
-        { nickname: 'pepe', firstname: 'Peter', lastname: 'Meyer', email: 'peter@google.de' }
+        {nickname: 'hada', firstname: 'Hans', lastname: 'Dampf', email: 'hans@aol.com'},
+        {nickname: 'pepe', firstname: 'Peter', lastname: 'Meyer', email: 'peter@google.de'}
       ]);
     });
 
     sinon.stub(membersPersistence, 'listByField', function (email, sortOrder, callback) {
       callback(null, [
-        { nickname: 'hada', firstname: 'Hans', lastname: 'Dampf', email: 'hans@aol.com' },
-        { nickname: 'pepe', firstname: 'Peter', lastname: 'Meyer', email: 'peter@google.de' }
+        {nickname: 'hada', firstname: 'Hans', lastname: 'Dampf', email: 'hans@aol.com'},
+        {nickname: 'pepe', firstname: 'Peter', lastname: 'Meyer', email: 'peter@google.de'}
       ]);
     });
 
@@ -160,6 +170,31 @@ describe('Groups application', function () {
         .expect(/Diese Gruppe hat&nbsp;2 Mitglieder\./)
         .expect(/Peter Meyer/)
         .expect(/Hans Dampf/, done);
+    });
+
+    it('displays the group\'s upcoming activities', function (done) {
+      var date1 = fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013');
+      var date2 = fieldHelpers.parseToUnixUsingDefaultTimezone('01.05.2013');
+
+      sinon.stub(activitystore, 'upcomingActivitiesForGroupIds', function (list, callback) {
+        return callback(null, [new Activity({
+          title: "Erste Aktivität",
+          startUnix: date1
+        }), new Activity({
+          title: "Zweite Aktivität",
+          startUnix: date2
+        })]);
+      });
+
+      request(createApp())
+        .get('/GroupA')
+        .expect(200)
+        .expect('Content-Type', /text\/html/)
+        .expect(/Kommende Aktivitäten:/)
+        .expect(/1\. Januar 2013/)
+        .expect(/Erste Aktivität/)
+        .expect(/1\. Mai 2013/)
+        .expect(/Zweite Aktivität/, done);
     });
 
   });
