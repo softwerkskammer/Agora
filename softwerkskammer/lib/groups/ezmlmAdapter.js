@@ -3,7 +3,7 @@
 var _ = require('lodash');
 var async = require('async');
 var conf = require('simple-configure');
-var ezmlm = require('ezmlm-node')(conf.get('ezmlmHomedir'), conf.get('emaildomainname'), conf.get('listownerAddress'), conf.get('ezmlmrc'));
+var ezmlm = require('ezmlm-node')(conf.get('fullyQualifiedHomeDir'), conf.get('emaildomainname'), conf.get('listownerAddress'), conf.get('ezmlmrc'));
 
 module.exports = {
 
@@ -36,6 +36,9 @@ module.exports = {
 
   removeUserFromList: function (email, list, callback) {
     ezmlm.unsubscribeUserFromList(email, list, callback);
-  }
+  },
 
+  archivedMails: function (list, maxAgeInDays, callback) {
+    ezmlm.archivedMails(list, maxAgeInDays, callback);
+  }
 };

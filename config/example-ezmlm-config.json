@@ -1,7 +1,7 @@
 // to use these values, strip "example-" from the filename, delete this comment and replace the below values
 {
   "emaildomainname": "softwerkskammer.org",
-  "ezmlmHomedir": "/home/username/",
+  "fullyQualifiedHomeDir": "/home/username/",
   "listownerAddress": "info@softwerkskammer.org",
   "ezmlmrc": ""
 }

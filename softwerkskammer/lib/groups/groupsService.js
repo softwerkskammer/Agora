@@ -12,7 +12,7 @@ var sympaCache;
 //Just checking if remote has been configured
 if (conf.get('swkTrustedAppName') || conf.get('swkTrustedAppPwd')) {
   sympaCache = require('./sympaCache')(beans.get('sympa'));
-} else if (conf.get('ezmlmHomedir')) {
+} else if (conf.get('fullyQualifiedHomeDir')) {
   sympaCache = beans.get('ezmlmAdapter');
 } else {
   sympaCache = beans.get('sympaStub');
