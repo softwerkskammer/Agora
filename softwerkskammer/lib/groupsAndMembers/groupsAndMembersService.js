@@ -44,6 +44,7 @@ var getUserWithHisGroupsByUser = function (member, callback) {
 var addMembersToGroup = function (group, callback) {
   if (!group) { return callback(null); }
   getUsersOfList(group.id, function (err, members) {
+    if (err) { return callback(err); }
     async.each(members, membersService.getImage, function () {
       group.members = members;
       group.membercount = members.length;

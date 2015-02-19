@@ -38,6 +38,8 @@
   "groupstore": {"module": "./softwerkskammer/lib/groups/groupstore"},
   "memberstore": {"module": "./softwerkskammer/lib/members/memberstore"},
 
+  "ezmlmAdapter": {"module": "./softwerkskammer/lib/groups/ezmlmAdapter"},
+  
   "sympa": {"module": "./softwerkskammer/lib/groups/sympa"},
   "sympaStub": {"module": "./softwerkskammer/lib/groups/sympaStub"},
   "sympaTransformer": {"module": "./softwerkskammer/lib/groups/sympaTransformer"},

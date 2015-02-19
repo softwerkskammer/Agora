@@ -1,7 +1,6 @@
 'use strict';
 var _ = require('lodash');
 var conf = require('simple-configure');
-var logger = require('winston').loggers.get('application');
 var async = require('async');
 
 var beans = conf.get('beans');
@@ -9,54 +8,54 @@ var validation = beans.get('validation');
 var groupstore = beans.get('groupstore');
 var misc = beans.get('misc');
 
-var sympaClient;
+var sympaCache;
 //Just checking if remote has been configured
 if (conf.get('swkTrustedAppName') || conf.get('swkTrustedAppPwd')) {
-  sympaClient = beans.get('sympa');
+  sympaCache = require('./sympaCache')(beans.get('sympa'));
+} else if (conf.get('fullyQualifiedHomeDir')) {
+  sympaCache = beans.get('ezmlmAdapter');
 } else {
-  sympaClient = beans.get('sympaStub');
+  sympaCache = beans.get('sympaStub');
 }
-
-var sympaCache = require('./sympaCache')(sympaClient);
 
 var isReserved = function (groupname) {
   return new RegExp('^edit$|^new$|^checkgroupname$|^submit$|^administration$|[^\\w-]', 'i').test(groupname);
 };
 
+var subscribedListsForUser = function (userMail, callback) {
+  sympaCache.getSubscribedListsForUser(userMail, function (err, lists) {
+    callback(err, _.without(lists, conf.get('adminListName')));
+  });
+};
+
+var groupsForRetriever = function (retriever, callback) {
+  async.waterfall([retriever],
+    function (err, lists) {
+      if (err) { return callback(err); }
+      groupstore.groupsByLists(lists, callback);
+    });
+};
+
 module.exports = {
   refreshCache: function () {
-    sympaCache = require('./sympaCache')(sympaClient);
+    if (conf.get('swkTrustedAppName') || conf.get('swkTrustedAppPwd')) {
+      sympaCache = require('./sympaCache')(beans.get('sympa'));
+    }
   },
 
-  getSubscribedGroupsForUser: function (userMail, globalCallback) {
-    async.waterfall(
-      [ function (callback) {
-        sympaCache.getSubscribedListsForUser(userMail, callback);
-      } ],
-      function (err, subscribedLists) { groupstore.groupsByLists(subscribedLists, globalCallback); }
-    );
+  getSubscribedGroupsForUser: function (userMail, callback) {
+    groupsForRetriever(function (callback) { subscribedListsForUser(userMail, callback); }, callback);
   },
 
-  getAllAvailableGroups: function (globalCallback) {
-    async.waterfall([ function (callback) { sympaCache.getAllAvailableLists(callback); } ],
-      function (err, allLists) {
-        if (err) {
-          logger.error(err);
-          globalCallback(err);
-        } else {
-          groupstore.groupsByLists(allLists, globalCallback);
-        }
-      });
+  getAllAvailableGroups: function (callback) {
+    groupsForRetriever(function (callback) { sympaCache.getAllAvailableLists(callback); }, callback);
   },
 
   allGroupColors: function (callback) {
     this.getAllAvailableGroups(function (err, groups) {
-      if (err) { callback(err); }
-      var result = {};
-      groups.forEach(function (each) {
-        result[each.id] = each.color;
-      });
-      callback(null, result);
+      callback(err, _.transform(groups, function (result, group) {
+        result[group.id] = group.color;
+      }, {}));
     });
   },
 
@@ -112,13 +111,11 @@ module.exports = {
     async.waterfall(
       [
         function (callback) {
-          sympaCache.getSubscribedListsForUser(oldUserMail, callback);
+          subscribedListsForUser(oldUserMail, callback);
         }
       ],
       function (err, subscribedLists) {
-        if (err) {
-          return globalCallback(err);
-        }
+        if (err) { return globalCallback(err); }
         newSubscriptions = misc.toArray(newSubscriptions);
         var emailChanged = userMail !== oldUserMail;
         var listsToSubscribe = emailChanged ? newSubscriptions : _.difference(newSubscriptions, subscribedLists);
@@ -157,7 +154,7 @@ module.exports = {
 
   combineSubscribedAndAvailableGroups: function (subscribedGroups, availableGroups) {
     return availableGroups.map(function (group) {
-      return { group: group, selected: _.some(subscribedGroups, {id: group.id}) };
+      return {group: group, selected: _.some(subscribedGroups, {id: group.id})};
     });
   },
 

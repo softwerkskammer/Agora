@@ -50,7 +50,8 @@ function createConfiguration() {
     'mailsender-config.json',
     'wikirepo-config.json',
     'activityresults-config.json',
-    'crosssite-config.json'];
+    'crosssite-config.json',
+    'ezmlm-config.json'];
   conf.addFiles(_.map(files, function (file) { return configdir + file; }));
 
   return conf;

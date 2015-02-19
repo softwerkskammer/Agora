@@ -415,8 +415,8 @@
       },
       "groups": {
         "saved": "Deine Gruppe wurde gespeichert.",
-        "subscribed": "Du bist jetzt Mitglied in der Gruppe und wirst in wenigen Momenten eine Begrüßungs-E-Mail erhalten.",
-        "unsubscribed": "Du bist jetzt nicht mehr Mitglied in der Gruppe und wirst in wenigen Momenten eine Bestätigungs-E-Mail erhalten."
+        "subscribed": "Du bist jetzt Mitglied in der Gruppe.",
+        "unsubscribed": "Du bist jetzt nicht mehr Mitglied in der Gruppe."
       },
       "mailsender": {
         "error_reason": "Deine __type__ wurde nicht gesendet. Grund: __err__",

@@ -414,8 +414,8 @@
       },
       "groups": {
         "saved": "Your group has been saved.",
-        "subscribed": "You are now a member of this group. You will receive a welcome-email in a few moments.",
-        "unsubscribed": "You are not a member of this group any more. You will receive a goodbye-email in a few moments."
+        "subscribed": "You are now a member of this group.",
+        "unsubscribed": "You are not a member of this group any more."
       },
       "mailsender": {
         "error_reason": "Your __type__ has not been sent. Reason: __err__",
