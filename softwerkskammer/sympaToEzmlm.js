@@ -21,7 +21,7 @@ var really = process.argv[3];
 var doSave = process.argv[4] === 'doSave';
 
 if (!really || really !== 'really') {
-  console.log('If you really want to rename the group, append "really" to the command line.');
+  console.log('If you really want to migrate the lists, append "really" to the command line.');
   console.log('If you really want to save, append "doSave" after "really" to the command line.');
   process.exit();
 }
@@ -41,9 +41,8 @@ if (doSave) {
   };
   perform = function (commandline, callback) {
     console.log(commandline);
-    exec(commandline, {cwd: fqhomedir}, callback);
+    callback();
   };
-  //perform = function (commandline, callback) { callback(); };
   ezmlmAdapter = proxyquire('./lib/groups/ezmlmAdapter', {'ezmlm-node': function () { return ezmlmStub; }});
 }
 
