@@ -158,10 +158,14 @@ Resource.registrationClosed = 'registrationClosed';
 Resource.waitinglistPossible = 'waitinglistPossible';
 Resource.onWaitinglist = 'onWaitinglist';
 Resource.full = 'full';
+Resource.canSubscribeFromWaitinglist = 'canSubscribeFromWaitinglist'; // is on waitinglist and entitled to subscribe
 
 Resource.prototype.registrationStateFor = function (memberId) {
   if (this.registeredMembers().indexOf(memberId) > -1) {
     return this.canUnsubscribe() ? Resource.registered : Resource.fixed;
+  }
+  if (this.waitinglistEntryFor(memberId) && this.waitinglistEntryFor(memberId).canSubscribe()) {
+    return Resource.canSubscribeFromWaitinglist;
   }
   if (this.isRegistrationOpen() && !this.isFull()) {
     return Resource.registrationPossible;

@@ -4,6 +4,7 @@ var request = require('supertest');
 var sinon = require('sinon').sandbox.create();
 var expect = require('must');
 var _ = require('lodash');
+var moment = require('moment-timezone');
 
 var createApp = require('../../testutil/testHelper')('activitiesApp').createApp;
 
@@ -325,6 +326,33 @@ describe('Activity application', function () {
         .get('/' + 'urlForInteresting')
         .expect(200)
         .expect(/Auf die Warteliste/, done);
+    });
+
+    it('allows to leave the waitinglist if member is on waitinglist', function (done) {
+      activityWithParticipants.state.resources['default']._registrationOpen = false;
+      activityWithParticipants.state.resources['default']._limit = 1;
+      activityWithParticipants.state.resources['default']._waitinglist = [{
+        _memberId: 'memberId3'
+      }];
+
+      request(createApp('memberId3'))
+        .get('/' + 'urlForInteresting')
+        .expect(200)
+        .expect(/Warteliste verlassen/, done);
+    });
+
+    it('shows the subscription link if waitinglist participant is entitled to subscribe', function (done) {
+      activityWithParticipants.state.resources['default']._registrationOpen = false;
+      activityWithParticipants.state.resources['default']._limit = 1;
+      activityWithParticipants.state.resources['default']._waitinglist = [{
+        _memberId: 'memberId3',
+        _registrationValidUntil: moment().add(1, 'days')
+      }];
+
+      request(createApp('memberId3'))
+        .get('/' + 'urlForInteresting')
+        .expect(200)
+        .expect(/Ich bin dabei!/, done);
     });
 
     it('shows the deregistration button for an activity with participants when a user is logged in who already is participant', function (done) {
