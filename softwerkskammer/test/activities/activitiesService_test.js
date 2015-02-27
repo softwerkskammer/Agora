@@ -10,6 +10,7 @@ var _ = require('lodash');
 var beans = require('../../testutil/configureForTest').get('beans');
 
 var activitiesService = beans.get('activitiesService');
+var membersService = beans.get('membersService');
 var activitystore = beans.get('activitystore');
 var groupsService = beans.get('groupsService');
 var groupstore = beans.get('groupstore');
@@ -91,7 +92,6 @@ describe('Activities Service', function () {
   });
 
   it('returns an activity and enhances it with its group and visitors', function (done) {
-    // TODO: flaky test!
     var member1 = new Member({id: 'memberId1', nickname: 'participant1', email: 'a@b.c'});
     var member2 = new Member({id: 'memberId2', nickname: 'participant2', email: 'a@b.c'});
     var owner = new Member({id: 'ownerId', nickname: 'owner', email: 'a@b.c'});
@@ -108,6 +108,7 @@ describe('Activities Service', function () {
       }
       return callback(null, null);
     });
+    sinon.stub(membersService, 'getImage', function (member, callback) { return callback(); });
 
     activitiesService.getActivityWithGroupAndParticipants('urlOfTheActivity', function (err, activity) {
       expect(activity, 'Activity').to.exist();
