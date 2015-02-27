@@ -49,7 +49,7 @@ Resource.prototype.registrationDateOf = function (memberId) {
 };
 
 Resource.prototype.addMemberId = function (memberId, momentOfRegistration) {
-  if (!this.canSubscribeFromWaitinglist(memberId) && (this.isFull() || !this.isRegistrationOpen())) { return; }
+  if (!(this.canSubscribe() || this.canSubscribeFromWaitinglist(memberId))) { return; }
 
   if (this.registeredMembers().indexOf(memberId) === -1) {
     this.state._registeredMembers.push({
@@ -129,6 +129,10 @@ Resource.prototype.isFull = function () {
   return (this.limit() >= 0) && (this.limit() <= this.registeredMembers().length);
 };
 
+Resource.prototype.canSubscribe = function () {
+  return this.isRegistrationOpen() && !this.isFull();
+};
+
 Resource.prototype.canSubscribeFromWaitinglist = function (memberId) {
   var waitingListEntry = this.waitinglistEntryFor(memberId);
   return waitingListEntry && waitingListEntry.canSubscribe();
@@ -169,10 +173,10 @@ Resource.prototype.registrationStateFor = function (memberId) {
   if (this.registeredMembers().indexOf(memberId) > -1) {
     return this.canUnsubscribe() ? Resource.registered : Resource.fixed;
   }
-  if (this.waitinglistEntryFor(memberId) && this.waitinglistEntryFor(memberId).canSubscribe()) {
+  if (this.canSubscribeFromWaitinglist(memberId)) {
     return Resource.canSubscribeFromWaitinglist;
   }
-  if (this.isRegistrationOpen() && !this.isFull()) {
+  if (this.canSubscribe()) {
     return Resource.registrationPossible;
   }
   if (this.limit() === 0) {
