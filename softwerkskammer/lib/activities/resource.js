@@ -49,17 +49,18 @@ Resource.prototype.registrationDateOf = function (memberId) {
 };
 
 Resource.prototype.addMemberId = function (memberId, momentOfRegistration) {
-  if (!(this.canSubscribe() || this.canSubscribeFromWaitinglist(memberId))) { return false; }
-
-  if (this.registeredMembers().indexOf(memberId) === -1) {
-    this.state._registeredMembers.push({
-      memberId: memberId,
-      registeredAt: (momentOfRegistration || moment()).toDate()
-    });
+  if (this.canSubscribe() || this.canSubscribeFromWaitinglist(memberId)) {
+    if (this.registeredMembers().indexOf(memberId) === -1) {
+      this.state._registeredMembers.push({
+        memberId: memberId,
+        registeredAt: (momentOfRegistration || moment()).toDate()
+      });
+    }
+    this.removeFromWaitinglist(memberId);
+    if (this.isFull()) { this.state._registrationOpen = false; }
+    return true;
   }
-  this.removeFromWaitinglist(memberId);
-  if (this.isFull()) { this.state._registrationOpen = false; }
-  return true;
+  return false;
 };
 
 Resource.prototype.isAlreadyRegistered = function (memberId) {
