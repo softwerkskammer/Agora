@@ -13,8 +13,10 @@ tomorrow.add(1, 'days');
 describe('Resource', function () {
   describe('registration matters', function () {
     it('can add a member', function () {
-      var resource = new Resource({ _registrationOpen: true });
-      resource.addMemberId('memberID');
+      var resource = new Resource({_registrationOpen: true});
+      var result = resource.addMemberId('memberID');
+
+      expect(result).to.be(true);
       expect(resource.registeredMembers()).to.contain('memberID');
     });
 
@@ -27,18 +29,21 @@ describe('Resource', function () {
         _registrationOpen: true
       });
       expect(resource.isRegistrationOpen()).to.be(true);
-      resource.addMemberId('memberID1');
+      var result = resource.addMemberId('memberID1');
+      expect(result).to.be(true);
       expect(resource.registeredMembers().length).to.equal(2);
       expect(resource.isRegistrationOpen()).to.be(false);
     });
 
     it('does not add a member twice', function () {
       var resource = new Resource({
+        _registrationOpen: true,
         _registeredMembers: [
           {memberId: 'memberID'}
         ]
       });
-      resource.addMemberId('memberID');
+      var result = resource.addMemberId('memberID');
+      expect(result).to.be(true);
       expect(resource.registeredMembers().length).to.equal(1);
     });
 
@@ -50,7 +55,8 @@ describe('Resource', function () {
         ]
       });
       expect(resource.waitinglistEntries().length).to.equal(1);
-      resource.addMemberId('memberID');
+      var result = resource.addMemberId('memberID');
+      expect(result).to.be(true);
       expect(resource.registeredMembers().length).to.equal(1);
       expect(resource.waitinglistEntries().length).to.equal(0);
     });
@@ -109,7 +115,8 @@ describe('Resource', function () {
         ],
         _limit: 1
       });
-      resource.addMemberId('otherMemberID');
+      var result = resource.addMemberId('otherMemberID');
+      expect(result).to.be(false);
       expect(resource.registeredMembers().length).to.equal(1);
       expect(resource.registeredMembers()).to.contain('memberID');
     });
@@ -118,7 +125,8 @@ describe('Resource', function () {
       var resource = new Resource({
         _registrationOpen: false
       });
-      resource.addMemberId('memberID');
+      var result = resource.addMemberId('memberID');
+      expect(result).to.be(false);
       expect(resource.registeredMembers().length).to.equal(0);
     });
 
@@ -136,7 +144,8 @@ describe('Resource', function () {
           }
         ]
       });
-      resource.addMemberId('memberID');
+      var result = resource.addMemberId('memberID');
+      expect(result).to.be(true);
       expect(resource.registeredMembers().length).to.equal(2);
       expect(resource.registeredMembers()).to.contain('memberID');
       expect(resource.waitinglistEntries().length).to.equal(0);
@@ -160,14 +169,16 @@ describe('Resource', function () {
 
     it('does not change the registered members of the copy when a member is added to the original', function () {
       var resource = new Resource({
+        _registrationOpen: true,
         _registeredMembers: [
           {memberId: 'memberID'}
         ],
-        _limit: 1
+        _limit: 2
       });
       var copy = new Resource({}).copyFrom(resource);
-      resource.addMemberId('memberID2');
-      expect(resource.registeredMembers()).to.not.be.empty();
+      var result = resource.addMemberId('memberID2');
+      expect(result).to.be(true);
+      expect(resource.registeredMembers()).to.have.length(2);
       expect(copy.registeredMembers()).to.be.empty();
     });
 
@@ -291,7 +302,7 @@ describe('Resource', function () {
       activity1 = new Activity({
         id: 'Meine Aktivität',
         url: 'myActivity',
-        resources: {'Meine Ressource': { _registrationOpen: true, _waitinglist: []}}
+        resources: {'Meine Ressource': {_registrationOpen: true, _waitinglist: []}}
       });
     });
 
@@ -322,6 +333,7 @@ describe('Resource', function () {
     it('does not add a member to waitinglist if this member is already registered', function () {
       var resource = activity1.resourceNamed('Meine Ressource');
       resource.addMemberId('12345');
+
       expect(resource.isAlreadyRegistered('12345')).to.be(true);
       resource.addToWaitinglist('12345', moment());
 
@@ -332,7 +344,7 @@ describe('Resource', function () {
   describe('- registration date -', function () {
     var resource;
     beforeEach(function () {
-      resource = new Resource({ _registrationOpen: true });
+      resource = new Resource({_registrationOpen: true});
     });
 
     it('returns undefined if the member is not registered', function () {
