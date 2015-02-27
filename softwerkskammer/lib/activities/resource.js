@@ -49,7 +49,7 @@ Resource.prototype.registrationDateOf = function (memberId) {
 };
 
 Resource.prototype.addMemberId = function (memberId, momentOfRegistration) {
-  if (!this.canSubscribeFromWaitinglist(memberId) && this.isFull()) { return; }
+  if (!this.canSubscribeFromWaitinglist(memberId) && (this.isFull() || !this.isRegistrationOpen())) { return; }
 
   if (this.registeredMembers().indexOf(memberId) === -1) {
     this.state._registeredMembers.push({

@@ -111,7 +111,7 @@ describe('Resources (fillFromUI)', function () {
   describe('- registration dates -', function () {
     var resources;
     beforeEach(function () {
-      resources = new Resources({resource1: {}, resource2: {}});
+      resources = new Resources({resource1: { _registrationOpen: true }, resource2: { _registrationOpen: true }});
     });
 
     it('returns an empty array if the member is not registered', function () {
@@ -174,7 +174,7 @@ describe('Resources (fillFromUI)', function () {
   describe('- resource names -', function () {
     var resources;
     beforeEach(function () {
-      resources = new Resources({resource1: {}, resource2: {}});
+      resources = new Resources({resource1: { _registrationOpen: true }, resource2: { _registrationOpen: true }});
     });
 
     it('returns an empty array if the member is not registered', function () {
@@ -206,7 +206,7 @@ describe('Resources (fillFromUI)', function () {
   describe('- registration offset -', function () {
     var resources;
     beforeEach(function () {
-      resources = new Resources({resource1: {}, resource2: {}});
+      resources = new Resources({resource1: { _registrationOpen: true }, resource2: { _registrationOpen: true }});
     });
 
     var today = moment();

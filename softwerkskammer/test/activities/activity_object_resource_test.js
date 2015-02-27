@@ -83,7 +83,7 @@ describe('Activity resource management', function () {
     });
 
     it('adds a member to a desired resource', function () {
-      var activity = new Activity({url: 'myURL', resources: {Einzelzimmer: { _registeredMembers: []}, Doppelzimmer: { _registeredMembers: []}}});
+      var activity = new Activity({url: 'myURL', resources: {Einzelzimmer: { _registrationOpen: true, _registeredMembers: []}, Doppelzimmer: { _registeredMembers: []}}});
       activity.resourceNamed('Einzelzimmer').addMemberId('memberID');
       expect(activity.resourceNamed('Einzelzimmer').registeredMembers()).to.contain('memberID');
       expect(activity.resourceNamed('Doppelzimmer').registeredMembers()).to.be.empty();
@@ -328,7 +328,7 @@ describe('Activity resource management', function () {
 
     it('knows when a resource is full and when not', function () {
       var activity = new Activity({url: 'url', resources: {
-        Teilnehmer: { _registeredMembers: [], _limit: 1}
+        Teilnehmer: { _registrationOpen: true, _registeredMembers: [], _limit: 1}
       }});
 
       expect(activity.resourceNamed('Teilnehmer').isFull()).to.be(false);
@@ -340,7 +340,7 @@ describe('Activity resource management', function () {
 
     it('knows how many free slots are in a resource', function () {
       var activity = new Activity({url: 'url', resources: {
-        Teilnehmer: { _registeredMembers: [], _limit: 10}
+        Teilnehmer: { _registrationOpen: true, _registeredMembers: [], _limit: 10}
       }});
 
       expect(activity.resourceNamed('Teilnehmer').numberOfFreeSlots()).to.equal(10);

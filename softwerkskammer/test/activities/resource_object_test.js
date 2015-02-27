@@ -13,7 +13,7 @@ tomorrow.add(1, 'days');
 describe('Resource', function () {
   describe('registration matters', function () {
     it('can add a member', function () {
-      var resource = new Resource({});
+      var resource = new Resource({ _registrationOpen: true });
       resource.addMemberId('memberID');
       expect(resource.registeredMembers()).to.contain('memberID');
     });
@@ -44,6 +44,7 @@ describe('Resource', function () {
 
     it('removes a member from the waitinglist when registering', function () {
       var resource = new Resource({
+        _registrationOpen: true,
         _waitinglist: [
           {_memberId: 'memberID'}
         ]
@@ -102,6 +103,7 @@ describe('Resource', function () {
 
     it('with one spot does not accept member registrations when one member is registered', function () {
       var resource = new Resource({
+        _registrationOpen: true,
         _registeredMembers: [
           {memberId: 'memberID'}
         ],
@@ -112,8 +114,17 @@ describe('Resource', function () {
       expect(resource.registeredMembers()).to.contain('memberID');
     });
 
-    it('allows somebody on the waitinglist to subscribe although it is full', function () {
+    it('does not accept member registration when registration is not open', function () {
       var resource = new Resource({
+        _registrationOpen: false
+      });
+      resource.addMemberId('memberID');
+      expect(resource.registeredMembers().length).to.equal(0);
+    });
+
+    it('allows somebody on the waitinglist to subscribe although it is full and registration is not open', function () {
+      var resource = new Resource({
+        _registrationOpen: false,
         _limit: 1,
         _registeredMembers: [
           {memberId: 'otherMemberID'}
@@ -280,7 +291,7 @@ describe('Resource', function () {
       activity1 = new Activity({
         id: 'Meine Aktivität',
         url: 'myActivity',
-        resources: {'Meine Ressource': {_waitinglist: []}}
+        resources: {'Meine Ressource': { _registrationOpen: true, _waitinglist: []}}
       });
     });
 
@@ -321,7 +332,7 @@ describe('Resource', function () {
   describe('- registration date -', function () {
     var resource;
     beforeEach(function () {
-      resource = new Resource();
+      resource = new Resource({ _registrationOpen: true });
     });
 
     it('returns undefined if the member is not registered', function () {
