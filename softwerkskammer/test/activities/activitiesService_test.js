@@ -76,6 +76,7 @@ describe('Activities Service', function () {
   });
 
   it('returns an activity and enhances it with its group and visitors', function (done) {
+    // TODO: flaky test!
     var member1 = new Member({id: 'memberId1', nickname: 'participant1', email: 'a@b.c'});
     var member2 = new Member({id: 'memberId2', nickname: 'participant2', email: 'a@b.c'});
     var owner = new Member({id: 'ownerId', nickname: 'owner', email: 'a@b.c'});
