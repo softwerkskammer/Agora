@@ -21,12 +21,27 @@ var Member = beans.get('member');
 var Group = beans.get('group');
 var notifications = beans.get('notifications');
 
-var dummyActivity = new Activity({title: 'Title of the Activity', description: 'description', assignedGroup: 'assignedGroup',
-  location: 'location', direction: 'direction', startDate: '01.01.2013', url: 'urlOfTheActivity', color: 'aus Gruppe' });
+var dummyActivity = new Activity({
+  title: 'Title of the Activity',
+  description: 'description',
+  assignedGroup: 'assignedGroup',
+  location: 'location',
+  direction: 'direction',
+  startDate: '01.01.2013',
+  url: 'urlOfTheActivity',
+  color: 'aus Gruppe'
+});
 
-var emptyActivity = new Activity({title: 'Title of the Activity', description: 'description1', assignedGroup: 'groupname',
-  location: 'location1', direction: 'direction1', startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'), url: 'urlOfTheActivity',
-  owner: 'ownerId'});
+var emptyActivity = new Activity({
+  title: 'Title of the Activity',
+  description: 'description1',
+  assignedGroup: 'groupname',
+  location: 'location1',
+  direction: 'direction1',
+  startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'),
+  url: 'urlOfTheActivity',
+  owner: 'ownerId'
+});
 
 var group = new Group({id: 'groupname', longName: 'Buxtehude'});
 
@@ -82,7 +97,7 @@ describe('Activities Service', function () {
     var owner = new Member({id: 'ownerId', nickname: 'owner', email: 'a@b.c'});
     sinon.stub(activitystore, 'getActivity', function (activityId, callback) { callback(null, emptyActivity); });
     sinon.stub(memberstore, 'getMembersForIds', function (ids, callback) {
-      callback(null, [ member1, member2 ]);
+      callback(null, [member1, member2]);
     });
     sinon.stub(memberstore, 'getMemberForId', function (id, callback) {
       callback(null, owner);
@@ -131,21 +146,38 @@ describe('Activities Service', function () {
 
   describe('- when adding a visitor -', function () {
 
-    it('succeeds when registration is open', function (done) {
-      var activity = activityWithEinzelzimmer({_registrationOpen: true});
+    beforeEach(function () {
+      sinon.stub(activitystore, 'saveActivity', function (id, callback) { callback(null); });
       sinon.stub(notifications, 'visitorRegistration');
+    });
+
+    function activityWithAddMemberIdReturning(truthValue) {
+      return {resourceNamed: function () { return {addMemberId: function () { return truthValue; }}; }};
+    }
+
+    it('does not show a status message when member addition succeeds', function (done) {
+      sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, activityWithAddMemberIdReturning(true)); });
 
       activitiesService.addVisitorTo('memberId', 'activity-url', 'Einzelzimmer', moment(), function (err, statusTitle, statusText) {
-        expect(statusTitle, 'Status Title').to.not.exist();
-        expect(statusText, 'Status Text').to.not.exist();
-        expect(activity.resourceNamed('Einzelzimmer').registeredMembers()).to.contain('memberId');
+        expect(statusTitle).to.not.exist();
+        expect(statusText).to.not.exist();
         done(err);
       });
     });
 
-    it('notifies of the registration', function (done) {
-      var activity = activityWithEinzelzimmer({_registrationOpen: true});
-      sinon.stub(notifications, 'visitorRegistration');
+    it('shows a status message when member addition fails', function (done) {
+      sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, activityWithAddMemberIdReturning(false)); });
+
+      activitiesService.addVisitorTo('memberId', 'activity-url', 'Einzelzimmer', moment(), function (err, statusTitle, statusText) {
+        expect(statusTitle).to.be('activities.registration_not_now');
+        expect(statusText).to.be('activities.registration_not_possible');
+        done(err);
+      });
+    });
+
+    it('notifies of the registration when member addition succeeds', function (done) {
+      var activity = activityWithAddMemberIdReturning(true);
+      sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, activity); });
 
       activitiesService.addVisitorTo('memberId', 'activity-url', 'Einzelzimmer', moment(), function (err) {
         expect(notifications.visitorRegistration.calledOnce).to.be(true);
@@ -156,29 +188,11 @@ describe('Activities Service', function () {
       });
     });
 
-    it('gives a status message when registration is not open', function (done) {
-      var activity = activityWithEinzelzimmer({_registrationOpen: false});
+    it('does not notify of the registration when member addition fails', function (done) {
+      sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, activityWithAddMemberIdReturning(false)); });
 
-      activitiesService.addVisitorTo('memberId', 'activity-url', 'Einzelzimmer', moment(), function (err, statusTitle, statusText) {
-        expect(statusTitle, 'Status Title').to.equal('activities.registration_not_now');
-        expect(statusText, 'Status Text').to.equal('activities.registration_not_possible');
-        expect(activity.resourceNamed('Einzelzimmer').registeredMembers()).to.not.contain('memberId');
-        done(err);
-      });
-    });
-
-    it('succeeds when registration is not open but registrant is on waiting list and allowed to subscribe', function (done) {
-      var tomorrow = moment();
-      tomorrow.add(1, 'days');
-      var activity = activityWithEinzelzimmer({ _registrationOpen: false, _waitinglist: [
-        { _memberId: 'memberId', _registrationValidUntil: tomorrow.toDate() }
-      ]});
-      sinon.stub(notifications, 'visitorRegistration');
-
-      activitiesService.addVisitorTo('memberId', 'activity-url', 'Einzelzimmer', moment(), function (err, statusTitle, statusText) {
-        expect(statusTitle, 'Status Title').to.not.exist();
-        expect(statusText, 'Status Text').to.not.exist();
-        expect(activity.resourceNamed('Einzelzimmer').registeredMembers()).to.contain('memberId');
+      activitiesService.addVisitorTo('memberId', 'activity-url', 'Einzelzimmer', moment(), function (err) {
+        expect(notifications.visitorRegistration.called).to.be(false);
         done(err);
       });
     });
@@ -187,7 +201,7 @@ describe('Activities Service', function () {
       sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(new Error('error')); });
 
       activitiesService.addVisitorTo('memberId', 'activity-url', 'Einzelzimmer', moment(), function (err) {
-        expect(err, 'Error').to.exist();
+        expect(err).to.exist();
         done(); // error condition - do not pass err
       });
     });
@@ -196,10 +210,13 @@ describe('Activities Service', function () {
   describe('- when removing a visitor -', function () {
 
     it('succeeds when registration is open', function (done) {
-      var activity = activityWithEinzelzimmer({_registrationOpen: true, _registeredMembers: [
-        {memberId: 'memberId'},
-        {memberId: 'otherId'}
-      ]});
+      var activity = activityWithEinzelzimmer({
+        _registrationOpen: true,
+        _registeredMembers: [
+          {memberId: 'memberId'},
+          {memberId: 'otherId'}
+        ]
+      });
       sinon.stub(notifications, 'visitorUnregistration');
 
       activitiesService.removeVisitorFrom('memberId', 'activity-url', 'Einzelzimmer', function (err) {
@@ -210,10 +227,13 @@ describe('Activities Service', function () {
     });
 
     it('succeeds when registration is not open', function (done) {
-      var activity = activityWithEinzelzimmer({_registrationOpen: false, _registeredMembers: [
-        {memberId: 'memberId'},
-        {memberId: 'otherId'}
-      ]});
+      var activity = activityWithEinzelzimmer({
+        _registrationOpen: false,
+        _registeredMembers: [
+          {memberId: 'memberId'},
+          {memberId: 'otherId'}
+        ]
+      });
       sinon.stub(notifications, 'visitorUnregistration');
 
       activitiesService.removeVisitorFrom('memberId', 'activity-url', 'Einzelzimmer', function (err) {
@@ -224,10 +244,13 @@ describe('Activities Service', function () {
     });
 
     it('notifies of the unregistration', function (done) {
-      var activity = activityWithEinzelzimmer({_registrationOpen: true, _registeredMembers: [
-        {memberId: 'memberId'},
-        {memberId: 'otherId'}
-      ]});
+      var activity = activityWithEinzelzimmer({
+        _registrationOpen: true,
+        _registeredMembers: [
+          {memberId: 'memberId'},
+          {memberId: 'otherId'}
+        ]
+      });
       sinon.stub(notifications, 'visitorUnregistration');
 
       activitiesService.removeVisitorFrom('memberId', 'activity-url', 'Einzelzimmer', function (err) {
@@ -302,10 +325,12 @@ describe('Activities Service', function () {
   describe('- when removing a waitinglist member -', function () {
 
     it('succeeds no matter whether registration is open or not', function (done) {
-      var activity = activityWithEinzelzimmer({_waitinglist: [
-        {_memberId: 'memberId'},
-        {_memberId: 'otherId'}
-      ]});
+      var activity = activityWithEinzelzimmer({
+        _waitinglist: [
+          {_memberId: 'memberId'},
+          {_memberId: 'otherId'}
+        ]
+      });
       sinon.stub(notifications, 'waitinglistRemoval');
 
       activitiesService.removeFromWaitinglist('memberId', 'activity-url', 'Einzelzimmer', function (err) {
@@ -317,10 +342,13 @@ describe('Activities Service', function () {
     });
 
     it('notifies of the waitinglist removal', function (done) {
-      var activity = activityWithEinzelzimmer({_registrationOpen: true, _registeredMembers: [
-        {memberId: 'memberId'},
-        {memberId: 'otherId'}
-      ]});
+      var activity = activityWithEinzelzimmer({
+        _registrationOpen: true,
+        _registeredMembers: [
+          {memberId: 'memberId'},
+          {memberId: 'otherId'}
+        ]
+      });
       sinon.stub(notifications, 'waitinglistRemoval');
 
       activitiesService.removeFromWaitinglist('memberId', 'activity-url', 'Einzelzimmer', function (err) {
