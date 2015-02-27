@@ -49,7 +49,7 @@ Resource.prototype.registrationDateOf = function (memberId) {
 };
 
 Resource.prototype.addMemberId = function (memberId, momentOfRegistration) {
-  if (!(this.canSubscribe() || this.canSubscribeFromWaitinglist(memberId))) { return; }
+  if (!(this.canSubscribe() || this.canSubscribeFromWaitinglist(memberId))) { return false; }
 
   if (this.registeredMembers().indexOf(memberId) === -1) {
     this.state._registeredMembers.push({
@@ -59,6 +59,7 @@ Resource.prototype.addMemberId = function (memberId, momentOfRegistration) {
   }
   this.removeFromWaitinglist(memberId);
   if (this.isFull()) { this.state._registrationOpen = false; }
+  return true;
 };
 
 Resource.prototype.isAlreadyRegistered = function (memberId) {
