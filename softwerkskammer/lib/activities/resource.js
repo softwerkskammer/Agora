@@ -49,7 +49,7 @@ Resource.prototype.registrationDateOf = function (memberId) {
 };
 
 Resource.prototype.addMemberId = function (memberId, momentOfRegistration) {
-  if (this.isFull()) { return; }
+  if (!this.canSubscribeFromWaitinglist(memberId) && this.isFull()) { return; }
 
   if (this.registeredMembers().indexOf(memberId) === -1) {
     this.state._registeredMembers.push({
@@ -127,6 +127,11 @@ Resource.prototype.limit = function () {
 
 Resource.prototype.isFull = function () {
   return (this.limit() >= 0) && (this.limit() <= this.registeredMembers().length);
+};
+
+Resource.prototype.canSubscribeFromWaitinglist = function (memberId) {
+  var waitingListEntry = this.waitinglistEntryFor(memberId);
+  return waitingListEntry && waitingListEntry.canSubscribe();
 };
 
 Resource.prototype.numberOfFreeSlots = function () {
