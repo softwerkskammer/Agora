@@ -112,10 +112,6 @@ describe('Groups Service (getSubscribedGroupsForUser)', function () {
 
 describe('Groups Service (getAllAvailableGroups)', function () {
 
-  beforeEach(function () {
-    systemUnderTest.refreshCache();
-  });
-
   afterEach(function () {
     sinon.restore();
   });
@@ -178,10 +174,6 @@ describe('Groups Service (getAllAvailableGroups)', function () {
 
 describe('Groups Service (getSympaUsersOfList)', function () {
 
-  beforeEach(function () {
-    systemUnderTest.refreshCache();
-  });
-
   afterEach(function () {
     sinon.restore();
   });
@@ -218,7 +210,6 @@ describe('Groups Service (createOrSaveGroup)', function () {
   var saveGroupSpy;
 
   beforeEach(function () {
-    systemUnderTest.refreshCache();
     createListSpy = sinon.stub(sympa, 'createList', function (listname, prefix, callback) { callback(); });
     saveGroupSpy = sinon.stub(groupstore, 'saveGroup', function (group, callback) { callback(null); });
 

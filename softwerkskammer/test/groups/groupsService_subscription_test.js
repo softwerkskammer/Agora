@@ -17,7 +17,6 @@ describe('Groups Service (updateSubscriptions)', function () {
   var unsubscribeSpy;
 
   beforeEach(function () {
-    systemUnderTest.refreshCache();
     subscribeSpy = sinon.stub(fakeListAdapter, 'addUserToList', function (email, list, callback) { callback(); });
     unsubscribeSpy = sinon.stub(fakeListAdapter, 'removeUserFromList', function (email, list, callback) { callback(); });
   });

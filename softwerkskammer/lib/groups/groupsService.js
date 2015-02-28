@@ -10,9 +10,7 @@ var misc = beans.get('misc');
 
 var listAdapter;
 //Just checking if remote has been configured
-if (conf.get('swkTrustedAppName') || conf.get('swkTrustedAppPwd')) {
-  listAdapter = require('./sympaCache')(beans.get('sympa'));
-} else if (conf.get('fullyQualifiedHomeDir')) {
+if (conf.get('fullyQualifiedHomeDir')) {
   listAdapter = beans.get('ezmlmAdapter');
 } else {
   listAdapter = beans.get('fakeListAdapter');
@@ -37,12 +35,6 @@ var groupsForRetriever = function (retriever, callback) {
 };
 
 module.exports = {
-  refreshCache: function () {
-    if (conf.get('swkTrustedAppName') || conf.get('swkTrustedAppPwd')) {
-      listAdapter = require('./sympaCache')(beans.get('sympa'));
-    }
-  },
-
   getSubscribedGroupsForUser: function (userMail, callback) {
     groupsForRetriever(function (callback) { subscribedListsForUser(userMail, callback); }, callback);
   },
