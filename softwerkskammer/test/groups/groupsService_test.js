@@ -30,7 +30,7 @@ var NonPersistentGroup = new Group({
 });
 
 var groupstore = beans.get('groupstore');
-var sympa = beans.get('sympaStub');
+var sympa = beans.get('fakeListAdapter');
 
 var systemUnderTest = beans.get('groupsService');
 

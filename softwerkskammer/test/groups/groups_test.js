@@ -9,7 +9,7 @@ var membersPersistence = beans.get('membersPersistence');
 var activitystore = beans.get('activitystore');
 var Group = beans.get('group');
 var Activity = beans.get('activity');
-var sympa = beans.get('sympaStub');
+var fakeListAdapter = beans.get('fakeListAdapter');
 var fieldHelpers = beans.get('fieldHelpers');
 
 var createApp = require('../../testutil/testHelper')('groupsApp').createApp;
@@ -26,11 +26,11 @@ var GroupA = new Group({
 describe('Groups application', function () {
 
   before(function () {
-    sinon.stub(sympa, 'getAllAvailableLists', function (callback) {
+    sinon.stub(fakeListAdapter, 'getAllAvailableLists', function (callback) {
       return callback(null, ['GroupA']);
     });
 
-    sinon.stub(sympa, 'getUsersOfList', function (groupname, callback) {
+    sinon.stub(fakeListAdapter, 'getUsersOfList', function (groupname, callback) {
       if (groupname === 'groupa') {
         return callback(null, ['peter@google.de', 'hans@aol.com']);
       }

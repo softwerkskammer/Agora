@@ -8,14 +8,14 @@ var validation = beans.get('validation');
 var groupstore = beans.get('groupstore');
 var misc = beans.get('misc');
 
-var sympaCache;
+var listAdapter;
 //Just checking if remote has been configured
 if (conf.get('swkTrustedAppName') || conf.get('swkTrustedAppPwd')) {
-  sympaCache = require('./sympaCache')(beans.get('sympa'));
+  listAdapter = require('./sympaCache')(beans.get('sympa'));
 } else if (conf.get('fullyQualifiedHomeDir')) {
-  sympaCache = beans.get('ezmlmAdapter');
+  listAdapter = beans.get('ezmlmAdapter');
 } else {
-  sympaCache = beans.get('sympaStub');
+  listAdapter = beans.get('fakeListAdapter');
 }
 
 var isReserved = function (groupname) {
@@ -23,7 +23,7 @@ var isReserved = function (groupname) {
 };
 
 var subscribedListsForUser = function (userMail, callback) {
-  sympaCache.getSubscribedListsForUser(userMail, function (err, lists) {
+  listAdapter.getSubscribedListsForUser(userMail, function (err, lists) {
     callback(err, _.without(lists, conf.get('adminListName')));
   });
 };
@@ -39,7 +39,7 @@ var groupsForRetriever = function (retriever, callback) {
 module.exports = {
   refreshCache: function () {
     if (conf.get('swkTrustedAppName') || conf.get('swkTrustedAppPwd')) {
-      sympaCache = require('./sympaCache')(beans.get('sympa'));
+      listAdapter = require('./sympaCache')(beans.get('sympa'));
     }
   },
 
@@ -48,7 +48,7 @@ module.exports = {
   },
 
   getAllAvailableGroups: function (callback) {
-    groupsForRetriever(function (callback) { sympaCache.getAllAvailableLists(callback); }, callback);
+    groupsForRetriever(function (callback) { listAdapter.getAllAvailableLists(callback); }, callback);
   },
 
   allGroupColors: function (callback) {
@@ -60,7 +60,7 @@ module.exports = {
   },
 
   getSympaUsersOfList: function (groupname, callback) {
-    sympaCache.getUsersOfList(groupname, callback);
+    listAdapter.getUsersOfList(groupname, callback);
   },
 
   isGroupValid: function (group) {
@@ -87,7 +87,7 @@ module.exports = {
         [
           function (callback) {
             if (!existingGroup) {
-              sympaCache.createList(newGroup.id, newGroup.emailPrefix, callback);
+              listAdapter.createList(newGroup.id, newGroup.emailPrefix, callback);
             } else {
               callback(null);
             }
@@ -100,11 +100,11 @@ module.exports = {
   },
 
   addUserToList: function (userMail, list, callback) {
-    sympaCache.addUserToList(userMail, list, callback);
+    listAdapter.addUserToList(userMail, list, callback);
   },
 
   removeUserFromList: function (userMail, list, callback) {
-    sympaCache.removeUserFromList(userMail, list, callback);
+    listAdapter.removeUserFromList(userMail, list, callback);
   },
 
   updateSubscriptions: function (userMail, oldUserMail, newSubscriptions, globalCallback) {
@@ -127,19 +127,19 @@ module.exports = {
           [
             function (funCallback) {
               if (firstListToSubscribe) {
-                return sympaCache.addUserToList(userMail, firstListToSubscribe, funCallback);
+                return listAdapter.addUserToList(userMail, firstListToSubscribe, funCallback);
               }
               return funCallback(null);
             },
             function (funCallback) {
               var subscribe = function (list, callback) {
-                sympaCache.addUserToList(userMail, list, callback);
+                listAdapter.addUserToList(userMail, list, callback);
               };
               async.map(listsToSubscribe, subscribe, funCallback);
             },
             function (funCallback) {
               var unsubscribe = function (list, callback) {
-                sympaCache.removeUserFromList(oldUserMail, list, callback);
+                listAdapter.removeUserFromList(oldUserMail, list, callback);
               };
               async.map(listsToUnsubscribe, unsubscribe, funCallback);
             }

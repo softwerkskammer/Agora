@@ -41,7 +41,7 @@
   "ezmlmAdapter": {"module": "./softwerkskammer/lib/groups/ezmlmAdapter"},
   
   "sympa": {"module": "./softwerkskammer/lib/groups/sympa"},
-  "sympaStub": {"module": "./softwerkskammer/lib/groups/sympaStub"},
+  "fakeListAdapter": {"module": "./softwerkskammer/lib/groups/fakeListAdapter"},
   "sympaTransformer": {"module": "./softwerkskammer/lib/groups/sympaTransformer"},
 
   "activitiesPersistence": {

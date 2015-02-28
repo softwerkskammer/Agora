@@ -8,7 +8,7 @@ var Group = beans.get('group');
 var GroupA = new Group({id: 'GroupA', longName: 'Gruppe A', description: 'Dies ist Gruppe A.', type: 'Themengruppe'});
 var GroupB = new Group({id: 'GroupB', longName: 'Gruppe B', description: 'Dies ist Gruppe B.', type: 'Regionalgruppe'});
 
-var sympaStub = beans.get('sympaStub');
+var fakeListAdapter = beans.get('fakeListAdapter');
 var systemUnderTest = beans.get('groupsService');
 
 describe('Groups Service (updateSubscriptions)', function () {
@@ -18,8 +18,8 @@ describe('Groups Service (updateSubscriptions)', function () {
 
   beforeEach(function () {
     systemUnderTest.refreshCache();
-    subscribeSpy = sinon.stub(sympaStub, 'addUserToList', function (email, list, callback) { callback(); });
-    unsubscribeSpy = sinon.stub(sympaStub, 'removeUserFromList', function (email, list, callback) { callback(); });
+    subscribeSpy = sinon.stub(fakeListAdapter, 'addUserToList', function (email, list, callback) { callback(); });
+    unsubscribeSpy = sinon.stub(fakeListAdapter, 'removeUserFromList', function (email, list, callback) { callback(); });
   });
 
   afterEach(function () {
@@ -27,7 +27,7 @@ describe('Groups Service (updateSubscriptions)', function () {
   });
 
   var setupSubscribedListsForUser = function (lists) {
-    sinon.stub(sympaStub, 'getSubscribedListsForUser', function (email, callback) {
+    sinon.stub(fakeListAdapter, 'getSubscribedListsForUser', function (email, callback) {
       callback(null, lists);
     });
   };
