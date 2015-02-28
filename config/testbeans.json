@@ -1,5 +1,4 @@
 {
-  "sympa": {},
   "groupsPersistence": {"module": "./softwerkskammer/test/persistence/testpersistence"},
   "membersPersistence": {"module": "./softwerkskammer/test/persistence/testpersistence"},
   "activitiesPersistence": {"module": "./softwerkskammer/test/persistence/testpersistence"},

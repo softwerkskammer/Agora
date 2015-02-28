@@ -1,5 +1,4 @@
 {
-  "sympa": {},
   "groupsPersistence": {"module": "./softwerkskammer/lib/persistence/persistence",
     "constructorArgs": {
       "collectionName": "teststore"

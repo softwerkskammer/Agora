@@ -39,10 +39,7 @@
   "memberstore": {"module": "./softwerkskammer/lib/members/memberstore"},
 
   "ezmlmAdapter": {"module": "./softwerkskammer/lib/groups/ezmlmAdapter"},
-  
-  "sympa": {"module": "./softwerkskammer/lib/groups/sympa"},
   "fakeListAdapter": {"module": "./softwerkskammer/lib/groups/fakeListAdapter"},
-  "sympaTransformer": {"module": "./softwerkskammer/lib/groups/sympaTransformer"},
 
   "activitiesPersistence": {
     "module": "./softwerkskammer/lib/persistence/persistence",

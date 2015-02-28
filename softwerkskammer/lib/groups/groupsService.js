@@ -114,6 +114,7 @@ module.exports = {
         var listsToUnsubscribe = emailChanged ? subscribedLists : _.difference(subscribedLists, newSubscriptions);
         // we must make sure that one list is completely subscribed for a new user before attempting to subscribe other lists
         // otherwise we get a racing condition in sympa
+        // DO WE STILL NEED THAT?
         var firstListToSubscribe = listsToSubscribe.pop();
         async.series(
           [
