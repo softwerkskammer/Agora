@@ -19,7 +19,7 @@ var getUsersOfList = function (listname, globalCallback) {
   async.parallel(
     {
       sympaUsers: function (callback) {
-        groupsService.getSympaUsersOfList(listname, callback);
+        groupsService.getMailinglistUsersOfList(listname, callback);
       },
       allMembers: function (callback) {
         memberstore.allMembers(callback);
@@ -141,7 +141,7 @@ module.exports = {
 
   addMembercountToGroup: function (group, callback) {
     if (!group) { return callback(null); }
-    groupsService.getSympaUsersOfList(group.id, function (err, sympaUsers) {
+    groupsService.getMailinglistUsersOfList(group.id, function (err, sympaUsers) {
       group.membercount = sympaUsers.length;
       return callback(err, group);
     });
@@ -154,7 +154,7 @@ module.exports = {
   updateAdminlistSubscriptions: function (memberID, callback) {
     this.getMemberWithHisGroupsByMemberId(memberID, function (err, member) {
       var adminListName = conf.get('adminListName');
-      groupsService.getSympaUsersOfList(adminListName, function (err, emailAddresses) {
+      groupsService.getMailinglistUsersOfList(adminListName, function (err, emailAddresses) {
         var isInAdminList = _.contains(emailAddresses, member.email());
         if (member.isContactperson() && !isInAdminList) {
           return groupsService.addUserToList(member.email(), adminListName, callback);

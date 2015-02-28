@@ -51,7 +51,7 @@ module.exports = {
     });
   },
 
-  getSympaUsersOfList: function (groupname, callback) {
+  getMailinglistUsersOfList: function (groupname, callback) {
     listAdapter.getUsersOfList(groupname, callback);
   },
 

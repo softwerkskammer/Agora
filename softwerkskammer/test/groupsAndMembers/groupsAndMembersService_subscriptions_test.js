@@ -39,7 +39,7 @@ describe('Groups and Members Service (Subscriptions)', function () {
     it('subscribes a new contact person', function (done) {
       groupA.organizers.push(member.id());
       subscribedGroups.push(groupA);
-      sinon.stub(groupsService, 'getSympaUsersOfList', function (listname, callback) { callback(null, []); });
+      sinon.stub(groupsService, 'getMailinglistUsersOfList', function (listname, callback) { callback(null, []); });
 
       groupsAndMembersService.updateAdminlistSubscriptions(member.id(), function (err) {
         expect(addUserToListSpy.called, 'subscribe is called').to.be(true);
@@ -49,7 +49,7 @@ describe('Groups and Members Service (Subscriptions)', function () {
     });
 
     it('unsubscribes an ex-contact person', function (done) {
-      sinon.stub(groupsService, 'getSympaUsersOfList', function (listname, callback) { callback(null, [email]); });
+      sinon.stub(groupsService, 'getMailinglistUsersOfList', function (listname, callback) { callback(null, [email]); });
 
       groupsAndMembersService.updateAdminlistSubscriptions(member.id(), function (err) {
         expect(addUserToListSpy.called, 'subscribe is called').to.be(false);
@@ -61,7 +61,7 @@ describe('Groups and Members Service (Subscriptions)', function () {
     it('does nothing if contact person is already subscribed', function (done) {
       groupA.organizers.push(member.id());
       subscribedGroups.push(groupA);
-      sinon.stub(groupsService, 'getSympaUsersOfList', function (listname, callback) { callback(null, [email]); });
+      sinon.stub(groupsService, 'getMailinglistUsersOfList', function (listname, callback) { callback(null, [email]); });
 
       groupsAndMembersService.updateAdminlistSubscriptions(member.id(), function (err) {
         expect(addUserToListSpy.called, 'subscribe is called').to.be(false);
@@ -71,7 +71,7 @@ describe('Groups and Members Service (Subscriptions)', function () {
     });
 
     it('does nothing if non-contact person is not subscribed', function (done) {
-      sinon.stub(groupsService, 'getSympaUsersOfList', function (listname, callback) { callback(null, []); });
+      sinon.stub(groupsService, 'getMailinglistUsersOfList', function (listname, callback) { callback(null, []); });
 
       groupsAndMembersService.updateAdminlistSubscriptions(member.id(), function (err) {
         expect(addUserToListSpy.called, 'subscribe is called').to.be(false);
@@ -88,7 +88,7 @@ describe('Groups and Members Service (Subscriptions)', function () {
     beforeEach(function () {
       subscribedGroups.push(groupA);
       createOrSaveGroupSpy = sinon.stub(groupsService, 'createOrSaveGroup', function (group, callback) { callback(); });
-      sinon.stub(groupsService, 'getSympaUsersOfList', function (listname, callback) { callback(null, []); });
+      sinon.stub(groupsService, 'getMailinglistUsersOfList', function (listname, callback) { callback(null, []); });
     });
 
     it('calls groupService to perform saving', function (done) {
@@ -126,7 +126,7 @@ describe('Groups and Members Service (Subscriptions)', function () {
     beforeEach(function () {
       subscribedGroups.push(groupA);
       updateSubscriptionsSpy = sinon.stub(groupsService, 'updateSubscriptions', function (memberEmail, oldEmail, subscriptions, callback) { callback(); });
-      sinon.stub(groupsService, 'getSympaUsersOfList', function (listname, callback) { callback(null, sympaUsers); });
+      sinon.stub(groupsService, 'getMailinglistUsersOfList', function (listname, callback) { callback(null, sympaUsers); });
     });
 
     it('calls groupService to perform saving', function (done) {
@@ -162,7 +162,7 @@ describe('Groups and Members Service (Subscriptions)', function () {
     var sympaUsers = [];
 
     beforeEach(function () {
-      sinon.stub(groupsService, 'getSympaUsersOfList', function (listname, callback) { callback(null, sympaUsers); });
+      sinon.stub(groupsService, 'getMailinglistUsersOfList', function (listname, callback) { callback(null, sympaUsers); });
     });
 
     afterEach(function () {
