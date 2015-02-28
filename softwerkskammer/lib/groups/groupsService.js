@@ -107,29 +107,19 @@ module.exports = {
         var emailChanged = userMail !== oldUserMail;
         var listsToSubscribe = emailChanged ? newSubscriptions : _.difference(newSubscriptions, subscribedLists);
         var listsToUnsubscribe = emailChanged ? subscribedLists : _.difference(subscribedLists, newSubscriptions);
-        // we must make sure that one list is completely subscribed for a new user before attempting to subscribe other lists
-        // otherwise we get a racing condition in sympa
-        // DO WE STILL NEED THAT?
-        var firstListToSubscribe = listsToSubscribe.pop();
         async.series(
           [
-            function (funCallback) {
-              if (firstListToSubscribe) {
-                return listAdapter.addUserToList(userMail, firstListToSubscribe, funCallback);
-              }
-              return funCallback(null);
-            },
             function (funCallback) {
               var subscribe = function (list, callback) {
                 listAdapter.addUserToList(userMail, list, callback);
               };
-              async.map(listsToSubscribe, subscribe, funCallback);
+              async.each(listsToSubscribe, subscribe, funCallback);
             },
             function (funCallback) {
               var unsubscribe = function (list, callback) {
                 listAdapter.removeUserFromList(oldUserMail, list, callback);
               };
-              async.map(listsToUnsubscribe, unsubscribe, funCallback);
+              async.each(listsToUnsubscribe, unsubscribe, funCallback);
             }
           ],
           function (err) {
