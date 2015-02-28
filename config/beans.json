@@ -69,7 +69,7 @@
     "module": "./softwerkskammer/lib/persistence/persistence",
     "constructorArgs": { "collectionName": "settingsstore" }
   },
-  "sympaPersistence": {
+  "mailinglistPersistence": {
     "module": "./softwerkskammer/lib/persistence/persistence",
     "constructorArgs": { "collectionName": "sympastore" }
   },

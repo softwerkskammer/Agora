@@ -4,7 +4,7 @@ require('./configure'); // initializing parameters
 var beans = require('simple-configure').get('beans');
 var membersPersistence = beans.get('membersPersistence');
 var groupsPersistence = beans.get('groupsPersistence');
-var sympaPersistence = beans.get('sympaPersistence');
+var mailinglistPersistence = beans.get('mailinglistPersistence');
 var Group = beans.get('group');
 var Member = beans.get('member');
 
@@ -33,7 +33,7 @@ async.parallel(
         {id: 'internet'}
       ];
       async.map(lists, function (list, callback) {
-        sympaPersistence.save({"id" : list.id, "users": []}, function (err) {
+        mailinglistPersistence.save({"id" : list.id, "users": []}, function (err) {
           callback(err, 'List "' + list.id + '"');
         });
       }, function (err, results) {
