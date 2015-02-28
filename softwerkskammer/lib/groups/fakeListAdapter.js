@@ -6,7 +6,7 @@ var beans = require('simple-configure').get('beans');
 var persistence = beans.get('mailinglistPersistence');
 
 
-// Mock for the SympaClient with underlying database and proper behavior
+// Mock for the groupsService with underlying database and proper behavior
 module.exports = {
   getAllAvailableLists: function (callback) {
     persistence.list({id: 1}, function (err, lists) {

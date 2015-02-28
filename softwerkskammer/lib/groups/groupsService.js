@@ -8,13 +8,8 @@ var validation = beans.get('validation');
 var groupstore = beans.get('groupstore');
 var misc = beans.get('misc');
 
-var listAdapter;
 //Just checking if remote has been configured
-if (conf.get('fullyQualifiedHomeDir')) {
-  listAdapter = beans.get('ezmlmAdapter');
-} else {
-  listAdapter = beans.get('fakeListAdapter');
-}
+var listAdapter = conf.get('fullyQualifiedHomeDir') ? beans.get('ezmlmAdapter') : beans.get('fakeListAdapter');
 
 var isReserved = function (groupname) {
   return new RegExp('^edit$|^new$|^checkgroupname$|^submit$|^administration$|[^\\w-]', 'i').test(groupname);

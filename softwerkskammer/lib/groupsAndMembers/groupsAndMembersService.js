@@ -18,7 +18,7 @@ var Member = beans.get('member');
 var getUsersOfList = function (listname, globalCallback) {
   async.parallel(
     {
-      sympaUsers: function (callback) {
+      mailinglistUsers: function (callback) {
         groupsService.getMailinglistUsersOfList(listname, callback);
       },
       allMembers: function (callback) {
@@ -27,11 +27,11 @@ var getUsersOfList = function (listname, globalCallback) {
     },
     function (err, results) {
       if (err) { return globalCallback(err); }
-      var missingEmails = misc.differenceCaseInsensitive(results.sympaUsers, _.map(results.allMembers, function (member) {return member.email(); }));
+      var missingEmails = misc.differenceCaseInsensitive(results.mailinglistUsers, _.map(results.allMembers, function (member) {return member.email(); }));
       if (missingEmails.length > 0) {
         logger.warn('In list "' + listname + '", these email addresses are superfluous: ' + missingEmails);
       }
-      memberstore.getMembersForEMails(results.sympaUsers, globalCallback);
+      memberstore.getMembersForEMails(results.mailinglistUsers, globalCallback);
     }
   );
 };
@@ -141,8 +141,8 @@ module.exports = {
 
   addMembercountToGroup: function (group, callback) {
     if (!group) { return callback(null); }
-    groupsService.getMailinglistUsersOfList(group.id, function (err, sympaUsers) {
-      group.membercount = sympaUsers.length;
+    groupsService.getMailinglistUsersOfList(group.id, function (err, mailinglistUsers) {
+      group.membercount = mailinglistUsers.length;
       return callback(err, group);
     });
   },
