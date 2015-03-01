@@ -1,5 +1,4 @@
 {
-  "sympa": {},
   "groupsPersistence": {"module": "./softwerkskammer/lib/persistence/persistence",
     "constructorArgs": {
       "collectionName": "teststore"
@@ -15,7 +14,7 @@
   "announcementsPersistence": {"module": "./softwerkskammer/test/persistence/testpersistence"},
   "mailsPersistence": {"module": "./softwerkskammer/test/persistence/testpersistence"},
   "colorsPersistence": {"module": "./softwerkskammer/lib/persistence/testpersistence"},
-  "sympaPersistence": {"module": "./softwerkskammer/lib/persistence/persistence",
+  "mailinglistPersistence": {"module": "./softwerkskammer/lib/persistence/persistence",
     "constructorArgs": {
       "collectionName": "teststore"
     }}

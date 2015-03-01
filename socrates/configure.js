@@ -34,7 +34,7 @@ function createConfiguration() {
 
   // then, add properties from config files:
   var files = ['mongo-config.json',
-    'sympa-config.json',
+    'ezmlm-config.json',
     'socrates-server-config.json',
     'authentication-config.json',
     'mailsender-config.json',

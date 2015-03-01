@@ -62,7 +62,7 @@ groupsService.getAllAvailableGroups(function (err, groups) {
         ezmlmAdapter.createList(list, group.emailPrefix, function (err) {
           if (err) { return callback(err); }
           console.log('ezmlm create list: "' + list + '" prefixed: "' + group.emailPrefix + '"');
-          groupsService.getSympaUsersOfList(list, function (err, users) {
+          groupsService.getMailinglistUsersOfList(list, function (err, users) {
             var userlist = users.join(',');
             console.log('ezmlm subscribe users: "' + userlist + '" to list: "' + list + '"');
             ezmlmAdapter.addUserToList(userlist, list, callback);

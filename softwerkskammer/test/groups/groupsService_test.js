@@ -30,7 +30,7 @@ var NonPersistentGroup = new Group({
 });
 
 var groupstore = beans.get('groupstore');
-var sympa = beans.get('sympaStub');
+var listAdapter = beans.get('fakeListAdapter');
 
 var systemUnderTest = beans.get('groupsService');
 
@@ -44,7 +44,7 @@ describe('Groups Service (getSubscribedGroupsForUser)', function () {
     sinon.stub(groupstore, 'groupsByLists', function (lists, globalCallback) {
       globalCallback(null, []);
     });
-    sinon.stub(sympa, 'getSubscribedListsForUser', function (email, callback) { callback(null, []); });
+    sinon.stub(listAdapter, 'getSubscribedListsForUser', function (email, callback) { callback(null, []); });
 
     systemUnderTest.getSubscribedGroupsForUser('me@bla.com', function (err, validLists) {
       expect(validLists).to.not.be(null);
@@ -57,7 +57,7 @@ describe('Groups Service (getSubscribedGroupsForUser)', function () {
     sinon.stub(groupstore, 'groupsByLists', function (lists, globalCallback) {
       globalCallback(null, [GroupA]);
     });
-    sinon.stub(sympa, 'getSubscribedListsForUser', function (email, callback) { callback(null, ['GroupA']); });
+    sinon.stub(listAdapter, 'getSubscribedListsForUser', function (email, callback) { callback(null, ['GroupA']); });
 
     systemUnderTest.getSubscribedGroupsForUser('GroupAuser@softwerkskammer.de', function (err, validLists) {
       expect(validLists).to.not.be(null);
@@ -71,7 +71,7 @@ describe('Groups Service (getSubscribedGroupsForUser)', function () {
     sinon.stub(groupstore, 'groupsByLists', function (lists, globalCallback) {
       globalCallback(null, [GroupA, GroupB]);
     });
-    sinon.stub(sympa, 'getSubscribedListsForUser', function (email, callback) {
+    sinon.stub(listAdapter, 'getSubscribedListsForUser', function (email, callback) {
       callback(null, ['GroupA', 'GroupB']);
     });
 
@@ -88,7 +88,7 @@ describe('Groups Service (getSubscribedGroupsForUser)', function () {
     var spy = sinon.stub(groupstore, 'groupsByLists', function (lists, globalCallback) {
       globalCallback(null, []);
     });
-    sinon.stub(sympa, 'getSubscribedListsForUser', function (email, callback) {
+    sinon.stub(listAdapter, 'getSubscribedListsForUser', function (email, callback) {
       callback(null, ['GroupA', 'GroupB', conf.get('adminListName')]);
     });
 
@@ -99,7 +99,7 @@ describe('Groups Service (getSubscribedGroupsForUser)', function () {
   });
 
   it('handles errors in retrieving lists', function (done) {
-    sinon.stub(sympa, 'getSubscribedListsForUser', function (email, callback) {
+    sinon.stub(listAdapter, 'getSubscribedListsForUser', function (email, callback) {
       callback(new Error(), null);
     });
 
@@ -112,19 +112,15 @@ describe('Groups Service (getSubscribedGroupsForUser)', function () {
 
 describe('Groups Service (getAllAvailableGroups)', function () {
 
-  beforeEach(function () {
-    systemUnderTest.refreshCache();
-  });
-
   afterEach(function () {
     sinon.restore();
   });
 
-  it('returns an empty array of groups if there are no lists defined in sympa', function (done) {
+  it('returns an empty array of groups if there are no lists defined in mailinglist', function (done) {
     sinon.stub(groupstore, 'groupsByLists', function (lists, globalCallback) {
       globalCallback(null, []);
     });
-    sinon.stub(sympa, 'getAllAvailableLists', function (callback) { callback(null, []); });
+    sinon.stub(listAdapter, 'getAllAvailableLists', function (callback) { callback(null, []); });
 
     systemUnderTest.getAllAvailableGroups(function (err, lists) {
       expect(lists).to.not.be(null);
@@ -133,11 +129,11 @@ describe('Groups Service (getAllAvailableGroups)', function () {
     });
   });
 
-  it('returns an empty array of groups if there is one list defined in sympa but there is no matching group in Softwerkskammer', function (done) {
+  it('returns an empty array of groups if there is one list defined in mailinglist but there is no matching group in Softwerkskammer', function (done) {
     sinon.stub(groupstore, 'groupsByLists', function (lists, globalCallback) {
       globalCallback(null, []);
     });
-    sinon.stub(sympa, 'getAllAvailableLists', function (callback) { callback(null, ['unknownGroup']); });
+    sinon.stub(listAdapter, 'getAllAvailableLists', function (callback) { callback(null, ['unknownGroup']); });
 
     systemUnderTest.getAllAvailableGroups(function (err, lists) {
       expect(lists).to.not.be(null);
@@ -146,11 +142,11 @@ describe('Groups Service (getAllAvailableGroups)', function () {
     });
   });
 
-  it('returns one group if there are two lists defined in sympa and there is one matching group in Softwerkskammer', function (done) {
+  it('returns one group if there are two lists defined in mailinglist and there is one matching group in Softwerkskammer', function (done) {
     sinon.stub(groupstore, 'groupsByLists', function (lists, globalCallback) {
       globalCallback(null, [GroupA]);
     });
-    sinon.stub(sympa, 'getAllAvailableLists', function (callback) { callback(null, ['GroupA', 'unknownGroup']); });
+    sinon.stub(listAdapter, 'getAllAvailableLists', function (callback) { callback(null, ['GroupA', 'unknownGroup']); });
 
     systemUnderTest.getAllAvailableGroups(function (err, lists) {
       expect(lists).to.not.be(null);
@@ -160,11 +156,11 @@ describe('Groups Service (getAllAvailableGroups)', function () {
     });
   });
 
-  it('returns two groups if there are two lists defined in sympa and there are two matching groups in Softwerkskammer', function (done) {
+  it('returns two groups if there are two lists defined in mailinglist and there are two matching groups in Softwerkskammer', function (done) {
     sinon.stub(groupstore, 'groupsByLists', function (lists, globalCallback) {
       globalCallback(null, [GroupA, GroupB]);
     });
-    sinon.stub(sympa, 'getAllAvailableLists', function (callback) { callback(null, ['GroupA', 'GroupB']); });
+    sinon.stub(listAdapter, 'getAllAvailableLists', function (callback) { callback(null, ['GroupA', 'GroupB']); });
 
     systemUnderTest.getAllAvailableGroups(function (err, lists) {
       expect(lists).to.not.be(null);
@@ -176,32 +172,28 @@ describe('Groups Service (getAllAvailableGroups)', function () {
   });
 });
 
-describe('Groups Service (getSympaUsersOfList)', function () {
-
-  beforeEach(function () {
-    systemUnderTest.refreshCache();
-  });
+describe('Groups Service (getMailinglistUsersOfList)', function () {
 
   afterEach(function () {
     sinon.restore();
   });
 
-  it('returns an empty array of lists if there are no users subscribed to the list in sympa', function (done) {
-    sinon.stub(sympa, 'getUsersOfList', function (groupname, callback) { callback(null, []); });
+  it('returns an empty array of lists if there are no users subscribed to the list in mailinglist', function (done) {
+    sinon.stub(listAdapter, 'getUsersOfList', function (groupname, callback) { callback(null, []); });
 
-    systemUnderTest.getSympaUsersOfList('groupname', function (err, lists) {
+    systemUnderTest.getMailinglistUsersOfList('groupname', function (err, lists) {
       expect(lists).to.not.be(null);
       expect(lists.length).to.equal(0);
       done(err);
     });
   });
 
-  it('returns the users subscribed to the list in sympa', function (done) {
-    sinon.stub(sympa, 'getUsersOfList', function (groupname, callback) {
+  it('returns the users subscribed to the list in mailinglist', function (done) {
+    sinon.stub(listAdapter, 'getUsersOfList', function (groupname, callback) {
       callback(null, ['user1@mail1.de', 'user2@mail2.de', 'user3@mail3.de']);
     });
 
-    systemUnderTest.getSympaUsersOfList('groupname', function (err, users) {
+    systemUnderTest.getMailinglistUsersOfList('groupname', function (err, users) {
       expect(users).to.not.be(null);
       expect(users.length).to.equal(3);
       expect(users[0]).to.equal('user1@mail1.de');
@@ -218,8 +210,7 @@ describe('Groups Service (createOrSaveGroup)', function () {
   var saveGroupSpy;
 
   beforeEach(function () {
-    systemUnderTest.refreshCache();
-    createListSpy = sinon.stub(sympa, 'createList', function (listname, prefix, callback) { callback(); });
+    createListSpy = sinon.stub(listAdapter, 'createList', function (listname, prefix, callback) { callback(); });
     saveGroupSpy = sinon.stub(groupstore, 'saveGroup', function (group, callback) { callback(null); });
 
     sinon.stub(groupstore, 'getGroup', function (name, callback) {
@@ -296,7 +287,7 @@ describe('Groups Service (allGroupColors)', function () {
     sinon.stub(groupstore, 'groupsByLists', function (lists, globalCallback) {
       globalCallback(null, [GroupA, GroupB]);
     });
-    sinon.stub(sympa, 'getAllAvailableLists', function (callback) { callback(null, ['GroupA', 'GroupB']); });
+    sinon.stub(listAdapter, 'getAllAvailableLists', function (callback) { callback(null, ['GroupA', 'GroupB']); });
 
     systemUnderTest.allGroupColors(function (err, colorMap) {
       expect(colorMap).to.have.ownProperty('groupa', '#FFFFFF');
@@ -306,7 +297,7 @@ describe('Groups Service (allGroupColors)', function () {
   });
 
   it('handles an error gracefully', function (done) {
-    sinon.stub(sympa, 'getAllAvailableLists', function (callback) { callback(new Error()); });
+    sinon.stub(listAdapter, 'getAllAvailableLists', function (callback) { callback(new Error()); });
 
     systemUnderTest.allGroupColors(function (err) {
       expect(err).to.exist();

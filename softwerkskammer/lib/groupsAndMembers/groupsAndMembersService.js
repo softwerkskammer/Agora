@@ -18,8 +18,8 @@ var Member = beans.get('member');
 var getUsersOfList = function (listname, globalCallback) {
   async.parallel(
     {
-      sympaUsers: function (callback) {
-        groupsService.getSympaUsersOfList(listname, callback);
+      mailinglistUsers: function (callback) {
+        groupsService.getMailinglistUsersOfList(listname, callback);
       },
       allMembers: function (callback) {
         memberstore.allMembers(callback);
@@ -27,11 +27,11 @@ var getUsersOfList = function (listname, globalCallback) {
     },
     function (err, results) {
       if (err) { return globalCallback(err); }
-      var missingEmails = misc.differenceCaseInsensitive(results.sympaUsers, _.map(results.allMembers, function (member) {return member.email(); }));
+      var missingEmails = misc.differenceCaseInsensitive(results.mailinglistUsers, _.map(results.allMembers, function (member) {return member.email(); }));
       if (missingEmails.length > 0) {
         logger.warn('In list "' + listname + '", these email addresses are superfluous: ' + missingEmails);
       }
-      memberstore.getMembersForEMails(results.sympaUsers, globalCallback);
+      memberstore.getMembersForEMails(results.mailinglistUsers, globalCallback);
     }
   );
 };
@@ -141,8 +141,8 @@ module.exports = {
 
   addMembercountToGroup: function (group, callback) {
     if (!group) { return callback(null); }
-    groupsService.getSympaUsersOfList(group.id, function (err, sympaUsers) {
-      group.membercount = sympaUsers.length;
+    groupsService.getMailinglistUsersOfList(group.id, function (err, mailinglistUsers) {
+      group.membercount = mailinglistUsers.length;
       return callback(err, group);
     });
   },
@@ -154,7 +154,7 @@ module.exports = {
   updateAdminlistSubscriptions: function (memberID, callback) {
     this.getMemberWithHisGroupsByMemberId(memberID, function (err, member) {
       var adminListName = conf.get('adminListName');
-      groupsService.getSympaUsersOfList(adminListName, function (err, emailAddresses) {
+      groupsService.getMailinglistUsersOfList(adminListName, function (err, emailAddresses) {
         var isInAdminList = _.contains(emailAddresses, member.email());
         if (member.isContactperson() && !isInAdminList) {
           return groupsService.addUserToList(member.email(), adminListName, callback);
