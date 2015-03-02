@@ -92,10 +92,10 @@ module.exports = {
   getAllMembersWithTheirGroups: function (callback) {
     groupsService.getAllAvailableGroups(function (err, groups) {
       if (err) { return callback(err); }
-      var groupnameWithUserlist = {};
+      var groupnamesWithUserlist = {};
 
       function fillGroupsInMember(member) {
-        var groupnames = _.transform(groupnameWithUserlist, function (result, value, key) {
+        var groupnames = _.transform(groupnamesWithUserlist, function (result, value, key) {
           if (_.contains(value, member.email())) {
             result.push(key);
             return result;
@@ -107,21 +107,33 @@ module.exports = {
         });
       }
 
-      async.eachSeries(groups, function (group, innerCallback) {
-        groupsService.getMailinglistUsersOfList(group.id, function (err, emails) {
-          groupnameWithUserlist[group.id] = emails;
-          innerCallback(err);
-        });
-      }, function (err) {
+      function createWrongUserInformation(members) {
+        var allEmailAddresses = _.map(members, function (member) { return member.email(); });
+        return _.transform(groupnamesWithUserlist, function (result, value, key) {
+          var diff = _.difference(value, allEmailAddresses);
+          if (diff.length > 0) {
+            result.push({group: key, unmatched: diff});
+          }
+        }, []);
+      }
+
+      function loadMembersAndFillInGroups(err) {
         if (err) { return callback(err); }
         memberstore.allMembers(function (err, members) {
           if (err) { return callback(err); }
           _.each(members, function (member) {
             fillGroupsInMember(member);
           });
-          callback(null, members);
+          callback(null, members, createWrongUserInformation(members));
         });
-      });
+      }
+
+      async.eachSeries(groups, function (group, cb) {
+        groupsService.getMailinglistUsersOfList(group.id, function (err, emails) {
+          groupnamesWithUserlist[group.id] = emails;
+          cb(err);
+        });
+      }, loadMembersAndFillInGroups);
     });
   },
 
