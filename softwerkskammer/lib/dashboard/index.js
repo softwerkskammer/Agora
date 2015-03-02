@@ -183,7 +183,7 @@ app.get('/json/subscribedGroups/', function (req, res, next) {
     return res.end(JSON.stringify({}));
   }
 
-  groupsAndMembersService.getUserWithHisGroups(req.user.member.nickname(), function (err, member) {
+  groupsAndMembersService.getMemberWithHisGroups(req.user.member.nickname(), function (err, member) {
     if (err) { return next(err); }
     if (!member) { return next(new Error('no member found')); }
 
@@ -203,7 +203,7 @@ app.get('/json/events/', function (req, res, next) {
     return res.end(JSON.stringify({}));
   }
 
-  groupsAndMembersService.getUserWithHisGroups(req.user.member.nickname(), function (err, member) {
+  groupsAndMembersService.getMemberWithHisGroups(req.user.member.nickname(), function (err, member) {
     if (err) { return next(err); }
     if (!member) { return next(new Error('no member found')); }
     activitiesService.getUpcomingActivitiesOfMemberAndHisGroups(member, function (err, activities) {

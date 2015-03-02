@@ -35,7 +35,7 @@ describe('Groups and Members Service', function () {
     describe('when some error occurs', function () {
 
       it('returns an error when the member loading caused an error', function (done) {
-        sinon.stub(groupsAndMembersService, 'getUserWithHisGroups', function (nickname, callback) { callback(new Error('some error')); });
+        sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups', function (nickname, callback) { callback(new Error('some error')); });
 
         groupsAndMembersService.updateAndSaveSubmittedMemberWithSubscriptions(undefined, {previousNickname: "nick"}, undefined, undefined, function (err, nickname) {
           expect(err.message).to.equal('some error');
@@ -45,7 +45,7 @@ describe('Groups and Members Service', function () {
       });
 
       it('returns an error when the submitted member is a new member and saving the member caused an error', function (done) {
-        sinon.stub(groupsAndMembersService, 'getUserWithHisGroups', function (nickname, callback) { callback(null, null); });
+        sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups', function (nickname, callback) { callback(null, null); });
         sinon.stub(memberstore, 'saveMember', function (member, callback) { callback(new Error('some error')); });
 
         groupsAndMembersService.updateAndSaveSubmittedMemberWithSubscriptions(undefined, {previousNickname: "nick"}, undefined, undefined, function (err, nickname) {
@@ -56,7 +56,7 @@ describe('Groups and Members Service', function () {
       });
 
       it('returns an error when the submitted member is an existing member and we are allowed to edit the member but saving causes an error', function (done) {
-        sinon.stub(groupsAndMembersService, 'getUserWithHisGroups', function (nickname, callback) { callback(null, member); });
+        sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups', function (nickname, callback) { callback(null, member); });
         var accessrights = {canEditMember: function () { return true; }};
         sinon.stub(memberstore, 'saveMember', function (member, callback) { callback(new Error('some error')); });
 
@@ -73,7 +73,7 @@ describe('Groups and Members Service', function () {
 
       beforeEach(function () {
         sinon.stub(memberstore, 'saveMember', function (member, callback) { callback(null); });
-        sinon.stub(groupsAndMembersService, 'getUserWithHisGroups', function (nickname, callback) { callback(null, null); });
+        sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups', function (nickname, callback) { callback(null, null); });
         sinon.stub(groupsAndMembersService, 'updateSubscriptions', function (member, oldEmail, subscriptions, callback) { callback(null); });
       });
 
@@ -96,7 +96,7 @@ describe('Groups and Members Service', function () {
 
       beforeEach(function () {
         sinon.stub(memberstore, 'saveMember', function (member, callback) { callback(null); });
-        sinon.stub(groupsAndMembersService, 'getUserWithHisGroups', function (nickname, callback) { callback(null, member); });
+        sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups', function (nickname, callback) { callback(null, member); });
         sinon.stub(groupsAndMembersService, 'updateSubscriptions', function (member, oldEmail, subscriptions, callback) { callback(null); });
       });
 

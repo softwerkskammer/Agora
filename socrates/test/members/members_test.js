@@ -220,7 +220,7 @@ describe('SoCraTes members application', function () {
       var notificationCall = sinon.stub(socratesNotifications, 'newSoCraTesMemberRegistered', function () { return undefined; });
 
       // the following stub indicates that the member already exists
-      sinon.stub(groupsAndMembersService, 'getUserWithHisGroups', function (nickname, callback) { callback(null, softwerkskammerMember); });
+      sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups', function (nickname, callback) { callback(null, softwerkskammerMember); });
       // and that the subscriber is not yet there
       sinon.stub(subscriberstore, 'getSubscriber', function (id, callback) { callback(null); });
       appWithSoftwerkskammerMember
@@ -244,7 +244,7 @@ describe('SoCraTes members application', function () {
       var notificationCall = sinon.stub(socratesNotifications, 'newSoCraTesMemberRegistered', function () { return undefined; });
 
       // the following stub indicates that the member already exists
-      sinon.stub(groupsAndMembersService, 'getUserWithHisGroups', function (nickname, callback) { callback(null, socratesMember); });
+      sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups', function (nickname, callback) { callback(null, socratesMember); });
       // and that the subscriber also exists
       sinon.stub(subscriberstore, 'getSubscriber', function (id, callback) { callback(null, socratesSubscriber); });
       appWithSocratesMember
@@ -269,7 +269,7 @@ describe('SoCraTes members application', function () {
       var notificationCall = sinon.stub(socratesNotifications, 'newSoCraTesMemberRegistered', function () { return undefined; });
 
       // the following stub indicates that the member does not exist yet
-      sinon.stub(groupsAndMembersService, 'getUserWithHisGroups', function (nickname, callback) { callback(null); });
+      sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups', function (nickname, callback) { callback(null); });
       // and that the subscriber does not exist either
       sinon.stub(subscriberstore, 'getSubscriber', function (id, callback) { callback(null); });
       appWithSocratesMember

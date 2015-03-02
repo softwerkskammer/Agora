@@ -106,7 +106,7 @@ app.get('/new', function (req, res, next) {
 app.get('/edit/:nickname', function (req, res, next) {
   async.parallel(
     {
-      member: function (callback) { groupsAndMembersService.getUserWithHisGroups(req.params.nickname, callback); },
+      member: function (callback) { groupsAndMembersService.getMemberWithHisGroups(req.params.nickname, callback); },
       allGroups: function (callback) { groupsService.getAllAvailableGroups(callback); },
       allTags: function (callback) { return tagsFor(callback); }
     },
@@ -130,7 +130,7 @@ app.get('/edit/:nickname', function (req, res, next) {
 
 app.get('/delete/:nickname', function (req, res, next) {
   var nicknameOfEditMember = req.params.nickname;
-  groupsAndMembersService.getUserWithHisGroups(nicknameOfEditMember, function (err, member) {
+  groupsAndMembersService.getMemberWithHisGroups(nicknameOfEditMember, function (err, member) {
     if (err || !member) { return next(err); }
     if (!res.locals.accessrights.canDeleteMember(member)) {
       return res.redirect('/members/' + encodeURIComponent(member.nickname()));
@@ -209,7 +209,7 @@ app.get('/deleteAvatarFor/:nickname', function (req, res, next) {
 });
 
 app.get('/:nickname', function (req, res, next) {
-  groupsAndMembersService.getUserWithHisGroups(req.params.nickname, function (err, member, subscribedGroups) {
+  groupsAndMembersService.getMemberWithHisGroups(req.params.nickname, function (err, member, subscribedGroups) {
     if (err || !member) { return next(err); }
     activitiesService.getPastActivitiesOfMember(member, function (err, activities) {
       if (err) { return next(err); }

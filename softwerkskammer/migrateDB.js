@@ -16,7 +16,7 @@ if (!really || really !== 'really') {
 }
 
 // set "socratesOnly" to false for all members.
-groupsAndMembersService.getAllUsersWithTheirGroups(function (err, members) {
+groupsAndMembersService.getAllMembersWithTheirGroups(function (err, members) {
   async.each(members,
     function (member, callback) {
       // set to true if member is only in socrates list

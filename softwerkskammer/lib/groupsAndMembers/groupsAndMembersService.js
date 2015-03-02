@@ -15,35 +15,16 @@ var Group = beans.get('group');
 var misc = beans.get('misc');
 var Member = beans.get('member');
 
-var getUsersOfList = function (listname, globalCallback) {
-  async.parallel(
-    {
-      mailinglistUsers: function (callback) {
-        groupsService.getMailinglistUsersOfList(listname, callback);
-      },
-      allMembers: function (callback) {
-        memberstore.allMembers(callback);
-      }
-    },
-    function (err, results) {
-      if (err) { return globalCallback(err); }
-      var missingEmails = misc.differenceCaseInsensitive(results.mailinglistUsers, _.map(results.allMembers, function (member) {return member.email(); }));
-      if (missingEmails.length > 0) {
-        logger.warn('In list "' + listname + '", these email addresses are superfluous: ' + missingEmails);
-      }
-      memberstore.getMembersForEMails(results.mailinglistUsers, globalCallback);
-    }
-  );
-};
-
-var getUserWithHisGroupsByUser = function (member, callback) {
-  if (!member) { return callback(null); }
-  groupsService.getSubscribedGroupsForUser(member.email(), callback);
+var membersOfList = function (listname, callback) {
+  groupsService.getMailinglistUsersOfList(listname, function (err, emailAddresses) {
+    if (err) { return callback(err); }
+    memberstore.getMembersForEMails(emailAddresses, callback);
+  });
 };
 
 var addMembersToGroup = function (group, callback) {
   if (!group) { return callback(null); }
-  getUsersOfList(group.id, function (err, members) {
+  membersOfList(group.id, function (err, members) {
     if (err) { return callback(err); }
     async.each(members, membersService.getImage, function () {
       group.members = members;
@@ -54,17 +35,25 @@ var addMembersToGroup = function (group, callback) {
 };
 
 var addGroupsToMember = function (member, callback) {
-  getUserWithHisGroupsByUser(member, function (err, subscribedGroups) {
+  if (!member) { return callback(null); }
+  groupsService.getSubscribedGroupsForUser(member.email(), function (err, subscribedGroups) {
     if (err) { return callback(err); }
-    if (member) {
-      member.subscribedGroups = subscribedGroups;
-    }
+    member.subscribedGroups = subscribedGroups;
+    callback(err, member);
+  });
+};
+
+var addGroupnamesToMember = function (member, callback) {
+  if (!member) { return callback(null); }
+  groupsService.getSubscribedGroupnamesForUser(member.email(), function (err, subscribedGroupnames) {
+    if (err) { return callback(err); }
+    member.subscribedGroupnames = subscribedGroupnames;
     callback(err, member);
   });
 };
 
 var updateAndSaveSubmittedMember = function (self, sessionUser, memberformData, accessrights, notifyNewMemberRegistration, updateSubscriptions, callback) {
-  self.getUserWithHisGroups(memberformData.previousNickname, function (err, persistentMember) {
+  self.getMemberWithHisGroups(memberformData.previousNickname, function (err, persistentMember) {
     if (err) { return callback(err); }
     if (persistentMember && !accessrights.canEditMember(persistentMember)) {
       return callback(null);
@@ -95,7 +84,7 @@ var updateAndSaveSubmittedMember = function (self, sessionUser, memberformData, 
 };
 
 module.exports = {
-  getUserWithHisGroups: function (nickname, callback) {
+  getMemberWithHisGroups: function (nickname, callback) {
     memberstore.getMember(nickname, function (err, member) {
       if (err) { return callback(err); }
       addGroupsToMember(member, callback);
@@ -109,11 +98,11 @@ module.exports = {
     });
   },
 
-  getAllUsersWithTheirGroups: function (callback) {
+  getAllMembersWithTheirGroupnames: function (callback) {
     memberstore.allMembers(function (err, members) {
       if (err) { return callback(err); }
-      async.each(members, function (member, innerCallback) {
-        addGroupsToMember(member, innerCallback);
+      async.eachSeries(members, function (member, innerCallback) {
+        addGroupnamesToMember(member, innerCallback);
       }, function (err) {
         if (err) { return callback(err); }
         callback(null, members);

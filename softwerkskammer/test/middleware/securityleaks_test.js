@@ -45,7 +45,7 @@ describe('Security regarding', function () {
       var dummymember = new Member({id: 'memberId', nickname: 'hada', email: 'a@b.c', site: 'http://my.blog',
         firstname: 'Hans', lastname: 'Dampf', authentications: [], subscribedGroups: []});
       sinon.stub(groupsService, 'getAllAvailableGroups', function (callback) { callback(null, []); });
-      sinon.stub(groupsAndMembersService, 'getUserWithHisGroups', function (nickname, callback) { callback(null, dummymember); });
+      sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups', function (nickname, callback) { callback(null, dummymember); });
       sinon.stub(memberstore, 'allMembers', function (callback) { callback(null, [dummymember]); });
     });
 

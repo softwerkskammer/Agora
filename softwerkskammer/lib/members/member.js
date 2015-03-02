@@ -158,7 +158,7 @@ Member.prototype.isContactperson = function () {
 };
 
 Member.prototype.isInGroup = function (groupId) {
-  return !!this.subscribedGroups && _.some(this.subscribedGroups, {id: groupId});
+  return (!!this.subscribedGroups && _.some(this.subscribedGroups, {id: groupId})) || (_.contains(this.subscribedGroupnames || [], groupId));
 };
 
 Member.prototype.isSuperuser = function () {

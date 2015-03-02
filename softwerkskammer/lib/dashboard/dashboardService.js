@@ -34,7 +34,7 @@ module.exports = {
   groupsByColumns: groupsByColumns,
 
   dataForDashboard: function (nickname, callback) {
-    groupsAndMembersService.getUserWithHisGroups(nickname, function (err, member) {
+    groupsAndMembersService.getMemberWithHisGroups(nickname, function (err, member) {
       if (err) { return callback(err); }
       if (!member) { return callback(new Error('no member found')); }
       activitiesService.getUpcomingActivitiesOfMemberAndHisGroups(member, function (err, activities) {

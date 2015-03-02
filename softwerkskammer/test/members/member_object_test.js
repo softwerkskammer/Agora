@@ -125,12 +125,12 @@ describe('filling socratesOnly from UI', function () {
   });
 
   it('sets socratesOnly to false if false is provided from UI', function () {
-    var member = new Member().fillFromUI({ socratesOnly: false });
+    var member = new Member().fillFromUI({socratesOnly: false});
     expect(member.socratesOnly()).to.be.false();
   });
 
   it('sets socratesOnly to true if true is provided from UI', function () {
-    var member = new Member().fillFromUI({ socratesOnly: true });
+    var member = new Member().fillFromUI({socratesOnly: true});
     expect(member.socratesOnly()).to.be.true();
   });
 });
@@ -146,15 +146,15 @@ describe('display functionalities', function () {
 describe('utility functions', function () {
   it('gives superuser email addresses', function () {
     var member = new Member({id: 'superuserID', email: 'email1'});
-    expect(Member.superuserEmails([ member ])).to.contain('email1');
+    expect(Member.superuserEmails([member])).to.contain('email1');
   });
 
   it('gives wikichange email addresses', function () {
     var member = new Member({notifyOnWikiChanges: true, email: 'email1'});
-    expect(Member.wikiNotificationMembers([ member ])).to.contain('email1');
+    expect(Member.wikiNotificationMembers([member])).to.contain('email1');
   });
 
-  it('can tell if the member is member of a group', function () {
+  it('can tell if the member is member of a group (by complete group)', function () {
     var member = new Member();
     member.subscribedGroups = [
       {id: 'group'},
@@ -163,11 +163,23 @@ describe('utility functions', function () {
     expect(member.isInGroup('group')).to.be(true);
   });
 
-  it('can tell if the member is not member of a group', function () {
+  it('can tell if the member is member of a group (by names only)', function () {
+    var member = new Member();
+    member.subscribedGroupnames = ['group', 'anotherGroup'];
+    expect(member.isInGroup('group')).to.be(true);
+  });
+
+  it('can tell if the member is not member of a group (by complete group)', function () {
     var member = new Member();
     member.subscribedGroups = [
       {id: 'anotherGroup'}
     ];
+    expect(member.isInGroup('group')).to.be(false);
+  });
+
+  it('can tell if the member is not member of a group (by names only)', function () {
+    var member = new Member();
+    member.subscribedGroups = ['anotherGroup'];
     expect(member.isInGroup('group')).to.be(false);
   });
 });
