@@ -47,7 +47,7 @@ describe('Administration application', function () {
     sinonSandbox.stub(groupsService, 'getAllAvailableGroups', function (callback) {
       return callback(null, [new Group({id: 'id', longName: 'GRUPPO', description: 'desc'})]);
     });
-    sinonSandbox.stub(groupsAndMembersService, 'getAllMembersWithTheirGroups', function (callback) {
+    sinonSandbox.stub(groupsAndMembersService, 'getAllMembersWithTheirGroupnames', function (callback) {
       return callback(null, [dummymember]);
     });
     sinonSandbox.stub(activitiesService, 'getActivitiesForDisplay', function (activitiesFetcher, callback) {
