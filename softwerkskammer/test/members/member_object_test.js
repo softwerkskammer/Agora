@@ -154,7 +154,7 @@ describe('utility functions', function () {
     expect(Member.wikiNotificationMembers([member])).to.contain('email1');
   });
 
-  it('can tell if the member is member of a group (by complete group)', function () {
+  it('can tell if the member is member of a group', function () {
     var member = new Member();
     member.subscribedGroups = [
       {id: 'group'},
@@ -163,23 +163,11 @@ describe('utility functions', function () {
     expect(member.isInGroup('group')).to.be(true);
   });
 
-  it('can tell if the member is member of a group (by names only)', function () {
-    var member = new Member();
-    member.subscribedGroupnames = ['group', 'anotherGroup'];
-    expect(member.isInGroup('group')).to.be(true);
-  });
-
-  it('can tell if the member is not member of a group (by complete group)', function () {
+  it('can tell if the member is not member of a group', function () {
     var member = new Member();
     member.subscribedGroups = [
       {id: 'anotherGroup'}
     ];
-    expect(member.isInGroup('group')).to.be(false);
-  });
-
-  it('can tell if the member is not member of a group (by names only)', function () {
-    var member = new Member();
-    member.subscribedGroups = ['anotherGroup'];
     expect(member.isInGroup('group')).to.be(false);
   });
 });

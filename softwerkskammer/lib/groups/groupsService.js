@@ -30,8 +30,6 @@ var groupsForRetriever = function (retriever, callback) {
 };
 
 module.exports = {
-  getSubscribedGroupnamesForUser: subscribedListsForUser,
-
   getSubscribedGroupsForUser: function (userMail, callback) {
     groupsForRetriever(function (callback) { subscribedListsForUser(userMail, callback); }, callback);
   },

@@ -32,7 +32,7 @@ describe('Groups and Members Service (getAllMembersWithTheirGroups)', function (
       callback(null, []);
     });
 
-    groupsAndMembersService.getAllMembersWithTheirGroupnames(function (err, members) {
+    groupsAndMembersService.getAllMembersWithTheirGroups(function (err, members) {
       expect(members).to.be.empty();
       done(err);
     });
@@ -42,17 +42,17 @@ describe('Groups and Members Service (getAllMembersWithTheirGroups)', function (
     sinon.stub(memberstore, 'allMembers', function (callback) {
       callback(null, [dummymember]);
     });
-    sinon.stub(groupsService, 'getSubscribedGroupnamesForUser', function (userMail, globalCallback) {
-      globalCallback(null, ['GroupA', 'GroupB']);
+    sinon.stub(groupsService, 'getSubscribedGroupsForUser', function (userMail, globalCallback) {
+      globalCallback(null, [GroupA, GroupB]);
     });
 
-    groupsAndMembersService.getAllMembersWithTheirGroupnames(function (err, members) {
+    groupsAndMembersService.getAllMembersWithTheirGroups(function (err, members) {
       expect(members.length).to.equal(1);
       expect(members[0]).to.equal(dummymember);
-      expect(members[0].subscribedGroupnames).to.not.be(null);
-      expect(members[0].subscribedGroupnames.length).to.equal(2);
-      expect(members[0].subscribedGroupnames[0]).to.equal('GroupA');
-      expect(members[0].subscribedGroupnames[1]).to.equal('GroupB');
+      expect(members[0].subscribedGroups).to.not.be(null);
+      expect(members[0].subscribedGroups.length).to.equal(2);
+      expect(members[0].subscribedGroups[0]).to.equal(GroupA);
+      expect(members[0].subscribedGroups[1]).to.equal(GroupB);
       done(err);
     });
   });
@@ -61,15 +61,15 @@ describe('Groups and Members Service (getAllMembersWithTheirGroups)', function (
     sinon.stub(memberstore, 'allMembers', function (callback) {
       callback(null, [dummymember]);
     });
-    sinon.stub(groupsService, 'getSubscribedGroupnamesForUser', function (userMail, globalCallback) {
+    sinon.stub(groupsService, 'getSubscribedGroupsForUser', function (userMail, globalCallback) {
       globalCallback(null, []);
     });
 
-    groupsAndMembersService.getAllMembersWithTheirGroupnames(function (err, members) {
+    groupsAndMembersService.getAllMembersWithTheirGroups(function (err, members) {
       expect(members.length).to.equal(1);
       expect(members[0]).to.equal(dummymember);
-      expect(members[0].subscribedGroupnames).to.not.be(null);
-      expect(members[0].subscribedGroupnames.length).to.equal(0);
+      expect(members[0].subscribedGroups).to.not.be(null);
+      expect(members[0].subscribedGroups.length).to.equal(0);
       done(err);
     });
   });
@@ -80,24 +80,24 @@ describe('Groups and Members Service (getAllMembersWithTheirGroups)', function (
     });
 
     var memberCount = 1;
-    sinon.stub(groupsService, 'getSubscribedGroupnamesForUser', function (userMail, globalCallback) {
+    sinon.stub(groupsService, 'getSubscribedGroupsForUser', function (userMail, globalCallback) {
       if (memberCount === 1) {
         memberCount = memberCount + 1;
         return globalCallback(null, []);
       }
-      return globalCallback(null, ['GroupA', 'GroupB']);
+      return globalCallback(null, [GroupA, GroupB]);
     });
 
-    groupsAndMembersService.getAllMembersWithTheirGroupnames(function (err, members) {
+    groupsAndMembersService.getAllMembersWithTheirGroups(function (err, members) {
       expect(members.length).to.equal(2);
       expect(members[0]).to.equal(dummymember);
-      expect(members[0].subscribedGroupnames).to.not.be(null);
-      expect(members[0].subscribedGroupnames.length).to.equal(0);
+      expect(members[0].subscribedGroups).to.not.be(null);
+      expect(members[0].subscribedGroups.length).to.equal(0);
       expect(members[1]).to.equal(dummymember2);
-      expect(members[1].subscribedGroupnames).to.not.be(null);
-      expect(members[1].subscribedGroupnames.length).to.equal(2);
-      expect(members[1].subscribedGroupnames[0]).to.equal('GroupA');
-      expect(members[1].subscribedGroupnames[1]).to.equal('GroupB');
+      expect(members[1].subscribedGroups).to.not.be(null);
+      expect(members[1].subscribedGroups.length).to.equal(2);
+      expect(members[1].subscribedGroups[0]).to.equal(GroupA);
+      expect(members[1].subscribedGroups[1]).to.equal(GroupB);
       done(err);
     });
   });

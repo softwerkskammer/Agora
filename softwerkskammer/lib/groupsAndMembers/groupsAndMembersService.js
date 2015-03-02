@@ -43,15 +43,6 @@ var addGroupsToMember = function (member, callback) {
   });
 };
 
-var addGroupnamesToMember = function (member, callback) {
-  if (!member) { return callback(null); }
-  groupsService.getSubscribedGroupnamesForUser(member.email(), function (err, subscribedGroupnames) {
-    if (err) { return callback(err); }
-    member.subscribedGroupnames = subscribedGroupnames;
-    callback(err, member);
-  });
-};
-
 var updateAndSaveSubmittedMember = function (self, sessionUser, memberformData, accessrights, notifyNewMemberRegistration, updateSubscriptions, callback) {
   self.getMemberWithHisGroups(memberformData.previousNickname, function (err, persistentMember) {
     if (err) { return callback(err); }
@@ -98,11 +89,11 @@ module.exports = {
     });
   },
 
-  getAllMembersWithTheirGroupnames: function (callback) {
+  getAllMembersWithTheirGroups: function (callback) {
     memberstore.allMembers(function (err, members) {
       if (err) { return callback(err); }
       async.eachSeries(members, function (member, innerCallback) {
-        addGroupnamesToMember(member, innerCallback);
+        addGroupsToMember(member, innerCallback);
       }, function (err) {
         if (err) { return callback(err); }
         callback(null, members);
