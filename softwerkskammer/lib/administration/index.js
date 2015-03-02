@@ -28,7 +28,7 @@ app.get('/memberAndGroupTable', function (req, res, next) {
   async.parallel(
     {
       groups: groupsService.getAllAvailableGroups,
-      members: groupsAndMembersService.getAllUsersWithTheirGroups
+      members: groupsAndMembersService.getAllMembersWithTheirGroups
     },
     function (err, results) {
       if (err) { return next(err); }

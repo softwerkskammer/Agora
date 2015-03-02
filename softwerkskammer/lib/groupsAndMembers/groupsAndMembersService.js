@@ -109,7 +109,7 @@ module.exports = {
     });
   },
 
-  getAllUsersWithTheirGroups: function (callback) {
+  getAllMembersWithTheirGroups: function (callback) {
     memberstore.allMembers(function (err, members) {
       if (err) { return callback(err); }
       async.each(members, function (member, innerCallback) {

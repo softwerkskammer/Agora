@@ -58,13 +58,13 @@ describe('Groups and Members Service (getMemberWithHisGroups or getMemberWithHis
     });
   });
 
-  describe('- getAllUsersWithTheirGroups -', function () {
+  describe('- getAllMembersWithTheirGroups -', function () {
     it('returns no members when there are no members', function (done) {
       sinon.stub(memberstore, 'allMembers', function (callback) {
         callback(null, []);
       });
 
-      groupsAndMembersService.getAllUsersWithTheirGroups(function (err, members) {
+      groupsAndMembersService.getAllMembersWithTheirGroups(function (err, members) {
         expect(members).to.be.empty();
         done(err);
       });
@@ -78,7 +78,7 @@ describe('Groups and Members Service (getMemberWithHisGroups or getMemberWithHis
         globalCallback(null, [GroupA, GroupB]);
       });
 
-      groupsAndMembersService.getAllUsersWithTheirGroups(function (err, members) {
+      groupsAndMembersService.getAllMembersWithTheirGroups(function (err, members) {
         expect(members.length).to.equal(1);
         expect(members[0]).to.equal(dummymember);
         expect(members[0].subscribedGroups).to.not.be(null);
@@ -97,7 +97,7 @@ describe('Groups and Members Service (getMemberWithHisGroups or getMemberWithHis
         globalCallback(null, []);
       });
 
-      groupsAndMembersService.getAllUsersWithTheirGroups(function (err, members) {
+      groupsAndMembersService.getAllMembersWithTheirGroups(function (err, members) {
         expect(members.length).to.equal(1);
         expect(members[0]).to.equal(dummymember);
         expect(members[0].subscribedGroups).to.not.be(null);
@@ -120,7 +120,7 @@ describe('Groups and Members Service (getMemberWithHisGroups or getMemberWithHis
         return globalCallback(null, [GroupA, GroupB]);
       });
 
-      groupsAndMembersService.getAllUsersWithTheirGroups(function (err, members) {
+      groupsAndMembersService.getAllMembersWithTheirGroups(function (err, members) {
         expect(members.length).to.equal(2);
         expect(members[0]).to.equal(dummymember);
         expect(members[0].subscribedGroups).to.not.be(null);
