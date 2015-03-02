@@ -64,7 +64,7 @@ var addGroupsToMember = function (member, callback) {
 };
 
 var updateAndSaveSubmittedMember = function (self, sessionUser, memberformData, accessrights, notifyNewMemberRegistration, updateSubscriptions, callback) {
-  self.getUserWithHisGroups(memberformData.previousNickname, function (err, persistentMember) {
+  self.getMemberWithHisGroups(memberformData.previousNickname, function (err, persistentMember) {
     if (err) { return callback(err); }
     if (persistentMember && !accessrights.canEditMember(persistentMember)) {
       return callback(null);
@@ -95,7 +95,7 @@ var updateAndSaveSubmittedMember = function (self, sessionUser, memberformData, 
 };
 
 module.exports = {
-  getUserWithHisGroups: function (nickname, callback) {
+  getMemberWithHisGroups: function (nickname, callback) {
     memberstore.getMember(nickname, function (err, member) {
       if (err) { return callback(err); }
       addGroupsToMember(member, callback);

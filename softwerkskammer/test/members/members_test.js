@@ -210,7 +210,7 @@ describe('Members application', function () {
     var notificationCall = sinon.stub(notifications, 'newMemberRegistered', function () { return undefined; });
 
     // the following stub indicates that the member already exists 
-    sinon.stub(groupsAndMembersService, 'getUserWithHisGroups', function (nickname, callback) { callback(null, dummymember); });
+    sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups', function (nickname, callback) { callback(null, dummymember); });
     request(createApp('memberID'))
       .post('/submit')
       .send('id=0815&firstname=A&lastname=B&location=x&profession=y&reference=z')
@@ -231,7 +231,7 @@ describe('Members application', function () {
     var notificationCall = sinon.stub(notifications, 'newMemberRegistered', function () { return undefined; });
 
     // the following stub indicates that the member does not exist yet
-    sinon.stub(groupsAndMembersService, 'getUserWithHisGroups', function (nickname, callback) { callback(null); });
+    sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups', function (nickname, callback) { callback(null); });
     request(createApp('memberID'))
       .post('/submit')
       .send('id=0815&firstname=A&lastname=B&location=x&profession=y&reference=z')

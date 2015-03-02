@@ -21,19 +21,19 @@ var groupstore = beans.get('groupstore');
 
 var groupsAndMembersService = beans.get('groupsAndMembersService');
 
-describe('Groups and Members Service (getUserWithHisGroups or getMemberWithHisGroupsByMemberId)', function () {
+describe('Groups and Members Service (getMemberWithHisGroups or getMemberWithHisGroupsByMemberId)', function () {
 
   afterEach(function () {
     sinon.restore();
   });
 
-  describe('- getUserWithHisGroups -', function () {
+  describe('- getMemberWithHisGroups -', function () {
     it('returns no member when there is no member for the given nickname', function (done) {
       sinon.stub(memberstore, 'getMember', function (nickname, callback) {
         callback(null, null);
       });
 
-      groupsAndMembersService.getUserWithHisGroups('nickname', function (err, member) {
+      groupsAndMembersService.getMemberWithHisGroups('nickname', function (err, member) {
         expect(member).to.not.exist();
         done(err);
       });
@@ -47,7 +47,7 @@ describe('Groups and Members Service (getUserWithHisGroups or getMemberWithHisGr
         globalCallback(null, [GroupA, GroupB]);
       });
 
-      groupsAndMembersService.getUserWithHisGroups('nickname', function (err, member) {
+      groupsAndMembersService.getMemberWithHisGroups('nickname', function (err, member) {
         expect(member).to.equal(dummymember);
         expect(member.subscribedGroups).to.not.be(null);
         expect(member.subscribedGroups.length).to.equal(2);

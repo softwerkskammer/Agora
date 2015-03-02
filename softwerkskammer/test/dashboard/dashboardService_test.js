@@ -25,7 +25,7 @@ describe('Dashboard Service', function () {
     member = {membername: 'membername'};
     activity1 = {activity: 1};
     activity2 = {activity: 2};
-    sinon.stub(groupsAndMembersService, 'getUserWithHisGroups', function (nickname, callback) {
+    sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups', function (nickname, callback) {
       if (nickname === NOT_FOUND) {
         return callback(null, null);
       }
