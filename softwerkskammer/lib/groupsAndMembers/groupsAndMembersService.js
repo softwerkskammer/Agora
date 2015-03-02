@@ -112,7 +112,7 @@ module.exports = {
   getAllMembersWithTheirGroups: function (callback) {
     memberstore.allMembers(function (err, members) {
       if (err) { return callback(err); }
-      async.each(members, function (member, innerCallback) {
+      async.eachSeries(members, function (member, innerCallback) {
         addGroupsToMember(member, innerCallback);
       }, function (err) {
         if (err) { return callback(err); }

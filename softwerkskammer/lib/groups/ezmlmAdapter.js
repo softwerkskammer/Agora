@@ -18,7 +18,7 @@ module.exports = {
   getSubscribedListsForUser: function (user, callback) {
     ezmlm.allLists(function (err, alle) {
       if (err) { return callback(err); }
-      async.filter(alle, function (listname, innerCallback) {
+      async.filterSeries(alle, function (listname, innerCallback) {
         ezmlm.usersOfList(listname, function (err, users) {
           innerCallback(_.contains(users, user));
         });
