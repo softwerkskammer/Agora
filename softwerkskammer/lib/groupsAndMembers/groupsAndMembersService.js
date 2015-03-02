@@ -90,13 +90,37 @@ module.exports = {
   },
 
   getAllMembersWithTheirGroups: function (callback) {
-    memberstore.allMembers(function (err, members) {
+    groupsService.getAllAvailableGroups(function (err, groups) {
       if (err) { return callback(err); }
-      async.eachSeries(members, function (member, innerCallback) {
-        addGroupsToMember(member, innerCallback);
+      var groupnameWithUserlist = {};
+
+      function fillGroupsInMember(member) {
+        var groupnames = _.transform(groupnameWithUserlist, function (result, value, key) {
+          if (_.contains(value, member.email())) {
+            result.push(key);
+            return result;
+          }
+          return result;
+        }, []);
+        member.subscribedGroups = _.map(groupnames, function (name) {
+          return _.find(groups, {id: name});
+        });
+      }
+
+      async.eachSeries(groups, function (group, innerCallback) {
+        groupsService.getMailinglistUsersOfList(group.id, function (err, emails) {
+          groupnameWithUserlist[group.id] = emails;
+          innerCallback(err);
+        });
       }, function (err) {
         if (err) { return callback(err); }
-        callback(null, members);
+        memberstore.allMembers(function (err, members) {
+          if (err) { return callback(err); }
+          _.each(members, function (member) {
+            fillGroupsInMember(member);
+          });
+          callback(null, members);
+        });
       });
     });
   },
