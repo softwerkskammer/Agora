@@ -41,20 +41,8 @@ describe('Administration application', function () {
   });
 
   beforeEach(function () {
-    sinonSandbox.stub(memberstore, 'allMembers', function (callback) {
-      return callback(null, [dummymember]);
-    });
     sinonSandbox.stub(groupsService, 'getAllAvailableGroups', function (callback) {
       return callback(null, [new Group({id: 'id', longName: 'GRUPPO', description: 'desc'})]);
-    });
-    sinonSandbox.stub(groupsAndMembersService, 'getAllMembersWithTheirGroups', function (callback) {
-      return callback(null, [dummymember], {});
-    });
-    sinonSandbox.stub(activitiesService, 'getActivitiesForDisplay', function (activitiesFetcher, callback) {
-      return callback(null, [emptyActivity]);
-    });
-    sinonSandbox.stub(announcementstore, 'allAnnouncements', function (callback) {
-      return callback(null, [ dummyAnnouncement ]);
     });
   });
 
@@ -63,6 +51,9 @@ describe('Administration application', function () {
   });
 
   it('shows the table for members', function (done) {
+    sinonSandbox.stub(memberstore, 'allMembers', function (callback) {
+      return callback(null, [dummymember]);
+    });
     appWithSuperuser
       .get('/memberTable')
       .expect(200)
@@ -71,11 +62,16 @@ describe('Administration application', function () {
   });
 
   it('shows the table for members and groups', function (done) {
+    sinonSandbox.stub(groupsAndMembersService, 'getAllMembersWithTheirGroups', function (callback) {
+      return callback(null, [dummymember], [{group: 'Überflüssig', unmatched: ['peter.pan@alice.de']}]);
+    });
     appWithSuperuser
       .get('/memberAndGroupTable')
       .expect(200)
       .expect(/<h2>Verwaltung<small> Mitglieder und Gruppen/)
       .expect(/Hans Dampf/)
+      .expect(/<dt>Überflüssig<\/dt>/)
+      .expect(/<dd>peter\.pan@alice\.de<\/dd>/)
       .expect(/GRUP&hellip;/, done);
   });
 
@@ -88,6 +84,9 @@ describe('Administration application', function () {
   });
 
   it('shows the table for activities', function (done) {
+    sinonSandbox.stub(activitiesService, 'getActivitiesForDisplay', function (activitiesFetcher, callback) {
+      return callback(null, [emptyActivity]);
+    });
     appWithSuperuser
       .get('/activityTable')
       .expect(200)
@@ -97,6 +96,9 @@ describe('Administration application', function () {
   });
 
   it('shows the table for announcements', function (done) {
+    sinonSandbox.stub(announcementstore, 'allAnnouncements', function (callback) {
+      return callback(null, [ dummyAnnouncement ]);
+    });
     appWithSuperuser
       .get('/announcementTable')
       .expect(200)
