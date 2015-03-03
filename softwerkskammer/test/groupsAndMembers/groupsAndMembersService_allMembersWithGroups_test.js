@@ -41,8 +41,9 @@ describe('Groups and Members Service (getAllMembersWithTheirGroups)', function (
       callback(null, []);
     });
 
-    groupsAndMembersService.getAllMembersWithTheirGroups(function (err, members) {
+    groupsAndMembersService.getAllMembersWithTheirGroups(function (err, members, infos) {
       expect(members).to.be.empty();
+      expect(infos).to.be.empty();
       done(err);
     });
   });
@@ -59,7 +60,7 @@ describe('Groups and Members Service (getAllMembersWithTheirGroups)', function (
       expect(members.length).to.equal(1);
       expect(members[0]).to.equal(dummymember);
       expect(members[0].subscribedGroups).to.not.be(null);
-      expect(members[0].subscribedGroups.length).to.equal(2);
+      expect(members[0].subscribedGroups).to.have.length(2);
       expect(members[0].subscribedGroups[0]).to.equal(GroupA);
       expect(members[0].subscribedGroups[1]).to.equal(GroupB);
       done(err);
@@ -74,14 +75,14 @@ describe('Groups and Members Service (getAllMembersWithTheirGroups)', function (
       if (listname === 'groupa') {
         return callback(null, ['email1']);
       }
-      callback(null);
+      callback(null, []);
     });
 
     groupsAndMembersService.getAllMembersWithTheirGroups(function (err, members) {
       expect(members.length).to.equal(1);
       expect(members[0]).to.equal(dummymember);
       expect(members[0].subscribedGroups).to.not.be(null);
-      expect(members[0].subscribedGroups.length).to.equal(1);
+      expect(members[0].subscribedGroups).to.have.length(1);
       expect(members[0].subscribedGroups[0]).to.equal(GroupA);
       done(err);
     });
@@ -99,7 +100,7 @@ describe('Groups and Members Service (getAllMembersWithTheirGroups)', function (
       expect(members.length).to.equal(1);
       expect(members[0]).to.equal(dummymember);
       expect(members[0].subscribedGroups).to.not.be(null);
-      expect(members[0].subscribedGroups.length).to.equal(0);
+      expect(members[0].subscribedGroups).to.have.length(0);
       done(err);
     });
   });
@@ -113,15 +114,34 @@ describe('Groups and Members Service (getAllMembersWithTheirGroups)', function (
     });
 
     groupsAndMembersService.getAllMembersWithTheirGroups(function (err, members) {
-      expect(members.length).to.equal(2);
+      expect(members).to.have.length(2);
       expect(members[0]).to.equal(dummymember);
       expect(members[0].subscribedGroups).to.not.be(null);
-      expect(members[0].subscribedGroups.length).to.equal(0);
+      expect(members[0].subscribedGroups).to.have.length(0);
       expect(members[1]).to.equal(dummymember2);
       expect(members[1].subscribedGroups).to.not.be(null);
-      expect(members[1].subscribedGroups.length).to.equal(2);
+      expect(members[1].subscribedGroups).to.have.length(2);
       expect(members[1].subscribedGroups[0]).to.equal(GroupA);
       expect(members[1].subscribedGroups[1]).to.equal(GroupB);
+      done(err);
+    });
+  });
+
+  it('returns an additional email address in GroupA when there is no member for this email address', function (done) {
+    sinon.stub(memberstore, 'allMembers', function (callback) {
+      callback(null, [dummymember, dummymember2]);
+    });
+    sinon.stub(groupsService, 'getMailinglistUsersOfList', function (listname, callback) {
+      if (listname === 'groupa') {
+        return callback(null, ['email3']);
+      }
+      callback(null, []);
+    });
+
+    groupsAndMembersService.getAllMembersWithTheirGroups(function (err, members, infos) {
+      expect(infos).to.have.length(1);
+      expect(infos[0].group).to.equal('groupa');
+      expect(infos[0].unmatched).to.contain('email3');
       done(err);
     });
   });

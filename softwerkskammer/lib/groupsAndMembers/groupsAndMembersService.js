@@ -73,6 +73,14 @@ var updateAndSaveSubmittedMember = function (self, sessionUser, memberformData, 
   });
 };
 
+var groupsWithExtraEmailAddresses = function (members, groupNamesWithEmails) {
+  var allEmailAddresses = _.map(members, function (member) { return member.email(); });
+  return _.transform(groupNamesWithEmails, function (result, value, key) {
+    var diff = _.difference(value, allEmailAddresses);
+    if (diff.length > 0) { result.push({group: key, unmatched: diff}); }
+  }, []);
+};
+
 module.exports = {
   getMemberWithHisGroups: function (nickname, callback) {
     memberstore.getMember(nickname, function (err, member) {
@@ -91,48 +99,25 @@ module.exports = {
   getAllMembersWithTheirGroups: function (callback) {
     groupsService.getAllAvailableGroups(function (err, groups) {
       if (err) { return callback(err); }
-      var groupnamesWithUserlist = {};
 
-      function fillGroupsInMember(member) {
-        var groupnames = _.transform(groupnamesWithUserlist, function (result, value, key) {
-          if (_.contains(value, member.email())) {
-            result.push(key);
-            return result;
-          }
-          return result;
-        }, []);
-        member.subscribedGroups = _.map(groupnames, function (name) {
-          return _.find(groups, {id: name});
-        });
-      }
-
-      function createWrongUserInformation(members) {
-        var allEmailAddresses = _.map(members, function (member) { return member.email(); });
-        return _.transform(groupnamesWithUserlist, function (result, value, key) {
-          var diff = _.difference(value, allEmailAddresses);
-          if (diff.length > 0) {
-            result.push({group: key, unmatched: diff});
-          }
-        }, []);
-      }
-
-      function loadMembersAndFillInGroups(err) {
+      function loadMembersAndFillInGroups(err, groupNamesWithEmails, callback) {
         if (err) { return callback(err); }
+
         memberstore.allMembers(function (err, members) {
           if (err) { return callback(err); }
-          _.each(members, function (member) {
-            fillGroupsInMember(member);
-          });
-          callback(null, members, createWrongUserInformation(members));
+          _.each(members, function (member) { member.fillSubscribedGroups(groupNamesWithEmails, groups); });
+          callback(null, members, groupsWithExtraEmailAddresses(members, groupNamesWithEmails));
         });
       }
 
-      async.eachSeries(groups, function (group, cb) {
+      async.reduce(groups, {}, function (memo, group, cb) {
         groupsService.getMailinglistUsersOfList(group.id, function (err, emails) {
-          groupnamesWithUserlist[group.id] = emails;
-          cb(err);
+          memo[group.id] = emails;
+          cb(err, memo);
         });
-      }, loadMembersAndFillInGroups);
+      }, function (err, groupNamesWithEmails) {
+        loadMembersAndFillInGroups(err, groupNamesWithEmails, callback);
+      });
     });
   },
 
