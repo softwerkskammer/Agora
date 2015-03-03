@@ -21,9 +21,9 @@ describe('The ezmlm adapter', function () {
   describe(' - Standard Calls', function () {
     beforeEach(function () {
       sinon.stub(ezmlmStub, 'allLists', function (callback) { callback(null, ['a', 'b']); });
-      sinon.stub(ezmlmStub, 'usersOfList', function (listname, callback) {
-        if (listname === 'a') { return callback(null, ['Hans@here.org', 'Gerd@there.org']); }
-        callback(null, ['Anna@localhost', 'Gudrun@localhost']);
+      sinon.stub(ezmlmStub, 'usersOfList', function (listname, callback) { // !!!always lowercase here!!!
+        if (listname === 'a') { return callback(null, ['hans@here.org', 'gerd@there.org']); }
+        callback(null, ['anna@localhost', 'gudrun@localhost']);
       });
       sinon.stub(ezmlmStub, 'subscribeUserToList', function (user, list, callback) {
         callback(null, {user: user, list: list});
@@ -51,8 +51,8 @@ describe('The ezmlm adapter', function () {
 
     it('"getUsersOfList" - forwards the call', function (done) {
       ezmlmAdapter.getUsersOfList('listname', function (err, result) {
-        expect(result).to.contain('Anna@localhost');
-        expect(result).to.contain('Gudrun@localhost');
+        expect(result).to.contain('anna@localhost');
+        expect(result).to.contain('gudrun@localhost');
         done(err);
       });
     });
