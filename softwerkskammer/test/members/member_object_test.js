@@ -170,4 +170,22 @@ describe('utility functions', function () {
     ];
     expect(member.isInGroup('group')).to.be(false);
   });
+
+  it('fills its only subscribed group', function () {
+    var member = new Member({email: 'myEmail'});
+    var group = {id: 'group'};
+    member.fillSubscribedGroups({group: ['myEmail']}, [group, {id: 'groupb'}]);
+    expect(member.subscribedGroups).to.have.length(1);
+    expect(member.subscribedGroups).to.contain(group);
+  });
+
+  it('fills its more than one subscribed group', function () {
+    var member = new Member({email: 'myEmail'});
+    var group = {id: 'group'};
+    var groupb = {id: 'groupb'};
+    member.fillSubscribedGroups({group: ['myEmail'], groupb: ['myEmail'] }, [group, groupb]);
+    expect(member.subscribedGroups).to.have.length(2);
+    expect(member.subscribedGroups).to.contain(group);
+    expect(member.subscribedGroups).to.contain(groupb);
+  });
 });

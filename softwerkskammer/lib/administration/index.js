@@ -28,11 +28,11 @@ app.get('/memberAndGroupTable', function (req, res, next) {
   async.parallel(
     {
       groups: groupsService.getAllAvailableGroups,
-      members: groupsAndMembersService.getAllMembersWithTheirGroups
+      membersAndInfo: groupsAndMembersService.getAllMembersWithTheirGroups
     },
     function (err, results) {
       if (err) { return next(err); }
-      res.render('memberAndGroupTable', { members: results.members, groups: results.groups });
+      res.render('memberAndGroupTable', {members: results.membersAndInfo[0], groupsWithExtraEmailAddresses: results.membersAndInfo[1], groups: results.groups});
     }
   );
 });

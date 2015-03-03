@@ -2,7 +2,6 @@
 
 var async = require('async');
 var winston = require('winston');
-var logger = winston.loggers.get('sympa');
 var _ = require('lodash');
 
 var conf = require('simple-configure');
@@ -74,6 +73,14 @@ var updateAndSaveSubmittedMember = function (self, sessionUser, memberformData, 
   });
 };
 
+var groupsWithExtraEmailAddresses = function (members, groupNamesWithEmails) {
+  var allEmailAddresses = _.map(members, function (member) { return member.email(); });
+  return _.transform(groupNamesWithEmails, function (result, value, key) {
+    var diff = _.difference(value, allEmailAddresses);
+    if (diff.length > 0) { result.push({group: key, extraAddresses: diff}); }
+  }, []);
+};
+
 module.exports = {
   getMemberWithHisGroups: function (nickname, callback) {
     memberstore.getMember(nickname, function (err, member) {
@@ -92,35 +99,24 @@ module.exports = {
   getAllMembersWithTheirGroups: function (callback) {
     groupsService.getAllAvailableGroups(function (err, groups) {
       if (err) { return callback(err); }
-      var groupnameWithUserlist = {};
 
-      function fillGroupsInMember(member) {
-        var groupnames = _.transform(groupnameWithUserlist, function (result, value, key) {
-          if (_.contains(value, member.email())) {
-            result.push(key);
-            return result;
-          }
-          return result;
-        }, []);
-        member.subscribedGroups = _.map(groupnames, function (name) {
-          return _.find(groups, {id: name});
+      function loadMembersAndFillInGroups(err, groupNamesWithEmails, callback) {
+        if (err) { return callback(err); }
+
+        memberstore.allMembers(function (err, members) {
+          if (err) { return callback(err); }
+          _.each(members, function (member) { member.fillSubscribedGroups(groupNamesWithEmails, groups); });
+          callback(null, members, groupsWithExtraEmailAddresses(members, groupNamesWithEmails));
         });
       }
 
-      async.eachSeries(groups, function (group, innerCallback) {
+      async.reduce(groups, {}, function (memo, group, cb) {
         groupsService.getMailinglistUsersOfList(group.id, function (err, emails) {
-          groupnameWithUserlist[group.id] = emails;
-          innerCallback(err);
+          memo[group.id] = emails;
+          cb(err, memo);
         });
-      }, function (err) {
-        if (err) { return callback(err); }
-        memberstore.allMembers(function (err, members) {
-          if (err) { return callback(err); }
-          _.each(members, function (member) {
-            fillGroupsInMember(member);
-          });
-          callback(null, members);
-        });
+      }, function (err, groupNamesWithEmails) {
+        loadMembersAndFillInGroups(err, groupNamesWithEmails, callback);
       });
     });
   },

@@ -33,3 +33,7 @@ block content
                   td.center
                     if member.isInGroup(group.id)
                       i.fa.fa-check &nbsp;
+      dl.dl-horizontal
+        for groupinfo in groupsWithExtraEmailAddresses
+          dt #{groupinfo.group}
+          dd #{groupinfo.extraAddresses.join(', ')}
