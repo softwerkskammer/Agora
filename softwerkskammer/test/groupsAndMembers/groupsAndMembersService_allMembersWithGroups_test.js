@@ -141,7 +141,7 @@ describe('Groups and Members Service (getAllMembersWithTheirGroups)', function (
     groupsAndMembersService.getAllMembersWithTheirGroups(function (err, members, infos) {
       expect(infos).to.have.length(1);
       expect(infos[0].group).to.equal('groupa');
-      expect(infos[0].unmatched).to.contain('email3');
+      expect(infos[0].extraAddresses).to.contain('email3');
       done(err);
     });
   });

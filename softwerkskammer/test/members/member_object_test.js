@@ -15,9 +15,9 @@ describe('Member initial filling', function () {
 
   it('is populated by Google OpenID record', function () {
     var userdata = JSON.parse('{' +
-    '"authenticationId": "https://www.google.com/accounts/o8/id?id=someGoogelID", "profile": {' +
-    '"displayName": "Hans Dampf", "emails" : [{"value": "hada@web.de"}],' +
-    '"name": {"familyName": "Dampf","givenName": "Hans"}}}');
+      '"authenticationId": "https://www.google.com/accounts/o8/id?id=someGoogelID", "profile": {' +
+      '"displayName": "Hans Dampf", "emails" : [{"value": "hada@web.de"}],' +
+      '"name": {"familyName": "Dampf","givenName": "Hans"}}}');
 
     var member = new Member().initFromSessionUser(userdata);
     expect(member.firstname(), 'firstname').to.equal('Hans');
@@ -27,10 +27,10 @@ describe('Member initial filling', function () {
 
   it('is populated by GitHub record', function () {
     var userdata = JSON.parse('{' +
-    '"authenticationId": "github:123456", "profile": {' +
-    ' "provider" : "github", "id" : 123456, "displayName": "Hans Dampf", "username" :"hada", ' +
-    '"profileUrl" : "https://github.com/hansdampf", ' + '"emails" : [ { "value": null } ], ' +
-    '"_json" : { "html_url" :"https://github.com/hansdampf", "blog" : "http://hada.wordpress.com" }}}');
+      '"authenticationId": "github:123456", "profile": {' +
+      ' "provider" : "github", "id" : 123456, "displayName": "Hans Dampf", "username" :"hada", ' +
+      '"profileUrl" : "https://github.com/hansdampf", ' + '"emails" : [ { "value": null } ], ' +
+      '"_json" : { "html_url" :"https://github.com/hansdampf", "blog" : "http://hada.wordpress.com" }}}');
 
     var member = new Member().initFromSessionUser(userdata);
     expect(member.firstname(), 'firstname').not.to.exist();
@@ -40,10 +40,10 @@ describe('Member initial filling', function () {
 
   it('is populated by GitHub record with only github url', function () {
     var userdata = JSON.parse('{' +
-    '"authenticationId": "github:123456", "profile": {' +
-    ' "provider" : "github", "id" : 123456, "displayName": "Hans Dampf", "username" :"hada", ' +
-    '"profileUrl" : "https://github.com/hansdampf", ' + '"emails" : [ { "value": null } ], ' +
-    '"_json" : { "html_url" :"https://github.com/hansdampf", "blog" : "undefined" }}}');
+      '"authenticationId": "github:123456", "profile": {' +
+      ' "provider" : "github", "id" : 123456, "displayName": "Hans Dampf", "username" :"hada", ' +
+      '"profileUrl" : "https://github.com/hansdampf", ' + '"emails" : [ { "value": null } ], ' +
+      '"_json" : { "html_url" :"https://github.com/hansdampf", "blog" : "undefined" }}}');
 
     var member = new Member().initFromSessionUser(userdata);
     expect(member.firstname(), 'firstname').not.to.exist();

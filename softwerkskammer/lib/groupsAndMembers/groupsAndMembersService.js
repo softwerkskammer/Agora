@@ -77,7 +77,7 @@ var groupsWithExtraEmailAddresses = function (members, groupNamesWithEmails) {
   var allEmailAddresses = _.map(members, function (member) { return member.email(); });
   return _.transform(groupNamesWithEmails, function (result, value, key) {
     var diff = _.difference(value, allEmailAddresses);
-    if (diff.length > 0) { result.push({group: key, unmatched: diff}); }
+    if (diff.length > 0) { result.push({group: key, extraAddresses: diff}); }
   }, []);
 };
 

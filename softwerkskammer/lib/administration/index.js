@@ -32,7 +32,7 @@ app.get('/memberAndGroupTable', function (req, res, next) {
     },
     function (err, results) {
       if (err) { return next(err); }
-      res.render('memberAndGroupTable', {members: results.membersAndInfo[0], info: results.membersAndInfo[1], groups: results.groups});
+      res.render('memberAndGroupTable', {members: results.membersAndInfo[0], groupsWithExtraEmailAddresses: results.membersAndInfo[1], groups: results.groups});
     }
   );
 });

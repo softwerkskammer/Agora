@@ -63,7 +63,7 @@ describe('Administration application', function () {
 
   it('shows the table for members and groups', function (done) {
     sinonSandbox.stub(groupsAndMembersService, 'getAllMembersWithTheirGroups', function (callback) {
-      return callback(null, [dummymember], [{group: 'Überflüssig', unmatched: ['peter.pan@alice.de']}]);
+      return callback(null, [dummymember], [{group: 'Überflüssig', extraAddresses: ['peter.pan@alice.de']}]);
     });
     appWithSuperuser
       .get('/memberAndGroupTable')
