@@ -74,7 +74,7 @@ var updateAndSaveSubmittedMember = function (self, sessionUser, memberformData, 
 };
 
 var groupsWithExtraEmailAddresses = function (members, groupNamesWithEmails) {
-  var allEmailAddresses = _.map(members, function (member) { return member.email(); });
+  var allEmailAddresses = _.map(members, function (member) { return member.email().toLowerCase(); });
   return _.transform(groupNamesWithEmails, function (result, value, key) {
     var diff = _.difference(value, allEmailAddresses);
     if (diff.length > 0) { result.push({group: key, extraAddresses: diff}); }

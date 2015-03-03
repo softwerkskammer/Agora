@@ -7,7 +7,7 @@ var expect = require('must');
 
 var Member = beans.get('member');
 
-var dummymember = new Member({id: 'hada', email: 'email1'});
+var dummymember = new Member({id: 'hada', email: 'Email1'});
 var dummymember2 = new Member({id: 'hada2', email: 'email2'});
 
 var Group = beans.get('group');
@@ -142,6 +142,23 @@ describe('Groups and Members Service (getAllMembersWithTheirGroups)', function (
       expect(infos).to.have.length(1);
       expect(infos[0].group).to.equal('groupa');
       expect(infos[0].extraAddresses).to.contain('email3');
+      done(err);
+    });
+  });
+
+  it('returns no additional email address in GroupA just because of case sensitivity', function (done) {
+    sinon.stub(memberstore, 'allMembers', function (callback) {
+      callback(null, [dummymember, dummymember2]);
+    });
+    sinon.stub(groupsService, 'getMailinglistUsersOfList', function (listname, callback) {
+      if (listname === 'groupa') {
+        return callback(null, ['email1']);
+      }
+      callback(null, []);
+    });
+
+    groupsAndMembersService.getAllMembersWithTheirGroups(function (err, members, infos) {
+      expect(infos).to.be.empty();
       done(err);
     });
   });

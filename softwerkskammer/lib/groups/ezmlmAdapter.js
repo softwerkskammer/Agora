@@ -20,7 +20,7 @@ module.exports = {
       if (err) { return callback(err); }
       async.filterSeries(alle, function (listname, innerCallback) {
         ezmlm.usersOfList(listname, function (err, users) {
-          innerCallback(_.contains(users, user));
+          innerCallback(_.contains(users, user.toLowerCase()));
         });
       }, function (result) { callback(null, result); });
     });

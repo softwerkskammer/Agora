@@ -185,7 +185,7 @@ Member.superuserEmails = function (members) {
 Member.prototype.fillSubscribedGroups = function (groupNamesWithEmails, groups) {
   var self = this;
   this.subscribedGroups = _.transform(groupNamesWithEmails, function (result, value, key) {
-    if (_.contains(value, self.email())) { result.push(_.find(groups, {id: key})); }
+    if (_.contains(value, self.email().toLowerCase())) { result.push(_.find(groups, {id: key})); }
   }, []);
 };
 
