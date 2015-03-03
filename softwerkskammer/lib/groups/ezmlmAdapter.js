@@ -31,11 +31,11 @@ module.exports = {
   },
 
   addUserToList: function (email, list, callback) {
-    ezmlm.subscribeUserToList(email, list, callback);
+    ezmlm.subscribeUserToList(email.toLowerCase(), list, callback);
   },
 
   removeUserFromList: function (email, list, callback) {
-    ezmlm.unsubscribeUserFromList(email, list, callback);
+    ezmlm.unsubscribeUserFromList(email.toLowerCase(), list, callback);
   },
 
   archivedMails: function (list, maxAgeInDays, callback) {
