@@ -43,20 +43,6 @@
         "level": "info"
       }
     },
-    "sympa": {
-      "console": {
-        "level": "info",
-        "colorize": true
-      },
-      "file": {
-        "timestamp": true,
-        "json": false,
-        "filename": "log/agora-sympa.log",
-        "maxFiles": 5,
-        "maxsize": 10485760,
-        "level": "info"
-      }
-    },
     "transactions": {
       "console": {
         "level": "info",

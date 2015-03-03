@@ -2,7 +2,6 @@
 
 var async = require('async');
 var winston = require('winston');
-var logger = winston.loggers.get('sympa');
 var _ = require('lodash');
 
 var conf = require('simple-configure');
