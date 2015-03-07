@@ -18,7 +18,6 @@ var memberstore = beans.get('memberstore');
 var paymentService = beans.get('paymentService');
 var fieldHelpers = beans.get('fieldHelpers');
 
-var PaymentInfo = beans.get('paymentInfo'); // muss wieder raus hier
 var Activity = beans.get('activity');
 var validation = beans.get('validation');
 var statusmessage = beans.get('statusmessage');
@@ -249,14 +248,10 @@ app.get('/:url', function (req, res, next) {
   });
 });
 
-app.get('/subscribe/:url/default', function (req, res) {
-  // for backwards compatibility only
-  res.redirect('/activities/subscribe/' + encodeURIComponent(req.params.url) + '/' + standardResourceName);
-});
+function subscribe(body, req, res, next) {
+  var resourceName = body.resource;
+  var activityUrl = body.url;
 
-app.get('/subscribe/:url/:resource', function (req, res, next) {
-  var resourceName = req.params.resource;
-  var activityUrl = req.params.url;
   activitiesService.addVisitorTo(req.user.member.id(), activityUrl, resourceName, moment(), function (err, statusTitle, statusText) {
     if (err) { return next(err); }
     if (statusTitle && statusText) {
@@ -268,16 +263,27 @@ app.get('/subscribe/:url/:resource', function (req, res, next) {
     }
     res.redirect('/activities/' + encodeURIComponent(activityUrl));
   });
+}
+app.post('/subscribe', function (req, res, next) {
+  subscribe(req.body, req, res, next);
 });
 
-app.get('/subscribe/:url', function (req, res) {
-  // for backwards compatibility only
-  res.redirect('/activities/subscribe/' + encodeURIComponent(req.params.url) + '/' + standardResourceName);
+app.get('/subscribe/:activity/:resource', function (req, res) {
+  // TODO: remove in June 2015 - just here for legacy invitation emails
+  res.redirect('/activities/' + encodeURIComponent(req.params.activity));
 });
 
-app.get('/unsubscribe/:url/:resource', function (req, res, next) {
-  var resourceName = req.params.resource;
-  var activityUrl = req.params.url;
+app.get('/subscribe', function (req, res, next) {
+  // in case the call was redirected via login, we get called with "get"
+  var body = req.session.previousBody;
+  if (!body) { return next(); }
+  delete req.session.previousBody;
+  subscribe(body, req, res, next);
+});
+
+app.post('/unsubscribe', function (req, res, next) { // unsubscribe can only be called when user is already logged in
+  var resourceName = req.body.resource;
+  var activityUrl = req.body.url;
   activitiesService.removeVisitorFrom(req.user.member.id(), activityUrl, resourceName, function (err, statusTitle, statusText) {
     if (err) { return next(err); }
     if (statusTitle && statusText) {
@@ -291,27 +297,39 @@ app.get('/unsubscribe/:url/:resource', function (req, res, next) {
   });
 });
 
-app.get('/addToWaitinglist/:activityUrl/:resourceName', function (req, res, next) {
-  activitiesService.addToWaitinglist(req.user.member.id(), req.params.activityUrl, req.params.resourceName, moment(), function (err, statusTitle, statusText) {
+function addToWaitinglist(body, req, res, next) {
+  activitiesService.addToWaitinglist(req.user.member.id(), body.url, body.resource, moment(), function (err, statusTitle, statusText) {
     if (err) { return next(err); }
     if (statusTitle && statusText) {
       statusmessage.errorMessage(statusTitle, statusText).putIntoSession(req);
     } else {
       statusmessage.successMessage('message.title.save_successful', 'message.content.activities.waitinglist_added').putIntoSession(req);
     }
-    res.redirect('/activities/' + encodeURIComponent(req.params.activityUrl));
+    res.redirect('/activities/' + encodeURIComponent(body.url));
   });
+}
+
+app.post('/addToWaitinglist', function (req, res, next) {
+  // in case the call was redirected via login, we get called with "get"
+  addToWaitinglist(req.body, req, res, next);
 });
 
-app.get('/removeFromWaitinglist/:activityUrl/:resourceName', function (req, res, next) {
-  activitiesService.removeFromWaitinglist(req.user.member.id(), req.params.activityUrl, req.params.resourceName, function (err, statusTitle, statusText) {
+app.get('/addToWaitinglist', function (req, res, next) {
+  var body = req.session.previousBody;
+  if (!body) { return next(); }
+  delete req.session.previousBody;
+  addToWaitinglist(body, req, res, next);
+});
+
+app.post('/removeFromWaitinglist', function (req, res, next) { // removeFromWaitinglist can only be called when user is already logged in
+  activitiesService.removeFromWaitinglist(req.user.member.id(), req.body.url, req.body.resource, function (err, statusTitle, statusText) {
     if (err) { return next(err); }
     if (statusTitle && statusText) {
       statusmessage.errorMessage(statusTitle, statusText).putIntoSession(req);
     } else {
       statusmessage.successMessage('message.title.save_successful', 'message.content.activities.waitinglist_removed').putIntoSession(req);
     }
-    res.redirect('/activities/' + encodeURIComponent(req.params.activityUrl));
+    res.redirect('/activities/' + encodeURIComponent(req.body.url));
   });
 });
 

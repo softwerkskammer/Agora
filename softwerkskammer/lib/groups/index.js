@@ -76,25 +76,25 @@ app.get('/checkemailprefix', function (req, res) {
   misc.validate(req.query.emailPrefix, null, groupsService.isEmailPrefixAvailable, res.end);
 });
 
-app.get('/subscribe/:groupname', function (req, res, next) {
-  groupsAndMembers.subscribeMemberToGroup(req.user.member, req.params.groupname, function (err) {
+app.post('/subscribe', function (req, res) {
+  groupsAndMembers.subscribeMemberToGroup(req.user.member, req.body.groupname, function (err) {
     if (err) {
       statusmessage.errorMessage('message.title.problem', 'message.content.save_error_reason', {err: err.toString()}).putIntoSession(req);
     } else {
       statusmessage.successMessage('message.title.save_successful', 'message.content.groups.subscribed').putIntoSession(req);
     }
-    res.redirect('/groups/' + req.params.groupname);
+    res.redirect('/groups/' + req.body.groupname);
   });
 });
 
-app.get('/unsubscribe/:groupname', function (req, res, next) {
-  groupsAndMembers.unsubscribeMemberFromGroup(req.user.member, req.params.groupname, function (err) {
+app.post('/unsubscribe', function (req, res) {
+  groupsAndMembers.unsubscribeMemberFromGroup(req.user.member, req.body.groupname, function (err) {
     if (err) {
       statusmessage.errorMessage('message.title.problem', 'message.content.save_error_reason', {err: err.toString()}).putIntoSession(req);
     } else {
       statusmessage.successMessage('message.title.save_successful', 'message.content.groups.unsubscribed').putIntoSession(req);
     }
-    res.redirect('/groups/' + req.params.groupname);
+    res.redirect('/groups/' + req.body.groupname);
   });
 });
 

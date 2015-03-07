@@ -23,8 +23,4 @@ describe('Groups application security for normal visitors does not allow to acce
     request(app).post('/groups/subscribe/GroupA').expect(302).expect('location', /login/, done);
   });
 
-  it('/unsubscribe', function (done) {
-    request(app).post('/groups/unsubscribe/GroupA').expect(302).expect('location', /login/, done);
-  });
-
 });

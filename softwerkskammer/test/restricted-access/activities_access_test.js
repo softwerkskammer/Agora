@@ -40,19 +40,11 @@ describe('Activities application security for normal visitors does not allow to 
   });
 
   it('/subscribe', function (done) {
-    request(app).get('/activities/subscribe/eventid').expect(302).expect('location', /login/, done);
-  });
-
-  it('/unsubscribe', function (done) {
-    request(app).get('/activities/unsubscribe/eventid').expect(302).expect('location', /login/, done);
+    request(app).post('/activities/subscribe').expect(302).expect('location', /login/, done);
   });
 
   it('/addToWaitinglist', function (done) {
-    request(app).get('/activities/addToWaitinglist/eventid').expect(302).expect('location', /login/, done);
-  });
-
-  it('/removeFromWaitinglist', function (done) {
-    request(app).get('/activities/removeFromWaitinglist/eventid').expect(302).expect('location', /login/, done);
+    request(app).post('/activities/addToWaitinglist').expect(302).expect('location', /login/, done);
   });
 
 });

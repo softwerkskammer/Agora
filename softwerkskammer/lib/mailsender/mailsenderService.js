@@ -26,16 +26,6 @@ function buttonFor(activity, resourceName) {
   return {text: text, url: url};
 }
 
-function invitationLinkFor(activity) {
-  var url = misc.toFullQualifiedUrl('activities', encodeURIComponent(activity.url()));
-  var buttons = [];
-  buttons.push({text: 'Zur Aktivität', url: url});
-  _.each(activity.resourceNames(), function (resourceName) {
-    buttons.push(buttonFor(activity, resourceName));
-  });
-  return buttons;
-}
-
 function statusmessageForError(type, err) {
   return statusmessage.errorMessage('message.title.email_problem', 'message.content.mailsender.error_reason', {type: type, err: err.toString()});
 }
@@ -78,7 +68,7 @@ module.exports = {
         var message = new Message();
         message.setSubject('Einladung: ' + activity.title());
         message.setMarkdown(activityMarkdown(activity, language));
-        message.addToButtons(invitationLinkFor(activity));
+        message.addToButtons({text: 'Zur Aktivität', url: misc.toFullQualifiedUrl('activities', encodeURIComponent(activity.url()))});
         var result = {message: message, regionalgroups: regionalGroups, themegroups: thematicGroups, successURL: '/activities/' + encodeURIComponent(activityURL), activity: activity };
         globalCallback(null, result);
       }

@@ -167,7 +167,10 @@ describe('Activity application', function () {
         .get('/' + 'urlForInteresting')
         .expect(200)
         .expect(/Bislang haben 2 Mitglieder ihre Teilnahme zugesagt\./)
-        .expect(/href="subscribe\/urlForInteresting\/default" class="(\S|\s)*">Ich bin dabei!/)
+        .expect(/action="subscribe"/)
+        .expect(/input type="hidden" name="url" value="urlForInteresting"/)
+        .expect(/input type="hidden" name="resource" value="default"/)
+        .expect(/type="submit" class="btn btn-primary">Ich bin dabei!/)
         .expect(/participant1/)
         .expect(/participant2/, done);
     });
@@ -177,7 +180,10 @@ describe('Activity application', function () {
         .get('/' + 'urlForInteresting')
         .expect(200)
         .expect(/Bislang haben 2 Mitglieder ihre Teilnahme zugesagt\./)
-        .expect(/href="unsubscribe\/urlForInteresting\/default" class="(\S|\s)*">Ich kann doch nicht/)
+        .expect(/action="unsubscribe"/)
+        .expect(/input type="hidden" name="url" value="urlForInteresting"/)
+        .expect(/input type="hidden" name="resource" value="default"/)
+        .expect(/type="submit" class="btn btn-default">Ich kann doch nicht/)
         .expect(/participant1/)
         .expect(/participant2/, done);
     });
@@ -187,8 +193,14 @@ describe('Activity application', function () {
         .get('/' + 'urlForMultiple')
         .expect(200)
         .expect(/Bislang haben 4 Mitglieder ihre Teilnahme zugesagt\./)
-        .expect(/href="unsubscribe\/urlForMultiple\/Einzelzimmer" class="(\S|\s)*">Absagen/)
-        .expect(/href="subscribe\/urlForMultiple\/Doppelzimmer" class="(\S|\s)*">Anmelden/)
+        .expect(/action="unsubscribe"/)
+        .expect(/input type="hidden" name="url" value="urlForMultiple"/)
+        .expect(/input type="hidden" name="resource" value="Einzelzimmer"/)
+        .expect(/type="submit" class="btn btn-default">Absagen/)
+        .expect(/action="subscribe"/)
+        .expect(/input type="hidden" name="url" value="urlForMultiple"/)
+        .expect(/input type="hidden" name="resource" value="Doppelzimmer"/)
+        .expect(/type="submit" class="btn btn-primary">Anmelden/)
         .expect(/participant1/)
         .expect(/participant2/)
         .expect(/participant3/)
@@ -256,7 +268,10 @@ describe('Activity application', function () {
         .get('/' + 'urlForInteresting')
         .expect(200)
         .expect(/Bislang haben 2 Mitglieder ihre Teilnahme zugesagt\./)
-        .expect(/href="unsubscribe\/urlForInteresting\/default" class="(\S|\s)*">Ich kann doch nicht/)
+        .expect(/action="unsubscribe"/)
+        .expect(/input type="hidden" name="url" value="urlForInteresting"/)
+        .expect(/input type="hidden" name="resource" value="default"/)
+        .expect(/type="submit" class="btn btn-default">Ich kann doch nicht/)
         .expect(/participant1/)
         .expect(/participant2/, done);
     });
@@ -269,7 +284,10 @@ describe('Activity application', function () {
         .get('/' + 'urlForMultiple')
         .expect(200)
         .expect(/Bislang haben 4 Mitglieder ihre Teilnahme zugesagt\./)
-        .expect(/href="unsubscribe\/urlForMultiple\/Einzelzimmer" class="(\S|\s)*">Absagen/)
+        .expect(/action="unsubscribe"/)
+        .expect(/input type="hidden" name="url" value="urlForMultiple"/)
+        .expect(/input type="hidden" name="resource" value="Einzelzimmer"/)
+        .expect(/type="submit" class="btn btn-default">Absagen/)
         .expect(/Doppelzimmer:<\/label>(\S|\s)*Anmeldung ist zur Zeit nicht möglich\./)
         .expect(/participant1/)
         .expect(/participant2/)
@@ -311,7 +329,7 @@ describe('Activity application', function () {
         .expect(/Alle Plätze sind belegt\./, done);
     });
 
-    it('shows the link to the waitinglist if registrationClosed and some limit set and waitinglist is enabled', function (done) {
+    it('shows the link to the waitinglist if registrationClosed and some limit set and waitinglist is enabled for multiple resources', function (done) {
       activityWithMultipleResources.state.resources.Einzelzimmer._registrationOpen = false;
       activityWithMultipleResources.state.resources.Doppelzimmer._registrationOpen = false;
       activityWithMultipleResources.state.resources.Einzelzimmer._limit = 2;
@@ -321,7 +339,10 @@ describe('Activity application', function () {
       request(createApp('memberId3'))
         .get('/' + 'urlForMultiple')
         .expect(200)
-        .expect(/addToWaitinglist\/urlForMultiple\/Einzelzimmer(\S|\s)*Auf die Warteliste/, done);
+        .expect(/action="addToWaitinglist"/)
+        .expect(/input type="hidden" name="url" value="urlForMultiple"/)
+        .expect(/input type="hidden" name="resource" value="Einzelzimmer"/)
+        .expect(/type="submit" class="btn btn-primary">Auf die Warteliste!/, done);
     });
 
   });

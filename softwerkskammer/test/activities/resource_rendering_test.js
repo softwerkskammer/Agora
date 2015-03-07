@@ -31,63 +31,63 @@ describe('ResourceRegistrationRenderer', function () {
 
   it('gives values for state "fixed"', function () {
     var result = resultForState(Resource.fixed);
-    expect(result.url).to.not.exist();
+    expect(result.type).to.not.exist();
     expect(result.displayText).to.equal('activities.unsubscribe_not_possible');
   });
 
   it('gives values for state "registered" if only 1 resource', function () {
     var result = resultForState(Resource.registered);
-    expect(result.url).to.match(/^unsubscribe/);
+    expect(result.type).to.be('unsubscribe');
     expect(result.displayText).to.equal('activities.unsubscribe_single');
   });
 
   it('gives different values for state "registered" if more than 1 resource', function () {
     resourceNamesList.push('name2');
     var result = resultForState(Resource.registered);
-    expect(result.url).to.match(/^unsubscribe/);
+    expect(result.type).to.be('unsubscribe');
     expect(result.displayText).to.equal('activities.unsubscribe_multiple');
   });
 
   it('gives values for state "registrationPossible" if only 1 resource', function () {
     var result = resultForState(Resource.registrationPossible);
-    expect(result.url).to.match(/^subscribe/);
+    expect(result.type).to.be('subscribe');
     expect(result.displayText).to.equal('activities.subscribe_single');
   });
 
   it('gives different values for state "registrationPossible" if more than 1 resource', function () {
     resourceNamesList.push('name2');
     var result = resultForState(Resource.registrationPossible);
-    expect(result.url).to.match(/^subscribe/);
+    expect(result.type).to.be('subscribe');
     expect(result.displayText).to.equal('activities.subscribe_multiple');
   });
 
   it('gives values for state "registrationElsewhere"', function () {
     var result = resultForState(Resource.registrationElsewhere);
-    expect(result.url).to.not.exist();
+    expect(result.type).to.not.exist();
     expect(result.displayText).to.equal('activities.registration_not_here');
   });
 
   it('gives values for state "registrationClosed"', function () {
     var result = resultForState(Resource.registrationClosed);
-    expect(result.url).to.not.exist();
+    expect(result.type).to.not.exist();
     expect(result.displayText).to.equal('activities.registration_not_now');
   });
 
   it('gives values for state "waitinglistPossible"', function () {
     var result = resultForState(Resource.waitinglistPossible);
-    expect(result.url).to.match(/^addToWai/);
+    expect(result.type).to.be('addToWaitinglist');
     expect(result.displayText).to.equal('activities.add_to_waitinglist');
   });
 
   it('gives values for state "onWaitinglist"', function () {
     var result = resultForState(Resource.onWaitinglist);
-    expect(result.url).to.match(/^removeFromWai/);
+    expect(result.type).to.be('removeFromWaitinglist');
     expect(result.displayText).to.equal('activities.remove_from_waitinglist');
   });
 
   it('gives values for state "full"', function () {
     var result = resultForState(Resource.full);
-    expect(result.url).to.not.exist();
+    expect(result.type).to.not.exist();
     expect(result.displayText).to.equal('activities.full');
   });
 
