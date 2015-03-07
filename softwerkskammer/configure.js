@@ -22,11 +22,10 @@ function createConfiguration() {
       '/new|' +
       '/edit|' +
       '/submit|' +
-      '(subscribe|unsubscribe)/|' +
+      '/subscribe|' +
       '/mailarchive|' +
       '/invitation|' +
       '/addToWaitinglist|' +
-      '/removeFromWaitinglist|' +
       '/addon|' +
       '/submitAddon|' +
       '/wiki/socrates.*/|' +

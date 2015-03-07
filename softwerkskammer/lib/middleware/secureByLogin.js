@@ -6,6 +6,9 @@ var securedByLoginURLRegex = new RegExp(conf.get('securedByLoginURLPattern'));
 
 module.exports = function secureByLogin(req, res, next) {
   if (securedByLoginURLRegex.test(req.originalUrl)) {
+    if (req.method === 'POST') {
+      req.session.previousBody = req.body;
+    }
     return ensureLoggedIn(req, res, next);
   }
   next();

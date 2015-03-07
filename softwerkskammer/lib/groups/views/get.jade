@@ -2,6 +2,7 @@ extends ../../../views/layout
 include ../../members/views/memberlist-mixin
 include ../../wiki/views/wiki-mixins
 include ../../activities/views/activities-mixins
+include ../../../views/formComponents
 
 block title
     | #{group.longName}
@@ -35,9 +36,15 @@ block content
 
       if (accessrights.canParticipateInGroup(group))
         if (userIsGroupMember)
-          a.btn.btn-default(href='unsubscribe/#{group.id}') #{t('groups.leave')}
+          form(role='form', method='POST', action='unsubscribe')
+            +csrf
+            +hidden('groupname', group.id)
+            button.btn.btn-default(type='submit') #{t('groups.leave')}
         else
-          a.btn.btn-primary(href='subscribe/#{group.id}') #{t('groups.join')}
+          form(role='form', method='POST', action='subscribe')
+            +csrf
+            +hidden('groupname', group.id)
+            button.btn.btn-primary(type='submit') #{t('groups.join')}
     .col-md-6
       +tagCloud(users, group.color)
   .row

@@ -15,15 +15,24 @@ mixin subscriptionButtons(activity, resourceName, resourceRegistrationRenderer)
     if (!result.representsButton())
       | #{t(result.displayText)}
     else
-      a(href='#{result.url}', class='btn #{btnClass}') #{t(result.displayText)}
+      form(role='form', method='POST', action=result.type)
+        +csrf
+        +hidden('url', result.url)
+        +hidden('resource', result.resourcename)
+        button.btn(type='submit', class='#{btnClass}') #{t(result.displayText)}
   else
-    form.form-horizontal
+    .form-horizontal
       .form-group
         label.control-label.col-xs-6(style='text-align: left;') #{resourceName}:
         if (!result.representsButton())
           span.col-xs-6.control-label(style='text-align: center;') #{t(result.displayText)}
         else
-          a(href='#{result.url}', class='btn col-xs-6 #{btnClass}') #{t(result.displayText)}
+          span.col-xs-6
+            form(role='form', method='POST', action=result.type)
+              +csrf
+              +hidden('url', result.url)
+              +hidden('resource', result.resourcename)
+              button.btn(type='submit', class='#{btnClass}') #{t(result.displayText)}
 
 mixin activityList(activities, member)
   dl.dl-horizontal
