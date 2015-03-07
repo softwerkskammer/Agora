@@ -18,7 +18,6 @@ var memberstore = beans.get('memberstore');
 var paymentService = beans.get('paymentService');
 var fieldHelpers = beans.get('fieldHelpers');
 
-var PaymentInfo = beans.get('paymentInfo'); // muss wieder raus hier
 var Activity = beans.get('activity');
 var validation = beans.get('validation');
 var statusmessage = beans.get('statusmessage');
@@ -267,6 +266,11 @@ function subscribe(body, req, res, next) {
 }
 app.post('/subscribe', function (req, res, next) {
   subscribe(req.body, req, res, next);
+});
+
+app.get('/subscribe/:activity/:resource', function (req, res) {
+  // TODO: remove in June 2015 - just here for legacy invitation emails
+  res.redirect('/activities/' + encodeURIComponent(req.params.activity));
 });
 
 app.get('/subscribe', function (req, res, next) {
