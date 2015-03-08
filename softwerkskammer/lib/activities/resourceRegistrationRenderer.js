@@ -29,7 +29,7 @@ module.exports.htmlRepresentationOf = function (activity, resourceName, memberId
     return new RenderingInformation('subscribe', activity.url(), resourceName, isSingle ? 'activities.subscribe_single' : 'activities.subscribe_multiple');
   }
   if (state === Resource.canSubscribeFromWaitinglist) {
-    return new RenderingInformation('subscribe/' + url, isSingle ? 'activities.subscribe_single' : 'activities.subscribe_multiple');
+    return new RenderingInformation('subscribe', activity.url(), resourceName, isSingle ? 'activities.subscribe_single' : 'activities.subscribe_multiple');
   }
   if (state === Resource.registrationElsewhere) {
     return new RenderingInformation(null, null, null, 'activities.registration_not_here');
