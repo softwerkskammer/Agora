@@ -120,6 +120,16 @@ module.exports = function (grunt) {
         options: jsLintStandardOptions
       }
     },
+    karma: {
+      options: {
+        configFile: 'karma-socrates.conf.js'
+      },
+      once: {
+        browsers: ['PhantomJS'],
+        runnerPort: 6666,
+        singleRun: true
+      }
+    },
     less: {
       minify: {
         options: {
@@ -168,7 +178,39 @@ module.exports = function (grunt) {
         }
       }
     },
-
+    istanbul_check_coverage: {
+      server: {
+        options: {
+          coverageFolder: 'socrates/coverage*',
+          check: {
+            lines: 81,
+            statements: 77
+          }
+        }
+      },
+      frontend: {
+        options: {
+          coverageFolder: 'socrates/karma-coverage',
+          check: {
+            lines: 90,
+            statements: 94
+          }
+        }
+      }
+    },
+    jade: {
+      compile: {
+        options: {
+          pretty: true,
+          data: function () {
+            return require('./socrates/frontendtests/fixtures/locals');
+          }
+        },
+        files: {
+          'socrates/frontendtests/fixtures/forms.html': 'socrates/frontendtests/fixtures/forms.jade'
+        }
+      }
+    },
     'bower-install-simple': {
       default: {
         options: {
@@ -182,14 +224,17 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-bower-install-simple');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-contrib-jade');
   grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-mocha-istanbul');
   grunt.loadNpmTasks('grunt-jslint');
+  grunt.loadNpmTasks('grunt-karma');
   grunt.loadNpmTasks('grunt-patch');
 
   grunt.registerTask('prepare', ['jslint', 'bower-install-simple', 'copy', 'patch', 'less']);
-  grunt.registerTask('tests', ['prepare', 'mocha_istanbul']);
+  grunt.registerTask('frontendtests', ['clean', 'prepare', 'jade', 'uglify:production', 'karma:once', 'uglify:development', 'karma:once', 'istanbul_check_coverage:frontend']);
+  grunt.registerTask('tests', ['prepare', 'frontendtests', 'mocha_istanbul', 'istanbul_check_coverage:server']);
   grunt.registerTask('deploy_development', ['prepare', 'uglify:development']);
   grunt.registerTask('deploy_production', ['clean', 'prepare', 'uglify:production']);
 
