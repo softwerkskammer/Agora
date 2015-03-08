@@ -4,6 +4,9 @@ include participationinfoform
   
 extends ../../../views/simpleLayout
 
+block scripts
+  script(src='/clientscripts/check-memberform.js')
+
 block title 
   | Registration - SoCraTes
 block content
@@ -17,4 +20,4 @@ block content
 
       .row(style='margin-bottom: 10px')
         .col-sm-12
-          button.pull-right.btn.btn-primary(type='submit') I really do want to participate!
+          +memberSubmitButtons('I really do want to participate!')

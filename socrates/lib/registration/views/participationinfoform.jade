@@ -1,4 +1,4 @@
-mixin participationinfoform(roomOptions)
+mixin participationinfoform(activity, roomOptions)
   .row
     .col-sm-12
       legend
@@ -18,36 +18,41 @@ mixin participationinfoform(roomOptions)
           table.table.table-striped.table-condensed.table-bordered
             thead
               tr
-                th Room from Thurs evening until
-                th.text-right Sat evening
-                th.text-right Sun morning
-                th.text-right Sun evening*
-                th.text-right Mon morning*
+                th Room from Thursday evening until
+                th.text-center Sat evening
+                th.text-center Sun morning
+                th.text-center Sun evening*
+                th.text-center Mon morning*
             tbody
               for option in roomOptions
                 tr
                   th #{option.name}
-                  td.text-right
-                    //.radio-inline
-                      //input(type='radio', name='nightsOptions', value=option.id + 2)
-                    | #{option.two}&nbsp;€
-                  td.text-right
-                    //.radio-inline
-                      //input(type='radio', name='nightsOptions', value=option.id + 3)
-                    | #{option.three}&nbsp;€
-                  td.text-right
-                    //.radio-inline
-                      //input(type='radio', name='nightsOptions', value=option.id + 4)
-                    | #{option.threePlus}&nbsp;€
-                  td.text-right
-                    //.radio-inline
-                      //input(type='radio', name='nightsOptions', value=option.id + 5)
-                    | #{option.four}&nbsp;€
+                  td.text-center
+                    .radio-inline
+                      label
+                        input(type='radio', name='nightsOptions', value=option.id + ',2')
+                        | #{option.two}&nbsp;€
+                  td.text-center
+                    .radio-inline
+                      label
+                        input(type='radio', name='nightsOptions', value=option.id + ',3')
+                        | #{option.three}&nbsp;€
+                  td.text-center
+                    .radio-inline
+                      label
+                        input(type='radio', name='nightsOptions', value=option.id + ',4')
+                        | #{option.threePlus}&nbsp;€
+                  td.text-center
+                    .radio-inline
+                      label
+                        input(type='radio', name='nightsOptions', value=option.id + ',5')
+                        | #{option.four}&nbsp;€
         .row(style='margin-top:-15px; margin-bottom:15px')
           .col-xs-12
             small * including participation in Sunday Coderetreat or Workshop
 
         +csrf
+        +hidden('activityUrl', activity.url())
         .row(style='margin-bottom: 10px')
           .col-sm-12
             button.pull-right.btn.btn-primary(type='submit') I really do want to participate!

@@ -10,7 +10,7 @@ var member_validator;
 
     // DO NOT FORGET TO KEEP THIS FILE IN SYNC WITH /lib/commons/validation.js
 
-    member_validator = $("#memberform").validate(
+    member_validator = $("#memberform, #participationform").validate(
       {
         rules: {
           nickname: {
@@ -20,7 +20,7 @@ var member_validator;
               url: "/members/checknickname",
               data: {
                 previousNickname: function () {
-                  return $("#memberform [name=previousNickname]").val();
+                  return $("[name=previousNickname]").val();
                 }
               }
             }
@@ -34,7 +34,7 @@ var member_validator;
               url: "/members/checkemail",
               data: {
                 previousEmail: function () {
-                  return $("#memberform [name=previousEmail]").val();
+                  return $("[name=previousEmail]").val();
                 }
               }
             }
@@ -71,8 +71,8 @@ var member_validator;
       };
     };
 
-    ["#memberform [name=nickname]", "#memberform [name=lastname]", "#memberform [name=firstname]", "#memberform [name=email]",
-      "#memberform [name=profession]", "#memberform [name=location]", "#memberform [name=reference]"].forEach(
+    ["[name=nickname]", "[name=lastname]", "[name=firstname]", "[name=email]",
+      "[name=profession]", "[name=location]", "[name=reference]"].forEach(
       function (each) {
         $(each).on("change", handler(each));
         $(each).keyup(handler(each));

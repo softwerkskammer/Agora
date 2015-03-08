@@ -64,7 +64,14 @@ mixin submitButtons(submitTextToken)
     a.btn.btn-default(href='javascript:history.back()', type='cancel') #{t('general.back')}
     button.btn.btn-primary(type='submit') #{t(submitTextToken)}
 
-
+mixin memberSubmitButtons(submitText)
+  .btn-group.pull-right
+    if (accessrights.isRegistered())
+      a.btn.btn-default(href='javascript:history.back()', type='cancel') #{t('general.back')}
+    else
+      a.btn.btn-danger(href='/auth/logout', type='cancel') #{t('members.cancel')}
+    button.btn.btn-primary(type='submit') #{submitText}
+    
 mixin hidden(name, value)
   input(type='hidden', name=name, value=value)
 
