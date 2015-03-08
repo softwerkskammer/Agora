@@ -127,7 +127,7 @@ module.exports = {
     message.setReceiver(member);
     message.setSubject('Moving up for / Nachrücken für "' + activity.title() + '"');
     message.setMarkdown(markdownEnglish + '\n\n---\n\n' + markdownGerman);
-    message.addToButtons(buttonFor(activity, waitinglistEntry.resourceName()));
+    message.addToButtons(buttonFor(activity, waitinglistEntry.resourceName())); // TODO change to message.addToButtons(invitationLinkFor(activity));
     sendMail(message, 'Nachricht', callback);
   },
 

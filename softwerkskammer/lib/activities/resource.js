@@ -49,16 +49,18 @@ Resource.prototype.registrationDateOf = function (memberId) {
 };
 
 Resource.prototype.addMemberId = function (memberId, momentOfRegistration) {
-  if (this.isFull()) { return; }
-
-  if (this.registeredMembers().indexOf(memberId) === -1) {
-    this.state._registeredMembers.push({
-      memberId: memberId,
-      registeredAt: (momentOfRegistration || moment()).toDate()
-    });
+  if (this.canSubscribe() || this.canSubscribeFromWaitinglist(memberId)) {
+    if (this.registeredMembers().indexOf(memberId) === -1) {
+      this.state._registeredMembers.push({
+        memberId: memberId,
+        registeredAt: (momentOfRegistration || moment()).toDate()
+      });
+    }
+    this.removeFromWaitinglist(memberId);
+    if (this.isFull()) { this.state._registrationOpen = false; }
+    return true;
   }
-  this.removeFromWaitinglist(memberId);
-  if (this.isFull()) { this.state._registrationOpen = false; }
+  return false;
 };
 
 Resource.prototype.isAlreadyRegistered = function (memberId) {
@@ -129,6 +131,15 @@ Resource.prototype.isFull = function () {
   return (this.limit() >= 0) && (this.limit() <= this.registeredMembers().length);
 };
 
+Resource.prototype.canSubscribe = function () {
+  return this.isRegistrationOpen() && !this.isFull();
+};
+
+Resource.prototype.canSubscribeFromWaitinglist = function (memberId) {
+  var waitingListEntry = this.waitinglistEntryFor(memberId);
+  return waitingListEntry && waitingListEntry.canSubscribe();
+};
+
 Resource.prototype.numberOfFreeSlots = function () {
   if (this.limit() >= 0) {
     return Math.max(0, this.limit() - this.registeredMembers().length);
@@ -158,12 +169,16 @@ Resource.registrationClosed = 'registrationClosed';
 Resource.waitinglistPossible = 'waitinglistPossible';
 Resource.onWaitinglist = 'onWaitinglist';
 Resource.full = 'full';
+Resource.canSubscribeFromWaitinglist = 'canSubscribeFromWaitinglist'; // is on waitinglist and entitled to subscribe
 
 Resource.prototype.registrationStateFor = function (memberId) {
   if (this.registeredMembers().indexOf(memberId) > -1) {
     return this.canUnsubscribe() ? Resource.registered : Resource.fixed;
   }
-  if (this.isRegistrationOpen() && !this.isFull()) {
+  if (this.canSubscribeFromWaitinglist(memberId)) {
+    return Resource.canSubscribeFromWaitinglist;
+  }
+  if (this.canSubscribe()) {
     return Resource.registrationPossible;
   }
   if (this.limit() === 0) {

@@ -9,13 +9,11 @@ block title
 block content
   .page-header
     h1 Participate in SoCraTes 2015
-  form#participationform.relaxed(action='/registration/participate', method='post')
+  form#participationform.relaxed(action='/registration/completeRegistration', method='post')
     +csrf
-    if (participation.id)
-      +hidden('id', participation.id)
     fieldset
-      +memberinfoform(participation.member, 'members.edit_registration')
-      +userinfoform(participation.addon)
+      +memberinfoform(member, 'members.edit_registration')
+      +userinfoform(addon)
 
       .row(style='margin-bottom: 10px')
         .col-sm-12

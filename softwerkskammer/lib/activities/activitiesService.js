@@ -99,16 +99,13 @@ module.exports = {
     var self = this;
     activitystore.getActivity(activityUrl, function (err, activity) {
       if (err || !activity) { return callback(err, 'message.title.problem', 'message.content.activities.does_not_exist'); }
-      var resource = activity.resourceNamed(resourceName);
-      var waitinglistEntry = resource.waitinglistEntryFor(memberId);
-      var canSubscribe = waitinglistEntry ? waitinglistEntry.canSubscribe() : false;
-      if (resource.isRegistrationOpen() || canSubscribe) {
-        resource.addMemberId(memberId, moment);
+      if (activity.resourceNamed(resourceName).addMemberId(memberId, moment)) {
         return activitystore.saveActivity(activity, function (err) {
           if (err && err.message === CONFLICTING_VERSIONS) {
             // we try again because of a racing condition during save:
             return self.addVisitorTo(memberId, activityUrl, resourceName, moment, callback);
           }
+          if (err) { return callback(err); }
           notifications.visitorRegistration(activity, memberId, resourceName);
           return callback(err);
         });

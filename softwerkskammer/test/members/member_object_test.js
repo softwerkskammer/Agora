@@ -9,8 +9,8 @@ describe('Member initial filling', function () {
   it('is correctly filled from small database record', function () {
     var db_record = {id: 'ID', nickname: 'NICK'};
     var member = new Member(db_record);
-    expect(member.id(), 'id').to.equal(db_record.id);
-    expect(member.nickname(), 'nickname').to.equal(db_record.nickname);
+    expect(member.id()).to.equal(db_record.id);
+    expect(member.nickname()).to.equal(db_record.nickname);
   });
 
   it('is populated by Google OpenID record', function () {
@@ -20,9 +20,9 @@ describe('Member initial filling', function () {
       '"name": {"familyName": "Dampf","givenName": "Hans"}}}');
 
     var member = new Member().initFromSessionUser(userdata);
-    expect(member.firstname(), 'firstname').to.equal('Hans');
-    expect(member.lastname(), 'lastname').to.equal('Dampf');
-    expect(member.email(), 'email').to.equal('hada@web.de');
+    expect(member.firstname()).to.equal('Hans');
+    expect(member.lastname()).to.equal('Dampf');
+    expect(member.email()).to.equal('hada@web.de');
   });
 
   it('is populated by GitHub record', function () {
@@ -33,9 +33,9 @@ describe('Member initial filling', function () {
       '"_json" : { "html_url" :"https://github.com/hansdampf", "blog" : "http://hada.wordpress.com" }}}');
 
     var member = new Member().initFromSessionUser(userdata);
-    expect(member.firstname(), 'firstname').not.to.exist();
-    expect(member.lastname(), 'lastname').not.to.exist();
-    expect(member.site(), 'site').to.equal('https://github.com/hansdampf, http://hada.wordpress.com');
+    expect(member.firstname()).not.to.exist();
+    expect(member.lastname()).not.to.exist();
+    expect(member.site()).to.equal('https://github.com/hansdampf, http://hada.wordpress.com');
   });
 
   it('is populated by GitHub record with only github url', function () {
@@ -46,26 +46,26 @@ describe('Member initial filling', function () {
       '"_json" : { "html_url" :"https://github.com/hansdampf", "blog" : "undefined" }}}');
 
     var member = new Member().initFromSessionUser(userdata);
-    expect(member.firstname(), 'firstname').not.to.exist();
-    expect(member.lastname(), 'lastname').not.to.exist();
-    expect(member.site(), 'site').to.equal('https://github.com/hansdampf');
+    expect(member.firstname()).not.to.exist();
+    expect(member.lastname()).not.to.exist();
+    expect(member.site()).to.equal('https://github.com/hansdampf');
   });
 
   it('is populated with empty fields where no information is given', function () {
     var record = {
       id: 'testuser',
-      nickname: 'testuser',
+      nickname: 'testNick',
       email: 'mail@google.de',
       firstname: 'Test',
       lastname: 'User'
     };
     var member = new Member(record);
-    expect(member.twitter(), 'twitter').not.to.exist();
-    expect(member.location(), 'location').not.to.exist();
-    expect(member.profession(), 'profession').not.to.exist();
-    expect(member.interests(), 'interest').not.to.exist();
-    expect(member.site(), 'site').not.to.exist();
-    expect(member.reference(), 'reference').not.to.exist();
+    expect(member.twitter()).not.to.exist();
+    expect(member.location()).not.to.exist();
+    expect(member.profession()).not.to.exist();
+    expect(member.interests()).not.to.exist();
+    expect(member.site()).not.to.exist();
+    expect(member.reference()).not.to.exist();
   });
 
   it('shows the full name as display-name', function () {
@@ -90,30 +90,83 @@ describe('Member initial filling', function () {
   });
 });
 
+describe('fillFromUI', function () {
+  it('leaves fields undefined where no information is given', function () {
+    var record = {
+      nickname: 'testNick',
+      email: 'mail@google.de',
+      firstname: 'Test',
+      lastname: 'User'
+    };
+    var member = new Member().fillFromUI(record);
+    expect(member.twitter()).not.to.exist();
+    expect(member.location()).not.to.exist();
+    expect(member.profession()).not.to.exist();
+    expect(member.interests()).not.to.exist();
+    expect(member.site()).not.to.exist();
+    expect(member.reference()).not.to.exist();
+    expect(member.notifyOnWikiChanges()).not.to.exist();
+    expect(member.socratesOnly()).not.to.exist();
+  });
+
+  it('trims the contents of all fields', function () {
+    var record = {
+      nickname: ' testNick ',
+      email: ' mail@google.de ',
+      firstname: ' Test ',
+      lastname: ' User ',
+      twitter: ' @twitti ',
+      location: ' somewhere ',
+      profession: ' My Job ',
+      interests: ' Everything ',
+      site: ' www.mypage.de ',
+      reference: ' A friend ',
+      customAvatar: ' avatar-url ',
+      notifyOnWikiChanges: ' X ',
+      socratesOnly: 'yes'
+    };
+    var member = new Member().fillFromUI(record);
+    expect(member.nickname()).to.equal('testNick');
+    expect(member.email()).to.equal('mail@google.de');
+    expect(member.firstname()).to.equal('Test');
+    expect(member.lastname()).to.equal('User');
+    expect(member.twitter()).to.equal('twitti');
+    expect(member.location()).to.equal('somewhere');
+    expect(member.profession()).to.equal('My Job');
+    expect(member.interests()).to.equal('Everything');
+    expect(member.site()).to.equal('http://www.mypage.de');
+    expect(member.reference()).to.equal('A friend');
+    expect(member.customAvatar()).to.equal('avatar-url');
+    expect(member.notifyOnWikiChanges()).to.be.true();
+    expect(member.socratesOnly()).to.be.true();
+  });
+
+});
+
 describe('Member twitter field autocorrection', function () {
   it('is autocorrecting the twittername removing leading @', function () {
     var member = new Member().fillFromUI({twitter: '@twitter'});
-    expect(member.twitter(), 'twitter').to.equal('twitter');
+    expect(member.twitter()).to.equal('twitter');
   });
 
   it('is not autocorrecting the twittername when already no leading @', function () {
     var member = new Member().fillFromUI({twitter: 'twitter'});
-    expect(member.twitter(), 'twitter').to.equal('twitter');
+    expect(member.twitter()).to.equal('twitter');
   });
 
   it('is adding http:// when not provided', function () {
     var member = new Member().fillFromUI({site: 'twitter'});
-    expect(member.site(), 'site').to.equal('http://twitter');
+    expect(member.site()).to.equal('http://twitter');
   });
 
   it('is not adding http:// when already provided', function () {
     var member = new Member().fillFromUI({site: 'http://twitter'});
-    expect(member.site(), 'site').to.equal('http://twitter');
+    expect(member.site()).to.equal('http://twitter');
   });
 
   it('is not adding http:// when already https:// provided', function () {
     var member = new Member().fillFromUI({site: 'https://twitter'});
-    expect(member.site(), 'site').to.equal('https://twitter');
+    expect(member.site()).to.equal('https://twitter');
   });
 
 });

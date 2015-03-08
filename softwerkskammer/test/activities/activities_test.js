@@ -4,6 +4,7 @@ var request = require('supertest');
 var sinon = require('sinon').sandbox.create();
 var expect = require('must');
 var _ = require('lodash');
+var moment = require('moment-timezone');
 
 var createApp = require('../../testutil/testHelper')('activitiesApp').createApp;
 
@@ -19,61 +20,127 @@ var groupsService = beans.get('groupsService');
 var groupsAndMembersService = beans.get('groupsAndMembersService');
 var memberstore = beans.get('memberstore');
 
-var member1 = new Member({id: 'memberId1', nickname: 'participant1', email: 'nick1@b.c', firstname: 'Firstname1', lastname: 'Lastname1'});
-var member2 = new Member({id: 'memberId2', nickname: 'participant2', email: 'nick2@b.c', firstname: 'Firstname2', lastname: 'Lastname2'});
-var member3 = new Member({id: 'memberId3', nickname: 'participant3', email: 'nick3@b.c', firstname: 'Firstname3', lastname: 'Lastname3'});
-var member4 = new Member({id: 'memberId4', nickname: 'participant4', email: 'nick4@b.c', firstname: 'Firstname4', lastname: 'Lastname4'});
+var member1 = new Member({
+  id: 'memberId1',
+  nickname: 'participant1',
+  email: 'nick1@b.c',
+  firstname: 'Firstname1',
+  lastname: 'Lastname1'
+});
+var member2 = new Member({
+  id: 'memberId2',
+  nickname: 'participant2',
+  email: 'nick2@b.c',
+  firstname: 'Firstname2',
+  lastname: 'Lastname2'
+});
+var member3 = new Member({
+  id: 'memberId3',
+  nickname: 'participant3',
+  email: 'nick3@b.c',
+  firstname: 'Firstname3',
+  lastname: 'Lastname3'
+});
+var member4 = new Member({
+  id: 'memberId4',
+  nickname: 'participant4',
+  email: 'nick4@b.c',
+  firstname: 'Firstname4',
+  lastname: 'Lastname4'
+});
 
 var group = new Group({id: 'groupname', longName: 'Buxtehude'});
 
-var emptyActivity = new Activity({title: 'Title of the Activity', description: 'description1', assignedGroup: 'groupname',
-  location: 'location1', direction: 'direction1', startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'),
-  url: 'urlOfTheActivity', owner: 'owner' });
-emptyActivity.participants = [ ];
+var emptyActivity = new Activity({
+  title: 'Title of the Activity',
+  description: 'description1',
+  assignedGroup: 'groupname',
+  location: 'location1',
+  direction: 'direction1',
+  startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'),
+  url: 'urlOfTheActivity',
+  owner: 'owner'
+});
+emptyActivity.participants = [];
 emptyActivity.colorRGB = '#123456';
 emptyActivity.group = group;
 
-var activityWithParticipants = new Activity({title: 'Interesting Activity', description: 'description2', assignedGroup: 'groupname',
-  location: 'location2', direction: 'direction2', startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'), url: 'urlForInteresting',
-  resources: {'default': {_registeredMembers: [
-    {memberId: 'memberId1'},
-    {memberId: 'memberId2'}
-  ],
-    _registrationOpen: true }} });
-activityWithParticipants.participants = [ member1, member2 ];
+var activityWithParticipants = new Activity({
+  title: 'Interesting Activity',
+  description: 'description2',
+  assignedGroup: 'groupname',
+  location: 'location2',
+  direction: 'direction2',
+  startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'),
+  url: 'urlForInteresting',
+  resources: {
+    'default': {
+      _registeredMembers: [
+        {memberId: 'memberId1'},
+        {memberId: 'memberId2'}
+      ],
+      _registrationOpen: true
+    }
+  }
+});
+activityWithParticipants.participants = [member1, member2];
 activityWithParticipants.colorRGB = '#123456';
 activityWithParticipants.group = new Group({id: 'group', longName: 'The name of the assigned Group'});
 
-var activityWithMultipleResources = new Activity({title: 'Interesting Activity', description: 'description2', assignedGroup: 'groupname',
-  location: 'location2', direction: 'direction2', startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'), url: 'urlForMultiple',
-  resources: {Einzelzimmer: {_registeredMembers: [
-    {memberId: 'memberId1'},
-    {memberId: 'memberId2'}
-  ]}, Doppelzimmer: {_registeredMembers: [
-    {memberId: 'memberId3'},
-    {memberId: 'memberId4'}
-  ],
-    _registrationOpen: true}} });
-activityWithMultipleResources.participants = [ member1, member2, member3, member4 ];
+var activityWithMultipleResources = new Activity({
+  title: 'Interesting Activity',
+  description: 'description2',
+  assignedGroup: 'groupname',
+  location: 'location2',
+  direction: 'direction2',
+  startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'),
+  url: 'urlForMultiple',
+  resources: {
+    Einzelzimmer: {
+      _registeredMembers: [
+        {memberId: 'memberId1'},
+        {memberId: 'memberId2'}
+      ]
+    },
+    Doppelzimmer: {
+      _registeredMembers: [
+        {memberId: 'memberId3'},
+        {memberId: 'memberId4'}
+      ],
+      _registrationOpen: true
+    }
+  }
+});
+activityWithMultipleResources.participants = [member1, member2, member3, member4];
 activityWithMultipleResources.colorRGB = '#123456';
 activityWithMultipleResources.group = new Group({id: 'group', longName: 'The name of the assigned Group'});
 
-var activityWithEditors = new Activity({title: 'Activity with Editors', description: 'description5', assignedGroup: 'groupname5',
-  location: 'location5', direction: 'direction5', startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'), url: 'urlForEditors',
+var activityWithEditors = new Activity({
+  title: 'Activity with Editors',
+  description: 'description5',
+  assignedGroup: 'groupname5',
+  location: 'location5',
+  direction: 'direction5',
+  startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'),
+  url: 'urlForEditors',
   owner: 'memberId4',
   editorIds: ['memberId1', 'memberId3'],
-  resources: {'default': {_registeredMembers: [
-    {memberId: 'memberId1'},
-    {memberId: 'memberId2'},
-    {memberId: 'memberId3'},
-    {memberId: 'memberId4'}
-  ],
-    _registrationOpen: true }} });
-activityWithEditors.participants = [ member1, member2, member3, member4 ];
+  resources: {
+    'default': {
+      _registeredMembers: [
+        {memberId: 'memberId1'},
+        {memberId: 'memberId2'},
+        {memberId: 'memberId3'},
+        {memberId: 'memberId4'}
+      ],
+      _registrationOpen: true
+    }
+  }
+});
+activityWithEditors.participants = [member1, member2, member3, member4];
 activityWithEditors.colorRGB = '#123456';
 activityWithEditors.group = new Group({id: 'group', longName: 'The name of the group with editors'});
 activityWithEditors.ownerNickname = 'participant4';
-
 
 describe('Activity application', function () {
   beforeEach(function () {
@@ -261,6 +328,33 @@ describe('Activity application', function () {
         .expect(/Auf die Warteliste/, done);
     });
 
+    it('allows to leave the waitinglist if member is on waitinglist', function (done) {
+      activityWithParticipants.state.resources['default']._registrationOpen = false;
+      activityWithParticipants.state.resources['default']._limit = 1;
+      activityWithParticipants.state.resources['default']._waitinglist = [{
+        _memberId: 'memberId3'
+      }];
+
+      request(createApp('memberId3'))
+        .get('/' + 'urlForInteresting')
+        .expect(200)
+        .expect(/Warteliste verlassen/, done);
+    });
+
+    it('shows the subscription link if waitinglist participant is entitled to subscribe', function (done) {
+      activityWithParticipants.state.resources['default']._registrationOpen = false;
+      activityWithParticipants.state.resources['default']._limit = 1;
+      activityWithParticipants.state.resources['default']._waitinglist = [{
+        _memberId: 'memberId3',
+        _registrationValidUntil: moment().add(1, 'days')
+      }];
+
+      request(createApp('memberId3'))
+        .get('/' + 'urlForInteresting')
+        .expect(200)
+        .expect(/Ich bin dabei!/, done);
+    });
+
     it('shows the deregistration button for an activity with participants when a user is logged in who already is participant', function (done) {
       activityWithParticipants.state.resources['default']._registrationOpen = false;
 
@@ -327,6 +421,27 @@ describe('Activity application', function () {
         .get('/' + 'urlForMultiple')
         .expect(200)
         .expect(/Alle Plätze sind belegt\./, done);
+    });
+
+    it('shows the number of participants if the total limit is greater than 0', function (done) {
+      emptyActivity.state.resources.default = { _registrationOpen: false, _limit: 1 };
+
+      request(createApp('memberId3'))
+        .get('/' + 'urlOfTheActivity')
+        .expect(200)
+        .expect(/Bislang gibt es keine Teilnahmezusagen\./, done);
+    });
+
+    it('does not show the number of participants if the total limit is 0', function (done) {
+      emptyActivity.state.resources.default = { _registrationOpen: false, _limit: 0 };
+
+      request(createApp('memberId3'))
+        .get('/' + 'urlOfTheActivity')
+        .expect(200)
+        .expect(function (res) {
+          expect(res.text).to.not.contain('Bislang gibt es keine Teilnahmezusagen.');
+        })
+        .end(done);
     });
 
     it('shows the link to the waitinglist if registrationClosed and some limit set and waitinglist is enabled for multiple resources', function (done) {
@@ -484,7 +599,6 @@ describe('Activity application', function () {
     });
   });
 
-
   describe('- when editors are being utilized -', function () {
     it('does not show the names of the editors for a guest visitor', function (done) {
       request(createApp())
@@ -526,7 +640,6 @@ describe('Activity application', function () {
         .expect(/tags: \["Firstname1 Lastname1 \(participant1\)","Firstname2 Lastname2 \(participant2\)","Firstname3 Lastname3 \(participant3\)"\]/)
         .end(done);
     });
-
 
   });
 });

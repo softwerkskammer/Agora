@@ -12,35 +12,42 @@ mixin participationinfoform(roomOptions)
           li Junior double bed room (one 160cm bed), can be shared or occupied exclusively
         p If you stay at least until Sunday evening, we assume that you want to participate in the Coderetreat or in one of the workshops on Sunday.
         p All prices are per person.
-      .table-responsive
-        table.table.table-striped.table-condensed.table-bordered
-          thead
-            tr
-              th Room until
-              th.text-right Sat evening
-              th.text-right Sun morning
-              th.text-right Sun evening*
-              th.text-right Mon morning*
-          tbody
-            for option in roomOptions
+
+      form#participationform.relaxed(action='/registration/startRegistration', method='post')
+        .table-responsive
+          table.table.table-striped.table-condensed.table-bordered
+            thead
               tr
-                th #{option.name}
-                td.text-right
-                  //.radio-inline
-                    //input(type='radio', name='nightsOptions', value=option.id + 2)
-                  | #{option.two}&nbsp;€
-                td.text-right
-                  //.radio-inline
-                    //input(type='radio', name='nightsOptions', value=option.id + 3)
-                  | #{option.three}&nbsp;€
-                td.text-right
-                  //.radio-inline
-                    //input(type='radio', name='nightsOptions', value=option.id + 4)
-                  | #{option.threePlus}&nbsp;€
-                td.text-right
-                  //.radio-inline
-                    //input(type='radio', name='nightsOptions', value=option.id + 5)
-                  | #{option.four}&nbsp;€
-      .row(style='margin-top:-15px; margin-bottom:15px')
-        .col-xs-12
-          small * including participation in Sunday Coderetreat or Workshop
+                th Room from Thurs evening until
+                th.text-right Sat evening
+                th.text-right Sun morning
+                th.text-right Sun evening*
+                th.text-right Mon morning*
+            tbody
+              for option in roomOptions
+                tr
+                  th #{option.name}
+                  td.text-right
+                    //.radio-inline
+                      //input(type='radio', name='nightsOptions', value=option.id + 2)
+                    | #{option.two}&nbsp;€
+                  td.text-right
+                    //.radio-inline
+                      //input(type='radio', name='nightsOptions', value=option.id + 3)
+                    | #{option.three}&nbsp;€
+                  td.text-right
+                    //.radio-inline
+                      //input(type='radio', name='nightsOptions', value=option.id + 4)
+                    | #{option.threePlus}&nbsp;€
+                  td.text-right
+                    //.radio-inline
+                      //input(type='radio', name='nightsOptions', value=option.id + 5)
+                    | #{option.four}&nbsp;€
+        .row(style='margin-top:-15px; margin-bottom:15px')
+          .col-xs-12
+            small * including participation in Sunday Coderetreat or Workshop
+
+        +csrf
+        .row(style='margin-bottom: 10px')
+          .col-sm-12
+            button.pull-right.btn.btn-primary(type='submit') I really do want to participate!

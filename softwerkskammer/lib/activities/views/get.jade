@@ -54,7 +54,8 @@ block content
         | !{activity.directionHTML()}
       hr
       .hidden-print
-        +visitorCount(activity.participants.length)
+        if (allowsRegistration)
+          +visitorCount(activity.participants.length)
         each resourceName in activity.resourceNames()
           +subscriptionButtons(activity, resourceName, resourceRegistrationRenderer)
         if (accessrights.isRegistered() && activity.participants.length > 0)

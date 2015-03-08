@@ -13,16 +13,16 @@ function Member(object) {
 Member.prototype.fillFromUI = function (object) {
   var self = this;
   _.each(['nickname', 'firstname', 'lastname', 'email', 'location', 'profession', 'interests', 'reference', 'customAvatar'], function (property) {
-    if (object.hasOwnProperty(property)) { self.state[property] = object[property]; }
+    if (object.hasOwnProperty(property) && object[property]) { self.state[property] = object[property].trim(); }
   });
   _.each(['notifyOnWikiChanges', 'socratesOnly'], function (property) {
     if (object.hasOwnProperty(property)) { self.state[property] = !!object[property]; }
   });
-  if (object.hasOwnProperty('twitter')) {
-    self.state.twitter = fieldHelpers.removePrefixFrom('@', object.twitter);
+  if (object.twitter) {
+    self.state.twitter = fieldHelpers.removePrefixFrom('@', object.twitter.trim());
   }
-  if (object.hasOwnProperty('site')) {
-    self.state.site = fieldHelpers.addPrefixTo('http://', object.site, 'https://');
+  if (object.site) {
+    self.state.site = fieldHelpers.addPrefixTo('http://', object.site.trim(), 'https://');
   }
 
   return self;

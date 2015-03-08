@@ -237,8 +237,12 @@ app.get('/:url', function (req, res, next) {
     memberstore.getMembersForIds(activity.editorIds(), function (err, editors) {
       if (err || !editors) { return next(err); }
       var editorNicknames = _.map(editors, function (editor) { return editor.nickname(); });
+      var allowsRegistration = _.every(activity.resources().resourceNames(), function (resouceName, n) {
+        return activity.resourceNamed(resouceName).limit() !== 0;
+      });
       res.render('get', {
         activity: activity,
+        allowsRegistration: allowsRegistration,
         editorNicknames: editorNicknames,
         resourceRegistrationRenderer: resourceRegistrationRenderer,
         calViewYear: activity.year(),

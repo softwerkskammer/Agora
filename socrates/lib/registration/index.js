@@ -7,8 +7,11 @@ var membersService = beans.get('membersService');
 var mailsenderService = beans.get('mailsenderService');
 var subscriberstore = beans.get('subscriberstore');
 var activitiesService = beans.get('activitiesService');
+var registrationService = beans.get('registrationService');
 var icalService = beans.get('icalService');
 var activitystore = beans.get('activitystore');
+var statusmessage = beans.get('statusmessage');
+var SoCraTesResource = beans.get('socratesResource');
 
 var app = misc.expressAppIn(__dirname);
 
@@ -41,27 +44,34 @@ app.get('/ical', function (req, res, next) {
   });
 });
 
-
 // TODO noch nicht freigeschaltete Funktionalitäten:
 
-app.get('/participate', function (req, res, next) {
-  if (!req.user.member) {return next(); }
+app.post('/startRegistration', function (req, res, next) {
 
-  subscriberstore.getSubscriber(req.user.member.id(), function (err, subscriber) {
+  // TODO was wenn derjenige nicht angemeldet ist? Soll trotzdem funktionieren!
+  var resourceName = 'single'; //req.params.resource;
+  var days = 'three';
+  registrationService.startRegistration(/*req.user.member.id()*/'memberId5', currentUrl, resourceName, days, moment(), function (err, statusTitle, statusText) {
     if (err) { return next(err); }
-    var participation = {
-      member: req.user.member,
-      addon: subscriber.addon(),
-      room: 'double',
-      nights: 2
-    };
-    res.render('participate', {participation: participation});
+    if (statusTitle && statusText) {
+      statusmessage.errorMessage(statusTitle, statusText).putIntoSession(req);
+      res.redirect('/registration');
+    } else {
+      res.redirect('/registration/completeRegistration');
+    }
   });
 });
 
-app.post('/participate', function (req, res) {
-  console.log(req.body);
-  res.redirect('participate');
+// TODO: Was wenn derjenige nicht angemeldet ist? Soll trotzdem funktionieren!
+app.get('/completeRegistration', function (req, res, next) {
+  subscriberstore.getSubscriber(req.user.member.id(), function (err, subscriber) {
+    if (err) { return next(err); }
+    res.render('participate', {member: req.user.member, addon: subscriber.addon()});
+  });
+});
+
+app.post('/completeRegistration', function (req, res, next) {
+  //statusmessage.successMessage('message.title.save_successful', 'message.content.activities.participation_for_resource_added', {resourceName: new SoCraTesResource().displayName(resourceName)}).putIntoSession(req);
 });
 
 app.get('/resign', function (req, res) {
