@@ -51,7 +51,7 @@ app.post('/startRegistration', function (req, res, next) {
   // TODO was wenn derjenige nicht angemeldet ist? Soll trotzdem funktionieren!
   var resourceName = 'single'; //req.params.resource;
   var days = 'three';
-  registrationService.startRegistration(/*req.user.member.id()*/'memberId5', currentUrl, resourceName, days, moment(), function (err, statusTitle, statusText) {
+  registrationService.startRegistration(req.user.member.id(), currentUrl, resourceName, days, moment(), function (err, statusTitle, statusText) {
     if (err) { return next(err); }
     if (statusTitle && statusText) {
       statusmessage.errorMessage(statusTitle, statusText).putIntoSession(req);
@@ -71,6 +71,7 @@ app.get('/completeRegistration', function (req, res, next) {
 });
 
 app.post('/completeRegistration', function (req, res, next) {
+  res.redirect('/');
   //statusmessage.successMessage('message.title.save_successful', 'message.content.activities.participation_for_resource_added', {resourceName: new SoCraTesResource().displayName(resourceName)}).putIntoSession(req);
 });
 
