@@ -19,6 +19,10 @@ var app = misc.expressAppIn(__dirname);
 var currentYear = 2015;
 var currentUrl = 'socrates-' + currentYear;
 
+function isRegistrationOpen() { // we currently set this on false on production system, because this feature is still in development
+  return process.env.NODE_ENV !== 'production';
+}
+
 app.get('/', function (req, res, next) {
   activitiesService.getActivityWithGroupAndParticipants(currentUrl, function (err, activity) {
     if (err || !activity) { return next(err); }
@@ -28,7 +32,7 @@ app.get('/', function (req, res, next) {
       {id: 'junior', name: 'Junior shared …', shareable: true, two: 151, three: 197, threePlus: 227, four: 272},
       {id: 'bed_in_junior', name: 'Junior (exclusive)', two: 242, three: 333, threePlus: 363, four: 454}
     ];
-    res.render('get', {activity: activity, roomOptions: roomOptions});
+    res.render('get', {activity: activity, roomOptions: roomOptions, registrationPossible: isRegistrationOpen()});
   });
 });
 
@@ -57,7 +61,7 @@ function participate(registrationTupel, req, res, next) {
 }
 
 app.post('/startRegistration', function (req, res, next) {
-  if (!req.body.nightsOptions) { return res.redirect('/registration'); }
+  if (!isRegistrationOpen() || !req.body.nightsOptions) { return res.redirect('/registration'); }
   var option = req.body.nightsOptions.split(',');
   var registrationTupel = {activityUrl: req.body.activityUrl, resourceName: option[0], days: option[1]};
   var memberId = req.user ? req.user.member.id() : 'SessionID' + req.sessionID;
