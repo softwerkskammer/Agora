@@ -19,7 +19,7 @@ var app = misc.expressAppIn(__dirname);
 var currentYear = 2015;
 var currentUrl = 'socrates-' + currentYear;
 
-function isRegistrationOpen() { // we currently set this on false on production system, because this feature is still in development
+function isRegistrationOpen() { // we currently set this to false on production system, because this feature is still in development
   return app.get('env') !== 'production';
 }
 
