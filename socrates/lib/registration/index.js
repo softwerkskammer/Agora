@@ -51,7 +51,7 @@ app.get('/ical', function (req, res, next) {
 
 // TODO noch nicht freigeschaltete Funktionalitäten:
 
-function participate(registrationTupel, req, res, next) {
+function participate(registrationTuple, req, res, next) {
   if (!req.user) { return res.redirect('/registration'); }
   var member = req.user.member || new Member().initFromSessionUser(req.user, true);
   subscriberstore.getSubscriber(member.id(), function (err, subscriber) {
@@ -63,9 +63,9 @@ function participate(registrationTupel, req, res, next) {
 app.post('/startRegistration', function (req, res, next) {
   if (!isRegistrationOpen() || !req.body.nightsOptions) { return res.redirect('/registration'); }
   var option = req.body.nightsOptions.split(',');
-  var registrationTupel = {activityUrl: req.body.activityUrl, resourceName: option[0], days: option[1]};
+  var registrationTuple = {activityUrl: req.body.activityUrl, resourceName: option[0], days: option[1]};
   var memberId = req.user ? req.user.member.id() : 'SessionID' + req.sessionID;
-  registrationService.startRegistration(memberId, registrationTupel, function (err, statusTitle, statusText) {
+  registrationService.startRegistration(memberId, registrationTuple, function (err, statusTitle, statusText) {
     if (err) { return next(err); }
     if (statusTitle && statusText) {
       statusmessage.errorMessage(statusTitle, statusText).putIntoSession(req);
@@ -73,18 +73,18 @@ app.post('/startRegistration', function (req, res, next) {
     }
     if (!req.user) {
       var returnToUrl = '/registration/participate';
-      req.session.registrationTupel = registrationTupel;
+      req.session.registrationTuple = registrationTuple;
       req.session.returnToUrl = returnToUrl;
       return res.render('loginForRegistration', {returnToUrl: returnToUrl});
     }
-    participate(registrationTupel, req, res, next);
+    participate(registrationTuple, req, res, next);
   });
 });
 
 app.get('/participate', function (req, res, next) {
-  var registrationTupel = req.session.registrationTupel;
-  if (!registrationTupel) { return res.redirect('/registration'); }
-  participate(registrationTupel, req, res, next);
+  var registrationTuple = req.session.registrationTuple;
+  if (!registrationTuple) { return res.redirect('/registration'); }
+  participate(registrationTuple, req, res, next);
 });
 
 app.post('/completeRegistration', function (req, res, next) {

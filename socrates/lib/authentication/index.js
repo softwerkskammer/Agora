@@ -57,7 +57,7 @@ app.get('/loggedIn', function (req, res, next) {
           res.redirect(returnTo);
         });
       }
-      if (req.session.registrationTupel) { // handle new user during participate workflow
+      if (req.session.registrationTuple) { // handle new user during participate workflow
         return res.redirect('/registration/participate');
       }
       res.redirect('/members/edit');
