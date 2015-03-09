@@ -4,6 +4,8 @@ include ../../lib/registration/views/userinfoform
 
 +activityform(activity)
 
++participationinfoform(activity, roomOptions, true)
+
 form#participationform.relaxed(action='/registration/completeRegistration', method='post')
   +csrf
   fieldset

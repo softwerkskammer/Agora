@@ -20,7 +20,7 @@ var currentYear = 2015;
 var currentUrl = 'socrates-' + currentYear;
 
 function isRegistrationOpen() { // we currently set this on false on production system, because this feature is still in development
-  return process.env.NODE_ENV !== 'production';
+  return app.get('env') !== 'production';
 }
 
 app.get('/', function (req, res, next) {

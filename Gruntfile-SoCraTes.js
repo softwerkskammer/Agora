@@ -72,6 +72,7 @@ module.exports = function (grunt) {
       },
       customJS: {
         src: ['socrates/frontend/javascript/check-*',
+          'socrates/frontend/javascript/enhance-*',
           'softwerkskammer/frontend/javascript/check-member*',
           'softwerkskammer/frontend/javascript/activityDateModel.js',
           'softwerkskammer/frontend/javascript/activityform-dateAdapter.js'],
