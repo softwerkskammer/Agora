@@ -39,12 +39,19 @@ var winstonStream = {
   }
 };
 
+function useApp(parent, url, child) {
+  if (child.get('env') !== 'production') {
+    child.locals.pretty = true;
+  }
+  parent.use(url, child);
+  return child;
+}
+
+
+
 module.exports = {
   create: function () {
     var app = express();
-    if (process.env.NODE_ENV !== 'production') {
-      app.locals.pretty = true;
-    }
     app.set('view engine', 'jade');
     app.set('views', path.join(__dirname, 'views'));
     app.use(favicon(path.join(__dirname, 'public/img/favicon.ico')));
@@ -69,12 +76,12 @@ module.exports = {
     app.use(beans.get('addCsrfTokenToLocals'));
     app.use('/', beans.get('socratesSiteApp'));
     app.use('/activities/', beans.get('socratesActivitiesApp'));
-    app.use('/registration/', beans.get('socratesRegistrationApp'));
-    app.use('/auth/', beans.get('authenticationApp'));
-    app.use('/mailsender/', beans.get('socratesMailsenderApp'));
-    app.use('/members/', beans.get('socratesMembersApp'));
-    app.use('/subscribers/', beans.get('socratesSubscribersApp'));
-    app.use('/wiki/', beans.get('socratesWikiApp'));
+    useApp(app, '/registration/', beans.get('socratesRegistrationApp'));
+    useApp(app, '/auth/', beans.get('authenticationApp'));
+    useApp(app, '/mailsender/', beans.get('socratesMailsenderApp'));
+    useApp(app, '/members/', beans.get('socratesMembersApp'));
+    useApp(app, '/subscribers/', beans.get('socratesSubscribersApp'));
+    useApp(app, '/wiki/', beans.get('socratesWikiApp'));
     app.use(beans.get('handle404')(appLogger));
     app.use(beans.get('handle500')(appLogger));
 

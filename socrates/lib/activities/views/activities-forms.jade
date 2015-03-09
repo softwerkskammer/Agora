@@ -1,6 +1,6 @@
 include  ../../../views/formComponents
 
-mixin activityform(activity, groups)
+mixin activityform(activity)
   form(id='activityform', action='/activities/submit', method='post')
     +csrf
     if (activity.id())

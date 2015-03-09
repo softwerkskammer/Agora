@@ -3,8 +3,11 @@ include ../../../../softwerkskammer/views/formComponents
 include ../../../../softwerkskammer/lib/activities/views/activities-mixins
 include participationinfoform
 
+block scripts
+  script(src='/clientscripts/enhance-participationinfoform.js')
+
 block title
-  | #{activity.title()} - #{t('activities.activities')}
+  | #{activity.title()} - Registration
 
 block content
   .row
@@ -22,25 +25,12 @@ block content
             a.btn.btn-default(href='/activities/edit/#{encodeURIComponent(activity.url())}', title=t('general.edit')): i.fa.fa-edit.fa-fw
           if (accessrights.canDeleteActivity(activity))
             +reallyDeleteModal('activities.delete', '/activities/delete/' + encodeURIComponent(activity.url()))
-        h2 #{activity.title()}
-          br
-          small #{activity.startMoment().locale(language).format('LL')} (#{activity.startMoment().locale(language).format('LT')}
-            if (activity.isMultiDay())
-              | ) - #{activity.endMoment().locale(language).format('LL')} (#{activity.endMoment().locale(language).format('LT')})
-            else
-              |  - #{activity.endMoment().locale(language).format('LT')})
+        h2 Registration
       .clearfix
       | !{activity.descriptionHTML()}
   .row
     .col-md-12
-      +participationinfoform(roomOptions)
-  .row
-    .col-md-12
-      hr
-      | Registration will open in April, 2015.
-    .col-md-6
-      .hidden-print
-        // +visitorCount(activity.participants.length)
+      +participationinfoform(activity, roomOptions, registrationPossible)
 
 block scripts
   script.

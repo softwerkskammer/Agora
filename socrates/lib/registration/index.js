@@ -4,6 +4,7 @@ var moment = require('moment-timezone');
 var beans = require('simple-configure').get('beans');
 var misc = beans.get('misc');
 var membersService = beans.get('membersService');
+var Member = beans.get('member');
 var mailsenderService = beans.get('mailsenderService');
 var subscriberstore = beans.get('subscriberstore');
 var activitiesService = beans.get('activitiesService');
@@ -18,16 +19,20 @@ var app = misc.expressAppIn(__dirname);
 var currentYear = 2015;
 var currentUrl = 'socrates-' + currentYear;
 
+function isRegistrationOpen() { // we currently set this to false on production system, because this feature is still in development
+  return app.get('env') !== 'production';
+}
+
 app.get('/', function (req, res, next) {
   activitiesService.getActivityWithGroupAndParticipants(currentUrl, function (err, activity) {
     if (err || !activity) { return next(err); }
     var roomOptions = [
       {id: 'single', name: 'Single', two: 200, three: 270, threePlus: 300, four: 370},
-      {id: 'double', name: 'Double shared …', shareable: true, two: 160, three: 210, threePlus: 240, four: 290},
+      {id: 'bed_in_double', name: 'Double shared …', shareable: true, two: 160, three: 210, threePlus: 240, four: 290},
       {id: 'junior', name: 'Junior shared …', shareable: true, two: 151, three: 197, threePlus: 227, four: 272},
-      {id: 'juniorAlone', name: 'Junior (exclusive)', two: 242, three: 333, threePlus: 363, four: 454}
+      {id: 'bed_in_junior', name: 'Junior (exclusive)', two: 242, three: 333, threePlus: 363, four: 454}
     ];
-    res.render('get', {activity: activity, roomOptions: roomOptions});
+    res.render('get', {activity: activity, roomOptions: roomOptions, registrationPossible: isRegistrationOpen()});
   });
 });
 
@@ -46,28 +51,40 @@ app.get('/ical', function (req, res, next) {
 
 // TODO noch nicht freigeschaltete Funktionalitäten:
 
-app.post('/startRegistration', function (req, res, next) {
+function participate(registrationTuple, req, res, next) {
+  if (!req.user) { return res.redirect('/registration'); }
+  var member = req.user.member || new Member().initFromSessionUser(req.user, true);
+  subscriberstore.getSubscriber(member.id(), function (err, subscriber) {
+    if (err) { return next(err); }
+    res.render('participate', {member: member, addon: subscriber.addon()});
+  });
+}
 
-  // TODO was wenn derjenige nicht angemeldet ist? Soll trotzdem funktionieren!
-  var resourceName = 'single'; //req.params.resource;
-  var days = 'three';
-  registrationService.startRegistration(req.user.member.id(), currentUrl, resourceName, days, moment(), function (err, statusTitle, statusText) {
+app.post('/startRegistration', function (req, res, next) {
+  if (!isRegistrationOpen() || !req.body.nightsOptions) { return res.redirect('/registration'); }
+  var option = req.body.nightsOptions.split(',');
+  var registrationTuple = {activityUrl: req.body.activityUrl, resourceName: option[0], days: option[1]};
+  var memberId = req.user ? req.user.member.id() : 'SessionID' + req.sessionID;
+  registrationService.startRegistration(memberId, registrationTuple, function (err, statusTitle, statusText) {
     if (err) { return next(err); }
     if (statusTitle && statusText) {
       statusmessage.errorMessage(statusTitle, statusText).putIntoSession(req);
-      res.redirect('/registration');
-    } else {
-      res.redirect('/registration/completeRegistration');
+      return res.redirect('/registration');
     }
+    if (!req.user) {
+      var returnToUrl = '/registration/participate';
+      req.session.registrationTuple = registrationTuple;
+      req.session.returnToUrl = returnToUrl;
+      return res.render('loginForRegistration', {returnToUrl: returnToUrl});
+    }
+    participate(registrationTuple, req, res, next);
   });
 });
 
-// TODO: Was wenn derjenige nicht angemeldet ist? Soll trotzdem funktionieren!
-app.get('/completeRegistration', function (req, res, next) {
-  subscriberstore.getSubscriber(req.user.member.id(), function (err, subscriber) {
-    if (err) { return next(err); }
-    res.render('participate', {member: req.user.member, addon: subscriber.addon()});
-  });
+app.get('/participate', function (req, res, next) {
+  var registrationTuple = req.session.registrationTuple;
+  if (!registrationTuple) { return res.redirect('/registration'); }
+  participate(registrationTuple, req, res, next);
 });
 
 app.post('/completeRegistration', function (req, res, next) {

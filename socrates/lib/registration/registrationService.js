@@ -18,17 +18,17 @@ var CONFLICTING_VERSIONS = beans.get('constants').CONFLICTING_VERSIONS;
 module.exports = {
 
   // TODO save days
-  startRegistration: function (memberId, activityUrl, resourceName, days, moment, callback) {
+  startRegistration: function (memberId, registrationTuple, callback) {
     var self = this;
-    activitystore.getActivity(activityUrl, function (err, activity) {
+    activitystore.getActivity(registrationTuple.activityUrl, function (err, activity) {
       if (err || !activity) { return callback(err, 'message.title.problem', 'message.content.activities.does_not_exist'); }
-      var resource = new SoCraTesResource(activity.resourceNamed(resourceName));
-      if (resource.addMemberId(memberId, moment)) {
+      var resource = new SoCraTesResource(activity.resourceNamed(registrationTuple.resourceName));
+      if (resource.addMemberId(memberId)) {
         resource.addExpirationTimeFor(memberId);
         return activitystore.saveActivity(activity, function (err) {
           if (err && err.message === CONFLICTING_VERSIONS) {
             // we try again because of a racing condition during save:
-            return self.addVisitorTo(memberId, activityUrl, resourceName, moment, callback);
+            return self.startRegistration(memberId, registrationTuple, callback);
           }
           if (err) { return callback(err); }
           //notifications.visitorRegistration(activity, memberId, resourceName);

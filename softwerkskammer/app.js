@@ -18,7 +18,7 @@ function useApp(parent, url, child) {
     next();
   }
 
-  if (process.env.NODE_ENV !== 'production') {
+  if (child.get('env') !== 'production') {
     child.locals.pretty = true;
   }
   parent.get('/' + url, ensureRequestedUrlEndsWithSlash);
