@@ -47,6 +47,13 @@ Once retrieved perform the following commands inside the directory of the cloned
 1. `node softwerkskammer/initialDBSetup` - this will create some sample data to start with
 1. `npm test` - will create a few necessary files and perform a complete test suite. *This must end successfully!*
 
+Prepare log file configuration
+    
+1. Open `softwerkskammer/config/example-winston-config.json` or `socrates/config/example-winston-config.json`, depending on which app you want to use
+1. Delete the comment in line 1 (`// to use these values, strip "example-" from the filename, delete this comment and replace the below values
+`), you may keep the content of the file as it is
+1. Save this file as `winston-config.json`
+
 Now you can decide which app you want to start:
 
 * Start softwerkskammer
