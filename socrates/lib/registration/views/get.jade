@@ -15,7 +15,7 @@ block content
       .page-header
         .pull-right.visible-print
           img(height='80px', src='/qrcode?url=#{encodeURIComponent(activity.fullyQualifiedUrl())}')
-        .btn-group.pull-right
+        .btn-group.pull-right.hidden-print
           if (accessrights.canEditActivity(activity))
             a.btn.btn-default(href='/activities/addons/#{encodeURIComponent(activity.url())}', title=t('activities.participants')): i.fa.fa-list-ol.fa-fw
           a.btn.btn-default(href='/registration/ical', title=t('activities.export')): i.fa.fa-calendar.fa-fw
