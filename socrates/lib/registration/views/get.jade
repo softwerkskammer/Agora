@@ -26,8 +26,6 @@ block content
           if (accessrights.canDeleteActivity(activity))
             +reallyDeleteModal('activities.delete', '/activities/delete/' + encodeURIComponent(activity.url()))
         h2 Registration
-      .clearfix
-      | !{activity.descriptionHTML()}
   .row
     .col-md-12
       +participationinfoform(activity, roomOptions, registrationPossible)
