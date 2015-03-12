@@ -185,8 +185,6 @@ describe('Activity store', function () {
           _registrationOpen: true
         }, 'Veranstaltung'));
         expect(activity.isMultiDay()).to.be(true);
-        expect(activity.description()).to.be('Coolest event ever :-)');
-        expect(activity.descriptionHTML()).to.be('<p>Coolest event ever :-)</p>\n');
         expect(activity.location()).to.be('Right next door');
         expect(activity.assignedGroup()).to.be('G');
         expect(activity.owner()).to.eql({nickname: "ownerNick"});

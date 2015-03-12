@@ -28,13 +28,11 @@ mixin activityform(activity)
                     +date('endDate', t('activities.end'), activity.endMoment().locale(language).format('DD/MM/YYYY'), t('activities.tooltip.end'))
                   #dates.col-xs-6(style='padding-left:3px;padding-right:0px')
                     +time('endTime', activity.endMoment().locale(language).format('HH:mm'))
-            .col-md-6
-              .form-group
-                +textarea('description', t('general.description'), activity.description())
           .row
             .col-md-12
+              hr
               .row
-                .col-xs-3.col-sm-4
+                .col-xs-3.col-sm-2
                   +controlLabel('bezeichnung', t('activities.resourcelabel'))
                 .col-xs-3.col-sm-2
                   +controlLabel('anzahl', t('activities.count'), t('activities.tooltip.count'))
@@ -55,7 +53,7 @@ mixin activityform(activity)
 
 mixin resourceRow(name, limit, isRegistrationOpen, canUnsubscribe, hasWaitinglist)
   .row.form-group
-    .col-xs-3.col-sm-4
+    .col-xs-3.col-sm-2
       input.form-control(name='resources[names]', value=name, type='text', placeholder=t('activities.label'), readonly)
     .col-xs-3.col-sm-2
       input.form-control(name='resources[limits]', value=limit, type='text', placeholder=t('activities.unlimited'))
