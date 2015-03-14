@@ -8,7 +8,10 @@ var ezmlm = require('ezmlm-node')(conf.get('fullyQualifiedHomeDir'), conf.get('e
 module.exports = {
 
   createList: function (list, prefix, callback) {
-    ezmlm.createListNamed(list, ezmlm.defaultOptions, prefix, callback);
+    ezmlm.createListNamed(list, ezmlm.defaultOptions, prefix, function (err) {
+      if (err) { return callback(err); }
+      ezmlm.replyToList(list, callback);
+    });
   },
 
   getAllAvailableLists: function (callback) {
