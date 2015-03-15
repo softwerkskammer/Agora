@@ -29,7 +29,7 @@ SoCraTesResource.prototype.recordFor = function (memberId) {
 
 SoCraTesResource.prototype.reserve = function (memberOrSessionId, registrationTuple) {
   if (!this.addMemberId(memberOrSessionId)) { return false; }
-  var record = this.recordFor(memberOrSessionId)
+  var record = this.recordFor(memberOrSessionId);
   addExpirationTimeFor(record);
   setDuration(record, registrationTuple.duration);
   return true;
