@@ -27,10 +27,10 @@ app.get('/', function (req, res, next) {
   activitiesService.getActivityWithGroupAndParticipants(currentUrl, function (err, activity) {
     if (err || !activity) { return next(err); }
     var roomOptions = [
-      {id: 'single', name: 'Single', two: 200, three: 270, threePlus: 300, four: 370},
-      {id: 'bed_in_double', name: 'Double shared …', shareable: true, two: 160, three: 210, threePlus: 240, four: 290},
-      {id: 'junior', name: 'Junior shared …', shareable: true, two: 151, three: 197, threePlus: 227, four: 272},
-      {id: 'bed_in_junior', name: 'Junior (exclusive)', two: 242, three: 333, threePlus: 363, four: 454}
+      {id: 'single', name: 'Single', two: 175, three: 245, threePlus: 260, four: 330},
+      {id: 'bed_in_double', name: 'Double shared …', shareable: true, two: 135, three: 185, threePlus: 200, four: 250},
+      {id: 'junior', name: 'Junior shared …', shareable: true, two: 125, three: 170, threePlus: 190, four: 235},
+      {id: 'bed_in_junior', name: 'Junior (exclusive)', two: 220, three: 310, threePlus: 325, four: 415}
     ];
     res.render('get', {activity: activity, roomOptions: roomOptions, registrationPossible: isRegistrationOpen()});
   });
