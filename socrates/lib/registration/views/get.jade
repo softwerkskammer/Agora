@@ -30,9 +30,3 @@ block content
   .row
     .col-md-12
       +participationinfoform(activity, roomOptions, registrationPossible)
-
-block scripts
-  script.
-    displayedActivityStart = moment('#{activity.startMoment().toISOString()}');
-    displayedActivityEnd = moment('#{activity.endMoment().toISOString()}');
-//- cannot write "#{activity.startMoment()}" as we need to produce a string to eval in the client
