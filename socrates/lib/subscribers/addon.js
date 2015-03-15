@@ -1,5 +1,7 @@
 'use strict';
 
+var _ = require('lodash');
+
 function Addon(object) {
   this.state = object; // this must be *the* object that is referenced by subscriber.state._addon
   return this;
@@ -8,7 +10,7 @@ function Addon(object) {
 Addon.prototype.fillFromUI = function (uiInputObject) {
   this.state.homeAddress = uiInputObject.homeAddress;
   this.state.billingAddress = uiInputObject.billingAddress;
-  this.state.tShirtSize = uiInputObject.tShirtSize;
+  this.state.tShirtSize = _(uiInputObject.tShirtSize).compact().first();
 
   return this;
 };

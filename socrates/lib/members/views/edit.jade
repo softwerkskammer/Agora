@@ -15,5 +15,10 @@ block title
 block content
   form#memberform.relaxed(action='/members/submit',method='post')
     +csrf
+    .row
+      .col-sm-12
+        legend
+          h4 #{t('members.personal_data')}
+
     +memberinfoform(member, 'members.edit_preregistration')
     +memberSubmitButtons(t('general.save'))

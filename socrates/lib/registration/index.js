@@ -1,5 +1,6 @@
 'use strict';
 var moment = require('moment-timezone');
+var _ = require('lodash');
 
 var beans = require('simple-configure').get('beans');
 var misc = beans.get('misc');
@@ -12,18 +13,17 @@ var registrationService = beans.get('registrationService');
 var icalService = beans.get('icalService');
 var activitystore = beans.get('activitystore');
 var statusmessage = beans.get('statusmessage');
+var memberSubmitHelper = beans.get('memberSubmitHelper');
+var socratesConstants = beans.get('socratesConstants');
 
 var app = misc.expressAppIn(__dirname);
-
-var currentYear = 2015;
-var currentUrl = 'socrates-' + currentYear;
 
 function isRegistrationOpen() { // we currently set this to false on production system, because this feature is still in development
   return app.get('env') !== 'production';
 }
 
 app.get('/', function (req, res, next) {
-  activitiesService.getActivityWithGroupAndParticipants(currentUrl, function (err, activity) {
+  activitiesService.getActivityWithGroupAndParticipants(socratesConstants.currentUrl, function (err, activity) {
     if (err || !activity) { return next(err); }
     var roomOptions = [
       {id: 'single', name: 'Single', two: 175, three: 245, threePlus: 260, four: 330},
@@ -42,7 +42,7 @@ app.get('/ical', function (req, res, next) {
     res.send(ical.toString());
   }
 
-  activitystore.getActivity(currentUrl, function (err, activity) {
+  activitystore.getActivity(socratesConstants.currentUrl, function (err, activity) {
     if (err || !activity) { return next(err); }
     sendCalendarStringNamedToResult(icalService.activityAsICal(activity), activity.url(), res);
   });
@@ -53,16 +53,22 @@ app.get('/ical', function (req, res, next) {
 function participate(registrationTuple, req, res, next) {
   if (!req.user) { return res.redirect('/registration'); }
   var member = req.user.member || new Member().initFromSessionUser(req.user, true);
+  delete req.session.registrationTuple;
   subscriberstore.getSubscriber(member.id(), function (err, subscriber) {
     if (err) { return next(err); }
-    res.render('participate', {member: member, addon: subscriber.addon()});
+    res.render('participate', {member: member, addon: subscriber.addon(), registrationTuple: registrationTuple});
   });
 }
 
 app.post('/startRegistration', function (req, res, next) {
   if (!isRegistrationOpen() || !req.body.nightsOptions) { return res.redirect('/registration'); }
   var option = req.body.nightsOptions.split(',');
-  var registrationTuple = {activityUrl: req.body.activityUrl, resourceName: option[0], duration: option[1], sessionID: req.sessionID};
+  var registrationTuple = {
+    activityUrl: req.body.activityUrl,
+    resourceName: option[0],
+    duration: option[1],
+    sessionID: req.sessionID
+  };
   registrationService.startRegistration(registrationTuple, function (err, statusTitle, statusText) {
     if (err) { return next(err); }
     if (statusTitle && statusText) {
@@ -86,7 +92,19 @@ app.get('/participate', function (req, res, next) {
 });
 
 app.post('/completeRegistration', function (req, res, next) {
-  res.redirect('/');
+  memberSubmitHelper(req, res, function (err) {
+    if (err) { return next(err); }
+    var body = req.body;
+    registrationService.saveRegistration(req.user.member.id(), req.sessionID, body, function (err, statusTitle, statusText) {
+      if (err) { return next(err); }
+      if (statusTitle && statusText) {
+        delete req.session.statusmessage;
+        statusmessage.errorMessage(statusTitle, statusText).putIntoSession(req);
+        return res.redirect('/registration');
+      }
+      res.redirect('/');
+    });
+  });
 });
 
 app.get('/resign', function (req, res) {

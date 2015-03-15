@@ -28,4 +28,35 @@ describe('Extended SoCraTes Activity', function () {
     expect(moment(expirationTime).isBetween(moment().add(29, 'minutes'), moment().add(31, 'minutes'))).to.be(true);
   });
 
+  it('registeres a registrationTuple', function () {
+    var activity = new SoCraTesActivity({
+      resources: {
+        single: {
+          _registrationOpen: true,
+          _registeredMembers: []
+        }
+      }
+    });
+    activity.reserve({resourceName: 'single', sessionID: 'sessionID', duration: 3});
+
+    activity.register('heinz', {resourceName: 'single', sessionID: 'sessionID', duration: 3});
+
+    expect(activity.resourceNamed('single').isAlreadyRegistered('heinz')).to.be.true();
+  });
+
+  it('can tell if a reservation is valid', function () {
+    var activity = new SoCraTesActivity({
+      resources: {
+        single: {
+          _registrationOpen: true,
+          _registeredMembers: []
+        }
+      }
+    });
+    var registrationTuple = {resourceName: 'single', sessionID: 'sessionID', duration: 3};
+    activity.reserve(registrationTuple);
+
+    expect(activity.hasValidReservationFor(registrationTuple)).to.be.true();
+  });
+
 });

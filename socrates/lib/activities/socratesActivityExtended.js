@@ -18,6 +18,18 @@ if (SoCraTesActivity.prototype.reserve === undefined) {
     });
     return this.socratesResourceNamed(registrationTuple.resourceName).reserve(registrationTuple);
   };
+
+  SoCraTesActivity.prototype.register = function (memberID, registrationTuple) {
+    var self = this;
+    _.each(this.resourceNames(), function (name) {
+      self.socratesResourceNamed(name).stripExpiredReservations();
+    });
+    return this.socratesResourceNamed(registrationTuple.resourceName).register(memberID, registrationTuple);
+  };
+
+  SoCraTesActivity.prototype.hasValidReservationFor = function (registrationTuple) {
+    return this.socratesResourceNamed(registrationTuple.resourceName).hasValidReservationFor(registrationTuple);
+  };
 }
 
 module.exports = SoCraTesActivity;

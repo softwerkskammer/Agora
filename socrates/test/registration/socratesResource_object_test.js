@@ -26,6 +26,34 @@ describe('SoCraTesResource', function () {
     expect(moment(expirationTime).isBetween(moment().add(29, 'minutes'), moment().add(31, 'minutes'))).to.be(true);
   });
 
+  it('can tell if a reservation is valid', function () {
+    var resource = new Resource({
+      _registrationOpen: true,
+      _registeredMembers: []
+    });
+    var socratesResource = new SoCraTesResource(resource);
+
+    var registrationTuple = {sessionID: 'sessionID', duration: 3};
+    socratesResource.reserve(registrationTuple);
+
+    expect(socratesResource.hasValidReservationFor(registrationTuple)).to.be.true();
+  });
+
+  it('registers a member and deletes the session', function () {
+    var resource = new Resource({
+      _registrationOpen: true,
+      _registeredMembers: []
+    });
+    var socratesResource = new SoCraTesResource(resource);
+
+    var registrationTuple = {sessionID: 'sessionID', duration: 3};
+    socratesResource.reserve(registrationTuple);
+
+    socratesResource.register('memberID', registrationTuple);
+
+    expect(socratesResource.state._registeredMembers[0].memberId).to.be('memberID');
+  });
+
   it('prefixes the saved memberID with "SessionID:"', function () {
     var resource = new Resource({
       _registrationOpen: true,

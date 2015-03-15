@@ -11,9 +11,14 @@ block title
   | Registration - SoCraTes
 block content
   .page-header
-    h1 Participate in SoCraTes 2015
+    h1 Registration<br>
+      small Personal Information
+      
   form#participationform.relaxed(action='/registration/completeRegistration', method='post')
     +csrf
+    +hidden('activityUrl', registrationTuple.activityUrl)
+    +hidden('resourceName', registrationTuple.resourceName)
+    +hidden('duration', registrationTuple.duration)
     fieldset
       +memberinfoform(member, 'members.edit_registration')
       +userinfoform(addon)
