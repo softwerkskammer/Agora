@@ -5,6 +5,16 @@ var moment = require('moment-timezone');
 var beans = require('simple-configure').get('beans');
 var Resource = beans.get('resource');
 
+function addExpirationTimeFor(record) {
+  var date = moment();
+  date.add(30, 'minutes');
+  record.expiresAt = date.toDate();
+}
+
+function setDuration(record, duration) {
+  record.duration = duration;
+}
+
 function SoCraTesResource(resource) {
   this.state = (resource && resource.state) || {};
   return this;
@@ -13,18 +23,22 @@ function SoCraTesResource(resource) {
 // inherit from Resource:
 SoCraTesResource.prototype = new Resource();
 
-
-SoCraTesResource.prototype.addExpirationTimeFor = function (memberId) {
-  var self = this;
-  _.find(self.state._registeredMembers, {'memberId': memberId}).expiresAt = moment().add(30, 'minutes').toDate();
+SoCraTesResource.prototype.recordFor = function (memberId) {
+  return _.find(this.state._registeredMembers, {'memberId': memberId});
 };
 
-SoCraTesResource.single = 'single';
+SoCraTesResource.prototype.reserve = function (memberOrSessionId, registrationTuple) {
+  if (!this.addMemberId(memberOrSessionId)) { return false; }
+  var record = this.recordFor(memberOrSessionId)
+  addExpirationTimeFor(record);
+  setDuration(record, registrationTuple.duration);
+  return true;
+};
 
-SoCraTesResource.prototype.displayName = function (resource) {
-  if (resource === SoCraTesResource.single) {
-    return 'Single-Bed Room';
-  }
+SoCraTesResource.prototype.stripExpiredReservations = function () {
+  _.remove(this.state._registeredMembers, function (record) {
+    return record.expiresAt && moment(record.expiresAt).isBefore(moment());
+  });
 };
 
 module.exports = SoCraTesResource;

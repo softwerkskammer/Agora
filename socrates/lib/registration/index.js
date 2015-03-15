@@ -26,6 +26,7 @@ function isRegistrationOpen() { // we currently set this to false on production 
 app.get('/', function (req, res, next) {
   activitiesService.getActivityWithGroupAndParticipants(currentUrl, function (err, activity) {
     if (err || !activity) { return next(err); }
+    registrationService.stripExpiredReservations(activity);
     var roomOptions = [
       {id: 'single', name: 'Single', two: 175, three: 245, threePlus: 260, four: 330},
       {id: 'bed_in_double', name: 'Double shared …', shareable: true, two: 135, three: 185, threePlus: 200, four: 250},
@@ -63,7 +64,7 @@ function participate(registrationTuple, req, res, next) {
 app.post('/startRegistration', function (req, res, next) {
   if (!isRegistrationOpen() || !req.body.nightsOptions) { return res.redirect('/registration'); }
   var option = req.body.nightsOptions.split(',');
-  var registrationTuple = {activityUrl: req.body.activityUrl, resourceName: option[0], days: option[1]};
+  var registrationTuple = {activityUrl: req.body.activityUrl, resourceName: option[0], duration: option[1]};
   var memberId = req.user ? req.user.member.id() : 'SessionID' + req.sessionID;
   registrationService.startRegistration(memberId, registrationTuple, function (err, statusTitle, statusText) {
     if (err) { return next(err); }

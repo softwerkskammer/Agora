@@ -21,10 +21,49 @@ describe('SoCraTesResource', function () {
     });
     var socratesResource = new SoCraTesResource(resource);
 
-    socratesResource.addExpirationTimeFor('memberID');
+    socratesResource.reserve('memberID', {duration: 3});
 
     var expirationTime = socratesResource.state._registeredMembers[0].expiresAt;
     expect(expirationTime).to.exist();
     expect(moment(expirationTime).isBetween(moment().add(29, 'minutes'), moment().add(31, 'minutes'))).to.be(true);
+  });
+
+  describe('cleans up', function () {
+    it('only expired reservations', function () {
+      var resource = new Resource({
+        _registeredMembers: [
+          {memberId: 'memberID', expiresAt: moment().subtract(1, 'minutes').toDate()},
+          {memberId: 'memberID2', expiresAt: moment().add(1, 'minutes').toDate()}
+        ]
+      });
+      var socratesResource = new SoCraTesResource(resource);
+
+      socratesResource.stripExpiredReservations();
+      expect(socratesResource.registeredMembers()).to.not.contain('memberID');
+      expect(socratesResource.registeredMembers()).to.contain('memberID2');
+    });
+
+    it('nothing if expiresAt is not set', function () {
+      var resource = new Resource({
+        _registeredMembers: [
+          {memberId: 'memberID'}
+        ]
+      });
+      var socratesResource = new SoCraTesResource(resource);
+
+      socratesResource.stripExpiredReservations();
+      expect(socratesResource.registeredMembers()).is.not.empty();
+      expect(socratesResource.registeredMembers()).to.contain('memberID');
+    });
+
+    it('does work error-free with empty resources', function () {
+      var resource = new Resource({
+        _registeredMembers: []
+      });
+      var socratesResource = new SoCraTesResource(resource);
+
+      socratesResource.stripExpiredReservations();
+      expect(socratesResource.registeredMembers()).is.empty();
+    });
   });
 });
