@@ -29,8 +29,8 @@ app.get('/', function (req, res, next) {
     var roomOptions = [
       {id: 'single', name: 'Single', two: 175, three: 245, threePlus: 260, four: 330},
       {id: 'bed_in_double', name: 'Double shared …', shareable: true, two: 135, three: 185, threePlus: 200, four: 250},
-      {id: 'junior', name: 'Junior shared …', shareable: true, two: 125, three: 170, threePlus: 190, four: 235},
-      {id: 'bed_in_junior', name: 'Junior (exclusive)', two: 220, three: 310, threePlus: 325, four: 415}
+      {id: 'bed_in_junior', name: 'Junior shared …', shareable: true, two: 125, three: 170, threePlus: 190, four: 235},
+      {id: 'junior', name: 'Junior (exclusive)', two: 220, three: 310, threePlus: 325, four: 415}
     ];
     res.render('get', {activity: activity, roomOptions: roomOptions, registrationPossible: isRegistrationOpen()});
   });
