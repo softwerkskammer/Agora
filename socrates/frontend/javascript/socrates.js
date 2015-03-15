@@ -157,11 +157,18 @@
     });
   };
 
+  var addCount = function () {
+    $.ajax({url: '/subscribers/count'}).done(function (count) {
+      $('.count').text(count + ' people are interested in SoCraTes!');
+    });
+  };
+
   $(document).ready(highlightCurrentSection);
   $(document).ready(addHelpButtonToTextarea);
   $(document).ready(initPickers);
   $(document).ready(extendDataTables);
   $(document).ready(createLinks);
-
   $(document).ready(twitterUtil);
+  $(document).ready(addCount);
+
 }());

@@ -101,12 +101,6 @@ block content
               hr.sponsorline.hidden-lg
               .col-lg-12.visible-lg-block
                 hr
-  script.
-    $(document).ready(function () {
-      $.ajax({url: '/subscribers/count'}).done(function (count) {
-        $('.count').text(count + ' people are interested in SoCraTes!');
-      });
-    });
 
 
 mixin sponsorCol(sponsor)
