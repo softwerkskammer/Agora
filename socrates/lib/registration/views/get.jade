@@ -12,7 +12,7 @@ block title
 block content
   .row
     .col-md-12
-      .page-header
+      .page-header(style='margin-bottom: 0;')
         .pull-right.visible-print
           img(height='80px', src='/qrcode?url=#{encodeURIComponent(activity.fullyQualifiedUrl())}')
         .btn-group.pull-right.hidden-print
@@ -25,7 +25,8 @@ block content
             a.btn.btn-default(href='/activities/edit/#{encodeURIComponent(activity.url())}', title=t('general.edit')): i.fa.fa-edit.fa-fw
           if (accessrights.canDeleteActivity(activity))
             +reallyDeleteModal('activities.delete', '/activities/delete/' + encodeURIComponent(activity.url()))
-        h2 Registration
+        h1 Registration<br>
+          small SoCraTes, 27 - 30 August 2015
   .row
     .col-md-12
       +participationinfoform(activity, roomOptions, registrationPossible)
