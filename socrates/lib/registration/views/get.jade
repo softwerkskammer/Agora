@@ -18,7 +18,6 @@ block content
         .btn-group.pull-right.hidden-print
           if (accessrights.canEditActivity(activity))
             a.btn.btn-default(href='/activities/addons/#{encodeURIComponent(activity.url())}', title=t('activities.participants')): i.fa.fa-list-ol.fa-fw
-          a.btn.btn-default(href='/registration/ical', title=t('activities.export')): i.fa.fa-calendar.fa-fw
           if (accessrights.canEditActivity(activity))
             a.btn.btn-default(href='/waitinglist/#{encodeURIComponent(activity.url())}', title=t('activities.waitinglist')): i.fa.fa-clock-o.fa-fw
             a.btn.btn-default(href='/mailsender/invitation/#{encodeURIComponent(activity.url())}', title=t('activities.invitation')): i.fa.fa-envelope-o.fa-fw

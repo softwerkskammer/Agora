@@ -89,6 +89,9 @@ mixin footer
                   +contactbuttons
 
 mixin contactbuttons
+  a.btn.btn-info(href='/registration/ical', title=t('activities.export'))
+    span.glyphicon.glyphicon-download-alt
+    span.hidden-xs #{' ' + t('activities.ical')}
   a.btn.btn-info(href='/impressum.html', title='Impressum')
     i.fa.fa-fw.fa-info
     span.hidden-xs #{' ' + t('general.legal_notice')}

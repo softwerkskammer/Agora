@@ -88,6 +88,7 @@
     "upcoming": "Upcoming",
     "past": "Past",
     "export": "Export to calendar",
+    "ical": "ical",
     "export_subscribe": "$t(activities.export). To subscribe: Subscribe URL in calendar application",
     "invitation": "Send invitation",
     "directions": "Directions",
