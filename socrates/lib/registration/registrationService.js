@@ -17,18 +17,15 @@ var CONFLICTING_VERSIONS = beans.get('constants').CONFLICTING_VERSIONS;
 
 module.exports = {
 
-  // TODO save days
-  startRegistration: function (memberId, registrationTuple, callback) {
+  startRegistration: function (registrationTuple, callback) {
     var self = this;
     activitystore.getActivity(registrationTuple.activityUrl, function (err, activity) {
-      self.stripExpiredReservations(activity);
       if (err || !activity) { return callback(err, 'message.title.problem', 'message.content.activities.does_not_exist'); }
-      var resource = new SoCraTesResource(activity.resourceNamed(registrationTuple.resourceName));
-      if (resource.reserve(memberId, registrationTuple)) {
+      if (activity.reserve(registrationTuple)) {
         return activitystore.saveActivity(activity, function (err) {
           if (err && err.message === CONFLICTING_VERSIONS) {
             // we try again because of a racing condition during save:
-            return self.startRegistration(memberId, registrationTuple, callback);
+            return self.startRegistration(registrationTuple, callback);
           }
           if (err) { return callback(err); }
           //notifications.visitorRegistration(activity, memberId, resourceName);
@@ -36,13 +33,6 @@ module.exports = {
         });
       }
       return callback(null, 'activities.registration_not_now', 'activities.registration_not_possible');
-    });
-  },
-
-  stripExpiredReservations: function (activity) {
-    var resources = activity.resources();
-    _.each(resources.resourceNames(), function (name) {
-      new SoCraTesResource(resources.named(name)).stripExpiredReservations();
     });
   }
 

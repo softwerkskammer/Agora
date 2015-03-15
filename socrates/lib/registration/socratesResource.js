@@ -27,9 +27,10 @@ SoCraTesResource.prototype.recordFor = function (memberId) {
   return _.find(this.state._registeredMembers, {'memberId': memberId});
 };
 
-SoCraTesResource.prototype.reserve = function (memberOrSessionId, registrationTuple) {
-  if (!this.addMemberId(memberOrSessionId)) { return false; }
-  var record = this.recordFor(memberOrSessionId);
+SoCraTesResource.prototype.reserve = function (registrationTuple) {
+  var sessionID = 'SessionID:' + registrationTuple.sessionID;
+  if (!this.addMemberId(sessionID)) { return false; }
+  var record = this.recordFor(sessionID);
   addExpirationTimeFor(record);
   setDuration(record, registrationTuple.duration);
   return true;

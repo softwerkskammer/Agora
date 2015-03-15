@@ -15,17 +15,27 @@ describe('SoCraTesResource', function () {
   it('adds the expiration time to a registered member', function () {
     var resource = new Resource({
       _registrationOpen: true,
-      _registeredMembers: [
-        {memberId: 'memberID'}
-      ]
+      _registeredMembers: []
     });
     var socratesResource = new SoCraTesResource(resource);
 
-    socratesResource.reserve('memberID', {duration: 3});
+    socratesResource.reserve({sessionID: 'sessionID', duration: 3});
 
     var expirationTime = socratesResource.state._registeredMembers[0].expiresAt;
     expect(expirationTime).to.exist();
     expect(moment(expirationTime).isBetween(moment().add(29, 'minutes'), moment().add(31, 'minutes'))).to.be(true);
+  });
+
+  it('prefixes the saved memberID with "SessionID:"', function () {
+    var resource = new Resource({
+      _registrationOpen: true,
+      _registeredMembers: []
+    });
+    var socratesResource = new SoCraTesResource(resource);
+
+    socratesResource.reserve({sessionID: 'sessionID', duration: 3});
+
+    expect(socratesResource.state._registeredMembers[0].memberId).to.be('SessionID:sessionID');
   });
 
   describe('cleans up', function () {
@@ -39,6 +49,7 @@ describe('SoCraTesResource', function () {
       var socratesResource = new SoCraTesResource(resource);
 
       socratesResource.stripExpiredReservations();
+
       expect(socratesResource.registeredMembers()).to.not.contain('memberID');
       expect(socratesResource.registeredMembers()).to.contain('memberID2');
     });
@@ -52,6 +63,7 @@ describe('SoCraTesResource', function () {
       var socratesResource = new SoCraTesResource(resource);
 
       socratesResource.stripExpiredReservations();
+
       expect(socratesResource.registeredMembers()).is.not.empty();
       expect(socratesResource.registeredMembers()).to.contain('memberID');
     });

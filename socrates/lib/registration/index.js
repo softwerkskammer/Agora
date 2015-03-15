@@ -12,7 +12,6 @@ var registrationService = beans.get('registrationService');
 var icalService = beans.get('icalService');
 var activitystore = beans.get('activitystore');
 var statusmessage = beans.get('statusmessage');
-var SoCraTesResource = beans.get('socratesResource');
 
 var app = misc.expressAppIn(__dirname);
 
@@ -26,7 +25,6 @@ function isRegistrationOpen() { // we currently set this to false on production 
 app.get('/', function (req, res, next) {
   activitiesService.getActivityWithGroupAndParticipants(currentUrl, function (err, activity) {
     if (err || !activity) { return next(err); }
-    registrationService.stripExpiredReservations(activity);
     var roomOptions = [
       {id: 'single', name: 'Single', two: 175, three: 245, threePlus: 260, four: 330},
       {id: 'bed_in_double', name: 'Double shared …', shareable: true, two: 135, three: 185, threePlus: 200, four: 250},
@@ -64,9 +62,8 @@ function participate(registrationTuple, req, res, next) {
 app.post('/startRegistration', function (req, res, next) {
   if (!isRegistrationOpen() || !req.body.nightsOptions) { return res.redirect('/registration'); }
   var option = req.body.nightsOptions.split(',');
-  var registrationTuple = {activityUrl: req.body.activityUrl, resourceName: option[0], duration: option[1]};
-  var memberId = req.user ? req.user.member.id() : 'SessionID' + req.sessionID;
-  registrationService.startRegistration(memberId, registrationTuple, function (err, statusTitle, statusText) {
+  var registrationTuple = {activityUrl: req.body.activityUrl, resourceName: option[0], duration: option[1], sessionID: req.sessionID};
+  registrationService.startRegistration(registrationTuple, function (err, statusTitle, statusText) {
     if (err) { return next(err); }
     if (statusTitle && statusText) {
       statusmessage.errorMessage(statusTitle, statusText).putIntoSession(req);
@@ -90,7 +87,6 @@ app.get('/participate', function (req, res, next) {
 
 app.post('/completeRegistration', function (req, res, next) {
   res.redirect('/');
-  //statusmessage.successMessage('message.title.save_successful', 'message.content.activities.participation_for_resource_added', {resourceName: new SoCraTesResource().displayName(resourceName)}).putIntoSession(req);
 });
 
 app.get('/resign', function (req, res) {

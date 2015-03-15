@@ -6,16 +6,11 @@ var Activity = beans.get('activity');
 var Group = beans.get('group');
 
 function SoCraTesActivity(object) {
-  this.activity = new Activity(object);
-  this.state = this.activity.state; // required for persisting
+  this.state = new Activity(object).state; // required for persisting
 }
 
 // inherit from Activity:
 SoCraTesActivity.prototype = new Activity();
-
-SoCraTesActivity.prototype.isSoCraTes = function () {
-  return this.activity.isSoCraTes(); // should always be true
-};
 
 SoCraTesActivity.prototype.fullyQualifiedUrl = function () {
   return conf.get('socratesURL');
