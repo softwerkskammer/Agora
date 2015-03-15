@@ -8,9 +8,6 @@ block before-container
 
   .jumbotron.stage-background
     .container
-      a.btn.btn-info.sponsorbutton.pull-right(href='/sponsoring.html')
-        span.glyphicon.glyphicon-thumbs-up
-        |  Sponsor us
       img.logo-left(src='img/socrates2015_logo.png', alt='SoCraTes Conference 2015 - Software Craftsmanship and Testing')
       h1 SoCraTes 2015
       p 5th International Software Craftsmanship and Testing Conference in Germany
@@ -96,11 +93,15 @@ block content
             if (pair.second)
               hr.sponsorline.hidden-lg
               +sponsorCol(pair.second)
-          if (index < sponsors.length - 1)
-            .row
-              hr.sponsorline.hidden-lg
-              .col-lg-12.visible-lg-block
-                hr
+          .row
+            hr.sponsorline.hidden-lg
+            .col-lg-12.visible-lg-block
+              hr
+        a.btn.btn-info.pull-right(href='/sponsoring.html', style='width:160px')
+          span.glyphicon.glyphicon-thumbs-up
+          |  Sponsor us
+
+
 
 
 mixin sponsorCol(sponsor)
