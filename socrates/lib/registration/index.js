@@ -22,16 +22,36 @@ function isRegistrationOpen() { // we currently set this to false on production 
   return app.get('env') !== 'production';
 }
 
+function roomOptions() {
+  var dinner = 13;
+  var day = 17;
+  var single = 70 + dinner;
+  var double = 50 + dinner;
+  var junior = 46 + dinner;
+  var juniorExclusive = 2 * 46 + dinner;
+
+  function option(id, name, base) {
+    return {
+      id: id,
+      name: name,
+      two: 2 * base + 2 * day,
+      three: 3 * base + 2 * day,
+      threePlus: 3 * base + 3 * day,
+      four: 4 * base + 3 * day
+    };
+  }
+
+  return [
+    option('single', 'Single', single),
+    option('bed_in_double', 'Double shared …', double),
+    option('bed_in_junior', 'Junior shared …', junior),
+    option('junior', 'Junior (exclusive)', juniorExclusive)
+  ];
+}
 app.get('/', function (req, res, next) {
   activitiesService.getActivityWithGroupAndParticipants(socratesConstants.currentUrl, function (err, activity) {
     if (err || !activity) { return next(err); }
-    var roomOptions = [
-      {id: 'single', name: 'Single', two: 175, three: 245, threePlus: 260, four: 330},
-      {id: 'bed_in_double', name: 'Double shared …', shareable: true, two: 135, three: 185, threePlus: 200, four: 250},
-      {id: 'bed_in_junior', name: 'Junior shared …', shareable: true, two: 125, three: 170, threePlus: 190, four: 235},
-      {id: 'junior', name: 'Junior (exclusive)', two: 220, three: 310, threePlus: 325, four: 415}
-    ];
-    res.render('get', {activity: activity, roomOptions: roomOptions, registrationPossible: isRegistrationOpen()});
+    res.render('get', {activity: activity, roomOptions: roomOptions(), registrationPossible: isRegistrationOpen()});
   });
 });
 
