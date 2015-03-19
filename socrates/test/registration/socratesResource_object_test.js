@@ -48,6 +48,18 @@ describe('SoCraTesResource', function () {
     expect(socratesResource.hasValidReservationFor(registrationTuple)).to.be.true();
   });
 
+  it('handles empty participants gracefully when checking reservation validity', function () {
+    var resource = new Resource({
+      _registrationOpen: true,
+      _registeredMembers: []
+    });
+    var socratesResource = new SoCraTesResource(resource);
+
+    var registrationTuple = {sessionID: 'sessionID', duration: 3};
+
+    expect(socratesResource.hasValidReservationFor(registrationTuple)).to.be.false();
+  });
+
   it('registers a member and deletes the session', function () {
     var resource = new Resource({
       _registrationOpen: true,

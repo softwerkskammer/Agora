@@ -57,7 +57,7 @@ SoCraTesResource.prototype.hasValidReservationFor = function (registrationTuple)
     self.state._registeredMembers = [];
   }
   var record = self.recordFor(sessionID);
-  return record.expiresAt && moment(record.expiresAt).isAfter(moment());
+  return !!(record && record.expiresAt && moment(record.expiresAt).isAfter(moment()));
 };
 
 SoCraTesResource.prototype.stripExpiredReservations = function () {
