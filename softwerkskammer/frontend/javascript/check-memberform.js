@@ -70,8 +70,6 @@ var member_validator;
     );
 
     member_validator.form();
-    member_validator.element($("#tShirtSizeMale"));
-    member_validator.element($("#tShirtSizeFemale"));
 
     var handler = function (each) {
       return function () {
@@ -84,14 +82,6 @@ var member_validator;
       function (each) {
         $(each).on("change", handler(each));
         $(each).keyup(handler(each));
-      }
-    );
-    ["[name=tShirtSize]"].forEach(
-      function (each) {
-        $(each).on("change", handler($("#tShirtSizeMale")));
-        $(each).on("change", handler($("#tShirtSizeFemale")));
-        $(each).keyup(handler($("#tShirtSizeMale")));
-        $(each).keyup(handler($("#tShirtSizeFemale")));
       }
     );
   };
