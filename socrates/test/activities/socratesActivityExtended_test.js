@@ -28,7 +28,7 @@ describe('Extended SoCraTes Activity', function () {
     expect(moment(expirationTime).isBetween(moment().add(29, 'minutes'), moment().add(31, 'minutes'))).to.be(true);
   });
 
-  it('registeres a registrationTuple', function () {
+  it('registers a registrationTuple', function () {
     var activity = new SoCraTesActivity({
       resources: {
         single: {
@@ -57,6 +57,35 @@ describe('Extended SoCraTes Activity', function () {
     activity.reserve(registrationTuple);
 
     expect(activity.hasValidReservationFor(registrationTuple)).to.be.true();
+  });
+
+  it('returns a registered member\'s optionText', function () {
+    var activity = new SoCraTesActivity({
+      resources: {
+        single: {
+          _registrationOpen: true,
+          _registeredMembers: []
+        }
+      }
+    });
+    var registrationTuple = {resourceName: 'single', sessionID: 'sessionID', duration: 3};
+    activity.reserve(registrationTuple);
+    activity.register('heinz', registrationTuple);
+
+    expect(activity.selectedOptionFor('heinz')).to.be('single,3');
+  });
+
+  it('returns null as the optionText for a not registered member', function () {
+    var activity = new SoCraTesActivity({
+      resources: {
+        single: {
+          _registrationOpen: true,
+          _registeredMembers: []
+        }
+      }
+    });
+
+    expect(activity.selectedOptionFor('heinz')).to.be(null);
   });
 
 });

@@ -15,6 +15,7 @@ var activitystore = beans.get('activitystore');
 var statusmessage = beans.get('statusmessage');
 var memberSubmitHelper = beans.get('memberSubmitHelper');
 var socratesConstants = beans.get('socratesConstants');
+var Addon = beans.get('socratesAddon');
 
 var app = misc.expressAppIn(__dirname);
 
@@ -70,25 +71,17 @@ app.get('/ical', function (req, res, next) {
 
 // TODO noch nicht freigeschaltete Funktionalitäten:
 
-function participate(registrationTuple, req, res, next) {
-  if (!req.user) { return res.redirect('/registration'); }
-  var member = req.user.member || new Member().initFromSessionUser(req.user, true);
-  delete req.session.registrationTuple;
-  subscriberstore.getSubscriber(member.id(), function (err, subscriber) {
-    if (err) { return next(err); }
-    res.render('participate', {member: member, addon: subscriber.addon(), registrationTuple: registrationTuple});
-  });
-}
-
 app.post('/startRegistration', function (req, res, next) {
   if (!isRegistrationOpen() || !req.body.nightsOptions) { return res.redirect('/registration'); }
   var option = req.body.nightsOptions.split(',');
   var registrationTuple = {
-    activityUrl: req.body.activityUrl,
+    activityUrl: socratesConstants.currentUrl,
     resourceName: option[0],
     duration: option[1],
     sessionID: req.sessionID
   };
+  var participateURL = '/registration/participate';
+  req.session.registrationTuple = registrationTuple;
   registrationService.startRegistration(registrationTuple, function (err, statusTitle, statusText) {
     if (err) { return next(err); }
     if (statusTitle && statusText) {
@@ -96,19 +89,31 @@ app.post('/startRegistration', function (req, res, next) {
       return res.redirect('/registration');
     }
     if (!req.user) {
-      var returnToUrl = '/registration/participate';
-      req.session.registrationTuple = registrationTuple;
-      req.session.returnToUrl = returnToUrl;
-      return res.render('loginForRegistration', {returnToUrl: returnToUrl});
+      req.session.returnToUrl = participateURL;
+      return res.render('loginForRegistration', {returnToUrl: participateURL});
     }
-    participate(registrationTuple, req, res, next);
+    res.redirect(participateURL);
   });
 });
 
 app.get('/participate', function (req, res, next) {
   var registrationTuple = req.session.registrationTuple;
   if (!registrationTuple) { return res.redirect('/registration'); }
-  participate(registrationTuple, req, res, next);
+  if (!req.user) { return res.redirect('/registration'); }
+  var member = req.user.member || new Member().initFromSessionUser(req.user, true);
+
+  activitiesService.getActivityWithGroupAndParticipants(socratesConstants.currentUrl, function (err, activity) {
+    if (err || !activity) { return next(err); }
+    if (activity.isAlreadyRegistered(member.id())) {
+      statusmessage.successMessage('general.info', 'activities.already_registered').putIntoSession(req);
+      return res.redirect('/registration');
+    }
+    subscriberstore.getSubscriber(member.id(), function (err, subscriber) {
+      if (err) { return next(err); }
+      var addon = (subscriber && subscriber.addon()) || new Addon({});
+      res.render('participate', {member: member, addon: addon, registrationTuple: registrationTuple});
+    });
+  });
 });
 
 app.post('/completeRegistration', function (req, res, next) {
@@ -117,12 +122,13 @@ app.post('/completeRegistration', function (req, res, next) {
     var body = req.body;
     registrationService.saveRegistration(req.user.member.id(), req.sessionID, body, function (err, statusTitle, statusText) {
       if (err) { return next(err); }
+      delete req.session.statusmessage;
       if (statusTitle && statusText) {
-        delete req.session.statusmessage;
         statusmessage.errorMessage(statusTitle, statusText).putIntoSession(req);
         return res.redirect('/registration');
       }
-      res.redirect('/');
+      statusmessage.successMessage('general.info', 'activities.successfully_registered').putIntoSession(req);
+      res.redirect('/registration');
     });
   });
 });

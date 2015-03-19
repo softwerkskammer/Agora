@@ -45,8 +45,10 @@ module.exports = {
     activitystore.getActivity(registrationTuple.activityUrl, function (err, activity) {
       if (err || !activity) { return callback(err); }
       if (!activity.hasValidReservationFor(registrationTuple)) {
-        // TODO create reasonable strings
-        return callback(null, 'message.title.problem', 'activities.registration_not_possible');
+        return callback(null, 'message.title.problem', 'activities.registration_timed_out');
+      }
+      if (activity.isAlreadyRegistered(memberID)) {
+        return callback(null, 'message.title.problem', 'activities.already_registered');
       }
       if (activity.register(memberID, registrationTuple)) {
         return activitystore.saveActivity(activity, function (err) {

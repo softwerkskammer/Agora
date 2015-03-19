@@ -176,6 +176,17 @@ Activity.prototype.allRegisteredMembers = function () {
   return this.resources().allRegisteredMembers();
 };
 
+Activity.prototype.isAlreadyRegistered = function (memberID) {
+  return this.resources().allRegisteredMembers().indexOf(memberID) > -1;
+};
+
+Activity.prototype.registeredResources = function (memberID) {
+  var self = this;
+  return _.map(this.resources().resourceNamesOf(memberID), function (resourceName) {
+    return self.resourceNamed(resourceName);
+  });
+};
+
 Activity.prototype.allWaitinglistEntries = function () {
   return this.resources().allWaitinglistEntries();
 };

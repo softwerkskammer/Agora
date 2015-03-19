@@ -12,6 +12,15 @@ var tomorrow = moment();
 tomorrow.add(1, 'days');
 
 describe('SoCraTesResource', function () {
+  it('can tell its name', function () {
+    var resource = new Resource({
+      _registrationOpen: true,
+      _registeredMembers: []
+    }, 'name');
+    var socratesResource = new SoCraTesResource(resource);
+    expect(socratesResource.resourceName).to.be('name');
+  });
+
   it('adds the expiration time to a registered member', function () {
     var resource = new Resource({
       _registrationOpen: true,

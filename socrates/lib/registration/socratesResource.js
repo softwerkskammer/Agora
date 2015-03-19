@@ -17,6 +17,7 @@ function setDuration(record, duration) {
 
 function SoCraTesResource(resource) {
   this.state = (resource && resource.state) || {};
+  this.resourceName = (resource && resource.resourceName);
   return this;
 }
 
