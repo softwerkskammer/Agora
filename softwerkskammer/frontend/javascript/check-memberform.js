@@ -27,6 +27,7 @@ var member_validator;
           },
           firstname: "required",
           lastname: "required",
+          homeAddress: "required",
           tShirtSize: {
             required: function () {
               return $("#tShirtSizeMale").val() === '' && $("#tShirtSizeFemale").val() === '';
@@ -69,6 +70,8 @@ var member_validator;
     );
 
     member_validator.form();
+    member_validator.element($("#tShirtSizeMale"));
+    member_validator.element($("#tShirtSizeFemale"));
 
     var handler = function (each) {
       return function () {
@@ -77,7 +80,7 @@ var member_validator;
     };
 
     ["[name=nickname]", "[name=lastname]", "[name=firstname]", "[name=email]",
-      "[name=profession]", "[name=location]", "[name=reference]"].forEach(
+      "[name=profession]", "[name=location]", "[name=reference]", "[name=homeAddress]"].forEach(
       function (each) {
         $(each).on("change", handler(each));
         $(each).keyup(handler(each));

@@ -81,5 +81,9 @@
       expect(member_validator.element(field)).to.be(true);
     });
 
+    it('checks that "homeAddress" is mandatory', function () {
+      checkFieldMandatory('[name=homeAddress]', 'onetwo\nhhsd');
+    });
+
   });
 }());
