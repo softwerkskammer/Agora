@@ -27,6 +27,11 @@ var member_validator;
           },
           firstname: "required",
           lastname: "required",
+          tShirtSize: {
+            required: function () {
+              return $("#tShirtSizeMale").val() === '' && $("#tShirtSizeFemale").val() === '';
+            }
+          },
           email: {
             required: true,
             email: true,
@@ -76,6 +81,14 @@ var member_validator;
       function (each) {
         $(each).on("change", handler(each));
         $(each).keyup(handler(each));
+      }
+    );
+    ["[name=tShirtSize]"].forEach(
+      function (each) {
+        $(each).on("change", handler($("#tShirtSizeMale")));
+        $(each).on("change", handler($("#tShirtSizeFemale")));
+        $(each).keyup(handler($("#tShirtSizeMale")));
+        $(each).keyup(handler($("#tShirtSizeFemale")));
       }
     );
   };
