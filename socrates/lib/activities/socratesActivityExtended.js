@@ -7,29 +7,20 @@ var SoCraTesActivity = beans.get('socratesActivity');
 var SoCraTesResource = beans.get('socratesResource');
 
 if (SoCraTesActivity.prototype.reserve === undefined) {
-  SoCraTesActivity.prototype.socratesResourceNamed = function (name) {
-    return new SoCraTesResource(this.resourceNamed(name));
-  };
-
-  SoCraTesActivity.prototype.stripExpiredReservations = function () {
-    var self = this;
-    _.each(this.resourceNames(), function (name) {
-      self.socratesResourceNamed(name).stripExpiredReservations();
-    });
+  SoCraTesActivity.prototype.socratesResourceNamed = function (registrationTuple) {
+    return new SoCraTesResource(this.resourceNamed(registrationTuple.resourceName));
   };
 
   SoCraTesActivity.prototype.reserve = function (registrationTuple) {
-    this.stripExpiredReservations();
-    return this.socratesResourceNamed(registrationTuple.resourceName).reserve(registrationTuple);
+    return this.socratesResourceNamed(registrationTuple).reserve(registrationTuple);
   };
 
   SoCraTesActivity.prototype.register = function (memberID, registrationTuple) {
-    this.stripExpiredReservations();
-    return this.socratesResourceNamed(registrationTuple.resourceName).register(memberID, registrationTuple);
+    return this.socratesResourceNamed(registrationTuple).register(memberID, registrationTuple);
   };
 
   SoCraTesActivity.prototype.hasValidReservationFor = function (registrationTuple) {
-    return this.socratesResourceNamed(registrationTuple.resourceName).hasValidReservationFor(registrationTuple);
+    return this.socratesResourceNamed(registrationTuple).hasValidReservationFor(registrationTuple);
   };
 
   SoCraTesActivity.prototype.selectedOptionFor = function (memberID) {

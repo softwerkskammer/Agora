@@ -87,7 +87,7 @@ describe('SoCraTesResource', function () {
     expect(socratesResource.state._registeredMembers[0].memberId).to.be('SessionID:sessionID');
   });
 
-  describe('cleans up', function () {
+  describe('clean up during creation (in constructor)', function () {
     it('only expired reservations', function () {
       var resource = new Resource({
         _registeredMembers: [
@@ -96,8 +96,6 @@ describe('SoCraTesResource', function () {
         ]
       });
       var socratesResource = new SoCraTesResource(resource);
-
-      socratesResource.stripExpiredReservations();
 
       expect(socratesResource.registeredMembers()).to.not.contain('memberID');
       expect(socratesResource.registeredMembers()).to.contain('memberID2');
@@ -111,8 +109,6 @@ describe('SoCraTesResource', function () {
       });
       var socratesResource = new SoCraTesResource(resource);
 
-      socratesResource.stripExpiredReservations();
-
       expect(socratesResource.registeredMembers()).is.not.empty();
       expect(socratesResource.registeredMembers()).to.contain('memberID');
     });
@@ -123,7 +119,6 @@ describe('SoCraTesResource', function () {
       });
       var socratesResource = new SoCraTesResource(resource);
 
-      socratesResource.stripExpiredReservations();
       expect(socratesResource.registeredMembers()).is.empty();
     });
   });
