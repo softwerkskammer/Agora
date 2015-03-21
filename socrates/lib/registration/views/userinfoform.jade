@@ -9,13 +9,10 @@ mixin memberinfoform(member, newmember_text)
   .row
     .col-sm-12
       .well.well-sm
+        p #{t(newmember_text)}
         if (accessrights.isRegistered())
-          if (member.socratesOnly())
-            p #{t('members.edit_socrates_only')}
-          else
+          unless (member.socratesOnly())
             p #{t('members.edit_socrates_softwerkskammer')}
-        else
-          p #{t(newmember_text)}
 
   .row
     .col-sm-6
