@@ -5,22 +5,22 @@
 (function () {
   "use strict";
   function enhanceMemberValidator() {
-    function handler(each) {
+    function handler() {
       return function () {
-        member_validator.element(each);
+        member_validator.element($("#tShirtSizeMale"));
+        member_validator.element($("#tShirtSizeFemale"));
       };
     }
 
-    member_validator.element($("#tShirtSizeMale"));
-    member_validator.element($("#tShirtSizeFemale"));
-    $("[name=tShirtSize]").each(
+    ["#tShirtSizeMale", "#tShirtSizeFemale"].forEach(
       function (each) {
-        $(each).on("change", handler($("#tShirtSizeMale")));
-        $(each).on("change", handler($("#tShirtSizeFemale")));
-        $(each).keyup(handler($("#tShirtSizeMale")));
-        $(each).keyup(handler($("#tShirtSizeFemale")));
+        member_validator.element(each);
+        $(each).on("change", handler());
+        $(each).keyup(handler());
       }
     );
+
   }
+
   $(document).ready(enhanceMemberValidator);
 }());
