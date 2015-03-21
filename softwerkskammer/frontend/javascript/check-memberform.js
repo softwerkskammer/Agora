@@ -63,11 +63,16 @@ var member_validator;
         highlight: function (element) {
           if ($(element).attr("id") === "tShirtSizeMale") {
             $("#tShirtBox").parent().addClass("has-error");
+          } else {
+            $(element).parent().addClass("has-error");
           }
-          $(element).parent().addClass("has-error");
         },
         unhighlight: function (element) {
-          $(element).parent().removeClass("has-error");
+          if ($(element).attr("id") === "tShirtSizeMale") {
+            $("#tShirtBox").parent().removeClass("has-error");
+          } else {
+            $(element).parent().removeClass("has-error");
+          }
         },
         errorPlacement: function (error, element) {
           if (element.attr("id") === "tShirtSizeMale") {
