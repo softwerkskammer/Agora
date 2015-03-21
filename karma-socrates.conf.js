@@ -14,6 +14,7 @@ module.exports = function (config) {
       'socrates/frontendtests/fixtures/forms.html',
       'socrates/frontendtests/fixtures/fixtures.js',
       'socrates/public/clientscripts/check-memberform.js',
+      'socrates/public/clientscripts/check-socrates-memberform.js',
       'socrates/public/clientscripts/check-activityform.js',
       'socrates/public/clientscripts/enhance-participationinfoform.js',
       'socrates/frontendtests/*.js'

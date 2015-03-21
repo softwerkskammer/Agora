@@ -20,10 +20,11 @@ describe('Subscriber\'s Addon', function () {
     expect(subscriber.addon().tShirtSize()).to.equal('XXXL');
   });
 
-  it('can be filled from the UI', function () {
+  it('can be filled from the UI (unpacks t-shirt size)', function () {
+    var addonDataUI = { homeAddress: 'homeOne', billingAddress: 'billingTwo', tShirtSize: ['XXXL', ''] };
     var addonData = { homeAddress: 'homeOne', billingAddress: 'billingTwo', tShirtSize: 'XXXL' };
     var subscriberFromUI = new Subscriber();
-    subscriberFromUI.addon().fillFromUI(addonData);
+    subscriberFromUI.addon().fillFromUI(addonDataUI);
     expect(subscriberFromUI).to.eql(new Subscriber({ _addon: addonData }));
   });
 

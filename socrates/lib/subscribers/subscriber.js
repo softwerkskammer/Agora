@@ -3,6 +3,7 @@
 var beans = require('simple-configure').get('beans');
 var Addon = beans.get('socratesAddon');
 var Payment = beans.get('socratesPayment');
+var socratesConstants = beans.get('socratesConstants');
 
 function Subscriber(object) {
   this.state = object || {};
@@ -21,6 +22,16 @@ Subscriber.prototype.payment = function () {
     this.state._payment = {};
   }
   return new Payment(this.state._payment);
+};
+
+Subscriber.prototype.currentYear = function () {
+  if (!this.state.years) {
+    this.state.years = {};
+  }
+  if (!this.state.years[socratesConstants.currentYear]) {
+    this.state.years[socratesConstants.currentYear] = {};
+  }
+  return this.state.years[socratesConstants.currentYear];
 };
 
 module.exports = Subscriber;

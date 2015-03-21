@@ -1,52 +1,50 @@
 include  ../../../views/formComponents
 
 mixin memberinfoform(member, newmember_text)
+  +hidden('id', member.id())
+  +hidden('previousNickname', member.nickname())
+  +hidden('previousEmail', accessrights.isRegistered() ? member.email() : '')
+  +hidden('created', member.created())
+  +hidden('socratesOnly', member.socratesOnly())
   .row
     .col-sm-12
-      legend
-        h4 #{t('members.personal_data')}
-      .well
+      .well.well-sm
+        p #{t(newmember_text)}
         if (accessrights.isRegistered())
-          if (member.socratesOnly())
-            p #{t('members.edit_socrates_only')}
-          else
+          unless (member.socratesOnly())
             p #{t('members.edit_socrates_softwerkskammer')}
-        else
-          p #{t(newmember_text)}
 
   .row
     .col-sm-6
-      +hidden('id', member.id())
-      +hidden('previousNickname', member.nickname())
-      +hidden('previousEmail', accessrights.isRegistered() ? member.email() : '')
-      +hidden('created', member.created())
-      +hidden('socratesOnly', member.socratesOnly())
       +text('nickname', 'Nickname', member.nickname())
-      +text('firstname', 'First name', member.firstname())
-      +text('lastname', 'Last name', member.lastname())
+      .row
+        .col-sm-6
+          +text('firstname', 'First name', member.firstname())
+        .col-sm-6
+          +text('lastname', 'Last name', member.lastname())
     .col-sm-6
       +text('email', 'E-Mail', member.email())
       +twitter('twitter', 'Twitter', member.twitter())
 
 mixin userinfoform(addon)
   .row
-    .col-sm-12
-      p.
-        The home address is required by the hotel. It needs to be the address where you are registered, not your company's. In case you
-        want a different address on the invoice of the hotel, fill in the billing address.
-  .row
     .col-sm-6
       +textareaPure('homeAddress', 'Home Address', addon.homeAddress())
-      +textareaPure('billingAddress', 'Billing Address (if different)', addon.billingAddress())
+      p.small The home address is required by the hotel. It needs to be the address where you are registered, not your company's.
     .col-sm-6
-      .row
+      +textareaPure('billingAddress', 'Billing Address (if different)', addon.billingAddress())
+      p.small In case you want a different address on the invoice of the hotel, fill in the billing address.
+  .row
+    .col-sm-6
+      .row#tShirtBox
         .col-sm-6
-          .form-group
+          .form-group(style='margin-bottom:0;')
             label.control-label(for='tShirtSizeMale') T-Shirt (Male):
             select#tShirtSizeMale.form-control(name='tShirtSize')
               for item in ['', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL' ]
                 option(selected=addon.tShirtSize() === item) #{item}
-          .form-group
+        .col-sm-6
+          .form-group(style='margin-bottom:0;')
             label.control-label(for='tShirtSizeFemale') T-Shirt (Female):
             select#tShirtSizeFemale.form-control(name='tShirtSize')
               for item in ['', 'Ladies\' XS', 'Ladies\' S', 'Ladies\' M', 'Ladies\' L', 'Ladies\' XL', 'Ladies\' XXL' ]

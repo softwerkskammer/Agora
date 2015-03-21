@@ -1,5 +1,6 @@
 'use strict';
 var moment = require('moment-timezone');
+var _ = require('lodash');
 
 var beans = require('simple-configure').get('beans');
 var misc = beans.get('misc');
@@ -12,27 +13,46 @@ var registrationService = beans.get('registrationService');
 var icalService = beans.get('icalService');
 var activitystore = beans.get('activitystore');
 var statusmessage = beans.get('statusmessage');
-var SoCraTesResource = beans.get('socratesResource');
+var memberSubmitHelper = beans.get('memberSubmitHelper');
+var socratesConstants = beans.get('socratesConstants');
+var Addon = beans.get('socratesAddon');
 
 var app = misc.expressAppIn(__dirname);
-
-var currentYear = 2015;
-var currentUrl = 'socrates-' + currentYear;
 
 function isRegistrationOpen() { // we currently set this to false on production system, because this feature is still in development
   return app.get('env') !== 'production';
 }
 
+function roomOptions() {
+  var dinner = 13;
+  var day = 17;
+  var single = 70 + dinner;
+  var double = 50 + dinner;
+  var junior = 46 + dinner;
+  var juniorExclusive = 2 * 46 + dinner;
+
+  function option(id, name, base) {
+    return {
+      id: id,
+      name: name,
+      two: 2 * base + 2 * day,
+      three: 3 * base + 2 * day,
+      threePlus: 3 * base + 3 * day,
+      four: 4 * base + 3 * day
+    };
+  }
+
+  return [
+    option('single', 'Single', single),
+    option('bed_in_double', 'Double shared …', double),
+    option('bed_in_junior', 'Junior shared …', junior),
+    option('junior', 'Junior (exclusive)', juniorExclusive)
+  ];
+}
 app.get('/', function (req, res, next) {
-  activitiesService.getActivityWithGroupAndParticipants(currentUrl, function (err, activity) {
+  activitiesService.getActivityWithGroupAndParticipants(socratesConstants.currentUrl, function (err, activity) {
     if (err || !activity) { return next(err); }
-    var roomOptions = [
-      {id: 'single', name: 'Single', two: 200, three: 270, threePlus: 300, four: 370},
-      {id: 'bed_in_double', name: 'Double shared …', shareable: true, two: 160, three: 210, threePlus: 240, four: 290},
-      {id: 'junior', name: 'Junior shared …', shareable: true, two: 151, three: 197, threePlus: 227, four: 272},
-      {id: 'bed_in_junior', name: 'Junior (exclusive)', two: 242, three: 333, threePlus: 363, four: 454}
-    ];
-    res.render('get', {activity: activity, roomOptions: roomOptions, registrationPossible: isRegistrationOpen()});
+    res.render('get', {activity: activity, roomOptions: roomOptions(), registrationPossible: isRegistrationOpen()});
   });
 });
 
@@ -43,7 +63,7 @@ app.get('/ical', function (req, res, next) {
     res.send(ical.toString());
   }
 
-  activitystore.getActivity(currentUrl, function (err, activity) {
+  activitystore.getActivity(socratesConstants.currentUrl, function (err, activity) {
     if (err || !activity) { return next(err); }
     sendCalendarStringNamedToResult(icalService.activityAsICal(activity), activity.url(), res);
   });
@@ -51,45 +71,66 @@ app.get('/ical', function (req, res, next) {
 
 // TODO noch nicht freigeschaltete Funktionalitäten:
 
-function participate(registrationTuple, req, res, next) {
-  if (!req.user) { return res.redirect('/registration'); }
-  var member = req.user.member || new Member().initFromSessionUser(req.user, true);
-  subscriberstore.getSubscriber(member.id(), function (err, subscriber) {
-    if (err) { return next(err); }
-    res.render('participate', {member: member, addon: subscriber.addon()});
-  });
-}
-
 app.post('/startRegistration', function (req, res, next) {
   if (!isRegistrationOpen() || !req.body.nightsOptions) { return res.redirect('/registration'); }
   var option = req.body.nightsOptions.split(',');
-  var registrationTuple = {activityUrl: req.body.activityUrl, resourceName: option[0], days: option[1]};
-  var memberId = req.user ? req.user.member.id() : 'SessionID' + req.sessionID;
-  registrationService.startRegistration(memberId, registrationTuple, function (err, statusTitle, statusText) {
+  var registrationTuple = {
+    activityUrl: socratesConstants.currentUrl,
+    resourceName: option[0],
+    duration: option[1],
+    sessionID: req.sessionID
+  };
+  var participateURL = '/registration/participate';
+  req.session.registrationTuple = registrationTuple;
+  registrationService.startRegistration(registrationTuple, function (err, statusTitle, statusText) {
     if (err) { return next(err); }
     if (statusTitle && statusText) {
       statusmessage.errorMessage(statusTitle, statusText).putIntoSession(req);
       return res.redirect('/registration');
     }
     if (!req.user) {
-      var returnToUrl = '/registration/participate';
-      req.session.registrationTuple = registrationTuple;
-      req.session.returnToUrl = returnToUrl;
-      return res.render('loginForRegistration', {returnToUrl: returnToUrl});
+      req.session.returnToUrl = participateURL;
+      return res.render('loginForRegistration', {returnToUrl: participateURL});
     }
-    participate(registrationTuple, req, res, next);
+    res.redirect(participateURL);
   });
 });
 
 app.get('/participate', function (req, res, next) {
   var registrationTuple = req.session.registrationTuple;
   if (!registrationTuple) { return res.redirect('/registration'); }
-  participate(registrationTuple, req, res, next);
+  if (!req.user) { return res.redirect('/registration'); }
+  var member = req.user.member || new Member().initFromSessionUser(req.user, true);
+
+  activitiesService.getActivityWithGroupAndParticipants(socratesConstants.currentUrl, function (err, activity) {
+    if (err || !activity) { return next(err); }
+    if (activity.isAlreadyRegistered(member.id())) {
+      statusmessage.successMessage('general.info', 'activities.already_registered').putIntoSession(req);
+      return res.redirect('/registration');
+    }
+    subscriberstore.getSubscriber(member.id(), function (err, subscriber) {
+      if (err) { return next(err); }
+      var addon = (subscriber && subscriber.addon()) || new Addon({});
+      res.render('participate', {member: member, addon: addon, registrationTuple: registrationTuple});
+    });
+  });
 });
 
 app.post('/completeRegistration', function (req, res, next) {
-  res.redirect('/');
-  //statusmessage.successMessage('message.title.save_successful', 'message.content.activities.participation_for_resource_added', {resourceName: new SoCraTesResource().displayName(resourceName)}).putIntoSession(req);
+  memberSubmitHelper(req, res, function (err) {
+    if (err) { return next(err); }
+    var body = req.body;
+    registrationService.saveRegistration(req.user.member.id(), req.sessionID, body, function (err, statusTitle, statusText) {
+      if (err) { return next(err); }
+      delete req.session.statusmessage;
+      if (statusTitle && statusText) {
+        statusmessage.errorMessage(statusTitle, statusText).putIntoSession(req);
+        return res.redirect('/registration');
+      }
+      statusmessage.successMessage('general.info', 'activities.successfully_registered').putIntoSession(req);
+      res.redirect('/registration');
+    });
+  });
 });
 
 app.get('/resign', function (req, res) {

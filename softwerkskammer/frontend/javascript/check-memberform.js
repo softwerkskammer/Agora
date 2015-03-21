@@ -1,10 +1,14 @@
-/*global nicknameIsNotAvailable, contentsOfNickname, emailAlreadyTaken */
+/*global nicknameIsNotAvailable, contentsOfNickname, emailAlreadyTaken, selectTshirtSize*/
 
 // THE ORIGINAL OF THIS FILE IS IN frontend/javascript
 
 var member_validator;
 (function () {
   "use strict";
+
+  $.validator.addMethod("tShirtSelected", function () {
+    return $("#tShirtSizeMale").val() !== '' || $("#tShirtSizeFemale").val() !== '';
+  }, selectTshirtSize);
 
   var initValidator = function () {
 
@@ -27,6 +31,8 @@ var member_validator;
           },
           firstname: "required",
           lastname: "required",
+          homeAddress: "required",
+          tShirtSize: "tShirtSelected",
           email: {
             required: true,
             email: true,
@@ -55,10 +61,25 @@ var member_validator;
         errorElement: "span",
         errorClass: "help-block",
         highlight: function (element) {
-          $(element).parent().addClass("has-error");
+          if ($(element).attr("id") === "tShirtSizeMale") {
+            $("#tShirtBox").parent().addClass("has-error");
+          } else {
+            $(element).parent().addClass("has-error");
+          }
         },
         unhighlight: function (element) {
-          $(element).parent().removeClass("has-error");
+          if ($(element).attr("id") === "tShirtSizeMale") {
+            $("#tShirtBox").parent().removeClass("has-error");
+          } else {
+            $(element).parent().removeClass("has-error");
+          }
+        },
+        errorPlacement: function (error, element) {
+          if (element.attr("id") === "tShirtSizeMale") {
+            error.insertAfter("#tShirtBox");
+          } else if (element.attr("id") !== "tShirtSizeFemale") {
+            error.insertAfter(element);
+          }
         }
       }
     );
@@ -72,7 +93,7 @@ var member_validator;
     };
 
     ["[name=nickname]", "[name=lastname]", "[name=firstname]", "[name=email]",
-      "[name=profession]", "[name=location]", "[name=reference]"].forEach(
+      "[name=profession]", "[name=location]", "[name=reference]", "[name=homeAddress]"].forEach(
       function (each) {
         $(each).on("change", handler(each));
         $(each).keyup(handler(each));

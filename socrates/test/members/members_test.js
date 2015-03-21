@@ -115,13 +115,14 @@ describe('SoCraTes members application', function () {
       appWithSocratesMember
         .get('/edit')
         .expect(200)
-        .expect(/Here you can edit your information\./, done);
+        .expect(/In order to keep you informed about the SoCraTes conference, we need you to provide us with the following information\. Please fill in all mandatory fields\./, done);
     });
 
     it('allows a Softwerkskammer member to edit his page', function (done) {
       appWithSoftwerkskammerMember
         .get('/edit')
         .expect(200)
+        .expect(/In order to keep you informed about the SoCraTes conference, we need you to provide us with the following information\. Please fill in all mandatory fields\./)
         .expect(/Here you find the information from your Softwerkskammer account that is used by SoCraTes\./, done);
     });
 

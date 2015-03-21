@@ -12,26 +12,20 @@ block title
 block content
   .row
     .col-md-12
-      .page-header
+      .page-header(style='margin-bottom: 0;')
         .pull-right.visible-print
           img(height='80px', src='/qrcode?url=#{encodeURIComponent(activity.fullyQualifiedUrl())}')
         .btn-group.pull-right.hidden-print
           if (accessrights.canEditActivity(activity))
             a.btn.btn-default(href='/activities/addons/#{encodeURIComponent(activity.url())}', title=t('activities.participants')): i.fa.fa-list-ol.fa-fw
-          a.btn.btn-default(href='/registration/ical', title=t('activities.export')): i.fa.fa-calendar.fa-fw
           if (accessrights.canEditActivity(activity))
             a.btn.btn-default(href='/waitinglist/#{encodeURIComponent(activity.url())}', title=t('activities.waitinglist')): i.fa.fa-clock-o.fa-fw
             a.btn.btn-default(href='/mailsender/invitation/#{encodeURIComponent(activity.url())}', title=t('activities.invitation')): i.fa.fa-envelope-o.fa-fw
             a.btn.btn-default(href='/activities/edit/#{encodeURIComponent(activity.url())}', title=t('general.edit')): i.fa.fa-edit.fa-fw
           if (accessrights.canDeleteActivity(activity))
             +reallyDeleteModal('activities.delete', '/activities/delete/' + encodeURIComponent(activity.url()))
-        h2 Registration
+        h1 Registration<br>
+          small SoCraTes, 27 - 30 August 2015
   .row
     .col-md-12
       +participationinfoform(activity, roomOptions, registrationPossible)
-
-block scripts
-  script.
-    displayedActivityStart = moment('#{activity.startMoment().toISOString()}');
-    displayedActivityEnd = moment('#{activity.endMoment().toISOString()}');
-//- cannot write "#{activity.startMoment()}" as we need to produce a string to eval in the client

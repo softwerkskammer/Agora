@@ -71,5 +71,19 @@
       expect(member_validator.element(nickname)).to.be(false);
       expect(member_validator.errorList[0]).to.have.ownProperty('message', 'Please enter at least 2 characters.');
     });
+
+    it('checks that "tShirtSize" is mandatory', function () {
+      var field = $('#tShirtSizeMale');
+      field.val('');
+      expect(member_validator.element(field)).to.be(false);
+      expect(member_validator.errorList[0].message).to.be('Please select a t-shirt size.');
+      field.val('L');
+      expect(member_validator.element(field)).to.be(true);
+    });
+
+    it('checks that "homeAddress" is mandatory', function () {
+      checkFieldMandatory('[name=homeAddress]', 'onetwo\nhhsd');
+    });
+
   });
 }());

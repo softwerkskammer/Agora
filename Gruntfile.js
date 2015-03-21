@@ -309,8 +309,8 @@ module.exports = function (grunt) {
         options: {
           coverageFolder: 'softwerkskammer/karma-coverage',
           check: {
-            lines: 94,
-            statements: 94
+            lines: 93,
+            statements: 93
           }
         }
       }

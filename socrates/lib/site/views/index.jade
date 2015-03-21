@@ -8,9 +8,6 @@ block before-container
 
   .jumbotron.stage-background
     .container
-      a.btn.btn-info.sponsorbutton.pull-right(href='/sponsoring.html')
-        span.glyphicon.glyphicon-thumbs-up
-        |  Sponsor us
       img.logo-left(src='img/socrates2015_logo.png', alt='SoCraTes Conference 2015 - Software Craftsmanship and Testing')
       h1 SoCraTes 2015
       p 5th International Software Craftsmanship and Testing Conference in Germany
@@ -29,7 +26,7 @@ block content
 
           h3 It's about People
           p Everyone who is concerned with coding, testing, code quality, software craftsmanship, if&nbsp;&hellip;
-          ul.square
+          ul
             li you are passionate about software development and testing.
             li you have already heard of Software Craftsmanship or even already are part of the growing community.
             li you want to share your knowlege, experience and expertise.
@@ -40,10 +37,10 @@ block content
             |  groups, the community of all German-speaking Software Craftsmanship groups.
             | It will be much like a retreat. We will be there for 48 hours to
             | collaborate and share ideas. There will be:
-          ul.square
+          ul
             li Highly collaborative interactions
             li A self-organized Open Space, with &hellip;
-            ul.square
+            ul
               li hands-on coding sessions
               li sessions focused on discussion
               li interactive talks
@@ -96,17 +93,15 @@ block content
             if (pair.second)
               hr.sponsorline.hidden-lg
               +sponsorCol(pair.second)
-          if (index < sponsors.length - 1)
-            .row
-              hr.sponsorline.hidden-lg
-              .col-lg-12.visible-lg-block
-                hr
-  script.
-    $(document).ready(function () {
-      $.ajax({url: '/subscribers/count'}).done(function (count) {
-        $('.count').text(count + ' people are interested in SoCraTes!');
-      });
-    });
+          .row
+            hr.sponsorline.hidden-lg
+            .col-lg-12.visible-lg-block
+              hr
+        a.btn.btn-info.pull-right(href='/sponsoring.html', style='width:160px')
+          span.glyphicon.glyphicon-thumbs-up
+          |  Sponsor us
+
+
 
 
 mixin sponsorCol(sponsor)

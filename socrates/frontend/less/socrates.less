@@ -9,13 +9,6 @@
   }
 }
 
-.sponsorbutton {
-  margin-top: -15px;
-  @media (min-width: @screen-sm-min) {
-    margin-top: -30px;
-  }
-}
-
 .sidebar {
   text-align: center;
   @media (min-width: @screen-sm-min) {
@@ -23,11 +16,12 @@
   }
 }
 
-ul.square {
-  list-style-type: square;
+.radio-inline > label {
+  font-weight: normal;
 }
 
-ul.outside {
+ul {
+  list-style-type: square;
   padding-left: inherit;
 }
 
@@ -88,6 +82,10 @@ dd {
   background-color: #f9f9f9;
 }
 
+.page-header {
+  margin-bottom: 0;
+}
+
 @media (max-width: 767px) {
   .navbar {
     margin-bottom: 0px;
@@ -111,6 +109,7 @@ dd {
 
 @media print {
   body {
+    font-size: 10pt;
     padding: 0;
   }
 
@@ -120,10 +119,6 @@ dd {
 
   h3 {
     font-size: 14pt;
-  }
-
-  p {
-    font-size: 10pt;
   }
 
   .panel {

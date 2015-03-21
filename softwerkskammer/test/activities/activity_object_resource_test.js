@@ -12,7 +12,7 @@ describe('Activity resource management', function () {
   describe('- on creation -', function () {
     it('lists the name of the default resource if no resources are present on creation', function () {
       var activity = new Activity();
-      expect(activity.resourceNames().length).to.equal(1);
+      expect(activity.resourceNames()).to.have.length(1);
       expect(activity.resourceNames()).to.contain(defaultName);
     });
 
@@ -23,7 +23,7 @@ describe('Activity resource management', function () {
 
     it('lists the names of all resources if resources are present on creation', function () {
       var activity = new Activity({resources: {Einzelzimmer: { _registeredMembers: []}, Doppelzimmer: { _registeredMembers: []}}});
-      expect(activity.resourceNames().length).to.equal(2);
+      expect(activity.resourceNames()).to.have.length(2);
       expect(activity.resourceNames()).to.contain('Einzelzimmer');
       expect(activity.resourceNames()).to.contain('Doppelzimmer');
     });
@@ -31,7 +31,7 @@ describe('Activity resource management', function () {
     it('orders the resources if their order is given via fillFromUI', function () {
       var activity = new Activity({resources: {Einzelzimmer: { _registeredMembers: []}, Doppelzimmer: { _registeredMembers: []}}});
       activity.fillFromUI({resources: {names: ['Doppelzimmer', 'Einzelzimmer'], limits: ['', ''], previousNames: ['Einzelzimmer', 'Doppelzimmer']}});
-      expect(activity.resourceNames().length).to.equal(2);
+      expect(activity.resourceNames()).to.have.length(2);
       expect(activity.resourceNames()[0]).to.equal('Doppelzimmer');
       expect(activity.resourceNames()[1]).to.equal('Einzelzimmer');
     });
@@ -43,7 +43,7 @@ describe('Activity resource management', function () {
 
     it('adds a default resource if there is no resources property in the activity', function () {
       var activity = new Activity({});
-      expect(activity.resourceNames().length).to.equal(1);
+      expect(activity.resourceNames()).to.have.length(1);
       expect(activity.resourceNames()).to.contain(defaultName);
     });
 
@@ -98,7 +98,7 @@ describe('Activity resource management', function () {
         }}
       );
       activity.resourceNamed('Einzelzimmer').addMemberId('memberID');
-      expect(activity.resourceNames().length).to.equal(1);
+      expect(activity.resourceNames()).to.have.length(1);
       expect(activity.resourceNamed('default').registeredMembers()).to.contain('memberID');
     });
   });
@@ -149,7 +149,7 @@ describe('Activity resource management', function () {
         }}
       );
       activity.resourceNamed('Doppelzimmer').removeMemberId('memberID');
-      expect(activity.resourceNames().length).to.equal(1);
+      expect(activity.resourceNames()).to.have.length(1);
       expect(activity.resourceNamed('default').registeredMembers()).to.contain('memberID');
     });
   });
@@ -279,6 +279,17 @@ describe('Activity resource management', function () {
   });
 
   describe('- when querying registered members -', function () {
+    var defaultResource = { _registeredMembers: [{memberId: 'memberID1'}] };
+    var activityWithThreeDifferentMembers = new Activity({ resources: {
+      'default': defaultResource,
+      Einzelzimmer: { _registeredMembers: [
+        {memberId: 'memberID2'}
+      ]},
+      Doppelzimmer: { _registeredMembers: [
+        {memberId: 'memberID3'}
+      ]}
+    }});
+
     it('returns no members if the desired resource does not exist', function () {
       var activity = new Activity();
       expect(activity.resourceNamed('Nicht Existente Ressource').registeredMembers()).to.be.empty();
@@ -290,21 +301,22 @@ describe('Activity resource management', function () {
     });
 
     it('lists all registered members of any resource', function () {
-      var activity = new Activity({ resources: {
-        'default': { _registeredMembers: [
-          {memberId: 'memberID1'}
-        ]},
-        Einzelzimmer: { _registeredMembers: [
-          {memberId: 'memberID2'}
-        ]},
-        Doppelzimmer: { _registeredMembers: [
-          {memberId: 'memberID3'}
-        ]}
-      }});
-      expect(activity.allRegisteredMembers().length).to.equal(3);
-      expect(activity.allRegisteredMembers()).to.contain('memberID1');
-      expect(activity.allRegisteredMembers()).to.contain('memberID2');
-      expect(activity.allRegisteredMembers()).to.contain('memberID3');
+      expect(activityWithThreeDifferentMembers.allRegisteredMembers()).to.have.length(3);
+      expect(activityWithThreeDifferentMembers.allRegisteredMembers()).to.contain('memberID1');
+      expect(activityWithThreeDifferentMembers.allRegisteredMembers()).to.contain('memberID2');
+      expect(activityWithThreeDifferentMembers.allRegisteredMembers()).to.contain('memberID3');
+    });
+
+    it('can tell if a memberID is registered in any resource', function () {
+      expect(activityWithThreeDifferentMembers.isAlreadyRegistered('memberID1')).to.be(true);
+      expect(activityWithThreeDifferentMembers.isAlreadyRegistered('memberID2')).to.be(true);
+      expect(activityWithThreeDifferentMembers.isAlreadyRegistered('memberID3')).to.be(true);
+    });
+
+    it('can return the registerd resources for a memberID', function () {
+      var result = activityWithThreeDifferentMembers.registeredResources('memberID1');
+      expect(result).to.have.length(1);
+      expect(result[0].resourceName).to.be('default');
     });
 
     it('lists a registered member only once even when he registered for multiple resources', function () {
@@ -319,7 +331,7 @@ describe('Activity resource management', function () {
           {memberId: 'memberID'}
         ]}
       }});
-      expect(activity.allRegisteredMembers().length).to.equal(1);
+      expect(activity.allRegisteredMembers()).to.have.length(1);
       expect(activity.allRegisteredMembers()).to.contain('memberID');
     });
   });
@@ -350,4 +362,5 @@ describe('Activity resource management', function () {
       expect(activity.resourceNamed('Teilnehmer').numberOfFreeSlots()).to.equal(9);
     });
   });
+
 });

@@ -6,7 +6,8 @@ module.exports = {
   t: function (string) { return string; },
   accessrights: {
     isRegistered: function () { return true; },
-    isMember: function () { return true; }
+    isMember: function () { return true; },
+    memberId: function () { return ''; }
   },
   activity: {
     id: function () { return ''; },
@@ -17,7 +18,9 @@ module.exports = {
     description: function () { return ''; },
     location: function () { return ''; },
     direction: function () { return ''; },
-    resourceNames: function () { return []; }
+    resourceNames: function () { return []; },
+    isAlreadyRegistered: function () { return false; },
+    selectedOptionFor: function () { return null; }
   },
   message: {
     receiver: ''
