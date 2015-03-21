@@ -12,3 +12,4 @@ var datepicker_format = 'dd/mm/yyyy';
 var fc_lang = 'en-gb';
 var tableLangUrl = '';
 var help = 'Help';
+var selectTshirtSize = 'Please select a t-shirt size.';
