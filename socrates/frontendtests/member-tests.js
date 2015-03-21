@@ -76,7 +76,7 @@
       var field = $('#tShirtSizeMale');
       field.val('');
       expect(member_validator.element(field)).to.be(false);
-      expect(member_validator.errorList[0].message).to.be('This field is required.');
+      expect(member_validator.errorList[0].message).to.be('Please select a t-shirt size.');
       field.val('L');
       expect(member_validator.element(field)).to.be(true);
     });

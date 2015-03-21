@@ -1,10 +1,14 @@
-/*global nicknameIsNotAvailable, contentsOfNickname, emailAlreadyTaken */
+/*global nicknameIsNotAvailable, contentsOfNickname, emailAlreadyTaken, selectTshirtSize*/
 
 // THE ORIGINAL OF THIS FILE IS IN frontend/javascript
 
 var member_validator;
 (function () {
   "use strict";
+
+  $.validator.addMethod("tShirtSelected", function () {
+    return $("#tShirtSizeMale").val() !== '' || $("#tShirtSizeFemale").val() !== '';
+  }, selectTshirtSize);
 
   var initValidator = function () {
 
@@ -28,11 +32,7 @@ var member_validator;
           firstname: "required",
           lastname: "required",
           homeAddress: "required",
-          tShirtSize: {
-            required: function () {
-              return $("#tShirtSizeMale").val() === '' && $("#tShirtSizeFemale").val() === '';
-            }
-          },
+          tShirtSize: "tShirtSelected",
           email: {
             required: true,
             email: true,
@@ -61,10 +61,20 @@ var member_validator;
         errorElement: "span",
         errorClass: "help-block",
         highlight: function (element) {
+          if ($(element).attr("id") === "tShirtSizeMale") {
+            $("#tShirtBox").parent().addClass("has-error");
+          }
           $(element).parent().addClass("has-error");
         },
         unhighlight: function (element) {
           $(element).parent().removeClass("has-error");
+        },
+        errorPlacement: function (error, element) {
+          if (element.attr("id") === "tShirtSizeMale") {
+            error.insertAfter("#tShirtBox");
+          } else if (element.attr("id") !== "tShirtSizeFemale") {
+            error.insertAfter(element);
+          }
         }
       }
     );

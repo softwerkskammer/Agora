@@ -38,18 +38,20 @@ mixin userinfoform(addon)
       +textareaPure('billingAddress', 'Billing Address (if different)', addon.billingAddress())
       p.small In case you want a different address on the invoice of the hotel, fill in the billing address.
   .row
-    .col-sm-3
-      .form-group
-        label.control-label(for='tShirtSizeMale') T-Shirt (Male):
-        select#tShirtSizeMale.form-control(name='tShirtSize')
-          for item in ['', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL' ]
-            option(selected=addon.tShirtSize() === item) #{item}
-    .col-sm-3
-      .form-group
-        label.control-label(for='tShirtSizeFemale') T-Shirt (Female):
-        select#tShirtSizeFemale.form-control(name='tShirtSize')
-          for item in ['', 'Ladies\' XS', 'Ladies\' S', 'Ladies\' M', 'Ladies\' L', 'Ladies\' XL', 'Ladies\' XXL' ]
-            option(selected=addon.tShirtSize() === item) #{item}
+    .col-sm-6
+      .row#tShirtBox
+        .col-sm-6
+          .form-group(style='margin-bottom:0;')
+            label.control-label(for='tShirtSizeMale') T-Shirt (Male):
+            select#tShirtSizeMale.form-control(name='tShirtSize')
+              for item in ['', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL' ]
+                option(selected=addon.tShirtSize() === item) #{item}
+        .col-sm-6
+          .form-group(style='margin-bottom:0;')
+            label.control-label(for='tShirtSizeFemale') T-Shirt (Female):
+            select#tShirtSizeFemale.form-control(name='tShirtSize')
+              for item in ['', 'Ladies\' XS', 'Ladies\' S', 'Ladies\' M', 'Ladies\' L', 'Ladies\' XL', 'Ladies\' XXL' ]
+                option(selected=addon.tShirtSize() === item) #{item}
   script.
     $('#tShirtSizeMale').on('change', function (e) {
       if ($(this).val() !== '') {
