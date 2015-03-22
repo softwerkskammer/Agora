@@ -2,7 +2,8 @@
 var moment = require('moment-timezone');
 var _ = require('lodash');
 
-var beans = require('simple-configure').get('beans');
+var conf = require('simple-configure');
+var beans = conf.get('beans');
 var misc = beans.get('misc');
 var membersService = beans.get('membersService');
 var Member = beans.get('member');
@@ -19,11 +20,13 @@ var Addon = beans.get('socratesAddon');
 
 var app = misc.expressAppIn(__dirname);
 
-function isRegistrationOpen() { // we currently set this to false on production system, because this feature is still in development
-  return app.get('env') !== 'production';
+function isRegistrationOpen() {
+  // we currently set this to false on production system, because this feature is still in development
+  // the conf variable is used as a backdoor for testing
+  return app.get('env') !== 'production' && !conf.get('registrationIsClosed');
 }
 
-function roomOptions() {
+function roomOptions(activity, memberId) {
   var dinner = 13;
   var day = 17;
   var single = 70 + dinner;
@@ -38,7 +41,8 @@ function roomOptions() {
       two: 2 * base + 2 * day,
       three: 3 * base + 2 * day,
       threePlus: 3 * base + 3 * day,
-      four: 4 * base + 3 * day
+      four: 4 * base + 3 * day,
+      displayAsBookable: (activity.isAlreadyRegistered(memberId) || !isRegistrationOpen() || activity.resourceNamed(id).canSubscribe())
     };
   }
 
@@ -49,10 +53,12 @@ function roomOptions() {
     option('junior', 'Junior (exclusive)', juniorExclusive)
   ];
 }
+
 app.get('/', function (req, res, next) {
   activitiesService.getActivityWithGroupAndParticipants(socratesConstants.currentUrl, function (err, activity) {
     if (err || !activity) { return next(err); }
-    res.render('get', {activity: activity, roomOptions: roomOptions(), registrationPossible: isRegistrationOpen()});
+    var options = roomOptions(activity, res.locals.accessrights.memberId());
+    res.render('get', {activity: activity, roomOptions: options, registrationPossible: isRegistrationOpen()});
   });
 });
 
