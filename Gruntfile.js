@@ -20,7 +20,7 @@ module.exports = function (grunt) {
     'bower_components/bootstrap/dist/js/bootstrap.js',
     'bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js',
     'bower_components/bootstrap-markdown/js/bootstrap-markdown.js',
-    'softwerkskammer/frontend/3rd_party_js/bootstrap-markdown.de.js',
+    'bower_components/bootstrap-markdown/locale/bootstrap-markdown.de.js',
     'node_modules/moment-timezone/node_modules/moment/moment.js',
     'bower_components/smartmenus/dist/jquery.smartmenus.js',
     'softwerkskammer/build/javascript/jquery.smartmenus.bootstrap-patched.js',
@@ -239,9 +239,7 @@ module.exports = function (grunt) {
             'bower_components/select2-bootstrap-css/select2-bootstrap.css',
             'bower_components/mjolnic-bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css',
             'bower_components/jquery-guillotine/css/jquery.guillotine.css',
-            'softwerkskammer/build/stylesheets/less/agora.less',
-            'softwerkskammer/build/stylesheets/less/TypoPro-SourceCodePro.less',
-            'softwerkskammer/build/stylesheets/less/TypoPro-SourceSansPro.less'
+            'softwerkskammer/build/stylesheets/less/agora.less'
           ]
         }
       }
