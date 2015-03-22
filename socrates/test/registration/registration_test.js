@@ -28,7 +28,6 @@ describe('SoCraTes registration application', function () {
     authentications: [],
     socratesOnly: true
   });
-  //var socratesSubscriber = new Subscriber({id: 'memberId2'});
 
   var appWithSocratesMember = request(createApp({member: socratesMember}));
 
