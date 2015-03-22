@@ -177,7 +177,7 @@ Activity.prototype.allRegisteredMembers = function () {
 };
 
 Activity.prototype.isAlreadyRegistered = function (memberID) {
-  return this.resources().allRegisteredMembers().indexOf(memberID) > -1;
+  return this.allRegisteredMembers().indexOf(memberID) > -1;
 };
 
 Activity.prototype.registeredResources = function (memberID) {

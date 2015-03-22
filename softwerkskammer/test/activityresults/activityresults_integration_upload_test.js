@@ -19,7 +19,7 @@ describe('/activityresults/:result/upload', function () {
         callback(null, 'my-custom-image-id');
       });
 
-      request(createApp(1))
+      request(createApp({id: 'memberId'}))
         .post('/foo/upload')
         .attach('image', __filename)
         .expect(302)

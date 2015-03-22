@@ -8,13 +8,11 @@ var beans = require('../../testutil/configureForTest').get('beans');
 var activityresultsService = beans.get('activityresultsService');
 var activityresultsPersistence = beans.get('activityresultsPersistence');
 
-var removeServerpathsDummy = require('../../testutil/removeServerpathsDummyInTests');
-
 var createApp = require('../../testutil/testHelper')('activityresultsApp').createApp;
 
 var ActivityResult = beans.get('activityresult');
 
-var MEMBER_ID = 1;
+var MEMBER_ID = 'memberID';
 
 function stubGreenReturnForActivityResultService() {
   sinon.stub(activityresultsService, 'getActivityResultByName', function (activityResultName, callback) {
@@ -69,7 +67,7 @@ describe('/activityresults', function () {
         callback(null, activityResult);
       });
 
-      var app = createApp(MEMBER_ID);
+      var app = createApp({id: MEMBER_ID});
       var activityResultName = 'NewActivityResult';
       request(app)
         .post('/')
@@ -85,7 +83,7 @@ describe('/activityresults', function () {
         callback(null, activityResult);
       });
 
-      var app = createApp(1);
+      var app = createApp({id: MEMBER_ID});
       request(app)
         .post('/')
         .type('form')
@@ -98,14 +96,14 @@ describe('/activityresults', function () {
     });
 
     it('should reject request without activityResultName parameter', function (done) {
-      request(createApp(MEMBER_ID, removeServerpathsDummy))
+      request(createApp())
         .post('/')
         .type('form')
         .expect(500, done);
     });
 
     it('should reject request with empty activityResultName parameter', function (done) {
-      request(createApp(MEMBER_ID, removeServerpathsDummy))
+      request(createApp())
         .post('/')
         .type('form')
         .send({ activityResultName: '' })

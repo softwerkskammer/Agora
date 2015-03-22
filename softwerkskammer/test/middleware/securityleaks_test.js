@@ -30,7 +30,7 @@ describe('Security regarding', function () {
     });
 
     it('sends an X-Frame-Options header with param DENY', function (done) {
-      var app = setupApp('membersApp').createApp(null, beans.get('secureAgainstClickjacking'));
+      var app = setupApp('membersApp').createApp({middlewares: [beans.get('secureAgainstClickjacking')]});
 
       request(app)
         .get('/')
@@ -54,7 +54,7 @@ describe('Security regarding', function () {
     });
 
     it('creates a CSRF token and adds it to the edit form', function (done) {
-      var app = setupApp('membersApp').createApp('memberId', csurf());
+      var app = setupApp('membersApp').createApp({id: 'memberId', middlewares: [csurf()]});
 
       request(app)
         .get('/edit/hada')
@@ -64,7 +64,7 @@ describe('Security regarding', function () {
     it('blocks updates that do not come with a csrf token', function (done) {
 
       // we need to load accessrights and jade support code before the csrf handling
-      var app = setupApp('membersApp').createApp('memberId', beans.get('accessrights'), beans.get('serverpathRemover'), csurf(), addCsrfTokenToLocals);
+      var app = setupApp('membersApp').createApp({id: 'memberId', middlewares: [beans.get('accessrights'), beans.get('serverpathRemover'), csurf(), addCsrfTokenToLocals]});
 
       request(app)
         .post('/submit')
@@ -98,7 +98,7 @@ describe('Security regarding', function () {
 
     it('does not happen through paths in server error messages', function (done) {
 
-      var app = setupApp('mailsenderApp').createApp(null, serverpathRemover);
+      var app = setupApp('mailsenderApp').createApp({middlewares: [serverpathRemover]});
 
       request(app)
         .get('/contactMember/xyz')

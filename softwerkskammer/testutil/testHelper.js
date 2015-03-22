@@ -1,5 +1,6 @@
 'use strict';
 
+var _ = require('lodash');
 var express = require('express');
 var userStub = require('./userStub');
 var i18n = require('i18next');
@@ -17,9 +18,7 @@ module.exports = function (internalAppName, configuredBeans) {
   });
 
   return {
-    createApp: function (memberID) {  /* add middleware list as dynamic params */
-      var i;
-      var middleware;
+    createApp: function (params) {  //  add middleware list as dynamic params {middlewares: [userWithoutMember]}
       var app = express();
       app.locals.pretty = true;
       app.enable('view cache');
@@ -32,16 +31,18 @@ module.exports = function (internalAppName, configuredBeans) {
       app.use(i18n.handle);
       app.use(beans.get('expressSessionConfigurator'));
 
-      for (i = 1; i < arguments.length; i = i + 1) {
-        middleware = arguments[i];
-        if (middleware) {
+      if (params && params.middlewares) {
+        _.each(params.middlewares, function (middleware) {
           app.use(middleware);
-        }
+        });
       }
 
-      if (memberID) {
+      if (params && params.id) {
         var Member = beans.get('member');
-        app.use(userStub({member: new Member({id: memberID})}));
+        app.use(userStub({member: new Member({id: params.id})}));
+      }
+      if (params && params.member) {
+        app.use(userStub({member: params.member}));
       }
 
       app.use(beans.get('accessrights'));

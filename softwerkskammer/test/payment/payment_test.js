@@ -20,7 +20,7 @@ describe('Payment application', function () {
   describe('Fee calculation', function () {
 
     it('returns an empty string when the input is undefined', function (done) {
-      request(createApp('user'))
+      request(createApp({id: 'user'}))
         .get('/calcFee/')
         .expect(200)
         .end(function (err, res) {
@@ -30,7 +30,7 @@ describe('Payment application', function () {
     });
 
     it('returns the fee in german locale with euro sign', function (done) {
-      request(createApp('user'))
+      request(createApp({id: 'user'}))
         .get('/calcFee/100')
         .expect(200)
         .end(function (err, res) {
@@ -39,7 +39,7 @@ describe('Payment application', function () {
         });
     });
     it('returns the fee for 100 in german locale with euro sign', function (done) {
-      request(createApp('user'))
+      request(createApp({id: 'user'}))
         .get('/calcFee/100')
         .expect(200)
         .end(function (err, res) {
@@ -49,7 +49,7 @@ describe('Payment application', function () {
     });
 
     it('returns the fee for 600,55 in german locale with euro sign', function (done) {
-      request(createApp('user'))
+      request(createApp({id: 'user'}))
         .get('/calcFee/600,55')
         .expect(200)
         .end(function (err, res) {
@@ -59,7 +59,7 @@ describe('Payment application', function () {
     });
 
     it('accepts the amount with dot formatting', function (done) {
-      request(createApp('user'))
+      request(createApp({id: 'user'}))
         .get('/calcFee/600.55')
         .expect(200)
         .end(function (err, res) {
@@ -69,7 +69,7 @@ describe('Payment application', function () {
     });
 
     it('returns an empty string if the amount is 0', function (done) {
-      request(createApp('user'))
+      request(createApp({id: 'user'}))
         .get('/calcFee/0')
         .expect(200)
         .end(function (err, res) {
@@ -93,7 +93,7 @@ describe('Payment application', function () {
     });
 
     it('passes a float to the service method when a float with comma and Euro sign is posted', function (done) {
-      request(createApp('user'))
+      request(createApp({id: 'user'}))
         .post('/submitCreditCard')
         .send('amount=100,23 €')
         .expect(302)
@@ -104,7 +104,7 @@ describe('Payment application', function () {
     });
 
     it('passes a float to the service method when a float with dot and Euro sign is posted', function (done) {
-      request(createApp('user'))
+      request(createApp({id: 'user'}))
         .post('/submitCreditCard')
         .send('amount=100.23 €')
         .expect(302)
@@ -115,7 +115,7 @@ describe('Payment application', function () {
     });
 
     it('passes a float to the service method when an integer with Euro sign is posted', function (done) {
-      request(createApp('user'))
+      request(createApp({id: 'user'}))
         .post('/submitCreditCard')
         .send('amount=100 €')
         .expect(302)
@@ -126,7 +126,7 @@ describe('Payment application', function () {
     });
 
     it('passes NaN to the service method when the amount field is empty', function (done) {
-      request(createApp('user'))
+      request(createApp({id: 'user'}))
         .post('/submitCreditCard')
         .send('amount=')
         .expect(302)
