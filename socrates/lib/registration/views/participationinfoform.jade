@@ -41,7 +41,7 @@ mixin participationinfoform(activity, roomOptions, registrationPossible)
                   th.text-center Mon morning*
               tbody
                 for option in roomOptions
-                  if (option.displayAsBookable)
+                  if option.displayRegistrationCheckboxes
                     tr
                       th #{option.name}
                       td.text-center

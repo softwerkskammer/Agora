@@ -42,7 +42,7 @@ function roomOptions(activity, memberId) {
       three: 3 * base + 2 * day,
       threePlus: 3 * base + 3 * day,
       four: 4 * base + 3 * day,
-      displayAsBookable: (activity.isAlreadyRegistered(memberId) || !isRegistrationOpen() || activity.resourceNamed(id).canSubscribe())
+      displayRegistrationCheckboxes: (activity.isAlreadyRegistered(memberId) || !isRegistrationOpen() || activity.resourceNamed(id).canSubscribe())
     };
   }
 
