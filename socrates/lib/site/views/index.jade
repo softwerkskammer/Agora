@@ -10,8 +10,8 @@ block before-container
     .container
       img.logo-left(src='img/socrates2015_logo.png', alt='SoCraTes Conference 2015 - Software Craftsmanship and Testing')
       h1 SoCraTes 2015
-      p 5th International Software Craftsmanship and Testing Conference in Germany
-      p 27 - 30 August 2015, Soltau, Germany
+      h2: small 5th International Software Craftsmanship and Testing Conference in Germany
+      h2: small 27 - 30 August 2015, Soltau, Germany
       if !accessrights.isRegistered()
         p: a.btn.btn-primary.pull-right(data-toggle='modal', data-target='#interested', href='/interested') I am interested!
 block content
@@ -102,7 +102,7 @@ block content
             hr.sponsorline.hidden-lg
             .col-lg-12.visible-lg-block
               hr
-        a.btn.btn-info.pull-right(href='/sponsoring.html', style='width:160px')
+        a.btn.btn-info.pull-right(href='/sponsoring.html', style='width:160px;margin-bottom: 15px;')
           span.glyphicon.glyphicon-thumbs-up
           |  Sponsor us
 
