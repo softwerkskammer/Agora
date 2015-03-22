@@ -18,7 +18,7 @@ module.exports = function (internalAppName, configuredBeans) {
   });
 
   return {
-    createApp: function (params) { /* memberId, member, middlewares */
+    createApp: function (params) { /* member, middlewares */
       var app = express();
       app.locals.pretty = true;
       app.enable('view cache');
@@ -34,11 +34,6 @@ module.exports = function (internalAppName, configuredBeans) {
       _.each(params.middlewares, function (middleware) {
         app.use(middleware);
       });
-
-      if (params.memberId) {
-        var Member = beans.get('member');
-        app.use(userStub({member: new Member({id: params.memberId})}));
-      }
 
       if (params.member) {
         app.use(userStub({member: params.member}));
