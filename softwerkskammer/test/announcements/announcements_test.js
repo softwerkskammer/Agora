@@ -31,7 +31,7 @@ describe('Announcement application', function () {
 
   before(function () {
     appWithoutUser = request(createApp());
-    appWithAuthor = request(createApp('author'));
+    appWithAuthor = request(createApp({id: 'author'}));
   });
 
   beforeEach(function () {

@@ -56,10 +56,10 @@ module.exports = {
     deposit: function () { return ''; }
   },
   roomOptions: [
-    {id: 'single', name: 'Single', two: 200, three: 270, threePlus: 300, four: 370},
-    {id: 'bed_in_double', name: 'Double shared …', shareable: true, two: 160, three: 210, threePlus: 240, four: 290},
-    {id: 'junior', name: 'Junior shared …', shareable: true, two: 151, three: 197, threePlus: 227, four: 272},
-    {id: 'bed_in_junior', name: 'Junior (exclusive)', two: 242, three: 333, threePlus: 363, four: 454}
+    {id: 'single', name: 'Single', two: 200, three: 270, threePlus: 300, four: 370, displayRegistrationCheckboxes: true},
+    {id: 'bed_in_double', name: 'Double shared …', shareable: true, two: 160, three: 210, threePlus: 240, four: 290, displayRegistrationCheckboxes: true},
+    {id: 'junior', name: 'Junior shared …', shareable: true, two: 151, three: 197, threePlus: 227, four: 272, displayRegistrationCheckboxes: true},
+    {id: 'bed_in_junior', name: 'Junior (exclusive)', two: 242, three: 333, threePlus: 363, four: 454, displayRegistrationCheckboxes: true}
   ]
 
 };

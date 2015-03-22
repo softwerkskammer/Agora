@@ -70,7 +70,7 @@ describe('Wiki application', function () {
   });
 
   it('redirects to the edit page of a page when the page does not exist yet and a user is logged in', function (done) {
-    request(createApp('member'))
+    request(createApp({id: 'member'}))
       .get('/' + nonExistingPage)
       .expect(302)
       .expect('Location', '/wiki/edit/' + nonExistingPage)

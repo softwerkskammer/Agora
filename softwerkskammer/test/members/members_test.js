@@ -55,7 +55,7 @@ describe('Members application', function () {
   });
 
   it('shows the list of members as retrieved from the membersstore if the user is registered', function (done) {
-    request(createApp('hada'))
+    request(createApp({id: 'hada'}))
       .get('/')
       .expect(200)
       .expect(/href="\/members\/hada"/)
@@ -66,7 +66,7 @@ describe('Members application', function () {
   });
 
   it('shows the details of one member as retrieved from the membersstore', function (done) {
-    request(createApp('hada'))
+    request(createApp({id: 'hada'}))
       .get('/hada')
       .expect(200)
       .expect(/http:\/\/my\.blog/, function (err) {
@@ -77,27 +77,27 @@ describe('Members application', function () {
   });
 
   it('allows a member to edit her own data', function (done) {
-    request(createApp('memberID'))
+    request(createApp({id: 'memberID'}))
       .get('/edit/hada')
       .expect(200)
       .expect(/Profil bearbeiten/, done);
   });
 
   it('does not allow a member to edit another member\'s data', function (done) {
-    request(createApp('memberID1'))
+    request(createApp({id: 'memberID1'}))
       .get('/edit/hada')
       .expect(302)
       .expect('location', /members/, done);
   });
 
   it('allows a superuser member to edit another member\'s data', function (done) {
-    request(createApp('superuserID'))
+    request(createApp({id: 'superuserID'}))
       .get('/edit/hada')
       .expect(200, done);
   });
 
   it('allows a member to edit her own avatar', function (done) {
-    request(createApp('memberID'))
+    request(createApp({id: 'memberID'}))
       .get('/hada')
       .expect(200)
       .expect(/<img src="https:\/\/www\.gravatar\.com\/avatar\/5d60d4e28066df254d5452f92c910092\?d=mm&amp;s=200"/)
@@ -109,7 +109,7 @@ describe('Members application', function () {
       if (res.text.match(/<input id="input-file" type="file" accept="image\/\*" name="image"/)) { return 'hasFileInput'; }
     }
 
-    request(createApp('memberID1'))
+    request(createApp({id: 'memberID1'}))
       .get('/hada')
       .expect(200)
       .expect(/<img src="https:\/\/www\.gravatar\.com\/avatar\/5d60d4e28066df254d5452f92c910092\?d=mm&amp;s=200"/)
@@ -118,7 +118,7 @@ describe('Members application', function () {
   });
 
   it('allows a superuser member to edit another member\'s avatar', function (done) {
-    request(createApp('superuserID'))
+    request(createApp({id: 'superuserID'}))
       .get('/hada')
       .expect(200)
       .expect(/<input id="input-file" type="file" accept="image\/\*" name="image"\/>/, done);
@@ -211,7 +211,7 @@ describe('Members application', function () {
 
     // the following stub indicates that the member already exists 
     sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups', function (nickname, callback) { callback(null, dummymember); });
-    request(createApp('memberID'))
+    request(createApp({id: 'memberID'}))
       .post('/submit')
       .send('id=0815&firstname=A&lastname=B&location=x&profession=y&reference=z')
       .send('nickname=nickerinack')
@@ -232,7 +232,7 @@ describe('Members application', function () {
 
     // the following stub indicates that the member does not exist yet
     sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups', function (nickname, callback) { callback(null); });
-    request(createApp('memberID'))
+    request(createApp({id: 'memberID'}))
       .post('/submit')
       .send('id=0815&firstname=A&lastname=B&location=x&profession=y&reference=z')
       .send('nickname=nickerinack')

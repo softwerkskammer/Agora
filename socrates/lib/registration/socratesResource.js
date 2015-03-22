@@ -11,13 +11,16 @@ function addExpirationTimeFor(record) {
   record.expiresAt = date.toDate();
 }
 
-function setDuration(record, duration) {
-  record.duration = duration;
+function removeExpiredReservations(registeredMembers) {
+  _.remove(registeredMembers, function (record) {
+    return record.expiresAt && moment(record.expiresAt).isBefore(moment());
+  });
 }
 
 function SoCraTesResource(resource) {
   this.state = (resource && resource.state) || {};
   this.resourceName = (resource && resource.resourceName);
+  removeExpiredReservations(this.state._registeredMembers);
   return this;
 }
 
@@ -33,7 +36,7 @@ SoCraTesResource.prototype.reserve = function (registrationTuple) {
   if (!this.addMemberId(sessionID)) { return false; }
   var record = this.recordFor(sessionID);
   addExpirationTimeFor(record);
-  setDuration(record, registrationTuple.duration);
+  record.duration = registrationTuple.duration;
   return true;
 };
 
@@ -46,7 +49,7 @@ SoCraTesResource.prototype.register = function (memberID, registrationTuple) {
 
   if (!this.addMemberId(memberID)) { return false; }
   var record = this.recordFor(memberID);
-  setDuration(record, registrationTuple.duration);
+  record.duration = registrationTuple.duration;
   return true;
 };
 
@@ -58,12 +61,6 @@ SoCraTesResource.prototype.hasValidReservationFor = function (registrationTuple)
   }
   var record = self.recordFor(sessionID);
   return !!(record && record.expiresAt && moment(record.expiresAt).isAfter(moment()));
-};
-
-SoCraTesResource.prototype.stripExpiredReservations = function () {
-  _.remove(this.state._registeredMembers, function (record) {
-    return record.expiresAt && moment(record.expiresAt).isBefore(moment());
-  });
 };
 
 module.exports = SoCraTesResource;

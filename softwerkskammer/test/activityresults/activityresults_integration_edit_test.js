@@ -11,8 +11,7 @@ var createApp = require('../../testutil/testHelper')('activityresultsApp').creat
 var ActivityResult = beans.get('activityresult');
 var galleryService = beans.get('galleryService');
 
-var MEMBER_ID = 1;
-var OTHER_MEMBER_ID = 2;
+var MEMBER_ID = 'member1';
 
 describe('/activityresults/:result/photo/:photo', function () {
   afterEach(function () {
@@ -22,12 +21,17 @@ describe('/activityresults/:result/photo/:photo', function () {
   var photoId = 'photo_id';
   beforeEach(function () {
     sinon.stub(activityresultsService, 'getActivityResultByName', function (activityResultName, callback) {
-      callback(null, new ActivityResult({ id: 'foo', name: 'foobar', created_by: MEMBER_ID, photos: [{id: photoId, title: 'mishka', uploaded_by: MEMBER_ID}]}));
+      callback(null, new ActivityResult({
+        id: 'foo',
+        name: 'foobar',
+        created_by: MEMBER_ID,
+        photos: [{id: photoId, title: 'mishka', uploaded_by: MEMBER_ID}]
+      }));
     });
   });
 
   it('should have old values set', function (done) {
-    request(createApp(MEMBER_ID))
+    request(createApp({id: MEMBER_ID}))
       .get('/foo/photo/' + photoId + '/edit')
       .expect(function (res) {
         if (res.text.indexOf('mishka') === -1) {
@@ -38,7 +42,7 @@ describe('/activityresults/:result/photo/:photo', function () {
   });
 
   it('should not let me edit a photo I didn\'t upload', function (done) {
-    request(createApp(OTHER_MEMBER_ID))
+    request(createApp())
       .get('/foo/photo/' + photoId + '/edit')
       .expect(302, done);
   });
@@ -50,7 +54,7 @@ describe('/activityresults/:result/photo/:photo', function () {
       callback();
     });
 
-    request(createApp(MEMBER_ID))
+    request(createApp())
       .post('/foo/photo/' + photoId + '/edit')
       .type('form')
       .send({
@@ -71,7 +75,7 @@ describe('/activityresults/:result/photo/:photo', function () {
       callback();
     });
 
-    request(createApp(OTHER_MEMBER_ID))
+    request(createApp())
       .post('/foo/photo/' + photoId + '/edit')
       .type('form')
       .send({

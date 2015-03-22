@@ -159,7 +159,7 @@ describe('Groups application', function () {
     });
 
     it('displays an existing group and its members if somebody is logged in', function (done) {
-      request(createApp('someMember'))
+      request(createApp({id: 'someMember'}))
         .get('/GroupA')
         .expect(200)
         .expect('Content-Type', /text\/html/)
@@ -201,7 +201,7 @@ describe('Groups application', function () {
 
   describe('group creation', function () {
     it('opens the group creation page', function (done) {
-      request(createApp('someMember'))
+      request(createApp({id: 'someMember'}))
         .get('/new')
         .expect(200)
         .expect('Content-Type', /text\/html/)
@@ -209,7 +209,7 @@ describe('Groups application', function () {
     });
 
     it('lists the group creator as contact', function (done) {
-      request(createApp('theMemberThatCreatesTheGroup'))
+      request(createApp({id: 'theMemberThatCreatesTheGroup'}))
         .get('/new')
         .expect(200)
         .expect(/Ansprechpartner/)
@@ -219,7 +219,7 @@ describe('Groups application', function () {
 
   describe('group editing', function () {
     it('opens the group editing page', function (done) {
-      request(createApp('organizer'))
+      request(createApp({id: 'organizer'}))
         .get('/edit/GroupA')
         .expect(200)
         .expect('Content-Type', /text\/html/)
@@ -227,7 +227,7 @@ describe('Groups application', function () {
     });
 
     it('lists all group members as possible contacts', function (done) {
-      request(createApp('organizer'))
+      request(createApp({id: 'organizer'}))
         .get('/edit/GroupA')
         .expect(200)
         .expect(/Ansprechpartner/)
@@ -236,7 +236,7 @@ describe('Groups application', function () {
     });
 
     it('disallows editing an existing group for non contact persons', function (done) {
-      request(createApp('someMember'))
+      request(createApp({id: 'someMember'}))
         .get('/edit/GroupA')
         .expect(302)
         .expect('location', /\/groups\/GroupA/, done);

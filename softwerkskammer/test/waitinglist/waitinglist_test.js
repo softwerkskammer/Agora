@@ -11,7 +11,7 @@ var Activity = beans.get('activity');
 var activitiesService = beans.get('activitiesService');
 var waitinglistService = beans.get('waitinglistService');
 
-var app = require('../../testutil/testHelper')('waitinglistApp').createApp('superuser');
+var app = require('../../testutil/testHelper')('waitinglistApp').createApp({id: 'superuser'});
 
 describe('Waitinglist application', function () {
 

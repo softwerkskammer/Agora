@@ -173,8 +173,8 @@ module.exports = function (grunt) {
           root: 'socrates/lib',
           reporter: 'dot',
           check: {
-            lines: 80,
-            statements: 80
+            lines: 72,
+            statements: 68
           }
         }
       }
@@ -184,8 +184,8 @@ module.exports = function (grunt) {
         options: {
           coverageFolder: 'socrates/coverage*',
           check: {
-            lines: 81,
-            statements: 77
+            lines: 72,
+            statements: 68
           }
         }
       },

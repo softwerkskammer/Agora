@@ -21,9 +21,10 @@ describe('Extended SoCraTes Activity', function () {
         }
       }
     });
-    activity.reserve({resourceName: 'single', sessionID: 'sessionID', duration: 3});
+    var registrationTuple = {resourceName: 'single', sessionID: 'sessionID', duration: 3};
+    activity.reserve(registrationTuple);
 
-    var expirationTime = activity.socratesResourceNamed('single').state._registeredMembers[0].expiresAt;
+    var expirationTime = activity.socratesResourceNamed(registrationTuple).state._registeredMembers[0].expiresAt;
     expect(expirationTime).to.exist();
     expect(moment(expirationTime).isBetween(moment().add(29, 'minutes'), moment().add(31, 'minutes'))).to.be(true);
   });
