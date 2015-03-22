@@ -70,6 +70,18 @@ module.exports = function (grunt) {
         expand: true,
         flatten: true
       },
+      customSoftwerkskammerFONTS: {
+        src: 'softwerkskammer/frontend/fonts/*',
+        dest: 'socrates/public/fonts',
+        expand: true,
+        flatten: true
+      },
+      customFONTS: {
+        src: 'socrates/frontend/fonts/*',
+        dest: 'socrates/public/fonts',
+        expand: true,
+        flatten: true
+      },
       customJS: {
         src: ['socrates/frontend/javascript/check-*',
           'socrates/frontend/javascript/enhance-*',

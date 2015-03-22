@@ -239,9 +239,7 @@ module.exports = function (grunt) {
             'bower_components/select2-bootstrap-css/select2-bootstrap.css',
             'bower_components/mjolnic-bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css',
             'bower_components/jquery-guillotine/css/jquery.guillotine.css',
-            'softwerkskammer/build/stylesheets/less/agora.less',
-            'softwerkskammer/build/stylesheets/less/TypoPro-SourceCodePro.less',
-            'softwerkskammer/build/stylesheets/less/TypoPro-SourceSansPro.less'
+            'softwerkskammer/build/stylesheets/less/agora.less'
           ]
         }
       }
