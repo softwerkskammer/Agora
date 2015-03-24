@@ -116,12 +116,6 @@ module.exports = function (grunt) {
         expand: true,
         flatten: true
       },
-      customFONTS: {
-        src: 'softwerkskammer/frontend/fonts/*',
-        dest: 'softwerkskammer/public/fonts',
-        expand: true,
-        flatten: true
-      },
       customJS: {
         cwd: 'softwerkskammer/frontend/javascript/',
         src: ['*', '!agora.js'],
