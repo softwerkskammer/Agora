@@ -64,8 +64,10 @@ var member_validator;
         errorElement: "span",
         errorClass: "help-block",
         highlight: function (element) {
+          /* istanbul ignore if */
           if ($(element).attr("id") === "tShirtSizeMale") {
             $("#tShirtBox").parent().addClass("has-error");
+          /* istanbul ignore if */
           } else if ($(element).hasClass("md-input")) {
             $(element).parent().parent().addClass("has-error");
           } else {
@@ -73,8 +75,10 @@ var member_validator;
           }
         },
         unhighlight: function (element) {
+          /* istanbul ignore if */
           if ($(element).attr("id") === "tShirtSizeMale") {
             $("#tShirtBox").parent().removeClass("has-error");
+            /* istanbul ignore if */
           } else if ($(element).hasClass("md-input")) {
             $(element).parent().parent().removeClass("has-error");
           } else {
@@ -82,6 +86,7 @@ var member_validator;
           }
         },
         errorPlacement: function (error, element) {
+          /* istanbul ignore if */
           if (element.attr("id") === "tShirtSizeMale") {
             error.insertAfter("#tShirtBox");
           } else if (element.attr("id") !== "tShirtSizeFemale") {

@@ -4,7 +4,7 @@ module.exports = function (config) {
     // base path, that will be used to resolve files and exclude
     basePath: '',
 
-    frameworks: [ 'mocha', 'must', 'sinon' ],
+    frameworks: ['mocha', 'must', 'sinon'],
 
     // list of files / patterns to load in the browser
     files: [
@@ -18,8 +18,7 @@ module.exports = function (config) {
     ],
 
     // list of files to exclude
-    exclude: [
-    ],
+    exclude: [],
 
     // possible values: 'dots', 'progress'
     reporters: ['dots', 'coverage'],
@@ -74,7 +73,7 @@ module.exports = function (config) {
     },
 
     coverageReporter: {
-      type: 'json',
+      reporters: [{type: 'json'}, {type: 'html'}],
       dir: 'softwerkskammer/karma-coverage/',
       subdir: '.'
     },
