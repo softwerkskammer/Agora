@@ -76,8 +76,16 @@ mixin participationinfoform(activity, roomOptions, registrationPossible)
                             | #{option.four}&nbsp;€
                   else
                     tr
-                      th.warning #{option.name}
-                      td.warning.text-center(colspan='4') Sorry, this option is not available anymore 
+                      th.disabled-text #{option.name} (Waitinglist only)
+                      td.text-center.disabled-text
+                        span(style='margin-left:20px;') #{option.two}&nbsp;€
+                      td.text-center.disabled-text
+                        span(style='margin-left:20px;') #{option.three}&nbsp;€
+                      td.text-center.disabled-text
+                        span(style='margin-left:20px;') #{option.threePlus}&nbsp;€
+                      td.text-center.disabled-text
+                        span(style='margin-left:20px;') #{option.four}&nbsp;€
+
         .row(style='margin-top:-15px; margin-bottom:15px')
           .col-xs-12
             small * including participation in Sunday Coderetreat or Workshop
