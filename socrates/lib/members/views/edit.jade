@@ -1,6 +1,5 @@
 include  ../../../views/formComponents
-include ../../registration/views/userinfoform
-include ../../../../softwerkskammer/lib/payment/views/paymentFormComponents
+include userinfoform
 
 extends ../../../views/simpleLayout
 
@@ -25,17 +24,18 @@ block content
     +memberinfoform(member, accessrights.isRegistered() ? null : 'members.edit_preregistration')
     if addon
       +userinfoform(addon)
-      p &nbsp;
-      if (!payment.paymentDone())
-        .pull-right
-          a.btn.btn-warning(href='/payment/socrates')
-            i.fa.fa-money.fa-fw &nbsp;
-            | Pay deposit
-      else
-        .pull-right
-          a.btn.btn-success(href='/payment/socrates')
-            i.fa.fa-money.fa-fw &nbsp;
-            | Payment
       .gutter
       p &nbsp;
-    +memberSubmitButtons(t('general.save'))
+
+    .btn-group.pull-right
+      if (accessrights.isRegistered())
+        a.btn.btn-default(href='javascript:history.back()', type='cancel') #{t('general.back')}
+      else
+        a.btn.btn-danger(href='/auth/logout', type='cancel') #{t('members.cancel')}
+      if (addon && !payment.paymentDone())
+        a.btn.btn-warning(href='/payment/socrates')
+          i.fa.fa-money.fa-fw &nbsp;
+          | Save & Pay
+      else
+        button.btn.btn-primary(type='submit') #{t('general.save')}
+  

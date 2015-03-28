@@ -11,6 +11,8 @@ var conf = require('simple-configure');
 var beans = conf.get('beans');
 var Renderer = beans.get('renderer');
 var misc = beans.get('misc');
+var mailsenderService = beans.get('mailsenderService');
+
 var sponsorpairs = require('./sponsorpairs');
 
 var app = misc.expressAppIn(__dirname);
@@ -83,6 +85,21 @@ app.get('/qrcode', function (req, res) {
   var img = qrimage.image(fullUrl, {type: 'svg'});
   res.type('svg');
   img.pipe(res);
+});
+
+app.get('/resign', function (req, res) {
+  if (req.user.member) {
+    return res.render('compose-resign', {nickname: req.user.member.nickname()});
+  }
+  return res.render('/');
+});
+
+app.post('/submitresign', function (req, res, next) {
+  var markdown = '**' + req.i18n.t('mailsender.why-resign') + '**\n' + req.body.why + '\n\n**' + req.i18n.t('mailsender.notes-resign') + '**\n' + req.body.notes;
+  return mailsenderService.sendResignment(markdown, req.user.member, function (err, statusmsg) {
+    statusmsg.putIntoSession(req);
+    res.redirect('/');
+  });
 });
 
 module.exports = app;

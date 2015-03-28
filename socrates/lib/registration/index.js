@@ -7,7 +7,6 @@ var beans = conf.get('beans');
 var misc = beans.get('misc');
 var membersService = beans.get('membersService');
 var Member = beans.get('member');
-var mailsenderService = beans.get('mailsenderService');
 var subscriberstore = beans.get('subscriberstore');
 var activitiesService = beans.get('activitiesService');
 var registrationService = beans.get('registrationService');
@@ -140,21 +139,6 @@ app.post('/completeRegistration', function (req, res, next) {
       statusmessage.successMessage('general.info', 'activities.successfully_registered').putIntoSession(req);
       res.redirect('/payment/socrates');
     });
-  });
-});
-
-app.get('/resign', function (req, res) {
-  if (req.user.member) {
-    return res.render('compose-resign', {nickname: req.user.member.nickname()});
-  }
-  return res.render('/');
-});
-
-app.post('/submitresign', function (req, res, next) {
-  var markdown = '**' + req.i18n.t('mailsender.why-resign') + '**\n' + req.body.why + '\n\n**' + req.i18n.t('mailsender.notes-resign') + '**\n' + req.body.notes;
-  return mailsenderService.sendResignment(markdown, req.user.member, function (err, statusmsg) {
-    statusmsg.putIntoSession(req);
-    res.redirect('/');
   });
 });
 

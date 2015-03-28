@@ -15,7 +15,7 @@ mixin loginMenu(forInline)
             span.glyphicon.glyphicon-log-out
             | &nbsp;#{t('general.logout')}
           if user.member.socratesOnly() || true
-            li: a(href='/registration/resign')
+            li: a(href='/resign')
               span.glyphicon.glyphicon-ban-circle
               | &nbsp;#{t('members.resign')}
         else
