@@ -11,7 +11,9 @@ mixin memberinfoform(member, newmember_text)
       .well.well-sm
         p #{t(newmember_text)}
         if (accessrights.isRegistered())
-          unless (member.socratesOnly())
+          if (member.socratesOnly())
+            p #{t('members.edit_socrates_only')}
+          else
             p #{t('members.edit_socrates_softwerkskammer')}
 
   .row

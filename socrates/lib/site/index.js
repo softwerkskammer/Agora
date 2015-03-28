@@ -65,10 +65,6 @@ app.get('/login', function (req, res) {
   res.render('authenticationRequired');
 });
 
-app.get('/interested', function (req, res) {
-  res.render('iAmInterested');
-});
-
 app.get('/loginDialog', function (req, res) {
   res.render('loginDialog', {returnUrl: req.query.returnUrl});
 });

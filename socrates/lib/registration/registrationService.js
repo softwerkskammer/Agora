@@ -26,7 +26,6 @@ module.exports = {
             return self.startRegistration(registrationTuple, callback);
           }
           if (err) { return callback(err); }
-          //notifications.visitorRegistration(activity, memberId, resourceName);
           return callback(err);
         });
       }

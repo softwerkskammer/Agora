@@ -75,6 +75,10 @@ app.get('/ical', function (req, res, next) {
   });
 });
 
+app.get('/interested', function (req, res) {
+  res.render('iAmInterested');
+});
+
 // TODO noch nicht freigeschaltete Funktionalitäten:
 
 app.post('/startRegistration', function (req, res, next) {
@@ -134,7 +138,7 @@ app.post('/completeRegistration', function (req, res, next) {
         return res.redirect('/registration');
       }
       statusmessage.successMessage('general.info', 'activities.successfully_registered').putIntoSession(req);
-      res.redirect('/registration');
+      res.redirect('/payment/socrates');
     });
   });
 });

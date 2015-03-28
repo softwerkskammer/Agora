@@ -14,6 +14,7 @@
 
     ["#tShirtSizeMale", "#tShirtSizeFemale"].forEach(
       function (each) {
+        if (!$(each).length) { return; }
         member_validator.element(each);
         $(each).on("change", handler());
         $(each).keyup(handler());

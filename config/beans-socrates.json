@@ -5,6 +5,7 @@
   "socratesRegistrationApp": {"module": "./socrates/lib/registration"},
   "socratesMembersApp": {"module": "./socrates/lib/members"},
   "socratesMailsenderApp": {"module": "./socrates/lib/mailsender"},
+  "socratesPaymentApp": {"module": "./socrates/lib/payment"},
   "socratesSubscribersApp": {"module": "./socrates/lib/subscribers"},
   "socratesWikiApp": {"module": "./socrates/lib/wiki"},
 
