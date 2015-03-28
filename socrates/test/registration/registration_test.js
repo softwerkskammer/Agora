@@ -105,8 +105,8 @@ describe('SoCraTes registration application', function () {
 
       appWithoutMember
         .get('/')
-        .expect(/<th class="warning">Single<\/th><td colspan="4" class="warning text-center">Sorry, this option is not available anymore/)
-        .expect(/<th class="warning">Double shared …<\/th><td colspan="4" class="warning text-center">Sorry, this option is not available anymore/, done);
+        .expect(/<th class="disabled-text">/)
+        .expect(/<th class="disabled-text">/, done);
     });
 
     it('displays the options (but disabled), because the user is registered', function (done) {
