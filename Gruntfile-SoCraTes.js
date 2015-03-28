@@ -66,7 +66,7 @@ module.exports = function (grunt) {
         flatten: true
       },
       customLESS: {
-        src: 'socrates/frontend/less/*',
+        src: ['socrates/frontend/less/*', 'softwerkskammer/frontend/less/bootstrap-markdown-patched.less'],
         dest: 'socrates/build/stylesheets/less',
         expand: true,
         flatten: true
