@@ -24,7 +24,7 @@ app.get('/checkemail', function (req, res) {
 
 app.get('/edit', function (req, res, next) {
   if (!req.user.member) {
-    return res.render('edit', { member: new Member().initFromSessionUser(req.user, true) });
+    return res.render('edit', {member: new Member().initFromSessionUser(req.user, true)});
   }
   var member = req.user.member;
   subscriberstore.getSubscriber(member.id(), function (err, subscriber) {
@@ -32,7 +32,7 @@ app.get('/edit', function (req, res, next) {
     res.render('edit', {
       member: member,
       addon: subscriber && subscriber.addon(),
-      payment: subscriber && subscriber.payment()
+      participation: subscriber && subscriber.currentParticipation()
     });
   });
 });
@@ -40,7 +40,17 @@ app.get('/edit', function (req, res, next) {
 app.post('/submit', function (req, res, next) {
   memberSubmitHelper(req, res, function (err) {
     if (err) { return next(err); }
-    res.redirect('/');
+    subscriberstore.getSubscriber(req.user.member.id(), function (err, subscriber) {
+      if (err) { return next(err); }
+      subscriber.fillFromUI(req.body);
+      subscriberstore.saveSubscriber(subscriber, function () {
+        if (subscriber.needsToPay()) {
+          return res.redirect('/payment/socrates');
+        }
+        res.redirect('/');
+      });
+    });
+
   });
 });
 

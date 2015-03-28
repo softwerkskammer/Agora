@@ -26,6 +26,7 @@ app.get('/socrates', function (req, res, next) {
     if (err || !paymentInfo) { return next(err); }
     subscriberstore.getSubscriber(req.user.member.id(), function (err, subscriber) {
       if (err || !subscriber) { return next(err); }
+      if (!subscriber.isParticipating()) { return res.redirect('/registration'); }
       res.render('index', {
         amount: socratesConstants.depositAmount,
         title: 'SoCraTes-' + socratesConstants.currentYear,

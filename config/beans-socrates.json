@@ -21,6 +21,7 @@
 
   "socratesAddon": {"module": "./socrates/lib/subscribers/addon"},
   "socratesPayment": {"module": "./socrates/lib/subscribers/payment"},
+  "socratesParticipation": {"module": "./socrates/lib/subscribers/participation"},
   "subscriber": {"module": "./socrates/lib/subscribers/subscriber"},
 
   "accessrights": {"module": "./socrates/lib/middleware/accessrights"},

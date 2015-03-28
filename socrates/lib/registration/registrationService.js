@@ -59,7 +59,7 @@ module.exports = {
           //notifications.visitorRegistration(activity, memberId, resourceName);
           return subscriberstore.getSubscriber(memberID, function (err, subscriber) {
             if (err) { return callback(err); }
-            subscriber.addon().fillFromUI(body);
+            subscriber.fillFromUI(body);
             subscriberstore.saveSubscriber(subscriber, callback);
           });
         });

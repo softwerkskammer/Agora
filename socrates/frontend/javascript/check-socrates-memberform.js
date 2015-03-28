@@ -5,6 +5,7 @@
 (function () {
   "use strict";
   function enhanceMemberValidator() {
+    /* istanbul ignore next */
     function handler() {
       return function () {
         member_validator.element($("#tShirtSizeMale"));
