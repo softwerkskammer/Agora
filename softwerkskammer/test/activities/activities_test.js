@@ -522,9 +522,9 @@ describe('Activity application', function () {
   });
 
   it('offers the owner only his groups to choose from', function (done) {
-    var groupA = new Group({id: 'groupA', longName: 'groupA'});
-    var groupB = new Group({id: 'groupB', longName: 'groupB'});
-    var groupC = new Group({id: 'groupC', longName: 'groupC'});
+    var groupA = new Group({id: 'groupA', longName: 'groupA', type: 'Themengruppe'});
+    var groupB = new Group({id: 'groupB', longName: 'groupB', type: 'Themengruppe'});
+    var groupC = new Group({id: 'groupC', longName: 'groupC', type: 'Themengruppe'});
     sinon.stub(groupsService, 'getAllAvailableGroups', function (callback) { callback(null, [groupA, groupB, groupC]); });
     sinon.stub(groupsService, 'getSubscribedGroupsForUser', function (email, callback) { callback(null, [groupA, groupB]); });
 
@@ -544,7 +544,6 @@ describe('Activity application', function () {
     var groupB = new Group({id: 'groupB', longName: 'groupB'});
     var groupC = new Group({id: 'groupC', longName: 'groupC'});
     sinon.stub(groupsService, 'getAllAvailableGroups', function (callback) { callback(null, [groupA, groupB, groupC]); });
-    sinon.stub(groupsService, 'getSubscribedGroupsForUser', function (email, callback) { callback(null, [groupA, groupB]); });
 
     request(createApp({id: 'superuserID'}))
       .get('/new')
@@ -553,6 +552,57 @@ describe('Activity application', function () {
       .expect(/groupB/)
       .expect(/groupC/)
       .end(done);
+  });
+
+  it('shows a superuser all groups in the order of appearance, no matter whether they are regional or thematic groups', function (done) {
+    var groupA = new Group({id: 'groupA', longName: 'groupA', type: 'Themengruppe'});
+    var groupB = new Group({id: 'groupB', longName: 'groupB', type: 'Themengruppe'});
+    var groupC = new Group({id: 'groupC', longName: 'groupC', type: 'Regionalgruppe'});
+    sinon.stub(groupsService, 'getAllAvailableGroups', function (callback) { callback(null, [groupA, groupB, groupC]); });
+
+    request(createApp({id: 'superuserID'}))
+      .get('/new')
+      .expect(200)
+      .end(function (err, res) {
+        expect(res.text).to.contain('groupA');
+        expect(res.text.indexOf('groupA')).to.be.below(res.text.indexOf('groupB'));
+        expect(res.text.indexOf('groupB')).to.be.below(res.text.indexOf('groupC'));
+        done(err);
+      });
+  });
+
+  it('shows regional groups first on activity creation for regular users', function (done) {
+    var groupA = new Group({id: 'groupA', longName: 'groupA', type: 'Themengruppe'});
+    var groupB = new Group({id: 'groupB', longName: 'groupB', type: 'Themengruppe'});
+    var groupC = new Group({id: 'groupC', longName: 'groupC', type: 'Regionalgruppe'});
+    sinon.stub(groupsService, 'getSubscribedGroupsForUser', function (email, callback) { callback(null, [groupA, groupB, groupC]); });
+
+    request(createApp({id: 'owner'}))
+      .get('/new')
+      .expect(200)
+      .end(function (err, res) {
+        expect(res.text).to.contain('groupC');
+        expect(res.text.indexOf('groupC')).to.be.below(res.text.indexOf('groupA'));
+        expect(res.text.indexOf('groupA')).to.be.below(res.text.indexOf('groupB'));
+        done(err);
+      });
+  });
+
+  it('shows regional groups first on activity editing for regular users', function (done) {
+    var groupA = new Group({id: 'groupA', longName: 'groupA', type: 'Themengruppe'});
+    var groupB = new Group({id: 'groupB', longName: 'groupB', type: 'Themengruppe'});
+    var groupC = new Group({id: 'groupC', longName: 'groupC', type: 'Regionalgruppe'});
+    sinon.stub(groupsService, 'getSubscribedGroupsForUser', function (email, callback) { callback(null, [groupA, groupB, groupC]); });
+
+    request(createApp({id: 'owner'}))
+      .get('/edit/urlOfTheActivity')
+      .expect(200)
+      .end(function (err, res) {
+        expect(res.text).to.contain('groupC');
+        expect(res.text.indexOf('groupC')).to.be.below(res.text.indexOf('groupA'));
+        expect(res.text.indexOf('groupA')).to.be.below(res.text.indexOf('groupB'));
+        done(err);
+      });
   });
 
   it('shows no group name if no groups are available', function (done) {

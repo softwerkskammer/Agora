@@ -19,6 +19,7 @@ var paymentService = beans.get('paymentService');
 var fieldHelpers = beans.get('fieldHelpers');
 
 var Activity = beans.get('activity');
+var Group = beans.get('group');
 var validation = beans.get('validation');
 var statusmessage = beans.get('statusmessage');
 var resourceRegistrationRenderer = beans.get('resourceRegistrationRenderer');
@@ -154,8 +155,7 @@ app.get('/eventsForSidebar', function (req, res, next) {
 });
 
 function renderActivityCombinedWithGroups(res, next, activity) {
-  var callback = function (err, groups) {
-    if (err) { return next(err); }
+  var render = function (groups) {
     memberstore.getMembersForIds(activity.editorIds(), function (err, editors) {
       if (err || !editors) { return next(err); }
       var editorNames = _.map(editors, editorNameOf);
@@ -171,9 +171,16 @@ function renderActivityCombinedWithGroups(res, next, activity) {
   };
 
   if (res.locals.accessrights.isSuperuser()) {
-    return groupsService.getAllAvailableGroups(callback);
+    return groupsService.getAllAvailableGroups(function (err, allGroups) {
+      if (err) { return next(err); }
+      return render(allGroups);
+    });
   }
-  groupsService.getSubscribedGroupsForUser(res.locals.user.member.email(), callback);
+
+  groupsService.getSubscribedGroupsForUser(res.locals.user.member.email(), function (err, subscribedGroups) {
+    if (err) { return next(err); }
+    return render(Group.regionalsFrom(subscribedGroups).concat(Group.thematicsFrom(subscribedGroups)));
+  });
 }
 
 app.get('/new', function (req, res, next) {
