@@ -563,8 +563,12 @@ describe('Activity application', function () {
     request(createApp({id: 'superuserID'}))
       .get('/new')
       .expect(200)
-      .expect(new RegExp('groupA.*groupB.*groupC'))
-      .end(done);
+      .end(function (err, res) {
+        expect(res.text).to.contain('groupA');
+        expect(res.text.indexOf('groupA')).to.be.below(res.text.indexOf('groupB'));
+        expect(res.text.indexOf('groupB')).to.be.below(res.text.indexOf('groupC'));
+        done(err);
+      });
   });
 
   it('shows regional groups first on activity creation for regular users', function (done) {
@@ -576,8 +580,12 @@ describe('Activity application', function () {
     request(createApp({id: 'owner'}))
       .get('/new')
       .expect(200)
-      .expect(new RegExp('groupC.*groupA.*groupB'))
-      .end(done);
+      .end(function (err, res) {
+        expect(res.text).to.contain('groupC');
+        expect(res.text.indexOf('groupC')).to.be.below(res.text.indexOf('groupA'));
+        expect(res.text.indexOf('groupA')).to.be.below(res.text.indexOf('groupB'));
+        done(err);
+      });
   });
 
   it('shows regional groups first on activity editing for regular users', function (done) {
@@ -589,8 +597,12 @@ describe('Activity application', function () {
     request(createApp({id: 'owner'}))
       .get('/edit/urlOfTheActivity')
       .expect(200)
-      .expect(new RegExp('groupC.*groupA.*groupB'))
-      .end(done);
+      .end(function (err, res) {
+        expect(res.text).to.contain('groupC');
+        expect(res.text.indexOf('groupC')).to.be.below(res.text.indexOf('groupA'));
+        expect(res.text.indexOf('groupA')).to.be.below(res.text.indexOf('groupB'));
+        done(err);
+      });
   });
 
   it('shows no group name if no groups are available', function (done) {
