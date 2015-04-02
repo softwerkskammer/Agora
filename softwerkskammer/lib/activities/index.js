@@ -171,7 +171,7 @@ function renderActivityCombinedWithGroups(res, next, activity) {
   };
 
   if (res.locals.accessrights.isSuperuser()) {
-    groupsService.getAllAvailableGroups(function (err, allGroups) {
+    return groupsService.getAllAvailableGroups(function (err, allGroups) {
       if (err) { return next(err); }
       return render(allGroups);
     });
