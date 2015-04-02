@@ -74,4 +74,17 @@ app.post('/submitCreditCardSocrates', function (req, res, next) {
     });
 });
 
+app.post('/submitTransferSocrates', function (req, res, next) {
+  subscriberstore.getSubscriber(req.user.member.id(), function (err, subscriber) {
+    if (err) { return next(err); }
+    subscriber.payment().noteMoneyTransfer();
+    subscriberstore.saveSubscriber(subscriber, function (err) {
+      if (err) { return next(err); }
+      var message = statusmessage.successMessage('message.title.save_successful', 'message.content.activities.transfer_paid');
+      message.putIntoSession(req);
+      res.redirect('/');
+    });
+  });
+});
+
 module.exports = app;

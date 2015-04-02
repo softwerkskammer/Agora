@@ -22,8 +22,8 @@ block content
           h4 #{t('members.personal_data')}
 
     +memberinfoform(member, accessrights.isRegistered() ? null : 'members.edit_preregistration')
-    if addon
-      +userinfoform(addon)
+    if (addon && addon.homeAddress)
+      +userinfoform(addon, participation)
       .gutter
       p &nbsp;
 
@@ -32,7 +32,7 @@ block content
         a.btn.btn-default(href='javascript:history.back()', type='cancel') #{t('general.back')}
       else
         a.btn.btn-danger(href='/auth/logout', type='cancel') #{t('members.cancel')}
-      if (addon && !participation.payment().paymentDone())
+      if (addon && participation && !participation.payment().paymentDone())
         button.btn.btn-warning(type='submit')
           i.fa.fa-money.fa-fw &nbsp;
           | Save & Pay

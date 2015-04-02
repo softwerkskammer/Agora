@@ -9,9 +9,10 @@ var activitystore = beans.get('activitystore');
 var SoCraTesResource = beans.get('socratesResource');
 var groupsService = beans.get('groupsService');
 var subscriberstore = beans.get('subscriberstore');
-var notifications = beans.get('notifications');
+var socratesNotifications = beans.get('socratesNotifications');
 var fieldHelpers = beans.get('fieldHelpers');
 var CONFLICTING_VERSIONS = beans.get('constants').CONFLICTING_VERSIONS;
+var roomOptions = beans.get('roomOptions');
 
 module.exports = {
 
@@ -56,7 +57,8 @@ module.exports = {
             return self.startRegistration(registrationTuple, callback);
           }
           if (err) { return callback(err); }
-          //notifications.visitorRegistration(activity, memberId, resourceName);
+          var bookingdetails = roomOptions.informationFor(registrationTuple.resourceName, registrationTuple.duration);
+          socratesNotifications.newParticipant(memberID, bookingdetails);
           return subscriberstore.getSubscriber(memberID, function (err, subscriber) {
             if (err) { return callback(err); }
             subscriber.fillFromUI(body);

@@ -32,7 +32,7 @@ app.get('/edit', function (req, res, next) {
     res.render('edit', {
       member: member,
       addon: subscriber && subscriber.addon(),
-      participation: subscriber && subscriber.currentParticipation()
+      participation: subscriber && subscriber.isParticipating() ? subscriber.currentParticipation() : null
     });
   });
 });
@@ -43,7 +43,8 @@ app.post('/submit', function (req, res, next) {
     subscriberstore.getSubscriber(req.user.member.id(), function (err, subscriber) {
       if (err) { return next(err); }
       subscriber.fillFromUI(req.body);
-      subscriberstore.saveSubscriber(subscriber, function () {
+      subscriberstore.saveSubscriber(subscriber, function (err) {
+        if (err) { return next(err); }
         if (subscriber.needsToPay()) {
           return res.redirect('/payment/socrates');
         }

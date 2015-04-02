@@ -42,7 +42,7 @@ Subscriber.prototype.currentParticipation = function () {
 };
 
 Subscriber.prototype.isParticipating = function () {
-  return this.participations()[socratesConstants.currentYear];
+  return !!this.participations()[socratesConstants.currentYear];
 };
 
 Subscriber.prototype.needsToPay = function () {

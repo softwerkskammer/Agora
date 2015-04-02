@@ -16,6 +16,8 @@ var statusmessage = beans.get('statusmessage');
 var memberSubmitHelper = beans.get('memberSubmitHelper');
 var socratesConstants = beans.get('socratesConstants');
 var Addon = beans.get('socratesAddon');
+var Participation = beans.get('socratesParticipation');
+var roomOptions = beans.get('roomOptions');
 
 var app = misc.expressAppIn(__dirname);
 
@@ -25,38 +27,10 @@ function isRegistrationOpen() {
   return app.get('env') !== 'production' && !conf.get('registrationIsClosed');
 }
 
-function roomOptions(activity, memberId) {
-  var dinner = 13;
-  var day = 17;
-  var single = 70 + dinner;
-  var double = 50 + dinner;
-  var junior = 46 + dinner;
-  var juniorExclusive = 2 * 46 + dinner;
-
-  function option(id, name, base) {
-    return {
-      id: id,
-      name: name,
-      two: 2 * base + 2 * day,
-      three: 3 * base + 2 * day,
-      threePlus: 3 * base + 3 * day,
-      four: 4 * base + 3 * day,
-      displayRegistrationCheckboxes: (activity.isAlreadyRegistered(memberId) || !isRegistrationOpen() || activity.resourceNamed(id).canSubscribe())
-    };
-  }
-
-  return [
-    option('single', 'Single', single),
-    option('bed_in_double', 'Double shared …', double),
-    option('bed_in_junior', 'Junior shared …', junior),
-    option('junior', 'Junior (exclusive)', juniorExclusive)
-  ];
-}
-
 app.get('/', function (req, res, next) {
   activitiesService.getActivityWithGroupAndParticipants(socratesConstants.currentUrl, function (err, activity) {
     if (err || !activity) { return next(err); }
-    var options = roomOptions(activity, res.locals.accessrights.memberId());
+    var options = roomOptions.all(activity, res.locals.accessrights.memberId(), isRegistrationOpen());
     res.render('get', {activity: activity, roomOptions: options, registrationPossible: isRegistrationOpen()});
   });
 });
@@ -120,7 +94,8 @@ app.get('/participate', function (req, res, next) {
     subscriberstore.getSubscriber(member.id(), function (err, subscriber) {
       if (err) { return next(err); }
       var addon = (subscriber && subscriber.addon()) || new Addon({});
-      res.render('participate', {member: member, addon: addon, registrationTuple: registrationTuple});
+      var participation = (subscriber && subscriber.currentParticipation()) || new Participation();
+      res.render('participate', {member: member, addon: addon, participation: participation, registrationTuple: registrationTuple});
     });
   });
 });

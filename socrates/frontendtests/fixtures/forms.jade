@@ -10,7 +10,7 @@ form#participationform.relaxed(action='/registration/completeRegistration', meth
   +csrf
   fieldset
     +memberinfoform(member, 'members.edit_registration')
-    +userinfoform(addon)
+    +userinfoform(addon, participation)
     .row(style='margin-bottom: 10px')
       .col-sm-12
         +memberSubmitButtons('I really do want to participate!')
