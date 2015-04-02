@@ -82,7 +82,7 @@ describe('SoCraTes registration application', function () {
       appWithoutMember
         .get('/')
         .expect(/<th>Single<\/th><td class="text-center"><div class="radio-inline"><label><input type="radio" name="nightsOptions" value="single,2"/)
-        .expect(/<th>Double shared …<\/th><td class="text-center"><div class="radio-inline"><label><input type="radio" name="nightsOptions" value="bed_in_double,2"/, done);
+        .expect(/<th>Double shared<\/th><td class="text-center"><div class="radio-inline"><label><input type="radio" name="nightsOptions" value="bed_in_double,2"/, done);
     });
 
   });
@@ -95,7 +95,7 @@ describe('SoCraTes registration application', function () {
       appWithoutMember
         .get('/')
         .expect(/<form id="participationinfoform" action="\/registration\/startRegistration" method="post" class="relaxed"><fieldset>/)
-        .expect(/<th>Junior shared …<\/th><td class="text-center"><div class="radio-inline"><label><input type="radio" name="nightsOptions" value="bed_in_junior,2"/)
+        .expect(/<th>Junior shared<\/th><td class="text-center"><div class="radio-inline"><label><input type="radio" name="nightsOptions" value="bed_in_junior,2"/)
         .expect(/<button type="submit" disabled="disabled" class="pull-right btn btn-primary">I really do want to participate!/)
         .expect(200, done);
     });
@@ -105,8 +105,8 @@ describe('SoCraTes registration application', function () {
 
       appWithoutMember
         .get('/')
-        .expect(/<th class="warning">Single<\/th><td colspan="4" class="warning text-center">Sorry, this option is not available anymore/)
-        .expect(/<th class="warning">Double shared …<\/th><td colspan="4" class="warning text-center">Sorry, this option is not available anymore/, done);
+        .expect(/<th class="disabled-text">/)
+        .expect(/<th class="disabled-text">/, done);
     });
 
     it('displays the options (but disabled), because the user is registered', function (done) {
@@ -117,7 +117,7 @@ describe('SoCraTes registration application', function () {
         .get('/')
         .expect(/<form id="participationinfoform" action="\/registration\/startRegistration" method="post" class="relaxed"><fieldset disabled="disabled">/)
         .expect(/<th>Single<\/th><td class="text-center"><div class="radio-inline"><label><input type="radio" name="nightsOptions" value="single,2"/)
-        .expect(/<th>Double shared …<\/th><td class="text-center"><div class="radio-inline"><label><input type="radio" name="nightsOptions" value="bed_in_double,2"/)
+        .expect(/<th>Double shared<\/th><td class="text-center"><div class="radio-inline"><label><input type="radio" name="nightsOptions" value="bed_in_double,2"/)
         .expect(/<div class="btn pull-right btn btn-success">You are already registered\./, done);
     });
 

@@ -10,12 +10,17 @@ block title
   | #{activity.title()} - Registration
 
 block content
+  #interested.modal.fade(tabindex='-1')
+    .modal-dialog
+      .modal-content
   .row
     .col-md-12
       .page-header(style='margin-bottom: 0;')
         .pull-right.visible-print
           img(height='80px', src='/qrcode?url=#{encodeURIComponent(activity.fullyQualifiedUrl())}')
         .btn-group.pull-right.hidden-print
+          if !accessrights.isRegistered()
+            a.btn.btn-primary.pull-right(data-toggle='modal', data-target='#interested', href='/registration/interested') I am interested!
           if (accessrights.canEditActivity(activity))
             a.btn.btn-default(href='/activities/addons/#{encodeURIComponent(activity.url())}', title=t('activities.participants')): i.fa.fa-list-ol.fa-fw
           if (accessrights.canEditActivity(activity))

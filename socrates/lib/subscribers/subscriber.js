@@ -3,13 +3,19 @@
 var beans = require('simple-configure').get('beans');
 var Addon = beans.get('socratesAddon');
 var Payment = beans.get('socratesPayment');
+var Participation = beans.get('socratesParticipation');
 var socratesConstants = beans.get('socratesConstants');
 
 function Subscriber(object) {
   this.state = object || {};
 }
 
-// Addon information as most recently entered by the subscriber:
+Subscriber.prototype.fillFromUI = function (uiInputObject) {
+  this.addon().fillFromUI(uiInputObject);
+  this.currentParticipation().fillFromUI(uiInputObject);
+  return this;
+};
+
 Subscriber.prototype.addon = function () {
   if (!this.state._addon) {
     this.state._addon = {};
@@ -18,20 +24,29 @@ Subscriber.prototype.addon = function () {
 };
 
 Subscriber.prototype.payment = function () {
-  if (!this.state._payment) {
-    this.state._payment = {};
-  }
-  return new Payment(this.state._payment);
+  return this.currentParticipation().payment();
 };
 
-Subscriber.prototype.currentYear = function () {
-  if (!this.state.years) {
-    this.state.years = {};
+Subscriber.prototype.participations = function () {
+  if (!this.state.participations) {
+    this.state.participations = {};
   }
-  if (!this.state.years[socratesConstants.currentYear]) {
-    this.state.years[socratesConstants.currentYear] = {};
+  return this.state.participations;
+};
+
+Subscriber.prototype.currentParticipation = function () {
+  if (!this.participations()[socratesConstants.currentYear]) {
+    this.state.participations[socratesConstants.currentYear] = {};
   }
-  return this.state.years[socratesConstants.currentYear];
+  return new Participation(this.participations()[socratesConstants.currentYear]);
+};
+
+Subscriber.prototype.isParticipating = function () {
+  return !!this.participations()[socratesConstants.currentYear];
+};
+
+Subscriber.prototype.needsToPay = function () {
+  return this.participations()[socratesConstants.currentYear] && !this.payment().paymentDone();
 };
 
 module.exports = Subscriber;

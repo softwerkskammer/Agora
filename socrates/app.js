@@ -82,6 +82,7 @@ module.exports = {
     useApp(app, '/auth/', beans.get('authenticationApp'));
     useApp(app, '/mailsender/', beans.get('socratesMailsenderApp'));
     useApp(app, '/members/', beans.get('socratesMembersApp'));
+    useApp(app, '/payment/', beans.get('socratesPaymentApp'));
     useApp(app, '/subscribers/', beans.get('socratesSubscribersApp'));
     useApp(app, '/wiki/', beans.get('socratesWikiApp'));
     app.use(beans.get('handle404')(appLogger));

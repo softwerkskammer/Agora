@@ -11,7 +11,9 @@ mixin memberinfoform(member, newmember_text)
       .well.well-sm
         p #{t(newmember_text)}
         if (accessrights.isRegistered())
-          unless (member.socratesOnly())
+          if (member.socratesOnly())
+            p #{t('members.edit_socrates_only')}
+          else
             p #{t('members.edit_socrates_softwerkskammer')}
 
   .row
@@ -26,7 +28,7 @@ mixin memberinfoform(member, newmember_text)
       +text('email', 'E-Mail', member.email())
       +twitter('twitter', 'Twitter', member.twitter())
 
-mixin userinfoform(addon)
+mixin userinfoform(addon, participation)
   .row
     .col-sm-6
       +textareaPure('homeAddress', 'Home Address', addon.homeAddress())
@@ -49,6 +51,17 @@ mixin userinfoform(addon)
             select#tShirtSizeFemale.form-control(name='tShirtSize')
               for item in ['', 'Ladies\' XS', 'Ladies\' S', 'Ladies\' M', 'Ladies\' L', 'Ladies\' XL', 'Ladies\' XXL' ]
                 option(selected=addon.tShirtSize() === item) #{item}
+  if participation
+    .row
+      .col-sm-12
+        legend
+          h4 &nbsp;
+        p Please tell us a little bit about you by answering the following questions.
+      .col-md-6
+        +textarea('question1', 'What is your relation to Software Craftsmanship', participation.question1(), null, 'Opinions, Questions, Experiences...')
+        +textarea('question2', 'What do you want to share with the other participants', participation.question2(), null, 'This can e.g. be your blog or your code repository.')
+      .col-md-6
+        +textarea('question3', 'What do you want to take home from the event', participation.question3(), null, 'Expectations, Hopes, Wishes...')
   script.
     $('#tShirtSizeMale').on('change', function (e) {
       if ($(this).val() !== '') {

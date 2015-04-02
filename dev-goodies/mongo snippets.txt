@@ -1,0 +1,5 @@
+--find every SoCraTes activity
+db.activitystore.find({isSoCraTes:true}).pretty()
+
+--delete the registration of a member whose id matches /git/ from SoCraTes activities
+db.activitystore.update({isSoCraTes:true}, {$pull: {"resources.bed_in_double._registeredMembers": {memberId: /git/}}})

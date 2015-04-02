@@ -9,6 +9,8 @@ var membersService = beans.get('membersService');
 var subscriberService = beans.get('subscriberService');
 var Member = beans.get('member');
 var memberSubmitHelper = beans.get('memberSubmitHelper');
+var fieldHelpers = beans.get('fieldHelpers');
+var subscriberstore = beans.get('subscriberstore');
 
 var app = misc.expressAppIn(__dirname);
 
@@ -20,15 +22,36 @@ app.get('/checkemail', function (req, res) {
   misc.validate(req.query.email, req.query.previousEmail, membersService.isValidEmail, res.end);
 });
 
-app.get('/edit', function (req, res) {
-  var member = req.user.member || new Member().initFromSessionUser(req.user, true);
-  res.render('edit', {member: member});
+app.get('/edit', function (req, res, next) {
+  if (!req.user.member) {
+    return res.render('edit', {member: new Member().initFromSessionUser(req.user, true)});
+  }
+  var member = req.user.member;
+  subscriberstore.getSubscriber(member.id(), function (err, subscriber) {
+    if (err) { return next(err); }
+    res.render('edit', {
+      member: member,
+      addon: subscriber && subscriber.addon(),
+      participation: subscriber && subscriber.isParticipating() ? subscriber.currentParticipation() : null
+    });
+  });
 });
 
 app.post('/submit', function (req, res, next) {
   memberSubmitHelper(req, res, function (err) {
     if (err) { return next(err); }
-    res.redirect('/');
+    subscriberstore.getSubscriber(req.user.member.id(), function (err, subscriber) {
+      if (err) { return next(err); }
+      subscriber.fillFromUI(req.body);
+      subscriberstore.saveSubscriber(subscriber, function (err) {
+        if (err) { return next(err); }
+        if (subscriber.needsToPay()) {
+          return res.redirect('/payment/socrates');
+        }
+        res.redirect('/');
+      });
+    });
+
   });
 });
 

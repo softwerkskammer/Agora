@@ -104,6 +104,10 @@ describe('SoCraTes members application', function () {
 
   describe('editing a member page', function () {
 
+    beforeEach(function () {
+      sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null); });
+    });
+
     it('allows somebody who is neither member nor subscriber to create his account', function (done) {
       appWithoutMember
         .get('/edit')
@@ -115,14 +119,13 @@ describe('SoCraTes members application', function () {
       appWithSocratesMember
         .get('/edit')
         .expect(200)
-        .expect(/In order to keep you informed about the SoCraTes conference, we need you to provide us with the following information\. Please fill in all mandatory fields\./, done);
+        .expect(/Here you can edit your information\./, done);
     });
 
     it('allows a Softwerkskammer member to edit his page', function (done) {
       appWithSoftwerkskammerMember
         .get('/edit')
         .expect(200)
-        .expect(/In order to keep you informed about the SoCraTes conference, we need you to provide us with the following information\. Please fill in all mandatory fields\./)
         .expect(/Here you find the information from your Softwerkskammer account that is used by SoCraTes\./, done);
     });
 
@@ -214,23 +217,30 @@ describe('SoCraTes members application', function () {
     });
 
     it('saves an existing Softwerkskammer member, creates a subscriber because it is not yet there, and does not trigger notification sending', function (done) {
+      var subscriberSaved = false;
       sinon.stub(membersService, 'isValidNickname', function (nickname, callback) { callback(null, true); });
       sinon.stub(membersService, 'isValidEmail', function (nickname, callback) { callback(null, true); });
       sinon.stub(memberstore, 'saveMember', function (member, callback) { callback(null); });
-      var subscriberSave = sinon.stub(subscriberstore, 'saveSubscriber', function (subscriber, callback) { callback(null); });
+      var subscriberSave = sinon.stub(subscriberstore, 'saveSubscriber', function (subscriber, callback) {
+        subscriberSaved = true;
+        callback(null);
+      });
       var notificationCall = sinon.stub(socratesNotifications, 'newSoCraTesMemberRegistered', function () { return undefined; });
 
       // the following stub indicates that the member already exists
       sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups', function (nickname, callback) { callback(null, softwerkskammerMember); });
-      // and that the subscriber is not yet there
-      sinon.stub(subscriberstore, 'getSubscriber', function (id, callback) { callback(null); });
+      // and that the subscriber is not yet there at first call
+      sinon.stub(subscriberstore, 'getSubscriber', function (id, callback) {
+        if (subscriberSaved) { return callback(null, softwerkskammerSubscriber); }
+        callback(null);
+      });
       appWithSoftwerkskammerMember
         .post('/submit')
         .send('id=0815&firstname=A&lastname=B')
         .send('nickname=nickerinack')
         .send('email=here@there.org')
         .expect(302)
-        .expect('location', '/', function (err) {
+        .expect('location', '/payment/socrates', function (err) {
           expect(subscriberSave.called).to.be(true);
           expect(notificationCall.called).to.be(false);
           done(err);
@@ -254,32 +264,39 @@ describe('SoCraTes members application', function () {
         .send('nickname=nickerinack')
         .send('email=here@there.org')
         .expect(302)
-        .expect('location', '/', function (err) {
-          expect(subscriberSave.called).to.be(false);
+        .expect('location', '/payment/socrates', function (err) {
+          expect(subscriberSave.called).to.be(true);
           expect(notificationCall.called).to.be(false);
           done(err);
         });
     });
 
     it('saves a new SoCraTes member and a new subscriber and triggers notification sending', function (done) {
+      var subscriberSaved = false;
       sinon.stub(membersService, 'isValidNickname', function (nickname, callback) { callback(null, true); });
       sinon.stub(membersService, 'isValidEmail', function (nickname, callback) { callback(null, true); });
       sinon.stub(memberstore, 'allMembers', function (callback) { callback(null, [softwerkskammerMember, socratesMember]); });
       sinon.stub(memberstore, 'saveMember', function (member, callback) { callback(null); });
-      var subscriberSave = sinon.stub(subscriberstore, 'saveSubscriber', function (subscriber, callback) { callback(null); });
+      var subscriberSave = sinon.stub(subscriberstore, 'saveSubscriber', function (subscriber, callback) {
+        subscriberSaved = true;
+        callback(null);
+      });
       var notificationCall = sinon.stub(socratesNotifications, 'newSoCraTesMemberRegistered', function () { return undefined; });
 
       // the following stub indicates that the member does not exist yet
       sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups', function (nickname, callback) { callback(null); });
       // and that the subscriber does not exist either
-      sinon.stub(subscriberstore, 'getSubscriber', function (id, callback) { callback(null); });
+      sinon.stub(subscriberstore, 'getSubscriber', function (id, callback) {
+        if (subscriberSaved) { return callback(null, socratesSubscriber); }
+        callback(null);
+      });
       appWithSocratesMember
         .post('/submit')
         .send('id=0815&firstname=A&lastname=B')
         .send('nickname=nickerinack')
         .send('email=here@there.org')
         .expect(302)
-        .expect('location', '/', function (err) {
+        .expect('location', '/payment/socrates', function (err) {
           expect(subscriberSave.called).to.be(true);
           expect(notificationCall.called).to.be(true);
           done(err);

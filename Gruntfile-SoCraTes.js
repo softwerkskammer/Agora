@@ -16,6 +16,7 @@ module.exports = function (grunt) {
   var files = {
     'socrates/public/clientscripts/global.js': [
       'bower_components/jquery/dist/jquery.js',
+      'bower_components/autoNumeric/autoNumeric.js',
       'bower_components/bootstrap/dist/js/bootstrap.js',
       'bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js',
       'bower_components/bootstrap-markdown/js/bootstrap-markdown.js',
@@ -65,7 +66,7 @@ module.exports = function (grunt) {
         flatten: true
       },
       customLESS: {
-        src: 'socrates/frontend/less/*',
+        src: ['socrates/frontend/less/*', 'softwerkskammer/frontend/less/bootstrap-markdown-patched.less'],
         dest: 'socrates/build/stylesheets/less',
         expand: true,
         flatten: true
@@ -74,6 +75,7 @@ module.exports = function (grunt) {
         src: ['socrates/frontend/javascript/check-*',
           'socrates/frontend/javascript/enhance-*',
           'softwerkskammer/frontend/javascript/check-member*',
+          'softwerkskammer/frontend/javascript/check-payment*',
           'softwerkskammer/frontend/javascript/activityDateModel.js',
           'softwerkskammer/frontend/javascript/activityform-dateAdapter.js'],
         dest: 'socrates/public/clientscripts',

@@ -12,6 +12,7 @@ var activitystore = beans.get('activitystore');
 var Activity = beans.get('activity');
 var validation = beans.get('validation');
 var statusmessage = beans.get('statusmessage');
+var roomOptions = beans.get('roomOptions');
 
 var reservedURLs = '^new$|^edit$|^submit$|^checkurl$\\+';
 
@@ -41,14 +42,13 @@ function activitySubmitted(req, res, next) {
 }
 
 app.get('/new', function (req, res) {
+  var resources = {};
+  _.each(roomOptions.allIds, function (id) {
+    resources[id] = {_canUnsubscribe: false};
+  });
+  resources.waitinglist = {_canUnsubscribe: false, _waitinglist: true};
   var activity = new Activity({
-    resources: {
-      single: {_canUnsubscribe: false},
-      bed_in_double: {_canUnsubscribe: false},
-      junior: {_canUnsubscribe: false},
-      bed_in_junior: {_canUnsubscribe: false},
-      waitinglist: {_canUnsubscribe: false, _waitinglist: true}
-    }
+    resources: resources
   });
   res.render('edit', {activity: activity});
 });

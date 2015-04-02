@@ -32,6 +32,9 @@ var member_validator;
           firstname: "required",
           lastname: "required",
           homeAddress: "required",
+          question1: "required",
+          question2: "required",
+          question3: "required",
           tShirtSize: "tShirtSelected",
           email: {
             required: true,
@@ -61,20 +64,29 @@ var member_validator;
         errorElement: "span",
         errorClass: "help-block",
         highlight: function (element) {
+          /* istanbul ignore if */
           if ($(element).attr("id") === "tShirtSizeMale") {
             $("#tShirtBox").parent().addClass("has-error");
+          /* istanbul ignore if */
+          } else if ($(element).hasClass("md-input")) {
+            $(element).parent().parent().addClass("has-error");
           } else {
             $(element).parent().addClass("has-error");
           }
         },
         unhighlight: function (element) {
+          /* istanbul ignore if */
           if ($(element).attr("id") === "tShirtSizeMale") {
             $("#tShirtBox").parent().removeClass("has-error");
+            /* istanbul ignore if */
+          } else if ($(element).hasClass("md-input")) {
+            $(element).parent().parent().removeClass("has-error");
           } else {
             $(element).parent().removeClass("has-error");
           }
         },
         errorPlacement: function (error, element) {
+          /* istanbul ignore if */
           if (element.attr("id") === "tShirtSizeMale") {
             error.insertAfter("#tShirtBox");
           } else if (element.attr("id") !== "tShirtSizeFemale") {
@@ -92,9 +104,9 @@ var member_validator;
       };
     };
 
-    ["[name=nickname]", "[name=lastname]", "[name=firstname]", "[name=email]",
-      "[name=profession]", "[name=location]", "[name=reference]", "[name=homeAddress]"].forEach(
-      function (each) {
+    ["nickname", "lastname", "firstname", "email", "profession", "location", "reference", "homeAddress", "question1", "question2", "question3"].forEach(
+      function (name) {
+        var each = "[name=" + name + "]";
         $(each).on("change", handler(each));
         $(each).keyup(handler(each));
       }

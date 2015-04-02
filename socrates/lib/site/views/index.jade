@@ -2,18 +2,14 @@ extends ../../../views/layout
 block title
   | SoCraTes 2015 - 5th International Software Craftsmanship and Testing Conference, 27-30 August 2015, Soltau, Germany
 block before-container
-  #interested.modal.fade(tabindex='-1')
-    .modal-dialog
-      .modal-content
-
   .jumbotron.stage-background
     .container
       img.logo-left(src='img/socrates2015_logo.png', alt='SoCraTes Conference 2015 - Software Craftsmanship and Testing')
       h1 SoCraTes 2015
       h2: small 5th International Software Craftsmanship and Testing Conference in Germany
       h2: small 27 - 30 August 2015, Soltau, Germany
-      if !accessrights.isRegistered()
-        p: a.btn.btn-primary.pull-right(data-toggle='modal', data-target='#interested', href='/interested') I am interested!
+      p: a.btn.btn-primary.pull-right(href='/registration') Pricing and Registration…
+
 block content
   .row
     .col-sm-8

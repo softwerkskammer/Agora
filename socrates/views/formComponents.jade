@@ -25,14 +25,14 @@ mixin currency(name, label, value, tooltip, placeholder, readonly)
     script.
       $('.currency').autoNumeric('init');
 
-mixin textareaPure(name, label, value)
-  +textareaInternal('form-control', '4', name, label, value)
+mixin textareaPure(name, label, value, placeholder)
+  +textareaInternal('form-control', '4', name, label, value, null, placeholder)
 
-mixin textarea(name, label, value, tooltip)
-  +textareaInternal('md-textarea', '7', name, label, value, tooltip)
+mixin textarea(name, label, value, tooltip, placeholder)
+  +textareaInternal('md-textarea', '7', name, label, value, tooltip, placeholder)
 
-mixin hightextarea(name, label, value, tooltip)
-  +textareaInternal('md-textarea', '15', name, label, value, tooltip)
+mixin hightextarea(name, label, value, tooltip, placeholder)
+  +textareaInternal('md-textarea', '15', name, label, value, tooltip, placeholder)
 
 mixin checkboxWithDescription(name, label, checked, description, optionalValue)
   .checkbox
@@ -119,10 +119,10 @@ mixin controlLabel(name, label, tooltip)
     -else
       | #{label}:
 
-mixin textareaInternal(classname, rowCount, name, label, value, tooltip)
+mixin textareaInternal(classname, rowCount, name, label, value, tooltip, placeholder)
   .form-group
     +controlLabel(name, label, tooltip)
-    textarea(class=classname, id=name, rows=rowCount, type='text', name=name) #{value}
+    textarea(class=classname, id=name, rows=rowCount, type='text', name=name, placeholder=placeholder) #{value}
 
 mixin reallyDeleteModal(header, urlForButton)
   -var theID = 'reallyDelete' + header.replace('\.', '')

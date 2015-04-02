@@ -44,4 +44,4 @@ Payment.prototype.notePaymentReceived = function () {
   this.state.paymentReceived = moment().toDate();
 };
 
-module.export = Payment;
+module.exports = Payment;
