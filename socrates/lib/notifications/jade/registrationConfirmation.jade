@@ -3,17 +3,16 @@ html
   body
     h3 SoCraTes Registration Confirmation
     p.
-      Hello #{member.displayName()},<br>
-      We have received your registration for the SoCraTes Conference 2015.
+      Hello #{member.displayName()},
+    p Congratulations! You are now registered for the SoCraTes Conference 2015.
     p
       | You have booked a #{' '} 
       b #{bookingdetails.room}
-      | #{' '} room for #{' '}
+      | #{' '} for #{' '}
       b #{bookingdetails.nights}
-      | #{' '} nights until #{' '} 
+      | #{' '} nights until #{' '}
       b #{bookingdetails.until}
-    p As soon as we recceive your payment you will receive a confirmation for your payment.
-    p You can check and modify your registration data at: 
+      | .
+    p As soon as we receive your payment we will send you a confirmation email.
+    p You can review and modify your registration data and access the payment information at #{' '}
       a(href='#{url}/members/edit') #{url}/members/edit
-
-    
