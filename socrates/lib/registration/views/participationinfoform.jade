@@ -2,28 +2,10 @@ include  ../../../views/formComponents
 mixin participationinfoform(activity, roomOptions, registrationPossible)
   .row
     .col-md-6
-      h3 Payment and Invoice
-      p.
-        You will pay for the hotel and the hotel will issue an invoice on departure. During registration you can enter 
-        an alternate address for the invoice if the address is not your residential address.
-      h4 Deposit
-      p.
-        We require you to pay a (non-refundable) deposit of 100 &euro; as soon as you finish your registration. This will
-        also validate your registration. You will not receive an invoice for the deposit, so you propably will have to pay this 
-        from your private money.
-      p However, we will return your deposit to you in cash during your arrival at the conference.
-      p You have two alternatives to pay the deposit:
-      ul
-        li Via bank transfer to a German bank account
-        li Via credit card (+3,30 &euro; non-refundable fee, no invoice)
-      p.
-        If you cannot participate in the event, you can provide another participant to substitute you &ndash; your deposit can
-        then be counted towards the replacing participant. Please contact us in this case.
-    .col-md-6
-      h3 Room Options and Pricing
+      h3 Room Options
       p.
         We offer three kinds of rooms. Please choose the room you'd like and tell us for how long you will be our guest.
-        All stays start on Thursday evening. There will be no exceptions.
+        All rooms need to be booked from Thursday evening. There will be no exceptions.
       ul
         li Single bed room
         li Double bed room, can only be shared
@@ -35,6 +17,30 @@ mixin participationinfoform(activity, roomOptions, registrationPossible)
         li the hotel room
         li meals, snacks and coffee
       p The final prices depend on our sponsors and may be slightly lower than announced here.
+
+    .col-md-6
+      h3 Deposit
+      p.
+        We require you to pay a (non-refundable) deposit of 100 &euro; as soon as you finish your registration.
+      p.
+        Your registration is considered
+        pending until we receive the deposit. You will not receive an invoice for the deposit, so you might have to pay it
+        from your private money.
+        However, we will return your deposit to you in cash at the conference.
+      p The deposit can be paid in two ways:
+      ul
+        li Via bank transfer to a German bank account
+        li Via credit card (+ 3,30 &euro; non-refundable fee, does not appear on the invoice)
+      p You can delegate the paying to somebody else, but you need to register yourself. Deposit payments can be merged (for multiple participants).
+      p.
+        If you cannot participate in the event, you can provide another participant to substitute you &ndash; your deposit will
+        then be counted towards the replacing participant. Please contact us in this case.
+
+      h3 Payment and Invoice
+      p.
+        We will return your deposit to you in cash at the conference.
+        You will pay the full amount (as given below) to the venue on checkout, and you will receive an invoice from the venue.
+
   .row
     .col-sm-12
       -var alreadyRegistered = activity.isAlreadyRegistered(accessrights.memberId())
