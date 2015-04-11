@@ -8,15 +8,17 @@ mixin memberinfoform(member, newmember_text)
   +hidden('socratesOnly', member.socratesOnly())
   .row
     .col-sm-12
-      .well.well-sm
-        p #{t(newmember_text)}
-        if (accessrights.isRegistered())
-          if (member.socratesOnly())
-            p #{t('members.edit_socrates_only')}
-          else
-            p #{t('members.edit_socrates_softwerkskammer')}
+      if(newmember_text)
+        .well.well-sm
+          p #{t(newmember_text)}
 
   .row
+    .col-sm-12
+      if (accessrights.isRegistered())
+        if (member.socratesOnly())
+          p #{t('members.edit_socrates_only')}
+        else
+          p #{t('members.edit_socrates_softwerkskammer')}
     .col-sm-6
       +text('nickname', 'Nickname', member.nickname())
       .row
@@ -30,12 +32,15 @@ mixin memberinfoform(member, newmember_text)
 
 mixin userinfoform(addon, participation)
   .row
+    .col-sm-12
+      hr
+      p.
+        The home address is required by the hotel. It needs to be the address where you are living (not your company's address).
+        In case you want a different address on the invoice, please fill in the billing address.
     .col-sm-6
       +textareaPure('homeAddress', 'Home Address', addon.homeAddress())
-      p.small The home address is required by the hotel. It needs to be the address where you are registered, not your company's.
     .col-sm-6
       +textareaPure('billingAddress', 'Billing Address (if different)', addon.billingAddress())
-      p.small In case you want a different address on the invoice of the hotel, fill in the billing address.
   .row
     .col-sm-6
       .row#tShirtBox
@@ -54,12 +59,11 @@ mixin userinfoform(addon, participation)
   if participation
     .row
       .col-sm-12
-        legend
-          h4 &nbsp;
-        p Please tell us a little bit about you by answering the following questions.
+        hr
+        p Please tell us a little bit about yourself by answering the following questions.
       .col-md-6
         +textarea('question1', 'What is your relation to Software Craftsmanship', participation.question1(), null, 'Opinions, Questions, Experiences...')
-        +textarea('question2', 'What do you want to share with the other participants', participation.question2(), null, 'This can e.g. be your blog or your code repository.')
+        +textarea('question2', 'What do you want to share with the other participants', participation.question2(), null, 'This can e.g. be a link to your blog or your code repository.')
       .col-md-6
         +textarea('question3', 'What do you want to take home from the event', participation.question3(), null, 'Expectations, Hopes, Wishes...')
   script.
