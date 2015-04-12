@@ -71,7 +71,10 @@
     "guest": "Gast",
     "none": "keine",
     "events_in_europe": "Europaweite Veranstaltungen",
-    "events_in_europe_desc": "Jahreskalender von Konferenzen, Open Spaces, BarCamps und anderen Veranstaltungen"
+    "events_in_europe_desc": "Jahreskalender von Konferenzen, Open Spaces, BarCamps und anderen Veranstaltungen",
+    "socrates_text": "5. Internationale Software Craftsmanship and Testing Conference",
+    "socrates_date": "27.-30. August 2015, Soltau, Deutschland",
+    "socrates_register": "Voranmeldung hier!"
   },
   "error": {
     "congratulations": "Herzlichen Glückwunsch!",
