@@ -11,6 +11,23 @@ block content
         h2 Softwerkskammer <br>
           small #{t('general.communities')}
 
+      .panel.panel-default
+        .panel-heading
+          h4.panel-title #{t('general.current')}
+        .panel-body
+          .row
+            .col-md-3
+              a(href='https://socrates-conference.de'): img(src='https://socrates-conference.de/img/socrates2015_logo.png', width='150')
+            .col-md-9
+              h3
+                a(href='https://socrates-conference.de') SoCraTes 2015
+                br
+                small.
+                  #{t('general.socrates_text')}<br>
+                  #{t('general.socrates_date')}
+              h3
+                a(href='https://socrates-conference.de') #{t('general.socrates_register')}
+
   .row
     .col-md-6
       !=t('general.about_us_text', { postProcess: 'jade' })

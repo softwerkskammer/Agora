@@ -9,7 +9,7 @@ var rooms = [
   {id: 'single', name: 'Single', display: 'single room', price: 70 + dinner},
   {id: 'bed_in_double', name: 'Double shared', display: 'bed in a double room', price: 50 + dinner},
   {id: 'bed_in_junior', name: 'Junior shared', display: 'bed in a junior room', price: 46 + dinner},
-  {id: 'junior', name: 'Junior (exclusive)', display: 'junior room exclusive', price: 2 * 46 + dinner}
+  {id: 'junior', name: 'Junior (exclusive)', display: 'junior room (exclusively)', price: 2 * 46 + dinner}
 ];
 
 function roomOptions(activity, memberId, isRegistrationOpen) {

@@ -68,7 +68,12 @@
     "delete": "Delete",
     "guest": "Guest",
     "new": "New",
-    "none": "none"
+    "none": "none",
+    "events_in_europe": "Events in Europe",
+    "events_in_europe_desc": "Calendar of conferences, open spaces, bar camps and other events",
+    "socrates_text": "5th International Software Craftsmanship and Testing Conference",
+    "socrates_date": "27-30 August 2015, Soltau, Germany",
+    "socrates_register": "Pre-Register here!"
   },
   "error": {
     "congratulations": "Congratulations!",

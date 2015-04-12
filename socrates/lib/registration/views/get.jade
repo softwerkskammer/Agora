@@ -20,7 +20,7 @@ block content
           img(height='80px', src='/qrcode?url=#{encodeURIComponent(activity.fullyQualifiedUrl())}')
         .btn-group.pull-right.hidden-print
           if !accessrights.isRegistered()
-            a.btn.btn-primary.pull-right(data-toggle='modal', data-target='#interested', href='/registration/interested') I am interested!
+            a.btn.btn-primary.pull-right(data-toggle='modal', data-target='#interested', href='/registration/interested') Notify me when registration starts!
           if (accessrights.canEditActivity(activity))
             a.btn.btn-default(href='/activities/addons/#{encodeURIComponent(activity.url())}', title=t('activities.participants')): i.fa.fa-list-ol.fa-fw
           if (accessrights.canEditActivity(activity))
