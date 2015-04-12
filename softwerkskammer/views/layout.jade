@@ -9,6 +9,14 @@ block specific
     .page-header.visible-xs.visible-sm
       h2 #{t('activities.activities')}
     #calendar
+    .row
+      .col-md-12
+        h4
+          a(href='/wiki/alle/europaweite-veranstaltungen-2015') #{t('general.events_in_europe')} 2015
+          br
+          small.
+            #{t('general.events_in_europe_desc')}
+
     if (latestNews)
       h2 #{t('announcements.latest_news')}&nbsp;
         if (!!displayMoreNews)

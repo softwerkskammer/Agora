@@ -69,7 +69,9 @@
     "delete": "Löschen",
     "new": "Neu",
     "guest": "Gast",
-    "none": "keine"
+    "none": "keine",
+    "events_in_europe": "Europaweite Veranstaltungen",
+    "events_in_europe_desc": "Jahreskalender von Konferenzen, Open Spaces, BarCamps und anderen Veranstaltungen"
   },
   "error": {
     "congratulations": "Herzlichen Glückwunsch!",

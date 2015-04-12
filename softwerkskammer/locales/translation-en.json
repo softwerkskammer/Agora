@@ -68,7 +68,9 @@
     "delete": "Delete",
     "guest": "Guest",
     "new": "New",
-    "none": "none"
+    "none": "none",
+    "events_in_europe": "Events in Europe",
+    "events_in_europe_desc": "Calendar of conferences, open spaces, bar camps and other events"
   },
   "error": {
     "congratulations": "Congratulations!",
