@@ -95,7 +95,12 @@ app.get('/participate', function (req, res, next) {
       if (err) { return next(err); }
       var addon = (subscriber && subscriber.addon()) || new Addon({});
       var participation = (subscriber && subscriber.currentParticipation()) || new Participation();
-      res.render('participate', {member: member, addon: addon, participation: participation, registrationTuple: registrationTuple});
+      res.render('participate', {
+        member: member,
+        addon: addon,
+        participation: participation,
+        registrationTuple: registrationTuple
+      });
     });
   });
 });
