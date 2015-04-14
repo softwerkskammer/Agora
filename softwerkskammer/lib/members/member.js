@@ -16,7 +16,7 @@ Member.prototype.fillFromUI = function (object) {
     if (object.hasOwnProperty(property) && object[property]) { self.state[property] = object[property].trim(); }
   });
   _.each(['notifyOnWikiChanges', 'socratesOnly'], function (property) {
-    if (object.hasOwnProperty(property)) { self.state[property] = !!object[property]; }
+    self.state[property] = !!object[property];
   });
   if (object.twitter) {
     self.state.twitter = fieldHelpers.removePrefixFrom('@', object.twitter.trim());
