@@ -82,7 +82,11 @@ mixin participationinfoform(activity, roomOptions, registrationPossible)
                             | #{option.four}&nbsp;€
                   else
                     tr
-                      th.disabled-text #{option.name} (Waitinglist only)
+                      th #{option.name}
+                        .radio-inline
+                          label
+                            input(type='radio', name='nightsOptions', value=option.id + ',waitinglist')
+                            |  Add to Waitinglist
                       td.text-center.disabled-text
                         span(style='margin-left:20px;') #{option.two}&nbsp;€
                       td.text-center.disabled-text

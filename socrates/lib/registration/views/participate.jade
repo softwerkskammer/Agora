@@ -12,7 +12,10 @@ block title
   | Registration - SoCraTes
 block content
   .page-header
-    h1 Registration<br>
+    if(registrationTuple.duration === 'waitinglist')
+      h1 Waitinglist Registration<br>
+    else
+      h1 Registration<br>
       small Personal Information
       
   form#participationform.relaxed(action='/registration/completeRegistration', method='post')

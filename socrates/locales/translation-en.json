@@ -132,6 +132,7 @@
     "registration_not_here": "Subscription is not possible via Softwerkskammer.",
     "registration_not_now": "Subscription is currently not allowed.",
     "registration_timed_out": "Your reservation timed out.",
+    "waitinglist_registration_timed_out": "Your waitinglist reservation timed out.",
     "already_registered": "You are already registered.",
     "successfully_registered": "Your registration was successful. You will receive a confirmation e-mail in a few seconds.",
     "registration_not_possible": "Subscription is not yet available, or all spots are taken.",

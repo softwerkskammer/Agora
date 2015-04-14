@@ -23,6 +23,10 @@ if (SoCraTesActivity.prototype.reserve === undefined) {
     return this.socratesResourceNamed(registrationTuple).hasValidReservationFor(registrationTuple);
   };
 
+  SoCraTesActivity.prototype.hasValidWaitinglistReservationFor = function (registrationTuple) {
+    return this.socratesResourceNamed(registrationTuple).hasValidWaitinglistReservationFor(registrationTuple);
+  };
+
   SoCraTesActivity.prototype.selectedOptionFor = function (memberID) {
     var resource = new SoCraTesResource(_.first(this.registeredResources(memberID)));
     if (!resource) { return null; }
