@@ -58,7 +58,7 @@ module.exports = {
         return activitystore.saveActivity(activity, function (err) {
           if (err && err.message === CONFLICTING_VERSIONS) {
             // we try again because of a racing condition during save:
-            return self.startRegistration(registrationTuple, callback);
+            return self.saveRegistration(memberID, sessionID, body, callback);
           }
           if (err) { return callback(err); }
           if (registrationTuple.duration !== 'waitinglist') {
