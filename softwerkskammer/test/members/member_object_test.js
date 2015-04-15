@@ -91,7 +91,7 @@ describe('Member initial filling', function () {
 });
 
 describe('fillFromUI', function () {
-  it('leaves fields undefined where no information is given', function () {
+  it('leaves fields undefined / false where no information is given', function () {
     var record = {
       nickname: 'testNick',
       email: 'mail@google.de',
@@ -105,8 +105,8 @@ describe('fillFromUI', function () {
     expect(member.interests()).not.to.exist();
     expect(member.site()).not.to.exist();
     expect(member.reference()).not.to.exist();
-    expect(member.notifyOnWikiChanges()).not.to.exist();
-    expect(member.socratesOnly()).not.to.exist();
+    expect(member.notifyOnWikiChanges()).to.be.false();
+    expect(member.socratesOnly()).to.be.false();
   });
 
   it('trims the contents of all fields', function () {
@@ -172,13 +172,13 @@ describe('Member twitter field autocorrection', function () {
 });
 
 describe('filling socratesOnly from UI', function () {
-  it('sets socratesOnly to undefined if the field is not provided from UI', function () {
+  it('sets socratesOnly to false if the field is not provided from UI', function () {
     var member = new Member().fillFromUI({});
-    expect(member.socratesOnly()).to.be.undefined();
+    expect(member.socratesOnly()).to.be.false();
   });
 
-  it('sets socratesOnly to false if false is provided from UI', function () {
-    var member = new Member().fillFromUI({socratesOnly: false});
+  it('sets socratesOnly to false if empty string is provided from UI', function () {
+    var member = new Member().fillFromUI({socratesOnly: ""});
     expect(member.socratesOnly()).to.be.false();
   });
 
