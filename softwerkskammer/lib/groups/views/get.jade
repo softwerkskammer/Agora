@@ -46,11 +46,9 @@ block content
             +hidden('groupname', group.id)
             button.btn.btn-primary(type='submit') #{t('groups.join')}
     .col-md-6
-      +tagCloud(users, group.color)
-  .row
-    .col-md-12
       h4 #{t('activities.upcoming_activities')}:
       +activityList(upcomingGroupActivities)
+      +tagCloud(users, group.color)    
   .row
     if (blogposts.length > 0)
       .col-md-6
