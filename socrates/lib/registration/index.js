@@ -31,7 +31,13 @@ app.get('/', function (req, res, next) {
   activitiesService.getActivityWithGroupAndParticipants(socratesConstants.currentUrl, function (err, activity) {
     if (err || !activity) { return next(err); }
     var options = roomOptions.all(activity, res.locals.accessrights.memberId(), isRegistrationOpen());
-    res.render('get', {activity: activity, roomOptions: options, registrationPossible: isRegistrationOpen()});
+    res.render('get', {
+      activity: activity,
+      roomOptions: options,
+      registrationPossible: isRegistrationOpen(),
+      alreadyRegistered: activity.isAlreadyRegistered(res.locals.accessrights.memberId()),
+      alreadyOnWaitinglist: activity.isAlreadyOnWaitinglist(res.locals.accessrights.memberId())
+    });
   });
 });
 

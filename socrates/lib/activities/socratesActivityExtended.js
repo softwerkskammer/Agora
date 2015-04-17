@@ -31,8 +31,13 @@ if (SoCraTesActivity.prototype.reserve === undefined) {
     var resource = new SoCraTesResource(_.first(this.registeredResources(memberID)));
     if (!resource) { return null; }
     var record = resource.recordFor(memberID);
-    if (!record) { return null; }
-    return resource.resourceName + ',' + record.duration;
+    if (record) {
+      return resource.resourceName + ',' + record.duration;
+    }
+    if (resource.waitinglistRecordFor(memberID)) {
+      return resource.resourceName + ',waitinglist';
+    }
+    return null;
   };
 
 }

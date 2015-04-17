@@ -1,5 +1,5 @@
 include  ../../../views/formComponents
-mixin participationinfoform(activity, roomOptions, registrationPossible)
+mixin participationinfoform(activity, roomOptions, registrationPossible, alreadyRegistered, alreadyOnWaitinglist)
   .row
     .col-md-6
       h3 Room Options
@@ -43,9 +43,8 @@ mixin participationinfoform(activity, roomOptions, registrationPossible)
 
   .row
     .col-sm-12
-      -var alreadyRegistered = activity.isAlreadyRegistered(accessrights.memberId())
       form#participationinfoform.relaxed(action='/registration/startRegistration', method='post')
-        fieldset(disabled=(!registrationPossible || alreadyRegistered))
+        fieldset(disabled=(!registrationPossible || alreadyRegistered || alreadyOnWaitinglist))
           .table-responsive
             table.table.table-striped.table-condensed.table-bordered
               thead
@@ -102,6 +101,8 @@ mixin participationinfoform(activity, roomOptions, registrationPossible)
               +csrf
         if alreadyRegistered
           .btn.pull-right.btn.btn-success You are already registered.
+        else if alreadyOnWaitinglist
+          .btn.pull-right.btn.btn-success You are already on the waitinglist.
         else
           .row.hidden-print(style='margin-bottom: 10px')
             .col-sm-12

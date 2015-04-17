@@ -63,7 +63,7 @@ SoCraTesResource.prototype.register = function (memberID, registrationTuple) {
   function registerOnResource(self) {
     var index = self.registeredMembers().indexOf(sessionID);
     if (index > -1) {
-      this.state._registeredMembers.splice(index, 1);
+      self.state._registeredMembers.splice(index, 1);
     }
 
     if (!self.addMemberId(memberID)) { return false; }
