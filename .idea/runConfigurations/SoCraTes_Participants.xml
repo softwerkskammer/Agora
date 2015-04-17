@@ -6,7 +6,7 @@
     <envs>
       <env name="reporter" value="spec" />
     </envs>
-    <ui>BDD</ui>
+    <ui>bdd</ui>
     <extra-mocha-options />
     <test-directory>$PROJECT_DIR$/socrates/test/participants</test-directory>
     <recursive>true</recursive>
