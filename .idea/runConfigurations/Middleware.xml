@@ -6,7 +6,7 @@
     <envs>
       <env name="reporter" value="spec" />
     </envs>
-    <ui>BDD</ui>
+    <ui>bdd</ui>
     <extra-mocha-options />
     <test-directory>$PROJECT_DIR$/softwerkskammer/test/middleware</test-directory>
     <recursive>true</recursive>

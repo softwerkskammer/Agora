@@ -33,6 +33,9 @@ function allIds() {
 }
 
 function informationFor(id, duration) {
+  if (typeof duration !== 'number') {
+    return { room: _.find(rooms, {id: id}).display };
+  }
   var endOfStay = ['saturday evening', 'sunday morning', 'sunday evening', 'monday morning'];
   return {
     room: _.find(rooms, {id: id}).display,

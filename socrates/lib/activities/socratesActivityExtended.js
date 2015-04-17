@@ -23,12 +23,21 @@ if (SoCraTesActivity.prototype.reserve === undefined) {
     return this.socratesResourceNamed(registrationTuple).hasValidReservationFor(registrationTuple);
   };
 
+  SoCraTesActivity.prototype.hasValidWaitinglistReservationFor = function (registrationTuple) {
+    return this.socratesResourceNamed(registrationTuple).hasValidWaitinglistReservationFor(registrationTuple);
+  };
+
   SoCraTesActivity.prototype.selectedOptionFor = function (memberID) {
-    var resource = new SoCraTesResource(_.first(this.registeredResources(memberID)));
-    if (!resource) { return null; }
-    var record = resource.recordFor(memberID);
-    if (!record) { return null; }
-    return resource.resourceName + ',' + record.duration;
+    var regResource = _.first(this.registeredResourcesFor(memberID));
+    if (regResource) {
+      return regResource.resourceName + ',' + new SoCraTesResource(regResource).recordFor(memberID).duration;
+    }
+
+    var waitResource = _.first(this.waitinglistResourcesFor(memberID));
+    if (waitResource) {
+      return waitResource.resourceName + ',waitinglist';
+    }
+    return null;
   };
 
 }

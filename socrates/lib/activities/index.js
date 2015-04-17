@@ -44,9 +44,8 @@ function activitySubmitted(req, res, next) {
 app.get('/new', function (req, res) {
   var resources = {};
   _.each(roomOptions.allIds, function (id) {
-    resources[id] = {_canUnsubscribe: false};
+    resources[id] = {_canUnsubscribe: false, _waitinglist: true};
   });
-  resources.waitinglist = {_canUnsubscribe: false, _waitinglist: true};
   var activity = new Activity({
     resources: resources
   });
