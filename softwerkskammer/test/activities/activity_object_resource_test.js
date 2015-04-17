@@ -279,14 +279,16 @@ describe('Activity resource management', function () {
   });
 
   describe('- when querying registered members -', function () {
-    var defaultResource = { _registeredMembers: [{memberId: 'memberID1'}] };
-    var activityWithThreeDifferentMembers = new Activity({ resources: {
-      'default': defaultResource,
+    var activityWithFourDifferentMembers = new Activity({ resources: {
+      'default': { _registeredMembers: [{memberId: 'memberID1'}] },
       Einzelzimmer: { _registeredMembers: [
         {memberId: 'memberID2'}
       ]},
       Doppelzimmer: { _registeredMembers: [
         {memberId: 'memberID3'}
+      ]},
+      Waitingroom: { _registeredMembers: [], _waitinglist: [
+        { _memberId: 'waiter' }
       ]}
     }});
 
@@ -301,22 +303,28 @@ describe('Activity resource management', function () {
     });
 
     it('lists all registered members of any resource', function () {
-      expect(activityWithThreeDifferentMembers.allRegisteredMembers()).to.have.length(3);
-      expect(activityWithThreeDifferentMembers.allRegisteredMembers()).to.contain('memberID1');
-      expect(activityWithThreeDifferentMembers.allRegisteredMembers()).to.contain('memberID2');
-      expect(activityWithThreeDifferentMembers.allRegisteredMembers()).to.contain('memberID3');
+      expect(activityWithFourDifferentMembers.allRegisteredMembers()).to.have.length(3);
+      expect(activityWithFourDifferentMembers.allRegisteredMembers()).to.contain('memberID1');
+      expect(activityWithFourDifferentMembers.allRegisteredMembers()).to.contain('memberID2');
+      expect(activityWithFourDifferentMembers.allRegisteredMembers()).to.contain('memberID3');
     });
 
     it('can tell if a memberID is registered in any resource', function () {
-      expect(activityWithThreeDifferentMembers.isAlreadyRegistered('memberID1')).to.be(true);
-      expect(activityWithThreeDifferentMembers.isAlreadyRegistered('memberID2')).to.be(true);
-      expect(activityWithThreeDifferentMembers.isAlreadyRegistered('memberID3')).to.be(true);
+      expect(activityWithFourDifferentMembers.isAlreadyRegistered('memberID1')).to.be(true);
+      expect(activityWithFourDifferentMembers.isAlreadyRegistered('memberID2')).to.be(true);
+      expect(activityWithFourDifferentMembers.isAlreadyRegistered('memberID3')).to.be(true);
     });
 
-    it('can return the registerd resources for a memberID', function () {
-      var result = activityWithThreeDifferentMembers.registeredResources('memberID1');
+    it('can return the registered resources for a memberID', function () {
+      var result = activityWithFourDifferentMembers.registeredResourcesFor('memberID1');
       expect(result).to.have.length(1);
       expect(result[0].resourceName).to.be('default');
+    });
+
+    it('can return the waitinglist resources for a memberID', function () {
+      var result = activityWithFourDifferentMembers.waitinglistResourcesFor('waiter');
+      expect(result).to.have.length(1);
+      expect(result[0].resourceName).to.be('Waitingroom');
     });
 
     it('lists a registered member only once even when he registered for multiple resources', function () {

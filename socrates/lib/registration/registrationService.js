@@ -61,9 +61,10 @@ module.exports = {
             return self.saveRegistration(memberID, sessionID, body, callback);
           }
           if (err) { return callback(err); }
-          if (registrationTuple.duration !== 'waitinglist') {
-            var bookingdetails = roomOptions.informationFor(registrationTuple.resourceName, registrationTuple.duration);
-            socratesNotifications.newParticipant(memberID, bookingdetails);
+          if (registrationTuple.duration === 'waitinglist') {
+            socratesNotifications.newWaitinglistEntry(memberID, roomOptions.informationFor(registrationTuple.resourceName, registrationTuple.duration));
+          } else {
+            socratesNotifications.newParticipant(memberID, roomOptions.informationFor(registrationTuple.resourceName, registrationTuple.duration));
           }
           return subscriberstore.getSubscriber(memberID, function (err, subscriber) {
             if (err) { return callback(err); }

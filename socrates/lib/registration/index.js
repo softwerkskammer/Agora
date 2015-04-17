@@ -58,8 +58,6 @@ app.get('/interested', function (req, res) {
   res.render('iAmInterested');
 });
 
-// TODO noch nicht freigeschaltete Funktionalitäten:
-
 app.post('/startRegistration', function (req, res, next) {
   if (!isRegistrationOpen() || !req.body.nightsOptions) { return res.redirect('/registration'); }
   var option = req.body.nightsOptions.split(',');

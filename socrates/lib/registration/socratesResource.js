@@ -39,7 +39,7 @@ SoCraTesResource.prototype.waitinglistRecordFor = function (memberId) {
 SoCraTesResource.prototype.reserve = function (registrationTuple) {
   var sessionID = 'SessionID:' + registrationTuple.sessionID;
   if (registrationTuple.duration === 'waitinglist') {
-    this.addToWaitinglist(sessionID); // TODO return success status here?!
+    if (!this.addToWaitinglist(sessionID)) { return false; }
     addExpirationTimeFor(this.waitinglistRecordFor(sessionID));
   } else {
     if (!this.addMemberId(sessionID)) { return false; }
@@ -57,8 +57,7 @@ SoCraTesResource.prototype.register = function (memberID, registrationTuple) {
     if (self.waitinglistEntryFor(sessionID)) {
       self.removeFromWaitinglist(sessionID);
     }
-    self.addToWaitinglist(memberID); // TODO return success status here?!
-    return true;
+    return self.addToWaitinglist(memberID);
   }
 
   function registerOnResource(self) {

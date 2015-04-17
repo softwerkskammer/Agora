@@ -43,8 +43,9 @@ mixin participationinfoform(activity, roomOptions, registrationPossible, already
 
   .row
     .col-sm-12
+      -var disabled = (!registrationPossible || alreadyRegistered || alreadyOnWaitinglist)
       form#participationinfoform.relaxed(action='/registration/startRegistration', method='post')
-        fieldset(disabled=(!registrationPossible || alreadyRegistered || alreadyOnWaitinglist))
+        fieldset(disabled=disabled class=(disabled ? 'disabled-text' : ''))
           .table-responsive
             table.table.table-striped.table-condensed.table-bordered
               thead
@@ -82,10 +83,10 @@ mixin participationinfoform(activity, roomOptions, registrationPossible, already
                   else
                     tr
                       th #{option.name}
-                        .radio-inline
+                        .radio-inline.pull-right
                           label
                             input(type='radio', name='nightsOptions', value=option.id + ',waitinglist')
-                            |  Add to Waitinglist
+                            |  Waitinglist
                       td.text-center.disabled-text
                         span(style='margin-left:20px;') #{option.two}&nbsp;€
                       td.text-center.disabled-text

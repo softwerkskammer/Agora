@@ -184,9 +184,16 @@ Activity.prototype.isAlreadyOnWaitinglist = function (memberID) {
   return _(this.allWaitinglistEntries()).find(function (entry) { return entry.registrantId() === memberID; });
 };
 
-Activity.prototype.registeredResources = function (memberID) {
+Activity.prototype.registeredResourcesFor = function (memberID) {
   var self = this;
   return _.map(this.resources().resourceNamesOf(memberID), function (resourceName) {
+    return self.resourceNamed(resourceName);
+  });
+};
+
+Activity.prototype.waitinglistResourcesFor = function (memberID) {
+  var self = this;
+  return _.map(this.resources().waitinglistResourceNamesOf(memberID), function (resourceName) {
     return self.resourceNamed(resourceName);
   });
 };

@@ -77,14 +77,15 @@ Resource.prototype.removeMemberId = function (memberId) {
 };
 
 Resource.prototype.addToWaitinglist = function (memberId, momentOfRegistration) {
-  if (!this.hasWaitinglist()) { return; }
-  if (this.isAlreadyRegistered(memberId)) { return; }
+  if (!this.hasWaitinglist()) { return false; }
+  if (this.isAlreadyRegistered(memberId)) { return false; }
   if (!this.waitinglistEntryFor(memberId)) {
     this.state._waitinglist.push({
       _memberId: memberId,
       _registeredAt: (momentOfRegistration || moment()).toDate()
     });
   }
+  return true;
 };
 
 Resource.prototype.removeFromWaitinglist = function (memberId) {

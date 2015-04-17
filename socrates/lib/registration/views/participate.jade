@@ -2,7 +2,7 @@ include  ../../../views/formComponents
 include ../../members/views/userinfoform
 include participationinfoform
   
-extends ../../../views/simpleLayout
+extends ../../../views/layout
 
 block scripts
   script(src='/clientscripts/check-memberform.js')
@@ -19,14 +19,25 @@ block content
       small Personal Information
       
   form#participationform.relaxed(action='/registration/completeRegistration', method='post')
-    +csrf
-    +hidden('activityUrl', registrationTuple.activityUrl)
-    +hidden('resourceName', registrationTuple.resourceName)
-    +hidden('duration', registrationTuple.duration)
-    fieldset
-      +memberinfoform(member, 'members.edit_registration')
-      +userinfoform(addon, participation)
-
-      .row(style='margin-bottom: 10px')
-        .col-sm-12
+    .row(style='margin-bottom: 10px')
+      .col-sm-12
+        if(registrationTuple.duration === 'waitinglist')
+          +memberSubmitButtons('Put me on the waitinglist!')
+        else
+          +memberSubmitButtons('I really do want to participate!')
+    .row
+      .col-sm-12
+        +csrf
+        +hidden('activityUrl', registrationTuple.activityUrl)
+        +hidden('resourceName', registrationTuple.resourceName)
+        +hidden('duration', registrationTuple.duration)
+        fieldset
+          +memberinfoform(member, 'members.edit_registration')
+          +userinfoform(addon, participation)
+    
+    .row(style='margin-bottom: 10px')
+      .col-sm-12
+        if(registrationTuple.duration === 'waitinglist')
+          +memberSubmitButtons('Put me on the waitinglist!')
+        else
           +memberSubmitButtons('I really do want to participate!')

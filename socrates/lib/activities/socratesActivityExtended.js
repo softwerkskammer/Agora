@@ -28,14 +28,14 @@ if (SoCraTesActivity.prototype.reserve === undefined) {
   };
 
   SoCraTesActivity.prototype.selectedOptionFor = function (memberID) {
-    var resource = new SoCraTesResource(_.first(this.registeredResources(memberID)));
-    if (!resource) { return null; }
-    var record = resource.recordFor(memberID);
-    if (record) {
-      return resource.resourceName + ',' + record.duration;
+    var regResource = _.first(this.registeredResourcesFor(memberID));
+    if (regResource) {
+      return regResource.resourceName + ',' + new SoCraTesResource(regResource).recordFor(memberID).duration;
     }
-    if (resource.waitinglistRecordFor(memberID)) {
-      return resource.resourceName + ',waitinglist';
+
+    var waitResource = _.first(this.waitinglistResourcesFor(memberID));
+    if (waitResource) {
+      return waitResource.resourceName + ',waitinglist';
     }
     return null;
   };
