@@ -116,8 +116,13 @@ app.post('/completeRegistration', function (req, res, next) {
         statusmessage.errorMessage(statusTitle, statusText).putIntoSession(req);
         return res.redirect('/registration');
       }
-      statusmessage.successMessage('general.info', 'activities.successfully_registered').putIntoSession(req);
-      res.redirect('/payment/socrates');
+      if (body.duration === 'waitinglist') {
+        statusmessage.successMessage('general.info', 'activities.successfully_added_to_waitinglist').putIntoSession(req);
+        res.redirect('/registration');
+      } else {
+        statusmessage.successMessage('general.info', 'activities.successfully_registered').putIntoSession(req);
+        res.redirect('/payment/socrates');
+      }
     });
   });
 });
