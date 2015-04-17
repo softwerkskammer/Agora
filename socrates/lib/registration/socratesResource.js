@@ -21,6 +21,7 @@ function SoCraTesResource(resource) {
   this.state = (resource && resource.state) || {};
   this.resourceName = (resource && resource.resourceName);
   removeExpiredReservations(this.state._registeredMembers);
+  removeExpiredReservations(this.state._waitinglist);
   return this;
 }
 
