@@ -45,20 +45,16 @@ block content
             +csrf
             +hidden('groupname', group.id)
             button.btn.btn-primary(type='submit') #{t('groups.join')}
+
+      h4 #{t('members.members')}:
+      +memberlistHeading(t('groups.has'), users.length)
+      +memberlist(users, organizers)
     .col-md-6
       h4 #{t('activities.upcoming_activities')}:
       +activityList(upcomingGroupActivities)
       +tagCloud(users, group.color)    
   .row
     if (blogposts.length > 0)
-      .col-md-6
-        h4 #{t('members.members')}:
-        +memberlistHeading(t('groups.has'), users.length)
-        +memberlist(users, organizers)
-      .col-md-6
-        +blogposts-panel(blogposts)
-    else
       .col-md-12
-        h4 #{t('members.members')}:
-        +memberlistHeading(t('groups.has'), users.length)
-        +memberlist(users, organizers)
+        +blogposts-panel(blogposts)
+   
