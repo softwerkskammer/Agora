@@ -43,7 +43,21 @@ module.exports = {
       var filename = path.join(__dirname, 'jade/registrationConfirmation.jade');
       var receivers = [member.email()];
       notifications._sendMail(receivers, 'SoCraTes Registration Confirmation', jade.renderFile(filename, renderingOptions));
+    });
+  },
 
+  newWaitinglistEntry: function (memberID, bookingdetails) {
+    memberstore.getMemberForId(memberID, function (err, member) {
+      if (err || !member) { return logger.error(err); }
+      var renderingOptions = {
+        pretty: true,
+        member: member,
+        url: conf.get('publicUrlPrefix'),
+        bookingdetails: bookingdetails
+      };
+      var filename = path.join(__dirname, 'jade/waitinglistConfirmation.jade');
+      var receivers = [member.email()];
+      notifications._sendMail(receivers, 'SoCraTes Waitinglist Confirmation', jade.renderFile(filename, renderingOptions));
     });
   }
 };

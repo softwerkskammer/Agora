@@ -71,7 +71,7 @@ describe('SoCraTes registration application', function () {
 
       appWithoutMember
         .get('/')
-        .expect(/<form id="participationinfoform" action="\/registration\/startRegistration" method="post" class="relaxed"><fieldset disabled="disabled">/)
+        .expect(/<form id="participationinfoform" action="\/registration\/startRegistration" method="post" class="relaxed"><fieldset disabled="disabled"/)
         .expect(/<button type="submit" disabled="disabled" class="pull-right btn btn-primary">Registration will open /)
         .expect(200, done);
     });
@@ -105,8 +105,8 @@ describe('SoCraTes registration application', function () {
 
       appWithoutMember
         .get('/')
-        .expect(/<th class="disabled-text">/)
-        .expect(/<th class="disabled-text">/, done);
+        .expect(/<th>Double shared<div class="radio-inline/)
+        .expect(/<th>Single<div class="radio-inline/, done);
     });
 
     it('displays the options (but disabled), because the user is registered', function (done) {
@@ -115,7 +115,7 @@ describe('SoCraTes registration application', function () {
 
       appWithSocratesMember
         .get('/')
-        .expect(/<form id="participationinfoform" action="\/registration\/startRegistration" method="post" class="relaxed"><fieldset disabled="disabled">/)
+        .expect(/<form id="participationinfoform" action="\/registration\/startRegistration" method="post" class="relaxed"><fieldset disabled="disabled"/)
         .expect(/<th>Single<\/th><td class="text-center"><div class="radio-inline"><label><input type="radio" name="nightsOptions" value="single,2"/)
         .expect(/<th>Double shared<\/th><td class="text-center"><div class="radio-inline"><label><input type="radio" name="nightsOptions" value="bed_in_double,2"/)
         .expect(/<div class="btn pull-right btn btn-success">You are already registered\./, done);
