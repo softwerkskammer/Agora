@@ -8,6 +8,7 @@ function Participation(object) {
 }
 
 Participation.prototype.fillFromUI = function (uiInputObject) {
+  this.state.roommate = uiInputObject.roommate;
   this.state.question1 = uiInputObject.question1;
   this.state.question2 = uiInputObject.question2;
   this.state.question3 = uiInputObject.question3;
@@ -19,6 +20,10 @@ Participation.prototype.payment = function () {
     this.state.payment = {};
   }
   return new Payment(this.state.payment);
+};
+
+Participation.prototype.roommate = function () {
+  return this.state.roommate;
 };
 
 Participation.prototype.question1 = function () {

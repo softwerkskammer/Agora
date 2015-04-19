@@ -8,11 +8,14 @@ var beans = require('../../testutil/configureForTest').get('beans');
 var userWithoutMember = require('../../testutil/userWithoutMember');
 var membersService = beans.get('membersService');
 var memberstore = beans.get('memberstore');
+var activitystore = beans.get('activitystore');
 var subscriberstore = beans.get('subscriberstore');
 var socratesNotifications = beans.get('socratesNotifications');
 var groupsAndMembersService = beans.get('groupsAndMembersService');
 var Member = beans.get('member');
 var Subscriber = beans.get('subscriber');
+var SoCraTesActivity = beans.get('socratesActivityExtended');
+var currentYear = beans.get('socratesConstants').currentYear;
 
 var createApp = require('../../testutil/testHelper')('socratesMembersApp').createApp;
 
@@ -24,6 +27,7 @@ describe('SoCraTes members application', function () {
   var socratesMember;
   var softwerkskammerSubscriber;
   var socratesSubscriber;
+  var socrates;
 
   before(function () {
     softwerkskammerMember = new Member({
@@ -48,11 +52,19 @@ describe('SoCraTes members application', function () {
       authentications: [],
       socratesOnly: true
     });
-    socratesSubscriber = new Subscriber({id: 'memberId2'});
+    var participation = {};
+    participation[currentYear] = {};
+    socratesSubscriber = new Subscriber({id: 'memberId2', _addon: {homeAddress: 'at home'}, participations: participation});
 
     appWithoutMember = request(createApp({middlewares: [userWithoutMember]}));
     appWithSoftwerkskammerMember = request(createApp({member: softwerkskammerMember}));
     appWithSocratesMember = request(createApp({member: socratesMember}));
+  });
+
+  beforeEach(function () {
+    socrates = { resources: { single: {}, bed_in_double: {}, junior: {}, bed_in_junior: {} } };
+
+    sinon.stub(activitystore, 'getActivity', function (url, callback) { return callback(null, new SoCraTesActivity(socrates)); });
   });
 
   afterEach(function () {
@@ -104,11 +116,9 @@ describe('SoCraTes members application', function () {
 
   describe('editing a member page', function () {
 
-    beforeEach(function () {
-      sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null); });
-    });
-
     it('allows somebody who is neither member nor subscriber to create his account', function (done) {
+      sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(); });
+
       appWithoutMember
         .get('/edit')
         .expect(200)
@@ -116,6 +126,8 @@ describe('SoCraTes members application', function () {
     });
 
     it('allows a SoCraTes-only member to edit his page', function (done) {
+      sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
+
       appWithSocratesMember
         .get('/edit')
         .expect(200)
@@ -123,11 +135,76 @@ describe('SoCraTes members application', function () {
     });
 
     it('allows a Softwerkskammer member to edit his page', function (done) {
+      sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, softwerkskammerSubscriber); });
+
       appWithSoftwerkskammerMember
         .get('/edit')
         .expect(200)
         .expect(/Here you find the information from your Softwerkskammer account that is used by SoCraTes\./, done);
     });
+
+    it('does not allow an unsubscribed member to enter a roommate', function (done) {
+      sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
+
+      appWithSocratesMember
+        .get('/edit')
+        .expect(200)
+        .end(function (err, res) {
+          expect(res.text).to.not.contain('Who do you want to share your room with');
+          done(err);
+        });
+    });
+
+    it('does not allow a member who is subscribed for a single-bed-room to enter a roommate', function (done) {
+      socrates.resources.single._registeredMembers = [{memberId: 'memberId2'}];
+      sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
+
+      appWithSocratesMember
+        .get('/edit')
+        .expect(200)
+        .expect(/Home Address/)
+        .end(function (err, res) {
+          expect(res.text).to.not.contain('Who do you want to share your room with');
+          done(err);
+        });
+    });
+
+    it('does not allow a member who is subscribed for an exclusive junior room to enter a roommate', function (done) {
+      socrates.resources.junior._registeredMembers = [{memberId: 'memberId2'}];
+      sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
+
+      appWithSocratesMember
+        .get('/edit')
+        .expect(200)
+        .expect(/Home Address/)
+        .end(function (err, res) {
+          expect(res.text).to.not.contain('Who do you want to share your room with');
+          done(err);
+        });
+    });
+
+    it('allows a member who is subscribed for a bed in a double-bed room to enter a roommate', function (done) {
+      socrates.resources.bed_in_double._registeredMembers = [{memberId: 'memberId2'}];
+      sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
+
+      appWithSocratesMember
+        .get('/edit')
+        .expect(200)
+        .expect(/Home Address/)
+        .expect(/Who do you want to share your room with/, done);
+    });
+
+    it('allows a member who is subscribed for a bed in a junior room to enter a roommate', function (done) {
+      socrates.resources.bed_in_junior._registeredMembers = [{memberId: 'memberId2'}];
+      sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
+
+      appWithSocratesMember
+        .get('/edit')
+        .expect(200)
+        .expect(/Home Address/)
+        .expect(/Who do you want to share your room with/, done);
+    });
+
 
   });
 

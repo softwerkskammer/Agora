@@ -7,10 +7,12 @@ var beans = require('simple-configure').get('beans');
 var misc = beans.get('misc');
 var membersService = beans.get('membersService');
 var subscriberService = beans.get('subscriberService');
+var activitystore = beans.get('activitystore');
 var Member = beans.get('member');
 var memberSubmitHelper = beans.get('memberSubmitHelper');
 var fieldHelpers = beans.get('fieldHelpers');
 var subscriberstore = beans.get('subscriberstore');
+var socratesConstants = beans.get('socratesConstants');
 
 var app = misc.expressAppIn(__dirname);
 
@@ -29,10 +31,15 @@ app.get('/edit', function (req, res, next) {
   var member = req.user.member;
   subscriberstore.getSubscriber(member.id(), function (err, subscriber) {
     if (err) { return next(err); }
-    res.render('edit', {
-      member: member,
-      addon: subscriber && subscriber.addon(),
-      participation: subscriber && subscriber.isParticipating() ? subscriber.currentParticipation() : null
+    activitystore.getActivity(socratesConstants.currentUrl, function (err, socrates) {
+      if (err || !socrates) { return next(err); }
+      var registeredResources = socrates.resources().resourceNamesOf(member.id());
+      res.render('edit', {
+        member: member,
+        addon: subscriber && subscriber.addon(),
+        participation: subscriber && subscriber.isParticipating() ? subscriber.currentParticipation() : null,
+        sharesARoom: registeredResources.length === 1 && registeredResources[0].indexOf('bed_in_') > -1
+      });
     });
   });
 });

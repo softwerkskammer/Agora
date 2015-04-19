@@ -35,7 +35,7 @@ block content
 
     +memberinfoform(member, accessrights.isRegistered() ? null : 'members.edit_preregistration')
     if (addon && addon.homeAddress)
-      +userinfoform(addon, participation)
+      +userinfoform(addon, participation, sharesARoom)
       .gutter
       p &nbsp;
 
