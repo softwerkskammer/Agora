@@ -21,8 +21,9 @@ var roomOptions = beans.get('roomOptions');
 
 var app = misc.expressAppIn(__dirname);
 
-function isRegistrationOpen() {
-  return moment(conf.get('registrationOpensAt')).isBefore(moment());
+function isRegistrationOpen(registrationParam) {
+  return moment(conf.get('registrationOpensAt')).isBefore(moment())
+    || (registrationParam && registrationParam === conf.get('registrationParam'));
 }
 
 function registrationOpensIn() {
@@ -45,7 +46,8 @@ app.get('/', function (req, res, next) {
     res.render('get', {
       activity: activity,
       roomOptions: options,
-      registrationPossible: isRegistrationOpen(),
+      registrationPossible: isRegistrationOpen(req.query.registration),
+      registrationParam: req.query.registration,
       alreadyRegistered: activity.isAlreadyRegistered(res.locals.accessrights.memberId()),
       alreadyOnWaitinglist: activity.isAlreadyOnWaitinglist(res.locals.accessrights.memberId()),
       registrationOpening: moment(conf.get('registrationOpensAt')),
@@ -72,7 +74,7 @@ app.get('/interested', function (req, res) {
 });
 
 app.post('/startRegistration', function (req, res, next) {
-  if (!isRegistrationOpen() || !req.body.nightsOptions) { return res.redirect('/registration'); }
+  if (!isRegistrationOpen(req.body.registrationParam) || !req.body.nightsOptions) { return res.redirect('/registration'); }
   var option = req.body.nightsOptions.split(',');
   var registrationTuple = {
     activityUrl: socratesConstants.currentUrl,

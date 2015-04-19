@@ -1,5 +1,5 @@
 include  ../../../views/formComponents
-mixin participationinfoform(activity, roomOptions, registrationPossible, alreadyRegistered, alreadyOnWaitinglist, registrationOpening, registrationOpensIn)
+mixin participationinfoform(activity, roomOptions, registrationPossible, alreadyRegistered, alreadyOnWaitinglist, registrationOpening, registrationOpensIn, registrationParam)
   .row
     .col-md-6
       h3 Room Options
@@ -45,6 +45,7 @@ mixin participationinfoform(activity, roomOptions, registrationPossible, already
     .col-sm-12
       -var disabled = (!registrationPossible || alreadyRegistered || alreadyOnWaitinglist)
       form#participationinfoform.relaxed(action='/registration/startRegistration', method='post')
+        +hidden('registrationParam', registrationParam)
         fieldset(disabled=disabled class=(disabled ? 'disabled-text' : ''))
           .table-responsive
             table.table.table-striped.table-condensed.table-bordered
@@ -112,7 +113,7 @@ mixin participationinfoform(activity, roomOptions, registrationPossible, already
                   | I really do want to participate!
                 else
                   | Registration will open #{registrationOpening.format("dddd, Do MMMM YYYY, HH:mm [GMT]Z")}
-              if(registrationOpensIn)
+              if (!registrationPossible)
                 .row
                 p.pull-right (i.e. in #{registrationOpensIn.days} days, #{registrationOpensIn.hours} hours, #{registrationOpensIn.minutes} minutes)
 
