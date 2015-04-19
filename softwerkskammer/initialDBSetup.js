@@ -49,7 +49,7 @@ async.parallel(
         {id: 'internet', emailPrefix: 'internet', description: 'D-Scription', longName: 'Virtual Group', type: 'Regionalgruppe', color: '#00ff00', mapX: '100', mapY: '300', shortName: 'VG'}
       ];
       async.map(groups, function (group, callback) {
-        group.description = '';
+        group.description = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras at pellentesque leo. Suspendisse at ante in lorem faucibus aliquet volutpat ac metus. Aenean vel mauris et lacus venenatis venenatis rhoncus eu nisi. Nam imperdiet pretium ante vel hendrerit. Etiam lacinia lacinia bibendum. Ut malesuada neque sed enim accumsan, id tristique lectus gravida. Morbi lorem justo, vestibulum quis est non, pretium cursus ante. Aenean porttitor nulla eget elit rhoncus rhoncus. In vitae lacinia arcu, quis aliquet nibh. ';
         groupsPersistence.save(new Group(group), function (err) {
           callback(err, 'Group "' + group.id + '"');
         });
