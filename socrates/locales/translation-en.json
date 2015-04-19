@@ -255,6 +255,7 @@
     "members": "Members",
     "create": "Create Profile",
     "edit": "Edit Profile",
+    "view": "View Profile",
     "new": "New Member",
     "cancel": "Cancel registration",
     "group_membership": "Group Membership",
