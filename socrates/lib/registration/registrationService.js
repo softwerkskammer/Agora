@@ -44,7 +44,11 @@ module.exports = {
     };
     activitystore.getActivity(registrationTuple.activityUrl, function (err, activity) {
       if (err || !activity) { return callback(err); }
-      if (!activity.hasValidReservationFor(registrationTuple)) {
+      if (registrationTuple.duration === 'waitinglist') {
+        if (!activity.hasValidWaitinglistReservationFor(registrationTuple)) {
+          return callback(null, 'message.title.problem', 'activities.waitinglist_registration_timed_out');
+        }
+      } else if (!activity.hasValidReservationFor(registrationTuple)) {
         return callback(null, 'message.title.problem', 'activities.registration_timed_out');
       }
       if (activity.isAlreadyRegistered(memberID)) {
@@ -54,11 +58,14 @@ module.exports = {
         return activitystore.saveActivity(activity, function (err) {
           if (err && err.message === CONFLICTING_VERSIONS) {
             // we try again because of a racing condition during save:
-            return self.startRegistration(registrationTuple, callback);
+            return self.saveRegistration(memberID, sessionID, body, callback);
           }
           if (err) { return callback(err); }
-          var bookingdetails = roomOptions.informationFor(registrationTuple.resourceName, registrationTuple.duration);
-          socratesNotifications.newParticipant(memberID, bookingdetails);
+          if (registrationTuple.duration === 'waitinglist') {
+            socratesNotifications.newWaitinglistEntry(memberID, roomOptions.informationFor(registrationTuple.resourceName, registrationTuple.duration));
+          } else {
+            socratesNotifications.newParticipant(memberID, roomOptions.informationFor(registrationTuple.resourceName, registrationTuple.duration));
+          }
           return subscriberstore.getSubscriber(memberID, function (err, subscriber) {
             if (err) { return callback(err); }
             subscriber.fillFromUI(body);

@@ -103,6 +103,13 @@ Resources.prototype.resourceNamesOf = function (memberId) {
   }).compact().sort().value();
 };
 
+Resources.prototype.waitinglistResourceNamesOf = function (memberId) {
+  var self = this;
+  return _(self.resourceNames()).map(function (resourceName) {
+    return !!self.named(resourceName).waitinglistEntryFor(memberId) && resourceName;
+  }).compact().sort().value();
+};
+
 Resources.prototype.memberIsRegisteredForMoreDaysThan = function (days, member) {
   var soManyDaysAgo = moment().subtract(days, 'days');
   return soManyDaysAgo.isAfter(_.min(this.registrationDatesOf(member.id())));

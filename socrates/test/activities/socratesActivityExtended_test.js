@@ -76,6 +76,23 @@ describe('Extended SoCraTes Activity', function () {
     expect(activity.selectedOptionFor('heinz')).to.be('single,3');
   });
 
+  it('returns a registered member\'s optionText for waitinglist registration', function () {
+    var activity = new SoCraTesActivity({
+      resources: {
+        single: {
+          _registrationOpen: false,
+          _registeredMembers: [],
+          _waitinglist: []
+        }
+      }
+    });
+    var registrationTuple = {resourceName: 'single', sessionID: 'sessionID', duration: 'waitinglist'};
+    activity.reserve(registrationTuple);
+    activity.register('heinz', registrationTuple);
+
+    expect(activity.selectedOptionFor('heinz')).to.be('single,waitinglist');
+  });
+
   it('returns null as the optionText for a not registered member', function () {
     var activity = new SoCraTesActivity({
       resources: {

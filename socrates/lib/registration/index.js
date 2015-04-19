@@ -31,7 +31,13 @@ app.get('/', function (req, res, next) {
   activitiesService.getActivityWithGroupAndParticipants(socratesConstants.currentUrl, function (err, activity) {
     if (err || !activity) { return next(err); }
     var options = roomOptions.all(activity, res.locals.accessrights.memberId(), isRegistrationOpen());
-    res.render('get', {activity: activity, roomOptions: options, registrationPossible: isRegistrationOpen()});
+    res.render('get', {
+      activity: activity,
+      roomOptions: options,
+      registrationPossible: isRegistrationOpen(),
+      alreadyRegistered: activity.isAlreadyRegistered(res.locals.accessrights.memberId()),
+      alreadyOnWaitinglist: activity.isAlreadyOnWaitinglist(res.locals.accessrights.memberId())
+    });
   });
 });
 
@@ -51,8 +57,6 @@ app.get('/ical', function (req, res, next) {
 app.get('/interested', function (req, res) {
   res.render('iAmInterested');
 });
-
-// TODO noch nicht freigeschaltete Funktionalitäten:
 
 app.post('/startRegistration', function (req, res, next) {
   if (!isRegistrationOpen() || !req.body.nightsOptions) { return res.redirect('/registration'); }
@@ -95,7 +99,12 @@ app.get('/participate', function (req, res, next) {
       if (err) { return next(err); }
       var addon = (subscriber && subscriber.addon()) || new Addon({});
       var participation = (subscriber && subscriber.currentParticipation()) || new Participation();
-      res.render('participate', {member: member, addon: addon, participation: participation, registrationTuple: registrationTuple});
+      res.render('participate', {
+        member: member,
+        addon: addon,
+        participation: participation,
+        registrationTuple: registrationTuple
+      });
     });
   });
 });
@@ -111,8 +120,13 @@ app.post('/completeRegistration', function (req, res, next) {
         statusmessage.errorMessage(statusTitle, statusText).putIntoSession(req);
         return res.redirect('/registration');
       }
-      statusmessage.successMessage('general.info', 'activities.successfully_registered').putIntoSession(req);
-      res.redirect('/payment/socrates');
+      if (body.duration === 'waitinglist') {
+        statusmessage.successMessage('general.info', 'activities.successfully_added_to_waitinglist').putIntoSession(req);
+        res.redirect('/registration');
+      } else {
+        statusmessage.successMessage('general.info', 'activities.successfully_registered').putIntoSession(req);
+        res.redirect('/payment/socrates');
+      }
     });
   });
 });
