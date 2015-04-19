@@ -22,9 +22,7 @@ var roomOptions = beans.get('roomOptions');
 var app = misc.expressAppIn(__dirname);
 
 function isRegistrationOpen() {
-  // we currently set this to false on production system, because this feature is still in development
-  // the conf variable is used as a backdoor for testing
-  return app.get('env') !== 'production' && !conf.get('registrationIsClosed');
+  return moment(conf.get('registrationOpensAt')).isBefore(moment());
 }
 
 app.get('/', function (req, res, next) {
@@ -36,7 +34,8 @@ app.get('/', function (req, res, next) {
       roomOptions: options,
       registrationPossible: isRegistrationOpen(),
       alreadyRegistered: activity.isAlreadyRegistered(res.locals.accessrights.memberId()),
-      alreadyOnWaitinglist: activity.isAlreadyOnWaitinglist(res.locals.accessrights.memberId())
+      alreadyOnWaitinglist: activity.isAlreadyOnWaitinglist(res.locals.accessrights.memberId()),
+      registrationOpening: moment(conf.get('registrationOpensAt'))
     });
   });
 });

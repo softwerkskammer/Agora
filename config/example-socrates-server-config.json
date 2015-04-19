@@ -2,5 +2,6 @@
 {
   "publicUrlPrefix": "http://www.socrates-conference.de",
   "secret": "secret",
-  "sessionkey": "socrates-conference.de"
+  "sessionkey": "socrates-conference.de",
+  "registrationOpensAt": "2015-04-28T19:00:00+0200"
 }
