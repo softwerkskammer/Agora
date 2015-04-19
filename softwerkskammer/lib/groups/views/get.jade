@@ -50,8 +50,9 @@ block content
       +memberlistHeading(t('groups.has'), users.length)
       +memberlist(users, organizers)
     .col-md-6
-      h4 #{t('activities.upcoming_activities')}:
-      +activityList(upcomingGroupActivities)
+      if (upcomingGroupActivities.length > 0)
+        h4 #{t('activities.upcoming_activities')}:
+        +activityList(upcomingGroupActivities)
       +tagCloud(users, group.color)   
       if (blogposts.length > 0)
          +blogposts-panel(blogposts)
