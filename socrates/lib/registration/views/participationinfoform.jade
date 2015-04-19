@@ -1,5 +1,5 @@
 include  ../../../views/formComponents
-mixin participationinfoform(activity, roomOptions, registrationPossible, alreadyRegistered, alreadyOnWaitinglist, registrationOpening)
+mixin participationinfoform(activity, roomOptions, registrationPossible, alreadyRegistered, alreadyOnWaitinglist, registrationOpening, registrationOpensIn)
   .row
     .col-md-6
       h3 Room Options
@@ -112,6 +112,10 @@ mixin participationinfoform(activity, roomOptions, registrationPossible, already
                   | I really do want to participate!
                 else
                   | Registration will open #{registrationOpening.format("dddd, Do MMMM YYYY, HH:mm [GMT]Z")}
+              if(registrationOpensIn)
+                .row
+                p.pull-right (i.e. in #{registrationOpensIn.days} days, #{registrationOpensIn.hours} hours, #{registrationOpensIn.minutes} minutes)
+
         script.
           $(function () {
             var selectedInput = $('input[value="' + '#{activity.selectedOptionFor(accessrights.memberId())}"]')

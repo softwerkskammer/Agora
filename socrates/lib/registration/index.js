@@ -25,17 +25,31 @@ function isRegistrationOpen() {
   return moment(conf.get('registrationOpensAt')).isBefore(moment());
 }
 
+function registrationOpensIn() {
+  var registrationOpening = moment(conf.get('registrationOpensAt'));
+  var reference = moment();
+  if (registrationOpening.isAfter(reference)) {
+    var inDays = registrationOpening.diff(reference, 'days');
+    var inHours = registrationOpening.diff(reference.add(inDays, 'days'), 'hours');
+    var inMinutes = registrationOpening.diff(reference.add(inHours, 'hours'), 'minutes');
+    return {days: inDays, hours: inHours, minutes: inMinutes};
+  }
+  return undefined;
+}
+
 app.get('/', function (req, res, next) {
   activitiesService.getActivityWithGroupAndParticipants(socratesConstants.currentUrl, function (err, activity) {
     if (err || !activity) { return next(err); }
     var options = roomOptions.all(activity, res.locals.accessrights.memberId(), isRegistrationOpen());
+
     res.render('get', {
       activity: activity,
       roomOptions: options,
       registrationPossible: isRegistrationOpen(),
       alreadyRegistered: activity.isAlreadyRegistered(res.locals.accessrights.memberId()),
       alreadyOnWaitinglist: activity.isAlreadyOnWaitinglist(res.locals.accessrights.memberId()),
-      registrationOpening: moment(conf.get('registrationOpensAt'))
+      registrationOpening: moment(conf.get('registrationOpensAt')),
+      registrationOpensIn: registrationOpensIn()
     });
   });
 });
