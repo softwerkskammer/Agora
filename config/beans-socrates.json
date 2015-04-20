@@ -30,7 +30,7 @@
   "redirectRuleForNewUser": {"module": "./socrates/lib/middleware/redirectRuleForNewUser"},
   "socratesWikiSubdirs": {"module": "./socrates/lib/middleware/wikiSubdirs"},
   "socratesNotifications": {"module": "./socrates/lib/notifications"},
-  "socratesResource": {"module": "./socrates/lib/registration/socratesResource"},
+  "socratesResource": {"module": "./socrates/lib/activities/socratesResource"},
   "socratesActivityExtended": {"module": "./socrates/lib/activities/socratesActivityExtended"},
   "memberSubmitHelper": {"module": "./socrates/lib/members/memberSubmitHelper"},
   "socratesConstants": {"module": "./socrates/lib/activities/socratesConstants"}
