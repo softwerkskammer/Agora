@@ -56,6 +56,7 @@ describe('SoCraTes registration application', function () {
 
   beforeEach(function () {
     conf.addProperties({registrationOpensAt: moment().subtract(10, 'days').format()}); // already opened
+    sinon.stub(activitiesService, 'getActivityWithGroupAndParticipants', function (activityUrl, callback) { callback(null, socratesActivity); });
   });
 
   afterEach(function () {
@@ -69,8 +70,6 @@ describe('SoCraTes registration application', function () {
     });
 
     it('shows a disabled registration table and the "registration date button"', function (done) {
-      sinon.stub(activitiesService, 'getActivityWithGroupAndParticipants', function (activityUrl, callback) { callback(null, socratesActivity); });
-
       appWithoutMember
         .get('/')
         .expect(/<form id="participationinfoform" action="\/registration\/startRegistration" method="post" class="relaxed"><fieldset disabled="disabled"/)
@@ -79,8 +78,6 @@ describe('SoCraTes registration application', function () {
     });
 
     it('does not display that options 1 and 2 are not available', function (done) {
-      sinon.stub(activitiesService, 'getActivityWithGroupAndParticipants', function (activityUrl, callback) { callback(null, socratesActivity); });
-
       appWithoutMember
         .get('/')
         .expect(/<th>Single<\/th><td class="text-center"><div class="radio-inline"><label><input type="radio" name="nightsOptions" value="single,2"/)
@@ -88,8 +85,6 @@ describe('SoCraTes registration application', function () {
     });
 
     it('shows an enabled registration table with initially disabled register button if the registration param is passed along', function (done) {
-      sinon.stub(activitiesService, 'getActivityWithGroupAndParticipants', function (activityUrl, callback) { callback(null, socratesActivity); });
-
       appWithoutMember
         .get('/?registration=secretCode')
         .expect(/<form id="participationinfoform" action="\/registration\/startRegistration" method="post" class="relaxed"><fieldset>/)
@@ -104,8 +99,6 @@ describe('SoCraTes registration application', function () {
   describe('when registration is opened', function () {
 
     it('shows an enabled registration table with initially disabled register button if the registration is open', function (done) {
-      sinon.stub(activitiesService, 'getActivityWithGroupAndParticipants', function (activityUrl, callback) { callback(null, socratesActivity); });
-
       appWithoutMember
         .get('/')
         .expect(/<form id="participationinfoform" action="\/registration\/startRegistration" method="post" class="relaxed"><fieldset>/)
@@ -115,8 +108,6 @@ describe('SoCraTes registration application', function () {
     });
 
     it('displays that options 1 and 2 are not available', function (done) {
-      sinon.stub(activitiesService, 'getActivityWithGroupAndParticipants', function (activityUrl, callback) { callback(null, socratesActivity); });
-
       appWithoutMember
         .get('/')
         .expect(/<th>Double shared<div class="radio-inline/)
@@ -124,7 +115,6 @@ describe('SoCraTes registration application', function () {
     });
 
     it('displays the options (but disabled), because the user is registered', function (done) {
-      sinon.stub(activitiesService, 'getActivityWithGroupAndParticipants', function (activityUrl, callback) { callback(null, socratesActivity); });
       socrates.resources.single._registeredMembers = [{memberId: 'memberId2'}];
 
       appWithSocratesMember
