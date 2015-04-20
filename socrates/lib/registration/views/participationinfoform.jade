@@ -45,7 +45,6 @@ mixin participationinfoform(activity, roomOptions, registrationPossible, already
     .col-sm-12
       -var disabled = (!registrationPossible || alreadyRegistered || alreadyOnWaitinglist)
       form#participationinfoform.relaxed(action='/registration/startRegistration', method='post')
-        +hidden('registrationParam', registrationParam)
         fieldset(disabled=disabled class=(disabled ? 'disabled-text' : ''))
           .table-responsive
             table.table.table-striped.table-condensed.table-bordered
@@ -101,6 +100,7 @@ mixin participationinfoform(activity, roomOptions, registrationPossible, already
           .col-xs-12
             small * including participation in Sunday Coderetreat or Workshop
               +csrf
+        +hidden('registrationParam', registrationParam)
         if alreadyRegistered
           .btn.pull-right.btn.btn-success You are already registered.
         else if alreadyOnWaitinglist
