@@ -3,6 +3,7 @@
 var request = require('supertest');
 var sinon = require('sinon').sandbox.create();
 var expect = require('must');
+var moment = require('moment-timezone');
 
 var conf = require('../../testutil/configureForTest');
 var beans = conf.get('beans');
@@ -12,7 +13,7 @@ var accessrights = beans.get('accessrights');
 var activitiesService = beans.get('activitiesService');
 
 var Member = beans.get('member');
-var SoCraTesActivity = beans.get('socratesActivity');
+var SoCraTesActivity = beans.get('socratesActivityExtended');
 var createApp = require('../../testutil/testHelper')('socratesRegistrationApp').createApp;
 
 describe('SoCraTes registration application', function () {
@@ -54,7 +55,7 @@ describe('SoCraTes registration application', function () {
   var socratesActivity = new SoCraTesActivity(socrates);
 
   beforeEach(function () {
-    conf.addProperties({registrationIsClosed: false});
+    conf.addProperties({registrationOpensAt: moment().subtract(10, 'days').format()}); // already opened
   });
 
   afterEach(function () {
@@ -63,7 +64,7 @@ describe('SoCraTes registration application', function () {
 
   describe('before registration is opened', function () {
     beforeEach(function () {
-      conf.addProperties({registrationIsClosed: true});
+      conf.addProperties({registrationOpensAt: moment().add(10, 'days').format()}); // not opened yet
     });
 
     it('shows a disabled registration table and the "registration date button"', function (done) {
@@ -76,7 +77,7 @@ describe('SoCraTes registration application', function () {
         .expect(200, done);
     });
 
-    it('does not displays that options 1 and 2 are not available', function (done) {
+    it('does not display that options 1 and 2 are not available', function (done) {
       sinon.stub(activitiesService, 'getActivityWithGroupAndParticipants', function (activityUrl, callback) { callback(null, socratesActivity); });
 
       appWithoutMember
