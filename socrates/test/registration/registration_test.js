@@ -65,6 +65,7 @@ describe('SoCraTes registration application', function () {
   describe('before registration is opened', function () {
     beforeEach(function () {
       conf.addProperties({registrationOpensAt: moment().add(10, 'days').format()}); // not opened yet
+      conf.addProperties({registrationParam: "secretCode"}); // allows for pre-registration
     });
 
     it('shows a disabled registration table and the "registration date button"', function (done) {
@@ -85,6 +86,18 @@ describe('SoCraTes registration application', function () {
         .expect(/<th>Single<\/th><td class="text-center"><div class="radio-inline"><label><input type="radio" name="nightsOptions" value="single,2"/)
         .expect(/<th>Double shared<\/th><td class="text-center"><div class="radio-inline"><label><input type="radio" name="nightsOptions" value="bed_in_double,2"/, done);
     });
+
+    it('shows an enabled registration table with initially disabled register button if the registration param is passed along', function (done) {
+      sinon.stub(activitiesService, 'getActivityWithGroupAndParticipants', function (activityUrl, callback) { callback(null, socratesActivity); });
+
+      appWithoutMember
+        .get('/?registration=secretCode')
+        .expect(/<form id="participationinfoform" action="\/registration\/startRegistration" method="post" class="relaxed"><fieldset>/)
+        .expect(/<th>Junior shared<\/th><td class="text-center"><div class="radio-inline"><label><input type="radio" name="nightsOptions" value="bed_in_junior,2"/)
+        .expect(/<button type="submit" disabled="disabled" class="pull-right btn btn-primary">I really do want to participate!/)
+        .expect(200, done);
+    });
+
 
   });
 
