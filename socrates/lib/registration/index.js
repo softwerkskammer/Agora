@@ -20,14 +20,15 @@ var Participation = beans.get('socratesParticipation');
 var roomOptions = beans.get('roomOptions');
 
 var app = misc.expressAppIn(__dirname);
+var registrationOpening = moment(conf.get('registrationOpensAt'));
 
 function isRegistrationOpen(registrationParam) {
-  return moment(conf.get('registrationOpensAt')).isBefore(moment())
+  return registrationOpening.isBefore(moment())
     || (registrationParam && registrationParam === conf.get('registrationParam'));
 }
 
+
 function registrationOpensIn() {
-  var registrationOpening = moment(conf.get('registrationOpensAt'));
   var reference = moment();
   if (registrationOpening.isAfter(reference)) {
     var inDays = registrationOpening.diff(reference, 'days');
@@ -50,7 +51,7 @@ app.get('/', function (req, res, next) {
       registrationParam: req.query.registration,
       alreadyRegistered: activity.isAlreadyRegistered(res.locals.accessrights.memberId()),
       alreadyOnWaitinglist: activity.isAlreadyOnWaitinglist(res.locals.accessrights.memberId()),
-      registrationOpening: moment(conf.get('registrationOpensAt')),
+      registrationOpening: registrationOpening,
       registrationOpensIn: registrationOpensIn()
     });
   });
