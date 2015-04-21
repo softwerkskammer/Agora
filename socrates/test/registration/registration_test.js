@@ -3,6 +3,7 @@
 var request = require('supertest');
 var sinon = require('sinon').sandbox.create();
 var expect = require('must');
+var moment = require('moment-timezone');
 
 var conf = require('../../testutil/configureForTest');
 var beans = conf.get('beans');
@@ -12,7 +13,7 @@ var accessrights = beans.get('accessrights');
 var activitiesService = beans.get('activitiesService');
 
 var Member = beans.get('member');
-var SoCraTesActivity = beans.get('socratesActivity');
+var SoCraTesActivity = beans.get('socratesActivityExtended');
 var createApp = require('../../testutil/testHelper')('socratesRegistrationApp').createApp;
 
 describe('SoCraTes registration application', function () {
@@ -54,7 +55,8 @@ describe('SoCraTes registration application', function () {
   var socratesActivity = new SoCraTesActivity(socrates);
 
   beforeEach(function () {
-    conf.addProperties({registrationIsClosed: false});
+    conf.addProperties({registrationOpensAt: moment().subtract(10, 'days').format()}); // already opened
+    sinon.stub(activitiesService, 'getActivityWithGroupAndParticipants', function (activityUrl, callback) { callback(null, socratesActivity); });
   });
 
   afterEach(function () {
@@ -63,12 +65,11 @@ describe('SoCraTes registration application', function () {
 
   describe('before registration is opened', function () {
     beforeEach(function () {
-      conf.addProperties({registrationIsClosed: true});
+      conf.addProperties({registrationOpensAt: moment().add(10, 'days').format()}); // not opened yet
+      conf.addProperties({registrationParam: "secretCode"}); // allows for pre-registration
     });
 
     it('shows a disabled registration table and the "registration date button"', function (done) {
-      sinon.stub(activitiesService, 'getActivityWithGroupAndParticipants', function (activityUrl, callback) { callback(null, socratesActivity); });
-
       appWithoutMember
         .get('/')
         .expect(/<form id="participationinfoform" action="\/registration\/startRegistration" method="post" class="relaxed"><fieldset disabled="disabled"/)
@@ -76,22 +77,28 @@ describe('SoCraTes registration application', function () {
         .expect(200, done);
     });
 
-    it('does not displays that options 1 and 2 are not available', function (done) {
-      sinon.stub(activitiesService, 'getActivityWithGroupAndParticipants', function (activityUrl, callback) { callback(null, socratesActivity); });
-
+    it('does not display that options 1 and 2 are not available', function (done) {
       appWithoutMember
         .get('/')
         .expect(/<th>Single<\/th><td class="text-center"><div class="radio-inline"><label><input type="radio" name="nightsOptions" value="single,2"/)
         .expect(/<th>Double shared<\/th><td class="text-center"><div class="radio-inline"><label><input type="radio" name="nightsOptions" value="bed_in_double,2"/, done);
     });
 
+    it('shows an enabled registration table with initially disabled register button if the registration param is passed along', function (done) {
+      appWithoutMember
+        .get('/?registration=secretCode')
+        .expect(/<form id="participationinfoform" action="\/registration\/startRegistration" method="post" class="relaxed"><fieldset>/)
+        .expect(/<th>Junior shared<\/th><td class="text-center"><div class="radio-inline"><label><input type="radio" name="nightsOptions" value="bed_in_junior,2"/)
+        .expect(/<button type="submit" disabled="disabled" class="pull-right btn btn-primary">I really do want to participate!/)
+        .expect(200, done);
+    });
+
+
   });
 
   describe('when registration is opened', function () {
 
     it('shows an enabled registration table with initially disabled register button if the registration is open', function (done) {
-      sinon.stub(activitiesService, 'getActivityWithGroupAndParticipants', function (activityUrl, callback) { callback(null, socratesActivity); });
-
       appWithoutMember
         .get('/')
         .expect(/<form id="participationinfoform" action="\/registration\/startRegistration" method="post" class="relaxed"><fieldset>/)
@@ -101,8 +108,6 @@ describe('SoCraTes registration application', function () {
     });
 
     it('displays that options 1 and 2 are not available', function (done) {
-      sinon.stub(activitiesService, 'getActivityWithGroupAndParticipants', function (activityUrl, callback) { callback(null, socratesActivity); });
-
       appWithoutMember
         .get('/')
         .expect(/<th>Double shared<div class="radio-inline/)
@@ -110,7 +115,6 @@ describe('SoCraTes registration application', function () {
     });
 
     it('displays the options (but disabled), because the user is registered', function (done) {
-      sinon.stub(activitiesService, 'getActivityWithGroupAndParticipants', function (activityUrl, callback) { callback(null, socratesActivity); });
       socrates.resources.single._registeredMembers = [{memberId: 'memberId2'}];
 
       appWithSocratesMember

@@ -21,22 +21,43 @@ var roomOptions = beans.get('roomOptions');
 
 var app = misc.expressAppIn(__dirname);
 
-function isRegistrationOpen() {
-  // we currently set this to false on production system, because this feature is still in development
-  // the conf variable is used as a backdoor for testing
-  return app.get('env') !== 'production' && !conf.get('registrationIsClosed');
+function registrationOpening() {
+  return moment(conf.get('registrationOpensAt'));
+}
+
+function isRegistrationOpen(registrationParam) {
+  return registrationOpening().isBefore(moment())
+    || (registrationParam && registrationParam === conf.get('registrationParam'));
+}
+
+function registrationOpensIn() {
+  var registrationOpeningTime = registrationOpening();
+  var reference = moment();
+  if (registrationOpeningTime.isAfter(reference)) {
+    var inDays = registrationOpeningTime.diff(reference, 'days');
+    var inHours = registrationOpeningTime.diff(reference.add(inDays, 'days'), 'hours');
+    var inMinutes = registrationOpeningTime.diff(reference.add(inHours, 'hours'), 'minutes');
+    return {days: inDays, hours: inHours, minutes: inMinutes};
+  }
+  return undefined;
 }
 
 app.get('/', function (req, res, next) {
   activitiesService.getActivityWithGroupAndParticipants(socratesConstants.currentUrl, function (err, activity) {
     if (err || !activity) { return next(err); }
     var options = roomOptions.all(activity, res.locals.accessrights.memberId(), isRegistrationOpen());
+
     res.render('get', {
       activity: activity,
       roomOptions: options,
-      registrationPossible: isRegistrationOpen(),
-      alreadyRegistered: activity.isAlreadyRegistered(res.locals.accessrights.memberId()),
-      alreadyOnWaitinglist: activity.isAlreadyOnWaitinglist(res.locals.accessrights.memberId())
+      registration: {
+        isPossible: isRegistrationOpen(req.query.registration),
+        queryParam: req.query.registration,
+        alreadyRegistered: activity.isAlreadyRegistered(res.locals.accessrights.memberId()),
+        alreadyOnWaitinglist: activity.isAlreadyOnWaitinglist(res.locals.accessrights.memberId()),
+        opening: registrationOpening(),
+        opensIn: registrationOpensIn()
+      }
     });
   });
 });
@@ -59,7 +80,7 @@ app.get('/interested', function (req, res) {
 });
 
 app.post('/startRegistration', function (req, res, next) {
-  if (!isRegistrationOpen() || !req.body.nightsOptions) { return res.redirect('/registration'); }
+  if (!isRegistrationOpen(req.body.registrationParam) || !req.body.nightsOptions) { return res.redirect('/registration'); }
   var option = req.body.nightsOptions.split(',');
   var registrationTuple = {
     activityUrl: socratesConstants.currentUrl,
