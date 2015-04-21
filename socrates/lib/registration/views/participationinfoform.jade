@@ -1,5 +1,5 @@
 include  ../../../views/formComponents
-mixin participationinfoform(activity, roomOptions, registrationPossible, alreadyRegistered, alreadyOnWaitinglist, registrationOpening, registrationOpensIn, registrationParam)
+mixin participationinfoform(activity, roomOptions, registration)
   .row
     .col-md-6
       h3 Room Options
@@ -43,7 +43,7 @@ mixin participationinfoform(activity, roomOptions, registrationPossible, already
 
   .row
     .col-sm-12
-      -var disabled = (!registrationPossible || alreadyRegistered || alreadyOnWaitinglist)
+      -var disabled = (!registration.isPossible || registration.alreadyRegistered || registration.alreadyOnWaitinglist)
       form#participationinfoform.relaxed(action='/registration/startRegistration', method='post')
         fieldset(disabled=disabled class=(disabled ? 'disabled-text' : ''))
           .table-responsive
@@ -100,22 +100,22 @@ mixin participationinfoform(activity, roomOptions, registrationPossible, already
           .col-xs-12
             small * including participation in Sunday Coderetreat or Workshop
               +csrf
-        +hidden('registrationParam', registrationParam)
-        if alreadyRegistered
+        +hidden('registrationParam', registration.queryParam)
+        if registration.alreadyRegistered
           .btn.pull-right.btn.btn-success You are already registered.
-        else if alreadyOnWaitinglist
+        else if registration.alreadyOnWaitinglist
           .btn.pull-right.btn.btn-success You are already on the waitinglist.
         else
           .row.hidden-print(style='margin-bottom: 10px')
             .col-sm-12
               button.pull-right.btn.btn-primary(type='submit', disabled)
-                if (registrationPossible)
+                if (registration.isPossible)
                   | I really do want to participate!
                 else
-                  | Registration will open #{registrationOpening.format("dddd, Do MMMM YYYY, HH:mm [GMT]Z")}
-              if (!registrationPossible)
+                  | Registration will open #{registration.opening.format("dddd, Do MMMM YYYY, HH:mm [GMT]Z")}
+              if (!registration.isPossible)
                 .row
-                p.pull-right (i.e. in #{registrationOpensIn.days} days, #{registrationOpensIn.hours} hours, #{registrationOpensIn.minutes} minutes)
+                p.pull-right (i.e. in #{registration.opensIn.days} days, #{registration.opensIn.hours} hours, #{registration.opensIn.minutes} minutes)
 
         script.
           $(function () {

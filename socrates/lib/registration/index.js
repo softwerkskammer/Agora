@@ -50,12 +50,14 @@ app.get('/', function (req, res, next) {
     res.render('get', {
       activity: activity,
       roomOptions: options,
-      registrationPossible: isRegistrationOpen(req.query.registration),
-      registrationParam: req.query.registration,
-      alreadyRegistered: activity.isAlreadyRegistered(res.locals.accessrights.memberId()),
-      alreadyOnWaitinglist: activity.isAlreadyOnWaitinglist(res.locals.accessrights.memberId()),
-      registrationOpening: registrationOpening(),
-      registrationOpensIn: registrationOpensIn()
+      registration: {
+        isPossible: isRegistrationOpen(req.query.registration),
+        queryParam: req.query.registration,
+        alreadyRegistered: activity.isAlreadyRegistered(res.locals.accessrights.memberId()),
+        alreadyOnWaitinglist: activity.isAlreadyOnWaitinglist(res.locals.accessrights.memberId()),
+        opening: registrationOpening(),
+        opensIn: registrationOpensIn()
+      }
     });
   });
 });
