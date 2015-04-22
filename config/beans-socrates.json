@@ -17,7 +17,7 @@
 
   "subscribersPersistence": {
     "module": "./softwerkskammer/lib/persistence/persistence",
-    "constructorArgs": { "collectionName": "participantstore" }
+    "constructorArgs": { "collectionName": "subscriberstore" }
   },
 
   "socratesAddon": {"module": "./socrates/lib/subscribers/addon"},
