@@ -12,40 +12,37 @@ var rooms = [
   {id: 'junior', name: 'Junior (exclusive)', display: 'junior room (exclusively)', price: 2 * 46 + dinner}
 ];
 
-function roomOptions(activity, memberId, isRegistrationOpen) {
-  function option(room) {
-    return {
-      id: room.id,
-      name: room.name,
-      two: 2 * room.price + 2 * day,
-      three: 3 * room.price + 2 * day,
-      threePlus: 3 * room.price + 3 * day,
-      four: 4 * room.price + 3 * day,
-      displayRegistrationCheckboxes: (activity.isAlreadyRegistered(memberId) || !isRegistrationOpen || activity.resourceNamed(room.id).canSubscribe())
-    };
-  }
-
-  return _.map(rooms, option);
-}
-
-function allIds() {
-  return _.pluck(rooms, 'id');
-}
-
-function informationFor(id, duration) {
-  if (typeof duration !== 'number') {
-    return { room: _.find(rooms, {id: id}).display };
-  }
-  var endOfStay = ['saturday evening', 'sunday morning', 'sunday evening', 'monday morning'];
-  return {
-    room: _.find(rooms, {id: id}).display,
-    nights: (duration > 3 ? duration - 1 : duration),
-    until: endOfStay[duration - 2]
-  };
-}
-
 module.exports = {
-  all: roomOptions,
-  allIds: allIds(),
-  informationFor: informationFor
+  allIds: function () {
+    return _.pluck(rooms, 'id');
+  },
+
+  all: function (activity, memberId, isRegistrationOpen) {
+    function option(room) {
+      return {
+        id: room.id,
+        name: room.name,
+        two: 2 * room.price + 2 * day,
+        three: 3 * room.price + 2 * day,
+        threePlus: 3 * room.price + 3 * day,
+        four: 4 * room.price + 3 * day,
+        displayRegistrationCheckboxes: (activity.isAlreadyRegistered(memberId) || !isRegistrationOpen || activity.resourceNamed(room.id).canSubscribe())
+      };
+    }
+
+    return _.map(rooms, option);
+  },
+
+  informationFor: function (id, duration) {
+    var endOfStay = ['saturday evening', 'sunday morning', 'sunday evening', 'monday morning'];
+    return {
+      room: this.waitinglistInformationFor(id).room,
+      nights: (duration > 3 ? duration - 1 : duration),
+      until: endOfStay[duration - 2]
+    };
+  },
+
+  waitinglistInformationFor: function (id) {
+    return {room: _.find(rooms, {id: id}).display};
+  }
 };

@@ -12,3 +12,6 @@ db.activitystore.update({url: "socrates-2015"}, {$pull: {"resources.bed_in_doubl
 
 -- delete the registration of a member whose id matches /git/ from SoCraTes activities
 db.activitystore.update({url: "socrates-2015"}, {$pull: {"resources.junior._waitinglist": {_memberId: /git/}}})
+
+-- rename a collection
+db.participantstore.renameCollection( "subscriberstore" )

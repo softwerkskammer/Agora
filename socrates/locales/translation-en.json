@@ -136,7 +136,7 @@
     "already_registered": "You are already registered.",
     "successfully_registered": "Your registration was successful. You will receive a confirmation e-mail in a few seconds.",
     "registration_not_possible": "Subscription is not yet available, or all spots are taken.",
-    "successfully_added_to_waitinglist": "You are now on the waitinglist.",
+    "successfully_added_to_waitinglist": "You are now on the waitinglist. You will receive a confirmation e-mail in a few seconds.",
     "add_to_waitinglist": "Add to waiting list!",
     "remove_from_waitinglist": "Leave waiting list…",
     "waitinglist_not_possible": "Waiting list is currently not available.",

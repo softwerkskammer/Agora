@@ -62,7 +62,7 @@ module.exports = {
           }
           if (err) { return callback(err); }
           if (registrationTuple.duration === 'waitinglist') {
-            socratesNotifications.newWaitinglistEntry(memberID, roomOptions.informationFor(registrationTuple.resourceName, registrationTuple.duration));
+            socratesNotifications.newWaitinglistEntry(memberID, roomOptions.waitinglistInformationFor(registrationTuple.resourceName));
           } else {
             socratesNotifications.newParticipant(memberID, roomOptions.informationFor(registrationTuple.resourceName, registrationTuple.duration));
           }
