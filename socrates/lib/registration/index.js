@@ -45,7 +45,7 @@ function registrationOpensIn() {
 app.get('/', function (req, res, next) {
   activitiesService.getActivityWithGroupAndParticipants(socratesConstants.currentUrl, function (err, activity) {
     if (err || !activity) { return next(err); }
-    var options = roomOptions.all(activity, res.locals.accessrights.memberId(), isRegistrationOpen());
+    var options = roomOptions.all(activity, res.locals.accessrights.memberId(), isRegistrationOpen(req.query.registration));
 
     res.render('get', {
       activity: activity,
