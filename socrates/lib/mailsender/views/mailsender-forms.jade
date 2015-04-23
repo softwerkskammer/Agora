@@ -1,6 +1,6 @@
 include  ../../../views/formComponents
  
-mixin mailform(message)
+mixin mailform(message, successURL, massMailing)
   form#mailform(action='/mailsender/send', method='post')
     +csrf
     fieldset
@@ -9,6 +9,16 @@ mixin mailform(message)
           +submitButtons('mailsender.send')
           legend
             | #{t('mailsender.write')}
+          if (massMailing)
+            .radio
+              label
+                input(type='radio', name='massMailing', value='participants')
+                | To this year's SoCraTes participants
+            .radio
+              label
+                input(type='radio', name='massMailing', value='subscribers')
+                | To all persons that are interested in SoCraTes (send this only once per year!)
+
           if (message.receiver)
             +text('nickname', t('mailsender.to_member'), message.receiver.nickname(), '', '', true)
           +text('subject', t('mailsender.subject'), message.subject)

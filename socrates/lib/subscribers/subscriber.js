@@ -16,6 +16,10 @@ Subscriber.prototype.fillFromUI = function (uiInputObject) {
   return this;
 };
 
+Subscriber.prototype.id = function () {
+  return this.state.id;
+};
+
 Subscriber.prototype.addon = function () {
   if (!this.state._addon) {
     this.state._addon = {};
