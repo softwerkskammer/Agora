@@ -21,12 +21,6 @@ block content
   form#participationform.relaxed(action='/registration/completeRegistration', method='post')
     .row(style='margin-bottom: 10px')
       .col-sm-12
-        if(registrationTuple.duration === 'waitinglist')
-          +memberSubmitButtons('Put me on the waitinglist!')
-        else
-          +memberSubmitButtons('I really do want to participate!')
-    .row
-      .col-sm-12
         +csrf
         +hidden('activityUrl', registrationTuple.activityUrl)
         +hidden('resourceName', registrationTuple.resourceName)
