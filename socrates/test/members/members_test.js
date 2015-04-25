@@ -52,12 +52,10 @@ describe('SoCraTes members application', function () {
       authentications: [],
       socratesOnly: true
     });
-    var participation = {};
-    participation[currentYear] = {};
     socratesSubscriber = new Subscriber({
       id: 'memberId2',
       _addon: {homeAddress: 'at home'},
-      participations: participation
+      participations: {}
     });
 
     appWithoutMember = request(createApp({middlewares: [userWithoutMember]}));
@@ -164,6 +162,7 @@ describe('SoCraTes members application', function () {
 
       it('does not allow a subscriber who is registered for a single-bed-room to enter a roommate', function (done) {
         socrates.resources.single._registeredMembers = [{memberId: 'memberId2'}];
+        socratesSubscriber.state.participations[currentYear] = {};
         sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
 
         appWithSocratesMember
@@ -178,6 +177,7 @@ describe('SoCraTes members application', function () {
 
       it('does not allow a subscriber who is registered for an exclusive junior room to enter a roommate', function (done) {
         socrates.resources.junior._registeredMembers = [{memberId: 'memberId2'}];
+        socratesSubscriber.state.participations[currentYear] = {};
         sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
 
         appWithSocratesMember
@@ -192,6 +192,7 @@ describe('SoCraTes members application', function () {
 
       it('allows a subscriber who is registered for a bed in a double-bed room to enter a roommate', function (done) {
         socrates.resources.bed_in_double._registeredMembers = [{memberId: 'memberId2'}];
+        socratesSubscriber.state.participations[currentYear] = {};
         sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
 
         appWithSocratesMember
@@ -203,6 +204,7 @@ describe('SoCraTes members application', function () {
 
       it('allows a subscriber who is registered for a bed in a junior room to enter a roommate', function (done) {
         socrates.resources.bed_in_junior._registeredMembers = [{memberId: 'memberId2'}];
+        socratesSubscriber.state.participations[currentYear] = {};
         sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
 
         appWithSocratesMember
