@@ -38,4 +38,8 @@ Participation.prototype.question3 = function () {
   return this.state.question3;
 };
 
+Participation.hasParticipationInformation = function (uiInputObject) {
+  return !!uiInputObject.question1;
+};
+
 module.exports = Participation;
