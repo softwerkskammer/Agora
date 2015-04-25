@@ -54,7 +54,11 @@ describe('SoCraTes members application', function () {
     });
     var participation = {};
     participation[currentYear] = {};
-    socratesSubscriber = new Subscriber({id: 'memberId2', _addon: {homeAddress: 'at home'}, participations: participation});
+    socratesSubscriber = new Subscriber({
+      id: 'memberId2',
+      _addon: {homeAddress: 'at home'},
+      participations: participation
+    });
 
     appWithoutMember = request(createApp({middlewares: [userWithoutMember]}));
     appWithSoftwerkskammerMember = request(createApp({member: softwerkskammerMember}));
@@ -62,7 +66,7 @@ describe('SoCraTes members application', function () {
   });
 
   beforeEach(function () {
-    socrates = { resources: { single: {}, bed_in_double: {}, junior: {}, bed_in_junior: {} } };
+    socrates = {resources: {single: {}, bed_in_double: {}, junior: {}, bed_in_junior: {}}};
 
     sinon.stub(activitystore, 'getActivity', function (url, callback) { return callback(null, new SoCraTesActivity(socrates)); });
   });
@@ -116,95 +120,98 @@ describe('SoCraTes members application', function () {
 
   describe('editing a member page', function () {
 
-    it('allows somebody who is neither member nor subscriber to create his account', function (done) {
-      sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(); });
+    describe('initially creates an account', function () {
+      it('allows somebody who is neither member nor subscriber to create his account', function (done) {
+        sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(); });
 
-      appWithoutMember
-        .get('/edit')
-        .expect(200)
-        .expect(/In order to keep you informed about the SoCraTes conference, we need you to provide us with the following information\. Please fill in all mandatory fields\./, done);
+        appWithoutMember
+          .get('/edit')
+          .expect(200)
+          .expect(/In order to keep you informed about the SoCraTes conference, we need you to provide us with the following information\. Please fill in all mandatory fields\./, done);
+      });
+
+      it('allows a SoCraTes-only member to edit his page', function (done) {
+        sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
+
+        appWithSocratesMember
+          .get('/edit')
+          .expect(200)
+          .expect(/Here you can edit your information\./, done);
+      });
+
+      it('allows a Softwerkskammer member to edit his page', function (done) {
+        sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, softwerkskammerSubscriber); });
+
+        appWithSoftwerkskammerMember
+          .get('/edit')
+          .expect(200)
+          .expect(/Here you find the information from your Softwerkskammer account that is used by SoCraTes\./, done);
+      });
     });
 
-    it('allows a SoCraTes-only member to edit his page', function (done) {
-      sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
+    describe('- entering a roommate', function () {
+      it('does not allow an unregistered subscriber to enter a roommate', function (done) {
+        sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
 
-      appWithSocratesMember
-        .get('/edit')
-        .expect(200)
-        .expect(/Here you can edit your information\./, done);
+        appWithSocratesMember
+          .get('/edit')
+          .expect(200)
+          .end(function (err, res) {
+            expect(res.text).to.not.contain('Who do you want to share your room with');
+            done(err);
+          });
+      });
+
+      it('does not allow a subscriber who is registered for a single-bed-room to enter a roommate', function (done) {
+        socrates.resources.single._registeredMembers = [{memberId: 'memberId2'}];
+        sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
+
+        appWithSocratesMember
+          .get('/edit')
+          .expect(200)
+          .expect(/Home Address/)
+          .end(function (err, res) {
+            expect(res.text).to.not.contain('Who do you want to share your room with');
+            done(err);
+          });
+      });
+
+      it('does not allow a subscriber who is registered for an exclusive junior room to enter a roommate', function (done) {
+        socrates.resources.junior._registeredMembers = [{memberId: 'memberId2'}];
+        sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
+
+        appWithSocratesMember
+          .get('/edit')
+          .expect(200)
+          .expect(/Home Address/)
+          .end(function (err, res) {
+            expect(res.text).to.not.contain('Who do you want to share your room with');
+            done(err);
+          });
+      });
+
+      it('allows a subscriber who is registered for a bed in a double-bed room to enter a roommate', function (done) {
+        socrates.resources.bed_in_double._registeredMembers = [{memberId: 'memberId2'}];
+        sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
+
+        appWithSocratesMember
+          .get('/edit')
+          .expect(200)
+          .expect(/Home Address/)
+          .expect(/Who do you want to share your room with/, done);
+      });
+
+      it('allows a subscriber who is registered for a bed in a junior room to enter a roommate', function (done) {
+        socrates.resources.bed_in_junior._registeredMembers = [{memberId: 'memberId2'}];
+        sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
+
+        appWithSocratesMember
+          .get('/edit')
+          .expect(200)
+          .expect(/Home Address/)
+          .expect(/Who do you want to share your room with/, done);
+      });
     });
-
-    it('allows a Softwerkskammer member to edit his page', function (done) {
-      sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, softwerkskammerSubscriber); });
-
-      appWithSoftwerkskammerMember
-        .get('/edit')
-        .expect(200)
-        .expect(/Here you find the information from your Softwerkskammer account that is used by SoCraTes\./, done);
-    });
-
-    it('does not allow an unsubscribed member to enter a roommate', function (done) {
-      sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
-
-      appWithSocratesMember
-        .get('/edit')
-        .expect(200)
-        .end(function (err, res) {
-          expect(res.text).to.not.contain('Who do you want to share your room with');
-          done(err);
-        });
-    });
-
-    it('does not allow a member who is subscribed for a single-bed-room to enter a roommate', function (done) {
-      socrates.resources.single._registeredMembers = [{memberId: 'memberId2'}];
-      sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
-
-      appWithSocratesMember
-        .get('/edit')
-        .expect(200)
-        .expect(/Home Address/)
-        .end(function (err, res) {
-          expect(res.text).to.not.contain('Who do you want to share your room with');
-          done(err);
-        });
-    });
-
-    it('does not allow a member who is subscribed for an exclusive junior room to enter a roommate', function (done) {
-      socrates.resources.junior._registeredMembers = [{memberId: 'memberId2'}];
-      sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
-
-      appWithSocratesMember
-        .get('/edit')
-        .expect(200)
-        .expect(/Home Address/)
-        .end(function (err, res) {
-          expect(res.text).to.not.contain('Who do you want to share your room with');
-          done(err);
-        });
-    });
-
-    it('allows a member who is subscribed for a bed in a double-bed room to enter a roommate', function (done) {
-      socrates.resources.bed_in_double._registeredMembers = [{memberId: 'memberId2'}];
-      sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
-
-      appWithSocratesMember
-        .get('/edit')
-        .expect(200)
-        .expect(/Home Address/)
-        .expect(/Who do you want to share your room with/, done);
-    });
-
-    it('allows a member who is subscribed for a bed in a junior room to enter a roommate', function (done) {
-      socrates.resources.bed_in_junior._registeredMembers = [{memberId: 'memberId2'}];
-      sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
-
-      appWithSocratesMember
-        .get('/edit')
-        .expect(200)
-        .expect(/Home Address/)
-        .expect(/Who do you want to share your room with/, done);
-    });
-
 
   });
 
