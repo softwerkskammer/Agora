@@ -36,7 +36,7 @@ app.get('/edit', function (req, res, next) {
       var registeredResources = socrates.resources().resourceNamesOf(member.id());
       res.render('edit', {
         member: member,
-        addon: subscriber && subscriber.addon(),
+        addon: subscriber && subscriber.addon().homeAddress() ? subscriber.addon() : undefined,
         participation: subscriber && subscriber.isParticipating() ? subscriber.currentParticipation() : null,
         sharesARoom: registeredResources.length === 1 && registeredResources[0].indexOf('bed_in_') > -1
       });

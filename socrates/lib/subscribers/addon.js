@@ -35,4 +35,8 @@ Addon.prototype.tShirtSize = function () {
   return this.state.tShirtSize;
 };
 
+Addon.hasAddonInformation = function (uiInputObject) {
+  return !!uiInputObject.homeAddress;
+};
+
 module.exports = Addon;
