@@ -29,7 +29,7 @@ describe('SoCraTes members application', function () {
   var socratesSubscriber;
   var socrates;
 
-  before(function () {
+  beforeEach(function () {
     softwerkskammerMember = new Member({
       id: 'memberId',
       nickname: 'hada',
@@ -116,7 +116,7 @@ describe('SoCraTes members application', function () {
 
   });
 
-  describe('editing a member page', function () {
+  describe('editing a subscriber page', function () {
 
     describe('initially creates an account', function () {
       it('allows somebody who is neither member nor subscriber to create his account', function (done) {
