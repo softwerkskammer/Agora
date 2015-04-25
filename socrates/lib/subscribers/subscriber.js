@@ -11,8 +11,12 @@ function Subscriber(object) {
 }
 
 Subscriber.prototype.fillFromUI = function (uiInputObject) {
-  this.addon().fillFromUI(uiInputObject);
-  this.currentParticipation().fillFromUI(uiInputObject); // TODO if isParticipating
+  if (Addon.hasAddonInformation(uiInputObject)) {
+    this.addon().fillFromUI(uiInputObject);
+  }
+  if (Participation.hasParticipationInformation(uiInputObject)) {
+    this.currentParticipation().fillFromUI(uiInputObject);
+  }
   return this;
 };
 

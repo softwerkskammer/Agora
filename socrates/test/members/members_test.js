@@ -217,15 +217,24 @@ describe('SoCraTes members application', function () {
 
     describe('- entering the home address', function () {
       it('does not allow an unregistered subscriber to enter the home address', function (done) {
-        sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
+        sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, softwerkskammerSubscriber); });
 
-        appWithSocratesMember
+        appWithSoftwerkskammerMember
           .get('/edit')
           .expect(200)
           .end(function (err, res) {
             expect(res.text).to.not.contain('Home Address');
             done(err);
           });
+      });
+
+      it('does allow a registered subscriber to enter the home address, even if he is not participating this year', function (done) {
+        sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
+
+        appWithSocratesMember
+          .get('/edit')
+          .expect(200)
+          .expect(/Home Address/, done);
       });
 
     });
@@ -239,7 +248,6 @@ describe('SoCraTes members application', function () {
         .expect(200)
         .expect(/Home Address/, done);
     });
-
 
   });
 
@@ -351,6 +359,8 @@ describe('SoCraTes members application', function () {
         .send('id=0815&firstname=A&lastname=B')
         .send('nickname=nickerinack')
         .send('email=here@there.org')
+        .send('homeAddress=home')
+        .send('question1=Q1')
         .expect(302)
         .expect('location', '/payment/socrates', function (err) {
           expect(subscriberSave.called).to.be(true);
@@ -375,6 +385,8 @@ describe('SoCraTes members application', function () {
         .send('id=0815&firstname=A&lastname=B')
         .send('nickname=nickerinack')
         .send('email=here@there.org')
+        .send('homeAddress=home')
+        .send('question1=Q1')
         .expect(302)
         .expect('location', '/payment/socrates', function (err) {
           expect(subscriberSave.called).to.be(true);
@@ -407,6 +419,8 @@ describe('SoCraTes members application', function () {
         .send('id=0815&firstname=A&lastname=B')
         .send('nickname=nickerinack')
         .send('email=here@there.org')
+        .send('homeAddress=home')
+        .send('question1=Q1')
         .expect(302)
         .expect('location', '/payment/socrates', function (err) {
           expect(subscriberSave.called).to.be(true);
