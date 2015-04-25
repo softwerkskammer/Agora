@@ -215,6 +215,32 @@ describe('SoCraTes members application', function () {
       });
     });
 
+    describe('- entering the home address', function () {
+      it('does not allow an unregistered subscriber to enter the home address', function (done) {
+        sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
+
+        appWithSocratesMember
+          .get('/edit')
+          .expect(200)
+          .end(function (err, res) {
+            expect(res.text).to.not.contain('Home Address');
+            done(err);
+          });
+      });
+
+    });
+
+    it('allows a subscriber who is registered to enter the home address', function (done) {
+      socrates.resources.bed_in_double._registeredMembers = [{memberId: 'memberId2'}];
+      sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
+
+      appWithSocratesMember
+        .get('/edit')
+        .expect(200)
+        .expect(/Home Address/, done);
+    });
+
+
   });
 
   describe('submitting a member form', function () {
