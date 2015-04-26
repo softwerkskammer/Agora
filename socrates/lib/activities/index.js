@@ -2,6 +2,7 @@
 
 var async = require('async');
 var _ = require('lodash');
+var moment = require('moment-timezone');
 
 var beans = require('simple-configure').get('beans');
 var misc = beans.get('misc');
@@ -13,6 +14,8 @@ var Activity = beans.get('activity');
 var validation = beans.get('validation');
 var statusmessage = beans.get('statusmessage');
 var roomOptions = beans.get('roomOptions');
+var addonService = beans.get('addonService');
+var currentUrl = beans.get('socratesConstants').currentUrl;
 
 var reservedURLs = '^new$|^edit$|^submit$|^checkurl$\\+';
 
@@ -93,6 +96,45 @@ app.post('/submit', function (req, res, next) {
 
 app.get('/checkurl', function (req, res) {
   misc.validate(req.query.url, req.query.previousUrl, _.partial(activitiesService.isValidUrl, reservedURLs), res.end);
+});
+
+// for management tables:
+
+app.get('/addons', function (req, res, next) {
+  activitiesService.getActivityWithGroupAndParticipants(currentUrl, function (err, activity) {
+    if (!res.locals.accessrights.canEditActivity(activity)) {
+      return res.redirect('/registration');
+    }
+
+    addonService.addonLinesOf(activity, function (err, addonLines) {
+      if (err) { return next(err); }
+
+      var formatDates = function (dates) {
+        return _(dates).map(function (date) { return date.locale(res.locals.language).format('L'); }).uniq().value();
+      };
+      var formatList = function (list) {
+        return list.join(', ');
+      };
+
+      var tshirtSizes = addonService.tshirtSizes(addonLines);
+
+      res.render('managementTables', {
+        activity: activity,
+        addonLines: addonLines,
+        addonLinesOfUnsubscribedMembers: [],
+        tshirtsizes: tshirtSizes,
+        formatDates: formatDates,
+        formatList: formatList
+      });
+    });
+  });
+});
+
+app.get('/paymentReceived/:nickname', function (req, res) {
+  addonService.submitPaymentReceived(req.params.nickname, function (err) {
+    if (err) { return res.send('Error: ' + err); }
+    res.send(moment().locale(res.locals.language).format('L'));
+  });
 });
 
 module.exports = app;

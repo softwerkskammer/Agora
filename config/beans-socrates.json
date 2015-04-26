@@ -9,6 +9,7 @@
   "socratesSubscribersApp": {"module": "./socrates/lib/subscribers"},
   "socratesWikiApp": {"module": "./socrates/lib/wiki"},
 
+  "addonService": {"module": "./socrates/lib/activities/addonService"},
   "subscriberService": {"module": "./socrates/lib/subscribers/subscriberService"},
   "registrationService": {"module": "./socrates/lib/registration/registrationService"},
   "roomOptions": {"module": "./socrates/lib/activities/roomOptions"},

@@ -115,19 +115,5 @@ module.exports.newMemberRegistered = function (member, subscriptions) {
   });
 };
 
-module.exports.paymentMarked = function (activity, memberId) {
-  memberstore.getMemberForId(memberId, function (err, member) {
-    if (err || !member) { return; }
-    var renderingOptions = {
-      member: member,
-      activity: activity
-    };
-    _.defaults(renderingOptions, defaultRenderingOptions);
-    var filename = path.join(__dirname, 'jade/paymenttemplate.jade');
-    var receivers = [member.email()];
-    sendMail(receivers, 'Payment Receipt / Zahlungseingang', jade.renderFile(filename, renderingOptions));
-  });
-};
-
 // this is only exported for reuse in socratesNotifications.
 module.exports._sendMail = sendMail;
