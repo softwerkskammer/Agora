@@ -135,6 +135,12 @@ module.exports = {
     };
   },
 
+  superuserEmails: function (callback) {
+    store.superUsers(function (err, members) {
+      callback(err, _.map(members, function (member) { return member.email(); }));
+    });
+  },
+
   isReserved: isReserved
 };
 
