@@ -5,6 +5,7 @@ var conf = require('simple-configure');
 var beans = conf.get('beans');
 var notifications = beans.get('notifications');
 var memberstore = beans.get('memberstore');
+var membersService = beans.get('membersService');
 var subscriberstore = beans.get('subscriberstore');
 var Member = beans.get('member');
 var transport = beans.get('mailtransport');
@@ -22,14 +23,13 @@ function renderingOptions(member) {
 
 module.exports = {
   newSoCraTesMemberRegistered: function (member) {
-    memberstore.allMembers(function (err, members) {
-      if (err || !members) { return logger.error(err); }
+    membersService.superuserEmails(function (err, receivers) {
+      if (err || !receivers) { return logger.error(err); }
       subscriberstore.allSubscribers(function (err, subscribers) {
         if (err || !subscribers) { return logger.error(err); }
         var options = renderingOptions(member);
         options.count = subscribers.length;
         var filename = path.join(__dirname, 'jade/newmembertemplate.jade');
-        var receivers = Member.superuserEmails(members);
         notifications._sendMail(receivers, 'Neuer Interessent', jade.renderFile(filename, options));
       });
     });
@@ -43,10 +43,9 @@ module.exports = {
       var filename = path.join(__dirname, 'jade/registrationConfirmation.jade');
       var receivers = [member.email()];
       notifications._sendMail(receivers, 'SoCraTes Registration Confirmation', jade.renderFile(filename, options));
-      memberstore.allMembers(function (err, members) {
-        if (err || !members) { return logger.error(err); }
+      membersService.superuserEmails(function (err, superusers) {
+        if (err || !superusers) { return logger.error(err); }
         var filenameSuperuser = path.join(__dirname, 'jade/superuserRegistrationNotification.jade');
-        var superusers = Member.superuserEmails(members);
         notifications._sendMail(superusers, 'New SoCraTes Registration', jade.renderFile(filenameSuperuser, options));
       });
     });
@@ -60,10 +59,9 @@ module.exports = {
       var filename = path.join(__dirname, 'jade/waitinglistConfirmation.jade');
       var receivers = [member.email()];
       notifications._sendMail(receivers, 'SoCraTes Waitinglist Confirmation', jade.renderFile(filename, options));
-      memberstore.allMembers(function (err, members) {
-        if (err || !members) { return logger.error(err); }
+      membersService.superuserEmails(function (err, superusers) {
+        if (err || !superusers) { return logger.error(err); }
         var filenameSuperuser = path.join(__dirname, 'jade/superuserWaitinglistNotification.jade');
-        var superusers = Member.superuserEmails(members);
         notifications._sendMail(superusers, 'New SoCraTes Waitinglist Entry', jade.renderFile(filenameSuperuser, options));
       });
     });
@@ -76,9 +74,8 @@ module.exports = {
       var filename = path.join(__dirname, 'jade/paymentConfirmation.jade');
       var receivers = [member.email()];
       notifications._sendMail(receivers, 'SoCraTes Payment Confirmation', jade.renderFile(filename, options));
-      memberstore.allMembers(function (err, members) {
-        if (err || !members) { return logger.error(err); }
-        var superusers = Member.superuserEmails(members);
+      membersService.superuserEmails(function (err, superusers) {
+        if (err || !superusers) { return logger.error(err); }
         notifications._sendMail(superusers, 'SoCraTes Payment for ' + member.nickname(), jade.renderFile(filename, options));
       });
     });

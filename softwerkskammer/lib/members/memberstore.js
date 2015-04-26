@@ -1,6 +1,7 @@
 'use strict';
 
-var beans = require('simple-configure').get('beans');
+var conf = require('simple-configure');
+var beans = conf.get('beans');
 var _ = require('lodash');
 var persistence = beans.get('membersPersistence');
 var Member = beans.get('member');
@@ -28,6 +29,11 @@ module.exports = {
 
   socratesOnlyMembers: function (callback) {
     persistence.listByField({'socratesOnly': true}, {lastname: 1, firstname: 1}, _.partial(toMemberList, callback));
+  },
+
+  superUsers: function (callback) {
+    var superusersids = conf.get('superuser');
+    persistence.listByField({'id': misc.arrayToLowerCaseRegExp(superusersids)}, {lastname: 1, firstname: 1}, _.partial(toMemberList, callback));
   },
 
   getMembersForEMails: function (emails, callback) {

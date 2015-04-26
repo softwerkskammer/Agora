@@ -135,8 +135,8 @@ module.exports = {
     var memberUrl = conf.get('publicUrlPrefix') + '/members/' + encodeURIComponent(member.nickname());
     var messageData = {markdown: member.displayName() + ' ([' + member.nickname() + '](' + memberUrl + ')) möchte gerne austreten.\n\n' + markdown, subject: 'Austrittswunsch', sendCopyToSelf: true};
     var message = new Message(messageData, member);
-    memberstore.allMembers(function (err, members) {
-      message.setTo(Member.superuserEmails(members));
+    membersService.superuserEmails(function (err, superusers) {
+      message.setTo(superusers);
       sendMail(message, 'E-Mail zum Austrittswunsch', callback);
     });
   }
