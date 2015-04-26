@@ -121,11 +121,14 @@ app.get('/participate', function (req, res, next) {
       if (err) { return next(err); }
       var addon = (subscriber && subscriber.addon()) || new Addon({});
       var participation = (subscriber && subscriber.currentParticipation()) || new Participation();
+      var expiresAt = activity.expirationTime(registrationTuple);
       res.render('participate', {
         member: member,
         addon: addon,
         participation: participation,
-        registrationTuple: registrationTuple
+        registrationTuple: registrationTuple,
+        expiresIn: expiresAt.diff(moment(), 'minutes'),
+        expiresAt: expiresAt
       });
     });
   });

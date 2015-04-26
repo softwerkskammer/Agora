@@ -17,6 +17,27 @@ function removeExpiredReservations(registeredMembers) {
   });
 }
 
+function waitinglistRecordFor(state, memberId) {
+  return _.find(state._waitinglist, {_memberId: memberId});
+}
+
+function recordOrWaitinglistRecordFor(state, registrationTuple) {
+  var sessionID = 'SessionID:' + registrationTuple.sessionID;
+  var record;
+  if (registrationTuple.duration === 'waitinglist') {
+    if (!state._waitinglist) {
+      state._waitinglist = [];
+    }
+    record = waitinglistRecordFor(state, sessionID);
+  } else {
+    if (!state._registeredMembers) {
+      state._registeredMembers = [];
+    }
+    record = _.find(state._registeredMembers, {memberId: sessionID});
+  }
+  return record;
+}
+
 function SoCraTesResource(resource) {
   this.state = (resource && resource.state) || {};
   this.resourceName = (resource && resource.resourceName);
@@ -32,15 +53,13 @@ SoCraTesResource.prototype.recordFor = function (memberId) {
   return _.find(this.state._registeredMembers, {memberId: memberId});
 };
 
-SoCraTesResource.prototype.waitinglistRecordFor = function (memberId) {
-  return _.find(this.state._waitinglist, {_memberId: memberId});
-};
+
 
 SoCraTesResource.prototype.reserve = function (registrationTuple) {
   var sessionID = 'SessionID:' + registrationTuple.sessionID;
   if (registrationTuple.duration === 'waitinglist') {
     if (!this.addToWaitinglist(sessionID)) { return false; }
-    addExpirationTimeFor(this.waitinglistRecordFor(sessionID));
+    addExpirationTimeFor(waitinglistRecordFor(this.state, sessionID));
   } else {
     if (!this.addMemberId(sessionID)) { return false; }
     var record = this.recordFor(sessionID);
@@ -79,22 +98,13 @@ SoCraTesResource.prototype.register = function (memberID, registrationTuple) {
 };
 
 SoCraTesResource.prototype.hasValidReservationFor = function (registrationTuple) {
-  var self = this;
-  var sessionID = 'SessionID:' + registrationTuple.sessionID;
-  if (!self.state._registeredMembers) {
-    self.state._registeredMembers = [];
-  }
-  var record = self.recordFor(sessionID);
+  var record = recordOrWaitinglistRecordFor(this.state, registrationTuple);
   return !!(record && record.expiresAt && moment(record.expiresAt).isAfter(moment()));
 };
 
-SoCraTesResource.prototype.hasValidWaitinglistReservationFor = function (registrationTuple) {
-  if (!this.state._waitinglist) {
-    this.state._waitinglist = [];
-  }
-  var sessionID = 'SessionID:' + registrationTuple.sessionID;
-  var record = this.waitinglistRecordFor(sessionID);
-  return record && record.expiresAt && moment(record.expiresAt).isAfter(moment());
+SoCraTesResource.prototype.expirationTime = function (registrationTuple) {
+  var record = recordOrWaitinglistRecordFor(this.state, registrationTuple);
+  return record && moment(record.expiresAt);
 };
 
 module.exports = SoCraTesResource;
