@@ -16,5 +16,8 @@ db.activitystore.update({url: "socrates-2015"}, {$pull: {"resources.junior._wait
 -- rename a collection
 db.participantstore.renameCollection( "subscriberstore" )
 
--- delete the participations of a member whose id matches /git/
+-- delete the participations of a subscriber whose id matches /git/
 db.subscriberstore.update({id: /git/}, {$unset: {"participations": "" }})
+
+-- delete the payment-received-notification of a member whose id matches /xlogon/
+db.subscriberstore.update({id: /xlogon/}, {$unset: {"participations.2015.payment.paymentReceived": "" }})
