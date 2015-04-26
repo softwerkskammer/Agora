@@ -71,6 +71,7 @@ app.get('/ical', function (req, res, next) {
 
   activitystore.getActivity(socratesConstants.currentUrl, function (err, activity) {
     if (err || !activity) { return next(err); }
+    activity.state.description = '';
     sendCalendarStringNamedToResult(icalService.activityAsICal(activity), activity.url(), res);
   });
 });
