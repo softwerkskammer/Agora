@@ -7,7 +7,7 @@ var SoCraTesActivity = beans.get('socratesActivity');
 var SoCraTesResource = beans.get('socratesResource');
 
 if (SoCraTesActivity.prototype.reserve === undefined) {
-  SoCraTesActivity.prototype.socratesResourceFor = function socratesResourceNamed(registrationTuple) {
+  SoCraTesActivity.prototype.socratesResourceFor = function (registrationTuple) {
     return new SoCraTesResource(this.resourceNamed(registrationTuple.resourceName));
   };
 
