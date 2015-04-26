@@ -3,10 +3,10 @@ include ../../../../softwerkskammer/lib/members/views/memberlist-mixin
 include ../../../../softwerkskammer/views/format-mixin
 include ../../../../softwerkskammer/views/dataTables-mixin
 mixin localdate(momentOrNull)
-  | #{momentOrNull ? momentOrNull.locale(language).format('L') : '-'}
+  | #{momentOrNull ? momentOrNull.locale('de').format('L') : '-'}
 mixin buttonOrDate(momentOrNull, paymentDone, nickname)
   if (momentOrNull)
-    | #{momentOrNull.locale(language).format('L')}
+    | #{momentOrNull.locale('de').format('L')}
   else
     a.btn.btn-primary.btn-xs.btn-block(id='#{encodeURIComponent(nickname) + "-button"}',
     href='javascript:paymentDone(\'#{"/activities/paymentReceived/" + encodeURIComponent(nickname)}\', \'#{encodeURIComponent(nickname) + "-button"}\')') Erhalten…
@@ -30,7 +30,7 @@ block content
     .col-md-12
       .page-header
         h2 #{activity.title()} - Verwaltung
-          a.btn.pull-right.btn-default(href=activity.fullyQualifiedUrl()) Zurück
+          a.btn.pull-right.btn-default(href='/registration') Zurück
   ul.nav.nav-tabs
     li: a(href='#main', data-toggle='tab') #{t('activities.participants')}
     li.active: a(href='#addons', data-toggle='tab') Zahlungen
@@ -56,7 +56,7 @@ block content
                 tbody
                   for member in participants
                     tr
-                      td #{member.registeredAt.locale(language).format('L')}
+                      td #{member.registeredAt.locale('de').format('L')}
                       td: +linkedMember(member.nickname())
                       td #{member.firstname()}
                       td #{member.lastname()}
@@ -129,7 +129,7 @@ block content
                       td gelöscht
                       td &nbsp;
                       td &nbsp;
-                    td #{line.addon.paymentReceivedMoment() && line.addon.paymentReceivedMoment().locale(language).format('L')}
+                    td #{line.addon.paymentReceivedMoment() && line.addon.paymentReceivedMoment().locale('de').format('L')}
           hr
         .tab-pane#addresses
           h4 Adressen der Teilnehmer

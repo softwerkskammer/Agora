@@ -110,7 +110,7 @@ app.get('/addons', function (req, res, next) {
       if (err) { return next(err); }
 
       var formatDates = function (dates) {
-        return _(dates).map(function (date) { return date.locale(res.locals.language).format('L'); }).uniq().value();
+        return _(dates).map(function (date) { return date.locale('de').format('L'); }).uniq().value();
       };
       var formatList = function (list) {
         return list.join(', ');
