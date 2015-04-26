@@ -90,7 +90,7 @@ describe('Notifications', function () {
     });
   });
 
-  describe.only('for participation', function () {
+  describe('for participation', function () {
     it('creates a meaningful text and subject', function () {
       sinon.stub(memberstore, 'getMemberForId', function (id, callback) { callback(null, hans); });
       sinon.stub(memberstore, 'allMembers', function (callback) { callback(null, [hans, alice, bob, superman]); });
