@@ -60,6 +60,12 @@ module.exports = {
       var filename = path.join(__dirname, 'jade/waitinglistConfirmation.jade');
       var receivers = [member.email()];
       notifications._sendMail(receivers, 'SoCraTes Waitinglist Confirmation', jade.renderFile(filename, options));
+      memberstore.allMembers(function (err, members) {
+        if (err || !members) { return logger.error(err); }
+        var filenameSuperuser = path.join(__dirname, 'jade/superuserWaitinglistNotification.jade');
+        var superusers = Member.superuserEmails(members);
+        notifications._sendMail(superusers, 'New SoCraTes Waitinglist Entry', jade.renderFile(filenameSuperuser, options));
+      });
     });
   }
 };

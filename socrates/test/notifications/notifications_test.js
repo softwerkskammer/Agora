@@ -116,13 +116,31 @@ describe('Notifications', function () {
       expect(options.html).to.contain('<b>3</b>  nights');
       expect(options.html).to.contain('Gassenhauer');
     });
+  });
 
-    it('does not trigger mail sending if there are no superusers', function () {
-      sinon.stub(memberstore, 'allMembers', function (callback) { callback(null, [hans, alice, bob]); });
-      sinon.stub(subscriberstore, 'allSubscribers', function (callback) { callback(null, ['p1', 'p2', 'p3']); });
+  describe('for waitinglist', function () {
+    it('creates a meaningful text and subject', function () {
+      sinon.stub(memberstore, 'getMemberForId', function (id, callback) { callback(null, hans); });
+      sinon.stub(memberstore, 'allMembers', function (callback) { callback(null, [hans, alice, bob, superman]); });
 
-      notifications.newSoCraTesMemberRegistered(hans);
-      expect(transport.sendMail.called).to.be(false);
+      notifications.newWaitinglistEntry(hans, roomOptions.informationFor('junior', 3));
+      expect(transport.sendMail.calledTwice).to.be(true);
+      var options = transport.sendMail.firstCall.args[0];
+      expect(options.subject).to.equal('SoCraTes Waitinglist Confirmation');
+      expect(options.html).to.contain('junior room (exclusively)');
+    });
+
+    it('sends a meaningful mail to superusers', function () {
+      sinon.stub(memberstore, 'getMemberForId', function (id, callback) { callback(null, hans); });
+      sinon.stub(memberstore, 'allMembers', function (callback) { callback(null, [hans, alice, bob, superman]); });
+
+      notifications.newWaitinglistEntry(hans, roomOptions.informationFor('junior', 3));
+      expect(transport.sendMail.calledTwice).to.be(true);
+      var options = transport.sendMail.secondCall.args[0];
+      expect(options.bcc).to.contain('superman@email.de');
+      expect(options.subject).to.equal('New SoCraTes Waitinglist Entry');
+      expect(options.html).to.contain('junior room (exclusively)');
+      expect(options.html).to.contain('Gassenhauer');
     });
   });
 
