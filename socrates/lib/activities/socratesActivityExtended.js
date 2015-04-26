@@ -7,20 +7,20 @@ var SoCraTesActivity = beans.get('socratesActivity');
 var SoCraTesResource = beans.get('socratesResource');
 
 if (SoCraTesActivity.prototype.reserve === undefined) {
-  SoCraTesActivity.prototype.socratesResourceNamed = function socratesResourceNamed(name) {
-    return new SoCraTesResource(this.resourceNamed(name));
+  SoCraTesActivity.prototype.socratesResourceFor = function socratesResourceNamed(registrationTuple) {
+    return new SoCraTesResource(this.resourceNamed(registrationTuple.resourceName));
   };
 
   SoCraTesActivity.prototype.reserve = function (registrationTuple) {
-    return this.socratesResourceNamed(registrationTuple.resourceName).reserve(registrationTuple);
+    return this.socratesResourceFor(registrationTuple).reserve(registrationTuple);
   };
 
   SoCraTesActivity.prototype.register = function (memberID, registrationTuple) {
-    return this.socratesResourceNamed(registrationTuple.resourceName).register(memberID, registrationTuple);
+    return this.socratesResourceFor(registrationTuple).register(memberID, registrationTuple);
   };
 
   SoCraTesActivity.prototype.hasValidReservationFor = function (registrationTuple) {
-    return this.socratesResourceNamed(registrationTuple.resourceName).hasValidReservationFor(registrationTuple);
+    return this.socratesResourceFor(registrationTuple).hasValidReservationFor(registrationTuple);
   };
 
   SoCraTesActivity.prototype.selectedOptionFor = function (memberID) {
@@ -37,7 +37,7 @@ if (SoCraTesActivity.prototype.reserve === undefined) {
   };
 
   SoCraTesActivity.prototype.expirationTime = function (registrationTuple) {
-    return this.socratesResourceNamed(registrationTuple.resourceName).expirationTime(registrationTuple);
+    return this.socratesResourceFor(registrationTuple).expirationTime(registrationTuple);
   };
 }
 
