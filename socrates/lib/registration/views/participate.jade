@@ -36,6 +36,10 @@ block content
     
     .row(style='margin-bottom: 10px')
       .col-sm-12
+        p Our conference is dedicated to providing a harassment-free conference experience for everyone. We do 
+          | not tolerate harassment of conference participants in any form. With your registration, you accept this and 
+          a(href='/values.html', target='_blank') our code of conduct
+          | #{' '} in general.
         if(registrationTuple.duration === 'waitinglist')
           +memberSubmitButtons('Put me on the waitinglist!')
         else
