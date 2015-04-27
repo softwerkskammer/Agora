@@ -59,7 +59,6 @@ app.post('/submitCreditCard', function (req, res, next) {
     req.body.stripeId, function (err, message) {
       if (err) { return next(err); }
       message.putIntoSession(req);
-      socratesNotifications.freePaymentConfirmation(memberId, amount);
       res.redirect('/');
     });
 });
@@ -77,7 +76,6 @@ app.post('/submitCreditCardSocrates', function (req, res, next) {
     req.body.stripeId, function (err, message) {
       if (err) { return next(err); }
       message.putIntoSession(req);
-      socratesNotifications.paymentConfirmation(memberId);
       res.redirect('/');
     });
 });
