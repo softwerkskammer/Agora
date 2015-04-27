@@ -11,8 +11,12 @@ Addon.prototype.fillFromUI = function (uiInputObject) {
   this.state.homeAddress = uiInputObject.homeAddress;
   this.state.billingAddress = uiInputObject.billingAddress;
   this.state.tShirtSize = _(uiInputObject.tShirtSize).compact().first();
-
+  this.state.remarks = uiInputObject.remarks;
   return this;
+};
+
+Addon.prototype.remarks = function () {
+  return this.state.remarks;
 };
 
 Addon.prototype.homeAddress = function () {

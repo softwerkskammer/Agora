@@ -56,6 +56,8 @@ mixin userinfoform(addon, participation, sharesARoom)
             select#tShirtSizeFemale.form-control(name='tShirtSize')
               for item in ['', 'Ladies\' XS', 'Ladies\' S', 'Ladies\' M', 'Ladies\' L', 'Ladies\' XL', 'Ladies\' XXL' ]
                 option(selected=addon.tShirtSize() === item) #{item}
+    .col-sm-6
+      +textareaPure('remarks', 'Remarks (e.g. dietary restrictions)', addon.remarks())
   if participation
     if sharesARoom
       .row
