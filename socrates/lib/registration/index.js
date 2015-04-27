@@ -127,7 +127,7 @@ app.get('/participate', function (req, res, next) {
         addon: addon,
         participation: participation,
         registrationTuple: registrationTuple,
-        expiresIn: expiresAt.diff(moment(), 'minutes'),
+        expiresIn: expiresAt && expiresAt.diff(moment(), 'minutes'),
         expiresAt: expiresAt
       });
     });

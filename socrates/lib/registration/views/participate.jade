@@ -17,11 +17,11 @@ block content
     else
       h1 Registration #{' '}
         small Personal Information
-      
-    p.
-      You have #{expiresIn} minutes to complete your registration. The reservation will expire 
-      at #{expiresAt.locale('en-gb').format('LT')}.
-      After that you will have to restart the process from the previous page.
+    if (!!expiresAt)
+      p.
+        You have #{expiresIn} minutes to complete your registration. The reservation will expire 
+        at #{expiresAt.locale('en-gb').format('LT')}.
+        After that you will have to restart the process from the previous page.
       
   form#participationform.relaxed(action='/registration/completeRegistration', method='post')
     .row(style='margin-bottom: 10px')
