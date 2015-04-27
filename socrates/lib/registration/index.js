@@ -141,6 +141,7 @@ app.post('/completeRegistration', function (req, res, next) {
     registrationService.saveRegistration(req.user.member.id(), req.sessionID, body, function (err, statusTitle, statusText) {
       if (err) { return next(err); }
       delete req.session.statusmessage;
+      delete req.session.registrationTuple;
       if (statusTitle && statusText) {
         statusmessage.errorMessage(statusTitle, statusText).putIntoSession(req);
         return res.redirect('/registration');
