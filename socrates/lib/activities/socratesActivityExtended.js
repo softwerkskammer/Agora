@@ -36,8 +36,8 @@ if (SoCraTesActivity.prototype.reserve === undefined) {
     return null;
   };
 
-  SoCraTesActivity.prototype.expirationTime = function (registrationTuple) {
-    return this.socratesResourceFor(registrationTuple).expirationTime(registrationTuple);
+  SoCraTesActivity.prototype.expirationTimeOf = function (registrationTuple) {
+    return this.socratesResourceFor(registrationTuple).expirationTimeOf(registrationTuple);
   };
 }
 
