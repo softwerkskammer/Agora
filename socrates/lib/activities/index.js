@@ -133,7 +133,7 @@ app.get('/addons', function (req, res, next) {
 app.get('/paymentReceived/:nickname', function (req, res) {
   addonService.submitPaymentReceived(req.params.nickname, function (err) {
     if (err) { return res.send('Error: ' + err); }
-    res.send(moment().locale(res.locals.language).format('L'));
+    res.send(moment().locale('de').format('L'));
   });
 });
 
