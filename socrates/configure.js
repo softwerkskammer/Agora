@@ -29,7 +29,8 @@ function createConfiguration() {
     emaildomainname: 'localhost',
     softwerkskammerURL: 'http://localhost:17124',
     socratesURL: 'http://localhost:17224',
-    jwt_secret: 'my_very_secret'
+    jwt_secret: 'my_very_secret',
+    socratesAdmins: []
   });
 
   // then, add properties from config files:
