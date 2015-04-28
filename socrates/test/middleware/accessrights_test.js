@@ -15,7 +15,7 @@ describe('accessrights', function () {
   beforeEach(function () {
     req = {};
     res = {locals: {}};
-    next = function () {};
+    next = function () { return; };
 
     accessrights(req, res, next);
   });
