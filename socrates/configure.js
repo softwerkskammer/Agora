@@ -38,6 +38,7 @@ function createConfiguration() {
     'ezmlm-config.json',
     'socrates-server-config.json',
     'authentication-config.json',
+    'socrates-authentication-config.json',
     'mailsender-config.json',
     'socrates-wikirepo-config.json',
     'activityresults-config.json',
