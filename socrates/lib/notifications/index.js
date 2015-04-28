@@ -69,9 +69,13 @@ module.exports = {
     });
   },
 
-  paymentMarked: function (memberId) {
-    memberstore.getMemberForId(memberId, function (err, member) {
-      if (err || !member) { return; }
+  paymentMarked: function (nickname) {
+    memberstore.getMember(nickname, function (err, member) {
+      if (err || !member) {
+        logger.error("Error sending payment notification mail to member " + nickname);
+        logger.error(err);
+        return;
+      }
       var options = renderingOptions(member);
       options.activityTitle = "SoCraTes " + socratesConstants.currentYear;
       var filename = path.join(__dirname, 'jade/paymenttemplate.jade');
