@@ -69,7 +69,7 @@ block content
               thead
                 tr
                   th Registriert
-                  th Ressourcen
+                  th Ressource
                   th Nickname
                   th Vorname
                   th Nachname
@@ -84,7 +84,7 @@ block content
                   tr
                     -var payment = line.participation.payment()
                     td #{formatList(formatDates(activity.resources().registrationDatesOf(line.member.id())))}
-                    td: +formatAsBulletList(activity.resources().resourceNamesOf(line.member.id()))
+                    td #{formatList(activity.resources().resourceNamesOf(line.member.id()))}
                     td: +linkedMember(line.member.nickname())
                     td #{line.member.firstname()}
                     td #{line.member.lastname()}
@@ -141,7 +141,7 @@ block content
                   th Nachname
                   th Heimatadresse
                   th Rechnungsadresse
-                  th Ressourcen
+                  th Ressource
               tbody
                 for line in addonLines
                   tr
@@ -149,5 +149,5 @@ block content
                     td #{line.member.lastname()}
                     td: +formatAsLines(line.addon.homeAddressLines())
                     td: +formatAsLines(line.addon.billingAddressLines())
-                    td: +formatAsBulletList(activity.resources().resourceNamesOf(line.member.id()))
+                    td #{formatList(activity.resources().resourceNamesOf(line.member.id()))}
           hr
