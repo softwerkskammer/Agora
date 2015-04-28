@@ -14,7 +14,7 @@ module.exports = function expressViewHelper(req, res, next) {
   }
   res.locals.user = req.user;
   if (!req.i18n) {
-    logger.error('No i18n for ' + req.path);
+    logger.error('No i18n for ' + req.path + ' - make sure that the route is ignored in i18n.init() and that the file is present');
   } else {
     req.i18n.setLng(res.locals.language);
   }

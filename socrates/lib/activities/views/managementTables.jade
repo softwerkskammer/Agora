@@ -1,0 +1,153 @@
+extends ../../../views/layout
+include ../../../../softwerkskammer/lib/members/views/memberlist-mixin
+include ../../../../softwerkskammer/views/format-mixin
+include ../../../../softwerkskammer/views/dataTables-mixin
+mixin localdate(momentOrNull)
+  | #{momentOrNull ? momentOrNull.locale('de').format('L') : '-'}
+mixin buttonOrDate(momentOrNull, paymentDone, nickname)
+  if (momentOrNull)
+    | #{momentOrNull.locale('de').format('L')}
+  else
+    a.btn.btn-primary.btn-xs.btn-block(id='#{encodeURIComponent(nickname) + "-button"}',
+    href='javascript:paymentDone(\'#{"/activities/paymentReceived/" + encodeURIComponent(nickname)}\', \'#{encodeURIComponent(nickname) + "-button"}\')') Erhalten…
+block scripts
+  +dataTableImport
+  script.
+    function paymentDone(url, buttonid) {
+      $.ajax({url: url}).done(function (data) {
+        $('#' + buttonid).parent().html(data);
+      });
+    }
+  +dataTable('.addontable', '[ 4, "asc" ]', '[{targets: [0,8,9,10], type: "date-eu"}]')
+  +dataTable('.membertable', '[ 0, "asc" ]', '[{targets: 0, type: "date-eu"}]')
+  +dataTable('.tshirttable', '[]', '[]')
+  +dataTable('.unsubscribedtable', '[]', '[]')
+  +dataTable('.addressestable', '[ 1, "asc" ]', '[]')
+block title
+  | #{activity.title()} - Verwaltung
+block content
+  .row
+    .col-md-12
+      .page-header
+        h2 #{activity.title()} - Verwaltung
+          a.btn.pull-right.btn-default(href='/registration') Zurück
+  ul.nav.nav-tabs
+    li: a(href='#main', data-toggle='tab') #{t('activities.participants')}
+    li.active: a(href='#addons', data-toggle='tab') Zahlungen
+    li: a(href='#tshirtSizes', data-toggle='tab') T-Shirt-Bestellungen
+    li: a(href='#unsubscribed', data-toggle='tab') Abgemeldete
+    li: a(href='#addresses', data-toggle='tab') Adressen
+  .row
+    .col-md-12
+      .tab-content
+        .tab-pane#main
+          each resourceName in activity.resourceNames()
+            -var participants = activity.participantsOf(resourceName)
+            h4 #{resourceName} (#{participants.length} von #{activity.resourceNamed(resourceName).limit() || 'unbegrenzt'})
+            .panel
+              table.table.table-condensed.table-hover.table-striped.membertable
+                thead
+                  tr
+                    th Registriert
+                    th Nickname
+                    th Vorname
+                    th Nachname
+                    th Ort/Region
+                tbody
+                  for member in participants
+                    tr
+                      td #{member.registeredAt.locale('de').format('L')}
+                      td: +linkedMember(member.nickname())
+                      td #{member.firstname()}
+                      td #{member.lastname()}
+                      td #{member.location()}
+            hr
+        .tab-pane.active#addons
+          h4 Alle Teilnehmer mit Zahlungen
+          .panel
+            table.table.table-condensed.table-hover.table-striped.addontable
+              thead
+                tr
+                  th Registriert
+                  th Ressource
+                  th Nickname
+                  th Vorname
+                  th Nachname
+                  th Ort/Region
+                  th T-Shirt
+                  th Zimmer mit
+                  th Überwiesen
+                  th Kreditkarte
+                  th Zahlungseingang
+              tbody
+                for line in addonLines
+                  tr
+                    -var payment = line.participation.payment()
+                    td #{formatList(formatDates(activity.resources().registrationDatesOf(line.member.id())))}
+                    td #{formatList(activity.resources().resourceNamesOf(line.member.id()))}
+                    td: +linkedMember(line.member.nickname())
+                    td #{line.member.firstname()}
+                    td #{line.member.lastname()}
+                    td #{line.member.location()}
+                    td #{line.addon.tShirtSize()}
+                    td #{line.participation.roommate()}
+                    td: +localdate(payment.moneyTransferredMoment())
+                    td: +localdate(payment.creditCardPaidMoment())
+                    td: +buttonOrDate(payment.paymentReceivedMoment(), payment.paymentDone(), line.member.nickname())
+        .tab-pane#tshirtSizes
+          h4 Verteilungen der T-Shirt-Größen
+          .panel
+            table.table.table-condensed.table-hover.table-striped.tshirttable
+              thead
+                tr
+                  th T-Shirt-Größe
+                  th Anzahl
+              tbody
+                for tshirtsize in tshirtsizes
+                  tr
+                    td #{tshirtsize.size}
+                    td #{tshirtsize.count}
+          hr
+        .tab-pane#unsubscribed
+          h4 Zahlungs-Information von Abgemeldeten
+          .panel
+            table.table.table-condensed.table-hover.table-striped.unsubscribedtable
+              thead
+                tr
+                  th Nickname
+                  th Vorname
+                  th Nachname
+                  th Zahlungseingang
+              tbody
+                for line in addonLinesOfUnsubscribedMembers
+                  tr
+                    if line.member
+                      td: +linkedMember(line.member.nickname())
+                      td #{line.member.firstname()}
+                      td #{line.member.lastname()}
+                    else
+                      td gelöscht
+                      td &nbsp;
+                      td &nbsp;
+                    td #{line.addon.paymentReceivedMoment() && line.addon.paymentReceivedMoment().locale('de').format('L')}
+          hr
+        .tab-pane#addresses
+          h4 Adressen der Teilnehmer
+          .panel
+            table.table.table-condensed.table-hover.table-striped.addressestable
+              thead
+                tr
+                  th Vorname
+                  th Nachname
+                  th Heimatadresse
+                  th Rechnungsadresse
+                  th Ressource
+              tbody
+                for line in addonLines
+                  tr
+                    td #{line.member.firstname()}
+                    td #{line.member.lastname()}
+                    td: +formatAsLines(line.addon.homeAddressLines())
+                    td: +formatAsLines(line.addon.billingAddressLines())
+                    td #{formatList(activity.resources().resourceNamesOf(line.member.id()))}
+          hr

@@ -2,6 +2,10 @@
 
 var _ = require('lodash');
 var conf = require('simple-configure');
+var logger = require('winston').loggers.get('transactions');
+var jade = require('jade');
+var path = require('path');
+
 var beans = conf.get('beans');
 var notifications = beans.get('notifications');
 var memberstore = beans.get('memberstore');
@@ -9,9 +13,7 @@ var membersService = beans.get('membersService');
 var subscriberstore = beans.get('subscriberstore');
 var Member = beans.get('member');
 var transport = beans.get('mailtransport');
-var logger = require('winston').loggers.get('transactions');
-var jade = require('jade');
-var path = require('path');
+var socratesConstants = beans.get('socratesConstants');
 
 function renderingOptions(member) {
   return {
@@ -65,5 +67,21 @@ module.exports = {
         notifications._sendMail(superusers, 'New SoCraTes Waitinglist Entry', jade.renderFile(filenameSuperuser, options));
       });
     });
+  },
+
+  paymentMarked: function (nickname) {
+    memberstore.getMember(nickname, function (err, member) {
+      if (err || !member) {
+        logger.error("Error sending payment notification mail to member " + nickname);
+        logger.error(err);
+        return;
+      }
+      var options = renderingOptions(member);
+      options.activityTitle = "SoCraTes " + socratesConstants.currentYear;
+      var filename = path.join(__dirname, 'jade/paymenttemplate.jade');
+      var receivers = [member.email()];
+      notifications._sendMail(receivers, 'Payment Receipt / Zahlungseingang', jade.renderFile(filename, options));
+    });
   }
+
 };

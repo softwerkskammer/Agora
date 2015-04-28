@@ -40,6 +40,18 @@ module.exports = function (grunt) {
       options: {force: true}
     },
     copy: {
+      datatablesJS: {
+        src: 'bower_components/datatables/media/js/*.min.js',
+        dest: 'socrates/public/clientscripts',
+        expand: true,
+        flatten: true
+      },
+      datatablesBootstrapAndGermanJS: {
+        src: 'softwerkskammer/frontend/3rd_party_js/dataTables*',
+        dest: 'socrates/public/clientscripts',
+        expand: true,
+        flatten: true
+      },
       bootstrapFONTS: {
         src: 'bower_components/bootstrap/dist/fonts/*',
         dest: 'socrates/public/fonts',
