@@ -1,6 +1,7 @@
 'use strict';
 var moment = require('moment-timezone');
-var Member = require('simple-configure').get('beans').get('member');
+var conf = require('simple-configure');
+var Member = conf.get('beans').get('member');
 
 module.exports = function accessrights(req, res, next) {
   res.locals.accessrights = {
@@ -26,6 +27,10 @@ module.exports = function accessrights(req, res, next) {
       return Member.isSuperuser(this.memberId()); // same superusers as in SWK
     },
 
+    isSoCraTesAdmin: function () {
+      return this.isRegistered() && conf.get('socratesAdmins').indexOf(this.memberId()) > -1;
+    },
+
     canEditMember: function (member) {
       return this.isMember(member);
     },
@@ -38,11 +43,11 @@ module.exports = function accessrights(req, res, next) {
       return this.isSuperuser();
     },
 
-    canEditActivity: function (activity) {
-      return this.isSuperuser();
+    canEditActivity: function () {
+      return this.isSuperuser() || this.isSoCraTesAdmin();
     },
 
-    canDeleteActivity: function (activity) {
+    canDeleteActivity: function () {
       return this.isSuperuser();
     }
 
