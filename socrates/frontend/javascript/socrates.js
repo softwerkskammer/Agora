@@ -118,7 +118,7 @@
                 subdir: ($('[name=subdir]').val() || $('[name=assignedGroup]').val() || $('[name=id]').val()),
                 '_csrf': $('[name=_csrf]').val()
               },
-              function (data) { $('.md-preview').html(data); });
+              function (data) { e.$element.parent().find('.md-preview').html(data); });
             return ''; // to clearly indicate the loading...
           },
           iconlibrary: 'fa',

@@ -121,11 +121,14 @@ app.get('/participate', function (req, res, next) {
       if (err) { return next(err); }
       var addon = (subscriber && subscriber.addon()) || new Addon({});
       var participation = (subscriber && subscriber.currentParticipation()) || new Participation();
+      var expiresAt = activity.expirationTime(registrationTuple);
       res.render('participate', {
         member: member,
         addon: addon,
         participation: participation,
-        registrationTuple: registrationTuple
+        registrationTuple: registrationTuple,
+        expiresIn: expiresAt && expiresAt.diff(moment(), 'minutes'),
+        expiresAt: expiresAt
       });
     });
   });
@@ -138,6 +141,7 @@ app.post('/completeRegistration', function (req, res, next) {
     registrationService.saveRegistration(req.user.member.id(), req.sessionID, body, function (err, statusTitle, statusText) {
       if (err) { return next(err); }
       delete req.session.statusmessage;
+      delete req.session.registrationTuple;
       if (statusTitle && statusText) {
         statusmessage.errorMessage(statusTitle, statusText).putIntoSession(req);
         return res.redirect('/registration');

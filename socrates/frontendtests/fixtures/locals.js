@@ -53,7 +53,8 @@ module.exports = {
     billingAddress: function () { return 'yes'; },
     tShirtSize: function () { return 'yes'; },
     roommate: function () { return 'yes'; },
-    deposit: function () { return ''; }
+    deposit: function () { return ''; },
+    remarks: function () { return ''; }
   },
   roomOptions: [
     {

@@ -193,7 +193,7 @@ describe('MailsenderService', function () {
     var superuser = new Member({id: 'superuserID', email: 'email@super.user'});
 
     beforeEach(function () {
-      sinon.stub(memberstore, 'allMembers', function (callback) { callback(null, [superuser]); });
+      sinon.stub(memberstore, 'superUsers', function (callback) { callback(null, [superuser]); });
     });
 
     it('sends the email', function (done) {

@@ -13,6 +13,11 @@ html
       | #{' '} nights until #{' '}
       b #{bookingdetails.until}
       | .
-    p As soon as we receive your payment we will send you a confirmation email.
+    p As soon as we receive your payment we will send you a payment confirmation email.
     p You can review and modify your registration data and access the payment information at #{' '}
       a(href='#{url}/members/edit') #{url}/members/edit
+
+    p You can review your booking information at #{' '}
+      a(href='#{url}/registration') #{url}/registration
+
+    p If you have questions, need help or want to give feedback, just reply to this e-mail.

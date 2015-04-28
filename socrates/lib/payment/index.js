@@ -9,6 +9,9 @@ var fieldHelpers = beans.get('fieldHelpers');
 var socratesConstants = beans.get('socratesConstants');
 var subscriberstore = beans.get('subscriberstore');
 
+var socratesNotifications = beans.get('socratesNotifications');
+var roomOptions = beans.get('roomOptions');
+
 var app = misc.expressAppIn(__dirname);
 
 app.get('/', function (req, res, next) {
@@ -50,7 +53,9 @@ app.get('/calcFee', function (req, res) {
 
 app.post('/submitCreditCard', function (req, res, next) {
   var saveCreditCardPayment = function (callback) { callback(null); };
-  paymentService.payWithCreditCard(saveCreditCardPayment, parseFloat(req.body.amount.replace(',', '.')), req.body.description, req.user.member.id(),
+  var amount = parseFloat(req.body.amount.replace(',', '.'));
+  var memberId = req.user.member.id();
+  paymentService.payWithCreditCard(saveCreditCardPayment, amount, req.body.description, memberId,
     req.body.stripeId, function (err, message) {
       if (err) { return next(err); }
       message.putIntoSession(req);
@@ -59,14 +64,15 @@ app.post('/submitCreditCard', function (req, res, next) {
 });
 
 app.post('/submitCreditCardSocrates', function (req, res, next) {
+  var memberId = req.user.member.id();
   var saveCreditCardPayment = function (callback) {
-    subscriberstore.getSubscriber(req.user.member.id(), function (err, subscriber) {
+    subscriberstore.getSubscriber(memberId, function (err, subscriber) {
       if (err) { return callback(err); }
       subscriber.payment().noteCreditCardPayment();
       subscriberstore.saveSubscriber(subscriber, callback);
     });
   };
-  paymentService.payWithCreditCard(saveCreditCardPayment, parseFloat(req.body.amount.replace(',', '.')), req.body.description, req.user.member.id(),
+  paymentService.payWithCreditCard(saveCreditCardPayment, parseFloat(req.body.amount.replace(',', '.')), req.body.description, memberId,
     req.body.stripeId, function (err, message) {
       if (err) { return next(err); }
       message.putIntoSession(req);

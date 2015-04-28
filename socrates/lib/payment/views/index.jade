@@ -10,8 +10,13 @@ block content
       .page-header
         h2 #{t('payment.title')}
       if amount && !paymentDone
-        p.
-          #{t('payment.how_to_pay_detail')}
+        p #{t('payment.how_to_pay_detail')}
+        p The 
+          a(href='/payment') payment can also be done by somebody else
+          | , e.g. your company's finance department can pay for
+          | multiple participants at once. Please make sure that the description includes the names of all participants 
+          | in question and that the amount is 100 € per participant.
+          
   if amount && !paymentDone
     .row
       .col-md-6

@@ -24,9 +24,27 @@ describe('Extended SoCraTes Activity', function () {
     var registrationTuple = {resourceName: 'single', sessionID: 'sessionID', duration: 3};
     activity.reserve(registrationTuple);
 
-    var expirationTime = activity.socratesResourceNamed(registrationTuple).state._registeredMembers[0].expiresAt;
+    var expirationTime = activity.expirationTime(registrationTuple);
     expect(expirationTime).to.exist();
-    expect(moment(expirationTime).isBetween(moment().add(29, 'minutes'), moment().add(31, 'minutes'))).to.be(true);
+    expect(expirationTime.isBetween(moment().add(29, 'minutes'), moment().add(31, 'minutes'))).to.be(true);
+  });
+
+  it('reserves a registrationTuple as waitinglist', function () {
+    var activity = new SoCraTesActivity({
+      resources: {
+        single: {
+          _registrationOpen: true,
+          _registeredMembers: [],
+          _waitinglist: []
+        }
+      }
+    });
+    var registrationTuple = {resourceName: 'single', sessionID: 'sessionID', duration: 'waitinglist'};
+    activity.reserve(registrationTuple);
+
+    var expirationTime = activity.expirationTime(registrationTuple);
+    expect(expirationTime).to.exist();
+    expect(expirationTime.isBetween(moment().add(29, 'minutes'), moment().add(31, 'minutes'))).to.be(true);
   });
 
   it('registers a registrationTuple', function () {

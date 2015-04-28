@@ -44,12 +44,9 @@ module.exports = {
     };
     activitystore.getActivity(registrationTuple.activityUrl, function (err, activity) {
       if (err || !activity) { return callback(err); }
-      if (registrationTuple.duration === 'waitinglist') {
-        if (!activity.hasValidWaitinglistReservationFor(registrationTuple)) {
-          return callback(null, 'message.title.problem', 'activities.waitinglist_registration_timed_out');
-        }
-      } else if (!activity.hasValidReservationFor(registrationTuple)) {
-        return callback(null, 'message.title.problem', 'activities.registration_timed_out');
+      if (!activity.hasValidReservationFor(registrationTuple)) {
+        var message = registrationTuple.duration === 'waitinglist' ? 'activities.waitinglist_registration_timed_out' : 'activities.registration_timed_out';
+        return callback(null, 'message.title.problem', message);
       }
       if (activity.isAlreadyRegistered(memberID)) {
         return callback(null, 'message.title.problem', 'activities.already_registered');
