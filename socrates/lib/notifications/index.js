@@ -65,31 +65,5 @@ module.exports = {
         notifications._sendMail(superusers, 'New SoCraTes Waitinglist Entry', jade.renderFile(filenameSuperuser, options));
       });
     });
-  },
-
-  paymentConfirmation: function (memberID) {
-    memberstore.getMemberForId(memberID, function (err, member) {
-      if (err || !member) { return logger.error(err); }
-      var options = renderingOptions(member);
-      var filename = path.join(__dirname, 'jade/paymentConfirmation.jade');
-      var receivers = [member.email()];
-      notifications._sendMail(receivers, 'SoCraTes Payment Confirmation', jade.renderFile(filename, options));
-      membersService.superuserEmails(function (err, superusers) {
-        if (err || !superusers) { return logger.error(err); }
-        notifications._sendMail(superusers, 'SoCraTes Payment for ' + member.nickname(), jade.renderFile(filename, options));
-      });
-    });
-  },
-
-  freePaymentConfirmation: function (memberID, amount) {
-    memberstore.getMemberForId(memberID, function (err, member) {
-      if (err || !member) { return logger.error(err); }
-      var options = renderingOptions(member);
-      options.amount = amount;
-      var filename = path.join(__dirname, 'jade/freePaymentConfirmation.jade');
-      var receivers = [member.email()];
-      notifications._sendMail(receivers, 'SoCraTes Payment Receipt', jade.renderFile(filename, options));
-    });
   }
-
 };
