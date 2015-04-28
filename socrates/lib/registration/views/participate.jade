@@ -19,9 +19,9 @@ block content
         small Personal Information
     if (!!expiresAt)
       p.
-        You have #{expiresIn} minutes to complete your registration. The reservation will expire 
-        at #{expiresAt.locale('en-gb').format('LT')}.
-        After that you will have to restart the process from the previous page.
+        You now have a reserved spot at SoCraTes. This reservation is held for #{expiresIn} minutes
+        (i.e. until #{expiresAt.locale('en-gb').format('LT')}). If you do not fill in and submit this form until then,
+        you will have to restart the registration from the previous page.
       
   form#participationform.relaxed(action='/registration/completeRegistration', method='post')
     .row(style='margin-bottom: 10px')
