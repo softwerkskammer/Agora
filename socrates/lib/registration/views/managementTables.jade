@@ -33,6 +33,7 @@ block content
           a.btn.pull-right.btn-default(href='/registration') Zurück
   ul.nav.nav-tabs
     li: a(href='#main', data-toggle='tab') #{t('activities.participants')}
+    li: a(href='#waitinglist', data-toggle='tab') Wartelisten
     li.active: a(href='#addons', data-toggle='tab') Zahlungen
     li: a(href='#tshirtSizes', data-toggle='tab') T-Shirt-Bestellungen
     li: a(href='#unsubscribed', data-toggle='tab') Abgemeldete
@@ -57,6 +58,28 @@ block content
                   for member in participants
                     tr
                       td #{member.registeredAt.locale('de').format('L')}
+                      td: +linkedMember(member.nickname())
+                      td #{member.firstname()}
+                      td #{member.lastname()}
+                      td #{member.location()}
+            hr
+        .tab-pane#waitinglist
+          each resourceName in activity.resourceNames()
+            -var waitingMembers = activity.waitinglistMembers[resourceName]
+            h4 #{resourceName} (#{waitingMembers.length})
+            .panel
+              table.table.table-condensed.table-hover.table-striped.membertable
+                thead
+                  tr
+                    th Eingetragen
+                    th Nickname
+                    th Vorname
+                    th Nachname
+                    th Ort/Region
+                tbody
+                  for member in waitingMembers
+                    tr
+                      td #{member.addedToWaitinglistAt}
                       td: +linkedMember(member.nickname())
                       td #{member.firstname()}
                       td #{member.lastname()}
