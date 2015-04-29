@@ -8,14 +8,13 @@ var beans = require('simple-configure').get('beans');
 var misc = beans.get('misc');
 var CONFLICTING_VERSIONS = beans.get('constants').CONFLICTING_VERSIONS;
 var activitiesService = beans.get('activitiesService');
+var socratesActivitiesService = beans.get('socratesActivitiesService');
 var activitystore = beans.get('activitystore');
 
 var Activity = beans.get('activity');
 var validation = beans.get('validation');
 var statusmessage = beans.get('statusmessage');
 var roomOptions = beans.get('roomOptions');
-var addonService = beans.get('addonService');
-var currentUrl = beans.get('socratesConstants').currentUrl;
 
 var reservedURLs = '^new$|^edit$|^submit$|^checkurl$\\+';
 
@@ -58,7 +57,7 @@ app.get('/new', function (req, res) {
 app.get('/edit/:url', function (req, res, next) {
   activitiesService.getActivityWithGroupAndParticipants(req.params.url, function (err, activity) {
     if (err || activity === null) { return next(err); }
-    if (!res.locals.accessrights.canEditActivity(activity)) {
+    if (!res.locals.accessrights.canEditActivity()) {
       return res.redirect('/registration/');
     }
     res.render('edit', {activity: activity});
@@ -100,38 +99,8 @@ app.get('/checkurl', function (req, res) {
 
 // for management tables:
 
-app.get('/addons', function (req, res, next) {
-  activitiesService.getActivityWithGroupAndParticipants(currentUrl, function (err, activity) {
-    if (!res.locals.accessrights.canEditActivity(activity)) {
-      return res.redirect('/registration');
-    }
-
-    addonService.addonLinesOf(activity, function (err, addonLines) {
-      if (err) { return next(err); }
-
-      var formatDates = function (dates) {
-        return _(dates).map(function (date) { return date.locale('de').format('L'); }).uniq().value();
-      };
-      var formatList = function (list) {
-        return list.join(', ');
-      };
-
-      var tshirtSizes = addonService.tshirtSizes(addonLines);
-
-      res.render('managementTables', {
-        activity: activity,
-        addonLines: addonLines,
-        addonLinesOfUnsubscribedMembers: [],
-        tshirtsizes: tshirtSizes,
-        formatDates: formatDates,
-        formatList: formatList
-      });
-    });
-  });
-});
-
 app.get('/paymentReceived/:nickname', function (req, res) {
-  addonService.submitPaymentReceived(req.params.nickname, function (err) {
+  socratesActivitiesService.submitPaymentReceived(req.params.nickname, function (err) {
     if (err) { return res.send('Error: ' + err); }
     res.send(moment().locale('de').format('L'));
   });

@@ -18,6 +18,8 @@ var socratesConstants = beans.get('socratesConstants');
 var Addon = beans.get('socratesAddon');
 var Participation = beans.get('socratesParticipation');
 var roomOptions = beans.get('roomOptions');
+var managementService = beans.get('managementService');
+var currentUrl = beans.get('socratesConstants').currentUrl;
 
 var app = misc.expressAppIn(__dirname);
 
@@ -153,6 +155,38 @@ app.post('/completeRegistration', function (req, res, next) {
         statusmessage.successMessage('general.info', 'activities.successfully_registered').putIntoSession(req);
         res.redirect('/payment/socrates');
       }
+    });
+  });
+});
+
+// for management tables:
+
+app.get('/management', function (req, res, next) {
+  if (!res.locals.accessrights.canEditActivity()) {
+    return res.redirect('/registration');
+  }
+
+  activitiesService.getActivityWithGroupAndParticipants(currentUrl, function (err, activity) {
+    managementService.addonLinesOf(activity, function (err, addonLines) {
+      if (err) { return next(err); }
+
+      var formatDates = function (dates) {
+        return _(dates).map(function (date) { return date.locale('de').format('L'); }).uniq().value();
+      };
+      var formatList = function (list) {
+        return list.join(', ');
+      };
+
+      var tshirtSizes = managementService.tshirtSizes(addonLines);
+
+      res.render('managementTables', {
+        activity: activity,
+        addonLines: addonLines,
+        addonLinesOfUnsubscribedMembers: [],
+        tshirtsizes: tshirtSizes,
+        formatDates: formatDates,
+        formatList: formatList
+      });
     });
   });
 });

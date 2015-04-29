@@ -22,19 +22,6 @@ module.exports = {
       globalCallback);
   },
 
-  submitPaymentReceived: function (nickname, callback) {
-    subscriberstore.getSubscriberByNickname(nickname, function (err, subscriber) {
-      if (err || !subscriber) { return callback(err); }
-      if (!subscriber.isParticipating()) {return callback(new Error(nickname + " is not participating!")); }
-      subscriber.currentParticipation().payment().notePaymentReceived();
-      subscriberstore.saveSubscriber(subscriber, function (err) {
-        if (err) { return callback(err); }
-        notifications.paymentMarked(nickname);
-        callback(null);
-      });
-    });
-  },
-
   tshirtSizes: function (addonLines) {
     var sizes = {};
     _.each(addonLines, function (line) {
