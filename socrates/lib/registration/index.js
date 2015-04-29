@@ -195,7 +195,7 @@ app.get('/management', function (req, res, next) {
           },
           function (err, results) {
             if (err) { next(err); }
-            activity.waitinglistMembers[resourceName] = results;
+            activity.waitinglistMembers[resourceName] = _.compact(results);
             globalCallback();
           });
       }
