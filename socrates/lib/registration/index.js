@@ -1,11 +1,13 @@
 'use strict';
 var moment = require('moment-timezone');
 var _ = require('lodash');
+var async = require('async');
 
 var conf = require('simple-configure');
 var beans = conf.get('beans');
 var misc = beans.get('misc');
 var membersService = beans.get('membersService');
+var memberstore = beans.get('memberstore');
 var Member = beans.get('member');
 var subscriberstore = beans.get('subscriberstore');
 var activitiesService = beans.get('activitiesService');
@@ -179,14 +181,40 @@ app.get('/management', function (req, res, next) {
 
       var tshirtSizes = managementService.tshirtSizes(addonLines);
 
-      res.render('managementTables', {
-        activity: activity,
-        addonLines: addonLines,
-        addonLinesOfUnsubscribedMembers: [],
-        tshirtsizes: tshirtSizes,
-        formatDates: formatDates,
-        formatList: formatList
-      });
+      var resourceNames = activity.resourceNames();
+      activity.waitinglistMembers = {};
+
+      function membersOnWaitinglist(activity, resourceName, globalCallback) {
+        async.map(activity.resourceNamed(resourceName).waitinglistEntries(),
+          function (entry, callback) {
+            memberstore.getMemberForId(entry.registrantId(), function (err, member) {
+              if (err || !member) { return callback(err); }
+              member.addedToWaitinglistAt = entry.registrationDate();
+              callback(null, member);
+            });
+          },
+          function (err, results) {
+            if (err) { next(err); }
+            activity.waitinglistMembers[resourceName] = results;
+            globalCallback();
+          });
+      }
+
+      async.each(resourceNames,
+        function (resourceName, callback) { membersOnWaitinglist(activity, resourceName, callback); },
+        function (err) {
+          if (err) { next(err); }
+
+          res.render('managementTables', {
+            activity: activity,
+            addonLines: addonLines,
+            addonLinesOfUnsubscribedMembers: [],
+            tshirtsizes: tshirtSizes,
+            formatDates: formatDates,
+            formatList: formatList
+          });
+        });
+
     });
   });
 });
