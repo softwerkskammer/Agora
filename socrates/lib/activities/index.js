@@ -16,6 +16,8 @@ var validation = beans.get('validation');
 var statusmessage = beans.get('statusmessage');
 var roomOptions = beans.get('roomOptions');
 
+var currentUrl = beans.get('socratesConstants').currentUrl;
+
 var reservedURLs = '^new$|^edit$|^submit$|^checkurl$\\+';
 
 var app = misc.expressAppIn(__dirname);
@@ -103,6 +105,20 @@ app.get('/paymentReceived/:nickname', function (req, res) {
   socratesActivitiesService.submitPaymentReceived(req.params.nickname, function (err) {
     if (err) { return res.send('Error: ' + err); }
     res.send(moment().locale('de').format('L'));
+  });
+});
+
+app.get('/fromWaitinglistToParticipant/:resourceName/:memberId', function (req, res) {
+  var registrationTuple = {
+    activityUrl: currentUrl,
+    resourceName: req.params.resourceName,
+    duration: 2,
+    sessionID: req.sessionID
+  };
+
+  socratesActivitiesService.fromWaitinglistToParticipant(req.params.memberId, registrationTuple, function (err) {
+    if (err) { return res.send('Error: ' + err); }
+    res.send("-> Teilnehmer");
   });
 });
 

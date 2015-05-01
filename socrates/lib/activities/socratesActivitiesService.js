@@ -2,7 +2,13 @@
 
 var beans = require('simple-configure').get('beans');
 var subscriberstore = beans.get('subscriberstore');
+var activitiesService = beans.get('activitiesService');
+var activitystore = beans.get('activitystore');
 var notifications = beans.get('socratesNotifications');
+var roomOptions = beans.get('roomOptions');
+var CONFLICTING_VERSIONS = beans.get('constants').CONFLICTING_VERSIONS;
+
+var currentUrl = beans.get('socratesConstants').currentUrl;
 
 module.exports = {
 
@@ -17,5 +23,27 @@ module.exports = {
         callback(null);
       });
     });
+  },
+
+  fromWaitinglistToParticipant: function (memberId, registrationTuple, callback) {
+    var self = this;
+
+    activitystore.getActivity(registrationTuple.activityUrl, function (err, activity) {
+      if (err || !activity) { return callback(err); }
+
+      activity.register(memberId, registrationTuple);
+      return activitystore.saveActivity(activity, function (err) {
+        if (err && err.message === CONFLICTING_VERSIONS) {
+          // we try again because of a racing condition during save:
+          return self.fromWaitinglistToParticipant(memberId, registrationTuple, callback);
+        }
+        if (err) { callback(err); }
+
+        notifications.newParticipant(memberId, roomOptions.informationFor(registrationTuple.resourceName, registrationTuple.duration));
+        return callback();
+      });
+    });
+
   }
+
 };
