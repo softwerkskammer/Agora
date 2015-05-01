@@ -215,6 +215,34 @@ describe('SoCraTes members application', function () {
       });
     });
 
+    describe('forwarding to payment on save', function () {
+      it('happens for "real" participants', function (done) {
+        socrates.resources.junior._registeredMembers = [{memberId: 'memberId2'}];
+        socratesSubscriber.state.participations[currentYear] = {};
+        sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
+
+        appWithSocratesMember
+          .get('/edit')
+          .expect(200)
+          .expect(/Save & Pay/, done);
+      });
+
+      it('does not happen for waitinglist participants', function (done) {
+        socrates.resources.junior._registeredMembers = [];
+        socratesSubscriber.state.participations[currentYear] = {};
+        sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
+
+        appWithSocratesMember
+          .get('/edit')
+          .expect(200)
+          .expect(/Save/)
+          .end(function (err, res) {
+            expect(res.text).to.not.contain('Save & Pay');
+            done(err);
+          });
+      });
+    });
+
     describe('- entering the home address', function () {
       it('does not allow an unregistered subscriber to enter the home address', function (done) {
         sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, softwerkskammerSubscriber); });
