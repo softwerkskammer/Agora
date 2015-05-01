@@ -49,6 +49,10 @@ function SoCraTesResource(resource) {
 // inherit from Resource:
 SoCraTesResource.prototype = new Resource();
 
+SoCraTesResource.prototype.canSubscribe = function () {
+  return true;
+};
+
 SoCraTesResource.prototype.recordFor = function (memberId) {
   return _.find(this.state._registeredMembers, {memberId: memberId});
 };
