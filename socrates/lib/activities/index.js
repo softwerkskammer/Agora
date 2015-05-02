@@ -108,7 +108,7 @@ app.get('/paymentReceived/:nickname', function (req, res) {
   });
 });
 
-app.get('/fromWaitinglistToParticipant/:resourceName/:memberId', function (req, res) {
+app.get('/fromWaitinglistToParticipant/:resourceName/:nickname', function (req, res) {
   var registrationTuple = {
     activityUrl: currentUrl,
     resourceName: req.params.resourceName,
@@ -116,7 +116,7 @@ app.get('/fromWaitinglistToParticipant/:resourceName/:memberId', function (req, 
     sessionID: req.sessionID
   };
 
-  socratesActivitiesService.fromWaitinglistToParticipant(req.params.memberId, registrationTuple, function (err) {
+  socratesActivitiesService.fromWaitinglistToParticipant(req.params.nickname, registrationTuple, function (err) {
     if (err) { return res.send('Error: ' + err); }
     res.send("-> Teilnehmer");
   });

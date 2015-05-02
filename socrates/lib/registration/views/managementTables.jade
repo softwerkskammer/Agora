@@ -10,9 +10,9 @@ mixin buttonOrDate(momentOrNull, paymentDone, nickname)
   else
     a.btn.btn-primary.btn-xs.btn-block(id='#{encodeURIComponent(nickname) + "-button"}',
     href='javascript:changeState(\'#{"/activities/paymentReceived/" + encodeURIComponent(nickname)}\', \'#{encodeURIComponent(nickname) + "-button"}\')') Erhalten…
-mixin fromWaitinglistToParticipant(resourceName, memberId, nickname)
+mixin fromWaitinglistToParticipant(resourceName, nickname)
   a.btn.btn-primary.btn-xs.btn-block(id='#{encodeURIComponent(nickname) + "-button"}',
-  href='javascript:changeState(\'#{"/activities/fromWaitinglistToParticipant/" + encodeURIComponent(resourceName) + "/" + encodeURIComponent(memberId)}\', \'#{encodeURIComponent(nickname) + "-button"}\')') Teilnehmen lassen…
+  href='javascript:changeState(\'#{"/activities/fromWaitinglistToParticipant/" + encodeURIComponent(resourceName) + "/" + encodeURIComponent(nickname)}\', \'#{encodeURIComponent(nickname) + "-button"}\')') Teilnehmen lassen…
 block scripts
   +dataTableImport
   script.
@@ -88,7 +88,7 @@ block content
                       td #{member.firstname()}
                       td #{member.lastname()}
                       td #{member.location()}
-                      td: +fromWaitinglistToParticipant(resourceName, member.id(), member.nickname())
+                      td: +fromWaitinglistToParticipant(resourceName, member.nickname())
             hr
         .tab-pane.active#addons
           h4 Alle Teilnehmer mit Zahlungen

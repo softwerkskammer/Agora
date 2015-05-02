@@ -10,6 +10,7 @@ var beans = require('../../testutil/configureForTest').get('beans');
 var socratesActivitiesService = beans.get('socratesActivitiesService');
 var activitystore = beans.get('activitystore');
 var SoCraTesActivity = beans.get('socratesActivity');
+var Member = beans.get('member');
 
 var membersService = beans.get('membersService');
 var groupsService = beans.get('groupsService');
@@ -53,6 +54,9 @@ describe('SoCraTes Activities Service', function () {
     socratesActivity = new SoCraTesActivity(socrates);
 
     sinon.stub(notifications, 'newParticipant');
+    sinon.stub(memberstore, 'getMember', function (nickname, callback) {
+      callback(null, new Member({id: 'memberId'}));
+    });
     sinon.stub(activitystore, 'getActivity', function (url, callback) {
       if (url === 'wrongUrl') {
         return callback(new Error('Wrong URL!'));
@@ -74,7 +78,7 @@ describe('SoCraTes Activities Service', function () {
   it('returns an error if the activity cannot be found', function (done) {
     registrationTuple.activityUrl = 'wrongUrl';
 
-    socratesActivitiesService.fromWaitinglistToParticipant('memberId', registrationTuple, function (err) {
+    socratesActivitiesService.fromWaitinglistToParticipant('nickname', registrationTuple, function (err) {
       expect(err).to.exist();
       done();
     });
@@ -83,7 +87,7 @@ describe('SoCraTes Activities Service', function () {
   it('registers the user when he is not on the waitinglist', function (done) {
     expect(socratesActivity.resourceNamed('single').waitinglistEntryFor('memberId')).to.not.exist();
 
-    socratesActivitiesService.fromWaitinglistToParticipant('memberId', registrationTuple, function (err) {
+    socratesActivitiesService.fromWaitinglistToParticipant('nickname', registrationTuple, function (err) {
       expect(savedActivity.resourceNamed('single').waitinglistEntryFor('memberId')).to.not.exist();
       expect(savedActivity.resourceNamed('single').isAlreadyRegistered('memberId')).to.be.true();
       done(err);
@@ -94,7 +98,7 @@ describe('SoCraTes Activities Service', function () {
     socrates.resources.single._waitinglist = [{_memberId: 'memberId'}];
     expect(socratesActivity.resourceNamed('single').waitinglistEntryFor('memberId')).to.exist();
 
-    socratesActivitiesService.fromWaitinglistToParticipant('memberId', registrationTuple, function (err) {
+    socratesActivitiesService.fromWaitinglistToParticipant('nickname', registrationTuple, function (err) {
       expect(savedActivity.resourceNamed('single').waitinglistEntryFor('memberId')).to.not.exist();
       expect(savedActivity.resourceNamed('single').isAlreadyRegistered('memberId')).to.be.true();
       done(err);
@@ -106,7 +110,7 @@ describe('SoCraTes Activities Service', function () {
     socrates.resources.single._waitinglist = [{_memberId: 'memberId'}];
     expect(socratesActivity.resourceNamed('single').limit()).to.be(0);
 
-    socratesActivitiesService.fromWaitinglistToParticipant('memberId', registrationTuple, function (err) {
+    socratesActivitiesService.fromWaitinglistToParticipant('nickname', registrationTuple, function (err) {
       expect(savedActivity.resourceNamed('single').waitinglistEntryFor('memberId')).to.not.exist();
       expect(savedActivity.resourceNamed('single').isAlreadyRegistered('memberId')).to.be.true();
       done(err);
@@ -119,7 +123,7 @@ describe('SoCraTes Activities Service', function () {
     socrates.resources.single._waitinglist = [{_memberId: 'memberId'}];
     expect(socratesActivity.resourceNamed('single').isFull()).to.be.true();
 
-    socratesActivitiesService.fromWaitinglistToParticipant('memberId', registrationTuple, function (err) {
+    socratesActivitiesService.fromWaitinglistToParticipant('nickname', registrationTuple, function (err) {
       expect(savedActivity.resourceNamed('single').waitinglistEntryFor('memberId')).to.not.exist();
       expect(savedActivity.resourceNamed('single').isAlreadyRegistered('memberId')).to.be.true();
       done(err);
@@ -130,7 +134,7 @@ describe('SoCraTes Activities Service', function () {
     socrates.resources.single._registrationOpen = false;
     expect(socratesActivity.resourceNamed('single').isRegistrationOpen()).to.be.false();
 
-    socratesActivitiesService.fromWaitinglistToParticipant('memberId', registrationTuple, function (err) {
+    socratesActivitiesService.fromWaitinglistToParticipant('nickname', registrationTuple, function (err) {
       expect(savedActivity.resourceNamed('single').waitinglistEntryFor('memberId')).to.not.exist();
       expect(savedActivity.resourceNamed('single').isAlreadyRegistered('memberId')).to.be.true();
       done(err);

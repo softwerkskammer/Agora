@@ -2,6 +2,7 @@
 
 var beans = require('simple-configure').get('beans');
 var subscriberstore = beans.get('subscriberstore');
+var memberstore = beans.get('memberstore');
 var activitiesService = beans.get('activitiesService');
 var activitystore = beans.get('activitystore');
 var notifications = beans.get('socratesNotifications');
@@ -25,22 +26,26 @@ module.exports = {
     });
   },
 
-  fromWaitinglistToParticipant: function (memberId, registrationTuple, callback) {
+  fromWaitinglistToParticipant: function (nickname, registrationTuple, callback) {
     var self = this;
 
     activitystore.getActivity(registrationTuple.activityUrl, function (err, activity) {
       if (err || !activity) { return callback(err); }
 
-      activity.register(memberId, registrationTuple);
-      return activitystore.saveActivity(activity, function (err) {
-        if (err && err.message === CONFLICTING_VERSIONS) {
-          // we try again because of a racing condition during save:
-          return self.fromWaitinglistToParticipant(memberId, registrationTuple, callback);
-        }
-        if (err) { callback(err); }
+      memberstore.getMember(nickname, function (err, member) {
+        if (err || !member) { return callback(err); }
 
-        notifications.newParticipant(memberId, roomOptions.informationFor(registrationTuple.resourceName, registrationTuple.duration));
-        return callback();
+        activity.register(member.id(), registrationTuple);
+        return activitystore.saveActivity(activity, function (err) {
+          if (err && err.message === CONFLICTING_VERSIONS) {
+            // we try again because of a racing condition during save:
+            return self.fromWaitinglistToParticipant(member.id(), registrationTuple, callback);
+          }
+          if (err) { return callback(err); }
+
+          notifications.newParticipant(member.id(), roomOptions.informationFor(registrationTuple.resourceName, registrationTuple.duration));
+          return callback();
+        });
       });
     });
 
