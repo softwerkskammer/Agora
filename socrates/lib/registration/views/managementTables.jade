@@ -47,7 +47,8 @@ block content
         .tab-pane#main
           each resourceName in activity.resourceNames()
             -var participants = activity.participantsOf(resourceName)
-            h4 #{resourceName} (#{participants.length} von #{activity.resourceNamed(resourceName).limit() || 'unbegrenzt'})
+            -var resource = activity.socratesResourceNamed(resourceName)
+            h4 #{resourceName} (#{participants.length} von #{resource.limit() || 'unbegrenzt'})
             .panel
               table.table.table-condensed.table-hover.table-striped.membertable
                 thead
@@ -57,6 +58,7 @@ block content
                     th Vorname
                     th Nachname
                     th Ort/Region
+                    th bleibt bis
                 tbody
                   for member in participants
                     tr
@@ -65,6 +67,7 @@ block content
                       td #{member.firstname()}
                       td #{member.lastname()}
                       td #{member.location()}
+                      td #{resource.durationFor(member.id())}
             hr
         .tab-pane#waitinglist
           each resourceName in activity.resourceNames()

@@ -5,7 +5,7 @@ var expect = require('must');
 var roomOptions = require('../../testutil/configureForTest').get('beans').get('roomOptions');
 
 describe('Room Options', function () {
-  describe('for a room registration', function () {
+  describe('for a room', function () {
     it('returns the correct room name for each room selection', function () {
       expect(roomOptions.informationFor('single', '2').room).to.be('single room');
       expect(roomOptions.informationFor('bed_in_double', '2').room).to.be('bed in a double room');
@@ -28,7 +28,7 @@ describe('Room Options', function () {
     });
   });
 
-  describe('for a room registration', function () {
+  describe('for a room\'s waitinglist', function () {
     it('returns the correct room name for each room selection', function () {
       expect(roomOptions.waitinglistInformationFor('single').room).to.be('single room');
       expect(roomOptions.waitinglistInformationFor('bed_in_double').room).to.be('bed in a double room');

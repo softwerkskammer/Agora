@@ -9,7 +9,7 @@ var rooms = [
   {id: 'single', name: 'Single', display: 'single room', price: 70 + dinner},
   {id: 'bed_in_double', name: 'Double shared', display: 'bed in a double room', price: 50 + dinner},
   {id: 'bed_in_junior', name: 'Junior shared', display: 'bed in a junior room', price: 46 + dinner},
-  {id: 'junior', name: 'Junior (exclusive)', display: 'junior room (exclusively)', price: 2 * 46 + dinner}
+  {id: 'junior', name: 'Junior (exclusively)', display: 'junior room (exclusively)', price: 2 * 46 + dinner}
 ];
 
 module.exports = {
@@ -26,7 +26,8 @@ module.exports = {
         three: 3 * room.price + 2 * day,
         threePlus: 3 * room.price + 3 * day,
         four: 4 * room.price + 3 * day,
-        displayRegistrationCheckboxes: (activity.isAlreadyRegistered(memberId) || !isRegistrationOpen || activity.resourceNamed(room.id).canSubscribe())
+        displayRegistrationCheckboxes: (activity.isAlreadyRegistered(memberId) || !isRegistrationOpen || activity.resourceNamed(room.id).canSubscribe()),
+        displayWaitinglistCheckbox: activity.resourceNamed(room.id).hasWaitinglist()
       };
     }
 
@@ -34,12 +35,16 @@ module.exports = {
   },
 
   informationFor: function (id, duration) {
-    var endOfStay = ['saturday evening', 'sunday morning', 'sunday evening', 'monday morning'];
     return {
       room: this.waitinglistInformationFor(id).room,
       nights: (duration > 3 ? duration - 1 : duration),
-      until: endOfStay[duration - 2]
+      until: this.endOfStayFor(duration)
     };
+  },
+
+  endOfStayFor: function (duration) {
+    var endOfStay = ['saturday evening', 'sunday morning', 'sunday evening', 'monday morning'];
+    return endOfStay[duration - 2];
   },
 
   waitinglistInformationFor: function (id) {
