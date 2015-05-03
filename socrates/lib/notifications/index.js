@@ -53,6 +53,19 @@ module.exports = {
     });
   },
 
+  changedDuration: function (member, bookingdetails) {
+    var options = renderingOptions(member);
+    options.bookingdetails = bookingdetails;
+    var filename = path.join(__dirname, 'jade/changedDuration.jade');
+    var receivers = [member.email()];
+    notifications._sendMail(receivers, 'SoCraTes Change of Length of Stay', jade.renderFile(filename, options));
+    membersService.superuserEmails(function (err, superusers) {
+      if (err || !superusers) { return logger.error(err); }
+      var filenameSuperuser = path.join(__dirname, 'jade/superuserDurationChangeNotification.jade');
+      notifications._sendMail(superusers, 'Change in SoCraTes Registration', jade.renderFile(filenameSuperuser, options));
+    });
+  },
+
   newWaitinglistEntry: function (memberID, bookingdetails) {
     memberstore.getMemberForId(memberID, function (err, member) {
       if (err || !member) { return logger.error(err); }

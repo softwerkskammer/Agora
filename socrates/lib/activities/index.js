@@ -122,4 +122,11 @@ app.get('/fromWaitinglistToParticipant/:resourceName/:nickname', function (req, 
   });
 });
 
+app.post('/newDuration', function (req, res, next) {
+  socratesActivitiesService.newDurationFor(req.body.nickname, req.body.resourceName, req.body.duration, function (err) {
+    if (err) {return next(err); }
+    res.redirect('/registration/management');
+  });
+});
+
 module.exports = app;
