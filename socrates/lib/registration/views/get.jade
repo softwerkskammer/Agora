@@ -22,8 +22,7 @@ block content
           if !accessrights.isRegistered()
             a.btn.btn-primary.pull-right(data-toggle='modal', data-target='#interested', href='/registration/interested') Notify me when registration starts!
           if (accessrights.canEditActivity(activity))
-            a.btn.btn-default(href='/activities/addons/#{encodeURIComponent(activity.url())}', title=t('activities.participants')): i.fa.fa-list-ol.fa-fw
-          if (accessrights.canEditActivity(activity))
+            a.btn.btn-default(href='/registration/management', title=t('activities.participants')): i.fa.fa-list-ol.fa-fw
             a.btn.btn-default(href='/waitinglist/#{encodeURIComponent(activity.url())}', title=t('activities.waitinglist')): i.fa.fa-clock-o.fa-fw
             a.btn.btn-default(href='/mailsender/invitation/#{encodeURIComponent(activity.url())}', title=t('activities.invitation')): i.fa.fa-envelope-o.fa-fw
             a.btn.btn-default(href='/activities/edit/#{encodeURIComponent(activity.url())}', title=t('general.edit')): i.fa.fa-edit.fa-fw

@@ -9,11 +9,14 @@ mixin buttonOrDate(momentOrNull, paymentDone, nickname)
     | #{momentOrNull.locale('de').format('L')}
   else
     a.btn.btn-primary.btn-xs.btn-block(id='#{encodeURIComponent(nickname) + "-button"}',
-    href='javascript:paymentDone(\'#{"/activities/paymentReceived/" + encodeURIComponent(nickname)}\', \'#{encodeURIComponent(nickname) + "-button"}\')') Erhalten…
+    href='javascript:changeState(\'#{"/activities/paymentReceived/" + encodeURIComponent(nickname)}\', \'#{encodeURIComponent(nickname) + "-button"}\')') Erhalten…
+mixin fromWaitinglistToParticipant(resourceName, nickname)
+  a.btn.btn-primary.btn-xs.btn-block(id='#{encodeURIComponent(nickname) + "-button"}',
+  href='javascript:changeState(\'#{"/activities/fromWaitinglistToParticipant/" + encodeURIComponent(resourceName) + "/" + encodeURIComponent(nickname)}\', \'#{encodeURIComponent(nickname) + "-button"}\')') Teilnehmen lassen…
 block scripts
   +dataTableImport
   script.
-    function paymentDone(url, buttonid) {
+    function changeState(url, buttonid) {
       $.ajax({url: url}).done(function (data) {
         $('#' + buttonid).parent().html(data);
       });
@@ -76,6 +79,7 @@ block content
                     th Vorname
                     th Nachname
                     th Ort/Region
+                    th Übernehmen
                 tbody
                   for member in waitingMembers
                     tr
@@ -84,6 +88,7 @@ block content
                       td #{member.firstname()}
                       td #{member.lastname()}
                       td #{member.location()}
+                      td: +fromWaitinglistToParticipant(resourceName, member.nickname())
             hr
         .tab-pane.active#addons
           h4 Alle Teilnehmer mit Zahlungen

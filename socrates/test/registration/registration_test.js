@@ -115,7 +115,7 @@ describe('SoCraTes registration application', function () {
     });
 
     it('displays the options (but disabled), because the user is registered', function (done) {
-      socrates.resources.single._registeredMembers = [{memberId: 'memberId2'}];
+      socrates.resources.junior._registeredMembers = [{memberId: 'memberId2'}];
 
       appWithSocratesMember
         .get('/')

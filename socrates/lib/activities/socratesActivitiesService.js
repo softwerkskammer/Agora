@@ -2,7 +2,14 @@
 
 var beans = require('simple-configure').get('beans');
 var subscriberstore = beans.get('subscriberstore');
+var memberstore = beans.get('memberstore');
+var activitiesService = beans.get('activitiesService');
+var activitystore = beans.get('activitystore');
 var notifications = beans.get('socratesNotifications');
+var roomOptions = beans.get('roomOptions');
+var CONFLICTING_VERSIONS = beans.get('constants').CONFLICTING_VERSIONS;
+
+var currentUrl = beans.get('socratesConstants').currentUrl;
 
 module.exports = {
 
@@ -17,5 +24,31 @@ module.exports = {
         callback(null);
       });
     });
+  },
+
+  fromWaitinglistToParticipant: function (nickname, registrationTuple, callback) {
+    var self = this;
+
+    activitystore.getActivity(registrationTuple.activityUrl, function (err, activity) {
+      if (err || !activity) { return callback(err); }
+
+      memberstore.getMember(nickname, function (err, member) {
+        if (err || !member) { return callback(err); }
+
+        activity.register(member.id(), registrationTuple);
+        return activitystore.saveActivity(activity, function (err) {
+          if (err && err.message === CONFLICTING_VERSIONS) {
+            // we try again because of a racing condition during save:
+            return self.fromWaitinglistToParticipant(member.id(), registrationTuple, callback);
+          }
+          if (err) { return callback(err); }
+
+          notifications.newParticipant(member.id(), roomOptions.informationFor(registrationTuple.resourceName, registrationTuple.duration));
+          return callback();
+        });
+      });
+    });
+
   }
+
 };
