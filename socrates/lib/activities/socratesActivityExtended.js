@@ -7,12 +7,12 @@ var SoCraTesActivity = beans.get('socratesActivity');
 var SoCraTesResource = beans.get('socratesResource');
 
 if (SoCraTesActivity.prototype.reserve === undefined) {
-  SoCraTesActivity.prototype.socratesResourceFor = function (registrationTuple) {
-    return new SoCraTesResource(this.resourceNamed(registrationTuple.resourceName));
-  };
-
   SoCraTesActivity.prototype.socratesResourceNamed = function (resourceName) {
     return new SoCraTesResource(this.resourceNamed(resourceName));
+  };
+
+  SoCraTesActivity.prototype.socratesResourceFor = function (registrationTuple) {
+    return this.socratesResourceNamed(registrationTuple.resourceName);
   };
 
   SoCraTesActivity.prototype.reserve = function (registrationTuple) {
