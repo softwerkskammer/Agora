@@ -4,6 +4,7 @@ var _ = require('lodash');
 var moment = require('moment-timezone');
 var beans = require('simple-configure').get('beans');
 var Resource = beans.get('resource');
+var roomOptions = beans.get('roomOptions');
 
 function addExpirationTimeFor(record) {
   var date = moment();
@@ -55,6 +56,10 @@ SoCraTesResource.prototype.canSubscribe = function () {
 
 SoCraTesResource.prototype.recordFor = function (memberId) {
   return _.find(this.state._registeredMembers, {memberId: memberId});
+};
+
+SoCraTesResource.prototype.durationFor = function (memberId) {
+  return roomOptions.endOfStayFor(this.recordFor(memberId).duration);
 };
 
 

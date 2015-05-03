@@ -35,12 +35,16 @@ module.exports = {
   },
 
   informationFor: function (id, duration) {
-    var endOfStay = ['saturday evening', 'sunday morning', 'sunday evening', 'monday morning'];
     return {
       room: this.waitinglistInformationFor(id).room,
       nights: (duration > 3 ? duration - 1 : duration),
-      until: endOfStay[duration - 2]
+      until: this.endOfStayFor(duration)
     };
+  },
+
+  endOfStayFor: function (duration) {
+    var endOfStay = ['saturday evening', 'sunday morning', 'sunday evening', 'monday morning'];
+    return endOfStay[duration - 2];
   },
 
   waitinglistInformationFor: function (id) {
