@@ -23,12 +23,12 @@ mixin newDuration(resourceName, nickname, currentSelection)
     +csrf
     +hidden('resourceName', resourceName)
     +hidden('nickname', nickname)
-    select.form-control(name='duration')
+    select.form-control(name='duration', style='height: inherit;')
       option(value='2', selected=(currentSelection === 2 ? true : false)) saturday evening
       option(value='3', selected=(currentSelection === 3 ? true : false)) sunday morning
       option(value='4', selected=(currentSelection === 4 ? true : false)) sunday evening
       option(value='5', selected=(currentSelection === 5 ? true : false)) monday morning
-    button.pull-right.btn(type='submit') Ändern
+    button.btn.btn-default.btn-xs(type='submit') Ändern
 
 block scripts
   +dataTableImport
@@ -37,10 +37,6 @@ block scripts
       $.ajax({url: url}).done(function (data) {
         $('#' + buttonid).parent().html(data);
       });
-    }
-    function postChange(url, name, value) {
-      var params = [{name: name, value: value}];
-      $.post({url: url, params: params}).done(function (data) {});
     }
   +dataTable('.addontable', '[ 4, "asc" ]', '[{targets: [0,8,9,10], type: "date-eu"}]')
   +dataTable('.membertable', '[ 0, "asc" ]', '[{targets: 0, type: "date-eu"}]')
