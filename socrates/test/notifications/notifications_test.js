@@ -91,7 +91,7 @@ describe('Notifications', function () {
   });
 
   describe('for participation', function () {
-    it('creates a meaningful text and subject', function () {
+    it('creates a meaningful text and subject for immediate registrants', function () {
       sinon.stub(memberstore, 'getMemberForId', function (id, callback) { callback(null, hans); });
       sinon.stub(memberstore, 'superUsers', function (callback) { callback(null, []); });
 
@@ -101,6 +101,20 @@ describe('Notifications', function () {
       expect(options.subject).to.equal('SoCraTes Registration Confirmation');
       expect(options.html).to.contain('junior room (exclusively)');
       expect(options.html).to.contain('<b>3</b>  nights');
+      expect(options.html).to.not.contain('If you want to stay longer, please tell us by replying to this e-mail');
+    });
+
+    it('creates a meaningful text and subject for registrants coming from the waitinglist', function () {
+      sinon.stub(memberstore, 'getMemberForId', function (id, callback) { callback(null, hans); });
+      sinon.stub(memberstore, 'superUsers', function (callback) { callback(null, []); });
+
+      var bookingdetails = roomOptions.informationFor('junior', 3);
+      bookingdetails.fromWaitinglist = true;
+      notifications.newParticipant(hans, bookingdetails);
+      expect(transport.sendMail.calledOnce).to.be(true);
+      var options = transport.sendMail.firstCall.args[0];
+      expect(options.subject).to.equal('SoCraTes Registration Confirmation');
+      expect(options.html).to.not.contain('If you want to stay longer, please tell us by replying to this e-mail');
     });
 
     it('sends a meaningful mail to superusers', function () {

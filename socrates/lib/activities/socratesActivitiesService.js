@@ -43,7 +43,9 @@ module.exports = {
           }
           if (err) { return callback(err); }
 
-          notifications.newParticipant(member.id(), roomOptions.informationFor(registrationTuple.resourceName, registrationTuple.duration));
+          var bookingdetails = roomOptions.informationFor(registrationTuple.resourceName, registrationTuple.duration);
+          bookingdetails.fromWaitinglist = true;
+          notifications.newParticipant(member.id(), bookingdetails);
           return callback();
         });
       });

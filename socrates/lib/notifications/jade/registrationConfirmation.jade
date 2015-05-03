@@ -13,6 +13,14 @@ html
       | #{' '} nights until #{' '}
       b #{bookingdetails.until}
       | .
+    if bookingdetails.fromWaitinglist
+      p
+        | If you want to stay longer, please tell us by replying to this e-mail, and we will change your booking accordingly.
+        | You can stay until Sunday morning, Sunday evening or Monday morning (the latter two options include participation
+        | in a Coderetreat or workshop on Sunday). For pricing information please have a look at #{' '}
+        a(href='#{url}/registration') the registration page
+        | .
+
     p As soon as we receive your payment we will send you a payment confirmation email.
     p You can review and modify your registration data and access the payment information at #{' '}
       a(href='#{url}/members/edit') #{url}/members/edit
