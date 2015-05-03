@@ -54,22 +54,17 @@ module.exports = {
 
   newDurationFor: function (nickname, resourceName, duration, callback) {
     var self = this;
-
     activitystore.getActivity(currentUrl, function (err, activity) {
       if (err || !activity) { return callback(err); }
-
       memberstore.getMember(nickname, function (err, member) {
         if (err || !member) { return callback(err); }
-
         activity.socratesResourceNamed(resourceName).recordFor(member.id()).duration = duration;
-
         return activitystore.saveActivity(activity, function (err) {
           if (err && err.message === CONFLICTING_VERSIONS) {
             // we try again because of a racing condition during save:
             return self.newDurationFor(nickname, resourceName, duration, callback);
           }
           if (err) { return callback(err); }
-
           notifications.changedDuration(member, roomOptions.informationFor(resourceName, duration));
           return callback();
         });
