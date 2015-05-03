@@ -54,6 +54,7 @@ describe('SoCraTes Activities Service', function () {
     socratesActivity = new SoCraTesActivity(socrates);
 
     sinon.stub(notifications, 'newParticipant');
+    sinon.stub(notifications, 'changedDuration');
     sinon.stub(memberstore, 'getMember', function (nickname, callback) {
       callback(null, new Member({id: 'memberId'}));
     });
@@ -141,4 +142,13 @@ describe('SoCraTes Activities Service', function () {
     });
   });
 
+  it('saves the activity with a new duration for the given member in the given resource', function (done) {
+    socrates.resources.single._registeredMembers = [{memberId: 'memberId', duration: 2}];
+    expect(socratesActivity.socratesResourceNamed('single').recordFor('memberId').duration).to.be(2);
+
+    socratesActivitiesService.newDurationFor('nickname', 'single', 4, function (err) {
+      expect(savedActivity.socratesResourceNamed('single').recordFor('memberId').duration).to.be(4);
+      done(err);
+    });
+  });
 });

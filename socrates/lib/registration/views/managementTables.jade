@@ -1,18 +1,35 @@
 extends ../../../views/layout
 include ../../../../softwerkskammer/lib/members/views/memberlist-mixin
 include ../../../../softwerkskammer/views/format-mixin
+include ../../../../softwerkskammer/views/formComponents
 include ../../../../softwerkskammer/views/dataTables-mixin
+
 mixin localdate(momentOrNull)
   | #{momentOrNull ? momentOrNull.locale('de').format('L') : '-'}
+
 mixin buttonOrDate(momentOrNull, paymentDone, nickname)
   if (momentOrNull)
     | #{momentOrNull.locale('de').format('L')}
   else
     a.btn.btn-primary.btn-xs.btn-block(id='#{encodeURIComponent(nickname) + "-button"}',
     href='javascript:changeState(\'#{"/activities/paymentReceived/" + encodeURIComponent(nickname)}\', \'#{encodeURIComponent(nickname) + "-button"}\')') Erhalten…
+
 mixin fromWaitinglistToParticipant(resourceName, nickname)
   a.btn.btn-primary.btn-xs.btn-block(id='#{encodeURIComponent(nickname) + "-button"}',
   href='javascript:changeState(\'#{"/activities/fromWaitinglistToParticipant/" + encodeURIComponent(resourceName) + "/" + encodeURIComponent(nickname)}\', \'#{encodeURIComponent(nickname) + "-button"}\')') Teilnehmen lassen…
+
+mixin newDuration(resourceName, nickname, currentSelection)
+  form(id='activityform', action='/activities/newDuration', method='post')
+    +csrf
+    +hidden('resourceName', resourceName)
+    +hidden('nickname', nickname)
+    select.form-control(name='duration', style='height: inherit;')
+      option(value='2', selected=(currentSelection === 2 ? true : false)) saturday evening
+      option(value='3', selected=(currentSelection === 3 ? true : false)) sunday morning
+      option(value='4', selected=(currentSelection === 4 ? true : false)) sunday evening
+      option(value='5', selected=(currentSelection === 5 ? true : false)) monday morning
+    button.btn.btn-default.btn-xs(type='submit') Ändern
+
 block scripts
   +dataTableImport
   script.
@@ -59,6 +76,7 @@ block content
                     th Nachname
                     th Ort/Region
                     th bleibt bis
+                    th ändern in
                 tbody
                   for member in participants
                     tr
@@ -68,6 +86,7 @@ block content
                       td #{member.lastname()}
                       td #{member.location()}
                       td #{resource.durationFor(member.id())}
+                      td: +newDuration(resourceName, member.nickname(), resource.recordFor(member.id()).duration)
             hr
         .tab-pane#waitinglist
           each resourceName in activity.resourceNames()
