@@ -67,6 +67,11 @@ module.exports = {
       'superuserRegistrationNotification', 'Change in SoCraTes Registration - Resource');
   },
 
+  changedWaitinglist: function (member, bookingdetails) {
+    notifyMemberAndSuperuser(member, bookingdetails, 'changedWaitinglist', 'SoCraTes Waitinglist Change of Room Option',
+      'superuserWaitinglistNotification', 'Change in SoCraTes Waitinglist - Resource');
+  },
+
   newWaitinglistEntry: function (memberID, bookingdetails) {
     memberstore.getMemberForId(memberID, function (err, member) {
       if (err || !member) { return logger.error(err); }

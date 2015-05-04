@@ -24,6 +24,7 @@ mixin newDuration(resourceName, nickname, currentSelection)
     +hidden('resourceName', resourceName)
     +hidden('nickname', nickname)
     select.form-control(name='duration', style='height: inherit;')
+      option(value='0') #{' '}
       option(value='2', selected=(currentSelection === 2 ? true : false)) saturday evening
       option(value='3', selected=(currentSelection === 3 ? true : false)) sunday morning
       option(value='4', selected=(currentSelection === 4 ? true : false)) sunday evening
@@ -36,6 +37,20 @@ mixin newResource(resourceName, nickname)
     +hidden('resourceName', resourceName)
     +hidden('nickname', nickname)
     select.form-control(name='newResourceName', style='height: inherit;')
+      option(value='0') #{' '}
+      option(value='single') single
+      option(value='bed_in_double') bed in double
+      option(value='bed_in_junior') bed in junior
+      option(value='junior') junior
+    button.btn.btn-default.btn-xs(type='submit') Ändern
+
+mixin newWaitinglist(resourceName, nickname)
+  form(id='activityform', action='/activities/newWaitinglist', method='post')
+    +csrf
+    +hidden('resourceName', resourceName)
+    +hidden('nickname', nickname)
+    select.form-control(name='newResourceName', style='height: inherit;')
+      option(value='0') #{' '}
       option(value='single') single
       option(value='bed_in_double') bed in double
       option(value='bed_in_junior') bed in junior
@@ -52,8 +67,7 @@ block scripts
     }
   +dataTable('.addontable', '[ 4, "asc" ]', '[{targets: [0,8,9,10], type: "date-eu"}]')
   +dataTable('.membertable', '[ 0, "asc" ]', '[{targets: 0, type: "date-eu"}]')
-  +dataTable('.tshirttable', '[]', '[]')
-  +dataTable('.unsubscribedtable', '[]', '[]')
+  +dataTable('.unsortedtable', '[]', '[]')
   +dataTable('.addressestable', '[ 1, "asc" ]', '[]')
 block title
   | #{activity.title()} - Verwaltung
@@ -64,6 +78,7 @@ block content
         h2 #{activity.title()} - Verwaltung
           a.btn.pull-right.btn-default(href='/registration') Zurück
   ul.nav.nav-tabs
+    li: a(href='#overview', data-toggle='tab') Übersicht
     li: a(href='#main', data-toggle='tab') #{t('activities.participants')}
     li: a(href='#waitinglist', data-toggle='tab') Wartelisten
     li.active: a(href='#addons', data-toggle='tab') Zahlungen
@@ -73,6 +88,24 @@ block content
   .row
     .col-md-12
       .tab-content
+        .tab-pane#overview
+            .panel
+              table.table.table-condensed.table-hover.table-striped.unsortedtable
+                thead
+                  tr
+                    th Option
+                    th Teilnehmer
+                    th Wartende
+                tbody
+                  for resourceName in activity.resourceNames()
+                    -var participants = activity.participantsOf(resourceName)
+                    -var resource = activity.socratesResourceNamed(resourceName)
+                    -var waitingMembers = activity.waitinglistMembers[resourceName]
+                    tr
+                      td #{resourceName}
+                      td #{participants.length} von #{resource.limit() || 'unbegrenzt'}
+                      td #{waitingMembers.length}
+            hr
         .tab-pane#main
           each resourceName in activity.resourceNames()
             -var participants = activity.participantsOf(resourceName)
@@ -87,9 +120,9 @@ block content
                     th Vorname
                     th Nachname
                     th Ort/Region
-                    th umbuchen in
                     th bleibt bis
                     th ändern in
+                    th umbuchen in
                 tbody
                   for member in participants
                     tr
@@ -98,9 +131,9 @@ block content
                       td #{member.firstname()}
                       td #{member.lastname()}
                       td #{member.location()}
-                      td: +newResource(resourceName, member.nickname())
                       td #{resource.durationFor(member.id())}
                       td: +newDuration(resourceName, member.nickname(), resource.recordFor(member.id()).duration)
+                      td: +newResource(resourceName, member.nickname())
             hr
         .tab-pane#waitinglist
           each resourceName in activity.resourceNames()
@@ -116,6 +149,7 @@ block content
                     th Nachname
                     th Ort/Region
                     th Übernehmen
+                    th ändern in
                 tbody
                   for member in waitingMembers
                     tr
@@ -125,6 +159,7 @@ block content
                       td #{member.lastname()}
                       td #{member.location()}
                       td: +fromWaitinglistToParticipant(resourceName, member.nickname())
+                      td: +newWaitinglist(resourceName, member.nickname())
             hr
         .tab-pane.active#addons
           h4 Alle Teilnehmer mit Zahlungen
@@ -161,7 +196,7 @@ block content
         .tab-pane#tshirtSizes
           h4 Verteilungen der T-Shirt-Größen
           .panel
-            table.table.table-condensed.table-hover.table-striped.tshirttable
+            table.table.table-condensed.table-hover.table-striped.unsortedtable
               thead
                 tr
                   th T-Shirt-Größe
@@ -175,7 +210,7 @@ block content
         .tab-pane#unsubscribed
           h4 Zahlungs-Information von Abgemeldeten
           .panel
-            table.table.table-condensed.table-hover.table-striped.unsubscribedtable
+            table.table.table-condensed.table-hover.table-striped.unsortedtable
               thead
                 tr
                   th Nickname
@@ -209,6 +244,27 @@ block content
                   th Ressource
               tbody
                 for line in addonLines
+                  tr
+                    td #{line.member.firstname()}
+                    td #{line.member.lastname()}
+                    td #{line.member.email()}
+                    td: +formatAsLines(line.addon.homeAddressLines())
+                    td: +formatAsLines(line.addon.billingAddressLines())
+                    td #{formatList(activity.resources().resourceNamesOf(line.member.id()))}
+
+          h4 Adressen der Wartenden
+          .panel
+            table.table.table-condensed.table-hover.table-striped.addressestable
+              thead
+                tr
+                  th Vorname
+                  th Nachname
+                  th E-Mail
+                  th Heimatadresse
+                  th Rechnungsadresse
+                  th Ressource
+              tbody
+                for line in waitinglistLines
                   tr
                     td #{line.member.firstname()}
                     td #{line.member.lastname()}
