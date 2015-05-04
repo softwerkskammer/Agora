@@ -30,6 +30,18 @@ mixin newDuration(resourceName, nickname, currentSelection)
       option(value='5', selected=(currentSelection === 5 ? true : false)) monday morning
     button.btn.btn-default.btn-xs(type='submit') Ändern
 
+mixin newResource(resourceName, nickname)
+  form(id='activityform', action='/activities/newResource', method='post')
+    +csrf
+    +hidden('resourceName', resourceName)
+    +hidden('nickname', nickname)
+    select.form-control(name='newResourceName', style='height: inherit;')
+      option(value='single') single
+      option(value='bed_in_double') bed in double
+      option(value='bed_in_junior') bed in junior
+      option(value='junior') junior
+    button.btn.btn-default.btn-xs(type='submit') Ändern
+
 block scripts
   +dataTableImport
   script.
@@ -75,6 +87,7 @@ block content
                     th Vorname
                     th Nachname
                     th Ort/Region
+                    th umbuchen in
                     th bleibt bis
                     th ändern in
                 tbody
@@ -85,6 +98,7 @@ block content
                       td #{member.firstname()}
                       td #{member.lastname()}
                       td #{member.location()}
+                      td: +newResource(resourceName, member.nickname())
                       td #{resource.durationFor(member.id())}
                       td: +newDuration(resourceName, member.nickname(), resource.recordFor(member.id()).duration)
             hr

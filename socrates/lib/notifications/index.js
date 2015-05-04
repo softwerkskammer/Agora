@@ -23,6 +23,18 @@ function renderingOptions(member) {
   };
 }
 
+function notifyMemberAndSuperuser(member, bookingdetails, participantFilename, participantSubject, superuserFilename, superuserSubject) {
+  var options = renderingOptions(member);
+  options.bookingdetails = bookingdetails;
+  var filename = path.join(__dirname, 'jade/' + participantFilename + '.jade');
+  var receivers = [member.email()];
+  notifications._sendMail(receivers, participantSubject, jade.renderFile(filename, options));
+  membersService.superuserEmails(function (err, superusers) {
+    if (err || !superusers) { return logger.error(err); }
+    var filenameSuperuser = path.join(__dirname, 'jade/' + superuserFilename + '.jade');
+    notifications._sendMail(superusers, superuserSubject, jade.renderFile(filenameSuperuser, options));
+  });
+}
 module.exports = {
   newSoCraTesMemberRegistered: function (member) {
     membersService.superuserEmails(function (err, receivers) {
@@ -40,45 +52,26 @@ module.exports = {
   newParticipant: function (memberID, bookingdetails) {
     memberstore.getMemberForId(memberID, function (err, member) {
       if (err || !member) { return logger.error(err); }
-      var options = renderingOptions(member);
-      options.bookingdetails = bookingdetails;
-      var filename = path.join(__dirname, 'jade/registrationConfirmation.jade');
-      var receivers = [member.email()];
-      notifications._sendMail(receivers, 'SoCraTes Registration Confirmation', jade.renderFile(filename, options));
-      membersService.superuserEmails(function (err, superusers) {
-        if (err || !superusers) { return logger.error(err); }
-        var filenameSuperuser = path.join(__dirname, 'jade/superuserRegistrationNotification.jade');
-        notifications._sendMail(superusers, 'New SoCraTes Registration', jade.renderFile(filenameSuperuser, options));
-      });
+      notifyMemberAndSuperuser(member, bookingdetails, 'registrationConfirmation', 'SoCraTes Registration Confirmation',
+        'superuserRegistrationNotification', 'New SoCraTes Registration');
     });
   },
 
   changedDuration: function (member, bookingdetails) {
-    var options = renderingOptions(member);
-    options.bookingdetails = bookingdetails;
-    var filename = path.join(__dirname, 'jade/changedDuration.jade');
-    var receivers = [member.email()];
-    notifications._sendMail(receivers, 'SoCraTes Change of Length of Stay', jade.renderFile(filename, options));
-    membersService.superuserEmails(function (err, superusers) {
-      if (err || !superusers) { return logger.error(err); }
-      var filenameSuperuser = path.join(__dirname, 'jade/superuserDurationChangeNotification.jade');
-      notifications._sendMail(superusers, 'Change in SoCraTes Registration', jade.renderFile(filenameSuperuser, options));
-    });
+    notifyMemberAndSuperuser(member, bookingdetails, 'changedRegistration', 'SoCraTes Change of Length of Stay',
+      'superuserRegistrationNotification', 'Change in SoCraTes Registration - Duration');
+  },
+
+  changedResource: function (member, bookingdetails) {
+    notifyMemberAndSuperuser(member, bookingdetails, 'changedRegistration', 'SoCraTes Change of Room Option',
+      'superuserRegistrationNotification', 'Change in SoCraTes Registration - Resource');
   },
 
   newWaitinglistEntry: function (memberID, bookingdetails) {
     memberstore.getMemberForId(memberID, function (err, member) {
       if (err || !member) { return logger.error(err); }
-      var options = renderingOptions(member);
-      options.bookingdetails = bookingdetails;
-      var filename = path.join(__dirname, 'jade/waitinglistConfirmation.jade');
-      var receivers = [member.email()];
-      notifications._sendMail(receivers, 'SoCraTes Waitinglist Confirmation', jade.renderFile(filename, options));
-      membersService.superuserEmails(function (err, superusers) {
-        if (err || !superusers) { return logger.error(err); }
-        var filenameSuperuser = path.join(__dirname, 'jade/superuserWaitinglistNotification.jade');
-        notifications._sendMail(superusers, 'New SoCraTes Waitinglist Entry', jade.renderFile(filenameSuperuser, options));
-      });
+      notifyMemberAndSuperuser(member, bookingdetails, 'waitinglistConfirmation', 'SoCraTes Waitinglist Confirmation',
+        'superuserWaitinglistNotification', 'New SoCraTes Waitinglist Entry');
     });
   },
 

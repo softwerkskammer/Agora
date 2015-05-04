@@ -54,15 +54,24 @@ SoCraTesResource.prototype.canSubscribe = function () {
   return true;
 };
 
+SoCraTesResource.prototype.canUnsubscribe = function () {
+  return true;
+};
+
 SoCraTesResource.prototype.recordFor = function (memberId) {
   return _.find(this.state._registeredMembers, {memberId: memberId});
+};
+
+SoCraTesResource.prototype.addRecord = function (record) {
+  if (!this.state._registeredMembers) {
+    this.state._registeredMembers = [];
+  }
+  return this.state._registeredMembers.push(record);
 };
 
 SoCraTesResource.prototype.durationFor = function (memberId) {
   return roomOptions.endOfStayFor(this.recordFor(memberId).duration);
 };
-
-
 
 SoCraTesResource.prototype.reserve = function (registrationTuple) {
   var sessionID = 'SessionID:' + registrationTuple.sessionID;
