@@ -251,4 +251,25 @@ block content
                     td: +formatAsLines(line.addon.homeAddressLines())
                     td: +formatAsLines(line.addon.billingAddressLines())
                     td #{formatList(activity.resources().resourceNamesOf(line.member.id()))}
+
+          h4 Adressen der Wartenden
+          .panel
+            table.table.table-condensed.table-hover.table-striped.addressestable
+              thead
+                tr
+                  th Vorname
+                  th Nachname
+                  th E-Mail
+                  th Heimatadresse
+                  th Rechnungsadresse
+                  th Ressource
+              tbody
+                for line in waitinglistLines
+                  tr
+                    td #{line.member.firstname()}
+                    td #{line.member.lastname()}
+                    td #{line.member.email()}
+                    td: +formatAsLines(line.addon.homeAddressLines())
+                    td: +formatAsLines(line.addon.billingAddressLines())
+                    td #{formatList(activity.resources().resourceNamesOf(line.member.id()))}
           hr

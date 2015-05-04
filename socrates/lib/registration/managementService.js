@@ -9,8 +9,8 @@ var notifications = beans.get('socratesNotifications');
 
 module.exports = {
 
-  addonLinesOf: function (activityWithParticipants, globalCallback) {
-    async.map(activityWithParticipants.participants,
+  addonLinesOf: function (members, globalCallback) {
+    async.map(members,
       function (member, callback) {
         subscriberstore.getSubscriber(member.id(), function (err, subscriber) {
           if (err || !subscriber) { return callback(err); }
