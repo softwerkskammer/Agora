@@ -6,6 +6,7 @@ var async = require('async');
 
 var subscriberstore = beans.get('subscriberstore');
 var notifications = beans.get('socratesNotifications');
+var roomOptions = beans.get('roomOptions');
 
 module.exports = {
 
@@ -34,6 +35,21 @@ module.exports = {
       }
     });
     return sizes;
+  },
+
+  durations: function (activity) {
+    var durations = {};
+    _.each(activity.resourceNames(), function (resourceName) {
+      _.each(activity.socratesResourceNamed(resourceName).durations(), function (duration) {
+        var currentCount = durations[duration];
+        if (currentCount) {
+          durations[duration].count = currentCount.count + 1;
+        } else {
+          durations[duration] = {count: 1, duration: roomOptions.endOfStayFor(duration)};
+        }
+      });
+    });
+    return durations;
   }
 
 };
