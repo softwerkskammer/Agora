@@ -58,8 +58,8 @@ module.exports = {
   },
 
   changedDuration: function (member, bookingdetails) {
-    notifyMemberAndSuperuser(member, bookingdetails, 'changedDuration', 'SoCraTes Change of Length of Stay',
-      'superuserDurationChangeNotification', 'Change in SoCraTes Registration');
+    notifyMemberAndSuperuser(member, bookingdetails, 'changedRegistration', 'SoCraTes Change of Length of Stay',
+      'superuserRegistrationNotification', 'Change in SoCraTes Registration - Duration');
   },
 
   newWaitinglistEntry: function (memberID, bookingdetails) {
