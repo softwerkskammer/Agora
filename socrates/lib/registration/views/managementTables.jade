@@ -24,6 +24,7 @@ mixin newDuration(resourceName, nickname, currentSelection)
     +hidden('resourceName', resourceName)
     +hidden('nickname', nickname)
     select.form-control(name='duration', style='height: inherit;')
+      option(value='0') #{' '}
       option(value='2', selected=(currentSelection === 2 ? true : false)) saturday evening
       option(value='3', selected=(currentSelection === 3 ? true : false)) sunday morning
       option(value='4', selected=(currentSelection === 4 ? true : false)) sunday evening
@@ -36,6 +37,7 @@ mixin newResource(resourceName, nickname)
     +hidden('resourceName', resourceName)
     +hidden('nickname', nickname)
     select.form-control(name='newResourceName', style='height: inherit;')
+      option(value='0') #{' '}
       option(value='single') single
       option(value='bed_in_double') bed in double
       option(value='bed_in_junior') bed in junior
@@ -87,9 +89,9 @@ block content
                     th Vorname
                     th Nachname
                     th Ort/Region
-                    th umbuchen in
                     th bleibt bis
                     th ändern in
+                    th umbuchen in
                 tbody
                   for member in participants
                     tr
@@ -98,9 +100,9 @@ block content
                       td #{member.firstname()}
                       td #{member.lastname()}
                       td #{member.location()}
-                      td: +newResource(resourceName, member.nickname())
                       td #{resource.durationFor(member.id())}
                       td: +newDuration(resourceName, member.nickname(), resource.recordFor(member.id()).duration)
+                      td: +newResource(resourceName, member.nickname())
             hr
         .tab-pane#waitinglist
           each resourceName in activity.resourceNames()
