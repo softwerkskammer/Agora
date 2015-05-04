@@ -89,23 +89,38 @@ block content
     .col-md-12
       .tab-content
         .tab-pane#overview
+          h4 Bettenbelegung
+          .panel
+            table.table.table-condensed.table-hover.table-striped.unsortedtable
+              thead
+                tr
+                  th Option
+                  th Teilnehmer
+                  th Wartende
+              tbody
+                for resourceName in activity.resourceNames()
+                  -var participants = activity.participantsOf(resourceName)
+                  -var resource = activity.socratesResourceNamed(resourceName)
+                  -var waitingMembers = activity.waitinglistMembers[resourceName]
+                  tr
+                    td #{resourceName}
+                    td #{participants.length} von #{resource.limit() || 'unbegrenzt'}
+                    td #{waitingMembers.length}
+
+            hr
+            h4 Aufenthaltsdauer
             .panel
               table.table.table-condensed.table-hover.table-striped.unsortedtable
                 thead
                   tr
-                    th Option
-                    th Teilnehmer
-                    th Wartende
+                    th Name
+                    th Count
                 tbody
-                  for resourceName in activity.resourceNames()
-                    -var participants = activity.participantsOf(resourceName)
-                    -var resource = activity.socratesResourceNamed(resourceName)
-                    -var waitingMembers = activity.waitinglistMembers[resourceName]
+                  for duration in durations
                     tr
-                      td #{resourceName}
-                      td #{participants.length} von #{resource.limit() || 'unbegrenzt'}
-                      td #{waitingMembers.length}
-            hr
+                      td #{duration.duration}
+                      td #{duration.count}
+
         .tab-pane#main
           each resourceName in activity.resourceNames()
             -var participants = activity.participantsOf(resourceName)

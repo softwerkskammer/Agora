@@ -84,6 +84,13 @@ SoCraTesResource.prototype.durationFor = function (memberId) {
   return roomOptions.endOfStayFor(this.recordFor(memberId).duration);
 };
 
+SoCraTesResource.prototype.durations = function () {
+  if (!this.state._registeredMembers) {
+    this.state._registeredMembers = [];
+  }
+  return _.pluck(this.state._registeredMembers, 'duration');
+};
+
 SoCraTesResource.prototype.reserve = function (registrationTuple) {
   var sessionID = 'SessionID:' + registrationTuple.sessionID;
   if (registrationTuple.duration === 'waitinglist') {

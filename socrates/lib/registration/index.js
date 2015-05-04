@@ -179,9 +179,6 @@ app.get('/management', function (req, res, next) {
         return list.join(', ');
       };
 
-      var tshirtSizes = managementService.tshirtSizes(addonLines);
-
-      var resourceNames = activity.resourceNames();
       activity.waitinglistMembers = {};
 
       function membersOnWaitinglist(activity, resourceName, globalCallback) {
@@ -200,7 +197,7 @@ app.get('/management', function (req, res, next) {
           });
       }
 
-      async.each(resourceNames,
+      async.each(activity.resourceNames(),
         function (resourceName, callback) { membersOnWaitinglist(activity, resourceName, callback); },
         function (err) {
           if (err) { return next(err); }
@@ -218,7 +215,8 @@ app.get('/management', function (req, res, next) {
               addonLines: addonLines,
               waitinglistLines: waitinglistLines,
               addonLinesOfUnsubscribedMembers: [],
-              tshirtsizes: tshirtSizes,
+              tshirtsizes: managementService.tshirtSizes(addonLines),
+              durations: managementService.durations(activity),
               formatDates: formatDates,
               formatList: formatList
             });
