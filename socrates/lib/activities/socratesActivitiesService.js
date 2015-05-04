@@ -71,6 +71,30 @@ module.exports = {
       });
 
     });
+  },
+
+  newResourceFor: function (nickname, resourceName, newResourceName, callback) {
+    var self = this;
+    activitystore.getActivity(currentUrl, function (err, activity) {
+      if (err || !activity) { return callback(err); }
+      memberstore.getMember(nickname, function (err, member) {
+        if (err || !member) { return callback(err); }
+        var oldResource = activity.socratesResourceNamed(resourceName);
+        var registrationRecord = oldResource.recordFor(member.id());
+        oldResource.removeMemberId(member.id());
+        activity.socratesResourceNamed(newResourceName).addRecord(registrationRecord);
+        return activitystore.saveActivity(activity, function (err) {
+          if (err && err.message === CONFLICTING_VERSIONS) {
+            // we try again because of a racing condition during save:
+            return self.newResourceFor(nickname, resourceName, newResourceName, callback);
+          }
+          if (err) { return callback(err); }
+          notifications.changedResource(member, roomOptions.informationFor(newResourceName, registrationRecord.duration));
+          return callback();
+        });
+      });
+
+    });
   }
 
 };

@@ -47,7 +47,8 @@ describe('SoCraTes Activities Service', function () {
       assignedGroup: "assignedGroup",
       group: {groupLongName: "longName"},
       resources: {
-        single: {_canUnsubscribe: false, _limit: 10, _position: 2, _registrationOpen: true}
+        single: {_canUnsubscribe: false, _limit: 10, _registrationOpen: true},
+        bed_in_double: {_canUnsubscribe: false, _limit: 10, _registrationOpen: true}
       }
     };
 
@@ -55,6 +56,7 @@ describe('SoCraTes Activities Service', function () {
 
     sinon.stub(notifications, 'newParticipant');
     sinon.stub(notifications, 'changedDuration');
+    sinon.stub(notifications, 'changedResource');
     sinon.stub(memberstore, 'getMember', function (nickname, callback) {
       callback(null, new Member({id: 'memberId'}));
     });
@@ -148,6 +150,17 @@ describe('SoCraTes Activities Service', function () {
 
     socratesActivitiesService.newDurationFor('nickname', 'single', 4, function (err) {
       expect(savedActivity.socratesResourceNamed('single').recordFor('memberId').duration).to.be(4);
+      done(err);
+    });
+  });
+
+  it('moves a member\'s registration to a different resource', function (done) {
+    socrates.resources.single._registeredMembers = [{memberId: 'memberId', duration: 2}];
+    expect(socratesActivity.socratesResourceNamed('single').isAlreadyRegistered('memberId')).to.be(true);
+
+    socratesActivitiesService.newResourceFor('nickname', 'single', 'bed_in_double', function (err) {
+      expect(socratesActivity.socratesResourceNamed('single').isAlreadyRegistered('memberId')).to.be(false);
+      expect(socratesActivity.socratesResourceNamed('bed_in_double').isAlreadyRegistered('memberId')).to.be(true);
       done(err);
     });
   });
