@@ -203,6 +203,7 @@ block content
                 tr
                   th Vorname
                   th Nachname
+                  th E-Mail
                   th Heimatadresse
                   th Rechnungsadresse
                   th Ressource
@@ -211,6 +212,7 @@ block content
                   tr
                     td #{line.member.firstname()}
                     td #{line.member.lastname()}
+                    td #{line.member.email()}
                     td: +formatAsLines(line.addon.homeAddressLines())
                     td: +formatAsLines(line.addon.billingAddressLines())
                     td #{formatList(activity.resources().resourceNamesOf(line.member.id()))}
