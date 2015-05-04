@@ -44,6 +44,19 @@ mixin newResource(resourceName, nickname)
       option(value='junior') junior
     button.btn.btn-default.btn-xs(type='submit') Ändern
 
+mixin newWaitinglist(resourceName, nickname)
+  form(id='activityform', action='/activities/newWaitinglist', method='post')
+    +csrf
+    +hidden('resourceName', resourceName)
+    +hidden('nickname', nickname)
+    select.form-control(name='newResourceName', style='height: inherit;')
+      option(value='0') #{' '}
+      option(value='single') single
+      option(value='bed_in_double') bed in double
+      option(value='bed_in_junior') bed in junior
+      option(value='junior') junior
+    button.btn.btn-default.btn-xs(type='submit') Ändern
+
 block scripts
   +dataTableImport
   script.
@@ -118,6 +131,7 @@ block content
                     th Nachname
                     th Ort/Region
                     th Übernehmen
+                    th ändern in
                 tbody
                   for member in waitingMembers
                     tr
@@ -127,6 +141,7 @@ block content
                       td #{member.lastname()}
                       td #{member.location()}
                       td: +fromWaitinglistToParticipant(resourceName, member.nickname())
+                      td: +newWaitinglist(resourceName, member.nickname())
             hr
         .tab-pane.active#addons
           h4 Alle Teilnehmer mit Zahlungen

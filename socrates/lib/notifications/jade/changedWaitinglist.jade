@@ -1,0 +1,16 @@
+doctype html
+html
+  body
+    h3 SoCraTes Change of Waitinglist
+    p.
+      Hello #{member.displayName()},
+    p We have changed your waitinglist entry for the SoCraTes Conference 2015 as follows:
+    p
+      | You are waiting for a #{' '} 
+      b #{bookingdetails.room}
+      | .
+    p We will inform you as soon as a space is available. You can then choose the number of nights you want to stay.
+    p You can review and modify your waitinglist data at #{' '}
+      a(href='#{url}/members/edit') #{url}/members/edit
+
+    p The organisers
