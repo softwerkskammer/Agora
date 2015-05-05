@@ -1,0 +1,12 @@
+mixin ajaxFunction
+  script.
+    function changeState(url, buttonid) {
+      $.ajax({url: url}).done(function (data) {
+        $('#' + buttonid).parent().html(data);
+      });
+    }
+
+mixin ajaxButton(nickname, url, infix, buttonLabel)
+  -var spacelessNick = nickname.replace(/ /g, 'X')
+  a.btn.btn-primary.btn-xs.btn-block(id='#{encodeURIComponent(spacelessNick) + "-" + infix + "-button"}',
+  href='javascript:changeState(\'#{url}\', \'#{encodeURIComponent(spacelessNick) + "-" + infix + "-button"}\')') #{buttonLabel}

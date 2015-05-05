@@ -3,6 +3,7 @@ include ../../../../softwerkskammer/lib/members/views/memberlist-mixin
 include ../../../../softwerkskammer/views/format-mixin
 include ../../../../softwerkskammer/views/formComponents
 include ../../../../softwerkskammer/views/dataTables-mixin
+include ajax
 
 mixin localdate(momentOrNull)
   | #{momentOrNull ? momentOrNull.locale('de').format('L') : '-'}
@@ -11,14 +12,10 @@ mixin buttonOrDate(momentOrNull, paymentDone, nickname)
   if (momentOrNull)
     | #{momentOrNull.locale('de').format('L')}
   else
-    -var spacelessNick = nickname.replace(/ /g, 'X')
-    a.btn.btn-primary.btn-xs.btn-block(id='#{encodeURIComponent(spacelessNick) + "-button"}',
-    href='javascript:changeState(\'#{"/activities/paymentReceived/" + encodeURIComponent(nickname)}\', \'#{encodeURIComponent(spacelessNick) + "-button"}\')') Erhalten…
+    +ajaxButton(nickname, "/activities/paymentReceived/" + encodeURIComponent(nickname), 'PR', 'Erhalten…')
 
 mixin fromWaitinglistToParticipant(resourceName, nickname)
-  -var spacelessNick = nickname.replace(/ /g, 'X')
-  a.btn.btn-primary.btn-xs.btn-block(id='#{encodeURIComponent(spacelessNick) + "-button"}',
-  href='javascript:changeState(\'#{"/activities/fromWaitinglistToParticipant/" + encodeURIComponent(resourceName) + "/" + encodeURIComponent(nickname)}\', \'#{encodeURIComponent(spacelessNick) + "-button"}\')') Teilnehmen lassen…
+  +ajaxButton(nickname, "/activities/fromWaitinglistToParticipant/" + encodeURIComponent(resourceName) + "/" + encodeURIComponent(nickname), 'WLP', 'Teilnehmen lassen…')
 
 mixin newDuration(resourceName, nickname, currentSelection)
   form(id='activityform', action='/activities/newDuration', method='post')
@@ -61,12 +58,7 @@ mixin newWaitinglist(resourceName, nickname)
 
 block scripts
   +dataTableImport
-  script.
-    function changeState(url, buttonid) {
-      $.ajax({url: url}).done(function (data) {
-        $('#' + buttonid).parent().html(data);
-      });
-    }
+  +ajaxFunction
   +dataTable('.addontable', '[ 4, "asc" ]', '[{targets: [0,8,9,10], type: "date-eu"}]')
   +dataTable('.membertable', '[ 0, "asc" ]', '[{targets: 0, type: "date-eu"}]')
   +dataTable('.unsortedtable', '[]', '[]')
