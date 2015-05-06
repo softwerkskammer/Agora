@@ -90,15 +90,18 @@ block content
                 tr
                   th Option
                   th Teilnehmer
+                  th Freie Plätze
                   th Wartende
               tbody
                 for resourceName in activity.resourceNames()
                   -var participants = activity.participantsOf(resourceName)
                   -var resource = activity.socratesResourceNamed(resourceName)
                   -var waitingMembers = activity.waitinglistMembers[resourceName]
+                  -var freeSpots = resource.limit() ? resource.limit() - participants.length : undefined
                   tr
                     td #{resourceName}
                     td #{participants.length} von #{resource.limit() || 'unbegrenzt'}
+                    td #{freeSpots || 'beliebig viele'}
                     td #{waitingMembers.length}
 
             hr
