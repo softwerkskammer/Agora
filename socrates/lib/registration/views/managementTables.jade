@@ -24,10 +24,10 @@ mixin newDuration(resourceName, nickname, currentSelection)
     +hidden('nickname', nickname)
     select.form-control(name='duration', style='height: inherit;')
       option(value='0') #{' '}
-      option(value='2', selected=(currentSelection === 2 ? true : false)) saturday evening
-      option(value='3', selected=(currentSelection === 3 ? true : false)) sunday morning
-      option(value='4', selected=(currentSelection === 4 ? true : false)) sunday evening
-      option(value='5', selected=(currentSelection === 5 ? true : false)) monday morning
+      option(value='2') saturday evening
+      option(value='3') sunday morning
+      option(value='4') sunday evening
+      option(value='5') monday morning
     button.btn.btn-default.btn-xs(type='submit') Ändern
 
 mixin newResource(resourceName, nickname)
@@ -107,7 +107,7 @@ block content
               table.table.table-condensed.table-hover.table-striped.unsortedtable
                 thead
                   tr
-                    th Name
+                    th Option
                     th Count
                 tbody
                   for duration in durations
