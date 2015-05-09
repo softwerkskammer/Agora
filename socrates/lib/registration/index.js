@@ -210,16 +210,16 @@ app.get('/management', function (req, res, next) {
           managementService.addonLinesOf(_.flatten(waitinglistMembers), function (err, waitinglistLines) {
             if (err || !waitinglistLines) { return next(err); }
 
-            memberstore.getMembersForIds(activity.socratesResourceNamed('bed_in_double').rooms().participantsWithoutRoom(), function (err, unpairedDoubleParticipants) {
-              memberstore.getMembersForIds(activity.socratesResourceNamed('bed_in_junior').rooms().participantsWithoutRoom(), function (err, unpairedJuniorParticipants) {
-                memberstore.getMembersForIds(activity.socratesResourceNamed('bed_in_double').rooms().participantsInRoom(), function (err, pairedDoubleParticipants) {
-                  memberstore.getMembersForIds(activity.socratesResourceNamed('bed_in_junior').rooms().participantsInRoom(), function (err, pairedJuniorParticipants) {
+            memberstore.getMembersForIds(activity.rooms('bed_in_double').participantsWithoutRoom(), function (err, unpairedDoubleParticipants) {
+              memberstore.getMembersForIds(activity.rooms('bed_in_junior').participantsWithoutRoom(), function (err, unpairedJuniorParticipants) {
+                memberstore.getMembersForIds(activity.rooms('bed_in_double').participantsInRoom(), function (err, pairedDoubleParticipants) {
+                  memberstore.getMembersForIds(activity.rooms('bed_in_junior').participantsInRoom(), function (err, pairedJuniorParticipants) {
 
                     function findMemberById(id, members) {
                       return _.find(members, function (member) {return member.id() === id; });
                     }
 
-                    var doubleRoomPairs = _.map(activity.socratesResourceNamed('bed_in_double').rooms().roomPairs(),
+                    var doubleRoomPairs = _.map(activity.rooms('bed_in_double').roomPairs(),
                       function (roomPair) {
                         return {
                           participant1: findMemberById(roomPair.participant1, pairedDoubleParticipants),
@@ -227,7 +227,7 @@ app.get('/management', function (req, res, next) {
                         };
                       });
 
-                    var juniorRoomPairs = _.map(activity.socratesResourceNamed('bed_in_junior').rooms().roomPairs(),
+                    var juniorRoomPairs = _.map(activity.rooms('bed_in_junior').roomPairs(),
                       function (roomPair) {
                         return {
                           participant1: findMemberById(roomPair.participant1, pairedJuniorParticipants),

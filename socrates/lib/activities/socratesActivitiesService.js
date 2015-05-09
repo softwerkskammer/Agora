@@ -129,7 +129,7 @@ module.exports = {
         if (err || !participant1) { return callback(err); }
         memberstore.getMember(participant2Nick, function (err, participant2) {
           if (err || !participant2) { return callback(err); }
-          activity.socratesResourceNamed(resourceName).rooms().add(participant1.id(), participant2.id());
+          activity.rooms(resourceName).add(participant1.id(), participant2.id());
           return activitystore.saveActivity(activity, function (err) {
             if (err && err.message === CONFLICTING_VERSIONS) {
               // we try again because of a racing condition during save:
