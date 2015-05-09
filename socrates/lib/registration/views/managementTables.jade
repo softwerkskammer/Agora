@@ -242,6 +242,7 @@ block content
         .tab-pane#tshirtSizes
           h4 Verteilungen der T-Shirt-Größen
           .panel
+            -var totalShirtCount = 0
             table.table.table-condensed.table-hover.table-striped.unsortedtable
               thead
                 tr
@@ -249,9 +250,12 @@ block content
                   th Anzahl
               tbody
                 for tshirtsize in tshirtsizes
+                  -totalShirtCount += tshirtsize.count
                   tr
                     td #{tshirtsize.size}
                     td #{tshirtsize.count}
+            hr
+            p Gesamtzahl T-Shirts: #{totalShirtCount}
           hr
         .tab-pane#unsubscribed
           h4 Zahlungs-Information von Abgemeldeten
