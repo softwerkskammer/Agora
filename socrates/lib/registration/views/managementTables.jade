@@ -99,6 +99,9 @@ block content
         .tab-pane#overview
           h4 Bettenbelegung
           .panel
+            -var totalParticipants = 0
+            -var totalFreeSpots = 0
+            -var totalWaitingMembers = 0
             table.table.table-condensed.table-hover.table-striped.unsortedtable
               thead
                 tr
@@ -108,15 +111,23 @@ block content
                   th Wartende
               tbody
                 for resourceName in activity.resourceNames()
-                  -var participants = activity.participantsOf(resourceName)
+                  -var participants = activity.participantsOf(resourceName).length
                   -var resource = activity.socratesResourceNamed(resourceName)
-                  -var waitingMembers = activity.waitinglistMembers[resourceName]
-                  -var freeSpots = resource.limit() ? resource.limit() - participants.length : undefined
+                  -var waitingMembers = activity.waitinglistMembers[resourceName].length
+                  -var freeSpots = resource.limit() ? resource.limit() - participants : undefined
+                  -totalParticipants += participants
+                  -totalFreeSpots = freeSpots ? totalFreeSpots + freeSpots : totalFreeSpots
+                  -totalWaitingMembers += waitingMembers
                   tr
                     td #{resourceName}
-                    td #{participants.length} von #{resource.limit() || 'unbegrenzt'}
+                    td #{participants} von #{resource.limit() || 'unbegrenzt'}
                     td #{freeSpots || 'beliebig viele'}
-                    td #{waitingMembers.length}
+                    td #{waitingMembers}
+                tr
+                  td <b>Summe</b>
+                  td <b>#{totalParticipants}</b>
+                  td <b>#{totalFreeSpots}</b>
+                  td <b>#{totalWaitingMembers}</b>
 
             hr
             h4 Aufenthaltsdauer
