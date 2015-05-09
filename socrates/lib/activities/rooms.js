@@ -4,6 +4,8 @@ var _ = require('lodash');
 var WaitinglistEntry = require('simple-configure').get('beans').get('waitinglistEntry');
 
 function Rooms(roomsObject, allKnownMemberIds) {
+  console.log(roomsObject);
+  console.log(allKnownMemberIds);
   this.state = roomsObject; // this must be *the* object that is referenced by resource.rooms
   this.allKnownMemberIds = allKnownMemberIds;
   return this;
@@ -25,6 +27,10 @@ Rooms.prototype.participantsInRoom = function () {
   participantsInRoom.push(_.pluck(this.state, 'participant1'));
   participantsInRoom.push(_.pluck(this.state, 'participant2'));
   return _.flatten(participantsInRoom);
+};
+
+Rooms.prototype.roomPairs = function () {
+  return this.state.slice(); // attention - this is a shallow copy only!
 };
 
 Rooms.prototype.participantsWithoutRoom = function () {

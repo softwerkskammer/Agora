@@ -82,6 +82,15 @@ describe('Rooms', function () {
     expect(participantsInRoom).to.eql(['memberId1', 'memberId2']);
   });
 
+  it('lists the room pairs', function () {
+    var roomsInResource = [{ participant1: 'memberId1', participant2: 'memberId2' }, { participant1: 'memberId3', participant2: 'memberId4' }];
+    var rooms = new Rooms(roomsInResource, allKnownMemberIds);
+
+    var roomPairs = rooms.roomPairs();
+
+    expect(roomPairs).to.eql([{ participant1: 'memberId1', participant2: 'memberId2' }, { participant1: 'memberId3', participant2: 'memberId4' }]);
+  });
+
   it('lists those participants that are not yet in a room', function () {
     var roomsInResource = [{ participant1: 'memberId1', participant2: 'memberId2' }];
     var rooms = new Rooms(roomsInResource, allKnownMemberIds);
