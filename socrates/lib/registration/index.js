@@ -210,15 +210,34 @@ app.get('/management', function (req, res, next) {
           managementService.addonLinesOf(_.flatten(waitinglistMembers), function (err, waitinglistLines) {
             if (err || !waitinglistLines) { return next(err); }
 
-            res.render('managementTables', {
-              activity: activity,
-              addonLines: addonLines,
-              waitinglistLines: waitinglistLines,
-              addonLinesOfUnsubscribedMembers: [],
-              tshirtsizes: managementService.tshirtSizes(addonLines),
-              durations: managementService.durations(activity),
-              formatDates: formatDates,
-              formatList: formatList
+            memberstore.getMembersForIds(activity.rooms('bed_in_double').participantsWithoutRoom(), function (err, unpairedDoubleParticipants) {
+              memberstore.getMembersForIds(activity.rooms('bed_in_junior').participantsWithoutRoom(), function (err, unpairedJuniorParticipants) {
+                memberstore.getMembersForIds(activity.rooms('bed_in_double').participantsInRoom(), function (err, pairedDoubleParticipants) {
+                  memberstore.getMembersForIds(activity.rooms('bed_in_junior').participantsInRoom(), function (err, pairedJuniorParticipants) {
+
+                    res.render('managementTables', {
+                      activity: activity,
+                      addonLines: addonLines,
+                      waitinglistLines: waitinglistLines,
+                      addonLinesOfUnsubscribedMembers: [],
+                      tshirtsizes: managementService.tshirtSizes(addonLines),
+                      durations: managementService.durations(activity),
+                      rooms: {
+                        bed_in_double: {
+                          unpairedParticipants: unpairedDoubleParticipants,
+                          roomPairs: activity.rooms('bed_in_double').roomPairsWithMembersFrom(pairedDoubleParticipants)
+                        },
+                        bed_in_junior: {
+                          unpairedParticipants: unpairedJuniorParticipants,
+                          roomPairs: activity.rooms('bed_in_junior').roomPairsWithMembersFrom(pairedJuniorParticipants)
+                        }
+                      },
+                      formatDates: formatDates,
+                      formatList: formatList
+                    });
+                  });
+                });
+              });
             });
           });
         });

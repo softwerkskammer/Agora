@@ -5,6 +5,7 @@ var moment = require('moment-timezone');
 var beans = require('simple-configure').get('beans');
 var Resource = beans.get('resource');
 var roomOptions = beans.get('roomOptions');
+var Rooms = beans.get('rooms');
 
 function addExpirationTimeFor(record) {
   var date = moment();
@@ -141,6 +142,13 @@ SoCraTesResource.prototype.hasValidReservationFor = function (registrationTuple)
 SoCraTesResource.prototype.expirationTimeOf = function (registrationTuple) {
   var record = recordOrWaitinglistRecordFor(this.state, registrationTuple);
   return record && moment(record.expiresAt);
+};
+
+SoCraTesResource.prototype.rooms = function () {
+  if (!this.state.rooms) {
+    this.state.rooms = [];
+  }
+  return new Rooms(this.state.rooms, this.registeredMembers());
 };
 
 module.exports = SoCraTesResource;

@@ -56,6 +56,19 @@ mixin newWaitinglist(resourceName, nickname)
       option(value='junior') junior
     button.btn.btn-default.btn-xs(type='submit') Ändern
 
+mixin unpairedParticipantDropdown(resourceName, participant1Nick, unpairedParticipants)
+  form(id='unpairedParticipantForm', action='/activities/newParticipantPair', method='post')
+    +csrf
+    +hidden('resourceName', resourceName)
+    +hidden('participant1', participant1Nick)
+    select.form-control(name='participant2', style='height: inherit;')
+      option(value='0') #{' '}
+      for participant2 in unpairedParticipants
+        -var p2nick = participant2.nickname()
+        if participant1Nick !== p2nick
+          option(value=p2nick) #{participant2.displayName()} (#{p2nick})
+    button.btn.btn-default.btn-xs(type='submit') Zufügen
+
 block scripts
   +dataTableImport
   +ajaxFunction
@@ -76,6 +89,7 @@ block content
     li: a(href='#main', data-toggle='tab') #{t('activities.participants')}
     li: a(href='#waitinglist', data-toggle='tab') Wartelisten
     li.active: a(href='#addons', data-toggle='tab') Zahlungen
+    li: a(href='#bedroomPairing', data-toggle='tab') Zimmerzuordnungen
     li: a(href='#tshirtSizes', data-toggle='tab') T-Shirt-Bestellungen
     li: a(href='#unsubscribed', data-toggle='tab') Abgemeldete
     li: a(href='#addresses', data-toggle='tab') Adressen
@@ -85,6 +99,9 @@ block content
         .tab-pane#overview
           h4 Bettenbelegung
           .panel
+            -var totalParticipants = 0
+            -var totalFreeSpots = 0
+            -var totalWaitingMembers = 0
             table.table.table-condensed.table-hover.table-striped.unsortedtable
               thead
                 tr
@@ -94,15 +111,23 @@ block content
                   th Wartende
               tbody
                 for resourceName in activity.resourceNames()
-                  -var participants = activity.participantsOf(resourceName)
+                  -var participants = activity.participantsOf(resourceName).length
                   -var resource = activity.socratesResourceNamed(resourceName)
-                  -var waitingMembers = activity.waitinglistMembers[resourceName]
-                  -var freeSpots = resource.limit() ? resource.limit() - participants.length : undefined
+                  -var waitingMembers = activity.waitinglistMembers[resourceName].length
+                  -var freeSpots = resource.limit() ? resource.limit() - participants : undefined
+                  -totalParticipants += participants
+                  -totalFreeSpots = freeSpots ? totalFreeSpots + freeSpots : totalFreeSpots
+                  -totalWaitingMembers += waitingMembers
                   tr
                     td #{resourceName}
-                    td #{participants.length} von #{resource.limit() || 'unbegrenzt'}
+                    td #{participants} von #{resource.limit() || 'unbegrenzt'}
                     td #{freeSpots || 'beliebig viele'}
-                    td #{waitingMembers.length}
+                    td #{waitingMembers}
+                tr
+                  td <b>Summe</b>
+                  td <b>#{totalParticipants}</b>
+                  td <b>#{totalFreeSpots}</b>
+                  td <b>#{totalWaitingMembers}</b>
 
             hr
             h4 Aufenthaltsdauer
@@ -116,7 +141,7 @@ block content
                   for duration in durations
                     tr
                       td #{duration.duration}
-                      td #{duration.count}
+                      td #{duration.count} (total: #{duration.total})
 
         .tab-pane#main
           each resourceName in activity.resourceNames()
@@ -205,9 +230,30 @@ block content
                     td: +localdate(payment.moneyTransferredMoment())
                     td: +localdate(payment.creditCardPaidMoment())
                     td: +buttonOrDate(payment.paymentReceivedMoment(), payment.paymentDone(), line.member.nickname())
+
+        .tab-pane#bedroomPairing
+          for resourceName in ['bed_in_double', 'bed_in_junior']
+            h4 Zuordnung der Belegungen für #{resourceName}
+            .panel
+              table.table.table-condensed.table-hover.table-striped.unsortedtable
+                thead
+                  tr
+                    th 1. Teilnehmer
+                    th 2. Teilnehmer
+                tbody
+                  for pair in rooms[resourceName].roomPairs
+                    tr
+                      td #{pair.participant1.displayName()} (#{pair.participant1.nickname()})
+                      td #{pair.participant2.displayName()} (#{pair.participant2.nickname()})
+                  for participant in rooms[resourceName].unpairedParticipants
+                    tr
+                      td #{participant.displayName()} (#{participant.nickname()})
+                      td: +unpairedParticipantDropdown(resourceName, participant.nickname(), rooms[resourceName].unpairedParticipants)
+
         .tab-pane#tshirtSizes
           h4 Verteilungen der T-Shirt-Größen
           .panel
+            -var totalShirtCount = 0
             table.table.table-condensed.table-hover.table-striped.unsortedtable
               thead
                 tr
@@ -215,9 +261,12 @@ block content
                   th Anzahl
               tbody
                 for tshirtsize in tshirtsizes
+                  -totalShirtCount += tshirtsize.count
                   tr
                     td #{tshirtsize.size}
                     td #{tshirtsize.count}
+            hr
+            p Gesamtzahl T-Shirts: #{totalShirtCount}
           hr
         .tab-pane#unsubscribed
           h4 Zahlungs-Information von Abgemeldeten

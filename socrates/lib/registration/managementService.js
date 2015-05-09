@@ -49,6 +49,14 @@ module.exports = {
         }
       });
     });
+
+    function count(index) { return durations[index] ? durations[index].count : 0; }
+
+    if (durations[2]) { durations[2].total = count(2) + count(3) + count(4) + count(5); }
+    if (durations[3]) { durations[3].total = count(3) + count(4) + count(5); }
+    if (durations[4]) { durations[4].total = count(4) + count(5); }
+    if (durations[5]) { durations[5].total = count(5); }
+
     return durations;
   }
 
