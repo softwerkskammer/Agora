@@ -38,7 +38,6 @@ Rooms.prototype.roomPairsWithMembersFrom = function (memberList) {
       participant2: findMemberById(roomPair.participant2, memberList)
     };
   });
-
 };
 
 Rooms.prototype.participantsWithoutRoom = function () {

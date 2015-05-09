@@ -50,7 +50,7 @@ if (SoCraTesActivity.prototype.reserve === undefined) {
   };
 
   SoCraTesActivity.prototype.rooms = function (resourceName) {
-    return this.socratesResourceFor(resourceName).rooms();
+    return this.socratesResourceNamed(resourceName).rooms();
   };
 
 }
