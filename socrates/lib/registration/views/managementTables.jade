@@ -141,7 +141,7 @@ block content
                   for duration in durations
                     tr
                       td #{duration.duration}
-                      td #{duration.count}
+                      td #{duration.count} (total: #{duration.total})
 
         .tab-pane#main
           each resourceName in activity.resourceNames()
