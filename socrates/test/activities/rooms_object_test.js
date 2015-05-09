@@ -16,7 +16,7 @@ describe('Rooms', function () {
     new Member({id: 'memberId3'}),
     new Member({id: 'memberId4'}),
     new Member({id: 'memberId5'})
-  ]
+  ];
 
   it('can put two participants into a room', function () {
     var roomsInResource = [];
