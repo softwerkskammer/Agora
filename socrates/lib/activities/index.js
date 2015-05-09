@@ -143,4 +143,12 @@ app.post('/newWaitinglist', function (req, res, next) {
   });
 });
 
+app.post('/newParticipantPair', function (req, res, next) {
+  console.log('new participant pair: ' + req.body.participant1 + " " + req.body.participant2 + " " + req.body.resourceName);
+  socratesActivitiesService.newParticipantPairFor(req.body.resourceName, req.body.participant1, req.body.participant2, function (err) {
+    if (err) { return next(err); }
+    res.redirect('/registration/management');
+  });
+});
+
 module.exports = app;

@@ -119,6 +119,28 @@ module.exports = {
       });
 
     });
+  },
+
+  newParticipantPairFor: function (resourceName, participant1Nick, participant2Nick, callback) {
+    var self = this;
+    activitystore.getActivity(currentUrl, function (err, activity) {
+      if (err || !activity) { return callback(err); }
+      memberstore.getMember(participant1Nick, function (err, participant1) {
+        if (err || !participant1) { return callback(err); }
+        memberstore.getMember(participant2Nick, function (err, participant2) {
+          if (err || !participant2) { return callback(err); }
+          activity.socratesResourceNamed(resourceName).rooms().add(participant1.id(), participant2.id());
+          return activitystore.saveActivity(activity, function (err) {
+            if (err && err.message === CONFLICTING_VERSIONS) {
+              // we try again because of a racing condition during save:
+              return self.newParticipantPairFor(resourceName, participant1Nick, participant2Nick, callback);
+            }
+            return callback(err);
+          });
+
+        });
+      });
+    });
   }
 
 };
