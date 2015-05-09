@@ -56,6 +56,19 @@ mixin newWaitinglist(resourceName, nickname)
       option(value='junior') junior
     button.btn.btn-default.btn-xs(type='submit') Ändern
 
+mixin unpairedParticipantDropdown(resourceName, participant1Nick, unpairedParticipants)
+  form(id='unpairedParticipantForm', action='/activities/newParticipantPair', method='post')
+    +csrf
+    +hidden('resourceName', resourceName)
+    +hidden('participant1', participant1Nick)
+    select.form-control(name='participant2', style='height: inherit;')
+      option(value='0') #{' '}
+      for participant2 in unpairedParticipants
+        -var p2nick = participant2.nickname()
+        if participant1Nick !== p2nick
+          option(value=p2nick) #{participant2.displayName()} (#{p2nick})
+    button.btn.btn-default.btn-xs(type='submit') Zufügen
+
 block scripts
   +dataTableImport
   +ajaxFunction
@@ -76,6 +89,7 @@ block content
     li: a(href='#main', data-toggle='tab') #{t('activities.participants')}
     li: a(href='#waitinglist', data-toggle='tab') Wartelisten
     li.active: a(href='#addons', data-toggle='tab') Zahlungen
+    li: a(href='#bedroomPairing', data-toggle='tab') Zimmerzuordnungen
     li: a(href='#tshirtSizes', data-toggle='tab') T-Shirt-Bestellungen
     li: a(href='#unsubscribed', data-toggle='tab') Abgemeldete
     li: a(href='#addresses', data-toggle='tab') Adressen
@@ -205,6 +219,26 @@ block content
                     td: +localdate(payment.moneyTransferredMoment())
                     td: +localdate(payment.creditCardPaidMoment())
                     td: +buttonOrDate(payment.paymentReceivedMoment(), payment.paymentDone(), line.member.nickname())
+
+        .tab-pane#bedroomPairing
+          for resourceName in ['bed_in_double', 'bed_in_junior']
+            h4 Zuordnung der Belegungen für #{resourceName}
+            .panel
+              table.table.table-condensed.table-hover.table-striped.unsortedtable
+                thead
+                  tr
+                    th 1. Teilnehmer
+                    th 2. Teilnehmer
+                tbody
+                  for pair in rooms[resourceName].roomPairs
+                    tr
+                      td #{pair.participant1.displayName()} (#{pair.participant1.nickname()})
+                      td #{pair.participant2.displayName()} (#{pair.participant2.nickname()})
+                  for participant in rooms[resourceName].unpairedParticipants
+                    tr
+                      td #{participant.displayName()} (#{participant.nickname()})
+                      td: +unpairedParticipantDropdown(resourceName, participant.nickname(), rooms[resourceName].unpairedParticipants)
+
         .tab-pane#tshirtSizes
           h4 Verteilungen der T-Shirt-Größen
           .panel

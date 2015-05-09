@@ -210,15 +210,54 @@ app.get('/management', function (req, res, next) {
           managementService.addonLinesOf(_.flatten(waitinglistMembers), function (err, waitinglistLines) {
             if (err || !waitinglistLines) { return next(err); }
 
-            res.render('managementTables', {
-              activity: activity,
-              addonLines: addonLines,
-              waitinglistLines: waitinglistLines,
-              addonLinesOfUnsubscribedMembers: [],
-              tshirtsizes: managementService.tshirtSizes(addonLines),
-              durations: managementService.durations(activity),
-              formatDates: formatDates,
-              formatList: formatList
+            memberstore.getMembersForIds(activity.socratesResourceNamed('bed_in_double').rooms().participantsWithoutRoom(), function (err, unpairedDoubleParticipants) {
+              memberstore.getMembersForIds(activity.socratesResourceNamed('bed_in_junior').rooms().participantsWithoutRoom(), function (err, unpairedJuniorParticipants) {
+                memberstore.getMembersForIds(activity.socratesResourceNamed('bed_in_double').rooms().participantsInRoom(), function (err, pairedDoubleParticipants) {
+                  memberstore.getMembersForIds(activity.socratesResourceNamed('bed_in_junior').rooms().participantsInRoom(), function (err, pairedJuniorParticipants) {
+
+                    function findMemberById(id, members) {
+                      return _.find(members, function (member) {return member.id() === id; });
+                    }
+
+                    var doubleRoomPairs = _.map(activity.socratesResourceNamed('bed_in_double').rooms().roomPairs(),
+                      function (roomPair) {
+                        return {
+                          participant1: findMemberById(roomPair.participant1, pairedDoubleParticipants),
+                          participant2: findMemberById(roomPair.participant2, pairedDoubleParticipants)
+                        };
+                      });
+
+                    var juniorRoomPairs = _.map(activity.socratesResourceNamed('bed_in_junior').rooms().roomPairs(),
+                      function (roomPair) {
+                        return {
+                          participant1: findMemberById(roomPair.participant1, pairedJuniorParticipants),
+                          participant2: findMemberById(roomPair.participant2, pairedJuniorParticipants)
+                        };
+                      });
+
+                    res.render('managementTables', {
+                      activity: activity,
+                      addonLines: addonLines,
+                      waitinglistLines: waitinglistLines,
+                      addonLinesOfUnsubscribedMembers: [],
+                      tshirtsizes: managementService.tshirtSizes(addonLines),
+                      durations: managementService.durations(activity),
+                      rooms: {
+                        bed_in_double: {
+                          unpairedParticipants: unpairedDoubleParticipants,
+                          roomPairs: doubleRoomPairs
+                        },
+                        bed_in_junior: {
+                          unpairedParticipants: unpairedJuniorParticipants,
+                          roomPairs: juniorRoomPairs
+                        }
+                      },
+                      formatDates: formatDates,
+                      formatList: formatList
+                    });
+                  });
+                });
+              });
             });
           });
         });
