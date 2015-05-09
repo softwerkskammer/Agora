@@ -215,9 +215,6 @@ app.get('/management', function (req, res, next) {
                 memberstore.getMembersForIds(activity.rooms('bed_in_double').participantsInRoom(), function (err, pairedDoubleParticipants) {
                   memberstore.getMembersForIds(activity.rooms('bed_in_junior').participantsInRoom(), function (err, pairedJuniorParticipants) {
 
-                    var doubleRoomPairs = activity.rooms('bed_in_double').roomPairsWithMembersFrom(pairedDoubleParticipants);
-                    var juniorRoomPairs = activity.rooms('bed_in_junior').roomPairsWithMembersFrom(pairedJuniorParticipants);
-
                     res.render('managementTables', {
                       activity: activity,
                       addonLines: addonLines,
@@ -228,11 +225,11 @@ app.get('/management', function (req, res, next) {
                       rooms: {
                         bed_in_double: {
                           unpairedParticipants: unpairedDoubleParticipants,
-                          roomPairs: doubleRoomPairs
+                          roomPairs: activity.rooms('bed_in_double').roomPairsWithMembersFrom(pairedDoubleParticipants)
                         },
                         bed_in_junior: {
                           unpairedParticipants: unpairedJuniorParticipants,
-                          roomPairs: juniorRoomPairs
+                          roomPairs: activity.rooms('bed_in_junior').roomPairsWithMembersFrom(pairedJuniorParticipants)
                         }
                       },
                       formatDates: formatDates,
