@@ -28,14 +28,10 @@ Rooms.prototype.participantsInRoom = function () {
 };
 
 Rooms.prototype.roomPairsWithMembersFrom = function (memberList) {
-  function findMemberById(id, members) {
-    return _.find(members, function (member) {return member.id() === id; });
-  }
-
   return _.map(this.state, function (roomPair) {
     return {
-      participant1: findMemberById(roomPair.participant1, memberList),
-      participant2: findMemberById(roomPair.participant2, memberList)
+      participant1: _.find(memberList, function (member) { return member.id() === roomPair.participant1; }),
+      participant2: _.find(memberList, function (member) { return member.id() === roomPair.participant2; })
     };
   });
 };
