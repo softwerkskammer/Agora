@@ -32,6 +32,10 @@ Payment.prototype.paymentDone = function () {
   return !!(this.creditCardPaid() || this.moneyTransferred());
 };
 
+Payment.prototype.paymentConfirmed = function () {
+  return !!this.state.paymentReceived;
+};
+
 Payment.prototype.noteCreditCardPayment = function () {
   this.state.creditCardPaid = moment().toDate();
 };
