@@ -4,8 +4,6 @@ var _ = require('lodash');
 var WaitinglistEntry = require('simple-configure').get('beans').get('waitinglistEntry');
 
 function Rooms(roomsObject, allKnownMemberIds) {
-  console.log(roomsObject);
-  console.log(allKnownMemberIds);
   this.state = roomsObject; // this must be *the* object that is referenced by resource.rooms
   this.allKnownMemberIds = allKnownMemberIds;
   return this;
