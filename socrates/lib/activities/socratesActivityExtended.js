@@ -49,6 +49,10 @@ if (SoCraTesActivity.prototype.reserve === undefined) {
     return this.waitinglistMembers[resourceName];
   };
 
+  SoCraTesActivity.prototype.rooms = function (resourceName) {
+    return this.socratesResourceFor(resourceName).rooms();
+  };
+
 }
 
 module.exports = SoCraTesActivity;
