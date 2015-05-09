@@ -215,25 +215,8 @@ app.get('/management', function (req, res, next) {
                 memberstore.getMembersForIds(activity.rooms('bed_in_double').participantsInRoom(), function (err, pairedDoubleParticipants) {
                   memberstore.getMembersForIds(activity.rooms('bed_in_junior').participantsInRoom(), function (err, pairedJuniorParticipants) {
 
-                    function findMemberById(id, members) {
-                      return _.find(members, function (member) {return member.id() === id; });
-                    }
-
-                    var doubleRoomPairs = _.map(activity.rooms('bed_in_double').roomPairs(),
-                      function (roomPair) {
-                        return {
-                          participant1: findMemberById(roomPair.participant1, pairedDoubleParticipants),
-                          participant2: findMemberById(roomPair.participant2, pairedDoubleParticipants)
-                        };
-                      });
-
-                    var juniorRoomPairs = _.map(activity.rooms('bed_in_junior').roomPairs(),
-                      function (roomPair) {
-                        return {
-                          participant1: findMemberById(roomPair.participant1, pairedJuniorParticipants),
-                          participant2: findMemberById(roomPair.participant2, pairedJuniorParticipants)
-                        };
-                      });
+                    var doubleRoomPairs = activity.rooms('bed_in_double').roomPairsWithMembersFrom(pairedDoubleParticipants);
+                    var juniorRoomPairs = activity.rooms('bed_in_junior').roomPairsWithMembersFrom(pairedJuniorParticipants);
 
                     res.render('managementTables', {
                       activity: activity,

@@ -5,10 +5,18 @@ var _ = require('lodash');
 
 var beans = require('../../testutil/configureForTest').get('beans');
 var Rooms = beans.get('rooms');
+var Member = beans.get('member');
 
 describe('Rooms', function () {
 
   var allKnownMemberIds = ['memberId1', 'memberId2', 'memberId3', 'memberId4', 'memberId5'];
+  var allKnownMembers = [
+    new Member({id: 'memberId1'}),
+    new Member({id: 'memberId2'}),
+    new Member({id: 'memberId3'}),
+    new Member({id: 'memberId4'}),
+    new Member({id: 'memberId5'})
+  ]
 
   it('can put two participants into a room', function () {
     var roomsInResource = [];
@@ -43,7 +51,7 @@ describe('Rooms', function () {
   });
 
   it('does not create a room if one of the participants already is in a room', function () {
-    var roomsInResource = [{ participant1: 'memberId1', participant2: 'memberId2' }];
+    var roomsInResource = [{participant1: 'memberId1', participant2: 'memberId2'}];
     var rooms = new Rooms(roomsInResource, allKnownMemberIds);
 
     rooms.add('memberId1', 'memberId3');
@@ -74,7 +82,7 @@ describe('Rooms', function () {
   });
 
   it('lists those participants that already are in a room', function () {
-    var roomsInResource = [{ participant1: 'memberId1', participant2: 'memberId2' }];
+    var roomsInResource = [{participant1: 'memberId1', participant2: 'memberId2'}];
     var rooms = new Rooms(roomsInResource, allKnownMemberIds);
 
     var participantsInRoom = rooms.participantsInRoom();
@@ -83,16 +91,27 @@ describe('Rooms', function () {
   });
 
   it('lists the room pairs', function () {
-    var roomsInResource = [{ participant1: 'memberId1', participant2: 'memberId2' }, { participant1: 'memberId3', participant2: 'memberId4' }];
+    var roomsInResource = [
+      {
+        participant1: 'memberId1',
+        participant2: 'memberId2'
+      }, {
+        participant1: 'memberId3',
+        participant2: 'memberId4'
+      }];
     var rooms = new Rooms(roomsInResource, allKnownMemberIds);
 
-    var roomPairs = rooms.roomPairs();
+    var roomPairs = rooms.roomPairsWithMembersFrom(allKnownMembers);
 
-    expect(roomPairs).to.eql([{ participant1: 'memberId1', participant2: 'memberId2' }, { participant1: 'memberId3', participant2: 'memberId4' }]);
+    expect(roomPairs).to.have.length(2);
+    expect(roomPairs[0].participant1.id()).to.be('memberId1');
+    expect(roomPairs[0].participant2.id()).to.be('memberId2');
+    expect(roomPairs[1].participant1.id()).to.be('memberId3');
+    expect(roomPairs[1].participant2.id()).to.be('memberId4');
   });
 
   it('lists those participants that are not yet in a room', function () {
-    var roomsInResource = [{ participant1: 'memberId1', participant2: 'memberId2' }];
+    var roomsInResource = [{participant1: 'memberId1', participant2: 'memberId2'}];
     var rooms = new Rooms(roomsInResource, allKnownMemberIds);
 
     var participantsWithoutRoom = rooms.participantsWithoutRoom();
