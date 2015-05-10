@@ -4,6 +4,8 @@ var _ = require('lodash');
 var moment = require('moment-timezone');
 var beans = require('simple-configure').get('beans');
 var Resource = beans.get('resource');
+var roomOptions = beans.get('roomOptions');
+var Rooms = beans.get('rooms');
 
 function addExpirationTimeFor(record) {
   var date = moment();
@@ -53,11 +55,42 @@ SoCraTesResource.prototype.canSubscribe = function () {
   return true;
 };
 
+SoCraTesResource.prototype.canUnsubscribe = function () {
+  return true;
+};
+
 SoCraTesResource.prototype.recordFor = function (memberId) {
   return _.find(this.state._registeredMembers, {memberId: memberId});
 };
 
+SoCraTesResource.prototype.waitinglistRecordFor = function (memberId) {
+  return _.find(this.state._waitinglist, {_memberId: memberId});
+};
 
+SoCraTesResource.prototype.addRecord = function (record) {
+  if (!this.state._registeredMembers) {
+    this.state._registeredMembers = [];
+  }
+  return this.state._registeredMembers.push(record);
+};
+
+SoCraTesResource.prototype.addWaitinglistRecord = function (record) {
+  if (!this.state._waitinglist) {
+    return; // waitinglist is not enabled
+  }
+  return this.state._waitinglist.push(record);
+};
+
+SoCraTesResource.prototype.durationFor = function (memberId) {
+  return roomOptions.endOfStayFor(this.recordFor(memberId).duration);
+};
+
+SoCraTesResource.prototype.durations = function () {
+  if (!this.state._registeredMembers) {
+    this.state._registeredMembers = [];
+  }
+  return _.pluck(this.state._registeredMembers, 'duration');
+};
 
 SoCraTesResource.prototype.reserve = function (registrationTuple) {
   var sessionID = 'SessionID:' + registrationTuple.sessionID;
@@ -109,6 +142,13 @@ SoCraTesResource.prototype.hasValidReservationFor = function (registrationTuple)
 SoCraTesResource.prototype.expirationTimeOf = function (registrationTuple) {
   var record = recordOrWaitinglistRecordFor(this.state, registrationTuple);
   return record && moment(record.expiresAt);
+};
+
+SoCraTesResource.prototype.rooms = function () {
+  if (!this.state.rooms) {
+    this.state.rooms = [];
+  }
+  return new Rooms(this.state.rooms, this.registeredMembers());
 };
 
 module.exports = SoCraTesResource;

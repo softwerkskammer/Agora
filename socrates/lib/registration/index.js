@@ -169,7 +169,7 @@ app.get('/management', function (req, res, next) {
   }
 
   activitiesService.getActivityWithGroupAndParticipants(currentUrl, function (err, activity) {
-    managementService.addonLinesOf(activity, function (err, addonLines) {
+    managementService.addonLinesOf(activity.participants, function (err, addonLines) {
       if (err) { return next(err); }
 
       var formatDates = function (dates) {
@@ -179,9 +179,6 @@ app.get('/management', function (req, res, next) {
         return list.join(', ');
       };
 
-      var tshirtSizes = managementService.tshirtSizes(addonLines);
-
-      var resourceNames = activity.resourceNames();
       activity.waitinglistMembers = {};
 
       function membersOnWaitinglist(activity, resourceName, globalCallback) {
@@ -194,24 +191,54 @@ app.get('/management', function (req, res, next) {
             });
           },
           function (err, results) {
-            if (err) { next(err); }
+            if (err) { return next(err); }
             activity.waitinglistMembers[resourceName] = _.compact(results);
             globalCallback();
           });
       }
 
-      async.each(resourceNames,
+      async.each(activity.resourceNames(),
         function (resourceName, callback) { membersOnWaitinglist(activity, resourceName, callback); },
         function (err) {
-          if (err) { next(err); }
+          if (err) { return next(err); }
 
-          res.render('managementTables', {
-            activity: activity,
-            addonLines: addonLines,
-            addonLinesOfUnsubscribedMembers: [],
-            tshirtsizes: tshirtSizes,
-            formatDates: formatDates,
-            formatList: formatList
+          var waitinglistMembers = [];
+          _.each(activity.resourceNames(), function (resourceName) {
+            waitinglistMembers.push(activity.waitinglistMembers[resourceName]);
+          });
+
+          managementService.addonLinesOf(_.flatten(waitinglistMembers), function (err, waitinglistLines) {
+            if (err || !waitinglistLines) { return next(err); }
+
+            memberstore.getMembersForIds(activity.rooms('bed_in_double').participantsWithoutRoom(), function (err, unpairedDoubleParticipants) {
+              memberstore.getMembersForIds(activity.rooms('bed_in_junior').participantsWithoutRoom(), function (err, unpairedJuniorParticipants) {
+                memberstore.getMembersForIds(activity.rooms('bed_in_double').participantsInRoom(), function (err, pairedDoubleParticipants) {
+                  memberstore.getMembersForIds(activity.rooms('bed_in_junior').participantsInRoom(), function (err, pairedJuniorParticipants) {
+
+                    res.render('managementTables', {
+                      activity: activity,
+                      addonLines: addonLines,
+                      waitinglistLines: waitinglistLines,
+                      addonLinesOfUnsubscribedMembers: [],
+                      tshirtsizes: managementService.tshirtSizes(addonLines),
+                      durations: managementService.durations(activity),
+                      rooms: {
+                        bed_in_double: {
+                          unpairedParticipants: unpairedDoubleParticipants,
+                          roomPairs: activity.rooms('bed_in_double').roomPairsWithMembersFrom(pairedDoubleParticipants)
+                        },
+                        bed_in_junior: {
+                          unpairedParticipants: unpairedJuniorParticipants,
+                          roomPairs: activity.rooms('bed_in_junior').roomPairsWithMembersFrom(pairedJuniorParticipants)
+                        }
+                      },
+                      formatDates: formatDates,
+                      formatList: formatList
+                    });
+                  });
+                });
+              });
+            });
           });
         });
 

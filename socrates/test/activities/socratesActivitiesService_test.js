@@ -47,13 +47,17 @@ describe('SoCraTes Activities Service', function () {
       assignedGroup: "assignedGroup",
       group: {groupLongName: "longName"},
       resources: {
-        single: {_canUnsubscribe: false, _limit: 10, _position: 2, _registrationOpen: true}
+        single: {_canUnsubscribe: false, _limit: 10, _registrationOpen: true},
+        bed_in_double: {_canUnsubscribe: false, _limit: 10, _registrationOpen: true}
       }
     };
 
     socratesActivity = new SoCraTesActivity(socrates);
 
     sinon.stub(notifications, 'newParticipant');
+    sinon.stub(notifications, 'changedDuration');
+    sinon.stub(notifications, 'changedResource');
+    sinon.stub(notifications, 'changedWaitinglist');
     sinon.stub(memberstore, 'getMember', function (nickname, callback) {
       callback(null, new Member({id: 'memberId'}));
     });
@@ -141,4 +145,37 @@ describe('SoCraTes Activities Service', function () {
     });
   });
 
+  it('saves the activity with a new duration for the given member in the given resource', function (done) {
+    socrates.resources.single._registeredMembers = [{memberId: 'memberId', duration: 2}];
+    expect(socratesActivity.socratesResourceNamed('single').recordFor('memberId').duration).to.be(2);
+
+    socratesActivitiesService.newDurationFor('nickname', 'single', 4, function (err) {
+      expect(savedActivity.socratesResourceNamed('single').recordFor('memberId').duration).to.be(4);
+      done(err);
+    });
+  });
+
+  it('moves a member\'s registration to a different resource', function (done) {
+    socrates.resources.single._registeredMembers = [{memberId: 'memberId', duration: 2}];
+    expect(socratesActivity.resourceNamed('single').isAlreadyRegistered('memberId')).to.be(true);
+
+    socratesActivitiesService.newResourceFor('nickname', 'single', 'bed_in_double', function (err) {
+      expect(savedActivity.resourceNamed('single').isAlreadyRegistered('memberId')).to.be(false);
+      expect(savedActivity.resourceNamed('bed_in_double').isAlreadyRegistered('memberId')).to.be(true);
+      done(err);
+    });
+  });
+
+  it('moves a member\'s waitinglist reservation to a different resource', function (done) {
+    socrates.resources.single._waitinglist = [{_memberId: 'memberId'}];
+    socrates.resources.bed_in_double._waitinglist = [];
+    expect(socratesActivity.resourceNamed('single').waitinglistEntryFor('memberId')).to.exist();
+    expect(socratesActivity.resourceNamed('bed_in_double').waitinglistEntryFor('memberId')).to.not.exist();
+
+    socratesActivitiesService.newWaitinglistFor('nickname', 'single', 'bed_in_double', function (err) {
+      expect(savedActivity.resourceNamed('single').waitinglistEntryFor('memberId')).to.not.exist();
+      expect(savedActivity.resourceNamed('bed_in_double').waitinglistEntryFor('memberId')).to.exist();
+      done(err);
+    });
+  });
 });

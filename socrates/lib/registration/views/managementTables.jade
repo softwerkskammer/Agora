@@ -1,30 +1,80 @@
 extends ../../../views/layout
 include ../../../../softwerkskammer/lib/members/views/memberlist-mixin
 include ../../../../softwerkskammer/views/format-mixin
+include ../../../../softwerkskammer/views/formComponents
 include ../../../../softwerkskammer/views/dataTables-mixin
+include ajax
+
 mixin localdate(momentOrNull)
   | #{momentOrNull ? momentOrNull.locale('de').format('L') : '-'}
+
 mixin buttonOrDate(momentOrNull, paymentDone, nickname)
   if (momentOrNull)
     | #{momentOrNull.locale('de').format('L')}
   else
-    a.btn.btn-primary.btn-xs.btn-block(id='#{encodeURIComponent(nickname) + "-button"}',
-    href='javascript:changeState(\'#{"/activities/paymentReceived/" + encodeURIComponent(nickname)}\', \'#{encodeURIComponent(nickname) + "-button"}\')') Erhalten…
+    +ajaxButton(nickname, "/activities/paymentReceived/" + encodeURIComponent(nickname), 'PR', 'Erhalten…')
+
 mixin fromWaitinglistToParticipant(resourceName, nickname)
-  a.btn.btn-primary.btn-xs.btn-block(id='#{encodeURIComponent(nickname) + "-button"}',
-  href='javascript:changeState(\'#{"/activities/fromWaitinglistToParticipant/" + encodeURIComponent(resourceName) + "/" + encodeURIComponent(nickname)}\', \'#{encodeURIComponent(nickname) + "-button"}\')') Teilnehmen lassen…
+  +ajaxButton(nickname, "/activities/fromWaitinglistToParticipant/" + encodeURIComponent(resourceName) + "/" + encodeURIComponent(nickname), 'WLP', 'Teilnehmen lassen…')
+
+mixin newDuration(resourceName, nickname, currentSelection)
+  form(id='activityform', action='/activities/newDuration', method='post')
+    +csrf
+    +hidden('resourceName', resourceName)
+    +hidden('nickname', nickname)
+    select.form-control(name='duration', style='height: inherit;')
+      option(value='0') #{' '}
+      option(value='2') saturday evening
+      option(value='3') sunday morning
+      option(value='4') sunday evening
+      option(value='5') monday morning
+    button.btn.btn-default.btn-xs(type='submit') Ändern
+
+mixin newResource(resourceName, nickname)
+  form(id='activityform', action='/activities/newResource', method='post')
+    +csrf
+    +hidden('resourceName', resourceName)
+    +hidden('nickname', nickname)
+    select.form-control(name='newResourceName', style='height: inherit;')
+      option(value='0') #{' '}
+      option(value='single') single
+      option(value='bed_in_double') bed in double
+      option(value='bed_in_junior') bed in junior
+      option(value='junior') junior
+    button.btn.btn-default.btn-xs(type='submit') Ändern
+
+mixin newWaitinglist(resourceName, nickname)
+  form(id='activityform', action='/activities/newWaitinglist', method='post')
+    +csrf
+    +hidden('resourceName', resourceName)
+    +hidden('nickname', nickname)
+    select.form-control(name='newResourceName', style='height: inherit;')
+      option(value='0') #{' '}
+      option(value='single') single
+      option(value='bed_in_double') bed in double
+      option(value='bed_in_junior') bed in junior
+      option(value='junior') junior
+    button.btn.btn-default.btn-xs(type='submit') Ändern
+
+mixin unpairedParticipantDropdown(resourceName, participant1Nick, unpairedParticipants)
+  form(id='unpairedParticipantForm', action='/activities/newParticipantPair', method='post')
+    +csrf
+    +hidden('resourceName', resourceName)
+    +hidden('participant1', participant1Nick)
+    select.form-control(name='participant2', style='height: inherit;')
+      option(value='0') #{' '}
+      for participant2 in unpairedParticipants
+        -var p2nick = participant2.nickname()
+        if participant1Nick !== p2nick
+          option(value=p2nick) #{participant2.displayName()} (#{p2nick})
+    button.btn.btn-default.btn-xs(type='submit') Zufügen
+
 block scripts
   +dataTableImport
-  script.
-    function changeState(url, buttonid) {
-      $.ajax({url: url}).done(function (data) {
-        $('#' + buttonid).parent().html(data);
-      });
-    }
+  +ajaxFunction
   +dataTable('.addontable', '[ 4, "asc" ]', '[{targets: [0,8,9,10], type: "date-eu"}]')
   +dataTable('.membertable', '[ 0, "asc" ]', '[{targets: 0, type: "date-eu"}]')
-  +dataTable('.tshirttable', '[]', '[]')
-  +dataTable('.unsubscribedtable', '[]', '[]')
+  +dataTable('.unsortedtable', '[]', '[]')
   +dataTable('.addressestable', '[ 1, "asc" ]', '[]')
 block title
   | #{activity.title()} - Verwaltung
@@ -35,19 +85,69 @@ block content
         h2 #{activity.title()} - Verwaltung
           a.btn.pull-right.btn-default(href='/registration') Zurück
   ul.nav.nav-tabs
+    li: a(href='#overview', data-toggle='tab') Übersicht
     li: a(href='#main', data-toggle='tab') #{t('activities.participants')}
     li: a(href='#waitinglist', data-toggle='tab') Wartelisten
     li.active: a(href='#addons', data-toggle='tab') Zahlungen
+    li: a(href='#bedroomPairing', data-toggle='tab') Zimmerzuordnungen
     li: a(href='#tshirtSizes', data-toggle='tab') T-Shirt-Bestellungen
     li: a(href='#unsubscribed', data-toggle='tab') Abgemeldete
     li: a(href='#addresses', data-toggle='tab') Adressen
   .row
     .col-md-12
       .tab-content
+        .tab-pane#overview
+          h4 Bettenbelegung
+          .panel
+            -var totalParticipants = 0
+            -var totalFreeSpots = 0
+            -var totalWaitingMembers = 0
+            table.table.table-condensed.table-hover.table-striped.unsortedtable
+              thead
+                tr
+                  th Option
+                  th Teilnehmer
+                  th Freie Plätze
+                  th Wartende
+              tbody
+                for resourceName in activity.resourceNames()
+                  -var participants = activity.participantsOf(resourceName).length
+                  -var resource = activity.socratesResourceNamed(resourceName)
+                  -var waitingMembers = activity.waitinglistMembers[resourceName].length
+                  -var freeSpots = resource.limit() ? resource.limit() - participants : undefined
+                  -totalParticipants += participants
+                  -totalFreeSpots = freeSpots ? totalFreeSpots + freeSpots : totalFreeSpots
+                  -totalWaitingMembers += waitingMembers
+                  tr
+                    td #{resourceName}
+                    td #{participants} von #{resource.limit() || 'unbegrenzt'}
+                    td #{freeSpots || 'beliebig viele'}
+                    td #{waitingMembers}
+                tr
+                  td <b>Summe</b>
+                  td <b>#{totalParticipants}</b>
+                  td <b>#{totalFreeSpots}</b>
+                  td <b>#{totalWaitingMembers}</b>
+
+            hr
+            h4 Aufenthaltsdauer
+            .panel
+              table.table.table-condensed.table-hover.table-striped.unsortedtable
+                thead
+                  tr
+                    th Option
+                    th Count
+                tbody
+                  for duration in durations
+                    tr
+                      td #{duration.duration}
+                      td #{duration.count} (total: #{duration.total})
+
         .tab-pane#main
           each resourceName in activity.resourceNames()
             -var participants = activity.participantsOf(resourceName)
-            h4 #{resourceName} (#{participants.length} von #{activity.resourceNamed(resourceName).limit() || 'unbegrenzt'})
+            -var resource = activity.socratesResourceNamed(resourceName)
+            h4 #{resourceName} (#{participants.length} von #{resource.limit() || 'unbegrenzt'})
             .panel
               table.table.table-condensed.table-hover.table-striped.membertable
                 thead
@@ -57,6 +157,9 @@ block content
                     th Vorname
                     th Nachname
                     th Ort/Region
+                    th bleibt bis
+                    th ändern in
+                    th umbuchen in
                 tbody
                   for member in participants
                     tr
@@ -65,6 +168,9 @@ block content
                       td #{member.firstname()}
                       td #{member.lastname()}
                       td #{member.location()}
+                      td #{resource.durationFor(member.id())}
+                      td: +newDuration(resourceName, member.nickname(), resource.recordFor(member.id()).duration)
+                      td: +newResource(resourceName, member.nickname())
             hr
         .tab-pane#waitinglist
           each resourceName in activity.resourceNames()
@@ -80,6 +186,7 @@ block content
                     th Nachname
                     th Ort/Region
                     th Übernehmen
+                    th ändern in
                 tbody
                   for member in waitingMembers
                     tr
@@ -89,6 +196,7 @@ block content
                       td #{member.lastname()}
                       td #{member.location()}
                       td: +fromWaitinglistToParticipant(resourceName, member.nickname())
+                      td: +newWaitinglist(resourceName, member.nickname())
             hr
         .tab-pane.active#addons
           h4 Alle Teilnehmer mit Zahlungen
@@ -122,24 +230,48 @@ block content
                     td: +localdate(payment.moneyTransferredMoment())
                     td: +localdate(payment.creditCardPaidMoment())
                     td: +buttonOrDate(payment.paymentReceivedMoment(), payment.paymentDone(), line.member.nickname())
+
+        .tab-pane#bedroomPairing
+          for resourceName in ['bed_in_double', 'bed_in_junior']
+            h4 Zuordnung der Belegungen für #{resourceName}
+            .panel
+              table.table.table-condensed.table-hover.table-striped.unsortedtable
+                thead
+                  tr
+                    th 1. Teilnehmer
+                    th 2. Teilnehmer
+                tbody
+                  for pair in rooms[resourceName].roomPairs
+                    tr
+                      td #{pair.participant1.displayName()} (#{pair.participant1.nickname()})
+                      td #{pair.participant2.displayName()} (#{pair.participant2.nickname()})
+                  for participant in rooms[resourceName].unpairedParticipants
+                    tr
+                      td #{participant.displayName()} (#{participant.nickname()})
+                      td: +unpairedParticipantDropdown(resourceName, participant.nickname(), rooms[resourceName].unpairedParticipants)
+
         .tab-pane#tshirtSizes
           h4 Verteilungen der T-Shirt-Größen
           .panel
-            table.table.table-condensed.table-hover.table-striped.tshirttable
+            -var totalShirtCount = 0
+            table.table.table-condensed.table-hover.table-striped.unsortedtable
               thead
                 tr
                   th T-Shirt-Größe
                   th Anzahl
               tbody
                 for tshirtsize in tshirtsizes
+                  -totalShirtCount += tshirtsize.count
                   tr
                     td #{tshirtsize.size}
                     td #{tshirtsize.count}
+            hr
+            p Gesamtzahl T-Shirts: #{totalShirtCount}
           hr
         .tab-pane#unsubscribed
           h4 Zahlungs-Information von Abgemeldeten
           .panel
-            table.table.table-condensed.table-hover.table-striped.unsubscribedtable
+            table.table.table-condensed.table-hover.table-striped.unsortedtable
               thead
                 tr
                   th Nickname
@@ -167,6 +299,7 @@ block content
                 tr
                   th Vorname
                   th Nachname
+                  th E-Mail
                   th Heimatadresse
                   th Rechnungsadresse
                   th Ressource
@@ -175,6 +308,28 @@ block content
                   tr
                     td #{line.member.firstname()}
                     td #{line.member.lastname()}
+                    td #{line.member.email()}
+                    td: +formatAsLines(line.addon.homeAddressLines())
+                    td: +formatAsLines(line.addon.billingAddressLines())
+                    td #{formatList(activity.resources().resourceNamesOf(line.member.id()))}
+
+          h4 Adressen der Wartenden
+          .panel
+            table.table.table-condensed.table-hover.table-striped.addressestable
+              thead
+                tr
+                  th Vorname
+                  th Nachname
+                  th E-Mail
+                  th Heimatadresse
+                  th Rechnungsadresse
+                  th Ressource
+              tbody
+                for line in waitinglistLines
+                  tr
+                    td #{line.member.firstname()}
+                    td #{line.member.lastname()}
+                    td #{line.member.email()}
                     td: +formatAsLines(line.addon.homeAddressLines())
                     td: +formatAsLines(line.addon.billingAddressLines())
                     td #{formatList(activity.resources().resourceNamesOf(line.member.id()))}

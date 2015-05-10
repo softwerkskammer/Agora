@@ -54,7 +54,7 @@ Subscriber.prototype.isParticipating = function () {
 };
 
 Subscriber.prototype.needsToPay = function () {
-  return this.participations()[socratesConstants.currentYear] && !this.payment().paymentDone();
+  return this.participations()[socratesConstants.currentYear] && !this.payment().paymentConfirmed();
 };
 
 module.exports = Subscriber;

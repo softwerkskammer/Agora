@@ -19,15 +19,12 @@ block content
         .pull-right.visible-print
           img(height='80px', src='/qrcode?url=#{encodeURIComponent(activity.fullyQualifiedUrl())}')
         .btn-group.pull-right.hidden-print
-          if !accessrights.isRegistered()
+          if !accessrights.isRegistered() && !registration.isPossible
             a.btn.btn-primary.pull-right(data-toggle='modal', data-target='#interested', href='/registration/interested') Notify me when registration starts!
-          if (accessrights.canEditActivity(activity))
+          if (accessrights.canEditActivity())
             a.btn.btn-default(href='/registration/management', title=t('activities.participants')): i.fa.fa-list-ol.fa-fw
-            a.btn.btn-default(href='/waitinglist/#{encodeURIComponent(activity.url())}', title=t('activities.waitinglist')): i.fa.fa-clock-o.fa-fw
-            a.btn.btn-default(href='/mailsender/invitation/#{encodeURIComponent(activity.url())}', title=t('activities.invitation')): i.fa.fa-envelope-o.fa-fw
+            a.btn.btn-default(href='/mailsender/massMailing', title=t('activities.invitation')): i.fa.fa-envelope-o.fa-fw
             a.btn.btn-default(href='/activities/edit/#{encodeURIComponent(activity.url())}', title=t('general.edit')): i.fa.fa-edit.fa-fw
-          if (accessrights.canDeleteActivity(activity))
-            +reallyDeleteModal('activities.delete', '/activities/delete/' + encodeURIComponent(activity.url()))
         h1 Registration<br>
           small SoCraTes, 27 - 30 August 2015
   .row
