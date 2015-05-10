@@ -3,7 +3,9 @@
 var _ = require('lodash');
 var jade = require('jade');
 var path = require('path');
-var beans = require('simple-configure').get('beans');
+var conf = require('simple-configure');
+var beans = conf.get('beans');
+var publicUrlPrefix = conf.get('publicUrlPrefix');
 var misc = beans.get('misc');
 var Renderer = beans.get('renderer');
 
@@ -79,8 +81,8 @@ Message.prototype.toTransportObject = function (senderAddress) {
     cc: this.cc,
     bcc: this.bcc,
     subject: this.subject,
-    text: jade.renderFile(filenameTextonly, renderingOptions),
-    html: jade.renderFile(filename, renderingOptions)
+    text: jade.renderFile(filenameTextonly, renderingOptions).replace(new RegExp('\\]\\(/', 'g'), '](' +  publicUrlPrefix + '/'),
+    html: jade.renderFile(filename, renderingOptions).replace(new RegExp('<a href="/', 'g'), '<a href="' +  publicUrlPrefix + '/')
   };
 };
 

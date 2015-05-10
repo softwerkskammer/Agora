@@ -2,7 +2,9 @@
 
 require('../../testutil/configureForTest');
 
-var beans = require('simple-configure').get('beans');
+var conf = require('simple-configure');
+var beans = conf.get('beans');
+var publicUrlPrefix = conf.get('publicUrlPrefix');
 var expect = require('must');
 var Message = beans.get('message');
 var Member = beans.get('member');
@@ -112,6 +114,19 @@ describe('Message Object to TransportObject', function () {
     expect(transportObject.replyTo).to.equal('"Hans Dampf" <E-Mail>');
   });
 
+  it('uses absolute URLs in html', function () {
+    var message = new Message();
+    message.setMarkdown("[link](/url)");
+    var transportObject = message.toTransportObject('dummy');
+    expect(transportObject.html).to.contain('<a href="' + publicUrlPrefix + '/url">link</a>');
+  });
+
+  it('uses absolute URLs in text', function () {
+    var message = new Message();
+    message.setMarkdown("[link](/url)");
+    var transportObject = message.toTransportObject('dummy');
+    expect(transportObject.text).to.contain('[link](' + publicUrlPrefix + '/url');
+  });
 });
 
 describe('Message Object\'s buttons', function () {
