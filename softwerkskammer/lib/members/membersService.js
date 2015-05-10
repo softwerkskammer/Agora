@@ -100,7 +100,6 @@ module.exports = {
 
   findMemberFor: function (user, authenticationId, legacyAuthenticationId, callback) {
     return function () {
-      logger.info('membersService.findMemberFor: authenticationId: ' + authenticationId + ' legacy id: ' + legacyAuthenticationId);
       if (!user) { // not currently logged in
         return store.getMemberForAuthentication(authenticationId, function (err, member) {
           if (err) { return callback(err); }
