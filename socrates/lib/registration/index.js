@@ -11,6 +11,7 @@ var memberstore = beans.get('memberstore');
 var Member = beans.get('member');
 var subscriberstore = beans.get('subscriberstore');
 var activitiesService = beans.get('activitiesService');
+var subscriberService = beans.get('subscriberService');
 var registrationService = beans.get('registrationService');
 var icalService = beans.get('icalService');
 var activitystore = beans.get('activitystore');
@@ -210,10 +211,10 @@ app.get('/management', function (req, res, next) {
           managementService.addonLinesOf(_.flatten(waitinglistMembers), function (err, waitinglistLines) {
             if (err || !waitinglistLines) { return next(err); }
 
-            memberstore.getMembersForIds(activity.rooms('bed_in_double').participantsWithoutRoom(), function (err, unpairedDoubleParticipants) {
-              memberstore.getMembersForIds(activity.rooms('bed_in_junior').participantsWithoutRoom(), function (err, unpairedJuniorParticipants) {
-                memberstore.getMembersForIds(activity.rooms('bed_in_double').participantsInRoom(), function (err, pairedDoubleParticipants) {
-                  memberstore.getMembersForIds(activity.rooms('bed_in_junior').participantsInRoom(), function (err, pairedJuniorParticipants) {
+            subscriberService.getMembersAndSubscribersForIds(activity.rooms('bed_in_double').participantsWithoutRoom(), function (err, unpairedDoubleParticipants) {
+              subscriberService.getMembersAndSubscribersForIds(activity.rooms('bed_in_junior').participantsWithoutRoom(), function (err, unpairedJuniorParticipants) {
+                subscriberService.getMembersAndSubscribersForIds(activity.rooms('bed_in_double').participantsInRoom(), function (err, pairedDoubleParticipants) {
+                  subscriberService.getMembersAndSubscribersForIds(activity.rooms('bed_in_junior').participantsInRoom(), function (err, pairedJuniorParticipants) {
 
                     res.render('managementTables', {
                       activity: activity,
