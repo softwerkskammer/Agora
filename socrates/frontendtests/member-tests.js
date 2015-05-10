@@ -1,4 +1,4 @@
-/*global member_validator, nicknameIsNotAvailable, emailAlreadyTaken */
+/*global member_validator, nicknameIsNotAvailable, emailAlreadyTaken, testglobals */
 (function () {
   'use strict';
 

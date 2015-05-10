@@ -20,19 +20,6 @@ var hans = new Member({
   email: 'hans@email.de',
   nickname: 'Gassenhauer'
 });
-var alice = new Member({
-  id: 'alice',
-  firstname: 'firstname of alice',
-  lastname: 'lastname of alice',
-  email: 'alice@email.de'
-});
-var bob = new Member({
-  id: 'bob',
-  firstname: 'firstname of bob',
-  lastname: 'lastname of bob',
-  email: 'bob@email.de',
-  nickname: 'nickbob'
-});
 var superman = new Member({
   id: 'superuserID',
   firstname: 'firstname of su',

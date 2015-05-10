@@ -11,7 +11,7 @@ var membersService = beans.get('membersService');
 var misc = beans.get('misc');
 
 var urlPrefix = conf.get('publicUrlPrefix');
-var jwt_secret = conf.get('jwt_secret');
+var jwtSecret = conf.get('jwtSecret');
 
 function createUserObject(req, authenticationId, legacyAuthenticationId, profile, done) {
   if (req.session.callingAppReturnTo) { // we're invoked from another app -> don't add a member to the session
@@ -70,7 +70,7 @@ function createProviderAuthenticationRoutes(app, provider) {
       profile: req.user.authenticationId.profile,
       returnTo: returnTo,
       expires: moment().add(5, 'seconds').toJSON()
-    }, jwt_secret);
+    }, jwtSecret);
     if (req.session.currentAgoraUser) { // restore current member info:
       req._passport.session.user = req.session.currentAgoraUser;
       delete req.session.currentAgoraUser;

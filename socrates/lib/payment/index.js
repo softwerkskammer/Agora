@@ -9,9 +9,6 @@ var fieldHelpers = beans.get('fieldHelpers');
 var socratesConstants = beans.get('socratesConstants');
 var subscriberstore = beans.get('subscriberstore');
 
-var socratesNotifications = beans.get('socratesNotifications');
-var roomOptions = beans.get('roomOptions');
-
 var app = misc.expressAppIn(__dirname);
 
 app.get('/', function (req, res, next) {

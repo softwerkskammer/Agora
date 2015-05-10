@@ -1,8 +1,5 @@
 'use strict';
 
-var _ = require('lodash');
-var async = require('async');
-
 var beans = require('simple-configure').get('beans');
 var misc = beans.get('misc');
 var membersService = beans.get('membersService');
@@ -10,7 +7,6 @@ var subscriberService = beans.get('subscriberService');
 var activitystore = beans.get('activitystore');
 var Member = beans.get('member');
 var memberSubmitHelper = beans.get('memberSubmitHelper');
-var fieldHelpers = beans.get('fieldHelpers');
 var subscriberstore = beans.get('subscriberstore');
 var socratesConstants = beans.get('socratesConstants');
 
@@ -44,13 +40,13 @@ app.get('/edit', function (req, res, next) {
 });
 
 app.post('/submit', function (req, res, next) {
-  memberSubmitHelper(req, res, function (err) {
+  memberSubmitHelper(req, res, next, function (err) {
     if (err) { return next(err); }
-    subscriberstore.getSubscriber(req.user.member.id(), function (err, subscriber) {
-      if (err) { return next(err); }
+    subscriberstore.getSubscriber(req.user.member.id(), function (err1, subscriber) {
+      if (err1) { return next(err1); }
       subscriber.fillFromUI(req.body);
-      subscriberstore.saveSubscriber(subscriber, function (err) {
-        if (err) { return next(err); }
+      subscriberstore.saveSubscriber(subscriber, function (err2) {
+        if (err2) { return next(err2); }
         if (subscriber.needsToPay()) {
           return res.redirect('/payment/socrates');
         }

@@ -20,8 +20,8 @@ module.exports = {
   getMemberIfSubscriberExists: function (nickname, callback) {
     memberstore.getMember(nickname, function (err, member) {
       if (err || !member) { return callback(err); }
-      subscriberstore.getSubscriber(member.id(), function (err, subscriber) {
-        if (err || !subscriber) { return callback(err); }
+      subscriberstore.getSubscriber(member.id(), function (err1, subscriber) {
+        if (err1 || !subscriber) { return callback(err1); }
         callback(null, member);
       });
     });

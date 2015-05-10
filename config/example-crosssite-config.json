@@ -2,5 +2,5 @@
 {
   "softwerkskammerURL": "http://www.softwerkskammer.org",
   "socratesURL": "http://www.socrates-conference.de",
-  "jwt_secret": "my_very_secret"
+  "jwtSecret": "my_very_secret"
 }

@@ -3,24 +3,24 @@ var mail_validator;
 // THE ORIGINAL OF THIS FILE IS IN frontend/javascript
 
 (function () {
-  "use strict";
+  'use strict';
 
   var initValidator = function () {
 
     // DO NOT FORGET TO KEEP THIS FILE IN SYNC WITH /lib/commons/validation.js
 
-    mail_validator = $("#mailform").validate({
+    mail_validator = $('#mailform').validate({
       rules: {
-        subject: "required",
-        markdown: "required"
+        subject: 'required',
+        markdown: 'required'
       },
-      errorElement: "span",
-      errorClass: "help-block",
+      errorElement: 'span',
+      errorClass: 'help-block',
       highlight: function (element) {
-        $(element).parent().addClass("has-error");
+        $(element).parent().addClass('has-error');
       },
       unhighlight: function (element) {
-        $(element).parent().removeClass("has-error");
+        $(element).parent().removeClass('has-error');
       }
     });
 
@@ -32,8 +32,8 @@ var mail_validator;
       };
     };
 
-    ["#mailform [name=subject]", "#mailform [name=markdown]"].forEach(function (each) {
-      $(each).on("change", handler(each));
+    ['#mailform [name=subject]', '#mailform [name=markdown]'].forEach(function (each) {
+      $(each).on('change', handler(each));
       $(each).keyup(handler(each));
     });
   };

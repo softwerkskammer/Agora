@@ -1,0 +1,14 @@
+{
+  "env": {
+    "browser": true,
+    "jquery": true,
+    "mocha": true
+  },
+  "rules": {
+    "camelcase": 0
+  },
+  "globals": {
+    "expect": true,
+    "sinon": true
+  }
+}

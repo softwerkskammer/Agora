@@ -7,7 +7,7 @@ var Beans = require('CoolBeans');
 var path = require('path');
 
 function createConfiguration() {
-  var configdir = path.normalize(__dirname + '/../config/');
+  var configdir = path.join(__dirname, '/../config/');
 
   // first, set the default values
   // beans:
@@ -29,7 +29,7 @@ function createConfiguration() {
     emaildomainname: 'localhost',
     softwerkskammerURL: 'http://localhost:17124',
     socratesURL: 'http://localhost:17224',
-    jwt_secret: 'my_very_secret',
+    jwtSecret: 'my_very_secret',
     socratesAdmins: []
   });
 

@@ -38,7 +38,7 @@ function messageSubmitted(req, res, next) {
   res.redirect(req.body.successURL);
 }
 
-app.get('/massMailing', function (req, res, next) {
+app.get('/massMailing', function (req, res) {
   var message = new Message();
   message.addToButtons({
     text: 'To SoCraTes 2015',

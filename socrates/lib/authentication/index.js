@@ -8,19 +8,18 @@ var logger = require('winston').loggers.get('authorization');
 var conf = require('simple-configure');
 var beans = conf.get('beans');
 var misc = beans.get('misc');
-var jwt_secret = conf.get('jwt_secret');
+var jwtSecret = conf.get('jwtSecret');
 
 var subscriberService = beans.get('subscriberService');
 var membersService = beans.get('membersService');
-var memberstore = beans.get('memberstore');
 var statusmessage = beans.get('statusmessage');
 
 var app = misc.expressAppIn(__dirname);
 
 app.get('/loggedIn', function (req, res, next) {
 
-  function getTokenFrom(req) {
-    return jwt.decode(req.query.id_token, jwt_secret);
+  function getTokenFrom(req1) {
+    return jwt.decode(req1.query.id_token, jwtSecret);
   }
 
   function createUserObject(token, callback) {
@@ -41,15 +40,17 @@ app.get('/loggedIn', function (req, res, next) {
   }
 
   createUserObject(getTokenFrom(req), function (err, userObject, returnTo) {
+    /*eslint no-underscore-dangle: 0*/
+
     if (err) { return next(err); }
-    if ('/login' === returnTo) {
+    if (returnTo === '/login') {
       returnTo = req.session.returnTo;
     }
     req._passport.session.user = userObject;
     passport.authenticate('session')(req, res, function () {
       if (req.user.member) {
-        return subscriberService.createSubscriberIfNecessaryFor(req.user.member.id(), function (err, subscriberAlreadyExists) {
-          if (err) { return next(err); }
+        return subscriberService.createSubscriberIfNecessaryFor(req.user.member.id(), function (err1, subscriberAlreadyExists) {
+          if (err1) { return next(err1); }
           if (!subscriberAlreadyExists) {
             delete req.session.statusmessage; // If the subscriber was not an SWK member, SWK added a "profile saved" message to the session.
             statusmessage.successMessage('general.welcome', 'general.thanks_for_interest').putIntoSession(req);

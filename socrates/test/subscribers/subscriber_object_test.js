@@ -1,23 +1,10 @@
 'use strict';
 
-var request = require('supertest');
-var sinon = require('sinon').sandbox.create();
 var expect = require('must');
 
 var beans = require('../../testutil/configureForTest').get('beans');
-var userWithoutMember = require('../../testutil/userWithoutMember');
-var membersService = beans.get('membersService');
-var memberstore = beans.get('memberstore');
-var activitystore = beans.get('activitystore');
-var subscriberstore = beans.get('subscriberstore');
-var socratesNotifications = beans.get('socratesNotifications');
-var groupsAndMembersService = beans.get('groupsAndMembersService');
-var Member = beans.get('member');
 var Subscriber = beans.get('subscriber');
-var SoCraTesActivity = beans.get('socratesActivityExtended');
 var currentYear = beans.get('socratesConstants').currentYear;
-
-var createApp = require('../../testutil/testHelper')('socratesMembersApp').createApp;
 
 describe('Subscriber', function () {
   var unregisteredSubscriber;
@@ -45,6 +32,8 @@ describe('Subscriber', function () {
     });
 
     it('the addon if no home address provided', function () {
+      /* eslint no-underscore-dangle: 0 */
+
       unregisteredSubscriber.fillFromUI({});
       expect(unregisteredSubscriber.state._addon).to.be.undefined();
       expect(unregisteredSubscriber.addon().homeAddress()).to.be.undefined();

@@ -1,5 +1,4 @@
 'use strict';
-var moment = require('moment-timezone');
 var conf = require('simple-configure');
 var Member = conf.get('beans').get('member');
 

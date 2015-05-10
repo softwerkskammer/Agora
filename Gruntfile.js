@@ -1,4 +1,5 @@
 module.exports = function (grunt) {
+  /*eslint camelcase: 0*/
   'use strict';
 
   // set up common objects for jslint

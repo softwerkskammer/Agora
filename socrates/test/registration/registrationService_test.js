@@ -1,9 +1,9 @@
+/* eslint no-underscore-dangle: 0 */
 'use strict';
 
 var sinon = require('sinon').sandbox.create();
 var expect = require('must');
 var moment = require('moment-timezone');
-var _ = require('lodash');
 
 var beans = require('../../testutil/configureForTest').get('beans');
 
@@ -42,9 +42,9 @@ describe('Registration Service', function () {
       isSoCraTes: true,
       startUnix: 1440687600,
       endUnix: 1440946800,
-      owner: {nickname: "ownerNick"},
-      assignedGroup: "assignedGroup",
-      group: {groupLongName: "longName"},
+      owner: {nickname: 'ownerNick'},
+      assignedGroup: 'assignedGroup',
+      group: {groupLongName: 'longName'},
       resources: {
         single: {_canUnsubscribe: false, _limit: 10, _registrationOpen: true}
       }
@@ -102,7 +102,7 @@ describe('Registration Service', function () {
       expect(socratesActivity.resourceNamed('single').waitinglistEntries()).to.have.length(0);
       expect(socratesActivity.resourceNamed('single').registeredMembers()).to.have.length(0);
 
-      registrationService.startRegistration(registrationTuple, function (err, statusTitle, statusText) {
+      registrationService.startRegistration(registrationTuple, function (err) {
         expect(socratesActivity.resourceNamed('single').registeredMembers()).to.eql(['SessionID:sessionId']);
         expect(socratesActivity.resourceNamed('single').waitinglistEntries()).to.have.length(0);
         done(err);
@@ -115,7 +115,7 @@ describe('Registration Service', function () {
       expect(socratesActivity.resourceNamed('single').waitinglistEntries()).to.have.length(0);
       expect(socratesActivity.resourceNamed('single').registeredMembers()).to.have.length(0);
 
-      registrationService.startRegistration(registrationTuple, function (err, statusTitle, statusText) {
+      registrationService.startRegistration(registrationTuple, function (err) {
         expect(socratesActivity.resourceNamed('single').registeredMembers()).to.have.length(0);
         expect(socratesActivity.resourceNamed('single').waitinglistEntries()).to.have.length(1);
         expect(socratesActivity.resourceNamed('single').waitinglistEntries()[0].state._memberId).to.eql('SessionID:sessionId');
@@ -129,7 +129,7 @@ describe('Registration Service', function () {
       expect(socratesActivity.resourceNamed('single').waitinglistEntries()).to.have.length(0);
       expect(socratesActivity.resourceNamed('single').registeredMembers()).to.have.length(0);
 
-      registrationService.startRegistration(registrationTuple, function (err, statusTitle, statusText) {
+      registrationService.startRegistration(registrationTuple, function (err) {
         expect(socratesActivity.resourceNamed('single').registeredMembers()).to.have.length(0);
         expect(socratesActivity.resourceNamed('single').waitinglistEntries()).to.have.length(0);
         done(err);

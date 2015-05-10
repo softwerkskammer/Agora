@@ -2,11 +2,9 @@
 
 var moment = require('moment-timezone');
 var expect = require('must');
-var _ = require('lodash');
 
 var beans = require('../../testutil/configureForTest').get('beans');
 var SoCraTesActivity = beans.get('socratesActivityExtended');
-var Resource = beans.get('resource');
 
 var tomorrow = moment();
 tomorrow.add(1, 'days');

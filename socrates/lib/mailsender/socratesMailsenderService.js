@@ -1,21 +1,12 @@
 'use strict';
 
-var _ = require('lodash');
 var async = require('async');
 
 var conf = require('simple-configure');
 
 var beans = conf.get('beans');
-var groupsService = beans.get('groupsService');
-var groupsAndMembersService = beans.get('groupsAndMembersService');
-var activitiesService = beans.get('activitiesService');
-var membersService = beans.get('membersService');
 var memberstore = beans.get('memberstore');
 var subscriberstore = beans.get('subscriberstore');
-var Member = beans.get('member');
-var Message = beans.get('message');
-var Group = beans.get('group');
-var misc = beans.get('misc');
 var statusmessage = beans.get('statusmessage');
 var logger = require('winston').loggers.get('application');
 
@@ -47,10 +38,10 @@ module.exports = {
     subscriberstore.allSubscribers(function (err, subscribers) {
       if (err) { return globalCallback(err, statusmessageForError(type, err)); }
 
-      async.map(subscribers, function (subscriber, callback) { memberstore.getMemberForId(subscriber.id(), callback); }, function (err, members) {
-        if (err) { return globalCallback(err, statusmessageForError(type, err)); }
+      async.map(subscribers, function (subscriber, callback) { memberstore.getMemberForId(subscriber.id(), callback); }, function (err1, members) {
+        if (err1) { return globalCallback(err1, statusmessageForError(type, err1)); }
         message.setBccToMemberAddresses(members);
-        logger.info("BCC: " + message.bcc);
+        logger.info('BCC: ' + message.bcc);
         sendMail(message, type, globalCallback);
       });
 

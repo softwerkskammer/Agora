@@ -72,7 +72,7 @@ app.get('/edit/:subdir/:page', function (req, res, next) {
   });
 });
 
-app.post('/:subdir/:page', function (req, res, next) {
+app.post('/:subdir/:page', function (req, res) {
   var pageName = Renderer.normalize(req.params.page);
   var subdir = req.params.subdir;
   wikiService.pageSave(subdir, pageName, req.body, req.user.member, function (err, conflict) {
