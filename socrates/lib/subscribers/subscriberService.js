@@ -1,5 +1,6 @@
 'use strict';
 
+var async = require('async');
 var beans = require('simple-configure').get('beans');
 var memberstore = beans.get('memberstore');
 var subscriberstore = beans.get('subscriberstore');
@@ -24,6 +25,20 @@ module.exports = {
         if (err1 || !subscriber) { return callback(err1); }
         callback(null, member);
       });
+    });
+  },
+
+  getMembersAndSubscribersForIds: function (memberIds, globalCallback) {
+    memberstore.getMembersForIds(memberIds, function (err, members) {
+      if (err || !members) { return globalCallback(err); }
+      async.map(members,
+        function (member, callback) {
+          subscriberstore.getSubscriber(member.id(), function (err1, subscriber) {
+            if (err1 || !subscriber) { return callback(err1); }
+            member.subscriber = subscriber;
+            callback(null, member);
+          });
+        }, globalCallback);
     });
   }
 

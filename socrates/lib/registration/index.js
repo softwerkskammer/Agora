@@ -10,6 +10,7 @@ var memberstore = beans.get('memberstore');
 var Member = beans.get('member');
 var subscriberstore = beans.get('subscriberstore');
 var activitiesService = beans.get('activitiesService');
+var subscriberService = beans.get('subscriberService');
 var registrationService = beans.get('registrationService');
 var icalService = beans.get('icalService');
 var activitystore = beans.get('activitystore');
@@ -66,10 +67,10 @@ app.get('/', function (req, res, next) {
 });
 
 app.get('/ical', function (req, res, next) {
-  function sendCalendarStringNamedToResult(ical, filename, res1) {
-    res1.type('text/calendar; charset=utf-8');
-    res1.header('Content-Disposition', 'inline; filename=' + filename + '.ics');
-    res1.send(ical.toString());
+  function sendCalendarStringNamedToResult(ical, filename, localRes) {
+    localRes.type('text/calendar; charset=utf-8');
+    localRes.header('Content-Disposition', 'inline; filename=' + filename + '.ics');
+    localRes.send(ical.toString());
   }
 
   activitystore.getActivity(socratesConstants.currentUrl, function (err, activity) {
@@ -138,7 +139,7 @@ app.get('/participate', function (req, res, next) {
 });
 
 app.post('/completeRegistration', function (req, res, next) {
-  memberSubmitHelper(req, res, next, function (err) {
+  memberSubmitHelper(req, res, function (err) {
     if (err) { return next(err); }
     var body = req.body;
     registrationService.saveRegistration(req.user.member.id(), req.sessionID, body, function (err1, statusTitle, statusText) {
@@ -181,8 +182,8 @@ app.get('/management', function (req, res, next) {
 
       activity.waitinglistMembers = {};
 
-      function membersOnWaitinglist(activity1, resourceName, globalCallback) {
-        async.map(activity1.resourceNamed(resourceName).waitinglistEntries(),
+      function membersOnWaitinglist(act, resourceName, globalCallback) {
+        async.map(act.resourceNamed(resourceName).waitinglistEntries(),
           function (entry, callback) {
             memberstore.getMemberForId(entry.registrantId(), function (err2, member) {
               if (err2 || !member) { return callback(err2); }
@@ -192,7 +193,7 @@ app.get('/management', function (req, res, next) {
           },
           function (err2, results) {
             if (err2) { return next(err2); }
-            activity1.waitinglistMembers[resourceName] = _.compact(results);
+            act.waitinglistMembers[resourceName] = _.compact(results);
             globalCallback();
           });
       }
@@ -210,12 +211,15 @@ app.get('/management', function (req, res, next) {
           managementService.addonLinesOf(_.flatten(waitinglistMembers), function (err3, waitinglistLines) {
             if (err3 || !waitinglistLines) { return next(err3); }
 
-            memberstore.getMembersForIds(activity.rooms('bed_in_double').participantsWithoutRoom(), function (err4, unpairedDoubleParticipants) {
-              memberstore.getMembersForIds(activity.rooms('bed_in_junior').participantsWithoutRoom(), function (err5, unpairedJuniorParticipants) {
-                memberstore.getMembersForIds(activity.rooms('bed_in_double').participantsInRoom(), function (err6, pairedDoubleParticipants) {
-                  memberstore.getMembersForIds(activity.rooms('bed_in_junior').participantsInRoom(), function (err7, pairedJuniorParticipants) {
-                    /*eslint camelcase: 0*/
-
+            subscriberService.getMembersAndSubscribersForIds(activity.rooms('bed_in_double').participantsWithoutRoom(), function (errA, unpairedDoubleParticipants) {
+              if (errA) { return next(errA); }
+              subscriberService.getMembersAndSubscribersForIds(activity.rooms('bed_in_junior').participantsWithoutRoom(), function (errB, unpairedJuniorParticipants) {
+                if (errB) { return next(errB); }
+                subscriberService.getMembersAndSubscribersForIds(activity.rooms('bed_in_double').participantsInRoom(), function (errC, pairedDoubleParticipants) {
+                  if (errC) { return next(errC); }
+                  subscriberService.getMembersAndSubscribersForIds(activity.rooms('bed_in_junior').participantsInRoom(), function (errD, pairedJuniorParticipants) {
+                    if (errD) { return next(errD); }
+                    /* eslint camelcase: 0 */
                     res.render('managementTables', {
                       activity: activity,
                       addonLines: addonLines,

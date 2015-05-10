@@ -140,6 +140,28 @@ module.exports = {
         });
       });
     });
+  },
+
+  removeParticipantPairFor: function (resourceName, participant1Nick, participant2Nick, callback) {
+    var self = this;
+    activitystore.getActivity(currentUrl, function (err, activity) {
+      if (err || !activity) { return callback(err); }
+      memberstore.getMember(participant1Nick, function (err1, participant1) {
+        if (err1 || !participant1) { return callback(err1); }
+        memberstore.getMember(participant2Nick, function (err2, participant2) {
+          if (err2 || !participant2) { return callback(err2); }
+          activity.rooms(resourceName).remove(participant1.id(), participant2.id());
+          return activitystore.saveActivity(activity, function (err3) {
+            if (err3 && err3.message === CONFLICTING_VERSIONS) {
+              // we try again because of a racing condition during save:
+              return self.removeParticipantPairFor(resourceName, participant1Nick, participant2Nick, callback);
+            }
+            return callback(err3);
+          });
+
+        });
+      });
+    });
   }
 
 };

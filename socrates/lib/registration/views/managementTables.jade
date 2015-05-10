@@ -66,8 +66,16 @@ mixin unpairedParticipantDropdown(resourceName, participant1Nick, unpairedPartic
       for participant2 in unpairedParticipants
         -var p2nick = participant2.nickname()
         if participant1Nick !== p2nick
-          option(value=p2nick) #{participant2.displayName()} (#{p2nick})
+          option(value=p2nick) #{participant2.displayName()} (#{p2nick}) - [Wunsch: #{participant2.subscriber.currentParticipation().roommate()}]
     button.btn.btn-default.btn-xs(type='submit') Zufügen
+
+mixin removePair(resourceName, pair)
+  form(id='removePairForm', action='/activities/removeParticipantPair', method='post')
+    +csrf
+    +hidden('resourceName', resourceName)
+    +hidden('participant1', pair.participant1.nickname())
+    +hidden('participant2', pair.participant2.nickname())
+    button.btn.btn-default.btn-xs(type='submit') Entfernen
 
 block scripts
   +dataTableImport
@@ -240,15 +248,18 @@ block content
                   tr
                     th 1. Teilnehmer
                     th 2. Teilnehmer
+                    td Zuordnung entfernen
                 tbody
                   for pair in rooms[resourceName].roomPairs
                     tr
-                      td #{pair.participant1.displayName()} (#{pair.participant1.nickname()})
-                      td #{pair.participant2.displayName()} (#{pair.participant2.nickname()})
+                      td #{pair.participant1.displayName()} (#{pair.participant1.nickname()}) - [Wunsch: #{pair.participant1.subscriber.currentParticipation().roommate()}]
+                      td #{pair.participant2.displayName()} (#{pair.participant2.nickname()}) - [Wunsch: #{pair.participant2.subscriber.currentParticipation().roommate()}]
+                      td: +removePair(resourceName, pair)
                   for participant in rooms[resourceName].unpairedParticipants
                     tr
-                      td #{participant.displayName()} (#{participant.nickname()})
+                      td #{participant.displayName()} (#{participant.nickname()}) - [Wunsch: #{participant.subscriber.currentParticipation().roommate()}]
                       td: +unpairedParticipantDropdown(resourceName, participant.nickname(), rooms[resourceName].unpairedParticipants)
+                      td #{' '}
 
         .tab-pane#tshirtSizes
           h4 Verteilungen der T-Shirt-Größen

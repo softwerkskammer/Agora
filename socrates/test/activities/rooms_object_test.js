@@ -80,6 +80,46 @@ describe('Rooms', function () {
     expect(roomsInResource).to.have.length(0);
   });
 
+  it('removes a pair if the members are given in the right order', function () {
+    var roomsInResource = [
+      {
+        participant1: 'memberId1',
+        participant2: 'memberId2'
+      }, {
+        participant1: 'memberId3',
+        participant2: 'memberId4'
+      }];
+    var rooms = new Rooms(roomsInResource, allKnownMemberIds);
+
+    rooms.remove('memberId1', 'memberId2');
+
+    expect(rooms.state).to.have.length(1);
+    expect(rooms.state[0].participant1).to.be('memberId3');
+    expect(rooms.state[0].participant2).to.be('memberId4');
+  });
+
+  it('does not remove a pair if the members are given in the wrong order', function () {
+    var roomsInResource = [
+      {
+        participant1: 'memberId1',
+        participant2: 'memberId2'
+      }, {
+        participant1: 'memberId3',
+        participant2: 'memberId4'
+      }];
+    var rooms = new Rooms(roomsInResource, allKnownMemberIds);
+
+    rooms.remove('memberId2', 'memberId1');
+
+    expect(rooms.state).to.have.length(2);
+    expect(rooms.state[0].participant1).to.be('memberId1');
+    expect(rooms.state[0].participant2).to.be('memberId2');
+    expect(rooms.state[1].participant1).to.be('memberId3');
+    expect(rooms.state[1].participant2).to.be('memberId4');
+  });
+
+
+
   it('lists those participants that already are in a room', function () {
     var roomsInResource = [{participant1: 'memberId1', participant2: 'memberId2'}];
     var rooms = new Rooms(roomsInResource, allKnownMemberIds);
