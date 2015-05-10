@@ -28,7 +28,7 @@ app.get('/socrates', function (req, res, next) {
   paymentService.getPaymentInfo(function (err, paymentInfo) {
     if (err || !paymentInfo) { return next(err); }
     var subscriber = req.user.subscriber;
-    if (!subscriber) { return next(err); }
+    if (!subscriber) { return next(); }
     if (!subscriber.isParticipating()) { return res.redirect('/registration'); }
     res.render('index', {
       amount: socratesConstants.depositAmount,
