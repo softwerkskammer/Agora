@@ -27,16 +27,15 @@ app.get('/', function (req, res, next) {
 app.get('/socrates', function (req, res, next) {
   paymentService.getPaymentInfo(function (err, paymentInfo) {
     if (err || !paymentInfo) { return next(err); }
-    subscriberstore.getSubscriber(req.user.member.id(), function (err, subscriber) {
-      if (err || !subscriber) { return next(err); }
-      if (!subscriber.isParticipating()) { return res.redirect('/registration'); }
-      res.render('index', {
-        amount: socratesConstants.depositAmount,
-        title: 'SoCraTes-' + socratesConstants.currentYear,
-        fee: fieldHelpers.formatNumberWithCurrentLocale(res, paymentService.calcFee(socratesConstants.depositAmount)),
-        paymentInfo: paymentInfo,
-        paymentDone: subscriber.payment().paymentDone()
-      });
+    var subscriber = req.user.subscriber;
+    if (!subscriber) { return next(); }
+    if (!subscriber.isParticipating()) { return res.redirect('/registration'); }
+    res.render('index', {
+      amount: socratesConstants.depositAmount,
+      title: 'SoCraTes-' + socratesConstants.currentYear,
+      fee: fieldHelpers.formatNumberWithCurrentLocale(res, paymentService.calcFee(socratesConstants.depositAmount)),
+      paymentInfo: paymentInfo,
+      paymentDone: subscriber.payment().paymentDone()
     });
   });
 });
@@ -64,15 +63,12 @@ app.post('/submitCreditCard', function (req, res, next) {
 });
 
 app.post('/submitCreditCardSocrates', function (req, res, next) {
-  var memberId = req.user.member.id();
   var saveCreditCardPayment = function (callback) {
-    subscriberstore.getSubscriber(memberId, function (err, subscriber) {
-      if (err) { return callback(err); }
-      subscriber.payment().noteCreditCardPayment();
-      subscriberstore.saveSubscriber(subscriber, callback);
-    });
+    var subscriber = req.user.subscriber;
+    subscriber.payment().noteCreditCardPayment();
+    subscriberstore.saveSubscriber(subscriber, callback);
   };
-  paymentService.payWithCreditCard(saveCreditCardPayment, parseFloat(req.body.amount.replace(',', '.')), req.body.description, memberId,
+  paymentService.payWithCreditCard(saveCreditCardPayment, parseFloat(req.body.amount.replace(',', '.')), req.body.description, req.user.member.id(),
     req.body.stripeId, function (err, message) {
       if (err) { return next(err); }
       message.putIntoSession(req);
@@ -81,15 +77,13 @@ app.post('/submitCreditCardSocrates', function (req, res, next) {
 });
 
 app.post('/submitTransferSocrates', function (req, res, next) {
-  subscriberstore.getSubscriber(req.user.member.id(), function (err, subscriber) {
+  var subscriber = req.user.subscriber;
+  subscriber.payment().noteMoneyTransfer();
+  subscriberstore.saveSubscriber(subscriber, function (err) {
     if (err) { return next(err); }
-    subscriber.payment().noteMoneyTransfer();
-    subscriberstore.saveSubscriber(subscriber, function (err) {
-      if (err) { return next(err); }
-      var message = statusmessage.successMessage('message.title.save_successful', 'message.content.activities.transfer_paid');
-      message.putIntoSession(req);
-      res.redirect('/');
-    });
+    var message = statusmessage.successMessage('message.title.save_successful', 'message.content.activities.transfer_paid');
+    message.putIntoSession(req);
+    res.redirect('/');
   });
 });
 

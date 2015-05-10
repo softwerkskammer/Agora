@@ -32,6 +32,7 @@
   "accessrights": {"module": "./socrates/lib/middleware/accessrights"},
   "expressViewHelper": {"module": "./socrates/lib/middleware/expressViewHelper"},
   "redirectRuleForNewUser": {"module": "./socrates/lib/middleware/redirectRuleForNewUser"},
+  "passportInitializer": {"module": "./socrates/lib/middleware/passportInitializer"},
   "socratesWikiSubdirs": {"module": "./socrates/lib/middleware/wikiSubdirs"},
   "socratesNotifications": {"module": "./socrates/lib/notifications"},
   "socratesResource": {"module": "./socrates/lib/activities/socratesResource"},

@@ -44,6 +44,9 @@ module.exports = function (defaultLanguage, abspath) {
         if (atts.member) {
           app.use(userStub({member: atts.member}));
         }
+        if (atts.user) {
+          app.use(userStub(atts.user));
+        }
 
         app.use(beans.get('accessrights'));
         app.use(beans.get('expressViewHelper'));

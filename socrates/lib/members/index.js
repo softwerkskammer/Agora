@@ -29,18 +29,16 @@ app.get('/edit', function (req, res, next) {
     return res.render('edit', {member: new Member().initFromSessionUser(req.user, true)});
   }
   var member = req.user.member;
-  subscriberstore.getSubscriber(member.id(), function (err, subscriber) {
-    if (err) { return next(err); }
-    activitystore.getActivity(socratesConstants.currentUrl, function (err, socrates) {
-      if (err || !socrates) { return next(err); }
-      var registeredResources = socrates.resources().resourceNamesOf(member.id());
-      res.render('edit', {
-        member: member,
-        addon: subscriber && subscriber.addon().homeAddress() ? subscriber.addon() : undefined,
-        participation: subscriber && subscriber.isParticipating() ? subscriber.currentParticipation() : null,
-        isOnlyOnWaitinglist: registeredResources.length === 0,
-        sharesARoom: registeredResources.length === 1 && registeredResources[0].indexOf('bed_in_') > -1
-      });
+  var subscriber = req.user.subscriber;
+  activitystore.getActivity(socratesConstants.currentUrl, function (err, socrates) {
+    if (err || !socrates) { return next(err); }
+    var registeredResources = socrates.resources().resourceNamesOf(member.id());
+    res.render('edit', {
+      member: member,
+      addon: subscriber && subscriber.addon().homeAddress() ? subscriber.addon() : undefined,
+      participation: subscriber && subscriber.isParticipating() ? subscriber.currentParticipation() : null,
+      isOnlyOnWaitinglist: registeredResources.length === 0,
+      sharesARoom: registeredResources.length === 1 && registeredResources[0].indexOf('bed_in_') > -1
     });
   });
 });
