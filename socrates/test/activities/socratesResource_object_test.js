@@ -1,8 +1,8 @@
+/* eslint no-underscore-dangle: 0 */
 'use strict';
 
 var moment = require('moment-timezone');
 var expect = require('must');
-var _ = require('lodash');
 
 var beans = require('../../testutil/configureForTest').get('beans');
 var Resource = beans.get('resource');

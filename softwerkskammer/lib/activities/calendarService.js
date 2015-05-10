@@ -9,7 +9,7 @@ var activitystore = beans.get('activitystore');
 module.exports = {
 
   eventsBetween: function (startMoment, endMoment, groupsColors, callback) {
-    function asCalendarEvent(activity, groupsColors) {
+    function asCalendarEvent(activity) {
       return {
         start: activity.startMoment().format(),
         end: activity.endMoment().format(),
@@ -23,7 +23,7 @@ module.exports = {
     activitystore.allActivitiesByDateRangeInAscendingOrder(startMoment.unix(), endMoment.unix(), function (err, activities) {
       if (err) { return callback(err); }
       callback(null, activities.map(function (activity) {
-        return asCalendarEvent(activity, groupsColors);
+        return asCalendarEvent(activity);
       }));
     });
   }

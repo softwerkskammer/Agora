@@ -1,3 +1,4 @@
+/*eslint no-process-exit: 0 */
 'use strict';
 
 require('./configure'); // initializing parameters
@@ -32,9 +33,9 @@ async.parallel(
         {id: 'craftsmanswap'},
         {id: 'internet'}
       ];
-      async.map(lists, function (list, callback) {
-        mailinglistPersistence.save({"id" : list.id, "users": []}, function (err) {
-          callback(err, 'List "' + list.id + '"');
+      async.map(lists, function (list, cb) {
+        mailinglistPersistence.save({id: list.id, users: []}, function (err) {
+          cb(err, 'List "' + list.id + '"');
         });
       }, function (err, results) {
         callback(err, results.join(', '));
@@ -48,10 +49,10 @@ async.parallel(
         {id: 'craftsmanswap', emailPrefix: 'craftsmanswap', description: 'D-Scription', longName: 'Craftsman Swaps', type: 'Regionalgruppe', color: '#0000ff', mapX: '100', mapY: '200', shortName: 'CS'},
         {id: 'internet', emailPrefix: 'internet', description: 'D-Scription', longName: 'Virtual Group', type: 'Regionalgruppe', color: '#00ff00', mapX: '100', mapY: '300', shortName: 'VG'}
       ];
-      async.map(groups, function (group, callback) {
+      async.map(groups, function (group, cb) {
         group.description = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras at pellentesque leo. Suspendisse at ante in lorem faucibus aliquet volutpat ac metus. Aenean vel mauris et lacus venenatis venenatis rhoncus eu nisi. Nam imperdiet pretium ante vel hendrerit. Etiam lacinia lacinia bibendum. Ut malesuada neque sed enim accumsan, id tristique lectus gravida. Morbi lorem justo, vestibulum quis est non, pretium cursus ante. Aenean porttitor nulla eget elit rhoncus rhoncus. In vitae lacinia arcu, quis aliquet nibh. ';
         groupsPersistence.save(new Group(group), function (err) {
-          callback(err, 'Group "' + group.id + '"');
+          cb(err, 'Group "' + group.id + '"');
         });
       }, function (err, results) {
         callback(err, results.join(', '));
@@ -65,12 +66,11 @@ async.parallel(
         {id: 'auth04', nickname: 'Jamie', firstname: 'James', lastname: 'Hetfield', email: 'james@hetfield.com', location: 'Downey, LA', profession: 'Musiker', reference: '-', authentications: ['auth04']},
         {id: 'auth05', nickname: 'leider', firstname: 'Andreas', lastname: 'Leidig', email: 'andreas@leidig.com', location: 'Jöhlingen', profession: 'SoCra', interests: 'clean code tag1 skiing smoking ', reference: '-', authentications: ['auth05']}
       ];
-      async.map(members, function (member, callback) {
+      async.map(members, function (member, cb) {
         membersPersistence.getById(member.id, function (err, existingMember) {
-          if (existingMember) {return callback(null, 'Member "' + member.nickname + '" (already existing)'); }
-          membersPersistence.save(new Member(member).state, function (err) {
-            callback(err, 'Member "' + member.id + '"');
-          });
+          if (err) { return cb(err); }
+          if (existingMember) { return cb(null, 'Member "' + member.nickname + '" (already existing)'); }
+          membersPersistence.save(new Member(member).state, function (err1) { cb(err1, 'Member "' + member.id + '"'); });
         });
       }, function (err, results) {
         callback(err, results.join(', '));

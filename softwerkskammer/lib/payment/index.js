@@ -4,7 +4,6 @@ var beans = require('simple-configure').get('beans');
 
 var misc = beans.get('misc');
 var paymentService = beans.get('paymentService');
-var statusmessage = beans.get('statusmessage');
 var fieldHelpers = beans.get('fieldHelpers');
 
 var app = misc.expressAppIn(__dirname);

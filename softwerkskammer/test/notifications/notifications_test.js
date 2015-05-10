@@ -67,7 +67,7 @@ describe('Notifications', function () {
       expect(options.html).to.contain('Für die Aktivität "Title of the Activity" (Kaffeekranz) hat sich ein neuer Besucher angemeldet:');
       expect(options.html).to.contain('firstname of bob lastname of bob (nickbob)');
       expect(options.html).to.contain('/activities/urlurl');
-      done();
+      done(err);
     });
   });
 
@@ -76,7 +76,8 @@ describe('Notifications', function () {
     activity2.state.owner = 'hans';
 
     notifications.visitorRegistration(activity, 'bob', 'Kaffeekranz', function (err) {
-      notifications.visitorRegistration(activity2, 'alice', 'Biertrinken', function (err) {
+      if (err) { return done(err); }
+      notifications.visitorRegistration(activity2, 'alice', 'Biertrinken', function (err1) {
 
         expect(transport.sendMail.calledTwice).to.be(true);
         var options = transport.sendMail.firstCall.args[0];
@@ -90,7 +91,7 @@ describe('Notifications', function () {
         expect(options.html).to.contain('Für die Aktivität "Another Nice Activity" (Biertrinken) hat sich ein neuer Besucher angemeldet:');
         expect(options.html).to.contain('firstname of alice lastname of alice ()');
         expect(options.html).to.contain('/activities/niceurl');
-        done();
+        done(err1);
       });
     });
   });
@@ -107,7 +108,7 @@ describe('Notifications', function () {
       expect(options.bcc).to.contain('alice@email.de');
       expect(options.bcc).to.not.contain('bob');
       expect(options.from).to.contain('Softwerkskammer Benachrichtigungen');
-      done();
+      done(err);
     });
   });
 

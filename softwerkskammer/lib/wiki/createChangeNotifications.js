@@ -17,6 +17,7 @@ var util = require('util');
 
 function closeAndExit() {
   return persistence.closeDB(function () {
+    /* eslint no-process-exit: 0 */
     logger.info('Terminating the process.......');
     process.exit();
   });
@@ -31,10 +32,10 @@ persistence.getByField({id: 'lastWikiNotifications'}, function (err, result) {
   logger.info('No error when reading lastWikiNotifications');
   var yesterday = moment().subtract(1, 'days');
   var lastNotified = result || {id: 'lastWikiNotifications', moment: yesterday.toDate()};
-  logger.info("Last notified: " + util.inspect(result.moment));
-  wikiService.findPagesForDigestSince(moment(lastNotified.moment), function (err, changes) {
-    if (err) {
-      logger.error("Error when finding pages for Digest: " + err);
+  logger.info('Last notified: ' + util.inspect(result.moment));
+  wikiService.findPagesForDigestSince(moment(lastNotified.moment), function (err1, changes) {
+    if (err1) {
+      logger.error('Error when finding pages for Digest: ' + err1);
       return closeAndExit();
     }
     if (changes.length === 0) {
@@ -42,15 +43,15 @@ persistence.getByField({id: 'lastWikiNotifications'}, function (err, result) {
       console.log('no changes to report'); // for cron mail
       return closeAndExit();
     }
-    notifications.wikiChanges(changes, function (err) {
-      if (err) {
-        logger.error(err);
+    notifications.wikiChanges(changes, function (err2) {
+      if (err2) {
+        logger.error(err2);
         return closeAndExit();
       }
       lastNotified.moment = moment().toDate();
-      persistence.save(lastNotified, function (err) {
-        if (err) {
-          logger.error(err);
+      persistence.save(lastNotified, function (err3) {
+        if (err3) {
+          logger.error(err3);
           return closeAndExit();
         }
         logger.info('Wiki-Changes notified at: ' + lastNotified.moment);

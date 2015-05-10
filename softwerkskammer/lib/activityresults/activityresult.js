@@ -22,7 +22,7 @@ Photo.prototype.uri = function () {
   return this.state.uri || '/gallery/' + this.id();
 };
 
-Photo.prototype.uploaded_by = function () {
+Photo.prototype.uploadedBy = function () {
   return this.state.uploaded_by;
 };
 
@@ -38,10 +38,6 @@ function ActivityResult(data) {
 
 ActivityResult.prototype.id = function () {
   return this.state.id;
-};
-
-ActivityResult.prototype.created_by = function () {
-  return this.state.created_by;
 };
 
 ActivityResult.prototype.photos = function () {

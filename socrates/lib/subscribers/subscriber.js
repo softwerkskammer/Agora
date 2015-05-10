@@ -2,7 +2,6 @@
 
 var beans = require('simple-configure').get('beans');
 var Addon = beans.get('socratesAddon');
-var Payment = beans.get('socratesPayment');
 var Participation = beans.get('socratesParticipation');
 var socratesConstants = beans.get('socratesConstants');
 
@@ -25,6 +24,7 @@ Subscriber.prototype.id = function () {
 };
 
 Subscriber.prototype.addon = function () {
+  /*eslint no-underscore-dangle: 0*/
   if (!this.state._addon) {
     this.state._addon = {};
   }

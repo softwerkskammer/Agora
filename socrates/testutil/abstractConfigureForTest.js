@@ -34,15 +34,15 @@ module.exports = function (firstTestBeansFilename, secondTestBeansFilename) {
     publicUrlPrefix: 'http://localhost:17225',
     secret: 'secret',
     sessionkey: 'testsession',
-    githubClientID : null,
-    githubClientSecret : null,
+    githubClientID: null,
+    githubClientSecret: null,
     publicPaymentKey: null,
     secretPaymentKey: null,
-    paymentBic      : 'paymentBic',
-    paymentIban     : 'paymentIban',
-    paymentReceiver : 'paymentReceiver',
-    emaildomainname : 'localhost',
-    imageDirectory  : null
+    paymentBic: 'paymentBic',
+    paymentIban: 'paymentIban',
+    paymentReceiver: 'paymentReceiver',
+    emaildomainname: 'localhost',
+    imageDirectory: null
   });
 
   return conf;

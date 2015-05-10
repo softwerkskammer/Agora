@@ -9,7 +9,6 @@ var paymentService = beans.get('paymentService');
 var statusmessage = beans.get('statusmessage');
 
 var createApp = require('../../testutil/testHelper')('paymentApp').createApp;
-var app = createApp();
 
 describe('Payment application', function () {
 
@@ -97,7 +96,7 @@ describe('Payment application', function () {
         .post('/submitCreditCard')
         .send('amount=100,23 €')
         .expect(302)
-        .end(function (err, res) {
+        .end(function (err) {
           expect(amount).to.be(100.23);
           done(err);
         });
@@ -108,7 +107,7 @@ describe('Payment application', function () {
         .post('/submitCreditCard')
         .send('amount=100.23 €')
         .expect(302)
-        .end(function (err, res) {
+        .end(function (err) {
           expect(amount).to.be(100.23);
           done(err);
         });
@@ -119,7 +118,7 @@ describe('Payment application', function () {
         .post('/submitCreditCard')
         .send('amount=100 €')
         .expect(302)
-        .end(function (err, res) {
+        .end(function (err) {
           expect(amount).to.be(100);
           done(err);
         });
@@ -130,7 +129,7 @@ describe('Payment application', function () {
         .post('/submitCreditCard')
         .send('amount=')
         .expect(302)
-        .end(function (err, res) {
+        .end(function (err) {
           expect(isNaN(amount)).to.be.true();
           done(err);
         });

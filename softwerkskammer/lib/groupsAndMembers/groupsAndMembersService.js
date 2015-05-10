@@ -1,7 +1,6 @@
 'use strict';
 
 var async = require('async');
-var winston = require('winston');
 var _ = require('lodash');
 
 var conf = require('simple-configure');
@@ -52,8 +51,8 @@ var updateAndSaveSubmittedMember = function (self, sessionUser, memberformData, 
     var oldEmail = persistentMember ? member.email() : memberformData.previousEmail;
     member.addAuthentication(memberformData.id);
     member.fillFromUI(memberformData);
-    memberstore.saveMember(member, function (err) {
-      if (err) { return callback(err); }
+    memberstore.saveMember(member, function (err1) {
+      if (err1) { return callback(err1); }
       if (!sessionUser.member || sessionUser.member.id() === member.id()) {
         sessionUser.member = member;
         delete sessionUser.profile;
@@ -64,8 +63,8 @@ var updateAndSaveSubmittedMember = function (self, sessionUser, memberformData, 
         notifyNewMemberRegistration(member, subscriptions);
       }
       if (updateSubscriptions) {
-        return self.updateSubscriptions(member, oldEmail, subscriptions, function (err) {
-          return callback(err, member.nickname());
+        return self.updateSubscriptions(member, oldEmail, subscriptions, function (err2) {
+          return callback(err2, member.nickname());
         });
       }
       return callback(null, member.nickname());
@@ -100,23 +99,23 @@ module.exports = {
     groupsService.getAllAvailableGroups(function (err, groups) {
       if (err) { return callback(err); }
 
-      function loadMembersAndFillInGroups(err, groupNamesWithEmails, callback) {
-        if (err) { return callback(err); }
+      function loadMembersAndFillInGroups(err1, groupNamesWithEmails, cb) {
+        if (err1) { return cb(err1); }
 
-        memberstore.allMembers(function (err, members) {
-          if (err) { return callback(err); }
+        memberstore.allMembers(function (err2, members) {
+          if (err2) { return cb(err2); }
           _.each(members, function (member) { member.fillSubscribedGroups(groupNamesWithEmails, groups); });
-          callback(null, members, groupsWithExtraEmailAddresses(members, groupNamesWithEmails));
+          cb(null, members, groupsWithExtraEmailAddresses(members, groupNamesWithEmails));
         });
       }
 
       async.reduce(groups, {}, function (memo, group, cb) {
-        groupsService.getMailinglistUsersOfList(group.id, function (err, emails) {
+        groupsService.getMailinglistUsersOfList(group.id, function (err1, emails) {
           memo[group.id] = emails;
-          cb(err, memo);
+          cb(err1, memo);
         });
-      }, function (err, groupNamesWithEmails) {
-        loadMembersAndFillInGroups(err, groupNamesWithEmails, callback);
+      }, function (err1, groupNamesWithEmails) {
+        loadMembersAndFillInGroups(err1, groupNamesWithEmails, callback);
       });
     });
   },
@@ -152,9 +151,11 @@ module.exports = {
   },
 
   updateAdminlistSubscriptions: function (memberID, callback) {
-    this.getMemberWithHisGroupsByMemberId(memberID, function (err, member) {
+    this.getMemberWithHisGroupsByMemberId(memberID, function (err1, member) {
+      if (err1) { return callback(err1); }
       var adminListName = conf.get('adminListName');
-      groupsService.getMailinglistUsersOfList(adminListName, function (err, emailAddresses) {
+      groupsService.getMailinglistUsersOfList(adminListName, function (err2, emailAddresses) {
+        if (err2) { return callback(err2); }
         var isInAdminList = _.contains(emailAddresses, member.email());
         if (member.isContactperson() && !isInAdminList) {
           return groupsService.addUserToList(member.email(), adminListName, callback);
@@ -171,8 +172,8 @@ module.exports = {
     var self = this;
     groupsService.createOrSaveGroup(newGroup, function (err, existingGroup) {
       if (err) { return callback(err); }
-      async.each(Group.organizersOnlyInOneOf(newGroup, existingGroup), function (memberID, callback) {
-        self.updateAdminlistSubscriptions(memberID, callback);
+      async.each(Group.organizersOnlyInOneOf(newGroup, existingGroup), function (memberID, cb) {
+        self.updateAdminlistSubscriptions(memberID, cb);
       });
       callback();
     });

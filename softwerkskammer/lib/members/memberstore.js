@@ -1,3 +1,4 @@
+/* eslint no-underscore-dangle: 0 */
 'use strict';
 
 var conf = require('simple-configure');

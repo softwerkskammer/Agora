@@ -29,7 +29,7 @@ describe('ActivityResult service', function () {
     it('should return the activityResult for an id', function (done) {
       service.getActivityResultByName(activityResult.id, function (err, returnedActivityResult) {
         expect(returnedActivityResult.id()).to.equal(activityResult.id);
-        done();
+        done(err);
       });
     });
 
@@ -39,16 +39,17 @@ describe('ActivityResult service', function () {
         return callback(new Error('not found'), null);
       });
 
-      service.getActivityResultByName('non-existing-id', function (err, activityResult) {
+      service.getActivityResultByName('non-existing-id', function (err, result) {
         expect(err).to.exist();
-        expect(activityResult).to.be(undefined);
+        expect(result).to.be(undefined);
         done();
       });
     });
 
-    it('return an activitymodel instance', function () {
+    it('return an activitymodel instance', function (done) {
       service.getActivityResultByName(activityResult.id, function (err, model) {
         expect(model).to.be.an.instanceOf(ActivityResult);
+        done(err);
       });
     });
   });

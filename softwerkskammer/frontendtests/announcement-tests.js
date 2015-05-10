@@ -1,4 +1,4 @@
-/*global announcement_validator, urlIsNotAvailable */
+/*global announcement_validator, urlIsNotAvailable, testglobals */
 (function () {
   'use strict';
 

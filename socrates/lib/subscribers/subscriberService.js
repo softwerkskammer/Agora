@@ -21,8 +21,8 @@ module.exports = {
   getMemberIfSubscriberExists: function (nickname, callback) {
     memberstore.getMember(nickname, function (err, member) {
       if (err || !member) { return callback(err); }
-      subscriberstore.getSubscriber(member.id(), function (err, subscriber) {
-        if (err || !subscriber) { return callback(err); }
+      subscriberstore.getSubscriber(member.id(), function (err1, subscriber) {
+        if (err1 || !subscriber) { return callback(err1); }
         callback(null, member);
       });
     });
@@ -33,8 +33,8 @@ module.exports = {
       if (err || !members) { return globalCallback(err); }
       async.map(members,
         function (member, callback) {
-          subscriberstore.getSubscriber(member.id(), function (err, subscriber) {
-            if (err || !subscriber) { return callback(err); }
+          subscriberstore.getSubscriber(member.id(), function (err1, subscriber) {
+            if (err1 || !subscriber) { return callback(err1); }
             member.subscriber = subscriber;
             callback(null, member);
           });

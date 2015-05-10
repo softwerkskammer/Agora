@@ -16,8 +16,8 @@ function deserializeUser(user, done) {
   if (user.profile) { return done(null, user); } // new user
   memberstore.getMemberForAuthentication(user.authenticationId, function (err, member) {
     if (err) { return done(err); }
-    subscriberstore.getSubscriber(member.id(), function (err, subscriber) {
-      if (err) { return done(err); }
+    subscriberstore.getSubscriber(member.id(), function (err1, subscriber) {
+      if (err1) { return done(err1); }
       done(null, {authenticationId: user.authenticationId, member: member, subscriber: subscriber});
     });
   });

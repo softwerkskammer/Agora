@@ -44,6 +44,7 @@
   };
 
   var twitterUtil = function () {
+    /* eslint no-underscore-dangle: 0 */
     if (window.__twitterIntentHandler) { return; }
     var intentRegex = /twitter\.com(\:\d{2,4})?\/intent\/(\w+)/,
       windowOptions = 'scrollbars=yes,resizable=yes,toolbar=no,location=yes',

@@ -6,7 +6,6 @@ var sinon = require('sinon').sandbox.create();
 var beans = require('../../testutil/configureForTestWithDB').get('beans');
 var persistence = beans.get('activitiesPersistence');
 var activitystore = beans.get('activitystore');
-var membersService = beans.get('membersService');
 var memberstore = beans.get('memberstore');
 var mailsenderService = beans.get('mailsenderService');
 var waitinglistService = beans.get('waitinglistService');
@@ -43,7 +42,7 @@ describe('Waitinglist Service with DB', function () {
           {memberId: 'memberId1'}
         ], _waitinglist: [
           {_memberId: 'memberIdWaiting'}
-        ], _registrationOpen: true  }
+        ], _registrationOpen: true }
       }, version: 2}
     );
 
@@ -91,12 +90,11 @@ describe('Waitinglist Service with DB', function () {
     // To mimick a racing condition, we return an activity without members for the first "getActivity".
     waitinglistService.saveWaitinglistEntry({nickname: 'nick', activityUrl: activityUrl, resourcename: 'default'}, function (err) {
       if (err) { return done(err); }
-      getActivity(activityUrl, function (err, activity) {
-        if (err) { return done(err); }
+      getActivity(activityUrl, function (err1, activity) {
         expect(activity.resourceNamed('default').waitinglistEntries()[0].registrantId(), 'Waiting member is still in the waitinglist').to.equal('memberIdWaiting');
         expect(activity.resourceNamed('default').waitinglistEntries()[1].registrantId(), 'New member is stored in the waitinglist').to.equal('memberIdNew');
         expect(activity.resourceNamed('default').registeredMembers(), 'First registered member is still there').to.contain('memberId1');
-        done(err);
+        done(err1);
       });
     });
   });
@@ -106,11 +104,10 @@ describe('Waitinglist Service with DB', function () {
     // To mimick a racing condition, we return an activity without members for the first 'getActivity'.
     waitinglistService.allowRegistrationForWaitinglistEntry({nickname: 'waiting', activityUrl: activityUrl, resourcename: 'default', hoursstring: '10'}, function (err) {
       if (err) { return done(err); }
-      getActivity(activityUrl, function (err, activity) {
-        if (err) { return done(err); }
+      getActivity(activityUrl, function (err1, activity) {
         expect(activity.resourceNamed('default').waitinglistEntries()[0].canSubscribe(), 'Waiting member is now allowed to subscribe').to.be(true);
         expect(activity.resourceNamed('default').registeredMembers(), 'First registered member is still there').to.contain('memberId1');
-        done(err);
+        done(err1);
       });
     });
   });

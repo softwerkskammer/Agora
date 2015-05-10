@@ -1,3 +1,4 @@
+/* eslint no-underscore-dangle: 0 */
 'use strict';
 
 var _ = require('lodash');
@@ -19,6 +20,7 @@ var defaultRenderingOptions = {
 };
 
 function sendMail(emailAddresses, subject, html, callback) {
+  /* eslint consistent-return: 0 */
   if (!emailAddresses || emailAddresses.length === 0) {
     if (callback) { return callback(null); }
     return;
@@ -44,9 +46,9 @@ function sendMail(emailAddresses, subject, html, callback) {
 function activityParticipation(activity, visitorID, ressourceName, content, type, callback) {
   async.parallel(
     {
-      group: function (callback) { groupsAndMembers.getGroupAndMembersForList(activity.assignedGroup(), callback); },
-      owner: function (callback) { memberstore.getMemberForId(activity.owner(), callback); },
-      visitor: function (callback) { memberstore.getMemberForId(visitorID, callback); }
+      group: function (cb) { groupsAndMembers.getGroupAndMembersForList(activity.assignedGroup(), cb); },
+      owner: function (cb) { memberstore.getMemberForId(activity.owner(), cb); },
+      visitor: function (cb) { memberstore.getMemberForId(visitorID, cb); }
     },
 
     function (err, results) {
@@ -103,6 +105,7 @@ module.exports.wikiChanges = function (changes, callback) {
 
 module.exports.newMemberRegistered = function (member, subscriptions) {
   memberstore.allMembers(function (err, members) {
+    if (err) { return; }
     var renderingOptions = {
       member: member,
       groups: subscriptions,

@@ -1,7 +1,6 @@
 'use strict';
 
 var _ = require('lodash');
-var path = require('path');
 var fs = require('fs');
 var mimetypes = require('mime-types');
 
@@ -10,7 +9,6 @@ var store = beans.get('memberstore');
 var avatarProvider = beans.get('avatarProvider');
 var fieldHelpers = beans.get('fieldHelpers');
 var galleryService = beans.get('galleryService');
-var logger = require('winston').loggers.get('authorization');
 
 function isReserved(nickname) {
   return new RegExp('^edit$|^new$|^checknickname$|^submit$|^administration$|^[.][.]$|^[.]$|\\+', 'i').test(nickname);
@@ -48,8 +46,8 @@ module.exports = {
   saveCustomAvatarForNickname: function (nickname, files, params, callback) {
     store.getMember(nickname, function (err, member) {
       if (err) { return callback(err); }
-      galleryService.storeAvatar(files.image[0].path, params, function (err, filename) {
-        if (err) { return callback(err); }
+      galleryService.storeAvatar(files.image[0].path, params, function (err1, filename) {
+        if (err1) { return callback(err1); }
         member.state.customAvatar = filename;
         store.saveMember(member, callback);
       });
@@ -62,11 +60,9 @@ module.exports = {
       if (err || !member.hasCustomAvatar()) { return callback(err); }
       var avatar = member.customAvatar();
       delete member.state.customAvatar;
-      store.saveMember(member, function (err) {
-        if (err) { return callback(err); }
-        galleryService.deleteAvatar(avatar, function (err) {
-          callback(err);
-        });
+      store.saveMember(member, function (err1) {
+        if (err1) { return callback(err1); }
+        galleryService.deleteAvatar(avatar, function (err2) { callback(err2); });
       });
     });
   },
@@ -75,12 +71,12 @@ module.exports = {
     if (member.hasCustomAvatar()) {
       return galleryService.retrieveScaledImage(member.customAvatar(), 'mini', function (err, result) {
         if (err) { return callback(err); }
-        fs.readFile(result, function (err, data) {
+        fs.readFile(result, function (err1, data) {
           member.setAvatarData({
             image: 'data:' + mimetypes.lookup(result) + ';base64,' + new Buffer(data).toString('base64'),
             hasNoData: false
           });
-          callback(err);
+          callback(err1);
         });
       });
     }
@@ -107,14 +103,14 @@ module.exports = {
           if (member) { return callback(null, member); }
           // no member: let's try again with the legacy id
           if (legacyAuthenticationId) {
-            return store.getMemberForAuthentication(legacyAuthenticationId, function (err, member) {
-              if (err || !member) {return callback(err); }
+            return store.getMemberForAuthentication(legacyAuthenticationId, function (err1, member1) {
+              if (err1 || !member1) {return callback(err1); }
               if (authenticationId) {
                 // add the new authentication id to the member
-                member.addAuthentication(authenticationId);
-                return store.saveMember(member, function (err) { callback(err, member); });
+                member1.addAuthentication(authenticationId);
+                return store.saveMember(member1, function (err2) { callback(err2, member1); });
               }
-              callback(null, member);
+              callback(null, member1);
             });
           }
           return callback(null);
@@ -129,7 +125,7 @@ module.exports = {
         if (member && memberOfSession.id() === member.id()) { return callback(null, member); }
         // no member found:
         memberOfSession.addAuthentication(authenticationId);
-        store.saveMember(memberOfSession, function (err) { callback(err, memberOfSession); });
+        store.saveMember(memberOfSession, function (err1) { callback(err1, memberOfSession); });
       });
     };
   },

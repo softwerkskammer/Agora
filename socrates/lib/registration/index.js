@@ -6,7 +6,6 @@ var async = require('async');
 var conf = require('simple-configure');
 var beans = conf.get('beans');
 var misc = beans.get('misc');
-var membersService = beans.get('membersService');
 var memberstore = beans.get('memberstore');
 var Member = beans.get('member');
 var subscriberstore = beans.get('subscriberstore');
@@ -68,10 +67,10 @@ app.get('/', function (req, res, next) {
 });
 
 app.get('/ical', function (req, res, next) {
-  function sendCalendarStringNamedToResult(ical, filename, res) {
-    res.type('text/calendar; charset=utf-8');
-    res.header('Content-Disposition', 'inline; filename=' + filename + '.ics');
-    res.send(ical.toString());
+  function sendCalendarStringNamedToResult(ical, filename, localRes) {
+    localRes.type('text/calendar; charset=utf-8');
+    localRes.header('Content-Disposition', 'inline; filename=' + filename + '.ics');
+    localRes.send(ical.toString());
   }
 
   activitystore.getActivity(socratesConstants.currentUrl, function (err, activity) {
@@ -122,8 +121,8 @@ app.get('/participate', function (req, res, next) {
       statusmessage.successMessage('general.info', 'activities.already_registered').putIntoSession(req);
       return res.redirect('/registration');
     }
-    subscriberstore.getSubscriber(member.id(), function (err, subscriber) {
-      if (err) { return next(err); }
+    subscriberstore.getSubscriber(member.id(), function (err1, subscriber) {
+      if (err1) { return next(err1); }
       var addon = (subscriber && subscriber.addon()) || new Addon({});
       var participation = (subscriber && subscriber.currentParticipation()) || new Participation();
       var expiresAt = activity.expirationTimeOf(registrationTuple);
@@ -143,8 +142,8 @@ app.post('/completeRegistration', function (req, res, next) {
   memberSubmitHelper(req, res, function (err) {
     if (err) { return next(err); }
     var body = req.body;
-    registrationService.saveRegistration(req.user.member.id(), req.sessionID, body, function (err, statusTitle, statusText) {
-      if (err) { return next(err); }
+    registrationService.saveRegistration(req.user.member.id(), req.sessionID, body, function (err1, statusTitle, statusText) {
+      if (err1) { return next(err1); }
       delete req.session.statusmessage;
       delete req.session.registrationTuple;
       if (statusTitle && statusText) {
@@ -170,8 +169,9 @@ app.get('/management', function (req, res, next) {
   }
 
   activitiesService.getActivityWithGroupAndParticipants(currentUrl, function (err, activity) {
-    managementService.addonLinesOf(activity.participants, function (err, addonLines) {
-      if (err) { return next(err); }
+    if (err) { return next(err); }
+    managementService.addonLinesOf(activity.participants, function (err1, addonLines) {
+      if (err1) { return next(err1); }
 
       var formatDates = function (dates) {
         return _(dates).map(function (date) { return date.locale('de').format('L'); }).uniq().value();
@@ -182,40 +182,44 @@ app.get('/management', function (req, res, next) {
 
       activity.waitinglistMembers = {};
 
-      function membersOnWaitinglist(activity, resourceName, globalCallback) {
-        async.map(activity.resourceNamed(resourceName).waitinglistEntries(),
+      function membersOnWaitinglist(act, resourceName, globalCallback) {
+        async.map(act.resourceNamed(resourceName).waitinglistEntries(),
           function (entry, callback) {
-            memberstore.getMemberForId(entry.registrantId(), function (err, member) {
-              if (err || !member) { return callback(err); }
+            memberstore.getMemberForId(entry.registrantId(), function (err2, member) {
+              if (err2 || !member) { return callback(err2); }
               member.addedToWaitinglistAt = entry.registrationDate();
               callback(null, member);
             });
           },
-          function (err, results) {
-            if (err) { return next(err); }
-            activity.waitinglistMembers[resourceName] = _.compact(results);
+          function (err2, results) {
+            if (err2) { return next(err2); }
+            act.waitinglistMembers[resourceName] = _.compact(results);
             globalCallback();
           });
       }
 
       async.each(activity.resourceNames(),
         function (resourceName, callback) { membersOnWaitinglist(activity, resourceName, callback); },
-        function (err) {
-          if (err) { return next(err); }
+        function (err2) {
+          if (err2) { return next(err2); }
 
           var waitinglistMembers = [];
           _.each(activity.resourceNames(), function (resourceName) {
             waitinglistMembers.push(activity.waitinglistMembers[resourceName]);
           });
 
-          managementService.addonLinesOf(_.flatten(waitinglistMembers), function (err, waitinglistLines) {
-            if (err || !waitinglistLines) { return next(err); }
+          managementService.addonLinesOf(_.flatten(waitinglistMembers), function (err3, waitinglistLines) {
+            if (err3 || !waitinglistLines) { return next(err3); }
 
-            subscriberService.getMembersAndSubscribersForIds(activity.rooms('bed_in_double').participantsWithoutRoom(), function (err, unpairedDoubleParticipants) {
-              subscriberService.getMembersAndSubscribersForIds(activity.rooms('bed_in_junior').participantsWithoutRoom(), function (err, unpairedJuniorParticipants) {
-                subscriberService.getMembersAndSubscribersForIds(activity.rooms('bed_in_double').participantsInRoom(), function (err, pairedDoubleParticipants) {
-                  subscriberService.getMembersAndSubscribersForIds(activity.rooms('bed_in_junior').participantsInRoom(), function (err, pairedJuniorParticipants) {
-
+            subscriberService.getMembersAndSubscribersForIds(activity.rooms('bed_in_double').participantsWithoutRoom(), function (errA, unpairedDoubleParticipants) {
+              if (errA) { return next(errA); }
+              subscriberService.getMembersAndSubscribersForIds(activity.rooms('bed_in_junior').participantsWithoutRoom(), function (errB, unpairedJuniorParticipants) {
+                if (errB) { return next(errB); }
+                subscriberService.getMembersAndSubscribersForIds(activity.rooms('bed_in_double').participantsInRoom(), function (errC, pairedDoubleParticipants) {
+                  if (errC) { return next(errC); }
+                  subscriberService.getMembersAndSubscribersForIds(activity.rooms('bed_in_junior').participantsInRoom(), function (errD, pairedJuniorParticipants) {
+                    if (errD) { return next(errD); }
+                    /* eslint camelcase: 0 */
                     res.render('managementTables', {
                       activity: activity,
                       addonLines: addonLines,

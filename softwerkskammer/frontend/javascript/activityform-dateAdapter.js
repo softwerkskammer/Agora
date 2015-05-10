@@ -1,6 +1,6 @@
 /*global activityDateModel */
 (function () {
-  "use strict";
+  'use strict';
 
   // THE ORIGINAL OF THIS FILE IS IN frontend/javascript
 

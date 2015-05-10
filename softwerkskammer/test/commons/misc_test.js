@@ -1,10 +1,8 @@
 'use strict';
 var expect = require('must');
-var moment = require('moment-timezone');
 
 var beans = require('../../testutil/configureForTest').get('beans');
 var misc = beans.get('misc');
-var wikiService = beans.get('wikiService');
 
 describe('toArray function', function () {
 

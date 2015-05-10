@@ -1,3 +1,4 @@
+/*eslint no-underscore-dangle: 0*/
 'use strict';
 
 var _ = require('lodash');
@@ -78,7 +79,7 @@ SoCraTesResource.prototype.addWaitinglistRecord = function (record) {
   if (!this.state._waitinglist) {
     return; // waitinglist is not enabled
   }
-  return this.state._waitinglist.push(record);
+  this.state._waitinglist.push(record);
 };
 
 SoCraTesResource.prototype.durationFor = function (memberId) {

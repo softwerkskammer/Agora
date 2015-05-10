@@ -17,7 +17,6 @@ var Group = beans.get('group');
 
 var activitiesService = beans.get('activitiesService');
 var groupsService = beans.get('groupsService');
-var groupsAndMembersService = beans.get('groupsAndMembersService');
 var memberstore = beans.get('memberstore');
 
 var member1 = new Member({
@@ -276,9 +275,9 @@ describe('Activity application', function () {
   });
 
   describe('- when registration is not open -', function () {
-
+    /* eslint no-underscore-dangle: 0 */
     it('shows the registration button for an activity with participants when a user is logged in who is not participant', function (done) {
-      activityWithParticipants.state.resources['default']._registrationOpen = false;
+      activityWithParticipants.state.resources.default._registrationOpen = false;
 
       request(createApp({member: member3}))
         .get('/' + 'urlForInteresting')
@@ -289,7 +288,7 @@ describe('Activity application', function () {
     });
 
     it('shows that registration is not possible if registrationClosed and no limit set', function (done) {
-      activityWithParticipants.state.resources['default']._registrationOpen = false;
+      activityWithParticipants.state.resources.default._registrationOpen = false;
 
       request(createApp({member: member3}))
         .get('/' + 'urlForInteresting')
@@ -298,8 +297,8 @@ describe('Activity application', function () {
     });
 
     it('shows that registration is somewhere else if registrationClosed and limit is "0"', function (done) {
-      activityWithParticipants.state.resources['default']._registrationOpen = false;
-      activityWithParticipants.state.resources['default']._limit = 0;
+      activityWithParticipants.state.resources.default._registrationOpen = false;
+      activityWithParticipants.state.resources.default._limit = 0;
 
       request(createApp({member: member3}))
         .get('/' + 'urlForInteresting')
@@ -308,8 +307,8 @@ describe('Activity application', function () {
     });
 
     it('shows that the event is full if registrationClosed and some limit set', function (done) {
-      activityWithParticipants.state.resources['default']._registrationOpen = false;
-      activityWithParticipants.state.resources['default']._limit = 1;
+      activityWithParticipants.state.resources.default._registrationOpen = false;
+      activityWithParticipants.state.resources.default._limit = 1;
 
       request(createApp({member: member3}))
         .get('/' + 'urlForInteresting')
@@ -318,9 +317,9 @@ describe('Activity application', function () {
     });
 
     it('shows the link to the waitinglist if registrationClosed and some limit set and waitinglist is enabled', function (done) {
-      activityWithParticipants.state.resources['default']._registrationOpen = false;
-      activityWithParticipants.state.resources['default']._limit = 1;
-      activityWithParticipants.state.resources['default']._waitinglist = [];
+      activityWithParticipants.state.resources.default._registrationOpen = false;
+      activityWithParticipants.state.resources.default._limit = 1;
+      activityWithParticipants.state.resources.default._waitinglist = [];
 
       request(createApp({member: member3}))
         .get('/' + 'urlForInteresting')
@@ -329,9 +328,9 @@ describe('Activity application', function () {
     });
 
     it('allows to leave the waitinglist if member is on waitinglist', function (done) {
-      activityWithParticipants.state.resources['default']._registrationOpen = false;
-      activityWithParticipants.state.resources['default']._limit = 1;
-      activityWithParticipants.state.resources['default']._waitinglist = [{
+      activityWithParticipants.state.resources.default._registrationOpen = false;
+      activityWithParticipants.state.resources.default._limit = 1;
+      activityWithParticipants.state.resources.default._waitinglist = [{
         _memberId: 'memberId3'
       }];
 
@@ -342,9 +341,9 @@ describe('Activity application', function () {
     });
 
     it('shows the subscription link if waitinglist participant is entitled to subscribe', function (done) {
-      activityWithParticipants.state.resources['default']._registrationOpen = false;
-      activityWithParticipants.state.resources['default']._limit = 1;
-      activityWithParticipants.state.resources['default']._waitinglist = [{
+      activityWithParticipants.state.resources.default._registrationOpen = false;
+      activityWithParticipants.state.resources.default._limit = 1;
+      activityWithParticipants.state.resources.default._waitinglist = [{
         _memberId: 'memberId3',
         _registrationValidUntil: moment().add(1, 'days')
       }];
@@ -356,7 +355,7 @@ describe('Activity application', function () {
     });
 
     it('shows the deregistration button for an activity with participants when a user is logged in who already is participant', function (done) {
-      activityWithParticipants.state.resources['default']._registrationOpen = false;
+      activityWithParticipants.state.resources.default._registrationOpen = false;
 
       request(createApp({member: member1}))
         .get('/' + 'urlForInteresting')

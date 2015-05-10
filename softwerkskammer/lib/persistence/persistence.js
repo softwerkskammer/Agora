@@ -48,11 +48,12 @@ module.exports = function (collectionName) {
       performInDB(function (err, db) {
         if (err) { return callback(err); }
         var cursor = db.collection(collectionName).find(searchObject, options).sort(sortOrder);
-        cursor.count(function (err, result) {
+        cursor.count(function (err1, result) {
+          if (err1) { return callback(err1); }
           cursor.batchSize(result);
-          cursor.toArray(function (err, result) {
-            if (err) { return callback(err); }
-            callback(null, result);
+          cursor.toArray(function (err2, result1) {
+            if (err2) { return callback(err2); }
+            callback(null, result1);
           });
         });
       });
@@ -65,9 +66,9 @@ module.exports = function (collectionName) {
     getByField: function (fieldAsObject, callback) {
       performInDB(function (err, db) {
         if (err) { return callback(err); }
-        db.collection(collectionName).find(fieldAsObject).toArray(function (err, result) {
-          if (err) { return callback(err); }
-          callback(null, result[0]);
+        db.collection(collectionName).find(fieldAsObject).toArray(function (err1, result) {
+          if (err1) { return callback(err1); }
+          callback(err1, result[0]);
         });
       });
     },
@@ -90,8 +91,8 @@ module.exports = function (collectionName) {
       performInDB(function (err, db) {
         if (err) { return callback(err); }
         var collection = db.collection(collectionName);
-        collection.update({id: storedId}, object, {upsert: true}, function (err) {
-          if (err) { return callback(err); }
+        collection.update({id: storedId}, object, {upsert: true}, function (err1) {
+          if (err1) { return callback(err1); }
           logger.info(object.constructor.name + ' saved: ' + JSON.stringify(object));
           callback(null);
         });
@@ -105,9 +106,8 @@ module.exports = function (collectionName) {
       performInDB(function (err, db) {
         if (err) { return callback(err); }
         var collection = db.collection(collectionName);
-        collection.remove({id: objectId}, {w: 1}, function (err) {
-          if (err) { return callback(err); }
-          callback(null);
+        collection.remove({id: objectId}, {w: 1}, function (err1) {
+          callback(err1);
         });
       });
     },
@@ -122,13 +122,13 @@ module.exports = function (collectionName) {
         var collection = db.collection(collectionName);
         var oldVersion = object.version;
         object.version = oldVersion ? oldVersion + 1 : 1;
-        self.getById(object.id, function (err, result) {
-          if (err) { return callback(err); }
+        self.getById(object.id, function (err1, result) {
+          if (err1) { return callback(err1); }
           if (result) { // object exists
             collection.findAndModify({id: object.id, version: oldVersion}, [], object,
               {new: true, upsert: false},
-              function (err, newObject) {
-                if (err) { return callback(err); }
+              function (err2, newObject) {
+                if (err2) { return callback(err2); }
                 if (!newObject.value) {
                   // something went wrong: restore old version count
                   object.version = oldVersion;
@@ -153,8 +153,8 @@ module.exports = function (collectionName) {
       performInDB(function (err, db) {
         if (err) { return callback(err); }
         logger.info('Drop ' + collectionName + ' called!');
-        db.dropCollection(collectionName, function (err) {
-          callback(err);
+        db.dropCollection(collectionName, function (err1) {
+          callback(err1);
         });
       });
     },

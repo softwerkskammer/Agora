@@ -7,10 +7,10 @@ var Member = require('../../testutil/configureForTest').get('beans').get('member
 describe('Member initial filling', function () {
 
   it('is correctly filled from small database record', function () {
-    var db_record = {id: 'ID', nickname: 'NICK'};
-    var member = new Member(db_record);
-    expect(member.id()).to.equal(db_record.id);
-    expect(member.nickname()).to.equal(db_record.nickname);
+    var dbRecord = {id: 'ID', nickname: 'NICK'};
+    var member = new Member(dbRecord);
+    expect(member.id()).to.equal(dbRecord.id);
+    expect(member.nickname()).to.equal(dbRecord.nickname);
   });
 
   it('is populated by Google OpenID record', function () {
@@ -69,23 +69,23 @@ describe('Member initial filling', function () {
   });
 
   it('shows the full name as display-name', function () {
-    var db_record = {nickname: 'Nick', firstname: 'Hans', lastname: 'Dampf'};
-    var member = new Member(db_record);
+    var dbRecord = {nickname: 'Nick', firstname: 'Hans', lastname: 'Dampf'};
+    var member = new Member(dbRecord);
     expect(member.displayName()).to.equal('Hans Dampf');
   });
 
   it('constructs avatar from mail address using gravatar URL with https', function () {
     var email = 'member@mail.com';
-    var db_record = {nickname: 'Nick', email: email};
-    var member = new Member(db_record);
+    var dbRecord = {nickname: 'Nick', email: email};
+    var member = new Member(dbRecord);
     expect(member.avatarUrl(10)).to.contain('https://www.gravatar.com/avatar/');
     expect(member.avatarUrl(10)).to.contain('?d=mm&s=10');
   });
 
   it('uses size 200 if no size is given', function () {
     var email = 'member@mail.com';
-    var db_record = {nickname: 'Nick', email: email};
-    var member = new Member(db_record);
+    var dbRecord = {nickname: 'Nick', email: email};
+    var member = new Member(dbRecord);
     expect(member.avatarUrl()).to.contain('?d=mm&s=200');
   });
 });
@@ -178,7 +178,7 @@ describe('filling socratesOnly from UI', function () {
   });
 
   it('sets socratesOnly to false if empty string is provided from UI', function () {
-    var member = new Member().fillFromUI({socratesOnly: ""});
+    var member = new Member().fillFromUI({socratesOnly: ''});
     expect(member.socratesOnly()).to.be.false();
   });
 
@@ -190,8 +190,7 @@ describe('filling socratesOnly from UI', function () {
 
 describe('display functionalities', function () {
   it('produces a valid git author', function () {
-    var db_record = {nickname: 'Nick'};
-    var member = new Member(db_record);
+    var member = new Member({nickname: 'Nick'});
     expect(member.asGitAuthor()).to.equal('Nick <Nick@softwerkskammer.org>');
   });
 });

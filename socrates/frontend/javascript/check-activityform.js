@@ -1,10 +1,10 @@
-/*global activityDateModel, endMustBeAfterBegin, urlIsNotAvailable */
+/*global activityDateModel, endMustBeAfterBegin */
 
 // THE ORIGINAL OF THIS FILE IS IN frontend/javascript
 
 var activity_validator;
 (function () {
-  "use strict";
+  'use strict';
 
   $(document).ready(function () {
 
@@ -14,10 +14,10 @@ var activity_validator;
       var endDate = $('#activityform [name=endDate]').val();
       var endTime = $('#activityform [name=endTime]').val();
       var dateAndTime = activityDateModel(startDate, startTime).convertInputs(startDate, startTime, endDate, endTime);
-      return endDate !== "" && endTime !== "" && dateAndTime.end.diff(dateAndTime.start, 'minutes') > 0;
+      return endDate !== '' && endTime !== '' && dateAndTime.end.diff(dateAndTime.start, 'minutes') > 0;
     };
 
-    $.validator.addMethod("dateAndTime", validateDateAndTime, $.validator.format(endMustBeAfterBegin));
+    $.validator.addMethod('dateAndTime', validateDateAndTime, $.validator.format(endMustBeAfterBegin));
 
   });
 
@@ -25,39 +25,39 @@ var activity_validator;
 
     // DO NOT FORGET TO KEEP THIS FILE IN SYNC WITH /lib/commons/validation.js
 
-    activity_validator = $("#activityform").validate({
+    activity_validator = $('#activityform').validate({
       rules: {
-        startDate: "required",
-        startTime: "required",
-        endDate: "dateAndTime",
-        endTime: "dateAndTime"
+        startDate: 'required',
+        startTime: 'required',
+        endDate: 'dateAndTime',
+        endTime: 'dateAndTime'
       },
       errorPlacement: function (error, element) {
-        if (element.attr("name") === "endDate" || element.attr("name") === "endTime") {
-          error.insertAfter("#dates");
+        if (element.attr('name') === 'endDate' || element.attr('name') === 'endTime') {
+          error.insertAfter('#dates');
         } else {
           error.insertAfter(element);
         }
       },
-      errorElement: "span",
-      errorClass: "help-block",
+      errorElement: 'span',
+      errorClass: 'help-block',
       highlight: function (element) {
-        if ($(element).attr("name") === "endDate" || $(element).attr("name") === "endTime") {
-          $("#dates").parent().addClass("has-error");
+        if ($(element).attr('name') === 'endDate' || $(element).attr('name') === 'endTime') {
+          $('#dates').parent().addClass('has-error');
         } else {
-          $(element).parent().addClass("has-error");
+          $(element).parent().addClass('has-error');
         }
       },
       unhighlight: function (element) {
-        if ($(element).attr("name") === "endDate" || $(element).attr("name") === "endTime") {
-          $("#dates").parent().removeClass("has-error");
+        if ($(element).attr('name') === 'endDate' || $(element).attr('name') === 'endTime') {
+          $('#dates').parent().removeClass('has-error');
         } else {
-          $(element).parent().removeClass("has-error");
+          $(element).parent().removeClass('has-error');
         }
       }
     });
 
-    $("#activityform [name=endDate]").datepicker().on('changeDate', function () {
+    $('#activityform [name=endDate]').datepicker().on('changeDate', function () {
       activity_validator.element($('#activityform [name=endDate]'));
     });
 
@@ -69,9 +69,9 @@ var activity_validator;
       };
     };
 
-    ["#activityform [name=startDate]", "#activityform [name=startTime]", "#activityform [name=endDate]", "#activityform [name=endTime]"].forEach(
+    ['#activityform [name=startDate]', '#activityform [name=startTime]', '#activityform [name=endDate]', '#activityform [name=endTime]'].forEach(
       function (each) {
-        $(each).on("change", handler(each));
+        $(each).on('change', handler(each));
         $(each).keyup(handler(each));
       }
     );

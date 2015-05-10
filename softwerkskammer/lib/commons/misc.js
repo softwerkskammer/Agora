@@ -4,7 +4,6 @@ var _ = require('lodash');
 var express = require('express');
 var path = require('path');
 var conf = require('simple-configure');
-var moment = require('moment-timezone');
 var mimetypes = require('mime-types');
 
 var imageExtensions = _(mimetypes.extensions)
@@ -47,8 +46,8 @@ module.exports = {
   },
 
   differenceCaseInsensitive: function (strings, stringsToReduce) {
-    function prepare(strings) {
-      return _(strings).compact().invoke('toLowerCase').value();
+    function prepare(strs) {
+      return _(strs).compact().invoke('toLowerCase').value();
     }
 
     return _.difference(prepare(strings), prepare(stringsToReduce));

@@ -37,7 +37,8 @@ Member.prototype.displayName = function () {
 };
 
 Member.prototype.initFromSessionUser = function (sessionUser, socratesOnly) {
-  // this is THE ONLY VALID WAY to create and initialize a new user in real life (not tests) 
+  /* eslint no-underscore-dangle: 0 */
+  // this is THE ONLY VALID WAY to create and initialize a new user in real life (not tests)
   if (!sessionUser || this.id()) {
     return this;
   }

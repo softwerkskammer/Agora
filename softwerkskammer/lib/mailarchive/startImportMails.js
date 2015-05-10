@@ -11,6 +11,7 @@ var logger = winston.loggers.get('scripts');
 var persistence = require('../../configure').get('beans').get('mailsPersistence');
 
 function closeAndExit() {
+  /* eslint no-process-exit: 0 */
   return persistence.closeDB(function () { process.exit(); });
 }
 
@@ -21,8 +22,8 @@ require('./importMails')(file, group, function (err, mailDbObject) {
     return closeAndExit();
   }
 
-  persistence.save(mailDbObject, function (err) {
-    if (err) { logger.error('Error during save: ' + err); }
+  persistence.save(mailDbObject, function (err1) {
+    if (err1) { logger.error('Error during save: ' + err1); }
     logger.info('Subject of eMail: ' + mailDbObject.subject);
     return closeAndExit();
   });

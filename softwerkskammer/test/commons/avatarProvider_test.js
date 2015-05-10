@@ -14,7 +14,7 @@ describe('AvatarProvider', function () {
   });
 
   it('tries to load a members avatar via gravatar if it not cached locally', function (done) {
-    sinon.stub(avatarProvider, 'imageDataFromGravatar', function (member, callback) {
+    sinon.stub(avatarProvider, 'imageDataFromGravatar', function (anyMember, callback) {
       callback({image: 'image', hasNoImage: true});
     });
 
@@ -27,7 +27,7 @@ describe('AvatarProvider', function () {
   });
 
   it('Does not load a members avatar via gravatar if it can be retrieved from cache', function (done) {
-    sinon.stub(avatarProvider, 'imageDataFromCache', function (member) {
+    sinon.stub(avatarProvider, 'imageDataFromCache', function () {
       return {image: 'image', hasNoImage: false};
     });
     var gravatarCall = sinon.spy(avatarProvider, 'imageDataFromGravatar');

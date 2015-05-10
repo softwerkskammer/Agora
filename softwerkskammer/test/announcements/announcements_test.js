@@ -63,7 +63,7 @@ describe('Announcement application', function () {
   });
 
   it('shows the details of one announcement as retrieved from the store', function (done) {
-    var dummyMember = new Member({nickname: "nickname", id: "member ID"});
+    var dummyMember = new Member({nickname: 'nickname', id: 'member ID'});
     sinonSandbox.stub(memberstore, 'getMemberForId', function (id, callback) {
       callback(null, dummyMember);
     });
@@ -108,21 +108,12 @@ describe('Announcement application', function () {
   });
 
   it('keeps a unix timestamp, if thruDate is already a unix timestamp', function () {
-    var dummyAnnouncement = new Announcement({
-      title: 'title',
-      url: 'url',
-      message: 'text',
-      author: 'author',
-      fromUnix: 1388448000,
-      thruUnix: 1388448000
-    });
     expect(dummyAnnouncement.thruUnix).to.equal(1388448000);
   });
 
   it('sets fromDate to current timestamp, when a new Announcement gets created', function () {
-    var dummyAnnouncement = new Announcement();
     var now = moment.utc().unix();
-    expect(dummyAnnouncement.fromUnix).to.equal(now);
+    expect(new Announcement().fromUnix).to.equal(now);
   });
 
   describe('url check', function () {

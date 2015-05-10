@@ -1,7 +1,6 @@
 'use strict';
 
 var conf = require('simple-configure');
-var moment = require('moment-timezone');
 
 
 function PaymentInfo(state) {

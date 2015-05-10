@@ -20,8 +20,8 @@ function memberSubmitted(req, res, callback) {
 
   return groupsAndMembersService.updateAndSaveSubmittedMemberWithoutSubscriptions(req.user, req.body, res.locals.accessrights, notifyNewMemberRegistration, function (err, nickname) {
     if (err) { return callback(err); }
-    subscriberService.createSubscriberIfNecessaryFor(req.user.member.id(), function (err) {
-      if (err) { return callback(err); }
+    subscriberService.createSubscriberIfNecessaryFor(req.user.member.id(), function (err1) {
+      if (err1) { return callback(err1); }
       if (nickname) {
         statusmessage.successMessage('message.title.save_successful', 'message.content.members.saved').putIntoSession(req);
       }
@@ -31,18 +31,18 @@ function memberSubmitted(req, res, callback) {
 }
 
 
-module.exports =  function (req, res, callback) {
+module.exports = function (req, res, next, globalCallback) {
   var body = req.body;
   async.parallel(
     [
       function (callback) {
         // we need this helper function (in order to have a closure?!)
-        var validityChecker = function (nickname, callback) { membersService.isValidNickname(nickname, callback); };
+        var validityChecker = function (nickname, cb) { membersService.isValidNickname(nickname, cb); };
         validation.checkValidity(body.previousNickname, body.nickname, validityChecker, 'validation.nickname_not_available', callback);
       },
       function (callback) {
         // we need this helper function (in order to have a closure?!)
-        var validityChecker = function (email, callback) { membersService.isValidEmail(email, callback); };
+        var validityChecker = function (email, cb) { membersService.isValidEmail(email, cb); };
         validation.checkValidity(body.previousEmail, body.email, validityChecker, 'validation.duplicate_email', callback);
       },
       function (callback) {
@@ -50,9 +50,10 @@ module.exports =  function (req, res, callback) {
       }
     ],
     function (err, errorMessages) {
+      if (err) { return next(err); }
       var realErrors = _.filter(_.flatten(errorMessages), function (message) { return !!message; });
       if (realErrors.length === 0) {
-        return memberSubmitted(req, res, callback);
+        return memberSubmitted(req, res, globalCallback);
       }
       return res.render('../../../views/errorPages/validationError', {errors: realErrors});
     }

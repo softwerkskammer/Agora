@@ -34,8 +34,8 @@ describe('Dashboard Service', function () {
       }
       callback(null, member);
     });
-    sinon.stub(activitiesService, 'getUpcomingActivitiesOfMemberAndHisGroups', function (member, callback) {
-      if (member === CRASH_ACTIVITY) {
+    sinon.stub(activitiesService, 'getUpcomingActivitiesOfMemberAndHisGroups', function (mem, callback) {
+      if (mem === CRASH_ACTIVITY) {
         return callback(new Error());
       }
       callback(null, [activity1, activity2]);
@@ -54,7 +54,7 @@ describe('Dashboard Service', function () {
       expect(result.postsByGroup).to.be.empty();
       expect(result.changesByGroup).to.be.empty();
       expect(result.mailsByGroup).to.be.empty();
-      done();
+      done(err);
     });
   });
 
@@ -115,7 +115,7 @@ describe('Dashboard Service', function () {
         expect(result.changesByGroup).to.have.keys(['group']);
         expect(result.changesByGroup.group).to.contain('change1');
         expect(result.changesByGroup.group).to.contain('change2');
-        done();
+        done(err);
       });
     });
 
@@ -128,7 +128,7 @@ describe('Dashboard Service', function () {
         expect(result.mailsByGroup.group).to.contain(mail1);
         expect(result.mailsByGroup.group).to.contain(mail2);
         expect(result.mailsByGroup.group).not.to.contain(veryOldMail);
-        done();
+        done(err);
       });
     });
 

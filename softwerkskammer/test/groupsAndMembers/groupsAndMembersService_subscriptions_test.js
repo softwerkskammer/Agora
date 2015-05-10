@@ -23,8 +23,8 @@ describe('Groups and Members Service (Subscriptions)', function () {
 
   beforeEach(function () {
     getMemberForIdSpy = sinon.stub(memberstore, 'getMemberForId', function (memberID, callback) { callback(null, member); });
-    addUserToListSpy = sinon.stub(groupsService, 'addUserToList', function (email, list, callback) { callback(); });
-    removeUserFromListSpy = sinon.stub(groupsService, 'removeUserFromList', function (email, list, callback) { callback(); });
+    addUserToListSpy = sinon.stub(groupsService, 'addUserToList', function (someEmail, list, callback) { callback(); });
+    removeUserFromListSpy = sinon.stub(groupsService, 'removeUserFromList', function (someEmail, list, callback) { callback(); });
     sinon.stub(groupsService, 'getSubscribedGroupsForUser', function (memberEmail, callback) { callback(null, subscribedGroups); });
   });
 

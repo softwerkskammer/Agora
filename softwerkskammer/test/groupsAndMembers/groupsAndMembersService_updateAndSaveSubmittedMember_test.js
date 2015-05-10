@@ -7,17 +7,7 @@ var expect = require('must');
 
 var Member = beans.get('member');
 
-var dummymember = new Member().initFromSessionUser({authenticationId: 'hada', profile: {emails: [{value: 'email'}]}});
-var dummymember2 = new Member().initFromSessionUser({authenticationId: 'hada2', profile: {emails: [{value: 'email'}]}});
-
-var Group = beans.get('group');
-
-var GroupA = new Group({id: 'GroupA', longName: 'Gruppe A', description: 'Dies ist Gruppe A.', type: 'Themengruppe'});
-var GroupB = new Group({id: 'GroupB', longName: 'Gruppe B', description: 'Dies ist Gruppe B.', type: 'Regionalgruppe'});
-
 var memberstore = beans.get('memberstore');
-var groupsService = beans.get('groupsService');
-var groupstore = beans.get('groupstore');
 
 var groupsAndMembersService = beans.get('groupsAndMembersService');
 
@@ -37,7 +27,7 @@ describe('Groups and Members Service', function () {
       it('returns an error when the member loading caused an error', function (done) {
         sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups', function (nickname, callback) { callback(new Error('some error')); });
 
-        groupsAndMembersService.updateAndSaveSubmittedMemberWithSubscriptions(undefined, {previousNickname: "nick"}, undefined, undefined, function (err, nickname) {
+        groupsAndMembersService.updateAndSaveSubmittedMemberWithSubscriptions(undefined, {previousNickname: 'nick'}, undefined, undefined, function (err, nickname) {
           expect(err.message).to.equal('some error');
           expect(nickname).to.be.undefined();
           done();
@@ -46,9 +36,9 @@ describe('Groups and Members Service', function () {
 
       it('returns an error when the submitted member is a new member and saving the member caused an error', function (done) {
         sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups', function (nickname, callback) { callback(null, null); });
-        sinon.stub(memberstore, 'saveMember', function (member, callback) { callback(new Error('some error')); });
+        sinon.stub(memberstore, 'saveMember', function (anyMember, callback) { callback(new Error('some error')); });
 
-        groupsAndMembersService.updateAndSaveSubmittedMemberWithSubscriptions(undefined, {previousNickname: "nick"}, undefined, undefined, function (err, nickname) {
+        groupsAndMembersService.updateAndSaveSubmittedMemberWithSubscriptions(undefined, {previousNickname: 'nick'}, undefined, undefined, function (err, nickname) {
           expect(err.message).to.equal('some error');
           expect(nickname).to.be.undefined();
           done();
@@ -58,7 +48,7 @@ describe('Groups and Members Service', function () {
       it('returns an error when the submitted member is an existing member and we are allowed to edit the member but saving causes an error', function (done) {
         sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups', function (nickname, callback) { callback(null, member); });
         var accessrights = {canEditMember: function () { return true; }};
-        sinon.stub(memberstore, 'saveMember', function (member, callback) { callback(new Error('some error')); });
+        sinon.stub(memberstore, 'saveMember', function (anyMember, callback) { callback(new Error('some error')); });
 
         groupsAndMembersService.updateAndSaveSubmittedMemberWithSubscriptions(undefined, memberformData, accessrights, undefined, function (err, nickname) {
           expect(err.message).to.equal('some error');
@@ -72,9 +62,9 @@ describe('Groups and Members Service', function () {
     describe('when the submitted member is a new member', function () {
 
       beforeEach(function () {
-        sinon.stub(memberstore, 'saveMember', function (member, callback) { callback(null); });
+        sinon.stub(memberstore, 'saveMember', function (anyMember, callback) { callback(null); });
         sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups', function (nickname, callback) { callback(null, null); });
-        sinon.stub(groupsAndMembersService, 'updateSubscriptions', function (member, oldEmail, subscriptions, callback) { callback(null); });
+        sinon.stub(groupsAndMembersService, 'updateSubscriptions', function (anyMember, oldEmail, subscriptions, callback) { callback(null); });
       });
 
       it('adds the new member to the sessionUser', function (done) {
@@ -95,9 +85,9 @@ describe('Groups and Members Service', function () {
       var canEditMember = {canEditMember: function () { return true; }};
 
       beforeEach(function () {
-        sinon.stub(memberstore, 'saveMember', function (member, callback) { callback(null); });
+        sinon.stub(memberstore, 'saveMember', function (anyMember, callback) { callback(null); });
         sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups', function (nickname, callback) { callback(null, member); });
-        sinon.stub(groupsAndMembersService, 'updateSubscriptions', function (member, oldEmail, subscriptions, callback) { callback(null); });
+        sinon.stub(groupsAndMembersService, 'updateSubscriptions', function (anyMember, oldEmail, subscriptions, callback) { callback(null); });
       });
 
       it('returns null when we are not allowed to edit the member', function (done) {

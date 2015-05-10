@@ -1,3 +1,4 @@
+/* eslint no-underscore-dangle: 0 */
 'use strict';
 
 var request = require('supertest');
@@ -64,6 +65,7 @@ describe('SoCraTes members application', function () {
   });
 
   beforeEach(function () {
+    /* eslint camelcase: 0 */
     socrates = {resources: {single: {}, bed_in_double: {}, junior: {}, bed_in_junior: {}}};
 
     sinon.stub(activitystore, 'getActivity', function (url, callback) { return callback(null, new SoCraTesActivity(socrates)); });

@@ -35,9 +35,8 @@ module.exports = {
     persistence.getById(id, function (err, archivedMail) {
       if (err || !archivedMail) { return callback(err); }
       var mail = new Mail(archivedMail);
-      addProfileDataForMembers([mail], function (err) {
-        if (err) { return callback(err); }
-        callback(null, mail);
+      addProfileDataForMembers([mail], function (err1) {
+        callback(err1, mail);
       });
     });
   },

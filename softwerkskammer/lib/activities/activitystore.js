@@ -98,6 +98,7 @@ module.exports = {
 
   activitiesForGroupIdsAndRegisteredMemberId: function (groupIds, memberId, upcoming, callback) {
     var map = function () {
+      /* eslint no-underscore-dangle: 0 */
       var self = this; // "this" holds the activity that is currently being examined
 
       // is the assigned group in the list of groups?

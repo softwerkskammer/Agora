@@ -33,7 +33,7 @@ describe('Activities Service with DB', function () {
           {memberId: 'memberIdX'}
         ], _waitinglist: [
           {_memberId: 'memberIdY'}
-        ], _registrationOpen: true  }
+        ], _registrationOpen: true }
       }, version: 1}
     );
 
@@ -44,7 +44,7 @@ describe('Activities Service with DB', function () {
           {memberId: 'memberIdX'}
         ], _waitinglist: [
           {_memberId: 'memberIdY'}
-        ], _registrationOpen: true  }
+        ], _registrationOpen: true }
       }, version: 2}
     );
 
@@ -82,11 +82,11 @@ describe('Activities Service with DB', function () {
     // To mimick a racing condition, we return an activity without members for the first "getActivity".
     activitiesService.addVisitorTo('memberId2', activityUrl, 'default', moment(), function (err) {
       if (err) { return done(err); }
-      getActivity(activityUrl, function (err, activity) {
-        if (err) { return done(err); }
+      getActivity(activityUrl, function (err1, activity) {
+        if (err1) { return done(err1); }
         expect(activity.resourceNamed('default').registeredMembers(), 'Second registered member is stored in the database').to.contain('memberId2');
         expect(activity.resourceNamed('default').registeredMembers(), 'First registered member is still there').to.contain('memberId1');
-        done(err);
+        done(err1);
       });
     });
   });
@@ -96,11 +96,11 @@ describe('Activities Service with DB', function () {
     // To mimick a racing condition, we return an activity without members for the first 'getActivity'.
     activitiesService.removeVisitorFrom('memberIdX', activityUrl, 'default', function (err) {
       if (err) { return done(err); }
-      getActivity(activityUrl, function (err, activity) {
-        if (err) { return done(err); }
+      getActivity(activityUrl, function (err1, activity) {
+        if (err1) { return done(err1); }
         expect(activity.resourceNamed('default').registeredMembers(), 'Second removed member is no longer in the database').to.not.contain('memberIdX');
         expect(activity.resourceNamed('default').registeredMembers(), 'First registered member is still there').to.contain('memberId1');
-        done(err);
+        done(err1);
       });
     });
   });
@@ -110,12 +110,12 @@ describe('Activities Service with DB', function () {
     // To mimick a racing condition, we return an activity without members for the first "getActivity".
     activitiesService.addToWaitinglist('memberId2', activityUrl, 'default', moment(), function (err) {
       if (err) { return done(err); }
-      getActivity(activityUrl, function (err, activity) {
-        if (err) { return done(err); }
+      getActivity(activityUrl, function (err1, activity) {
+        if (err1) { return done(err1); }
         expect(activity.resourceNamed('default').waitinglistEntries()[0].registrantId(), 'Previous member is still in the waitinglist').to.equal('memberIdY');
         expect(activity.resourceNamed('default').waitinglistEntries()[1].registrantId(), 'Second member is stored in the waitinglist').to.equal('memberId2');
         expect(activity.resourceNamed('default').registeredMembers(), 'First registered member is still there').to.contain('memberId1');
-        done(err);
+        done(err1);
       });
     });
   });
@@ -125,11 +125,11 @@ describe('Activities Service with DB', function () {
     // To mimick a racing condition, we return an activity without members for the first "getActivity".
     activitiesService.removeFromWaitinglist('memberIdY', activityUrl, 'default', function (err) {
       if (err) { return done(err); }
-      getActivity(activityUrl, function (err, activity) {
-        if (err) { return done(err); }
+      getActivity(activityUrl, function (err1, activity) {
+        if (err1) { return done(err1); }
         expect(activity.resourceNamed('default').waitinglistEntries().length, 'Waitinglist member is no longer in the database').to.equal(0);
         expect(activity.resourceNamed('default').registeredMembers(), 'First registered member is still there').to.contain('memberId1');
-        done(err);
+        done(err1);
       });
     });
   });

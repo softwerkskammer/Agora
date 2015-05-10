@@ -9,7 +9,6 @@ var activityresultsService = beans.get('activityresultsService');
 var createApp = require('../../testutil/testHelper')('activityresultsApp').createApp;
 
 var ActivityResult = beans.get('activityresult');
-var galleryService = beans.get('galleryService');
 
 var MEMBER_ID = 'member1';
 
@@ -21,10 +20,11 @@ describe('/activityresults/:result/photo/:photo', function () {
   var photoId = 'photo_id';
   beforeEach(function () {
     sinon.stub(activityresultsService, 'getActivityResultByName', function (activityResultName, callback) {
+      /* eslint camelcase: 0 */
+
       callback(null, new ActivityResult({
         id: 'foo',
         name: 'foobar',
-        created_by: MEMBER_ID,
         photos: [{id: photoId, title: 'mishka', uploaded_by: MEMBER_ID}]
       }));
     });
@@ -48,7 +48,7 @@ describe('/activityresults/:result/photo/:photo', function () {
   });
 
   it('should save a photos time, tags and title', function (done) {
-    sinon.stub(activityresultsService, 'updatePhotoOfActivityResult', function (activityResultName, photoId, data, accessrights, callback) {
+    sinon.stub(activityresultsService, 'updatePhotoOfActivityResult', function (activityResultName, photoID, data, accessrights, callback) {
       expect(data.title).to.eql('My adventures with the softwerkskammer');
       expect(data.tags).to.eql(['a', 'b']);
       callback();
@@ -69,7 +69,7 @@ describe('/activityresults/:result/photo/:photo', function () {
   });
 
   it('should not let me save changes to a photo if I didn\'t upload it', function (done) {
-    sinon.stub(activityresultsService, 'updatePhotoOfActivityResult', function (activityResultName, photoId, data, accessrights, callback) {
+    sinon.stub(activityresultsService, 'updatePhotoOfActivityResult', function (activityResultName, photoID, data, accessrights, callback) {
       expect(data.title).to.eql('My adventures with the softwerkskammer');
       expect(data.tags).to.eql(['a', 'b']);
       callback();

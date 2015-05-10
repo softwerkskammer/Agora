@@ -13,8 +13,6 @@ module.exports = {
       if (err || !lists) {return callback(err); }
       callback(null, _.pluck(lists, 'id'));
     });
-
-//    callback(null, lists);
   },
 
   getUsersOfList: function (listName, callback) {
@@ -22,32 +20,22 @@ module.exports = {
       if (err || !list) {return callback(err); }
       callback(null, list.users);
     });
-
-//    callback(null, ['test@me.de', 'michael@schumacher.de', 'michael@ballack.de', 'james@hetfield.com']);
   },
 
   addUserToList: function (user, listName, callback) {
     persistence.getById(listName, function (err, list) {
       if (err || !list) {return callback(err); }
       list.users.push(user);
-      persistence.save(list, function (err) {
-        callback(err, true);
-      });
+      persistence.save(list, function (err1) { callback(err1, true); });
     });
-
-//    callback(null, true);
   },
 
   removeUserFromList: function (user, listName, callback) {
     persistence.getById(listName, function (err, list) {
       if (err || !list) {return callback(err); }
       _.remove(list.users, function (entry) { return entry.trim() === user.trim(); });
-      persistence.save(list, function (err) {
-        callback(err, true);
-      });
+      persistence.save(list, function (err1) { callback(err1, true); });
     });
-
-//    callback(null, true);
   },
 
   getSubscribedListsForUser: function (userEmail, callback) {
@@ -58,8 +46,6 @@ module.exports = {
 
       callback(null, _.pluck(subscribed, 'id'));
     });
-
-//    callback(null, lists);
   },
 
   createList: function (listName, emailPrefix, callback) {

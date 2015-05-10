@@ -76,7 +76,7 @@ module.exports = function accessrights(req, res, next) {
     },
 
     canEditPhoto: function (photo) {
-      return this.isSuperuser() || (photo && photo.uploaded_by && photo.uploaded_by() === this.memberId());
+      return this.isSuperuser() || (photo && photo.uploadedBy && photo.uploadedBy() === this.memberId());
     },
 
     canDeletePhoto: function () {

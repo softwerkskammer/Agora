@@ -1,9 +1,8 @@
+/* eslint no-underscore-dangle: 0 */
 'use strict';
 
 var sinon = require('sinon').sandbox.create();
 var expect = require('must');
-var moment = require('moment-timezone');
-var _ = require('lodash');
 
 var beans = require('../../testutil/configureForTest').get('beans');
 
@@ -12,11 +11,7 @@ var activitystore = beans.get('activitystore');
 var SoCraTesActivity = beans.get('socratesActivity');
 var Member = beans.get('member');
 
-var membersService = beans.get('membersService');
-var groupsService = beans.get('groupsService');
-var groupstore = beans.get('groupstore');
 var memberstore = beans.get('memberstore');
-var fieldHelpers = beans.get('fieldHelpers');
 var notifications = beans.get('socratesNotifications');
 
 describe('SoCraTes Activities Service', function () {
@@ -27,6 +22,7 @@ describe('SoCraTes Activities Service', function () {
   var savedActivity;
 
   beforeEach(function () {
+    /*eslint camelcase: 0*/
     registrationTuple = {
       activityUrl: 'socrates-url',
       resourceName: 'single',
@@ -43,9 +39,9 @@ describe('SoCraTes Activities Service', function () {
       isSoCraTes: true,
       startUnix: 1440687600,
       endUnix: 1440946800,
-      owner: {nickname: "ownerNick"},
-      assignedGroup: "assignedGroup",
-      group: {groupLongName: "longName"},
+      owner: {nickname: 'ownerNick'},
+      assignedGroup: 'assignedGroup',
+      group: {groupLongName: 'longName'},
       resources: {
         single: {_canUnsubscribe: false, _limit: 10, _registrationOpen: true},
         bed_in_double: {_canUnsubscribe: false, _limit: 10, _registrationOpen: true}

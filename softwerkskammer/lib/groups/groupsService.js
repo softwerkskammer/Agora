@@ -31,11 +31,11 @@ var groupsForRetriever = function (retriever, callback) {
 
 module.exports = {
   getSubscribedGroupsForUser: function (userMail, callback) {
-    groupsForRetriever(function (callback) { subscribedListsForUser(userMail, callback); }, callback);
+    groupsForRetriever(function (cb) { subscribedListsForUser(userMail, cb); }, callback);
   },
 
   getAllAvailableGroups: function (callback) {
-    groupsForRetriever(function (callback) { listAdapter.getAllAvailableLists(callback); }, callback);
+    groupsForRetriever(function (cb) { listAdapter.getAllAvailableLists(cb); }, callback);
   },
 
   allGroupColors: function (callback) {
@@ -50,38 +50,40 @@ module.exports = {
     listAdapter.getUsersOfList(groupname, callback);
   },
 
-  isGroupValid: function (group) {
+  isGroupValid: function (group, callback) {
     var self = this;
     var errors = validation.isValidGroup(group);
     groupstore.getGroup(group.id, function (err, existingGroup) {
-      if (!existingGroup) {
-        self.isGroupNameAvailable(group.id, function (err, result) {
-          if (err) { errors.push('Technical error validating name of group.'); }
-          if (!result) { errors.push('Dieser Gruppenname ist bereits vergeben.'); }
+      if (err) { errors.push('Technical error validating the group.'); }
+      if (existingGroup) { return callback(errors); }
+      self.isGroupNameAvailable(group.id, function (err1, result) {
+        if (err1) { errors.push('Technical error validating name of group.'); }
+        if (!result) { errors.push('Dieser Gruppenname ist bereits vergeben.'); }
+        self.isEmailPrefixAvailable(group.emailPrefix, function (err2, result1) {
+          if (err2) { errors.push('Technical error validating email prefix.'); }
+          if (!result1) { errors.push('Dieses Präfix ist bereits vergeben.'); }
+          callback(errors);
         });
-        self.isEmailPrefixAvailable(group.emailPrefix, function (err, result) {
-          if (err) { errors.push('Technical error validating email prefix.'); }
-          if (!result) { errors.push('Dieses Präfix ist bereits vergeben.'); }
-        });
-      }
+      });
     });
-    return errors;
   },
 
-  createOrSaveGroup: function (newGroup, globalCallback) {
+  createOrSaveGroup: function (newGroup, callback) {
     groupstore.getGroup(newGroup.id, function (err, existingGroup) {
+      if (err) { return callback(err, existingGroup); }
+
       async.parallel(
         [
-          function (callback) {
+          function (cb) {
             if (!existingGroup) {
-              listAdapter.createList(newGroup.id, newGroup.emailPrefix, callback);
+              listAdapter.createList(newGroup.id, newGroup.emailPrefix, cb);
             } else {
-              callback(null);
+              cb(null);
             }
           },
-          function (callback) { groupstore.saveGroup(newGroup, callback); }
+          function (cb) { groupstore.saveGroup(newGroup, cb); }
         ],
-        function (err) { globalCallback(err, existingGroup); }
+        function (err1) { callback(err1, existingGroup); }
       );
     });
   },
@@ -94,15 +96,13 @@ module.exports = {
     listAdapter.removeUserFromList(userMail, list, callback);
   },
 
-  updateSubscriptions: function (userMail, oldUserMail, newSubscriptions, globalCallback) {
+  updateSubscriptions: function (userMail, oldUserMail, newSubscriptions, callback) {
     async.waterfall(
       [
-        function (callback) {
-          subscribedListsForUser(oldUserMail, callback);
-        }
+        function (cb) { subscribedListsForUser(oldUserMail, cb); }
       ],
       function (err, subscribedLists) {
-        if (err) { return globalCallback(err); }
+        if (err) { return callback(err); }
         newSubscriptions = misc.toArray(newSubscriptions);
         var emailChanged = userMail !== oldUserMail;
         var listsToSubscribe = emailChanged ? newSubscriptions : _.difference(newSubscriptions, subscribedLists);
@@ -110,21 +110,19 @@ module.exports = {
         async.series(
           [
             function (funCallback) {
-              var subscribe = function (list, callback) {
-                listAdapter.addUserToList(userMail, list, callback);
+              var subscribe = function (list, cb) {
+                listAdapter.addUserToList(userMail, list, cb);
               };
               async.each(listsToSubscribe, subscribe, funCallback);
             },
             function (funCallback) {
-              var unsubscribe = function (list, callback) {
-                listAdapter.removeUserFromList(oldUserMail, list, callback);
+              var unsubscribe = function (list, cb) {
+                listAdapter.removeUserFromList(oldUserMail, list, cb);
               };
               async.each(listsToUnsubscribe, unsubscribe, funCallback);
             }
           ],
-          function (err) {
-            globalCallback(err);
-          }
+          function (err1) { callback(err1); }
         );
       }
     );

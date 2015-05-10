@@ -292,7 +292,7 @@ describe('Groups Service (allGroupColors)', function () {
     systemUnderTest.allGroupColors(function (err, colorMap) {
       expect(colorMap).to.have.ownProperty('groupa', '#FFFFFF');
       expect(colorMap).to.have.ownProperty('groupb', '#AAAAAA');
-      done();
+      done(err);
     });
   });
 

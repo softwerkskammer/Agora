@@ -23,9 +23,9 @@ describe('Activity store', function () {
     isSoCraTes: true,
     startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.02.2014'),
     endUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('15.02.2014'),
-    owner: {nickname: "ownerNick"},
-    assignedGroup: "assignedGroup",
-    group: {groupLongName: "longName"}
+    owner: {nickname: 'ownerNick'},
+    assignedGroup: 'assignedGroup',
+    group: {groupLongName: 'longName'}
   };
   var sampleList;
   var getByField;
@@ -174,8 +174,8 @@ describe('Activity store', function () {
       store.getActivityForId(id, function (err, activity) {
         expect(activity.id()).to.equal('socratesId');
         expect(activity.title()).to.equal('SoCraTes');
-        expect(activity.startMoment().toString()).to.equal("Sat Feb 01 2014 00:00:00 GMT+0100");
-        expect(activity.endMoment().toString()).to.equal("Sat Feb 15 2014 00:00:00 GMT+0100");
+        expect(activity.startMoment().toString()).to.equal('Sat Feb 01 2014 00:00:00 GMT+0100');
+        expect(activity.endMoment().toString()).to.equal('Sat Feb 15 2014 00:00:00 GMT+0100');
         expect(activity.fullyQualifiedUrl()).to.equal('https://socrates.com:12345');
         expect(activity.url()).to.equal('socrates-url');
         expect(activity.allRegisteredMembers()).to.eql([]);
@@ -187,7 +187,7 @@ describe('Activity store', function () {
         expect(activity.isMultiDay()).to.be(true);
         expect(activity.location()).to.be('Right next door');
         expect(activity.assignedGroup()).to.be('G');
-        expect(activity.owner()).to.eql({nickname: "ownerNick"});
+        expect(activity.owner()).to.eql({nickname: 'ownerNick'});
         expect(activity.groupName()).to.be(undefined);
         expect(activity.colorFrom()).to.equal('#3771C8'); // fixed SoCraTes color
         expect(activity.groupFrom()).to.equal(undefined);

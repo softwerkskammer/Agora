@@ -1,4 +1,4 @@
-/*global activity_validator, endMustBeAfterBegin, urlIsNotAvailable*/
+/*global activity_validator, endMustBeAfterBegin, urlIsNotAvailable, testglobals*/
 (function () {
   'use strict';
 

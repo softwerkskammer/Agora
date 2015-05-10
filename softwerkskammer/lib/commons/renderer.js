@@ -19,7 +19,7 @@ marked.setOptions({
   breaks: true,
   smartLists: true,
   pedantic: false,
-  sanitize: false, // To be able to add iframes 
+  sanitize: false, // To be able to add iframes
   highlight: function (code, lang) {
     var language = Nsh.getLanguage(lang || 'text');
     return Nsh.highlight(code, language || Nsh.getLanguage('text'));

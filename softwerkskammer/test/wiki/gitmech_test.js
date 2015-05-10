@@ -20,7 +20,7 @@ describe('the gitmech module', function () {
       });
       Git.readFile('path', 1, function (err, string) {
         expect(string).to.equal('string');
-        done();
+        done(err);
       });
     });
 
@@ -52,7 +52,7 @@ describe('the gitmech module', function () {
         expect(metadata.author).to.equal('leider');
         expect(metadata.datestring).to.equal('2014-03-01 18:36:29 +0100');
         expect(metadata.comment).to.equal('no comment');
-        done();
+        done(err);
       });
     });
 
@@ -106,7 +106,7 @@ describe('the gitmech module', function () {
         expect(metadatas[2].hashRef).to.equal('16e441b');
         expect(metadatas[3].hashRef).to.equal('a5967c3');
         expect(metadatas[4].hashRef).to.equal('3d38d9d');
-        done();
+        done(err);
       });
     });
 
@@ -142,7 +142,7 @@ describe('the gitmech module', function () {
         metadata = metadatas[1];
         expect(metadata.name).to.equal('path/file.md');
         expect(metadata.hashRef).to.equal('7f91fc6');
-        done();
+        done(err);
       });
     });
 
@@ -179,7 +179,7 @@ describe('the gitmech module', function () {
         expect(metadatas[0].hashRef).to.equal('f327d71');
         expect(metadatas[1].hashRef).to.equal('19c89ae');
         expect(metadatas[2].hashRef).to.equal('60ca4ed');
-        done();
+        done(err);
       });
     });
 
@@ -266,7 +266,7 @@ describe('the gitmech module', function () {
       Git.grep('test', function (err, chunks) {
         expect(chunks).to.have.length(4);
         expect(chunks).to.contain('global/veran.md:16:[Belgium Testing Days](http://btdconf.com/)                                                                                    | Brügge                  | 17.3. - 20.3.    ');
-        done();
+        done(err);
       });
     });
 
@@ -284,13 +284,13 @@ describe('the gitmech module', function () {
       Git.grep('test', function (err, chunks) {
         expect(chunks).to.have.length(3);
         expect(chunks).to.contain('andex.md');
-        done();
+        done(err);
       });
     });
 
     it('handles errors in grep search with more than two lines', function (done) {
       sinon.stub(gitExec, 'command', function (args, callback) {
-        if (args[0] === 'grep') { callback(new Error("line1\nline2\nline3")); }
+        if (args[0] === 'grep') { callback(new Error('line1\nline2\nline3')); }
       });
       Git.grep('test', function (err) {
         expect(err).to.exist();
@@ -300,7 +300,7 @@ describe('the gitmech module', function () {
 
     it('handles errors in grep search with less than two lines', function (done) {
       sinon.stub(gitExec, 'command', function (args, callback) {
-        if (args[0] === 'grep') { callback(new Error("line1\nline2")); }
+        if (args[0] === 'grep') { callback(new Error('line1\nline2')); }
       });
       Git.grep('test', function (err, result) {
         expect(err).to.not.exist();

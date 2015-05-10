@@ -20,12 +20,14 @@ module.exports = {
 
   addPhotoToActivityResult: function (activityResultName, image, memberId, callback) {
     async.waterfall([
-      function (callback) { galleryService.storeImage(image.path, callback); },
-      function (imageUri, callback) {
-        galleryService.getMetadataForImage(imageUri, function (err, metadata) { callback(err, metadata, imageUri); });
+      function (cb) { galleryService.storeImage(image.path, cb); },
+      function (imageUri, cb) {
+        galleryService.getMetadataForImage(imageUri, function (err, metadata) { cb(err, metadata, imageUri); });
       },
-      function (metadata, imageUri, callback) {
+      function (metadata, imageUri, cb) {
         load(activityResultName, function (err, activityResult) {
+          /* eslint camelcase: 0 */
+          if (err) { return cb(err); }
           var date = new Date();
           if (metadata && metadata.exif) {
             date = metadata.exif.dateTime || metadata.exif.dateTimeOriginal || metadata.exif.dateTimeDigitized || new Date();
@@ -35,9 +37,7 @@ module.exports = {
             timestamp: moment.min(moment(), moment(date)).toDate(),
             uploaded_by: memberId
           });
-          persistence.save(activityResult.state, function (err) {
-            callback(err, imageUri);
-          });
+          persistence.save(activityResult.state, function (err1) { cb(err1, imageUri); });
         });
       }
     ], callback);
@@ -51,9 +51,7 @@ module.exports = {
       if (!photo) { return callback(err); }
       if (accessrights.canEditPhoto(photo)) {
         activityResult.updatePhotoById(photoId, data);
-        return persistence.save(activityResult.state, function (err) {
-          callback(err);
-        });
+        return persistence.save(activityResult.state, function (err1) { callback(err1); });
       }
       callback();
     });
@@ -61,9 +59,10 @@ module.exports = {
 
   deletePhotoOfActivityResult: function (activityResultName, photoId, callback) {
     load(activityResultName, function (err, activityResult) {
+      if (err) { callback(err); }
       activityResult.deletePhotoById(photoId);
-      persistence.save(activityResult.state, function (err) {
-        if (err) { callback(err); }
+      persistence.save(activityResult.state, function (err1) {
+        if (err1) { callback(err1); }
         galleryService.deleteImage(photoId, callback);
       });
     });

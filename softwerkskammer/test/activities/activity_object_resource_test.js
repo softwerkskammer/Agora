@@ -61,6 +61,8 @@ describe('Activity resource management', function () {
   });
 
   describe('- when adding members -', function () {
+    /* eslint no-underscore-dangle: 0 */
+
     it('adds a member to the default resource', function () {
       var activity = new Activity();
       activity.resourceNamed(defaultName).addMemberId('memberID');

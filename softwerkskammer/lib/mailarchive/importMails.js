@@ -24,10 +24,11 @@ module.exports = function (file, group, done) {
     return moment();
   }
 
-  function assignMessageId(parsedObject, mailDbObject, done) {
+  function assignMessageId(parsedObject, mailDbObject, done1) {
+    /* eslint new-cap: 0 */
     if (parsedObject.messageId) {
       mailDbObject.id = parsedObject.messageId;
-      done(null, mailDbObject);
+      done1(null, mailDbObject);
       return;
     }
 
@@ -40,7 +41,7 @@ module.exports = function (file, group, done) {
     s.on('end', function () {
       var d = shasum.digest('hex');
       mailDbObject.id = 'mail-sha1-' + d + '@softwerkskammer.org';
-      done(null, mailDbObject);
+      done1(null, mailDbObject);
     });
   }
 

@@ -24,6 +24,8 @@ function Resources(state) {
 }
 
 Resources.prototype.resourceNames = function () {
+  /* eslint no-underscore-dangle: 0 */
+
   var self = this;
   return _(Object.getOwnPropertyNames(self.state))
     .map(function (key) { return { name: key, position: self.state[key]._position }; })

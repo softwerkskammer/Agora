@@ -12,6 +12,7 @@ var Renderer = beans.get('renderer');
 var standardName = 'Veranstaltung';
 
 function Activity(object) {
+  /* eslint no-underscore-dangle: 0 */
   if (object) {
     this.state = object;
   } else {

@@ -11,7 +11,6 @@ var groupsAndMembersService = beans.get('groupsAndMembersService');
 var activitiesService = beans.get('activitiesService');
 var membersService = beans.get('membersService');
 var memberstore = beans.get('memberstore');
-var Member = beans.get('member');
 var Message = beans.get('message');
 var Group = beans.get('group');
 var misc = beans.get('misc');
@@ -99,9 +98,9 @@ module.exports = {
     return groupsService.getGroups(invitedGroups, function (err, groups) {
       if (err) { return callback(err, statusmessageForError(type, err)); }
       if (groups.length === 0) { return callback(null, statusmessageForError(type, new Error('Keine der Gruppen wurde gefunden.'))); }
-      async.map(groups, groupsAndMembersService.addMembersToGroup, function (err, groups) {
-        if (err) { return callback(err, statusmessageForError(type, err)); }
-        message.setBccToGroupMemberAddresses(groups);
+      async.map(groups, groupsAndMembersService.addMembersToGroup, function (err1, groups1) {
+        if (err1) { return callback(err1, statusmessageForError(type, err1)); }
+        message.setBccToGroupMemberAddresses(groups1);
         sendMail(message, type, callback);
       });
     });
@@ -136,6 +135,7 @@ module.exports = {
     var messageData = {markdown: member.displayName() + ' ([' + member.nickname() + '](' + memberUrl + ')) möchte gerne austreten.\n\n' + markdown, subject: 'Austrittswunsch', sendCopyToSelf: true};
     var message = new Message(messageData, member);
     membersService.superuserEmails(function (err, superusers) {
+      if (err) { return callback(err); }
       message.setTo(superusers);
       sendMail(message, 'E-Mail zum Austrittswunsch', callback);
     });

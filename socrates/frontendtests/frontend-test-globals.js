@@ -26,7 +26,7 @@ var testglobals = {};
 
   testglobals.checkFieldWithPositiveAjaxResponse = function (validator, field, value, urlRegexp) {
     performAsXHR(field, value, function (request) {
-      request.respond(200, { "Content-Type": "text/plain" }, 'true');
+      request.respond(200, { 'Content-Type': 'text/plain' }, 'true');
 
       expect(validator.element(field)).to.be(true);
       expect(validator.errorList).to.be.empty();
@@ -36,7 +36,7 @@ var testglobals = {};
 
   testglobals.checkFieldWithNegativeAjaxResponse = function (validator, field, message, value, urlRegexp) {
     performAsXHR(field, value, function (request) {
-      request.respond(200, { "Content-Type": "text/plain" }, 'false');
+      request.respond(200, { 'Content-Type': 'text/plain' }, 'false');
 
       expect(validator.element(field)).to.be(false);
       expect(validator.errorList[0]).to.have.ownProperty('message', message);

@@ -2,13 +2,11 @@
 
 var request = require('supertest');
 var sinon = require('sinon').sandbox.create();
-var expect = require('must');
 var moment = require('moment-timezone');
 
 var conf = require('../../testutil/configureForTest');
 var beans = conf.get('beans');
 var userWithoutMember = require('../../testutil/userWithoutMember');
-var accessrights = beans.get('accessrights');
 
 var activitiesService = beans.get('activitiesService');
 
@@ -17,6 +15,7 @@ var SoCraTesActivity = beans.get('socratesActivityExtended');
 var createApp = require('../../testutil/testHelper')('socratesRegistrationApp').createApp;
 
 describe('SoCraTes registration application', function () {
+  /* eslint camelcase: 0 */
   var appWithoutMember = request(createApp({middlewares: [userWithoutMember]}));
 
   var socratesMember = new Member({
@@ -41,9 +40,9 @@ describe('SoCraTes registration application', function () {
     isSoCraTes: true,
     startUnix: 1440687600,
     endUnix: 1440946800,
-    owner: {nickname: "ownerNick"},
-    assignedGroup: "assignedGroup",
-    group: {groupLongName: "longName"},
+    owner: {nickname: 'ownerNick'},
+    assignedGroup: 'assignedGroup',
+    group: {groupLongName: 'longName'},
     resources: {
       single: {_canUnsubscribe: false, _limit: 0, _position: 2, _registrationOpen: true, _waitinglist: []}, // no capacity
       bed_in_double: {_canUnsubscribe: false, _limit: 10, _position: 3, _registrationOpen: false, _waitinglist: []}, // not opened
@@ -66,7 +65,7 @@ describe('SoCraTes registration application', function () {
   describe('before registration is opened', function () {
     beforeEach(function () {
       conf.addProperties({registrationOpensAt: moment().add(10, 'days').format()}); // not opened yet
-      conf.addProperties({registrationParam: "secretCode"}); // allows for pre-registration
+      conf.addProperties({registrationParam: 'secretCode'}); // allows for pre-registration
     });
 
     it('shows a disabled registration table and the "registration date button"', function (done) {
@@ -122,6 +121,8 @@ describe('SoCraTes registration application', function () {
     });
 
     it('displays the options (but disabled) if the user is registered', function (done) {
+      /* eslint no-underscore-dangle: 0 */
+
       socrates.resources.bed_in_junior._registeredMembers = [{memberId: 'memberId2'}];
 
       appWithSocratesMember

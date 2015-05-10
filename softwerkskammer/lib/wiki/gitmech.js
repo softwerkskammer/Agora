@@ -91,9 +91,7 @@ module.exports = {
   mv: function (oldpath, newpath, message, author, callback) {
     gitExec.command(['mv', oldpath, newpath], function (err) {
       if (err) { return callback(err); }
-      gitExec.command(['commit', '--author="' + author + '"', '-m', message], function (err) {
-        callback(err);
-      });
+      gitExec.command(['commit', '--author="' + author + '"', '-m', message], function (err1) { callback(err1); });
     });
   },
 
@@ -105,7 +103,7 @@ module.exports = {
   },
 
   grep: function (pattern, callback) {
-    var args = [ 'grep', '--no-color', '-F', '-n', '-i', '-I', pattern ];
+    var args = ['grep', '--no-color', '-F', '-n', '-i', '-I', pattern];
     gitExec.command(args, function (err, data) {
       if (err) {
         if (err.message.split('\n').length < 3) {
@@ -115,27 +113,27 @@ module.exports = {
       }
       var result = data ? data.toString().split('\n') : [];
       // Search in the file names
-      gitExec.command([ 'ls-files', '*' + pattern + '*.md' ], function (err, data) {
+      gitExec.command(['ls-files', '*' + pattern + '*.md'], function (err1, data1) {
 
-        if (data) {
-          data.toString().split('\n').forEach(function (name) {
+        if (data1) {
+          data1.toString().split('\n').forEach(function (name) {
             result.push(name);
           });
         }
 
-        callback(err, result);
+        callback(err1, result);
       });
     });
   },
 
   diff: function (path, revisions, callback) {
-    gitExec.command([ 'diff', '--no-color', '-b', revisions, '--', path ], function (err, data) {
+    gitExec.command(['diff', '--no-color', '-b', revisions, '--', path], function (err, data) {
       callback(err, data.toString());
     });
   },
 
   ls: function (subdir, callback) {
-    gitExec.command([ 'ls-tree', '--name-only', '-r', 'HEAD', subdir ], function (err, data) {
+    gitExec.command(['ls-tree', '--name-only', '-r', 'HEAD', subdir], function (err, data) {
       if (err) { return callback(err); }
       callback(null, dataToLines(data));
     });
@@ -143,14 +141,14 @@ module.exports = {
 
   lsdirs: function (callback) {
     if (!workTree) { return callback(null, []); } // to make it run on dev systems
-    gitExec.command([ 'ls-tree', '--name-only', '-d', 'HEAD' ], function (err, data) {
+    gitExec.command(['ls-tree', '--name-only', '-d', 'HEAD'], function (err, data) {
       if (err || !data) { return callback(err); }
       callback(null, dataToLines(data));
     });
   },
 
   lsblogposts: function (groupname, pattern, callback) {
-    gitExec.command([ 'ls-files', groupname + '/' + pattern ], function (err, data) {
+    gitExec.command(['ls-files', groupname + '/' + pattern], function (err, data) {
       if (err) { return callback(err); }
       callback(null, dataToLines(data));
     });

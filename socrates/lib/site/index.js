@@ -1,9 +1,8 @@
+/*eslint no-underscore-dangle: 0*/
 'use strict';
 
 var path = require('path');
-var async = require('async');
 var fs = require('fs');
-var _ = require('lodash');
 var qrimage = require('qr-image');
 var _s = require('underscore.string');
 
@@ -97,6 +96,7 @@ app.get('/resign', function (req, res) {
 app.post('/submitresign', function (req, res, next) {
   var markdown = '**' + req.i18n.t('mailsender.why-resign') + '**\n' + req.body.why + '\n\n**' + req.i18n.t('mailsender.notes-resign') + '**\n' + req.body.notes;
   return mailsenderService.sendResignment(markdown, req.user.member, function (err, statusmsg) {
+    if (err) { return next(err); }
     statusmsg.putIntoSession(req);
     res.redirect('/');
   });

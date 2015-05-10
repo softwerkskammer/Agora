@@ -37,8 +37,8 @@ module.exports = {
     groupsAndMembersService.getMemberWithHisGroups(nickname, function (err, member) {
       if (err) { return callback(err); }
       if (!member) { return callback(new Error('no member found')); }
-      activitiesService.getUpcomingActivitiesOfMemberAndHisGroups(member, function (err, activities) {
-        if (err) { return callback(err); }
+      activitiesService.getUpcomingActivitiesOfMemberAndHisGroups(member, function (err1, activities) {
+        if (err1) { return callback(err1); }
         var basicHeight = 3;
         var basicHeightPerSection = 1;
         var postsByGroup = {};
@@ -46,27 +46,27 @@ module.exports = {
         var mailsByGroup = {};
         var linesPerGroup = {};
         var oneMonthAgo = moment().subtract(1, 'months');
-        async.each(member.subscribedGroups || [], function (group, callback) {
+        async.each(member.subscribedGroups || [], function (group, cb) {
           linesPerGroup[group.id] = basicHeight;
-          wikiService.getBlogpostsForGroup(group.id, function (err, blogposts) {
-            if (err) { return callback(err); }
+          wikiService.getBlogpostsForGroup(group.id, function (err2, blogposts) {
+            if (err2) { return cb(err2); }
             postsByGroup[group.id] = blogposts;
             linesPerGroup[group.id] = linesPerGroup[group.id] + basicHeightPerSection + blogposts.length;
-            wikiService.listChangedFilesinDirectory(group.id, function (err, metadatas) {
-              if (err) { return callback(err); }
+            wikiService.listChangedFilesinDirectory(group.id, function (err3, metadatas) {
+              if (err3) { return cb(err3); }
               changesByGroup[group.id] = metadatas;
               linesPerGroup[group.id] = linesPerGroup[group.id] + basicHeightPerSection + metadatas.length;
-              mailarchiveService.unthreadedMailsYoungerThan(group.id, oneMonthAgo.unix(), function (err, mails) {
+              mailarchiveService.unthreadedMailsYoungerThan(group.id, oneMonthAgo.unix(), function (err4, mails) {
                 if (mails) {
                   mailsByGroup[group.id] = mails;
                   linesPerGroup[group.id] = linesPerGroup[group.id] + basicHeightPerSection + mails.length;
                 }
-                callback(err);
+                cb(err4);
               });
             });
           });
-        }, function (err) {
-          callback(err, {
+        }, function (err2) {
+          callback(err2, {
             member: member,
             activities: activities,
             postsByGroup: postsByGroup,

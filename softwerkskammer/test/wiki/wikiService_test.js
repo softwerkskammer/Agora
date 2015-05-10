@@ -265,7 +265,7 @@ describe('Wiki Service (daily digest)', function () {
       if (dirname === 'dirB') { return callback(null, filesForDirB); }
     });
 
-    sinon.stub(Git, 'latestChanges', function (filename, moment, callback) {
+    sinon.stub(Git, 'latestChanges', function (filename, someMoment, callback) {
       if (filename.indexOf('A1') > -1) { return callback(null, [metadataA1]); }
       if (filename.indexOf('A2') > -1) { return callback(null, [metadataA2]); }
       if (filename.indexOf('B1') > -1) { return callback(null, [metadataB1]); }

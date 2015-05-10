@@ -1,3 +1,4 @@
+/*eslint no-process-exit: 0 */
 'use strict';
 
 require('./configure'); // initializing parameters
@@ -43,8 +44,8 @@ groupsService.getAllAvailableGroups(function (err, groups) {
     if (id === 'alle') { return callback(); }
     console.log('\n=========== Changing list: ' + id);
     ezmlm.replyToList(id, callback);
-  }, function (err) {
-    handle(err);
+  }, function (err1) {
+    handle(err1);
     process.exit();
   });
 });

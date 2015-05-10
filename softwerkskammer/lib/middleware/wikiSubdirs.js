@@ -14,6 +14,7 @@ module.exports = function subdirs(req, res, next) {
       groups: groupstore.allGroups
     },
     function (err, results) {
+      if (err) { return next(err); }
       var gitdirs = results.gitdirs;
       var regionals = _(Group.regionalsFrom(results.groups)).pluck('id').intersection(gitdirs).value();
       var thematics = _(Group.thematicsFrom(results.groups)).pluck('id').intersection(gitdirs).value();
