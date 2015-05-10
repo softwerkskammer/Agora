@@ -59,8 +59,8 @@ describe('SoCraTes members application', function () {
     });
 
     appWithoutMember = request(createApp({middlewares: [userWithoutMember]}));
-    appWithSoftwerkskammerMember = request(createApp({member: softwerkskammerMember}));
-    appWithSocratesMember = request(createApp({member: socratesMember}));
+    appWithSoftwerkskammerMember = request(createApp({user: {member: softwerkskammerMember, subscriber: softwerkskammerSubscriber}}));
+    appWithSocratesMember = request(createApp({user: {member: socratesMember, subscriber: socratesSubscriber}}));
   });
 
   beforeEach(function () {
