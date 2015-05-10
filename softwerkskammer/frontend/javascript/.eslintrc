@@ -1,0 +1,10 @@
+{
+  "env": {
+    "node": false,
+    "browser": true,
+    "jquery": true
+  },
+  "rules": {
+    "camelcase": 0
+  }
+}

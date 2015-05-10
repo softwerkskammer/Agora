@@ -8,7 +8,7 @@ var groupsService = beans.get('groupsService');
 var groupstore = beans.get('groupstore');
 var announcementstore = beans.get('announcementstore');
 
-var base_uri = 'http://localhost:' + parseInt(conf.get('port'), 10);
+var baseUri = 'http://localhost:' + parseInt(conf.get('port'), 10);
 
 var app = require('../app.js');
 
@@ -26,7 +26,7 @@ describe('SWK Plattform server', function () {
   });
 
   it('responds on a GET for the home page', function (done) {
-    httpRequest({uri: base_uri}, function (req, resp) {
+    httpRequest({uri: baseUri}, function (req, resp) {
       expect(resp).to.exist();
       expect(resp.statusCode).to.equal(200);
       done(); // without error check
@@ -34,22 +34,22 @@ describe('SWK Plattform server', function () {
   });
 
   it('responds with HTML on a GET for the home page', function (done) {
-    httpRequest({uri: base_uri}, function (req, resp) {
+    httpRequest({uri: baseUri}, function (req, resp) {
       expect(resp.headers['content-type']).to.contain('text/html');
       done(); // without error check
     });
   });
 
   it('shows "Softwerkskammer" on the home page', function (done) {
-    httpRequest({uri: base_uri}, function (req, resp) {
+    httpRequest({uri: baseUri}, function (req, resp) {
       expect(resp.body).to.contain('Softwerkskammer');
       done(); // without error check
     });
   });
 
   it('provides the screen style sheet', function (done) {
-    var stylesheet_uri = base_uri + '/stylesheets/screen.css';
-    httpRequest({uri: stylesheet_uri}, function (req, resp) {
+    var stylesheetUri = baseUri + '/stylesheets/screen.css';
+    httpRequest({uri: stylesheetUri}, function (req, resp) {
       expect(resp.statusCode).to.equal(200);
       expect(resp.headers['content-type']).to.contain('text/css');
       expect(resp.body).to.contain('color:');
@@ -58,8 +58,8 @@ describe('SWK Plattform server', function () {
   });
 
   it('provides the clientside membercheck functions', function (done) {
-    var stylesheet_uri = base_uri + '/clientscripts/check-memberform.js';
-    httpRequest({uri: stylesheet_uri}, function (req, resp) {
+    var stylesheetUri = baseUri + '/clientscripts/check-memberform.js';
+    httpRequest({uri: stylesheetUri}, function (req, resp) {
       expect(resp.statusCode).to.equal(200);
       expect(resp.headers['content-type']).to.contain('application/javascript');
       expect(resp.body).to.contain('#memberform');

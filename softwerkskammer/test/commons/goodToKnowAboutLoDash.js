@@ -11,18 +11,18 @@ describe('Lo-Dash', function () {
       var testfunc = function (arg1, arg2) {
         return arg1 + ' ' + arg2;
       };
-      var testfunc_curried = _.curry(testfunc)('Argument1');
-      var testfunc_partial = _.partial(testfunc, 'Argument1');
-      var testfunc_applied = async.apply(testfunc, 'Argument1');
+      var testfuncCurried = _.curry(testfunc)('Argument1');
+      var testfuncPartial = _.partial(testfunc, 'Argument1');
+      var testfuncApplied = async.apply(testfunc, 'Argument1');
 
-      expect(testfunc_curried('Argument2')).to.equal('Argument1 Argument2');
-      expect(testfunc_partial('Argument2')).to.equal('Argument1 Argument2');
-      expect(testfunc_applied('Argument2')).to.equal('Argument1 Argument2');
+      expect(testfuncCurried('Argument2')).to.equal('Argument1 Argument2');
+      expect(testfuncPartial('Argument2')).to.equal('Argument1 Argument2');
+      expect(testfuncApplied('Argument2')).to.equal('Argument1 Argument2');
 
-      expect(testfunc_applied()).to.equal('Argument1 undefined');
-      expect(testfunc_partial()).to.equal('Argument1 undefined');
+      expect(testfuncApplied()).to.equal('Argument1 undefined');
+      expect(testfuncPartial()).to.equal('Argument1 undefined');
 
-      expect(testfunc_curried()).to.not.equal('Argument1 undefined'); // Trouble!
+      expect(testfuncCurried()).to.not.equal('Argument1 undefined'); // Trouble!
     });
   });
 });

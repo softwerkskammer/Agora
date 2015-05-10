@@ -1,7 +1,6 @@
 'use strict';
 var request = require('supertest');
 var sinon = require('sinon').sandbox.create();
-var expect = require('must');
 
 var beans = require('../../testutil/configureForTest').get('beans');
 var galleryService = beans.get('galleryService');
@@ -11,6 +10,7 @@ var app = require('../../testutil/testHelper')('galleryApp').createApp();
 var OK = 200;
 
 describe('/gallery', function () {
+  /* eslint no-path-concat: 0 */
   var storedImageId = 'image.jpg';
   var imagePath = __dirname + '/fixtures/' + storedImageId;
 

@@ -1,3 +1,4 @@
+/*eslint no-process-exit: 0 */
 'use strict';
 
 require('./configure'); // initializing parameters
@@ -17,6 +18,10 @@ if (!really || really !== 'really') {
 
 // set "socratesOnly" to false for all members.
 groupsAndMembersService.getAllMembersWithTheirGroups(function (err, members) {
+  if (err) {
+    console.log(err);
+    process.exit();
+  }
   async.each(members,
     function (member, callback) {
       // set to true if member is only in socrates list
@@ -34,8 +39,8 @@ groupsAndMembersService.getAllMembersWithTheirGroups(function (err, members) {
       }
       callback(null, null);
     },
-    function (err) {
-      if (err) { console.log(err); }
+    function (err1) {
+      if (err1) { console.log(err1); }
       process.exit();
     });
 });

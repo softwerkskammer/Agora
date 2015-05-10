@@ -1,3 +1,4 @@
+/* eslint no-underscore-dangle: 0 */
 'use strict';
 
 var path = require('path');
@@ -22,8 +23,8 @@ app.get('/', function (req, res, next) {
   groupsService.getAllAvailableGroups(function (err, groups) {
     if (err) { return next(err); }
     async.map(groups, function (group, callback) { groupsAndMembers.addMembercountToGroup(group, callback); },
-      function (err, groupsWithMembers) {
-        if (err) { return next(err); }
+      function (err1, groupsWithMembers) {
+        if (err1) { return next(err1); }
         res.render('index', {regionalgroups: Group.regionalsFrom(groupsWithMembers)});
       });
   });

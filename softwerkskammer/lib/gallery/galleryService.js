@@ -1,7 +1,6 @@
 'use strict';
 
 var conf = require('simple-configure');
-var logger = require('winston').loggers.get('application');
 var magick = require('imagemagick');
 var uuid = require('node-uuid');
 var path = require('path');
@@ -53,6 +52,7 @@ function representsImage(file) {
 
 function deleteAllImagesMatching(pattern, callback) {
   glob(fullPath(pattern), function (err, files) {
+    if (err) { return callback(err); }
     async.each(_.filter(files, representsImage), fs.unlink, callback);
   });
 }

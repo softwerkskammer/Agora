@@ -1,6 +1,5 @@
 'use strict';
 var path = require('path');
-var fs = require('fs');
 var async = require('async');
 
 var maxAgeInDays = process.argv[2];
@@ -16,7 +15,10 @@ var ezmlmAdapter = beans.get('ezmlmAdapter');
 var importMail = require('./importMails');
 
 function closeAndExit() {
-  return persistence.closeDB(function () { process.exit(); });
+  return persistence.closeDB(function () {
+    /* eslint no-process-exit: 0 */
+    process.exit();
+  });
 }
 
 function importIt(filename, listname, callback) {
@@ -26,10 +28,10 @@ function importIt(filename, listname, callback) {
       return callback(err);
     }
 
-    persistence.save(mailDbObject, function (err) {
-      if (err) { logger.error('Error during save: ' + err); }
+    persistence.save(mailDbObject, function (err1) {
+      if (err1) { logger.error('Error during save: ' + err1); }
       logger.info('Subject of eMail: ' + mailDbObject.subject);
-      callback(err);
+      callback(err1);
     });
   });
 }
@@ -44,18 +46,16 @@ ezmlmAdapter.getAllAvailableLists(function (err, listnames) {
   async.each(listnames,
     function (listname, callback) {
       logger.info('== Import Started for List ' + listname);
-      ezmlmAdapter.archivedMails(listname, maxAgeInDays, function (err, filenames) {
-        if (err) {
-          logger.error('Error during retrieval of archived mails, exiting process: ' + err);
-          return callback(err);
+      ezmlmAdapter.archivedMails(listname, maxAgeInDays, function (err1, filenames) {
+        if (err1) {
+          logger.error('Error during retrieval of archived mails, exiting process: ' + err1);
+          return callback(err1);
         }
         async.each(filenames,
-          function (filename, callback) {
-            importIt(filename, listname, callback);
-          },
-          function (err) {
+          function (filename, cb) { importIt(filename, listname, cb); },
+          function (err2) {
             logger.info('== Import Finished for List ' + listname);
-            callback(err);
+            callback(err2);
           });
       });
     },

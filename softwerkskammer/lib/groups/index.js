@@ -16,12 +16,13 @@ var app = misc.expressAppIn(__dirname);
 
 function groupSubmitted(req, res, next) {
   var group = new Group(req.body);
-  var errors = groupsService.isGroupValid(group);
-  if (errors.length !== 0) { return res.render('../../../views/errorPages/validationError', {errors: errors}); }
-  groupsAndMembers.saveGroup(group, function (err) {
-    if (err) { return next(err); }
-    statusmessage.successMessage('message.title.save_successful', 'message.content.groups.saved').putIntoSession(req);
-    res.redirect('/groups/' + group.id);
+  groupsService.isGroupValid(group, function (errors) {
+    if (errors.length !== 0) { return res.render('../../../views/errorPages/validationError', {errors: errors}); }
+    groupsAndMembers.saveGroup(group, function (err) {
+      if (err) { return next(err); }
+      statusmessage.successMessage('message.title.save_successful', 'message.content.groups.saved').putIntoSession(req);
+      res.redirect('/groups/' + group.id);
+    });
   });
 }
 
@@ -30,8 +31,8 @@ app.get('/', function (req, res, next) {
   groupsService.getAllAvailableGroups(function (err, groups) {
     if (err) { return next(err); }
     async.map(groups, function (group, callback) { groupsAndMembers.addMembercountToGroup(group, callback); },
-      function (err, groupsWithMembers) {
-        if (err) { return next(err); }
+      function (err1, groupsWithMembers) {
+        if (err1) { return next(err1); }
         res.render('index', {
           regionalgroups: Group.regionalsFrom(groupsWithMembers),
           themegroups: Group.thematicsFrom(groupsWithMembers)
@@ -99,20 +100,20 @@ app.post('/unsubscribe', function (req, res) {
 });
 
 app.get('/:groupname', function (req, res, next) {
-  function registeredUserId(req) {
+  function registeredUserId() {
     return req && req.user ? req.user.member.id() : undefined;
   }
 
   groupsAndMembers.getGroupAndMembersForList(req.params.groupname, function (err, group) {
     if (err || !group) { return next(err); }
-    wikiService.getBlogpostsForGroup(req.params.groupname, function (err, blogposts) {
-      if (err) { return next(err); }
-      activitystore.upcomingActivitiesForGroupIds([group.id], function (err, activities) {
-        if (err) { return next(err); }
+    wikiService.getBlogpostsForGroup(req.params.groupname, function (err1, blogposts) {
+      if (err1) { return next(err1); }
+      activitystore.upcomingActivitiesForGroupIds([group.id], function (err2, activities) {
+        if (err2) { return next(err2); }
         res.render('get', {
           group: group,
           users: group.members,
-          userIsGroupMember: groupsAndMembers.memberIsInMemberList(registeredUserId(req), group.members),
+          userIsGroupMember: groupsAndMembers.memberIsInMemberList(registeredUserId(), group.members),
           organizers: group.organizers,
           blogposts: blogposts,
           webcalURL: conf.get('publicUrlPrefix').replace('http', 'webcal') + '/activities/icalForGroup/' + group.id,

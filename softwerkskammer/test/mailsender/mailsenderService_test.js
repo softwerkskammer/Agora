@@ -4,7 +4,6 @@ var expect = require('must');
 var sinon = require('sinon').sandbox.create();
 var beans = require('../../testutil/configureForTest').get('beans');
 
-var membersService = beans.get('membersService');
 var memberstore = beans.get('memberstore');
 var groupsService = beans.get('groupsService');
 var groupsAndMembersService = beans.get('groupsAndMembersService');
@@ -33,13 +32,13 @@ describe('MailsenderService', function () {
     emptyActivity = new Activity({title: 'Title of the Activity', description: 'description1', assignedGroup: 'assignedGroup',
       location: 'location1', direction: 'direction1', startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'), url: 'urlOfTheActivity' });
     sinon.stub(groupsService, 'getAllAvailableGroups', function (callback) { callback(null, availableGroups); });
-    sinon.stub(activitiesService, 'getActivityWithGroupAndParticipants', function (activityURL, callback) {
-      if (activityURL === null) { return callback(new Error()); }
+    sinon.stub(activitiesService, 'getActivityWithGroupAndParticipants', function (actURL, callback) {
+      if (actURL === null) { return callback(new Error()); }
       callback(null, emptyActivity);
     });
-    sinon.stub(memberstore, 'getMember', function (nickname, callback) {
-      if (nickname === null) { return callback(null); }
-      if (nickname === 'broken') { return callback(new Error()); }
+    sinon.stub(memberstore, 'getMember', function (nick, callback) {
+      if (nick === null) { return callback(null); }
+      if (nick === 'broken') { return callback(new Error()); }
       callback(null, new Member({email: 'email@mail.de'}));
     });
     sendmail = sinon.stub(mailtransport, 'sendMail', function (transportobject, callback) {
@@ -138,7 +137,7 @@ describe('MailsenderService', function () {
         expect(transportobject.bcc).to.contain(emailAddress);
         expect(transportobject.html).to.contain('mark down');
         expect(statusmessage.contents().type).to.equal('alert-success');
-        done();
+        done(err);
       });
     });
 
@@ -146,7 +145,7 @@ describe('MailsenderService', function () {
       mailsenderService.sendMailToParticipantsOf(activityURL, message, function (err, statusmessage) {
         expect(sendmail.calledOnce).to.be(true);
         expect(statusmessage.contents().type).to.equal('alert-danger');
-        done();
+        done(err);
       });
     });
 
@@ -168,7 +167,7 @@ describe('MailsenderService', function () {
         expect(transportobject.bcc).to.contain('email@mail.de');
         expect(transportobject.html).to.contain('mark down');
         expect(statusmessage.contents().type).to.equal('alert-success');
-        done();
+        done(err);
       });
     });
 
@@ -206,7 +205,7 @@ describe('MailsenderService', function () {
         expect(transportobject.subject).to.contain('Austrittswunsch');
         expect(transportobject.to).to.contain('email@super.user');
         expect(statusmessage.contents().type).to.equal('alert-success');
-        done();
+        done(err);
       });
     });
 
@@ -254,7 +253,7 @@ describe('MailsenderService', function () {
         expect(transportobject.bcc).to.contain('memberB');
         expect(transportobject.html).to.contain('mark down');
         expect(statusmessage.contents().type).to.equal('alert-success');
-        done();
+        done(err);
       });
     });
 

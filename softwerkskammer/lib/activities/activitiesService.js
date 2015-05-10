@@ -19,8 +19,8 @@ module.exports = {
     async.parallel(
       {
         activities: activitiesFetcher,
-        groups: function (callback) { groupsService.getAllAvailableGroups(callback); },
-        groupColors: function (callback) { groupsService.allGroupColors(callback); }
+        groups: function (cb) { groupsService.getAllAvailableGroups(cb); },
+        groupColors: function (cb) { groupsService.allGroupColors(cb); }
       },
 
       function (err, results) {
@@ -37,17 +37,17 @@ module.exports = {
   },
 
   getUpcomingActivitiesOfMemberAndHisGroups: function (member, callback) {
-    var activitiesFetcher = function (member) {
-      var groupIds = _.pluck(member.subscribedGroups, 'id');
-      return _.partial(activitystore.activitiesForGroupIdsAndRegisteredMemberId, groupIds, member.id(), true);
+    var activitiesFetcher = function (mem) {
+      var groupIds = _.pluck(mem.subscribedGroups, 'id');
+      return _.partial(activitystore.activitiesForGroupIdsAndRegisteredMemberId, groupIds, mem.id(), true);
     };
 
     return this.getActivitiesForDisplay(activitiesFetcher(member), callback);
   },
 
   getPastActivitiesOfMember: function (member, callback) {
-    var activitiesFetcher = function (member) {
-      return _.partial(activitystore.activitiesForGroupIdsAndRegisteredMemberId, [], member.id(), false);
+    var activitiesFetcher = function (mem) {
+      return _.partial(activitystore.activitiesForGroupIdsAndRegisteredMemberId, [], mem.id(), false);
     };
 
     return this.getActivitiesForDisplay(activitiesFetcher(member), callback);
@@ -57,22 +57,22 @@ module.exports = {
     activitystore.getActivity(url, function (err, activity) {
       if (err || !activity) { return callback(err); }
 
-      var participantsLoader = function (callback) {
-        memberstore.getMembersForIds(activity.allRegisteredMembers(), function (err, members) {
+      var participantsLoader = function (cb) {
+        memberstore.getMembersForIds(activity.allRegisteredMembers(), function (err1, members) {
           async.each(members, membersService.getImage, function () {
-            callback(err, members);
+            cb(err1, members);
           });
         });
       };
       async.parallel(
         {
-          group: function (callback) { groupstore.getGroup(activity.assignedGroup(), callback); },
+          group: function (cb) { groupstore.getGroup(activity.assignedGroup(), cb); },
           participants: participantsLoader,
-          owner: function (callback) { memberstore.getMemberForId(activity.owner(), callback); }
+          owner: function (cb) { memberstore.getMemberForId(activity.owner(), cb); }
         },
 
-        function (err, results) {
-          if (err) {return callback(err); }
+        function (err1, results) {
+          if (err1) {return callback(err1); }
           activity.group = results.group;
           activity.participants = results.participants;
           activity.ownerNickname = results.owner ? results.owner.nickname() : undefined;
@@ -100,14 +100,14 @@ module.exports = {
     activitystore.getActivity(activityUrl, function (err, activity) {
       if (err || !activity) { return callback(err, 'message.title.problem', 'message.content.activities.does_not_exist'); }
       if (activity.resourceNamed(resourceName).addMemberId(memberId, moment)) {
-        return activitystore.saveActivity(activity, function (err) {
-          if (err && err.message === CONFLICTING_VERSIONS) {
+        return activitystore.saveActivity(activity, function (err1) {
+          if (err1 && err1.message === CONFLICTING_VERSIONS) {
             // we try again because of a racing condition during save:
             return self.addVisitorTo(memberId, activityUrl, resourceName, moment, callback);
           }
-          if (err) { return callback(err); }
+          if (err1) { return callback(err1); }
           notifications.visitorRegistration(activity, memberId, resourceName);
-          return callback(err);
+          return callback(err1);
         });
       }
       return callback(null, 'activities.registration_not_now', 'activities.registration_not_possible');
@@ -119,13 +119,13 @@ module.exports = {
     activitystore.getActivity(activityUrl, function (err, activity) {
       if (err || !activity) { return callback(err, 'message.title.problem', 'message.content.activities.does_not_exist'); }
       activity.resourceNamed(resourceName).removeMemberId(memberId);
-      activitystore.saveActivity(activity, function (err) {
-        if (err && err.message === CONFLICTING_VERSIONS) {
+      activitystore.saveActivity(activity, function (err1) {
+        if (err1 && err1.message === CONFLICTING_VERSIONS) {
           // we try again because of a racing condition during save:
           return self.removeVisitorFrom(memberId, activityUrl, resourceName, callback);
         }
         notifications.visitorUnregistration(activity, memberId, resourceName);
-        return callback(err);
+        return callback(err1);
       });
     });
   },
@@ -137,13 +137,13 @@ module.exports = {
       var resource = activity.resourceNamed(resourceName);
       if (resource.hasWaitinglist()) {
         resource.addToWaitinglist(memberId, moment);
-        return activitystore.saveActivity(activity, function (err) {
-          if (err && err.message === CONFLICTING_VERSIONS) {
+        return activitystore.saveActivity(activity, function (err1) {
+          if (err1 && err1.message === CONFLICTING_VERSIONS) {
             // we try again because of a racing condition during save:
             return self.addToWaitinglist(memberId, activityUrl, resourceName, moment, callback);
           }
           notifications.waitinglistAddition(activity, memberId, resourceName);
-          return callback(err);
+          return callback(err1);
         });
       }
       return callback(null, 'activities.waitinglist_not_possible', 'activities.no_waitinglist');
@@ -155,13 +155,13 @@ module.exports = {
     activitystore.getActivity(activityUrl, function (err, activity) {
       if (err || !activity) { return callback(err, 'message.title.problem', 'message.content.activities.does_not_exist'); }
       activity.resourceNamed(resourceName).removeFromWaitinglist(memberId);
-      return activitystore.saveActivity(activity, function (err) {
-        if (err && err.message === CONFLICTING_VERSIONS) {
+      return activitystore.saveActivity(activity, function (err1) {
+        if (err1 && err1.message === CONFLICTING_VERSIONS) {
           // we try again because of a racing condition during save:
           return self.removeFromWaitinglist(memberId, activityUrl, resourceName, callback);
         }
         notifications.waitinglistRemoval(activity, memberId, resourceName);
-        return callback(err);
+        return callback(err1);
       });
     });
   }

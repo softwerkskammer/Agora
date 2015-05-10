@@ -14,8 +14,8 @@ module.exports = {
     activitystore.getActivity(activityUrl, function (err, activity) {
       if (err) { return globalCallback(err); }
       async.map(activity.allWaitinglistEntries(), function (waitinglistEntry, callback) {
-        memberstore.getMemberForId(waitinglistEntry.registrantId(), function (err, member) {
-          if (err || !member) { return callback(err); }
+        memberstore.getMemberForId(waitinglistEntry.registrantId(), function (err1, member) {
+          if (err1 || !member) { return callback(err1); }
           waitinglistEntry.registrantNickname = member.nickname();
           callback(null, waitinglistEntry);
         });
@@ -27,18 +27,18 @@ module.exports = {
     var self = this;
     async.parallel(
       {
-        member: function (callback) { memberstore.getMember(args.nickname, callback); },
-        activity: function (callback) { activitystore.getActivity(args.activityUrl, callback); }
+        member: function (cb) { memberstore.getMember(args.nickname, cb); },
+        activity: function (cb) { activitystore.getActivity(args.activityUrl, cb); }
       },
       function (err, results) {
         if (err || !results.member || !results.activity) { return callback(err); }
         results.activity.resourceNamed(args.resourcename).addToWaitinglist(results.member.id(), moment());
-        activitystore.saveActivity(results.activity, function (err) {
-          if (err && err.message === CONFLICTING_VERSIONS) {
+        activitystore.saveActivity(results.activity, function (err1) {
+          if (err1 && err1.message === CONFLICTING_VERSIONS) {
             // we try again because of a racing condition during save:
             return self.saveWaitinglistEntry(args, callback);
           }
-          return callback(err);
+          return callback(err1);
         });
       }
     );
@@ -56,12 +56,12 @@ module.exports = {
         var entry = results.activity.resourceNamed(args.resourcename).waitinglistEntryFor(results.member.id());
         if (!entry) { return outerCallback(null); }
         entry.setRegistrationValidityFor(args.hoursstring);
-        activitystore.saveActivity(results.activity, function (err) {
-          if (err && err.message === CONFLICTING_VERSIONS) {
+        activitystore.saveActivity(results.activity, function (err1) {
+          if (err1 && err1.message === CONFLICTING_VERSIONS) {
             // we try again because of a racing condition during save:
             return self.allowRegistrationForWaitinglistEntry(args, outerCallback);
           }
-          if (err) { return outerCallback(err); }
+          if (err1) { return outerCallback(err1); }
           mailsenderService.sendRegistrationAllowed(results.member, results.activity, entry, outerCallback);
         });
       }

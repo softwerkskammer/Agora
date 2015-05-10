@@ -17,7 +17,6 @@ var GroupB = new Group({id: 'GroupB', longName: 'Gruppe B', description: 'Dies i
 
 var memberstore = beans.get('memberstore');
 var groupsService = beans.get('groupsService');
-var groupstore = beans.get('groupstore');
 
 var groupsAndMembersService = beans.get('groupsAndMembersService');
 

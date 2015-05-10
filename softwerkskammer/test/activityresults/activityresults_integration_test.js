@@ -1,5 +1,4 @@
 'use strict';
-var stream = require('stream');
 var request = require('supertest');
 var sinon = require('sinon').sandbox.create();
 var expect = require('must');

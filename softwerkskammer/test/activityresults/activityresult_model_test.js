@@ -7,7 +7,7 @@ var ActivityResult = require('../../testutil/configureForTest').get('beans').get
 
 describe('Activity result', function () {
   it('should have an id', function () {
-    var activityResult = new ActivityResult({id: "hackergarten2_2"});
+    var activityResult = new ActivityResult({id: 'hackergarten2_2'});
     expect(activityResult.id()).to.be('hackergarten2_2');
   });
 
@@ -27,10 +27,6 @@ describe('Activity result', function () {
     expect(activityResult.photos()[0].state).to.eql({id: 'image1.jpg'});
     expect(activityResult.photos()[1].state).to.eql({id: 'image2.jpg'});
 
-  });
-
-  it('should have a created_by function', function () {
-    expect(new ActivityResult({created_by: 'me'}).created_by()).to.eql('me');
   });
 
   it('should have a field of defined tags for an activityResult', function () {

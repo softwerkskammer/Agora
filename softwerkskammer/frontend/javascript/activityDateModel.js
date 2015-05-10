@@ -1,7 +1,8 @@
 /*global moment */
+/*eslint no-unused-vars: 0 */
 var activityDateModel;
 (function () {
-  "use strict";
+  'use strict';
 
   // THE ORIGINAL OF THIS FILE IS IN frontend/javascript
 
@@ -9,23 +10,9 @@ var activityDateModel;
 
     var toUtc = function (dateString, timeString) {
       if (dateString && timeString) {
-        return moment.utc(dateString + " " + timeString, 'D.M.YYYY H:m');
+        return moment.utc(dateString + ' ' + timeString, 'D.M.YYYY H:m');
       }
       return null;
-    };
-
-    var dateString = function (date) {
-      if (date) {
-        return date.format('DD.MM.YYYY');
-      }
-      return "";
-    };
-
-    var timeString = function (time) {
-      if (time) {
-        return time.format('HH:mm');
-      }
-      return "";
     };
 
     var oldStartDate = toUtc(initialDate, initialTime);
@@ -48,8 +35,8 @@ var activityDateModel;
 
       createDateAndTimeStrings: function (endMoment) {
         return {
-          endDate: dateString(endMoment),
-          endTime: timeString(endMoment)
+          endDate: (endMoment ? endMoment.format('DD.MM.YYYY') : ''),
+          endTime: (endMoment ? endMoment.format('HH:mm') : '')
         };
       },
 

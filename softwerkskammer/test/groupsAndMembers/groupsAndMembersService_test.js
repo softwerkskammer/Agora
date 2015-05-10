@@ -102,7 +102,7 @@ describe('Groups and Members Service (getGroupAndMembersForList)', function () {
 
   it('returns no group when there is no group and no mailing-list', function (done) {
     sinon.stub(memberstore, 'getMembersForEMails', function (member, callback) { callback(); });
-    sinon.stub(groupsService, 'getMailinglistUsersOfList', function (err, callback) { callback(null, []); });
+    sinon.stub(groupsService, 'getMailinglistUsersOfList', function (ignoredErr, callback) { callback(null, []); });
     sinon.stub(groupstore, 'getGroup', function (groupname, callback) { callback(null, null); });
 
     groupsAndMembersService.getGroupAndMembersForList('unbekannteListe', function (err, group) {
@@ -112,7 +112,7 @@ describe('Groups and Members Service (getGroupAndMembersForList)', function () {
   });
 
   it('returns no group when there is no group but a mailing-list', function (done) {
-    sinon.stub(groupsService, 'getMailinglistUsersOfList', function (err, callback) {
+    sinon.stub(groupsService, 'getMailinglistUsersOfList', function (ignoredErr, callback) {
       callback(null, ['user1@mail1.com', 'user2@mail2.com']);
     });
     sinon.stub(memberstore, 'getMembersForEMails', function (member, callback) {
@@ -127,7 +127,7 @@ describe('Groups and Members Service (getGroupAndMembersForList)', function () {
   });
 
   it('returns the group with the given name and an empty list of subscribed users when there is no mailing-list or when there are no subscribers', function (done) {
-    sinon.stub(groupsService, 'getMailinglistUsersOfList', function (err, callback) { callback(null, []); });
+    sinon.stub(groupsService, 'getMailinglistUsersOfList', function (ignoredErr, callback) { callback(null, []); });
     sinon.stub(groupstore, 'getGroup', function (groupname, callback) {
       callback(null, GroupA);
     });
@@ -144,7 +144,7 @@ describe('Groups and Members Service (getGroupAndMembersForList)', function () {
   });
 
   it('returns the group with the given name and a list of one subscribed user when there is one subscriber in mailinglist', function (done) {
-    sinon.stub(groupsService, 'getMailinglistUsersOfList', function (err, callback) { callback(null, ['user@email.com']); });
+    sinon.stub(groupsService, 'getMailinglistUsersOfList', function (ignoredErr, callback) { callback(null, ['user@email.com']); });
     sinon.stub(groupstore, 'getGroup', function (groupname, callback) {
       callback(null, GroupA);
     });
@@ -162,7 +162,7 @@ describe('Groups and Members Service (getGroupAndMembersForList)', function () {
   });
 
   it('fails gracefully if groupsService has an error', function (done) {
-    sinon.stub(groupsService, 'getMailinglistUsersOfList', function (err, callback) { callback(new Error()); });
+    sinon.stub(groupsService, 'getMailinglistUsersOfList', function (ignoredErr, callback) { callback(new Error()); });
     sinon.stub(groupstore, 'getGroup', function (groupname, callback) {
       callback(null, GroupA);
     });
@@ -195,7 +195,7 @@ describe('Groups and Members Service (addMembercountToGroup)', function () {
   });
 
   it('adds zero to group if there are no subscribers', function (done) {
-    sinon.stub(groupsService, 'getMailinglistUsersOfList', function (err, callback) { callback(null, []); });
+    sinon.stub(groupsService, 'getMailinglistUsersOfList', function (ignoredErr, callback) { callback(null, []); });
     groupsAndMembersService.addMembercountToGroup({}, function (err, group) {
       expect(group.membercount).to.equal(0);
       done(err);
@@ -203,7 +203,7 @@ describe('Groups and Members Service (addMembercountToGroup)', function () {
   });
 
   it('adds the number of subscribers to the group', function (done) {
-    sinon.stub(groupsService, 'getMailinglistUsersOfList', function (err, callback) { callback(null, ['1', '2', '4']); });
+    sinon.stub(groupsService, 'getMailinglistUsersOfList', function (ignoredErr, callback) { callback(null, ['1', '2', '4']); });
     groupsAndMembersService.addMembercountToGroup({}, function (err, group) {
       expect(group.membercount).to.equal(3);
       done(err);
@@ -243,7 +243,7 @@ describe('Groups and Members Service (addMembersToGroup)', function () {
   });
 
   it('returns the group with an empty list of subscribed users when there are no subscribers', function (done) {
-    sinon.stub(groupsService, 'getMailinglistUsersOfList', function (err, callback) { callback(null, []); });
+    sinon.stub(groupsService, 'getMailinglistUsersOfList', function (ignoredErr, callback) { callback(null, []); });
     sinon.stub(memberstore, 'getMembersForEMails', function (member, callback) {
       callback(null, []);
     });
@@ -259,7 +259,7 @@ describe('Groups and Members Service (addMembersToGroup)', function () {
   });
 
   it('returns the group with a list of one subscribed user when there is one subscriber in mailinglist', function (done) {
-    sinon.stub(groupsService, 'getMailinglistUsersOfList', function (err, callback) { callback(null, ['user@email.com']); });
+    sinon.stub(groupsService, 'getMailinglistUsersOfList', function (ignoredErr, callback) { callback(null, ['user@email.com']); });
     sinon.stub(memberstore, 'getMembersForEMails', function (member, callback) {
       callback(null, [dummymember]);
     });

@@ -35,6 +35,7 @@ function messageSubmitted(req, res, next) {
 }
 
 function resignmentSubmitted(req, res) {
+  /* eslint handle-callback-err: 0 */
   var markdown = '**' + req.i18n.t('mailsender.why-resign') + '**\n' + req.body.why + '\n\n**' + req.i18n.t('mailsender.notes-resign') + '**\n' + req.body.notes;
   return mailsenderService.sendResignment(markdown, req.user.member, function (err, statusmsg) {
     statusmsg.putIntoSession(req);

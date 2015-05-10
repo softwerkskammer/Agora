@@ -55,9 +55,9 @@ describe('The persistence store', function () {
       it('on save-with-version, saves an object that is not yet in database and initializes version with 1', function (done) {
         persistence.saveWithVersion({id: 123}, function (err) {
           if (err) {return done(err); }
-          persistence.getById(123, function (err, result) {
+          persistence.getById(123, function (err1, result) {
             expect(result.version).to.equal(1);
-            done(err);
+            done(err1);
           });
         });
       });
@@ -65,12 +65,12 @@ describe('The persistence store', function () {
       it('on save-with-version, updates an object that is in database with same version', function (done) {
         persistence.save({id: 123, data: 'abc', version: 1}, function (err) {
           if (err) {return done(err); }
-          persistence.saveWithVersion({id: 123, data: 'def', version: 1}, function (err) {
-            if (err) {return done(err); }
-            persistence.getById(123, function (err, result) {
+          persistence.saveWithVersion({id: 123, data: 'def', version: 1}, function (err1) {
+            if (err1) {return done(err1); }
+            persistence.getById(123, function (err2, result) {
               expect(result.data).to.equal('def');
               expect(result.version).to.equal(2);
-              done(err);
+              done(err2);
             });
           });
         });
@@ -80,13 +80,13 @@ describe('The persistence store', function () {
         persistence.save({id: 123, data: 'abc', version: 2}, function (err) {
           if (err) {return done(err); }
           var objectToSave = {id: 123, data: 'def', version: 1};
-          persistence.saveWithVersion(objectToSave, function (err) {
-            expect(err.message).to.equal(CONFLICTING_VERSIONS);
-            persistence.getById(123, function (err, result) {
+          persistence.saveWithVersion(objectToSave, function (err1) {
+            expect(err1.message).to.equal(CONFLICTING_VERSIONS);
+            persistence.getById(123, function (err2, result) {
               expect(result.data, 'Data of object in database remains unchanged').to.equal('abc');
               expect(result.version, 'Version of object in database remains unchanged').to.equal(2);
               expect(objectToSave.version, 'Version of object to save remains unchanged').to.equal(1);
-              done(err);
+              done(err2);
             });
           });
         });
@@ -98,11 +98,11 @@ describe('The persistence store', function () {
         storeSampleData(function () {
           persistence.update({id: 'toPersist', firstname: 'Peter'}, 'toPersist', function (err) {
             if (err) { done(err); }
-            persistence.getById('toPersist', function (err, result) {
+            persistence.getById('toPersist', function (err1, result) {
               expect(result.id).to.equal('toPersist');
               expect(result.name).to.be.undefined();
               expect(result.firstname).to.equal('Peter');
-              done(err);
+              done(err1);
             });
           });
         });
@@ -112,12 +112,12 @@ describe('The persistence store', function () {
         storeSampleData(function () {
           persistence.update({id: 'toPersist2', name: 'Heinz'}, 'toPersist', function (err) {
             if (err) { done(err); }
-            persistence.getById('toPersist', function (err, result) {
+            persistence.getById('toPersist', function (err1, result) {
               expect(result).to.be.undefined();
-              persistence.getById('toPersist2', function (err, result) {
-                expect(result.id).to.equal('toPersist2');
-                expect(result.name).to.equal('Heinz');
-                done(err);
+              persistence.getById('toPersist2', function (err2, result1) {
+                expect(result1.id).to.equal('toPersist2');
+                expect(result1.name).to.equal('Heinz');
+                done(err2);
               });
             });
           });
@@ -188,10 +188,11 @@ describe('The persistence store', function () {
     describe('on remove', function () {
       it('removes an object having an id', function (done) {
         storeSampleData(function () {
-          persistence.remove('toPersist', function (err) {
-            persistence.getById('toPersist', function (err, result) {
+          persistence.remove('toPersist', function (err1) {
+            if (err1) { return done(err1); }
+            persistence.getById('toPersist', function (err2, result) {
               expect(result).to.be.undefined();
-              done(err);
+              done(err2);
             });
           });
         });

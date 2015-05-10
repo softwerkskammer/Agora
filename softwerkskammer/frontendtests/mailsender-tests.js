@@ -1,4 +1,4 @@
-/*global mail_validator */
+/*global mail_validator, testglobals */
 (function () {
   'use strict';
 

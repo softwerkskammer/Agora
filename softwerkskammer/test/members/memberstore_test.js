@@ -101,18 +101,18 @@ describe('Members store', function () {
     var adonis = { lastname: 'Adonis', firstname: 'Zaza' };
     var betti = { lastname: 'Betti', firstname: 'Andi' };
     var dave = { lastname: 'Dave', firstname: 'Dave' };
-    var betti_low = { lastname: 'betti', firstname: 'Bodo' };
-    var adonis_low = { lastname: 'adonis', firstname: 'Abbu' };
+    var bettiLow = { lastname: 'betti', firstname: 'Bodo' };
+    var adonisLow = { lastname: 'adonis', firstname: 'Abbu' };
 
     sinon.stub(persistence, 'listByField', function (criteria, sortorder, callback) {
-      callback(null, [adonis, betti, dave, betti_low, adonis_low]);
+      callback(null, [adonis, betti, dave, bettiLow, adonisLow]);
     });
 
     store.allMembers(function (err, members) {
-      expect(members[0].lastname()).to.equal(adonis_low.lastname);
+      expect(members[0].lastname()).to.equal(adonisLow.lastname);
       expect(members[1].lastname()).to.equal(adonis.lastname);
       expect(members[2].lastname()).to.equal(betti.lastname);
-      expect(members[3].lastname()).to.equal(betti_low.lastname);
+      expect(members[3].lastname()).to.equal(bettiLow.lastname);
       expect(members[4].lastname()).to.equal(dave.lastname);
       done(err);
     });

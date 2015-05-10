@@ -11,7 +11,7 @@ var Group = beans.get('group');
 var expect = require('must');
 
 function guest() {
-  var req = {  };
+  var req = { };
   var res = { locals: {} };
   accessrights(req, res, function () { return undefined; });
   return res.locals.accessrights;

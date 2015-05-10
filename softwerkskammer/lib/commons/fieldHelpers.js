@@ -1,4 +1,5 @@
 'use strict';
+/* eslint no-underscore-dangle: 0 */
 
 var _s = require('underscore.string');
 var moment = require('moment-timezone');

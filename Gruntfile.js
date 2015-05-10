@@ -156,6 +156,10 @@ module.exports = function (grunt) {
         }
       }
     },
+    eslint: {
+      options: {quiet: true},
+      target: ['softwerkskammer/**/*.js']
+    },
     jslint: {
       server: {
         src: [
@@ -337,14 +341,15 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-jade');
   grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-mocha-istanbul');
+  grunt.loadNpmTasks('grunt-eslint');
   grunt.loadNpmTasks('grunt-jslint');
   grunt.loadNpmTasks('grunt-karma');
+  grunt.loadNpmTasks('grunt-mocha-istanbul');
   grunt.loadNpmTasks('grunt-patch');
 
   grunt.registerTask('prepare', ['bower-install-simple', 'copy', 'patch', 'less']);
   grunt.registerTask('frontendtests', ['clean', 'prepare', 'jade', 'uglify:production_de', 'karma:once', 'uglify:development_de', 'karma:once', 'istanbul_check_coverage:frontend']);
-  grunt.registerTask('tests', ['jslint', 'frontendtests', 'mocha_istanbul', 'istanbul_check_coverage:server']);
+  grunt.registerTask('tests', ['jslint', 'eslint', 'frontendtests', 'mocha_istanbul', 'istanbul_check_coverage:server']);
   grunt.registerTask('deploy_development', ['prepare', 'uglify:development_de', 'uglify:development_en']);
 
   // Default task.

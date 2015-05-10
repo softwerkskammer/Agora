@@ -160,12 +160,12 @@ app.get('/json/groupData/:groupId', function (req, res, next) {
     if (err) { return next(err); }
     result.blogs = blogposts;
     lines = lines + basicHeightPerSection + blogposts.length;
-    wikiService.listChangedFilesinDirectory(req.params.groupId, function (err, metadatas) {
-      if (err) { return next(err); }
+    wikiService.listChangedFilesinDirectory(req.params.groupId, function (err1, metadatas) {
+      if (err1) { return next(err1); }
       result.wiki = metadatas;
       lines = lines + basicHeightPerSection + metadatas.length;
-      mailarchiveService.unthreadedMailsYoungerThan(req.params.groupId, oneMonthAgo.unix(), function (err, mails) {
-        if (err) { return next(err); }
+      mailarchiveService.unthreadedMailsYoungerThan(req.params.groupId, oneMonthAgo.unix(), function (err2, mails) {
+        if (err2) { return next(err2); }
         result.email = mails;
         result.lines = lines + basicHeightPerSection + mails.length;
         res.end(JSON.stringify(result));
@@ -206,8 +206,8 @@ app.get('/json/events/', function (req, res, next) {
   groupsAndMembersService.getMemberWithHisGroups(req.user.member.nickname(), function (err, member) {
     if (err) { return next(err); }
     if (!member) { return next(new Error('no member found')); }
-    activitiesService.getUpcomingActivitiesOfMemberAndHisGroups(member, function (err, activities) {
-      if (err) { return next(err); }
+    activitiesService.getUpcomingActivitiesOfMemberAndHisGroups(member, function (err1, activities) {
+      if (err1) { return next(err1); }
 
       var result = _.map(activities, function (activity) {
         return { eventName: activity.state.title, date: activity.state.startUnix };

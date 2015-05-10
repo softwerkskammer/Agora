@@ -12,11 +12,8 @@ var activitiesService = beans.get('activitiesService');
 var calendarService = beans.get('calendarService');
 var icalService = beans.get('icalService');
 var groupsService = beans.get('groupsService');
-var groupsAndMembersService = beans.get('groupsAndMembersService');
 var activitystore = beans.get('activitystore');
 var memberstore = beans.get('memberstore');
-var paymentService = beans.get('paymentService');
-var fieldHelpers = beans.get('fieldHelpers');
 
 var Activity = beans.get('activity');
 var Group = beans.get('group');
@@ -44,13 +41,13 @@ function activitySubmitted(req, res, next) {
     });
     editorIds = _.compact(editorIds);
     activity.fillFromUI(req.body, editorIds);
-    activitystore.saveActivity(activity, function (err) {
-      if (err && err.message === CONFLICTING_VERSIONS) {
+    activitystore.saveActivity(activity, function (err1) {
+      if (err1 && err1.message === CONFLICTING_VERSIONS) {
         // we try again because of a racing condition during save:
         statusmessage.errorMessage('message.title.conflict', 'message.content.save_error_retry').putIntoSession(req);
         return res.redirect('/activities/edit/' + encodeURIComponent(activity.url()));
       }
-      if (err) { return next(err); }
+      if (err1) { return next(err1); }
       statusmessage.successMessage('message.title.save_successful', 'message.content.activities.saved').putIntoSession(req);
       res.redirect('/activities/' + encodeURIComponent(activity.url()));
     });
@@ -146,8 +143,8 @@ app.get('/eventsForSidebar', function (req, res, next) {
     },
     function (err, collectedColors) {
       if (err) { next(err); }
-      calendarService.eventsBetween(start, end, collectedColors.groupColors, function (err, events) {
-        if (err) { return next(err); }
+      calendarService.eventsBetween(start, end, collectedColors.groupColors, function (err1, events) {
+        if (err1) { return next(err1); }
         res.end(JSON.stringify(events));
       });
     }
@@ -213,7 +210,7 @@ app.post('/submit', function (req, res, next) {
     [
       function (callback) {
         // we need this helper function (in order to have a closure?!)
-        var validityChecker = function (url, callback) { activitiesService.isValidUrl(reservedURLs, url, callback); };
+        var validityChecker = function (url, cb) { activitiesService.isValidUrl(reservedURLs, url, cb); };
         validation.checkValidity(req.body.previousUrl.trim(), req.body.url.trim(), validityChecker, req.i18n.t('validation.url_not_available'), callback);
       },
       function (callback) {
@@ -222,6 +219,7 @@ app.post('/submit', function (req, res, next) {
       }
     ],
     function (err, errorMessages) {
+      if (err) { return next(err); }
       var realErrors = _.filter(_.flatten(errorMessages), function (message) { return !!message; });
       if (realErrors.length === 0) {
         return activitySubmitted(req, res, next);
@@ -241,11 +239,11 @@ app.get('/:url', function (req, res, next) {
     if (activity.isSoCraTes()) {
       return res.redirect(activity.fullyQualifiedUrl());
     }
-    memberstore.getMembersForIds(activity.editorIds(), function (err, editors) {
-      if (err || !editors) { return next(err); }
+    memberstore.getMembersForIds(activity.editorIds(), function (err1, editors) {
+      if (err1 || !editors) { return next(err1); }
       var editorNicknames = _.map(editors, function (editor) { return editor.nickname(); });
-      var allowsRegistration = _.every(activity.resources().resourceNames(), function (resouceName, n) {
-        return activity.resourceNamed(resouceName).limit() !== 0;
+      var allowsRegistration = _.every(activity.resources().resourceNames(), function (resourceName) {
+        return activity.resourceNamed(resourceName).limit() !== 0;
       });
       res.render('get', {
         activity: activity,
@@ -346,6 +344,7 @@ app.post('/removeFromWaitinglist', function (req, res, next) { // removeFromWait
 
 app.get('/addons/:url', function (req, res, next) {
   activitiesService.getActivityWithGroupAndParticipants(req.params.url, function (err, activity) {
+    if (err) { return next(err); }
     if (!res.locals.accessrights.canEditActivity(activity)) {
       return res.redirect('/activities/' + encodeURIComponent(req.params.url));
     }
@@ -360,8 +359,8 @@ app.get('/delete/:activityUrl', function (req, res, next) {
     if (!res.locals.accessrights.canDeleteActivity(activity)) {
       return res.redirect('/activities/' + encodeURIComponent(url));
     }
-    activitystore.removeActivity(activity, function (err) {
-      if (err) { return next(err); }
+    activitystore.removeActivity(activity, function (err1) {
+      if (err1) { return next(err1); }
       statusmessage.successMessage('message.title.save_successful', 'message.content.activities.deleted').putIntoSession(req);
       res.redirect('/activities/');
     });

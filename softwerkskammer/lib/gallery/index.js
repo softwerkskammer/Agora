@@ -1,10 +1,6 @@
 'use strict';
 var beans = require('simple-configure').get('beans');
 var misc = beans.get('misc');
-var path = require('path');
-var _ = require('lodash');
-var logger = require('winston').loggers.get('application');
-var Form = require('multiparty').Form;
 var galleryService = beans.get('galleryService');
 
 var app = misc.expressAppIn(__dirname);

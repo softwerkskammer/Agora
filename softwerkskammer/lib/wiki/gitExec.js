@@ -15,8 +15,8 @@ if (workTree) {
     workTree = absWorkTree;
     if (err) { throw new Error('Bad repository path (not exists): ' + workTree); }
     var gitDir = Path.join(workTree, '.git');
-    Fs.stat(gitDir, function (err) {
-      if (err) { throw new Error('Bad repository path (not initialized): ' + workTree); }
+    Fs.stat(gitDir, function (err1) {
+      if (err1) { throw new Error('Bad repository path (not initialized): ' + workTree); }
       gitCommands = ['--git-dir=' + gitDir, '--work-tree=' + workTree];
     });
   });

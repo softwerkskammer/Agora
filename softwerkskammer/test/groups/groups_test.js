@@ -178,10 +178,10 @@ describe('Groups application', function () {
 
       sinon.stub(activitystore, 'upcomingActivitiesForGroupIds', function (list, callback) {
         return callback(null, [new Activity({
-          title: "Erste Aktivität",
+          title: 'Erste Aktivität',
           startUnix: date1
         }), new Activity({
-          title: "Zweite Aktivität",
+          title: 'Zweite Aktivität',
           startUnix: date2
         })]);
       });

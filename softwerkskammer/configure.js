@@ -7,7 +7,7 @@ var conf = require('simple-configure');
 var path = require('path');
 
 function createConfiguration() {
-  var configdir = path.normalize(__dirname + '/../config/');
+  var configdir = path.join(__dirname, '/../config/');
 
   // first, set the default values
   conf.addProperties({

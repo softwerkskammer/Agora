@@ -1,42 +1,43 @@
 /*global contentsOfPrefixForEMail, contentsOfEMailAddress, groupnameAlreadyTaken, contentsOfName, prefixAlreadyTaken, contentsOfAlphanumeric */
+/*eslint no-unused-vars: 0 */
 
 // THE ORIGINAL OF THIS FILE IS IN frontend/javascript
 
 var groups_validator;
 (function () {
-  "use strict";
+  'use strict';
 
   var initValidator = function () {
 
     // DO NOT FORGET TO KEEP THIS FILE IN SYNC WITH /lib/commons/validation.js
 
-    $.validator.addMethod("alnumdashblank", function (value, element) {
+    $.validator.addMethod('alnumdashblank', function (value, element) {
       return this.optional(element) || /^[a-z0-9 \-]+$/i.test(value);
     }, contentsOfPrefixForEMail);
 
-    $.validator.addMethod("alnumdashunderscore", function (value, element) {
+    $.validator.addMethod('alnumdashunderscore', function (value, element) {
       return this.optional(element) || /^[a-z0-9_\-]+$/i.test(value);
     }, contentsOfAlphanumeric);
 
-    groups_validator = $("#groupform").validate({
+    groups_validator = $('#groupform').validate({
       rules: {
         id: {
           required: true,
           minlength: 2,
           maxlength: 20,
-          alnumdashunderscore: "",
-          remote: "/groups/checkgroupname"
+          alnumdashunderscore: '',
+          remote: '/groups/checkgroupname'
         },
         emailPrefix: {
           required: true,
           minlength: 5,
           maxlength: 15,
-          alnumdashblank: "",
-          remote: "/groups/checkemailprefix"
+          alnumdashblank: '',
+          remote: '/groups/checkemailprefix'
         },
-        longName: "required",
-        description: "required",
-        type: "required"
+        longName: 'required',
+        description: 'required',
+        type: 'required'
 
       },
       messages: {
@@ -47,13 +48,13 @@ var groups_validator;
           remote: $.validator.format(prefixAlreadyTaken)
         }
       },
-      errorElement: "span",
-      errorClass: "help-block",
+      errorElement: 'span',
+      errorClass: 'help-block',
       highlight: function (element) {
-        $(element).parent().addClass("has-error");
+        $(element).parent().addClass('has-error');
       },
       unhighlight: function (element) {
-        $(element).parent().removeClass("has-error");
+        $(element).parent().removeClass('has-error');
       }
     });
 
@@ -65,10 +66,10 @@ var groups_validator;
       };
     };
 
-    ["#groupform [name=id]", "#groupform [name=longName]", "#groupform [name=description]", "#groupform [name=type]",
-      "#groupform [name=emailPrefix]"].forEach(
+    ['#groupform [name=id]', '#groupform [name=longName]', '#groupform [name=description]', '#groupform [name=type]',
+      '#groupform [name=emailPrefix]'].forEach(
       function (each) {
-        $(each).on("change", handler(each));
+        $(each).on('change', handler(each));
         $(each).keyup(handler(each));
       }
     );

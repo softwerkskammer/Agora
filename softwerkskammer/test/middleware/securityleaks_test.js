@@ -75,14 +75,14 @@ describe('Security regarding', function () {
     });
 
     it('csrf middleware adds the csrf token to res.locals', function () {
-      var csrf_token = 'csrf token';
-      var req = { csrfToken: function () { return csrf_token; } };
+      var csrftoken = 'csrf token';
+      var req = { csrfToken: function () { return csrftoken; } };
       var res = {locals: {}};
       var next = function () { return undefined; };
 
       addCsrfTokenToLocals(req, res, next);
 
-      expect(res.locals.csrf_token).to.equal(csrf_token);
+      expect(res.locals.csrf_token).to.equal(csrftoken);
     });
 
   });

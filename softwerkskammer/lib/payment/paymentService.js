@@ -1,11 +1,8 @@
 'use strict';
-var _ = require('lodash');
-var async = require('async');
 
 var logger = require('winston').loggers.get('application');
 var beans = require('simple-configure').get('beans');
 var PaymentInfo = beans.get('paymentInfo');
-var misc = beans.get('misc');
 var memberstore = beans.get('memberstore');
 var statusmessage = beans.get('statusmessage');
 var stripeService = beans.get('stripeService');
@@ -29,21 +26,21 @@ module.exports = {
       var charge = { amount: totalAmount, currency: 'EUR', card: stripeId,
         description: description + ' payment for ' + member.firstname() + ' ' + member.lastname() +
           ' (' + member.nickname() + ')'};
-      stripeService.transaction().charges.create(charge, function (err, charge) {
-        if (err) {
-          logger.error('Error on payment: ' + err.message + '. For: "' + description + '" and member "' + memberId + '".');
-          if (err.message) {
-            return callback(null, statusmessage.errorMessage('message.title.problem', 'message.content.activities.credit_card_not_paid', {reason: err.message}));
+      stripeService.transaction().charges.create(charge, function (err1, charge1) {
+        if (err1) {
+          logger.error('Error on payment: ' + err1.message + '. For: "' + description + '" and member "' + memberId + '".');
+          if (err1.message) {
+            return callback(null, statusmessage.errorMessage('message.title.problem', 'message.content.activities.credit_card_not_paid', {reason: err1.message}));
           }
-          return callback(err);
+          return callback(err1);
         }
         logger.info('Credit Card charged for: "' + description + '" and member "' + memberId + '".' +
-          'Charge: ' + JSON.stringify(charge));
+          'Charge: ' + JSON.stringify(charge1));
 
-        saveCreditCardPayment(function (err) {
-          var displayAmount = (charge.amount / 100).toFixed(2).replace('.', ',') + ' €';
+        saveCreditCardPayment(function (err2) {
+          var displayAmount = (charge1.amount / 100).toFixed(2).replace('.', ',') + ' €';
           var message = statusmessage.successMessage('message.title.save_successful', 'message.content.activities.credit_card_paid', {amount: displayAmount});
-          callback(err, message);
+          callback(err2, message);
         });
       });
     });

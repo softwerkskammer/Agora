@@ -1,6 +1,5 @@
 'use strict';
 
-var sinon = require('sinon').sandbox.create();
 var expect = require('must');
 
 var beans = require('../../testutil/configureForTestWithDB').get('beans');
@@ -75,9 +74,7 @@ describe('Members application with DB', function () {
       persistence.drop(function () {
         memberstore.saveMember(swkMember, function (err) {
           if (err) { done(err); }
-          memberstore.saveMember(socMember, function (err) {
-            done(err);
-          });
+          memberstore.saveMember(socMember, function (err1) { done(err1); });
         });
       });
     });

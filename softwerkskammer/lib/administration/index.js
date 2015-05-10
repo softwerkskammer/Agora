@@ -1,6 +1,5 @@
 'use strict';
 
-var _ = require('lodash');
 var async = require('async');
 
 var beans = require('simple-configure').get('beans');
@@ -13,7 +12,6 @@ var activitiesService = beans.get('activitiesService');
 var announcementstore = beans.get('announcementstore');
 var misc = beans.get('misc');
 var Group = beans.get('group');
-var statusmessage = beans.get('statusmessage');
 
 var app = misc.expressAppIn(__dirname);
 

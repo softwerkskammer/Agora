@@ -2,7 +2,6 @@
 var Fs = require('fs');
 var Path = require('path');
 var _ = require('lodash');
-var moment = require('moment-timezone');
 var beans = require('simple-configure').get('beans');
 var Git = beans.get('gitmech');
 var wikiObjects = beans.get('wikiObjects');
@@ -10,7 +9,6 @@ var FileWithChangelist = wikiObjects.FileWithChangelist;
 var DirectoryWithChangedFiles = wikiObjects.DirectoryWithChangedFiles;
 var Diff = beans.get('gitDiff');
 var async = require('async');
-var misc = beans.get('misc');
 var logger = require('winston').loggers.get('application');
 
 module.exports = {
@@ -28,7 +26,7 @@ module.exports = {
       }
       Git.readFile(completePageName + '.md', 'HEAD', function (err, content) {
         if (err) { return callback(err); }
-        Git.log(completePageName + '.md', 'HEAD', 1, function (err, metadata) {
+        Git.log(completePageName + '.md', 'HEAD', 1, function (ignoredErr, metadata) {
           callback(null, content, metadata);
         });
       });
@@ -54,10 +52,10 @@ module.exports = {
       var pageFile = Git.absPath(completePageName);
       Fs.writeFile(pageFile, body.content, function (err) {
         if (err) { return callback(err); }
-        Git.log(completePageName, 'HEAD', 1, function (err, metadata) {
+        Git.log(completePageName, 'HEAD', 1, function (ignoredErr, metadata) {
           var conflict = metadata[0] && metadata[0].fullhash !== body.metadata;
-          Git.add(completePageName, (body.comment.length === 0 ? 'no comment' : body.comment), member.asGitAuthor(), function (err) {
-            callback(err, conflict);
+          Git.add(completePageName, (body.comment.length === 0 ? 'no comment' : body.comment), member.asGitAuthor(), function (err1) {
+            callback(err1, conflict);
           });
         });
       });
@@ -67,7 +65,7 @@ module.exports = {
   pageHistory: function (completePageName, callback) {
     Git.readFile(completePageName + '.md', 'HEAD', function (err) {
       if (err) { return callback(err); }
-      Git.log(completePageName + '.md', 'HEAD', 30, function (err, metadata) {
+      Git.log(completePageName + '.md', 'HEAD', 30, function (ignoredErr, metadata) {
         callback(null, metadata);
       });
     });
@@ -123,13 +121,13 @@ module.exports = {
       if (result.length === 0) { return callback(err, []); }
       async.map(result,
         function (path, mapCallback) {
-          Git.readFileFs(path, function (err, post) {
-            if (err) { return mapCallback(err); }
+          Git.readFileFs(path, function (err1, post) {
+            if (err1) { return mapCallback(err1); }
             mapCallback(null, self.parseBlogPost(path, post));
           });
         },
-        function (err, unsortedPosts) {
-          if (err) { return callback(err); }
+        function (err1, unsortedPosts) {
+          if (err1) { return callback(err1); }
           var postsSortedByDate = _(unsortedPosts).compact().sortBy(function (post) {
             // _.sortBy is always in ascending order and we want the latest post first, so use negation
             return -post.date().unix();
@@ -149,28 +147,28 @@ module.exports = {
         self.pageList(directory, function (listErr, items) {
           if (listErr) { return directoryCallback(listErr); }
           async.each(items, function (item, itemsCallback) {
-            Git.latestChanges(item.fullname + '.md', moment, function (err, metadata) {
-              if (err) { return itemsCallback(err); }
+            Git.latestChanges(item.fullname + '.md', moment, function (err1, metadata) {
+              if (err1) { return itemsCallback(err1); }
               if (metadata.length > 0) {
-                Git.diff(item.fullname + '.md', 'HEAD@{' + moment.toISOString() + '}..HEAD', function (err, diff) {
-                  if (err) { return itemsCallback(err); }
+                Git.diff(item.fullname + '.md', 'HEAD@{' + moment.toISOString() + '}..HEAD', function (err2, diff) {
+                  if (err2) { return itemsCallback(err2); }
                   resultLine.addFile(new FileWithChangelist({file: item.name, changelist: metadata, diff: new Diff(diff)}));
                   itemsCallback();
                 });
               } else { itemsCallback(); }
             });
-          }, function (err) {
-            if (err) { logger.error(err); }
+          }, function (err1) {
+            if (err1) { logger.error(err1); }
             if (resultLine.files.length > 0) {
               result.push(resultLine);
             }
             directoryCallback();
           });
         });
-      }, function (err) {
-        if (err) {
-          logger.error(err);
-          return callback(err);
+      }, function (err1) {
+        if (err1) {
+          logger.error(err1);
+          return callback(err1);
         }
         callback(null, result);
       });
@@ -178,7 +176,7 @@ module.exports = {
   },
 
   listChangedFilesinDirectory: function (directory, callback) {
-    Git.log(directory, 'HEAD', 30, function (err, metadata) {
+    Git.log(directory, 'HEAD', 30, function (ignoredErr, metadata) {
       var datas = _(metadata).uniq('name').reject(function (item) { return item.name.match(wikiObjects.BLOG_ENTRY_REGEX); }).value();
       callback(null, datas);
     });

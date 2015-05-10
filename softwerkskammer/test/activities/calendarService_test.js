@@ -34,7 +34,7 @@ describe('Calendar Service', function () {
       expect('2013-04-04T00:00:00+02:00').to.equal(event.start); // includes timezone offset!
       expect(event.url).to.match('/activities/myURL$');
       expect('#353535').to.equal(event.color);
-      done();
+      done(err);
     });
   });
 

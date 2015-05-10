@@ -2,8 +2,6 @@
 
 var request = require('supertest');
 var sinonSandbox = require('sinon').sandbox.create();
-var expect = require('must');
-var moment = require('moment-timezone');
 
 var beans = require('../../testutil/configureForTest').get('beans');
 

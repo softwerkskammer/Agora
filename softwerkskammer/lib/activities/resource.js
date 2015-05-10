@@ -11,6 +11,8 @@ function Resource(resourceObject, resourceName) {
 }
 
 Resource.prototype.fillFromUI = function (uiInputObject) {
+  /* eslint no-underscore-dangle: 0 */
+
   this.state._registrationOpen = uiInputObject.isRegistrationOpen === 'yes';
   this.state._canUnsubscribe = uiInputObject.canUnsubscribe === 'yes';
   this.state._position = uiInputObject.position;

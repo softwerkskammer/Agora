@@ -1,7 +1,6 @@
 'use strict';
 var moment = require('moment-timezone');
 var _ = require('lodash');
-var _s = require('underscore.string');
 var path = require('path');
 
 var beans = require('simple-configure').get('beans');

@@ -72,7 +72,7 @@ app.get('/edit/:subdir/:page', function (req, res, next) {
   });
 });
 
-app.post('/:subdir/:page', function (req, res, next) {
+app.post('/:subdir/:page', function (req, res) {
   var pageName = Renderer.normalize(req.params.page);
   var subdir = req.params.subdir;
   wikiService.pageSave(subdir, pageName, req.body, req.user.member, function (err, conflict) {
@@ -110,10 +110,11 @@ app.get('/list/:subdir/', function (req, res, next) {
   });
 });
 
-app.get('/modal/:subdir/:page', function (req, res) {
+app.get('/modal/:subdir/:page', function (req, res, next) {
   var subdir = req.params.subdir;
   var completePageName = subdir + '/' + req.params.page;
   wikiService.showPage(completePageName, 'HEAD', function (err, content) {
+    if (err) { return next(err); }
     res.render('modal', { content: content && Renderer.render(content, subdir), subdir: subdir });
   });
 });

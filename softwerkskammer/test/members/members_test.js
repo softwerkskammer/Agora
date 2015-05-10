@@ -209,7 +209,7 @@ describe('Members application', function () {
     sinon.stub(memberstore, 'saveMember', function (member, callback) { callback(null); });
     var notificationCall = sinon.stub(notifications, 'newMemberRegistered', function () { return undefined; });
 
-    // the following stub indicates that the member already exists 
+    // the following stub indicates that the member already exists
     sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups', function (nickname, callback) { callback(null, dummymember); });
     request(createApp({id: 'memberID'}))
       .post('/submit')

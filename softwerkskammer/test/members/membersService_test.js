@@ -8,9 +8,9 @@ var Member = beans.get('member');
 var memberstore = beans.get('memberstore');
 var membersService = beans.get('membersService');
 
-var galleryService = beans.get('galleryService');
 
 describe('MembersService', function () {
+  /* eslint no-path-concat: 0 */
   var imagePath = __dirname + '/../gallery/fixtures/image.jpg';
   var member;
 
@@ -219,7 +219,7 @@ describe('MembersService', function () {
   describe('avatar functions', function () {
     var saveMember;
     beforeEach(function () {
-      saveMember = sinon.stub(memberstore, 'saveMember', function (member, callback) { callback(); });
+      saveMember = sinon.stub(memberstore, 'saveMember', function (anyMember, callback) { callback(); });
     });
 
     it('updates a member with information about a saved avatar', function (done) {
@@ -264,7 +264,7 @@ describe('MembersService', function () {
     var saveMember;
 
     beforeEach(function () {
-      saveMember = sinon.stub(memberstore, 'saveMember', function (member, callback) { callback(); });
+      saveMember = sinon.stub(memberstore, 'saveMember', function (anyMember, callback) { callback(); });
 
       sinon.stub(memberstore, 'getMemberForAuthentication', function (auth, callback) {
         if (!auth || auth === 'newAuth') {

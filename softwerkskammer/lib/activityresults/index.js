@@ -12,6 +12,7 @@ var fieldHelpers = beans.get('fieldHelpers');
 var app = misc.expressAppIn(__dirname);
 
 app.post('/', function (req, res, next) {
+  /* eslint camelcase: 0 */
   var activityResultName = req.body.activityResultName;
   if (!activityResultName) {
     return next(new Error('No Images')); // Sollte durch geeignete Prüfungen abgefangen werden. Siehe andere post Implementierungen (activities)
@@ -21,7 +22,7 @@ app.post('/', function (req, res, next) {
   activityresultsPersistence.save(new ActivityResult({
     id: activityResultName,
     tags: tags,
-    created_by: req.user.member.id
+    uploaded_by: req.user.member.id
   }).state, function (err) {
     if (err) { return next(err); }
     res.redirect(app.path() + activityResultName);
@@ -34,8 +35,8 @@ app.post('/:activityResultName/upload', function (req, res, next) {
     if (err || !files || files.length < 1) {
       return res.redirect(app.path() + activityResultName); // Es fehlen Prüfungen im Frontend
     }
-    activityresultsService.addPhotoToActivityResult(activityResultName, files.image[0], req.user.member.id(), function (err, imageUri) {
-      if (err) { return next(err); }
+    activityresultsService.addPhotoToActivityResult(activityResultName, files.image[0], req.user.member.id(), function (err1, imageUri) {
+      if (err1) { return next(err1); }
       res.redirect(app.path() + activityResultName + '/photo/' + imageUri + '/edit');
     });
 

@@ -62,11 +62,10 @@ describe('Activity application with DB - on submit -', function () {
       .expect(/Redirecting to \/activities\/edit\/urlOfTheActivity/, function (err) {
         if (err) { return done(err); }
         // check that activity did not get changed on the database
-        getActivity('urlOfTheActivity', function (err, activity) {
-          if (err) { return done(err); }
+        getActivity('urlOfTheActivity', function (err1, activity) {
           expect(activity.resourceNamed('Veranstaltung').registeredMembers(), 'Registered member is still there').to.contain('memberId1');
           expect(activity.location(), 'Old location was not overwritten').to.equal('location1');
-          done(err);
+          done(err1);
         });
       });
   });

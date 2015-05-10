@@ -20,7 +20,7 @@ describe('The parallel persistence store', function () {
           persistence1.getById('toPersist', function (err, result) {
             expect(result.id).to.equal('toPersist');
             expect(result.name).to.equal('Heinz');
-            callback();
+            callback(err);
           });
         });
       },
@@ -29,7 +29,7 @@ describe('The parallel persistence store', function () {
           persistence2.getById('toStore', function (err, result) {
             expect(result.id).to.equal('toStore');
             expect(result.name).to.equal('Hans');
-            callback();
+            callback(err);
           });
         });
       },
@@ -38,7 +38,7 @@ describe('The parallel persistence store', function () {
           persistence1.getById('toPersist2', function (err, result) {
             expect(result.id).to.equal('toPersist2');
             expect(result.name).to.equal('Heinz2');
-            callback();
+            callback(err);
           });
         });
       },
@@ -47,7 +47,7 @@ describe('The parallel persistence store', function () {
           persistence2.getById('toStore2', function (err, result) {
             expect(result.id).to.equal('toStore2');
             expect(result.name).to.equal('Hans2');
-            callback();
+            callback(err);
           });
         });
       }

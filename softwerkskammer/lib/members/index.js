@@ -10,12 +10,10 @@ var Member = beans.get('member');
 var Group = beans.get('group');
 var membersService = beans.get('membersService');
 var memberstore = beans.get('memberstore');
-var wikiService = beans.get('wikiService');
 var groupsAndMembersService = beans.get('groupsAndMembersService');
 var groupsService = beans.get('groupsService');
 var groupstore = beans.get('groupstore');
 var activitiesService = beans.get('activitiesService');
-var activitystore = beans.get('activitystore');
 var misc = beans.get('misc');
 var statusmessage = beans.get('statusmessage');
 var notifications = beans.get('notifications');
@@ -49,8 +47,8 @@ var app = misc.expressAppIn(__dirname);
 app.get('/', function (req, res, next) {
   memberstore.allMembers(function (err, members) {
     if (err) { return next(err); }
-    async.each(members, membersService.getImage, function (err) {
-      if (err) { return next(err); }
+    async.each(members, membersService.getImage, function (err1) {
+      if (err1) { return next(err1); }
       res.render('index', {members: members, wordList: membersService.toWordList(members)});
     });
   });
@@ -60,8 +58,8 @@ app.get('/interests', function (req, res, next) {
   var casesensitive = req.query.casesensitive ? '' : 'i';
   memberstore.getMembersWithInterest(req.query.interest, casesensitive, function (err, members) {
     if (err) { return next(err); }
-    async.each(members, membersService.getImage, function (err) {
-      if (err) { return next(err); }
+    async.each(members, membersService.getImage, function (err1) {
+      if (err1) { return next(err1); }
       res.render('indexForTag', {
         interest: req.query.interest,
         members: members,
@@ -136,8 +134,8 @@ app.get('/delete/:nickname', function (req, res, next) {
       return res.redirect('/members/' + encodeURIComponent(member.nickname()));
     }
     if (_.isEmpty(member.subscribedGroups)) {
-      return memberstore.removeMember(member, function (err) {
-        if (err) { return next(err); }
+      return memberstore.removeMember(member, function (err1) {
+        if (err1) { return next(err1); }
         statusmessage.successMessage('message.title.save_successful', 'message.content.members.deleted').putIntoSession(req);
         res.redirect('/members/');
       });
@@ -152,12 +150,12 @@ app.post('/submit', function (req, res, next) {
     [
       function (callback) {
         // we need this helper function (in order to have a closure?!)
-        var validityChecker = function (nickname, callback) { membersService.isValidNickname(nickname, callback); };
+        var validityChecker = function (nickname, cb) { membersService.isValidNickname(nickname, cb); };
         validation.checkValidity(req.body.previousNickname, req.body.nickname, validityChecker, req.i18n.t('validation.nickname_not_available'), callback);
       },
       function (callback) {
         // we need this helper function (in order to have a closure?!)
-        var validityChecker = function (email, callback) { membersService.isValidEmail(email, callback); };
+        var validityChecker = function (email, cb) { membersService.isValidEmail(email, cb); };
         validation.checkValidity(req.body.previousEmail, req.body.email, validityChecker, req.i18n.t('validation.duplicate_email'), callback);
       },
       function (callback) {
@@ -166,6 +164,7 @@ app.post('/submit', function (req, res, next) {
       }
     ],
     function (err, errorMessages) {
+      if (err) { return next(err); }
       var realErrors = _.filter(_.flatten(errorMessages), function (message) { return !!message; });
       if (realErrors.length === 0) {
         return memberSubmitted(req, res, next);
@@ -186,8 +185,8 @@ app.post('/submitavatar', function (req, res, next) {
       scale: fields.scale[0],
       angle: fields.angle[0]
     };
-    membersService.saveCustomAvatarForNickname(nickname, files, params, function (err) {
-      if (err) { return next(err); }
+    membersService.saveCustomAvatarForNickname(nickname, files, params, function (err1) {
+      if (err1) { return next(err1); }
       res.redirect('/members/' + encodeURIComponent(nickname)); // Es fehlen Prüfungen im Frontend
     });
   });
@@ -198,8 +197,8 @@ app.get('/deleteAvatarFor/:nickname', function (req, res, next) {
   memberstore.getMember(nicknameOfEditMember, function (err, member) {
     if (err) { return next(err); }
     if (res.locals.accessrights.canEditMember(member)) {
-      return membersService.deleteCustomAvatarForNickname(nicknameOfEditMember, function (err) {
-        if (err) { return next(err); }
+      return membersService.deleteCustomAvatarForNickname(nicknameOfEditMember, function (err1) {
+        if (err1) { return next(err1); }
         res.redirect('/members/' + encodeURIComponent(nicknameOfEditMember));
       });
     }
@@ -211,8 +210,8 @@ app.get('/deleteAvatarFor/:nickname', function (req, res, next) {
 app.get('/:nickname', function (req, res, next) {
   groupsAndMembersService.getMemberWithHisGroups(req.params.nickname, function (err, member, subscribedGroups) {
     if (err || !member) { return next(err); }
-    activitiesService.getPastActivitiesOfMember(member, function (err, activities) {
-      if (err) { return next(err); }
+    activitiesService.getPastActivitiesOfMember(member, function (err1, activities) {
+      if (err1) { return next(err1); }
       res.render('get', {member: member, pastActivities: activities, subscribedGroups: subscribedGroups});
     });
   });

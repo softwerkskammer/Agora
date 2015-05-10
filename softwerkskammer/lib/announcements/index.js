@@ -1,5 +1,4 @@
 'use strict';
-var moment = require('moment-timezone');
 
 var beans = require('simple-configure').get('beans');
 var misc = beans.get('misc');
@@ -71,8 +70,8 @@ app.post('/submit', function (req, res, next) {
 app.get('/:url', function (req, res, next) {
   store.getAnnouncement(req.params.url, function (err, announcement) {
     if (err || !announcement) { return next(err); }
-    announcementsService.getAuthorName(announcement, function (err, name) {
-      if (err) { return next(err); }
+    announcementsService.getAuthorName(announcement, function (err1, name) {
+      if (err1) { return next(err1); }
       announcement.authorname = name;
       res.render('get', { announcement: announcement });
     });

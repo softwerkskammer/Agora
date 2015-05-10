@@ -3,7 +3,6 @@
 var conf = require('simple-configure');
 var beans = conf.get('beans');
 var Activity = beans.get('activity');
-var Group = beans.get('group');
 
 function SoCraTesActivity(object) {
   this.state = new Activity(object).state; // required for persisting

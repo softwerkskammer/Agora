@@ -1,4 +1,4 @@
-/*global addon_validator */
+/*global addon_validator, testglobals */
 (function () {
   'use strict';
 
