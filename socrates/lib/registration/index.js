@@ -139,7 +139,7 @@ app.get('/participate', function (req, res, next) {
 });
 
 app.post('/completeRegistration', function (req, res, next) {
-  memberSubmitHelper(req, res, function (err) {
+  memberSubmitHelper(req, res, next, function (err) {
     if (err) { return next(err); }
     var body = req.body;
     registrationService.saveRegistration(req.user.member.id(), req.sessionID, body, function (err1, statusTitle, statusText) {
