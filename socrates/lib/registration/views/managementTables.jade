@@ -99,6 +99,7 @@ block content
     li.active: a(href='#addons', data-toggle='tab') Zahlungen
     li: a(href='#bedroomPairing', data-toggle='tab') Zimmerzuordnungen
     li: a(href='#tshirtSizes', data-toggle='tab') T-Shirt-Bestellungen
+    li: a(href='#remarks', data-toggle='tab') Zusatzinformationen
     li: a(href='#unsubscribed', data-toggle='tab') Abgemeldete
     li: a(href='#addresses', data-toggle='tab') Adressen
   .row
@@ -278,6 +279,24 @@ block content
                     td #{tshirtsize.count}
             hr
             p Gesamtzahl T-Shirts: #{totalShirtCount}
+          hr
+        .tab-pane#remarks
+          h4 Remarks
+          .panel
+            table.table.table-condensed.table-hover.table-striped.unsortedtable
+              thead
+                tr
+                  th Nickname
+                  th Vorname
+                  th Nachname
+                  th Bemerkung
+              tbody
+                for line in addonLines
+                  tr
+                    td: +linkedMember(line.member.nickname())
+                    td #{line.member.firstname()}
+                    td #{line.member.lastname()}
+                    td #{line.addon.remarks()}
           hr
         .tab-pane#unsubscribed
           h4 Zahlungs-Information von Abgemeldeten
