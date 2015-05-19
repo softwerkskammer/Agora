@@ -17,6 +17,8 @@ module.exports = {
 
   save: function () {throw new Error('Testpersistence - function save not implemented'); },
 
+  saveWithVersion: function () {throw new Error('Testpersistence - function saveWithVersion not implemented'); },
+
   saveAll: function () {throw new Error('Testpersistence - function saveAll not implemented'); },
 
   saveValueObject: function () {throw new Error('Testpersistence - function saveValueObject not implemented'); },
