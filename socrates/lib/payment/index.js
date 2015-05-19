@@ -50,13 +50,11 @@ app.get('/calcFee', function (req, res) {
 app.post('/submitCreditCard', function (req, res, next) {
   var saveCreditCardPayment = function (callback) { callback(null); };
   var amount = parseFloat(req.body.amount.replace(',', '.'));
-  var memberId = req.user.member.id();
-  paymentService.payWithCreditCard(saveCreditCardPayment, amount, req.body.description, memberId,
-    req.body.stripeId, function (err, message) {
-      if (err) { return next(err); }
-      message.putIntoSession(req);
-      res.redirect('/');
-    });
+  paymentService.payWithCreditCard(saveCreditCardPayment, amount, req.body.description, req.body.stripeId, function (err, message) {
+    if (err) { return next(err); }
+    message.putIntoSession(req);
+    res.redirect('/');
+  });
 });
 
 app.post('/submitCreditCardSocrates', function (req, res, next) {
@@ -65,16 +63,22 @@ app.post('/submitCreditCardSocrates', function (req, res, next) {
     subscriber.payment().noteCreditCardPayment();
     subscriberstore.saveSubscriber(subscriber, callback);
   };
-  paymentService.payWithCreditCard(saveCreditCardPayment, parseFloat(req.body.amount.replace(',', '.')), req.body.description, req.user.member.id(),
-    req.body.stripeId, function (err, message) {
-      if (err) { return next(err); }
-      message.putIntoSession(req);
-      res.redirect('/');
-    });
+  var member = req.user.member;
+  if (!member) { return next(); }
+
+  var description = req.body.description + ' payment for ' + member.firstname() + ' ' + member.lastname() +
+    ' (' + member.nickname() + ')';
+  var amount = parseFloat(req.body.amount.replace(',', '.'));
+  paymentService.payWithCreditCard(saveCreditCardPayment, amount, description, req.body.stripeId, function (err, message) {
+    if (err) { return next(err); }
+    message.putIntoSession(req);
+    res.redirect('/');
+  });
 });
 
 app.post('/submitTransferSocrates', function (req, res, next) {
   var subscriber = req.user.subscriber;
+  if (!subscriber) { return next(); }
   subscriber.payment().noteMoneyTransfer();
   subscriberstore.saveSubscriber(subscriber, function (err) {
     if (err) { return next(err); }
