@@ -151,7 +151,7 @@ describe('SoCraTes payment application', function () {
         .get('/socrates')
         .expect(/Credit Card/)
         .expect(/Amount:<\/b><span class="amount pull-right">100 €/)
-        .expect(/Handling fee:<\/b><span class="fee pull-right">3.30 €/)
+        .expect(/Handling fee:<\/b><span class="fee pull-right">3\.30 €/)
         .expect(/Card number:<\/label><input/)
         .expect(/CVC code:<\/label><input/)
         .expect(/Valid until month:<\/label><input/)
@@ -170,8 +170,8 @@ describe('SoCraTes payment application', function () {
         .expect(/BIC:/)
         .expect(/IBAN:/)
         .expect(/Receiver:/)
-        .expect(/Already Paid./)
-        .expect(/You have already paid./)
+        .expect(/Already Paid\./)
+        .expect(/You have already paid\./)
         .expect(200, done);
     });
 
@@ -185,8 +185,8 @@ describe('SoCraTes payment application', function () {
         .expect(/BIC:/)
         .expect(/IBAN:/)
         .expect(/Receiver:/)
-        .expect(/Already Paid./)
-        .expect(/You have already paid./)
+        .expect(/Already Paid\./)
+        .expect(/You have already paid\./)
         .expect(200, done);
     });
 
@@ -254,7 +254,7 @@ describe('SoCraTes payment application', function () {
         .send('amount=100,00')
         .send('description=Generous donation')
         .send('stripeId=abcdefghijklm')
-        .expect(/404 - This page is missing./)
+        .expect(/404 - This page is missing\./)
         .expect(404, done);
     });
 
@@ -275,7 +275,7 @@ describe('SoCraTes payment application', function () {
     it('returns a 404 when nobody is logged in', function (done) {
       appWithoutMember
         .post('/submitTransferSocrates')
-        .expect(/404 - This page is missing./)
+        .expect(/404 - This page is missing\./)
         .expect(404, done);
     });
 
