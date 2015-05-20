@@ -3,7 +3,6 @@
 var logger = require('winston').loggers.get('application');
 var beans = require('simple-configure').get('beans');
 var PaymentInfo = beans.get('paymentInfo');
-var memberstore = beans.get('memberstore');
 var statusmessage = beans.get('statusmessage');
 var stripeService = beans.get('stripeService');
 var fieldHelpers = beans.get('fieldHelpers');
