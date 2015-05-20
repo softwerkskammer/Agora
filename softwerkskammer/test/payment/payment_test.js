@@ -84,7 +84,7 @@ describe('Payment application', function () {
 
     beforeEach(function () {
       amount = undefined;
-      sinon.stub(paymentService, 'payWithCreditCard', function (saveCreditCardPayment, passedAmount, description, memberId, stripeId, callback) {
+      sinon.stub(paymentService, 'payWithCreditCard', function (saveCreditCardPayment, passedAmount, description, stripeId, callback) {
         amount = passedAmount;
         var message = statusmessage.successMessage('message.title.save_successful', 'message.content.activities.credit_card_paid', {amount: passedAmount});
         callback(null, message);
