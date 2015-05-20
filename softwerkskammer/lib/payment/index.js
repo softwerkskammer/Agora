@@ -30,7 +30,7 @@ app.get('/calcFee', function (req, res) {
 
 app.post('/submitCreditCard', function (req, res, next) {
   var saveCreditCardPayment = function (callback) { callback(null); };
-  paymentService.payWithCreditCard(saveCreditCardPayment, parseFloat(req.body.amount.replace(',', '.')), req.body.description, req.user.member.id(),
+  paymentService.payWithCreditCard(saveCreditCardPayment, parseFloat(req.body.amount.replace(',', '.')), req.body.description,
     req.body.stripeId, function (err, message) {
       if (err) { return next(err); }
       message.putIntoSession(req);

@@ -7,8 +7,6 @@ var beans = require('../../testutil/configureForTest').get('beans');
 
 var paymentService = beans.get('paymentService');
 var stripeService = beans.get('stripeService');
-var memberstore = beans.get('memberstore');
-var Member = beans.get('member');
 
 describe('Payment Service', function () {
 
@@ -25,13 +23,12 @@ describe('Payment Service', function () {
 
     beforeEach(function () {
       invoked = false;
-      sinon.stub(memberstore, 'getMemberForId', function (id, callback) { callback(null, new Member({firstname: 'Hans', lastname: 'Dampf', nickname: 'hada'})); });
     });
 
     it('executes save callback', function (done) {
       sinon.stub(stripeService, 'transaction', function () { return { charges: { create: function (charge, callback) {callback(null, charge); }}}; });
 
-      paymentService.payWithCreditCard(saveCreditCardPayment, 100, 'Credit Card Payment', 'member', 'stripe-id', function (err, message) {
+      paymentService.payWithCreditCard(saveCreditCardPayment, 100, 'Credit Card Payment', 'stripe-id', function (err, message) {
         expect(invoked).to.be.true();
         expect(message).to.exist();
         expect(err).to.not.exist();
@@ -42,7 +39,7 @@ describe('Payment Service', function () {
     it('shows a status message if the returned error contains a message', function (done) {
       sinon.stub(stripeService, 'transaction', function () { return { charges: { create: function (charge, callback) {callback({message: 'General problem'}); }}}; });
 
-      paymentService.payWithCreditCard(saveCreditCardPayment, 100, 'Credit Card Payment', 'member', 'stripe-id', function (err, message) {
+      paymentService.payWithCreditCard(saveCreditCardPayment, 100, 'Credit Card Payment', 'stripe-id', function (err, message) {
         expect(invoked).to.be.false();
         expect(message).to.exist();
         expect(message.contents().type).to.equal('alert-danger');
@@ -54,7 +51,7 @@ describe('Payment Service', function () {
     it('shows a normal error if the returned error contains no message', function (done) {
       sinon.stub(stripeService, 'transaction', function () { return { charges: { create: function (charge, callback) {callback({}); }}}; });
 
-      paymentService.payWithCreditCard(saveCreditCardPayment, 100, 'Credit Card Payment', 'member', 'stripe-id', function (err, message) {
+      paymentService.payWithCreditCard(saveCreditCardPayment, 100, 'Credit Card Payment', 'stripe-id', function (err, message) {
         expect(invoked).to.be.false();
         expect(message).to.not.exist();
         expect(err).to.exist();
@@ -91,7 +88,7 @@ describe('Payment Service', function () {
     it('shows a normal error if the method is invoked with amount being null', function (done) {
       sinon.stub(stripeService, 'transaction', function () { return { charges: { create: function (charge, callback) {callback({}); }}}; });
 
-      paymentService.payWithCreditCard(saveCreditCardPayment, null, 'Credit Card Payment', 'member', 'stripe-id', function (err, message) {
+      paymentService.payWithCreditCard(saveCreditCardPayment, null, 'Credit Card Payment', 'stripe-id', function (err, message) {
         expect(invoked).to.be.false();
         expect(message).to.not.exist();
         expect(err).to.exist();
@@ -101,25 +98,12 @@ describe('Payment Service', function () {
     });
   });
 
-  describe('Payment with credit card where member loading', function () {
-    it('does not return a member: ', function (done) {
-      sinon.stub(memberstore, 'getMemberForId', function (id, callback) { callback(null); });
-
-      paymentService.payWithCreditCard(null, 100, 'Credit Card Payment', 'member', 'stripe-id', function (err, message) {
-        expect(message).to.not.exist();
+  describe('Payment with credit card', function () {
+    it('does not require a member: ', function (done) {
+      paymentService.payWithCreditCard(null, 100, 'Credit Card Payment', 'stripe-id', function (err, message) {
+        expect(message).to.exist();
         expect(err).to.not.exist();
         done(err);
-      });
-    });
-
-    it('yields an error: ', function (done) {
-      sinon.stub(memberstore, 'getMemberForId', function (id, callback) { callback(new Error('Member loading error')); });
-
-      paymentService.payWithCreditCard(null, 100, 'Credit Card Payment', 'member', 'stripe-id', function (err, message) {
-        expect(message).to.not.exist();
-        expect(err).to.exist();
-        expect(err.message).to.be('Member loading error');
-        done(); // error case - do not pass error to done()
       });
     });
   });
