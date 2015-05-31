@@ -134,7 +134,8 @@ Member.prototype.interests = function () {
 };
 
 Member.prototype.interestsForSelect2 = function () {
-  return _(this.interests()).words(/[^, |^,]+/g);
+  /*jslint regexp: true*/
+  return _(this.interests()).words(/[^,]+/g);
 };
 
 Member.prototype.reference = function () {
