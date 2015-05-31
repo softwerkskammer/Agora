@@ -16,7 +16,10 @@ mixin textWithTags(name, label, value, tags)
       each tag in tags
         option(selected = value.indexOf(tag) > -1) #{tag}
     script.
-      $(#{name}).select2({tags: true, tokenSeparators: [',', ', ']});
+      $(#{name}).select2({
+        tags: true, 
+        tokenSeparators: [',', ', ']
+      });
 
 mixin multiselect(name, label, value, tags)
   .form-group

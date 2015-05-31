@@ -14,5 +14,5 @@ block content
       form(role='form',method='POST',action='/activityresults/')
         +csrf
         +text('activityResultName', 'Name', activityResultName, '', '', true)
-        +textWithTags('tags', 'Tags', '', [])
+        +textWithTags('tags', 'Tags', [], [])
         +submitButtons('activityresults.submit')
