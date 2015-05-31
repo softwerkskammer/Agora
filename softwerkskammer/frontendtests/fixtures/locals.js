@@ -53,6 +53,7 @@ module.exports = {
     location: function () { return ''; },
     profession: function () { return ''; },
     interests: function () { return ''; },
+    interestsForSelect2: function () { return []; },
     site: function () { return ''; },
     reference: function () { return ''; },
     notifyOnWikiChanges: function () { return ''; },

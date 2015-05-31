@@ -674,8 +674,9 @@ describe('Activity application', function () {
       request(createApp({member: member4}))
         .get('/edit/urlForEditors')
         .expect(200)
-        .expect(/value="Firstname1 Lastname1 \(participant1\),Firstname3 Lastname3 \(participant3\)"/)
-        .expect(/tags: \["Firstname1 Lastname1 \(participant1\)","Firstname2 Lastname2 \(participant2\)","Firstname3 Lastname3 \(participant3\)"\]/)
+        .expect(/<option selected="selected">Firstname1 Lastname1 \(participant1\)/)
+        .expect(/<option>Firstname2 Lastname2 \(participant2\)/)
+        .expect(/<option selected="selected">Firstname3 Lastname3 \(participant3\)/)
         .end(done);
     });
 
@@ -685,8 +686,9 @@ describe('Activity application', function () {
       request(createApp({member: member1}))
         .get('/edit/urlForEditors')
         .expect(200)
-        .expect(/value="Firstname1 Lastname1 \(participant1\),Firstname3 Lastname3 \(participant3\)"/)
-        .expect(/tags: \["Firstname1 Lastname1 \(participant1\)","Firstname2 Lastname2 \(participant2\)","Firstname3 Lastname3 \(participant3\)"\]/)
+        .expect(/<option selected="selected">Firstname1 Lastname1 \(participant1\)/)
+        .expect(/<option>Firstname2 Lastname2 \(participant2\)/)
+        .expect(/<option selected="selected">Firstname3 Lastname3 \(participant3\)/)
         .end(done);
     });
 

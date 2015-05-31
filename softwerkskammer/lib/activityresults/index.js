@@ -17,7 +17,7 @@ app.post('/', function (req, res, next) {
   if (!activityResultName) {
     return next(new Error('No Images')); // Sollte durch geeignete Prüfungen abgefangen werden. Siehe andere post Implementierungen (activities)
   }
-  var tags = (req.body.tags || '').split(',');
+  var tags = misc.toArray(req.body.tags);
 
   activityresultsPersistence.save(new ActivityResult({
     id: activityResultName,

@@ -34,7 +34,7 @@ function activitySubmitted(req, res, next) {
   activitiesService.getActivityWithGroupAndParticipants(req.body.previousUrl, function (err, activity) {
     if (err) { return next(err); }
     if (!activity) { activity = new Activity({owner: req.user.member.id()}); }
-    var trimmedEditors = _.map((req.body.editorIds || '').split(','), function (editor) { return editor.trim(); });
+    var trimmedEditors = misc.toArray(req.body.editorIds);
     var editorIds = _.map(trimmedEditors, function (editor) {
       var memberRepresentingTheEditor = _.find(activity.participants, function (participant) { return editorNameOf(participant) === editor; });
       return memberRepresentingTheEditor ? memberRepresentingTheEditor.id() : undefined;
