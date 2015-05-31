@@ -29,7 +29,7 @@ module.exports = {
 
   imageDataFromCache: function (member) {
     var url = this.avatarUrl(member.email(), 16);
-    return imageCache.get(url)[url];
+    return imageCache.get(url);
   }, // public for stubbing in test
 
   imageDataFromGravatar: function (member, callback) {
