@@ -16,7 +16,7 @@ module.exports = function (grunt) {
   var commonJSfiles = [
     'bower_components/jquery/dist/jquery.js',
     'bower_components/jquery-guillotine/js/jquery.guillotine.js',
-    'bower_components/select2/select2.js',
+    'bower_components/select2/dist/js/select2.full.js',
     'bower_components/autoNumeric/autoNumeric.js',
     'bower_components/bootstrap/dist/js/bootstrap.js',
     'bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js',
@@ -234,7 +234,7 @@ module.exports = function (grunt) {
             'bower_components/datatables/media/css/jquery.dataTables.css',
             'softwerkskammer/frontend/3rd_party_css/dataTables.bootstrap.css',
             'softwerkskammer/frontend/3rd_party_css/dataTables.fontAwesome.css',
-            'bower_components/select2/select2.css',
+            'bower_components/select2/dist/css/select2.css',
             'bower_components/select2-bootstrap-css/select2-bootstrap.css',
             'bower_components/mjolnic-bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css',
             'bower_components/jquery-guillotine/css/jquery.guillotine.css',

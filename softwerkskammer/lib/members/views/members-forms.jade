@@ -39,7 +39,7 @@ mixin memberform(member, regionalgroups, themegroups, tags)
         .col-md-6
           +text('location', t('members.location'), member.location())
           +text('profession', t('members.profession'), member.profession())
-          +textWithTags('interests', t('members.interests'), member.interests(), tags)
+          +textWithTags('interests', t('members.interests'), member.interestsForSelect2(), tags)
           +text('site', t('members.web'), member.site())
           +text('reference', t('members.reference'), member.reference())
       if (accessrights.isRegistered())

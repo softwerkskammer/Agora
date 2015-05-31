@@ -118,7 +118,7 @@ describe('fillFromUI', function () {
       twitter: ' @twitti ',
       location: ' somewhere ',
       profession: ' My Job ',
-      interests: ' Everything ',
+      interests: ['Everything'],
       site: ' www.mypage.de ',
       reference: ' A friend ',
       customAvatar: ' avatar-url ',

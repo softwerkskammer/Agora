@@ -12,7 +12,7 @@ function Member(object) {
 
 Member.prototype.fillFromUI = function (object) {
   var self = this;
-  _.each(['nickname', 'firstname', 'lastname', 'email', 'location', 'profession', 'interests', 'reference', 'customAvatar'], function (property) {
+  _.each(['nickname', 'firstname', 'lastname', 'email', 'location', 'profession', 'reference', 'customAvatar'], function (property) {
     if (object.hasOwnProperty(property) && object[property]) { self.state[property] = object[property].trim(); }
   });
   _.each(['notifyOnWikiChanges', 'socratesOnly'], function (property) {
@@ -23,6 +23,9 @@ Member.prototype.fillFromUI = function (object) {
   }
   if (object.site) {
     self.state.site = fieldHelpers.addPrefixTo('http://', object.site.trim(), 'https://');
+  }
+  if (object.interests) {
+    self.state.interests = object.interests.toString();
   }
 
   return self;
@@ -128,6 +131,10 @@ Member.prototype.profession = function () {
 
 Member.prototype.interests = function () {
   return this.state.interests;
+};
+
+Member.prototype.interestsForSelect2 = function () {
+  return _(this.interests()).words(/[^, |^,]+/g);
 };
 
 Member.prototype.reference = function () {
