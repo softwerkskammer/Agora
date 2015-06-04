@@ -36,20 +36,6 @@ function fullPathFor(name) {
   return path.join(conf.get('imageDirectory') || conf.get('TMPDIR') || '/tmp/', name);
 }
 
-function scaleImage(id, width, callback) {
-  var scaledImagePath = fullPathFor(width ? scaledImageId(id, width) : id);
-  fs.exists(scaledImagePath, function (exists) {
-    if (exists || !width) { return callback(null, scaledImagePath); }
-    var fullPath = fullPathFor(id);
-    fs.exists(fullPath, function (existsFullPath) {
-      if (!existsFullPath) { return callback(); }
-      magick.convert([fullPath, '-quality', '75', '-scale', width, scaledImagePath], function (err) {
-        callback(err, scaledImagePath);
-      });
-    });
-  });
-}
-
 function representsImage(file) {
   return misc.representsImage(file);
 }
@@ -85,6 +71,19 @@ module.exports = {
   },
 
   retrieveScaledImage: function (id, miniOrThumb, callback) {
-    scaleImage(id, widths[miniOrThumb], callback);
+    var width = widths[miniOrThumb];
+    var scaledImagePath = fullPathFor(width ? scaledImageId(id, width) : id);
+    fs.exists(scaledImagePath, function (exists) {
+      if(!exists && !width) { return callback(new Error('Image does not exist')); }
+      if (exists || !width) { return callback(null, scaledImagePath); }
+      var fullPath = fullPathFor(id);
+      fs.exists(fullPath, function (existsFullPath) {
+        if (!existsFullPath) { return callback(new Error('Image does not exist')); }
+        magick.convert([fullPath, '-quality', '75', '-scale', width, scaledImagePath], function (err) {
+          callback(err, scaledImagePath);
+        });
+      });
+    });
+
   }
 };
