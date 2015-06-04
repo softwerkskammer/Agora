@@ -35,7 +35,7 @@ block content
       p &nbsp;
     .col-md-4
       if(accessrights.canEditMember(member))
-        +avatar
+        +avatar(member)
       else
         div(style='width: 200px')
           img(src=member.avatarUrl())

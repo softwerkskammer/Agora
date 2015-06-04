@@ -1,7 +1,7 @@
 include ../../../views/formComponents
 include ../../../views/imageUpload
   
-mixin avatar
+mixin avatar(member)
   div(style='width: 200px')
     form(id='recordForm', role='form', method='POST', action='/members/submitavatar' + '?_csrf=' + encodeURIComponent(csrf_token), enctype='multipart/form-data')
       #selectFileButton
