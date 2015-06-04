@@ -1,5 +1,6 @@
 'use strict';
 
+var _ = require('lodash');
 var beans = require('simple-configure').get('beans');
 var subscriberstore = beans.get('subscriberstore');
 var memberstore = beans.get('memberstore');
@@ -171,6 +172,10 @@ module.exports = {
       memberstore.getMember(participantNick, function (err1, participant) {
         if (err1 || !participant) { return callback(err1); }
         activity.socratesResourceNamed(resourceName).removeMemberId(participant.id());
+        var rooms = activity.rooms(resourceName);
+        _.each(rooms.roomPairsWithMembersFrom([participant.id()]), function (roomPair) {
+          rooms.remove(roomPair.participant1, roomPair.participant2);
+        });
         return activitystore.saveActivity(activity, function (err2) {
           if (err2 && err2.message === CONFLICTING_VERSIONS) {
             // we try again because of a racing condition during save:
