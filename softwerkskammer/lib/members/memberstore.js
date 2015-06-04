@@ -7,13 +7,13 @@ var _ = require('lodash');
 var persistence = beans.get('membersPersistence');
 var Member = beans.get('member');
 var misc = beans.get('misc');
-var _s = require('underscore.string');
+var naturalCmp = require('underscore.string/naturalCmp');
 var logger = require('winston').loggers.get('transactions');
 var toMember = _.partial(misc.toObject, Member);
 
 var sortCaseInsensitive = function (objectlist) {
   return objectlist.sort(function (a, b) {
-    return _s.naturalCmp(a.lastname.toLowerCase() + ' ' + a.firstname.toLowerCase(), b.lastname.toLowerCase() + ' ' + b.firstname.toLowerCase());
+    return naturalCmp(a.lastname.toLowerCase() + ' ' + a.firstname.toLowerCase(), b.lastname.toLowerCase() + ' ' + b.firstname.toLowerCase());
   });
 
 };

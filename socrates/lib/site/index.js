@@ -4,7 +4,7 @@
 var path = require('path');
 var fs = require('fs');
 var qrimage = require('qr-image');
-var _s = require('underscore.string');
+var _ = require('lodash');
 
 var conf = require('simple-configure');
 var beans = conf.get('beans');
@@ -80,7 +80,7 @@ app.get('/mustBeSuperuser', function (req, res) {
 
 app.get('/qrcode', function (req, res) {
   var url = req.query.url;
-  var fullUrl = _s.startsWith(url, 'http') ? url : conf.get('publicUrlPrefix') + url;
+  var fullUrl = _.startsWith(url, 'http') ? url : conf.get('publicUrlPrefix') + url;
   var img = qrimage.image(fullUrl, {type: 'svg'});
   res.type('svg');
   img.pipe(res);
