@@ -75,7 +75,7 @@ module.exports = {
     var width = widths[miniOrThumb];
 
     fs.exists(image, function (exists) {
-      if (!exists) { return callback(new Error('Image does not exist')); }
+      if (!exists) { return callback(new Error('Image ' + image + ' does not exist')); }
       if (!width) { return callback(null, fullPathFor(id)); }
       var scaledImage = fullPathFor(scaledImageId(id, width));
       fs.exists(scaledImage, function (existsScaledImage) {
