@@ -71,19 +71,20 @@ module.exports = {
   },
 
   retrieveScaledImage: function (id, miniOrThumb, callback) {
+    var image = fullPathFor(id);
     var width = widths[miniOrThumb];
-    var scaledImagePath = fullPathFor(width ? scaledImageId(id, width) : id);
-    fs.exists(scaledImagePath, function (exists) {
-      if(!exists && !width) { return callback(new Error('Image does not exist')); }
-      if (exists || !width) { return callback(null, scaledImagePath); }
-      var fullPath = fullPathFor(id);
-      fs.exists(fullPath, function (existsFullPath) {
-        if (!existsFullPath) { return callback(new Error('Image does not exist')); }
-        magick.convert([fullPath, '-quality', '75', '-scale', width, scaledImagePath], function (err) {
-          callback(err, scaledImagePath);
+
+    fs.exists(image, function (exists) {
+      if (!exists) { return callback(new Error('Image does not exist')); }
+      if (!width) { return callback(null, fullPathFor(id)); }
+      var scaledImage = fullPathFor(scaledImageId(id, width));
+      fs.exists(scaledImage, function (existsScaledImage) {
+        if (existsScaledImage) { return callback(null, scaledImage); }
+        magick.convert([image, '-quality', '75', '-scale', width, scaledImage], function (err) {
+          callback(err, scaledImage);
         });
       });
     });
-
   }
+
 };
