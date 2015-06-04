@@ -162,6 +162,24 @@ module.exports = {
         });
       });
     });
+  },
+
+  removeParticipantFor: function (resourceName, participantNick, callback) {
+    var self = this;
+    activitystore.getActivity(currentUrl, function (err, activity) {
+      if (err || !activity) { return callback(err); }
+      memberstore.getMember(participantNick, function (err1, participant) {
+        if (err1 || !participant) { return callback(err1); }
+        activity.socratesResourceNamed(resourceName).removeMemberId(participant.id());
+        return activitystore.saveActivity(activity, function (err2) {
+          if (err2 && err2.message === CONFLICTING_VERSIONS) {
+            // we try again because of a racing condition during save:
+            return self.removeParticipantFor(resourceName, participantNick, callback);
+          }
+          return callback(err2);
+        });
+      });
+    });
   }
 
 };

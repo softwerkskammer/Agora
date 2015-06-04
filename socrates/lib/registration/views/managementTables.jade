@@ -77,6 +77,27 @@ mixin removePair(resourceName, pair)
     +hidden('participant2', pair.participant2.nickname())
     button.btn.btn-default.btn-xs(type='submit') Entfernen
 
+mixin removeParticipantWithModal(resourceName, participantNick)
+  -var theID = 'reallyDelete' + participantNick
+  .modal.fade(id=theID, tabindex='-1')
+    .modal-dialog
+      .modal-content
+        .modal-header
+          button.close(type='button', data-dismiss='modal', aria-hidden='true') &times;
+          h3 Entfernen
+        .modal-body
+          p #{t('general.are_you_sure')}
+          form(id='removeParticipantForm', action='/activities/removeParticipant', method='post')
+            .btn-group
+              button.btn.btn-default(type='cancel', data-dismiss='modal', aria-hidden='true') #{t('general.no')}
+              +csrf
+              +hidden('resourceName', resourceName)
+              +hidden('participant', participantNick)
+              button.btn.btn-danger(type='submit')
+                i.fa.fa-trash-o.fa-fw &nbsp;
+                | #{t('general.delete')}
+  button.btn.btn-danger(data-toggle='modal', data-target='#' + theID): i.fa.fa-trash-o.fa-fw
+
 block scripts
   +dataTableImport
   +ajaxFunction
@@ -169,6 +190,7 @@ block content
                     th bleibt bis
                     th ändern in
                     th umbuchen in
+                    th entfernen
                 tbody
                   for member in participants
                     tr
@@ -180,6 +202,7 @@ block content
                       td #{resource.durationFor(member.id())}
                       td: +newDuration(resourceName, member.nickname(), resource.recordFor(member.id()).duration)
                       td: +newResource(resourceName, member.nickname())
+                      td: +removeParticipantWithModal(resourceName, member.nickname())
             hr
         .tab-pane#waitinglist
           each resourceName in activity.resourceNames()
