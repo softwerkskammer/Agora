@@ -180,6 +180,7 @@ pre code {
   text-align: right;
   border-bottom-color: transparent;
 }
+// wiki page compare *END*
 
 .navbar {
   font-family: @headings-font-family;
@@ -188,4 +189,20 @@ pre code {
 .disabled-text {
   color: @gray-light;
 }
-// wiki page compare *END*
+
+// File upload button
+.btn-file {
+  position: relative;
+  overflow: hidden;
+  input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    opacity: 0;
+    -ms-filter: alpha(opacity=0);
+    font-size: 200px;
+    direction: ltr;
+    cursor: pointer;
+  }
+}

@@ -164,6 +164,7 @@ module.exports = function (grunt) {
             'node_modules/node-syntaxhighlighter/lib/styles/shCoreDefault.css',
             'bower_components/smartmenus/dist/addons/bootstrap/jquery.smartmenus.bootstrap.css',
             'socrates/build/stylesheets/less/bootstrap-markdown-patched.less',
+            'bower_components/jquery-guillotine/css/jquery.guillotine.css',
             'socrates/build/stylesheets/less/socrates.less'
           ]
         }
