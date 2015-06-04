@@ -1,3 +1,4 @@
+/*jslint stupid: true*/
 'use strict';
 
 var conf = require('../../testutil/configureForTest');
@@ -15,7 +16,6 @@ function tmpPathFor(name) {
 }
 
 function exists(name) {
-  /*jslint stupid: true*/
   return fs.existsSync(tmpPathFor(name));
 }
 
@@ -63,7 +63,7 @@ describe('the gallery repository on real files', function () {
         service.retrieveScaledImage(imageId, 'thumb', function (err2, retrievedImagePath) {
           expect(fs.existsSync(retrievedImagePath)).to.be(true);
           expect(retrievedImagePath).to.not.be(tmpPathFor(imageId));
-          expect(retrievedImagePath).to.match(/_400.jpg$/);
+          expect(retrievedImagePath).to.match(/_400\.jpg$/);
 
           // second retrieve: scaled image already exists
           service.retrieveScaledImage(imageId, 'thumb', function (err3, retrievedImagePath2) {
