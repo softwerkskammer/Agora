@@ -32,16 +32,20 @@ function scaledImageId(id, width) {
   return path.basename(id, ext) + '_' + width + ext;
 }
 
-function fullPath(name) {
+function fullPathFor(name) {
   return path.join(conf.get('imageDirectory') || conf.get('TMPDIR') || '/tmp/', name);
 }
 
 function scaleImage(id, width, callback) {
-  var scaledImagePath = fullPath(width ? scaledImageId(id, width) : id);
+  var scaledImagePath = fullPathFor(width ? scaledImageId(id, width) : id);
   fs.exists(scaledImagePath, function (exists) {
     if (exists || !width) { return callback(null, scaledImagePath); }
-    magick.convert([fullPath(id), '-quality', '75', '-scale', width, scaledImagePath], function (err) {
-      callback(err, scaledImagePath);
+    var fullPath = fullPathFor(id);
+    fs.exists(fullPath, function (existsFullPath) {
+      if (!existsFullPath) { return callback(); }
+      magick.convert([fullPath, '-quality', '75', '-scale', width, scaledImagePath], function (err) {
+        callback(err, scaledImagePath);
+      });
     });
   });
 }
@@ -51,7 +55,7 @@ function representsImage(file) {
 }
 
 function deleteAllImagesMatching(pattern, callback) {
-  glob(fullPath(pattern), function (err, files) {
+  glob(fullPathFor(pattern), function (err, files) {
     if (err) { return callback(err); }
     async.each(_.filter(files, representsImage), fs.unlink, callback);
   });
@@ -64,7 +68,7 @@ module.exports = {
 
   storeAvatar: function (tmpImageFilePath, params, callback) {
     var id = uuid.v4() + path.extname(tmpImageFilePath);
-    convert(tmpImageFilePath, fullPath(id), params, function (err) { callback(err, id); });
+    convert(tmpImageFilePath, fullPathFor(id), params, function (err) { callback(err, id); });
   },
 
   deleteAvatar: function (nickname, callback) {
@@ -73,11 +77,11 @@ module.exports = {
 
   storeImage: function (tmpImageFilePath, callback) {
     var id = uuid.v4() + path.extname(tmpImageFilePath);
-    autoOrient(tmpImageFilePath, fullPath(id), function (err) { callback(err, id); });
+    autoOrient(tmpImageFilePath, fullPathFor(id), function (err) { callback(err, id); });
   },
 
   getMetadataForImage: function (id, callback) {
-    magick.readMetadata(fullPath(id), callback);
+    magick.readMetadata(fullPathFor(id), callback);
   },
 
   retrieveScaledImage: function (id, miniOrThumb, callback) {
