@@ -4,12 +4,14 @@
     "general": "General",
     "all": "All",
     "create": "Create",
+    "new": "New",
     "edit": "Edit",
     "rename": "Rename",
     "add": "Add",
     "save": "Save",
     "back": "Back",
     "close": "Close",
+    "cancel": "Cancel",
     "compare": "Compare",
     "more": "More",
     "title": "Title",
@@ -285,6 +287,10 @@
     "edit_socrates_softwerkskammer": "Here you find the information from your Softwerkskammer account that is used by SoCraTes. If you change anything here, it is changed in Softwerkskammer as well.",
     "edit_preregistration": "In order to keep you informed about the SoCraTes conference, we need you to provide us with the following information. Please fill in all mandatory fields.",
     "edit_registration": "In order to participate in the event, we need you to provide us with the following information. Please fill in all mandatory fields."
+  },
+  "photo": {
+    "replace": "Replace",
+    "delete": "Delete Photo"
   },
   "wiki": {
     "blogposts": "Blog Posts",

@@ -17,6 +17,7 @@ module.exports = function (grunt) {
   var files = {
     'socrates/public/clientscripts/global.js': [
       'bower_components/jquery/dist/jquery.js',
+      'bower_components/jquery-guillotine/js/jquery.guillotine.js',
       'bower_components/autoNumeric/autoNumeric.js',
       'bower_components/bootstrap/dist/js/bootstrap.js',
       'bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js',
