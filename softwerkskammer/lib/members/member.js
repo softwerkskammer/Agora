@@ -82,7 +82,7 @@ Member.prototype.inlineAvatar = function () {
 };
 
 Member.prototype.hasCustomAvatar = function () {
-  return !!this.state.customAvatar;
+  return !!this.customAvatar();
 };
 
 Member.prototype.customAvatar = function () {
