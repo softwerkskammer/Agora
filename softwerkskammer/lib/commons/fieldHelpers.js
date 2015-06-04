@@ -1,7 +1,7 @@
 'use strict';
 /* eslint no-underscore-dangle: 0 */
 
-var _s = require('underscore.string');
+var _ = require('lodash');
 var moment = require('moment-timezone');
 var numeral = require('numeral');
 numeral.language('de', require('numeral/languages/de'));
@@ -23,7 +23,7 @@ module.exports = {
   },
 
   addPrefixTo: function (prefix, string, additionalPrefixToCheck) {
-    if (string && !_s.startsWith(string, prefix) && !_s.startsWith(string, additionalPrefixToCheck)) {
+    if (string && !_.startsWith(string, prefix) && !_.startsWith(string, additionalPrefixToCheck)) {
       return prefix + string;
     }
     return string;
