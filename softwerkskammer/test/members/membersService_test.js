@@ -8,7 +8,6 @@ var Member = beans.get('member');
 var memberstore = beans.get('memberstore');
 var membersService = beans.get('membersService');
 
-
 describe('MembersService', function () {
   /* eslint no-path-concat: 0 */
   var imagePath = __dirname + '/../gallery/fixtures/image.jpg';
@@ -247,7 +246,7 @@ describe('MembersService', function () {
       });
     });
 
-    it('loads the cuatom avatar mini picture into the member', function (done) {
+    it('loads the custom avatar mini picture into the member', function (done) {
       var files = {image: [{path: imagePath}]};
       var params = {};
       member.state.nickname = 'hada';
@@ -256,6 +255,16 @@ describe('MembersService', function () {
           expect(member.inlineAvatar()).to.match(/^data:image\/jpeg;base64,\/9j/);
           done(err);
         });
+      });
+    });
+
+    it('does not load any image into the member if the member\'s custom avatar cannot be found', function (done) {
+      member.state.customAvatar = 'myNonexistentPic.jpg';
+      expect(member.inlineAvatar()).to.match('');
+
+      membersService.getImage(member, function (err) {
+        expect(member.inlineAvatar()).to.match('');
+        done(err);
       });
     });
   });

@@ -1,5 +1,6 @@
 'use strict';
 
+var Form = require('multiparty').Form;
 var beans = require('simple-configure').get('beans');
 var misc = beans.get('misc');
 var membersService = beans.get('membersService');
@@ -9,6 +10,7 @@ var Member = beans.get('member');
 var memberSubmitHelper = beans.get('memberSubmitHelper');
 var subscriberstore = beans.get('subscriberstore');
 var socratesConstants = beans.get('socratesConstants');
+var memberstore = beans.get('memberstore');
 
 var app = misc.expressAppIn(__dirname);
 
@@ -54,6 +56,38 @@ app.post('/submit', function (req, res, next) {
       });
     });
 
+  });
+});
+
+app.post('/submitavatar', function (req, res, next) {
+  new Form().parse(req, function (err, fields, files) {
+    var nickname = fields.nickname[0];
+    if (err || !files || files.length < 1) {
+      return res.redirect('/members/' + nickname);
+    }
+    var params = {
+      geometry: fields.w[0] + 'x' + fields.h[0] + '+' + fields.x[0] + '+' + fields.y[0],
+      scale: fields.scale[0],
+      angle: fields.angle[0]
+    };
+    membersService.saveCustomAvatarForNickname(nickname, files, params, function (err2) {
+      if (err2) { return next(err2); }
+      res.redirect('/members/' + encodeURIComponent(nickname)); // Es fehlen Prüfungen im Frontend
+    });
+  });
+});
+
+app.get('/deleteAvatarFor/:nickname', function (req, res, next) {
+  var nicknameOfEditMember = req.params.nickname;
+  memberstore.getMember(nicknameOfEditMember, function (err, member) {
+    if (err) { return next(err); }
+    if (res.locals.accessrights.canEditMember(member)) {
+      return membersService.deleteCustomAvatarForNickname(nicknameOfEditMember, function (err2) {
+        if (err2) { return next(err2); }
+        res.redirect('/members/' + encodeURIComponent(nicknameOfEditMember));
+      });
+    }
+    res.redirect('/members/' + encodeURIComponent(nicknameOfEditMember));
   });
 });
 

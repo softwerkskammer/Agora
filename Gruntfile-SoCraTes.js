@@ -17,6 +17,7 @@ module.exports = function (grunt) {
   var files = {
     'socrates/public/clientscripts/global.js': [
       'bower_components/jquery/dist/jquery.js',
+      'bower_components/jquery-guillotine/js/jquery.guillotine.js',
       'bower_components/autoNumeric/autoNumeric.js',
       'bower_components/bootstrap/dist/js/bootstrap.js',
       'bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js',
@@ -163,6 +164,7 @@ module.exports = function (grunt) {
             'node_modules/node-syntaxhighlighter/lib/styles/shCoreDefault.css',
             'bower_components/smartmenus/dist/addons/bootstrap/jquery.smartmenus.bootstrap.css',
             'socrates/build/stylesheets/less/bootstrap-markdown-patched.less',
+            'bower_components/jquery-guillotine/css/jquery.guillotine.css',
             'socrates/build/stylesheets/less/socrates.less'
           ]
         }

@@ -70,7 +70,7 @@ module.exports = {
   getImage: function (member, callback) {
     if (member.hasCustomAvatar()) {
       return galleryService.retrieveScaledImage(member.customAvatar(), 'mini', function (err, result) {
-        if (err) { return callback(err); }
+        if (err || !result) { return callback(); }
         fs.readFile(result, function (err1, data) {
           member.setAvatarData({
             image: 'data:' + mimetypes.lookup(result) + ';base64,' + new Buffer(data).toString('base64'),

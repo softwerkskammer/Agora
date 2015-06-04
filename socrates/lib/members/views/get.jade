@@ -1,6 +1,7 @@
 extends ../../../views/layout
 
 include ../../../views/formComponents
+include ../../../../softwerkskammer/lib/members/views/editavatar
 
 block title
   | #{member.firstname()} #{member.lastname()} - #{t('members.profile')}
@@ -33,8 +34,11 @@ block content
 
       p &nbsp;
     .col-md-4
-      p
-        img(src=member.avatarUrl(200))
+      if(accessrights.canEditMember(member))
+        +avatar(member)
+      else
+        div(style='width: 200px')
+          img(src=member.avatarUrl())
 
   .row
     .col-md-12
