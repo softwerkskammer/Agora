@@ -158,4 +158,11 @@ app.post('/removeParticipantPair', function (req, res, next) {
   });
 });
 
+app.post('/removeParticipant', function (req, res, next) {
+  socratesActivitiesService.removeParticipantFor(req.body.resourceName, req.body.participant, function (err) {
+    if (err) { return next(err); }
+    res.redirect('/registration/management');
+  });
+});
+
 module.exports = app;

@@ -1,5 +1,7 @@
 'use strict';
 
+var _ = require('lodash');
+var async = require('async');
 var beans = require('simple-configure').get('beans');
 var subscriberstore = beans.get('subscriberstore');
 var memberstore = beans.get('memberstore');
@@ -9,6 +11,18 @@ var roomOptions = beans.get('roomOptions');
 var CONFLICTING_VERSIONS = beans.get('constants').CONFLICTING_VERSIONS;
 
 var currentUrl = beans.get('socratesConstants').currentUrl;
+
+function saveActivity(args) {
+  activitystore.saveActivity(args.activity, function (err) {
+    if (err && err.message === CONFLICTING_VERSIONS) {
+      // we try again because of a racing condition during save:
+      return args.repeat(args.callback);
+    }
+    if (err) { return args.callback(err); }
+    if (args.handleSuccess) { args.handleSuccess(); }
+    return args.callback();
+  });
+}
 
 module.exports = {
 
@@ -28,140 +42,178 @@ module.exports = {
   fromWaitinglistToParticipant: function (nickname, registrationTuple, callback) {
     var self = this;
 
-    activitystore.getActivity(registrationTuple.activityUrl, function (err, activity) {
-      if (err || !activity) { return callback(err); }
+    async.parallel(
+      {
+        activity: _.partial(activitystore.getActivity, registrationTuple.activityUrl),
+        member: _.partial(memberstore.getMember, nickname)
+      },
+      function (err, results) {
+        if (err || !results.activity || !results.member) { return callback(err); }
 
-      memberstore.getMember(nickname, function (err1, member) {
-        if (err1 || !member) { return callback(err1); }
+        results.activity.register(results.member.id(), registrationTuple);
 
-        activity.register(member.id(), registrationTuple);
-        return activitystore.saveActivity(activity, function (err2) {
-          if (err2 && err2.message === CONFLICTING_VERSIONS) {
-            // we try again because of a racing condition during save:
-            return self.fromWaitinglistToParticipant(member.id(), registrationTuple, callback);
+        saveActivity({
+          activity: results.activity,
+          callback: callback,
+          repeat: _.partial(self.fromWaitinglistToParticipant, nickname, registrationTuple),
+          handleSuccess: function () {
+            var bookingdetails = roomOptions.informationFor(registrationTuple.resourceName, registrationTuple.duration);
+            bookingdetails.fromWaitinglist = true;
+            notifications.newParticipant(results.member.id(), bookingdetails);
           }
-          if (err2) { return callback(err2); }
-
-          var bookingdetails = roomOptions.informationFor(registrationTuple.resourceName, registrationTuple.duration);
-          bookingdetails.fromWaitinglist = true;
-          notifications.newParticipant(member.id(), bookingdetails);
-          return callback();
         });
-      });
-    });
+      }
+    );
   },
 
   newDurationFor: function (nickname, resourceName, duration, callback) {
     var self = this;
-    activitystore.getActivity(currentUrl, function (err, activity) {
-      if (err || !activity) { return callback(err); }
-      memberstore.getMember(nickname, function (err1, member) {
-        if (err1 || !member) { return callback(err1); }
-        activity.socratesResourceNamed(resourceName).recordFor(member.id()).duration = duration;
-        return activitystore.saveActivity(activity, function (err2) {
-          if (err2 && err2.message === CONFLICTING_VERSIONS) {
-            // we try again because of a racing condition during save:
-            return self.newDurationFor(nickname, resourceName, duration, callback);
-          }
-          if (err2) { return callback(err2); }
-          notifications.changedDuration(member, roomOptions.informationFor(resourceName, duration));
-          return callback();
-        });
-      });
 
-    });
+    async.parallel(
+      {
+        activity: _.partial(activitystore.getActivity, currentUrl),
+        member: _.partial(memberstore.getMember, nickname)
+      },
+      function (err, results) {
+        if (err || !results.activity || !results.member) { return callback(err); }
+
+        results.activity.socratesResourceNamed(resourceName).recordFor(results.member.id()).duration = duration;
+
+        saveActivity({
+          activity: results.activity,
+          callback: callback,
+          repeat: _.partial(self.newDurationFor, nickname, resourceName, duration),
+          handleSuccess: function () {
+            notifications.changedDuration(results.member, roomOptions.informationFor(resourceName, duration));
+          }
+        });
+      }
+    );
   },
 
   newResourceFor: function (nickname, resourceName, newResourceName, callback) {
     var self = this;
-    activitystore.getActivity(currentUrl, function (err, activity) {
-      if (err || !activity) { return callback(err); }
-      memberstore.getMember(nickname, function (err1, member) {
-        if (err1 || !member) { return callback(err1); }
-        var oldResource = activity.socratesResourceNamed(resourceName);
-        var registrationRecord = oldResource.recordFor(member.id());
-        oldResource.removeMemberId(member.id());
-        activity.socratesResourceNamed(newResourceName).addRecord(registrationRecord);
-        return activitystore.saveActivity(activity, function (err2) {
-          if (err2 && err2.message === CONFLICTING_VERSIONS) {
-            // we try again because of a racing condition during save:
-            return self.newResourceFor(nickname, resourceName, newResourceName, callback);
-          }
-          if (err2) { return callback(err2); }
-          notifications.changedResource(member, roomOptions.informationFor(newResourceName, registrationRecord.duration));
-          return callback();
-        });
-      });
 
-    });
+    async.parallel(
+      {
+        activity: _.partial(activitystore.getActivity, currentUrl),
+        member: _.partial(memberstore.getMember, nickname)
+      },
+      function (err, results) {
+        if (err || !results.activity || !results.member) { return callback(err); }
+
+        var oldResource = results.activity.socratesResourceNamed(resourceName);
+        var registrationRecord = oldResource.recordFor(results.member.id());
+        oldResource.removeMemberId(results.member.id());
+        results.activity.socratesResourceNamed(newResourceName).addRecord(registrationRecord);
+
+        saveActivity({
+          activity: results.activity,
+          callback: callback,
+          repeat: _.partial(self.newResourceFor, nickname, resourceName, newResourceName),
+          handleSuccess: function () {
+            notifications.changedResource(results.member, roomOptions.informationFor(newResourceName, registrationRecord.duration));
+          }
+        });
+      }
+    );
   },
 
   newWaitinglistFor: function (nickname, resourceName, newResourceName, callback) {
     var self = this;
-    activitystore.getActivity(currentUrl, function (err, activity) {
-      if (err || !activity) { return callback(err); }
-      memberstore.getMember(nickname, function (err1, member) {
-        if (err1 || !member) { return callback(err1); }
-        var oldResource = activity.socratesResourceNamed(resourceName);
-        var waitinglistRecord = oldResource.waitinglistRecordFor(member.id());
-        oldResource.removeFromWaitinglist(member.id());
-        activity.socratesResourceNamed(newResourceName).addWaitinglistRecord(waitinglistRecord);
-        return activitystore.saveActivity(activity, function (err2) {
-          if (err2 && err2.message === CONFLICTING_VERSIONS) {
-            // we try again because of a racing condition during save:
-            return self.newResourceFor(nickname, resourceName, newResourceName, callback);
-          }
-          if (err2) { return callback(err2); }
-          notifications.changedWaitinglist(member, roomOptions.informationFor(newResourceName, 'waitinglist'));
-          return callback();
-        });
-      });
 
-    });
+    async.parallel(
+      {
+        activity: _.partial(activitystore.getActivity, currentUrl),
+        member: _.partial(memberstore.getMember, nickname)
+      },
+      function (err, results) {
+        if (err || !results.activity || !results.member) { return callback(err); }
+
+        var oldResource = results.activity.socratesResourceNamed(resourceName);
+        var waitinglistRecord = oldResource.waitinglistRecordFor(results.member.id());
+        oldResource.removeFromWaitinglist(results.member.id());
+        results.activity.socratesResourceNamed(newResourceName).addWaitinglistRecord(waitinglistRecord);
+
+        saveActivity({
+          activity: results.activity,
+          callback: callback,
+          repeat: _.partial(self.newWaitinglistFor, nickname, resourceName, newResourceName),
+          handleSuccess: function () {
+            notifications.changedWaitinglist(results.member, roomOptions.informationFor(newResourceName, 'waitinglist'));
+          }
+        });
+      }
+    );
   },
 
   newParticipantPairFor: function (resourceName, participant1Nick, participant2Nick, callback) {
     var self = this;
-    activitystore.getActivity(currentUrl, function (err, activity) {
-      if (err || !activity) { return callback(err); }
-      memberstore.getMember(participant1Nick, function (err1, participant1) {
-        if (err1 || !participant1) { return callback(err1); }
-        memberstore.getMember(participant2Nick, function (err2, participant2) {
-          if (err2 || !participant2) { return callback(err2); }
-          activity.rooms(resourceName).add(participant1.id(), participant2.id());
-          return activitystore.saveActivity(activity, function (err3) {
-            if (err3 && err3.message === CONFLICTING_VERSIONS) {
-              // we try again because of a racing condition during save:
-              return self.newParticipantPairFor(resourceName, participant1Nick, participant2Nick, callback);
-            }
-            return callback(err3);
-          });
 
+    async.parallel(
+      {
+        activity: _.partial(activitystore.getActivity, currentUrl),
+        participant1: _.partial(memberstore.getMember, participant1Nick),
+        participant2: _.partial(memberstore.getMember, participant2Nick)
+      },
+      function (err, results) {
+        if (err || !results.activity || !results.participant1 || !results.participant2) { return callback(err); }
+
+        results.activity.rooms(resourceName).add(results.participant1.id(), results.participant2.id());
+
+        saveActivity({
+          activity: results.activity,
+          callback: callback,
+          repeat: _.partial(self.newParticipantPairFor, resourceName, participant1Nick, participant2Nick)
         });
-      });
-    });
+      }
+    );
   },
 
   removeParticipantPairFor: function (resourceName, participant1Nick, participant2Nick, callback) {
     var self = this;
-    activitystore.getActivity(currentUrl, function (err, activity) {
-      if (err || !activity) { return callback(err); }
-      memberstore.getMember(participant1Nick, function (err1, participant1) {
-        if (err1 || !participant1) { return callback(err1); }
-        memberstore.getMember(participant2Nick, function (err2, participant2) {
-          if (err2 || !participant2) { return callback(err2); }
-          activity.rooms(resourceName).remove(participant1.id(), participant2.id());
-          return activitystore.saveActivity(activity, function (err3) {
-            if (err3 && err3.message === CONFLICTING_VERSIONS) {
-              // we try again because of a racing condition during save:
-              return self.removeParticipantPairFor(resourceName, participant1Nick, participant2Nick, callback);
-            }
-            return callback(err3);
-          });
 
+    async.parallel(
+      {
+        activity: _.partial(activitystore.getActivity, currentUrl),
+        participant1: _.partial(memberstore.getMember, participant1Nick),
+        participant2: _.partial(memberstore.getMember, participant2Nick)
+      },
+      function (err, results) {
+        if (err || !results.activity || !results.participant1 || !results.participant2) { return callback(err); }
+
+        results.activity.rooms(resourceName).remove(results.participant1.id(), results.participant2.id());
+
+        saveActivity({
+          activity: results.activity,
+          callback: callback,
+          repeat: _.partial(self.removeParticipantPairFor, resourceName, participant1Nick, participant2Nick)
         });
-      });
-    });
+      }
+    );
+  },
+
+  removeParticipantFor: function (resourceName, participantNick, callback) {
+    var self = this;
+
+    async.parallel(
+      {
+        activity: _.partial(activitystore.getActivity, currentUrl),
+        participant: _.partial(memberstore.getMember, participantNick)
+      },
+      function (err, results) {
+        if (err || !results.activity || !results.participant) { return callback(err); }
+
+        results.activity.socratesResourceNamed(resourceName).removeMemberId(results.participant.id());
+        results.activity.rooms(resourceName).removePairContaining(results.participant.id());
+
+        saveActivity({
+          activity: results.activity,
+          callback: callback,
+          repeat: _.partial(self.removeParticipantFor, resourceName, participantNick)
+        });
+      }
+    );
   }
 
 };
