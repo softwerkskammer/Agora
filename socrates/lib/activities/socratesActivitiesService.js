@@ -192,10 +192,7 @@ module.exports = {
         if (err || !results.activity || !results.participant) { return callback(err); }
 
         results.activity.socratesResourceNamed(resourceName).removeMemberId(results.participant.id());
-        var rooms = results.activity.rooms(resourceName);
-        _.each(rooms.roomPairsWithMembersFrom([results.participant.id()]), function (roomPair) {
-          rooms.remove(roomPair.participant1, roomPair.participant2);
-        });
+        results.activity.rooms(resourceName).removePairContaining(results.participant.id());
 
         saveActivity({
           activity: results.activity,
