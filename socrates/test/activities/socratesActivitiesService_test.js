@@ -55,6 +55,8 @@ describe('SoCraTes Activities Service', function () {
     sinon.stub(notifications, 'changedResource');
     sinon.stub(notifications, 'changedWaitinglist');
     sinon.stub(memberstore, 'getMember', function (nickname, callback) {
+      if (nickname === 'nicknameForPair1') { return callback(null, new Member({id: 'memberIdForPair1'})); }
+      if (nickname === 'nicknameForPair2') { return callback(null, new Member({id: 'memberIdForPair2'})); }
       callback(null, new Member({id: 'memberId'}));
     });
     sinon.stub(activitystore, 'getActivity', function (url, callback) {
@@ -174,4 +176,47 @@ describe('SoCraTes Activities Service', function () {
       done(err);
     });
   });
+
+  it('joins two members to form a room', function (done) {
+    var allKnownMembersForRoomPairing = [new Member({id: 'memberIdForPair1'}), new Member({id: 'memberIdForPair2'})];
+
+    socrates.resources.bed_in_double._registeredMembers = [{
+      memberId: 'memberIdForPair1',
+      duration: 2
+    }, {memberId: 'memberIdForPair2', duration: 2}];
+
+    socratesActivitiesService.newParticipantPairFor('bed_in_double', 'nicknameForPair1', 'nicknameForPair2', function (err) {
+      var pairs = savedActivity.rooms('bed_in_double').roomPairsWithMembersFrom(allKnownMembersForRoomPairing);
+      expect(pairs).to.have.length(1);
+      expect(pairs[0].participant1.id()).to.be('memberIdForPair1');
+      expect(pairs[0].participant2.id()).to.be('memberIdForPair2');
+      done(err);
+    });
+  });
+
+  it('removes a room pair', function (done) {
+    var allKnownMembersForRoomPairing = [new Member({id: 'memberIdForPair1'}), new Member({id: 'memberIdForPair2'})];
+    socrates.resources.bed_in_double._registeredMembers = [{
+      memberId: 'memberIdForPair1',
+      duration: 2
+    }, {memberId: 'memberIdForPair2', duration: 2}];
+    socrates.resources.bed_in_double.rooms = [{participant1: 'memberIdForPair1', participant2: 'memberIdForPair2'}];
+    expect(socratesActivity.rooms('bed_in_double').roomPairsWithMembersFrom(allKnownMembersForRoomPairing)).to.have.length(1);
+
+    socratesActivitiesService.removeParticipantPairFor('bed_in_double', 'nicknameForPair1', 'nicknameForPair2', function (err) {
+      expect(savedActivity.rooms('bed_in_double').roomPairsWithMembersFrom(allKnownMembersForRoomPairing)).to.have.length(0);
+      done(err);
+    });
+  });
+
+  it('removes a participant from the given resource', function (done) {
+    socrates.resources.single._registeredMembers = [{memberId: 'memberId', duration: 2}];
+    expect(socratesActivity.resourceNamed('single').registeredMembers()).to.eql(['memberId']);
+
+    socratesActivitiesService.removeParticipantFor('single', 'nickname', function (err) {
+      expect(socratesActivity.resourceNamed('single').registeredMembers()).to.be.empty();
+      done(err);
+    });
+  });
+
 });
