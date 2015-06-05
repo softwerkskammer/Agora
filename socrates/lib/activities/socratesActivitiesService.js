@@ -42,7 +42,8 @@ module.exports = {
   fromWaitinglistToParticipant: function (nickname, registrationTuple, callback) {
     var self = this;
 
-    async.parallel({
+    async.parallel(
+      {
         activity: _.partial(activitystore.getActivity, registrationTuple.activityUrl),
         member: _.partial(memberstore.getMember, nickname)
       },
@@ -61,13 +62,15 @@ module.exports = {
             notifications.newParticipant(results.member.id(), bookingdetails);
           }
         });
-      });
+      }
+    );
   },
 
   newDurationFor: function (nickname, resourceName, duration, callback) {
     var self = this;
 
-    async.parallel({
+    async.parallel(
+      {
         activity: _.partial(activitystore.getActivity, currentUrl),
         member: _.partial(memberstore.getMember, nickname)
       },
@@ -84,13 +87,15 @@ module.exports = {
             notifications.changedDuration(results.member, roomOptions.informationFor(resourceName, duration));
           }
         });
-      });
+      }
+    );
   },
 
   newResourceFor: function (nickname, resourceName, newResourceName, callback) {
     var self = this;
 
-    async.parallel({
+    async.parallel(
+      {
         activity: _.partial(activitystore.getActivity, currentUrl),
         member: _.partial(memberstore.getMember, nickname)
       },
@@ -110,13 +115,15 @@ module.exports = {
             notifications.changedResource(results.member, roomOptions.informationFor(newResourceName, registrationRecord.duration));
           }
         });
-      });
+      }
+    );
   },
 
   newWaitinglistFor: function (nickname, resourceName, newResourceName, callback) {
     var self = this;
 
-    async.parallel({
+    async.parallel(
+      {
         activity: _.partial(activitystore.getActivity, currentUrl),
         member: _.partial(memberstore.getMember, nickname)
       },
@@ -136,13 +143,15 @@ module.exports = {
             notifications.changedWaitinglist(results.member, roomOptions.informationFor(newResourceName, 'waitinglist'));
           }
         });
-      });
+      }
+    );
   },
 
   newParticipantPairFor: function (resourceName, participant1Nick, participant2Nick, callback) {
     var self = this;
 
-    async.parallel({
+    async.parallel(
+      {
         activity: _.partial(activitystore.getActivity, currentUrl),
         participant1: _.partial(memberstore.getMember, participant1Nick),
         participant2: _.partial(memberstore.getMember, participant2Nick)
@@ -157,13 +166,15 @@ module.exports = {
           callback: callback,
           repeat: _.partial(self.newParticipantPairFor, resourceName, participant1Nick, participant2Nick)
         });
-      });
+      }
+    );
   },
 
   removeParticipantPairFor: function (resourceName, participant1Nick, participant2Nick, callback) {
     var self = this;
 
-    async.parallel({
+    async.parallel(
+      {
         activity: _.partial(activitystore.getActivity, currentUrl),
         participant1: _.partial(memberstore.getMember, participant1Nick),
         participant2: _.partial(memberstore.getMember, participant2Nick)
@@ -178,13 +189,15 @@ module.exports = {
           callback: callback,
           repeat: _.partial(self.removeParticipantPairFor, resourceName, participant1Nick, participant2Nick)
         });
-      });
+      }
+    );
   },
 
   removeParticipantFor: function (resourceName, participantNick, callback) {
     var self = this;
 
-    async.parallel({
+    async.parallel(
+      {
         activity: _.partial(activitystore.getActivity, currentUrl),
         participant: _.partial(memberstore.getMember, participantNick)
       },
@@ -199,7 +212,8 @@ module.exports = {
           callback: callback,
           repeat: _.partial(self.removeParticipantFor, resourceName, participantNick)
         });
-      });
+      }
+    );
   }
 
 };
