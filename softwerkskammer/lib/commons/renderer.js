@@ -61,6 +61,7 @@ function evalTags(text, subdir) {
 
 var Renderer = {
   render: function (content, subdir) {
+    if (content === undefined || content === null) { return ''; }
     var rendered = marked(evalTags(content, subdir));
     return rendered.replace(/<table>/g, '<table class="table table-condensed table-hover table-striped">').replace(/<img src=/g, '<img class="img-responsive" src=');
   },
