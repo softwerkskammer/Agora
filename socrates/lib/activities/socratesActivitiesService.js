@@ -222,7 +222,7 @@ module.exports = {
       if (err || !activity) { return callback(err); }
 
       async.parallel({
-        members: function (cb) { memberstore.getMembersForIds(activity.allRegisteredMembers(), cb); },
+        members: _.partial(memberstore.getMembersForIds, activity.allRegisteredMembers()),
         subscribers: subscriberstore.allSubscribers
       }, function (err1, results) {
         if (err1) { return callback(err1); }
