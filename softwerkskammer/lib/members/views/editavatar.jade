@@ -1,20 +1,22 @@
 include ../../../views/formComponents
 include ../../../views/imageUpload
   
-mixin avatar(member)
+mixin avatar(member, returnToParticipantsListing)
   div(style='width: 200px')
     form(id='recordForm', role='form', method='POST', action='/members/submitavatar' + '?_csrf=' + encodeURIComponent(csrf_token), enctype='multipart/form-data')
+      +hidden('returnToParticipantsListing', returnToParticipantsListing)
       #selectFileButton
         img(src=member.avatarUrl())
         if(accessrights.canEditMember(member))
           .btn-group(style='display: table; margin-left: auto; margin-right: auto; margin-top: 5px;')
             +selectFileButton(member.hasCustomAvatar() ? 'photo.replace' : 'general.new', 'btn-sm')
             if member.hasCustomAvatar()
-              +reallyDeleteModal('photo.delete', '/members/deleteAvatarFor/' + member.nickname(), 'btn-sm')
+              -var deleteURL = returnToParticipantsListing ? '/members/deleteAvatarInOverviewFor/' : '/members/deleteAvatarFor/'
+              +reallyDeleteModal('photo.delete', deleteURL + member.nickname(), 'btn-sm')
       #previewContainer
         div
           div(style='margin-top: 5px; width: 200px; height:200px;')
-            img#preview(style=previewStyle)
+            img#preview
           .clearfix
           .btn-group(style='display: table; margin-left: auto; margin-right: auto; margin-top: 5px;')
             span#rotate-left.btn.btn-xs.btn-default(title=t('photo.rotate-left')): i.fa.fa-fw.fa-rotate-left

@@ -12,17 +12,9 @@ var subscriberstore = beans.get('subscriberstore');
 var socratesConstants = beans.get('socratesConstants');
 var memberstore = beans.get('memberstore');
 
-var app = misc.expressAppIn(__dirname);
+var participantsOverviewUrlPrefix = '/wiki/' + socratesConstants.currentYear + '/participantsOverview#';
 
-app.get('/checknickname', function (req, res) {
-  misc.validate(req.query.nickname, req.query.previousNickname, membersService.isValidNickname, res.end);
-});
-
-app.get('/checkemail', function (req, res) {
-  misc.validate(req.query.email, req.query.previousEmail, membersService.isValidEmail, res.end);
-});
-
-app.get('/edit', function (req, res, next) {
+function editMember(req, res, next, returnToParticipantsListing) {
   if (!req.user.member) {
     return res.render('edit', {member: new Member().initFromSessionUser(req.user, true)});
   }
@@ -36,12 +28,47 @@ app.get('/edit', function (req, res, next) {
       addon: subscriber && subscriber.addon().homeAddress() ? subscriber.addon() : undefined,
       participation: subscriber && subscriber.isParticipating() ? subscriber.currentParticipation() : null,
       isOnlyOnWaitinglist: registeredResources.length === 0,
-      sharesARoom: registeredResources.length === 1 && registeredResources[0].indexOf('bed_in_') > -1
+      sharesARoom: registeredResources.length === 1 && registeredResources[0].indexOf('bed_in_') > -1,
+      returnToParticipantsListing: returnToParticipantsListing
     });
   });
+}
+
+function deleteAvatar(req, res, next, forwardPrefix) {
+  var nicknameOfEditMember = req.params.nickname;
+  memberstore.getMember(nicknameOfEditMember, function (err, member) {
+    if (err) { return next(err); }
+    if (res.locals.accessrights.canEditMember(member)) {
+      return membersService.deleteCustomAvatarForNickname(nicknameOfEditMember, function (err2) {
+        if (err2) { return next(err2); }
+        res.redirect(forwardPrefix + encodeURIComponent(nicknameOfEditMember));
+      });
+    }
+    res.redirect(forwardPrefix + encodeURIComponent(nicknameOfEditMember));
+  });
+}
+
+
+var app = misc.expressAppIn(__dirname);
+
+app.get('/checknickname', function (req, res) {
+  misc.validate(req.query.nickname, req.query.previousNickname, membersService.isValidNickname, res.end);
+});
+
+app.get('/checkemail', function (req, res) {
+  misc.validate(req.query.email, req.query.previousEmail, membersService.isValidEmail, res.end);
+});
+
+app.get('/edit', function (req, res, next) {
+  editMember(req, res, next);
+});
+
+app.get('/editForParticipantListing', function (req, res, next) {
+  editMember(req, res, next, 'returnToParticipantsListing');
 });
 
 app.post('/submit', function (req, res, next) {
+  var returnToParticipantsListing = req.body.returnToParticipantsListing;
   memberSubmitHelper(req, res, next, function (err) {
     if (err) { return next(err); }
     subscriberstore.getSubscriber(req.user.member.id(), function (err1, subscriber) {
@@ -51,6 +78,9 @@ app.post('/submit', function (req, res, next) {
         if (err2) { return next(err2); }
         if (subscriber.needsToPay()) {
           return res.redirect('/payment/socrates');
+        }
+        if (returnToParticipantsListing) {
+          return res.redirect(participantsOverviewUrlPrefix + encodeURIComponent(req.user.member.nickname()));
         }
         res.redirect('/');
       });
@@ -72,23 +102,20 @@ app.post('/submitavatar', function (req, res, next) {
     };
     membersService.saveCustomAvatarForNickname(nickname, files, params, function (err2) {
       if (err2) { return next(err2); }
+      if (fields.returnToParticipantsListing[0]) {
+        return res.redirect(participantsOverviewUrlPrefix + encodeURIComponent(nickname));
+      }
       res.redirect('/members/' + encodeURIComponent(nickname)); // Es fehlen Prüfungen im Frontend
     });
   });
 });
 
 app.get('/deleteAvatarFor/:nickname', function (req, res, next) {
-  var nicknameOfEditMember = req.params.nickname;
-  memberstore.getMember(nicknameOfEditMember, function (err, member) {
-    if (err) { return next(err); }
-    if (res.locals.accessrights.canEditMember(member)) {
-      return membersService.deleteCustomAvatarForNickname(nicknameOfEditMember, function (err2) {
-        if (err2) { return next(err2); }
-        res.redirect('/members/' + encodeURIComponent(nicknameOfEditMember));
-      });
-    }
-    res.redirect('/members/' + encodeURIComponent(nicknameOfEditMember));
-  });
+  deleteAvatar(req, res, next, '/members/');
+});
+
+app.get('/deleteAvatarInOverviewFor/:nickname', function (req, res, next) {
+  deleteAvatar(req, res, next, participantsOverviewUrlPrefix);
 });
 
 app.get('/:nickname', function (req, res, next) {

@@ -17,6 +17,7 @@ block content
   form#memberform.relaxed(action='/members/submit',method='post')
     +editButtons
 
+    +hidden('returnToParticipantsListing', returnToParticipantsListing)
     +csrf
     .row
       .col-sm-12
