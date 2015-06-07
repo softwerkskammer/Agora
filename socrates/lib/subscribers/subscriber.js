@@ -43,10 +43,14 @@ Subscriber.prototype.participations = function () {
 };
 
 Subscriber.prototype.currentParticipation = function () {
-  if (!this.participations()[socratesConstants.currentYear]) {
-    this.state.participations[socratesConstants.currentYear] = {};
+  return this.participationOf(socratesConstants.currentYear);
+};
+
+Subscriber.prototype.participationOf = function (year) {
+  if (!this.participations()[year]) {
+    this.state.participations[year] = {};
   }
-  return new Participation(this.participations()[socratesConstants.currentYear]);
+  return new Participation(this.participations()[year]);
 };
 
 Subscriber.prototype.isParticipating = function () {

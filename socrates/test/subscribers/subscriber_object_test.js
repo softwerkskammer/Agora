@@ -57,4 +57,13 @@ describe('Subscriber', function () {
       expect(unregisteredSubscriber.currentParticipation().question1()).to.be('Q1');
     });
   });
+
+  describe('gives participation information by year (if available)', function () {
+    it('for the year 2010', function () {
+      unregisteredSubscriber.fillFromUI({question1: 'Q1'});
+      unregisteredSubscriber.state.participations['2010'] = unregisteredSubscriber.state.participations[currentYear];
+      delete unregisteredSubscriber.state.participations[currentYear];
+      expect(unregisteredSubscriber.participationOf('2010').question1()).to.be('Q1');
+    });
+  });
 });

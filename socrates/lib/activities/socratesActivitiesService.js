@@ -9,6 +9,7 @@ var activitystore = beans.get('activitystore');
 var notifications = beans.get('socratesNotifications');
 var roomOptions = beans.get('roomOptions');
 var CONFLICTING_VERSIONS = beans.get('constants').CONFLICTING_VERSIONS;
+var Participation = beans.get('socratesParticipation');
 
 var currentUrl = beans.get('socratesConstants').currentUrl;
 
@@ -214,6 +215,25 @@ module.exports = {
         });
       }
     );
-  }
+  },
 
+  getActivityWithParticipantsAndSubscribers: function (year, callback) {
+    activitystore.getActivity('socrates-' + year, function (err, activity) {
+      if (err || !activity) { return callback(err); }
+
+      async.parallel({
+        members: function (cb) { memberstore.getMembersForIds(activity.allRegisteredMembers(), cb); },
+        subscribers: subscriberstore.allSubscribers
+      }, function (err1, results) {
+        if (err1) { return callback(err1); }
+        _.each(results.members, function (member) {
+          var subscriber = _.find(results.subscribers, function (sub) { return sub.id() === member.id(); });
+          member.participation = subscriber ? subscriber.participationOf(year) : new Participation();
+        });
+        activity.participants = results.members;
+        callback(null, activity);
+      });
+
+    });
+  }
 };

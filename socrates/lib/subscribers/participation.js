@@ -2,6 +2,7 @@
 
 var beans = require('simple-configure').get('beans');
 var Payment = beans.get('socratesPayment');
+var Renderer = beans.get('renderer');
 
 function Participation(object) {
   this.state = object || {};
@@ -36,6 +37,18 @@ Participation.prototype.question2 = function () {
 
 Participation.prototype.question3 = function () {
   return this.state.question3;
+};
+
+Participation.prototype.question1Html = function () {
+  return Renderer.render(this.state.question1);
+};
+
+Participation.prototype.question2Html = function () {
+  return Renderer.render(this.state.question2);
+};
+
+Participation.prototype.question3Html = function () {
+  return Renderer.render(this.state.question3);
 };
 
 Participation.hasParticipationInformation = function (uiInputObject) {
