@@ -3,6 +3,7 @@
 
 var sinon = require('sinon').sandbox.create();
 var expect = require('must');
+var _ = require('lodash');
 
 var beans = require('../../testutil/configureForTest').get('beans');
 
@@ -10,16 +11,18 @@ var socratesActivitiesService = beans.get('socratesActivitiesService');
 var activitystore = beans.get('activitystore');
 var SoCraTesActivity = beans.get('socratesActivity');
 var Member = beans.get('member');
+var Subscriber = beans.get('subscriber');
 
 var memberstore = beans.get('memberstore');
+var subscriberstore = beans.get('subscriberstore');
 var notifications = beans.get('socratesNotifications');
-
 describe('SoCraTes Activities Service', function () {
 
   var socrates;
   var socratesActivity;
   var registrationTuple;
   var savedActivity;
+  var subscriber;
 
   beforeEach(function () {
     /*eslint camelcase: 0*/
@@ -58,6 +61,12 @@ describe('SoCraTes Activities Service', function () {
       if (nickname === 'nicknameForPair1') { return callback(null, new Member({id: 'memberIdForPair1'})); }
       if (nickname === 'nicknameForPair2') { return callback(null, new Member({id: 'memberIdForPair2'})); }
       callback(null, new Member({id: 'memberId'}));
+    });
+    sinon.stub(memberstore, 'getMembersForIds', function (ids, callback) {
+      callback(null, _.map(ids, function (id) { return new Member({id: id}); }));
+    });
+    sinon.stub(subscriberstore, 'allSubscribers', function (callback) {
+      callback(null, [subscriber]);
     });
     sinon.stub(activitystore, 'getActivity', function (url, callback) {
       if (url === 'wrongUrl') {
@@ -180,10 +189,10 @@ describe('SoCraTes Activities Service', function () {
   it('joins two members to form a room', function (done) {
     var allKnownMembersForRoomPairing = [new Member({id: 'memberIdForPair1'}), new Member({id: 'memberIdForPair2'})];
 
-    socrates.resources.bed_in_double._registeredMembers = [{
-      memberId: 'memberIdForPair1',
-      duration: 2
-    }, {memberId: 'memberIdForPair2', duration: 2}];
+    socrates.resources.bed_in_double._registeredMembers = [
+      {memberId: 'memberIdForPair1', duration: 2},
+      {memberId: 'memberIdForPair2', duration: 2}
+    ];
 
     socratesActivitiesService.newParticipantPairFor('bed_in_double', 'nicknameForPair1', 'nicknameForPair2', function (err) {
       var pairs = savedActivity.rooms('bed_in_double').roomPairsWithMembersFrom(allKnownMembersForRoomPairing);
@@ -196,10 +205,10 @@ describe('SoCraTes Activities Service', function () {
 
   it('removes a room pair', function (done) {
     var allKnownMembersForRoomPairing = [new Member({id: 'memberIdForPair1'}), new Member({id: 'memberIdForPair2'})];
-    socrates.resources.bed_in_double._registeredMembers = [{
-      memberId: 'memberIdForPair1',
-      duration: 2
-    }, {memberId: 'memberIdForPair2', duration: 2}];
+    socrates.resources.bed_in_double._registeredMembers = [
+      {memberId: 'memberIdForPair1', duration: 2},
+      {memberId: 'memberIdForPair2', duration: 2}
+    ];
     socrates.resources.bed_in_double.rooms = [{participant1: 'memberIdForPair1', participant2: 'memberIdForPair2'}];
     expect(socratesActivity.rooms('bed_in_double').roomPairsWithMembersFrom(allKnownMembersForRoomPairing)).to.have.length(1);
 
@@ -221,16 +230,30 @@ describe('SoCraTes Activities Service', function () {
 
   it('when removing a participant, also removes him from his room pair', function (done) {
     var allKnownMembersForRoomPairing = [new Member({id: 'memberIdForPair1'}), new Member({id: 'memberIdForPair2'})];
-    socrates.resources.bed_in_double._registeredMembers = [{
-      memberId: 'memberIdForPair1',
-      duration: 2
-    }, {memberId: 'memberIdForPair2', duration: 2}];
+    socrates.resources.bed_in_double._registeredMembers = [
+      {memberId: 'memberIdForPair1', duration: 2},
+      {memberId: 'memberIdForPair2', duration: 2}
+    ];
     socrates.resources.bed_in_double.rooms = [{participant1: 'memberIdForPair1', participant2: 'memberIdForPair2'}];
     expect(socratesActivity.rooms('bed_in_double').roomPairsWithMembersFrom(allKnownMembersForRoomPairing)).to.have.length(1);
 
     socratesActivitiesService.removeParticipantFor('bed_in_double', 'nicknameForPair1', function (err) {
       expect(savedActivity.resourceNamed('bed_in_double').registeredMembers()).to.eql(['memberIdForPair2']);
       expect(savedActivity.rooms('bed_in_double').roomPairsWithMembersFrom(allKnownMembersForRoomPairing)).to.be.empty();
+      done(err);
+    });
+  });
+
+  it('loads an activity enriched with participants and their participation information for a year', function (done) {
+    socrates.resources.single._registeredMembers = [{memberId: 'memberId', duration: 2}];
+    subscriber = new Subscriber({id: 'memberId'});
+    subscriber.participationOf('2020').state.question1 = 'Answer for Q1';
+
+    expect(socratesActivity.resourceNamed('single').registeredMembers()).to.eql(['memberId']);
+
+    socratesActivitiesService.getActivityWithParticipantsAndSubscribers('2020', function (err, activity) {
+      expect(activity.participants).to.have.length(1);
+      expect(activity.participants[0].participation.question1()).to.be('Answer for Q1');
       done(err);
     });
   });

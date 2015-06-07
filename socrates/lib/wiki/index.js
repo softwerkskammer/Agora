@@ -5,6 +5,8 @@ var Renderer = beans.get('renderer');
 var wikiService = beans.get('wikiService');
 var statusmessage = beans.get('statusmessage');
 var misc = beans.get('misc');
+var socratesActivitiesService = beans.get('socratesActivitiesService');
+var currentYear = beans.get('socratesConstants').currentYear;
 
 function showPage(subdir, pageName, pageVersion, req, res, next) {
   var normalizedPageName = Renderer.normalize(pageName);
@@ -102,6 +104,17 @@ app.post('/rename/:subdir/:page', function (req, res, next) {
 
 // showing pages
 
+app.get('/:year/participantsOverview/', function (req, res, next) {
+  var year = req.params.year;
+  socratesActivitiesService.getActivityWithParticipantsAndSubscribers(year, function (err, activity) {
+    if (err || !activity) { return next(err); }
+    res.render('participants', {
+      title: 'Participants',
+      activity: activity
+    });
+  });
+});
+
 app.get('/list/:subdir/', function (req, res, next) {
   var subdir = req.params.subdir;
   wikiService.pageList(subdir, function (err, items) {
@@ -124,7 +137,7 @@ app.get('/:subdir', function (req, res) {
 });
 
 app.get('/', function (req, res) {
-  res.redirect('/wiki/2014/index');
+  res.redirect('/wiki/' + currentYear + '/index');
 });
 
 app.post('/search', function (req, res, next) {

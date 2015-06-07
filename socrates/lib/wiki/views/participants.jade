@@ -1,0 +1,31 @@
+extends ../../../views/layoutNoFooter
+include  ../../../views/formComponents
+include ../../../../softwerkskammer/lib/members/views/editavatar
+
+block title
+  | Participants
+block content
+  .row.relaxed
+    .col-md-12
+      .btn-group.pull-right
+        a.btn.btn-default(href='/members/edit', title=t('general.edit')): i.fa.fa-edit.fa-fw
+      h2 #{title}
+  .row
+    .col-md-12
+      each participant in activity.participants
+        h4: a(href='/members/' + participant.nickname()) #{participant.displayName()}
+        .row
+          .col-sm-8
+            h5 What is your relation to Software Craftsmanship?
+            | !{participant.participation.question1Html()}
+            h5 What do you want to share with the other participants?
+            | !{participant.participation.question2Html()}
+            h5 What do you want to take home from the event?
+            | !{participant.participation.question3Html()}
+          .col-sm-4
+            if(accessrights.canEditMember(participant))
+              +avatar(participant)
+            else
+              div(style='width: 200px')
+                img(src=participant.avatarUrl())
+        hr

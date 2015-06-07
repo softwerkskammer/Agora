@@ -93,4 +93,9 @@ describe('Renderer', function () {
     expect(result).to.have.property('body', '<p>Dresden</p>\n');
   });
 
+  it('should get along with "null" or "undefined" input when rendering', function () {
+    expect(Renderer.render(undefined, '')).to.be('');
+    expect(Renderer.render(null, '')).to.be('');
+  });
+
 });
