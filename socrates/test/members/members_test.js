@@ -96,24 +96,26 @@ describe('SoCraTes members application', function () {
 
     it('shows the subscriber\'s own page', function (done) {
       sinon.stub(memberstore, 'getMember', function (nickname, callback) { callback(null, softwerkskammerMember); });
+      sinon.stub(memberstore, 'getMemberForId', function (nickname, callback) { callback(null, softwerkskammerMember); });
       sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, softwerkskammerSubscriber); });
 
       appWithSoftwerkskammerMember
         .get('/hada')
         .expect(200)
-        .expect(/First name:<\/strong> Hans/)
-        .expect(/Last name:<\/strong> Dampf/, done);
+        .expect(/First name:&nbsp;<\/strong>Hans/)
+        .expect(/Last name:&nbsp;<\/strong>Dampf/, done);
     });
 
     it('shows a different subscriber\'s page', function (done) {
       sinon.stub(memberstore, 'getMember', function (nickname, callback) { callback(null, socratesMember); });
+      sinon.stub(memberstore, 'getMemberForId', function (nickname, callback) { callback(null, socratesMember); });
       sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
 
       appWithSoftwerkskammerMember
         .get('/nini')
         .expect(200)
-        .expect(/First name:<\/strong> Petra/)
-        .expect(/Last name:<\/strong> Meier/, done);
+        .expect(/First name:&nbsp;<\/strong>Petra/)
+        .expect(/Last name:&nbsp;<\/strong>Meier/, done);
     });
 
   });

@@ -35,7 +35,16 @@ Rooms.prototype.removePairContaining = function (memberId) {
   if (pairIndex > -1) {
     this.state.splice(pairIndex, 1);
   }
+};
 
+Rooms.prototype.findRoommateFor = function (memberId) {
+  var pairWithMember = _.find(this.state, function (pair) {
+    return pair.participant1 === memberId || pair.participant2 === memberId;
+  });
+  if(pairWithMember){
+    return pairWithMember.participant1 === memberId ? pairWithMember.participant2 : pairWithMember.participant1;
+  }
+  return undefined;
 };
 
 Rooms.prototype.participantsInRoom = function () {

@@ -22,15 +22,20 @@ block content
   .row
     .col-md-8
       p
-        strong #{t('members.firstname')}:
-        |  #{member.firstname()}
+        strong #{t('members.firstname')}:&nbsp;
+        | #{member.firstname()}
       p
-        strong #{t('members.lastname')}:
-        |  #{member.lastname()}
+        strong #{t('members.lastname')}:&nbsp;
+        | #{member.lastname()}
       p
         strong #{t('members.twitter')}:&nbsp;
         span.twitterify
           | #{member.twitter()}
+
+      p
+        if(accessrights.canEditMember(member))
+          strong #{t('members.roommate')}:&nbsp;
+          | #{roommate}
 
       p &nbsp;
     .col-md-4

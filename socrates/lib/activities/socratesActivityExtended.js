@@ -53,6 +53,15 @@ if (SoCraTesActivity.prototype.reserve === undefined) {
     return this.socratesResourceNamed(resourceName).rooms();
   };
 
+  SoCraTesActivity.prototype.roommateFor = function (memberId) {
+    var self = this;
+    var resources = self.registeredResourcesFor(memberId);
+    var roommates = _.map(resources, function (resource) {
+      new SoCraTesResource(resource).rooms().findRoommateFor(memberId);
+    });
+    return _.compact(roommates)[0];
+  };
+
 }
 
 module.exports = SoCraTesActivity;

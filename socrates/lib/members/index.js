@@ -122,7 +122,18 @@ app.get('/deleteAvatarInOverviewFor/:nickname', function (req, res, next) {
 app.get('/:nickname', function (req, res, next) {
   subscriberService.getMemberIfSubscriberExists(req.params.nickname, function (err, member) {
     if (err || !member) { return next(err); }
-    res.render('get', {member: member});
+    activitystore.getActivity(socratesConstants.currentUrl, function (err2, activity) {
+      if (err2 || !activity) { return next(err2); }
+      // var registeredResource = activity.registeredResourcesFor(member.id())[0];
+      // if(registeredResource && registeredResource.indexOf('bed_in_') > -1){ }
+      var roommateId = activity.roommateFor(member.id());
+      memberstore.getMemberForId(roommateId, function (err3, roommate) {
+        if (err3) { return next(err3); }
+        var roommateName = roommate ? roommate.displayName() : 'None';
+        res.render('get', { member: member, roommate: roommateName });
+
+      });
+    });
   });
 });
 
