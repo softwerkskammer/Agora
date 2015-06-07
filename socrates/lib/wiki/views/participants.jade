@@ -17,11 +17,11 @@ block content
         .row
           .col-sm-8
             h5 What is your relation to Software Craftsmanship?
-            p !{participant.participation.question1Html()}
+            | !{participant.participation.question1Html()}
             h5 What do you want to share with the other participants?
-            p !{participant.participation.question2Html()}
+            | !{participant.participation.question2Html()}
             h5 What do you want to take home from the event?
-            p !{participant.participation.question3Html()}
+            | !{participant.participation.question3Html()}
           .col-sm-4
             if(accessrights.canEditMember(participant))
               +avatar(participant)

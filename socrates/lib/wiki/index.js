@@ -6,6 +6,7 @@ var wikiService = beans.get('wikiService');
 var statusmessage = beans.get('statusmessage');
 var misc = beans.get('misc');
 var socratesActivitiesService = beans.get('socratesActivitiesService');
+var currentYear = beans.get('socratesConstants').currentYear;
 
 function showPage(subdir, pageName, pageVersion, req, res, next) {
   var normalizedPageName = Renderer.normalize(pageName);
@@ -136,7 +137,7 @@ app.get('/:subdir', function (req, res) {
 });
 
 app.get('/', function (req, res) {
-  res.redirect('/wiki/2014/index');
+  res.redirect('/wiki/' + currentYear + '/index');
 });
 
 app.post('/search', function (req, res, next) {
