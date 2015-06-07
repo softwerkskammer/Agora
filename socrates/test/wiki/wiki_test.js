@@ -29,7 +29,7 @@ describe('SoCraTes wiki application', function () {
     sinon.restore();
   });
 
-  describe.only('lists the participants', function () {
+  describe('lists the participants', function () {
     it('and shows no editing option for anybody', function (done) {
       request(createApp({id: 'anybody'}))
         .get('/someYear/participantsOverview')
