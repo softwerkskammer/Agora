@@ -235,5 +235,12 @@ module.exports = {
       });
 
     });
+  },
+
+  getCurrentSocrates: function (callback) {
+    activitystore.getActivity(currentUrl, function (err, activity) {
+      if (err || !activity) { return callback(err); }
+      callback(null, activity);
+    });
   }
 };
