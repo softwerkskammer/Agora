@@ -1,12 +1,12 @@
 'use strict';
 var conf = require('simple-configure');
-var beans = conf.get('beans')
+var beans = conf.get('beans');
 var Member = beans.get('member');
 var socratesActivitiesService = beans.get('socratesActivitiesService');
 
 module.exports = function accessrights(req, res, next) {
   socratesActivitiesService.getCurrentSocrates(function (err, socratesActivity) {
-    var socrates = (err) ? null : socratesActivity;
+    var socrates = err ? null : socratesActivity;
     res.locals.accessrights = {
       req: req,
 
@@ -55,7 +55,7 @@ module.exports = function accessrights(req, res, next) {
       },
 
       needsToPay: function () {
-        return (socrates.resources().resourceNamesOf(this.memberId()).length > 0)
+        return !!socrates && socrates.resources().resourceNamesOf(this.memberId()).length > 0
           && this.isRegistered() && !!this.req.user.subscriber && this.req.user.subscriber.needsToPay();
       }
 
