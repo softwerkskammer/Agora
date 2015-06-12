@@ -11,6 +11,7 @@ var userWithoutMember = require('../../testutil/userWithoutMember');
 var subscriberstore = beans.get('subscriberstore');
 var socratesConstants = beans.get('socratesConstants');
 var stripeService = beans.get('stripeService');
+var socratesActivitiesService = beans.get('socratesActivitiesService');
 
 var Member = beans.get('member');
 var Subscriber = beans.get('subscriber');
@@ -36,6 +37,8 @@ describe('SoCraTes payment application', function () {
   var appWithSocratesMember;
 
   beforeEach(function () {
+    sinon.stub(socratesActivitiesService, 'getCurrentSocrates', function (callback) { callback(null); });
+
     subscriber = {
       id: 'memberId'
     };

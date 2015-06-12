@@ -56,7 +56,7 @@ describe('accessrights', function () {
     conf.addProperties({socratesAdmins: []});
   });
 
-  describe.only('tells if the current user needs to pay', function () {
+  describe('tells if the current user needs to pay', function () {
     beforeEach(function () {
       loginAs('memberId');
     });
