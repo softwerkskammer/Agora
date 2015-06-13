@@ -2,7 +2,7 @@
 
 var beans = require('../../testutil/configureForTest').get('beans');
 var detectBrowser = beans.get('detectBrowser');
-var expect = require('must');
+var expect = require('must-dist');
 
 describe('Detecting Browser', function () {
 

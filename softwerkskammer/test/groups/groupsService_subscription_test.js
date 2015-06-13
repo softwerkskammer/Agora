@@ -2,7 +2,7 @@
 
 var sinon = require('sinon').sandbox.create();
 
-var expect = require('must');
+var expect = require('must-dist');
 var beans = require('../../testutil/configureForTest').get('beans');
 var Group = beans.get('group');
 var GroupA = new Group({id: 'GroupA', longName: 'Gruppe A', description: 'Dies ist Gruppe A.', type: 'Themengruppe'});

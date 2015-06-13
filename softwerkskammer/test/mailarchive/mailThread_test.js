@@ -1,7 +1,7 @@
 'use strict';
 
 var beans = require('../../testutil/configureForTest').get('beans');
-var expect = require('must');
+var expect = require('must-dist');
 
 var mailThread = beans.get('mailThread');
 var Mail = beans.get('archivedMail');

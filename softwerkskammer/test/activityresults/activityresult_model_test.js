@@ -1,7 +1,7 @@
 'use strict';
 
 var moment = require('moment-timezone');
-var expect = require('must');
+var expect = require('must-dist');
 
 var ActivityResult = require('../../testutil/configureForTest').get('beans').get('activityresult');
 

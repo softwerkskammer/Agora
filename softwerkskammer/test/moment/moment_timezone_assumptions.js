@@ -1,6 +1,6 @@
 'use strict';
 
-var expect = require('must');
+var expect = require('must-dist');
 var moment = require('moment-timezone');
 
 describe('moment-timezone', function () {

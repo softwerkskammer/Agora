@@ -1,5 +1,5 @@
 'use strict';
-var expect = require('must');
+var expect = require('must-dist');
 var httpRequest = require('request');
 var sinon = require('sinon').sandbox.create();
 var conf = require('../testutil/configureForTest');

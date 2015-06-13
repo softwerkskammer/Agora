@@ -1,7 +1,7 @@
 'use strict';
 
 var request = require('supertest');
-var expect = require('must');
+var expect = require('must-dist');
 var sinon = require('sinon').sandbox.create();
 var moment = require('moment-timezone');
 

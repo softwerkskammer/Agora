@@ -1,5 +1,5 @@
 'use strict';
-var expect = require('must');
+var expect = require('must-dist');
 var sinon = require('sinon').sandbox.create();
 
 var beans = require('../../testutil/configureForTest').get('beans');

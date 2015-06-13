@@ -2,7 +2,7 @@
 
 require('../../testutil/configureForTest');
 var beans = require('simple-configure').get('beans');
-var expect = require('must');
+var expect = require('must-dist');
 
 var WaitinglistEntry = beans.get('waitinglistEntry');
 var moment = require('moment-timezone');

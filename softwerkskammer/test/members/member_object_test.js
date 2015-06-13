@@ -1,6 +1,6 @@
 'use strict';
 
-var expect = require('must');
+var expect = require('must-dist');
 
 var Member = require('../../testutil/configureForTest').get('beans').get('member');
 

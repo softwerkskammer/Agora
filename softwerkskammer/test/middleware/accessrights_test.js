@@ -8,7 +8,7 @@ var Activity = beans.get('activity');
 var Announcement = beans.get('announcement');
 var Member = beans.get('member');
 var Group = beans.get('group');
-var expect = require('must');
+var expect = require('must-dist');
 
 function guest() {
   var req = { };

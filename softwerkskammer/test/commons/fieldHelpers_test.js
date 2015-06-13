@@ -1,7 +1,7 @@
 'use strict';
 
 var fieldHelpers = require('../../testutil/configureForTest').get('beans').get('fieldHelpers');
-var expect = require('must');
+var expect = require('must-dist');
 
 describe('Activity application', function () {
 

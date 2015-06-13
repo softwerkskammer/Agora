@@ -1,7 +1,7 @@
 'use strict';
 
 var statusmessage = require('../../testutil/configureForTest').get('beans').get('statusmessage');
-var expect = require('must');
+var expect = require('must-dist');
 
 describe('Statusmessage', function () {
 

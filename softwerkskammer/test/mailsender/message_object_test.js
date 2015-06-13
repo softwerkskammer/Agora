@@ -3,7 +3,7 @@
 require('../../testutil/configureForTest');
 
 var beans = require('simple-configure').get('beans');
-var expect = require('must');
+var expect = require('must-dist');
 var Message = beans.get('message');
 var Member = beans.get('member');
 

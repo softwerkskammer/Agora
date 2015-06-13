@@ -3,7 +3,7 @@
 
 var request = require('supertest');
 var sinon = require('sinon').sandbox.create();
-var expect = require('must');
+var expect = require('must-dist');
 
 var beans = require('../../testutil/configureForTest').get('beans');
 var userWithoutMember = require('../../testutil/userWithoutMember');

@@ -4,7 +4,7 @@ var conf = require('../../testutil/configureForTest');
 var beans = conf.get('beans');
 var expressSessionConfigurator = beans.get('expressSessionConfigurator');
 var MemoryStore = require('express-session').MemoryStore;
-var expect = require('must');
+var expect = require('must-dist');
 
 describe('Configuration sets Persistent Store only if configured', function () {
 

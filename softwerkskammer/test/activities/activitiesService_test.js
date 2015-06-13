@@ -1,7 +1,7 @@
 'use strict';
 
 var sinon = require('sinon').sandbox.create();
-var expect = require('must');
+var expect = require('must-dist');
 var moment = require('moment-timezone');
 var _ = require('lodash');
 

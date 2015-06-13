@@ -2,7 +2,7 @@
 
 var conf = require('../../testutil/configureForTest');
 var securedByLoginURLRegex = new RegExp(conf.get('securedByLoginURLPattern'));
-var expect = require('must');
+var expect = require('must-dist');
 
 describe('SecuredByLoginURLRedirect Rule (members)', function () {
 

@@ -3,7 +3,7 @@
 var beans = require('../../testutil/configureForTest').get('beans');
 var announcementsInSidebar = beans.get('announcementsInSidebar');
 var store = beans.get('announcementstore');
-var expect = require('must');
+var expect = require('must-dist');
 var sinon = require('sinon').sandbox.create();
 
 function stubAnouncements(announcements) {

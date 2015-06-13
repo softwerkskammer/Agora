@@ -3,7 +3,7 @@
 var sinon = require('sinon').sandbox.create();
 var beans = require('../../testutil/configureForTest').get('beans');
 
-var expect = require('must');
+var expect = require('must-dist');
 
 var Member = beans.get('member');
 var Group = beans.get('group');

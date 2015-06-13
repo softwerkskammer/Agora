@@ -1,7 +1,7 @@
 'use strict';
 
 var sinon = require('sinon').sandbox.create();
-var expect = require('must');
+var expect = require('must-dist');
 var _ = require('lodash');
 var beans = require('../../testutil/configureForTest').get('beans');
 var wikiService = beans.get('wikiService');

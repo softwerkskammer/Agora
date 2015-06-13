@@ -1,7 +1,7 @@
 'use strict';
 
 require('../../testutil/configureForTest');
-var expect = require('must');
+var expect = require('must-dist');
 
 var beans = require('simple-configure').get('beans');
 var Activity = beans.get('activity');

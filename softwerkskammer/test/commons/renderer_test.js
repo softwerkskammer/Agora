@@ -1,5 +1,5 @@
 'use strict';
-var expect = require('must');
+var expect = require('must-dist');
 
 require('../../testutil/configureForTest');
 var Renderer = require('simple-configure').get('beans').get('renderer');
