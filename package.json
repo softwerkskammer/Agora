@@ -39,6 +39,7 @@
     "express": "4.12.4",
     "express-session": "1.11.2",
     "ezmlm-node": "1.2.3",
+    "fullcalendar": "2.3.1",
     "glob": "5.0.10",
     "i18next": "1.9.0",
     "icalendar": "0.7.1",

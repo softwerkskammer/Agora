@@ -1,18 +1,37 @@
-Index: bower_components/fullcalendar/dist/fullcalendar.js
+Index: node_modules/fullcalendar/dist/fullcalendar.js
 ===================================================================
---- bower_components/fullcalendar/dist/fullcalendar.js	(revision )
-+++ bower_components/fullcalendar/dist/fullcalendar.js	(revision )
-
-@@ -4689,1 +4689,1 @@
--						timeHtml + ' ' + titleHtml   //
-+						titleHtml   //
-
-@@ -7781,11 +7781,14 @@
- 							customText = smartProperty(options.buttonText, buttonName);
+--- softwerkskammer/build/javascript/fullcalendar.js	(revision )
++++ softwerkskammer/build/javascript/fullcalendar.js	(revision )
+@@ -5043,13 +5043,8 @@
  
- 							if (viewText || customText) {
--								innerHtml = htmlEscape(viewText || customText);
-+								innerHtml = viewText || customText;
+ 		classes.unshift('fc-day-grid-event', 'fc-h-event');
+ 
+-		// Only display a timed events time if it is the starting segment
+-		if (seg.isStart) {
+-			timeText = this.getEventTimeText(event);
+-			if (timeText) {
+-				timeHtml = '<span class="fc-time">' + htmlEscape(timeText) + '</span>';
+-			}
+-		}
++		// Never display a timed events time if it is the starting segment
++		// Original code deleted here
+ 
+ 		titleHtml =
+ 			'<span class="fc-title">' +
+@@ -8678,7 +8673,6 @@
+ 				var groupEl;
+ 
+ 				$.each(this.split(','), function(j, buttonName) {
+-					var viewSpec;
+ 					var buttonClick;
+ 					var overrideText; // text explicitly set by calendar's constructor options. overcomes icons
+ 					var defaultText;
+@@ -8717,11 +8711,14 @@
+ 							normalIcon = options.buttonIcons[buttonName];
+ 
+ 							if (overrideText) {
+-								innerHtml = htmlEscape(overrideText);
++								innerHtml = overrideText;
  							}
  							else if (themeIcon && options.theme) {
  								innerHtml = "<span class='ui-icon ui-icon-" + themeIcon + "'></span>";
@@ -23,15 +42,10 @@ Index: bower_components/fullcalendar/dist/fullcalendar.js
  							else if (normalIcon && !options.theme) {
  								innerHtml = "<span class='fc-icon fc-icon-" + normalIcon + "'></span>";
  							}
-@@ -7793,17 +7796,26 @@
- 								innerHtml = htmlEscape(defaultText || buttonName);
+@@ -8729,17 +8726,25 @@
+ 								innerHtml = htmlEscape(defaultText);
  							}
  
--							classes = [
--								'fc-' + buttonName + '-button',
--								tm + '-button',
--								tm + '-state-default'
--							];
 +							if (options.bootstrap) {
 +								button = $(
 +									'<span class="fc-' +
@@ -39,18 +53,24 @@ Index: bower_components/fullcalendar/dist/fullcalendar.js
 +									innerHtml + '</span>'
 +								)
 +							} else {
+-							classes = [
+-								'fc-' + buttonName + '-button',
+-								tm + '-button',
+-								tm + '-state-default'
+-							];
 +								classes = [
 +									'fc-' + buttonName + '-button',
 +									tm + '-button',
 +									tm + '-state-default'
 +								];
- 
+-
 -							button = $( // type="button" so that it doesn't submit a form
 -								'<button type="button" class="' + classes.join(' ') + '">' +
+-									innerHtml +
+-								'</button>'
 +								button = $( // type="button" so that it doesn't submit a form
 +									'<button type="button" class="' + classes.join(' ') + '">' +
- 									innerHtml +
--								'</button>'
++										innerHtml +
 +									'</button>'
  								)
 +							}
@@ -58,15 +78,7 @@ Index: bower_components/fullcalendar/dist/fullcalendar.js
  								.click(function() {
  									// don't process clicks for disabled buttons
  									if (!button.hasClass(tm + '-state-disabled')) {
-@@ -7847,14 +7859,14 @@
- 											.removeClass(tm + '-state-hover')
- 											.removeClass(tm + '-state-down'); // if mouseleave happens before mouseup
- 									}
--								);
-+							);
- 
- 							groupChildren = groupChildren.add(button);
- 						}
+@@ -8790,7 +8795,7 @@
  					}
  				});
  
@@ -75,23 +87,16 @@ Index: bower_components/fullcalendar/dist/fullcalendar.js
  					groupChildren
  						.first().addClass(tm + '-corner-left').end()
  						.last().addClass(tm + '-corner-right').end();
-@@ -7863,7 +7875,11 @@
+@@ -8799,7 +8804,11 @@
  				if (groupChildren.length > 1) {
  					groupEl = $('<div/>');
  					if (isOnlyButtons) {
--						groupEl.addClass('fc-button-group');
 +						if (options.bootstrap) {
 +							groupEl.addClass('btn-group');
 +						} else {
+-						groupEl.addClass('fc-button-group');
 +							groupEl.addClass('fc-button-group');
 +						}
  					}
  					groupEl.append(groupChildren);
  					sectionEl.append(groupEl);
-@@ -9810,4 +9826,4 @@
- };
- ;;
- 
--});
-\ No newline at end of file
-+});

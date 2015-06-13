@@ -42,23 +42,13 @@ var interestify, surroundInterestsWithLinks, surroundWithLink, surroundTwitterNa
 
   var initCalendar = function () {
     $('#calendar').fullCalendar({
-      bootstrap: true,
-      fontawesome: true,
-      lang: fc_lang,
-      aspectRatio: 1.2,
-      height: 'auto',
       header: {
         left: 'title',
         center: '',
         right: 'prev,today,next'
       },
-      fixedWeekCount: false,
       titleFormat: {
         month: 'MMM \'YY'
-      },
-      buttonIcons: {
-        prev: 'fa-caret-left',
-        next: 'fa-caret-right'
       },
       timezone: 'Europe/Berlin',
       events: '/activities/eventsForSidebar',
@@ -79,6 +69,19 @@ var interestify, surroundInterestsWithLinks, surroundWithLink, surroundTwitterNa
       eventAfterAllRender: function () {
         if (displayedActivityStart) {
           this.calendar.select(displayedActivityStart, displayedActivityEnd);
+        }
+      },
+      bootstrap: true,
+      buttonIcons: {
+        prev: 'fa-caret-left',
+        next: 'fa-caret-right'
+      },
+      views: {
+        month: {
+          lang: fc_lang,
+          aspectRatio: 1.2,
+          height: 'auto',
+          fixedWeekCount: false
         }
       }
     });

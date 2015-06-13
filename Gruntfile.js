@@ -44,7 +44,7 @@ module.exports = function (grunt) {
       'bower_components/jquery-validation/src/localization/methods_de.js',
       'bower_components/bootstrap-datepicker/js/locales/bootstrap-datepicker.de.js',
       'bower_components/select2/select2_locale_de.js',
-      'bower_components/fullcalendar/dist/lang/de.js',
+      'node_modules/fullcalendar/dist/lang/de.js',
       'softwerkskammer/locales/frontend_de.js',
       'softwerkskammer/frontend/javascript/agora.js'
     ])
@@ -52,7 +52,7 @@ module.exports = function (grunt) {
 
   var files_en = {
     'softwerkskammer/public/clientscripts/global_en.js': commonJSfiles.concat([
-      'bower_components/fullcalendar/dist/lang/en-gb.js',
+      'node_modules/fullcalendar/dist/lang/en-gb.js',
       'softwerkskammer/locales/frontend_en.js',
       'softwerkskammer/frontend/javascript/agora.js'
     ])
@@ -152,7 +152,7 @@ module.exports = function (grunt) {
           patch: 'softwerkskammer/frontend/3rd_party_js/fullcalendar.js.patch'
         },
         files: {
-          'softwerkskammer/build/javascript/fullcalendar-patched.js': 'bower_components/fullcalendar/dist/fullcalendar.js'
+          'softwerkskammer/build/javascript/fullcalendar-patched.js': 'node_modules/fullcalendar/dist/fullcalendar.js'
         }
       }
     },
@@ -224,7 +224,7 @@ module.exports = function (grunt) {
         },
         files: {
           'softwerkskammer/public/stylesheets/screen.css': [
-            'bower_components/fullcalendar/dist/fullcalendar.css',
+            'node_modules/fullcalendar/dist/fullcalendar.css',
             'softwerkskammer/build/stylesheets/less/bootstrap.less',
             'bower_components/bootstrap-datepicker/css/datepicker3.css',
             'softwerkskammer/build/stylesheets/less/bootstrap-markdown-patched.less',
