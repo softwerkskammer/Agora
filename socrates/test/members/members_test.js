@@ -151,7 +151,7 @@ describe('SoCraTes members application', function () {
       });
     });
 
-    describe('- entering a roommate', function () {
+    describe('- entering a desired roommate', function () {
       it('does not allow an unregistered subscriber to enter a roommate', function (done) {
         sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
 
@@ -164,7 +164,7 @@ describe('SoCraTes members application', function () {
           });
       });
 
-      it('does not allow a subscriber who is registered for a single-bed-room to enter a roommate', function (done) {
+      it('does not allow a subscriber who is registered for a single-bed-room to enter a desired roommate', function (done) {
         socrates.resources.single._registeredMembers = [{memberId: 'memberId2'}];
         socratesSubscriber.state.participations[currentYear] = {};
         sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
@@ -179,7 +179,7 @@ describe('SoCraTes members application', function () {
           });
       });
 
-      it('does not allow a subscriber who is registered for an exclusive junior room to enter a roommate', function (done) {
+      it('does not allow a subscriber who is registered for an exclusive junior room to enter a desired roommate', function (done) {
         socrates.resources.junior._registeredMembers = [{memberId: 'memberId2'}];
         socratesSubscriber.state.participations[currentYear] = {};
         sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
@@ -194,7 +194,7 @@ describe('SoCraTes members application', function () {
           });
       });
 
-      it('allows a subscriber who is registered for a bed in a double-bed room to enter a roommate', function (done) {
+      it('allows a subscriber who is registered for a bed in a double-bed room to enter a desired roommate', function (done) {
         socrates.resources.bed_in_double._registeredMembers = [{memberId: 'memberId2'}];
         socratesSubscriber.state.participations[currentYear] = {};
         sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
@@ -206,7 +206,7 @@ describe('SoCraTes members application', function () {
           .expect(/Who do you want to share your room with/, done);
       });
 
-      it('allows a subscriber who is registered for a bed in a junior room to enter a roommate', function (done) {
+      it('allows a subscriber who is registered for a bed in a junior room to enter a desired roommate', function (done) {
         socrates.resources.bed_in_junior._registeredMembers = [{memberId: 'memberId2'}];
         socratesSubscriber.state.participations[currentYear] = {};
         sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
