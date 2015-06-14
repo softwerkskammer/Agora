@@ -76,11 +76,11 @@ var interestify, surroundInterestsWithLinks, surroundWithLink, surroundTwitterNa
         prev: 'fa-caret-left',
         next: 'fa-caret-right'
       },
+      aspectRatio: 1.2,
+      height: 'auto',
       views: {
         month: {
           lang: fc_lang,
-          aspectRatio: 1.2,
-          height: 'auto',
           fixedWeekCount: false
         }
       }
