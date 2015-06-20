@@ -57,7 +57,7 @@ if (SoCraTesActivity.prototype.reserve === undefined) {
     var self = this;
     var resources = self.registeredResourcesFor(memberId);
     var roommates = _.map(resources, function (resource) {
-      new SoCraTesResource(resource).rooms().findRoommateFor(memberId);
+      return new SoCraTesResource(resource).rooms().findRoommateFor(memberId);
     });
     return _.compact(roommates)[0];
   };

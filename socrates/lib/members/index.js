@@ -124,14 +124,15 @@ app.get('/:nickname', function (req, res, next) {
     if (err || !member) { return next(err); }
     activitystore.getActivity(socratesConstants.currentUrl, function (err2, activity) {
       if (err2 || !activity) { return next(err2); }
-      // var registeredResource = activity.registeredResourcesFor(member.id())[0];
-      // if(registeredResource && registeredResource.indexOf('bed_in_') > -1){ }
+
+      // only when a participant looks at their own profile!
+      var registeredResource = activity.registeredResourcesFor(member.id())[0];
+      var isInDoubleBedRoom = registeredResource && registeredResource.resourceName.indexOf('bed_in_') > -1;
       var roommateId = activity.roommateFor(member.id());
       memberstore.getMemberForId(roommateId, function (err3, roommate) {
         if (err3) { return next(err3); }
-        var roommateName = roommate ? roommate.displayName() : 'None';
-        res.render('get', { member: member, roommate: roommateName });
-
+        var roommateName = roommate ? roommate.displayName() : 'Not assigned yet';
+        res.render('get', { member: member, roommate: roommateName, isInDoubleBedRoom: isInDoubleBedRoom });
       });
     });
   });

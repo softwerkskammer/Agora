@@ -187,14 +187,14 @@ Activity.prototype.isAlreadyOnWaitinglist = function (memberID) {
 
 Activity.prototype.registeredResourcesFor = function (memberID) {
   var self = this;
-  return _.map(this.resources().resourceNamesOf(memberID), function (resourceName) {
+  return _.map(self.resources().resourceNamesOf(memberID), function (resourceName) {
     return self.resourceNamed(resourceName);
   });
 };
 
 Activity.prototype.waitinglistResourcesFor = function (memberID) {
   var self = this;
-  return _.map(this.resources().waitinglistResourceNamesOf(memberID), function (resourceName) {
+  return _.map(self.resources().waitinglistResourceNamesOf(memberID), function (resourceName) {
     return self.resourceNamed(resourceName);
   });
 };

@@ -33,7 +33,7 @@ block content
           | #{member.twitter()}
 
       p
-        if(accessrights.canEditMember(member))
+        if(accessrights.canEditMember(member) && isInDoubleBedRoom)
           strong #{t('members.roommate')}:&nbsp;
           | #{roommate}
 
