@@ -31,7 +31,7 @@ block content
         +hidden('resourceName', registrationTuple.resourceName)
         +hidden('duration', registrationTuple.duration)
         fieldset
-          +memberinfoform(member, 'members.edit_registration')
+          +memberinfoform(member, subscriber, 'members.edit_registration')
           +userinfoform(addon, participation, registrationTuple.resourceName.indexOf('bed_in_') > -1)
     
     .row(style='margin-bottom: 10px')

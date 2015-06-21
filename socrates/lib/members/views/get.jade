@@ -32,8 +32,8 @@ block content
         span.twitterify
           | #{member.twitter()}
 
-      p
-        if(accessrights.canEditMember(member) && isInDoubleBedRoom)
+      if(accessrights.canEditMember(member) && isInDoubleBedRoom)
+        p
           strong #{t('members.roommate')}:&nbsp;
           | #{roommate}
 

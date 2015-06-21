@@ -129,6 +129,7 @@ app.get('/participate', function (req, res, next) {
       res.render('participate', {
         member: member,
         addon: addon,
+        subscriber: subscriber,
         participation: participation,
         registrationTuple: registrationTuple,
         expiresIn: expiresAt && expiresAt.diff(moment(), 'minutes'),

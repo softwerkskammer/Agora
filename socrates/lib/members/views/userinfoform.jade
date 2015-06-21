@@ -1,6 +1,6 @@
 include  ../../../views/formComponents
 
-mixin memberinfoform(member, newmember_text)
+mixin memberinfoform(member, subscriber, newmember_text)
   +hidden('id', member.id())
   +hidden('previousNickname', member.nickname())
   +hidden('previousEmail', accessrights.isRegistered() ? member.email() : '')
@@ -29,6 +29,8 @@ mixin memberinfoform(member, newmember_text)
           +text('lastname', 'Last name', member.lastname())
       if subscriber
         +checkbox('notifyOnWikiChangesSoCraTes', t('members.notifyOnWikiChanges'), subscriber.notifyOnWikiChangesSoCraTes())
+      else
+        +checkbox('notifyOnWikiChangesSoCraTes', t('members.notifyOnWikiChanges'), true)
     .col-sm-6
       +text('email', 'E-Mail', member.email())
       +twitter('twitter', 'Twitter', member.twitter())
