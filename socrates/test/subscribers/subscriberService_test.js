@@ -14,7 +14,7 @@ var Member = beans.get('member');
 var memberID1 = 'stubbed_member';
 var memberID2 = 'another_stubbed_member';
 
-describe.only('SubscriberService', function () {
+describe('SubscriberService', function () {
 
   var expectedMember1 = new Member({id: memberID1, email: 'email'});
   var subscriber1 = new Subscriber({id: memberID1, notifyOnWikiChangesSoCraTes: true});
