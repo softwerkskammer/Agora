@@ -52,7 +52,7 @@
     "marked": "0.3.3",
     "mime-types": "2.1.1",
     "moment-timezone": "0.4.0",
-    "mongodb": "2.0.33",
+    "mongodb": "2.0.34",
     "morgan": "1.5.3",
     "multiparty": "4.1.2",
     "node-cache": "3.0.0",
