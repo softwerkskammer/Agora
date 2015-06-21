@@ -4,12 +4,14 @@ var conf = require('simple-configure');
 var logger = require('winston').loggers.get('transactions');
 var jade = require('jade');
 var path = require('path');
+var _ = require('lodash');
 
 var beans = conf.get('beans');
 var notifications = beans.get('notifications');
 var memberstore = beans.get('memberstore');
 var membersService = beans.get('membersService');
 var subscriberstore = beans.get('subscriberstore');
+var subscriberService = beans.get('subscriberService');
 var socratesConstants = beans.get('socratesConstants');
 
 function renderingOptions(member) {
@@ -91,6 +93,18 @@ module.exports = {
       var filename = path.join(__dirname, 'jade/paymenttemplate.jade');
       var receivers = [member.email()];
       notifications._sendMail(receivers, 'Payment Receipt / Zahlungseingang', jade.renderFile(filename, options));
+    });
+  },
+
+  wikiChanges: function (changes, callback) {
+    var options = {
+      directories: _.sortBy(changes, 'dir')
+    };
+    _.defaults(options, renderingOptions());
+    subscriberService.emailAddressesForWikiNotifications(function (err1, emails) {
+      if (err1 || emails.length === 0) { return callback(err1); }
+      var filename = path.join(__dirname, 'jade/wikichangetemplate.jade');
+      notifications._sendMail(emails, 'Wiki Changes', jade.renderFile(filename, options), callback);
     });
   }
 

@@ -1,6 +1,8 @@
 'use strict';
 
+var _ = require('lodash');
 var async = require('async');
+
 var beans = require('simple-configure').get('beans');
 var memberstore = beans.get('memberstore');
 var subscriberstore = beans.get('subscriberstore');
@@ -39,6 +41,17 @@ module.exports = {
             callback(null, member);
           });
         }, globalCallback);
+    });
+  },
+
+  emailAddressesForWikiNotifications: function (globalCallback) {
+    subscriberstore.allSubscribers(function (err, subscribers) {
+      if (err || !subscribers) { return globalCallback(err); }
+      var memberIds = _(subscribers).filter(function (subscriber) { return subscriber.notifyOnWikiChangesSoCraTes(); }).map(function (subscriber) {return subscriber.id(); }).value();
+      memberstore.getMembersForIds(memberIds, function (err1, members) {
+        if (err1) { return globalCallback(err1); }
+        globalCallback(null, _.map(members, function (member) { return member.email(); }));
+      });
     });
   }
 

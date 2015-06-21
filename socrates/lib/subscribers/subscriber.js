@@ -16,6 +16,7 @@ Subscriber.prototype.fillFromUI = function (uiInputObject) {
   if (Participation.hasParticipationInformation(uiInputObject)) {
     this.currentParticipation().fillFromUI(uiInputObject);
   }
+  this.state.notifyOnWikiChangesSoCraTes = !!uiInputObject.notifyOnWikiChangesSoCraTes;
   return this;
 };
 
@@ -44,6 +45,10 @@ Subscriber.prototype.participations = function () {
 
 Subscriber.prototype.currentParticipation = function () {
   return this.participationOf(socratesConstants.currentYear);
+};
+
+Subscriber.prototype.notifyOnWikiChangesSoCraTes = function () {
+  return this.state.notifyOnWikiChangesSoCraTes;
 };
 
 Subscriber.prototype.participationOf = function (year) {

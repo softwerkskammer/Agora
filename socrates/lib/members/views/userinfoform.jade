@@ -6,6 +6,7 @@ mixin memberinfoform(member, newmember_text)
   +hidden('previousEmail', accessrights.isRegistered() ? member.email() : '')
   +hidden('created', member.created())
   +hidden('socratesOnly', member.socratesOnly())
+  +hidden('notifyOnWikiChanges', member.notifyOnWikiChanges())
   .row
     .col-sm-12
       if(newmember_text)
@@ -26,6 +27,8 @@ mixin memberinfoform(member, newmember_text)
           +text('firstname', 'First name', member.firstname())
         .col-sm-6
           +text('lastname', 'Last name', member.lastname())
+      if subscriber
+        +checkbox('notifyOnWikiChangesSoCraTes', t('members.notifyOnWikiChanges'), subscriber.notifyOnWikiChangesSoCraTes())
     .col-sm-6
       +text('email', 'E-Mail', member.email())
       +twitter('twitter', 'Twitter', member.twitter())
