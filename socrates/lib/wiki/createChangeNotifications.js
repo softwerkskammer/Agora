@@ -10,11 +10,11 @@ var beans = require('simple-configure').get('beans');
 // open persistence AFTER logger is created
 var persistence = beans.get('settingsPersistence');
 var wikiService = beans.get('wikiService');
-var notifications = beans.get('notifications');
+var notifications = beans.get('socratesNotifications');
 var moment = require('moment-timezone');
 var util = require('util');
 
-var lastNotifications = 'lastWikiNotifications';
+var lastNotifications = 'lastWikiNotificationsSoCraTes';
 
 function closeAndExit() {
   return persistence.closeDB(function () {
@@ -24,16 +24,18 @@ function closeAndExit() {
   });
 }
 
-logger.info('== Wiki Changes ==========================================================================');
+logger.info('== SoCraTes Wiki Changes ==========================================================================');
 persistence.getByField({id: lastNotifications}, function (err, result) {
   if (err) {
-    logger.error('Error when reading lastWikiNotifications: ' + err);
+    logger.error('Error when reading lastWikiNotificationsSoCraTes: ' + err);
     return closeAndExit();
   }
-  logger.info('No error when reading lastWikiNotifications');
+  logger.info('No error when reading lastWikiNotificationsSoCraTes');
   var yesterday = moment().subtract(1, 'days');
   var lastNotified = result || {id: lastNotifications, moment: yesterday.toDate()};
-  logger.info('Last notified: ' + util.inspect(result.moment));
+  if (result) {
+    logger.info('Last notified: ' + util.inspect(result.moment));
+  }
   wikiService.findPagesForDigestSince(moment(lastNotified.moment), function (err1, changes) {
     if (err1) {
       logger.error('Error when finding pages for Digest: ' + err1);
@@ -55,8 +57,8 @@ persistence.getByField({id: lastNotifications}, function (err, result) {
           logger.error(err3);
           return closeAndExit();
         }
-        logger.info('Wiki-Changes notified at: ' + lastNotified.moment);
-        console.log('wiki-changes were reported'); // for cron mail
+        logger.info('SoCraTes Wiki-Changes notified at: ' + lastNotified.moment);
+        console.log('SoCraTes wiki-changes were reported'); // for cron mail
         return closeAndExit();
       });
     });

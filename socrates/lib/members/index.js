@@ -25,6 +25,7 @@ function editMember(req, res, next, returnToParticipantsListing) {
     var registeredResources = socrates.resources().resourceNamesOf(member.id());
     res.render('edit', {
       member: member,
+      subscriber: subscriber,
       addon: subscriber && subscriber.addon().homeAddress() ? subscriber.addon() : undefined,
       participation: subscriber && subscriber.isParticipating() ? subscriber.currentParticipation() : null,
       isOnlyOnWaitinglist: registeredResources.length === 0,

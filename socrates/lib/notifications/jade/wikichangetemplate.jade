@@ -1,0 +1,58 @@
+doctype html
+html
+  head
+    style.
+      body {
+        font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif;
+        font-size: 12px;
+        line-height: 1.2;
+      }
+      .table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .compare {
+        font-family: Consolas, monospace;
+        font-size: 10px;
+        padding: 3px;
+      }
+      .compare td {
+        padding: 0 3px;
+        border-top-width: 0
+      }
+      .compare .gd {
+        background-color: #ffdddd;
+      }
+      .compare .gc {
+        color: #999999;
+        background-color: #EAF2F5;
+      }
+      .compare .gi {
+        background-color: #ddffdd;
+      }
+      .compare .ln {
+        color: #999999;
+        background-color: #EAF2F5;
+        text-align: right;
+        border-bottom-color: transparent;
+      }
+
+  body
+    h2 The following wiki pages have changed:
+    each directory in directories
+      h3 Wiki "#{directory.dir}"
+      each file in directory.sortedFiles()
+        h4 Page: 
+          a(href='#{url}/wiki/#{directory.dir}/#{file.file}') #{file.file}
+        p Changes by: #{file.authorsString()}
+        div
+        table.compare
+          each line in file.diff.asLines()
+            tr
+              td.ln #{line.ldln}
+              td.ln #{line.rdln}
+              td(class=line.class) #{line.text}
+      hr
+    p If you do not want to receive these mails in the future, please #{''}
+      a(href='#{url}/members/edit') edit your SoCraTes profile
+      | #{''} and deselect the option "Notify on wiki changes".
