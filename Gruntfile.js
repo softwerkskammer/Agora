@@ -26,22 +26,22 @@ module.exports = function (grunt) {
     'bower_components/smartmenus/dist/jquery.smartmenus.js',
     'softwerkskammer/build/javascript/jquery.smartmenus.bootstrap-patched.js',
     'softwerkskammer/build/javascript/fullcalendar-patched.js',
-    'bower_components/tinycolor/tinycolor.js',
+    'node_modules/tinycolor2/tinycolor.js',
     'node_modules/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js',
-    'node_modules/jquery-validation/dist/jquery.validate.js',
-    'node_modules/jquery-validation/dist/additional-methods.js',
+    'bower_components/jquery-validation/dist/jquery.validate.js',
+    'bower_components/jquery-validation/dist/additional-methods.js',
     'bower_components/jquery.qrcode/dist/jquery.qrcode.js',
     'bower_components/bootstrap-timepicker/js/bootstrap-timepicker.js',
     'bower_components/jqcloud2/dist/jqcloud.js',
-    'bower_components/tinygradient/tinygradient.js',
+    'node_modules/tinygradient/tinygradient.js',
     'node_modules/URIjs/src/URI.js'
   ];
 
   // filesets for uglify
   var files_de = {
     'softwerkskammer/public/clientscripts/global_de.js': commonJSfiles.concat([
-      'node_modules/jquery-validation/src/localization/messages_de.js',
-      'node_modules/jquery-validation/src/localization/methods_de.js',
+      'bower_components/jquery-validation/src/localization/messages_de.js',
+      'bower_components/jquery-validation/src/localization/methods_de.js',
       'node_modules/bootstrap-datepicker/js/locales/bootstrap-datepicker.de.js',
       'bower_components/select2/select2_locale_de.js',
       'node_modules/fullcalendar/dist/lang/de.js',
