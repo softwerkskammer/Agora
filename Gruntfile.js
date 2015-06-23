@@ -14,35 +14,35 @@ module.exports = function (grunt) {
   jsLintServerTestDirectives.predef = ['afterEach', 'after', 'beforeEach', 'before', 'describe', 'it'];
 
   var commonJSfiles = [
-    'bower_components/jquery/dist/jquery.js',
+    'node_modules/jquery/dist/jquery.js',
     'bower_components/jquery-guillotine/js/jquery.guillotine.js',
     'bower_components/select2/dist/js/select2.js',
     'bower_components/autoNumeric/autoNumeric.js',
-    'bower_components/bootstrap/dist/js/bootstrap.js',
-    'bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js',
-    'bower_components/bootstrap-markdown/js/bootstrap-markdown.js',
-    'bower_components/bootstrap-markdown/locale/bootstrap-markdown.de.js',
+    'node_modules/bootstrap/dist/js/bootstrap.js',
+    'node_modules/bootstrap-datepicker/js/bootstrap-datepicker.js',
+    'node_modules/bootstrap-markdown/js/bootstrap-markdown.js',
+    'node_modules/bootstrap-markdown/locale/bootstrap-markdown.de.js',
     'node_modules/moment-timezone/node_modules/moment/moment.js',
     'bower_components/smartmenus/dist/jquery.smartmenus.js',
     'softwerkskammer/build/javascript/jquery.smartmenus.bootstrap-patched.js',
     'softwerkskammer/build/javascript/fullcalendar-patched.js',
     'bower_components/tinycolor/tinycolor.js',
-    'bower_components/mjolnic-bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js',
-    'bower_components/jquery-validation/dist/jquery.validate.js',
-    'bower_components/jquery-validation/dist/additional-methods.js',
+    'node_modules/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js',
+    'node_modules/jquery-validation/dist/jquery.validate.js',
+    'node_modules/jquery-validation/dist/additional-methods.js',
     'bower_components/jquery.qrcode/dist/jquery.qrcode.js',
     'bower_components/bootstrap-timepicker/js/bootstrap-timepicker.js',
     'bower_components/jqcloud2/dist/jqcloud.js',
     'bower_components/tinygradient/tinygradient.js',
-    'bower_components/URIjs/src/URI.js'
+    'node_modules/URIjs/src/URI.js'
   ];
 
   // filesets for uglify
   var files_de = {
     'softwerkskammer/public/clientscripts/global_de.js': commonJSfiles.concat([
-      'bower_components/jquery-validation/src/localization/messages_de.js',
-      'bower_components/jquery-validation/src/localization/methods_de.js',
-      'bower_components/bootstrap-datepicker/js/locales/bootstrap-datepicker.de.js',
+      'node_modules/jquery-validation/src/localization/messages_de.js',
+      'node_modules/jquery-validation/src/localization/methods_de.js',
+      'node_modules/bootstrap-datepicker/js/locales/bootstrap-datepicker.de.js',
       'bower_components/select2/select2_locale_de.js',
       'node_modules/fullcalendar/dist/lang/de.js',
       'softwerkskammer/locales/frontend_de.js',
@@ -68,7 +68,7 @@ module.exports = function (grunt) {
     },
     copy: {
       datatablesJS: {
-        src: 'bower_components/datatables/media/js/*.min.js',
+        src: 'node_modules/datatables/media/js/*.min.js',
         dest: 'softwerkskammer/public/clientscripts',
         expand: true,
         flatten: true
@@ -80,39 +80,39 @@ module.exports = function (grunt) {
         flatten: true
       },
       datatablesImages: {
-        src: 'bower_components/datatables/media/images/*',
+        src: 'node_modules/datatables/media/images/*',
         dest: 'softwerkskammer/public/images/',
         expand: true,
         flatten: true
       },
       colorpickerImages: {
-        cwd: 'bower_components/mjolnic-bootstrap-colorpicker/dist/img',
+        cwd: 'node_modules/bootstrap-colorpicker/dist/img',
         src: ['**'],
         dest: 'softwerkskammer/public/img/',
         expand: true,
         flatten: false
       },
       bootstrapFONTS: {
-        src: 'bower_components/bootstrap/dist/fonts/*',
+        src: 'node_modules/bootstrap/dist/fonts/*',
         dest: 'softwerkskammer/public/fonts',
         expand: true,
         flatten: true
       },
       bootstrapLESS: {
-        cwd: 'bower_components/bootstrap/less/',
+        cwd: 'node_modules/bootstrap/less/',
         src: ['**', '!variables.less'],
         dest: 'softwerkskammer/build/stylesheets/less',
         expand: true,
         flatten: false
       },
       bootstrapMarkdownLESS: {
-        src: 'bower_components/bootstrap-markdown/less/*',
+        src: 'node_modules/bootstrap-markdown/less/*',
         dest: 'softwerkskammer/build/stylesheets/less',
         expand: true,
         flatten: true
       },
       fontawesomeFONTS: {
-        src: 'bower_components/font-awesome/fonts/*',
+        src: 'node_modules/font-awesome/fonts/*',
         dest: 'softwerkskammer/public/fonts',
         expand: true,
         flatten: true
@@ -226,17 +226,17 @@ module.exports = function (grunt) {
           'softwerkskammer/public/stylesheets/screen.css': [
             'node_modules/fullcalendar/dist/fullcalendar.css',
             'softwerkskammer/build/stylesheets/less/bootstrap.less',
-            'bower_components/bootstrap-datepicker/css/datepicker3.css',
+            'node_modules/bootstrap-datepicker/css/datepicker3.css',
             'softwerkskammer/build/stylesheets/less/bootstrap-markdown-patched.less',
-            'bower_components/font-awesome/css/font-awesome.css',
+            'node_modules/font-awesome/css/font-awesome.css',
             'node_modules/node-syntaxhighlighter/lib/styles/shCoreDefault.css',
             'bower_components/smartmenus/dist/addons/bootstrap/jquery.smartmenus.bootstrap.css',
-            'bower_components/datatables/media/css/jquery.dataTables.css',
+            'node_modules/datatables/media/css/jquery.dataTables.css',
             'softwerkskammer/frontend/3rd_party_css/dataTables.bootstrap.css',
             'softwerkskammer/frontend/3rd_party_css/dataTables.fontAwesome.css',
             'bower_components/select2/dist/css/select2.css',
-            'bower_components/select2-bootstrap-css/select2-bootstrap.css',
-            'bower_components/mjolnic-bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css',
+            'node_modules/select2-bootstrap-css/select2-bootstrap.css',
+            'node_modules/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css',
             'bower_components/jquery-guillotine/css/jquery.guillotine.css',
             'softwerkskammer/build/stylesheets/less/agora.less'
           ]
