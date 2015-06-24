@@ -16,19 +16,19 @@ module.exports = function (grunt) {
   // filesets for uglify
   var files = {
     'socrates/public/clientscripts/global.js': [
-      'bower_components/jquery/dist/jquery.js',
+      'node_modules/jquery/dist/jquery.js',
       'bower_components/jquery-guillotine/js/jquery.guillotine.js',
       'bower_components/autoNumeric/autoNumeric.js',
-      'bower_components/bootstrap/dist/js/bootstrap.js',
-      'bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js',
-      'bower_components/bootstrap-markdown/js/bootstrap-markdown.js',
+      'node_modules/bootstrap/dist/js/bootstrap.js',
+      'node_modules/bootstrap-datepicker/js/bootstrap-datepicker.js',
+      'node_modules/bootstrap-markdown/js/bootstrap-markdown.js',
       'node_modules/moment-timezone/node_modules/moment/moment.js',
       'bower_components/smartmenus/dist/jquery.smartmenus.js',
       'socrates/build/javascript/jquery.smartmenus.bootstrap-patched.js',
       'bower_components/jquery-validation/dist/jquery.validate.js',
       'bower_components/jquery-validation/dist/additional-methods.js',
       'bower_components/bootstrap-timepicker/js/bootstrap-timepicker.js',
-      'bower_components/URIjs/src/URI.js',
+      'node_modules/URIjs/src/URI.js',
       'socrates/locales/frontend_en.js',
       'socrates/frontend/javascript/socrates.js'
     ]
@@ -43,7 +43,7 @@ module.exports = function (grunt) {
     },
     copy: {
       datatablesJS: {
-        src: 'bower_components/datatables/media/js/*.min.js',
+        src: 'node_modules/datatables/media/js/*.min.js',
         dest: 'socrates/public/clientscripts',
         expand: true,
         flatten: true
@@ -55,26 +55,26 @@ module.exports = function (grunt) {
         flatten: true
       },
       bootstrapFONTS: {
-        src: 'bower_components/bootstrap/dist/fonts/*',
+        src: 'node_modules/bootstrap/dist/fonts/*',
         dest: 'socrates/public/fonts',
         expand: true,
         flatten: true
       },
       bootstrapLESS: {
-        cwd: 'bower_components/bootstrap/less/',
+        cwd: 'node_modules/bootstrap/less/',
         src: ['**', '!variables.less'],
         dest: 'socrates/build/stylesheets/less',
         expand: true,
         flatten: false
       },
       bootstrapMarkdownLESS: {
-        src: 'bower_components/bootstrap-markdown/less/*',
+        src: 'node_modules/bootstrap-markdown/less/*',
         dest: 'socrates/build/stylesheets/less',
         expand: true,
         flatten: true
       },
       fontawesomeFONTS: {
-        src: 'bower_components/font-awesome/fonts/*',
+        src: 'node_modules/font-awesome/fonts/*',
         dest: 'socrates/public/fonts',
         expand: true,
         flatten: true
@@ -160,10 +160,12 @@ module.exports = function (grunt) {
         files: {
           'socrates/public/stylesheets/screen.css': [
             'socrates/build/stylesheets/less/bootstrap.less',
-            'bower_components/font-awesome/css/font-awesome.css',
+            'node_modules/font-awesome/css/font-awesome.css',
             'node_modules/node-syntaxhighlighter/lib/styles/shCoreDefault.css',
             'bower_components/smartmenus/dist/addons/bootstrap/jquery.smartmenus.bootstrap.css',
             'socrates/build/stylesheets/less/bootstrap-markdown-patched.less',
+            'node_modules/datatables/media/css/jquery.dataTables.css',
+            'softwerkskammer/frontend/3rd_party_css/dataTables.bootstrap.css',
             'bower_components/jquery-guillotine/css/jquery.guillotine.css',
             'socrates/build/stylesheets/less/socrates.less'
           ]
