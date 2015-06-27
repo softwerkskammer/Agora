@@ -104,7 +104,7 @@ module.exports = {
     subscriberService.emailAddressesForWikiNotifications(function (err1, emails) {
       if (err1 || emails.length === 0) { return callback(err1); }
       var filename = path.join(__dirname, 'jade/wikichangetemplate.jade');
-      notifications._sendMail(emails, 'Wiki Changes', jade.renderFile(filename, options), callback);
+      notifications._sendMail(emails, 'SoCraTes Wiki Changes', jade.renderFile(filename, options), callback);
     });
   }
 
