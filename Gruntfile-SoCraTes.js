@@ -2,17 +2,6 @@ module.exports = function (grunt) {
   /*eslint camelcase: 0*/
   'use strict';
 
-  // set up common objects for jslint
-  var jsLintStandardOptions = {edition: 'latest', errorsOnly: true, failOnError: true};
-
-  var serverDirectives = function () {
-    return {indent: 2, node: true, nomen: true, todo: true, unparam: true, vars: true};
-  };
-  var jsLintServerDirectives = serverDirectives();
-  var jsLintServerTestDirectives = serverDirectives();
-  jsLintServerTestDirectives.ass = true;
-  jsLintServerTestDirectives.predef = ['afterEach', 'after', 'beforeEach', 'before', 'describe', 'it'];
-
   // filesets for uglify
   var files = {
     'socrates/public/clientscripts/global.js': [
@@ -110,36 +99,6 @@ module.exports = function (grunt) {
     eslint: {
       options: {quiet: true},
       target: ['socrates/**/*.js']
-    },
-    jslint: {
-      server: {
-        src: [
-          'socrates/*.js',
-          'socrates/lib/**/*.js'
-        ],
-        directives: jsLintServerDirectives,
-        options: jsLintStandardOptions
-      },
-      servertests: {
-        src: [
-          'socrates/test/**/*.js',
-          'socrates/testutil/**/*.js'
-        ],
-        directives: jsLintServerTestDirectives,
-        options: jsLintStandardOptions
-      },
-      client: {
-        src: [
-          'socrates/frontend/javascript/*.js'
-        ],
-        directives: {
-          indent: 2,
-          browser: true,
-          vars: true,
-          predef: ['$']
-        },
-        options: jsLintStandardOptions
-      }
     },
     karma: {
       options: {
@@ -252,12 +211,11 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-eslint');
-  grunt.loadNpmTasks('grunt-jslint');
   grunt.loadNpmTasks('grunt-karma');
   grunt.loadNpmTasks('grunt-mocha-istanbul');
   grunt.loadNpmTasks('grunt-patch');
 
-  grunt.registerTask('prepare', ['jslint', 'eslint', 'bower-install-simple', 'copy', 'patch', 'less']);
+  grunt.registerTask('prepare', ['eslint', 'bower-install-simple', 'copy', 'patch', 'less']);
   grunt.registerTask('frontendtests', ['clean', 'prepare', 'jade', 'uglify:production', 'karma:once', 'uglify:development', 'karma:once', 'istanbul_check_coverage:frontend']);
   grunt.registerTask('tests', ['prepare', 'frontendtests', 'mocha_istanbul', 'istanbul_check_coverage:server']);
   grunt.registerTask('deploy_development', ['prepare', 'uglify:development']);

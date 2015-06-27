@@ -9,8 +9,5 @@
     "jquery-guillotine": "1.3.0",
     "select2": "4.0.0",
     "smartmenus": "0.9.7"
-  },
-  "resolutions": {
-    "jquery": "2.1.4"
   }
 }
