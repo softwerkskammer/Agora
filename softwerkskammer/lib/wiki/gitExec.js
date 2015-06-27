@@ -1,4 +1,3 @@
-/*jslint regexp: true*/
 'use strict';
 
 var Path = require('path');

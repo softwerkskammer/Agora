@@ -1,4 +1,3 @@
-/*jslint regexp: true*/
 'use strict';
 var marked = require('marked');
 var Crypto = require('crypto');

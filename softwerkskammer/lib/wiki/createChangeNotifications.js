@@ -1,9 +1,9 @@
 'use strict';
 var path = require('path');
 require('../../configure'); // initializing parameters
-/*jslint stupid: true */
+
+/*eslint no-sync: 0 */
 var winston = require('winston-config').fromFileSync(path.join(__dirname, '../../../config/winston-config.json'));
-/*jslint stupid: false */
 var logger = winston.loggers.get('scripts');
 
 var beans = require('simple-configure').get('beans');

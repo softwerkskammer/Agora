@@ -134,7 +134,6 @@ Member.prototype.interests = function () {
 };
 
 Member.prototype.interestsForSelect2 = function () {
-  /*jslint regexp: true*/
   return _(this.interests()).words(/[^,]+/g);
 };
 

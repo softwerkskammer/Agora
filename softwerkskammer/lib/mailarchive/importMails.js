@@ -1,4 +1,3 @@
-/*jslint regexp: true*/
 'use strict';
 var moment = require('moment-timezone');
 var beans = require('simple-configure').get('beans');
@@ -6,9 +5,9 @@ var fieldHelpers = beans.get('fieldHelpers');
 var memberstore = beans.get('memberstore');
 
 var path = require('path');
-/*jslint stupid: true */
+
+/*eslint no-sync: 0 */
 var winston = require('winston-config').fromFileSync(path.join(__dirname, '../../../config/winston-config.json'));
-/*jslint stupid: false */
 var logger = winston.loggers.get('scripts');
 
 var MailParser = require('mailparser').MailParser;

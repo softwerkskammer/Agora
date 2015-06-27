@@ -30,9 +30,8 @@ var conf = require('simple-configure');
 var beans = conf.get('beans');
 
 // initialize winston and two concrete loggers
-/*jslint stupid: true */
+/*eslint no-sync: 0 */
 var winston = require('winston-config').fromFileSync(path.join(__dirname, '../config/winston-config.json'));
-/*jslint stupid: false */
 
 var appLogger = winston.loggers.get('application');
 var httpLogger = winston.loggers.get('http');

@@ -3,9 +3,8 @@ var path = require('path');
 var file = process.argv[2];
 var group = process.argv[3].replace(/@softwerkskammer\.org/g, ''); // remove trailing domain
 
-/*jslint stupid: true */
+/*eslint no-sync: 0 */
 var winston = require('winston-config').fromFileSync(path.join(__dirname, '../../../config/winston-config.json'));
-/*jslint stupid: false */
 var logger = winston.loggers.get('scripts');
 
 var persistence = require('../../configure').get('beans').get('mailsPersistence');
