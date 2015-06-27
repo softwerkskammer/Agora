@@ -1,5 +1,6 @@
 'use strict';
 
+var async = require('async');
 var Form = require('multiparty').Form;
 var beans = require('simple-configure').get('beans');
 var misc = beans.get('misc');
@@ -138,7 +139,10 @@ app.get('/:nickname', function (req, res, next) {
         }
         memberstore.getMembersForIds(potentialRoommates, function (err4, potentialRoommateMembers) {
           if (err4) { return next(err4); }
-          res.render('get', {member: member, roommate: roommate, potentialRoommates: potentialRoommateMembers, isInDoubleBedRoom: isInDoubleBedRoom});
+          async.each(potentialRoommateMembers, membersService.getImage, function (err5) {
+            if (err5) { return next(err5); }
+            res.render('get', {member: member, roommate: roommate, potentialRoommates: potentialRoommateMembers, isInDoubleBedRoom: isInDoubleBedRoom});
+          });
         });
       });
     });
