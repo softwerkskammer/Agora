@@ -35,7 +35,10 @@ block content
       if(accessrights.canEditMember(member) && isInDoubleBedRoom)
         p
           strong #{t('members.roommate')}:&nbsp;
-          | #{roommate}
+          if roommate
+            | #{roommate.displayName()}
+          else
+            | Not assigned yet
 
       p &nbsp;
     .col-md-4

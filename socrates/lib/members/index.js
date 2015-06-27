@@ -131,8 +131,7 @@ app.get('/:nickname', function (req, res, next) {
       var roommateId = activity.roommateFor(member.id());
       memberstore.getMemberForId(roommateId, function (err3, roommate) {
         if (err3) { return next(err3); }
-        var roommateName = roommate ? roommate.displayName() : 'Not assigned yet';
-        res.render('get', { member: member, roommate: roommateName, isInDoubleBedRoom: isInDoubleBedRoom });
+        res.render('get', { member: member, roommate: roommate, isInDoubleBedRoom: isInDoubleBedRoom });
       });
     });
   });
