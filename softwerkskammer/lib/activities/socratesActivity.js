@@ -31,4 +31,8 @@ SoCraTesActivity.prototype.groupFrom = function () {
   return undefined;
 };
 
+SoCraTesActivity.prototype.description = function () {
+  return ''; // required for ical export
+};
+
 module.exports = SoCraTesActivity;
