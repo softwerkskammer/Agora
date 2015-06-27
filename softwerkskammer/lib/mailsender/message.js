@@ -71,7 +71,7 @@ Message.prototype.toTransportObject = function (senderAddress) {
   var filename = path.join(__dirname, 'views/mailtemplate.jade');
   var filenameTextonly = path.join(__dirname, 'views/mailtemplate-textonly.jade');
 
-  var fromName = (this.senderName ? this.senderName + ' via ' : '') + conf.get('domainname') || 'softwerkskammer.org';
+  var fromName = (this.senderName ? this.senderName + ' via ' : '') + (conf.get('domainname') || 'softwerkskammer.org');
   var replyTo = this.senderName ? formatEMailAddress(this.senderName, this.senderAddress) : undefined;
   return {
     from: formatEMailAddress(fromName, senderAddress),
