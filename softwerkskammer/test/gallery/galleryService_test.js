@@ -1,5 +1,5 @@
-/*jslint stupid: true*/
 'use strict';
+/*eslint no-sync: 0 */
 
 var conf = require('../../testutil/configureForTest');
 var expect = require('must-dist');

@@ -1,5 +1,4 @@
 /*global screen, moment, datepicker_lang, datepicker_format, URI, help */
-/*jslint nomen: true*/
 (function () {
   'use strict';
   var highlightCurrentSection = function () {

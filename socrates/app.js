@@ -18,9 +18,8 @@ var beans = conf.get('beans');
 beans.get('socratesActivityExtended'); // must be called to extend the prototype
 
 // initialize winston and two concrete loggers
-/*jslint stupid: true */
+/*eslint no-sync: 0 */
 var winston = require('winston-config').fromFileSync(path.join(__dirname, '../config/winston-config.json'));
-/*jslint stupid: false */
 
 var appLogger = winston.loggers.get('socrates');
 var httpLogger = winston.loggers.get('socrates-http');
