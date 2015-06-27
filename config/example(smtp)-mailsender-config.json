@@ -8,5 +8,6 @@
     },
     "debug": "true"
   },
+  "sender-name": "Softwerkskammer Benachrichtigungen",
   "sender-address": "info@my-domain.org"
 }

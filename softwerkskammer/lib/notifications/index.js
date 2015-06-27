@@ -26,7 +26,7 @@ function sendMail(emailAddresses, subject, html, callback) {
     return;
   }
 
-  var fromName = 'Softwerkskammer Benachrichtigungen';
+  var fromName = conf.get('sender-name') || 'Softwerkskammer Benachrichtigungen';
   var mailoptions = {
     from: '"' + fromName + '" <' + conf.get('sender-address') + '>',
     bcc: _.uniq(emailAddresses).toString(),

@@ -40,6 +40,7 @@ function createConfiguration() {
     'authentication-config.json',
     'socrates-authentication-config.json',
     'mailsender-config.json',
+    'socrates-mailsender-config.json',
     'socrates-wikirepo-config.json',
     'activityresults-config.json',
     'crosssite-config.json'];
