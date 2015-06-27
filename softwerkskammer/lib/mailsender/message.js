@@ -3,7 +3,8 @@
 var _ = require('lodash');
 var jade = require('jade');
 var path = require('path');
-var beans = require('simple-configure').get('beans');
+var conf = require('simple-configure');
+var beans = conf.get('beans');
 var misc = beans.get('misc');
 var Renderer = beans.get('renderer');
 
@@ -70,7 +71,7 @@ Message.prototype.toTransportObject = function (senderAddress) {
   var filename = path.join(__dirname, 'views/mailtemplate.jade');
   var filenameTextonly = path.join(__dirname, 'views/mailtemplate-textonly.jade');
 
-  var fromName = (this.senderName ? this.senderName + ' via ' : '') + 'softwerkskammer.org';
+  var fromName = (this.senderName ? this.senderName + ' via ' : '') + (conf.get('domainname') || 'softwerkskammer.org');
   var replyTo = this.senderName ? formatEMailAddress(this.senderName, this.senderAddress) : undefined;
   return {
     from: formatEMailAddress(fromName, senderAddress),

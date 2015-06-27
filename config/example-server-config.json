@@ -1,6 +1,7 @@
 // to use these values, strip "example-" from the filename, delete this comment and replace the below values
 {
-  "publicUrlPrefix": "http://www.softwerkskammer.org",
+  "publicUrlPrefix": "http://localhost:17124",
   "secret": "secret",
+  "domainname": "softwerkskammer.org",
   "sessionkey": "softwerkskammer.org"
 }
