@@ -122,7 +122,7 @@ function setupGithub(app1) {
 function setupGooglePlus(app1) {
   var googlePlusClientID = conf.get('googlePlusClientID');
   if (googlePlusClientID) {
-    var GooglePlusStrategy = require('passport-openidconnect').Strategy;
+    var GooglePlusStrategy = require('openidconnect-for-passport').Strategy;
 
     var strategy = new GooglePlusStrategy(
       {

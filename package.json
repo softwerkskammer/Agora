@@ -71,7 +71,7 @@
     "passport": "0.2.2",
     "passport-github": "0.1.5",
     "passport-openid": "0.3.1",
-    "passport-openidconnect": "git://github.com/NicoleRauch/passport-openidconnect#master",
+    "openidconnect-for-passport": "0.0.2",
     "qr-image": "3.1.0",
     "select2-bootstrap-css": "1.4.6",
     "serve-favicon": "2.3.0",
