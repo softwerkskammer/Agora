@@ -49,7 +49,6 @@ function deleteAvatar(req, res, next, forwardPrefix) {
   });
 }
 
-
 var app = misc.expressAppIn(__dirname);
 
 app.get('/checknickname', function (req, res) {
@@ -130,8 +129,17 @@ app.get('/:nickname', function (req, res, next) {
       var isInDoubleBedRoom = registeredResource && registeredResource.resourceName.indexOf('bed_in_') > -1;
       var roommateId = activity.roommateFor(member.id());
       memberstore.getMemberForId(roommateId, function (err3, roommate) {
+        var potentialRoommates = [];
         if (err3) { return next(err3); }
-        res.render('get', { member: member, roommate: roommate, isInDoubleBedRoom: isInDoubleBedRoom });
+        if(registeredResource && !roommate) {
+          potentialRoommates = activity.rooms(registeredResource.resourceName).participantsWithoutRoom();
+          var index = potentialRoommates.indexOf(member.id());
+          potentialRoommates.splice(index, 1);
+        }
+        memberstore.getMembersForIds(potentialRoommates, function (err4, potentialRoommateMembers) {
+          if (err4) { return next(err4); }
+          res.render('get', {member: member, roommate: roommate, potentialRoommates: potentialRoommateMembers, isInDoubleBedRoom: isInDoubleBedRoom});
+        });
       });
     });
   });
