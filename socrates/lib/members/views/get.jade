@@ -2,6 +2,7 @@ extends ../../../views/layout
 
 include ../../../views/formComponents
 include ../../../../softwerkskammer/lib/members/views/editavatar
+include ../../../../softwerkskammer/lib/members/views/memberlist-mixin
 
 block title
   | #{member.firstname()} #{member.lastname()} - #{t('members.profile')}
@@ -45,10 +46,7 @@ block content
             a(href='mailto:info@softwerkskammer.org') When you both agree, tell us.
             | #{' '}Otherwise, we will match you up at random.
             p
-            ul
-              for potentialRoommate in potentialRoommates
-                li
-                  a(href='/members/#{potentialRoommate.nickname()}') #{potentialRoommate.displayName()}
+            +memberlist(potentialRoommates)
 
       p &nbsp;
     .col-md-4

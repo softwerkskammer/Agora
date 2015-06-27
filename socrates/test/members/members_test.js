@@ -200,8 +200,8 @@ describe('SoCraTes members application', function () {
           .get('/nini')
           .expect(200)
           .expect(/Your roommate:&nbsp;<\/strong>You do not have a roommate yet./)
-          .expect(/<li><a href="\/members\/hada">Hans Dampf<\/a><\/li>/, function (err, res) {
-            expect(res.text).to.not.contain('<li><a href="/members/nini">Petra Meier</a></li>');
+          .expect(/<dd>Hans Dampf&nbsp;<\/dd>/, function (err, res) {
+            expect(res.text).to.not.contain('<dd>Petra Meier');
             done(err);
           });
       });
