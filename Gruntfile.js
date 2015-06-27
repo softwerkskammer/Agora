@@ -2,17 +2,6 @@ module.exports = function (grunt) {
   /*eslint camelcase: 0*/
   'use strict';
 
-  // set up common objects for jslint
-  var jsLintStandardOptions = {edition: 'latest', errorsOnly: true, failOnError: true};
-
-  var serverDirectives = function () {
-    return {indent: 2, node: true, nomen: true, todo: true, unparam: true, vars: true};
-  };
-  var jsLintServerDirectives = serverDirectives();
-  var jsLintServerTestDirectives = serverDirectives();
-  jsLintServerTestDirectives.ass = true;
-  jsLintServerTestDirectives.predef = ['afterEach', 'after', 'beforeEach', 'before', 'describe', 'it'];
-
   var commonJSfiles = [
     'node_modules/jquery/dist/jquery.js',
     'bower_components/jquery-guillotine/js/jquery.guillotine.js',
@@ -160,52 +149,6 @@ module.exports = function (grunt) {
       options: {quiet: true},
       target: ['softwerkskammer/**/*.js']
     },
-    jslint: {
-      server: {
-        src: [
-          'softwerkskammer/*.js',
-          'softwerkskammer/lib/**/*.js'
-        ],
-        directives: jsLintServerDirectives,
-        options: jsLintStandardOptions
-      },
-      servertests: {
-        src: [
-          'softwerkskammer/test/**/*.js',
-          'softwerkskammer/testWithDB/**/*.js',
-          'softwerkskammer/testutil/**/*.js',
-          'softwerkskammer/frontendtests/fixtures/locals.js'
-        ],
-        directives: jsLintServerTestDirectives,
-        options: jsLintStandardOptions
-      },
-      client: {
-        src: [
-          'softwerkskammer/frontend/javascript/*.js'
-        ],
-        directives: {
-          indent: 2,
-          browser: true,
-          vars: true,
-          predef: ['$']
-        },
-        options: jsLintStandardOptions
-      },
-      clienttests: {
-        src: [
-          'softwerkskammer/frontendtests/*.js',
-          'softwerkskammer/frontendtests/fixtures/fixtures.js'
-        ],
-        directives: {
-          indent: 2,
-          browser: true,
-          vars: true,
-          nomen: true,
-          predef: ['$', 'describe', 'expect', 'beforeEach', 'afterEach', 'sinon', 'it', 'testglobals']
-        },
-        options: jsLintStandardOptions
-      }
-    },
     karma: {
       options: {
         configFile: 'karma.conf.js'
@@ -342,14 +285,13 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-eslint');
-  grunt.loadNpmTasks('grunt-jslint');
   grunt.loadNpmTasks('grunt-karma');
   grunt.loadNpmTasks('grunt-mocha-istanbul');
   grunt.loadNpmTasks('grunt-patch');
 
   grunt.registerTask('prepare', ['bower-install-simple', 'copy', 'patch', 'less']);
   grunt.registerTask('frontendtests', ['clean', 'prepare', 'jade', 'uglify:production_de', 'karma:once', 'uglify:development_de', 'karma:once', 'istanbul_check_coverage:frontend']);
-  grunt.registerTask('tests', ['jslint', 'eslint', 'frontendtests', 'mocha_istanbul', 'istanbul_check_coverage:server']);
+  grunt.registerTask('tests', ['eslint', 'frontendtests', 'mocha_istanbul', 'istanbul_check_coverage:server']);
   grunt.registerTask('deploy_development', ['prepare', 'uglify:development_de', 'uglify:development_en']);
 
   // Default task.
