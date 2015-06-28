@@ -74,6 +74,17 @@ describe('SoCraTes members application', function () {
     socrates = {resources: {single: {}, bed_in_double: {}, junior: {}, bed_in_junior: {}}};
 
     sinon.stub(activitystore, 'getActivity', function (url, callback) { return callback(null, new SoCraTesActivity(socrates)); });
+
+    sinon.stub(memberstore, 'getMembersForIds', function (ids, callback) {
+      var members = [];
+      if(ids.indexOf('memberId') > -1){
+        members.push(softwerkskammerMember);
+      }
+      if (ids.indexOf('memberId2') > -1) {
+        members.push(socratesMember);
+      }
+      callback(null, members);
+    });
   });
 
   afterEach(function () {
@@ -181,14 +192,18 @@ describe('SoCraTes members application', function () {
           });
       });
 
-      it('displays "not assigned yet" if the subscriber is in a double-bed room but has no roommate associated', function (done) {
-        socrates.resources.bed_in_double._registeredMembers = [{memberId: 'memberId2'}];
+      it('displays other unmatched roommates if the subscriber is in a double-bed room but has no roommate associated', function (done) {
+        socrates.resources.bed_in_double._registeredMembers = [{memberId: 'memberId'}, {memberId: 'memberId2'}];
         socratesSubscriber.state.participations[currentYear] = {};
 
         appWithSocratesMember
           .get('/nini')
           .expect(200)
-          .expect(/Your roommate:&nbsp;<\/strong>Not assigned yet/, done);
+          .expect(/Your roommate:&nbsp;<\/strong>You do not have a roommate yet./)
+          .expect(/<dd>Hans Dampf&nbsp;<\/dd>/, function (err, res) {
+            expect(res.text).to.not.contain('<dd>Petra Meier');
+            done(err);
+          });
       });
 
       it('displays the name of the roommate if the subscriber is in a double-bed room and has a roommate associated', function (done) {
