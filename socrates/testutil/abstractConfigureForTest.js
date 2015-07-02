@@ -26,6 +26,7 @@ module.exports = function (firstTestBeansFilename, secondTestBeansFilename) {
     swkRemoteAppUser: null,
     dontUsePersistentSessions: true,
     superuser: 'superuserID',
+    socratesAdmins: ['socratesAdminID'],
     wikipath: '..',
     beans: new Beans(productionBeans),
     transport: null,
