@@ -38,7 +38,6 @@ var httpLogger = winston.loggers.get('http');
 
 // initialize i18n
 i18n.init({
-  ignoreRoutes: ['/clientscripts/', '/fonts/', '/images/', '/img/', '/stylesheets/'],
   supportedLngs: ['de', 'en'],
   preload: ['de', 'en'],
   fallbackLng: 'de',
@@ -96,7 +95,7 @@ module.exports = {
     useApp(app, 'payment', beans.get('paymentApp'));
     useApp(app, 'gallery', beans.get('galleryApp'));
 
-    app.use(beans.get('handle404')(appLogger));
+    app.use(beans.get('handle404')());
     app.use(beans.get('handle500')(appLogger));
 
     i18n.registerAppHelper(app);
