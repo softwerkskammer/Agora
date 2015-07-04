@@ -41,6 +41,7 @@
     "CoolBeans": "0.0.9",
     "csurf": "1.8.3",
     "datatables": "1.10.7",
+    "drmonty-smartmenus": "0.9.7",
     "express": "4.13.0",
     "express-session": "1.11.3",
     "ezmlm-node": "1.2.3",

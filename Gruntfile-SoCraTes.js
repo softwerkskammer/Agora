@@ -12,7 +12,7 @@ module.exports = function (grunt) {
       'node_modules/bootstrap-datepicker/js/bootstrap-datepicker.js',
       'node_modules/bootstrap-markdown/js/bootstrap-markdown.js',
       'node_modules/moment-timezone/node_modules/moment/moment.js',
-      'bower_components/smartmenus/dist/jquery.smartmenus.js',
+      'node_modules/drmonty-smartmenus/js/jquery.smartmenus.js',
       'socrates/build/javascript/jquery.smartmenus.bootstrap-patched.js',
       'bower_components/jquery-validation/dist/jquery.validate.js',
       'bower_components/jquery-validation/dist/additional-methods.js',
@@ -96,7 +96,7 @@ module.exports = function (grunt) {
           patch: 'softwerkskammer/frontend/3rd_party_js/jquery.smartmenus.bootstrap.js.patch'
         },
         files: {
-          'socrates/build/javascript/jquery.smartmenus.bootstrap-patched.js': 'bower_components/smartmenus/dist/addons/bootstrap/jquery.smartmenus.bootstrap.js'
+          'socrates/build/javascript/jquery.smartmenus.bootstrap-patched.js': 'node_modules/drmonty-smartmenus/js/jquery.smartmenus.bootstrap.js'
         }
       }
     },
@@ -125,7 +125,7 @@ module.exports = function (grunt) {
             'socrates/build/stylesheets/less/bootstrap.less',
             'node_modules/font-awesome/css/font-awesome.css',
             'node_modules/node-syntaxhighlighter/lib/styles/shCoreDefault.css',
-            'bower_components/smartmenus/dist/addons/bootstrap/jquery.smartmenus.bootstrap.css',
+            'node_modules/drmonty-smartmenus/css/jquery.smartmenus.bootstrap.css',
             'socrates/build/stylesheets/less/bootstrap-markdown-patched.less',
             'node_modules/datatables/media/css/jquery.dataTables.css',
             'softwerkskammer/frontend/3rd_party_css/dataTables.bootstrap.css',
