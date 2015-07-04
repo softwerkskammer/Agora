@@ -111,7 +111,7 @@ describe('Message Object to TransportObject', function () {
     var message = new Message();
     message.setMarkdown('[link](/url)');
     var transportObject = message.toTransportObject('dummy');
-    expect(transportObject.text).to.contain('[link](' + publicUrlPrefix + '/url');
+    expect(transportObject.text).to.contain('[link](' + publicUrlPrefix + '/url)');
   });
 
   it('uses absolute URLs in html (already absolute)', function () {
@@ -125,7 +125,7 @@ describe('Message Object to TransportObject', function () {
     var message = new Message();
     message.setMarkdown('[link](http://bild.de/url)');
     var transportObject = message.toTransportObject('dummy');
-    expect(transportObject.text).to.contain('[link](http://bild.de/url');
+    expect(transportObject.text).to.contain('[link](http://bild.de/url)');
   });
 });
 
