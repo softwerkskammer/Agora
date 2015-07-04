@@ -140,6 +140,7 @@ module.exports = {
   findPagesForDigestSince: function (moment, callback) {
     var self = this;
     Git.lsdirs(function (err, subdirs) {
+      /* istanbul ignore if */
       if (err) {
         err.localInformation = 'lsdirs failed';
         return callback(err);
@@ -148,18 +149,21 @@ module.exports = {
       async.each(subdirs, function (directory, directoryCallback) {
         var resultLine = new DirectoryWithChangedFiles({dir: directory, files: []});
         self.pageList(directory, function (listErr, items) {
+          /* istanbul ignore if */
           if (listErr) {
             listErr.localInformation = 'pageList failed on dir ' + directory;
             return directoryCallback(listErr);
           }
           async.each(items, function (item, itemsCallback) {
             Git.latestChanges(item.fullname + '.md', moment, function (err1, metadata) {
+              /* istanbul ignore if */
               if (err1) {
                 err1.localInformation = 'latestChanges failed on item ' + item.fullname;
                 return itemsCallback(err1);
               }
               if (metadata.length > 0) {
                 Git.diff(item.fullname + '.md', 'HEAD@{' + moment.toISOString() + '}..HEAD', function (err2, diff) {
+                  /* istanbul ignore if */
                   if (err2) {
                     err2.localInformation = 'diff failed on ' + item.fullname;
                     return itemsCallback(err2);
@@ -174,6 +178,7 @@ module.exports = {
               } else { itemsCallback(); }
             });
           }, function (err1) {
+            /* istanbul ignore if */
             if (err1) {
               logger.error(err1.localInformation);
               logger.error(err1);
@@ -185,6 +190,7 @@ module.exports = {
           });
         });
       }, function (err1) {
+        /* istanbul ignore if */
         if (err1) {
           logger.error(err1.localInformation);
           logger.error(err1);
