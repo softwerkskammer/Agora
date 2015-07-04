@@ -56,6 +56,10 @@ module.exports = function (grunt) {
         expand: true,
         flatten: false
       },
+      bootstrapCustomVariablesLESS: {
+        src: 'node_modules/bootstrap/less/variables.less',
+        dest: 'socrates/build/stylesheets/less/original-variables.less'
+      },
       bootstrapMarkdownLESS: {
         src: 'node_modules/bootstrap-markdown/less/*',
         dest: 'socrates/build/stylesheets/less',
