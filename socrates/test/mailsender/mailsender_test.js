@@ -9,6 +9,8 @@ var beans = conf.get('beans');
 var userWithoutMember = require('../../testutil/userWithoutMember');
 
 var activitystore = beans.get('activitystore');
+var groupstore = beans.get('groupstore');
+var memberstore = beans.get('memberstore');
 
 var Member = beans.get('member');
 var SoCraTesActivity = beans.get('socratesActivityExtended');
@@ -52,6 +54,10 @@ describe('SoCraTes mailsender application', function () {
     socratesActivity = new SoCraTesActivity(socrates);
 
     sinon.stub(activitystore, 'getActivity', function (activityUrl, callback) { callback(null, socratesActivity); });
+    sinon.stub(groupstore, 'getGroup', function (group, callback) { callback(); });
+    sinon.stub(memberstore, 'getMembersForIds', function (members, callback) { callback(null, []); });
+    sinon.stub(memberstore, 'getMemberForId', function (memberId, callback) { callback(null, socratesMember); });
+    sinon.stub(memberstore, 'getMember', function (member, callback) { callback(null, socratesMember); });
   });
 
   afterEach(function () {
@@ -82,6 +88,88 @@ describe('SoCraTes mailsender application', function () {
     it('can not be opened when nobody is logged in', function (done) {
       appWithoutMember
         .get('/massMailing')
+        .expect(302)
+        .expect('location', '/registration', done);
+    });
+  });
+
+  describe('mail form for mass mailing', function () {
+
+    it('can be submitted as superuser', function (done) {
+      appWithSuperuser
+        .post('/send')
+        .send('nickname=ABC&subject=Hello&markdown=MailBody&sendCopyToSelf=true')
+        .send('massMailing=participants')
+        .send('successURL=/redirectToHereIfSuccessful')
+        .expect(302)
+        .expect('location', '/redirectToHereIfSuccessful', done);
+    });
+
+    it('can be submitted as socrates admin', function (done) {
+      appWithSocratesAdmin
+        .post('/send')
+        .send('nickname=ABC&subject=Hello&markdown=MailBody&sendCopyToSelf=true')
+        .send('massMailing=participants')
+        .send('successURL=/redirectToHereIfSuccessful')
+        .expect(302)
+        .expect('location', '/redirectToHereIfSuccessful', done);
+    });
+
+    it('can not be submitted as regular member', function (done) {
+      appWithSocratesMember
+        .post('/send')
+        .send('nickname=ABC&subject=Hello&markdown=MailBody&sendCopyToSelf=true')
+        .send('massMailing=participants')
+        .send('successURL=/redirectToHereIfSuccessful')
+        .expect(302)
+        .expect('location', '/registration', done);
+    });
+
+    it('can not be submitted when nobody is logged in', function (done) {
+      appWithoutMember
+        .post('/send')
+        .send('nickname=ABC&subject=Hello&markdown=MailBody&sendCopyToSelf=true')
+        .send('massMailing=participants')
+        .send('successURL=/redirectToHereIfSuccessful')
+        .expect(302)
+        .expect('location', '/registration', done);
+    });
+  });
+
+  describe('mail form for mail to another member', function () {
+
+    it('can be submitted as superuser', function (done) {
+      appWithSuperuser
+        .post('/send')
+        .send('nickname=ABC&subject=Hello&markdown=MailBody&sendCopyToSelf=true')
+        .send('successURL=/redirectToHereIfSuccessful')
+        .expect(302)
+        .expect('location', '/redirectToHereIfSuccessful', done);
+    });
+
+    it('can be submitted as socrates admin', function (done) {
+      appWithSocratesAdmin
+        .post('/send')
+        .send('nickname=ABC&subject=Hello&markdown=MailBody&sendCopyToSelf=true')
+        .send('successURL=/redirectToHereIfSuccessful')
+        .expect(302)
+        .expect('location', '/redirectToHereIfSuccessful', done);
+    });
+
+    it('can be submitted as regular member', function (done) {
+      appWithSocratesMember
+        .post('/send')
+        .send('nickname=ABC&subject=Hello&markdown=MailBody&sendCopyToSelf=true')
+        .send('successURL=/redirectToHereIfSuccessful')
+        .expect(302)
+        .expect('location', '/redirectToHereIfSuccessful', done);
+    });
+
+    xit('can not be submitted when nobody is logged in', function (done) {
+      appWithoutMember
+        .post('/send')
+        .send('nickname=ABC&subject=Hello&markdown=MailBody&sendCopyToSelf=true')
+        .send('successURL=/redirectToHereIfSuccessful')
         .expect(302)
         .expect('location', '/registration', done);
     });
