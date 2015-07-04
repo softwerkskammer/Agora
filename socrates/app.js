@@ -26,7 +26,6 @@ var httpLogger = winston.loggers.get('socrates-http');
 
 // initialize i18n
 i18n.init({
-  ignoreRoutes: ['/clientscripts/', '/fonts/', '/images/', '/img/', '/stylesheets/'],
   supportedLngs: ['en'],
   preload: ['en'],
   fallbackLng: 'en',
@@ -85,7 +84,7 @@ module.exports = {
     useApp(app, '/payment/', beans.get('socratesPaymentApp'));
     useApp(app, '/subscribers/', beans.get('socratesSubscribersApp'));
     useApp(app, '/wiki/', beans.get('socratesWikiApp'));
-    app.use(beans.get('handle404')(appLogger));
+    app.use(beans.get('handle404')());
     app.use(beans.get('handle500')(appLogger));
 
     i18n.registerAppHelper(app);

@@ -484,7 +484,9 @@ describe('Activity application', function () {
   });
 
   it('shows a 404 if the id cannot be found in the store for the detail page', function (done) {
-    request(createApp()).get('/' + emptyActivity.id + '4711').expect(404, function (err) { done(err); });
+    request(createApp())
+      .get('/' + emptyActivity.id + '4711')
+      .expect(404, done);
   });
 
   it('allows to create a new activity', function (done) {
