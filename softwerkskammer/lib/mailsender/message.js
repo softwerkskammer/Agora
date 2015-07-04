@@ -5,6 +5,7 @@ var jade = require('jade');
 var path = require('path');
 var conf = require('simple-configure');
 var beans = conf.get('beans');
+var publicUrlPrefix = conf.get('publicUrlPrefix');
 var misc = beans.get('misc');
 var Renderer = beans.get('renderer');
 
@@ -62,10 +63,12 @@ Message.prototype.toTransportObject = function (senderAddress) {
     return '"' + name + '" <' + email + '>';
   };
 
+  var modifiedMarkdown = this.markdown.replace(/\]\(\//g, '](' + publicUrlPrefix + '/');
+
   var renderingOptions = {
     pretty: true,
-    content: Renderer.render(this.markdown),
-    plain: this.markdown,
+    content: Renderer.render(modifiedMarkdown),
+    plain: modifiedMarkdown,
     buttons: this.buttons
   };
   var filename = path.join(__dirname, 'views/mailtemplate.jade');

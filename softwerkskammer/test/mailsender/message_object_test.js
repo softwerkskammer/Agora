@@ -2,7 +2,9 @@
 
 require('../../testutil/configureForTest');
 
-var beans = require('simple-configure').get('beans');
+var conf = require('simple-configure');
+var beans = conf.get('beans');
+var publicUrlPrefix = conf.get('publicUrlPrefix');
 var expect = require('must-dist');
 var Message = beans.get('message');
 var Member = beans.get('member');
@@ -36,15 +38,9 @@ describe('Message Object\'s bcc', function () {
   it('is filled by groups with members', function () {
     var message = new Message();
     var groups = [
-      {members: [
-        new Member({email: 'heinz'})
-      ]},
-      {members: [
-        new Member({email: 'hans'})
-      ]},
-      {members: [
-        new Member({email: 'elfriede'})
-      ]}
+      {members: [new Member({email: 'heinz'})]},
+      {members: [new Member({email: 'hans'})]},
+      {members: [new Member({email: 'elfriede'})]}
     ];
     message.setBccToGroupMemberAddresses(groups);
     expect(message.bcc).to.eql(['heinz', 'hans', 'elfriede']);
@@ -53,18 +49,10 @@ describe('Message Object\'s bcc', function () {
   it('is filled by groups with members and removing duplicates', function () {
     var message = new Message();
     var groups = [
-      {members: [
-        new Member({email: 'heinz'})
-      ]},
-      {members: [
-        new Member({email: 'heinz'})
-      ]},
-      {members: [
-        new Member({email: 'hans'})
-      ]},
-      {members: [
-        new Member({email: 'elfriede'})
-      ]}
+      {members: [new Member({email: 'heinz'})]},
+      {members: [new Member({email: 'heinz'})]},
+      {members: [new Member({email: 'hans'})]},
+      {members: [new Member({email: 'elfriede'})]}
     ];
     message.setBccToGroupMemberAddresses(groups);
     expect(message.bcc).to.eql(['heinz', 'hans', 'elfriede']);
@@ -112,6 +100,33 @@ describe('Message Object to TransportObject', function () {
     expect(transportObject.replyTo).to.equal('"Hans Dampf" <E-Mail>');
   });
 
+  it('uses absolute URLs in html (relative)', function () {
+    var message = new Message();
+    message.setMarkdown('[link](/url)');
+    var transportObject = message.toTransportObject('dummy');
+    expect(transportObject.html).to.contain('<a href="' + publicUrlPrefix + '/url">link</a>');
+  });
+
+  it('uses absolute URLs in text (relative)', function () {
+    var message = new Message();
+    message.setMarkdown('[link](/url)');
+    var transportObject = message.toTransportObject('dummy');
+    expect(transportObject.text).to.contain('[link](' + publicUrlPrefix + '/url)');
+  });
+
+  it('uses absolute URLs in html (already absolute)', function () {
+    var message = new Message();
+    message.setMarkdown('[link](http://bild.de/url)');
+    var transportObject = message.toTransportObject('dummy');
+    expect(transportObject.html).to.contain('<a href="http://bild.de/url">link</a>');
+  });
+
+  it('uses absolute URLs in text (already absolute)', function () {
+    var message = new Message();
+    message.setMarkdown('[link](http://bild.de/url)');
+    var transportObject = message.toTransportObject('dummy');
+    expect(transportObject.text).to.contain('[link](http://bild.de/url)');
+  });
 });
 
 describe('Message Object\'s buttons', function () {

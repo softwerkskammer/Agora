@@ -41,6 +41,15 @@ Just follow these steps:
 1. You will find the sources inside the VM in a directory `/vagrant`
 1. So `cd /vagrant`
 
+Under host OS Windows execute 
+
+1. `./syncLocalCopy.sh` 
+1. `cd ~/agora`
+
+node js modules can not be installed into /vagrant because it is shared with the host OS which does not support links.
+So every time you change anything on the windows side you should repeat call `./syncLocalCopy.sh` from either `/vagrant` 
+or `~/agora` and the all of the following steps should run in `~/agora`.
+
 Once retrieved perform the following commands inside the directory of the cloned repo:
 
 1. `npm install` - this will fetch all dependencies needed
