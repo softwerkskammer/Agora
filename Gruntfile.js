@@ -17,8 +17,8 @@ module.exports = function (grunt) {
     'softwerkskammer/build/javascript/fullcalendar-patched.js',
     'node_modules/tinycolor2/tinycolor.js',
     'node_modules/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js',
-    'bower_components/jquery-validation/dist/jquery.validate.js',
-    'bower_components/jquery-validation/dist/additional-methods.js',
+    'node_modules/jquery-validation/dist/jquery.validate.js',
+    'node_modules/jquery-validation/dist/additional-methods.js',
     'bower_components/jquery.qrcode/dist/jquery.qrcode.js',
     'bower_components/bootstrap-timepicker/js/bootstrap-timepicker.js',
     'bower_components/jqcloud2/dist/jqcloud.js',
@@ -29,8 +29,8 @@ module.exports = function (grunt) {
   // filesets for uglify
   var files_de = {
     'softwerkskammer/public/clientscripts/global_de.js': commonJSfiles.concat([
-      'bower_components/jquery-validation/src/localization/messages_de.js',
-      'bower_components/jquery-validation/src/localization/methods_de.js',
+      'node_modules/jquery-validation/dist/localization/messages_de.js',
+      'node_modules/jquery-validation/dist/localization/methods_de.js',
       'node_modules/bootstrap-datepicker/js/locales/bootstrap-datepicker.de.js',
       'bower_components/select2/select2_locale_de.js',
       'node_modules/fullcalendar/dist/lang/de.js',
