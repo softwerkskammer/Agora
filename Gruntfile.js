@@ -21,7 +21,7 @@ module.exports = function (grunt) {
     'node_modules/jquery-validation/dist/additional-methods.js',
     'bower_components/jquery.qrcode/dist/jquery.qrcode.js',
     'bower_components/bootstrap-timepicker/js/bootstrap-timepicker.js',
-    'bower_components/jqcloud2/dist/jqcloud.js',
+    'node_modules/jqcloud-npm/dist/jqcloud.js',
     'node_modules/tinygradient/tinygradient.js',
     'node_modules/URIjs/src/URI.js'
   ];
