@@ -16,7 +16,7 @@ module.exports = function (grunt) {
       'socrates/build/javascript/jquery.smartmenus.bootstrap-patched.js',
       'node_modules/jquery-validation/dist/jquery.validate.js',
       'node_modules/jquery-validation/dist/additional-methods.js',
-      'bower_components/bootstrap-timepicker/js/bootstrap-timepicker.js',
+      'node_modules/simple-timepicker/dist/simple-timepicker.js',
       'node_modules/URIjs/src/URI.js',
       'socrates/locales/frontend_en.js',
       'socrates/frontend/javascript/socrates.js'

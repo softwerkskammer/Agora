@@ -75,6 +75,7 @@
     "select2-bootstrap-css": "1.4.6",
     "serve-favicon": "2.3.0",
     "simple-configure": "0.1.6",
+    "simple-timepicker": "1.0.1",
     "stripe": "3.5.2",
     "tinycolor2": "1.1.2",
     "tinygradient": "0.3.0",
