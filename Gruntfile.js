@@ -5,7 +5,7 @@ module.exports = function (grunt) {
   var commonJSfiles = [
     'node_modules/jquery/dist/jquery.js',
     'bower_components/jquery-guillotine/js/jquery.guillotine.js',
-    'bower_components/select2/dist/js/select2.js',
+    'node_modules/select2/dist/js/select2.js',
     'bower_components/autoNumeric/autoNumeric.js',
     'node_modules/bootstrap/dist/js/bootstrap.js',
     'node_modules/bootstrap-datepicker/js/bootstrap-datepicker.js',
@@ -32,7 +32,7 @@ module.exports = function (grunt) {
       'node_modules/jquery-validation/dist/localization/messages_de.js',
       'node_modules/jquery-validation/dist/localization/methods_de.js',
       'node_modules/bootstrap-datepicker/js/locales/bootstrap-datepicker.de.js',
-      'bower_components/select2/select2_locale_de.js',
+      'node_modules/select2/dist/js/i18n/de.js',
       'node_modules/fullcalendar/dist/lang/de.js',
       'softwerkskammer/locales/frontend_de.js',
       'softwerkskammer/frontend/javascript/agora.js'
@@ -122,13 +122,6 @@ module.exports = function (grunt) {
         dest: 'softwerkskammer/build/stylesheets/less',
         expand: true,
         flatten: true
-      },
-      select2images: {
-        cwd: 'bower_components/select2/',
-        src: ['*.png', '*.gif'],
-        dest: 'softwerkskammer/public/stylesheets',
-        expand: true,
-        flatten: false
       }
     },
     patch: {
@@ -181,7 +174,7 @@ module.exports = function (grunt) {
             'node_modules/datatables/media/css/jquery.dataTables.css',
             'softwerkskammer/frontend/3rd_party_css/dataTables.bootstrap.css',
             'softwerkskammer/frontend/3rd_party_css/dataTables.fontAwesome.css',
-            'bower_components/select2/dist/css/select2.css',
+            'node_modules/select2/dist/css/select2.css',
             'node_modules/select2-bootstrap-css/select2-bootstrap.css',
             'node_modules/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css',
             'bower_components/jquery-guillotine/css/jquery.guillotine.css',

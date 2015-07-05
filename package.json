@@ -17,12 +17,7 @@
     "type": "git",
     "url": "https://github.com/softwerkskammer/Agora"
   },
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "http://www.opensource.org/licenses/MIT"
-    }
-  ],
+  "license": "(MIT OR Apache-2.0)",
   "main": "",
   "engines": {
     "node": ">0.10"
@@ -76,6 +71,7 @@
     "passport-openid": "0.3.1",
     "openidconnect-for-passport": "0.0.2",
     "qr-image": "3.1.0",
+    "select2": "4.0.0",
     "select2-bootstrap-css": "1.4.6",
     "serve-favicon": "2.3.0",
     "simple-configure": "0.1.6",
