@@ -3,11 +3,6 @@
   "version": "1.0.0",
   "dependencies": {
     "autoNumeric": "1.9.30",
-    "bootstrap-timepicker": "0.2.6",
-    "jqcloud2": "2.0.1",
-    "jquery-validation": "1.13.1",
-    "jquery-guillotine": "1.3.0",
-    "select2": "4.0.0",
-    "smartmenus": "0.9.7"
+    "jquery-guillotine": "1.3.0"
   }
 }

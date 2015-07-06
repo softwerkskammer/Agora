@@ -5,23 +5,23 @@ module.exports = function (grunt) {
   var commonJSfiles = [
     'node_modules/jquery/dist/jquery.js',
     'bower_components/jquery-guillotine/js/jquery.guillotine.js',
-    'bower_components/select2/dist/js/select2.js',
+    'node_modules/select2/dist/js/select2.js',
     'bower_components/autoNumeric/autoNumeric.js',
     'node_modules/bootstrap/dist/js/bootstrap.js',
     'node_modules/bootstrap-datepicker/js/bootstrap-datepicker.js',
     'node_modules/bootstrap-markdown/js/bootstrap-markdown.js',
     'node_modules/bootstrap-markdown/locale/bootstrap-markdown.de.js',
     'node_modules/moment-timezone/node_modules/moment/moment.js',
-    'bower_components/smartmenus/dist/jquery.smartmenus.js',
+    'node_modules/drmonty-smartmenus/js/jquery.smartmenus.js',
     'softwerkskammer/build/javascript/jquery.smartmenus.bootstrap-patched.js',
     'softwerkskammer/build/javascript/fullcalendar-patched.js',
     'node_modules/tinycolor2/tinycolor.js',
     'node_modules/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js',
-    'bower_components/jquery-validation/dist/jquery.validate.js',
-    'bower_components/jquery-validation/dist/additional-methods.js',
+    'node_modules/jquery-validation/dist/jquery.validate.js',
+    'node_modules/jquery-validation/dist/additional-methods.js',
     'bower_components/jquery.qrcode/dist/jquery.qrcode.js',
-    'bower_components/bootstrap-timepicker/js/bootstrap-timepicker.js',
-    'bower_components/jqcloud2/dist/jqcloud.js',
+    'node_modules/simple-timepicker/dist/simple-timepicker.js',
+    'node_modules/jqcloud-npm/dist/jqcloud.js',
     'node_modules/tinygradient/tinygradient.js',
     'node_modules/URIjs/src/URI.js'
   ];
@@ -29,10 +29,10 @@ module.exports = function (grunt) {
   // filesets for uglify
   var files_de = {
     'softwerkskammer/public/clientscripts/global_de.js': commonJSfiles.concat([
-      'bower_components/jquery-validation/src/localization/messages_de.js',
-      'bower_components/jquery-validation/src/localization/methods_de.js',
+      'node_modules/jquery-validation/dist/localization/messages_de.js',
+      'node_modules/jquery-validation/dist/localization/methods_de.js',
       'node_modules/bootstrap-datepicker/js/locales/bootstrap-datepicker.de.js',
-      'bower_components/select2/select2_locale_de.js',
+      'node_modules/select2/dist/js/i18n/de.js',
       'node_modules/fullcalendar/dist/lang/de.js',
       'softwerkskammer/locales/frontend_de.js',
       'softwerkskammer/frontend/javascript/agora.js'
@@ -122,13 +122,6 @@ module.exports = function (grunt) {
         dest: 'softwerkskammer/build/stylesheets/less',
         expand: true,
         flatten: true
-      },
-      select2images: {
-        cwd: 'bower_components/select2/',
-        src: ['*.png', '*.gif'],
-        dest: 'softwerkskammer/public/stylesheets',
-        expand: true,
-        flatten: false
       }
     },
     patch: {
@@ -137,7 +130,7 @@ module.exports = function (grunt) {
           patch: 'softwerkskammer/frontend/3rd_party_js/jquery.smartmenus.bootstrap.js.patch'
         },
         files: {
-          'softwerkskammer/build/javascript/jquery.smartmenus.bootstrap-patched.js': 'bower_components/smartmenus/dist/addons/bootstrap/jquery.smartmenus.bootstrap.js'
+          'softwerkskammer/build/javascript/jquery.smartmenus.bootstrap-patched.js': 'node_modules/drmonty-smartmenus/js/jquery.smartmenus.bootstrap.js'
         }
       },
       fullcalendar: {
@@ -177,11 +170,11 @@ module.exports = function (grunt) {
             'softwerkskammer/build/stylesheets/less/bootstrap-markdown-patched.less',
             'node_modules/font-awesome/css/font-awesome.css',
             'node_modules/node-syntaxhighlighter/lib/styles/shCoreDefault.css',
-            'bower_components/smartmenus/dist/addons/bootstrap/jquery.smartmenus.bootstrap.css',
+            'node_modules/drmonty-smartmenus/css/jquery.smartmenus.bootstrap.css',
             'node_modules/datatables/media/css/jquery.dataTables.css',
             'softwerkskammer/frontend/3rd_party_css/dataTables.bootstrap.css',
             'softwerkskammer/frontend/3rd_party_css/dataTables.fontAwesome.css',
-            'bower_components/select2/dist/css/select2.css',
+            'node_modules/select2/dist/css/select2.css',
             'node_modules/select2-bootstrap-css/select2-bootstrap.css',
             'node_modules/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css',
             'bower_components/jquery-guillotine/css/jquery.guillotine.css',
