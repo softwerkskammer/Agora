@@ -43,6 +43,12 @@ module.exports = function (grunt) {
         expand: true,
         flatten: true
       },
+      datatablesImages: {
+        src: 'node_modules/datatables/media/images/*',
+        dest: 'socrates/public/images/',
+        expand: true,
+        flatten: true
+      },
       bootstrapFONTS: {
         src: 'node_modules/bootstrap/dist/fonts/*',
         dest: 'socrates/public/fonts',
@@ -129,6 +135,7 @@ module.exports = function (grunt) {
             'socrates/build/stylesheets/less/bootstrap-markdown-patched.less',
             'node_modules/datatables/media/css/jquery.dataTables.css',
             'softwerkskammer/frontend/3rd_party_css/dataTables.bootstrap.css',
+            'softwerkskammer/frontend/3rd_party_css/dataTables.fontAwesome.css',
             'bower_components/jquery-guillotine/css/jquery.guillotine.css',
             'socrates/build/stylesheets/less/socrates.less'
           ]
