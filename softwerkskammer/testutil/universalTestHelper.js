@@ -11,6 +11,8 @@ module.exports = function (defaultLanguage, abspath) {
   return function (internalAppName, configuredBeans) {
     var appName = internalAppName;
     var beans = configuredBeans || require('./configureForTest').get('beans');
+    var secureByLogin = beans.get('secureByLogin');
+    var secureSuperuserOnly = beans.get('secureSuperuserOnly');
 
     i18n.init({
       supportedLngs: [defaultLanguage],
@@ -20,7 +22,7 @@ module.exports = function (defaultLanguage, abspath) {
     });
 
     return {
-      createApp: function (params) { /* id, member, middlewares, baseurl */
+      createApp: function (params) { /* id, member, middlewares, baseurl, secureByLogin, secureBySuperuser */
         var atts = params || {};
         var app = express();
         app.locals.pretty = true;
@@ -49,6 +51,12 @@ module.exports = function (defaultLanguage, abspath) {
         }
 
         app.use(beans.get('accessrights'));
+        if(atts.secureByLogin) {
+          app.use(secureByLogin);
+        }
+        if(atts.secureBySuperuser) {
+          app.use(secureSuperuserOnly);
+        }
         app.use(beans.get('expressViewHelper'));
         var baseurl = atts.baseurl || '/';
         app.use(baseurl, beans.get(appName));
