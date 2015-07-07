@@ -1,7 +1,6 @@
 'use strict';
 
 var request = require('supertest');
-var expect = require('must-dist');
 var sinon = require('sinon').sandbox.create();
 
 var conf = require('../../testutil/configureForTest');
@@ -23,10 +22,10 @@ describe('SoCraTes mailsender application', function () {
   var socratesAdmin = new Member({ id: 'socratesAdminID' });
   var superuser = new Member({ id: 'superuserID' });
 
-  var appWithoutMember = request(createApp({middlewares: [userWithoutMember]}));
-  var appWithSocratesMember = request(createApp({member: socratesMember}));
-  var appWithSocratesAdmin = request(createApp({member: socratesAdmin}));
-  var appWithSuperuser = request(createApp({member: superuser}));
+  var appWithoutMember = request(createApp({middlewares: [userWithoutMember], baseurl: '/mailsender', secureByLogin: true, secureBySuperuser: true }));
+  var appWithSocratesMember = request(createApp({member: socratesMember, baseurl: '/mailsender', secureByLogin: true, secureBySuperuser: true }));
+  var appWithSocratesAdmin = request(createApp({member: socratesAdmin, baseurl: '/mailsender', secureByLogin: true, secureBySuperuser: true }));
+  var appWithSuperuser = request(createApp({member: superuser, baseurl: '/mailsender', secureByLogin: true, secureBySuperuser: true }));
 
   var socrates;
   var socratesActivity;
@@ -68,28 +67,28 @@ describe('SoCraTes mailsender application', function () {
 
     it('can be opened as superuser', function (done) {
       appWithSuperuser
-        .get('/massMailing')
+        .get('/mailsender/massMailing')
         .expect(200, done);
     });
 
     it('can be opened as socrates admin', function (done) {
       appWithSocratesAdmin
-        .get('/massMailing')
+        .get('/mailsender/massMailing')
         .expect(200, done);
     });
 
     it('can not be opened as regular member', function (done) {
       appWithSocratesMember
-        .get('/massMailing')
+        .get('/mailsender/massMailing')
         .expect(302)
         .expect('location', '/registration', done);
     });
 
     it('can not be opened when nobody is logged in', function (done) {
       appWithoutMember
-        .get('/massMailing')
+        .get('/mailsender/massMailing')
         .expect(302)
-        .expect('location', '/registration', done);
+        .expect('location', '/login', done);
     });
   });
 
@@ -97,7 +96,7 @@ describe('SoCraTes mailsender application', function () {
 
     it('can be submitted as superuser', function (done) {
       appWithSuperuser
-        .post('/send')
+        .post('/mailsender/send')
         .send('nickname=ABC&subject=Hello&markdown=MailBody&sendCopyToSelf=true')
         .send('massMailing=participants')
         .send('successURL=/redirectToHereIfSuccessful')
@@ -107,7 +106,7 @@ describe('SoCraTes mailsender application', function () {
 
     it('can be submitted as socrates admin', function (done) {
       appWithSocratesAdmin
-        .post('/send')
+        .post('/mailsender/send')
         .send('nickname=ABC&subject=Hello&markdown=MailBody&sendCopyToSelf=true')
         .send('massMailing=participants')
         .send('successURL=/redirectToHereIfSuccessful')
@@ -117,7 +116,7 @@ describe('SoCraTes mailsender application', function () {
 
     it('can not be submitted as regular member', function (done) {
       appWithSocratesMember
-        .post('/send')
+        .post('/mailsender/send')
         .send('nickname=ABC&subject=Hello&markdown=MailBody&sendCopyToSelf=true')
         .send('massMailing=participants')
         .send('successURL=/redirectToHereIfSuccessful')
@@ -127,12 +126,12 @@ describe('SoCraTes mailsender application', function () {
 
     it('can not be submitted when nobody is logged in', function (done) {
       appWithoutMember
-        .post('/send')
+        .post('/mailsender/send')
         .send('nickname=ABC&subject=Hello&markdown=MailBody&sendCopyToSelf=true')
         .send('massMailing=participants')
         .send('successURL=/redirectToHereIfSuccessful')
         .expect(302)
-        .expect('location', '/registration', done);
+        .expect('location', '/login', done);
     });
   });
 
@@ -140,7 +139,7 @@ describe('SoCraTes mailsender application', function () {
 
     it('can be submitted as superuser', function (done) {
       appWithSuperuser
-        .post('/send')
+        .post('/mailsender/send')
         .send('nickname=ABC&subject=Hello&markdown=MailBody&sendCopyToSelf=true')
         .send('successURL=/redirectToHereIfSuccessful')
         .expect(302)
@@ -149,7 +148,7 @@ describe('SoCraTes mailsender application', function () {
 
     it('can be submitted as socrates admin', function (done) {
       appWithSocratesAdmin
-        .post('/send')
+        .post('/mailsender/send')
         .send('nickname=ABC&subject=Hello&markdown=MailBody&sendCopyToSelf=true')
         .send('successURL=/redirectToHereIfSuccessful')
         .expect(302)
@@ -158,20 +157,20 @@ describe('SoCraTes mailsender application', function () {
 
     it('can be submitted as regular member', function (done) {
       appWithSocratesMember
-        .post('/send')
+        .post('/mailsender/send')
         .send('nickname=ABC&subject=Hello&markdown=MailBody&sendCopyToSelf=true')
         .send('successURL=/redirectToHereIfSuccessful')
         .expect(302)
         .expect('location', '/redirectToHereIfSuccessful', done);
     });
 
-    xit('can not be submitted when nobody is logged in', function (done) {
+    it('can not be submitted when nobody is logged in', function (done) {
       appWithoutMember
-        .post('/send')
+        .post('/mailsender/send')
         .send('nickname=ABC&subject=Hello&markdown=MailBody&sendCopyToSelf=true')
         .send('successURL=/redirectToHereIfSuccessful')
         .expect(302)
-        .expect('location', '/registration', done);
+        .expect('location', '/login', done);
     });
   });
 
