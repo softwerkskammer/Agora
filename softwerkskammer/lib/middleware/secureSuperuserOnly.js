@@ -10,7 +10,7 @@ module.exports = function redirectIfNotSuperuser(req, res, next) {
 
   if (securedBySuperuserURLRegex.test(originalUrl)) {
     if (!res.locals.accessrights.isSuperuser()) {
-      logger.info('Someone tried to access superuser protected page.' + (user ? ' - User was: ' + user.authenticationId : ''));
+      logger.info('Someone tried to access superuser protected page ' + originalUrl + ' ' + (user ? ' - User was: ' + user.authenticationId : ''));
       return res.redirect('/mustBeSuperuser?page=' + encodeURIComponent(conf.get('publicUrlPrefix') + originalUrl));
     }
   }
