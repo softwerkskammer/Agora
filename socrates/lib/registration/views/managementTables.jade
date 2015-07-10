@@ -78,7 +78,7 @@ mixin removePair(resourceName, pair)
     button.btn.btn-default.btn-xs(type='submit') Entfernen
 
 mixin removeParticipantWithModal(resourceName, participantNick)
-  -var theID = 'reallyDelete' + participantNick
+  -var theID = 'reallyDelete' + participantNick.replace(/\s/g, '')
   .modal.fade(id=theID, tabindex='-1')
     .modal-dialog
       .modal-content
