@@ -6,7 +6,7 @@ module.exports = function (grunt) {
   var files = {
     'socrates/public/clientscripts/global.js': [
       'node_modules/jquery/dist/jquery.js',
-      'bower_components/jquery-guillotine/js/jquery.guillotine.js',
+      'node_modules/guillotine/js/jquery.guillotine.js',
       'bower_components/autoNumeric/autoNumeric.js',
       'node_modules/bootstrap/dist/js/bootstrap.js',
       'node_modules/bootstrap-datepicker/js/bootstrap-datepicker.js',
@@ -136,7 +136,7 @@ module.exports = function (grunt) {
             'node_modules/datatables/media/css/jquery.dataTables.css',
             'softwerkskammer/frontend/3rd_party_css/dataTables.bootstrap.css',
             'softwerkskammer/frontend/3rd_party_css/dataTables.fontAwesome.css',
-            'bower_components/jquery-guillotine/css/jquery.guillotine.css',
+            'node_modules/guillotine/css/jquery.guillotine.css',
             'socrates/build/stylesheets/less/socrates.less'
           ]
         }

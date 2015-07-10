@@ -43,6 +43,7 @@
     "font-awesome": "4.3.0",
     "fullcalendar": "2.3.1",
     "glob": "5.0.13",
+    "guillotine": "1.3.1",
     "i18next": "1.10.2",
     "icalendar": "0.7.1",
     "iconv": "2.1.8",
