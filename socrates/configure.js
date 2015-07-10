@@ -23,6 +23,7 @@ function createConfiguration() {
       '/mailsender|' +
       '/members',
     securedBySuperuserURLPattern: '^/activities',
+    securedBySoCraTesAdminURLPattern: '^/mailsender/massMailing',
     secret: 'secret',
     sessionkey: 'socrates-conference.de',
     beans: new Beans(swkBeans),

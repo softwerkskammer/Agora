@@ -30,8 +30,8 @@ module.exports = function accessrights(req, res, next) {
         return Member.isSuperuser(this.memberId()); // same superusers as in SWK
       },
 
-      isSoCraTesAdmin: function () {
-        return this.isRegistered() && conf.get('socratesAdmins').indexOf(this.memberId()) > -1;
+      isSoCraTesAdmin: function () { // superusers are automatically SoCraTes admins
+        return this.isRegistered() && (conf.get('socratesAdmins').indexOf(this.memberId()) > -1 || this.isSuperuser());
       },
 
       canEditMember: function (member) {
@@ -47,7 +47,7 @@ module.exports = function accessrights(req, res, next) {
       },
 
       canEditActivity: function () {
-        return this.isSuperuser() || this.isSoCraTesAdmin();
+        return this.isSoCraTesAdmin();
       },
 
       canDeleteActivity: function () {

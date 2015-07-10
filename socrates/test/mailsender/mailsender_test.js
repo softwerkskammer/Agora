@@ -2,6 +2,7 @@
 
 var request = require('supertest');
 var sinon = require('sinon').sandbox.create();
+var expect = require('must-dist');
 
 var conf = require('../../testutil/configureForTest');
 var beans = conf.get('beans');
@@ -14,6 +15,9 @@ var memberstore = beans.get('memberstore');
 var Member = beans.get('member');
 var SoCraTesActivity = beans.get('socratesActivityExtended');
 var createApp = require('../../testutil/testHelper')('socratesMailsenderApp').createApp;
+var secureByLogin = beans.get('secureByLogin');
+var secureSuperuserOnly = beans.get('secureSuperuserOnly');
+var secureSoCraTesAdminOnly = beans.get('secureSoCraTesAdminOnly');
 
 describe('SoCraTes mailsender application', function () {
   /* eslint camelcase: 0 */
@@ -22,10 +26,10 @@ describe('SoCraTes mailsender application', function () {
   var socratesAdmin = new Member({ id: 'socratesAdminID' });
   var superuser = new Member({ id: 'superuserID' });
 
-  var appWithoutMember = request(createApp({middlewares: [userWithoutMember], baseurl: '/mailsender', secureByLogin: true, secureBySuperuser: true }));
-  var appWithSocratesMember = request(createApp({member: socratesMember, baseurl: '/mailsender', secureByLogin: true, secureBySuperuser: true }));
-  var appWithSocratesAdmin = request(createApp({member: socratesAdmin, baseurl: '/mailsender', secureByLogin: true, secureBySuperuser: true }));
-  var appWithSuperuser = request(createApp({member: superuser, baseurl: '/mailsender', secureByLogin: true, secureBySuperuser: true }));
+  var appWithoutMember = request(createApp({middlewares: [userWithoutMember], baseurl: '/mailsender', secureByMiddlewares: [secureByLogin, secureSuperuserOnly, secureSoCraTesAdminOnly] }));
+  var appWithSocratesMember = request(createApp({member: socratesMember, baseurl: '/mailsender', secureByMiddlewares: [secureByLogin, secureSuperuserOnly, secureSoCraTesAdminOnly] }));
+  var appWithSocratesAdmin = request(createApp({member: socratesAdmin, baseurl: '/mailsender', secureByMiddlewares: [secureByLogin, secureSuperuserOnly, secureSoCraTesAdminOnly] }));
+  var appWithSuperuser = request(createApp({member: superuser, baseurl: '/mailsender', secureByMiddlewares: [secureByLogin, secureSuperuserOnly, secureSoCraTesAdminOnly] }));
 
   var socrates;
   var socratesActivity;
@@ -80,8 +84,10 @@ describe('SoCraTes mailsender application', function () {
     it('can not be opened as regular member', function (done) {
       appWithSocratesMember
         .get('/mailsender/massMailing')
-        .expect(302)
-        .expect('location', '/registration', done);
+        .expect(302, function(err, res) {
+          expect(res.header.location).to.contain('/mustBeSoCraTesAdmin'); // TODO: startWith (from 0.13.0)
+          done(err);
+        });
     });
 
     it('can not be opened when nobody is logged in', function (done) {

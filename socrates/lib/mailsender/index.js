@@ -43,10 +43,6 @@ function messageSubmitted(req, res, next) {
 }
 
 app.get('/massMailing', function (req, res) {
-  if (!res.locals.accessrights.canEditActivity()) {
-    return res.redirect('/registration');
-  }
-
   var message = new Message();
   message.addToButtons({
     text: 'To SoCraTes 2015',

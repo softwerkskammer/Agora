@@ -78,6 +78,10 @@ app.get('/mustBeSuperuser', function (req, res) {
   res.render('superuserRightsRequired', {requestedPage: req.query.page});
 });
 
+app.get('/mustBeSoCraTesAdmin', function (req, res) {
+  res.render('socratesAdminRightsRequired', {requestedPage: req.query.page});
+});
+
 app.get('/qrcode', function (req, res) {
   var url = req.query.url;
   var fullUrl = _.startsWith(url, 'http') ? url : conf.get('publicUrlPrefix') + url;
