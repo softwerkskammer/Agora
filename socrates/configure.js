@@ -22,7 +22,8 @@ function createConfiguration() {
     securedByLoginURLPattern: '/wiki|' +
       '/mailsender|' +
       '/members',
-    securedBySuperuserURLPattern: '^/activities|^/mailsender/massMailing',
+    securedBySuperuserURLPattern: '^/activities',
+    securedBySoCraTesAdminURLPattern: '^/mailsender/massMailing',
     secret: 'secret',
     sessionkey: 'socrates-conference.de',
     beans: new Beans(swkBeans),

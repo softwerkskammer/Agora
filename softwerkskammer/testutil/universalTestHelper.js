@@ -20,7 +20,7 @@ module.exports = function (defaultLanguage, abspath) {
     });
 
     return {
-      createApp: function (params) { /* id, member, middlewares */
+      createApp: function (params) { /* id, member, middlewares, baseurl, secureByMiddlewares */
         var atts = params || {};
         var app = express();
         app.locals.pretty = true;
@@ -49,8 +49,12 @@ module.exports = function (defaultLanguage, abspath) {
         }
 
         app.use(beans.get('accessrights'));
+        _.each(atts.secureByMiddlewares, function (middleware) {
+          app.use(middleware);
+        });
         app.use(beans.get('expressViewHelper'));
-        app.use('/', beans.get(appName));
+        var baseurl = atts.baseurl || '/';
+        app.use(baseurl, beans.get(appName));
 
         var appLogger = {error: function () { return undefined; }};
         app.use(beans.get('handle404')(appLogger));

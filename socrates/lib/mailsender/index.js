@@ -14,6 +14,10 @@ var currentUrl = beans.get('socratesConstants').currentUrl;
 var app = misc.expressAppIn(__dirname);
 
 function messageSubmitted(req, res, next) {
+  if (req.body && req.body.massMailing && !res.locals.accessrights.canEditActivity()) {
+    return res.redirect('/registration');
+  }
+
   var errors = validation.isValidMessage(req.body);
   if (errors.length !== 0) { return res.render('../../../views/errorPages/validationError', {errors: errors}); }
 

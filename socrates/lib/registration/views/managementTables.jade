@@ -78,7 +78,7 @@ mixin removePair(resourceName, pair)
     button.btn.btn-default.btn-xs(type='submit') Entfernen
 
 mixin removeParticipantWithModal(resourceName, participantNick)
-  -var theID = 'reallyDelete' + participantNick
+  -var theID = 'reallyDelete' + participantNick.replace(/\s/g, '')
   .modal.fade(id=theID, tabindex='-1')
     .modal-dialog
       .modal-content
@@ -374,6 +374,8 @@ block content
                   th Vorname
                   th Nachname
                   th E-Mail
+                  th T-Shirt
+                  th Zimmer mit
                   th Heimatadresse
                   th Rechnungsadresse
                   th Ressource
@@ -383,6 +385,8 @@ block content
                     td #{line.member.firstname()}
                     td #{line.member.lastname()}
                     td #{line.member.email()}
+                    td #{line.addon.tShirtSize()}
+                    td #{line.participation.roommate()}
                     td: +formatAsLines(line.addon.homeAddressLines())
                     td: +formatAsLines(line.addon.billingAddressLines())
                     td #{formatList(activity.resources().resourceNamesOf(line.member.id()))}

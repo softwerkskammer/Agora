@@ -78,6 +78,10 @@ app.get('/mustBeSuperuser', function (req, res) {
   res.render('superuserRightsRequired', {requestedPage: req.query.page});
 });
 
+app.get('/mustBeSoCraTesAdmin', function (req, res) {
+  res.render('socratesAdminRightsRequired', {requestedPage: req.query.page});
+});
+
 app.get('/qrcode', function (req, res) {
   var url = req.query.url;
   var fullUrl = _.startsWith(url, 'http') ? url : conf.get('publicUrlPrefix') + url;
@@ -94,7 +98,7 @@ app.get('/resign', function (req, res) {
 });
 
 app.post('/submitresign', function (req, res, next) {
-  var markdown = '**' + req.i18n.t('mailsender.why-resign') + '**\n' + req.body.why + '\n\n**' + req.i18n.t('mailsender.notes-resign') + '**\n' + req.body.notes;
+  var markdown = '#### Resignation from SoCraTes-Conference\n\n' + '**' + req.i18n.t('mailsender.why-resign') + '**\n' + req.body.why + '\n\n**' + req.i18n.t('mailsender.notes-resign') + '**\n' + req.body.notes;
   return mailsenderService.sendResignment(markdown, req.user.member, function (err, statusmsg) {
     if (err) { return next(err); }
     statusmsg.putIntoSession(req);
