@@ -1,0 +1,51 @@
+mixin selectFileButton(label, extraclasses)
+  span.btn.btn-primary.btn-file(class=extraclasses)
+    i.fa.fa-fw.fa-camera
+    | &nbsp; #{t(label)}
+    input#input-file(type='file', accept='image/*', name='image')
+
+mixin uploadButtons(btnGroupClasses)
+  .btn-group(class=btnGroupClasses)
+    span#btn-cancel.btn.btn-default #{t('general.cancel')}
+    button.btn.btn-primary(type='submit') #{t('general.save')}
+
+mixin imageScripts
+  script.
+    $(function () {
+      $('#recordForm').on('submit', function () {
+        $('#recordForm button[type="submit"]').prepend($('<i class="fa fa-fw fa-spinner fa-spin"/>&nbsp;'));
+      });
+    });
+    $('#input-file').on('change', function () {
+      if (!this.files || !this.files[0]) { return null; }
+      var reader = new FileReader();
+      reader.onload = function (event) {
+        $('img#preview').attr('src', event.target.result);
+        $('#previewContainer').show();
+        $('#selectFileButton').hide();
+        $('#uploadButtons').show();
+      };
+      reader.readAsDataURL(this.files[0]);
+    });
+    $('#btn-cancel').click(function () {
+      $('#previewContainer').hide();
+      $('#uploadButtons').hide();
+      $('#selectFileButton').show();
+      $('#input-file').val(null);
+    });
+    $(function () {
+      $('#previewContainer').hide();
+      $('#uploadButtons').hide();
+    });
+
+mixin imageUpload
+  #selectFileButton
+    +selectFileButton('general.photo')
+  #uploadButtons
+    +uploadButtons(['pull-right'])
+  .clearfix
+  #previewContainer
+    div
+      div(style='margin-top: 5px;')
+        img#preview(style='max-width: 100%;')
+  +imageScripts

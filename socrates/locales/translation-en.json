@@ -24,6 +24,7 @@
     "logout": "Log out",
     "overview": "Overview",
     "administration": "Administration",
+    "photo": "New Photo",
     "faq": "Hints & FAQs",
     "credits": "Credits",
     "legal_notice": "Legal Notice",
@@ -164,6 +165,7 @@
     }
   },
   "activityresults": {
+    "new": "New Session Snap Collection",
     "cancel": "Cancel",
     "done": "Done",
     "nothing_to_see_here": "There is nothing here yet",

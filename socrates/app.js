@@ -78,6 +78,7 @@ module.exports = {
     app.use('/', beans.get('socratesSiteApp'));
     app.use('/activities/', beans.get('socratesActivitiesApp'));
     useApp(app, '/registration/', beans.get('socratesRegistrationApp'));
+    useApp(app, '/activityresults/', beans.get('socratesActivityresultsApp'));
     useApp(app, '/auth/', beans.get('authenticationApp'));
     useApp(app, '/mailsender/', beans.get('socratesMailsenderApp'));
     useApp(app, '/members/', beans.get('socratesMembersApp'));

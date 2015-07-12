@@ -57,6 +57,14 @@ module.exports = function accessrights(req, res, next) {
       needsToPay: function () {
         return !!socrates && socrates.resources().resourceNamesOf(this.memberId()).length > 0
           && this.isRegistered() && !!this.req.user.subscriber && this.req.user.subscriber.needsToPay();
+      },
+
+      canEditPhoto: function (photo) {
+        return this.isSuperuser() || (photo && photo.uploadedBy && photo.uploadedBy() === this.memberId());
+      },
+
+      canDeletePhoto: function () {
+        return this.isSuperuser();
       }
 
     };

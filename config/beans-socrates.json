@@ -1,6 +1,7 @@
 {
   "socratesActivitiesApp": {"module": "./socrates/lib/activities"},
   "authenticationApp": {"module": "./socrates/lib/authentication"},
+  "socratesActivityresultsApp" : {"module": "./socrates/lib/activityresults"},
   "socratesSiteApp": {"module": "./socrates/lib/site"},
   "socratesRegistrationApp": {"module": "./socrates/lib/registration"},
   "socratesMembersApp": {"module": "./socrates/lib/members"},
