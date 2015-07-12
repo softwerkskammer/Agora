@@ -32,7 +32,7 @@ app.get('/versions/:subdir/:page', function (req, res, next) {
   var subdir = req.params.subdir;
   var completePageName = subdir + '/' + pageName;
   wikiService.pageHistory(completePageName, function (err, metadata) {
-    if (err || !metadata) { return next(err); }
+    if (err || !metadata) { return next(); }
     res.render('history', {
       pageName: pageName,
       subdir: subdir,
@@ -47,7 +47,7 @@ app.get('/compare/:subdir/:page/:revisions', function (req, res, next) {
   var completePageName = subdir + '/' + pageName;
   var revisions = req.params.revisions;
   wikiService.pageCompare(completePageName, revisions, function (err, diff) {
-    if (err || !diff) { return next(err); }
+    if (err || !diff) { return next(); }
     res.render('compare', {
       pageName: pageName,
       subdir: subdir,

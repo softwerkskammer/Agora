@@ -33,7 +33,9 @@ persistence.getByField({id: lastNotifications}, function (err, result) {
   logger.info('No error when reading lastWikiNotifications');
   var yesterday = moment().subtract(1, 'days');
   var lastNotified = result || {id: lastNotifications, moment: yesterday.toDate()};
-  logger.info('Last notified: ' + util.inspect(result.moment));
+  if (result) {
+    logger.info('Last notified: ' + util.inspect(result.moment));
+  }
   wikiService.findPagesForDigestSince(moment(lastNotified.moment), function (err1, changes) {
     if (err1) {
       logger.error('Error when finding pages for Digest: ' + err1);
