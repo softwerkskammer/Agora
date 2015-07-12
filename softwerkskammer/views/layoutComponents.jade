@@ -59,7 +59,7 @@ mixin loginMenu(forInline)
 mixin languageEntry(forInline, lang, title, img)
   li(class=forInline ? 'visible-xs' : '')
     a.no-left-margin(href='/language/' + lang + '?currentUrl=#{encodeURIComponent(currentUrl)}', title=title)
-      img.fa-fw(src='/img/flags/' + img, height='16', style='vertical-align: baseline;')
+      img.fa-fw(src='/img/flags/' + img, height='16', style='vertical-align: baseline;', alt='title')
       if(forInline)
         | &nbsp;#{title}
 
