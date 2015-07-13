@@ -2,32 +2,31 @@ extends commonLayout
 include layoutComponents
   
 block specific
-  body(role='document')
-    if (browserIsTooOld)
-      .alert.alert-block.alert-warning
-        h2 Please note that we no longer support Internet Explorer versions 7 or 8.
-        p We follow the example of #{''}
-          a(href='https://help.github.com/articles/supported-browsers') github 
-          | .
-        p We recommend upgrading to the latest 
-          a(href='https://ie.microsoft.com/') Internet Explorer #{''}
-          | , 
-          a(href='https://chrome.google.com') Google Chrome #{''}
-          | , or 
-          a(href='https://mozilla.org/firefox/') Firefox #{''}
-          | .
-        p If you are using IE 9 or later, make sure you #{''}
-          a(href='http://windows.microsoft.com/en-US/windows7/webpages-look-incorrect-in-Internet-Explorer') turn off "Compatibility View"
-          | .
-    else
-      block navigation
-        .navbar.navbar-inverse.navbar-fixed-top.hidden-print.hidden-xs(role='navigation')
-          +navbar
-        .navbar.navbar-inverse.navbar-top.hidden-print.visible-xs(role='navigation')
-          +navbar('xs')
+  if (browserIsTooOld)
+    .alert.alert-block.alert-warning
+      h2 Please note that we no longer support Internet Explorer versions 7 or 8.
+      p We follow the example of #{''}
+        a(href='https://help.github.com/articles/supported-browsers') github 
+        | .
+      p We recommend upgrading to the latest 
+        a(href='https://ie.microsoft.com/') Internet Explorer #{''}
+        | , 
+        a(href='https://chrome.google.com') Google Chrome #{''}
+        | , or 
+        a(href='https://mozilla.org/firefox/') Firefox #{''}
+        | .
+      p If you are using IE 9 or later, make sure you #{''}
+        a(href='http://windows.microsoft.com/en-US/windows7/webpages-look-incorrect-in-Internet-Explorer') turn off "Compatibility View"
+        | .
+  else
+    block navigation
+      .navbar.navbar-inverse.navbar-fixed-top.hidden-print.hidden-xs(role='navigation')
+        +navbar
+      .navbar.navbar-inverse.navbar-top.hidden-print.visible-xs(role='navigation')
+        +navbar('xs')
 
-      if (statusmessage)
-        +notificationsBlock(statusmessage)
-      block before-container
-      .container
-        block content
+    if (statusmessage)
+      +notificationsBlock(statusmessage)
+    block before-container
+    .container
+      block content

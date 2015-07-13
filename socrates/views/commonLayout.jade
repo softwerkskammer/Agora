@@ -20,11 +20,12 @@ html
     title
       block title
     block extrahead
-  #cheatsheet.modal.bs-modal-lg.fade(tabindex='-1')
-    .modal-dialog.modal-lg
-      .modal-content
-  #login.modal.fade(tabindex='-1')
-    .modal-dialog
-      .modal-content
-  block specific
+  body
+    #cheatsheet.modal.bs-modal-lg.fade(tabindex='-1')
+      .modal-dialog.modal-lg
+        .modal-content
+    #login.modal.fade(tabindex='-1')
+      .modal-dialog
+        .modal-content
+    block specific
 
