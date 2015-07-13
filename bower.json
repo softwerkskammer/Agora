@@ -1,7 +1,0 @@
-{
-  "name": "agora-bower",
-  "version": "1.0.0",
-  "dependencies": {
-    "autoNumeric": "1.9.30"
-  }
-}

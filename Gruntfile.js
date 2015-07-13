@@ -6,7 +6,7 @@ module.exports = function (grunt) {
     'node_modules/jquery/dist/jquery.js',
     'node_modules/guillotine/js/jquery.guillotine.js',
     'node_modules/select2/dist/js/select2.js',
-    'bower_components/autoNumeric/autoNumeric.js',
+    'node_modules/autonumeric/autonumeric.js',
     'node_modules/bootstrap/dist/js/bootstrap.js',
     'node_modules/bootstrap-datepicker/js/bootstrap-datepicker.js',
     'node_modules/bootstrap-markdown/js/bootstrap-markdown.js',
@@ -264,18 +264,10 @@ module.exports = function (grunt) {
           'softwerkskammer/frontendtests/fixtures/forms.html': 'softwerkskammer/frontendtests/fixtures/forms.jade'
         }
       }
-    },
-    'bower-install-simple': {
-      default: {
-        options: {
-          directory: 'bower_components'
-        }
-      }
     }
   });
 
   // These plugins provide necessary tasks.
-  grunt.loadNpmTasks('grunt-bower-install-simple');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-jade');
@@ -286,7 +278,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-mocha-istanbul');
   grunt.loadNpmTasks('grunt-patch');
 
-  grunt.registerTask('prepare', ['bower-install-simple', 'copy', 'patch', 'less']);
+  grunt.registerTask('prepare', ['copy', 'patch', 'less']);
   grunt.registerTask('frontendtests', ['clean', 'prepare', 'jade', 'uglify:production_de', 'karma:once', 'uglify:development_de', 'karma:once', 'istanbul_check_coverage:frontend']);
   grunt.registerTask('tests', ['eslint', 'frontendtests', 'mocha_istanbul', 'istanbul_check_coverage:server']);
   grunt.registerTask('deploy_development', ['prepare', 'uglify:development_de', 'uglify:development_en']);
