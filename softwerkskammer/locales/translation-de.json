@@ -185,7 +185,8 @@
   },
   "activityresults": {
     "new": "Neue Session Snap Sammlung",
-    "photoTitlePlaceholder": "Was kann man hier sehen?"
+    "photoTitlePlaceholder": "Was kann man hier sehen?",
+    "submit": "Speichern"
   },
   "payment": {
     "title": "Zahlung",

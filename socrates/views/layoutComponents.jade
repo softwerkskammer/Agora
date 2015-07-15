@@ -17,10 +17,6 @@ mixin loginMenu(forInline)
         li: a(href='/auth/logout')
           span.glyphicon.glyphicon-log-out
           | &nbsp;#{t('general.logout')}
-        if user.member.socratesOnly() || true
-          li: a(href='/resign')
-            span.glyphicon.glyphicon-ban-circle
-            | &nbsp;#{t('members.resign')}
       else
         li: a(data-toggle='modal', data-target='#login', href='/loginDialog?returnUrl=' + encodeURIComponent(currentUrl ||  '/'))
           span.glyphicon.glyphicon-log-in
