@@ -1,5 +1,15 @@
 include  ../../../views/formComponents
 mixin participationinfoform(activity, roomOptions, registration)
+  if registration.alreadyRegistered || registration.alreadyOnWaitinglist
+    .row
+      .col-md-12
+        h3 Can't make it to SoCraTes? #{''}
+          a(href='mailto:info@softwerkskammer.org') Please tell us
+          | #{''} so that we can release your #{''}
+          if registration.alreadyRegistered
+            | participant spot!
+          else
+            | waitinglist spot!
   .row
     .col-md-6
       h3 Room Options

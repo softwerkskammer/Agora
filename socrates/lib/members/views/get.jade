@@ -33,7 +33,7 @@ block content
         span.twitterify
           | #{member.twitter()}
 
-      if(accessrights.canEditMember(member) && isInDoubleBedRoom)
+      if(accessrights.canEditMember(member) && registration.isInDoubleBedRoom)
         p
           if roommate
             strong #{t('members.roommate')}:&nbsp;
@@ -47,6 +47,15 @@ block content
             | #{' '}Otherwise, we will match you up at random.
             p
             +memberlist(potentialRoommates)
+
+      if registration.alreadyRegistered || registration.alreadyOnWaitinglist
+        p <strong>Can't make it to SoCraTes?</strong> #{''}
+          a(href='mailto:info@softwerkskammer.org') Please tell us
+          | #{''} so that we can release your #{''}
+          if registration.alreadyRegistered
+            | participant spot!
+          else
+            | waitinglist spot!
 
       p &nbsp;
     .col-md-4

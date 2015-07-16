@@ -132,7 +132,7 @@ app.get('/:nickname', function (req, res, next) {
       memberstore.getMemberForId(roommateId, function (err3, roommate) {
         var potentialRoommates = [];
         if (err3) { return next(err3); }
-        if(registeredResource && !roommate) {
+        if (registeredResource && !roommate) {
           potentialRoommates = activity.rooms(registeredResource.resourceName).participantsWithoutRoom();
           var index = potentialRoommates.indexOf(member.id());
           potentialRoommates.splice(index, 1);
@@ -141,7 +141,16 @@ app.get('/:nickname', function (req, res, next) {
           if (err4) { return next(err4); }
           async.each(potentialRoommateMembers, membersService.getImage, function (err5) {
             if (err5) { return next(err5); }
-            res.render('get', {member: member, roommate: roommate, potentialRoommates: potentialRoommateMembers, isInDoubleBedRoom: isInDoubleBedRoom});
+            res.render('get', {
+              member: member,
+              roommate: roommate,
+              potentialRoommates: potentialRoommateMembers,
+              registration: {
+                isInDoubleBedRoom: isInDoubleBedRoom,
+                alreadyRegistered: !!registeredResource,
+                alreadyOnWaitinglist: activity.waitinglistResourcesFor(member.id())[0]
+              }
+            });
           });
         });
       });
