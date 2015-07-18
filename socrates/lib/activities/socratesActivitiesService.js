@@ -211,7 +211,10 @@ module.exports = {
         saveActivity({
           activity: results.activity,
           callback: callback,
-          repeat: _.partial(self.removeParticipantFor, resourceName, participantNick)
+          repeat: _.partial(self.removeParticipantFor, resourceName, participantNick),
+          handleSuccess: function () {
+            notifications.removedFromParticipants(results.participant);
+          }
         });
       }
     );
@@ -233,7 +236,10 @@ module.exports = {
         saveActivity({
           activity: results.activity,
           callback: callback,
-          repeat: _.partial(self.removeWaitinglistMemberFor, resourceName, waitinglistMemberNick)
+          repeat: _.partial(self.removeWaitinglistMemberFor, resourceName, waitinglistMemberNick),
+          handleSuccess: function () {
+            notifications.removedFromWaitinglist(results.waitinglistMember);
+          }
         });
       }
     );

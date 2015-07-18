@@ -57,6 +57,8 @@ describe('SoCraTes Activities Service', function () {
     sinon.stub(notifications, 'changedDuration');
     sinon.stub(notifications, 'changedResource');
     sinon.stub(notifications, 'changedWaitinglist');
+    sinon.stub(notifications, 'removedFromParticipants');
+    sinon.stub(notifications, 'removedFromWaitinglist');
     sinon.stub(memberstore, 'getMember', function (nickname, callback) {
       if (nickname === 'nicknameForPair1') { return callback(null, new Member({id: 'memberIdForPair1'})); }
       if (nickname === 'nicknameForPair2') { return callback(null, new Member({id: 'memberIdForPair2'})); }
