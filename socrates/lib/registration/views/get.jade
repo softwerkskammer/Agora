@@ -2,6 +2,7 @@ extends ../../../views/layout
 include ../../../../softwerkskammer/views/formComponents
 include ../../../../softwerkskammer/lib/activities/views/activities-mixins
 include participationinfoform
+include ../../members/views/resignBanner  
 
 block scripts
   script(src='/clientscripts/enhance-participationinfoform.js')
@@ -15,6 +16,7 @@ block content
       .modal-content
   .row
     .col-md-12
+      +resignBanner(registration)
       .page-header(style='margin-bottom: 0;')
         .pull-right.visible-print
           img(height='80px', src='/qrcode?url=#{encodeURIComponent(activity.fullyQualifiedUrl())}')

@@ -11,9 +11,6 @@ mixin loginMenu(forInline)
         li: a(href='/members/' + encodeURIComponent(user.member.nickname()))
           span.glyphicon.glyphicon-eye-open
           | &nbsp;#{t('members.view')}
-        li: a(href='/members/edit')
-          span.glyphicon.glyphicon-edit
-          | &nbsp;#{t('members.edit')}
         li: a(href='/auth/logout')
           span.glyphicon.glyphicon-log-out
           | &nbsp;#{t('general.logout')}
