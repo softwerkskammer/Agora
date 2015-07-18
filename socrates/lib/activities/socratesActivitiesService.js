@@ -217,6 +217,28 @@ module.exports = {
     );
   },
 
+  removeWaitinglistMemberFor: function (resourceName, waitinglistMemberNick, callback) {
+    var self = this;
+
+    async.parallel(
+      {
+        activity: _.partial(activitystore.getActivity, currentUrl),
+        waitinglistMember: _.partial(memberstore.getMember, waitinglistMemberNick)
+      },
+      function (err, results) {
+        if (err || !results.activity || !results.waitinglistMember) { return callback(err); }
+
+        results.activity.socratesResourceNamed(resourceName).removeFromWaitinglist(results.waitinglistMember.id());
+
+        saveActivity({
+          activity: results.activity,
+          callback: callback,
+          repeat: _.partial(self.removeWaitinglistMemberFor, resourceName, waitinglistMemberNick)
+        });
+      }
+    );
+  },
+
   getActivityWithParticipantsAndSubscribers: function (year, callback) {
     activitystore.getActivity('socrates-' + year, function (err, activity) {
       if (err || !activity) { return callback(err); }

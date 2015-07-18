@@ -244,6 +244,16 @@ describe('SoCraTes Activities Service', function () {
     });
   });
 
+  it('removes a waitinglist member from the given resource', function (done) {
+    socrates.resources.single._waitinglist = [{_memberId: 'memberId'}];
+    expect(socratesActivity.resourceNamed('single').waitinglistEntries()[0].registrantId()).to.eql('memberId');
+
+    socratesActivitiesService.removeWaitinglistMemberFor('single', 'nickname', function (err) {
+      expect(savedActivity.resourceNamed('single').waitinglistEntries()).to.be.empty();
+      done(err);
+    });
+  });
+
   it('loads an activity enriched with participants and their participation information for a year', function (done) {
     socrates.resources.single._registeredMembers = [{memberId: 'memberId', duration: 2}];
     subscriber = new Subscriber({id: 'memberId'});
