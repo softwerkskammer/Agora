@@ -22,6 +22,13 @@ module.exports = {
       globalCallback);
   },
 
+  addonLinesOfMembersWithSubscribers: function (members) {
+    return _.map(members, function (member) {
+        var participation = member.subscriber.isParticipating() ? member.subscriber.currentParticipation() : {};
+        return {member: member, addon: member.subscriber.addon(), participation: participation};
+      });
+  },
+
   tshirtSizes: function (addonLines) {
     var sizes = {};
     _.each(addonLines, function (line) {

@@ -358,6 +358,7 @@ block content
                   th Zahlungseingang
               tbody
                 for line in addonLinesOfUnsubscribedMembers
+                  -var payment = line.participation.payment()
                   tr
                     if line.member
                       td: +linkedMember(line.member.nickname())
@@ -367,7 +368,7 @@ block content
                       td gelöscht
                       td &nbsp;
                       td &nbsp;
-                    td #{line.addon.paymentReceivedMoment() && line.addon.paymentReceivedMoment().locale('de').format('L')}
+                    td #{payment.paymentReceivedMoment() && payment.paymentReceivedMoment().locale('de').format('L')}
           hr
         .tab-pane#addresses
           h4 Adressen der Teilnehmer
