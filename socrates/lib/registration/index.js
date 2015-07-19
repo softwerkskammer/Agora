@@ -220,26 +220,42 @@ app.get('/management', function (req, res, next) {
                   if (errC) { return next(errC); }
                   subscriberService.getMembersAndSubscribersForIds(activity.rooms('bed_in_junior').participantsInRoom(), function (errD, pairedJuniorParticipants) {
                     if (errD) { return next(errD); }
-                    /* eslint camelcase: 0 */
-                    res.render('managementTables', {
-                      activity: activity,
-                      addonLines: addonLines,
-                      waitinglistLines: waitinglistLines,
-                      addonLinesOfUnsubscribedMembers: [],
-                      tshirtsizes: managementService.tshirtSizes(addonLines),
-                      durations: managementService.durations(activity),
-                      rooms: {
-                        bed_in_double: {
-                          unpairedParticipants: unpairedDoubleParticipants,
-                          roomPairs: activity.rooms('bed_in_double').roomPairsWithMembersFrom(pairedDoubleParticipants)
-                        },
-                        bed_in_junior: {
-                          unpairedParticipants: unpairedJuniorParticipants,
-                          roomPairs: activity.rooms('bed_in_junior').roomPairsWithMembersFrom(pairedJuniorParticipants)
-                        }
-                      },
-                      formatDates: formatDates,
-                      formatList: formatList
+                    subscriberstore.allSubscribers(function (errE, subscribers) {
+                      if (errE) { return next(errE); }
+                      var currentYearSubscribers = _.filter(subscribers, function (subscriber) { return subscriber.isParticipating(); });
+                      var cysThatAreNotParticipants = _.filter(currentYearSubscribers, function (subscriber) {
+                        return !_.find(activity.participants, function (participant) { return participant.id() === subscriber.id(); });
+                      });
+                      var neitherParticipantsNorOnWaitinglist = _.filter(cysThatAreNotParticipants, function (subscriber) {
+                        return !_.find(_.flatten(waitinglistMembers), function (wlMember) { return wlMember.registrantId() === subscriber.id(); });
+                      });
+                      subscriberService.getMembersForSubscribers(_.flatten(neitherParticipantsNorOnWaitinglist), function (errF, exParticipants) {
+                        if (errF || !exParticipants) { return next(errF); }
+
+                        var addonLinesOfExParticipants = managementService.addonLinesOfMembersWithSubscribers(exParticipants);
+
+                        /* eslint camelcase: 0 */
+                        res.render('managementTables', {
+                          activity: activity,
+                          addonLines: addonLines,
+                          waitinglistLines: waitinglistLines,
+                          addonLinesOfUnsubscribedMembers: addonLinesOfExParticipants,
+                          tshirtsizes: managementService.tshirtSizes(addonLines),
+                          durations: managementService.durations(activity),
+                          rooms: {
+                            bed_in_double: {
+                              unpairedParticipants: unpairedDoubleParticipants,
+                              roomPairs: activity.rooms('bed_in_double').roomPairsWithMembersFrom(pairedDoubleParticipants)
+                            },
+                            bed_in_junior: {
+                              unpairedParticipants: unpairedJuniorParticipants,
+                              roomPairs: activity.rooms('bed_in_junior').roomPairsWithMembersFrom(pairedJuniorParticipants)
+                            }
+                          },
+                          formatDates: formatDates,
+                          formatList: formatList
+                        });
+                      });
                     });
                   });
                 });

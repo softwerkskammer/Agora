@@ -78,21 +78,44 @@ mixin removePair(resourceName, pair)
     button.btn.btn-default.btn-xs(type='submit') Entfernen
 
 mixin removeParticipantWithModal(resourceName, participantNick)
-  -var theID = 'reallyDelete' + participantNick.replace(/\s/g, '')
+  -var theID = 'reallyRemoveParticipant' + participantNick.replace(/\s/g, '')
   .modal.fade(id=theID, tabindex='-1')
     .modal-dialog
       .modal-content
         .modal-header
           button.close(type='button', data-dismiss='modal', aria-hidden='true') &times;
-          h3 Entfernen
+          h3 Remove Participant
         .modal-body
           p #{t('general.are_you_sure')}
+          p This will remove #{participantNick} from the list of participants.
           form(id='removeParticipantForm', action='/activities/removeParticipant', method='post')
             .btn-group
               button.btn.btn-default(type='cancel', data-dismiss='modal', aria-hidden='true') #{t('general.no')}
               +csrf
               +hidden('resourceName', resourceName)
               +hidden('participant', participantNick)
+              button.btn.btn-danger(type='submit')
+                i.fa.fa-trash-o.fa-fw &nbsp;
+                | #{t('general.delete')}
+  button.btn.btn-danger(data-toggle='modal', data-target='#' + theID): i.fa.fa-trash-o.fa-fw
+
+mixin removeWaitinglistMemberWithModal(resourceName, waitinglistNick)
+  -var theID = 'reallyRemoveWaitinglistMember' + waitinglistNick.replace(/\s/g, '')
+  .modal.fade(id=theID, tabindex='-1')
+    .modal-dialog
+      .modal-content
+        .modal-header
+          button.close(type='button', data-dismiss='modal', aria-hidden='true') &times;
+          h3 Remove Waitinglist Member
+        .modal-body
+          p #{t('general.are_you_sure')}
+          p This will remove #{waitinglistNick} from the waitinglist.
+          form(id='removeWaitinglistMemberForm', action='/activities/removeWaitinglistMember', method='post')
+            .btn-group
+              button.btn.btn-default(type='cancel', data-dismiss='modal', aria-hidden='true') #{t('general.no')}
+              +csrf
+              +hidden('resourceName', resourceName)
+              +hidden('waitinglistMember', waitinglistNick)
               button.btn.btn-danger(type='submit')
                 i.fa.fa-trash-o.fa-fw &nbsp;
                 | #{t('general.delete')}
@@ -219,6 +242,7 @@ block content
                     th Ort/Region
                     th Übernehmen
                     th ändern in
+                    th entfernen
                 tbody
                   for member in waitingMembers
                     tr
@@ -229,6 +253,7 @@ block content
                       td #{member.location()}
                       td: +fromWaitinglistToParticipant(resourceName, member.nickname())
                       td: +newWaitinglist(resourceName, member.nickname())
+                      td: +removeWaitinglistMemberWithModal(resourceName, member.nickname())
             hr
         .tab-pane.active#addons
           h4 Alle Teilnehmer mit Zahlungen
@@ -333,6 +358,7 @@ block content
                   th Zahlungseingang
               tbody
                 for line in addonLinesOfUnsubscribedMembers
+                  -var payment = line.participation.payment()
                   tr
                     if line.member
                       td: +linkedMember(line.member.nickname())
@@ -342,7 +368,7 @@ block content
                       td gelöscht
                       td &nbsp;
                       td &nbsp;
-                    td #{line.addon.paymentReceivedMoment() && line.addon.paymentReceivedMoment().locale('de').format('L')}
+                    td #{payment.paymentReceivedMoment() && payment.paymentReceivedMoment().locale('de').format('L')}
           hr
         .tab-pane#addresses
           h4 Adressen der Teilnehmer

@@ -165,4 +165,11 @@ app.post('/removeParticipant', function (req, res, next) {
   });
 });
 
+app.post('/removeWaitinglistMember', function (req, res, next) {
+  socratesActivitiesService.removeWaitinglistMemberFor(req.body.resourceName, req.body.waitinglistMember, function (err) {
+    if (err) { return next(err); }
+    res.redirect('/registration/management');
+  });
+});
+
 module.exports = app;

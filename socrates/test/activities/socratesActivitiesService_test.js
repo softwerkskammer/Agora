@@ -57,6 +57,8 @@ describe('SoCraTes Activities Service', function () {
     sinon.stub(notifications, 'changedDuration');
     sinon.stub(notifications, 'changedResource');
     sinon.stub(notifications, 'changedWaitinglist');
+    sinon.stub(notifications, 'removedFromParticipants');
+    sinon.stub(notifications, 'removedFromWaitinglist');
     sinon.stub(memberstore, 'getMember', function (nickname, callback) {
       if (nickname === 'nicknameForPair1') { return callback(null, new Member({id: 'memberIdForPair1'})); }
       if (nickname === 'nicknameForPair2') { return callback(null, new Member({id: 'memberIdForPair2'})); }
@@ -240,6 +242,16 @@ describe('SoCraTes Activities Service', function () {
     socratesActivitiesService.removeParticipantFor('bed_in_double', 'nicknameForPair1', function (err) {
       expect(savedActivity.resourceNamed('bed_in_double').registeredMembers()).to.eql(['memberIdForPair2']);
       expect(savedActivity.rooms('bed_in_double').roomPairsWithMembersFrom(allKnownMembersForRoomPairing)).to.be.empty();
+      done(err);
+    });
+  });
+
+  it('removes a waitinglist member from the given resource', function (done) {
+    socrates.resources.single._waitinglist = [{_memberId: 'memberId'}];
+    expect(socratesActivity.resourceNamed('single').waitinglistEntries()[0].registrantId()).to.eql('memberId');
+
+    socratesActivitiesService.removeWaitinglistMemberFor('single', 'nickname', function (err) {
+      expect(savedActivity.resourceNamed('single').waitinglistEntries()).to.be.empty();
       done(err);
     });
   });

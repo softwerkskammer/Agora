@@ -211,7 +211,35 @@ module.exports = {
         saveActivity({
           activity: results.activity,
           callback: callback,
-          repeat: _.partial(self.removeParticipantFor, resourceName, participantNick)
+          repeat: _.partial(self.removeParticipantFor, resourceName, participantNick),
+          handleSuccess: function () {
+            notifications.removedFromParticipants(results.participant);
+          }
+        });
+      }
+    );
+  },
+
+  removeWaitinglistMemberFor: function (resourceName, waitinglistMemberNick, callback) {
+    var self = this;
+
+    async.parallel(
+      {
+        activity: _.partial(activitystore.getActivity, currentUrl),
+        waitinglistMember: _.partial(memberstore.getMember, waitinglistMemberNick)
+      },
+      function (err, results) {
+        if (err || !results.activity || !results.waitinglistMember) { return callback(err); }
+
+        results.activity.socratesResourceNamed(resourceName).removeFromWaitinglist(results.waitinglistMember.id());
+
+        saveActivity({
+          activity: results.activity,
+          callback: callback,
+          repeat: _.partial(self.removeWaitinglistMemberFor, resourceName, waitinglistMemberNick),
+          handleSuccess: function () {
+            notifications.removedFromWaitinglist(results.waitinglistMember);
+          }
         });
       }
     );

@@ -73,6 +73,16 @@ module.exports = {
       'superuserWaitinglistNotification', 'Change in SoCraTes Waitinglist - Resource');
   },
 
+  removedFromParticipants: function (member) {
+    notifyMemberAndSuperuser(member, {resourceKind: 'participant list'}, 'removalNotification', 'SoCraTes - Removal from Participant List',
+      'superuserRemovalNotification', 'Change in SoCraTes Registration - Removal from Participants');
+  },
+
+  removedFromWaitinglist: function (member) {
+    notifyMemberAndSuperuser(member, {resourceKind: 'waitinglist'}, 'removalNotification', 'SoCraTes - Removal from Waitinglist',
+      'superuserRemovalNotification', 'Change in SoCraTes Registration - Removal from Waitinglist');
+  },
+
   newWaitinglistEntry: function (memberID, bookingdetails) {
     memberstore.getMemberForId(memberID, function (err, member) {
       if (err || !member) { return logger.error(err); }

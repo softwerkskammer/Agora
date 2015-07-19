@@ -44,6 +44,17 @@ module.exports = {
     });
   },
 
+  getMembersForSubscribers: function (subscribers, globalCallback) {
+    async.map(subscribers,
+      function (subscriber, callback) {
+        memberstore.getMemberForId(subscriber.id(), function (err1, member) {
+          if (err1 || !member) { return callback(err1); }
+          member.subscriber = subscriber;
+          callback(null, member);
+        });
+      }, globalCallback);
+  },
+
   emailAddressesForWikiNotifications: function (globalCallback) {
     subscriberstore.allSubscribers(function (err, subscribers) {
       if (err || !subscribers) { return globalCallback(err); }
