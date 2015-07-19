@@ -227,7 +227,7 @@ app.get('/management', function (req, res, next) {
                         return !_.find(activity.participants, function (participant) { return participant.id() === subscriber.id(); });
                       });
                       var neitherParticipantsNorOnWaitinglist = _.filter(cysThatAreNotParticipants, function (subscriber) {
-                        return !_.find(_.flatten(waitinglistMembers), function (wlMember) { return wlMember.registrantId() === subscriber.id(); });
+                        return !_.find(_.flatten(waitinglistMembers), function (wlMember) { return wlMember.id() === subscriber.id(); });
                       });
                       subscriberService.getMembersForSubscribers(_.flatten(neitherParticipantsNorOnWaitinglist), function (errF, exParticipants) {
                         if (errF || !exParticipants) { return next(errF); }
