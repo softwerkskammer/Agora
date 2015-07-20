@@ -19,11 +19,7 @@ block content
             h4: a(href='/members/' + participant.nickname()) #{participant.displayName()}
           .row
             .col-sm-3.col-sm-push-9
-              if(accessrights.canEditMember(participant))
-                +avatar(participant, true)
-              else
-                div(style='width: 200px')
-                  img(src=participant.avatarUrl())
+              +avatar(participant, true)
             .col-sm-9.col-sm-pull-3
               h5: em What is your relation to Software Craftsmanship?
               | !{participant.participation.question1Html()}
