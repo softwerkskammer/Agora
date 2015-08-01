@@ -18,6 +18,7 @@ var statusmessage = beans.get('statusmessage');
 var memberSubmitHelper = beans.get('memberSubmitHelper');
 var socratesConstants = beans.get('socratesConstants');
 var Addon = beans.get('socratesAddon');
+var addonLineUtilities = beans.get('socratesAddonLineUtilities');
 var Participation = beans.get('socratesParticipation');
 var roomOptions = beans.get('roomOptions');
 var managementService = beans.get('managementService');
@@ -158,6 +159,22 @@ app.post('/completeRegistration', function (req, res, next) {
         statusmessage.successMessage('general.info', 'activities.successfully_registered').putIntoSession(req);
         res.redirect('/payment/socrates');
       }
+    });
+  });
+});
+
+app.get('/reception', function (req, res, next) {
+  if (!res.locals.accessrights.canEditActivity()) {
+    return res.redirect('/registration');
+  }
+
+  activitiesService.getActivityWithGroupAndParticipants(currentUrl, function (err, activity) {
+    if (err) { return next(err); }
+    managementService.addonLinesOf(activity.participants, function (err1, addonLines) {
+      if (err1) { return next(err1); }
+      res.render('reception', {
+        addonLines: addonLineUtilities.groupAndSortAddonlines(addonLines)
+      });
     });
   });
 });
