@@ -76,7 +76,7 @@ describe('Renderer', function () {
   });
 
   it('splits a text into header and remainder if header is really header', function () {
-    var result = Renderer.titleAndRenderedTail('##Hallo\n\nDresden');
+    var result = Renderer.titleAndRenderedTail('## Hallo\n\nDresden');
     expect(result).to.have.property('title', 'Hallo');
     expect(result).to.have.property('body', '<p>Dresden</p>\n');
   });
@@ -88,7 +88,7 @@ describe('Renderer', function () {
   });
 
   it('splits a text into header and remainder if header has nested markdown', function () {
-    var result = Renderer.titleAndRenderedTail('##Hallo *kursiv* jj\n\nDresden');
+    var result = Renderer.titleAndRenderedTail('## Hallo *kursiv* jj\n\nDresden');
     expect(result).to.have.property('title', 'Hallo *kursiv* jj');
     expect(result).to.have.property('body', '<p>Dresden</p>\n');
   });
