@@ -93,11 +93,11 @@ describe('BlogPost', function () {
   it('can parse a multitude of content', function () {
     function parse(post) { return new Blogpost('blog_2013-02-01LeanCoffeeTest.md', post); }
 
-    expect(parse('#Lean\n\nblank').title).is('Lean');
-    expect(parse('#Lean\n\nblank').teaser).is('blank');
+    expect(parse('# Lean\n\nblank').title).is('Lean');
+    expect(parse('# Lean\n\nblank').teaser).is('blank');
 
-    expect(parse('#Lean\nblitz\nblank').title).is('Lean');
-    expect(parse('#Lean\nblitz\nblank').teaser).is('blitz\nblank');
+    expect(parse('# Lean\nblitz\nblank').title).is('Lean');
+    expect(parse('# Lean\nblitz\nblank').teaser).is('blitz\nblank');
 
     expect(parse('Lean\n====\n\nblank').title).is('Lean');
     expect(parse('Lean\n====\n\nblank').teaser).is('blank');
