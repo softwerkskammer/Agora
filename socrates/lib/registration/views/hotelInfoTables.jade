@@ -26,9 +26,9 @@ block content
     ul.nav.nav-tabs
       li.active: a(href='#addresses', data-toggle='tab') Adressen
       li: a(href='#single', data-toggle='tab') Einzelzimmer
-      li: a(href='#double', data-toggle='tab') Doppelzimmer
-      li: a(href='#juniorDouble', data-toggle='tab') Junior-DZ Doppelbelegung
-      li: a(href='#juniorSingle', data-toggle='tab') Junior-DZ Einzelbelegung
+      li: a(href='#bed_in_double', data-toggle='tab') Doppelzimmer
+      li: a(href='#bed_in_junior', data-toggle='tab') Junior-DZ Doppelbelegung
+      li: a(href='#junior', data-toggle='tab') Junior-DZ Einzelbelegung
       li: a(href='#total', data-toggle='tab') Gesamt-Personenzahl
   .row
     .col-md-12
@@ -52,6 +52,26 @@ block content
 
         .tab-pane#single
           -var resourceName = 'single'
+          -var participants = activity.participantsOf(resourceName)
+          -var resource = activity.socratesResourceNamed(resourceName)
+          .panel
+            table.table.table-condensed.table-hover.table-striped.membertable
+              thead
+                tr
+                  th Donnerstag - Samstag
+                  th Samstag - Sonntag
+                  th Sonntag - Montag
+              tbody
+                for member in participants
+                  -var duration = resource.duration(member.id())
+                  -var name = member.displayName()
+                  tr
+                    td #{name}
+                    td #{duration > 2 ? name : ""}
+                    td #{duration > 4 ? name : ""}
+
+        .tab-pane#junior
+          -var resourceName = 'junior'
           -var participants = activity.participantsOf(resourceName)
           -var resource = activity.socratesResourceNamed(resourceName)
           .panel
