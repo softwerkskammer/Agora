@@ -3,18 +3,70 @@ include ../../../../softwerkskammer/lib/members/views/memberlist-mixin
 include ../../../../softwerkskammer/views/format-mixin
 include ../../../../softwerkskammer/views/formComponents
 include ../../../../softwerkskammer/views/dataTables-mixin
-include ajax
 
-mixin localdate(momentOrNull)
-  | #{momentOrNull ? momentOrNull.locale('de').format('L') : '-'}
+mixin individualRoom(resourceName)
+  -var participants = activity.participantsOf(resourceName)
+  -var resource = activity.socratesResourceNamed(resourceName)
+  .panel
+    table.table.table-condensed.table-hover.table-striped.unsortedtable
+      thead
+        tr
+          th Donnerstag - Samstag
+          th Samstag - Sonntag
+          th Sonntag - Montag
+      tbody
+        for member in participants
+          -var duration = resource.duration(member.id())
+          -var name = member.displayName()
+          tr
+            td #{name}
+            td #{duration > 2 ? name : ""}
+            td #{duration > 4 ? name : ""}
+
+mixin sharedRoom(resourceName)
+  -var resource = activity.socratesResourceNamed(resourceName)
+  .panel
+    table.table.table-condensed.table-hover.table-striped.unsortedtable
+      thead
+        tr
+          th(colspan="2") Donnerstag - Samstag
+          th(colspan="2") Samstag - Sonntag
+          th(colspan="2") Sonntag - Montag
+        tr
+          th 1. Teilnehmer
+          th 2. Teilnehmer
+          th 1. Teilnehmer
+          th 2. Teilnehmer
+          th 1. Teilnehmer
+          th 2. Teilnehmer
+      tbody
+        for pair in rooms[resourceName].roomPairs
+          -var name1 = pair.participant1.displayName()
+          -var name2 = pair.participant2.displayName()
+          -var duration1 = resource.duration(pair.participant1.id())
+          -var duration2 = resource.duration(pair.participant2.id())
+          tr
+            td #{name1}
+            td #{name2}
+            td #{duration1 > 2 ? name1 : ""}
+            td #{duration2 > 2 ? name2 : ""}
+            td #{duration1 > 4 ? name1 : ""}
+            td #{duration2 > 4 ? name2 : ""}
+        for participant in rooms[resourceName].unpairedParticipants
+          -var name = participant.displayName()
+          -var duration = resource.duration(participant.id())
+          tr
+            td #{name}
+            td
+            td #{duration > 2 ? name : ""}
+            td
+            td #{duration > 4 ? name : ""}
+            td
+
 
 block scripts
   +dataTableImport
-  +ajaxFunction
-  +dataTable('.addontable', '[ 4, "asc" ]', '[{targets: [0,8,9,10], type: "date-eu"}]')
-  +dataTable('.membertable', '[ 0, "asc" ]', '[{targets: 0, type: "date-eu"}]')
   +dataTable('.unsortedtable', '[]', '[]')
-  +dataTable('.addressestable', '[ 1, "asc" ]', '[]')
 block title
   | Hotel-Informationen
 block content
@@ -35,7 +87,7 @@ block content
       .tab-content
         .tab-pane#addresses
           .panel
-            table.table.table-condensed.table-hover.table-striped.addressestable
+            table.table.table-condensed.table-hover.table-striped.unsortedtable
               thead
                 tr
                   th Vorname
@@ -51,41 +103,13 @@ block content
                     td: +formatAsLines(line.addon.billingAddressLines())
 
         .tab-pane#single
-          -var resourceName = 'single'
-          -var participants = activity.participantsOf(resourceName)
-          -var resource = activity.socratesResourceNamed(resourceName)
-          .panel
-            table.table.table-condensed.table-hover.table-striped.membertable
-              thead
-                tr
-                  th Donnerstag - Samstag
-                  th Samstag - Sonntag
-                  th Sonntag - Montag
-              tbody
-                for member in participants
-                  -var duration = resource.duration(member.id())
-                  -var name = member.displayName()
-                  tr
-                    td #{name}
-                    td #{duration > 2 ? name : ""}
-                    td #{duration > 4 ? name : ""}
+          +individualRoom('single')
+
+        .tab-pane#bed_in_double
+          +sharedRoom('bed_in_double')
+
+        .tab-pane#bed_in_junior
+          +sharedRoom('bed_in_junior')
 
         .tab-pane#junior
-          -var resourceName = 'junior'
-          -var participants = activity.participantsOf(resourceName)
-          -var resource = activity.socratesResourceNamed(resourceName)
-          .panel
-            table.table.table-condensed.table-hover.table-striped.membertable
-              thead
-                tr
-                  th Donnerstag - Samstag
-                  th Samstag - Sonntag
-                  th Sonntag - Montag
-              tbody
-                for member in participants
-                  -var duration = resource.duration(member.id())
-                  -var name = member.displayName()
-                  tr
-                    td #{name}
-                    td #{duration > 2 ? name : ""}
-                    td #{duration > 4 ? name : ""}
+          +individualRoom('junior')

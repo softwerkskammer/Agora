@@ -294,14 +294,35 @@ app.get('/hotelInfo', function (req, res, next) {
     if (err) { return next(err); }
     managementService.addonLinesOf(activity.participants, function (err1, addonLines) {
       if (err1) { return next(err1); }
-      res.render('hotelInfoTables', {
-        activity: activity,
-        addonLines: addonLines
+      subscriberService.getMembersAndSubscribersForIds(activity.rooms('bed_in_double').participantsWithoutRoom(), function (errA, unpairedDoubleParticipants) {
+        if (errA) { return next(errA); }
+        subscriberService.getMembersAndSubscribersForIds(activity.rooms('bed_in_junior').participantsWithoutRoom(), function (errB, unpairedJuniorParticipants) {
+          if (errB) { return next(errB); }
+          subscriberService.getMembersAndSubscribersForIds(activity.rooms('bed_in_double').participantsInRoom(), function (errC, pairedDoubleParticipants) {
+            if (errC) { return next(errC); }
+            subscriberService.getMembersAndSubscribersForIds(activity.rooms('bed_in_junior').participantsInRoom(), function (errD, pairedJuniorParticipants) {
+              if (errD) { return next(errD); }
+
+              res.render('hotelInfoTables', {
+                activity: activity,
+                addonLines: addonLines,
+                rooms: {
+                  bed_in_double: {
+                    unpairedParticipants: unpairedDoubleParticipants,
+                    roomPairs: activity.rooms('bed_in_double').roomPairsWithMembersFrom(pairedDoubleParticipants)
+                  },
+                  bed_in_junior: {
+                    unpairedParticipants: unpairedJuniorParticipants,
+                    roomPairs: activity.rooms('bed_in_junior').roomPairsWithMembersFrom(pairedJuniorParticipants)
+                  }
+                }
+              });
+            });
+          });
+        });
       });
     });
   });
 });
-
-
 
 module.exports = app;
