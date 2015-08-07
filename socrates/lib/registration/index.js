@@ -285,4 +285,22 @@ app.get('/management', function (req, res, next) {
   });
 });
 
+app.get('/hotelInfo', function (req, res, next) {
+  if (!res.locals.accessrights.canEditActivity()) {
+    return res.redirect('/registration');
+  }
+
+  activitiesService.getActivityWithGroupAndParticipants(currentUrl, function (err, activity) {
+    if (err) { return next(err); }
+    managementService.addonLinesOf(activity.participants, function (err1, addonLines) {
+      if (err1) { return next(err1); }
+      res.render('hotelInfoTables', {
+        addonLines: addonLines
+      });
+    });
+  });
+});
+
+
+
 module.exports = app;

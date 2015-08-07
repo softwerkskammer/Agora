@@ -26,6 +26,7 @@ block content
           if (accessrights.canEditActivity())
             a.btn.btn-default(href='/registration/management', title=t('activities.participants')): i.fa.fa-list-ol.fa-fw
             a.btn.btn-default(href='/registration/reception', title=t('activities.participants')): i.fa.fa-print.fa-fw
+            a.btn.btn-default(href='/registration/hotelInfo', title=t('activities.participants')): i.fa.fa-bed.fa-fw
             a.btn.btn-default(href='/mailsender/massMailing', title=t('activities.invitation')): i.fa.fa-envelope-o.fa-fw
             a.btn.btn-default(href='/activities/edit/#{encodeURIComponent(activity.url())}', title=t('general.edit')): i.fa.fa-edit.fa-fw
         h1 Registration<br>
