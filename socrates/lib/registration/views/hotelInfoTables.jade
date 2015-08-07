@@ -34,7 +34,6 @@ block content
     .col-md-12
       .tab-content
         .tab-pane#addresses
-          h4 Adressen der Teilnehmer
           .panel
             table.table.table-condensed.table-hover.table-striped.addressestable
               thead
@@ -50,4 +49,23 @@ block content
                     td #{line.member.lastname()}
                     td: +formatAsLines(line.addon.homeAddressLines())
                     td: +formatAsLines(line.addon.billingAddressLines())
-          hr
+
+        .tab-pane#single
+          -var resourceName = 'single'
+          -var participants = activity.participantsOf(resourceName)
+          -var resource = activity.socratesResourceNamed(resourceName)
+          .panel
+            table.table.table-condensed.table-hover.table-striped.membertable
+              thead
+                tr
+                  th Donnerstag - Samstag
+                  th Samstag - Sonntag
+                  th Sonntag - Montag
+              tbody
+                for member in participants
+                  -var duration = resource.duration(member.id())
+                  -var name = member.displayName()
+                  tr
+                    td #{name}
+                    td #{duration > 2 ? name : ""}
+                    td #{duration > 4 ? name : ""}

@@ -295,6 +295,7 @@ app.get('/hotelInfo', function (req, res, next) {
     managementService.addonLinesOf(activity.participants, function (err1, addonLines) {
       if (err1) { return next(err1); }
       res.render('hotelInfoTables', {
+        activity: activity,
         addonLines: addonLines
       });
     });

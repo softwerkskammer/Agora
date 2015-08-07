@@ -86,6 +86,10 @@ SoCraTesResource.prototype.durationFor = function (memberId) {
   return roomOptions.endOfStayFor(this.recordFor(memberId).duration);
 };
 
+SoCraTesResource.prototype.duration = function (memberId) {
+  return this.recordFor(memberId).duration;
+};
+
 SoCraTesResource.prototype.durations = function () {
   if (!this.state._registeredMembers) {
     this.state._registeredMembers = [];
