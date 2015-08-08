@@ -24,16 +24,16 @@ var prefix = function () {
     '\n' +
     '\n' +
     '\\begin{document}\n';
-}
+};
 
 var lineFor = function (members) {
   if (members.length > 3) {
     return 'ERROR! Passed more than 3 members to lineFor()';
   }
   return _.map(members, function (member) {
-      return '\\nametag{' + member.firstname() + '}{' + member.lastname() + '}{' + member.twitter() + '}';
+      return '\\nametag{' + member.firstname() + '}{' + member.lastname() + '}{' + (member.twitter() || '').replace('_', '\_') + '}';
     }).join(' & ') + '\\\\ \\hline \n';
-}
+};
 
 var tableFor = function (members) {
   if (members.length > 12) {
@@ -43,18 +43,18 @@ var tableFor = function (members) {
     '\\hline \n' +
     lineFor(members.slice(0, 3)) + lineFor(members.slice(3, 6)) + lineFor(members.slice(6, 9)) + lineFor(members.slice(9, 12)) +
     '\n' +
-    '\\end{tabular}\n';
-}
+    '\\end{tabular}\n\n\n';
+};
 
 var tablesFor = function (members) {
   return _.map(_.range(0, members.length, 12),
     function (startIndex) { return tableFor(members.slice(startIndex, startIndex + 12)); });
-}
+};
 
 var postfix = function () {
   return '\n' +
     '\\end{document}\n';
-}
+};
 
 module.exports = {
 
