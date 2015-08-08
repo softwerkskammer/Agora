@@ -47,19 +47,20 @@ module.exports = {
   },
 
   _tableFor: function (members) {
+    var self = this;
     if (members.length > 12) {
       return 'ERROR! Passed more than 12 members to tableFor()';
     }
     return '\\begin{tabular}{|p{7cm}|p{7cm}|p{7cm}|} \n' +
       '\\hline \n' +
-      this._lineFor(members.slice(0, 3)) + this._lineFor(members.slice(3, 6)) + this._lineFor(members.slice(6, 9)) + this._lineFor(members.slice(9, 12)) +
-      '\n' +
-      '\\end{tabular}\n\n\n';
+      _.map(_.range(0, members.length, 3), function (startIndex) { return self._lineFor(members.slice(startIndex, startIndex + 3)); }).join('') +
+      '\n\\end{tabular}\n\n\n';
   },
 
   _tablesFor: function (members) {
+    var self = this;
     return _.map(_.range(0, members.length, 12),
-      function (startIndex) { return this._tableFor(members.slice(startIndex, startIndex + 12)); });
+      function (startIndex) { return self._tableFor(members.slice(startIndex, startIndex + 12)); }).join('');
   },
 
   _postfix: function () {
