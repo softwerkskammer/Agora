@@ -22,6 +22,7 @@ var addonLineUtilities = beans.get('socratesAddonLineUtilities');
 var Participation = beans.get('socratesParticipation');
 var roomOptions = beans.get('roomOptions');
 var managementService = beans.get('managementService');
+var nametagService = beans.get('nametagService');
 var currentUrl = beans.get('socratesConstants').currentUrl;
 
 var app = misc.expressAppIn(__dirname);
@@ -324,5 +325,19 @@ app.get('/hotelInfo', function (req, res, next) {
     });
   });
 });
+
+app.get('/nametags.tex', function (req, res, next) {
+  if (!res.locals.accessrights.canEditActivity()) {
+    return res.redirect('/registration');
+  }
+
+  activitiesService.getActivityWithGroupAndParticipants(currentUrl, function (err, activity) {
+    if (err) { return next(err); }
+    res.type('text/plain; charset=utf-8');
+    res.header('Content-Disposition', 'attachment; filename=nametags.tex');
+    res.send(nametagService.nametagsFor(activity.participants));
+  });
+});
+
 
 module.exports = app;

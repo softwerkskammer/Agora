@@ -14,6 +14,7 @@
   "subscriberService": {"module": "./socrates/lib/subscribers/subscriberService"},
   "registrationService": {"module": "./socrates/lib/registration/registrationService"},
   "managementService": {"module": "./socrates/lib/registration/managementService"},
+  "nametagService": {"module": "./socrates/lib/registration/nametagService"},
   "roomOptions": {"module": "./socrates/lib/activities/roomOptions"},
   "rooms": {"module": "./socrates/lib/activities/rooms"},
   "socratesMailsenderService": {"module": "./socrates/lib/mailsender/socratesMailsenderService"},
