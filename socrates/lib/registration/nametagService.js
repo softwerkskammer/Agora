@@ -31,7 +31,7 @@ var lineFor = function (members) {
     return 'ERROR! Passed more than 3 members to lineFor()';
   }
   return _.map(members, function (member) {
-      return '\\nametag{' + member.firstname() + '}{' + member.lastname() + '}{' + (member.twitter() || '').replace('_', '\_') + '}';
+      return '\\nametag{' + member.firstname() + '}{' + member.lastname() + '}{' + (member.twitter() || '').replace('_', '\\_') + '}';
     }).join(' & ') + '\\\\ \\hline \n';
 };
 
