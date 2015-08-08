@@ -18,7 +18,8 @@ function renderingOptions(member) {
   return {
     pretty: true,
     member: member,
-    url: conf.get('publicUrlPrefix')
+    url: conf.get('publicUrlPrefix'),
+    socratesConstants: socratesConstants
   };
 }
 
