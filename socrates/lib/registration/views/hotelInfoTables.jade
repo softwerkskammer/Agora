@@ -84,9 +84,9 @@ mixin roomCountFor(firstColumn, resourceName, totalRoomCount)
     -if(duration > 4)
       -sundayToMonday = sundayToMonday + 1
 
-    -totalRoomCount.thursdayToSaturday = totalRoomCount.thursdayToSaturday + thursdayToSaturday
-    -totalRoomCount.saturdayToSunday = totalRoomCount.saturdayToSunday + saturdayToSunday
-    -totalRoomCount.sundayToMonday = totalRoomCount.sundayToMonday + sundayToMonday
+  -totalRoomCount.thursdayToSaturday = totalRoomCount.thursdayToSaturday + thursdayToSaturday
+  -totalRoomCount.saturdayToSunday = totalRoomCount.saturdayToSunday + saturdayToSunday
+  -totalRoomCount.sundayToMonday = totalRoomCount.sundayToMonday + sundayToMonday
   tr
     +roomCountLine(firstColumn, thursdayToSaturday, saturdayToSunday, sundayToMonday)
 
