@@ -156,7 +156,7 @@ block content
                 +roomCountFor('Einzelzimmer', 'single', totalRoomCount)
                 +roomCountFor('Doppelzimmer', 'bed_in_double', totalRoomCount)
                 +roomCountFor('Junior-DZ Doppelbelegung', 'bed_in_junior', totalRoomCount)
-                +roomCountFor('Junior-DZ Einzelbelegung', 'junior', totalRoomCount)
+                // leave this one out for now... +roomCountFor('Junior-DZ Einzelbelegung', 'junior', totalRoomCount)
                 +roomCountLine('Personen gesamt', totalRoomCount.thursdayToSaturday, totalRoomCount.saturdayToSunday, totalRoomCount.sundayToMonday)
 
           h4 Tagesgäste
@@ -169,7 +169,7 @@ block content
               tbody
                 -var fridayAndSaturday = 0
                 -var sunday = 0
-                for resourceName in ['single', 'bed_in_double', 'bed_in_junior']
+                for resourceName in ['single', 'bed_in_double', 'bed_in_junior', 'junior']
                   -var participants = activity.participantsOf(resourceName)
                   -var resource = activity.socratesResourceNamed(resourceName)
                   for member in participants
