@@ -63,6 +63,33 @@ mixin sharedRoom(resourceName)
             td #{duration > 4 ? name : ""}
             td
 
+mixin roomCountLine(firstColumn, thursdayToSaturday, saturdayToSunday, sundayToMonday)
+  td #{firstColumn}
+  td #{thursdayToSaturday}
+  td #{saturdayToSunday}
+  td #{sundayToMonday}
+
+mixin roomCountFor(firstColumn, resourceName, totalRoomCount)
+  -var thursdayToSaturday = 0
+  -var saturdayToSunday = 0
+  -var sundayToMonday = 0
+  -var participants = activity.participantsOf(resourceName)
+  -var resource = activity.socratesResourceNamed(resourceName)
+
+  for member in participants
+    -var duration = resource.duration(member.id())
+    -thursdayToSaturday = thursdayToSaturday + 1
+    -if(duration > 2)
+      -saturdayToSunday = saturdayToSunday + 1
+    -if(duration > 4)
+      -sundayToMonday = sundayToMonday + 1
+
+    -totalRoomCount.thursdayToSaturday = totalRoomCount.thursdayToSaturday + thursdayToSaturday
+    -totalRoomCount.saturdayToSunday = totalRoomCount.saturdayToSunday + saturdayToSunday
+    -totalRoomCount.sundayToMonday = totalRoomCount.sundayToMonday + sundayToMonday
+  tr
+    +roomCountLine(firstColumn, thursdayToSaturday, saturdayToSunday, sundayToMonday)
+
 
 block scripts
   +dataTableImport
@@ -113,3 +140,43 @@ block content
 
         .tab-pane#junior
           +individualRoom('junior')
+
+        .tab-pane#total
+          h4 Zimmerbelegung Personenzahl
+          .panel
+            table.table.table-condensed.table-hover.table-striped
+              thead
+                tr
+                  th #{' '}
+                  th Donnerstag - Samstag
+                  th Samstag - Sonntag
+                  th Sonntag - Montag
+              tbody
+                - var totalRoomCount = { thursdayToSaturday: 0, saturdayToSunday: 0, sundayToMonday: 0 }
+                +roomCountFor('Einzelzimmer', 'single', totalRoomCount)
+                +roomCountFor('Doppelzimmer', 'bed_in_double', totalRoomCount)
+                +roomCountFor('Junior-DZ Doppelbelegung', 'bed_in_junior', totalRoomCount)
+                +roomCountFor('Junior-DZ Einzelbelegung', 'junior', totalRoomCount)
+                +roomCountLine('Personen gesamt', totalRoomCount.thursdayToSaturday, totalRoomCount.saturdayToSunday, totalRoomCount.sundayToMonday)
+
+          h4 Tagesgäste
+          .panel
+            table.table.table-condensed.table-hover.table-striped
+              thead
+                tr
+                  th Freitag und Samstag
+                  th Sonntag
+              tbody
+                -var fridayAndSaturday = 0
+                -var sunday = 0
+                for resourceName in ['single', 'bed_in_double', 'bed_in_junior']
+                  -var participants = activity.participantsOf(resourceName)
+                  -var resource = activity.socratesResourceNamed(resourceName)
+                  for member in participants
+                    -var duration = resource.duration(member.id())
+                    -fridayAndSaturday = fridayAndSaturday + 1
+                    -if(duration > 3)
+                      -sunday = sunday + 1
+                tr
+                  td #{fridayAndSaturday}
+                  td #{sunday}
