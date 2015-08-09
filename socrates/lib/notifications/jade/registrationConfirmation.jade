@@ -1,10 +1,21 @@
 doctype html
 html
   body
-    h3 SoCraTes Registration Confirmation
+    h2 SoCraTes Registration Confirmation
     p.
       Hello #{member.displayName()},
-    p Congratulations! You are now registered for the SoCraTes Conference 2015.
+    p Congratulations! You now have a guaranteed spot for the SoCraTes Conference 2015.
+
+    if bookingdetails.fromWaitinglist
+      p If you can't make it for some reason, please tell us so we can give the spot to the next person on the waitinglist.
+
+    h3 Paying the Deposit
+    p To complete your registration, please pay the deposit of #{socratesConstants.depositAmount} €. In order to do so, please have a look
+      | at the payment details for credit card and bank transfer which you can find at #{' '}
+      a(href='#{url}/payment/socrates') #{url}/payment/socrates
+    p As soon as we receive your payment, we will send you a payment confirmation email.
+
+    h3 Your Booking
     p
       | You have booked a #{' '} 
       b #{bookingdetails.room}
@@ -21,8 +32,7 @@ html
         a(href='#{url}/registration') the registration page
         | .
 
-    p As soon as we receive your payment we will send you a payment confirmation email.
-    p You can review and modify your registration data and access the payment information at #{' '}
+    p You can review and modify your registration data at #{' '}
       a(href='#{url}/members/edit') #{url}/members/edit
 
     p You can review your booking information at #{' '}
