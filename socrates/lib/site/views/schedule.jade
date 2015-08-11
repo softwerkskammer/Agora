@@ -1,6 +1,6 @@
 extends ../../../views/layout
 
-block title 
+block title
   |  Schedule - SoCraTes
 block content
   .row
@@ -20,34 +20,66 @@ block content
         .panel-heading
           h4.panel-title Open Space Technology
         .panel-body.
-          is an approach for hosting meetings, conferences, corporate-style retreats and community summit events, 
-          focused on a specific and important purpose or task &ndash; but beginning without any formal agenda, beyond 
+          is an approach for hosting meetings, conferences, corporate-style retreats and community summit events,
+          focused on a specific and important purpose or task &ndash; but beginning without any formal agenda, beyond
           the overall purpose or theme.
         .panel-footer
           cite
             +extlink('http://en.wikipedia.org/wiki/Open_Space_Technology','Wikipedia')
       dl
-        dt Thursday evening
-        dd Opening: A #{''}
+        dt Thursday
+        dd.
+          The conference starts at 5pm on Thursday, August 27th 2015.
+          This is the time to get to know new faces or meet old friends, have
+          some drinks at the bar, explore the surrounding area etc.
+          T-Shirts are being distributed and deposits are returned.
+        dd.
+          Starting around 6pm the hotel will serve a buffet so that even
+          people who arrived a little later will get something to eat.
+        dd Later around 7.30pm we will officially start the conference with a #{''}
           +extlink('https://en.wikipedia.org/wiki/The_World_Cafe', 'World Café')
-          | #{''} in which we all discuss the question "What do you want to do at
-          | SoCraTes?".
+          | , to help kickstart everyone into a great conference experience.
         dt Friday
-        dd Open Space day 1. We start at 9.30h and there will be six time slots
-          | for you to fill with your ideas, sessions, workshops, questions and
-          | whatever else you'd like to bring or get from SoCraTes.
+        dd Friday is completely reserved for a full-day #{''}
+          +extlink('http://agilecoachcamp.org/tiki-index.php?page=OpenSpace', 'Open Space')
+          | .
+        dd.
+          We start the marketplace at 9am and the first sessions will start
+          around 10.30am. The last session timeslot ends at 6pm, which is also
+          the time we all meet again in the marketplace room for a joint
+          retrospective of the day.
+        dd
+          | Around 7pm dinner is available for around 2h, so everyone can start
+          | into the evening at their own pace. Of course there's lots of room for
+          | shared #{''}
+          a(href='/wiki/2015/evening-activities') evening activities
+          |  like board games, making music, hacking or just talking and having fun.
         dt Saturday
-        dd Open Space day 2. The second day provides opportunities in form of
-          | five time slots for the participants to fill.
-        dt Sunday (optional, you can choose to attend when registering)
-        dd Workshops, e.g. a #{''}
-          +extlink('http://coderetreat.org/', 'Coderetreat')
-          |  (details to be announced).
+        dd Saturday is also completely reserved for a full-day #{''}
+          +extlink('http://agilecoachcamp.org/tiki-index.php?page=OpenSpace', 'Open Space')
+          | .
+        dd.
+          We start the marketplace again at 9am and the first sessions will
+          start around 10.30am too. The last session timeslot ends at 4.30pm.
+          After that we again all meet for the closing of the conference and a
+          retrospective of the two days. The closing of the conference will most
+          likely end around 5.30pm.
+        dd Participants staying until Sunday (or longer) can have dinner starting at 7pm.
+        dt Sunday
+        dd
+          | Sunday is reserved for workshop oriented formats. Go and make a
+          | suggestion or request for a workshop on the #{''}
+          a(href='/wiki/2015/sunday-workshops') Sunday Workshops
+          |  page.
+        dd.
+          Each workshop can choose themselves when they want to start (though
+          rooms are available from 9am) and when they want to end, but the latest
+          they have to end sometime around 6pm.
       p
-        | To get an impression of what you can expect, have a look at 2013's schedule for #{''}
+        | To get an impression of what you can expect, have a look at 2013's Open Space timetable for #{''}
         a(href='/static/socrates_2013_collection/large-12.html') Friday
         |  and #{''}
-        a(href='/static/socrates_2013_collection/large-13.html') Saturday. 
+        a(href='/static/socrates_2013_collection/large-13.html') Saturday.
         |  You can see that the range of topics is quite diverse, as is the kind of session (discussion, hands-on coding, …).
       p
         | Open Space means there is no agenda, or rather: #{''}
@@ -71,10 +103,15 @@ block content
         +bloglink('http://monospacedmonologues.com/post/58252924228/socrates-2013', 'Samir Talwar')
         +bloglink('https://blog.codecentric.de/en/2013/08/socrates2013/', 'Robert Hostlowsky')
       p Facilitation will be in English. However, it will be possible to run sessions in other languages.
-  
+
       h2 Evening activities
       p
-        | In the previous years there were a multitude of things going on in the evenings, from music (some participants
+        | Participants organize evening activities. In the previous years there
+        | were a multitude of things going on in the evenings, from music (some participants
         | brought instruments, songbooks etc., one year they even wrote a song about the conference) over board games to #{''}
         +extlink('https://github.com/janernsting/maexchen', 'live-hacking programs to play mia against each other')
         |. And of course there's always plenty of people to just talk to, or continue discussions from the day.
+      p
+        | Check out the #{''}
+        a(href='/wiki/2015/evening-activities') wiki
+        |  page to see what is currently being proposed. Don't forget to contribute your ideas.
