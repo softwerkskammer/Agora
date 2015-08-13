@@ -20,8 +20,9 @@ function createConfiguration() {
     mongoURL: 'mongodb://localhost:27017/swk',
     publicUrlPrefix: 'http://localhost:17224',
     securedByLoginURLPattern: '/wiki|' +
-      '/mailsender|' +
-      '/members',
+    '/mailsender|' +
+    '/members|' +
+    '/payment/socrates',
     securedBySuperuserURLPattern: '^/activities',
     securedBySoCraTesAdminURLPattern: '^/mailsender/massMailing',
     secret: 'secret',
