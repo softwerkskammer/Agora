@@ -266,6 +266,7 @@ block content
                   th Nickname
                   th Vorname
                   th Nachname
+                  th eMail
                   th Ort/Region
                   th T-Shirt
                   th Zimmer mit
@@ -281,6 +282,7 @@ block content
                     td: +linkedMember(line.member.nickname())
                     td #{line.member.firstname()}
                     td #{line.member.lastname()}
+                    td #{line.member.email()}
                     td #{line.member.location()}
                     td #{line.addon.tShirtSize()}
                     td #{line.participation.roommate()}
