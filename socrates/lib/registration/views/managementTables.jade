@@ -78,7 +78,7 @@ mixin removePair(resourceName, pair)
     button.btn.btn-default.btn-xs(type='submit') Entfernen
 
 mixin removeParticipantWithModal(resourceName, participantNick)
-  -var theID = 'reallyRemoveParticipant' + participantNick.replace(/\s/g, '')
+  -var theID = 'reallyRemoveParticipant' + participantNick.replace(/\s/g, '').replace(/@/g, 'AT')
   .modal.fade(id=theID, tabindex='-1')
     .modal-dialog
       .modal-content
@@ -100,7 +100,7 @@ mixin removeParticipantWithModal(resourceName, participantNick)
   button.btn.btn-danger(data-toggle='modal', data-target='#' + theID): i.fa.fa-trash-o.fa-fw
 
 mixin removeWaitinglistMemberWithModal(resourceName, waitinglistNick)
-  -var theID = 'reallyRemoveWaitinglistMember' + waitinglistNick.replace(/\s/g, '')
+  -var theID = 'reallyRemoveWaitinglistMember' + waitinglistNick.replace(/\s/g, '').replace(/@/g, 'AT')
   .modal.fade(id=theID, tabindex='-1')
     .modal-dialog
       .modal-content
