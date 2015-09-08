@@ -2,32 +2,22 @@ Index: node_modules/fullcalendar/dist/fullcalendar.js
 ===================================================================
 --- softwerkskammer/build/javascript/fullcalendar.js	(revision )
 +++ softwerkskammer/build/javascript/fullcalendar.js	(revision )
-@@ -5043,13 +5043,8 @@
- 
+@@ -5297,12 +5297,7 @@
  		classes.unshift('fc-day-grid-event', 'fc-h-event');
  
--		// Only display a timed events time if it is the starting segment
+ 		// Only display a timed events time if it is the starting segment
 -		if (seg.isStart) {
 -			timeText = this.getEventTimeText(event);
 -			if (timeText) {
 -				timeHtml = '<span class="fc-time">' + htmlEscape(timeText) + '</span>';
 -			}
 -		}
-+		// Never display a timed events time if it is the starting segment
 +		// Original code deleted here
  
  		titleHtml =
  			'<span class="fc-title">' +
-@@ -8678,7 +8673,6 @@
- 				var groupEl;
- 
- 				$.each(this.split(','), function(j, buttonName) {
--					var viewSpec;
- 					var buttonClick;
- 					var overrideText; // text explicitly set by calendar's constructor options. overcomes icons
- 					var defaultText;
-@@ -8717,11 +8711,14 @@
- 							normalIcon = options.buttonIcons[buttonName];
+@@ -9117,11 +9112,14 @@
+ 									options.buttonIcons[buttonName];
  
  							if (overrideText) {
 -								innerHtml = htmlEscape(overrideText);
@@ -42,7 +32,7 @@ Index: node_modules/fullcalendar/dist/fullcalendar.js
  							else if (normalIcon && !options.theme) {
  								innerHtml = "<span class='fc-icon fc-icon-" + normalIcon + "'></span>";
  							}
-@@ -8729,17 +8726,25 @@
+@@ -9129,22 +9127,30 @@
  								innerHtml = htmlEscape(defaultText);
  							}
  
@@ -66,19 +56,61 @@ Index: node_modules/fullcalendar/dist/fullcalendar.js
 -
 -							button = $( // type="button" so that it doesn't submit a form
 -								'<button type="button" class="' + classes.join(' ') + '">' +
--									innerHtml +
--								'</button>'
 +								button = $( // type="button" so that it doesn't submit a form
 +									'<button type="button" class="' + classes.join(' ') + '">' +
-+										innerHtml +
+ 									innerHtml +
+-								'</button>'
 +									'</button>'
  								)
+-								.click(function(ev) {
 +							}
 +							button
- 								.click(function() {
++								.click(function() {
  									// don't process clicks for disabled buttons
  									if (!button.hasClass(tm + '-state-disabled')) {
-@@ -8790,7 +8795,7 @@
+ 
+-										buttonClick(ev);
++										buttonClick();
+ 
+ 										// after the click action, if the button becomes the "active" tab, or disabled,
+ 										// it should never have a hover class, so remove it now.
+@@ -9169,28 +9175,28 @@
+ 									button.removeClass(tm + '-state-down');
+ 								})
+ 								.hover(
+-									function() {
+-										// the *hover* effect.
+-										// only on buttons that are not the "active" tab, or disabled
+-										button
+-											.not('.' + tm + '-state-active')
+-											.not('.' + tm + '-state-disabled')
+-											.addClass(tm + '-state-hover');
+-									},
+-									function() {
+-										// undo the *hover* effect
+-										button
+-											.removeClass(tm + '-state-hover')
+-											.removeClass(tm + '-state-down'); // if mouseleave happens before mouseup
+-									}
+-								);
++								function() {
++									// the *hover* effect.
++									// only on buttons that are not the "active" tab, or disabled
++									button
++										.not('.' + tm + '-state-active')
++										.not('.' + tm + '-state-disabled')
++										.addClass(tm + '-state-hover');
++								},
++								function() {
++									// undo the *hover* effect
++									button
++										.removeClass(tm + '-state-hover')
++										.removeClass(tm + '-state-down'); // if mouseleave happens before mouseup
++								}
++							);
+ 
+ 							groupChildren = groupChildren.add(button);
+ 						}
  					}
  				});
  
@@ -87,7 +119,7 @@ Index: node_modules/fullcalendar/dist/fullcalendar.js
  					groupChildren
  						.first().addClass(tm + '-corner-left').end()
  						.last().addClass(tm + '-corner-right').end();
-@@ -8799,7 +8804,11 @@
+@@ -9199,7 +9205,11 @@
  				if (groupChildren.length > 1) {
  					groupEl = $('<div/>');
  					if (isOnlyButtons) {
