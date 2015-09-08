@@ -94,8 +94,12 @@ app.get('/gdcr2013', function (req, res, next) {
   return renderGdcrFor(moment('2013-12-14', 'YYYY-MM-DD'), res, next);
 });
 
-app.get('/gdcr', function (req, res, next) {
+app.get('/gdcr2014', function (req, res, next) {
   return renderGdcrFor(moment('2014-11-15', 'YYYY-MM-DD'), res, next);
+});
+
+app.get('/gdcr', function (req, res, next) {
+  return renderGdcrFor(moment('2015-11-14', 'YYYY-MM-DD'), res, next);
 });
 
 app.get('/upcoming', function (req, res, next) {
