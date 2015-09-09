@@ -101,7 +101,7 @@
     "grunt-patch": "0.1.7",
     "istanbul": "0.3.19",
     "karma": "0.13.9",
-    "karma-coverage": "0.5.1",
+    "karma-coverage": "0.5.2",
     "karma-html2js-preprocessor": "0.1.0",
     "karma-mocha": "0.2.0",
     "karma-must": "0.1.1",
