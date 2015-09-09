@@ -31,10 +31,6 @@ block content
         h2 #{t('general.gdcr_activities')} #{year}
       p  #{t('general.gdcr_text')}&nbsp;
         span.urlify http://gdcr.coderetreat.org/
-      if previousYears.length > 0
-        h3 #{t('activities.previous_gdcr')}
-        each year in previousYears
-          p: a(href='/activities/gdcr' + year) #{year}
       h2 #{activities.length) Coderetreats
   .row
     .col-md-6
@@ -43,6 +39,14 @@ block content
       +placeGroupLabels(activities)
     .col-md-6.hidden-xs.hidden-sm.groupsmap(style='position: relative; width: 50%; height: 100px; background-image:url("/img/map.svg"); background-size: 100% 100%; background-repeat: no-repeat;')
       +placeGroupLabels(activities)
+
+  .row
+    .col-md-12
+      if previousYears.length > 0
+        h3 #{t('activities.previous_gdcr')}
+        each year in previousYears
+          p: a(href='/activities/gdcr' + year) #{year}
+
 
   script.
     function adjustMapsize() {
