@@ -39,6 +39,7 @@ var activity_validator;
           }
         },
         title: 'required',
+        assignedGroup: 'required',
         location: 'required',
         startDate: 'required',
         startTime: 'required',
@@ -90,7 +91,7 @@ var activity_validator;
       };
     };
 
-    ['#activityform [name=title]', '#activityform [name=location]', '#activityform [name=startDate]', '#activityform [name=startTime]',
+    ['#activityform [name=title]', '#activityform [name=assignedGroup]', '#activityform [name=location]', '#activityform [name=startDate]', '#activityform [name=startTime]',
       '#activityform [name=endDate]', '#activityform [name=endTime]', '#activityform [name=url]'].forEach(
       function (each) {
         $(each).on('change', handler(each));

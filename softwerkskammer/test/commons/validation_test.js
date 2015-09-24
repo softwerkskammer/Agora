@@ -58,13 +58,19 @@ describe('Validation', function () {
     it('performs many checks simultaneously', function () {
       var result = validation.isValidForActivity({});
 
-      expect(result.length).to.equal(8);
+      expect(result.length).to.equal(9);
     });
 
     it('does not validate activity input without title', function () {
       var result = validation.isValidForActivity({});
 
       expect(result).to.contain('Titel ist ein Pflichtfeld.');
+    });
+
+    it('does not validate activity input without group', function () {
+      var result = validation.isValidForActivity({});
+
+      expect(result).to.contain('Gruppe ist ein Pflichtfeld.');
     });
 
     it('does not validate activity url with "/"', function () {

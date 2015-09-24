@@ -26,7 +26,6 @@ module.exports = function (grunt) {
 
   grunt.initConfig({
     clean: {
-      bower_components: ['bower_components'],
       build: ['socrates/build/'],
       public: ['socrates/public/clientscripts', 'socrates/public/fonts', 'socrates/public/stylesheets'],
       options: {force: true}
