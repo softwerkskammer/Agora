@@ -78,6 +78,7 @@ module.exports = {
     validator.check(activityInput.startTime, 'Startuhrzeit ist ein Pflichtfeld.').notEmpty();
     validator.check(activityInput.endDate, 'Endedatum ist ein Pflichtfeld.').notEmpty();
     validator.check(activityInput.endTime, 'Enduhrzeit ist ein Pflichtfeld.').notEmpty();
+    validator.check(activityInput.assignedGroup, 'Gruppe ist ein Pflichtfeld.').notEmpty();
     _.each(nonEmptyResourceLimits, function (limit) { validator.check(limit, 'Die Ressourcenbeschränkungen dürfen nur aus Ziffern bestehen.').isInt(); });
 
     if (nonEmptyResourceNames.length === 0) {

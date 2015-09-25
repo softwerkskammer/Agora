@@ -57,7 +57,7 @@ describe('Activity application with DB - on submit -', function () {
 
     request(createApp('memberId'))
       .post('/submit')
-      .send('url=urlOfTheActivity&previousUrl=urlOfTheActivity&location=location2&title=Title 2&startDate=02.07.2000&startTime=19:00&endDate=02.07.2000&endTime=21:00&resources[names]=Veranstaltung')
+      .send('url=urlOfTheActivity&previousUrl=urlOfTheActivity&assignedGroup=alle&location=location2&title=Title 2&startDate=02.07.2000&startTime=19:00&endDate=02.07.2000&endTime=21:00&resources[names]=Veranstaltung')
       .expect(302)
       .expect(/Redirecting to \/activities\/edit\/urlOfTheActivity/, function (err) {
         if (err) { return done(err); }

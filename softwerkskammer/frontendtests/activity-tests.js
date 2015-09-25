@@ -41,6 +41,12 @@
       checkFieldMandatory('#activityform [name=title]');
     });
 
+    it('checks that "assignedGroup" is mandatory', function () {
+      var selector = '#activityform [name=assignedGroup]';
+      var field = $(selector);
+      expect(activity_validator.element(field)).to.be(false);
+    });
+
     it('checks that "location" is mandatory', function () {
       checkFieldMandatory('#activityform [name=location]');
     });

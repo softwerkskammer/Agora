@@ -19,7 +19,6 @@ module.exports = function (grunt) {
     'node_modules/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js',
     'node_modules/jquery-validation/dist/jquery.validate.js',
     'node_modules/jquery-validation/dist/additional-methods.js',
-    'bower_components/jquery.qrcode/dist/jquery.qrcode.js',
     'node_modules/simple-timepicker/dist/simple-timepicker.js',
     'node_modules/jqcloud-npm/dist/jqcloud.js',
     'node_modules/tinygradient/tinygradient.js',
@@ -49,7 +48,6 @@ module.exports = function (grunt) {
 
   grunt.initConfig({
     clean: {
-      bower_components: ['bower_components'],
       build: ['softwerkskammer/build', 'softwerkskammer/frontendtests/fixtures/*.html'],
       coverage: ['softwerkskammer/coverage', 'softwerkskammer/coverageWithDB', 'softwerkskammer/karma-coverage'],
       public: ['softwerkskammer/public/clientscripts', 'softwerkskammer/public/fonts', 'softwerkskammer/public/img/bootstrap-colorpicker', 'softwerkskammer/public/images', 'softwerkskammer/public/stylesheets'],
