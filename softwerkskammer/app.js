@@ -65,6 +65,7 @@ module.exports = {
 
     app.use(beans.get('expressSessionConfigurator'));
     app.use(beans.get('passportInitializer'));
+    app.use(beans.get('passportSessionInitializer'));
     app.use(i18n.handle);
     app.use(beans.get('serverpathRemover'));
     app.use(beans.get('accessrights'));

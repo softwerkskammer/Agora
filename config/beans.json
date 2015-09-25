@@ -111,6 +111,7 @@
   "handle500": {"module": "./softwerkskammer/lib/middleware/handle500"},
   "mailtransport": {"module": "./softwerkskammer/lib/mailsender/mailtransport"},
   "passportInitializer": {"module": "./softwerkskammer/lib/middleware/passportInitializer"},
+  "passportSessionInitializer": {"module": "./softwerkskammer/lib/middleware/passportSessionInitializer"},
   "redirectRuleForNewUser": {"module": "./softwerkskammer/lib/middleware/redirectRuleForNewUser"},
   "secureAgainstClickjacking": {"module": "./softwerkskammer/lib/middleware/secureAgainstClickjacking"},
   "secureByLogin": {"module": "./softwerkskammer/lib/middleware/secureByLogin"},
