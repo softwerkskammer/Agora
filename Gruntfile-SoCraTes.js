@@ -222,7 +222,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('prepare', ['eslint', 'copy', 'patch', 'less']);
   grunt.registerTask('frontendtests', ['clean', 'prepare', 'jade', 'uglify:production', 'karma:once', 'uglify:development', 'karma:once', 'istanbul_check_coverage:frontend']);
-  grunt.registerTask('tests', ['prepare', 'mocha_istanbul', 'istanbul_check_coverage:server']);
+  grunt.registerTask('tests', ['prepare', 'frontendtests', 'mocha_istanbul', 'istanbul_check_coverage:server']);
   grunt.registerTask('deploy_development', ['prepare', 'uglify:development']);
   grunt.registerTask('deploy_production', ['clean', 'prepare', 'uglify:production']);
 
