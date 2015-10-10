@@ -112,7 +112,7 @@
     "phantomjs": "1.9.18",
     "proxyquire": "1.7.2",
     "request": "2.63.0",
-    "sinon": "1.17.0",
+    "sinon": "1.16.1",
     "supertest": "1.1.0"
   },
   "scripts": {
