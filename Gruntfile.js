@@ -22,7 +22,7 @@ module.exports = function (grunt) {
     'node_modules/simple-timepicker/dist/simple-timepicker.js',
     'node_modules/jqcloud-npm/dist/jqcloud.js',
     'node_modules/tinygradient/tinygradient.js',
-    'node_modules/URIjs/src/URI.js'
+    'node_modules/urijs/src/URI.js'
   ];
 
   // filesets for uglify

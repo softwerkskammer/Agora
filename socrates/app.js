@@ -62,6 +62,7 @@ module.exports = {
     app.use(express.static(path.join(__dirname, 'public'), {maxAge: 600 * 1000})); // ten minutes
     app.use(beans.get('expressSessionConfigurator'));
     app.use(beans.get('passportInitializer'));
+    app.use(beans.get('passportSessionInitializer'));
     app.use(i18n.handle);
     app.use(beans.get('serverpathRemover'));
     app.use(beans.get('accessrights'));
