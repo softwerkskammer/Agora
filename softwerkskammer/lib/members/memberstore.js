@@ -82,8 +82,8 @@ module.exports = {
     });
   },
     
-  isSoCraTesSubscriber: function (member, callback) {
-    subscriberPersistence.getById(member.id(), function(err, subscriber) {
+  isSoCraTesSubscriber: function (id, callback) {
+    subscriberPersistence.getById(id, function(err, subscriber) {
       callback(err, !!subscriber);
     });
   }

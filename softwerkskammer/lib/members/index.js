@@ -134,13 +134,13 @@ app.get('/delete/:nickname', function (req, res, next) {
       return res.redirect('/members/' + encodeURIComponent(member.nickname()));
     }
     if (_.isEmpty(member.subscribedGroups)) {
-      return memberstore.isSoCraTesSubscriber(member, function(err1, isSubscriber) {
+      return memberstore.isSoCraTesSubscriber(member.id(), function(err1, isSubscriber) {
         if (!err && isSubscriber) {
           member.state.socratesOnly = true;
           return memberstore.saveMember(member, function (err2) {
             if (err2) { return next(err2); }
             statusmessage.successMessage('message.title.save_successful', 'message.content.members.saved').putIntoSession(req);
-            res.redirect('/members/' + nicknameOfEditMember);
+            res.redirect('/members/' + encodeURIComponent(member.nickname()));
           });
         }
         memberstore.removeMember(member, function (err2) {
