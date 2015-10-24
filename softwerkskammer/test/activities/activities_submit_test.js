@@ -3,6 +3,11 @@
 var request = require('supertest');
 var sinon = require('sinon').sandbox.create();
 
+var chado = require('chado');
+var activitiesServiceDouble = chado.createDouble('activitiesService');
+var cb = chado.callback;
+var assume = chado.assume;
+
 var beans = require('../../testutil/configureForTest').get('beans');
 var activitiesService = beans.get('activitiesService');
 
@@ -15,15 +20,37 @@ describe('Activity application - on submit -', function () {
   });
 
   it('rejects an activity with invalid and different url', function (done) {
-    sinon.stub(activitiesService, 'isValidUrl', function (isReserved, nickname, callback) { callback(null, false); });
+    sinon.stub(activitiesService, 'isValidUrl', function (reservedUrls, nickname, callback) { callback(null, false); });
+
+    assume(activitiesServiceDouble)
+      .canHandle('isValidUrl')
+      .withArgs('edit', '^edit$', cb)
+      .andCallsCallbackWith(null, false);
 
     request(createApp())
       .post('/submit')
-      .send('url=uhu&resources[names]=x')
+      .send('url=edit')
       .send('previousUrl=aha')
       .expect(200)
       .expect(/Validierungsfehler/)
       .expect(/Diese URL ist leider nicht verfügbar\./, function (err) {
+        done(err);
+      });
+  });
+
+  it('accepts an activity with valid and different url', function (done) {
+    sinon.stub(activitiesService, 'isValidUrl', function (reservedUrls, nickname, callback) { callback(null, true); });
+
+    assume(activitiesServiceDouble)
+      .canHandle('isValidUrl')
+      .withArgs(' edit ', ' ^edit$', cb)
+      .andCallsCallbackWith(null, true);
+
+    request(createApp())
+      .post('/submit')
+      .send('url=%20edit%20')
+      .send('previousUrl=aha')
+      .expect(200, function (err) {
         done(err);
       });
   });

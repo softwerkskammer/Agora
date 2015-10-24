@@ -1,5 +1,9 @@
 'use strict';
 
+var chado = require('chado');
+var cb = chado.callback;
+var verify = chado.verify;
+
 var sinon = require('sinon').sandbox.create();
 var expect = require('must-dist');
 var moment = require('moment-timezone');
@@ -122,19 +126,22 @@ describe('Activities Service', function () {
   });
 
   describe('checks the validity of URLs and', function () {
+
     it('does not allow the URL \'edit\'', function (done) {
-      activitiesService.isValidUrl('edit', '^edit$', function (err, result) {
-        expect(result).to.be(false);
-        done(err);
-      });
+      verify('activitiesService')
+        .canHandle('isValidUrl')
+        .withArgs('edit', '^edit$', cb)
+        .andCallsCallbackWith(null, false)
+        .on(activitiesService, done);
     });
 
     it('allows the untrimmed URL \' edit \'', function (done) {
       sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, null); });
-      activitiesService.isValidUrl(' edit ', '^edit$', function (err, result) {
-        expect(result).to.be(true);
-        done(err);
-      });
+      verify('activitiesService')
+        .canHandle('isValidUrl')
+        .withArgs(' edit ', ' ^edit$', cb)
+        .andCallsCallbackWith(null, true)
+        .on(activitiesService, done);
     });
 
     it('does not allow a URL containing a "/"', function (done) {
