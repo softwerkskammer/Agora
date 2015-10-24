@@ -73,6 +73,10 @@
     "module": "./softwerkskammer/lib/persistence/persistence",
     "constructorArgs": { "collectionName": "sympastore" }
   },
+  "subscribersPersistence": {
+    "module": "./softwerkskammer/lib/persistence/persistence",
+    "constructorArgs": { "collectionName": "subscriberstore" }
+  },
   
   "activity": {"module": "./softwerkskammer/lib/activities/activity"},
   "socratesActivity": {"module": "./softwerkskammer/lib/activities/socratesActivity"},

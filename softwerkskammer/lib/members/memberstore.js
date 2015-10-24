@@ -5,6 +5,7 @@ var conf = require('simple-configure');
 var beans = conf.get('beans');
 var _ = require('lodash');
 var persistence = beans.get('membersPersistence');
+var subscriberPersistence = beans.get('subscribersPersistence');
 var Member = beans.get('member');
 var misc = beans.get('misc');
 var naturalCmp = require('underscore.string/naturalCmp');
@@ -78,6 +79,12 @@ module.exports = {
     persistence.remove(member.id(), function (err) {
       logger.info('Member removed:' + JSON.stringify(member));
       callback(err);
+    });
+  },
+    
+  isSoCraTesSubscriber: function (id, callback) {
+    subscriberPersistence.getById(id, function(err, subscriber) {
+      callback(err, !!subscriber);
     });
   }
 };
