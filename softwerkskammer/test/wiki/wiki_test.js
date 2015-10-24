@@ -44,7 +44,7 @@ describe('Wiki application', function () {
       .get('/global/Some%20Päg\'é')
       .expect(200)
       .end(function (err) {
-        expect(pageShow.calledWith('global/some-page', 'HEAD')).to.be(true);
+        expect(pageShow.calledWith('global/some-pg', 'HEAD')).to.be(true);
         done(err);
       });
   });

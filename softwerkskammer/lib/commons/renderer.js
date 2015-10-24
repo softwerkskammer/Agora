@@ -2,14 +2,14 @@
 var marked = require('marked');
 var Crypto = require('crypto');
 var Nsh = require('node-syntaxhighlighter');
-var Iconv = require('iconv').Iconv;
+var iconv = require('iconv-lite');
 var _ = require('lodash');
 
 var normalize = function (str) {
   if (typeof str !== 'string' || str.trim() === '') {
     return '';
   }
-  return new Iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE').convert(str).toString().trim().replace(/\s/g, '-').replace(/\//g, '-').replace(/[^a-zA-Z0-9\- _]/g, '').toLowerCase();
+  return iconv.decode(new Buffer(str, 'utf-8'), 'utf8').trim().replace(/\s/g, '-').replace(/\//g, '-').replace(/[^a-zA-Z0-9\- _]/g, '').toLowerCase();
 };
 
 marked.setOptions({
