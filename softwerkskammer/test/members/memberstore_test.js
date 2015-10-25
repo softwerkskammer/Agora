@@ -6,6 +6,7 @@ var sinon = require('sinon').sandbox.create();
 
 var beans = require('../../testutil/configureForTest').get('beans');
 var persistence = beans.get('membersPersistence');
+var subscriberPersistence = beans.get('subscribersPersistence');
 var store = beans.get('memberstore');
 var Member = beans.get('member');
 
@@ -157,6 +158,14 @@ describe('Members store', function () {
   it('returns an empty array when asked for all members for empty email list', function (done) {
     store.getMembersForEMails([], function (err, members) {
       expect(members).to.be.empty();
+      done(err);
+    });
+  });
+
+  it('tells that some user is a socrates subscriber', function (done) {
+    sinon.stub(subscriberPersistence, 'getById', function (memberId, callback) { callback(null, {}); });
+    store.isSoCraTesSubscriber('id', function (err, isSubscriber) {
+      expect(isSubscriber).to.be(true);
       done(err);
     });
   });

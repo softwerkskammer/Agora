@@ -134,10 +134,20 @@ app.get('/delete/:nickname', function (req, res, next) {
       return res.redirect('/members/' + encodeURIComponent(member.nickname()));
     }
     if (_.isEmpty(member.subscribedGroups)) {
-      return memberstore.removeMember(member, function (err1) {
-        if (err1) { return next(err1); }
-        statusmessage.successMessage('message.title.save_successful', 'message.content.members.deleted').putIntoSession(req);
-        res.redirect('/members/');
+      return memberstore.isSoCraTesSubscriber(member.id(), function(err1, isSubscriber) {
+        if (!err && isSubscriber) {
+          member.state.socratesOnly = true;
+          return memberstore.saveMember(member, function (err2) {
+            if (err2) { return next(err2); }
+            statusmessage.successMessage('message.title.save_successful', 'message.content.members.saved').putIntoSession(req);
+            res.redirect('/members/' + encodeURIComponent(member.nickname()));
+          });
+        }
+        memberstore.removeMember(member, function (err2) {
+          if (err2) { return next(err2); }
+          statusmessage.successMessage('message.title.save_successful', 'message.content.members.deleted').putIntoSession(req);
+          res.redirect('/members/');
+        });
       });
     }
     statusmessage.errorMessage('message.title.problem', 'message.content.members.hasSubscriptions').putIntoSession(req);
