@@ -41,7 +41,8 @@ module.exports = function (testBeansFilename) {
     paymentReceiver: 'paymentReceiver',
     emaildomainname: 'localhost',
     imageDirectory: null,
-    socratesURL: 'https://socrates.com:12345'
+    socratesURL: 'https://socrates.com:12345',
+    fullyQualifiedHomeDir: null
   });
 
   return conf;
