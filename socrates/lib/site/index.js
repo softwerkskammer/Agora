@@ -42,6 +42,10 @@ app.get('/schedule.html', function (req, res) {
   res.render('schedule');
 });
 
+app.get('/experienceReports.html', function (req, res) {
+  res.render('experienceReports');
+});
+
 app.get('/location.html', function (req, res) {
   res.render('location');
 });
