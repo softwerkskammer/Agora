@@ -17,14 +17,14 @@ describe('Activity application - on submit -', function () {
 
   afterEach(function () {
     sinon.restore();
+    chado.reset();
   });
 
   it('rejects an activity with invalid and different url', function (done) {
-    sinon.stub(activitiesService, 'isValidUrl', function (reservedUrls, nickname, callback) { callback(null, false); });
-
-    assume(activitiesServiceDouble)
+    
+    assume(activitiesServiceDouble, activitiesService)
       .canHandle('isValidUrl')
-      .withArgs('edit', '^edit$', cb)
+      .withArgs('^gdcr$|^upcoming$|^past$|^ical$|^eventsForSidebar$|^new$|^newLike$|^edit$|^submit$|^checkurl$|^subscribe$|^unsubscribe$|^addToWaitinglist$|^removeFromWaitinglist$|\\+', 'edit', cb)
       .andCallsCallbackWith(null, false);
 
     request(createApp())
@@ -39,16 +39,14 @@ describe('Activity application - on submit -', function () {
   });
 
   it('accepts an activity with valid and different url', function (done) {
-    sinon.stub(activitiesService, 'isValidUrl', function (reservedUrls, nickname, callback) { callback(null, true); });
-
-    assume(activitiesServiceDouble)
+    assume(activitiesServiceDouble, activitiesService)
       .canHandle('isValidUrl')
-      .withArgs(' edit ', ' ^edit$', cb)
+      .withArgs('^gdcr$|^upcoming$|^past$|^ical$|^eventsForSidebar$|^new$|^newLike$|^edit$|^submit$|^checkurl$|^subscribe$|^unsubscribe$|^addToWaitinglist$|^removeFromWaitinglist$|\\+', 'dontedit', cb)
       .andCallsCallbackWith(null, true);
 
     request(createApp())
       .post('/submit')
-      .send('url=%20edit%20')
+      .send('url=dontedit')
       .send('previousUrl=aha')
       .expect(200, function (err) {
         done(err);

@@ -130,16 +130,16 @@ describe('Activities Service', function () {
     it('does not allow the URL \'edit\'', function (done) {
       verify('activitiesService')
         .canHandle('isValidUrl')
-        .withArgs('edit', '^edit$', cb)
+        .withArgs('^gdcr$|^upcoming$|^past$|^ical$|^eventsForSidebar$|^new$|^newLike$|^edit$|^submit$|^checkurl$|^subscribe$|^unsubscribe$|^addToWaitinglist$|^removeFromWaitinglist$|\\+', 'edit', cb)
         .andCallsCallbackWith(null, false)
         .on(activitiesService, done);
     });
 
-    it('allows the untrimmed URL \' edit \'', function (done) {
+    it('allows the untrimmed URL \'dontedit\'', function (done) {
       sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, null); });
       verify('activitiesService')
         .canHandle('isValidUrl')
-        .withArgs(' edit ', ' ^edit$', cb)
+        .withArgs('^gdcr$|^upcoming$|^past$|^ical$|^eventsForSidebar$|^new$|^newLike$|^edit$|^submit$|^checkurl$|^subscribe$|^unsubscribe$|^addToWaitinglist$|^removeFromWaitinglist$|\\+', 'dontedit', cb)
         .andCallsCallbackWith(null, true)
         .on(activitiesService, done);
     });
