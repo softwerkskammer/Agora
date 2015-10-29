@@ -1,5 +1,8 @@
-mixin bloglink(url, author)
-  li: +extlink(url, author)
+mixin bloglink(url, title, author)
+  li: a(href=url, target='_blank') #{title}
+  | #{''} by #{author}
+
+
 mixin extlink(url, text)
   a(href=url, target='_blank') #{text}
 
