@@ -21,9 +21,6 @@ module.exports = function (firstTestBeansFilename, secondTestBeansFilename) {
 
   conf.addProperties({
     port: '17225',
-    swkTrustedAppName: null,
-    swkTrustedAppPwd: null,
-    swkRemoteAppUser: null,
     dontUsePersistentSessions: true,
     superuser: 'superuserID',
     socratesAdmins: ['socratesAdminID'],
