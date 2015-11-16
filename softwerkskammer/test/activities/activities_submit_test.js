@@ -1,30 +1,35 @@
 'use strict';
 
 var request = require('supertest');
-var sinon = require('sinon').sandbox.create();
+
+var conf = require('../../testutil/configureForTest');
+var beans = conf.get('beans');
+var reservedURLs = conf.get('reservedActivityURLs');
+
+var activitiesService = beans.get('activitiesService');
 
 var chado = require('chado');
-var activitiesServiceDouble = chado.createDouble('activitiesService');
 var cb = chado.callback;
 var assume = chado.assume;
-
-var beans = require('../../testutil/configureForTest').get('beans');
-var activitiesService = beans.get('activitiesService');
 
 var createApp = require('../../testutil/testHelper')('activitiesApp').createApp;
 
 describe('Activity application - on submit -', function () {
 
+  beforeEach(function() {
+    // will enhance the activitiesService with chado properties
+    chado.createDouble('activitiesService', activitiesService);
+  });
+  
   afterEach(function () {
-    sinon.restore();
+    // will undo the enhancements of the activitiesService with chado properties
     chado.reset();
   });
 
   it('rejects an activity with invalid and different url', function (done) {
-    
-    assume(activitiesServiceDouble, activitiesService)
+    assume(activitiesService)
       .canHandle('isValidUrl')
-      .withArgs('^gdcr$|^upcoming$|^past$|^ical$|^eventsForSidebar$|^new$|^newLike$|^edit$|^submit$|^checkurl$|^subscribe$|^unsubscribe$|^addToWaitinglist$|^removeFromWaitinglist$|\\+', 'edit', cb)
+      .withArgs(reservedURLs, 'edit', cb)
       .andCallsCallbackWith(null, false);
 
     request(createApp())
@@ -38,15 +43,32 @@ describe('Activity application - on submit -', function () {
       });
   });
 
-  it('accepts an activity with valid and different url', function (done) {
-    assume(activitiesServiceDouble, activitiesService)
+  it('rejects an activity with a url containing "/"', function (done) {
+    assume(activitiesService)
       .canHandle('isValidUrl')
-      .withArgs('^gdcr$|^upcoming$|^past$|^ical$|^eventsForSidebar$|^new$|^newLike$|^edit$|^submit$|^checkurl$|^subscribe$|^unsubscribe$|^addToWaitinglist$|^removeFromWaitinglist$|\\+', 'dontedit', cb)
+      .withArgs(reservedURLs, 'legal/egal', cb)
+      .andCallsCallbackWith(null, false);
+
+    request(createApp())
+      .post('/submit')
+      .send('url=legal/egal')
+      .send('previousUrl=aha')
+      .expect(200)
+      .expect(/Validierungsfehler/)
+      .expect(/Diese URL ist leider nicht verfügbar\./, function (err) {
+        done(err);
+      });
+  });
+
+  it('accepts an activity with valid and different url', function (done) {
+    assume(activitiesService)
+      .canHandle('isValidUrl')
+      .withArgs(reservedURLs, 'uhu', cb)
       .andCallsCallbackWith(null, true);
 
     request(createApp())
       .post('/submit')
-      .send('url=dontedit')
+      .send('url=uhu')
       .send('previousUrl=aha')
       .expect(200, function (err) {
         done(err);
@@ -66,7 +88,10 @@ describe('Activity application - on submit -', function () {
   });
 
   it('rejects an activity with different but valid url and with empty title', function (done) {
-    sinon.stub(activitiesService, 'isValidUrl', function (isReserved, nickname, callback) { callback(null, true); });
+    assume(activitiesService)
+      .canHandle('isValidUrl')
+      .withArgs(reservedURLs, 'uhu', cb)
+      .andCallsCallbackWith(null, true);
 
     request(createApp())
       .post('/submit')

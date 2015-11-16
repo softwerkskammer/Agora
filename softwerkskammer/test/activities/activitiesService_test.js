@@ -11,7 +11,9 @@ var _ = require('lodash');
 
 //var util = require('util');
 
-var beans = require('../../testutil/configureForTest').get('beans');
+var conf = require('../../testutil/configureForTest');
+var beans = conf.get('beans');
+var reservedURLs = conf.get('reservedActivityURLs');
 
 var activitiesService = beans.get('activitiesService');
 var membersService = beans.get('membersService');
@@ -37,17 +39,6 @@ var dummyActivity = new Activity({
   color: 'aus Gruppe'
 });
 
-var emptyActivity = new Activity({
-  title: 'Title of the Activity',
-  description: 'description1',
-  assignedGroup: 'groupname',
-  location: 'location1',
-  direction: 'direction1',
-  startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'),
-  url: 'urlOfTheActivity',
-  owner: 'ownerId'
-});
-
 var group = new Group({id: 'groupname', longName: 'Buxtehude'});
 
 var waitinglistMembersOf = function (activity, resourceName) {
@@ -66,6 +57,8 @@ var activityWithEinzelzimmer = function (ressource) {
 describe('Activities Service', function () {
 
   beforeEach(function () {
+    //sinon.stub(membersService, 'getImage', function(member, callback) { callback(); });
+    
     sinon.stub(activitystore, 'allActivities', function (callback) {callback(null, [dummyActivity]); });
 
     sinon.stub(groupsService, 'getAllAvailableGroups', function (callback) {
@@ -96,11 +89,46 @@ describe('Activities Service', function () {
   });
 
   it('returns an activity and enhances it with its group and visitors', function (done) {
-    var member1 = new Member({id: 'memberId1', nickname: 'participant1', email: 'a@b.c'});
-    var member2 = new Member({id: 'memberId2', nickname: 'participant2', email: 'a@b.c'});
+    var member1 = new Member({
+      id: 'memberId1',
+      nickname: 'participant1',
+      email: 'nick1@b.c',
+      firstname: 'Firstname1',
+      lastname: 'Lastname1'
+    });
+    var member2 = new Member({
+      id: 'memberId2',
+      nickname: 'participant2',
+      email: 'nick2@b.c',
+      firstname: 'Firstname2',
+      lastname: 'Lastname2'
+    });
     var owner = new Member({id: 'ownerId', nickname: 'owner', email: 'a@b.c'});
+
+    var emptyActivity = new Activity({
+      title: 'Title of the Activity',
+      url: 'urlOfTheActivity',
+      assignedGroup: 'groupname',
+      owner: 'ownerId'
+    });
+
     sinon.stub(activitystore, 'getActivity', function (activityId, callback) { callback(null, emptyActivity); });
     sinon.stub(memberstore, 'getMembersForIds', function (ids, callback) {
+      var member1 = new Member({
+        id: 'memberId1',
+        nickname: 'participant1',
+        email: 'nick1@b.c',
+        firstname: 'Firstname1',
+        lastname: 'Lastname1'
+      });
+      var member2 = new Member({
+        id: 'memberId2',
+        nickname: 'participant2',
+        email: 'nick2@b.c',
+        firstname: 'Firstname2',
+        lastname: 'Lastname2'
+      });
+
       callback(null, [member1, member2]);
     });
     sinon.stub(memberstore, 'getMemberForId', function (id, callback) {
@@ -112,17 +140,24 @@ describe('Activities Service', function () {
       }
       return callback(null, null);
     });
-    sinon.stub(membersService, 'getImage', function (member, callback) { return callback(); });
 
-    activitiesService.getActivityWithGroupAndParticipants('urlOfTheActivity', function (err, activity) {
-      expect(activity, 'Activity').to.exist();
-      expect(activity.group, 'Group').to.equal(group);
-      expect(activity.participants.length).to.equal(2);
-      expect(activity.participants, 'Participants').to.contain(member1);
-      expect(activity.participants, 'Participants').to.contain(member2);
-      expect(activity.ownerNickname, 'Owner').to.equal('owner');
-      done(err);
+    var expectedActivity = new Activity({
+      title: 'Title of the Activity',
+      url: 'urlOfTheActivity',
+      assignedGroup: 'groupname',
+      owner: 'ownerId'
     });
+    
+    // following are the expected enrichements of the activity
+    expectedActivity.group = group;
+    expectedActivity.participants = [member1, member2];
+    expectedActivity.ownerNickname = 'owner';
+
+    verify('activitiesService')
+      .canHandle('getActivityWithGroupAndParticipants')
+      .withArgs('urlOfTheActivity', cb)
+      .andCallsCallbackWith(null, expectedActivity)
+      .on(activitiesService, done);
   });
 
   describe('checks the validity of URLs and', function () {
@@ -130,25 +165,26 @@ describe('Activities Service', function () {
     it('does not allow the URL \'edit\'', function (done) {
       verify('activitiesService')
         .canHandle('isValidUrl')
-        .withArgs('^gdcr$|^upcoming$|^past$|^ical$|^eventsForSidebar$|^new$|^newLike$|^edit$|^submit$|^checkurl$|^subscribe$|^unsubscribe$|^addToWaitinglist$|^removeFromWaitinglist$|\\+', 'edit', cb)
+        .withArgs(reservedURLs, 'edit', cb)
         .andCallsCallbackWith(null, false)
         .on(activitiesService, done);
     });
 
-    it('allows the untrimmed URL \'dontedit\'', function (done) {
+    it('allows the untrimmed URL \'uhu\'', function (done) {
       sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, null); });
       verify('activitiesService')
         .canHandle('isValidUrl')
-        .withArgs('^gdcr$|^upcoming$|^past$|^ical$|^eventsForSidebar$|^new$|^newLike$|^edit$|^submit$|^checkurl$|^subscribe$|^unsubscribe$|^addToWaitinglist$|^removeFromWaitinglist$|\\+', 'dontedit', cb)
+        .withArgs(reservedURLs, 'uhu', cb)
         .andCallsCallbackWith(null, true)
         .on(activitiesService, done);
     });
 
     it('does not allow a URL containing a "/"', function (done) {
-      activitiesService.isValidUrl('', 'legal/egal', function (err, result) {
-        expect(result).to.be(false);
-        done(err);
-      });
+      verify('activitiesService')
+        .canHandle('isValidUrl')
+        .withArgs(reservedURLs, 'legal/egal', cb)
+        .andCallsCallbackWith(null, false)
+        .on(activitiesService, done);
     });
   });
 

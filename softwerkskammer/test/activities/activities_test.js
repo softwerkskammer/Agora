@@ -6,6 +6,10 @@ var expect = require('must-dist');
 var _ = require('lodash');
 var moment = require('moment-timezone');
 
+var chado = require('chado');
+var cb = chado.callback;
+var assume = chado.assume;
+
 var createApp = require('../../testutil/testHelper')('activitiesApp').createApp;
 
 var beans = require('../../testutil/configureForTest').get('beans');
@@ -49,20 +53,6 @@ var member4 = new Member({
 });
 
 var group = new Group({id: 'groupname', longName: 'Buxtehude'});
-
-var emptyActivity = new Activity({
-  title: 'Title of the Activity',
-  description: 'description1',
-  assignedGroup: 'groupname',
-  location: 'location1',
-  direction: 'direction1',
-  startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'),
-  url: 'urlOfTheActivity',
-  owner: 'owner'
-});
-emptyActivity.participants = [];
-emptyActivity.colorRGB = '#123456';
-emptyActivity.group = group;
 
 var activityWithParticipants = new Activity({
   title: 'Interesting Activity',
@@ -142,7 +132,15 @@ activityWithEditors.group = new Group({id: 'group', longName: 'The name of the g
 activityWithEditors.ownerNickname = 'participant4';
 
 describe('Activity application', function () {
+  var emptyActivity;
+
   beforeEach(function () {
+    emptyActivity = new Activity({
+      title: 'Title of the Activity',
+      url: 'urlOfTheActivity',
+      assignedGroup: 'groupname',
+      owner: 'ownerId'
+    });
     sinon.stub(activitystore, 'upcomingActivities', function (callback) {callback(null, [emptyActivity]); });
     sinon.stub(activitiesService, 'getActivitiesForDisplay', function (fetcher, callback) {
       callback(null, [emptyActivity]);
@@ -172,7 +170,37 @@ describe('Activity application', function () {
     sinon.restore();
   });
 
+  it('shows enriched activities when in detail', function (done) {
+    chado.createDouble('activitiesService', activitiesService);
+    var expectedActivity = new Activity({
+      title: 'Title of the Activity',
+      url: 'urlOfTheActivity',
+      assignedGroup: 'groupname',
+      owner: 'ownerId'
+    });
+    expectedActivity.group = group;
+    expectedActivity.participants = [member1, member2];
+    expectedActivity.ownerNickname = 'owner';
+    
+    assume(activitiesService)
+      .canHandle('getActivityWithGroupAndParticipants')
+      .withArgs('urlOfTheActivity', cb)
+      .andCallsCallbackWith(null, expectedActivity);
+    
+    request(createApp({member: member1}))
+      .get('/' + 'urlOfTheActivity')
+      .expect(200)
+      .expect(/<h2>Title of the Activity/)
+      .expect(/Bislang haben 2 Mitglieder ihre Teilnahme zugesagt\./, function (err, res) {
+        chado.reset();
+        done(err);
+      });
+  });
+
   it('shows the list of activities with "webcal:" link', function (done) {
+    emptyActivity.colorRGB = '#123456';
+    emptyActivity.group = group;
+    emptyActivity.state.startUnix = fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013');
     request(createApp())
       .get('/')
       .expect(200)
@@ -187,6 +215,11 @@ describe('Activity application', function () {
   });
 
   it('shows the details of an activity without participants', function (done) {
+    emptyActivity.participants = [];
+    emptyActivity.state.startUnix = fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013');
+    emptyActivity.state.direction = 'direction1';
+    emptyActivity.state.location = 'location1';
+    emptyActivity.state.description = 'description1';
     request(createApp({member: member1}))
       .get('/' + 'urlOfTheActivity')
       .expect(200)
@@ -203,13 +236,14 @@ describe('Activity application', function () {
   });
 
   it('shows the details of an activity with Owner', function (done) {
+    emptyActivity.group = group;
+    emptyActivity.participants = [];
     emptyActivity.ownerNickname = 'owner';
     request(createApp({member: member1}))
       .get('/' + 'urlOfTheActivity')
       .expect(200)
       .expect(/Angelegt von/)
       .expect(/owner/, function (err) {
-        delete emptyActivity.ownerNickname;
         done(err);
       });
   });
@@ -423,6 +457,7 @@ describe('Activity application', function () {
     });
 
     it('shows the number of participants if the total limit is greater than 0', function (done) {
+      emptyActivity.participants = [];
       emptyActivity.state.resources.default = {_registrationOpen: false, _limit: 1};
 
       request(createApp({member: member3}))
@@ -432,6 +467,7 @@ describe('Activity application', function () {
     });
 
     it('does not show the number of participants if the total limit is 0', function (done) {
+      emptyActivity.participants = [];
       emptyActivity.state.resources.default = {_registrationOpen: false, _limit: 0};
 
       request(createApp({member: member3}))
@@ -462,6 +498,9 @@ describe('Activity application', function () {
   });
 
   it('upcoming activities are exposed as iCalendar', function (done) {
+    emptyActivity.state.location = 'location1';
+    emptyActivity.state.description = 'description1';
+
     request(createApp())
       .get('/ical')
       .expect(200)
@@ -473,6 +512,9 @@ describe('Activity application', function () {
   });
 
   it('activity is exposed as iCalendar', function (done) {
+    emptyActivity.state.location = 'location1';
+    emptyActivity.state.description = 'description1';
+
     request(createApp())
       .get('/ical/' + 'urlOfTheActivity')
       .expect(200)
@@ -485,7 +527,7 @@ describe('Activity application', function () {
 
   it('shows a 404 if the id cannot be found in the store for the detail page', function (done) {
     request(createApp())
-      .get('/' + emptyActivity.id + '4711')
+      .get('/' + emptyActivity.url() + '4711')
       .expect(404, done);
   });
 
@@ -502,7 +544,7 @@ describe('Activity application', function () {
   it('allows the owner to edit an activity', function (done) {
     sinon.stub(groupsService, 'getSubscribedGroupsForUser', function (email, callback) { callback(null, []); });
 
-    request(createApp({id: 'owner'}))
+    request(createApp({id: 'ownerId'}))
       .get('/edit/urlOfTheActivity')
       .expect(200)
       .expect(/activities/, done);
@@ -595,7 +637,7 @@ describe('Activity application', function () {
     var groupC = new Group({id: 'groupC', longName: 'groupC', type: 'Regionalgruppe'});
     sinon.stub(groupsService, 'getSubscribedGroupsForUser', function (email, callback) { callback(null, [groupA, groupB, groupC]); });
 
-    request(createApp({id: 'owner'}))
+    request(createApp({id: 'ownerId'}))
       .get('/edit/urlOfTheActivity')
       .expect(200)
       .end(function (err, res) {
@@ -607,19 +649,19 @@ describe('Activity application', function () {
   });
 
   it('shows no group name if no groups are available', function (done) {
-    var backupGroup = emptyActivity.group;
-    emptyActivity.group = undefined;
+    emptyActivity.participants = [];
     request(createApp('guest'))
       .get('/urlOfTheActivity')
       .expect(200)
       .end(function (err, res) {
         expect(res.text).to.not.contain('Veranstaltet von der Gruppe');
-        emptyActivity.group = backupGroup;
         done(err);
       });
   });
 
   it('shows the name of the assigned group if the group exists', function (done) {
+    emptyActivity.group = group;
+    emptyActivity.participants = [];
     request(createApp('guest'))
       .get('/urlOfTheActivity')
       .expect(200)
@@ -627,6 +669,7 @@ describe('Activity application', function () {
   });
 
   it('shows all activities that take place at the day of the global code retreat', function (done) {
+    emptyActivity.group = group;
     request(createApp())
       .get('/gdcr')
       .expect(200)

@@ -22,7 +22,7 @@ var statusmessage = beans.get('statusmessage');
 var resourceRegistrationRenderer = beans.get('resourceRegistrationRenderer');
 
 var standardResourceName = Activity.standardName;
-var reservedURLs = '^gdcr$|^upcoming$|^past$|^ical$|^eventsForSidebar$|^new$|^newLike$|^edit$|^submit$|^checkurl$|^subscribe$|^unsubscribe$|^addToWaitinglist$|^removeFromWaitinglist$|\\+';
+var reservedURLs = conf.get('reservedActivityURLs');
 
 var app = misc.expressAppIn(__dirname);
 
