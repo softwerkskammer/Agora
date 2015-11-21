@@ -1,6 +1,11 @@
 'use strict';
 
+var chado = require('chado');
+var cb = chado.callback;
+var assume = chado.assume;
+
 var sinon = require('sinon').sandbox.create();
+
 var beans = require('../../testutil/configureForTest').get('beans');
 
 var expect = require('must-dist');
@@ -12,8 +17,9 @@ var dummymember2 = new Member({id: 'hada2', email: 'email2'});
 
 var Group = beans.get('group');
 
-var GroupA = new Group({id: 'GroupA', longName: 'Gruppe A', description: 'Dies ist Gruppe A.', type: 'Themengruppe'});
-var GroupB = new Group({id: 'GroupB', longName: 'Gruppe B', description: 'Dies ist Gruppe B.', type: 'Regionalgruppe'});
+var groupsForTest = require('../groups/groups_for_tests');
+var GroupA = groupsForTest.GroupA;
+var GroupB = groupsForTest.GroupB;
 
 var memberstore = beans.get('memberstore');
 var groupsService = beans.get('groupsService');
@@ -26,19 +32,20 @@ describe('Groups and Members Service (getAllMembersWithTheirGroups)', function (
     sinon.stub(groupsService, 'getAllAvailableGroups', function (callback) {
       callback(null, [GroupA, GroupB]);
     });
+    chado.createDouble('groupsService', groupsService);
   });
 
   afterEach(function () {
     sinon.restore();
+    chado.reset();
   });
 
   it('returns no members when there are no members', function (done) {
     sinon.stub(memberstore, 'allMembers', function (callback) {
       callback(null, []);
     });
-    sinon.stub(groupsService, 'getMailinglistUsersOfList', function (listname, callback) {
-      callback(null, []);
-    });
+    assume(groupsService).canHandle('getMailinglistUsersOfList').withArgs('groupa', cb).andCallsCallbackWith(null, []);
+    assume(groupsService).canHandle('getMailinglistUsersOfList').withArgs('groupb', cb).andCallsCallbackWith(null, []);
 
     groupsAndMembersService.getAllMembersWithTheirGroups(function (err, members, infos) {
       expect(members).to.be.empty();
@@ -51,9 +58,8 @@ describe('Groups and Members Service (getAllMembersWithTheirGroups)', function (
     sinon.stub(memberstore, 'allMembers', function (callback) {
       callback(null, [dummymember]);
     });
-    sinon.stub(groupsService, 'getMailinglistUsersOfList', function (listname, callback) {
-      callback(null, ['email1']);
-    });
+    assume(groupsService).canHandle('getMailinglistUsersOfList').withArgs('groupa', cb).andCallsCallbackWith(null, ['email1']);
+    assume(groupsService).canHandle('getMailinglistUsersOfList').withArgs('groupb', cb).andCallsCallbackWith(null, ['email1']);
 
     groupsAndMembersService.getAllMembersWithTheirGroups(function (err, members) {
       expect(members.length).to.equal(1);
@@ -70,12 +76,8 @@ describe('Groups and Members Service (getAllMembersWithTheirGroups)', function (
     sinon.stub(memberstore, 'allMembers', function (callback) {
       callback(null, [dummymember]);
     });
-    sinon.stub(groupsService, 'getMailinglistUsersOfList', function (listname, callback) {
-      if (listname === 'groupa') {
-        return callback(null, ['email1']);
-      }
-      callback(null, []);
-    });
+    assume(groupsService).canHandle('getMailinglistUsersOfList').withArgs('groupa', cb).andCallsCallbackWith(null, ['email1']);
+    assume(groupsService).canHandle('getMailinglistUsersOfList').withArgs('groupb', cb).andCallsCallbackWith(null, []);
 
     groupsAndMembersService.getAllMembersWithTheirGroups(function (err, members) {
       expect(members.length).to.equal(1);
@@ -91,9 +93,8 @@ describe('Groups and Members Service (getAllMembersWithTheirGroups)', function (
     sinon.stub(memberstore, 'allMembers', function (callback) {
       callback(null, [dummymember]);
     });
-    sinon.stub(groupsService, 'getMailinglistUsersOfList', function (listname, callback) {
-      callback(null, []);
-    });
+    assume(groupsService).canHandle('getMailinglistUsersOfList').withArgs('groupa', cb).andCallsCallbackWith(null, []);
+    assume(groupsService).canHandle('getMailinglistUsersOfList').withArgs('groupb', cb).andCallsCallbackWith(null, []);
 
     groupsAndMembersService.getAllMembersWithTheirGroups(function (err, members) {
       expect(members.length).to.equal(1);
@@ -108,20 +109,19 @@ describe('Groups and Members Service (getAllMembersWithTheirGroups)', function (
     sinon.stub(memberstore, 'allMembers', function (callback) {
       callback(null, [dummymember, dummymember2]);
     });
-    sinon.stub(groupsService, 'getMailinglistUsersOfList', function (listname, callback) {
-      callback(null, ['email2']);
-    });
+    assume(groupsService).canHandle('getMailinglistUsersOfList').withArgs('groupa', cb).andCallsCallbackWith(null, ['email1']);
+    assume(groupsService).canHandle('getMailinglistUsersOfList').withArgs('groupb', cb).andCallsCallbackWith(null, ['email1']);
 
     groupsAndMembersService.getAllMembersWithTheirGroups(function (err, members) {
       expect(members).to.have.length(2);
       expect(members[0]).to.equal(dummymember);
       expect(members[0].subscribedGroups).to.not.be(null);
-      expect(members[0].subscribedGroups).to.have.length(0);
+      expect(members[0].subscribedGroups).to.have.length(2);
+      expect(members[0].subscribedGroups[0]).to.equal(GroupA);
+      expect(members[0].subscribedGroups[1]).to.equal(GroupB);
       expect(members[1]).to.equal(dummymember2);
       expect(members[1].subscribedGroups).to.not.be(null);
-      expect(members[1].subscribedGroups).to.have.length(2);
-      expect(members[1].subscribedGroups[0]).to.equal(GroupA);
-      expect(members[1].subscribedGroups[1]).to.equal(GroupB);
+      expect(members[1].subscribedGroups).to.have.length(0);
       done(err);
     });
   });
@@ -130,12 +130,8 @@ describe('Groups and Members Service (getAllMembersWithTheirGroups)', function (
     sinon.stub(memberstore, 'allMembers', function (callback) {
       callback(null, [dummymember, dummymember2]);
     });
-    sinon.stub(groupsService, 'getMailinglistUsersOfList', function (listname, callback) {
-      if (listname === 'groupa') {
-        return callback(null, ['email3']);
-      }
-      callback(null, []);
-    });
+    assume(groupsService).canHandle('getMailinglistUsersOfList').withArgs('groupa', cb).andCallsCallbackWith(null, ['email1', 'email2', 'email3']);
+    assume(groupsService).canHandle('getMailinglistUsersOfList').withArgs('groupb', cb).andCallsCallbackWith(null, []);
 
     groupsAndMembersService.getAllMembersWithTheirGroups(function (err, members, infos) {
       expect(infos).to.have.length(1);
@@ -149,12 +145,8 @@ describe('Groups and Members Service (getAllMembersWithTheirGroups)', function (
     sinon.stub(memberstore, 'allMembers', function (callback) {
       callback(null, [dummymember, dummymember2]);
     });
-    sinon.stub(groupsService, 'getMailinglistUsersOfList', function (listname, callback) {
-      if (listname === 'groupa') {
-        return callback(null, ['email1']);
-      }
-      callback(null, []);
-    });
+    assume(groupsService).canHandle('getMailinglistUsersOfList').withArgs('groupa', cb).andCallsCallbackWith(null, ['email1']);
+    assume(groupsService).canHandle('getMailinglistUsersOfList').withArgs('groupb', cb).andCallsCallbackWith(null, []);
 
     groupsAndMembersService.getAllMembersWithTheirGroups(function (err, members, infos) {
       expect(infos).to.be.empty();

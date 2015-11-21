@@ -1,5 +1,9 @@
 'use strict';
 
+var chado = require('chado');
+var cb = chado.callback;
+var verify = chado.verify;
+
 var sinon = require('sinon').sandbox.create();
 var expect = require('must-dist');
 
@@ -7,32 +11,15 @@ var conf = require('../../testutil/configureForTest');
 var beans = conf.get('beans');
 var Group = beans.get('group');
 
-var GroupA = new Group({
-  id: 'GroupA',
-  longName: 'Gruppe A',
-  description: 'Dies ist Gruppe A.',
-  type: 'Themengruppe',
-  emailPrefix: 'PREFIX',
-  color: '#FFFFFF'
-});
-var GroupB = new Group({
-  id: 'GroupB',
-  longName: 'Gruppe B',
-  description: 'Dies ist Gruppe B.',
-  type: 'Regionalgruppe',
-  color: '#AAAAAA'
-});
-var NonPersistentGroup = new Group({
-  id: 'Group C',
-  longName: 'Gruppe C',
-  description: 'Dies ist Gruppe C.',
-  type: 'Regionalgruppe'
-});
+var groupsForTest = require('./groups_for_tests');
+var GroupA = groupsForTest.GroupA;
+var GroupB = groupsForTest.GroupB;
+var NonPersistentGroup = groupsForTest.GroupC;
 
 var groupstore = beans.get('groupstore');
 var listAdapter = beans.get('fakeListAdapter');
 
-var systemUnderTest = beans.get('groupsService');
+var groupsService = beans.get('groupsService');
 
 describe('Groups Service (getSubscribedGroupsForUser)', function () {
 
@@ -46,7 +33,7 @@ describe('Groups Service (getSubscribedGroupsForUser)', function () {
     });
     sinon.stub(listAdapter, 'getSubscribedListsForUser', function (email, callback) { callback(null, []); });
 
-    systemUnderTest.getSubscribedGroupsForUser('me@bla.com', function (err, validLists) {
+    groupsService.getSubscribedGroupsForUser('me@bla.com', function (err, validLists) {
       expect(validLists).to.not.be(null);
       expect(validLists.length).to.equal(0);
       done(err);
@@ -59,7 +46,7 @@ describe('Groups Service (getSubscribedGroupsForUser)', function () {
     });
     sinon.stub(listAdapter, 'getSubscribedListsForUser', function (email, callback) { callback(null, ['GroupA']); });
 
-    systemUnderTest.getSubscribedGroupsForUser('GroupAuser@softwerkskammer.de', function (err, validLists) {
+    groupsService.getSubscribedGroupsForUser('GroupAuser@softwerkskammer.de', function (err, validLists) {
       expect(validLists).to.not.be(null);
       expect(validLists.length).to.equal(1);
       expect(validLists[0]).to.equal(GroupA);
@@ -75,7 +62,7 @@ describe('Groups Service (getSubscribedGroupsForUser)', function () {
       callback(null, ['GroupA', 'GroupB']);
     });
 
-    systemUnderTest.getSubscribedGroupsForUser('GroupAandBuser@softwerkskammer.de', function (err, validLists) {
+    groupsService.getSubscribedGroupsForUser('GroupAandBuser@softwerkskammer.de', function (err, validLists) {
       expect(validLists).to.not.be(null);
       expect(validLists.length).to.equal(2);
       expect(validLists[0]).to.equal(GroupA);
@@ -92,7 +79,7 @@ describe('Groups Service (getSubscribedGroupsForUser)', function () {
       callback(null, ['GroupA', 'GroupB', conf.get('adminListName')]);
     });
 
-    systemUnderTest.getSubscribedGroupsForUser('admin@softwerkskammer.de', function (err) {
+    groupsService.getSubscribedGroupsForUser('admin@softwerkskammer.de', function (err) {
       expect(spy.calledWith(['GroupA', 'GroupB'])).to.be(true);
       done(err);
     });
@@ -103,7 +90,7 @@ describe('Groups Service (getSubscribedGroupsForUser)', function () {
       callback(new Error(), null);
     });
 
-    systemUnderTest.getSubscribedGroupsForUser('admin@softwerkskammer.de', function (err) {
+    groupsService.getSubscribedGroupsForUser('admin@softwerkskammer.de', function (err) {
       expect(err).to.exist();
       done();
     });
@@ -122,7 +109,7 @@ describe('Groups Service (getAllAvailableGroups)', function () {
     });
     sinon.stub(listAdapter, 'getAllAvailableLists', function (callback) { callback(null, []); });
 
-    systemUnderTest.getAllAvailableGroups(function (err, lists) {
+    groupsService.getAllAvailableGroups(function (err, lists) {
       expect(lists).to.not.be(null);
       expect(lists.length).to.equal(0);
       done(err);
@@ -135,7 +122,7 @@ describe('Groups Service (getAllAvailableGroups)', function () {
     });
     sinon.stub(listAdapter, 'getAllAvailableLists', function (callback) { callback(null, ['unknownGroup']); });
 
-    systemUnderTest.getAllAvailableGroups(function (err, lists) {
+    groupsService.getAllAvailableGroups(function (err, lists) {
       expect(lists).to.not.be(null);
       expect(lists.length).to.equal(0);
       done(err);
@@ -148,7 +135,7 @@ describe('Groups Service (getAllAvailableGroups)', function () {
     });
     sinon.stub(listAdapter, 'getAllAvailableLists', function (callback) { callback(null, ['GroupA', 'unknownGroup']); });
 
-    systemUnderTest.getAllAvailableGroups(function (err, lists) {
+    groupsService.getAllAvailableGroups(function (err, lists) {
       expect(lists).to.not.be(null);
       expect(lists.length).to.equal(1);
       expect(lists[0]).to.equal(GroupA);
@@ -162,7 +149,7 @@ describe('Groups Service (getAllAvailableGroups)', function () {
     });
     sinon.stub(listAdapter, 'getAllAvailableLists', function (callback) { callback(null, ['GroupA', 'GroupB']); });
 
-    systemUnderTest.getAllAvailableGroups(function (err, lists) {
+    groupsService.getAllAvailableGroups(function (err, lists) {
       expect(lists).to.not.be(null);
       expect(lists.length).to.equal(2);
       expect(lists[0]).to.equal(GroupA);
@@ -174,33 +161,48 @@ describe('Groups Service (getAllAvailableGroups)', function () {
 
 describe('Groups Service (getMailinglistUsersOfList)', function () {
 
+  beforeEach(function () {
+    chado.createDouble('groupsService', groupsService);
+  });
+
   afterEach(function () {
     sinon.restore();
+    chado.reset();
   });
 
-  it('returns an empty array of lists if there are no users subscribed to the list in mailinglist', function (done) {
+  it('returns an empty array if there are no users subscribed to the list "groupa" in mailinglist', function (done) {
     sinon.stub(listAdapter, 'getUsersOfList', function (groupname, callback) { callback(null, []); });
 
-    systemUnderTest.getMailinglistUsersOfList('groupname', function (err, lists) {
-      expect(lists).to.not.be(null);
-      expect(lists.length).to.equal(0);
-      done(err);
-    });
+    verify('groupsService').canHandle('getMailinglistUsersOfList')
+      .withArgs('groupa', cb).andCallsCallbackWith(null, []).on(groupsService, done);
   });
 
-  it('returns the users subscribed to the list in mailinglist', function (done) {
-    sinon.stub(listAdapter, 'getUsersOfList', function (groupname, callback) {
-      callback(null, ['user1@mail1.de', 'user2@mail2.de', 'user3@mail3.de']);
-    });
+  it('returns an array with the email address if there is one user subscribed to the list "groupa" in mailinglist', function (done) {
+    sinon.stub(listAdapter, 'getUsersOfList', function (groupname, callback) { callback(null, ['email1']); });
 
-    systemUnderTest.getMailinglistUsersOfList('groupname', function (err, users) {
-      expect(users).to.not.be(null);
-      expect(users.length).to.equal(3);
-      expect(users[0]).to.equal('user1@mail1.de');
-      expect(users[1]).to.equal('user2@mail2.de');
-      expect(users[2]).to.equal('user3@mail3.de');
-      done(err);
-    });
+    verify('groupsService').canHandle('getMailinglistUsersOfList')
+      .withArgs('groupa', cb).andCallsCallbackWith(null, ['email1']).on(groupsService, done);
+  });
+
+  it('returns an empty array of lists if there are no users subscribed to the list "groupb" in mailinglist', function (done) {
+    sinon.stub(listAdapter, 'getUsersOfList', function (groupname, callback) { callback(null, []); });
+
+    verify('groupsService').canHandle('getMailinglistUsersOfList')
+      .withArgs('groupb', cb).andCallsCallbackWith(null, []).on(groupsService, done);
+  });
+
+  it('returns an array with the email address if there is one user subscribed to the list "groupb" in mailinglist', function (done) {
+    sinon.stub(listAdapter, 'getUsersOfList', function (groupname, callback) { callback(null, ['email1']); });
+
+    verify('groupsService').canHandle('getMailinglistUsersOfList')
+      .withArgs('groupb', cb).andCallsCallbackWith(null, ['email1']).on(groupsService, done);
+  });
+
+  it('returns multiple users subscribed to the list in mailinglist', function (done) {
+    sinon.stub(listAdapter, 'getUsersOfList', function (groupname, callback) { callback(null, ['email1', 'email2', 'email3']); });
+
+    verify('groupsService').canHandle('getMailinglistUsersOfList')
+      .withArgs('groupa', cb).andCallsCallbackWith(null, ['email1', 'email2', 'email3']).on(groupsService, done);
   });
 });
 
@@ -230,7 +232,7 @@ describe('Groups Service (createOrSaveGroup)', function () {
 
   it('creates a new group and saves it if there is no group with the given name', function (done) {
 
-    systemUnderTest.createOrSaveGroup(NonPersistentGroup, function (err, group) {
+    groupsService.createOrSaveGroup(NonPersistentGroup, function (err, group) {
       expect(group).to.be(null); // would return an existingGroup, but Group is new
       expect(createListSpy.calledOnce).to.be(true);
       expect(saveGroupSpy.calledOnce).to.be(true);
@@ -240,7 +242,7 @@ describe('Groups Service (createOrSaveGroup)', function () {
 
   it('only saves the group if there already exists a group with the given name', function (done) {
 
-    systemUnderTest.createOrSaveGroup(GroupA, function (err, group) {
+    groupsService.createOrSaveGroup(GroupA, function (err, group) {
       expect(group).to.equal(GroupA);
       expect(createListSpy.called).to.be(false);
       expect(saveGroupSpy.calledOnce).to.be(true);
@@ -284,14 +286,18 @@ describe('Groups Service (allGroupColors)', function () {
   });
 
   it('returns an object with group id and color', function (done) {
+    GroupA.color = '#FFFFFF';
+    GroupB.color = '#AAAAAA';
     sinon.stub(groupstore, 'groupsByLists', function (lists, globalCallback) {
       globalCallback(null, [GroupA, GroupB]);
     });
     sinon.stub(listAdapter, 'getAllAvailableLists', function (callback) { callback(null, ['GroupA', 'GroupB']); });
 
-    systemUnderTest.allGroupColors(function (err, colorMap) {
+    groupsService.allGroupColors(function (err, colorMap) {
       expect(colorMap).to.have.ownProperty('groupa', '#FFFFFF');
       expect(colorMap).to.have.ownProperty('groupb', '#AAAAAA');
+      delete GroupA.color;
+      delete GroupB.color;
       done(err);
     });
   });
@@ -299,7 +305,7 @@ describe('Groups Service (allGroupColors)', function () {
   it('handles an error gracefully', function (done) {
     sinon.stub(listAdapter, 'getAllAvailableLists', function (callback) { callback(new Error()); });
 
-    systemUnderTest.allGroupColors(function (err) {
+    groupsService.allGroupColors(function (err) {
       expect(err).to.exist();
       done();
     });
@@ -324,7 +330,7 @@ describe('Groups Service (isGroupNameAvailable)', function () {
   });
 
   it('returns false when there is already a group of this name present', function (done) {
-    systemUnderTest.isGroupNameAvailable('GroupA', function (err, result) {
+    groupsService.isGroupNameAvailable('GroupA', function (err, result) {
       expect(result).to.not.be(null);
       expect(result).to.be(false);
       done(err);
@@ -332,7 +338,7 @@ describe('Groups Service (isGroupNameAvailable)', function () {
   });
 
   it('returns true when there is no group of this name present', function (done) {
-    systemUnderTest.isGroupNameAvailable('MyGroup', function (err, result) {
+    groupsService.isGroupNameAvailable('MyGroup', function (err, result) {
       expect(result).to.not.be(null);
       expect(result).to.be(true);
       done(err);
@@ -340,12 +346,12 @@ describe('Groups Service (isGroupNameAvailable)', function () {
   });
 
   it('rejects groupnames that contain special characters', function (done) {
-    expect(systemUnderTest.isReserved('Sch adar')).to.be(true);
-    expect(systemUnderTest.isReserved('Sch/adar')).to.be(true);
-    expect(systemUnderTest.isReserved('Schad\nar')).to.be(true);
-    expect(systemUnderTest.isReserved('Schad@r')).to.be(true);
+    expect(groupsService.isReserved('Sch adar')).to.be(true);
+    expect(groupsService.isReserved('Sch/adar')).to.be(true);
+    expect(groupsService.isReserved('Schad\nar')).to.be(true);
+    expect(groupsService.isReserved('Schad@r')).to.be(true);
 
-    systemUnderTest.isGroupNameAvailable('Scha dar', function (err, result) {
+    groupsService.isGroupNameAvailable('Scha dar', function (err, result) {
       expect(result).to.be(false);
       done(err);
     });
@@ -353,23 +359,23 @@ describe('Groups Service (isGroupNameAvailable)', function () {
 
   it('allows groupnames that contain alphanumeric characters only', function (done) {
 
-    expect(systemUnderTest.isReserved('Schad_r')).to.be(false);
-    expect(systemUnderTest.isReserved('Schadar')).to.be(false);
+    expect(groupsService.isReserved('Schad_r')).to.be(false);
+    expect(groupsService.isReserved('Schadar')).to.be(false);
 
-    systemUnderTest.isGroupNameAvailable('Schadar', function (err, result) {
+    groupsService.isGroupNameAvailable('Schadar', function (err, result) {
       expect(result).to.be(true);
       done(err);
     });
   });
   it('rejects groupnames that contain reserved routes', function (done) {
 
-    expect(systemUnderTest.isReserved('new')).to.be(true);
-    expect(systemUnderTest.isReserved('submit')).to.be(true);
-    expect(systemUnderTest.isReserved('administration')).to.be(true);
-    expect(systemUnderTest.isReserved('edit')).to.be(true);
-    expect(systemUnderTest.isReserved('checkgroupname')).to.be(true);
+    expect(groupsService.isReserved('new')).to.be(true);
+    expect(groupsService.isReserved('submit')).to.be(true);
+    expect(groupsService.isReserved('administration')).to.be(true);
+    expect(groupsService.isReserved('edit')).to.be(true);
+    expect(groupsService.isReserved('checkgroupname')).to.be(true);
 
-    systemUnderTest.isGroupNameAvailable('edit', function (err, result) {
+    groupsService.isGroupNameAvailable('edit', function (err, result) {
       expect(result).to.be(false);
       done(err);
     });
