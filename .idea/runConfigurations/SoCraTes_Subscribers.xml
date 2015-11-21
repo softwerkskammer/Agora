@@ -8,6 +8,7 @@
     </envs>
     <ui>bdd</ui>
     <extra-mocha-options />
+    <test-kind>DIRECTORY</test-kind>
     <test-directory>$PROJECT_DIR$/socrates/test/subscribers</test-directory>
     <recursive>true</recursive>
     <RunnerSettings RunnerId="RunnerForMochaJavaScript" />
