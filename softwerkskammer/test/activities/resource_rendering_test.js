@@ -21,7 +21,6 @@ describe('ResourceRegistrationRenderer', function () {
   beforeEach(function () {
     resourceNamesList = [ 'name1' ];
     sinon.stub(activity, 'resourceNamed', function () { return resource; });
-    sinon.stub(activity, 'url', function () { return 'URL'; });
     sinon.stub(activity, 'resourceNames', function () { return resourceNamesList; });
   });
 
