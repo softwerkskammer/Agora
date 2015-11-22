@@ -57,7 +57,8 @@ module.exports = {
     site: function () { return ''; },
     reference: function () { return ''; },
     notifyOnWikiChanges: function () { return ''; },
-    authentications: function () { return []; }
+    authentications: function () { return []; },
+    socratesOnly: function () { return false; }
   },
   regionalgroups: [],
   themegroups: [],
