@@ -8,6 +8,7 @@ mixin memberform(member, regionalgroups, themegroups, tags)
         .col-md-12
           h2
             if (accessrights.isRegistered())
+              | !{(member.socratesOnly() ? '<img src="https://www.socrates-conference.de/img/socrates_no_text_40.png">&nbsp;' : '')}
               | #{member.nickname()}
             else
               | #{t('members.new')}

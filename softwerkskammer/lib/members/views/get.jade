@@ -17,6 +17,7 @@ block content
           if (accessrights.canDeleteMember(member))
             +reallyDeleteModal('members.delete', '/members/delete/' +encodeURIComponent(member.nickname()))
         h2
+          | !{(member.socratesOnly() ? '<img src="https://www.socrates-conference.de/img/socrates_no_text_40.png">&nbsp;' : '')}
           | #{member.nickname()}
           small
             if (member.isContactperson())
