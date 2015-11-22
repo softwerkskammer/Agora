@@ -38,9 +38,7 @@ describe('Activity application - on submit -', function () {
       .send('previousUrl=aha')
       .expect(200)
       .expect(/Validierungsfehler/)
-      .expect(/Diese URL ist leider nicht verfügbar\./, function (err) {
-        done(err);
-      });
+      .expect(/Diese URL ist leider nicht verfügbar\./, done);
   });
 
   it('rejects an activity with a url containing "/"', function (done) {
@@ -55,9 +53,7 @@ describe('Activity application - on submit -', function () {
       .send('previousUrl=aha')
       .expect(200)
       .expect(/Validierungsfehler/)
-      .expect(/Diese URL ist leider nicht verfügbar\./, function (err) {
-        done(err);
-      });
+      .expect(/Diese URL ist leider nicht verfügbar\./, done);
   });
 
   it('accepts an activity with valid and different url', function (done) {
@@ -70,9 +66,7 @@ describe('Activity application - on submit -', function () {
       .post('/submit')
       .send('url=uhu')
       .send('previousUrl=aha')
-      .expect(200, function (err) {
-        done(err);
-      });
+      .expect(200, done);
   });
 
   it('rejects an activity with empty title', function (done) {
@@ -82,9 +76,7 @@ describe('Activity application - on submit -', function () {
       .send('title=')
       .expect(200)
       .expect(/Validierungsfehler/)
-      .expect(/Titel ist ein Pflichtfeld\./, function (err) {
-        done(err);
-      });
+      .expect(/Titel ist ein Pflichtfeld\./, done);
   });
 
   it('rejects an activity with different but valid url and with empty title', function (done) {
@@ -99,9 +91,7 @@ describe('Activity application - on submit -', function () {
       .send('title=')
       .expect(200)
       .expect(/Validierungsfehler/)
-      .expect(/Titel ist ein Pflichtfeld\./, function (err) {
-        done(err);
-      });
+      .expect(/Titel ist ein Pflichtfeld\./, done);
   });
 
   it('rejects an activity with two identical resource names', function (done) {
@@ -111,9 +101,7 @@ describe('Activity application - on submit -', function () {
       .send('resources[names]=Doppelzimmer&resources[names]=Doppelzimmer')
       .expect(200)
       .expect(/Validierungsfehler/)
-      .expect(/Die Bezeichnungen der Ressourcen müssen eindeutig sein\./, function (err) {
-        done(err);
-      });
+      .expect(/Die Bezeichnungen der Ressourcen müssen eindeutig sein\./, done);
   });
 
   it('rejects an activity whose resource names are empty', function (done) {
@@ -123,9 +111,7 @@ describe('Activity application - on submit -', function () {
       .send('resources[names]=&resources[names]=')
       .expect(200)
       .expect(/Validierungsfehler/)
-      .expect(/Es muss mindestens eine Ressourcenbezeichnung angegeben werden\./, function (err) {
-        done(err);
-      });
+      .expect(/Es muss mindestens eine Ressourcenbezeichnung angegeben werden\./, done);
   });
 
   it('rejects an activity whose resource limits are non-integral', function (done) {
@@ -135,9 +121,7 @@ describe('Activity application - on submit -', function () {
       .send('resources[limits]=&resources[limits]=7,5&resources[limits]=hallo')
       .expect(200)
       .expect(/Validierungsfehler/)
-      .expect(/Die Ressourcenbeschränkungen dürfen nur aus Ziffern bestehen\./, function (err) {
-        done(err);
-      });
+      .expect(/Die Ressourcenbeschränkungen dürfen nur aus Ziffern bestehen\./, done);
   });
 
 });
