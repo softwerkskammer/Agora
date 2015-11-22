@@ -28,7 +28,7 @@ block content
             for member in members
               tr
                 td #{member.firstname() + ' ' + member.lastname()}
-                td: mixin linkedMember(member.nickname())
+                td: +linkedMember(member.nickname())
                 for group in groups
                   td.center
                     if member.isInGroup(group.id)

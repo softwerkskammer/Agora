@@ -43,7 +43,7 @@ mixin groupform(group, allTypes, organizersChecked)
               +text('mapX', t('groups.x_coord'), group.mapX, t('groups.tooltip.x_coord'))
             .col-md-6
               +text('mapY', t('groups.y_coord'), group.mapY, t('groups.tooltip.y_coord'))
-          mixin text('shortName', t('groups.map_label'), group.shortName, t('groups.tooltip.map_label'))
+          +text('shortName', t('groups.map_label'), group.shortName, t('groups.tooltip.map_label'))
       .row
         .col-md-12
           if group.id

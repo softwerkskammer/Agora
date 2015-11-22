@@ -38,7 +38,9 @@ block content
               tr
                 td: a.btn-sm(href='/members/edit/#{encodeURIComponent(member.nickname())}'): i.fa.fa-edit.fa-fw
                 td #{member.created()}
-                td: mixin linkedMember(member.nickname())
+                td
+                  | !{(member.socratesOnly() ? '<img src="https://www.socrates-conference.de/img/favicon.ico">&nbsp;' : '')}
+                  +linkedMember(member.nickname())
                 td #{member.firstname()}
                 td #{member.lastname()}
                 td #{member.location()}

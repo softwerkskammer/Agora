@@ -1,6 +1,7 @@
 'use strict';
 
 var async = require('async');
+var _ = require('lodash');
 
 var beans = require('simple-configure').get('beans');
 var membersService = beans.get('membersService');
@@ -18,7 +19,10 @@ var app = misc.expressAppIn(__dirname);
 app.get('/memberTable', function (req, res, next) {
   memberstore.allMembers(function (err, members) {
     if (err) { return next(err); }
-    res.render('memberTable', { members: members });
+    memberstore.socratesOnlyMembers(function(err1, socMembers) {
+      if (err1) { return next(err1); }
+      res.render('memberTable', { members: _.union(members, socMembers) });
+    });
   });
 });
 
