@@ -105,16 +105,13 @@ describe('Members application', function () {
   });
 
   it('does not allow a member to edit another member\'s avatar', function (done) {
-    function noFileInput(res) {
-      if (res.text.match(/<input id="input-file" type="file" accept="image\/\*" name="image"/)) { return 'hasFileInput'; }
-    }
-
     request(createApp({id: 'memberID1'}))
       .get('/hada')
       .expect(200)
-      .expect(/<img src="https:\/\/www\.gravatar\.com\/avatar\/5d60d4e28066df254d5452f92c910092\?d=mm&amp;s=200"/)
-      .expect(noFileInput)
-      .end(done);
+      .expect(/<img src="https:\/\/www\.gravatar\.com\/avatar\/5d60d4e28066df254d5452f92c910092\?d=mm&amp;s=200"/, function (err, res) {
+        expect(res.text).to.not.contain('<input id="input-file" type="file" accept="image\/\*" name="image"');
+        done(err);
+      });
   });
 
   it('allows a superuser member to edit another member\'s avatar', function (done) {
@@ -122,6 +119,22 @@ describe('Members application', function () {
       .get('/hada')
       .expect(200)
       .expect(/<input id="input-file" type="file" accept="image\/\*" name="image"\/>/, done);
+  });
+
+  it('allows a superuser member to add another member\'s authentication', function (done) {
+    request(createApp({id: 'superuserID'}))
+      .get('/edit/hada')
+      .expect(200)
+      .expect(/<input id="additionalAuthentication" type="text"/, done);
+  });
+
+  it('does not allow a member to add another authentication to her own profile', function (done) {
+    request(createApp({id: 'memberID'}))
+      .get('/edit/hada')
+      .expect(200, function (err, res) {
+        expect(res.text).to.not.contain('<input id="additionalAuthentication" type="text"');
+        done(err);
+      });
   });
 
   it('rejects a member with invalid and different nickname on submit', function (done) {

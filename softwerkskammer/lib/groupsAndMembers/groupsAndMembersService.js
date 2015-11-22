@@ -50,6 +50,7 @@ var updateAndSaveSubmittedMember = function (self, sessionUser, memberformData, 
     var member = persistentMember || new Member().initFromSessionUser(sessionUser);
     var oldEmail = persistentMember ? member.email() : memberformData.previousEmail;
     member.addAuthentication(memberformData.id);
+    if (accessrights.isSuperuser()) { member.addAuthentication(memberformData.additionalAuthentication); }
     member.fillFromUI(memberformData);
     memberstore.saveMember(member, function (err1) {
       if (err1) { return callback(err1); }

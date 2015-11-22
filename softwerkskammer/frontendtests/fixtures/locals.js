@@ -16,7 +16,8 @@ module.exports = {
   t: function (string) { return string; },
   accessrights: {
     isRegistered: function () { return true; },
-    isMember: function () { return true; }
+    isMember: function () { return true; },
+    isSuperuser: function () { return false; }
   },
   activity: {
     id: function () { return ''; },

@@ -56,6 +56,10 @@ mixin memberform(member, regionalgroups, themegroups, tags)
               a.btn.btn-primary(data-toggle='modal', data-target='#login', href='/loginDialog?returnUrl=' + encodeURIComponent(currentUrl ||  '/'))
                 i.fa.fa-plus-square.fa-fw
                 | &nbsp;#{t('members.authenticate')}
+        if (accessrights.isSuperuser())
+          .row
+            .col-md-6
+              +text('additionalAuthentication', t('members.authenticate'), '')
       .row
         .col-md-12
           +memberSubmitButtons

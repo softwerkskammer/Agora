@@ -97,8 +97,10 @@ Member.prototype.addAuthentication = function (authenticationId) {
   if (!this.state.authentications) {
     this.state.authentications = [];
   }
-  this.state.authentications.push(authenticationId);
-  this.state.authentications = _.uniq(this.authentications());
+  if (!!authenticationId) {
+    this.state.authentications.push(authenticationId);
+    this.state.authentications = _.uniq(this.authentications());
+  }
 };
 
 Member.prototype.id = function () {
