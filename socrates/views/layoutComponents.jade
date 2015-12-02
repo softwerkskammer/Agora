@@ -38,14 +38,14 @@ mixin navbar(xs)
         span.icon-bar
         span.icon-bar
         span.icon-bar
-      .navbar-brand(style='padding-top: 5px; padding-right: 0px;', title='SoCraTes 2015')
+      .navbar-brand(style='padding-top: 5px; padding-right: 0px;', title='SoCraTes 2016')
         a(href='/'): img(src='/img/socrates_no_text_40.png', alt='logo')
     .navbar-collapse.collapse
       if (!xs)
         ul.nav.navbar-nav.navbar-right
           +loginMenu
       ul.nav.navbar-nav
-        li(data-nav-index=''): a(href='/', title='Home', style='padding-left: 5px') SoCraTes 2015
+        li(data-nav-index=''): a(href='/', title='Home', style='padding-left: 5px') SoCraTes 2016
         li(data-nav='schedule.html'): a(href='/schedule.html', title='Schedule')
           span.glyphicon.glyphicon-calendar
           span.hidden-sm  Schedule
@@ -100,11 +100,11 @@ mixin contactbuttons
     i.fa.fa-fw.fa-envelope
     span.hidden-xs #{' ' + t('members.email')}
   .btn-group.dropup
-    a.btn.btn-info(href='https://twitter.com/intent/tweet?text=SoCraTes+2015+will+take+place+from+27+to+30+August.+More+at&url=http%3A%2F%2Fsocrates-conference.de%2F&hashtags=socrates_15&via=socrates_2015', title='Tweet')
+    a.btn.btn-info(href='https://twitter.com/intent/tweet?text=SoCraTes+2016+will+take+place+from+25+to+28+August.+More+at&url=http%3A%2F%2Fsocrates-conference.de%2F&hashtags=socrates_16&via=socrates_2016', title='Tweet')
       i.fa.fa-fw.fa-twitter
       span.hidden-xs #{' ' + t('general.tweet')}
     a.btn.btn-info.dropdown-toggle(data-toggle='dropdown')
       i.fa.fa-caret-up
     ul.dropdown-menu(role='menu')
-      li: a(href='https://twitter.com/intent/user?screen_name=socrates_2015') #{t('general.show_tweets')}
-      li: a(href='https://twitter.com/intent/follow?screen_name=socrates_2015') #{t('general.follow')}
+      li: a(href='https://twitter.com/intent/user?screen_name=socrates_2016') #{t('general.show_tweets')}
+      li: a(href='https://twitter.com/intent/follow?screen_name=socrates_2016') #{t('general.follow')}
