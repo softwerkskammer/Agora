@@ -21,3 +21,7 @@ db.subscriberstore.update({id: /git/}, {$unset: {"participations": "" }})
 
 -- delete the payment-received-notification of a member whose id matches /xlogon/
 db.subscriberstore.update({id: /xlogon/}, {$unset: {"participations.2015.payment.paymentReceived": "" }})
+
+-- update a registration in a specific room
+db.activitystore.update({title: 'SoCraTes 2015', "resources.single._registeredMembers": {$elemMatch: {memberId: "github:450708"}}}, 
+{$set: {"resources.single._registeredMembers.$.memberId": "github:450708"}})
