@@ -83,9 +83,9 @@ System requirements and Installation
 
 It is a node.js project. Therefore you need node.js installed. Get it from [http://nodejs.org](http://nodejs.org).
 
-You need a current 0.10.x version to run the software.
+You need a current 4.x version to run the software (0.12.x should also be OK).
 
-Your node.js installation must contain at least npm 1.3.
+Your node.js ships a npm in suitable version.
 
 ### Additional Software
 
