@@ -24,9 +24,13 @@ module.exports = function (defaultLanguage, abspath) {
           next();
         });
         app.use(beans.get('expressSessionConfigurator'));
+        app.use(function (req, res, next) {
+          req.session.language = defaultLanguage;
+          next();
+        });
 
         app.use(beans.get('expressViewHelper'));
-        app.use(initI18N(defaultLanguage, abspath));
+        app.use(initI18N('fr', abspath));
 
         if (atts.id) {
           var Member = beans.get('member');

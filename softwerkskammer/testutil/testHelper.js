@@ -1,3 +1,3 @@
 'use strict';
 
-module.exports = require('./universalTestHelper')('en');
+module.exports = require('./universalTestHelper')('de');
