@@ -29,6 +29,10 @@
 
   "accessrights": {"module": "./socrates/lib/middleware/accessrights"},
   "expressViewHelper": {"module": "./socrates/lib/middleware/expressViewHelper"},
+  "initI18N": {
+    "module": "./softwerkskammer/lib/middleware/initI18N",
+    "constructorArgs": { "languages": "en" }
+  },
   "redirectRuleForNewUser": {"module": "./socrates/lib/middleware/redirectRuleForNewUser"},
   "passportInitializer": {"module": "./socrates/lib/middleware/passportInitializer"},
   "secureSoCraTesAdminOnly": {"module": "./socrates/lib/middleware/secureSoCraTesAdminOnly"},
