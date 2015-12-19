@@ -17,7 +17,6 @@ module.exports = function expressViewHelper(req, res, next) {
   }
   res.locals.user = req.user;
   res.locals.currentUrl = req.url;
-  req.lng = res.locals.language;
   res.locals.tagclouddata = membersService.toWordList;
   next();
 };
