@@ -18,19 +18,11 @@ module.exports = function (defaultLanguage, abspath) {
         app.enable('view cache');
         app.use(require('cookie-parser')());
         app.use(require('body-parser').urlencoded({extended: true}));
-
         app.use(function (req, res, next) {
           res.locals.removeServerpaths = function (msg) { return msg; };
           next();
         });
         app.use(beans.get('expressSessionConfigurator'));
-        app.use(function (req, res, next) {
-          req.session.language = defaultLanguage;
-          next();
-        });
-
-        app.use(beans.get('expressViewHelper'));
-        app.use(initI18N('fr', abspath));
 
         if (atts.id) {
           var Member = beans.get('member');
@@ -46,11 +38,17 @@ module.exports = function (defaultLanguage, abspath) {
         _.each(atts.secureByMiddlewares, function (middleware) {
           app.use(middleware);
         });
-        
+        app.use(function (req, res, next) {
+          req.session.language = defaultLanguage;
+          next();
+        });
+
+        app.use(beans.get('expressViewHelper'));
+        app.use(initI18N('fr', abspath)); // fr because of some technical reasons I do not yet understand... (leider)
+
         _.each(atts.middlewares, function (middleware) {
           app.use(middleware);
         });
-
 
         var baseurl = atts.baseurl || '/';
         app.use(baseurl, beans.get(appName));
