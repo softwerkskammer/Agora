@@ -9,8 +9,6 @@ var morgan = require('morgan');
 var bodyparser = require('body-parser');
 var compress = require('compression');
 var csurf = require('csurf');
-var i18n = require('i18next');
-var jade = require('jade');
 
 function useApp(parent, url, child) {
   function ensureRequestedUrlEndsWithSlash(req, res, next) {
@@ -36,13 +34,7 @@ var winston = require('winston-config').fromFileSync(path.join(__dirname, '../co
 var appLogger = winston.loggers.get('application');
 var httpLogger = winston.loggers.get('http');
 
-// initialize i18n
-i18n.init({
-  supportedLngs: ['de', 'en'],
-  preload: ['de', 'en'],
-  fallbackLng: 'de',
-  resGetPath: 'locales/__ns__-__lng__.json'
-});
+
 
 // stream the log messages of express to winston, remove line breaks on message
 var winstonStream = {
@@ -61,17 +53,17 @@ module.exports = {
     app.use(cookieParser());
     app.use(bodyparser.urlencoded({extended: true}));
     app.use(compress());
-    app.use(express.static(path.join(__dirname, 'public'), { maxAge: 600 * 1000 })); // ten minutes
+    app.use(express.static(path.join(__dirname, 'public'), {maxAge: 600 * 1000})); // ten minutes
 
     app.use(beans.get('expressSessionConfigurator'));
     app.use(beans.get('passportInitializer'));
     app.use(beans.get('passportSessionInitializer'));
-    app.use(i18n.handle);
     app.use(beans.get('serverpathRemover'));
     app.use(beans.get('accessrights'));
     app.use(beans.get('secureByLogin'));
     app.use(beans.get('secureSuperuserOnly'));
     app.use(beans.get('expressViewHelper'));
+    app.use(beans.get('initI18N'));
     app.use(beans.get('redirectRuleForNewUser'));
     app.use(beans.get('announcementsInSidebar'));
     app.use(beans.get('wikiSubdirs'));
@@ -98,11 +90,6 @@ module.exports = {
 
     app.use(beans.get('handle404')());
     app.use(beans.get('handle500')(appLogger));
-
-    i18n.registerAppHelper(app);
-    i18n.addPostProcessor('jade', function (val, key, opts) {
-      return jade.compile(val, opts)();
-    });
 
     return app;
   },

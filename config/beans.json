@@ -113,6 +113,10 @@
   "gitmech": {"module": "./softwerkskammer/lib/wiki/gitmech"},
   "handle404": {"module": "./softwerkskammer/lib/middleware/handle404"},
   "handle500": {"module": "./softwerkskammer/lib/middleware/handle500"},
+  "initI18N": {
+    "module": "./softwerkskammer/lib/middleware/initI18N", 
+    "constructorArgs": { "languages": "de,en" }
+  },
   "mailtransport": {"module": "./softwerkskammer/lib/mailsender/mailtransport"},
   "passportInitializer": {"module": "./softwerkskammer/lib/middleware/passportInitializer"},
   "passportSessionInitializer": {"module": "./softwerkskammer/lib/middleware/passportSessionInitializer"},

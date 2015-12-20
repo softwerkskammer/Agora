@@ -32,7 +32,7 @@
     "members": {
       "one": "ein Mitglied",
       "none": "keine Mitglieder",
-      "count": "__count__ Mitglieder"
+      "count": "{{count}} Mitglieder"
     },
     "current": "Aktuelles",
     "communities": "Software Craftsmanship Communities in Deutschland, Österreich und der Schweiz.",
@@ -130,7 +130,7 @@
     "waitinglist_new": "Neuer Eintrag",
     "no_participants": "Bislang gibt es keine Teilnahmezusagen.",
     "one_participant": "Bislang hat ein Mitglied seine Teilnahme zugesagt.",
-    "count_participants": "Bislang haben __count__ Mitglieder ihre Teilnahme zugesagt.",
+    "count_participants": "Bislang haben {{count}} Mitglieder ihre Teilnahme zugesagt.",
     "label": "Bezeichnung",
     "unlimited": "unbegrenzt",
     "title": "Titel",
@@ -265,7 +265,7 @@
     "new": "Neue Gruppe",
     "create": "Gruppe anlegen",
     "more": "mehr lesen…",
-    "edit": "Gruppe \"__groupId__\" bearbeiten",
+    "edit": "Gruppe \"{{groupId}}\" bearbeiten",
     "join": "Gruppe beitreten",
     "leave": "Gruppe verlassen",
     "has": "Diese Gruppe hat",
@@ -340,7 +340,7 @@
     "reference": "Wie ich von der Softwerkskammer erfahren habe",
     "authenticated_via": "Aktuell authentifiziert bei",
     "authenticate": "Anderswo authentifizieren",
-    "send_email": "Eine E-Mail an __firstname__ __lastname__ senden",
+    "send_email": "Eine E-Mail an {{firstname}} {{lastname}} senden",
     "has": "Die Softwerkskammer hat",
     "has_by_interests": "Mit diesem Schlagwort gibt es",
     "notifyOnWikiChanges": "Benachrichtigen bei Änderungen im Wiki",
@@ -359,15 +359,15 @@
     "all_pages": "Alle Seiten in",
     "revisions": "Revisionen",
     "search": "Wiki durchsuchen",
-    "rename": "Wiki-Seite \"__pageName__\" umbenennen",
+    "rename": "Wiki-Seite \"{{pageName}}\" umbenennen",
     "newname": "Neuer Name",
     "rename_info": [
       "h3 Achtung: Verweise",
       "p Das Umbennen einer Seite ändert nicht die Verweise auf sie.",
       "p Bitte Suche nach dem Seitennamen und passe die Verweise manuell an."
     ],
-    "create": "Wiki-Seite \"__subdir__/__pageName__\" anlegen",
-    "edit": "Wiki-Seite \"__subdir__/__pageName__\" bearbeiten",
+    "create": "Wiki-Seite \"{{subdir}}/{{pageName}}\" anlegen",
+    "edit": "Wiki-Seite \"{{subdir}}/{{pageName}}\" bearbeiten",
     "contents": "Inhalt",
     "message": "Kommentar",
     "commit_message": "Commit-Kommentar",
@@ -393,17 +393,17 @@
     "content": {
       "save_error": "Das Speichern war nicht erfolgreich.",
       "save_error_retry": "Das Speichern war nicht erfolgreich. Bitte führe Deine Änderungen nochmals durch und speichere erneut.",
-      "save_error_reason": "Das Speichern war nicht erfolgreich. Grund: __err__",
+      "save_error_reason": "Das Speichern war nicht erfolgreich. Grund: {{err}}",
       "query": "Dein eingegebener Suchtext ist zu kurz.",
       "activities": {
         "saved": "Deine Aktivität wurde gespeichert.",
-        "credit_card_paid": "Deine Kreditkartenzahlung in Höhe von __amount__ ist erfolgt.",
-        "credit_card_not_paid": "Deine Kreditkartenzahlung ist nicht erfolgt. Grund: \"__reason__\"",
+        "credit_card_paid": "Deine Kreditkartenzahlung in Höhe von {{amount}} ist erfolgt.",
+        "credit_card_not_paid": "Deine Kreditkartenzahlung ist nicht erfolgt. Grund: \"{{reason}}\"",
         "transfer_paid": "Deine Überweisungsbestätigung wurde gespeichert.",
         "participation_added": "Deine Teilnahme wurde eingetragen.",
-        "participation_for_resource_added": "Deine Teilnahme wurde für \"__resourceName__\" eingetragen.",
+        "participation_for_resource_added": "Deine Teilnahme wurde für \"{{resourceName}}\" eingetragen.",
         "participation_removed": "Schade, dass Du nicht dabei sein wirst.",
-        "participation_for_resource_removed": "Schade, dass Du bei \"__resourceName__\" nicht dabei sein wirst.",
+        "participation_for_resource_removed": "Schade, dass Du bei \"{{resourceName}}\" nicht dabei sein wirst.",
         "waitinglist_added": "Du bist jetzt auf der Warteliste.",
         "waitinglist_removed": "Du bist jetzt nicht mehr auf der Warteliste.",
         "does_not_exist": "Die Aktivität existiert nicht.",
@@ -425,9 +425,9 @@
         "unsubscribed": "Du bist jetzt nicht mehr Mitglied in der Gruppe."
       },
       "mailsender": {
-        "error_reason": "Deine __type__ wurde nicht gesendet. Grund: __err__",
+        "error_reason": "Deine {{type}} wurde nicht gesendet. Grund: {{err}}",
         "error_no_recipient": "Deine E-Mail wurde nicht gesendet. Es ist kein Empfänger angegeben.",
-        "success": "Deine __type__ ist unterwegs."
+        "success": "Deine {{type}} ist unterwegs."
       },
       "members": {
         "saved": "Das Profil wurde gespeichert.",

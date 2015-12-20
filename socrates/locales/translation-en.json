@@ -36,7 +36,7 @@
     "members": {
       "one": "one member",
       "none": "no members",
-      "count": "__count__ members"
+      "count": "{{count}} members"
     },
     "current": "Current Activities",
     "communities": "Software Craftsmanship Communities in Germany, Austria and Switzerland.",
@@ -112,7 +112,7 @@
     "waitinglist_new": "New Entry",
     "no_participants": "So far, there are no participants.",
     "one_participant": "So far, there is one participant.",
-    "count_participants": "So far, there are __count__ participants.",
+    "count_participants": "So far, there are {{count}} participants.",
     "label": "Label",
     "unlimited": "unlimited",
     "title": "Title",
@@ -280,7 +280,7 @@
     "reference": "How I got to know about Softwerkskammer",
     "authenticated_via": "Currently authenticated via",
     "authenticate": "Authenticate elsewhere",
-    "send_email": "Send e-mail to __firstname__ __lastname__",
+    "send_email": "Send e-mail to {{firstname}} {{lastname}}",
     "has": "Softwerkskammer has",
     "has_by_interests": "For this phrase we have",
     "notifyOnWikiChanges": "Notify on wiki changes",
@@ -306,15 +306,15 @@
     "all_pages": "All pages in",
     "revisions": "Revisions",
     "search": "Search wiki",
-    "rename": "Rename wiki-page \"__pageName__\"",
+    "rename": "Rename wiki-page \"{{pageName}}\"",
     "newname": "New Name",
     "rename_info": [
       "h3 Attention: Links",
       "p Renaming the page will not adapt links to the page.",
       "p Please search for the old page name and change found links accordingly."
     ],
-    "create": "$t(general.create) wiki-page \"__subdir__/__pageName__\"",
-    "edit": "$t(general.edit) wiki-page \"__subdir__/__pageName__\"",
+    "create": "$t(general.create) wiki-page \"{{subdir}}/{{pageName}}\"",
+    "edit": "$t(general.edit) wiki-page \"{{subdir}}/{{pageName}}\"",
     "contents": "Contents",
     "message": "Message",
     "commit_message": "Commit Message",
@@ -340,17 +340,17 @@
     "content": {
       "save_error": "Save failed.",
       "save_error_retry": "Save failed. Please redo your changes and save again.",
-      "save_error_reason": "Save failed. Reason: __err__",
+      "save_error_reason": "Save failed. Reason: {{err}}",
       "query": "The query string you entered is too short.",
       "activities": {
         "saved": "Your activity has been saved.",
-        "credit_card_paid": "Your credit card payment of __amount__ has been transferred.",
-        "credit_card_not_paid": "Your credit card payment has not been successful. Reason: \"__reason__\"",
+        "credit_card_paid": "Your credit card payment of {{amount}} has been transferred.",
+        "credit_card_not_paid": "Your credit card payment has not been successful. Reason: \"{{reason}}\"",
         "transfer_paid": "Your money transfer confirmation was saved.",
         "participation_added": "Your participation has been registered.",
-        "participation_for_resource_added": "Your participation in \"__resourceName__\" has been registered.",
+        "participation_for_resource_added": "Your participation in \"{{resourceName}}\" has been registered.",
         "participation_removed": "What a pity that you will not participate.",
-        "participation_for_resource_removed": "What a pity that you will not participate in \"__resourceName__\".",
+        "participation_for_resource_removed": "What a pity that you will not participate in \"{{resourceName}}\".",
         "waitinglist_added": "You have been added to the waiting list.",
         "waitinglist_removed": "You have been removed from the waiting list.",
         "does_not_exist": "The activity does not exist.",
@@ -368,9 +368,9 @@
         "unsubscribed": "You are not a member of this group any more. You will receive a goodbye-e-mail in a few moments."
       },
       "mailsender": {
-        "error_reason": "Your __type__ has not been sent. Reason: __err__",
+        "error_reason": "Your {{type}} has not been sent. Reason: {{err}}",
         "error_no_recipient": "Your e-mail has not been sent. No recipient given.",
-        "success": "Your __type__ is on its way."
+        "success": "Your {{type}} is on its way."
       },
       "members": {
         "saved": "The profile has been saved.",
