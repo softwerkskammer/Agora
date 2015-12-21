@@ -55,7 +55,7 @@ block content
       hr
       .hidden-print
         if (allowsRegistration)
-          +visitorCount(activity.participants.length)
+          p #{t('activities.count_participants_interval', { postProcess: 'interval', count: activity.participants.length })}
         each resourceName in activity.resourceNames()
           +subscriptionButtons(activity, resourceName, resourceRegistrationRenderer)
         if (accessrights.isRegistered() && activity.participants.length > 0)

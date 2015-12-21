@@ -1,13 +1,3 @@
-mixin visitorCount(number)
-  p
-    if (number === 0)
-      |  #{t('activities.no_participants')}
-    else if (number === 1)
-      |  #{t('activities.one_participant')}
-    else
-      |  #{t('activities.count_participants', {count: '' + number})}
-
-
 mixin subscriptionButtons(activity, resourceName, resourceRegistrationRenderer)
   -var result = resourceRegistrationRenderer.htmlRepresentationOf(activity, resourceName, accessrights.memberId())
   -var btnClass = result.isWithdrawal() ? 'btn-default' : 'btn-primary'
