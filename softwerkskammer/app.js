@@ -63,7 +63,7 @@ module.exports = {
     app.use(beans.get('secureByLogin'));
     app.use(beans.get('secureSuperuserOnly'));
     app.use(beans.get('expressViewHelper'));
-    app.use(beans.get('initI18N'));
+    app.use(beans.get('initI18N').middleware);
     app.use(beans.get('redirectRuleForNewUser'));
     app.use(beans.get('announcementsInSidebar'));
     app.use(beans.get('wikiSubdirs'));

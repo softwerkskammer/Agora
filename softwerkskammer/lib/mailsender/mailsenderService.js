@@ -18,6 +18,7 @@ var statusmessage = beans.get('statusmessage');
 var logger = require('winston').loggers.get('application');
 
 var transport = beans.get('mailtransport');
+var i18n = beans.get('initI18N').i18n;
 
 function buttonFor(activity, resourceName) {
   var url = misc.toFullQualifiedUrl('activities/subscribe', activity.url() + '/' + resourceName);
@@ -26,7 +27,10 @@ function buttonFor(activity, resourceName) {
 }
 
 function statusmessageForError(type, err) {
-  return statusmessage.errorMessage('message.title.email_problem', 'message.content.mailsender.error_reason', {type: type, err: err.toString()});
+  return statusmessage.errorMessage('message.title.email_problem', 'message.content.mailsender.error_reason', {
+    type: type,
+    err: err.toString()
+  });
 }
 
 function statusmessageForSuccess(type) {
@@ -67,8 +71,17 @@ module.exports = {
         var message = new Message();
         message.setSubject('Einladung: ' + activity.title());
         message.setMarkdown(activityMarkdown(activity, language));
-        message.addToButtons({text: 'Zur Aktivität', url: misc.toFullQualifiedUrl('activities', encodeURIComponent(activity.url()))});
-        var result = {message: message, regionalgroups: regionalGroups, themegroups: thematicGroups, successURL: '/activities/' + encodeURIComponent(activityURL), activity: activity };
+        message.addToButtons({
+          text: 'Zur Aktivität',
+          url: misc.toFullQualifiedUrl('activities', encodeURIComponent(activity.url()))
+        });
+        var result = {
+          message: message,
+          regionalgroups: regionalGroups,
+          themegroups: thematicGroups,
+          successURL: '/activities/' + encodeURIComponent(activityURL),
+          activity: activity
+        };
         globalCallback(null, result);
       }
     );
@@ -85,7 +98,7 @@ module.exports = {
   },
 
   sendMailToParticipantsOf: function (activityURL, message, callback) {
-    var type = '$t(mailsender.reminder)';
+    var type = i18n.t('mailsender.reminder');
     return activitiesService.getActivityWithGroupAndParticipants(activityURL, function (err, activity) {
       if (err) { return callback(err, statusmessageForError(type, err)); }
       message.setBccToMemberAddresses(activity.participants);
@@ -94,7 +107,7 @@ module.exports = {
   },
 
   sendMailToInvitedGroups: function (invitedGroups, message, callback) {
-    var type = '$t(mailsender.invitation)';
+    var type = i18n.t('mailsender.invitation');
     return groupsService.getGroups(invitedGroups, function (err, groups) {
       if (err) { return callback(err, statusmessageForError(type, err)); }
       if (groups.length === 0) { return callback(null, statusmessageForError(type, new Error('Keine der Gruppen wurde gefunden.'))); }
@@ -107,7 +120,7 @@ module.exports = {
   },
 
   sendMailToMember: function (nickname, message, callback) {
-    var type = '$t(mailsender.notification)';
+    var type = i18n.t('mailsender.notification');
     return memberstore.getMember(nickname, function (err, member) {
       if (err) {return callback(err, statusmessageForError(type, err)); }
       if (!member) {return callback(null, statusmessageForError(type, new Error('Empfänger wurde nicht gefunden.'))); }
@@ -132,7 +145,11 @@ module.exports = {
 
   sendResignment: function (markdown, member, callback) {
     var memberUrl = conf.get('publicUrlPrefix') + '/members/' + encodeURIComponent(member.nickname());
-    var messageData = {markdown: member.displayName() + ' ([' + member.nickname() + '](' + memberUrl + ')) möchte gerne austreten.\n\n' + markdown, subject: 'Austrittswunsch', sendCopyToSelf: true};
+    var messageData = {
+      markdown: member.displayName() + ' ([' + member.nickname() + '](' + memberUrl + ')) möchte gerne austreten.\n\n' + markdown,
+      subject: 'Austrittswunsch',
+      sendCopyToSelf: true
+    };
     var message = new Message(messageData, member);
     membersService.superuserEmails(function (err, superusers) {
       if (err) { return callback(err); }
