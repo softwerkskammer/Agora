@@ -10,7 +10,7 @@ There is a companion project where the feature backlog lives. Go to the issues i
 Video hangout
 --------------------
 
-Co-ordination via the mailinglist at [http://www.softwerkskammer.org/groups/neueplattform](http://www.softwerkskammer.org/groups/neueplattform)
+Co-ordination via the mailinglist at [http://www.softwerkskammer.org/groups/agora](http://www.softwerkskammer.org/groups/agora)
 
 What this is about
 ==================

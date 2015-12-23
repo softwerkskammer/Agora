@@ -155,7 +155,7 @@ describe('Groups application', function () {
         .expect(/Dies ist Gruppe A\./)
         .expect(/Themengruppe/)
         .expect(/Mitglieder:/)
-        .expect(/Diese Gruppe hat&nbsp;2 Mitglieder\./, done);
+        .expect(/Diese Gruppe hat 2 Mitglieder\./, done);
     });
 
     it('displays an existing group and its members if somebody is logged in', function (done) {
@@ -167,7 +167,7 @@ describe('Groups application', function () {
         .expect(/Dies ist Gruppe A\./)
         .expect(/Themengruppe/)
         .expect(/Mitglieder:/)
-        .expect(/Diese Gruppe hat&nbsp;2 Mitglieder\./)
+        .expect(/Diese Gruppe hat 2 Mitglieder\./)
         .expect(/Peter Meyer/)
         .expect(/Hans Dampf/, done);
     });

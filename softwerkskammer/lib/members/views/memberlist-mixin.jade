@@ -1,12 +1,6 @@
 mixin memberlistHeading(firstPart, count)
-  | #{firstPart}&nbsp;
-  if (count === 1)
-    | #{t('general.members.one')}.
-  else if (count === 0)
-    | #{t('general.members.none')}.
-  else
-    | #{t('general.members.count', {count: '' + count})}.
-
+  | #{firstPart}#{t('general.members_interval', { postProcess: 'interval', count: count })}.
+  
 mixin memberlist(members, organizers)
   if (accessrights.isRegistered())
     dl.dl-horizontal

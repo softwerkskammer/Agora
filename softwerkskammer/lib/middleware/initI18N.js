@@ -3,6 +3,7 @@
 var i18n = require('i18next');
 var middleware = require('i18next-express-middleware');
 var Backend = require('i18next-node-fs-backend');
+var intervalPlural = require('i18next-intervalplural-postprocessor');
 var jade = require('jade');
 var path = require('path');
 
@@ -19,6 +20,7 @@ module.exports = function initI18N(languages, abspath) {
     .use(Backend)
     .use(middleware.LanguageDetector)
     .use(JadePostProcessor)
+    .use(intervalPlural)
     .init({
       debug: false,
       supportedLngs: langs,
@@ -34,7 +36,8 @@ module.exports = function initI18N(languages, abspath) {
         lookupSession: 'language'
       }
     });
-  return middleware.handle(i18n, {});
+  var handle = middleware.handle(i18n, {});
+  return {i18n: i18n, middleware: handle};
 }
 
 
