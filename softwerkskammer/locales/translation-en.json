@@ -103,73 +103,72 @@
     "authentication": "Authentication",
     "authentication_text": "You can authenticate via one of the methods given below. Subsequently, we ask you to provide some personal data.",
     "error": "Authentication Error",
-    "error_text": {
-      "0": "h3 Authentication Error!",
-      "1": "p Unfortunately, something went wrong during authentication.",
-      "2": "  | Please ",
-      "3": "  a(href=\"/login\") try again.",
-      "4": "p If the error occurs repeatedly, please ",
-      "5": "  a(href=\"https://github.com/softwerkskammer/Agora/issues/\") $t(error.detailed_report):",
-      "6": "  ul",
-      "7": "    li How did you access the login page?",
-      "8": "    li Which authentication did you choose?",
-      "9": "    li If you entered a URL manually, which was it?",
-      "10": "    li $t(error.os_browser)",
-      "11": "    li $t(error.datetime)",
-      "12": "    li $t(error.stacktrace500)",
-      "13": "p $t(error.sorry)"
-    },
+    "error_text": [
+      "h3 Authentication Error!",
+      "p Unfortunately, something went wrong during authentication.",
+      "  | Please ",
+      "  a(href=\"/login\") try again.",
+      "p If the error occurs repeatedly, please ",
+      "  a(href=\"https://github.com/softwerkskammer/Agora/issues/\") $t(error.detailed_report):",
+      "  ul",
+      "    li How did you access the login page?",
+      "    li Which authentication did you choose?",
+      "    li If you entered a URL manually, which was it?",
+      "    li $t(error.os_browser)",
+      "    li $t(error.datetime)",
+      "    li $t(error.stacktrace500)"
+    ],
     "please_authenticate": "Please, authenticate yourself!",
-    "required_text": {
-      "0": "h3 You need to be logged-in to access this page!",
-      "1": "p You wanted to access a protected page inside the members section. To do that you need to authenticate yourself.",
-      "2": "p If this is an application error, we apologize and would love to get ",
-      "3": "  a(href='https://github.com/softwerkskammer/Agora/issues/') feedback.",
-      "4": "p The Agora-Team is begging your pardon."
-    }
+    "required_text": [
+      "h3 You need to be logged-in to access this page!",
+      "p You wanted to access a protected page inside the members section. To do that you need to authenticate yourself.",
+      "p If this is an application error, we apologize and would love to get ",
+      "  a(href='https://github.com/softwerkskammer/Agora/issues/') feedback.",
+      "p The Agora-Team is begging your pardon."
+    ]
   },
   "colors": {
     "color": "Colour",
     "colors": "Colours"
   },
   "dashboard": {
-    "description": {
-      "0": "p Your personal view to softwerkskammer. It shows your groups and their upcoming activities."
-    }
+    "description": [
+      "p Your personal view to softwerkskammer. It shows your groups and their upcoming activities."
+    ]
   },
   "error": {
     "click_links": "I'd suggest you click on one of the links in the header.",
     "congratulations": "Congratulations!",
-    "datetime": "Date and time",
-    "detailed_report": "give us a detailed error report",
-    "error500_text": {
-      "0": "p Please ",
-      "1": "  a(href=\"https://github.com/softwerkskammer/Agora/issues/\") $t(error.detailed_report):",
-      "2": "  ul",
-      "3": "    li What did you do?",
-      "4": "    li $t(error.os_browser)",
-      "5": "    li $t(error.datetime)",
-      "6": "    li $t(error.stacktrace500)"
-    },
+    "datetime": "| Date and time",
+    "detailed_report": "| give us a detailed error report",
+    "error500_text": [
+      "p Please ",
+      "  a(href=\"https://github.com/softwerkskammer/Agora/issues/\") $t(error.detailed_report):",
+      "  ul",
+      "    li What did you do?",
+      "    li $t(error.os_browser)",
+      "    li $t(error.datetime)",
+      "    li $t(error.stacktrace500)"
+    ],
     "found404": "You found a four-zero-four.",
     "found500": "You found an error.",
     "general": "General Problem",
     "missing_page": "Missing Page",
-    "os_browser": "Operating system and browser, including versions.",
+    "os_browser": "| Operating system and browser, including versions.",
     "page_is_missing": "This page is missing.",
     "sorry": "The Agora team begs your pardon.",
-    "stacktrace500": "The Stacktrace"
+    "stacktrace500": "| The Stacktrace"
   },
   "general": {
-    "about_us_text": {
-      "0": "h4 About us",
-      "1": "p.",
-      "2": "  Softwerkskammer founded itself in 2011 in order to simplify the exchange of experiences among people interested in Software Craftsmanship.",
-      "3": "p.",
-      "4": "  The local communities use it to organise their meetings and other events like Code Retreats or Open Spaces,",
-      "5": "  or they simply share ideas or discuss interesting things on their mailing list.",
-      "6": "p Look at the Activities menu to find out what we're up to over the next few weeks."
-    },
+    "about_us_text": [
+      "h4 About us",
+      "p.",
+      "  Softwerkskammer founded itself in 2011 in order to simplify the exchange of experiences among people interested in Software Craftsmanship.",
+      "p.",
+      "  The local communities use it to organise their meetings and other events like Code Retreats or Open Spaces,",
+      "  or they simply share ideas or discuss interesting things on their mailing list.",
+      "p Look at the Activities menu to find out what we're up to over the next few weeks."
+    ],
     "add": "Add",
     "address": "Address",
     "administration": "Administration",
@@ -194,15 +193,15 @@
     "gdcr_activities": "Activities related to GDCR",
     "gdcr_text": "Here you find almost all german-speaking activities. You can find a full overview at",
     "general": "General",
-    "goodbye_text": {
-      "0": "h2 Great you've been here.",
-      "1": "p Take care - see you soon!",
-      "2": "hr",
-      "3": "p.text-right Or maybe you want to return? ",
-      "4": "  a.btn.btn-primary(data-toggle='modal', data-target='#login', href='/loginDialog?returnUrl=' + encodeURIComponent(currentUrl ||  '/'))",
-      "5": "    i.fa.fa-sign-in.fa-fw",
-      "6": "    | &nbsp;$t(general.login)"
-    },
+    "goodbye_text": [
+      "h2 Great you've been here.",
+      "p Take care - see you soon!",
+      "hr",
+      "p.text-right Or maybe you want to return? ",
+      "  a.btn.btn-primary(data-toggle='modal', data-target='#login', href='/loginDialog?returnUrl=' + encodeURIComponent(currentUrl ||  '/'))",
+      "    i.fa.fa-sign-in.fa-fw",
+      "    | &nbsp;Log in"
+    ],
     "guest": "Guest",
     "legal_notice": "Legal Notice",
     "login": "Log in",
@@ -280,11 +279,11 @@
     "others": "Others",
     "reminder": "Reminder",
     "resign": "Write Resignment E-mail",
-    "resign_info": {
-      "0": "p We are sorry that you want to leave.",
-      "1": "p We are respecting this and will remove your account as soon as possible. We would be thankful if you answered the following questions.",
-      "2": "p Account removal is a manual process and sending this form will trigger an e-mail to the administators."
-    },
+    "resign_info": [
+      "p We are sorry that you want to leave.",
+      "p We are respecting this and will remove your account as soon as possible. We would be thankful if you answered the following questions.",
+      "p Account removal is a manual process and sending this form will trigger an e-mail to the administators."
+    ],
     "send": "Send",
     "subject": "Subject",
     "to_member": "To member",
@@ -453,11 +452,11 @@
     "no_results": "No results",
     "overview": "Overview of files in",
     "rename": "Rename wiki-page \"{{pageName}}\"",
-    "rename_info": {
-      "0": "h3 Attention: Links",
-      "1": "p Renaming the page will not adapt links to the page.",
-      "2": "p Please search for the old page name and change found links accordingly."
-    },
+    "rename_info": [
+      "h3 Attention: Links",
+      "p Renaming the page will not adapt links to the page.",
+      "p Please search for the old page name and change found links accordingly."
+    ],
     "revisions": "Revisions",
     "search": "Search wiki",
     "searchresults": "Search Results",

@@ -103,74 +103,73 @@
     "authentication": "Authentifizierung",
     "authentication_text": "Du kannst Dich über einen der untenstehenden Dienste authentifizieren. Im Anschluss bitten wir Dich, einige persönliche Daten einzugeben.",
     "error": "Authentifizierungsproblem",
-    "error_text": {
-      "0": "h3 Problem bei der Authentifizierung!",
-      "1": "p Leider scheint bei der Authentifizierung etwas schief gegangen zu sein.",
-      "2": "  | Bitte ",
-      "3": "  a(href=\"/login\") versuche es noch einmal.",
-      "4": "p Sollte der Fehler wiederholt auftreten, lass uns bitte ",
-      "5": "  a(href=\"https://github.com/softwerkskammer/Agora/issues/\") $t(error.detailed_report):",
-      "6": "  ul",
-      "7": "    li Wie bist Du auf die Login Seite gegangen?",
-      "8": "    li Welche Authentifizierung hast Du gewählt?",
-      "9": "    li Wenn Du selbst eine URL eingegeben hast, welche war das?",
-      "10": "    li $t(error.os_browser)",
-      "11": "    li $t(error.datetime)",
-      "12": "    li $t(error.stacktrace500)",
-      "13": "p $t(error.sorry)"
-    },
+    "error_text": [
+      "h3 Problem bei der Authentifizierung!",
+      "p Leider scheint bei der Authentifizierung etwas schief gegangen zu sein.",
+      "  | Bitte ",
+      "  a(href=\"/login\") versuche es noch einmal.",
+      "p Sollte der Fehler wiederholt auftreten, lass uns bitte ",
+      "  a(href=\"https://github.com/softwerkskammer/Agora/issues/\") $t(error.detailed_report):",
+      "  ul",
+      "    li Wie bist Du auf die Login Seite gegangen?",
+      "    li Welche Authentifizierung hast Du gewählt?",
+      "    li Wenn Du selbst eine URL eingegeben hast, welche war das?",
+      "    li $t(error.os_browser)",
+      "    li $t(error.datetime)",
+      "    li $t(error.stacktrace500)"
+    ],
     "please_authenticate": "Bitte authentifiziere Dich!",
-    "required_text": {
-      "0": "h3 Um auf diese Seite zuzugreifen, musst Du angemeldet sein!",
-      "1": "p Du wolltest auf eine Seite im Mitgliederbereich zugreifen. Dazu musst Du Dich authentifizieren.",
-      "2": "p Sollte dies ein Fehler in der Anwendung sein, bitten wir um ",
-      "3": "  a(href='https://github.com/softwerkskammer/Agora/issues/') Rückmeldung.",
-      "4": "p Das Agora-Team bittet um Entschuldigung."
-    }
+    "required_text": [
+      "h3 Um auf diese Seite zuzugreifen, musst Du angemeldet sein!",
+      "p Du wolltest auf eine Seite im Mitgliederbereich zugreifen. Dazu musst Du Dich authentifizieren.",
+      "p Sollte dies ein Fehler in der Anwendung sein, bitten wir um ",
+      "  a(href='https://github.com/softwerkskammer/Agora/issues/') Rückmeldung.",
+      "p Das Agora-Team bittet um Entschuldigung."
+    ]
   },
   "colors": {
     "color": "Farbe",
     "colors": "Farben"
   },
   "dashboard": {
-    "description": {
-      "0": "p Deine persönliche Softwerkskammer. Wir zeigen Dir hier Deine Gruppen und ihre Aktivitäten."
-    }
+    "description": [
+      "p Deine persönliche Softwerkskammer. Wir zeigen Dir hier Deine Gruppen und ihre Aktivitäten."
+    ]
   },
   "error": {
     "click_links": "Am Besten klickst Du auf einen unserer Links im Header.",
     "congratulations": "Herzlichen Glückwunsch!",
-    "datetime": "Datum / Uhrzeit",
-    "detailed_report": "einen möglichst detaillierten Fehlerbericht zukommen",
-    "error500_text": {
-      "0": "p Bitte lass uns ",
-      "1": "  a(href=\"https://github.com/softwerkskammer/Agora/issues/\") $t(error.detailed_report):",
-      "2": "  ul",
-      "3": "    li Was hast Du getan?",
-      "4": "    li $t(error.os_browser)",
-      "5": "    li $t(error.datetime)",
-      "6": "    li $t(error.stacktrace500)"
-    },
+    "datetime": "| Datum / Uhrzeit",
+    "detailed_report": "| einen möglichst detaillierten Fehlerbericht zukommen",
+    "error500_text": [
+      "p Bitte lass uns ",
+      "  a(href=\"https://github.com/softwerkskammer/Agora/issues/\") $t(error.detailed_report):",
+      "  ul",
+      "    li Was hast Du getan?",
+      "    li $t(error.os_browser)",
+      "    li $t(error.datetime)",
+      "    li $t(error.stacktrace500)"
+    ],
     "found404": "Du hast einen vier-null-vier gefunden.",
     "found500": "Du hast einen Fehler gefunden.",
     "general": "Generelles Problem",
     "missing_page": "Fehlende Seite",
-    "os_browser": "Betriebssystem und Browser inkl. Version.",
+    "os_browser": "| Betriebssystem und Browser inkl. Version.",
     "page_is_missing": "Diese Seite fehlt.",
     "sorry": "Das Agora-Team bittet um Entschuldigung.",
-    "stacktrace500": "Den Stacktrace"
+    "stacktrace500": "| Den Stacktrace"
   },
   "general": {
-    "about_us_text": {
-      "0": "h4 Über uns",
-      "1": "p.",
-      "2": "  Die Softwerkskammer hat sich 2011 gegründet, um den Austausch Interessierter zum Thema Software Craftsmanship",
-      "3": "  zu vereinfachen.",
-      "4": "p.",
-      "5": "  Hierüber organisieren die lokalen Communities (die Softwerkskammern) ihre Treffen und andere Events wie",
-      "6": "  CodeRetreats oder OpenSpaces oder tauschen sich einfach nur via Mailingliste aus.",
-      "7": "p Was wir in den nächsten Wochen veranstalten, findest Du unter Aktivitäten."
-    },
+    "about_us_text": [
+      "h4 Über uns",
+      "p.",
+      "  Die Softwerkskammer hat sich 2011 gegründet, um den Austausch Interessierter zum Thema Software Craftsmanship",
+      "  zu vereinfachen.",
+      "p.",
+      "  Hierüber organisieren die lokalen Communities (die Softwerkskammern) ihre Treffen und andere Events wie",
+      "  CodeRetreats oder OpenSpaces oder tauschen sich einfach nur via Mailingliste aus.",
+      "p Was wir in den nächsten Wochen veranstalten, findest Du unter Aktivitäten."
+    ],
     "add": "Hinzufügen",
     "address": "Adresse",
     "administration": "Verwaltung",
@@ -195,15 +194,15 @@
     "gdcr_activities": "Aktivitäten zum GDCR",
     "gdcr_text": "Hier findest Du fast alle deutschsprachigen Veranstaltungen. Eine vollständige Übersicht findest Du auf",
     "general": "Allgemein",
-    "goodbye_text": {
-      "0": "h2 Schön, dass Du hier warst.",
-      "1": "p Mach's gut - bis zum nächsten Mal!",
-      "2": "hr",
-      "3": "p.text-right Oder magst Du nochmal reinschauen? ",
-      "4": "  a.btn.btn-primary(data-toggle='modal', data-target='#login', href='/loginDialog?returnUrl=' + encodeURIComponent(currentUrl ||  '/'))",
-      "5": "    i.fa.fa-sign-in.fa-fw",
-      "6": "    | &nbsp;$t(general.login)"
-    },
+    "goodbye_text": [
+      "h2 Schön, dass Du hier warst.",
+      "p Mach's gut - bis zum nächsten Mal!",
+      "hr",
+      "p.text-right Oder magst Du nochmal reinschauen? ",
+      "  a.btn.btn-primary(data-toggle='modal', data-target='#login', href='/loginDialog?returnUrl=' + encodeURIComponent(currentUrl ||  '/'))",
+      "    i.fa.fa-sign-in.fa-fw",
+      "    | &nbsp;Anmelden"
+    ],
     "guest": "Gast",
     "legal_notice": "Impressum",
     "login": "Anmelden",
@@ -281,11 +280,11 @@
     "others": "Sonstige",
     "reminder": "Erinnerung",
     "resign": "Austrittsmail schreiben",
-    "resign_info": {
-      "0": "p Schade, dass Du aus der Softwerkskammer austreten möchtest.",
-      "1": "p Wir respektieren diesen Wunsch und werden ihn umgehend erfüllen. Es wäre schön, wenn Du Dir noch die Zeit nimmst, die untenstehenden Fragen zu beantworten.",
-      "2": "p Das Senden dieses Formulars schickt eine E-Mail an uns Adminsitratoren und wir werden dann manuell Deinen Account löschen."
-    },
+    "resign_info": [
+      "p Schade, dass Du aus der Softwerkskammer austreten möchtest.",
+      "p Wir respektieren diesen Wunsch und werden ihn umgehend erfüllen. Es wäre schön, wenn Du Dir noch die Zeit nimmst, die untenstehenden Fragen zu beantworten.",
+      "p Das Senden dieses Formulars schickt eine E-Mail an uns Adminsitratoren und wir werden dann manuell Deinen Account löschen."
+    ],
     "send": "Senden",
     "subject": "Betreff",
     "to_member": "An Mitglied",
@@ -454,11 +453,11 @@
     "no_results": "Keine Ergebnisse",
     "overview": "Übersicht der Dateien in",
     "rename": "Wiki-Seite \"{{pageName}}\" umbenennen",
-    "rename_info": {
-      "0": "h3 Achtung: Verweise",
-      "1": "p Das Umbennen einer Seite ändert nicht die Verweise auf sie.",
-      "2": "p Bitte Suche nach dem Seitennamen und passe die Verweise manuell an."
-    },
+    "rename_info": [
+      "h3 Achtung: Verweise",
+      "p Das Umbennen einer Seite ändert nicht die Verweise auf sie.",
+      "p Bitte Suche nach dem Seitennamen und passe die Verweise manuell an."
+    ],
     "revisions": "Revisionen",
     "search": "Wiki durchsuchen",
     "searchresults": "Suchergebnis",
