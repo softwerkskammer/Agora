@@ -41,10 +41,10 @@ describe('Wiki application', function () {
 
   it('normalizes page names', function (done) {
     request(createApp())
-      .get('/global/Some%20Päg\'é')
+      .get('/global/Söme%20Päg\'é')
       .expect(200)
       .end(function (err) {
-        expect(pageShow.calledWith('global/some-pg', 'HEAD')).to.be(true);
+        expect(pageShow.calledWith('global/some-page', 'HEAD')).to.be(true);
         done(err);
       });
   });
