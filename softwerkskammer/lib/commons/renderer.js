@@ -9,7 +9,14 @@ var normalize = function (str) {
   if (typeof str !== 'string' || str.trim() === '') {
     return '';
   }
-  return iconv.decode(new Buffer(str, 'utf-8'), 'utf8').trim().replace(/\s/g, '-').replace(/\//g, '-').replace(/[^a-zA-Z0-9\- _]/g, '').toLowerCase();
+  // iconv-lite cannot do this yet, so we do it manually:
+  var withoutUmlauts = str.replace(/[äÄàáÀÁâÂ]/gi, 'a')
+    .replace(/[èéÈÉêÊ]/gi, 'e')
+    .replace(/[ìíÌÍîÎ]/gi, 'i')
+    .replace(/[öÖòóÒÓôÔ]/gi, 'o')
+    .replace(/[üÜùúÙÚûÛ]/gi, 'u')
+    .replace(/ß/g, 's');
+  return iconv.decode(new Buffer(withoutUmlauts, 'utf-8'), 'utf8').trim().replace(/\s/g, '-').replace(/\//g, '-').replace(/[^a-zA-Z0-9\- _]/g, '').toLowerCase();
 };
 
 marked.setOptions({

@@ -54,9 +54,11 @@ describe('Renderer', function () {
     expect(Renderer.normalize('nell"aria')).to.equal('nellaria');
     expect(Renderer.normalize('lento  lento   lentissimo')).to.equal('lento--lento---lentissimo');
     expect(Renderer.normalize('nell - aria')).to.equal('nell---aria');
-    expect(Renderer.normalize(' nell - aria ')).to.equal('nell---aria');
-    expect(Renderer.normalize('Caffé')).to.equal('caff');
-    expect(Renderer.normalize('Caffé corretto!')).to.equal('caff-corretto');
+    expect(Renderer.normalize(' nell - ariä ')).to.equal('nell---aria');
+    expect(Renderer.normalize('Caffé')).to.equal('caffe');
+    expect(Renderer.normalize('Caffè corretto!')).to.equal('caffe-corretto');
+    expect(Renderer.normalize('äöüß')).to.equal('aous');
+    expect(Renderer.normalize('ÄÖÜ')).to.equal('aou');
     expect(Renderer.normalize('Caff<p>e</p> senza schiuma')).to.equal('caffpe-p-senza-schiuma');
     expect(Renderer.normalize('Per favore: nessun, dico; E un punto...')).to.equal('per-favore-nessun-dico-e-un-punto');
   });

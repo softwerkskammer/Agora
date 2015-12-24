@@ -19,9 +19,6 @@ module.exports = function (testBeansFilename) {
 
   conf.addProperties({
     port: '17125',
-    swkTrustedAppName: null,
-    swkTrustedAppPwd: null,
-    swkRemoteAppUser: null,
     dontUsePersistentSessions: true,
     superuser: 'superuserID',
     wikipath: '..',
