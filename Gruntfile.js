@@ -214,6 +214,18 @@ module.exports = function (grunt) {
           reporter: 'dot'
         }
       },
+      testApp: {
+        src: 'softwerkskammer/testApp',
+        options: {
+          coverageFolder: 'softwerkskammer/coverageApp',
+          excludes: ['**/activitystore.js'],
+          timeout: 6000,
+          slow: 100,
+          mask: '**/*.js',
+          root: 'softwerkskammer/lib',
+          reporter: 'dot'
+        }
+      },
       test: {
         src: 'softwerkskammer/test',
         options: {
