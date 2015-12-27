@@ -18,7 +18,6 @@ var statusmessage = beans.get('statusmessage');
 var logger = require('winston').loggers.get('application');
 
 var transport = beans.get('mailtransport');
-var i18n = beans.get('initI18N').i18n;
 
 function buttonFor(activity, resourceName) {
   var url = misc.toFullQualifiedUrl('activities/subscribe', activity.url() + '/' + resourceName);
@@ -98,7 +97,7 @@ module.exports = {
   },
 
   sendMailToParticipantsOf: function (activityURL, message, callback) {
-    var type = i18n.t('mailsender.reminder');
+    var type = '$t(mailsender.reminder)';
     return activitiesService.getActivityWithGroupAndParticipants(activityURL, function (err, activity) {
       if (err) { return callback(err, statusmessageForError(type, err)); }
       message.setBccToMemberAddresses(activity.participants);
@@ -107,7 +106,7 @@ module.exports = {
   },
 
   sendMailToInvitedGroups: function (invitedGroups, message, callback) {
-    var type = i18n.t('mailsender.invitation');
+    var type = '$t(mailsender.invitation)';
     return groupsService.getGroups(invitedGroups, function (err, groups) {
       if (err) { return callback(err, statusmessageForError(type, err)); }
       if (groups.length === 0) { return callback(null, statusmessageForError(type, new Error('Keine der Gruppen wurde gefunden.'))); }
@@ -120,7 +119,7 @@ module.exports = {
   },
 
   sendMailToMember: function (nickname, message, callback) {
-    var type = i18n.t('mailsender.notification');
+    var type = '$t(mailsender.notification)';
     return memberstore.getMember(nickname, function (err, member) {
       if (err) {return callback(err, statusmessageForError(type, err)); }
       if (!member) {return callback(null, statusmessageForError(type, new Error('Empfänger wurde nicht gefunden.'))); }
