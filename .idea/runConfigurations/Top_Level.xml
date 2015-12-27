@@ -7,7 +7,7 @@
     <ui>bdd</ui>
     <extra-mocha-options />
     <test-kind>DIRECTORY</test-kind>
-    <test-directory>$PROJECT_DIR$/softwerkskammer/test</test-directory>
+    <test-directory>$PROJECT_DIR$/softwerkskammer/testApp</test-directory>
     <recursive>false</recursive>
     <RunnerSettings RunnerId="MochaDebugRunner" />
     <RunnerSettings RunnerId="RunnerForMochaJavaScript" />

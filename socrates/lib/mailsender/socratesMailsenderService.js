@@ -11,7 +11,6 @@ var statusmessage = beans.get('statusmessage');
 var logger = require('winston').loggers.get('application');
 
 var transport = beans.get('mailtransport');
-var i18n = beans.get('initI18N').i18n;
 
 function statusmessageForError(type, err) {
   return statusmessage.errorMessage('message.title.email_problem', 'message.content.mailsender.error_reason', {
@@ -35,7 +34,7 @@ function sendMail(message, type, callback) {
 module.exports = {
 
   sendMailToAllSubscribers: function (message, globalCallback) {
-    var type = i18n.t('mailsender.invitation');
+    var type = '$t(mailsender.invitation)';
     subscriberstore.allSubscribers(function (err, subscribers) {
       if (err) { return globalCallback(err, statusmessageForError(type, err)); }
 

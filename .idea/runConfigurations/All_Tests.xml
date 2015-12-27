@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="All Tests" type="mocha-javascript-test-runner" factoryName="Mocha">
     <node-options />
-    <working-directory>$PROJECT_DIR$/softwerkskammer/lib</working-directory>
+    <working-directory>$PROJECT_DIR$</working-directory>
     <pass-parent-env>true</pass-parent-env>
     <envs />
     <ui>bdd</ui>

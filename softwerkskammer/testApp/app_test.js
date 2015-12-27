@@ -7,6 +7,7 @@ var beans = conf.get('beans');
 var groupsService = beans.get('groupsService');
 var groupstore = beans.get('groupstore');
 var announcementstore = beans.get('announcementstore');
+var activitiesService = beans.get('activitiesService');
 
 var baseUri = 'http://localhost:' + parseInt(conf.get('port'), 10);
 
@@ -47,6 +48,13 @@ describe('SWK Plattform server', function () {
     });
   });
 
+  it('renders the i18n translated text on the home page correctly', function (done) {
+    httpRequest({uri: baseUri}, function (req, resp) {
+      expect(resp.body).to.contain('Die Softwerkskammer hat sich 2011 gegründet, um den Austausch Interessierter zum Thema Software Craftsmanship\nzu vereinfachen.');
+      done(); // without error check
+    });
+  });
+
   it('provides the screen style sheet', function (done) {
     var stylesheetUri = baseUri + '/stylesheets/screen.css';
     httpRequest({uri: stylesheetUri}, function (req, resp) {
@@ -66,4 +74,30 @@ describe('SWK Plattform server', function () {
       done(); // without error check
     });
   });
+});
+
+describe('SWK Plattform server with Error', function () {
+  beforeEach(function (done) {
+    sinon.stub(groupstore, 'allGroups', function (callback) {return callback(new Error(), []); });
+    sinon.stub(groupsService, 'getAllAvailableGroups', function (callback) {return callback(null, []); });
+    sinon.stub(announcementstore, 'allAnnouncementsUntilToday', function (callback) {return callback(null, []); });
+    app.start(done);
+  });
+
+  afterEach(function (done) {
+    sinon.restore();
+    app.stop(done);
+  });
+
+  it('renders the i18n translated text on the home page correctly', function (done) {
+
+    httpRequest({uri: baseUri}, function (req, resp) {
+      expect(resp.body).to.contain('<li>Was hast Du getan?</li>');
+      expect(resp.body).to.contain('<li>Betriebssystem und Browser inkl. Version.</li>');
+      expect(resp.body).to.contain('<li>Den Stacktrace</li>');
+      expect(resp.body).to.contain('<p>Das Agora-Team bittet um Entschuldigung.</p>');
+      done(); // without error check
+    });
+  });
+
 });
