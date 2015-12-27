@@ -139,8 +139,8 @@
   "error": {
     "click_links": "I'd suggest you click on one of the links in the header.",
     "congratulations": "Congratulations!",
-    "datetime": "| Date and time",
-    "detailed_report": "| give us a detailed error report",
+    "datetime": "Date and time",
+    "detailed_report": "give us a detailed error report",
     "error500_text": [
       "p Please ",
       "  a(href=\"https://github.com/softwerkskammer/Agora/issues/\") $t(error.detailed_report):",
@@ -154,10 +154,10 @@
     "found500": "You found an error.",
     "general": "General Problem",
     "missing_page": "Missing Page",
-    "os_browser": "| Operating system and browser, including versions.",
+    "os_browser": "Operating system and browser, including versions.",
     "page_is_missing": "This page is missing.",
     "sorry": "The Agora team begs your pardon.",
-    "stacktrace500": "| The Stacktrace"
+    "stacktrace500": "The Stacktrace"
   },
   "general": {
     "about_us_text": [
@@ -200,7 +200,7 @@
       "p.text-right Or maybe you want to return? ",
       "  a.btn.btn-primary(data-toggle='modal', data-target='#login', href='/loginDialog?returnUrl=' + encodeURIComponent(currentUrl ||  '/'))",
       "    i.fa.fa-sign-in.fa-fw",
-      "    | &nbsp;Log in"
+      "    | &nbsp;$t(general.login)"
     ],
     "guest": "Guest",
     "legal_notice": "Legal Notice",
