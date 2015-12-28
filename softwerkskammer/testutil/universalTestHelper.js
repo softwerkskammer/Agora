@@ -3,9 +3,11 @@
 var _ = require('lodash');
 var express = require('express');
 var userStub = require('./userStub');
-var initI18N = require('../lib/middleware/initI18N');
+var beans = require('simple-configure').get('beans');
 
-module.exports = function (defaultLanguage, abspath) {
+var initI18N = beans.get('initI18N');
+
+module.exports = function (defaultLanguage) {
   return function (internalAppName, configuredBeans) {
     var appName = internalAppName;
     var beans = configuredBeans || require('./configureForTest').get('beans');
@@ -44,7 +46,7 @@ module.exports = function (defaultLanguage, abspath) {
         });
 
         app.use(beans.get('expressViewHelper'));
-        app.use(initI18N('fr', abspath)); // fr because of some technical reasons I do not yet understand... (leider)
+        app.use(initI18N);
 
         _.each(atts.middlewares, function (middleware) {
           app.use(middleware);

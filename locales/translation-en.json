@@ -43,6 +43,7 @@
     "participants": "Participants",
     "past": "Past",
     "possible": "possible",
+    "previous_gdcr": "Previous GDCRs",
     "register_until": "Can register until",
     "registration": "Subscription",
     "registration_not_here": "Subscription is not possible via Softwerkskammer.",
@@ -64,11 +65,16 @@
     "t_shirt_size": "T-Shirt size",
     "title": "Title",
     "tooltip": {
+      "address_suffix": "Used for links within this site",
       "count": "Maximal number of participants (no limit if field is empty, registration impossible if 0)",
       "deregistration": "Here you can enable or disable unsubscription",
       "end": "Here you can adjust the duration",
+      "registered": "You are registered.",
       "registration": "Here you can enable or disable registration",
+      "resourcelabel": "Name of the unit that can be booked (e.g. Single Room, Twin Room)",
       "start": "End date and time are shifted automatically (the duration remains the same)",
+      "title": "Short and concise for overviews",
+      "unknown": "You are not registered.",
       "waitinglist": "Should the resource have a waiting list?"
     },
     "unlimited": "unlimited",
@@ -91,6 +97,17 @@
     "photoTitlePlaceholder": "What's on this photo?",
     "record_image": "Record",
     "submit": "Submit"
+  },
+  "announcements": {
+    "announcement": "Announcement",
+    "announcements": "Announcements",
+    "automatic": "automatic",
+    "create": "Create announcement",
+    "edit": "Edit announcement",
+    "latest_news": "Latest News",
+    "new": "New Announcement",
+    "show_until": "Show until (and including)",
+    "text": "Announcement text"
   },
   "authentication": {
     "alternative_url": "(optional) Enter the URL of an alternative OpenID provider",
@@ -122,6 +139,15 @@
       "p The Agora-Team is begging your pardon."
     ]
   },
+  "colors": {
+    "color": "Colour",
+    "colors": "Colours"
+  },
+  "dashboard": {
+    "description": [
+      "p Your personal view to softwerkskammer. It shows your groups and their upcoming activities."
+    ]
+  },
   "error": {
     "click_links": "I'd suggest you click on one of the links in the header.",
     "congratulations": "Congratulations!",
@@ -146,6 +172,15 @@
     "stacktrace500": "The Stacktrace"
   },
   "general": {
+    "about_us_text": [
+      "h4 About us",
+      "p.",
+      "  Softwerkskammer founded itself in 2011 in order to simplify the exchange of experiences among people interested in Software Craftsmanship.",
+      "p.",
+      "  The local communities use it to organise their meetings and other events like Code Retreats or Open Spaces,",
+      "  or they simply share ideas or discuss interesting things on their mailing list.",
+      "p Look at the Activities menu to find out what we're up to over the next few weeks."
+    ],
     "add": "Add",
     "address": "Address",
     "administration": "Administration",
@@ -162,10 +197,24 @@
     "delete": "Delete",
     "description": "Description",
     "edit": "Edit",
+    "events_in_europe": "Events in Europe",
+    "events_in_europe_desc": "Calendar of conferences, open spaces, bar camps and other events",
     "faq": "Hints & FAQs",
     "feedback": "Feedback",
     "follow": "Follow",
+    "gdcr": "Global Day of Coderetreat",
+    "gdcr_activities": "Activities related to GDCR",
+    "gdcr_text": "Here you find almost all german-speaking activities. You can find a full overview at",
     "general": "General",
+    "goodbye_text": [
+      "h2 Great you've been here.",
+      "p Take care - see you soon!",
+      "hr",
+      "p.text-right Or maybe you want to return? ",
+      "  a.btn.btn-primary(data-toggle='modal', data-target='#login', href='/loginDialog?returnUrl=' + encodeURIComponent(currentUrl ||  '/'))",
+      "    i.fa.fa-sign-in.fa-fw",
+      "    | &nbsp;$t(general.login)"
+    ],
     "goodbye_text_bottom": "Or maybe you want to return?",
     "goodbye_text_top": [
       "h2 Great you've been here.",
@@ -176,11 +225,12 @@
     "legal_notice": "Legal Notice",
     "login": "Log in",
     "logout": "Log out",
-    "members_interval": "(0){no members};(1){one member};(2-inf){{{count}} members}",
+    "members_interval": "(0){ no members};(1){ one member};(2-inf){ {{count}} members}",
     "more": "More",
     "name": "Name",
     "new": "New",
     "no": "no",
+    "none": "none",
     "overview": "Overview",
     "photo": "New Photo",
     "register_here": "Register here!",
@@ -189,6 +239,10 @@
     "separator": ".",
     "settings": "Settings",
     "show_tweets": "Show Tweets",
+    "socrates_date": "27-30 August 2015, Soltau, Germany",
+    "socrates_register": "Pre-Register here!",
+    "socrates_text": "5th International Software Craftsmanship and Testing Conference",
+    "submit": "Submit",
     "thanks_for_interest": "Thank you for stating your interest in the SoCraTes conference.",
     "title": "Title",
     "to_group": "To Softwerkskammer-Group",
@@ -197,6 +251,37 @@
     "welcome": "Welcome!",
     "what_does_not_work": "What does not work the way it should?",
     "yes": "yes"
+  },
+  "groups": {
+    "contact": "Contact person",
+    "contacts": "Contact persons",
+    "create": "Create group",
+    "edit": "Edit group \"{{groupId}}\"",
+    "email_prefix": "Prefix for e-mail-subjects",
+    "group": "Group",
+    "groups": "Groups",
+    "has": "This group has",
+    "join": "Join Group",
+    "leave": "Leave Group",
+    "map_label": "Label in map",
+    "more": "read more…",
+    "new": "New Group",
+    "other": "Others",
+    "overview": "Groups Overview",
+    "regional": "Regional Groups",
+    "themed": "Themed Groups",
+    "tooltip": {
+      "email_prefix": "surrounded by [], it prefixes the subject of e-mails sent via the group",
+      "gotogroup": "Go to group's page.",
+      "map_label": "Label that is displayed in the map",
+      "name": "The e-mail address \"@softwerkskammer.org\" where the group can be reached.",
+      "title": "Name of the group used in the website, also realname for e-mails sent by the group",
+      "x_coord": "Horizontal position on the map",
+      "y_coord": "Vertical position on the map"
+    },
+    "type": "Group type",
+    "x_coord": "X-coord.",
+    "y_coord": "Y-coord."
   },
   "mailarchive": {
     "archive": "Mail Archive",
@@ -231,10 +316,12 @@
   "members": {
     "authenticate": "Authenticate elsewhere",
     "authenticated_via": "Currently authenticated via",
+    "avatar_info_text": "This is your current avatar. If it is a custom one, you can delete it and then we try to show your Gravatar.com avatar. Use the Button to upload a new photo and replace the current one.",
     "cancel": "Cancel registration",
     "create": "Create Profile",
     "delete": "Delete Member",
     "edit": "Edit Profile",
+    "edit_avatar": "Edit Photo",
     "edit_preregistration": "In order to keep you informed about the SoCraTes conference, we need you to provide us with the following information. Please fill in all mandatory fields.",
     "edit_registration": "In order to participate in the event, we need you to provide us with the following information. Please fill in all mandatory fields.",
     "edit_socrates_only": "Here you can edit your information.",
@@ -287,13 +374,17 @@
       "announcements": {
         "saved": "Your announcement has been saved."
       },
+      "colors": {
+        "saved": "Your colors have been saved.",
+        "saved_single": "The new color has been saved."
+      },
       "groups": {
         "saved": "Your group has been saved.",
-        "subscribed": "You are now a member of this group. You will receive a welcome-e-mail in a few moments.",
-        "unsubscribed": "You are not a member of this group any more. You will receive a goodbye-e-mail in a few moments."
+        "subscribed": "You are now a member of this group.",
+        "unsubscribed": "You are not a member of this group any more."
       },
       "mailsender": {
-        "error_no_recipient": "Your e-mail has not been sent. No recipient given.",
+        "error_no_recipient": "Your E-mail has not been sent. No recipient given.",
         "error_reason": "Your {{type}} has not been sent. Reason: {{err}}",
         "success": "Your {{type}} is on its way."
       },
