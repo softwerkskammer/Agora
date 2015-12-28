@@ -36,8 +36,7 @@ module.exports = function initI18N(languages, abspath) {
         lookupSession: 'language'
       }
     });
-  var handle = middleware.handle(i18n, {});
-  return {i18n: i18n, middleware: handle};
+  return middleware.handle(i18n, {});
 }
 
 

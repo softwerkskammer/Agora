@@ -44,7 +44,7 @@ module.exports = function (defaultLanguage, abspath) {
         });
 
         app.use(beans.get('expressViewHelper'));
-        app.use(initI18N('fr', abspath).middleware); // fr because of some technical reasons I do not yet understand... (leider)
+        app.use(initI18N('fr', abspath)); // fr because of some technical reasons I do not yet understand... (leider)
 
         _.each(atts.middlewares, function (middleware) {
           app.use(middleware);
