@@ -59,7 +59,7 @@ module.exports = {
     app.use(beans.get('secureSuperuserOnly'));
     app.use(beans.get('secureSoCraTesAdminOnly'));
     app.use(beans.get('expressViewHelper'));
-    app.use(beans.get('initI18N').middleware);
+    app.use(beans.get('initI18N'));
     app.use(beans.get('redirectRuleForNewUser'));
     app.use(beans.get('detectBrowser'));
     app.use(beans.get('secureAgainstClickjacking'));

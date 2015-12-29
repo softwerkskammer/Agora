@@ -19,7 +19,7 @@ module.exports = function (grunt) {
       'node_modules/jquery-validation/dist/additional-methods.js',
       'node_modules/simple-timepicker/dist/simple-timepicker.js',
       'node_modules/urijs/src/URI.js',
-      'socrates/locales/frontend_en.js',
+      'locales/frontend_en.js',
       'socrates/frontend/javascript/socrates.js'
     ]
   };

@@ -33,7 +33,7 @@ module.exports = function (grunt) {
       'node_modules/bootstrap-datepicker/js/locales/bootstrap-datepicker.de.js',
       'node_modules/select2/dist/js/i18n/de.js',
       'node_modules/fullcalendar/dist/lang/de.js',
-      'softwerkskammer/locales/frontend_de.js',
+      'locales/frontend_de.js',
       'softwerkskammer/frontend/javascript/agora.js'
     ])
   };
@@ -41,7 +41,7 @@ module.exports = function (grunt) {
   var files_en = {
     'softwerkskammer/public/clientscripts/global_en.js': commonJSfiles.concat([
       'node_modules/fullcalendar/dist/lang/en-gb.js',
-      'softwerkskammer/locales/frontend_en.js',
+      'locales/frontend_en.js',
       'softwerkskammer/frontend/javascript/agora.js'
     ])
   };
