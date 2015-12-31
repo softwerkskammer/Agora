@@ -133,11 +133,6 @@ app.get('/ical/:url', function (req, res, next) {
 });
 
 app.get('/eventsForSidebar', function (req, res, next) {
-  var from = moment.unix(req.query.start).utc();
-  if (from.date() > 1) { from.add('M', 1); }
-  req.session.calViewYear = from.year();
-  req.session.calViewMonth = from.month();
-
   var start = moment(req.query.start).utc();
   var end = moment(req.query.end).utc();
 

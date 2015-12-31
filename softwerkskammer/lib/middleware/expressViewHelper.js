@@ -8,8 +8,6 @@ var logger = require('winston').loggers.get('application');
 module.exports = function expressViewHelper(req, res, next) {
   res.locals.language = 'de';
   if (req.session) {
-    res.locals.calViewYear = req.session.calViewYear;
-    res.locals.calViewMonth = req.session.calViewMonth;
     if (req.session.statusmessage) {
       statusmessage.fromObject(req.session.statusmessage).putIntoSession(req, res);
     }
