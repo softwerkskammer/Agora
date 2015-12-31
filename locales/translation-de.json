@@ -452,6 +452,7 @@
   },
   "wiki": {
     "all_pages": "Alle Seiten in",
+    "as_table": "Zur Tabelle...",
     "blogposts": "Blogartikel",
     "changes": "Wiki Änderungen",
     "commit_message": "Commit-Kommentar",
