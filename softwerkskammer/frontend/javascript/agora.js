@@ -57,7 +57,7 @@ var initParameterisedCalendar, interestify, surroundInterestsWithLinks, surround
       eventMouseover: function (event) {
         var day = event.start.day();
         $(this).tooltip({
-          title: event.start.format('HH:mm') + ': ' + event.title,
+          title: (isForActivities ? event.start.format('HH:mm') + ': ' : '') + event.title,
           trigger: 'manual',
           placement: (day < 4 && day > 0) ? 'right' : 'left',
           container: 'body',
