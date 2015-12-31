@@ -41,18 +41,19 @@ var initParameterisedCalendar, interestify, surroundInterestsWithLinks, surround
   };
 
   initParameterisedCalendar = function (id, date) {
+    var isForActivities = id === '#calendar';
     $(id).fullCalendar({
       defaultDate: date,
       header: {
         left: 'title',
         center: '',
-        right: id === '#calendar' ? 'prev,today,next' : ''
+        right: isForActivities ? 'prev,today,next' : ''
       },
       titleFormat: {
-        month: id === '#calendar' ? 'MMM \'YY' : 'MMMM'
+        month: isForActivities ? 'MMM \'YY' : 'MMMM'
       },
       timezone: 'Europe/Berlin',
-      events: id === '#calendar' ? '/activities/eventsForSidebar' : '/wiki/eventsFor',
+      events: isForActivities ? '/activities/eventsForSidebar' : '/wiki/eventsFor',
       eventMouseover: function (event) {
         var day = event.start.day();
         $(this).tooltip({
