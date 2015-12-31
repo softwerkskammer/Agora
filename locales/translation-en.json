@@ -460,6 +460,7 @@
   },
   "wiki": {
     "all_pages": "All pages in",
+    "as_table": "View Table...",
     "blogposts": "Blog Posts",
     "changes": "Wiki Changes",
     "commit_message": "Commit Message",

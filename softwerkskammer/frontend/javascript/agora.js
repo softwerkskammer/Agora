@@ -1,6 +1,6 @@
 /*global moment, datepicker_lang, datepicker_format, fc_lang, URI, help */
 
-var interestify, surroundInterestsWithLinks, surroundWithLink, surroundTwitterName, surroundEmail, displayedActivityStart, displayedActivityEnd;
+var initParameterisedCalendar, interestify, surroundInterestsWithLinks, surroundWithLink, surroundTwitterName, surroundEmail, displayedActivityStart, displayedActivityEnd;
 (function () {
   'use strict';
 
@@ -40,22 +40,24 @@ var interestify, surroundInterestsWithLinks, surroundWithLink, surroundTwitterNa
     return '<a href="mailto:' + email + '">' + email + '</a>';
   };
 
-  var initCalendar = function () {
-    $('#calendar').fullCalendar({
+  initParameterisedCalendar = function (id, date) {
+    var isForActivities = id === '#calendar';
+    $(id).fullCalendar({
+      defaultDate: date,
       header: {
         left: 'title',
         center: '',
-        right: 'prev,today,next'
+        right: isForActivities ? 'prev,today,next' : ''
       },
       titleFormat: {
-        month: 'MMM \'YY'
+        month: isForActivities ? 'MMM \'YY' : 'MMMM'
       },
       timezone: 'Europe/Berlin',
-      events: '/activities/eventsForSidebar',
+      events: isForActivities ? '/activities/eventsForSidebar' : '/wiki/eventsFor',
       eventMouseover: function (event) {
         var day = event.start.day();
         $(this).tooltip({
-          title: event.start.format('HH:mm') + ': ' + event.title,
+          title: (isForActivities ? event.start.format('HH:mm') + ': ' : '') + event.title,
           trigger: 'manual',
           placement: (day < 4 && day > 0) ? 'right' : 'left',
           container: 'body',
@@ -87,7 +89,12 @@ var interestify, surroundInterestsWithLinks, surroundWithLink, surroundTwitterNa
     });
   };
 
-  var adaptScrollableBox = function () {
+  function initActivitiesCalendar() {
+    var id = '#calendar';
+    initParameterisedCalendar(id, moment());
+  }
+
+  function adaptScrollableBox() {
     var h = $(window).height();
     var padtop = parseInt($('body').css('padding-top'), 10);
     var padbottom = parseInt($('body').css('padding-bottom'), 10);
@@ -95,9 +102,9 @@ var interestify, surroundInterestsWithLinks, surroundWithLink, surroundTwitterNa
     $('.scrollable-box').css('maxHeight', Math.max(h - (padtop + padbottom + otherElementsHeight), 250) + 'px');
     $('.scrollable-box').css('margin-bottom', '0px');
     $('.scrollable-box').css('overflow-y', 'scroll');
-  };
+  }
 
-  var initPickers = function () {
+  function initPickers() {
     $('.datepicker').datepicker({
       autoclose: true,
       format: datepicker_format,
@@ -114,16 +121,16 @@ var interestify, surroundInterestsWithLinks, surroundWithLink, surroundTwitterNa
       showMeridian: false
     });
 
-  };
+  }
 
-  var highlightCurrentSection = function () {
+  function highlightCurrentSection() {
     var result = URI.parse(window.location.href); // full URL
     $('[data-agoranav]').filter(function () {
       return new RegExp('^\/' + $(this).attr('data-agoranav')).test(result.path);
     }).addClass('active');
-  };
+  }
 
-  var addHelpButtonToTextarea = function () {
+  function addHelpButtonToTextarea() {
     $('.md-textarea').each(function () {
       $(this).markdown(
         {
@@ -158,18 +165,18 @@ var interestify, surroundInterestsWithLinks, surroundWithLink, surroundTwitterNa
         }
       );
     });
-  };
+  }
 
-  var extendDataTables = function () {
+  function extendDataTables() {
     if (!$.fn.dataTableExt) { return; }
     $.extend($.fn.dataTableExt.oSort, {
       'date-eu-pre': function (dateString) { return moment(dateString, 'DD.MM.YYYY HH:mm').unix(); },
       'date-eu-asc': function (a, b) { return a - b; },
       'date-eu-desc': function (a, b) { return b - a; }
     });
-  };
+  }
 
-  var createLinks = function () {
+  function createLinks() {
     $('.urlify').each(function () {
       $(this).html(surroundWithLink(this.innerHTML));
     });
@@ -182,9 +189,9 @@ var interestify, surroundInterestsWithLinks, surroundWithLink, surroundTwitterNa
       $(this).html(surroundEmail(this.innerHTML));
     });
     interestify();
-  };
+  }
 
-  var initTooltipsAndHovers = function () {
+  function initTooltipsAndHovers() {
     $('[rel=tooltip]').each(function () {
       $(this).popover({html: true, trigger: 'hover', delay: {hide: 50}});
     });
@@ -197,9 +204,9 @@ var interestify, surroundInterestsWithLinks, surroundWithLink, surroundTwitterNa
       $(this).tooltip();
       $(this).addClass('popover-highlight');
     });
-  };
+  }
 
-  var patchBootstrapPopover = function () {
+  function patchBootstrapPopover() {
     var originalLeave = $.fn.popover.Constructor.prototype.leave;
     $.fn.popover.Constructor.prototype.leave = function (obj) {
       var self = obj instanceof this.constructor ? obj : $(obj.currentTarget)[this.type](this.getDelegateOptions()).data('bs.' + this.type);
@@ -220,7 +227,7 @@ var interestify, surroundInterestsWithLinks, surroundWithLink, surroundTwitterNa
         });
       }
     };
-  };
+  }
 
   patchBootstrapPopover();
   $.event.add(window, 'resize', adaptScrollableBox);
@@ -228,7 +235,7 @@ var interestify, surroundInterestsWithLinks, surroundWithLink, surroundTwitterNa
   $(document).ready(addHelpButtonToTextarea);
   $(document).ready(initPickers);
   $(document).ready(adaptScrollableBox);
-  $(document).ready(initCalendar);
+  $(document).ready(initActivitiesCalendar);
   $(document).ready(extendDataTables);
   $(document).ready(createLinks);
   $(document).ready(initTooltipsAndHovers);

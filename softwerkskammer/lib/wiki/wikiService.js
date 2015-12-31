@@ -2,6 +2,8 @@
 var Fs = require('fs');
 var Path = require('path');
 var _ = require('lodash');
+var eventsToObject = require('./eventsToObject');
+var moment = require('moment-timezone');
 var beans = require('simple-configure').get('beans');
 var Git = beans.get('gitmech');
 var wikiObjects = beans.get('wikiObjects');
@@ -152,7 +154,11 @@ module.exports = {
               if (metadata.length > 0) {
                 Git.diff(item.fullname + '.md', 'HEAD@{' + moment.toISOString() + '}..HEAD', function (err2, diff) {
                   if (err2) { return itemsCallback(err2); }
-                  resultLine.addFile(new FileWithChangelist({file: item.name, changelist: metadata, diff: new Diff(diff)}));
+                  resultLine.addFile(new FileWithChangelist({
+                    file: item.name,
+                    changelist: metadata,
+                    diff: new Diff(diff)
+                  }));
                   itemsCallback();
                 });
               } else { itemsCallback(); }
@@ -179,6 +185,12 @@ module.exports = {
     Git.log(directory, 'HEAD', 30, function (ignoredErr, metadata) {
       var datas = _(metadata).uniq('name').reject(function (item) { return item.name.match(wikiObjects.BLOG_ENTRY_REGEX); }).value();
       callback(null, datas);
+    });
+  },
+
+  parseEvents: function (year, callback) {
+    Git.readFile('alle/europaweite-veranstaltungen-' + year + '.md', 'HEAD', function (err, contents) {
+      callback(null, !!err ? {} : eventsToObject(contents, year));
     });
   }
 

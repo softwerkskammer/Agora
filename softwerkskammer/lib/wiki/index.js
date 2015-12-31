@@ -1,5 +1,6 @@
 'use strict';
 
+var moment = require('moment-timezone');
 var beans = require('simple-configure').get('beans');
 var Renderer = beans.get('renderer');
 var wikiService = beans.get('wikiService');
@@ -26,6 +27,23 @@ function showPage(subdir, pageName, pageVersion, req, res, next) {
 }
 
 var app = misc.expressAppIn(__dirname);
+
+// the calendar for events
+app.get('/events/:year', function (req, res) {
+  res.render('eventsWithCalendars', {year: req.params.year});
+});
+
+app.get('/eventsFor', function (req, res, next) {
+  var from = moment(req.query.start);
+  if (from.date() > 1) { from.add(1, 'M'); }
+
+  wikiService.parseEvents(from.year(), function (err, events) {
+    if (err) { return next(err); }
+    res.end(JSON.stringify(events));
+  });
+});
+
+// wiki pages
 
 app.get('/versions/:subdir/:page', function (req, res, next) {
   var pageName = req.params.page;
@@ -115,7 +133,7 @@ app.get('/modal/:subdir/:page', function (req, res, next) {
   var completePageName = subdir + '/' + req.params.page;
   wikiService.showPage(completePageName, 'HEAD', function (err, content) {
     if (err) { return next(err); }
-    res.render('modal', { content: content && Renderer.render(content, subdir), subdir: subdir });
+    res.render('modal', {content: content && Renderer.render(content, subdir), subdir: subdir});
   });
 });
 
