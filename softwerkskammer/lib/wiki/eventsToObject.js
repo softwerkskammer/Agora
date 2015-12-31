@@ -21,7 +21,7 @@ function contentsToObject(contents, year) {
       var fromAndUntil = _(element.split('-')).map(function (each) {return each.trim()}).compact().value();
       var from = moment.utc(fromAndUntil[0] + year, 'D.M.YYYY');
       var until = moment.utc((fromAndUntil[1] || fromAndUntil[0]) + year, 'D.M.YYYY');
-      until.add(1, 'days');
+      until.add(23, 'hours');
       return [from.format(), until.format()];
     }
   }
