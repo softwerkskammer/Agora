@@ -3,7 +3,7 @@
 var _ = require('lodash');
 
 var dinner = 13;
-var day = 17;
+var day = 43; // adapt this line to the actual day fare as reduced by sponsoring
 
 var rooms = [
   {id: 'single', name: 'Single', display: 'single room', price: 70 + dinner},
