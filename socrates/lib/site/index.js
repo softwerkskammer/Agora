@@ -11,7 +11,7 @@ var beans = conf.get('beans');
 var Renderer = beans.get('renderer');
 var misc = beans.get('misc');
 var mailsenderService = beans.get('mailsenderService');
-
+var socratesConstants = beans.get('socratesConstants');
 var sponsorpairs = require('./sponsorpairs');
 
 var app = misc.expressAppIn(__dirname);
@@ -39,7 +39,7 @@ app.get('/impressum.html', function (req, res) {
 });
 
 app.get('/schedule.html', function (req, res) {
-  res.render('schedule');
+  res.render('schedule', {currentYear: socratesConstants.currentYear});
 });
 
 app.get('/experienceReports.html', function (req, res) {

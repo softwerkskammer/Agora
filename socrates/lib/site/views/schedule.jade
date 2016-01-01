@@ -54,9 +54,8 @@ block content
           | into the evening at their own pace. Of course there's lots of room for
           | shared evening activities like board games, making music, hacking
           | or just talking and having fun. Take a look at #{''}
-          a(href='/wiki/2015/evening-activities') last year's activities
+          a(href='/wiki/' + (currentYear - 1) + '/evening-activities') last year's activities
           |  to get an impression of the kind of activities that will happen.
-        //- TODO update with new wiki
         dt Saturday
         dd Saturday is also completely reserved for a full-day #{''}
           +extlink('http://agilecoachcamp.org/tiki-index.php?page=OpenSpace', 'Open Space')
@@ -72,9 +71,8 @@ block content
         dd
           | Sunday is reserved for workshop oriented formats. Last year we had
           | the following #{''}
-          a(href='/wiki/2015/sunday-workshops') Sunday Workshops
+          a(href='/wiki/' + (currentYear - 1) + '/sunday-workshops') Sunday Workshops
           | .
-        //- TODO update with new wiki
         dd.
           Each workshop can choose themselves when they want to start (though
           rooms are available from 9am) and when they want to end, but the latest
@@ -98,16 +96,14 @@ block content
         | #{''} from previous years.
       p Facilitation will be in English. However, it will be possible to run sessions in other languages.
 
-      //
-        TODO include again after wiki update
-        h2 Evening activities
-        p
-            | Participants organize evening activities. In the previous years there
-            | were a multitude of things going on in the evenings, from music (some participants
-            | brought instruments, songbooks etc., one year they even wrote a song about the conference) over board games to #{''}
-            +extlink('https://github.com/janernsting/maexchen', 'live-hacking programs to play mia against each other')
-            |. And of course there's always plenty of people to just talk to, or continue discussions from the day.
-        p
-            | Check out the #{''}
-            a(href='/wiki/2015/evening-activities') wiki
-            |  page to see what is currently being proposed. Don't forget to contribute your ideas.
+      h2 Evening activities
+      p
+          | Participants organize evening activities. In the previous years there
+          | were a multitude of things going on in the evenings, from music (some participants
+          | brought instruments, songbooks etc., one year they even wrote a song about the conference) over board games to #{''}
+          +extlink('https://github.com/janernsting/maexchen', 'live-hacking programs to play mia against each other')
+          |. And of course there's always plenty of people to just talk to, or continue discussions from the day.
+      p
+          | Check out the #{''}
+          a(href='/wiki/' + (currentYear) + '/evening-activities') wiki
+          |  page to see what is currently being proposed. Don't forget to contribute your ideas.
