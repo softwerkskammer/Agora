@@ -20,4 +20,5 @@ block content
           +time('time', photo.time().locale(language).format('LT'))
         +submitButtons('general.save')
       if (accessrights.canDeletePhoto(photo))
-        +reallyDeleteModal('photo.delete', '/activityresults/' + activityResult.id() + '/photo/' + photo.id() + '/delete')
+        -var deleteoptions = {url: '/activityresults/delete', params: {activityresults: activityResult.id(), photo: photo.id()}}
+        +reallyDeleteModalPost('photo.delete', deleteoptions)

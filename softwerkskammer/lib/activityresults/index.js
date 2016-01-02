@@ -43,10 +43,10 @@ app.post('/:activityResultName/upload', function (req, res, next) {
   });
 });
 
-app.get('/:activityResultName/photo/:photoId/delete', function (req, res, next) {
-  var activityResultName = req.params.activityResultName;
+app.post('/delete', function (req, res, next) {
+  var activityResultName = req.body.activityresults;
+  var photoId = req.body.photo;
   if (res.locals.accessrights.canDeletePhoto()) {
-    var photoId = req.params.photoId;
     return activityresultsService.deletePhotoOfActivityResult(activityResultName, photoId, function (err) {
       if (err) { return next(err); }
       res.redirect(app.path() + activityResultName);

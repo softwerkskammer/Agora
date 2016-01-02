@@ -17,7 +17,8 @@ block content
           if (accessrights.canEditMember(member))
             a.btn.btn-default(href='/members/edit'): i.fa.fa-edit.fa-fw
           if (accessrights.canDeleteMember(member))
-            +reallyDeleteModal('members.delete', '/members/delete/' +encodeURIComponent(member.nickname()))
+            -var deleteoptions = {url: '/members/delete', params: {nickname: member.nickname()}}
+            +reallyDeleteModalPost('members.delete', deleteoptions)
         h2
           | #{member.nickname()}
           small

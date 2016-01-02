@@ -131,7 +131,11 @@ mixin textareaInternal(classname, rowCount, name, label, value, tooltip, placeho
     +controlLabel(name, label, tooltip)
     textarea(class=classname, id=name, rows=rowCount, type='text', name=name, placeholder=placeholder) #{value}
 
-mixin reallyDeleteModal(header, urlForButton)
+mixin reallyDeleteModalPost(header, options, extraclasses)
+  +reallyDeleteModalOnly(header, options)
+  +reallyDeleteButtonOnly(header, options, extraclasses)
+
+mixin reallyDeleteModalOnly(header, options)
   -var theID = 'reallyDelete' + header.replace('\.', '')
   .modal.fade(id=theID, tabindex='-1')
     .modal-dialog
@@ -141,9 +145,20 @@ mixin reallyDeleteModal(header, urlForButton)
           h3 #{t(header)}
         .modal-body
           p #{t('general.are_you_sure')}
-          .btn-group
-            button.btn.btn-default(type='cancel', data-dismiss='modal', aria-hidden='true') #{t('general.no')}
-            a.btn.btn-danger(href=urlForButton)
-              i.fa.fa-trash-o.fa-fw &nbsp;
-              | #{t('general.delete')}
-  button.btn.btn-danger(data-toggle='modal', data-target='#' + theID): i.fa.fa-trash-o.fa-fw
+          form(action=options.url, role='form', method='post')
+            +csrf
+            each val, param in options.params
+              +hidden(param, val) 
+            .btn-group
+              button.btn.btn-default(type='cancel', data-dismiss='modal', aria-hidden='true') #{t('general.No')}
+              button.btn.btn-primary(type='submit')
+                i.fa.fa-trash-o.fa-fw &nbsp;
+                | #{t('general.delete')}
+
+mixin reallyDeleteButtonOnly(header, options, extraclasses)
+  -var theID = 'reallyDelete' + header.replace('\.', '')
+  span.btn.btn-danger(data-toggle='modal', data-target='#' + theID, class=extraclasses)
+    i.fa.fa-trash-o.fa-fw
+    if (extraclasses)
+      | &nbsp; #{t('general.delete')}
+  

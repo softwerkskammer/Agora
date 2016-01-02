@@ -356,8 +356,8 @@ app.get('/addons/:url', function (req, res, next) {
   });
 });
 
-app.get('/delete/:activityUrl', function (req, res, next) {
-  var url = req.params.activityUrl;
+app.post('/delete', function (req, res, next) {
+  var url = req.body.activityUrl;
   activitystore.getActivity(url, function (err, activity) {
     if (err || !activity) { return next(err); }
     if (!res.locals.accessrights.canDeleteActivity(activity)) {
