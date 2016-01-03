@@ -388,6 +388,7 @@
       },
       "members": {
         "deleted": "The profile has been deleted.",
+        "hasParticipated": "The user has participated in some SoCraTes.",
         "hasSubscriptions": "The user is still subscribed to some groups.",
         "saved": "The profile has been saved."
       },

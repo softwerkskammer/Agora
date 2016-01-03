@@ -75,7 +75,6 @@ describe('SubscriberService', function () {
         done(err);
       });
     });
-
   });
 
   describe('emailAddressesForWikiNotifications', function () {
@@ -119,6 +118,36 @@ describe('SubscriberService', function () {
         done(err);
       });
     });
+  });
 
+  describe('removeSubscriber', function () {
+    beforeEach(function() {
+      sinon.stub(subscriberstore, 'removeSubscriber', function (subscriber, callback) {
+        callback(null);
+      });
+
+      sinon.stub(memberstore, 'getMemberForId', function (subscriberId, callback) {
+        callback(null, expectedMember1);
+      });
+    });
+
+    it('only removes the subscriber the member is also regular Softwerkskammer member', function (done) {
+      subscriberService.removeSubscriber(subscriber1, function(err) {
+        done(err);
+      });
+    });
+
+    it('also removes the member if she is also regular Softwerkskammer member', function (done) {
+      var removeMemberCall = sinon.stub(memberstore, 'removeMember', function (subscriber, callback) {
+        callback(null);
+      });
+      expectedMember1.state.socratesOnly = true;
+
+      subscriberService.removeSubscriber(subscriber1, function(err) {
+        expectedMember1.state.socratesOnly = false;
+        expect(removeMemberCall.called).to.be(true);
+        done(err);
+      });
+    });
   });
 });

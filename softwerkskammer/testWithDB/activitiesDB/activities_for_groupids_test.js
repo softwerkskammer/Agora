@@ -19,28 +19,78 @@ describe('Activity application with DB - shows activities for Group-Ids -', func
   var dayBeforeYesterday = moment().subtract(2, 'days');
   var threeDaysAgo = moment().subtract(3, 'days');
 
-  var futureActivity1 = new Activity({id: 'futureActivity1', title: 'Future Activity 1', description: 'description1', assignedGroup: 'groupname1',
+  var futureActivity1 = new Activity({
+    id: 'futureActivity1', title: 'Future Activity 1', description: 'description1', assignedGroup: 'groupname1',
     location: 'location1', direction: 'direction1', startUnix: tomorrowEarly.unix(), endUnix: dayAfterTomorrow.unix(),
-    url: 'url_future', owner: 'owner', resources: {Veranstaltung: {_registeredMembers: [{memberId: 'memberId2'}], _registrationOpen: true },
-      AndereVeranstaltung: {_registeredMembers: [{memberId: 'memberId2'}], _registrationOpen: true }}, version: 1});
-  var futureActivity2 = new Activity({id: 'futureActivity2', title: 'Future Activity 2', description: 'description1', assignedGroup: 'groupname2',
-    location: 'location1', direction: 'direction1', startUnix: tomorrowLate.unix(), endUnix: dayAfterTomorrow.unix(),
-    url: 'url_future', owner: 'owner', resources: {Veranstaltung: {_registeredMembers: [{memberId: 'memberId'}], _registrationOpen: true }}, version: 1});
+    url: 'url_future', owner: 'owner', resources: {
+      Veranstaltung: {_registeredMembers: [{memberId: 'memberId2'}], _registrationOpen: true},
+      AndereVeranstaltung: {_registeredMembers: [{memberId: 'memberId2'}], _registrationOpen: true}
+    }, version: 1
+  });
+  var futureActivity2 = new Activity({
+    id: 'futureActivity2',
+    title: 'Future Activity 2',
+    description: 'description1',
+    assignedGroup: 'groupname2',
+    location: 'location1',
+    direction: 'direction1',
+    startUnix: tomorrowLate.unix(),
+    endUnix: dayAfterTomorrow.unix(),
+    url: 'url_future',
+    owner: 'owner',
+    resources: {Veranstaltung: {_registeredMembers: [{memberId: 'memberId'}], _registrationOpen: true}},
+    version: 1
+  });
 
-  var currentActivity1 = new Activity({id: 'currentActivity1', title: 'Current Activity 1', description: 'description1', assignedGroup: 'groupname1',
+  var currentActivity1 = new Activity({
+    id: 'currentActivity1',
+    title: 'Current Activity 1',
+    description: 'description1',
+    assignedGroup: 'groupname1',
+    location: 'location1',
+    direction: 'direction1',
+    startUnix: yesterday.unix(),
+    endUnix: tomorrowEarly.unix(),
+    url: 'url_current',
+    owner: 'owner',
+    resources: {Veranstaltung: {_registeredMembers: [{memberId: 'memberId'}], _registrationOpen: true}},
+    version: 1
+  });
+  var currentActivity2 = new Activity({
+    id: 'currentActivity2', title: 'Current Activity 2', description: 'description1', assignedGroup: 'groupname2',
     location: 'location1', direction: 'direction1', startUnix: yesterday.unix(), endUnix: tomorrowEarly.unix(),
-    url: 'url_current', owner: 'owner', resources: {Veranstaltung: {_registeredMembers: [{memberId: 'memberId'}], _registrationOpen: true }}, version: 1});
-  var currentActivity2 = new Activity({id: 'currentActivity2', title: 'Current Activity 2', description: 'description1', assignedGroup: 'groupname2',
-    location: 'location1', direction: 'direction1', startUnix: yesterday.unix(), endUnix: tomorrowEarly.unix(),
-    url: 'url_current', owner: 'owner', resources: {Veranstaltung: {}}, version: 1}); // resource has no registered members!
+    url: 'url_current', owner: 'owner', resources: {Veranstaltung: {}}, version: 1
+  }); // resource has no registered members!
 
-  var pastActivity1 = new Activity({id: 'pastActivity1', title: 'Past Activity 1', description: 'description1', assignedGroup: 'groupname',
-    location: 'location1', direction: 'direction1', startUnix: dayBeforeYesterday.unix(), endUnix: yesterday.unix(),
-    url: 'url_past', owner: 'owner', resources: {Veranstaltung: {_registeredMembers: [{memberId: 'memberId'}], _registrationOpen: true }}, version: 1});
+  var pastActivity1 = new Activity({
+    id: 'pastActivity1',
+    title: 'Past Activity 1',
+    description: 'description1',
+    assignedGroup: 'groupname',
+    location: 'location1',
+    direction: 'direction1',
+    startUnix: dayBeforeYesterday.unix(),
+    endUnix: yesterday.unix(),
+    url: 'url_past',
+    owner: 'owner',
+    resources: {Veranstaltung: {_registeredMembers: [{memberId: 'memberId'}], _registrationOpen: true}},
+    version: 1
+  });
 
-  var pastActivity2 = new Activity({id: 'pastActivity2', title: 'Past Activity 2', description: 'description1', assignedGroup: 'groupname',
-    location: 'location1', direction: 'direction1', startUnix: threeDaysAgo.unix(), endUnix: threeDaysAgo.unix(),
-    url: 'url_past', owner: 'owner', resources: {Veranstaltung: {_registeredMembers: [{memberId: 'memberId'}], _registrationOpen: true }}, version: 1});
+  var pastActivity2 = new Activity({
+    id: 'pastActivity2',
+    title: 'Past Activity 2',
+    description: 'description1',
+    assignedGroup: 'groupname',
+    location: 'location1',
+    direction: 'direction1',
+    startUnix: threeDaysAgo.unix(),
+    endUnix: threeDaysAgo.unix(),
+    url: 'url_past',
+    owner: 'owner',
+    resources: {Veranstaltung: {_registeredMembers: [{memberId: 'memberId'}], _registrationOpen: true}},
+    version: 1
+  });
 
   beforeEach(function (done) { // if this fails, you need to start your mongo DB
 

@@ -6,6 +6,7 @@ var persistence = beans.get('subscribersPersistence');
 var memberstore = beans.get('memberstore');
 var Subscriber = beans.get('subscriber');
 var misc = beans.get('misc');
+var logger = require('winston').loggers.get('transactions');
 var toSubscriber = _.partial(misc.toObject, Subscriber);
 
 var toSubscriberList = function (callback, err, result) {
@@ -27,6 +28,13 @@ module.exports = {
     memberstore.getMember(nickname, function (err, member) {
       if (err || !member) { return callback(err); }
       self.getSubscriber(member.id(), callback);
+    });
+  },
+
+  removeSubscriber: function (subscriber, callback) {
+    persistence.remove(subscriber.id(), function (err) {
+      logger.info('Subscriber removed: ' + JSON.stringify(subscriber));
+      callback(err);
     });
   },
 
