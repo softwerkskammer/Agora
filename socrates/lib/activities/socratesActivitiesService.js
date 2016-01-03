@@ -274,7 +274,7 @@ module.exports = {
 
   isParticipant: function (subscriber, callback) {
     function containsSoCraTes(activities) {
-      return !!_.find(activities, function (activity) { return activity.state.isSoCraTes; });
+      return !!_.find(activities, 'state.isSoCraTes');
     }
 
     activitystore.activitiesForGroupIdsAndRegisteredMemberId([], subscriber.id(), true, function (err, upcomingActivities) {
