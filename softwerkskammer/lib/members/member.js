@@ -97,7 +97,7 @@ Member.prototype.addAuthentication = function (authenticationId) {
   if (!this.state.authentications) {
     this.state.authentications = [];
   }
-  if (!!authenticationId) {
+  if (authenticationId) {
     this.state.authentications.push(authenticationId);
     this.state.authentications = _.uniq(this.authentications());
   }

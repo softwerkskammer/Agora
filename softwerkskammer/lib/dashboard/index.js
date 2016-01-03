@@ -11,7 +11,7 @@ var mailarchiveService = beans.get('mailarchiveService');
 var activitiesService = beans.get('activitiesService');
 
 
-var util = require('util');
+// var util = require('util');
 
 var app = misc.expressAppIn(__dirname);
 
@@ -78,7 +78,7 @@ var transformStuffPerGroup = function (groupIds, stuffPerGroup, language) {
 var transformMails;
 
 var transformMail = function (language, mail) {
-  console.log(util.inspect(mail));
+  // console.log(util.inspect(mail));
 
   var result = {
     timeUnix: mail.timeUnix,

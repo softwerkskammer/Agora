@@ -20,7 +20,7 @@ describe('Activity application - on submit -', function () {
     // will enhance the activitiesService with chado properties
     chado.createDouble('activitiesService', activitiesService);
   });
-  
+
   afterEach(function () {
     // will undo the enhancements of the activitiesService with chado properties
     chado.reset();

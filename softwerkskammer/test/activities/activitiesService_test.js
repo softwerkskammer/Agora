@@ -16,13 +16,11 @@ var beans = conf.get('beans');
 var reservedURLs = conf.get('reservedActivityURLs');
 
 var activitiesService = beans.get('activitiesService');
-var membersService = beans.get('membersService');
 var activitystore = beans.get('activitystore');
 var groupsService = beans.get('groupsService');
 var groupstore = beans.get('groupstore');
 var memberstore = beans.get('memberstore');
 
-var fieldHelpers = beans.get('fieldHelpers');
 var Activity = beans.get('activity');
 var Member = beans.get('member');
 var Group = beans.get('group');
@@ -58,7 +56,7 @@ describe('Activities Service', function () {
 
   beforeEach(function () {
     //sinon.stub(membersService, 'getImage', function(member, callback) { callback(); });
-    
+
     sinon.stub(activitystore, 'allActivities', function (callback) {callback(null, [dummyActivity]); });
 
     sinon.stub(groupsService, 'getAllAvailableGroups', function (callback) {
@@ -114,14 +112,14 @@ describe('Activities Service', function () {
 
     sinon.stub(activitystore, 'getActivity', function (activityId, callback) { callback(null, emptyActivity); });
     sinon.stub(memberstore, 'getMembersForIds', function (ids, callback) {
-      var member1 = new Member({
+      var memberA = new Member({
         id: 'memberId1',
         nickname: 'participant1',
         email: 'nick1@b.c',
         firstname: 'Firstname1',
         lastname: 'Lastname1'
       });
-      var member2 = new Member({
+      var memberB = new Member({
         id: 'memberId2',
         nickname: 'participant2',
         email: 'nick2@b.c',
@@ -129,7 +127,7 @@ describe('Activities Service', function () {
         lastname: 'Lastname2'
       });
 
-      callback(null, [member1, member2]);
+      callback(null, [memberA, memberB]);
     });
     sinon.stub(memberstore, 'getMemberForId', function (id, callback) {
       callback(null, owner);
@@ -147,7 +145,7 @@ describe('Activities Service', function () {
       assignedGroup: 'groupname',
       owner: 'ownerId'
     });
-    
+
     // following are the expected enrichements of the activity
     expectedActivity.group = group;
     expectedActivity.participants = [member1, member2];

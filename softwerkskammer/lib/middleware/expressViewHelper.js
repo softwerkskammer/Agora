@@ -3,7 +3,6 @@
 var beans = require('simple-configure').get('beans');
 var statusmessage = beans.get('statusmessage');
 var membersService = beans.get('membersService');
-var logger = require('winston').loggers.get('application');
 
 module.exports = function expressViewHelper(req, res, next) {
   res.locals.language = 'de';

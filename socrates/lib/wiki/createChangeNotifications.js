@@ -37,6 +37,7 @@ persistence.getByField({id: lastNotifications}, function (err, result) {
     logger.info('Last notified: ' + util.inspect(result.moment));
   }
   wikiService.findPagesForDigestSince(moment(lastNotified.moment), function (err1, changes) {
+    /* eslint no-console: 0 */
     if (err1) {
       logger.error('Error when finding pages for Digest: ' + err1);
       return closeAndExit();

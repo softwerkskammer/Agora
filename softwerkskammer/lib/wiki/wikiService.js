@@ -3,7 +3,6 @@ var Fs = require('fs');
 var Path = require('path');
 var _ = require('lodash');
 var eventsToObject = require('./eventsToObject');
-var moment = require('moment-timezone');
 var beans = require('simple-configure').get('beans');
 var Git = beans.get('gitmech');
 var wikiObjects = beans.get('wikiObjects');
@@ -190,7 +189,7 @@ module.exports = {
 
   parseEvents: function (year, callback) {
     Git.readFile('alle/europaweite-veranstaltungen-' + year + '.md', 'HEAD', function (err, contents) {
-      callback(null, !!err ? {} : eventsToObject(contents, year));
+      callback(null, err ? {} : eventsToObject(contents, year));
     });
   }
 

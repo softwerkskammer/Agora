@@ -7,7 +7,6 @@ var beans = conf.get('beans');
 var groupsService = beans.get('groupsService');
 var groupstore = beans.get('groupstore');
 var announcementstore = beans.get('announcementstore');
-var activitiesService = beans.get('activitiesService');
 
 var baseUri = 'http://localhost:' + parseInt(conf.get('port'), 10);
 

@@ -50,7 +50,7 @@ app.get('/new', function (req, res) {
   _.each(roomOptions.allIds(), function (id) {
     resources[id] = {_registrationOpen: true, _canUnsubscribe: false, _waitinglist: false};
   });
-  resources['waitinglist'] = {_registrationOpen: false, _canUnsubscribe: false, _waitinglist: true};
+  resources.waitinglist = {_registrationOpen: false, _canUnsubscribe: false, _waitinglist: true};
   var activity = new Activity({
     resources: resources
   });

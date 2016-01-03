@@ -240,17 +240,17 @@ describe('utility functions', function () {
     expect(member.subscribedGroups).to.contain(group);
     expect(member.subscribedGroups).to.contain(groupb);
   });
-  
+
   it('does not add a subscription only if it is empty', function () {
     var member = new Member({});
     member.addAuthentication('');
     expect(member.authentications()).to.have.length(0);
   });
-  
+
   it('adds a subscription if it is not empty', function () {
     var member = new Member({});
     member.addAuthentication('auth');
     expect(member.authentications()).to.have.length(1);
     expect(member.authentications()).to.contain('auth');
-  })
+  });
 });

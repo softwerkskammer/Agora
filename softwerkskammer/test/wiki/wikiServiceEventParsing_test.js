@@ -2,10 +2,8 @@
 
 var sinon = require('sinon').sandbox.create();
 var expect = require('must-dist');
-var _ = require('lodash');
 var beans = require('../../testutil/configureForTest').get('beans');
 var wikiService = beans.get('wikiService');
-var moment = require('moment-timezone');
 var Git = beans.get('gitmech');
 
 describe('Wiki Service - Event Parsing', function () {
@@ -31,11 +29,11 @@ describe('Wiki Service - Event Parsing', function () {
       '`Februar` |   |\n' +
       '[OOP](http://www.oop-konferenz.de/) | München  | 1.2.\n' +
       '[microXchg - The Microservices Conference](http://microxchg.io) | Berlin | 4.2.  - 5.2.';
-    
+
     sinon.stub(Git, 'readFile', function (name, version, callback) {
       callback(null, wikifile);
     });
-    
+
     wikiService.parseEvents('some date', function (err, events) {
       expect(events).to.have.length(4);
       done();

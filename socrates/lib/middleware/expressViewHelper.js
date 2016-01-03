@@ -3,7 +3,6 @@
 var conf = require('simple-configure');
 var beans = conf.get('beans');
 var statusmessage = beans.get('statusmessage');
-var logger = require('winston').loggers.get('application');
 
 module.exports = function expressViewHelper(req, res, next) {
   if (req.session) {

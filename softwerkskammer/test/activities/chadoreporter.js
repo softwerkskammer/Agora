@@ -10,7 +10,7 @@ after(function () {
 
   /*eslint no-sync: 0*/
   fs.writeFileSync('chado-result.json', JSON.stringify(chado.repo, null, 2));
-  
+
   expect(analyzer.getNotVerifiedAssumptions(reportArray)).to.have.length(0);
   expect(analyzer.getNotAssumedVerifications(reportArray)).to.have.length(0);
 });

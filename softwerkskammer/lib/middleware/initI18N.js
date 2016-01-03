@@ -36,6 +36,6 @@ module.exports = function initI18N(languages) {
       }
     });
   return middleware.handle(i18n, {});
-}
+};
 
 

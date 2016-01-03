@@ -6,9 +6,6 @@ var moment = require('moment-timezone');
 function contentsToObject(contents, year) {
   if (!contents) { return {}; }
 
-  var lines = contents.split(/[\n\r]/);
-  return _(lines).map(lineToObject).compact().value();
-
   function titleAndLinkToObject(element) {
     var titleAndLink = element.replace(/[\[\)]/g, '').split(/\]\s*\(/);
     if (titleAndLink.length === 2) {
@@ -18,7 +15,7 @@ function contentsToObject(contents, year) {
 
   function dates(element) {
     if (element.trim()) {
-      var fromAndUntil = _(element.split('-')).map(function (each) {return each.trim()}).compact().value();
+      var fromAndUntil = _(element.split('-')).map(function (each) { return each.trim(); }).compact().value();
       var from = moment.utc(fromAndUntil[0] + year, 'D.M.YYYY');
       var until = moment.utc((fromAndUntil[1] || fromAndUntil[0]) + year, 'D.M.YYYY');
       until.add(23, 'hours');
@@ -42,6 +39,9 @@ function contentsToObject(contents, year) {
       }
     }
   }
+
+  var lines = contents.split(/[\n\r]/);
+  return _(lines).map(lineToObject).compact().value();
 }
 
 module.exports = contentsToObject;

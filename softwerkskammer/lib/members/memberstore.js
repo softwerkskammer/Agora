@@ -81,7 +81,7 @@ module.exports = {
       callback(err);
     });
   },
-    
+
   isSoCraTesSubscriber: function (id, callback) {
     subscriberPersistence.getById(id, function(err, subscriber) {
       callback(err, !!subscriber);

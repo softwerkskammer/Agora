@@ -15,8 +15,6 @@ var Member = beans.get('member');
 var dummymember = new Member({id: 'hada', email: 'Email1'});
 var dummymember2 = new Member({id: 'hada2', email: 'email2'});
 
-var Group = beans.get('group');
-
 var groupsForTest = require('../groups/groups_for_tests');
 var GroupA = groupsForTest.GroupA;
 var GroupB = groupsForTest.GroupB;

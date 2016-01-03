@@ -181,17 +181,17 @@ describe('Activity application', function () {
     expectedActivity.group = group;
     expectedActivity.participants = [member1, member2];
     expectedActivity.ownerNickname = 'owner';
-    
+
     assume(activitiesService)
       .canHandle('getActivityWithGroupAndParticipants')
       .withArgs('urlOfTheActivity', cb)
       .andCallsCallbackWith(null, expectedActivity);
-    
+
     request(createApp({member: member1}))
       .get('/' + 'urlOfTheActivity')
       .expect(200)
       .expect(/<h2>Title of the Activity/)
-      .expect(/Bislang haben 2 Mitglieder ihre Teilnahme zugesagt\./, function (err, res) {
+      .expect(/Bislang haben 2 Mitglieder ihre Teilnahme zugesagt\./, function (err) {
         chado.reset();
         done(err);
       });

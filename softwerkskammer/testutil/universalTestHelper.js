@@ -3,14 +3,12 @@
 var _ = require('lodash');
 var express = require('express');
 var userStub = require('./userStub');
-var beans = require('simple-configure').get('beans');
-
-var initI18N = beans.get('initI18N');
 
 module.exports = function (defaultLanguage) {
   return function (internalAppName, configuredBeans) {
     var appName = internalAppName;
     var beans = configuredBeans || require('./configureForTest').get('beans');
+    var initI18N = beans.get('initI18N');
 
     return {
       createApp: function (params) { /* id, member, middlewares, baseurl, secureByMiddlewares */
