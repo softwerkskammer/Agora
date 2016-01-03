@@ -14,7 +14,7 @@ module.exports = {
       function (member, callback) {
         subscriberstore.getSubscriber(member.id(), function (err, subscriber) {
           if (err || !subscriber) { return callback(err); }
-          var participation = subscriber.isParticipating() ? subscriber.currentParticipation() : subscriber.currentParticipation();
+          var participation = subscriber.isParticipating() ? subscriber.currentParticipation() : {};
 
           callback(null, {member: member, addon: subscriber.addon(), participation: participation});
         });

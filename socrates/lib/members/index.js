@@ -77,7 +77,7 @@ app.post('/delete', function (req, res, next) {
     if (!res.locals.accessrights.canDeleteMember(subscriber)) {
       return res.redirect('/members/' + encodeURIComponent(nicknameOfEditMember));
     }
-    socratesActivitiesService.isParticipant(subscriber, function (err1, isParticipant) {
+    socratesActivitiesService.participationStatus(subscriber, function (err1, isParticipant) {
       if (err1 || !subscriber) { return next(err1); }
       if (isParticipant) {
         statusmessage.errorMessage('message.title.problem', 'message.content.members.hasParticipated').putIntoSession(req);

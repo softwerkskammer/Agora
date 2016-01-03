@@ -272,7 +272,7 @@ module.exports = {
     });
   },
 
-  isParticipant: function (subscriber, callback) {
+  participationStatus: function (subscriber, callback) {
     function containsSoCraTes(activities) {
       return !!_.find(activities, 'state.isSoCraTes');
     }

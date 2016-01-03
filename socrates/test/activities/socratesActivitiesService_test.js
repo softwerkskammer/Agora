@@ -277,7 +277,7 @@ describe('SoCraTes Activities Service', function () {
         callback(null, [{state: {isSoCraTes: true}}, {state: {isSoCraTes: false}}]);
       });
 
-      socratesActivitiesService.isParticipant(new Subscriber({id: 'memberId'}), function (err, result) {
+      socratesActivitiesService.participationStatus(new Subscriber({id: 'memberId'}), function (err, result) {
         expect(result).to.be.true();
         done(err);
       });
@@ -289,7 +289,7 @@ describe('SoCraTes Activities Service', function () {
         callback(null, [{state: {isSoCraTes: true}}, {state: {isSoCraTes: false}}]);
       });
 
-      socratesActivitiesService.isParticipant(new Subscriber({id: 'memberId'}), function (err, result) {
+      socratesActivitiesService.participationStatus(new Subscriber({id: 'memberId'}), function (err, result) {
         expect(result).to.be.true();
         done(err);
       });
@@ -300,7 +300,7 @@ describe('SoCraTes Activities Service', function () {
         callback(null, [{state: {isSoCraTes: false}}]);
       });
 
-      socratesActivitiesService.isParticipant(new Subscriber({id: 'memberId'}), function (err, result) {
+      socratesActivitiesService.participationStatus(new Subscriber({id: 'memberId'}), function (err, result) {
         expect(result).to.be.false();
         done(err);
       });

@@ -33,7 +33,7 @@ module.exports = {
 
   removeSubscriber: function (subscriber, callback) {
     persistence.remove(subscriber.id(), function (err) {
-      logger.info('Subscriber removed:' + JSON.stringify(subscriber));
+      logger.info('Subscriber removed: ' + JSON.stringify(subscriber));
       callback(err);
     });
   },
