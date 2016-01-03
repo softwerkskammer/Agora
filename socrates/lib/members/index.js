@@ -77,18 +77,18 @@ app.post('/delete', function (req, res, next) {
     if (!res.locals.accessrights.canDeleteMember(subscriber)) {
       return res.redirect('/members/' + encodeURIComponent(nicknameOfEditMember));
     }
-    socratesActivitiesService.isParticipant(subscriber, function(err1, isParticipant) {
+    socratesActivitiesService.isParticipant(subscriber, function (err1, isParticipant) {
       if (err1 || !subscriber) { return next(err1); }
-      if(isParticipant) {
+      if (isParticipant) {
         statusmessage.errorMessage('message.title.problem', 'message.content.members.hasParticipated').putIntoSession(req);
         return res.redirect('/members/' + encodeURIComponent(nicknameOfEditMember));
       }
-      return res.redirect('/members/' + encodeURIComponent(nicknameOfEditMember));
-      //subscriberstore.removeSubscriber(subscriber, function (err1) {
-      //  if (err1) { return next(err1); }
-      //  statusmessage.successMessage('message.title.save_successful', 'message.content.members.deleted').putIntoSession(req);
-      //  res.redirect(participantsOverviewUrlPrefix);
-      //})
+      //return res.redirect('/members/' + encodeURIComponent(nicknameOfEditMember));
+      subscriberstore.removeSubscriber(subscriber, function (err2) {
+        if (err2) { return next(err2); }
+        statusmessage.successMessage('message.title.save_successful', 'message.content.members.deleted').putIntoSession(req);
+        res.redirect(participantsOverviewUrlPrefix);
+      });
     });
   });
 });

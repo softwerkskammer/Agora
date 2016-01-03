@@ -9,6 +9,7 @@ var beans = require('../../testutil/configureForTest').get('beans');
 var userWithoutMember = require('../../testutil/userWithoutMember');
 var membersService = beans.get('membersService');
 var memberstore = beans.get('memberstore');
+var socratesActivitiesService = beans.get('socratesActivitiesService');
 var activitystore = beans.get('activitystore');
 var subscriberstore = beans.get('subscriberstore');
 var socratesNotifications = beans.get('socratesNotifications');
@@ -77,7 +78,7 @@ describe('SoCraTes members application', function () {
 
     sinon.stub(memberstore, 'getMembersForIds', function (ids, callback) {
       var members = [];
-      if(ids.indexOf('memberId') > -1){
+      if (ids.indexOf('memberId') > -1) {
         members.push(softwerkskammerMember);
       }
       if (ids.indexOf('memberId2') > -1) {
@@ -638,6 +639,43 @@ describe('SoCraTes members application', function () {
         });
     });
 
+  });
+
+  describe('submitting deletion of a member', function () {
+    beforeEach(function () {
+      sinon.stub(subscriberstore, 'getSubscriberByNickname', function (nicknameOfEditMember, callback) {
+        callback(null, socratesSubscriber);
+      });
+    });
+
+    it('refuses permission and redirects to the profile page', function (done) {
+      appWithSocratesMember
+        .post('/delete')
+        .send('nickname=someNick')
+        .expect(302)
+        .expect('location', '/members/someNick', function (err) {
+          done(err);
+        });
+    });
+
+    it('refuses deletion when the subscriber is also participant redirects to the profile page', function (done) {
+      sinon.stub(socratesActivitiesService, 'isParticipant', function (subscriber, callback) {
+        callback(null, false);
+      });
+
+      var deleteCall = sinon.stub(subscriberstore, 'removeSubscriber', function (subscriber, callback) {
+        callback(null);
+      });
+
+      request(createApp({id: 'superuserID'}))
+        .post('/delete')
+        .send('nickname=someNick')
+        .expect(302)
+        .expect('location', /participantsOverview/, function (err) {
+          expect(deleteCall.called).to.be(true);
+          done(err);
+        });
+    });
   });
 
 });
