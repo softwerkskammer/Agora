@@ -660,6 +660,20 @@ describe('SoCraTes members application', function () {
 
     it('refuses deletion when the subscriber is also participant redirects to the profile page', function (done) {
       sinon.stub(socratesActivitiesService, 'isParticipant', function (subscriber, callback) {
+        callback(null, true);
+      });
+
+      request(createApp({id: 'superuserID'}))
+        .post('/delete')
+        .send('nickname=someNick')
+        .expect(302)
+        .expect('location', '/members/someNick', function (err) {
+          done(err);
+        });
+    });
+
+    it('deletes a subscriber that is not participant and redirects to the profiles overview page of current year', function (done) {
+      sinon.stub(socratesActivitiesService, 'isParticipant', function (subscriber, callback) {
         callback(null, false);
       });
 
