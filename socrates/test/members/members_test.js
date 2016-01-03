@@ -11,6 +11,7 @@ var membersService = beans.get('membersService');
 var memberstore = beans.get('memberstore');
 var socratesActivitiesService = beans.get('socratesActivitiesService');
 var activitystore = beans.get('activitystore');
+var subscriberService = beans.get('subscriberService');
 var subscriberstore = beans.get('subscriberstore');
 var socratesNotifications = beans.get('socratesNotifications');
 var groupsAndMembersService = beans.get('groupsAndMembersService');
@@ -677,7 +678,7 @@ describe('SoCraTes members application', function () {
         callback(null, false);
       });
 
-      var deleteCall = sinon.stub(subscriberstore, 'removeSubscriber', function (subscriber, callback) {
+      var deleteCall = sinon.stub(subscriberService, 'removeSubscriber', function (subscriber, callback) {
         callback(null);
       });
 

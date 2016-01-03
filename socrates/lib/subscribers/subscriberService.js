@@ -64,6 +64,23 @@ module.exports = {
         globalCallback(null, _.map(members, function (member) { return member.email(); }));
       });
     });
+  },
+
+  removeSubscriber: function (subscriber, callback) {
+    subscriberstore.removeSubscriber(subscriber, function (err) {
+      if (err) { return callback(err); }
+      memberstore.getMemberForId(subscriber.id(), function (err1, member) {
+        if (err1) { return callback(err1); }
+        if (member.socratesOnly()) {
+          return memberstore.removeMember(subscriber, function (err2) {
+            if (err2) { return callback(err2); }
+            callback(null);
+          });
+        }
+        callback(null);
+      });
+    });
+
   }
 
 };

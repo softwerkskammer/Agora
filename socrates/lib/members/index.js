@@ -83,8 +83,7 @@ app.post('/delete', function (req, res, next) {
         statusmessage.errorMessage('message.title.problem', 'message.content.members.hasParticipated').putIntoSession(req);
         return res.redirect('/members/' + encodeURIComponent(nicknameOfEditMember));
       }
-      //return res.redirect('/members/' + encodeURIComponent(nicknameOfEditMember));
-      subscriberstore.removeSubscriber(subscriber, function (err2) {
+      subscriberService.removeSubscriber(subscriber, function (err2) {
         if (err2) { return next(err2); }
         statusmessage.successMessage('message.title.save_successful', 'message.content.members.deleted').putIntoSession(req);
         res.redirect(participantsOverviewUrlPrefix);
