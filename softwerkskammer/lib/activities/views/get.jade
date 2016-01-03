@@ -34,7 +34,8 @@ block content
             a.btn.btn-default(href='/mailsender/invitation/#{encodeURIComponent(activity.url())}', title=t('activities.invitation')): i.fa.fa-envelope-o.fa-fw
             a.btn.btn-default(href='/activities/edit/#{encodeURIComponent(activity.url())}', title=t('general.edit')): i.fa.fa-edit.fa-fw
           if (accessrights.canDeleteActivity(activity))
-            +reallyDeleteModal('activities.delete', '/activities/delete/' +encodeURIComponent(activity.url()))
+            -var deleteoptions = {url: '/activities/delete', params: {activityUrl: activity.url()}}
+            +reallyDeleteModalPost('activities.delete', deleteoptions)
         h2 #{activity.title()}
           br
           small #{activity.startMoment().locale(language).format('LL')} (#{activity.startMoment().locale(language).format('LT')}

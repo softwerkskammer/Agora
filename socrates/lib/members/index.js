@@ -37,7 +37,7 @@ function editMember(req, res, next, returnToParticipantsListing) {
 }
 
 function deleteAvatar(req, res, next, forwardPrefix) {
-  var nicknameOfEditMember = req.params.nickname;
+  var nicknameOfEditMember = req.body.nickname;
   memberstore.getMember(nicknameOfEditMember, function (err, member) {
     if (err) { return next(err); }
     if (res.locals.accessrights.canEditMember(member)) {
@@ -111,11 +111,11 @@ app.post('/submitavatar', function (req, res, next) {
   });
 });
 
-app.get('/deleteAvatarFor/:nickname', function (req, res, next) {
+app.post('/deleteAvatarFor', function (req, res, next) {
   deleteAvatar(req, res, next, '/members/');
 });
 
-app.get('/deleteAvatarInOverviewFor/:nickname', function (req, res, next) {
+app.post('/deleteAvatarInOverviewFor', function (req, res, next) {
   deleteAvatar(req, res, next, participantsOverviewUrlPrefix);
 });
 

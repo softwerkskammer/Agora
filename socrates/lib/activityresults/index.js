@@ -43,18 +43,6 @@ app.post('/:activityResultName/upload', function (req, res, next) {
   });
 });
 
-app.get('/:activityResultName/photo/:photoId/delete', function (req, res, next) {
-  var activityResultName = req.params.activityResultName;
-  if (res.locals.accessrights.canDeletePhoto()) {
-    var photoId = req.params.photoId;
-    return activityresultsService.deletePhotoOfActivityResult(activityResultName, photoId, function (err) {
-      if (err) { return next(err); }
-      res.redirect(app.path() + activityResultName);
-    });
-  }
-  res.redirect(app.path() + activityResultName);
-});
-
 app.get('/:activityResultName/photo/:photoId/edit', function (req, res, next) {
   var activityResultName = req.params.activityResultName;
   activityresultsService.getActivityResultByName(activityResultName, function (err, activityResult) {
@@ -84,6 +72,18 @@ app.post('/:activityResultName/photo/:photoId/edit', function (req, res, next) {
     res.redirect(app.path() + activityResultName);
   });
 
+});
+
+app.post('/delete', function (req, res, next) {
+  var activityResultName = req.body.activityresults;
+  if (res.locals.accessrights.canDeletePhoto()) {
+    var photoId = req.body.photo;
+    return activityresultsService.deletePhotoOfActivityResult(activityResultName, photoId, function (err) {
+      if (err) { return next(err); }
+      res.redirect(app.path() + activityResultName);
+    });
+  }
+  res.redirect(app.path() + activityResultName);
 });
 
 app.get('/:activityResultName', function (req, res, next) {

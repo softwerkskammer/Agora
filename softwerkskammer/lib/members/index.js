@@ -126,8 +126,8 @@ app.get('/edit/:nickname', function (req, res, next) {
   );
 });
 
-app.get('/delete/:nickname', function (req, res, next) {
-  var nicknameOfEditMember = req.params.nickname;
+app.post('/delete', function (req, res, next) {
+  var nicknameOfEditMember = req.body.nickname;
   groupsAndMembersService.getMemberWithHisGroups(nicknameOfEditMember, function (err, member) {
     if (err || !member) { return next(err); }
     if (!res.locals.accessrights.canDeleteMember(member)) {
@@ -202,8 +202,8 @@ app.post('/submitavatar', function (req, res, next) {
   });
 });
 
-app.get('/deleteAvatarFor/:nickname', function (req, res, next) {
-  var nicknameOfEditMember = req.params.nickname;
+app.post('/deleteAvatarFor', function (req, res, next) {
+  var nicknameOfEditMember = req.body.nickname;
   memberstore.getMember(nicknameOfEditMember, function (err, member) {
     if (err) { return next(err); }
     if (res.locals.accessrights.canEditMember(member)) {
