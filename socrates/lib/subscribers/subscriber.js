@@ -62,6 +62,10 @@ Subscriber.prototype.isParticipating = function () {
   return !!this.participations()[socratesConstants.currentYear];
 };
 
+Subscriber.prototype.hasParticipatedAnyYear = function () {
+  return Object.getOwnPropertyNames(this.participations()).length > 0;
+};
+
 Subscriber.prototype.needsToPay = function () {
   return this.participations()[socratesConstants.currentYear] && !this.payment().paymentConfirmed();
 };

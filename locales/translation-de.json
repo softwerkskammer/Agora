@@ -380,6 +380,7 @@
       },
       "members": {
         "deleted": "Das Profil wurde gelöscht.",
+        "hasParticipated": "The user has participated in some SoCraTes.",
         "hasSubscriptions": "Der User ist noch Mitglied in Gruppen.",
         "saved": "Das Profil wurde gespeichert."
       },

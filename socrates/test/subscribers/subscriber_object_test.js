@@ -6,7 +6,7 @@ var beans = require('../../testutil/configureForTest').get('beans');
 var Subscriber = beans.get('subscriber');
 var currentYear = beans.get('socratesConstants').currentYear;
 
-describe('Subscriber', function () {
+describe.only('Subscriber', function () {
   var unregisteredSubscriber;
   var unregisteredSubscriberWhoParticipatedLastYear;
   var registeredSubscriber;
@@ -15,7 +15,7 @@ describe('Subscriber', function () {
     var registered = {};
     registered[currentYear] = {};
     unregisteredSubscriber = new Subscriber({id: 'unregistered'});
-    unregisteredSubscriberWhoParticipatedLastYear = new Subscriber({id: 'unregistered', participations: {}});
+    unregisteredSubscriberWhoParticipatedLastYear = new Subscriber({id: 'unregistered', participations: {'2014': {}}});
     registeredSubscriber = new Subscriber({id: 'unregistered', participations: registered});
   });
 
@@ -23,6 +23,12 @@ describe('Subscriber', function () {
     expect(unregisteredSubscriber.isParticipating()).to.be.false();
     expect(unregisteredSubscriberWhoParticipatedLastYear.isParticipating()).to.be.false();
     expect(registeredSubscriber.isParticipating()).to.be.true();
+  });
+
+  it('hasParticipatedAnyYear', function () {
+    expect(unregisteredSubscriber.hasParticipatedAnyYear()).to.be.false();
+    expect(unregisteredSubscriberWhoParticipatedLastYear.hasParticipatedAnyYear()).to.be.true();
+    expect(registeredSubscriber.hasParticipatedAnyYear()).to.be.true();
   });
 
   describe('does NOT fill from UI', function () {

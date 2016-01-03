@@ -1,6 +1,6 @@
 'use strict';
 
-var currentYear = 2016;
+var currentYear = 2015;
 
 module.exports.currentYear = currentYear;
 module.exports.currentUrl = 'socrates-' + currentYear;

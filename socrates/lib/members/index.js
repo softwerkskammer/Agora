@@ -1,6 +1,7 @@
 'use strict';
 
 var async = require('async');
+var _ = require('lodash');
 var Form = require('multiparty').Form;
 var beans = require('simple-configure').get('beans');
 var misc = beans.get('misc');
@@ -12,6 +13,7 @@ var memberSubmitHelper = beans.get('memberSubmitHelper');
 var subscriberstore = beans.get('subscriberstore');
 var socratesConstants = beans.get('socratesConstants');
 var memberstore = beans.get('memberstore');
+var statusmessage = beans.get('statusmessage');
 
 var participantsOverviewUrlPrefix = '/wiki/' + socratesConstants.currentYear + '/participantsOverview#';
 
@@ -66,6 +68,36 @@ app.get('/edit', function (req, res, next) {
 
 app.get('/editForParticipantListing', function (req, res, next) {
   editMember(req, res, next, 'returnToParticipantsListing');
+});
+
+app.post('/delete', function (req, res, next) {
+  var nicknameOfEditMember = req.body.nickname;
+  subscriberstore.getSubscriberByNickname(nicknameOfEditMember, function (err, subscriber) {
+    if (err || !subscriber) { return next(err); }
+    if (!res.locals.accessrights.canDeleteMember(subscriber)) {
+      return res.redirect('/members/' + encodeURIComponent(nicknameOfEditMember));
+    }
+    activitystore.activitiesForGroupIdsAndRegisteredMemberId([], subscriber.id(), false, function (err, activities) {
+      if (err) { return next(err); }
+      if (_.find(activities, function (activity) { return activity.state.isSoCraTes; })) {
+        statusmessage.errorMessage('message.title.problem', 'message.content.members.hasParticipated').putIntoSession(req);
+        return res.redirect('/members/' + encodeURIComponent(nicknameOfEditMember));
+      }
+      activitystore.activitiesForGroupIdsAndRegisteredMemberId([], subscriber.id(), true, function (err, activities) {
+        if (err) { return next(err); }
+        if (_.find(activities, function (activity) { return activity.state.isSoCraTes; })) {
+          statusmessage.errorMessage('message.title.problem', 'message.content.members.hasParticipated').putIntoSession(req);
+          return res.redirect('/members/' + encodeURIComponent(nicknameOfEditMember));
+        }
+          return res.redirect('/members/' + encodeURIComponent(nicknameOfEditMember));
+        //subscriberstore.removeSubscriber(subscriber, function (err1) {
+        //  if (err1) { return next(err1); }
+        //  statusmessage.successMessage('message.title.save_successful', 'message.content.members.deleted').putIntoSession(req);
+        //  res.redirect(participantsOverviewUrlPrefix);
+        //})
+      });
+    });
+  });
 });
 
 app.post('/submit', function (req, res, next) {
