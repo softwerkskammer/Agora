@@ -6,12 +6,14 @@ var beans = require('simple-configure').get('beans');
 var misc = beans.get('misc');
 var membersService = beans.get('membersService');
 var subscriberService = beans.get('subscriberService');
+var socratesActivitiesService = beans.get('socratesActivitiesService');
 var activitystore = beans.get('activitystore');
 var Member = beans.get('member');
 var memberSubmitHelper = beans.get('memberSubmitHelper');
 var subscriberstore = beans.get('subscriberstore');
 var socratesConstants = beans.get('socratesConstants');
 var memberstore = beans.get('memberstore');
+var statusmessage = beans.get('statusmessage');
 
 var participantsOverviewUrlPrefix = '/wiki/' + socratesConstants.currentYear + '/participantsOverview#';
 
@@ -66,6 +68,29 @@ app.get('/edit', function (req, res, next) {
 
 app.get('/editForParticipantListing', function (req, res, next) {
   editMember(req, res, next, 'returnToParticipantsListing');
+});
+
+app.post('/delete', function (req, res, next) {
+  var nicknameOfEditMember = req.body.nickname;
+  subscriberstore.getSubscriberByNickname(nicknameOfEditMember, function (err, subscriber) {
+    if (err || !subscriber) { return next(err); }
+    if (!res.locals.accessrights.canDeleteMember(subscriber)) {
+      return res.redirect('/members/' + encodeURIComponent(nicknameOfEditMember));
+    }
+    socratesActivitiesService.isParticipant(subscriber, function(err1, isParticipant) {
+      if (err1 || !subscriber) { return next(err1); }
+      if(isParticipant) {
+        statusmessage.errorMessage('message.title.problem', 'message.content.members.hasParticipated').putIntoSession(req);
+        return res.redirect('/members/' + encodeURIComponent(nicknameOfEditMember));
+      }
+      return res.redirect('/members/' + encodeURIComponent(nicknameOfEditMember));
+      //subscriberstore.removeSubscriber(subscriber, function (err1) {
+      //  if (err1) { return next(err1); }
+      //  statusmessage.successMessage('message.title.save_successful', 'message.content.members.deleted').putIntoSession(req);
+      //  res.redirect(participantsOverviewUrlPrefix);
+      //})
+    });
+  });
 });
 
 app.post('/submit', function (req, res, next) {

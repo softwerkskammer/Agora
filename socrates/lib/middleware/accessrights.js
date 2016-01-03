@@ -38,8 +38,8 @@ module.exports = function accessrights(req, res, next) {
         return this.isMember(member);
       },
 
-      canDeleteMember: function (member) {
-        return this.isSuperuser() && !this.isMember(member);
+      canDeleteMember: function (memberOrSubscriber) {
+        return this.isSuperuser() && !this.isMember(memberOrSubscriber);
       },
 
       canCreateActivity: function () {

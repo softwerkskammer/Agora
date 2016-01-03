@@ -270,5 +270,20 @@ module.exports = {
       if (err || !activity) { return callback(err); }
       callback(null, activity);
     });
+  },
+
+  isParticipant: function (subscriber, callback) {
+    function containsSoCraTes(activities) {
+      return !!_.find(activities, function (activity) { return activity.state.isSoCraTes; });
+    }
+
+    activitystore.activitiesForGroupIdsAndRegisteredMemberId([], subscriber.id(), true, function (err, upcomingActivities) {
+      if (err) { return callback(err); }
+      activitystore.activitiesForGroupIdsAndRegisteredMemberId([], subscriber.id(), false, function (err1, pastActivities) {
+        if (err1) { return callback(err1); }
+        callback(null, containsSoCraTes(upcomingActivities.concat(pastActivities)));
+      });
+    });
+
   }
 };
