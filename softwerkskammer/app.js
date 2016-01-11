@@ -34,8 +34,6 @@ var winston = require('winston-config').fromFileSync(path.join(__dirname, '../co
 var appLogger = winston.loggers.get('application');
 var httpLogger = winston.loggers.get('http');
 
-
-
 // stream the log messages of express to winston, remove line breaks on message
 var winstonStream = {
   write: function (message) {
@@ -97,6 +95,32 @@ module.exports = {
   start: function (done) {
     var port = conf.get('port');
     var app = this.create();
+
+    // start memwatch stuff
+    if (conf.get('memlog')) {
+      var memLogger = winston.loggers.get('mem');
+      var memwatch = require('memwatch-next');
+      var lastSize;
+      var heapdiffer;
+
+      memwatch.on('leak', function (info) {
+        memLogger.info('leak: ' + JSON.stringify(info));
+      });
+
+      memwatch.on('stats', function (stats) {
+        if (!heapdiffer) {
+          heapdiffer = new memwatch.HeapDiff();
+          lastSize = stats.current_base;
+        }
+        if (stats.estimated_base > lastSize) {
+          memLogger.info('HEAPDIFF: ' + JSON.stringify(heapdiffer.end()));
+          heapdiffer = new memwatch.HeapDiff();
+          lastSize = stats.current_base;
+        }
+        memLogger.info('stats: ' + JSON.stringify(stats));
+      });
+    }
+    //end memwatch stuff
 
     this.server = http.createServer(app);
     this.server.listen(port, function () {
