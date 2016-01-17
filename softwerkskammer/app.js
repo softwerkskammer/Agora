@@ -97,7 +97,7 @@ module.exports = {
     var app = this.create();
 
     // start memwatch stuff
-    if (conf.get('memlog')) {
+    function memwatchstuff() { // function to have scoped vars
       var memLogger = winston.loggers.get('mem');
       var memwatch = require('memwatch-next');
       var lastSize;
@@ -119,6 +119,9 @@ module.exports = {
         }
         memLogger.info('stats: ' + JSON.stringify(stats));
       });
+    }
+    if (conf.get('memlog')) {
+      memwatchstuff();
     }
     //end memwatch stuff
 
