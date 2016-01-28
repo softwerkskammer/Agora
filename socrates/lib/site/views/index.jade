@@ -105,29 +105,23 @@ block content
     .logocolumn.col-sm-4.col-md-3.col-lg-4.col-md-offset-1.col-lg-offset-0
       .sidebar
         .page-header
-          h2 Sponsors needed
-        //
-          TODO update when we have sponsors
-          .page-header
-            h2 Our Sponsors
-          each pair, index in sponsors
-            .row
-              +sponsorCol(pair.first)
-              if (pair.second)
-                hr.sponsorline.hidden-lg
-                +sponsorCol(pair.second)
-            .row
+          h2 Our Sponsors
+        each pair, index in sponsors
+          .row
+            +sponsorCol(pair.first)
+            if (pair.second)
               hr.sponsorline.hidden-lg
-              .col-lg-12.visible-lg-block
-                hr
+              +sponsorCol(pair.second)
+          .row
+            hr.sponsorline.hidden-lg
+            .col-lg-12.visible-lg-block
+              hr
         a.btn.btn-info.pull-right(href='/sponsoring.html', style='width:160px;margin-bottom: 15px;')
           span.glyphicon.glyphicon-thumbs-up
           |  Sponsor us
 
 
 
-//
-  TODO update when we have sponsors
-  mixin sponsorCol(sponsor)
-    .col-lg-6
-      a(href=sponsor.url, target='_blank'): img(src='logos/' + sponsor.logo, alt=sponsor.name, width='160')
+mixin sponsorCol(sponsor)
+  .col-lg-6
+    a(href=sponsor.url, target='_blank'): img(src='logos/' + sponsor.logo, alt=sponsor.name, width='160')
