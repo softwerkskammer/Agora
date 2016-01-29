@@ -21,6 +21,8 @@
 
   "subscriberstore": {"module": "./socrates/lib/subscribers/subscriberstore"},
 
+  "events": {"module": "./socrates/lib/eventstore/events"},
+
   "socratesAddon": {"module": "./socrates/lib/subscribers/addon"},
   "socratesAddonLineUtilities": {"module": "./socrates/lib/subscribers/addonLineUtilities"},
   "socratesPayment": {"module": "./socrates/lib/subscribers/payment"},
