@@ -25,16 +25,16 @@ SoCraTesEventStore.prototype.quota = function () {
 };
 
 var thirtyMinutesAgo = moment.tz().subtract(30, 'minutes');
-var updateEventsBySessionId = function (eventsBySessionId, event) {
+var updateBookingsBySessionId = function (bookingsBySessionId, event) {
   if (event.event === 'PARTICIPANT-WAS-REGISTERED' || (event.event === 'RESERVATION-WAS-ISSUED' && event.timestamp.isAfter(thirtyMinutesAgo))) {
-    eventsBySessionId[event.sessionID] = event;
+    bookingsBySessionId[event.sessionID] = event;
   }
-  return eventsBySessionId;
+  return bookingsBySessionId;
 };
 
 SoCraTesEventStore.prototype.reservationsAndParticipants = function () {
   if (!this._reservationsAndParticipants) {
-    this._reservationsAndParticipants = R.reduce(updateEventsBySessionId, {}, this.resourceEvents);
+    this._reservationsAndParticipants = R.reduce(updateBookingsBySessionId, {}, this.resourceEvents);
   }
   return R.values(this._reservationsAndParticipants);
 };
@@ -46,7 +46,7 @@ SoCraTesEventStore.prototype.issueReservation = function (roomType, sessionId) {
     // append to event stream:
     this.resourceEvents.push(event);
     // update write model:
-    this._reservationsAndParticipants = updateEventsBySessionId(this._reservationsAndParticipants, event);
+    this._reservationsAndParticipants = updateBookingsBySessionId(this._reservationsAndParticipants, event);
   }
 };
 
@@ -56,7 +56,7 @@ SoCraTesEventStore.prototype.registerParticipant = function (roomType, sessionId
     // append to event stream:
     this.resourceEvents.push(event);
     // update write model:
-    this._reservationsAndParticipants = updateEventsBySessionId(this._reservationsAndParticipants, event);
+    this._reservationsAndParticipants = updateBookingsBySessionId(this._reservationsAndParticipants, event);
   }
 };
 
