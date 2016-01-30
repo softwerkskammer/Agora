@@ -20,7 +20,7 @@ module.exports = {
     return enrich({event: RESERVATION_WAS_ISSUED, sessionID: sessionId, roomType: roomType});
   },
 
-  participantWasRegistered: function (roomType, sessionId) {
-    return enrich({event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId, roomType: roomType});
+  participantWasRegistered: function (roomType, sessionId, memberId) {
+    return enrich({event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId, roomType: roomType, memberId: memberId});
   }
 };
