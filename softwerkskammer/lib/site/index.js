@@ -77,7 +77,7 @@ app.get('/test', function (req, res) {
 });
 
 app.get('/language/:isoCode', function (req, res) {
-  req.session.language = req.params.isoCode;
+  req.session.language = req.params.isoCode.substring(0, 2);
   res.redirect(req.query.currentUrl);
 });
 
