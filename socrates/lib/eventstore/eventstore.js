@@ -16,7 +16,7 @@ function SoCraTesEventStore() {
   // write model state (will not be persisted):
   this._quota = {};
   this._reservationsBySessionId = {};
-  this._participantsInAllRoomTypesByMemberId = undefined;
+  this._participantsByMemberId = undefined;
   return this;
 }
 
@@ -33,81 +33,74 @@ SoCraTesEventStore.prototype.quotaFor = function (roomType) {
 };
 
 var thirtyMinutesAgo = moment.tz().subtract(30, 'minutes');
-var updateBookingsBySessionId = function (roomType, bookingsBySessionId, event) {
 
-  var eventIsForDesiredRoomType = event.roomType === roomType;
-  var eventIsRegistration = event.event === 'PARTICIPANT-WAS-REGISTERED';
-  var eventIsAnActiveReservation = event.event === 'RESERVATION-WAS-ISSUED' && event.timestamp.isAfter(thirtyMinutesAgo);
-  if (eventIsAnActiveReservation && eventIsForDesiredRoomType) {
-    bookingsBySessionId[event.sessionID] = event;
+var updateReservationsBySessionId = function (roomType, reservationsBySessionId, event) {
+  if (event.event === 'RESERVATION-WAS-ISSUED' && event.timestamp.isAfter(thirtyMinutesAgo) && event.roomType === roomType) {
+    reservationsBySessionId[event.sessionID] = event;
   }
-  if (eventIsRegistration && eventIsForDesiredRoomType) {
-    delete bookingsBySessionId[event.sessionID];
+  if (event.event === 'PARTICIPANT-WAS-REGISTERED' && event.roomType === roomType) {
+    delete reservationsBySessionId[event.sessionID];
   }
-  return bookingsBySessionId;
+  return reservationsBySessionId;
 };
 
 SoCraTesEventStore.prototype.reservations = function (roomType) {
   if (!this._reservationsBySessionId[roomType]) {
-    this._reservationsBySessionId[roomType] = R.reduce(R.partial(updateBookingsBySessionId, [roomType]), {}, this.state.resourceEvents);
+    this._reservationsBySessionId[roomType] = R.reduce(R.partial(updateReservationsBySessionId, [roomType]), {}, this.state.resourceEvents);
   }
-  return R.values(this._reservationsBySessionId[roomType]);
+  return this._reservationsBySessionId[roomType];
 };
 
-var updateParticipantsInAllRoomTypesByMemberId = function (participantsInAllRoomTypesByMemberId, event) {
-  if (event.event === 'PARTICIPANT-WAS-REGISTERED') {
-    participantsInAllRoomTypesByMemberId[event.memberId] = event;
+var updateParticipantsByMemberId = function (participantsByMemberId, event) {
+  if (event.event === 'PARTICIPANT-WAS-REGISTERED' || event.event === 'ROOM-TYPE-WAS-CHANGED') {
+    participantsByMemberId[event.memberId] = event;
   }
-  return participantsInAllRoomTypesByMemberId;
+  return participantsByMemberId;
 };
 
-SoCraTesEventStore.prototype.participantsInAllRoomTypesByMemberId = function () {
-  if (!this._participantsInAllRoomTypesByMemberId) {
-    this._participantsInAllRoomTypesByMemberId = R.reduce(updateParticipantsInAllRoomTypesByMemberId, {}, this.state.resourceEvents);
+SoCraTesEventStore.prototype.participantsByMemberId = function () {
+  if (!this._participantsByMemberId) {
+    this._participantsByMemberId = R.reduce(updateParticipantsByMemberId, {}, this.state.resourceEvents);
   }
-  return this._participantsInAllRoomTypesByMemberId;
+  return this._participantsByMemberId;
 };
 
-SoCraTesEventStore.prototype.reservationsAndParticipants = function (roomType) {
-  this.reservations(roomType); // hydrate cache - TODO remove
-  return R.values(R.reduce(function (result, event) { if(event.roomType === roomType) { result[event.sessionID] = event; } return result; },
-    this._reservationsBySessionId[roomType] || {},
-    R.values(this.participantsInAllRoomTypesByMemberId())));
+SoCraTesEventStore.prototype.participantsFor = function (roomType) {
+  return R.filter(function(event){ return event.roomType === roomType; }, R.values(this.participantsByMemberId()));
 }
 
+SoCraTesEventStore.prototype.reservationsAndParticipantsFor = function (roomType) {
+  return R.concat(R.values(this.reservations(roomType)), this.participantsFor(roomType));
+};
+
 // handle commands:
+SoCraTesEventStore.prototype.updateResourceEventsAndWriteModel = function (event) {
+  // append to event stream:
+  this.state.resourceEvents.push(event);
+  // update write models:
+  this._reservationsBySessionId[event.roomType] = updateReservationsBySessionId(event.roomType, this.reservations(event.roomType), event);
+  this._participantsByMemberId = updateParticipantsByMemberId(this.participantsByMemberId(), event);
+};
+
+
 SoCraTesEventStore.prototype.issueReservation = function (roomType, sessionId) {
-  if (this.quotaFor(roomType) > this.reservationsAndParticipants(roomType).length) {
+  if (this.quotaFor(roomType) > this.reservationsAndParticipantsFor(roomType).length) {
     var event = events.reservationWasIssued(roomType, sessionId);
-    // append to event stream:
-    this.state.resourceEvents.push(event);
-    // update write models:
-    this._reservationsBySessionId[roomType] = updateBookingsBySessionId(roomType, this.reservations(roomType), event);
-    this._participantsInAllRoomTypesByMemberId = updateParticipantsInAllRoomTypesByMemberId(this.participantsInAllRoomTypesByMemberId(), event);
+    this.updateResourceEventsAndWriteModel(event);
   }
 };
 
 SoCraTesEventStore.prototype.registerParticipant = function (roomType, sessionId, memberId) {
-  if (this.quotaFor(roomType) > this.reservationsAndParticipants(roomType).length) {
+  if (this.quotaFor(roomType) > this.reservationsAndParticipantsFor(roomType).length) {
     var event = events.participantWasRegistered(roomType, sessionId, memberId);
-    // append to event stream:
-    this.state.resourceEvents.push(event);
-    // update write models:
-    this._reservationsBySessionId[roomType] = updateBookingsBySessionId(roomType, this.reservations(roomType), event);
-    this._participantsInAllRoomTypesByMemberId = updateParticipantsInAllRoomTypesByMemberId(this.participantsInAllRoomTypesByMemberId(), event);
+    this.updateResourceEventsAndWriteModel(event);
   }
 };
 
 SoCraTesEventStore.prototype.moveParticipantToNewRoomType = function (memberId, roomType) {
-  var existingParticipantEvent = this.participantsInAllRoomTypesByMemberId()[memberId];
+  var existingParticipantEvent = this.participantsByMemberId()[memberId];
   var event = existingParticipantEvent ? events.roomTypeWasChanged(memberId, roomType) : events.didNotChangeRoomTypeForNonParticipant(memberId, roomType);
-  // append to event stream:
-  this.state.resourceEvents.push(event);
-  // update write models:
-  if (existingParticipantEvent) {
-    this._reservationsBySessionId[roomType] = updateBookingsBySessionId(roomType, this.reservations(roomType), event);
-    this._participantsInAllRoomTypesByMemberId = updateParticipantsInAllRoomTypesByMemberId(this.participantsInAllRoomTypesByMemberId(), event);
-  }
+  this.updateResourceEventsAndWriteModel(event);
 };
 
 module.exports = SoCraTesEventStore;
