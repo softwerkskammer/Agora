@@ -67,7 +67,7 @@ SoCraTesEventStore.prototype.participantsByMemberId = function () {
 
 SoCraTesEventStore.prototype.participantsFor = function (roomType) {
   return R.filter(function(event){ return event.roomType === roomType; }, R.values(this.participantsByMemberId()));
-}
+};
 
 SoCraTesEventStore.prototype.reservationsAndParticipantsFor = function (roomType) {
   return R.concat(R.values(this.reservations(roomType)), this.participantsFor(roomType));
