@@ -56,37 +56,54 @@ describe('the socrates conference write model', function () {
 
   it('does not consider reservations that are already expired', function () {
     var socrates = new SoCraTesEventStore();
-    socrates.resourceEvents = [{event: RESERVATION_WAS_ISSUED, sessionID: sessionId1, timestamp: aLongTimeAgo}];
+    socrates.resourceEvents = [
+      {event: RESERVATION_WAS_ISSUED, sessionID: sessionId1, roomType: singleBedRoom, timestamp: aLongTimeAgo}];
 
     expect(socrates.reservationsAndParticipants(singleBedRoom)).to.eql([]);
   });
 
   it('considers reservations that are still active', function () {
     var socrates = new SoCraTesEventStore();
-    socrates.resourceEvents = [{event: RESERVATION_WAS_ISSUED, sessionID: sessionId1, timestamp: aShortTimeAgo}];
+    socrates.resourceEvents = [
+      {event: RESERVATION_WAS_ISSUED, sessionID: sessionId1, roomType: singleBedRoom, timestamp: aShortTimeAgo}];
 
-    expect(socrates.reservationsAndParticipants(singleBedRoom)).to.eql([{event: RESERVATION_WAS_ISSUED, sessionID: sessionId1, timestamp: aShortTimeAgo}]);
+    expect(socrates.reservationsAndParticipants(singleBedRoom)).to.eql([
+      {event: RESERVATION_WAS_ISSUED, sessionID: sessionId1, roomType: singleBedRoom, timestamp: aShortTimeAgo}]);
   });
 
   it('considers participations', function () {
     var socrates = new SoCraTesEventStore();
     socrates.resourceEvents = [
-      {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, timestamp: aLongTimeAgo},
-      {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId2, timestamp: aShortTimeAgo}];
+      {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, roomType: singleBedRoom, timestamp: aLongTimeAgo},
+      {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId2, roomType: singleBedRoom, timestamp: aShortTimeAgo}];
 
     expect(socrates.reservationsAndParticipants(singleBedRoom)).to.eql([
-      {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, timestamp: aLongTimeAgo},
-      {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId2, timestamp: aShortTimeAgo}]);
+      {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, roomType: singleBedRoom, timestamp: aLongTimeAgo},
+      {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId2, roomType: singleBedRoom, timestamp: aShortTimeAgo}]);
   });
 
   it('does not consider registrations that have a matching participation', function () {
     var socrates = new SoCraTesEventStore();
     socrates.resourceEvents = [
-      {event: RESERVATION_WAS_ISSUED, sessionID: sessionId1, timestamp: aShortTimeAgo},
-      {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, timestamp: anEvenShorterTimeAgo}];
+      {event: RESERVATION_WAS_ISSUED, sessionID: sessionId1, roomType: singleBedRoom, timestamp: aShortTimeAgo},
+      {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, roomType: singleBedRoom, timestamp: anEvenShorterTimeAgo}];
 
     expect(socrates.reservationsAndParticipants(singleBedRoom)).to.eql([
-      {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, timestamp: anEvenShorterTimeAgo}]);
+      {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, roomType: singleBedRoom, timestamp: anEvenShorterTimeAgo}]);
+  });
+
+  it('returns only the events belonging to the queried room type', function () {
+    var socrates = new SoCraTesEventStore();
+    socrates.resourceEvents = [
+      {event: RESERVATION_WAS_ISSUED, sessionID: sessionId1, roomType: bedInDouble, timestamp: aLongTimeAgo},
+      {event: RESERVATION_WAS_ISSUED, sessionID: sessionId1, roomType: singleBedRoom, timestamp: aShortTimeAgo},
+      {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId2, roomType: bedInDouble, timestamp: aShortTimeAgo},
+      {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, roomType: singleBedRoom, timestamp: anEvenShorterTimeAgo}];
+
+    expect(socrates.reservationsAndParticipants(singleBedRoom)).to.eql([
+      {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, roomType: singleBedRoom, timestamp: anEvenShorterTimeAgo}]);
+    expect(socrates.reservationsAndParticipants(bedInDouble)).to.eql([
+      {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId2, roomType: bedInDouble, timestamp: aShortTimeAgo}]);
   });
 });
 
