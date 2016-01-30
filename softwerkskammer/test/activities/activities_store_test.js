@@ -195,5 +195,25 @@ describe('Activity store', function () {
       });
     });
 
+    it('flattensAndSorts a mongo result completely', function () {
+      var nestedMongoResult = [{
+        value: [
+          [
+            [
+              {startUnix: 3}, {startUnix: 7}, {startUnix: 2}
+            ],
+            {startUnix: 1}, {startUnix: 6}, {startUnix: 5}
+          ],
+          {startUnix: 4}, {startUnix: 9}, {startUnix: 8}
+        ]
+      }];
+      var result = store.flattenAndSortMongoResultCollection(nestedMongoResult);
+      expect(result).to.eql([
+        {startUnix: 1}, {startUnix: 2}, {startUnix: 3},
+        {startUnix: 4}, {startUnix: 5}, {startUnix: 6},
+        {startUnix: 7}, {startUnix: 8}, {startUnix: 9}
+      ]);
+    });
+
   });
 });

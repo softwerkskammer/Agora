@@ -11,14 +11,14 @@ var persistence = beans.get('activitiesPersistence');
 var Activity = beans.get('activity');
 var SoCraTesActivity = beans.get('socratesActivity');
 
-var toActivity = function (callback, err, jsobject) {
+function toActivity(callback, err, jsobject) {
   if (jsobject && jsobject.isSoCraTes) {
     return misc.toObject(SoCraTesActivity, callback, err, jsobject);
   }
   return misc.toObject(Activity, callback, err, jsobject);
-};
+}
 
-var toActivityList = function (callback, err, jsobjects) {
+function toActivityList(callback, err, jsobjects) {
   if (err) { return callback(err); }
   callback(null, _.map(jsobjects, function (each) {
     if (each && each.isSoCraTes) {
@@ -26,24 +26,28 @@ var toActivityList = function (callback, err, jsobjects) {
     }
     return new Activity(each);
   }));
-};
+}
 
-var allActivitiesByDateRange = function (rangeFrom, rangeTo, sortOrder, callback) {
+function allActivitiesByDateRange(rangeFrom, rangeTo, sortOrder, callback) {
   persistence.listByField({
     $and: [
       {endUnix: {$gt: rangeFrom}},
       {endUnix: {$lt: rangeTo}}
     ]
   }, sortOrder, _.partial(toActivityList, callback));
-};
+}
 
-var allActivitiesByDateRangeInAscendingOrder = function (rangeFrom, rangeTo, callback) {
+function allActivitiesByDateRangeInAscendingOrder(rangeFrom, rangeTo, callback) {
   allActivitiesByDateRange(rangeFrom, rangeTo, {startUnix: 1}, callback);
-};
+}
 
-var allActivitiesByDateRangeInDescendingOrder = function (rangeFrom, rangeTo, callback) {
+function allActivitiesByDateRangeInDescendingOrder(rangeFrom, rangeTo, callback) {
   allActivitiesByDateRange(rangeFrom, rangeTo, {startUnix: -1}, callback);
-};
+}
+
+function flattenAndSortMongoResultCollection(collection) {
+  return _.sortBy(_.flatten(collection[0].value, true), 'startUnix');
+}
 
 module.exports = {
   allActivities: function (callback) {
@@ -99,25 +103,25 @@ module.exports = {
   activitiesForGroupIdsAndRegisteredMemberId: function (groupIds, memberId, upcoming, callback) {
     var map = function () {
       /* eslint no-underscore-dangle: 0 */
-      var self = this; // "this" holds the activity that is currently being examined
+      var activity = this; // "this" holds the activity that is currently being examined
 
       // is the assigned group in the list of groups?
-      if (groupIds.indexOf(self.assignedGroup) > -1) {
-        emit(memberId, self);
+      if (groupIds.indexOf(activity.assignedGroup) > -1) {
+        emit(memberId, activity);
       } else { // only try this if the first one failed -> otherwise we get duplicate entries!
 
         // is the member registered in one of the resources?
         var memberIsRegistered = false;
         var checkMemberId = function (elem) {
           if (elem.memberId === memberId) {
-            emit(memberId, self);
+            emit(memberId, activity);
             memberIsRegistered = true;
           }
         };
         var resource;
-        for (resource in self.resources) {
-          if (self.resources.hasOwnProperty(resource) && self.resources[resource]._registeredMembers) {
-            self.resources[resource]._registeredMembers.forEach(checkMemberId);
+        for (resource in activity.resources) {
+          if (activity.resources.hasOwnProperty(resource) && activity.resources[resource]._registeredMembers) {
+            activity.resources[resource]._registeredMembers.forEach(checkMemberId);
             if (memberIsRegistered) { return; } // we only want to add the activity once
           }
         }
@@ -139,11 +143,13 @@ module.exports = {
         return callback(null, []);
       }
       // when there are many results, the value will be a nested array, so we need to flatten it:
-      var results = _.sortBy(_.flatten(collection[0].value), 'startUnix');
+      var results = flattenAndSortMongoResultCollection(collection);
       if (!upcoming) {
         results = results.reverse();
       }
       return toActivityList(callback, null, results);
     });
-  }
+  },
+
+  flattenAndSortMongoResultCollection: flattenAndSortMongoResultCollection
 };
