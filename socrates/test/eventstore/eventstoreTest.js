@@ -9,6 +9,8 @@ var SoCraTesEventStore = require('../../lib/eventstore/eventstore');
 
 var RESERVATION_WAS_ISSUED = 'RESERVATION-WAS-ISSUED';
 var PARTICIPANT_WAS_REGISTERED = 'PARTICIPANT-WAS-REGISTERED';
+var ROOM_TYPE_WAS_CHANGED = 'ROOM-TYPE-WAS-CHANGED';
+var DID_NOT_CHANGE_ROOM_TYPE_FOR_NON_PARTICIPANT = 'DID-NOT-CHANGE-ROOM-TYPE-FOR-NON-PARTICIPANT';
 
 function stripTimestamps(events) {
   return _.map(events, function(event) {
@@ -109,7 +111,7 @@ describe('the socrates conference write model', function () {
   });
 });
 
-describe('the socrates conference command handler', function () {
+describe('the socrates conference command handler for room reservations', function () {
   it('reserves a room if the quota is not yet exceeded', function () {
     // Given (saved events)
     var socrates = new SoCraTesEventStore();
@@ -195,7 +197,9 @@ describe('the socrates conference command handler', function () {
       {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, roomType: singleBedRoom},
       {event: RESERVATION_WAS_ISSUED, sessionID: sessionId2, roomType: singleBedRoom}]);
   });
+});
 
+describe('the socrates conference command handler for room bookings', function () {
   it('registers a room', function () { // TODO books a room?
     // Given (saved events)
     var socrates = new SoCraTesEventStore();
@@ -260,3 +264,36 @@ describe('the socrates conference command handler', function () {
   });
 });
 
+describe('the socrates conference command handler for room type changes', function () {
+  it('moves the participant to the new room type without caring about the new room limit', function () {
+    // Given (saved events)
+    var socrates = new SoCraTesEventStore();
+    socrates.state.socratesEvents = [events.roomQuotaWasSet(bedInDouble, 0)];
+    socrates.state.resourceEvents = [
+      {event: RESERVATION_WAS_ISSUED, sessionID: sessionId1, roomType: singleBedRoom, timestamp: aLongTimeAgo},
+      {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, roomType: singleBedRoom, memberId: memberId1, timestamp: aShortTimeAgo}];
+
+    // When (issued command)
+    socrates.moveParticipantToNewRoomType(memberId1, bedInDouble);
+
+    // Then (new events)
+    expect(stripTimestamps(socrates.state.resourceEvents)).to.eql([
+      {event: RESERVATION_WAS_ISSUED, sessionID: sessionId1, roomType: singleBedRoom},
+      {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, roomType: singleBedRoom, memberId: memberId1},
+      {event: ROOM_TYPE_WAS_CHANGED, memberId: memberId1, roomType: bedInDouble}]);
+  });
+
+  it('appends an error event if the member has not actually been a participant', function () {
+    // Given (saved events)
+    var socrates = new SoCraTesEventStore();
+    socrates.state.socratesEvents = [events.roomQuotaWasSet(bedInDouble, 10)];
+    socrates.state.resourceEvents = [];
+
+    // When (issued command)
+    socrates.moveParticipantToNewRoomType(memberId1, bedInDouble);
+
+    // Then (new events)
+    expect(stripTimestamps(socrates.state.resourceEvents)).to.eql([
+      {event: DID_NOT_CHANGE_ROOM_TYPE_FOR_NON_PARTICIPANT, memberId: memberId1, roomType: bedInDouble}]);
+  });
+});
