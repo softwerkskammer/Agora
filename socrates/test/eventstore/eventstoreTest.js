@@ -23,47 +23,49 @@ var anEvenShorterTimeAgo = moment.tz().subtract(5, 'minutes');
 
 var sessionId1 = 'session-id-1';
 var sessionId2 = 'session-id-2';
-var singleBedRoom = singleBedRoom;
+var singleBedRoom = 'singleBedRoom';
+var bedInDouble = 'bedInDouble';
 
 describe('the socrates conference write model', function () {
   it('does not know the quota if it has not been set', function () {
     var socrates = new SoCraTesEventStore();
 
-    expect(socrates.quota()).to.be(undefined);
+    expect(socrates.quotaFor(singleBedRoom)).to.be(undefined);
   });
 
   it('determines the quota from the socrates event', function () {
     var socrates = new SoCraTesEventStore();
     socrates.socratesEvents = [events.roomQuotaWasSet(singleBedRoom, 100)];
 
-    expect(socrates.quota()).to.be(100);
+    expect(socrates.quotaFor(singleBedRoom)).to.be(100);
   });
 
-  it('determines the quota from the latest socrates event', function () {
+  it('determines the quota from the latest socrates event for the requested room type', function () {
     var socrates = new SoCraTesEventStore();
-    socrates.socratesEvents = [events.roomQuotaWasSet(singleBedRoom, 100), events.roomQuotaWasSet(singleBedRoom, 200)];
+    socrates.socratesEvents = [events.roomQuotaWasSet(singleBedRoom, 100), events.roomQuotaWasSet(singleBedRoom, 200), events.roomQuotaWasSet(bedInDouble, 300)];
 
-    expect(socrates.quota()).to.be(200);
+    expect(socrates.quotaFor(singleBedRoom)).to.be(200);
+    expect(socrates.quotaFor(bedInDouble)).to.be(300);
   });
 
   it('does not consider any reservations or participants when there are no events', function () {
     var socrates = new SoCraTesEventStore();
 
-    expect(socrates.reservationsAndParticipants()).to.eql([]);
+    expect(socrates.reservationsAndParticipants(singleBedRoom)).to.eql([]);
   });
 
   it('does not consider reservations that are already expired', function () {
     var socrates = new SoCraTesEventStore();
     socrates.resourceEvents = [{event: RESERVATION_WAS_ISSUED, sessionID: sessionId1, timestamp: aLongTimeAgo}];
 
-    expect(socrates.reservationsAndParticipants()).to.eql([]);
+    expect(socrates.reservationsAndParticipants(singleBedRoom)).to.eql([]);
   });
 
   it('considers reservations that are still active', function () {
     var socrates = new SoCraTesEventStore();
     socrates.resourceEvents = [{event: RESERVATION_WAS_ISSUED, sessionID: sessionId1, timestamp: aShortTimeAgo}];
 
-    expect(socrates.reservationsAndParticipants()).to.eql([{event: RESERVATION_WAS_ISSUED, sessionID: sessionId1, timestamp: aShortTimeAgo}]);
+    expect(socrates.reservationsAndParticipants(singleBedRoom)).to.eql([{event: RESERVATION_WAS_ISSUED, sessionID: sessionId1, timestamp: aShortTimeAgo}]);
   });
 
   it('considers participations', function () {
@@ -72,7 +74,7 @@ describe('the socrates conference write model', function () {
       {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, timestamp: aLongTimeAgo},
       {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId2, timestamp: aShortTimeAgo}];
 
-    expect(socrates.reservationsAndParticipants()).to.eql([
+    expect(socrates.reservationsAndParticipants(singleBedRoom)).to.eql([
       {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, timestamp: aLongTimeAgo},
       {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId2, timestamp: aShortTimeAgo}]);
   });
@@ -83,7 +85,7 @@ describe('the socrates conference write model', function () {
       {event: RESERVATION_WAS_ISSUED, sessionID: sessionId1, timestamp: aShortTimeAgo},
       {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, timestamp: anEvenShorterTimeAgo}];
 
-    expect(socrates.reservationsAndParticipants()).to.eql([
+    expect(socrates.reservationsAndParticipants(singleBedRoom)).to.eql([
       {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, timestamp: anEvenShorterTimeAgo}]);
   });
 });

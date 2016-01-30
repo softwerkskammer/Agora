@@ -9,19 +9,20 @@ var events = beans.get('events');
 function SoCraTesEventStore() {
   this.socratesEvents = [];
   this.resourceEvents = [];
+  this._quota = {};
   return this;
 }
 
 // write model state:
 
-var updateQuota = function (quota, event) { return event.event === 'ROOM-QUOTA-WAS-SET' ? event.quota : quota; }
+var updateQuota = function (roomType, quota, event) { return event.event === 'ROOM-QUOTA-WAS-SET' && event.roomType === roomType ? event.quota : quota; }
 
-SoCraTesEventStore.prototype.quota = function () {
-  if (!this._quota) {
-    this._quota = R.reduce(updateQuota, undefined, this.socratesEvents);
+SoCraTesEventStore.prototype.quotaFor = function (roomType) {
+  if (!this._quota[roomType]) {
+    this._quota[roomType] = R.reduce(R.partial(updateQuota, [roomType]), undefined, this.socratesEvents);
   }
 
-  return this._quota;
+  return this._quota[roomType];
 };
 
 var thirtyMinutesAgo = moment.tz().subtract(30, 'minutes');
@@ -41,7 +42,7 @@ SoCraTesEventStore.prototype.reservationsAndParticipants = function () {
 
 // handle commands:
 SoCraTesEventStore.prototype.issueReservation = function (roomType, sessionId) {
-  if (this.quota() > this.reservationsAndParticipants().length) {
+  if (this.quotaFor(roomType) > this.reservationsAndParticipants().length) {
     var event = events.reservationWasIssued(roomType, sessionId);
     // append to event stream:
     this.resourceEvents.push(event);
@@ -51,7 +52,7 @@ SoCraTesEventStore.prototype.issueReservation = function (roomType, sessionId) {
 };
 
 SoCraTesEventStore.prototype.registerParticipant = function (roomType, sessionId) {
-  if (this.quota() > this.reservationsAndParticipants().length) {
+  if (this.quotaFor(roomType) > this.reservationsAndParticipants().length) {
     var event = events.participantWasRegistered(roomType, sessionId);
     // append to event stream:
     this.resourceEvents.push(event);
