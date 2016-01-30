@@ -161,7 +161,7 @@ describe('the socrates conference command handler', function () {
 
     // Then (new events)
     expect(stripTimestamps(socrates.resourceEvents)).to.eql([{event: RESERVATION_WAS_ISSUED, sessionID: sessionId1, roomType: roomType},
-      {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, roomType: roomType}, {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId2, roomType: roomType}]);
+      {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, roomType: roomType}, {event: RESERVATION_WAS_ISSUED, sessionID: sessionId2, roomType: roomType}]);
   });
 
   it('registers a room', function () { // TODO books a room?

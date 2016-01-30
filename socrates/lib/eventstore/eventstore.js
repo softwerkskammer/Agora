@@ -26,12 +26,13 @@ SoCraTesEventStore.prototype.reservationsAndParticipants = function () {
   var self = this;
   var thirtyMinutesAgo = moment.tz().subtract(30, 'minutes');
   if(!self._reservationsAndParticipants) {
-    self._reservationsAndParticipants = _.filter(this.resourceEvents, function (event) {
+    var events = _.filter(this.resourceEvents, function (event) {
       return event.event === 'PARTICIPANT-WAS-REGISTERED' || (event.event === 'RESERVATION-WAS-ISSUED' && event.timestamp.isAfter(thirtyMinutesAgo));
     });
-    // TODO remove reservations that have an accompanying registration
+    var f = function (eventsBySessionId, event) { eventsBySessionId[event.sessionID] = event; return eventsBySessionId; }
+    self._reservationsAndParticipants = R.reduce(f, {}, events);
   }
-  return self._reservationsAndParticipants;
+  return R.values(self._reservationsAndParticipants);
 };
 
 // handle commands:
@@ -39,7 +40,7 @@ SoCraTesEventStore.prototype.issueReservation = function (roomType, sessionId) {
   if(this.quota() > this.reservationsAndParticipants().length) {
     var event = events.reservationWasIssued(roomType, sessionId);
     this.resourceEvents.push(event);
-    this._reservationsAndParticipants.push(event);
+    this._reservationsAndParticipants[event.sessionID] = event;
   }
 };
 
@@ -47,7 +48,7 @@ SoCraTesEventStore.prototype.registerParticipant = function (roomType, sessionId
   if(this.quota() > this.reservationsAndParticipants().length) {
     var event = events.participantWasRegistered(roomType, sessionId);
     this.resourceEvents.push(event);
-    this._reservationsAndParticipants.push(event);
+    this._reservationsAndParticipants[event.sessionID] = event;
   }
 };
 
