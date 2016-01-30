@@ -16,11 +16,11 @@ module.exports = {
     return enrich({event: ROOM_QUOTA_WAS_SET, roomType: roomType, quota: quota});
   },
 
-  reservationWasIssued: function (roomType) {
-    return enrich({event: RESERVATION_WAS_ISSUED, roomType: roomType});
+  reservationWasIssued: function (roomType, sessionId) {
+    return enrich({event: RESERVATION_WAS_ISSUED, sessionID: sessionId, roomType: roomType});
   },
 
-  participantWasRegistered: function (roomType) {
-    return enrich({event: PARTICIPANT_WAS_REGISTERED, roomType: roomType});
+  participantWasRegistered: function (roomType, sessionId) {
+    return enrich({event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId, roomType: roomType});
   }
 };

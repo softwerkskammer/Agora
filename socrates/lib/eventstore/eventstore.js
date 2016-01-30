@@ -35,16 +35,20 @@ SoCraTesEventStore.prototype.reservationsAndParticipants = function () {
 };
 
 // handle commands:
-SoCraTesEventStore.prototype.issueReservation = function (roomType) {
+SoCraTesEventStore.prototype.issueReservation = function (roomType, sessionId) {
   if(this.quota() > this.reservationsAndParticipants().length) {
-    var event = events.reservationWasIssued(roomType);
+    var event = events.reservationWasIssued(roomType, sessionId);
     this.resourceEvents.push(event);
     this._reservationsAndParticipants.push(event);
   }
 };
 
-SoCraTesEventStore.prototype.registerParticipant = function () {
-
+SoCraTesEventStore.prototype.registerParticipant = function (roomType, sessionId) {
+  if(this.quota() > this.reservationsAndParticipants().length) {
+    var event = events.participantWasRegistered(roomType, sessionId);
+    this.resourceEvents.push(event);
+    this._reservationsAndParticipants.push(event);
+  }
 };
 
 module.exports = SoCraTesEventStore;
