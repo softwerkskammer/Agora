@@ -16,7 +16,6 @@ function SoCraTesEventStore() {
   // write model state (will not be persisted):
   this._quota = {};
   this._reservationsAndParticipantsBySessionId = {};
-  this._participantsByMemberId = {};
   this._participantsInAllRoomTypesByMemberId = undefined;
   return this;
 }
@@ -56,20 +55,6 @@ SoCraTesEventStore.prototype.reservationsAndParticipants = function (roomType) {
   return R.values(this._reservationsAndParticipantsBySessionId[roomType]);
 };
 
-var updateParticipantsByMemberId = function (roomType, participantsByMemberId, event) {
-  if (event.event === 'PARTICIPANT-WAS-REGISTERED' && event.roomType === roomType) {
-    participantsByMemberId[event.memberId] = event;
-  }
-  return participantsByMemberId;
-};
-
-SoCraTesEventStore.prototype.participantsByMemberId = function (roomType) {
-  if (!this._participantsByMemberId[roomType]) {
-    this._participantsByMemberId[roomType] = R.reduce(R.partial(updateParticipantsByMemberId, [roomType]), {}, this.state.resourceEvents);
-  }
-  return this._participantsByMemberId[roomType];
-};
-
 var updateParticipantsInAllRoomTypesByMemberId = function (participantsInAllRoomTypesByMemberId, event) {
   if (event.event === 'PARTICIPANT-WAS-REGISTERED') {
     participantsInAllRoomTypesByMemberId[event.memberId] = event;
@@ -102,7 +87,6 @@ SoCraTesEventStore.prototype.registerParticipant = function (roomType, sessionId
     this.state.resourceEvents.push(event);
     // update write models:
     this._reservationsAndParticipantsBySessionId[roomType] = updateBookingsBySessionId(roomType, this.reservationsAndParticipants(roomType), event);
-    this._participantsByMemberId = updateParticipantsByMemberId(roomType, this.participantsByMemberId(), event);
     this._participantsInAllRoomTypesByMemberId = updateParticipantsInAllRoomTypesByMemberId(this.participantsInAllRoomTypesByMemberId(), event);
   }
 };
@@ -115,7 +99,7 @@ SoCraTesEventStore.prototype.moveParticipantToNewRoomType = function (memberId, 
   // update write models:
   if(existingParticipantEvent){
     this._reservationsAndParticipantsBySessionId[roomType] = updateBookingsBySessionId(roomType, this.reservationsAndParticipants(roomType), event);
-    this._participantsByMemberId = updateParticipantsByMemberId(roomType, this.participantsByMemberId(), event);
+    this._participantsInAllRoomTypesByMemberId = updateParticipantsInAllRoomTypesByMemberId(this.participantsInAllRoomTypesByMemberId(), event);
   }
 };
 
