@@ -13,42 +13,50 @@ function SoCraTesEventStore() {
 }
 
 // write model state:
+
+var updateQuota = function (quota, event) { return event.event === 'ROOM-QUOTA-WAS-SET' ? event.quota : quota; }
+
 SoCraTesEventStore.prototype.quota = function () {
   if (!this._quota) {
-    var f = function (quota, event) { return event.event === 'ROOM-QUOTA-WAS-SET' ? event.quota : quota; }
-    this._quota = R.reduce(f, undefined, this.socratesEvents);
+    this._quota = R.reduce(updateQuota, undefined, this.socratesEvents);
   }
 
   return this._quota;
 };
 
-SoCraTesEventStore.prototype.reservationsAndParticipants = function () {
-  var self = this;
-  var thirtyMinutesAgo = moment.tz().subtract(30, 'minutes');
-  if(!self._reservationsAndParticipants) {
-    var events = _.filter(this.resourceEvents, function (event) {
-      return event.event === 'PARTICIPANT-WAS-REGISTERED' || (event.event === 'RESERVATION-WAS-ISSUED' && event.timestamp.isAfter(thirtyMinutesAgo));
-    });
-    var f = function (eventsBySessionId, event) { eventsBySessionId[event.sessionID] = event; return eventsBySessionId; }
-    self._reservationsAndParticipants = R.reduce(f, {}, events);
+var thirtyMinutesAgo = moment.tz().subtract(30, 'minutes');
+var updateEventsBySessionId = function (eventsBySessionId, event) {
+  if (event.event === 'PARTICIPANT-WAS-REGISTERED' || (event.event === 'RESERVATION-WAS-ISSUED' && event.timestamp.isAfter(thirtyMinutesAgo))) {
+    eventsBySessionId[event.sessionID] = event;
   }
-  return R.values(self._reservationsAndParticipants);
+  return eventsBySessionId;
+};
+
+SoCraTesEventStore.prototype.reservationsAndParticipants = function () {
+  if (!this._reservationsAndParticipants) {
+    this._reservationsAndParticipants = R.reduce(updateEventsBySessionId, {}, this.resourceEvents);
+  }
+  return R.values(this._reservationsAndParticipants);
 };
 
 // handle commands:
 SoCraTesEventStore.prototype.issueReservation = function (roomType, sessionId) {
-  if(this.quota() > this.reservationsAndParticipants().length) {
+  if (this.quota() > this.reservationsAndParticipants().length) {
     var event = events.reservationWasIssued(roomType, sessionId);
+    // append to event stream:
     this.resourceEvents.push(event);
-    this._reservationsAndParticipants[event.sessionID] = event;
+    // update write model:
+    this._reservationsAndParticipants = updateEventsBySessionId(this._reservationsAndParticipants, event);
   }
 };
 
 SoCraTesEventStore.prototype.registerParticipant = function (roomType, sessionId) {
-  if(this.quota() > this.reservationsAndParticipants().length) {
+  if (this.quota() > this.reservationsAndParticipants().length) {
     var event = events.participantWasRegistered(roomType, sessionId);
+    // append to event stream:
     this.resourceEvents.push(event);
-    this._reservationsAndParticipants[event.sessionID] = event;
+    // update write model:
+    this._reservationsAndParticipants = updateEventsBySessionId(this._reservationsAndParticipants, event);
   }
 };
 
