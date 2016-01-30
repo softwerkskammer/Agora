@@ -15,7 +15,7 @@ function SoCraTesEventStore() {
 
   // write model state (will not be persisted):
   this._quota = {};
-  this._reservationsAndParticipantsBySessionId = {};
+  this._reservationsBySessionId = {};
   this._participantsInAllRoomTypesByMemberId = undefined;
   return this;
 }
@@ -42,17 +42,16 @@ var updateBookingsBySessionId = function (roomType, bookingsBySessionId, event) 
     bookingsBySessionId[event.sessionID] = event;
   }
   if (eventIsRegistration && eventIsForDesiredRoomType) {
-    bookingsBySessionId[event.sessionID] = event;
-    // delete bookingsBySessionId[event.sessionID];
+    delete bookingsBySessionId[event.sessionID];
   }
   return bookingsBySessionId;
 };
 
-SoCraTesEventStore.prototype.reservationsAndParticipants = function (roomType) {
-  if (!this._reservationsAndParticipantsBySessionId[roomType]) {
-    this._reservationsAndParticipantsBySessionId[roomType] = R.reduce(R.partial(updateBookingsBySessionId, [roomType]), {}, this.state.resourceEvents);
+SoCraTesEventStore.prototype.reservations = function (roomType) {
+  if (!this._reservationsBySessionId[roomType]) {
+    this._reservationsBySessionId[roomType] = R.reduce(R.partial(updateBookingsBySessionId, [roomType]), {}, this.state.resourceEvents);
   }
-  return R.values(this._reservationsAndParticipantsBySessionId[roomType]);
+  return R.values(this._reservationsBySessionId[roomType]);
 };
 
 var updateParticipantsInAllRoomTypesByMemberId = function (participantsInAllRoomTypesByMemberId, event) {
@@ -69,6 +68,13 @@ SoCraTesEventStore.prototype.participantsInAllRoomTypesByMemberId = function () 
   return this._participantsInAllRoomTypesByMemberId;
 };
 
+SoCraTesEventStore.prototype.reservationsAndParticipants = function (roomType) {
+  this.reservations(roomType); // hydrate cache - TODO remove
+  return R.values(R.reduce(function (result, event) { if(event.roomType === roomType) { result[event.sessionID] = event; } return result; },
+    this._reservationsBySessionId[roomType] || {},
+    R.values(this.participantsInAllRoomTypesByMemberId())));
+}
+
 // handle commands:
 SoCraTesEventStore.prototype.issueReservation = function (roomType, sessionId) {
   if (this.quotaFor(roomType) > this.reservationsAndParticipants(roomType).length) {
@@ -76,7 +82,8 @@ SoCraTesEventStore.prototype.issueReservation = function (roomType, sessionId) {
     // append to event stream:
     this.state.resourceEvents.push(event);
     // update write models:
-    this._reservationsAndParticipantsBySessionId[roomType] = updateBookingsBySessionId(roomType, this.reservationsAndParticipants(roomType), event);
+    this._reservationsBySessionId[roomType] = updateBookingsBySessionId(roomType, this.reservations(roomType), event);
+    this._participantsInAllRoomTypesByMemberId = updateParticipantsInAllRoomTypesByMemberId(this.participantsInAllRoomTypesByMemberId(), event);
   }
 };
 
@@ -86,7 +93,7 @@ SoCraTesEventStore.prototype.registerParticipant = function (roomType, sessionId
     // append to event stream:
     this.state.resourceEvents.push(event);
     // update write models:
-    this._reservationsAndParticipantsBySessionId[roomType] = updateBookingsBySessionId(roomType, this.reservationsAndParticipants(roomType), event);
+    this._reservationsBySessionId[roomType] = updateBookingsBySessionId(roomType, this.reservations(roomType), event);
     this._participantsInAllRoomTypesByMemberId = updateParticipantsInAllRoomTypesByMemberId(this.participantsInAllRoomTypesByMemberId(), event);
   }
 };
@@ -97,8 +104,8 @@ SoCraTesEventStore.prototype.moveParticipantToNewRoomType = function (memberId, 
   // append to event stream:
   this.state.resourceEvents.push(event);
   // update write models:
-  if(existingParticipantEvent){
-    this._reservationsAndParticipantsBySessionId[roomType] = updateBookingsBySessionId(roomType, this.reservationsAndParticipants(roomType), event);
+  if (existingParticipantEvent) {
+    this._reservationsBySessionId[roomType] = updateBookingsBySessionId(roomType, this.reservations(roomType), event);
     this._participantsInAllRoomTypesByMemberId = updateParticipantsInAllRoomTypesByMemberId(this.participantsInAllRoomTypesByMemberId(), event);
   }
 };
