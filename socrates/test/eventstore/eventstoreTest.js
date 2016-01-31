@@ -8,6 +8,7 @@ var beans = require('../../testutil/configureForTest').get('beans');
 var events = beans.get('events');
 var SoCraTesEventStore = require('../../lib/eventstore/eventstore');
 
+var ROOM_QUOTA_WAS_SET = 'ROOM-QUOTA-WAS-SET';
 var RESERVATION_WAS_ISSUED = 'RESERVATION-WAS-ISSUED';
 var PARTICIPANT_WAS_REGISTERED = 'PARTICIPANT-WAS-REGISTERED';
 var ROOM_TYPE_WAS_CHANGED = 'ROOM-TYPE-WAS-CHANGED';
@@ -144,6 +145,27 @@ describe('the socrates conference write model', function () {
         roomType: bedInDouble,
         timestamp: aShortTimeAgo
       }]);
+  });
+});
+
+describe('the socrates conference command handler for room quota changes', function () {
+  it('changes the quota', function () {
+    // Given (saved events)
+    var socrates = new SoCraTesEventStore();
+
+    socrates.state.socratesEvents = [events.roomQuotaWasSet(singleBedRoom, 100)];
+    socrates.state.resourceEvents = [];
+
+    // When (issued command)
+    socrates.updateRoomQuota(singleBedRoom, 150);
+
+    // Then (new events)
+    expect(stripTimestamps(socrates.state.socratesEvents)).to.eql([
+      {event: ROOM_QUOTA_WAS_SET, roomType: singleBedRoom, quota: 100},
+      {event: ROOM_QUOTA_WAS_SET, roomType: singleBedRoom, quota: 150}
+    ]);
+    // And (new write model)
+    expect(socrates.quotaFor(singleBedRoom)).to.eql(150);
   });
 });
 

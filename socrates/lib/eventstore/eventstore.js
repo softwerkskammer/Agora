@@ -32,7 +32,6 @@ SoCraTesEventStore.prototype.quotaFor = function (roomType) {
   return this._quota[roomType];
 };
 
-
 var updateReservationsBySessionId = function (roomType, reservationsBySessionId, event) {
   var thirtyMinutesAgo = moment.tz().subtract(30, 'minutes');
   if (event.event === 'RESERVATION-WAS-ISSUED' && event.timestamp.isAfter(thirtyMinutesAgo) && event.roomType === roomType) {
@@ -66,7 +65,7 @@ SoCraTesEventStore.prototype.participantsByMemberId = function () {
 };
 
 SoCraTesEventStore.prototype.participantsByMemberIdFor = function (roomType) {
-  return R.filter(function(event){ return event.roomType === roomType; }, this.participantsByMemberId());
+  return R.filter(function (event) { return event.roomType === roomType; }, this.participantsByMemberId());
 };
 
 SoCraTesEventStore.prototype.reservationsAndParticipantsFor = function (roomType) {
@@ -74,6 +73,20 @@ SoCraTesEventStore.prototype.reservationsAndParticipantsFor = function (roomType
 };
 
 // handle commands:
+// that create SoCraTes events:
+SoCraTesEventStore.prototype.updateSoCraTesEventsAndWriteModel = function (event) {
+  // append to event stream:
+  this.state.socratesEvents.push(event);
+  // update write models:
+  this._quota[event.roomType] = updateQuota(event.roomType, this.quotaFor(event.roomType), event);
+};
+
+SoCraTesEventStore.prototype.updateRoomQuota = function (roomType, quota) {
+  var event = events.roomQuotaWasSet(roomType, quota);
+  this.updateSoCraTesEventsAndWriteModel(event);
+};
+
+// that create Resource events:
 SoCraTesEventStore.prototype.updateResourceEventsAndWriteModel = function (event) {
   // append to event stream:
   this.state.resourceEvents.push(event);
@@ -81,7 +94,6 @@ SoCraTesEventStore.prototype.updateResourceEventsAndWriteModel = function (event
   this._reservationsBySessionId[event.roomType] = updateReservationsBySessionId(event.roomType, this.reservationsBySessionIdFor(event.roomType), event);
   this._participantsByMemberId = updateParticipantsByMemberId(this.participantsByMemberId(), event);
 };
-
 
 SoCraTesEventStore.prototype.issueReservation = function (roomType, sessionId) {
   if (this.quotaFor(roomType) > this.reservationsAndParticipantsFor(roomType).length) {
