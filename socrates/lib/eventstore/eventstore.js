@@ -44,7 +44,7 @@ var updateReservationsBySessionId = function (roomType, reservationsBySessionId,
   return reservationsBySessionId;
 };
 
-SoCraTesEventStore.prototype.reservations = function (roomType) {
+SoCraTesEventStore.prototype.reservationsBySessionIdFor = function (roomType) {
   if (!this._reservationsBySessionId[roomType]) {
     this._reservationsBySessionId[roomType] = R.reduce(R.partial(updateReservationsBySessionId, [roomType]), {}, this.state.resourceEvents);
   }
@@ -65,12 +65,12 @@ SoCraTesEventStore.prototype.participantsByMemberId = function () {
   return this._participantsByMemberId;
 };
 
-SoCraTesEventStore.prototype.participantsFor = function (roomType) {
-  return R.filter(function(event){ return event.roomType === roomType; }, R.values(this.participantsByMemberId()));
+SoCraTesEventStore.prototype.participantsByMemberIdFor = function (roomType) {
+  return R.filter(function(event){ return event.roomType === roomType; }, this.participantsByMemberId());
 };
 
 SoCraTesEventStore.prototype.reservationsAndParticipantsFor = function (roomType) {
-  return R.concat(R.values(this.reservations(roomType)), this.participantsFor(roomType));
+  return R.concat(R.values(this.reservationsBySessionIdFor(roomType)), R.values(this.participantsByMemberIdFor(roomType)));
 };
 
 // handle commands:
@@ -78,7 +78,7 @@ SoCraTesEventStore.prototype.updateResourceEventsAndWriteModel = function (event
   // append to event stream:
   this.state.resourceEvents.push(event);
   // update write models:
-  this._reservationsBySessionId[event.roomType] = updateReservationsBySessionId(event.roomType, this.reservations(event.roomType), event);
+  this._reservationsBySessionId[event.roomType] = updateReservationsBySessionId(event.roomType, this.reservationsBySessionIdFor(event.roomType), event);
   this._participantsByMemberId = updateParticipantsByMemberId(this.participantsByMemberId(), event);
 };
 
