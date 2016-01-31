@@ -1,8 +1,8 @@
 'use strict';
 var moment = require('moment-timezone');
 
-function enrich(event) {
-  event.timestamp = moment();
+function enrich(event, timestamp) {
+  event.timestamp = timestamp || moment();
   return event;
 }
 
@@ -18,12 +18,12 @@ module.exports = {
     return enrich({event: ROOM_QUOTA_WAS_SET, roomType: roomType, quota: quota});
   },
 
-  reservationWasIssued: function (roomType, sessionId) {
-    return enrich({event: RESERVATION_WAS_ISSUED, sessionID: sessionId, roomType: roomType});
+  reservationWasIssued: function (roomType, sessionId, timestamp) {
+    return enrich({event: RESERVATION_WAS_ISSUED, sessionID: sessionId, roomType: roomType}, timestamp);
   },
 
-  participantWasRegistered: function (roomType, sessionId, memberId) {
-    return enrich({event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId, roomType: roomType, memberId: memberId});
+  participantWasRegistered: function (roomType, sessionId, memberId, timestamp) {
+    return enrich({event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId, roomType: roomType, memberId: memberId}, timestamp);
   },
 
   roomTypeWasChanged: function (memberId, roomType) {

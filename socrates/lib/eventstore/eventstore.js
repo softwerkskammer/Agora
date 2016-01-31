@@ -32,9 +32,9 @@ SoCraTesEventStore.prototype.quotaFor = function (roomType) {
   return this._quota[roomType];
 };
 
-var thirtyMinutesAgo = moment.tz().subtract(30, 'minutes');
 
 var updateReservationsBySessionId = function (roomType, reservationsBySessionId, event) {
+  var thirtyMinutesAgo = moment.tz().subtract(30, 'minutes');
   if (event.event === 'RESERVATION-WAS-ISSUED' && event.timestamp.isAfter(thirtyMinutesAgo) && event.roomType === roomType) {
     reservationsBySessionId[event.sessionID] = event;
   }
