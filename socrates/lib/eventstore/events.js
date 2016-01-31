@@ -12,6 +12,7 @@ var DID_NOT_ISSUE_RESERVATION_FOR_ALREADY_RESERVED_SESSION = 'DID_NOT_ISSUE_RESE
 var DID_NOT_ISSUE_RESERVATION_FOR_FULL_RESOURCE = 'DID_NOT_ISSUE_RESERVATION_FOR_FULL_RESOURCE';
 var PARTICIPANT_WAS_REGISTERED = 'PARTICIPANT-WAS-REGISTERED';
 var DID_NOT_REGISTER_PARTICIPANT_FOR_FULL_RESOURCE = 'DID_NOT_REGISTER_PARTICIPANT_FOR_FULL_RESOURCE';
+var DID_NOT_REGISTER_PARTICIPANT_A_SECOND_TIME = 'DID_NOT_REGISTER_PARTICIPANT_A_SECOND_TIME';
 var ROOM_TYPE_WAS_CHANGED = 'ROOM-TYPE-WAS-CHANGED';
 var DID_NOT_CHANGE_ROOM_TYPE_FOR_NON_PARTICIPANT = 'DID-NOT-CHANGE-ROOM-TYPE-FOR-NON-PARTICIPANT';
 
@@ -42,6 +43,10 @@ module.exports = {
 
   didNotRegisterParticipantForFullResource: function (roomType, sessionId, memberId, timestamp) {
     return enrich({event: DID_NOT_REGISTER_PARTICIPANT_FOR_FULL_RESOURCE, sessionID: sessionId, roomType: roomType, memberId: memberId}, timestamp);
+  },
+
+  didNotRegisterParticipantASecondTime: function (roomType, sessionId, memberId, timestamp) {
+    return enrich({event: DID_NOT_REGISTER_PARTICIPANT_A_SECOND_TIME, sessionID: sessionId, roomType: roomType, memberId: memberId}, timestamp);
   },
 
   // after registration:

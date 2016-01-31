@@ -119,6 +119,9 @@ SoCraTesEventStore.prototype.registerParticipant = function (roomType, sessionId
   if (this.quotaFor(roomType) <= this.reservationsAndParticipantsFor(roomType).length) {
     // resource is already full
     event = events.didNotRegisterParticipantForFullResource(roomType, sessionId, memberId);
+  } else if (this.participantsByMemberId()[memberId]) {
+    // member is already registered
+    event = events.didNotRegisterParticipantASecondTime(roomType, sessionId, memberId);
   } else {
     // all is well
     event = events.participantWasRegistered(roomType, sessionId, memberId);

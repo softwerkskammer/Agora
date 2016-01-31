@@ -14,6 +14,7 @@ var DID_NOT_ISSUE_RESERVATION_FOR_ALREADY_RESERVED_SESSION = 'DID_NOT_ISSUE_RESE
 var DID_NOT_ISSUE_RESERVATION_FOR_FULL_RESOURCE = 'DID_NOT_ISSUE_RESERVATION_FOR_FULL_RESOURCE';
 var PARTICIPANT_WAS_REGISTERED = 'PARTICIPANT-WAS-REGISTERED';
 var DID_NOT_REGISTER_PARTICIPANT_FOR_FULL_RESOURCE = 'DID_NOT_REGISTER_PARTICIPANT_FOR_FULL_RESOURCE';
+var DID_NOT_REGISTER_PARTICIPANT_A_SECOND_TIME = 'DID_NOT_REGISTER_PARTICIPANT_A_SECOND_TIME';
 var ROOM_TYPE_WAS_CHANGED = 'ROOM-TYPE-WAS-CHANGED';
 var DID_NOT_CHANGE_ROOM_TYPE_FOR_NON_PARTICIPANT = 'DID-NOT-CHANGE-ROOM-TYPE-FOR-NON-PARTICIPANT';
 
@@ -316,7 +317,7 @@ describe('the socrates conference command handler for room reservations', functi
   });
 });
 
-describe('the socrates conference command handler for room bookings', function () {
+describe('the socrates conference command handler for room registrations', function () {
   it('registers a room', function () { // TODO books a room?
     // Given (saved events)
     var socrates = new SoCraTesEventStore();
@@ -392,6 +393,28 @@ describe('the socrates conference command handler for room bookings', function (
     // And (new write model)
     expect(stripTimestamps(socrates.reservationsAndParticipantsFor(singleBedRoom))).to.eql([
       {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, roomType: singleBedRoom, memberId: memberId1}]);
+  });
+
+  it('does register two rooms for the same member, not even different rooms', function () { // TODO books a room?
+    // Given (saved events)
+    var socrates = new SoCraTesEventStore();
+    socrates.state.socratesEvents = [events.roomQuotaWasSet(singleBedRoom, 100)];
+    socrates.state.resourceEvents = [
+      events.participantWasRegistered(singleBedRoom, sessionId1, memberId1)
+    ];
+
+    // When (issued command)
+    socrates.registerParticipant(bedInDouble, sessionId1, memberId1);
+
+    // Then (new events)
+    expect(stripTimestamps(socrates.state.resourceEvents)).to.eql([
+      {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, roomType: singleBedRoom, memberId: memberId1},
+      {event: DID_NOT_REGISTER_PARTICIPANT_A_SECOND_TIME, sessionID: sessionId1, roomType: bedInDouble, memberId: memberId1},
+    ]);
+    // And (new write model)
+    expect(stripTimestamps(socrates.reservationsAndParticipantsFor(singleBedRoom))).to.eql([
+      {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, roomType: singleBedRoom, memberId: memberId1}]);
+    expect(stripTimestamps(socrates.reservationsAndParticipantsFor(bedInDouble))).to.eql([]);
   });
 });
 
