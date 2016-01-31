@@ -54,7 +54,6 @@ SoCraTesEventStore.prototype.reservationsBySessionIdFor = function (roomType) {
   return R.filter(function (event) { return event.roomType === roomType; }, this.reservationsBySessionId());
 };
 
-
 var updateParticipantsByMemberId = function (participantsByMemberId, event) {
   if (event.event === 'PARTICIPANT-WAS-REGISTERED' || event.event === 'ROOM-TYPE-WAS-CHANGED') {
     participantsByMemberId[event.memberId] = event;
@@ -116,10 +115,15 @@ SoCraTesEventStore.prototype.issueReservation = function (roomType, sessionId) {
 };
 
 SoCraTesEventStore.prototype.registerParticipant = function (roomType, sessionId, memberId) {
-  if (this.quotaFor(roomType) > this.reservationsAndParticipantsFor(roomType).length) {
-    var event = events.participantWasRegistered(roomType, sessionId, memberId);
-    this.updateResourceEventsAndWriteModel(event);
+  var event;
+  if (this.quotaFor(roomType) <= this.reservationsAndParticipantsFor(roomType).length) {
+    // resource is already full
+    event = events.didNotRegisterParticipantForFullResource(roomType, sessionId, memberId);
+  } else {
+    // all is well
+    event = events.participantWasRegistered(roomType, sessionId, memberId);
   }
+  this.updateResourceEventsAndWriteModel(event);
 };
 
 SoCraTesEventStore.prototype.moveParticipantToNewRoomType = function (memberId, roomType) {

@@ -13,6 +13,7 @@ var RESERVATION_WAS_ISSUED = 'RESERVATION-WAS-ISSUED';
 var DID_NOT_ISSUE_RESERVATION_FOR_ALREADY_RESERVED_SESSION = 'DID_NOT_ISSUE_RESERVATION_FOR_ALREADY_RESERVED_SESSION';
 var DID_NOT_ISSUE_RESERVATION_FOR_FULL_RESOURCE = 'DID_NOT_ISSUE_RESERVATION_FOR_FULL_RESOURCE';
 var PARTICIPANT_WAS_REGISTERED = 'PARTICIPANT-WAS-REGISTERED';
+var DID_NOT_REGISTER_PARTICIPANT_FOR_FULL_RESOURCE = 'DID_NOT_REGISTER_PARTICIPANT_FOR_FULL_RESOURCE';
 var ROOM_TYPE_WAS_CHANGED = 'ROOM-TYPE-WAS-CHANGED';
 var DID_NOT_CHANGE_ROOM_TYPE_FOR_NON_PARTICIPANT = 'DID-NOT-CHANGE-ROOM-TYPE-FOR-NON-PARTICIPANT';
 
@@ -368,7 +369,9 @@ describe('the socrates conference command handler for room bookings', function (
     // Then (new events)
     expect(stripTimestamps(socrates.state.resourceEvents)).to.eql([
       {event: RESERVATION_WAS_ISSUED, sessionID: sessionId1, roomType: singleBedRoom},
-      {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId2, roomType: singleBedRoom, memberId: memberId2}]);
+      {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId2, roomType: singleBedRoom, memberId: memberId2},
+      {event: DID_NOT_REGISTER_PARTICIPANT_FOR_FULL_RESOURCE, sessionID: sessionId1, roomType: singleBedRoom, memberId: memberId1}
+    ]);
     // And (new write model)
     expect(stripTimestamps(socrates.reservationsAndParticipantsFor(singleBedRoom))).to.eql([
       {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId2, roomType: singleBedRoom, memberId: memberId2}]);
