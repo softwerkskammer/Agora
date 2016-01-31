@@ -125,12 +125,14 @@ describe('the socrates conference write model', function () {
       }]);
   });
 
-  it('does not consider DID_NOT_... reservation events', function () {
+  it('does not consider DID_NOT_... reservation and registration events', function () {
     var socrates = new SoCraTesEventStore();
     socrates.state.resourceEvents = [
       events.reservationWasIssued(singleBedRoom, sessionId1, aShortTimeAgo),
       events.didNotIssueReservationForAlreadyReservedSession(bedInDouble, sessionId1, aShortTimeAgo),
-      events.didNotIssueReservationForFullResource(singleBedRoom, sessionId2, aShortTimeAgo)
+      events.didNotIssueReservationForFullResource(singleBedRoom, sessionId2, aShortTimeAgo),
+      events.didNotRegisterParticipantForFullResource(singleBedRoom, sessionId1, memberId1, aShortTimeAgo),
+      events.didNotRegisterParticipantASecondTime(singleBedRoom, sessionId1, memberId1, aShortTimeAgo)
     ];
 
     expect(socrates.reservationsAndParticipantsFor(singleBedRoom)).to.eql([
