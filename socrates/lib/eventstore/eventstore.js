@@ -15,7 +15,7 @@ function SoCraTesEventStore() {
 
   // write model state (will not be persisted):
   this._quota = {};
-  this._reservationsBySessionId = {};
+  this._reservationsBySessionId = undefined;
   this._participantsByMemberId = undefined;
   return this;
 }
@@ -32,23 +32,28 @@ SoCraTesEventStore.prototype.quotaFor = function (roomType) {
   return this._quota[roomType];
 };
 
-var updateReservationsBySessionId = function (roomType, reservationsBySessionId, event) {
+var updateReservationsBySessionId = function (reservationsBySessionId, event) {
   var thirtyMinutesAgo = moment.tz().subtract(30, 'minutes');
-  if (event.event === 'RESERVATION-WAS-ISSUED' && event.timestamp.isAfter(thirtyMinutesAgo) && event.roomType === roomType) {
+  if (event.event === 'RESERVATION-WAS-ISSUED' && event.timestamp.isAfter(thirtyMinutesAgo)) {
     reservationsBySessionId[event.sessionID] = event;
   }
-  if (event.event === 'PARTICIPANT-WAS-REGISTERED' && event.roomType === roomType) {
+  if (event.event === 'PARTICIPANT-WAS-REGISTERED') {
     delete reservationsBySessionId[event.sessionID];
   }
   return reservationsBySessionId;
 };
 
-SoCraTesEventStore.prototype.reservationsBySessionIdFor = function (roomType) {
-  if (!this._reservationsBySessionId[roomType]) {
-    this._reservationsBySessionId[roomType] = R.reduce(R.partial(updateReservationsBySessionId, [roomType]), {}, this.state.resourceEvents);
+SoCraTesEventStore.prototype.reservationsBySessionId = function () {
+  if (!this._reservationsBySessionId) {
+    this._reservationsBySessionId = R.reduce(updateReservationsBySessionId, {}, this.state.resourceEvents);
   }
-  return this._reservationsBySessionId[roomType];
+  return this._reservationsBySessionId;
 };
+
+SoCraTesEventStore.prototype.reservationsBySessionIdFor = function (roomType) {
+  return R.filter(function (event) { return event.roomType === roomType; }, this.reservationsBySessionId());
+};
+
 
 var updateParticipantsByMemberId = function (participantsByMemberId, event) {
   if (event.event === 'PARTICIPANT-WAS-REGISTERED' || event.event === 'ROOM-TYPE-WAS-CHANGED') {
@@ -91,15 +96,23 @@ SoCraTesEventStore.prototype.updateResourceEventsAndWriteModel = function (event
   // append to event stream:
   this.state.resourceEvents.push(event);
   // update write models:
-  this._reservationsBySessionId[event.roomType] = updateReservationsBySessionId(event.roomType, this.reservationsBySessionIdFor(event.roomType), event);
+  this._reservationsBySessionId = updateReservationsBySessionId(this.reservationsBySessionId(), event);
   this._participantsByMemberId = updateParticipantsByMemberId(this.participantsByMemberId(), event);
 };
 
 SoCraTesEventStore.prototype.issueReservation = function (roomType, sessionId) {
-  if (this.quotaFor(roomType) > this.reservationsAndParticipantsFor(roomType).length) {
-    var event = events.reservationWasIssued(roomType, sessionId);
-    this.updateResourceEventsAndWriteModel(event);
+  var event;
+  if (this.quotaFor(roomType) <= this.reservationsAndParticipantsFor(roomType).length) {
+    // resource is already full
+    event = events.didNotIssueReservationForFullResource(roomType, sessionId);
+  } else if (this.reservationsBySessionId()[sessionId]) {
+    // session id already reserved a spot
+    event = events.didNotIssueReservationForAlreadyReservedSession(roomType, sessionId);
+  } else {
+    // all is good
+    event = events.reservationWasIssued(roomType, sessionId);
   }
+  this.updateResourceEventsAndWriteModel(event);
 };
 
 SoCraTesEventStore.prototype.registerParticipant = function (roomType, sessionId, memberId) {
