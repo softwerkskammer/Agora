@@ -81,7 +81,7 @@ Member.prototype.persistAvatarData = function (data) {
 };
 
 Member.prototype.getPersistedAvatarData = function () {
-  return !!this.state.avatardata;
+  return this.state.avatardata;
 };
 
 Member.prototype.inlineAvatar = function () {

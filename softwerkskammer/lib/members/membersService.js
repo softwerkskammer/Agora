@@ -86,11 +86,11 @@ module.exports = {
         store.saveMember(member, callback);
       });
     } else {
-      if (member.getPersistedAvatarData().fetchTime && new Date().getTime() - member.getPersistedAvatarData().fetchTime < 60 * 1000) { // one hour
+      if (member.getPersistedAvatarData().fetchTime && new Date().getTime() - member.getPersistedAvatarData().fetchTime > 60 * 60 * 1000) { // one hour
         avatarProvider.getImage(member, function (imageData) {
-          var oldAvatar = member.inlineAvatar();
+          var oldAvatar = member.getPersistedAvatarData();
           member.persistAvatarData(imageData);
-          if (member.inlineAvatar() !== oldAvatar) {
+          if (member.getPersistedAvatarData() !== oldAvatar) {
             store.saveMember(member, function () { /* background op */ });
           }
         });
