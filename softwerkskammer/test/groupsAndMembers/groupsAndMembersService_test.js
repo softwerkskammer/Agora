@@ -16,6 +16,7 @@ var GroupA = new Group({id: 'GroupA', longName: 'Gruppe A', description: 'Dies i
 var GroupB = new Group({id: 'GroupB', longName: 'Gruppe B', description: 'Dies ist Gruppe B.', type: 'Regionalgruppe'});
 
 var memberstore = beans.get('memberstore');
+var membersService = beans.get('membersService');
 var groupsService = beans.get('groupsService');
 var groupstore = beans.get('groupstore');
 
@@ -151,6 +152,9 @@ describe('Groups and Members Service (getGroupAndMembersForList)', function () {
     sinon.stub(memberstore, 'getMembersForEMails', function (member, callback) {
       callback(null, [dummymember]);
     });
+    sinon.stub(membersService, 'getImage', function (member, callback) {
+      callback();
+    });
 
     groupsAndMembersService.getGroupAndMembersForList('GroupA', function (err, group) {
       expect(group).to.equal(GroupA);
@@ -262,6 +266,9 @@ describe('Groups and Members Service (addMembersToGroup)', function () {
     sinon.stub(groupsService, 'getMailinglistUsersOfList', function (ignoredErr, callback) { callback(null, ['user@email.com']); });
     sinon.stub(memberstore, 'getMembersForEMails', function (member, callback) {
       callback(null, [dummymember]);
+    });
+    sinon.stub(membersService, 'getImage', function (member, callback) {
+      callback();
     });
 
     groupsAndMembersService.addMembersToGroup(GroupA, function (err, group) {
