@@ -87,6 +87,9 @@ describe('SoCraTes members application', function () {
       }
       callback(null, members);
     });
+    sinon.stub(membersService, 'getImage', function (member, callback) {
+      callback();
+    });
   });
 
   afterEach(function () {

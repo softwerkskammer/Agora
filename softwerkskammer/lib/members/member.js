@@ -8,6 +8,9 @@ var _ = require('lodash');
 
 function Member(object) {
   this.state = object || {};
+  if (this.state.avatardata) {
+    this.setAvatarData(this.state.avatardata);
+  }
 }
 
 Member.prototype.fillFromUI = function (object) {
@@ -29,10 +32,6 @@ Member.prototype.fillFromUI = function (object) {
   }
 
   return self;
-};
-
-Member.prototype.setSite = function (siteUrl) {
-  this.site = fieldHelpers.addPrefixTo('http://', siteUrl, 'https://');
 };
 
 Member.prototype.displayName = function () {
@@ -75,6 +74,14 @@ Member.prototype.avatarUrl = function (size) {
 Member.prototype.setAvatarData = function (data) {
   this.avatarImage = data.image;
   this.hasNoImage = data.hasNoImage;
+};
+
+Member.prototype.setPersistedAvatarData = function (data) {
+  this.state.avatardata = data;
+};
+
+Member.prototype.getPersistedAvatarData = function () {
+  return this.state.avatardata;
 };
 
 Member.prototype.inlineAvatar = function () {

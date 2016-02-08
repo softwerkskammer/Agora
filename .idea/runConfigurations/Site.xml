@@ -1,0 +1,16 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Site" type="mocha-javascript-test-runner" factoryName="Mocha" singleton="false">
+    <node-options />
+    <working-directory>$PROJECT_DIR$</working-directory>
+    <pass-parent-env>true</pass-parent-env>
+    <envs>
+      <env name="reporter" value="spec" />
+    </envs>
+    <ui>bdd</ui>
+    <extra-mocha-options />
+    <test-kind>DIRECTORY</test-kind>
+    <test-directory>$PROJECT_DIR$/softwerkskammer/test/site</test-directory>
+    <recursive>true</recursive>
+    <method />
+  </configuration>
+</component>

@@ -7,9 +7,9 @@ var beans = require('../../testutil/configureForTest').get('beans');
 var Member = beans.get('member');
 var memberstore = beans.get('memberstore');
 var membersService = beans.get('membersService');
+var avatarProvider = beans.get('avatarProvider');
 
 describe('MembersService', function () {
-  /* eslint no-path-concat: 0 */
   var imagePath = __dirname + '/../gallery/fixtures/image.jpg';
   var member;
 
@@ -217,8 +217,16 @@ describe('MembersService', function () {
 
   describe('avatar functions', function () {
     var saveMember;
+    var getImageFromAvatarProvider;
+    var now = new Date().getTime();
+    var gravatarData;
+
     beforeEach(function () {
       saveMember = sinon.stub(memberstore, 'saveMember', function (anyMember, callback) { callback(); });
+      gravatarData = {image: 'the image', hasNoImage: false, fetchTime: now};
+      getImageFromAvatarProvider = sinon.stub(avatarProvider, 'getImage', function (anyMember, callback) {
+        callback(gravatarData);
+      });
     });
 
     it('updates a member with information about a saved avatar', function (done) {
@@ -264,6 +272,47 @@ describe('MembersService', function () {
 
       membersService.getImage(member, function (err) {
         expect(member.inlineAvatar()).to.match('');
+        done(err);
+      });
+    });
+
+    it('a member without a custom avatar loads it from gravatar and persists it', function (done) {
+      membersService.getImage(member, function (err) {
+        expect(member.state.avatardata).to.be(gravatarData);
+        expect(getImageFromAvatarProvider.called).to.be(true);
+        expect(saveMember.called).to.be(true);
+        done(err);
+      });
+    });
+
+    it('a member takes the persisted one if it is actual enough', function (done) {
+      member.state.avatardata = gravatarData;
+      membersService.getImage(member, function (err) {
+        expect(member.state.avatardata).to.be(gravatarData);
+        expect(getImageFromAvatarProvider.called).to.be(false);
+        expect(saveMember.called).to.be(false);
+        done(err);
+      });
+    });
+
+    it('loads it again if it is potentially outdated but does not save it if it is equal', function (done) {
+      gravatarData.fetchTime = gravatarData.fetchTime - 61 * 61 * 1000;
+
+      member.state.avatardata = gravatarData;
+      membersService.getImage(member, function (err) {
+        expect(member.state.avatardata).to.be(gravatarData);
+        expect(getImageFromAvatarProvider.called).to.be(true);
+        expect(saveMember.called).to.be(false);
+        done(err);
+      });
+    });
+
+    it('loads it again if it is potentially outdated but does not save it if it is equal', function (done) {
+      member.state.avatardata = {image: 'another image', hasNoImage: false, fetchTime: now - 61 * 61 * 1000};
+      membersService.getImage(member, function (err) {
+        expect(member.state.avatardata).to.be(gravatarData);
+        expect(getImageFromAvatarProvider.called).to.be(true);
+        expect(saveMember.called).to.be(true);
         done(err);
       });
     });

@@ -16,8 +16,8 @@ function isReserved(nickname) {
 
 function wordList(members, groupingFunction) {
   return _(members).map(function (member) {
-    return member.interests() && member.interests().split(',').map(function (interest) {return interest.trim(); });
-  })
+      return member.interests() && member.interests().split(',').map(function (interest) {return interest.trim(); });
+    })
     .flatten() // now we have all words in one collection
     .compact() // remove empty strings
     .groupBy(groupingFunction) // prepare counting by grouping
@@ -80,7 +80,23 @@ module.exports = {
         });
       });
     }
-    avatarProvider.getImage(member, callback);
+    if (!member.getPersistedAvatarData()) {
+      avatarProvider.getImage(member, function (imageData) {
+        member.setPersistedAvatarData(imageData);
+        store.saveMember(member, callback);
+      });
+    } else {
+      if (member.getPersistedAvatarData().fetchTime && new Date().getTime() - member.getPersistedAvatarData().fetchTime > 60 * 60 * 1000) { // one hour
+        avatarProvider.getImage(member, function (imageData) {
+          var oldAvatar = member.getPersistedAvatarData();
+          member.setPersistedAvatarData(imageData);
+          if (member.getPersistedAvatarData() !== oldAvatar) {
+            store.saveMember(member, function () { /* background op */ });
+          }
+        });
+      }
+      callback();
+    }
   },
 
   toWordList: function (members) {

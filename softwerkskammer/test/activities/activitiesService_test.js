@@ -20,6 +20,7 @@ var activitystore = beans.get('activitystore');
 var groupsService = beans.get('groupsService');
 var groupstore = beans.get('groupstore');
 var memberstore = beans.get('memberstore');
+var membersService = beans.get('membersService');
 
 var Activity = beans.get('activity');
 var Member = beans.get('member');
@@ -129,6 +130,7 @@ describe('Activities Service', function () {
 
       callback(null, [memberA, memberB]);
     });
+    sinon.stub(membersService, 'getImage', function (member, callback) {callback();});
     sinon.stub(memberstore, 'getMemberForId', function (id, callback) {
       callback(null, owner);
     });
