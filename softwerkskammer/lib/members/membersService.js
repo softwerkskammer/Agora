@@ -82,14 +82,14 @@ module.exports = {
     }
     if (!member.getPersistedAvatarData()) {
       avatarProvider.getImage(member, function (imageData) {
-        member.persistAvatarData(imageData);
+        member.setPersistedAvatarData(imageData);
         store.saveMember(member, callback);
       });
     } else {
       if (member.getPersistedAvatarData().fetchTime && new Date().getTime() - member.getPersistedAvatarData().fetchTime > 60 * 60 * 1000) { // one hour
         avatarProvider.getImage(member, function (imageData) {
           var oldAvatar = member.getPersistedAvatarData();
-          member.persistAvatarData(imageData);
+          member.setPersistedAvatarData(imageData);
           if (member.getPersistedAvatarData() !== oldAvatar) {
             store.saveMember(member, function () { /* background op */ });
           }

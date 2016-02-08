@@ -76,7 +76,7 @@ Member.prototype.setAvatarData = function (data) {
   this.hasNoImage = data.hasNoImage;
 };
 
-Member.prototype.persistAvatarData = function (data) {
+Member.prototype.setPersistedAvatarData = function (data) {
   this.state.avatardata = data;
 };
 

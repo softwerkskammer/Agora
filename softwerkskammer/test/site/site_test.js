@@ -4,8 +4,8 @@ var request = require('supertest');
 
 var app = require('../../testutil/testHelper')('siteApp').createApp();
 
-describe('The site pages', function () {
-  it('redirect aftr switching the language', function (done) {
+describe('The router for the site\' pages', function () {
+  it('redirects after switching the language', function (done) {
     request(app)
       .get('/language/de?currentUrl=%2Fpeter%2F')
       .expect(302)
