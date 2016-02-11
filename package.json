@@ -25,7 +25,7 @@
   "dependencies": {
     "async": "1.5.2",
     "autonumeric": "1.9.43",
-    "body-parser": "1.14.2",
+    "body-parser": "1.15.0",
     "bootstrap": "3.3.6",
     "bootstrap-colorpicker": "2.3.0",
     "bootstrap-datepicker": "1.6.0",
@@ -43,7 +43,7 @@
     "ezmlm-node": "1.2.3",
     "font-awesome": "4.5.0",
     "fullcalendar": "2.6.0",
-    "glob": "6.0.4",
+    "glob": "7.0.0",
     "guillotine": "1.3.1",
     "heapdump": "0.3.7",
     "i18next": "2.1.0",
@@ -83,7 +83,7 @@
     "serve-favicon": "2.3.0",
     "simple-configure": "0.1.6",
     "simple-timepicker": "1.1.1",
-    "stripe": "4.3.0",
+    "stripe": "4.4.0",
     "tinycolor2": "1.3.0",
     "tinygradient": "0.3.0",
     "underscore.string": "3.2.3",
@@ -101,7 +101,7 @@
     "grunt-contrib-jade": "0.15.0",
     "grunt-contrib-less": "1.2.0",
     "grunt-contrib-uglify": "0.11.1",
-    "grunt-eslint": "17.3.1",
+    "grunt-eslint": "17.3.2",
     "grunt-karma": "0.12.1",
     "grunt-mocha-istanbul": "3.0.1",
     "grunt-patch": "0.1.7",
@@ -119,7 +119,7 @@
     "proxyquire": "1.7.4",
     "request": "2.69.0",
     "sinon": "1.17.3",
-    "supertest": "1.1.0"
+    "supertest": "1.2.0"
   },
   "scripts": {
     "start": "node softwerkskammer/start",
