@@ -65,7 +65,7 @@
     "memwatch-next": "0.2.10",
     "mime-types": "2.1.9",
     "moment-timezone": "0.5.0",
-    "mongodb": "2.1.4",
+    "mongodb": "2.1.7",
     "morgan": "1.6.1",
     "multiparty": "4.1.2",
     "node-html-encoder": "0.0.2",
