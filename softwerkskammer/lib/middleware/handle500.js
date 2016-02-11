@@ -5,6 +5,7 @@ module.exports = function (appLogger) {
   return function (error, req, res, next) { // express needs four arguments!
     var status = error.status || 500;
     res.status(status);
+    appLogger.error(req.originalUrl);
     appLogger.error(error.stack);
     if (/InternalOpenIDError|BadRequestError|InternalOAuthError/.test(error.name)) {
       return res.render('errorPages/authenticationError.jade', {error: error, status: status});
