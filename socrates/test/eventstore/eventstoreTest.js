@@ -466,11 +466,11 @@ describe('the socrates conference command handler for room type changes', functi
     expect(stripTimestamps(socrates.state.resourceEvents)).to.eql([
       {event: RESERVATION_WAS_ISSUED, sessionID: sessionId1, roomType: singleBedRoom, duration: untilSaturday},
       {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1},
-      {event: ROOM_TYPE_WAS_CHANGED, memberId: memberId1, roomType: bedInDouble}]);
+      {event: ROOM_TYPE_WAS_CHANGED, memberId: memberId1, roomType: bedInDouble, duration: untilSaturday}]);
     // And (new write model)
     expect(stripTimestamps(socrates.reservationsAndParticipantsFor(singleBedRoom))).to.eql([]);
     expect(stripTimestamps(socrates.reservationsAndParticipantsFor(bedInDouble))).to.eql([
-      {event: ROOM_TYPE_WAS_CHANGED, memberId: memberId1, roomType: bedInDouble}]);
+      {event: ROOM_TYPE_WAS_CHANGED, memberId: memberId1, roomType: bedInDouble, duration: untilSaturday}]);
   });
 
   it('multiple room changes keep moving the participant to the new room types', function () {
@@ -480,7 +480,7 @@ describe('the socrates conference command handler for room type changes', functi
     socrates.state.resourceEvents = [
       events.reservationWasIssued(singleBedRoom, untilSaturday, sessionId1, aLongTimeAgo),
       events.participantWasRegistered(singleBedRoom, untilSaturday, sessionId1, memberId1, aShortTimeAgo),
-      events.roomTypeWasChanged(memberId1, bedInDouble)
+      events.roomTypeWasChanged(memberId1, bedInDouble, untilSaturday)
     ];
 
     // When (issued command)
@@ -490,14 +490,14 @@ describe('the socrates conference command handler for room type changes', functi
     expect(stripTimestamps(socrates.state.resourceEvents)).to.eql([
       {event: RESERVATION_WAS_ISSUED, sessionID: sessionId1, roomType: singleBedRoom, duration: untilSaturday},
       {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1},
-      {event: ROOM_TYPE_WAS_CHANGED, memberId: memberId1, roomType: bedInDouble},
-      {event: ROOM_TYPE_WAS_CHANGED, memberId: memberId1, roomType: kingSuite}
+      {event: ROOM_TYPE_WAS_CHANGED, memberId: memberId1, roomType: bedInDouble, duration: untilSaturday},
+      {event: ROOM_TYPE_WAS_CHANGED, memberId: memberId1, roomType: kingSuite, duration: untilSaturday}
     ]);
     // And (new write model)
     expect(stripTimestamps(socrates.reservationsAndParticipantsFor(singleBedRoom))).to.eql([]);
     expect(stripTimestamps(socrates.reservationsAndParticipantsFor(bedInDouble))).to.eql([]);
     expect(stripTimestamps(socrates.reservationsAndParticipantsFor(kingSuite))).to.eql([
-      {event: ROOM_TYPE_WAS_CHANGED, memberId: memberId1, roomType: kingSuite}]);
+      {event: ROOM_TYPE_WAS_CHANGED, memberId: memberId1, roomType: kingSuite, duration: untilSaturday}]);
   });
 
   it('appends an error event if the member has not actually been a participant', function () {

@@ -52,8 +52,8 @@ module.exports = {
   },
 
   // after registration:
-  roomTypeWasChanged: function (memberId, roomType) {
-    return enrich({event: ROOM_TYPE_WAS_CHANGED, memberId: memberId, roomType: roomType});
+  roomTypeWasChanged: function (memberId, roomType, duration) {
+    return enrich({event: ROOM_TYPE_WAS_CHANGED, memberId: memberId, roomType: roomType, duration: duration});
   },
 
   didNotChangeRoomTypeForNonParticipant: function (memberId, roomType) {

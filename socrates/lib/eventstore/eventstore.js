@@ -131,7 +131,7 @@ SoCraTesEventStore.prototype.registerParticipant = function (roomType, duration,
 
 SoCraTesEventStore.prototype.moveParticipantToNewRoomType = function (memberId, roomType) {
   var existingParticipantEvent = this.participantsByMemberId()[memberId];
-  var event = existingParticipantEvent ? events.roomTypeWasChanged(memberId, roomType) : events.didNotChangeRoomTypeForNonParticipant(memberId, roomType);
+  var event = existingParticipantEvent ? events.roomTypeWasChanged(memberId, roomType, existingParticipantEvent.duration) : events.didNotChangeRoomTypeForNonParticipant(memberId, roomType);
   this.updateResourceEventsAndWriteModel(event);
 };
 
