@@ -46,15 +46,10 @@ describe('SoCraTes registration application', function () {
     socrates = {
       id: 'socratesId',
       title: 'SoCraTes',
-      description: 'Coolest event ever :-)',
-      location: 'Right next door',
       url: 'socrates-url',
       isSoCraTes: true,
       startUnix: 1440687600,
       endUnix: 1440946800,
-      owner: {nickname: 'ownerNick'},
-      assignedGroup: 'assignedGroup',
-      group: {groupLongName: 'longName'},
       resources: {
         single: {_canUnsubscribe: false, _limit: 0, _position: 2, _registrationOpen: true, _waitinglist: []}, // no capacity
         bed_in_double: {_canUnsubscribe: false, _limit: 10, _position: 3, _registrationOpen: false, _waitinglist: []}, // not opened

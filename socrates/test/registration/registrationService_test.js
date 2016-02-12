@@ -36,15 +36,10 @@ describe('Registration Service', function () {
     socrates = {
       id: 'socratesId',
       title: 'SoCraTes',
-      description: 'Coolest event ever :-)',
-      location: 'Right next door',
       url: 'socrates-url',
       isSoCraTes: true,
       startUnix: 1440687600,
       endUnix: 1440946800,
-      owner: {nickname: 'ownerNick'},
-      assignedGroup: 'assignedGroup',
-      group: {groupLongName: 'longName'},
       resources: {
         single: {_canUnsubscribe: false, _limit: 10, _registrationOpen: true}
       }
