@@ -14,7 +14,9 @@ var PARTICIPANT_WAS_REGISTERED = 'PARTICIPANT-WAS-REGISTERED';
 var DID_NOT_REGISTER_PARTICIPANT_FOR_FULL_RESOURCE = 'DID_NOT_REGISTER_PARTICIPANT_FOR_FULL_RESOURCE';
 var DID_NOT_REGISTER_PARTICIPANT_A_SECOND_TIME = 'DID_NOT_REGISTER_PARTICIPANT_A_SECOND_TIME';
 var ROOM_TYPE_WAS_CHANGED = 'ROOM-TYPE-WAS-CHANGED';
+var DURATION_WAS_CHANGED = 'DURATION-WAS-CHANGED';
 var DID_NOT_CHANGE_ROOM_TYPE_FOR_NON_PARTICIPANT = 'DID-NOT-CHANGE-ROOM-TYPE-FOR-NON-PARTICIPANT';
+var DID_NOT_CHANGE_DURATION_FOR_NON_PARTICIPANT = 'DID-NOT-CHANGE-DURATION-FOR-NON-PARTICIPANT';
 
 module.exports = {
   // room quota:
@@ -56,5 +58,13 @@ module.exports = {
 
   didNotChangeRoomTypeForNonParticipant: function (memberId, roomType) {
     return enrich({event: DID_NOT_CHANGE_ROOM_TYPE_FOR_NON_PARTICIPANT, memberId: memberId, roomType: roomType});
+  },
+
+  durationWasChanged: function (memberId, roomType, duration) {
+    return enrich({event: DURATION_WAS_CHANGED, memberId: memberId, roomType: roomType, duration: duration});
+  },
+
+  didNotChangeDurationForNonParticipant: function (memberId, duration) {
+    return enrich({event: DID_NOT_CHANGE_DURATION_FOR_NON_PARTICIPANT, memberId: memberId, duration: duration});
   }
 };
