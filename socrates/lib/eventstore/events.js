@@ -24,29 +24,29 @@ module.exports = {
   },
 
   // reservation:
-  reservationWasIssued: function (roomType, sessionId, timestamp) {
-    return enrich({event: RESERVATION_WAS_ISSUED, sessionID: sessionId, roomType: roomType}, timestamp);
+  reservationWasIssued: function (roomType, duration, sessionId, timestamp) {
+    return enrich({event: RESERVATION_WAS_ISSUED, sessionID: sessionId, roomType: roomType, duration: duration}, timestamp);
   },
 
-  didNotIssueReservationForAlreadyReservedSession: function (roomType, sessionId, timestamp) {
-    return enrich({event: DID_NOT_ISSUE_RESERVATION_FOR_ALREADY_RESERVED_SESSION, sessionID: sessionId, roomType: roomType}, timestamp);
+  didNotIssueReservationForAlreadyReservedSession: function (roomType, duration, sessionId, timestamp) {
+    return enrich({event: DID_NOT_ISSUE_RESERVATION_FOR_ALREADY_RESERVED_SESSION, sessionID: sessionId, roomType: roomType, duration: duration}, timestamp);
   },
 
-  didNotIssueReservationForFullResource: function (roomType, sessionId, timestamp) {
-    return enrich({event: DID_NOT_ISSUE_RESERVATION_FOR_FULL_RESOURCE, sessionID: sessionId, roomType: roomType}, timestamp);
+  didNotIssueReservationForFullResource: function (roomType, duration, sessionId, timestamp) {
+    return enrich({event: DID_NOT_ISSUE_RESERVATION_FOR_FULL_RESOURCE, sessionID: sessionId, roomType: roomType, duration: duration}, timestamp);
   },
 
   // registration:
-  participantWasRegistered: function (roomType, sessionId, memberId, timestamp) {
-    return enrich({event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId, roomType: roomType, memberId: memberId}, timestamp);
+  participantWasRegistered: function (roomType, duration, sessionId, memberId, timestamp) {
+    return enrich({event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId, roomType: roomType, duration: duration, memberId: memberId}, timestamp);
   },
 
-  didNotRegisterParticipantForFullResource: function (roomType, sessionId, memberId, timestamp) {
-    return enrich({event: DID_NOT_REGISTER_PARTICIPANT_FOR_FULL_RESOURCE, sessionID: sessionId, roomType: roomType, memberId: memberId}, timestamp);
+  didNotRegisterParticipantForFullResource: function (roomType, duration, sessionId, memberId, timestamp) {
+    return enrich({event: DID_NOT_REGISTER_PARTICIPANT_FOR_FULL_RESOURCE, sessionID: sessionId, roomType: roomType, duration: duration, memberId: memberId}, timestamp);
   },
 
-  didNotRegisterParticipantASecondTime: function (roomType, sessionId, memberId, timestamp) {
-    return enrich({event: DID_NOT_REGISTER_PARTICIPANT_A_SECOND_TIME, sessionID: sessionId, roomType: roomType, memberId: memberId}, timestamp);
+  didNotRegisterParticipantASecondTime: function (roomType, duration, sessionId, memberId, timestamp) {
+    return enrich({event: DID_NOT_REGISTER_PARTICIPANT_A_SECOND_TIME, sessionID: sessionId, roomType: roomType, duration: duration, memberId: memberId}, timestamp);
   },
 
   // after registration:

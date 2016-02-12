@@ -99,32 +99,32 @@ SoCraTesEventStore.prototype.updateResourceEventsAndWriteModel = function (event
   this._participantsByMemberId = updateParticipantsByMemberId(this.participantsByMemberId(), event);
 };
 
-SoCraTesEventStore.prototype.issueReservation = function (roomType, sessionId) {
+SoCraTesEventStore.prototype.issueReservation = function (roomType, duration, sessionId) {
   var event;
   if (this.quotaFor(roomType) <= this.reservationsAndParticipantsFor(roomType).length) {
     // resource is already full
-    event = events.didNotIssueReservationForFullResource(roomType, sessionId);
+    event = events.didNotIssueReservationForFullResource(roomType, duration, sessionId);
   } else if (this.reservationsBySessionId()[sessionId]) {
     // session id already reserved a spot
-    event = events.didNotIssueReservationForAlreadyReservedSession(roomType, sessionId);
+    event = events.didNotIssueReservationForAlreadyReservedSession(roomType, duration, sessionId);
   } else {
     // all is good
-    event = events.reservationWasIssued(roomType, sessionId);
+    event = events.reservationWasIssued(roomType, duration, sessionId);
   }
   this.updateResourceEventsAndWriteModel(event);
 };
 
-SoCraTesEventStore.prototype.registerParticipant = function (roomType, sessionId, memberId) {
+SoCraTesEventStore.prototype.registerParticipant = function (roomType, duration, sessionId, memberId) {
   var event;
   if (this.quotaFor(roomType) <= this.reservationsAndParticipantsFor(roomType).length) {
     // resource is already full
-    event = events.didNotRegisterParticipantForFullResource(roomType, sessionId, memberId);
+    event = events.didNotRegisterParticipantForFullResource(roomType, duration, sessionId, memberId);
   } else if (this.participantsByMemberId()[memberId]) {
     // member is already registered
-    event = events.didNotRegisterParticipantASecondTime(roomType, sessionId, memberId);
+    event = events.didNotRegisterParticipantASecondTime(roomType, duration, sessionId, memberId);
   } else {
     // all is well
-    event = events.participantWasRegistered(roomType, sessionId, memberId);
+    event = events.participantWasRegistered(roomType, duration, sessionId, memberId);
   }
   this.updateResourceEventsAndWriteModel(event);
 };

@@ -1,4 +1,5 @@
 'use strict';
+
 var expect = require('must-dist');
 var moment = require('moment-timezone');
 var _ = require('lodash');
@@ -35,6 +36,8 @@ var sessionId2 = 'session-id-2';
 var singleBedRoom = 'singleBedRoom';
 var bedInDouble = 'bedInDouble';
 var kingSuite = 'kingSuite';
+var untilSaturday = 'untilSaturday';
+var untilSundayMorning = 'untilSundayMorning';
 var memberId1 = 'member-id-1';
 var memberId2 = 'member-id-2';
 
@@ -72,7 +75,7 @@ describe('the socrates conference write model', function () {
   it('does not consider reservations that are already expired', function () {
     var socrates = new SoCraTesEventStore();
     socrates.state.resourceEvents = [
-      events.reservationWasIssued(singleBedRoom, sessionId1, aLongTimeAgo)];
+      events.reservationWasIssued(singleBedRoom, untilSaturday, sessionId1, aLongTimeAgo)];
 
     expect(socrates.reservationsAndParticipantsFor(singleBedRoom)).to.eql([]);
   });
@@ -80,17 +83,17 @@ describe('the socrates conference write model', function () {
   it('considers reservations that are still active', function () {
     var socrates = new SoCraTesEventStore();
     socrates.state.resourceEvents = [
-      events.reservationWasIssued(singleBedRoom, sessionId1, aShortTimeAgo)];
+      events.reservationWasIssued(singleBedRoom, untilSaturday, sessionId1, aShortTimeAgo)];
 
     expect(socrates.reservationsAndParticipantsFor(singleBedRoom)).to.eql([
-      {event: RESERVATION_WAS_ISSUED, sessionID: sessionId1, roomType: singleBedRoom, timestamp: aShortTimeAgo}]);
+      {event: RESERVATION_WAS_ISSUED, sessionID: sessionId1, roomType: singleBedRoom, duration: untilSaturday, timestamp: aShortTimeAgo}]);
   });
 
   it('considers participations', function () {
     var socrates = new SoCraTesEventStore();
     socrates.state.resourceEvents = [
-      events.participantWasRegistered(singleBedRoom, sessionId1, memberId1, aLongTimeAgo),
-      events.participantWasRegistered(singleBedRoom, sessionId2, memberId2, aShortTimeAgo)];
+      events.participantWasRegistered(singleBedRoom, untilSaturday, sessionId1, memberId1, aLongTimeAgo),
+      events.participantWasRegistered(singleBedRoom, untilSundayMorning, sessionId2, memberId2, aShortTimeAgo)];
 
     expect(socrates.reservationsAndParticipantsFor(singleBedRoom)).to.eql([
       {
@@ -98,6 +101,7 @@ describe('the socrates conference write model', function () {
         sessionID: sessionId1,
         memberId: memberId1,
         roomType: singleBedRoom,
+        duration: untilSaturday,
         timestamp: aLongTimeAgo
       },
       {
@@ -105,6 +109,7 @@ describe('the socrates conference write model', function () {
         sessionID: sessionId2,
         memberId: memberId2,
         roomType: singleBedRoom,
+        duration: untilSundayMorning,
         timestamp: aShortTimeAgo
       }]);
   });
@@ -112,8 +117,8 @@ describe('the socrates conference write model', function () {
   it('does not consider registrations that have a matching participation', function () {
     var socrates = new SoCraTesEventStore();
     socrates.state.resourceEvents = [
-      events.reservationWasIssued(singleBedRoom, sessionId1, aShortTimeAgo),
-      events.participantWasRegistered(singleBedRoom, sessionId1, memberId1, anEvenShorterTimeAgo)];
+      events.reservationWasIssued(singleBedRoom, untilSaturday, sessionId1, aShortTimeAgo),
+      events.participantWasRegistered(singleBedRoom, untilSaturday, sessionId1, memberId1, anEvenShorterTimeAgo)];
 
     expect(socrates.reservationsAndParticipantsFor(singleBedRoom)).to.eql([
       {
@@ -121,6 +126,7 @@ describe('the socrates conference write model', function () {
         sessionID: sessionId1,
         memberId: memberId1,
         roomType: singleBedRoom,
+        duration: untilSaturday,
         timestamp: anEvenShorterTimeAgo
       }]);
   });
@@ -128,15 +134,15 @@ describe('the socrates conference write model', function () {
   it('does not consider DID_NOT_... reservation and registration events', function () {
     var socrates = new SoCraTesEventStore();
     socrates.state.resourceEvents = [
-      events.reservationWasIssued(singleBedRoom, sessionId1, aShortTimeAgo),
-      events.didNotIssueReservationForAlreadyReservedSession(bedInDouble, sessionId1, aShortTimeAgo),
-      events.didNotIssueReservationForFullResource(singleBedRoom, sessionId2, aShortTimeAgo),
-      events.didNotRegisterParticipantForFullResource(singleBedRoom, sessionId1, memberId1, aShortTimeAgo),
-      events.didNotRegisterParticipantASecondTime(singleBedRoom, sessionId1, memberId1, aShortTimeAgo)
+      events.reservationWasIssued(singleBedRoom, untilSaturday, sessionId1, aShortTimeAgo),
+      events.didNotIssueReservationForAlreadyReservedSession(bedInDouble, untilSaturday, sessionId1, aShortTimeAgo),
+      events.didNotIssueReservationForFullResource(singleBedRoom, untilSaturday, sessionId2, aShortTimeAgo),
+      events.didNotRegisterParticipantForFullResource(singleBedRoom, untilSundayMorning, sessionId1, memberId1, aShortTimeAgo),
+      events.didNotRegisterParticipantASecondTime(singleBedRoom, untilSundayMorning, sessionId1, memberId1, aShortTimeAgo)
     ];
 
     expect(socrates.reservationsAndParticipantsFor(singleBedRoom)).to.eql([
-      {event: RESERVATION_WAS_ISSUED, sessionID: sessionId1, roomType: singleBedRoom, timestamp: aShortTimeAgo}]);
+      {event: RESERVATION_WAS_ISSUED, sessionID: sessionId1, roomType: singleBedRoom, duration: untilSaturday, timestamp: aShortTimeAgo}]);
     expect(socrates.reservationsAndParticipantsFor(bedInDouble)).to.eql([]);
   });
 
@@ -144,10 +150,10 @@ describe('the socrates conference write model', function () {
   it('returns only the events belonging to the queried room type', function () {
     var socrates = new SoCraTesEventStore();
     socrates.state.resourceEvents = [
-      events.reservationWasIssued(bedInDouble, sessionId1, aLongTimeAgo),
-      events.reservationWasIssued(singleBedRoom, sessionId1, aShortTimeAgo),
-      events.participantWasRegistered(bedInDouble, sessionId2, memberId2, aShortTimeAgo),
-      events.participantWasRegistered(singleBedRoom, sessionId1, memberId1, anEvenShorterTimeAgo)];
+      events.reservationWasIssued(bedInDouble, untilSaturday, sessionId1, aLongTimeAgo),
+      events.reservationWasIssued(singleBedRoom, untilSundayMorning, sessionId1, aShortTimeAgo),
+      events.participantWasRegistered(bedInDouble, untilSaturday, sessionId2, memberId2, aShortTimeAgo),
+      events.participantWasRegistered(singleBedRoom, untilSundayMorning, sessionId1, memberId1, anEvenShorterTimeAgo)];
 
     expect(socrates.reservationsAndParticipantsFor(singleBedRoom)).to.eql([
       {
@@ -155,6 +161,7 @@ describe('the socrates conference write model', function () {
         sessionID: sessionId1,
         memberId: memberId1,
         roomType: singleBedRoom,
+        duration: untilSundayMorning,
         timestamp: anEvenShorterTimeAgo
       }]);
     expect(socrates.reservationsAndParticipantsFor(bedInDouble)).to.eql([
@@ -163,6 +170,7 @@ describe('the socrates conference write model', function () {
         sessionID: sessionId2,
         memberId: memberId2,
         roomType: bedInDouble,
+        duration: untilSaturday,
         timestamp: aShortTimeAgo
       }]);
   });
@@ -198,14 +206,14 @@ describe('the socrates conference command handler for room reservations', functi
     socrates.state.resourceEvents = [];
 
     // When (issued command)
-    socrates.issueReservation(singleBedRoom, sessionId1);
+    socrates.issueReservation(singleBedRoom, untilSaturday, sessionId1);
 
     // Then (new events)
     expect(stripTimestamps(socrates.state.resourceEvents)).to.eql([
-      {event: RESERVATION_WAS_ISSUED, sessionID: sessionId1, roomType: singleBedRoom}]);
+      {event: RESERVATION_WAS_ISSUED, sessionID: sessionId1, roomType: singleBedRoom, duration: untilSaturday}]);
     // And (new write model)
     expect(stripTimestamps(socrates.reservationsAndParticipantsFor(singleBedRoom))).to.eql([
-      {event: RESERVATION_WAS_ISSUED, sessionID: sessionId1, roomType: singleBedRoom}]);
+      {event: RESERVATION_WAS_ISSUED, sessionID: sessionId1, roomType: singleBedRoom, duration: untilSaturday}]);
   });
 
   it('does not reserve a room if the quota is already exhausted by an active reservation', function () {
@@ -214,19 +222,19 @@ describe('the socrates conference command handler for room reservations', functi
 
     socrates.state.socratesEvents = [events.roomQuotaWasSet(singleBedRoom, 1)];
     socrates.state.resourceEvents = [
-      events.reservationWasIssued(singleBedRoom, sessionId1, aShortTimeAgo)];
+      events.reservationWasIssued(singleBedRoom, untilSaturday, sessionId1, aShortTimeAgo)];
 
     // When (issued command)
-    socrates.issueReservation(singleBedRoom, sessionId2);
+    socrates.issueReservation(singleBedRoom, untilSundayMorning, sessionId2);
 
     // Then (new events)
     expect(stripTimestamps(socrates.state.resourceEvents)).to.eql([
-      {event: RESERVATION_WAS_ISSUED, sessionID: sessionId1, roomType: singleBedRoom},
-      {event: DID_NOT_ISSUE_RESERVATION_FOR_FULL_RESOURCE, sessionID: sessionId2, roomType: singleBedRoom}
+      {event: RESERVATION_WAS_ISSUED, sessionID: sessionId1, roomType: singleBedRoom, duration: untilSaturday},
+      {event: DID_NOT_ISSUE_RESERVATION_FOR_FULL_RESOURCE, sessionID: sessionId2, roomType: singleBedRoom, duration: untilSundayMorning}
     ]);
     // And (new write model)
     expect(stripTimestamps(socrates.reservationsAndParticipantsFor(singleBedRoom))).to.eql([
-      {event: RESERVATION_WAS_ISSUED, sessionID: sessionId1, roomType: singleBedRoom}]);
+      {event: RESERVATION_WAS_ISSUED, sessionID: sessionId1, roomType: singleBedRoom, duration: untilSaturday}]);
   });
 
   it('reserves a room when an expired reservation exists', function () {
@@ -235,18 +243,18 @@ describe('the socrates conference command handler for room reservations', functi
 
     socrates.state.socratesEvents = [events.roomQuotaWasSet(singleBedRoom, 1)];
     socrates.state.resourceEvents = [
-      events.reservationWasIssued(singleBedRoom, sessionId1, aLongTimeAgo)];
+      events.reservationWasIssued(singleBedRoom, untilSaturday, sessionId1, aLongTimeAgo)];
 
     // When (issued command)
-    socrates.issueReservation(singleBedRoom, sessionId2);
+    socrates.issueReservation(singleBedRoom, untilSundayMorning, sessionId2);
 
     // Then (new events)
     expect(stripTimestamps(socrates.state.resourceEvents)).to.eql([
-      {event: RESERVATION_WAS_ISSUED, sessionID: sessionId1, roomType: singleBedRoom},
-      {event: RESERVATION_WAS_ISSUED, sessionID: sessionId2, roomType: singleBedRoom}]);
+      {event: RESERVATION_WAS_ISSUED, sessionID: sessionId1, roomType: singleBedRoom, duration: untilSaturday},
+      {event: RESERVATION_WAS_ISSUED, sessionID: sessionId2, roomType: singleBedRoom, duration: untilSundayMorning}]);
     // And (new write model)
     expect(stripTimestamps(socrates.reservationsAndParticipantsFor(singleBedRoom))).to.eql([
-      {event: RESERVATION_WAS_ISSUED, sessionID: sessionId2, roomType: singleBedRoom}]);
+      {event: RESERVATION_WAS_ISSUED, sessionID: sessionId2, roomType: singleBedRoom, duration: untilSundayMorning}]);
   });
 
   it('does not reserve a room if the quota is already exhausted by a registration', function () {
@@ -255,21 +263,21 @@ describe('the socrates conference command handler for room reservations', functi
 
     socrates.state.socratesEvents = [events.roomQuotaWasSet(singleBedRoom, 1)];
     socrates.state.resourceEvents = [
-      events.reservationWasIssued(singleBedRoom, sessionId1, aShortTimeAgo),
-      events.participantWasRegistered(singleBedRoom, sessionId1, memberId1)];
+      events.reservationWasIssued(singleBedRoom, untilSaturday, sessionId1, aShortTimeAgo),
+      events.participantWasRegistered(singleBedRoom, untilSaturday, sessionId1, memberId1)];
 
     // When (issued command)
-    socrates.issueReservation(singleBedRoom, sessionId2);
+    socrates.issueReservation(singleBedRoom, untilSaturday, sessionId2);
 
     // Then (new events)
     expect(stripTimestamps(socrates.state.resourceEvents)).to.eql([
-      {event: RESERVATION_WAS_ISSUED, sessionID: sessionId1, roomType: singleBedRoom},
-      {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, memberId: memberId1, roomType: singleBedRoom},
-      {event: DID_NOT_ISSUE_RESERVATION_FOR_FULL_RESOURCE, sessionID: sessionId2, roomType: singleBedRoom}
+      {event: RESERVATION_WAS_ISSUED, sessionID: sessionId1, roomType: singleBedRoom, duration: untilSaturday},
+      {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday},
+      {event: DID_NOT_ISSUE_RESERVATION_FOR_FULL_RESOURCE, sessionID: sessionId2, roomType: singleBedRoom, duration: untilSaturday}
     ]);
     // And (new write model)
     expect(stripTimestamps(socrates.reservationsAndParticipantsFor(singleBedRoom))).to.eql([
-      {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, memberId: memberId1, roomType: singleBedRoom}]);
+      {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday}]);
   });
 
   it('does not count a reservation and its matching booking towards the quota', function () {
@@ -278,21 +286,21 @@ describe('the socrates conference command handler for room reservations', functi
 
     socrates.state.socratesEvents = [events.roomQuotaWasSet(singleBedRoom, 2)];
     socrates.state.resourceEvents = [
-      events.reservationWasIssued(singleBedRoom, sessionId1, aShortTimeAgo),
-      events.participantWasRegistered(singleBedRoom, sessionId1, memberId1)];
+      events.reservationWasIssued(singleBedRoom, untilSaturday, sessionId1, aShortTimeAgo),
+      events.participantWasRegistered(singleBedRoom, untilSaturday, sessionId1, memberId1)];
 
     // When (issued command)
-    socrates.issueReservation(singleBedRoom, sessionId2);
+    socrates.issueReservation(singleBedRoom, untilSaturday, sessionId2);
 
     // Then (new events)
     expect(stripTimestamps(socrates.state.resourceEvents)).to.eql([
-      {event: RESERVATION_WAS_ISSUED, sessionID: sessionId1, roomType: singleBedRoom},
-      {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, memberId: memberId1, roomType: singleBedRoom},
-      {event: RESERVATION_WAS_ISSUED, sessionID: sessionId2, roomType: singleBedRoom}]);
+      {event: RESERVATION_WAS_ISSUED, sessionID: sessionId1, roomType: singleBedRoom, duration: untilSaturday},
+      {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday},
+      {event: RESERVATION_WAS_ISSUED, sessionID: sessionId2, roomType: singleBedRoom, duration: untilSaturday}]);
     // And (new write model)
     expect(stripTimestamps(socrates.reservationsAndParticipantsFor(singleBedRoom))).to.eql([
-      {event: RESERVATION_WAS_ISSUED, sessionID: sessionId2, roomType: singleBedRoom},
-      {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, memberId: memberId1, roomType: singleBedRoom}]);
+      {event: RESERVATION_WAS_ISSUED, sessionID: sessionId2, roomType: singleBedRoom, duration: untilSaturday},
+      {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday}]);
   });
 
   it('does not allow a registration for any resource if there is already an active registration for the same session id', function () {
@@ -303,18 +311,18 @@ describe('the socrates conference command handler for room reservations', functi
       events.roomQuotaWasSet(singleBedRoom, 100),
       events.roomQuotaWasSet(bedInDouble, 100)];
     socrates.state.resourceEvents = [
-      events.reservationWasIssued(singleBedRoom, sessionId1, aShortTimeAgo)];
+      events.reservationWasIssued(singleBedRoom, untilSaturday, sessionId1, aShortTimeAgo)];
 
     // When (issued command)
-    socrates.issueReservation(bedInDouble, sessionId1);
+    socrates.issueReservation(bedInDouble, untilSaturday, sessionId1);
 
     // Then (new events)
     expect(stripTimestamps(socrates.state.resourceEvents)).to.eql([
-      {event: RESERVATION_WAS_ISSUED, sessionID: sessionId1, roomType: singleBedRoom},
-      {event: DID_NOT_ISSUE_RESERVATION_FOR_ALREADY_RESERVED_SESSION, sessionID: sessionId1, roomType: bedInDouble}]);
+      {event: RESERVATION_WAS_ISSUED, sessionID: sessionId1, roomType: singleBedRoom, duration: untilSaturday},
+      {event: DID_NOT_ISSUE_RESERVATION_FOR_ALREADY_RESERVED_SESSION, sessionID: sessionId1, roomType: bedInDouble, duration: untilSaturday}]);
     // And (new write model)
     expect(stripTimestamps(socrates.reservationsAndParticipantsFor(singleBedRoom))).to.eql([
-      {event: RESERVATION_WAS_ISSUED, sessionID: sessionId1, roomType: singleBedRoom}]);
+      {event: RESERVATION_WAS_ISSUED, sessionID: sessionId1, roomType: singleBedRoom, duration: untilSaturday}]);
     expect(stripTimestamps(socrates.reservationsAndParticipantsFor(bedInDouble))).to.eql([]);
   });
 });
@@ -325,18 +333,37 @@ describe('the socrates conference command handler for room registrations', funct
     var socrates = new SoCraTesEventStore();
     socrates.state.socratesEvents = [events.roomQuotaWasSet(singleBedRoom, 100)];
     socrates.state.resourceEvents = [
-      events.reservationWasIssued(singleBedRoom, sessionId1, aShortTimeAgo)];
+      events.reservationWasIssued(singleBedRoom, untilSaturday, sessionId1, aShortTimeAgo)];
 
     // When (issued command)
-    socrates.registerParticipant(singleBedRoom, sessionId1, memberId1);
+    socrates.registerParticipant(singleBedRoom, untilSaturday, sessionId1, memberId1);
 
     // Then (new events)
     expect(stripTimestamps(socrates.state.resourceEvents)).to.eql([
-      {event: RESERVATION_WAS_ISSUED, sessionID: sessionId1, roomType: singleBedRoom},
-      {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, roomType: singleBedRoom, memberId: memberId1}]);
+      {event: RESERVATION_WAS_ISSUED, sessionID: sessionId1, roomType: singleBedRoom, duration: untilSaturday},
+      {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1}]);
     // And (new write model)
     expect(stripTimestamps(socrates.reservationsAndParticipantsFor(singleBedRoom))).to.eql([
-      {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, roomType: singleBedRoom, memberId: memberId1}]);
+      {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1}]);
+  });
+
+  it('registers a room for the given duration even if the reservation was for a different duration', function () { // TODO books a room?
+    // Given (saved events)
+    var socrates = new SoCraTesEventStore();
+    socrates.state.socratesEvents = [events.roomQuotaWasSet(singleBedRoom, 100)];
+    socrates.state.resourceEvents = [
+      events.reservationWasIssued(singleBedRoom, untilSundayMorning, sessionId1, aShortTimeAgo)];
+
+    // When (issued command)
+    socrates.registerParticipant(singleBedRoom, untilSaturday, sessionId1, memberId1);
+
+    // Then (new events)
+    expect(stripTimestamps(socrates.state.resourceEvents)).to.eql([
+      {event: RESERVATION_WAS_ISSUED, sessionID: sessionId1, roomType: singleBedRoom, duration: untilSundayMorning},
+      {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1}]);
+    // And (new write model)
+    expect(stripTimestamps(socrates.reservationsAndParticipantsFor(singleBedRoom))).to.eql([
+      {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1}]);
   });
 
   it('registers a room even if there was an expired reservation, if there was enough space', function () { // TODO books a room?
@@ -344,18 +371,18 @@ describe('the socrates conference command handler for room registrations', funct
     var socrates = new SoCraTesEventStore();
     socrates.state.socratesEvents = [events.roomQuotaWasSet(singleBedRoom, 1)];
     socrates.state.resourceEvents = [
-      events.reservationWasIssued(singleBedRoom, sessionId1, aLongTimeAgo)];
+      events.reservationWasIssued(singleBedRoom, untilSaturday, sessionId1, aLongTimeAgo)];
 
     // When (issued command)
-    socrates.registerParticipant(singleBedRoom, sessionId1, memberId1);
+    socrates.registerParticipant(singleBedRoom, untilSaturday, sessionId1, memberId1);
 
     // Then (new events)
     expect(stripTimestamps(socrates.state.resourceEvents)).to.eql([
-      {event: RESERVATION_WAS_ISSUED, sessionID: sessionId1, roomType: singleBedRoom},
-      {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, roomType: singleBedRoom, memberId: memberId1}]);
+      {event: RESERVATION_WAS_ISSUED, sessionID: sessionId1, roomType: singleBedRoom, duration: untilSaturday},
+      {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1}]);
     // And (new write model)
     expect(stripTimestamps(socrates.reservationsAndParticipantsFor(singleBedRoom))).to.eql([
-      {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, roomType: singleBedRoom, memberId: memberId1}]);
+      {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1}]);
   });
 
   it('does not register a room if there was an expired reservation but if there was not enough space', function () { // TODO books a room?
@@ -363,21 +390,21 @@ describe('the socrates conference command handler for room registrations', funct
     var socrates = new SoCraTesEventStore();
     socrates.state.socratesEvents = [events.roomQuotaWasSet(singleBedRoom, 1)];
     socrates.state.resourceEvents = [
-      events.reservationWasIssued(singleBedRoom, sessionId1, aLongTimeAgo),
-      events.participantWasRegistered(singleBedRoom, sessionId2, memberId2)];
+      events.reservationWasIssued(singleBedRoom, untilSaturday, sessionId1, aLongTimeAgo),
+      events.participantWasRegistered(singleBedRoom, untilSaturday, sessionId2, memberId2)];
 
     // When (issued command)
-    socrates.registerParticipant(singleBedRoom, sessionId1, memberId1);
+    socrates.registerParticipant(singleBedRoom, untilSaturday, sessionId1, memberId1);
 
     // Then (new events)
     expect(stripTimestamps(socrates.state.resourceEvents)).to.eql([
-      {event: RESERVATION_WAS_ISSUED, sessionID: sessionId1, roomType: singleBedRoom},
-      {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId2, roomType: singleBedRoom, memberId: memberId2},
-      {event: DID_NOT_REGISTER_PARTICIPANT_FOR_FULL_RESOURCE, sessionID: sessionId1, roomType: singleBedRoom, memberId: memberId1}
+      {event: RESERVATION_WAS_ISSUED, sessionID: sessionId1, roomType: singleBedRoom, duration: untilSaturday},
+      {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId2, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId2},
+      {event: DID_NOT_REGISTER_PARTICIPANT_FOR_FULL_RESOURCE, sessionID: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1}
     ]);
     // And (new write model)
     expect(stripTimestamps(socrates.reservationsAndParticipantsFor(singleBedRoom))).to.eql([
-      {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId2, roomType: singleBedRoom, memberId: memberId2}]);
+      {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId2, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId2}]);
   });
 
   it('registers a room even if there was no reservation, if there was enough space', function () { // TODO books a room?
@@ -387,14 +414,14 @@ describe('the socrates conference command handler for room registrations', funct
     socrates.state.resourceEvents = [];
 
     // When (issued command)
-    socrates.registerParticipant(singleBedRoom, sessionId1, memberId1);
+    socrates.registerParticipant(singleBedRoom, untilSaturday, sessionId1, memberId1);
 
     // Then (new events)
     expect(stripTimestamps(socrates.state.resourceEvents)).to.eql([
-      {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, roomType: singleBedRoom, memberId: memberId1}]);
+      {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1}]);
     // And (new write model)
     expect(stripTimestamps(socrates.reservationsAndParticipantsFor(singleBedRoom))).to.eql([
-      {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, roomType: singleBedRoom, memberId: memberId1}]);
+      {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1}]);
   });
 
   it('does register two rooms for the same member, not even different rooms', function () { // TODO books a room?
@@ -402,20 +429,20 @@ describe('the socrates conference command handler for room registrations', funct
     var socrates = new SoCraTesEventStore();
     socrates.state.socratesEvents = [events.roomQuotaWasSet(singleBedRoom, 100)];
     socrates.state.resourceEvents = [
-      events.participantWasRegistered(singleBedRoom, sessionId1, memberId1)
+      events.participantWasRegistered(singleBedRoom, untilSaturday, sessionId1, memberId1)
     ];
 
     // When (issued command)
-    socrates.registerParticipant(bedInDouble, sessionId1, memberId1);
+    socrates.registerParticipant(bedInDouble, untilSaturday, sessionId1, memberId1);
 
     // Then (new events)
     expect(stripTimestamps(socrates.state.resourceEvents)).to.eql([
-      {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, roomType: singleBedRoom, memberId: memberId1},
-      {event: DID_NOT_REGISTER_PARTICIPANT_A_SECOND_TIME, sessionID: sessionId1, roomType: bedInDouble, memberId: memberId1},
+      {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1},
+      {event: DID_NOT_REGISTER_PARTICIPANT_A_SECOND_TIME, sessionID: sessionId1, roomType: bedInDouble, duration: untilSaturday, memberId: memberId1},
     ]);
     // And (new write model)
     expect(stripTimestamps(socrates.reservationsAndParticipantsFor(singleBedRoom))).to.eql([
-      {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, roomType: singleBedRoom, memberId: memberId1}]);
+      {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1}]);
     expect(stripTimestamps(socrates.reservationsAndParticipantsFor(bedInDouble))).to.eql([]);
   });
 });
@@ -426,16 +453,16 @@ describe('the socrates conference command handler for room type changes', functi
     var socrates = new SoCraTesEventStore();
     socrates.state.socratesEvents = [events.roomQuotaWasSet(bedInDouble, 0)];
     socrates.state.resourceEvents = [
-      events.reservationWasIssued(singleBedRoom, sessionId1, aLongTimeAgo),
-      events.participantWasRegistered(singleBedRoom, sessionId1, memberId1, aShortTimeAgo)];
+      events.reservationWasIssued(singleBedRoom, untilSaturday, sessionId1, aLongTimeAgo),
+      events.participantWasRegistered(singleBedRoom, untilSaturday, sessionId1, memberId1, aShortTimeAgo)];
 
     // When (issued command)
     socrates.moveParticipantToNewRoomType(memberId1, bedInDouble);
 
     // Then (new events)
     expect(stripTimestamps(socrates.state.resourceEvents)).to.eql([
-      {event: RESERVATION_WAS_ISSUED, sessionID: sessionId1, roomType: singleBedRoom},
-      {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, roomType: singleBedRoom, memberId: memberId1},
+      {event: RESERVATION_WAS_ISSUED, sessionID: sessionId1, roomType: singleBedRoom, duration: untilSaturday},
+      {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1},
       {event: ROOM_TYPE_WAS_CHANGED, memberId: memberId1, roomType: bedInDouble}]);
     // And (new write model)
     expect(stripTimestamps(socrates.reservationsAndParticipantsFor(singleBedRoom))).to.eql([]);
@@ -448,8 +475,8 @@ describe('the socrates conference command handler for room type changes', functi
     var socrates = new SoCraTesEventStore();
     socrates.state.socratesEvents = [events.roomQuotaWasSet(bedInDouble, 0)];
     socrates.state.resourceEvents = [
-      events.reservationWasIssued(singleBedRoom, sessionId1, aLongTimeAgo),
-      events.participantWasRegistered(singleBedRoom, sessionId1, memberId1, aShortTimeAgo),
+      events.reservationWasIssued(singleBedRoom, untilSaturday, sessionId1, aLongTimeAgo),
+      events.participantWasRegistered(singleBedRoom, untilSaturday, sessionId1, memberId1, aShortTimeAgo),
       events.roomTypeWasChanged(memberId1, bedInDouble)
     ];
 
@@ -458,8 +485,8 @@ describe('the socrates conference command handler for room type changes', functi
 
     // Then (new events)
     expect(stripTimestamps(socrates.state.resourceEvents)).to.eql([
-      {event: RESERVATION_WAS_ISSUED, sessionID: sessionId1, roomType: singleBedRoom},
-      {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, roomType: singleBedRoom, memberId: memberId1},
+      {event: RESERVATION_WAS_ISSUED, sessionID: sessionId1, roomType: singleBedRoom, duration: untilSaturday},
+      {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1},
       {event: ROOM_TYPE_WAS_CHANGED, memberId: memberId1, roomType: bedInDouble},
       {event: ROOM_TYPE_WAS_CHANGED, memberId: memberId1, roomType: kingSuite}
     ]);
