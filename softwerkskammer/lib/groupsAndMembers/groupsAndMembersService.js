@@ -13,14 +13,14 @@ var Group = beans.get('group');
 var misc = beans.get('misc');
 var Member = beans.get('member');
 
-var membersOfList = function (listname, callback) {
+function membersOfList(listname, callback) {
   groupsService.getMailinglistUsersOfList(listname, function (err, emailAddresses) {
     if (err) { return callback(err); }
     memberstore.getMembersForEMails(emailAddresses, callback);
   });
-};
+}
 
-var addMembersToGroup = function (group, callback) {
+function addMembersToGroup(group, callback) {
   if (!group) { return callback(null); }
   membersOfList(group.id, function (err, members) {
     if (err) { return callback(err); }
@@ -30,18 +30,18 @@ var addMembersToGroup = function (group, callback) {
       callback(err, group);
     });
   });
-};
+}
 
-var addGroupsToMember = function (member, callback) {
+function addGroupsToMember(member, callback) {
   if (!member) { return callback(null); }
   groupsService.getSubscribedGroupsForUser(member.email(), function (err, subscribedGroups) {
     if (err) { return callback(err); }
     member.subscribedGroups = subscribedGroups;
     callback(err, member);
   });
-};
+}
 
-var updateAndSaveSubmittedMember = function (self, sessionUser, memberformData, accessrights, notifyNewMemberRegistration, updateSubscriptions, callback) {
+function updateAndSaveSubmittedMember(self, sessionUser, memberformData, accessrights, notifyNewMemberRegistration, updateSubscriptions, callback) {
   self.getMemberWithHisGroups(memberformData.previousNickname, function (err, persistentMember) {
     if (err) { return callback(err); }
     if (persistentMember && !accessrights.canEditMember(persistentMember)) {
@@ -72,15 +72,15 @@ var updateAndSaveSubmittedMember = function (self, sessionUser, memberformData, 
       return callback(null, member.nickname());
     });
   });
-};
+}
 
-var groupsWithExtraEmailAddresses = function (members, groupNamesWithEmails) {
+function groupsWithExtraEmailAddresses(members, groupNamesWithEmails) {
   var allEmailAddresses = _.map(members, function (member) { return member.email().toLowerCase(); });
   return _.transform(groupNamesWithEmails, function (result, value, key) {
     var diff = _.difference(value, allEmailAddresses);
     if (diff.length > 0) { result.push({group: key, extraAddresses: diff}); }
   }, []);
-};
+}
 
 module.exports = {
   getMemberWithHisGroups: function (nickname, callback) {
