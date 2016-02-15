@@ -1,6 +1,7 @@
 /* eslint no-underscore-dangle: 0 */
 'use strict';
 
+var async = require('async');
 var conf = require('simple-configure');
 var beans = conf.get('beans');
 var _ = require('lodash');
@@ -35,12 +36,22 @@ module.exports = {
 
   superUsers: function (callback) {
     var superusersids = conf.get('superuser');
-    persistence.listByField({'id': misc.arrayToLowerCaseRegExp(superusersids)}, {lastname: 1, firstname: 1}, _.partial(toMemberList, callback));
+    persistence.listByField({'id': misc.arrayToLowerCaseRegExp(superusersids)}, {
+      lastname: 1,
+      firstname: 1
+    }, _.partial(toMemberList, callback));
   },
 
   getMembersForEMails: function (emails, callback) {
     if (emails.length === 0) { return callback(null, []); }
-    persistence.listByField({email: misc.arrayToLowerCaseRegExp(emails)}, {}, _.partial(toMemberList, callback));
+    async.map(_.chunk(emails, 500),
+      function (chunk, callbackOfChunk) {
+        persistence.listByField({email: misc.arrayToLowerCaseRegExp(chunk)}, {}, _.partial(toMemberList, callbackOfChunk));
+      },
+      function (err, members) {
+        callback(err, _.flatten(members));
+      }
+    );
   },
 
   getMember: function (nickname, callback) {
@@ -83,7 +94,7 @@ module.exports = {
   },
 
   isSoCraTesSubscriber: function (id, callback) {
-    subscriberPersistence.getById(id, function(err, subscriber) {
+    subscriberPersistence.getById(id, function (err, subscriber) {
       callback(err, !!subscriber);
     });
   }
