@@ -7,7 +7,7 @@ mixin memberlist(members, organizers)
       for member in members
         dt: .member
           +linkedMember(member.nickname())
-          if (!member.hasNoImage)
+          if (member.hasImage())
             | &nbsp; <a href='#' rel='tooltip' data-content='#{member.nickname()}' title='<div style="height: 128px;"><img src=#{member.avatarUrl(128)} width="128" height="128"/></div>' >
             img.hidden-print(src=member.inlineAvatar(), width='16', height='16')
             | </a>

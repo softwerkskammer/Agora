@@ -296,7 +296,7 @@ describe('MembersService', function () {
     });
 
     it('loads it again if it is potentially outdated but does not save it if it is equal', function (done) {
-      gravatarData.fetchTime = gravatarData.fetchTime - 61 * 61 * 1000;
+      gravatarData.fetchTime = gravatarData.fetchTime - (membersService.regetInterval + 1);
 
       member.state.avatardata = gravatarData;
       membersService.getImage(member, function (err) {
@@ -308,7 +308,7 @@ describe('MembersService', function () {
     });
 
     it('loads it again if it is potentially outdated but does not save it if it is equal', function (done) {
-      member.state.avatardata = {image: 'another image', hasNoImage: false, fetchTime: now - 61 * 61 * 1000};
+      member.state.avatardata = {image: 'another image', hasNoImage: false, fetchTime: now - (membersService.regetInterval + 1)};
       membersService.getImage(member, function (err) {
         expect(member.state.avatardata).to.be(gravatarData);
         expect(getImageFromAvatarProvider.called).to.be(true);

@@ -71,6 +71,10 @@ Member.prototype.avatarUrl = function (size) {
   return avatarProvider.avatarUrl(this.email(), size || 200);
 };
 
+Member.prototype.hasImage = function () {
+  return this.hasNoImage === false;
+};
+
 Member.prototype.setAvatarData = function (data) {
   this.avatarImage = data.image;
   this.hasNoImage = data.hasNoImage;

@@ -73,21 +73,6 @@ describe('Member initial filling', function () {
     var member = new Member(dbRecord);
     expect(member.displayName()).to.equal('Hans Dampf');
   });
-
-  it('constructs avatar from mail address using gravatar URL with https', function () {
-    var email = 'member@mail.com';
-    var dbRecord = {nickname: 'Nick', email: email};
-    var member = new Member(dbRecord);
-    expect(member.avatarUrl(10)).to.contain('https://www.gravatar.com/avatar/');
-    expect(member.avatarUrl(10)).to.contain('?d=mm&s=10');
-  });
-
-  it('uses size 200 if no size is given', function () {
-    var email = 'member@mail.com';
-    var dbRecord = {nickname: 'Nick', email: email};
-    var member = new Member(dbRecord);
-    expect(member.avatarUrl()).to.contain('?d=mm&s=200');
-  });
 });
 
 describe('fillFromUI', function () {
@@ -235,7 +220,7 @@ describe('utility functions', function () {
     var member = new Member({email: 'myEmail'});
     var group = {id: 'group'};
     var groupb = {id: 'groupb'};
-    member.fillSubscribedGroups({group: ['myemail'], groupb: ['myemail'] }, [group, groupb]);
+    member.fillSubscribedGroups({group: ['myemail'], groupb: ['myemail']}, [group, groupb]);
     expect(member.subscribedGroups).to.have.length(2);
     expect(member.subscribedGroups).to.contain(group);
     expect(member.subscribedGroups).to.contain(groupb);
@@ -252,5 +237,51 @@ describe('utility functions', function () {
     member.addAuthentication('auth');
     expect(member.authentications()).to.have.length(1);
     expect(member.authentications()).to.contain('auth');
+  });
+});
+
+describe('avatar handling', function () {
+  it('constructs avatar from mail address using gravatar URL with https', function () {
+    var email = 'member@mail.com';
+    var dbRecord = {nickname: 'Nick', email: email};
+    var member = new Member(dbRecord);
+
+    expect(member.avatarUrl(10)).to.contain('https://www.gravatar.com/avatar/');
+    expect(member.avatarUrl(10)).to.contain('?d=mm&s=10');
+  });
+
+  it('uses size 200 if no size is given', function () {
+    var email = 'member@mail.com';
+    var dbRecord = {nickname: 'Nick', email: email};
+    var member = new Member(dbRecord);
+
+    expect(member.avatarUrl()).to.contain('?d=mm&s=200');
+  });
+
+  it('saves miniicon from gravatar', function () {
+    var member = new Member();
+    var gravatarIcon = {image: null, hasNoImage: true, fetchTime: new Date().getTime()};
+    member.setPersistedAvatarData(gravatarIcon);
+
+    expect(member.state.avatardata).to.be(gravatarIcon);
+  });
+
+  it('sets avatar miniicon on load if available', function () {
+    var gravatarIcon = {image: 'theImage', hasNoImage: false, fetchTime: new Date().getTime()};
+    var member = new Member({avatardata: gravatarIcon});
+
+    expect(member.state.avatardata).to.be(gravatarIcon);
+    expect(member.inlineAvatar()).to.be('theImage');
+    expect(member.hasImage()).to.be(true);
+  });
+
+  it('does not save custom icons', function () {
+    var member = new Member();
+    var gravatarIcon = {image: 'theImage', hasNoImage: false};
+    member.setAvatarData(gravatarIcon);
+
+    expect(member.state.avatardata).to.not.exist();
+    expect(member.inlineAvatar()).to.be('theImage');
+    expect(member.hasImage()).to.be(true);
   });
 });

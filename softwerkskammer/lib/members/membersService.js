@@ -10,6 +10,8 @@ var avatarProvider = beans.get('avatarProvider');
 var fieldHelpers = beans.get('fieldHelpers');
 var galleryService = beans.get('galleryService');
 
+var regetInterval = 24 * 60 * 60 * 1000; // once a day
+
 function isReserved(nickname) {
   return new RegExp('^edit$|^new$|^checknickname$|^submit$|^administration$|^[.][.]$|^[.]$|\\+', 'i').test(nickname);
 }
@@ -86,7 +88,7 @@ module.exports = {
         store.saveMember(member, callback);
       });
     } else {
-      if (member.getPersistedAvatarData().fetchTime && new Date().getTime() - member.getPersistedAvatarData().fetchTime > 60 * 60 * 1000) { // one hour
+      if (member.getPersistedAvatarData().fetchTime && new Date().getTime() - member.getPersistedAvatarData().fetchTime > regetInterval) {
         avatarProvider.getImage(member, function (imageData) {
           var oldAvatar = member.getPersistedAvatarData();
           member.setPersistedAvatarData(imageData);
@@ -152,6 +154,8 @@ module.exports = {
     });
   },
 
-  isReserved: isReserved
+  isReserved: isReserved,
+
+  regetInterval: regetInterval
 };
 
