@@ -6,7 +6,7 @@ var beans = require('../../testutil/configureForTest').get('beans');
 var Member = beans.get('member');
 var avatarProvider = beans.get('avatarProvider');
 
-describe.only('AvatarProvider', function () {
+describe('AvatarProvider', function () {
   it('loads the gravatar of "leider" from gravatar', function (done) {
     var member = new Member({email: 'derleider@web.de'});
     avatarProvider.getImage(member, function () {

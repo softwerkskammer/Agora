@@ -8,9 +8,6 @@ var _ = require('lodash');
 
 function Member(object) {
   this.state = object || {};
-  if (this.state.avatardata) {
-    this.setAvatarData(this.state.avatardata);
-  }
 }
 
 Member.prototype.fillFromUI = function (object) {
@@ -72,12 +69,11 @@ Member.prototype.avatarUrl = function (size) {
 };
 
 Member.prototype.hasImage = function () {
-  return this.hasNoImage === false;
+  return (this.getPersistedAvatarData() && this.getPersistedAvatarData().hasNoImage) === false;
 };
 
 Member.prototype.setAvatarData = function (data) {
-  this.avatarImage = data.image;
-  this.hasNoImage = data.hasNoImage;
+  this.setPersistedAvatarData(data);
 };
 
 Member.prototype.setPersistedAvatarData = function (data) {
@@ -89,7 +85,7 @@ Member.prototype.getPersistedAvatarData = function () {
 };
 
 Member.prototype.inlineAvatar = function () {
-  return this.avatarImage || '';
+  return (this.getPersistedAvatarData() && this.getPersistedAvatarData().image) || '';
 };
 
 Member.prototype.hasCustomAvatar = function () {

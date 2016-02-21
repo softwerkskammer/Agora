@@ -275,12 +275,12 @@ describe('avatar handling', function () {
     expect(member.hasImage()).to.be(true);
   });
 
-  it('does not save custom icons', function () {
+  it('does also save custom icons', function () {
     var member = new Member();
     var gravatarIcon = {image: 'theImage', hasNoImage: false};
     member.setAvatarData(gravatarIcon);
 
-    expect(member.state.avatardata).to.not.exist();
+    expect(member.state.avatardata).to.exist();
     expect(member.inlineAvatar()).to.be('theImage');
     expect(member.hasImage()).to.be(true);
   });
