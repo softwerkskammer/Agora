@@ -7,10 +7,10 @@ function md5(emailAddress) {
   return emailAddress ? crypto.createHash('md5').update(emailAddress).digest('hex') : '';
 }
 
-function imageDataFromGravatar (url, callback) {
+function imageDataFromGravatar(url, callback) {
   request.get(url, function (error, response, body) {
     if (error) {
-      return callback({image: null, hasNoImage: true, fetchTime: new Date().getTime()});
+      return callback();
     }
     var image = 'data:' + response.headers['content-type'] + ';base64,' + new Buffer(body).toString('base64');
     var data = {image: image, hasNoImage: body.length < 100, fetchTime: new Date().getTime()};

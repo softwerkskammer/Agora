@@ -261,7 +261,7 @@ describe('avatar handling', function () {
   it('saves miniicon from gravatar', function () {
     var member = new Member();
     var gravatarIcon = {image: null, hasNoImage: true, fetchTime: new Date().getTime()};
-    member.setPersistedAvatarData(gravatarIcon);
+    member.setAvatarData(gravatarIcon);
 
     expect(member.state.avatardata).to.be(gravatarIcon);
   });

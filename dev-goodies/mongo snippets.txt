@@ -28,3 +28,6 @@ db.activitystore.update({title: 'SoCraTes 2015', "resources.single._registeredMe
 
 -- update the memberID in a visited resource
 db.activitystore.update({"url" : "neue_aktion", 'resources.Veranstaltung._registeredMembers.memberId':"github:450708" }, {$set: {'resources.Veranstaltung._registeredMembers.$.memberId': "github:450701"}})
+
+-- delete all avatardata in members
+db.memberstore.update({}, {$unset:{'avatardata':''}}, {multi:true})

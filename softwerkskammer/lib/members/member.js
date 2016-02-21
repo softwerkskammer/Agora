@@ -69,23 +69,19 @@ Member.prototype.avatarUrl = function (size) {
 };
 
 Member.prototype.hasImage = function () {
-  return (this.getPersistedAvatarData() && this.getPersistedAvatarData().hasNoImage) === false;
+  return (this.getAvatarData() && this.getAvatarData().hasNoImage) === false;
 };
 
 Member.prototype.setAvatarData = function (data) {
-  this.setPersistedAvatarData(data);
-};
-
-Member.prototype.setPersistedAvatarData = function (data) {
   this.state.avatardata = data;
 };
 
-Member.prototype.getPersistedAvatarData = function () {
+Member.prototype.getAvatarData = function () {
   return this.state.avatardata;
 };
 
 Member.prototype.inlineAvatar = function () {
-  return (this.getPersistedAvatarData() && this.getPersistedAvatarData().image) || '';
+  return (this.getAvatarData() && this.getAvatarData().image) || '';
 };
 
 Member.prototype.hasCustomAvatar = function () {
@@ -94,6 +90,15 @@ Member.prototype.hasCustomAvatar = function () {
 
 Member.prototype.customAvatar = function () {
   return this.state.customAvatar;
+};
+
+Member.prototype.setCustomAvatar = function (data) {
+  this.state.customAvatar = data;
+};
+
+Member.prototype.deleteCustomAvatar = function () {
+  delete this.state.customAvatar;
+  delete this.state.avatardata;
 };
 
 Member.prototype.asGitAuthor = function () {

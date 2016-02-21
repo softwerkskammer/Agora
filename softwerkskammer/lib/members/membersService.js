@@ -29,6 +29,20 @@ function wordList(members, groupingFunction) {
     }, []); // create the final structure
 }
 
+function setCustomAvatarImageInMember(member, callback) {
+  return galleryService.retrieveScaledImage(member.customAvatar(), 'mini', function (err, result) {
+    if (err || !result) { return callback(); }
+    fs.readFile(result, function (err1, data) {
+      member.setAvatarData({
+        image: 'data:' + mimetypes.lookup(result) + ';base64,' + new Buffer(data).toString('base64'),
+        hasNoImage: false,
+        fetchTime: new Date().getTime()
+      });
+      callback(err1);
+    });
+  });
+}
+
 module.exports = {
   isValidNickname: function (nickname, callback) {
     if (fieldHelpers.containsSlash(nickname) || isReserved(nickname)) { return callback(null, false); }
@@ -50,18 +64,19 @@ module.exports = {
       if (err) { return callback(err); }
       galleryService.storeAvatar(files.image[0].path, params, function (err1, filename) {
         if (err1) { return callback(err1); }
-        member.state.customAvatar = filename;
-        store.saveMember(member, callback);
+        member.setCustomAvatar(filename);
+        setCustomAvatarImageInMember(member, function() { // we ignore the error here
+          store.saveMember(member, callback);
+        });
       });
     });
-
   },
 
   deleteCustomAvatarForNickname: function (nickname, callback) {
     store.getMember(nickname, function (err, member) {
       if (err || !member.hasCustomAvatar()) { return callback(err); }
       var avatar = member.customAvatar();
-      delete member.state.customAvatar;
+      member.deleteCustomAvatar();
       store.saveMember(member, function (err1) {
         if (err1) { return callback(err1); }
         galleryService.deleteAvatar(avatar, function (err2) { callback(err2); });
@@ -71,28 +86,22 @@ module.exports = {
 
   getImage: function (member, callback) {
     if (member.hasCustomAvatar()) {
-      return galleryService.retrieveScaledImage(member.customAvatar(), 'mini', function (err, result) {
-        if (err || !result) { return callback(); }
-        fs.readFile(result, function (err1, data) {
-          member.setAvatarData({
-            image: 'data:' + mimetypes.lookup(result) + ';base64,' + new Buffer(data).toString('base64'),
-            hasNoData: false
-          });
-          callback(err1);
-        });
-      });
+      if (member.hasImage()) {
+        return callback();
+      }
+      return setCustomAvatarImageInMember(member, callback);
     }
-    if (!member.getPersistedAvatarData()) {
+    if (!member.getAvatarData()) {
       avatarProvider.getImage(member, function (imageData) {
-        member.setPersistedAvatarData(imageData);
+        member.setAvatarData(imageData);
         store.saveMember(member, callback);
       });
     } else {
-      if (member.getPersistedAvatarData().fetchTime && new Date().getTime() - member.getPersistedAvatarData().fetchTime > regetInterval) {
+      if (member.getAvatarData().fetchTime && new Date().getTime() - member.getAvatarData().fetchTime > regetInterval) {
         avatarProvider.getImage(member, function (imageData) {
-          var oldAvatar = member.getPersistedAvatarData();
-          member.setPersistedAvatarData(imageData);
-          if (member.getPersistedAvatarData() !== oldAvatar) {
+          var oldAvatar = member.getAvatarData();
+          member.setAvatarData(imageData);
+          if (member.getAvatarData() !== oldAvatar) {
             store.saveMember(member, function () { /* background op */ });
           }
         });
