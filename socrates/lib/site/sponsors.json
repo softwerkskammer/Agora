@@ -14,7 +14,12 @@
     "url": "http://codurance.com",
     "logo": "codurance160.png"
   },
-  {
+  { 
+    "name": "dreamIT GmbH",
+    "url": "http://dreamit.de",
+    "logo": "dreamit160.png"
+  },
+  { 
     "name": "msgGillardon AG",
     "url": "http://www.msg-gillardon.de",
     "logo": "msgGillardon160.png"
