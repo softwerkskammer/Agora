@@ -223,7 +223,7 @@ describe('MembersService', function () {
 
     beforeEach(function () {
       saveMember = sinon.stub(memberstore, 'saveMember', function (anyMember, callback) { callback(); });
-      gravatarData = {image: 'the image', hasNoImage: false, fetchTime: now};
+      gravatarData = {image: 'the image', hasNoImage: false, fetchTime: now + 1000};
       getImageFromAvatarProvider = sinon.stub(avatarProvider, 'getImage', function (anyMember, callback) {
         callback(gravatarData);
       });
@@ -295,20 +295,25 @@ describe('MembersService', function () {
       });
     });
 
-    it('loads it again if it is potentially outdated but does not save it if it is equal', function (done) {
-      gravatarData.fetchTime = gravatarData.fetchTime - (membersService.regetInterval + 1);
+    it('loads it again if it is potentially outdated and saves it even though it is equal', function (done) {
+      var fetchTime = gravatarData.fetchTime - (membersService.regetInterval + 60 * 1000);
+      member.state.avatardata = {image: 'the image', hasNoImage: false, fetchTime: fetchTime};
 
-      member.state.avatardata = gravatarData;
       membersService.getImage(member, function (err) {
-        expect(member.state.avatardata).to.be(gravatarData);
+        expect(member.state.avatardata.image).to.eql(gravatarData.image);
         expect(getImageFromAvatarProvider.called).to.be(true);
-        expect(saveMember.called).to.be(false);
+        expect(saveMember.called).to.be(true);
+        expect(member.state.avatardata.fetchTime).to.be.gt(fetchTime);
         done(err);
       });
     });
 
     it('loads it again if it is potentially outdated but does not save it if it is equal', function (done) {
-      member.state.avatardata = {image: 'another image', hasNoImage: false, fetchTime: now - (membersService.regetInterval + 1)};
+      member.state.avatardata = {
+        image: 'another image',
+        hasNoImage: false,
+        fetchTime: now - (membersService.regetInterval + 1)
+      };
       membersService.getImage(member, function (err) {
         expect(member.state.avatardata).to.be(gravatarData);
         expect(getImageFromAvatarProvider.called).to.be(true);

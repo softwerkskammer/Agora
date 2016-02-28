@@ -108,8 +108,9 @@ module.exports = {
           member.setAvatarData(imageData);
           return store.saveMember(member, callback); // never, ever "fork" stuff in node by not having return values *I AM IDIOT*
         });
+      } else {
+        callback();
       }
-      callback();
     }
   },
 
