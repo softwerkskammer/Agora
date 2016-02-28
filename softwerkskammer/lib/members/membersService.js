@@ -31,7 +31,12 @@ function wordList(members, groupingFunction) {
 
 function setCustomAvatarImageInMember(member, callback) {
   return galleryService.retrieveScaledImage(member.customAvatar(), 'mini', function (err, result) {
-    if (err || !result) { return callback(); }
+    if (err || !result) {
+      if (err.message.match(/does not exist/)) {
+        delete member.state.customAvatar;
+      }
+      return callback();
+    }
     fs.readFile(result, function (err1, data) {
       member.setAvatarData({
         image: 'data:' + mimetypes.lookup(result) + ';base64,' + new Buffer(data).toString('base64'),
@@ -65,7 +70,7 @@ module.exports = {
       galleryService.storeAvatar(files.image[0].path, params, function (err1, filename) {
         if (err1) { return callback(err1); }
         member.setCustomAvatar(filename);
-        setCustomAvatarImageInMember(member, function() { // we ignore the error here
+        setCustomAvatarImageInMember(member, function () { // we ignore the error here
           store.saveMember(member, callback);
         });
       });
@@ -86,10 +91,10 @@ module.exports = {
 
   getImage: function (member, callback) {
     if (member.hasCustomAvatar()) {
-      if (member.hasImage()) {
-        return callback();
-      }
-      return setCustomAvatarImageInMember(member, callback);
+      if (member.hasImage()) { return callback(); }
+      return setCustomAvatarImageInMember(member, function () {
+        store.saveMember(member, callback);
+      });
     }
     if (!member.getAvatarData()) {
       avatarProvider.getImage(member, function (imageData) {
@@ -97,13 +102,11 @@ module.exports = {
         store.saveMember(member, callback);
       });
     } else {
-      if (member.getAvatarData().fetchTime && new Date().getTime() - member.getAvatarData().fetchTime > regetInterval) {
+      var now = new Date().getTime();
+      if (member.getAvatarData().fetchTime && now - member.getAvatarData().fetchTime > regetInterval) {
         avatarProvider.getImage(member, function (imageData) {
-          var oldAvatar = member.getAvatarData();
           member.setAvatarData(imageData);
-          if (member.getAvatarData() !== oldAvatar) {
-            store.saveMember(member, function () { /* background op */ });
-          }
+          return store.saveMember(member, callback); // never, ever "fork" stuff in node by not having return values *I AM IDIOT*
         });
       }
       callback();
