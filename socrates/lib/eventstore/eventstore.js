@@ -117,7 +117,9 @@ SoCraTesEventStore.prototype.issueReservation = function (roomType, duration, se
 
 SoCraTesEventStore.prototype.registerParticipant = function (roomType, duration, sessionId, memberId) {
   var event;
-  if (this.quotaFor(roomType) <= this.reservationsAndParticipantsFor(roomType).length) {
+  if (this.reservationsBySessionId()[sessionId]) {
+    event = events.participantWasRegistered(roomType, duration, sessionId, memberId);
+  } else if (this.quotaFor(roomType) <= this.reservationsAndParticipantsFor(roomType).length) {
     // resource is already full
     event = events.didNotRegisterParticipantForFullResource(roomType, duration, sessionId, memberId);
   } else if (this.participantsByMemberId()[memberId]) {

@@ -350,6 +350,25 @@ describe('the socrates conference command handler for room registrations', funct
       {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1}]);
   });
 
+  it('registers a room even if the matching reservation filled up the room', function () { // TODO books a room?
+    // Given (saved events)
+    var socrates = new SoCraTesEventStore();
+    socrates.state.socratesEvents = [events.roomQuotaWasSet(singleBedRoom, 1)];
+    socrates.state.resourceEvents = [
+      events.reservationWasIssued(singleBedRoom, untilSaturday, sessionId1, aShortTimeAgo)];
+
+    // When (issued command)
+    socrates.registerParticipant(singleBedRoom, untilSaturday, sessionId1, memberId1);
+
+    // Then (new events)
+    expect(stripTimestamps(socrates.state.resourceEvents)).to.eql([
+      {event: RESERVATION_WAS_ISSUED, sessionID: sessionId1, roomType: singleBedRoom, duration: untilSaturday},
+      {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1}]);
+    // And (new write model)
+    expect(stripTimestamps(socrates.reservationsAndParticipantsFor(singleBedRoom))).to.eql([
+      {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1}]);
+  });
+
   it('registers a room for the given duration even if the reservation was for a different duration', function () { // TODO books a room?
     // Given (saved events)
     var socrates = new SoCraTesEventStore();
