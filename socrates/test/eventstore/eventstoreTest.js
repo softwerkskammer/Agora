@@ -21,8 +21,8 @@ var DURATION_WAS_CHANGED = 'DURATION-WAS-CHANGED';
 var DID_NOT_CHANGE_ROOM_TYPE_FOR_NON_PARTICIPANT = 'DID-NOT-CHANGE-ROOM-TYPE-FOR-NON-PARTICIPANT';
 var DID_NOT_CHANGE_DURATION_FOR_NON_PARTICIPANT = 'DID-NOT-CHANGE-DURATION-FOR-NON-PARTICIPANT';
 
-function stripTimestamps(events) {
-  return _.map(events, function (event) {
+function stripTimestamps(someEvents) {
+  return _.map(someEvents, function (event) {
     var newEvent = R.clone(event);
     delete newEvent.timestamp;
     return newEvent;
@@ -441,7 +441,7 @@ describe('the socrates conference command handler for room registrations', funct
     // Then (new events)
     expect(stripTimestamps(socrates.state.resourceEvents)).to.eql([
       {event: PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1},
-      {event: DID_NOT_REGISTER_PARTICIPANT_A_SECOND_TIME, sessionID: sessionId1, roomType: bedInDouble, duration: untilSaturday, memberId: memberId1},
+      {event: DID_NOT_REGISTER_PARTICIPANT_A_SECOND_TIME, sessionID: sessionId1, roomType: bedInDouble, duration: untilSaturday, memberId: memberId1}
     ]);
     // And (new write model)
     expect(stripTimestamps(socrates.reservationsAndParticipantsFor(singleBedRoom))).to.eql([
