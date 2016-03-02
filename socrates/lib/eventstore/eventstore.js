@@ -8,6 +8,7 @@ var beans = require('simple-configure').get('beans');
 var events = beans.get('events');
 
 function SoCraTesEventStore() {
+  // TODO when loading from DB, sort event streams by timestamp!
   // event streams (will be persisted):
   this.state = {
     socratesEvents: [],
@@ -79,7 +80,7 @@ SoCraTesEventStore.prototype.reservationsAndParticipantsFor = function (roomType
 
 // handle commands:
 // that create SoCraTes events:
-SoCraTesEventStore.prototype.updateSoCraTesEventsAndWriteModel = function (event) {
+SoCraTesEventStore.prototype._updateSoCraTesEventsAndWriteModel = function (event) {
   // append to event stream:
   this.state.socratesEvents.push(event);
   // update write models:
@@ -88,11 +89,11 @@ SoCraTesEventStore.prototype.updateSoCraTesEventsAndWriteModel = function (event
 
 SoCraTesEventStore.prototype.updateRoomQuota = function (roomType, quota) {
   var event = events.roomQuotaWasSet(roomType, quota);
-  this.updateSoCraTesEventsAndWriteModel(event);
+  this._updateSoCraTesEventsAndWriteModel(event);
 };
 
 // that create Resource events:
-SoCraTesEventStore.prototype.updateResourceEventsAndWriteModel = function (event) {
+SoCraTesEventStore.prototype._updateResourceEventsAndWriteModel = function (event) {
   // append to event stream:
   this.state.resourceEvents.push(event);
   // update write models:
@@ -112,7 +113,7 @@ SoCraTesEventStore.prototype.issueReservation = function (roomType, duration, se
     // all is good
     event = events.reservationWasIssued(roomType, duration, sessionId);
   }
-  this.updateResourceEventsAndWriteModel(event);
+  this._updateResourceEventsAndWriteModel(event);
 };
 
 SoCraTesEventStore.prototype.registerParticipant = function (roomType, duration, sessionId, memberId) {
@@ -129,19 +130,19 @@ SoCraTesEventStore.prototype.registerParticipant = function (roomType, duration,
     // all is well
     event = events.participantWasRegistered(roomType, duration, sessionId, memberId);
   }
-  this.updateResourceEventsAndWriteModel(event);
+  this._updateResourceEventsAndWriteModel(event);
 };
 
 SoCraTesEventStore.prototype.moveParticipantToNewRoomType = function (memberId, roomType) {
   var existingParticipantEvent = this.participantsByMemberId()[memberId];
   var event = existingParticipantEvent ? events.roomTypeWasChanged(memberId, roomType, existingParticipantEvent.duration) : events.didNotChangeRoomTypeForNonParticipant(memberId, roomType);
-  this.updateResourceEventsAndWriteModel(event);
+  this._updateResourceEventsAndWriteModel(event);
 };
 
 SoCraTesEventStore.prototype.setNewDurationForParticipant = function (memberId, duration) {
   var existingParticipantEvent = this.participantsByMemberId()[memberId];
   var event = existingParticipantEvent ? events.durationWasChanged(memberId, existingParticipantEvent.roomType, duration) : events.didNotChangeDurationForNonParticipant(memberId, duration);
-  this.updateResourceEventsAndWriteModel(event);
+  this._updateResourceEventsAndWriteModel(event);
 };
 
 module.exports = SoCraTesEventStore;
