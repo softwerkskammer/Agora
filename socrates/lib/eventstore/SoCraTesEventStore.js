@@ -7,10 +7,11 @@ var moment = require('moment-timezone');
 var beans = require('simple-configure').get('beans');
 var events = beans.get('events');
 
-function SoCraTesEventStore() {
+function SoCraTesEventStore(object) {
   // TODO when loading from DB, sort event streams by timestamp!
   // event streams (will be persisted):
-  this.state = {
+  this.state = object || {
+    id: 'socratesEventStore',
     socratesEvents: [],
     resourceEvents: []
   };
