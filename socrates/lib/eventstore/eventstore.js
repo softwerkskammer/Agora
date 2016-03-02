@@ -13,8 +13,8 @@ function toSoCraTesEventStore(callback, err, jsobject) {
 }
 
 module.exports = {
-  getEventStore: function (callback) {
-    persistence.getById('socratesEventStore', _.partial(toSoCraTesEventStore, callback));
+  getEventStore: function (url, callback) {
+    persistence.getByField({url: url}, _.partial(toSoCraTesEventStore, callback));
   },
 
   saveEventStore: function (eventStore, callback) {
