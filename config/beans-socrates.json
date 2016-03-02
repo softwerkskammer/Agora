@@ -10,6 +10,7 @@
   "socratesSubscribersApp": {"module": "./socrates/lib/subscribers"},
   "socratesWikiApp": {"module": "./socrates/lib/wiki"},
 
+
   "socratesActivitiesService": {"module": "./socrates/lib/activities/socratesActivitiesService"},
   "subscriberService": {"module": "./socrates/lib/subscribers/subscriberService"},
   "registrationService": {"module": "./socrates/lib/registration/registrationService"},
@@ -21,6 +22,7 @@
 
   "subscriberstore": {"module": "./socrates/lib/subscribers/subscriberstore"},
 
+  "SoCraTesEventStore": {"module": "./socrates/lib/eventstore/SoCraTesEventStore"},
   "events": {"module": "./socrates/lib/eventstore/events"},
 
   "socratesAddon": {"module": "./socrates/lib/subscribers/addon"},

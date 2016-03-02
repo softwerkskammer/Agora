@@ -7,7 +7,7 @@ var R = require('ramda');
 
 var beans = require('../../testutil/configureForTest').get('beans');
 var events = beans.get('events');
-var SoCraTesEventStore = require('../../lib/eventstore/SoCraTesEventStore');
+var SoCraTesEventStore = beans.get('SoCraTesEventStore');
 
 var ROOM_QUOTA_WAS_SET = 'ROOM-QUOTA-WAS-SET';
 var RESERVATION_WAS_ISSUED = 'RESERVATION-WAS-ISSUED';
