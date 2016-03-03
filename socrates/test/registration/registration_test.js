@@ -53,8 +53,8 @@ describe('SoCraTes registration application', function () {
       resources: {
         single: {_canUnsubscribe: false, _limit: 0, _position: 2, _registrationOpen: true, _waitinglist: []}, // no capacity
         bed_in_double: {_canUnsubscribe: false, _limit: 10, _position: 3, _registrationOpen: false, _waitinglist: []}, // not opened
-        junior: {_canUnsubscribe: false, _limit: 10, _position: 4, _registrationOpen: false}, // not opened, no waitinglist
-        bed_in_junior: {_canUnsubscribe: false, _limit: 10, _position: 5, _registrationOpen: true}
+        junior: {_canUnsubscribe: false, _limit: 10, _position: 4, _registrationOpen: false, _waitinglist: []}, // not opened
+        bed_in_junior: {_canUnsubscribe: false, _limit: 10, _position: 5, _registrationOpen: true, _waitinglist: []}
       }
     };
     socratesActivity = new SoCraTesActivity(socrates);
@@ -126,12 +126,6 @@ describe('SoCraTes registration application', function () {
         .get('/')
         .expect(/<th>Double shared<div class="radio-inline/)
         .expect(/<th>Single<div class="radio-inline/, done);
-    });
-
-    it('displays that option 3 does not have a waitinglist button if nobody is logged in', function (done) {
-      appWithoutMember
-        .get('/')
-        .expect(/<th>Junior \(exclusively\)<\/th>/, done);
     });
 
     it('displays the options (but disabled) if the user is registered', function (done) {
