@@ -52,8 +52,8 @@ describe('SoCraTes registration application', function () {
       endUnix: 1440946800,
       resources: {
         single: {_canUnsubscribe: false, _limit: 0, _position: 2, _registrationOpen: true, _waitinglist: []}, // no capacity
-        bed_in_double: {_canUnsubscribe: false, _limit: 10, _position: 3, _registrationOpen: false, _waitinglist: []}, // not opened
-        junior: {_canUnsubscribe: false, _limit: 10, _position: 4, _registrationOpen: false, _waitinglist: []}, // not opened
+        bed_in_double: {_canUnsubscribe: false, _limit: 10, _position: 3, _registrationOpen: true, _waitinglist: []},
+        junior: {_canUnsubscribe: false, _limit: 10, _position: 4, _registrationOpen: true, _waitinglist: []},
         bed_in_junior: {_canUnsubscribe: false, _limit: 10, _position: 5, _registrationOpen: true, _waitinglist: []}
       }
     };
@@ -121,10 +121,12 @@ describe('SoCraTes registration application', function () {
         .expect(200, done);
     });
 
-    it('displays that options 1 and 2 have a waitinglist button if nobody is logged in', function (done) {
+    it('displays that only option 1 has a waitinglist button if nobody is logged in', function (done) {
       appWithoutMember
         .get('/')
-        .expect(/<th>Double shared<div class="radio-inline/)
+        .expect(/<th>Double shared<\/th>/)
+        .expect(/<th>Junior shared<\/th>/)
+        .expect(/<th>Junior \(exclusively\)<\/th>/)
         .expect(/<th>Single<div class="radio-inline/, done);
     });
 
