@@ -157,4 +157,24 @@ SoCraTesEventStore.prototype.isAlreadyRegistered = function (memberId) {
   return !!this._participantEventFor(memberId);
 };
 
+SoCraTesEventStore.prototype.isAlreadyOnWaitinglist = function (memberId) {
+  return false; // TODO implement waitinglist!
+};
+
+SoCraTesEventStore.prototype.selectedOptionFor = function (memberID) {
+  var participantEvent = this._participantEventFor(memberID);
+  if (participantEvent) {
+    return participantEvent.roomType + ',' + participantEvent.duration;
+  }
+
+  /* TODO implement waitinglist!
+  var waitResource = _.first(this.waitinglistResourcesFor(memberID));
+  if (waitResource) {
+    return waitResource.resourceName + ',waitinglist';
+  }
+  */
+  return null;
+};
+
+
 module.exports = SoCraTesEventStore;

@@ -19,6 +19,11 @@ var notifications = beans.get('socratesNotifications');
 var Member = beans.get('member');
 var Subscriber = beans.get('subscriber');
 var SoCraTesActivity = beans.get('socratesActivityExtended');
+
+var events = beans.get('events');
+var SoCraTesEventStore = beans.get('SoCraTesEventStore');
+var eventstore = beans.get('eventstore');
+
 var createApp = require('../../testutil/testHelper')('socratesRegistrationApp').createApp;
 
 describe('SoCraTes registration application', function () {
@@ -42,6 +47,8 @@ describe('SoCraTes registration application', function () {
   var socratesActivity;
   var activitySave;
 
+  var socratesES;
+
   beforeEach(function () {
     socrates = {
       id: 'socratesId',
@@ -59,6 +66,14 @@ describe('SoCraTes registration application', function () {
     };
     socratesActivity = new SoCraTesActivity(socrates);
 
+    socratesES = new SoCraTesEventStore();
+    socratesES.state.socratesEvents = [
+      events.roomQuotaWasSet('single', 0),
+      events.roomQuotaWasSet('bed_in_double', 10),
+      events.roomQuotaWasSet('junior', 10),
+      events.roomQuotaWasSet('bed_in_junior', 10)
+    ];
+
     conf.addProperties({registrationOpensAt: moment().subtract(10, 'days').format()}); // already opened
     sinon.stub(activitiesService, 'getActivityWithGroupAndParticipants', function (activityUrl, callback) { callback(null, socratesActivity); });
     sinon.stub(subscriberService, 'createSubscriberIfNecessaryFor', function (userId, callback) { callback(); });
@@ -68,6 +83,8 @@ describe('SoCraTes registration application', function () {
     activitySave = sinon.stub(activitystore, 'saveActivity', function (activity, callback) { callback(); });
     sinon.stub(subscriberstore, 'getSubscriber', function (memberId, callback) { callback(null, new Subscriber({})); });
     sinon.stub(subscriberstore, 'saveSubscriber', function (subscriber, callback) { callback(); });
+
+    sinon.stub(eventstore, 'getEventStore', function (url, callback) { callback(null, socratesES); });
 
     sinon.stub(notifications, 'newParticipant');
     sinon.stub(notifications, 'newWaitinglistEntry');
@@ -133,7 +150,8 @@ describe('SoCraTes registration application', function () {
     it('displays the options (but disabled) if the user is registered', function (done) {
       /* eslint no-underscore-dangle: 0 */
 
-      socrates.resources.bed_in_junior._registeredMembers = [{memberId: 'memberId2'}];
+      socratesES.state.resourceEvents = [
+        events.participantWasRegistered('bed_in_junior', 'some-duration', 'some-session-id', 'memberId2')];
 
       appWithSocratesMember
         .get('/')

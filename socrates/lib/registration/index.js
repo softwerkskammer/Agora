@@ -25,6 +25,8 @@ var managementService = beans.get('managementService');
 var nametagService = beans.get('nametagService');
 var currentUrl = beans.get('socratesConstants').currentUrl;
 
+var eventstore = beans.get('eventstore');
+
 var app = misc.expressAppIn(__dirname);
 
 function registrationOpening() {
@@ -49,18 +51,24 @@ function registrationOpensIn() {
 }
 
 app.get('/', function (req, res, next) {
-  activitiesService.getActivityWithGroupAndParticipants(socratesConstants.currentUrl, function (err, activity) {
-    if (err || !activity) { return next(err); }
-    var options = roomOptions.all(activity, res.locals.accessrights.memberId(), isRegistrationOpen(req.query.registration));
+  eventstore.getEventStore(socratesConstants.currentUrl, function (err, socratesEventStore) {
+    if (err || !socratesEventStore) { return next(err); }
+    var memberId = res.locals.accessrights.memberId();
+    var options = roomOptions.allFromEventStore(socratesEventStore, memberId, isRegistrationOpen(req.query.registration));
 
     res.render('get', {
-      activity: activity,
+      activity: {
+        title: '',
+        url: '',
+        fullyQualifiedUrl: ''
+      },
       roomOptions: options,
       registration: {
         isPossible: isRegistrationOpen(req.query.registration),
         queryParam: req.query.registration,
-        alreadyRegistered: activity.isAlreadyRegistered(res.locals.accessrights.memberId()),
-        alreadyOnWaitinglist: activity.isAlreadyOnWaitinglist(res.locals.accessrights.memberId()),
+        alreadyRegistered: socratesEventStore.isAlreadyRegistered(memberId),
+        selectedOption: socratesEventStore.selectedOptionFor(memberId),
+        alreadyOnWaitinglist: socratesEventStore.isAlreadyOnWaitinglist(memberId),
         opening: registrationOpening(),
         opensIn: registrationOpensIn()
       }
