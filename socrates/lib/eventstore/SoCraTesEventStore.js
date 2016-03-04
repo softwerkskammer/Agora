@@ -105,8 +105,7 @@ SoCraTesEventStore.prototype._updateResourceEventsAndWriteModel = function (even
 
 SoCraTesEventStore.prototype.issueReservation = function (roomType, duration, sessionId) {
   var event;
-  if (this.quotaFor(roomType) <= this.reservationsAndParticipantsFor(roomType).length) {
-    // resource is already full
+  if (this.isFull(roomType)) {
     event = events.didNotIssueReservationForFullResource(roomType, duration, sessionId);
   } else if (this.reservationsBySessionId()[sessionId]) {
     // session id already reserved a spot
@@ -123,11 +122,9 @@ SoCraTesEventStore.prototype.registerParticipant = function (roomType, duration,
   if (this.reservationsBySessionId()[sessionId]) {
     // TODO does not work if the SoCraTesEventStore stays in memory for more than 30 minutes! How to test this?
     event = events.participantWasRegistered(roomType, duration, sessionId, memberId);
-  } else if (this.quotaFor(roomType) <= this.reservationsAndParticipantsFor(roomType).length) {
-    // resource is already full
+  } else if (this.isFull(roomType)) {
     event = events.didNotRegisterParticipantForFullResource(roomType, duration, sessionId, memberId);
-  } else if (this.participantsByMemberId()[memberId]) {
-    // member is already registered
+  } else if (this.isAlreadyRegistered(memberId)) {
     event = events.didNotRegisterParticipantASecondTime(roomType, duration, sessionId, memberId);
   } else {
     // all is well
@@ -137,15 +134,27 @@ SoCraTesEventStore.prototype.registerParticipant = function (roomType, duration,
 };
 
 SoCraTesEventStore.prototype.moveParticipantToNewRoomType = function (memberId, roomType) {
-  var existingParticipantEvent = this.participantsByMemberId()[memberId];
+  var existingParticipantEvent = this._participantEventFor(memberId);
   var event = existingParticipantEvent ? events.roomTypeWasChanged(memberId, roomType, existingParticipantEvent.duration) : events.didNotChangeRoomTypeForNonParticipant(memberId, roomType);
   this._updateResourceEventsAndWriteModel(event);
 };
 
 SoCraTesEventStore.prototype.setNewDurationForParticipant = function (memberId, duration) {
-  var existingParticipantEvent = this.participantsByMemberId()[memberId];
+  var existingParticipantEvent = this._participantEventFor(memberId);
   var event = existingParticipantEvent ? events.durationWasChanged(memberId, existingParticipantEvent.roomType, duration) : events.didNotChangeDurationForNonParticipant(memberId, duration);
   this._updateResourceEventsAndWriteModel(event);
+};
+
+SoCraTesEventStore.prototype.isFull = function (roomType) {
+  return this.quotaFor(roomType) <= this.reservationsAndParticipantsFor(roomType).length;
+};
+
+SoCraTesEventStore.prototype._participantEventFor = function (memberId) {
+  return this.participantsByMemberId()[memberId];
+};
+
+SoCraTesEventStore.prototype.isAlreadyRegistered = function (memberId) {
+  return !!this._participantEventFor(memberId);
 };
 
 module.exports = SoCraTesEventStore;
