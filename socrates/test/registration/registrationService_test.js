@@ -19,11 +19,17 @@ var Subscriber = beans.get('subscriber');
 
 var notifications = beans.get('socratesNotifications');
 
+var events = beans.get('events');
+var SoCraTesEventStore = beans.get('SoCraTesEventStore');
+var eventstore = beans.get('eventstore');
+
 describe('Registration Service', function () {
 
   var socrates;
   var socratesActivity;
   var registrationTuple;
+
+  var socratesES;
 
   beforeEach(function () {
     registrationTuple = {
@@ -47,6 +53,11 @@ describe('Registration Service', function () {
 
     socratesActivity = new SoCraTesActivity(socrates);
 
+    socratesES = new SoCraTesEventStore();
+    socratesES.state.socratesEvents = [
+      events.roomQuotaWasSet('single', 10)
+    ];
+
     sinon.stub(notifications, 'newParticipant');
     sinon.stub(notifications, 'newWaitinglistEntry');
 
@@ -65,8 +76,18 @@ describe('Registration Service', function () {
       }
       return callback(null);
     });
+    sinon.stub(eventstore, 'getEventStore', function (url, callback) {
+      if (url === 'wrongUrl') {
+        return callback(new Error('Wrong URL!'));
+      }
+      if (url === 'socrates-url') {
+        return callback(null, socratesES);
+      }
+      return callback(null);
+    });
 
     sinon.stub(activitystore, 'saveActivity', function (activity, callback) { callback(); });
+    sinon.stub(eventstore, 'saveEventStore', function (activity, callback) { callback(); });
     sinon.stub(subscriberstore, 'saveSubscriber', function (subscriber, callback) { callback(); });
   });
 
@@ -94,12 +115,16 @@ describe('Registration Service', function () {
     });
 
     it('adds the registrant to the resource if the registration data says so', function (done) {
-      expect(socratesActivity.resourceNamed('single').waitinglistEntries()).to.have.length(0);
-      expect(socratesActivity.resourceNamed('single').registeredMembers()).to.have.length(0);
+      // TODO add waitinglist! expect(socratesActivity.resourceNamed('single').waitinglistEntries()).to.have.length(0);
+      expect(socratesES.reservationsAndParticipantsFor('single')).to.have.length(0);
 
       registrationService.startRegistration(registrationTuple, function (err) {
-        expect(socratesActivity.resourceNamed('single').registeredMembers()).to.eql(['SessionID:sessionId']);
-        expect(socratesActivity.resourceNamed('single').waitinglistEntries()).to.have.length(0);
+        expect(socratesES.reservationsAndParticipantsFor('single')).to.have.length(1);
+        expect(socratesES.reservationsAndParticipantsFor('single')[0]).to.have.ownProperty('event', 'RESERVATION-WAS-ISSUED');
+        expect(socratesES.reservationsAndParticipantsFor('single')[0]).to.have.ownProperty('sessionID', 'sessionId');
+        expect(socratesES.reservationsAndParticipantsFor('single')[0]).to.have.ownProperty('roomType', 'single');
+        expect(socratesES.reservationsAndParticipantsFor('single')[0]).to.have.ownProperty('duration', 2);
+        // TODO add waitinglist! expect(socratesActivity.resourceNamed('single').waitinglistEntries()).to.have.length(0);
         done(err);
       });
     });
@@ -239,7 +264,7 @@ describe('Registration Service', function () {
           memberId: 'SessionID:sessionId',
           expiresAt: moment().add(1, 'hours')
         }];
-      socrates.resources.single._waitinglist = [{ _memberId: 'memberId' }];
+      socrates.resources.single._waitinglist = [{_memberId: 'memberId'}];
 
       registrationService.saveRegistration('memberId', 'sessionId', registrationTuple, function (err, statusTitle, statusText) {
         expect(statusTitle).to.not.exist();
@@ -268,7 +293,6 @@ describe('Registration Service', function () {
         done(err);
       });
     });
-
 
   });
 

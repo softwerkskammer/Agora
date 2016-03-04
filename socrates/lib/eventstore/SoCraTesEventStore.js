@@ -115,6 +115,7 @@ SoCraTesEventStore.prototype.issueReservation = function (roomType, duration, se
     event = events.reservationWasIssued(roomType, duration, sessionId);
   }
   this._updateResourceEventsAndWriteModel(event);
+  return event.event;
 };
 
 SoCraTesEventStore.prototype.registerParticipant = function (roomType, duration, sessionId, memberId) {

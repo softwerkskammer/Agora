@@ -46,6 +46,7 @@ describe('SoCraTes registration application', function () {
   var socrates;
   var socratesActivity;
   var activitySave;
+  var eventStoreSave;
 
   var socratesES;
 
@@ -81,6 +82,7 @@ describe('SoCraTes registration application', function () {
       function (sessionUser, memberformData, accessrights, notifyNewMemberRegistration, callback) { callback(); });
     sinon.stub(activitystore, 'getActivity', function (activityUrl, callback) { callback(null, socratesActivity); });
     activitySave = sinon.stub(activitystore, 'saveActivity', function (activity, callback) { callback(); });
+    eventStoreSave = sinon.stub(eventstore, 'saveEventStore', function (eventStore, callback) { callback(); });
     sinon.stub(subscriberstore, 'getSubscriber', function (memberId, callback) { callback(null, new Subscriber({})); });
     sinon.stub(subscriberstore, 'saveSubscriber', function (subscriber, callback) { callback(); });
 
@@ -171,18 +173,29 @@ describe('SoCraTes registration application', function () {
         .post('/startRegistration')
         .expect(302)
         .expect('location', '/registration', function (err) {
-          expect(activitySave.called).to.be(false);
+          expect(eventStoreSave.called).to.be(false);
           done(err);
         });
     });
 
-    it('redirects to the participate form page when a room is selected', function (done) {
+    it('redirects to the registration page when a room is selected that is full', function (done) {
       appWithSocratesMember
         .post('/startRegistration')
         .send('nightsOptions=single,3')
         .expect(302)
+        .expect('location', '/registration', function (err) {
+          expect(eventStoreSave.called).to.be(true);
+          done(err);
+        });
+    });
+
+    it('redirects to the participate form page when a room is selected that is not full', function (done) {
+      appWithSocratesMember
+        .post('/startRegistration')
+        .send('nightsOptions=bed_in_double,3')
+        .expect(302)
         .expect('location', '/registration/participate', function (err) {
-          expect(activitySave.called).to.be(true);
+          expect(eventStoreSave.called).to.be(true);
           done(err);
         });
     });
@@ -193,7 +206,7 @@ describe('SoCraTes registration application', function () {
         .send('nightsOptions=single,waitinglist')
         .expect(302)
         .expect('location', '/registration/participate', function (err) {
-          expect(activitySave.called).to.be(true);
+          expect(eventStoreSave.called).to.be(true);
           done(err);
         });
     });
