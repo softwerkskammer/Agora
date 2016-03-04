@@ -2,7 +2,10 @@
 
 var expect = require('must-dist');
 
-var roomOptions = require('../../testutil/configureForTest').get('beans').get('roomOptions');
+var beans = require('../../testutil/configureForTest').get('beans');
+var roomOptions = beans.get('roomOptions');
+var events = beans.get('events');
+var SoCraTesEventStore = beans.get('SoCraTesEventStore');
 
 describe('Room Options', function () {
   describe('for a room', function () {
@@ -55,6 +58,47 @@ describe('Room Options', function () {
       expect(roomOptions.all(activity(true, false), 'member-id', registrationIsNotOpen)[0].displayRegistrationCheckboxes).to.eql(true);
       expect(roomOptions.all(activity(false, true), 'member-id', registrationIsNotOpen)[0].displayRegistrationCheckboxes).to.eql(true);
       expect(roomOptions.all(activity(false, false), 'member-id', registrationIsNotOpen)[0].displayRegistrationCheckboxes).to.eql(true);
+    });
+
+    it('returns whether the registration and waitinglist checkboxes must be displayed (based on ES)', function () {
+      var sessionId1 = 'session-id-1';
+      var sessionId2 = 'session-id-2';
+      var untilSaturday = 'untilSaturday';
+      var memberId1 = 'member-id-1';
+      var memberId2 = 'member-id-2';
+      var memberId3 = 'member-id-3';
+
+      var roomIds = roomOptions.allIds();
+      var socrates = new SoCraTesEventStore();
+      socrates.state.socratesEvents = [
+        events.roomQuotaWasSet(roomIds[0], 100),
+        events.roomQuotaWasSet(roomIds[1], 1),
+        events.roomQuotaWasSet(roomIds[2], 100),
+        events.roomQuotaWasSet(roomIds[3], 0)];
+      socrates.state.resourceEvents = [
+        events.participantWasRegistered(roomIds[0], untilSaturday, sessionId1, memberId1),
+        events.participantWasRegistered(roomIds[1], untilSaturday, sessionId2, memberId2)];
+
+      // 0: registered, resource is not full
+      // 1: registered, resource is full
+      // 2: not registered, resource is not full
+      // 3: not registered, resource is full
+
+      var registrationIsOpen = true;
+      // if registered, it does not matter whether the resource is full - we always show the checkboxes to indicate the registered slot
+      expect(roomOptions.allFromEventStore(socrates, memberId2, registrationIsOpen)[1].displayRegistrationCheckboxes).to.eql(true);
+      expect(roomOptions.allFromEventStore(socrates, memberId1, registrationIsOpen)[0].displayRegistrationCheckboxes).to.eql(true);
+
+      // if not registered, the resource can only be selected if it is not full
+      expect(roomOptions.allFromEventStore(socrates, memberId3, registrationIsOpen)[3].displayRegistrationCheckboxes).to.eql(false);
+      expect(roomOptions.allFromEventStore(socrates, memberId3, registrationIsOpen)[2].displayRegistrationCheckboxes).to.eql(true);
+
+      // if the registration is not open, the checkboxes are always displayed, no matter the status of the resource
+      var registrationIsNotOpen = false;
+      expect(roomOptions.allFromEventStore(socrates, memberId2, registrationIsNotOpen)[1].displayRegistrationCheckboxes).to.eql(true);
+      expect(roomOptions.allFromEventStore(socrates, memberId1, registrationIsNotOpen)[0].displayRegistrationCheckboxes).to.eql(true);
+      expect(roomOptions.allFromEventStore(socrates, memberId3, registrationIsNotOpen)[3].displayRegistrationCheckboxes).to.eql(true);
+      expect(roomOptions.allFromEventStore(socrates, memberId3, registrationIsNotOpen)[2].displayRegistrationCheckboxes).to.eql(true);
     });
 
   });

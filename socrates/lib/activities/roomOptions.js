@@ -34,6 +34,23 @@ module.exports = {
     return _.map(rooms, option);
   },
 
+  allFromEventStore: function (socratesEventStore, memberId, isRegistrationOpen) {
+    function option(room) {
+      return {
+        id: room.id,
+        name: room.name,
+        two: 2 * room.price + 2 * day,
+        three: 3 * room.price + 2 * day,
+        threePlus: 3 * room.price + 3 * day,
+        four: 4 * room.price + 3 * day,
+        displayRegistrationCheckboxes: (socratesEventStore.isAlreadyRegistered(memberId) || !isRegistrationOpen || !socratesEventStore.isFull(room.id)),
+        displayWaitinglistCheckbox: true // TODO remove altogether
+      };
+    }
+
+    return _.map(rooms, option);
+  },
+
   informationFor: function (id, duration) {
     return {
       room: this.waitinglistInformationFor(id).room,
