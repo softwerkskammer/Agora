@@ -6,6 +6,7 @@ var moment = require('moment-timezone');
 
 var beans = require('simple-configure').get('beans');
 var events = beans.get('events');
+var e = beans.get('eventConstants');
 var socratesConstants = beans.get('socratesConstants');
 
 function SoCraTesEventStore(object) {
@@ -26,7 +27,7 @@ function SoCraTesEventStore(object) {
 
 // write model state:
 
-var updateQuota = function (roomType, quota, event) { return event.event === 'ROOM-QUOTA-WAS-SET' && event.roomType === roomType ? event.quota : quota; };
+var updateQuota = function (roomType, quota, event) { return event.event === e.ROOM_QUOTA_WAS_SET && event.roomType === roomType ? event.quota : quota; };
 
 SoCraTesEventStore.prototype.quotaFor = function (roomType) {
   if (!this._quota[roomType]) {
@@ -38,10 +39,10 @@ SoCraTesEventStore.prototype.quotaFor = function (roomType) {
 
 var updateReservationsBySessionId = function (reservationsBySessionId, event) {
   var thirtyMinutesAgo = moment.tz().subtract(30, 'minutes');
-  if (event.event === 'RESERVATION-WAS-ISSUED' && event.timestamp.isAfter(thirtyMinutesAgo)) {
+  if (event.event === e.RESERVATION_WAS_ISSUED && event.timestamp.isAfter(thirtyMinutesAgo)) {
     reservationsBySessionId[event.sessionID] = event;
   }
-  if (event.event === 'PARTICIPANT-WAS-REGISTERED') {
+  if (event.event === e.PARTICIPANT_WAS_REGISTERED) {
     delete reservationsBySessionId[event.sessionID];
   }
   return reservationsBySessionId;
@@ -59,7 +60,7 @@ SoCraTesEventStore.prototype.reservationsBySessionIdFor = function (roomType) {
 };
 
 var updateParticipantsByMemberId = function (participantsByMemberId, event) {
-  if (event.event === 'PARTICIPANT-WAS-REGISTERED' || event.event === 'ROOM-TYPE-WAS-CHANGED' || event.event === 'DURATION-WAS-CHANGED') {
+  if (event.event === e.PARTICIPANT_WAS_REGISTERED || event.event === e.ROOM_TYPE_WAS_CHANGED || event.event === e.DURATION_WAS_CHANGED) {
     participantsByMemberId[event.memberId] = event;
   }
   return participantsByMemberId;
