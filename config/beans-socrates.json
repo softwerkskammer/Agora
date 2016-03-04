@@ -29,6 +29,7 @@
     "constructorArgs": { "collectionName": "eventstore" }
   },
   "events": {"module": "./socrates/lib/eventstore/events"},
+  "eventConstants": {"module": "./socrates/lib/eventstore/eventConstants"},
 
   "socratesAddon": {"module": "./socrates/lib/subscribers/addon"},
   "socratesAddonLineUtilities": {"module": "./socrates/lib/subscribers/addonLineUtilities"},
