@@ -17,28 +17,28 @@ module.exports = {
   },
 
   // reservation:
-  reservationWasIssued: function (roomType, duration, sessionId, timestamp) {
+  reservationWasIssued: function (roomType, duration, sessionId) {
     return enrich({event: e.RESERVATION_WAS_ISSUED, sessionID: sessionId, roomType: roomType, duration: duration});
   },
 
-  didNotIssueReservationForAlreadyReservedSession: function (roomType, duration, sessionId, timestamp) {
+  didNotIssueReservationForAlreadyReservedSession: function (roomType, duration, sessionId) {
     return enrich({event: e.DID_NOT_ISSUE_RESERVATION_FOR_ALREADY_RESERVED_SESSION, sessionID: sessionId, roomType: roomType, duration: duration});
   },
 
-  didNotIssueReservationForFullResource: function (roomType, duration, sessionId, timestamp) {
+  didNotIssueReservationForFullResource: function (roomType, duration, sessionId) {
     return enrich({event: e.DID_NOT_ISSUE_RESERVATION_FOR_FULL_RESOURCE, sessionID: sessionId, roomType: roomType, duration: duration});
   },
 
   // registration:
-  participantWasRegistered: function (roomType, duration, sessionId, memberId, timestamp) {
+  participantWasRegistered: function (roomType, duration, sessionId, memberId) {
     return enrich({event: e.PARTICIPANT_WAS_REGISTERED, sessionID: sessionId, roomType: roomType, duration: duration, memberId: memberId});
   },
 
-  didNotRegisterParticipantForFullResource: function (roomType, duration, sessionId, memberId, timestamp) {
+  didNotRegisterParticipantForFullResource: function (roomType, duration, sessionId, memberId) {
     return enrich({event: e.DID_NOT_REGISTER_PARTICIPANT_FOR_FULL_RESOURCE, sessionID: sessionId, roomType: roomType, duration: duration, memberId: memberId});
   },
 
-  didNotRegisterParticipantASecondTime: function (roomType, duration, sessionId, memberId, timestamp) {
+  didNotRegisterParticipantASecondTime: function (roomType, duration, sessionId, memberId) {
     return enrich({event: e.DID_NOT_REGISTER_PARTICIPANT_A_SECOND_TIME, sessionID: sessionId, roomType: roomType, duration: duration, memberId: memberId});
   },
 
