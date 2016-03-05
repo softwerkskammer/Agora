@@ -9,7 +9,6 @@ var CONFLICTING_VERSIONS = beans.get('constants').CONFLICTING_VERSIONS;
 var roomOptions = beans.get('roomOptions');
 
 var eventstore = beans.get('eventstore');
-var events = beans.get('events');
 var eventConstants = beans.get('eventConstants');
 
 module.exports = {

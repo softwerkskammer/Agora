@@ -1,4 +1,3 @@
-/*global emit */
 'use strict';
 
 var beans = require('simple-configure').get('beans');
