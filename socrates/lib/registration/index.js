@@ -99,7 +99,7 @@ app.post('/startRegistration', function (req, res, next) {
   var option = req.body.nightsOptions.split(',');
   var registrationTuple = {
     activityUrl: socratesConstants.currentUrl,
-    resourceName: option[0],
+    resourceName: option[0], // TODO roomType
     duration: option[1],
     sessionID: req.sessionID
   };
