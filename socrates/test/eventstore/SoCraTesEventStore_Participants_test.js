@@ -517,7 +517,7 @@ describe('The socrates conference command handler for room registrations', funct
       }]);
   });
 
-  it('does register two rooms for the same member, not even different rooms', function () { // TODO books a room?
+  it('does not register two rooms for the same member, not even different rooms', function () { // TODO books a room?
     // Given (saved events)
     var socrates = new SoCraTesEventStore();
     socrates.state.socratesEvents = [events.roomQuotaWasSet(singleBedRoom, 100)];
