@@ -21,8 +21,16 @@ module.exports = {
     return enrich({event: e.RESERVATION_WAS_ISSUED, sessionID: sessionId, roomType: roomType, duration: duration});
   },
 
+  waitinglistReservationWasIssued: function (roomType, sessionId) {
+    return enrich({event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionID: sessionId, desiredRoomTypes: [roomType]});
+  },
+
   didNotIssueReservationForAlreadyReservedSession: function (roomType, duration, sessionId) {
     return enrich({event: e.DID_NOT_ISSUE_RESERVATION_FOR_ALREADY_RESERVED_SESSION, sessionID: sessionId, roomType: roomType, duration: duration});
+  },
+
+  didNotIssueWaitinglistReservationForAlreadyReservedSession: function (roomType, sessionId) {
+    return enrich({event: e.DID_NOT_ISSUE_WAITINGLIST_RESERVATION_FOR_ALREADY_RESERVED_SESSION, sessionID: sessionId, desiredRoomTypes: [roomType]});
   },
 
   didNotIssueReservationForFullResource: function (roomType, duration, sessionId) {
@@ -32,6 +40,10 @@ module.exports = {
   // registration:
   participantWasRegistered: function (roomType, duration, sessionId, memberId) {
     return enrich({event: e.PARTICIPANT_WAS_REGISTERED, sessionID: sessionId, roomType: roomType, duration: duration, memberId: memberId});
+  },
+
+  waitinglistParticipantWasRegistered: function (roomType, sessionId, memberId) {
+    return enrich({event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionID: sessionId, desiredRoomTypes: [roomType], memberId: memberId});
   },
 
   didNotRegisterParticipantForFullResource: function (roomType, duration, sessionId, memberId) {

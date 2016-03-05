@@ -16,16 +16,21 @@ module.exports = {
 
   startRegistration: function (registrationTuple, callback) {
     var self = this;
+    var reservationEvent;
     eventstore.getEventStore(registrationTuple.activityUrl, function (err, socratesEventStore) {
       if (err || !socratesEventStore) { return callback(err, 'message.title.problem', 'message.content.activities.does_not_exist'); }
-      var reservationEvent = socratesEventStore.issueReservation(registrationTuple.resourceName, registrationTuple.duration, registrationTuple.sessionID);// roomType, duration, sessionId);
+      if (registrationTuple.duration === 'waitinglist') {
+        reservationEvent = socratesEventStore.issueWaitinglistReservation(registrationTuple.resourceName, registrationTuple.sessionID);
+      } else {
+        reservationEvent = socratesEventStore.issueReservation(registrationTuple.resourceName, registrationTuple.duration, registrationTuple.sessionID);
+      }
       return eventstore.saveEventStore(socratesEventStore, function (err1) {
         if (err1 && err1.message === CONFLICTING_VERSIONS) {
           // we try again because of a racing condition during save:
           return self.startRegistration(registrationTuple, callback);
         }
         if (err1) { return callback(err1); }
-        if (reservationEvent === eventConstants.RESERVATION_WAS_ISSUED) {
+        if (reservationEvent === eventConstants.RESERVATION_WAS_ISSUED || reservationEvent === eventConstants.WAITINGLIST_RESERVATION_WAS_ISSUED) {
           return callback(null);
         }
         return callback(null, 'activities.registration_not_now', 'activities.registration_not_possible');

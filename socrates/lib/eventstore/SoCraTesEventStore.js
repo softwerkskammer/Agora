@@ -13,15 +13,17 @@ function SoCraTesEventStore(object) {
   // TODO when loading from DB, sort event streams by timestamp!
   // event streams (will be persisted):
   this.state = object || {
-    url: socratesConstants.currentUrl,
-    socratesEvents: [],
-    resourceEvents: []
-  };
+      url: socratesConstants.currentUrl,
+      socratesEvents: [],
+      resourceEvents: []
+    };
 
   // write model state (will not be persisted):
   this._quota = {};
   this._reservationsBySessionId = undefined;
+  this._waitinglistReservationsBySessionId = undefined;
   this._participantsByMemberId = undefined;
+  this._waitinglistParticipantsByMemberId = undefined;
   return this;
 }
 
@@ -59,6 +61,28 @@ SoCraTesEventStore.prototype.reservationsBySessionIdFor = function (roomType) {
   return R.filter(function (event) { return event.roomType === roomType; }, this.reservationsBySessionId());
 };
 
+var updateWaitinglistReservationsBySessionId = function (waitinglistReservationsBySessionId, event) {
+  var thirtyMinutesAgo = moment.tz().subtract(30, 'minutes');
+  if (event.event === e.WAITINGLIST_RESERVATION_WAS_ISSUED && event.timestamp.isAfter(thirtyMinutesAgo)) {
+    waitinglistReservationsBySessionId[event.sessionID] = event;
+  }
+  if (event.event === e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED) {
+    delete waitinglistReservationsBySessionId[event.sessionID];
+  }
+  return waitinglistReservationsBySessionId;
+};
+
+SoCraTesEventStore.prototype.waitinglistReservationsBySessionId = function () {
+  if (!this._waitinglistReservationsBySessionId) {
+    this._waitinglistReservationsBySessionId = R.reduce(updateWaitinglistReservationsBySessionId, {}, this.state.resourceEvents);
+  }
+  return this._waitinglistReservationsBySessionId;
+};
+
+SoCraTesEventStore.prototype.waitinglistReservationsBySessionIdFor = function (roomType) {
+  return R.filter(function (event) { return R.contains(roomType, event.desiredRoomTypes); }, this.waitinglistReservationsBySessionId());
+};
+
 var updateParticipantsByMemberId = function (participantsByMemberId, event) {
   if (event.event === e.PARTICIPANT_WAS_REGISTERED || event.event === e.ROOM_TYPE_WAS_CHANGED || event.event === e.DURATION_WAS_CHANGED) {
     participantsByMemberId[event.memberId] = event;
@@ -77,8 +101,31 @@ SoCraTesEventStore.prototype.participantsByMemberIdFor = function (roomType) {
   return R.filter(function (event) { return event.roomType === roomType; }, this.participantsByMemberId());
 };
 
+var updateWaitinglistParticipantsByMemberId = function (waitinglistParticipantsByMemberId, event) {
+  if (event.event === e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED) {
+    waitinglistParticipantsByMemberId[event.memberId] = event;
+  }
+  return waitinglistParticipantsByMemberId;
+};
+
+SoCraTesEventStore.prototype.waitinglistParticipantsByMemberId = function () {
+  if (!this._waitinglistParticipantsByMemberId) {
+    this._waitinglistParticipantsByMemberId = R.reduce(updateWaitinglistParticipantsByMemberId, {}, this.state.resourceEvents);
+  }
+  return this._waitinglistParticipantsByMemberId;
+};
+
+SoCraTesEventStore.prototype.waitinglistParticipantsByMemberIdFor = function (roomType) {
+  return R.filter(function (event) { return R.contains(roomType, event.desiredRoomTypes); }, this.waitinglistParticipantsByMemberId());
+};
+
 SoCraTesEventStore.prototype.reservationsAndParticipantsFor = function (roomType) {
   return R.concat(R.values(this.reservationsBySessionIdFor(roomType)), R.values(this.participantsByMemberIdFor(roomType)));
+};
+
+// TODO this is currently for tests only...:
+SoCraTesEventStore.prototype.waitinglistReservationsAndParticipantsFor = function (roomType) {
+  return R.concat(R.values(this.waitinglistReservationsBySessionIdFor(roomType)), R.values(this.waitinglistParticipantsByMemberIdFor(roomType)));
 };
 
 // handle commands:
@@ -102,6 +149,8 @@ SoCraTesEventStore.prototype._updateResourceEventsAndWriteModel = function (even
   // update write models:
   this._reservationsBySessionId = updateReservationsBySessionId(this.reservationsBySessionId(), event);
   this._participantsByMemberId = updateParticipantsByMemberId(this.participantsByMemberId(), event);
+  this._waitinglistReservationsBySessionId = updateWaitinglistReservationsBySessionId(this.waitinglistReservationsBySessionId(), event);
+  this._waitinglistParticipantsByMemberId = updateWaitinglistParticipantsByMemberId(this.waitinglistParticipantsByMemberId(), event);
 };
 
 SoCraTesEventStore.prototype.issueReservation = function (roomType, duration, sessionId) {
@@ -119,6 +168,19 @@ SoCraTesEventStore.prototype.issueReservation = function (roomType, duration, se
   return event.event;
 };
 
+SoCraTesEventStore.prototype.issueWaitinglistReservation = function (roomType, sessionId) {
+  var event;
+  if (this.waitinglistReservationsBySessionId()[sessionId]) {
+    // session id already reserved a spot
+    event = events.didNotIssueWaitinglistReservationForAlreadyReservedSession(roomType, sessionId);
+  } else {
+    // all is good
+    event = events.waitinglistReservationWasIssued(roomType, sessionId);
+  }
+  this._updateResourceEventsAndWriteModel(event);
+  return event.event;
+};
+
 SoCraTesEventStore.prototype.registerParticipant = function (roomType, duration, sessionId, memberId) {
   var event;
   if (this.reservationsBySessionId()[sessionId]) {
@@ -126,11 +188,25 @@ SoCraTesEventStore.prototype.registerParticipant = function (roomType, duration,
     event = events.participantWasRegistered(roomType, duration, sessionId, memberId);
   } else if (this.isFull(roomType)) {
     event = events.didNotRegisterParticipantForFullResource(roomType, duration, sessionId, memberId);
-  } else if (this.isAlreadyRegistered(memberId)) {
+  } else if (this.isAlreadyRegistered(memberId) || this.isAlreadyOnWaitinglist(memberId)) {
     event = events.didNotRegisterParticipantASecondTime(roomType, duration, sessionId, memberId);
   } else {
     // all is well
     event = events.participantWasRegistered(roomType, duration, sessionId, memberId);
+  }
+  this._updateResourceEventsAndWriteModel(event);
+};
+
+SoCraTesEventStore.prototype.registerWaitinglistParticipant = function (roomType, sessionId, memberId) {
+  var event;
+  if (this.waitinglistReservationsBySessionId()[sessionId]) {
+    // TODO does not work if the SoCraTesEventStore stays in memory for more than 30 minutes! How to test this?
+    event = events.waitinglistParticipantWasRegistered(roomType, sessionId, memberId);
+  } else if (this.isAlreadyRegistered(memberId) || this.isAlreadyOnWaitinglist(memberId)) {
+    event = events.didNotRegisterParticipantASecondTime(roomType, 'waitinglist', sessionId, memberId);
+  } else {
+    // all is well
+    event = events.waitinglistParticipantWasRegistered(roomType, sessionId, memberId);
   }
   this._updateResourceEventsAndWriteModel(event);
 };
@@ -155,12 +231,16 @@ SoCraTesEventStore.prototype._participantEventFor = function (memberId) {
   return this.participantsByMemberId()[memberId];
 };
 
+SoCraTesEventStore.prototype._waitinglistParticipantEventFor = function (memberId) {
+  return this.waitinglistParticipantsByMemberId()[memberId];
+};
+
 SoCraTesEventStore.prototype.isAlreadyRegistered = function (memberId) {
   return !!this._participantEventFor(memberId);
 };
 
 SoCraTesEventStore.prototype.isAlreadyOnWaitinglist = function (memberId) {
-  return false; // TODO implement waitinglist!
+  return !!this._waitinglistParticipantEventFor(memberId);
 };
 
 SoCraTesEventStore.prototype.selectedOptionFor = function (memberID) {
@@ -169,14 +249,11 @@ SoCraTesEventStore.prototype.selectedOptionFor = function (memberID) {
     return participantEvent.roomType + ',' + participantEvent.duration;
   }
 
-  /* TODO implement waitinglist!
-  var waitResource = _.first(this.waitinglistResourcesFor(memberID));
-  if (waitResource) {
-    return waitResource.resourceName + ',waitinglist';
+  var waitinglistParticipantEvent = this._waitinglistParticipantEventFor(memberID);
+  if (waitinglistParticipantEvent) {
+    return waitinglistParticipantEvent.desiredRoomTypes[0] + ',waitinglist'; // TODO improve UX! Show all selected waitinglist options.
   }
-  */
   return null;
 };
-
 
 module.exports = SoCraTesEventStore;

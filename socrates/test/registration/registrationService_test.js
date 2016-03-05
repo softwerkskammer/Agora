@@ -115,43 +115,31 @@ describe('Registration Service', function () {
     });
 
     it('adds the registrant to the resource if the registration data says so', function (done) {
-      // TODO add waitinglist! expect(socratesActivity.resourceNamed('single').waitinglistEntries()).to.have.length(0);
       expect(socratesES.reservationsAndParticipantsFor('single')).to.have.length(0);
+      expect(socratesES.waitinglistReservationsAndParticipantsFor('single')).to.have.length(0);
 
       registrationService.startRegistration(registrationTuple, function (err) {
         expect(socratesES.reservationsAndParticipantsFor('single')).to.have.length(1);
-        expect(socratesES.reservationsAndParticipantsFor('single')[0]).to.have.ownProperty('event', 'RESERVATION-WAS-ISSUED');
-        expect(socratesES.reservationsAndParticipantsFor('single')[0]).to.have.ownProperty('sessionID', 'sessionId');
-        expect(socratesES.reservationsAndParticipantsFor('single')[0]).to.have.ownProperty('roomType', 'single');
-        expect(socratesES.reservationsAndParticipantsFor('single')[0]).to.have.ownProperty('duration', 2);
-        // TODO add waitinglist! expect(socratesActivity.resourceNamed('single').waitinglistEntries()).to.have.length(0);
+        expect(socratesES.reservationsAndParticipantsFor('single')[0].event).to.eql('RESERVATION-WAS-ISSUED');
+        expect(socratesES.reservationsAndParticipantsFor('single')[0].sessionID).to.eql('sessionId');
+        expect(socratesES.reservationsAndParticipantsFor('single')[0].roomType).to.eql('single');
+        expect(socratesES.reservationsAndParticipantsFor('single')[0].duration).to.eql(2);
+        expect(socratesES.waitinglistReservationsAndParticipantsFor('single')).to.have.length(0);
         done(err);
       });
     });
 
     it('adds the registrant to the waitinglist if the registration data says so and if a waitinglist is present', function (done) {
       registrationTuple.duration = 'waitinglist';
-      socrates.resources.single._waitinglist = [];
-      expect(socratesActivity.resourceNamed('single').waitinglistEntries()).to.have.length(0);
-      expect(socratesActivity.resourceNamed('single').registeredMembers()).to.have.length(0);
+      expect(socratesES.reservationsAndParticipantsFor('single')).to.have.length(0);
+      expect(socratesES.waitinglistReservationsAndParticipantsFor('single')).to.have.length(0);
 
       registrationService.startRegistration(registrationTuple, function (err) {
-        expect(socratesActivity.resourceNamed('single').registeredMembers()).to.have.length(0);
-        expect(socratesActivity.resourceNamed('single').waitinglistEntries()).to.have.length(1);
-        expect(socratesActivity.resourceNamed('single').waitinglistEntries()[0].state._memberId).to.eql('SessionID:sessionId');
-        done(err);
-      });
-    });
-
-    it('does not add the registrant to the waitinglist if the registration data says so but no waitinglist is present', function (done) {
-      registrationTuple.duration = 'waitinglist';
-      socrates.resources.single._waitinglist = undefined;
-      expect(socratesActivity.resourceNamed('single').waitinglistEntries()).to.have.length(0);
-      expect(socratesActivity.resourceNamed('single').registeredMembers()).to.have.length(0);
-
-      registrationService.startRegistration(registrationTuple, function (err) {
-        expect(socratesActivity.resourceNamed('single').registeredMembers()).to.have.length(0);
-        expect(socratesActivity.resourceNamed('single').waitinglistEntries()).to.have.length(0);
+        expect(socratesES.reservationsAndParticipantsFor('single')).to.have.length(0);
+        expect(socratesES.waitinglistReservationsAndParticipantsFor('single')).to.have.length(1);
+        expect(socratesES.waitinglistReservationsAndParticipantsFor('single')[0].event).to.eql('WAITINGLIST-RESERVATION-WAS-ISSUED');
+        expect(socratesES.waitinglistReservationsAndParticipantsFor('single')[0].sessionID).to.eql('sessionId');
+        expect(socratesES.waitinglistReservationsAndParticipantsFor('single')[0].desiredRoomTypes).to.eql(['single']);
         done(err);
       });
     });

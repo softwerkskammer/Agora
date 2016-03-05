@@ -200,7 +200,7 @@ describe('SoCraTes registration application', function () {
         });
     });
 
-    it('redirects to the participate form page when a waitinglist option is selected', function (done) {
+    it('redirects to the participate form page when a waitinglist option is selected (especially when the corresponding room is full)', function (done) {
       appWithSocratesMember
         .post('/startRegistration')
         .send('nightsOptions=single,waitinglist')
