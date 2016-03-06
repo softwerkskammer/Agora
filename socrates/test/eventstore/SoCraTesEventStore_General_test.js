@@ -86,7 +86,7 @@ describe('The socrates conference write model', function () {
       setTimestamp(events.reservationWasIssued(singleBedRoom, 'untilSaturday', sessionId1), aShortTimeAgo)
     ];
 
-    expect(socrates.reservationExpiresAt(sessionId2)).to.be(undefined);
+    expect(socrates.reservationExpiration(sessionId2)).to.be(undefined);
   });
 
   it('returns the expiration time of the reservation if there is one', function () {
@@ -95,7 +95,7 @@ describe('The socrates conference write model', function () {
       setTimestamp(events.reservationWasIssued(singleBedRoom, 'untilSaturday', sessionId1), aShortTimeAgo)
     ];
 
-    expect(socrates.reservationExpiresAt(sessionId1)).to.be(aShortTimeAgo.add(30, 'minutes'));
+    expect(socrates.reservationExpiration(sessionId1)).to.be(aShortTimeAgo.add(30, 'minutes'));
   });
 
   it('returns undefined as the expiration time of the reservation if it is already expired', function () {
@@ -104,7 +104,7 @@ describe('The socrates conference write model', function () {
       setTimestamp(events.reservationWasIssued(singleBedRoom, 'untilSaturday', sessionId1), aLongTimeAgo)
     ];
 
-    expect(socrates.reservationExpiresAt(sessionId1)).to.be(undefined);
+    expect(socrates.reservationExpiration(sessionId1)).to.be(undefined);
   });
 
   it('returns the expiration time of the waitinglist reservation if there is no regular reservation', function () {
@@ -113,7 +113,7 @@ describe('The socrates conference write model', function () {
       setTimestamp(events.waitinglistReservationWasIssued(singleBedRoom, sessionId1), aShortTimeAgo)
     ];
 
-    expect(socrates.reservationExpiresAt(sessionId1)).to.be(aShortTimeAgo.add(30, 'minutes'));
+    expect(socrates.reservationExpiration(sessionId1)).to.be(aShortTimeAgo.add(30, 'minutes'));
   });
 
   it('returns the expiration time of the reservation if there are both regular and waitinglist reservations', function () {
@@ -123,7 +123,7 @@ describe('The socrates conference write model', function () {
       setTimestamp(events.waitinglistReservationWasIssued(singleBedRoom, sessionId1), anEvenShorterTimeAgo)
     ];
 
-    expect(socrates.reservationExpiresAt(sessionId1)).to.be(aShortTimeAgo.add(30, 'minutes'));
+    expect(socrates.reservationExpiration(sessionId1)).to.be(aShortTimeAgo.add(30, 'minutes'));
 
   });
 });

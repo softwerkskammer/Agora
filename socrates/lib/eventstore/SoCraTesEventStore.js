@@ -258,7 +258,7 @@ SoCraTesEventStore.prototype._updateResourceEventsAndWriteModel = function (even
   this._waitinglistParticipantsByMemberId = updateWaitinglistParticipantsByMemberId(this.waitinglistParticipantsByMemberId(), event);
 };
 
-SoCraTesEventStore.prototype.reservationExpiresAt = function (sessionId) {
+SoCraTesEventStore.prototype.reservationExpiration = function (sessionId) {
   var event = this.reservationsBySessionId()[sessionId] || this.waitinglistReservationsBySessionId()[sessionId];
   return event && event.timestamp.add(registrationPeriodinMinutes, 'minutes');
 };
