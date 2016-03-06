@@ -2,7 +2,6 @@
 
 var beans = require('simple-configure').get('beans');
 
-var activitystore = beans.get('activitystore');
 var subscriberstore = beans.get('subscriberstore');
 var socratesNotifications = beans.get('socratesNotifications');
 var CONFLICTING_VERSIONS = beans.get('constants').CONFLICTING_VERSIONS;

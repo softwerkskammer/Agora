@@ -26,6 +26,11 @@ var eventstore = beans.get('eventstore');
 
 var createApp = require('../../testutil/testHelper')('socratesRegistrationApp').createApp;
 
+function setTimestamp(event, timestamp) {
+  event.timestamp = timestamp;
+  return event;
+}
+
 describe('SoCraTes registration application', function () {
   /* eslint camelcase: 0 */
   var appWithoutMember = request(createApp({middlewares: [userWithoutMember]}));
@@ -42,31 +47,13 @@ describe('SoCraTes registration application', function () {
   });
 
   var appWithSocratesMember = request(createApp({member: socratesMember}));
+  var appWithSocratesMemberAndFixedSessionId = request(createApp({member: socratesMember, sessionID: 'session-id'}));
 
-  var socrates;
-  var socratesActivity;
-  var activitySave;
   var eventStoreSave;
 
   var socratesES;
 
   beforeEach(function () {
-    socrates = {
-      id: 'socratesId',
-      title: 'SoCraTes',
-      url: 'socrates-url',
-      isSoCraTes: true,
-      startUnix: 1440687600,
-      endUnix: 1440946800,
-      resources: {
-        single: {_canUnsubscribe: false, _limit: 0, _position: 2, _registrationOpen: true, _waitinglist: []}, // no capacity
-        bed_in_double: {_canUnsubscribe: false, _limit: 10, _position: 3, _registrationOpen: true, _waitinglist: []},
-        junior: {_canUnsubscribe: false, _limit: 10, _position: 4, _registrationOpen: true, _waitinglist: []},
-        bed_in_junior: {_canUnsubscribe: false, _limit: 10, _position: 5, _registrationOpen: true, _waitinglist: []}
-      }
-    };
-    socratesActivity = new SoCraTesActivity(socrates);
-
     socratesES = new SoCraTesEventStore();
     socratesES.state.socratesEvents = [
       events.roomQuotaWasSet('single', 0),
@@ -76,12 +63,8 @@ describe('SoCraTes registration application', function () {
     ];
 
     conf.addProperties({registrationOpensAt: moment().subtract(10, 'days').format()}); // already opened
-    sinon.stub(activitiesService, 'getActivityWithGroupAndParticipants', function (activityUrl, callback) { callback(null, socratesActivity); });
-    sinon.stub(subscriberService, 'createSubscriberIfNecessaryFor', function (userId, callback) { callback(); });
     sinon.stub(groupsAndMembersService, 'updateAndSaveSubmittedMemberWithoutSubscriptions',
       function (sessionUser, memberformData, accessrights, notifyNewMemberRegistration, callback) { callback(); });
-    sinon.stub(activitystore, 'getActivity', function (activityUrl, callback) { callback(null, socratesActivity); });
-    activitySave = sinon.stub(activitystore, 'saveActivity', function (activity, callback) { callback(); });
     eventStoreSave = sinon.stub(eventstore, 'saveEventStore', function (eventStore, callback) { callback(); });
     sinon.stub(subscriberstore, 'getSubscriber', function (memberId, callback) { callback(null, new Subscriber({})); });
     sinon.stub(subscriberstore, 'saveSubscriber', function (subscriber, callback) { callback(); });
@@ -215,9 +198,10 @@ describe('SoCraTes registration application', function () {
   describe('submission of the participate form', function () {
 
     it('is accepted when a room is selected', function (done) {
-      socratesActivity.hasValidReservationFor = function () { return true; };
+      socratesES.state.resourceEvents = [
+        events.reservationWasIssued('single', 5, 'session-id', 'memberId2')];
 
-      appWithSocratesMember
+      appWithSocratesMemberAndFixedSessionId
         .post('/completeRegistration')
         .send('activityUrl=socrates-url')
         .send('resourceName=single')
@@ -235,16 +219,17 @@ describe('SoCraTes registration application', function () {
         .send('firstname=Peter&lastname=Miller')
         .expect(302)
         .expect('location', '/payment/socrates', function (err) {
-          expect(activitySave.called).to.be(true);
+          expect(eventStoreSave.called).to.be(true);
           done(err);
         });
 
     });
 
     it('is accepted when a waitinglist option is selected', function (done) {
-      socratesActivity.hasValidReservationFor = function () { return true; };
+      socratesES.state.resourceEvents = [
+        events.waitinglistReservationWasIssued('single', 'session-id', 'memberId2')];
 
-      appWithSocratesMember
+      appWithSocratesMemberAndFixedSessionId
         .post('/completeRegistration')
         .send('activityUrl=socrates-url')
         .send('resourceName=single')
@@ -262,15 +247,16 @@ describe('SoCraTes registration application', function () {
         .send('firstname=Peter&lastname=Miller')
         .expect(302)
         .expect('location', '/registration', function (err) {
-          expect(activitySave.called).to.be(true);
+          expect(eventStoreSave.called).to.be(true);
           done(err);
         });
     });
 
     it('is denied when the timeout is expired', function (done) {
-      socratesActivity.hasValidReservationFor = function () { return false; };
+      socratesES.state.resourceEvents = [
+        setTimestamp(events.waitinglistReservationWasIssued('single', 'session-id', 'memberId2'), moment().subtract(1, 'hours'))];
 
-      appWithSocratesMember
+      appWithSocratesMemberAndFixedSessionId
         .post('/completeRegistration')
         .send('activityUrl=socrates-url')
         .send('resourceName=single')
@@ -288,7 +274,7 @@ describe('SoCraTes registration application', function () {
         .send('firstname=Peter&lastname=Miller')
         .expect(302)
         .expect('location', '/registration', function (err) {
-          expect(activitySave.called).to.be(false);
+          expect(eventStoreSave.called).to.be(false); // TODO we should save the evenstore in this case as well!
           done(err);
         });
     });

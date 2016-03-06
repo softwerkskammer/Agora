@@ -274,6 +274,7 @@ describe('Registration Service', function () {
 
     it('adds the registrant to the waitinglist if he had a valid session entry', function (done) {
       registrationTuple.duration = 'waitinglist';
+
       socratesES.state.resourceEvents = [
         events.waitinglistReservationWasIssued(registrationTuple.resourceName, registrationTuple.sessionID)];
 
@@ -304,6 +305,7 @@ describe('Registration Service', function () {
 
     it('does not add the registrant to the waitinglist if the reservation is already expired', function (done) {
       registrationTuple.duration = 'waitinglist';
+
       socratesES.state.resourceEvents = [
         setTimestamp(events.waitinglistReservationWasIssued(registrationTuple.resourceName, registrationTuple.sessionID), moment().subtract(1, 'hours'))];
 
@@ -318,7 +320,9 @@ describe('Registration Service', function () {
       });
     });
 
-    it('does not add the registrant to the waitinglist if he is already registered', function (done) {
+    it('does not add the registrant to the waitinglist if he is already registered - but does not delete the waitinglist reservation either', function (done) {
+      registrationTuple.duration = 'waitinglist';
+
       socratesES.state.resourceEvents = [
         events.participantWasRegistered(registrationTuple.resourceName, registrationTuple.duration, registrationTuple.sessionID, 'memberId'),
         events.waitinglistReservationWasIssued(registrationTuple.resourceName, registrationTuple.sessionID)
@@ -329,7 +333,7 @@ describe('Registration Service', function () {
         expect(statusText).to.be('activities.already_registered');
         expect(socratesES.reservationsBySessionIdFor('single')).to.eql({});
         expect(R.keys(socratesES.participantsByMemberIdFor('single'))).to.eql(['memberId']);
-        expect(socratesES.waitinglistReservationsBySessionIdFor('single')).to.eql({});
+        expect(R.keys(socratesES.waitinglistReservationsBySessionIdFor('single'))).to.eql(['sessionId']);
         expect(socratesES.waitinglistParticipantsByMemberIdFor('single')).to.eql({});
         done(err);
       });
