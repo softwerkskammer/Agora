@@ -79,7 +79,7 @@ describe('The socrates conference write model for the room quota', function () {
   });
 });
 
-describe('The socrates conference write model', function () {
+describe('The socrates conference write model calculating the reservationExpiration', function () {
   it('returns undefined as the expiration time if there are no reservations for the given session id', function () {
     var socrates = new SoCraTesEventStore();
     socrates.state.resourceEvents = [
@@ -124,6 +124,55 @@ describe('The socrates conference write model', function () {
     ];
 
     expect(socrates.reservationExpiration(sessionId1)).to.be(aShortTimeAgo.add(30, 'minutes'));
+
+  });
+});
+
+describe('The socrates conference write model calculating the existence of a valid reservation', function () {
+  it('returns undefined as the expiration time if there are no reservations for the given session id', function () {
+    var socrates = new SoCraTesEventStore();
+    socrates.state.resourceEvents = [
+      setTimestamp(events.reservationWasIssued(singleBedRoom, 'untilSaturday', sessionId1), aShortTimeAgo)
+    ];
+
+    expect(socrates.hasValidReservationFor(sessionId2)).to.be(false);
+  });
+
+  it('returns the expiration time of the reservation if there is one', function () {
+    var socrates = new SoCraTesEventStore();
+    socrates.state.resourceEvents = [
+      setTimestamp(events.reservationWasIssued(singleBedRoom, 'untilSaturday', sessionId1), aShortTimeAgo)
+    ];
+
+    expect(socrates.hasValidReservationFor(sessionId1)).to.be(true);
+  });
+
+  it('returns undefined as the expiration time of the reservation if it is already expired', function () {
+    var socrates = new SoCraTesEventStore();
+    socrates.state.resourceEvents = [
+      setTimestamp(events.reservationWasIssued(singleBedRoom, 'untilSaturday', sessionId1), aLongTimeAgo)
+    ];
+
+    expect(socrates.hasValidReservationFor(sessionId1)).to.be(false);
+  });
+
+  it('returns the expiration time of the waitinglist reservation if there is no regular reservation', function () {
+    var socrates = new SoCraTesEventStore();
+    socrates.state.resourceEvents = [
+      setTimestamp(events.waitinglistReservationWasIssued(singleBedRoom, sessionId1), aShortTimeAgo)
+    ];
+
+    expect(socrates.hasValidReservationFor(sessionId1)).to.be(true);
+  });
+
+  it('returns the expiration time of the reservation if there are both regular and waitinglist reservations', function () {
+    var socrates = new SoCraTesEventStore();
+    socrates.state.resourceEvents = [
+      setTimestamp(events.reservationWasIssued(singleBedRoom, 'untilSaturday', sessionId1), aShortTimeAgo),
+      setTimestamp(events.waitinglistReservationWasIssued(singleBedRoom, sessionId1), anEvenShorterTimeAgo)
+    ];
+
+    expect(socrates.hasValidReservationFor(sessionId1)).to.be(true);
 
   });
 });

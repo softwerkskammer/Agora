@@ -258,9 +258,21 @@ SoCraTesEventStore.prototype._updateResourceEventsAndWriteModel = function (even
   this._waitinglistParticipantsByMemberId = updateWaitinglistParticipantsByMemberId(this.waitinglistParticipantsByMemberId(), event);
 };
 
+function expirationTimeOf(event) {
+  return event.timestamp.add(registrationPeriodinMinutes, 'minutes');
+}
+
+SoCraTesEventStore.prototype._reservationOrWaitinglistReservationEventFor = function (sessionId) {
+  return this.reservationsBySessionId()[sessionId] || this.waitinglistReservationsBySessionId()[sessionId];
+};
+
+SoCraTesEventStore.prototype.hasValidReservationFor = function (sessionId) {
+  return !!this._reservationOrWaitinglistReservationEventFor(sessionId);
+};
+
 SoCraTesEventStore.prototype.reservationExpiration = function (sessionId) {
-  var event = this.reservationsBySessionId()[sessionId] || this.waitinglistReservationsBySessionId()[sessionId];
-  return event && event.timestamp.add(registrationPeriodinMinutes, 'minutes');
+  var event = this._reservationOrWaitinglistReservationEventFor(sessionId);
+  return event && expirationTimeOf(event);
 };
 
 SoCraTesEventStore.prototype.isFull = function (roomType) {
