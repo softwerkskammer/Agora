@@ -54,7 +54,7 @@ app.get('/new', function (req, res) {
   var activity = new Activity({
     resources: resources
   });
-  res.render('edit', {activity: activity});
+  res.render('edit', {activity: activity, roomTypes: roomOptions.allIds()});
 });
 
 app.get('/edit/:url', function (req, res, next) {
@@ -63,7 +63,7 @@ app.get('/edit/:url', function (req, res, next) {
     if (!res.locals.accessrights.canEditActivity()) {
       return res.redirect('/registration/');
     }
-    res.render('edit', {activity: activity});
+    res.render('edit', {activity: activity, roomTypes: roomOptions.allIds()});
   });
 });
 

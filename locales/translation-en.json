@@ -38,6 +38,7 @@
     "new_copy": "New (based on this activity)",
     "no_participants": "So far, there are no participants.",
     "no_waitinglist": "There is no waiting list.",
+    "nonnegative_number": "Please enter a number >= 0.",
     "one_participant": "So far, there is one participant.",
     "organized_by": "Organized by group",
     "participants": "Participants",

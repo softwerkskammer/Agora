@@ -36,36 +36,18 @@ mixin activityform(activity)
                   +controlLabel('bezeichnung', t('activities.resourcelabel'))
                 .col-xs-3.col-sm-2
                   +controlLabel('anzahl', t('activities.count'), t('activities.tooltip.count'))
-                .col-xs-2.col-sm-2
-                  +controlLabel('registrierung', t('activities.registration'), t('activities.tooltip.registration'))
-                .col-xs-2.col-sm-2
-                  +controlLabel('registrierung', t('activities.deregistration'), t('activities.tooltip.deregistration'))
-                .col-xs-2.col-sm-2
-                  +controlLabel('registrierung', t('activities.waitinglist'), t('activities.tooltip.waitinglist'))
-              each name in activity.resourceNames()
+              each name in roomTypes
                 - var resource = activity.resourceNamed(name)
-                +resourceRow(name, resource.limit(), resource.isRegistrationOpen(), resource.canUnsubscribe(), resource.hasWaitinglist())
+                +resourceRow(name, resource.limit())
                 +hidden('resources[previousNames]', name)
       .row
         .col-md-12
           hr
           +submitButtons('general.save')
 
-mixin resourceRow(name, limit, isRegistrationOpen, canUnsubscribe, hasWaitinglist)
+mixin resourceRow(name, limit)
   .row.form-group
     .col-xs-3.col-sm-2
       input.form-control(name='resources[names]', value=name, type='text', placeholder=t('activities.label'), readonly)
     .col-xs-3.col-sm-2
-      input.form-control(name='resources[limits]', value=limit, type='text', placeholder=t('activities.unlimited'))
-    .col-xs-2.col-sm-2
-      select.form-control(name='resources[isRegistrationOpen]')
-        option(value='yes', selected=(isRegistrationOpen ? true : false)) #{t('activities.possible')}
-        option(value='no', selected=(isRegistrationOpen ? false : true)) #{t('activities.impossible')}
-    .col-xs-2.col-sm-2
-      select.form-control(name='resources[canUnsubscribe]')
-        option(value='yes', selected=(canUnsubscribe ? true : false)) #{t('activities.possible')}
-        option(value='no', selected=(canUnsubscribe ? false : true)) #{t('activities.impossible')}
-    .col-xs-2.col-sm-2
-      select.form-control(name='resources[hasWaitinglist]')
-        option(value='yes', selected=(hasWaitinglist ? true : false)) #{t('general.yes')}
-        option(value='no', selected=(hasWaitinglist ? false : true)) #{t('general.no')}
+      input.form-control(name='resources[limits]', value=limit, type='text', placeholder=t('activities.nonnegative_number'))
