@@ -12,6 +12,9 @@ var socratesActivitiesService = beans.get('socratesActivitiesService');
 var activitystore = beans.get('activitystore');
 
 var Activity = beans.get('activity');
+var SoCraTesEventStore = beans.get('SoCraTesEventStore');
+var eventstoreService = beans.get('eventstoreService');
+var eventstore = beans.get('eventstore');
 var validation = beans.get('validation');
 var statusmessage = beans.get('statusmessage');
 var roomOptions = beans.get('roomOptions');
@@ -23,47 +26,51 @@ var reservedURLs = '^new$|^edit$|^submit$|^checkurl$\\+';
 var app = misc.expressAppIn(__dirname);
 
 function activitySubmitted(req, res, next) {
-  if (req.body.previousUrl && req.body.url !== req.body.previousUrl) {
-    statusmessage.errorMessage('message.title.conflict', 'To create a new SoCraTes activity for a different year, please use "New".').putIntoSession(req);
-    return res.redirect('/registration/');
-  }
-  activitiesService.getActivityWithGroupAndParticipants(req.body.previousUrl, function (err, activity) {
+  eventstore.getEventStore(req.body.previousUrl, function (err, socratesEventStore) {
     if (err) { return next(err); }
-    if (!activity) { activity = new Activity({owner: req.user.member.id()}); }
-    req.body.isSoCraTes = true; // mark activity as SoCraTes activity (important for SWK)
-    activity.fillFromUI(req.body);
-    activitystore.saveActivity(activity, function (err1) {
+    if (!socratesEventStore) { socratesEventStore = new SoCraTesEventStore(); }
+    socratesEventStore.updateFromUI(req.body);
+    eventstore.saveEventStore(socratesEventStore, function (err1) {
       if (err1 && err1.message === CONFLICTING_VERSIONS) {
         // we try again because of a racing condition during save:
         statusmessage.errorMessage('message.title.conflict', 'message.content.save_error_retry').putIntoSession(req);
-        return res.redirect('/activities/edit/' + encodeURIComponent(activity.url()));
+        return res.redirect('/activities/edit/' + encodeURIComponent(socratesEventStore.url()));
       }
       if (err1) { return next(err1); }
-      statusmessage.successMessage('message.title.save_successful', 'message.content.activities.saved').putIntoSession(req);
-      res.redirect('/registration/');
+
+      // update the activity because we need it for the display in the SWK calendar
+      // TODO SWK must not create activities whose URLs start with 'socrates-'!
+      activitiesService.getActivityWithGroupAndParticipants(req.body.previousUrl, function (err2, activity) {
+        if (err2) { return next(err2); }
+        if (!activity) { activity = new Activity({owner: req.user.member.id()}); }
+        req.body.isSoCraTes = true; // mark activity as SoCraTes activity (important for SWK)
+        activity.fillFromUI(req.body);
+        activitystore.saveActivity(activity, function (err3) {
+          if (err3 && err3.message === CONFLICTING_VERSIONS) {
+            // we try again because of a racing condition during save:
+            statusmessage.errorMessage('message.title.conflict', 'message.content.save_error_retry').putIntoSession(req);
+            return res.redirect('/activities/edit/' + encodeURIComponent(activity.url()));
+          }
+          if (err3) { return next(err3); }
+          statusmessage.successMessage('message.title.save_successful', 'message.content.activities.saved').putIntoSession(req);
+          res.redirect('/registration/');
+        });
+      });
     });
   });
 }
 
 app.get('/new', function (req, res) {
-  var resources = {};
-  _.each(roomOptions.allIds(), function (id) {
-    resources[id] = {_registrationOpen: true, _canUnsubscribe: false, _waitinglist: false};
-  });
-  resources.waitinglist = {_registrationOpen: false, _canUnsubscribe: false, _waitinglist: true};
-  var activity = new Activity({
-    resources: resources
-  });
-  res.render('edit', {activity: activity, roomTypes: roomOptions.allIds()});
+  res.render('edit', {activity: new SoCraTesEventStore(), roomTypes: roomOptions.allIds()});
 });
 
 app.get('/edit/:url', function (req, res, next) {
-  activitiesService.getActivityWithGroupAndParticipants(req.params.url, function (err, activity) {
-    if (err || activity === null) { return next(err); }
+  eventstore.getEventStore(req.params.url, function (err, socratesEventStore) {
+    if (err || socratesEventStore === null) { return next(err); }
     if (!res.locals.accessrights.canEditActivity()) {
       return res.redirect('/registration/');
     }
-    res.render('edit', {activity: activity, roomTypes: roomOptions.allIds()});
+    res.render('edit', {activity: socratesEventStore, roomTypes: roomOptions.allIds()});
   });
 });
 
@@ -78,7 +85,7 @@ app.post('/submit', function (req, res, next) {
     [
       function (callback) {
         // we need this helper function (in order to have a closure?!)
-        var validityChecker = function (url, cb) { activitiesService.isValidUrl(reservedURLs, url, cb); };
+        var validityChecker = function (url, cb) { eventstoreService.isValidUrl(url, cb); };
         validation.checkValidity(req.body.previousUrl.trim(), req.body.url.trim(), validityChecker, req.i18n.t('validation.url_not_available'), callback);
       },
       function (callback) {

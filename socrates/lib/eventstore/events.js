@@ -10,10 +10,21 @@ function enrich(event) {
 }
 
 module.exports = {
-  // room quota:
+  // general SoCraTes data:
   roomQuotaWasSet: function (roomType, quota) {
-
     return enrich({event: e.ROOM_QUOTA_WAS_SET, roomType: roomType, quota: quota});
+  },
+
+  urlWasSet: function (url) {
+    return enrich({event: e.URL_WAS_SET, url: url});
+  },
+
+  startUnixWasSet: function (startUnix) {
+    return enrich({event: e.START_UNIX_WAS_SET, startUnix: startUnix});
+  },
+
+  endUnixWasSet: function (endUnix) {
+    return enrich({event: e.END_UNIX_WAS_SET, endUnix: endUnix});
   },
 
   // reservation:

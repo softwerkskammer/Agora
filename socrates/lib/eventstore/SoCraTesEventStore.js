@@ -8,6 +8,7 @@ var beans = require('simple-configure').get('beans');
 var events = beans.get('events');
 var e = beans.get('eventConstants');
 var socratesConstants = beans.get('socratesConstants');
+var fieldHelpers = beans.get('fieldHelpers');
 
 function SoCraTesEventStore(object) {
   // TODO when loading from DB, sort event streams by timestamp!
@@ -29,6 +30,10 @@ function SoCraTesEventStore(object) {
 
 var registrationPeriodinMinutes = 30;
 
+SoCraTesEventStore.prototype.id = function () {
+  return this.state.id;
+}
+
 // write model state:
 ////////////////////////////////////////////////////////////////////////////////////////////
 // General Event Information:
@@ -49,15 +54,46 @@ SoCraTesEventStore.prototype.quotaFor = function (roomType) {
   return this._quota[roomType];
 };
 
-var updateReservationsBySessionId = function (reservationsBySessionId, event) {
-  var thirtyMinutesAgo = moment.tz().subtract(registrationPeriodinMinutes, 'minutes');
-  if (event.event === e.RESERVATION_WAS_ISSUED && event.timestamp.isAfter(thirtyMinutesAgo)) {
-    reservationsBySessionId[event.sessionID] = event;
-  }
-  if (event.event === e.PARTICIPANT_WAS_REGISTERED) {
-    delete reservationsBySessionId[event.sessionID];
-  }
-  return reservationsBySessionId;
+var updateUrl = function (url, event) { return event.event === e.URL_WAS_SET ? event.url : url; };
+
+SoCraTesEventStore.prototype.updateUrl = function (newUrl) {
+  var event = events.urlWasSet(newUrl);
+  this._updateSoCraTesEventsAndWriteModel(event);
+};
+
+SoCraTesEventStore.prototype.url = function () {
+  return this.state.url;
+};
+
+var updateStartUnix = function (startUnix, event) { return event.event === e.START_UNIX_WAS_SET ? event.startUnix : startUnix; };
+
+SoCraTesEventStore.prototype.updateStartUnix = function (startDate, startTime) {
+  var startUnix = fieldHelpers.parseToUnixUsingDefaultTimezone(startDate, startTime);
+  this._updateSoCraTesEventsAndWriteModel(events.startUnixWasSet(startUnix));
+};
+
+SoCraTesEventStore.prototype.startMoment = function () {
+  return moment.unix(this._startUnix).tz(fieldHelpers.defaultTimezone());
+};
+
+var updateEndUnix = function (endUnix, event) { return event.event === e.END_UNIX_WAS_SET ? event.endUnix : endUnix; };
+
+SoCraTesEventStore.prototype.updateEndUnix = function (endDate, endTime) {
+  var endUnix = fieldHelpers.parseToUnixUsingDefaultTimezone(endDate, endTime);
+  this._updateSoCraTesEventsAndWriteModel(events.endUnixWasSet(endUnix));
+};
+
+SoCraTesEventStore.prototype.endMoment = function () {
+  return moment.unix(this._endUnix).tz(fieldHelpers.defaultTimezone());
+};
+
+SoCraTesEventStore.prototype.updateFromUI = function (uiData) {
+  this.updateUrl(uiData.url);
+  this.updateStartUnix(uiData.startDate, uiData.startTime);
+  this.updateEndUnix(uiData.endDate, uiData.endTime);
+  // persistence needs an id:
+  this.state.id = uiData.url;
+  // TODO update quotas
 };
 
 // handle commands:
@@ -67,6 +103,9 @@ SoCraTesEventStore.prototype._updateSoCraTesEventsAndWriteModel = function (even
   this.state.socratesEvents.push(event);
   // update write models:
   this._quota[event.roomType] = updateQuota(event.roomType, this.quotaFor(event.roomType), event);
+  this.state.url = updateUrl(this.state.url, event);
+  this._startUnix = updateStartUnix(this._startUnix, event);
+  this._endUnix = updateEndUnix(this._endUnix, event);
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -86,6 +125,17 @@ SoCraTesEventStore.prototype.issueReservation = function (roomType, duration, se
   }
   this._updateResourceEventsAndWriteModel(event);
   return event.event;
+};
+
+var updateReservationsBySessionId = function (reservationsBySessionId, event) {
+  var thirtyMinutesAgo = moment.tz().subtract(registrationPeriodinMinutes, 'minutes');
+  if (event.event === e.RESERVATION_WAS_ISSUED && event.timestamp.isAfter(thirtyMinutesAgo)) {
+    reservationsBySessionId[event.sessionID] = event;
+  }
+  if (event.event === e.PARTICIPANT_WAS_REGISTERED) {
+    delete reservationsBySessionId[event.sessionID];
+  }
+  return reservationsBySessionId;
 };
 
 SoCraTesEventStore.prototype.reservationsBySessionId = function () {

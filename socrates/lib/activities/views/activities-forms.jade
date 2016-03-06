@@ -1,17 +1,17 @@
 include  ../../../views/formComponents
 
-mixin activityform(activity)
+mixin activityform(socratesEventStore, roomTypes)
   form(id='activityform', action='/activities/submit', method='post')
     +csrf
-    if (activity.id())
-      +hidden('id', activity.id())
-    +hidden('previousUrl', activity.url())
+    if (socratesEventStore.id())
+      +hidden('id', socratesEventStore.id())
+    +hidden('previousUrl', socratesEventStore.url())
     fieldset
       .row
         .col-md-12
           +submitButtons('general.save')
           legend
-            if (activity.id())
+            if (socratesEventStore.id())
               | Edit SoCraTes
             else
               | Create SoCraTes
@@ -20,14 +20,14 @@ mixin activityform(activity)
               .row
                 .col-xs-6(style='padding-right:5px')
                   .col-xs-6(style='padding-left:0px;padding-right:3px')
-                    +date('startDate', t('activities.start'), activity.startMoment().locale(language).format('DD/MM/YYYY'), t('activities.tooltip.start'))
+                    +date('startDate', t('activities.start'), socratesEventStore.startMoment().locale(language).format('DD/MM/YYYY'), t('activities.tooltip.start'))
                   .col-xs-6(style='padding-left:3px;padding-right:0px')
-                    +time('startTime', activity.startMoment().locale(language).format('HH:mm'))
+                    +time('startTime', socratesEventStore.startMoment().locale(language).format('HH:mm'))
                 .col-xs-6(style='padding-left:5px')
                   .col-xs-6(style='padding-left:0px;padding-right:3px')
-                    +date('endDate', t('activities.end'), activity.endMoment().locale(language).format('DD/MM/YYYY'), t('activities.tooltip.end'))
+                    +date('endDate', t('activities.end'), socratesEventStore.endMoment().locale(language).format('DD/MM/YYYY'), t('activities.tooltip.end'))
                   #dates.col-xs-6(style='padding-left:3px;padding-right:0px')
-                    +time('endTime', activity.endMoment().locale(language).format('HH:mm'))
+                    +time('endTime', socratesEventStore.endMoment().locale(language).format('HH:mm'))
           .row
             .col-md-12
               hr
@@ -37,9 +37,7 @@ mixin activityform(activity)
                 .col-xs-3.col-sm-2
                   +controlLabel('anzahl', t('activities.count'), t('activities.tooltip.count'))
               each name in roomTypes
-                - var resource = activity.resourceNamed(name)
-                +resourceRow(name, resource.limit())
-                +hidden('resources[previousNames]', name)
+                +resourceRow(name, socratesEventStore.quotaFor(name))
       .row
         .col-md-12
           hr
