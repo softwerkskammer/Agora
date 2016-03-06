@@ -27,6 +27,8 @@ function SoCraTesEventStore(object) {
   return this;
 }
 
+var registrationPeriodinMinutes = 30;
+
 // write model state:
 ////////////////////////////////////////////////////////////////////////////////////////////
 // General Event Information:
@@ -48,7 +50,7 @@ SoCraTesEventStore.prototype.quotaFor = function (roomType) {
 };
 
 var updateReservationsBySessionId = function (reservationsBySessionId, event) {
-  var thirtyMinutesAgo = moment.tz().subtract(30, 'minutes');
+  var thirtyMinutesAgo = moment.tz().subtract(registrationPeriodinMinutes, 'minutes');
   if (event.event === e.RESERVATION_WAS_ISSUED && event.timestamp.isAfter(thirtyMinutesAgo)) {
     reservationsBySessionId[event.sessionID] = event;
   }
@@ -256,6 +258,10 @@ SoCraTesEventStore.prototype._updateResourceEventsAndWriteModel = function (even
   this._waitinglistParticipantsByMemberId = updateWaitinglistParticipantsByMemberId(this.waitinglistParticipantsByMemberId(), event);
 };
 
+SoCraTesEventStore.prototype.reservationExpiresAt = function (sessionId) {
+  var event = this.reservationsBySessionId()[sessionId] || this.waitinglistReservationsBySessionId()[sessionId];
+  return event && event.timestamp.add(registrationPeriodinMinutes, 'minutes');
+};
 
 SoCraTesEventStore.prototype.isFull = function (roomType) {
   return this.quotaFor(roomType) <= this.reservationsAndParticipantsFor(roomType).length;
