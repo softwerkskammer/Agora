@@ -39,28 +39,38 @@ module.exports = {
 
   saveRegistration: function (memberID, sessionID, body, callback) {
     var self = this;
+    var registrationEvent;
     var registrationTuple = {
       sessionID: sessionID,
       activityUrl: body.activityUrl,
       resourceName: body.resourceName,
       duration: body.duration
     };
-    activitystore.getActivity(registrationTuple.activityUrl, function (err, activity) {
-      if (err || !activity) { return callback(err); }
-      if (!activity.hasValidReservationFor(registrationTuple)) {
+    eventstore.getEventStore(registrationTuple.activityUrl, function (err, socratesEventStore) {
+      if (err || !socratesEventStore) { return callback(err); }
+
+      // TODO logic is already handled in the event store - follow it here!
+      if (socratesEventStore.isAlreadyRegistered(memberID)) {
+        return callback(null, 'message.title.problem', 'activities.already_registered');
+      }
+      if (!socratesEventStore.hasValidReservationFor(registrationTuple.sessionID)) {
         var message = registrationTuple.duration === 'waitinglist' ? 'activities.waitinglist_registration_timed_out' : 'activities.registration_timed_out';
         return callback(null, 'message.title.problem', message);
       }
-      if (activity.isAlreadyRegistered(memberID)) {
-        return callback(null, 'message.title.problem', 'activities.already_registered');
+      if (registrationTuple.duration === 'waitinglist') {
+        registrationEvent = socratesEventStore.registerWaitinglistParticipant(registrationTuple.resourceName, registrationTuple.sessionID, memberID);
+      } else {
+        registrationEvent = socratesEventStore.registerParticipant(registrationTuple.resourceName, registrationTuple.duration, registrationTuple.sessionID, memberID);
       }
-      if (activity.register(memberID, registrationTuple)) {
-        return activitystore.saveActivity(activity, function (err1) {
-          if (err1 && err1.message === CONFLICTING_VERSIONS) {
-            // we try again because of a racing condition during save:
-            return self.saveRegistration(memberID, sessionID, body, callback);
-          }
-          if (err1) { return callback(err1); }
+      return eventstore.saveEventStore(socratesEventStore, function (err1) {
+        if (err1 && err1.message === CONFLICTING_VERSIONS) {
+          // we try again because of a racing condition during save:
+          return self.saveRegistration(memberID, sessionID, body, callback);
+        }
+        if (err1) { return callback(err1); }
+
+        // error and success handling as indicated by the event:
+        if (registrationEvent === eventConstants.PARTICIPANT_WAS_REGISTERED || registrationEvent === eventConstants.WAITINGLIST_PARTICIPANT_WAS_REGISTERED) {
           if (registrationTuple.duration === 'waitinglist') {
             socratesNotifications.newWaitinglistEntry(memberID, roomOptions.waitinglistInformationFor(registrationTuple.resourceName));
           } else {
@@ -71,12 +81,11 @@ module.exports = {
             subscriber.fillFromUI(body);
             subscriberstore.saveSubscriber(subscriber, callback);
           });
-        });
-
-      }
-      callback(null, 'activities.registration_not_now', 'activities.registration_not_possible');
+        } else {
+          callback(null, 'activities.registration_not_now', 'activities.registration_not_possible');
+        }
+      });
     });
-
   }
 
 };

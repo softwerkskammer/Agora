@@ -137,6 +137,7 @@ SoCraTesEventStore.prototype.registerParticipant = function (roomType, duration,
     event = events.participantWasRegistered(roomType, duration, sessionId, memberId);
   }
   this._updateResourceEventsAndWriteModel(event);
+  return event.event;
 };
 
 SoCraTesEventStore.prototype.moveParticipantToNewRoomType = function (memberId, roomType) {
@@ -188,6 +189,7 @@ SoCraTesEventStore.prototype.registerWaitinglistParticipant = function (roomType
     event = events.waitinglistParticipantWasRegistered(roomType, sessionId, memberId);
   }
   this._updateResourceEventsAndWriteModel(event);
+  return event.event;
 };
 
 var updateWaitinglistReservationsBySessionId = function (waitinglistReservationsBySessionId, event) {
@@ -195,7 +197,7 @@ var updateWaitinglistReservationsBySessionId = function (waitinglistReservations
   if (event.event === e.WAITINGLIST_RESERVATION_WAS_ISSUED && event.timestamp.isAfter(thirtyMinutesAgo)) {
     waitinglistReservationsBySessionId[event.sessionID] = event;
   }
-  if (event.event === e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED) {
+  if (event.event === e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED || event.event === e.PARTICIPANT_WAS_REGISTERED) {
     delete waitinglistReservationsBySessionId[event.sessionID];
   }
   return waitinglistReservationsBySessionId;
@@ -215,6 +217,9 @@ SoCraTesEventStore.prototype.waitinglistReservationsBySessionIdFor = function (r
 var updateWaitinglistParticipantsByMemberId = function (waitinglistParticipantsByMemberId, event) {
   if (event.event === e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED) {
     waitinglistParticipantsByMemberId[event.memberId] = event;
+  }
+  if (event.event === e.PARTICIPANT_WAS_REGISTERED) {
+    delete waitinglistParticipantsByMemberId[event.memberId];
   }
   return waitinglistParticipantsByMemberId;
 };
