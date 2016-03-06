@@ -104,7 +104,7 @@ app.post('/startRegistration', function (req, res, next) {
     sessionID: req.sessionID
   };
   var participateURL = '/registration/participate';
-  req.session.registrationTuple = registrationTuple;
+  req.session.registrationTuple = registrationTuple; // so that we can access it again when finishing the registration
   registrationService.startRegistration(registrationTuple, function (err, statusTitle, statusText) {
     if (err) { return next(err); }
     if (statusTitle && statusText) {
