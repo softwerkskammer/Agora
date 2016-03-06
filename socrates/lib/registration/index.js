@@ -58,9 +58,9 @@ app.get('/', function (req, res, next) {
 
     res.render('get', {
       activity: {
-        title: '',
-        url: '',
-        fullyQualifiedUrl: ''
+        title: 'SoCraTes ' + socratesConstants.currentYear,
+        url: socratesConstants.currentUrl,
+        fullyQualifiedUrl: conf.get('socratesURL')
       },
       roomOptions: options,
       registration: {
