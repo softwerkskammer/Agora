@@ -37,7 +37,6 @@ describe('SoCraTes payment application', function () {
   var appWithSocratesMember;
 
   beforeEach(function () {
-    sinon.stub(socratesActivitiesService, 'getCurrentSocrates', function (callback) { callback(null); });
 
     subscriber = {
       id: 'memberId'

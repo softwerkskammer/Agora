@@ -16,7 +16,6 @@ var createApp = require('../../testutil/testHelper')('socratesWikiApp').createAp
 describe('SoCraTes wiki application', function () {
 
   beforeEach(function () {
-    sinon.stub(socratesActivitiesService, 'getCurrentSocrates', function (callback) { callback(null); });
 
     sinon.stub(socratesActivitiesService, 'getActivityWithParticipantsAndSubscribers', function (year, callback) {
       var socratesActivity = new SoCraTesActivity({});

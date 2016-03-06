@@ -15,10 +15,6 @@ var ActivityResult = beans.get('activityresult');
 var MEMBER_ID = 'memberID';
 
 describe('SoCraTes activityresults application', function () {
-  beforeEach(function () {
-    sinon.stub(socratesActivitiesService, 'getCurrentSocrates', function (callback) { callback(null); });
-  });
-
   afterEach(function () {
     sinon.restore();
   });
