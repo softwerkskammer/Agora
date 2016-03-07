@@ -55,6 +55,15 @@ app.get('/', function (req, res, next) {
     if (err || !socratesEventStore) { return next(err); }
     var memberId = res.locals.accessrights.memberId();
     var options = roomOptions.allFromEventStore(socratesEventStore, memberId, isRegistrationOpen(req.query.registration));
+    var registration = {
+      isPossible: isRegistrationOpen(req.query.registration),
+      queryParam: req.query.registration,
+      alreadyRegistered: socratesEventStore.isAlreadyRegistered(memberId),
+      selectedOption: socratesEventStore.selectedOptionFor(memberId),
+      alreadyOnWaitinglist: socratesEventStore.isAlreadyOnWaitinglist(memberId),
+      opening: registrationOpening(),
+      opensIn: registrationOpensIn()
+    };
 
     res.render('get', {
       activity: {
@@ -63,15 +72,7 @@ app.get('/', function (req, res, next) {
         fullyQualifiedUrl: conf.get('socratesURL')
       },
       roomOptions: options,
-      registration: {
-        isPossible: isRegistrationOpen(req.query.registration),
-        queryParam: req.query.registration,
-        alreadyRegistered: socratesEventStore.isAlreadyRegistered(memberId),
-        selectedOption: socratesEventStore.selectedOptionFor(memberId),
-        alreadyOnWaitinglist: socratesEventStore.isAlreadyOnWaitinglist(memberId),
-        opening: registrationOpening(),
-        opensIn: registrationOpensIn()
-      }
+      registration: registration
     });
   });
 });
@@ -346,6 +347,5 @@ app.get('/nametags.tex', function (req, res, next) {
     res.send(nametagService.nametagsFor(activity.participants));
   });
 });
-
 
 module.exports = app;
