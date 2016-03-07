@@ -9,6 +9,8 @@ var events = beans.get('events');
 var e = beans.get('eventConstants');
 var socratesConstants = beans.get('socratesConstants');
 var fieldHelpers = beans.get('fieldHelpers');
+var misc = beans.get('misc');
+var roomOptions = beans.get('roomOptions');
 
 function SoCraTesEventStore(object) {
   // TODO when loading from DB, sort event streams by timestamp!
@@ -86,6 +88,18 @@ SoCraTesEventStore.prototype.updateEndTime = function (endDate, endTime) {
 SoCraTesEventStore.prototype.endTime = function () {
   return moment(this._endTimeInMillis).tz(fieldHelpers.defaultTimezone());
 };
+
+SoCraTesEventStore.prototype._updateQuotasFromUI = function (uiInputArrays) {
+  function matchArrayEntries(input) {
+    return R.zipObj(misc.toArray(input.names), misc.toArray(input.limits));
+  }
+
+  var self = this;
+  var newQuotas = matchArrayEntries(uiInputArrays);
+
+  R.map(function (roomType) {
+    self.updateRoomQuota(roomType, newQuotas[roomType]);
+  }, roomOptions.allIds());
 };
 
 SoCraTesEventStore.prototype.updateFromUI = function (uiData) {
@@ -94,7 +108,8 @@ SoCraTesEventStore.prototype.updateFromUI = function (uiData) {
   this.updateEndTime(uiData.endDate, uiData.endTime);
   // persistence needs an id:
   this.state.id = uiData.url;
-  // TODO update quotas
+  // update quotas:
+  this._updateQuotasFromUI(uiData.resources);
 };
 
 // handle commands:
