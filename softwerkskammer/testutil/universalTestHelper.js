@@ -46,7 +46,7 @@ module.exports = function (defaultLanguage) {
           app.use(function (req, res, next) {
             req.sessionID = atts.sessionID;
             next();
-          })
+          });
         }
 
         app.use(beans.get('expressViewHelper'));

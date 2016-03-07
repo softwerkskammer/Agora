@@ -9,16 +9,12 @@ var conf = require('../../testutil/configureForTest');
 var beans = conf.get('beans');
 var userWithoutMember = require('../../testutil/userWithoutMember');
 
-var activitiesService = beans.get('activitiesService');
 var groupsAndMembersService = beans.get('groupsAndMembersService');
-var subscriberService = beans.get('subscriberService');
 var subscriberstore = beans.get('subscriberstore');
-var activitystore = beans.get('activitystore');
 var notifications = beans.get('socratesNotifications');
 
 var Member = beans.get('member');
 var Subscriber = beans.get('subscriber');
-var SoCraTesActivity = beans.get('socratesActivityExtended');
 
 var events = beans.get('events');
 var SoCraTesEventStore = beans.get('SoCraTesEventStore');

@@ -6,7 +6,6 @@ var expect = require('must-dist');
 var beans = require('../../testutil/configureForTest').get('beans');
 var activityresultsService = beans.get('activityresultsService');
 var activityresultsPersistence = beans.get('activityresultsPersistence');
-var socratesActivitiesService = beans.get('socratesActivitiesService');
 
 var createApp = require('../../testutil/testHelper')('socratesActivityresultsApp').createApp;
 
