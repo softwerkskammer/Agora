@@ -54,7 +54,7 @@ describe('The socrates conference command handler for room quota changes', funct
 });
 
 describe('The socrates conference command handlers for the event time', function () {
-  it('changes the start time', function () {
+  it('changes the start time on update', function () {
     // Given (saved events)
     var socrates = new SoCraTesEventStore();
 
@@ -69,7 +69,7 @@ describe('The socrates conference command handlers for the event time', function
     expect(socrates.startTime().valueOf()).to.eql(moment('2015-06-15T12:30:00+02:00').valueOf());
   });
 
-  it('changes the end time', function () {
+  it('changes the end time on update', function () {
     // Given (saved events)
     var socrates = new SoCraTesEventStore();
 
@@ -83,6 +83,23 @@ describe('The socrates conference command handlers for the event time', function
     // And (new write model)
     expect(socrates.endTime().valueOf()).to.eql(moment('2010-08-10T10:30:00+02:00').valueOf());
   });
+
+  it('reads the latest start and end time from the events', function () {
+    // Given (saved events)
+    var socrates = new SoCraTesEventStore();
+
+    socrates.state.socratesEvents = [
+      events.startTimeWasSet(moment('2015-12-15T12:30:00+02:00')),
+      events.startTimeWasSet(moment('2015-06-15T12:30:00+02:00')),
+      events.endTimeWasSet(moment('2015-11-15T12:30:00+02:00')),
+      events.endTimeWasSet(moment('2015-08-15T12:30:00+02:00'))
+    ];
+
+    // Then (new write model)
+    expect(socrates.startTime().valueOf()).to.eql(moment('2015-06-15T12:30:00+02:00').valueOf());
+    expect(socrates.endTime().valueOf()).to.eql(moment('2015-08-15T12:30:00+02:00').valueOf());
+  });
+
 
 });
 

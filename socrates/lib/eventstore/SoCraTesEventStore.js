@@ -75,6 +75,10 @@ SoCraTesEventStore.prototype.updateStartTime = function (startDate, startTime) {
 };
 
 SoCraTesEventStore.prototype.startTime = function () {
+  if (!this._startTimeInMillis) {
+    this._startTimeInMillis = R.reduce(updateStartTime, undefined, this.state.socratesEvents);
+  }
+
   return moment(this._startTimeInMillis).tz(fieldHelpers.defaultTimezone());
 };
 
@@ -86,6 +90,10 @@ SoCraTesEventStore.prototype.updateEndTime = function (endDate, endTime) {
 };
 
 SoCraTesEventStore.prototype.endTime = function () {
+  if (!this._endTimeInMillis) {
+    this._endTimeInMillis = R.reduce(updateEndTime, undefined, this.state.socratesEvents);
+  }
+
   return moment(this._endTimeInMillis).tz(fieldHelpers.defaultTimezone());
 };
 
