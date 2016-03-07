@@ -5,7 +5,7 @@ var beans = require('simple-configure').get('beans');
 var e = beans.get('eventConstants');
 
 function enrich(event) {
-  event.timestamp = moment();
+  event.timestamp = moment().valueOf();
   return event;
 }
 
@@ -19,12 +19,12 @@ module.exports = {
     return enrich({event: e.URL_WAS_SET, url: url});
   },
 
-  startUnixWasSet: function (startUnix) {
-    return enrich({event: e.START_UNIX_WAS_SET, startUnix: startUnix});
+  startTimeWasSet: function (startMoment) {
+    return enrich({event: e.START_TIME_WAS_SET, startTimeInMillis: startMoment.valueOf()});
   },
 
-  endUnixWasSet: function (endUnix) {
-    return enrich({event: e.END_UNIX_WAS_SET, endUnix: endUnix});
+  endTimeWasSet: function (endMoment) {
+    return enrich({event: e.END_TIME_WAS_SET, endTimeInMillis: endMoment.valueOf()});
   },
 
   // reservation:

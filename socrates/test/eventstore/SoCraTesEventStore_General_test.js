@@ -28,7 +28,7 @@ var aShortTimeAgo = moment.tz().subtract(10, 'minutes');
 var anEvenShorterTimeAgo = moment.tz().subtract(1, 'minutes');
 
 function setTimestamp(event, timestamp) {
-  event.timestamp = timestamp;
+  event.timestamp = timestamp.valueOf();
   return event;
 }
 
@@ -51,6 +51,39 @@ describe('The socrates conference command handler for room quota changes', funct
     // And (new write model)
     expect(socrates.quotaFor(singleBedRoom)).to.eql(150);
   });
+});
+
+describe('The socrates conference command handlers for the event time', function () {
+  it('changes the start time', function () {
+    // Given (saved events)
+    var socrates = new SoCraTesEventStore();
+
+    // When (issued command)
+    socrates.updateStartTime('15/06/2015', '12:30');
+
+    // Then (new events)
+    expect(stripTimestamps(socrates.state.socratesEvents)).to.eql([
+      {event: e.START_TIME_WAS_SET, startTimeInMillis: 1434364200000}
+    ]);
+    // And (new write model)
+    expect(socrates.startTime().valueOf()).to.eql(moment('2015-06-15T12:30:00+02:00').valueOf());
+  });
+
+  it('changes the end time', function () {
+    // Given (saved events)
+    var socrates = new SoCraTesEventStore();
+
+    // When (issued command)
+    socrates.updateEndTime('10/08/2010', '10:30');
+
+    // Then (new events)
+    expect(stripTimestamps(socrates.state.socratesEvents)).to.eql([
+      {event: e.END_TIME_WAS_SET, endTimeInMillis: 1281429000000}
+    ]);
+    // And (new write model)
+    expect(socrates.endTime().valueOf()).to.eql(moment('2010-08-10T10:30:00+02:00').valueOf());
+  });
+
 });
 
 describe('The socrates conference write model for the room quota', function () {
@@ -95,7 +128,7 @@ describe('The socrates conference write model calculating the reservationExpirat
       setTimestamp(events.reservationWasIssued(singleBedRoom, 'untilSaturday', sessionId1), aShortTimeAgo)
     ];
 
-    expect(socrates.reservationExpiration(sessionId1)).to.be(aShortTimeAgo.add(30, 'minutes'));
+    expect(socrates.reservationExpiration(sessionId1).valueOf()).to.be(aShortTimeAgo.add(30, 'minutes').valueOf());
   });
 
   it('returns undefined as the expiration time of the reservation if it is already expired', function () {
@@ -113,7 +146,7 @@ describe('The socrates conference write model calculating the reservationExpirat
       setTimestamp(events.waitinglistReservationWasIssued(singleBedRoom, sessionId1), aShortTimeAgo)
     ];
 
-    expect(socrates.reservationExpiration(sessionId1)).to.be(aShortTimeAgo.add(30, 'minutes'));
+    expect(socrates.reservationExpiration(sessionId1).valueOf()).to.be(aShortTimeAgo.add(30, 'minutes').valueOf());
   });
 
   it('returns the expiration time of the reservation if there are both regular and waitinglist reservations', function () {
@@ -123,7 +156,7 @@ describe('The socrates conference write model calculating the reservationExpirat
       setTimestamp(events.waitinglistReservationWasIssued(singleBedRoom, sessionId1), anEvenShorterTimeAgo)
     ];
 
-    expect(socrates.reservationExpiration(sessionId1)).to.be(aShortTimeAgo.add(30, 'minutes'));
+    expect(socrates.reservationExpiration(sessionId1).valueOf()).to.be(aShortTimeAgo.add(30, 'minutes').valueOf());
 
   });
 });

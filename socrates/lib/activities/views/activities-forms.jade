@@ -20,14 +20,14 @@ mixin activityform(socratesEventStore, roomTypes)
               .row
                 .col-xs-6(style='padding-right:5px')
                   .col-xs-6(style='padding-left:0px;padding-right:3px')
-                    +date('startDate', t('activities.start'), socratesEventStore.startMoment().locale(language).format('DD/MM/YYYY'), t('activities.tooltip.start'))
+                    +date('startDate', t('activities.start'), socratesEventStore.startTime().locale(language).format('DD/MM/YYYY'), t('activities.tooltip.start'))
                   .col-xs-6(style='padding-left:3px;padding-right:0px')
-                    +time('startTime', socratesEventStore.startMoment().locale(language).format('HH:mm'))
+                    +time('startTime', socratesEventStore.startTime().locale(language).format('HH:mm'))
                 .col-xs-6(style='padding-left:5px')
                   .col-xs-6(style='padding-left:0px;padding-right:3px')
-                    +date('endDate', t('activities.end'), socratesEventStore.endMoment().locale(language).format('DD/MM/YYYY'), t('activities.tooltip.end'))
+                    +date('endDate', t('activities.end'), socratesEventStore.endTime().locale(language).format('DD/MM/YYYY'), t('activities.tooltip.end'))
                   #dates.col-xs-6(style='padding-left:3px;padding-right:0px')
-                    +time('endTime', socratesEventStore.endMoment().locale(language).format('HH:mm'))
+                    +time('endTime', socratesEventStore.endTime().locale(language).format('HH:mm'))
           .row
             .col-md-12
               hr

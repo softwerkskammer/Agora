@@ -32,7 +32,7 @@ var registrationPeriodinMinutes = 30;
 
 SoCraTesEventStore.prototype.id = function () {
   return this.state.id;
-}
+};
 
 // write model state:
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -65,32 +65,33 @@ SoCraTesEventStore.prototype.url = function () {
   return this.state.url;
 };
 
-var updateStartUnix = function (startUnix, event) { return event.event === e.START_UNIX_WAS_SET ? event.startUnix : startUnix; };
+var updateStartTime = function (startTimeInMillis, event) { return event.event === e.START_TIME_WAS_SET ? event.startTimeInMillis : startTimeInMillis; };
 
-SoCraTesEventStore.prototype.updateStartUnix = function (startDate, startTime) {
-  var startUnix = fieldHelpers.parseToUnixUsingDefaultTimezone(startDate, startTime);
-  this._updateSoCraTesEventsAndWriteModel(events.startUnixWasSet(startUnix));
+SoCraTesEventStore.prototype.updateStartTime = function (startDate, startTime) {
+  var startMoment = fieldHelpers.parseToMomentUsingDefaultTimezone(startDate, startTime);
+  this._updateSoCraTesEventsAndWriteModel(events.startTimeWasSet(startMoment));
 };
 
-SoCraTesEventStore.prototype.startMoment = function () {
-  return moment.unix(this._startUnix).tz(fieldHelpers.defaultTimezone());
+SoCraTesEventStore.prototype.startTime = function () {
+  return moment(this._startTimeInMillis).tz(fieldHelpers.defaultTimezone());
 };
 
-var updateEndUnix = function (endUnix, event) { return event.event === e.END_UNIX_WAS_SET ? event.endUnix : endUnix; };
+var updateEndTime = function (endTimeInMillis, event) { return event.event === e.END_TIME_WAS_SET ? event.endTimeInMillis : endTimeInMillis; };
 
-SoCraTesEventStore.prototype.updateEndUnix = function (endDate, endTime) {
-  var endUnix = fieldHelpers.parseToUnixUsingDefaultTimezone(endDate, endTime);
-  this._updateSoCraTesEventsAndWriteModel(events.endUnixWasSet(endUnix));
+SoCraTesEventStore.prototype.updateEndTime = function (endDate, endTime) {
+  var endMoment = fieldHelpers.parseToMomentUsingDefaultTimezone(endDate, endTime);
+  this._updateSoCraTesEventsAndWriteModel(events.endTimeWasSet(endMoment));
 };
 
-SoCraTesEventStore.prototype.endMoment = function () {
-  return moment.unix(this._endUnix).tz(fieldHelpers.defaultTimezone());
+SoCraTesEventStore.prototype.endTime = function () {
+  return moment(this._endTimeInMillis).tz(fieldHelpers.defaultTimezone());
+};
 };
 
 SoCraTesEventStore.prototype.updateFromUI = function (uiData) {
   this.updateUrl(uiData.url);
-  this.updateStartUnix(uiData.startDate, uiData.startTime);
-  this.updateEndUnix(uiData.endDate, uiData.endTime);
+  this.updateStartTime(uiData.startDate, uiData.startTime);
+  this.updateEndTime(uiData.endDate, uiData.endTime);
   // persistence needs an id:
   this.state.id = uiData.url;
   // TODO update quotas
@@ -104,8 +105,8 @@ SoCraTesEventStore.prototype._updateSoCraTesEventsAndWriteModel = function (even
   // update write models:
   this._quota[event.roomType] = updateQuota(event.roomType, this.quotaFor(event.roomType), event);
   this.state.url = updateUrl(this.state.url, event);
-  this._startUnix = updateStartUnix(this._startUnix, event);
-  this._endUnix = updateEndUnix(this._endUnix, event);
+  this._startTimeInMillis = updateStartTime(this._startTimeInMillis, event);
+  this._endTimeInMillis = updateEndTime(this._endTimeInMillis, event);
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -129,7 +130,7 @@ SoCraTesEventStore.prototype.issueReservation = function (roomType, duration, se
 
 var updateReservationsBySessionId = function (reservationsBySessionId, event) {
   var thirtyMinutesAgo = moment.tz().subtract(registrationPeriodinMinutes, 'minutes');
-  if (event.event === e.RESERVATION_WAS_ISSUED && event.timestamp.isAfter(thirtyMinutesAgo)) {
+  if (event.event === e.RESERVATION_WAS_ISSUED && moment(event.timestamp).isAfter(thirtyMinutesAgo)) {
     reservationsBySessionId[event.sessionID] = event;
   }
   if (event.event === e.PARTICIPANT_WAS_REGISTERED) {
@@ -244,7 +245,7 @@ SoCraTesEventStore.prototype.registerWaitinglistParticipant = function (roomType
 
 var updateWaitinglistReservationsBySessionId = function (waitinglistReservationsBySessionId, event) {
   var thirtyMinutesAgo = moment.tz().subtract(30, 'minutes');
-  if (event.event === e.WAITINGLIST_RESERVATION_WAS_ISSUED && event.timestamp.isAfter(thirtyMinutesAgo)) {
+  if (event.event === e.WAITINGLIST_RESERVATION_WAS_ISSUED && moment(event.timestamp).isAfter(thirtyMinutesAgo)) {
     waitinglistReservationsBySessionId[event.sessionID] = event;
   }
   if (event.event === e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED || event.event === e.PARTICIPANT_WAS_REGISTERED) {
@@ -285,7 +286,6 @@ SoCraTesEventStore.prototype.waitinglistParticipantsByMemberIdFor = function (ro
   return R.filter(function (event) { return R.contains(roomType, event.desiredRoomTypes); }, this.waitinglistParticipantsByMemberId());
 };
 
-
 // TODO this is currently for tests only...:
 SoCraTesEventStore.prototype.waitinglistReservationsAndParticipantsFor = function (roomType) {
   return R.concat(R.values(this.waitinglistReservationsBySessionIdFor(roomType)), R.values(this.waitinglistParticipantsByMemberIdFor(roomType)));
@@ -314,7 +314,7 @@ SoCraTesEventStore.prototype._updateResourceEventsAndWriteModel = function (even
 };
 
 function expirationTimeOf(event) {
-  return event.timestamp.add(registrationPeriodinMinutes, 'minutes');
+  return moment(event.timestamp).add(registrationPeriodinMinutes, 'minutes');
 }
 
 SoCraTesEventStore.prototype._reservationOrWaitinglistReservationEventFor = function (sessionId) {
@@ -346,6 +346,5 @@ SoCraTesEventStore.prototype.selectedOptionFor = function (memberID) {
   }
   return null;
 };
-
 
 module.exports = SoCraTesEventStore;
