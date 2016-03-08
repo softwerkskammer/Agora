@@ -538,7 +538,7 @@ describe('SoCraTes members application', function () {
         .send('nickname=nickerinack')
         .send('email=here@there.org')
         .send('homeAddress=home')
-        .send('question1=Q1')
+        .send('hasParticipationInformation=true')
         .expect(302)
         .expect('location', '/payment/socrates', function (err) {
           expect(subscriberSave.called).to.be(true);
@@ -569,7 +569,7 @@ describe('SoCraTes members application', function () {
           .send('nickname=nickerinack')
           .send('email=here@there.org')
           .send('homeAddress=home')
-          .send('question1=Q1')
+          .send('hasParticipationInformation=true')
           .expect(302)
           .expect('location', '/payment/socrates', function (err) {
             expect(subscriberSave.called).to.be(true);
@@ -598,7 +598,7 @@ describe('SoCraTes members application', function () {
           .send('nickname=nickerinack')
           .send('email=here@there.org')
           .send('homeAddress=home')
-          .send('question1=Q1')
+          .send('hasParticipationInformation=true')
           .expect(302)
           .expect('location', '/', function (err) {
             expect(subscriberSave.called).to.be(true);
@@ -634,7 +634,7 @@ describe('SoCraTes members application', function () {
         .send('nickname=nickerinack')
         .send('email=here@there.org')
         .send('homeAddress=home')
-        .send('question1=Q1')
+        .send('hasParticipationInformation=true')
         .expect(302)
         .expect('location', '/payment/socrates', function (err) {
           expect(subscriberSave.called).to.be(true);

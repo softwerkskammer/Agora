@@ -110,7 +110,8 @@ app.get('/:year/participantsOverview/', function (req, res, next) {
     if (err || !activity) { return next(err); }
     res.render('participants', {
       title: 'Participants',
-      activity: activity
+      activity: activity,
+      showQuestions: year < 2016
     });
   });
 });

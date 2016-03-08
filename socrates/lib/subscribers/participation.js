@@ -10,9 +10,6 @@ function Participation(object) {
 
 Participation.prototype.fillFromUI = function (uiInputObject) {
   this.state.roommate = uiInputObject.roommate;
-  this.state.question1 = uiInputObject.question1;
-  this.state.question2 = uiInputObject.question2;
-  this.state.question3 = uiInputObject.question3;
   return this;
 };
 
@@ -27,6 +24,7 @@ Participation.prototype.roommate = function () {
   return this.state.roommate;
 };
 
+// these should remain here so that the data from previous years can still be accessed
 Participation.prototype.question1 = function () {
   return this.state.question1;
 };
@@ -52,7 +50,7 @@ Participation.prototype.question3Html = function () {
 };
 
 Participation.hasParticipationInformation = function (uiInputObject) {
-  return !!uiInputObject.question1;
+  return !!uiInputObject.hasParticipationInformation;
 };
 
 module.exports = Participation;

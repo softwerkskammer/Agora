@@ -101,10 +101,6 @@ module.exports = {
       displayRegistrationCheckboxes: true
     }
   ],
-  participation: {
-    question1: function () { return 'q1'; },
-    question2: function () { return 'q2'; },
-    question3: function () { return 'q3'; }
-  }
+  participation: {}
 
 };

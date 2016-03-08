@@ -84,18 +84,5 @@
     it('checks that "homeAddress" is mandatory', function () {
       checkFieldMandatory('[name=homeAddress]', 'onetwo\nhhsd');
     });
-
-    it('checks that "question1" is mandatory', function () {
-      checkFieldMandatory('[name=question1]', 'onetwo\nhhsd');
-    });
-
-    it('checks that "question2" is mandatory', function () {
-      checkFieldMandatory('[name=question2]', 'onetwo\nhhsd');
-    });
-
-    it('checks that "question3" is mandatory', function () {
-      checkFieldMandatory('[name=question3]', 'onetwo\nhhsd');
-    });
-
   });
 }());

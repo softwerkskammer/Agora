@@ -259,13 +259,13 @@ describe('SoCraTes Activities Service', function () {
   it('loads an activity enriched with participants and their participation information for a year', function (done) {
     socrates.resources.single._registeredMembers = [{memberId: 'memberId', duration: 2}];
     subscriber = new Subscriber({id: 'memberId'});
-    subscriber.participationOf('2020').state.question1 = 'Answer for Q1';
+    subscriber.participationOf('2020').state.roommate = 'My buddy';
 
     expect(socratesActivity.resourceNamed('single').registeredMembers()).to.eql(['memberId']);
 
     socratesActivitiesService.getActivityWithParticipantsAndSubscribers('2020', function (err, activity) {
       expect(activity.participants).to.have.length(1);
-      expect(activity.participants[0].participation.question1()).to.be('Answer for Q1');
+      expect(activity.participants[0].participation.roommate()).to.be('My buddy');
       done(err);
     });
   });
