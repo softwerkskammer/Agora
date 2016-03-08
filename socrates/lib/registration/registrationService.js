@@ -52,10 +52,6 @@ module.exports = {
       if (socratesEventStore.isAlreadyRegistered(memberID)) {
         return callback(null, 'message.title.problem', 'activities.already_registered');
       }
-      if (!socratesEventStore.hasValidReservationFor(registrationTuple.sessionID)) {
-        var message = registrationTuple.duration === 'waitinglist' ? 'activities.waitinglist_registration_timed_out' : 'activities.registration_timed_out';
-        return callback(null, 'message.title.problem', message);
-      }
       if (registrationTuple.duration === 'waitinglist') {
         registrationEvent = socratesEventStore.registerWaitinglistParticipant(registrationTuple.resourceName, registrationTuple.sessionID, memberID);
       } else {
@@ -80,6 +76,17 @@ module.exports = {
             subscriber.fillFromUI(body);
             subscriberstore.saveSubscriber(subscriber, callback);
           });
+        } else if (registrationEvent === eventConstants.DID_NOT_REGISTER_PARTICIPANT_FOR_FULL_RESOURCE) {
+          // if the resource was full, this can only be due to the registration having timed out:
+          var message = registrationTuple.duration === 'waitinglist' ? 'activities.waitinglist_registration_timed_out' : 'activities.registration_timed_out';
+          return callback(null, 'message.title.problem', message);
+          /*
+          return subscriberstore.getSubscriber(memberID, function (err2, subscriber) {
+            if (err2) { return callback(err2); }
+            subscriber.fillFromUI(body);
+            subscriberstore.saveSubscriber(subscriber, callback);
+          });
+          */
         } else {
           callback(null, 'activities.registration_not_now', 'activities.registration_not_possible');
         }

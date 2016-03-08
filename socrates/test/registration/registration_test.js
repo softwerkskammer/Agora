@@ -17,6 +17,7 @@ var Member = beans.get('member');
 var Subscriber = beans.get('subscriber');
 
 var events = beans.get('events');
+var e = beans.get('eventConstants');
 var SoCraTesEventStore = beans.get('SoCraTesEventStore');
 var eventstore = beans.get('eventstore');
 
@@ -191,7 +192,7 @@ describe('SoCraTes registration application', function () {
     });
   });
 
-  describe('submission of the participate form', function () {
+  describe('submission of the participate form to become a participant', function () {
 
     it('is accepted when a room is selected', function (done) {
       socratesES.state.resourceEvents = [
@@ -216,11 +217,128 @@ describe('SoCraTes registration application', function () {
         .expect(302)
         .expect('location', '/payment/socrates', function (err) {
           expect(eventStoreSave.called).to.be(true);
+          expect(socratesES.state.resourceEvents[0].event).to.eql(e.RESERVATION_WAS_ISSUED);
+          expect(socratesES.state.resourceEvents[1].event).to.eql(e.PARTICIPANT_WAS_REGISTERED);
           done(err);
         });
 
     });
 
+    it('is still accepted as participant even when the timeout is expired, if there is enough space in the resource', function (done) {
+      socratesES.state.resourceEvents = [
+        setTimestamp(events.reservationWasIssued('junior', 'session-id', 'memberId2'), moment().subtract(1, 'hours'))];
+
+      appWithSocratesMemberAndFixedSessionId
+        .post('/completeRegistration')
+        .send('activityUrl=socrates-url')
+        .send('resourceName=junior')
+        .send('duration=3')
+        .send('homeAddress=At home')
+        .send('billingAddress=')
+        .send('tShirtSize=XXXL')
+        .send('remarks=vegan')
+        .send('roommate=My buddy')
+        .send('question1=Dunno...')
+        .send('question2=Nothing.')
+        .send('question3=Why are you so curious?')
+        .send('previousNickname=Nick&nickname=Nick')
+        .send('previousEmail=me@you.com&email=me@you.com')
+        .send('firstname=Peter&lastname=Miller')
+        .expect(302)
+        .expect('location', '/payment/socrates', function (err) {
+          expect(eventStoreSave.called).to.be(true);
+          expect(socratesES.state.resourceEvents[0].event).to.eql(e.RESERVATION_WAS_ISSUED);
+          expect(socratesES.state.resourceEvents[1].event).to.eql(e.PARTICIPANT_WAS_REGISTERED);
+          done(err);
+        });
+    });
+
+    it('is still accepted as participant even when there is no reservation, if there is enough space in the resource', function (done) {
+      socratesES.state.resourceEvents = [];
+
+      appWithSocratesMemberAndFixedSessionId
+        .post('/completeRegistration')
+        .send('activityUrl=socrates-url')
+        .send('resourceName=junior')
+        .send('duration=3')
+        .send('homeAddress=At home')
+        .send('billingAddress=')
+        .send('tShirtSize=XXXL')
+        .send('remarks=vegan')
+        .send('roommate=My buddy')
+        .send('question1=Dunno...')
+        .send('question2=Nothing.')
+        .send('question3=Why are you so curious?')
+        .send('previousNickname=Nick&nickname=Nick')
+        .send('previousEmail=me@you.com&email=me@you.com')
+        .send('firstname=Peter&lastname=Miller')
+        .expect(302)
+        .expect('location', '/payment/socrates', function (err) {
+          expect(eventStoreSave.called).to.be(true);
+          expect(socratesES.state.resourceEvents[0].event).to.eql(e.PARTICIPANT_WAS_REGISTERED);
+          done(err);
+        });
+    });
+
+    it('is not accepted as participant when the timeout is expired and there is not enough space in the resource', function (done) {
+      socratesES.state.resourceEvents = [
+        setTimestamp(events.reservationWasIssued('single', 'session-id', 'memberId2'), moment().subtract(1, 'hours'))];
+
+      appWithSocratesMemberAndFixedSessionId
+        .post('/completeRegistration')
+        .send('activityUrl=socrates-url')
+        .send('resourceName=single')
+        .send('duration=3')
+        .send('homeAddress=At home')
+        .send('billingAddress=')
+        .send('tShirtSize=XXXL')
+        .send('remarks=vegan')
+        .send('roommate=My buddy')
+        .send('question1=Dunno...')
+        .send('question2=Nothing.')
+        .send('question3=Why are you so curious?')
+        .send('previousNickname=Nick&nickname=Nick')
+        .send('previousEmail=me@you.com&email=me@you.com')
+        .send('firstname=Peter&lastname=Miller')
+        .expect(302)
+        .expect('location', '/registration', function (err) {
+          expect(eventStoreSave.called).to.be(true);
+          expect(socratesES.state.resourceEvents[0].event).to.eql(e.RESERVATION_WAS_ISSUED);
+          expect(socratesES.state.resourceEvents[1].event).to.eql(e.DID_NOT_REGISTER_PARTICIPANT_FOR_FULL_RESOURCE);
+          done(err);
+        });
+    });
+
+    it('is not accepted as participant when there is no reservation and there is not enough space in the resource', function (done) {
+      socratesES.state.resourceEvents = [];
+
+      appWithSocratesMemberAndFixedSessionId
+        .post('/completeRegistration')
+        .send('activityUrl=socrates-url')
+        .send('resourceName=single')
+        .send('duration=3')
+        .send('homeAddress=At home')
+        .send('billingAddress=')
+        .send('tShirtSize=XXXL')
+        .send('remarks=vegan')
+        .send('roommate=My buddy')
+        .send('question1=Dunno...')
+        .send('question2=Nothing.')
+        .send('question3=Why are you so curious?')
+        .send('previousNickname=Nick&nickname=Nick')
+        .send('previousEmail=me@you.com&email=me@you.com')
+        .send('firstname=Peter&lastname=Miller')
+        .expect(302)
+        .expect('location', '/registration', function (err) {
+          expect(eventStoreSave.called).to.be(true);
+          expect(socratesES.state.resourceEvents[0].event).to.eql(e.DID_NOT_REGISTER_PARTICIPANT_FOR_FULL_RESOURCE);
+          done(err);
+        });
+    });
+
+  });
+
+  describe('submission of the participate form to become a waitinglist participant', function () {
     it('is accepted when a waitinglist option is selected', function (done) {
       socratesES.state.resourceEvents = [
         events.waitinglistReservationWasIssued('single', 'session-id', 'memberId2')];
@@ -244,11 +362,13 @@ describe('SoCraTes registration application', function () {
         .expect(302)
         .expect('location', '/registration', function (err) {
           expect(eventStoreSave.called).to.be(true);
+          expect(socratesES.state.resourceEvents[0].event).to.eql(e.WAITINGLIST_RESERVATION_WAS_ISSUED);
+          expect(socratesES.state.resourceEvents[1].event).to.eql(e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED);
           done(err);
         });
     });
 
-    it('is denied when the timeout is expired', function (done) {
+    it('is still accepted to the waitinglist even when the timeout is expired', function (done) {
       socratesES.state.resourceEvents = [
         setTimestamp(events.waitinglistReservationWasIssued('single', 'session-id', 'memberId2'), moment().subtract(1, 'hours'))];
 
@@ -270,7 +390,9 @@ describe('SoCraTes registration application', function () {
         .send('firstname=Peter&lastname=Miller')
         .expect(302)
         .expect('location', '/registration', function (err) {
-          expect(eventStoreSave.called).to.be(false); // TODO we should save the evenstore in this case as well!
+          expect(eventStoreSave.called).to.be(true);
+          expect(socratesES.state.resourceEvents[0].event).to.eql(e.WAITINGLIST_RESERVATION_WAS_ISSUED);
+          expect(socratesES.state.resourceEvents[1].event).to.eql(e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED);
           done(err);
         });
     });
