@@ -227,27 +227,27 @@ describe('Registration Service', function () {
       });
     });
 
-    it('does not add the registrant to the resource if no sessionId entry exists', function (done) {
+    it('adds the registrant to the resource even if no sessionId entry exists, provided there is enough space', function (done) {
       registrationService.saveRegistration('memberId', 'sessionId', registrationTuple, function (err, statusTitle, statusText) {
-        expect(statusTitle).to.be('message.title.problem');
-        expect(statusText).to.be('activities.registration_timed_out');
+        expect(statusTitle).to.be(undefined);
+        expect(statusText).to.be(undefined);
         expect(socratesES.reservationsBySessionIdFor('single')).to.eql({});
-        expect(socratesES.participantsByMemberIdFor('single')).to.eql({});
+        expect(R.keys(socratesES.participantsByMemberIdFor('single'))).to.eql(['memberId']);
         expect(socratesES.waitinglistReservationsBySessionIdFor('single')).to.eql({});
         expect(socratesES.waitinglistParticipantsByMemberIdFor('single')).to.eql({});
         done(err);
       });
     });
 
-    it('does not add the registrant to the resource if the sessionId entry is already expired', function (done) {
+    it('adds the registrant to the resource if the sessionId entry is already expired, if there is enough space', function (done) {
       socratesES.state.resourceEvents = [
         setTimestamp(events.reservationWasIssued(registrationTuple.resourceName, registrationTuple.duration, registrationTuple.sessionID), moment().subtract(1, 'hours'))];
 
       registrationService.saveRegistration('memberId', 'sessionId', registrationTuple, function (err, statusTitle, statusText) {
-        expect(statusTitle).to.be('message.title.problem');
-        expect(statusText).to.be('activities.registration_timed_out');
+        expect(statusTitle).to.be(undefined);
+        expect(statusText).to.be(undefined);
         expect(socratesES.reservationsBySessionIdFor('single')).to.eql({});
-        expect(socratesES.participantsByMemberIdFor('single')).to.eql({});
+        expect(R.keys(socratesES.participantsByMemberIdFor('single'))).to.eql(['memberId']);
         expect(socratesES.waitinglistReservationsBySessionIdFor('single')).to.eql({});
         expect(socratesES.waitinglistParticipantsByMemberIdFor('single')).to.eql({});
         done(err);
@@ -289,33 +289,33 @@ describe('Registration Service', function () {
       });
     });
 
-    it('does not add the registrant to the waitinglist if there is no reservation for the session id', function (done) {
+    it('adds the registrant to the waitinglist if there is no reservation for the session id but there is enough space in the resource', function (done) {
       registrationTuple.duration = 'waitinglist';
 
       registrationService.saveRegistration('memberId', 'sessionId', registrationTuple, function (err, statusTitle, statusText) {
-        expect(statusTitle).to.be('message.title.problem');
-        expect(statusText).to.be('activities.waitinglist_registration_timed_out');
+        expect(statusTitle).to.be(undefined);
+        expect(statusText).to.be(undefined);
         expect(socratesES.reservationsBySessionIdFor('single')).to.eql({});
         expect(socratesES.participantsByMemberIdFor('single')).to.eql({});
         expect(socratesES.waitinglistReservationsBySessionIdFor('single')).to.eql({});
-        expect(socratesES.waitinglistParticipantsByMemberIdFor('single')).to.eql({});
+        expect(R.keys(socratesES.waitinglistParticipantsByMemberIdFor('single'))).to.eql(['memberId']);
         done(err);
       });
     });
 
-    it('does not add the registrant to the waitinglist if the reservation is already expired', function (done) {
+    it('adds the registrant to the waitinglist if the reservation is already expired but there is enough space in the resource', function (done) {
       registrationTuple.duration = 'waitinglist';
 
       socratesES.state.resourceEvents = [
         setTimestamp(events.waitinglistReservationWasIssued(registrationTuple.resourceName, registrationTuple.sessionID), moment().subtract(1, 'hours'))];
 
       registrationService.saveRegistration('memberId', 'sessionId', registrationTuple, function (err, statusTitle, statusText) {
-        expect(statusTitle).to.be('message.title.problem');
-        expect(statusText).to.be('activities.waitinglist_registration_timed_out');
+        expect(statusTitle).to.be(undefined);
+        expect(statusText).to.be(undefined);
         expect(socratesES.reservationsBySessionIdFor('single')).to.eql({});
         expect(socratesES.participantsByMemberIdFor('single')).to.eql({});
         expect(socratesES.waitinglistReservationsBySessionIdFor('single')).to.eql({});
-        expect(socratesES.waitinglistParticipantsByMemberIdFor('single')).to.eql({});
+        expect(R.keys(socratesES.waitinglistParticipantsByMemberIdFor('single'))).to.eql(['memberId']);
         done(err);
       });
     });

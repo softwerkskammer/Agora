@@ -253,10 +253,7 @@ SoCraTesEventStore.prototype.issueWaitinglistReservation = function (roomType, s
 
 SoCraTesEventStore.prototype.registerWaitinglistParticipant = function (roomType, sessionId, memberId) {
   var event;
-  if (this.waitinglistReservationsBySessionId()[sessionId]) {
-    // TODO does not work if the SoCraTesEventStore stays in memory for more than 30 minutes! How to test this?
-    event = events.waitinglistParticipantWasRegistered(roomType, sessionId, memberId);
-  } else if (this.isAlreadyRegistered(memberId) || this.isAlreadyOnWaitinglist(memberId)) {
+  if (this.isAlreadyRegistered(memberId) || this.isAlreadyOnWaitinglist(memberId)) {
     event = events.didNotRegisterParticipantASecondTime(roomType, 'waitinglist', sessionId, memberId);
   } else {
     // all is well
