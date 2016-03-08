@@ -336,6 +336,37 @@ describe('SoCraTes registration application', function () {
         });
     });
 
+    it('is not accepted if already registered', function (done) {
+      socratesES.state.resourceEvents = [
+        events.participantWasRegistered('junior', 5, 'session-id', 'memberId2')
+      ];
+
+      appWithSocratesMemberAndFixedSessionId
+        .post('/completeRegistration')
+        .send('activityUrl=socrates-url')
+        .send('resourceName=junior')
+        .send('duration=5')
+        .send('homeAddress=At home')
+        .send('billingAddress=')
+        .send('tShirtSize=XXXL')
+        .send('remarks=vegan')
+        .send('roommate=My buddy')
+        .send('question1=Dunno...')
+        .send('question2=Nothing.')
+        .send('question3=Why are you so curious?')
+        .send('previousNickname=Nick&nickname=Nick')
+        .send('previousEmail=me@you.com&email=me@you.com')
+        .send('firstname=Peter&lastname=Miller')
+        .expect(302)
+        .expect('location', '/registration', function (err) {
+          expect(eventStoreSave.called).to.be(true);
+          expect(socratesES.state.resourceEvents[0].event).to.eql(e.PARTICIPANT_WAS_REGISTERED);
+          expect(socratesES.state.resourceEvents[1].event).to.eql(e.DID_NOT_REGISTER_PARTICIPANT_A_SECOND_TIME);
+          done(err);
+        });
+
+    });
+
   });
 
   describe('submission of the participate form to become a waitinglist participant', function () {
@@ -397,6 +428,34 @@ describe('SoCraTes registration application', function () {
         });
     });
 
+    it('is not accepted to the waitinglist a second time', function (done) {
+      socratesES.state.resourceEvents = [
+        events.waitinglistParticipantWasRegistered('single', 'session-id', 'memberId2')];
+
+      appWithSocratesMemberAndFixedSessionId
+        .post('/completeRegistration')
+        .send('activityUrl=socrates-url')
+        .send('resourceName=junior')
+        .send('duration=waitinglist')
+        .send('homeAddress=At home')
+        .send('billingAddress=')
+        .send('tShirtSize=XXXL')
+        .send('remarks=vegan')
+        .send('roommate=My buddy')
+        .send('question1=Dunno...')
+        .send('question2=Nothing.')
+        .send('question3=Why are you so curious?')
+        .send('previousNickname=Nick&nickname=Nick')
+        .send('previousEmail=me@you.com&email=me@you.com')
+        .send('firstname=Peter&lastname=Miller')
+        .expect(302)
+        .expect('location', '/registration', function (err) {
+          expect(eventStoreSave.called).to.be(true);
+          expect(socratesES.state.resourceEvents[0].event).to.eql(e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED);
+          expect(socratesES.state.resourceEvents[1].event).to.eql(e.DID_NOT_REGISTER_PARTICIPANT_A_SECOND_TIME);
+          done(err);
+        });
+    });
   });
 
 });

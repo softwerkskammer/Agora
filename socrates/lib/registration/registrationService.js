@@ -48,10 +48,6 @@ module.exports = {
     eventstore.getEventStore(registrationTuple.activityUrl, function (err, socratesEventStore) {
       if (err || !socratesEventStore) { return callback(err); }
 
-      // TODO logic is already handled in the event store - follow it here!
-      if (socratesEventStore.isAlreadyRegistered(memberID)) {
-        return callback(null, 'message.title.problem', 'activities.already_registered');
-      }
       if (registrationTuple.duration === 'waitinglist') {
         registrationEvent = socratesEventStore.registerWaitinglistParticipant(registrationTuple.resourceName, registrationTuple.sessionID, memberID);
       } else {
@@ -80,6 +76,15 @@ module.exports = {
           // if the resource was full, this can only be due to the registration having timed out:
           var message = registrationTuple.duration === 'waitinglist' ? 'activities.waitinglist_registration_timed_out' : 'activities.registration_timed_out';
           return callback(null, 'message.title.problem', message);
+          /*
+          return subscriberstore.getSubscriber(memberID, function (err2, subscriber) {
+            if (err2) { return callback(err2); }
+            subscriber.fillFromUI(body);
+            subscriberstore.saveSubscriber(subscriber, callback);
+          });
+          */
+        } else if (registrationEvent === eventConstants.DID_NOT_REGISTER_PARTICIPANT_A_SECOND_TIME) {
+          return callback(null, 'message.title.problem', 'activities.already_registered');
           /*
           return subscriberstore.getSubscriber(memberID, function (err2, subscriber) {
             if (err2) { return callback(err2); }
