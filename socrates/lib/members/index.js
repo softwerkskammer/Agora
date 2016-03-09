@@ -7,7 +7,6 @@ var misc = beans.get('misc');
 var membersService = beans.get('membersService');
 var subscriberService = beans.get('subscriberService');
 var socratesActivitiesService = beans.get('socratesActivitiesService');
-var activitystore = beans.get('activitystore');
 var eventstore = beans.get('eventstore');
 var Member = beans.get('member');
 var memberSubmitHelper = beans.get('memberSubmitHelper');
@@ -148,18 +147,18 @@ app.post('/deleteAvatarInOverviewFor', function (req, res, next) {
 app.get('/:nickname', function (req, res, next) {
   subscriberService.getMemberIfSubscriberExists(req.params.nickname, function (err, member) {
     if (err || !member) { return next(err); }
-    activitystore.getActivity(socratesConstants.currentUrl, function (err2, activity) {
-      if (err2 || !activity) { return next(err2); }
+    eventstore.getEventStore(socratesConstants.currentUrl, function (err2, socratesEventStore) {
+      if (err2 || !socratesEventStore) { return next(err2); }
 
       // only when a participant looks at their own profile!
-      var registeredResource = activity.registeredResourcesFor(member.id())[0];
-      var isInDoubleBedRoom = registeredResource && registeredResource.resourceName.indexOf('bed_in_') > -1;
-      var roommateId = activity.roommateFor(member.id());
+      var registeredResource = socratesEventStore.registeredInRoomType(member.id());
+      var isInDoubleBedRoom = registeredResource && registeredResource.indexOf('bed_in_') > -1;
+      var roommateId; // TODO socratesEventStore.roommateFor(member.id());
       memberstore.getMemberForId(roommateId, function (err3, roommate) {
         var potentialRoommates = [];
         if (err3) { return next(err3); }
         if (registeredResource && !roommate) {
-          potentialRoommates = activity.rooms(registeredResource.resourceName).participantsWithoutRoom();
+          potentialRoommates = [member.id()]; // TODO socratesEventStore.rooms(registeredResource).participantsWithoutRoom();
           var index = potentialRoommates.indexOf(member.id());
           potentialRoommates.splice(index, 1);
         }
@@ -174,7 +173,7 @@ app.get('/:nickname', function (req, res, next) {
               registration: {
                 isInDoubleBedRoom: isInDoubleBedRoom,
                 alreadyRegistered: !!registeredResource,
-                alreadyOnWaitinglist: activity.waitinglistResourcesFor(member.id())[0]
+                alreadyOnWaitinglist: socratesEventStore.isAlreadyOnWaitinglist(member.id())
               }
             });
           });

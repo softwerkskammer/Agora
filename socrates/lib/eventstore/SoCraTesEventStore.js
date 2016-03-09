@@ -315,6 +315,14 @@ SoCraTesEventStore.prototype._waitinglistParticipantEventFor = function (memberI
   return this.waitinglistParticipantsByMemberId()[memberId];
 };
 
+SoCraTesEventStore.prototype.registeredInRoomType = function (memberID) {
+  var participantEvent = this._participantEventFor(memberID);
+  if (participantEvent) {
+    return participantEvent.roomType;
+  }
+  return null;
+};
+
 SoCraTesEventStore.prototype.isAlreadyOnWaitinglist = function (memberId) {
   return !!this._waitinglistParticipantEventFor(memberId);
 };
