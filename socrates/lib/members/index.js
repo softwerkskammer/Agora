@@ -32,7 +32,7 @@ function editMember(req, res, next, returnToParticipantsListing) {
       subscriber: subscriber,
       addon: subscriber && subscriber.addon().homeAddress() ? subscriber.addon() : undefined,
       participation: subscriber && subscriber.isParticipating() ? subscriber.currentParticipation() : null,
-      isOnlyOnWaitinglist: registeredResources.length === 0,
+      isOnlyOnWaitinglist: socratesEventStore.isAlreadyOnWaitinglist(member.id()) && !socratesEventStore.isAlreadyRegistered(member.id()),
       sharesARoom: registeredResources.length === 1 && registeredResources[0].indexOf('bed_in_') > -1,
       returnToParticipantsListing: returnToParticipantsListing
     };
