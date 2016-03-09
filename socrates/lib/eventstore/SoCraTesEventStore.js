@@ -367,4 +367,17 @@ SoCraTesEventStore.prototype.selectedOptionFor = function (memberID) {
   return null;
 };
 
+SoCraTesEventStore.prototype.roomTypesOf = function (memberID) {
+  var participantEvent = this._participantEventFor(memberID);
+  if (participantEvent) {
+    return [participantEvent.roomType];
+  }
+
+  var waitinglistParticipantEvent = this._waitinglistParticipantEventFor(memberID);
+  if (waitinglistParticipantEvent) {
+    return waitinglistParticipantEvent.desiredRoomTypes;
+  }
+  return [];
+};
+
 module.exports = SoCraTesEventStore;

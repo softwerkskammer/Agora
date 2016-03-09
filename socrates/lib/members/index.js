@@ -8,6 +8,7 @@ var membersService = beans.get('membersService');
 var subscriberService = beans.get('subscriberService');
 var socratesActivitiesService = beans.get('socratesActivitiesService');
 var activitystore = beans.get('activitystore');
+var eventstore = beans.get('eventstore');
 var Member = beans.get('member');
 var memberSubmitHelper = beans.get('memberSubmitHelper');
 var subscriberstore = beans.get('subscriberstore');
@@ -23,10 +24,10 @@ function editMember(req, res, next, returnToParticipantsListing) {
   }
   var member = req.user.member;
   var subscriber = req.user.subscriber;
-  activitystore.getActivity(socratesConstants.currentUrl, function (err, socrates) {
-    if (err || !socrates) { return next(err); }
-    var registeredResources = socrates.resources().resourceNamesOf(member.id());
-    res.render('edit', {
+  eventstore.getEventStore(socratesConstants.currentUrl, function (err, socratesEventStore) {
+    if (err || !socratesEventStore) { return next(err); }
+    var registeredResources = socratesEventStore.roomTypesOf(member.id());
+    var options = {
       member: member,
       subscriber: subscriber,
       addon: subscriber && subscriber.addon().homeAddress() ? subscriber.addon() : undefined,
@@ -34,7 +35,8 @@ function editMember(req, res, next, returnToParticipantsListing) {
       isOnlyOnWaitinglist: registeredResources.length === 0,
       sharesARoom: registeredResources.length === 1 && registeredResources[0].indexOf('bed_in_') > -1,
       returnToParticipantsListing: returnToParticipantsListing
-    });
+    };
+    res.render('edit', options);
   });
 }
 
