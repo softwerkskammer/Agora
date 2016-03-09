@@ -68,6 +68,7 @@ mixin userinfoform(addon, participation, sharesARoom)
       .row
         .col-sm-12
           hr
+          +hidden('hasParticipationInformation', true)
           +text('roommate', 'Who do you want to share your room with', participation.roommate())
   script.
     $('#tShirtSizeMale').on('change', function (e) {
