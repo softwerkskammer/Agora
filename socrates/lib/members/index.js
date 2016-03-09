@@ -79,7 +79,7 @@ app.post('/delete', function (req, res, next) {
       return res.redirect('/members/' + encodeURIComponent(nicknameOfEditMember));
     }
     socratesActivitiesService.participationStatus(subscriber, function (err1, isParticipant) {
-      if (err1 || !subscriber) { return next(err1); }
+      if (err1) { return next(err1); }
       if (isParticipant) {
         statusmessage.errorMessage('message.title.problem', 'message.content.members.hasParticipated').putIntoSession(req);
         return res.redirect('/members/' + encodeURIComponent(nicknameOfEditMember));
