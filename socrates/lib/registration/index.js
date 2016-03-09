@@ -164,11 +164,10 @@ app.post('/completeRegistration', function (req, res, next) {
       }
       if (body.duration === 'waitinglist') {
         statusmessage.successMessage('general.info', 'activities.successfully_added_to_waitinglist').putIntoSession(req);
-        res.redirect('/registration');
       } else {
         statusmessage.successMessage('general.info', 'activities.successfully_registered').putIntoSession(req);
-        res.redirect('/payment/socrates');
       }
+      res.redirect('/registration');
     });
   });
 });

@@ -1,7 +1,6 @@
 'use strict';
 
 var beans = require('simple-configure').get('beans');
-var Payment = beans.get('socratesPayment');
 var Renderer = beans.get('renderer');
 
 function Participation(object) {
@@ -11,13 +10,6 @@ function Participation(object) {
 Participation.prototype.fillFromUI = function (uiInputObject) {
   this.state.roommate = uiInputObject.roommate;
   return this;
-};
-
-Participation.prototype.payment = function () {
-  if (!this.state.payment) {
-    this.state.payment = {};
-  }
-  return new Payment(this.state.payment);
 };
 
 Participation.prototype.roommate = function () {

@@ -72,9 +72,6 @@ mixin navbar(xs)
             else
               li: a(href='/') <i>none</i>
         +loginMenu(true)
-      if accessrights.needsToPay()
-        a.btn.btn-primary.pull-right.hidden-xs(href='/payment/socrates', style='margin-top: 7px;') Pay
-        a.btn.btn-primary.visible-xs(href='/payment/socrates', style='margin-top: 7px;') Pay
 
       
       

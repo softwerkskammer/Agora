@@ -31,7 +31,6 @@ function editMember(req, res, next, returnToParticipantsListing) {
       subscriber: subscriber,
       addon: subscriber && subscriber.addon().homeAddress() ? subscriber.addon() : undefined,
       participation: subscriber && subscriber.isParticipating() ? subscriber.currentParticipation() : null,
-      isOnlyOnWaitinglist: socratesEventStore.isAlreadyOnWaitinglist(member.id()) && !socratesEventStore.isAlreadyRegistered(member.id()),
       sharesARoom: registeredResources.length === 1 && registeredResources[0].indexOf('bed_in_') > -1,
       returnToParticipantsListing: returnToParticipantsListing
     };
@@ -102,9 +101,6 @@ app.post('/submit', function (req, res, next) {
       subscriber.fillFromUI(req.body);
       subscriberstore.saveSubscriber(subscriber, function (err2) {
         if (err2) { return next(err2); }
-        if (subscriber.needsToPay()) {
-          return res.redirect('/payment/socrates');
-        }
         if (returnToParticipantsListing) {
           return res.redirect(participantsOverviewUrlPrefix + encodeURIComponent(req.user.member.nickname()));
         }

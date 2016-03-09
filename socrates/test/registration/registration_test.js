@@ -213,7 +213,7 @@ describe('SoCraTes registration application', function () {
         .send('previousEmail=me@you.com&email=me@you.com')
         .send('firstname=Peter&lastname=Miller')
         .expect(302)
-        .expect('location', '/payment/socrates', function (err) {
+        .expect('location', '/registration', function (err) {
           expect(eventStoreSave.called).to.be(true);
           expect(socratesES.state.resourceEvents[0].event).to.eql(e.RESERVATION_WAS_ISSUED);
           expect(socratesES.state.resourceEvents[1].event).to.eql(e.PARTICIPANT_WAS_REGISTERED);
@@ -241,7 +241,7 @@ describe('SoCraTes registration application', function () {
         .send('previousEmail=me@you.com&email=me@you.com')
         .send('firstname=Peter&lastname=Miller')
         .expect(302)
-        .expect('location', '/payment/socrates', function (err) {
+        .expect('location', '/registration', function (err) {
           expect(eventStoreSave.called).to.be(true);
           expect(socratesES.state.resourceEvents[0].event).to.eql(e.RESERVATION_WAS_ISSUED);
           expect(socratesES.state.resourceEvents[1].event).to.eql(e.PARTICIPANT_WAS_REGISTERED);
@@ -267,7 +267,7 @@ describe('SoCraTes registration application', function () {
         .send('previousEmail=me@you.com&email=me@you.com')
         .send('firstname=Peter&lastname=Miller')
         .expect(302)
-        .expect('location', '/payment/socrates', function (err) {
+        .expect('location', '/registration', function (err) {
           expect(eventStoreSave.called).to.be(true);
           expect(socratesES.state.resourceEvents[0].event).to.eql(e.PARTICIPANT_WAS_REGISTERED);
           done(err);

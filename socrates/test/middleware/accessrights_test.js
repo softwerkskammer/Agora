@@ -5,9 +5,6 @@ var sinon = require('sinon').sandbox.create();
 
 var conf = require('../../testutil/configureForTest');
 var beans = conf.get('beans');
-var SoCraTesEventStore = beans.get('SoCraTesEventStore');
-var eventstore = beans.get('eventstore');
-var events = beans.get('events');
 var accessrights = beans.get('accessrights');
 
 describe('accessrights', function () {
@@ -15,11 +12,8 @@ describe('accessrights', function () {
   var req;
   var res;
   var next;
-  var socrates;
 
   beforeEach(function () {
-    socrates = new SoCraTesEventStore();
-    sinon.stub(eventstore, 'getEventStore', function (url, callback) { callback(null, socrates); });
     req = {};
     res = {locals: {}};
     next = function () { return; };
@@ -58,41 +52,4 @@ describe('accessrights', function () {
     conf.addProperties({socratesAdmins: []});
   });
 
-  describe('tells if the current user needs to pay', function () {
-    beforeEach(function () {
-      loginAs('memberId');
-    });
-
-    it('yes, if he is subscribed and has not paid', function () {
-      socrates.state.resourceEvents = [
-        events.participantWasRegistered('single', 3, 'session-id', 'memberId')
-      ];
-      req.user.subscriber = {needsToPay: function () { return true; }};
-
-      expect(res.locals.accessrights.needsToPay()).to.be.true();
-    });
-
-    it('no, if he is not really subscribed (-> waitinglist) and has not paid', function () {
-      socrates.state.resourceEvents = [
-        events.waitinglistParticipantWasRegistered('single', 3, 'memberId')
-      ];
-      req.user.subscriber = {needsToPay: function () { return true; }};
-
-      expect(res.locals.accessrights.needsToPay()).to.be.false();
-    });
-
-    it('no, if he is subscribed and has paid', function () {
-      socrates.state.resourceEvents = [
-        events.participantWasRegistered('single', 3, 'session-id', 'memberId')
-      ];
-      req.user.subscriber = {needsToPay: function () { return false; }};
-
-      expect(res.locals.accessrights.needsToPay()).to.be.false();
-    });
-
-    it('no, if there is no subscriber at all', function () {
-
-      expect(res.locals.accessrights.needsToPay()).to.be.false();
-    });
-  });
 });

@@ -21,7 +21,6 @@ var SoCraTesActivity = beans.get('socratesActivityExtended');
 var currentYear = beans.get('socratesConstants').currentYear;
 
 var events = beans.get('events');
-var e = beans.get('eventConstants');
 var SoCraTesEventStore = beans.get('SoCraTesEventStore');
 var eventstore = beans.get('eventstore');
 
@@ -371,70 +370,6 @@ describe('SoCraTes members application', function () {
       });
     });
 
-    describe('labeling "Save & Pay" for the save button', function () {
-      it('happens for "real" participants', function (done) {
-        socratesES.state.resourceEvents = [
-          events.participantWasRegistered('junior', 3, 'session-id', 'memberId2')
-        ];
-        socratesSubscriber.state.participations[currentYear] = {};
-        sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
-
-        appWithSocratesMember
-          .get('/edit')
-          .expect(200)
-          .expect(/Save & Pay/, done);
-      });
-
-      it('happens for "real" participants whose payment has not yet been confirmed', function (done) {
-        socratesES.state.resourceEvents = [
-          events.participantWasRegistered('junior', 3, 'session-id', 'memberId2')
-        ];
-        socratesSubscriber.state.participations[currentYear] = {};
-        socratesSubscriber.payment().noteCreditCardPayment();
-        sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
-
-        appWithSocratesMember
-          .get('/edit')
-          .expect(200)
-          .expect(/Save & Pay/, done);
-      });
-
-      it('does not happen for "real" participants whose payment has been confirmed', function (done) {
-        socratesES.state.resourceEvents = [
-          events.participantWasRegistered('junior', 3, 'session-id', 'memberId2')
-        ];
-        socratesSubscriber.state.participations[currentYear] = {};
-        socratesSubscriber.payment().notePaymentReceived();
-        sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
-
-        appWithSocratesMember
-          .get('/edit')
-          .expect(200)
-          .expect(/Save/)
-          .end(function (err, res) {
-            expect(res.text).to.not.contain('Save & Pay');
-            done(err);
-          });
-      });
-
-      it('does not happen for waitinglist participants', function (done) {
-        socratesES.state.resourceEvents = [
-          events.waitinglistParticipantWasRegistered('junior', 'session-id', 'memberId2')
-        ];
-        socratesSubscriber.state.participations[currentYear] = {};
-        sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
-
-        appWithSocratesMember
-          .get('/edit')
-          .expect(200)
-          .expect(/Save/)
-          .end(function (err, res) {
-            expect(res.text).to.not.contain('Save & Pay');
-            done(err);
-          });
-      });
-    });
-
     describe('- entering the home address', function () {
       it('does not allow an unregistered subscriber to enter the home address', function (done) {
         sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, softwerkskammerSubscriber); });
@@ -584,16 +519,16 @@ describe('SoCraTes members application', function () {
         .send('homeAddress=home')
         .send('hasParticipationInformation=true')
         .expect(302)
-        .expect('location', '/payment/socrates', function (err) {
+        .expect('location', '/', function (err) {
           expect(subscriberSave.called).to.be(true);
           expect(notificationCall.called).to.be(false);
           done(err);
         });
     });
 
-    describe('for exisiting members with subribers', function () {
+    describe('for exisiting members with subscribers', function () {
 
-      it('saves an existing SoCraTes member, creates no subscriber because it is already there, and does not trigger notification sending; forwards to payment page because the payment is done but not confirmed', function (done) {
+      it('saves an existing SoCraTes member, creates no subscriber because it is already there, and does not trigger notification sending; forwards to root page', function (done) {
         sinon.stub(membersService, 'isValidNickname', function (nickname, callback) { callback(null, true); });
         sinon.stub(membersService, 'isValidEmail', function (nickname, callback) { callback(null, true); });
         sinon.stub(memberstore, 'saveMember', function (member, callback) { callback(null); });
@@ -604,37 +539,6 @@ describe('SoCraTes members application', function () {
         sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups', function (nickname, callback) { callback(null, socratesMember); });
         // and that the subscriber also exists
         sinon.stub(subscriberstore, 'getSubscriber', function (id, callback) { callback(null, socratesSubscriber); });
-        // subscriber has paid via credit card
-        socratesSubscriber.payment().noteCreditCardPayment();
-
-        appWithSocratesMember
-          .post('/submit')
-          .send('id=0815&firstname=A&lastname=B')
-          .send('nickname=nickerinack')
-          .send('email=here@there.org')
-          .send('homeAddress=home')
-          .send('hasParticipationInformation=true')
-          .expect(302)
-          .expect('location', '/payment/socrates', function (err) {
-            expect(subscriberSave.called).to.be(true);
-            expect(notificationCall.called).to.be(false);
-            done(err);
-          });
-      });
-
-      it('does not forward to the payment page if the subscriber has a confirmed payment', function (done) {
-        sinon.stub(membersService, 'isValidNickname', function (nickname, callback) { callback(null, true); });
-        sinon.stub(membersService, 'isValidEmail', function (nickname, callback) { callback(null, true); });
-        sinon.stub(memberstore, 'saveMember', function (member, callback) { callback(null); });
-        var subscriberSave = sinon.stub(subscriberstore, 'saveSubscriber', function (subscriber, callback) { callback(null); });
-        var notificationCall = sinon.stub(socratesNotifications, 'newSoCraTesMemberRegistered', function () { return undefined; });
-
-        // the following stub indicates that the member already exists
-        sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups', function (nickname, callback) { callback(null, socratesMember); });
-        // and that the subscriber also exists
-        sinon.stub(subscriberstore, 'getSubscriber', function (id, callback) { callback(null, socratesSubscriber); });
-        // confirm the payment
-        socratesSubscriber.payment().notePaymentReceived();
 
         appWithSocratesMember
           .post('/submit')
@@ -680,7 +584,7 @@ describe('SoCraTes members application', function () {
         .send('homeAddress=home')
         .send('hasParticipationInformation=true')
         .expect(302)
-        .expect('location', '/payment/socrates', function (err) {
+        .expect('location', '/', function (err) {
           expect(subscriberSave.called).to.be(true);
           expect(notificationCall.called).to.be(true);
           done(err);

@@ -74,7 +74,6 @@ module.exports = {
     useApp(app, '/mailsender/', beans.get('socratesMailsenderApp'));
     useApp(app, '/members/', beans.get('socratesMembersApp'));
     useApp(app, '/gallery/', beans.get('galleryApp'));
-    useApp(app, '/payment/', beans.get('socratesPaymentApp'));
     useApp(app, '/subscribers/', beans.get('socratesSubscribersApp'));
     useApp(app, '/wiki/', beans.get('socratesWikiApp'));
     app.use(beans.get('handle404')());
