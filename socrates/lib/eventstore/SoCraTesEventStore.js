@@ -46,16 +46,6 @@ SoCraTesEventStore.prototype.updateRoomQuota = function (roomType, quota) {
   this._updateSoCraTesEventsAndWriteModel(event);
 };
 
-var updateQuota = function (roomType, quota, event) { return event.event === e.ROOM_QUOTA_WAS_SET && event.roomType === roomType ? event.quota : quota; };
-
-SoCraTesEventStore.prototype.quotaFor = function (roomType) {
-  if (!this._quota[roomType]) {
-    this._quota[roomType] = R.reduce(R.partial(updateQuota, [roomType]), undefined, this.state.socratesEvents);
-  }
-
-  return this._quota[roomType];
-};
-
 var updateUrl = function (url, event) { return event.event === e.URL_WAS_SET ? event.url : url; };
 
 SoCraTesEventStore.prototype.updateUrl = function (newUrl) {
