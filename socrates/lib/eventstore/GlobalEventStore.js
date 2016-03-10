@@ -26,6 +26,6 @@ GlobalEventStore.prototype.setId = function () {
     // persistence needs an id:
     this.state.id = moment().valueOf() + this.state.url;
   }
-}
+};
 
 module.exports = GlobalEventStore;

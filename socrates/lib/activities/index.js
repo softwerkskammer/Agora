@@ -12,8 +12,6 @@ var socratesActivitiesService = beans.get('socratesActivitiesService');
 var activitystore = beans.get('activitystore');
 
 var Activity = beans.get('activity');
-var SoCraTesReadModel = beans.get('SoCraTesReadModel');
-var GlobalEventStore = beans.get('GlobalEventStore');
 var eventstoreService = beans.get('eventstoreService');
 var eventstore = beans.get('eventstore');
 var validation = beans.get('validation');
@@ -61,7 +59,7 @@ function activitySubmitted(req, res, next) {
 }
 
 app.get('/new', function (req, res) {
-  res.render('edit', {activity: eventstoreService.newSoCraTesReadModel(), roomTypes: roomOptions.allIds()});
+  res.render('edit', {socratesReadModel: eventstoreService.newSoCraTesReadModel(), roomTypes: roomOptions.allIds()});
 });
 
 app.get('/edit/:url', function (req, res, next) {
@@ -70,7 +68,7 @@ app.get('/edit/:url', function (req, res, next) {
     if (!res.locals.accessrights.canEditActivity()) {
       return res.redirect('/registration/');
     }
-    res.render('edit', {activity: socratesReadModel, roomTypes: roomOptions.allIds()});
+    res.render('edit', {socratesReadModel: socratesReadModel, roomTypes: roomOptions.allIds()});
   });
 });
 
