@@ -9,6 +9,9 @@ var events = beans.get('events');
 var e = beans.get('eventConstants');
 var socratesConstants = beans.get('socratesConstants');
 
+var SoCraTesReadModel = beans.get('SoCraTesReadModel');
+var GlobalEventStore = beans.get('GlobalEventStore');
+
 function SoCraTesEventStore(object) {
   // TODO when loading from DB, sort event streams by timestamp!
   // event streams (will be persisted):
@@ -261,7 +264,7 @@ SoCraTesEventStore.prototype.reservationExpiration = function (sessionId) {
 };
 
 SoCraTesEventStore.prototype.isFull = function (roomType) {
-  return this.quotaFor(roomType) <= this.reservationsAndParticipantsFor(roomType).length;
+  return new SoCraTesReadModel(new GlobalEventStore(this.state)).quotaFor(roomType) <= this.reservationsAndParticipantsFor(roomType).length;
 };
 
 SoCraTesEventStore.prototype.selectedOptionFor = function (memberID) {
