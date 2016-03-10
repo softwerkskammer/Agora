@@ -17,9 +17,13 @@ module.exports = {
 
   getSoCraTesReadModel: function (url, callback) {
     eventstore.getEventStore(url, function (err, eventStore) {
-      if (err) { return callback(err); }
+      if (err || eventStore === null) { return callback(err); }
       callback(null, new SoCraTesReadModel(eventStore));
     });
+  },
+
+  newSoCraTesReadModel: function () {
+    return new SoCraTesReadModel(new GlobalEventStore());
   },
 
   getSoCraTesCommandProcessor: function (url, callback) {

@@ -10,7 +10,7 @@ module.exports = {
     isMember: function () { return true; },
     memberId: function () { return ''; }
   },
-  socratesEventStore: {
+  socratesReadModel: {
     id: function () { return ''; },
     url: function () { return ''; },
     startTime: function () { return moment(); },

@@ -8,7 +8,6 @@ var beans = require('simple-configure').get('beans');
 var events = beans.get('events');
 var e = beans.get('eventConstants');
 var socratesConstants = beans.get('socratesConstants');
-var fieldHelpers = beans.get('fieldHelpers');
 
 function SoCraTesEventStore(object) {
   // TODO when loading from DB, sort event streams by timestamp!
@@ -32,37 +31,6 @@ var registrationPeriodinMinutes = 30;
 
 SoCraTesEventStore.prototype.id = function () {
   return this.state.id;
-};
-
-// write model state:
-////////////////////////////////////////////////////////////////////////////////////////////
-// General Event Information:
-////////////////////////////////////////////////////////////////////////////////////////////
-
-var updateUrl = function (url, event) { return event.event === e.URL_WAS_SET ? event.url : url; };
-
-SoCraTesEventStore.prototype.url = function () {
-  return this.state.url;
-};
-
-var updateStartTime = function (startTimeInMillis, event) { return event.event === e.START_TIME_WAS_SET ? event.startTimeInMillis : startTimeInMillis; };
-
-SoCraTesEventStore.prototype.startTime = function () {
-  if (!this._startTimeInMillis) {
-    this._startTimeInMillis = R.reduce(updateStartTime, undefined, this.state.socratesEvents);
-  }
-
-  return moment(this._startTimeInMillis).tz(fieldHelpers.defaultTimezone());
-};
-
-var updateEndTime = function (endTimeInMillis, event) { return event.event === e.END_TIME_WAS_SET ? event.endTimeInMillis : endTimeInMillis; };
-
-SoCraTesEventStore.prototype.endTime = function () {
-  if (!this._endTimeInMillis) {
-    this._endTimeInMillis = R.reduce(updateEndTime, undefined, this.state.socratesEvents);
-  }
-
-  return moment(this._endTimeInMillis).tz(fieldHelpers.defaultTimezone());
 };
 
 

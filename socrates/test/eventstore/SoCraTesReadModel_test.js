@@ -1,6 +1,7 @@
 'use strict';
 
 var expect = require('must-dist');
+var moment = require('moment-timezone');
 
 var beans = require('../../testutil/configureForTest').get('beans');
 var events = beans.get('events');
@@ -18,6 +19,18 @@ describe('The socrates conference read model', function () {
   beforeEach(function () {
     eventStore = new GlobalEventStore();
     readModel = new SoCraTesReadModel(eventStore);
+  });
+
+  it('reads the latest start and end time from the events', function () {
+    eventStore.state.socratesEvents = [
+      events.startTimeWasSet(moment('2015-12-15T12:30:00+02:00')),
+      events.startTimeWasSet(moment('2015-06-15T12:30:00+02:00')),
+      events.endTimeWasSet(moment('2015-11-15T12:30:00+02:00')),
+      events.endTimeWasSet(moment('2015-08-15T12:30:00+02:00'))
+    ];
+
+    expect(readModel.startTime().valueOf()).to.eql(moment('2015-06-15T12:30:00+02:00').valueOf());
+    expect(readModel.endTime().valueOf()).to.eql(moment('2015-08-15T12:30:00+02:00').valueOf());
   });
 
   it('does not know the quota if it has not been set', function () {
