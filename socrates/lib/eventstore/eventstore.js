@@ -4,16 +4,16 @@ var beans = require('simple-configure').get('beans');
 var _ = require('lodash');
 var misc = beans.get('misc');
 
-var SoCraTesEventStore = beans.get('SoCraTesEventStore');
+var GlobalEventStore = beans.get('GlobalEventStore');
 var persistence = beans.get('eventstorePersistence');
 
-function toSoCraTesEventStore(callback, err, jsobject) {
-  return misc.toObject(SoCraTesEventStore, callback, err, jsobject);
+function toGlobalEventStore(callback, err, jsobject) {
+  return misc.toObject(GlobalEventStore, callback, err, jsobject);
 }
 
 module.exports = {
   getEventStore: function (url, callback) {
-    persistence.getByField({url: url}, _.partial(toSoCraTesEventStore, callback));
+    persistence.getByField({url: url}, _.partial(toGlobalEventStore, callback));
   },
 
   saveEventStore: function (eventStore, callback) {
