@@ -41,11 +41,6 @@ SoCraTesEventStore.prototype.id = function () {
 // General Event Information:
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-SoCraTesEventStore.prototype.updateRoomQuota = function (roomType, quota) {
-  var event = events.roomQuotaWasSet(roomType, quota);
-  this._updateSoCraTesEventsAndWriteModel(event);
-};
-
 var updateUrl = function (url, event) { return event.event === e.URL_WAS_SET ? event.url : url; };
 
 SoCraTesEventStore.prototype.updateUrl = function (newUrl) {

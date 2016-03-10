@@ -32,25 +32,6 @@ function setTimestamp(event, timestamp) {
   return event;
 }
 
-describe('The socrates conference command handler for room quota changes', function () {
-  it('changes the quota', function () {
-    // Given (saved events)
-    var socrates = new SoCraTesEventStore();
-
-    socrates.state.socratesEvents = [events.roomQuotaWasSet(singleBedRoom, 100)];
-    socrates.state.resourceEvents = [];
-
-    // When (issued command)
-    socrates.updateRoomQuota(singleBedRoom, 150);
-
-    // Then (new events)
-    expect(stripTimestamps(socrates.state.socratesEvents)).to.eql([
-      {event: e.ROOM_QUOTA_WAS_SET, roomType: singleBedRoom, quota: 100},
-      {event: e.ROOM_QUOTA_WAS_SET, roomType: singleBedRoom, quota: 150}
-    ]);
-  });
-});
-
 describe('The socrates conference command handlers for the event time', function () {
   it('changes the start time on update', function () {
     // Given (saved events)

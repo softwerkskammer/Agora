@@ -25,7 +25,9 @@
   "eventstoreService": {"module": "./socrates/lib/eventstore/eventstoreService"},
   "eventstore": {"module": "./socrates/lib/eventstore/eventstore"},
 
+  "SoCraTesCommandProcessor": {"module": "./socrates/lib/eventstore/SoCraTesCommandProcessor"},
   "SoCraTesReadModel": {"module": "./socrates/lib/eventstore/SoCraTesReadModel"},
+  "SoCraTesWriteModel": {"module": "./socrates/lib/eventstore/SoCraTesWriteModel"},
   "GlobalEventStore": {"module": "./socrates/lib/eventstore/GlobalEventStore"},
   "eventstorePersistence": {
     "module": "./softwerkskammer/lib/persistence/persistence",
