@@ -56,11 +56,11 @@ SoCraTesCommandProcessor.prototype.updateRoomQuota = function (roomType, quota) 
   this._updateSoCraTesEvents(event);
 };
 
-SoCraTesCommandProcessor.prototype._updateSoCraTesEvents = function (events) {
-  if (!(events instanceof Array)) {
-    events = [events];
+SoCraTesCommandProcessor.prototype._updateSoCraTesEvents = function (newEvents) {
+  if (!(newEvents instanceof Array)) {
+    newEvents = [newEvents];
   }
-  this.writeModel.updateSoCraTesEvents(events);
+  this.writeModel.updateSoCraTesEvents(newEvents);
 };
 
 SoCraTesCommandProcessor.prototype.eventStore = function () {
