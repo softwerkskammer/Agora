@@ -26,15 +26,14 @@ var reservedURLs = '^new$|^edit$|^submit$|^checkurl$\\+';
 var app = misc.expressAppIn(__dirname);
 
 function activitySubmitted(req, res, next) {
-  eventstore.getEventStore(req.body.previousUrl, function (err, socratesEventStore) {
+  eventstoreService.getSoCraTesCommandProcessor(req.body.previousUrl, function (err, socratesCommandProcessor) {
     if (err) { return next(err); }
-    if (!socratesEventStore) { socratesEventStore = new SoCraTesEventStore(); }
-    socratesEventStore.updateFromUI(req.body);
-    eventstore.saveEventStore(socratesEventStore, function (err1) {
+    socratesCommandProcessor.updateFromUI(req.body);
+    eventstore.saveEventStore(socratesCommandProcessor.eventStore(), function (err1) {
       if (err1 && err1.message === CONFLICTING_VERSIONS) {
         // we try again because of a racing condition during save:
         statusmessage.errorMessage('message.title.conflict', 'message.content.save_error_retry').putIntoSession(req);
-        return res.redirect('/activities/edit/' + encodeURIComponent(socratesEventStore.url()));
+        return res.redirect('/activities/edit/' + encodeURIComponent(req.body.previousUrl));
       }
       if (err1) { return next(err1); }
 

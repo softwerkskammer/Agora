@@ -9,8 +9,6 @@ var events = beans.get('events');
 var e = beans.get('eventConstants');
 var socratesConstants = beans.get('socratesConstants');
 var fieldHelpers = beans.get('fieldHelpers');
-var misc = beans.get('misc');
-var roomOptions = beans.get('roomOptions');
 
 function SoCraTesEventStore(object) {
   // TODO when loading from DB, sort event streams by timestamp!
@@ -43,21 +41,11 @@ SoCraTesEventStore.prototype.id = function () {
 
 var updateUrl = function (url, event) { return event.event === e.URL_WAS_SET ? event.url : url; };
 
-SoCraTesEventStore.prototype.updateUrl = function (newUrl) {
-  var event = events.urlWasSet(newUrl);
-  this._updateSoCraTesEventsAndWriteModel(event);
-};
-
 SoCraTesEventStore.prototype.url = function () {
   return this.state.url;
 };
 
 var updateStartTime = function (startTimeInMillis, event) { return event.event === e.START_TIME_WAS_SET ? event.startTimeInMillis : startTimeInMillis; };
-
-SoCraTesEventStore.prototype.updateStartTime = function (startDate, startTime) {
-  var startMoment = fieldHelpers.parseToMomentUsingDefaultTimezone(startDate, startTime);
-  this._updateSoCraTesEventsAndWriteModel(events.startTimeWasSet(startMoment));
-};
 
 SoCraTesEventStore.prototype.startTime = function () {
   if (!this._startTimeInMillis) {
@@ -69,11 +57,6 @@ SoCraTesEventStore.prototype.startTime = function () {
 
 var updateEndTime = function (endTimeInMillis, event) { return event.event === e.END_TIME_WAS_SET ? event.endTimeInMillis : endTimeInMillis; };
 
-SoCraTesEventStore.prototype.updateEndTime = function (endDate, endTime) {
-  var endMoment = fieldHelpers.parseToMomentUsingDefaultTimezone(endDate, endTime);
-  this._updateSoCraTesEventsAndWriteModel(events.endTimeWasSet(endMoment));
-};
-
 SoCraTesEventStore.prototype.endTime = function () {
   if (!this._endTimeInMillis) {
     this._endTimeInMillis = R.reduce(updateEndTime, undefined, this.state.socratesEvents);
@@ -82,40 +65,6 @@ SoCraTesEventStore.prototype.endTime = function () {
   return moment(this._endTimeInMillis).tz(fieldHelpers.defaultTimezone());
 };
 
-SoCraTesEventStore.prototype._updateQuotasFromUI = function (uiInputArrays) {
-  function matchArrayEntries(input) {
-    return R.zipObj(misc.toArray(input.names), misc.toArray(input.limits));
-  }
-
-  var self = this;
-  var newQuotas = matchArrayEntries(uiInputArrays);
-
-  R.map(function (roomType) {
-    self.updateRoomQuota(roomType, newQuotas[roomType]);
-  }, roomOptions.allIds());
-};
-
-SoCraTesEventStore.prototype.updateFromUI = function (uiData) {
-  this.updateUrl(uiData.url);
-  this.updateStartTime(uiData.startDate, uiData.startTime);
-  this.updateEndTime(uiData.endDate, uiData.endTime);
-  // persistence needs an id:
-  this.state.id = uiData.url;
-  // update quotas:
-  this._updateQuotasFromUI(uiData.resources);
-};
-
-// handle commands:
-// that create SoCraTes events:
-SoCraTesEventStore.prototype._updateSoCraTesEventsAndWriteModel = function (event) {
-  // append to event stream:
-  this.state.socratesEvents.push(event);
-  // update write models:
-  this._quota[event.roomType] = updateQuota(event.roomType, this.quotaFor(event.roomType), event);
-  this.state.url = updateUrl(this.state.url, event);
-  this._startTimeInMillis = updateStartTime(this._startTimeInMillis, event);
-  this._endTimeInMillis = updateEndTime(this._endTimeInMillis, event);
-};
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Reservations and Participants:

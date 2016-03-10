@@ -30,7 +30,27 @@ describe('The socrates conference command handler', function () {
     commandHandler = new SoCraTesCommandProcessor(new SoCraTesWriteModel(eventStore));
   });
 
-  it('changes the quota', function () {
+  it('creates a new start time event on update', function () {
+    // When (issued command)
+    commandHandler.updateStartTime('15/06/2015', '12:30');
+
+    // Then (new events)
+    expect(stripTimestamps(eventStore.state.socratesEvents)).to.eql([
+      {event: e.START_TIME_WAS_SET, startTimeInMillis: 1434364200000}
+    ]);
+  });
+
+  it('creates a new end time event on update', function () {
+    // When (issued command)
+    commandHandler.updateEndTime('10/08/2010', '10:30');
+
+    // Then (new events)
+    expect(stripTimestamps(eventStore.state.socratesEvents)).to.eql([
+      {event: e.END_TIME_WAS_SET, endTimeInMillis: 1281429000000}
+    ]);
+  });
+
+  it('creates a new quota event on update', function () {
     // Given (saved events)
 
     eventStore.state.socratesEvents = [events.roomQuotaWasSet(singleBedRoom, 100)];
