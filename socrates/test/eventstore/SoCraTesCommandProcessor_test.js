@@ -32,7 +32,7 @@ describe('The socrates conference command handler', function () {
 
   it('creates a new start time event on update', function () {
     // When (issued command)
-    commandHandler.updateStartTime('15/06/2015', '12:30');
+    commandHandler._updateStartTime('15/06/2015', '12:30');
 
     // Then (new events)
     expect(stripTimestamps(eventStore.state.socratesEvents)).to.eql([
@@ -42,7 +42,7 @@ describe('The socrates conference command handler', function () {
 
   it('creates a new end time event on update', function () {
     // When (issued command)
-    commandHandler.updateEndTime('10/08/2010', '10:30');
+    commandHandler._updateEndTime('10/08/2010', '10:30');
 
     // Then (new events)
     expect(stripTimestamps(eventStore.state.socratesEvents)).to.eql([
@@ -56,7 +56,7 @@ describe('The socrates conference command handler', function () {
     eventStore.state.socratesEvents = [events.roomQuotaWasSet(singleBedRoom, 100)];
 
     // When (issued command)
-    commandHandler.updateRoomQuota(singleBedRoom, 150);
+    commandHandler._updateRoomQuota(singleBedRoom, 150);
 
     // Then (new events)
     expect(stripTimestamps(eventStore.state.socratesEvents)).to.eql([
