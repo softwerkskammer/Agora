@@ -20,15 +20,15 @@ RegistrationWriteModel.prototype.alreadyHasWaitinglistReservation = function (se
 
 // internal function?
 RegistrationWriteModel.prototype.participantEventFor = function (memberId) {
-  return this.registrationReadModel.participantsByMemberId()[memberId];
+  return this.registrationReadModel.participantEventFor(memberId);
 };
 
 RegistrationWriteModel.prototype.isAlreadyRegistered = function (memberId) {
-  return !!this.participantEventFor(memberId);
+  return this.registrationReadModel.isAlreadyRegistered(memberId);
 };
 
-RegistrationWriteModel.prototype._waitinglistParticipantEventFor = function (memberId) {
-  return this.registrationReadModel.waitinglistParticipantsByMemberId()[memberId];
+RegistrationWriteModel.prototype.waitinglistParticipantEventFor = function (memberId) {
+  return this.registrationReadModel.waitinglistParticipantEventFor(memberId);
 };
 
 RegistrationWriteModel.prototype.registeredInRoomType = function (memberID) {
@@ -40,7 +40,7 @@ RegistrationWriteModel.prototype.registeredInRoomType = function (memberID) {
 };
 
 RegistrationWriteModel.prototype.isAlreadyOnWaitinglist = function (memberId) {
-  return !!this._waitinglistParticipantEventFor(memberId);
+  return !!this.waitinglistParticipantEventFor(memberId);
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////

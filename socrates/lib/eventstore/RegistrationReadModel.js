@@ -59,6 +59,15 @@ RegistrationReadModel.prototype.participantsByMemberIdFor = function (roomType) 
   return R.filter(function (event) { return event.roomType === roomType; }, this.participantsByMemberId());
 };
 
+RegistrationReadModel.prototype.participantEventFor = function (memberId) {
+  return this.participantsByMemberId()[memberId];
+};
+
+RegistrationReadModel.prototype.isAlreadyRegistered = function (memberId) {
+  return !!this.participantEventFor(memberId);
+};
+
+
 RegistrationReadModel.prototype.reservationsAndParticipantsFor = function (roomType) {
   return R.concat(R.values(this.reservationsBySessionIdFor(roomType)), R.values(this.participantsByMemberIdFor(roomType)));
 };
@@ -128,6 +137,35 @@ RegistrationReadModel.prototype.hasValidReservationFor = function (sessionId) {
   return !!this._reservationOrWaitinglistReservationEventFor(sessionId);
 };
 
+RegistrationReadModel.prototype.waitinglistParticipantEventFor = function (memberId) {
+  return this.waitinglistParticipantsByMemberId()[memberId];
+};
+
+RegistrationReadModel.prototype.selectedOptionFor = function (memberID) {
+  var participantEvent = this.participantEventFor(memberID);
+  if (participantEvent) {
+    return participantEvent.roomType + ',' + participantEvent.duration;
+  }
+
+  var waitinglistParticipantEvent = this.waitinglistParticipantEventFor(memberID);
+  if (waitinglistParticipantEvent) {
+    return waitinglistParticipantEvent.desiredRoomTypes[0] + ',waitinglist'; // TODO improve UX! Show all selected waitinglist options.
+  }
+  return null;
+};
+
+RegistrationReadModel.prototype.roomTypesOf = function (memberID) {
+  var participantEvent = this._participantEventFor(memberID);
+  if (participantEvent) {
+    return [participantEvent.roomType];
+  }
+
+  var waitinglistParticipantEvent = this.waitinglistParticipantEventFor(memberID);
+  if (waitinglistParticipantEvent) {
+    return waitinglistParticipantEvent.desiredRoomTypes;
+  }
+  return [];
+};
 
 // TODO this is currently for tests only...:
 RegistrationReadModel.prototype.waitinglistReservationsAndParticipantsFor = function (roomType) {

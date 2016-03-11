@@ -17,7 +17,7 @@ module.exports = {
     return _.pluck(rooms, 'id');
   },
 
-  all: function (activity, memberId, isRegistrationOpen) {
+  allRoomOptions: function (registrationReadModel, memberId, isRegistrationOpen) {
     function option(room) {
       return {
         id: room.id,
@@ -26,24 +26,7 @@ module.exports = {
         three: 3 * room.price + 2 * day,
         threePlus: 3 * room.price + 3 * day,
         four: 4 * room.price + 3 * day,
-        displayRegistrationCheckboxes: (activity.isAlreadyRegistered(memberId) || !isRegistrationOpen || activity.resourceNamed(room.id).canSubscribe()),
-        displayWaitinglistCheckbox: activity.resourceNamed(room.id).hasWaitinglist()
-      };
-    }
-
-    return _.map(rooms, option);
-  },
-
-  allFromEventStore: function (socratesEventStore, memberId, isRegistrationOpen) {
-    function option(room) {
-      return {
-        id: room.id,
-        name: room.name,
-        two: 2 * room.price + 2 * day,
-        three: 3 * room.price + 2 * day,
-        threePlus: 3 * room.price + 3 * day,
-        four: 4 * room.price + 3 * day,
-        displayRegistrationCheckboxes: (socratesEventStore.isAlreadyRegistered(memberId) || !isRegistrationOpen || !socratesEventStore.isFull(room.id)),
+        displayRegistrationCheckboxes: (registrationReadModel.isAlreadyRegistered(memberId) || !isRegistrationOpen || !registrationReadModel.isFull(room.id)),
         displayWaitinglistCheckbox: true // TODO remove altogether
       };
     }
