@@ -18,7 +18,7 @@ var Subscriber = beans.get('subscriber');
 
 var events = beans.get('events');
 var e = beans.get('eventConstants');
-var SoCraTesEventStore = beans.get('SoCraTesEventStore');
+var GlobalEventStore = beans.get('GlobalEventStore'); // TODO
 var eventstore = beans.get('eventstore');
 
 var createApp = require('../../testutil/testHelper')('socratesRegistrationApp').createApp;
@@ -51,7 +51,7 @@ describe('SoCraTes registration application', function () {
   var socratesES;
 
   beforeEach(function () {
-    socratesES = new SoCraTesEventStore();
+    socratesES = new GlobalEventStore();
     socratesES.state.socratesEvents = [
       events.roomQuotaWasSet('single', 0),
       events.roomQuotaWasSet('bed_in_double', 10),

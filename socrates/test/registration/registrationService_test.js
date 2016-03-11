@@ -21,7 +21,7 @@ var Subscriber = beans.get('subscriber');
 var notifications = beans.get('socratesNotifications');
 
 var events = beans.get('events');
-var SoCraTesEventStore = beans.get('SoCraTesEventStore');
+var GlobalEventStore = beans.get('GlobalEventStore'); // TODO
 var eventstore = beans.get('eventstore');
 
 function setTimestamp(event, timestamp) {
@@ -59,7 +59,7 @@ describe('Registration Service', function () {
 
     socratesActivity = new SoCraTesActivity(socrates);
 
-    socratesES = new SoCraTesEventStore();
+    socratesES = new GlobalEventStore();
     socratesES.state.socratesEvents = [
       events.roomQuotaWasSet('single', 10)
     ];

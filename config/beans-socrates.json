@@ -21,7 +21,6 @@
 
   "subscriberstore": {"module": "./socrates/lib/subscribers/subscriberstore"},
 
-  "SoCraTesEventStore": {"module": "./socrates/lib/eventstore/SoCraTesEventStore"},
   "eventstoreService": {"module": "./socrates/lib/eventstore/eventstoreService"},
   "eventstore": {"module": "./socrates/lib/eventstore/eventstore"},
 

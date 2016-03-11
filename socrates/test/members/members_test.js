@@ -21,7 +21,7 @@ var SoCraTesActivity = beans.get('socratesActivityExtended');
 var currentYear = beans.get('socratesConstants').currentYear;
 
 var events = beans.get('events');
-var SoCraTesEventStore = beans.get('SoCraTesEventStore');
+var GlobalEventStore = beans.get('GlobalEventStore'); // TODO
 var eventstore = beans.get('eventstore');
 
 var createApp = require('../../testutil/testHelper')('socratesMembersApp').createApp;
@@ -80,7 +80,7 @@ describe('SoCraTes members application', function () {
     /* eslint camelcase: 0 */
     socrates = {resources: {single: {}, bed_in_double: {}, junior: {}, bed_in_junior: {}}};
 
-    socratesES = new SoCraTesEventStore();
+    socratesES = new GlobalEventStore();
     socratesES.state.socratesEvents = [
       events.roomQuotaWasSet('single', 10),
       events.roomQuotaWasSet('bed_in_double', 10),
