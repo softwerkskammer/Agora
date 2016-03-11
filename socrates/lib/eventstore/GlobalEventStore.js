@@ -9,7 +9,7 @@ function GlobalEventStore(object) {
   this.state = object || {
       url: socratesConstants.currentUrl,
       socratesEvents: [],
-      resourceEvents: []
+      registrationEvents: []
     };
 }
 
@@ -17,8 +17,16 @@ GlobalEventStore.prototype.updateSoCraTesEvents = function (newEvents) {
   this.state.socratesEvents = this.state.socratesEvents.concat(newEvents);
 };
 
+GlobalEventStore.prototype.updateRegistrationEvents = function (newEvents) {
+  this.state.registrationEvents = this.state.registrationEvents.concat(newEvents);
+};
+
 GlobalEventStore.prototype.socratesEvents = function () {
   return this.state.socratesEvents;
+};
+
+GlobalEventStore.prototype.registrationEvents = function () {
+  return this.state.registrationEvents;
 };
 
 GlobalEventStore.prototype.setId = function () {

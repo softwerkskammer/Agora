@@ -30,8 +30,6 @@ function SoCraTesEventStore(object) {
   return this;
 }
 
-var registrationPeriodinMinutes = 30;
-
 SoCraTesEventStore.prototype.id = function () {
   return this.state.id;
 };
@@ -41,196 +39,13 @@ SoCraTesEventStore.prototype.id = function () {
 // Reservations and Participants:
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-SoCraTesEventStore.prototype.issueReservation = function (roomType, duration, sessionId) {
-  var event;
-  if (this.isFull(roomType)) {
-    event = events.didNotIssueReservationForFullResource(roomType, duration, sessionId);
-  } else if (this.reservationsBySessionId()[sessionId]) {
-    // session id already reserved a spot
-    event = events.didNotIssueReservationForAlreadyReservedSession(roomType, duration, sessionId);
-  } else {
-    // all is good
-    event = events.reservationWasIssued(roomType, duration, sessionId);
-  }
-  this._updateResourceEventsAndWriteModel(event);
-  return event.event;
-};
-
-var updateReservationsBySessionId = function (reservationsBySessionId, event) {
-  var thirtyMinutesAgo = moment.tz().subtract(registrationPeriodinMinutes, 'minutes');
-  if (event.event === e.RESERVATION_WAS_ISSUED && moment(event.timestamp).isAfter(thirtyMinutesAgo)) {
-    reservationsBySessionId[event.sessionID] = event;
-  }
-  if (event.event === e.PARTICIPANT_WAS_REGISTERED) {
-    delete reservationsBySessionId[event.sessionID];
-  }
-  return reservationsBySessionId;
-};
-
-SoCraTesEventStore.prototype.reservationsBySessionId = function () {
-  if (!this._reservationsBySessionId) {
-    this._reservationsBySessionId = R.reduce(updateReservationsBySessionId, {}, this.state.resourceEvents);
-  }
-  return this._reservationsBySessionId;
-};
-
-SoCraTesEventStore.prototype.reservationsBySessionIdFor = function (roomType) {
-  return R.filter(function (event) { return event.roomType === roomType; }, this.reservationsBySessionId());
-};
-
-var updateParticipantsByMemberId = function (participantsByMemberId, event) {
-  if (event.event === e.PARTICIPANT_WAS_REGISTERED || event.event === e.ROOM_TYPE_WAS_CHANGED || event.event === e.DURATION_WAS_CHANGED) {
-    participantsByMemberId[event.memberId] = event;
-  }
-  return participantsByMemberId;
-};
-
-SoCraTesEventStore.prototype.participantsByMemberId = function () {
-  if (!this._participantsByMemberId) {
-    this._participantsByMemberId = R.reduce(updateParticipantsByMemberId, {}, this.state.resourceEvents);
-  }
-  return this._participantsByMemberId;
-};
-
-SoCraTesEventStore.prototype.participantsByMemberIdFor = function (roomType) {
-  return R.filter(function (event) { return event.roomType === roomType; }, this.participantsByMemberId());
-};
-
-SoCraTesEventStore.prototype.reservationsAndParticipantsFor = function (roomType) {
-  return R.concat(R.values(this.reservationsBySessionIdFor(roomType)), R.values(this.participantsByMemberIdFor(roomType)));
-};
-
 // handle commands:
 // that create Resource events:
-SoCraTesEventStore.prototype.registerParticipant = function (roomType, duration, sessionId, memberId) {
-  var event;
-  if (this.reservationsBySessionId()[sessionId]) {
-    // TODO does not work if the SoCraTesEventStore stays in memory for more than 30 minutes! How to test this?
-    event = events.participantWasRegistered(roomType, duration, sessionId, memberId);
-  } else if (this.isFull(roomType)) {
-    event = events.didNotRegisterParticipantForFullResource(roomType, duration, sessionId, memberId);
-  } else if (this.isAlreadyRegistered(memberId) || this.isAlreadyOnWaitinglist(memberId)) {
-    event = events.didNotRegisterParticipantASecondTime(roomType, duration, sessionId, memberId);
-  } else {
-    // all is well
-    event = events.participantWasRegistered(roomType, duration, sessionId, memberId);
-  }
-  this._updateResourceEventsAndWriteModel(event);
-  return event.event;
-};
-
-SoCraTesEventStore.prototype.moveParticipantToNewRoomType = function (memberId, roomType) {
-  var existingParticipantEvent = this._participantEventFor(memberId);
-  var event = existingParticipantEvent ? events.roomTypeWasChanged(memberId, roomType, existingParticipantEvent.duration) : events.didNotChangeRoomTypeForNonParticipant(memberId, roomType);
-  this._updateResourceEventsAndWriteModel(event);
-};
-
-SoCraTesEventStore.prototype.setNewDurationForParticipant = function (memberId, duration) {
-  var existingParticipantEvent = this._participantEventFor(memberId);
-  var event = existingParticipantEvent ? events.durationWasChanged(memberId, existingParticipantEvent.roomType, duration) : events.didNotChangeDurationForNonParticipant(memberId, duration);
-  this._updateResourceEventsAndWriteModel(event);
-};
-
-SoCraTesEventStore.prototype._participantEventFor = function (memberId) {
-  return this.participantsByMemberId()[memberId];
-};
-
-SoCraTesEventStore.prototype.isAlreadyRegistered = function (memberId) {
-  return !!this._participantEventFor(memberId);
-};
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Waitinglist Reservations and Participants
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-SoCraTesEventStore.prototype.issueWaitinglistReservation = function (roomType, sessionId) {
-  var event;
-  if (this.waitinglistReservationsBySessionId()[sessionId]) {
-    // session id already reserved a spot
-    event = events.didNotIssueWaitinglistReservationForAlreadyReservedSession(roomType, sessionId);
-  } else {
-    // all is good
-    event = events.waitinglistReservationWasIssued(roomType, sessionId);
-  }
-  this._updateResourceEventsAndWriteModel(event);
-  return event.event;
-};
-
-SoCraTesEventStore.prototype.registerWaitinglistParticipant = function (roomType, sessionId, memberId) {
-  var event;
-  if (this.isAlreadyRegistered(memberId) || this.isAlreadyOnWaitinglist(memberId)) {
-    event = events.didNotRegisterParticipantASecondTime(roomType, 'waitinglist', sessionId, memberId);
-  } else {
-    // all is well
-    event = events.waitinglistParticipantWasRegistered(roomType, sessionId, memberId);
-  }
-  this._updateResourceEventsAndWriteModel(event);
-  return event.event;
-};
-
-var updateWaitinglistReservationsBySessionId = function (waitinglistReservationsBySessionId, event) {
-  var thirtyMinutesAgo = moment.tz().subtract(30, 'minutes');
-  if (event.event === e.WAITINGLIST_RESERVATION_WAS_ISSUED && moment(event.timestamp).isAfter(thirtyMinutesAgo)) {
-    waitinglistReservationsBySessionId[event.sessionID] = event;
-  }
-  if (event.event === e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED || event.event === e.PARTICIPANT_WAS_REGISTERED) {
-    delete waitinglistReservationsBySessionId[event.sessionID];
-  }
-  return waitinglistReservationsBySessionId;
-};
-
-SoCraTesEventStore.prototype.waitinglistReservationsBySessionId = function () {
-  if (!this._waitinglistReservationsBySessionId) {
-    this._waitinglistReservationsBySessionId = R.reduce(updateWaitinglistReservationsBySessionId, {}, this.state.resourceEvents);
-  }
-  return this._waitinglistReservationsBySessionId;
-};
-
-SoCraTesEventStore.prototype.waitinglistReservationsBySessionIdFor = function (roomType) {
-  return R.filter(function (event) { return R.contains(roomType, event.desiredRoomTypes); }, this.waitinglistReservationsBySessionId());
-};
-
-var updateWaitinglistParticipantsByMemberId = function (waitinglistParticipantsByMemberId, event) {
-  if (event.event === e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED) {
-    waitinglistParticipantsByMemberId[event.memberId] = event;
-  }
-  if (event.event === e.PARTICIPANT_WAS_REGISTERED) {
-    delete waitinglistParticipantsByMemberId[event.memberId];
-  }
-  return waitinglistParticipantsByMemberId;
-};
-
-SoCraTesEventStore.prototype.waitinglistParticipantsByMemberId = function () {
-  if (!this._waitinglistParticipantsByMemberId) {
-    this._waitinglistParticipantsByMemberId = R.reduce(updateWaitinglistParticipantsByMemberId, {}, this.state.resourceEvents);
-  }
-  return this._waitinglistParticipantsByMemberId;
-};
-
-SoCraTesEventStore.prototype.waitinglistParticipantsByMemberIdFor = function (roomType) {
-  return R.filter(function (event) { return R.contains(roomType, event.desiredRoomTypes); }, this.waitinglistParticipantsByMemberId());
-};
-
-// TODO this is currently for tests only...:
-SoCraTesEventStore.prototype.waitinglistReservationsAndParticipantsFor = function (roomType) {
-  return R.concat(R.values(this.waitinglistReservationsBySessionIdFor(roomType)), R.values(this.waitinglistParticipantsByMemberIdFor(roomType)));
-};
-
-SoCraTesEventStore.prototype._waitinglistParticipantEventFor = function (memberId) {
-  return this.waitinglistParticipantsByMemberId()[memberId];
-};
-
-SoCraTesEventStore.prototype.registeredInRoomType = function (memberID) {
-  var participantEvent = this._participantEventFor(memberID);
-  if (participantEvent) {
-    return participantEvent.roomType;
-  }
-  return null;
-};
-
-SoCraTesEventStore.prototype.isAlreadyOnWaitinglist = function (memberId) {
-  return !!this._waitinglistParticipantEventFor(memberId);
-};
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // General
@@ -239,28 +54,6 @@ SoCraTesEventStore.prototype.isAlreadyOnWaitinglist = function (memberId) {
 SoCraTesEventStore.prototype._updateResourceEventsAndWriteModel = function (event) {
   // append to event stream:
   this.state.resourceEvents.push(event);
-  // update write models:
-  this._reservationsBySessionId = updateReservationsBySessionId(this.reservationsBySessionId(), event);
-  this._participantsByMemberId = updateParticipantsByMemberId(this.participantsByMemberId(), event);
-  this._waitinglistReservationsBySessionId = updateWaitinglistReservationsBySessionId(this.waitinglistReservationsBySessionId(), event);
-  this._waitinglistParticipantsByMemberId = updateWaitinglistParticipantsByMemberId(this.waitinglistParticipantsByMemberId(), event);
-};
-
-function expirationTimeOf(event) {
-  return moment(event.timestamp).add(registrationPeriodinMinutes, 'minutes');
-}
-
-SoCraTesEventStore.prototype._reservationOrWaitinglistReservationEventFor = function (sessionId) {
-  return this.reservationsBySessionId()[sessionId] || this.waitinglistReservationsBySessionId()[sessionId];
-};
-
-SoCraTesEventStore.prototype.hasValidReservationFor = function (sessionId) {
-  return !!this._reservationOrWaitinglistReservationEventFor(sessionId);
-};
-
-SoCraTesEventStore.prototype.reservationExpiration = function (sessionId) {
-  var event = this._reservationOrWaitinglistReservationEventFor(sessionId);
-  return event && expirationTimeOf(event);
 };
 
 SoCraTesEventStore.prototype.isFull = function (roomType) {

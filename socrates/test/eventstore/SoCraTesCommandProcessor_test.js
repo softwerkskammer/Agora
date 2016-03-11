@@ -22,7 +22,7 @@ function stripTimestamps(someEvents) {
   }, someEvents);
 }
 
-describe('The socrates conference command handler', function () {
+describe('The SoCraTes command processor', function () {
   var eventStore;
   var commandHandler;
 

@@ -11,7 +11,7 @@ var SoCraTesReadModel = beans.get('SoCraTesReadModel');
 var singleBedRoom = 'singleBedRoom';
 var bedInDouble = 'bedInDouble';
 
-describe('The socrates conference read model', function () {
+describe('The SoCraTes read model', function () {
 
   var eventStore;
   var readModel;
