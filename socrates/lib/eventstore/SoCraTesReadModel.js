@@ -34,7 +34,7 @@ var updateStartTime = function (startTimeInMillis, event) { return event.event =
 
 SoCraTesReadModel.prototype.startTime = function () {
   if (!this._startTimeInMillis) {
-    this._startTimeInMillis = R.reduce(updateStartTime, undefined, this.eventStore.socratesEvents());
+    this._startTimeInMillis = R.reduce(updateStartTime, undefined, this.eventStore.socratesEvents()); // this is a projection :-)
   }
 
   return moment(this._startTimeInMillis).tz(fieldHelpers.defaultTimezone());

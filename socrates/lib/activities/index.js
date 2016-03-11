@@ -27,7 +27,7 @@ var app = misc.expressAppIn(__dirname);
 function activitySubmitted(req, res, next) {
   eventstoreService.getSoCraTesCommandProcessor(req.body.previousUrl, function (err, socratesCommandProcessor) {
     if (err) { return next(err); }
-    socratesCommandProcessor.updateFromUI(req.body);
+    socratesCommandProcessor.setConferenceDetails(req.body);
     eventstore.saveEventStore(socratesCommandProcessor.eventStore(), function (err1) {
       if (err1 && err1.message === CONFLICTING_VERSIONS) {
         // we try again because of a racing condition during save:

@@ -14,7 +14,7 @@ function SoCraTesCommandProcessor(writeModel) {
   this.writeModel = writeModel;
 }
 
-SoCraTesCommandProcessor.prototype.updateFromUI = function (uiData) {
+SoCraTesCommandProcessor.prototype.setConferenceDetails = function (uiData) {
   this._updateUrl(uiData.url);
   this._updateStartTime(uiData.startDate, uiData.startTime);
   this._updateEndTime(uiData.endDate, uiData.endTime);
