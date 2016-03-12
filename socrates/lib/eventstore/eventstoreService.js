@@ -7,6 +7,8 @@ var SoCraTesReadModel = beans.get('SoCraTesReadModel');
 var SoCraTesWriteModel = beans.get('SoCraTesWriteModel');
 var SoCraTesCommandProcessor = beans.get('SoCraTesCommandProcessor');
 var RegistrationReadModel = beans.get('RegistrationReadModel');
+var RegistrationWriteModel = beans.get('RegistrationWriteModel');
+var RegistrationCommandProcessor = beans.get('RegistrationCommandProcessor');
 
 module.exports = {
   isValidUrl: function (url, callback) {
@@ -29,6 +31,7 @@ module.exports = {
 
   getSoCraTesCommandProcessor: function (url, callback) {
     eventstore.getEventStore(url, function (err, eventStore) {
+      // when creating a new SoCraTes, we want to create a new event store for it:
       if (err) { return callback(err); }
       if (!eventStore) { eventStore = new GlobalEventStore(); }
       callback(null, new SoCraTesCommandProcessor(new SoCraTesWriteModel(eventStore)));
@@ -37,8 +40,20 @@ module.exports = {
 
   getRegistrationReadModel: function (url, callback) {
     eventstore.getEventStore(url, function (err, eventStore) {
-      if (err || eventStore === null) { return callback(err); }
+      if (err || !eventStore) { return callback(err); }
       callback(null, new RegistrationReadModel(eventStore));
     });
+  },
+
+  getRegistrationCommandProcessor: function (url, callback) {
+    eventstore.getEventStore(url, function (err, eventStore) {
+      // when adding a new registration, we require the event store to be already in place:
+      if (err || !eventStore) { return callback(err); }
+      callback(null, new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore)));
+    });
+  },
+
+  saveRegistrationCommandProcessor: function (commandProcessor, callback) {
+    eventstore.saveEventStore(commandProcessor.eventStore(), callback);
   }
 };
