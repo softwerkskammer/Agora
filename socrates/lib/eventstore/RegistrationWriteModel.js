@@ -42,7 +42,7 @@ RegistrationWriteModel.prototype.updateRegistrationEvents = function (newEvents)
 
 RegistrationWriteModel.prototype.isFull = function (roomType) {
   return this.registrationReadModel.isFull(roomType);
-}
+};
 
 RegistrationWriteModel.prototype.eventStore = function () {
   // persistence needs an id:
