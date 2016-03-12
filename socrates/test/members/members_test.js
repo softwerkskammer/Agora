@@ -21,7 +21,7 @@ var SoCraTesActivity = beans.get('socratesActivityExtended');
 var currentYear = beans.get('socratesConstants').currentYear;
 
 var events = beans.get('events');
-var GlobalEventStore = beans.get('GlobalEventStore'); // TODO
+var GlobalEventStore = beans.get('GlobalEventStore');
 var eventstore = beans.get('eventstore');
 
 var createApp = require('../../testutil/testHelper')('socratesMembersApp').createApp;
@@ -35,7 +35,7 @@ describe('SoCraTes members application', function () {
   var softwerkskammerSubscriber;
   var socratesSubscriber;
   var socrates;
-  var socratesES;
+  var eventStore;
 
   beforeEach(function () {
     softwerkskammerMember = new Member({
@@ -80,8 +80,8 @@ describe('SoCraTes members application', function () {
     /* eslint camelcase: 0 */
     socrates = {resources: {single: {}, bed_in_double: {}, junior: {}, bed_in_junior: {}}};
 
-    socratesES = new GlobalEventStore();
-    socratesES.state.socratesEvents = [
+    eventStore = new GlobalEventStore();
+    eventStore.state.socratesEvents = [
       events.roomQuotaWasSet('single', 10),
       events.roomQuotaWasSet('bed_in_double', 10),
       events.roomQuotaWasSet('junior', 10),
@@ -89,7 +89,7 @@ describe('SoCraTes members application', function () {
     ];
 
     sinon.stub(activitystore, 'getActivity', function (url, callback) { return callback(null, new SoCraTesActivity(socrates)); });
-    sinon.stub(eventstore, 'getEventStore', function (url, callback) { return callback(null, socratesES); });
+    sinon.stub(eventstore, 'getEventStore', function (url, callback) { return callback(null, eventStore); });
 
     sinon.stub(memberstore, 'getMembersForIds', function (ids, callback) {
       var members = [];
@@ -200,7 +200,7 @@ describe('SoCraTes members application', function () {
       });
 
       it('does not display anything about roommates if the subscriber is in a single-bed room', function (done) {
-        socratesES.state.resourceEvents = [
+        eventStore.state.registrationEvents = [
           events.participantWasRegistered('single', 3, 'session-id', 'memberId2')
         ];
         socratesSubscriber.state.participations[currentYear] = {};
@@ -214,7 +214,7 @@ describe('SoCraTes members application', function () {
       });
 
       xit('displays other unmatched roommates if the subscriber is in a double-bed room but has no roommate associated', function (done) {
-        socratesES.state.resourceEvents = [
+        eventStore.state.registrationEvents = [
           events.participantWasRegistered('bed_in_double', 3, 'session-id', 'memberId'),
           events.participantWasRegistered('bed_in_double', 3, 'session-id-2', 'memberId2')
         ];
@@ -231,7 +231,7 @@ describe('SoCraTes members application', function () {
       });
 
       xit('displays the name of the roommate if the subscriber is in a double-bed room and has a roommate associated', function (done) {
-        socratesES.state.resourceEvents = [
+        eventStore.state.registrationEvents = [
           events.participantWasRegistered('bed_in_double', 3, 'session-id', 'memberId'),
           events.participantWasRegistered('bed_in_double', 3, 'session-id-2', 'memberId2')
         ];
@@ -245,7 +245,7 @@ describe('SoCraTes members application', function () {
       });
 
       it('does not display anything about roommates on a different member\'s profile', function (done) {
-        socratesES.state.resourceEvents = [
+        eventStore.state.registrationEvents = [
           events.participantWasRegistered('bed_in_double', 3, 'session-id', 'memberId'),
           events.participantWasRegistered('bed_in_double', 3, 'session-id-2', 'memberId2')
         ];
@@ -308,7 +308,7 @@ describe('SoCraTes members application', function () {
       });
 
       it('does not allow a subscriber who is registered for a single-bed-room to enter a desired roommate', function (done) {
-        socratesES.state.resourceEvents = [
+        eventStore.state.registrationEvents = [
           events.participantWasRegistered('single', 3, 'session-id', 'memberId2')
         ];
         socratesSubscriber.state.participations[currentYear] = {};
@@ -325,7 +325,7 @@ describe('SoCraTes members application', function () {
       });
 
       it('does not allow a subscriber who is registered for an exclusive junior room to enter a desired roommate', function (done) {
-        socratesES.state.resourceEvents = [
+        eventStore.state.registrationEvents = [
           events.participantWasRegistered('junior', 3, 'session-id', 'memberId2')
         ];
         socratesSubscriber.state.participations[currentYear] = {};
@@ -342,7 +342,7 @@ describe('SoCraTes members application', function () {
       });
 
       it('allows a subscriber who is registered for a bed in a double-bed room to enter a desired roommate', function (done) {
-        socratesES.state.resourceEvents = [
+        eventStore.state.registrationEvents = [
           events.participantWasRegistered('bed_in_double', 3, 'session-id', 'memberId2')
         ];
         socratesSubscriber.state.participations[currentYear] = {};
@@ -356,7 +356,7 @@ describe('SoCraTes members application', function () {
       });
 
       it('allows a subscriber who is registered for a bed in a junior room to enter a desired roommate', function (done) {
-        socratesES.state.resourceEvents = [
+        eventStore.state.registrationEvents = [
           events.participantWasRegistered('bed_in_junior', 3, 'session-id', 'memberId2')
         ];
         socratesSubscriber.state.participations[currentYear] = {};
@@ -395,7 +395,7 @@ describe('SoCraTes members application', function () {
     });
 
     it('allows a subscriber who is registered to enter the home address', function (done) {
-      socratesES.state.resourceEvents = [
+      eventStore.state.registrationEvents = [
         events.participantWasRegistered('bed_in_double', 3, 'session-id', 'memberId2')
       ];
       sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });

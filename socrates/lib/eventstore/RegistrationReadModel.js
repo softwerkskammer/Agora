@@ -136,6 +136,14 @@ RegistrationReadModel.prototype.hasValidReservationFor = function (sessionId) {
   return !!this._reservationOrWaitinglistReservationEventFor(sessionId);
 };
 
+RegistrationReadModel.prototype.registeredInRoomType = function (memberID) {
+  var participantEvent = this.participantEventFor(memberID);
+  if (participantEvent) {
+    return participantEvent.roomType;
+  }
+  return null;
+};
+
 RegistrationReadModel.prototype.waitinglistParticipantEventFor = function (memberId) {
   return this.waitinglistParticipantsByMemberId()[memberId];
 };

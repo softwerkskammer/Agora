@@ -31,14 +31,6 @@ RegistrationWriteModel.prototype.waitinglistParticipantEventFor = function (memb
   return this.registrationReadModel.waitinglistParticipantEventFor(memberId);
 };
 
-RegistrationWriteModel.prototype.registeredInRoomType = function (memberID) {
-  var participantEvent = this.participantEventFor(memberID);
-  if (participantEvent) {
-    return participantEvent.roomType;
-  }
-  return null;
-};
-
 RegistrationWriteModel.prototype.isAlreadyOnWaitinglist = function (memberId) {
   return this.registrationReadModel.isAlreadyOnWaitinglist(memberId);
 };

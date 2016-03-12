@@ -7,7 +7,7 @@ var misc = beans.get('misc');
 var membersService = beans.get('membersService');
 var subscriberService = beans.get('subscriberService');
 var socratesActivitiesService = beans.get('socratesActivitiesService');
-var eventstore = beans.get('eventstore');
+var eventstoreService = beans.get('eventstoreService');
 var Member = beans.get('member');
 var memberSubmitHelper = beans.get('memberSubmitHelper');
 var subscriberstore = beans.get('subscriberstore');
@@ -23,9 +23,9 @@ function editMember(req, res, next, returnToParticipantsListing) {
   }
   var member = req.user.member;
   var subscriber = req.user.subscriber;
-  eventstore.getEventStore(socratesConstants.currentUrl, function (err, socratesEventStore) {
-    if (err || !socratesEventStore) { return next(err); }
-    var registeredResources = socratesEventStore.roomTypesOf(member.id());
+  eventstoreService.getRegistrationReadModel(socratesConstants.currentUrl, function (err, readModel) {
+    if (err || !readModel) { return next(err); }
+    var registeredResources = readModel.roomTypesOf(member.id());
     var options = {
       member: member,
       subscriber: subscriber,
@@ -143,18 +143,18 @@ app.post('/deleteAvatarInOverviewFor', function (req, res, next) {
 app.get('/:nickname', function (req, res, next) {
   subscriberService.getMemberIfSubscriberExists(req.params.nickname, function (err, member) {
     if (err || !member) { return next(err); }
-    eventstore.getEventStore(socratesConstants.currentUrl, function (err2, socratesEventStore) {
-      if (err2 || !socratesEventStore) { return next(err2); }
+    eventstoreService.getRegistrationReadModel(socratesConstants.currentUrl, function (err2, readModel) {
+      if (err2 || !readModel) { return next(err2); }
 
       // only when a participant looks at their own profile!
-      var registeredResource = socratesEventStore.registeredInRoomType(member.id());
+      var registeredResource = readModel.registeredInRoomType(member.id());
       var isInDoubleBedRoom = registeredResource && registeredResource.indexOf('bed_in_') > -1;
-      var roommateId; // TODO socratesEventStore.roommateFor(member.id());
+      var roommateId; // TODO readModel.roommateFor(member.id());
       memberstore.getMemberForId(roommateId, function (err3, roommate) {
         var potentialRoommates = [];
         if (err3) { return next(err3); }
         if (registeredResource && !roommate) {
-          potentialRoommates = [member.id()]; // TODO socratesEventStore.rooms(registeredResource).participantsWithoutRoom();
+          potentialRoommates = [member.id()]; // TODO readModel.rooms(registeredResource).participantsWithoutRoom();
           var index = potentialRoommates.indexOf(member.id());
           potentialRoommates.splice(index, 1);
         }
@@ -169,7 +169,7 @@ app.get('/:nickname', function (req, res, next) {
               registration: {
                 isInDoubleBedRoom: isInDoubleBedRoom,
                 alreadyRegistered: !!registeredResource,
-                alreadyOnWaitinglist: socratesEventStore.isAlreadyOnWaitinglist(member.id())
+                alreadyOnWaitinglist: readModel.isAlreadyOnWaitinglist(member.id())
               }
             });
           });
