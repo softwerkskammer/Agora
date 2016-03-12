@@ -40,7 +40,7 @@ RegistrationWriteModel.prototype.registeredInRoomType = function (memberID) {
 };
 
 RegistrationWriteModel.prototype.isAlreadyOnWaitinglist = function (memberId) {
-  return !!this.waitinglistParticipantEventFor(memberId);
+  return this.registrationReadModel.isAlreadyOnWaitinglist(memberId);
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////

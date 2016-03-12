@@ -67,7 +67,6 @@ RegistrationReadModel.prototype.isAlreadyRegistered = function (memberId) {
   return !!this.participantEventFor(memberId);
 };
 
-
 RegistrationReadModel.prototype.reservationsAndParticipantsFor = function (roomType) {
   return R.concat(R.values(this.reservationsBySessionIdFor(roomType)), R.values(this.participantsByMemberIdFor(roomType)));
 };
@@ -140,6 +139,11 @@ RegistrationReadModel.prototype.hasValidReservationFor = function (sessionId) {
 RegistrationReadModel.prototype.waitinglistParticipantEventFor = function (memberId) {
   return this.waitinglistParticipantsByMemberId()[memberId];
 };
+
+RegistrationReadModel.prototype.isAlreadyOnWaitinglist = function (memberId) {
+  return !!this.waitinglistParticipantEventFor(memberId);
+};
+
 
 RegistrationReadModel.prototype.selectedOptionFor = function (memberID) {
   var participantEvent = this.participantEventFor(memberID);

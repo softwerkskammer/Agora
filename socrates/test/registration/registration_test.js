@@ -18,7 +18,7 @@ var Subscriber = beans.get('subscriber');
 
 var events = beans.get('events');
 var e = beans.get('eventConstants');
-var GlobalEventStore = beans.get('GlobalEventStore'); // TODO
+var GlobalEventStore = beans.get('GlobalEventStore');
 var eventstore = beans.get('eventstore');
 
 var createApp = require('../../testutil/testHelper')('socratesRegistrationApp').createApp;
@@ -48,11 +48,11 @@ describe('SoCraTes registration application', function () {
 
   var eventStoreSave;
 
-  var socratesES;
+  var eventStore;
 
   beforeEach(function () {
-    socratesES = new GlobalEventStore();
-    socratesES.state.socratesEvents = [
+    eventStore = new GlobalEventStore();
+    eventStore.state.socratesEvents = [
       events.roomQuotaWasSet('single', 0),
       events.roomQuotaWasSet('bed_in_double', 10),
       events.roomQuotaWasSet('junior', 10),
@@ -62,11 +62,11 @@ describe('SoCraTes registration application', function () {
     conf.addProperties({registrationOpensAt: moment().subtract(10, 'days').format()}); // already opened
     sinon.stub(groupsAndMembersService, 'updateAndSaveSubmittedMemberWithoutSubscriptions',
       function (sessionUser, memberformData, accessrights, notifyNewMemberRegistration, callback) { callback(); });
-    eventStoreSave = sinon.stub(eventstore, 'saveEventStore', function (eventStore, callback) { callback(); });
+    eventStoreSave = sinon.stub(eventstore, 'saveEventStore', function (store, callback) { callback(); });
     sinon.stub(subscriberstore, 'getSubscriber', function (memberId, callback) { callback(null, new Subscriber({})); });
     sinon.stub(subscriberstore, 'saveSubscriber', function (subscriber, callback) { callback(); });
 
-    sinon.stub(eventstore, 'getEventStore', function (url, callback) { callback(null, socratesES); });
+    sinon.stub(eventstore, 'getEventStore', function (url, callback) { callback(null, eventStore); });
 
     sinon.stub(notifications, 'newParticipant');
     sinon.stub(notifications, 'newWaitinglistEntry');
@@ -132,7 +132,7 @@ describe('SoCraTes registration application', function () {
     it('displays the options (but disabled) if the user is registered', function (done) {
       /* eslint no-underscore-dangle: 0 */
 
-      socratesES.state.resourceEvents = [
+      eventStore.state.registrationEvents = [
         events.participantWasRegistered('bed_in_junior', 'some-duration', 'some-session-id', 'memberId2')];
 
       appWithSocratesMember
@@ -195,7 +195,7 @@ describe('SoCraTes registration application', function () {
   describe('submission of the participate form to become a participant', function () {
 
     it('is accepted when a room is selected', function (done) {
-      socratesES.state.resourceEvents = [
+      eventStore.state.registrationEvents = [
         events.reservationWasIssued('single', 5, 'session-id', 'memberId2')];
 
       appWithSocratesMemberAndFixedSessionId
@@ -215,15 +215,15 @@ describe('SoCraTes registration application', function () {
         .expect(302)
         .expect('location', '/registration', function (err) {
           expect(eventStoreSave.called).to.be(true);
-          expect(socratesES.state.resourceEvents[0].event).to.eql(e.RESERVATION_WAS_ISSUED);
-          expect(socratesES.state.resourceEvents[1].event).to.eql(e.PARTICIPANT_WAS_REGISTERED);
+          expect(eventStore.state.registrationEvents[0].event).to.eql(e.RESERVATION_WAS_ISSUED);
+          expect(eventStore.state.registrationEvents[1].event).to.eql(e.PARTICIPANT_WAS_REGISTERED);
           done(err);
         });
 
     });
 
     it('is still accepted as participant even when the timeout is expired, if there is enough space in the resource', function (done) {
-      socratesES.state.resourceEvents = [
+      eventStore.state.registrationEvents = [
         setTimestamp(events.reservationWasIssued('junior', 'session-id', 'memberId2'), moment().subtract(1, 'hours'))];
 
       appWithSocratesMemberAndFixedSessionId
@@ -243,14 +243,14 @@ describe('SoCraTes registration application', function () {
         .expect(302)
         .expect('location', '/registration', function (err) {
           expect(eventStoreSave.called).to.be(true);
-          expect(socratesES.state.resourceEvents[0].event).to.eql(e.RESERVATION_WAS_ISSUED);
-          expect(socratesES.state.resourceEvents[1].event).to.eql(e.PARTICIPANT_WAS_REGISTERED);
+          expect(eventStore.state.registrationEvents[0].event).to.eql(e.RESERVATION_WAS_ISSUED);
+          expect(eventStore.state.registrationEvents[1].event).to.eql(e.PARTICIPANT_WAS_REGISTERED);
           done(err);
         });
     });
 
     it('is still accepted as participant even when there is no reservation, if there is enough space in the resource', function (done) {
-      socratesES.state.resourceEvents = [];
+      eventStore.state.registrationEvents = [];
 
       appWithSocratesMemberAndFixedSessionId
         .post('/completeRegistration')
@@ -269,13 +269,13 @@ describe('SoCraTes registration application', function () {
         .expect(302)
         .expect('location', '/registration', function (err) {
           expect(eventStoreSave.called).to.be(true);
-          expect(socratesES.state.resourceEvents[0].event).to.eql(e.PARTICIPANT_WAS_REGISTERED);
+          expect(eventStore.state.registrationEvents[0].event).to.eql(e.PARTICIPANT_WAS_REGISTERED);
           done(err);
         });
     });
 
     it('is not accepted as participant when the timeout is expired and there is not enough space in the resource', function (done) {
-      socratesES.state.resourceEvents = [
+      eventStore.state.registrationEvents = [
         setTimestamp(events.reservationWasIssued('single', 'session-id', 'memberId2'), moment().subtract(1, 'hours'))];
 
       appWithSocratesMemberAndFixedSessionId
@@ -295,14 +295,14 @@ describe('SoCraTes registration application', function () {
         .expect(302)
         .expect('location', '/registration', function (err) {
           expect(eventStoreSave.called).to.be(true);
-          expect(socratesES.state.resourceEvents[0].event).to.eql(e.RESERVATION_WAS_ISSUED);
-          expect(socratesES.state.resourceEvents[1].event).to.eql(e.DID_NOT_REGISTER_PARTICIPANT_FOR_FULL_RESOURCE);
+          expect(eventStore.state.registrationEvents[0].event).to.eql(e.RESERVATION_WAS_ISSUED);
+          expect(eventStore.state.registrationEvents[1].event).to.eql(e.DID_NOT_REGISTER_PARTICIPANT_FOR_FULL_RESOURCE);
           done(err);
         });
     });
 
     it('is not accepted as participant when there is no reservation and there is not enough space in the resource', function (done) {
-      socratesES.state.resourceEvents = [];
+      eventStore.state.registrationEvents = [];
 
       appWithSocratesMemberAndFixedSessionId
         .post('/completeRegistration')
@@ -321,13 +321,13 @@ describe('SoCraTes registration application', function () {
         .expect(302)
         .expect('location', '/registration', function (err) {
           expect(eventStoreSave.called).to.be(true);
-          expect(socratesES.state.resourceEvents[0].event).to.eql(e.DID_NOT_REGISTER_PARTICIPANT_FOR_FULL_RESOURCE);
+          expect(eventStore.state.registrationEvents[0].event).to.eql(e.DID_NOT_REGISTER_PARTICIPANT_FOR_FULL_RESOURCE);
           done(err);
         });
     });
 
     it('is not accepted if already registered', function (done) {
-      socratesES.state.resourceEvents = [
+      eventStore.state.registrationEvents = [
         events.participantWasRegistered('junior', 5, 'session-id', 'memberId2')
       ];
 
@@ -348,8 +348,8 @@ describe('SoCraTes registration application', function () {
         .expect(302)
         .expect('location', '/registration', function (err) {
           expect(eventStoreSave.called).to.be(true);
-          expect(socratesES.state.resourceEvents[0].event).to.eql(e.PARTICIPANT_WAS_REGISTERED);
-          expect(socratesES.state.resourceEvents[1].event).to.eql(e.DID_NOT_REGISTER_PARTICIPANT_A_SECOND_TIME);
+          expect(eventStore.state.registrationEvents[0].event).to.eql(e.PARTICIPANT_WAS_REGISTERED);
+          expect(eventStore.state.registrationEvents[1].event).to.eql(e.DID_NOT_REGISTER_PARTICIPANT_A_SECOND_TIME);
           done(err);
         });
 
@@ -359,7 +359,7 @@ describe('SoCraTes registration application', function () {
 
   describe('submission of the participate form to become a waitinglist participant', function () {
     it('is accepted when a waitinglist option is selected', function (done) {
-      socratesES.state.resourceEvents = [
+      eventStore.state.registrationEvents = [
         events.waitinglistReservationWasIssued('single', 'session-id', 'memberId2')];
 
       appWithSocratesMemberAndFixedSessionId
@@ -379,14 +379,14 @@ describe('SoCraTes registration application', function () {
         .expect(302)
         .expect('location', '/registration', function (err) {
           expect(eventStoreSave.called).to.be(true);
-          expect(socratesES.state.resourceEvents[0].event).to.eql(e.WAITINGLIST_RESERVATION_WAS_ISSUED);
-          expect(socratesES.state.resourceEvents[1].event).to.eql(e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED);
+          expect(eventStore.state.registrationEvents[0].event).to.eql(e.WAITINGLIST_RESERVATION_WAS_ISSUED);
+          expect(eventStore.state.registrationEvents[1].event).to.eql(e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED);
           done(err);
         });
     });
 
     it('is still accepted to the waitinglist even when the timeout is expired', function (done) {
-      socratesES.state.resourceEvents = [
+      eventStore.state.registrationEvents = [
         setTimestamp(events.waitinglistReservationWasIssued('single', 'session-id', 'memberId2'), moment().subtract(1, 'hours'))];
 
       appWithSocratesMemberAndFixedSessionId
@@ -406,14 +406,14 @@ describe('SoCraTes registration application', function () {
         .expect(302)
         .expect('location', '/registration', function (err) {
           expect(eventStoreSave.called).to.be(true);
-          expect(socratesES.state.resourceEvents[0].event).to.eql(e.WAITINGLIST_RESERVATION_WAS_ISSUED);
-          expect(socratesES.state.resourceEvents[1].event).to.eql(e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED);
+          expect(eventStore.state.registrationEvents[0].event).to.eql(e.WAITINGLIST_RESERVATION_WAS_ISSUED);
+          expect(eventStore.state.registrationEvents[1].event).to.eql(e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED);
           done(err);
         });
     });
 
     it('is not accepted to the waitinglist a second time', function (done) {
-      socratesES.state.resourceEvents = [
+      eventStore.state.registrationEvents = [
         events.waitinglistParticipantWasRegistered('single', 'session-id', 'memberId2')];
 
       appWithSocratesMemberAndFixedSessionId
@@ -433,8 +433,8 @@ describe('SoCraTes registration application', function () {
         .expect(302)
         .expect('location', '/registration', function (err) {
           expect(eventStoreSave.called).to.be(true);
-          expect(socratesES.state.resourceEvents[0].event).to.eql(e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED);
-          expect(socratesES.state.resourceEvents[1].event).to.eql(e.DID_NOT_REGISTER_PARTICIPANT_A_SECOND_TIME);
+          expect(eventStore.state.registrationEvents[0].event).to.eql(e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED);
+          expect(eventStore.state.registrationEvents[1].event).to.eql(e.DID_NOT_REGISTER_PARTICIPANT_A_SECOND_TIME);
           done(err);
         });
     });
