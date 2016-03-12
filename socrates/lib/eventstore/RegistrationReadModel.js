@@ -167,7 +167,7 @@ RegistrationReadModel.prototype.selectedOptionFor = function (memberID) {
 };
 
 RegistrationReadModel.prototype.roomTypesOf = function (memberID) {
-  var participantEvent = this._participantEventFor(memberID);
+  var participantEvent = this.participantEventFor(memberID);
   if (participantEvent) {
     return [participantEvent.roomType];
   }
