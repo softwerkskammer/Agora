@@ -128,9 +128,9 @@ app.get('/participate', function (req, res, next) {
   if (!req.user) { return res.redirect('/registration'); }
   var member = req.user.member || new Member().initFromSessionUser(req.user, true);
 
-  eventstore.getEventStore(socratesConstants.currentUrl, function (err, socratesEventStore) {
-    if (err || !socratesEventStore) { return next(err); }
-    if (socratesEventStore.isAlreadyRegistered(member.id())) {
+  eventstoreService.getRegistrationReadModel(socratesConstants.currentUrl, function (err, readModel) {
+    if (err || !readModel) { return next(err); }
+    if (readModel.isAlreadyRegistered(member.id())) {
       statusmessage.successMessage('general.info', 'activities.already_registered').putIntoSession(req);
       return res.redirect('/registration');
     }
@@ -138,7 +138,7 @@ app.get('/participate', function (req, res, next) {
       if (err1) { return next(err1); }
       var addon = (subscriber && subscriber.addon()) || new Addon({});
       var participation = (subscriber && subscriber.currentParticipation()) || new Participation();
-      var expiresAt = socratesEventStore.reservationExpiration(registrationTuple.sessionID);
+      var expiresAt = readModel.reservationExpiration(registrationTuple.sessionID);
       res.render('participate', {
         member: member,
         addon: addon,

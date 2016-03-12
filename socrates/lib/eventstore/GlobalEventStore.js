@@ -36,4 +36,8 @@ GlobalEventStore.prototype.setId = function () {
   }
 };
 
+GlobalEventStore.prototype.id = function () {
+  return this.state.id;
+};
+
 module.exports = GlobalEventStore;

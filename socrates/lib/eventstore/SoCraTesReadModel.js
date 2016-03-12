@@ -61,5 +61,8 @@ SoCraTesReadModel.prototype.quotaFor = function (roomType) {
   return this._quota[roomType];
 };
 
+SoCraTesReadModel.prototype.id = function () {
+  return this._eventStore.id();
+};
 
 module.exports = SoCraTesReadModel;
