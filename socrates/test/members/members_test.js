@@ -10,14 +10,12 @@ var userWithoutMember = require('../../testutil/userWithoutMember');
 var membersService = beans.get('membersService');
 var memberstore = beans.get('memberstore');
 var socratesActivitiesService = beans.get('socratesActivitiesService');
-var activitystore = beans.get('activitystore');
 var subscriberService = beans.get('subscriberService');
 var subscriberstore = beans.get('subscriberstore');
 var socratesNotifications = beans.get('socratesNotifications');
 var groupsAndMembersService = beans.get('groupsAndMembersService');
 var Member = beans.get('member');
 var Subscriber = beans.get('subscriber');
-var SoCraTesActivity = beans.get('socratesActivityExtended');
 var currentYear = beans.get('socratesConstants').currentYear;
 
 var events = beans.get('events');
@@ -88,7 +86,6 @@ describe('SoCraTes members application', function () {
       events.roomQuotaWasSet('bed_in_junior', 10)
     ];
 
-    sinon.stub(activitystore, 'getActivity', function (url, callback) { return callback(null, new SoCraTesActivity(socrates)); });
     sinon.stub(eventstore, 'getEventStore', function (url, callback) { return callback(null, eventStore); });
 
     sinon.stub(memberstore, 'getMembersForIds', function (ids, callback) {

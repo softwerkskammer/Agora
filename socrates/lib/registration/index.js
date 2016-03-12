@@ -85,6 +85,7 @@ app.get('/ical', function (req, res, next) {
     localRes.send(ical.toString());
   }
 
+  // here we want to continue using the real activity:
   activitystore.getActivity(socratesConstants.currentUrl, function (err, activity) {
     if (err || !activity) { return next(err); }
     activity.state.description = '';
