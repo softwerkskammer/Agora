@@ -163,7 +163,7 @@ app.get('/:nickname', function (req, res, next) {
         }
         memberstore.getMembersForIds(potentialRoommates, function (err4, potentialRoommateMembers) {
           if (err4) { return next(err4); }
-          async.each(potentialRoommateMembers, membersService.getImage, function (err5) {
+          async.each(potentialRoommateMembers, membersService.putAvatarIntoMemberAndSave, function (err5) {
             if (err5) { return next(err5); }
             res.render('get', {
               member: member,

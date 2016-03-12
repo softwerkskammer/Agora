@@ -218,12 +218,11 @@ describe('MembersService', function () {
   describe('avatar functions', function () {
     var saveMember;
     var getImageFromAvatarProvider;
-    var now = new Date().getTime();
     var gravatarData;
 
     beforeEach(function () {
       saveMember = sinon.stub(memberstore, 'saveMember', function (anyMember, callback) { callback(); });
-      gravatarData = {image: 'the image', hasNoImage: false, fetchTime: now + 1000};
+      gravatarData = {image: 'the image', hasNoImage: false};
       getImageFromAvatarProvider = sinon.stub(avatarProvider, 'getImage', function (anyMember, callback) {
         callback(gravatarData);
       });
@@ -259,7 +258,7 @@ describe('MembersService', function () {
       var params = {};
       member.state.nickname = 'hada';
       membersService.saveCustomAvatarForNickname('hada', files, params, function () {
-        membersService.getImage(member, function (err) {
+        membersService.putAvatarIntoMemberAndSave(member, function (err) {
           expect(member.inlineAvatar()).to.match(/^data:image\/jpeg;base64,\/9j/);
           done(err);
         });
@@ -270,14 +269,14 @@ describe('MembersService', function () {
       member.state.customAvatar = 'myNonexistentPic.jpg';
       expect(member.inlineAvatar()).to.match('');
 
-      membersService.getImage(member, function (err) {
+      membersService.putAvatarIntoMemberAndSave(member, function (err) {
         expect(member.inlineAvatar()).to.match('');
         done(err);
       });
     });
 
     it('a member without a custom avatar loads it from gravatar and persists it', function (done) {
-      membersService.getImage(member, function (err) {
+      membersService.putAvatarIntoMemberAndSave(member, function (err) {
         expect(member.state.avatardata).to.be(gravatarData);
         expect(getImageFromAvatarProvider.called).to.be(true);
         expect(saveMember.called).to.be(true);
@@ -287,7 +286,7 @@ describe('MembersService', function () {
 
     it('a member takes the persisted one if it is actual enough', function (done) {
       member.state.avatardata = gravatarData;
-      membersService.getImage(member, function (err) {
+      membersService.putAvatarIntoMemberAndSave(member, function (err) {
         expect(member.state.avatardata).to.be(gravatarData);
         expect(getImageFromAvatarProvider.called).to.be(false);
         expect(saveMember.called).to.be(false);
@@ -296,14 +295,12 @@ describe('MembersService', function () {
     });
 
     it('loads it again if it is potentially outdated and saves it even though it is equal', function (done) {
-      var fetchTime = gravatarData.fetchTime - (membersService.regetInterval + 60 * 1000);
-      member.state.avatardata = {image: 'the image', hasNoImage: false, fetchTime: fetchTime};
+      member.state.avatardata = {image: 'the image', hasNoImage: false};
 
-      membersService.getImage(member, function (err) {
+      membersService.updateImage(member, function (err) {
         expect(member.state.avatardata.image).to.eql(gravatarData.image);
         expect(getImageFromAvatarProvider.called).to.be(true);
         expect(saveMember.called).to.be(true);
-        expect(member.state.avatardata.fetchTime).to.be.gt(fetchTime);
         done(err);
       });
     });
@@ -311,10 +308,9 @@ describe('MembersService', function () {
     it('loads it again if it is potentially outdated but does not save it if it is equal', function (done) {
       member.state.avatardata = {
         image: 'another image',
-        hasNoImage: false,
-        fetchTime: now - (membersService.regetInterval + 1)
+        hasNoImage: false
       };
-      membersService.getImage(member, function (err) {
+      membersService.updateImage(member, function (err) {
         expect(member.state.avatardata).to.be(gravatarData);
         expect(getImageFromAvatarProvider.called).to.be(true);
         expect(saveMember.called).to.be(true);

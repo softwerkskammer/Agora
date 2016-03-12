@@ -44,7 +44,7 @@ describe('Administration application', function () {
     sinon.stub(groupsService, 'getAllAvailableGroups', function (callback) {
       return callback(null, [new Group({id: 'id', longName: 'GRUPPO', description: 'desc'})]);
     });
-    sinon.stub(membersService, 'getImage', function (member, callback) {
+    sinon.stub(membersService, 'putAvatarIntoMemberAndSave', function (member, callback) {
       callback();
     });
   });
