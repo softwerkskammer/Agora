@@ -8,6 +8,7 @@ var CONFLICTING_VERSIONS = beans.get('constants').CONFLICTING_VERSIONS;
 var roomOptions = beans.get('roomOptions');
 
 var eventstore = beans.get('eventstore');
+var eventstoreService = beans.get('eventstoreService');
 var eventConstants = beans.get('eventConstants');
 
 module.exports = {
@@ -15,14 +16,14 @@ module.exports = {
   startRegistration: function (registrationTuple, callback) {
     var self = this;
     var reservationEvent;
-    eventstore.getEventStore(registrationTuple.activityUrl, function (err, socratesEventStore) {
-      if (err || !socratesEventStore) { return callback(err, 'message.title.problem', 'message.content.activities.does_not_exist'); }
+    eventstoreService.getRegistrationCommandProcessor(registrationTuple.activityUrl, function (err, registrationCommandProcessor) {
+      if (err || !registrationCommandProcessor) { return callback(err, 'message.title.problem', 'message.content.activities.does_not_exist'); }
       if (registrationTuple.duration === 'waitinglist') {
-        reservationEvent = socratesEventStore.issueWaitinglistReservation(registrationTuple.resourceName, registrationTuple.sessionID);
+        reservationEvent = registrationCommandProcessor.issueWaitinglistReservation(registrationTuple.resourceName, registrationTuple.sessionID);
       } else {
-        reservationEvent = socratesEventStore.issueReservation(registrationTuple.resourceName, registrationTuple.duration, registrationTuple.sessionID);
+        reservationEvent = registrationCommandProcessor.issueReservation(registrationTuple.resourceName, registrationTuple.duration, registrationTuple.sessionID);
       }
-      return eventstore.saveEventStore(socratesEventStore, function (err1) {
+      return eventstoreService.saveRegistrationCommandProcessor(registrationCommandProcessor, function (err1) {
         if (err1 && err1.message === CONFLICTING_VERSIONS) {
           // we try again because of a racing condition during save:
           return self.startRegistration(registrationTuple, callback);
@@ -45,15 +46,15 @@ module.exports = {
       resourceName: body.resourceName,
       duration: body.duration
     };
-    eventstore.getEventStore(registrationTuple.activityUrl, function (err, socratesEventStore) {
-      if (err || !socratesEventStore) { return callback(err); }
+    eventstoreService.getRegistrationCommandProcessor(registrationTuple.activityUrl, function (err, commandProcessor) {
+      if (err || !commandProcessor) { return callback(err); }
 
       if (registrationTuple.duration === 'waitinglist') {
-        registrationEvent = socratesEventStore.registerWaitinglistParticipant(registrationTuple.resourceName, registrationTuple.sessionID, memberID);
+        registrationEvent = commandProcessor.registerWaitinglistParticipant(registrationTuple.resourceName, registrationTuple.sessionID, memberID);
       } else {
-        registrationEvent = socratesEventStore.registerParticipant(registrationTuple.resourceName, registrationTuple.duration, registrationTuple.sessionID, memberID);
+        registrationEvent = commandProcessor.registerParticipant(registrationTuple.resourceName, registrationTuple.duration, registrationTuple.sessionID, memberID);
       }
-      return eventstore.saveEventStore(socratesEventStore, function (err1) {
+      return eventstoreService.saveRegistrationCommandProcessor(commandProcessor, function (err1) {
         if (err1 && err1.message === CONFLICTING_VERSIONS) {
           // we try again because of a racing condition during save:
           return self.saveRegistration(memberID, sessionID, body, callback);
