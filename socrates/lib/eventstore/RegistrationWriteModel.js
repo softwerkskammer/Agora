@@ -6,7 +6,7 @@ var RegistrationReadModel = beans.get('RegistrationReadModel');
 
 
 function RegistrationWriteModel(eventStore) {
-  this.eventStore = eventStore;
+  this._eventStore = eventStore;
   this.registrationReadModel = new RegistrationReadModel(eventStore);
 }
 
@@ -45,11 +45,17 @@ RegistrationWriteModel.prototype.isAlreadyOnWaitinglist = function (memberId) {
 
 /////////////////////////////////////////////////////////////////////////////////////////
 RegistrationWriteModel.prototype.updateRegistrationEvents = function (newEvents) {
-  this.eventStore.updateRegistrationEvents(newEvents);
+  this._eventStore.updateRegistrationEvents(newEvents);
 };
 
 RegistrationWriteModel.prototype.isFull = function (roomType) {
   return this.registrationReadModel.isFull(roomType);
 }
+
+RegistrationWriteModel.prototype.eventStore = function () {
+  // persistence needs an id:
+  this._eventStore.setId();
+  return this._eventStore;
+};
 
 module.exports = RegistrationWriteModel;

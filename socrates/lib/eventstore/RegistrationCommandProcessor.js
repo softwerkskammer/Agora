@@ -86,4 +86,8 @@ RegistrationCommandProcessor.prototype._updateRegistrationEvents = function (new
   this.writeModel.updateRegistrationEvents(newEvents);
 };
 
+RegistrationCommandProcessor.prototype.eventStore = function () {
+  return this.writeModel.eventStore();
+};
+
 module.exports = RegistrationCommandProcessor;

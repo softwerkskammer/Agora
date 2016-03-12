@@ -10,7 +10,7 @@ var socratesConstants = beans.get('socratesConstants');
 var SoCraTesReadModel = beans.get('SoCraTesReadModel');
 
 function RegistrationReadModel(eventStore) {
-  this.eventStore = eventStore;
+  this._eventStore = eventStore;
 
   // read model state:
   this._reservationsBySessionId = undefined;
@@ -32,7 +32,7 @@ var updateReservationsBySessionId = function (reservationsBySessionId, event) {
 
 RegistrationReadModel.prototype.reservationsBySessionId = function () {
   if (!this._reservationsBySessionId) {
-    this._reservationsBySessionId = R.reduce(updateReservationsBySessionId, {}, this.eventStore.registrationEvents());
+    this._reservationsBySessionId = R.reduce(updateReservationsBySessionId, {}, this._eventStore.registrationEvents());
   }
   return this._reservationsBySessionId;
 };
@@ -50,7 +50,7 @@ var updateParticipantsByMemberId = function (participantsByMemberId, event) {
 
 RegistrationReadModel.prototype.participantsByMemberId = function () {
   if (!this._participantsByMemberId) {
-    this._participantsByMemberId = R.reduce(updateParticipantsByMemberId, {}, this.eventStore.registrationEvents());
+    this._participantsByMemberId = R.reduce(updateParticipantsByMemberId, {}, this._eventStore.registrationEvents());
   }
   return this._participantsByMemberId;
 };
@@ -85,7 +85,7 @@ var updateWaitinglistReservationsBySessionId = function (waitinglistReservations
 
 RegistrationReadModel.prototype.waitinglistReservationsBySessionId = function () {
   if (!this._waitinglistReservationsBySessionId) {
-    this._waitinglistReservationsBySessionId = R.reduce(updateWaitinglistReservationsBySessionId, {}, this.eventStore.registrationEvents());
+    this._waitinglistReservationsBySessionId = R.reduce(updateWaitinglistReservationsBySessionId, {}, this._eventStore.registrationEvents());
   }
   return this._waitinglistReservationsBySessionId;
 };
@@ -106,7 +106,7 @@ var updateWaitinglistParticipantsByMemberId = function (waitinglistParticipantsB
 
 RegistrationReadModel.prototype.waitinglistParticipantsByMemberId = function () {
   if (!this._waitinglistParticipantsByMemberId) {
-    this._waitinglistParticipantsByMemberId = R.reduce(updateWaitinglistParticipantsByMemberId, {}, this.eventStore.registrationEvents());
+    this._waitinglistParticipantsByMemberId = R.reduce(updateWaitinglistParticipantsByMemberId, {}, this._eventStore.registrationEvents());
   }
   return this._waitinglistParticipantsByMemberId;
 };
@@ -116,7 +116,7 @@ RegistrationReadModel.prototype.waitinglistParticipantsByMemberIdFor = function 
 };
 
 RegistrationReadModel.prototype.isFull = function (roomType) {
-  return new SoCraTesReadModel(this.eventStore).quotaFor(roomType) <= this.reservationsAndParticipantsFor(roomType).length;
+  return new SoCraTesReadModel(this._eventStore).quotaFor(roomType) <= this.reservationsAndParticipantsFor(roomType).length;
 };
 
 RegistrationReadModel.prototype._reservationOrWaitinglistReservationEventFor = function (sessionId) {
