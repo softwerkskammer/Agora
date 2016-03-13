@@ -19,7 +19,7 @@ function RegistrationReadModel(eventStore) {
   this._waitinglistParticipantsByMemberId = undefined;
 }
 
-var updateReservationsBySessionId = function (reservationsBySessionId, event) {
+var projectReservationsBySessionId = function (reservationsBySessionId, event) {
   var earliestValidRegistrationTime = moment.tz().subtract(socratesConstants.registrationPeriodinMinutes, 'minutes');
   if (event.event === e.RESERVATION_WAS_ISSUED && moment(event.timestamp).isAfter(earliestValidRegistrationTime)) {
     reservationsBySessionId[event.sessionID] = event;
@@ -32,7 +32,7 @@ var updateReservationsBySessionId = function (reservationsBySessionId, event) {
 
 RegistrationReadModel.prototype.reservationsBySessionId = function () {
   if (!this._reservationsBySessionId) {
-    this._reservationsBySessionId = R.reduce(updateReservationsBySessionId, {}, this._eventStore.registrationEvents());
+    this._reservationsBySessionId = R.reduce(projectReservationsBySessionId, {}, this._eventStore.registrationEvents());
   }
   return this._reservationsBySessionId;
 };
@@ -41,7 +41,7 @@ RegistrationReadModel.prototype.reservationsBySessionIdFor = function (roomType)
   return R.filter(function (event) { return event.roomType === roomType; }, this.reservationsBySessionId());
 };
 
-var updateParticipantsByMemberId = function (participantsByMemberId, event) {
+var projectParticipantsByMemberId = function (participantsByMemberId, event) {
   if (event.event === e.PARTICIPANT_WAS_REGISTERED || event.event === e.ROOM_TYPE_WAS_CHANGED || event.event === e.DURATION_WAS_CHANGED) {
     participantsByMemberId[event.memberId] = event;
   }
@@ -50,7 +50,7 @@ var updateParticipantsByMemberId = function (participantsByMemberId, event) {
 
 RegistrationReadModel.prototype.participantsByMemberId = function () {
   if (!this._participantsByMemberId) {
-    this._participantsByMemberId = R.reduce(updateParticipantsByMemberId, {}, this._eventStore.registrationEvents());
+    this._participantsByMemberId = R.reduce(projectParticipantsByMemberId, {}, this._eventStore.registrationEvents());
   }
   return this._participantsByMemberId;
 };
@@ -71,7 +71,7 @@ RegistrationReadModel.prototype.reservationsAndParticipantsFor = function (roomT
   return R.concat(R.values(this.reservationsBySessionIdFor(roomType)), R.values(this.participantsByMemberIdFor(roomType)));
 };
 
-var updateWaitinglistReservationsBySessionId = function (waitinglistReservationsBySessionId, event) {
+var projectWaitinglistReservationsBySessionId = function (waitinglistReservationsBySessionId, event) {
   var thirtyMinutesAgo = moment.tz().subtract(30, 'minutes');
   if (event.event === e.WAITINGLIST_RESERVATION_WAS_ISSUED && moment(event.timestamp).isAfter(thirtyMinutesAgo)) {
     waitinglistReservationsBySessionId[event.sessionID] = event;
@@ -84,7 +84,7 @@ var updateWaitinglistReservationsBySessionId = function (waitinglistReservations
 
 RegistrationReadModel.prototype.waitinglistReservationsBySessionId = function () {
   if (!this._waitinglistReservationsBySessionId) {
-    this._waitinglistReservationsBySessionId = R.reduce(updateWaitinglistReservationsBySessionId, {}, this._eventStore.registrationEvents());
+    this._waitinglistReservationsBySessionId = R.reduce(projectWaitinglistReservationsBySessionId, {}, this._eventStore.registrationEvents());
   }
   return this._waitinglistReservationsBySessionId;
 };
@@ -93,7 +93,7 @@ RegistrationReadModel.prototype.waitinglistReservationsBySessionIdFor = function
   return R.filter(function (event) { return R.contains(roomType, event.desiredRoomTypes); }, this.waitinglistReservationsBySessionId());
 };
 
-var updateWaitinglistParticipantsByMemberId = function (waitinglistParticipantsByMemberId, event) {
+var projectWaitinglistParticipantsByMemberId = function (waitinglistParticipantsByMemberId, event) {
   if (event.event === e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED) {
     waitinglistParticipantsByMemberId[event.memberId] = event;
   }
@@ -105,7 +105,7 @@ var updateWaitinglistParticipantsByMemberId = function (waitinglistParticipantsB
 
 RegistrationReadModel.prototype.waitinglistParticipantsByMemberId = function () {
   if (!this._waitinglistParticipantsByMemberId) {
-    this._waitinglistParticipantsByMemberId = R.reduce(updateWaitinglistParticipantsByMemberId, {}, this._eventStore.registrationEvents());
+    this._waitinglistParticipantsByMemberId = R.reduce(projectWaitinglistParticipantsByMemberId, {}, this._eventStore.registrationEvents());
   }
   return this._waitinglistParticipantsByMemberId;
 };
