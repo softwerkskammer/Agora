@@ -32,7 +32,7 @@ function allActivitiesByDateRange(rangeFrom, rangeTo, sortOrder, callback) {
   persistence.listByField({
     $and: [
       {endUnix: {$gt: rangeFrom}},
-      {endUnix: {$lt: rangeTo}}
+      {startUnix: {$lt: rangeTo}}
     ]
   }, sortOrder, _.partial(toActivityList, callback));
 }
