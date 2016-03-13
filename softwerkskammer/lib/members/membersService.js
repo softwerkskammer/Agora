@@ -46,6 +46,9 @@ function setCustomAvatarImageInMember(member, callback) {
 }
 
 function updateImage(member, callback) { // to be called at regular intervals
+  if (member.hasCustomAvatar()) {
+    return callback();
+  }
   avatarProvider.getImage(member, function (imageData) {
     member.setAvatarData(imageData);
     store.saveMember(member, callback); // never, ever "fork" stuff in node by not having return values *I AM IDIOT*

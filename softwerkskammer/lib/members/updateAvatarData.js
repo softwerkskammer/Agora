@@ -4,6 +4,7 @@
 
 require('../../configure'); // initializing parameters
 
+var _ = require('lodash');
 var async = require('async');
 var beans = require('simple-configure').get('beans');
 var store = beans.get('memberstore');
@@ -14,16 +15,16 @@ function updateMembersAvatar(member, callback) {
 }
 
 store.allMembers(function (err, members) {
-  if (err || !members) {
-    console.log('avatar updater had problems loading members');
-  }
-  console.log('starting avatar update');
-  async.each(members, updateMembersAvatar, function (err1) {
-    if (err) {
-      console.log('avatar updater encountered an error: ' + err1.message);
-    }
-    console.log('finishing avatar update');
-    process.exit();
+  if (err || !members) { console.log('avatar updater had problems loading members'); }
+  store.socratesOnlyMembers(function (err1, socMembers) {
+    if (err1 || !members) { console.log('avatar updater had problems loading members'); }
+    console.log('starting avatar update');
+    async.each(_.union(members, socMembers), updateMembersAvatar, function (err2) {
+      if (err2) {
+        console.log('avatar updater encountered an error: ' + err2.message);
+      }
+      console.log('finishing avatar update');
+      process.exit();
+    });
   });
 });
-

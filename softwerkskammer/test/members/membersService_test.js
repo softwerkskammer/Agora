@@ -265,6 +265,18 @@ describe('MembersService', function () {
       });
     });
 
+    it('updating the avatar from gravatar does not happen when there is a custom avatar', function (done) {
+      var files = {image: [{path: imagePath}]};
+      var params = {};
+      member.state.nickname = 'hada';
+      membersService.saveCustomAvatarForNickname('hada', files, params, function () {
+        membersService.updateImage(member, function (err) {
+          expect(member.inlineAvatar()).to.match(/^data:image\/jpeg;base64,\/9j/);
+          done(err);
+        });
+      });
+    });
+
     it('does not load any image into the member if the member\'s custom avatar cannot be found', function (done) {
       member.state.customAvatar = 'myNonexistentPic.jpg';
       expect(member.inlineAvatar()).to.match('');
