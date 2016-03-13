@@ -47,7 +47,7 @@ var app = misc.expressAppIn(__dirname);
 app.get('/', function (req, res, next) {
   memberstore.allMembers(function (err, members) {
     if (err) { return next(err); }
-    async.each(members, membersService.getImage, function (err1) {
+    async.each(members, membersService.putAvatarIntoMemberAndSave, function (err1) {
       if (err1) { return next(err1); }
       res.render('index', {members: members, wordList: membersService.toWordList(members)});
     });
@@ -58,7 +58,7 @@ app.get('/interests', function (req, res, next) {
   var casesensitive = req.query.casesensitive ? '' : 'i';
   memberstore.getMembersWithInterest(req.query.interest, casesensitive, function (err, members) {
     if (err) { return next(err); }
-    async.each(members, membersService.getImage, function (err1) {
+    async.each(members, membersService.putAvatarIntoMemberAndSave, function (err1) {
       if (err1) { return next(err1); }
       res.render('indexForTag', {
         interest: req.query.interest,

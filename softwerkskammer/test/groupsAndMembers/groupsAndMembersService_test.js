@@ -152,7 +152,7 @@ describe('Groups and Members Service (getGroupAndMembersForList)', function () {
     sinon.stub(memberstore, 'getMembersForEMails', function (member, callback) {
       callback(null, [dummymember]);
     });
-    sinon.stub(membersService, 'getImage', function (member, callback) {
+    sinon.stub(membersService, 'putAvatarIntoMemberAndSave', function (member, callback) {
       callback();
     });
 
@@ -267,7 +267,7 @@ describe('Groups and Members Service (addMembersToGroup)', function () {
     sinon.stub(memberstore, 'getMembersForEMails', function (member, callback) {
       callback(null, [dummymember]);
     });
-    sinon.stub(membersService, 'getImage', function (member, callback) {
+    sinon.stub(membersService, 'putAvatarIntoMemberAndSave', function (member, callback) {
       callback();
     });
 

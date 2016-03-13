@@ -59,7 +59,7 @@ module.exports = {
 
       var participantsLoader = function (cb) {
         memberstore.getMembersForIds(activity.allRegisteredMembers(), function (err1, members) {
-          async.each(members, membersService.getImage, function () {
+          async.each(members, membersService.putAvatarIntoMemberAndSave, function () {
             cb(err1, members);
           });
         });

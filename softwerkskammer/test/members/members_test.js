@@ -39,7 +39,7 @@ describe('Members application', function () {
     getMember = sinon.stub(memberstore, 'getMember', function (nickname, callback) {
       callback(null, dummymember);
     });
-    sinon.stub(membersService, 'getImage', function (member, callback) {
+    sinon.stub(membersService, 'putAvatarIntoMemberAndSave', function (member, callback) {
       callback();
     });
     getSubscribedGroupsForUser = sinon.stub(groupsService, 'getSubscribedGroupsForUser', function (email, callback) {
