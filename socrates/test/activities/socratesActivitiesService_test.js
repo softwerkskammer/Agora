@@ -20,6 +20,7 @@ var notifications = beans.get('socratesNotifications');
 var events = beans.get('events');
 var eventstore = beans.get('eventstore');
 var GlobalEventStore = beans.get('GlobalEventStore');
+var RoomsReadModel = beans.get('RoomsReadModel');
 
 describe('SoCraTes Activities Service', function () {
 
@@ -223,16 +224,21 @@ describe('SoCraTes Activities Service', function () {
   });
 
   it('removes a room pair', function (done) {
-    var allKnownMembersForRoomPairing = [new Member({id: 'memberIdForPair1'}), new Member({id: 'memberIdForPair2'})];
-    socrates.resources.bed_in_double._registeredMembers = [
-      {memberId: 'memberIdForPair1', duration: 2},
-      {memberId: 'memberIdForPair2', duration: 2}
+    eventStore.state.registrationEvents = [
+      events.participantWasRegistered('bed_in_double', 2, 'session-id', 'memberIdForPair1'),
+      events.participantWasRegistered('bed_in_double', 2, 'session-id', 'memberIdForPair2')
     ];
-    socrates.resources.bed_in_double.rooms = [{participant1: 'memberIdForPair1', participant2: 'memberIdForPair2'}];
-    expect(socratesActivity.rooms('bed_in_double').roomPairsWithMembersFrom(allKnownMembersForRoomPairing)).to.have.length(1);
+    eventStore.state.roomsEvents = [
+      events.roomPairWasAdded('bed_in_double', 'memberIdForPair1', 'memberIdForPair2')
+    ];
+
+    expect(new RoomsReadModel(eventStore).roomPairsFor('bed_in_double')).to.eql([{
+      participant1: 'memberIdForPair1',
+      participant2: 'memberIdForPair2'
+    }]);
 
     socratesActivitiesService.removeParticipantPairFor('bed_in_double', 'nicknameForPair1', 'nicknameForPair2', function (err) {
-      expect(savedActivity.rooms('bed_in_double').roomPairsWithMembersFrom(allKnownMembersForRoomPairing)).to.have.length(0);
+      expect(new RoomsReadModel(eventStore).roomPairsFor('bed_in_double')).to.eql([]);
       done(err);
     });
   });

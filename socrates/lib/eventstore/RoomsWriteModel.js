@@ -3,15 +3,21 @@
 
 var beans = require('simple-configure').get('beans');
 var RegistrationReadModel = beans.get('RegistrationReadModel');
+var RoomsReadModel = beans.get('RoomsReadModel');
 
 
 function RoomsWriteModel(eventStore) {
   this._eventStore = eventStore;
+  this.roomsReadModel = new RoomsReadModel(eventStore);
   this.registrationReadModel = new RegistrationReadModel(eventStore);
 }
 
 RoomsWriteModel.prototype.isParticipantIn = function (roomType, participantId) {
   return this.registrationReadModel.registeredInRoomType(participantId) === roomType;
+};
+
+RoomsWriteModel.prototype.isRoomPairIn = function (roomType, participant1Id, participant2Id) {
+  return this.roomsReadModel.isRoomPairIn(roomType, participant1Id, participant2Id);
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////

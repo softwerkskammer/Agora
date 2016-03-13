@@ -26,6 +26,7 @@
 
   "RoomsCommandProcessor": {"module": "./socrates/lib/eventstore/RoomsCommandProcessor"},
   "RoomsWriteModel": {"module": "./socrates/lib/eventstore/RoomsWriteModel"},
+  "RoomsReadModel": {"module": "./socrates/lib/eventstore/RoomsReadModel"},
   "RegistrationCommandProcessor": {"module": "./socrates/lib/eventstore/RegistrationCommandProcessor"},
   "RegistrationReadModel": {"module": "./socrates/lib/eventstore/RegistrationReadModel"},
   "RegistrationWriteModel": {"module": "./socrates/lib/eventstore/RegistrationWriteModel"},

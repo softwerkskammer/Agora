@@ -171,24 +171,24 @@ module.exports = {
     );
   },
 
-  removeParticipantPairFor: function (resourceName, participant1Nick, participant2Nick, callback) {
+  removeParticipantPairFor: function (roomType, participant1Nick, participant2Nick, callback) {
     var self = this;
 
     async.parallel(
       {
-        activity: _.partial(activitystore.getActivity, currentUrl),
+        commandProcessor: _.partial(eventstoreService.getRoomsCommandProcessor, currentUrl),
         participant1: _.partial(memberstore.getMember, participant1Nick),
         participant2: _.partial(memberstore.getMember, participant2Nick)
       },
       function (err, results) {
-        if (err || !results.activity || !results.participant1 || !results.participant2) { return callback(err); }
+        if (err || !results.commandProcessor || !results.participant1 || !results.participant2) { return callback(err); }
 
-        results.activity.rooms(resourceName).remove(results.participant1.id(), results.participant2.id());
+        results.commandProcessor.removeParticipantPairFor(roomType, results.participant1.id(), results.participant2.id());
 
-        saveActivity({
-          activity: results.activity,
+        saveCommandProcessor({
+          commandProcessor: results.commandProcessor,
           callback: callback,
-          repeat: _.partial(self.removeParticipantPairFor, resourceName, participant1Nick, participant2Nick)
+          repeat: _.partial(self.removeParticipantPairFor, roomType, participant1Nick, participant2Nick)
         });
       }
     );

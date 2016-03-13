@@ -20,7 +20,27 @@ RoomsCommandProcessor.prototype.newParticipantPairFor = function (roomType, part
 
   if (eventList.length === 0) {
     // nothing bad was discovered so far
-    eventList.push(events.addedNewRoomPair(roomType, participant1Id, participant2Id));
+    eventList.push(events.roomPairWasAdded(roomType, participant1Id, participant2Id));
+  }
+  this._updateRoomsEvents(eventList);
+};
+
+RoomsCommandProcessor.prototype.removeParticipantPairFor = function (roomType, participant1Id, participant2Id) {
+  var eventList = [];
+
+  if (!this.writeModel.isParticipantIn(roomType, participant1Id)) {
+    eventList.push(events.didNotRemoveRoomPairBecauseParticipantIsNotInRoomType(roomType, participant1Id));
+  }
+  if (!this.writeModel.isParticipantIn(roomType, participant2Id)) {
+    eventList.push(events.didNotRemoveRoomPairBecauseParticipantIsNotInRoomType(roomType, participant2Id));
+  }
+  if (!this.writeModel.isRoomPairIn(roomType, participant1Id, participant2Id)) {
+    eventList.push(events.didNotRemoveRoomPairBecauseThePairDoesNotExistForThisRoomType(roomType, participant1Id, participant2Id));
+  }
+
+  if (eventList.length === 0) {
+    // nothing bad was discovered so far
+    eventList.push(events.roomPairWasRemoved(roomType, participant1Id, participant2Id));
   }
   this._updateRoomsEvents(eventList);
 };
