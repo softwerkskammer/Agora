@@ -25,7 +25,6 @@ var managementService = beans.get('managementService');
 var nametagService = beans.get('nametagService');
 var currentUrl = beans.get('socratesConstants').currentUrl;
 
-var eventstore = beans.get('eventstore');
 var eventstoreService = beans.get('eventstoreService');
 
 var app = misc.expressAppIn(__dirname);

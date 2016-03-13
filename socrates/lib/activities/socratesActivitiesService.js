@@ -6,7 +6,6 @@ var beans = require('simple-configure').get('beans');
 var subscriberstore = beans.get('subscriberstore');
 var memberstore = beans.get('memberstore');
 var activitystore = beans.get('activitystore');
-var eventstore = beans.get('eventstore');
 var eventstoreService = beans.get('eventstoreService');
 var notifications = beans.get('socratesNotifications');
 var roomOptions = beans.get('roomOptions');

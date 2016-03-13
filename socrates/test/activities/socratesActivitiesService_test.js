@@ -20,8 +20,6 @@ var notifications = beans.get('socratesNotifications');
 var events = beans.get('events');
 var eventstore = beans.get('eventstore');
 var GlobalEventStore = beans.get('GlobalEventStore');
-var RoomsWriteModel = beans.get('RoomsWriteModel');
-var RoomsCommandProcessor = beans.get('RoomsCommandProcessor');
 
 describe('SoCraTes Activities Service', function () {
 
