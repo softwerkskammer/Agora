@@ -13,7 +13,7 @@ var groupstore = beans.get('groupstore');
 var memberstore = beans.get('memberstore');
 
 var Member = beans.get('member');
-var SoCraTesActivity = beans.get('socratesActivityExtended');
+var SoCraTesActivity = beans.get('socratesActivity');
 var createApp = require('../../testutil/testHelper')('socratesMailsenderApp').createApp;
 var secureByLogin = beans.get('secureByLogin');
 var secureSuperuserOnly = beans.get('secureSuperuserOnly');
@@ -31,30 +31,20 @@ describe('SoCraTes mailsender application', function () {
   var appWithSocratesAdmin = request(createApp({member: socratesAdmin, baseurl: '/mailsender', secureByMiddlewares: [secureByLogin, secureSuperuserOnly, secureSoCraTesAdminOnly] }));
   var appWithSuperuser = request(createApp({member: superuser, baseurl: '/mailsender', secureByMiddlewares: [secureByLogin, secureSuperuserOnly, secureSoCraTesAdminOnly] }));
 
-  var socrates;
-  var socratesActivity;
 
   beforeEach(function () {
-    socrates = {
+    var socratesActivity = new SoCraTesActivity({
       id: 'socratesId',
       title: 'SoCraTes',
-      description: 'Coolest event ever :-)',
       location: 'Right next door',
       url: 'socrates-url',
       isSoCraTes: true,
       startUnix: 1440687600,
       endUnix: 1440946800,
       owner: {nickname: 'ownerNick'},
-      assignedGroup: 'assignedGroup',
       group: {groupLongName: 'longName'},
-      resources: {
-        single: {_canUnsubscribe: false, _limit: 0, _position: 2, _registrationOpen: true, _waitinglist: []}, // no capacity
-        bed_in_double: {_canUnsubscribe: false, _limit: 10, _position: 3, _registrationOpen: false, _waitinglist: []}, // not opened
-        junior: {_canUnsubscribe: false, _limit: 10, _position: 4, _registrationOpen: false}, // not opened, no waitinglist
-        bed_in_junior: {_canUnsubscribe: false, _limit: 10, _position: 5, _registrationOpen: true}
-      }
-    };
-    socratesActivity = new SoCraTesActivity(socrates);
+      resources: {}
+    });
 
     sinon.stub(activitystore, 'getActivity', function (activityUrl, callback) { callback(null, socratesActivity); });
     sinon.stub(groupstore, 'getGroup', function (group, callback) { callback(); });
