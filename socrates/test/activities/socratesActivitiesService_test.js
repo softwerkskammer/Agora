@@ -16,7 +16,22 @@ var Subscriber = beans.get('subscriber');
 var memberstore = beans.get('memberstore');
 var subscriberstore = beans.get('subscriberstore');
 var notifications = beans.get('socratesNotifications');
+
+var events = beans.get('events');
+var eventstore = beans.get('eventstore');
+var GlobalEventStore = beans.get('GlobalEventStore');
+var RoomsWriteModel = beans.get('RoomsWriteModel');
+var RoomsCommandProcessor = beans.get('RoomsCommandProcessor');
+
 describe('SoCraTes Activities Service', function () {
+
+  var eventStore;
+  var savedEventStore;
+
+  beforeEach(function () {
+    eventStore = new GlobalEventStore();
+  });
+
 
   var socrates;
   var socratesActivity;
@@ -77,9 +92,22 @@ describe('SoCraTes Activities Service', function () {
       callback(null, socratesActivity);
     });
 
+    sinon.stub(eventstore, 'getEventStore', function (url, callback) {
+      if (url === 'wrongUrl') {
+        return callback(new Error('Wrong URL!'));
+      }
+      callback(null, eventStore);
+    });
+
     savedActivity = undefined;
     sinon.stub(activitystore, 'saveActivity', function (activity, callback) {
       savedActivity = activity;
+      callback();
+    });
+
+    savedEventStore = undefined;
+    sinon.stub(eventstore, 'saveEventStore', function (store, callback) {
+      savedEventStore = store;
       callback();
     });
   });
@@ -189,18 +217,17 @@ describe('SoCraTes Activities Service', function () {
   });
 
   it('joins two members to form a room', function (done) {
-    var allKnownMembersForRoomPairing = [new Member({id: 'memberIdForPair1'}), new Member({id: 'memberIdForPair2'})];
 
-    socrates.resources.bed_in_double._registeredMembers = [
-      {memberId: 'memberIdForPair1', duration: 2},
-      {memberId: 'memberIdForPair2', duration: 2}
+    eventStore.state.registrationEvents = [
+      events.participantWasRegistered('bed_in_double', 2, 'session-id', 'memberIdForPair1'),
+      events.participantWasRegistered('bed_in_double', 2, 'session-id', 'memberIdForPair2')
     ];
 
     socratesActivitiesService.newParticipantPairFor('bed_in_double', 'nicknameForPair1', 'nicknameForPair2', function (err) {
-      var pairs = savedActivity.rooms('bed_in_double').roomPairsWithMembersFrom(allKnownMembersForRoomPairing);
+      var pairs = eventStore.state.roomsEvents;
       expect(pairs).to.have.length(1);
-      expect(pairs[0].participant1.id()).to.be('memberIdForPair1');
-      expect(pairs[0].participant2.id()).to.be('memberIdForPair2');
+      expect(pairs[0].participant1Id).to.be('memberIdForPair1');
+      expect(pairs[0].participant2Id).to.be('memberIdForPair2');
       done(err);
     });
   });

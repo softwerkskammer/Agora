@@ -22,7 +22,7 @@ module.exports = {
       } else {
         reservationEvent = registrationCommandProcessor.issueReservation(registrationTuple.resourceName, registrationTuple.duration, registrationTuple.sessionID);
       }
-      return eventstoreService.saveRegistrationCommandProcessor(registrationCommandProcessor, function (err1) {
+      return eventstoreService.saveCommandProcessor(registrationCommandProcessor, function (err1) {
         if (err1 && err1.message === CONFLICTING_VERSIONS) {
           // we try again because of a racing condition during save:
           return self.startRegistration(registrationTuple, callback);
@@ -53,7 +53,7 @@ module.exports = {
       } else {
         registrationEvent = commandProcessor.registerParticipant(registrationTuple.resourceName, registrationTuple.duration, registrationTuple.sessionID, memberID);
       }
-      return eventstoreService.saveRegistrationCommandProcessor(commandProcessor, function (err1) {
+      return eventstoreService.saveCommandProcessor(commandProcessor, function (err1) {
         if (err1 && err1.message === CONFLICTING_VERSIONS) {
           // we try again because of a racing condition during save:
           return self.saveRegistration(memberID, sessionID, body, callback);

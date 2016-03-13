@@ -24,6 +24,8 @@
   "eventstoreService": {"module": "./socrates/lib/eventstore/eventstoreService"},
   "eventstore": {"module": "./socrates/lib/eventstore/eventstore"},
 
+  "RoomsCommandProcessor": {"module": "./socrates/lib/eventstore/RoomsCommandProcessor"},
+  "RoomsWriteModel": {"module": "./socrates/lib/eventstore/RoomsWriteModel"},
   "RegistrationCommandProcessor": {"module": "./socrates/lib/eventstore/RegistrationCommandProcessor"},
   "RegistrationReadModel": {"module": "./socrates/lib/eventstore/RegistrationReadModel"},
   "RegistrationWriteModel": {"module": "./socrates/lib/eventstore/RegistrationWriteModel"},

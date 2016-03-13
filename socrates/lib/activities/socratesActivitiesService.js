@@ -6,6 +6,8 @@ var beans = require('simple-configure').get('beans');
 var subscriberstore = beans.get('subscriberstore');
 var memberstore = beans.get('memberstore');
 var activitystore = beans.get('activitystore');
+var eventstore = beans.get('eventstore');
+var eventstoreService = beans.get('eventstoreService');
 var notifications = beans.get('socratesNotifications');
 var roomOptions = beans.get('roomOptions');
 var CONFLICTING_VERSIONS = beans.get('constants').CONFLICTING_VERSIONS;
@@ -15,6 +17,18 @@ var currentUrl = beans.get('socratesConstants').currentUrl;
 
 function saveActivity(args) {
   activitystore.saveActivity(args.activity, function (err) {
+    if (err && err.message === CONFLICTING_VERSIONS) {
+      // we try again because of a racing condition during save:
+      return args.repeat(args.callback);
+    }
+    if (err) { return args.callback(err); }
+    if (args.handleSuccess) { args.handleSuccess(); }
+    return args.callback();
+  });
+}
+
+function saveCommandProcessor(args) {
+  eventstoreService.saveCommandProcessor(args.commandProcessor, function (err) {
     if (err && err.message === CONFLICTING_VERSIONS) {
       // we try again because of a racing condition during save:
       return args.repeat(args.callback);
@@ -135,24 +149,24 @@ module.exports = {
     );
   },
 
-  newParticipantPairFor: function (resourceName, participant1Nick, participant2Nick, callback) {
+  newParticipantPairFor: function (roomType, participant1Nick, participant2Nick, callback) {
     var self = this;
 
     async.parallel(
       {
-        activity: _.partial(activitystore.getActivity, currentUrl),
+        commandProcessor: _.partial(eventstoreService.getRoomsCommandProcessor, currentUrl),
         participant1: _.partial(memberstore.getMember, participant1Nick),
         participant2: _.partial(memberstore.getMember, participant2Nick)
       },
       function (err, results) {
-        if (err || !results.activity || !results.participant1 || !results.participant2) { return callback(err); }
+        if (err || !results.commandProcessor || !results.participant1 || !results.participant2) { return callback(err); }
 
-        results.activity.rooms(resourceName).add(results.participant1.id(), results.participant2.id());
+        results.commandProcessor.newParticipantPairFor(roomType, results.participant1.id(), results.participant2.id());
 
-        saveActivity({
-          activity: results.activity,
+        saveCommandProcessor({
+          commandProcessor: results.commandProcessor,
           callback: callback,
-          repeat: _.partial(self.newParticipantPairFor, resourceName, participant1Nick, participant2Nick)
+          repeat: _.partial(self.newParticipantPairFor, roomType, participant1Nick, participant2Nick)
         });
       }
     );

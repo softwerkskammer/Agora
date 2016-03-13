@@ -10,6 +10,7 @@ function enrich(event) {
 }
 
 module.exports = {
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // general SoCraTes data:
   roomQuotaWasSet: function (roomType, quota) {
     return enrich({event: e.ROOM_QUOTA_WAS_SET, roomType: roomType, quota: quota});
@@ -27,6 +28,7 @@ module.exports = {
     return enrich({event: e.END_TIME_WAS_SET, endTimeInMillis: endMoment.valueOf()});
   },
 
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // reservation:
   reservationWasIssued: function (roomType, duration, sessionId) {
     return enrich({event: e.RESERVATION_WAS_ISSUED, sessionID: sessionId, roomType: roomType, duration: duration});
@@ -80,5 +82,14 @@ module.exports = {
 
   didNotChangeDurationForNonParticipant: function (memberId, duration) {
     return enrich({event: e.DID_NOT_CHANGE_DURATION_FOR_NON_PARTICIPANT, memberId: memberId, duration: duration});
+  },
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // rooms:
+  addedNewRoomPair: function (roomType, participant1Id, participant2Id) {
+    return enrich({event: e.ADDED_NEW_ROOM_PAIR, roomType: roomType, participant1Id: participant1Id, participant2Id: participant2Id});
+  },
+  didNotAddNewRoomPairBecauseParticipantIsNotInRoomType: function (roomType, participantId) {
+    return enrich({event: e.DID_NOT_ADD_NEW_ROOM_PAIR_BECAUSE_PARTICIPANT_IS_NOT_IN_ROOM_TYPE, roomType: roomType, participantId: participantId});
   }
 };
