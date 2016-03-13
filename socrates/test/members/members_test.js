@@ -607,7 +607,7 @@ describe('SoCraTes members application', function () {
         });
     });
 
-    it('refuses deletion when the subscriber is also participant redirects to the profile page', function (done) {
+    it('refuses deletion when the subscriber is also participant and redirects to the profile page', function (done) {
       sinon.stub(socratesActivitiesService, 'participationStatus', function (subscriber, callback) {
         callback(null, true);
       });

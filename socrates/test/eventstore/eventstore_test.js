@@ -29,8 +29,8 @@ describe('eventstore', function () {
 
   it('calls persistence.getByField for store.getEventStore and transforms the result to a GlobalEventStore', function (done) {
     store.getEventStore('socrates-url', function (err, globalEventStore) {
-      expect(globalEventStore.state.url).to.equal('socrates-url');
       expect(getByField.calledWith({url: 'socrates-url'})).to.be(true);
+      expect(globalEventStore.state.url).to.equal('socrates-url');
       expect(globalEventStore.state.socratesEvents).to.eql([{event: 'EVENT-1'}]);
       done(err);
     });

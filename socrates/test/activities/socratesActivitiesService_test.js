@@ -26,12 +26,6 @@ var RoomsCommandProcessor = beans.get('RoomsCommandProcessor');
 describe('SoCraTes Activities Service', function () {
 
   var eventStore;
-  var savedEventStore;
-
-  beforeEach(function () {
-    eventStore = new GlobalEventStore();
-  });
-
 
   var socrates;
   var socratesActivity;
@@ -40,6 +34,8 @@ describe('SoCraTes Activities Service', function () {
   var subscriber;
 
   beforeEach(function () {
+    eventStore = new GlobalEventStore();
+
     /*eslint camelcase: 0*/
     registrationTuple = {
       activityUrl: 'socrates-url',
@@ -98,6 +94,7 @@ describe('SoCraTes Activities Service', function () {
       }
       callback(null, eventStore);
     });
+    sinon.stub(eventstore, 'saveEventStore', function (store, callback) { callback(); });
 
     savedActivity = undefined;
     sinon.stub(activitystore, 'saveActivity', function (activity, callback) {
@@ -105,11 +102,6 @@ describe('SoCraTes Activities Service', function () {
       callback();
     });
 
-    savedEventStore = undefined;
-    sinon.stub(eventstore, 'saveEventStore', function (store, callback) {
-      savedEventStore = store;
-      callback();
-    });
   });
 
   afterEach(function () {
@@ -224,10 +216,10 @@ describe('SoCraTes Activities Service', function () {
     ];
 
     socratesActivitiesService.newParticipantPairFor('bed_in_double', 'nicknameForPair1', 'nicknameForPair2', function (err) {
-      var pairs = eventStore.state.roomsEvents;
-      expect(pairs).to.have.length(1);
-      expect(pairs[0].participant1Id).to.be('memberIdForPair1');
-      expect(pairs[0].participant2Id).to.be('memberIdForPair2');
+      var pairEvents = eventStore.state.roomsEvents;
+      expect(pairEvents).to.have.length(1);
+      expect(pairEvents[0].participant1Id).to.be('memberIdForPair1');
+      expect(pairEvents[0].participant2Id).to.be('memberIdForPair2');
       done(err);
     });
   });
