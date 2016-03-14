@@ -1,0 +1,208 @@
+/*eslint no-underscore-dangle: 0*/
+'use strict';
+
+var expect = require('must-dist');
+var R = require('ramda');
+
+var beans = require('../../testutil/configureForTest').get('beans');
+var events = beans.get('events');
+var GlobalEventStore = beans.get('GlobalEventStore');
+var RoomsWriteModel = beans.get('RoomsWriteModel');
+var RoomsCommandProcessor = beans.get('RoomsCommandProcessor');
+var e = beans.get('eventConstants');
+
+function stripTimestamps(someEvents) {
+  return R.map(function (event) {
+    var newEvent = R.clone(event);
+    delete newEvent.timestamp;
+    return newEvent;
+  }, someEvents);
+}
+
+var bedInDouble = 'bedInDouble';
+
+describe('The rooms command processor', function () {
+
+  var eventStore;
+  var commandProcessor;
+
+  beforeEach(function () {
+    eventStore = new GlobalEventStore();
+    commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStore));
+
+    eventStore.state.registrationEvents = [
+      events.participantWasRegistered(bedInDouble, 2, 'sessionId1', 'memberId1'),
+      events.participantWasRegistered(bedInDouble, 2, 'sessionId2', 'memberId2'),
+      events.participantWasRegistered(bedInDouble, 2, 'sessionId3', 'memberId3'),
+      events.participantWasRegistered(bedInDouble, 2, 'sessionId4', 'memberId4'),
+      events.participantWasRegistered(bedInDouble, 2, 'sessionId5', 'memberId5')
+    ];
+  });
+
+  it('can put two participants into a room', function () {
+    commandProcessor.addParticipantPairFor(bedInDouble, 'memberId1', 'memberId2');
+
+    expect(stripTimestamps(eventStore.state.roomsEvents)).to.eql([{
+      event: e.ROOM_PAIR_WAS_ADDED,
+      roomType: bedInDouble,
+      participant1Id: 'memberId1',
+      participant2Id: 'memberId2'
+    }]);
+  });
+
+  it('does not create a room if one of the participants is undefined', function () {
+    commandProcessor.addParticipantPairFor(bedInDouble, 'memberId1', undefined);
+
+    expect(stripTimestamps(eventStore.state.roomsEvents)).to.eql([{
+      event: e.DID_NOT_ADD_ROOM_PAIR_BECAUSE_PARTICIPANT_IS_NOT_IN_ROOM_TYPE,
+      roomType: bedInDouble,
+      participantId: undefined
+    }]);
+  });
+
+  it('does not create a room if one of the participants is null', function () {
+    commandProcessor.addParticipantPairFor(bedInDouble, null, 'memberId5');
+
+    expect(stripTimestamps(eventStore.state.roomsEvents)).to.eql([{
+      event: e.DID_NOT_ADD_ROOM_PAIR_BECAUSE_PARTICIPANT_IS_NOT_IN_ROOM_TYPE,
+      roomType: bedInDouble,
+      participantId: null
+    }]);
+  });
+
+  it('does not create a room if both participants do not exist', function () {
+    commandProcessor.addParticipantPairFor(bedInDouble, undefined, null);
+
+    expect(stripTimestamps(eventStore.state.roomsEvents)).to.eql([
+      {
+        event: e.DID_NOT_ADD_ROOM_PAIR_BECAUSE_PARTICIPANT_IS_NOT_IN_ROOM_TYPE,
+        roomType: bedInDouble,
+        participantId: undefined
+      },
+      {
+        event: e.DID_NOT_ADD_ROOM_PAIR_BECAUSE_PARTICIPANT_IS_NOT_IN_ROOM_TYPE,
+        roomType: bedInDouble,
+        participantId: null
+      }
+    ]);
+  });
+
+  it('does not create a room if the first participant is not known', function () {
+    commandProcessor.addParticipantPairFor(bedInDouble, 'unknownMemberId', 'memberId5');
+
+    expect(stripTimestamps(eventStore.state.roomsEvents)).to.eql([{
+      event: e.DID_NOT_ADD_ROOM_PAIR_BECAUSE_PARTICIPANT_IS_NOT_IN_ROOM_TYPE,
+      roomType: bedInDouble,
+      participantId: 'unknownMemberId'
+    }]);
+  });
+
+  it('does not create a room if the second participant is not known', function () {
+    commandProcessor.addParticipantPairFor(bedInDouble, 'memberId1', 'unknownMemberId');
+
+    expect(stripTimestamps(eventStore.state.roomsEvents)).to.eql([{
+      event: e.DID_NOT_ADD_ROOM_PAIR_BECAUSE_PARTICIPANT_IS_NOT_IN_ROOM_TYPE,
+      roomType: bedInDouble,
+      participantId: 'unknownMemberId'
+    }]);
+  });
+
+  it('does not create a room if both participants are not known', function () {
+    commandProcessor.addParticipantPairFor(bedInDouble, 'unknownMemberId', 'anotherUnknownMemberId');
+
+    expect(stripTimestamps(eventStore.state.roomsEvents)).to.eql([
+      {
+        event: e.DID_NOT_ADD_ROOM_PAIR_BECAUSE_PARTICIPANT_IS_NOT_IN_ROOM_TYPE,
+        roomType: bedInDouble,
+        participantId: 'unknownMemberId'
+      },
+      {
+        event: e.DID_NOT_ADD_ROOM_PAIR_BECAUSE_PARTICIPANT_IS_NOT_IN_ROOM_TYPE,
+        roomType: bedInDouble,
+        participantId: 'anotherUnknownMemberId'
+      }
+    ]);
+  });
+
+  it('does not create a room if the two participants are identical', function () {
+    commandProcessor.addParticipantPairFor(bedInDouble, 'memberId1', 'memberId1');
+
+    expect(stripTimestamps(eventStore.state.roomsEvents)).to.eql([{
+      event: e.DID_NOT_ADD_ROOM_PAIR_BECAUSE_PARTICIPANT_IS_PAIRED_WITH_THEMSELVES,
+      roomType: bedInDouble,
+      participantId: 'memberId1'
+    }]);
+  });
+
+  it('does not create a room if the first participant already is in a room', function () {
+    eventStore.state.roomsEvents = [
+      events.roomPairWasAdded(bedInDouble, 'memberId1', 'memberId2')
+    ];
+
+    commandProcessor.addParticipantPairFor(bedInDouble, 'memberId1', 'memberId3');
+
+    expect(stripTimestamps(eventStore.state.roomsEvents)).to.eql([
+      {
+        event: e.ROOM_PAIR_WAS_ADDED,
+        roomType: bedInDouble,
+        participant1Id: 'memberId1',
+        participant2Id: 'memberId2'
+      },
+      {
+        event: e.DID_NOT_ADD_ROOM_PAIR_BECAUSE_PARTICIPANT_IS_ALREADY_IN_ROOM,
+        roomType: bedInDouble,
+        participantId: 'memberId1'
+      }
+    ]);
+  });
+
+  it('does not create a room if the second participant already is in a room', function () {
+    eventStore.state.roomsEvents = [
+      events.roomPairWasAdded(bedInDouble, 'memberId1', 'memberId2')
+    ];
+
+    commandProcessor.addParticipantPairFor(bedInDouble, 'memberId4', 'memberId2');
+
+    expect(stripTimestamps(eventStore.state.roomsEvents)).to.eql([
+      {
+        event: e.ROOM_PAIR_WAS_ADDED,
+        roomType: bedInDouble,
+        participant1Id: 'memberId1',
+        participant2Id: 'memberId2'
+      },
+      {
+        event: e.DID_NOT_ADD_ROOM_PAIR_BECAUSE_PARTICIPANT_IS_ALREADY_IN_ROOM,
+        roomType: bedInDouble,
+        participantId: 'memberId2'
+      }
+    ]);
+  });
+
+  it('does not create a room if the participants already are in a room but in reverse order', function () {
+    eventStore.state.roomsEvents = [
+      events.roomPairWasAdded(bedInDouble, 'memberId1', 'memberId2')
+    ];
+
+    commandProcessor.addParticipantPairFor(bedInDouble, 'memberId2', 'memberId1');
+
+    expect(stripTimestamps(eventStore.state.roomsEvents)).to.eql([
+      {
+        event: e.ROOM_PAIR_WAS_ADDED,
+        roomType: bedInDouble,
+        participant1Id: 'memberId1',
+        participant2Id: 'memberId2'
+      },
+      {
+        event: e.DID_NOT_ADD_ROOM_PAIR_BECAUSE_PARTICIPANT_IS_ALREADY_IN_ROOM,
+        roomType: bedInDouble,
+        participantId: 'memberId2'
+      },
+      {
+        event: e.DID_NOT_ADD_ROOM_PAIR_BECAUSE_PARTICIPANT_IS_ALREADY_IN_ROOM,
+        roomType: bedInDouble,
+        participantId: 'memberId1'
+      }
+    ]);
+  });
+
+});

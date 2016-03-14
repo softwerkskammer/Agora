@@ -11,6 +11,7 @@ function RoomsReadModel(eventStore) {
 
   // read model state:
   this._roomPairsFor = {};
+  this._participantsIn = {};
 }
 
 var projectRoomPairs = function (roomType, roomPairs, event) {
@@ -38,6 +39,27 @@ RoomsReadModel.prototype.isRoomPairIn = function (roomType, participant1Id, part
   return R.find(function (pair) {
     return pair.participant1 === participant1Id || pair.participant2 === participant2Id;
   }, this.roomPairsFor(roomType));
+};
+
+var projectParticpantsInRoom = function (roomType, participants, event) {
+  if (event.event === e.ROOM_PAIR_WAS_ADDED && event.roomType === roomType) {
+    return R.append(event.participant2Id, R.append(event.participant1Id, participants));
+  }
+  if (event.event === e.ROOM_PAIR_WAS_REMOVED && event.roomType === roomType) {
+    return R.reject(function (participant) {
+      return participant === event.participant1Id || participant === event.participant2Id;
+    }, participants);
+  }
+
+  return participants;
+};
+
+RoomsReadModel.prototype.participantsInRoom = function (roomType) {
+  if (!this._participantsIn[roomType]) {
+    this._participantsIn[roomType] = R.reduce(R.partial(projectParticpantsInRoom, [roomType]), [], this._eventStore.roomsEvents());
+  }
+
+  return this._participantsIn[roomType];
 };
 
 module.exports = RoomsReadModel;

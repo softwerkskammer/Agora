@@ -8,17 +8,6 @@ function Rooms(roomsObject, allKnownMemberIds) {
   return this;
 }
 
-Rooms.prototype.add = function (memberId1, memberId2) {
-  var participantsInRoom = this.participantsInRoom();
-  var bothAreKnown = this.allKnownMemberIds.indexOf(memberId1) > -1 && this.allKnownMemberIds.indexOf(memberId2) > -1;
-  var bothAreNotInARoom = participantsInRoom.indexOf(memberId1) === -1 && participantsInRoom.indexOf(memberId2) === -1;
-  var theyAreDifferent = memberId1 !== memberId2;
-
-  if (bothAreKnown && bothAreNotInARoom && theyAreDifferent) {
-    this.state.push({participant1: memberId1, participant2: memberId2});
-  }
-};
-
 Rooms.prototype.remove = function (memberId1, memberId2) {
   var pairIndex = _.findIndex(this.state, function (pair) {
     return pair.participant1 === memberId1 && pair.participant2 === memberId2;

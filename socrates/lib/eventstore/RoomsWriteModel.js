@@ -1,6 +1,8 @@
 /*eslint no-underscore-dangle: 0*/
 'use strict';
 
+var R = require('ramda');
+
 var beans = require('simple-configure').get('beans');
 var RegistrationReadModel = beans.get('RegistrationReadModel');
 var RoomsReadModel = beans.get('RoomsReadModel');
@@ -19,6 +21,10 @@ RoomsWriteModel.prototype.isParticipantIn = function (roomType, participantId) {
 RoomsWriteModel.prototype.isRoomPairIn = function (roomType, participant1Id, participant2Id) {
   return this.roomsReadModel.isRoomPairIn(roomType, participant1Id, participant2Id);
 };
+
+RoomsWriteModel.prototype.isInRoom = function (roomType, participantId) {
+  return R.contains(participantId, this.roomsReadModel.participantsInRoom(roomType));
+}
 
 /////////////////////////////////////////////////////////////////////////////////////////
 RoomsWriteModel.prototype.updateRoomsEvents = function (newEvents) {

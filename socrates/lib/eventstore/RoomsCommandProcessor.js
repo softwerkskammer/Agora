@@ -17,6 +17,15 @@ RoomsCommandProcessor.prototype.addParticipantPairFor = function (roomType, part
   if (!this.writeModel.isParticipantIn(roomType, participant2Id)) {
     eventList.push(events.didNotAddRoomPairBecauseParticipantIsNotInRoomType(roomType, participant2Id));
   }
+  if (this.writeModel.isInRoom(roomType, participant1Id)) {
+    eventList.push(events.didNotAddRoomPairBecauseParticipantIsAlreadyInRoom(roomType, participant1Id));
+  }
+  if (this.writeModel.isInRoom(roomType, participant2Id)) {
+    eventList.push(events.didNotAddRoomPairBecauseParticipantIsAlreadyInRoom(roomType, participant2Id));
+  }
+  if (participant1Id === participant2Id) {
+    eventList.push(events.didNotAddRoomPairBecauseParticipantIsPairedWithThemselves(roomType, participant1Id));
+  }
 
   if (eventList.length === 0) {
     // nothing bad was discovered so far
@@ -24,6 +33,7 @@ RoomsCommandProcessor.prototype.addParticipantPairFor = function (roomType, part
   }
   this._updateRoomsEvents(eventList);
 };
+
 
 RoomsCommandProcessor.prototype.removeParticipantPairFor = function (roomType, participant1Id, participant2Id) {
   var eventList = [];

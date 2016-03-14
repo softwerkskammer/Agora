@@ -92,6 +92,11 @@ module.exports = {
   didNotAddRoomPairBecauseParticipantIsNotInRoomType: function (roomType, participantId) {
     return enrich({event: e.DID_NOT_ADD_ROOM_PAIR_BECAUSE_PARTICIPANT_IS_NOT_IN_ROOM_TYPE, roomType: roomType, participantId: participantId});
   },
+  didNotAddRoomPairBecauseParticipantIsAlreadyInRoom: function (roomType, participantId) {
+    return enrich({event: e.DID_NOT_ADD_ROOM_PAIR_BECAUSE_PARTICIPANT_IS_ALREADY_IN_ROOM, roomType: roomType, participantId: participantId});
+  },
+  didNotAddRoomPairBecauseParticipantIsPairedWithThemselves: function (roomType, participantId) {
+    return enrich({event: e.DID_NOT_ADD_ROOM_PAIR_BECAUSE_PARTICIPANT_IS_PAIRED_WITH_THEMSELVES, roomType: roomType, participantId: participantId});
   },
   roomPairWasRemoved: function (roomType, participant1Id, participant2Id) {
     return enrich({event: e.ROOM_PAIR_WAS_REMOVED, roomType: roomType, participant1Id: participant1Id, participant2Id: participant2Id});
