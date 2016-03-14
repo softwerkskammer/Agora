@@ -151,7 +151,7 @@ app.post('/newWaitinglist', function (req, res, next) {
 });
 
 app.post('/newParticipantPair', function (req, res, next) {
-  socratesActivitiesService.newParticipantPairFor(req.body.resourceName, req.body.participant1, req.body.participant2, function (err) {
+  socratesActivitiesService.addParticipantPairFor(req.body.resourceName, req.body.participant1, req.body.participant2, function (err) {
     if (err) { return next(err); }
     res.redirect('/registration/management');
   });

@@ -8,14 +8,14 @@ function RoomsCommandProcessor(writeModel) {
   this.writeModel = writeModel;
 }
 
-RoomsCommandProcessor.prototype.newParticipantPairFor = function (roomType, participant1Id, participant2Id) {
+RoomsCommandProcessor.prototype.addParticipantPairFor = function (roomType, participant1Id, participant2Id) {
   var eventList = [];
 
   if (!this.writeModel.isParticipantIn(roomType, participant1Id)) {
-    eventList.push(events.didNotAddNewRoomPairBecauseParticipantIsNotInRoomType(roomType, participant1Id));
+    eventList.push(events.didNotAddRoomPairBecauseParticipantIsNotInRoomType(roomType, participant1Id));
   }
   if (!this.writeModel.isParticipantIn(roomType, participant2Id)) {
-    eventList.push(events.didNotAddNewRoomPairBecauseParticipantIsNotInRoomType(roomType, participant2Id));
+    eventList.push(events.didNotAddRoomPairBecauseParticipantIsNotInRoomType(roomType, participant2Id));
   }
 
   if (eventList.length === 0) {

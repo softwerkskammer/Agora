@@ -214,7 +214,7 @@ describe('SoCraTes Activities Service', function () {
       events.participantWasRegistered('bed_in_double', 2, 'session-id', 'memberIdForPair2')
     ];
 
-    socratesActivitiesService.newParticipantPairFor('bed_in_double', 'nicknameForPair1', 'nicknameForPair2', function (err) {
+    socratesActivitiesService.addParticipantPairFor('bed_in_double', 'nicknameForPair1', 'nicknameForPair2', function (err) {
       var pairEvents = eventStore.state.roomsEvents;
       expect(pairEvents).to.have.length(1);
       expect(pairEvents[0].participant1Id).to.be('memberIdForPair1');

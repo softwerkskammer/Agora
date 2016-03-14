@@ -148,7 +148,7 @@ module.exports = {
     );
   },
 
-  newParticipantPairFor: function (roomType, participant1Nick, participant2Nick, callback) {
+  addParticipantPairFor: function (roomType, participant1Nick, participant2Nick, callback) {
     var self = this;
 
     async.parallel(
@@ -160,12 +160,12 @@ module.exports = {
       function (err, results) {
         if (err || !results.commandProcessor || !results.participant1 || !results.participant2) { return callback(err); }
 
-        results.commandProcessor.newParticipantPairFor(roomType, results.participant1.id(), results.participant2.id());
+        results.commandProcessor.addParticipantPairFor(roomType, results.participant1.id(), results.participant2.id());
 
         saveCommandProcessor({
           commandProcessor: results.commandProcessor,
           callback: callback,
-          repeat: _.partial(self.newParticipantPairFor, roomType, participant1Nick, participant2Nick)
+          repeat: _.partial(self.addParticipantPairFor, roomType, participant1Nick, participant2Nick)
         });
       }
     );
