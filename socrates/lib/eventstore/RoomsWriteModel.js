@@ -24,7 +24,7 @@ RoomsWriteModel.prototype.isRoomPairIn = function (roomType, participant1Id, par
 
 RoomsWriteModel.prototype.isInRoom = function (roomType, participantId) {
   return R.contains(participantId, this.roomsReadModel.participantsInRoom(roomType));
-}
+};
 
 /////////////////////////////////////////////////////////////////////////////////////////
 RoomsWriteModel.prototype.updateRoomsEvents = function (newEvents) {
