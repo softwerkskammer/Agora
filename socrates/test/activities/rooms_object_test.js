@@ -17,41 +17,6 @@ describe('Rooms', function () {
     new Member({id: 'memberId5'})
   ];
 
-  it('removes a pair if the first member is given', function () {
-    var roomsInResource = [
-      {
-        participant1: 'memberId1',
-        participant2: 'memberId2'
-      }, {
-        participant1: 'memberId3',
-        participant2: 'memberId4'
-      }];
-    var rooms = new Rooms(roomsInResource, allKnownMemberIds);
-
-    rooms.removePairContaining('memberId1');
-
-    expect(rooms.state).to.have.length(1);
-    expect(rooms.state[0].participant1).to.be('memberId3');
-    expect(rooms.state[0].participant2).to.be('memberId4');
-  });
-
-  it('removes a pair if the second member is given', function () {
-    var roomsInResource = [
-      {
-        participant1: 'memberId1',
-        participant2: 'memberId2'
-      }, {
-        participant1: 'memberId3',
-        participant2: 'memberId4'
-      }];
-    var rooms = new Rooms(roomsInResource, allKnownMemberIds);
-
-    rooms.removePairContaining('memberId2');
-
-    expect(rooms.state).to.have.length(1);
-    expect(rooms.state[0].participant1).to.be('memberId3');
-    expect(rooms.state[0].participant2).to.be('memberId4');
-  });
 
   it('finds a roommate for a given member id', function () {
     var roomsInResource = [

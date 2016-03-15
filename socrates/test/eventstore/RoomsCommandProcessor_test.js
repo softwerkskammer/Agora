@@ -251,5 +251,72 @@ describe('The rooms command processor', function () {
     ]);
   });
 
+  it('removes a pair if the first member is given', function () {
+    eventStore.state.roomsEvents = [
+      events.roomPairWasAdded(bedInDouble, 'memberId1', 'memberId2')
+    ];
+
+    commandProcessor.removeParticipantPairContaining(bedInDouble, 'memberId1');
+
+    expect(stripTimestamps(eventStore.state.roomsEvents)).to.eql([
+      {
+        event: e.ROOM_PAIR_WAS_ADDED,
+        roomType: bedInDouble,
+        participant1Id: 'memberId1',
+        participant2Id: 'memberId2'
+      },
+      {
+        event: e.ROOM_PAIR_CONTAINING_A_PARTICIPANT_WAS_REMOVED,
+        roomType: bedInDouble,
+        participantIdToBeRemoved: 'memberId1',
+        participant1Id: 'memberId1',
+        participant2Id: 'memberId2'
+      }
+    ]);
+  });
+
+  it('removes a pair if the second member is given', function () {
+    eventStore.state.roomsEvents = [
+      events.roomPairWasAdded(bedInDouble, 'memberId1', 'memberId2')
+    ];
+    commandProcessor.removeParticipantPairContaining(bedInDouble, 'memberId2');
+
+    expect(stripTimestamps(eventStore.state.roomsEvents)).to.eql([
+      {
+        event: e.ROOM_PAIR_WAS_ADDED,
+        roomType: bedInDouble,
+        participant1Id: 'memberId1',
+        participant2Id: 'memberId2'
+      },
+      {
+        event: e.ROOM_PAIR_CONTAINING_A_PARTICIPANT_WAS_REMOVED,
+        roomType: bedInDouble,
+        participantIdToBeRemoved: 'memberId2',
+        participant1Id: 'memberId1',
+        participant2Id: 'memberId2'
+      }
+    ]);
+  });
+
+  it('does not remove a pair if the participant is not in any pairs', function () {
+    eventStore.state.roomsEvents = [
+      events.roomPairWasAdded(bedInDouble, 'memberId1', 'memberId2')
+    ];
+    commandProcessor.removeParticipantPairContaining(bedInDouble, 'memberId3');
+
+    expect(stripTimestamps(eventStore.state.roomsEvents)).to.eql([
+      {
+        event: e.ROOM_PAIR_WAS_ADDED,
+        roomType: bedInDouble,
+        participant1Id: 'memberId1',
+        participant2Id: 'memberId2'
+      },
+      {
+        event: e.DID_NOT_REMOVE_ROOM_PAIR_CONTAINING_BECAUSE_THE_PAIR_DOES_NOT_EXIST_FOR_THIS_ROOM_TYPE,
+        roomType: bedInDouble,
+        participantId: 'memberId3'
+      }
+    ]);
+  });
 
 });

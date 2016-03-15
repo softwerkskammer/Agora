@@ -67,6 +67,21 @@ module.exports = {
     return enrich({event: e.DID_NOT_REGISTER_PARTICIPANT_A_SECOND_TIME, sessionID: sessionId, roomType: roomType, duration: duration, memberId: memberId});
   },
 
+  // removal:
+
+  participantWasRemoved: function (roomType, participantId) {
+    return enrich({event: e.PARTICIPANT_WAS_REMOVED, participantId: participantId});
+  },
+  didNotRemoveParticipantBecauseTheyAreNotRegistered: function (roomType, participantId) {
+    return enrich({event: e.DID_NOT_REMOVE_PARTICIPANT_BECAUSE_THEY_ARE_NOT_REGISTERED, participantId: participantId});
+  },
+  waitinglistParticipantWasRemoved: function (roomType, participantId) {
+    return enrich({event: e.WAITINGLIST_PARTICIPANT_WAS_REMOVED, participantId: participantId});
+  },
+  didNotRemoveWaitinglistParticipantBecauseTheyAreNotRegistered: function (roomType, participantId) {
+    return enrich({event: e.DID_NOT_REMOVE_WAITINGLIST_PARTICIPANT_BECAUSE_THEY_ARE_NOT_REGISTERED, participantId: participantId});
+  },
+
   // after registration:
   roomTypeWasChanged: function (memberId, roomType, duration) {
     return enrich({event: e.ROOM_TYPE_WAS_CHANGED, memberId: memberId, roomType: roomType, duration: duration});
@@ -98,6 +113,7 @@ module.exports = {
   didNotAddRoomPairBecauseParticipantIsPairedWithThemselves: function (roomType, participantId) {
     return enrich({event: e.DID_NOT_ADD_ROOM_PAIR_BECAUSE_PARTICIPANT_IS_PAIRED_WITH_THEMSELVES, roomType: roomType, participantId: participantId});
   },
+
   roomPairWasRemoved: function (roomType, participant1Id, participant2Id) {
     return enrich({event: e.ROOM_PAIR_WAS_REMOVED, roomType: roomType, participant1Id: participant1Id, participant2Id: participant2Id});
   },
@@ -106,5 +122,12 @@ module.exports = {
   },
   didNotRemoveRoomPairBecauseThePairDoesNotExistForThisRoomType: function (roomType, participant1Id, participant2Id) {
     return enrich({event: e.DID_NOT_REMOVE_ROOM_PAIR_BECAUSE_THE_PAIR_DOES_NOT_EXIST_FOR_THIS_ROOM_TYPE, roomType: roomType, participant1Id: participant1Id, participant2Id: participant2Id});
+  },
+
+  roomPairContainingAParticipantWasRemoved: function (roomType, participantIdToBeRemoved, participant1Id, participant2Id) {
+    return enrich({event: e.ROOM_PAIR_CONTAINING_A_PARTICIPANT_WAS_REMOVED, roomType: roomType, participantIdToBeRemoved: participantIdToBeRemoved, participant1Id: participant1Id, participant2Id: participant2Id});
+  },
+  didNotRemoveRoomPairContainingBecauseThePairDoesNotExistForThisRoomType: function (roomType, participantId) {
+    return enrich({event: e.DID_NOT_REMOVE_ROOM_PAIR_CONTAINING_BECAUSE_THE_PAIR_DOES_NOT_EXIST_FOR_THIS_ROOM_TYPE, roomType: roomType, participantId: participantId});
   }
 };

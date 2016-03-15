@@ -27,7 +27,7 @@ function saveActivity(args) {
 }
 
 function saveCommandProcessor(args) {
-  eventstoreService.saveCommandProcessor(args.commandProcessor, function (err) {
+  eventstoreService.saveCommandProcessor(args.roomsCommandProcessor, function (err) {
     if (err && err.message === CONFLICTING_VERSIONS) {
       // we try again because of a racing condition during save:
       return args.repeat(args.callback);
@@ -153,17 +153,17 @@ module.exports = {
 
     async.parallel(
       {
-        commandProcessor: _.partial(eventstoreService.getRoomsCommandProcessor, currentUrl),
+        roomsCommandProcessor: _.partial(eventstoreService.getRoomsCommandProcessor, currentUrl),
         participant1: _.partial(memberstore.getMember, participant1Nick),
         participant2: _.partial(memberstore.getMember, participant2Nick)
       },
       function (err, results) {
-        if (err || !results.commandProcessor || !results.participant1 || !results.participant2) { return callback(err); }
+        if (err || !results.roomsCommandProcessor || !results.participant1 || !results.participant2) { return callback(err); }
 
-        results.commandProcessor.addParticipantPairFor(roomType, results.participant1.id(), results.participant2.id());
+        results.roomsCommandProcessor.addParticipantPairFor(roomType, results.participant1.id(), results.participant2.id());
 
         saveCommandProcessor({
-          commandProcessor: results.commandProcessor,
+          roomsCommandProcessor: results.roomsCommandProcessor,
           callback: callback,
           repeat: _.partial(self.addParticipantPairFor, roomType, participant1Nick, participant2Nick)
         });
@@ -176,17 +176,17 @@ module.exports = {
 
     async.parallel(
       {
-        commandProcessor: _.partial(eventstoreService.getRoomsCommandProcessor, currentUrl),
+        roomsCommandProcessor: _.partial(eventstoreService.getRoomsCommandProcessor, currentUrl),
         participant1: _.partial(memberstore.getMember, participant1Nick),
         participant2: _.partial(memberstore.getMember, participant2Nick)
       },
       function (err, results) {
-        if (err || !results.commandProcessor || !results.participant1 || !results.participant2) { return callback(err); }
+        if (err || !results.roomsCommandProcessor || !results.participant1 || !results.participant2) { return callback(err); }
 
-        results.commandProcessor.removeParticipantPairFor(roomType, results.participant1.id(), results.participant2.id());
+        results.roomsCommandProcessor.removeParticipantPairFor(roomType, results.participant1.id(), results.participant2.id());
 
         saveCommandProcessor({
-          commandProcessor: results.commandProcessor,
+          roomsCommandProcessor: results.roomsCommandProcessor,
           callback: callback,
           repeat: _.partial(self.removeParticipantPairFor, roomType, participant1Nick, participant2Nick)
         });
@@ -194,24 +194,25 @@ module.exports = {
     );
   },
 
-  removeParticipantFor: function (resourceName, participantNick, callback) {
+  removeParticipantFor: function (roomType, participantNick, callback) {
     var self = this;
 
     async.parallel(
       {
-        activity: _.partial(activitystore.getActivity, currentUrl),
+        roomsCommandProcessor: _.partial(eventstoreService.getRoomsCommandProcessor, currentUrl),
+        registrationCommandProcessor: _.partial(eventstoreService.getRegistrationCommandProcessor, currentUrl),
         participant: _.partial(memberstore.getMember, participantNick)
       },
       function (err, results) {
-        if (err || !results.activity || !results.participant) { return callback(err); }
+        if (err || !results.roomsCommandProcessor || !results.registrationCommandProcessor || !results.participant) { return callback(err); }
 
-        results.activity.socratesResourceNamed(resourceName).removeMemberId(results.participant.id());
-        results.activity.rooms(resourceName).removePairContaining(results.participant.id());
+        results.roomsCommandProcessor.removeParticipantPairContaining(roomType, results.participant.id());
+        results.registrationCommandProcessor.removeParticipant(roomType, results.participant.id());
 
-        saveActivity({
-          activity: results.activity,
+        saveCommandProcessor({
+          roomsCommandProcessor: results.roomsCommandProcessor,
           callback: callback,
-          repeat: _.partial(self.removeParticipantFor, resourceName, participantNick),
+          repeat: _.partial(self.removeParticipantFor, roomType, participantNick),
           handleSuccess: function () {
             notifications.removedFromParticipants(results.participant);
           }
@@ -220,23 +221,23 @@ module.exports = {
     );
   },
 
-  removeWaitinglistMemberFor: function (resourceName, waitinglistMemberNick, callback) {
+  removeWaitinglistMemberFor: function (roomType, waitinglistMemberNick, callback) {
     var self = this;
 
     async.parallel(
       {
-        activity: _.partial(activitystore.getActivity, currentUrl),
+        registrationCommandProcessor: _.partial(eventstoreService.getRegistrationCommandProcessor, currentUrl),
         waitinglistMember: _.partial(memberstore.getMember, waitinglistMemberNick)
       },
       function (err, results) {
-        if (err || !results.activity || !results.waitinglistMember) { return callback(err); }
+        if (err || !results.registrationCommandProcessor || !results.waitinglistMember) { return callback(err); }
 
-        results.activity.socratesResourceNamed(resourceName).removeFromWaitinglist(results.waitinglistMember.id());
+        results.registrationCommandProcessor.removeWaitinglistParticipant(roomType, results.waitinglistMember.id());
 
         saveActivity({
-          activity: results.activity,
+          activity: results.registrationCommandProcessor,
           callback: callback,
-          repeat: _.partial(self.removeWaitinglistMemberFor, resourceName, waitinglistMemberNick),
+          repeat: _.partial(self.removeWaitinglistMemberFor, roomType, waitinglistMemberNick),
           handleSuccess: function () {
             notifications.removedFromWaitinglist(results.waitinglistMember);
           }

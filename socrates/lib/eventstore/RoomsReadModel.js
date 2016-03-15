@@ -16,11 +16,11 @@ function RoomsReadModel(eventStore) {
 
 var projectRoomPairs = function (roomType, roomPairs, event) {
   if (event.event === e.ROOM_PAIR_WAS_ADDED && event.roomType === roomType) {
-    return R.append({participant1: event.participant1Id, participant2: event.participant2Id}, roomPairs);
+    return R.append({participant1Id: event.participant1Id, participant2Id: event.participant2Id}, roomPairs);
   }
-  if (event.event === e.ROOM_PAIR_WAS_REMOVED && event.roomType === roomType) {
+  if ((event.event === e.ROOM_PAIR_WAS_REMOVED || event.event === e.ROOM_PAIR_CONTAINING_A_PARTICIPANT_WAS_REMOVED) && event.roomType === roomType) {
     return R.reject(function (pair) {
-      return pair.participant1 === event.participant1Id && pair.participant2 === event.participant2Id;
+      return pair.participant1Id === event.participant1Id && pair.participant2Id === event.participant2Id;
     }, roomPairs);
   }
 
@@ -37,7 +37,7 @@ RoomsReadModel.prototype.roomPairsFor = function (roomType) {
 
 RoomsReadModel.prototype.isRoomPairIn = function (roomType, participant1Id, participant2Id) {
   return R.find(function (pair) {
-    return pair.participant1 === participant1Id || pair.participant2 === participant2Id;
+    return pair.participant1Id === participant1Id || pair.participant2Id === participant2Id;
   }, this.roomPairsFor(roomType));
 };
 
@@ -45,7 +45,7 @@ var projectParticpantsInRoom = function (roomType, participants, event) {
   if (event.event === e.ROOM_PAIR_WAS_ADDED && event.roomType === roomType) {
     return R.append(event.participant2Id, R.append(event.participant1Id, participants));
   }
-  if (event.event === e.ROOM_PAIR_WAS_REMOVED && event.roomType === roomType) {
+  if ((event.event === e.ROOM_PAIR_WAS_REMOVED || event.event === e.ROOM_PAIR_CONTAINING_A_PARTICIPANT_WAS_REMOVED) && event.roomType === roomType) {
     return R.reject(function (participant) {
       return participant === event.participant1Id || participant === event.participant2Id;
     }, participants);

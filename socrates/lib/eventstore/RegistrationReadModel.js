@@ -45,6 +45,9 @@ var projectParticipantsByMemberId = function (participantsByMemberId, event) {
   if (event.event === e.PARTICIPANT_WAS_REGISTERED || event.event === e.ROOM_TYPE_WAS_CHANGED || event.event === e.DURATION_WAS_CHANGED) {
     participantsByMemberId[event.memberId] = event;
   }
+  if (event.event === e.PARTICIPANT_WAS_REMOVED) {
+    delete participantsByMemberId[event.participantId];
+  }
   return participantsByMemberId;
 };
 
@@ -99,6 +102,9 @@ var projectWaitinglistParticipantsByMemberId = function (waitinglistParticipants
   }
   if (event.event === e.PARTICIPANT_WAS_REGISTERED) {
     delete waitinglistParticipantsByMemberId[event.memberId];
+  }
+  if (event.event === e.WAITINGLIST_PARTICIPANT_WAS_REMOVED) {
+    delete waitinglistParticipantsByMemberId[event.participantId];
   }
   return waitinglistParticipantsByMemberId;
 };

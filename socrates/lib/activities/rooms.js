@@ -8,15 +8,6 @@ function Rooms(roomsObject, allKnownMemberIds) {
   return this;
 }
 
-Rooms.prototype.removePairContaining = function (memberId) {
-  var pairIndex = _.findIndex(this.state, function (pair) {
-    return pair.participant1 === memberId || pair.participant2 === memberId;
-  });
-  if (pairIndex > -1) {
-    this.state.splice(pairIndex, 1);
-  }
-};
-
 Rooms.prototype.findRoommateFor = function (memberId) {
   var pairWithMember = _.find(this.state, function (pair) {
     return pair.participant1 === memberId || pair.participant2 === memberId;

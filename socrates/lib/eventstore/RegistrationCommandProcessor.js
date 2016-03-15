@@ -40,6 +40,28 @@ RegistrationCommandProcessor.prototype.registerParticipant = function (roomType,
   return event.event;
 };
 
+RegistrationCommandProcessor.prototype.removeParticipant = function (roomType, participantId) {
+  var event;
+  if (!this.writeModel.isAlreadyRegistered(participantId)) {
+    event = events.didNotRemoveParticipantBecauseTheyAreNotRegistered(roomType, participantId);
+  } else {
+    // all is well
+    event = events.participantWasRemoved(roomType, participantId);
+  }
+  this._updateRegistrationEvents(event);
+};
+
+RegistrationCommandProcessor.prototype.removeWaitinglistParticipant = function (roomType, participantId) {
+  var event;
+  if (!this.writeModel.isAlreadyOnWaitinglist(participantId)) {
+    event = events.didNotRemoveWaitinglistParticipantBecauseTheyAreNotRegistered(roomType, participantId);
+  } else {
+    // all is well
+    event = events.waitinglistParticipantWasRemoved(roomType, participantId);
+  }
+  this._updateRegistrationEvents(event);
+};
+
 RegistrationCommandProcessor.prototype.moveParticipantToNewRoomType = function (memberId, roomType) {
   var existingParticipantEvent = this.writeModel.participantEventFor(memberId);
   var event = existingParticipantEvent ? events.roomTypeWasChanged(memberId, roomType, existingParticipantEvent.duration) : events.didNotChangeRoomTypeForNonParticipant(memberId, roomType);

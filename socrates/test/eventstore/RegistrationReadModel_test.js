@@ -202,6 +202,24 @@ describe('The registration read model', function () {
 
   });
 
+  describe('considering removals', function () {
+    it('does not list the registration event of a participant that has been removed', function () {
+      eventStore.state.registrationEvents = [
+        events.participantWasRegistered(singleBedRoom, untilSaturday, sessionId1, memberId1),
+        events.participantWasRemoved(singleBedRoom, memberId1)];
+
+      expect(readModel.reservationsAndParticipantsFor(singleBedRoom)).to.eql([]);
+    });
+
+    it('does not return the member id  and information of a participant that has been removed', function () {
+      eventStore.state.registrationEvents = [
+        events.participantWasRegistered(singleBedRoom, untilSaturday, sessionId1, memberId1),
+        events.participantWasRemoved(singleBedRoom, memberId1)];
+
+      expect(readModel.participantsByMemberIdFor(singleBedRoom)).to.eql({});
+    });
+  });
+
   describe('calculating the existence of a valid reservation', function () {
 
     it('returns undefined as the expiration time if there are no reservations for the given session id', function () {

@@ -4,6 +4,7 @@
 var sinon = require('sinon').sandbox.create();
 var expect = require('must-dist');
 var _ = require('lodash');
+var R = require('ramda');
 
 var beans = require('../../testutil/configureForTest').get('beans');
 
@@ -21,6 +22,7 @@ var events = beans.get('events');
 var eventstore = beans.get('eventstore');
 var GlobalEventStore = beans.get('GlobalEventStore');
 var RoomsReadModel = beans.get('RoomsReadModel');
+var RegistrationReadModel = beans.get('RegistrationReadModel');
 
 describe('SoCraTes Activities Service', function () {
 
@@ -232,9 +234,9 @@ describe('SoCraTes Activities Service', function () {
       events.roomPairWasAdded('bed_in_double', 'memberIdForPair1', 'memberIdForPair2')
     ];
 
-    expect(new RoomsReadModel(eventStore).roomPairsFor('bed_in_double')).to.eql([{
-      participant1: 'memberIdForPair1',
-      participant2: 'memberIdForPair2'
+    expect(new RoomsReadModel(eventStore).roomPairsFor('bed_in_double')).to.eql([{ // TODO extract to its own test!
+      participant1Id: 'memberIdForPair1',
+      participant2Id: 'memberIdForPair2'
     }]);
 
     socratesActivitiesService.removeParticipantPairFor('bed_in_double', 'nicknameForPair1', 'nicknameForPair2', function (err) {
@@ -244,37 +246,39 @@ describe('SoCraTes Activities Service', function () {
   });
 
   it('removes a participant from the given resource', function (done) {
-    socrates.resources.single._registeredMembers = [{memberId: 'memberId', duration: 2}];
-    expect(socratesActivity.resourceNamed('single').registeredMembers()).to.eql(['memberId']);
+    eventStore.state.registrationEvents = [
+      events.participantWasRegistered('bed_in_double', 2, 'session-id', 'memberId')
+    ];
 
     socratesActivitiesService.removeParticipantFor('single', 'nickname', function (err) {
-      expect(savedActivity.resourceNamed('single').registeredMembers()).to.be.empty();
+      expect(R.keys(new RegistrationReadModel(eventStore).participantsByMemberIdFor('bed_in_double'))).to.eql([]);
       done(err);
     });
   });
 
   it('when removing a participant, also removes him from his room pair', function (done) {
-    var allKnownMembersForRoomPairing = [new Member({id: 'memberIdForPair1'}), new Member({id: 'memberIdForPair2'})];
-    socrates.resources.bed_in_double._registeredMembers = [
-      {memberId: 'memberIdForPair1', duration: 2},
-      {memberId: 'memberIdForPair2', duration: 2}
+    eventStore.state.registrationEvents = [
+      events.participantWasRegistered('bed_in_double', 2, 'session-id', 'memberIdForPair1'),
+      events.participantWasRegistered('bed_in_double', 2, 'session-id', 'memberIdForPair2')
     ];
-    socrates.resources.bed_in_double.rooms = [{participant1: 'memberIdForPair1', participant2: 'memberIdForPair2'}];
-    expect(socratesActivity.rooms('bed_in_double').roomPairsWithMembersFrom(allKnownMembersForRoomPairing)).to.have.length(1);
+    eventStore.state.roomsEvents = [
+      events.roomPairWasAdded('bed_in_double', 'memberIdForPair1', 'memberIdForPair2')
+    ];
 
     socratesActivitiesService.removeParticipantFor('bed_in_double', 'nicknameForPair1', function (err) {
-      expect(savedActivity.resourceNamed('bed_in_double').registeredMembers()).to.eql(['memberIdForPair2']);
-      expect(savedActivity.rooms('bed_in_double').roomPairsWithMembersFrom(allKnownMembersForRoomPairing)).to.be.empty();
+      expect(R.keys(new RegistrationReadModel(eventStore).participantsByMemberIdFor('bed_in_double'))).to.eql(['memberIdForPair2']);
+      expect(new RoomsReadModel(eventStore).roomPairsFor('bed_in_double')).to.eql([]);
       done(err);
     });
   });
 
   it('removes a waitinglist member from the given resource', function (done) {
-    socrates.resources.single._waitinglist = [{_memberId: 'memberId'}];
-    expect(socratesActivity.resourceNamed('single').waitinglistEntries()[0].registrantId()).to.eql('memberId');
+    eventStore.state.registrationEvents = [
+      events.waitinglistParticipantWasRegistered('single', 'session-id', 'memberId')
+    ];
 
     socratesActivitiesService.removeWaitinglistMemberFor('single', 'nickname', function (err) {
-      expect(savedActivity.resourceNamed('single').waitinglistEntries()).to.be.empty();
+      expect(R.keys(new RegistrationReadModel(eventStore).waitinglistParticipantsByMemberIdFor('single'))).to.eql([]);
       done(err);
     });
   });
