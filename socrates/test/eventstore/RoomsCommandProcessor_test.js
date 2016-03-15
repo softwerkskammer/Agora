@@ -205,4 +205,51 @@ describe('The rooms command processor', function () {
     ]);
   });
 
+  it('removes a pair if the members are given in the right order', function () {
+    eventStore.state.roomsEvents = [
+      events.roomPairWasAdded(bedInDouble, 'memberId1', 'memberId2')
+    ];
+
+    commandProcessor.removeParticipantPairFor(bedInDouble, 'memberId1', 'memberId2');
+
+    expect(stripTimestamps(eventStore.state.roomsEvents)).to.eql([
+      {
+        event: e.ROOM_PAIR_WAS_ADDED,
+        roomType: bedInDouble,
+        participant1Id: 'memberId1',
+        participant2Id: 'memberId2'
+      },
+      {
+        event: e.ROOM_PAIR_WAS_REMOVED,
+        roomType: bedInDouble,
+        participant1Id: 'memberId1',
+        participant2Id: 'memberId2'
+      }
+    ]);
+  });
+
+  it('does not remove a pair if the members are given in the wrong order', function () {
+    eventStore.state.roomsEvents = [
+      events.roomPairWasAdded(bedInDouble, 'memberId1', 'memberId2')
+    ];
+
+    commandProcessor.removeParticipantPairFor(bedInDouble, 'memberId2', 'memberId1');
+
+    expect(stripTimestamps(eventStore.state.roomsEvents)).to.eql([
+      {
+        event: e.ROOM_PAIR_WAS_ADDED,
+        roomType: bedInDouble,
+        participant1Id: 'memberId1',
+        participant2Id: 'memberId2'
+      },
+      {
+        event: e.DID_NOT_REMOVE_ROOM_PAIR_BECAUSE_THE_PAIR_DOES_NOT_EXIST_FOR_THIS_ROOM_TYPE,
+        roomType: bedInDouble,
+        participant1Id: 'memberId2',
+        participant2Id: 'memberId1'
+      }
+    ]);
+  });
+
+
 });
