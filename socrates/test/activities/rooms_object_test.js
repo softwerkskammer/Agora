@@ -36,15 +36,6 @@ describe('Rooms', function () {
 
 
 
-  it('lists those participants that already are in a room', function () {
-    var roomsInResource = [{participant1: 'memberId1', participant2: 'memberId2'}];
-    var rooms = new Rooms(roomsInResource, allKnownMemberIds);
-
-    var participantsInRoom = rooms.participantsInRoom();
-
-    expect(participantsInRoom).to.eql(['memberId1', 'memberId2']);
-  });
-
   it('lists the room pairs', function () {
     var roomsInResource = [
       {
@@ -63,15 +54,6 @@ describe('Rooms', function () {
     expect(roomPairs[0].participant2.id()).to.be('memberId2');
     expect(roomPairs[1].participant1.id()).to.be('memberId3');
     expect(roomPairs[1].participant2.id()).to.be('memberId4');
-  });
-
-  it('lists those participants that are not yet in a room', function () {
-    var roomsInResource = [{participant1: 'memberId1', participant2: 'memberId2'}];
-    var rooms = new Rooms(roomsInResource, allKnownMemberIds);
-
-    var participantsWithoutRoom = rooms.participantsWithoutRoom();
-
-    expect(participantsWithoutRoom).to.eql(['memberId3', 'memberId4', 'memberId5']);
   });
 
 });

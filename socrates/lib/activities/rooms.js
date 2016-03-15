@@ -18,13 +18,6 @@ Rooms.prototype.findRoommateFor = function (memberId) {
   return undefined;
 };
 
-Rooms.prototype.participantsInRoom = function () {
-  var participantsInRoom = [];
-  participantsInRoom.push(_.pluck(this.state, 'participant1'));
-  participantsInRoom.push(_.pluck(this.state, 'participant2'));
-  return _.flatten(participantsInRoom);
-};
-
 Rooms.prototype.roomPairsWithMembersFrom = function (memberList) {
   return _.map(this.state, function (roomPair) {
     return {
@@ -32,11 +25,6 @@ Rooms.prototype.roomPairsWithMembersFrom = function (memberList) {
       participant2: _.find(memberList, function (member) { return member.id() === roomPair.participant2; })
     };
   });
-};
-
-Rooms.prototype.participantsWithoutRoom = function () {
-  var participantsInRoom = this.participantsInRoom();
-  return _.filter(this.allKnownMemberIds, function (memberId) {return participantsInRoom.indexOf(memberId) === -1; });
 };
 
 module.exports = Rooms;

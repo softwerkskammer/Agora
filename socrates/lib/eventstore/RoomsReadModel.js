@@ -5,9 +5,12 @@ var R = require('ramda');
 
 var beans = require('simple-configure').get('beans');
 var e = beans.get('eventConstants');
+var RegistrationReadModel = beans.get('RegistrationReadModel');
+
 
 function RoomsReadModel(eventStore) {
   this._eventStore = eventStore;
+  this._registrationReadModel = new RegistrationReadModel(eventStore);
 
   // read model state:
   this._roomPairsFor = {};
@@ -60,6 +63,10 @@ RoomsReadModel.prototype.participantsInRoom = function (roomType) {
   }
 
   return this._participantsIn[roomType];
+};
+
+RoomsReadModel.prototype.participantsWithoutRoomIn = function (roomType) {
+  return R.difference(this._registrationReadModel.allParticipantsIn(roomType), this.participantsInRoom(roomType));
 };
 
 module.exports = RoomsReadModel;

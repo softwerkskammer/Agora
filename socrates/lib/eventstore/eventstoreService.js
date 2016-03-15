@@ -9,6 +9,7 @@ var SoCraTesCommandProcessor = beans.get('SoCraTesCommandProcessor');
 var RegistrationReadModel = beans.get('RegistrationReadModel');
 var RegistrationWriteModel = beans.get('RegistrationWriteModel');
 var RegistrationCommandProcessor = beans.get('RegistrationCommandProcessor');
+var RoomsReadModel = beans.get('RoomsReadModel');
 var RoomsWriteModel = beans.get('RoomsWriteModel');
 var RoomsCommandProcessor = beans.get('RoomsCommandProcessor');
 
@@ -60,6 +61,14 @@ module.exports = {
       // when adding a new rooms combination, we require the event store to be already in place:
       if (err || !eventStore) { return callback(err); }
       callback(null, new RoomsCommandProcessor(new RoomsWriteModel(eventStore)));
+    });
+  },
+
+  getRoomsReadModel: function (url, callback) {
+    eventstore.getEventStore(url, function (err, eventStore) {
+      // when adding a new rooms combination, we require the event store to be already in place:
+      if (err || !eventStore) { return callback(err); }
+      callback(null, new RoomsReadModel(eventStore));
     });
   },
 

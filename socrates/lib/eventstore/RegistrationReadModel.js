@@ -70,6 +70,10 @@ RegistrationReadModel.prototype.isAlreadyRegistered = function (memberId) {
   return !!this.participantEventFor(memberId);
 };
 
+RegistrationReadModel.prototype.allParticipantsIn = function (roomType) {
+  return R.keys(this.participantsByMemberIdFor(roomType));
+};
+
 RegistrationReadModel.prototype.reservationsAndParticipantsFor = function (roomType) {
   return R.concat(R.values(this.reservationsBySessionIdFor(roomType)), R.values(this.participantsByMemberIdFor(roomType)));
 };
@@ -132,7 +136,6 @@ function expirationTimeOf(event) {
   return moment(event.timestamp).add(socratesConstants.registrationPeriodinMinutes, 'minutes');
 }
 
-
 RegistrationReadModel.prototype.reservationExpiration = function (sessionId) {
   var event = this._reservationOrWaitinglistReservationEventFor(sessionId);
   return event && expirationTimeOf(event);
@@ -157,7 +160,6 @@ RegistrationReadModel.prototype.waitinglistParticipantEventFor = function (membe
 RegistrationReadModel.prototype.isAlreadyOnWaitinglist = function (memberId) {
   return !!this.waitinglistParticipantEventFor(memberId);
 };
-
 
 RegistrationReadModel.prototype.selectedOptionFor = function (memberID) {
   var participantEvent = this.participantEventFor(memberID);
@@ -189,6 +191,5 @@ RegistrationReadModel.prototype.roomTypesOf = function (memberID) {
 RegistrationReadModel.prototype.waitinglistReservationsAndParticipantsFor = function (roomType) {
   return R.concat(R.values(this.waitinglistReservationsBySessionIdFor(roomType)), R.values(this.waitinglistParticipantsByMemberIdFor(roomType)));
 };
-
 
 module.exports = RegistrationReadModel;
