@@ -143,34 +143,37 @@ app.post('/deleteAvatarInOverviewFor', function (req, res, next) {
 app.get('/:nickname', function (req, res, next) {
   subscriberService.getMemberIfSubscriberExists(req.params.nickname, function (err, member) {
     if (err || !member) { return next(err); }
-    eventstoreService.getRegistrationReadModel(socratesConstants.currentUrl, function (err2, readModel) {
-      if (err2 || !readModel) { return next(err2); }
+    eventstoreService.getRegistrationReadModel(socratesConstants.currentUrl, function (err2, registrationReadModel) {
+      if (err2 || !registrationReadModel) { return next(err2); }
+      eventstoreService.getRoomsReadModel(socratesConstants.currentUrl, function (err3, roomsReadModel) {
+        if (err3 || !roomsReadModel) { return next(err3); }
 
-      // only when a participant looks at their own profile!
-      var registeredResource = readModel.registeredInRoomType(member.id());
-      var isInDoubleBedRoom = registeredResource && registeredResource.indexOf('bed_in_') > -1;
-      var roommateId; // TODO readModel.roommateFor(member.id());
-      memberstore.getMemberForId(roommateId, function (err3, roommate) {
-        var potentialRoommates = [];
-        if (err3) { return next(err3); }
-        if (registeredResource && !roommate) {
-          potentialRoommates = [member.id()]; // TODO readModel.rooms(registeredResource).participantsWithoutRoom();
-          var index = potentialRoommates.indexOf(member.id());
-          potentialRoommates.splice(index, 1);
-        }
-        memberstore.getMembersForIds(potentialRoommates, function (err4, potentialRoommateMembers) {
+        // only when a participant looks at their own profile!
+        var registeredResource = registrationReadModel.registeredInRoomType(member.id());
+        var isInDoubleBedRoom = registeredResource && registeredResource.indexOf('bed_in_') > -1;
+        var roommateId; // TODO readModel.roommateFor(member.id());
+        memberstore.getMemberForId(roommateId, function (err4, roommate) {
+          var potentialRoommates = [];
           if (err4) { return next(err4); }
-          async.each(potentialRoommateMembers, membersService.getImage, function (err5) {
+          if (registeredResource && !roommate) {
+            potentialRoommates = roomsReadModel.participantsWithoutRoomIn(registeredResource);
+            var index = potentialRoommates.indexOf(member.id());
+            potentialRoommates.splice(index, 1);
+          }
+          memberstore.getMembersForIds(potentialRoommates, function (err5, potentialRoommateMembers) {
             if (err5) { return next(err5); }
-            res.render('get', {
-              member: member,
-              roommate: roommate,
-              potentialRoommates: potentialRoommateMembers,
-              registration: {
-                isInDoubleBedRoom: isInDoubleBedRoom,
-                alreadyRegistered: !!registeredResource,
-                alreadyOnWaitinglist: readModel.isAlreadyOnWaitinglist(member.id())
-              }
+            async.each(potentialRoommateMembers, membersService.getImage, function (err6) {
+              if (err6) { return next(err6); }
+              res.render('get', {
+                member: member,
+                roommate: roommate,
+                potentialRoommates: potentialRoommateMembers,
+                registration: {
+                  isInDoubleBedRoom: isInDoubleBedRoom,
+                  alreadyRegistered: !!registeredResource,
+                  alreadyOnWaitinglist: registrationReadModel.isAlreadyOnWaitinglist(member.id())
+                }
+              });
             });
           });
         });
