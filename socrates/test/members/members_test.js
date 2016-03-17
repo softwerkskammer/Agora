@@ -210,7 +210,7 @@ describe('SoCraTes members application', function () {
           });
       });
 
-      xit('displays other unmatched roommates if the subscriber is in a double-bed room but has no roommate associated', function (done) {
+      it('displays other unmatched roommates if the subscriber is in a double-bed room but has no roommate associated', function (done) {
         eventStore.state.registrationEvents = [
           events.participantWasRegistered('bed_in_double', 3, 'session-id', 'memberId'),
           events.participantWasRegistered('bed_in_double', 3, 'session-id-2', 'memberId2')
@@ -227,12 +227,14 @@ describe('SoCraTes members application', function () {
           });
       });
 
-      xit('displays the name of the roommate if the subscriber is in a double-bed room and has a roommate associated', function (done) {
+      it('displays the name of the roommate if the subscriber is in a double-bed room and has a roommate associated', function (done) {
         eventStore.state.registrationEvents = [
           events.participantWasRegistered('bed_in_double', 3, 'session-id', 'memberId'),
           events.participantWasRegistered('bed_in_double', 3, 'session-id-2', 'memberId2')
         ];
-        socrates.resources.bed_in_double.rooms = [{participant1: 'memberId', participant2: 'memberId2'}];
+        eventStore.state.roomsEvents = [
+          events.roomPairWasAdded('bed_in_double', 'memberId', 'memberId2')
+        ];
         socratesSubscriber.state.participations[currentYear] = {};
 
         appWithSocratesMember
@@ -246,7 +248,9 @@ describe('SoCraTes members application', function () {
           events.participantWasRegistered('bed_in_double', 3, 'session-id', 'memberId'),
           events.participantWasRegistered('bed_in_double', 3, 'session-id-2', 'memberId2')
         ];
-        socrates.resources.bed_in_double.rooms = [{participant1: 'memberId', participant2: 'memberId2'}];
+        eventStore.state.roomsEvents = [
+          events.roomPairWasAdded('bed_in_double', 'memberId', 'memberId2')
+        ];
         socratesSubscriber.state.participations[currentYear] = {};
 
         appWithSocratesMember
