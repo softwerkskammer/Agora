@@ -64,7 +64,7 @@ app.get('/new', function (req, res) {
 
 app.get('/edit/:url', function (req, res, next) {
   eventstoreService.getSoCraTesReadModel(req.params.url, function (err, socratesReadModel) {
-    if (err || socratesReadModel === null) { return next(err); }
+    if (err || !socratesReadModel) { return next(err); }
     if (!res.locals.accessrights.canEditActivity()) {
       return res.redirect('/registration/');
     }
