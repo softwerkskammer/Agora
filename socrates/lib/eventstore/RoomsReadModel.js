@@ -79,4 +79,13 @@ RoomsReadModel.prototype.roommateFor = function (roomType, participantId) {
   return undefined;
 };
 
+RoomsReadModel.prototype.roomPairsWithFullMembersFrom = function (roomType, memberList) {
+  return R.map(function (roomPair) {
+    return {
+      participant1: R.find(function (member) { return member.id() === roomPair.participant1Id; }, memberList),
+      participant2: R.find(function (member) { return member.id() === roomPair.participant2Id; }, memberList)
+    };
+  }, this.roomPairsFor(roomType));
+};
+
 module.exports = RoomsReadModel;

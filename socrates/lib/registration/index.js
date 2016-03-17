@@ -275,11 +275,11 @@ app.get('/management', function (req, res, next) {
                             rooms: {
                               bed_in_double: {
                                 unpairedParticipants: unpairedDoubleParticipants,
-                                roomPairs: activity.rooms('bed_in_double').roomPairsWithMembersFrom(pairedDoubleParticipants)
+                                roomPairs: roomsReadModel.roomPairsWithFullMembersFrom('bed_in_double', pairedDoubleParticipants)
                               },
                               bed_in_junior: {
                                 unpairedParticipants: unpairedJuniorParticipants,
-                                roomPairs: activity.rooms('bed_in_junior').roomPairsWithMembersFrom(pairedJuniorParticipants)
+                                roomPairs: roomsReadModel.roomPairsWithFullMembersFrom('bed_in_junior', pairedJuniorParticipants)
                               }
                             },
                             formatDates: formatDates,
@@ -326,11 +326,11 @@ app.get('/hotelInfo', function (req, res, next) {
                   rooms: {
                     bed_in_double: {
                       unpairedParticipants: unpairedDoubleParticipants,
-                      roomPairs: activity.rooms('bed_in_double').roomPairsWithMembersFrom(pairedDoubleParticipants)
+                      roomPairs: roomsReadModel.roomPairsWithFullMembersFrom('bed_in_double', pairedDoubleParticipants)
                     },
                     bed_in_junior: {
                       unpairedParticipants: unpairedJuniorParticipants,
-                      roomPairs: activity.rooms('bed_in_junior').roomPairsWithMembersFrom(pairedJuniorParticipants)
+                      roomPairs: roomsReadModel.roomPairsWithFullMembersFrom('bed_in_junior', pairedJuniorParticipants)
                     }
                   }
                 });

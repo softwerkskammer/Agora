@@ -7,6 +7,7 @@ var beans = require('../../testutil/configureForTest').get('beans');
 var events = beans.get('events');
 var GlobalEventStore = beans.get('GlobalEventStore');
 var RoomsReadModel = beans.get('RoomsReadModel');
+var Member = beans.get('member');
 
 var bedInDouble = 'bedInDouble';
 
@@ -60,6 +61,28 @@ describe('The rooms read model', function () {
 
   it('returns undefined if the member is not associated to a roommate', function () {
     expect(readModel.roommateFor(bedInDouble, 'memberId1')).to.be(undefined);
+  });
+
+  it('lists the room pairs', function () {
+    var allKnownMembers = [
+      new Member({id: 'memberId1'}),
+      new Member({id: 'memberId2'}),
+      new Member({id: 'memberId3'}),
+      new Member({id: 'memberId4'}),
+      new Member({id: 'memberId5'})
+    ];
+    eventStore.state.roomsEvents = [
+      events.roomPairWasAdded(bedInDouble, 'memberId1', 'memberId2'),
+      events.roomPairWasAdded(bedInDouble, 'memberId3', 'memberId4')
+    ];
+
+    var roomPairs = readModel.roomPairsWithFullMembersFrom(bedInDouble, allKnownMembers);
+
+    expect(roomPairs).to.have.length(2);
+    expect(roomPairs[0].participant1.id()).to.be('memberId1');
+    expect(roomPairs[0].participant2.id()).to.be('memberId2');
+    expect(roomPairs[1].participant1.id()).to.be('memberId3');
+    expect(roomPairs[1].participant2.id()).to.be('memberId4');
   });
 
 });
