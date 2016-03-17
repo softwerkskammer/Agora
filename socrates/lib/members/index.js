@@ -149,14 +149,14 @@ app.get('/:nickname', function (req, res, next) {
         if (err3 || !roomsReadModel) { return next(err3); }
 
         // only when a participant looks at their own profile!
-        var registeredResource = registrationReadModel.registeredInRoomType(member.id());
-        var isInDoubleBedRoom = registeredResource && registeredResource.indexOf('bed_in_') > -1;
-        var roommateId; // TODO readModel.roommateFor(member.id());
+        var registeredInRoomType = registrationReadModel.registeredInRoomType(member.id());
+        var isInDoubleBedRoom = registeredInRoomType && registeredInRoomType.indexOf('bed_in_') > -1;
+        var roommateId = roomsReadModel.roommateFor(registeredInRoomType, member.id());
         memberstore.getMemberForId(roommateId, function (err4, roommate) {
           var potentialRoommates = [];
           if (err4) { return next(err4); }
-          if (registeredResource && !roommate) {
-            potentialRoommates = roomsReadModel.participantsWithoutRoomIn(registeredResource);
+          if (registeredInRoomType && !roommate) {
+            potentialRoommates = roomsReadModel.participantsWithoutRoomIn(registeredInRoomType);
             var index = potentialRoommates.indexOf(member.id());
             potentialRoommates.splice(index, 1);
           }
@@ -170,7 +170,7 @@ app.get('/:nickname', function (req, res, next) {
                 potentialRoommates: potentialRoommateMembers,
                 registration: {
                   isInDoubleBedRoom: isInDoubleBedRoom,
-                  alreadyRegistered: !!registeredResource,
+                  alreadyRegistered: !!registeredInRoomType,
                   alreadyOnWaitinglist: registrationReadModel.isAlreadyOnWaitinglist(member.id())
                 }
               });
