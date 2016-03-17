@@ -7,7 +7,6 @@ var beans = require('simple-configure').get('beans');
 var e = beans.get('eventConstants');
 var RegistrationReadModel = beans.get('RegistrationReadModel');
 
-
 function RoomsReadModel(eventStore) {
   this._eventStore = eventStore;
   this._registrationReadModel = new RegistrationReadModel(eventStore);
@@ -67,6 +66,17 @@ RoomsReadModel.prototype.participantsInRoom = function (roomType) {
 
 RoomsReadModel.prototype.participantsWithoutRoomIn = function (roomType) {
   return R.difference(this._registrationReadModel.allParticipantsIn(roomType), this.participantsInRoom(roomType));
+};
+
+RoomsReadModel.prototype.roommateFor = function (roomType, participantId) {
+  var pairWithMember = R.find(function (pair) {
+    return pair.participant1Id === participantId || pair.participant2Id === participantId;
+  }, this.roomPairsFor(roomType));
+
+  if (pairWithMember) {
+    return pairWithMember.participant1Id === participantId ? pairWithMember.participant2Id : pairWithMember.participant1Id;
+  }
+  return undefined;
 };
 
 module.exports = RoomsReadModel;

@@ -122,32 +122,4 @@ describe('Extended SoCraTes Activity', function () {
     expect(activity.selectedOptionFor('heinz')).to.be(null);
   });
 
-  it('returns the id of a member\'s roommate', function () {
-    var activity = new SoCraTesActivity({
-      resources: {
-        doubleBedRoom: {
-          _registeredMembers: [{memberId: 'memberId1'}, {memberId: 'memberId2'}],
-          rooms: [{participant1: 'memberId1', participant2: 'memberId2'}]
-        }
-      }
-    });
-
-    expect(activity.roommateFor('memberId1')).to.be('memberId2');
-    expect(activity.roommateFor('memberId2')).to.be('memberId1');
-  });
-
-  it('returns undefined if the member is not associated to a roommate', function () {
-    var activity = new SoCraTesActivity({
-      resources: {
-        doubleBedRoom: {
-          _registeredMembers: [{memberId: 'memberId1'}, {memberId: 'memberId2'}],
-          rooms: []
-        }
-      }
-    });
-
-    expect(activity.roommateFor('memberId1')).to.be(undefined);
-    expect(activity.roommateFor('memberId2')).to.be(undefined);
-  });
-
 });

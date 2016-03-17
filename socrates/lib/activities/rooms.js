@@ -8,16 +8,6 @@ function Rooms(roomsObject, allKnownMemberIds) {
   return this;
 }
 
-Rooms.prototype.findRoommateFor = function (memberId) {
-  var pairWithMember = _.find(this.state, function (pair) {
-    return pair.participant1 === memberId || pair.participant2 === memberId;
-  });
-  if (pairWithMember) {
-    return pairWithMember.participant1 === memberId ? pairWithMember.participant2 : pairWithMember.participant1;
-  }
-  return undefined;
-};
-
 Rooms.prototype.roomPairsWithMembersFrom = function (memberList) {
   return _.map(this.state, function (roomPair) {
     return {

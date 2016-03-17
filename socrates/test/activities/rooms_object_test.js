@@ -18,24 +18,6 @@ describe('Rooms', function () {
   ];
 
 
-  it('finds a roommate for a given member id', function () {
-    var roomsInResource = [
-      {
-        participant1: 'memberId1',
-        participant2: 'memberId2'
-      }, {
-        participant1: 'memberId3',
-        participant2: 'memberId4'
-      }];
-    var rooms = new Rooms(roomsInResource, allKnownMemberIds);
-
-    expect(rooms.findRoommateFor('memberId1')).to.be('memberId2');
-    expect(rooms.findRoommateFor('memberId2')).to.be('memberId1');
-    expect(rooms.findRoommateFor('nonexistentMemberId')).to.not.exist();
-  });
-
-
-
   it('lists the room pairs', function () {
     var roomsInResource = [
       {
