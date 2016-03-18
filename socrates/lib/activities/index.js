@@ -116,14 +116,9 @@ app.get('/paymentReceived/:nickname', function (req, res) {
 });
 
 app.get('/fromWaitinglistToParticipant/:resourceName/:nickname', function (req, res) {
-  var registrationTuple = {
-    activityUrl: currentUrl,
-    resourceName: req.params.resourceName,
-    duration: 2,
-    sessionID: req.sessionID
-  };
+  var duration = 2;
 
-  socratesActivitiesService.fromWaitinglistToParticipant(req.params.nickname, registrationTuple, function (err) {
+  socratesActivitiesService.fromWaitinglistToParticipant(req.params.nickname, req.params.resourceName, duration, function (err) {
     if (err) { return res.send('Error: ' + err); }
     res.send('-> Teilnehmer');
   });

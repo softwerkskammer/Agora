@@ -40,25 +40,25 @@ function saveCommandProcessor(args) {
 
 module.exports = {
 
-  fromWaitinglistToParticipant: function (nickname, registrationTuple, callback) {
+  fromWaitinglistToParticipant: function (nickname, roomType, duration, callback) {
     var self = this;
 
     async.parallel(
       {
-        activity: _.partial(activitystore.getActivity, registrationTuple.activityUrl),
+        registrationCommandProcessor: _.partial(eventstoreService.getRegistrationCommandProcessor, currentUrl),
         member: _.partial(memberstore.getMember, nickname)
       },
       function (err, results) {
-        if (err || !results.activity || !results.member) { return callback(err); }
+        if (err || !results.registrationCommandProcessor || !results.member) { return callback(err); }
 
-        results.activity.register(results.member.id(), registrationTuple);
+        results.registrationCommandProcessor.fromWaitinglistToParticipant(roomType, results.member.id(), duration);
 
-        saveActivity({
-          activity: results.activity,
+        saveCommandProcessor({
+          commandProcessor: results.registrationCommandProcessor,
           callback: callback,
-          repeat: _.partial(self.fromWaitinglistToParticipant, nickname, registrationTuple),
+          repeat: _.partial(self.fromWaitinglistToParticipant, nickname, roomType, duration),
           handleSuccess: function () {
-            var bookingdetails = roomOptions.informationFor(registrationTuple.resourceName, registrationTuple.duration);
+            var bookingdetails = roomOptions.informationFor(roomType, duration);
             bookingdetails.fromWaitinglist = true;
             notifications.newParticipant(results.member.id(), bookingdetails);
           }

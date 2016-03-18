@@ -19,6 +19,7 @@ var subscriberstore = beans.get('subscriberstore');
 var notifications = beans.get('socratesNotifications');
 
 var events = beans.get('events');
+var e = beans.get('eventConstants');
 var eventstore = beans.get('eventstore');
 var GlobalEventStore = beans.get('GlobalEventStore');
 var RoomsReadModel = beans.get('RoomsReadModel');
@@ -30,7 +31,6 @@ describe('SoCraTes Activities Service', function () {
 
   var socrates;
   var socratesActivity;
-  var registrationTuple;
   var savedActivity;
   var subscriber;
 
@@ -38,13 +38,6 @@ describe('SoCraTes Activities Service', function () {
     eventStore = new GlobalEventStore();
 
     /*eslint camelcase: 0*/
-    registrationTuple = {
-      activityUrl: 'socrates-url',
-      resourceName: 'single',
-      duration: 2,
-      sessionID: 'sessionId'
-    };
-
     socrates = {
       id: 'socratesId',
       title: 'SoCraTes',
@@ -90,7 +83,7 @@ describe('SoCraTes Activities Service', function () {
     });
 
     sinon.stub(eventstore, 'getEventStore', function (url, callback) {
-      if (url === 'wrongUrl') {
+      if (url === 'wrongUrl') { // TODO remove, unused
         return callback(new Error('Wrong URL!'));
       }
       callback(null, eventStore);
@@ -109,68 +102,96 @@ describe('SoCraTes Activities Service', function () {
     sinon.restore();
   });
 
-  it('returns an error if the activity cannot be found', function (done) {
-    registrationTuple.activityUrl = 'wrongUrl';
-
-    socratesActivitiesService.fromWaitinglistToParticipant('nickname', registrationTuple, function (err) {
-      expect(err).to.exist();
-      done();
+  function stripTimestamps(someEvents) {
+    return _.map(someEvents, function (event) {
+      var newEvent = R.clone(event);
+      delete newEvent.timestamp;
+      return newEvent;
     });
-  });
+  }
 
   it('registers the user when he is not on the waitinglist', function (done) {
-    expect(socratesActivity.resourceNamed('single').waitinglistEntryFor('memberId')).to.not.exist();
 
-    socratesActivitiesService.fromWaitinglistToParticipant('nickname', registrationTuple, function (err) {
-      expect(savedActivity.resourceNamed('single').waitinglistEntryFor('memberId')).to.not.exist();
-      expect(savedActivity.resourceNamed('single').isAlreadyRegistered('memberId')).to.be.true();
+    socratesActivitiesService.fromWaitinglistToParticipant('nickname', 'single', 2, function (err) {
+      expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([{
+        event: e.PARTICIPANT_WAS_REGISTERED,
+        sessionID: undefined,
+        roomType: 'single',
+        memberId: 'memberId',
+        duration: 2
+      }]);
+      //expect(savedActivity.resourceNamed('single').waitinglistEntryFor('memberId')).to.not.exist();
+      //expect(savedActivity.resourceNamed('single').isAlreadyRegistered('memberId')).to.be.true();
       done(err);
     });
   });
 
   it('registers the user when he is on the waitinglist', function (done) {
-    socrates.resources.single._waitinglist = [{_memberId: 'memberId'}];
-    expect(socratesActivity.resourceNamed('single').waitinglistEntryFor('memberId')).to.exist();
+    eventStore.state.registrationEvents = [
+      events.waitinglistParticipantWasRegistered('single', 'sessionId', 'memberId')];
 
-    socratesActivitiesService.fromWaitinglistToParticipant('nickname', registrationTuple, function (err) {
-      expect(savedActivity.resourceNamed('single').waitinglistEntryFor('memberId')).to.not.exist();
-      expect(savedActivity.resourceNamed('single').isAlreadyRegistered('memberId')).to.be.true();
+    socratesActivitiesService.fromWaitinglistToParticipant('nickname', 'single', 2, function (err) {
+      expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([{
+        event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED,
+        sessionID: 'sessionId',
+        desiredRoomTypes: ['single'],
+        memberId: 'memberId'
+      }, {
+        event: e.REGISTERED_PARTICIPANT_FROM_WAITINGLIST,
+        roomType: 'single',
+        memberId: 'memberId',
+        duration: 2
+      }]);
       done(err);
     });
   });
 
   it('registers the user even when the limit is 0', function (done) {
-    socrates.resources.single._limit = 0;
-    socrates.resources.single._waitinglist = [{_memberId: 'memberId'}];
-    expect(socratesActivity.resourceNamed('single').limit()).to.be(0);
+    eventStore.state.socratesEvents = [events.roomQuotaWasSet('single', 0)];
+    eventStore.state.registrationEvents = [
+      events.waitinglistParticipantWasRegistered('single', 'sessionId', 'memberId')];
 
-    socratesActivitiesService.fromWaitinglistToParticipant('nickname', registrationTuple, function (err) {
-      expect(savedActivity.resourceNamed('single').waitinglistEntryFor('memberId')).to.not.exist();
-      expect(savedActivity.resourceNamed('single').isAlreadyRegistered('memberId')).to.be.true();
+    socratesActivitiesService.fromWaitinglistToParticipant('nickname', 'single', 2, function (err) {
+      expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([{
+        event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED,
+        sessionID: 'sessionId',
+        desiredRoomTypes: ['single'],
+        memberId: 'memberId'
+      }, {
+        event: e.REGISTERED_PARTICIPANT_FROM_WAITINGLIST,
+        roomType: 'single',
+        memberId: 'memberId',
+        duration: 2
+      }]);
       done(err);
     });
   });
 
   it('registers the user even when the resource is full', function (done) {
-    socrates.resources.single._limit = 1;
-    socrates.resources.single._registeredMembers = [{memberId: 'otherId'}];
-    socrates.resources.single._waitinglist = [{_memberId: 'memberId'}];
-    expect(socratesActivity.resourceNamed('single').isFull()).to.be.true();
+    eventStore.state.socratesEvents = [events.roomQuotaWasSet('single', 1)];
+    eventStore.state.registrationEvents = [
+      events.participantWasRegistered('single', 3, 'otherSessionId', 'otherMemberId'),
+      events.waitinglistParticipantWasRegistered('single', 'sessionId', 'memberId')
+    ];
 
-    socratesActivitiesService.fromWaitinglistToParticipant('nickname', registrationTuple, function (err) {
-      expect(savedActivity.resourceNamed('single').waitinglistEntryFor('memberId')).to.not.exist();
-      expect(savedActivity.resourceNamed('single').isAlreadyRegistered('memberId')).to.be.true();
-      done(err);
-    });
-  });
-
-  it('registers the user even when the resource is not open for registration', function (done) {
-    socrates.resources.single._registrationOpen = false;
-    expect(socratesActivity.resourceNamed('single').isRegistrationOpen()).to.be.false();
-
-    socratesActivitiesService.fromWaitinglistToParticipant('nickname', registrationTuple, function (err) {
-      expect(savedActivity.resourceNamed('single').waitinglistEntryFor('memberId')).to.not.exist();
-      expect(savedActivity.resourceNamed('single').isAlreadyRegistered('memberId')).to.be.true();
+    socratesActivitiesService.fromWaitinglistToParticipant('nickname', 'single', 2, function (err) {
+      expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([{
+        event: e.PARTICIPANT_WAS_REGISTERED,
+        sessionID: 'otherSessionId',
+        roomType: 'single',
+        memberId: 'otherMemberId',
+        duration: 3
+      }, {
+        event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED,
+        sessionID: 'sessionId',
+        desiredRoomTypes: ['single'],
+        memberId: 'memberId'
+      }, {
+        event: e.REGISTERED_PARTICIPANT_FROM_WAITINGLIST,
+        roomType: 'single',
+        memberId: 'memberId',
+        duration: 2
+      }]);
       done(err);
     });
   });

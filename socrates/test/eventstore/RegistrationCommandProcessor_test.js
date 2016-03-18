@@ -504,7 +504,7 @@ describe('The registration command processor', function () {
     it('disregards a reservation if there is a matching booking', function () {
       // Given (saved events)
       eventStore.state.registrationEvents = [
-        events.waitinglistReservationWasIssued(singleBedRoom, sessionId1, aShortTimeAgo),
+        events.waitinglistReservationWasIssued(singleBedRoom, sessionId1),
         events.waitinglistParticipantWasRegistered(singleBedRoom, sessionId1, memberId1)];
 
       // When (issued command)

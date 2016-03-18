@@ -99,6 +99,20 @@ RegistrationCommandProcessor.prototype.registerWaitinglistParticipant = function
   return event.event;
 };
 
+RegistrationCommandProcessor.prototype.fromWaitinglistToParticipant = function (roomType, memberId, duration) {
+  var event;
+  if (this.writeModel.isAlreadyRegistered(memberId)) {
+    event = events.didNotRegisterParticipantFromWaitinglistASecondTime(roomType, duration, memberId);
+  } else if (!this.writeModel.isAlreadyOnWaitinglist(memberId)) {
+    // we gracefully register them nonetheless:
+    event = events.participantWasRegistered(roomType, duration, undefined, memberId);
+  } else {
+    // all is well
+    event = events.registeredParticipantFromWaitinglist(roomType, duration, memberId);
+  }
+  this._updateRegistrationEvents(event);
+
+};
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 RegistrationCommandProcessor.prototype._updateRegistrationEvents = function (newEvents) {
