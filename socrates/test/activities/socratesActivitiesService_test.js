@@ -197,11 +197,23 @@ describe('SoCraTes Activities Service', function () {
   });
 
   it('saves the activity with a new duration for the given member in the given resource', function (done) {
-    socrates.resources.single._registeredMembers = [{memberId: 'memberId', duration: 2}];
-    expect(socratesActivity.socratesResourceNamed('single').recordFor('memberId').duration).to.be(2);
+    eventStore.state.registrationEvents = [
+      events.participantWasRegistered('single', 2, 'sessionId', 'memberId')
+    ];
 
     socratesActivitiesService.newDurationFor('nickname', 'single', 4, function (err) {
-      expect(savedActivity.socratesResourceNamed('single').recordFor('memberId').duration).to.be(4);
+      expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([{
+        event: e.PARTICIPANT_WAS_REGISTERED,
+        sessionID: 'sessionId',
+        roomType: 'single',
+        memberId: 'memberId',
+        duration: 2
+      }, {
+        event: e.DURATION_WAS_CHANGED,
+        roomType: 'single',
+        memberId: 'memberId',
+        duration: 4
+      }]);
       done(err);
     });
   });

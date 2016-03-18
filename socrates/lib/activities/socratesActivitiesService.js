@@ -72,16 +72,16 @@ module.exports = {
 
     async.parallel(
       {
-        activity: _.partial(activitystore.getActivity, currentUrl),
+        registrationCommandProcessor: _.partial(eventstoreService.getRegistrationCommandProcessor, currentUrl),
         member: _.partial(memberstore.getMember, nickname)
       },
       function (err, results) {
-        if (err || !results.activity || !results.member) { return callback(err); }
+        if (err || !results.registrationCommandProcessor || !results.member) { return callback(err); }
 
-        results.activity.socratesResourceNamed(resourceName).recordFor(results.member.id()).duration = duration;
+        results.registrationCommandProcessor.setNewDurationForParticipant(results.member.id(), duration);
 
-        saveActivity({
-          activity: results.activity,
+        saveCommandProcessor({
+          commandProcessor: results.registrationCommandProcessor,
           callback: callback,
           repeat: _.partial(self.newDurationFor, nickname, resourceName, duration),
           handleSuccess: function () {
