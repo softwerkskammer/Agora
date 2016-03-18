@@ -219,25 +219,23 @@ describe('SoCraTes Activities Service', function () {
   });
 
   it('moves a member\'s registration to a different resource', function (done) {
-    socrates.resources.single._registeredMembers = [{memberId: 'memberId', duration: 2}];
-    expect(socratesActivity.resourceNamed('single').isAlreadyRegistered('memberId')).to.be(true);
+    eventStore.state.registrationEvents = [
+      events.participantWasRegistered('single', 2, 'sessionId', 'memberId')
+    ];
 
     socratesActivitiesService.newResourceFor('nickname', 'single', 'bed_in_double', function (err) {
-      expect(savedActivity.resourceNamed('single').isAlreadyRegistered('memberId')).to.be(false);
-      expect(savedActivity.resourceNamed('bed_in_double').isAlreadyRegistered('memberId')).to.be(true);
-      done(err);
-    });
-  });
-
-  it('moves a member\'s waitinglist reservation to a different resource', function (done) {
-    socrates.resources.single._waitinglist = [{_memberId: 'memberId'}];
-    socrates.resources.bed_in_double._waitinglist = [];
-    expect(socratesActivity.resourceNamed('single').waitinglistEntryFor('memberId')).to.exist();
-    expect(socratesActivity.resourceNamed('bed_in_double').waitinglistEntryFor('memberId')).to.not.exist();
-
-    socratesActivitiesService.newWaitinglistFor('nickname', 'single', 'bed_in_double', function (err) {
-      expect(savedActivity.resourceNamed('single').waitinglistEntryFor('memberId')).to.not.exist();
-      expect(savedActivity.resourceNamed('bed_in_double').waitinglistEntryFor('memberId')).to.exist();
+      expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([{
+        event: e.PARTICIPANT_WAS_REGISTERED,
+        sessionID: 'sessionId',
+        roomType: 'single',
+        memberId: 'memberId',
+        duration: 2
+      }, {
+        event: e.ROOM_TYPE_WAS_CHANGED,
+        roomType: 'bed_in_double',
+        memberId: 'memberId',
+        duration: 2
+      }]);
       done(err);
     });
   });

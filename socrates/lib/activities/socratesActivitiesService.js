@@ -97,23 +97,20 @@ module.exports = {
 
     async.parallel(
       {
-        activity: _.partial(activitystore.getActivity, currentUrl),
+        registrationCommandProcessor: _.partial(eventstoreService.getRegistrationCommandProcessor, currentUrl),
         member: _.partial(memberstore.getMember, nickname)
       },
       function (err, results) {
-        if (err || !results.activity || !results.member) { return callback(err); }
+        if (err || !results.registrationCommandProcessor || !results.member) { return callback(err); }
 
-        var oldResource = results.activity.socratesResourceNamed(resourceName);
-        var registrationRecord = oldResource.recordFor(results.member.id());
-        oldResource.removeMemberId(results.member.id());
-        results.activity.socratesResourceNamed(newResourceName).addRecord(registrationRecord);
+        results.registrationCommandProcessor.moveParticipantToNewRoomType(results.member.id(), newResourceName);
 
-        saveActivity({
-          activity: results.activity,
+        saveCommandProcessor({
+          commandProcessor: results.registrationCommandProcessor,
           callback: callback,
           repeat: _.partial(self.newResourceFor, nickname, resourceName, newResourceName),
           handleSuccess: function () {
-            notifications.changedResource(results.member, roomOptions.informationFor(newResourceName, registrationRecord.duration));
+            notifications.changedResource(results.member, roomOptions.informationFor(newResourceName, undefined)); // TODO: must be duration!
           }
         });
       }
