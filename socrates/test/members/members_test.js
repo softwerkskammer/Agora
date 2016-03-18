@@ -32,7 +32,6 @@ describe('SoCraTes members application', function () {
   var socratesMember;
   var softwerkskammerSubscriber;
   var socratesSubscriber;
-  var socrates;
   var eventStore;
 
   beforeEach(function () {
@@ -76,7 +75,6 @@ describe('SoCraTes members application', function () {
 
   beforeEach(function () {
     /* eslint camelcase: 0 */
-    socrates = {resources: {single: {}, bed_in_double: {}, junior: {}, bed_in_junior: {}}};
 
     eventStore = new GlobalEventStore();
     eventStore.state.socratesEvents = [
