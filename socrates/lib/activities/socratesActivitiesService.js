@@ -27,7 +27,7 @@ function saveActivity(args) {
 }
 
 function saveCommandProcessor(args) {
-  eventstoreService.saveCommandProcessor(args.roomsCommandProcessor, function (err) {
+  eventstoreService.saveCommandProcessor(args.commandProcessor, function (err) {
     if (err && err.message === CONFLICTING_VERSIONS) {
       // we try again because of a racing condition during save:
       return args.repeat(args.callback);
@@ -163,7 +163,7 @@ module.exports = {
         results.roomsCommandProcessor.addParticipantPairFor(roomType, results.participant1.id(), results.participant2.id());
 
         saveCommandProcessor({
-          roomsCommandProcessor: results.roomsCommandProcessor,
+          commandProcessor: results.roomsCommandProcessor,
           callback: callback,
           repeat: _.partial(self.addParticipantPairFor, roomType, participant1Nick, participant2Nick)
         });
@@ -186,7 +186,7 @@ module.exports = {
         results.roomsCommandProcessor.removeParticipantPairFor(roomType, results.participant1.id(), results.participant2.id());
 
         saveCommandProcessor({
-          roomsCommandProcessor: results.roomsCommandProcessor,
+          commandProcessor: results.roomsCommandProcessor,
           callback: callback,
           repeat: _.partial(self.removeParticipantPairFor, roomType, participant1Nick, participant2Nick)
         });
@@ -210,7 +210,7 @@ module.exports = {
         results.registrationCommandProcessor.removeParticipant(roomType, results.participant.id());
 
         saveCommandProcessor({
-          roomsCommandProcessor: results.roomsCommandProcessor,
+          commandProcessor: results.roomsCommandProcessor,
           callback: callback,
           repeat: _.partial(self.removeParticipantFor, roomType, participantNick),
           handleSuccess: function () {
