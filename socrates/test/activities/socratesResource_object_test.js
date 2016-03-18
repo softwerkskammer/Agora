@@ -56,41 +56,4 @@ describe('SoCraTesResource', function () {
       expect(socratesResource.registeredMembers()).is.empty();
     });
   });
-
-  describe('always accepts subscriptions', function () {
-    it('if limit is 0', function () {
-      var resource = new Resource({
-        _registrationOpen: true,
-        _limit: 0,
-        _registeredMembers: []
-      });
-      var socratesResource = new SoCraTesResource(resource);
-
-      expect(socratesResource.limit()).to.be(0);
-      expect(socratesResource.canSubscribe()).to.be(true);
-    });
-
-    it('if resource is full', function () {
-      var resource = new Resource({
-        _registrationOpen: true,
-        _limit: 1,
-        _registeredMembers: ['memberId']
-      });
-      var socratesResource = new SoCraTesResource(resource);
-
-      expect(socratesResource.isFull()).to.be(true);
-      expect(socratesResource.canSubscribe()).to.be(true);
-    });
-
-    it('if registration is not open', function () {
-      var resource = new Resource({
-        _registrationOpen: false,
-        _registeredMembers: []
-      });
-      var socratesResource = new SoCraTesResource(resource);
-
-      expect(socratesResource.isRegistrationOpen()).to.be(false);
-      expect(socratesResource.canSubscribe()).to.be(true);
-    });
-  });
 });

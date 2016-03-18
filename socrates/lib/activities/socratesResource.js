@@ -24,14 +24,6 @@ function SoCraTesResource(resource) {
 // inherit from Resource:
 SoCraTesResource.prototype = new Resource();
 
-SoCraTesResource.prototype.canSubscribe = function () {
-  return true;
-};
-
-SoCraTesResource.prototype.canUnsubscribe = function () {
-  return true;
-};
-
 SoCraTesResource.prototype.recordFor = function (memberId) {
   return _.find(this.state._registeredMembers, {memberId: memberId});
 };
@@ -60,34 +52,6 @@ SoCraTesResource.prototype.durations = function () {
     this.state._registeredMembers = [];
   }
   return _.pluck(this.state._registeredMembers, 'duration');
-};
-
-SoCraTesResource.prototype.register = function (memberID, registrationTuple) {
-  var sessionID = 'SessionID:' + registrationTuple.sessionID;
-
-  function registerOnWaitinglist(self) {
-    if (self.waitinglistEntryFor(sessionID)) {
-      self.removeFromWaitinglist(sessionID);
-    }
-    return self.addToWaitinglist(memberID);
-  }
-
-  function registerOnResource(self) {
-    var index = self.registeredMembers().indexOf(sessionID);
-    if (index > -1) {
-      self.state._registeredMembers.splice(index, 1);
-    }
-
-    if (!self.addMemberId(memberID)) { return false; }
-    var record = self.recordFor(memberID);
-    record.duration = registrationTuple.duration;
-    return true;
-  }
-
-  if (registrationTuple.duration === 'waitinglist') {
-    return registerOnWaitinglist(this);
-  }
-  return registerOnResource(this);
 };
 
 module.exports = SoCraTesResource;
