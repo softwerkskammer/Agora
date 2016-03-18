@@ -143,9 +143,4 @@ SoCraTesResource.prototype.hasValidReservationFor = function (registrationTuple)
   return !!(record && record.expiresAt && moment(record.expiresAt).isAfter(moment()));
 };
 
-SoCraTesResource.prototype.expirationTimeOf = function (registrationTuple) {
-  var record = recordOrWaitinglistRecordFor(this.state, registrationTuple);
-  return record && moment(record.expiresAt);
-};
-
 module.exports = SoCraTesResource;

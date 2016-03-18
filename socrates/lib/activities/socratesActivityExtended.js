@@ -40,10 +40,6 @@ if (SoCraTesActivity.prototype.reserve === undefined) {
     return null;
   };
 
-  SoCraTesActivity.prototype.expirationTimeOf = function (registrationTuple) {
-    return this.socratesResourceFor(registrationTuple).expirationTimeOf(registrationTuple);
-  };
-
   SoCraTesActivity.prototype.waitinglistParticipantsOf = function (resourceName) {
     if (!this.waitinglistMembers) { return []; }
     return this.waitinglistMembers[resourceName];

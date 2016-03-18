@@ -10,40 +10,6 @@ var tomorrow = moment();
 tomorrow.add(1, 'days');
 
 describe('Extended SoCraTes Activity', function () {
-  it('reserves a registrationTuple', function () {
-    var activity = new SoCraTesActivity({
-      resources: {
-        single: {
-          _registrationOpen: true,
-          _registeredMembers: []
-        }
-      }
-    });
-    var registrationTuple = {resourceName: 'single', sessionID: 'sessionID', duration: 3};
-    activity.reserve(registrationTuple);
-
-    var expirationTime = activity.expirationTimeOf(registrationTuple);
-    expect(expirationTime).to.exist();
-    expect(expirationTime.isBetween(moment().add(29, 'minutes'), moment().add(31, 'minutes'))).to.be(true);
-  });
-
-  it('reserves a registrationTuple as waitinglist', function () {
-    var activity = new SoCraTesActivity({
-      resources: {
-        single: {
-          _registrationOpen: true,
-          _registeredMembers: [],
-          _waitinglist: []
-        }
-      }
-    });
-    var registrationTuple = {resourceName: 'single', sessionID: 'sessionID', duration: 'waitinglist'};
-    activity.reserve(registrationTuple);
-
-    var expirationTime = activity.expirationTimeOf(registrationTuple);
-    expect(expirationTime).to.exist();
-    expect(expirationTime.isBetween(moment().add(29, 'minutes'), moment().add(31, 'minutes'))).to.be(true);
-  });
 
   it('registers a registrationTuple', function () {
     var activity = new SoCraTesActivity({
