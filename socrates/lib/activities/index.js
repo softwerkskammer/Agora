@@ -132,7 +132,7 @@ app.post('/newDuration', function (req, res, next) {
 });
 
 app.post('/newResource', function (req, res, next) {
-  socratesActivitiesService.newResourceFor(req.body.nickname, req.body.resourceName, req.body.newResourceName, function (err) {
+  socratesActivitiesService.newRoomTypeFor(req.body.nickname, req.body.newResourceName, function (err) {
     if (err) {return next(err); }
     res.redirect('/registration/management');
   });

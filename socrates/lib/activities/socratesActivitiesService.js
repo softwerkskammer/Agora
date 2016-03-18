@@ -92,7 +92,7 @@ module.exports = {
     );
   },
 
-  newResourceFor: function (nickname, resourceName, newResourceName, callback) {
+  newRoomTypeFor: function (nickname, newRoomType, callback) {
     var self = this;
 
     async.parallel(
@@ -103,14 +103,14 @@ module.exports = {
       function (err, results) {
         if (err || !results.registrationCommandProcessor || !results.member) { return callback(err); }
 
-        results.registrationCommandProcessor.moveParticipantToNewRoomType(results.member.id(), newResourceName);
+        results.registrationCommandProcessor.moveParticipantToNewRoomType(results.member.id(), newRoomType);
 
         saveCommandProcessor({
           commandProcessor: results.registrationCommandProcessor,
           callback: callback,
-          repeat: _.partial(self.newResourceFor, nickname, resourceName, newResourceName),
+          repeat: _.partial(self.newRoomTypeFor, nickname, newRoomType),
           handleSuccess: function () {
-            notifications.changedResource(results.member, roomOptions.informationFor(newResourceName, undefined)); // TODO: must be duration!
+            notifications.changedResource(results.member, roomOptions.informationFor(newRoomType, undefined)); // TODO: must be duration!
           }
         });
       }

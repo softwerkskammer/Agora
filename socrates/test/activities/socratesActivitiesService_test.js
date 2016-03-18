@@ -223,7 +223,7 @@ describe('SoCraTes Activities Service', function () {
       events.participantWasRegistered('single', 2, 'sessionId', 'memberId')
     ];
 
-    socratesActivitiesService.newResourceFor('nickname', 'single', 'bed_in_double', function (err) {
+    socratesActivitiesService.newRoomTypeFor('nickname', 'bed_in_double', function (err) {
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([{
         event: e.PARTICIPANT_WAS_REGISTERED,
         sessionID: 'sessionId',

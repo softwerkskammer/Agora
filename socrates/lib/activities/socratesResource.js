@@ -40,13 +40,6 @@ SoCraTesResource.prototype.waitinglistRecordFor = function (memberId) {
   return _.find(this.state._waitinglist, {_memberId: memberId});
 };
 
-SoCraTesResource.prototype.addRecord = function (record) {
-  if (!this.state._registeredMembers) {
-    this.state._registeredMembers = [];
-  }
-  return this.state._registeredMembers.push(record);
-};
-
 SoCraTesResource.prototype.addWaitinglistRecord = function (record) {
   if (!this.state._waitinglist) {
     return; // waitinglist is not enabled
