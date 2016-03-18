@@ -15,9 +15,7 @@ if (SoCraTesActivity.prototype.reserve === undefined) {
     return this.socratesResourceNamed(registrationTuple.resourceName);
   };
 
-  SoCraTesActivity.prototype.reserve = function (registrationTuple) {
-    return this.socratesResourceFor(registrationTuple).reserve(registrationTuple);
-  };
+  SoCraTesActivity.prototype.reserve = {}; // required for the check above
 
   SoCraTesActivity.prototype.register = function (memberID, registrationTuple) {
     return this.socratesResourceFor(registrationTuple).register(memberID, registrationTuple);
