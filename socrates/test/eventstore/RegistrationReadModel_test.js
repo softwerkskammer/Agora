@@ -222,7 +222,7 @@ describe('The registration read model', function () {
 
   describe('calculating the existence of a valid reservation', function () {
 
-    it('returns undefined as the expiration time if there are no reservations for the given session id', function () {
+    it('returns false if there are no reservations for the given session id', function () {
       eventStore.state.registrationEvents = [
         setTimestamp(events.reservationWasIssued(singleBedRoom, 'untilSaturday', sessionId1), aShortTimeAgo)
       ];
@@ -230,7 +230,7 @@ describe('The registration read model', function () {
       expect(readModel.hasValidReservationFor(sessionId2)).to.be(false);
     });
 
-    it('returns the expiration time of the reservation if there is one', function () {
+    it('returns true if there is a valid reservation', function () {
       eventStore.state.registrationEvents = [
         setTimestamp(events.reservationWasIssued(singleBedRoom, 'untilSaturday', sessionId1), aShortTimeAgo)
       ];
@@ -238,7 +238,7 @@ describe('The registration read model', function () {
       expect(readModel.hasValidReservationFor(sessionId1)).to.be(true);
     });
 
-    it('returns undefined as the expiration time of the reservation if it is already expired', function () {
+    it('returns false if the reservation is already expired', function () {
       eventStore.state.registrationEvents = [
         setTimestamp(events.reservationWasIssued(singleBedRoom, 'untilSaturday', sessionId1), aLongTimeAgo)
       ];
@@ -246,7 +246,7 @@ describe('The registration read model', function () {
       expect(readModel.hasValidReservationFor(sessionId1)).to.be(false);
     });
 
-    it('returns the expiration time of the waitinglist reservation if there is no regular reservation', function () {
+    it('returns true if there is a waitinglist reservation but no no regular reservation', function () {
       eventStore.state.registrationEvents = [
         setTimestamp(events.waitinglistReservationWasIssued(singleBedRoom, sessionId1), aShortTimeAgo)
       ];
@@ -254,14 +254,13 @@ describe('The registration read model', function () {
       expect(readModel.hasValidReservationFor(sessionId1)).to.be(true);
     });
 
-    it('returns the expiration time of the reservation if there are both regular and waitinglist reservations', function () {
+    it('returns true if there are both regular and waitinglist reservations', function () {
       eventStore.state.registrationEvents = [
         setTimestamp(events.reservationWasIssued(singleBedRoom, 'untilSaturday', sessionId1), aShortTimeAgo),
         setTimestamp(events.waitinglistReservationWasIssued(singleBedRoom, sessionId1), anEvenShorterTimeAgo)
       ];
 
       expect(readModel.hasValidReservationFor(sessionId1)).to.be(true);
-
     });
   });
 
