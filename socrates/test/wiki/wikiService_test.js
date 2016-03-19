@@ -47,28 +47,7 @@ describe('SoCraTes Wiki Service', function () {
 
   it('loads the participants and their participation information for a year (before 2016)', function (done) {
     /*eslint camelcase: 0*/
-    var socrates = {
-      id: 'socratesId',
-      title: 'SoCraTes',
-      description: 'Coolest event ever :-)',
-      location: 'Right next door',
-      url: 'socrates-url',
-      isSoCraTes: true,
-      startUnix: 1440687600,
-      endUnix: 1440946800,
-      owner: {nickname: 'ownerNick'},
-      assignedGroup: 'assignedGroup',
-      group: {groupLongName: 'longName'},
-      resources: {
-        single: {
-          _canUnsubscribe: false,
-          _limit: 10,
-          _registrationOpen: true,
-          _registeredMembers: [{memberId: 'memberId', duration: 2}]
-        },
-        bed_in_double: {_canUnsubscribe: false, _limit: 10, _registrationOpen: true}
-      }
-    };
+    var socrates = {resources: {single: {_registeredMembers: [{memberId: 'memberId', duration: 2}]}}};
     sinon.stub(activitystore, 'getActivity', function (url, callback) {
       callback(null, new SoCraTesActivity(socrates));
     });
