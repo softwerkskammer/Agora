@@ -1,6 +1,7 @@
 'use strict';
 
 var _ = require('lodash');
+var R = require('ramda');
 var async = require('async');
 var beans = require('simple-configure').get('beans');
 var subscriberstore = beans.get('subscriberstore');
@@ -228,12 +229,10 @@ module.exports = {
     );
   },
 
-  getActivityWithParticipantsAndSubscribers: function (year, callback) {
-    activitystore.getActivity('socrates-' + year, function (err, activity) {
-      if (err || !activity) { return callback(err); }
-
+  getParticipantsFor: function (year, callback) {
+    var getMembers = function (memberIds) {
       async.parallel({
-        members: _.partial(memberstore.getMembersForIds, activity.allRegisteredMembers()),
+        members: _.partial(memberstore.getMembersForIds, memberIds),
         subscribers: subscriberstore.allSubscribers
       }, function (err1, results) {
         if (err1) { return callback(err1); }
@@ -241,11 +240,29 @@ module.exports = {
           var subscriber = _.find(results.subscribers, function (sub) { return sub.id() === member.id(); });
           member.participation = subscriber ? subscriber.participationOf(year) : new Participation();
         });
-        activity.participants = results.members;
-        callback(null, activity);
+        callback(null, results.members);
       });
+    };
 
-    });
+    if (year < 2016) {
+      activitystore.getActivity('socrates-' + year, function (err, activity) {
+        if (err || !activity) { return callback(err); }
+
+        getMembers(activity.allRegisteredMembers(), function (err1, participants) {
+          if (err1 || !participants) { return callback(err); }
+          callback(null, participants);
+        });
+      });
+    } else {
+      eventstoreService.getRegistrationReadModel('socrates-' + year, function (err, readModel) {
+        if (err || !readModel) { return callback(err); }
+
+        getMembers(R.keys(readModel.participantsByMemberId()), function (err1, participants) {
+          if (err1 || !participants) { return callback(err); }
+          callback(null, participants);
+        });
+      });
+    }
   },
 
   participationStatus: function (subscriber, callback) {

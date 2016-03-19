@@ -106,11 +106,11 @@ app.post('/rename/:subdir/:page', function (req, res, next) {
 
 app.get('/:year/participantsOverview/', function (req, res, next) {
   var year = req.params.year;
-  socratesActivitiesService.getActivityWithParticipantsAndSubscribers(year, function (err, activity) {
-    if (err || !activity) { return next(err); }
+  socratesActivitiesService.getParticipantsFor(year, function (err, participants) {
+    if (err || !participants) { return next(err); }
     res.render('participants', {
       title: 'Participants',
-      activity: activity,
+      participants: participants,
       showQuestions: year < 2016
     });
   });

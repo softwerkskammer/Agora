@@ -8,7 +8,6 @@ var conf = require('../../testutil/configureForTest');
 var beans = conf.get('beans');
 
 var socratesActivitiesService = beans.get('socratesActivitiesService');
-var SoCraTesActivity = beans.get('socratesActivityExtended');
 var Member = beans.get('member');
 var Participation = beans.get('socratesParticipation');
 
@@ -18,12 +17,10 @@ describe('SoCraTes wiki application', function () {
 
   beforeEach(function () {
 
-    sinon.stub(socratesActivitiesService, 'getActivityWithParticipantsAndSubscribers', function (year, callback) {
-      var socratesActivity = new SoCraTesActivity({});
+    sinon.stub(socratesActivitiesService, 'getParticipantsFor', function (year, callback) {
       var member = new Member({id: 'userid', nickname: 'nick', firstname: 'first', lastname: 'last'});
       member.participation = new Participation({question1: 'Relation to SC'});
-      socratesActivity.participants = [member];
-      callback(null, socratesActivity);
+      callback(null, [member]);
     });
   });
 

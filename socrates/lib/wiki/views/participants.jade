@@ -7,7 +7,7 @@ block title
 block content
   .row
     .col-md-12
-      each participant in activity.participants
+      each participant in participants
         div(id=participant.nickname())
           if accessrights.canEditMember(participant)
             h4

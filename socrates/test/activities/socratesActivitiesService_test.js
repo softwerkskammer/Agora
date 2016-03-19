@@ -304,16 +304,29 @@ describe('SoCraTes Activities Service', function () {
     });
   });
 
-  it('loads an activity enriched with participants and their participation information for a year', function (done) {
+  it('loads an activity enriched with participants and their participation information for a year (before 2016)', function (done) {
     socrates.resources.single._registeredMembers = [{memberId: 'memberId', duration: 2}];
+    subscriber = new Subscriber({id: 'memberId'});
+    subscriber.participationOf('2010').state.roommate = 'My buddy';
+
+    socratesActivitiesService.getParticipantsFor('2010', function (err, participants) {
+      expect(participants).to.have.length(1);
+      expect(participants[0].participation.roommate()).to.be('My buddy');
+      done(err);
+    });
+  });
+
+  it('loads an activity enriched with participants and their participation information for a year (on or after 2016)', function (done) {
+    eventStore.state.registrationEvents = [
+      events.participantWasRegistered('single', 2, 'session-id', 'memberId')
+    ];
+
     subscriber = new Subscriber({id: 'memberId'});
     subscriber.participationOf('2020').state.roommate = 'My buddy';
 
-    expect(socratesActivity.resourceNamed('single').registeredMembers()).to.eql(['memberId']);
-
-    socratesActivitiesService.getActivityWithParticipantsAndSubscribers('2020', function (err, activity) {
-      expect(activity.participants).to.have.length(1);
-      expect(activity.participants[0].participation.roommate()).to.be('My buddy');
+    socratesActivitiesService.getParticipantsFor('2020', function (err, participants) {
+      expect(participants).to.have.length(1);
+      expect(participants[0].participation.roommate()).to.be('My buddy');
       done(err);
     });
   });
