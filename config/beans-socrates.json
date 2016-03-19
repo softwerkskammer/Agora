@@ -11,6 +11,7 @@
 
 
   "socratesActivitiesService": {"module": "./socrates/lib/activities/socratesActivitiesService"},
+  "socratesWikiService": {"module": "./socrates/lib/wiki/wikiService"},
   "subscriberService": {"module": "./socrates/lib/subscribers/subscriberService"},
   "registrationService": {"module": "./socrates/lib/registration/registrationService"},
   "managementService": {"module": "./socrates/lib/registration/managementService"},

@@ -10,12 +10,10 @@ var beans = require('../../testutil/configureForTest').get('beans');
 
 var socratesActivitiesService = beans.get('socratesActivitiesService');
 var activitystore = beans.get('activitystore');
-var SoCraTesActivity = beans.get('socratesActivity');
 var Member = beans.get('member');
 var Subscriber = beans.get('subscriber');
 
 var memberstore = beans.get('memberstore');
-var subscriberstore = beans.get('subscriberstore');
 var notifications = beans.get('socratesNotifications');
 
 var events = beans.get('events');
@@ -29,33 +27,8 @@ describe('SoCraTes Activities Service', function () {
 
   var eventStore;
 
-  var socrates;
-  var socratesActivity;
-  var subscriber;
-
   beforeEach(function () {
     eventStore = new GlobalEventStore();
-
-    /*eslint camelcase: 0*/
-    socrates = {
-      id: 'socratesId',
-      title: 'SoCraTes',
-      description: 'Coolest event ever :-)',
-      location: 'Right next door',
-      url: 'socrates-url',
-      isSoCraTes: true,
-      startUnix: 1440687600,
-      endUnix: 1440946800,
-      owner: {nickname: 'ownerNick'},
-      assignedGroup: 'assignedGroup',
-      group: {groupLongName: 'longName'},
-      resources: {
-        single: {_canUnsubscribe: false, _limit: 10, _registrationOpen: true},
-        bed_in_double: {_canUnsubscribe: false, _limit: 10, _registrationOpen: true}
-      }
-    };
-
-    socratesActivity = new SoCraTesActivity(socrates);
 
     sinon.stub(notifications, 'newParticipant');
     sinon.stub(notifications, 'changedDuration');
@@ -63,29 +36,17 @@ describe('SoCraTes Activities Service', function () {
     sinon.stub(notifications, 'changedWaitinglist');
     sinon.stub(notifications, 'removedFromParticipants');
     sinon.stub(notifications, 'removedFromWaitinglist');
+
     sinon.stub(memberstore, 'getMember', function (nickname, callback) {
       if (nickname === 'nicknameForPair1') { return callback(null, new Member({id: 'memberIdForPair1'})); }
       if (nickname === 'nicknameForPair2') { return callback(null, new Member({id: 'memberIdForPair2'})); }
       callback(null, new Member({id: 'memberId'}));
-    });
-    sinon.stub(memberstore, 'getMembersForIds', function (ids, callback) {
-      callback(null, _.map(ids, function (id) { return new Member({id: id}); }));
-    });
-    sinon.stub(subscriberstore, 'allSubscribers', function (callback) {
-      callback(null, [subscriber]);
-    });
-    sinon.stub(activitystore, 'getActivity', function (url, callback) {
-      if (url === 'wrongUrl') {
-        return callback(new Error('Wrong URL!'));
-      }
-      callback(null, socratesActivity);
     });
 
     sinon.stub(eventstore, 'getEventStore', function (url, callback) {
       callback(null, eventStore);
     });
     sinon.stub(eventstore, 'saveEventStore', function (store, callback) { callback(); });
-
   });
 
   afterEach(function () {
@@ -300,33 +261,6 @@ describe('SoCraTes Activities Service', function () {
 
     socratesActivitiesService.removeWaitinglistMemberFor('single', 'nickname', function (err) {
       expect(R.keys(new RegistrationReadModel(eventStore).waitinglistParticipantsByMemberIdFor('single'))).to.eql([]);
-      done(err);
-    });
-  });
-
-  it('loads an activity enriched with participants and their participation information for a year (before 2016)', function (done) {
-    socrates.resources.single._registeredMembers = [{memberId: 'memberId', duration: 2}];
-    subscriber = new Subscriber({id: 'memberId'});
-    subscriber.participationOf('2010').state.roommate = 'My buddy';
-
-    socratesActivitiesService.getParticipantsFor('2010', function (err, participants) {
-      expect(participants).to.have.length(1);
-      expect(participants[0].participation.roommate()).to.be('My buddy');
-      done(err);
-    });
-  });
-
-  it('loads an activity enriched with participants and their participation information for a year (on or after 2016)', function (done) {
-    eventStore.state.registrationEvents = [
-      events.participantWasRegistered('single', 2, 'session-id', 'memberId')
-    ];
-
-    subscriber = new Subscriber({id: 'memberId'});
-    subscriber.participationOf('2020').state.roommate = 'My buddy';
-
-    socratesActivitiesService.getParticipantsFor('2020', function (err, participants) {
-      expect(participants).to.have.length(1);
-      expect(participants[0].participation.roommate()).to.be('My buddy');
       done(err);
     });
   });
