@@ -228,8 +228,8 @@ module.exports = {
 
         results.registrationCommandProcessor.removeWaitinglistParticipant(roomType, results.waitinglistMember.id());
 
-        saveActivity({
-          activity: results.registrationCommandProcessor,
+        saveCommandProcessor({
+          commandProcessor: results.registrationCommandProcessor,
           callback: callback,
           repeat: _.partial(self.removeWaitinglistMemberFor, roomType, waitinglistMemberNick),
           handleSuccess: function () {
