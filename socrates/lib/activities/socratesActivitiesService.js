@@ -14,18 +14,6 @@ var Participation = beans.get('socratesParticipation');
 
 var currentUrl = beans.get('socratesConstants').currentUrl;
 
-function saveActivity(args) {
-  activitystore.saveActivity(args.activity, function (err) {
-    if (err && err.message === CONFLICTING_VERSIONS) {
-      // we try again because of a racing condition during save:
-      return args.repeat(args.callback);
-    }
-    if (err) { return args.callback(err); }
-    if (args.handleSuccess) { args.handleSuccess(); }
-    return args.callback();
-  });
-}
-
 function saveCommandProcessor(args) {
   eventstoreService.saveCommandProcessor(args.commandProcessor, function (err) {
     if (err && err.message === CONFLICTING_VERSIONS) {

@@ -31,7 +31,6 @@ describe('SoCraTes Activities Service', function () {
 
   var socrates;
   var socratesActivity;
-  var savedActivity;
   var subscriber;
 
   beforeEach(function () {
@@ -83,18 +82,9 @@ describe('SoCraTes Activities Service', function () {
     });
 
     sinon.stub(eventstore, 'getEventStore', function (url, callback) {
-      if (url === 'wrongUrl') { // TODO remove, unused
-        return callback(new Error('Wrong URL!'));
-      }
       callback(null, eventStore);
     });
     sinon.stub(eventstore, 'saveEventStore', function (store, callback) { callback(); });
-
-    savedActivity = undefined;
-    sinon.stub(activitystore, 'saveActivity', function (activity, callback) {
-      savedActivity = activity;
-      callback();
-    });
 
   });
 
