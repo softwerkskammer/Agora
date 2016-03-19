@@ -6,7 +6,7 @@ var beans = require('simple-configure').get('beans');
 var misc = beans.get('misc');
 var membersService = beans.get('membersService');
 var subscriberService = beans.get('subscriberService');
-var socratesActivitiesService = beans.get('socratesActivitiesService');
+var socratesMembersService = beans.get('socratesMembersService');
 var eventstoreService = beans.get('eventstoreService');
 var Member = beans.get('member');
 var memberSubmitHelper = beans.get('memberSubmitHelper');
@@ -77,7 +77,7 @@ app.post('/delete', function (req, res, next) {
     if (!res.locals.accessrights.canDeleteMember(subscriber)) {
       return res.redirect('/members/' + encodeURIComponent(nicknameOfEditMember));
     }
-    socratesActivitiesService.participationStatus(subscriber, function (err1, isParticipant) {
+    socratesMembersService.participationStatus(subscriber, function (err1, isParticipant) {
       if (err1) { return next(err1); }
       if (isParticipant) {
         statusmessage.errorMessage('message.title.problem', 'message.content.members.hasParticipated').putIntoSession(req);

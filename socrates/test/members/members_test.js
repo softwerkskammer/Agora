@@ -9,7 +9,7 @@ var beans = require('../../testutil/configureForTest').get('beans');
 var userWithoutMember = require('../../testutil/userWithoutMember');
 var membersService = beans.get('membersService');
 var memberstore = beans.get('memberstore');
-var socratesActivitiesService = beans.get('socratesActivitiesService');
+var socratesMembersService = beans.get('socratesMembersService');
 var subscriberService = beans.get('subscriberService');
 var subscriberstore = beans.get('subscriberstore');
 var socratesNotifications = beans.get('socratesNotifications');
@@ -610,7 +610,7 @@ describe('SoCraTes members application', function () {
     });
 
     it('refuses deletion when the subscriber is also participant and redirects to the profile page', function (done) {
-      sinon.stub(socratesActivitiesService, 'participationStatus', function (subscriber, callback) {
+      sinon.stub(socratesMembersService, 'participationStatus', function (subscriber, callback) {
         callback(null, true);
       });
 
@@ -624,7 +624,7 @@ describe('SoCraTes members application', function () {
     });
 
     it('deletes a subscriber that is not participant and redirects to the profiles overview page of current year', function (done) {
-      sinon.stub(socratesActivitiesService, 'participationStatus', function (subscriber, callback) {
+      sinon.stub(socratesMembersService, 'participationStatus', function (subscriber, callback) {
         callback(null, false);
       });
 

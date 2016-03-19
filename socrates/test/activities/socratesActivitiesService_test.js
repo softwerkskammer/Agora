@@ -9,9 +9,7 @@ var R = require('ramda');
 var beans = require('../../testutil/configureForTest').get('beans');
 
 var socratesActivitiesService = beans.get('socratesActivitiesService');
-var activitystore = beans.get('activitystore');
 var Member = beans.get('member');
-var Subscriber = beans.get('subscriber');
 
 var memberstore = beans.get('memberstore');
 var notifications = beans.get('socratesNotifications');
@@ -262,43 +260,6 @@ describe('SoCraTes Activities Service', function () {
     socratesActivitiesService.removeWaitinglistMemberFor('single', 'nickname', function (err) {
       expect(R.keys(new RegistrationReadModel(eventStore).waitinglistParticipantsByMemberIdFor('single'))).to.eql([]);
       done(err);
-    });
-  });
-
-  describe('checking participation of a subscriber', function () {
-    it('tells that a subscriber participated in a previous SoCraTes', function (done) {
-      sinon.stub(activitystore, 'activitiesForGroupIdsAndRegisteredMemberId', function (groups, memberId, upcoming, callback) {
-        if (upcoming) { return callback(null, []); }
-        callback(null, [{state: {isSoCraTes: true}}, {state: {isSoCraTes: false}}]);
-      });
-
-      socratesActivitiesService.participationStatus(new Subscriber({id: 'memberId'}), function (err, result) {
-        expect(result).to.be.true();
-        done(err);
-      });
-    });
-
-    it('tells that a subscriber will participate in an upcoming SoCraTes', function (done) {
-      sinon.stub(activitystore, 'activitiesForGroupIdsAndRegisteredMemberId', function (groups, memberId, upcoming, callback) {
-        if (!upcoming) { return callback(null, []); }
-        callback(null, [{state: {isSoCraTes: true}}, {state: {isSoCraTes: false}}]);
-      });
-
-      socratesActivitiesService.participationStatus(new Subscriber({id: 'memberId'}), function (err, result) {
-        expect(result).to.be.true();
-        done(err);
-      });
-    });
-
-    it('tells that a subscriber did not and will not participate in any SoCraTes', function (done) {
-      sinon.stub(activitystore, 'activitiesForGroupIdsAndRegisteredMemberId', function (groups, memberId, upcoming, callback) {
-        callback(null, [{state: {isSoCraTes: false}}]);
-      });
-
-      socratesActivitiesService.participationStatus(new Subscriber({id: 'memberId'}), function (err, result) {
-        expect(result).to.be.false();
-        done(err);
-      });
     });
   });
 });
