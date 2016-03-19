@@ -117,26 +117,23 @@ module.exports = {
     );
   },
 
-  newWaitinglistFor: function (nickname, resourceName, newResourceName, callback) {
+  newWaitinglistFor: function (nickname, newResourceName, callback) {
     var self = this;
 
     async.parallel(
       {
-        activity: _.partial(activitystore.getActivity, currentUrl),
+        registrationCommandProcessor: _.partial(eventstoreService.getRegistrationCommandProcessor, currentUrl),
         member: _.partial(memberstore.getMember, nickname)
       },
       function (err, results) {
         if (err || !results.activity || !results.member) { return callback(err); }
 
-        var oldResource = results.activity.socratesResourceNamed(resourceName);
-        var waitinglistRecord = oldResource.waitinglistRecordFor(results.member.id());
-        oldResource.removeFromWaitinglist(results.member.id());
-        results.activity.socratesResourceNamed(newResourceName).addWaitinglistRecord(waitinglistRecord);
+        results.registrationCommandProcessor.changeDesiredRoomTypes(results.member.id(), [newResourceName]);
 
-        saveActivity({
-          activity: results.activity,
+        saveCommandProcessor({
+          commandProcessor: results.registrationCommandProcessor,
           callback: callback,
-          repeat: _.partial(self.newWaitinglistFor, nickname, resourceName, newResourceName),
+          repeat: _.partial(self.newWaitinglistFor, nickname, newResourceName),
           handleSuccess: function () {
             notifications.changedWaitinglist(results.member, roomOptions.informationFor(newResourceName, 'waitinglist'));
           }

@@ -91,6 +91,14 @@ module.exports = {
     return enrich({event: e.DID_NOT_CHANGE_ROOM_TYPE_FOR_NON_PARTICIPANT, memberId: memberId, roomType: roomType});
   },
 
+  desiredRoomTypesWereChanged: function (memberId, desiredRoomTypes) {
+    return enrich({event: e.DESIRED_ROOM_TYPES_WERE_CHANGED, memberId: memberId, desiredRoomTypes: desiredRoomTypes});
+  },
+
+  didNotChangeDesiredRoomTypesBecauseParticipantIsNotOnWaitinglist: function (memberId, desiredRoomTypes) {
+      return enrich({event: e.DID_NOT_CHANGE_DESIRED_ROOM_TYPES_BECAUSE_PARTICIPANT_IS_NOT_ON_WAITINGLIST, memberId: memberId, desiredRoomTypes: desiredRoomTypes});
+  },
+
   durationWasChanged: function (memberId, roomType, duration) {
     return enrich({event: e.DURATION_WAS_CHANGED, memberId: memberId, roomType: roomType, duration: duration});
   },

@@ -28,17 +28,6 @@ SoCraTesResource.prototype.recordFor = function (memberId) {
   return _.find(this.state._registeredMembers, {memberId: memberId});
 };
 
-SoCraTesResource.prototype.waitinglistRecordFor = function (memberId) {
-  return _.find(this.state._waitinglist, {_memberId: memberId});
-};
-
-SoCraTesResource.prototype.addWaitinglistRecord = function (record) {
-  if (!this.state._waitinglist) {
-    return; // waitinglist is not enabled
-  }
-  this.state._waitinglist.push(record);
-};
-
 SoCraTesResource.prototype.durationFor = function (memberId) {
   return roomOptions.endOfStayFor(this.recordFor(memberId).duration);
 };

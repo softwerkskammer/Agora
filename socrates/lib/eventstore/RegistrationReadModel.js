@@ -104,7 +104,7 @@ RegistrationReadModel.prototype.waitinglistReservationsBySessionIdFor = function
 };
 
 var projectWaitinglistParticipantsByMemberId = function (waitinglistParticipantsByMemberId, event) {
-  if (event.event === e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED) {
+  if (event.event === e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED || event.event === e.DESIRED_ROOM_TYPES_WERE_CHANGED) {
     waitinglistParticipantsByMemberId[event.memberId] = event;
   }
   if (event.event === e.PARTICIPANT_WAS_REGISTERED) {

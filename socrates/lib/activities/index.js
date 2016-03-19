@@ -139,7 +139,7 @@ app.post('/newResource', function (req, res, next) {
 });
 
 app.post('/newWaitinglist', function (req, res, next) {
-  socratesActivitiesService.newWaitinglistFor(req.body.nickname, req.body.resourceName, req.body.newResourceName, function (err) {
+  socratesActivitiesService.newWaitinglistFor(req.body.nickname, req.body.newResourceName, function (err) {
     if (err) {return next(err); }
     res.redirect('/registration/management');
   });
