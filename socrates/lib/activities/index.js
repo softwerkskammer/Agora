@@ -12,7 +12,6 @@ var activitystore = beans.get('activitystore');
 
 var Activity = beans.get('activity');
 var eventstoreService = beans.get('eventstoreService');
-var eventstore = beans.get('eventstore');
 var validation = beans.get('validation');
 var statusmessage = beans.get('statusmessage');
 var roomOptions = beans.get('roomOptions');
@@ -25,7 +24,7 @@ function activitySubmitted(req, res, next) {
   eventstoreService.getSoCraTesCommandProcessor(req.body.previousUrl, function (err, socratesCommandProcessor) {
     if (err) { return next(err); }
     socratesCommandProcessor.setConferenceDetails(req.body);
-    eventstore.saveEventStore(socratesCommandProcessor.eventStore(), function (err1) {
+    eventstoreService.saveCommandProcessor(socratesCommandProcessor, function (err1) {
       if (err1 && err1.message === CONFLICTING_VERSIONS) {
         // we try again because of a racing condition during save:
         statusmessage.errorMessage('message.title.conflict', 'message.content.save_error_retry').putIntoSession(req);
