@@ -10,6 +10,7 @@ var memberstore = beans.get('memberstore');
 var Member = beans.get('member');
 var subscriberstore = beans.get('subscriberstore');
 var activitiesService = beans.get('activitiesService');
+var activityParticipantService = beans.get('activityParticipantService');
 var subscriberService = beans.get('subscriberService');
 var registrationService = beans.get('registrationService');
 var icalService = beans.get('icalService');
@@ -24,6 +25,7 @@ var roomOptions = beans.get('roomOptions');
 var managementService = beans.get('managementService');
 var nametagService = beans.get('nametagService');
 var currentUrl = beans.get('socratesConstants').currentUrl;
+var currentYear = beans.get('socratesConstants').currentYear;
 
 var eventstoreService = beans.get('eventstoreService');
 
@@ -178,9 +180,9 @@ app.get('/reception', function (req, res, next) {
     return res.redirect('/registration');
   }
 
-  activitiesService.getActivityWithGroupAndParticipants(currentUrl, function (err, activity) {
+  activityParticipantService.getParticipantsFor(currentYear, function (err, participants) {
     if (err) { return next(err); }
-    managementService.addonLinesOf(activity.participants, function (err1, addonLines) {
+    managementService.addonLinesOf(participants, function (err1, addonLines) {
       if (err1) { return next(err1); }
       res.render('reception', {
         addonLines: addonLineUtilities.groupAndSortAddonlines(addonLines)
