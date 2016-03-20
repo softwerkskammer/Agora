@@ -101,7 +101,7 @@ app.post('/submit', function (req, res, next) {
 });
 
 app.get('/checkurl', function (req, res) {
-  misc.validate(req.query.url, req.query.previousUrl, _.partial(activitiesService.isValidUrl, reservedURLs), res.end);
+  misc.validate(req.query.url, req.query.previousUrl, _.partial(eventstoreService.isValidUrl, reservedURLs), res.end);
 });
 
 // for management tables:
