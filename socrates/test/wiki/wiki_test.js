@@ -7,7 +7,7 @@ var expect = require('must-dist');
 var conf = require('../../testutil/configureForTest');
 var beans = conf.get('beans');
 
-var socratesWikiService = beans.get('socratesWikiService');
+var activityParticipantService = beans.get('activityParticipantService');
 var Member = beans.get('member');
 var Participation = beans.get('socratesParticipation');
 
@@ -17,7 +17,7 @@ describe('SoCraTes wiki application', function () {
 
   beforeEach(function () {
 
-    sinon.stub(socratesWikiService, 'getParticipantsFor', function (year, callback) {
+    sinon.stub(activityParticipantService, 'getParticipantsFor', function (year, callback) {
       var member = new Member({id: 'userid', nickname: 'nick', firstname: 'first', lastname: 'last'});
       member.participation = new Participation({question1: 'Relation to SC'});
       callback(null, [member]);

@@ -7,7 +7,7 @@ var _ = require('lodash');
 
 var beans = require('../../testutil/configureForTest').get('beans');
 
-var socratesWikiService = beans.get('socratesWikiService');
+var activityParticipantService = beans.get('activityParticipantService');
 var activitystore = beans.get('activitystore');
 var SoCraTesActivity = beans.get('socratesActivity');
 var Member = beans.get('member');
@@ -55,7 +55,7 @@ describe('SoCraTes Wiki Service', function () {
     subscriber = new Subscriber({id: 'memberId'});
     subscriber.participationOf('2010').state.roommate = 'My buddy';
 
-    socratesWikiService.getParticipantsFor('2010', function (err, participants) {
+    activityParticipantService.getParticipantsFor('2010', function (err, participants) {
       expect(participants).to.have.length(1);
       expect(participants[0].participation.roommate()).to.be('My buddy');
       done(err);
@@ -70,7 +70,7 @@ describe('SoCraTes Wiki Service', function () {
     subscriber = new Subscriber({id: 'memberId'});
     subscriber.participationOf('2020').state.roommate = 'My buddy';
 
-    socratesWikiService.getParticipantsFor('2020', function (err, participants) {
+    activityParticipantService.getParticipantsFor('2020', function (err, participants) {
       expect(participants).to.have.length(1);
       expect(participants[0].participation.roommate()).to.be('My buddy');
       done(err);
