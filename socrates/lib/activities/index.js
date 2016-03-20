@@ -6,15 +6,16 @@ var _ = require('lodash');
 var beans = require('simple-configure').get('beans');
 var misc = beans.get('misc');
 var CONFLICTING_VERSIONS = beans.get('constants').CONFLICTING_VERSIONS;
-var activitiesService = beans.get('activitiesService');
 var socratesActivitiesService = beans.get('socratesActivitiesService');
-var activitystore = beans.get('activitystore');
 
-var Activity = beans.get('activity');
 var eventstoreService = beans.get('eventstoreService');
 var validation = beans.get('validation');
 var statusmessage = beans.get('statusmessage');
 var roomOptions = beans.get('roomOptions');
+
+var activitiesService = beans.get('activitiesService');  // for fetching the SoCraTes activity from SWK
+var Activity = beans.get('activity'); // for creating a new activity for SWK
+var activitystore = beans.get('activitystore'); // for storing the SoCraTes activity in SWK
 
 var reservedURLs = '^new$|^edit$|^submit$|^checkurl$\\+';
 
