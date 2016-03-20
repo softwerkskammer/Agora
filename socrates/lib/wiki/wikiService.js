@@ -31,20 +31,12 @@ module.exports = {
     if (year < 2016) {
       activitystore.getActivity('socrates-' + year, function (err, activity) {
         if (err || !activity) { return callback(err); }
-
-        getMembers(activity.allRegisteredMembers(), function (err1, participants) {
-          if (err1 || !participants) { return callback(err); }
-          callback(null, participants);
-        });
+        getMembers(activity.allRegisteredMembers(), callback);
       });
     } else {
       eventstoreService.getRegistrationReadModel('socrates-' + year, function (err, readModel) {
         if (err || !readModel) { return callback(err); }
-
-        getMembers(R.keys(readModel.participantsByMemberId()), function (err1, participants) {
-          if (err1 || !participants) { return callback(err); }
-          callback(null, participants);
-        });
+        getMembers(R.keys(readModel.participantsByMemberId()), callback);
       });
     }
   }
