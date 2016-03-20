@@ -24,7 +24,7 @@ function addMembersToGroup(group, callback) {
   if (!group) { return callback(null); }
   membersOfList(group.id, function (err, members) {
     if (err) { return callback(err); }
-    async.each(members, membersService.getImage, function () {
+    async.each(members, membersService.putAvatarIntoMemberAndSave, function () {
       group.members = members;
       group.membercount = members.length;
       callback(err, group);

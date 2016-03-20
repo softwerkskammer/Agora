@@ -155,15 +155,16 @@ app.get('/:nickname', function (req, res, next) {
         memberstore.getMemberForId(roommateId, function (err4, roommate) {
           var potentialRoommates = [];
           if (err4) { return next(err4); }
+
           if (registeredInRoomType && !roommate) {
             potentialRoommates = roomsReadModel.participantsWithoutRoomIn(registeredInRoomType);
             var index = potentialRoommates.indexOf(member.id());
             potentialRoommates.splice(index, 1);
           }
-          memberstore.getMembersForIds(potentialRoommates, function (err5, potentialRoommateMembers) {
-            if (err5) { return next(err5); }
-            async.each(potentialRoommateMembers, membersService.getImage, function (err6) {
-              if (err6) { return next(err6); }
+          memberstore.getMembersForIds(potentialRoommates, function (err4a, potentialRoommateMembers) {
+            if (err4a) { return next(err4a); }
+            async.each(potentialRoommateMembers, membersService.putAvatarIntoMemberAndSave, function (err5) {
+              if (err5) { return next(err5); }
               res.render('get', {
                 member: member,
                 roommate: roommate,

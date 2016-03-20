@@ -10,8 +10,6 @@ var avatarProvider = beans.get('avatarProvider');
 var fieldHelpers = beans.get('fieldHelpers');
 var galleryService = beans.get('galleryService');
 
-var regetInterval = 24 * 60 * 60 * 1000; // once a day
-
 function isReserved(nickname) {
   return new RegExp('^edit$|^new$|^checknickname$|^submit$|^administration$|^[.][.]$|^[.]$|\\+', 'i').test(nickname);
 }
@@ -40,11 +38,20 @@ function setCustomAvatarImageInMember(member, callback) {
     fs.readFile(result, function (err1, data) {
       member.setAvatarData({
         image: 'data:' + mimetypes.lookup(result) + ';base64,' + new Buffer(data).toString('base64'),
-        hasNoImage: false,
-        fetchTime: new Date().getTime()
+        hasNoImage: false
       });
       callback(err1);
     });
+  });
+}
+
+function updateImage(member, callback) { // to be called at regular intervals
+  if (member.hasCustomAvatar()) {
+    return callback();
+  }
+  avatarProvider.getImage(member, function (imageData) {
+    member.setAvatarData(imageData);
+    store.saveMember(member, callback); // never, ever "fork" stuff in node by not having return values *I AM IDIOT*
   });
 }
 
@@ -89,30 +96,12 @@ module.exports = {
     });
   },
 
-  getImage: function (member, callback) {
-    if (member.hasCustomAvatar()) {
-      if (member.hasImage()) { return callback(); }
-      return setCustomAvatarImageInMember(member, function () {
-        store.saveMember(member, callback);
-      });
-    }
-    if (!member.getAvatarData()) {
-      avatarProvider.getImage(member, function (imageData) {
-        member.setAvatarData(imageData);
-        store.saveMember(member, callback);
-      });
-    } else {
-      var now = new Date().getTime();
-      if (member.getAvatarData().fetchTime && now - member.getAvatarData().fetchTime > regetInterval) {
-        avatarProvider.getImage(member, function (imageData) {
-          member.setAvatarData(imageData);
-          return store.saveMember(member, callback); // never, ever "fork" stuff in node by not having return values *I AM IDIOT*
-        });
-      } else {
-        callback();
-      }
-    }
+  putAvatarIntoMemberAndSave: function (member, callback) {
+    if (member.getAvatarData()) { return callback(); }
+    updateImage(member, callback);
   },
+
+  updateImage: updateImage,
 
   toWordList: function (members) {
     return wordList(members, function (each) { return each.toUpperCase(); })
@@ -167,8 +156,6 @@ module.exports = {
     });
   },
 
-  isReserved: isReserved,
-
-  regetInterval: regetInterval
+  isReserved: isReserved
 };
 

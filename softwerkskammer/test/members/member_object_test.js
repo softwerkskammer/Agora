@@ -260,14 +260,14 @@ describe('avatar handling', function () {
 
   it('saves miniicon from gravatar', function () {
     var member = new Member();
-    var gravatarIcon = {image: null, hasNoImage: true, fetchTime: new Date().getTime()};
+    var gravatarIcon = {image: null, hasNoImage: true};
     member.setAvatarData(gravatarIcon);
 
     expect(member.state.avatardata).to.be(gravatarIcon);
   });
 
   it('sets avatar miniicon on load if available', function () {
-    var gravatarIcon = {image: 'theImage', hasNoImage: false, fetchTime: new Date().getTime()};
+    var gravatarIcon = {image: 'theImage', hasNoImage: false};
     var member = new Member({avatardata: gravatarIcon});
 
     expect(member.state.avatardata).to.be(gravatarIcon);

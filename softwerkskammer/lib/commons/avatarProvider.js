@@ -13,7 +13,7 @@ function imageDataFromGravatar(url, callback) {
       return callback();
     }
     var image = 'data:' + response.headers['content-type'] + ';base64,' + new Buffer(body).toString('base64');
-    var data = {image: image, hasNoImage: body.length < 100, fetchTime: new Date().getTime()};
+    var data = {image: image, hasNoImage: body.length < 100};
     callback(data);
   });
 }

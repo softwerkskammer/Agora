@@ -52,7 +52,7 @@ describe('Groups application', function () {
       ]);
     });
 
-    sinon.stub(membersService, 'getImage', function (member, callback) {
+    sinon.stub(membersService, 'putAvatarIntoMemberAndSave', function (member, callback) {
       callback();
     });
 

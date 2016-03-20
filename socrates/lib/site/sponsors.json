@@ -19,10 +19,20 @@
     "url": "http://dreamit.de",
     "logo": "dreamit160.png"
   },
+  {
+    "name": "Holisticon AG",
+    "url": "http://www.holisticon.de",
+    "logo": "holisticon160.png"
+  },
   { 
     "name": "msgGillardon AG",
     "url": "http://www.msg-gillardon.de",
     "logo": "msgGillardon160.png"
+  },
+  {
+    "name": "oose. Innovative Informatik eG",
+    "url": "http://www.oose.de",
+    "logo": "oose160.png"
   },
   {
     "name": "Zweitag GmbH",
