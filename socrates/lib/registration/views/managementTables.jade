@@ -349,7 +349,7 @@ block content
                     td #{line.addon.remarks()}
           hr
         .tab-pane#unsubscribed
-          h4 Zahlungs-Information von Abgemeldeten
+          h4 Abgemeldete
           .panel
             table.table.table-condensed.table-hover.table-striped.unsortedtable
               thead
@@ -357,10 +357,8 @@ block content
                   th Nickname
                   th Vorname
                   th Nachname
-                  th Zahlungseingang
               tbody
                 for line in addonLinesOfUnsubscribedMembers
-                  -var payment = line.participation.payment()
                   tr
                     if line.member
                       td: +linkedMember(line.member.nickname())
@@ -370,7 +368,6 @@ block content
                       td gelöscht
                       td &nbsp;
                       td &nbsp;
-                    td #{payment.paymentReceivedMoment() && payment.paymentReceivedMoment().locale('de').format('L')}
           hr
         .tab-pane#addresses
           h4 Adressen der Teilnehmer
