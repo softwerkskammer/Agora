@@ -9,7 +9,6 @@
   "socratesSubscribersApp": {"module": "./socrates/lib/subscribers"},
   "socratesWikiApp": {"module": "./socrates/lib/wiki"},
 
-
   "socratesActivitiesService": {"module": "./socrates/lib/activities/socratesActivitiesService"},
   "socratesMembersService": {"module": "./socrates/lib/members/socratesMembersService"},
   "socratesWikiService": {"module": "./socrates/lib/wiki/wikiService"},
@@ -19,11 +18,6 @@
   "nametagService": {"module": "./socrates/lib/registration/nametagService"},
   "roomOptions": {"module": "./socrates/lib/activities/roomOptions"},
   "socratesMailsenderService": {"module": "./socrates/lib/mailsender/socratesMailsenderService"},
-
-  "subscriberstore": {"module": "./socrates/lib/subscribers/subscriberstore"},
-
-  "eventstoreService": {"module": "./socrates/lib/eventstore/eventstoreService"},
-  "eventstore": {"module": "./socrates/lib/eventstore/eventstore"},
 
   "RoomsCommandProcessor": {"module": "./socrates/lib/eventstore/RoomsCommandProcessor"},
   "RoomsWriteModel": {"module": "./socrates/lib/eventstore/RoomsWriteModel"},
@@ -35,6 +29,8 @@
   "SoCraTesReadModel": {"module": "./socrates/lib/eventstore/SoCraTesReadModel"},
   "SoCraTesWriteModel": {"module": "./socrates/lib/eventstore/SoCraTesWriteModel"},
   "GlobalEventStore": {"module": "./socrates/lib/eventstore/GlobalEventStore"},
+  "eventstoreService": {"module": "./socrates/lib/eventstore/eventstoreService"},
+  "eventstore": {"module": "./socrates/lib/eventstore/eventstore"},
   "eventstorePersistence": {
     "module": "./softwerkskammer/lib/persistence/persistence",
     "constructorArgs": { "collectionName": "eventstore" }
@@ -45,6 +41,7 @@
   "socratesAddon": {"module": "./socrates/lib/subscribers/addon"},
   "socratesAddonLineUtilities": {"module": "./socrates/lib/subscribers/addonLineUtilities"},
   "socratesParticipation": {"module": "./socrates/lib/subscribers/participation"},
+  "subscriberstore": {"module": "./socrates/lib/subscribers/subscriberstore"},
   "subscriber": {"module": "./socrates/lib/subscribers/subscriber"},
 
   "accessrights": {"module": "./socrates/lib/middleware/accessrights"},
@@ -58,8 +55,9 @@
   "secureSoCraTesAdminOnly": {"module": "./socrates/lib/middleware/secureSoCraTesAdminOnly"},
   "socratesWikiSubdirs": {"module": "./socrates/lib/middleware/wikiSubdirs"},
   "socratesNotifications": {"module": "./socrates/lib/notifications"},
-  "socratesResource": {"module": "./socrates/lib/activities/socratesResource"},
-  "socratesActivityExtended": {"module": "./socrates/lib/activities/socratesActivityExtended"},
   "memberSubmitHelper": {"module": "./socrates/lib/members/memberSubmitHelper"},
-  "socratesConstants": {"module": "./socrates/lib/activities/socratesConstants"}
+  "socratesConstants": {"module": "./socrates/lib/activities/socratesConstants"},
+
+  "socratesResource": {"module": "./socrates/lib/activities/socratesResource"},
+  "socratesActivityExtended": {"module": "./socrates/lib/activities/socratesActivityExtended"}
 }
