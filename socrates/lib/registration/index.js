@@ -308,7 +308,6 @@ app.get('/hotelInfo', function (req, res, next) {
 
   eventstoreService.getRoomsReadModel(currentUrl, function (err0, roomsReadModel) {
     if (err0 || !roomsReadModel) { return next(err0); }
-
     activitiesService.getActivityWithGroupAndParticipants(currentUrl, function (err, activity) {
       if (err) { return next(err); }
       managementService.addonLinesOf(activity.participants, function (err1, addonLines) {
@@ -350,11 +349,11 @@ app.get('/nametags.tex', function (req, res, next) {
     return res.redirect('/registration');
   }
 
-  activitiesService.getActivityWithGroupAndParticipants(currentUrl, function (err, activity) {
+  activityParticipantService.getParticipantsFor(currentYear, function (err, participants) {
     if (err) { return next(err); }
     res.type('text/plain; charset=utf-8');
     res.header('Content-Disposition', 'attachment; filename=nametags.tex');
-    res.send(nametagService.nametagsFor(activity.participants));
+    res.send(nametagService.nametagsFor(participants));
   });
 });
 
