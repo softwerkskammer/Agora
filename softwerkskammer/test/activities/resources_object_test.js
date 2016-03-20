@@ -7,7 +7,6 @@ var moment = require('moment-timezone');
 var beans = require('simple-configure').get('beans');
 
 var Resources = beans.get('resources');
-var Member = beans.get('member');
 
 describe('Resources (fillFromUI)', function () {
   describe('adding / removing children', function () {
@@ -203,50 +202,4 @@ describe('Resources (fillFromUI)', function () {
   });
 
 
-  describe('- registration offset -', function () {
-    var resources;
-    beforeEach(function () {
-      resources = new Resources({resource1: { _registrationOpen: true }, resource2: { _registrationOpen: true }});
-    });
-
-    var today = moment();
-    var twoDaysAgo = today.subtract(2, 'days');
-    var fiveDaysAgo = today.subtract(5, 'days');
-    var member = new Member({id: '12345'});
-
-    it('is not too far in the past', function () {
-      resources.named('resource1').addMemberId('12345', twoDaysAgo);
-
-      expect(resources.memberIsRegisteredForMoreDaysThan(8, member)).to.be(false);
-    });
-    it('is not too far in the past for two resources', function () {
-      resources.named('resource1').addMemberId('12345', twoDaysAgo);
-      resources.named('resource2').addMemberId('12345', fiveDaysAgo);
-
-      expect(resources.memberIsRegisteredForMoreDaysThan(8, member)).to.be(false);
-    });
-    it('is too far in the past', function () {
-      resources.named('resource1').addMemberId('12345', twoDaysAgo);
-
-      expect(resources.memberIsRegisteredForMoreDaysThan(1, member)).to.be(true);
-    });
-    it('is too far in the past for two resources', function () {
-      resources.named('resource1').addMemberId('12345', twoDaysAgo);
-      resources.named('resource2').addMemberId('12345', fiveDaysAgo);
-
-      expect(resources.memberIsRegisteredForMoreDaysThan(1, member)).to.be(true);
-    });
-    it('is too far in the past for one of two resources (direction 1)', function () {
-      resources.named('resource1').addMemberId('12345', twoDaysAgo);
-      resources.named('resource2').addMemberId('12345', fiveDaysAgo);
-
-      expect(resources.memberIsRegisteredForMoreDaysThan(3, member)).to.be(true);
-    });
-    it('is too far in the past for one of two resources (direction 2)', function () {
-      resources.named('resource1').addMemberId('12345', fiveDaysAgo);
-      resources.named('resource2').addMemberId('12345', twoDaysAgo);
-
-      expect(resources.memberIsRegisteredForMoreDaysThan(3, member)).to.be(true);
-    });
-  });
 });
