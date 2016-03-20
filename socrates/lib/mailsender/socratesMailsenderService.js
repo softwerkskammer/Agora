@@ -7,6 +7,7 @@ var conf = require('simple-configure');
 var beans = conf.get('beans');
 var memberstore = beans.get('memberstore');
 var subscriberstore = beans.get('subscriberstore');
+var activityParticipantService = beans.get('activityParticipantService');
 var statusmessage = beans.get('statusmessage');
 var logger = require('winston').loggers.get('application');
 
@@ -45,6 +46,15 @@ module.exports = {
         sendMail(message, type, globalCallback);
       });
 
+    });
+  },
+
+  sendMailToParticipantsOf: function (year, message, callback) {
+    var type = '$t(mailsender.reminder)';
+    return activityParticipantService.getParticipantsFor(year, function (err, participants) {
+      if (err) { return callback(err, statusmessageForError(type, err)); }
+      message.setBccToMemberAddresses(participants);
+      sendMail(message, type, callback);
     });
   }
 

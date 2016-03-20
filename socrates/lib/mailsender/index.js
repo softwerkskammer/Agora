@@ -9,7 +9,7 @@ var statusmessage = beans.get('statusmessage');
 var mailsenderService = beans.get('mailsenderService');
 var socratesMailsenderService = beans.get('socratesMailsenderService');
 var Message = beans.get('message');
-var currentUrl = beans.get('socratesConstants').currentUrl;
+var currentYear = beans.get('socratesConstants').currentYear;
 
 var app = misc.expressAppIn(__dirname);
 
@@ -30,7 +30,7 @@ function messageSubmitted(req, res, next) {
   }
 
   if (req.body.massMailing === 'participants') {
-    return mailsenderService.sendMailToParticipantsOf(currentUrl, message, processResult);
+    return socratesMailsenderService.sendMailToParticipantsOf(currentYear, message, processResult);
   }
   if (req.body.massMailing === 'subscribers') {
     return socratesMailsenderService.sendMailToAllSubscribers(message, processResult);
