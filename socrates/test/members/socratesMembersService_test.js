@@ -7,6 +7,9 @@ var expect = require('must-dist');
 var beans = require('../../testutil/configureForTest').get('beans');
 
 var socratesMembersService = beans.get('socratesMembersService');
+var events = beans.get('events');
+var eventstore = beans.get('eventstore');
+var GlobalEventStore = beans.get('GlobalEventStore');
 var activitystore = beans.get('activitystore');
 var Member = beans.get('member');
 var Subscriber = beans.get('subscriber');
@@ -14,15 +17,12 @@ var Subscriber = beans.get('subscriber');
 var memberstore = beans.get('memberstore');
 var notifications = beans.get('socratesNotifications');
 
-var eventstore = beans.get('eventstore');
-var GlobalEventStore = beans.get('GlobalEventStore');
-
 describe('SoCraTes Members Service', function () {
 
-  var eventStore;
+  var globalEventStore;
 
   beforeEach(function () {
-    eventStore = new GlobalEventStore();
+    globalEventStore = new GlobalEventStore();
 
     sinon.stub(notifications, 'newParticipant');
     sinon.stub(notifications, 'changedDuration');
@@ -38,7 +38,7 @@ describe('SoCraTes Members Service', function () {
     });
 
     sinon.stub(eventstore, 'getEventStore', function (url, callback) {
-      callback(null, eventStore);
+      callback(null, globalEventStore);
     });
     sinon.stub(eventstore, 'saveEventStore', function (store, callback) { callback(); });
   });
@@ -48,7 +48,7 @@ describe('SoCraTes Members Service', function () {
   });
 
   describe('checking participation of a subscriber', function () {
-    it('tells that a subscriber participated in a previous SoCraTes', function (done) {
+    it('tells that a subscriber participated in an old SoCraTes', function (done) {
       sinon.stub(activitystore, 'activitiesForGroupIdsAndRegisteredMemberId', function (groups, memberId, upcoming, callback) {
         if (upcoming) { return callback(null, []); }
         callback(null, [{state: {isSoCraTes: true}}, {state: {isSoCraTes: false}}]);
@@ -60,11 +60,13 @@ describe('SoCraTes Members Service', function () {
       });
     });
 
-    it('tells that a subscriber will participate in an upcoming SoCraTes', function (done) {
+    it('tells that a subscriber will participate or participated in a new eventsourced SoCraTes', function (done) {
       sinon.stub(activitystore, 'activitiesForGroupIdsAndRegisteredMemberId', function (groups, memberId, upcoming, callback) {
-        if (!upcoming) { return callback(null, []); }
-        callback(null, [{state: {isSoCraTes: true}}, {state: {isSoCraTes: false}}]);
+        return callback(null, []);
       });
+      globalEventStore.state.registrationEvents = [
+        events.participantWasRegistered('single', 3, 'sessionId', 'memberId')
+      ];
 
       socratesMembersService.participationStatus(new Subscriber({id: 'memberId'}), function (err, result) {
         expect(result).to.be.true();
