@@ -35,7 +35,7 @@ function activitySubmitted(req, res, next) {
 
       // update the activity because we need it for the display in the SWK calendar
       // TODO SWK must not create activities whose URLs start with 'socrates-'!
-      activitiesService.getActivityWithGroupAndParticipants(req.body.previousUrl, function (err2, activity) {
+      activitiesService.getActivityWithGroupAndParticipants(req.body.previousUrl, function (err2, activity) { // here we need a real activity
         if (err2) { return next(err2); }
         if (!activity) { activity = new Activity({owner: req.user.member.id()}); }
         req.body.isSoCraTes = true; // mark activity as SoCraTes activity (important for SWK)
