@@ -2,8 +2,9 @@
 
 var _ = require('lodash');
 
+var thursdayEvening = 7;
 var dinner = 13;
-var day = 43; // adapt this line to the actual day fare as reduced by sponsoring
+var day = 37; // adapt this line to the actual day fare as reduced by sponsoring
 
 var rooms = [
   {id: 'single', name: 'Single', display: 'single room', price: 70 + dinner},
@@ -22,10 +23,10 @@ module.exports = {
       return {
         id: room.id,
         name: room.name,
-        two: 2 * room.price + 2 * day,
-        three: 3 * room.price + 2 * day,
-        threePlus: 3 * room.price + 3 * day,
-        four: 4 * room.price + 3 * day,
+        two: 2 * room.price + 2 * day + thursdayEvening,
+        three: 3 * room.price + 2 * day + thursdayEvening,
+        threePlus: 3 * room.price + 3 * day + thursdayEvening,
+        four: 4 * room.price + 3 * day + thursdayEvening,
         displayRegistrationCheckboxes: (registrationReadModel.isAlreadyRegistered(memberId) || !isRegistrationOpen || !registrationReadModel.isFull(room.id)),
         displayWaitinglistCheckbox: true // TODO remove altogether
       };
