@@ -2,7 +2,6 @@
 
 var async = require('async');
 var _ = require('lodash');
-var moment = require('moment-timezone');
 
 var beans = require('simple-configure').get('beans');
 var misc = beans.get('misc');
@@ -105,13 +104,6 @@ app.get('/checkurl', function (req, res) {
 });
 
 // for management tables:
-
-app.get('/paymentReceived/:nickname', function (req, res) {
-  socratesActivitiesService.submitPaymentReceived(req.params.nickname, function (err) {
-    if (err) { return res.send('Error: ' + err); }
-    res.send(moment().locale('de').format('L'));
-  });
-});
 
 app.get('/fromWaitinglistToParticipant/:resourceName/:nickname', function (req, res) {
   var duration = 2;
