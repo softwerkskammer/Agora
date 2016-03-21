@@ -124,7 +124,7 @@ mixin removeWaitinglistMemberWithModal(resourceName, waitinglistNick)
 block scripts
   +dataTableImport
   +ajaxFunction
-  +dataTable('.addontable', '[ 4, "asc" ]', '[{targets: [0,8,9,10], type: "date-eu"}]')
+  +dataTable('.addontable', '[ 4, "asc" ]', '[{targets: [0], type: "date-eu"}]')
   +dataTable('.membertable', '[ 0, "asc" ]', '[{targets: 0, type: "date-eu"}]')
   +dataTable('.unsortedtable', '[]', '[]')
   +dataTable('.addressestable', '[ 1, "asc" ]', '[]')
@@ -275,8 +275,9 @@ block content
               tbody
                 for line in addonLines
                   tr
-                    td #{formatList(formatDates(activity.resources().registrationDatesOf(line.member.id())))}
-                    td #{formatList(activity.resources().resourceNamesOf(line.member.id()))}
+                    -var event = registrationReadModel.participantEventFor(line.member.id())
+                    td #{formatDate(event.timestamp)}
+                    td #{event.roomType}
                     td: +linkedMember(line.member.nickname())
                     td #{line.member.firstname()}
                     td #{line.member.lastname()}
