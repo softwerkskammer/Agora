@@ -129,12 +129,12 @@ block scripts
   +dataTable('.unsortedtable', '[]', '[]')
   +dataTable('.addressestable', '[ 1, "asc" ]', '[]')
 block title
-  | #{activity.title()} - Verwaltung
+  | #{title} - Verwaltung
 block content
   .row
     .col-md-12
       .page-header
-        h2 #{activity.title()} - Verwaltung
+        h2 #{title} - Verwaltung
           a.btn.pull-right.btn-default(href='/registration') Zurück
     ul.nav.nav-tabs
       li: a(href='#overview', data-toggle='tab') Übersicht
@@ -163,17 +163,17 @@ block content
                   th Freie Plätze
                   th Wartende
               tbody
-                for resourceName in activity.resourceNames()
+                for resourceName in roomOptionIds
                   -var participants = activity.participantsOf(resourceName).length
-                  -var resource = activity.socratesResourceNamed(resourceName)
+                  -var quota = socratesReadModel.quotaFor(resourceName)
                   -var waitingMembers = activity.waitinglistMembers[resourceName].length
-                  -var freeSpots = resource.limit() ? resource.limit() - participants : undefined
+                  -var freeSpots = quota ? quota - participants : undefined
                   -totalParticipants += participants
                   -totalFreeSpots = freeSpots ? totalFreeSpots + freeSpots : totalFreeSpots
                   -totalWaitingMembers += waitingMembers
                   tr
                     td #{resourceName}
-                    td #{participants} von #{resource.limit() || 'unbegrenzt'}
+                    td #{participants} von #{quota || 'unbegrenzt'}
                     td #{freeSpots}
                     td #{waitingMembers}
                 tr
@@ -197,10 +197,11 @@ block content
                       td #{duration.count} (total: #{duration.total})
 
         .tab-pane#main
-          each resourceName in activity.resourceNames()
+          each resourceName in roomOptionIds
             -var participants = activity.participantsOf(resourceName)
             -var resource = activity.socratesResourceNamed(resourceName)
-            h4 #{resourceName} (#{participants.length} von #{resource.limit() || 'unbegrenzt'})
+            -var quota = socratesReadModel.quotaFor(resourceName)
+            h4 #{resourceName} (#{participants.length} von #{quota || 'unbegrenzt'})
             .panel
               table.table.table-condensed.table-hover.table-striped.membertable
                 thead
@@ -228,7 +229,7 @@ block content
                       td: +removeParticipantWithModal(resourceName, member.nickname())
             hr
         .tab-pane#waitinglist
-          each resourceName in activity.resourceNames()
+          each resourceName in roomOptionIds
             -var waitingMembers = activity.waitinglistMembers[resourceName]
             h4 #{resourceName} (#{waitingMembers.length})
             .panel
