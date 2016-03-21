@@ -139,8 +139,8 @@ block content
     ul.nav.nav-tabs
       li: a(href='#overview', data-toggle='tab') Übersicht
       li: a(href='#main', data-toggle='tab') Teilnehmer nach Zimmern
-      li: a(href='#waitinglist', data-toggle='tab') Wartelisten
-      li.active: a(href='#addons', data-toggle='tab') Teilnehmer gesamt
+      li: a(href='#waitinglist', data-toggle='tab') Warteliste
+      li.active: a(href='#addons', data-toggle='tab') Teilnehmer
       li: a(href='#bedroomPairing', data-toggle='tab') Zimmerzuordnungen
       li: a(href='#tshirtSizes', data-toggle='tab') T-Shirt-Bestellungen
       li: a(href='#remarks', data-toggle='tab') Zusatzinformationen
@@ -310,19 +310,25 @@ block content
           h4 Verteilungen der T-Shirt-Größen
           .panel
             -var totalShirtCount = 0
+            -var totalShirtCountPlusBuffer = 0
             table.table.table-condensed.table-hover.table-striped.unsortedtable
               thead
                 tr
                   th T-Shirt-Größe
                   th Anzahl
+                  th Anzahl + 10%
               tbody
                 for tshirtsize in tshirtsizes
-                  -totalShirtCount += tshirtsize.count
+                  -var count = tshirtsize.count
+                  -var countPlusBuffer = Math.ceil(tshirtsize.count * 1.1)
+                  -totalShirtCount += count
+                  -totalShirtCountPlusBuffer += countPlusBuffer
                   tr
                     td #{tshirtsize.size}
-                    td #{tshirtsize.count}
+                    td #{count}
+                    td #{countPlusBuffer}
             hr
-            p Gesamtzahl T-Shirts: #{totalShirtCount}
+            p Gesamtzahl T-Shirts: #{totalShirtCount} (Plus 10 %: #{totalShirtCountPlusBuffer})
           hr
         .tab-pane#remarks
           h4 Remarks
