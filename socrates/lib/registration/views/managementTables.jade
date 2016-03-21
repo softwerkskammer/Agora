@@ -166,7 +166,7 @@ block content
                 for resourceName in roomOptionIds
                   -var participants = registrationReadModel.participantCountFor(resourceName)
                   -var quota = socratesReadModel.quotaFor(resourceName)
-                  -var waitingMembers = activity.waitinglistMembers[resourceName].length
+                  -var waitingMembers = registrationReadModel.waitinglistParticipantCountFor(resourceName)
                   -var freeSpots = quota ? quota - participants : undefined
                   -totalParticipants += participants
                   -totalFreeSpots = freeSpots ? totalFreeSpots + freeSpots : totalFreeSpots
@@ -224,8 +224,8 @@ block content
                       td #{member.firstname()}
                       td #{member.lastname()}
                       td #{member.location()}
-                      td #{resource.durationFor(member.id())}
-                      td: +newDuration(resourceName, member.nickname(), resource.recordFor(member.id()).duration)
+                      td #{registrationReadModel.durationFor(member.id())}
+                      td: +newDuration(resourceName, member.nickname(), registrationReadModel.participantEventFor(member.id()).duration)
                       td: +newResource(resourceName, member.nickname())
                       td: +removeParticipantWithModal(resourceName, member.nickname())
             hr
@@ -385,7 +385,7 @@ block content
                     td #{line.member.email()}
                     td: +formatAsLines(line.addon.homeAddressLines())
                     td: +formatAsLines(line.addon.billingAddressLines())
-                    td #{formatList(activity.resources().resourceNamesOf(line.member.id()))}
+                    td #{registrationReadModel.participantEventFor(line.member.id()).roomType}
 
           h4 Adressen der Wartenden
           .panel
@@ -410,5 +410,5 @@ block content
                     td #{line.participation.roommate()}
                     td: +formatAsLines(line.addon.homeAddressLines())
                     td: +formatAsLines(line.addon.billingAddressLines())
-                    td #{formatList(activity.resources().resourceNamesOf(line.member.id()))}
+                    td #{formatList(registrationReadModel.waitinglistParticipantEventFor(line.member.id()).desiredRoomTypes)}
           hr

@@ -8,6 +8,7 @@ var beans = require('simple-configure').get('beans');
 var e = beans.get('eventConstants');
 var socratesConstants = beans.get('socratesConstants');
 var SoCraTesReadModel = beans.get('SoCraTesReadModel');
+var roomOptions = beans.get('roomOptions');
 
 function RegistrationReadModel(eventStore) {
   this._eventStore = eventStore;
@@ -73,6 +74,11 @@ RegistrationReadModel.prototype.participantEventFor = function (memberId) {
   return this.participantsByMemberId()[memberId];
 };
 
+// TODO hierhin?
+RegistrationReadModel.prototype.durationFor = function (memberId) {
+  return roomOptions.endOfStayFor(this.participantEventFor(memberId).duration);
+};
+
 RegistrationReadModel.prototype.isAlreadyRegistered = function (memberId) {
   return !!this.participantEventFor(memberId);
 };
@@ -128,6 +134,14 @@ RegistrationReadModel.prototype.waitinglistParticipantsByMemberId = function () 
     this._waitinglistParticipantsByMemberId = R.reduce(projectWaitinglistParticipantsByMemberId, {}, this._eventStore.registrationEvents());
   }
   return this._waitinglistParticipantsByMemberId;
+};
+
+RegistrationReadModel.prototype.allWaitinglistParticipantsIn = function (roomType) {
+  return R.keys(this.waitinglistParticipantsByMemberIdFor(roomType));
+};
+
+RegistrationReadModel.prototype.waitinglistParticipantCountFor = function (roomType) {
+  return this.allWaitinglistParticipantsIn(roomType).length;
 };
 
 RegistrationReadModel.prototype.waitinglistParticipantsByMemberIdFor = function (roomType) {

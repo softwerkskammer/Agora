@@ -28,10 +28,6 @@ SoCraTesResource.prototype.recordFor = function (memberId) {
   return _.find(this.state._registeredMembers, {memberId: memberId});
 };
 
-SoCraTesResource.prototype.durationFor = function (memberId) {
-  return roomOptions.endOfStayFor(this.recordFor(memberId).duration);
-};
-
 SoCraTesResource.prototype.duration = function (memberId) {
   return this.recordFor(memberId).duration;
 };
