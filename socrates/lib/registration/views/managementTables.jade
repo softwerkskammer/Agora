@@ -138,9 +138,9 @@ block content
           a.btn.pull-right.btn-default(href='/registration') Zurück
     ul.nav.nav-tabs
       li: a(href='#overview', data-toggle='tab') Übersicht
-      li: a(href='#main', data-toggle='tab') #{t('activities.participants')}
+      li: a(href='#main', data-toggle='tab') Teilnehmer nach Zimmern
       li: a(href='#waitinglist', data-toggle='tab') Wartelisten
-      li.active: a(href='#addons', data-toggle='tab') Zahlungen
+      li.active: a(href='#addons', data-toggle='tab') Teilnehmer gesamt
       li: a(href='#bedroomPairing', data-toggle='tab') Zimmerzuordnungen
       li: a(href='#tshirtSizes', data-toggle='tab') T-Shirt-Bestellungen
       li: a(href='#remarks', data-toggle='tab') Zusatzinformationen
@@ -256,7 +256,7 @@ block content
                       td: +removeWaitinglistMemberWithModal(resourceName, member.nickname())
             hr
         .tab-pane.active#addons
-          h4 Alle Teilnehmer mit Zahlungen
+          h4 Alle Teilnehmer
           .panel
             table.table.table-condensed.table-hover.table-striped.addontable
               thead
@@ -270,13 +270,9 @@ block content
                   th Ort/Region
                   th T-Shirt
                   th Zimmer mit
-                  th Überwiesen
-                  th Kreditkarte
-                  th Zahlungseingang
               tbody
                 for line in addonLines
                   tr
-                    -var payment = line.participation.payment()
                     td #{formatList(formatDates(activity.resources().registrationDatesOf(line.member.id())))}
                     td #{formatList(activity.resources().resourceNamesOf(line.member.id()))}
                     td: +linkedMember(line.member.nickname())
@@ -286,9 +282,6 @@ block content
                     td #{line.member.location()}
                     td #{line.addon.tShirtSize()}
                     td #{line.participation.roommate()}
-                    td: +localdate(payment.moneyTransferredMoment())
-                    td: +localdate(payment.creditCardPaidMoment())
-                    td: +buttonOrDate(payment.paymentReceivedMoment(), payment.paymentDone(), line.member.nickname())
 
         .tab-pane#bedroomPairing
           for resourceName in ['bed_in_double', 'bed_in_junior']
