@@ -5,7 +5,6 @@ var _ = require('lodash');
 var moment = require('moment-timezone');
 var beans = require('simple-configure').get('beans');
 var Resource = beans.get('resource');
-var roomOptions = beans.get('roomOptions');
 
 function removeExpiredReservations(registeredMembers) {
   _.remove(registeredMembers, function (record) {

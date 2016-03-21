@@ -230,32 +230,30 @@ block content
                       td: +removeParticipantWithModal(resourceName, member.nickname())
             hr
         .tab-pane#waitinglist
-          each resourceName in roomOptionIds
-            -var waitingMembers = activity.waitinglistMembers[resourceName]
-            h4 #{resourceName} (#{waitingMembers.length})
-            .panel
-              table.table.table-condensed.table-hover.table-striped.membertable
-                thead
+          h4 Wartende (#{waitinglistLines.length})
+          .panel
+            table.table.table-condensed.table-hover.table-striped.membertable
+              thead
+                tr
+                  th Eingetragen
+                  th Nickname
+                  th Vorname
+                  th Nachname
+                  th Ort/Region
+                  th Übernehmen
+                  th ändern in
+                  th entfernen
+              tbody
+                for line in waitinglistLines
                   tr
-                    th Eingetragen
-                    th Nickname
-                    th Vorname
-                    th Nachname
-                    th Ort/Region
-                    th Übernehmen
-                    th ändern in
-                    th entfernen
-                tbody
-                  for member in waitingMembers
-                    tr
-                      td #{member.addedToWaitinglistAt}
-                      td: +linkedMember(member.nickname())
-                      td #{member.firstname()}
-                      td #{member.lastname()}
-                      td #{member.location()}
-                      td: +fromWaitinglistToParticipant(resourceName, member.nickname())
-                      td: +newWaitinglist(resourceName, member.nickname())
-                      td: +removeWaitinglistMemberWithModal(resourceName, member.nickname())
+                    td #{formatDate(registrationReadModel.waitinglistParticipantEventFor(line.member.id()).timestamp)}
+                    td #{+linkedMember(line.member.nickname())}
+                    td #{line.member.firstname()}
+                    td #{line.member.lastname()}
+                    td #{line.member.location()}
+                    td: +fromWaitinglistToParticipant(resourceName, member.nickname())
+                    td: +newWaitinglist(resourceName, member.nickname())
+                    td: +removeWaitinglistMemberWithModal(resourceName, member.nickname())
             hr
         .tab-pane.active#addons
           h4 Alle Teilnehmer

@@ -324,7 +324,7 @@ app.get('/hotelInfo', function (req, res, next) {
     if (err0 || !roomsReadModel) { return next(err0); }
     activitiesService.getActivityWithGroupAndParticipants(currentUrl, function (err, activity) {
       if (err) { return next(err); }
-      managementService.addonLinesOf(participants, function (err1, addonLines) {
+      managementService.addonLinesOf(activity.participants, function (err1, addonLines) {
         if (err1) { return next(err1); }
         subscriberService.getMembersAndSubscribersForIds(roomsReadModel.participantsWithoutRoomIn('bed_in_double'), function (errA, unpairedDoubleParticipants) {
           if (errA) { return next(errA); }
