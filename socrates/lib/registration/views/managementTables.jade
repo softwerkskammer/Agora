@@ -164,7 +164,7 @@ block content
                   th Wartende
               tbody
                 for resourceName in roomOptionIds
-                  -var participants = activity.participantsOf(resourceName).length
+                  -var participants = registrationReadModel.participantCountFor(resourceName)
                   -var quota = socratesReadModel.quotaFor(resourceName)
                   -var waitingMembers = activity.waitinglistMembers[resourceName].length
                   -var freeSpots = quota ? quota - participants : undefined
@@ -199,9 +199,10 @@ block content
         .tab-pane#main
           each resourceName in roomOptionIds
             -var participants = activity.participantsOf(resourceName)
+            -var participantCount = registrationReadModel.participantCountFor(resourceName)
             -var resource = activity.socratesResourceNamed(resourceName)
             -var quota = socratesReadModel.quotaFor(resourceName)
-            h4 #{resourceName} (#{participants.length} von #{quota || 'unbegrenzt'})
+            h4 #{resourceName} (#{participantCount} von #{quota || 'unbegrenzt'})
             .panel
               table.table.table-condensed.table-hover.table-striped.membertable
                 thead

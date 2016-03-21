@@ -65,6 +65,10 @@ RegistrationReadModel.prototype.participantsByMemberIdFor = function (roomType) 
   return R.filter(function (event) { return event.roomType === roomType; }, this.participantsByMemberId());
 };
 
+RegistrationReadModel.prototype.participantCountFor = function (roomType) {
+  return this.allParticipantsIn(roomType).length;
+};
+
 RegistrationReadModel.prototype.participantEventFor = function (memberId) {
   return this.participantsByMemberId()[memberId];
 };
