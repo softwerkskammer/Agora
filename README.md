@@ -169,10 +169,18 @@ Running the server
 * If your installation is fresh or you changed anything:
    * Run `npm test` (this creates the CSS files and other static contents and performs jshint checking)
 
-* Run `npm start`
+Now you can decide which app you want to start:
 
-* You can now access the application by entering [http://localhost:17124](http://localhost:17124) in your browser
-  * The port `17124` is the default and can be changed via the command line option `--port` or via the environment option 'port' to any desired value
+* Start softwerkskammer
+    * `node start-softwerkskammer` - will start the server
+    * Now go to your local machine, open a browser and use `http://localhost:17124`
+
+* Start socrates
+    * `./build-socrates.sh` in order to build some css, js etc.
+    * `node start-socrates`- will start the server
+    * Now go to your local machine, open a browser and use `http://localhost:17224`
+
+* The ports `17124` and `17224` are the default and can be changed via the command line option `--port` or via the environment option 'port' to any desired value
 * If your installation is fresh, you should create an account for yourself by registering.
   * The default setup assumes you are running on localhost for authentication. If you are using a different hostname, you have to edit the configuration file `config/example-server-config.json`. Follow the instructions in there.
 
