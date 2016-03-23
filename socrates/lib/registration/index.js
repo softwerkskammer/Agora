@@ -322,32 +322,36 @@ app.get('/hotelInfo', function (req, res, next) {
 
   eventstoreService.getRoomsReadModel(currentUrl, function (err0, roomsReadModel) {
     if (err0 || !roomsReadModel) { return next(err0); }
-    activitiesService.getActivityWithGroupAndParticipants(currentUrl, function (err, activity) {
-      if (err) { return next(err); }
-      managementService.addonLinesOf(activity.participants, function (err1, addonLines) {
-        if (err1) { return next(err1); }
-        subscriberService.getMembersAndSubscribersForIds(roomsReadModel.participantsWithoutRoomIn('bed_in_double'), function (errA, unpairedDoubleParticipants) {
-          if (errA) { return next(errA); }
-          subscriberService.getMembersAndSubscribersForIds(roomsReadModel.participantsWithoutRoomIn('bed_in_junior'), function (errB, unpairedJuniorParticipants) {
-            if (errB) { return next(errB); }
-            subscriberService.getMembersAndSubscribersForIds(roomsReadModel.participantsInRoom('bed_in_double'), function (errC, pairedDoubleParticipants) {
-              if (errC) { return next(errC); }
-              subscriberService.getMembersAndSubscribersForIds(roomsReadModel.participantsInRoom('bed_in_junior'), function (errD, pairedJuniorParticipants) {
-                if (errD) { return next(errD); }
+    eventstoreService.getRegistrationReadModel(currentUrl, function (err00, registrationReadModel) {
+      if (err00 || !registrationReadModel) { return next(err00); }
+      activitiesService.getActivityWithGroupAndParticipants(currentUrl, function (err, activity) {
+        if (err) { return next(err); }
+        managementService.addonLinesOf(activity.participants, function (err1, addonLines) {
+          if (err1) { return next(err1); }
+          subscriberService.getMembersAndSubscribersForIds(roomsReadModel.participantsWithoutRoomIn('bed_in_double'), function (errA, unpairedDoubleParticipants) {
+            if (errA) { return next(errA); }
+            subscriberService.getMembersAndSubscribersForIds(roomsReadModel.participantsWithoutRoomIn('bed_in_junior'), function (errB, unpairedJuniorParticipants) {
+              if (errB) { return next(errB); }
+              subscriberService.getMembersAndSubscribersForIds(roomsReadModel.participantsInRoom('bed_in_double'), function (errC, pairedDoubleParticipants) {
+                if (errC) { return next(errC); }
+                subscriberService.getMembersAndSubscribersForIds(roomsReadModel.participantsInRoom('bed_in_junior'), function (errD, pairedJuniorParticipants) {
+                  if (errD) { return next(errD); }
 
-                res.render('hotelInfoTables', {
-                  activity: activity,
-                  addonLines: addonLines,
-                  rooms: {
-                    bed_in_double: {
-                      unpairedParticipants: unpairedDoubleParticipants,
-                      roomPairs: roomsReadModel.roomPairsWithFullMembersFrom('bed_in_double', pairedDoubleParticipants)
-                    },
-                    bed_in_junior: {
-                      unpairedParticipants: unpairedJuniorParticipants,
-                      roomPairs: roomsReadModel.roomPairsWithFullMembersFrom('bed_in_junior', pairedJuniorParticipants)
+                  res.render('hotelInfoTables', {
+                    activity: activity,
+                    registrationReadModel: registrationReadModel,
+                    addonLines: addonLines,
+                    rooms: {
+                      bed_in_double: {
+                        unpairedParticipants: unpairedDoubleParticipants,
+                        roomPairs: roomsReadModel.roomPairsWithFullMembersFrom('bed_in_double', pairedDoubleParticipants)
+                      },
+                      bed_in_junior: {
+                        unpairedParticipants: unpairedJuniorParticipants,
+                        roomPairs: roomsReadModel.roomPairsWithFullMembersFrom('bed_in_junior', pairedJuniorParticipants)
+                      }
                     }
-                  }
+                  });
                 });
               });
             });

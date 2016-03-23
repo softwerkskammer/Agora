@@ -200,7 +200,6 @@ block content
           each resourceName in roomOptionIds
             -var participants = activity.participantsOf(resourceName)
             -var participantCount = registrationReadModel.participantCountFor(resourceName)
-            -var resource = activity.socratesResourceNamed(resourceName)
             -var quota = socratesReadModel.quotaFor(resourceName)
             h4 #{resourceName} (#{participantCount} von #{quota || 'unbegrenzt'})
             .panel
