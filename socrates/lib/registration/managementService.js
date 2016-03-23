@@ -5,7 +5,6 @@ var _ = require('lodash');
 var async = require('async');
 
 var subscriberstore = beans.get('subscriberstore');
-var roomOptions = beans.get('roomOptions');
 
 module.exports = {
 
