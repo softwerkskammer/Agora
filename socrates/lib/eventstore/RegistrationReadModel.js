@@ -81,20 +81,13 @@ RegistrationReadModel.prototype.durationFor = function (memberId) {
 
 RegistrationReadModel.prototype.durations = function () {
 
-  var countsPerDuration = R.pipe(
+  return R.pipe(
     R.values, // only the events
     R.pluck('duration'), // pull out each duration
     R.groupBy(R.identity), // group same durations
-    R.map(R.length) // take the number of durations
+    R.mapObjIndexed(function (value, key) { return {count: value.length, duration: roomOptions.endOfStayFor(key)}; })
   )(this.participantsByMemberId());
 
-  var durations = {};
-
-  R.forEach(function (duration) {
-    durations[duration] = {count: countsPerDuration[duration], duration: roomOptions.endOfStayFor(duration)};
-  }, R.keys(countsPerDuration));
-
-  return durations;
 };
 
 RegistrationReadModel.prototype.isAlreadyRegistered = function (memberId) {
