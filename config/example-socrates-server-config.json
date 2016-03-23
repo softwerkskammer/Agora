@@ -1,4 +1,4 @@
-// to use these values, strip "example-socrates-" from the filename, delete this comment and replace the below values
+// to use these values, strip "example-" from the filename, delete this comment and replace the below values
 {
   "publicUrlPrefix": "http://localhost:17224",
   "secret": "secret",
