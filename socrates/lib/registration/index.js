@@ -284,7 +284,7 @@ app.get('/management', function (req, res, next) {
                                   waitinglistLines: waitinglistLines,
                                   addonLinesOfUnsubscribedMembers: addonLinesOfExParticipants,
                                   tshirtsizes: managementService.tshirtSizes(addonLines),
-                                  durations: managementService.durations(activity),
+                                  durations: managementService.durations(registrationReadModel),
                                   rooms: {
                                     bed_in_double: {
                                       unpairedParticipants: unpairedDoubleParticipants,

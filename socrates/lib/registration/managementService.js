@@ -43,18 +43,8 @@ module.exports = {
     return sizes;
   },
 
-  durations: function (activity) {
-    var durations = {};
-    _.each(activity.resourceNames(), function (resourceName) {
-      _.each(activity.socratesResourceNamed(resourceName).durations(), function (duration) {
-        var currentCount = durations[duration];
-        if (currentCount) {
-          durations[duration].count = currentCount.count + 1;
-        } else {
-          durations[duration] = {count: 1, duration: roomOptions.endOfStayFor(duration)};
-        }
-      });
-    });
+  durations: function (registrationReadModel) {
+    var durations = registrationReadModel.durations();
 
     function count(index) { return durations[index] ? durations[index].count : 0; }
 

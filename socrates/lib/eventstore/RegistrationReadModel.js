@@ -79,6 +79,24 @@ RegistrationReadModel.prototype.durationFor = function (memberId) {
   return roomOptions.endOfStayFor(this.participantEventFor(memberId).duration);
 };
 
+RegistrationReadModel.prototype.durations = function () {
+
+  var countsPerDuration = R.pipe(
+    R.values, // only the events
+    R.pluck('duration'), // pull out each duration
+    R.groupBy(R.identity), // group same durations
+    R.map(R.length) // take the number of durations
+  )(this.participantsByMemberId());
+
+  var durations = {};
+
+  R.forEach(function (duration) {
+    durations[duration] = {count: countsPerDuration[duration], duration: roomOptions.endOfStayFor(duration)};
+  }, R.keys(countsPerDuration));
+
+  return durations;
+};
+
 RegistrationReadModel.prototype.isAlreadyRegistered = function (memberId) {
   return !!this.participantEventFor(memberId);
 };

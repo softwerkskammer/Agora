@@ -31,11 +31,4 @@ SoCraTesResource.prototype.duration = function (memberId) {
   return this.recordFor(memberId).duration;
 };
 
-SoCraTesResource.prototype.durations = function () {
-  if (!this.state._registeredMembers) {
-    this.state._registeredMembers = [];
-  }
-  return _.pluck(this.state._registeredMembers, 'duration');
-};
-
 module.exports = SoCraTesResource;
