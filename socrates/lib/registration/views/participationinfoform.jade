@@ -21,24 +21,11 @@ mixin participationinfoform(activity, roomOptions, registration)
     .col-md-6
       h3 Deposit
       p.
-        We require you to pay a (non-refundable) deposit of 100 &euro; as soon as you finish your registration.
-      p.
-        Your registration is considered
-        pending until we receive the deposit. You will not receive an invoice for the deposit, so you might have to pay it
-        from your private money.
-        However, we will return your deposit to you in cash at the conference.
-      p The deposit can be paid in two ways:
-      ul
-        li Via bank transfer to a German bank account
-        li Via credit card (+ 3,30 &euro; non-refundable fee, does not appear on the invoice)
-      p You can delegate the paying to somebody else, but you need to register yourself. Deposit payments can be merged (for multiple participants).
-      p.
-        If you cannot participate in the event, you can provide another participant to substitute you &ndash; your deposit will
-        then be counted towards the replacing participant. Please contact us in this case.
+        This year we decided against collecting a deposit. We trust that you will notify us if you cannot participate.
+        If you do not notify us until 24th August, you will be charged for the first night.
 
       h3 Payment and Invoice
       p.
-        We will return your deposit to you in cash at the conference.
         You will pay the full amount (as given below) to the venue on checkout, and you will receive an invoice from the venue.
 
   .row
@@ -114,9 +101,9 @@ mixin participationinfoform(activity, roomOptions, registration)
                   | I really do want to participate!
                 else
                   | Registration will open #{registration.opening.format("dddd, Do MMMM YYYY, HH:mm [GMT]Z")}
-              if (!registration.isPossible)
-                .row
-                p.pull-right (i.e. in #{registration.opensIn.days} days, #{registration.opensIn.hours} hours, #{registration.opensIn.minutes} minutes)
+                if (!registration.isPossible)
+                  .row
+                  p.pull-right (i.e. in #{registration.opensIn.days} days, #{registration.opensIn.hours} hours, #{registration.opensIn.minutes} minutes)
 
         script.
           $(function () {
