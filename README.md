@@ -158,7 +158,7 @@ Preparations for use
 The built-in wiki
 -----------------
 
-To set up the built-in wiki follow [these instructions](softwerskammer/lib/wiki/README.md)
+To set up the built-in wiki follow [these instructions](softwerkskammer/lib/wiki/README.md)
 
 Running the server
 ------------------
