@@ -5,7 +5,7 @@ include ../../../../softwerkskammer/views/formComponents
 include ../../../../softwerkskammer/views/dataTables-mixin
 
 mixin individualRoom(resourceName)
-  -var participants = activity.participantsOf(resourceName)
+  -var participants = participantsOf[resourceName]
   .panel
     table.table.table-condensed.table-hover.table-striped.unsortedtable
       thead
@@ -71,7 +71,7 @@ mixin roomCountFor(firstColumn, resourceName, totalRoomCount)
   -var thursdayToSaturday = 0
   -var saturdayToSunday = 0
   -var sundayToMonday = 0
-  -var participants = activity.participantsOf(resourceName)
+  -var participants = participantsOf[resourceName]
 
   for member in participants
     -var duration = registrationReadModel.durationFor(member.id())
@@ -167,7 +167,7 @@ block content
                 -var fridayAndSaturday = 0
                 -var sunday = 0
                 for resourceName in ['single', 'bed_in_double', 'bed_in_junior', 'junior']
-                  -var participants = activity.participantsOf(resourceName)
+                  -var participants = participantsOf[resourceName]
                   for member in participants
                     -var duration = registrationReadModel.durationFor(member.id())
                     -fridayAndSaturday = fridayAndSaturday + 1
