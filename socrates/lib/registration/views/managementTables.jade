@@ -198,7 +198,7 @@ block content
 
         .tab-pane#main
           each resourceName in roomOptionIds
-            -var participants = activity.participantsOf(resourceName)
+            -var participants = participantsOf[resourceName]
             -var participantCount = registrationReadModel.participantCountFor(resourceName)
             -var quota = socratesReadModel.quotaFor(resourceName)
             h4 #{resourceName} (#{participantCount} von #{quota || 'unbegrenzt'})
@@ -218,7 +218,7 @@ block content
                 tbody
                   for member in participants
                     tr
-                      td #{member.registeredAt.locale('de').format('L')}
+                      td #{registrationReadModel.registeredAt(member.id()).locale('de').format('L')}
                       td: +linkedMember(member.nickname())
                       td #{member.firstname()}
                       td #{member.lastname()}

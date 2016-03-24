@@ -90,6 +90,10 @@ RegistrationReadModel.prototype.durations = function () {
 
 };
 
+RegistrationReadModel.prototype.registeredAt = function (memberId) {
+  return moment(this.participantEventFor(memberId).timestamp);
+};
+
 RegistrationReadModel.prototype.isAlreadyRegistered = function (memberId) {
   return !!this.participantEventFor(memberId);
 };
