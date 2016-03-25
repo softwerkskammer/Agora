@@ -68,16 +68,8 @@ mixin userinfoform(addon, participation, sharesARoom)
       .row
         .col-sm-12
           hr
+          +hidden('hasParticipationInformation', true)
           +text('roommate', 'Who do you want to share your room with', participation.roommate())
-    .row
-      .col-sm-12
-        hr
-        p Please tell us a little bit about yourself by answering the following questions.
-      .col-md-6
-        +textarea('question1', 'What is your relation to Software Craftsmanship', participation.question1(), null, 'Opinions, Questions, Experiences...')
-        +textarea('question2', 'What do you want to share with the other participants', participation.question2(), null, 'This can e.g. be a link to your blog or your code repository.')
-      .col-md-6
-        +textarea('question3', 'What do you want to take home from the event', participation.question3(), null, 'Expectations, Hopes, Wishes...')
   script.
     $('#tShirtSizeMale').on('change', function (e) {
       if ($(this).val() !== '') {

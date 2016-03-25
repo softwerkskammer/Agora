@@ -13,8 +13,6 @@ var csurf = require('csurf');
 var conf = require('simple-configure');
 var beans = conf.get('beans');
 
-beans.get('socratesActivityExtended'); // must be called to extend the prototype
-
 // initialize winston and two concrete loggers
 /*eslint no-sync: 0 */
 var winston = require('winston-config').fromFileSync(path.join(__dirname, '../config/winston-config.json'));
@@ -74,7 +72,6 @@ module.exports = {
     useApp(app, '/mailsender/', beans.get('socratesMailsenderApp'));
     useApp(app, '/members/', beans.get('socratesMembersApp'));
     useApp(app, '/gallery/', beans.get('galleryApp'));
-    useApp(app, '/payment/', beans.get('socratesPaymentApp'));
     useApp(app, '/subscribers/', beans.get('socratesSubscribersApp'));
     useApp(app, '/wiki/', beans.get('socratesWikiApp'));
     app.use(beans.get('handle404')());

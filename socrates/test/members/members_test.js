@@ -9,16 +9,18 @@ var beans = require('../../testutil/configureForTest').get('beans');
 var userWithoutMember = require('../../testutil/userWithoutMember');
 var membersService = beans.get('membersService');
 var memberstore = beans.get('memberstore');
-var socratesActivitiesService = beans.get('socratesActivitiesService');
-var activitystore = beans.get('activitystore');
+var socratesMembersService = beans.get('socratesMembersService');
 var subscriberService = beans.get('subscriberService');
 var subscriberstore = beans.get('subscriberstore');
 var socratesNotifications = beans.get('socratesNotifications');
 var groupsAndMembersService = beans.get('groupsAndMembersService');
 var Member = beans.get('member');
 var Subscriber = beans.get('subscriber');
-var SoCraTesActivity = beans.get('socratesActivityExtended');
 var currentYear = beans.get('socratesConstants').currentYear;
+
+var events = beans.get('events');
+var GlobalEventStore = beans.get('GlobalEventStore');
+var eventstore = beans.get('eventstore');
 
 var createApp = require('../../testutil/testHelper')('socratesMembersApp').createApp;
 
@@ -30,7 +32,7 @@ describe('SoCraTes members application', function () {
   var socratesMember;
   var softwerkskammerSubscriber;
   var socratesSubscriber;
-  var socrates;
+  var eventStore;
 
   beforeEach(function () {
     softwerkskammerMember = new Member({
@@ -73,9 +75,16 @@ describe('SoCraTes members application', function () {
 
   beforeEach(function () {
     /* eslint camelcase: 0 */
-    socrates = {resources: {single: {}, bed_in_double: {}, junior: {}, bed_in_junior: {}}};
 
-    sinon.stub(activitystore, 'getActivity', function (url, callback) { return callback(null, new SoCraTesActivity(socrates)); });
+    eventStore = new GlobalEventStore();
+    eventStore.state.socratesEvents = [
+      events.roomQuotaWasSet('single', 10),
+      events.roomQuotaWasSet('bed_in_double', 10),
+      events.roomQuotaWasSet('junior', 10),
+      events.roomQuotaWasSet('bed_in_junior', 10)
+    ];
+
+    sinon.stub(eventstore, 'getEventStore', function (url, callback) { return callback(null, eventStore); });
 
     sinon.stub(memberstore, 'getMembersForIds', function (ids, callback) {
       var members = [];
@@ -186,7 +195,9 @@ describe('SoCraTes members application', function () {
       });
 
       it('does not display anything about roommates if the subscriber is in a single-bed room', function (done) {
-        socrates.resources.single._registeredMembers = [{memberId: 'memberId2'}];
+        eventStore.state.registrationEvents = [
+          events.participantWasRegistered('single', 3, 'session-id', 'memberId2')
+        ];
         socratesSubscriber.state.participations[currentYear] = {};
 
         appWithSocratesMember
@@ -198,7 +209,10 @@ describe('SoCraTes members application', function () {
       });
 
       it('displays other unmatched roommates if the subscriber is in a double-bed room but has no roommate associated', function (done) {
-        socrates.resources.bed_in_double._registeredMembers = [{memberId: 'memberId'}, {memberId: 'memberId2'}];
+        eventStore.state.registrationEvents = [
+          events.participantWasRegistered('bed_in_double', 3, 'session-id', 'memberId'),
+          events.participantWasRegistered('bed_in_double', 3, 'session-id-2', 'memberId2')
+        ];
         socratesSubscriber.state.participations[currentYear] = {};
 
         appWithSocratesMember
@@ -212,8 +226,13 @@ describe('SoCraTes members application', function () {
       });
 
       it('displays the name of the roommate if the subscriber is in a double-bed room and has a roommate associated', function (done) {
-        socrates.resources.bed_in_double._registeredMembers = [{memberId: 'memberId'}, {memberId: 'memberId2'}];
-        socrates.resources.bed_in_double.rooms = [{participant1: 'memberId', participant2: 'memberId2'}];
+        eventStore.state.registrationEvents = [
+          events.participantWasRegistered('bed_in_double', 3, 'session-id', 'memberId'),
+          events.participantWasRegistered('bed_in_double', 3, 'session-id-2', 'memberId2')
+        ];
+        eventStore.state.roomsEvents = [
+          events.roomPairWasAdded('bed_in_double', 'memberId', 'memberId2')
+        ];
         socratesSubscriber.state.participations[currentYear] = {};
 
         appWithSocratesMember
@@ -223,8 +242,13 @@ describe('SoCraTes members application', function () {
       });
 
       it('does not display anything about roommates on a different member\'s profile', function (done) {
-        socrates.resources.bed_in_double._registeredMembers = [{memberId: 'memberId'}, {memberId: 'memberId2'}];
-        socrates.resources.bed_in_double.rooms = [{participant1: 'memberId', participant2: 'memberId2'}];
+        eventStore.state.registrationEvents = [
+          events.participantWasRegistered('bed_in_double', 3, 'session-id', 'memberId'),
+          events.participantWasRegistered('bed_in_double', 3, 'session-id-2', 'memberId2')
+        ];
+        eventStore.state.roomsEvents = [
+          events.roomPairWasAdded('bed_in_double', 'memberId', 'memberId2')
+        ];
         socratesSubscriber.state.participations[currentYear] = {};
 
         appWithSocratesMember
@@ -283,7 +307,9 @@ describe('SoCraTes members application', function () {
       });
 
       it('does not allow a subscriber who is registered for a single-bed-room to enter a desired roommate', function (done) {
-        socrates.resources.single._registeredMembers = [{memberId: 'memberId2'}];
+        eventStore.state.registrationEvents = [
+          events.participantWasRegistered('single', 3, 'session-id', 'memberId2')
+        ];
         socratesSubscriber.state.participations[currentYear] = {};
         sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
 
@@ -298,7 +324,9 @@ describe('SoCraTes members application', function () {
       });
 
       it('does not allow a subscriber who is registered for an exclusive junior room to enter a desired roommate', function (done) {
-        socrates.resources.junior._registeredMembers = [{memberId: 'memberId2'}];
+        eventStore.state.registrationEvents = [
+          events.participantWasRegistered('junior', 3, 'session-id', 'memberId2')
+        ];
         socratesSubscriber.state.participations[currentYear] = {};
         sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
 
@@ -313,7 +341,9 @@ describe('SoCraTes members application', function () {
       });
 
       it('allows a subscriber who is registered for a bed in a double-bed room to enter a desired roommate', function (done) {
-        socrates.resources.bed_in_double._registeredMembers = [{memberId: 'memberId2'}];
+        eventStore.state.registrationEvents = [
+          events.participantWasRegistered('bed_in_double', 3, 'session-id', 'memberId2')
+        ];
         socratesSubscriber.state.participations[currentYear] = {};
         sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
 
@@ -325,7 +355,9 @@ describe('SoCraTes members application', function () {
       });
 
       it('allows a subscriber who is registered for a bed in a junior room to enter a desired roommate', function (done) {
-        socrates.resources.bed_in_junior._registeredMembers = [{memberId: 'memberId2'}];
+        eventStore.state.registrationEvents = [
+          events.participantWasRegistered('bed_in_junior', 3, 'session-id', 'memberId2')
+        ];
         socratesSubscriber.state.participations[currentYear] = {};
         sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
 
@@ -334,62 +366,6 @@ describe('SoCraTes members application', function () {
           .expect(200)
           .expect(/Home Address/)
           .expect(/Who do you want to share your room with/, done);
-      });
-    });
-
-    describe('labeling "Save & Pay" for the save button', function () {
-      it('happens for "real" participants', function (done) {
-        socrates.resources.junior._registeredMembers = [{memberId: 'memberId2'}];
-        socratesSubscriber.state.participations[currentYear] = {};
-        sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
-
-        appWithSocratesMember
-          .get('/edit')
-          .expect(200)
-          .expect(/Save & Pay/, done);
-      });
-
-      it('happens for "real" participants whose payment has not yet been confirmed', function (done) {
-        socrates.resources.junior._registeredMembers = [{memberId: 'memberId2'}];
-        socratesSubscriber.state.participations[currentYear] = {};
-        socratesSubscriber.payment().noteCreditCardPayment();
-        sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
-
-        appWithSocratesMember
-          .get('/edit')
-          .expect(200)
-          .expect(/Save & Pay/, done);
-      });
-
-      it('does not happen for "real" participants whose payment has been confirmed', function (done) {
-        socrates.resources.junior._registeredMembers = [{memberId: 'memberId2'}];
-        socratesSubscriber.state.participations[currentYear] = {};
-        socratesSubscriber.payment().notePaymentReceived();
-        sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
-
-        appWithSocratesMember
-          .get('/edit')
-          .expect(200)
-          .expect(/Save/)
-          .end(function (err, res) {
-            expect(res.text).to.not.contain('Save & Pay');
-            done(err);
-          });
-      });
-
-      it('does not happen for waitinglist participants', function (done) {
-        socrates.resources.junior._registeredMembers = [];
-        socratesSubscriber.state.participations[currentYear] = {};
-        sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
-
-        appWithSocratesMember
-          .get('/edit')
-          .expect(200)
-          .expect(/Save/)
-          .end(function (err, res) {
-            expect(res.text).to.not.contain('Save & Pay');
-            done(err);
-          });
       });
     });
 
@@ -418,7 +394,9 @@ describe('SoCraTes members application', function () {
     });
 
     it('allows a subscriber who is registered to enter the home address', function (done) {
-      socrates.resources.bed_in_double._registeredMembers = [{memberId: 'memberId2'}];
+      eventStore.state.registrationEvents = [
+        events.participantWasRegistered('bed_in_double', 3, 'session-id', 'memberId2')
+      ];
       sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
 
       appWithSocratesMember
@@ -538,18 +516,18 @@ describe('SoCraTes members application', function () {
         .send('nickname=nickerinack')
         .send('email=here@there.org')
         .send('homeAddress=home')
-        .send('question1=Q1')
+        .send('hasParticipationInformation=true')
         .expect(302)
-        .expect('location', '/payment/socrates', function (err) {
+        .expect('location', '/', function (err) {
           expect(subscriberSave.called).to.be(true);
           expect(notificationCall.called).to.be(false);
           done(err);
         });
     });
 
-    describe('for exisiting members with subribers', function () {
+    describe('for exisiting members with subscribers', function () {
 
-      it('saves an existing SoCraTes member, creates no subscriber because it is already there, and does not trigger notification sending; forwards to payment page because the payment is done but not confirmed', function (done) {
+      it('saves an existing SoCraTes member, creates no subscriber because it is already there, and does not trigger notification sending; forwards to root page', function (done) {
         sinon.stub(membersService, 'isValidNickname', function (nickname, callback) { callback(null, true); });
         sinon.stub(membersService, 'isValidEmail', function (nickname, callback) { callback(null, true); });
         sinon.stub(memberstore, 'saveMember', function (member, callback) { callback(null); });
@@ -560,8 +538,6 @@ describe('SoCraTes members application', function () {
         sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups', function (nickname, callback) { callback(null, socratesMember); });
         // and that the subscriber also exists
         sinon.stub(subscriberstore, 'getSubscriber', function (id, callback) { callback(null, socratesSubscriber); });
-        // subscriber has paid via credit card
-        socratesSubscriber.payment().noteCreditCardPayment();
 
         appWithSocratesMember
           .post('/submit')
@@ -569,36 +545,7 @@ describe('SoCraTes members application', function () {
           .send('nickname=nickerinack')
           .send('email=here@there.org')
           .send('homeAddress=home')
-          .send('question1=Q1')
-          .expect(302)
-          .expect('location', '/payment/socrates', function (err) {
-            expect(subscriberSave.called).to.be(true);
-            expect(notificationCall.called).to.be(false);
-            done(err);
-          });
-      });
-
-      it('does not forward to the payment page if the subscriber has a confirmed payment', function (done) {
-        sinon.stub(membersService, 'isValidNickname', function (nickname, callback) { callback(null, true); });
-        sinon.stub(membersService, 'isValidEmail', function (nickname, callback) { callback(null, true); });
-        sinon.stub(memberstore, 'saveMember', function (member, callback) { callback(null); });
-        var subscriberSave = sinon.stub(subscriberstore, 'saveSubscriber', function (subscriber, callback) { callback(null); });
-        var notificationCall = sinon.stub(socratesNotifications, 'newSoCraTesMemberRegistered', function () { return undefined; });
-
-        // the following stub indicates that the member already exists
-        sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups', function (nickname, callback) { callback(null, socratesMember); });
-        // and that the subscriber also exists
-        sinon.stub(subscriberstore, 'getSubscriber', function (id, callback) { callback(null, socratesSubscriber); });
-        // confirm the payment
-        socratesSubscriber.payment().notePaymentReceived();
-
-        appWithSocratesMember
-          .post('/submit')
-          .send('id=0815&firstname=A&lastname=B')
-          .send('nickname=nickerinack')
-          .send('email=here@there.org')
-          .send('homeAddress=home')
-          .send('question1=Q1')
+          .send('hasParticipationInformation=true')
           .expect(302)
           .expect('location', '/', function (err) {
             expect(subscriberSave.called).to.be(true);
@@ -634,9 +581,9 @@ describe('SoCraTes members application', function () {
         .send('nickname=nickerinack')
         .send('email=here@there.org')
         .send('homeAddress=home')
-        .send('question1=Q1')
+        .send('hasParticipationInformation=true')
         .expect(302)
-        .expect('location', '/payment/socrates', function (err) {
+        .expect('location', '/', function (err) {
           expect(subscriberSave.called).to.be(true);
           expect(notificationCall.called).to.be(true);
           done(err);
@@ -662,8 +609,8 @@ describe('SoCraTes members application', function () {
         });
     });
 
-    it('refuses deletion when the subscriber is also participant redirects to the profile page', function (done) {
-      sinon.stub(socratesActivitiesService, 'participationStatus', function (subscriber, callback) {
+    it('refuses deletion when the subscriber is also participant and redirects to the profile page', function (done) {
+      sinon.stub(socratesMembersService, 'participationStatus', function (subscriber, callback) {
         callback(null, true);
       });
 
@@ -677,7 +624,7 @@ describe('SoCraTes members application', function () {
     });
 
     it('deletes a subscriber that is not participant and redirects to the profiles overview page of current year', function (done) {
-      sinon.stub(socratesActivitiesService, 'participationStatus', function (subscriber, callback) {
+      sinon.stub(socratesMembersService, 'participationStatus', function (subscriber, callback) {
         callback(null, false);
       });
 

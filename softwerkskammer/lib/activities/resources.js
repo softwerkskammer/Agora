@@ -1,7 +1,6 @@
 'use strict';
 
 var _ = require('lodash');
-var moment = require('moment-timezone');
 
 var beans = require('simple-configure').get('beans');
 var misc = beans.get('misc');
@@ -110,11 +109,6 @@ Resources.prototype.waitinglistResourceNamesOf = function (memberId) {
   return _(self.resourceNames()).map(function (resourceName) {
     return !!self.named(resourceName).waitinglistEntryFor(memberId) && resourceName;
   }).compact().sort().value();
-};
-
-Resources.prototype.memberIsRegisteredForMoreDaysThan = function (days, member) {
-  var soManyDaysAgo = moment().subtract(days, 'days');
-  return soManyDaysAgo.isAfter(_.min(this.registrationDatesOf(member.id())));
 };
 
 module.exports = Resources;

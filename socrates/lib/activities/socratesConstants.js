@@ -3,5 +3,7 @@
 var currentYear = 2016;
 
 module.exports.currentYear = currentYear;
-module.exports.currentUrl = 'socrates-' + currentYear;
-module.exports.depositAmount = 100;
+module.exports.urlPrefix = 'socrates-';
+module.exports.currentUrl = this.urlPrefix + currentYear;
+
+module.exports.registrationPeriodinMinutes = 30;

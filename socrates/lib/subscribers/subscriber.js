@@ -32,10 +32,6 @@ Subscriber.prototype.addon = function () {
   return new Addon(this.state._addon);
 };
 
-Subscriber.prototype.payment = function () {
-  return this.currentParticipation().payment();
-};
-
 Subscriber.prototype.participations = function () {
   if (!this.state.participations) {
     this.state.participations = {};
@@ -60,10 +56,6 @@ Subscriber.prototype.participationOf = function (year) {
 
 Subscriber.prototype.isParticipating = function () {
   return !!this.participations()[socratesConstants.currentYear];
-};
-
-Subscriber.prototype.needsToPay = function () {
-  return this.participations()[socratesConstants.currentYear] && !this.payment().paymentConfirmed();
 };
 
 module.exports = Subscriber;

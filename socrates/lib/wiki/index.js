@@ -5,7 +5,7 @@ var Renderer = beans.get('renderer');
 var wikiService = beans.get('wikiService');
 var statusmessage = beans.get('statusmessage');
 var misc = beans.get('misc');
-var socratesActivitiesService = beans.get('socratesActivitiesService');
+var activityParticipantService = beans.get('activityParticipantService');
 var currentYear = beans.get('socratesConstants').currentYear;
 
 function showPage(subdir, pageName, pageVersion, req, res, next) {
@@ -106,11 +106,12 @@ app.post('/rename/:subdir/:page', function (req, res, next) {
 
 app.get('/:year/participantsOverview/', function (req, res, next) {
   var year = req.params.year;
-  socratesActivitiesService.getActivityWithParticipantsAndSubscribers(year, function (err, activity) {
-    if (err || !activity) { return next(err); }
+  activityParticipantService.getParticipantsFor(year, function (err, participants) {
+    if (err || !participants) { return next(err); }
     res.render('participants', {
       title: 'Participants',
-      activity: activity
+      participants: participants,
+      showQuestions: year < 2016
     });
   });
 });

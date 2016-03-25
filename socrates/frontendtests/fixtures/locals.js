@@ -10,19 +10,23 @@ module.exports = {
     isMember: function () { return true; },
     memberId: function () { return ''; }
   },
-  activity: {
+  socratesReadModel: {
     id: function () { return ''; },
     url: function () { return ''; },
-    title: function () { return ''; },
-    startMoment: function () { return moment(); },
-    endMoment: function () { return moment(); },
-    description: function () { return ''; },
-    location: function () { return ''; },
-    direction: function () { return ''; },
-    resourceNames: function () { return []; },
-    isAlreadyRegistered: function () { return false; },
-    selectedOptionFor: function () { return null; }
+    startTime: function () { return moment(); },
+    endTime: function () { return moment(); },
+    quotaFor: function () { return 10; }
   },
+  registration: {
+    isPossible: true,
+    queryParam: undefined,
+    alreadyRegistered: false,
+    selectedOption: undefined,
+    alreadyOnWaitinglist: false,
+    opening: undefined,
+    opensIn: undefined
+  },
+  roomTypes: ['single', 'bed_in_double', 'junior', 'bed_in_junior'],
   message: {
     receiver: ''
   },
@@ -97,10 +101,6 @@ module.exports = {
       displayRegistrationCheckboxes: true
     }
   ],
-  participation: {
-    question1: function () { return 'q1'; },
-    question2: function () { return 'q2'; },
-    question3: function () { return 'q3'; }
-  }
+  participation: {}
 
 };

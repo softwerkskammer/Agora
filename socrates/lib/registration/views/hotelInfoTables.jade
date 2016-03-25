@@ -5,8 +5,7 @@ include ../../../../softwerkskammer/views/formComponents
 include ../../../../softwerkskammer/views/dataTables-mixin
 
 mixin individualRoom(resourceName)
-  -var participants = activity.participantsOf(resourceName)
-  -var resource = activity.socratesResourceNamed(resourceName)
+  -var participants = participantsOf[resourceName]
   .panel
     table.table.table-condensed.table-hover.table-striped.unsortedtable
       thead
@@ -16,7 +15,7 @@ mixin individualRoom(resourceName)
           th Sonntag - Montag
       tbody
         for member in participants
-          -var duration = resource.duration(member.id())
+          -var duration = registrationReadModel.durationFor(member.id())
           -var name = member.displayName()
           tr
             td #{name}
@@ -24,7 +23,6 @@ mixin individualRoom(resourceName)
             td #{duration > 4 ? name : ""}
 
 mixin sharedRoom(resourceName)
-  -var resource = activity.socratesResourceNamed(resourceName)
   .panel
     table.table.table-condensed.table-hover.table-striped.unsortedtable
       thead
@@ -43,8 +41,8 @@ mixin sharedRoom(resourceName)
         for pair in rooms[resourceName].roomPairs
           -var name1 = pair.participant1.displayName()
           -var name2 = pair.participant2.displayName()
-          -var duration1 = resource.duration(pair.participant1.id())
-          -var duration2 = resource.duration(pair.participant2.id())
+          -var duration1 = registrationReadModel.durationFor(pair.participant1.id())
+          -var duration2 = registrationReadModel.durationFor(pair.participant2.id())
           tr
             td #{name1}
             td #{name2}
@@ -54,7 +52,7 @@ mixin sharedRoom(resourceName)
             td #{duration2 > 4 ? name2 : ""}
         for participant in rooms[resourceName].unpairedParticipants
           -var name = participant.displayName()
-          -var duration = resource.duration(participant.id())
+          -var duration = registrationReadModel.durationFor(participant.id())
           tr
             td #{name}
             td
@@ -73,11 +71,10 @@ mixin roomCountFor(firstColumn, resourceName, totalRoomCount)
   -var thursdayToSaturday = 0
   -var saturdayToSunday = 0
   -var sundayToMonday = 0
-  -var participants = activity.participantsOf(resourceName)
-  -var resource = activity.socratesResourceNamed(resourceName)
+  -var participants = participantsOf[resourceName]
 
   for member in participants
-    -var duration = resource.duration(member.id())
+    -var duration = registrationReadModel.durationFor(member.id())
     -thursdayToSaturday = thursdayToSaturday + 1
     -if(duration > 2)
       -saturdayToSunday = saturdayToSunday + 1
@@ -170,10 +167,9 @@ block content
                 -var fridayAndSaturday = 0
                 -var sunday = 0
                 for resourceName in ['single', 'bed_in_double', 'bed_in_junior', 'junior']
-                  -var participants = activity.participantsOf(resourceName)
-                  -var resource = activity.socratesResourceNamed(resourceName)
+                  -var participants = participantsOf[resourceName]
                   for member in participants
-                    -var duration = resource.duration(member.id())
+                    -var duration = registrationReadModel.durationFor(member.id())
                     -fridayAndSaturday = fridayAndSaturday + 1
                     -if(duration > 3)
                       -sunday = sunday + 1

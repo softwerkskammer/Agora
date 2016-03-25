@@ -21,8 +21,7 @@ function createConfiguration() {
     publicUrlPrefix: 'http://localhost:17224',
     securedByLoginURLPattern: '/wiki|' +
     '/mailsender|' +
-    '/members|' +
-    '/payment/socrates',
+    '/members',
     securedBySuperuserURLPattern: '^/activities',
     securedBySoCraTesAdminURLPattern: '^/mailsender/massMailing',
     secret: 'secret',

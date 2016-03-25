@@ -8,7 +8,7 @@ block scripts
   script(src='/clientscripts/enhance-participationinfoform.js')
 
 block title
-  | #{activity.title()} - Registration
+  | #{activity.title} - Registration
 
 block content
   #interested.modal.fade(tabindex='-1')
@@ -19,7 +19,7 @@ block content
       +resignBanner(registration)
       .page-header(style='margin-bottom: 0;')
         .pull-right.visible-print
-          img(height='80px', src='/qrcode?url=#{encodeURIComponent(activity.fullyQualifiedUrl())}')
+          img(height='80px', src='/qrcode?url=#{encodeURIComponent(activity.fullyQualifiedUrl)}')
         .btn-group.pull-right.hidden-print
           if !accessrights.isRegistered() && !registration.isPossible
             a.btn.btn-primary.pull-right(data-toggle='modal', data-target='#interested', href='/registration/interested') Notify me when registration starts!
@@ -29,9 +29,9 @@ block content
             a.btn.btn-default(href='/registration/hotelInfo', title=t('activities.participants')): i.fa.fa-bed.fa-fw
             a.btn.btn-default(href='/registration/nametags.tex', title=t('activities.participants')): i.fa.fa-tags.fa-fw
             a.btn.btn-default(href='/mailsender/massMailing', title=t('activities.invitation')): i.fa.fa-envelope-o.fa-fw
-            a.btn.btn-default(href='/activities/edit/#{encodeURIComponent(activity.url())}', title=t('general.edit')): i.fa.fa-edit.fa-fw
+            a.btn.btn-default(href='/activities/edit/#{encodeURIComponent(activity.url)}', title=t('general.edit')): i.fa.fa-edit.fa-fw
         h1 Registration<br>
           small SoCraTes, 25 - 28 August 2016
   .row
     .col-md-12
-      +participationinfoform(activity, roomOptions, registration)
+      +participationinfoform(roomOptions, registration)

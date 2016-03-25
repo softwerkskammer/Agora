@@ -39,10 +39,10 @@ describe('Subscriber', function () {
       expect(unregisteredSubscriber.addon().homeAddress()).to.be.undefined();
     });
 
-    it('the participation if no answer for question1 is provided', function () {
-      unregisteredSubscriber.fillFromUI({});
+    it('the participation if no participation information hint is given', function () {
+      unregisteredSubscriber.fillFromUI({roommate: 'My best friend'});
       expect(unregisteredSubscriber.state.participation).to.be.undefined();
-      expect(unregisteredSubscriber.currentParticipation().question1()).to.be.undefined();
+      expect(unregisteredSubscriber.currentParticipation().roommate()).to.be.undefined();
     });
   });
 
@@ -52,18 +52,18 @@ describe('Subscriber', function () {
       expect(unregisteredSubscriber.addon().homeAddress()).to.be('bingo');
     });
 
-    it('the participation if an answer for question1 is provided', function () {
-      unregisteredSubscriber.fillFromUI({question1: 'Q1'});
-      expect(unregisteredSubscriber.currentParticipation().question1()).to.be('Q1');
+    it('the participation if a participation information hint is provided', function () {
+      unregisteredSubscriber.fillFromUI({hasParticipationInformation: true});
+      expect(unregisteredSubscriber.currentParticipation().roommate()).to.be(undefined);
     });
   });
 
   describe('gives participation information by year (if available)', function () {
     it('for the year 2010', function () {
-      unregisteredSubscriber.fillFromUI({question1: 'Q1'});
+      unregisteredSubscriber.fillFromUI({hasParticipationInformation: true, roommate: 'My sister'});
       unregisteredSubscriber.state.participations['2010'] = unregisteredSubscriber.state.participations[currentYear];
       delete unregisteredSubscriber.state.participations[currentYear];
-      expect(unregisteredSubscriber.participationOf('2010').question1()).to.be('Q1');
+      expect(unregisteredSubscriber.participationOf('2010').roommate()).to.be('My sister');
     });
   });
 });

@@ -124,23 +124,23 @@ mixin removeWaitinglistMemberWithModal(resourceName, waitinglistNick)
 block scripts
   +dataTableImport
   +ajaxFunction
-  +dataTable('.addontable', '[ 4, "asc" ]', '[{targets: [0,8,9,10], type: "date-eu"}]')
+  +dataTable('.addontable', '[ 4, "asc" ]', '[{targets: [0], type: "date-eu"}]')
   +dataTable('.membertable', '[ 0, "asc" ]', '[{targets: 0, type: "date-eu"}]')
   +dataTable('.unsortedtable', '[]', '[]')
   +dataTable('.addressestable', '[ 1, "asc" ]', '[]')
 block title
-  | #{activity.title()} - Verwaltung
+  | #{title} - Verwaltung
 block content
   .row
     .col-md-12
       .page-header
-        h2 #{activity.title()} - Verwaltung
+        h2 #{title} - Verwaltung
           a.btn.pull-right.btn-default(href='/registration') Zurück
     ul.nav.nav-tabs
       li: a(href='#overview', data-toggle='tab') Übersicht
-      li: a(href='#main', data-toggle='tab') #{t('activities.participants')}
-      li: a(href='#waitinglist', data-toggle='tab') Wartelisten
-      li.active: a(href='#addons', data-toggle='tab') Zahlungen
+      li: a(href='#main', data-toggle='tab') Teilnehmer nach Zimmern
+      li: a(href='#waitinglist', data-toggle='tab') Warteliste
+      li.active: a(href='#addons', data-toggle='tab') Teilnehmer
       li: a(href='#bedroomPairing', data-toggle='tab') Zimmerzuordnungen
       li: a(href='#tshirtSizes', data-toggle='tab') T-Shirt-Bestellungen
       li: a(href='#remarks', data-toggle='tab') Zusatzinformationen
@@ -163,17 +163,17 @@ block content
                   th Freie Plätze
                   th Wartende
               tbody
-                for resourceName in activity.resourceNames()
-                  -var participants = activity.participantsOf(resourceName).length
-                  -var resource = activity.socratesResourceNamed(resourceName)
-                  -var waitingMembers = activity.waitinglistMembers[resourceName].length
-                  -var freeSpots = resource.limit() ? resource.limit() - participants : undefined
+                for resourceName in roomOptionIds
+                  -var participants = registrationReadModel.participantCountFor(resourceName)
+                  -var quota = socratesReadModel.quotaFor(resourceName)
+                  -var waitingMembers = registrationReadModel.waitinglistParticipantCountFor(resourceName)
+                  -var freeSpots = quota ? quota - participants : undefined
                   -totalParticipants += participants
                   -totalFreeSpots = freeSpots ? totalFreeSpots + freeSpots : totalFreeSpots
                   -totalWaitingMembers += waitingMembers
                   tr
                     td #{resourceName}
-                    td #{participants} von #{resource.limit() || 'unbegrenzt'}
+                    td #{participants} von #{quota || 'unbegrenzt'}
                     td #{freeSpots}
                     td #{waitingMembers}
                 tr
@@ -197,10 +197,11 @@ block content
                       td #{duration.count} (total: #{duration.total})
 
         .tab-pane#main
-          each resourceName in activity.resourceNames()
+          each resourceName in roomOptionIds
             -var participants = activity.participantsOf(resourceName)
-            -var resource = activity.socratesResourceNamed(resourceName)
-            h4 #{resourceName} (#{participants.length} von #{resource.limit() || 'unbegrenzt'})
+            -var participantCount = registrationReadModel.participantCountFor(resourceName)
+            -var quota = socratesReadModel.quotaFor(resourceName)
+            h4 #{resourceName} (#{participantCount} von #{quota || 'unbegrenzt'})
             .panel
               table.table.table-condensed.table-hover.table-striped.membertable
                 thead
@@ -222,41 +223,39 @@ block content
                       td #{member.firstname()}
                       td #{member.lastname()}
                       td #{member.location()}
-                      td #{resource.durationFor(member.id())}
-                      td: +newDuration(resourceName, member.nickname(), resource.recordFor(member.id()).duration)
+                      td #{registrationReadModel.durationFor(member.id())}
+                      td: +newDuration(resourceName, member.nickname(), registrationReadModel.participantEventFor(member.id()).duration)
                       td: +newResource(resourceName, member.nickname())
                       td: +removeParticipantWithModal(resourceName, member.nickname())
             hr
         .tab-pane#waitinglist
-          each resourceName in activity.resourceNames()
-            -var waitingMembers = activity.waitinglistMembers[resourceName]
-            h4 #{resourceName} (#{waitingMembers.length})
-            .panel
-              table.table.table-condensed.table-hover.table-striped.membertable
-                thead
+          h4 Wartende (#{waitinglistLines.length})
+          .panel
+            table.table.table-condensed.table-hover.table-striped.membertable
+              thead
+                tr
+                  th Eingetragen
+                  th Nickname
+                  th Vorname
+                  th Nachname
+                  th Ort/Region
+                  th Übernehmen
+                  th ändern in
+                  th entfernen
+              tbody
+                for line in waitinglistLines
                   tr
-                    th Eingetragen
-                    th Nickname
-                    th Vorname
-                    th Nachname
-                    th Ort/Region
-                    th Übernehmen
-                    th ändern in
-                    th entfernen
-                tbody
-                  for member in waitingMembers
-                    tr
-                      td #{member.addedToWaitinglistAt}
-                      td: +linkedMember(member.nickname())
-                      td #{member.firstname()}
-                      td #{member.lastname()}
-                      td #{member.location()}
-                      td: +fromWaitinglistToParticipant(resourceName, member.nickname())
-                      td: +newWaitinglist(resourceName, member.nickname())
-                      td: +removeWaitinglistMemberWithModal(resourceName, member.nickname())
+                    td #{formatDate(registrationReadModel.waitinglistParticipantEventFor(line.member.id()).timestamp)}
+                    td #{+linkedMember(line.member.nickname())}
+                    td #{line.member.firstname()}
+                    td #{line.member.lastname()}
+                    td #{line.member.location()}
+                    td: +fromWaitinglistToParticipant(resourceName, member.nickname())
+                    td: +newWaitinglist(resourceName, member.nickname())
+                    td: +removeWaitinglistMemberWithModal(resourceName, member.nickname())
             hr
         .tab-pane.active#addons
-          h4 Alle Teilnehmer mit Zahlungen
+          h4 Alle Teilnehmer
           .panel
             table.table.table-condensed.table-hover.table-striped.addontable
               thead
@@ -270,15 +269,12 @@ block content
                   th Ort/Region
                   th T-Shirt
                   th Zimmer mit
-                  th Überwiesen
-                  th Kreditkarte
-                  th Zahlungseingang
               tbody
                 for line in addonLines
                   tr
-                    -var payment = line.participation.payment()
-                    td #{formatList(formatDates(activity.resources().registrationDatesOf(line.member.id())))}
-                    td #{formatList(activity.resources().resourceNamesOf(line.member.id()))}
+                    -var event = registrationReadModel.participantEventFor(line.member.id())
+                    td #{formatDate(event.timestamp)}
+                    td #{event.roomType}
                     td: +linkedMember(line.member.nickname())
                     td #{line.member.firstname()}
                     td #{line.member.lastname()}
@@ -286,9 +282,6 @@ block content
                     td #{line.member.location()}
                     td #{line.addon.tShirtSize()}
                     td #{line.participation.roommate()}
-                    td: +localdate(payment.moneyTransferredMoment())
-                    td: +localdate(payment.creditCardPaidMoment())
-                    td: +buttonOrDate(payment.paymentReceivedMoment(), payment.paymentDone(), line.member.nickname())
 
         .tab-pane#bedroomPairing
           for resourceName in ['bed_in_double', 'bed_in_junior']
@@ -316,19 +309,25 @@ block content
           h4 Verteilungen der T-Shirt-Größen
           .panel
             -var totalShirtCount = 0
+            -var totalShirtCountPlusBuffer = 0
             table.table.table-condensed.table-hover.table-striped.unsortedtable
               thead
                 tr
                   th T-Shirt-Größe
                   th Anzahl
+                  th Anzahl + 10%
               tbody
                 for tshirtsize in tshirtsizes
-                  -totalShirtCount += tshirtsize.count
+                  -var count = tshirtsize.count
+                  -var countPlusBuffer = Math.ceil(tshirtsize.count * 1.1)
+                  -totalShirtCount += count
+                  -totalShirtCountPlusBuffer += countPlusBuffer
                   tr
                     td #{tshirtsize.size}
-                    td #{tshirtsize.count}
+                    td #{count}
+                    td #{countPlusBuffer}
             hr
-            p Gesamtzahl T-Shirts: #{totalShirtCount}
+            p Gesamtzahl T-Shirts: #{totalShirtCount} (Plus 10 %: #{totalShirtCountPlusBuffer})
           hr
         .tab-pane#remarks
           h4 Remarks
@@ -349,7 +348,7 @@ block content
                     td #{line.addon.remarks()}
           hr
         .tab-pane#unsubscribed
-          h4 Zahlungs-Information von Abgemeldeten
+          h4 Abgemeldete
           .panel
             table.table.table-condensed.table-hover.table-striped.unsortedtable
               thead
@@ -357,10 +356,8 @@ block content
                   th Nickname
                   th Vorname
                   th Nachname
-                  th Zahlungseingang
               tbody
                 for line in addonLinesOfUnsubscribedMembers
-                  -var payment = line.participation.payment()
                   tr
                     if line.member
                       td: +linkedMember(line.member.nickname())
@@ -370,7 +367,6 @@ block content
                       td gelöscht
                       td &nbsp;
                       td &nbsp;
-                    td #{payment.paymentReceivedMoment() && payment.paymentReceivedMoment().locale('de').format('L')}
           hr
         .tab-pane#addresses
           h4 Adressen der Teilnehmer
@@ -392,7 +388,7 @@ block content
                     td #{line.member.email()}
                     td: +formatAsLines(line.addon.homeAddressLines())
                     td: +formatAsLines(line.addon.billingAddressLines())
-                    td #{formatList(activity.resources().resourceNamesOf(line.member.id()))}
+                    td #{registrationReadModel.participantEventFor(line.member.id()).roomType}
 
           h4 Adressen der Wartenden
           .panel
@@ -417,5 +413,5 @@ block content
                     td #{line.participation.roommate()}
                     td: +formatAsLines(line.addon.homeAddressLines())
                     td: +formatAsLines(line.addon.billingAddressLines())
-                    td #{formatList(activity.resources().resourceNamesOf(line.member.id()))}
+                    td #{formatList(registrationReadModel.waitinglistParticipantEventFor(line.member.id()).desiredRoomTypes)}
           hr

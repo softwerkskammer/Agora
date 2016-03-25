@@ -2,9 +2,9 @@ include ../../lib/activities/views/activities-forms
 include ../../lib/registration/views/participationinfoform
 include ../../lib/members/views/userinfoform
 
-+activityform(activity)
++activityform(socratesReadModel, roomTypes)
 
-+participationinfoform(activity, roomOptions, {isPossible: true})
++participationinfoform(roomOptions, registration)
 
 form#participationform.relaxed(action='/registration/completeRegistration', method='post')
   +csrf
