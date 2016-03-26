@@ -16,7 +16,6 @@ module.exports = function (defaultLanguage) {
         var app = express();
         app.locals.pretty = true;
         app.enable('view cache');
-        app.use(require('cookie-parser')());
         app.use(require('body-parser').urlencoded({extended: true}));
         app.use(function (req, res, next) {
           res.locals.removeServerpaths = function (msg) { return msg; };
