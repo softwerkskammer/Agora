@@ -112,7 +112,7 @@ describe('Registration Service', function () {
 
     it('adds the registrant to the waitinglist if the registration data says so', function (done) {
       registrationTuple.duration = 'waitinglist';
-      registrationTuple.desiredRoomTypes =  ['single'];
+      registrationTuple.desiredRoomTypes = ['single'];
 
       registrationService.startRegistration(registrationTuple, function (err) {
         expect(readModel.reservationsAndParticipantsFor('single')).to.have.length(0);
