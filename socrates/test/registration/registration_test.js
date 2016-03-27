@@ -183,7 +183,7 @@ describe('SoCraTes registration application', function () {
     it('redirects to the participate form page when a waitinglist option is selected (especially when the corresponding room is full)', function (done) {
       appWithSocratesMember
         .post('/startRegistration')
-        .send('nightsOptions=single,waitinglist')
+        .send('nightsOptions=single,waitinglist&nightsOptions=bed_in_double,waitinglist')
         .expect(302)
         .expect('location', '/registration/participate', function (err) {
           expect(eventStoreSave.called).to.be(true);

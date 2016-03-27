@@ -98,12 +98,21 @@ app.get('/interested', function (req, res) {
 });
 
 app.post('/startRegistration', function (req, res, next) {
-  if (!isRegistrationOpen(req.body.registrationParam) || !req.body.nightsOptions) { return res.redirect('/registration'); }
-  var option = req.body.nightsOptions.split(',');
+  var nightsOptions = req.body.nightsOptions;
+  var option = {};
+  if (!isRegistrationOpen(req.body.registrationParam) || !nightsOptions) { return res.redirect('/registration'); }
+  if (nightsOptions instanceof Array) {
+    option.roomType = nightsOptions.map(nightsOption => nightsOption.split(',')[0]);
+    option.duration = 'waitinglist';
+  } else {
+    var splitArray = nightsOptions.split(',');
+    option.roomType = splitArray[1] === 'waitinglist' ? [splitArray[0]] : splitArray[0];
+    option.duration = splitArray[1];
+  }
   var registrationTuple = {
     activityUrl: socratesConstants.currentUrl,
-    resourceName: option[0], // TODO roomType
-    duration: option[1],
+    resourceName: option.roomType, // TODO roomType
+    duration: option.duration,
     sessionID: req.sessionID
   };
   var participateURL = '/registration/participate';
