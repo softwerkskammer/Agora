@@ -73,7 +73,7 @@ mixin participationinfoform(roomOptions, registration)
                         if option.displayWaitinglistCheckbox
                           .radio-inline.pull-right
                             label
-                              input(type='radio', name='nightsOptions', value=option.id + ',waitinglist')
+                              input(type='checkbox', name='nightsOptions', value=option.id + ',waitinglist')
                               |  Waitinglist
                       td.text-center.disabled-text
                         span(style='margin-left:20px;') #{option.two}&nbsp;€

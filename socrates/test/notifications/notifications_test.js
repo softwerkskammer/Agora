@@ -124,7 +124,7 @@ describe('Notifications', function () {
       sinon.stub(memberstore, 'getMemberForId', function (id, callback) { callback(null, hans); });
       sinon.stub(memberstore, 'superUsers', function (callback) { callback(null, []); });
 
-      notifications.newWaitinglistEntry(hans, roomOptions.informationFor('junior', 3));
+      notifications.newWaitinglistEntry(hans, [roomOptions.informationFor('junior', 3)]);
       expect(transport.sendMail.calledOnce).to.be(true);
       var options = transport.sendMail.firstCall.args[0];
       expect(options.subject).to.equal('SoCraTes Waitinglist Confirmation');
@@ -135,7 +135,7 @@ describe('Notifications', function () {
       sinon.stub(memberstore, 'getMemberForId', function (id, callback) { callback(null, hans); });
       sinon.stub(memberstore, 'superUsers', function (callback) { callback(null, [superman]); });
 
-      notifications.newWaitinglistEntry(hans, roomOptions.informationFor('junior', 3));
+      notifications.newWaitinglistEntry(hans, [roomOptions.informationFor('junior', 3)]);
       expect(transport.sendMail.calledTwice).to.be(true);
       var options = transport.sendMail.secondCall.args[0];
       expect(options.bcc).to.contain('superman@email.de');

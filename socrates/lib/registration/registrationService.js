@@ -18,7 +18,7 @@ module.exports = {
     eventstoreService.getRegistrationCommandProcessor(registrationTuple.activityUrl, function (err, registrationCommandProcessor) {
       if (err || !registrationCommandProcessor) { return callback(err, 'message.title.problem', 'message.content.activities.does_not_exist'); }
       if (registrationTuple.duration === 'waitinglist') {
-        reservationEvent = registrationCommandProcessor.issueWaitinglistReservation(registrationTuple.resourceName, registrationTuple.sessionID);
+        reservationEvent = registrationCommandProcessor.issueWaitinglistReservation(registrationTuple.desiredRoomTypes, registrationTuple.sessionID);
       } else {
         reservationEvent = registrationCommandProcessor.issueReservation(registrationTuple.resourceName, registrationTuple.duration, registrationTuple.sessionID);
       }
@@ -43,6 +43,7 @@ module.exports = {
       sessionID: sessionID,
       activityUrl: body.activityUrl,
       resourceName: body.resourceName,
+      desiredRoomTypes: body.desiredRoomTypes && body.desiredRoomTypes.split(','),
       duration: body.duration
     };
     eventstoreService.getRegistrationCommandProcessor(registrationTuple.activityUrl, function (err, commandProcessor) {
@@ -63,7 +64,7 @@ module.exports = {
         // error and success handling as indicated by the event:
         if (registrationEvent === eventConstants.PARTICIPANT_WAS_REGISTERED || registrationEvent === eventConstants.WAITINGLIST_PARTICIPANT_WAS_REGISTERED) {
           if (registrationTuple.duration === 'waitinglist') {
-            socratesNotifications.newWaitinglistEntry(memberID, roomOptions.waitinglistInformationFor(registrationTuple.resourceName));
+            socratesNotifications.newWaitinglistEntry(memberID, registrationTuple.desiredRoomTypes.map(roomType => roomOptions.waitinglistInformationFor(roomType)));
           } else {
             socratesNotifications.newParticipant(memberID, roomOptions.informationFor(registrationTuple.resourceName, registrationTuple.duration));
           }

@@ -85,26 +85,26 @@ RegistrationCommandProcessor.prototype.setNewDurationForParticipant = function (
   this._updateRegistrationEvents(event);
 };
 
-RegistrationCommandProcessor.prototype.issueWaitinglistReservation = function (roomType, sessionId) {
+RegistrationCommandProcessor.prototype.issueWaitinglistReservation = function (desiredRoomTypes, sessionId) {
   var event;
   if (this.writeModel.alreadyHasWaitinglistReservation(sessionId)) {
     // session id already reserved a spot
-    event = events.didNotIssueWaitinglistReservationForAlreadyReservedSession(roomType, sessionId);
+    event = events.didNotIssueWaitinglistReservationForAlreadyReservedSession(desiredRoomTypes, sessionId);
   } else {
     // all is good
-    event = events.waitinglistReservationWasIssued(roomType, sessionId);
+    event = events.waitinglistReservationWasIssued(desiredRoomTypes, sessionId);
   }
   this._updateRegistrationEvents(event);
   return event.event;
 };
 
-RegistrationCommandProcessor.prototype.registerWaitinglistParticipant = function (roomType, sessionId, memberId) {
+RegistrationCommandProcessor.prototype.registerWaitinglistParticipant = function (desiredRoomTypes, sessionId, memberId) {
   var event;
   if (this.writeModel.isAlreadyRegistered(memberId) || this.writeModel.isAlreadyOnWaitinglist(memberId)) {
-    event = events.didNotRegisterParticipantASecondTime(roomType, 'waitinglist', sessionId, memberId);
+    event = events.didNotRegisterParticipantASecondTime(desiredRoomTypes, 'waitinglist', sessionId, memberId);
   } else {
     // all is well
-    event = events.waitinglistParticipantWasRegistered(roomType, sessionId, memberId);
+    event = events.waitinglistParticipantWasRegistered(desiredRoomTypes, sessionId, memberId);
   }
   this._updateRegistrationEvents(event);
   return event.event;
