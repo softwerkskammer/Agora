@@ -102,16 +102,18 @@ app.post('/startRegistration', function (req, res, next) {
   var option = {};
   if (!isRegistrationOpen(req.body.registrationParam) || !nightsOptions) { return res.redirect('/registration'); }
   if (nightsOptions instanceof Array) {
-    option.roomType = nightsOptions.map(nightsOption => nightsOption.split(',')[0]);
+    option.desiredRoomTypes = nightsOptions.map(nightsOption => nightsOption.split(',')[0]);
     option.duration = 'waitinglist';
   } else {
     var splitArray = nightsOptions.split(',');
-    option.roomType = splitArray[1] === 'waitinglist' ? [splitArray[0]] : splitArray[0];
+    option.roomType = splitArray[1] === 'waitinglist' ? undefined : splitArray[0];
+    option.desiredRoomTypes = splitArray[1] === 'waitinglist' ? [splitArray[0]] : undefined;
     option.duration = splitArray[1];
   }
   var registrationTuple = {
     activityUrl: socratesConstants.currentUrl,
     resourceName: option.roomType, // TODO roomType
+    desiredRoomTypes: option.desiredRoomTypes,
     duration: option.duration,
     sessionID: req.sessionID
   };
