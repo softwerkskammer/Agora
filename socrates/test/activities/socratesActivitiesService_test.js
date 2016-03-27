@@ -77,7 +77,7 @@ describe('SoCraTes Activities Service', function () {
 
   it('registers the user when he is on the waitinglist', function (done) {
     eventStore.state.registrationEvents = [
-      events.waitinglistParticipantWasRegistered('single', 'sessionId', 'memberId')];
+      events.waitinglistParticipantWasRegistered(['single'], 'sessionId', 'memberId')];
 
     socratesActivitiesService.fromWaitinglistToParticipant('nickname', 'single', 2, function (err) {
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([{
@@ -98,7 +98,7 @@ describe('SoCraTes Activities Service', function () {
   it('registers the user even when the limit is 0', function (done) {
     eventStore.state.socratesEvents = [events.roomQuotaWasSet('single', 0)];
     eventStore.state.registrationEvents = [
-      events.waitinglistParticipantWasRegistered('single', 'sessionId', 'memberId')];
+      events.waitinglistParticipantWasRegistered(['single'], 'sessionId', 'memberId')];
 
     socratesActivitiesService.fromWaitinglistToParticipant('nickname', 'single', 2, function (err) {
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([{
@@ -120,7 +120,7 @@ describe('SoCraTes Activities Service', function () {
     eventStore.state.socratesEvents = [events.roomQuotaWasSet('single', 1)];
     eventStore.state.registrationEvents = [
       events.participantWasRegistered('single', 3, 'otherSessionId', 'otherMemberId'),
-      events.waitinglistParticipantWasRegistered('single', 'sessionId', 'memberId')
+      events.waitinglistParticipantWasRegistered(['single'], 'sessionId', 'memberId')
     ];
 
     socratesActivitiesService.fromWaitinglistToParticipant('nickname', 'single', 2, function (err) {
