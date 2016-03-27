@@ -360,12 +360,12 @@ describe('SoCraTes registration application', function () {
   describe('submission of the participate form to become a waitinglist participant', function () {
     it('is accepted when a waitinglist option is selected', function (done) {
       eventStore.state.registrationEvents = [
-        events.waitinglistReservationWasIssued('single', 'session-id', 'memberId2')];
+        events.waitinglistReservationWasIssued(['single'], 'session-id', 'memberId2')];
 
       appWithSocratesMemberAndFixedSessionId
         .post('/completeRegistration')
         .send('activityUrl=socrates-url')
-        .send('resourceName=single')
+        .send('desiredRoomTypes=single')
         .send('duration=waitinglist')
         .send('homeAddress=At home')
         .send('billingAddress=')
@@ -387,12 +387,12 @@ describe('SoCraTes registration application', function () {
 
     it('is still accepted to the waitinglist even when the timeout is expired', function (done) {
       eventStore.state.registrationEvents = [
-        setTimestamp(events.waitinglistReservationWasIssued('single', 'session-id', 'memberId2'), moment().subtract(1, 'hours'))];
+        setTimestamp(events.waitinglistReservationWasIssued(['single'], 'session-id', 'memberId2'), moment().subtract(1, 'hours'))];
 
       appWithSocratesMemberAndFixedSessionId
         .post('/completeRegistration')
         .send('activityUrl=socrates-url')
-        .send('resourceName=single')
+        .send('desiredRoomTypes=single')
         .send('duration=waitinglist')
         .send('homeAddress=At home')
         .send('billingAddress=')

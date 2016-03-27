@@ -112,6 +112,7 @@ describe('Registration Service', function () {
 
     it('adds the registrant to the waitinglist if the registration data says so', function (done) {
       registrationTuple.duration = 'waitinglist';
+      registrationTuple.desiredRoomTypes =  ['single'];
 
       registrationService.startRegistration(registrationTuple, function (err) {
         expect(readModel.reservationsAndParticipantsFor('single')).to.have.length(0);
@@ -245,9 +246,11 @@ describe('Registration Service', function () {
 
     it('adds the registrant to the waitinglist if he had a valid session entry', function (done) {
       registrationTuple.duration = 'waitinglist';
+      // here, registrationTuple is actually the body
+      registrationTuple.desiredRoomTypes = 'single';
 
       eventStore.state.registrationEvents = [
-        events.waitinglistReservationWasIssued(registrationTuple.resourceName, registrationTuple.sessionID)];
+        events.waitinglistReservationWasIssued(registrationTuple.desiredRoomTypes, registrationTuple.sessionID)];
 
       registrationService.saveRegistration('memberId', 'sessionId', registrationTuple, function (err, statusTitle, statusText) {
         expect(statusTitle).to.not.exist();
@@ -262,6 +265,8 @@ describe('Registration Service', function () {
 
     it('adds the registrant to the waitinglist if there is no reservation for the session id but there is enough space in the resource', function (done) {
       registrationTuple.duration = 'waitinglist';
+      // here, registrationTuple is actually the body
+      registrationTuple.desiredRoomTypes = 'single';
 
       registrationService.saveRegistration('memberId', 'sessionId', registrationTuple, function (err, statusTitle, statusText) {
         expect(statusTitle).to.be(undefined);
@@ -276,9 +281,11 @@ describe('Registration Service', function () {
 
     it('adds the registrant to the waitinglist if the reservation is already expired but there is enough space in the resource', function (done) {
       registrationTuple.duration = 'waitinglist';
+      // here, registrationTuple is actually the body
+      registrationTuple.desiredRoomTypes = 'single';
 
       eventStore.state.registrationEvents = [
-        setTimestamp(events.waitinglistReservationWasIssued(registrationTuple.resourceName, registrationTuple.sessionID), moment().subtract(1, 'hours'))];
+        setTimestamp(events.waitinglistReservationWasIssued(registrationTuple.desiredRoomTypes, registrationTuple.sessionID), moment().subtract(1, 'hours'))];
 
       registrationService.saveRegistration('memberId', 'sessionId', registrationTuple, function (err, statusTitle, statusText) {
         expect(statusTitle).to.be(undefined);
