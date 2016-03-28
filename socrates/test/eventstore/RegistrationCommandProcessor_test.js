@@ -50,7 +50,7 @@ describe('The registration command processor', function () {
     commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore));
   });
 
-  describe('for room reservations', function () {
+  describe('for room reservations (issueReservation)', function () {
     it('reserves a room if the quota is not yet exceeded', function () {
       // Given (saved events)
       eventStore.state.socratesEvents = [events.roomQuotaWasSet(singleBedRoom, 100)];
@@ -180,7 +180,8 @@ describe('The registration command processor', function () {
     });
   });
 
-  describe('for room registrations', function () {
+  describe('for room registrations (registerParticipant)', function () {
+
     it('registers a room', function () { // TODO books a room?
       // Given (saved events)
       eventStore.state.socratesEvents = [events.roomQuotaWasSet(singleBedRoom, 100)];
@@ -344,7 +345,7 @@ describe('The registration command processor', function () {
     });
   });
 
-  describe('for room type changes', function () {
+  describe('for room type changes (moveParticipantToNewRoomType)', function () {
     it('moves the participant to the new room type without caring about the new room limit', function () {
       // Given (saved events)
       eventStore.state.socratesEvents = [events.roomQuotaWasSet(bedInDouble, 0)];
@@ -409,7 +410,7 @@ describe('The registration command processor', function () {
     });
   });
 
-  describe('for duration changes', function () {
+  describe('for duration changes (setNewDurationForParticipant)', function () {
     it('moves the participant to the new duration', function () {
       // Given (saved events)
       eventStore.state.socratesEvents = [events.roomQuotaWasSet(singleBedRoom, 10)];
@@ -474,7 +475,7 @@ describe('The registration command processor', function () {
     });
   });
 
-  describe('for waitinglist reservations', function () {
+  describe('for waitinglist reservations (issueWaitinglistReservation)', function () {
     it('reserves a spot on the waitinglist', function () {
       // Given (saved events)
       eventStore.state.registrationEvents = [];
@@ -513,19 +514,14 @@ describe('The registration command processor', function () {
       // Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
         {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionID: sessionId1, desiredRoomTypes: [singleBedRoom]},
-        {
-          event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED,
-          sessionID: sessionId1,
-          memberId: memberId1,
-          desiredRoomTypes: [singleBedRoom]
-        },
+        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, memberId: memberId1, desiredRoomTypes: [singleBedRoom]},
         {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionID: sessionId2, desiredRoomTypes: [singleBedRoom]}]);
     });
 
     it('does not allow a registration for any resource if there is already an active registration for the same session id', function () {
       // Given (saved events)
       eventStore.state.registrationEvents = [
-        events.waitinglistReservationWasIssued([singleBedRoom], sessionId1, aShortTimeAgo)];
+        events.waitinglistReservationWasIssued([singleBedRoom], sessionId1)];
 
       // When (issued command)
       commandProcessor.issueWaitinglistReservation([bedInDouble], sessionId1);
@@ -533,19 +529,27 @@ describe('The registration command processor', function () {
       // Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
         {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionID: sessionId1, desiredRoomTypes: [singleBedRoom]},
-        {
-          event: e.DID_NOT_ISSUE_WAITINGLIST_RESERVATION_FOR_ALREADY_RESERVED_SESSION,
-          sessionID: sessionId1,
-          desiredRoomTypes: [bedInDouble]
-        }]);
+        {event: e.DID_NOT_ISSUE_WAITINGLIST_RESERVATION_FOR_ALREADY_RESERVED_SESSION, sessionID: sessionId1, desiredRoomTypes: [bedInDouble]}]);
     });
+    it('reserves a spot on the waitinglist for multiple rooms', function () {
+      // Given (saved events)
+      eventStore.state.registrationEvents = [];
+
+      // When (issued command)
+      commandProcessor.issueWaitinglistReservation([singleBedRoom, bedInDouble], sessionId1);
+
+      // Then (new events)
+      expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
+        {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionID: sessionId1, desiredRoomTypes: [singleBedRoom, bedInDouble]}]);
+    });
+
   });
 
-  describe('for waitinglist registrations', function () {
+  describe('for waitinglist registrations (registerWaitinglistParticipant)', function () {
     it('registers a spot on the waitinglist', function () {
       // Given (saved events)
       eventStore.state.registrationEvents = [
-        events.waitinglistReservationWasIssued([singleBedRoom], sessionId1, aShortTimeAgo)];
+        setTimestamp(events.waitinglistReservationWasIssued([singleBedRoom], sessionId1), aShortTimeAgo)];
 
       // When (issued command)
       commandProcessor.registerWaitinglistParticipant([singleBedRoom], sessionId1, memberId1);
@@ -553,18 +557,13 @@ describe('The registration command processor', function () {
       // Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
         {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionID: sessionId1, desiredRoomTypes: [singleBedRoom]},
-        {
-          event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED,
-          sessionID: sessionId1,
-          desiredRoomTypes: [singleBedRoom],
-          memberId: memberId1
-        }]);
+        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, desiredRoomTypes: [singleBedRoom], memberId: memberId1}]);
     });
 
     it('registers a spot on the waitinglist even if there was an expired reservation', function () { // TODO books a room?
       // Given (saved events)
       eventStore.state.registrationEvents = [
-        events.waitinglistReservationWasIssued([singleBedRoom], sessionId1, aLongTimeAgo)];
+        setTimestamp(events.waitinglistReservationWasIssued([singleBedRoom], sessionId1), aLongTimeAgo)];
 
       // When (issued command)
       commandProcessor.registerWaitinglistParticipant([singleBedRoom], sessionId1, memberId1);
@@ -572,12 +571,7 @@ describe('The registration command processor', function () {
       // Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
         {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionID: sessionId1, desiredRoomTypes: [singleBedRoom]},
-        {
-          event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED,
-          sessionID: sessionId1,
-          desiredRoomTypes: [singleBedRoom],
-          memberId: memberId1
-        }]);
+        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, desiredRoomTypes: [singleBedRoom], memberId: memberId1}]);
     });
 
     it('registers a spot on the waitinglist even if there was no reservation', function () { // TODO books a room?
@@ -589,12 +583,7 @@ describe('The registration command processor', function () {
 
       // Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {
-          event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED,
-          sessionID: sessionId1,
-          desiredRoomTypes: [singleBedRoom],
-          memberId: memberId1
-        }]);
+        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, desiredRoomTypes: [singleBedRoom], memberId: memberId1}]);
     });
 
     it('does not register two spots on the waitinglist for the same member, not even for different rooms', function () { // TODO books a room?
@@ -608,20 +597,22 @@ describe('The registration command processor', function () {
 
       // Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {
-          event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED,
-          sessionID: sessionId1,
-          desiredRoomTypes: [singleBedRoom],
-          memberId: memberId1
-        },
-        {
-          event: e.DID_NOT_REGISTER_PARTICIPANT_A_SECOND_TIME,
-          sessionID: sessionId1,
-          roomType: [bedInDouble],
-          duration: 'waitinglist',
-          memberId: memberId1
-        }
+        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, desiredRoomTypes: [singleBedRoom], memberId: memberId1},
+        {event: e.DID_NOT_REGISTER_PARTICIPANT_A_SECOND_TIME, sessionID: sessionId1, roomType: [bedInDouble], duration: 'waitinglist', memberId: memberId1}
       ]);
+    });
+    it('registers a spot on the waitinglist for multiple desired rooms', function () {
+      // Given (saved events)
+      eventStore.state.registrationEvents = [
+        setTimestamp(events.waitinglistReservationWasIssued([singleBedRoom, bedInDouble], sessionId1), aShortTimeAgo)];
+
+      // When (issued command)
+      commandProcessor.registerWaitinglistParticipant([singleBedRoom, bedInDouble], sessionId1, memberId1);
+
+      // Then (new events)
+      expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
+        {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionID: sessionId1, desiredRoomTypes: [singleBedRoom, bedInDouble]},
+        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, desiredRoomTypes: [singleBedRoom, bedInDouble], memberId: memberId1}]);
     });
   });
 });
