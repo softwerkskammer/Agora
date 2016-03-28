@@ -382,25 +382,25 @@ describe('The registration read model', function () {
 
   describe('knows about a participant\'s selected options', function () {
 
-    it('returns a registered member\'s options', function () {
+    it('returns a registered member\'s option', function () {
       eventStore.state.registrationEvents = [
         events.reservationWasIssued('single', 3, sessionId1),
         events.participantWasRegistered('single', 3, sessionId1, memberId1)];
 
-      expect(readModel.selectedOptionFor(memberId1)).to.be('single,3');
+      expect(readModel.selectedOptionsFor(memberId1)).to.be('single,3');
     });
 
     it('returns a registered member\'s options for waitinglist registration', function () {
       eventStore.state.registrationEvents = [
-        events.waitinglistReservationWasIssued(['single'], sessionId1),
-        events.waitinglistParticipantWasRegistered(['single'], sessionId1, memberId1)];
+        events.waitinglistReservationWasIssued(['single', 'junior'], sessionId1),
+        events.waitinglistParticipantWasRegistered(['single', 'junior'], sessionId1, memberId1)];
 
-      expect(readModel.selectedOptionFor(memberId1)).to.be('single,waitinglist');
+      expect(readModel.selectedOptionsFor(memberId1)).to.eql('single,waitinglist;junior,waitinglist');
     });
 
     it('returns null as the options for a not registered member', function () {
 
-      expect(readModel.selectedOptionFor(memberId1)).to.be(null);
+      expect(readModel.selectedOptionsFor(memberId1)).to.be(null);
     });
 
   });

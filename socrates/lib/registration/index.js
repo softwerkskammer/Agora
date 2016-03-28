@@ -60,7 +60,7 @@ app.get('/', function (req, res, next) {
       isPossible: isRegistrationOpen(req.query.registration),
       queryParam: req.query.registration,
       alreadyRegistered: registrationReadModel.isAlreadyRegistered(memberId),
-      selectedOption: registrationReadModel.selectedOptionFor(memberId),
+      selectedOptions: registrationReadModel.selectedOptionsFor(memberId),
       alreadyOnWaitinglist: registrationReadModel.isAlreadyOnWaitinglist(memberId),
       opening: registrationOpening(),
       opensIn: registrationOpensIn()

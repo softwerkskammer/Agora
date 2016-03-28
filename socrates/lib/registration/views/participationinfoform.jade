@@ -107,9 +107,12 @@ mixin participationinfoform(roomOptions, registration)
 
         script.
           $(function () {
-            var selectedInput = $('input[value="' + '#{registration.selectedOption}"]')
-            selectedInput.attr('checked', 'checked');
-            selectedInput.parent().parent().parent().addClass('bg-success')
-            selectedInput.parent().addClass('text-success')
+            var selectedOptions = '#{registration.selectedOptions}'.split(';');
+            selectedOptions.forEach(function (option) {
+              var selectedInput = $('input[value="' + option + '"]')
+              selectedInput.attr('checked', 'checked');
+              selectedInput.parent().parent().parent().addClass('bg-success')
+              selectedInput.parent().addClass('text-success')
+            });
           })
                                 
