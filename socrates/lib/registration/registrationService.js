@@ -50,7 +50,7 @@ module.exports = {
       if (err || !commandProcessor) { return callback(err); }
 
       if (registrationTuple.duration === 'waitinglist') {
-        registrationEvent = commandProcessor.registerWaitinglistParticipant(registrationTuple.resourceName, registrationTuple.sessionID, memberID);
+        registrationEvent = commandProcessor.registerWaitinglistParticipant(registrationTuple.desiredRoomTypes, registrationTuple.sessionID, memberID);
       } else {
         registrationEvent = commandProcessor.registerParticipant(registrationTuple.resourceName, registrationTuple.duration, registrationTuple.sessionID, memberID);
       }

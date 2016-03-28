@@ -22,10 +22,19 @@ var events = beans.get('events');
 var GlobalEventStore = beans.get('GlobalEventStore');
 var RegistrationReadModel = beans.get('RegistrationReadModel');
 var eventstore = beans.get('eventstore');
+var e = beans.get('eventConstants');
 
 function setTimestamp(event, timestamp) {
   event.timestamp = timestamp;
   return event;
+}
+
+function stripTimestamps(someEvents) {
+  return someEvents.map(function (event) {
+    var newEvent = R.clone(event);
+    delete newEvent.timestamp;
+    return newEvent;
+  });
 }
 
 describe('Registration Service', function () {
@@ -252,11 +261,16 @@ describe('Registration Service', function () {
       registrationTuple.desiredRoomTypes = 'single';
 
       eventStore.state.registrationEvents = [
-        events.waitinglistReservationWasIssued(registrationTuple.desiredRoomTypes, registrationTuple.sessionID)];
+        events.waitinglistReservationWasIssued([registrationTuple.desiredRoomTypes], registrationTuple.sessionID)];
 
       registrationService.completeRegistration('memberId', 'sessionId', registrationTuple, function (err, statusTitle, statusText) {
         expect(statusTitle).to.not.exist();
         expect(statusText).to.not.exist();
+        expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
+          {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionID: 'sessionId', desiredRoomTypes: ['single']},
+          {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionID: 'sessionId', memberId: 'memberId', desiredRoomTypes: ['single']}]);
+
+        // TODO pull out into read model test:
         expect(readModel.reservationsBySessionIdFor('single')).to.eql({});
         expect(readModel.participantsByMemberIdFor('single')).to.eql({});
         expect(readModel.waitinglistReservationsBySessionIdFor('single')).to.eql({});
