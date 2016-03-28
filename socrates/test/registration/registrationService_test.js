@@ -112,6 +112,7 @@ describe('Registration Service', function () {
 
     it('adds the registrant to the waitinglist if the registration data says so', function (done) {
       registrationTuple.duration = 'waitinglist';
+      registrationTuple.resourceName = undefined;
       registrationTuple.desiredRoomTypes = ['single'];
 
       registrationService.startRegistration(registrationTuple, function (err) {
@@ -246,6 +247,7 @@ describe('Registration Service', function () {
 
     it('adds the registrant to the waitinglist if he had a valid session entry', function (done) {
       registrationTuple.duration = 'waitinglist';
+      registrationTuple.resourceName = undefined;
       // here, registrationTuple is actually the body
       registrationTuple.desiredRoomTypes = 'single';
 
@@ -281,6 +283,7 @@ describe('Registration Service', function () {
 
     it('adds the registrant to the waitinglist if the reservation is already expired but there is enough space in the resource', function (done) {
       registrationTuple.duration = 'waitinglist';
+      registrationTuple.resourceName = undefined;
       // here, registrationTuple is actually the body
       registrationTuple.desiredRoomTypes = 'single';
 
