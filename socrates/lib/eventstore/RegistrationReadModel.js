@@ -200,7 +200,7 @@ RegistrationReadModel.prototype.isAlreadyOnWaitinglist = function (memberId) {
   return !!this.waitinglistParticipantEventFor(memberId);
 };
 
-RegistrationReadModel.prototype.selectedOptionFor = function (memberID) {
+RegistrationReadModel.prototype.selectedOptionsFor = function (memberID) {
   var participantEvent = this.participantEventFor(memberID);
   if (participantEvent) {
     return participantEvent.roomType + ',' + participantEvent.duration;
@@ -208,7 +208,7 @@ RegistrationReadModel.prototype.selectedOptionFor = function (memberID) {
 
   var waitinglistParticipantEvent = this.waitinglistParticipantEventFor(memberID);
   if (waitinglistParticipantEvent) {
-    return waitinglistParticipantEvent.desiredRoomTypes[0] + ',waitinglist'; // TODO improve UX! Show all selected waitinglist options.
+    return waitinglistParticipantEvent.desiredRoomTypes.map(roomType => roomType + ',waitinglist').join(';');
   }
   return null;
 };
