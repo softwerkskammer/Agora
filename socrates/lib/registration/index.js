@@ -167,7 +167,7 @@ app.post('/completeRegistration', function (req, res, next) {
   memberSubmitHelper(req, res, next, function (err) {
     if (err) { return next(err); }
     var body = req.body;
-    registrationService.saveRegistration(req.user.member.id(), req.sessionID, body, function (err1, statusTitle, statusText) {
+    registrationService.completeRegistration(req.user.member.id(), req.sessionID, body, function (err1, statusTitle, statusText) {
       if (err1) { return next(err1); }
       delete req.session.statusmessage;
       delete req.session.registrationTuple;

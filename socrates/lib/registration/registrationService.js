@@ -36,7 +36,7 @@ module.exports = {
     });
   },
 
-  saveRegistration: function (memberID, sessionID, body, callback) {
+  completeRegistration: function (memberID, sessionID, body, callback) {
     var self = this;
     var registrationEvent;
     var registrationTuple = {
@@ -57,7 +57,7 @@ module.exports = {
       return eventstoreService.saveCommandProcessor(commandProcessor, function (err1) {
         if (err1 && err1.message === CONFLICTING_VERSIONS) {
           // we try again because of a racing condition during save:
-          return self.saveRegistration(memberID, sessionID, body, callback);
+          return self.completeRegistration(memberID, sessionID, body, callback);
         }
         if (err1) { return callback(err1); }
 
