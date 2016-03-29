@@ -44,8 +44,10 @@ RegistrationCommandProcessor.prototype.removeParticipant = function (roomType, p
   var event;
   if (!this.writeModel.isAlreadyRegistered(participantId)) {
     event = events.didNotRemoveParticipantBecauseTheyAreNotRegistered(roomType, participantId);
+  } else if (!this.writeModel.isRegisteredInRoomType(participantId, roomType)){
+    // not registered for this room
+    event = events.didNotRemoveParticipantBecauseTheyAreNotRegisteredForThisRoomType(roomType, participantId);
   } else {
-    // all is well
     event = events.participantWasRemoved(roomType, participantId);
   }
   this._updateRegistrationEvents(event);

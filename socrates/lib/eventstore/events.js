@@ -70,10 +70,13 @@ module.exports = {
   // removal:
 
   participantWasRemoved: function (roomType, participantId) {
-    return enrich({event: e.PARTICIPANT_WAS_REMOVED, participantId: participantId});
+    return enrich({event: e.PARTICIPANT_WAS_REMOVED, participantId: participantId, roomType: roomType});
   },
   didNotRemoveParticipantBecauseTheyAreNotRegistered: function (roomType, participantId) {
-    return enrich({event: e.DID_NOT_REMOVE_PARTICIPANT_BECAUSE_THEY_ARE_NOT_REGISTERED, participantId: participantId});
+    return enrich({event: e.DID_NOT_REMOVE_PARTICIPANT_BECAUSE_THEY_ARE_NOT_REGISTERED, participantId: participantId, roomType: roomType});
+  },
+  didNotRemoveParticipantBecauseTheyAreNotRegisteredForThisRoomType: function (roomType, participantId) {
+    return enrich({event: e.DID_NOT_REMOVE_PARTICIPANT_BECAUSE_THEY_ARE_NOT_REGISTERED_FOR_THIS_ROOM_TYPE, participantId: participantId, roomType: roomType});
   },
   waitinglistParticipantWasRemoved: function (roomType, participantId) {
     return enrich({event: e.WAITINGLIST_PARTICIPANT_WAS_REMOVED, participantId: participantId});

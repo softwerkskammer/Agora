@@ -192,6 +192,7 @@ RegistrationReadModel.prototype.registeredInRoomType = function (memberID) {
   return null;
 };
 
+
 RegistrationReadModel.prototype.waitinglistParticipantEventFor = function (memberId) {
   return this.waitinglistParticipantsByMemberId()[memberId];
 };

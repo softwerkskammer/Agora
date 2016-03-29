@@ -27,6 +27,10 @@ RegistrationWriteModel.prototype.isAlreadyRegistered = function (memberId) {
   return this.registrationReadModel.isAlreadyRegistered(memberId);
 };
 
+RegistrationWriteModel.prototype.isRegisteredInRoomType = function (memberId, roomType) {
+   return this.registrationReadModel.registeredInRoomType(memberId) === roomType;
+};
+
 RegistrationWriteModel.prototype.waitinglistParticipantEventFor = function (memberId) {
   return this.registrationReadModel.waitinglistParticipantEventFor(memberId);
 };
