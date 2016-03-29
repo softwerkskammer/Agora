@@ -230,7 +230,7 @@ describe('SoCraTes Activities Service', function () {
       events.participantWasRegistered('bed_in_double', 2, 'session-id', 'memberId')
     ];
 
-    socratesActivitiesService.removeParticipantFor('single', 'nickname', function (err) {
+    socratesActivitiesService.removeParticipantFor('bed_in_double', 'nickname', function (err) {
       expect(R.keys(new RegistrationReadModel(eventStore).participantsByMemberIdFor('bed_in_double'))).to.eql([]);
       done(err);
     });
