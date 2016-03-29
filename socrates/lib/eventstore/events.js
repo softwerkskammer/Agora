@@ -70,7 +70,7 @@ module.exports = {
   // removal:
 
   participantWasRemoved: function (roomType, participantId) {
-    return enrich({event: e.PARTICIPANT_WAS_REMOVED, participantId: participantId});
+    return enrich({event: e.PARTICIPANT_WAS_REMOVED, participantId: participantId, roomType: roomType});
   },
   didNotRemoveParticipantBecauseTheyAreNotRegistered: function (roomType, participantId) {
     return enrich({event: e.DID_NOT_REMOVE_PARTICIPANT_BECAUSE_THEY_ARE_NOT_REGISTERED, participantId: participantId});
