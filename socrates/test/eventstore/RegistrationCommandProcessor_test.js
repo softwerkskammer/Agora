@@ -434,6 +434,50 @@ describe('The registration command processor', function () {
     });
   });
 
+  describe('for changing the desired room types (changeDesiredRoomTypes)', function () {
+    it('changed the desired room types', function () {
+      //Given (saved events)
+      eventStore.state.registrationEvents = [
+        events.waitinglistParticipantWasRegistered([singleBedRoom], sessionId1, memberId1)
+      ];
+
+      //When (issued command)
+      commandProcessor.changeDesiredRoomTypes(memberId1, [bedInDouble]);
+
+      //Then (new events)
+      expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
+        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, desiredRoomTypes: [singleBedRoom], sessionID: sessionId1, memberId: memberId1},
+        {event: e.DESIRED_ROOM_TYPES_WERE_CHANGED, desiredRoomTypes: [bedInDouble], memberId: memberId1}
+      ]);
+    });
+    it('does not change the desired room types because participant is not o n waitinglist', function () {
+      //Given (saved events)
+      eventStore.state.registrationEvents = [];
+
+      //When (issued command)
+      commandProcessor.changeDesiredRoomTypes(memberId1, [bedInDouble]);
+
+      //Then (new events)
+      expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
+        {event: e.DID_NOT_CHANGE_DESIRED_ROOM_TYPES_BECAUSE_PARTICIPANT_IS_NOT_ON_WAITINGLIST, desiredRoomTypes: [bedInDouble], memberId: memberId1}
+      ]);
+    });
+    xit('does not change the desired room types cause it would not change anything', function () {
+      //Given (saved events)
+      eventStore.state.registrationEvents = [
+        events.waitinglistParticipantWasRegistered([singleBedRoom], sessionId1, memberId1)
+      ];
+
+      //When (issued command)
+      commandProcessor.changeDesiredRoomTypes([singleBedRoom], memberId1);
+
+      //Then (new events)
+      expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
+        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, desiredRoomTypes: [singleBedRoom], sessionID: sessionId1, memberId: memberId1}
+      ]);
+    });
+  });
+
   describe('for room type changes (moveParticipantToNewRoomType)', function () {
     it('moves the participant to the new room type without caring about the new room limit', function () {
       // Given (saved events)
