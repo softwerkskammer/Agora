@@ -521,7 +521,7 @@ describe('The registration command processor', function () {
       }]);
     });
 
-    it('does not register the participant again if already registered', function () {
+    xit('does not register the participant again if already registered', function () {
       //Given (saved events)
       eventStore.state.registrationEvents = [
         events.waitinglistParticipantWasRegistered([singleBedRoom], sessionId1, memberId1)
@@ -537,7 +537,7 @@ describe('The registration command processor', function () {
         {event: e.DID_NOT_REGISTER_PARTICIPANT_A_SECOND_TIME, desiredRoomTypes: [singleBedRoom], sessionID: sessionId1, memberId: memberId1}]);
     });
 
-    it('does register waitinglist participant for one of two desired room types', function () {
+    xit('does register waitinglist participant for one of two desired room types', function () {
       //Given (saved events)
       eventStore.state.registrationEvents = [
         events.waitinglistParticipantWasRegistered([singleBedRoom], sessionId1, memberId1)
