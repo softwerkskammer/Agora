@@ -69,20 +69,20 @@ module.exports = {
 
   // removal:
 
-  participantWasRemoved: function (roomType, participantId) {
-    return enrich({event: e.PARTICIPANT_WAS_REMOVED, participantId: participantId, roomType: roomType});
+  participantWasRemoved: function (roomType, memberId) {
+    return enrich({event: e.PARTICIPANT_WAS_REMOVED, memberId: memberId, roomType: roomType});
   },
-  didNotRemoveParticipantBecauseTheyAreNotRegistered: function (roomType, participantId) {
-    return enrich({event: e.DID_NOT_REMOVE_PARTICIPANT_BECAUSE_THEY_ARE_NOT_REGISTERED, participantId: participantId, roomType: roomType});
+  didNotRemoveParticipantBecauseTheyAreNotRegistered: function (roomType, memberId) {
+    return enrich({event: e.DID_NOT_REMOVE_PARTICIPANT_BECAUSE_THEY_ARE_NOT_REGISTERED, memberId: memberId, roomType: roomType});
   },
-  didNotRemoveParticipantBecauseTheyAreNotRegisteredForThisRoomType: function (roomType, participantId) {
-    return enrich({event: e.DID_NOT_REMOVE_PARTICIPANT_BECAUSE_THEY_ARE_NOT_REGISTERED_FOR_THIS_ROOM_TYPE, participantId: participantId, roomType: roomType});
+  didNotRemoveParticipantBecauseTheyAreNotRegisteredForThisRoomType: function (roomType, memberId) {
+    return enrich({event: e.DID_NOT_REMOVE_PARTICIPANT_BECAUSE_THEY_ARE_NOT_REGISTERED_FOR_THIS_ROOM_TYPE, memberId: memberId, roomType: roomType});
   },
-  waitinglistParticipantWasRemoved: function (roomType, participantId) {
-    return enrich({event: e.WAITINGLIST_PARTICIPANT_WAS_REMOVED, participantId: participantId});
+  waitinglistParticipantWasRemoved: function (desiredRoomTypes, memberId) {
+    return enrich({event: e.WAITINGLIST_PARTICIPANT_WAS_REMOVED, memberId: memberId, desiredRoomTypes: desiredRoomTypes});
   },
-  didNotRemoveWaitinglistParticipantBecauseTheyAreNotRegistered: function (roomType, participantId) {
-    return enrich({event: e.DID_NOT_REMOVE_WAITINGLIST_PARTICIPANT_BECAUSE_THEY_ARE_NOT_REGISTERED, participantId: participantId});
+  didNotRemoveWaitinglistParticipantBecauseTheyAreNotRegistered: function (desiredRoomTypes, memberId) {
+    return enrich({event: e.DID_NOT_REMOVE_WAITINGLIST_PARTICIPANT_BECAUSE_THEY_ARE_NOT_REGISTERED, memberId: memberId, desiredRoomTypes: desiredRoomTypes});
   },
 
   // management after registration:
@@ -99,7 +99,10 @@ module.exports = {
   },
 
   didNotChangeDesiredRoomTypesBecauseParticipantIsNotOnWaitinglist: function (memberId, desiredRoomTypes) {
-      return enrich({event: e.DID_NOT_CHANGE_DESIRED_ROOM_TYPES_BECAUSE_PARTICIPANT_IS_NOT_ON_WAITINGLIST, memberId: memberId, desiredRoomTypes: desiredRoomTypes});
+    return enrich({event: e.DID_NOT_CHANGE_DESIRED_ROOM_TYPES_BECAUSE_PARTICIPANT_IS_NOT_ON_WAITINGLIST, memberId: memberId, desiredRoomTypes: desiredRoomTypes});
+  },
+  didNotChangeDesiredRoomTypesBecauseThereWasNoChange: function (memberId, desiredRoomTypes) {
+    return enrich({event: e.DID_NOT_CHANGE_DESIRED_ROOM_TYPES_BECAUSE_THERE_WAS_NO_CHANGE, memberId: memberId, desiredRoomTypes: desiredRoomTypes});
   },
 
   durationWasChanged: function (memberId, roomType, duration) {
@@ -127,30 +130,30 @@ module.exports = {
   roomPairWasAdded: function (roomType, participant1Id, participant2Id) {
     return enrich({event: e.ROOM_PAIR_WAS_ADDED, roomType: roomType, participant1Id: participant1Id, participant2Id: participant2Id});
   },
-  didNotAddRoomPairBecauseParticipantIsNotInRoomType: function (roomType, participantId) {
-    return enrich({event: e.DID_NOT_ADD_ROOM_PAIR_BECAUSE_PARTICIPANT_IS_NOT_IN_ROOM_TYPE, roomType: roomType, participantId: participantId});
+  didNotAddRoomPairBecauseParticipantIsNotInRoomType: function (roomType, memberId) {
+    return enrich({event: e.DID_NOT_ADD_ROOM_PAIR_BECAUSE_PARTICIPANT_IS_NOT_IN_ROOM_TYPE, roomType: roomType, memberId: memberId});
   },
-  didNotAddRoomPairBecauseParticipantIsAlreadyInRoom: function (roomType, participantId) {
-    return enrich({event: e.DID_NOT_ADD_ROOM_PAIR_BECAUSE_PARTICIPANT_IS_ALREADY_IN_ROOM, roomType: roomType, participantId: participantId});
+  didNotAddRoomPairBecauseParticipantIsAlreadyInRoom: function (roomType, memberId) {
+    return enrich({event: e.DID_NOT_ADD_ROOM_PAIR_BECAUSE_PARTICIPANT_IS_ALREADY_IN_ROOM, roomType: roomType, memberId: memberId});
   },
-  didNotAddRoomPairBecauseParticipantIsPairedWithThemselves: function (roomType, participantId) {
-    return enrich({event: e.DID_NOT_ADD_ROOM_PAIR_BECAUSE_PARTICIPANT_IS_PAIRED_WITH_THEMSELVES, roomType: roomType, participantId: participantId});
+  didNotAddRoomPairBecauseParticipantIsPairedWithThemselves: function (roomType, memberId) {
+    return enrich({event: e.DID_NOT_ADD_ROOM_PAIR_BECAUSE_PARTICIPANT_IS_PAIRED_WITH_THEMSELVES, roomType: roomType, memberId: memberId});
   },
 
   roomPairWasRemoved: function (roomType, participant1Id, participant2Id) {
     return enrich({event: e.ROOM_PAIR_WAS_REMOVED, roomType: roomType, participant1Id: participant1Id, participant2Id: participant2Id});
   },
-  didNotRemoveRoomPairBecauseParticipantIsNotInRoomType: function (roomType, participantId) {
-    return enrich({event: e.DID_NOT_REMOVE_ROOM_PAIR_BECAUSE_PARTICIPANT_IS_NOT_IN_ROOM_TYPE, roomType: roomType, participantId: participantId});
+  didNotRemoveRoomPairBecauseParticipantIsNotInRoomType: function (roomType, memberId) {
+    return enrich({event: e.DID_NOT_REMOVE_ROOM_PAIR_BECAUSE_PARTICIPANT_IS_NOT_IN_ROOM_TYPE, roomType: roomType, memberId: memberId});
   },
   didNotRemoveRoomPairBecauseThePairDoesNotExistForThisRoomType: function (roomType, participant1Id, participant2Id) {
     return enrich({event: e.DID_NOT_REMOVE_ROOM_PAIR_BECAUSE_THE_PAIR_DOES_NOT_EXIST_FOR_THIS_ROOM_TYPE, roomType: roomType, participant1Id: participant1Id, participant2Id: participant2Id});
   },
 
-  roomPairContainingAParticipantWasRemoved: function (roomType, participantIdToBeRemoved, participant1Id, participant2Id) {
-    return enrich({event: e.ROOM_PAIR_CONTAINING_A_PARTICIPANT_WAS_REMOVED, roomType: roomType, participantIdToBeRemoved: participantIdToBeRemoved, participant1Id: participant1Id, participant2Id: participant2Id});
+  roomPairContainingAParticipantWasRemoved: function (roomType, memberIdToBeRemoved, participant1Id, participant2Id) {
+    return enrich({event: e.ROOM_PAIR_CONTAINING_A_PARTICIPANT_WAS_REMOVED, roomType: roomType, memberIdToBeRemoved: memberIdToBeRemoved, participant1Id: participant1Id, participant2Id: participant2Id});
   },
-  didNotRemoveRoomPairContainingBecauseThePairDoesNotExistForThisRoomType: function (roomType, participantId) {
-    return enrich({event: e.DID_NOT_REMOVE_ROOM_PAIR_CONTAINING_BECAUSE_THE_PAIR_DOES_NOT_EXIST_FOR_THIS_ROOM_TYPE, roomType: roomType, participantId: participantId});
+  didNotRemoveRoomPairContainingBecauseThePairDoesNotExistForThisRoomType: function (roomType, memberId) {
+    return enrich({event: e.DID_NOT_REMOVE_ROOM_PAIR_CONTAINING_BECAUSE_THE_PAIR_DOES_NOT_EXIST_FOR_THIS_ROOM_TYPE, roomType: roomType, memberId: memberId});
   }
 };

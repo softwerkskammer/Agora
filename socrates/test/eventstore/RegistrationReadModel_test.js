@@ -404,5 +404,22 @@ describe('The registration read model', function () {
     });
 
   });
+  describe('knows about participants on waitinglist (isALreadyOnWaitinglist)', function () {
+    it('returns false if participant is not on waitinglist', function () {
+      eventStore.state.registrationEvents = [];
+
+      expect(readModel.isAlreadyOnWaitinglist(memberId1)).to.eql(false);
+    });
+
+    it('returns true if participant is on waitinglist', function () {
+      eventStore.state.registrationEvents = [
+        events.waitinglistParticipantWasRegistered(['single', 'junior'], sessionId1, memberId1)
+      ];
+
+      expect(readModel.isAlreadyOnWaitinglist(memberId1)).to.eql(true);
+    });
+
+
+  });
 
 });

@@ -13,21 +13,21 @@ function RoomsWriteModel(eventStore) {
   this.registrationReadModel = new RegistrationReadModel(eventStore);
 }
 
-RoomsWriteModel.prototype.isParticipantIn = function (roomType, participantId) {
-  return this.registrationReadModel.registeredInRoomType(participantId) === roomType;
+RoomsWriteModel.prototype.isParticipantIn = function (roomType, memberId) {
+  return this.registrationReadModel.registeredInRoomType(memberId) === roomType;
 };
 
 RoomsWriteModel.prototype.isRoomPairIn = function (roomType, participant1Id, participant2Id) {
   return this.roomsReadModel.isRoomPairIn(roomType, participant1Id, participant2Id);
 };
 
-RoomsWriteModel.prototype.isInRoom = function (roomType, participantId) {
-  return R.contains(participantId, this.roomsReadModel.participantsInRoom(roomType));
+RoomsWriteModel.prototype.isInRoom = function (roomType, memberId) {
+  return R.contains(memberId, this.roomsReadModel.participantsInRoom(roomType));
 };
 
-RoomsWriteModel.prototype.roomPairContaining = function (roomType, participantId) {
+RoomsWriteModel.prototype.roomPairContaining = function (roomType, memberId) {
   return R.find(function (pair) {
-    return pair.participant1Id === participantId || pair.participant2Id === participantId;
+    return pair.participant1Id === memberId || pair.participant2Id === memberId;
   }, this.roomsReadModel.roomPairsFor(roomType));
 };
 

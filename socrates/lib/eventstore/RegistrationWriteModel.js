@@ -39,6 +39,10 @@ RegistrationWriteModel.prototype.isAlreadyOnWaitinglist = function (memberId) {
   return this.registrationReadModel.isAlreadyOnWaitinglist(memberId);
 };
 
+RegistrationWriteModel.prototype.roomTypesOf = function (memberId) {
+  return this.registrationReadModel.roomTypesOf(memberId);
+};
+
 /////////////////////////////////////////////////////////////////////////////////////////
 RegistrationWriteModel.prototype.updateRegistrationEvents = function (newEvents) {
   this._eventStore.updateRegistrationEvents(newEvents);

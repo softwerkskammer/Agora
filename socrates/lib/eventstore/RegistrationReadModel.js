@@ -50,7 +50,7 @@ var projectParticipantsByMemberId = function (participantsByMemberId, event) {
     participantsByMemberId[event.memberId] = event;
   }
   if (event.event === e.PARTICIPANT_WAS_REMOVED) {
-    delete participantsByMemberId[event.participantId];
+    delete participantsByMemberId[event.memberId];
   }
   return participantsByMemberId;
 };
@@ -136,7 +136,7 @@ var projectWaitinglistParticipantsByMemberId = function (waitinglistParticipants
     delete waitinglistParticipantsByMemberId[event.memberId];
   }
   if (event.event === e.WAITINGLIST_PARTICIPANT_WAS_REMOVED) {
-    delete waitinglistParticipantsByMemberId[event.participantId];
+    delete waitinglistParticipantsByMemberId[event.memberId];
   }
   if (event.event === e.REGISTERED_PARTICIPANT_FROM_WAITINGLIST) {
     delete waitinglistParticipantsByMemberId[event.memberId];

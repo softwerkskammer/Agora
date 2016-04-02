@@ -232,7 +232,7 @@ app.get('/management', function (req, res, next) {
             function membersOnWaitinglist(resourceName, globalCallback) {
               async.map(registrationReadModel.allWaitinglistParticipantsIn(resourceName),
                 function (entry, callback) {
-                  memberstore.getMemberForId(entry.participantId, function (err2, member) {
+                  memberstore.getMemberForId(entry.memberId, function (err2, member) {
                     if (err2 || !member) { return callback(err2); }
                     member.addedToWaitinglistAt = entry.timestamp;
                     callback(null, member);

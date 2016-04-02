@@ -3,7 +3,7 @@
 
 var beans = require('simple-configure').get('beans');
 var events = beans.get('events');
-
+var misc = beans.get('misc');
 
 function RegistrationCommandProcessor(writeModel) {
   this.writeModel = writeModel;
@@ -40,26 +40,26 @@ RegistrationCommandProcessor.prototype.registerParticipant = function (roomType,
   return event.event;
 };
 
-RegistrationCommandProcessor.prototype.removeParticipant = function (roomType, participantId) {
+RegistrationCommandProcessor.prototype.removeParticipant = function (roomType, memberId) {
   var event;
-  if (!this.writeModel.isAlreadyRegistered(participantId)) {
-    event = events.didNotRemoveParticipantBecauseTheyAreNotRegistered(roomType, participantId);
-  } else if (!this.writeModel.isRegisteredInRoomType(participantId, roomType)){
+  if (!this.writeModel.isAlreadyRegistered(memberId)) {
+    event = events.didNotRemoveParticipantBecauseTheyAreNotRegistered(roomType, memberId);
+  } else if (!this.writeModel.isRegisteredInRoomType(memberId, roomType)) {
     // not registered for this room
-    event = events.didNotRemoveParticipantBecauseTheyAreNotRegisteredForThisRoomType(roomType, participantId);
+    event = events.didNotRemoveParticipantBecauseTheyAreNotRegisteredForThisRoomType(roomType, memberId);
   } else {
-    event = events.participantWasRemoved(roomType, participantId);
+    event = events.participantWasRemoved(roomType, memberId);
   }
   this._updateRegistrationEvents(event);
 };
 
-RegistrationCommandProcessor.prototype.removeWaitinglistParticipant = function (roomType, participantId) {
+RegistrationCommandProcessor.prototype.removeWaitinglistParticipant = function (desiredRoomTypes, memberId) {
   var event;
-  if (!this.writeModel.isAlreadyOnWaitinglist(participantId)) {
-    event = events.didNotRemoveWaitinglistParticipantBecauseTheyAreNotRegistered(roomType, participantId);
+  if (!this.writeModel.isAlreadyOnWaitinglist(memberId)) {
+    event = events.didNotRemoveWaitinglistParticipantBecauseTheyAreNotRegistered(desiredRoomTypes, memberId);
   } else {
     // all is well
-    event = events.waitinglistParticipantWasRemoved(roomType, participantId);
+    event = events.waitinglistParticipantWasRemoved(desiredRoomTypes, memberId);
   }
   this._updateRegistrationEvents(event);
 };
@@ -68,6 +68,8 @@ RegistrationCommandProcessor.prototype.changeDesiredRoomTypes = function (member
   var event;
   if (!this.writeModel.isAlreadyOnWaitinglist(memberId)) {
     event = events.didNotChangeDesiredRoomTypesBecauseParticipantIsNotOnWaitinglist(memberId, desiredRoomTypes);
+  } else if (misc.arraysAreEqual(this.writeModel.roomTypesOf(memberId), desiredRoomTypes)) {
+    event = events.didNotChangeDesiredRoomTypesBecauseThereWasNoChange(memberId, desiredRoomTypes);
   } else {
     // all is well
     event = events.desiredRoomTypesWereChanged(memberId, desiredRoomTypes);
