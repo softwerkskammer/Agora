@@ -403,6 +403,35 @@ describe('The registration command processor', function () {
         {event: e.WAITINGLIST_PARTICIPANT_WAS_REMOVED, desiredRoomTypes: [singleBedRoom], memberId: memberId1}
       ]);
     });
+    it('does not remove waitinglist participant because he is not registered', function () {
+      //Given (saved events)
+      eventStore.state.registrationEvents = [
+        events.waitinglistParticipantWasRegistered([singleBedRoom], sessionId2, memberId2)
+      ];
+
+      //When (issued command)
+      commandProcessor.removeWaitinglistParticipant([singleBedRoom], memberId1);
+
+      //Then (saved events)
+      expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
+        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, desiredRoomTypes: [singleBedRoom], sessionID: sessionId2, memberId: memberId2},
+        {event: e.DID_NOT_REMOVE_WAITINGLIST_PARTICIPANT_BECAUSE_THEY_ARE_NOT_REGISTERED, desiredRoomTypes: [singleBedRoom], memberId: memberId1}
+      ]);
+    });
+    it('does only remove waitinglist participant from one of two rooms', function () {
+      //Given (saved events)
+      eventStore.state.registrationEvents = [
+        events.waitinglistParticipantWasRegistered([singleBedRoom, bedInDouble], sessionId1, memberId1)
+      ];
+
+      //When (issued commands)
+      commandProcessor.removeWaitinglistParticipant([bedInDouble], memberId1);
+
+      //Then (saved events)
+      expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
+        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, desiredRoomTypes: [singleBedRoom, bedInDouble], sessionID: sessionId1, memberId: memberId1},
+        {event: e.WAITINGLIST_PARTICIPANT_WAS_REMOVED, desiredRoomTypes: [bedInDouble], memberId: memberId1}]);
+    });
   });
 
   describe('for room type changes (moveParticipantToNewRoomType)', function () {
