@@ -400,7 +400,7 @@ describe('The registration command processor', function () {
       //Then (saved events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
         {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, desiredRoomTypes: [singleBedRoom], sessionID: sessionId1, memberId: memberId1},
-        {event: e.WAITINGLIST_PARTICIPANT_WAS_REMOVED, desiredRoomTypes: [singleBedRoom], sessionID: sessionId1, memberId: memberId1}
+        {event: e.WAITINGLIST_PARTICIPANT_WAS_REMOVED, desiredRoomTypes: [singleBedRoom], memberId: memberId1}
       ]);
     });
   });
