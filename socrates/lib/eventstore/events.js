@@ -78,11 +78,11 @@ module.exports = {
   didNotRemoveParticipantBecauseTheyAreNotRegisteredForThisRoomType: function (roomType, memberId) {
     return enrich({event: e.DID_NOT_REMOVE_PARTICIPANT_BECAUSE_THEY_ARE_NOT_REGISTERED_FOR_THIS_ROOM_TYPE, memberId: memberId, roomType: roomType});
   },
-  waitinglistParticipantWasRemoved: function (roomType, memberId) {
-    return enrich({event: e.WAITINGLIST_PARTICIPANT_WAS_REMOVED, memberId: memberId});
+  waitinglistParticipantWasRemoved: function (desiredRoomTypes, memberId) {
+    return enrich({event: e.WAITINGLIST_PARTICIPANT_WAS_REMOVED, memberId: memberId, desiredRoomTypes: desiredRoomTypes});
   },
-  didNotRemoveWaitinglistParticipantBecauseTheyAreNotRegistered: function (roomType, memberId) {
-    return enrich({event: e.DID_NOT_REMOVE_WAITINGLIST_PARTICIPANT_BECAUSE_THEY_ARE_NOT_REGISTERED, memberId: memberId});
+  didNotRemoveWaitinglistParticipantBecauseTheyAreNotRegistered: function (desiredRoomTypes, memberId) {
+    return enrich({event: e.DID_NOT_REMOVE_WAITINGLIST_PARTICIPANT_BECAUSE_THEY_ARE_NOT_REGISTERED, memberId: memberId, desiredRoomTypes: desiredRoomTypes});
   },
 
   // management after registration:

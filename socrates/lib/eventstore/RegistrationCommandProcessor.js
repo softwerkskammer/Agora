@@ -53,13 +53,13 @@ RegistrationCommandProcessor.prototype.removeParticipant = function (roomType, m
   this._updateRegistrationEvents(event);
 };
 
-RegistrationCommandProcessor.prototype.removeWaitinglistParticipant = function (roomType, memberId) {
+RegistrationCommandProcessor.prototype.removeWaitinglistParticipant = function (desiredRoomTypes, memberId) {
   var event;
   if (!this.writeModel.isAlreadyOnWaitinglist(memberId)) {
-    event = events.didNotRemoveWaitinglistParticipantBecauseTheyAreNotRegistered(roomType, memberId);
+    event = events.didNotRemoveWaitinglistParticipantBecauseTheyAreNotRegistered(desiredRoomTypes, memberId);
   } else {
     // all is well
-    event = events.waitinglistParticipantWasRemoved(roomType, memberId);
+    event = events.waitinglistParticipantWasRemoved(desiredRoomTypes, memberId);
   }
   this._updateRegistrationEvents(event);
 };
