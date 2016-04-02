@@ -55,17 +55,17 @@ RoomsCommandProcessor.prototype.removeParticipantPairFor = function (roomType, p
   this._updateRoomsEvents(eventList);
 };
 
-RoomsCommandProcessor.prototype.removeParticipantPairContaining = function (roomType, participantId) {
+RoomsCommandProcessor.prototype.removeParticipantPairContaining = function (roomType, memberId) {
   var eventList = [];
 
-  var pair = this.writeModel.roomPairContaining(roomType, participantId);
+  var pair = this.writeModel.roomPairContaining(roomType, memberId);
   if (!pair) {
-    eventList.push(events.didNotRemoveRoomPairContainingBecauseThePairDoesNotExistForThisRoomType(roomType, participantId));
+    eventList.push(events.didNotRemoveRoomPairContainingBecauseThePairDoesNotExistForThisRoomType(roomType, memberId));
   }
 
   if (eventList.length === 0) {
     // nothing bad was discovered so far
-    eventList.push(events.roomPairContainingAParticipantWasRemoved(roomType, participantId, pair.participant1Id, pair.participant2Id));
+    eventList.push(events.roomPairContainingAParticipantWasRemoved(roomType, memberId, pair.participant1Id, pair.participant2Id));
   }
   this._updateRoomsEvents(eventList);
 };

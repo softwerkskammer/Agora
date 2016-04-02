@@ -357,7 +357,7 @@ describe('The registration command processor', function () {
       //Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
         {event: e.PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1},
-        {event: e.PARTICIPANT_WAS_REMOVED, roomType: singleBedRoom, participantId: memberId1}
+        {event: e.PARTICIPANT_WAS_REMOVED, roomType: singleBedRoom, memberId: memberId1}
       ]);
     });
     it('removes no participant when not registered', function () {
@@ -370,7 +370,7 @@ describe('The registration command processor', function () {
       //Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
         {event: e.PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId2},
-        {event: e.DID_NOT_REMOVE_PARTICIPANT_BECAUSE_THEY_ARE_NOT_REGISTERED, roomType: singleBedRoom, participantId: memberId1}
+        {event: e.DID_NOT_REMOVE_PARTICIPANT_BECAUSE_THEY_ARE_NOT_REGISTERED, roomType: singleBedRoom, memberId: memberId1}
       ]);
     });
     it('doesnt remove the participant because its not the right room', function () {
@@ -383,7 +383,7 @@ describe('The registration command processor', function () {
       //Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
         {event: e.PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1},
-        {event: e.DID_NOT_REMOVE_PARTICIPANT_BECAUSE_THEY_ARE_NOT_REGISTERED_FOR_THIS_ROOM_TYPE, roomType: bedInDouble, participantId: memberId1}
+        {event: e.DID_NOT_REMOVE_PARTICIPANT_BECAUSE_THEY_ARE_NOT_REGISTERED_FOR_THIS_ROOM_TYPE, roomType: bedInDouble, memberId: memberId1}
       ]);
     });
   });

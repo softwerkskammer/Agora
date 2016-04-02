@@ -68,13 +68,13 @@ RoomsReadModel.prototype.participantsWithoutRoomIn = function (roomType) {
   return R.difference(this._registrationReadModel.allParticipantsIn(roomType), this.participantsInRoom(roomType));
 };
 
-RoomsReadModel.prototype.roommateFor = function (roomType, participantId) {
+RoomsReadModel.prototype.roommateFor = function (roomType, memberId) {
   var pairWithMember = R.find(function (pair) {
-    return pair.participant1Id === participantId || pair.participant2Id === participantId;
+    return pair.participant1Id === memberId || pair.participant2Id === memberId;
   }, this.roomPairsFor(roomType));
 
   if (pairWithMember) {
-    return pairWithMember.participant1Id === participantId ? pairWithMember.participant2Id : pairWithMember.participant1Id;
+    return pairWithMember.participant1Id === memberId ? pairWithMember.participant2Id : pairWithMember.participant1Id;
   }
   return undefined;
 };

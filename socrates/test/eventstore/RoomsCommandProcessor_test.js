@@ -56,7 +56,7 @@ describe('The rooms command processor', function () {
     expect(stripTimestamps(eventStore.state.roomsEvents)).to.eql([{
       event: e.DID_NOT_ADD_ROOM_PAIR_BECAUSE_PARTICIPANT_IS_NOT_IN_ROOM_TYPE,
       roomType: bedInDouble,
-      participantId: undefined
+      memberId: undefined
     }]);
   });
 
@@ -66,7 +66,7 @@ describe('The rooms command processor', function () {
     expect(stripTimestamps(eventStore.state.roomsEvents)).to.eql([{
       event: e.DID_NOT_ADD_ROOM_PAIR_BECAUSE_PARTICIPANT_IS_NOT_IN_ROOM_TYPE,
       roomType: bedInDouble,
-      participantId: null
+      memberId: null
     }]);
   });
 
@@ -77,12 +77,12 @@ describe('The rooms command processor', function () {
       {
         event: e.DID_NOT_ADD_ROOM_PAIR_BECAUSE_PARTICIPANT_IS_NOT_IN_ROOM_TYPE,
         roomType: bedInDouble,
-        participantId: undefined
+        memberId: undefined
       },
       {
         event: e.DID_NOT_ADD_ROOM_PAIR_BECAUSE_PARTICIPANT_IS_NOT_IN_ROOM_TYPE,
         roomType: bedInDouble,
-        participantId: null
+        memberId: null
       }
     ]);
   });
@@ -93,7 +93,7 @@ describe('The rooms command processor', function () {
     expect(stripTimestamps(eventStore.state.roomsEvents)).to.eql([{
       event: e.DID_NOT_ADD_ROOM_PAIR_BECAUSE_PARTICIPANT_IS_NOT_IN_ROOM_TYPE,
       roomType: bedInDouble,
-      participantId: 'unknownMemberId'
+      memberId: 'unknownMemberId'
     }]);
   });
 
@@ -103,7 +103,7 @@ describe('The rooms command processor', function () {
     expect(stripTimestamps(eventStore.state.roomsEvents)).to.eql([{
       event: e.DID_NOT_ADD_ROOM_PAIR_BECAUSE_PARTICIPANT_IS_NOT_IN_ROOM_TYPE,
       roomType: bedInDouble,
-      participantId: 'unknownMemberId'
+      memberId: 'unknownMemberId'
     }]);
   });
 
@@ -114,12 +114,12 @@ describe('The rooms command processor', function () {
       {
         event: e.DID_NOT_ADD_ROOM_PAIR_BECAUSE_PARTICIPANT_IS_NOT_IN_ROOM_TYPE,
         roomType: bedInDouble,
-        participantId: 'unknownMemberId'
+        memberId: 'unknownMemberId'
       },
       {
         event: e.DID_NOT_ADD_ROOM_PAIR_BECAUSE_PARTICIPANT_IS_NOT_IN_ROOM_TYPE,
         roomType: bedInDouble,
-        participantId: 'anotherUnknownMemberId'
+        memberId: 'anotherUnknownMemberId'
       }
     ]);
   });
@@ -130,7 +130,7 @@ describe('The rooms command processor', function () {
     expect(stripTimestamps(eventStore.state.roomsEvents)).to.eql([{
       event: e.DID_NOT_ADD_ROOM_PAIR_BECAUSE_PARTICIPANT_IS_PAIRED_WITH_THEMSELVES,
       roomType: bedInDouble,
-      participantId: 'memberId1'
+      memberId: 'memberId1'
     }]);
   });
 
@@ -151,7 +151,7 @@ describe('The rooms command processor', function () {
       {
         event: e.DID_NOT_ADD_ROOM_PAIR_BECAUSE_PARTICIPANT_IS_ALREADY_IN_ROOM,
         roomType: bedInDouble,
-        participantId: 'memberId1'
+        memberId: 'memberId1'
       }
     ]);
   });
@@ -173,7 +173,7 @@ describe('The rooms command processor', function () {
       {
         event: e.DID_NOT_ADD_ROOM_PAIR_BECAUSE_PARTICIPANT_IS_ALREADY_IN_ROOM,
         roomType: bedInDouble,
-        participantId: 'memberId2'
+        memberId: 'memberId2'
       }
     ]);
   });
@@ -195,12 +195,12 @@ describe('The rooms command processor', function () {
       {
         event: e.DID_NOT_ADD_ROOM_PAIR_BECAUSE_PARTICIPANT_IS_ALREADY_IN_ROOM,
         roomType: bedInDouble,
-        participantId: 'memberId2'
+        memberId: 'memberId2'
       },
       {
         event: e.DID_NOT_ADD_ROOM_PAIR_BECAUSE_PARTICIPANT_IS_ALREADY_IN_ROOM,
         roomType: bedInDouble,
-        participantId: 'memberId1'
+        memberId: 'memberId1'
       }
     ]);
   });
@@ -268,7 +268,7 @@ describe('The rooms command processor', function () {
       {
         event: e.ROOM_PAIR_CONTAINING_A_PARTICIPANT_WAS_REMOVED,
         roomType: bedInDouble,
-        participantIdToBeRemoved: 'memberId1',
+        memberIdToBeRemoved: 'memberId1',
         participant1Id: 'memberId1',
         participant2Id: 'memberId2'
       }
@@ -291,7 +291,7 @@ describe('The rooms command processor', function () {
       {
         event: e.ROOM_PAIR_CONTAINING_A_PARTICIPANT_WAS_REMOVED,
         roomType: bedInDouble,
-        participantIdToBeRemoved: 'memberId2',
+        memberIdToBeRemoved: 'memberId2',
         participant1Id: 'memberId1',
         participant2Id: 'memberId2'
       }
@@ -314,7 +314,7 @@ describe('The rooms command processor', function () {
       {
         event: e.DID_NOT_REMOVE_ROOM_PAIR_CONTAINING_BECAUSE_THE_PAIR_DOES_NOT_EXIST_FOR_THIS_ROOM_TYPE,
         roomType: bedInDouble,
-        participantId: 'memberId3'
+        memberId: 'memberId3'
       }
     ]);
   });
