@@ -388,6 +388,23 @@ describe('The registration command processor', function () {
     });
   });
 
+  describe('for removing a waitinglist Participant (removeWaitinglistParticipant)', function () {
+    xit('removes a waitinglist participant', function () {
+      //Given (saved events)
+      eventStore.state.registrationEvents = [
+        events.waitinglistParticipantWasRegistered([singleBedRoom], sessionId1, memberId1)
+      ];
+      //When (issued commamnd)
+      commandProcessor.removeWaitinglistParticipant([singleBedRoom], sessionId1, memberId1);
+
+      //Then (saved events)
+      expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
+        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, desiredRoomTypes: [singleBedRoom], sessionID: sessionId1, memberId: memberId1},
+        {event: e.WAITINGLIST_PARTICIPANT_WAS_REMOVED, desiredRoomTypes: [singleBedRoom], sessionID: sessionId1, memberId: memberId1}
+      ]);
+    });
+  });
+
   describe('for room type changes (moveParticipantToNewRoomType)', function () {
     it('moves the participant to the new room type without caring about the new room limit', function () {
       // Given (saved events)
