@@ -450,7 +450,7 @@ describe('The registration command processor', function () {
         {event: e.DESIRED_ROOM_TYPES_WERE_CHANGED, desiredRoomTypes: [bedInDouble], memberId: memberId1}
       ]);
     });
-    it('does not change the desired room types because participant is not o n waitinglist', function () {
+    it('does not change the desired room types because participant is not on waitinglist', function () {
       //Given (saved events)
       eventStore.state.registrationEvents = [];
 
@@ -462,18 +462,19 @@ describe('The registration command processor', function () {
         {event: e.DID_NOT_CHANGE_DESIRED_ROOM_TYPES_BECAUSE_PARTICIPANT_IS_NOT_ON_WAITINGLIST, desiredRoomTypes: [bedInDouble], memberId: memberId1}
       ]);
     });
-    xit('does not change the desired room types cause it would not change anything', function () {
+    it('does not change the desired room types cause it would not change anything', function () {
       //Given (saved events)
       eventStore.state.registrationEvents = [
         events.waitinglistParticipantWasRegistered([singleBedRoom], sessionId1, memberId1)
       ];
 
       //When (issued command)
-      commandProcessor.changeDesiredRoomTypes([singleBedRoom], memberId1);
+      commandProcessor.changeDesiredRoomTypes(memberId1, [singleBedRoom]);
 
       //Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, desiredRoomTypes: [singleBedRoom], sessionID: sessionId1, memberId: memberId1}
+        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, desiredRoomTypes: [singleBedRoom], sessionID: sessionId1, memberId: memberId1},
+        {event: e.DID_NOT_CHANGE_DESIRED_ROOM_TYPES_BECAUSE_THERE_WAS_NO_CHANGE, desiredRoomTypes: [singleBedRoom], memberId: memberId1}
       ]);
     });
   });

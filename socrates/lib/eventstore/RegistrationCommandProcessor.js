@@ -3,7 +3,7 @@
 
 var beans = require('simple-configure').get('beans');
 var events = beans.get('events');
-
+var misc = beans.get('misc');
 
 function RegistrationCommandProcessor(writeModel) {
   this.writeModel = writeModel;
@@ -44,7 +44,7 @@ RegistrationCommandProcessor.prototype.removeParticipant = function (roomType, m
   var event;
   if (!this.writeModel.isAlreadyRegistered(memberId)) {
     event = events.didNotRemoveParticipantBecauseTheyAreNotRegistered(roomType, memberId);
-  } else if (!this.writeModel.isRegisteredInRoomType(memberId, roomType)){
+  } else if (!this.writeModel.isRegisteredInRoomType(memberId, roomType)) {
     // not registered for this room
     event = events.didNotRemoveParticipantBecauseTheyAreNotRegisteredForThisRoomType(roomType, memberId);
   } else {
@@ -68,6 +68,8 @@ RegistrationCommandProcessor.prototype.changeDesiredRoomTypes = function (member
   var event;
   if (!this.writeModel.isAlreadyOnWaitinglist(memberId)) {
     event = events.didNotChangeDesiredRoomTypesBecauseParticipantIsNotOnWaitinglist(memberId, desiredRoomTypes);
+  } else if (misc.arraysAreEqual(this.writeModel.roomTypesOf(memberId), desiredRoomTypes)) {
+    event = events.didNotChangeDesiredRoomTypesBecauseThereWasNoChange(memberId, desiredRoomTypes);
   } else {
     // all is well
     event = events.desiredRoomTypesWereChanged(memberId, desiredRoomTypes);

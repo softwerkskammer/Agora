@@ -99,7 +99,10 @@ module.exports = {
   },
 
   didNotChangeDesiredRoomTypesBecauseParticipantIsNotOnWaitinglist: function (memberId, desiredRoomTypes) {
-      return enrich({event: e.DID_NOT_CHANGE_DESIRED_ROOM_TYPES_BECAUSE_PARTICIPANT_IS_NOT_ON_WAITINGLIST, memberId: memberId, desiredRoomTypes: desiredRoomTypes});
+    return enrich({event: e.DID_NOT_CHANGE_DESIRED_ROOM_TYPES_BECAUSE_PARTICIPANT_IS_NOT_ON_WAITINGLIST, memberId: memberId, desiredRoomTypes: desiredRoomTypes});
+  },
+  didNotChangeDesiredRoomTypesBecauseThereWasNoChange: function (memberId, desiredRoomTypes) {
+    return enrich({event: e.DID_NOT_CHANGE_DESIRED_ROOM_TYPES_BECAUSE_THERE_WAS_NO_CHANGE, memberId: memberId, desiredRoomTypes: desiredRoomTypes});
   },
 
   durationWasChanged: function (memberId, roomType, duration) {

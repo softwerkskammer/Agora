@@ -45,6 +45,10 @@ module.exports = {
     return new RegExp(_(stringsArray).compact().map(asWholeWordEscaped).join('|'), 'i');
   },
 
+  arraysAreEqual: function (array1, array2) {
+    return array1.length === array2.length && array1.every((v, i)=> v === array2[i]);
+  },
+
   differenceCaseInsensitive: function (strings, stringsToReduce) {
     function prepare(strs) {
       return _(strs).compact().invoke('toLowerCase').value();
