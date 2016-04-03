@@ -40,7 +40,7 @@ describe('The registration read model', function () {
     readModel = new RegistrationReadModel(eventStore);
   });
 
-  describe('calculating the reservation expiration time', function () {
+  describe('calculating the reservation expiration time (reservationExpiration)', function () {
 
     it('returns undefined as the expiration time if there are no reservations for the given session id', function () {
       eventStore.state.registrationEvents = [
@@ -85,7 +85,7 @@ describe('The registration read model', function () {
     });
   });
 
-  describe('giving the reservations and participants for a room type', function () {
+  describe('giving the reservations and participants for a room type (reservationsAndParticipantsFor)', function () {
 
     it('does not consider any reservations or participants when there are no events', function () {
 
@@ -199,10 +199,6 @@ describe('The registration read model', function () {
           timestamp: aShortTimeAgo.valueOf()
         }]);
     });
-
-  });
-
-  describe('considering removals', function () {
     it('does not list the registration event of a participant that has been removed', function () {
       eventStore.state.registrationEvents = [
         events.participantWasRegistered(singleBedRoom, untilSaturday, sessionId1, memberId1),
@@ -210,6 +206,10 @@ describe('The registration read model', function () {
 
       expect(readModel.reservationsAndParticipantsFor(singleBedRoom)).to.eql([]);
     });
+
+  });
+
+  describe('considering removals (participantsByMemberIdFor)', function () {
 
     it('does not return the member id  and information of a participant that has been removed', function () {
       eventStore.state.registrationEvents = [
@@ -220,7 +220,7 @@ describe('The registration read model', function () {
     });
   });
 
-  describe('calculating the existence of a valid reservation', function () {
+  describe('calculating the existence of a valid reservation (hasValidReservationFor)', function () {
 
     it('returns false if there are no reservations for the given session id', function () {
       eventStore.state.registrationEvents = [
@@ -264,7 +264,7 @@ describe('The registration read model', function () {
     });
   });
 
-  describe('for waitinglist reservations and participants', function () {
+  describe('for waitinglist reservations and participants (waitinglistReservationsAndParticipantsFor)', function () {
     it('does not consider any waitinglist reservations or participants when there are no events', function () {
       expect(readModel.waitinglistReservationsAndParticipantsFor(singleBedRoom)).to.eql([]);
     });
@@ -369,7 +369,7 @@ describe('The registration read model', function () {
     });
   });
 
-  describe('knows about registered persons', function () {
+  describe('knows about registered persons (isAlreadyRegistered)', function () {
     it('registers a registrationTuple', function () {
       eventStore.state.registrationEvents = [
         events.reservationWasIssued(singleBedRoom, untilSaturday, sessionId1),
@@ -380,7 +380,7 @@ describe('The registration read model', function () {
 
   });
 
-  describe('knows about a participant\'s selected options', function () {
+  describe('knows about a participant\'s selected options (selectedOptionsFor)', function () {
 
     it('returns a registered member\'s option', function () {
       eventStore.state.registrationEvents = [
@@ -404,7 +404,8 @@ describe('The registration read model', function () {
     });
 
   });
-  describe('knows about participants on waitinglist (isALreadyOnWaitinglist)', function () {
+
+  describe('knows about participants on waitinglist (isAlreadyOnWaitinglist)', function () {
     it('returns false if participant is not on waitinglist', function () {
       eventStore.state.registrationEvents = [];
 
@@ -419,7 +420,88 @@ describe('The registration read model', function () {
       expect(readModel.isAlreadyOnWaitinglist(memberId1)).to.eql(true);
     });
 
+  });
 
+  describe('knows if rooms are full (isFull)', function () {
+    it('returns true when the room is full', function () {
+      eventStore.state.socratesEvents = [events.roomQuotaWasSet(singleBedRoom, 1)]
+      eventStore.state.registrationEvents = [
+        events.participantWasRegistered(singleBedRoom, untilSaturday, sessionId1, memberId1)
+      ];
+
+      expect(readModel.isFull(singleBedRoom)).to.eql(true);
+    });
+    it('returns false if the room quota was not set', function () {
+      eventStore.state.socratesEvents = [events.roomQuotaWasSet(bedInDouble, 100)];
+
+      expect(readModel.isFull(singleBedRoom)).to.eql(false);
+    });
+
+    it('is no longer full when participant was removed from full room', function () {
+      eventStore.state.socratesEvents = [events.roomQuotaWasSet(singleBedRoom, 1)];
+      eventStore.state.registrationEvents = [
+        events.participantWasRegistered(singleBedRoom, untilSaturday, sessionId1, memberId1),
+        events.participantWasRemoved(singleBedRoom, memberId1)
+      ];
+
+      expect(readModel.isFull(singleBedRoom)).to.eql(false);
+    });
+
+    it('returns true if participant was registered from waitinglist', function () {
+      eventStore.state.socratesEvents = [events.roomQuotaWasSet(singleBedRoom, 1)];
+      eventStore.state.registrationEvents = [
+        events.registeredParticipantFromWaitinglist(singleBedRoom, untilSaturday, memberId1)
+      ];
+
+      expect(readModel.isFull(singleBedRoom)).to.eql(true);
+    });
+
+    it('returns true when person is moved by changing his room type', function () {
+      eventStore.state.socratesEvents = [
+        events.roomQuotaWasSet(singleBedRoom, 1),
+        events.roomQuotaWasSet(bedInDouble, 1)
+      ];
+      eventStore.state.registrationEvents = [
+        events.participantWasRegistered(singleBedRoom, untilSaturday, sessionId1, memberId1),
+        events.roomTypeWasChanged(memberId1, bedInDouble, untilSaturday)];
+
+      expect(readModel.isFull(singleBedRoom)).to.eql(false);
+      expect(readModel.isFull(bedInDouble)).to.eql(true);
+    });
+  });
+
+  describe('knows in what room type the participant is registered (registeredInRoomType)', function () {
+    it('returns the right room type for a registered participant', function () {
+      eventStore.state.registrationEvents = [
+        events.participantWasRegistered(singleBedRoom, untilSaturday, sessionId1, memberId1)
+      ];
+      expect(readModel.registeredInRoomType(memberId1)).to.eql(singleBedRoom);
+    });
+
+    it('returns null if member is not registered', function () {
+      eventStore.state.registrationEvents = [
+        events.participantWasRegistered(singleBedRoom, untilSaturday, sessionId1, memberId1)
+      ];
+      expect(readModel.registeredInRoomType(memberId2)).to.eql(null);
+    });
+
+    it('returns the right room if participant has changed the room type', function () {
+      eventStore.state.registrationEvents = [
+        events.participantWasRegistered(singleBedRoom, untilSundayMorning, sessionId1, memberId1),
+        events.roomTypeWasChanged(memberId1, bedInDouble, untilSaturday)
+      ];
+
+      expect(readModel.registeredInRoomType(memberId1)).to.eql(bedInDouble);
+    });
+
+    it('returns the right room if participant was moved from waitinglist', function () {
+      eventStore.state.registrationEvents = [
+        events.waitinglistParticipantWasRegistered([bedInDouble, singleBedRoom], sessionId1, memberId1),
+        events.registeredParticipantFromWaitinglist(singleBedRoom, untilSaturday, memberId1)
+      ];
+
+      expect(readModel.registeredInRoomType(memberId1)).to.eql(singleBedRoom);
+    });
   });
 
 });
