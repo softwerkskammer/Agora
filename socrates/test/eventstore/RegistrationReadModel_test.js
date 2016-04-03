@@ -504,4 +504,44 @@ describe('The registration read model', function () {
     });
   });
 
+  describe('knows the room types of a participant or waitinglist participant (roomTypesOf)', function () {
+    it('returns the correct room type for a registered participant', function () {
+      eventStore.state.registrationEvents = [
+        events.participantWasRegistered(singleBedRoom, untilSundayMorning, sessionId1, memberId1)
+      ];
+      expect(readModel.roomTypesOf(memberId1)).to.eql([singleBedRoom]);
+    });
+    it('returns the desired room types of a waitinglist participant', function () {
+      eventStore.state.registrationEvents = [
+        events.waitinglistParticipantWasRegistered([singleBedRoom, bedInDouble], sessionId1, memberId1)
+      ];
+
+      expect(readModel.roomTypesOf(memberId1)).to.eql([singleBedRoom, bedInDouble]);
+    });
+
+    it('returns the right room types if they were changed', function () {
+      eventStore.state.registrationEvents = [
+        events.participantWasRegistered(singleBedRoom, untilSaturday, sessionId1, memberId1),
+        events.waitinglistParticipantWasRegistered([bedInDouble], sessionId2, memberId2),
+        events.desiredRoomTypesWereChanged(memberId2, [singleBedRoom]),
+        events.roomTypeWasChanged(memberId1, bedInDouble, untilSundayMorning)
+      ];
+
+      expect(readModel.roomTypesOf(memberId1)).to.eql([bedInDouble]);
+      expect(readModel.roomTypesOf(memberId2)).to.eql([singleBedRoom]);
+
+    });
+
+    it('returns the right room types when participant/waitinglist participant was removed', function () {
+      eventStore.state.registrationEvents = [
+        events.participantWasRegistered(singleBedRoom, untilSundayMorning, sessionId1, memberId1),
+        events.waitinglistParticipantWasRegistered([singleBedRoom], sessionId2, memberId2),
+        events.participantWasRemoved(singleBedRoom, memberId1),
+        events.waitinglistParticipantWasRemoved([singleBedRoom], memberId2)
+      ];
+
+      expect(readModel.roomTypesOf(memberId1)).to.eql([]);
+      expect(readModel.roomTypesOf(memberId2)).to.eql([]);
+    });
+  });
 });
