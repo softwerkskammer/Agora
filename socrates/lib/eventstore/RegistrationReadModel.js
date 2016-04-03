@@ -214,13 +214,13 @@ RegistrationReadModel.prototype.selectedOptionsFor = function (memberID) {
   return null;
 };
 
-RegistrationReadModel.prototype.roomTypesOf = function (memberID) {
-  var participantEvent = this.participantEventFor(memberID);
+RegistrationReadModel.prototype.roomTypesOf = function (memberId) {
+  var participantEvent = this.participantEventFor(memberId);
   if (participantEvent) {
     return [participantEvent.roomType];
   }
 
-  var waitinglistParticipantEvent = this.waitinglistParticipantEventFor(memberID);
+  var waitinglistParticipantEvent = this.waitinglistParticipantEventFor(memberId);
   if (waitinglistParticipantEvent) {
     return waitinglistParticipantEvent.desiredRoomTypes;
   }

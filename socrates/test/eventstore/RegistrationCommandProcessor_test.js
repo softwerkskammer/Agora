@@ -785,4 +785,64 @@ describe('The registration command processor', function () {
         {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, desiredRoomTypes: [singleBedRoom, bedInDouble], memberId: memberId1}]);
     });
   });
+
+  describe('for registering participants from the waitinglist (fromWaitinglistToParticipant)', function () {
+    it('registers a participant even if he is not on the waitinglist', function () {
+      //Given (saved events)
+      eventStore.state.registrationEvents = [];
+
+      //When (issued command)
+      commandProcessor.fromWaitinglistToParticipant(singleBedRoom, memberId1, untilSaturday);
+
+      //Then (new events)
+      expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
+        {event: e.PARTICIPANT_WAS_REGISTERED, roomType: singleBedRoom, memberId: memberId1, sessionID: undefined, duration: untilSaturday}
+      ]);
+    });
+    it('registers a participant even if he is on waitinglist', function () {
+      //Given (saved events)
+      eventStore.state.registrationEvents = [
+        events.waitinglistParticipantWasRegistered([singleBedRoom, bedInDouble], sessionId1, memberId1)
+      ];
+
+      //When (issued command)
+      commandProcessor.fromWaitinglistToParticipant(singleBedRoom, memberId1, untilSaturday);
+
+      //Then (new events)
+      expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
+        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, desiredRoomTypes: [singleBedRoom, bedInDouble], memberId: memberId1},
+        {event: e.REGISTERED_PARTICIPANT_FROM_WAITINGLIST, roomType: singleBedRoom, memberId: memberId1, duration: untilSaturday}
+      ]);
+    });
+    it('does not register the participant again if he registered directly', function () {
+      //Given (saved events)
+      eventStore.state.registrationEvents = [
+        events.participantWasRegistered(singleBedRoom, untilSaturday, sessionId1, memberId1)
+      ];
+
+      //When (issued command)
+      commandProcessor.fromWaitinglistToParticipant(singleBedRoom, memberId1, untilSaturday);
+
+      //Then (new events)
+      expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
+        {event: e.PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday},
+        {event: e.DID_NOT_REGISTER_PARTICIPANT_FROM_WAITINGLIST_A_SECOND_TIME, memberId: memberId1, duration: untilSaturday, roomType: singleBedRoom}
+      ]);
+    });
+    it('does not register the participant again if he registered from the waitinglist', function () {
+      //Given (saved events)
+      eventStore.state.registrationEvents = [
+        events.registeredParticipantFromWaitinglist(singleBedRoom, untilSaturday, memberId1)
+      ];
+
+      //When (issued command)
+      commandProcessor.fromWaitinglistToParticipant(singleBedRoom, memberId1, untilSaturday);
+
+      //Then (new events)
+      expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
+        {event: e.REGISTERED_PARTICIPANT_FROM_WAITINGLIST, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday},
+        {event: e.DID_NOT_REGISTER_PARTICIPANT_FROM_WAITINGLIST_A_SECOND_TIME, memberId: memberId1, duration: untilSaturday, roomType: singleBedRoom}
+      ]);
+    });
+  });
 });
