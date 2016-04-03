@@ -196,7 +196,7 @@ describe('Registration Service', function () {
         done(err);
       });
     });
-    
+
     it('adds the registrant to the resource if he is on the waitinglist and has a valid session entry, removing him from the waitinglist', function (done) {
       eventStore.state.registrationEvents = [
         events.waitinglistParticipantWasRegistered(registrationTuple.resourceName, registrationTuple.sessionID, 'memberId'),
