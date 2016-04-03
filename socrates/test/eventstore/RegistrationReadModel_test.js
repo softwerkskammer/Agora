@@ -2,6 +2,7 @@
 
 var expect = require('must-dist');
 var moment = require('moment-timezone');
+var R = require('ramda');
 
 var beans = require('../../testutil/configureForTest').get('beans');
 var events = beans.get('events');
@@ -544,4 +545,32 @@ describe('The registration read model', function () {
       expect(readModel.roomTypesOf(memberId2)).to.eql([]);
     });
   });
+
+  describe('Reservations and registrations for participants and waitinglist participants', function () {
+    it('for a registered participant', function () {
+      eventStore.state.registrationEvents = [
+        events.reservationWasIssued(singleBedRoom, 2, sessionId1),
+        events.participantWasRegistered(singleBedRoom, 2, sessionId1, memberId1)
+      ];
+
+      expect(readModel.reservationsBySessionIdFor(singleBedRoom)).to.eql({});
+      expect(R.keys(readModel.participantsByMemberIdFor(singleBedRoom))).to.eql([memberId1]);
+      expect(readModel.waitinglistReservationsBySessionIdFor(singleBedRoom)).to.eql({});
+      expect(readModel.waitinglistParticipantsByMemberIdFor(singleBedRoom)).to.eql({});
+    });
+  });
+
+  it('for a waitinglist reservation', function () {
+    eventStore.state.registrationEvents = [
+      events.waitinglistReservationWasIssued(singleBedRoom, sessionId1),
+      events.reservationWasIssued(singleBedRoom, untilSaturday, sessionId1),
+      events.participantWasRegistered(singleBedRoom, untilSaturday, sessionId1, memberId1)
+    ];
+
+    expect(readModel.reservationsBySessionIdFor(singleBedRoom)).to.eql({});
+    expect(R.keys(readModel.participantsByMemberIdFor(singleBedRoom))).to.eql([memberId1]);
+    expect(readModel.waitinglistReservationsBySessionIdFor(singleBedRoom)).to.eql({});
+    expect(readModel.waitinglistParticipantsByMemberIdFor(singleBedRoom)).to.eql({});
+  });
+
 });
