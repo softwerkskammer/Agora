@@ -56,9 +56,6 @@ mixin navbar(xs)
         li(data-nav='location.html'): a(href='/location.html', title='Location')
           span.glyphicon.glyphicon-globe
           span.hidden-sm  Location
-        li(data-nav='history.html'): a(href='/history.html', title='History')
-          span.glyphicon.glyphicon-time
-          span.hidden-sm  History
         li(data-nav='values.html'): a(href='/values.html', title='Values')
           span.glyphicon.glyphicon-gift
           span.hidden-sm  Values
@@ -72,6 +69,9 @@ mixin navbar(xs)
                 li: a(href='/wiki/#{subdir}/') #{subdir}
             else
               li: a(href='/') <i>none</i>
+        li(data-nav='history.html'): a(href='/history.html', title='History')
+          span.glyphicon.glyphicon-time
+          span.hidden-sm  History
         +loginMenu(true)
 
       
