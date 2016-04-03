@@ -92,21 +92,6 @@ module.exports = {
     });
   },
 
-  paymentMarked: function (nickname) {
-    memberstore.getMember(nickname, function (err, member) {
-      if (err || !member) {
-        logger.error('Error sending payment notification mail to member ' + nickname);
-        logger.error(err);
-        return;
-      }
-      var options = renderingOptions(member);
-      options.activityTitle = 'SoCraTes ' + socratesConstants.currentYear;
-      var filename = path.join(__dirname, 'jade/paymenttemplate.jade');
-      var receivers = [member.email()];
-      notifications._sendMail(receivers, 'Payment Receipt / Zahlungseingang', jade.renderFile(filename, options));
-    });
-  },
-
   wikiChanges: function (changes, callback) {
     var options = {
       directories: _.sortBy(changes, 'dir')

@@ -1,5 +1,5 @@
 include  ../../../views/formComponents
-mixin participationinfoform(activity, roomOptions, registration)
+mixin participationinfoform(roomOptions, registration)
   .row
     .col-md-6
       h3 Room Options
@@ -73,7 +73,7 @@ mixin participationinfoform(activity, roomOptions, registration)
                         if option.displayWaitinglistCheckbox
                           .radio-inline.pull-right
                             label
-                              input(type='radio', name='nightsOptions', value=option.id + ',waitinglist')
+                              input(type='checkbox', name='nightsOptions', value=option.id + ',waitinglist')
                               |  Waitinglist
                       td.text-center.disabled-text
                         span(style='margin-left:20px;') #{option.two}&nbsp;€
@@ -107,9 +107,12 @@ mixin participationinfoform(activity, roomOptions, registration)
 
         script.
           $(function () {
-            var selectedInput = $('input[value="' + '#{activity.selectedOptionFor(accessrights.memberId())}"]')
-            selectedInput.attr('checked', 'checked');
-            selectedInput.parent().parent().parent().addClass('bg-success')
-            selectedInput.parent().addClass('text-success')
+            var selectedOptions = '#{registration.selectedOptions}'.split(';');
+            selectedOptions.forEach(function (option) {
+              var selectedInput = $('input[value="' + option + '"]')
+              selectedInput.attr('checked', 'checked');
+              selectedInput.parent().parent().parent().addClass('bg-success')
+              selectedInput.parent().addClass('text-success')
+            });
           })
                                 

@@ -7,7 +7,7 @@ block title
 block content
   .row
     .col-md-12
-      each participant in activity.participants
+      each participant in participants
         div(id=participant.nickname())
           if accessrights.canEditMember(participant)
             h4
@@ -18,13 +18,17 @@ block content
           else
             h4: a(href='/members/' + participant.nickname()) #{participant.displayName()}
           .row
-            .col-sm-3.col-sm-push-9
+            if showQuestions
+              .col-sm-3.col-sm-push-9
+                +avatar(participant, true)
+              .col-sm-9.col-sm-pull-3
+                h5: em What is your relation to Software Craftsmanship?
+                | !{participant.participation.question1Html()}
+                h5: em What do you want to share with the other participants?
+                | !{participant.participation.question2Html()}
+                h5: em What do you want to take home from the event?
+                | !{participant.participation.question3Html()}
+            else
               +avatar(participant, true)
-            .col-sm-9.col-sm-pull-3
-              h5: em What is your relation to Software Craftsmanship?
-              | !{participant.participation.question1Html()}
-              h5: em What do you want to share with the other participants?
-              | !{participant.participation.question2Html()}
-              h5: em What do you want to take home from the event?
-              | !{participant.participation.question3Html()}
+
           hr

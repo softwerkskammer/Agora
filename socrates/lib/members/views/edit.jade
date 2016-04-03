@@ -38,10 +38,6 @@ mixin editButtons
       a.btn.btn-default(href='javascript:history.back()', type='cancel') #{t('general.back')}
     else
       a.btn.btn-danger(href='/auth/logout', type='cancel') #{t('members.cancel')}
-    if (!isOnlyOnWaitinglist && addon && participation && !participation.payment().paymentConfirmed())
-      button.btn.btn-warning(type='submit')
-        i.fa.fa-money.fa-fw &nbsp;
-        | Save & Pay
-    else
-      button.btn.btn-primary(type='submit') #{t('general.save')}
+
+    button.btn.btn-primary(type='submit') #{t('general.save')}
   

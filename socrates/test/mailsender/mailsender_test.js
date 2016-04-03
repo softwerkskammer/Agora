@@ -8,12 +8,13 @@ var conf = require('../../testutil/configureForTest');
 var beans = conf.get('beans');
 var userWithoutMember = require('../../testutil/userWithoutMember');
 
-var activitystore = beans.get('activitystore');
+var eventstore = beans.get('eventstore');
+var GlobalEventStore = beans.get('GlobalEventStore');
 var groupstore = beans.get('groupstore');
 var memberstore = beans.get('memberstore');
+var subscriberstore = beans.get('subscriberstore');
 
 var Member = beans.get('member');
-var SoCraTesActivity = beans.get('socratesActivityExtended');
 var createApp = require('../../testutil/testHelper')('socratesMailsenderApp').createApp;
 var secureByLogin = beans.get('secureByLogin');
 var secureSuperuserOnly = beans.get('secureSuperuserOnly');
@@ -22,45 +23,39 @@ var secureSoCraTesAdminOnly = beans.get('secureSoCraTesAdminOnly');
 describe('SoCraTes mailsender application', function () {
   /* eslint camelcase: 0 */
 
-  var socratesMember = new Member({ id: 'memberId' });
-  var socratesAdmin = new Member({ id: 'socratesAdminID' });
-  var superuser = new Member({ id: 'superuserID' });
+  var socratesMember = new Member({id: 'memberId'});
+  var socratesAdmin = new Member({id: 'socratesAdminID'});
+  var superuser = new Member({id: 'superuserID'});
 
-  var appWithoutMember = request(createApp({middlewares: [userWithoutMember], baseurl: '/mailsender', secureByMiddlewares: [secureByLogin, secureSuperuserOnly, secureSoCraTesAdminOnly] }));
-  var appWithSocratesMember = request(createApp({member: socratesMember, baseurl: '/mailsender', secureByMiddlewares: [secureByLogin, secureSuperuserOnly, secureSoCraTesAdminOnly] }));
-  var appWithSocratesAdmin = request(createApp({member: socratesAdmin, baseurl: '/mailsender', secureByMiddlewares: [secureByLogin, secureSuperuserOnly, secureSoCraTesAdminOnly] }));
-  var appWithSuperuser = request(createApp({member: superuser, baseurl: '/mailsender', secureByMiddlewares: [secureByLogin, secureSuperuserOnly, secureSoCraTesAdminOnly] }));
-
-  var socrates;
-  var socratesActivity;
+  var appWithoutMember = request(createApp({
+    middlewares: [userWithoutMember],
+    baseurl: '/mailsender',
+    secureByMiddlewares: [secureByLogin, secureSuperuserOnly, secureSoCraTesAdminOnly]
+  }));
+  var appWithSocratesMember = request(createApp({
+    member: socratesMember,
+    baseurl: '/mailsender',
+    secureByMiddlewares: [secureByLogin, secureSuperuserOnly, secureSoCraTesAdminOnly]
+  }));
+  var appWithSocratesAdmin = request(createApp({
+    member: socratesAdmin,
+    baseurl: '/mailsender',
+    secureByMiddlewares: [secureByLogin, secureSuperuserOnly, secureSoCraTesAdminOnly]
+  }));
+  var appWithSuperuser = request(createApp({
+    member: superuser,
+    baseurl: '/mailsender',
+    secureByMiddlewares: [secureByLogin, secureSuperuserOnly, secureSoCraTesAdminOnly]
+  }));
 
   beforeEach(function () {
-    socrates = {
-      id: 'socratesId',
-      title: 'SoCraTes',
-      description: 'Coolest event ever :-)',
-      location: 'Right next door',
-      url: 'socrates-url',
-      isSoCraTes: true,
-      startUnix: 1440687600,
-      endUnix: 1440946800,
-      owner: {nickname: 'ownerNick'},
-      assignedGroup: 'assignedGroup',
-      group: {groupLongName: 'longName'},
-      resources: {
-        single: {_canUnsubscribe: false, _limit: 0, _position: 2, _registrationOpen: true, _waitinglist: []}, // no capacity
-        bed_in_double: {_canUnsubscribe: false, _limit: 10, _position: 3, _registrationOpen: false, _waitinglist: []}, // not opened
-        junior: {_canUnsubscribe: false, _limit: 10, _position: 4, _registrationOpen: false}, // not opened, no waitinglist
-        bed_in_junior: {_canUnsubscribe: false, _limit: 10, _position: 5, _registrationOpen: true}
-      }
-    };
-    socratesActivity = new SoCraTesActivity(socrates);
+    sinon.stub(eventstore, 'getEventStore', function (url, callback) { callback(null, new GlobalEventStore()); });
 
-    sinon.stub(activitystore, 'getActivity', function (activityUrl, callback) { callback(null, socratesActivity); });
     sinon.stub(groupstore, 'getGroup', function (group, callback) { callback(); });
     sinon.stub(memberstore, 'getMembersForIds', function (members, callback) { callback(null, []); });
     sinon.stub(memberstore, 'getMemberForId', function (memberId, callback) { callback(null, socratesMember); });
     sinon.stub(memberstore, 'getMember', function (member, callback) { callback(null, socratesMember); });
+    sinon.stub(subscriberstore, 'allSubscribers', function (callback) { callback(null, []); });
   });
 
   afterEach(function () {
@@ -84,7 +79,7 @@ describe('SoCraTes mailsender application', function () {
     it('can not be opened as regular member', function (done) {
       appWithSocratesMember
         .get('/mailsender/massMailing')
-        .expect(302, function(err, res) {
+        .expect(302, function (err, res) {
           expect(res.header.location).to.contain('/mustBeSoCraTesAdmin'); // TODO: startWith (from 0.13.0)
           done(err);
         });

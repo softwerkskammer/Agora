@@ -32,9 +32,6 @@ var member_validator;
           firstname: 'required',
           lastname: 'required',
           homeAddress: 'required',
-          question1: 'required',
-          question2: 'required',
-          question3: 'required',
           tShirtSize: 'tShirtSelected',
           email: {
             required: true,
@@ -104,7 +101,7 @@ var member_validator;
       };
     };
 
-    ['nickname', 'lastname', 'firstname', 'email', 'profession', 'location', 'reference', 'homeAddress', 'question1', 'question2', 'question3'].forEach(
+    ['nickname', 'lastname', 'firstname', 'email', 'profession', 'location', 'reference', 'homeAddress'].forEach(
       function (name) {
         var each = '[name=' + name + ']';
         $(each).on('change', handler(each));

@@ -29,10 +29,11 @@ block content
         +csrf
         +hidden('activityUrl', registrationTuple.activityUrl)
         +hidden('resourceName', registrationTuple.resourceName)
+        +hidden('desiredRoomTypes', registrationTuple.desiredRoomTypes)
         +hidden('duration', registrationTuple.duration)
         fieldset
           +memberinfoform(member, subscriber, 'members.edit_registration')
-          +userinfoform(addon, participation, registrationTuple.resourceName.indexOf('bed_in_') > -1)
+          +userinfoform(addon, participation, registrationTuple.resourceName && registrationTuple.resourceName.indexOf('bed_in_') > -1)
     
     .row(style='margin-bottom: 10px')
       .col-sm-12

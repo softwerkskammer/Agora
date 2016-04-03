@@ -6,9 +6,13 @@ html
       Hello #{member.displayName()},
     p Congratulations! You entered the waitinglist for the SoCraTes Conference 2016.
     p
-      | You are waiting for a #{' '} 
-      b #{bookingdetails.room}
-      | .
+      if bookingdetails.length === 1
+        | You are waiting for a #{' '}
+        b #{bookingdetails[0].room}
+        | .
+      else
+        | You are waiting for #{' '}
+        b #{bookingdetails.map(room => room.room).join(', ')}
     p We will inform you as soon as a space is available. You can then choose the number of nights you want to stay.
     p You can review and modify your waitinglist data at #{' '}
       a(href='#{url}/members/edit') #{url}/members/edit

@@ -6,8 +6,8 @@ var beans = require('simple-configure').get('beans');
 var misc = beans.get('misc');
 var membersService = beans.get('membersService');
 var subscriberService = beans.get('subscriberService');
-var socratesActivitiesService = beans.get('socratesActivitiesService');
-var activitystore = beans.get('activitystore');
+var socratesMembersService = beans.get('socratesMembersService');
+var eventstoreService = beans.get('eventstoreService');
 var Member = beans.get('member');
 var memberSubmitHelper = beans.get('memberSubmitHelper');
 var subscriberstore = beans.get('subscriberstore');
@@ -23,18 +23,18 @@ function editMember(req, res, next, returnToParticipantsListing) {
   }
   var member = req.user.member;
   var subscriber = req.user.subscriber;
-  activitystore.getActivity(socratesConstants.currentUrl, function (err, socrates) {
-    if (err || !socrates) { return next(err); }
-    var registeredResources = socrates.resources().resourceNamesOf(member.id());
-    res.render('edit', {
+  eventstoreService.getRegistrationReadModel(socratesConstants.currentUrl, function (err, readModel) {
+    if (err || !readModel) { return next(err); }
+    var registeredResources = readModel.roomTypesOf(member.id());
+    var options = {
       member: member,
       subscriber: subscriber,
       addon: subscriber && subscriber.addon().homeAddress() ? subscriber.addon() : undefined,
       participation: subscriber && subscriber.isParticipating() ? subscriber.currentParticipation() : null,
-      isOnlyOnWaitinglist: registeredResources.length === 0,
       sharesARoom: registeredResources.length === 1 && registeredResources[0].indexOf('bed_in_') > -1,
       returnToParticipantsListing: returnToParticipantsListing
-    });
+    };
+    res.render('edit', options);
   });
 }
 
@@ -77,8 +77,8 @@ app.post('/delete', function (req, res, next) {
     if (!res.locals.accessrights.canDeleteMember(subscriber)) {
       return res.redirect('/members/' + encodeURIComponent(nicknameOfEditMember));
     }
-    socratesActivitiesService.participationStatus(subscriber, function (err1, isParticipant) {
-      if (err1 || !subscriber) { return next(err1); }
+    socratesMembersService.participationStatus(subscriber, function (err1, isParticipant) {
+      if (err1) { return next(err1); }
       if (isParticipant) {
         statusmessage.errorMessage('message.title.problem', 'message.content.members.hasParticipated').putIntoSession(req);
         return res.redirect('/members/' + encodeURIComponent(nicknameOfEditMember));
@@ -101,9 +101,6 @@ app.post('/submit', function (req, res, next) {
       subscriber.fillFromUI(req.body);
       subscriberstore.saveSubscriber(subscriber, function (err2) {
         if (err2) { return next(err2); }
-        if (subscriber.needsToPay()) {
-          return res.redirect('/payment/socrates');
-        }
         if (returnToParticipantsListing) {
           return res.redirect(participantsOverviewUrlPrefix + encodeURIComponent(req.user.member.nickname()));
         }
@@ -146,34 +143,38 @@ app.post('/deleteAvatarInOverviewFor', function (req, res, next) {
 app.get('/:nickname', function (req, res, next) {
   subscriberService.getMemberIfSubscriberExists(req.params.nickname, function (err, member) {
     if (err || !member) { return next(err); }
-    activitystore.getActivity(socratesConstants.currentUrl, function (err2, activity) {
-      if (err2 || !activity) { return next(err2); }
+    eventstoreService.getRegistrationReadModel(socratesConstants.currentUrl, function (err2, registrationReadModel) {
+      if (err2 || !registrationReadModel) { return next(err2); }
+      eventstoreService.getRoomsReadModel(socratesConstants.currentUrl, function (err3, roomsReadModel) {
+        if (err3 || !roomsReadModel) { return next(err3); }
 
-      // only when a participant looks at their own profile!
-      var registeredResource = activity.registeredResourcesFor(member.id())[0];
-      var isInDoubleBedRoom = registeredResource && registeredResource.resourceName.indexOf('bed_in_') > -1;
-      var roommateId = activity.roommateFor(member.id());
-      memberstore.getMemberForId(roommateId, function (err3, roommate) {
-        var potentialRoommates = [];
-        if (err3) { return next(err3); }
-        if (registeredResource && !roommate) {
-          potentialRoommates = activity.rooms(registeredResource.resourceName).participantsWithoutRoom();
-          var index = potentialRoommates.indexOf(member.id());
-          potentialRoommates.splice(index, 1);
-        }
-        memberstore.getMembersForIds(potentialRoommates, function (err4, potentialRoommateMembers) {
+        // only when a participant looks at their own profile!
+        var registeredInRoomType = registrationReadModel.registeredInRoomType(member.id());
+        var isInDoubleBedRoom = registeredInRoomType && registeredInRoomType.indexOf('bed_in_') > -1;
+        var roommateId = roomsReadModel.roommateFor(registeredInRoomType, member.id());
+        memberstore.getMemberForId(roommateId, function (err4, roommate) {
+          var potentialRoommates = [];
           if (err4) { return next(err4); }
-          async.each(potentialRoommateMembers, membersService.putAvatarIntoMemberAndSave, function (err5) {
-            if (err5) { return next(err5); }
-            res.render('get', {
-              member: member,
-              roommate: roommate,
-              potentialRoommates: potentialRoommateMembers,
-              registration: {
-                isInDoubleBedRoom: isInDoubleBedRoom,
-                alreadyRegistered: !!registeredResource,
-                alreadyOnWaitinglist: activity.waitinglistResourcesFor(member.id())[0]
-              }
+
+          if (registeredInRoomType && !roommate) {
+            potentialRoommates = roomsReadModel.participantsWithoutRoomIn(registeredInRoomType);
+            var index = potentialRoommates.indexOf(member.id());
+            potentialRoommates.splice(index, 1);
+          }
+          memberstore.getMembersForIds(potentialRoommates, function (err4a, potentialRoommateMembers) {
+            if (err4a) { return next(err4a); }
+            async.each(potentialRoommateMembers, membersService.putAvatarIntoMemberAndSave, function (err5) {
+              if (err5) { return next(err5); }
+              res.render('get', {
+                member: member,
+                roommate: roommate,
+                potentialRoommates: potentialRoommateMembers,
+                registration: {
+                  isInDoubleBedRoom: isInDoubleBedRoom,
+                  alreadyRegistered: !!registeredInRoomType,
+                  alreadyOnWaitinglist: registrationReadModel.isAlreadyOnWaitinglist(member.id())
+                }
+              });
             });
           });
         });

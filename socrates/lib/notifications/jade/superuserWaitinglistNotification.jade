@@ -4,5 +4,5 @@ html
     h3 SoCraTes Waitinglist Confirmation / Change
     p
       | #{member.displayName()} (#{member.nickname()}) is on the waitinglist for a #{' '}
-      b #{bookingdetails.room}
+      b #{bookingdetails.map(room => room.room).join(', ')}
       | .

@@ -11,7 +11,7 @@ module.exports = function (defaultLanguage) {
     var initI18N = beans.get('initI18N');
 
     return {
-      createApp: function (params) { /* id, member, middlewares, baseurl, secureByMiddlewares */
+      createApp: function (params) { /* id, member, middlewares, baseurl, secureByMiddlewares, sessionID */
         var atts = params || {};
         var app = express();
         app.locals.pretty = true;
@@ -42,6 +42,12 @@ module.exports = function (defaultLanguage) {
           req.session.language = defaultLanguage;
           next();
         });
+        if (atts.sessionID) {
+          app.use(function (req, res, next) {
+            req.sessionID = atts.sessionID;
+            next();
+          });
+        }
 
         app.use(beans.get('expressViewHelper'));
         app.use(initI18N);

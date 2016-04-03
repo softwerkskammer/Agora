@@ -6,7 +6,6 @@ var expect = require('must-dist');
 var beans = require('../../testutil/configureForTest').get('beans');
 var activityresultsService = beans.get('activityresultsService');
 var activityresultsPersistence = beans.get('activityresultsPersistence');
-var socratesActivitiesService = beans.get('socratesActivitiesService');
 
 var createApp = require('../../testutil/testHelper')('socratesActivityresultsApp').createApp;
 
@@ -15,10 +14,6 @@ var ActivityResult = beans.get('activityresult');
 var MEMBER_ID = 'memberID';
 
 describe('SoCraTes activityresults application', function () {
-  beforeEach(function () {
-    sinon.stub(socratesActivitiesService, 'getCurrentSocrates', function (callback) { callback(null); });
-  });
-
   afterEach(function () {
     sinon.restore();
   });

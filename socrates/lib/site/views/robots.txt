@@ -5,3 +5,4 @@ Disallow: /img/
 Disallow: /logos/
 Disallow: /static/
 Disallow: /stylesheets/
+Disallow: /loginDialog/
