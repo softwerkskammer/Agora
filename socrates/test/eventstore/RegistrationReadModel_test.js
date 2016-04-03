@@ -424,7 +424,7 @@ describe('The registration read model', function () {
 
   describe('knows if rooms are full (isFull)', function () {
     it('returns true when the room is full', function () {
-      eventStore.state.socratesEvents = [events.roomQuotaWasSet(singleBedRoom, 1)]
+      eventStore.state.socratesEvents = [events.roomQuotaWasSet(singleBedRoom, 1)];
       eventStore.state.registrationEvents = [
         events.participantWasRegistered(singleBedRoom, untilSaturday, sessionId1, memberId1)
       ];
