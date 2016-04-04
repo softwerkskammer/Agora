@@ -620,7 +620,7 @@ describe('The registration read model', function () {
     expect(readModel.waitinglistReservationsBySessionIdFor(singleBedRoom)).to.eql({});
     expect(R.keys(readModel.waitinglistParticipantsByMemberIdFor(singleBedRoom))).to.eql([memberId1]);
   });
-  
+
   it('for a waitinglist participant registering without reservation', function () {
     eventStore.state.registrationEvents = [
       events.waitinglistParticipantWasRegistered([singleBedRoom], sessionId1, memberId1)
@@ -629,6 +629,18 @@ describe('The registration read model', function () {
     expect(readModel.participantsByMemberIdFor(singleBedRoom)).to.eql({});
     expect(readModel.waitinglistReservationsBySessionIdFor(singleBedRoom)).to.eql({});
     expect(R.keys(readModel.waitinglistParticipantsByMemberIdFor(singleBedRoom))).to.eql([memberId1]);
+  });
+
+  it('for a registered participant with reservation', function () {
+    eventStore.state.registrationEvents = [
+      setTimestamp(events.reservationWasIssued(singleBedRoom, untilSaturday, sessionId1), moment().subtract(1, 'hours')),
+      events.participantWasRegistered(singleBedRoom, untilSaturday, sessionId1, memberId1)
+    ];
+
+    expect(readModel.reservationsBySessionIdFor(singleBedRoom)).to.eql({});
+    expect(R.keys(readModel.participantsByMemberIdFor(singleBedRoom))).to.eql([memberId1]);
+    expect(readModel.waitinglistReservationsBySessionIdFor(singleBedRoom)).to.eql({});
+    expect(readModel.waitinglistParticipantsByMemberIdFor(singleBedRoom)).to.eql({});
   });
 
 });

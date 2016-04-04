@@ -229,12 +229,13 @@ describe('Registration Service', function () {
         setTimestamp(events.reservationWasIssued(registrationTuple.resourceName, registrationTuple.duration, registrationTuple.sessionID), moment().subtract(1, 'hours'))];
 
       registrationService.completeRegistration('memberId', 'sessionId', registrationTuple, function (err, statusTitle, statusText) {
+
+        expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
+          {duration: 2, event: e.RESERVATION_WAS_ISSUED, roomType: 'single', sessionID: 'sessionId'},
+          {duration: 2, event: e.PARTICIPANT_WAS_REGISTERED, memberId: 'memberId', roomType: 'single', sessionID: 'sessionId'}
+        ]);
         expect(statusTitle).to.be(undefined);
         expect(statusText).to.be(undefined);
-        expect(readModel.reservationsBySessionIdFor('single')).to.eql({});
-        expect(R.keys(readModel.participantsByMemberIdFor('single'))).to.eql(['memberId']);
-        expect(readModel.waitinglistReservationsBySessionIdFor('single')).to.eql({});
-        expect(readModel.waitinglistParticipantsByMemberIdFor('single')).to.eql({});
         done(err);
       });
     });
