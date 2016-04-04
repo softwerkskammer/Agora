@@ -167,10 +167,10 @@ describe('Registration Service', function () {
       registrationService.completeRegistration('memberId', 'sessionId', registrationTuple, function (err, statusTitle, statusText) {
         expect(statusTitle).to.not.exist();
         expect(statusText).to.not.exist();
-        expect(readModel.reservationsBySessionIdFor('single')).to.eql({});
-        expect(R.keys(readModel.participantsByMemberIdFor('single'))).to.eql(['memberId']);
-        expect(readModel.waitinglistReservationsBySessionIdFor('single')).to.eql({});
-        expect(readModel.waitinglistParticipantsByMemberIdFor('single')).to.eql({});
+        expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
+          {event: e.RESERVATION_WAS_ISSUED, roomType: 'single', duration: 2, sessionID: 'sessionId'},
+          {event: e.PARTICIPANT_WAS_REGISTERED, roomType: 'single', duration: 2, sessionID: 'sessionId', memberId: 'memberId'}
+        ]);
         done(err);
       });
     });
@@ -184,6 +184,11 @@ describe('Registration Service', function () {
       registrationService.completeRegistration('memberId', 'sessionId', registrationTuple, function (err, statusTitle, statusText) {
         expect(statusTitle).to.not.exist();
         expect(statusText).to.not.exist();
+        expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
+          {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, desiredRoomTypes: 'single', sessionID: 'sessionId'},
+          {event: e.RESERVATION_WAS_ISSUED, roomType: 'single', duration: 2, sessionID: 'sessionId'},
+          {event: e.PARTICIPANT_WAS_REGISTERED, roomType: 'single', duration: 2, sessionID: 'sessionId', memberId: 'memberId'}
+        ]);
         expect(readModel.reservationsBySessionIdFor('single')).to.eql({});
         expect(R.keys(readModel.participantsByMemberIdFor('single'))).to.eql(['memberId']);
         expect(readModel.waitinglistReservationsBySessionIdFor('single')).to.eql({});
