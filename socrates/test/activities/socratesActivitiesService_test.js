@@ -24,13 +24,15 @@ var RegistrationReadModel = beans.get('RegistrationReadModel');
 describe('SoCraTes Activities Service', function () {
 
   var eventStore;
+  var changedResource;
 
   beforeEach(function () {
     eventStore = new GlobalEventStore();
 
     sinon.stub(notifications, 'newParticipant');
     sinon.stub(notifications, 'changedDuration');
-    sinon.stub(notifications, 'changedResource');
+    changedResource = sinon.spy();
+    sinon.stub(notifications, 'changedResource', changedResource);
     sinon.stub(notifications, 'changedWaitinglist');
     sinon.stub(notifications, 'removedFromParticipants');
     sinon.stub(notifications, 'removedFromWaitinglist');
@@ -185,6 +187,7 @@ describe('SoCraTes Activities Service', function () {
         memberId: 'memberId',
         duration: 2
       }]);
+      expect(changedResource.firstCall.args[1]).to.eql({room: 'bed in a double room', nights: 2, until: 'saturday evening'});
       done(err);
     });
   });

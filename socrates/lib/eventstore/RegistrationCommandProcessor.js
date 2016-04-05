@@ -81,6 +81,7 @@ RegistrationCommandProcessor.prototype.moveParticipantToNewRoomType = function (
   var existingParticipantEvent = this.writeModel.participantEventFor(memberId);
   var event = existingParticipantEvent ? events.roomTypeWasChanged(memberId, roomType, existingParticipantEvent.duration) : events.didNotChangeRoomTypeForNonParticipant(memberId, roomType);
   this._updateRegistrationEvents(event);
+  return event;
 };
 
 RegistrationCommandProcessor.prototype.setNewDurationForParticipant = function (memberId, duration) {
