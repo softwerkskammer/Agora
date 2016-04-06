@@ -1,5 +1,6 @@
 'use strict';
 
+var moment = require('moment-timezone');
 var expect = require('must-dist');
 
 var beans = require('../../testutil/configureForTest').get('beans');
@@ -47,8 +48,8 @@ describe('Room Options', function () {
         events.roomQuotaWasSet(roomIds[2], 100),
         events.roomQuotaWasSet(roomIds[3], 0)];
       eventStore.state.registrationEvents = [
-        events.participantWasRegistered(roomIds[0], untilSaturday, sessionId1, memberId1),
-        events.participantWasRegistered(roomIds[1], untilSaturday, sessionId2, memberId2)];
+        events.participantWasRegistered(roomIds[0], untilSaturday, sessionId1, memberId1, moment()),
+        events.participantWasRegistered(roomIds[1], untilSaturday, sessionId2, memberId2, moment())];
 
       var readModel = new RegistrationReadModel(eventStore);
 

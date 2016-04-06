@@ -23,6 +23,9 @@ var eventstore = beans.get('eventstore');
 
 var createApp = require('../../testutil/testHelper')('socratesRegistrationApp').createApp;
 
+var aShortTimeAgo = moment.tz().subtract(10, 'minutes');
+var aLongTimeAgo = moment.tz().subtract(40, 'minutes');
+
 function setTimestamp(event, timestamp) {
   event.timestamp = timestamp;
   return event;
@@ -133,7 +136,7 @@ describe('SoCraTes registration application', function () {
       /* eslint no-underscore-dangle: 0 */
 
       eventStore.state.registrationEvents = [
-        events.participantWasRegistered('bed_in_junior', 'some-duration', 'some-session-id', 'memberId2')];
+        events.participantWasRegistered('bed_in_junior', 'some-duration', 'some-session-id', 'memberId2', aShortTimeAgo)];
 
       appWithSocratesMember
         .get('/')
@@ -196,7 +199,7 @@ describe('SoCraTes registration application', function () {
 
     it('is accepted when a room is selected', function (done) {
       eventStore.state.registrationEvents = [
-        events.reservationWasIssued('single', 5, 'session-id', 'memberId2')];
+        events.reservationWasIssued('single', 5, 'session-id', aShortTimeAgo)];
 
       appWithSocratesMemberAndFixedSessionId
         .post('/completeRegistration')
@@ -224,7 +227,7 @@ describe('SoCraTes registration application', function () {
 
     it('is still accepted as participant even when the timeout is expired, if there is enough space in the resource', function (done) {
       eventStore.state.registrationEvents = [
-        setTimestamp(events.reservationWasIssued('junior', 'session-id', 'memberId2'), moment().subtract(1, 'hours'))];
+        events.reservationWasIssued('junior', 'session-id', 'memberId2', aLongTimeAgo)];
 
       appWithSocratesMemberAndFixedSessionId
         .post('/completeRegistration')
@@ -276,7 +279,7 @@ describe('SoCraTes registration application', function () {
 
     it('is not accepted as participant when the timeout is expired and there is not enough space in the resource', function (done) {
       eventStore.state.registrationEvents = [
-        setTimestamp(events.reservationWasIssued('single', 'session-id', 'memberId2'), moment().subtract(1, 'hours'))];
+        events.reservationWasIssued('single', 'session-id', 'memberId2', aLongTimeAgo)];
 
       appWithSocratesMemberAndFixedSessionId
         .post('/completeRegistration')
@@ -328,7 +331,7 @@ describe('SoCraTes registration application', function () {
 
     it('is not accepted if already registered', function (done) {
       eventStore.state.registrationEvents = [
-        events.participantWasRegistered('junior', 5, 'session-id', 'memberId2')
+        events.participantWasRegistered('junior', 5, 'session-id', 'memberId2', aShortTimeAgo)
       ];
 
       appWithSocratesMemberAndFixedSessionId
@@ -414,7 +417,7 @@ describe('SoCraTes registration application', function () {
 
     it('is not accepted to the waitinglist a second time', function (done) {
       eventStore.state.registrationEvents = [
-        events.waitinglistParticipantWasRegistered('single', 'session-id', 'memberId2')];
+        events.waitinglistParticipantWasRegistered('single', 'session-id', 'memberId2', aShortTimeAgo)];
 
       appWithSocratesMemberAndFixedSessionId
         .post('/completeRegistration')

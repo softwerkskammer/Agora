@@ -20,9 +20,10 @@ function RegistrationReadModel(eventStore) {
   this._waitinglistParticipantsByMemberId = undefined;
 }
 
+var earliestValidRegistrationTime = moment.tz().subtract(socratesConstants.registrationPeriodinMinutes, 'minutes');
+
 var projectReservationsBySessionId = function (reservationsBySessionId, event) {
-  var earliestValidRegistrationTime = moment.tz().subtract(socratesConstants.registrationPeriodinMinutes, 'minutes');
-  if (event.event === e.RESERVATION_WAS_ISSUED && moment(event.timestamp).isAfter(earliestValidRegistrationTime)) {
+  if (event.event === e.RESERVATION_WAS_ISSUED && moment(event.joinedSoCraTes).isAfter(earliestValidRegistrationTime)) {
     reservationsBySessionId[event.sessionID] = event;
   }
   if (event.event === e.PARTICIPANT_WAS_REGISTERED) {
@@ -111,8 +112,7 @@ RegistrationReadModel.prototype.reservationsAndParticipantsFor = function (roomT
 };
 
 var projectWaitinglistReservationsBySessionId = function (waitinglistReservationsBySessionId, event) {
-  var thirtyMinutesAgo = moment.tz().subtract(30, 'minutes');
-  if (event.event === e.WAITINGLIST_RESERVATION_WAS_ISSUED && moment(event.timestamp).isAfter(thirtyMinutesAgo)) {
+  if (event.event === e.WAITINGLIST_RESERVATION_WAS_ISSUED && moment(event.joinedWaitinglist).isAfter(earliestValidRegistrationTime)) {
     waitinglistReservationsBySessionId[event.sessionID] = event;
   }
   if (event.event === e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED || event.event === e.PARTICIPANT_WAS_REGISTERED) {
@@ -176,7 +176,8 @@ RegistrationReadModel.prototype._reservationOrWaitinglistReservationEventFor = f
 };
 
 function expirationTimeOf(event) {
-  return moment(event.timestamp).add(socratesConstants.registrationPeriodinMinutes, 'minutes');
+  var joinedAt = event.joinedSoCraTes || event.joinedWaitinglist;
+  return joinedAt ? moment(joinedAt).add(socratesConstants.registrationPeriodinMinutes, 'minutes') : undefined;
 }
 
 RegistrationReadModel.prototype.reservationExpiration = function (sessionId) {

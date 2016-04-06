@@ -25,7 +25,7 @@ function saveCommandProcessor(args) {
 
 module.exports = {
 
-  fromWaitinglistToParticipant: function (nickname, roomType, duration, callback) {
+  fromWaitinglistToParticipant: function (nickname, roomType, duration, now, callback) {
     var self = this;
 
     async.parallel(
@@ -36,12 +36,12 @@ module.exports = {
       function (err, results) {
         if (err || !results.registrationCommandProcessor || !results.member) { return callback(err); }
 
-        results.registrationCommandProcessor.fromWaitinglistToParticipant(roomType, results.member.id(), duration);
+        results.registrationCommandProcessor.fromWaitinglistToParticipant(roomType, results.member.id(), duration, now);
 
         saveCommandProcessor({
           commandProcessor: results.registrationCommandProcessor,
           callback: callback,
-          repeat: _.partial(self.fromWaitinglistToParticipant, nickname, roomType, duration),
+          repeat: _.partial(self.fromWaitinglistToParticipant, nickname, roomType, duration, now),
           handleSuccess: function () {
             var bookingdetails = roomOptions.informationFor(roomType, duration);
             bookingdetails.fromWaitinglist = true;
