@@ -34,16 +34,16 @@ module.exports = {
     return enrich({event: e.RESERVATION_WAS_ISSUED, sessionID: sessionId, roomType, duration});
   },
 
-  waitinglistReservationWasIssued: function (desiredRoomTypes, sessionId) {
-    return enrich({event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionID: sessionId, desiredRoomTypes});
+  waitinglistReservationWasIssued: function (desiredRoomTypes, sessionId, joinedWaitinglist) {
+    return enrich({event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionID: sessionId, desiredRoomTypes, joinedWaitinglist: joinedWaitinglist.valueOf()});
   },
 
   didNotIssueReservationForAlreadyReservedSession: function (roomType, duration, sessionId) {
     return enrich({event: e.DID_NOT_ISSUE_RESERVATION_FOR_ALREADY_RESERVED_SESSION, sessionID: sessionId, roomType, duration});
   },
 
-  didNotIssueWaitinglistReservationForAlreadyReservedSession: function (desiredRoomTypes, sessionId) {
-    return enrich({event: e.DID_NOT_ISSUE_WAITINGLIST_RESERVATION_FOR_ALREADY_RESERVED_SESSION, sessionID: sessionId, desiredRoomTypes});
+  didNotIssueWaitinglistReservationForAlreadyReservedSession: function (desiredRoomTypes, sessionId, joinedWaitinglist) {
+    return enrich({event: e.DID_NOT_ISSUE_WAITINGLIST_RESERVATION_FOR_ALREADY_RESERVED_SESSION, sessionID: sessionId, desiredRoomTypes, joinedWaitinglist: joinedWaitinglist.valueOf()});
   },
 
   didNotIssueReservationForFullResource: function (roomType, duration, sessionId) {
@@ -55,8 +55,8 @@ module.exports = {
     return enrich({event: e.PARTICIPANT_WAS_REGISTERED, sessionID: sessionId, roomType, duration, memberId});
   },
 
-  waitinglistParticipantWasRegistered: function (desiredRoomTypes, sessionId, memberId) {
-    return enrich({event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionID: sessionId, desiredRoomTypes, memberId});
+  waitinglistParticipantWasRegistered: function (desiredRoomTypes, sessionId, memberId, joinedWaitinglist) {
+    return enrich({event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionID: sessionId, desiredRoomTypes, memberId, joinedWaitinglist: joinedWaitinglist.valueOf()});
   },
 
   didNotRegisterParticipantForFullResource: function (roomType, duration, sessionId, memberId) {
@@ -78,8 +78,8 @@ module.exports = {
   didNotRemoveParticipantBecauseTheyAreNotRegisteredForThisRoomType: function (roomType, memberId) {
     return enrich({event: e.DID_NOT_REMOVE_PARTICIPANT_BECAUSE_THEY_ARE_NOT_REGISTERED_FOR_THIS_ROOM_TYPE, memberId, roomType});
   },
-  waitinglistParticipantWasRemoved: function (desiredRoomTypes, memberId) {
-    return enrich({event: e.WAITINGLIST_PARTICIPANT_WAS_REMOVED, memberId, desiredRoomTypes});
+  waitinglistParticipantWasRemoved: function (desiredRoomTypes, memberId, joinedWaitinglist) {
+    return enrich({event: e.WAITINGLIST_PARTICIPANT_WAS_REMOVED, memberId, desiredRoomTypes, joinedWaitinglist: joinedWaitinglist.valueOf()});
   },
   didNotRemoveWaitinglistParticipantBecauseTheyAreNotRegistered: function (desiredRoomTypes, memberId) {
     return enrich({event: e.DID_NOT_REMOVE_WAITINGLIST_PARTICIPANT_BECAUSE_THEY_ARE_NOT_REGISTERED, memberId, desiredRoomTypes});
@@ -94,15 +94,15 @@ module.exports = {
     return enrich({event: e.DID_NOT_CHANGE_ROOM_TYPE_FOR_NON_PARTICIPANT, memberId, roomType});
   },
 
-  desiredRoomTypesWereChanged: function (memberId, desiredRoomTypes) {
-    return enrich({event: e.DESIRED_ROOM_TYPES_WERE_CHANGED, memberId, desiredRoomTypes});
+  desiredRoomTypesWereChanged: function (memberId, desiredRoomTypes, joinedWaitinglist) {
+    return enrich({event: e.DESIRED_ROOM_TYPES_WERE_CHANGED, memberId, desiredRoomTypes, joinedWaitinglist: joinedWaitinglist.valueOf()});
   },
 
   didNotChangeDesiredRoomTypesBecauseParticipantIsNotOnWaitinglist: function (memberId, desiredRoomTypes) {
     return enrich({event: e.DID_NOT_CHANGE_DESIRED_ROOM_TYPES_BECAUSE_PARTICIPANT_IS_NOT_ON_WAITINGLIST, memberId, desiredRoomTypes});
   },
-  didNotChangeDesiredRoomTypesBecauseThereWasNoChange: function (memberId, desiredRoomTypes) {
-    return enrich({event: e.DID_NOT_CHANGE_DESIRED_ROOM_TYPES_BECAUSE_THERE_WAS_NO_CHANGE, memberId, desiredRoomTypes});
+  didNotChangeDesiredRoomTypesBecauseThereWasNoChange: function (memberId, desiredRoomTypes, joinedWaitinglist) {
+    return enrich({event: e.DID_NOT_CHANGE_DESIRED_ROOM_TYPES_BECAUSE_THERE_WAS_NO_CHANGE, memberId, desiredRoomTypes, joinedWaitinglist: joinedWaitinglist.valueOf()});
   },
 
   durationWasChanged: function (memberId, roomType, duration) {

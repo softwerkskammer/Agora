@@ -94,6 +94,10 @@ RegistrationReadModel.prototype.registeredAt = function (memberId) {
   return moment(this.participantEventFor(memberId).timestamp);
 };
 
+RegistrationReadModel.prototype.joinedWaitinglistAt = function () {
+  return null;
+};
+
 RegistrationReadModel.prototype.isAlreadyRegistered = function (memberId) {
   return !!this.participantEventFor(memberId);
 };
@@ -191,7 +195,6 @@ RegistrationReadModel.prototype.registeredInRoomType = function (memberID) {
   }
   return null;
 };
-
 
 RegistrationReadModel.prototype.waitinglistParticipantEventFor = function (memberId) {
   return this.waitinglistParticipantsByMemberId()[memberId];

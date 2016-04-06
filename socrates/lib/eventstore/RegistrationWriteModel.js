@@ -14,8 +14,12 @@ RegistrationWriteModel.prototype.alreadyHasReservation = function (sessionId) {
   return !!this.registrationReadModel.reservationsBySessionId()[sessionId];
 };
 
+RegistrationWriteModel.prototype.waitinglistReservation = function (sessionId) {
+  return this.registrationReadModel.waitinglistReservationsBySessionId()[sessionId];
+};
+
 RegistrationWriteModel.prototype.alreadyHasWaitinglistReservation = function (sessionId) {
-  return !!this.registrationReadModel.waitinglistReservationsBySessionId()[sessionId];
+  return !!this.waitinglistReservation(sessionId);
 };
 
 // internal function?
