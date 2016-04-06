@@ -5,6 +5,7 @@
 *~
 .DS_Store
 
+.idea/codeStyleSettings.xml
 .idea/dictionaries
 .idea/modules.xml
 .idea/libraries
