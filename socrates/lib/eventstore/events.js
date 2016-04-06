@@ -128,7 +128,7 @@ module.exports = {
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // rooms:
   roomPairWasAdded: function (roomType, participant1Id, participant2Id) {
-    return enrich({event: e.ROOM_PAIR_WAS_ADDED,  roomType, participant1Id, participant2Id});
+    return enrich({event: e.ROOM_PAIR_WAS_ADDED, roomType, participant1Id, participant2Id});
   },
   didNotAddRoomPairBecauseParticipantIsNotInRoomType: function (roomType, memberId) {
     return enrich({event: e.DID_NOT_ADD_ROOM_PAIR_BECAUSE_PARTICIPANT_IS_NOT_IN_ROOM_TYPE, roomType, memberId});

@@ -24,11 +24,6 @@ var RegistrationReadModel = beans.get('RegistrationReadModel');
 var eventstore = beans.get('eventstore');
 var e = beans.get('eventConstants');
 
-function setTimestamp(event, timestamp) {
-  event.timestamp = timestamp;
-  return event;
-}
-
 function stripTimestamps(someEvents) {
   return someEvents.map(function (event) {
     var newEvent = R.clone(event);

@@ -26,11 +26,6 @@ var aLongTimeAgo = moment.tz().subtract(40, 'minutes');
 var aShortTimeAgo = moment.tz().subtract(10, 'minutes');
 var anEvenShorterTimeAgo = moment.tz().subtract(1, 'minutes');
 
-function setTimestamp(event, timestamp) {
-  event.timestamp = timestamp.valueOf();
-  return event;
-}
-
 function stripTimestamps(someEvents) {
   return someEvents.map(function (event) {
     var newEvent = R.clone(event);
