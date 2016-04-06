@@ -56,6 +56,26 @@ describe('Activity application - on submit -', function () {
       .expect(/Diese URL ist leider nicht verfügbar\./, done);
   });
 
+  it('rejects an activity with a url containing "socrates-"', function (done) {
+    request(createApp())
+      .post('/submit')
+      .send('url=socrates-2016')
+      .send('previousUrl=aha')
+      .expect(200)
+      .expect(/Validierungsfehler/)
+      .expect(/Diese URL ist leider nicht verfügbar\./, done);
+  });
+
+   it('rejects an activity with a url containing "SoCraTes-"', function (done) {
+     request(createApp())
+      .post('/submit')
+      .send('url=SoCraTes-')
+      .send('previousUrl=aha')
+      .expect(200)
+      .expect(/Validierungsfehler/)
+      .expect(/Diese URL ist leider nicht verfügbar\./, done);
+  });
+
   it('accepts an activity with valid and different url', function (done) {
     assume(activitiesService)
       .canHandle('isValidUrl')
