@@ -8,12 +8,6 @@ include ajax
 mixin localdate(momentOrNull)
   | #{momentOrNull ? momentOrNull.locale('de').format('L') : '-'}
 
-mixin buttonOrDate(momentOrNull, paymentDone, nickname)
-  if (momentOrNull)
-    | #{momentOrNull.locale('de').format('L')}
-  else
-    +ajaxButton(nickname, "/activities/paymentReceived/" + encodeURIComponent(nickname), 'PR', 'Erhalten…')
-
 mixin fromWaitinglistToParticipant(resourceName, nickname)
   +ajaxButton(nickname, "/activities/fromWaitinglistToParticipant/" + encodeURIComponent(resourceName) + "/" + encodeURIComponent(nickname), 'WLP', 'Teilnehmen lassen…')
 

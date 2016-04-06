@@ -29,13 +29,15 @@ var now = moment.tz();
 describe('SoCraTes Activities Service', function () {
 
   var eventStore;
+  var changedResource;
 
   beforeEach(function () {
     eventStore = new GlobalEventStore();
 
     sinon.stub(notifications, 'newParticipant');
     sinon.stub(notifications, 'changedDuration');
-    sinon.stub(notifications, 'changedResource');
+    changedResource = sinon.spy();
+    sinon.stub(notifications, 'changedResource', changedResource);
     sinon.stub(notifications, 'changedWaitinglist');
     sinon.stub(notifications, 'removedFromParticipants');
     sinon.stub(notifications, 'removedFromWaitinglist');
@@ -181,7 +183,7 @@ describe('SoCraTes Activities Service', function () {
       events.participantWasRegistered('bed_in_double', 2, 'session-id', 'memberId', aLongTimeAgo)
     ];
 
-    socratesActivitiesService.removeParticipantFor('single', 'nickname', function (err) {
+    socratesActivitiesService.removeParticipantFor('bed_in_double', 'nickname', function (err) {
       expect(R.keys(new RegistrationReadModel(eventStore).participantsByMemberIdFor('bed_in_double'))).to.eql([]);
       done(err);
     });

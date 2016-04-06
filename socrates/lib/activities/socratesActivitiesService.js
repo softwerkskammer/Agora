@@ -88,14 +88,14 @@ module.exports = {
       function (err, results) {
         if (err || !results.registrationCommandProcessor || !results.member) { return callback(err); }
 
-        results.registrationCommandProcessor.moveParticipantToNewRoomType(results.member.id(), newRoomType);
+        var event = results.registrationCommandProcessor.moveParticipantToNewRoomType(results.member.id(), newRoomType);
 
         saveCommandProcessor({
           commandProcessor: results.registrationCommandProcessor,
           callback: callback,
           repeat: _.partial(self.newRoomTypeFor, nickname, newRoomType),
           handleSuccess: function () {
-            notifications.changedResource(results.member, roomOptions.informationFor(newRoomType, undefined)); // TODO: must be duration!
+            notifications.changedResource(results.member, roomOptions.informationFor(newRoomType, event.duration)); // this is a bit hacky, we should better go through a read model
           }
         });
       }

@@ -17,7 +17,7 @@ if (!conf.get('dontUsePersistentSessions')) {
 module.exports = expressSession({
   key: conf.get('sessionkey'),
   secret: conf.get('secret'),
-  cookie: {maxAge: sevenDays, secure: true},
+  cookie: {maxAge: sevenDays},
   store: sessionStore,
   resave: false,
   saveUninitialized: false
