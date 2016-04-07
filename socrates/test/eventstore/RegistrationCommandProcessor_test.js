@@ -36,11 +36,6 @@ var untilSundayEvening = 'untilSundayEvening';
 var memberId1 = 'member-id-1';
 var memberId2 = 'member-id-2';
 
-function setTimestamp(event, timestamp) {
-  event.timestamp = timestamp;
-  return event;
-}
-
 describe('The registration command processor', function () {
 
   var eventStore;
@@ -624,7 +619,7 @@ describe('The registration command processor', function () {
     it('registers a spot on the waitinglist even if there was an expired reservation', function () { // TODO books a room?
       // Given (saved events)
       eventStore.state.registrationEvents = [
-        setTimestamp(events.waitinglistReservationWasIssued([singleBedRoom], sessionId1, aLongTimeAgo), aLongTimeAgo)];
+        events.waitinglistReservationWasIssued([singleBedRoom], sessionId1, aLongTimeAgo)];
 
       // When (issued command)
       commandProcessor.registerWaitinglistParticipant([singleBedRoom], sessionId1, memberId1, aShortTimeAgo);

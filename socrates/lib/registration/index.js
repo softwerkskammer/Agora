@@ -234,7 +234,7 @@ app.get('/management', function (req, res, next) {
                 function (entry, callback) {
                   memberstore.getMemberForId(entry.memberId, function (err2, member) {
                     if (err2 || !member) { return callback(err2); }
-                    member.addedToWaitinglistAt = entry.timestamp;
+                    member.addedToWaitinglistAt = entry.joinedWaitinglist;
                     callback(null, member);
                   });
                 },

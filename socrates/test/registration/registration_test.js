@@ -26,11 +26,6 @@ var createApp = require('../../testutil/testHelper')('socratesRegistrationApp').
 var aShortTimeAgo = moment.tz().subtract(10, 'minutes');
 var aLongTimeAgo = moment.tz().subtract(40, 'minutes');
 
-function setTimestamp(event, timestamp) {
-  event.timestamp = timestamp;
-  return event;
-}
-
 describe('SoCraTes registration application', function () {
   /* eslint camelcase: 0 */
   var appWithoutMember = request(createApp({middlewares: [userWithoutMember]}));
@@ -390,7 +385,7 @@ describe('SoCraTes registration application', function () {
 
     it('is still accepted to the waitinglist even when the timeout is expired', function (done) {
       eventStore.state.registrationEvents = [
-        setTimestamp(events.waitinglistReservationWasIssued(['single'], 'session-id', 'memberId2'), moment().subtract(1, 'hours'))];
+        events.waitinglistReservationWasIssued(['single'], 'session-id', 'memberId2', aLongTimeAgo)];
 
       appWithSocratesMemberAndFixedSessionId
         .post('/completeRegistration')

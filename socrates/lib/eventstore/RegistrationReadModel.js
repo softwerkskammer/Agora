@@ -91,12 +91,12 @@ RegistrationReadModel.prototype.durations = function () {
 
 };
 
-RegistrationReadModel.prototype.registeredAt = function (memberId) {
-  return moment(this.participantEventFor(memberId).timestamp);
+RegistrationReadModel.prototype.joinedSoCraTesAt = function (memberId) {
+  return moment(this.participantEventFor(memberId).joinedSoCraTes);
 };
 
-RegistrationReadModel.prototype.joinedWaitinglistAt = function () {
-  return null;
+RegistrationReadModel.prototype.joinedWaitinglistAt = function (memberId) {
+  return moment(this.waitinglistParticipantEventFor(memberId).joinedWaitinglist);
 };
 
 RegistrationReadModel.prototype.isAlreadyRegistered = function (memberId) {

@@ -212,7 +212,7 @@ block content
                 tbody
                   for member in participants
                     tr
-                      td #{registrationReadModel.registeredAt(member.id()).locale('de').format('L')}
+                      td #{registrationReadModel.joinedSoCraTesAt(member.id()).locale('de').format('L')}
                       td: +linkedMember(member.nickname())
                       td #{member.firstname()}
                       td #{member.lastname()}
@@ -239,7 +239,7 @@ block content
               tbody
                 for line in waitinglistLines
                   tr
-                    td #{formatDate(registrationReadModel.waitinglistParticipantEventFor(line.member.id()).timestamp)}
+                    td #{formatDate(registrationReadModel.waitinglistParticipantEventFor(line.member.id()).joinedWaitinglist)}
                     td #{+linkedMember(line.member.nickname())}
                     td #{line.member.firstname()}
                     td #{line.member.lastname()}
@@ -267,7 +267,7 @@ block content
                 for line in addonLines
                   tr
                     -var event = registrationReadModel.participantEventFor(line.member.id())
-                    td #{formatDate(event.timestamp)}
+                    td #{formatDate(event.joinedSoCraTes)}
                     td #{event.roomType}
                     td: +linkedMember(line.member.nickname())
                     td #{line.member.firstname()}
