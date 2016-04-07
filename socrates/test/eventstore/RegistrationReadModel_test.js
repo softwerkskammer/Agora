@@ -480,6 +480,58 @@ describe('The registration read model', function () {
     });
   });
 
+  describe('knows when a participant entered the system (joinedSoCraTesAt)', function () {
+    it('when he is registered', function () {
+      eventStore.state.registrationEvents = [
+        events.participantWasRegistered(singleBedRoom, untilSaturday, sessionId1, memberId1, aLongTimeAgo)
+      ];
+
+      expect(readModel.joinedSoCraTesAt(memberId1)).to.eql(aLongTimeAgo);
+    });
+
+    it('when he is registered from waitinglist', function () {
+      eventStore.state.registrationEvents = [
+        events.registeredParticipantFromWaitinglist(singleBedRoom, untilSaturday, memberId1, aLongTimeAgo)
+      ];
+
+      expect(readModel.joinedSoCraTesAt(memberId1)).to.eql(aLongTimeAgo);
+    });
+
+    it('when his room type was changed', function () {
+      eventStore.state.registrationEvents = [
+        events.roomTypeWasChanged(memberId1, singleBedRoom, untilSaturday, aLongTimeAgo)
+      ];
+
+      expect(readModel.joinedSoCraTesAt(memberId1)).to.eql(aLongTimeAgo);
+    });
+
+    it('when his duration was changed', function () {
+      eventStore.state.registrationEvents = [
+        events.durationWasChanged(memberId1, singleBedRoom, untilSaturday, aLongTimeAgo)
+      ];
+
+      expect(readModel.joinedSoCraTesAt(memberId1)).to.eql(aLongTimeAgo);
+    });
+  });
+
+  describe('knows when a waitinglist participant entered the system (joinedWaitinglistAt)', function () {
+    it('when he is registered', function () {
+      eventStore.state.registrationEvents = [
+        events.waitinglistParticipantWasRegistered([singleBedRoom], sessionId1, memberId1, aLongTimeAgo)
+      ];
+
+      expect(readModel.joinedWaitinglistAt(memberId1)).to.eql(aLongTimeAgo);
+    });
+
+    it('when his desired room types are changed', function () {
+      eventStore.state.registrationEvents = [
+        events.desiredRoomTypesWereChanged(memberId1, [singleBedRoom], aLongTimeAgo)
+      ];
+
+      expect(readModel.joinedWaitinglistAt(memberId1)).to.eql(aLongTimeAgo);
+    });
+  });
+
   it('for a registered participant without reservation', function () {
     eventStore.state.registrationEvents = [
       events.participantWasRegistered(singleBedRoom, untilSaturday, sessionId1, memberId1, aLongTimeAgo)
