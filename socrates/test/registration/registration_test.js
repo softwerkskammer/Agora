@@ -272,6 +272,7 @@ describe('SoCraTes registration application', function () {
         .send('activityUrl=socrates-url')
         .send('resourceName=single')
         .send('duration=5')
+        .send('desiredRoomTypes=')
         .send('homeAddress=At home')
         .send('billingAddress=')
         .send('tShirtSize=XXXL')
@@ -300,6 +301,7 @@ describe('SoCraTes registration application', function () {
         .send('activityUrl=socrates-url')
         .send('resourceName=junior')
         .send('duration=3')
+        .send('desiredRoomTypes=')
         .send('homeAddress=At home')
         .send('billingAddress=')
         .send('tShirtSize=XXXL')
@@ -326,6 +328,7 @@ describe('SoCraTes registration application', function () {
         .send('activityUrl=socrates-url')
         .send('resourceName=junior')
         .send('duration=3')
+        .send('desiredRoomTypes=')
         .send('homeAddress=At home')
         .send('billingAddress=')
         .send('tShirtSize=XXXL')
@@ -352,6 +355,7 @@ describe('SoCraTes registration application', function () {
         .send('activityUrl=socrates-url')
         .send('resourceName=single')
         .send('duration=3')
+        .send('desiredRoomTypes=')
         .send('homeAddress=At home')
         .send('billingAddress=')
         .send('tShirtSize=XXXL')
@@ -378,6 +382,7 @@ describe('SoCraTes registration application', function () {
         .send('activityUrl=socrates-url')
         .send('resourceName=single')
         .send('duration=3')
+        .send('desiredRoomTypes=')
         .send('homeAddress=At home')
         .send('billingAddress=')
         .send('tShirtSize=XXXL')
@@ -405,6 +410,7 @@ describe('SoCraTes registration application', function () {
         .send('activityUrl=socrates-url')
         .send('resourceName=junior')
         .send('duration=5')
+        .send('desiredRoomTypes=')
         .send('homeAddress=At home')
         .send('billingAddress=')
         .send('tShirtSize=XXXL')
@@ -429,13 +435,14 @@ describe('SoCraTes registration application', function () {
   describe('submission of the participate form to become a waitinglist participant', function () {
     it('is accepted when a waitinglist option is selected', function (done) {
       eventStore.state.registrationEvents = [
-        events.waitinglistReservationWasIssued(['single'], 'session-id', 'memberId2')];
+        events.waitinglistReservationWasIssued(['single'], 'session-id', aShortTimeAgo)];
 
       appWithSocratesMemberAndFixedSessionId
         .post('/completeRegistration')
         .send('activityUrl=socrates-url')
+        .send('resourceName=')
+        .send('duration=')
         .send('desiredRoomTypes=single')
-        .send('duration=waitinglist')
         .send('homeAddress=At home')
         .send('billingAddress=')
         .send('tShirtSize=XXXL')
@@ -456,13 +463,14 @@ describe('SoCraTes registration application', function () {
 
     it('is still accepted to the waitinglist even when the timeout is expired', function (done) {
       eventStore.state.registrationEvents = [
-        events.waitinglistReservationWasIssued(['single'], 'session-id', 'memberId2', aLongTimeAgo)];
+        events.waitinglistReservationWasIssued(['single'], 'session-id', aLongTimeAgo)];
 
       appWithSocratesMemberAndFixedSessionId
         .post('/completeRegistration')
         .send('activityUrl=socrates-url')
+        .send('resourceName=')
+        .send('duration=')
         .send('desiredRoomTypes=single')
-        .send('duration=waitinglist')
         .send('homeAddress=At home')
         .send('billingAddress=')
         .send('tShirtSize=XXXL')
@@ -488,8 +496,9 @@ describe('SoCraTes registration application', function () {
       appWithSocratesMemberAndFixedSessionId
         .post('/completeRegistration')
         .send('activityUrl=socrates-url')
-        .send('resourceName=junior')
-        .send('duration=waitinglist')
+        .send('resourceName=')
+        .send('duration=')
+        .send('desiredRoomTypes=junior')
         .send('homeAddress=At home')
         .send('billingAddress=')
         .send('tShirtSize=XXXL')
@@ -503,7 +512,36 @@ describe('SoCraTes registration application', function () {
         .expect('location', '/registration', function (err) {
           expect(eventStoreSave.called).to.be(true);
           expect(eventStore.state.registrationEvents[0].event).to.eql(e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED);
-          expect(eventStore.state.registrationEvents[1].event).to.eql(e.DID_NOT_REGISTER_PARTICIPANT_A_SECOND_TIME);
+          expect(eventStore.state.registrationEvents[1].event).to.eql(e.DID_NOT_REGISTER_WAITINGLIST_PARTICIPANT_A_SECOND_TIME);
+          done(err);
+        });
+    });
+  });
+
+  describe('submission of the participate form to book a room and to become a waitinglist participant', function () {
+    it('is accepted when a room and at least a waitinglist option is selected', function (done) {
+      eventStore.state.registrationEvents = [];
+
+      appWithSocratesMemberAndFixedSessionId
+        .post('/completeRegistration')
+        .send('activityUrl=socrates-url')
+        .send('resourceName=bed_in_double')
+        .send('duration=2')
+        .send('desiredRoomTypes=single,junior')
+        .send('homeAddress=At home')
+        .send('billingAddress=')
+        .send('tShirtSize=XXXL')
+        .send('remarks=vegan')
+        .send('roommate=My buddy')
+        .send('hasParticipationInformation=true')
+        .send('previousNickname=Nick&nickname=Nick')
+        .send('previousEmail=me@you.com&email=me@you.com')
+        .send('firstname=Peter&lastname=Miller')
+        .expect(302)
+        .expect('location', '/registration', function (err) {
+          expect(eventStoreSave.called).to.be(true);
+          expect(eventStore.state.registrationEvents[0].event).to.eql(e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED);
+          expect(eventStore.state.registrationEvents[1].event).to.eql(e.PARTICIPANT_WAS_REGISTERED);
           done(err);
         });
     });
