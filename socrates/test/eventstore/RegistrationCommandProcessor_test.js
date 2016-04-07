@@ -654,7 +654,7 @@ describe('The registration command processor', function () {
       // Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
         {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, desiredRoomTypes: [singleBedRoom], memberId: memberId1, joinedWaitinglist: aLongTimeAgo.valueOf()},
-        {event: e.DID_NOT_REGISTER_PARTICIPANT_A_SECOND_TIME, sessionID: sessionId1, roomType: [bedInDouble], duration: 'waitinglist', memberId: memberId1}
+        {event: e.DID_NOT_REGISTER_WAITINGLIST_PARTICIPANT_A_SECOND_TIME, sessionID: sessionId1, roomType: [bedInDouble], memberId: memberId1}
       ]);
     });
     it('registers a spot on the waitinglist for multiple desired rooms', function () {

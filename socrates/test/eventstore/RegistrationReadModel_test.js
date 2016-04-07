@@ -265,7 +265,7 @@ describe('The registration read model', function () {
       eventStore.state.registrationEvents = [
         events.waitinglistReservationWasIssued([singleBedRoom], sessionId1, aShortTimeAgo),
         events.didNotIssueWaitinglistReservationForAlreadyReservedSession([bedInDouble], sessionId1),
-        events.didNotRegisterParticipantASecondTime(singleBedRoom, sessionId1, memberId1)
+        events.didNotRegisterWaitinglistParticipantASecondTime(singleBedRoom, sessionId1, memberId1)
       ];
 
       expect(stripTimestamps(readModel.waitinglistReservationsAndParticipantsFor(singleBedRoom))).to.eql([

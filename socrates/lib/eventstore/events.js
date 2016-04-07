@@ -115,6 +115,10 @@ module.exports = {
     return enrich({event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionID: sessionId, desiredRoomTypes, memberId, joinedWaitinglist: joinedWaitinglist.valueOf()});
   },
 
+  didNotRegisterWaitinglistParticipantASecondTime: function (roomType, sessionId, memberId) {
+    return enrich({event: e.DID_NOT_REGISTER_WAITINGLIST_PARTICIPANT_A_SECOND_TIME, sessionID: sessionId, roomType, memberId});
+  },
+
   // removal:
   waitinglistParticipantWasRemoved: function (desiredRoomTypes, memberId) {
     return enrich({event: e.WAITINGLIST_PARTICIPANT_WAS_REMOVED, memberId, desiredRoomTypes});

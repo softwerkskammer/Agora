@@ -114,7 +114,7 @@ RegistrationCommandProcessor.prototype.issueWaitinglistReservation = function (d
 RegistrationCommandProcessor.prototype.registerWaitinglistParticipant = function (desiredRoomTypes, sessionId, memberId, joinedWaitinglist) {
   var event;
   if (this.writeModel.isAlreadyRegistered(memberId) || this.writeModel.isAlreadyOnWaitinglist(memberId)) {
-    event = events.didNotRegisterParticipantASecondTime(desiredRoomTypes, 'waitinglist', sessionId, memberId);
+    event = events.didNotRegisterWaitinglistParticipantASecondTime(desiredRoomTypes, sessionId, memberId);
   } else {
     // all is well
     var waitinglistReservation = this.writeModel.waitinglistReservation(sessionId);
