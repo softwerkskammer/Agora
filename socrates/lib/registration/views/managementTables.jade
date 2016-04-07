@@ -239,7 +239,7 @@ block content
               tbody
                 for line in waitinglistLines
                   tr
-                    td #{formatDate(registrationReadModel.waitinglistParticipantEventFor(line.member.id()).joinedWaitinglist)}
+                    td #{formatDate(registrationReadModel.joinedWaitinglistAt(line.member.id()))}
                     td #{+linkedMember(line.member.nickname())}
                     td #{line.member.firstname()}
                     td #{line.member.lastname()}
