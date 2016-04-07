@@ -12,6 +12,7 @@ var userWithoutMember = require('../../testutil/userWithoutMember');
 var groupsAndMembersService = beans.get('groupsAndMembersService');
 var subscriberstore = beans.get('subscriberstore');
 var notifications = beans.get('socratesNotifications');
+var registrationService = beans.get('registrationService');
 
 var Member = beans.get('member');
 var Subscriber = beans.get('subscriber');
@@ -185,6 +186,76 @@ describe('SoCraTes registration application', function () {
         .expect(302)
         .expect('location', '/registration/participate', function (err) {
           expect(eventStoreSave.called).to.be(true);
+          done(err);
+        });
+    });
+  });
+
+  describe('startRegistration splits up the form params', function () {
+    it('for a room registration', function (done) {
+      const startRegistration = sinon.spy(registrationService, 'startRegistration');
+
+      appWithSocratesMember
+        .post('/startRegistration')
+        .send('nightsOptions=bed_in_double,3')
+        .expect(302)
+        .expect('location', '/registration/participate', function (err) {
+
+          const registrationTuple = startRegistration.firstCall.args[0];
+          expect(registrationTuple.resourceName).to.eql('bed_in_double');
+          expect(registrationTuple.duration).to.eql('3');
+          expect(registrationTuple.desiredRoomTypes).to.eql([]);
+          done(err);
+        });
+    });
+
+    it('for a waitinglist registration', function (done) {
+      const startRegistration = sinon.spy(registrationService, 'startRegistration');
+
+      appWithSocratesMember
+        .post('/startRegistration')
+        .send('nightsOptions=bed_in_double,waitinglist')
+        .expect(302)
+        .expect('location', '/registration/participate', function (err) {
+
+          const registrationTuple = startRegistration.firstCall.args[0];
+          expect(registrationTuple.resourceName).to.eql(undefined);
+          expect(registrationTuple.duration).to.eql(undefined);
+          expect(registrationTuple.desiredRoomTypes).to.eql(['bed_in_double']);
+          done(err);
+        });
+    });
+
+    it('for multiple waitinglist registrations', function (done) {
+      const startRegistration = sinon.spy(registrationService, 'startRegistration');
+
+      appWithSocratesMember
+        .post('/startRegistration')
+        .send('nightsOptions=single,waitinglist&nightsOptions=bed_in_double,waitinglist&nightsOptions=junior,waitinglist')
+        .expect(302)
+        .expect('location', '/registration/participate', function (err) {
+
+          const registrationTuple = startRegistration.firstCall.args[0];
+          expect(registrationTuple.resourceName).to.eql(undefined);
+          expect(registrationTuple.duration).to.eql(undefined);
+          expect(registrationTuple.desiredRoomTypes).to.eql(['single', 'bed_in_double', 'junior']);
+          done(err);
+        });
+    });
+
+    it('for a room registration and multiple waitinglist registrations', function (done) {
+      const startRegistration = sinon.spy(registrationService, 'startRegistration');
+
+      appWithSocratesMember
+        .post('/startRegistration')
+        .send('nightsOptions=single,3&nightsOptions=bed_in_double,waitinglist&nightsOptions=junior,waitinglist')
+        .expect(302)
+        .expect('location', '/registration/participate', function (err) {
+
+          const registrationTuple = startRegistration.firstCall.args[0];
+          expect(registrationTuple.resourceName).to.eql('single');
+          expect(registrationTuple.duration).to.eql('3');
+          expect(registrationTuple.desiredRoomTypes).to.eql(['bed_in_double', 'junior']);
           done(err);
         });
     });

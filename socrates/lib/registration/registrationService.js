@@ -15,11 +15,13 @@ module.exports = {
   startRegistration: function (registrationTuple, now, callback) {
     var self = this;
     var reservationEvent;
+    var waitinglistReservationEvent;
     eventstoreService.getRegistrationCommandProcessor(registrationTuple.activityUrl, function (err, registrationCommandProcessor) {
       if (err || !registrationCommandProcessor) { return callback(err, 'message.title.problem', 'message.content.activities.does_not_exist'); }
-      if (registrationTuple.duration === 'waitinglist') {
-        reservationEvent = registrationCommandProcessor.issueWaitinglistReservation(registrationTuple.desiredRoomTypes, registrationTuple.sessionID, now);
-      } else {
+      if (registrationTuple.desiredRoomTypes.length > 0) {
+        waitinglistReservationEvent = registrationCommandProcessor.issueWaitinglistReservation(registrationTuple.desiredRoomTypes, registrationTuple.sessionID, now);
+      }
+      if (registrationTuple.resourceName && registrationTuple.duration) {
         reservationEvent = registrationCommandProcessor.issueReservation(registrationTuple.resourceName, registrationTuple.duration, registrationTuple.sessionID, now);
       }
       return eventstoreService.saveCommandProcessor(registrationCommandProcessor, function (err1) {
@@ -28,7 +30,7 @@ module.exports = {
           return self.startRegistration(registrationTuple, now, callback);
         }
         if (err1) { return callback(err1); }
-        if (reservationEvent === eventConstants.RESERVATION_WAS_ISSUED || reservationEvent === eventConstants.WAITINGLIST_RESERVATION_WAS_ISSUED) {
+        if (reservationEvent === eventConstants.RESERVATION_WAS_ISSUED || waitinglistReservationEvent === eventConstants.WAITINGLIST_RESERVATION_WAS_ISSUED) {
           return callback(null);
         }
         return callback(null, 'activities.registration_not_now', 'activities.registration_not_possible');

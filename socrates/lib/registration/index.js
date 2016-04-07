@@ -98,25 +98,27 @@ app.get('/interested', function (req, res) {
 });
 
 app.post('/startRegistration', function (req, res, next) {
-  var nightsOptions = req.body.nightsOptions;
-  var option = {};
-  if (!isRegistrationOpen(req.body.registrationParam) || !nightsOptions) { return res.redirect('/registration'); }
-  if (nightsOptions instanceof Array) {
-    option.desiredRoomTypes = nightsOptions.map(nightsOption => nightsOption.split(',')[0]);
-    option.duration = 'waitinglist';
-  } else {
-    var splitArray = nightsOptions.split(',');
-    option.roomType = splitArray[1] === 'waitinglist' ? undefined : splitArray[0];
-    option.desiredRoomTypes = splitArray[1] === 'waitinglist' ? [splitArray[0]] : undefined;
-    option.duration = splitArray[1];
-  }
+
+  if (!isRegistrationOpen(req.body.registrationParam) || !req.body.nightsOptions) { return res.redirect('/registration'); }
+
+  var nightsOptions = req.body.nightsOptions instanceof Array ? req.body.nightsOptions : [req.body.nightsOptions];
+
   var registrationTuple = {
     activityUrl: socratesConstants.currentUrl,
-    resourceName: option.roomType, // TODO roomType
-    desiredRoomTypes: option.desiredRoomTypes,
-    duration: option.duration,
-    sessionID: req.sessionID
+    sessionID: req.sessionID,
+    desiredRoomTypes: []
   };
+
+  nightsOptions.forEach(option => {
+    var splitArray = option.split(',');
+    if (splitArray[1] === 'waitinglist') {
+      registrationTuple.desiredRoomTypes.push(splitArray[0]);
+    } else {
+      registrationTuple.resourceName = splitArray[0];  // TODO roomType
+      registrationTuple.duration = splitArray[1];
+    }
+  });
+
   var participateURL = '/registration/participate';
   req.session.registrationTuple = registrationTuple; // so that we can access it again when finishing the registration
   registrationService.startRegistration(registrationTuple, moment.tz(), function (err, statusTitle, statusText) {
