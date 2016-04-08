@@ -98,28 +98,30 @@ app.get('/interested', function (req, res) {
 });
 
 app.post('/startRegistration', function (req, res, next) {
-  var nightsOptions = req.body.nightsOptions;
-  var option = {};
-  if (!isRegistrationOpen(req.body.registrationParam) || !nightsOptions) { return res.redirect('/registration'); }
-  if (nightsOptions instanceof Array) {
-    option.desiredRoomTypes = nightsOptions.map(nightsOption => nightsOption.split(',')[0]);
-    option.duration = 'waitinglist';
-  } else {
-    var splitArray = nightsOptions.split(',');
-    option.roomType = splitArray[1] === 'waitinglist' ? undefined : splitArray[0];
-    option.desiredRoomTypes = splitArray[1] === 'waitinglist' ? [splitArray[0]] : undefined;
-    option.duration = splitArray[1];
-  }
+
+  if (!isRegistrationOpen(req.body.registrationParam) || !req.body.nightsOptions) { return res.redirect('/registration'); }
+
+  var nightsOptions = req.body.nightsOptions instanceof Array ? req.body.nightsOptions : [req.body.nightsOptions];
+
   var registrationTuple = {
     activityUrl: socratesConstants.currentUrl,
-    resourceName: option.roomType, // TODO roomType
-    desiredRoomTypes: option.desiredRoomTypes,
-    duration: option.duration,
-    sessionID: req.sessionID
+    sessionID: req.sessionID,
+    desiredRoomTypes: []
   };
+
+  nightsOptions.forEach(option => {
+    var splitArray = option.split(',');
+    if (splitArray[1] === 'waitinglist') {
+      registrationTuple.desiredRoomTypes.push(splitArray[0]);
+    } else {
+      registrationTuple.resourceName = splitArray[0];  // TODO roomType
+      registrationTuple.duration = splitArray[1];
+    }
+  });
+
   var participateURL = '/registration/participate';
   req.session.registrationTuple = registrationTuple; // so that we can access it again when finishing the registration
-  registrationService.startRegistration(registrationTuple, function (err, statusTitle, statusText) {
+  registrationService.startRegistration(registrationTuple, moment.tz(), function (err, statusTitle, statusText) {
     if (err) { return next(err); }
     if (statusTitle && statusText) {
       statusmessage.errorMessage(statusTitle, statusText).putIntoSession(req);
@@ -167,7 +169,7 @@ app.post('/completeRegistration', function (req, res, next) {
   memberSubmitHelper(req, res, next, function (err) {
     if (err) { return next(err); }
     var body = req.body;
-    registrationService.completeRegistration(req.user.member.id(), req.sessionID, body, function (err1, statusTitle, statusText) {
+    registrationService.completeRegistration(req.user.member.id(), req.sessionID, body, moment.tz(), function (err1, statusTitle, statusText) {
       if (err1) { return next(err1); }
       delete req.session.statusmessage;
       delete req.session.registrationTuple;
@@ -175,10 +177,10 @@ app.post('/completeRegistration', function (req, res, next) {
         statusmessage.errorMessage(statusTitle, statusText).putIntoSession(req);
         return res.redirect('/registration');
       }
-      if (body.duration === 'waitinglist') {
-        statusmessage.successMessage('general.info', 'activities.successfully_added_to_waitinglist').putIntoSession(req);
-      } else {
+      if (body.resourceName && body.duration) {
         statusmessage.successMessage('general.info', 'activities.successfully_registered').putIntoSession(req);
+      } else {
+        statusmessage.successMessage('general.info', 'activities.successfully_added_to_waitinglist').putIntoSession(req);
       }
       res.redirect('/registration');
     });
@@ -234,7 +236,7 @@ app.get('/management', function (req, res, next) {
                 function (entry, callback) {
                   memberstore.getMemberForId(entry.memberId, function (err2, member) {
                     if (err2 || !member) { return callback(err2); }
-                    member.addedToWaitinglistAt = entry.timestamp;
+                    member.addedToWaitinglistAt = entry.joinedWaitinglist;
                     callback(null, member);
                   });
                 },

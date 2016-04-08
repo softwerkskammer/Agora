@@ -2,6 +2,7 @@
 
 var async = require('async');
 var _ = require('lodash');
+var moment = require('moment-timezone');
 
 var beans = require('simple-configure').get('beans');
 var misc = beans.get('misc');
@@ -108,7 +109,7 @@ app.get('/checkurl', function (req, res) {
 app.get('/fromWaitinglistToParticipant/:resourceName/:nickname', function (req, res) {
   var duration = 2;
 
-  socratesActivitiesService.fromWaitinglistToParticipant(req.params.nickname, req.params.resourceName, duration, function (err) {
+  socratesActivitiesService.fromWaitinglistToParticipant(req.params.nickname, req.params.resourceName, duration, moment.tz(), function (err) {
     if (err) { return res.send('Error: ' + err); }
     res.send('-> Teilnehmer');
   });

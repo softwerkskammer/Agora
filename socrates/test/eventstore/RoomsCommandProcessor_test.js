@@ -3,6 +3,7 @@
 
 var expect = require('must-dist');
 var R = require('ramda');
+var moment = require('moment-timezone');
 
 var beans = require('../../testutil/configureForTest').get('beans');
 var events = beans.get('events');
@@ -10,6 +11,8 @@ var GlobalEventStore = beans.get('GlobalEventStore');
 var RoomsWriteModel = beans.get('RoomsWriteModel');
 var RoomsCommandProcessor = beans.get('RoomsCommandProcessor');
 var e = beans.get('eventConstants');
+
+var aLongTimeAgo = moment.tz().subtract(40, 'minutes');
 
 function stripTimestamps(someEvents) {
   return R.map(function (event) {
@@ -31,11 +34,11 @@ describe('The rooms command processor', function () {
     commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStore));
 
     eventStore.state.registrationEvents = [
-      events.participantWasRegistered(bedInDouble, 2, 'sessionId1', 'memberId1'),
-      events.participantWasRegistered(bedInDouble, 2, 'sessionId2', 'memberId2'),
-      events.participantWasRegistered(bedInDouble, 2, 'sessionId3', 'memberId3'),
-      events.participantWasRegistered(bedInDouble, 2, 'sessionId4', 'memberId4'),
-      events.participantWasRegistered(bedInDouble, 2, 'sessionId5', 'memberId5')
+      events.participantWasRegistered(bedInDouble, 2, 'sessionId1', 'memberId1', aLongTimeAgo),
+      events.participantWasRegistered(bedInDouble, 2, 'sessionId2', 'memberId2', aLongTimeAgo),
+      events.participantWasRegistered(bedInDouble, 2, 'sessionId3', 'memberId3', aLongTimeAgo),
+      events.participantWasRegistered(bedInDouble, 2, 'sessionId4', 'memberId4', aLongTimeAgo),
+      events.participantWasRegistered(bedInDouble, 2, 'sessionId5', 'memberId5', aLongTimeAgo)
     ];
   });
 

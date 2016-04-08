@@ -1,6 +1,7 @@
 /* eslint no-underscore-dangle: 0 */
 'use strict';
 
+var moment = require('moment-timezone');
 var sinon = require('sinon').sandbox.create();
 var expect = require('must-dist');
 
@@ -16,6 +17,8 @@ var Subscriber = beans.get('subscriber');
 
 var memberstore = beans.get('memberstore');
 var notifications = beans.get('socratesNotifications');
+
+var aLongTimeAgo = moment.tz().subtract(40, 'minutes');
 
 describe('SoCraTes Members Service', function () {
 
@@ -65,7 +68,7 @@ describe('SoCraTes Members Service', function () {
         return callback(null, []);
       });
       globalEventStore.state.registrationEvents = [
-        events.participantWasRegistered('single', 3, 'sessionId', 'memberId')
+        events.participantWasRegistered('single', 3, 'sessionId', 'memberId', aLongTimeAgo)
       ];
 
       socratesMembersService.participationStatus(new Subscriber({id: 'memberId'}), function (err, result) {

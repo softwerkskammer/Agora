@@ -108,6 +108,7 @@ mixin participationinfoform(roomOptions, registration)
         script.
           $(function () {
             var selectedOptions = '#{registration.selectedOptions}'.split(';');
+            console.log(selectedOptions)
             selectedOptions.forEach(function (option) {
               var selectedInput = $('input[value="' + option + '"]')
               selectedInput.attr('checked', 'checked');
