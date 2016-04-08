@@ -636,7 +636,7 @@ describe('The registration command processor', function () {
         {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, desiredRoomTypes: [singleBedRoom], sessionID: sessionId1, memberId: memberId1, joinedWaitinglist: aLongTimeAgo.valueOf()},
         {event: e.DID_NOT_REGISTER_WAITINGLIST_PARTICIPANT_A_SECOND_TIME, desiredRoomTypes: [singleBedRoom, bedInDouble], sessionID: sessionId1, memberId: memberId1}]);
     });
-    
+
     it('registers a spot on the waitinglist for multiple desired rooms', function () {
       // Given (saved events)
       eventStore.state.registrationEvents = [
