@@ -178,7 +178,7 @@ describe('SoCraTes Activities Service', function () {
     });
   });
 
-  xit('removes a participant from the given resource', function (done) {
+  it('removes a participant from the given resource', function (done) {
     eventStore.state.registrationEvents = [
       events.participantWasRegistered('bed_in_double', 2, 'session-id', 'memberId', aLongTimeAgo)
     ];
