@@ -137,7 +137,7 @@ describe('SoCraTes registration application', function () {
       appWithSocratesMember
         .get('/')
         .expect(/<form id="participationinfoform" action="\/registration\/startRegistration" method="post" class="relaxed"><fieldset disabled="disabled"/)
-        .expect(/<th>Single<\/th><td class="text-center"><div class="radio-inline"><label><input type="radio" name="nightsOptions" value="single,2"/)
+        .expect(/<th>Single<div class="radio-inline pull-right"><label><input type="checkbox" name="nightsOptions" value="single,waitinglist"/)
         .expect(/<th>Double shared<\/th><td class="text-center"><div class="radio-inline"><label><input type="radio" name="nightsOptions" value="bed_in_double,2"/)
         .expect(/<th>Junior \(exclusively\)<\/th><td class="text-center"><div class="radio-inline"><label><input type="radio" name="nightsOptions" value="junior,2"/)
         .expect(/<div class="btn pull-right btn btn-success">You are already registered\./, done);

@@ -103,6 +103,16 @@ RegistrationReadModel.prototype.isAlreadyRegistered = function (memberId) {
   return !!this.participantEventFor(memberId);
 };
 
+RegistrationReadModel.prototype.isAlreadyRegisteredFor = function (memberId, roomType) {
+  const event = this.participantEventFor(memberId);
+  return event && event.roomType === roomType;
+};
+
+RegistrationReadModel.prototype.isAlreadyOnWaitinglistFor = function (memberId, roomType) {
+  const event = this.waitinglistParticipantEventFor(memberId);
+  return event && R.contains(roomType, event.desiredRoomTypes);
+};
+
 RegistrationReadModel.prototype.allParticipantsIn = function (roomType) {
   return R.keys(this.participantsByMemberIdFor(roomType));
 };
