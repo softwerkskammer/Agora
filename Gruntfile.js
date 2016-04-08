@@ -4,6 +4,8 @@ module.exports = function (grunt) {
 
   var commonJSfiles = [
     'node_modules/jquery/dist/jquery.js',
+    'node_modules/moment/moment.js',
+    'node_modules/moment-timezone/moment-timezone.js',
     'node_modules/guillotine/js/jquery.guillotine.js',
     'node_modules/select2/dist/js/select2.js',
     'node_modules/autonumeric/autonumeric.js',
@@ -11,7 +13,6 @@ module.exports = function (grunt) {
     'node_modules/bootstrap-datepicker/js/bootstrap-datepicker.js',
     'node_modules/bootstrap-markdown/js/bootstrap-markdown.js',
     'node_modules/bootstrap-markdown/locale/bootstrap-markdown.de.js',
-    'node_modules/moment-timezone/node_modules/moment/moment.js',
     'node_modules/drmonty-smartmenus/js/jquery.smartmenus.js',
     'softwerkskammer/build/javascript/jquery.smartmenus.bootstrap-patched.js',
     'softwerkskammer/build/javascript/fullcalendar-patched.js',
