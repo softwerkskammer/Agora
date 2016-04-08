@@ -146,9 +146,6 @@ var projectWaitinglistParticipantsByMemberId = function (waitinglistParticipants
   if (event.event === e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED || event.event === e.DESIRED_ROOM_TYPES_WERE_CHANGED) {
     waitinglistParticipantsByMemberId[event.memberId] = event;
   }
-  if (event.event === e.PARTICIPANT_WAS_REGISTERED) {
-    delete waitinglistParticipantsByMemberId[event.memberId];
-  }
   if (event.event === e.WAITINGLIST_PARTICIPANT_WAS_REMOVED) {
     delete waitinglistParticipantsByMemberId[event.memberId];
   }
@@ -216,16 +213,17 @@ RegistrationReadModel.prototype.isAlreadyOnWaitinglist = function (memberId) {
 };
 
 RegistrationReadModel.prototype.selectedOptionsFor = function (memberID) {
+  var options = [];
   var participantEvent = this.participantEventFor(memberID);
   if (participantEvent) {
-    return participantEvent.roomType + ',' + participantEvent.duration;
+    options.push(participantEvent.roomType + ',' + participantEvent.duration);
   }
 
   var waitinglistParticipantEvent = this.waitinglistParticipantEventFor(memberID);
   if (waitinglistParticipantEvent) {
-    return waitinglistParticipantEvent.desiredRoomTypes.map(roomType => roomType + ',waitinglist').join(';');
+    waitinglistParticipantEvent.desiredRoomTypes.forEach(roomType => options.push(roomType + ',waitinglist'));
   }
-  return null;
+  return options.join(';');
 };
 
 RegistrationReadModel.prototype.roomTypesOf = function (memberId) {

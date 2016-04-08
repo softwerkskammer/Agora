@@ -300,25 +300,31 @@ describe('The registration read model', function () {
 
   describe('knows about a participant\'s selected options (selectedOptionsFor)', function () {
 
-    it('returns a registered member\'s option', function () {
+    it('returns the options for a participant', function () {
       eventStore.state.registrationEvents = [
-        events.reservationWasIssued('single', 3, sessionId1, aLongTimeAgo),
         events.participantWasRegistered('single', 3, sessionId1, memberId1, aShortTimeAgo)];
 
       expect(readModel.selectedOptionsFor(memberId1)).to.be('single,3');
     });
 
-    it('returns a registered member\'s options for waitinglist registration', function () {
+    it('returns the options for a waitinglist participant', function () {
       eventStore.state.registrationEvents = [
-        events.waitinglistReservationWasIssued(['single', 'junior'], sessionId1, aLongTimeAgo),
         events.waitinglistParticipantWasRegistered(['single', 'junior'], sessionId1, memberId1, aShortTimeAgo)];
 
       expect(readModel.selectedOptionsFor(memberId1)).to.eql('single,waitinglist;junior,waitinglist');
     });
 
-    it('returns null as the options for a not registered member', function () {
+    it('returns the options for somebody who is participant and waitinglist participant', function () {
+      eventStore.state.registrationEvents = [
+        events.participantWasRegistered('bed_in_double', 3, sessionId1, memberId1, aShortTimeAgo),
+        events.waitinglistParticipantWasRegistered(['single', 'junior'], sessionId1, memberId1, aShortTimeAgo)];
 
-      expect(readModel.selectedOptionsFor(memberId1)).to.be(null);
+      expect(readModel.selectedOptionsFor(memberId1)).to.eql('bed_in_double,3;single,waitinglist;junior,waitinglist');
+    });
+
+    it('returns an empty string as the options for an unregistered member', function () {
+
+      expect(readModel.selectedOptionsFor(memberId1)).to.be('');
     });
 
   });
@@ -558,7 +564,7 @@ describe('The registration read model', function () {
 
   it('for a waitinglist participant to a participant', function () {
     eventStore.state.registrationEvents = [
-      events.waitinglistParticipantWasRegistered(singleBedRoom, sessionId1, memberId1, aLongTimeAgo),
+      events.waitinglistParticipantWasRegistered([singleBedRoom], sessionId1, memberId1, aLongTimeAgo),
       events.reservationWasIssued(singleBedRoom, untilSaturday, sessionId1, aLongTimeAgo),
       events.participantWasRegistered(singleBedRoom, untilSaturday, sessionId1, memberId1, aLongTimeAgo)
     ];
@@ -566,7 +572,7 @@ describe('The registration read model', function () {
     expect(readModel.reservationsBySessionIdFor(singleBedRoom)).to.eql({});
     expect(R.keys(readModel.participantsByMemberIdFor(singleBedRoom))).to.eql([memberId1]);
     expect(readModel.waitinglistReservationsBySessionIdFor(singleBedRoom)).to.eql({});
-    expect(readModel.waitinglistParticipantsByMemberIdFor(singleBedRoom)).to.eql({});
+    expect(R.keys(readModel.waitinglistParticipantsByMemberIdFor(singleBedRoom))).to.eql([memberId1]);
   });
 
   it('for a already registered participant', function () {
