@@ -11,15 +11,17 @@ block scripts
 block title 
   | Registration - SoCraTes
 block content
+  -var asParticipant = registrationTuple.resourceName && registrationTuple.duration
   .page-header
-    if(registrationTuple.resourceName && registrationTuple.duration)
+    if(asParticipant)
       h1 Registration #{' '}
         small Personal Information
     else
       h1 Waitinglist Registration<br>
     if (!!expiresAt)
+      -var spotWhere = asParticipant ? 'at SoCraTes' : 'on the SoCraTes waitinglist'
       p.
-        You now have a reserved spot at SoCraTes. This reservation is held for #{expiresIn} minutes
+        You now have a reserved spot #{spotWhere}. This reservation is held for #{expiresIn} minutes
         (i.e. until #{expiresAt.locale('en-gb').format('LT')}). If you do not fill in and submit this form until then,
         you will have to restart the registration from the previous page.
       
