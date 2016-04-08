@@ -158,7 +158,7 @@ module.exports = {
       var adminListName = conf.get('adminListName');
       groupsService.getMailinglistUsersOfList(adminListName, function (err2, emailAddresses) {
         if (err2) { return callback(err2); }
-        var isInAdminList = _.contains(emailAddresses, member.email());
+        var isInAdminList = _.includes(emailAddresses, member.email());
         if (member.isContactperson() && !isInAdminList) {
           return groupsService.addUserToList(member.email(), adminListName, callback);
         }

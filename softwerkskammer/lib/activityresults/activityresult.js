@@ -69,7 +69,7 @@ ActivityResult.prototype.addPhoto = function (photo) {
 };
 
 ActivityResult.prototype.getDistinctPresentTags = function () {
-  return _(this.state.photos).pluck('tags').flatten().uniq().compact().value();
+  return _(this.state.photos).map('tags').flatten().uniq().compact().value();
 };
 
 ActivityResult.prototype.photosByDay = function () {

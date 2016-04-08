@@ -15,7 +15,7 @@ var rooms = [
 
 module.exports = {
   allIds: function () {
-    return _.pluck(rooms, 'id');
+    return _.map(rooms, 'id');
   },
 
   allRoomOptions: function (registrationReadModel, memberId, isRegistrationOpen) {

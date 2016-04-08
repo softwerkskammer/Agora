@@ -236,7 +236,7 @@ Activity.prototype.participantsOf = function (resourceName) {
   var resource = this.resourceNamed(resourceName);
   var memberIds = resource.registeredMembers();
   return _(this.participants).filter(function (participant) {
-    return _.any(memberIds, function (memberId) {
+    return _.some(memberIds, function (memberId) {
       return memberId === participant.id();
     });
   }).map(function (member) {

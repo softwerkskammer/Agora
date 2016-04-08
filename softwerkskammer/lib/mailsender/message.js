@@ -29,7 +29,7 @@ Message.prototype.setTo = function (toAddresses) {
 };
 
 Message.prototype.setBccToGroupMemberAddresses = function (groups) {
-  this.setBccToMemberAddresses(_(groups).compact().pluck('members').flatten().value());
+  this.setBccToMemberAddresses(_(groups).compact().map('members').flatten().value());
 };
 
 Message.prototype.setBccToMemberAddresses = function (members) {

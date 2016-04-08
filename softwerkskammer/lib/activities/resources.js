@@ -29,7 +29,7 @@ Resources.prototype.resourceNames = function () {
   return _(Object.getOwnPropertyNames(self.state))
     .map(function (key) { return { name: key, position: self.state[key]._position }; })
     .sortBy(function (entry) { return entry.position; })
-    .pluck('name').value();
+    .map('name').value();
 };
 
 Resources.prototype.named = function (resourceName) {
