@@ -105,7 +105,7 @@ app.post('/startRegistration', function (req, res, next) {
 
   var registrationTuple = {
     activityUrl: socratesConstants.currentUrl,
-    sessionID: req.sessionID,
+    sessionId: req.sessionID,
     desiredRoomTypes: []
   };
 
@@ -151,7 +151,7 @@ app.get('/participate', function (req, res, next) {
       if (err1) { return next(err1); }
       var addon = (subscriber && subscriber.addon()) || new Addon({});
       var participation = (subscriber && subscriber.currentParticipation()) || new Participation();
-      var expiresAt = readModel.reservationExpiration(registrationTuple.sessionID);
+      var expiresAt = readModel.reservationExpiration(registrationTuple.sessionId);
       res.render('participate', {
         member: member,
         addon: addon,
