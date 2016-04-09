@@ -43,6 +43,7 @@ describe('Registration Service', function () {
 
   var eventStore;
   var readModel;
+  var saveSubscriberCount;
 
   beforeEach(function () {
     registrationBody = {
@@ -79,7 +80,8 @@ describe('Registration Service', function () {
     });
 
     sinon.stub(eventstore, 'saveEventStore', function (activity, callback) { callback(); });
-    sinon.stub(subscriberstore, 'saveSubscriber', function (subscriber, callback) { callback(); });
+    saveSubscriberCount = 0;
+    sinon.stub(subscriberstore, 'saveSubscriber', function (activity, callback) { saveSubscriberCount += 1; callback(); });
   });
 
   afterEach(function () {
@@ -220,7 +222,7 @@ describe('Registration Service', function () {
       });
     });
 
-    it('returns error if registration fails due to full ressource', function (done) {
+    it('returns error and saves subscriber info if registration fails due to full ressource', function (done) {
       registrationBody.duration = 3;
       registrationBody.resourceName = 'junior';
       registrationBody.desiredRoomTypes = 'single';
@@ -229,12 +231,13 @@ describe('Registration Service', function () {
 
       registrationService.completeRegistration('memberId', 'sessionId', registrationBody, now, function (err, statusTitle, statusText) {
         expect(statusTitle).to.be('activities.registration_problem');
-        expect(statusText).to.be('activities.registration_is_full');
+        expect(statusText).to.be('activities.registration_timed_out');
+        expect(saveSubscriberCount).to.be(1);
         done(err);
       });
     });
 
-    it('returns error if registration fails due to duplicate booking', function (done) {
+    it('returns error and saves subscriber info if registration fails due to duplicate booking', function (done) {
       registrationBody.duration = 3;
       registrationBody.resourceName = 'junior';
       registrationBody.desiredRoomTypes = 'single';
@@ -244,11 +247,12 @@ describe('Registration Service', function () {
       registrationService.completeRegistration('memberId', 'sessionId', registrationBody, now, function (err, statusTitle, statusText) {
         expect(statusTitle).to.be('activities.registration_problem');
         expect(statusText).to.be('activities.already_registered');
+        expect(saveSubscriberCount).to.be(1);
         done(err);
       });
     });
 
-    it('returns error if waitinglist registration fails due to duplicate booking', function (done) {
+    it('returns error and saves subscriber info if waitinglist registration fails due to duplicate booking', function (done) {
       registrationBody.duration = 3;
       registrationBody.resourceName = 'junior';
       registrationBody.desiredRoomTypes = 'single';
@@ -258,6 +262,37 @@ describe('Registration Service', function () {
       registrationService.completeRegistration('memberId', 'sessionId', registrationBody, now, function (err, statusTitle, statusText) {
         expect(statusTitle).to.be('activities.registration_problem');
         expect(statusText).to.be('activities.already_registered');
+        expect(saveSubscriberCount).to.be(1);
+        done(err);
+      });
+    });
+
+    it('returns nothing and saves subscriber info if registration succeeds', function (done) {
+      registrationBody.duration = 3;
+      registrationBody.resourceName = 'junior';
+      registrationBody.desiredRoomTypes = 'single';
+      sinon.stub(RegistrationCommandProcessor.prototype, 'registerParticipant', function () {return e.PARTICIPANT_WAS_REGISTERED;});
+      sinon.stub(RegistrationCommandProcessor.prototype, 'registerWaitinglistParticipant', function () {return undefined;});
+
+      registrationService.completeRegistration('memberId', 'sessionId', registrationBody, now, function (err, statusTitle, statusText) {
+        expect(statusTitle).to.not.exist();
+        expect(statusText).to.not.exist();
+        expect(saveSubscriberCount).to.be(1);
+        done(err);
+      });
+    });
+
+    it('returns nothing and saves subscriber info if waitinglist registration succeeds', function (done) {
+      registrationBody.duration = 3;
+      registrationBody.resourceName = 'junior';
+      registrationBody.desiredRoomTypes = 'single';
+      sinon.stub(RegistrationCommandProcessor.prototype, 'registerParticipant', function () {return undefined;});
+      sinon.stub(RegistrationCommandProcessor.prototype, 'registerWaitinglistParticipant', function () {return e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED;});
+
+      registrationService.completeRegistration('memberId', 'sessionId', registrationBody, now, function (err, statusTitle, statusText) {
+        expect(statusTitle).to.not.exist();
+        expect(statusText).to.not.exist();
+        expect(saveSubscriberCount).to.be(1);
         done(err);
       });
     });
@@ -357,7 +392,7 @@ describe('Registration Service', function () {
           {event: e.PARTICIPANT_WAS_REGISTERED, roomType: 'single', memberId: 'memberId', sessionId: 'sessionId', duration: 2, joinedSoCraTes: aShortTimeAgo.valueOf()},
           {event: e.DID_NOT_REGISTER_PARTICIPANT_A_SECOND_TIME, roomType: 'single', memberId: 'memberId', sessionId: 'sessionId', duration: 2}
         ]);
-        expect(statusTitle).to.be('message.title.problem');
+        expect(statusTitle).to.be('activities.registration_problem');
         expect(statusText).to.be('activities.already_registered');
         done(err);
       });
@@ -431,7 +466,7 @@ describe('Registration Service', function () {
       ];
 
       registrationService.completeRegistration('memberId', 'sessionId', registrationBody, now, function (err, statusTitle, statusText) {
-        expect(statusTitle).to.be('message.title.problem');
+        expect(statusTitle).to.be('activities.registration_problem');
         expect(statusText).to.be('activities.already_registered');
         expect(readModel.reservationsBySessionIdFor('single')).to.eql({});
         expect(R.keys(readModel.participantsByMemberIdFor('single'))).to.eql(['memberId']);
