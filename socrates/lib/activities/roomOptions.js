@@ -34,8 +34,7 @@ module.exports = {
         three: 3 * room.price + 2 * day + thursdayEvening,
         threePlus: 3 * room.price + 3 * day + thursdayEvening,
         four: 4 * room.price + 3 * day + thursdayEvening,
-        displayRegistrationCheckboxes: displayRegistrationCheckboxes,
-        displayWaitinglistCheckbox: true // TODO remove altogether
+        displayRegistrationCheckboxes: displayRegistrationCheckboxes
       };
     }
 

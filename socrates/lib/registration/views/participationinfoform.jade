@@ -81,11 +81,10 @@ mixin participationinfoform(roomOptions, registration)
                   else
                     tr
                       th #{option.name}
-                        if option.displayWaitinglistCheckbox
-                          .radio-inline.pull-right
-                            label
-                              input(type='checkbox', name='nightsOptions', value=option.id + ',waitinglist')
-                              |  Waitinglist
+                        .radio-inline.pull-right
+                          label
+                            input(type='checkbox', name='nightsOptions', value=option.id + ',waitinglist')
+                            |  Waitinglist
                       td.text-center.disabled-text
                         span(style='margin-left:20px;') #{option.two}&nbsp;€
                       td.text-center.disabled-text
