@@ -289,12 +289,12 @@ describe('SoCraTes registration application', function () {
 
       appWithSocratesMember
         .post('/startRegistration')
-        .send('nightsOptions=single,3&nightsOptions=bed_in_double,waitinglist&nightsOptions=junior,waitinglist')
+        .send('nightsOptions=bed_in_junior,3&nightsOptions=bed_in_double,waitinglist&nightsOptions=junior,waitinglist')
         .expect(302)
         .expect('location', '/registration/participate', function (err) {
 
           const registrationTuple = startRegistration.firstCall.args[0];
-          expect(registrationTuple.roomType).to.eql('single');
+          expect(registrationTuple.roomType).to.eql('bed_in_junior');
           expect(registrationTuple.duration).to.eql(3);
           expect(registrationTuple.desiredRoomTypes).to.eql(['bed_in_double', 'junior']);
           done(err);

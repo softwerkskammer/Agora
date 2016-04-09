@@ -30,9 +30,17 @@ module.exports = {
           return self.startRegistration(registrationTuple, memberIdIfKnown, now, callback);
         }
         if (err1) { return callback(err1); }
-        if (reservationEvent === eventConstants.RESERVATION_WAS_ISSUED || waitinglistReservationEvent === eventConstants.WAITINGLIST_RESERVATION_WAS_ISSUED) {
-          return callback(null);
+        if (reservationEvent === eventConstants.DID_NOT_ISSUE_RESERVATION_FOR_FULL_RESOURCE) {
+          return callback(null, 'activities.registration_problem', 'activities.registration_is_full');
         }
+        if (reservationEvent === eventConstants.RESERVATION_WAS_ISSUED
+          || reservationEvent === eventConstants.DID_NOT_ISSUE_RESERVATION_FOR_ALREADY_RESERVED_SESSION
+          || waitinglistReservationEvent === eventConstants.WAITINGLIST_RESERVATION_WAS_ISSUED
+          || waitinglistReservationEvent === eventConstants.DID_NOT_ISSUE_WAITINGLIST_RESERVATION_FOR_ALREADY_RESERVED_SESSION
+        ) {
+          return callback(null); // let the user continue normally even in case he already has a reservation
+        }
+        // for any surprises that we might encounter
         return callback(null, 'activities.registration_not_now', 'activities.registration_not_possible');
       });
     });

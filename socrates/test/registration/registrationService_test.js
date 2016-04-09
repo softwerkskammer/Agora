@@ -21,6 +21,7 @@ var notifications = beans.get('socratesNotifications');
 var events = beans.get('events');
 var GlobalEventStore = beans.get('GlobalEventStore');
 var RegistrationReadModel = beans.get('RegistrationReadModel');
+var RegistrationCommandProcessor = beans.get('RegistrationCommandProcessor');
 var eventstore = beans.get('eventstore');
 var e = beans.get('eventConstants');
 
@@ -120,7 +121,10 @@ describe('Registration Service', function () {
 
     it('adds the registrant to the resource if the registration data says so', function (done) {
 
-      registrationService.startRegistration(registrationTuple, 'memberId', now, function (err) {
+      registrationService.startRegistration(registrationTuple, 'memberId', now, function (err, statusTitle, statusText) {
+        expect(statusTitle).to.not.exist();
+        expect(statusText).to.not.exist();
+
         expect(readModel.reservationsAndParticipantsFor('single')).to.have.length(1);
         expect(readModel.reservationsAndParticipantsFor('single')[0].event).to.eql('RESERVATION-WAS-ISSUED');
         expect(readModel.reservationsAndParticipantsFor('single')[0].sessionId).to.eql('sessionId');
@@ -134,11 +138,14 @@ describe('Registration Service', function () {
     });
 
     it('adds the registrant to the waitinglist if the registration data says so', function (done) {
-      registrationTuple.duration = 'waitinglist';
+      registrationTuple.duration = undefined;
       registrationTuple.roomType = undefined;
       registrationTuple.desiredRoomTypes = ['single'];
 
-      registrationService.startRegistration(registrationTuple, 'memberId', now, function (err) {
+      registrationService.startRegistration(registrationTuple, 'memberId', now, function (err, statusTitle, statusText) {
+        expect(statusTitle).to.not.exist();
+        expect(statusText).to.not.exist();
+
         expect(readModel.reservationsAndParticipantsFor('single')).to.have.length(0);
         expect(readModel.waitinglistReservationsAndParticipantsFor('single')).to.have.length(1);
         expect(readModel.waitinglistReservationsAndParticipantsFor('single')[0].event).to.eql('WAITINGLIST-RESERVATION-WAS-ISSUED');
@@ -149,6 +156,49 @@ describe('Registration Service', function () {
         done(err);
       });
     });
+
+    it('returns no error if reservation fails due to duplicate reservation - let the user continue', function (done) {
+      registrationTuple.duration = 3;
+      registrationTuple.resourceName = 'junior';
+      registrationTuple.desiredRoomTypes = ['single'];
+      sinon.stub(RegistrationCommandProcessor.prototype, 'issueReservation', function () {return e.DID_NOT_ISSUE_RESERVATION_FOR_ALREADY_RESERVED_SESSION;});
+      sinon.stub(RegistrationCommandProcessor.prototype, 'issueWaitinglistReservation', function () {return undefined;});
+
+      registrationService.startRegistration(registrationTuple, 'memberId', now, function (err, statusTitle, statusText) {
+        expect(statusTitle).to.not.exist();
+        expect(statusText).to.not.exist();
+        done(err);
+      });
+    });
+
+    it('returns error if reservation fails due to full ressource', function (done) {
+      registrationTuple.duration = 3;
+      registrationTuple.resourceName = 'junior';
+      registrationTuple.desiredRoomTypes = ['single'];
+      sinon.stub(RegistrationCommandProcessor.prototype, 'issueReservation', function () {return e.DID_NOT_ISSUE_RESERVATION_FOR_FULL_RESOURCE;});
+      sinon.stub(RegistrationCommandProcessor.prototype, 'issueWaitinglistReservation', function () {return undefined;});
+
+      registrationService.startRegistration(registrationTuple, 'memberId', now, function (err, statusTitle, statusText) {
+        expect(statusTitle).to.be('activities.registration_problem');
+        expect(statusText).to.be('activities.registration_is_full');
+        done(err);
+      });
+    });
+
+    it('returns no error if waitinglist reservation fails due to duplicate reservation - let the user continue', function (done) {
+      registrationTuple.duration = 3;
+      registrationTuple.resourceName = 'junior';
+      registrationTuple.desiredRoomTypes = ['single'];
+      sinon.stub(RegistrationCommandProcessor.prototype, 'issueReservation', function () {return undefined;});
+      sinon.stub(RegistrationCommandProcessor.prototype, 'issueWaitinglistReservation', function () {return e.DID_NOT_ISSUE_WAITINGLIST_RESERVATION_FOR_ALREADY_RESERVED_SESSION;});
+
+      registrationService.startRegistration(registrationTuple, 'memberId', now, function (err, statusTitle, statusText) {
+        expect(statusTitle).not.exist();
+        expect(statusText).to.not.exist();
+        done(err);
+      });
+    });
+
   });
 
   describe('finishing the registration - general errors', function () {
