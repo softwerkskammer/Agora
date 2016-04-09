@@ -81,21 +81,22 @@ module.exports = {
             if (registrationEvent === eventConstants.PARTICIPANT_WAS_REGISTERED || waitinglistRegistrationEvent === eventConstants.WAITINGLIST_PARTICIPANT_WAS_REGISTERED) {
               if (waitinglistRegistrationEvent === eventConstants.WAITINGLIST_PARTICIPANT_WAS_REGISTERED) {
                 socratesNotifications.newWaitinglistEntry(memberID, registrationTuple.desiredRoomTypes.map(roomType => roomOptions.waitinglistInformationFor(roomType)));
-                return callback(null);
               }
               if (registrationEvent === eventConstants.PARTICIPANT_WAS_REGISTERED) {
                 socratesNotifications.newParticipant(memberID, roomOptions.informationFor(registrationTuple.resourceName, registrationTuple.duration));
-                return callback(null);
               }
-            } else if (registrationEvent === eventConstants.DID_NOT_REGISTER_PARTICIPANT_FOR_FULL_RESOURCE) {
+              return callback(null);
+            }
+
+            if (registrationEvent === eventConstants.DID_NOT_REGISTER_PARTICIPANT_FOR_FULL_RESOURCE) {
               // if the resource was full, this can only be due to the registration having timed out:
               return callback(null, 'activities.registration_problem', 'activities.registration_timed_out');
-            } else if (registrationEvent === eventConstants.DID_NOT_REGISTER_PARTICIPANT_A_SECOND_TIME
+            }
+            if (registrationEvent === eventConstants.DID_NOT_REGISTER_PARTICIPANT_A_SECOND_TIME
               || waitinglistRegistrationEvent === eventConstants.DID_NOT_REGISTER_WAITINGLIST_PARTICIPANT_A_SECOND_TIME) {
               return callback(null, 'activities.registration_problem', 'activities.already_registered');
-            } else {
-              callback(null, 'activities.registration_problem', 'activities.registration_not_possible');
             }
+            callback(null, 'activities.registration_problem', 'activities.registration_not_possible');
           });
         });
       });
