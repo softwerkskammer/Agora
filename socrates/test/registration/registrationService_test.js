@@ -161,7 +161,7 @@ describe('Registration Service', function () {
 
     it('returns no error if reservation fails due to duplicate reservation - let the user continue', function (done) {
       registrationTuple.duration = 3;
-      registrationTuple.resourceName = 'junior';
+      registrationTuple.roomType = 'junior';
       registrationTuple.desiredRoomTypes = ['single'];
       sinon.stub(RegistrationCommandProcessor.prototype, 'issueReservation', function () {return e.DID_NOT_ISSUE_RESERVATION_FOR_ALREADY_RESERVED_SESSION;});
       sinon.stub(RegistrationCommandProcessor.prototype, 'issueWaitinglistReservation', function () {return undefined;});
@@ -175,7 +175,7 @@ describe('Registration Service', function () {
 
     it('returns error if reservation fails due to full ressource', function (done) {
       registrationTuple.duration = 3;
-      registrationTuple.resourceName = 'junior';
+      registrationTuple.roomType = 'junior';
       registrationTuple.desiredRoomTypes = ['single'];
       sinon.stub(RegistrationCommandProcessor.prototype, 'issueReservation', function () {return e.DID_NOT_ISSUE_RESERVATION_FOR_FULL_RESOURCE;});
       sinon.stub(RegistrationCommandProcessor.prototype, 'issueWaitinglistReservation', function () {return undefined;});
@@ -189,7 +189,7 @@ describe('Registration Service', function () {
 
     it('returns no error if waitinglist reservation fails due to duplicate reservation - let the user continue', function (done) {
       registrationTuple.duration = 3;
-      registrationTuple.resourceName = 'junior';
+      registrationTuple.roomType = 'junior';
       registrationTuple.desiredRoomTypes = ['single'];
       sinon.stub(RegistrationCommandProcessor.prototype, 'issueReservation', function () {return undefined;});
       sinon.stub(RegistrationCommandProcessor.prototype, 'issueWaitinglistReservation', function () {return e.DID_NOT_ISSUE_WAITINGLIST_RESERVATION_FOR_ALREADY_RESERVED_SESSION;});
@@ -224,7 +224,7 @@ describe('Registration Service', function () {
 
     it('returns error and saves subscriber info if registration fails due to full ressource', function (done) {
       registrationBody.duration = 3;
-      registrationBody.resourceName = 'junior';
+      registrationBody.roomType = 'junior';
       registrationBody.desiredRoomTypes = 'single';
       sinon.stub(RegistrationCommandProcessor.prototype, 'registerParticipant', function () {return e.DID_NOT_REGISTER_PARTICIPANT_FOR_FULL_RESOURCE;});
       sinon.stub(RegistrationCommandProcessor.prototype, 'registerWaitinglistParticipant', function () {return undefined;});
@@ -239,7 +239,7 @@ describe('Registration Service', function () {
 
     it('returns error and saves subscriber info if registration fails due to duplicate booking', function (done) {
       registrationBody.duration = 3;
-      registrationBody.resourceName = 'junior';
+      registrationBody.roomType = 'junior';
       registrationBody.desiredRoomTypes = 'single';
       sinon.stub(RegistrationCommandProcessor.prototype, 'registerParticipant', function () {return e.DID_NOT_REGISTER_PARTICIPANT_A_SECOND_TIME;});
       sinon.stub(RegistrationCommandProcessor.prototype, 'registerWaitinglistParticipant', function () {return undefined;});
@@ -254,7 +254,7 @@ describe('Registration Service', function () {
 
     it('returns error and saves subscriber info if waitinglist registration fails due to duplicate booking', function (done) {
       registrationBody.duration = 3;
-      registrationBody.resourceName = 'junior';
+      registrationBody.roomType = 'junior';
       registrationBody.desiredRoomTypes = 'single';
       sinon.stub(RegistrationCommandProcessor.prototype, 'registerParticipant', function () {return undefined;});
       sinon.stub(RegistrationCommandProcessor.prototype, 'registerWaitinglistParticipant', function () {return e.DID_NOT_REGISTER_WAITINGLIST_PARTICIPANT_A_SECOND_TIME;});
@@ -269,7 +269,7 @@ describe('Registration Service', function () {
 
     it('returns nothing and saves subscriber info if registration succeeds', function (done) {
       registrationBody.duration = 3;
-      registrationBody.resourceName = 'junior';
+      registrationBody.roomType = 'junior';
       registrationBody.desiredRoomTypes = 'single';
       sinon.stub(RegistrationCommandProcessor.prototype, 'registerParticipant', function () {return e.PARTICIPANT_WAS_REGISTERED;});
       sinon.stub(RegistrationCommandProcessor.prototype, 'registerWaitinglistParticipant', function () {return undefined;});
@@ -284,7 +284,7 @@ describe('Registration Service', function () {
 
     it('returns nothing and saves subscriber info if waitinglist registration succeeds', function (done) {
       registrationBody.duration = 3;
-      registrationBody.resourceName = 'junior';
+      registrationBody.roomType = 'junior';
       registrationBody.desiredRoomTypes = 'single';
       sinon.stub(RegistrationCommandProcessor.prototype, 'registerParticipant', function () {return undefined;});
       sinon.stub(RegistrationCommandProcessor.prototype, 'registerWaitinglistParticipant', function () {return e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED;});

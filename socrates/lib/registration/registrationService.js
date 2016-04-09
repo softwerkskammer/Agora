@@ -83,7 +83,7 @@ module.exports = {
                 socratesNotifications.newWaitinglistEntry(memberID, registrationTuple.desiredRoomTypes.map(roomType => roomOptions.waitinglistInformationFor(roomType)));
               }
               if (registrationEvent === eventConstants.PARTICIPANT_WAS_REGISTERED) {
-                socratesNotifications.newParticipant(memberID, roomOptions.informationFor(registrationTuple.resourceName, registrationTuple.duration));
+                socratesNotifications.newParticipant(memberID, roomOptions.informationFor(registrationTuple.roomType, registrationTuple.duration));
               }
               return callback(null);
             }
