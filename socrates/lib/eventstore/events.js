@@ -33,28 +33,28 @@ module.exports = {
 
   // reservation:
   reservationWasIssued: function (roomType, duration, sessionId, memberId, joinedSoCraTes) {
-    return enrich({event: e.RESERVATION_WAS_ISSUED, sessionID: sessionId, memberId, roomType, duration, joinedSoCraTes: joinedSoCraTes.valueOf()});
+    return enrich({event: e.RESERVATION_WAS_ISSUED, sessionId, memberId, roomType, duration, joinedSoCraTes: joinedSoCraTes.valueOf()});
   },
 
   didNotIssueReservationForAlreadyReservedSession: function (roomType, duration, sessionId, memberId) {
-    return enrich({event: e.DID_NOT_ISSUE_RESERVATION_FOR_ALREADY_RESERVED_SESSION, sessionID: sessionId, memberId, roomType, duration});
+    return enrich({event: e.DID_NOT_ISSUE_RESERVATION_FOR_ALREADY_RESERVED_SESSION, sessionId, memberId, roomType, duration});
   },
 
   didNotIssueReservationForFullResource: function (roomType, duration, sessionId, memberId) {
-    return enrich({event: e.DID_NOT_ISSUE_RESERVATION_FOR_FULL_RESOURCE, sessionID: sessionId, memberId, roomType, duration});
+    return enrich({event: e.DID_NOT_ISSUE_RESERVATION_FOR_FULL_RESOURCE, sessionId, memberId, roomType, duration});
   },
 
   // registration:
   participantWasRegistered: function (roomType, duration, sessionId, memberId, joinedSoCraTes) {
-    return enrich({event: e.PARTICIPANT_WAS_REGISTERED, sessionID: sessionId, roomType, duration, memberId, joinedSoCraTes: joinedSoCraTes.valueOf()});
+    return enrich({event: e.PARTICIPANT_WAS_REGISTERED, sessionId, roomType, duration, memberId, joinedSoCraTes: joinedSoCraTes.valueOf()});
   },
 
   didNotRegisterParticipantForFullResource: function (roomType, duration, sessionId, memberId) {
-    return enrich({event: e.DID_NOT_REGISTER_PARTICIPANT_FOR_FULL_RESOURCE, sessionID: sessionId, roomType, duration, memberId});
+    return enrich({event: e.DID_NOT_REGISTER_PARTICIPANT_FOR_FULL_RESOURCE, sessionId, roomType, duration, memberId});
   },
 
   didNotRegisterParticipantASecondTime: function (roomType, duration, sessionId, memberId) {
-    return enrich({event: e.DID_NOT_REGISTER_PARTICIPANT_A_SECOND_TIME, sessionID: sessionId, roomType, duration, memberId});
+    return enrich({event: e.DID_NOT_REGISTER_PARTICIPANT_A_SECOND_TIME, sessionId, roomType, duration, memberId});
   },
 
   registeredParticipantFromWaitinglist: function (roomType, duration, memberId, joinedSoCraTes) {
@@ -103,20 +103,20 @@ module.exports = {
 
   // reservation:
   waitinglistReservationWasIssued: function (desiredRoomTypes, sessionId, memberId, joinedWaitinglist) {
-    return enrich({event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionID: sessionId, desiredRoomTypes, memberId, joinedWaitinglist: joinedWaitinglist.valueOf()});
+    return enrich({event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionId, desiredRoomTypes, memberId, joinedWaitinglist: joinedWaitinglist.valueOf()});
   },
 
   didNotIssueWaitinglistReservationForAlreadyReservedSession: function (desiredRoomTypes, sessionId, memberId) {
-    return enrich({event: e.DID_NOT_ISSUE_WAITINGLIST_RESERVATION_FOR_ALREADY_RESERVED_SESSION, sessionID: sessionId, memberId, desiredRoomTypes});
+    return enrich({event: e.DID_NOT_ISSUE_WAITINGLIST_RESERVATION_FOR_ALREADY_RESERVED_SESSION, sessionId, memberId, desiredRoomTypes});
   },
 
   // registration:
   waitinglistParticipantWasRegistered: function (desiredRoomTypes, sessionId, memberId, joinedWaitinglist) {
-    return enrich({event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionID: sessionId, desiredRoomTypes, memberId, joinedWaitinglist: joinedWaitinglist.valueOf()});
+    return enrich({event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionId, desiredRoomTypes, memberId, joinedWaitinglist: joinedWaitinglist.valueOf()});
   },
 
   didNotRegisterWaitinglistParticipantASecondTime: function (desiredRoomTypes, sessionId, memberId) {
-    return enrich({event: e.DID_NOT_REGISTER_WAITINGLIST_PARTICIPANT_A_SECOND_TIME, sessionID: sessionId, desiredRoomTypes, memberId});
+    return enrich({event: e.DID_NOT_REGISTER_WAITINGLIST_PARTICIPANT_A_SECOND_TIME, sessionId, desiredRoomTypes, memberId});
   },
 
   // removal:

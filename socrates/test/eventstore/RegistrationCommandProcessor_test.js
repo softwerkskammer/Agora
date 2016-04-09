@@ -57,7 +57,7 @@ describe('The registration command processor', function () {
 
       // Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {event: e.RESERVATION_WAS_ISSUED, sessionID: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: aShortTimeAgo.valueOf()}]);
+        {event: e.RESERVATION_WAS_ISSUED, sessionId: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: aShortTimeAgo.valueOf()}]);
     });
 
     it('does not reserve a room if the quota is already exhausted by an active reservation', function () {
@@ -71,8 +71,8 @@ describe('The registration command processor', function () {
 
       // Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {event: e.RESERVATION_WAS_ISSUED, sessionID: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: aShortTimeAgo.valueOf()},
-        {event: e.DID_NOT_ISSUE_RESERVATION_FOR_FULL_RESOURCE, sessionID: sessionId2, memberId: memberId2, roomType: singleBedRoom, duration: untilSundayMorning}
+        {event: e.RESERVATION_WAS_ISSUED, sessionId: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: aShortTimeAgo.valueOf()},
+        {event: e.DID_NOT_ISSUE_RESERVATION_FOR_FULL_RESOURCE, sessionId: sessionId2, memberId: memberId2, roomType: singleBedRoom, duration: untilSundayMorning}
       ]);
     });
 
@@ -87,8 +87,8 @@ describe('The registration command processor', function () {
 
       // Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {event: e.RESERVATION_WAS_ISSUED, sessionID: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: aLongTimeAgo.valueOf()},
-        {event: e.RESERVATION_WAS_ISSUED, sessionID: sessionId2, memberId: memberId2, roomType: singleBedRoom, duration: untilSundayMorning, joinedSoCraTes: aShortTimeAgo.valueOf()}]);
+        {event: e.RESERVATION_WAS_ISSUED, sessionId: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: aLongTimeAgo.valueOf()},
+        {event: e.RESERVATION_WAS_ISSUED, sessionId: sessionId2, memberId: memberId2, roomType: singleBedRoom, duration: untilSundayMorning, joinedSoCraTes: aShortTimeAgo.valueOf()}]);
     });
 
     it('does not reserve a room if the quota is already exhausted by a registration', function () {
@@ -103,9 +103,9 @@ describe('The registration command processor', function () {
 
       // Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {event: e.RESERVATION_WAS_ISSUED, sessionID: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: aShortTimeAgo.valueOf()},
-        {event: e.PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: aShortTimeAgo.valueOf()},
-        {event: e.DID_NOT_ISSUE_RESERVATION_FOR_FULL_RESOURCE, sessionID: sessionId2, memberId: memberId2, roomType: singleBedRoom, duration: untilSaturday}
+        {event: e.RESERVATION_WAS_ISSUED, sessionId: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: aShortTimeAgo.valueOf()},
+        {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: aShortTimeAgo.valueOf()},
+        {event: e.DID_NOT_ISSUE_RESERVATION_FOR_FULL_RESOURCE, sessionId: sessionId2, memberId: memberId2, roomType: singleBedRoom, duration: untilSaturday}
       ]);
     });
 
@@ -121,9 +121,9 @@ describe('The registration command processor', function () {
 
       // Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {event: e.RESERVATION_WAS_ISSUED, sessionID: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: aShortTimeAgo.valueOf()},
-        {event: e.PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: aShortTimeAgo.valueOf()},
-        {event: e.RESERVATION_WAS_ISSUED, sessionID: sessionId2, memberId: memberId2, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: aShorterTimeAgo.valueOf()}]);
+        {event: e.RESERVATION_WAS_ISSUED, sessionId: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: aShortTimeAgo.valueOf()},
+        {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: aShortTimeAgo.valueOf()},
+        {event: e.RESERVATION_WAS_ISSUED, sessionId: sessionId2, memberId: memberId2, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: aShorterTimeAgo.valueOf()}]);
     });
 
     it('does not allow a registration for any resource if there is already an active registration for the same session id', function () {
@@ -139,8 +139,8 @@ describe('The registration command processor', function () {
 
       // Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {event: e.RESERVATION_WAS_ISSUED, sessionID: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: aShortTimeAgo.valueOf()},
-        {event: e.DID_NOT_ISSUE_RESERVATION_FOR_ALREADY_RESERVED_SESSION, sessionID: sessionId1, memberId: memberId1, roomType: bedInDouble, duration: untilSaturday}]);
+        {event: e.RESERVATION_WAS_ISSUED, sessionId: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: aShortTimeAgo.valueOf()},
+        {event: e.DID_NOT_ISSUE_RESERVATION_FOR_ALREADY_RESERVED_SESSION, sessionId: sessionId1, memberId: memberId1, roomType: bedInDouble, duration: untilSaturday}]);
     });
   });
 
@@ -157,8 +157,8 @@ describe('The registration command processor', function () {
 
       // Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {event: e.RESERVATION_WAS_ISSUED, sessionID: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: aShortTimeAgo.valueOf()},
-        {event: e.PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1, joinedSoCraTes: aShortTimeAgo.valueOf()}]);
+        {event: e.RESERVATION_WAS_ISSUED, sessionId: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: aShortTimeAgo.valueOf()},
+        {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1, joinedSoCraTes: aShortTimeAgo.valueOf()}]);
     });
 
     it('registers a room even if the matching reservation filled up the room', function () { // TODO books a room?
@@ -172,8 +172,8 @@ describe('The registration command processor', function () {
 
       // Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {event: e.RESERVATION_WAS_ISSUED, sessionID: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: aShortTimeAgo.valueOf()},
-        {event: e.PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1, joinedSoCraTes: aShortTimeAgo.valueOf()}]);
+        {event: e.RESERVATION_WAS_ISSUED, sessionId: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: aShortTimeAgo.valueOf()},
+        {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1, joinedSoCraTes: aShortTimeAgo.valueOf()}]);
     });
 
     it('registers a room for the given duration even if the reservation was for a different duration', function () { // TODO books a room?
@@ -187,8 +187,8 @@ describe('The registration command processor', function () {
 
       // Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {event: e.RESERVATION_WAS_ISSUED, sessionID: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSundayMorning, joinedSoCraTes: aShortTimeAgo.valueOf()},
-        {event: e.PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1, joinedSoCraTes: aShortTimeAgo.valueOf()}]);
+        {event: e.RESERVATION_WAS_ISSUED, sessionId: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSundayMorning, joinedSoCraTes: aShortTimeAgo.valueOf()},
+        {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1, joinedSoCraTes: aShortTimeAgo.valueOf()}]);
     });
 
     it('registers a room even if there was an expired reservation, if there was enough space', function () { // TODO books a room?
@@ -202,8 +202,8 @@ describe('The registration command processor', function () {
 
       // Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {event: e.RESERVATION_WAS_ISSUED, sessionID: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: aLongTimeAgo.valueOf()},
-        {event: e.PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1, joinedSoCraTes: aShortTimeAgo.valueOf()}]);
+        {event: e.RESERVATION_WAS_ISSUED, sessionId: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: aLongTimeAgo.valueOf()},
+        {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1, joinedSoCraTes: aShortTimeAgo.valueOf()}]);
     });
 
     it('does not register a room if there was an expired reservation but if there was not enough space', function () { // TODO books a room?
@@ -218,9 +218,9 @@ describe('The registration command processor', function () {
 
       // Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {event: e.RESERVATION_WAS_ISSUED, sessionID: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: aLongTimeAgo.valueOf()},
-        {event: e.PARTICIPANT_WAS_REGISTERED, sessionID: sessionId2, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId2, joinedSoCraTes: aShortTimeAgo.valueOf()},
-        {event: e.DID_NOT_REGISTER_PARTICIPANT_FOR_FULL_RESOURCE, sessionID: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1}
+        {event: e.RESERVATION_WAS_ISSUED, sessionId: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: aLongTimeAgo.valueOf()},
+        {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: sessionId2, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId2, joinedSoCraTes: aShortTimeAgo.valueOf()},
+        {event: e.DID_NOT_REGISTER_PARTICIPANT_FOR_FULL_RESOURCE, sessionId: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1}
       ]);
     });
 
@@ -234,7 +234,7 @@ describe('The registration command processor', function () {
 
       // Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {event: e.PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1, joinedSoCraTes: aShortTimeAgo.valueOf()}]);
+        {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1, joinedSoCraTes: aShortTimeAgo.valueOf()}]);
     });
 
     it('does not register two rooms for the same member, not even different rooms', function () { // TODO books a room?
@@ -249,8 +249,8 @@ describe('The registration command processor', function () {
 
       // Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {event: e.PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1, joinedSoCraTes: aLongTimeAgo.valueOf()},
-        {event: e.DID_NOT_REGISTER_PARTICIPANT_A_SECOND_TIME, sessionID: sessionId1, roomType: bedInDouble, duration: untilSaturday, memberId: memberId1}
+        {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1, joinedSoCraTes: aLongTimeAgo.valueOf()},
+        {event: e.DID_NOT_REGISTER_PARTICIPANT_A_SECOND_TIME, sessionId: sessionId1, roomType: bedInDouble, duration: untilSaturday, memberId: memberId1}
       ]);
     });
   });
@@ -266,7 +266,7 @@ describe('The registration command processor', function () {
 
       //Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {event: e.PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1, joinedSoCraTes: aShortTimeAgo.valueOf()},
+        {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1, joinedSoCraTes: aShortTimeAgo.valueOf()},
         {event: e.PARTICIPANT_WAS_REMOVED, roomType: singleBedRoom, memberId: memberId1}
       ]);
     });
@@ -279,7 +279,7 @@ describe('The registration command processor', function () {
 
       //Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {event: e.PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId2, joinedSoCraTes: aShortTimeAgo.valueOf()},
+        {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId2, joinedSoCraTes: aShortTimeAgo.valueOf()},
         {event: e.DID_NOT_REMOVE_PARTICIPANT_BECAUSE_THEY_ARE_NOT_REGISTERED, roomType: singleBedRoom, memberId: memberId1}
       ]);
     });
@@ -292,7 +292,7 @@ describe('The registration command processor', function () {
 
       //Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {event: e.PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1, joinedSoCraTes: aShortTimeAgo.valueOf()},
+        {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1, joinedSoCraTes: aShortTimeAgo.valueOf()},
         {event: e.DID_NOT_REMOVE_PARTICIPANT_BECAUSE_THEY_ARE_NOT_REGISTERED_FOR_THIS_ROOM_TYPE, roomType: bedInDouble, memberId: memberId1}
       ]);
     });
@@ -309,7 +309,7 @@ describe('The registration command processor', function () {
 
       //Then (saved events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, desiredRoomTypes: [singleBedRoom], sessionID: sessionId1, memberId: memberId1, joinedWaitinglist: aLongTimeAgo.valueOf()},
+        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, desiredRoomTypes: [singleBedRoom], sessionId: sessionId1, memberId: memberId1, joinedWaitinglist: aLongTimeAgo.valueOf()},
         {event: e.WAITINGLIST_PARTICIPANT_WAS_REMOVED, desiredRoomTypes: [singleBedRoom], memberId: memberId1}
       ]);
     });
@@ -324,7 +324,7 @@ describe('The registration command processor', function () {
 
       //Then (saved events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, desiredRoomTypes: [singleBedRoom], sessionID: sessionId2, memberId: memberId2, joinedWaitinglist: aLongTimeAgo.valueOf()},
+        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, desiredRoomTypes: [singleBedRoom], sessionId: sessionId2, memberId: memberId2, joinedWaitinglist: aLongTimeAgo.valueOf()},
         {event: e.DID_NOT_REMOVE_WAITINGLIST_PARTICIPANT_BECAUSE_THEY_ARE_NOT_REGISTERED, desiredRoomTypes: [singleBedRoom], memberId: memberId1}
       ]);
     });
@@ -339,7 +339,7 @@ describe('The registration command processor', function () {
 
       //Then (saved events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, desiredRoomTypes: [singleBedRoom, bedInDouble], sessionID: sessionId1, memberId: memberId1, joinedWaitinglist: aLongTimeAgo.valueOf()},
+        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, desiredRoomTypes: [singleBedRoom, bedInDouble], sessionId: sessionId1, memberId: memberId1, joinedWaitinglist: aLongTimeAgo.valueOf()},
         {event: e.WAITINGLIST_PARTICIPANT_WAS_REMOVED, desiredRoomTypes: [bedInDouble], memberId: memberId1}]);
     });
   });
@@ -356,7 +356,7 @@ describe('The registration command processor', function () {
 
       //Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, desiredRoomTypes: [singleBedRoom], sessionID: sessionId1, memberId: memberId1, joinedWaitinglist: aLongTimeAgo.valueOf()},
+        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, desiredRoomTypes: [singleBedRoom], sessionId: sessionId1, memberId: memberId1, joinedWaitinglist: aLongTimeAgo.valueOf()},
         {event: e.DESIRED_ROOM_TYPES_WERE_CHANGED, desiredRoomTypes: [bedInDouble], memberId: memberId1, joinedWaitinglist: aLongTimeAgo.valueOf()}
       ]);
     });
@@ -383,7 +383,7 @@ describe('The registration command processor', function () {
 
       //Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, desiredRoomTypes: [singleBedRoom], sessionID: sessionId1, memberId: memberId1, joinedWaitinglist: aLongTimeAgo.valueOf()},
+        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, desiredRoomTypes: [singleBedRoom], sessionId: sessionId1, memberId: memberId1, joinedWaitinglist: aLongTimeAgo.valueOf()},
         {event: e.DID_NOT_CHANGE_DESIRED_ROOM_TYPES_BECAUSE_THERE_WAS_NO_CHANGE, desiredRoomTypes: [singleBedRoom], memberId: memberId1}
       ]);
     });
@@ -402,8 +402,8 @@ describe('The registration command processor', function () {
 
       // Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {event: e.RESERVATION_WAS_ISSUED, sessionID: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: aShortTimeAgo.valueOf()},
-        {event: e.PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1, joinedSoCraTes: aShortTimeAgo.valueOf()},
+        {event: e.RESERVATION_WAS_ISSUED, sessionId: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: aShortTimeAgo.valueOf()},
+        {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1, joinedSoCraTes: aShortTimeAgo.valueOf()},
         {event: e.ROOM_TYPE_WAS_CHANGED, memberId: memberId1, roomType: bedInDouble, duration: untilSaturday, joinedSoCraTes: aShortTimeAgo.valueOf()}]);
     });
 
@@ -421,8 +421,8 @@ describe('The registration command processor', function () {
 
       // Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {event: e.RESERVATION_WAS_ISSUED, sessionID: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: aShortTimeAgo.valueOf()},
-        {event: e.PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1, joinedSoCraTes: aShortTimeAgo.valueOf()},
+        {event: e.RESERVATION_WAS_ISSUED, sessionId: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: aShortTimeAgo.valueOf()},
+        {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1, joinedSoCraTes: aShortTimeAgo.valueOf()},
         {event: e.ROOM_TYPE_WAS_CHANGED, memberId: memberId1, roomType: bedInDouble, duration: untilSaturday, joinedSoCraTes: aShortTimeAgo.valueOf()},
         {event: e.ROOM_TYPE_WAS_CHANGED, memberId: memberId1, roomType: kingSuite, duration: untilSaturday, joinedSoCraTes: aShortTimeAgo.valueOf()}
       ]);
@@ -455,8 +455,8 @@ describe('The registration command processor', function () {
 
       // Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {event: e.RESERVATION_WAS_ISSUED, sessionID: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: aLongTimeAgo.valueOf()},
-        {event: e.PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1, joinedSoCraTes: aShortTimeAgo.valueOf()},
+        {event: e.RESERVATION_WAS_ISSUED, sessionId: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: aLongTimeAgo.valueOf()},
+        {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1, joinedSoCraTes: aShortTimeAgo.valueOf()},
         {event: e.DURATION_WAS_CHANGED, memberId: memberId1, roomType: singleBedRoom, duration: untilSundayMorning, joinedSoCraTes: aShortTimeAgo.valueOf()}]);
     });
 
@@ -474,8 +474,8 @@ describe('The registration command processor', function () {
 
       // Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {event: e.RESERVATION_WAS_ISSUED, sessionID: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: aLongTimeAgo.valueOf()},
-        {event: e.PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1, joinedSoCraTes: aShortTimeAgo.valueOf()},
+        {event: e.RESERVATION_WAS_ISSUED, sessionId: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: aLongTimeAgo.valueOf()},
+        {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1, joinedSoCraTes: aShortTimeAgo.valueOf()},
         {event: e.DURATION_WAS_CHANGED, memberId: memberId1, roomType: singleBedRoom, duration: untilSundayMorning, joinedSoCraTes: aShortTimeAgo.valueOf()},
         {event: e.DURATION_WAS_CHANGED, memberId: memberId1, roomType: singleBedRoom, duration: untilSundayEvening, joinedSoCraTes: aShortTimeAgo.valueOf()}
       ]);
@@ -505,7 +505,7 @@ describe('The registration command processor', function () {
 
       // Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionID: sessionId1, memberId: memberId1, desiredRoomTypes: [singleBedRoom], joinedWaitinglist: aShortTimeAgo.valueOf()}]);
+        {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionId: sessionId1, memberId: memberId1, desiredRoomTypes: [singleBedRoom], joinedWaitinglist: aShortTimeAgo.valueOf()}]);
     });
 
     it('reserves a spot on the waitinglist when an expired reservation (from somebody else) exists', function () {
@@ -518,8 +518,8 @@ describe('The registration command processor', function () {
 
       // Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionID: sessionId1, memberId: memberId1, desiredRoomTypes: [singleBedRoom], joinedWaitinglist: aLongTimeAgo.valueOf()},
-        {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionID: sessionId2, memberId: memberId2, desiredRoomTypes: [singleBedRoom], joinedWaitinglist: aShorterTimeAgo.valueOf()}]);
+        {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionId: sessionId1, memberId: memberId1, desiredRoomTypes: [singleBedRoom], joinedWaitinglist: aLongTimeAgo.valueOf()},
+        {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionId: sessionId2, memberId: memberId2, desiredRoomTypes: [singleBedRoom], joinedWaitinglist: aShorterTimeAgo.valueOf()}]);
     });
 
     it('disregards a reservation if there is a matching booking', function () {
@@ -533,9 +533,9 @@ describe('The registration command processor', function () {
 
       // Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionID: sessionId1, memberId: memberId1, desiredRoomTypes: [singleBedRoom], joinedWaitinglist: aShortTimeAgo.valueOf()},
-        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, memberId: memberId1, desiredRoomTypes: [singleBedRoom], joinedWaitinglist: aLongTimeAgo.valueOf()},
-        {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionID: sessionId2, memberId: memberId2, desiredRoomTypes: [singleBedRoom], joinedWaitinglist: aShorterTimeAgo.valueOf()}]);
+        {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionId: sessionId1, memberId: memberId1, desiredRoomTypes: [singleBedRoom], joinedWaitinglist: aShortTimeAgo.valueOf()},
+        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionId: sessionId1, memberId: memberId1, desiredRoomTypes: [singleBedRoom], joinedWaitinglist: aLongTimeAgo.valueOf()},
+        {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionId: sessionId2, memberId: memberId2, desiredRoomTypes: [singleBedRoom], joinedWaitinglist: aShorterTimeAgo.valueOf()}]);
     });
 
     it('does not allow a registration for any resource if there is already an active registration for the same session id', function () {
@@ -548,8 +548,8 @@ describe('The registration command processor', function () {
 
       // Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionID: sessionId1, memberId: memberId1, desiredRoomTypes: [singleBedRoom], joinedWaitinglist: aShortTimeAgo.valueOf()},
-        {event: e.DID_NOT_ISSUE_WAITINGLIST_RESERVATION_FOR_ALREADY_RESERVED_SESSION, sessionID: sessionId1, memberId: memberId1, desiredRoomTypes: [bedInDouble]}]);
+        {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionId: sessionId1, memberId: memberId1, desiredRoomTypes: [singleBedRoom], joinedWaitinglist: aShortTimeAgo.valueOf()},
+        {event: e.DID_NOT_ISSUE_WAITINGLIST_RESERVATION_FOR_ALREADY_RESERVED_SESSION, sessionId: sessionId1, memberId: memberId1, desiredRoomTypes: [bedInDouble]}]);
     });
 
     it('reserves a spot on the waitinglist for multiple rooms', function () {
@@ -561,7 +561,7 @@ describe('The registration command processor', function () {
 
       // Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionID: sessionId1, memberId: memberId1, desiredRoomTypes: [singleBedRoom, bedInDouble], joinedWaitinglist: aShortTimeAgo.valueOf()}]);
+        {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionId: sessionId1, memberId: memberId1, desiredRoomTypes: [singleBedRoom, bedInDouble], joinedWaitinglist: aShortTimeAgo.valueOf()}]);
     });
 
   });
@@ -577,8 +577,8 @@ describe('The registration command processor', function () {
 
       // Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionID: sessionId1, memberId: memberId1, desiredRoomTypes: [singleBedRoom], joinedWaitinglist: aShortTimeAgo.valueOf()},
-        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, desiredRoomTypes: [singleBedRoom], memberId: memberId1, joinedWaitinglist: aShortTimeAgo.valueOf()}]);
+        {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionId: sessionId1, memberId: memberId1, desiredRoomTypes: [singleBedRoom], joinedWaitinglist: aShortTimeAgo.valueOf()},
+        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionId: sessionId1, desiredRoomTypes: [singleBedRoom], memberId: memberId1, joinedWaitinglist: aShortTimeAgo.valueOf()}]);
     });
 
     it('registers a spot on the waitinglist even if there was an expired reservation', function () { // TODO books a room?
@@ -591,8 +591,8 @@ describe('The registration command processor', function () {
 
       // Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionID: sessionId1, memberId: memberId1, desiredRoomTypes: [singleBedRoom], joinedWaitinglist: aLongTimeAgo.valueOf()},
-        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, desiredRoomTypes: [singleBedRoom], memberId: memberId1, joinedWaitinglist: aShortTimeAgo.valueOf()}]);
+        {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionId: sessionId1, memberId: memberId1, desiredRoomTypes: [singleBedRoom], joinedWaitinglist: aLongTimeAgo.valueOf()},
+        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionId: sessionId1, desiredRoomTypes: [singleBedRoom], memberId: memberId1, joinedWaitinglist: aShortTimeAgo.valueOf()}]);
     });
 
     it('registers a spot on the waitinglist even if there was no reservation', function () { // TODO books a room?
@@ -604,7 +604,7 @@ describe('The registration command processor', function () {
 
       // Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, desiredRoomTypes: [singleBedRoom], memberId: memberId1, joinedWaitinglist: aShortTimeAgo.valueOf()}]);
+        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionId: sessionId1, desiredRoomTypes: [singleBedRoom], memberId: memberId1, joinedWaitinglist: aShortTimeAgo.valueOf()}]);
     });
 
     it('does not register the participant again if already registered', function () {
@@ -618,8 +618,8 @@ describe('The registration command processor', function () {
 
       //Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, desiredRoomTypes: [singleBedRoom], sessionID: sessionId1, memberId: memberId1, joinedWaitinglist: aLongTimeAgo.valueOf()},
-        {event: e.DID_NOT_REGISTER_WAITINGLIST_PARTICIPANT_A_SECOND_TIME, desiredRoomTypes: [singleBedRoom], sessionID: sessionId1, memberId: memberId1}]);
+        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, desiredRoomTypes: [singleBedRoom], sessionId: sessionId1, memberId: memberId1, joinedWaitinglist: aLongTimeAgo.valueOf()},
+        {event: e.DID_NOT_REGISTER_WAITINGLIST_PARTICIPANT_A_SECOND_TIME, desiredRoomTypes: [singleBedRoom], sessionId: sessionId1, memberId: memberId1}]);
     });
 
     it('does not register waitinglist participant a second time, even if the desired room types differ', function () {
@@ -633,8 +633,8 @@ describe('The registration command processor', function () {
 
       //Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, desiredRoomTypes: [singleBedRoom], sessionID: sessionId1, memberId: memberId1, joinedWaitinglist: aLongTimeAgo.valueOf()},
-        {event: e.DID_NOT_REGISTER_WAITINGLIST_PARTICIPANT_A_SECOND_TIME, desiredRoomTypes: [singleBedRoom, bedInDouble], sessionID: sessionId1, memberId: memberId1}]);
+        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, desiredRoomTypes: [singleBedRoom], sessionId: sessionId1, memberId: memberId1, joinedWaitinglist: aLongTimeAgo.valueOf()},
+        {event: e.DID_NOT_REGISTER_WAITINGLIST_PARTICIPANT_A_SECOND_TIME, desiredRoomTypes: [singleBedRoom, bedInDouble], sessionId: sessionId1, memberId: memberId1}]);
     });
 
     it('registers a spot on the waitinglist for multiple desired rooms', function () {
@@ -647,8 +647,8 @@ describe('The registration command processor', function () {
 
       // Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionID: sessionId1, memberId: memberId1, desiredRoomTypes: [singleBedRoom, bedInDouble], joinedWaitinglist: aShortTimeAgo.valueOf()},
-        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, desiredRoomTypes: [singleBedRoom, bedInDouble], memberId: memberId1, joinedWaitinglist: aShortTimeAgo.valueOf()}]);
+        {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionId: sessionId1, memberId: memberId1, desiredRoomTypes: [singleBedRoom, bedInDouble], joinedWaitinglist: aShortTimeAgo.valueOf()},
+        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionId: sessionId1, desiredRoomTypes: [singleBedRoom, bedInDouble], memberId: memberId1, joinedWaitinglist: aShortTimeAgo.valueOf()}]);
     });
   });
 
@@ -662,7 +662,7 @@ describe('The registration command processor', function () {
 
       //Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {event: e.PARTICIPANT_WAS_REGISTERED, roomType: singleBedRoom, memberId: memberId1, sessionID: undefined, duration: untilSaturday, joinedSoCraTes: aShortTimeAgo.valueOf()}
+        {event: e.PARTICIPANT_WAS_REGISTERED, roomType: singleBedRoom, memberId: memberId1, sessionId: undefined, duration: untilSaturday, joinedSoCraTes: aShortTimeAgo.valueOf()}
       ]);
     });
 
@@ -677,7 +677,7 @@ describe('The registration command processor', function () {
 
       //Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, desiredRoomTypes: [singleBedRoom, bedInDouble], memberId: memberId1, joinedWaitinglist: aLongTimeAgo.valueOf()},
+        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionId: sessionId1, desiredRoomTypes: [singleBedRoom, bedInDouble], memberId: memberId1, joinedWaitinglist: aLongTimeAgo.valueOf()},
         {event: e.REGISTERED_PARTICIPANT_FROM_WAITINGLIST, roomType: singleBedRoom, memberId: memberId1, duration: untilSaturday, joinedSoCraTes: aShortTimeAgo.valueOf()}
       ]);
     });
@@ -692,7 +692,7 @@ describe('The registration command processor', function () {
 
       //Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {event: e.PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: aShortTimeAgo.valueOf()},
+        {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: aShortTimeAgo.valueOf()},
         {event: e.DID_NOT_REGISTER_PARTICIPANT_FROM_WAITINGLIST_A_SECOND_TIME, memberId: memberId1, duration: untilSaturday, roomType: singleBedRoom}
       ]);
     });

@@ -19,10 +19,10 @@ module.exports = {
     eventstoreService.getRegistrationCommandProcessor(registrationTuple.activityUrl, function (err, registrationCommandProcessor) {
       if (err || !registrationCommandProcessor) { return callback(err, 'message.title.problem', 'message.content.activities.does_not_exist'); }
       if (registrationTuple.desiredRoomTypes.length > 0) {
-        waitinglistReservationEvent = registrationCommandProcessor.issueWaitinglistReservation(registrationTuple.desiredRoomTypes, registrationTuple.sessionID, memberIdIfKnown, now);
+        waitinglistReservationEvent = registrationCommandProcessor.issueWaitinglistReservation(registrationTuple.desiredRoomTypes, registrationTuple.sessionId, memberIdIfKnown, now);
       }
-      if (registrationTuple.resourceName && registrationTuple.duration) {
-        reservationEvent = registrationCommandProcessor.issueReservation(registrationTuple.resourceName, registrationTuple.duration, registrationTuple.sessionID, memberIdIfKnown, now);
+      if (registrationTuple.roomType && registrationTuple.duration) {
+        reservationEvent = registrationCommandProcessor.issueReservation(registrationTuple.roomType, registrationTuple.duration, registrationTuple.sessionId, memberIdIfKnown, now);
       }
       return eventstoreService.saveCommandProcessor(registrationCommandProcessor, function (err1) {
         if (err1 && err1.message === CONFLICTING_VERSIONS) {
@@ -38,14 +38,14 @@ module.exports = {
     });
   },
 
-  completeRegistration: function (memberID, sessionID, body, now, callback) {
+  completeRegistration: function (memberID, sessionId, body, now, callback) {
     var self = this;
     var registrationEvent;
     var waitinglistRegistrationEvent;
     var registrationTuple = {
-      sessionID: sessionID,
+      sessionId: sessionId,
       activityUrl: body.activityUrl,
-      resourceName: body.resourceName,
+      roomType: body.roomType,
       duration: body.duration && parseInt(body.duration, 10),
       desiredRoomTypes: body.desiredRoomTypes ? body.desiredRoomTypes.split(',') : [] // attention, empty string gets split as well...
     };
@@ -53,15 +53,15 @@ module.exports = {
       if (err || !commandProcessor) { return callback(err); }
 
       if (registrationTuple.desiredRoomTypes.length > 0) {
-        waitinglistRegistrationEvent = commandProcessor.registerWaitinglistParticipant(registrationTuple.desiredRoomTypes, registrationTuple.sessionID, memberID, now);
+        waitinglistRegistrationEvent = commandProcessor.registerWaitinglistParticipant(registrationTuple.desiredRoomTypes, registrationTuple.sessionId, memberID, now);
       }
-      if (registrationTuple.resourceName && registrationTuple.duration) {
-        registrationEvent = commandProcessor.registerParticipant(registrationTuple.resourceName, registrationTuple.duration, registrationTuple.sessionID, memberID, now);
+      if (registrationTuple.roomType && registrationTuple.duration) {
+        registrationEvent = commandProcessor.registerParticipant(registrationTuple.roomType, registrationTuple.duration, registrationTuple.sessionId, memberID, now);
       }
       return eventstoreService.saveCommandProcessor(commandProcessor, function (err1) {
         if (err1 && err1.message === CONFLICTING_VERSIONS) {
           // we try again because of a racing condition during save:
-          return self.completeRegistration(memberID, sessionID, body, now, callback);
+          return self.completeRegistration(memberID, sessionId, body, now, callback);
         }
         if (err1) { return callback(err1); }
 
@@ -71,7 +71,7 @@ module.exports = {
             socratesNotifications.newWaitinglistEntry(memberID, registrationTuple.desiredRoomTypes.map(roomType => roomOptions.waitinglistInformationFor(roomType)));
           }
           if (registrationEvent === eventConstants.PARTICIPANT_WAS_REGISTERED) {
-            socratesNotifications.newParticipant(memberID, roomOptions.informationFor(registrationTuple.resourceName, registrationTuple.duration));
+            socratesNotifications.newParticipant(memberID, roomOptions.informationFor(registrationTuple.roomType, registrationTuple.duration));
           }
           return subscriberstore.getSubscriber(memberID, function (err2, subscriber) {
             if (err2) { return callback(err2); }

@@ -105,7 +105,7 @@ app.post('/startRegistration', function (req, res, next) {
 
   var registrationTuple = {
     activityUrl: socratesConstants.currentUrl,
-    sessionID: req.sessionID,
+    sessionId: req.sessionID,
     desiredRoomTypes: []
   };
 
@@ -114,7 +114,7 @@ app.post('/startRegistration', function (req, res, next) {
     if (splitArray[1] === 'waitinglist') {
       registrationTuple.desiredRoomTypes.push(splitArray[0]);
     } else {
-      registrationTuple.resourceName = splitArray[0];  // TODO roomType
+      registrationTuple.roomType = splitArray[0];  // TODO roomType
       registrationTuple.duration = parseInt(splitArray[1], 10);
     }
   });
@@ -151,7 +151,7 @@ app.get('/participate', function (req, res, next) {
       if (err1) { return next(err1); }
       var addon = (subscriber && subscriber.addon()) || new Addon({});
       var participation = (subscriber && subscriber.currentParticipation()) || new Participation();
-      var expiresAt = readModel.reservationExpiration(registrationTuple.sessionID);
+      var expiresAt = readModel.reservationExpiration(registrationTuple.sessionId);
       res.render('participate', {
         member: member,
         addon: addon,
@@ -177,7 +177,7 @@ app.post('/completeRegistration', function (req, res, next) {
         statusmessage.errorMessage(statusTitle, statusText).putIntoSession(req);
         return res.redirect('/registration');
       }
-      if (body.resourceName && body.duration) {
+      if (body.roomType && body.duration) {
         statusmessage.successMessage('general.info', 'activities.successfully_registered').putIntoSession(req);
       } else {
         statusmessage.successMessage('general.info', 'activities.successfully_added_to_waitinglist').putIntoSession(req);
@@ -231,8 +231,8 @@ app.get('/management', function (req, res, next) {
 
             var waitinglistMembers = [];
 
-            function membersOnWaitinglist(resourceName, globalCallback) {
-              async.map(registrationReadModel.allWaitinglistParticipantsIn(resourceName),
+            function membersOnWaitinglist(roomType, globalCallback) {
+              async.map(registrationReadModel.allWaitinglistParticipantsIn(roomType),
                 function (entry, callback) {
                   memberstore.getMemberForId(entry.memberId, function (err2, member) {
                     if (err2 || !member) { return callback(err2); }
@@ -248,7 +248,7 @@ app.get('/management', function (req, res, next) {
             }
 
             async.each(roomOptions.allIds(),
-              function (resourceName, callback) { membersOnWaitinglist(resourceName, callback); },
+              function (roomType, callback) { membersOnWaitinglist(roomType, callback); },
               function (err2) {
                 if (err2) { return next(err2); }
 

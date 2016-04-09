@@ -52,7 +52,7 @@ module.exports = {
     );
   },
 
-  newDurationFor: function (nickname, resourceName, duration, callback) {
+  newDurationFor: function (nickname, roomType, duration, callback) {
     var self = this;
 
     async.parallel(
@@ -68,9 +68,9 @@ module.exports = {
         saveCommandProcessor({
           commandProcessor: results.registrationCommandProcessor,
           callback: callback,
-          repeat: _.partial(self.newDurationFor, nickname, resourceName, duration),
+          repeat: _.partial(self.newDurationFor, nickname, roomType, duration),
           handleSuccess: function () {
-            notifications.changedDuration(results.member, roomOptions.informationFor(resourceName, duration));
+            notifications.changedDuration(results.member, roomOptions.informationFor(roomType, duration));
           }
         });
       }

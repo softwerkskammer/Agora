@@ -243,7 +243,7 @@ describe('SoCraTes registration application', function () {
         .expect('location', '/registration/participate', function (err) {
 
           const registrationTuple = startRegistration.firstCall.args[0];
-          expect(registrationTuple.resourceName).to.eql('bed_in_double');
+          expect(registrationTuple.roomType).to.eql('bed_in_double');
           expect(registrationTuple.duration).to.eql(3);
           expect(registrationTuple.desiredRoomTypes).to.eql([]);
           done(err);
@@ -260,7 +260,7 @@ describe('SoCraTes registration application', function () {
         .expect('location', '/registration/participate', function (err) {
 
           const registrationTuple = startRegistration.firstCall.args[0];
-          expect(registrationTuple.resourceName).to.eql(undefined);
+          expect(registrationTuple.roomType).to.eql(undefined);
           expect(registrationTuple.duration).to.eql(undefined);
           expect(registrationTuple.desiredRoomTypes).to.eql(['bed_in_double']);
           done(err);
@@ -277,7 +277,7 @@ describe('SoCraTes registration application', function () {
         .expect('location', '/registration/participate', function (err) {
 
           const registrationTuple = startRegistration.firstCall.args[0];
-          expect(registrationTuple.resourceName).to.eql(undefined);
+          expect(registrationTuple.roomType).to.eql(undefined);
           expect(registrationTuple.duration).to.eql(undefined);
           expect(registrationTuple.desiredRoomTypes).to.eql(['single', 'bed_in_double', 'junior']);
           done(err);
@@ -294,7 +294,7 @@ describe('SoCraTes registration application', function () {
         .expect('location', '/registration/participate', function (err) {
 
           const registrationTuple = startRegistration.firstCall.args[0];
-          expect(registrationTuple.resourceName).to.eql('single');
+          expect(registrationTuple.roomType).to.eql('single');
           expect(registrationTuple.duration).to.eql(3);
           expect(registrationTuple.desiredRoomTypes).to.eql(['bed_in_double', 'junior']);
           done(err);
@@ -311,7 +311,7 @@ describe('SoCraTes registration application', function () {
       appWithSocratesMemberAndFixedSessionId
         .post('/completeRegistration')
         .send('activityUrl=socrates-url')
-        .send('resourceName=single')
+        .send('roomType=single')
         .send('duration=5')
         .send('desiredRoomTypes=')
         .send('homeAddress=At home')
@@ -327,8 +327,8 @@ describe('SoCraTes registration application', function () {
         .expect('location', '/registration', function (err) {
           expect(eventStoreSave.called).to.be(true);
           expect(stripTimestampsAndJoins(eventStore.state.registrationEvents)).to.eql([
-            {event: e.RESERVATION_WAS_ISSUED, sessionID: 'session-id', memberId: 'memberId', roomType: 'single', duration: 5},
-            {event: e.PARTICIPANT_WAS_REGISTERED, sessionID: 'session-id', memberId: 'memberId2', roomType: 'single', duration: 5}
+            {event: e.RESERVATION_WAS_ISSUED, sessionId: 'session-id', memberId: 'memberId', roomType: 'single', duration: 5},
+            {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: 'session-id', memberId: 'memberId2', roomType: 'single', duration: 5}
           ]);
           done(err);
         });
@@ -342,7 +342,7 @@ describe('SoCraTes registration application', function () {
       appWithSocratesMemberAndFixedSessionId
         .post('/completeRegistration')
         .send('activityUrl=socrates-url')
-        .send('resourceName=junior')
+        .send('roomType=junior')
         .send('duration=3')
         .send('desiredRoomTypes=')
         .send('homeAddress=At home')
@@ -358,8 +358,8 @@ describe('SoCraTes registration application', function () {
         .expect('location', '/registration', function (err) {
           expect(eventStoreSave.called).to.be(true);
           expect(stripTimestampsAndJoins(eventStore.state.registrationEvents)).to.eql([
-            {event: e.RESERVATION_WAS_ISSUED, sessionID: 'session-id', memberId: 'memberId2', roomType: 'junior', duration: 3},
-            {event: e.PARTICIPANT_WAS_REGISTERED, sessionID: 'session-id', memberId: 'memberId2', roomType: 'junior', duration: 3}
+            {event: e.RESERVATION_WAS_ISSUED, sessionId: 'session-id', memberId: 'memberId2', roomType: 'junior', duration: 3},
+            {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: 'session-id', memberId: 'memberId2', roomType: 'junior', duration: 3}
           ]);
           done(err);
         });
@@ -371,7 +371,7 @@ describe('SoCraTes registration application', function () {
       appWithSocratesMemberAndFixedSessionId
         .post('/completeRegistration')
         .send('activityUrl=socrates-url')
-        .send('resourceName=junior')
+        .send('roomType=junior')
         .send('duration=3')
         .send('desiredRoomTypes=')
         .send('homeAddress=At home')
@@ -387,7 +387,7 @@ describe('SoCraTes registration application', function () {
         .expect('location', '/registration', function (err) {
           expect(eventStoreSave.called).to.be(true);
           expect(stripTimestampsAndJoins(eventStore.state.registrationEvents)).to.eql([
-            {event: e.PARTICIPANT_WAS_REGISTERED, sessionID: 'session-id', memberId: 'memberId2', roomType: 'junior', duration: 3}
+            {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: 'session-id', memberId: 'memberId2', roomType: 'junior', duration: 3}
           ]);
           done(err);
         });
@@ -400,7 +400,7 @@ describe('SoCraTes registration application', function () {
       appWithSocratesMemberAndFixedSessionId
         .post('/completeRegistration')
         .send('activityUrl=socrates-url')
-        .send('resourceName=single')
+        .send('roomType=single')
         .send('duration=3')
         .send('desiredRoomTypes=')
         .send('homeAddress=At home')
@@ -416,8 +416,8 @@ describe('SoCraTes registration application', function () {
         .expect('location', '/registration', function (err) {
           expect(eventStoreSave.called).to.be(true);
           expect(stripTimestampsAndJoins(eventStore.state.registrationEvents)).to.eql([
-            {event: e.RESERVATION_WAS_ISSUED, sessionID: 'session-id', memberId: 'memberId2', roomType: 'single', duration: 3},
-            {event: e.DID_NOT_REGISTER_PARTICIPANT_FOR_FULL_RESOURCE, sessionID: 'session-id', roomType: 'single', duration: 3, memberId: 'memberId2'}
+            {event: e.RESERVATION_WAS_ISSUED, sessionId: 'session-id', memberId: 'memberId2', roomType: 'single', duration: 3},
+            {event: e.DID_NOT_REGISTER_PARTICIPANT_FOR_FULL_RESOURCE, sessionId: 'session-id', roomType: 'single', duration: 3, memberId: 'memberId2'}
           ]);
           done(err);
         });
@@ -429,7 +429,7 @@ describe('SoCraTes registration application', function () {
       appWithSocratesMemberAndFixedSessionId
         .post('/completeRegistration')
         .send('activityUrl=socrates-url')
-        .send('resourceName=single')
+        .send('roomType=single')
         .send('duration=3')
         .send('desiredRoomTypes=')
         .send('homeAddress=At home')
@@ -445,7 +445,7 @@ describe('SoCraTes registration application', function () {
         .expect('location', '/registration', function (err) {
           expect(eventStoreSave.called).to.be(true);
           expect(stripTimestampsAndJoins(eventStore.state.registrationEvents)).to.eql([
-            {event: e.DID_NOT_REGISTER_PARTICIPANT_FOR_FULL_RESOURCE, sessionID: 'session-id', roomType: 'single', duration: 3, memberId: 'memberId2'}
+            {event: e.DID_NOT_REGISTER_PARTICIPANT_FOR_FULL_RESOURCE, sessionId: 'session-id', roomType: 'single', duration: 3, memberId: 'memberId2'}
           ]);
           done(err);
         });
@@ -459,7 +459,7 @@ describe('SoCraTes registration application', function () {
       appWithSocratesMemberAndFixedSessionId
         .post('/completeRegistration')
         .send('activityUrl=socrates-url')
-        .send('resourceName=junior')
+        .send('roomType=junior')
         .send('duration=5')
         .send('desiredRoomTypes=')
         .send('homeAddress=At home')
@@ -475,8 +475,8 @@ describe('SoCraTes registration application', function () {
         .expect('location', '/registration', function (err) {
           expect(eventStoreSave.called).to.be(true);
           expect(stripTimestampsAndJoins(eventStore.state.registrationEvents)).to.eql([
-            {event: e.PARTICIPANT_WAS_REGISTERED, sessionID: 'session-id', memberId: 'memberId2', roomType: 'junior', duration: 5},
-            {event: e.DID_NOT_REGISTER_PARTICIPANT_A_SECOND_TIME, sessionID: 'session-id', roomType: 'junior', duration: 5, memberId: 'memberId2'}
+            {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: 'session-id', memberId: 'memberId2', roomType: 'junior', duration: 5},
+            {event: e.DID_NOT_REGISTER_PARTICIPANT_A_SECOND_TIME, sessionId: 'session-id', roomType: 'junior', duration: 5, memberId: 'memberId2'}
           ]);
           done(err);
         });
@@ -493,7 +493,7 @@ describe('SoCraTes registration application', function () {
       appWithSocratesMemberAndFixedSessionId
         .post('/completeRegistration')
         .send('activityUrl=socrates-url')
-        .send('resourceName=')
+        .send('roomType=')
         .send('duration=')
         .send('desiredRoomTypes=single')
         .send('homeAddress=At home')
@@ -509,8 +509,8 @@ describe('SoCraTes registration application', function () {
         .expect('location', '/registration', function (err) {
           expect(eventStoreSave.called).to.be(true);
           expect(stripTimestampsAndJoins(eventStore.state.registrationEvents)).to.eql([
-            {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionID: 'session-id', desiredRoomTypes: ['single'], memberId: 'memberId'},
-            {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionID: 'session-id', desiredRoomTypes: ['single'], memberId: 'memberId2'}
+            {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionId: 'session-id', desiredRoomTypes: ['single'], memberId: 'memberId'},
+            {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionId: 'session-id', desiredRoomTypes: ['single'], memberId: 'memberId2'}
           ]);
           done(err);
         });
@@ -523,7 +523,7 @@ describe('SoCraTes registration application', function () {
       appWithSocratesMemberAndFixedSessionId
         .post('/completeRegistration')
         .send('activityUrl=socrates-url')
-        .send('resourceName=')
+        .send('roomType=')
         .send('duration=')
         .send('desiredRoomTypes=single')
         .send('homeAddress=At home')
@@ -539,8 +539,8 @@ describe('SoCraTes registration application', function () {
         .expect('location', '/registration', function (err) {
           expect(eventStoreSave.called).to.be(true);
           expect(stripTimestampsAndJoins(eventStore.state.registrationEvents)).to.eql([
-            {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionID: 'session-id', desiredRoomTypes: ['single'], memberId: 'memberId'},
-            {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionID: 'session-id', desiredRoomTypes: ['single'], memberId: 'memberId2'}
+            {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionId: 'session-id', desiredRoomTypes: ['single'], memberId: 'memberId'},
+            {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionId: 'session-id', desiredRoomTypes: ['single'], memberId: 'memberId2'}
           ]);
           done(err);
         });
@@ -553,7 +553,7 @@ describe('SoCraTes registration application', function () {
       appWithSocratesMemberAndFixedSessionId
         .post('/completeRegistration')
         .send('activityUrl=socrates-url')
-        .send('resourceName=')
+        .send('roomType=')
         .send('duration=')
         .send('desiredRoomTypes=junior')
         .send('homeAddress=At home')
@@ -569,8 +569,8 @@ describe('SoCraTes registration application', function () {
         .expect('location', '/registration', function (err) {
           expect(eventStoreSave.called).to.be(true);
           expect(stripTimestampsAndJoins(eventStore.state.registrationEvents)).to.eql([
-            {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionID: 'session-id', desiredRoomTypes: ['single'], memberId: 'memberId2'},
-            {event: e.DID_NOT_REGISTER_WAITINGLIST_PARTICIPANT_A_SECOND_TIME, sessionID: 'session-id', desiredRoomTypes: ['junior'], memberId: 'memberId2'}
+            {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionId: 'session-id', desiredRoomTypes: ['single'], memberId: 'memberId2'},
+            {event: e.DID_NOT_REGISTER_WAITINGLIST_PARTICIPANT_A_SECOND_TIME, sessionId: 'session-id', desiredRoomTypes: ['junior'], memberId: 'memberId2'}
           ]);
           done(err);
         });
@@ -584,7 +584,7 @@ describe('SoCraTes registration application', function () {
       appWithSocratesMemberAndFixedSessionId
         .post('/completeRegistration')
         .send('activityUrl=socrates-url')
-        .send('resourceName=bed_in_double')
+        .send('roomType=bed_in_double')
         .send('duration=2')
         .send('desiredRoomTypes=single,junior')
         .send('homeAddress=At home')
@@ -600,8 +600,8 @@ describe('SoCraTes registration application', function () {
         .expect('location', '/registration', function (err) {
           expect(eventStoreSave.called).to.be(true);
           expect(stripTimestampsAndJoins(eventStore.state.registrationEvents)).to.eql([
-            {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionID: 'session-id', desiredRoomTypes: ['single', 'junior'], memberId: 'memberId2'},
-            {event: e.PARTICIPANT_WAS_REGISTERED, sessionID: 'session-id', memberId: 'memberId2', roomType: 'bed_in_double', duration: 2}
+            {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionId: 'session-id', desiredRoomTypes: ['single', 'junior'], memberId: 'memberId2'},
+            {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: 'session-id', memberId: 'memberId2', roomType: 'bed_in_double', duration: 2}
           ]);
           done(err);
         });
