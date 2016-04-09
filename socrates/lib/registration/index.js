@@ -115,13 +115,13 @@ app.post('/startRegistration', function (req, res, next) {
       registrationTuple.desiredRoomTypes.push(splitArray[0]);
     } else {
       registrationTuple.resourceName = splitArray[0];  // TODO roomType
-      registrationTuple.duration = splitArray[1];
+      registrationTuple.duration = parseInt(splitArray[1], 10);
     }
   });
 
   var participateURL = '/registration/participate';
   req.session.registrationTuple = registrationTuple; // so that we can access it again when finishing the registration
-  registrationService.startRegistration(registrationTuple, moment.tz(), function (err, statusTitle, statusText) {
+  registrationService.startRegistration(registrationTuple, res.locals.accessrights.memberId(), moment.tz(), function (err, statusTitle, statusText) {
     if (err) { return next(err); }
     if (statusTitle && statusText) {
       statusmessage.errorMessage(statusTitle, statusText).putIntoSession(req);

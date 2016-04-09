@@ -32,16 +32,16 @@ module.exports = {
   // ***** Participation *****
 
   // reservation:
-  reservationWasIssued: function (roomType, duration, sessionId, joinedSoCraTes) {
-    return enrich({event: e.RESERVATION_WAS_ISSUED, sessionID: sessionId, roomType, duration, joinedSoCraTes: joinedSoCraTes.valueOf()});
+  reservationWasIssued: function (roomType, duration, sessionId, memberId, joinedSoCraTes) {
+    return enrich({event: e.RESERVATION_WAS_ISSUED, sessionID: sessionId, memberId, roomType, duration, joinedSoCraTes: joinedSoCraTes.valueOf()});
   },
 
-  didNotIssueReservationForAlreadyReservedSession: function (roomType, duration, sessionId) {
-    return enrich({event: e.DID_NOT_ISSUE_RESERVATION_FOR_ALREADY_RESERVED_SESSION, sessionID: sessionId, roomType, duration});
+  didNotIssueReservationForAlreadyReservedSession: function (roomType, duration, sessionId, memberId) {
+    return enrich({event: e.DID_NOT_ISSUE_RESERVATION_FOR_ALREADY_RESERVED_SESSION, sessionID: sessionId, memberId, roomType, duration});
   },
 
-  didNotIssueReservationForFullResource: function (roomType, duration, sessionId) {
-    return enrich({event: e.DID_NOT_ISSUE_RESERVATION_FOR_FULL_RESOURCE, sessionID: sessionId, roomType, duration});
+  didNotIssueReservationForFullResource: function (roomType, duration, sessionId, memberId) {
+    return enrich({event: e.DID_NOT_ISSUE_RESERVATION_FOR_FULL_RESOURCE, sessionID: sessionId, memberId, roomType, duration});
   },
 
   // registration:
@@ -102,12 +102,12 @@ module.exports = {
   // ***** Waitinglist *****
 
   // reservation:
-  waitinglistReservationWasIssued: function (desiredRoomTypes, sessionId, joinedWaitinglist) {
-    return enrich({event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionID: sessionId, desiredRoomTypes, joinedWaitinglist: joinedWaitinglist.valueOf()});
+  waitinglistReservationWasIssued: function (desiredRoomTypes, sessionId, memberId, joinedWaitinglist) {
+    return enrich({event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionID: sessionId, desiredRoomTypes, memberId, joinedWaitinglist: joinedWaitinglist.valueOf()});
   },
 
-  didNotIssueWaitinglistReservationForAlreadyReservedSession: function (desiredRoomTypes, sessionId) {
-    return enrich({event: e.DID_NOT_ISSUE_WAITINGLIST_RESERVATION_FOR_ALREADY_RESERVED_SESSION, sessionID: sessionId, desiredRoomTypes});
+  didNotIssueWaitinglistReservationForAlreadyReservedSession: function (desiredRoomTypes, sessionId, memberId) {
+    return enrich({event: e.DID_NOT_ISSUE_WAITINGLIST_RESERVATION_FOR_ALREADY_RESERVED_SESSION, sessionID: sessionId, memberId, desiredRoomTypes});
   },
 
   // registration:

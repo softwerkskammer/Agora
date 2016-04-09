@@ -12,22 +12,22 @@ var eventConstants = beans.get('eventConstants');
 
 module.exports = {
 
-  startRegistration: function (registrationTuple, now, callback) {
+  startRegistration: function (registrationTuple, memberIdIfKnown, now, callback) {
     var self = this;
     var reservationEvent;
     var waitinglistReservationEvent;
     eventstoreService.getRegistrationCommandProcessor(registrationTuple.activityUrl, function (err, registrationCommandProcessor) {
       if (err || !registrationCommandProcessor) { return callback(err, 'message.title.problem', 'message.content.activities.does_not_exist'); }
       if (registrationTuple.desiredRoomTypes.length > 0) {
-        waitinglistReservationEvent = registrationCommandProcessor.issueWaitinglistReservation(registrationTuple.desiredRoomTypes, registrationTuple.sessionID, now);
+        waitinglistReservationEvent = registrationCommandProcessor.issueWaitinglistReservation(registrationTuple.desiredRoomTypes, registrationTuple.sessionID, memberIdIfKnown, now);
       }
       if (registrationTuple.resourceName && registrationTuple.duration) {
-        reservationEvent = registrationCommandProcessor.issueReservation(registrationTuple.resourceName, registrationTuple.duration, registrationTuple.sessionID, now);
+        reservationEvent = registrationCommandProcessor.issueReservation(registrationTuple.resourceName, registrationTuple.duration, registrationTuple.sessionID, memberIdIfKnown, now);
       }
       return eventstoreService.saveCommandProcessor(registrationCommandProcessor, function (err1) {
         if (err1 && err1.message === CONFLICTING_VERSIONS) {
           // we try again because of a racing condition during save:
-          return self.startRegistration(registrationTuple, now, callback);
+          return self.startRegistration(registrationTuple, memberIdIfKnown, now, callback);
         }
         if (err1) { return callback(err1); }
         if (reservationEvent === eventConstants.RESERVATION_WAS_ISSUED || waitinglistReservationEvent === eventConstants.WAITINGLIST_RESERVATION_WAS_ISSUED) {
@@ -46,7 +46,7 @@ module.exports = {
       sessionID: sessionID,
       activityUrl: body.activityUrl,
       resourceName: body.resourceName,
-      duration: body.duration,
+      duration: body.duration && parseInt(body.duration, 10),
       desiredRoomTypes: body.desiredRoomTypes ? body.desiredRoomTypes.split(',') : [] // attention, empty string gets split as well...
     };
     eventstoreService.getRegistrationCommandProcessor(registrationTuple.activityUrl, function (err, commandProcessor) {

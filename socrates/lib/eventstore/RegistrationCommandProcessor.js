@@ -11,16 +11,16 @@ function RegistrationCommandProcessor(writeModel) {
   this.writeModel = writeModel;
 }
 
-RegistrationCommandProcessor.prototype.issueReservation = function (roomType, duration, sessionId, joinedSoCraTes) {
+RegistrationCommandProcessor.prototype.issueReservation = function (roomType, duration, sessionId, memberId, joinedSoCraTes) {
   var event;
   if (this.writeModel.isFull(roomType)) {
-    event = events.didNotIssueReservationForFullResource(roomType, duration, sessionId);
+    event = events.didNotIssueReservationForFullResource(roomType, duration, sessionId, memberId);
   } else if (this.writeModel.alreadyHasReservation(sessionId)) {
     // session id already reserved a spot
-    event = events.didNotIssueReservationForAlreadyReservedSession(roomType, duration, sessionId);
+    event = events.didNotIssueReservationForAlreadyReservedSession(roomType, duration, sessionId, memberId);
   } else {
     // all is good
-    event = events.reservationWasIssued(roomType, duration, sessionId, joinedSoCraTes);
+    event = events.reservationWasIssued(roomType, duration, sessionId, memberId, joinedSoCraTes);
   }
   this._updateRegistrationEvents(event);
   return event.event;
@@ -98,14 +98,14 @@ RegistrationCommandProcessor.prototype.setNewDurationForParticipant = function (
   this._updateRegistrationEvents(event);
 };
 
-RegistrationCommandProcessor.prototype.issueWaitinglistReservation = function (desiredRoomTypes, sessionId, joinedWaitinglist) {
+RegistrationCommandProcessor.prototype.issueWaitinglistReservation = function (desiredRoomTypes, sessionId, memberId, joinedWaitinglist) {
   var event;
   if (this.writeModel.alreadyHasWaitinglistReservation(sessionId)) {
     // session id already reserved a spot
-    event = events.didNotIssueWaitinglistReservationForAlreadyReservedSession(desiredRoomTypes, sessionId, joinedWaitinglist);
+    event = events.didNotIssueWaitinglistReservationForAlreadyReservedSession(desiredRoomTypes, sessionId, memberId);
   } else {
     // all is good
-    event = events.waitinglistReservationWasIssued(desiredRoomTypes, sessionId, joinedWaitinglist);
+    event = events.waitinglistReservationWasIssued(desiredRoomTypes, sessionId, memberId, joinedWaitinglist);
   }
   this._updateRegistrationEvents(event);
   return event.event;
