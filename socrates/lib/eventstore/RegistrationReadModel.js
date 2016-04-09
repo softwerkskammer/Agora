@@ -24,10 +24,10 @@ var earliestValidRegistrationTime = moment.tz().subtract(socratesConstants.regis
 
 var projectReservationsBySessionId = function (reservationsBySessionId, event) {
   if (event.event === e.RESERVATION_WAS_ISSUED && moment(event.joinedSoCraTes).isAfter(earliestValidRegistrationTime)) {
-    reservationsBySessionId[event.sessionID] = event;
+    reservationsBySessionId[event.sessionId] = event;
   }
   if (event.event === e.PARTICIPANT_WAS_REGISTERED) {
-    delete reservationsBySessionId[event.sessionID];
+    delete reservationsBySessionId[event.sessionId];
   }
   return reservationsBySessionId;
 };
@@ -123,10 +123,10 @@ RegistrationReadModel.prototype.reservationsAndParticipantsFor = function (roomT
 
 var projectWaitinglistReservationsBySessionId = function (waitinglistReservationsBySessionId, event) {
   if (event.event === e.WAITINGLIST_RESERVATION_WAS_ISSUED && moment(event.joinedWaitinglist).isAfter(earliestValidRegistrationTime)) {
-    waitinglistReservationsBySessionId[event.sessionID] = event;
+    waitinglistReservationsBySessionId[event.sessionId] = event;
   }
   if (event.event === e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED || event.event === e.PARTICIPANT_WAS_REGISTERED) {
-    delete waitinglistReservationsBySessionId[event.sessionID];
+    delete waitinglistReservationsBySessionId[event.sessionId];
   }
   return waitinglistReservationsBySessionId;
 };

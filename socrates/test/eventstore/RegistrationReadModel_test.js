@@ -107,7 +107,7 @@ describe('The registration read model', function () {
         events.reservationWasIssued(singleBedRoom, untilSaturday, sessionId1, memberId1, aShortTimeAgo)];
 
       expect(stripTimestamps(readModel.reservationsAndParticipantsFor(singleBedRoom))).to.eql([
-        {event: e.RESERVATION_WAS_ISSUED, sessionID: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: aShortTimeAgo.valueOf()}]);
+        {event: e.RESERVATION_WAS_ISSUED, sessionId: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: aShortTimeAgo.valueOf()}]);
     });
 
     it('considers participations', function () {
@@ -116,8 +116,8 @@ describe('The registration read model', function () {
         events.participantWasRegistered(singleBedRoom, untilSundayMorning, sessionId2, memberId2, aShortTimeAgo)];
 
       expect(stripTimestamps(readModel.reservationsAndParticipantsFor(singleBedRoom))).to.eql([
-        {event: e.PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: aLongTimeAgo.valueOf()},
-        {event: e.PARTICIPANT_WAS_REGISTERED, sessionID: sessionId2, memberId: memberId2, roomType: singleBedRoom, duration: untilSundayMorning, joinedSoCraTes: aShortTimeAgo.valueOf()}]);
+        {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: aLongTimeAgo.valueOf()},
+        {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: sessionId2, memberId: memberId2, roomType: singleBedRoom, duration: untilSundayMorning, joinedSoCraTes: aShortTimeAgo.valueOf()}]);
     });
 
     it('does not consider registrations that have a matching participation', function () {
@@ -126,7 +126,7 @@ describe('The registration read model', function () {
         events.participantWasRegistered(singleBedRoom, untilSaturday, sessionId1, memberId1, anEvenShorterTimeAgo)];
 
       expect(stripTimestamps(readModel.reservationsAndParticipantsFor(singleBedRoom))).to.eql([
-        {event: e.PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: anEvenShorterTimeAgo.valueOf()}]);
+        {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: anEvenShorterTimeAgo.valueOf()}]);
     });
 
     it('does not consider DID_NOT_... reservation and registration events', function () {
@@ -139,7 +139,7 @@ describe('The registration read model', function () {
       ];
 
       expect(stripTimestamps(readModel.reservationsAndParticipantsFor(singleBedRoom))).to.eql([
-        {event: e.RESERVATION_WAS_ISSUED, sessionID: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: aShortTimeAgo.valueOf()}]);
+        {event: e.RESERVATION_WAS_ISSUED, sessionId: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: aShortTimeAgo.valueOf()}]);
       expect(readModel.reservationsAndParticipantsFor(bedInDouble)).to.eql([]);
     });
 
@@ -151,9 +151,9 @@ describe('The registration read model', function () {
         events.participantWasRegistered(singleBedRoom, untilSundayMorning, sessionId1, memberId1, anEvenShorterTimeAgo)];
 
       expect(stripTimestamps(readModel.reservationsAndParticipantsFor(singleBedRoom))).to.eql([
-        {event: e.PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSundayMorning, joinedSoCraTes: anEvenShorterTimeAgo.valueOf()}]);
+        {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSundayMorning, joinedSoCraTes: anEvenShorterTimeAgo.valueOf()}]);
       expect(stripTimestamps(readModel.reservationsAndParticipantsFor(bedInDouble))).to.eql([
-        {event: e.PARTICIPANT_WAS_REGISTERED, sessionID: sessionId2, memberId: memberId2, roomType: bedInDouble, duration: untilSaturday, joinedSoCraTes: aShortTimeAgo.valueOf()}]);
+        {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: sessionId2, memberId: memberId2, roomType: bedInDouble, duration: untilSaturday, joinedSoCraTes: aShortTimeAgo.valueOf()}]);
     });
 
     it('does not list the registration event of a participant that has been removed', function () {
@@ -238,7 +238,7 @@ describe('The registration read model', function () {
         events.waitinglistReservationWasIssued([singleBedRoom], sessionId1, memberId1, aShortTimeAgo)];
 
       expect(stripTimestamps(readModel.waitinglistReservationsAndParticipantsFor(singleBedRoom))).to.eql([
-        {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionID: sessionId1, memberId: memberId1, desiredRoomTypes: [singleBedRoom], joinedWaitinglist: aShortTimeAgo.valueOf()}]);
+        {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionId: sessionId1, memberId: memberId1, desiredRoomTypes: [singleBedRoom], joinedWaitinglist: aShortTimeAgo.valueOf()}]);
     });
 
     it('considers participations', function () {
@@ -247,8 +247,8 @@ describe('The registration read model', function () {
         events.waitinglistParticipantWasRegistered([singleBedRoom], sessionId2, memberId2, aShortTimeAgo)];
 
       expect(stripTimestamps(readModel.waitinglistReservationsAndParticipantsFor(singleBedRoom))).to.eql([
-        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, memberId: memberId1, desiredRoomTypes: [singleBedRoom], joinedWaitinglist: aLongTimeAgo.valueOf()},
-        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionID: sessionId2, memberId: memberId2, desiredRoomTypes: [singleBedRoom], joinedWaitinglist: aShortTimeAgo.valueOf()}]);
+        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionId: sessionId1, memberId: memberId1, desiredRoomTypes: [singleBedRoom], joinedWaitinglist: aLongTimeAgo.valueOf()},
+        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionId: sessionId2, memberId: memberId2, desiredRoomTypes: [singleBedRoom], joinedWaitinglist: aShortTimeAgo.valueOf()}]);
     });
 
     it('does not consider registrations that have a matching participation', function () {
@@ -257,7 +257,7 @@ describe('The registration read model', function () {
         events.waitinglistParticipantWasRegistered([singleBedRoom], sessionId1, memberId1, anEvenShorterTimeAgo)];
 
       expect(stripTimestamps(readModel.waitinglistReservationsAndParticipantsFor(singleBedRoom))).to.eql([
-        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, memberId: memberId1, desiredRoomTypes: [singleBedRoom], joinedWaitinglist: anEvenShorterTimeAgo.valueOf()}]);
+        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionId: sessionId1, memberId: memberId1, desiredRoomTypes: [singleBedRoom], joinedWaitinglist: anEvenShorterTimeAgo.valueOf()}]);
     });
 
     it('does not consider DID_NOT_... reservation and registration events', function () {
@@ -268,7 +268,7 @@ describe('The registration read model', function () {
       ];
 
       expect(stripTimestamps(readModel.waitinglistReservationsAndParticipantsFor(singleBedRoom))).to.eql([
-        {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionID: sessionId1, memberId: memberId1, desiredRoomTypes: [singleBedRoom], joinedWaitinglist: aShortTimeAgo.valueOf()}]);
+        {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionId: sessionId1, memberId: memberId1, desiredRoomTypes: [singleBedRoom], joinedWaitinglist: aShortTimeAgo.valueOf()}]);
       expect(readModel.waitinglistReservationsAndParticipantsFor(bedInDouble)).to.eql([]);
     });
 
@@ -280,9 +280,9 @@ describe('The registration read model', function () {
         events.waitinglistParticipantWasRegistered([singleBedRoom], sessionId1, memberId1, anEvenShorterTimeAgo)];
 
       expect(stripTimestamps(readModel.waitinglistReservationsAndParticipantsFor(singleBedRoom))).to.eql([
-        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionID: sessionId1, memberId: memberId1, desiredRoomTypes: [singleBedRoom], joinedWaitinglist: anEvenShorterTimeAgo.valueOf()}]);
+        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionId: sessionId1, memberId: memberId1, desiredRoomTypes: [singleBedRoom], joinedWaitinglist: anEvenShorterTimeAgo.valueOf()}]);
       expect(stripTimestamps(readModel.waitinglistReservationsAndParticipantsFor(bedInDouble))).to.eql([
-        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionID: sessionId2, memberId: memberId2, desiredRoomTypes: [bedInDouble], joinedWaitinglist: aShortTimeAgo.valueOf()}]);
+        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionId: sessionId2, memberId: memberId2, desiredRoomTypes: [bedInDouble], joinedWaitinglist: aShortTimeAgo.valueOf()}]);
     });
   });
 
