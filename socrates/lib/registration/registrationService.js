@@ -41,7 +41,7 @@ module.exports = {
           return callback(null); // let the user continue normally even in case he already has a reservation
         }
         // for any surprises that we might encounter
-        return callback(null, 'activities.registration_not_now', 'activities.registration_not_possible');
+        return callback(null, 'activities.registration_problem', 'activities.registration_not_possible');
       });
     });
   },
@@ -88,7 +88,7 @@ module.exports = {
           });
         } else if (registrationEvent === eventConstants.DID_NOT_REGISTER_PARTICIPANT_FOR_FULL_RESOURCE) {
           // if the resource was full, this can only be due to the registration having timed out:
-          return callback(null, 'message.title.problem', 'activities.registration_timed_out');
+          return callback(null, 'activities.registration_problem', 'activities.registration_is_full');
           /*
            return subscriberstore.getSubscriber(memberID, function (err2, subscriber) {
            if (err2) { return callback(err2); }
@@ -98,7 +98,7 @@ module.exports = {
            */
         } else if (registrationEvent === eventConstants.DID_NOT_REGISTER_PARTICIPANT_A_SECOND_TIME
           || waitinglistRegistrationEvent === eventConstants.DID_NOT_REGISTER_WAITINGLIST_PARTICIPANT_A_SECOND_TIME) {
-          return callback(null, 'message.title.problem', 'activities.already_registered');
+          return callback(null, 'activities.registration_problem', 'activities.already_registered');
           /*
            return subscriberstore.getSubscriber(memberID, function (err2, subscriber) {
            if (err2) { return callback(err2); }
@@ -107,7 +107,7 @@ module.exports = {
            });
            */
         } else {
-          callback(null, 'activities.registration_not_now', 'activities.registration_not_possible');
+          callback(null, 'activities.registration_problem', 'activities.registration_not_possible');
         }
       });
     });

@@ -219,6 +219,49 @@ describe('Registration Service', function () {
         done(err);
       });
     });
+
+    it('returns error if registration fails due to full ressource', function (done) {
+      registrationBody.duration = 3;
+      registrationBody.resourceName = 'junior';
+      registrationBody.desiredRoomTypes = 'single';
+      sinon.stub(RegistrationCommandProcessor.prototype, 'registerParticipant', function () {return e.DID_NOT_REGISTER_PARTICIPANT_FOR_FULL_RESOURCE;});
+      sinon.stub(RegistrationCommandProcessor.prototype, 'registerWaitinglistParticipant', function () {return undefined;});
+
+      registrationService.completeRegistration('memberId', 'sessionId', registrationBody, now, function (err, statusTitle, statusText) {
+        expect(statusTitle).to.be('activities.registration_problem');
+        expect(statusText).to.be('activities.registration_is_full');
+        done(err);
+      });
+    });
+
+    it('returns error if registration fails due to duplicate booking', function (done) {
+      registrationBody.duration = 3;
+      registrationBody.resourceName = 'junior';
+      registrationBody.desiredRoomTypes = 'single';
+      sinon.stub(RegistrationCommandProcessor.prototype, 'registerParticipant', function () {return e.DID_NOT_REGISTER_PARTICIPANT_A_SECOND_TIME;});
+      sinon.stub(RegistrationCommandProcessor.prototype, 'registerWaitinglistParticipant', function () {return undefined;});
+
+      registrationService.completeRegistration('memberId', 'sessionId', registrationBody, now, function (err, statusTitle, statusText) {
+        expect(statusTitle).to.be('activities.registration_problem');
+        expect(statusText).to.be('activities.already_registered');
+        done(err);
+      });
+    });
+
+    it('returns error if waitinglist registration fails due to duplicate booking', function (done) {
+      registrationBody.duration = 3;
+      registrationBody.resourceName = 'junior';
+      registrationBody.desiredRoomTypes = 'single';
+      sinon.stub(RegistrationCommandProcessor.prototype, 'registerParticipant', function () {return undefined;});
+      sinon.stub(RegistrationCommandProcessor.prototype, 'registerWaitinglistParticipant', function () {return e.DID_NOT_REGISTER_WAITINGLIST_PARTICIPANT_A_SECOND_TIME;});
+
+      registrationService.completeRegistration('memberId', 'sessionId', registrationBody, now, function (err, statusTitle, statusText) {
+        expect(statusTitle).to.be('activities.registration_problem');
+        expect(statusText).to.be('activities.already_registered');
+        done(err);
+      });
+    });
+
   });
 
   describe('finishing the registration - normal registration', function () {
