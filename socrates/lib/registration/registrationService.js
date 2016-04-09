@@ -21,8 +21,8 @@ module.exports = {
       if (registrationTuple.desiredRoomTypes.length > 0) {
         waitinglistReservationEvent = registrationCommandProcessor.issueWaitinglistReservation(registrationTuple.desiredRoomTypes, registrationTuple.sessionId, memberIdIfKnown, now);
       }
-      if (registrationTuple.resourceName && registrationTuple.duration) {
-        reservationEvent = registrationCommandProcessor.issueReservation(registrationTuple.resourceName, registrationTuple.duration, registrationTuple.sessionId, memberIdIfKnown, now);
+      if (registrationTuple.roomType && registrationTuple.duration) {
+        reservationEvent = registrationCommandProcessor.issueReservation(registrationTuple.roomType, registrationTuple.duration, registrationTuple.sessionId, memberIdIfKnown, now);
       }
       return eventstoreService.saveCommandProcessor(registrationCommandProcessor, function (err1) {
         if (err1 && err1.message === CONFLICTING_VERSIONS) {
@@ -45,7 +45,7 @@ module.exports = {
     var registrationTuple = {
       sessionId: sessionId,
       activityUrl: body.activityUrl,
-      resourceName: body.resourceName,
+      roomType: body.roomType,
       duration: body.duration && parseInt(body.duration, 10),
       desiredRoomTypes: body.desiredRoomTypes ? body.desiredRoomTypes.split(',') : [] // attention, empty string gets split as well...
     };
@@ -55,8 +55,8 @@ module.exports = {
       if (registrationTuple.desiredRoomTypes.length > 0) {
         waitinglistRegistrationEvent = commandProcessor.registerWaitinglistParticipant(registrationTuple.desiredRoomTypes, registrationTuple.sessionId, memberID, now);
       }
-      if (registrationTuple.resourceName && registrationTuple.duration) {
-        registrationEvent = commandProcessor.registerParticipant(registrationTuple.resourceName, registrationTuple.duration, registrationTuple.sessionId, memberID, now);
+      if (registrationTuple.roomType && registrationTuple.duration) {
+        registrationEvent = commandProcessor.registerParticipant(registrationTuple.roomType, registrationTuple.duration, registrationTuple.sessionId, memberID, now);
       }
       return eventstoreService.saveCommandProcessor(commandProcessor, function (err1) {
         if (err1 && err1.message === CONFLICTING_VERSIONS) {
@@ -71,7 +71,7 @@ module.exports = {
             socratesNotifications.newWaitinglistEntry(memberID, registrationTuple.desiredRoomTypes.map(roomType => roomOptions.waitinglistInformationFor(roomType)));
           }
           if (registrationEvent === eventConstants.PARTICIPANT_WAS_REGISTERED) {
-            socratesNotifications.newParticipant(memberID, roomOptions.informationFor(registrationTuple.resourceName, registrationTuple.duration));
+            socratesNotifications.newParticipant(memberID, roomOptions.informationFor(registrationTuple.roomType, registrationTuple.duration));
           }
           return subscriberstore.getSubscriber(memberID, function (err2, subscriber) {
             if (err2) { return callback(err2); }

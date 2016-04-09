@@ -243,7 +243,7 @@ describe('SoCraTes registration application', function () {
         .expect('location', '/registration/participate', function (err) {
 
           const registrationTuple = startRegistration.firstCall.args[0];
-          expect(registrationTuple.resourceName).to.eql('bed_in_double');
+          expect(registrationTuple.roomType).to.eql('bed_in_double');
           expect(registrationTuple.duration).to.eql(3);
           expect(registrationTuple.desiredRoomTypes).to.eql([]);
           done(err);
@@ -260,7 +260,7 @@ describe('SoCraTes registration application', function () {
         .expect('location', '/registration/participate', function (err) {
 
           const registrationTuple = startRegistration.firstCall.args[0];
-          expect(registrationTuple.resourceName).to.eql(undefined);
+          expect(registrationTuple.roomType).to.eql(undefined);
           expect(registrationTuple.duration).to.eql(undefined);
           expect(registrationTuple.desiredRoomTypes).to.eql(['bed_in_double']);
           done(err);
@@ -277,7 +277,7 @@ describe('SoCraTes registration application', function () {
         .expect('location', '/registration/participate', function (err) {
 
           const registrationTuple = startRegistration.firstCall.args[0];
-          expect(registrationTuple.resourceName).to.eql(undefined);
+          expect(registrationTuple.roomType).to.eql(undefined);
           expect(registrationTuple.duration).to.eql(undefined);
           expect(registrationTuple.desiredRoomTypes).to.eql(['single', 'bed_in_double', 'junior']);
           done(err);
@@ -294,7 +294,7 @@ describe('SoCraTes registration application', function () {
         .expect('location', '/registration/participate', function (err) {
 
           const registrationTuple = startRegistration.firstCall.args[0];
-          expect(registrationTuple.resourceName).to.eql('single');
+          expect(registrationTuple.roomType).to.eql('single');
           expect(registrationTuple.duration).to.eql(3);
           expect(registrationTuple.desiredRoomTypes).to.eql(['bed_in_double', 'junior']);
           done(err);
@@ -311,7 +311,7 @@ describe('SoCraTes registration application', function () {
       appWithSocratesMemberAndFixedSessionId
         .post('/completeRegistration')
         .send('activityUrl=socrates-url')
-        .send('resourceName=single')
+        .send('roomType=single')
         .send('duration=5')
         .send('desiredRoomTypes=')
         .send('homeAddress=At home')
@@ -342,7 +342,7 @@ describe('SoCraTes registration application', function () {
       appWithSocratesMemberAndFixedSessionId
         .post('/completeRegistration')
         .send('activityUrl=socrates-url')
-        .send('resourceName=junior')
+        .send('roomType=junior')
         .send('duration=3')
         .send('desiredRoomTypes=')
         .send('homeAddress=At home')
@@ -371,7 +371,7 @@ describe('SoCraTes registration application', function () {
       appWithSocratesMemberAndFixedSessionId
         .post('/completeRegistration')
         .send('activityUrl=socrates-url')
-        .send('resourceName=junior')
+        .send('roomType=junior')
         .send('duration=3')
         .send('desiredRoomTypes=')
         .send('homeAddress=At home')
@@ -400,7 +400,7 @@ describe('SoCraTes registration application', function () {
       appWithSocratesMemberAndFixedSessionId
         .post('/completeRegistration')
         .send('activityUrl=socrates-url')
-        .send('resourceName=single')
+        .send('roomType=single')
         .send('duration=3')
         .send('desiredRoomTypes=')
         .send('homeAddress=At home')
@@ -429,7 +429,7 @@ describe('SoCraTes registration application', function () {
       appWithSocratesMemberAndFixedSessionId
         .post('/completeRegistration')
         .send('activityUrl=socrates-url')
-        .send('resourceName=single')
+        .send('roomType=single')
         .send('duration=3')
         .send('desiredRoomTypes=')
         .send('homeAddress=At home')
@@ -459,7 +459,7 @@ describe('SoCraTes registration application', function () {
       appWithSocratesMemberAndFixedSessionId
         .post('/completeRegistration')
         .send('activityUrl=socrates-url')
-        .send('resourceName=junior')
+        .send('roomType=junior')
         .send('duration=5')
         .send('desiredRoomTypes=')
         .send('homeAddress=At home')
@@ -493,7 +493,7 @@ describe('SoCraTes registration application', function () {
       appWithSocratesMemberAndFixedSessionId
         .post('/completeRegistration')
         .send('activityUrl=socrates-url')
-        .send('resourceName=')
+        .send('roomType=')
         .send('duration=')
         .send('desiredRoomTypes=single')
         .send('homeAddress=At home')
@@ -523,7 +523,7 @@ describe('SoCraTes registration application', function () {
       appWithSocratesMemberAndFixedSessionId
         .post('/completeRegistration')
         .send('activityUrl=socrates-url')
-        .send('resourceName=')
+        .send('roomType=')
         .send('duration=')
         .send('desiredRoomTypes=single')
         .send('homeAddress=At home')
@@ -553,7 +553,7 @@ describe('SoCraTes registration application', function () {
       appWithSocratesMemberAndFixedSessionId
         .post('/completeRegistration')
         .send('activityUrl=socrates-url')
-        .send('resourceName=')
+        .send('roomType=')
         .send('duration=')
         .send('desiredRoomTypes=junior')
         .send('homeAddress=At home')
@@ -584,7 +584,7 @@ describe('SoCraTes registration application', function () {
       appWithSocratesMemberAndFixedSessionId
         .post('/completeRegistration')
         .send('activityUrl=socrates-url')
-        .send('resourceName=bed_in_double')
+        .send('roomType=bed_in_double')
         .send('duration=2')
         .send('desiredRoomTypes=single,junior')
         .send('homeAddress=At home')

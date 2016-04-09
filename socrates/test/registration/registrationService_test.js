@@ -46,7 +46,7 @@ describe('Registration Service', function () {
   beforeEach(function () {
     registrationBody = {
       activityUrl: 'socrates-url',
-      resourceName: 'single',
+      roomType: 'single',
       duration: 2,
       desiredRoomTypes: '',
       sessionId: 'sessionId'
@@ -94,7 +94,7 @@ describe('Registration Service', function () {
     beforeEach(function () {
       registrationTuple = {
         activityUrl: 'socrates-url',
-        resourceName: 'single',
+        roomType: 'single',
         duration: 2,
         desiredRoomTypes: [],
         sessionId: 'sessionId'
@@ -135,7 +135,7 @@ describe('Registration Service', function () {
 
     it('adds the registrant to the waitinglist if the registration data says so', function (done) {
       registrationTuple.duration = 'waitinglist';
-      registrationTuple.resourceName = undefined;
+      registrationTuple.roomType = undefined;
       registrationTuple.desiredRoomTypes = ['single'];
 
       registrationService.startRegistration(registrationTuple, 'memberId', now, function (err) {
@@ -175,7 +175,7 @@ describe('Registration Service', function () {
 
     it('adds the registrant to the resource if he had a valid session entry', function (done) {
       eventStore.state.registrationEvents = [
-        events.reservationWasIssued(registrationBody.resourceName, registrationBody.duration, registrationBody.sessionId, 'memberId', aShortTimeAgo)
+        events.reservationWasIssued(registrationBody.roomType, registrationBody.duration, registrationBody.sessionId, 'memberId', aShortTimeAgo)
       ];
 
       registrationService.completeRegistration('memberId', 'sessionId', registrationBody, now, function (err, statusTitle, statusText) {
@@ -191,8 +191,8 @@ describe('Registration Service', function () {
 
     it('adds the registrant to the resource if he has a waitinglist reservation and has a valid session entry, removing him from the waitinglist', function (done) {
       eventStore.state.registrationEvents = [
-        events.waitinglistReservationWasIssued(registrationBody.resourceName, registrationBody.sessionId, 'memberId', aShortTimeAgo),
-        events.reservationWasIssued(registrationBody.resourceName, registrationBody.duration, registrationBody.sessionId, 'memberId', aShortTimeAgo)
+        events.waitinglistReservationWasIssued(registrationBody.roomType, registrationBody.sessionId, 'memberId', aShortTimeAgo),
+        events.reservationWasIssued(registrationBody.roomType, registrationBody.duration, registrationBody.sessionId, 'memberId', aShortTimeAgo)
       ];
 
       registrationService.completeRegistration('memberId', 'sessionId', registrationBody, now, function (err, statusTitle, statusText) {
@@ -209,8 +209,8 @@ describe('Registration Service', function () {
 
     it('adds the registrant to the resource if he is on the waitinglist and has a valid session entry, removing him from the waitinglist', function (done) {
       eventStore.state.registrationEvents = [
-        events.waitinglistParticipantWasRegistered(registrationBody.resourceName, registrationBody.sessionId, 'memberId', aShortTimeAgo),
-        events.reservationWasIssued(registrationBody.resourceName, registrationBody.duration, registrationBody.sessionId, 'memberId', aShortTimeAgo)
+        events.waitinglistParticipantWasRegistered(registrationBody.roomType, registrationBody.sessionId, 'memberId', aShortTimeAgo),
+        events.reservationWasIssued(registrationBody.roomType, registrationBody.duration, registrationBody.sessionId, 'memberId', aShortTimeAgo)
       ];
 
       registrationService.completeRegistration('memberId', 'sessionId', registrationBody, now, function (err, statusTitle, statusText) {
@@ -240,7 +240,7 @@ describe('Registration Service', function () {
 
     it('adds the registrant to the resource if the sessionId entry is already expired, if there is enough space', function (done) {
       eventStore.state.registrationEvents = [
-        events.reservationWasIssued(registrationBody.resourceName, registrationBody.duration, registrationBody.sessionId, 'memberId', aLongTimeAgo)];
+        events.reservationWasIssued(registrationBody.roomType, registrationBody.duration, registrationBody.sessionId, 'memberId', aLongTimeAgo)];
 
       registrationService.completeRegistration('memberId', 'sessionId', registrationBody, now, function (err, statusTitle, statusText) {
 
@@ -256,7 +256,7 @@ describe('Registration Service', function () {
 
     it('does not add the registrant to the resource if he is already registered', function (done) {
       eventStore.state.registrationEvents = [
-        events.participantWasRegistered(registrationBody.resourceName, registrationBody.duration, registrationBody.sessionId, 'memberId', aShortTimeAgo)];
+        events.participantWasRegistered(registrationBody.roomType, registrationBody.duration, registrationBody.sessionId, 'memberId', aShortTimeAgo)];
 
       registrationService.completeRegistration('memberId', 'sessionId', registrationBody, now, function (err, statusTitle, statusText) {
 
@@ -274,7 +274,7 @@ describe('Registration Service', function () {
   describe('finishing the registration - waitinglist registration', function () {
 
     it('adds the registrant to the waitinglist if he had a valid session entry', function (done) {
-      registrationBody.resourceName = '';
+      registrationBody.roomType = '';
       registrationBody.duration = '';
       registrationBody.desiredRoomTypes = 'single';
 
@@ -293,7 +293,7 @@ describe('Registration Service', function () {
     });
 
     it('adds the registrant to the waitinglist if there is no reservation for the session id but there is enough space in the resource', function (done) {
-      registrationBody.resourceName = '';
+      registrationBody.roomType = '';
       registrationBody.duration = '';
       registrationBody.desiredRoomTypes = 'single';
 
@@ -309,7 +309,7 @@ describe('Registration Service', function () {
     });
 
     it('adds the registrant to the waitinglist if the reservation is already expired but there is enough space in the resource', function (done) {
-      registrationBody.resourceName = '';
+      registrationBody.roomType = '';
       registrationBody.duration = '';
       registrationBody.desiredRoomTypes = 'single';
 
@@ -328,7 +328,7 @@ describe('Registration Service', function () {
     });
 
     it('does not add the registrant to the waitinglist if he is already registered - but does not delete the waitinglist reservation either', function (done) {
-      registrationBody.resourceName = '';
+      registrationBody.roomType = '';
       registrationBody.duration = '';
       registrationBody.desiredRoomTypes = 'single';
 
