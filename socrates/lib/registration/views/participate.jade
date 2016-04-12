@@ -11,15 +11,17 @@ block scripts
 block title 
   | Registration - SoCraTes
 block content
+  -var asParticipant = registrationTuple.roomType && registrationTuple.duration
   .page-header
-    if(registrationTuple.duration === 'waitinglist')
-      h1 Waitinglist Registration<br>
-    else
+    if(asParticipant)
       h1 Registration #{' '}
         small Personal Information
+    else
+      h1 Waitinglist Registration<br>
     if (!!expiresAt)
+      -var spotWhere = asParticipant ? 'at SoCraTes' : 'on the SoCraTes waitinglist'
       p.
-        You now have a reserved spot at SoCraTes. This reservation is held for #{expiresIn} minutes
+        You now have a reserved spot #{spotWhere}. This reservation is held for #{expiresIn} minutes
         (i.e. until #{expiresAt.locale('en-gb').format('LT')}). If you do not fill in and submit this form until then,
         you will have to restart the registration from the previous page.
       
@@ -28,12 +30,12 @@ block content
       .col-sm-12
         +csrf
         +hidden('activityUrl', registrationTuple.activityUrl)
-        +hidden('resourceName', registrationTuple.resourceName)
-        +hidden('desiredRoomTypes', registrationTuple.desiredRoomTypes)
+        +hidden('roomType', registrationTuple.roomType)
         +hidden('duration', registrationTuple.duration)
+        +hidden('desiredRoomTypes', registrationTuple.desiredRoomTypes)
         fieldset
           +memberinfoform(member, subscriber, 'members.edit_registration')
-          +userinfoform(addon, participation, registrationTuple.resourceName && registrationTuple.resourceName.indexOf('bed_in_') > -1)
+          +userinfoform(addon, participation, registrationTuple.roomType && registrationTuple.roomType.indexOf('bed_in_') > -1)
     
     .row(style='margin-bottom: 10px')
       .col-sm-12
@@ -41,7 +43,7 @@ block content
           | not tolerate harassment of conference participants in any form. With your registration, you accept this and 
           a(href='/values.html', target='_blank') our code of conduct
           | #{' '} in general.
-        if(registrationTuple.duration === 'waitinglist')
-          +memberSubmitButtons('Put me on the waitinglist!')
-        else
+        if(registrationTuple.roomType && registrationTuple.duration)
           +memberSubmitButtons('I really do want to participate!')
+        else
+          +memberSubmitButtons('Put me on the waitinglist!')

@@ -2,6 +2,7 @@
 
 var async = require('async');
 var _ = require('lodash');
+var moment = require('moment-timezone');
 
 var beans = require('simple-configure').get('beans');
 var misc = beans.get('misc');
@@ -105,17 +106,17 @@ app.get('/checkurl', function (req, res) {
 
 // for management tables:
 
-app.get('/fromWaitinglistToParticipant/:resourceName/:nickname', function (req, res) {
+app.get('/fromWaitinglistToParticipant/:roomType/:nickname', function (req, res) {
   var duration = 2;
 
-  socratesActivitiesService.fromWaitinglistToParticipant(req.params.nickname, req.params.resourceName, duration, function (err) {
+  socratesActivitiesService.fromWaitinglistToParticipant(req.params.nickname, req.params.roomType, duration, moment.tz(), function (err) {
     if (err) { return res.send('Error: ' + err); }
     res.send('-> Teilnehmer');
   });
 });
 
 app.post('/newDuration', function (req, res, next) {
-  socratesActivitiesService.newDurationFor(req.body.nickname, req.body.resourceName, req.body.duration, function (err) {
+  socratesActivitiesService.newDurationFor(req.body.nickname, req.body.roomType, req.body.duration, function (err) {
     if (err) {return next(err); }
     res.redirect('/registration/management');
   });
@@ -136,28 +137,28 @@ app.post('/newWaitinglist', function (req, res, next) {
 });
 
 app.post('/newParticipantPair', function (req, res, next) {
-  socratesActivitiesService.addParticipantPairFor(req.body.resourceName, req.body.participant1, req.body.participant2, function (err) {
+  socratesActivitiesService.addParticipantPairFor(req.body.roomType, req.body.participant1, req.body.participant2, function (err) {
     if (err) { return next(err); }
     res.redirect('/registration/management');
   });
 });
 
 app.post('/removeParticipantPair', function (req, res, next) {
-  socratesActivitiesService.removeParticipantPairFor(req.body.resourceName, req.body.participant1, req.body.participant2, function (err) {
+  socratesActivitiesService.removeParticipantPairFor(req.body.roomType, req.body.participant1, req.body.participant2, function (err) {
     if (err) { return next(err); }
     res.redirect('/registration/management');
   });
 });
 
 app.post('/removeParticipant', function (req, res, next) {
-  socratesActivitiesService.removeParticipantFor(req.body.resourceName, req.body.participant, function (err) {
+  socratesActivitiesService.removeParticipantFor(req.body.roomType, req.body.participant, function (err) {
     if (err) { return next(err); }
     res.redirect('/registration/management');
   });
 });
 
 app.post('/removeWaitinglistMember', function (req, res, next) {
-  socratesActivitiesService.removeWaitinglistMemberFor(req.body.resourceName, req.body.waitinglistMember, function (err) {
+  socratesActivitiesService.removeWaitinglistMemberFor(req.body.roomType, req.body.waitinglistMember, function (err) {
     if (err) { return next(err); }
     res.redirect('/registration/management');
   });

@@ -25,7 +25,7 @@ function saveCommandProcessor(args) {
 
 module.exports = {
 
-  fromWaitinglistToParticipant: function (nickname, roomType, duration, callback) {
+  fromWaitinglistToParticipant: function (nickname, roomType, duration, now, callback) {
     var self = this;
 
     async.parallel(
@@ -36,12 +36,12 @@ module.exports = {
       function (err, results) {
         if (err || !results.registrationCommandProcessor || !results.member) { return callback(err); }
 
-        results.registrationCommandProcessor.fromWaitinglistToParticipant(roomType, results.member.id(), duration);
+        results.registrationCommandProcessor.fromWaitinglistToParticipant(roomType, results.member.id(), duration, now);
 
         saveCommandProcessor({
           commandProcessor: results.registrationCommandProcessor,
           callback: callback,
-          repeat: _.partial(self.fromWaitinglistToParticipant, nickname, roomType, duration),
+          repeat: _.partial(self.fromWaitinglistToParticipant, nickname, roomType, duration, now),
           handleSuccess: function () {
             var bookingdetails = roomOptions.informationFor(roomType, duration);
             bookingdetails.fromWaitinglist = true;
@@ -52,7 +52,7 @@ module.exports = {
     );
   },
 
-  newDurationFor: function (nickname, resourceName, duration, callback) {
+  newDurationFor: function (nickname, roomType, duration, callback) {
     var self = this;
 
     async.parallel(
@@ -68,9 +68,9 @@ module.exports = {
         saveCommandProcessor({
           commandProcessor: results.registrationCommandProcessor,
           callback: callback,
-          repeat: _.partial(self.newDurationFor, nickname, resourceName, duration),
+          repeat: _.partial(self.newDurationFor, nickname, roomType, duration),
           handleSuccess: function () {
-            notifications.changedDuration(results.member, roomOptions.informationFor(resourceName, duration));
+            notifications.changedDuration(results.member, roomOptions.informationFor(roomType, duration));
           }
         });
       }
@@ -88,14 +88,14 @@ module.exports = {
       function (err, results) {
         if (err || !results.registrationCommandProcessor || !results.member) { return callback(err); }
 
-        results.registrationCommandProcessor.moveParticipantToNewRoomType(results.member.id(), newRoomType);
+        var event = results.registrationCommandProcessor.moveParticipantToNewRoomType(results.member.id(), newRoomType);
 
         saveCommandProcessor({
           commandProcessor: results.registrationCommandProcessor,
           callback: callback,
           repeat: _.partial(self.newRoomTypeFor, nickname, newRoomType),
           handleSuccess: function () {
-            notifications.changedResource(results.member, roomOptions.informationFor(newRoomType, undefined)); // TODO: must be duration!
+            notifications.changedResource(results.member, roomOptions.informationFor(newRoomType, event.duration)); // this is a bit hacky, we should better go through a read model
           }
         });
       }

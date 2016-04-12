@@ -39,7 +39,7 @@ function createConfiguration() {
     softwerkskammerURL: 'http://localhost:17124',
     socratesURL: 'http://localhost:17224',
     jwtSecret: 'my_very_secret',
-    reservedActivityURLs: '^gdcr$|^upcoming$|^past$|^ical$|^eventsForSidebar$|^new$|^newLike$|^edit$|^submit$|^checkurl$|^subscribe$|^unsubscribe$|^addToWaitinglist$|^removeFromWaitinglist$|\\+'
+    reservedActivityURLs: '^socrates-|^gdcr$|^upcoming$|^past$|^ical$|^eventsForSidebar$|^new$|^newLike$|^edit$|^submit$|^checkurl$|^subscribe$|^unsubscribe$|^addToWaitinglist$|^removeFromWaitinglist$|\\+'
 
 });
 

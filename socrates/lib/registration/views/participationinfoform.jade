@@ -18,18 +18,29 @@ mixin participationinfoform(roomOptions, registration)
         li meals, snacks and coffee
       p The final prices depend on our sponsors and may be slightly lower than announced here.
 
+      h3 Payment and Invoice
+      p.
+        You will pay the full amount (as given below) to the venue on checkout, and you will receive an invoice from the venue.
+
     .col-md-6
+      h3 Room Choice
+      p You can select a room and/or as many waitinglists as you like.
+      ul
+        li If you select more than one waitinglist (and no rooms), this means you are happy with any of the rooms you selected.
+        | We will move you to one of the rooms if they become available.
+        li If you select a room and one or more waitinglists, this indicates that you would prefer any of the waitinglist rooms to the one you actually selected.
+        | We will look into moving you to one of the waitinglist rooms if they become available. This will probably only happen closer to the date.
+      p Generally speaking: The more waitinglist options you select, the better your chances are to get a spot or to improve your selected room.
+      p Please be aware that we will move you to the next available room without checking back with you first. So please select only those waitinglists that you are happy with!
+
       h3 Deposit
       p.
         This year we decided against collecting a deposit. We trust that you will notify us if you cannot participate.
         If you do not notify us until 24th August, you will be charged for the first night.
 
-      h3 Payment and Invoice
-      p.
-        You will pay the full amount (as given below) to the venue on checkout, and you will receive an invoice from the venue.
-
   .row
     .col-sm-12
+
       -var disabled = (!registration.isPossible || registration.alreadyRegistered || registration.alreadyOnWaitinglist)
       form#participationinfoform.relaxed(action='/registration/startRegistration', method='post')
         fieldset(disabled=disabled class=(disabled ? 'disabled-text' : ''))
@@ -70,11 +81,10 @@ mixin participationinfoform(roomOptions, registration)
                   else
                     tr
                       th #{option.name}
-                        if option.displayWaitinglistCheckbox
-                          .radio-inline.pull-right
-                            label
-                              input(type='checkbox', name='nightsOptions', value=option.id + ',waitinglist')
-                              |  Waitinglist
+                        .radio-inline.pull-right
+                          label
+                            input(type='checkbox', name='nightsOptions', value=option.id + ',waitinglist')
+                            |  Waitinglist
                       td.text-center.disabled-text
                         span(style='margin-left:20px;') #{option.two}&nbsp;€
                       td.text-center.disabled-text
@@ -108,6 +118,7 @@ mixin participationinfoform(roomOptions, registration)
         script.
           $(function () {
             var selectedOptions = '#{registration.selectedOptions}'.split(';');
+            console.log(selectedOptions)
             selectedOptions.forEach(function (option) {
               var selectedInput = $('input[value="' + option + '"]')
               selectedInput.attr('checked', 'checked');

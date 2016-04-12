@@ -4,6 +4,7 @@
 var sinon = require('sinon').sandbox.create();
 var expect = require('must-dist');
 var _ = require('lodash');
+var moment = require('moment-timezone');
 
 var beans = require('../../testutil/configureForTest').get('beans');
 
@@ -64,7 +65,7 @@ describe('SoCraTes Wiki Service', function () {
 
   it('loads the participants and their participation information for a year (on or after 2016)', function (done) {
     eventStore.state.registrationEvents = [
-      events.participantWasRegistered('single', 2, 'session-id', 'memberId')
+      events.participantWasRegistered('single', 2, 'session-id', 'memberId', moment.tz())
     ];
 
     subscriber = new Subscriber({id: 'memberId'});

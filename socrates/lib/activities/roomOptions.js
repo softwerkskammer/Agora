@@ -20,6 +20,13 @@ module.exports = {
 
   allRoomOptions: function (registrationReadModel, memberId, isRegistrationOpen) {
     function option(room) {
+
+      const registrationNotOpen = !isRegistrationOpen;
+      const alreadyRegistered = registrationReadModel.isAlreadyRegisteredFor(memberId, room.id);
+      const resourceNotFull = !registrationReadModel.isFull(room.id);
+      const notOnWaitinglist = !registrationReadModel.isAlreadyOnWaitinglistFor(memberId, room.id);
+      const displayRegistrationCheckboxes =
+        registrationNotOpen || ((alreadyRegistered || resourceNotFull) && notOnWaitinglist);
       return {
         id: room.id,
         name: room.name,
@@ -27,8 +34,7 @@ module.exports = {
         three: 3 * room.price + 2 * day + thursdayEvening,
         threePlus: 3 * room.price + 3 * day + thursdayEvening,
         four: 4 * room.price + 3 * day + thursdayEvening,
-        displayRegistrationCheckboxes: (registrationReadModel.isAlreadyRegistered(memberId) || !isRegistrationOpen || !registrationReadModel.isFull(room.id)),
-        displayWaitinglistCheckbox: true // TODO remove altogether
+        displayRegistrationCheckboxes: displayRegistrationCheckboxes
       };
     }
 
