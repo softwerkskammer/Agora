@@ -20,7 +20,7 @@
   "license": "(MIT OR Apache-2.0)",
   "main": "",
   "engines": {
-    "node": ">4.0"
+    "node": ">=4.0"
   },
   "dependencies": {
     "async": "1.5.2",
