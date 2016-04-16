@@ -12,90 +12,93 @@ var eventConstants = beans.get('eventConstants');
 
 module.exports = {
 
-  startRegistration: function (registrationTuple, callback) {
+  startRegistration: function (registrationTuple, memberIdIfKnown, now, callback) {
     var self = this;
     var reservationEvent;
+    var waitinglistReservationEvent;
     eventstoreService.getRegistrationCommandProcessor(registrationTuple.activityUrl, function (err, registrationCommandProcessor) {
       if (err || !registrationCommandProcessor) { return callback(err, 'message.title.problem', 'message.content.activities.does_not_exist'); }
-      if (registrationTuple.duration === 'waitinglist') {
-        reservationEvent = registrationCommandProcessor.issueWaitinglistReservation(registrationTuple.desiredRoomTypes, registrationTuple.sessionID);
-      } else {
-        reservationEvent = registrationCommandProcessor.issueReservation(registrationTuple.resourceName, registrationTuple.duration, registrationTuple.sessionID);
+      if (registrationTuple.desiredRoomTypes.length > 0) {
+        waitinglistReservationEvent = registrationCommandProcessor.issueWaitinglistReservation(registrationTuple.desiredRoomTypes, registrationTuple.sessionId, memberIdIfKnown, now);
+      }
+      if (registrationTuple.roomType && registrationTuple.duration) {
+        reservationEvent = registrationCommandProcessor.issueReservation(registrationTuple.roomType, registrationTuple.duration, registrationTuple.sessionId, memberIdIfKnown, now);
       }
       return eventstoreService.saveCommandProcessor(registrationCommandProcessor, function (err1) {
         if (err1 && err1.message === CONFLICTING_VERSIONS) {
           // we try again because of a racing condition during save:
-          return self.startRegistration(registrationTuple, callback);
+          return self.startRegistration(registrationTuple, memberIdIfKnown, now, callback);
         }
         if (err1) { return callback(err1); }
-        if (reservationEvent === eventConstants.RESERVATION_WAS_ISSUED || reservationEvent === eventConstants.WAITINGLIST_RESERVATION_WAS_ISSUED) {
-          return callback(null);
+        if (reservationEvent === eventConstants.DID_NOT_ISSUE_RESERVATION_FOR_FULL_RESOURCE) {
+          return callback(null, 'activities.registration_problem', 'activities.registration_is_full');
         }
-        return callback(null, 'activities.registration_not_now', 'activities.registration_not_possible');
+        if (reservationEvent === eventConstants.RESERVATION_WAS_ISSUED
+          || reservationEvent === eventConstants.DID_NOT_ISSUE_RESERVATION_FOR_ALREADY_RESERVED_SESSION
+          || waitinglistReservationEvent === eventConstants.WAITINGLIST_RESERVATION_WAS_ISSUED
+          || waitinglistReservationEvent === eventConstants.DID_NOT_ISSUE_WAITINGLIST_RESERVATION_FOR_ALREADY_RESERVED_SESSION
+        ) {
+          return callback(null); // let the user continue normally even in case he already has a reservation
+        }
+        // for any surprises that we might encounter
+        return callback(null, 'activities.registration_problem', 'activities.registration_not_possible');
       });
     });
   },
 
-  completeRegistration: function (memberID, sessionID, body, callback) {
+  completeRegistration: function (memberID, sessionId, body, now, callback) {
     var self = this;
     var registrationEvent;
+    var waitinglistRegistrationEvent;
     var registrationTuple = {
-      sessionID: sessionID,
+      sessionId: sessionId,
       activityUrl: body.activityUrl,
-      resourceName: body.resourceName,
-      desiredRoomTypes: body.desiredRoomTypes && body.desiredRoomTypes.split(','),
-      duration: body.duration
+      roomType: body.roomType,
+      duration: body.duration && parseInt(body.duration, 10),
+      desiredRoomTypes: body.desiredRoomTypes ? body.desiredRoomTypes.split(',') : [] // attention, empty string gets split as well...
     };
     eventstoreService.getRegistrationCommandProcessor(registrationTuple.activityUrl, function (err, commandProcessor) {
       if (err || !commandProcessor) { return callback(err); }
 
-      if (registrationTuple.duration === 'waitinglist') {
-        registrationEvent = commandProcessor.registerWaitinglistParticipant(registrationTuple.desiredRoomTypes, registrationTuple.sessionID, memberID);
-      } else {
-        registrationEvent = commandProcessor.registerParticipant(registrationTuple.resourceName, registrationTuple.duration, registrationTuple.sessionID, memberID);
+      if (registrationTuple.desiredRoomTypes.length > 0) {
+        waitinglistRegistrationEvent = commandProcessor.registerWaitinglistParticipant(registrationTuple.desiredRoomTypes, registrationTuple.sessionId, memberID, now);
       }
-      return eventstoreService.saveCommandProcessor(commandProcessor, function (err1) {
-        if (err1 && err1.message === CONFLICTING_VERSIONS) {
-          // we try again because of a racing condition during save:
-          return self.completeRegistration(memberID, sessionID, body, callback);
-        }
-        if (err1) { return callback(err1); }
+      if (registrationTuple.roomType && registrationTuple.duration) {
+        registrationEvent = commandProcessor.registerParticipant(registrationTuple.roomType, registrationTuple.duration, registrationTuple.sessionId, memberID, now);
+      }
+      return subscriberstore.getSubscriber(memberID, function (err2, subscriber) {
+        if (err2) { return callback(err2); }
+        subscriber.fillFromUI(body);
+        subscriberstore.saveSubscriber(subscriber, function () {
+          return eventstoreService.saveCommandProcessor(commandProcessor, function (err1) {
+            if (err1 && err1.message === CONFLICTING_VERSIONS) {
+              // we try again because of a racing condition during save:
+              return self.completeRegistration(memberID, sessionId, body, now, callback);
+            }
+            if (err1) { return callback(err1); }
 
-        // error and success handling as indicated by the event:
-        if (registrationEvent === eventConstants.PARTICIPANT_WAS_REGISTERED || registrationEvent === eventConstants.WAITINGLIST_PARTICIPANT_WAS_REGISTERED) {
-          if (registrationTuple.duration === 'waitinglist') {
-            socratesNotifications.newWaitinglistEntry(memberID, registrationTuple.desiredRoomTypes.map(roomType => roomOptions.waitinglistInformationFor(roomType)));
-          } else {
-            socratesNotifications.newParticipant(memberID, roomOptions.informationFor(registrationTuple.resourceName, registrationTuple.duration));
-          }
-          return subscriberstore.getSubscriber(memberID, function (err2, subscriber) {
-            if (err2) { return callback(err2); }
-            subscriber.fillFromUI(body);
-            subscriberstore.saveSubscriber(subscriber, callback);
+            // error and success handling as indicated by the event:
+            if (registrationEvent === eventConstants.PARTICIPANT_WAS_REGISTERED || waitinglistRegistrationEvent === eventConstants.WAITINGLIST_PARTICIPANT_WAS_REGISTERED) {
+              if (waitinglistRegistrationEvent === eventConstants.WAITINGLIST_PARTICIPANT_WAS_REGISTERED) {
+                socratesNotifications.newWaitinglistEntry(memberID, registrationTuple.desiredRoomTypes.map(roomType => roomOptions.waitinglistInformationFor(roomType)));
+              }
+              if (registrationEvent === eventConstants.PARTICIPANT_WAS_REGISTERED) {
+                socratesNotifications.newParticipant(memberID, roomOptions.informationFor(registrationTuple.roomType, registrationTuple.duration));
+              }
+              return callback(null);
+            }
+
+            if (registrationEvent === eventConstants.DID_NOT_REGISTER_PARTICIPANT_FOR_FULL_RESOURCE) {
+              // if the resource was full, this can only be due to the registration having timed out:
+              return callback(null, 'activities.registration_problem', 'activities.registration_timed_out');
+            }
+            if (registrationEvent === eventConstants.DID_NOT_REGISTER_PARTICIPANT_A_SECOND_TIME
+              || waitinglistRegistrationEvent === eventConstants.DID_NOT_REGISTER_WAITINGLIST_PARTICIPANT_A_SECOND_TIME) {
+              return callback(null, 'activities.registration_problem', 'activities.already_registered');
+            }
+            callback(null, 'activities.registration_problem', 'activities.registration_not_possible');
           });
-        } else if (registrationEvent === eventConstants.DID_NOT_REGISTER_PARTICIPANT_FOR_FULL_RESOURCE) {
-          // if the resource was full, this can only be due to the registration having timed out:
-          var message = registrationTuple.duration === 'waitinglist' ? 'activities.waitinglist_registration_timed_out' : 'activities.registration_timed_out';
-          return callback(null, 'message.title.problem', message);
-          /*
-          return subscriberstore.getSubscriber(memberID, function (err2, subscriber) {
-            if (err2) { return callback(err2); }
-            subscriber.fillFromUI(body);
-            subscriberstore.saveSubscriber(subscriber, callback);
-          });
-          */
-        } else if (registrationEvent === eventConstants.DID_NOT_REGISTER_PARTICIPANT_A_SECOND_TIME) {
-          return callback(null, 'message.title.problem', 'activities.already_registered');
-          /*
-          return subscriberstore.getSubscriber(memberID, function (err2, subscriber) {
-            if (err2) { return callback(err2); }
-            subscriber.fillFromUI(body);
-            subscriberstore.saveSubscriber(subscriber, callback);
-          });
-          */
-        } else {
-          callback(null, 'activities.registration_not_now', 'activities.registration_not_possible');
-        }
+        });
       });
     });
   }

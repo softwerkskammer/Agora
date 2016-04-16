@@ -4,8 +4,8 @@ include ../../../../softwerkskammer/views/format-mixin
 include ../../../../softwerkskammer/views/formComponents
 include ../../../../softwerkskammer/views/dataTables-mixin
 
-mixin individualRoom(resourceName)
-  -var participants = participantsOf[resourceName]
+mixin individualRoom(roomType)
+  -var participants = participantsOf[roomType]
   .panel
     table.table.table-condensed.table-hover.table-striped.unsortedtable
       thead
@@ -22,7 +22,7 @@ mixin individualRoom(resourceName)
             td #{duration > 2 ? name : ""}
             td #{duration > 4 ? name : ""}
 
-mixin sharedRoom(resourceName)
+mixin sharedRoom(roomType)
   .panel
     table.table.table-condensed.table-hover.table-striped.unsortedtable
       thead
@@ -38,7 +38,7 @@ mixin sharedRoom(resourceName)
           th 1. Teilnehmer
           th 2. Teilnehmer
       tbody
-        for pair in rooms[resourceName].roomPairs
+        for pair in rooms[roomType].roomPairs
           -var name1 = pair.participant1.displayName()
           -var name2 = pair.participant2.displayName()
           -var duration1 = registrationReadModel.durationFor(pair.participant1.id())
@@ -50,7 +50,7 @@ mixin sharedRoom(resourceName)
             td #{duration2 > 2 ? name2 : ""}
             td #{duration1 > 4 ? name1 : ""}
             td #{duration2 > 4 ? name2 : ""}
-        for participant in rooms[resourceName].unpairedParticipants
+        for participant in rooms[roomType].unpairedParticipants
           -var name = participant.displayName()
           -var duration = registrationReadModel.durationFor(participant.id())
           tr
@@ -67,11 +67,11 @@ mixin roomCountLine(firstColumn, thursdayToSaturday, saturdayToSunday, sundayToM
   td #{saturdayToSunday}
   td #{sundayToMonday}
 
-mixin roomCountFor(firstColumn, resourceName, totalRoomCount)
+mixin roomCountFor(firstColumn, roomType, totalRoomCount)
   -var thursdayToSaturday = 0
   -var saturdayToSunday = 0
   -var sundayToMonday = 0
-  -var participants = participantsOf[resourceName]
+  -var participants = participantsOf[roomType]
 
   for member in participants
     -var duration = registrationReadModel.durationFor(member.id())
@@ -166,8 +166,8 @@ block content
               tbody
                 -var fridayAndSaturday = 0
                 -var sunday = 0
-                for resourceName in ['single', 'bed_in_double', 'bed_in_junior', 'junior']
-                  -var participants = participantsOf[resourceName]
+                for roomType in ['single', 'bed_in_double', 'bed_in_junior', 'junior']
+                  -var participants = participantsOf[roomType]
                   for member in participants
                     -var duration = registrationReadModel.durationFor(member.id())
                     -fridayAndSaturday = fridayAndSaturday + 1

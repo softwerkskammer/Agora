@@ -1,5 +1,6 @@
 'use strict';
 
+var moment = require('moment-timezone');
 var expect = require('must-dist');
 
 var beans = require('../../testutil/configureForTest').get('beans');
@@ -8,6 +9,8 @@ var GlobalEventStore = beans.get('GlobalEventStore');
 var RegistrationReadModel = beans.get('RegistrationReadModel');
 
 var managementService = beans.get('managementService');
+
+var aLongTimeAgo = moment.tz().subtract(40, 'minutes');
 
 describe('Management Service', function () {
 
@@ -23,20 +26,20 @@ describe('Management Service', function () {
 
     it('counts each value', function () {
       eventStore.state.registrationEvents = [
-        events.participantWasRegistered('single', 2, 'session-id', 'member-id1'),
-        events.participantWasRegistered('single', 2, 'session-id', 'member-id2'),
-        events.participantWasRegistered('single', 4, 'session-id', 'member-id3'),
-        events.participantWasRegistered('single', 3, 'session-id', 'member-id4'),
-        events.participantWasRegistered('single', 5, 'session-id', 'member-id5'),
-        events.participantWasRegistered('single', 2, 'session-id', 'member-id6'),
-        events.participantWasRegistered('single', 3, 'session-id', 'member-id7'),
-        events.participantWasRegistered('junior', 2, 'session-id', 'member-id8'),
-        events.participantWasRegistered('junior', 2, 'session-id', 'member-id9'),
-        events.participantWasRegistered('junior', 4, 'session-id', 'member-id10'),
-        events.participantWasRegistered('junior', 3, 'session-id', 'member-id11'),
-        events.participantWasRegistered('junior', 5, 'session-id', 'member-id12'),
-        events.participantWasRegistered('junior', 2, 'session-id', 'member-id13'),
-        events.participantWasRegistered('junior', 3, 'session-id', 'member-id14')
+        events.participantWasRegistered('single', 2, 'session-id', 'member-id1', aLongTimeAgo),
+        events.participantWasRegistered('single', 2, 'session-id', 'member-id2', aLongTimeAgo),
+        events.participantWasRegistered('single', 4, 'session-id', 'member-id3', aLongTimeAgo),
+        events.participantWasRegistered('single', 3, 'session-id', 'member-id4', aLongTimeAgo),
+        events.participantWasRegistered('single', 5, 'session-id', 'member-id5', aLongTimeAgo),
+        events.participantWasRegistered('single', 2, 'session-id', 'member-id6', aLongTimeAgo),
+        events.participantWasRegistered('single', 3, 'session-id', 'member-id7', aLongTimeAgo),
+        events.participantWasRegistered('junior', 2, 'session-id', 'member-id8', aLongTimeAgo),
+        events.participantWasRegistered('junior', 2, 'session-id', 'member-id9', aLongTimeAgo),
+        events.participantWasRegistered('junior', 4, 'session-id', 'member-id10', aLongTimeAgo),
+        events.participantWasRegistered('junior', 3, 'session-id', 'member-id11', aLongTimeAgo),
+        events.participantWasRegistered('junior', 5, 'session-id', 'member-id12', aLongTimeAgo),
+        events.participantWasRegistered('junior', 2, 'session-id', 'member-id13', aLongTimeAgo),
+        events.participantWasRegistered('junior', 3, 'session-id', 'member-id14', aLongTimeAgo)
       ];
 
       var durations = managementService.durations(readModel);
@@ -50,12 +53,12 @@ describe('Management Service', function () {
 
     it('counts only durations that are present', function () {
       eventStore.state.registrationEvents = [
-        events.participantWasRegistered('single', 2, 'session-id', 'member-id1'),
-        events.participantWasRegistered('single', 2, 'session-id', 'member-id2'),
-        events.participantWasRegistered('single', 5, 'session-id', 'member-id3'),
-        events.participantWasRegistered('junior', 2, 'session-id', 'member-id4'),
-        events.participantWasRegistered('junior', 2, 'session-id', 'member-id5'),
-        events.participantWasRegistered('junior', 4, 'session-id', 'member-id6')
+        events.participantWasRegistered('single', 2, 'session-id', 'member-id1', aLongTimeAgo),
+        events.participantWasRegistered('single', 2, 'session-id', 'member-id2', aLongTimeAgo),
+        events.participantWasRegistered('single', 5, 'session-id', 'member-id3', aLongTimeAgo),
+        events.participantWasRegistered('junior', 2, 'session-id', 'member-id4', aLongTimeAgo),
+        events.participantWasRegistered('junior', 2, 'session-id', 'member-id5', aLongTimeAgo),
+        events.participantWasRegistered('junior', 4, 'session-id', 'member-id6', aLongTimeAgo)
       ];
 
       var durations = managementService.durations(readModel);

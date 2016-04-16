@@ -20,13 +20,14 @@ function RegistrationReadModel(eventStore) {
   this._waitinglistParticipantsByMemberId = undefined;
 }
 
+var earliestValidRegistrationTime = moment.tz().subtract(socratesConstants.registrationPeriodinMinutes, 'minutes');
+
 var projectReservationsBySessionId = function (reservationsBySessionId, event) {
-  var earliestValidRegistrationTime = moment.tz().subtract(socratesConstants.registrationPeriodinMinutes, 'minutes');
-  if (event.event === e.RESERVATION_WAS_ISSUED && moment(event.timestamp).isAfter(earliestValidRegistrationTime)) {
-    reservationsBySessionId[event.sessionID] = event;
+  if (event.event === e.RESERVATION_WAS_ISSUED && moment(event.joinedSoCraTes).isAfter(earliestValidRegistrationTime)) {
+    reservationsBySessionId[event.sessionId] = event;
   }
   if (event.event === e.PARTICIPANT_WAS_REGISTERED) {
-    delete reservationsBySessionId[event.sessionID];
+    delete reservationsBySessionId[event.sessionId];
   }
   return reservationsBySessionId;
 };
@@ -90,12 +91,26 @@ RegistrationReadModel.prototype.durations = function () {
 
 };
 
-RegistrationReadModel.prototype.registeredAt = function (memberId) {
-  return moment(this.participantEventFor(memberId).timestamp);
+RegistrationReadModel.prototype.joinedSoCraTesAt = function (memberId) {
+  return moment(this.participantEventFor(memberId).joinedSoCraTes);
+};
+
+RegistrationReadModel.prototype.joinedWaitinglistAt = function (memberId) {
+  return moment(this.waitinglistParticipantEventFor(memberId).joinedWaitinglist);
 };
 
 RegistrationReadModel.prototype.isAlreadyRegistered = function (memberId) {
   return !!this.participantEventFor(memberId);
+};
+
+RegistrationReadModel.prototype.isAlreadyRegisteredFor = function (memberId, roomType) {
+  const event = this.participantEventFor(memberId);
+  return event && event.roomType === roomType;
+};
+
+RegistrationReadModel.prototype.isAlreadyOnWaitinglistFor = function (memberId, roomType) {
+  const event = this.waitinglistParticipantEventFor(memberId);
+  return event && R.contains(roomType, event.desiredRoomTypes);
 };
 
 RegistrationReadModel.prototype.allParticipantsIn = function (roomType) {
@@ -107,12 +122,11 @@ RegistrationReadModel.prototype.reservationsAndParticipantsFor = function (roomT
 };
 
 var projectWaitinglistReservationsBySessionId = function (waitinglistReservationsBySessionId, event) {
-  var thirtyMinutesAgo = moment.tz().subtract(30, 'minutes');
-  if (event.event === e.WAITINGLIST_RESERVATION_WAS_ISSUED && moment(event.timestamp).isAfter(thirtyMinutesAgo)) {
-    waitinglistReservationsBySessionId[event.sessionID] = event;
+  if (event.event === e.WAITINGLIST_RESERVATION_WAS_ISSUED && moment(event.joinedWaitinglist).isAfter(earliestValidRegistrationTime)) {
+    waitinglistReservationsBySessionId[event.sessionId] = event;
   }
   if (event.event === e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED || event.event === e.PARTICIPANT_WAS_REGISTERED) {
-    delete waitinglistReservationsBySessionId[event.sessionID];
+    delete waitinglistReservationsBySessionId[event.sessionId];
   }
   return waitinglistReservationsBySessionId;
 };
@@ -131,9 +145,6 @@ RegistrationReadModel.prototype.waitinglistReservationsBySessionIdFor = function
 var projectWaitinglistParticipantsByMemberId = function (waitinglistParticipantsByMemberId, event) {
   if (event.event === e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED || event.event === e.DESIRED_ROOM_TYPES_WERE_CHANGED) {
     waitinglistParticipantsByMemberId[event.memberId] = event;
-  }
-  if (event.event === e.PARTICIPANT_WAS_REGISTERED) {
-    delete waitinglistParticipantsByMemberId[event.memberId];
   }
   if (event.event === e.WAITINGLIST_PARTICIPANT_WAS_REMOVED) {
     delete waitinglistParticipantsByMemberId[event.memberId];
@@ -172,7 +183,8 @@ RegistrationReadModel.prototype._reservationOrWaitinglistReservationEventFor = f
 };
 
 function expirationTimeOf(event) {
-  return moment(event.timestamp).add(socratesConstants.registrationPeriodinMinutes, 'minutes');
+  var joinedAt = event.joinedSoCraTes || event.joinedWaitinglist;
+  return joinedAt ? moment(joinedAt).add(socratesConstants.registrationPeriodinMinutes, 'minutes') : undefined;
 }
 
 RegistrationReadModel.prototype.reservationExpiration = function (sessionId) {
@@ -192,7 +204,6 @@ RegistrationReadModel.prototype.registeredInRoomType = function (memberID) {
   return null;
 };
 
-
 RegistrationReadModel.prototype.waitinglistParticipantEventFor = function (memberId) {
   return this.waitinglistParticipantsByMemberId()[memberId];
 };
@@ -202,16 +213,17 @@ RegistrationReadModel.prototype.isAlreadyOnWaitinglist = function (memberId) {
 };
 
 RegistrationReadModel.prototype.selectedOptionsFor = function (memberID) {
+  var options = [];
   var participantEvent = this.participantEventFor(memberID);
   if (participantEvent) {
-    return participantEvent.roomType + ',' + participantEvent.duration;
+    options.push(participantEvent.roomType + ',' + participantEvent.duration);
   }
 
   var waitinglistParticipantEvent = this.waitinglistParticipantEventFor(memberID);
   if (waitinglistParticipantEvent) {
-    return waitinglistParticipantEvent.desiredRoomTypes.map(roomType => roomType + ',waitinglist').join(';');
+    waitinglistParticipantEvent.desiredRoomTypes.forEach(roomType => options.push(roomType + ',waitinglist'));
   }
-  return null;
+  return options.join(';');
 };
 
 RegistrationReadModel.prototype.roomTypesOf = function (memberId) {

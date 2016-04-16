@@ -1,6 +1,7 @@
 /*eslint no-underscore-dangle: 0*/
 'use strict';
 
+var moment = require('moment-timezone');
 var expect = require('must-dist');
 
 var beans = require('../../testutil/configureForTest').get('beans');
@@ -10,6 +11,8 @@ var RoomsReadModel = beans.get('RoomsReadModel');
 var Member = beans.get('member');
 
 var bedInDouble = 'bedInDouble';
+
+var aLongTimeAgo = moment.tz().subtract(40, 'minutes');
 
 describe('The rooms read model', function () {
 
@@ -21,11 +24,11 @@ describe('The rooms read model', function () {
     readModel = new RoomsReadModel(eventStore);
 
     eventStore.state.registrationEvents = [
-      events.participantWasRegistered(bedInDouble, 2, 'sessionId1', 'memberId1'),
-      events.participantWasRegistered(bedInDouble, 2, 'sessionId2', 'memberId2'),
-      events.participantWasRegistered(bedInDouble, 2, 'sessionId3', 'memberId3'),
-      events.participantWasRegistered(bedInDouble, 2, 'sessionId4', 'memberId4'),
-      events.participantWasRegistered(bedInDouble, 2, 'sessionId5', 'memberId5')
+      events.participantWasRegistered(bedInDouble, 2, 'sessionId1', 'memberId1', aLongTimeAgo),
+      events.participantWasRegistered(bedInDouble, 2, 'sessionId2', 'memberId2', aLongTimeAgo),
+      events.participantWasRegistered(bedInDouble, 2, 'sessionId3', 'memberId3', aLongTimeAgo),
+      events.participantWasRegistered(bedInDouble, 2, 'sessionId4', 'memberId4', aLongTimeAgo),
+      events.participantWasRegistered(bedInDouble, 2, 'sessionId5', 'memberId5', aLongTimeAgo)
     ];
   });
 

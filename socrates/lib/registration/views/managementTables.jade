@@ -8,13 +8,13 @@ include ajax
 mixin localdate(momentOrNull)
   | #{momentOrNull ? momentOrNull.locale('de').format('L') : '-'}
 
-mixin fromWaitinglistToParticipant(resourceName, nickname)
-  +ajaxButton(nickname, "/activities/fromWaitinglistToParticipant/" + encodeURIComponent(resourceName) + "/" + encodeURIComponent(nickname), 'WLP', 'Teilnehmen lassen…')
+mixin fromWaitinglistToParticipant(roomType, nickname)
+  +ajaxButton(nickname, "/activities/fromWaitinglistToParticipant/" + encodeURIComponent(roomType) + "/" + encodeURIComponent(nickname), 'WLP', 'Teilnehmen lassen…')
 
-mixin newDuration(resourceName, nickname, currentSelection)
+mixin newDuration(roomType, nickname, currentSelection)
   form(id='activityform', action='/activities/newDuration', method='post')
     +csrf
-    +hidden('resourceName', resourceName)
+    +hidden('roomType', roomType)
     +hidden('nickname', nickname)
     select.form-control(name='duration', style='height: inherit;')
       option(value='0') #{' '}
@@ -24,10 +24,10 @@ mixin newDuration(resourceName, nickname, currentSelection)
       option(value='5') monday morning
     button.btn.btn-default.btn-xs(type='submit') Ändern
 
-mixin newResource(resourceName, nickname)
+mixin newResource(roomType, nickname)
   form(id='activityform', action='/activities/newResource', method='post')
     +csrf
-    +hidden('resourceName', resourceName)
+    +hidden('roomType', roomType)
     +hidden('nickname', nickname)
     select.form-control(name='newResourceName', style='height: inherit;')
       option(value='0') #{' '}
@@ -37,10 +37,10 @@ mixin newResource(resourceName, nickname)
       option(value='junior') junior
     button.btn.btn-default.btn-xs(type='submit') Ändern
 
-mixin newWaitinglist(resourceName, nickname)
+mixin newWaitinglist(roomType, nickname)
   form(id='activityform', action='/activities/newWaitinglist', method='post')
     +csrf
-    +hidden('resourceName', resourceName)
+    +hidden('roomType', roomType)
     +hidden('nickname', nickname)
     select.form-control(name='newResourceName', style='height: inherit;')
       option(value='0') #{' '}
@@ -50,10 +50,10 @@ mixin newWaitinglist(resourceName, nickname)
       option(value='junior') junior
     button.btn.btn-default.btn-xs(type='submit') Ändern
 
-mixin unpairedParticipantDropdown(resourceName, participant1Nick, unpairedParticipants)
+mixin unpairedParticipantDropdown(roomType, participant1Nick, unpairedParticipants)
   form(id='unpairedParticipantForm', action='/activities/newParticipantPair', method='post')
     +csrf
-    +hidden('resourceName', resourceName)
+    +hidden('roomType', roomType)
     +hidden('participant1', participant1Nick)
     select.form-control(name='participant2', style='height: inherit;')
       option(value='0') #{' '}
@@ -63,15 +63,15 @@ mixin unpairedParticipantDropdown(resourceName, participant1Nick, unpairedPartic
           option(value=p2nick) #{participant2.displayName()} (#{p2nick}) - [Wunsch: #{participant2.subscriber.currentParticipation().roommate()}]
     button.btn.btn-default.btn-xs(type='submit') Zufügen
 
-mixin removePair(resourceName, pair)
+mixin removePair(roomType, pair)
   form(id='removePairForm', action='/activities/removeParticipantPair', method='post')
     +csrf
-    +hidden('resourceName', resourceName)
+    +hidden('roomType', roomType)
     +hidden('participant1', pair.participant1.nickname())
     +hidden('participant2', pair.participant2.nickname())
     button.btn.btn-default.btn-xs(type='submit') Entfernen
 
-mixin removeParticipantWithModal(resourceName, participantNick)
+mixin removeParticipantWithModal(roomType, participantNick)
   -var theID = 'reallyRemoveParticipant' + participantNick.replace(/\s/g, '').replace(/@/g, 'AT')
   .modal.fade(id=theID, tabindex='-1')
     .modal-dialog
@@ -86,14 +86,14 @@ mixin removeParticipantWithModal(resourceName, participantNick)
             .btn-group
               button.btn.btn-default(type='cancel', data-dismiss='modal', aria-hidden='true') #{t('general.no')}
               +csrf
-              +hidden('resourceName', resourceName)
+              +hidden('roomType', roomType)
               +hidden('participant', participantNick)
               button.btn.btn-danger(type='submit')
                 i.fa.fa-trash-o.fa-fw &nbsp;
                 | #{t('general.delete')}
   button.btn.btn-danger(data-toggle='modal', data-target='#' + theID): i.fa.fa-trash-o.fa-fw
 
-mixin removeWaitinglistMemberWithModal(resourceName, waitinglistNick)
+mixin removeWaitinglistMemberWithModal(roomType, waitinglistNick)
   -var theID = 'reallyRemoveWaitinglistMember' + waitinglistNick.replace(/\s/g, '').replace(/@/g, 'AT')
   .modal.fade(id=theID, tabindex='-1')
     .modal-dialog
@@ -108,7 +108,7 @@ mixin removeWaitinglistMemberWithModal(resourceName, waitinglistNick)
             .btn-group
               button.btn.btn-default(type='cancel', data-dismiss='modal', aria-hidden='true') #{t('general.no')}
               +csrf
-              +hidden('resourceName', resourceName)
+              +hidden('roomType', roomType)
               +hidden('waitinglistMember', waitinglistNick)
               button.btn.btn-danger(type='submit')
                 i.fa.fa-trash-o.fa-fw &nbsp;
@@ -157,16 +157,16 @@ block content
                   th Freie Plätze
                   th Wartende
               tbody
-                for resourceName in roomOptionIds
-                  -var participants = registrationReadModel.participantCountFor(resourceName)
-                  -var quota = socratesReadModel.quotaFor(resourceName)
-                  -var waitingMembers = registrationReadModel.waitinglistParticipantCountFor(resourceName)
+                for roomType in roomOptionIds
+                  -var participants = registrationReadModel.participantCountFor(roomType)
+                  -var quota = socratesReadModel.quotaFor(roomType)
+                  -var waitingMembers = registrationReadModel.waitinglistParticipantCountFor(roomType)
                   -var freeSpots = quota ? quota - participants : undefined
                   -totalParticipants += participants
                   -totalFreeSpots = freeSpots ? totalFreeSpots + freeSpots : totalFreeSpots
                   -totalWaitingMembers += waitingMembers
                   tr
-                    td #{resourceName}
+                    td #{roomType}
                     td #{participants} von #{quota || 'unbegrenzt'}
                     td #{freeSpots}
                     td #{waitingMembers}
@@ -191,11 +191,11 @@ block content
                       td #{duration.count} (total: #{duration.total})
 
         .tab-pane#main
-          each resourceName in roomOptionIds
-            -var participants = participantsOf[resourceName]
-            -var participantCount = registrationReadModel.participantCountFor(resourceName)
-            -var quota = socratesReadModel.quotaFor(resourceName)
-            h4 #{resourceName} (#{participantCount} von #{quota || 'unbegrenzt'})
+          each roomType in roomOptionIds
+            -var participants = participantsOf[roomType]
+            -var participantCount = registrationReadModel.participantCountFor(roomType)
+            -var quota = socratesReadModel.quotaFor(roomType)
+            h4 #{roomType} (#{participantCount} von #{quota || 'unbegrenzt'})
             .panel
               table.table.table-condensed.table-hover.table-striped.membertable
                 thead
@@ -212,15 +212,15 @@ block content
                 tbody
                   for member in participants
                     tr
-                      td #{registrationReadModel.registeredAt(member.id()).locale('de').format('L')}
+                      td #{registrationReadModel.joinedSoCraTesAt(member.id()).locale('de').format('L')}
                       td: +linkedMember(member.nickname())
                       td #{member.firstname()}
                       td #{member.lastname()}
                       td #{member.location()}
                       td #{registrationReadModel.durationFor(member.id())}
-                      td: +newDuration(resourceName, member.nickname(), registrationReadModel.participantEventFor(member.id()).duration)
-                      td: +newResource(resourceName, member.nickname())
-                      td: +removeParticipantWithModal(resourceName, member.nickname())
+                      td: +newDuration(roomType, member.nickname(), registrationReadModel.participantEventFor(member.id()).duration)
+                      td: +newResource(roomType, member.nickname())
+                      td: +removeParticipantWithModal(roomType, member.nickname())
             hr
         .tab-pane#waitinglist
           h4 Wartende (#{waitinglistLines.length})
@@ -239,14 +239,14 @@ block content
               tbody
                 for line in waitinglistLines
                   tr
-                    td #{formatDate(registrationReadModel.waitinglistParticipantEventFor(line.member.id()).timestamp)}
+                    td #{formatDate(registrationReadModel.joinedWaitinglistAt(line.member.id()))}
                     td #{+linkedMember(line.member.nickname())}
                     td #{line.member.firstname()}
                     td #{line.member.lastname()}
                     td #{line.member.location()}
-                    td: +fromWaitinglistToParticipant(resourceName, member.nickname())
-                    td: +newWaitinglist(resourceName, member.nickname())
-                    td: +removeWaitinglistMemberWithModal(resourceName, member.nickname())
+                    td: +fromWaitinglistToParticipant(roomType, member.nickname())
+                    td: +newWaitinglist(roomType, member.nickname())
+                    td: +removeWaitinglistMemberWithModal(roomType, member.nickname())
             hr
         .tab-pane.active#addons
           h4 Alle Teilnehmer
@@ -267,7 +267,7 @@ block content
                 for line in addonLines
                   tr
                     -var event = registrationReadModel.participantEventFor(line.member.id())
-                    td #{formatDate(event.timestamp)}
+                    td #{formatDate(event.joinedSoCraTes)}
                     td #{event.roomType}
                     td: +linkedMember(line.member.nickname())
                     td #{line.member.firstname()}
@@ -278,8 +278,8 @@ block content
                     td #{line.participation.roommate()}
 
         .tab-pane#bedroomPairing
-          for resourceName in ['bed_in_double', 'bed_in_junior']
-            h4 Zuordnung der Belegungen für #{resourceName}
+          for roomType in ['bed_in_double', 'bed_in_junior']
+            h4 Zuordnung der Belegungen für #{roomType}
             .panel
               table.table.table-condensed.table-hover.table-striped.unsortedtable
                 thead
@@ -288,15 +288,15 @@ block content
                     th 2. Teilnehmer
                     th Zuordnung entfernen
                 tbody
-                  for pair in rooms[resourceName].roomPairs
+                  for pair in rooms[roomType].roomPairs
                     tr
                       td #{pair.participant1.displayName()} (#{pair.participant1.nickname()}) - [Wunsch: #{pair.participant1.subscriber.currentParticipation().roommate()}]
                       td #{pair.participant2.displayName()} (#{pair.participant2.nickname()}) - [Wunsch: #{pair.participant2.subscriber.currentParticipation().roommate()}]
-                      td: +removePair(resourceName, pair)
-                  for participant in rooms[resourceName].unpairedParticipants
+                      td: +removePair(roomType, pair)
+                  for participant in rooms[roomType].unpairedParticipants
                     tr
                       td #{participant.displayName()} (#{participant.nickname()}) - [Wunsch: #{participant.subscriber.currentParticipation().roommate()}]
-                      td: +unpairedParticipantDropdown(resourceName, participant.nickname(), rooms[resourceName].unpairedParticipants)
+                      td: +unpairedParticipantDropdown(roomType, participant.nickname(), rooms[roomType].unpairedParticipants)
                       td #{' '}
 
         .tab-pane#tshirtSizes

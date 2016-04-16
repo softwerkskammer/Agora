@@ -1,72 +1,161 @@
 extends ../../../views/layout
-
 block title
-  |  Schedule - SoCraTes
+  | Format - SoCraTes
 block content
   .row
     .col-sm-12
       .page-header
-        h1 Schedule
+        h1
+          | SoCraTes&nbsp;
+          small what it is all about
+
+      p.extraspace
+        img.img-responsive(src='img/socrates2014_about_wall.jpg')
+
   .row
-    .col-sm-12
-      h2 Format
+    .col-md-12
       p
-        | The event will be run as a two day #{''}
+        |  SoCraTes is an international non-profit and community-run (un)conference
+        |  about all things related to #{''}
+        +extlink('https://en.wikipedia.org/wiki/Software_craftsmanship', 'Software Craftsmanship')
+        | . And at the same time it is so much more.
+
+      h3 Format
+      p
+        |  The conference starts with a #{''}
+        +extlink('https://en.wikipedia.org/wiki/The_World_Cafe', 'World Café')
+        |  followed by two days of #{' '}
         +extlink('http://agilecoachcamp.org/tiki-index.php?page=OpenSpace', 'Open Space')
-        | , facilitated by the outstanding facilitator #{''}
-        +extlink('http://blog.connexxo.com/', 'Pierluigi Pugliese')
-        |.
-      .panel.panel-primary.col-sm-4(style='float:right;padding: 0px;')
-        .panel-heading
-          h4.panel-title Open Space Technology
-        .panel-body.
-          is an approach for hosting meetings, conferences, corporate-style retreats and community summit events,
-          focused on a specific and important purpose or task &ndash; but beginning without any formal agenda, beyond
-          the overall purpose or theme.
-        .panel-footer
-          cite
-            +extlink('http://en.wikipedia.org/wiki/Open_Space_Technology','Wikipedia')
+        |  and finishes with a full day of #{''}
+        a(href='/wiki/' + (currentYear - 1) + '/sunday-workshops') workshops
+        | .
+      p.
+        Open Space is at the core of what SoCraTes is. Each day starts with
+        everybody gathering in the same room and creating the schedule for the
+        day. Anybody who wants to grabs a sheet of paper and writes the topic
+        they want to add to the schedule. Then the topics are briefly presented
+        and assigned to a timeslot and a room. That's it for a start, next come
+        the sessions.
+      p.
+        There are many different kinds of sessions. Some sessions are all about
+        discussing the topic in a somewhat chaotic manner where even the
+        participants don't know where the session is going to take them. People
+        share opinions, ask questions and compare experiences. Not everybody
+        needs to share - interest in the topic alone is sufficient. This is a
+        great way to learn beyond the book material, to learn how something
+        works in the real world from concrete experiences people had in their
+        specific contexts.
+      p.
+        Some sessions express the desire of the person proposing the session to
+        learn about a certain topic. In many cases, there will be some
+        participants who know the topic well and who are willing to share
+        their knowledge.
+      p.
+        A smaller number of sessions are run as presentations. This can be
+        about TDD, Event Sourcing, Functional Programming, a particular
+        library, or anything else a talk can be about. There is always time
+        left for discussion and answering questions.
+      p.
+        Quite a few sessions focus on hands-on activities. You want to try a
+        new technology?  Or just hack together in a group? You'll certainly
+        find people to join you. Some of the hands-on sessions are run like
+        workshops, some are done in mob-programming format, some are code
+        katas, others are just hacking on an interesting open-source library.
+        It can really be anything the group want it to be.
+      p.
+        And this is the beauty of Open Space - it really will be anything the
+        group wants it to be. You are feeling a bit frustrated with something
+        at work? How about a therapy session outside in the sun with a few
+        like-minded people over a glass of wine or a cup of tea? You have a
+        particular question about something you're stuck with? Just ask for
+        help. You... get the picture by now. :)
+      p.
+        And this leads us to...
+
+      h3 People
+      p.
+        SoCraTes is all about people. There are going to be 200 motivated,
+        intelligent and friendly participants, just like yourself, to make the
+        best of the time together.
+      p.
+        You'll have breakfast, lunch and dinner together. Some of the best
+        conversations happen over a meal. You'll spend the evenings together in
+        a bar, play games together, go for a morning run or a walk together.
+        There's definitely going to be a game or 100 of werewolf, fun rounds of
+        beach volleyball and much more.
+      p.
+        We all stay at the same location for the sole reason of having enough
+        time with each other - enough time to get to know each other, learn
+        from each other, create business contacts, recuperate from the real
+        world and have a generally great time. If you've never been to a
+        conference like this, it will be an eye-opener. No more divisions
+        between speakers and audience, going home alone or being tied to a
+        fixed schedule.  Doesn't matter if you're a world-class expert,
+        world-weary salary-man, a student, or have just started to program a
+        couple of months ago.  Everybody has something to give, to share and to
+        learn from others. And all of that happens in a friendly, supportive
+        and safe environment that embraces and celebrates diversity.
+      p.
+        This can sound a bit unusual, but it works beautifully in practice.
+        Why? Because so many amazing people are at the same place, focusing on
+        each other. By the end of the conference you'll know by name a few
+        dozens of new faces. You'll have made friends, business connections if
+        you want them, maybe you'll find a mentor, or a kindred spirit for that
+        interesting project you want to work on. Anything can happen. And is
+        bound to happen.
+      p
+        | And
+        b  that
+        |  is what SoCraTes is really all about.
+
+      h3 Schedule
+      p.
+        So now that you know what SoCraTes actually is, here are a few more
+        details about the schedule.
       dl
+
         dt Thursday
         dd.
           The conference starts at 5pm on Thursday, August 25th 2016.
           This is the time to get to know new faces or meet old friends, have
-          some drinks at the bar, explore the surrounding area etc.
+          some drinks at the bar, explore the location etc.
           T-Shirts are being distributed.
-        //- TODO "and deposits are returned" ?
         dd.
           Starting around 6pm the hotel will serve a buffet so that even
           people who arrived a little later will get something to eat.
         dd Later around 7.30pm we will officially start the conference with a #{''}
           +extlink('https://en.wikipedia.org/wiki/The_World_Cafe', 'World Café')
           | , to help kickstart everyone into a great conference experience.
+
         dt Friday
         dd Friday is completely reserved for a full-day #{''}
           +extlink('http://agilecoachcamp.org/tiki-index.php?page=OpenSpace', 'Open Space')
           | .
-        dd.
-          We start the marketplace at 9am and the first sessions will start
-          around 10.30am. The last session timeslot ends at 6pm, which is also
-          the time we all meet again in the marketplace room for a joint
-          retrospective of the day.
         dd
-          | Around 7pm dinner is available for around 2h, so everyone can start
+          | In the morning, we kick off with a marketplace, facilitated  by the outstanding facilitator #{''}
+          +extlink('http://blog.connexxo.com/', 'Pierluigi Pugliese')
+          |, followed by the first set of sessions. The sessions will take us
+          | through the whole day, and in the evening we briefly get together
+          | for a joint reflection on the day.
+        dd
+          | In the evening, there is a dinner buffet available, so everyone can start
           | into the evening at their own pace. Of course there's lots of room for
           | shared evening activities like board games, making music, hacking
           | or just talking and having fun. Take a look at #{''}
           a(href='/wiki/' + (currentYear - 1) + '/evening-activities') last year's activities
           |  to get an impression of the kind of activities that will happen.
+
         dt Saturday
         dd Saturday is also completely reserved for a full-day #{''}
           +extlink('http://agilecoachcamp.org/tiki-index.php?page=OpenSpace', 'Open Space')
           | .
         dd.
-          We start the marketplace again at 9am and the first sessions will
-          start around 10.30am too. The last session timeslot ends at 4.30pm.
-          After that we again all meet for the closing of the conference and a
-          retrospective of the two days. The closing of the conference will most
-          likely end around 5.30pm.
-        dd Participants staying until Sunday (or longer) can have dinner starting at 7pm.
+          The day runs in the same manner as Friday, but ends with the closing
+          of the conference. This will most likely end around 5.30pm.
+        dd.
+          Participants staying until Sunday (or longer) will have dinner at the
+          venue starting at 7pm.
+
         dt Sunday
         dd
           | Sunday is reserved for workshop oriented formats. Last year we had
@@ -74,36 +163,6 @@ block content
           a(href='/wiki/' + (currentYear - 1) + '/sunday-workshops') Sunday Workshops
           | .
         dd.
-          Each workshop can choose themselves when they want to start (though
-          rooms are available from 9am) and when they want to end, but the latest
-          they have to end sometime around 6pm.
-      p
-        //- TODO newer pictures
-        | To get an impression of what you can expect, have a look at 2013's Open Space timetable for #{''}
-        a(href='/static/socrates_2013_collection/large-12.html') Friday
-        |  and #{''}
-        a(href='/static/socrates_2013_collection/large-13.html') Saturday.
-        |  You can see that the range of topics is quite diverse, as is the kind of session (discussion, hands-on coding, …).
-      p
-        | Open Space means there is no agenda, or rather: #{''}
-        strong you #{''}
-        | set the agenda. This is your time, make the best of it!
-        | For ideas about what you can do in advance have a look at #{''}
-        +extlink('http://www.unconference.net/unconferencing-how-to-prepare-to-attend-an-unconference/', 'this article')
-        |.
-      p To get an even better impression, check out some of the #{''}
-        a(href='/experienceReports.html') experience reports
-        | #{''} from previous years.
-      p Facilitation will be in English. However, it will be possible to run sessions in other languages.
-
-      h2 Evening activities
-      p
-          | Participants organize evening activities. In the previous years there
-          | were a multitude of things going on in the evenings, from music (some participants
-          | brought instruments, songbooks etc., one year they even wrote a song about the conference) over board games to #{''}
-          +extlink('https://github.com/janernsting/maexchen', 'live-hacking programs to play mia against each other')
-          |. And of course there's always plenty of people to just talk to, or continue discussions from the day.
-      p
-          | Check out the #{''}
-          a(href='/wiki/' + (currentYear) + '/evening-activities') wiki
-          |  page to see what is currently being proposed. Don't forget to contribute your ideas.
+          Each workshop can choose themselves when they want to start  and when
+          they want to end, but the latest they have to end sometime around
+          6pm.

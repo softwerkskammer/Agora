@@ -50,15 +50,12 @@ mixin navbar(xs)
           +loginMenu
       ul.nav.navbar-nav
         li(data-nav-index=''): a(href='/', title='Home', style='padding-left: 5px') SoCraTes 2016
-        li(data-nav='schedule.html'): a(href='/schedule.html', title='Schedule')
+        li(data-nav='schedule.html'): a(href='/schedule.html', title='Format')
           span.glyphicon.glyphicon-calendar
-          span.hidden-sm  Schedule
+          span.hidden-sm  Format
         li(data-nav='location.html'): a(href='/location.html', title='Location')
           span.glyphicon.glyphicon-globe
           span.hidden-sm  Location
-        li(data-nav='history.html'): a(href='/history.html', title='History')
-          span.glyphicon.glyphicon-time
-          span.hidden-sm  History
         li(data-nav='values.html'): a(href='/values.html', title='Values')
           span.glyphicon.glyphicon-gift
           span.hidden-sm  Values
@@ -72,6 +69,9 @@ mixin navbar(xs)
                 li: a(href='/wiki/#{subdir}/') #{subdir}
             else
               li: a(href='/') <i>none</i>
+        li(data-nav='history.html'): a(href='/history.html', title='History')
+          span.glyphicon.glyphicon-time
+          span.hidden-sm  History
         +loginMenu(true)
 
       
