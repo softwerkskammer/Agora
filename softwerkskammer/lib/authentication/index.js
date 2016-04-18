@@ -15,7 +15,9 @@ var jwtSecret = conf.get('jwtSecret');
 
 function createUserObject(req, authenticationId, legacyAuthenticationId, profile, done) {
   if (req.session.callingAppReturnTo) { // we're invoked from another app -> don't add a member to the session
-    return done(null, { authenticationId: { newId: authenticationId, oldId: legacyAuthenticationId, profile: profile } });
+    const authentication = {authenticationId: {newId: authenticationId, oldId: legacyAuthenticationId, profile: profile}};
+    logger.info('createUserObject: ' + JSON.stringify(authentication));
+    return done(null, authentication);
   }
   process.nextTick(membersService.findMemberFor(req.user, authenticationId, legacyAuthenticationId, function (err, member) {
     if (err) { return done(err); }
@@ -34,6 +36,10 @@ function createUserObjectFromGithub(req, accessToken, refreshToken, profile, don
 
 function createUserObjectFromGooglePlus(req, iss, sub, profile, jwtClaims, accessToken, refreshToken, params, done) {
   /* eslint no-underscore-dangle: 0 */
+  logger.info('createUserObjectFromGooglePlus:');
+  logger.info('    sub: ' + JSON.stringify(sub));
+  logger.info('    jwtClaims: ' + JSON.stringify(jwtClaims));
+  logger.info('    profile: ' + JSON.stringify(profile));
   createUserObject(req, 'https://plus.google.com/' + sub, jwtClaims.openid_id, profile._json, done);
 }
 
@@ -65,13 +71,15 @@ function createProviderAuthenticationRoutes(app1, provider) {
   function redirectToCallingApp(req, res) {
     var returnTo = req.session.callingAppReturnTo;
     delete req.session.callingAppReturnTo;
-    var jwtToken = jwt.encode({
+    const jwtObject = {
       userId: req.user.authenticationId.newId,
       oldUserId: req.user.authenticationId.oldId,
       profile: req.user.authenticationId.profile,
       returnTo: returnTo,
       expires: moment().add(5, 'seconds').toJSON()
-    }, jwtSecret);
+    };
+    var jwtToken = jwt.encode(jwtObject, jwtSecret);
+    logger.info('redirectToCallingApp jwtToken (encoded length: ' + (jwtToken ? jwtToken.length : 0) + '): ' + JSON.stringify(jwtObject));
     if (req.session.currentAgoraUser) { // restore current member info:
       req._passport.session.user = req.session.currentAgoraUser;
       delete req.session.currentAgoraUser;
