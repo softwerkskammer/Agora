@@ -3,7 +3,7 @@
 var moment = require('moment-timezone');
 var jwt = require('jwt-simple');
 
-var logger = require('winston').loggers.get('authorization');
+// var logger = require('winston').loggers.get('authorization');
 
 const conf = require('simple-configure');
 var beans = conf.get('beans');
@@ -13,7 +13,6 @@ var jwtSecret = conf.get('jwtSecret');
 function createUserObject(req, authenticationId, legacyAuthenticationId, profile, done) {
   if (req.session.callingAppReturnTo) { // we're invoked from another app -> don't add a member to the session
     const user = {authenticationId: {newId: authenticationId, oldId: legacyAuthenticationId, profile: profile}};
-    logger.info('createUserObject: ' + JSON.stringify(user));
     return done(null, user);
   }
   process.nextTick(membersService.findMemberFor(req.user, authenticationId, legacyAuthenticationId, function (err, member) {
@@ -69,10 +68,6 @@ module.exports = {
     }
 
     /* eslint no-underscore-dangle: 0 */
-    logger.info('createUserObjectFromGooglePlus:');
-    logger.info('    sub: ' + JSON.stringify(sub));
-    logger.info('    jwtClaims: ' + JSON.stringify(jwtClaims));
-    logger.info('    profile: ' + JSON.stringify(profile));
     createUserObject(req, 'https://plus.google.com/' + sub, jwtClaims.openid_id, minimalProfileFrom(profile._json), done);
   },
 
@@ -88,7 +83,6 @@ module.exports = {
       expires: moment().add(5, 'seconds').toJSON()
     };
     var jwtToken = jwt.encode(jwtObject, jwtSecret);
-    logger.info('redirectToCallingApp jwtToken (encoded length: ' + (jwtToken ? jwtToken.length : 0) + '): ' + JSON.stringify(jwtObject));
     if (req.session.currentAgoraUser) { // restore current member info:
       req._passport.session.user = req.session.currentAgoraUser;
       delete req.session.currentAgoraUser;

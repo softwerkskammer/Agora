@@ -23,7 +23,6 @@ app.get('/loggedIn', function (req, res, next) {
   }
 
   function createUserObject(token, callback) {
-    logger.info('SoCraTes received token: ' + JSON.stringify(token));
     if (!token.userId) {
       return callback(new Error('Authentication failed.'));
     }
@@ -43,11 +42,7 @@ app.get('/loggedIn', function (req, res, next) {
   createUserObject(getTokenFrom(req), function (err, userObject, returnTo) {
     /*eslint no-underscore-dangle: 0*/
 
-    if (err) {
-      logger.info('createUserObject Error: ' + err.message);
-      return next(err);
-    }
-    logger.info('SoCraTes createUserObject user object: ' + JSON.stringify(userObject));
+    if (err) { return next(err); }
     if (returnTo === '/login') {
       returnTo = req.session.returnTo;
     }
