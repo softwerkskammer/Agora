@@ -6,14 +6,14 @@ module.exports = function (grunt) {
   var files = {
     'socrates/public/clientscripts/global.js': [
       'node_modules/jquery/dist/jquery.js',
-      'node_modules/moment/moment.js',
-      'node_modules/moment-timezone/moment-timezone.js',
       'node_modules/guillotine/js/jquery.guillotine.js',
       'node_modules/select2/dist/js/select2.js',
       'node_modules/autonumeric/autonumeric.js',
       'node_modules/bootstrap/dist/js/bootstrap.js',
       'node_modules/bootstrap-datepicker/js/bootstrap-datepicker.js',
       'node_modules/bootstrap-markdown/js/bootstrap-markdown.js',
+      'node_modules/moment/moment.js',
+      'node_modules/moment-timezone/moment-timezone.js',
       'node_modules/drmonty-smartmenus/js/jquery.smartmenus.js',
       'socrates/build/javascript/jquery.smartmenus.bootstrap-patched.js',
       'node_modules/jquery-validation/dist/jquery.validate.js',

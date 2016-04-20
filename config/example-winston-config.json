@@ -71,6 +71,20 @@
         "level": "info"
       }
     },
+    "socrates-authorization": {
+      "console": {
+        "level": "warn",
+        "colorize": true
+      },
+      "file": {
+        "timestamp": true,
+        "json": false,
+        "filename": "log/socrates-authorization.log",
+        "maxFiles": 5,
+        "maxsize": 10485760,
+        "level": "info"
+      }
+    },
     "socrates-http": {
       "console": {
         "level": "warn",
