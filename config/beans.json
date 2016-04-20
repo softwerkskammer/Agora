@@ -18,6 +18,7 @@
   "activitiesService": {"module": "./softwerkskammer/lib/activities/activitiesService"},
   "activityresultsService": {"module": "./softwerkskammer/lib/activityresults/activityresultsService"},
   "announcementsService": {"module": "./softwerkskammer/lib/announcements/announcementsService"},
+  "authenticationService": {"module": "./softwerkskammer/lib/authentication/authenticationService"},
   "calendarService": {"module": "./softwerkskammer/lib/activities/calendarService"},
   "dashboardService": {"module": "./softwerkskammer/lib/dashboard/dashboardService"},
   "groupsService": {"module": "./softwerkskammer/lib/groups/groupsService"},

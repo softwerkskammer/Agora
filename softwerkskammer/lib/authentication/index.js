@@ -1,41 +1,16 @@
+/* eslint no-underscore-dangle: 0 */
 'use strict';
 
 var passport = require('passport');
-var jwt = require('jwt-simple');
-var moment = require('moment-timezone');
 var logger = require('winston').loggers.get('authorization');
 
 var conf = require('simple-configure');
 var beans = conf.get('beans');
-var membersService = beans.get('membersService');
+var authenticationService = beans.get('authenticationService');
 var misc = beans.get('misc');
 
 var urlPrefix = conf.get('publicUrlPrefix');
-var jwtSecret = conf.get('jwtSecret');
 
-function createUserObject(req, authenticationId, legacyAuthenticationId, profile, done) {
-  if (req.session.callingAppReturnTo) { // we're invoked from another app -> don't add a member to the session
-    return done(null, { authenticationId: { newId: authenticationId, oldId: legacyAuthenticationId, profile: profile } });
-  }
-  process.nextTick(membersService.findMemberFor(req.user, authenticationId, legacyAuthenticationId, function (err, member) {
-    if (err) { return done(err); }
-    if (!member) { return done(null, {authenticationId: authenticationId, profile: profile}); }
-    return done(null, {authenticationId: authenticationId, member: member});
-  }));
-}
-
-function createUserObjectFromOpenID(req, authenticationId, profile, done) {
-  createUserObject(req, authenticationId, undefined, profile, done);
-}
-
-function createUserObjectFromGithub(req, accessToken, refreshToken, profile, done) {
-  createUserObject(req, profile.provider + ':' + profile.id, undefined, profile, done);
-}
-
-function createUserObjectFromGooglePlus(req, iss, sub, profile, jwtClaims, accessToken, refreshToken, params, done) {
-  /* eslint no-underscore-dangle: 0 */
-  createUserObject(req, 'https://plus.google.com/' + sub, jwtClaims.openid_id, profile._json, done);
-}
 
 function createProviderAuthenticationRoutes(app1, provider) {
 
@@ -62,27 +37,8 @@ function createProviderAuthenticationRoutes(app1, provider) {
     next();
   }
 
-  function redirectToCallingApp(req, res) {
-    var returnTo = req.session.callingAppReturnTo;
-    delete req.session.callingAppReturnTo;
-    var jwtToken = jwt.encode({
-      userId: req.user.authenticationId.newId,
-      oldUserId: req.user.authenticationId.oldId,
-      profile: req.user.authenticationId.profile,
-      returnTo: returnTo,
-      expires: moment().add(5, 'seconds').toJSON()
-    }, jwtSecret);
-    if (req.session.currentAgoraUser) { // restore current member info:
-      req._passport.session.user = req.session.currentAgoraUser;
-      delete req.session.currentAgoraUser;
-    } else { // log out:
-      delete req._passport.session.user;
-    }
-    res.redirect(conf.get('socratesURL') + '/auth/loggedIn' + '?id_token=' + jwtToken);
-  }
-
   app1.get('/idp/' + provider, setReturnViaIdentityProviderOnSuccess, authenticate());
-  app1.get('/idp_return_point', redirectToCallingApp);
+  app1.get('/idp_return_point', authenticationService.redirectToCallingApp);
 }
 
 function setupOpenID(app1) {
@@ -94,7 +50,7 @@ function setupOpenID(app1) {
       profile: true,
       passReqToCallback: true
     },
-    createUserObjectFromOpenID
+    authenticationService.createUserObjectFromOpenID
   ));
   createProviderAuthenticationRoutes(app1, 'openid');
 }
@@ -111,7 +67,7 @@ function setupGithub(app1) {
         customHeaders: {'User-Agent': 'agora node server'},
         passReqToCallback: true
       },
-      createUserObjectFromGithub
+      authenticationService.createUserObjectFromGithub
     );
     strategy._oauth2.useAuthorizationHeaderforGET(true);
     passport.use(strategy);
@@ -138,7 +94,7 @@ function setupGooglePlus(app1) {
 
         passReqToCallback: true
       },
-      createUserObjectFromGooglePlus
+      authenticationService.createUserObjectFromGooglePlus
     );
     strategy.authorizationParams = function () {
       return {
@@ -161,6 +117,7 @@ app.get('/logout', function (req, res) {
   }
   res.redirect('/goodbye.html');
 });
+
 setupOpenID(app);
 setupGithub(app);
 setupGooglePlus(app);
