@@ -6,7 +6,13 @@ var expect = require('must-dist');
 var moment = require('moment-timezone');
 var R = require('ramda');
 
-var beans = require('../../testutil/configureForTest').get('beans');
+var config = require('../../testutil/configureForTest');
+
+var beans = config.get('beans');
+
+var testLogger = require('winston').loggers.get();
+
+var CONFLICTING_VERSIONS = beans.get('constants').CONFLICTING_VERSIONS;
 
 var registrationService = beans.get('registrationService');
 
@@ -43,6 +49,7 @@ describe('Registration Service', function () {
 
   var eventStore;
   var readModel;
+  var saveEventStoreCalls;
   var saveSubscriberCount;
 
   beforeEach(function () {
@@ -79,9 +86,22 @@ describe('Registration Service', function () {
       return callback(null);
     });
 
-    sinon.stub(eventstore, 'saveEventStore', function (activity, callback) { callback(); });
+    saveEventStoreCalls = 0;
+    sinon.stub(eventstore, 'saveEventStore', function (activity, callback) {
+      //return race condition error if it is the first save event and the sessionId is 'racecondition'
+      saveEventStoreCalls += 1;
+      if (saveEventStoreCalls <= 1 &&
+        activity.state.registrationEvents.length >= 1 &&
+        activity.state.registrationEvents[activity.state.registrationEvents.length - 1].sessionId === 'racecondition') {
+        return callback(new Error(CONFLICTING_VERSIONS));
+      }
+      callback();
+    });
     saveSubscriberCount = 0;
-    sinon.stub(subscriberstore, 'saveSubscriber', function (activity, callback) { saveSubscriberCount += 1; callback(); });
+    sinon.stub(subscriberstore, 'saveSubscriber', function (activity, callback) {
+      saveSubscriberCount += 1;
+      callback();
+    });
   });
 
   afterEach(function () {
@@ -200,6 +220,30 @@ describe('Registration Service', function () {
         done(err);
       });
     });
+
+    it('returns no error but logs info if racing condition is detected', function (done) {
+
+      testLogger.clearWarnings();
+      registrationTuple.sessionId = 'racecondition';
+      registrationService.startRegistration(registrationTuple, 'memberId', now, function (err, statusTitle, statusText) {
+        expect(statusTitle).not.exist();
+        expect(statusText).to.not.exist();
+        expect(saveEventStoreCalls).to.be.eql(2);
+
+        var warnings = testLogger.getWarnings();
+        expect(warnings.length).to.be.eql(1);
+
+        var warning = warnings[0];
+        expect(warning).to.contain(CONFLICTING_VERSIONS);
+        expect(warning).to.contain('startRegistration');
+        expect(warning).to.contain('RegistrationTuple:');
+        expect(warning).to.contain('ReservationEvent:');
+        expect(warning).to.contain('WaitinglistReservationEvent:');
+        expect(warning).to.contain('activityUrl: \'socrates-url\'');
+        done(err);
+      });
+    });
+
 
   });
 
@@ -397,6 +441,37 @@ describe('Registration Service', function () {
         done(err);
       });
     });
+
+    it('returns no error but logs info if racing condition is detected', function (done) {
+
+      testLogger.clearWarnings();
+      eventStore.state.registrationEvents = [
+        events.reservationWasIssued(registrationBody.roomType, registrationBody.duration, 'racecondition', 'memberId', aShortTimeAgo)
+      ];
+
+      registrationService.completeRegistration('memberId', 'racecondition', registrationBody, now, function (err, statusTitle, statusText) {
+
+        expect(statusTitle).not.exist();
+        expect(statusText).to.not.exist();
+        // Wenn ich den Fehler erwarte ist der Test grün
+        //expect(statusTitle).to.be.eql('activities.registration_problem');
+        //expect(statusText).to.be.eql('activities.already_registered');
+        expect(saveEventStoreCalls).to.be.eql(2);
+
+        var warnings = testLogger.getWarnings();
+        expect(warnings.length).to.be.eql(1);
+
+        var warning = warnings[0];
+        expect(warning).to.contain(CONFLICTING_VERSIONS);
+        expect(warning).to.contain('completeRegistration');
+        expect(warning).to.contain('Subscriber:');
+        expect(warning).to.contain('ReservationEvent:');
+        expect(warning).to.contain('WaitinglistReservationEvent:');
+        expect(warning).to.contain('activityUrl: \'socrates-url\'');
+        done(err);
+      });
+    });
+
   });
 
   describe('finishing the registration - waitinglist registration', function () {
@@ -475,7 +550,6 @@ describe('Registration Service', function () {
         done(err);
       });
     });
-
   });
 
 });
