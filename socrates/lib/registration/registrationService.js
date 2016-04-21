@@ -9,7 +9,7 @@ var roomOptions = beans.get('roomOptions');
 var eventstoreService = beans.get('eventstoreService');
 var eventConstants = beans.get('eventConstants');
 
-var transactionLogger = require('winston').loggers.get('transactions');
+var conflictingVersionsLogger = require('winston').loggers.get('socrates');
 
 
 module.exports = {
@@ -34,7 +34,7 @@ module.exports = {
             event: reservationEvent,
             waitingListEvent: waitinglistReservationEvent
           });
-          transactionLogger.warn(message);
+          conflictingVersionsLogger.warn(message);
           // we try again because of a racing condition during save:
           return self.startRegistration(registrationTuple, memberIdIfKnown, now, callback);
         }
@@ -90,7 +90,7 @@ module.exports = {
                 waitingListEvent: waitinglistRegistrationEvent,
                 subscriber: subscriber
               });
-              transactionLogger.warn(message);
+              conflictingVersionsLogger.warn(message);
               // we try again because of a racing condition during save:
               return self.completeRegistration(memberID, sessionId, body, now, callback);
             }
