@@ -6,9 +6,11 @@ var subscriberstore = beans.get('subscriberstore');
 var socratesNotifications = beans.get('socratesNotifications');
 var CONFLICTING_VERSIONS = beans.get('constants').CONFLICTING_VERSIONS;
 var roomOptions = beans.get('roomOptions');
-
 var eventstoreService = beans.get('eventstoreService');
 var eventConstants = beans.get('eventConstants');
+
+var transactionLogger = require('winston').loggers.get('transactions');
+
 
 module.exports = {
 
@@ -26,10 +28,19 @@ module.exports = {
       }
       return eventstoreService.saveCommandProcessor(registrationCommandProcessor, function (err1) {
         if (err1 && err1.message === CONFLICTING_VERSIONS) {
+          var message = JSON.stringify({message: CONFLICTING_VERSIONS,
+            function: 'startRegistration',
+            tuple: registrationTuple,
+            event: reservationEvent,
+            waitingListEvent: waitinglistReservationEvent
+          });
+          transactionLogger.warn(message);
           // we try again because of a racing condition during save:
           return self.startRegistration(registrationTuple, memberIdIfKnown, now, callback);
         }
-        if (err1) { return callback(err1); }
+        if (err1) {
+          return callback(err1);
+        }
         if (reservationEvent === eventConstants.DID_NOT_ISSUE_RESERVATION_FOR_FULL_RESOURCE) {
           return callback(null, 'activities.registration_problem', 'activities.registration_is_full');
         }
@@ -72,6 +83,14 @@ module.exports = {
         subscriberstore.saveSubscriber(subscriber, function () {
           return eventstoreService.saveCommandProcessor(commandProcessor, function (err1) {
             if (err1 && err1.message === CONFLICTING_VERSIONS) {
+              var message = JSON.stringify({message: CONFLICTING_VERSIONS,
+                function: 'completeRegistration',
+                tuple: registrationTuple,
+                event: registrationEvent,
+                waitingListEvent: waitinglistRegistrationEvent,
+                subscriber: subscriber
+              });
+              transactionLogger.warn(message);
               // we try again because of a racing condition during save:
               return self.completeRegistration(memberID, sessionId, body, now, callback);
             }
