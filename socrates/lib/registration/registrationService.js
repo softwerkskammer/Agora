@@ -29,11 +29,13 @@ module.exports = {
       }
       return eventstoreService.saveCommandProcessor(registrationCommandProcessor, function (err1) {
         if (err1 && err1.message === CONFLICTING_VERSIONS) {
-          transactionLogger.warn(CONFLICTING_VERSIONS + ' by startRegistration ' +
-            'RegistrationTuple: ' + util.inspect(registrationTuple, false, null) + ' ' +
-            'ReservationEvent: ' + util.inspect(reservationEvent, false, null) + ' ' +
-            'WaitinglistReservationEvent: ' + util.inspect(waitinglistReservationEvent, false, null)
-          );
+          var message = JSON.stringify({message: CONFLICTING_VERSIONS,
+            function: 'startRegistration',
+            tuple: registrationTuple,
+            event: reservationEvent,
+            waitingListEvent: waitinglistReservationEvent
+          });
+          transactionLogger.warn(message);
           // we try again because of a racing condition during save:
           return self.startRegistration(registrationTuple, memberIdIfKnown, now, callback);
         }
@@ -82,12 +84,14 @@ module.exports = {
         subscriberstore.saveSubscriber(subscriber, function () {
           return eventstoreService.saveCommandProcessor(commandProcessor, function (err1) {
             if (err1 && err1.message === CONFLICTING_VERSIONS) {
-              transactionLogger.warn(CONFLICTING_VERSIONS + ' by completeRegistration ' +
-                'RegistrationTuple: ' + util.inspect(registrationTuple, false, null) + ' ' +
-                'Subscriber: ' + util.inspect(subscriber, false, null) + ' ' +
-                'ReservationEvent: ' + util.inspect(registrationEvent, false, null) + ' ' +
-                'WaitinglistReservationEvent: ' + util.inspect(waitinglistRegistrationEvent, false, null)
-              );
+              var message = JSON.stringify({message: CONFLICTING_VERSIONS,
+                function: 'completeRegistration',
+                tuple: registrationTuple,
+                event: registrationEvent,
+                waitingListEvent: waitinglistRegistrationEvent,
+                subscriber: subscriber
+              });
+              transactionLogger.warn(message);
               // we try again because of a racing condition during save:
               return self.completeRegistration(memberID, sessionId, body, now, callback);
             }
