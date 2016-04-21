@@ -6,11 +6,7 @@ var expect = require('must-dist');
 var moment = require('moment-timezone');
 var R = require('ramda');
 
-var config = require('../../testutil/configureForTest');
-
-var beans = config.get('beans');
-
-var testLogger = require('winston').loggers.get();
+var beans = require('../../testutil/configureForTest').get('beans');
 
 var CONFLICTING_VERSIONS = beans.get('constants').CONFLICTING_VERSIONS;
 
@@ -127,63 +123,31 @@ describe('Registration Service', function () {
     });
 
     it('on startRegistration, it returns no error but logs info', function (done) {
-     sinon.stub(eventstore, 'getEventStore', function (url, callback) {
+      sinon.stub(eventstore, 'getEventStore', function (url, callback) {
         eventStore.state.registrationEvents = [];
         return callback(null, eventStore);
       });
-
-      testLogger.clearWarnings();
-
       registrationTuple.sessionId = 'racecondition';
       registrationService.startRegistration(registrationTuple, 'memberId', now, function (err, statusTitle, statusText) {
-        expect(statusTitle).not.exist();
+        expect(statusTitle).to.not.exist();
         expect(statusText).to.not.exist();
         expect(saveEventStoreCalls).to.be.eql(2);
-
-        var warnings = testLogger.getWarnings();
-        expect(warnings.length).to.be.eql(1);
-
-        var warning = warnings[0];
-        expect(warning).to.contain(CONFLICTING_VERSIONS);
-        expect(warning).to.contain('startRegistration');
-        expect(warning).to.contain('RegistrationTuple:');
-        expect(warning).to.contain('ReservationEvent:');
-        expect(warning).to.contain('WaitinglistReservationEvent:');
-        expect(warning).to.contain('activityUrl: \'socrates-url\'');
         done(err);
       });
     });
 
     it('on completeRegistration, it returns no error but logs info', function (done) {
-
       sinon.stub(eventstore, 'getEventStore', function (url, callback) {
         eventStore.state.registrationEvents = [
           events.reservationWasIssued(registrationBody.roomType, registrationBody.duration, 'racecondition', 'memberId', aShortTimeAgo)
         ];
         return callback(null, eventStore);
       });
-
-      testLogger.clearWarnings();
-
       registrationService.completeRegistration('memberId', 'racecondition', registrationBody, now, function (err, statusTitle, statusText) {
 
-        expect(statusTitle).not.exist();
+        expect(statusTitle).to.not.exist();
         expect(statusText).to.not.exist();
-        // Wenn ich den Fehler erwarte ist der Test grün
-        //expect(statusTitle).to.be.eql('activities.registration_problem');
-        //expect(statusText).to.be.eql('activities.already_registered');
         expect(saveEventStoreCalls).to.be.eql(2);
-
-        var warnings = testLogger.getWarnings();
-        expect(warnings.length).to.be.eql(1);
-
-        var warning = warnings[0];
-        expect(warning).to.contain(CONFLICTING_VERSIONS);
-        expect(warning).to.contain('completeRegistration');
-        expect(warning).to.contain('Subscriber:');
-        expect(warning).to.contain('ReservationEvent:');
-        expect(warning).to.contain('WaitinglistReservationEvent:');
-        expect(warning).to.contain('activityUrl: \'socrates-url\'');
         done(err);
       });
     });
