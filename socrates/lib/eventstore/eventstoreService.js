@@ -1,6 +1,8 @@
 'use strict';
 
-var beans = require('simple-configure').get('beans');
+const conf = require('simple-configure');
+var beans = conf.get('beans');
+var cache = conf.get('cache');
 var eventstore = beans.get('eventstore');
 var GlobalEventStore = beans.get('GlobalEventStore');
 var SoCraTesReadModel = beans.get('SoCraTesReadModel');
@@ -13,6 +15,21 @@ var RoomsReadModel = beans.get('RoomsReadModel');
 var RoomsWriteModel = beans.get('RoomsWriteModel');
 var RoomsCommandProcessor = beans.get('RoomsCommandProcessor');
 
+
+function getReadModel(url, key, ReadModel, callback) {
+  var cachedModel = cache.get(key);
+  if (cachedModel) {
+    return callback(null, cachedModel);
+  }
+  eventstore.getEventStore(url, function (err, eventStore) {
+    // for the read models, there must be an eventstore already:
+    if (err || !eventStore) { return callback(err); }
+    const newModel = new ReadModel(eventStore);
+    cache.set(key, newModel);
+    callback(null, newModel);
+  });
+}
+
 module.exports = {
   isValidUrl: function (url, callback) {
     eventstore.getEventStore(url, function (err, result) {
@@ -22,10 +39,7 @@ module.exports = {
   },
 
   getSoCraTesReadModel: function (url, callback) {
-    eventstore.getEventStore(url, function (err, eventStore) {
-      if (err || eventStore === null) { return callback(err); }
-      callback(null, new SoCraTesReadModel(eventStore));
-    });
+    return getReadModel(url, 'soCraTesReadModel', SoCraTesReadModel, callback);
   },
 
   newSoCraTesReadModel: function () {
@@ -42,10 +56,7 @@ module.exports = {
   },
 
   getRegistrationReadModel: function (url, callback) {
-    eventstore.getEventStore(url, function (err, eventStore) {
-      if (err || !eventStore) { return callback(err); }
-      callback(null, new RegistrationReadModel(eventStore));
-    });
+    return getReadModel(url, 'registrationReadModel', RegistrationReadModel, callback);
   },
 
   getRegistrationCommandProcessor: function (url, callback) {
@@ -65,11 +76,7 @@ module.exports = {
   },
 
   getRoomsReadModel: function (url, callback) {
-    eventstore.getEventStore(url, function (err, eventStore) {
-      // when adding a new rooms combination, we require the event store to be already in place:
-      if (err || !eventStore) { return callback(err); }
-      callback(null, new RoomsReadModel(eventStore));
-    });
+    return getReadModel(url, 'roomsReadModel', RoomsReadModel, callback);
   },
 
   saveCommandProcessor: function (commandProcessor, callback) {

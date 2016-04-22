@@ -4,6 +4,7 @@ process.chdir(__dirname);
 var _ = require('lodash');
 var conf = require('simple-configure');
 var Beans = require('CoolBeans');
+var NodeCache = require('node-cache');
 var path = require('path');
 
 function createConfiguration() {
@@ -27,6 +28,7 @@ function createConfiguration() {
     secret: 'secret',
     sessionkey: 'socrates-conference.de',
     beans: new Beans(swkBeans),
+    cache: new NodeCache({ stdTTL: 0, checkperiod: 0, errorOnMissing: false, useClones: false }),
     emaildomainname: 'localhost',
     softwerkskammerURL: 'http://localhost:17124',
     socratesURL: 'http://localhost:17224',
