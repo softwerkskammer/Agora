@@ -26,7 +26,6 @@ var eventstore = beans.get('eventstore');
 var createApp = require('../../testutil/testHelper')('socratesRegistrationApp').createApp;
 
 var aShortTimeAgo = moment.tz().subtract(10, 'minutes');
-var aLongTimeAgo = moment.tz().subtract(40, 'minutes');
 
 function stripTimestampsAndJoins(someEvents) {
   return someEvents.map(event => {
