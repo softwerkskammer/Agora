@@ -57,7 +57,7 @@ module.exports = {
     });
   },
 
-  completeRegistration: function (memberID, sessionId, body, now, callback) {
+  completeRegistration: function (memberID, sessionId, body, callback) {
     var self = this;
     var registrationEvent;
     var waitinglistRegistrationEvent;
@@ -92,7 +92,7 @@ module.exports = {
               });
               conflictingVersionsLogger.warn(message);
               // we try again because of a racing condition during save:
-              return self.completeRegistration(memberID, sessionId, body, now, callback);
+              return self.completeRegistration(memberID, sessionId, body, callback);
             }
             if (err1) { return callback(err1); }
 
