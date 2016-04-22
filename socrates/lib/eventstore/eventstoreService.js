@@ -15,6 +15,10 @@ var RoomsReadModel = beans.get('RoomsReadModel');
 var RoomsWriteModel = beans.get('RoomsWriteModel');
 var RoomsCommandProcessor = beans.get('RoomsCommandProcessor');
 
+const SOCRATES_READ_MODEL = 'soCraTesReadModel';
+const REGISTRATION_READ_MODEL = 'registrationReadModel';
+const ROOMS_READ_MODEL = 'roomsReadModel';
+
 function getReadModel(url, key, ReadModel, callback) {
   var cachedModel = cache.get(key);
   if (cachedModel) {
@@ -38,7 +42,7 @@ module.exports = {
   },
 
   getSoCraTesReadModel: function (url, callback) {
-    return getReadModel(url, 'soCraTesReadModel', SoCraTesReadModel, callback);
+    return getReadModel(url, SOCRATES_READ_MODEL, SoCraTesReadModel, callback);
   },
 
   newSoCraTesReadModel: function () {
@@ -55,7 +59,7 @@ module.exports = {
   },
 
   getRegistrationReadModel: function (url, callback) {
-    return getReadModel(url, 'registrationReadModel', RegistrationReadModel, callback);
+    return getReadModel(url, REGISTRATION_READ_MODEL, RegistrationReadModel, callback);
   },
 
   getRegistrationCommandProcessor: function (url, callback) {
@@ -64,7 +68,7 @@ module.exports = {
       // when adding a new registration, we require the event store to be already in place:
       if (err || !eventStore) { return callback(err); }
       // self.getRegistrationReadModel(url, function (err1, registrationReadModel) {
-      getReadModel(url, 'registrationReadModel', RegistrationReadModel, function (err1, registrationReadModel) {
+      getReadModel(url, REGISTRATION_READ_MODEL, RegistrationReadModel, function (err1, registrationReadModel) {
         if (err1 || !registrationReadModel) { return callback(err1); }
         callback(null, new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, registrationReadModel)));
       });
@@ -77,10 +81,10 @@ module.exports = {
       // when adding a new rooms combination, we require the event store to be already in place:
       if (err || !eventStore) { return callback(err); }
       // self.getRoomsReadModel(url, function (err1, roomsReadModel) {
-      getReadModel(url, 'roomsReadModel', RoomsReadModel, function (err1, roomsReadModel) {
+      getReadModel(url, ROOMS_READ_MODEL, RoomsReadModel, function (err1, roomsReadModel) {
         if (err1 || !roomsReadModel) { return callback(err1); }
         // self.getRegistrationReadModel(url, function (err2, registrationReadModel) {
-        getReadModel(url, 'registrationReadModel', RegistrationReadModel, function (err2, registrationReadModel) {
+        getReadModel(url, REGISTRATION_READ_MODEL, RegistrationReadModel, function (err2, registrationReadModel) {
           if (err2 || !registrationReadModel) { return callback(err2); }
           callback(null, new RoomsCommandProcessor(new RoomsWriteModel(eventStore, roomsReadModel, registrationReadModel)));
         });
@@ -89,10 +93,14 @@ module.exports = {
   },
 
   getRoomsReadModel: function (url, callback) {
-    return getReadModel(url, 'roomsReadModel', RoomsReadModel, callback);
+    return getReadModel(url, ROOMS_READ_MODEL, RoomsReadModel, callback);
   },
 
   saveCommandProcessor: function (commandProcessor, callback) {
-    eventstore.saveEventStore(commandProcessor.eventStore(), callback);
+    eventstore.saveEventStore(commandProcessor.eventStore(), function (err) {
+      if (err) {return callback(err); }
+      cache.del([SOCRATES_READ_MODEL, REGISTRATION_READ_MODEL, ROOMS_READ_MODEL]);
+      callback();
+    });
   }
 };
