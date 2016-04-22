@@ -3,32 +3,28 @@
 
 var R = require('ramda');
 
-var beans = require('simple-configure').get('beans');
-var RegistrationReadModel = beans.get('RegistrationReadModel');
-var RoomsReadModel = beans.get('RoomsReadModel');
-
-function RoomsWriteModel(eventStore) {
+function RoomsWriteModel(eventStore, roomsReadModel, registrationReadModel) {
   this._eventStore = eventStore;
-  this.roomsReadModel = new RoomsReadModel(eventStore);
-  this.registrationReadModel = new RegistrationReadModel(eventStore);
+  this._roomsReadModel = roomsReadModel;
+  this._registrationReadModel = registrationReadModel;
 }
 
 RoomsWriteModel.prototype.isParticipantIn = function (roomType, memberId) {
-  return this.registrationReadModel.registeredInRoomType(memberId) === roomType;
+  return this._registrationReadModel.registeredInRoomType(memberId) === roomType;
 };
 
 RoomsWriteModel.prototype.isRoomPairIn = function (roomType, participant1Id, participant2Id) {
-  return this.roomsReadModel.isRoomPairIn(roomType, participant1Id, participant2Id);
+  return this._roomsReadModel.isRoomPairIn(roomType, participant1Id, participant2Id);
 };
 
 RoomsWriteModel.prototype.isInRoom = function (roomType, memberId) {
-  return R.contains(memberId, this.roomsReadModel.participantsInRoom(roomType));
+  return R.contains(memberId, this._roomsReadModel.participantsInRoom(roomType));
 };
 
 RoomsWriteModel.prototype.roomPairContaining = function (roomType, memberId) {
   return R.find(function (pair) {
     return pair.participant1Id === memberId || pair.participant2Id === memberId;
-  }, this.roomsReadModel.roomPairsFor(roomType));
+  }, this._roomsReadModel.roomPairsFor(roomType));
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////

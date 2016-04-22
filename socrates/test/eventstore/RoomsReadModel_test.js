@@ -8,6 +8,8 @@ var beans = require('../../testutil/configureForTest').get('beans');
 var events = beans.get('events');
 var GlobalEventStore = beans.get('GlobalEventStore');
 var RoomsReadModel = beans.get('RoomsReadModel');
+var RegistrationReadModel = beans.get('RegistrationReadModel');
+var SoCraTesReadModel = beans.get('SoCraTesReadModel');
 var Member = beans.get('member');
 
 var bedInDouble = 'bedInDouble';
@@ -21,7 +23,7 @@ describe('The rooms read model', function () {
 
   beforeEach(function () {
     eventStore = new GlobalEventStore();
-    readModel = new RoomsReadModel(eventStore);
+    readModel = new RoomsReadModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore)));
 
     eventStore.state.registrationEvents = [
       events.participantWasRegistered(bedInDouble, 2, 'sessionId1', 'memberId1', aLongTimeAgo),

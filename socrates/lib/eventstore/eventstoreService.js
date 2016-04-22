@@ -15,7 +15,6 @@ var RoomsReadModel = beans.get('RoomsReadModel');
 var RoomsWriteModel = beans.get('RoomsWriteModel');
 var RoomsCommandProcessor = beans.get('RoomsCommandProcessor');
 
-
 function getReadModel(url, key, ReadModel, callback) {
   var cachedModel = cache.get(key);
   if (cachedModel) {
@@ -60,18 +59,29 @@ module.exports = {
   },
 
   getRegistrationCommandProcessor: function (url, callback) {
+    const self = this;
     eventstore.getEventStore(url, function (err, eventStore) {
       // when adding a new registration, we require the event store to be already in place:
       if (err || !eventStore) { return callback(err); }
-      callback(null, new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore)));
+      self.getRegistrationReadModel(url, function (err1, registrationReadModel) {
+        if (err1 || !registrationReadModel) { return callback(err1); }
+        callback(null, new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, registrationReadModel)));
+      });
     });
   },
 
   getRoomsCommandProcessor: function (url, callback) {
+    const self = this;
     eventstore.getEventStore(url, function (err, eventStore) {
       // when adding a new rooms combination, we require the event store to be already in place:
       if (err || !eventStore) { return callback(err); }
-      callback(null, new RoomsCommandProcessor(new RoomsWriteModel(eventStore)));
+      self.getRoomsReadModel(url, function (err1, roomsReadModel) {
+        if (err1 || !roomsReadModel) { return callback(err1); }
+        self.getRegistrationReadModel(url, function (err2, registrationReadModel) {
+          if (err2 || !registrationReadModel) { return callback(err2); }
+          callback(null, new RoomsCommandProcessor(new RoomsWriteModel(eventStore, roomsReadModel, registrationReadModel)));
+        });
+      });
     });
   },
 

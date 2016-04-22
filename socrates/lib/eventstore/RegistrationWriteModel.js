@@ -1,17 +1,13 @@
 /*eslint no-underscore-dangle: 0*/
 'use strict';
 
-var beans = require('simple-configure').get('beans');
-var RegistrationReadModel = beans.get('RegistrationReadModel');
-
-
-function RegistrationWriteModel(eventStore) {
+function RegistrationWriteModel(eventStore, registrationReadModel) {
   this._eventStore = eventStore;
-  this.registrationReadModel = new RegistrationReadModel(eventStore);
+  this._registrationReadModel = registrationReadModel;
 }
 
 RegistrationWriteModel.prototype.reservationFor = function (sessionId) {
-  return this.registrationReadModel.reservationsBySessionId()[sessionId];
+  return this._registrationReadModel.reservationsBySessionId()[sessionId];
 };
 
 RegistrationWriteModel.prototype.alreadyHasReservation = function (sessionId) {
@@ -19,7 +15,7 @@ RegistrationWriteModel.prototype.alreadyHasReservation = function (sessionId) {
 };
 
 RegistrationWriteModel.prototype.waitinglistReservation = function (sessionId) {
-  return this.registrationReadModel.waitinglistReservationsBySessionId()[sessionId];
+  return this._registrationReadModel.waitinglistReservationsBySessionId()[sessionId];
 };
 
 RegistrationWriteModel.prototype.alreadyHasWaitinglistReservation = function (sessionId) {
@@ -28,27 +24,27 @@ RegistrationWriteModel.prototype.alreadyHasWaitinglistReservation = function (se
 
 // internal function?
 RegistrationWriteModel.prototype.participantEventFor = function (memberId) {
-  return this.registrationReadModel.participantEventFor(memberId);
+  return this._registrationReadModel.participantEventFor(memberId);
 };
 
 RegistrationWriteModel.prototype.isAlreadyRegistered = function (memberId) {
-  return this.registrationReadModel.isAlreadyRegistered(memberId);
+  return this._registrationReadModel.isAlreadyRegistered(memberId);
 };
 
 RegistrationWriteModel.prototype.isRegisteredInRoomType = function (memberId, roomType) {
-   return this.registrationReadModel.registeredInRoomType(memberId) === roomType;
+   return this._registrationReadModel.registeredInRoomType(memberId) === roomType;
 };
 
 RegistrationWriteModel.prototype.waitinglistParticipantEventFor = function (memberId) {
-  return this.registrationReadModel.waitinglistParticipantEventFor(memberId);
+  return this._registrationReadModel.waitinglistParticipantEventFor(memberId);
 };
 
 RegistrationWriteModel.prototype.isAlreadyOnWaitinglist = function (memberId) {
-  return this.registrationReadModel.isAlreadyOnWaitinglist(memberId);
+  return this._registrationReadModel.isAlreadyOnWaitinglist(memberId);
 };
 
 RegistrationWriteModel.prototype.roomTypesOf = function (memberId) {
-  return this.registrationReadModel.roomTypesOf(memberId);
+  return this._registrationReadModel.roomTypesOf(memberId);
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -57,7 +53,7 @@ RegistrationWriteModel.prototype.updateRegistrationEvents = function (newEvents)
 };
 
 RegistrationWriteModel.prototype.isFull = function (roomType) {
-  return this.registrationReadModel.isFull(roomType);
+  return this._registrationReadModel.isFull(roomType);
 };
 
 RegistrationWriteModel.prototype.eventStore = function () {

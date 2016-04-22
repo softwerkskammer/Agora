@@ -10,6 +10,8 @@ var beans = require('../../testutil/configureForTest').get('beans');
 var events = beans.get('events');
 var GlobalEventStore = beans.get('GlobalEventStore');
 var RegistrationWriteModel = beans.get('RegistrationWriteModel');
+var RegistrationReadModel = beans.get('RegistrationReadModel');
+var SoCraTesReadModel = beans.get('SoCraTesReadModel');
 var RegistrationCommandProcessor = beans.get('RegistrationCommandProcessor');
 var e = beans.get('eventConstants');
 
@@ -43,7 +45,7 @@ describe('The registration command processor', function () {
 
   beforeEach(function () {
     eventStore = new GlobalEventStore();
-    commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore));
+    commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
   });
 
   describe('for room reservations (issueReservation)', function () {
