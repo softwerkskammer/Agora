@@ -54,7 +54,7 @@ describe('Subscriber', function () {
 
     it('the participation if a participation information hint is provided', function () {
       unregisteredSubscriber.fillFromUI({hasParticipationInformation: true});
-      expect(unregisteredSubscriber.currentParticipation().roommate()).to.be(undefined);
+      expect(unregisteredSubscriber.currentParticipation().roommate()).to.be('');
     });
   });
 
