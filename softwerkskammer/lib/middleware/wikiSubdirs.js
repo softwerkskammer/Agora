@@ -16,9 +16,9 @@ module.exports = function subdirs(req, res, next) {
     function (err, results) {
       if (err) { return next(err); }
       var gitdirs = results.gitdirs;
-      var regionals = _(Group.regionalsFrom(results.groups)).pluck('id').intersection(gitdirs).value();
-      var thematics = _(Group.thematicsFrom(results.groups)).pluck('id').intersection(gitdirs).value();
-      var additionalWikis = _.difference(gitdirs, _.pluck(results.groups, 'id'));
+      var regionals = _(Group.regionalsFrom(results.groups)).map('id').intersection(gitdirs).value();
+      var thematics = _(Group.thematicsFrom(results.groups)).map('id').intersection(gitdirs).value();
+      var additionalWikis = _.difference(gitdirs, _.map(results.groups, 'id'));
       res.locals.wikisubdirs = gitdirs;
       res.locals.structuredWikisubdirs = {
         regional: regionals,

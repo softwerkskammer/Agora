@@ -38,7 +38,7 @@ function memberSubmitted(req, res, next) {
 
 function tagsFor(callback) {
   memberstore.allMembers(function (err, members) {
-    callback(err, _(membersService.toWordList(members)).pluck('text').sortBy().value());
+    callback(err, _(membersService.toWordList(members)).map('text').sortBy().value());
   });
 }
 

@@ -182,7 +182,7 @@ module.exports = {
 
   listChangedFilesinDirectory: function (directory, callback) {
     Git.log(directory, 'HEAD', 30, function (ignoredErr, metadata) {
-      var datas = _(metadata).uniq('name').reject(function (item) { return item.name.match(wikiObjects.BLOG_ENTRY_REGEX); }).value();
+      var datas = _(metadata).uniqBy('name').reject(function (item) { return item.name.match(wikiObjects.BLOG_ENTRY_REGEX); }).value();
       callback(null, datas);
     });
   },
