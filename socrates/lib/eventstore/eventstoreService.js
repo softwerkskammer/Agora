@@ -59,11 +59,12 @@ module.exports = {
   },
 
   getRegistrationCommandProcessor: function (url, callback) {
-    const self = this;
+    // var self = this; TODO wtf?!
     eventstore.getEventStore(url, function (err, eventStore) {
       // when adding a new registration, we require the event store to be already in place:
       if (err || !eventStore) { return callback(err); }
-      self.getRegistrationReadModel(url, function (err1, registrationReadModel) {
+      // self.getRegistrationReadModel(url, function (err1, registrationReadModel) {
+      getReadModel(url, 'registrationReadModel', RegistrationReadModel, function (err1, registrationReadModel) {
         if (err1 || !registrationReadModel) { return callback(err1); }
         callback(null, new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, registrationReadModel)));
       });
@@ -71,13 +72,15 @@ module.exports = {
   },
 
   getRoomsCommandProcessor: function (url, callback) {
-    const self = this;
+    // var self = this; TODO wtf?!
     eventstore.getEventStore(url, function (err, eventStore) {
       // when adding a new rooms combination, we require the event store to be already in place:
       if (err || !eventStore) { return callback(err); }
-      self.getRoomsReadModel(url, function (err1, roomsReadModel) {
+      // self.getRoomsReadModel(url, function (err1, roomsReadModel) {
+      getReadModel(url, 'roomsReadModel', RoomsReadModel, function (err1, roomsReadModel) {
         if (err1 || !roomsReadModel) { return callback(err1); }
-        self.getRegistrationReadModel(url, function (err2, registrationReadModel) {
+        // self.getRegistrationReadModel(url, function (err2, registrationReadModel) {
+        getReadModel(url, 'registrationReadModel', RegistrationReadModel, function (err2, registrationReadModel) {
           if (err2 || !registrationReadModel) { return callback(err2); }
           callback(null, new RoomsCommandProcessor(new RoomsWriteModel(eventStore, roomsReadModel, registrationReadModel)));
         });
