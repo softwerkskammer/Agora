@@ -153,7 +153,7 @@ describe('The registration command processor', function () {
         events.reservationWasIssued(singleBedRoom, untilSaturday, sessionId1, memberId1, aShortTimeAgo)];
 
       // When (issued command)
-      commandProcessor.registerParticipant(singleBedRoom, untilSaturday, sessionId1, memberId1, aShorterTimeAgo);
+      commandProcessor.registerParticipant(singleBedRoom, untilSaturday, sessionId1, memberId1);
 
       // Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
@@ -168,7 +168,7 @@ describe('The registration command processor', function () {
         events.reservationWasIssued(singleBedRoom, untilSaturday, sessionId1, memberId1, aShortTimeAgo)];
 
       // When (issued command)
-      commandProcessor.registerParticipant(singleBedRoom, untilSaturday, sessionId1, memberId1, aShorterTimeAgo);
+      commandProcessor.registerParticipant(singleBedRoom, untilSaturday, sessionId1, memberId1);
 
       // Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
@@ -183,7 +183,7 @@ describe('The registration command processor', function () {
         events.reservationWasIssued(singleBedRoom, untilSundayMorning, sessionId1, memberId1, aShortTimeAgo)];
 
       // When (issued command)
-      commandProcessor.registerParticipant(singleBedRoom, untilSaturday, sessionId1, memberId1, aShorterTimeAgo);
+      commandProcessor.registerParticipant(singleBedRoom, untilSaturday, sessionId1, memberId1);
 
       // Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
@@ -198,7 +198,7 @@ describe('The registration command processor', function () {
         events.reservationWasIssued(singleBedRoom, untilSaturday, sessionId1, memberId1, aLongTimeAgo)];
 
       // When (issued command)
-      commandProcessor.registerParticipant(singleBedRoom, untilSaturday, sessionId1, memberId1, aShortTimeAgo);
+      commandProcessor.registerParticipant(singleBedRoom, untilSaturday, sessionId1, memberId1);
 
       // Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
@@ -214,7 +214,7 @@ describe('The registration command processor', function () {
         events.participantWasRegistered(singleBedRoom, untilSaturday, sessionId2, memberId2, aShortTimeAgo)];
 
       // When (issued command)
-      commandProcessor.registerParticipant(singleBedRoom, untilSaturday, sessionId1, memberId1, aShorterTimeAgo);
+      commandProcessor.registerParticipant(singleBedRoom, untilSaturday, sessionId1, memberId1);
 
       // Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
@@ -230,7 +230,7 @@ describe('The registration command processor', function () {
       eventStore.state.registrationEvents = [];
 
       // When (issued command)
-      commandProcessor.registerParticipant(singleBedRoom, untilSaturday, sessionId1, memberId1, aShortTimeAgo);
+      commandProcessor.registerParticipant(singleBedRoom, untilSaturday, sessionId1, memberId1);
 
       // Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
@@ -245,7 +245,7 @@ describe('The registration command processor', function () {
       ];
 
       // When (issued command)
-      commandProcessor.registerParticipant(bedInDouble, untilSaturday, sessionId1, memberId1, aShortTimeAgo);
+      commandProcessor.registerParticipant(bedInDouble, untilSaturday, sessionId1, memberId1);
 
       // Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
@@ -573,7 +573,7 @@ describe('The registration command processor', function () {
         events.waitinglistReservationWasIssued([singleBedRoom], sessionId1, memberId1, aShortTimeAgo)];
 
       // When (issued command)
-      commandProcessor.registerWaitinglistParticipant([singleBedRoom], sessionId1, memberId1, aShorterTimeAgo);
+      commandProcessor.registerWaitinglistParticipant([singleBedRoom], sessionId1, memberId1);
 
       // Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
@@ -587,7 +587,7 @@ describe('The registration command processor', function () {
         events.waitinglistReservationWasIssued([singleBedRoom], sessionId1, memberId1, aLongTimeAgo)];
 
       // When (issued command)
-      commandProcessor.registerWaitinglistParticipant([singleBedRoom], sessionId1, memberId1, aShortTimeAgo);
+      commandProcessor.registerWaitinglistParticipant([singleBedRoom], sessionId1, memberId1);
 
       // Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
@@ -600,7 +600,7 @@ describe('The registration command processor', function () {
       eventStore.state.registrationEvents = [];
 
       // When (issued command)
-      commandProcessor.registerWaitinglistParticipant([singleBedRoom], sessionId1, memberId1, aShortTimeAgo);
+      commandProcessor.registerWaitinglistParticipant([singleBedRoom], sessionId1, memberId1);
 
       // Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
@@ -614,7 +614,7 @@ describe('The registration command processor', function () {
       ];
 
       //When (issued command)
-      commandProcessor.registerWaitinglistParticipant([singleBedRoom], sessionId1, memberId1, aShortTimeAgo);
+      commandProcessor.registerWaitinglistParticipant([singleBedRoom], sessionId1, memberId1);
 
       //Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
@@ -629,7 +629,7 @@ describe('The registration command processor', function () {
       ];
 
       //When (issued command)
-      commandProcessor.registerWaitinglistParticipant([singleBedRoom, bedInDouble], sessionId1, memberId1, aShortTimeAgo);
+      commandProcessor.registerWaitinglistParticipant([singleBedRoom, bedInDouble], sessionId1, memberId1);
 
       //Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
@@ -643,7 +643,7 @@ describe('The registration command processor', function () {
         events.waitinglistReservationWasIssued([singleBedRoom, bedInDouble], sessionId1, memberId1, aShortTimeAgo)];
 
       // When (issued command)
-      commandProcessor.registerWaitinglistParticipant([singleBedRoom, bedInDouble], sessionId1, memberId1, aShorterTimeAgo);
+      commandProcessor.registerWaitinglistParticipant([singleBedRoom, bedInDouble], sessionId1, memberId1);
 
       // Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([

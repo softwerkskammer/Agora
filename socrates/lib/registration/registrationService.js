@@ -72,10 +72,10 @@ module.exports = {
       if (err || !commandProcessor) { return callback(err); }
 
       if (registrationTuple.desiredRoomTypes.length > 0) {
-        waitinglistRegistrationEvent = commandProcessor.registerWaitinglistParticipant(registrationTuple.desiredRoomTypes, registrationTuple.sessionId, memberID, now);
+        waitinglistRegistrationEvent = commandProcessor.registerWaitinglistParticipant(registrationTuple.desiredRoomTypes, registrationTuple.sessionId, memberID);
       }
       if (registrationTuple.roomType && registrationTuple.duration) {
-        registrationEvent = commandProcessor.registerParticipant(registrationTuple.roomType, registrationTuple.duration, registrationTuple.sessionId, memberID, now);
+        registrationEvent = commandProcessor.registerParticipant(registrationTuple.roomType, registrationTuple.duration, registrationTuple.sessionId, memberID);
       }
       return subscriberstore.getSubscriber(memberID, function (err2, subscriber) {
         if (err2) { return callback(err2); }
