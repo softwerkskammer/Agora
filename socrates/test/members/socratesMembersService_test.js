@@ -5,7 +5,9 @@ var moment = require('moment-timezone');
 var sinon = require('sinon').sandbox.create();
 var expect = require('must-dist');
 
-var beans = require('../../testutil/configureForTest').get('beans');
+const conf = require('../../testutil/configureForTest');
+var beans = conf.get('beans');
+const cache = conf.get('cache');
 
 var socratesMembersService = beans.get('socratesMembersService');
 var events = beans.get('events');
@@ -64,6 +66,7 @@ describe('SoCraTes Members Service', function () {
     });
 
     it('tells that a subscriber will participate or participated in a new eventsourced SoCraTes', function (done) {
+      cache.flushAll();
       sinon.stub(activitystore, 'activitiesForGroupIdsAndRegisteredMemberId', function (groups, memberId, upcoming, callback) {
         return callback(null, []);
       });
@@ -78,6 +81,7 @@ describe('SoCraTes Members Service', function () {
     });
 
     it('tells that a subscriber did not and will not participate in any SoCraTes', function (done) {
+      cache.flushAll();
       sinon.stub(activitystore, 'activitiesForGroupIdsAndRegisteredMemberId', function (groups, memberId, upcoming, callback) {
         callback(null, [{state: {isSoCraTes: false}}]);
       });

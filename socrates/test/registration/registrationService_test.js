@@ -6,7 +6,9 @@ var expect = require('must-dist');
 var moment = require('moment-timezone');
 var R = require('ramda');
 
-var beans = require('../../testutil/configureForTest').get('beans');
+const conf = require('../../testutil/configureForTest');
+var beans = conf.get('beans');
+const cache = conf.get('cache');
 
 var CONFLICTING_VERSIONS = beans.get('constants').CONFLICTING_VERSIONS;
 
@@ -102,6 +104,8 @@ describe('Registration Service', function () {
     var saveEventStoreCalls;
 
     beforeEach(function () {
+      cache.flushAll();
+
       registrationTuple = {
         activityUrl: 'socrates-url',
         roomType: 'single',
