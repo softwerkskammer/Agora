@@ -8,7 +8,7 @@ function Participation(object) {
 }
 
 Participation.prototype.fillFromUI = function (uiInputObject) {
-  this.state.roommate = uiInputObject.roommate;
+  this.state.roommate = uiInputObject.roommate || '';
   return this;
 };
 

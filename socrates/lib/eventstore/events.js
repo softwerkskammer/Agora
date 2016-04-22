@@ -49,12 +49,12 @@ module.exports = {
     return enrich({event: e.PARTICIPANT_WAS_REGISTERED, sessionId, roomType, duration, memberId, joinedSoCraTes: joinedSoCraTes.valueOf()});
   },
 
-  didNotRegisterParticipantForFullResource: function (roomType, duration, sessionId, memberId) {
-    return enrich({event: e.DID_NOT_REGISTER_PARTICIPANT_FOR_FULL_RESOURCE, sessionId, roomType, duration, memberId});
-  },
-
   didNotRegisterParticipantASecondTime: function (roomType, duration, sessionId, memberId) {
     return enrich({event: e.DID_NOT_REGISTER_PARTICIPANT_A_SECOND_TIME, sessionId, roomType, duration, memberId});
+  },
+
+  didNotRegisterParticipantWithExpiredOrMissingReservation: function (roomType, duration, sessionId, memberId) {
+    return enrich({event: e.DID_NOT_REGISTER_PARTICIPANT_WITH_EXPIRED_OR_MISSING_RESERVATION, sessionId, roomType, duration, memberId});
   },
 
   registeredParticipantFromWaitinglist: function (roomType, duration, memberId, joinedSoCraTes) {
@@ -117,6 +117,10 @@ module.exports = {
 
   didNotRegisterWaitinglistParticipantASecondTime: function (desiredRoomTypes, sessionId, memberId) {
     return enrich({event: e.DID_NOT_REGISTER_WAITINGLIST_PARTICIPANT_A_SECOND_TIME, sessionId, desiredRoomTypes, memberId});
+  },
+
+  didNotRegisterWaitinglistParticipantWithExpiredOrMissingReservation: function (desiredRoomTypes, sessionId, memberId) {
+    return enrich({event: e.DID_NOT_REGISTER_WAITINGLIST_PARTICIPANT_WITH_EXPIRED_OR_MISSING_RESERVATION, sessionId, desiredRoomTypes, memberId});
   },
 
   // removal:

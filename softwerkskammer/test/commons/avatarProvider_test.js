@@ -31,7 +31,7 @@ describe('AvatarProvider', function () {
       expect(member.inlineAvatar()).to.be('');
       expect(member.hasImage()).to.be(false);
       done();
-    }, 'http://nonexisting.site');
+    }, 'http://nonexisting.site/');
   });
 });
 
