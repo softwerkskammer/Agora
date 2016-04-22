@@ -134,8 +134,8 @@ describe('The registration read model', function () {
         events.reservationWasIssued(singleBedRoom, untilSaturday, sessionId1, memberId1, aShortTimeAgo),
         events.didNotIssueReservationForAlreadyReservedSession(bedInDouble, untilSaturday, sessionId1, memberId1),
         events.didNotIssueReservationForFullResource(singleBedRoom, untilSaturday, sessionId2, memberId2),
-        events.didNotRegisterParticipantForFullResource(singleBedRoom, untilSundayMorning, sessionId1, memberId1),
-        events.didNotRegisterParticipantASecondTime(singleBedRoom, untilSundayMorning, sessionId1, memberId1)
+        events.didNotRegisterParticipantASecondTime(singleBedRoom, untilSundayMorning, sessionId1, memberId1),
+        events.didNotRegisterParticipantWithExpiredOrMissingReservation(singleBedRoom, untilSundayMorning, sessionId1, memberId1)
       ];
 
       expect(stripTimestamps(readModel.reservationsAndParticipantsFor(singleBedRoom))).to.eql([
@@ -264,7 +264,8 @@ describe('The registration read model', function () {
       eventStore.state.registrationEvents = [
         events.waitinglistReservationWasIssued([singleBedRoom], sessionId1, memberId1, aShortTimeAgo),
         events.didNotIssueWaitinglistReservationForAlreadyReservedSession([bedInDouble], sessionId1, memberId1),
-        events.didNotRegisterWaitinglistParticipantASecondTime(singleBedRoom, sessionId1, memberId1)
+        events.didNotRegisterWaitinglistParticipantASecondTime([singleBedRoom], sessionId1, memberId1),
+        events.didNotRegisterWaitinglistParticipantWithExpiredOrMissingReservation([singleBedRoom], sessionId1, memberId1)
       ];
 
       expect(stripTimestamps(readModel.waitinglistReservationsAndParticipantsFor(singleBedRoom))).to.eql([

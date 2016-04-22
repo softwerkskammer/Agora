@@ -107,13 +107,13 @@ module.exports = {
               return callback(null);
             }
 
-            if (registrationEvent === eventConstants.DID_NOT_REGISTER_PARTICIPANT_FOR_FULL_RESOURCE) {
-              // if the resource was full, this can only be due to the registration having timed out:
-              return callback(null, 'activities.registration_problem', 'activities.registration_timed_out');
-            }
             if (registrationEvent === eventConstants.DID_NOT_REGISTER_PARTICIPANT_A_SECOND_TIME
               || waitinglistRegistrationEvent === eventConstants.DID_NOT_REGISTER_WAITINGLIST_PARTICIPANT_A_SECOND_TIME) {
               return callback(null, 'activities.registration_problem', 'activities.already_registered');
+            }
+            if (registrationEvent === eventConstants.DID_NOT_REGISTER_PARTICIPANT_WITH_EXPIRED_OR_MISSING_RESERVATION
+              || waitinglistRegistrationEvent === eventConstants.DID_NOT_REGISTER_WAITINGLIST_PARTICIPANT_WITH_EXPIRED_OR_MISSING_RESERVATION) {
+              return callback(null, 'activities.registration_problem', 'activities.registration_timed_out');
             }
             callback(null, 'activities.registration_problem', 'activities.registration_not_possible');
           });

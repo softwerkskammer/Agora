@@ -191,7 +191,7 @@ describe('The registration command processor', function () {
         {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1, joinedSoCraTes: aShortTimeAgo.valueOf()}]);
     });
 
-    it('registers a room even if there was an expired reservation, if there was enough space', function () { // TODO books a room?
+    it('does not register a room if there was only an expired reservation, even if there was enough space', function () { // TODO books a room?
       // Given (saved events)
       eventStore.state.socratesEvents = [events.roomQuotaWasSet(singleBedRoom, 1)];
       eventStore.state.registrationEvents = [
@@ -203,10 +203,10 @@ describe('The registration command processor', function () {
       // Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
         {event: e.RESERVATION_WAS_ISSUED, sessionId: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: aLongTimeAgo.valueOf()},
-        {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1, joinedSoCraTes: aShortTimeAgo.valueOf()}]);
+        {event: e.DID_NOT_REGISTER_PARTICIPANT_WITH_EXPIRED_OR_MISSING_RESERVATION, sessionId: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1}]);
     });
 
-    it('does not register a room if there was an expired reservation but if there was not enough space', function () { // TODO books a room?
+    it('does not register a room if there was an expired reservation and if there was not enough space', function () { // TODO books a room?
       // Given (saved events)
       eventStore.state.socratesEvents = [events.roomQuotaWasSet(singleBedRoom, 1)];
       eventStore.state.registrationEvents = [
@@ -220,11 +220,11 @@ describe('The registration command processor', function () {
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
         {event: e.RESERVATION_WAS_ISSUED, sessionId: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: aLongTimeAgo.valueOf()},
         {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: sessionId2, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId2, joinedSoCraTes: aShortTimeAgo.valueOf()},
-        {event: e.DID_NOT_REGISTER_PARTICIPANT_FOR_FULL_RESOURCE, sessionId: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1}
+        {event: e.DID_NOT_REGISTER_PARTICIPANT_WITH_EXPIRED_OR_MISSING_RESERVATION, sessionId: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1}
       ]);
     });
 
-    it('registers a room even if there was no reservation, if there was enough space', function () { // TODO books a room?
+    it('does not register a room if there was no reservation, even if there was enough space', function () { // TODO books a room?
       // Given (saved events)
       eventStore.state.socratesEvents = [events.roomQuotaWasSet(singleBedRoom, 100)];
       eventStore.state.registrationEvents = [];
@@ -234,7 +234,7 @@ describe('The registration command processor', function () {
 
       // Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1, joinedSoCraTes: aShortTimeAgo.valueOf()}]);
+        {event: e.DID_NOT_REGISTER_PARTICIPANT_WITH_EXPIRED_OR_MISSING_RESERVATION, sessionId: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1}]);
     });
 
     it('does not register two rooms for the same member, not even different rooms', function () { // TODO books a room?
@@ -581,7 +581,7 @@ describe('The registration command processor', function () {
         {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionId: sessionId1, desiredRoomTypes: [singleBedRoom], memberId: memberId1, joinedWaitinglist: aShortTimeAgo.valueOf()}]);
     });
 
-    it('registers a spot on the waitinglist even if there was an expired reservation', function () { // TODO books a room?
+    it('does not register a spot on the waitinglist if there was an expired reservation', function () { // TODO books a room?
       // Given (saved events)
       eventStore.state.registrationEvents = [
         events.waitinglistReservationWasIssued([singleBedRoom], sessionId1, memberId1, aLongTimeAgo)];
@@ -592,10 +592,10 @@ describe('The registration command processor', function () {
       // Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
         {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionId: sessionId1, memberId: memberId1, desiredRoomTypes: [singleBedRoom], joinedWaitinglist: aLongTimeAgo.valueOf()},
-        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionId: sessionId1, desiredRoomTypes: [singleBedRoom], memberId: memberId1, joinedWaitinglist: aShortTimeAgo.valueOf()}]);
+        {event: e.DID_NOT_REGISTER_WAITINGLIST_PARTICIPANT_WITH_EXPIRED_OR_MISSING_RESERVATION, sessionId: sessionId1, desiredRoomTypes: [singleBedRoom], memberId: memberId1}]);
     });
 
-    it('registers a spot on the waitinglist even if there was no reservation', function () { // TODO books a room?
+    it('does not register a spot on the waitinglist if there was no reservation', function () { // TODO books a room?
       // Given (saved events)
       eventStore.state.registrationEvents = [];
 
@@ -604,7 +604,7 @@ describe('The registration command processor', function () {
 
       // Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionId: sessionId1, desiredRoomTypes: [singleBedRoom], memberId: memberId1, joinedWaitinglist: aShortTimeAgo.valueOf()}]);
+        {event: e.DID_NOT_REGISTER_WAITINGLIST_PARTICIPANT_WITH_EXPIRED_OR_MISSING_RESERVATION, sessionId: sessionId1, desiredRoomTypes: [singleBedRoom], memberId: memberId1}]);
     });
 
     it('does not register the participant again if already registered', function () {
