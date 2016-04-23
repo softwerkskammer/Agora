@@ -525,5 +525,4 @@ describe('Registration Service', function () {
       });
     });
   });
-
 });
