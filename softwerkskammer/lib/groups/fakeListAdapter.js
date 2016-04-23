@@ -11,7 +11,7 @@ module.exports = {
   getAllAvailableLists: function (callback) {
     persistence.list({id: 1}, function (err, lists) {
       if (err || !lists) {return callback(err); }
-      callback(null, _.pluck(lists, 'id'));
+      callback(null, _.map(lists, 'id'));
     });
   },
 
@@ -44,7 +44,7 @@ module.exports = {
 
       var subscribed = _.filter(lists, function (list) { return _.some(list.users, function (user) {return user === userEmail; }); });
 
-      callback(null, _.pluck(subscribed, 'id'));
+      callback(null, _.map(subscribed, 'id'));
     });
   },
 

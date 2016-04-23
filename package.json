@@ -20,7 +20,7 @@
   "license": "(MIT OR Apache-2.0)",
   "main": "",
   "engines": {
-    "node": ">0.10"
+    "node": ">=4.0"
   },
   "dependencies": {
     "CoolBeans": "0.0.9",
@@ -36,7 +36,8 @@
     "connect-mongo": "1.1.0",
     "cookie-parser": "1.4.1",
     "csurf": "1.8.3",
-    "datatables": "1.10.11",
+    "datatables.net": "1.10.11",
+    "datatables.net-bs": "1.10.11",
     "drmonty-smartmenus": "0.9.7",
     "express": "4.13.4",
     "express-session": "1.13.0",
@@ -59,13 +60,13 @@
     "jquery-validation": "1.15.0",
     "jwt-simple": "0.5.0",
     "kerberos": "0.0.19",
-    "lodash": "3.10.1",
+    "lodash": "4.8.2",
     "mailparser": "0.5.3",
     "marked": "0.3.5",
     "memwatch-next": "0.2.10",
     "mime-types": "2.1.10",
     "moment": "2.13.0",
-    "moment-timezone": "0.5.2",
+    "moment-timezone": "0.5.3",
     "mongodb": "2.1.7",
     "morgan": "1.7.0",
     "multiparty": "4.1.2",

@@ -26,7 +26,7 @@ groupsAndMembersService.getAllMembersWithTheirGroups(function (err, members) {
   async.each(members,
     function (member, callback) {
       // set to true if member is only in socrates list
-      var groups = _(member.subscribedGroups).pluck('id').filter(function (groupId) {
+      var groups = _(member.subscribedGroups).map('id').filter(function (groupId) {
         return groupId !== 'alle' && groupId !== 'commercial';
       }).value();
 

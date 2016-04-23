@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="SoCraTes (profiling)" type="NodeJSConfigurationType" factoryName="Node.js" path-to-node="project" path-to-js-file="start-socrates.js" working-dir="$PROJECT_DIR$">
+    <profiling do-profile="true" />
+    <RunnerSettings RunnerId="Basic" />
+    <RunnerSettings RunnerId="debuggableProgram" />
+    <ConfigurationWrapper RunnerId="Basic" />
+    <ConfigurationWrapper RunnerId="debuggableProgram" />
+    <method />
+  </configuration>
+</component>

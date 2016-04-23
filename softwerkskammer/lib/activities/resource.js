@@ -38,7 +38,7 @@ Resource.prototype.registeredMembers = function () {
   if (!this.state._registeredMembers) {
     this.state._registeredMembers = [];
   }
-  return _.pluck(this.state._registeredMembers, 'memberId');
+  return _.map(this.state._registeredMembers, 'memberId');
 };
 
 Resource.prototype.registrationDateOf = function (memberId) {
@@ -92,7 +92,7 @@ Resource.prototype.addToWaitinglist = function (memberId, momentOfRegistration) 
 
 Resource.prototype.removeFromWaitinglist = function (memberId) {
   if (!this.hasWaitinglist()) { return; }
-  var index = _.pluck(this.state._waitinglist, '_memberId').indexOf(memberId);
+  var index = _.map(this.state._waitinglist, '_memberId').indexOf(memberId);
   if (index > -1) {
     this.state._waitinglist.splice(index, 1);
   }

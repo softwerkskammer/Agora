@@ -176,7 +176,7 @@ Member.prototype.notifyOnWikiChanges = function () {
 };
 
 Member.prototype.isContactperson = function () {
-  return this.subscribedGroups && _(this.subscribedGroups).pluck('organizers').flatten().uniq().value().indexOf(this.id()) > -1;
+  return this.subscribedGroups && _(this.subscribedGroups).map('organizers').flatten().uniq().value().indexOf(this.id()) > -1;
 };
 
 Member.prototype.isInGroup = function (groupId) {
@@ -207,7 +207,7 @@ Member.superuserEmails = function (members) {
 Member.prototype.fillSubscribedGroups = function (groupNamesWithEmails, groups) {
   var self = this;
   this.subscribedGroups = _.transform(groupNamesWithEmails, function (result, value, key) {
-    if (_.contains(value, self.email().toLowerCase())) { result.push(_.find(groups, {id: key})); }
+    if (_.includes(value, self.email().toLowerCase())) { result.push(_.find(groups, {id: key})); }
   }, []);
 };
 

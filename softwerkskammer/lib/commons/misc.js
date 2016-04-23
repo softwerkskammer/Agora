@@ -51,7 +51,7 @@ module.exports = {
 
   differenceCaseInsensitive: function (strings, stringsToReduce) {
     function prepare(strs) {
-      return _(strs).compact().invoke('toLowerCase').value();
+      return _(strs).compact().invokeMap('toLowerCase').value();
     }
 
     return _.difference(prepare(strings), prepare(stringsToReduce));

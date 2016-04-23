@@ -46,7 +46,7 @@ function allActivitiesByDateRangeInDescendingOrder(rangeFrom, rangeTo, callback)
 }
 
 function flattenAndSortMongoResultCollection(collection) {
-  return _.sortBy(_.flatten(collection[0].value, true), 'startUnix');
+  return _.sortBy(_.flattenDeep(collection[0].value), 'startUnix');
 }
 
 module.exports = {
