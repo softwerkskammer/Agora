@@ -31,20 +31,18 @@ describe('eventstoreService', function () {
   });
 
   it('calls getEventStore once on startup', function (done) {
-    eventstoreService.getSoCraTesReadModel('socrates-url', function (err, model) {
+    eventstoreService.getSoCraTesReadModel('socrates-url', function (err) {
       expect(getEventStore.callCount).to.be(1);
       expect(getEventStore.calledWith('socrates-url')).to.be(true);
-      // expect(model).to.have.type(SoCraTesReadModel);
       done(err);
     });
   });
 
   it('calls getEventStore once even when fetching the model multiple times', function (done) {
-    eventstoreService.getSoCraTesReadModel('socrates-url', function (err1, model) {
-      eventstoreService.getSoCraTesReadModel('socrates-url', function (err2, model) {
-        eventstoreService.getSoCraTesReadModel('socrates-url', function (err3, model) {
+    eventstoreService.getSoCraTesReadModel('socrates-url', function (err1) {
+      eventstoreService.getSoCraTesReadModel('socrates-url', function (err2) {
+        eventstoreService.getSoCraTesReadModel('socrates-url', function (err3) {
           expect(getEventStore.callCount).to.be(1);
-          // expect(model).to.have.type(SoCraTesReadModel);
           done(err1 || err2 || err3);
         });
       });
