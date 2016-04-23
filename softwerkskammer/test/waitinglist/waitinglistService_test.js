@@ -19,7 +19,7 @@ var Activity = beans.get('activity');
 var activity1;
 
 var waitinglistMembersOf = function (activity, resourceName) {
-  return _.pluck(_.pluck(activity.resourceNamed(resourceName).waitinglistEntries(), 'state'), '_memberId');
+  return _.map(_.map(activity.resourceNamed(resourceName).waitinglistEntries(), 'state'), '_memberId');
 };
 
 var activityWithEinzelzimmer = function (resource) {

@@ -53,7 +53,7 @@ function activityParticipation(activity, visitorID, ressourceName, content, type
 
     function (err, results) {
       if (err) { return logger.error(err); }
-      var organizers = _.filter(results.group.members, function (member) { return _.contains(results.group.organizers, member.id()); });
+      var organizers = _.filter(results.group.members, function (member) { return _.includes(results.group.organizers, member.id()); });
       var organizersEmails = _.map(organizers, function (member) { return member.email(); });
       if (results.owner) {
         organizersEmails.push(results.owner.email());

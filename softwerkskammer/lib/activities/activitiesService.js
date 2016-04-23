@@ -38,7 +38,7 @@ module.exports = {
 
   getUpcomingActivitiesOfMemberAndHisGroups: function (member, callback) {
     var activitiesFetcher = function (mem) {
-      var groupIds = _.pluck(mem.subscribedGroups, 'id');
+      var groupIds = _.map(mem.subscribedGroups, 'id');
       return _.partial(activitystore.activitiesForGroupIdsAndRegisteredMemberId, groupIds, mem.id(), true);
     };
 

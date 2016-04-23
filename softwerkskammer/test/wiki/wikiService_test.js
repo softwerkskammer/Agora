@@ -229,7 +229,7 @@ describe('WikiService (getBlogPosts)', function () {
   it('skips empty posts and posts without proper date', function (done) {
     wikiService.getBlogpostsForGroup('error', function (err, result) {
       expect(result.length).to.equal(4);
-      var titles = _.pluck(result, 'title');
+      var titles = _.map(result, 'title');
       expect(titles).to.contain('1');
       expect(titles).to.contain('3');
       expect(titles).to.contain('4');

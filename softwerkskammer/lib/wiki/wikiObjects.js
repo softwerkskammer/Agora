@@ -71,7 +71,7 @@ function FileWithChangelist(object) {
 }
 
 FileWithChangelist.prototype.authorsString = function () {
-  return _(this.changelist).pluck('author').uniq().value().toString();
+  return _(this.changelist).map('author').uniq().value().toString();
 };
 
 function DirectoryWithChangedFiles(object) {

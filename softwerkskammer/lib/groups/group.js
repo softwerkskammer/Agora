@@ -28,11 +28,11 @@ function Group(object) {
 // Helper functions (static) -> look for a better place to implement
 
 Group.regionalsFrom = function (groups) {
-  return _.where(groups, {type: regionalgruppe});
+  return _.filter(groups, {type: regionalgruppe});
 };
 
 Group.thematicsFrom = function (groups) {
-  return _.where(groups, {type: themengruppe});
+  return _.filter(groups, {type: themengruppe});
 };
 
 Group.allTypes = function () {
@@ -57,7 +57,7 @@ Group.prototype.descriptionHTMLFiltered = function (tagToFilter) {
 
 Group.prototype.checkedOrganizers = function (members) {
   var self = this;
-  return _.map(members, function (member) {return {member: member, checked: _.contains(self.organizers, member.id())}; });
+  return _.map(members, function (member) {return {member: member, checked: _.includes(self.organizers, member.id())}; });
 };
 
 Group.prototype.mapYrelative = function () {

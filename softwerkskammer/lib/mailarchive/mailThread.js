@@ -4,7 +4,7 @@ var _ = require('lodash');
 
 module.exports = function (mailHeaders) {
   var threads = [];
-  var knownMails = _.indexBy(mailHeaders, 'id');
+  var knownMails = _.keyBy(mailHeaders, 'id');
 
   function knownRefs(references) {
     return _.filter(references, function (ref) { return knownMails[ref] !== undefined; });

@@ -2,6 +2,7 @@ language: node_js
 
 node_js:
   - "4"
+  - "5"
 
 before_script:
   - npm install -g grunt-cli
@@ -11,6 +12,9 @@ services:
 
 # Use faster Docker architecture on Travis. (http://blog.travis-ci.com/2014-12-17-faster-builds-with-container-based-infrastructure/)
 sudo: false
+
+notifications:
+    slack: softwarecraftsmanship:AJPQ1HMqrsg2dEV5js9qt4rc
 
 env:
   - CXX=g++-4.8
