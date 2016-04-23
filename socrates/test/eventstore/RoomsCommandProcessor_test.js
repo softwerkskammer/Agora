@@ -9,6 +9,9 @@ var beans = require('../../testutil/configureForTest').get('beans');
 var events = beans.get('events');
 var GlobalEventStore = beans.get('GlobalEventStore');
 var RoomsWriteModel = beans.get('RoomsWriteModel');
+var RoomsReadModel = beans.get('RoomsReadModel');
+var RegistrationReadModel = beans.get('RegistrationReadModel');
+var SoCraTesReadModel = beans.get('SoCraTesReadModel');
 var RoomsCommandProcessor = beans.get('RoomsCommandProcessor');
 var e = beans.get('eventConstants');
 
@@ -31,7 +34,8 @@ describe('The rooms command processor', function () {
 
   beforeEach(function () {
     eventStore = new GlobalEventStore();
-    commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStore));
+    const registrationReadModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
+    commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStore, new RoomsReadModel(eventStore, registrationReadModel), registrationReadModel));
 
     eventStore.state.registrationEvents = [
       events.participantWasRegistered(bedInDouble, 2, 'sessionId1', 'memberId1', aLongTimeAgo),

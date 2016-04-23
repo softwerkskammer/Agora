@@ -5,11 +5,10 @@ var R = require('ramda');
 
 var beans = require('simple-configure').get('beans');
 var e = beans.get('eventConstants');
-var RegistrationReadModel = beans.get('RegistrationReadModel');
 
-function RoomsReadModel(eventStore) {
+function RoomsReadModel(eventStore, registrationReadModel) {
   this._eventStore = eventStore;
-  this._registrationReadModel = new RegistrationReadModel(eventStore);
+  this._registrationReadModel = registrationReadModel;
 
   // read model state:
   this._roomPairsFor = {};

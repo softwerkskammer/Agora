@@ -7,6 +7,7 @@ var beans = require('../../testutil/configureForTest').get('beans');
 var events = beans.get('events');
 var GlobalEventStore = beans.get('GlobalEventStore');
 var RegistrationReadModel = beans.get('RegistrationReadModel');
+var SoCraTesReadModel = beans.get('SoCraTesReadModel');
 
 var managementService = beans.get('managementService');
 
@@ -21,7 +22,7 @@ describe('Management Service', function () {
 
     beforeEach(function () {
       eventStore = new GlobalEventStore();
-      readModel = new RegistrationReadModel(eventStore);
+      readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
     });
 
     it('counts each value', function () {

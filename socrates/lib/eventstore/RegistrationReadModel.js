@@ -7,11 +7,11 @@ var moment = require('moment-timezone');
 var beans = require('simple-configure').get('beans');
 var e = beans.get('eventConstants');
 var socratesConstants = beans.get('socratesConstants');
-var SoCraTesReadModel = beans.get('SoCraTesReadModel');
 var roomOptions = beans.get('roomOptions');
 
-function RegistrationReadModel(eventStore) {
+function RegistrationReadModel(eventStore, soCraTesReadModel) {
   this._eventStore = eventStore;
+  this._soCraTesReadModel = soCraTesReadModel;
 
   // read model state:
   this._reservationsBySessionId = undefined;
@@ -174,7 +174,7 @@ RegistrationReadModel.prototype.waitinglistParticipantsByMemberIdFor = function 
 };
 
 RegistrationReadModel.prototype.isFull = function (roomType) {
-  return new SoCraTesReadModel(this._eventStore).quotaFor(roomType) <= this.reservationsAndParticipantsFor(roomType).length;
+  return this._soCraTesReadModel.quotaFor(roomType) <= this.reservationsAndParticipantsFor(roomType).length;
 };
 
 RegistrationReadModel.prototype._reservationOrWaitinglistReservationEventFor = function (sessionId) {
