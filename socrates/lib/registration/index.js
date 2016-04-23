@@ -291,8 +291,8 @@ app.get('/management', function (req, res, next) {
                                 res.render('managementTables', {
                                   participantsOf: participantsOf,
                                   title: 'SoCraTes ' + currentYear,
-                                  roomsReadModel: roomsReadModel,
-                                  registrationReadModel: registrationReadModel,
+                                  _roomsReadModel: roomsReadModel,
+                                  _registrationReadModel: registrationReadModel,
                                   socratesReadModel: socratesReadModel,
                                   roomOptionIds: roomOptions.allIds(),
                                   addonLines: addonLines,
@@ -364,7 +364,7 @@ app.get('/hotelInfo', function (req, res, next) {
 
                     res.render('hotelInfoTables', {
                       participantsOf: participantsOf,
-                      registrationReadModel: registrationReadModel,
+                      _registrationReadModel: registrationReadModel,
                       addonLines: addonLines,
                       rooms: {
                         bed_in_double: {

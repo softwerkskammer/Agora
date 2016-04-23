@@ -22,6 +22,7 @@ var eventstore = beans.get('eventstore');
 var GlobalEventStore = beans.get('GlobalEventStore');
 var RoomsReadModel = beans.get('RoomsReadModel');
 var RegistrationReadModel = beans.get('RegistrationReadModel');
+var SoCraTesReadModel = beans.get('SoCraTesReadModel');
 
 var aLongTimeAgo = moment.tz().subtract(40, 'minutes');
 var now = moment.tz();
@@ -167,13 +168,13 @@ describe('SoCraTes Activities Service', function () {
       events.roomPairWasAdded('bed_in_double', 'memberIdForPair1', 'memberIdForPair2')
     ];
 
-    expect(new RoomsReadModel(eventStore).roomPairsFor('bed_in_double')).to.eql([{ // TODO extract to its own test!
+    expect(new RoomsReadModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))).roomPairsFor('bed_in_double')).to.eql([{ // TODO extract to its own test!
       participant1Id: 'memberIdForPair1',
       participant2Id: 'memberIdForPair2'
     }]);
 
     socratesActivitiesService.removeParticipantPairFor('bed_in_double', 'nicknameForPair1', 'nicknameForPair2', function (err) {
-      expect(new RoomsReadModel(eventStore).roomPairsFor('bed_in_double')).to.eql([]);
+      expect(new RoomsReadModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))).roomPairsFor('bed_in_double')).to.eql([]);
       done(err);
     });
   });
@@ -184,7 +185,7 @@ describe('SoCraTes Activities Service', function () {
     ];
 
     socratesActivitiesService.removeParticipantFor('bed_in_double', 'nickname', function (err) {
-      expect(R.keys(new RegistrationReadModel(eventStore).participantsByMemberIdFor('bed_in_double'))).to.eql([]);
+      expect(R.keys(new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore)).participantsByMemberIdFor('bed_in_double'))).to.eql([]);
       done(err);
     });
   });
@@ -199,8 +200,8 @@ describe('SoCraTes Activities Service', function () {
     ];
 
     socratesActivitiesService.removeParticipantFor('bed_in_double', 'nicknameForPair1', function (err) {
-      expect(R.keys(new RegistrationReadModel(eventStore).participantsByMemberIdFor('bed_in_double'))).to.eql(['memberIdForPair2']);
-      expect(new RoomsReadModel(eventStore).roomPairsFor('bed_in_double')).to.eql([]);
+      expect(R.keys(new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore)).participantsByMemberIdFor('bed_in_double'))).to.eql(['memberIdForPair2']);
+      expect(new RoomsReadModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))).roomPairsFor('bed_in_double')).to.eql([]);
       done(err);
     });
   });
@@ -211,7 +212,7 @@ describe('SoCraTes Activities Service', function () {
     ];
 
     socratesActivitiesService.removeWaitinglistMemberFor('single', 'nickname', function (err) {
-      expect(R.keys(new RegistrationReadModel(eventStore).waitinglistParticipantsByMemberIdFor('single'))).to.eql([]);
+      expect(R.keys(new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore)).waitinglistParticipantsByMemberIdFor('single'))).to.eql([]);
       done(err);
     });
   });

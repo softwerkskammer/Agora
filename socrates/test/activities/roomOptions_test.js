@@ -8,6 +8,7 @@ var roomOptions = beans.get('roomOptions');
 var events = beans.get('events');
 var GlobalEventStore = beans.get('GlobalEventStore');
 var RegistrationReadModel = beans.get('RegistrationReadModel');
+var SoCraTesReadModel = beans.get('SoCraTesReadModel');
 
 describe('Room Options', function () {
   describe('for a room', function () {
@@ -42,7 +43,7 @@ describe('Room Options', function () {
 
       var roomIds = roomOptions.allIds();
       var eventStore = new GlobalEventStore();
-      var readModel = new RegistrationReadModel(eventStore);
+      var readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
       eventStore.state.socratesEvents = [
         events.roomQuotaWasSet(roomIds[0], 100),
