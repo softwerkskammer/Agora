@@ -26,6 +26,7 @@ var RegistrationReadModel = beans.get('RegistrationReadModel');
 var RegistrationCommandProcessor = beans.get('RegistrationCommandProcessor');
 var eventstore = beans.get('eventstore');
 var e = beans.get('eventConstants');
+var conflictingVersionsLogger = require('winston').loggers.get('socrates');
 
 function stripTimestamps(someEvents) {
   return someEvents.map(function (event) {
@@ -120,6 +121,7 @@ describe('Registration Service', function () {
         }
         callback();
       });
+      sinon.spy(conflictingVersionsLogger, 'warn');
     });
 
     it('on startRegistration, it returns no error but logs info', function (done) {
@@ -132,6 +134,7 @@ describe('Registration Service', function () {
         expect(statusTitle).to.not.exist();
         expect(statusText).to.not.exist();
         expect(saveEventStoreCalls).to.be.eql(2);
+        expect(conflictingVersionsLogger.warn.calledOnce).to.be.true();
         done(err);
       });
     });
@@ -148,6 +151,7 @@ describe('Registration Service', function () {
         expect(statusTitle).to.not.exist();
         expect(statusText).to.not.exist();
         expect(saveEventStoreCalls).to.be.eql(2);
+        expect(conflictingVersionsLogger.warn.calledOnce).to.be.true();
         done(err);
       });
     });
