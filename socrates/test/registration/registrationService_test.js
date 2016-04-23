@@ -100,6 +100,7 @@ describe('Registration Service', function () {
 
     var registrationTuple;
     var saveEventStoreCalls;
+    var conflictingVersionsLoggerWarnSpy;
 
     beforeEach(function () {
       registrationTuple = {
@@ -121,7 +122,7 @@ describe('Registration Service', function () {
         }
         callback();
       });
-      sinon.spy(conflictingVersionsLogger, 'warn');
+      conflictingVersionsLoggerWarnSpy = sinon.spy(conflictingVersionsLogger, 'warn');
     });
 
     it('on startRegistration, it returns no error but logs info', function (done) {
@@ -135,6 +136,11 @@ describe('Registration Service', function () {
         expect(statusText).to.not.exist();
         expect(saveEventStoreCalls).to.be.eql(2);
         expect(conflictingVersionsLogger.warn.calledOnce).to.be.true();
+        var callArgument = JSON.parse(conflictingVersionsLoggerWarnSpy.getCall(0).args[0]);
+        expect(callArgument.message).to.be(CONFLICTING_VERSIONS);
+        expect(callArgument.function).to.be('startRegistration');
+        expect(callArgument.tuple.sessionId).to.be('racecondition');
+        expect(callArgument.event).to.be('RESERVATION-WAS-ISSUED');
         done(err);
       });
     });
@@ -152,6 +158,12 @@ describe('Registration Service', function () {
         expect(statusText).to.not.exist();
         expect(saveEventStoreCalls).to.be.eql(2);
         expect(conflictingVersionsLogger.warn.calledOnce).to.be.true();
+        var callArgument = JSON.parse(conflictingVersionsLoggerWarnSpy.getCall(0).args[0]);
+        expect(callArgument.message).to.be(CONFLICTING_VERSIONS);
+        expect(callArgument.function).to.be('completeRegistration');
+        expect(callArgument.tuple.sessionId).to.be('racecondition');
+        expect(callArgument.subscriber.state.id).to.be('memberId');
+        expect(callArgument.event).to.be('PARTICIPANT-WAS-REGISTERED');
         done(err);
       });
     });
