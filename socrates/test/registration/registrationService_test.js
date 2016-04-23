@@ -221,12 +221,8 @@ describe('Registration Service', function () {
       registrationTuple.duration = 3;
       registrationTuple.roomType = 'junior';
       registrationTuple.desiredRoomTypes = ['single'];
-      sinon.stub(RegistrationCommandProcessor.prototype, 'issueReservation', function () {
-        return e.DID_NOT_ISSUE_RESERVATION_FOR_FULL_RESOURCE;
-      });
-      sinon.stub(RegistrationCommandProcessor.prototype, 'issueWaitinglistReservation', function () {
-        return undefined;
-      });
+      sinon.stub(RegistrationCommandProcessor.prototype, 'issueReservation', function () {return e.DID_NOT_ISSUE_RESERVATION_FOR_FULL_RESOURCE;});
+      sinon.stub(RegistrationCommandProcessor.prototype, 'issueWaitinglistReservation', function () {return undefined;});
 
       registrationService.startRegistration(registrationTuple, 'memberId', now, function (err, statusTitle, statusText) {
         expect(statusTitle).to.be('activities.registration_problem');
