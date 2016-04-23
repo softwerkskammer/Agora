@@ -131,41 +131,53 @@ describe('Registration Service', function () {
         return callback(null, eventStore);
       });
       registrationTuple.sessionId = 'racecondition';
-      registrationService.startRegistration(registrationTuple, 'memberId', now, function (err, statusTitle, statusText) {
-        expect(statusTitle).to.not.exist();
-        expect(statusText).to.not.exist();
-        expect(saveEventStoreCalls).to.be.eql(2);
-        expect(conflictingVersionsLogger.warn.calledOnce).to.be.true();
-        var callArgument = JSON.parse(conflictingVersionsLoggerWarnSpy.getCall(0).args[0]);
-        expect(callArgument.message).to.be(CONFLICTING_VERSIONS);
-        expect(callArgument.function).to.be('startRegistration');
-        expect(callArgument.tuple.sessionId).to.be('racecondition');
-        expect(callArgument.event).to.be('RESERVATION-WAS-ISSUED');
-        done(err);
-      });
+      var expectedJson = {
+        message: CONFLICTING_VERSIONS,
+        function: 'startRegistration',
+        tuple: {activityUrl: 'socrates-url', duration: registrationTuple.duration, roomType: registrationTuple.roomType,
+          sessionId: 'racecondition', desiredRoomTypes: []},
+        event: 'RESERVATION-WAS-ISSUED'
+      };
+      registrationService.startRegistration(registrationTuple, 'memberId', now,
+        function (err, statusTitle, statusText) {
+          expect(statusTitle).to.not.exist();
+          expect(statusText).to.not.exist();
+          expect(saveEventStoreCalls).to.be.eql(2);
+          expect(conflictingVersionsLogger.warn.calledOnce).to.be.true();
+          var callArgument = JSON.parse(conflictingVersionsLoggerWarnSpy.getCall(0).args[0]);
+          expect(callArgument).to.be.eql(expectedJson);
+          done(err);
+        }
+      );
     });
 
     it('on completeRegistration, it returns no error but logs info', function (done) {
       sinon.stub(eventstore, 'getEventStore', function (url, callback) {
         eventStore.state.registrationEvents = [
-          events.reservationWasIssued(registrationBody.roomType, registrationBody.duration, 'racecondition', 'memberId', aShortTimeAgo)
+          events.reservationWasIssued(registrationBody.roomType, registrationBody.duration,
+            'racecondition', 'memberId', aShortTimeAgo)
         ];
         return callback(null, eventStore);
       });
-      registrationService.completeRegistration('memberId', 'racecondition', registrationBody, function (err, statusTitle, statusText) {
-
-        expect(statusTitle).to.not.exist();
-        expect(statusText).to.not.exist();
-        expect(saveEventStoreCalls).to.be.eql(2);
-        expect(conflictingVersionsLogger.warn.calledOnce).to.be.true();
-        var callArgument = JSON.parse(conflictingVersionsLoggerWarnSpy.getCall(0).args[0]);
-        expect(callArgument.message).to.be(CONFLICTING_VERSIONS);
-        expect(callArgument.function).to.be('completeRegistration');
-        expect(callArgument.tuple.sessionId).to.be('racecondition');
-        expect(callArgument.subscriber.state.id).to.be('memberId');
-        expect(callArgument.event).to.be('PARTICIPANT-WAS-REGISTERED');
-        done(err);
-      });
+      var expectedJson = {
+        message: CONFLICTING_VERSIONS,
+        function: 'completeRegistration',
+        tuple: {activityUrl: 'socrates-url', duration: registrationBody.duration, roomType: registrationBody.roomType,
+          sessionId: 'racecondition', desiredRoomTypes: []},
+        event: 'PARTICIPANT-WAS-REGISTERED',
+        subscriber: {state: {id: 'memberId', notifyOnWikiChangesSoCraTes: false}}
+      };
+      registrationService.completeRegistration('memberId', 'racecondition', registrationBody,
+        function (err, statusTitle, statusText) {
+          expect(statusTitle).to.not.exist();
+          expect(statusText).to.not.exist();
+          expect(saveEventStoreCalls).to.be.eql(2);
+          expect(conflictingVersionsLogger.warn.calledOnce).to.be.true();
+          var callArgument = JSON.parse(conflictingVersionsLoggerWarnSpy.getCall(0).args[0]);
+          expect(callArgument).to.be.eql(expectedJson);
+          done(err);
+        }
+      );
     });
   });
 
