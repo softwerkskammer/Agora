@@ -73,7 +73,7 @@ describe('Registration Service', function () {
     sinon.stub(notifications, 'newWaitinglistEntry');
     sinon.stub(memberstore, 'getMember', function (nickname, callback) {callback(null, new Member({id: 'memberId'}));});
     sinon.stub(subscriberstore, 'getSubscriber', function (memberId, callback) {callback(null, new Subscriber({id: 'memberId'}));});
-    
+
     getEventStoreStub = sinon.stub(eventstore, 'getEventStore', function (url, callback) {
       if (url === 'wrongUrl') {
         return callback(new Error('Wrong URL!'));
