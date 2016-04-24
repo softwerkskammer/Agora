@@ -33,24 +33,16 @@ Just follow these steps:
 
 1. Download and install Oracle VirtualBox from here: https://www.virtualbox.org
 1. Download and install Vagrant from here: http://www.vagrantup.com
-1. Check your version of Vagrant with `vagrant --version`. 1.5.1 and above are known to work.
+1. Check your version of Vagrant with `vagrant --version`. 1.8.1 and above are known to work.
 1. Clone, or if you plan to make contributions, fork and clone the repo (forking is a must if you want to contribute)
 1. Open a shell inside the checkout directory
 1. Perform `vagrant up` - (this will download and provision the virtual machine)
+1. Start auto-syncing your workspace with `vagrant rsync-auto &` (so local changes will be available on the vm)
 1. You can then log into the VM via `vagrant ssh`
-1. You will find the sources inside the VM in a directory `/vagrant`
-1. So `cd /vagrant`
+1. You will find the sources inside the VM in a directory `/home/vagrant/agora`
+1. So `cd agora`
 
-Under host OS Windows execute 
-
-1. `./syncLocalCopy.sh` 
-1. `cd ~/agora`
-
-node js modules can not be installed into /vagrant because it is shared with the host OS which does not support links.
-So every time you change anything on the windows side you should repeat call `./syncLocalCopy.sh` from either `/vagrant` 
-or `~/agora` and the all of the following steps should run in `~/agora`.
-
-Once retrieved perform the following commands inside the directory of the cloned repo:
+You are now ready to start the build.
 
 1. `npm install` - this will fetch all dependencies needed
 1. `node softwerkskammer/initialDBSetup` - this will create some sample data to start with
