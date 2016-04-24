@@ -54,7 +54,13 @@ describe('Registration Service', function () {
   var getEventStoreStub;
 
   beforeEach(function () {
-    registrationBody = {activityUrl: 'socrates-url', roomType: 'single', duration: 2, desiredRoomTypes: '', sessionId: 'sessionId'};
+    registrationBody = {
+      activityUrl: 'socrates-url',
+      roomType: 'single',
+      duration: 2,
+      desiredRoomTypes: '',
+      sessionId: 'sessionId'
+    };
     eventStore = new GlobalEventStore();
     eventStore.state.socratesEvents = [events.roomQuotaWasSet('single', 10)];
     readModel = new RegistrationReadModel(eventStore);
@@ -67,6 +73,7 @@ describe('Registration Service', function () {
     sinon.stub(notifications, 'newWaitinglistEntry');
     sinon.stub(memberstore, 'getMember', function (nickname, callback) {callback(null, new Member({id: 'memberId'}));});
     sinon.stub(subscriberstore, 'getSubscriber', function (memberId, callback) {callback(null, new Subscriber({id: 'memberId'}));});
+    
     getEventStoreStub = sinon.stub(eventstore, 'getEventStore', function (url, callback) {
       if (url === 'wrongUrl') {
         return callback(new Error('Wrong URL!'));
