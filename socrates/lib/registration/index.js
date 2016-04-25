@@ -291,8 +291,8 @@ app.get('/management', function (req, res, next) {
                                 res.render('managementTables', {
                                   participantsOf: participantsOf,
                                   title: 'SoCraTes ' + currentYear,
-                                  _roomsReadModel: roomsReadModel,
-                                  _registrationReadModel: registrationReadModel,
+                                  roomsReadModel: roomsReadModel,
+                                  registrationReadModel: registrationReadModel,
                                   socratesReadModel: socratesReadModel,
                                   roomOptionIds: roomOptions.allIds(),
                                   addonLines: addonLines,
