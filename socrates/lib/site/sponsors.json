@@ -25,6 +25,11 @@
     "logo": "dreamit160.png"
   },
   {
+    "name": "GitHub",
+    "url": "https://github.com",
+    "logo": "github160.png"
+  },
+  {
     "name": "Holisticon AG",
     "url": "http://www.holisticon.de",
     "logo": "holisticon160.png"
@@ -63,6 +68,11 @@
     "name": "TNG Technology Consulting GmbH",
     "url": "http://www.tngtech.com",
     "logo": "tng160.png"
+  },
+  {
+    "name": "Valtech GmbH",
+    "url": "http://www.valtech.de",
+    "logo": "valtech160.png"
   },
   {
     "name": "Zweitag GmbH",
