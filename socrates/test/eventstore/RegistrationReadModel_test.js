@@ -9,6 +9,7 @@ var events = beans.get('events');
 var e = beans.get('eventConstants');
 var GlobalEventStore = beans.get('GlobalEventStore');
 var RegistrationReadModel = beans.get('RegistrationReadModel');
+var SoCraTesReadModel = beans.get('SoCraTesReadModel');
 
 var sessionId1 = 'session-id-1';
 var sessionId2 = 'session-id-2';
@@ -41,7 +42,7 @@ describe('The registration read model', function () {
 
   beforeEach(function () {
     eventStore = new GlobalEventStore();
-    readModel = new RegistrationReadModel(eventStore);
+    readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
   });
 
   describe('calculating the reservation expiration time (reservationExpiration)', function () {

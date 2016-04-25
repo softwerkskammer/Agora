@@ -8,6 +8,7 @@ var R = require('ramda');
 
 var conf = require('../../testutil/configureForTest');
 var beans = conf.get('beans');
+const cache = conf.get('cache');
 var userWithoutMember = require('../../testutil/userWithoutMember');
 
 var groupsAndMembersService = beans.get('groupsAndMembersService');
@@ -60,6 +61,8 @@ describe('SoCraTes registration application', function () {
   var eventStore;
 
   beforeEach(function () {
+    cache.flushAll();
+
     eventStore = new GlobalEventStore();
     eventStore.state.socratesEvents = [
       events.roomQuotaWasSet('single', 0),

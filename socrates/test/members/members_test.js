@@ -6,7 +6,9 @@ var sinon = require('sinon').sandbox.create();
 var expect = require('must-dist');
 var moment = require('moment-timezone');
 
-var beans = require('../../testutil/configureForTest').get('beans');
+const config = require('../../testutil/configureForTest');
+var beans = config.get('beans');
+var cache = config.get('cache');
 var userWithoutMember = require('../../testutil/userWithoutMember');
 var membersService = beans.get('membersService');
 var memberstore = beans.get('memberstore');
@@ -78,6 +80,7 @@ describe('SoCraTes members application', function () {
 
   beforeEach(function () {
     /* eslint camelcase: 0 */
+    cache.flushAll();
 
     eventStore = new GlobalEventStore();
     eventStore.state.socratesEvents = [
@@ -166,6 +169,7 @@ describe('SoCraTes members application', function () {
     describe('displaying the associated roommate in the profile', function () {
 
       beforeEach(function () {
+
         sinon.stub(memberstore, 'getMember', function (nickname, callback) {
           if (nickname === 'hada') {
             return callback(null, softwerkskammerMember);

@@ -6,7 +6,9 @@ var expect = require('must-dist');
 var moment = require('moment-timezone');
 var R = require('ramda');
 
-var beans = require('../../testutil/configureForTest').get('beans');
+const conf = require('../../testutil/configureForTest');
+var beans = conf.get('beans');
+const cache = conf.get('cache');
 
 var CONFLICTING_VERSIONS = beans.get('constants').CONFLICTING_VERSIONS;
 
@@ -23,6 +25,7 @@ var notifications = beans.get('socratesNotifications');
 var events = beans.get('events');
 var GlobalEventStore = beans.get('GlobalEventStore');
 var RegistrationReadModel = beans.get('RegistrationReadModel');
+var SoCraTesReadModel = beans.get('SoCraTesReadModel');
 var RegistrationCommandProcessor = beans.get('RegistrationCommandProcessor');
 var eventstore = beans.get('eventstore');
 var e = beans.get('eventConstants');
@@ -62,7 +65,7 @@ describe('Registration Service', function () {
     eventStore.state.socratesEvents = [
       events.roomQuotaWasSet('single', 10)
     ];
-    readModel = new RegistrationReadModel(eventStore);
+    readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
     sinon.stub(notifications, 'newParticipant');
     sinon.stub(notifications, 'newWaitinglistEntry');
@@ -101,6 +104,8 @@ describe('Registration Service', function () {
     var saveEventStoreCalls;
 
     beforeEach(function () {
+      cache.flushAll();
+
       registrationTuple = {
         activityUrl: 'socrates-url',
         roomType: 'single',
