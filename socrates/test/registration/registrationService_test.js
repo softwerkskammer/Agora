@@ -62,8 +62,6 @@ describe('Registration Service', function () {
       sessionId: 'sessionId'
     };
     eventStore = new GlobalEventStore();
-    eventStore.state.socratesEvents = [events.roomQuotaWasSet('single', 10)];
-    readModel = new RegistrationReadModel(eventStore);
     eventStore.state.socratesEvents = [
       events.roomQuotaWasSet('single', 10)
     ];
@@ -139,8 +137,7 @@ describe('Registration Service', function () {
         },
         event: 'RESERVATION-WAS-ISSUED'};
 
-      registrationService.startRegistration(registrationTuple, 'memberId', now,
-        function (err, statusTitle, statusText) {
+      registrationService.startRegistration(registrationTuple, 'memberId', now, function (err, statusTitle, statusText) {
           expect(statusTitle).to.not.exist();
           expect(statusText).to.not.exist();
           expect(saveEventStoreCalls).to.be(2);
@@ -148,8 +145,7 @@ describe('Registration Service', function () {
           var callArgument = JSON.parse(conflictingVersionsLoggerWarnSpy.getCall(0).args[0]);
           expect(callArgument).to.be.eql(expectedJson);
           done(err);
-        }
-      );
+      });
     });
 
     it('on completeRegistration, it returns no error but logs info', function (done) {
@@ -198,7 +194,8 @@ describe('Registration Service', function () {
         roomType: 'single',
         duration: 2,
         desiredRoomTypes: [],
-        sessionId: 'sessionId'};
+        sessionId: 'sessionId'
+      };
     });
 
     it('returns an error if fetching the activity produces an error', function (done) {
