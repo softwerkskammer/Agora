@@ -53,6 +53,8 @@ describe('Registration Service', function () {
   var getEventStoreStub;
 
   beforeEach(function () {
+    cache.flushAll();
+
     registrationBody = {
       activityUrl: 'socrates-url',
       roomType: 'single',

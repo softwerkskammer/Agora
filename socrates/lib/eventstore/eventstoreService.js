@@ -18,6 +18,7 @@ var RoomsCommandProcessor = beans.get('RoomsCommandProcessor');
 const SOCRATES_READ_MODEL = 'soCraTesReadModel';
 const REGISTRATION_READ_MODEL = 'registrationReadModel';
 const ROOMS_READ_MODEL = 'roomsReadModel';
+const GLOBAL_EVENT_STORE_FOR_WRITING = 'globalEventStoreForWriting';
 
 function getReadModel(url, key, ReadModel, callback) {
   var cachedModel = cache.get(key);
@@ -47,6 +48,19 @@ function getReadModelWithArg(url, key, ReadModel, argument, callback) {
   });
 }
 
+function getGlobalEventStoreForWriting(url, callback) {
+  const cachedStore = cache.get(GLOBAL_EVENT_STORE_FOR_WRITING);
+  if (cachedStore) {
+    return callback(null, cachedStore);
+  }
+
+  eventstore.getEventStore(url, function (err, eventStore) {
+    if (err || !eventStore) { return callback(err); }
+    cache.set(GLOBAL_EVENT_STORE_FOR_WRITING, eventStore);
+    callback(null, eventStore);
+  });
+}
+
 module.exports = {
   isValidUrl: function (url, callback) {
     eventstore.getEventStore(url, function (err, result) {
@@ -64,10 +78,11 @@ module.exports = {
   },
 
   getSoCraTesCommandProcessor: function (url, callback) {
-    eventstore.getEventStore(url, function (err, eventStore) {
-      // when creating a new SoCraTes, we want to create a new event store for it:
+    getGlobalEventStoreForWriting(url, function (err, eventStore) {
       if (err) { return callback(err); }
+      // when creating a new SoCraTes, we want to create a new event store for it:
       if (!eventStore) { eventStore = new GlobalEventStore(); }
+      cache.set(GLOBAL_EVENT_STORE_FOR_WRITING, eventStore);
       callback(null, new SoCraTesCommandProcessor(new SoCraTesWriteModel(eventStore)));
     });
   },
@@ -80,7 +95,7 @@ module.exports = {
 
   getRegistrationCommandProcessor: function (url, callback) {
     var self = this;
-    eventstore.getEventStore(url, function (err, eventStore) {
+    getGlobalEventStoreForWriting(url, function (err, eventStore) {
       // when adding a new registration, we require the event store to be already in place:
       if (err || !eventStore) { return callback(err); }
       self.getRegistrationReadModel(url, function (err1, registrationReadModel) {
@@ -92,7 +107,7 @@ module.exports = {
 
   getRoomsCommandProcessor: function (url, callback) {
     var self = this;
-    eventstore.getEventStore(url, function (err, eventStore) {
+    getGlobalEventStoreForWriting(url, function (err, eventStore) {
       // when adding a new rooms combination, we require the event store to be already in place:
       if (err || !eventStore) { return callback(err); }
       self.getRegistrationReadModel(url, function (err2, registrationReadModel) {
