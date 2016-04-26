@@ -13,6 +13,8 @@ db.eventstore.remove({url: "socrates-2016"})
 
 -- delete all registration events:
 db.eventstore.update({url: "socrates-2016"}, {$set: {"registrationEvents": []}})
+-- delete all rooms events:
+db.eventstore.update({url: "socrates-2016"}, {$set: {"roomsEvents": []}})
 
 -- delete the registration of a member whose id matches /git/ from SoCraTes activities
 db.activitystore.update({url: "socrates-2015"}, {$pull: {"resources.bed_in_double._registeredMembers": {memberId: /git/}}})
