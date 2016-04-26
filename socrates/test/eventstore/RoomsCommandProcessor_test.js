@@ -317,13 +317,17 @@ describe('The rooms command processor', function () {
         roomType: bedInDouble,
         participant1Id: 'memberId1',
         participant2Id: 'memberId2'
-      },
-      {
-        event: e.DID_NOT_REMOVE_ROOM_PAIR_CONTAINING_BECAUSE_THE_PAIR_DOES_NOT_EXIST_FOR_THIS_ROOM_TYPE,
-        roomType: bedInDouble,
-        memberId: 'memberId3'
       }
     ]);
+  });
+
+  it('does not do anything if asked for a non-pair room type', function () {
+    eventStore.state.roomsEvents = [];
+
+    commandProcessor.removeParticipantPairContaining('single', 'memberId');
+    commandProcessor.removeParticipantPairContaining('junior', 'memberId');
+
+    expect(stripTimestamps(eventStore.state.roomsEvents)).to.eql([]);
   });
 
 });
