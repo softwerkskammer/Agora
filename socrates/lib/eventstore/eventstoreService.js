@@ -79,32 +79,26 @@ module.exports = {
   },
 
   getRegistrationCommandProcessor: function (url, callback) {
-    // var self = this; TODO wtf?!
+    var self = this;
     eventstore.getEventStore(url, function (err, eventStore) {
       // when adding a new registration, we require the event store to be already in place:
       if (err || !eventStore) { return callback(err); }
-      // self.getRegistrationReadModel(url, function (err1, registrationReadModel) {
-      getReadModel(url, SOCRATES_READ_MODEL, SoCraTesReadModel, function (err0, soCraTesReadModel) {
-        if (err0 || !soCraTesReadModel) { return callback(err0); }
-        getReadModelWithArg(url, REGISTRATION_READ_MODEL, RegistrationReadModel, soCraTesReadModel, function (err1, registrationReadModel) {
-          if (err1 || !registrationReadModel) { return callback(err1); }
-          callback(null, new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, registrationReadModel)));
-        });
+      self.getRegistrationReadModel(url, function (err1, registrationReadModel) {
+        if (err1 || !registrationReadModel) { return callback(err1); }
+        callback(null, new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, registrationReadModel)));
       });
     });
   },
 
   getRoomsCommandProcessor: function (url, callback) {
-    // var self = this; TODO wtf?!
+    var self = this;
     eventstore.getEventStore(url, function (err, eventStore) {
       // when adding a new rooms combination, we require the event store to be already in place:
       if (err || !eventStore) { return callback(err); }
-        // self.getRegistrationReadModel(url, function (err2, registrationReadModel) {
-        getReadModel(url, REGISTRATION_READ_MODEL, RegistrationReadModel, function (err2, registrationReadModel) {
-          if (err2 || !registrationReadModel) { return callback(err2); }
-          // self.getRoomsReadModel(url, function (err1, roomsReadModel) {
-          getReadModelWithArg(url, ROOMS_READ_MODEL, RoomsReadModel, registrationReadModel, function (err1, roomsReadModel) {
-            if (err1 || !roomsReadModel) { return callback(err1); }
+      self.getRegistrationReadModel(url, function (err2, registrationReadModel) {
+        if (err2 || !registrationReadModel) { return callback(err2); }
+        self.getRoomsReadModel(url, function (err1, roomsReadModel) {
+          if (err1 || !roomsReadModel) { return callback(err1); }
           callback(null, new RoomsCommandProcessor(new RoomsWriteModel(eventStore, roomsReadModel, registrationReadModel)));
         });
       });
