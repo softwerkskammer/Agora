@@ -20,8 +20,13 @@ const REGISTRATION_READ_MODEL = 'registrationReadModel';
 const ROOMS_READ_MODEL = 'roomsReadModel';
 const GLOBAL_EVENT_STORE_FOR_WRITING = 'globalEventStoreForWriting';
 
+function keyFor(url, key) {
+  return url + '_' + key;
+}
+
 function getReadModel(url, key, ReadModel, callback) {
-  var cachedModel = cache.get(key);
+  const cacheKey = keyFor(url, key);
+  var cachedModel = cache.get(cacheKey);
   if (cachedModel) {
     return callback(null, cachedModel);
   }
@@ -29,13 +34,14 @@ function getReadModel(url, key, ReadModel, callback) {
     // for the read models, there must be an eventstore already:
     if (err || !eventStore) { return callback(err); }
     const newModel = new ReadModel(eventStore);
-    cache.set(key, newModel);
+    cache.set(cacheKey, newModel);
     callback(null, newModel);
   });
 }
 
 function getReadModelWithArg(url, key, ReadModel, argument, callback) {
-  var cachedModel = cache.get(key);
+  const cacheKey = keyFor(url, key);
+  var cachedModel = cache.get(cacheKey);
   if (cachedModel) {
     return callback(null, cachedModel);
   }
@@ -43,20 +49,21 @@ function getReadModelWithArg(url, key, ReadModel, argument, callback) {
     // for the read models, there must be an eventstore already:
     if (err || !eventStore) { return callback(err); }
     const newModel = new ReadModel(eventStore, argument);
-    cache.set(key, newModel);
+    cache.set(cacheKey, newModel);
     callback(null, newModel);
   });
 }
 
 function getGlobalEventStoreForWriting(url, callback) {
-  const cachedStore = cache.get(GLOBAL_EVENT_STORE_FOR_WRITING);
+  const cacheKey = keyFor(url, GLOBAL_EVENT_STORE_FOR_WRITING);
+  const cachedStore = cache.get(cacheKey);
   if (cachedStore) {
     return callback(null, cachedStore);
   }
 
   eventstore.getEventStore(url, function (err, eventStore) {
     if (err || !eventStore) { return callback(err); }
-    cache.set(GLOBAL_EVENT_STORE_FOR_WRITING, eventStore);
+    cache.set(cacheKey, eventStore);
     callback(null, eventStore);
   });
 }
@@ -82,7 +89,7 @@ module.exports = {
       if (err) { return callback(err); }
       // when creating a new SoCraTes, we want to create a new event store for it:
       if (!eventStore) { eventStore = new GlobalEventStore(); }
-      cache.set(GLOBAL_EVENT_STORE_FOR_WRITING, eventStore);
+      cache.set(keyFor(url, GLOBAL_EVENT_STORE_FOR_WRITING), eventStore);
       callback(null, new SoCraTesCommandProcessor(new SoCraTesWriteModel(eventStore)));
     });
   },
@@ -127,9 +134,11 @@ module.exports = {
   },
 
   saveCommandProcessor: function (commandProcessor, callback) {
-    eventstore.saveEventStore(commandProcessor.eventStore(), function (err) {
+    const eventStore = commandProcessor.eventStore();
+    const url = eventStore.state.url;
+    eventstore.saveEventStore(eventStore, function (err) {
       if (err) {return callback(err); }
-      cache.del([SOCRATES_READ_MODEL, REGISTRATION_READ_MODEL, ROOMS_READ_MODEL]);
+      cache.del([keyFor(url, SOCRATES_READ_MODEL), keyFor(url, REGISTRATION_READ_MODEL), keyFor(url, ROOMS_READ_MODEL)]);
       callback();
     });
   }
