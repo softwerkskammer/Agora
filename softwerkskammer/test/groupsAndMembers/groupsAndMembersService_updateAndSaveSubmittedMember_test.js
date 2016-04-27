@@ -79,11 +79,11 @@ describe('Groups and Members Service', function () {
         accessrights.canEditMember = function () { return true; };
 
         groupsAndMembersService.updateAndSaveSubmittedMemberWithSubscriptions(sessionUser, memberformData, accessrights, function () { return; },
-          function (err, nickname) {
-            expect(nickname).to.equal('nick in memberform');
-            expect(sessionUser.member.id()).to.equal('member authentication id');
-            done(err);
-          });
+                                                                              function (err, nickname) {
+                                                                                expect(nickname).to.equal('nick in memberform');
+                                                                                expect(sessionUser.member.id()).to.equal('member authentication id');
+                                                                                done(err);
+                                                                              });
       });
     });
 
@@ -140,6 +140,44 @@ describe('Groups and Members Service', function () {
         });
       });
 
+    });
+
+    describe('called from SoCraTes', function () {
+      beforeEach(function () {
+        sinon.stub(memberstore, 'saveMember', function (anyMember, callback) { callback(null); });
+        sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups', function (nickname, callback) { callback(null, member); });
+        sinon.stub(groupsAndMembersService, 'updateSubscriptions', function (anyMember, oldEmail, subscriptions, callback) { callback(null); });
+      });
+
+      it('does _not_ set to SoCraTes only if the member seems to be a Softwerkskammer member', function (done) {
+        member.state.location = 'Karlsruhe';
+        var sessionUser = {profile: {}};
+        accessrights.canEditMember = function () { return true; };
+        expect(member.socratesOnly()).to.be(false); // just to be sure
+
+        groupsAndMembersService.updateAndSaveSubmittedMemberWithoutSubscriptions(sessionUser, memberformData, accessrights, undefined, function (err, nickname) {
+          expect(nickname).to.equal('nick in memberform');
+          expect(sessionUser.member).to.equal(member);
+          expect(sessionUser.hasOwnProperty('profile')).to.be.false();
+          expect(member.socratesOnly()).to.be(false);
+          delete member.state.location;
+          done(err);
+        });
+      });
+
+      it('does set to SoCraTes only if the member does not appear like a Softwerkskammer member', function (done) {
+        var sessionUser = {profile: {}};
+        accessrights.canEditMember = function () { return true; };
+        expect(member.socratesOnly()).to.be(false); // just to be sure
+
+        groupsAndMembersService.updateAndSaveSubmittedMemberWithoutSubscriptions(sessionUser, memberformData, accessrights, undefined, function (err, nickname) {
+          expect(nickname).to.equal('nick in memberform');
+          expect(sessionUser.member).to.equal(member);
+          expect(sessionUser.hasOwnProperty('profile')).to.be.false();
+          expect(member.socratesOnly()).to.be(true);
+          done(err);
+        });
+      });
     });
   });
 });

@@ -52,7 +52,7 @@ function updateAndSaveSubmittedMember(self, sessionUser, memberformData, accessr
     member.addAuthentication(memberformData.id);
     if (accessrights.isSuperuser()) { member.addAuthentication(memberformData.additionalAuthentication); }
     member.fillFromUI(memberformData);
-    member.state.socratesOnly = !updateSubscriptions; // SoCraTes creates members with "false", Softwerkskammer with "true"
+    member.state.socratesOnly = !updateSubscriptions && !member.location(); // SoCraTes creates members with "false", Softwerkskammer with "true"
     memberstore.saveMember(member, function (err1) {
       if (err1) { return callback(err1); }
       if (!sessionUser.member || sessionUser.member.id() === member.id()) {
