@@ -179,28 +179,29 @@ module.exports = {
     async.parallel(
       {
         roomsCommandProcessor: _.partial(eventstoreService.getRoomsCommandProcessor.bind(eventstoreService), currentUrl),
-        registrationCommandProcessor: _.partial(eventstoreService.getRegistrationCommandProcessor.bind(eventstoreService), currentUrl),
         participant: _.partial(memberstore.getMember, participantNick)
       },
       function (err, results) {
-        if (err || !results.roomsCommandProcessor || !results.registrationCommandProcessor || !results.participant) { return callback(err); }
+        eventstoreService.getRegistrationCommandProcessor(currentUrl, function (err2, registrationCommandProcessor) {
+          if (err || !results.roomsCommandProcessor || !registrationCommandProcessor || !results.participant) { return callback(err); }
 
-        results.roomsCommandProcessor.removeParticipantPairContaining(roomType, results.participant.id());
-        results.registrationCommandProcessor.removeParticipant(roomType, results.participant.id());
+          results.roomsCommandProcessor.removeParticipantPairContaining(roomType, results.participant.id());
+          registrationCommandProcessor.removeParticipant(roomType, results.participant.id());
 
-        saveCommandProcessor({
-          commandProcessor: results.roomsCommandProcessor,
-          callback: callback,
-          repeat: _.partial(self.removeParticipantFor, roomType, participantNick),
-          handleSuccess: function () {
-            notifications.removedFromParticipants(results.participant);
-          }
+          saveCommandProcessor({
+            commandProcessor: results.roomsCommandProcessor,
+            callback: callback,
+            repeat: _.partial(self.removeParticipantFor, roomType, participantNick),
+            handleSuccess: function () {
+              notifications.removedFromParticipants(results.participant);
+            }
+          });
         });
       }
     );
   },
 
-  removeWaitinglistMemberFor: function (roomType, waitinglistMemberNick, callback) {
+  removeWaitinglistMemberFor: function (desiredRoomTypes, waitinglistMemberNick, callback) {
     var self = this;
 
     async.parallel(
@@ -211,12 +212,12 @@ module.exports = {
       function (err, results) {
         if (err || !results.registrationCommandProcessor || !results.waitinglistMember) { return callback(err); }
 
-        results.registrationCommandProcessor.removeWaitinglistParticipant(roomType, results.waitinglistMember.id());
+        results.registrationCommandProcessor.removeWaitinglistParticipant(desiredRoomTypes, results.waitinglistMember.id());
 
         saveCommandProcessor({
           commandProcessor: results.registrationCommandProcessor,
           callback: callback,
-          repeat: _.partial(self.removeWaitinglistMemberFor, roomType, waitinglistMemberNick),
+          repeat: _.partial(self.removeWaitinglistMemberFor, desiredRoomTypes, waitinglistMemberNick),
           handleSuccess: function () {
             notifications.removedFromWaitinglist(results.waitinglistMember);
           }

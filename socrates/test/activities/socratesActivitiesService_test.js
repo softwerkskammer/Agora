@@ -55,7 +55,9 @@ describe('SoCraTes Activities Service', function () {
     });
 
     sinon.stub(eventstore, 'getEventStore', function (url, callback) {
-      callback(null, eventStore);
+      const newStore = new GlobalEventStore();
+      newStore.state = Object.assign({}, eventStore.state);
+      callback(null, newStore);
     });
     saveEventStore = sinon.stub(eventstore, 'saveEventStore', function (store, callback) { callback(); });
   });
@@ -75,7 +77,7 @@ describe('SoCraTes Activities Service', function () {
   it('registers the user when he is not on the waitinglist', function (done) {
 
     socratesActivitiesService.fromWaitinglistToParticipant('nickname', 'single', 2, now, function (err) {
-      expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
+      expect(stripTimestamps(saveEventStore.firstCall.args[0].state.registrationEvents)).to.eql([
         {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: undefined, roomType: 'single', memberId: 'memberId', duration: 2, joinedSoCraTes: now.valueOf()}]);
       done(err);
     });
@@ -179,7 +181,17 @@ describe('SoCraTes Activities Service', function () {
     }]);
 
     socratesActivitiesService.removeParticipantPairFor('bed_in_double', 'nicknameForPair1', 'nicknameForPair2', function (err) {
-      expect(new RoomsReadModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))).roomPairsFor('bed_in_double')).to.eql([]);
+      const savedEventStore = saveEventStore.firstCall.args[0];
+      expect(stripTimestamps(savedEventStore.state.registrationEvents)).to.eql([
+        {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: 'session-id', roomType: 'bed_in_double', memberId: 'memberIdForPair1', duration: 2, joinedSoCraTes: aLongTimeAgo.valueOf()},
+        {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: 'session-id', roomType: 'bed_in_double', memberId: 'memberIdForPair2', duration: 2, joinedSoCraTes: aLongTimeAgo.valueOf()}
+      ]);
+      expect(stripTimestamps(savedEventStore.state.roomsEvents)).to.eql([
+        {event: e.ROOM_PAIR_WAS_ADDED, roomType: 'bed_in_double', participant1Id: 'memberIdForPair1', participant2Id: 'memberIdForPair2'},
+        {event: e.ROOM_PAIR_WAS_REMOVED, roomType: 'bed_in_double', participant1Id: 'memberIdForPair1', participant2Id: 'memberIdForPair2'}
+      ]);
+
+//      expect(new RoomsReadModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))).roomPairsFor('bed_in_double')).to.eql([]);
       done(err);
     });
   });
@@ -190,8 +202,13 @@ describe('SoCraTes Activities Service', function () {
     ];
 
     socratesActivitiesService.removeParticipantFor('bed_in_double', 'nickname', function (err) {
-
-      expect(R.keys(new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore)).participantsByMemberIdFor('bed_in_double'))).to.eql([]);
+      const savedEventStore = saveEventStore.firstCall.args[0];
+      expect(stripTimestamps(savedEventStore.state.registrationEvents)).to.eql([
+        {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: 'session-id', roomType: 'bed_in_double', memberId: 'memberId', duration: 2, joinedSoCraTes: aLongTimeAgo.valueOf()},
+        {event: e.PARTICIPANT_WAS_REMOVED, roomType: 'bed_in_double', memberId: 'memberId'}
+      ]);
+      expect(stripTimestamps(savedEventStore.state.roomsEvents)).to.eql([]);
+      //      expect(R.keys(new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore)).participantsByMemberIdFor('bed_in_double'))).to.eql([]);
       done(err);
     });
   });
@@ -226,11 +243,17 @@ describe('SoCraTes Activities Service', function () {
 
   it('removes a waitinglist member from the given resource', function (done) {
     eventStore.state.registrationEvents = [
-      events.waitinglistParticipantWasRegistered('single', 'session-id', 'memberId', aLongTimeAgo)
+      events.waitinglistParticipantWasRegistered(['single'], 'session-id', 'memberId', aLongTimeAgo)
     ];
 
-    socratesActivitiesService.removeWaitinglistMemberFor('single', 'nickname', function (err) {
-      expect(R.keys(new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore)).waitinglistParticipantsByMemberIdFor('single'))).to.eql([]);
+    socratesActivitiesService.removeWaitinglistMemberFor(['single'], 'nickname', function (err) {
+      const savedEventStore = saveEventStore.firstCall.args[0];
+      expect(stripTimestamps(savedEventStore.state.registrationEvents)).to.eql([
+        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionId: 'session-id', desiredRoomTypes: ['single'], memberId: 'memberId', joinedWaitinglist: aLongTimeAgo.valueOf()},
+        {event: e.WAITINGLIST_PARTICIPANT_WAS_REMOVED, desiredRoomTypes: ['single'], memberId: 'memberId'}
+      ]);
+      expect(stripTimestamps(savedEventStore.state.roomsEvents)).to.eql([]);
+      //      expect(R.keys(new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore)).waitinglistParticipantsByMemberIdFor('single'))).to.eql([]);
       done(err);
     });
   });

@@ -158,7 +158,7 @@ app.post('/removeParticipant', function (req, res, next) {
 });
 
 app.post('/removeWaitinglistMember', function (req, res, next) {
-  socratesActivitiesService.removeWaitinglistMemberFor(req.body.roomType, req.body.waitinglistMember, function (err) {
+  socratesActivitiesService.removeWaitinglistMemberFor([req.body.roomType], req.body.waitinglistMember, function (err) {
     if (err) { return next(err); }
     res.redirect('/registration/management');
   });
