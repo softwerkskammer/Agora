@@ -68,5 +68,54 @@ describe('the flushable-memoize decorator', function () {
 
     testObject.fun();
   });
+
+  it('stores a separate cache for every instance of this', function() {
+    var fun = memoize(function(a) {
+      this.invocations++;
+      return a + this.a;
+    });
+
+    var obj1 = { fun: fun, a: 'Hello', invocations: 0};
+    var obj2 = { fun: fun, a: 'Goodbye', invocations: 0};
+
+    expect(obj1.fun('Foo')).to.equal('FooHello');
+    expect(obj1.fun('Foo')).to.equal('FooHello');
+    expect(obj2.fun('Foo')).to.equal('FooGoodbye');
+
+    expect(obj1.invocations).to.equal(1);
+    expect(obj2.invocations).to.equal(1);
+  });
+
+  it('flushes an individual cache only', function() {
+    var fun = memoize(function(a) {
+      this.invocations++;
+      return a + this.a;
+    });
+
+    var obj1 = { fun: fun, a: 'Hello', invocations: 0};
+    var obj2 = { fun: fun, a: 'Goodbye', invocations: 0};
+
+    obj1.fun('Foo');
+    obj1.fun.flushCache();
+    obj1.fun('Foo');
+    obj2.fun('Foo');
+
+    expect(obj1.invocations).to.equal(2);
+    expect(obj2.invocations).to.equal(1);
+  });
+
+  it('memoizes only over the called function when saving the cache on an instance', function() {
+    var obj = {
+      fun1: memoize(function(a) {
+        return 'Hello' + a;
+      }),
+      fun2: memoize(function(a) {
+        return 'Goodbye' + a;
+      })
+    };
+
+    expect(obj.fun1('a')).to.equal('Helloa');
+    expect(obj.fun2('a')).to.equal('Goodbyea');
+  });
 });
 
