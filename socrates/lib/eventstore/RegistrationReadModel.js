@@ -84,7 +84,7 @@ RegistrationReadModel.prototype.durations = function () {
 
   return R.pipe(
     R.values, // only the events
-    R.map(function(value){return value.duration;}), // pull out each duration
+    R.pluck('duration'), // pull out each duration
     R.groupBy(R.identity), // group same durations
     R.mapObjIndexed(function (value, key) { return {count: value.length, duration: roomOptions.endOfStayFor(key)}; })
   )(this.participantsByMemberId());
