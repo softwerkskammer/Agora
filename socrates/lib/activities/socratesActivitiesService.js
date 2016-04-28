@@ -30,7 +30,7 @@ module.exports = {
 
     async.parallel(
       {
-        registrationCommandProcessor: _.partial(eventstoreService.getRegistrationCommandProcessor.bind(eventstoreService), currentUrl),
+        registrationCommandProcessor: _.partial(eventstoreService.getRegistrationCommandProcessor, currentUrl).bind(eventstoreService),
         member: _.partial(memberstore.getMember, nickname)
       },
       function (err, results) {
@@ -57,7 +57,7 @@ module.exports = {
 
     async.parallel(
       {
-        registrationCommandProcessor: _.partial(eventstoreService.getRegistrationCommandProcessor.bind(eventstoreService), currentUrl),
+        registrationCommandProcessor: _.partial(eventstoreService.getRegistrationCommandProcessor, currentUrl).bind(eventstoreService),
         member: _.partial(memberstore.getMember, nickname)
       },
       function (err, results) {
@@ -82,7 +82,7 @@ module.exports = {
 
     async.parallel(
       {
-        registrationCommandProcessor: _.partial(eventstoreService.getRegistrationCommandProcessor.bind(eventstoreService), currentUrl),
+        registrationCommandProcessor: _.partial(eventstoreService.getRegistrationCommandProcessor, currentUrl).bind(eventstoreService),
         member: _.partial(memberstore.getMember, nickname)
       },
       function (err, results) {
@@ -107,7 +107,7 @@ module.exports = {
 
     async.parallel(
       {
-        registrationCommandProcessor: _.partial(eventstoreService.getRegistrationCommandProcessor.bind(eventstoreService), currentUrl),
+        registrationCommandProcessor: _.partial(eventstoreService.getRegistrationCommandProcessor, currentUrl).bind(eventstoreService),
         member: _.partial(memberstore.getMember, nickname)
       },
       function (err, results) {
@@ -132,7 +132,7 @@ module.exports = {
 
     async.parallel(
       {
-        roomsCommandProcessor: _.partial(eventstoreService.getRoomsCommandProcessor.bind(eventstoreService), currentUrl),
+        roomsCommandProcessor: _.partial(eventstoreService.getRoomsCommandProcessor, currentUrl).bind(eventstoreService),
         participant1: _.partial(memberstore.getMember, participant1Nick),
         participant2: _.partial(memberstore.getMember, participant2Nick)
       },
@@ -155,7 +155,7 @@ module.exports = {
 
     async.parallel(
       {
-        roomsCommandProcessor: _.partial(eventstoreService.getRoomsCommandProcessor.bind(eventstoreService), currentUrl),
+        roomsCommandProcessor: _.partial(eventstoreService.getRoomsCommandProcessor, currentUrl).bind(eventstoreService),
         participant1: _.partial(memberstore.getMember, participant1Nick),
         participant2: _.partial(memberstore.getMember, participant2Nick)
       },
@@ -178,7 +178,7 @@ module.exports = {
 
     async.parallel(
       {
-        roomsCommandProcessor: _.partial(eventstoreService.getRoomsCommandProcessor.bind(eventstoreService), currentUrl),
+        roomsCommandProcessor: _.partial(eventstoreService.getRoomsCommandProcessor, currentUrl).bind(eventstoreService),
         participant: _.partial(memberstore.getMember, participantNick)
       },
       function (err, results) {
@@ -206,7 +206,7 @@ module.exports = {
 
     async.parallel(
       {
-        registrationCommandProcessor: _.partial(eventstoreService.getRegistrationCommandProcessor.bind(eventstoreService), currentUrl),
+        registrationCommandProcessor: _.partial(eventstoreService.getRegistrationCommandProcessor, currentUrl).bind(eventstoreService),
         waitinglistMember: _.partial(memberstore.getMember, waitinglistMemberNick)
       },
       function (err, results) {
