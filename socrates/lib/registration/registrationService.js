@@ -11,7 +11,6 @@ var eventConstants = beans.get('eventConstants');
 
 var conflictingVersionsLogger = require('winston').loggers.get('socrates');
 
-
 module.exports = {
 
   startRegistration: function (registrationTuple, memberIdIfKnown, now, callback) {
@@ -28,7 +27,8 @@ module.exports = {
       }
       return eventstoreService.saveCommandProcessor(registrationCommandProcessor, function (err1) {
         if (err1 && err1.message === CONFLICTING_VERSIONS) {
-          var message = JSON.stringify({message: CONFLICTING_VERSIONS,
+          var message = JSON.stringify({
+            message: CONFLICTING_VERSIONS,
             function: 'startRegistration',
             tuple: registrationTuple,
             event: reservationEvent,
@@ -68,22 +68,25 @@ module.exports = {
       duration: body.duration && parseInt(body.duration, 10),
       desiredRoomTypes: body.desiredRoomTypes ? body.desiredRoomTypes.split(',') : [] // attention, empty string gets split as well...
     };
-    eventstoreService.getRegistrationCommandProcessor(registrationTuple.activityUrl, function (err, commandProcessor) {
-      if (err || !commandProcessor) { return callback(err); }
 
-      if (registrationTuple.desiredRoomTypes.length > 0) {
-        waitinglistRegistrationEvent = commandProcessor.registerWaitinglistParticipant(registrationTuple.desiredRoomTypes, registrationTuple.sessionId, memberID);
-      }
-      if (registrationTuple.roomType && registrationTuple.duration) {
-        registrationEvent = commandProcessor.registerParticipant(registrationTuple.roomType, registrationTuple.duration, registrationTuple.sessionId, memberID);
-      }
-      return subscriberstore.getSubscriber(memberID, function (err2, subscriber) {
-        if (err2) { return callback(err2); }
-        subscriber.fillFromUI(body);
-        subscriberstore.saveSubscriber(subscriber, function () {
+    subscriberstore.getSubscriber(memberID, function (err2, subscriber) {
+      if (err2) { return callback(err2); }
+      subscriber.fillFromUI(body);
+      subscriberstore.saveSubscriber(subscriber, function () {
+
+        eventstoreService.getRegistrationCommandProcessor(registrationTuple.activityUrl, function (err, commandProcessor) {
+          if (err || !commandProcessor) { return callback(err); }
+
+          if (registrationTuple.desiredRoomTypes.length > 0) {
+            waitinglistRegistrationEvent = commandProcessor.registerWaitinglistParticipant(registrationTuple.desiredRoomTypes, registrationTuple.sessionId, memberID);
+          }
+          if (registrationTuple.roomType && registrationTuple.duration) {
+            registrationEvent = commandProcessor.registerParticipant(registrationTuple.roomType, registrationTuple.duration, registrationTuple.sessionId, memberID);
+          }
           return eventstoreService.saveCommandProcessor(commandProcessor, function (err1) {
             if (err1 && err1.message === CONFLICTING_VERSIONS) {
-              var message = JSON.stringify({message: CONFLICTING_VERSIONS,
+              var message = JSON.stringify({
+                message: CONFLICTING_VERSIONS,
                 function: 'completeRegistration',
                 tuple: registrationTuple,
                 event: registrationEvent,
