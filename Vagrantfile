@@ -130,33 +130,39 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   #   chef.validation_client_name = "ORGNAME-validator"
 
   config.vm.provision "shell", inline: <<SCRIPT
-# optional: change apt to use a german mirror
-sed /etc/apt/sources.list -e 's|http://us.archive.ubuntu.com/|http://de.archive.ubuntu.com/|' -i
+    # optional: change apt to use a german mirror
+    sed /etc/apt/sources.list -e 's|http://us.archive.ubuntu.com/|http://de.archive.ubuntu.com/|' -i
 
 
-# update package info
-apt-get update
+    # update package info
+    apt-get update
 
-apt-get install --yes curl
+    apt-get install --yes curl
 
-curl -sL https://deb.nodesource.com/setup_5.x | sudo -E bash -
-apt-get install --yes nodejs
+    # install needed packages
+    apt-get install --yes \
+      mongodb \
+      g++ \
+      git \
+      python \
+      fontconfig \
+      imagemagick
 
-# install needed packages
-apt-get install --yes \
-  mongodb \
-  g++ \
-  git \
-  python \
-  fontconfig \
-  imagemagick
-
-# install grunt-cli using npm
-npm install -g grunt-cli
-# npm install -g phantomjs-prebuilt
-
-# create directory for image files stored in gallery microservice
-mkdir --verbose --parents /var/local/agora/gallery
-chown --verbose vagrant:vagrant /var/local/agora/gallery
+    # create directory for image files stored in gallery microservice
+    mkdir --verbose --parents /var/local/agora/gallery
+    chown --verbose vagrant:vagrant /var/local/agora/gallery
 SCRIPT
+
+  config.vm.provision :shell, privileged: false, inline: <<NVMSCRIPT
+    curl https://raw.githubusercontent.com/creationix/nvm/v0.31.0/install.sh | bash
+
+    echo "source /home/vagrant/.nvm/nvm.sh" >> /home/vagrant/.profile
+    source /home/vagrant/.profile
+
+    cd /home/vagrant/agora
+    nvm install
+    
+    # install grunt-cli using npm
+    npm install -g grunt-cli
+NVMSCRIPT
 end
