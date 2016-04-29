@@ -24,8 +24,6 @@ var notifications = beans.get('socratesNotifications');
 
 var events = beans.get('events');
 var GlobalEventStore = beans.get('GlobalEventStore');
-var RegistrationReadModel = beans.get('RegistrationReadModel');
-var SoCraTesReadModel = beans.get('SoCraTesReadModel');
 var RegistrationCommandProcessor = beans.get('RegistrationCommandProcessor');
 var eventstore = beans.get('eventstore');
 var e = beans.get('eventConstants');
@@ -62,7 +60,12 @@ describe('Registration Service', function () {
       sessionId: 'sessionId'
     };
 
-    eventStore = new GlobalEventStore();
+    eventStore = new GlobalEventStore({
+      url: 'socrates-url',
+      socratesEvents: [],
+      registrationEvents: [],
+      roomsEvents: []
+    });
     eventStore.state.socratesEvents = [
       events.roomQuotaWasSet('single', 10)
     ];
@@ -104,7 +107,6 @@ describe('Registration Service', function () {
     var saveEventStoreCalls;
 
     beforeEach(function () {
-      cache.flushAll();
 
       registrationTuple = {
         activityUrl: 'socrates-url',
@@ -191,12 +193,12 @@ describe('Registration Service', function () {
       });
     });
 
-    it('adds the registrant to the resource if the registration data says so', function (done) {
+    it('adds the registrant to the resource, if the registration data says so, stores the event and updates the read model', function (done) {
 
       registrationService.startRegistration(registrationTuple, 'memberId', now, function (err, statusTitle, statusText) {
         expect(statusTitle).to.not.exist();
         expect(statusText).to.not.exist();
-        const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
+        const readModel = cache.get('socrates-url_registrationReadModel');
 
         expect(readModel.reservationsAndParticipantsFor('single')).to.have.length(1);
         expect(readModel.reservationsAndParticipantsFor('single')[0].event).to.eql('RESERVATION-WAS-ISSUED');
@@ -206,11 +208,16 @@ describe('Registration Service', function () {
         expect(readModel.reservationsAndParticipantsFor('single')[0].duration).to.eql(2);
         expect(readModel.reservationsAndParticipantsFor('single')[0].joinedSoCraTes).to.eql(now.valueOf());
         expect(readModel.waitinglistReservationsAndParticipantsFor('single')).to.have.length(0);
+
+        const savedEventStore = saveEventStoreStub.firstCall.args[0];
+        expect(stripTimestamps(savedEventStore.state.registrationEvents)).to.eql([
+          {event: 'RESERVATION-WAS-ISSUED', sessionId: 'sessionId', roomType: 'single', memberId: 'memberId', duration: 2, joinedSoCraTes: now.valueOf()}
+        ]);
         done(err);
       });
     });
 
-    it('adds the registrant to the waitinglist if the registration data says so', function (done) {
+    it('adds the registrant to the waitinglist, if the registration data says so, stores the event and updates the read model', function (done) {
       registrationTuple.duration = undefined;
       registrationTuple.roomType = undefined;
       registrationTuple.desiredRoomTypes = ['single'];
@@ -218,7 +225,7 @@ describe('Registration Service', function () {
       registrationService.startRegistration(registrationTuple, 'memberId', now, function (err, statusTitle, statusText) {
         expect(statusTitle).to.not.exist();
         expect(statusText).to.not.exist();
-        const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
+        const readModel = cache.get('socrates-url_registrationReadModel');
 
         expect(readModel.reservationsAndParticipantsFor('single')).to.have.length(0);
         expect(readModel.waitinglistReservationsAndParticipantsFor('single')).to.have.length(1);
@@ -227,6 +234,11 @@ describe('Registration Service', function () {
         expect(readModel.waitinglistReservationsAndParticipantsFor('single')[0].memberId).to.eql('memberId');
         expect(readModel.waitinglistReservationsAndParticipantsFor('single')[0].desiredRoomTypes).to.eql(['single']);
         expect(readModel.waitinglistReservationsAndParticipantsFor('single')[0].joinedWaitinglist).to.eql(now.valueOf());
+
+        const savedEventStore = saveEventStoreStub.firstCall.args[0];
+        expect(stripTimestamps(savedEventStore.state.registrationEvents)).to.eql([
+          {event: 'WAITINGLIST-RESERVATION-WAS-ISSUED', sessionId: 'sessionId', desiredRoomTypes: ['single'], memberId: 'memberId', joinedWaitinglist: now.valueOf()}
+        ]);
         done(err);
       });
     });
@@ -235,7 +247,7 @@ describe('Registration Service', function () {
       registrationTuple.duration = 3;
       registrationTuple.roomType = 'junior';
       registrationTuple.desiredRoomTypes = ['single'];
-      sinon.stub(RegistrationCommandProcessor.prototype, 'issueReservation', function () {return e.DID_NOT_ISSUE_RESERVATION_FOR_ALREADY_RESERVED_SESSION;});
+      sinon.stub(RegistrationCommandProcessor.prototype, 'issueReservation', function () {return {event: e.DID_NOT_ISSUE_RESERVATION_FOR_ALREADY_RESERVED_SESSION};});
       sinon.stub(RegistrationCommandProcessor.prototype, 'issueWaitinglistReservation', function () {return undefined;});
 
       registrationService.startRegistration(registrationTuple, 'memberId', now, function (err, statusTitle, statusText) {
@@ -249,7 +261,7 @@ describe('Registration Service', function () {
       registrationTuple.duration = 3;
       registrationTuple.roomType = 'junior';
       registrationTuple.desiredRoomTypes = ['single'];
-      sinon.stub(RegistrationCommandProcessor.prototype, 'issueReservation', function () {return e.DID_NOT_ISSUE_RESERVATION_FOR_FULL_RESOURCE;});
+      sinon.stub(RegistrationCommandProcessor.prototype, 'issueReservation', function () {return {event: e.DID_NOT_ISSUE_RESERVATION_FOR_FULL_RESOURCE};});
       sinon.stub(RegistrationCommandProcessor.prototype, 'issueWaitinglistReservation', function () {return undefined;});
 
       registrationService.startRegistration(registrationTuple, 'memberId', now, function (err, statusTitle, statusText) {
@@ -264,7 +276,7 @@ describe('Registration Service', function () {
       registrationTuple.roomType = 'junior';
       registrationTuple.desiredRoomTypes = ['single'];
       sinon.stub(RegistrationCommandProcessor.prototype, 'issueReservation', function () {return undefined;});
-      sinon.stub(RegistrationCommandProcessor.prototype, 'issueWaitinglistReservation', function () {return e.DID_NOT_ISSUE_WAITINGLIST_RESERVATION_FOR_ALREADY_RESERVED_SESSION;});
+      sinon.stub(RegistrationCommandProcessor.prototype, 'issueWaitinglistReservation', function () {return {event: e.DID_NOT_ISSUE_WAITINGLIST_RESERVATION_FOR_ALREADY_RESERVED_SESSION}; });
 
       registrationService.startRegistration(registrationTuple, 'memberId', now, function (err, statusTitle, statusText) {
         expect(statusTitle).not.exist();

@@ -54,10 +54,10 @@ describe('The registration command processor', function () {
       const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       // When (issued command)
-      commandProcessor.issueReservation(singleBedRoom, untilSaturday, sessionId1, memberId1, aShortTimeAgo);
+      const event = commandProcessor.issueReservation(singleBedRoom, untilSaturday, sessionId1, memberId1, aShortTimeAgo);
 
       // Then (new events)
-      expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
+      expect(stripTimestamps([event])).to.eql([
         {event: e.RESERVATION_WAS_ISSUED, sessionId: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: aShortTimeAgo.valueOf()}]);
     });
 
@@ -69,11 +69,10 @@ describe('The registration command processor', function () {
       const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       // When (issued command)
-      commandProcessor.issueReservation(singleBedRoom, untilSundayMorning, sessionId2, memberId2, aShorterTimeAgo);
+      const event = commandProcessor.issueReservation(singleBedRoom, untilSundayMorning, sessionId2, memberId2, aShorterTimeAgo);
 
       // Then (new events)
-      expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {event: e.RESERVATION_WAS_ISSUED, sessionId: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: aShortTimeAgo.valueOf()},
+      expect(stripTimestamps([event])).to.eql([
         {event: e.DID_NOT_ISSUE_RESERVATION_FOR_FULL_RESOURCE, sessionId: sessionId2, memberId: memberId2, roomType: singleBedRoom, duration: untilSundayMorning}
       ]);
     });
@@ -86,11 +85,10 @@ describe('The registration command processor', function () {
       const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       // When (issued command)
-      commandProcessor.issueReservation(singleBedRoom, untilSundayMorning, sessionId2, memberId2, aShortTimeAgo);
+      const event = commandProcessor.issueReservation(singleBedRoom, untilSundayMorning, sessionId2, memberId2, aShortTimeAgo);
 
       // Then (new events)
-      expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {event: e.RESERVATION_WAS_ISSUED, sessionId: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: aLongTimeAgo.valueOf()},
+      expect(stripTimestamps([event])).to.eql([
         {event: e.RESERVATION_WAS_ISSUED, sessionId: sessionId2, memberId: memberId2, roomType: singleBedRoom, duration: untilSundayMorning, joinedSoCraTes: aShortTimeAgo.valueOf()}]);
     });
 
@@ -103,12 +101,10 @@ describe('The registration command processor', function () {
       const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       // When (issued command)
-      commandProcessor.issueReservation(singleBedRoom, untilSaturday, sessionId2, memberId2, aShorterTimeAgo);
+      const event = commandProcessor.issueReservation(singleBedRoom, untilSaturday, sessionId2, memberId2, aShorterTimeAgo);
 
       // Then (new events)
-      expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {event: e.RESERVATION_WAS_ISSUED, sessionId: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: aShortTimeAgo.valueOf()},
-        {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: aShortTimeAgo.valueOf()},
+      expect(stripTimestamps([event])).to.eql([
         {event: e.DID_NOT_ISSUE_RESERVATION_FOR_FULL_RESOURCE, sessionId: sessionId2, memberId: memberId2, roomType: singleBedRoom, duration: untilSaturday}
       ]);
     });
@@ -122,12 +118,10 @@ describe('The registration command processor', function () {
       const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       // When (issued command)
-      commandProcessor.issueReservation(singleBedRoom, untilSaturday, sessionId2, memberId2, aShorterTimeAgo);
+      const event = commandProcessor.issueReservation(singleBedRoom, untilSaturday, sessionId2, memberId2, aShorterTimeAgo);
 
       // Then (new events)
-      expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {event: e.RESERVATION_WAS_ISSUED, sessionId: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: aShortTimeAgo.valueOf()},
-        {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: aShortTimeAgo.valueOf()},
+      expect(stripTimestamps([event])).to.eql([
         {event: e.RESERVATION_WAS_ISSUED, sessionId: sessionId2, memberId: memberId2, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: aShorterTimeAgo.valueOf()}]);
     });
 
@@ -141,11 +135,10 @@ describe('The registration command processor', function () {
       const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       // When (issued command)
-      commandProcessor.issueReservation(bedInDouble, untilSaturday, sessionId1, memberId1, aShorterTimeAgo);
+      const event = commandProcessor.issueReservation(bedInDouble, untilSaturday, sessionId1, memberId1, aShorterTimeAgo);
 
       // Then (new events)
-      expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {event: e.RESERVATION_WAS_ISSUED, sessionId: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: aShortTimeAgo.valueOf()},
+      expect(stripTimestamps([event])).to.eql([
         {event: e.DID_NOT_ISSUE_RESERVATION_FOR_ALREADY_RESERVED_SESSION, sessionId: sessionId1, memberId: memberId1, roomType: bedInDouble, duration: untilSaturday}]);
     });
   });
@@ -531,10 +524,10 @@ describe('The registration command processor', function () {
       const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       // When (issued command)
-      commandProcessor.issueWaitinglistReservation([singleBedRoom], sessionId1, memberId1, aShortTimeAgo);
+      const event = commandProcessor.issueWaitinglistReservation([singleBedRoom], sessionId1, memberId1, aShortTimeAgo);
 
       // Then (new events)
-      expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
+      expect(stripTimestamps([event])).to.eql([
         {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionId: sessionId1, memberId: memberId1, desiredRoomTypes: [singleBedRoom], joinedWaitinglist: aShortTimeAgo.valueOf()}]);
     });
 
@@ -545,11 +538,10 @@ describe('The registration command processor', function () {
       const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       // When (issued command)
-      commandProcessor.issueWaitinglistReservation([singleBedRoom], sessionId2, memberId2, aShorterTimeAgo);
+      const event = commandProcessor.issueWaitinglistReservation([singleBedRoom], sessionId2, memberId2, aShorterTimeAgo);
 
       // Then (new events)
-      expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionId: sessionId1, memberId: memberId1, desiredRoomTypes: [singleBedRoom], joinedWaitinglist: aLongTimeAgo.valueOf()},
+      expect(stripTimestamps([event])).to.eql([
         {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionId: sessionId2, memberId: memberId2, desiredRoomTypes: [singleBedRoom], joinedWaitinglist: aShorterTimeAgo.valueOf()}]);
     });
 
@@ -561,12 +553,10 @@ describe('The registration command processor', function () {
       const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       // When (issued command)
-      commandProcessor.issueWaitinglistReservation([singleBedRoom], sessionId2, memberId2, aShorterTimeAgo);
+      const event = commandProcessor.issueWaitinglistReservation([singleBedRoom], sessionId2, memberId2, aShorterTimeAgo);
 
       // Then (new events)
-      expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionId: sessionId1, memberId: memberId1, desiredRoomTypes: [singleBedRoom], joinedWaitinglist: aShortTimeAgo.valueOf()},
-        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionId: sessionId1, memberId: memberId1, desiredRoomTypes: [singleBedRoom], joinedWaitinglist: aLongTimeAgo.valueOf()},
+      expect(stripTimestamps([event])).to.eql([
         {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionId: sessionId2, memberId: memberId2, desiredRoomTypes: [singleBedRoom], joinedWaitinglist: aShorterTimeAgo.valueOf()}]);
     });
 
@@ -577,11 +567,10 @@ describe('The registration command processor', function () {
       const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       // When (issued command)
-      commandProcessor.issueWaitinglistReservation([bedInDouble], sessionId1, memberId1, aShorterTimeAgo);
+      const event = commandProcessor.issueWaitinglistReservation([bedInDouble], sessionId1, memberId1, aShorterTimeAgo);
 
       // Then (new events)
-      expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionId: sessionId1, memberId: memberId1, desiredRoomTypes: [singleBedRoom], joinedWaitinglist: aShortTimeAgo.valueOf()},
+      expect(stripTimestamps([event])).to.eql([
         {event: e.DID_NOT_ISSUE_WAITINGLIST_RESERVATION_FOR_ALREADY_RESERVED_SESSION, sessionId: sessionId1, memberId: memberId1, desiredRoomTypes: [bedInDouble]}]);
     });
 
@@ -591,10 +580,10 @@ describe('The registration command processor', function () {
       const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       // When (issued command)
-      commandProcessor.issueWaitinglistReservation([singleBedRoom, bedInDouble], sessionId1, memberId1, aShortTimeAgo);
+      const event = commandProcessor.issueWaitinglistReservation([singleBedRoom, bedInDouble], sessionId1, memberId1, aShortTimeAgo);
 
       // Then (new events)
-      expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
+      expect(stripTimestamps([event])).to.eql([
         {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionId: sessionId1, memberId: memberId1, desiredRoomTypes: [singleBedRoom, bedInDouble], joinedWaitinglist: aShortTimeAgo.valueOf()}]);
     });
 

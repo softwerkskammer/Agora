@@ -24,17 +24,17 @@ SoCraTesCommandProcessor.prototype.setConferenceDetails = function (uiData) {
 
 SoCraTesCommandProcessor.prototype._updateUrl = function (newUrl) {
   var event = events.urlWasSet(newUrl);
-  this._updateSoCraTesEvents(event);
+  this.updateEventStore(event);
 };
 
 SoCraTesCommandProcessor.prototype._updateStartTime = function (startDate, startTime) {
   var startMoment = fieldHelpers.parseToMomentUsingDefaultTimezone(startDate, startTime);
-  this._updateSoCraTesEvents(events.startTimeWasSet(startMoment));
+  this.updateEventStore(events.startTimeWasSet(startMoment));
 };
 
 SoCraTesCommandProcessor.prototype._updateEndTime = function (endDate, endTime) {
   var endMoment = fieldHelpers.parseToMomentUsingDefaultTimezone(endDate, endTime);
-  this._updateSoCraTesEvents(events.endTimeWasSet(endMoment));
+  this.updateEventStore(events.endTimeWasSet(endMoment));
 };
 
 SoCraTesCommandProcessor.prototype._updateQuotasFromUI = function (uiInputArrays) {
@@ -53,10 +53,10 @@ SoCraTesCommandProcessor.prototype._updateQuotasFromUI = function (uiInputArrays
 
 SoCraTesCommandProcessor.prototype._updateRoomQuota = function (roomType, quota) {
   var event = events.roomQuotaWasSet(roomType, quota);
-  this._updateSoCraTesEvents(event);
+  this.updateEventStore(event);
 };
 
-SoCraTesCommandProcessor.prototype._updateSoCraTesEvents = function (newEvents) {
+SoCraTesCommandProcessor.prototype.updateEventStore = function (newEvents) {
   if (!(newEvents instanceof Array)) {
     newEvents = [newEvents];
   }

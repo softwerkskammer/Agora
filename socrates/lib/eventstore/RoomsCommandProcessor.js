@@ -31,7 +31,7 @@ RoomsCommandProcessor.prototype.addParticipantPairFor = function (roomType, part
     // nothing bad was discovered so far
     eventList.push(events.roomPairWasAdded(roomType, participant1Id, participant2Id));
   }
-  this._updateRoomsEvents(eventList);
+  this.updateEventStore(eventList);
 };
 
 RoomsCommandProcessor.prototype.removeParticipantPairFor = function (roomType, participant1Id, participant2Id) {
@@ -51,7 +51,7 @@ RoomsCommandProcessor.prototype.removeParticipantPairFor = function (roomType, p
     // nothing bad was discovered so far
     eventList.push(events.roomPairWasRemoved(roomType, participant1Id, participant2Id));
   }
-  this._updateRoomsEvents(eventList);
+  this.updateEventStore(eventList);
 };
 
 RoomsCommandProcessor.prototype.removeParticipantPairContaining = function (roomType, memberId) {
@@ -61,11 +61,11 @@ RoomsCommandProcessor.prototype.removeParticipantPairContaining = function (room
   if (pair) {
     eventList.push(events.roomPairContainingAParticipantWasRemoved(roomType, memberId, pair.participant1Id, pair.participant2Id));
   }
-  this._updateRoomsEvents(eventList);
+  this.updateEventStore(eventList);
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-RoomsCommandProcessor.prototype._updateRoomsEvents = function (newEvents) {
+RoomsCommandProcessor.prototype.updateEventStore = function (newEvents) {
   if (!(newEvents instanceof Array)) {
     newEvents = [newEvents];
   }
