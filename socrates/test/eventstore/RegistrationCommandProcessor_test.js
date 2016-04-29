@@ -29,9 +29,9 @@ var aShorterTimeAgo = moment.tz().subtract(5, 'minutes');
 
 var sessionId1 = 'session-id-1';
 var sessionId2 = 'session-id-2';
-var singleBedRoom = 'singleBedRoom';
-var bedInDouble = 'bedInDouble';
-var kingSuite = 'kingSuite';
+var singleBedRoom = 'single';
+var bedInDouble = 'bed_in_double';
+var junior = 'junior';
 var untilSaturday = 'untilSaturday';
 var untilSundayMorning = 'untilSundayMorning';
 var untilSundayEvening = 'untilSundayEvening';
@@ -41,11 +41,9 @@ var memberId2 = 'member-id-2';
 describe('The registration command processor', function () {
 
   var eventStore;
-  var commandProcessor;
 
   beforeEach(function () {
     eventStore = new GlobalEventStore();
-    commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
   });
 
   describe('for room reservations (issueReservation)', function () {
@@ -53,6 +51,7 @@ describe('The registration command processor', function () {
       // Given (saved events)
       eventStore.state.socratesEvents = [events.roomQuotaWasSet(singleBedRoom, 100)];
       eventStore.state.registrationEvents = [];
+      const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       // When (issued command)
       commandProcessor.issueReservation(singleBedRoom, untilSaturday, sessionId1, memberId1, aShortTimeAgo);
@@ -67,6 +66,7 @@ describe('The registration command processor', function () {
       eventStore.state.socratesEvents = [events.roomQuotaWasSet(singleBedRoom, 1)];
       eventStore.state.registrationEvents = [
         events.reservationWasIssued(singleBedRoom, untilSaturday, sessionId1, memberId1, aShortTimeAgo)];
+      const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       // When (issued command)
       commandProcessor.issueReservation(singleBedRoom, untilSundayMorning, sessionId2, memberId2, aShorterTimeAgo);
@@ -83,6 +83,7 @@ describe('The registration command processor', function () {
       eventStore.state.socratesEvents = [events.roomQuotaWasSet(singleBedRoom, 1)];
       eventStore.state.registrationEvents = [
         events.reservationWasIssued(singleBedRoom, untilSaturday, sessionId1, memberId1, aLongTimeAgo)];
+      const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       // When (issued command)
       commandProcessor.issueReservation(singleBedRoom, untilSundayMorning, sessionId2, memberId2, aShortTimeAgo);
@@ -99,6 +100,7 @@ describe('The registration command processor', function () {
       eventStore.state.registrationEvents = [
         events.reservationWasIssued(singleBedRoom, untilSaturday, sessionId1, memberId1, aShortTimeAgo),
         events.participantWasRegistered(singleBedRoom, untilSaturday, sessionId1, memberId1, aShortTimeAgo)];
+      const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       // When (issued command)
       commandProcessor.issueReservation(singleBedRoom, untilSaturday, sessionId2, memberId2, aShorterTimeAgo);
@@ -117,6 +119,7 @@ describe('The registration command processor', function () {
       eventStore.state.registrationEvents = [
         events.reservationWasIssued(singleBedRoom, untilSaturday, sessionId1, memberId1, aShortTimeAgo),
         events.participantWasRegistered(singleBedRoom, untilSaturday, sessionId1, memberId1, aShortTimeAgo)];
+      const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       // When (issued command)
       commandProcessor.issueReservation(singleBedRoom, untilSaturday, sessionId2, memberId2, aShorterTimeAgo);
@@ -135,6 +138,7 @@ describe('The registration command processor', function () {
         events.roomQuotaWasSet(bedInDouble, 100)];
       eventStore.state.registrationEvents = [
         events.reservationWasIssued(singleBedRoom, untilSaturday, sessionId1, memberId1, aShortTimeAgo)];
+      const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       // When (issued command)
       commandProcessor.issueReservation(bedInDouble, untilSaturday, sessionId1, memberId1, aShorterTimeAgo);
@@ -153,6 +157,7 @@ describe('The registration command processor', function () {
       eventStore.state.socratesEvents = [events.roomQuotaWasSet(singleBedRoom, 100)];
       eventStore.state.registrationEvents = [
         events.reservationWasIssued(singleBedRoom, untilSaturday, sessionId1, memberId1, aShortTimeAgo)];
+      const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       // When (issued command)
       commandProcessor.registerParticipant(singleBedRoom, untilSaturday, sessionId1, memberId1);
@@ -168,6 +173,7 @@ describe('The registration command processor', function () {
       eventStore.state.socratesEvents = [events.roomQuotaWasSet(singleBedRoom, 1)];
       eventStore.state.registrationEvents = [
         events.reservationWasIssued(singleBedRoom, untilSaturday, sessionId1, memberId1, aShortTimeAgo)];
+      const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       // When (issued command)
       commandProcessor.registerParticipant(singleBedRoom, untilSaturday, sessionId1, memberId1);
@@ -183,6 +189,7 @@ describe('The registration command processor', function () {
       eventStore.state.socratesEvents = [events.roomQuotaWasSet(singleBedRoom, 100)];
       eventStore.state.registrationEvents = [
         events.reservationWasIssued(singleBedRoom, untilSundayMorning, sessionId1, memberId1, aShortTimeAgo)];
+      const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       // When (issued command)
       commandProcessor.registerParticipant(singleBedRoom, untilSaturday, sessionId1, memberId1);
@@ -198,6 +205,7 @@ describe('The registration command processor', function () {
       eventStore.state.socratesEvents = [events.roomQuotaWasSet(singleBedRoom, 1)];
       eventStore.state.registrationEvents = [
         events.reservationWasIssued(singleBedRoom, untilSaturday, sessionId1, memberId1, aLongTimeAgo)];
+      const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       // When (issued command)
       commandProcessor.registerParticipant(singleBedRoom, untilSaturday, sessionId1, memberId1);
@@ -214,6 +222,7 @@ describe('The registration command processor', function () {
       eventStore.state.registrationEvents = [
         events.reservationWasIssued(singleBedRoom, untilSaturday, sessionId1, memberId1, aLongTimeAgo),
         events.participantWasRegistered(singleBedRoom, untilSaturday, sessionId2, memberId2, aShortTimeAgo)];
+      const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       // When (issued command)
       commandProcessor.registerParticipant(singleBedRoom, untilSaturday, sessionId1, memberId1);
@@ -230,6 +239,7 @@ describe('The registration command processor', function () {
       // Given (saved events)
       eventStore.state.socratesEvents = [events.roomQuotaWasSet(singleBedRoom, 100)];
       eventStore.state.registrationEvents = [];
+      const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       // When (issued command)
       commandProcessor.registerParticipant(singleBedRoom, untilSaturday, sessionId1, memberId1);
@@ -245,6 +255,7 @@ describe('The registration command processor', function () {
       eventStore.state.registrationEvents = [
         events.participantWasRegistered(singleBedRoom, untilSaturday, sessionId1, memberId1, aLongTimeAgo)
       ];
+      const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       // When (issued command)
       commandProcessor.registerParticipant(bedInDouble, untilSaturday, sessionId1, memberId1);
@@ -262,6 +273,7 @@ describe('The registration command processor', function () {
       //Given (saved events)
       eventStore.state.registrationEvents = [
         events.participantWasRegistered(singleBedRoom, untilSaturday, sessionId1, memberId1, aShortTimeAgo)];
+      const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       //When (issued command)
       commandProcessor.removeParticipant(singleBedRoom, memberId1);
@@ -275,6 +287,7 @@ describe('The registration command processor', function () {
     it('removes no participant when not registered', function () {
       //Given (saved events)
       eventStore.state.registrationEvents = [events.participantWasRegistered(singleBedRoom, untilSaturday, sessionId1, memberId2, aShortTimeAgo)];
+      const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       //When (issued command)
       commandProcessor.removeParticipant(singleBedRoom, memberId1);
@@ -288,6 +301,7 @@ describe('The registration command processor', function () {
     it('doesnt remove the participant because its not the right room', function () {
       //Given (saved events)
       eventStore.state.registrationEvents = [events.participantWasRegistered(singleBedRoom, untilSaturday, sessionId1, memberId1, aShortTimeAgo)];
+      const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       //When (issued command)
       commandProcessor.removeParticipant(bedInDouble, memberId1);
@@ -306,6 +320,8 @@ describe('The registration command processor', function () {
       eventStore.state.registrationEvents = [
         events.waitinglistParticipantWasRegistered([singleBedRoom], sessionId1, memberId1, aLongTimeAgo)
       ];
+      const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
+
       //When (issued commamnd)
       commandProcessor.removeWaitinglistParticipant([singleBedRoom], memberId1, aShortTimeAgo);
 
@@ -320,6 +336,7 @@ describe('The registration command processor', function () {
       eventStore.state.registrationEvents = [
         events.waitinglistParticipantWasRegistered([singleBedRoom], sessionId2, memberId2, aLongTimeAgo)
       ];
+      const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       //When (issued command)
       commandProcessor.removeWaitinglistParticipant([singleBedRoom], memberId1);
@@ -335,6 +352,7 @@ describe('The registration command processor', function () {
       eventStore.state.registrationEvents = [
         events.waitinglistParticipantWasRegistered([singleBedRoom, bedInDouble], sessionId1, memberId1, aLongTimeAgo)
       ];
+      const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       //When (issued commands)
       commandProcessor.removeWaitinglistParticipant([bedInDouble], memberId1);
@@ -352,6 +370,7 @@ describe('The registration command processor', function () {
       eventStore.state.registrationEvents = [
         events.waitinglistParticipantWasRegistered([singleBedRoom], sessionId1, memberId1, aLongTimeAgo)
       ];
+      const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       //When (issued command)
       commandProcessor.changeDesiredRoomTypes(memberId1, [bedInDouble]);
@@ -365,6 +384,7 @@ describe('The registration command processor', function () {
     it('does not change the desired room types because participant is not on waitinglist', function () {
       //Given (saved events)
       eventStore.state.registrationEvents = [];
+      const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       //When (issued command)
       commandProcessor.changeDesiredRoomTypes(memberId1, [bedInDouble]);
@@ -379,6 +399,7 @@ describe('The registration command processor', function () {
       eventStore.state.registrationEvents = [
         events.waitinglistParticipantWasRegistered([singleBedRoom], sessionId1, memberId1, aLongTimeAgo)
       ];
+      const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       //When (issued command)
       commandProcessor.changeDesiredRoomTypes(memberId1, [singleBedRoom]);
@@ -398,6 +419,7 @@ describe('The registration command processor', function () {
       eventStore.state.registrationEvents = [
         events.reservationWasIssued(singleBedRoom, untilSaturday, sessionId1, memberId1, aShortTimeAgo),
         events.participantWasRegistered(singleBedRoom, untilSaturday, sessionId1, memberId1, aShortTimeAgo)];
+      const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       // When (issued command)
       commandProcessor.moveParticipantToNewRoomType(memberId1, bedInDouble);
@@ -417,16 +439,17 @@ describe('The registration command processor', function () {
         events.participantWasRegistered(singleBedRoom, untilSaturday, sessionId1, memberId1, aShortTimeAgo),
         events.roomTypeWasChanged(memberId1, bedInDouble, untilSaturday, aShortTimeAgo)
       ];
+      const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       // When (issued command)
-      commandProcessor.moveParticipantToNewRoomType(memberId1, kingSuite);
+      commandProcessor.moveParticipantToNewRoomType(memberId1, junior);
 
       // Then (new events)
       expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
         {event: e.RESERVATION_WAS_ISSUED, sessionId: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: aShortTimeAgo.valueOf()},
         {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1, joinedSoCraTes: aShortTimeAgo.valueOf()},
         {event: e.ROOM_TYPE_WAS_CHANGED, memberId: memberId1, roomType: bedInDouble, duration: untilSaturday, joinedSoCraTes: aShortTimeAgo.valueOf()},
-        {event: e.ROOM_TYPE_WAS_CHANGED, memberId: memberId1, roomType: kingSuite, duration: untilSaturday, joinedSoCraTes: aShortTimeAgo.valueOf()}
+        {event: e.ROOM_TYPE_WAS_CHANGED, memberId: memberId1, roomType: junior, duration: untilSaturday, joinedSoCraTes: aShortTimeAgo.valueOf()}
       ]);
     });
 
@@ -434,6 +457,7 @@ describe('The registration command processor', function () {
       // Given (saved events)
       eventStore.state.socratesEvents = [events.roomQuotaWasSet(bedInDouble, 10)];
       eventStore.state.registrationEvents = [];
+      const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       // When (issued command)
       commandProcessor.moveParticipantToNewRoomType(memberId1, bedInDouble);
@@ -451,6 +475,7 @@ describe('The registration command processor', function () {
       eventStore.state.registrationEvents = [
         events.reservationWasIssued(singleBedRoom, untilSaturday, sessionId1, memberId1, aLongTimeAgo),
         events.participantWasRegistered(singleBedRoom, untilSaturday, sessionId1, memberId1, aShortTimeAgo)];
+      const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       // When (issued command)
       commandProcessor.setNewDurationForParticipant(memberId1, untilSundayMorning);
@@ -470,6 +495,7 @@ describe('The registration command processor', function () {
         events.participantWasRegistered(singleBedRoom, untilSaturday, sessionId1, memberId1, aShortTimeAgo),
         events.durationWasChanged(memberId1, singleBedRoom, untilSundayMorning, aShortTimeAgo)
       ];
+      const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       // When (issued command)
       commandProcessor.setNewDurationForParticipant(memberId1, untilSundayEvening);
@@ -487,6 +513,7 @@ describe('The registration command processor', function () {
       // Given (saved events)
       eventStore.state.socratesEvents = [events.roomQuotaWasSet(bedInDouble, 10)];
       eventStore.state.registrationEvents = [];
+      const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       // When (issued command)
       commandProcessor.setNewDurationForParticipant(memberId1, untilSaturday);
@@ -501,6 +528,7 @@ describe('The registration command processor', function () {
     it('reserves a spot on the waitinglist', function () {
       // Given (saved events)
       eventStore.state.registrationEvents = [];
+      const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       // When (issued command)
       commandProcessor.issueWaitinglistReservation([singleBedRoom], sessionId1, memberId1, aShortTimeAgo);
@@ -514,6 +542,7 @@ describe('The registration command processor', function () {
       // Given (saved events)
       eventStore.state.registrationEvents = [
         events.waitinglistReservationWasIssued([singleBedRoom], sessionId1, memberId1, aLongTimeAgo)];
+      const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       // When (issued command)
       commandProcessor.issueWaitinglistReservation([singleBedRoom], sessionId2, memberId2, aShorterTimeAgo);
@@ -529,6 +558,7 @@ describe('The registration command processor', function () {
       eventStore.state.registrationEvents = [
         events.waitinglistReservationWasIssued([singleBedRoom], sessionId1, memberId1, aShortTimeAgo),
         events.waitinglistParticipantWasRegistered([singleBedRoom], sessionId1, memberId1, aLongTimeAgo)];
+      const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       // When (issued command)
       commandProcessor.issueWaitinglistReservation([singleBedRoom], sessionId2, memberId2, aShorterTimeAgo);
@@ -544,6 +574,7 @@ describe('The registration command processor', function () {
       // Given (saved events)
       eventStore.state.registrationEvents = [
         events.waitinglistReservationWasIssued([singleBedRoom], sessionId1, memberId1, aShortTimeAgo)];
+      const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       // When (issued command)
       commandProcessor.issueWaitinglistReservation([bedInDouble], sessionId1, memberId1, aShorterTimeAgo);
@@ -557,6 +588,7 @@ describe('The registration command processor', function () {
     it('reserves a spot on the waitinglist for multiple rooms', function () {
       // Given (saved events)
       eventStore.state.registrationEvents = [];
+      const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       // When (issued command)
       commandProcessor.issueWaitinglistReservation([singleBedRoom, bedInDouble], sessionId1, memberId1, aShortTimeAgo);
@@ -573,6 +605,7 @@ describe('The registration command processor', function () {
       // Given (saved events)
       eventStore.state.registrationEvents = [
         events.waitinglistReservationWasIssued([singleBedRoom], sessionId1, memberId1, aShortTimeAgo)];
+      const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       // When (issued command)
       commandProcessor.registerWaitinglistParticipant([singleBedRoom], sessionId1, memberId1);
@@ -587,6 +620,7 @@ describe('The registration command processor', function () {
       // Given (saved events)
       eventStore.state.registrationEvents = [
         events.waitinglistReservationWasIssued([singleBedRoom], sessionId1, memberId1, aLongTimeAgo)];
+      const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       // When (issued command)
       commandProcessor.registerWaitinglistParticipant([singleBedRoom], sessionId1, memberId1);
@@ -600,6 +634,7 @@ describe('The registration command processor', function () {
     it('does not register a spot on the waitinglist if there was no reservation', function () { // TODO books a room?
       // Given (saved events)
       eventStore.state.registrationEvents = [];
+      const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       // When (issued command)
       commandProcessor.registerWaitinglistParticipant([singleBedRoom], sessionId1, memberId1);
@@ -614,6 +649,7 @@ describe('The registration command processor', function () {
       eventStore.state.registrationEvents = [
         events.waitinglistParticipantWasRegistered([singleBedRoom], sessionId1, memberId1, aLongTimeAgo)
       ];
+      const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       //When (issued command)
       commandProcessor.registerWaitinglistParticipant([singleBedRoom], sessionId1, memberId1);
@@ -629,6 +665,7 @@ describe('The registration command processor', function () {
       eventStore.state.registrationEvents = [
         events.waitinglistParticipantWasRegistered([singleBedRoom], sessionId1, memberId1, aLongTimeAgo)
       ];
+      const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       //When (issued command)
       commandProcessor.registerWaitinglistParticipant([singleBedRoom, bedInDouble], sessionId1, memberId1);
@@ -643,6 +680,7 @@ describe('The registration command processor', function () {
       // Given (saved events)
       eventStore.state.registrationEvents = [
         events.waitinglistReservationWasIssued([singleBedRoom, bedInDouble], sessionId1, memberId1, aShortTimeAgo)];
+      const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       // When (issued command)
       commandProcessor.registerWaitinglistParticipant([singleBedRoom, bedInDouble], sessionId1, memberId1);
@@ -658,6 +696,7 @@ describe('The registration command processor', function () {
     it('registers a participant even if he is not on the waitinglist', function () {
       //Given (saved events)
       eventStore.state.registrationEvents = [];
+      const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       //When (issued command)
       commandProcessor.fromWaitinglistToParticipant(singleBedRoom, memberId1, untilSaturday, aShortTimeAgo);
@@ -673,6 +712,7 @@ describe('The registration command processor', function () {
       eventStore.state.registrationEvents = [
         events.waitinglistParticipantWasRegistered([singleBedRoom, bedInDouble], sessionId1, memberId1, aLongTimeAgo)
       ];
+      const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       //When (issued command)
       commandProcessor.fromWaitinglistToParticipant(singleBedRoom, memberId1, untilSaturday, aShortTimeAgo);
@@ -688,6 +728,7 @@ describe('The registration command processor', function () {
       eventStore.state.registrationEvents = [
         events.participantWasRegistered(singleBedRoom, untilSaturday, sessionId1, memberId1, aShortTimeAgo)
       ];
+      const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       //When (issued command)
       commandProcessor.fromWaitinglistToParticipant(singleBedRoom, memberId1, untilSaturday, aShorterTimeAgo);
@@ -703,6 +744,7 @@ describe('The registration command processor', function () {
       eventStore.state.registrationEvents = [
         events.registeredParticipantFromWaitinglist(singleBedRoom, untilSaturday, memberId1, aLongTimeAgo)
       ];
+      const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       //When (issued command)
       commandProcessor.fromWaitinglistToParticipant(singleBedRoom, memberId1, untilSaturday, aShortTimeAgo);
