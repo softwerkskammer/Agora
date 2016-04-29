@@ -19,11 +19,9 @@ var aLongTimeAgo = moment.tz().subtract(40, 'minutes');
 describe('The rooms read model', function () {
 
   var eventStore;
-  var readModel;
 
   beforeEach(function () {
     eventStore = new GlobalEventStore();
-    readModel = new RoomsReadModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore)));
 
     eventStore.state.registrationEvents = [
       events.participantWasRegistered(bedInDouble, 2, 'sessionId1', 'memberId1', aLongTimeAgo),
@@ -38,6 +36,7 @@ describe('The rooms read model', function () {
     eventStore.state.roomsEvents = [
       events.roomPairWasAdded(bedInDouble, 'memberId1', 'memberId2')
     ];
+    const readModel = new RoomsReadModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore)));
 
     var participantsInRoom = readModel.participantsInRoom(bedInDouble);
 
@@ -49,6 +48,7 @@ describe('The rooms read model', function () {
     eventStore.state.roomsEvents = [
       events.roomPairWasAdded(bedInDouble, 'memberId1', 'memberId2')
     ];
+    const readModel = new RoomsReadModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore)));
 
     var participantsWithoutRoom = readModel.participantsWithoutRoomIn(bedInDouble);
 
@@ -59,12 +59,14 @@ describe('The rooms read model', function () {
     eventStore.state.roomsEvents = [
       events.roomPairWasAdded(bedInDouble, 'memberId1', 'memberId2')
     ];
+    const readModel = new RoomsReadModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore)));
 
     expect(readModel.roommateFor(bedInDouble, 'memberId1')).to.be('memberId2');
     expect(readModel.roommateFor(bedInDouble, 'memberId2')).to.be('memberId1');
   });
 
   it('returns undefined if the member is not associated to a roommate', function () {
+    const readModel = new RoomsReadModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore)));
     expect(readModel.roommateFor(bedInDouble, 'memberId1')).to.be(undefined);
   });
 
@@ -80,6 +82,7 @@ describe('The rooms read model', function () {
       events.roomPairWasAdded(bedInDouble, 'memberId1', 'memberId2'),
       events.roomPairWasAdded(bedInDouble, 'memberId3', 'memberId4')
     ];
+    const readModel = new RoomsReadModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore)));
 
     var roomPairs = readModel.roomPairsWithFullMembersFrom(bedInDouble, allKnownMembers);
 

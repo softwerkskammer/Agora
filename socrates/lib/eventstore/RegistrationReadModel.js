@@ -14,10 +14,12 @@ function RegistrationReadModel(eventStore, soCraTesReadModel) {
   this._soCraTesReadModel = soCraTesReadModel;
 
   // read model state:
-  this._reservationsBySessionId = undefined;
-  this._waitinglistReservationsBySessionId = undefined;
-  this._participantsByMemberId = undefined;
-  this._waitinglistParticipantsByMemberId = undefined;
+  this._reservationsBySessionId = {};
+  this._participantsByMemberId = {};
+  this._waitinglistReservationsBySessionId = {};
+  this._waitinglistParticipantsByMemberId = {};
+
+  this.update(this._eventStore.registrationEvents());
 }
 
 var earliestValidRegistrationTime = moment.tz().subtract(socratesConstants.registrationPeriodinMinutes, 'minutes');
@@ -30,17 +32,6 @@ var projectReservationsBySessionId = function (reservationsBySessionId, event) {
     delete reservationsBySessionId[event.sessionId];
   }
   return reservationsBySessionId;
-};
-
-RegistrationReadModel.prototype.reservationsBySessionId = function () {
-  if (!this._reservationsBySessionId) {
-    this._reservationsBySessionId = R.reduce(projectReservationsBySessionId, {}, this._eventStore.registrationEvents());
-  }
-  return this._reservationsBySessionId;
-};
-
-RegistrationReadModel.prototype.reservationsBySessionIdFor = function (roomType) {
-  return R.filter(function (event) { return event.roomType === roomType; }, this.reservationsBySessionId());
 };
 
 var projectParticipantsByMemberId = function (participantsByMemberId, event) {
@@ -56,10 +47,45 @@ var projectParticipantsByMemberId = function (participantsByMemberId, event) {
   return participantsByMemberId;
 };
 
-RegistrationReadModel.prototype.participantsByMemberId = function () {
-  if (!this._participantsByMemberId) {
-    this._participantsByMemberId = R.reduce(projectParticipantsByMemberId, {}, this._eventStore.registrationEvents());
+var projectWaitinglistReservationsBySessionId = function (waitinglistReservationsBySessionId, event) {
+  if (event.event === e.WAITINGLIST_RESERVATION_WAS_ISSUED && moment(event.joinedWaitinglist).isAfter(earliestValidRegistrationTime)) {
+    waitinglistReservationsBySessionId[event.sessionId] = event;
   }
+  if (event.event === e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED || event.event === e.PARTICIPANT_WAS_REGISTERED) {
+    delete waitinglistReservationsBySessionId[event.sessionId];
+  }
+  return waitinglistReservationsBySessionId;
+};
+
+var projectWaitinglistParticipantsByMemberId = function (waitinglistParticipantsByMemberId, event) {
+  if (event.event === e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED || event.event === e.DESIRED_ROOM_TYPES_WERE_CHANGED) {
+    waitinglistParticipantsByMemberId[event.memberId] = event;
+  }
+  if (event.event === e.WAITINGLIST_PARTICIPANT_WAS_REMOVED) {
+    delete waitinglistParticipantsByMemberId[event.memberId];
+  }
+  if (event.event === e.REGISTERED_PARTICIPANT_FROM_WAITINGLIST) {
+    delete waitinglistParticipantsByMemberId[event.memberId];
+  }
+  return waitinglistParticipantsByMemberId;
+};
+
+RegistrationReadModel.prototype.update = function (events) {
+  this._reservationsBySessionId = R.reduce(projectReservationsBySessionId, this._reservationsBySessionId, events);
+  this._participantsByMemberId = R.reduce(projectParticipantsByMemberId, this._participantsByMemberId, events);
+  this._waitinglistReservationsBySessionId = R.reduce(projectWaitinglistReservationsBySessionId, this._waitinglistReservationsBySessionId, events);
+  this._waitinglistParticipantsByMemberId = R.reduce(projectWaitinglistParticipantsByMemberId, this._waitinglistParticipantsByMemberId, events);
+};
+
+RegistrationReadModel.prototype.reservationsBySessionId = function () {
+  return this._reservationsBySessionId;
+};
+
+RegistrationReadModel.prototype.reservationsBySessionIdFor = function (roomType) {
+  return R.filter(function (event) { return event.roomType === roomType; }, this.reservationsBySessionId());
+};
+
+RegistrationReadModel.prototype.participantsByMemberId = function () {
   return this._participantsByMemberId;
 };
 
@@ -120,20 +146,7 @@ RegistrationReadModel.prototype.reservationsAndParticipantsFor = function (roomT
   return R.concat(R.values(this.reservationsBySessionIdFor(roomType)), R.values(this.participantsByMemberIdFor(roomType)));
 };
 
-var projectWaitinglistReservationsBySessionId = function (waitinglistReservationsBySessionId, event) {
-  if (event.event === e.WAITINGLIST_RESERVATION_WAS_ISSUED && moment(event.joinedWaitinglist).isAfter(earliestValidRegistrationTime)) {
-    waitinglistReservationsBySessionId[event.sessionId] = event;
-  }
-  if (event.event === e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED || event.event === e.PARTICIPANT_WAS_REGISTERED) {
-    delete waitinglistReservationsBySessionId[event.sessionId];
-  }
-  return waitinglistReservationsBySessionId;
-};
-
 RegistrationReadModel.prototype.waitinglistReservationsBySessionId = function () {
-  if (!this._waitinglistReservationsBySessionId) {
-    this._waitinglistReservationsBySessionId = R.reduce(projectWaitinglistReservationsBySessionId, {}, this._eventStore.registrationEvents());
-  }
   return this._waitinglistReservationsBySessionId;
 };
 
@@ -141,23 +154,7 @@ RegistrationReadModel.prototype.waitinglistReservationsBySessionIdFor = function
   return R.filter(function (event) { return R.contains(roomType, event.desiredRoomTypes); }, this.waitinglistReservationsBySessionId());
 };
 
-var projectWaitinglistParticipantsByMemberId = function (waitinglistParticipantsByMemberId, event) {
-  if (event.event === e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED || event.event === e.DESIRED_ROOM_TYPES_WERE_CHANGED) {
-    waitinglistParticipantsByMemberId[event.memberId] = event;
-  }
-  if (event.event === e.WAITINGLIST_PARTICIPANT_WAS_REMOVED) {
-    delete waitinglistParticipantsByMemberId[event.memberId];
-  }
-  if (event.event === e.REGISTERED_PARTICIPANT_FROM_WAITINGLIST) {
-    delete waitinglistParticipantsByMemberId[event.memberId];
-  }
-  return waitinglistParticipantsByMemberId;
-};
-
 RegistrationReadModel.prototype.waitinglistParticipantsByMemberId = function () {
-  if (!this._waitinglistParticipantsByMemberId) {
-    this._waitinglistParticipantsByMemberId = R.reduce(projectWaitinglistParticipantsByMemberId, {}, this._eventStore.registrationEvents());
-  }
   return this._waitinglistParticipantsByMemberId;
 };
 
