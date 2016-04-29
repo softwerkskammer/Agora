@@ -47,7 +47,6 @@ describe('Registration Service', function () {
   var registrationBody;
 
   var eventStore;
-  var readModel;
   var saveSubscriberCount;
   var saveEventStoreStub;
   var getEventStoreStub;
@@ -67,7 +66,6 @@ describe('Registration Service', function () {
     eventStore.state.socratesEvents = [
       events.roomQuotaWasSet('single', 10)
     ];
-    readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
     sinon.stub(notifications, 'newParticipant');
     sinon.stub(notifications, 'newWaitinglistEntry');
@@ -198,6 +196,7 @@ describe('Registration Service', function () {
       registrationService.startRegistration(registrationTuple, 'memberId', now, function (err, statusTitle, statusText) {
         expect(statusTitle).to.not.exist();
         expect(statusText).to.not.exist();
+        const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
         expect(readModel.reservationsAndParticipantsFor('single')).to.have.length(1);
         expect(readModel.reservationsAndParticipantsFor('single')[0].event).to.eql('RESERVATION-WAS-ISSUED');
@@ -219,6 +218,7 @@ describe('Registration Service', function () {
       registrationService.startRegistration(registrationTuple, 'memberId', now, function (err, statusTitle, statusText) {
         expect(statusTitle).to.not.exist();
         expect(statusText).to.not.exist();
+        const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
         expect(readModel.reservationsAndParticipantsFor('single')).to.have.length(0);
         expect(readModel.waitinglistReservationsAndParticipantsFor('single')).to.have.length(1);

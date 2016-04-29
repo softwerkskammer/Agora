@@ -25,17 +25,14 @@ function stripTimestamps(someEvents) {
   }, someEvents);
 }
 
-var bedInDouble = 'bedInDouble';
+var bedInDouble = 'bed_in_double';
 
 describe('The rooms command processor', function () {
 
   var eventStore;
-  var commandProcessor;
 
   beforeEach(function () {
     eventStore = new GlobalEventStore();
-    const registrationReadModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
-    commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStore, new RoomsReadModel(eventStore, registrationReadModel), registrationReadModel));
 
     eventStore.state.registrationEvents = [
       events.participantWasRegistered(bedInDouble, 2, 'sessionId1', 'memberId1', aLongTimeAgo),
@@ -47,6 +44,8 @@ describe('The rooms command processor', function () {
   });
 
   it('can put two participants into a room', function () {
+    const registrationReadModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
+    const commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStore, new RoomsReadModel(eventStore, registrationReadModel), registrationReadModel));
     commandProcessor.addParticipantPairFor(bedInDouble, 'memberId1', 'memberId2');
 
     expect(stripTimestamps(eventStore.state.roomsEvents)).to.eql([{
@@ -58,6 +57,8 @@ describe('The rooms command processor', function () {
   });
 
   it('does not create a room if one of the participants is undefined', function () {
+    const registrationReadModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
+    const commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStore, new RoomsReadModel(eventStore, registrationReadModel), registrationReadModel));
     commandProcessor.addParticipantPairFor(bedInDouble, 'memberId1', undefined);
 
     expect(stripTimestamps(eventStore.state.roomsEvents)).to.eql([{
@@ -68,6 +69,8 @@ describe('The rooms command processor', function () {
   });
 
   it('does not create a room if one of the participants is null', function () {
+    const registrationReadModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
+    const commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStore, new RoomsReadModel(eventStore, registrationReadModel), registrationReadModel));
     commandProcessor.addParticipantPairFor(bedInDouble, null, 'memberId5');
 
     expect(stripTimestamps(eventStore.state.roomsEvents)).to.eql([{
@@ -78,6 +81,8 @@ describe('The rooms command processor', function () {
   });
 
   it('does not create a room if both participants do not exist', function () {
+    const registrationReadModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
+    const commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStore, new RoomsReadModel(eventStore, registrationReadModel), registrationReadModel));
     commandProcessor.addParticipantPairFor(bedInDouble, undefined, null);
 
     expect(stripTimestamps(eventStore.state.roomsEvents)).to.eql([
@@ -95,6 +100,8 @@ describe('The rooms command processor', function () {
   });
 
   it('does not create a room if the first participant is not known', function () {
+    const registrationReadModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
+    const commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStore, new RoomsReadModel(eventStore, registrationReadModel), registrationReadModel));
     commandProcessor.addParticipantPairFor(bedInDouble, 'unknownMemberId', 'memberId5');
 
     expect(stripTimestamps(eventStore.state.roomsEvents)).to.eql([{
@@ -105,6 +112,8 @@ describe('The rooms command processor', function () {
   });
 
   it('does not create a room if the second participant is not known', function () {
+    const registrationReadModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
+    const commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStore, new RoomsReadModel(eventStore, registrationReadModel), registrationReadModel));
     commandProcessor.addParticipantPairFor(bedInDouble, 'memberId1', 'unknownMemberId');
 
     expect(stripTimestamps(eventStore.state.roomsEvents)).to.eql([{
@@ -115,6 +124,8 @@ describe('The rooms command processor', function () {
   });
 
   it('does not create a room if both participants are not known', function () {
+    const registrationReadModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
+    const commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStore, new RoomsReadModel(eventStore, registrationReadModel), registrationReadModel));
     commandProcessor.addParticipantPairFor(bedInDouble, 'unknownMemberId', 'anotherUnknownMemberId');
 
     expect(stripTimestamps(eventStore.state.roomsEvents)).to.eql([
@@ -132,6 +143,8 @@ describe('The rooms command processor', function () {
   });
 
   it('does not create a room if the two participants are identical', function () {
+    const registrationReadModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
+    const commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStore, new RoomsReadModel(eventStore, registrationReadModel), registrationReadModel));
     commandProcessor.addParticipantPairFor(bedInDouble, 'memberId1', 'memberId1');
 
     expect(stripTimestamps(eventStore.state.roomsEvents)).to.eql([{
@@ -146,6 +159,8 @@ describe('The rooms command processor', function () {
       events.roomPairWasAdded(bedInDouble, 'memberId1', 'memberId2')
     ];
 
+    const registrationReadModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
+    const commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStore, new RoomsReadModel(eventStore, registrationReadModel), registrationReadModel));
     commandProcessor.addParticipantPairFor(bedInDouble, 'memberId1', 'memberId3');
 
     expect(stripTimestamps(eventStore.state.roomsEvents)).to.eql([
@@ -168,6 +183,8 @@ describe('The rooms command processor', function () {
       events.roomPairWasAdded(bedInDouble, 'memberId1', 'memberId2')
     ];
 
+    const registrationReadModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
+    const commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStore, new RoomsReadModel(eventStore, registrationReadModel), registrationReadModel));
     commandProcessor.addParticipantPairFor(bedInDouble, 'memberId4', 'memberId2');
 
     expect(stripTimestamps(eventStore.state.roomsEvents)).to.eql([
@@ -190,6 +207,8 @@ describe('The rooms command processor', function () {
       events.roomPairWasAdded(bedInDouble, 'memberId1', 'memberId2')
     ];
 
+    const registrationReadModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
+    const commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStore, new RoomsReadModel(eventStore, registrationReadModel), registrationReadModel));
     commandProcessor.addParticipantPairFor(bedInDouble, 'memberId2', 'memberId1');
 
     expect(stripTimestamps(eventStore.state.roomsEvents)).to.eql([
@@ -217,6 +236,8 @@ describe('The rooms command processor', function () {
       events.roomPairWasAdded(bedInDouble, 'memberId1', 'memberId2')
     ];
 
+    const registrationReadModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
+    const commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStore, new RoomsReadModel(eventStore, registrationReadModel), registrationReadModel));
     commandProcessor.removeParticipantPairFor(bedInDouble, 'memberId1', 'memberId2');
 
     expect(stripTimestamps(eventStore.state.roomsEvents)).to.eql([
@@ -240,6 +261,8 @@ describe('The rooms command processor', function () {
       events.roomPairWasAdded(bedInDouble, 'memberId1', 'memberId2')
     ];
 
+    const registrationReadModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
+    const commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStore, new RoomsReadModel(eventStore, registrationReadModel), registrationReadModel));
     commandProcessor.removeParticipantPairFor(bedInDouble, 'memberId2', 'memberId1');
 
     expect(stripTimestamps(eventStore.state.roomsEvents)).to.eql([
@@ -263,6 +286,8 @@ describe('The rooms command processor', function () {
       events.roomPairWasAdded(bedInDouble, 'memberId1', 'memberId2')
     ];
 
+    const registrationReadModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
+    const commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStore, new RoomsReadModel(eventStore, registrationReadModel), registrationReadModel));
     commandProcessor.removeParticipantPairContaining(bedInDouble, 'memberId1');
 
     expect(stripTimestamps(eventStore.state.roomsEvents)).to.eql([
@@ -286,6 +311,8 @@ describe('The rooms command processor', function () {
     eventStore.state.roomsEvents = [
       events.roomPairWasAdded(bedInDouble, 'memberId1', 'memberId2')
     ];
+    const registrationReadModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
+    const commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStore, new RoomsReadModel(eventStore, registrationReadModel), registrationReadModel));
     commandProcessor.removeParticipantPairContaining(bedInDouble, 'memberId2');
 
     expect(stripTimestamps(eventStore.state.roomsEvents)).to.eql([
@@ -309,6 +336,8 @@ describe('The rooms command processor', function () {
     eventStore.state.roomsEvents = [
       events.roomPairWasAdded(bedInDouble, 'memberId1', 'memberId2')
     ];
+    const registrationReadModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
+    const commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStore, new RoomsReadModel(eventStore, registrationReadModel), registrationReadModel));
     commandProcessor.removeParticipantPairContaining(bedInDouble, 'memberId3');
 
     expect(stripTimestamps(eventStore.state.roomsEvents)).to.eql([
@@ -324,6 +353,8 @@ describe('The rooms command processor', function () {
   it('does not do anything if asked for a non-pair room type', function () {
     eventStore.state.roomsEvents = [];
 
+    const registrationReadModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
+    const commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStore, new RoomsReadModel(eventStore, registrationReadModel), registrationReadModel));
     commandProcessor.removeParticipantPairContaining('single', 'memberId');
     commandProcessor.removeParticipantPairContaining('junior', 'memberId');
 
