@@ -10,7 +10,6 @@ var socratesConstants = beans.get('socratesConstants');
 var roomOptions = beans.get('roomOptions');
 
 function RegistrationReadModel(eventStore, soCraTesReadModel) {
-  this._eventStore = eventStore;
   this._soCraTesReadModel = soCraTesReadModel;
 
   // read model state:
@@ -19,7 +18,7 @@ function RegistrationReadModel(eventStore, soCraTesReadModel) {
   this._waitinglistReservationsBySessionId = {};
   this._waitinglistParticipantsByMemberId = {};
 
-  this.update(this._eventStore.registrationEvents());
+  this.update(eventStore.registrationEvents());
 }
 
 var earliestValidRegistrationTime = moment.tz().subtract(socratesConstants.registrationPeriodinMinutes, 'minutes');
