@@ -5,6 +5,7 @@ var R = require('ramda');
 
 var beans = require('simple-configure').get('beans');
 var e = beans.get('eventConstants');
+const roomOptions = beans.get('roomOptions');
 
 function RoomsReadModel(eventStore, registrationReadModel) {
   this._eventStore = eventStore;
@@ -13,6 +14,12 @@ function RoomsReadModel(eventStore, registrationReadModel) {
   // read model state:
   this._roomPairsFor = {};
   this._participantsIn = {};
+  roomOptions.allIds().forEach(roomType => {
+    this._roomPairsFor[roomType] = [];
+    this._participantsIn[roomType] = [];
+  });
+
+  this.update(this._eventStore.roomsEvents());
 }
 
 var projectRoomPairs = function (roomType, roomPairs, event) {
@@ -28,20 +35,6 @@ var projectRoomPairs = function (roomType, roomPairs, event) {
   return roomPairs;
 };
 
-RoomsReadModel.prototype.roomPairsFor = function (roomType) {
-  if (!this._roomPairsFor[roomType]) {
-    this._roomPairsFor[roomType] = R.reduce(R.partial(projectRoomPairs, [roomType]), [], this._eventStore.roomsEvents());
-  }
-
-  return this._roomPairsFor[roomType];
-};
-
-RoomsReadModel.prototype.isRoomPairIn = function (roomType, participant1Id, participant2Id) {
-  return R.find(function (pair) {
-    return pair.participant1Id === participant1Id || pair.participant2Id === participant2Id;
-  }, this.roomPairsFor(roomType));
-};
-
 var projectParticpantsInRoom = function (roomType, participants, event) {
   if (event.event === e.ROOM_PAIR_WAS_ADDED && event.roomType === roomType) {
     return R.append(event.participant2Id, R.append(event.participant1Id, participants));
@@ -55,11 +48,25 @@ var projectParticpantsInRoom = function (roomType, participants, event) {
   return participants;
 };
 
-RoomsReadModel.prototype.participantsInRoom = function (roomType) {
-  if (!this._participantsIn[roomType]) {
-    this._participantsIn[roomType] = R.reduce(R.partial(projectParticpantsInRoom, [roomType]), [], this._eventStore.roomsEvents());
-  }
 
+RoomsReadModel.prototype.update = function (events) {
+  roomOptions.allIds().forEach(roomType => {
+    this._roomPairsFor[roomType] = R.reduce(R.partial(projectRoomPairs, [roomType]), this._roomPairsFor[roomType], events);
+    this._participantsIn[roomType] = R.reduce(R.partial(projectParticpantsInRoom, [roomType]), this._participantsIn[roomType], events);
+  });
+};
+
+RoomsReadModel.prototype.roomPairsFor = function (roomType) {
+  return this._roomPairsFor[roomType];
+};
+
+RoomsReadModel.prototype.isRoomPairIn = function (roomType, participant1Id, participant2Id) {
+  return R.find(function (pair) {
+    return pair.participant1Id === participant1Id || pair.participant2Id === participant2Id;
+  }, this.roomPairsFor(roomType));
+};
+
+RoomsReadModel.prototype.participantsInRoom = function (roomType) {
   return this._participantsIn[roomType];
 };
 
