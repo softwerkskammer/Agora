@@ -8,7 +8,6 @@ var e = beans.get('eventConstants');
 const roomOptions = beans.get('roomOptions');
 
 function RoomsReadModel(eventStore, registrationReadModel) {
-  this._eventStore = eventStore;
   this._registrationReadModel = registrationReadModel;
 
   // read model state:
@@ -19,7 +18,7 @@ function RoomsReadModel(eventStore, registrationReadModel) {
     this._participantsIn[roomType] = [];
   });
 
-  this.update(this._eventStore.roomsEvents());
+  this.update(eventStore.roomsEvents());
 }
 
 var projectRoomPairs = function (roomType, roomPairs, event) {
