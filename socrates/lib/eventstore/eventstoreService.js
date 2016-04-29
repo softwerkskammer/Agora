@@ -1,5 +1,7 @@
 'use strict';
 
+const R = require('ramda');
+
 const conf = require('simple-configure');
 var beans = conf.get('beans');
 var cache = conf.get('cache');
@@ -139,6 +141,25 @@ module.exports = {
     eventstore.saveEventStore(eventStore, function (err) {
       if (err) {return callback(err); }
       cache.del([keyFor(url, SOCRATES_READ_MODEL), keyFor(url, REGISTRATION_READ_MODEL), keyFor(url, ROOMS_READ_MODEL)]);
+      callback();
+    });
+  },
+
+  saveCommandProcessor2: function (commandProcessor, events, callback) {
+    if (!(events instanceof Array)) {
+      events = [events];
+    }
+
+    commandProcessor.updateEventStore(events);
+    
+    const eventStore = commandProcessor.eventStore();
+    const url = eventStore.state.url;
+
+    // update all read models:
+    R.values(cache.mget([keyFor(url, SOCRATES_READ_MODEL), keyFor(url, REGISTRATION_READ_MODEL), keyFor(url, ROOMS_READ_MODEL)])).forEach(model => model.update(events));
+
+    eventstore.saveEventStore(eventStore, function (err) {
+      if (err) {return callback(err); }
       callback();
     });
   }

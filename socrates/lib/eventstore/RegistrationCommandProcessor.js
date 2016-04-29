@@ -12,18 +12,15 @@ function RegistrationCommandProcessor(writeModel) {
 }
 
 RegistrationCommandProcessor.prototype.issueReservation = function (roomType, duration, sessionId, memberId, joinedSoCraTes) {
-  var event;
   if (this.writeModel.isFull(roomType)) {
-    event = events.didNotIssueReservationForFullResource(roomType, duration, sessionId, memberId);
+    return events.didNotIssueReservationForFullResource(roomType, duration, sessionId, memberId);
   } else if (this.writeModel.alreadyHasReservation(sessionId)) {
     // session id already reserved a spot
-    event = events.didNotIssueReservationForAlreadyReservedSession(roomType, duration, sessionId, memberId);
+    return events.didNotIssueReservationForAlreadyReservedSession(roomType, duration, sessionId, memberId);
   } else {
     // all is good
-    event = events.reservationWasIssued(roomType, duration, sessionId, memberId, joinedSoCraTes);
+    return events.reservationWasIssued(roomType, duration, sessionId, memberId, joinedSoCraTes);
   }
-  this._updateRegistrationEvents(event);
-  return event.event;
 };
 
 RegistrationCommandProcessor.prototype.registerParticipant = function (roomType, duration, sessionId, memberId) {
@@ -38,7 +35,7 @@ RegistrationCommandProcessor.prototype.registerParticipant = function (roomType,
     const reservation = this.writeModel.reservationFor(sessionId);
     event = events.participantWasRegistered(roomType, duration, sessionId, memberId, reservation.joinedSoCraTes);
   }
-  this._updateRegistrationEvents(event);
+  this.updateEventStore(event);
   return event.event;
 };
 
@@ -52,7 +49,7 @@ RegistrationCommandProcessor.prototype.removeParticipant = function (roomType, m
   } else {
     event = events.participantWasRemoved(roomType, memberId);
   }
-  this._updateRegistrationEvents(event);
+  this.updateEventStore(event);
 };
 
 RegistrationCommandProcessor.prototype.removeWaitinglistParticipant = function (desiredRoomTypes, memberId) {
@@ -63,7 +60,7 @@ RegistrationCommandProcessor.prototype.removeWaitinglistParticipant = function (
     // all is well
     event = events.waitinglistParticipantWasRemoved(desiredRoomTypes, memberId);
   }
-  this._updateRegistrationEvents(event);
+  this.updateEventStore(event);
 };
 
 RegistrationCommandProcessor.prototype.changeDesiredRoomTypes = function (memberId, desiredRoomTypes) {
@@ -77,7 +74,7 @@ RegistrationCommandProcessor.prototype.changeDesiredRoomTypes = function (member
     var waitinglistReservation = this.writeModel.waitinglistParticipantEventFor(memberId);
     event = events.desiredRoomTypesWereChanged(memberId, desiredRoomTypes, moment(waitinglistReservation.joinedWaitinglist));
   }
-  this._updateRegistrationEvents(event);
+  this.updateEventStore(event);
 };
 
 RegistrationCommandProcessor.prototype.moveParticipantToNewRoomType = function (memberId, roomType) {
@@ -85,7 +82,7 @@ RegistrationCommandProcessor.prototype.moveParticipantToNewRoomType = function (
   var event = existingParticipantEvent
     ? events.roomTypeWasChanged(memberId, roomType, existingParticipantEvent.duration, moment(existingParticipantEvent.joinedSoCraTes))
     : events.didNotChangeRoomTypeForNonParticipant(memberId, roomType);
-  this._updateRegistrationEvents(event);
+  this.updateEventStore(event);
   return event;
 };
 
@@ -94,20 +91,17 @@ RegistrationCommandProcessor.prototype.setNewDurationForParticipant = function (
   var event = existingParticipantEvent
     ? events.durationWasChanged(memberId, existingParticipantEvent.roomType, duration, moment(existingParticipantEvent.joinedSoCraTes))
     : events.didNotChangeDurationForNonParticipant(memberId, duration);
-  this._updateRegistrationEvents(event);
+  this.updateEventStore(event);
 };
 
 RegistrationCommandProcessor.prototype.issueWaitinglistReservation = function (desiredRoomTypes, sessionId, memberId, joinedWaitinglist) {
-  var event;
   if (this.writeModel.alreadyHasWaitinglistReservation(sessionId)) {
     // session id already reserved a spot
-    event = events.didNotIssueWaitinglistReservationForAlreadyReservedSession(desiredRoomTypes, sessionId, memberId);
+    return events.didNotIssueWaitinglistReservationForAlreadyReservedSession(desiredRoomTypes, sessionId, memberId);
   } else {
     // all is good
-    event = events.waitinglistReservationWasIssued(desiredRoomTypes, sessionId, memberId, joinedWaitinglist);
+    return events.waitinglistReservationWasIssued(desiredRoomTypes, sessionId, memberId, joinedWaitinglist);
   }
-  this._updateRegistrationEvents(event);
-  return event.event;
 };
 
 RegistrationCommandProcessor.prototype.registerWaitinglistParticipant = function (desiredRoomTypes, sessionId, memberId) {
@@ -120,7 +114,7 @@ RegistrationCommandProcessor.prototype.registerWaitinglistParticipant = function
     // all is well
     event = events.waitinglistParticipantWasRegistered(desiredRoomTypes, sessionId, memberId, this.writeModel.waitinglistReservation(sessionId).joinedWaitinglist);
   }
-  this._updateRegistrationEvents(event);
+  this.updateEventStore(event);
   return event.event;
 };
 
@@ -135,12 +129,12 @@ RegistrationCommandProcessor.prototype.fromWaitinglistToParticipant = function (
     // all is well
     event = events.registeredParticipantFromWaitinglist(roomType, duration, memberId, joinedSoCraTes);
   }
-  this._updateRegistrationEvents(event);
+  this.updateEventStore(event);
 
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-RegistrationCommandProcessor.prototype._updateRegistrationEvents = function (newEvents) {
+RegistrationCommandProcessor.prototype.updateEventStore = function (newEvents) {
   if (!(newEvents instanceof Array)) {
     newEvents = [newEvents];
   }

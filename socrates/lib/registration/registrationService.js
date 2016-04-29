@@ -1,5 +1,6 @@
 'use strict';
 
+const R = require('ramda');
 var beans = require('simple-configure').get('beans');
 
 var subscriberstore = beans.get('subscriberstore');
@@ -25,14 +26,17 @@ module.exports = {
       if (registrationTuple.roomType && registrationTuple.duration) {
         reservationEvent = registrationCommandProcessor.issueReservation(registrationTuple.roomType, registrationTuple.duration, registrationTuple.sessionId, memberIdIfKnown, now);
       }
-      return eventstoreService.saveCommandProcessor(registrationCommandProcessor, function (err1) {
+
+      const reservationEventMsg = reservationEvent && reservationEvent.event;
+      const waitinglistReservationEventMsg = waitinglistReservationEvent && waitinglistReservationEvent.event;
+      return eventstoreService.saveCommandProcessor2(registrationCommandProcessor, R.filter(R.identity, [reservationEvent, waitinglistReservationEvent]), function (err1) {
         if (err1 && err1.message === CONFLICTING_VERSIONS) {
           var message = JSON.stringify({
             message: CONFLICTING_VERSIONS,
             function: 'startRegistration',
             tuple: registrationTuple,
-            event: reservationEvent,
-            waitingListEvent: waitinglistReservationEvent
+            event: reservationEventMsg,
+            waitingListEvent: waitinglistReservationEventMsg
           });
           conflictingVersionsLogger.warn(message);
           // we try again because of a racing condition during save:
@@ -41,13 +45,13 @@ module.exports = {
         if (err1) {
           return callback(err1);
         }
-        if (reservationEvent === eventConstants.DID_NOT_ISSUE_RESERVATION_FOR_FULL_RESOURCE) {
+        if (reservationEventMsg === eventConstants.DID_NOT_ISSUE_RESERVATION_FOR_FULL_RESOURCE) {
           return callback(null, 'activities.registration_problem', 'activities.registration_is_full');
         }
-        if (reservationEvent === eventConstants.RESERVATION_WAS_ISSUED
-          || reservationEvent === eventConstants.DID_NOT_ISSUE_RESERVATION_FOR_ALREADY_RESERVED_SESSION
-          || waitinglistReservationEvent === eventConstants.WAITINGLIST_RESERVATION_WAS_ISSUED
-          || waitinglistReservationEvent === eventConstants.DID_NOT_ISSUE_WAITINGLIST_RESERVATION_FOR_ALREADY_RESERVED_SESSION
+        if (reservationEventMsg === eventConstants.RESERVATION_WAS_ISSUED
+          || reservationEventMsg === eventConstants.DID_NOT_ISSUE_RESERVATION_FOR_ALREADY_RESERVED_SESSION
+          || waitinglistReservationEventMsg === eventConstants.WAITINGLIST_RESERVATION_WAS_ISSUED
+          || waitinglistReservationEventMsg === eventConstants.DID_NOT_ISSUE_WAITINGLIST_RESERVATION_FOR_ALREADY_RESERVED_SESSION
         ) {
           return callback(null); // let the user continue normally even in case he already has a reservation
         }
