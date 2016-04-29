@@ -12,7 +12,7 @@ var RegistrationReadModel = beans.get('RegistrationReadModel');
 var SoCraTesReadModel = beans.get('SoCraTesReadModel');
 var Member = beans.get('member');
 
-var bedInDouble = 'bedInDouble';
+var bedInDouble = 'bed_in_double';
 
 var aLongTimeAgo = moment.tz().subtract(40, 'minutes');
 

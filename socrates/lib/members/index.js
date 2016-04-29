@@ -151,7 +151,7 @@ app.get('/:nickname', function (req, res, next) {
         // only when a participant looks at their own profile!
         var registeredInRoomType = registrationReadModel.registeredInRoomType(member.id());
         var isInDoubleBedRoom = registeredInRoomType && registeredInRoomType.indexOf('bed_in_') > -1;
-        var roommateId = roomsReadModel.roommateFor(registeredInRoomType, member.id());
+        var roommateId = isInDoubleBedRoom && roomsReadModel.roommateFor(registeredInRoomType, member.id());
         memberstore.getMemberForId(roommateId, function (err4, roommate) {
           var potentialRoommates = [];
           if (err4) { return next(err4); }
