@@ -215,22 +215,10 @@ describe('The rooms command processor', function () {
 
     const registrationReadModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
     const commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStore, new RoomsReadModel(eventStore, registrationReadModel), registrationReadModel));
-    commandProcessor.removeParticipantPairContaining(bedInDouble, 'memberId1');
+    const evts = commandProcessor.removeParticipantPairContaining(bedInDouble, 'memberId1');
 
-    expect(stripTimestamps(eventStore.state.roomsEvents)).to.eql([
-      {
-        event: e.ROOM_PAIR_WAS_ADDED,
-        roomType: bedInDouble,
-        participant1Id: 'memberId1',
-        participant2Id: 'memberId2'
-      },
-      {
-        event: e.ROOM_PAIR_CONTAINING_A_PARTICIPANT_WAS_REMOVED,
-        roomType: bedInDouble,
-        memberIdToBeRemoved: 'memberId1',
-        participant1Id: 'memberId1',
-        participant2Id: 'memberId2'
-      }
+    expect(stripTimestamps(evts)).to.eql([
+      { event: e.ROOM_PAIR_CONTAINING_A_PARTICIPANT_WAS_REMOVED, roomType: bedInDouble, memberIdToBeRemoved: 'memberId1', participant1Id: 'memberId1', participant2Id: 'memberId2'}
     ]);
   });
 
@@ -240,22 +228,10 @@ describe('The rooms command processor', function () {
     ];
     const registrationReadModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
     const commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStore, new RoomsReadModel(eventStore, registrationReadModel), registrationReadModel));
-    commandProcessor.removeParticipantPairContaining(bedInDouble, 'memberId2');
+    const evts = commandProcessor.removeParticipantPairContaining(bedInDouble, 'memberId2');
 
-    expect(stripTimestamps(eventStore.state.roomsEvents)).to.eql([
-      {
-        event: e.ROOM_PAIR_WAS_ADDED,
-        roomType: bedInDouble,
-        participant1Id: 'memberId1',
-        participant2Id: 'memberId2'
-      },
-      {
-        event: e.ROOM_PAIR_CONTAINING_A_PARTICIPANT_WAS_REMOVED,
-        roomType: bedInDouble,
-        memberIdToBeRemoved: 'memberId2',
-        participant1Id: 'memberId1',
-        participant2Id: 'memberId2'
-      }
+    expect(stripTimestamps(evts)).to.eql([
+      { event: e.ROOM_PAIR_CONTAINING_A_PARTICIPANT_WAS_REMOVED, roomType: bedInDouble, memberIdToBeRemoved: 'memberId2', participant1Id: 'memberId1', participant2Id: 'memberId2'}
     ]);
   });
 
@@ -265,27 +241,29 @@ describe('The rooms command processor', function () {
     ];
     const registrationReadModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
     const commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStore, new RoomsReadModel(eventStore, registrationReadModel), registrationReadModel));
-    commandProcessor.removeParticipantPairContaining(bedInDouble, 'memberId3');
+    const evts = commandProcessor.removeParticipantPairContaining(bedInDouble, 'memberId3');
 
-    expect(stripTimestamps(eventStore.state.roomsEvents)).to.eql([
-      {
-        event: e.ROOM_PAIR_WAS_ADDED,
-        roomType: bedInDouble,
-        participant1Id: 'memberId1',
-        participant2Id: 'memberId2'
-      }
-    ]);
+    expect(stripTimestamps(evts)).to.eql([]);
   });
 
-  it('does not do anything if asked for a non-pair room type', function () {
+  it('does not do anything if asked for a single room', function () {
     eventStore.state.roomsEvents = [];
 
     const registrationReadModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
     const commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStore, new RoomsReadModel(eventStore, registrationReadModel), registrationReadModel));
-    commandProcessor.removeParticipantPairContaining('single', 'memberId');
-    commandProcessor.removeParticipantPairContaining('junior', 'memberId');
+    const evts = commandProcessor.removeParticipantPairContaining('single', 'memberId');
 
-    expect(stripTimestamps(eventStore.state.roomsEvents)).to.eql([]);
+    expect(stripTimestamps(evts)).to.eql([]);
+  });
+
+  it('does not do anything if asked for a junior room', function () {
+    eventStore.state.roomsEvents = [];
+
+    const registrationReadModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
+    const commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStore, new RoomsReadModel(eventStore, registrationReadModel), registrationReadModel));
+    const evts = commandProcessor.removeParticipantPairContaining('junior', 'memberId');
+
+    expect(stripTimestamps(evts)).to.eql([]);
   });
 
 });

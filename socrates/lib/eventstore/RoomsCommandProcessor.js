@@ -61,7 +61,7 @@ RoomsCommandProcessor.prototype.removeParticipantPairContaining = function (room
   if (pair) {
     eventList.push(events.roomPairContainingAParticipantWasRemoved(roomType, memberId, pair.participant1Id, pair.participant2Id));
   }
-  this.updateEventStore(eventList);
+  return eventList;
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////

@@ -36,16 +36,14 @@ RegistrationCommandProcessor.prototype.registerParticipant = function (roomType,
 };
 
 RegistrationCommandProcessor.prototype.removeParticipant = function (roomType, memberId) {
-  var event;
   if (!this.writeModel.isAlreadyRegistered(memberId)) {
-    event = events.didNotRemoveParticipantBecauseTheyAreNotRegistered(roomType, memberId);
+    return events.didNotRemoveParticipantBecauseTheyAreNotRegistered(roomType, memberId);
   } else if (!this.writeModel.isRegisteredInRoomType(memberId, roomType)) {
     // not registered for this room
-    event = events.didNotRemoveParticipantBecauseTheyAreNotRegisteredForThisRoomType(roomType, memberId);
+    return events.didNotRemoveParticipantBecauseTheyAreNotRegisteredForThisRoomType(roomType, memberId);
   } else {
-    event = events.participantWasRemoved(roomType, memberId);
+    return events.participantWasRemoved(roomType, memberId);
   }
-  this.updateEventStore(event);
 };
 
 RegistrationCommandProcessor.prototype.removeWaitinglistParticipant = function (desiredRoomTypes, memberId) {
