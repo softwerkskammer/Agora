@@ -1,4 +1,5 @@
 'use strict';
+/*eslint no-control-regex: "off"*/
 
 var fieldHelpers = require('simple-configure').get('beans').get('fieldHelpers');
 
