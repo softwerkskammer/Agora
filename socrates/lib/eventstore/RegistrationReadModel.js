@@ -9,18 +9,6 @@ var e = beans.get('eventConstants');
 var socratesConstants = beans.get('socratesConstants');
 var roomOptions = beans.get('roomOptions');
 
-function RegistrationReadModel(eventStore, soCraTesReadModel) {
-  this._soCraTesReadModel = soCraTesReadModel;
-
-  // read model state:
-  this._reservationsBySessionId = {};
-  this._participantsByMemberId = {};
-  this._waitinglistReservationsBySessionId = {};
-  this._waitinglistParticipantsByMemberId = {};
-
-  this.update(eventStore.registrationEvents());
-}
-
 var earliestValidRegistrationTime = moment.tz().subtract(socratesConstants.registrationPeriodinMinutes, 'minutes');
 
 var projectReservationsBySessionId = function (reservationsBySessionId, event) {
@@ -69,11 +57,48 @@ var projectWaitinglistParticipantsByMemberId = function (waitinglistParticipants
   return waitinglistParticipantsByMemberId;
 };
 
+function RegistrationReadModel(eventStore, soCraTesReadModel) {
+  this._soCraTesReadModel = soCraTesReadModel;
+
+  // read model state:
+  this._reservationsBySessionId = {};
+  this._participantsByMemberId = {};
+  this._waitinglistReservationsBySessionId = {};
+  this._waitinglistParticipantsByMemberId = {};
+
+  this._reservationsBySessionIdFor = {};
+  this._participantsByMemberIdFor = {};
+  this._reservationsAndParticipantsFor = {};
+  this._waitinglistReservationsBySessionIdFor = {};
+  this._waitinglistParticipantsByMemberIdFor = {};
+  this._durations = [];
+
+  this.update(eventStore.registrationEvents());
+}
+
 RegistrationReadModel.prototype.update = function (events) {
+  // core data:
   this._reservationsBySessionId = R.reduce(projectReservationsBySessionId, this._reservationsBySessionId, events);
   this._participantsByMemberId = R.reduce(projectParticipantsByMemberId, this._participantsByMemberId, events);
   this._waitinglistReservationsBySessionId = R.reduce(projectWaitinglistReservationsBySessionId, this._waitinglistReservationsBySessionId, events);
   this._waitinglistParticipantsByMemberId = R.reduce(projectWaitinglistParticipantsByMemberId, this._waitinglistParticipantsByMemberId, events);
+
+  // derived data:
+  roomOptions.allIds().forEach(roomType => {
+    this._reservationsBySessionIdFor[roomType] = R.filter(function (event) { return event.roomType === roomType; }, this.reservationsBySessionId());
+    this._participantsByMemberIdFor[roomType] = R.filter(function (event) { return event.roomType === roomType; }, this.participantsByMemberId());
+    this._reservationsAndParticipantsFor[roomType] = R.concat(R.values(this.reservationsBySessionIdFor(roomType)), R.values(this.participantsByMemberIdFor(roomType)));
+    this._waitinglistReservationsBySessionIdFor[roomType] = R.filter(function (event) { return R.contains(roomType, event.desiredRoomTypes); }, this.waitinglistReservationsBySessionId());
+    this._waitinglistParticipantsByMemberIdFor[roomType] = R.filter(function (event) { return R.contains(roomType, event.desiredRoomTypes); }, this.waitinglistParticipantsByMemberId());
+  });
+
+  this._durations = R.pipe(
+    R.values, // only the events
+    R.pluck('duration'), // pull out each duration
+    R.groupBy(R.identity), // group same durations
+    R.mapObjIndexed(function (value, key) { return {count: value.length, duration: roomOptions.endOfStayFor(key)}; })
+  )(this.participantsByMemberId());
+
 };
 
 RegistrationReadModel.prototype.reservationsBySessionId = function () {
@@ -81,7 +106,7 @@ RegistrationReadModel.prototype.reservationsBySessionId = function () {
 };
 
 RegistrationReadModel.prototype.reservationsBySessionIdFor = function (roomType) {
-  return R.filter(function (event) { return event.roomType === roomType; }, this.reservationsBySessionId());
+  return this._reservationsBySessionIdFor[roomType];
 };
 
 RegistrationReadModel.prototype.participantsByMemberId = function () {
@@ -89,7 +114,7 @@ RegistrationReadModel.prototype.participantsByMemberId = function () {
 };
 
 RegistrationReadModel.prototype.participantsByMemberIdFor = function (roomType) {
-  return R.filter(function (event) { return event.roomType === roomType; }, this.participantsByMemberId());
+  return this._participantsByMemberIdFor[roomType];
 };
 
 RegistrationReadModel.prototype.participantCountFor = function (roomType) {
@@ -100,19 +125,12 @@ RegistrationReadModel.prototype.participantEventFor = function (memberId) {
   return this.participantsByMemberId()[memberId];
 };
 
-// TODO hierhin?
 RegistrationReadModel.prototype.durationFor = function (memberId) {
   return roomOptions.endOfStayFor(this.participantEventFor(memberId).duration);
 };
 
 RegistrationReadModel.prototype.durations = function () {
-
-  return R.pipe(
-    R.values, // only the events
-    R.pluck('duration'), // pull out each duration
-    R.groupBy(R.identity), // group same durations
-    R.mapObjIndexed(function (value, key) { return {count: value.length, duration: roomOptions.endOfStayFor(key)}; })
-  )(this.participantsByMemberId());
+  return this._durations;
 };
 
 RegistrationReadModel.prototype.joinedSoCraTesAt = function (memberId) {
@@ -142,7 +160,7 @@ RegistrationReadModel.prototype.allParticipantsIn = function (roomType) {
 };
 
 RegistrationReadModel.prototype.reservationsAndParticipantsFor = function (roomType) {
-  return R.concat(R.values(this.reservationsBySessionIdFor(roomType)), R.values(this.participantsByMemberIdFor(roomType)));
+  return this._reservationsAndParticipantsFor[roomType];
 };
 
 RegistrationReadModel.prototype.waitinglistReservationsBySessionId = function () {
@@ -150,7 +168,7 @@ RegistrationReadModel.prototype.waitinglistReservationsBySessionId = function ()
 };
 
 RegistrationReadModel.prototype.waitinglistReservationsBySessionIdFor = function (roomType) {
-  return R.filter(function (event) { return R.contains(roomType, event.desiredRoomTypes); }, this.waitinglistReservationsBySessionId());
+  return this._waitinglistReservationsBySessionIdFor[roomType];
 };
 
 RegistrationReadModel.prototype.waitinglistParticipantsByMemberId = function () {
@@ -166,7 +184,7 @@ RegistrationReadModel.prototype.waitinglistParticipantCountFor = function (roomT
 };
 
 RegistrationReadModel.prototype.waitinglistParticipantsByMemberIdFor = function (roomType) {
-  return R.filter(function (event) { return R.contains(roomType, event.desiredRoomTypes); }, this.waitinglistParticipantsByMemberId());
+  return this._waitinglistParticipantsByMemberIdFor[roomType];
 };
 
 RegistrationReadModel.prototype.isFull = function (roomType) {
