@@ -12,19 +12,7 @@ var CONFLICTING_VERSIONS = beans.get('constants').CONFLICTING_VERSIONS;
 var currentUrl = beans.get('socratesConstants').currentUrl;
 
 function saveCommandProcessor(args) {
-  eventstoreService.saveCommandProcessor(args.commandProcessor, function (err) {
-    if (err && err.message === CONFLICTING_VERSIONS) {
-      // we try again because of a racing condition during save:
-      return args.repeat(args.callback);
-    }
-    if (err) { return args.callback(err); }
-    if (args.handleSuccess) { args.handleSuccess(); }
-    return args.callback();
-  });
-}
-
-function saveCommandProcessor2(args) {
-  eventstoreService.saveCommandProcessor2(args.commandProcessor, args.events, function (err) {
+  eventstoreService.saveCommandProcessor(args.commandProcessor, args.events, function (err) {
     if (err) { return args.callback(err); }
     if (args.handleSuccess) { args.handleSuccess(); }
     return args.callback();
@@ -47,7 +35,7 @@ module.exports = {
 
         const event = registrationCommandProcessor.fromWaitinglistToParticipant(roomType, member.id(), duration, now);
 
-        saveCommandProcessor2({
+        saveCommandProcessor({
           commandProcessor: registrationCommandProcessor,
           events: [event],
           callback: callback,
@@ -76,7 +64,7 @@ module.exports = {
 
         const event = registrationCommandProcessor.setNewDurationForParticipant(member.id(), duration);
 
-        saveCommandProcessor2({
+        saveCommandProcessor({
           commandProcessor: registrationCommandProcessor,
           events: [event],
           callback: callback,
@@ -103,7 +91,7 @@ module.exports = {
 
         const event = registrationCommandProcessor.moveParticipantToNewRoomType(member.id(), newRoomType);
 
-        saveCommandProcessor2({
+        saveCommandProcessor({
           commandProcessor: registrationCommandProcessor,
           events: [event],
           callback: callback,
@@ -130,7 +118,7 @@ module.exports = {
 
         const event = registrationCommandProcessor.changeDesiredRoomTypes(member.id(), newDesiredResourceNames);
 
-        saveCommandProcessor2({
+        saveCommandProcessor({
           commandProcessor: registrationCommandProcessor,
           events: [event],
           callback: callback,
@@ -159,7 +147,7 @@ module.exports = {
 
         const events = roomsCommandProcessor.addParticipantPairFor(roomType, participant1.id(), participant2.id());
 
-        saveCommandProcessor2({
+        saveCommandProcessor({
           commandProcessor: roomsCommandProcessor,
           events: events,
           callback: callback
@@ -185,7 +173,7 @@ module.exports = {
 
         const events = roomsCommandProcessor.removeParticipantPairFor(roomType, participant1.id(), participant2.id());
 
-        saveCommandProcessor2({
+        saveCommandProcessor({
           commandProcessor: roomsCommandProcessor,
           events: events,
           callback: callback
@@ -212,7 +200,7 @@ module.exports = {
         const roomsEvents = roomsCommandProcessor.removeParticipantPairContaining(roomType, participant.id());
         const registrationEvent = registrationCommandProcessor.removeParticipant(roomType, participant.id());
 
-        saveCommandProcessor2({
+        saveCommandProcessor({
           commandProcessor: [roomsCommandProcessor, registrationCommandProcessor],
           events: [roomsEvents, [registrationEvent]],
           callback: callback,
@@ -239,7 +227,7 @@ module.exports = {
 
         const event = registrationCommandProcessor.removeWaitinglistParticipant(desiredRoomTypes, waitinglistMember.id());
 
-        saveCommandProcessor2({
+        saveCommandProcessor({
           commandProcessor: registrationCommandProcessor,
           events: [event],
           callback: callback,

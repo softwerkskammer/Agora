@@ -26,7 +26,7 @@ function activitySubmitted(req, res, next) {
   eventstoreService.getSoCraTesCommandProcessor(req.body.previousUrl, function (err, socratesCommandProcessor) {
     if (err) { return next(err); }
     const events = socratesCommandProcessor.setConferenceDetails(req.body);
-    eventstoreService.saveCommandProcessor2(socratesCommandProcessor, events, function (err1) {
+    eventstoreService.saveCommandProcessor(socratesCommandProcessor, events, function (err1) {
       if (err1 && err1.message === CONFLICTING_VERSIONS) {
         // we try again because of a racing condition during save:
         statusmessage.errorMessage('message.title.conflict', 'message.content.save_error_retry').putIntoSession(req);

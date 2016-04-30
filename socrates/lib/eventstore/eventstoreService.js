@@ -142,23 +142,14 @@ module.exports = {
     });
   },
 
-  saveCommandProcessor: function (commandProcessor, callback) {
-    const eventStore = commandProcessor.eventStore();
-    const url = eventStore.state.url;
-    eventstore.saveEventStore(eventStore, function (err) {
-      if (err) {return callback(err); }
-      cache.del([keyFor(url, SOCRATES_READ_MODEL), keyFor(url, REGISTRATION_READ_MODEL), keyFor(url, ROOMS_READ_MODEL)]);
-      callback();
-    });
-  },
-
-  saveCommandProcessor2: function (commandProcessor, events, callback) {
+  saveCommandProcessor: function (commandProcessor, events, callback) {
     if (!(events instanceof Array)) {
       events = [events];
     }
 
     let eventStore;
     if (commandProcessor instanceof Array) {
+      // sometimes we need to update several parts of the event store
       commandProcessor.map((processor, index) => processor.updateEventStore(events[index]));
       eventStore = commandProcessor[0].eventStore();
       events = R.flatten(events);

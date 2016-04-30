@@ -29,7 +29,7 @@ module.exports = {
 
       const reservationEventMsg = reservationEvent && reservationEvent.event;
       const waitinglistReservationEventMsg = waitinglistReservationEvent && waitinglistReservationEvent.event;
-      return eventstoreService.saveCommandProcessor2(registrationCommandProcessor, R.filter(R.identity, [reservationEvent, waitinglistReservationEvent]), function (err1) {
+      return eventstoreService.saveCommandProcessor(registrationCommandProcessor, R.filter(R.identity, [reservationEvent, waitinglistReservationEvent]), function (err1) {
         if (err1 && err1.message === CONFLICTING_VERSIONS) {
           var message = JSON.stringify({
             message: CONFLICTING_VERSIONS,
@@ -89,7 +89,7 @@ module.exports = {
           }
           const registrationEventMsg = registrationEvent && registrationEvent.event;
           const waitinglistRegistrationEventMsg = waitinglistRegistrationEvent && waitinglistRegistrationEvent.event;
-          return eventstoreService.saveCommandProcessor2(commandProcessor, R.filter(R.identity, [registrationEvent, waitinglistRegistrationEvent]), function (err1) {
+          return eventstoreService.saveCommandProcessor(commandProcessor, R.filter(R.identity, [registrationEvent, waitinglistRegistrationEvent]), function (err1) {
             if (err1 && err1.message === CONFLICTING_VERSIONS) {
               var message = JSON.stringify({
                 message: CONFLICTING_VERSIONS,
