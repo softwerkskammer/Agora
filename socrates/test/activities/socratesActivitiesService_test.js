@@ -146,7 +146,7 @@ describe('SoCraTes Activities Service', function () {
     });
   });
 
-  it('moves a member\'s registration to a different resource', function (done) {
+  it('moves a member\'s registration to a different resource and updates event store and read model', function (done) {
     eventStore.state.registrationEvents = [
       events.participantWasRegistered('single', 2, 'sessionId', 'memberId', aLongTimeAgo)
     ];
@@ -155,6 +155,10 @@ describe('SoCraTes Activities Service', function () {
       expect(stripTimestamps(saveEventStore.firstCall.args[0].state.registrationEvents)).to.eql([
         {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: 'sessionId', roomType: 'single', memberId: 'memberId', duration: 2, joinedSoCraTes: aLongTimeAgo.valueOf()},
         {event: e.ROOM_TYPE_WAS_CHANGED, roomType: 'bed_in_double', memberId: 'memberId', duration: 2, joinedSoCraTes: aLongTimeAgo.valueOf()}]);
+
+      const readModel = cache.get(socratesConstants.currentUrl + '_registrationReadModel');
+      expect(readModel.reservationsAndParticipantsFor('single')).to.have.length(0);
+      expect(readModel.reservationsAndParticipantsFor('bed_in_double')).to.have.length(1);
       done(err);
     });
   });
