@@ -25,7 +25,7 @@ function SoCraTesReadModel(eventStore) {
 var projectUrl = function (url, event) { return event.event === e.URL_WAS_SET ? event.url : url; };
 var projectStartTime = function (startTimeInMillis, event) { return event.event === e.START_TIME_WAS_SET ? event.startTimeInMillis : startTimeInMillis; };
 var projectEndTime = function (endTimeInMillis, event) { return event.event === e.END_TIME_WAS_SET ? event.endTimeInMillis : endTimeInMillis; };
-var projectQuota = function (roomType, quota, event) { return event.event === e.ROOM_QUOTA_WAS_SET && event.roomType === roomType ? event.quota : quota; };
+var projectQuota = function (roomType, quota, event) { return event.event === e.ROOM_QUOTA_WAS_SET && event.roomType === roomType ? parseInt(event.quota, 10) : quota; };
 
 SoCraTesReadModel.prototype.update = function (events) {
   // these are our projections :-)
