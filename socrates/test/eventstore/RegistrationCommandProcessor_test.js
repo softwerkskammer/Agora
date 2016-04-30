@@ -464,12 +464,10 @@ describe('The registration command processor', function () {
       const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       // When (issued command)
-      commandProcessor.setNewDurationForParticipant(memberId1, untilSundayMorning);
+      const event = commandProcessor.setNewDurationForParticipant(memberId1, untilSundayMorning);
 
       // Then (new events)
-      expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {event: e.RESERVATION_WAS_ISSUED, sessionId: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: aLongTimeAgo.valueOf()},
-        {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1, joinedSoCraTes: aShortTimeAgo.valueOf()},
+      expect(stripTimestamps([event])).to.eql([
         {event: e.DURATION_WAS_CHANGED, memberId: memberId1, roomType: singleBedRoom, duration: untilSundayMorning, joinedSoCraTes: aShortTimeAgo.valueOf()}]);
     });
 
@@ -484,13 +482,10 @@ describe('The registration command processor', function () {
       const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       // When (issued command)
-      commandProcessor.setNewDurationForParticipant(memberId1, untilSundayEvening);
+      const event = commandProcessor.setNewDurationForParticipant(memberId1, untilSundayEvening);
 
       // Then (new events)
-      expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {event: e.RESERVATION_WAS_ISSUED, sessionId: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: aLongTimeAgo.valueOf()},
-        {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1, joinedSoCraTes: aShortTimeAgo.valueOf()},
-        {event: e.DURATION_WAS_CHANGED, memberId: memberId1, roomType: singleBedRoom, duration: untilSundayMorning, joinedSoCraTes: aShortTimeAgo.valueOf()},
+      expect(stripTimestamps([event])).to.eql([
         {event: e.DURATION_WAS_CHANGED, memberId: memberId1, roomType: singleBedRoom, duration: untilSundayEvening, joinedSoCraTes: aShortTimeAgo.valueOf()}
       ]);
     });
@@ -502,10 +497,10 @@ describe('The registration command processor', function () {
       const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       // When (issued command)
-      commandProcessor.setNewDurationForParticipant(memberId1, untilSaturday);
+      const event = commandProcessor.setNewDurationForParticipant(memberId1, untilSaturday);
 
       // Then (new events)
-      expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
+      expect(stripTimestamps([event])).to.eql([
         {event: e.DID_NOT_CHANGE_DURATION_FOR_NON_PARTICIPANT, memberId: memberId1, duration: untilSaturday}]);
     });
   });

@@ -129,7 +129,7 @@ describe('SoCraTes Activities Service', function () {
     });
   });
 
-  it('saves the activity with a new duration for the given member in the given resource', function (done) {
+  it('saves the activity with a new duration for the given member in the given resource and updates the event store and the read model', function (done) {
     eventStore.state.registrationEvents = [
       events.participantWasRegistered('single', 2, 'sessionId', 'memberId', aLongTimeAgo)
     ];
@@ -138,6 +138,10 @@ describe('SoCraTes Activities Service', function () {
       expect(stripTimestamps(saveEventStore.firstCall.args[0].state.registrationEvents)).to.eql([
         {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: 'sessionId', roomType: 'single', memberId: 'memberId', duration: 2, joinedSoCraTes: aLongTimeAgo.valueOf()},
         {event: e.DURATION_WAS_CHANGED, roomType: 'single', memberId: 'memberId', duration: 4, joinedSoCraTes: aLongTimeAgo.valueOf()}]);
+
+      const readModel = cache.get(socratesConstants.currentUrl + '_registrationReadModel');
+      expect(readModel.reservationsAndParticipantsFor('single')).to.have.length(1);
+      expect(readModel.reservationsAndParticipantsFor('single')[0].duration).to.eql(4);
       done(err);
     });
   });
@@ -196,7 +200,7 @@ describe('SoCraTes Activities Service', function () {
         {event: e.ROOM_PAIR_WAS_REMOVED, roomType: 'bed_in_double', participant1Id: 'memberIdForPair1', participant2Id: 'memberIdForPair2'}
       ]);
 
-//      expect(new RoomsReadModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))).roomPairsFor('bed_in_double')).to.eql([]);
+      //      expect(new RoomsReadModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))).roomPairsFor('bed_in_double')).to.eql([]);
       done(err);
     });
   });

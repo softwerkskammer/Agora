@@ -84,10 +84,9 @@ RegistrationCommandProcessor.prototype.moveParticipantToNewRoomType = function (
 
 RegistrationCommandProcessor.prototype.setNewDurationForParticipant = function (memberId, duration) {
   var existingParticipantEvent = this.writeModel.participantEventFor(memberId);
-  var event = existingParticipantEvent
+  return existingParticipantEvent
     ? events.durationWasChanged(memberId, existingParticipantEvent.roomType, duration, moment(existingParticipantEvent.joinedSoCraTes))
     : events.didNotChangeDurationForNonParticipant(memberId, duration);
-  this.updateEventStore(event);
 };
 
 RegistrationCommandProcessor.prototype.issueWaitinglistReservation = function (desiredRoomTypes, sessionId, memberId, joinedWaitinglist) {

@@ -75,12 +75,12 @@ module.exports = {
         const registrationCommandProcessor = results[1];
         if (!registrationCommandProcessor || !member) { return callback(); }
 
-        registrationCommandProcessor.setNewDurationForParticipant(member.id(), duration);
+        const event = registrationCommandProcessor.setNewDurationForParticipant(member.id(), duration);
 
-        saveCommandProcessor({
+        saveCommandProcessor2({
           commandProcessor: registrationCommandProcessor,
+          events: [event],
           callback: callback,
-          repeat: _.partial(self.newDurationFor, nickname, roomType, duration),
           handleSuccess: function () {
             notifications.changedDuration(member, roomOptions.informationFor(roomType, duration));
           }
