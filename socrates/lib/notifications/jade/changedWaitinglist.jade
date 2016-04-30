@@ -7,7 +7,7 @@ html
     p We have changed your waitinglist entry for the SoCraTes Conference 2016 as follows:
     p
       | You are waiting for a #{' '} 
-      b #{bookingdetails.room}
+      b #{bookingdetails.map(x => x.room).join(', ')}
       | .
     p We will inform you as soon as a space is available. You can then choose the number of nights you want to stay.
     p You can review and modify your waitinglist data at #{' '}
