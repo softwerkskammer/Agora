@@ -254,6 +254,26 @@ describe('SoCraTes Activities Service', function () {
     });
   });
 
+  it('changes the waitinglist of a waitinglist member and updates the event store and the read model', function (done) {
+    eventStore.state.registrationEvents = [
+      events.waitinglistParticipantWasRegistered(['single'], 'session-id', 'memberId', aLongTimeAgo)
+    ];
+
+    socratesActivitiesService.newWaitinglistFor('nickname', ['bed_in_double'], function (err) {
+      const savedEventStore = saveEventStore.firstCall.args[0];
+      expect(stripTimestamps(savedEventStore.state.registrationEvents)).to.eql([
+        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, desiredRoomTypes: ['single'], memberId: 'memberId', joinedWaitinglist: aLongTimeAgo.valueOf(), sessionId: 'session-id'},
+        {event: e.DESIRED_ROOM_TYPES_WERE_CHANGED, desiredRoomTypes: ['bed_in_double'], memberId: 'memberId', joinedWaitinglist: aLongTimeAgo.valueOf()}
+      ]);
+
+      const readModel = cache.get(socratesConstants.currentUrl + '_registrationReadModel');
+      expect(readModel.waitinglistReservationsAndParticipantsFor('single')).to.have.length(0);
+      expect(readModel.waitinglistReservationsAndParticipantsFor('bed_in_double')).to.have.length(1);
+
+      done(err);
+    });
+  });
+
   it('removes a waitinglist member from the given resource', function (done) {
     eventStore.state.registrationEvents = [
       events.waitinglistParticipantWasRegistered(['single'], 'session-id', 'memberId', aLongTimeAgo)

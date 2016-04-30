@@ -115,7 +115,7 @@ module.exports = {
     );
   },
 
-  newWaitinglistFor: function (nickname, newResourceName, callback) {
+  newWaitinglistFor: function (nickname, newDesiredResourceNames, callback) {
 
     async.series(
       [
@@ -128,14 +128,14 @@ module.exports = {
         const registrationCommandProcessor = results[1];
         if (!registrationCommandProcessor || !member) { return callback(); }
 
-        const event = registrationCommandProcessor.changeDesiredRoomTypes(member.id(), [newResourceName]);
+        const event = registrationCommandProcessor.changeDesiredRoomTypes(member.id(), newDesiredResourceNames);
 
-        saveCommandProcessor({
+        saveCommandProcessor2({
           commandProcessor: registrationCommandProcessor,
           events: [event],
           callback: callback,
           handleSuccess: function () {
-            notifications.changedWaitinglist(member, roomOptions.informationFor(newResourceName, 'waitinglist'));
+            notifications.changedWaitinglist(member, newDesiredResourceNames.map(name => roomOptions.informationFor(name, 'waitinglist')));
           }
         });
       }
