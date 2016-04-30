@@ -62,7 +62,6 @@ module.exports = {
   },
 
   newDurationFor: function (nickname, roomType, duration, callback) {
-    var self = this;
 
     async.series(
       [
@@ -90,7 +89,6 @@ module.exports = {
   },
 
   newRoomTypeFor: function (nickname, newRoomType, callback) {
-    var self = this;
 
     async.series(
       [
@@ -103,12 +101,12 @@ module.exports = {
         const registrationCommandProcessor = results[1];
         if (!registrationCommandProcessor || !member) { return callback(); }
 
-        var event = registrationCommandProcessor.moveParticipantToNewRoomType(member.id(), newRoomType);
+        const event = registrationCommandProcessor.moveParticipantToNewRoomType(member.id(), newRoomType);
 
-        saveCommandProcessor({
+        saveCommandProcessor2({
           commandProcessor: registrationCommandProcessor,
+          events: [event],
           callback: callback,
-          repeat: _.partial(self.newRoomTypeFor, nickname, newRoomType),
           handleSuccess: function () {
             notifications.changedResource(member, roomOptions.informationFor(newRoomType, event.duration)); // this is a bit hacky, we should better go through a read model
           }
