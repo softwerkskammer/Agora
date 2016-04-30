@@ -40,6 +40,11 @@
     "logo": "holisticon160.png"
   },
   {
+    "name": "innoQ",
+    "url": "http://www.innoq.de",
+    "logo": "innoq160.png"
+  },
+  {
     "name": "it-agile GmbH",
     "url": "http://www.it-agile.de",
     "logo": "it-agile160.png"
@@ -48,6 +53,11 @@
     "name": "klose brothers gmbh",
     "url": "http://www.klosebrothers.de",
     "logo": "klosebrothers160.png"
+  },
+  { 
+    "name": "Mercateo AG",
+    "url": "http://www.mercateo.com",
+    "logo": "mercateo160.png"
   },
   { 
     "name": "msgGillardon AG",
