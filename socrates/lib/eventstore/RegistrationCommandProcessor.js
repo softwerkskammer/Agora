@@ -60,17 +60,15 @@ RegistrationCommandProcessor.prototype.removeWaitinglistParticipant = function (
 };
 
 RegistrationCommandProcessor.prototype.changeDesiredRoomTypes = function (memberId, desiredRoomTypes) {
-  var event;
   if (!this.writeModel.isAlreadyOnWaitinglist(memberId)) {
-    event = events.didNotChangeDesiredRoomTypesBecauseParticipantIsNotOnWaitinglist(memberId, desiredRoomTypes);
+    return events.didNotChangeDesiredRoomTypesBecauseParticipantIsNotOnWaitinglist(memberId, desiredRoomTypes);
   } else if (misc.arraysAreEqual(this.writeModel.roomTypesOf(memberId), desiredRoomTypes)) {
-    event = events.didNotChangeDesiredRoomTypesBecauseThereWasNoChange(memberId, desiredRoomTypes);
+    return events.didNotChangeDesiredRoomTypesBecauseThereWasNoChange(memberId, desiredRoomTypes);
   } else {
     // all is well
     var waitinglistReservation = this.writeModel.waitinglistParticipantEventFor(memberId);
-    event = events.desiredRoomTypesWereChanged(memberId, desiredRoomTypes, moment(waitinglistReservation.joinedWaitinglist));
+    return events.desiredRoomTypesWereChanged(memberId, desiredRoomTypes, moment(waitinglistReservation.joinedWaitinglist));
   }
-  this.updateEventStore(event);
 };
 
 RegistrationCommandProcessor.prototype.moveParticipantToNewRoomType = function (memberId, roomType) {
