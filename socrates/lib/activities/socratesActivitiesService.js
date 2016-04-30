@@ -116,7 +116,6 @@ module.exports = {
   },
 
   newWaitinglistFor: function (nickname, newResourceName, callback) {
-    var self = this;
 
     async.series(
       [
@@ -129,12 +128,12 @@ module.exports = {
         const registrationCommandProcessor = results[1];
         if (!registrationCommandProcessor || !member) { return callback(); }
 
-        registrationCommandProcessor.changeDesiredRoomTypes(member.id(), [newResourceName]);
+        const event = registrationCommandProcessor.changeDesiredRoomTypes(member.id(), [newResourceName]);
 
         saveCommandProcessor({
           commandProcessor: registrationCommandProcessor,
+          events: [event],
           callback: callback,
-          repeat: _.partial(self.newWaitinglistFor, nickname, newResourceName),
           handleSuccess: function () {
             notifications.changedWaitinglist(member, roomOptions.informationFor(newResourceName, 'waitinglist'));
           }

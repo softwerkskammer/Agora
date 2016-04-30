@@ -359,11 +359,10 @@ describe('The registration command processor', function () {
       const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       //When (issued command)
-      commandProcessor.changeDesiredRoomTypes(memberId1, [bedInDouble]);
+      const event = commandProcessor.changeDesiredRoomTypes(memberId1, [bedInDouble]);
 
       //Then (new events)
-      expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, desiredRoomTypes: [singleBedRoom], sessionId: sessionId1, memberId: memberId1, joinedWaitinglist: aLongTimeAgo.valueOf()},
+      expect(stripTimestamps([event])).to.eql([
         {event: e.DESIRED_ROOM_TYPES_WERE_CHANGED, desiredRoomTypes: [bedInDouble], memberId: memberId1, joinedWaitinglist: aLongTimeAgo.valueOf()}
       ]);
     });
@@ -373,10 +372,10 @@ describe('The registration command processor', function () {
       const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       //When (issued command)
-      commandProcessor.changeDesiredRoomTypes(memberId1, [bedInDouble]);
+      const event = commandProcessor.changeDesiredRoomTypes(memberId1, [bedInDouble]);
 
       //Then (new events)
-      expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
+      expect(stripTimestamps([event])).to.eql([
         {event: e.DID_NOT_CHANGE_DESIRED_ROOM_TYPES_BECAUSE_PARTICIPANT_IS_NOT_ON_WAITINGLIST, desiredRoomTypes: [bedInDouble], memberId: memberId1}
       ]);
     });
@@ -388,11 +387,10 @@ describe('The registration command processor', function () {
       const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       //When (issued command)
-      commandProcessor.changeDesiredRoomTypes(memberId1, [singleBedRoom]);
+      const event = commandProcessor.changeDesiredRoomTypes(memberId1, [singleBedRoom]);
 
       //Then (new events)
-      expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, desiredRoomTypes: [singleBedRoom], sessionId: sessionId1, memberId: memberId1, joinedWaitinglist: aLongTimeAgo.valueOf()},
+      expect(stripTimestamps([event])).to.eql([
         {event: e.DID_NOT_CHANGE_DESIRED_ROOM_TYPES_BECAUSE_THERE_WAS_NO_CHANGE, desiredRoomTypes: [singleBedRoom], memberId: memberId1}
       ]);
     });
