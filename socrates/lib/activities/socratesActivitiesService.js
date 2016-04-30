@@ -143,7 +143,6 @@ module.exports = {
   },
 
   addParticipantPairFor: function (roomType, participant1Nick, participant2Nick, callback) {
-    var self = this;
 
     async.series(
       [
@@ -158,12 +157,12 @@ module.exports = {
         const roomsCommandProcessor = results[2];
         if (!roomsCommandProcessor || !participant1 || !participant2) { return callback(); }
 
-        roomsCommandProcessor.addParticipantPairFor(roomType, participant1.id(), participant2.id());
+        const events = roomsCommandProcessor.addParticipantPairFor(roomType, participant1.id(), participant2.id());
 
-        saveCommandProcessor({
+        saveCommandProcessor2({
           commandProcessor: roomsCommandProcessor,
-          callback: callback,
-          repeat: _.partial(self.addParticipantPairFor, roomType, participant1Nick, participant2Nick)
+          events: events,
+          callback: callback
         });
       }
     );

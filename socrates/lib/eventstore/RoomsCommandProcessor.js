@@ -31,7 +31,7 @@ RoomsCommandProcessor.prototype.addParticipantPairFor = function (roomType, part
     // nothing bad was discovered so far
     eventList.push(events.roomPairWasAdded(roomType, participant1Id, participant2Id));
   }
-  this.updateEventStore(eventList);
+  return eventList;
 };
 
 RoomsCommandProcessor.prototype.removeParticipantPairFor = function (roomType, participant1Id, participant2Id) {

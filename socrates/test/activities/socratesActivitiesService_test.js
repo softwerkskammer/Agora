@@ -163,7 +163,7 @@ describe('SoCraTes Activities Service', function () {
     });
   });
 
-  it('joins two members to form a room', function (done) {
+  it('joins two members to form a room, updates the eventstore and the read model', function (done) {
 
     eventStore.state.registrationEvents = [
       events.participantWasRegistered('bed_in_double', 2, 'session-id', 'memberIdForPair1', aLongTimeAgo),
@@ -175,6 +175,10 @@ describe('SoCraTes Activities Service', function () {
       expect(pairEvents).to.have.length(1);
       expect(pairEvents[0].participant1Id).to.be('memberIdForPair1');
       expect(pairEvents[0].participant2Id).to.be('memberIdForPair2');
+
+      const readModel = cache.get(socratesConstants.currentUrl + '_roomsReadModel');
+      expect(readModel.roomPairsFor('bed_in_double')).to.have.length(1);
+
       done(err);
     });
   });
