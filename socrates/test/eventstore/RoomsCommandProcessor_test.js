@@ -187,21 +187,10 @@ describe('The rooms command processor', function () {
     const registrationReadModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
     const commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStore, new RoomsReadModel(eventStore, registrationReadModel), registrationReadModel));
 
-    commandProcessor.removeParticipantPairFor(bedInDouble, 'memberId1', 'memberId2');
+    const evts = commandProcessor.removeParticipantPairFor(bedInDouble, 'memberId1', 'memberId2');
 
-    expect(stripTimestamps(eventStore.state.roomsEvents)).to.eql([
-      {
-        event: e.ROOM_PAIR_WAS_ADDED,
-        roomType: bedInDouble,
-        participant1Id: 'memberId1',
-        participant2Id: 'memberId2'
-      },
-      {
-        event: e.ROOM_PAIR_WAS_REMOVED,
-        roomType: bedInDouble,
-        participant1Id: 'memberId1',
-        participant2Id: 'memberId2'
-      }
+    expect(stripTimestamps(evts)).to.eql([
+      { event: e.ROOM_PAIR_WAS_REMOVED, roomType: bedInDouble, participant1Id: 'memberId1', participant2Id: 'memberId2'}
     ]);
   });
 
@@ -212,21 +201,10 @@ describe('The rooms command processor', function () {
 
     const registrationReadModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
     const commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStore, new RoomsReadModel(eventStore, registrationReadModel), registrationReadModel));
-    commandProcessor.removeParticipantPairFor(bedInDouble, 'memberId2', 'memberId1');
+    const evts = commandProcessor.removeParticipantPairFor(bedInDouble, 'memberId2', 'memberId1');
 
-    expect(stripTimestamps(eventStore.state.roomsEvents)).to.eql([
-      {
-        event: e.ROOM_PAIR_WAS_ADDED,
-        roomType: bedInDouble,
-        participant1Id: 'memberId1',
-        participant2Id: 'memberId2'
-      },
-      {
-        event: e.DID_NOT_REMOVE_ROOM_PAIR_BECAUSE_THE_PAIR_DOES_NOT_EXIST_FOR_THIS_ROOM_TYPE,
-        roomType: bedInDouble,
-        participant1Id: 'memberId2',
-        participant2Id: 'memberId1'
-      }
+    expect(stripTimestamps(evts)).to.eql([
+      { event: e.DID_NOT_REMOVE_ROOM_PAIR_BECAUSE_THE_PAIR_DOES_NOT_EXIST_FOR_THIS_ROOM_TYPE, roomType: bedInDouble, participant1Id: 'memberId2', participant2Id: 'memberId1'}
     ]);
   });
 

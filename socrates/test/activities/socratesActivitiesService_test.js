@@ -208,6 +208,9 @@ describe('SoCraTes Activities Service', function () {
         {event: e.ROOM_PAIR_WAS_REMOVED, roomType: 'bed_in_double', participant1Id: 'memberIdForPair1', participant2Id: 'memberIdForPair2'}
       ]);
 
+      const readModel = cache.get(socratesConstants.currentUrl + '_roomsReadModel');
+      expect(readModel.roomPairsFor('bed_in_double')).to.have.length(0);
+
       //      expect(new RoomsReadModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))).roomPairsFor('bed_in_double')).to.eql([]);
       done(err);
     });
