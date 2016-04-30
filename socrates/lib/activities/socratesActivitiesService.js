@@ -225,7 +225,6 @@ module.exports = {
   },
 
   removeWaitinglistMemberFor: function (desiredRoomTypes, waitinglistMemberNick, callback) {
-    var self = this;
 
     async.series(
       [
@@ -238,12 +237,12 @@ module.exports = {
         const registrationCommandProcessor = results[1];
         if (!registrationCommandProcessor || !waitinglistMember) { return callback(); }
 
-        registrationCommandProcessor.removeWaitinglistParticipant(desiredRoomTypes, waitinglistMember.id());
+        const event = registrationCommandProcessor.removeWaitinglistParticipant(desiredRoomTypes, waitinglistMember.id());
 
-        saveCommandProcessor({
+        saveCommandProcessor2({
           commandProcessor: registrationCommandProcessor,
+          events: [event],
           callback: callback,
-          repeat: _.partial(self.removeWaitinglistMemberFor, desiredRoomTypes, waitinglistMemberNick),
           handleSuccess: function () {
             notifications.removedFromWaitinglist(waitinglistMember);
           }

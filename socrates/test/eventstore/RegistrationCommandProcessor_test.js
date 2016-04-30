@@ -306,11 +306,10 @@ describe('The registration command processor', function () {
       const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       //When (issued commamnd)
-      commandProcessor.removeWaitinglistParticipant([singleBedRoom], memberId1, aShortTimeAgo);
+      const event = commandProcessor.removeWaitinglistParticipant([singleBedRoom], memberId1, aShortTimeAgo);
 
       //Then (saved events)
-      expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, desiredRoomTypes: [singleBedRoom], sessionId: sessionId1, memberId: memberId1, joinedWaitinglist: aLongTimeAgo.valueOf()},
+      expect(stripTimestamps([event])).to.eql([
         {event: e.WAITINGLIST_PARTICIPANT_WAS_REMOVED, desiredRoomTypes: [singleBedRoom], memberId: memberId1}
       ]);
     });
@@ -322,11 +321,10 @@ describe('The registration command processor', function () {
       const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       //When (issued command)
-      commandProcessor.removeWaitinglistParticipant([singleBedRoom], memberId1);
+      const event = commandProcessor.removeWaitinglistParticipant([singleBedRoom], memberId1);
 
       //Then (saved events)
-      expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, desiredRoomTypes: [singleBedRoom], sessionId: sessionId2, memberId: memberId2, joinedWaitinglist: aLongTimeAgo.valueOf()},
+      expect(stripTimestamps([event])).to.eql([
         {event: e.DID_NOT_REMOVE_WAITINGLIST_PARTICIPANT_BECAUSE_THEY_ARE_NOT_REGISTERED, desiredRoomTypes: [singleBedRoom], memberId: memberId1}
       ]);
     });
@@ -338,11 +336,10 @@ describe('The registration command processor', function () {
       const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       //When (issued commands)
-      commandProcessor.removeWaitinglistParticipant([bedInDouble], memberId1);
+      const event = commandProcessor.removeWaitinglistParticipant([bedInDouble], memberId1);
 
       //Then (saved events)
-      expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, desiredRoomTypes: [singleBedRoom, bedInDouble], sessionId: sessionId1, memberId: memberId1, joinedWaitinglist: aLongTimeAgo.valueOf()},
+      expect(stripTimestamps([event])).to.eql([
         {event: e.WAITINGLIST_PARTICIPANT_WAS_REMOVED, desiredRoomTypes: [bedInDouble], memberId: memberId1}]);
     });
   });
