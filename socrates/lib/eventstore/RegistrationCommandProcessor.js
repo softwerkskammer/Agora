@@ -112,18 +112,15 @@ RegistrationCommandProcessor.prototype.registerWaitinglistParticipant = function
 };
 
 RegistrationCommandProcessor.prototype.fromWaitinglistToParticipant = function (roomType, memberId, duration, joinedSoCraTes) {
-  var event;
   if (this.writeModel.isAlreadyRegistered(memberId)) {
-    event = events.didNotRegisterParticipantFromWaitinglistASecondTime(roomType, duration, memberId);
+    return events.didNotRegisterParticipantFromWaitinglistASecondTime(roomType, duration, memberId);
   } else if (!this.writeModel.isAlreadyOnWaitinglist(memberId)) {
     // we gracefully register them nonetheless:
-    event = events.participantWasRegistered(roomType, duration, undefined, memberId, joinedSoCraTes);
+    return events.participantWasRegistered(roomType, duration, undefined, memberId, joinedSoCraTes);
   } else {
     // all is well
-    event = events.registeredParticipantFromWaitinglist(roomType, duration, memberId, joinedSoCraTes);
+    return events.registeredParticipantFromWaitinglist(roomType, duration, memberId, joinedSoCraTes);
   }
-  this.updateEventStore(event);
-
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////

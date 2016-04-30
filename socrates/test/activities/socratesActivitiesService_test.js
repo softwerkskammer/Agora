@@ -25,6 +25,7 @@ var GlobalEventStore = beans.get('GlobalEventStore');
 var RoomsReadModel = beans.get('RoomsReadModel');
 var RegistrationReadModel = beans.get('RegistrationReadModel');
 var SoCraTesReadModel = beans.get('SoCraTesReadModel');
+var socratesConstants = beans.get('socratesConstants');
 
 var aLongTimeAgo = moment.tz().subtract(40, 'minutes');
 var now = moment.tz();
@@ -83,7 +84,7 @@ describe('SoCraTes Activities Service', function () {
     });
   });
 
-  it('registers the user when he is on the waitinglist', function (done) {
+  it('registers the user when he is on the waitinglist, updates the registration read model and saves the eventstore', function (done) {
     eventStore.state.registrationEvents = [
       events.waitinglistParticipantWasRegistered(['single'], 'sessionId', 'memberId', aLongTimeAgo)];
 
@@ -91,6 +92,10 @@ describe('SoCraTes Activities Service', function () {
       expect(stripTimestamps(saveEventStore.firstCall.args[0].state.registrationEvents)).to.eql([
         {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionId: 'sessionId', desiredRoomTypes: ['single'], memberId: 'memberId', joinedWaitinglist: aLongTimeAgo.valueOf()},
         {event: e.REGISTERED_PARTICIPANT_FROM_WAITINGLIST, roomType: 'single', memberId: 'memberId', duration: 2, joinedSoCraTes: now.valueOf()}]);
+
+      const readModel = cache.get(socratesConstants.currentUrl + '_registrationReadModel');
+      expect(readModel.reservationsAndParticipantsFor('single')).to.have.length(1);
+
       done(err);
     });
   });

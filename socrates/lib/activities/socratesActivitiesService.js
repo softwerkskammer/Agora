@@ -23,11 +23,17 @@ function saveCommandProcessor(args) {
   });
 }
 
+function saveCommandProcessor2(args) {
+  eventstoreService.saveCommandProcessor2(args.commandProcessor, args.events, function (err) {
+    if (err) { return args.callback(err); }
+    if (args.handleSuccess) { args.handleSuccess(); }
+    return args.callback();
+  });
+}
+
 module.exports = {
 
   fromWaitinglistToParticipant: function (nickname, roomType, duration, now, callback) {
-    var self = this;
-
     async.series(
       [
         _.partial(memberstore.getMember, nickname),
@@ -39,12 +45,12 @@ module.exports = {
         const registrationCommandProcessor = results[1];
         if (!registrationCommandProcessor || !member) { return callback(); }
 
-        registrationCommandProcessor.fromWaitinglistToParticipant(roomType, member.id(), duration, now);
+        const event = registrationCommandProcessor.fromWaitinglistToParticipant(roomType, member.id(), duration, now);
 
-        saveCommandProcessor({
+        saveCommandProcessor2({
           commandProcessor: registrationCommandProcessor,
+          events: [event],
           callback: callback,
-          repeat: _.partial(self.fromWaitinglistToParticipant, nickname, roomType, duration, now),
           handleSuccess: function () {
             var bookingdetails = roomOptions.informationFor(roomType, duration);
             bookingdetails.fromWaitinglist = true;
