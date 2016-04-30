@@ -282,7 +282,7 @@ describe('SoCraTes Activities Service', function () {
     });
   });
 
-  it('removes a waitinglist member from the given resource', function (done) {
+  it('removes a waitinglist member from the given resource and updates event store and read model', function (done) {
     eventStore.state.registrationEvents = [
       events.waitinglistParticipantWasRegistered(['single'], 'session-id', 'memberId', aLongTimeAgo)
     ];
@@ -293,8 +293,9 @@ describe('SoCraTes Activities Service', function () {
         {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionId: 'session-id', desiredRoomTypes: ['single'], memberId: 'memberId', joinedWaitinglist: aLongTimeAgo.valueOf()},
         {event: e.WAITINGLIST_PARTICIPANT_WAS_REMOVED, desiredRoomTypes: ['single'], memberId: 'memberId'}
       ]);
-      expect(stripTimestamps(savedEventStore.state.roomsEvents)).to.eql([]);
-      //      expect(R.keys(new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore)).waitinglistParticipantsByMemberIdFor('single'))).to.eql([]);
+
+      const readModel = cache.get(socratesConstants.currentUrl + '_registrationReadModel');
+      expect(readModel.waitinglistReservationsAndParticipantsFor('single')).to.have.length(0);
       done(err);
     });
   });
