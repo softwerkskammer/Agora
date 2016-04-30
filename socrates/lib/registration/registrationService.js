@@ -87,14 +87,16 @@ module.exports = {
           if (registrationTuple.roomType && registrationTuple.duration) {
             registrationEvent = commandProcessor.registerParticipant(registrationTuple.roomType, registrationTuple.duration, registrationTuple.sessionId, memberID);
           }
-          return eventstoreService.saveCommandProcessor(commandProcessor, function (err1) {
+          const registrationEventMsg = registrationEvent && registrationEvent.event;
+          const waitinglistRegistrationEventMsg = waitinglistRegistrationEvent && waitinglistRegistrationEvent.event;
+          return eventstoreService.saveCommandProcessor2(commandProcessor, R.filter(R.identity, [registrationEvent, waitinglistRegistrationEvent]), function (err1) {
             if (err1 && err1.message === CONFLICTING_VERSIONS) {
               var message = JSON.stringify({
                 message: CONFLICTING_VERSIONS,
                 function: 'completeRegistration',
                 tuple: registrationTuple,
-                event: registrationEvent,
-                waitingListEvent: waitinglistRegistrationEvent,
+                event: registrationEventMsg,
+                waitingListEvent: waitinglistRegistrationEventMsg,
                 subscriber: subscriber
               });
               conflictingVersionsLogger.warn(message);
@@ -104,22 +106,22 @@ module.exports = {
             if (err1) { return callback(err1); }
 
             // error and success handling as indicated by the event:
-            if (registrationEvent === eventConstants.PARTICIPANT_WAS_REGISTERED || waitinglistRegistrationEvent === eventConstants.WAITINGLIST_PARTICIPANT_WAS_REGISTERED) {
-              if (waitinglistRegistrationEvent === eventConstants.WAITINGLIST_PARTICIPANT_WAS_REGISTERED) {
+            if (registrationEventMsg === eventConstants.PARTICIPANT_WAS_REGISTERED || waitinglistRegistrationEventMsg === eventConstants.WAITINGLIST_PARTICIPANT_WAS_REGISTERED) {
+              if (waitinglistRegistrationEventMsg === eventConstants.WAITINGLIST_PARTICIPANT_WAS_REGISTERED) {
                 socratesNotifications.newWaitinglistEntry(memberID, registrationTuple.desiredRoomTypes.map(roomType => roomOptions.waitinglistInformationFor(roomType)));
               }
-              if (registrationEvent === eventConstants.PARTICIPANT_WAS_REGISTERED) {
+              if (registrationEventMsg === eventConstants.PARTICIPANT_WAS_REGISTERED) {
                 socratesNotifications.newParticipant(memberID, roomOptions.informationFor(registrationTuple.roomType, registrationTuple.duration));
               }
               return callback(null);
             }
 
-            if (registrationEvent === eventConstants.DID_NOT_REGISTER_PARTICIPANT_A_SECOND_TIME
-              || waitinglistRegistrationEvent === eventConstants.DID_NOT_REGISTER_WAITINGLIST_PARTICIPANT_A_SECOND_TIME) {
+            if (registrationEventMsg === eventConstants.DID_NOT_REGISTER_PARTICIPANT_A_SECOND_TIME
+              || waitinglistRegistrationEventMsg === eventConstants.DID_NOT_REGISTER_WAITINGLIST_PARTICIPANT_A_SECOND_TIME) {
               return callback(null, 'activities.registration_problem', 'activities.already_registered');
             }
-            if (registrationEvent === eventConstants.DID_NOT_REGISTER_PARTICIPANT_WITH_EXPIRED_OR_MISSING_RESERVATION
-              || waitinglistRegistrationEvent === eventConstants.DID_NOT_REGISTER_WAITINGLIST_PARTICIPANT_WITH_EXPIRED_OR_MISSING_RESERVATION) {
+            if (registrationEventMsg === eventConstants.DID_NOT_REGISTER_PARTICIPANT_WITH_EXPIRED_OR_MISSING_RESERVATION
+              || waitinglistRegistrationEventMsg === eventConstants.DID_NOT_REGISTER_WAITINGLIST_PARTICIPANT_WITH_EXPIRED_OR_MISSING_RESERVATION) {
               return callback(null, 'activities.registration_problem', 'activities.registration_timed_out');
             }
             callback(null, 'activities.registration_problem', 'activities.registration_not_possible');
