@@ -157,9 +157,16 @@ module.exports = {
       events = [events];
     }
 
-    commandProcessor.updateEventStore(events);
+    let eventStore;
+    if (commandProcessor instanceof Array) {
+      commandProcessor.map((processor, index) => processor.updateEventStore(events[index]));
+      eventStore = commandProcessor[0].eventStore();
+      events = R.flatten(events);
+    } else {
+      commandProcessor.updateEventStore(events);
+      eventStore = commandProcessor.eventStore();
+    }
 
-    const eventStore = commandProcessor.eventStore();
     const url = eventStore.state.url;
 
     // update all read models:

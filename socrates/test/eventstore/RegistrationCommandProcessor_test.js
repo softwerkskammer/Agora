@@ -262,11 +262,10 @@ describe('The registration command processor', function () {
       const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       //When (issued command)
-      commandProcessor.removeParticipant(singleBedRoom, memberId1);
+      const event = commandProcessor.removeParticipant(singleBedRoom, memberId1);
 
       //Then (new events)
-      expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1, joinedSoCraTes: aShortTimeAgo.valueOf()},
+      expect(stripTimestamps([event])).to.eql([
         {event: e.PARTICIPANT_WAS_REMOVED, roomType: singleBedRoom, memberId: memberId1}
       ]);
     });
@@ -276,11 +275,10 @@ describe('The registration command processor', function () {
       const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       //When (issued command)
-      commandProcessor.removeParticipant(singleBedRoom, memberId1);
+      const event = commandProcessor.removeParticipant(singleBedRoom, memberId1);
 
       //Then (new events)
-      expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId2, joinedSoCraTes: aShortTimeAgo.valueOf()},
+      expect(stripTimestamps([event])).to.eql([
         {event: e.DID_NOT_REMOVE_PARTICIPANT_BECAUSE_THEY_ARE_NOT_REGISTERED, roomType: singleBedRoom, memberId: memberId1}
       ]);
     });
@@ -290,11 +288,10 @@ describe('The registration command processor', function () {
       const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       //When (issued command)
-      commandProcessor.removeParticipant(bedInDouble, memberId1);
+      const event = commandProcessor.removeParticipant(bedInDouble, memberId1);
 
       //Then (new events)
-      expect(stripTimestamps(eventStore.state.registrationEvents)).to.eql([
-        {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1, joinedSoCraTes: aShortTimeAgo.valueOf()},
+      expect(stripTimestamps([event])).to.eql([
         {event: e.DID_NOT_REMOVE_PARTICIPANT_BECAUSE_THEY_ARE_NOT_REGISTERED_FOR_THIS_ROOM_TYPE, roomType: bedInDouble, memberId: memberId1}
       ]);
     });

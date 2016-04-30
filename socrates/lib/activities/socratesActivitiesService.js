@@ -195,7 +195,6 @@ module.exports = {
   },
 
   removeParticipantFor: function (roomType, participantNick, callback) {
-    var self = this;
 
     async.series(
       [
@@ -210,13 +209,13 @@ module.exports = {
         const registrationCommandProcessor = results[2];
         if (!roomsCommandProcessor || !registrationCommandProcessor || !participant) { return callback(); }
 
-        roomsCommandProcessor.removeParticipantPairContaining(roomType, participant.id());
-        registrationCommandProcessor.removeParticipant(roomType, participant.id());
+        const roomsEvents = roomsCommandProcessor.removeParticipantPairContaining(roomType, participant.id());
+        const registrationEvent = registrationCommandProcessor.removeParticipant(roomType, participant.id());
 
-        saveCommandProcessor({
-          commandProcessor: roomsCommandProcessor,
+        saveCommandProcessor2({
+          commandProcessor: [roomsCommandProcessor, registrationCommandProcessor],
+          events: [roomsEvents, [registrationEvent]],
           callback: callback,
-          repeat: _.partial(self.removeParticipantFor, roomType, participantNick),
           handleSuccess: function () {
             notifications.removedFromParticipants(participant);
           }

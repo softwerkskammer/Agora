@@ -233,7 +233,7 @@ describe('SoCraTes Activities Service', function () {
     });
   });
 
-  it('when removing a participant, also removes him from his room pair', function (done) {
+  it('when removing a participant, also removes him from his room pair and updates event store and read models', function (done) {
     eventStore.state.registrationEvents = [
       events.participantWasRegistered('bed_in_double', 2, 'session-id', 'memberIdForPair1', aLongTimeAgo),
       events.participantWasRegistered('bed_in_double', 2, 'session-id', 'memberIdForPair2', aLongTimeAgo)
@@ -254,9 +254,10 @@ describe('SoCraTes Activities Service', function () {
         {event: e.ROOM_PAIR_CONTAINING_A_PARTICIPANT_WAS_REMOVED, roomType: 'bed_in_double', memberIdToBeRemoved: 'memberIdForPair1', participant1Id: 'memberIdForPair1', participant2Id: 'memberIdForPair2'}
       ]);
 
-      // TODO test this in read models:
-      //      expect(R.keys(new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore)).participantsByMemberIdFor('bed_in_double'))).to.eql(['memberIdForPair2']);
-      //      expect(new RoomsReadModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))).roomPairsFor('bed_in_double')).to.eql([]);
+      const registrationReadModel = cache.get(socratesConstants.currentUrl + '_registrationReadModel');
+      const roomsReadModel = cache.get(socratesConstants.currentUrl + '_roomsReadModel');
+      expect(R.keys(registrationReadModel.participantsByMemberIdFor('bed_in_double'))).to.eql(['memberIdForPair2']);
+      expect(roomsReadModel.roomPairsFor('bed_in_double')).to.eql([]);
       done(err);
     });
   });
