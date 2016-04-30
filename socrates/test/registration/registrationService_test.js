@@ -370,7 +370,7 @@ describe('Registration Service', function () {
       registrationBody.duration = 3;
       registrationBody.roomType = 'junior';
       registrationBody.desiredRoomTypes = 'single';
-      sinon.stub(RegistrationCommandProcessor.prototype, 'registerParticipant', function () {return {event: e.PARTICIPANT_WAS_REGISTERED};});
+      sinon.stub(RegistrationCommandProcessor.prototype, 'registerParticipant', function () {return events.participantWasRegistered('junior', 3, 'sessionId', 'memberId', aShortTimeAgo);});
       sinon.stub(RegistrationCommandProcessor.prototype, 'registerWaitinglistParticipant', function () {return undefined;});
 
       registrationService.completeRegistration('memberId', 'sessionId', registrationBody, function (err, statusTitle, statusText) {
@@ -386,7 +386,7 @@ describe('Registration Service', function () {
       registrationBody.roomType = 'junior';
       registrationBody.desiredRoomTypes = 'single';
       sinon.stub(RegistrationCommandProcessor.prototype, 'registerParticipant', function () {return undefined;});
-      sinon.stub(RegistrationCommandProcessor.prototype, 'registerWaitinglistParticipant', function () {return {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED};});
+      sinon.stub(RegistrationCommandProcessor.prototype, 'registerWaitinglistParticipant', function () {return events.waitinglistParticipantWasRegistered(['single'], 'sessionId', 'memberId', aShortTimeAgo);});
 
       registrationService.completeRegistration('memberId', 'sessionId', registrationBody, function (err, statusTitle, statusText) {
         expect(statusTitle).to.not.exist();
