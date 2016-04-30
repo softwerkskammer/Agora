@@ -90,7 +90,14 @@ module.exports = {
     getGlobalEventStoreForWriting(url, function (err, eventStore) {
       if (err) { return callback(err); }
       // when creating a new SoCraTes, we want to create a new event store for it:
-      if (!eventStore) { eventStore = new GlobalEventStore(); }
+      if (!eventStore) {
+        eventStore = new GlobalEventStore({
+          url: url,
+          socratesEvents: [],
+          registrationEvents: [],
+          roomsEvents: []
+        });
+      }
       cache.set(keyFor(url, GLOBAL_EVENT_STORE_FOR_WRITING), eventStore);
       callback(null, new SoCraTesCommandProcessor(new SoCraTesWriteModel(eventStore)));
     });
@@ -151,16 +158,13 @@ module.exports = {
     }
 
     commandProcessor.updateEventStore(events);
-    
+
     const eventStore = commandProcessor.eventStore();
     const url = eventStore.state.url;
 
     // update all read models:
     R.values(cache.mget([keyFor(url, SOCRATES_READ_MODEL), keyFor(url, REGISTRATION_READ_MODEL), keyFor(url, ROOMS_READ_MODEL)])).forEach(model => model.update(events));
 
-    eventstore.saveEventStore(eventStore, function (err) {
-      if (err) {return callback(err); }
-      callback();
-    });
+    eventstore.saveEventStore(eventStore, callback);
   }
 };
