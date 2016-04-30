@@ -7,20 +7,6 @@ var beans = require('simple-configure').get('beans');
 var e = beans.get('eventConstants');
 const roomOptions = beans.get('roomOptions');
 
-function RoomsReadModel(eventStore, registrationReadModel) {
-  this._registrationReadModel = registrationReadModel;
-
-  // read model state:
-  this._roomPairsFor = {};
-  this._participantsIn = {};
-  roomOptions.allIds().forEach(roomType => {
-    this._roomPairsFor[roomType] = [];
-    this._participantsIn[roomType] = [];
-  });
-
-  this.update(eventStore.roomsEvents());
-}
-
 var projectRoomPairs = function (roomType, roomPairs, event) {
   if (event.event === e.ROOM_PAIR_WAS_ADDED && event.roomType === roomType) {
     return R.append({participant1Id: event.participant1Id, participant2Id: event.participant2Id}, roomPairs);
@@ -47,6 +33,20 @@ var projectParticpantsInRoom = function (roomType, participants, event) {
   return participants;
 };
 
+
+function RoomsReadModel(eventStore, registrationReadModel) {
+  this._registrationReadModel = registrationReadModel;
+
+  // read model state:
+  this._roomPairsFor = {};
+  this._participantsIn = {};
+  roomOptions.allIds().forEach(roomType => {
+    this._roomPairsFor[roomType] = [];
+    this._participantsIn[roomType] = [];
+  });
+
+  this.update(eventStore.roomsEvents());
+}
 
 RoomsReadModel.prototype.update = function (events) {
   roomOptions.allIds().forEach(roomType => {
