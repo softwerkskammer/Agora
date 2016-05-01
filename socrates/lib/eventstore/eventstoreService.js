@@ -36,6 +36,10 @@ function getReadModel(url, key, ReadModel, callback) {
     // for the read models, there must be an eventstore already:
     if (err || !eventStore) { return callback(err); }
     const newModel = new ReadModel(eventStore);
+    var cachedModel2 = cache.get(cacheKey);
+    if (cachedModel2) {
+      return callback(null, cachedModel2);
+    }
     cache.set(cacheKey, newModel);
     callback(null, newModel);
   });
@@ -51,6 +55,10 @@ function getReadModelWithArg(url, key, ReadModel, argument, callback) {
     // for the read models, there must be an eventstore already:
     if (err || !eventStore) { return callback(err); }
     const newModel = new ReadModel(eventStore, argument);
+    var cachedModel2 = cache.get(cacheKey);
+    if (cachedModel2) {
+      return callback(null, cachedModel2);
+    }
     cache.set(cacheKey, newModel);
     callback(null, newModel);
   });
@@ -65,6 +73,10 @@ function getGlobalEventStoreForWriting(url, callback) {
 
   eventstore.getEventStore(url, function (err, eventStore) {
     if (err || !eventStore) { return callback(err); }
+    const cachedStore2 = cache.get(cacheKey);
+    if (cachedStore2) {
+      return callback(null, cachedStore2);
+    }
     cache.set(cacheKey, eventStore);
     callback(null, eventStore);
   });
