@@ -14,8 +14,8 @@ var SoCraTesReadModel = beans.get('SoCraTesReadModel');
 var sessionId1 = 'session-id-1';
 var sessionId2 = 'session-id-2';
 
-var singleBedRoom = 'singleBedRoom';
-var bedInDouble = 'bedInDouble';
+var singleBedRoom = 'single';
+var bedInDouble = 'bed_in_double';
 
 var untilSaturday = 'untilSaturday';
 var untilSundayMorning = 'untilSundayMorning';
@@ -38,11 +38,9 @@ function stripTimestamps(someEvents) {
 describe('The registration read model', function () {
 
   var eventStore;
-  var readModel;
 
   beforeEach(function () {
     eventStore = new GlobalEventStore();
-    readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
   });
 
   describe('calculating the reservation expiration time (reservationExpiration)', function () {
@@ -51,6 +49,7 @@ describe('The registration read model', function () {
       eventStore.state.registrationEvents = [
         events.reservationWasIssued(singleBedRoom, 'untilSaturday', sessionId1, memberId1, aShortTimeAgo)
       ];
+      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
       expect(readModel.reservationExpiration(sessionId2)).to.be(undefined);
     });
@@ -59,6 +58,7 @@ describe('The registration read model', function () {
       eventStore.state.registrationEvents = [
         events.reservationWasIssued(singleBedRoom, 'untilSaturday', sessionId1, memberId1, aShortTimeAgo)
       ];
+      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
       expect(readModel.reservationExpiration(sessionId1).valueOf()).to.be(aShortTimeAgo.add(30, 'minutes').valueOf());
     });
@@ -67,6 +67,7 @@ describe('The registration read model', function () {
       eventStore.state.registrationEvents = [
         events.reservationWasIssued(singleBedRoom, 'untilSaturday', sessionId1, memberId1, aLongTimeAgo)
       ];
+      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
       expect(readModel.reservationExpiration(sessionId1)).to.be(undefined);
     });
@@ -75,6 +76,7 @@ describe('The registration read model', function () {
       eventStore.state.registrationEvents = [
         events.waitinglistReservationWasIssued(singleBedRoom, sessionId1, memberId1, aShortTimeAgo)
       ];
+      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
       expect(readModel.reservationExpiration(sessionId1).valueOf()).to.be(aShortTimeAgo.add(30, 'minutes').valueOf());
     });
@@ -84,6 +86,7 @@ describe('The registration read model', function () {
         events.reservationWasIssued(singleBedRoom, 'untilSaturday', sessionId1, memberId1, aShortTimeAgo),
         events.waitinglistReservationWasIssued(singleBedRoom, sessionId1, memberId1, anEvenShorterTimeAgo)
       ];
+      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
       expect(readModel.reservationExpiration(sessionId1).valueOf()).to.be(aShortTimeAgo.add(30, 'minutes').valueOf());
     });
@@ -92,6 +95,7 @@ describe('The registration read model', function () {
   describe('giving the reservations and participants for a room type (reservationsAndParticipantsFor)', function () {
 
     it('does not consider any reservations or participants when there are no events', function () {
+      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
       expect(readModel.reservationsAndParticipantsFor(singleBedRoom)).to.eql([]);
     });
@@ -99,6 +103,7 @@ describe('The registration read model', function () {
     it('does not consider reservations that are already expired', function () {
       eventStore.state.registrationEvents = [
         events.reservationWasIssued(singleBedRoom, untilSaturday, sessionId1, memberId1, aLongTimeAgo)];
+      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
       expect(readModel.reservationsAndParticipantsFor(singleBedRoom)).to.eql([]);
     });
@@ -106,6 +111,7 @@ describe('The registration read model', function () {
     it('considers reservations that are still active', function () {
       eventStore.state.registrationEvents = [
         events.reservationWasIssued(singleBedRoom, untilSaturday, sessionId1, memberId1, aShortTimeAgo)];
+      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
       expect(stripTimestamps(readModel.reservationsAndParticipantsFor(singleBedRoom))).to.eql([
         {event: e.RESERVATION_WAS_ISSUED, sessionId: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: aShortTimeAgo.valueOf()}]);
@@ -115,6 +121,7 @@ describe('The registration read model', function () {
       eventStore.state.registrationEvents = [
         events.participantWasRegistered(singleBedRoom, untilSaturday, sessionId1, memberId1, aLongTimeAgo),
         events.participantWasRegistered(singleBedRoom, untilSundayMorning, sessionId2, memberId2, aShortTimeAgo)];
+      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
       expect(stripTimestamps(readModel.reservationsAndParticipantsFor(singleBedRoom))).to.eql([
         {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: aLongTimeAgo.valueOf()},
@@ -125,6 +132,7 @@ describe('The registration read model', function () {
       eventStore.state.registrationEvents = [
         events.reservationWasIssued(singleBedRoom, untilSaturday, sessionId1, memberId1, aShortTimeAgo),
         events.participantWasRegistered(singleBedRoom, untilSaturday, sessionId1, memberId1, anEvenShorterTimeAgo)];
+      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
       expect(stripTimestamps(readModel.reservationsAndParticipantsFor(singleBedRoom))).to.eql([
         {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: anEvenShorterTimeAgo.valueOf()}]);
@@ -138,6 +146,7 @@ describe('The registration read model', function () {
         events.didNotRegisterParticipantASecondTime(singleBedRoom, untilSundayMorning, sessionId1, memberId1),
         events.didNotRegisterParticipantWithExpiredOrMissingReservation(singleBedRoom, untilSundayMorning, sessionId1, memberId1)
       ];
+      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
       expect(stripTimestamps(readModel.reservationsAndParticipantsFor(singleBedRoom))).to.eql([
         {event: e.RESERVATION_WAS_ISSUED, sessionId: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: aShortTimeAgo.valueOf()}]);
@@ -150,6 +159,7 @@ describe('The registration read model', function () {
         events.reservationWasIssued(singleBedRoom, untilSundayMorning, sessionId1, memberId1, aShortTimeAgo),
         events.participantWasRegistered(bedInDouble, untilSaturday, sessionId2, memberId2, aShortTimeAgo),
         events.participantWasRegistered(singleBedRoom, untilSundayMorning, sessionId1, memberId1, anEvenShorterTimeAgo)];
+      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
       expect(stripTimestamps(readModel.reservationsAndParticipantsFor(singleBedRoom))).to.eql([
         {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSundayMorning, joinedSoCraTes: anEvenShorterTimeAgo.valueOf()}]);
@@ -161,6 +171,7 @@ describe('The registration read model', function () {
       eventStore.state.registrationEvents = [
         events.participantWasRegistered(singleBedRoom, untilSaturday, sessionId1, memberId1, aShortTimeAgo),
         events.participantWasRemoved(singleBedRoom, memberId1)];
+      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
       expect(readModel.reservationsAndParticipantsFor(singleBedRoom)).to.eql([]);
     });
@@ -173,6 +184,7 @@ describe('The registration read model', function () {
       eventStore.state.registrationEvents = [
         events.participantWasRegistered(singleBedRoom, untilSaturday, sessionId1, memberId1, aShortTimeAgo),
         events.participantWasRemoved(singleBedRoom, memberId1)];
+      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
       expect(readModel.participantsByMemberIdFor(singleBedRoom)).to.eql({});
     });
@@ -184,6 +196,7 @@ describe('The registration read model', function () {
       eventStore.state.registrationEvents = [
         events.reservationWasIssued(singleBedRoom, 'untilSaturday', sessionId1, memberId1, aShortTimeAgo)
       ];
+      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
       expect(readModel.hasValidReservationFor(sessionId2)).to.be(false);
     });
@@ -192,6 +205,7 @@ describe('The registration read model', function () {
       eventStore.state.registrationEvents = [
         events.reservationWasIssued(singleBedRoom, 'untilSaturday', sessionId1, memberId1, aShortTimeAgo)
       ];
+      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
       expect(readModel.hasValidReservationFor(sessionId1)).to.be(true);
     });
@@ -200,6 +214,7 @@ describe('The registration read model', function () {
       eventStore.state.registrationEvents = [
         events.reservationWasIssued(singleBedRoom, 'untilSaturday', sessionId1, memberId1, aLongTimeAgo)
       ];
+      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
       expect(readModel.hasValidReservationFor(sessionId1)).to.be(false);
     });
@@ -208,6 +223,7 @@ describe('The registration read model', function () {
       eventStore.state.registrationEvents = [
         events.waitinglistReservationWasIssued(singleBedRoom, sessionId1, memberId1, aShortTimeAgo)
       ];
+      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
       expect(readModel.hasValidReservationFor(sessionId1)).to.be(true);
     });
@@ -217,6 +233,7 @@ describe('The registration read model', function () {
         events.reservationWasIssued(singleBedRoom, 'untilSaturday', sessionId1, memberId1, aShortTimeAgo),
         events.waitinglistReservationWasIssued(singleBedRoom, sessionId1, memberId1, anEvenShorterTimeAgo)
       ];
+      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
       expect(readModel.hasValidReservationFor(sessionId1)).to.be(true);
     });
@@ -224,12 +241,14 @@ describe('The registration read model', function () {
 
   describe('for waitinglist reservations and participants (waitinglistReservationsAndParticipantsFor)', function () {
     it('does not consider any waitinglist reservations or participants when there are no events', function () {
+      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
       expect(readModel.waitinglistReservationsAndParticipantsFor(singleBedRoom)).to.eql([]);
     });
 
     it('does not consider reservations that are already expired', function () {
       eventStore.state.registrationEvents = [
         events.waitinglistReservationWasIssued(singleBedRoom, sessionId1, memberId1, aLongTimeAgo)];
+      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
       expect(readModel.waitinglistReservationsAndParticipantsFor(singleBedRoom)).to.eql([]);
     });
@@ -237,6 +256,7 @@ describe('The registration read model', function () {
     it('considers reservations that are still active', function () {
       eventStore.state.registrationEvents = [
         events.waitinglistReservationWasIssued([singleBedRoom], sessionId1, memberId1, aShortTimeAgo)];
+      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
       expect(stripTimestamps(readModel.waitinglistReservationsAndParticipantsFor(singleBedRoom))).to.eql([
         {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionId: sessionId1, memberId: memberId1, desiredRoomTypes: [singleBedRoom], joinedWaitinglist: aShortTimeAgo.valueOf()}]);
@@ -246,6 +266,7 @@ describe('The registration read model', function () {
       eventStore.state.registrationEvents = [
         events.waitinglistParticipantWasRegistered([singleBedRoom], sessionId1, memberId1, aLongTimeAgo),
         events.waitinglistParticipantWasRegistered([singleBedRoom], sessionId2, memberId2, aShortTimeAgo)];
+      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
       expect(stripTimestamps(readModel.waitinglistReservationsAndParticipantsFor(singleBedRoom))).to.eql([
         {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionId: sessionId1, memberId: memberId1, desiredRoomTypes: [singleBedRoom], joinedWaitinglist: aLongTimeAgo.valueOf()},
@@ -256,6 +277,7 @@ describe('The registration read model', function () {
       eventStore.state.registrationEvents = [
         events.waitinglistReservationWasIssued([singleBedRoom], sessionId1, memberId1, aShortTimeAgo),
         events.waitinglistParticipantWasRegistered([singleBedRoom], sessionId1, memberId1, anEvenShorterTimeAgo)];
+      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
       expect(stripTimestamps(readModel.waitinglistReservationsAndParticipantsFor(singleBedRoom))).to.eql([
         {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionId: sessionId1, memberId: memberId1, desiredRoomTypes: [singleBedRoom], joinedWaitinglist: anEvenShorterTimeAgo.valueOf()}]);
@@ -268,6 +290,7 @@ describe('The registration read model', function () {
         events.didNotRegisterWaitinglistParticipantASecondTime([singleBedRoom], sessionId1, memberId1),
         events.didNotRegisterWaitinglistParticipantWithExpiredOrMissingReservation([singleBedRoom], sessionId1, memberId1)
       ];
+      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
       expect(stripTimestamps(readModel.waitinglistReservationsAndParticipantsFor(singleBedRoom))).to.eql([
         {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionId: sessionId1, memberId: memberId1, desiredRoomTypes: [singleBedRoom], joinedWaitinglist: aShortTimeAgo.valueOf()}]);
@@ -280,6 +303,7 @@ describe('The registration read model', function () {
         events.waitinglistReservationWasIssued([singleBedRoom], sessionId1, memberId1, aShortTimeAgo),
         events.waitinglistParticipantWasRegistered([bedInDouble], sessionId2, memberId2, aShortTimeAgo),
         events.waitinglistParticipantWasRegistered([singleBedRoom], sessionId1, memberId1, anEvenShorterTimeAgo)];
+      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
       expect(stripTimestamps(readModel.waitinglistReservationsAndParticipantsFor(singleBedRoom))).to.eql([
         {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionId: sessionId1, memberId: memberId1, desiredRoomTypes: [singleBedRoom], joinedWaitinglist: anEvenShorterTimeAgo.valueOf()}]);
@@ -293,6 +317,7 @@ describe('The registration read model', function () {
       eventStore.state.registrationEvents = [
         events.reservationWasIssued(singleBedRoom, untilSaturday, sessionId1, memberId1, aLongTimeAgo),
         events.participantWasRegistered(singleBedRoom, untilSaturday, sessionId1, memberId1, aShortTimeAgo)];
+      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
       expect(readModel.isAlreadyRegistered(memberId1)).to.be.true();
     });
@@ -304,6 +329,7 @@ describe('The registration read model', function () {
     it('returns the options for a participant', function () {
       eventStore.state.registrationEvents = [
         events.participantWasRegistered('single', 3, sessionId1, memberId1, aShortTimeAgo)];
+      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
       expect(readModel.selectedOptionsFor(memberId1)).to.be('single,3');
     });
@@ -311,6 +337,7 @@ describe('The registration read model', function () {
     it('returns the options for a waitinglist participant', function () {
       eventStore.state.registrationEvents = [
         events.waitinglistParticipantWasRegistered(['single', 'junior'], sessionId1, memberId1, aShortTimeAgo)];
+      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
       expect(readModel.selectedOptionsFor(memberId1)).to.eql('single,waitinglist;junior,waitinglist');
     });
@@ -319,11 +346,13 @@ describe('The registration read model', function () {
       eventStore.state.registrationEvents = [
         events.participantWasRegistered('bed_in_double', 3, sessionId1, memberId1, aShortTimeAgo),
         events.waitinglistParticipantWasRegistered(['single', 'junior'], sessionId1, memberId1, aShortTimeAgo)];
+      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
       expect(readModel.selectedOptionsFor(memberId1)).to.eql('bed_in_double,3;single,waitinglist;junior,waitinglist');
     });
 
     it('returns an empty string as the options for an unregistered member', function () {
+      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
       expect(readModel.selectedOptionsFor(memberId1)).to.be('');
     });
@@ -333,6 +362,7 @@ describe('The registration read model', function () {
   describe('knows about participants on waitinglist (isAlreadyOnWaitinglist)', function () {
     it('returns false if participant is not on waitinglist', function () {
       eventStore.state.registrationEvents = [];
+      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
       expect(readModel.isAlreadyOnWaitinglist(memberId1)).to.eql(false);
     });
@@ -341,6 +371,7 @@ describe('The registration read model', function () {
       eventStore.state.registrationEvents = [
         events.waitinglistParticipantWasRegistered(['single', 'junior'], sessionId1, memberId1, aLongTimeAgo)
       ];
+      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
       expect(readModel.isAlreadyOnWaitinglist(memberId1)).to.eql(true);
     });
@@ -353,11 +384,13 @@ describe('The registration read model', function () {
       eventStore.state.registrationEvents = [
         events.participantWasRegistered(singleBedRoom, untilSaturday, sessionId1, memberId1, aLongTimeAgo)
       ];
+      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
       expect(readModel.isFull(singleBedRoom)).to.eql(true);
     });
     it('returns false if the room quota was not set', function () {
       eventStore.state.socratesEvents = [events.roomQuotaWasSet(bedInDouble, 100)];
+      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
       expect(readModel.isFull(singleBedRoom)).to.eql(false);
     });
@@ -368,6 +401,7 @@ describe('The registration read model', function () {
         events.participantWasRegistered(singleBedRoom, untilSaturday, sessionId1, memberId1, aLongTimeAgo),
         events.participantWasRemoved(singleBedRoom, memberId1)
       ];
+      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
       expect(readModel.isFull(singleBedRoom)).to.eql(false);
     });
@@ -377,6 +411,7 @@ describe('The registration read model', function () {
       eventStore.state.registrationEvents = [
         events.registeredParticipantFromWaitinglist(singleBedRoom, untilSaturday, memberId1, aLongTimeAgo)
       ];
+      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
       expect(readModel.isFull(singleBedRoom)).to.eql(true);
     });
@@ -389,6 +424,7 @@ describe('The registration read model', function () {
       eventStore.state.registrationEvents = [
         events.participantWasRegistered(singleBedRoom, untilSaturday, sessionId1, memberId1, aLongTimeAgo),
         events.roomTypeWasChanged(memberId1, bedInDouble, untilSaturday, aLongTimeAgo)];
+      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
       expect(readModel.isFull(singleBedRoom)).to.eql(false);
       expect(readModel.isFull(bedInDouble)).to.eql(true);
@@ -400,6 +436,7 @@ describe('The registration read model', function () {
       eventStore.state.registrationEvents = [
         events.participantWasRegistered(singleBedRoom, untilSaturday, sessionId1, memberId1, aLongTimeAgo)
       ];
+      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
       expect(readModel.registeredInRoomType(memberId1)).to.eql(singleBedRoom);
     });
 
@@ -407,6 +444,7 @@ describe('The registration read model', function () {
       eventStore.state.registrationEvents = [
         events.participantWasRegistered(singleBedRoom, untilSaturday, sessionId1, memberId1, aLongTimeAgo)
       ];
+      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
       expect(readModel.registeredInRoomType(memberId2)).to.eql(null);
     });
 
@@ -415,6 +453,7 @@ describe('The registration read model', function () {
         events.participantWasRegistered(singleBedRoom, untilSundayMorning, sessionId1, memberId1, aLongTimeAgo),
         events.roomTypeWasChanged(memberId1, bedInDouble, untilSaturday, aLongTimeAgo)
       ];
+      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
       expect(readModel.registeredInRoomType(memberId1)).to.eql(bedInDouble);
     });
@@ -424,6 +463,7 @@ describe('The registration read model', function () {
         events.waitinglistParticipantWasRegistered([bedInDouble, singleBedRoom], sessionId1, memberId1, aLongTimeAgo),
         events.registeredParticipantFromWaitinglist(singleBedRoom, untilSaturday, memberId1, aLongTimeAgo)
       ];
+      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
       expect(readModel.registeredInRoomType(memberId1)).to.eql(singleBedRoom);
     });
@@ -435,6 +475,7 @@ describe('The registration read model', function () {
       eventStore.state.registrationEvents = [
         events.participantWasRegistered(singleBedRoom, untilSundayMorning, sessionId1, memberId1, aLongTimeAgo)
       ];
+      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
       expect(readModel.roomTypesOf(memberId1)).to.eql([singleBedRoom]);
     });
 
@@ -442,6 +483,7 @@ describe('The registration read model', function () {
       eventStore.state.registrationEvents = [
         events.waitinglistParticipantWasRegistered([singleBedRoom, bedInDouble], sessionId1, memberId1, aLongTimeAgo)
       ];
+      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
       expect(readModel.roomTypesOf(memberId1)).to.eql([singleBedRoom, bedInDouble]);
     });
@@ -453,6 +495,7 @@ describe('The registration read model', function () {
         events.desiredRoomTypesWereChanged(memberId2, [singleBedRoom], aLongTimeAgo),
         events.roomTypeWasChanged(memberId1, bedInDouble, untilSundayMorning, aLongTimeAgo)
       ];
+      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
       expect(readModel.roomTypesOf(memberId1)).to.eql([bedInDouble]);
       expect(readModel.roomTypesOf(memberId2)).to.eql([singleBedRoom]);
@@ -466,6 +509,7 @@ describe('The registration read model', function () {
         events.participantWasRemoved(singleBedRoom, memberId1),
         events.waitinglistParticipantWasRemoved([singleBedRoom], memberId2)
       ];
+      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
       expect(readModel.roomTypesOf(memberId1)).to.eql([]);
       expect(readModel.roomTypesOf(memberId2)).to.eql([]);
@@ -479,6 +523,7 @@ describe('The registration read model', function () {
         events.reservationWasIssued(singleBedRoom, 2, sessionId1, memberId1, aLongTimeAgo),
         events.participantWasRegistered(singleBedRoom, 2, sessionId1, memberId1, aLongTimeAgo)
       ];
+      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
       expect(readModel.reservationsBySessionIdFor(singleBedRoom)).to.eql({});
       expect(R.keys(readModel.participantsByMemberIdFor(singleBedRoom))).to.eql([memberId1]);
@@ -492,6 +537,7 @@ describe('The registration read model', function () {
       eventStore.state.registrationEvents = [
         events.participantWasRegistered(singleBedRoom, untilSaturday, sessionId1, memberId1, aLongTimeAgo)
       ];
+      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
       expect(readModel.joinedSoCraTesAt(memberId1)).to.eql(aLongTimeAgo);
     });
@@ -500,6 +546,7 @@ describe('The registration read model', function () {
       eventStore.state.registrationEvents = [
         events.registeredParticipantFromWaitinglist(singleBedRoom, untilSaturday, memberId1, aLongTimeAgo)
       ];
+      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
       expect(readModel.joinedSoCraTesAt(memberId1)).to.eql(aLongTimeAgo);
     });
@@ -508,6 +555,7 @@ describe('The registration read model', function () {
       eventStore.state.registrationEvents = [
         events.roomTypeWasChanged(memberId1, singleBedRoom, untilSaturday, aLongTimeAgo)
       ];
+      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
       expect(readModel.joinedSoCraTesAt(memberId1)).to.eql(aLongTimeAgo);
     });
@@ -516,6 +564,7 @@ describe('The registration read model', function () {
       eventStore.state.registrationEvents = [
         events.durationWasChanged(memberId1, singleBedRoom, untilSaturday, aLongTimeAgo)
       ];
+      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
       expect(readModel.joinedSoCraTesAt(memberId1)).to.eql(aLongTimeAgo);
     });
@@ -526,6 +575,7 @@ describe('The registration read model', function () {
       eventStore.state.registrationEvents = [
         events.waitinglistParticipantWasRegistered([singleBedRoom], sessionId1, memberId1, aLongTimeAgo)
       ];
+      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
       expect(readModel.joinedWaitinglistAt(memberId1)).to.eql(aLongTimeAgo);
     });
@@ -534,6 +584,7 @@ describe('The registration read model', function () {
       eventStore.state.registrationEvents = [
         events.desiredRoomTypesWereChanged(memberId1, [singleBedRoom], aLongTimeAgo)
       ];
+      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
       expect(readModel.joinedWaitinglistAt(memberId1)).to.eql(aLongTimeAgo);
     });
@@ -543,6 +594,7 @@ describe('The registration read model', function () {
     eventStore.state.registrationEvents = [
       events.participantWasRegistered(singleBedRoom, untilSaturday, sessionId1, memberId1, aLongTimeAgo)
     ];
+    const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
     expect(readModel.reservationsBySessionIdFor(singleBedRoom)).to.eql({});
     expect(R.keys(readModel.participantsByMemberIdFor(singleBedRoom))).to.eql([memberId1]);
@@ -556,6 +608,7 @@ describe('The registration read model', function () {
       events.reservationWasIssued(singleBedRoom, untilSaturday, sessionId1, memberId1, aLongTimeAgo),
       events.participantWasRegistered(singleBedRoom, untilSaturday, sessionId1, memberId1, aLongTimeAgo)
     ];
+    const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
     expect(readModel.reservationsBySessionIdFor(singleBedRoom)).to.eql({});
     expect(R.keys(readModel.participantsByMemberIdFor(singleBedRoom))).to.eql([memberId1]);
@@ -569,6 +622,7 @@ describe('The registration read model', function () {
       events.reservationWasIssued(singleBedRoom, untilSaturday, sessionId1, memberId1, aLongTimeAgo),
       events.participantWasRegistered(singleBedRoom, untilSaturday, sessionId1, memberId1, aLongTimeAgo)
     ];
+    const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
     expect(readModel.reservationsBySessionIdFor(singleBedRoom)).to.eql({});
     expect(R.keys(readModel.participantsByMemberIdFor(singleBedRoom))).to.eql([memberId1]);
@@ -581,6 +635,7 @@ describe('The registration read model', function () {
       events.participantWasRegistered(singleBedRoom, untilSundayMorning, sessionId1, memberId1, aLongTimeAgo),
       events.didNotRegisterParticipantASecondTime(singleBedRoom, untilSundayMorning, sessionId1, memberId1)
     ];
+    const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
     expect(readModel.reservationsBySessionIdFor(singleBedRoom)).to.eql({});
     expect(R.keys(readModel.participantsByMemberIdFor(singleBedRoom))).to.eql([memberId1]);
@@ -593,6 +648,7 @@ describe('The registration read model', function () {
       events.waitinglistReservationWasIssued([singleBedRoom], sessionId1, memberId1, aLongTimeAgo),
       events.waitinglistParticipantWasRegistered([singleBedRoom], sessionId1, memberId1, aLongTimeAgo)
     ];
+    const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
     expect(readModel.reservationsBySessionIdFor(singleBedRoom)).to.eql({});
     expect(readModel.participantsByMemberIdFor(singleBedRoom)).to.eql({});
@@ -604,6 +660,7 @@ describe('The registration read model', function () {
     eventStore.state.registrationEvents = [
       events.waitinglistParticipantWasRegistered([singleBedRoom], sessionId1, memberId1, aLongTimeAgo)
     ];
+    const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
     expect(readModel.reservationsBySessionIdFor(singleBedRoom)).to.eql({});
     expect(readModel.participantsByMemberIdFor(singleBedRoom)).to.eql({});
     expect(readModel.waitinglistReservationsBySessionIdFor(singleBedRoom)).to.eql({});
@@ -615,6 +672,7 @@ describe('The registration read model', function () {
       events.reservationWasIssued(singleBedRoom, untilSaturday, sessionId1, memberId1, moment().subtract(1, 'hours')),
       events.participantWasRegistered(singleBedRoom, untilSaturday, sessionId1, memberId1, aShortTimeAgo)
     ];
+    const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
     expect(readModel.reservationsBySessionIdFor(singleBedRoom)).to.eql({});
     expect(R.keys(readModel.participantsByMemberIdFor(singleBedRoom))).to.eql([memberId1]);

@@ -1,5 +1,7 @@
 'use strict';
 
+const R = require('ramda');
+
 const conf = require('simple-configure');
 var beans = conf.get('beans');
 var cache = conf.get('cache');
@@ -34,6 +36,10 @@ function getReadModel(url, key, ReadModel, callback) {
     // for the read models, there must be an eventstore already:
     if (err || !eventStore) { return callback(err); }
     const newModel = new ReadModel(eventStore);
+    var cachedModel2 = cache.get(cacheKey);
+    if (cachedModel2) {
+      return callback(null, cachedModel2);
+    }
     cache.set(cacheKey, newModel);
     callback(null, newModel);
   });
@@ -49,6 +55,10 @@ function getReadModelWithArg(url, key, ReadModel, argument, callback) {
     // for the read models, there must be an eventstore already:
     if (err || !eventStore) { return callback(err); }
     const newModel = new ReadModel(eventStore, argument);
+    var cachedModel2 = cache.get(cacheKey);
+    if (cachedModel2) {
+      return callback(null, cachedModel2);
+    }
     cache.set(cacheKey, newModel);
     callback(null, newModel);
   });
@@ -63,6 +73,10 @@ function getGlobalEventStoreForWriting(url, callback) {
 
   eventstore.getEventStore(url, function (err, eventStore) {
     if (err || !eventStore) { return callback(err); }
+    const cachedStore2 = cache.get(cacheKey);
+    if (cachedStore2) {
+      return callback(null, cachedStore2);
+    }
     cache.set(cacheKey, eventStore);
     callback(null, eventStore);
   });
@@ -88,7 +102,14 @@ module.exports = {
     getGlobalEventStoreForWriting(url, function (err, eventStore) {
       if (err) { return callback(err); }
       // when creating a new SoCraTes, we want to create a new event store for it:
-      if (!eventStore) { eventStore = new GlobalEventStore(); }
+      if (!eventStore) {
+        eventStore = new GlobalEventStore({
+          url: url,
+          socratesEvents: [],
+          registrationEvents: [],
+          roomsEvents: []
+        });
+      }
       cache.set(keyFor(url, GLOBAL_EVENT_STORE_FOR_WRITING), eventStore);
       callback(null, new SoCraTesCommandProcessor(new SoCraTesWriteModel(eventStore)));
     });
@@ -133,13 +154,27 @@ module.exports = {
     });
   },
 
-  saveCommandProcessor: function (commandProcessor, callback) {
-    const eventStore = commandProcessor.eventStore();
+  saveCommandProcessor: function (commandProcessor, events, callback) {
+    if (!(events instanceof Array)) {
+      events = [events];
+    }
+
+    let eventStore;
+    if (commandProcessor instanceof Array) {
+      // sometimes we need to update several parts of the event store
+      commandProcessor.map((processor, index) => processor.updateEventStore(events[index]));
+      eventStore = commandProcessor[0].eventStore();
+      events = R.flatten(events);
+    } else {
+      commandProcessor.updateEventStore(events);
+      eventStore = commandProcessor.eventStore();
+    }
+
     const url = eventStore.state.url;
-    eventstore.saveEventStore(eventStore, function (err) {
-      if (err) {return callback(err); }
-      cache.del([keyFor(url, SOCRATES_READ_MODEL), keyFor(url, REGISTRATION_READ_MODEL), keyFor(url, ROOMS_READ_MODEL)]);
-      callback();
-    });
+
+    // update all read models:
+    R.values(cache.mget([keyFor(url, SOCRATES_READ_MODEL), keyFor(url, REGISTRATION_READ_MODEL), keyFor(url, ROOMS_READ_MODEL)])).forEach(model => model.update(events));
+
+    eventstore.saveEventStore(eventStore, callback);
   }
 };
