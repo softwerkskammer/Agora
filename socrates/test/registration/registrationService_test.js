@@ -10,8 +10,6 @@ const conf = require('../../testutil/configureForTest');
 var beans = conf.get('beans');
 const cache = conf.get('cache');
 
-var CONFLICTING_VERSIONS = beans.get('constants').CONFLICTING_VERSIONS;
-
 var registrationService = beans.get('registrationService');
 
 var memberstore = beans.get('memberstore');
@@ -47,7 +45,6 @@ describe('Registration Service', function () {
   var eventStore;
   var saveSubscriberCount;
   var saveEventStoreStub;
-  var getEventStoreStub;
 
   beforeEach(function () {
     cache.flushAll();
@@ -79,7 +76,7 @@ describe('Registration Service', function () {
     sinon.stub(subscriberstore, 'getSubscriber', function (memberId, callback) {
       callback(null, new Subscriber({id: 'memberId'}));
     });
-    getEventStoreStub = sinon.stub(eventstore, 'getEventStore', function (url, callback) {
+    sinon.stub(eventstore, 'getEventStore', function (url, callback) {
       if (url === 'wrongUrl') {
         return callback(new Error('Wrong URL!'));
       }
@@ -99,65 +96,6 @@ describe('Registration Service', function () {
 
   afterEach(function () {
     sinon.restore();
-  });
-
-  describe('when a race condition occurs', function () {
-
-    var registrationTuple;
-    var saveEventStoreCalls;
-
-    beforeEach(function () {
-
-      registrationTuple = {
-        activityUrl: 'socrates-url',
-        roomType: 'single',
-        duration: 2,
-        desiredRoomTypes: [],
-        sessionId: 'sessionId'
-      };
-
-      saveEventStoreStub.restore();
-      getEventStoreStub.restore();
-      saveEventStoreCalls = 0;
-      sinon.stub(eventstore, 'saveEventStore', function (activity, callback) {
-        //return race condition error if it is the first save event
-        saveEventStoreCalls += 1;
-        if (saveEventStoreCalls <= 1) {
-          return callback(new Error(CONFLICTING_VERSIONS));
-        }
-        callback();
-      });
-    });
-
-    it('on startRegistration, it returns no error but logs info', function (done) {
-      sinon.stub(eventstore, 'getEventStore', function (url, callback) {
-        eventStore.state.registrationEvents = [];
-        return callback(null, eventStore);
-      });
-      registrationTuple.sessionId = 'racecondition';
-      registrationService.startRegistration(registrationTuple, 'memberId', now, function (err, statusTitle, statusText) {
-        expect(statusTitle).to.not.exist();
-        expect(statusText).to.not.exist();
-        expect(saveEventStoreCalls).to.be.eql(2);
-        done(err);
-      });
-    });
-
-    xit('on completeRegistration, it returns no error but logs info', function (done) {
-      sinon.stub(eventstore, 'getEventStore', function (url, callback) {
-        eventStore.state.registrationEvents = [
-          events.reservationWasIssued(registrationBody.roomType, registrationBody.duration, 'racecondition', 'memberId', aShortTimeAgo)
-        ];
-        return callback(null, eventStore);
-      });
-      registrationService.completeRegistration('memberId', 'racecondition', registrationBody, function (err, statusTitle, statusText) {
-
-        expect(statusTitle).to.not.exist();
-        expect(statusText).to.not.exist();
-        expect(saveEventStoreCalls).to.be.eql(2);
-        done(err);
-      });
-    });
   });
 
   // TODO check that other entries remain intact!
