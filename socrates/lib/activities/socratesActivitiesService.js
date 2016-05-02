@@ -7,7 +7,6 @@ var memberstore = beans.get('memberstore');
 var eventstoreService = beans.get('eventstoreService');
 var notifications = beans.get('socratesNotifications');
 var roomOptions = beans.get('roomOptions');
-var CONFLICTING_VERSIONS = beans.get('constants').CONFLICTING_VERSIONS;
 
 var currentUrl = beans.get('socratesConstants').currentUrl;
 
