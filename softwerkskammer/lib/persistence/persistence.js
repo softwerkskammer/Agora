@@ -93,7 +93,7 @@ module.exports = function (collectionName) {
         var collection = db.collection(collectionName);
         collection.update({id: storedId}, object, {upsert: true}, function (err1) {
           if (err1) { return callback(err1); }
-          logger.info(object.constructor.name + ' saved: ' + JSON.stringify(object));
+          //logger.info(object.constructor.name + ' saved: ' + JSON.stringify(object));
           callback(null);
         });
       });
@@ -134,7 +134,7 @@ module.exports = function (collectionName) {
                   object.version = oldVersion;
                   return callback(new Error(CONFLICTING_VERSIONS));
                 }
-                logger.info(object.constructor.name + ' found and modified: ' + JSON.stringify(object));
+                //logger.info(object.constructor.name + ' found and modified: ' + JSON.stringify(object));
                 callback(null, newObject.value);
               });
           } else { // object is not yet persisted

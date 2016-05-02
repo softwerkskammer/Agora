@@ -17,6 +17,6 @@ module.exports = {
   },
 
   saveEventStore: function (eventStore, callback) {
-    persistence.saveWithVersion(eventStore.state, callback);
+    persistence.save(eventStore.state, callback);
   }
 };

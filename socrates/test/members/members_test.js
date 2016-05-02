@@ -90,7 +90,8 @@ describe('SoCraTes members application', function () {
       events.roomQuotaWasSet('bed_in_junior', 10)
     ];
 
-    sinon.stub(eventstore, 'getEventStore', function (url, callback) { return callback(null, eventStore); });
+    sinon.stub(eventstore, 'getEventStore', function (url, callback) {
+      return callback(null, eventStore); });
 
     sinon.stub(memberstore, 'getMembersForIds', function (ids, callback) {
       var members = [];
