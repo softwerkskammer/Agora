@@ -5,17 +5,14 @@ var beans = require('simple-configure').get('beans');
 
 var subscriberstore = beans.get('subscriberstore');
 var socratesNotifications = beans.get('socratesNotifications');
-var CONFLICTING_VERSIONS = beans.get('constants').CONFLICTING_VERSIONS;
 var roomOptions = beans.get('roomOptions');
 var eventstoreService = beans.get('eventstoreService');
 var eventConstants = beans.get('eventConstants');
 
-var conflictingVersionsLogger = require('winston').loggers.get('socrates');
 
 module.exports = {
 
   startRegistration: function (registrationTuple, memberIdIfKnown, now, callback) {
-    var self = this;
     var reservationEvent;
     var waitinglistReservationEvent;
     eventstoreService.getRegistrationCommandProcessor(registrationTuple.activityUrl, function (err, registrationCommandProcessor) {
@@ -30,18 +27,6 @@ module.exports = {
       const reservationEventMsg = reservationEvent && reservationEvent.event;
       const waitinglistReservationEventMsg = waitinglistReservationEvent && waitinglistReservationEvent.event;
       return eventstoreService.saveCommandProcessor(registrationCommandProcessor, R.filter(R.identity, [reservationEvent, waitinglistReservationEvent]), function (err1) {
-        if (err1 && err1.message === CONFLICTING_VERSIONS) {
-          var message = JSON.stringify({
-            message: CONFLICTING_VERSIONS,
-            function: 'startRegistration',
-            tuple: registrationTuple,
-            event: reservationEventMsg,
-            waitingListEvent: waitinglistReservationEventMsg
-          });
-          conflictingVersionsLogger.warn(message);
-          // we try again because of a racing condition during save:
-          return self.startRegistration(registrationTuple, memberIdIfKnown, now, callback);
-        }
         if (err1) {
           return callback(err1);
         }
@@ -62,7 +47,6 @@ module.exports = {
   },
 
   completeRegistration: function (memberID, sessionId, body, callback) {
-    var self = this;
     var registrationEvent;
     var waitinglistRegistrationEvent;
     var registrationTuple = {
@@ -90,19 +74,6 @@ module.exports = {
           const registrationEventMsg = registrationEvent && registrationEvent.event;
           const waitinglistRegistrationEventMsg = waitinglistRegistrationEvent && waitinglistRegistrationEvent.event;
           return eventstoreService.saveCommandProcessor(commandProcessor, R.filter(R.identity, [registrationEvent, waitinglistRegistrationEvent]), function (err1) {
-            if (err1 && err1.message === CONFLICTING_VERSIONS) {
-              var message = JSON.stringify({
-                message: CONFLICTING_VERSIONS,
-                function: 'completeRegistration',
-                tuple: registrationTuple,
-                event: registrationEventMsg,
-                waitingListEvent: waitinglistRegistrationEventMsg,
-                subscriber: subscriber
-              });
-              conflictingVersionsLogger.warn(message);
-              // we try again because of a racing condition during save:
-              return self.completeRegistration(memberID, sessionId, body, callback);
-            }
             if (err1) { return callback(err1); }
 
             // error and success handling as indicated by the event:
