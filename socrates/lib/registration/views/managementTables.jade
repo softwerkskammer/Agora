@@ -161,13 +161,13 @@ block content
                   -var participants = registrationReadModel.participantCountFor(roomType)
                   -var quota = socratesReadModel.quotaFor(roomType)
                   -var waitingMembers = registrationReadModel.waitinglistParticipantCountFor(roomType)
-                  -var freeSpots = quota ? quota - participants : undefined
+                  -var freeSpots = quota === undefined ? undefined : quota - participants
                   -totalParticipants += participants
                   -totalFreeSpots = freeSpots ? totalFreeSpots + freeSpots : totalFreeSpots
                   -totalWaitingMembers += waitingMembers
                   tr
                     td #{roomType}
-                    td #{participants} von #{quota || 'unbegrenzt'}
+                    td #{participants} von #{quota === undefined ? 'unbegrenzt' : quota}
                     td #{freeSpots}
                     td #{waitingMembers}
                 tr
