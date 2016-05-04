@@ -223,30 +223,32 @@ block content
                       td: +removeParticipantWithModal(roomType, member.nickname())
             hr
         .tab-pane#waitinglist
-          h4 Wartende (#{waitinglistLines.length})
-          .panel
-            table.table.table-condensed.table-hover.table-striped.membertable
-              thead
-                tr
-                  th Eingetragen
-                  th Nickname
-                  th Vorname
-                  th Nachname
-                  th Ort/Region
-                  th Übernehmen
-                  th ändern in
-                  th entfernen
-              tbody
-                for line in waitinglistLines
+          each roomType in roomOptionIds
+            -var waitinglistParticipants = waitinglistParticipantsOf[roomType]
+            h4 Wartende in #{roomType} (#{waitinglistParticipants.length})
+            .panel
+              table.table.table-condensed.table-hover.table-striped.membertable
+                thead
                   tr
-                    td #{formatDate(registrationReadModel.joinedWaitinglistAt(line.member.id()))}
-                    td #{+linkedMember(line.member.nickname())}
-                    td #{line.member.firstname()}
-                    td #{line.member.lastname()}
-                    td #{line.member.location()}
-                    td: +fromWaitinglistToParticipant(roomType, member.nickname())
-                    td: +newWaitinglist(roomType, member.nickname())
-                    td: +removeWaitinglistMemberWithModal(roomType, member.nickname())
+                    th Eingetragen
+                    th Nickname
+                    th Vorname
+                    th Nachname
+                    th Ort/Region
+                    th Übernehmen
+                    th ändern in
+                    th entfernen
+                tbody
+                  for member in waitinglistParticipants
+                    tr
+                      td #{formatDate(registrationReadModel.joinedWaitinglistAt(member.id()))}
+                      td: +linkedMember(member.nickname())
+                      td #{member.firstname()}
+                      td #{member.lastname()}
+                      td #{member.location()}
+                      td: +fromWaitinglistToParticipant(roomType, member.nickname())
+                      td: +newWaitinglist(roomType, member.nickname())
+                      td: +removeWaitinglistMemberWithModal(roomType, member.nickname())
             hr
         .tab-pane.active#addons
           h4 Alle Teilnehmer

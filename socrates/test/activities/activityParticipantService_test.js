@@ -6,7 +6,9 @@ var expect = require('must-dist');
 var _ = require('lodash');
 var moment = require('moment-timezone');
 
-var beans = require('../../testutil/configureForTest').get('beans');
+const conf = require('../../testutil/configureForTest');
+var beans = conf.get('beans');
+var cache = conf.get('cache');
 
 var activityParticipantService = beans.get('activityParticipantService');
 var activitystore = beans.get('activitystore');
@@ -21,12 +23,14 @@ var events = beans.get('events');
 var eventstore = beans.get('eventstore');
 var GlobalEventStore = beans.get('GlobalEventStore');
 
-describe('SoCraTes Wiki Service', function () {
+describe('activityParticipantService', function () {
 
   var eventStore;
   var subscriber;
 
   beforeEach(function () {
+    cache.flushAll();
+
     eventStore = new GlobalEventStore();
 
     sinon.stub(eventstore, 'getEventStore', function (url, callback) {
@@ -74,6 +78,21 @@ describe('SoCraTes Wiki Service', function () {
     activityParticipantService.getParticipantsFor('2020', function (err, participants) {
       expect(participants).to.have.length(1);
       expect(participants[0].participation.roommate()).to.be('My buddy');
+      done(err);
+    });
+  });
+
+  it('loads the waitinglist participants and their participation information for a year (on or after 2016)', function (done) {
+    eventStore.state.registrationEvents = [
+      events.waitinglistParticipantWasRegistered(['single', 'junior'], 'session-id', 'memberId', moment.tz())
+    ];
+
+    subscriber = new Subscriber({id: 'memberId'});
+    //subscriber.participationOf('2020').state.roommate = 'My buddy';
+
+    activityParticipantService.getWaitinglistParticipantsFor('2020', function (err, participants) {
+      expect(participants).to.have.length(1);
+      expect(participants[0].id()).to.be('memberId');
       done(err);
     });
   });
