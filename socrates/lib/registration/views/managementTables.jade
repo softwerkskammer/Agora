@@ -148,7 +148,8 @@ block content
           .panel
             -var totalParticipants = 0
             -var totalFreeSpots = 0
-            -var totalWaitingMembers = 0
+            -var totalWaitingOptions = 0
+            -var totalWaitingMembers = waitinglistLines.length
             table.table.table-condensed.table-hover.table-striped.unsortedtable
               thead
                 tr
@@ -160,21 +161,21 @@ block content
                 for roomType in roomOptionIds
                   -var participants = registrationReadModel.participantCountFor(roomType)
                   -var quota = socratesReadModel.quotaFor(roomType)
-                  -var waitingMembers = registrationReadModel.waitinglistParticipantCountFor(roomType)
+                  -var waitingOptions = registrationReadModel.waitinglistParticipantCountFor(roomType)
                   -var freeSpots = quota === undefined ? undefined : quota - participants
                   -totalParticipants += participants
                   -totalFreeSpots = freeSpots ? totalFreeSpots + freeSpots : totalFreeSpots
-                  -totalWaitingMembers += waitingMembers
+                  -totalWaitingOptions += waitingOptions
                   tr
                     td #{roomType}
                     td #{participants} von #{quota === undefined ? 'unbegrenzt' : quota}
                     td #{freeSpots}
-                    td #{waitingMembers}
+                    td #{waitingOptions}
                 tr
                   td <b>Summe</b>
                   td <b>#{totalParticipants}</b>
                   td <b>#{totalFreeSpots}</b>
-                  td <b>#{totalWaitingMembers}</b>
+                  td <b>Rooms: #{totalWaitingOptions} / Persons: #{totalWaitingMembers}</b>
 
             hr
             h4 Aufenthaltsdauer
