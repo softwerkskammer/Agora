@@ -9,7 +9,8 @@ mixin localdate(momentOrNull)
   | #{momentOrNull ? momentOrNull.locale('de').format('L') : '-'}
 
 mixin fromWaitinglistToParticipant(roomType, nickname)
-  +ajaxButton(nickname, "/activities/fromWaitinglistToParticipant/" + encodeURIComponent(roomType) + "/" + encodeURIComponent(nickname), 'WLP', 'Teilnehmen lassen…')
+  -var roomURI = encodeURIComponent(roomType)
+  +ajaxButton(nickname, "/activities/fromWaitinglistToParticipant/" + roomURI + "/" + encodeURIComponent(nickname), roomURI + '-WLP', 'Teilnehmen lassen…')
 
 mixin newDuration(roomType, nickname, currentSelection)
   form(id='activityform', action='/activities/newDuration', method='post')
@@ -133,12 +134,12 @@ block content
     ul.nav.nav-tabs
       li: a(href='#overview', data-toggle='tab') Übersicht
       li: a(href='#main', data-toggle='tab') Teilnehmer nach Zimmern
+      li: a(href='#waitinglistByRoom', data-toggle='tab') Warteliste nach Zimmern
       li: a(href='#waitinglist', data-toggle='tab') Warteliste
       li.active: a(href='#addons', data-toggle='tab') Teilnehmer
       li: a(href='#bedroomPairing', data-toggle='tab') Zimmerzuordnungen
       li: a(href='#tshirtSizes', data-toggle='tab') T-Shirt-Bestellungen
       li: a(href='#remarks', data-toggle='tab') Zusatzinformationen
-      li: a(href='#unsubscribed', data-toggle='tab') Abgemeldete
       li: a(href='#addresses', data-toggle='tab') Adressen
   .row
     .col-md-12
@@ -223,7 +224,7 @@ block content
                       td: +newResource(roomType, member.nickname())
                       td: +removeParticipantWithModal(roomType, member.nickname())
             hr
-        .tab-pane#waitinglist
+        .tab-pane#waitinglistByRoom
           each roomType in roomOptionIds
             -var waitinglistParticipants = waitinglistParticipantsOf[roomType]
             h4 Wartende in #{roomType} (#{waitinglistParticipants.length})
@@ -237,19 +238,40 @@ block content
                     th Nachname
                     th Ort/Region
                     th Übernehmen
-                    th ändern in
-                    th entfernen
                 tbody
                   for member in waitinglistParticipants
                     tr
-                      td #{formatDate(registrationReadModel.joinedWaitinglistAt(member.id()))}
+                      td #{formatDateTime(registrationReadModel.joinedWaitinglistAt(member.id()))}
                       td: +linkedMember(member.nickname())
                       td #{member.firstname()}
                       td #{member.lastname()}
                       td #{member.location()}
                       td: +fromWaitinglistToParticipant(roomType, member.nickname())
-                      td: +newWaitinglist(roomType, member.nickname())
-                      td: +removeWaitinglistMemberWithModal(roomType, member.nickname())
+            hr
+        .tab-pane#waitinglist
+          h4 Wartende (#{waitinglistLines.length})
+          .panel
+            table.table.table-condensed.table-hover.table-striped.membertable
+              thead
+                tr
+                  th Nickname
+                  th Vorname
+                  th Nachname
+                  th Ort/Region
+                  th Zimmer mit
+                  th ändern in
+                  th entfernen
+              tbody
+                for line in waitinglistLines
+                  tr
+                    td: +linkedMember(line.member.nickname())
+                    td #{line.member.firstname()}
+                    td #{line.member.lastname()}
+                    td #{line.member.location()}
+                    td #{line.participation.roommate()}
+                    td: +newWaitinglist(roomType, line.member.nickname())
+                    td: +removeWaitinglistMemberWithModal(roomType, line.member.nickname())
+
             hr
         .tab-pane.active#addons
           h4 Alle Teilnehmer
@@ -344,33 +366,13 @@ block content
                     td #{line.member.lastname()}
                     td #{line.addon.remarks()}
           hr
-        .tab-pane#unsubscribed
-          h4 Abgemeldete
-          .panel
-            table.table.table-condensed.table-hover.table-striped.unsortedtable
-              thead
-                tr
-                  th Nickname
-                  th Vorname
-                  th Nachname
-              tbody
-                for line in addonLinesOfUnsubscribedMembers
-                  tr
-                    if line.member
-                      td: +linkedMember(line.member.nickname())
-                      td #{line.member.firstname()}
-                      td #{line.member.lastname()}
-                    else
-                      td gelöscht
-                      td &nbsp;
-                      td &nbsp;
-          hr
         .tab-pane#addresses
           h4 Adressen der Teilnehmer
           .panel
             table.table.table-condensed.table-hover.table-striped.addressestable
               thead
                 tr
+                  th Nickname
                   th Vorname
                   th Nachname
                   th E-Mail
@@ -380,6 +382,7 @@ block content
               tbody
                 for line in addonLines
                   tr
+                    td: +linkedMember(line.member.nickname())
                     td #{line.member.firstname()}
                     td #{line.member.lastname()}
                     td #{line.member.email()}
@@ -392,6 +395,7 @@ block content
             table.table.table-condensed.table-hover.table-striped.addressestable
               thead
                 tr
+                  th Nickname
                   th Vorname
                   th Nachname
                   th E-Mail
@@ -403,6 +407,7 @@ block content
               tbody
                 for line in waitinglistLines
                   tr
+                    td: +linkedMember(line.member.nickname())
                     td #{line.member.firstname()}
                     td #{line.member.lastname()}
                     td #{line.member.email()}

@@ -3,6 +3,7 @@
 var _ = require('lodash');
 var async = require('async');
 var beans = require('simple-configure').get('beans');
+var e = beans.get('eventConstants');
 var memberstore = beans.get('memberstore');
 var eventstoreService = beans.get('eventstoreService');
 var notifications = beans.get('socratesNotifications');
@@ -34,16 +35,16 @@ module.exports = {
 
         const event = registrationCommandProcessor.fromWaitinglistToParticipant(roomType, member.id(), duration, now);
 
-        saveCommandProcessor({
-          commandProcessor: registrationCommandProcessor,
-          events: [event],
-          callback: callback,
-          handleSuccess: function () {
+        const args = {commandProcessor: registrationCommandProcessor, events: [event], callback: callback};
+
+        if (event.event === e.PARTICIPANT_WAS_REGISTERED || event.event === e.REGISTERED_PARTICIPANT_FROM_WAITINGLIST) {
+          args.handleSuccess = function () {
             var bookingdetails = roomOptions.informationFor(roomType, duration);
             bookingdetails.fromWaitinglist = true;
             notifications.newParticipant(member.id(), bookingdetails);
-          }
-        });
+          };
+        }
+        saveCommandProcessor(args);
       }
     );
   },
@@ -63,14 +64,14 @@ module.exports = {
 
         const event = registrationCommandProcessor.setNewDurationForParticipant(member.id(), duration);
 
-        saveCommandProcessor({
-          commandProcessor: registrationCommandProcessor,
-          events: [event],
-          callback: callback,
-          handleSuccess: function () {
+        const args = {commandProcessor: registrationCommandProcessor, events: [event], callback: callback};
+
+        if (event.event === e.DURATION_WAS_CHANGED) {
+          args.handleSuccess = function () {
             notifications.changedDuration(member, roomOptions.informationFor(roomType, duration));
-          }
-        });
+          };
+        }
+        saveCommandProcessor(args);
       }
     );
   },
@@ -90,14 +91,14 @@ module.exports = {
 
         const event = registrationCommandProcessor.moveParticipantToNewRoomType(member.id(), newRoomType);
 
-        saveCommandProcessor({
-          commandProcessor: registrationCommandProcessor,
-          events: [event],
-          callback: callback,
-          handleSuccess: function () {
+        const args = {commandProcessor: registrationCommandProcessor, events: [event], callback: callback};
+
+        if (event.event === e.ROOM_TYPE_WAS_CHANGED) {
+          args.handleSuccess = function () {
             notifications.changedResource(member, roomOptions.informationFor(newRoomType, event.duration)); // this is a bit hacky, we should better go through a read model
-          }
-        });
+          };
+        }
+        saveCommandProcessor(args);
       }
     );
   },
@@ -117,14 +118,14 @@ module.exports = {
 
         const event = registrationCommandProcessor.changeDesiredRoomTypes(member.id(), newDesiredResourceNames);
 
-        saveCommandProcessor({
-          commandProcessor: registrationCommandProcessor,
-          events: [event],
-          callback: callback,
-          handleSuccess: function () {
+        const args = {commandProcessor: registrationCommandProcessor, events: [event], callback: callback};
+
+        if (event.event === e.DESIRED_ROOM_TYPES_WERE_CHANGED) {
+          args.handleSuccess = function () {
             notifications.changedWaitinglist(member, newDesiredResourceNames.map(name => roomOptions.informationFor(name, 'waitinglist')));
-          }
-        });
+          };
+        }
+        saveCommandProcessor(args);
       }
     );
   },
@@ -199,14 +200,13 @@ module.exports = {
         const roomsEvents = roomsCommandProcessor.removeParticipantPairContaining(roomType, participant.id());
         const registrationEvent = registrationCommandProcessor.removeParticipant(roomType, participant.id());
 
-        saveCommandProcessor({
-          commandProcessor: [roomsCommandProcessor, registrationCommandProcessor],
-          events: [roomsEvents, [registrationEvent]],
-          callback: callback,
-          handleSuccess: function () {
+        const args = {commandProcessor: [roomsCommandProcessor, registrationCommandProcessor], events: [roomsEvents, [registrationEvent]], callback: callback};
+        if (registrationEvent.event === e.PARTICIPANT_WAS_REMOVED) {
+          args.handleSuccess = function () {
             notifications.removedFromParticipants(participant);
-          }
-        });
+          };
+        }
+        saveCommandProcessor(args);
       }
     );
   },
@@ -226,14 +226,14 @@ module.exports = {
 
         const event = registrationCommandProcessor.removeWaitinglistParticipant(desiredRoomTypes, waitinglistMember.id());
 
-        saveCommandProcessor({
-          commandProcessor: registrationCommandProcessor,
-          events: [event],
-          callback: callback,
-          handleSuccess: function () {
+        const args = {commandProcessor: registrationCommandProcessor, events: [event], callback: callback};
+
+        if (event.event === e.WAITINGLIST_PARTICIPANT_WAS_REMOVED) {
+          args.handleSuccess = function () {
             notifications.removedFromWaitinglist(waitinglistMember);
-          }
-        });
+          };
+        }
+        saveCommandProcessor(args);
       }
     );
   }

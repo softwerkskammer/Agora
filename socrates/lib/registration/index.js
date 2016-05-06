@@ -230,6 +230,9 @@ app.get('/management', function (req, res, next) {
                 var formatDate = function (date) {
                   return moment(date).locale('de').format('L');
                 };
+                var formatDateTime = function (date) {
+                  return moment(date).locale('de').format('D.M.YY H:mm');
+                };
                 var formatList = function (list) {
                   return list.join(', ');
                 };
@@ -242,23 +245,6 @@ app.get('/management', function (req, res, next) {
                       if (errC) { return next(errC); }
                       subscriberService.getMembersAndSubscribersForIds(roomsReadModel.participantsInRoom('bed_in_junior'), function (errD, pairedJuniorParticipants) {
                         if (errD) { return next(errD); }
-                        //                        subscriberstore.allSubscribers(function (errE, subscribers) {
-                        //                          if (errE) { return next(errE); }
-                        // var currentYearSubscribers = _.filter(subscribers, function (subscriber) { return subscriber.isParticipating(); });
-                        /*
-                         var cysThatAreNotParticipants = _.filter(currentYearSubscribers, function (subscriber) {
-                         return !_.find(participants, function (participant) { return participant.id() === subscriber.id(); });
-                         });
-                         */
-                        /*
-                         var neitherParticipantsNorOnWaitinglist = _.filter(cysThatAreNotParticipants, function (subscriber) {
-                         return !_.find(_.flatten(waitinglistMembers), function (wlMember) { return wlMember.id() === subscriber.id(); });
-                         });
-                         subscriberService.getMembersForSubscribers(_.flatten(neitherParticipantsNorOnWaitinglist), function (errF, exParticipants) {
-                         if (errF || !exParticipants) { return next(errF); }
-                         */
-
-                        var addonLinesOfExParticipants = []; //managementService.addonLinesOfMembersWithSubscribers(exParticipants);
 
                         var participantsOf = {};
                         async.each(roomOptions.allIds(), function (roomType, callback) {
@@ -291,7 +277,6 @@ app.get('/management', function (req, res, next) {
                               roomOptionIds: roomOptions.allIds(),
                               addonLines: addonLines,
                               waitinglistLines: waitinglistAddonLines,
-                              addonLinesOfUnsubscribedMembers: addonLinesOfExParticipants,
                               tshirtsizes: managementService.tshirtSizes(addonLines),
                               durations: managementService.durations(registrationReadModel),
                               rooms: {
@@ -305,11 +290,10 @@ app.get('/management', function (req, res, next) {
                                 }
                               },
                               formatDate: formatDate,
+                              formatDateTime: formatDateTime,
                               formatList: formatList
                             });
                           });
-                          //     });
-                          //   });
                         });
                       });
                     });
@@ -319,7 +303,6 @@ app.get('/management', function (req, res, next) {
             });
           });
         });
-
       });
     });
   });
