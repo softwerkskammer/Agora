@@ -36,12 +36,25 @@ describe('SoCraTes Activities Service', function () {
   var changedResource;
   var saveEventStore;
 
+  var newParticipantNotification;
+  var changedDurationNotification;
+  var changedResourceNotification;
+  var changedWaitinglistNotification;
+  var removedFromParticipantsNotification;
+  var removedFromWaitinglistNotification;
+  /*
+  var Notification;
+  var Notification;
+  var Notification;
+  var Notification;
+*/
+
   beforeEach(function () {
     cache.flushAll();
 
     eventStore = new GlobalEventStore();
 
-    sinon.stub(notifications, 'newParticipant');
+    newParticipantNotification = sinon.stub(notifications, 'newParticipant');
     sinon.stub(notifications, 'changedDuration');
     changedResource = sinon.spy();
     sinon.stub(notifications, 'changedResource', changedResource);
@@ -125,6 +138,35 @@ describe('SoCraTes Activities Service', function () {
         {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: 'otherSessionId', roomType: 'single', memberId: 'otherMemberId', duration: 3, joinedSoCraTes: aLongTimeAgo.valueOf()},
         {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionId: 'sessionId', desiredRoomTypes: ['single'], memberId: 'memberId', joinedWaitinglist: aLongTimeAgo.valueOf()},
         {event: e.REGISTERED_PARTICIPANT_FROM_WAITINGLIST, roomType: 'single', memberId: 'memberId', duration: 2, joinedSoCraTes: now.valueOf()}]);
+      expect(newParticipantNotification.called).to.be.true();
+      done(err);
+    });
+  });
+
+  it('registers the user even when they were not on the waitinglist', function (done) {
+    eventStore.state.registrationEvents = [];
+
+    socratesActivitiesService.fromWaitinglistToParticipant('nickname', 'single', 2, now, function (err) {
+      expect(stripTimestamps(saveEventStore.firstCall.args[0].state.registrationEvents)).to.eql([
+        {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: undefined, roomType: 'single', memberId: 'memberId', duration: 2, joinedSoCraTes: now.valueOf()}
+      ]);
+      expect(newParticipantNotification.called).to.be.true();
+      done(err);
+    });
+  });
+
+  it('does not register the user if he is already registered, even if the room is different', function (done) {
+    eventStore.state.registrationEvents = [
+      events.participantWasRegistered('junior', 3, 'sessionId', 'memberId', aLongTimeAgo),
+      events.waitinglistParticipantWasRegistered(['single'], 'sessionId', 'memberId', aLongTimeAgo)
+    ];
+
+    socratesActivitiesService.fromWaitinglistToParticipant('nickname', 'single', 2, now, function (err) {
+      expect(stripTimestamps(saveEventStore.firstCall.args[0].state.registrationEvents)).to.eql([
+        {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: 'sessionId', roomType: 'junior', memberId: 'memberId', duration: 3, joinedSoCraTes: aLongTimeAgo.valueOf()},
+        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionId: 'sessionId', desiredRoomTypes: ['single'], memberId: 'memberId', joinedWaitinglist: aLongTimeAgo.valueOf()},
+        {event: e.DID_NOT_REGISTER_PARTICIPANT_FROM_WAITINGLIST_A_SECOND_TIME, roomType: 'single', memberId: 'memberId', duration: 2}]);
+      expect(newParticipantNotification.called).to.be.false();
       done(err);
     });
   });

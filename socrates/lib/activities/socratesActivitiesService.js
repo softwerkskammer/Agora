@@ -3,6 +3,7 @@
 var _ = require('lodash');
 var async = require('async');
 var beans = require('simple-configure').get('beans');
+var e = beans.get('eventConstants');
 var memberstore = beans.get('memberstore');
 var eventstoreService = beans.get('eventstoreService');
 var notifications = beans.get('socratesNotifications');
@@ -34,16 +35,16 @@ module.exports = {
 
         const event = registrationCommandProcessor.fromWaitinglistToParticipant(roomType, member.id(), duration, now);
 
-        saveCommandProcessor({
-          commandProcessor: registrationCommandProcessor,
-          events: [event],
-          callback: callback,
-          handleSuccess: function () {
+        const args = {commandProcessor: registrationCommandProcessor, events: [event], callback: callback};
+
+        if (event.event === e.PARTICIPANT_WAS_REGISTERED || event.event === e.REGISTERED_PARTICIPANT_FROM_WAITINGLIST) {
+          args.handleSuccess = function () {
             var bookingdetails = roomOptions.informationFor(roomType, duration);
             bookingdetails.fromWaitinglist = true;
             notifications.newParticipant(member.id(), bookingdetails);
-          }
-        });
+          };
+        }
+        saveCommandProcessor(args);
       }
     );
   },
