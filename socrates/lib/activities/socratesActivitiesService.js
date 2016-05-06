@@ -119,6 +119,7 @@ module.exports = {
         const event = registrationCommandProcessor.changeDesiredRoomTypes(member.id(), newDesiredResourceNames);
 
         const args = {commandProcessor: registrationCommandProcessor, events: [event], callback: callback};
+
         if (event.event === e.DESIRED_ROOM_TYPES_WERE_CHANGED) {
           args.handleSuccess = function () {
             notifications.changedWaitinglist(member, newDesiredResourceNames.map(name => roomOptions.informationFor(name, 'waitinglist')));
