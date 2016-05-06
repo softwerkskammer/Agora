@@ -226,14 +226,14 @@ module.exports = {
 
         const event = registrationCommandProcessor.removeWaitinglistParticipant(desiredRoomTypes, waitinglistMember.id());
 
-        saveCommandProcessor({
-          commandProcessor: registrationCommandProcessor,
-          events: [event],
-          callback: callback,
-          handleSuccess: function () {
+        const args = {commandProcessor: registrationCommandProcessor, events: [event], callback: callback};
+
+        if (event.event === e.WAITINGLIST_PARTICIPANT_WAS_REMOVED) {
+          args.handleSuccess = function () {
             notifications.removedFromWaitinglist(waitinglistMember);
-          }
-        });
+          };
+        }
+        saveCommandProcessor(args);
       }
     );
   }

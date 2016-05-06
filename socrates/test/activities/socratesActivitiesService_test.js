@@ -42,12 +42,6 @@ describe('SoCraTes Activities Service', function () {
   var changedWaitinglistNotification;
   var removedFromParticipantsNotification;
   var removedFromWaitinglistNotification;
-  /*
-   var Notification;
-   var Notification;
-   var Notification;
-   var Notification;
-   */
 
   beforeEach(function () {
     cache.flushAll();
@@ -60,7 +54,7 @@ describe('SoCraTes Activities Service', function () {
     changedRoomTypeNotification = sinon.stub(notifications, 'changedResource', changedResource);
     changedWaitinglistNotification = sinon.stub(notifications, 'changedWaitinglist');
     sinon.stub(notifications, 'removedFromParticipants');
-    sinon.stub(notifications, 'removedFromWaitinglist');
+    removedFromWaitinglistNotification = sinon.stub(notifications, 'removedFromWaitinglist');
 
     sinon.stub(memberstore, 'getMember', function (nickname, callback) {
       if (nickname === 'nicknameForPair1') { return callback(null, new Member({id: 'memberIdForPair1'})); }
@@ -388,29 +382,46 @@ describe('SoCraTes Activities Service', function () {
         ]);
 
         expect(changedWaitinglistNotification.called).to.be.false();
-
         done(err);
       });
     });
 
-
   });
 
-  it('removes a waitinglist member from the given resource and updates event store and read model', function (done) {
-    eventStore.state.registrationEvents = [
-      events.waitinglistParticipantWasRegistered(['single'], 'session-id', 'memberId', aLongTimeAgo)
-    ];
+  describe('removeWaitinglistParticipant', function () {
 
-    socratesActivitiesService.removeWaitinglistMemberFor(['single'], 'nickname', function (err) {
-      const savedEventStore = saveEventStore.firstCall.args[0];
-      expect(stripTimestamps(savedEventStore.state.registrationEvents)).to.eql([
-        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionId: 'session-id', desiredRoomTypes: ['single'], memberId: 'memberId', joinedWaitinglist: aLongTimeAgo.valueOf()},
-        {event: e.WAITINGLIST_PARTICIPANT_WAS_REMOVED, desiredRoomTypes: ['single'], memberId: 'memberId'}
-      ]);
+    it('removes a waitinglist member from the given resource and updates event store and read model', function (done) {
+      eventStore.state.registrationEvents = [
+        events.waitinglistParticipantWasRegistered(['single'], 'session-id', 'memberId', aLongTimeAgo)
+      ];
 
-      const readModel = cache.get(socratesConstants.currentUrl + '_registrationReadModel');
-      expect(readModel.waitinglistReservationsAndParticipantsFor('single')).to.have.length(0);
-      done(err);
+      socratesActivitiesService.removeWaitinglistMemberFor(['single'], 'nickname', function (err) {
+        const savedEventStore = saveEventStore.firstCall.args[0];
+        expect(stripTimestamps(savedEventStore.state.registrationEvents)).to.eql([
+          {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionId: 'session-id', desiredRoomTypes: ['single'], memberId: 'memberId', joinedWaitinglist: aLongTimeAgo.valueOf()},
+          {event: e.WAITINGLIST_PARTICIPANT_WAS_REMOVED, desiredRoomTypes: ['single'], memberId: 'memberId'}
+        ]);
+
+        expect(removedFromWaitinglistNotification.called).to.be.true();
+
+        const readModel = cache.get(socratesConstants.currentUrl + '_registrationReadModel');
+        expect(readModel.waitinglistReservationsAndParticipantsFor('single')).to.have.length(0);
+        done(err);
+      });
+    });
+
+    it('does not remove a waitinglist member if they are not registered', function (done) {
+      eventStore.state.registrationEvents = [];
+
+      socratesActivitiesService.removeWaitinglistMemberFor(['single'], 'nickname', function (err) {
+        const savedEventStore = saveEventStore.firstCall.args[0];
+        expect(stripTimestamps(savedEventStore.state.registrationEvents)).to.eql([
+          {event: e.DID_NOT_REMOVE_WAITINGLIST_PARTICIPANT_BECAUSE_THEY_ARE_NOT_REGISTERED, desiredRoomTypes: ['single'], memberId: 'memberId'}
+        ]);
+
+        expect(removedFromWaitinglistNotification.called).to.be.false();
+        done(err);
+      });
     });
   });
 });
