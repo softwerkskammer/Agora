@@ -38,7 +38,7 @@ describe('SoCraTes Activities Service', function () {
 
   var newParticipantNotification;
   var changedDurationNotification;
-  var changedResourceNotification;
+  var changedRoomTypeNotification;
   var changedWaitinglistNotification;
   var removedFromParticipantsNotification;
   var removedFromWaitinglistNotification;
@@ -57,7 +57,7 @@ describe('SoCraTes Activities Service', function () {
     newParticipantNotification = sinon.stub(notifications, 'newParticipant');
     changedDurationNotification = sinon.stub(notifications, 'changedDuration');
     changedResource = sinon.spy();
-    sinon.stub(notifications, 'changedResource', changedResource);
+    changedRoomTypeNotification = sinon.stub(notifications, 'changedResource', changedResource);
     sinon.stub(notifications, 'changedWaitinglist');
     sinon.stub(notifications, 'removedFromParticipants');
     sinon.stub(notifications, 'removedFromWaitinglist');
@@ -204,20 +204,37 @@ describe('SoCraTes Activities Service', function () {
     });
   });
 
-  it('moves a member\'s registration to a different resource and updates event store and read model', function (done) {
-    eventStore.state.registrationEvents = [
-      events.participantWasRegistered('single', 2, 'sessionId', 'memberId', aLongTimeAgo)
-    ];
+  describe('newRoomTypeFor', function () {
 
-    socratesActivitiesService.newRoomTypeFor('nickname', 'bed_in_double', function (err) {
-      expect(stripTimestamps(saveEventStore.firstCall.args[0].state.registrationEvents)).to.eql([
-        {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: 'sessionId', roomType: 'single', memberId: 'memberId', duration: 2, joinedSoCraTes: aLongTimeAgo.valueOf()},
-        {event: e.ROOM_TYPE_WAS_CHANGED, roomType: 'bed_in_double', memberId: 'memberId', duration: 2, joinedSoCraTes: aLongTimeAgo.valueOf()}]);
+    it('moves a member\'s registration to a different resource and updates event store and read model', function (done) {
+      eventStore.state.registrationEvents = [
+        events.participantWasRegistered('single', 2, 'sessionId', 'memberId', aLongTimeAgo)
+      ];
 
-      const readModel = cache.get(socratesConstants.currentUrl + '_registrationReadModel');
-      expect(readModel.reservationsAndParticipantsFor('single')).to.have.length(0);
-      expect(readModel.reservationsAndParticipantsFor('bed_in_double')).to.have.length(1);
-      done(err);
+      socratesActivitiesService.newRoomTypeFor('nickname', 'bed_in_double', function (err) {
+        expect(stripTimestamps(saveEventStore.firstCall.args[0].state.registrationEvents)).to.eql([
+          {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: 'sessionId', roomType: 'single', memberId: 'memberId', duration: 2, joinedSoCraTes: aLongTimeAgo.valueOf()},
+          {event: e.ROOM_TYPE_WAS_CHANGED, roomType: 'bed_in_double', memberId: 'memberId', duration: 2, joinedSoCraTes: aLongTimeAgo.valueOf()}]);
+
+        expect(changedRoomTypeNotification.called).to.be.true();
+
+        const readModel = cache.get(socratesConstants.currentUrl + '_registrationReadModel');
+        expect(readModel.reservationsAndParticipantsFor('single')).to.have.length(0);
+        expect(readModel.reservationsAndParticipantsFor('bed_in_double')).to.have.length(1);
+        done(err);
+      });
+    });
+
+    it('does not change the room type for a non-participant and updates event store and read model', function (done) {
+      eventStore.state.registrationEvents = [];
+
+      socratesActivitiesService.newRoomTypeFor('nickname', 'bed_in_double', function (err) {
+        expect(stripTimestamps(saveEventStore.firstCall.args[0].state.registrationEvents)).to.eql([
+          {event: e.DID_NOT_CHANGE_ROOM_TYPE_FOR_NON_PARTICIPANT, roomType: 'bed_in_double', memberId: 'memberId'}]);
+
+        expect(changedRoomTypeNotification.called).to.be.false();
+        done(err);
+      });
     });
   });
 

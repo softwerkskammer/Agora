@@ -91,14 +91,14 @@ module.exports = {
 
         const event = registrationCommandProcessor.moveParticipantToNewRoomType(member.id(), newRoomType);
 
-        saveCommandProcessor({
-          commandProcessor: registrationCommandProcessor,
-          events: [event],
-          callback: callback,
-          handleSuccess: function () {
+        const args = {commandProcessor: registrationCommandProcessor, events: [event], callback: callback};
+
+        if (event.event === e.ROOM_TYPE_WAS_CHANGED) {
+          args.handleSuccess = function () {
             notifications.changedResource(member, roomOptions.informationFor(newRoomType, event.duration)); // this is a bit hacky, we should better go through a read model
-          }
-        });
+          };
+        }
+        saveCommandProcessor(args);
       }
     );
   },
