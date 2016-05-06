@@ -9,7 +9,8 @@ mixin localdate(momentOrNull)
   | #{momentOrNull ? momentOrNull.locale('de').format('L') : '-'}
 
 mixin fromWaitinglistToParticipant(roomType, nickname)
-  +ajaxButton(nickname, "/activities/fromWaitinglistToParticipant/" + encodeURIComponent(roomType) + "/" + encodeURIComponent(nickname), 'WLP', 'Teilnehmen lassen…')
+  -var roomURI = encodeURIComponent(roomType)
+  +ajaxButton(nickname, "/activities/fromWaitinglistToParticipant/" + roomURI + "/" + encodeURIComponent(nickname), roomURI + '-WLP', 'Teilnehmen lassen…')
 
 mixin newDuration(roomType, nickname, currentSelection)
   form(id='activityform', action='/activities/newDuration', method='post')
