@@ -199,14 +199,13 @@ module.exports = {
         const roomsEvents = roomsCommandProcessor.removeParticipantPairContaining(roomType, participant.id());
         const registrationEvent = registrationCommandProcessor.removeParticipant(roomType, participant.id());
 
-        saveCommandProcessor({
-          commandProcessor: [roomsCommandProcessor, registrationCommandProcessor],
-          events: [roomsEvents, [registrationEvent]],
-          callback: callback,
-          handleSuccess: function () {
+        const args = {commandProcessor: [roomsCommandProcessor, registrationCommandProcessor], events: [roomsEvents, [registrationEvent]], callback: callback};
+        if (registrationEvent.event === e.PARTICIPANT_WAS_REMOVED) {
+          args.handleSuccess = function () {
             notifications.removedFromParticipants(participant);
-          }
-        });
+          };
+        }
+        saveCommandProcessor(args);
       }
     );
   },
