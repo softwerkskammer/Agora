@@ -372,6 +372,7 @@ block content
             table.table.table-condensed.table-hover.table-striped.addressestable
               thead
                 tr
+                  th Nickname
                   th Vorname
                   th Nachname
                   th E-Mail
@@ -381,6 +382,7 @@ block content
               tbody
                 for line in addonLines
                   tr
+                    td: +linkedMember(line.member.nickname())
                     td #{line.member.firstname()}
                     td #{line.member.lastname()}
                     td #{line.member.email()}
@@ -393,6 +395,7 @@ block content
             table.table.table-condensed.table-hover.table-striped.addressestable
               thead
                 tr
+                  th Nickname
                   th Vorname
                   th Nachname
                   th E-Mail
@@ -404,6 +407,7 @@ block content
               tbody
                 for line in waitinglistLines
                   tr
+                    td: +linkedMember(line.member.nickname())
                     td #{line.member.firstname()}
                     td #{line.member.lastname()}
                     td #{line.member.email()}
