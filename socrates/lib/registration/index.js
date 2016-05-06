@@ -230,6 +230,9 @@ app.get('/management', function (req, res, next) {
                 var formatDate = function (date) {
                   return moment(date).locale('de').format('L');
                 };
+                var formatDateTime = function (date) {
+                  return moment(date).locale('de').format('D.M.YY H:mm');
+                };
                 var formatList = function (list) {
                   return list.join(', ');
                 };
@@ -287,6 +290,7 @@ app.get('/management', function (req, res, next) {
                                 }
                               },
                               formatDate: formatDate,
+                              formatDateTime: formatDateTime,
                               formatList: formatList
                             });
                           });
