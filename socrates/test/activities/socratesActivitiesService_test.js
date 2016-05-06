@@ -55,7 +55,7 @@ describe('SoCraTes Activities Service', function () {
     eventStore = new GlobalEventStore();
 
     newParticipantNotification = sinon.stub(notifications, 'newParticipant');
-    sinon.stub(notifications, 'changedDuration');
+    changedDurationNotification = sinon.stub(notifications, 'changedDuration');
     changedResource = sinon.spy();
     sinon.stub(notifications, 'changedResource', changedResource);
     sinon.stub(notifications, 'changedWaitinglist');
@@ -170,20 +170,37 @@ describe('SoCraTes Activities Service', function () {
     });
   });
 
-  it('saves the activity with a new duration for the given member in the given resource and updates the event store and the read model', function (done) {
-    eventStore.state.registrationEvents = [
-      events.participantWasRegistered('single', 2, 'sessionId', 'memberId', aLongTimeAgo)
-    ];
+  describe('newDurationFor', function () {
 
-    socratesActivitiesService.newDurationFor('nickname', 'single', 4, function (err) {
-      expect(stripTimestamps(saveEventStore.firstCall.args[0].state.registrationEvents)).to.eql([
-        {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: 'sessionId', roomType: 'single', memberId: 'memberId', duration: 2, joinedSoCraTes: aLongTimeAgo.valueOf()},
-        {event: e.DURATION_WAS_CHANGED, roomType: 'single', memberId: 'memberId', duration: 4, joinedSoCraTes: aLongTimeAgo.valueOf()}]);
+    it('saves the activity with a new duration for the given member in the given resource and updates the event store and the read model', function (done) {
+      eventStore.state.registrationEvents = [
+        events.participantWasRegistered('single', 2, 'sessionId', 'memberId', aLongTimeAgo)
+      ];
 
-      const readModel = cache.get(socratesConstants.currentUrl + '_registrationReadModel');
-      expect(readModel.reservationsAndParticipantsFor('single')).to.have.length(1);
-      expect(readModel.reservationsAndParticipantsFor('single')[0].duration).to.eql(4);
-      done(err);
+      socratesActivitiesService.newDurationFor('nickname', 'single', 4, function (err) {
+        expect(stripTimestamps(saveEventStore.firstCall.args[0].state.registrationEvents)).to.eql([
+          {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: 'sessionId', roomType: 'single', memberId: 'memberId', duration: 2, joinedSoCraTes: aLongTimeAgo.valueOf()},
+          {event: e.DURATION_WAS_CHANGED, roomType: 'single', memberId: 'memberId', duration: 4, joinedSoCraTes: aLongTimeAgo.valueOf()}]);
+
+        expect(changedDurationNotification.called).to.be.true();
+
+        const readModel = cache.get(socratesConstants.currentUrl + '_registrationReadModel');
+        expect(readModel.reservationsAndParticipantsFor('single')).to.have.length(1);
+        expect(readModel.reservationsAndParticipantsFor('single')[0].duration).to.eql(4);
+        done(err);
+      });
+    });
+
+    it('does not add a duration for a non-participant', function (done) {
+      eventStore.state.registrationEvents = [];
+
+      socratesActivitiesService.newDurationFor('nickname', 'single', 4, function (err) {
+        expect(stripTimestamps(saveEventStore.firstCall.args[0].state.registrationEvents)).to.eql([
+          {event: e.DID_NOT_CHANGE_DURATION_FOR_NON_PARTICIPANT, memberId: 'memberId', duration: 4}]);
+
+        expect(changedDurationNotification.called).to.be.false();
+        done(err);
+      });
     });
   });
 

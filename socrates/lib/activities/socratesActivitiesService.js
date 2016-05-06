@@ -64,14 +64,14 @@ module.exports = {
 
         const event = registrationCommandProcessor.setNewDurationForParticipant(member.id(), duration);
 
-        saveCommandProcessor({
-          commandProcessor: registrationCommandProcessor,
-          events: [event],
-          callback: callback,
-          handleSuccess: function () {
+        const args = {commandProcessor: registrationCommandProcessor, events: [event], callback: callback};
+
+        if (event.event === e.DURATION_WAS_CHANGED) {
+          args.handleSuccess = function () {
             notifications.changedDuration(member, roomOptions.informationFor(roomType, duration));
-          }
-        });
+          };
+        }
+        saveCommandProcessor(args);
       }
     );
   },
