@@ -140,7 +140,6 @@ block content
       li: a(href='#bedroomPairing', data-toggle='tab') Zimmerzuordnungen
       li: a(href='#tshirtSizes', data-toggle='tab') T-Shirt-Bestellungen
       li: a(href='#remarks', data-toggle='tab') Zusatzinformationen
-      li: a(href='#unsubscribed', data-toggle='tab') Abgemeldete
       li: a(href='#addresses', data-toggle='tab') Adressen
   .row
     .col-md-12
@@ -366,27 +365,6 @@ block content
                     td #{line.member.firstname()}
                     td #{line.member.lastname()}
                     td #{line.addon.remarks()}
-          hr
-        .tab-pane#unsubscribed
-          h4 Abgemeldete
-          .panel
-            table.table.table-condensed.table-hover.table-striped.unsortedtable
-              thead
-                tr
-                  th Nickname
-                  th Vorname
-                  th Nachname
-              tbody
-                for line in addonLinesOfUnsubscribedMembers
-                  tr
-                    if line.member
-                      td: +linkedMember(line.member.nickname())
-                      td #{line.member.firstname()}
-                      td #{line.member.lastname()}
-                    else
-                      td gelöscht
-                      td &nbsp;
-                      td &nbsp;
           hr
         .tab-pane#addresses
           h4 Adressen der Teilnehmer
