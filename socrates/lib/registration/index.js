@@ -246,49 +246,44 @@ app.get('/management', function (req, res, next) {
                       subscriberService.getMembersAndSubscribersForIds(roomsReadModel.participantsInRoom('bed_in_junior'), function (errD, pairedJuniorParticipants) {
                         if (errD) { return next(errD); }
 
-                        var participantsOf = {};
-                        async.each(roomOptions.allIds(), function (roomType, callback) {
-                          memberstore.getMembersForIds(registrationReadModel.allParticipantsIn(roomType), function (errG, members) {
-                            if (errG || !members) { return callback(errG); }
-                            participantsOf[roomType] = members;
-                            return callback(null);
-                          });
-                        }, function (errX) {
-                          if (errX) { return next(errX); }
+                        var participantLinesOf = {};
+                        roomOptions.allIds().forEach(roomType => { participantLinesOf[roomType] = []; });
+                        addonLines.forEach(line => {
+                          registrationReadModel.roomTypesOf(line.member.id()).forEach(roomType => { participantLinesOf[roomType].push(line); });
+                        });
 
-                          var waitinglistLinesOf = {};
-                          roomOptions.allIds().forEach(roomType => { waitinglistLinesOf[roomType] = []; });
-                          waitinglistAddonLines.forEach(line => {
-                            registrationReadModel.roomTypesOf(line.member.id()).forEach(roomType => { waitinglistLinesOf[roomType].push(line); });
-                          });
+                        var waitinglistLinesOf = {};
+                        roomOptions.allIds().forEach(roomType => { waitinglistLinesOf[roomType] = []; });
+                        waitinglistAddonLines.forEach(line => {
+                          registrationReadModel.roomTypesOf(line.member.id()).forEach(roomType => { waitinglistLinesOf[roomType].push(line); });
+                        });
 
-                          /* eslint camelcase: 0 */
-                          res.render('managementTables', {
-                            participantsOf: participantsOf,
-                            title: 'SoCraTes ' + currentYear,
-                            roomsReadModel: roomsReadModel,
-                            registrationReadModel: registrationReadModel,
-                            socratesReadModel: socratesReadModel,
-                            roomOptionIds: roomOptions.allIds(),
-                            addonLines: addonLines,
-                            waitinglistLines: waitinglistAddonLines,
-                            waitinglistLinesOf: waitinglistLinesOf,
-                            tshirtsizes: managementService.tshirtSizes(addonLines),
-                            durations: managementService.durations(registrationReadModel),
-                            rooms: {
-                              bed_in_double: {
-                                unpairedParticipants: unpairedDoubleParticipants,
-                                roomPairs: roomsReadModel.roomPairsWithFullMembersFrom('bed_in_double', pairedDoubleParticipants)
-                              },
-                              bed_in_junior: {
-                                unpairedParticipants: unpairedJuniorParticipants,
-                                roomPairs: roomsReadModel.roomPairsWithFullMembersFrom('bed_in_junior', pairedJuniorParticipants)
-                              }
+                        /* eslint camelcase: 0 */
+                        res.render('managementTables', {
+                          title: 'SoCraTes ' + currentYear,
+                          roomsReadModel: roomsReadModel,
+                          registrationReadModel: registrationReadModel,
+                          socratesReadModel: socratesReadModel,
+                          roomOptionIds: roomOptions.allIds(),
+                          addonLines: addonLines,
+                          participantLinesOf: participantLinesOf,
+                          waitinglistLines: waitinglistAddonLines,
+                          waitinglistLinesOf: waitinglistLinesOf,
+                          tshirtsizes: managementService.tshirtSizes(addonLines),
+                          durations: managementService.durations(registrationReadModel),
+                          rooms: {
+                            bed_in_double: {
+                              unpairedParticipants: unpairedDoubleParticipants,
+                              roomPairs: roomsReadModel.roomPairsWithFullMembersFrom('bed_in_double', pairedDoubleParticipants)
                             },
-                            formatDate: formatDate,
-                            formatDateTime: formatDateTime,
-                            formatList: formatList
-                          });
+                            bed_in_junior: {
+                              unpairedParticipants: unpairedJuniorParticipants,
+                              roomPairs: roomsReadModel.roomPairsWithFullMembersFrom('bed_in_junior', pairedJuniorParticipants)
+                            }
+                          },
+                          formatDate: formatDate,
+                          formatDateTime: formatDateTime,
+                          formatList: formatList
                         });
                       });
                     });

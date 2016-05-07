@@ -194,7 +194,7 @@ block content
 
         .tab-pane#main
           each roomType in roomOptionIds
-            -var participants = participantsOf[roomType]
+            -var participantLines = participantLinesOf[roomType]
             -var participantCount = registrationReadModel.participantCountFor(roomType)
             -var quota = socratesReadModel.quotaFor(roomType)
             h4 #{roomType} (#{participantCount} von #{quota === undefined ? 'unbegrenzt' : quota})
@@ -212,17 +212,17 @@ block content
                     th umbuchen in
                     th entfernen
                 tbody
-                  for member in participants
+                  for line in participantLines
                     tr
-                      td #{registrationReadModel.joinedSoCraTesAt(member.id()).locale('de').format('L')}
-                      td: +linkedMember(member.nickname())
-                      td #{member.firstname()}
-                      td #{member.lastname()}
-                      td #{member.location()}
-                      td #{registrationReadModel.durationFor(member.id())}
-                      td: +newDuration(roomType, member.nickname(), registrationReadModel.participantEventFor(member.id()).duration)
-                      td: +newResource(roomType, member.nickname())
-                      td: +removeParticipantWithModal(roomType, member.nickname())
+                      td #{registrationReadModel.joinedSoCraTesAt(line.member.id()).locale('de').format('L')}
+                      td: +linkedMember(line.member.nickname())
+                      td #{line.member.firstname()}
+                      td #{line.member.lastname()}
+                      td #{line.member.location()}
+                      td #{registrationReadModel.durationFor(line.member.id())}
+                      td: +newDuration(roomType, line.member.nickname(), registrationReadModel.participantEventFor(line.member.id()).duration)
+                      td: +newResource(roomType, line.member.nickname())
+                      td: +removeParticipantWithModal(roomType, line.member.nickname())
             hr
         .tab-pane#waitinglistByRoom
           each roomType in roomOptionIds
