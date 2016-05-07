@@ -6,6 +6,7 @@ var async = require('async');
 var conf = require('simple-configure');
 var beans = conf.get('beans');
 var misc = beans.get('misc');
+var allCountries = beans.get('allCountries');
 var memberstore = beans.get('memberstore');
 var Member = beans.get('member');
 var subscriberstore = beans.get('subscriberstore');
@@ -159,7 +160,8 @@ app.get('/participate', function (req, res, next) {
         participation: participation,
         registrationTuple: registrationTuple,
         expiresIn: expiresAt && expiresAt.diff(moment(), 'minutes'),
-        expiresAt: expiresAt
+        expiresAt: expiresAt,
+        allCountries: allCountries.countries
       });
     });
   });

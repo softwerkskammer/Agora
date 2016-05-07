@@ -12,6 +12,7 @@ var Member = beans.get('member');
 var memberSubmitHelper = beans.get('memberSubmitHelper');
 var subscriberstore = beans.get('subscriberstore');
 var socratesConstants = beans.get('socratesConstants');
+var allCountries = beans.get('allCountries');
 var memberstore = beans.get('memberstore');
 var statusmessage = beans.get('statusmessage');
 
@@ -32,7 +33,8 @@ function editMember(req, res, next, returnToParticipantsListing) {
       addon: subscriber && subscriber.addon().homeAddress() ? subscriber.addon() : undefined,
       participation: subscriber && subscriber.isParticipating() ? subscriber.currentParticipation() : null,
       sharesARoom: registeredResources.length === 1 && registeredResources[0].indexOf('bed_in_') > -1,
-      returnToParticipantsListing: returnToParticipantsListing
+      returnToParticipantsListing: returnToParticipantsListing,
+      allCountries: allCountries.countries
     };
     res.render('edit', options);
   });

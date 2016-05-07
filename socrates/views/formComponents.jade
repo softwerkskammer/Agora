@@ -14,6 +14,17 @@ mixin textWithTags(name, label, value, tags)
     script.
       $(#{name}).select2({tags: true, tokenSeparators: [',', ', ']});
 
+mixin singleselect(name, label, value, placeholder, tags)
+  .form-group
+    +controlLabel(name, label)
+    select.form-control(id=name, name=name)
+      option(value="") #{' '}
+      each tag in tags
+        option(value = tag.iso, selected = value && value.indexOf(tag.iso) === 0) #{tag.name}
+    script.
+      $("##{name}").select2({placeholder: "#{placeholder}"});
+
+
 mixin multiselect(name, label, value, tags)
   .form-group
     +controlLabel(name, label)

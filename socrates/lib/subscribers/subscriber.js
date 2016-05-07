@@ -35,7 +35,7 @@ Subscriber.prototype.country = function () {
 };
 
 Subscriber.prototype.livesInGermany = function () {
-  return this.country() === 'Germany';
+  return this.country() === 'DE';
 };
 
 Subscriber.prototype.addon = function () {

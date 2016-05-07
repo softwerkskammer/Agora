@@ -49,7 +49,7 @@ module.exports = {
   },
   subscriber: {
     notifyOnWikiChangesSoCraTes: function () { return true; },
-    country: function () {return ''; }
+    country: function () {return 'UNKNOWN'; }
   },
   paymentInfo: {
     paymentDone: function () { return false; },
@@ -105,6 +105,7 @@ module.exports = {
       displayRegistrationCheckboxes: true
     }
   ],
-  participation: {}
+  participation: {},
+  allCountries: [{iso: 'AA', name: 'Alpha Country'}, {iso: 'ZZ', name: 'Zero Land'}]
 
 };

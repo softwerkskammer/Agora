@@ -34,7 +34,7 @@ block content
         +hidden('duration', registrationTuple.duration)
         +hidden('desiredRoomTypes', registrationTuple.desiredRoomTypes)
         fieldset
-          +memberinfoform(member, subscriber, 'members.edit_registration')
+          +memberinfoform(member, subscriber, 'members.edit_registration', allCountries)
           +userinfoform(addon, participation, registrationTuple.roomType && registrationTuple.roomType.indexOf('bed_in_') > -1)
     
     .row(style='margin-bottom: 10px')
