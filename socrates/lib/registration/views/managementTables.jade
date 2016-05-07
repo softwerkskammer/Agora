@@ -226,8 +226,8 @@ block content
             hr
         .tab-pane#waitinglistByRoom
           each roomType in roomOptionIds
-            -var waitinglistParticipants = waitinglistParticipantsOf[roomType]
-            h4 Wartende in #{roomType} (#{waitinglistParticipants.length})
+            -var waitinglistLines = waitinglistLinesOf[roomType]
+            h4 Wartende in #{roomType} (#{waitinglistLines.length})
             .panel
               table.table.table-condensed.table-hover.table-striped.membertable
                 thead
@@ -237,16 +237,20 @@ block content
                     th Vorname
                     th Nachname
                     th Ort/Region
+                    th Gewählte Zimmer
+                    th Diversity?
                     th Übernehmen
                 tbody
-                  for member in waitinglistParticipants
+                  for line in waitinglistLines
                     tr
-                      td #{formatDateTime(registrationReadModel.joinedWaitinglistAt(member.id()))}
-                      td: +linkedMember(member.nickname())
-                      td #{member.firstname()}
-                      td #{member.lastname()}
-                      td #{member.location()}
-                      td: +fromWaitinglistToParticipant(roomType, member.nickname())
+                      td #{formatDateTime(registrationReadModel.joinedWaitinglistAt(line.member.id()))}
+                      td: +linkedMember(line.member.nickname())
+                      td #{line.member.firstname()}
+                      td #{line.member.lastname()}
+                      td #{line.member.location()}
+                      td #{formatList(registrationReadModel.roomTypesOf(line.member.id()))}
+                      td #{line.addon.ladiesTShirt() ? 'yes' : ''}
+                      td: +fromWaitinglistToParticipant(roomType, line.member.nickname())
             hr
         .tab-pane#waitinglist
           h4 Wartende (#{waitinglistLines.length})

@@ -514,6 +514,16 @@ describe('The registration read model', function () {
       expect(readModel.roomTypesOf(memberId1)).to.eql([]);
       expect(readModel.roomTypesOf(memberId2)).to.eql([]);
     });
+
+    it('returns the registered room type even when participant is also on waitinglist', function () {
+      eventStore.state.registrationEvents = [
+        events.participantWasRegistered(singleBedRoom, untilSundayMorning, sessionId1, memberId1, aLongTimeAgo),
+        events.waitinglistParticipantWasRegistered([bedInDouble], sessionId1, memberId1, aLongTimeAgo)
+      ];
+      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
+
+      expect(readModel.roomTypesOf(memberId1)).to.eql([singleBedRoom]);
+    });
   });
 
   describe('Reservations and registrations for participants and waitinglist participants', function () {

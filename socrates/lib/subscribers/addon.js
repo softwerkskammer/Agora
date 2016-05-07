@@ -39,6 +39,10 @@ Addon.prototype.tShirtSize = function () {
   return this.state.tShirtSize;
 };
 
+Addon.prototype.ladiesTShirt = function () {
+  return this.state.tShirtSize.startsWith('Ladies');
+};
+
 Addon.hasAddonInformation = function (uiInputObject) {
   return !!uiInputObject.homeAddress;
 };
