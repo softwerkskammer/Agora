@@ -4,10 +4,12 @@ html
     h2 SoCraTes Registration Confirmation
     p.
       Hello #{member.displayName()},
-    p Congratulations! You are now a participant of the SoCraTes Conference 2016.
+    p Congratulations! You are now a participant of SoCraTes Conference 2016.
 
     if bookingdetails.fromWaitinglist
-      p If you can't make it for some reason, please tell us so we can give the spot to the next person on the waitinglist.
+      p
+        | Please confirm your spot by replying to this e-mail within the next 48 hours. If you do not reply during this period,
+        | your spot will be given to the next person on the waitinglist.
 
     h3 Your Booking
     p
@@ -20,7 +22,7 @@ html
       | .
     if bookingdetails.fromWaitinglist
       p
-        | If you want to stay longer, please tell us by replying to this e-mail, and we will change your booking accordingly.
+        | If you want to stay longer, please tell us in your reply, and we will change your booking accordingly.
         | You can stay until Sunday morning, Sunday evening or Monday morning (the latter two options include participation
         | in a Coderetreat or workshop on Sunday). For pricing information please have a look at #{' '}
         a(href='#{url}/registration') the registration page
@@ -33,6 +35,13 @@ html
       a(href='#{url}/registration') #{url}/registration
 
     p You will receive a billable receipt during the event.
+
+    p
+      | If at any point in time you realize that you can't make it for some reason, please tell us
+      b as soon as possible
+      | so we can give the spot to the next person on the waitinglist.
+
+    p If you do not attend SoCraTes Conference without notifying us in advance, the hotel will send you an invoice and charge you for one night!
 
     p If you have questions, need help or want to give feedback, just reply to this e-mail.
 

@@ -28,6 +28,9 @@ db.participantstore.renameCollection( "subscriberstore" )
 -- delete the participations of a subscriber whose id matches /git/
 db.subscriberstore.update({id: /git/}, {$unset: {"participations": "" }})
 
+-- delete the country information of a subscriber whose id matches /git/
+db.subscriberstore.update({id: /git/}, {$unset: {"country": "" }})
+
 -- delete the payment-received-notification of a member whose id matches /xlogon/
 db.subscriberstore.update({id: /xlogon/}, {$unset: {"participations.2015.payment.paymentReceived": "" }})
 

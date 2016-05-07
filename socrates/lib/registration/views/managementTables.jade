@@ -133,11 +133,11 @@ block content
           a.btn.pull-right.btn-default(href='/registration') Zurück
     ul.nav.nav-tabs
       li: a(href='#overview', data-toggle='tab') Übersicht
-      li: a(href='#main', data-toggle='tab') Teilnehmer nach Zimmern
-      li: a(href='#waitinglistByRoom', data-toggle='tab') Warteliste nach Zimmern
-      li: a(href='#waitinglist', data-toggle='tab') Warteliste
       li.active: a(href='#addons', data-toggle='tab') Teilnehmer
+      li: a(href='#main', data-toggle='tab') Teilnehmer nach Zimmern
       li: a(href='#bedroomPairing', data-toggle='tab') Zimmerzuordnungen
+      li: a(href='#waitinglist', data-toggle='tab') Warteliste
+      li: a(href='#waitinglistByRoom', data-toggle='tab') Warteliste nach Zimmern
       li: a(href='#tshirtSizes', data-toggle='tab') T-Shirt-Bestellungen
       li: a(href='#remarks', data-toggle='tab') Zusatzinformationen
       li: a(href='#addresses', data-toggle='tab') Adressen
@@ -194,10 +194,10 @@ block content
 
         .tab-pane#main
           each roomType in roomOptionIds
-            -var participants = participantsOf[roomType]
+            -var participantLines = participantLinesOf[roomType]
             -var participantCount = registrationReadModel.participantCountFor(roomType)
             -var quota = socratesReadModel.quotaFor(roomType)
-            h4 #{roomType} (#{participantCount} von #{quota || 'unbegrenzt'})
+            h4 #{roomType} (#{participantCount} von #{quota === undefined ? 'unbegrenzt' : quota})
             .panel
               table.table.table-condensed.table-hover.table-striped.membertable
                 thead
@@ -212,22 +212,22 @@ block content
                     th umbuchen in
                     th entfernen
                 tbody
-                  for member in participants
+                  for line in participantLines
                     tr
-                      td #{registrationReadModel.joinedSoCraTesAt(member.id()).locale('de').format('L')}
-                      td: +linkedMember(member.nickname())
-                      td #{member.firstname()}
-                      td #{member.lastname()}
-                      td #{member.location()}
-                      td #{registrationReadModel.durationFor(member.id())}
-                      td: +newDuration(roomType, member.nickname(), registrationReadModel.participantEventFor(member.id()).duration)
-                      td: +newResource(roomType, member.nickname())
-                      td: +removeParticipantWithModal(roomType, member.nickname())
+                      td #{registrationReadModel.joinedSoCraTesAt(line.member.id()).locale('de').format('L')}
+                      td: +linkedMember(line.member.nickname())
+                      td #{line.member.firstname()}
+                      td #{line.member.lastname()}
+                      td #{line.member.location()}
+                      td #{registrationReadModel.durationFor(line.member.id())}
+                      td: +newDuration(roomType, line.member.nickname(), registrationReadModel.participantEventFor(line.member.id()).duration)
+                      td: +newResource(roomType, line.member.nickname())
+                      td: +removeParticipantWithModal(roomType, line.member.nickname())
             hr
         .tab-pane#waitinglistByRoom
           each roomType in roomOptionIds
-            -var waitinglistParticipants = waitinglistParticipantsOf[roomType]
-            h4 Wartende in #{roomType} (#{waitinglistParticipants.length})
+            -var waitinglistLines = waitinglistLinesOf[roomType]
+            h4 Wartende in #{roomType} (#{waitinglistLines.length})
             .panel
               table.table.table-condensed.table-hover.table-striped.membertable
                 thead
@@ -237,16 +237,20 @@ block content
                     th Vorname
                     th Nachname
                     th Ort/Region
+                    th Gewählte Zimmer
+                    th Diversity?
                     th Übernehmen
                 tbody
-                  for member in waitinglistParticipants
+                  for line in waitinglistLines
                     tr
-                      td #{formatDateTime(registrationReadModel.joinedWaitinglistAt(member.id()))}
-                      td: +linkedMember(member.nickname())
-                      td #{member.firstname()}
-                      td #{member.lastname()}
-                      td #{member.location()}
-                      td: +fromWaitinglistToParticipant(roomType, member.nickname())
+                      td #{formatDateTime(registrationReadModel.joinedWaitinglistAt(line.member.id()))}
+                      td: +linkedMember(line.member.nickname())
+                      td #{line.member.firstname()}
+                      td #{line.member.lastname()}
+                      td #{line.member.location()}
+                      td #{formatList(registrationReadModel.roomTypesOf(line.member.id()))}
+                      td #{line.addon.ladiesTShirt() || !line.subscriber.livesInGermany() ? 'yes' : ''}
+                      td: +fromWaitinglistToParticipant(roomType, line.member.nickname())
             hr
         .tab-pane#waitinglist
           h4 Wartende (#{waitinglistLines.length})

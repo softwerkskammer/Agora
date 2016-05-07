@@ -1,6 +1,6 @@
 include  ../../../views/formComponents
 
-mixin memberinfoform(member, subscriber, newmember_text)
+mixin memberinfoform(member, subscriber, newmember_text, allCountries)
   +hidden('id', member.id())
   +hidden('previousNickname', member.nickname())
   +hidden('previousEmail', accessrights.isRegistered() ? member.email() : '')
@@ -27,13 +27,17 @@ mixin memberinfoform(member, subscriber, newmember_text)
           +text('firstname', 'First name', member.firstname())
         .col-sm-6
           +text('lastname', 'Last name', member.lastname())
+        .col-sm-12
+          if subscriber
+            +singleselect('country', 'Country of Residence', subscriber.country(), 'Select your country', allCountries)
+
+    .col-sm-6
+      +text('email', 'E-Mail', member.email())
+      +twitter('twitter', 'Twitter', member.twitter())
       if subscriber
         +checkbox('notifyOnWikiChangesSoCraTes', t('members.notifyOnWikiChanges'), subscriber.notifyOnWikiChangesSoCraTes())
       else
         +checkbox('notifyOnWikiChangesSoCraTes', t('members.notifyOnWikiChanges'), true)
-    .col-sm-6
-      +text('email', 'E-Mail', member.email())
-      +twitter('twitter', 'Twitter', member.twitter())
 
 mixin userinfoform(addon, participation, sharesARoom)
   .row

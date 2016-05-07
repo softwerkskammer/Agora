@@ -101,7 +101,7 @@ describe('Notifications', function () {
       expect(transport.sendMail.calledOnce).to.be(true);
       var options = transport.sendMail.firstCall.args[0];
       expect(options.subject).to.equal('SoCraTes Registration Confirmation');
-      expect(options.html).to.contain('If you want to stay longer, please tell us by replying to this e-mail');
+      expect(options.html).to.contain('If you want to stay longer, please tell us in your reply');
     });
 
     it('sends a meaningful mail to superusers', function () {

@@ -58,6 +58,10 @@
       checkFieldMandatory('[name=lastname]');
     });
 
+    xit('checks that "country" is mandatory', function () {
+      checkFieldMandatory('[name=country]', 'DE'); // does not work with the select2 element?!
+    });
+
     it('checks that "email" is mandatory', function () {
       checkFieldMandatory('[name=email]', 'l@b.de');
     });

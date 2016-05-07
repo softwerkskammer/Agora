@@ -43,6 +43,7 @@
   "socratesParticipation": {"module": "./socrates/lib/subscribers/participation"},
   "subscriberstore": {"module": "./socrates/lib/subscribers/subscriberstore"},
   "subscriber": {"module": "./socrates/lib/subscribers/subscriber"},
+  "allCountries": {"module": "./socrates/lib/subscribers/allCountries"},
 
   "accessrights": {"module": "./socrates/lib/middleware/accessrights"},
   "expressViewHelper": {"module": "./socrates/lib/middleware/expressViewHelper"},

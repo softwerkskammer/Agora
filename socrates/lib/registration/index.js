@@ -6,6 +6,7 @@ var async = require('async');
 var conf = require('simple-configure');
 var beans = conf.get('beans');
 var misc = beans.get('misc');
+var allCountries = beans.get('allCountries');
 var memberstore = beans.get('memberstore');
 var Member = beans.get('member');
 var subscriberstore = beans.get('subscriberstore');
@@ -159,7 +160,8 @@ app.get('/participate', function (req, res, next) {
         participation: participation,
         registrationTuple: registrationTuple,
         expiresIn: expiresAt && expiresAt.diff(moment(), 'minutes'),
-        expiresAt: expiresAt
+        expiresAt: expiresAt,
+        allCountries: allCountries.countries
       });
     });
   });
@@ -246,54 +248,44 @@ app.get('/management', function (req, res, next) {
                       subscriberService.getMembersAndSubscribersForIds(roomsReadModel.participantsInRoom('bed_in_junior'), function (errD, pairedJuniorParticipants) {
                         if (errD) { return next(errD); }
 
-                        var participantsOf = {};
-                        async.each(roomOptions.allIds(), function (roomType, callback) {
-                          memberstore.getMembersForIds(registrationReadModel.allParticipantsIn(roomType), function (errG, members) {
-                            if (errG || !members) { return callback(errG); }
-                            participantsOf[roomType] = members;
-                            return callback(null);
-                          });
-                        }, function (errX) {
-                          if (errX) { return next(errX); }
+                        var participantLinesOf = {};
+                        roomOptions.allIds().forEach(roomType => { participantLinesOf[roomType] = []; });
+                        addonLines.forEach(line => {
+                          registrationReadModel.roomTypesOf(line.member.id()).forEach(roomType => { participantLinesOf[roomType].push(line); });
+                        });
 
-                          var waitinglistParticipantsOf = {};
-                          async.each(roomOptions.allIds(), function (roomType, callback) {
-                            memberstore.getMembersForIds(registrationReadModel.allWaitinglistParticipantsIn(roomType), function (errG, members) {
-                              if (errG || !members) { return callback(errG); }
-                              waitinglistParticipantsOf[roomType] = members;
-                              return callback(null);
-                            });
-                          }, function (errY) {
-                            if (errY) { return next(errY); }
+                        var waitinglistLinesOf = {};
+                        roomOptions.allIds().forEach(roomType => { waitinglistLinesOf[roomType] = []; });
+                        waitinglistAddonLines.forEach(line => {
+                          registrationReadModel.roomTypesOf(line.member.id()).forEach(roomType => { waitinglistLinesOf[roomType].push(line); });
+                        });
 
-                            /* eslint camelcase: 0 */
-                            res.render('managementTables', {
-                              participantsOf: participantsOf,
-                              waitinglistParticipantsOf: waitinglistParticipantsOf,
-                              title: 'SoCraTes ' + currentYear,
-                              roomsReadModel: roomsReadModel,
-                              registrationReadModel: registrationReadModel,
-                              socratesReadModel: socratesReadModel,
-                              roomOptionIds: roomOptions.allIds(),
-                              addonLines: addonLines,
-                              waitinglistLines: waitinglistAddonLines,
-                              tshirtsizes: managementService.tshirtSizes(addonLines),
-                              durations: managementService.durations(registrationReadModel),
-                              rooms: {
-                                bed_in_double: {
-                                  unpairedParticipants: unpairedDoubleParticipants,
-                                  roomPairs: roomsReadModel.roomPairsWithFullMembersFrom('bed_in_double', pairedDoubleParticipants)
-                                },
-                                bed_in_junior: {
-                                  unpairedParticipants: unpairedJuniorParticipants,
-                                  roomPairs: roomsReadModel.roomPairsWithFullMembersFrom('bed_in_junior', pairedJuniorParticipants)
-                                }
-                              },
-                              formatDate: formatDate,
-                              formatDateTime: formatDateTime,
-                              formatList: formatList
-                            });
-                          });
+                        /* eslint camelcase: 0 */
+                        res.render('managementTables', {
+                          title: 'SoCraTes ' + currentYear,
+                          roomsReadModel: roomsReadModel,
+                          registrationReadModel: registrationReadModel,
+                          socratesReadModel: socratesReadModel,
+                          roomOptionIds: roomOptions.allIds(),
+                          addonLines: addonLines,
+                          participantLinesOf: participantLinesOf,
+                          waitinglistLines: waitinglistAddonLines,
+                          waitinglistLinesOf: waitinglistLinesOf,
+                          tshirtsizes: managementService.tshirtSizes(addonLines),
+                          durations: managementService.durations(registrationReadModel),
+                          rooms: {
+                            bed_in_double: {
+                              unpairedParticipants: unpairedDoubleParticipants,
+                              roomPairs: roomsReadModel.roomPairsWithFullMembersFrom('bed_in_double', pairedDoubleParticipants)
+                            },
+                            bed_in_junior: {
+                              unpairedParticipants: unpairedJuniorParticipants,
+                              roomPairs: roomsReadModel.roomPairsWithFullMembersFrom('bed_in_junior', pairedJuniorParticipants)
+                            }
+                          },
+                          formatDate: formatDate,
+                          formatDateTime: formatDateTime,
+                          formatList: formatList
                         });
                       });
                     });

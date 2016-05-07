@@ -24,7 +24,7 @@ block content
         legend
           h4 #{t('members.personal_data')}
 
-    +memberinfoform(member, subscriber, accessrights.isRegistered() ? null : 'members.edit_preregistration')
+    +memberinfoform(member, subscriber, accessrights.isRegistered() ? null : 'members.edit_preregistration', allCountries)
     if (addon && addon.homeAddress)
       +userinfoform(addon, participation, sharesARoom)
       .gutter

@@ -10,18 +10,32 @@ function Subscriber(object) {
 }
 
 Subscriber.prototype.fillFromUI = function (uiInputObject) {
+  this.state.notifyOnWikiChangesSoCraTes = !!uiInputObject.notifyOnWikiChangesSoCraTes;
+  this.state.country = uiInputObject.country;
+
   if (Addon.hasAddonInformation(uiInputObject)) {
     this.addon().fillFromUI(uiInputObject);
   }
   if (Participation.hasParticipationInformation(uiInputObject)) {
     this.currentParticipation().fillFromUI(uiInputObject);
   }
-  this.state.notifyOnWikiChangesSoCraTes = !!uiInputObject.notifyOnWikiChangesSoCraTes;
   return this;
 };
 
 Subscriber.prototype.id = function () {
   return this.state.id;
+};
+
+Subscriber.prototype.notifyOnWikiChangesSoCraTes = function () {
+  return this.state.notifyOnWikiChangesSoCraTes;
+};
+
+Subscriber.prototype.country = function () {
+  return this.state.country;
+};
+
+Subscriber.prototype.livesInGermany = function () {
+  return this.country() === 'DE';
 };
 
 Subscriber.prototype.addon = function () {
@@ -43,9 +57,6 @@ Subscriber.prototype.currentParticipation = function () {
   return this.participationOf(socratesConstants.currentYear);
 };
 
-Subscriber.prototype.notifyOnWikiChangesSoCraTes = function () {
-  return this.state.notifyOnWikiChangesSoCraTes;
-};
 
 Subscriber.prototype.participationOf = function (year) {
   if (!this.participations()[year]) {

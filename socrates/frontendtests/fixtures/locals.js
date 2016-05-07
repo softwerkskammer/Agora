@@ -47,6 +47,10 @@ module.exports = {
     socratesOnly: function () { return false; },
     authentications: function () { return []; }
   },
+  subscriber: {
+    notifyOnWikiChangesSoCraTes: function () { return true; },
+    country: function () {return 'UNKNOWN'; }
+  },
   paymentInfo: {
     paymentDone: function () { return false; },
     paymentKey: function () { return 'paymentKey'; }
@@ -101,6 +105,7 @@ module.exports = {
       displayRegistrationCheckboxes: true
     }
   ],
-  participation: {}
+  participation: {},
+  allCountries: [{iso: 'AA', name: 'Alpha Country'}, {iso: 'ZZ', name: 'Zero Land'}]
 
 };

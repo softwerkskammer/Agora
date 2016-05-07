@@ -9,7 +9,7 @@ include ../../lib/members/views/userinfoform
 form#participationform.relaxed(action='/registration/completeRegistration', method='post')
   +csrf
   fieldset
-    +memberinfoform(member, null, 'members.edit_registration')
+    +memberinfoform(member, subscriber, 'members.edit_registration', allCountries)
     +userinfoform(addon, participation)
     .row(style='margin-bottom: 10px')
       .col-sm-12
