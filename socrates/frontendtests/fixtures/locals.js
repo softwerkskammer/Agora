@@ -47,6 +47,10 @@ module.exports = {
     socratesOnly: function () { return false; },
     authentications: function () { return []; }
   },
+  subscriber: {
+    notifyOnWikiChangesSoCraTes: function () { return true; },
+    country: function () {return ''; }
+  },
   paymentInfo: {
     paymentDone: function () { return false; },
     paymentKey: function () { return 'paymentKey'; }

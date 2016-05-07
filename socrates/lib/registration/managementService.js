@@ -15,7 +15,7 @@ module.exports = {
           if (err || !subscriber) { return callback(err); }
           var participation = subscriber.isParticipating() ? subscriber.currentParticipation() : {};
 
-          callback(null, {member: member, addon: subscriber.addon(), participation: participation});
+          callback(null, {member: member, addon: subscriber.addon(), participation: participation, subscriber: subscriber});
         });
       },
       globalCallback);

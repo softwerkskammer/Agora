@@ -27,13 +27,16 @@ mixin memberinfoform(member, subscriber, newmember_text)
           +text('firstname', 'First name', member.firstname())
         .col-sm-6
           +text('lastname', 'Last name', member.lastname())
+        .col-sm-12
+          if subscriber
+            +text('country', 'Country of Residence', subscriber.country())
+    .col-sm-6
+      +text('email', 'E-Mail', member.email())
+      +twitter('twitter', 'Twitter', member.twitter())
       if subscriber
         +checkbox('notifyOnWikiChangesSoCraTes', t('members.notifyOnWikiChanges'), subscriber.notifyOnWikiChangesSoCraTes())
       else
         +checkbox('notifyOnWikiChangesSoCraTes', t('members.notifyOnWikiChanges'), true)
-    .col-sm-6
-      +text('email', 'E-Mail', member.email())
-      +twitter('twitter', 'Twitter', member.twitter())
 
 mixin userinfoform(addon, participation, sharesARoom)
   .row

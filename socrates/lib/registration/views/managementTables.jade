@@ -249,7 +249,7 @@ block content
                       td #{line.member.lastname()}
                       td #{line.member.location()}
                       td #{formatList(registrationReadModel.roomTypesOf(line.member.id()))}
-                      td #{line.addon.ladiesTShirt() ? 'yes' : ''}
+                      td #{line.addon.ladiesTShirt() || !line.subscriber.livesInGermany() ? 'yes' : ''}
                       td: +fromWaitinglistToParticipant(roomType, line.member.nickname())
             hr
         .tab-pane#waitinglist

@@ -58,6 +58,10 @@
       checkFieldMandatory('[name=lastname]');
     });
 
+    it('checks that "country" is mandatory', function () {
+      checkFieldMandatory('[name=country]');
+    });
+
     it('checks that "email" is mandatory', function () {
       checkFieldMandatory('[name=email]', 'l@b.de');
     });
