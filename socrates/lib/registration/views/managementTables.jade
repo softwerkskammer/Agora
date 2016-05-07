@@ -197,7 +197,7 @@ block content
             -var participants = participantsOf[roomType]
             -var participantCount = registrationReadModel.participantCountFor(roomType)
             -var quota = socratesReadModel.quotaFor(roomType)
-            h4 #{roomType} (#{participantCount} von #{quota || 'unbegrenzt'})
+            h4 #{roomType} (#{participantCount} von #{quota === undefined ? 'unbegrenzt' : quota})
             .panel
               table.table.table-condensed.table-hover.table-striped.membertable
                 thead
