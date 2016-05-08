@@ -140,6 +140,10 @@ module.exports = {
     return enrich({event: e.DID_NOT_CHANGE_DESIRED_ROOM_TYPES_BECAUSE_PARTICIPANT_IS_NOT_ON_WAITINGLIST, memberId, desiredRoomTypes});
   },
 
+  didNotChangeDesiredRoomTypesBecauseNoRoomTypesWereSelected: function (memberId) {
+    return enrich({event: e.DID_NOT_CHANGE_DESIRED_ROOM_TYPES_BECAUSE_NO_ROOM_TYPES_WERE_SELECTED, memberId});
+  },
+
   didNotChangeDesiredRoomTypesBecauseThereWasNoChange: function (memberId, desiredRoomTypes) {
     return enrich({event: e.DID_NOT_CHANGE_DESIRED_ROOM_TYPES_BECAUSE_THERE_WAS_NO_CHANGE, memberId, desiredRoomTypes});
   },

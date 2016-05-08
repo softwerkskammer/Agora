@@ -129,7 +129,12 @@ app.post('/newResource', function (req, res, next) {
 });
 
 app.post('/newWaitinglist', function (req, res, next) {
-  socratesActivitiesService.newWaitinglistFor(req.body.nickname, [req.body.newResourceName], function (err) {
+  var waitinglistOptions = 'waitinglistOptions_' + encodeURIComponent(req.body.nickname);
+  var desiredRoomTypes = req.body[waitinglistOptions];
+  if (desiredRoomTypes && !(desiredRoomTypes instanceof Array)) {
+    desiredRoomTypes = [desiredRoomTypes];
+  }
+  socratesActivitiesService.newWaitinglistFor(req.body.nickname, desiredRoomTypes, function (err) {
     if (err) {return next(err); }
     res.redirect('/registration/management');
   });

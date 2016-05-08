@@ -56,7 +56,9 @@ RegistrationCommandProcessor.prototype.removeWaitinglistParticipant = function (
 };
 
 RegistrationCommandProcessor.prototype.changeDesiredRoomTypes = function (memberId, desiredRoomTypes) {
-  if (!this.writeModel.isAlreadyOnWaitinglist(memberId)) {
+  if (!desiredRoomTypes) {
+    return events.didNotChangeDesiredRoomTypesBecauseNoRoomTypesWereSelected(memberId);
+  } else if (!this.writeModel.isAlreadyOnWaitinglist(memberId)) {
     return events.didNotChangeDesiredRoomTypesBecauseParticipantIsNotOnWaitinglist(memberId, desiredRoomTypes);
   } else if (misc.arraysAreEqual(this.writeModel.roomTypesOf(memberId), desiredRoomTypes)) {
     return events.didNotChangeDesiredRoomTypesBecauseThereWasNoChange(memberId, desiredRoomTypes);

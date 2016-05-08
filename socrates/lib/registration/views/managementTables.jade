@@ -38,17 +38,13 @@ mixin newResource(roomType, nickname)
       option(value='junior') junior
     button.btn.btn-default.btn-xs(type='submit') Ändern
 
-mixin newWaitinglist(roomType, nickname)
+mixin newWaitinglist(currentRoomTypes, nickname)
   form(id='activityform', action='/activities/newWaitinglist', method='post')
     +csrf
-    +hidden('roomType', roomType)
     +hidden('nickname', nickname)
-    select.form-control(name='newResourceName', style='height: inherit;')
-      option(value='0') #{' '}
-      option(value='single') single
-      option(value='bed_in_double') bed in double
-      option(value='bed_in_junior') bed in junior
-      option(value='junior') junior
+    for roomType in roomOptionIds
+      input(type='checkbox', name='waitinglistOptions_' + encodeURIComponent(nickname), value=roomType, checked=(currentRoomTypes.indexOf(roomType) > -1) )
+      |  #{roomType} &nbsp;
     button.btn.btn-default.btn-xs(type='submit') Ändern
 
 mixin unpairedParticipantDropdown(roomType, participant1Nick, unpairedParticipants)
@@ -281,7 +277,7 @@ block content
                     td #{line.member.lastname()}
                     td #{line.member.location()}
                     td #{line.participation.roommate()}
-                    td: +newWaitinglist(roomType, line.member.nickname())
+                    td: +newWaitinglist(registrationReadModel.roomTypesOf(line.member.id()), line.member.nickname())
                     td: +removeWaitinglistMemberWithModal(roomType, line.member.nickname())
 
             hr
