@@ -31,6 +31,9 @@ db.subscriberstore.update({id: /git/}, {$unset: {"participations": "" }})
 -- delete the country information of a subscriber whose id matches /git/
 db.subscriberstore.update({id: /git/}, {$unset: {"country": "" }})
 
+-- set to "FR" the country information of a subscriber whose id matches /git/
+db.subscriberstore.update({id: "github:436499"}, {$set: {"country": "FR" }})
+
 -- delete the payment-received-notification of a member whose id matches /xlogon/
 db.subscriberstore.update({id: /xlogon/}, {$unset: {"participations.2015.payment.paymentReceived": "" }})
 
@@ -43,3 +46,17 @@ db.activitystore.update({"url" : "neue_aktion", 'resources.Veranstaltung._regist
 
 -- delete all avatardata in members
 db.memberstore.update({}, {$unset:{'avatardata':''}}, {multi:true})
+
+-- send mongo-db output to file
+$ mongo dbname << EOF > output.json
+db.collection.find().pretty()
+EOF
+
+-- show all collection entries at once, without iterating:
+db.collection.find().toArray()
+
+-- enable pretty printing by default:
+In
+$HOME/.mongorc.js
+add
+DBQuery.prototype._prettyShell = true
