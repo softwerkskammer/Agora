@@ -156,27 +156,35 @@ block content
                 tr
                   th Option
                   th Teilnehmer
+                  th Diversity-Teilnehmer
                   th Freie Plätze
                   th Wartende
+                  th Diversity-Wartende
               tbody
                 for roomType in roomOptionIds
                   -var participants = registrationReadModel.participantCountFor(roomType)
                   -var quota = socratesReadModel.quotaFor(roomType)
                   -var waitingOptions = registrationReadModel.waitinglistParticipantCountFor(roomType)
                   -var freeSpots = quota === undefined ? undefined : quota - participants
+                  -var participantDiversity = participantLinesOf[roomType].filter(line => line.addon.ladiesTShirt() || !line.subscriber.livesInGermany()).length
+                  -var waitingDiversity = waitinglistLinesOf[roomType].filter(line => line.addon.ladiesTShirt() || !line.subscriber.livesInGermany()).length
                   -totalParticipants += participants
                   -totalFreeSpots = freeSpots ? totalFreeSpots + freeSpots : totalFreeSpots
                   -totalWaitingOptions += waitingOptions
                   tr
                     td #{roomType}
                     td #{participants} von #{quota === undefined ? 'unbegrenzt' : quota}
+                    td #{participantDiversity}
                     td #{freeSpots}
                     td #{waitingOptions}
+                    td #{waitingDiversity}
                 tr
                   td <b>Summe</b>
                   td <b>#{totalParticipants}</b>
+                  td <b>#{addonLines.filter(line => line.addon.ladiesTShirt() || !line.subscriber.livesInGermany()).length}</b>
                   td <b>#{totalFreeSpots}</b>
                   td <b>Rooms: #{totalWaitingOptions} / Persons: #{totalWaitingMembers}</b>
+                  td <b>#{waitinglistLines.filter(line => line.addon.ladiesTShirt() || !line.subscriber.livesInGermany()).length}</b>
 
             hr
             h4 Aufenthaltsdauer
