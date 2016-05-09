@@ -33,7 +33,7 @@ module.exports = function (grunt) {
     },
     copy: {
       datatablesJS: {
-        src: 'node_modules/datatables/media/js/*.min.js',
+        src: 'node_modules/datatables.net/js/*.js',
         dest: 'socrates/public/clientscripts',
         expand: true,
         flatten: true
@@ -45,7 +45,7 @@ module.exports = function (grunt) {
         flatten: true
       },
       datatablesImages: {
-        src: 'node_modules/datatables/media/images/*',
+        src: 'node_modules/datatables.net-dt/images/*',
         dest: 'socrates/public/images/',
         expand: true,
         flatten: true
@@ -134,7 +134,7 @@ module.exports = function (grunt) {
             'node_modules/node-syntaxhighlighter/lib/styles/shCoreDefault.css',
             'node_modules/drmonty-smartmenus/css/jquery.smartmenus.bootstrap.css',
             'socrates/build/stylesheets/less/bootstrap-markdown-patched.less',
-            'node_modules/datatables/media/css/jquery.dataTables.css',
+            'node_modules/datatables.net-dt/css/jquery.dataTables.css',
             'softwerkskammer/frontend/3rd_party_css/dataTables.bootstrap.css',
             'node_modules/select2/dist/css/select2.css',
             'node_modules/select2-bootstrap-css/select2-bootstrap.css',
