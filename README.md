@@ -170,6 +170,7 @@ Running the server
 
 * Open a shell in *REPO*
 * If your installation is fresh, perform the db initialization script:
+   * `cd softwerkskammer`
    * Run `node initialDBSetup`
 * If your installation is fresh or you changed anything:
    * Run `npm test` (this creates the CSS files and other static contents and performs jshint checking)
