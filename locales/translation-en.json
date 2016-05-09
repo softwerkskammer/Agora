@@ -447,6 +447,7 @@
     "duplicate_email": "This e-mail address is already registered. Maybe you already have a profile?",
     "email_required": "E-mail is required.",
     "email_valid": "E-mail must be valid.",
+    "country_valid": "Country of Residence must be valid.",
     "failed": "Failed",
     "firstname_required": "First name is required.",
     "homeaddress_required": "Home address is required.",

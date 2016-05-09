@@ -20,6 +20,7 @@ function checkSoCraTesMemberFields(validator, memberInput) {
   validator.check(memberInput.lastname, 'validation.lastname_required').notEmpty();
   validator.check(memberInput.email, 'validation.email_required').notEmpty();
   validator.check(memberInput.email, 'validation.email_valid').isEmail();
+  validator.check(memberInput.country, 'validation.country_valid').notEmpty();
 }
 
 module.exports = {
