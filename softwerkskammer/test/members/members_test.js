@@ -229,7 +229,7 @@ describe('Members application', function () {
     sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups', function (nickname, callback) { callback(null, dummymember); });
     request(createApp({id: 'memberID'}))
       .post('/submit')
-      .send('id=0815&firstname=A&lastname=B&location=x&profession=y&reference=z')
+      .send('id=0815&firstname=A&lastname=B&location=x&profession=y&reference=z&country=x')
       .send('nickname=nickerinack')
       .send('email=here@there.org')
       .expect(302)
