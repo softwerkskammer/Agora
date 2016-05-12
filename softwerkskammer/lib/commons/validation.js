@@ -12,7 +12,7 @@ var fieldHelpers = beans.get('fieldHelpers');
 
 var Validator = require('./internal/validationHelper');
 
-function checkSoCraTesMemberFields(validator, memberInput) {
+function checkCommonMemberFields(validator, memberInput) {
   validator.check(memberInput.nickname, 'validation.nickname_required').notEmpty();
   validator.check(memberInput.nickname, 'validation.nickname_min_2_chars').len(2);
   validator.check(memberInput.nickname, 'validation.nickname_no_slash').noSlash();
@@ -37,7 +37,7 @@ module.exports = {
 
   isValidForMember: function (memberInput) {
     var validator = new Validator();
-    checkSoCraTesMemberFields(validator, memberInput);
+    checkCommonMemberFields(validator, memberInput);
     validator.check(memberInput.location, 'validation.city_required').notEmpty();
     validator.check(memberInput.reference, 'validation.reference_required').notEmpty();
     validator.check(memberInput.profession, 'validation.profession_required').notEmpty();
@@ -46,7 +46,8 @@ module.exports = {
 
   isValidForSoCraTesMember: function (memberInput) {
     var validator = new Validator();
-    checkSoCraTesMemberFields(validator, memberInput);
+    checkCommonMemberFields(validator, memberInput);
+    validator.check(memberInput.country, 'validation.country_valid').notEmpty();
     return validator.getErrors();
   },
 

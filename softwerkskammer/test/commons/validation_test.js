@@ -397,7 +397,8 @@ describe('Validation', function () {
         email: 'n@b.d',
         location: 'n',
         reference: 'n',
-        profession: 'n'
+        profession: 'n',
+        country: 'c'
       };
       expect(result(memberObject).length).to.equal(0);
     });

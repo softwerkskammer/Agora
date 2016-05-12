@@ -521,7 +521,7 @@ describe('SoCraTes members application', function () {
       appWithSoftwerkskammerMember
         .post('/submit')
         .send('id=0815&firstname=A&lastname=B')
-        .send('nickname=nickerinack')
+        .send('nickname=nickerinack&country=XX')
         .send('email=here@there.org')
         .send('homeAddress=home')
         .send('hasParticipationInformation=true')
@@ -550,7 +550,7 @@ describe('SoCraTes members application', function () {
         appWithSocratesMember
           .post('/submit')
           .send('id=0815&firstname=A&lastname=B')
-          .send('nickname=nickerinack')
+          .send('nickname=nickerinack&country=AB')
           .send('email=here@there.org')
           .send('homeAddress=home')
           .send('hasParticipationInformation=true')
@@ -586,7 +586,7 @@ describe('SoCraTes members application', function () {
       appWithSocratesMember
         .post('/submit')
         .send('id=0815&firstname=A&lastname=B')
-        .send('nickname=nickerinack')
+        .send('nickname=nickerinack&country=WW')
         .send('email=here@there.org')
         .send('homeAddress=home')
         .send('hasParticipationInformation=true')
