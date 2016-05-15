@@ -69,7 +69,7 @@ mixin removePair(roomType, pair)
     button.btn.btn-default.btn-xs(type='submit') Entfernen
 
 mixin removeParticipantWithModal(roomType, participantNick)
-  -var theID = 'reallyRemoveParticipant' + participantNick.replace(/\s/g, '').replace(/@/g, 'AT')
+  -var theID = 'reallyRemoveParticipant' + participantNick.replace(/\s/g, '').replace(/@/g, 'AT').replace(/\./g, 'DOT')
   .modal.fade(id=theID, tabindex='-1')
     .modal-dialog
       .modal-content
