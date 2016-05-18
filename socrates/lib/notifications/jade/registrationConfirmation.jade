@@ -8,8 +8,9 @@ html
 
     if bookingdetails.fromWaitinglist
       p
-        | Please confirm your spot by replying to this e-mail within the next 48 hours. If you do not reply during this period,
-        | your spot will be given to the next person on the waitinglist.
+        | Please #{' '}
+        b confirm or decline #{' '}
+        | your spot by replying to this e-mail within the next 48 hours.
 
     h3 Your Booking
     p
@@ -27,6 +28,8 @@ html
         | in a Coderetreat or workshop on Sunday). For pricing information please have a look at #{' '}
         a(href='#{url}/registration') the registration page
         | .
+      p
+        | If you cannot make it at all, please tell us straight away so that we can give your spot to the next person.
 
     p You can review and modify your registration data at #{' '}
       a(href='#{url}/members/edit') #{url}/members/edit
