@@ -253,9 +253,9 @@ block content
                     td #{line.member.lastname()}
                     td #{line.member.email()}
                     td #{registrationReadModel.durationFor(line.member.id())}
-                    td: +newDuration('global', line.member.nickname(), registrationReadModel.participantEventFor(line.member.id()).duration)
+                    td: +newDuration(event.roomType, line.member.nickname(), registrationReadModel.participantEventFor(line.member.id()).duration)
                     td #{event.roomType}
-                    td: +newResource('global', line.member.nickname())
+                    td: +newResource(event.roomType, line.member.nickname())
 
         .tab-pane#waitinglistByRoom
           each roomType in roomOptionIds
