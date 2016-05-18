@@ -210,9 +210,9 @@ block content
                     th Nickname
                     th Vorname
                     th Nachname
-                    th Ort/Region
                     th bleibt bis
                     th ändern in
+                    th room type
                     th umbuchen in
                     th entfernen
                 tbody
@@ -222,12 +222,43 @@ block content
                       td: +linkedMember(line.member.nickname())
                       td #{line.member.firstname()}
                       td #{line.member.lastname()}
-                      td #{line.member.location()}
                       td #{registrationReadModel.durationFor(line.member.id())}
                       td: +newDuration(roomType, line.member.nickname(), registrationReadModel.participantEventFor(line.member.id()).duration)
+                      td #{roomType}
                       td: +newResource(roomType, line.member.nickname())
                       td: +removeParticipantWithModal(roomType, line.member.nickname())
             hr
+        .tab-pane.active#addons
+          h4 Alle Teilnehmer
+          .panel
+            table.table.table-condensed.table-hover.table-striped.addontable
+              thead
+                tr
+                  th Registriert
+                  th Nickname
+                  th Vorname
+                  th Nachname
+                  th eMail
+                  th bleibt bis
+                  th ändern in
+                  th room type
+                  th umbuchen in
+                  th entfernen
+              tbody
+                for line in addonLines
+                  tr
+                    -var event = registrationReadModel.participantEventFor(line.member.id())
+                    td #{formatDate(event.joinedSoCraTes)}
+                    td: +linkedMember(line.member.nickname())
+                    td #{line.member.firstname()}
+                    td #{line.member.lastname()}
+                    td #{line.member.email()}
+                    td #{registrationReadModel.durationFor(line.member.id())}
+                    td: +newDuration('global', line.member.nickname(), registrationReadModel.participantEventFor(line.member.id()).duration)
+                    td #{event.roomType}
+                    td: +newResource('global', line.member.nickname())
+                    td: +removeParticipantWithModal('global', line.member.nickname())
+
         .tab-pane#waitinglistByRoom
           each roomType in roomOptionIds
             -var waitinglistLines = waitinglistLinesOf[roomType]
@@ -262,6 +293,7 @@ block content
             table.table.table-condensed.table-hover.table-striped.membertable
               thead
                 tr
+                  th Eingetragen
                   th Nickname
                   th Vorname
                   th Nachname
@@ -272,6 +304,7 @@ block content
               tbody
                 for line in waitinglistLines
                   tr
+                    td #{formatDateTime(registrationReadModel.joinedWaitinglistAt(line.member.id()))}
                     td: +linkedMember(line.member.nickname())
                     td #{line.member.firstname()}
                     td #{line.member.lastname()}
@@ -281,34 +314,6 @@ block content
                     td: +removeWaitinglistMemberWithModal(roomType, line.member.nickname())
 
             hr
-        .tab-pane.active#addons
-          h4 Alle Teilnehmer
-          .panel
-            table.table.table-condensed.table-hover.table-striped.addontable
-              thead
-                tr
-                  th Registriert
-                  th Ressource
-                  th Nickname
-                  th Vorname
-                  th Nachname
-                  th eMail
-                  th Ort/Region
-                  th T-Shirt
-                  th Zimmer mit
-              tbody
-                for line in addonLines
-                  tr
-                    -var event = registrationReadModel.participantEventFor(line.member.id())
-                    td #{formatDate(event.joinedSoCraTes)}
-                    td #{event.roomType}
-                    td: +linkedMember(line.member.nickname())
-                    td #{line.member.firstname()}
-                    td #{line.member.lastname()}
-                    td #{line.member.email()}
-                    td #{line.member.location()}
-                    td #{line.addon.tShirtSize()}
-                    td #{line.participation.roommate()}
 
         .tab-pane#bedroomPairing
           for roomType in ['bed_in_double', 'bed_in_junior']
@@ -386,7 +391,7 @@ block content
                   th E-Mail
                   th Heimatadresse
                   th Rechnungsadresse
-                  th Ressource
+                  th Zimmerart
               tbody
                 for line in addonLines
                   tr
@@ -411,7 +416,7 @@ block content
                   th Zimmer mit
                   th Heimatadresse
                   th Rechnungsadresse
-                  th Ressource
+                  th Zimmerarten
               tbody
                 for line in waitinglistLines
                   tr
