@@ -91,7 +91,7 @@ mixin removeParticipantWithModal(roomType, participantNick)
   button.btn.btn-danger(data-toggle='modal', data-target='#' + theID): i.fa.fa-trash-o.fa-fw
 
 mixin removeWaitinglistMemberWithModal(roomType, waitinglistNick)
-  -var theID = 'reallyRemoveWaitinglistMember' + waitinglistNick.replace(/\s/g, '').replace(/@/g, 'AT')
+  -var theID = 'reallyRemoveWaitinglistMember' + waitinglistNick.replace(/\s/g, '').replace(/@/g, 'AT').replace(/\./g, 'DOT')
   .modal.fade(id=theID, tabindex='-1')
     .modal-dialog
       .modal-content
