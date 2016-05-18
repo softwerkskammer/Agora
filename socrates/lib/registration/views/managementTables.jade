@@ -243,7 +243,6 @@ block content
                   th ändern in
                   th room type
                   th umbuchen in
-                  th entfernen
               tbody
                 for line in addonLines
                   tr
@@ -257,7 +256,6 @@ block content
                     td: +newDuration('global', line.member.nickname(), registrationReadModel.participantEventFor(line.member.id()).duration)
                     td #{event.roomType}
                     td: +newResource('global', line.member.nickname())
-                    td: +removeParticipantWithModal('global', line.member.nickname())
 
         .tab-pane#waitinglistByRoom
           each roomType in roomOptionIds
