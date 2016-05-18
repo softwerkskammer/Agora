@@ -1,7 +1,7 @@
 'use strict';
 var moment = require('moment-timezone');
-// var _ = require('lodash');
 var async = require('async');
+var R = require('ramda');
 
 var conf = require('simple-configure');
 var beans = conf.get('beans');
@@ -275,11 +275,11 @@ app.get('/management', function (req, res, next) {
                           durations: managementService.durations(registrationReadModel),
                           rooms: {
                             bed_in_double: {
-                              unpairedParticipants: unpairedDoubleParticipants,
+                              unpairedParticipants: R.sortBy(participant => participant.displayName(), unpairedDoubleParticipants),
                               roomPairs: roomsReadModel.roomPairsWithFullMembersFrom('bed_in_double', pairedDoubleParticipants)
                             },
                             bed_in_junior: {
-                              unpairedParticipants: unpairedJuniorParticipants,
+                              unpairedParticipants: R.sortBy(participant => participant.displayName(), unpairedJuniorParticipants),
                               roomPairs: roomsReadModel.roomPairsWithFullMembersFrom('bed_in_junior', pairedJuniorParticipants)
                             }
                           },
