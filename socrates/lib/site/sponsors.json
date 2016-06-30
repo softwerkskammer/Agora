@@ -19,7 +19,7 @@
     "url": "http://connexxo.com",
     "logo": "connexxo160.png"
   },
-  { 
+  {
     "name": "dreamIT GmbH",
     "url": "http://dreamit.de",
     "logo": "dreamit160.png"
@@ -33,6 +33,11 @@
     "name": "GitHub",
     "url": "https://github.com",
     "logo": "github160.png"
+  },
+  {
+    "name": "HolidayCheck",
+    "url": "http://www.holidaycheck.de",
+    "logo": "holidaycheck160.png"
   },
   {
     "name": "Holisticon AG",
@@ -54,7 +59,7 @@
     "url": "http://www.klosebrothers.de",
     "logo": "klosebrothers160.png"
   },
-  { 
+  {
     "name": "Mercateo AG",
     "url": "http://www.mercateo.com",
     "logo": "mercateo160.png"
@@ -64,7 +69,7 @@
     "url": "http://www.mozaicworks.com",
     "logo": "mozaic_works160.png"
   },
-  { 
+  {
     "name": "msgGillardon AG",
     "url": "http://www.msg-gillardon.de",
     "logo": "msgGillardon160.png"
