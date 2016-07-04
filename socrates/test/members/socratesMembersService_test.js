@@ -101,6 +101,7 @@ describe('SoCraTes Members Service', function () {
         socratesMembersService.registrationNotificationEmailAddresses(function (err, addresses) {
         expect(err).to.be.null();
         expect(addresses).to.eql([listAddress]);
+        done();
       });
     });
   });

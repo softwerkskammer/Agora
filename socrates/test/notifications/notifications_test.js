@@ -7,7 +7,7 @@ var beans = require('../../testutil/configureForTest').get('beans');
 var notifications = beans.get('socratesNotifications');
 
 var memberstore = beans.get('memberstore');
-var membersService = beans.get('membersService');
+var membersService = beans.get('socratesMembersService');
 var subscriberstore = beans.get('subscriberstore');
 
 var Member = beans.get('member');
@@ -24,9 +24,9 @@ var hans = new Member({
 });
 
 describe('Notifications', function () {
-  var stubOrganizers = function (conncernedPartyEmails) {
-    sinon.stub(membersService, 'superuserEmails',
-      function (callback) { callback(null, conncernedPartyEmails); });
+  var stubOrganizers = function (emailAdresses) {
+    sinon.stub(membersService, 'registrationNotificationEmailAddresses',
+      function (callback) { callback(null, emailAdresses); });
   };
 
   beforeEach(function () {
