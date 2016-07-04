@@ -23,7 +23,7 @@ function renderingOptions(member) {
   };
 }
 
-function notifyMemberAndSuperuser(member, bookingdetails, participantFilename, participantSubject, superuserFilename, superuserSubject) {
+function notifyConcernedParties(member, bookingdetails, participantFilename, participantSubject, superuserFilename, superuserSubject) {
   /*eslint no-underscore-dangle: 0*/
 
   var options = renderingOptions(member);
@@ -54,40 +54,40 @@ module.exports = {
   newParticipant: function (memberID, bookingdetails) {
     memberstore.getMemberForId(memberID, function (err, member) {
       if (err || !member) { return logger.error(err); }
-      notifyMemberAndSuperuser(member, bookingdetails, 'registrationConfirmation', 'SoCraTes Registration Confirmation',
+      notifyConcernedParties(member, bookingdetails, 'registrationConfirmation', 'SoCraTes Registration Confirmation',
         'superuserRegistrationNotification', 'New SoCraTes Registration');
     });
   },
 
   changedDuration: function (member, bookingdetails) {
-    notifyMemberAndSuperuser(member, bookingdetails, 'changedRegistration', 'SoCraTes Change of Length of Stay',
+    notifyConcernedParties(member, bookingdetails, 'changedRegistration', 'SoCraTes Change of Length of Stay',
       'superuserRegistrationNotification', 'Change in SoCraTes Registration - Duration');
   },
 
   changedResource: function (member, bookingdetails) {
-    notifyMemberAndSuperuser(member, bookingdetails, 'changedRegistration', 'SoCraTes Change of Room Option',
+    notifyConcernedParties(member, bookingdetails, 'changedRegistration', 'SoCraTes Change of Room Option',
       'superuserRegistrationNotification', 'Change in SoCraTes Registration - Resource');
   },
 
   changedWaitinglist: function (member, bookingdetails) {
-    notifyMemberAndSuperuser(member, bookingdetails, 'changedWaitinglist', 'SoCraTes Waitinglist Change of Room Option',
+    notifyConcernedParties(member, bookingdetails, 'changedWaitinglist', 'SoCraTes Waitinglist Change of Room Option',
       'superuserWaitinglistNotification', 'Change in SoCraTes Waitinglist - Resource');
   },
 
   removedFromParticipants: function (member) {
-    notifyMemberAndSuperuser(member, {resourceKind: 'participant list'}, 'removalNotification', 'SoCraTes - Removal from Participant List',
+    notifyConcernedParties(member, {resourceKind: 'participant list'}, 'removalNotification', 'SoCraTes - Removal from Participant List',
       'superuserRemovalNotification', 'Change in SoCraTes Registration - Removal from Participants');
   },
 
   removedFromWaitinglist: function (member) {
-    notifyMemberAndSuperuser(member, {resourceKind: 'waitinglist'}, 'removalNotification', 'SoCraTes - Removal from Waitinglist',
+    notifyConcernedParties(member, {resourceKind: 'waitinglist'}, 'removalNotification', 'SoCraTes - Removal from Waitinglist',
       'superuserRemovalNotification', 'Change in SoCraTes Registration - Removal from Waitinglist');
   },
 
   newWaitinglistEntry: function (memberID, bookingdetails) {
     memberstore.getMemberForId(memberID, function (err, member) {
       if (err || !member) { return logger.error(err); }
-      notifyMemberAndSuperuser(member, bookingdetails, 'waitinglistConfirmation', 'SoCraTes Waitinglist Confirmation',
+      notifyConcernedParties(member, bookingdetails, 'waitinglistConfirmation', 'SoCraTes Waitinglist Confirmation',
         'superuserWaitinglistNotification', 'New SoCraTes Waitinglist Entry');
     });
   },
