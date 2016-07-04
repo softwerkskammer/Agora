@@ -4,7 +4,8 @@ var _ = require('lodash');
 var R = require('ramda');
 var async = require('async');
 
-var beans = require('simple-configure').get('beans');
+var conf = require('simple-configure');
+var beans = conf.get('beans');
 var activitystore = beans.get('activitystore');
 var eventstoreService = beans.get('eventstoreService');
 var socratesConstants = beans.get('socratesConstants');
@@ -44,5 +45,9 @@ module.exports = {
         });
     });
 
+  },
+
+  registrationNotificationEmailAddresses: function (callback) {
+    callback(null, [conf.get('registrationListEmailAddress')]);
   }
 };

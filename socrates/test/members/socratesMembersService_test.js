@@ -92,4 +92,17 @@ describe('SoCraTes Members Service', function () {
       });
     });
   });
+
+  describe('notifying about changes regarding the registration', function () {
+    it('returns configured registration notification address', function (done) {
+        var listAddress = 'foo@example.com';
+        conf.addProperties({registrationListEmailAddress: listAddress});
+
+        socratesMembersService.registrationNotificationEmailAddresses(function (err, addresses) {
+        expect(err).to.be.null();
+        expect(addresses).to.eql([listAddress]);
+        done();
+      });
+    });
+  });
 });
