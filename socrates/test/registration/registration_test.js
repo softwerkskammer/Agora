@@ -158,6 +158,126 @@ describe('SoCraTes registration application', function () {
 
   });
 
+  describe('to support the search for a roommate', function () {
+
+    it('does not display the roommate banner on the registration page when the user is not logged in', function (done) {
+      appWithoutMember
+        .get('/')
+        .end(function (err, res) {
+          expect(res.text).to.not.contain('Still looking for a roommate?');
+          done(err);
+        });
+    });
+
+    it('does not display the roommate banner on the registration page when the user is not subscribed to SoCraTes', function (done) {
+      appWithSocratesMember
+        .get('/')
+        .end(function (err, res) {
+          expect(res.text).to.not.contain('Still looking for a roommate?');
+          done(err);
+        });
+    });
+
+    it('does not display the roommate banner on the registration page when the user is subscribed in a single-bed room', function (done) {
+      eventStore.state.registrationEvents = [
+        events.participantWasRegistered('single', 'some-duration', 'some-session-id', 'memberId2', aShortTimeAgo)];
+
+      appWithSocratesMember
+        .get('/')
+        .end(function (err, res) {
+          expect(res.text).to.not.contain('Still looking for a roommate?');
+          done(err);
+        });
+    });
+
+    it('does not display the roommate banner on the registration page when the user is subscribed in a junior room', function (done) {
+      eventStore.state.registrationEvents = [
+        events.participantWasRegistered('junior', 'some-duration', 'some-session-id', 'memberId2', aShortTimeAgo)];
+
+      appWithSocratesMember
+        .get('/')
+        .end(function (err, res) {
+          expect(res.text).to.not.contain('Still looking for a roommate?');
+          done(err);
+        });
+    });
+
+    it('does not display the roommate banner on the registration page when the user is on the waitinglist for a double-bed room', function (done) {
+      eventStore.state.registrationEvents = [
+        events.waitinglistParticipantWasRegistered(['bed_in_double'], 'some-session-id', 'memberId2', aShortTimeAgo)];
+
+      appWithSocratesMember
+        .get('/')
+        .end(function (err, res) {
+          expect(res.text).to.not.contain('Still looking for a roommate?');
+          done(err);
+        });
+    });
+
+    it('does not display the roommate banner on the registration page when the user is on the waitinglist for a shared junior room', function (done) {
+      eventStore.state.registrationEvents = [
+        events.waitinglistParticipantWasRegistered(['bed_in_junior'], 'some-session-id', 'memberId2', aShortTimeAgo)];
+
+      appWithSocratesMember
+        .get('/')
+        .end(function (err, res) {
+          expect(res.text).to.not.contain('Still looking for a roommate?');
+          done(err);
+        });
+    });
+
+    it('displays the roommate banner on the registration page when the user is subscribed for a double-bed room', function (done) {
+      eventStore.state.registrationEvents = [
+        events.participantWasRegistered('bed_in_double', 'some-duration', 'some-session-id', 'memberId2', aShortTimeAgo)];
+
+      appWithSocratesMember
+        .get('/')
+        .expect(/Still looking for a roommate?/, done);
+    });
+
+    it('displays the roommate banner on the registration page when the user is subscribed for a shared junior room', function (done) {
+      eventStore.state.registrationEvents = [
+        events.participantWasRegistered('bed_in_junior', 'some-duration', 'some-session-id', 'memberId2', aShortTimeAgo)];
+
+      appWithSocratesMember
+        .get('/')
+        .expect(/Still looking for a roommate?/, done);
+    });
+
+    it('does not display the roommate banner on the registration page when the user is subscribed for a double-bed room and already has a roommate', function (done) {
+      eventStore.state.registrationEvents = [
+        events.participantWasRegistered('bed_in_double', 'some-duration', 'some-session-id', 'other-member-id', aShortTimeAgo),
+        events.participantWasRegistered('bed_in_double', 'some-duration', 'some-session-id', 'memberId2', aShortTimeAgo)
+      ];
+      eventStore.state.roomsEvents = [
+        events.roomPairWasAdded('bed_in_double', 'other-member-id', 'memberId2')];
+
+
+      appWithSocratesMember
+        .get('/')
+        .end(function (err, res) {
+          expect(res.text).to.not.contain('Still looking for a roommate?');
+          done(err);
+        });
+    });
+
+    it('does not display the roommate banner on the registration page when the user is subscribed for a shared junior room and already has a roommate', function (done) {
+      eventStore.state.registrationEvents = [
+        events.participantWasRegistered('bed_in_junior', 'some-duration', 'some-session-id', 'other-member-id', aShortTimeAgo),
+        events.participantWasRegistered('bed_in_junior', 'some-duration', 'some-session-id', 'memberId2', aShortTimeAgo)
+      ];
+      eventStore.state.roomsEvents = [
+        events.roomPairWasAdded('bed_in_junior', 'other-member-id', 'memberId2')];
+
+      appWithSocratesMember
+        .get('/')
+        .end(function (err, res) {
+          expect(res.text).to.not.contain('Still looking for a roommate?');
+          done(err);
+        });
+    });
+  });
+
   describe('pressing the registration button on the registration page', function () {
 
     it('redirects to the registration page when no room is selected', function (done) {

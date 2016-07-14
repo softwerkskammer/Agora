@@ -3,6 +3,7 @@ include ../../../../softwerkskammer/views/formComponents
 include ../../../../softwerkskammer/lib/activities/views/activities-mixins
 include participationinfoform
 include ../../members/views/resignBanner  
+include ../../members/views/roommateBanner
 
 block scripts
   script(src='/clientscripts/enhance-participationinfoform.js')
@@ -17,6 +18,7 @@ block content
   .row
     .col-md-12
       +resignBanner(registration)
+      +roommateBanner(registration)
       .page-header(style='margin-bottom: 0;')
         .pull-right.visible-print
           img(height='80px', src='/qrcode?url=#{encodeURIComponent(activity.fullyQualifiedUrl)}')
