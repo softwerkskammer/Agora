@@ -10,14 +10,32 @@ var conf = require('simple-configure');
 var beans = conf.get('beans');
 var Renderer = beans.get('renderer');
 var misc = beans.get('misc');
+var eventstoreService = beans.get('eventstoreService');
 var mailsenderService = beans.get('mailsenderService');
 var socratesConstants = beans.get('socratesConstants');
 var sponsorpairs = require('./sponsorpairs');
 
 var app = misc.expressAppIn(__dirname);
 
-app.get('/', function (req, res) {
-  res.render('index', {sponsors: sponsorpairs()});
+app.get('/', function (req, res, next) {
+  eventstoreService.getRegistrationReadModel(socratesConstants.currentUrl, function (err, registrationReadModel) {
+    if (err || !registrationReadModel) { return next(err); }
+    eventstoreService.getRoomsReadModel(socratesConstants.currentUrl, function (err2, roomsReadModel) {
+      if (err2 || !roomsReadModel) { return next(err2); }
+      var memberId = res.locals.accessrights.memberId();
+      var registration = {
+        alreadyRegistered: registrationReadModel.isAlreadyRegistered(memberId),
+        alreadyOnWaitinglist: registrationReadModel.isAlreadyOnWaitinglist(memberId),
+        selectedOptions: registrationReadModel.selectedOptionsFor(memberId),
+        roommate: roomsReadModel.roommateFor('bed_in_double', memberId) || roomsReadModel.roommateFor('bed_in_junior', memberId)
+      };
+
+      res.render('index', {sponsors: sponsorpairs(), registration: registration});
+    });
+  });
+
+
+
 });
 
 app.get('/goodbye.html', function (req, res) {
