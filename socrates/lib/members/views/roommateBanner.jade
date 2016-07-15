@@ -1,0 +1,11 @@
+mixin roommateBanner(registration)
+  -var sharedOptions = registration.selectedOptions.split(';').filter(option => option.startsWith('bed_in_') && !option.endsWith('waitinglist'));
+  if registration.alreadyRegistered && sharedOptions.length > 0 && !registration.roommate
+    .row
+      .col-md-12
+        .alert.alert-warning
+          p.large-text
+            b Still looking for a roommate? #{''} &ndash; #{''}
+            b Check out the #{''}
+            a(href='/members/' + encodeURIComponent(user.member.nickname())) list of others who are also searching
+            | #{''}!

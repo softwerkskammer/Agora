@@ -1,7 +1,13 @@
 extends ../../../views/layout
+include ../../members/views/resignBanner
+include ../../members/views/roommateBanner
+
+
 block title
   | SoCraTes 2016 - 6th International Software Craftsmanship and Testing Conference, 25-28 August 2016, Soltau, Germany
 block before-container
+  +resignBanner(registration)
+  +roommateBanner(registration)
   .jumbotron.stage-background
     .container
       img.logo-left(src='img/socrates2016_logo.png', alt='SoCraTes Conference 2016 - Software Craftsmanship and Testing')

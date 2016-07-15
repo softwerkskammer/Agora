@@ -55,26 +55,30 @@ function registrationOpensIn() {
 app.get('/', function (req, res, next) {
   eventstoreService.getRegistrationReadModel(socratesConstants.currentUrl, function (err, registrationReadModel) {
     if (err || !registrationReadModel) { return next(err); }
-    var memberId = res.locals.accessrights.memberId();
-    var options = roomOptions.allRoomOptions(registrationReadModel, memberId, isRegistrationOpen(req.query.registration));
-    var registration = {
-      isPossible: isRegistrationOpen(req.query.registration),
-      queryParam: req.query.registration,
-      alreadyRegistered: registrationReadModel.isAlreadyRegistered(memberId),
-      selectedOptions: registrationReadModel.selectedOptionsFor(memberId),
-      alreadyOnWaitinglist: registrationReadModel.isAlreadyOnWaitinglist(memberId),
-      opening: registrationOpening(),
-      opensIn: registrationOpensIn()
-    };
+    eventstoreService.getRoomsReadModel(socratesConstants.currentUrl, function (err2, roomsReadModel) {
+      if (err2 || !roomsReadModel) { return next(err2); }
+      var memberId = res.locals.accessrights.memberId();
+      var options = roomOptions.allRoomOptions(registrationReadModel, memberId, isRegistrationOpen(req.query.registration));
+      var registration = {
+        isPossible: isRegistrationOpen(req.query.registration),
+        queryParam: req.query.registration,
+        alreadyRegistered: registrationReadModel.isAlreadyRegistered(memberId),
+        selectedOptions: registrationReadModel.selectedOptionsFor(memberId),
+        roommate: roomsReadModel.roommateFor('bed_in_double', memberId) || roomsReadModel.roommateFor('bed_in_junior', memberId),
+        alreadyOnWaitinglist: registrationReadModel.isAlreadyOnWaitinglist(memberId),
+        opening: registrationOpening(),
+        opensIn: registrationOpensIn()
+      };
 
-    res.render('get', {
-      activity: {
-        title: 'SoCraTes ' + socratesConstants.currentYear,
-        url: socratesConstants.currentUrl,
-        fullyQualifiedUrl: conf.get('socratesURL')
-      },
-      roomOptions: options,
-      registration: registration
+      res.render('get', {
+        activity: {
+          title: 'SoCraTes ' + socratesConstants.currentYear,
+          url: socratesConstants.currentUrl,
+          fullyQualifiedUrl: conf.get('socratesURL')
+        },
+        roomOptions: options,
+        registration: registration
+      });
     });
   });
 });
