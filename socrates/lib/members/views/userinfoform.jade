@@ -56,13 +56,13 @@ mixin userinfoform(addon, participation, sharesARoom)
           .form-group(style='margin-bottom:0;')
             label.control-label(for='tShirtSizeMale') T-Shirt (Male):
             select#tShirtSizeMale.form-control(name='tShirtSize')
-              for item in ['', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL' ]
+              for item in ['', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL', 'No Shirt' ]
                 option(selected=addon.tShirtSize() === item) #{item}
         .col-sm-6
           .form-group(style='margin-bottom:0;')
             label.control-label(for='tShirtSizeFemale') T-Shirt (Female):
             select#tShirtSizeFemale.form-control(name='tShirtSize')
-              for item in ['', 'Ladies\' XS', 'Ladies\' S', 'Ladies\' M', 'Ladies\' L', 'Ladies\' XL', 'Ladies\' XXL' ]
+              for item in ['', 'Ladies\' XS', 'Ladies\' S', 'Ladies\' M', 'Ladies\' L', 'Ladies\' XL', 'Ladies\' XXL', 'Ladies\' No Shirt' ]
                 option(selected=addon.tShirtSize() === item) #{item}
     .col-sm-6
       +textareaPure('remarks', 'Remarks (e.g. dietary restrictions)', addon.remarks())
