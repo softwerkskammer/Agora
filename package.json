@@ -20,7 +20,7 @@
   "license": "(MIT OR Apache-2.0)",
   "main": "",
   "engines": {
-    "node": ">=4.0"
+    "node": "4.3.2"
   },
   "dependencies": {
     "CoolBeans": "0.0.9",
