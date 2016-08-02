@@ -1,5 +1,9 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Agora" type="NodeJSConfigurationType" factoryName="Node.js" path-to-node="$usr-local-bin$/node" path-to-js-file="start-softwerkskammer.js" working-dir="$PROJECT_DIR$">
+    <profiling v8-profiler-path="$PROJECT_DIR$/node_modules/v8-profiler" />
+    <EXTENSION ID="com.jetbrains.nodejs.run.NodeJSProfilingRunConfigurationExtension">
+      <profiling v8-profiler-path="$PROJECT_DIR$/node_modules/v8-profiler" />
+    </EXTENSION>
     <RunnerSettings RunnerId="Basic" />
     <RunnerSettings RunnerId="NodeJS.debug" />
     <RunnerSettings RunnerId="NodeJS.run" />
