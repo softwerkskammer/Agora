@@ -110,7 +110,7 @@
     "grunt-eslint": "18.1.0",
     "grunt-karma": "2.0.0",
     "grunt-mocha-istanbul": "4.0.2",
-    "grunt-patch": "1.0.0",
+    "grunt-patch": "leider/grunt-patch",
     "istanbul": "0.4.3",
     "karma": "0.13.22",
     "karma-coverage": "1.0.0",
