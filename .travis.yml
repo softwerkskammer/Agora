@@ -1,7 +1,6 @@
 language: node_js
 
 node_js:
-  - "4"
   - "6"
 
 before_script:
@@ -16,11 +15,3 @@ sudo: false
 notifications:
     slack: softwarecraftsmanship:AJPQ1HMqrsg2dEV5js9qt4rc
 
-env:
-  - CXX=g++-4.8
-addons:
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-    packages:
-      - g++-4.8
