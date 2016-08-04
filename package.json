@@ -68,6 +68,7 @@
     "mime-types": "2.1.11",
     "moment-timezone": "0.5.4",
     "mongodb": "2.1.21",
+    "moment": "2.14.1",
     "morgan": "1.7.0",
     "multiparty": "4.1.2",
     "node-cache": "3.2.1",
