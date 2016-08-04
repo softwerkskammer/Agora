@@ -81,7 +81,7 @@ describe('Activity resource management', function () {
       var activity = new Activity();
       activity.resourceNamed(defaultName).addMemberId('memberID', now);
       expect(activity.state.resources[defaultName]._registeredMembers[0].memberId).to.equal('memberID');
-      expect(activity.state.resources[defaultName]._registeredMembers[0].registeredAt).to.equal(now.toDate());
+      expect(activity.state.resources[defaultName]._registeredMembers[0].registeredAt).to.eql(now.toDate());
     });
 
     it('adds a member to a desired resource', function () {
