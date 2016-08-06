@@ -228,7 +228,7 @@ describe('Activity application', function () {
       .expect(/description1/)
       .expect(/location1/)
       .expect(/direction1/)
-      .expect(/script src="https:\/\/maps\.googleapis\.com\/maps\/api\/js\?sensor=false"/)
+      .expect(/script src="https:\/\/maps\.googleapis\.com\/maps\/api\/js"/)
       .expect(/Bislang gibt es keine Teilnahmezusagen\./, function (err, res) {
         expect(res.text).to.not.contain('Angelegt von');
         done(err);
@@ -734,6 +734,16 @@ describe('Activity application', function () {
         .expect(/<option selected="selected">Firstname1 Lastname1 \(participant1\)/)
         .expect(/<option>Firstname2 Lastname2 \(participant2\)/)
         .expect(/<option selected="selected">Firstname3 Lastname3 \(participant3\)/)
+        .end(done);
+    });
+
+    it('always shows the already assigned group for selection even if it is not returned for the current user', function (done) {
+      sinon.stub(groupsService, 'getSubscribedGroupsForUser', function (user, callback) { callback(null, []); });
+
+      request(createApp({member: member1}))
+        .get('/edit/urlForEditors')
+        .expect(200)
+        .expect(/<option value="group">The name of the group with editors/)
         .end(done);
     });
 
