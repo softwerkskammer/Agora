@@ -24,10 +24,10 @@ function addMembersToGroup(group, callback) {
   if (!group) { return callback(null); }
   membersOfList(group.id, function (err, members) {
     if (err) { return callback(err); }
-    async.each(members, membersService.putAvatarIntoMemberAndSave, function () {
+    async.each(members, membersService.putAvatarIntoMemberAndSave, function (err1) {
       group.members = members;
       group.membercount = members.length;
-      callback(err, group);
+      callback(err1, group);
     });
   });
 }
