@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "CoolBeans": "0.0.9",
-    "async": "1.5.2",
+    "async": "2.0.1",
     "autonumeric": "1.9.45",
     "body-parser": "1.15.2",
     "bootstrap": "3.3.7",

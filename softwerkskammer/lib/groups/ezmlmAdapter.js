@@ -24,9 +24,9 @@ module.exports = {
       async.filterSeries(alle, function (listname, innerCallback) {
         ezmlm.usersOfList(listname, function (err1, users) {
           if (err1) { return callback(err1); }
-          innerCallback(_.includes(users, user.toLowerCase()));
+          innerCallback(null, _.includes(users, user.toLowerCase()));
         });
-      }, function (result) { callback(null, result); });
+      }, function (err1, result) { callback(err1, result); });
     });
   },
 
