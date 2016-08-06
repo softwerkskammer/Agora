@@ -737,5 +737,15 @@ describe('Activity application', function () {
         .end(done);
     });
 
+    it('always shows the already assigned group for selection even if it is not returned for the current user', function (done) {
+      sinon.stub(groupsService, 'getSubscribedGroupsForUser', function (user, callback) { callback(null, []); });
+
+      request(createApp({member: member1}))
+        .get('/edit/urlForEditors')
+        .expect(200)
+        .expect(/<option value="group">The name of the group with editors/)
+        .end(done);
+    });
+
   });
 });

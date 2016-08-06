@@ -162,6 +162,9 @@ function renderActivityCombinedWithGroups(res, next, activity) {
       var editorNames = _.map(editors, editorNameOf);
       _.remove(activity.participants || [], function (participant) { return participant.nickname() === activity.ownerNickname; });
       var participantNames = _.map(activity.participants || [], editorNameOf);
+      if (activity.group && !_(groups).map(group => group.id).includes(activity.assignedGroup())) {
+        groups.push(activity.group);
+      }
       res.render('edit', {
         activity: activity,
         groups: groups,
