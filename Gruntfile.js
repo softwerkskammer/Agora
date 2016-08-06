@@ -219,7 +219,6 @@ module.exports = function (grunt) {
         src: 'softwerkskammer/testApp',
         options: {
           coverageFolder: 'softwerkskammer/coverageApp',
-          excludes: ['**/activitystore.js'],
           timeout: 6000,
           slow: 100,
           mask: '**/*.js',
