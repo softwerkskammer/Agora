@@ -26,7 +26,7 @@ module.exports = {
           if (err1) { return callback(err1); }
           innerCallback(null, _.includes(users, user.toLowerCase()));
         });
-      }, function (err1, result) { callback(err1, result); });
+      }, callback);
     });
   },
 
