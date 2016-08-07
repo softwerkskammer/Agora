@@ -109,7 +109,7 @@
     "grunt-contrib-uglify": "2.0.0",
     "grunt-eslint": "19.0.0",
     "grunt-karma": "2.0.0",
-    "grunt-mocha-istanbul": "leider/grunt-mocha-istanbul",
+    "grunt-mocha-istanbul": "5.0.2",
     "grunt-patch": "leider/grunt-patch",
     "istanbul": "0.4.4",
     "karma": "1.1.2",
