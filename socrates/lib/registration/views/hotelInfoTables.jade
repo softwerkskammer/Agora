@@ -15,7 +15,7 @@ mixin individualRoom(roomType)
           th Sonntag - Montag
       tbody
         for member in participants
-          -var duration = registrationReadModel.durationFor(member.id())
+          -var duration = registrationReadModel.participantEventFor(member.id()).duration
           -var name = member.displayName()
           tr
             td #{name}
@@ -41,8 +41,8 @@ mixin sharedRoom(roomType)
         for pair in rooms[roomType].roomPairs
           -var name1 = pair.participant1.displayName()
           -var name2 = pair.participant2.displayName()
-          -var duration1 = registrationReadModel.durationFor(pair.participant1.id())
-          -var duration2 = registrationReadModel.durationFor(pair.participant2.id())
+          -var duration1 = registrationReadModel.participantEventFor(pair.participant1.id()).duration
+          -var duration2 = registrationReadModel.participantEventFor(pair.participant2.id()).duration
           tr
             td #{name1}
             td #{name2}
@@ -52,7 +52,7 @@ mixin sharedRoom(roomType)
             td #{duration2 > 4 ? name2 : ""}
         for participant in rooms[roomType].unpairedParticipants
           -var name = participant.displayName()
-          -var duration = registrationReadModel.durationFor(participant.id())
+          -var duration = registrationReadModel.participantEventFor(participant.id()).duration
           tr
             td #{name}
             td
@@ -74,7 +74,7 @@ mixin roomCountFor(firstColumn, roomType, totalRoomCount)
   -var participants = participantsOf[roomType]
 
   for member in participants
-    -var duration = registrationReadModel.durationFor(member.id())
+    -var duration = registrationReadModel.participantEventFor(member.id()).duration
     -thursdayToSaturday = thursdayToSaturday + 1
     -if(duration > 2)
       -saturdayToSunday = saturdayToSunday + 1
@@ -153,7 +153,7 @@ block content
                 +roomCountFor('Einzelzimmer', 'single', totalRoomCount)
                 +roomCountFor('Doppelzimmer', 'bed_in_double', totalRoomCount)
                 +roomCountFor('Junior-DZ Doppelbelegung', 'bed_in_junior', totalRoomCount)
-                // leave this one out for now... +roomCountFor('Junior-DZ Einzelbelegung', 'junior', totalRoomCount)
+                +roomCountFor('Junior-DZ Einzelbelegung', 'junior', totalRoomCount)
                 +roomCountLine('Personen gesamt', totalRoomCount.thursdayToSaturday, totalRoomCount.saturdayToSunday, totalRoomCount.sundayToMonday)
 
           h4 Tagesgäste
@@ -169,7 +169,7 @@ block content
                 for roomType in ['single', 'bed_in_double', 'bed_in_junior', 'junior']
                   -var participants = participantsOf[roomType]
                   for member in participants
-                    -var duration = registrationReadModel.durationFor(member.id())
+                    -var duration = registrationReadModel.participantEventFor(member.id()).duration
                     -fridayAndSaturday = fridayAndSaturday + 1
                     -if(duration > 3)
                       -sunday = sunday + 1
