@@ -338,7 +338,7 @@ app.get('/hotelInfo', function (req, res, next) {
 
                     res.render('hotelInfoTables', {
                       participantsOf: participantsOf,
-                      _registrationReadModel: registrationReadModel,
+                      registrationReadModel: registrationReadModel,
                       addonLines: addonLines,
                       rooms: {
                         bed_in_double: {
