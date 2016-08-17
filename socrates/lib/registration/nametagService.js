@@ -14,10 +14,10 @@ var gillardonTags = {
 };
 
 var orcanaTags = {
-  colWidth: '7cm',
-  tagHeight: '38mm',
-  bottomMargin: '-3mm',
-  paperMargins: 'left=15mm, right=15mm, top=15mm, bottom=15mm'
+  colWidth: '81mm',
+  tagHeight: '51mm',
+  bottomMargin: '10mm',
+  paperMargins: 'left=15mm, right=15mm, top=0mm, bottom=0mm'
 };
 
 
