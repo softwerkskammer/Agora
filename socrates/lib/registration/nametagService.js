@@ -2,6 +2,30 @@
 
 var _ = require('lodash');
 
+var conf = require('simple-configure');
+
+var orcana = conf.get('nametags') === 'orcana';
+
+var gillardonTags = {
+  colWidth: '7cm',
+  tagHeight: '38mm',
+  bottomMargin: '-3mm',
+  paperMargins: 'left=15mm, right=15mm, top=15mm, bottom=15mm'
+};
+
+var orcanaTags = {
+  colWidth: '7cm',
+  tagHeight: '38mm',
+  bottomMargin: '-3mm',
+  paperMargins: 'left=15mm, right=15mm, top=15mm, bottom=15mm'
+};
+
+
+var colWidth = orcana ? orcanaTags.colWidth : gillardonTags.colWidth;
+var tagHeight = orcana ? orcanaTags.tagHeight : gillardonTags.tagHeight;
+var bottomMargin = orcana ? orcanaTags.bottomMargin : gillardonTags.bottomMargin;
+var paperMargins = orcana ? orcanaTags.paperMargins : gillardonTags.paperMargins;
+
 module.exports = {
   /*eslint no-underscore-dangle: 0*/
 
@@ -10,23 +34,24 @@ module.exports = {
   },
 
   _prefix: function () {
+
     return '\\documentclass[12pt,a4paper]{scrbook}\n' +
       '\n' +
       '\\usepackage{ngerman}\n' +
       '\\usepackage[default,osfigures,scale=0.95]{opensans}\n' +
       '\\usepackage[utf8]{inputenc}\n' +
       '\\usepackage[T1]{fontenc}\n' +
-      '\\usepackage[a4paper, left=15mm, right=15mm, top=15mm, bottom=15mm, landscape]{geometry}\n' +
+      '\\usepackage[a4paper, ' + paperMargins + ', landscape]{geometry}\n' +
       '\n' +
       '\\pagestyle{empty}\n' +
       '\n' +
       '\n' +
       '\\newcommand{\\nametag}[3]{%\n' +
-      '  \\parbox[t]{7cm}{\\rule[0mm]{0mm}{38mm}%\n' +
-      '    \\begin{minipage}[b]{7cm}%\n' +
+      '  \\parbox[t]{' + colWidth + '}{\\rule[0mm]{0mm}{' + tagHeight + '}%\n' +
+      '    \\begin{minipage}[b]{' + colWidth + '}%\n' +
       '      {\\Huge \\textbf{#1}}\\\\[5mm]%\n' +
       '      {\\large #2}\\\\[5mm]%\n' +
-      '    {\\Large \\textbf{#3}}\\\\[-3mm]%\n' +
+      '    {\\Large \\textbf{#3}}\\\\[' + bottomMargin + ']%\n' +
       ' \\end{minipage}}}%\n' +
       '\n' +
       '\n' +
@@ -51,7 +76,7 @@ module.exports = {
     if (members.length > 12) {
       return 'ERROR! Passed more than 12 members to tableFor()';
     }
-    return '\\begin{tabular}{|p{7cm}|p{7cm}|p{7cm}|} \n' +
+    return '\\begin{tabular}{|p{' + colWidth + '}|p{' + colWidth + '}|p{' + colWidth + '}|} \n' +
       '\\hline \n' +
       _.map(_.range(0, members.length, 3), function (startIndex) { return self._lineFor(members.slice(startIndex, startIndex + 3)); }).join('') +
       '\n\\end{tabular}\n\n\n';
@@ -60,7 +85,7 @@ module.exports = {
   _tablesFor: function (members) {
     var self = this;
     return _.map(_.range(0, members.length, 12),
-      function (startIndex) { return self._tableFor(members.slice(startIndex, startIndex + 12)); }).join('');
+                 function (startIndex) { return self._tableFor(members.slice(startIndex, startIndex + 12)); }).join('');
   },
 
   _postfix: function () {
