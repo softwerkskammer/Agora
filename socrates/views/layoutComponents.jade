@@ -43,10 +43,6 @@ mixin navbar(xs)
     .navbar-collapse.collapse
       if (!xs)
         ul.nav.navbar-nav.navbar-right
-          a.btn.btn-info(href='/sponsoring.html', style='margin-bottom:5px;margin-top:5px;')
-            span.glyphicon.glyphicon-thumbs-up
-            |  Sponsor us
-        ul.nav.navbar-nav.navbar-right
           +loginMenu
       ul.nav.navbar-nav
         li(data-nav-index=''): a(href='/', title='Home', style='padding-left: 5px') SoCraTes 2016
