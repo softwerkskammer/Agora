@@ -70,7 +70,7 @@ Now you can decide which app you want to start:
 
 
 Local installation via Docker Compose
-==============================
+=====================================
 [Docker Compose](https://docs.docker.com/compose/) is an easy way to set up a Docker container with everything needed to get our server up and running.
 
 Just follow these steps:
@@ -81,13 +81,14 @@ Just follow these steps:
 You are now ready to start the build.
 
 1. Perform `docker-compose build` - (this will build a local Docker image for Agora)
-
 1. `docker-compose run agora node softwerkskammer/initialDBSetup really` - this will create some sample data to start with
 1. `docker-compose run agora npm test` - will create a few necessary files and perform a complete test suite. *This must end successfully!*
 
+To restart from scratch run `docker-compose down --volumes`
+
 
 Classical local installation
-=============================
+============================
 
 System requirements and Installation
 --------------------

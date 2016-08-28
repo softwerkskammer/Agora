@@ -8,5 +8,8 @@ COPY package.json /usr/src/app
 RUN npm install
 COPY . /usr/src/app
 
+# FXIME needed for tests
+RUN echo "Version: 0000000" > softwerkskammer/version.jade
+
 EXPOSE 17124 17224
 CMD [ "npm", "start" ]
