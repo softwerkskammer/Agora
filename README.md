@@ -39,8 +39,3 @@ We are using WebStorm as IDE [Webstorm](http://www.jetbrains.com/webstorm/)
 ![WebStorm Logo](/dev-goodies/webstorm.svg.png)
 
 Feel free to ask us for a community licence if you are contributing.
-
-Editing the stylesheets
------------------------
-
-Only edit the agora.less file inside the "partials" subfolder. Running `npm test` or `grunt default` will compile everything to screen.css.
