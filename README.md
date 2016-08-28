@@ -35,7 +35,8 @@ To run the style check (jshint) and the tests on every file change, use `grunt w
 
 We are using WebStorm as IDE [Webstorm](http://www.jetbrains.com/webstorm/)
 ----------
-![WebStorm Logo](http://www.jetbrains.com/webstorm/documentation/docs/logo_webstorm.png)
+
+![WebStorm Logo](/dev-goodies/webstorm.svg.png)
 
 Feel free to ask us for a community licence if you are contributing.
 
