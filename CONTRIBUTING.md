@@ -1,6 +1,6 @@
 # How to contribute
 
-What to do? There is a companion project where the feature backlog lives. Go to the issues in [https://github.com/softwerkskammer/Agora-Backlog/issues](https://github.com/softwerkskammer/Agora-Backlog/issues)
+Get in touch with us:
 
 Video hangout
 -------------
