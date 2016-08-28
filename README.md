@@ -17,12 +17,15 @@ how to get Agora running on you local development machine.
 Tests
 -----
 
-Run the tests with `npm test` (after you have [set up your local installation](/INSTALL.md)).
+Run the tests with `npm test`.
 
-For running specific tests only, you can use mocha in a command like
-`mocha -R spec test/announcements/` To install mocha, invoke `npm install -g mocha` or `sudo npm install -g mocha` 
+For running specific tests only, use either of these:
+- `./node_modules/.bin/grunt karma:once`
+- `./node_modules/.bin/grunt mocha_istanbul:test`
+- `./node_modules/.bin/grunt mocha_istanbul:testApp`
+- `./node_modules/.bin/grunt mocha_istanbul:testWithDB`
 
-To run the style check (eslint) and the tests on every file change, use `grunt watch`
+To run the style check (eslint) and the tests on every file change, use `grunt watch`.
 
 We are using WebStorm as IDE [Webstorm](http://www.jetbrains.com/webstorm/)
 ---------------------------------------------------------------------------
