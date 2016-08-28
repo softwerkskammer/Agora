@@ -1,6 +1,8 @@
 Agora
 =====
 
+[![Build Status](https://travis-ci.org/softwerkskammer/Agora.png)](https://travis-ci.org/softwerkskammer/Agora)
+
 This project comprises a web platform for a Community Server.
 
 There is a companion project where the feature backlog lives. Go to the issues in [https://github.com/softwerkskammer/Agora-Backlog/issues](https://github.com/softwerkskammer/Agora-Backlog/issues)
@@ -18,12 +20,6 @@ This is the project to build the new groupware platform for the German Software 
 The site is currently German only.
 
 ---
-
-Current Build Status
---------------------
-
-[![Build Status](https://travis-ci.org/softwerkskammer/Agora.png)](https://travis-ci.org/softwerkskammer/Agora)
-
 
 New and easy local installation via vagrant
 ===========================================
