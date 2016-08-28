@@ -25,8 +25,8 @@ Current Build Status
 [![Build Status](https://travis-ci.org/softwerkskammer/Agora.png)](https://travis-ci.org/softwerkskammer/Agora)
 
 
-New and easy local installation via vagrant
-===========================================
+Local installation via vagrant
+==============================
 Vagrant is an easy way to set up virtual machines inside your OS with everything needed to get our server up and running.
 
 Just follow these steps:
@@ -49,7 +49,7 @@ You are now ready to start the build.
 1. `npm test` - will create a few necessary files and perform a complete test suite. *This must end successfully!*
 
 Prepare log file configuration
-    
+
 1. Open `softwerkskammer/config/example-winston-config.json` or `socrates/config/example-winston-config.json`, depending on which app you want to use
 1. Delete the comment in line 1 (`// to use these values, strip "example-" from the filename, delete this comment and replace the below values
 `), you may keep the content of the file as it is
@@ -67,6 +67,23 @@ Now you can decide which app you want to start:
     * `./build-socrates.sh` in order to build some css, js etc.
     * `node start-socrates`- will start the server
     * Now go to your local machine, open a browser and use `http://localhost:17224`
+
+
+Local installation via Docker Compose
+==============================
+[Docker Compose](https://docs.docker.com/compose/) is an easy way to set up a Docker container with everything needed to get our server up and running.
+
+Just follow these steps:
+1. Install [Docker](https://docs.docker.com/engine/installation/)
+1. Install [Docker Compose](https://docs.docker.com/compose/install/)
+1. Clone, or if you plan to make contributions, fork and clone the repo (forking is a must if you want to contribute)
+
+You are now ready to start the build.
+
+1. Perform `docker-compose build` - (this will build a local Docker image for Agora)
+
+1. `docker-compose run agora node softwerkskammer/initialDBSetup really` - this will create some sample data to start with
+1. `docker-compose run agora npm test` - will create a few necessary files and perform a complete test suite. *This must end successfully!*
 
 
 Classical local installation
@@ -200,9 +217,9 @@ Access for Softwerkskammer and SoCraTes:
   or you can choose one from this list: `http://openid.net/get-an-openid/`
 
 * To access certain admin features, you may want to become superuser. This step will make you superuser of both applications at once.
-  In order to do this, open `mongo swk`, display all member information via `db.memberstore.find().pretty()` and search for your entry. Select the string after `id`, create a copy of `config/example-authentication-config.json`, 
+  In order to do this, open `mongo swk`, display all member information via `db.memberstore.find().pretty()` and search for your entry. Select the string after `id`, create a copy of `config/example-authentication-config.json`,
   name it `authentication-config.json`, and add your id to the `superuser` array.
-  
+
 
 Access for SoCraTes:
 
@@ -217,7 +234,7 @@ You can run the tests in *REPO* with `npm test`
 
 ####Optional
 For running specific tests only, you can use mocha in a command like
-`mocha -R spec test/announcements/` To install mocha, invoke `npm install -g mocha` or `sudo npm install -g mocha` 
+`mocha -R spec test/announcements/` To install mocha, invoke `npm install -g mocha` or `sudo npm install -g mocha`
 
 To run the style check (jshint) and the tests on every file change, use `grunt watch`
 
