@@ -1,0 +1,21 @@
+version: '2'
+services:
+  agora:
+    build: .
+    image: softwerkskammer/agora
+    volumes:
+      - socrates-public:/usr/src/app/socrates/public
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:3.2
+    volumes:
+      - mongo-db:/data/db
+      - mongo-configdb:/data/configdb
+
+volumes:
+  socrates-public:
+  # socrates-build: ?
+  mongo-db:
+  mongo-configdb:
