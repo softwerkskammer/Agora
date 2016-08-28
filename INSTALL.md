@@ -92,7 +92,7 @@ Configuration for Softwerkskammer and SoCraTes:
 * If your installation is fresh, perform the db initialization script:
    * Run `node softwerkskammer/initialDBSetup`
 * If your installation is fresh or you changed anything:
-   * Run `npm test` (this creates the CSS files and other static contents and performs jshint checking)
+   * Run `npm test` (this creates the CSS files and other static contents and performs eslint checking)
 
 Now you can decide which app you want to start:
 

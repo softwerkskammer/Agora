@@ -16,7 +16,7 @@ Run the tests with `npm test` (after you have [set up your local installation](/
 For running specific tests only, you can use mocha in a command like
 `mocha -R spec test/announcements/` To install mocha, invoke `npm install -g mocha` or `sudo npm install -g mocha` 
 
-To run the style check (jshint) and the tests on every file change, use `grunt watch`
+To run the style check (eslint) and the tests on every file change, use `grunt watch`
 
 We are using WebStorm as IDE [Webstorm](http://www.jetbrains.com/webstorm/)
 ---------------------------------------------------------------------------
