@@ -11,3 +11,4 @@ Slack
 -----
 
 There is an Agora slack channel on the [Software Craftsmanship Slack](https://softwarecraftsmanship.slack.com/messages/agora/). Invite yourself via [slack.softwarecraftsmanship.org](http://slack.softwarecraftsmanship.org/).
+

@@ -8,6 +8,12 @@ The site is currently German only.
 
 Want to help out? Check out our [Contribution guidelines](/CONTRIBUTING.md).
 
+Installation
+------------
+
+Please refer to our [installation guidelines](/INSTALL.md) to find out
+how to get Agora running on you local development machine.
+
 Tests
 -----
 
