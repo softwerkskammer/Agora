@@ -14,6 +14,11 @@ Video hangout
 
 Co-ordination via the mailinglist at [http://www.softwerkskammer.org/groups/agora](http://www.softwerkskammer.org/groups/agora)
 
+Slack
+-----
+
+There is an Agora slack channel on the [Software Craftsmanship Slack](https://softwarecraftsmanship.slack.com/messages/agora/). Invite yourself via [slack.softwarecraftsmanship.org](http://slack.softwarecraftsmanship.org/).
+
 What this is about
 ==================
 This is the project to build the new groupware platform for the German Software Craftsmanship Communities. It can be seen in action on [http://softwerkskammer.org](http://softwerkskammer.org)
