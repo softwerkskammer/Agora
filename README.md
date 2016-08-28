@@ -11,7 +11,7 @@ Want to help out? Check out our [Contribution guidelines](/CONTRIBUTING.md).
 Tests
 -----
 
-After can run the tests with `npm test` (after you have [set up your local installation](/INSTALL.md)).
+Run the tests with `npm test` (after you have [set up your local installation](/INSTALL.md)).
 
 For running specific tests only, you can use mocha in a command like
 `mocha -R spec test/announcements/` To install mocha, invoke `npm install -g mocha` or `sudo npm install -g mocha` 
