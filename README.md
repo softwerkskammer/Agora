@@ -21,50 +21,6 @@ The site is currently German only.
 
 ---
 
-New and easy local installation via vagrant
-===========================================
-Vagrant is an easy way to set up virtual machines inside your OS with everything needed to get our server up and running.
-
-Just follow these steps:
-
-1. Download and install Oracle VirtualBox from here: https://www.virtualbox.org
-1. Download and install Vagrant from here: http://www.vagrantup.com
-1. Check your version of Vagrant with `vagrant --version`. 1.8.1 and above are known to work.
-1. Clone, or if you plan to make contributions, fork and clone the repo (forking is a must if you want to contribute)
-1. Open a shell inside the checkout directory
-1. Perform `vagrant up` - (this will download and provision the virtual machine)
-1. Start auto-syncing your workspace with `vagrant rsync-auto &` (so local changes will be available on the vm)
-1. You can then log into the VM via `vagrant ssh`
-1. You will find the sources inside the VM in a directory `/home/vagrant/agora`
-1. So `cd agora`
-
-You are now ready to start the build.
-
-1. `npm install` - this will fetch all dependencies needed
-1. `node softwerkskammer/initialDBSetup` - this will create some sample data to start with
-1. `npm test` - will create a few necessary files and perform a complete test suite. *This must end successfully!*
-
-Prepare log file configuration
-    
-1. Open `softwerkskammer/config/example-winston-config.json` or `socrates/config/example-winston-config.json`, depending on which app you want to use
-1. Delete the comment in line 1 (`// to use these values, strip "example-" from the filename, delete this comment and replace the below values
-`), you may keep the content of the file as it is
-1. Save this file as `winston-config.json`
-
-Now you can decide which app you want to start:
-
-* Start softwerkskammer
-
-    * `node start-softwerkskammer` - will start the server
-    * Now go to your local machine, open a browser and use `http://localhost:17124`
-
-* Start socrates
-
-    * `./build-socrates.sh` in order to build some css, js etc.
-    * `node start-socrates`- will start the server
-    * Now go to your local machine, open a browser and use `http://localhost:17224`
-
-
 Classical local installation
 =============================
 
