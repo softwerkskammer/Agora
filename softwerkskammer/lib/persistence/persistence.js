@@ -50,6 +50,10 @@ module.exports = function (collectionName) {
         var cursor = db.collection(collectionName).find(searchObject, options).sort(sortOrder);
         cursor.count(function (err1, result) {
           if (err1) { return callback(err1); }
+          if (!result) {
+            // If not items found, return empty array
+            return callback(null, []);
+          }
           cursor.batchSize(result);
           cursor.toArray(function (err2, result1) {
             if (err2) { return callback(err2); }
