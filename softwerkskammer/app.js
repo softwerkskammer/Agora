@@ -1,7 +1,5 @@
 'use strict';
 
-require('heapdump');
-
 var express = require('express');
 var http = require('http');
 var path = require('path');
@@ -97,35 +95,6 @@ module.exports = {
   start: function (done) {
     var port = conf.get('port');
     var app = this.create();
-
-    // start memwatch stuff
-    function memwatchstuff() { // function to have scoped vars
-      var memLogger = winston.loggers.get('mem');
-      var memwatch = require('memwatch-next');
-      var lastSize;
-      var heapdiffer;
-
-      memwatch.on('leak', function (info) {
-        memLogger.info('leak: ' + JSON.stringify(info));
-      });
-
-      memwatch.on('stats', function (stats) {
-        if (!heapdiffer) {
-          heapdiffer = new memwatch.HeapDiff();
-          lastSize = stats.current_base;
-        }
-        if (stats.estimated_base > lastSize) {
-          memLogger.info('HEAPDIFF: ' + JSON.stringify(heapdiffer.end()));
-          heapdiffer = new memwatch.HeapDiff();
-          lastSize = stats.current_base;
-        }
-        memLogger.info('stats: ' + JSON.stringify(stats));
-      });
-    }
-    if (conf.get('memlog')) {
-      memwatchstuff();
-    }
-    //end memwatch stuff
 
     this.server = http.createServer(app);
     this.server.listen(port, function () {
