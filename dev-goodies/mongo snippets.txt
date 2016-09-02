@@ -47,6 +47,9 @@ db.activitystore.update({"url" : "neue_aktion", 'resources.Veranstaltung._regist
 -- delete all avatardata in members
 db.memberstore.update({}, {$unset:{'avatardata':''}}, {multi:true})
 
+--add credentials to an existing user
+db.memberstore.update({nickname: "NICK"}, {$push: {authentications: "github:000222111"}})
+
 -- send mongo-db output to file
 $ mongo dbname << EOF > output.json
 db.collection.find().pretty()
