@@ -6,12 +6,12 @@ Agora
 This is the project to build the new groupware platform for the German Software Craftsmanship Communities. It can be seen in action on [http://softwerkskammer.org](http://softwerkskammer.org)
 The site is currently German only.
 
-Want to help out? Check out our [Contribution guidelines](/CONTRIBUTING.md).
+Want to help out? Check out our [Contribution guidelines](CONTRIBUTING.md).
 
 Installation
 ------------
 
-Please refer to our [installation guidelines](/INSTALL.md) to find out
+Please refer to our [installation guidelines](INSTALL.md) to find out
 how to get Agora running on you local development machine.
 
 Tests
@@ -27,9 +27,9 @@ For running specific tests only, use either of these:
 
 To run the style check (eslint) and the tests on every file change, use `grunt watch`.
 
-We are using WebStorm as IDE [Webstorm](http://www.jetbrains.com/webstorm/)
+We are using [JetBrains' WebStorm](http://www.jetbrains.com/webstorm/) as IDE
 ---------------------------------------------------------------------------
 
-![WebStorm Logo](/dev-goodies/webstorm.svg.png)
+![WebStorm Logo](dev-goodies/icon_WebStorm.png)
 
 Feel free to ask us for a community licence if you are contributing.
