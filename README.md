@@ -3,15 +3,15 @@ Agora
 
 [![Build Status](https://travis-ci.org/softwerkskammer/Agora.png)](https://travis-ci.org/softwerkskammer/Agora)
 
-This is the project to build the new groupware platform for the German Software Craftsmanship Communities. It can be seen in action on [http://softwerkskammer.org](http://softwerkskammer.org)
-The site is currently German only.
+This is the project to build the new groupware platform for the German Software Craftsmanship Communities. It can be seen in action on https://softwerkskammer.org
+and https://socrates-conference.de
 
-Want to help out? Check out our [Contribution guidelines](CONTRIBUTING.md).
+Want to help out? Check out our [Contribution Guidelines](CONTRIBUTING.md).
 
 Installation
 ------------
 
-Please refer to our [installation guidelines](INSTALL.md) to find out
+Please refer to our [Installation Guidelines](INSTALL.md) to find out
 how to get Agora running on you local development machine.
 
 Tests
@@ -25,11 +25,10 @@ For running specific tests only, use either of these:
 - `./node_modules/.bin/grunt mocha_istanbul:testApp`
 - `./node_modules/.bin/grunt mocha_istanbul:testWithDB`
 
-To run the style check (eslint) and the tests on every file change, use `grunt watch`.
 
 We are using [JetBrains' WebStorm](http://www.jetbrains.com/webstorm/) as IDE
 ---------------------------------------------------------------------------
 
-![WebStorm Logo](dev-goodies/icon_WebStorm.png)
+[![WebStorm Logo](dev-goodies/icon_WebStorm.png)](http://www.jetbrains.com/webstorm/)
 
 Feel free to ask us for a community licence if you are contributing.
