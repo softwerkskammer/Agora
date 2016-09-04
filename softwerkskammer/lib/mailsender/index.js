@@ -20,12 +20,13 @@ function messageSubmitted(req, res, next) {
     res.redirect(req.body.successURL);
   }
 
+  var activityURL = req.body.successURL.replace('/activities/', '');
   if (req.body.toParticipants) {
     message.removeAllButFirstButton();
-    return mailsenderService.sendMailToParticipantsOf(req.body.successURL.replace('/activities/', ''), message, processResult);
+    return mailsenderService.sendMailToParticipantsOf(activityURL, message, processResult);
   }
   if (req.body.invitedGroups) {
-    return mailsenderService.sendMailToInvitedGroups(req.body.invitedGroups, message, processResult);
+    return mailsenderService.sendMailToInvitedGroups(req.body.invitedGroups, activityURL, message, processResult);
   }
   if (req.body.nickname) {
     return mailsenderService.sendMailToMember(req.body.nickname, message, processResult);
