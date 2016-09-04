@@ -3,8 +3,8 @@ Agora
 
 [![Build Status](https://travis-ci.org/softwerkskammer/Agora.png)](https://travis-ci.org/softwerkskammer/Agora)
 
-This is the project to build the new groupware platform for the German Software Craftsmanship Communities. It can be seen in action on https://softwerkskammer.org
-and https://socrates-conference.de
+This is the project to build the new groupware platform for the German Software Craftsmanship communities. It can be seen in action on https://www.softwerkskammer.org
+and https://www.socrates-conference.de
 
 Want to help out? Check out our [Contribution Guidelines](CONTRIBUTING.md).
 

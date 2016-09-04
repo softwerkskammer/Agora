@@ -5,7 +5,7 @@ Get in touch with us:
 Mailinglist
 -------------
 
-Co-ordination via the mailinglist at https://softwerkskammer.org/groups/agora
+Co-ordination via the mailinglist at https://www.softwerkskammer.org/groups/agora
 
 Slack
 -----

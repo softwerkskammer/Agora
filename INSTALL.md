@@ -14,14 +14,14 @@ Some modules are compiled during the installation. Therefore some additional sof
 
 ### Python & C++
 
-In former versions of this project it was definitely neccessary to have Python and a C++ compiler installed on your local dev machine.
-This was because we indirectly used modules that itself had native code inside that needs to be compiled. For these native 
+In former versions of this project it was neccessary to have Python and a C++ compiler installed on your local dev machine.
+This was because we indirectly used modules that itself were based on native code inside that needed to be compiled. For these native 
 modules nodejs uses `node-gyp`. Please have a look at their github project for further information. 
 https://github.com/nodejs/node-gyp
 
 We have removed all dependencies that required this. Please inform us via a github issue if you run into problems here.
 
-The sympton will be recognizable by errors during an `npm install` that contain failing `node-gyp` jobs.
+The sympton will be recognizable by errors during an `npm install` that contains failing `node-gyp` jobs.
 
 ### Git
 
@@ -101,8 +101,8 @@ Not all features can be accessed without login. Some can only be accessed when y
 
 Access for Softwerkskammer and SoCraTes:
 
-* Log in to the application (Softwerkskammer or SoCraTes or both). Be aware that Google and Github cannot be used out of the box. Therefore, you should use an OpenID provider such as Stack Exchange, XLogon (`https://my.xlogon.net/`)
-  or you can choose one from this list: `http://openid.net/get-an-openid/`
+* Log in to the application (Softwerkskammer or SoCraTes or both). Be aware that Google and Github cannot be used out of the box. Therefore, you should use an OpenID provider such as Stack Exchange, XLogon (https://my.xlogon.net/)
+  or you can choose one from this list: http://openid.net/get-an-openid/
 
 * To access certain admin features, you may want to become superuser. This step will make you superuser of both applications at once.
   In order to do this, open `mongo swk`, display all member information via `db.memberstore.find().pretty()` and search for your entry. Select the string after `id`, create a copy of `config/example-authentication-config.json`, 
@@ -116,6 +116,6 @@ Access for SoCraTes:
 ### Windows Systems
 
 Currently there are issues when running the tests:
-* most tests the verify pathnames will fail because of the "\" used by windwos as a separator
-* furthermore all tests that need imagemagick will fail as there is no binary version for windows available
+* most tests that verify pathnames will fail because of the "\" used by Windows as a separator
+* furthermore all tests that need imagemagick will fail as there is no binary version for Windows available
 
