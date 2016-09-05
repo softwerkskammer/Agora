@@ -65,6 +65,11 @@ module.exports = {
     return conf.get('publicUrlPrefix') + '/' + trimLeadingAndTrailingSlash(prefix) + '/' + trimLeadingAndTrailingSlash(localUrl);
   },
 
+  betweenBraces: string => {
+    var replaced = string.replace(/^.* \(/, '');
+    return replaced === string ? string : replaced.replace(/\)$/, '');
+  },
+
   expressAppIn: function (directory) {
     var app = express();
     app.set('views', path.join(directory, 'views'));

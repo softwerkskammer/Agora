@@ -34,22 +34,25 @@ function activitySubmitted(req, res, next) {
   activitiesService.getActivityWithGroupAndParticipants(req.body.previousUrl, function (err, activity) {
     if (err) { return next(err); }
     if (!activity) { activity = new Activity({owner: req.user.member.id()}); }
-    var trimmedEditors = misc.toArray(req.body.editorIds);
-    var editorIds = _.map(trimmedEditors, function (editor) {
-      var memberRepresentingTheEditor = _.find(activity.participants, function (participant) { return editorNameOf(participant) === editor; });
-      return memberRepresentingTheEditor ? memberRepresentingTheEditor.id() : undefined;
-    });
-    editorIds = _.compact(editorIds);
-    activity.fillFromUI(req.body, editorIds);
-    activitystore.saveActivity(activity, function (err1) {
-      if (err1 && err1.message === CONFLICTING_VERSIONS) {
-        // we try again because of a racing condition during save:
-        statusmessage.errorMessage('message.title.conflict', 'message.content.save_error_retry').putIntoSession(req);
-        return res.redirect('/activities/edit/' + encodeURIComponent(activity.url()));
-      }
-      if (err1) { return next(err1); }
-      statusmessage.successMessage('message.title.save_successful', 'message.content.activities.saved').putIntoSession(req);
-      res.redirect('/activities/' + encodeURIComponent(activity.url()));
+    var editorNames = misc.toArray(req.body.editorIds);
+    // editor can be either a name in the format editorNameOf() - for participants - or just a nickname - for manually entered
+    var nicknames = _.map(editorNames, misc.betweenBraces);
+    async.map(nicknames, memberstore.getMember, function(err1, members) {
+      var membersForEditors = _.compact(members);
+      var editorIds = _.map(membersForEditors, editor => {
+        return editor.id();
+      });
+      activity.fillFromUI(req.body, editorIds);
+      activitystore.saveActivity(activity, function (err2) {
+        if (err2 && err2.message === CONFLICTING_VERSIONS) {
+          // we try again because of a racing condition during save:
+          statusmessage.errorMessage('message.title.conflict', 'message.content.save_error_retry').putIntoSession(req);
+          return res.redirect('/activities/edit/' + encodeURIComponent(activity.url()));
+        }
+        if (err2) { return next(err2); }
+        statusmessage.successMessage('message.title.save_successful', 'message.content.activities.saved').putIntoSession(req);
+        res.redirect('/activities/' + encodeURIComponent(activity.url()));
+      });
     });
   });
 }
@@ -173,7 +176,7 @@ function renderActivityCombinedWithGroups(res, next, activity) {
         activity: activity,
         groups: groups,
         editorNames: editorNames,
-        participantNames: participantNames
+        participantNames: _.union(editorNames, participantNames)
       });
     });
   };
