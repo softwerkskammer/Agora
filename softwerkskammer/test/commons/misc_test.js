@@ -243,3 +243,37 @@ describe('represents image', function () {
     expect(misc.representsImage('.doc')).to.be.false();
   });
 });
+
+describe('betweenBraces', function () {
+  it('extracts the string between braces in simple cases', function () {
+    expect(misc.betweenBraces('some text (lolo)')).to.be('lolo');
+  });
+
+  it('extracts the string between braces if text before has opening brace', function () {
+    expect(misc.betweenBraces('some t(ext (lolo)')).to.be('lolo');
+  });
+
+  it('extracts the string between braces if text before has closing brace', function () {
+    expect(misc.betweenBraces('some tex)t (lolo)')).to.be('lolo');
+  });
+
+  it('extracts the string between braces if text inside braces has opening brace', function () {
+    expect(misc.betweenBraces('some text (l(olo)')).to.be('l(olo');
+  });
+
+  it('extracts the string between braces if inside braces has closing brace', function () {
+    expect(misc.betweenBraces('some text (lo)lo)')).to.be('lo)lo');
+  });
+
+  it('returns the string if there are no braces', function () {
+    expect(misc.betweenBraces('nicknameonly')).to.be('nicknameonly');
+  });
+
+  it('returns the string if there is an opening brace without blank', function () {
+    expect(misc.betweenBraces('nickname(only')).to.be('nickname(only');
+  });
+
+  it('returns the string if there is an opening brace without blank even if it ends with closing brace', function () {
+    expect(misc.betweenBraces('nickname(only)')).to.be('nickname(only)');
+  });
+});

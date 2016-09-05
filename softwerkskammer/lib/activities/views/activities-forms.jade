@@ -35,7 +35,7 @@ mixin activityform(activity, groups, editorNames, participantNames)
                   #dates.col-xs-6(style='padding-left:3px;padding-right:0px')
                     +time('endTime', activity.endMoment().locale(language).format('LT'))
               +textarea('description', t('general.description'), activity.description())
-              +multiselect('editorIds', t('activities.editors'), editorNames, participantNames)
+              +editableMultiselect('editorIds', t('activities.editors'), editorNames, participantNames)
             .col-md-6
               .form-group
                 +controlLabel('url', t('activities.address_suffix'), t('activities.tooltip.address_suffix'))
