@@ -49,6 +49,10 @@ Message.prototype.setMarkdown = function (markdown) {
   this.markdown = markdown || '';
 };
 
+Message.prototype.setIcal = function (ical) {
+  this.icalEvent = ical;
+};
+
 Message.prototype.addToButtons = function (buttonOrButtons) {
   this.buttons = this.buttons.concat(misc.toArray(buttonOrButtons));
 };
@@ -84,7 +88,8 @@ Message.prototype.toTransportObject = function (senderAddress) {
     bcc: this.bcc,
     subject: this.subject,
     text: jade.renderFile(filenameTextonly, renderingOptions),
-    html: jade.renderFile(filename, renderingOptions)
+    html: jade.renderFile(filename, renderingOptions),
+    icalEvent: this.icalEvent
   };
 };
 

@@ -10,7 +10,9 @@ var groupsService = beans.get('groupsService');
 var groupsAndMembersService = beans.get('groupsAndMembersService');
 var activitiesService = beans.get('activitiesService');
 var membersService = beans.get('membersService');
+var icalService = beans.get('icalService');
 var memberstore = beans.get('memberstore');
+var activitystore = beans.get('activitystore');
 var Message = beans.get('message');
 var Group = beans.get('group');
 var misc = beans.get('misc');
@@ -71,9 +73,9 @@ module.exports = {
         message.setSubject('Einladung: ' + activity.title());
         message.setMarkdown(activityMarkdown(activity, language));
         message.addToButtons({
-          text: 'Zur Aktivität',
-          url: misc.toFullQualifiedUrl('activities', encodeURIComponent(activity.url()))
-        });
+                               text: 'Zur Aktivität',
+                               url: misc.toFullQualifiedUrl('activities', encodeURIComponent(activity.url()))
+                             });
         var result = {
           message: message,
           regionalgroups: regionalGroups,
@@ -101,11 +103,12 @@ module.exports = {
     return activitiesService.getActivityWithGroupAndParticipants(activityURL, function (err, activity) {
       if (err) { return callback(err, statusmessageForError(type, err)); }
       message.setBccToMemberAddresses(activity.participants);
+      message.setIcal(icalService.activityAsICal(activity).toString());
       sendMail(message, type, callback);
     });
   },
 
-  sendMailToInvitedGroups: function (invitedGroups, message, callback) {
+  sendMailToInvitedGroups: function (invitedGroups, activityURL, message, callback) {
     var type = '$t(mailsender.invitation)';
     return groupsService.getGroups(invitedGroups, function (err, groups) {
       if (err) { return callback(err, statusmessageForError(type, err)); }
@@ -113,7 +116,12 @@ module.exports = {
       async.map(groups, groupsAndMembersService.addMembersToGroup, function (err1, groups1) {
         if (err1) { return callback(err1, statusmessageForError(type, err1)); }
         message.setBccToGroupMemberAddresses(groups1);
-        sendMail(message, type, callback);
+        activitystore.getActivity(activityURL, function (err2, activity) {
+          if (activity) {
+            message.setIcal(icalService.activityAsICal(activity).toString());
+          }
+          sendMail(message, type, callback);
+        });
       });
     });
   },

@@ -8,6 +8,7 @@ var memberstore = beans.get('memberstore');
 var groupsService = beans.get('groupsService');
 var groupsAndMembersService = beans.get('groupsAndMembersService');
 var activitiesService = beans.get('activitiesService');
+var activitystore = beans.get('activitystore');
 
 var mailsenderService = beans.get('mailsenderService');
 var Activity = beans.get('activity');
@@ -20,7 +21,7 @@ var mailtransport = beans.get('mailtransport');
 var emptyActivity;
 
 var sender = new Member();
-var message = new Message({subject: 'subject', markdown: 'mark down'}, sender);
+var message;
 var sendmail;
 
 describe('MailsenderService', function () {
@@ -29,8 +30,16 @@ describe('MailsenderService', function () {
 
   beforeEach(function () {
     var availableGroups = [];
-    emptyActivity = new Activity({title: 'Title of the Activity', description: 'description1', assignedGroup: 'assignedGroup',
-      location: 'location1', direction: 'direction1', startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'), url: 'urlOfTheActivity' });
+    message = new Message({subject: 'subject', markdown: 'mark down'}, sender);
+    emptyActivity = new Activity({
+      title: 'Title of the Activity',
+      description: 'description1',
+      assignedGroup: 'assignedGroup',
+      location: 'location1',
+      direction: 'direction1',
+      startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'),
+      url: 'urlOfTheActivity'
+    });
     sinon.stub(groupsService, 'getAllAvailableGroups', function (callback) { callback(null, availableGroups); });
     sinon.stub(activitiesService, 'getActivityWithGroupAndParticipants', function (actURL, callback) {
       if (actURL === null) { return callback(new Error()); }
@@ -40,6 +49,10 @@ describe('MailsenderService', function () {
       if (nick === null) { return callback(null); }
       if (nick === 'broken') { return callback(new Error()); }
       callback(null, new Member({email: 'email@mail.de'}));
+    });
+    sinon.stub(activitystore, 'getActivity', function (url, callback) {
+      if (url === 'activityUrlForMock') { return callback(null, emptyActivity); }
+      callback(new Error());
     });
     sendmail = sinon.stub(mailtransport, 'sendMail', function (transportobject, callback) {
       if (!transportobject.to && (!transportobject.bcc || transportobject.bcc.length === 0)) {
@@ -97,13 +110,13 @@ describe('MailsenderService', function () {
   describe('activity markdown', function () {
     it('with direction', function () {
       var activity = new Activity().fillFromUI({
-        url: 'url',
-        description: 'description',
-        location: 'location',
-        direction: 'direction',
-        startDate: '4.5.2013',
-        startTime: '12:21'
-      });
+                                                 url: 'url',
+                                                 description: 'description',
+                                                 location: 'location',
+                                                 direction: 'direction',
+                                                 startDate: '4.5.2013',
+                                                 startTime: '12:21'
+                                               });
       var markdown = mailsenderService.activityMarkdown(activity);
       expect(markdown).to.contain('description');
       expect(markdown).to.contain('4. Mai 2013');
@@ -136,6 +149,8 @@ describe('MailsenderService', function () {
         var transportobject = sendmail.args[0][0];
         expect(transportobject.bcc).to.contain(emailAddress);
         expect(transportobject.html).to.contain('mark down');
+        expect(transportobject.icalEvent).to.contain('BEGIN:VCALENDAR');
+        expect(transportobject.icalEvent).to.contain('URL:http://localhost:17125/activities/urlOfTheActivity');
         expect(statusmessage.contents().type).to.equal('alert-success');
         done(err);
       });
@@ -246,19 +261,41 @@ describe('MailsenderService', function () {
         group.membercount = 1;
         callback(null, group);
       });
-      mailsenderService.sendMailToInvitedGroups(['GroupA', 'GroupB'], message, function (err, statusmessage) {
+      mailsenderService.sendMailToInvitedGroups(['GroupA', 'GroupB'], 'activityUrlForMock', message, function (err, statusmessage) {
         expect(sendmail.calledOnce).to.be(true);
         var transportobject = sendmail.args[0][0];
         expect(transportobject.bcc).to.contain('memberA');
         expect(transportobject.bcc).to.contain('memberB');
         expect(transportobject.html).to.contain('mark down');
+        expect(transportobject.icalEvent).to.contain('BEGIN:VCALENDAR');
+        expect(transportobject.icalEvent).to.contain('URL:http://localhost:17125/activities/urlOfTheActivity');
+        expect(statusmessage.contents().type).to.equal('alert-success');
+        done(err);
+      });
+    });
+
+    it('ignores errors finding the activity when sending to members of selected groups', function (done) {
+      sinon.stub(groupsAndMembersService, 'addMembersToGroup', function (group, callback) {
+        if (group === null) { return callback(null); }
+        if (group === groupA) { group.members = [new Member({email: 'memberA'})]; }
+        if (group === groupB) { group.members = [new Member({email: 'memberB'})]; }
+        group.membercount = 1;
+        callback(null, group);
+      });
+      mailsenderService.sendMailToInvitedGroups(['GroupA', 'GroupB'], 'errorProvokingUrl', message, function (err, statusmessage) {
+        expect(sendmail.calledOnce).to.be(true);
+        var transportobject = sendmail.args[0][0];
+        expect(transportobject.bcc).to.contain('memberA');
+        expect(transportobject.bcc).to.contain('memberB');
+        expect(transportobject.html).to.contain('mark down');
+        expect(transportobject.icalEvent).to.be(undefined);
         expect(statusmessage.contents().type).to.equal('alert-success');
         done(err);
       });
     });
 
     it('does not send to members if no groups selected', function (done) {
-      mailsenderService.sendMailToInvitedGroups([], message, function (err, statusmessage) {
+      mailsenderService.sendMailToInvitedGroups([], 'activityUrlForMock', message, function (err, statusmessage) {
         expect(sendmail.calledOnce).to.not.be(true);
         expect(err).not.to.exist();
         expect(statusmessage.contents().type).to.equal('alert-danger');
@@ -267,7 +304,7 @@ describe('MailsenderService', function () {
     });
 
     it('does not send to members if finding groups causes error', function (done) {
-      mailsenderService.sendMailToInvitedGroups(null, message, function (err, statusmessage) {
+      mailsenderService.sendMailToInvitedGroups(null, 'activityUrlForMock', message, function (err, statusmessage) {
         expect(sendmail.calledOnce).to.not.be(true);
         expect(err).to.exist();
         expect(statusmessage.contents().type).to.equal('alert-danger');
@@ -280,7 +317,7 @@ describe('MailsenderService', function () {
         callback(new Error());
       });
 
-      mailsenderService.sendMailToInvitedGroups(['GroupA', 'GroupB'], message, function (err, statusmessage) {
+      mailsenderService.sendMailToInvitedGroups(['GroupA', 'GroupB'], 'activityUrlForMock', message, function (err, statusmessage) {
         expect(sendmail.calledOnce).to.not.be(true);
         expect(err).to.exist();
         expect(statusmessage.contents().type).to.equal('alert-danger');
