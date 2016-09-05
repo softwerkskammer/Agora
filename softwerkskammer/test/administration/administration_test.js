@@ -18,9 +18,6 @@ var Group = beans.get('group');
 var activitiesService = beans.get('activitiesService');
 var Activity = beans.get('activity');
 
-var announcementstore = beans.get('announcementstore');
-var Announcement = beans.get('announcement');
-
 var fieldHelpers = beans.get('fieldHelpers');
 var createApp = require('../../testutil/testHelper')('administrationApp').createApp;
 
@@ -30,15 +27,6 @@ describe('Administration application', function () {
   var emptyActivity = new Activity({title: 'Title of the Activity', description: 'description1', assignedGroup: 'groupname',
     location: 'location1', direction: 'direction1', startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'),
     url: 'urlOfTheActivity', owner: 'owner' });
-
-  var dummyAnnouncement = new Announcement({
-    title: 'title',
-    url: 'url',
-    message: 'text',
-    author: 'author',
-    fromUnix: 1375056000, // 29.07.2013
-    thruUnix: 1388448000 // 31.12.2013
-  });
 
   beforeEach(function () {
     sinon.stub(groupsService, 'getAllAvailableGroups', function (callback) {
@@ -102,16 +90,4 @@ describe('Administration application', function () {
       .expect(/Title of the Activity/)
       .expect(/01\.01\.2013/, done);
   });
-
-  it('shows the table for announcements', function (done) {
-    sinon.stub(announcementstore, 'allAnnouncements', function (callback) {
-      return callback(null, [ dummyAnnouncement ]);
-    });
-    appWithSuperuser
-      .get('/announcementTable')
-      .expect(200)
-      .expect(/<h2>Verwaltung<small> Nachrichten/)
-      .expect(/29\.07\.2013/, done);
-  });
-
 });

@@ -63,7 +63,6 @@ module.exports = {
     app.use(beans.get('expressViewHelper'));
     app.use(beans.get('initI18N'));
     app.use(beans.get('redirectRuleForNewUser'));
-    app.use(beans.get('announcementsInSidebar'));
     app.use(beans.get('wikiSubdirs'));
     app.use(beans.get('detectBrowser'));
     app.use(beans.get('secureAgainstClickjacking'));
@@ -76,7 +75,6 @@ module.exports = {
     useApp(app, 'activityresults', beans.get('activityresultsApp'));
     useApp(app, 'members', beans.get('membersApp'));
     useApp(app, 'groups', beans.get('groupsApp'));
-    useApp(app, 'announcements', beans.get('announcementsApp'));
     useApp(app, 'mailsender', beans.get('mailsenderApp'));
     useApp(app, 'auth', beans.get('authenticationApp'));
     useApp(app, 'mailarchive', beans.get('mailarchiveApp'));

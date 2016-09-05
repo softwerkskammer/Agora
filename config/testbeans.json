@@ -3,7 +3,6 @@
   "membersPersistence": {"module": "./softwerkskammer/test/persistence/testpersistence"},
   "activitiesPersistence": {"module": "./softwerkskammer/test/persistence/testpersistence"},
   "activityresultsPersistence": {"module": "./softwerkskammer/test/persistence/testpersistence"},
-  "announcementsPersistence": {"module": "./softwerkskammer/test/persistence/testpersistence"},
   "mailsPersistence": {"module": "./softwerkskammer/test/persistence/testpersistence"},
   "mailinglistPersistence": {"module": "./softwerkskammer/test/persistence/testpersistence"}
 }

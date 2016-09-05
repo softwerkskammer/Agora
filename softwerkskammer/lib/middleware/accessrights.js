@@ -39,14 +39,6 @@ module.exports = function accessrights(req, res, next) {
       return this.isSuperuser() || (activity.owner() === this.memberId() && activity.startMoment().isAfter(moment()));
     },
 
-    canCreateAnnouncement: function () {
-      return this.isRegistered();
-    },
-
-    canEditAnnouncement: function (announcement) {
-      return this.isSuperuser() || announcement.author === this.memberId();
-    },
-
     canCreateGroup: function () {
       return this.isRegistered();
     },

@@ -24,36 +24,6 @@ describe('Validation', function () {
     });
   });
 
-  describe('isValidAnnouncement', function () {
-    var result = function (object) {
-      return validation.isValidAnnouncement(object);
-    };
-
-    it('performs many checks simultaneously', function () {
-      expect(result({}).length).to.equal(3);
-    });
-
-    it('checks that title is set', function () {
-      expect(result({})).to.contain('Titel ist ein Pflichtfeld.');
-      expect(result({title: null})).to.contain('Titel ist ein Pflichtfeld.');
-      expect(result({title: 'n'})).to.not.contain('Titel ist ein Pflichtfeld.');
-    });
-
-    it('checks that thruDate is set', function () {
-      expect(result({})).to.contain('"Anzeigen bis einschliesslich" ist ein Pflichtfeld.');
-      expect(result({thruDate: null})).to.contain('"Anzeigen bis einschliesslich" ist ein Pflichtfeld.');
-      expect(result({thruDate: 'n'})).to.not.contain('"Anzeigen bis einschliesslich" ist ein Pflichtfeld.');
-    });
-
-    it('checks that url is set', function () {
-      expect(result({})).to.contain('URL ist ein Pflichtfeld.');
-      expect(result({url: null})).to.contain('URL ist ein Pflichtfeld.');
-      expect(result({url: 'n'})).to.not.contain('URL ist ein Pflichtfeld.');
-      expect(result({url: '/'})).to.contain('URL darf kein "/" enthalten.');
-    });
-
-  });
-
   describe('isValidForActivity', function () {
     it('performs many checks simultaneously', function () {
       var result = validation.isValidForActivity({});

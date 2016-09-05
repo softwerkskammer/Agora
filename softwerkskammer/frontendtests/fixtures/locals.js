@@ -33,10 +33,6 @@ module.exports = {
     addonConfig: function () {return addonConfig; }
   },
   groups: [],
-  announcement: {
-    id: '',
-    thruMoment: function () { return moment(); }
-  },
   group: {
   },
   allTypes: ['Themengruppe', 'Regionalgruppe'],

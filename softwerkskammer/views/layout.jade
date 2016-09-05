@@ -17,12 +17,3 @@ block specific
           br
           small.
             #{t('general.events_in_europe_desc')}
-
-    if (latestNews)
-      h2 #{t('announcements.latest_news')}&nbsp;
-        if (!!displayMoreNews)
-          small: a(href='/announcements/') #{t('general.more')}…
-      dl
-        for announcement in latestNews
-          dt #{announcement.fromMoment().locale(language).format('LL')}
-          dd: a(href='/announcements/#{encodeURIComponent(announcement.url)}') #{announcement.title}
