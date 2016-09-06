@@ -1,15 +1,13 @@
-'use strict';
-
-var _ = require('lodash');
-var beans = require('simple-configure').get('beans');
-var misc = beans.get('misc');
-var fieldHelpers = beans.get('fieldHelpers');
+const _ = require('lodash');
+const beans = require('simple-configure').get('beans');
+const misc = beans.get('misc');
+const fieldHelpers = beans.get('fieldHelpers');
 
 // DO NOT FORGET TO KEEP THIS FILE IN SYNC WITH /public/clientscripts/check-memberform.js
 // AND /public/clientscripts/check-groupform.js
 // AND /public/clientscripts/check-activityform.js
 
-var Validator = require('./internal/validationHelper');
+const Validator = require('./internal/validationHelper');
 
 function checkCommonMemberFields(validator, memberInput) {
   validator.check(memberInput.nickname, 'validation.nickname_required').notEmpty();
@@ -22,9 +20,9 @@ function checkCommonMemberFields(validator, memberInput) {
 }
 
 module.exports = {
-  checkValidity: function (oldValue, newValue, checkFunction, errorMessage, callback) {
+  checkValidity: function checkValidity(oldValue, newValue, checkFunction, errorMessage, callback) {
     if (newValue !== oldValue) {
-      return checkFunction(newValue, function (err, check) {
+      return checkFunction(newValue, (err, check) => {
         if (err || !check) {
           return callback(null, errorMessage);
         }
@@ -34,8 +32,8 @@ module.exports = {
     return callback(null);
   },
 
-  isValidForMember: function (memberInput) {
-    var validator = new Validator();
+  isValidForMember: function isValidForMember(memberInput) {
+    const validator = new Validator();
     checkCommonMemberFields(validator, memberInput);
     validator.check(memberInput.location, 'validation.city_required').notEmpty();
     validator.check(memberInput.reference, 'validation.reference_required').notEmpty();
@@ -43,15 +41,15 @@ module.exports = {
     return validator.getErrors();
   },
 
-  isValidForSoCraTesMember: function (memberInput) {
-    var validator = new Validator();
+  isValidForSoCraTesMember: function isValidForSoCraTesMember(memberInput) {
+    const validator = new Validator();
     checkCommonMemberFields(validator, memberInput);
     validator.check(memberInput.country, 'validation.country_valid').notEmpty();
     return validator.getErrors();
   },
 
-  isValidGroup: function (group) {
-    var validator = new Validator();
+  isValidGroup: function isValidGroup(group) {
+    const validator = new Validator();
     validator.check(group.id, 'Name ist ein Pflichtfeld.').notEmpty();
     validator.check(group.id, 'Name muss mindestens 2 und höchstens 20 Zeichen enthalten.').len(2, 20);
     validator.check(group.id, 'Name darf nur Buchstaben, Zahlen, Bindestrich und Unterstrich enthalten.').regex(/^[\w\-]+$/i);
@@ -65,10 +63,10 @@ module.exports = {
     return validator.getErrors();
   },
 
-  isValidForActivity: function (activityInput) {
-    var validator = new Validator();
-    var nonEmptyResourceNames = activityInput.resources ? _.compact(misc.toArray(activityInput.resources.names)) : [];
-    var nonEmptyResourceLimits = activityInput.resources ? _.compact(misc.toArray(activityInput.resources.limits)) : [];
+  isValidForActivity: function isValidForActivity(activityInput) {
+    const validator = new Validator();
+    const nonEmptyResourceNames = activityInput.resources ? _.compact(misc.toArray(activityInput.resources.names)) : [];
+    const nonEmptyResourceLimits = activityInput.resources ? _.compact(misc.toArray(activityInput.resources.limits)) : [];
 
     validator.check(activityInput.url, 'URL ist ein Pflichtfeld.').notEmpty();
     validator.check(activityInput.url, 'URL darf kein "/" enthalten.').noSlash();
@@ -79,7 +77,7 @@ module.exports = {
     validator.check(activityInput.endDate, 'Endedatum ist ein Pflichtfeld.').notEmpty();
     validator.check(activityInput.endTime, 'Enduhrzeit ist ein Pflichtfeld.').notEmpty();
     validator.check(activityInput.assignedGroup, 'Gruppe ist ein Pflichtfeld.').notEmpty();
-    _.each(nonEmptyResourceLimits, function (limit) { validator.check(limit, 'Die Ressourcenbeschränkungen dürfen nur aus Ziffern bestehen.').isInt(); });
+    _.each(nonEmptyResourceLimits, limit => validator.check(limit, 'Die Ressourcenbeschränkungen dürfen nur aus Ziffern bestehen.').isInt());
 
     if (nonEmptyResourceNames.length === 0) {
       validator.error('Es muss mindestens eine Ressourcenbezeichnung angegeben werden.');
@@ -88,8 +86,8 @@ module.exports = {
       validator.error('Die Bezeichnungen der Ressourcen müssen eindeutig sein.');
     }
 
-    var startUnix = fieldHelpers.parseToUnixUsingDefaultTimezone(activityInput.startDate, activityInput.startTime);
-    var endUnix = fieldHelpers.parseToUnixUsingDefaultTimezone(activityInput.endDate, activityInput.endTime);
+    const startUnix = fieldHelpers.parseToUnixUsingDefaultTimezone(activityInput.startDate, activityInput.startTime);
+    const endUnix = fieldHelpers.parseToUnixUsingDefaultTimezone(activityInput.endDate, activityInput.endTime);
 
     if (startUnix >= endUnix) {
       validator.error('Start muss vor Ende liegen.');
@@ -98,8 +96,8 @@ module.exports = {
     return validator.getErrors();
   },
 
-  isValidMessage: function (message) {
-    var validator = new Validator();
+  isValidMessage: function isValidMessage(message) {
+    const validator = new Validator();
     validator.check(message.subject, 'Subject ist ein Pflichtfeld.').notEmpty();
     validator.check(message.markdown, 'HTML-Text ist ein Pflichtfeld.').notEmpty();
     return validator.getErrors();
