@@ -8,7 +8,6 @@ var fieldHelpers = beans.get('fieldHelpers');
 // DO NOT FORGET TO KEEP THIS FILE IN SYNC WITH /public/clientscripts/check-memberform.js
 // AND /public/clientscripts/check-groupform.js
 // AND /public/clientscripts/check-activityform.js
-// AND /public/clientscripts/check-announcementform.js
 
 var Validator = require('./internal/validationHelper');
 
@@ -96,15 +95,6 @@ module.exports = {
       validator.error('Start muss vor Ende liegen.');
     }
 
-    return validator.getErrors();
-  },
-
-  isValidAnnouncement: function (announcement) {
-    var validator = new Validator();
-    validator.check(announcement.title, 'Titel ist ein Pflichtfeld.').notEmpty();
-    validator.check(announcement.url, 'URL ist ein Pflichtfeld.').notEmpty();
-    validator.check(announcement.url, 'URL darf kein "/" enthalten.').noSlash();
-    validator.check(announcement.thruDate, '"Anzeigen bis einschliesslich" ist ein Pflichtfeld.').notEmpty();
     return validator.getErrors();
   },
 

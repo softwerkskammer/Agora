@@ -73,11 +73,6 @@ describe('SecuredByLoginURLRedirect Rule (*/new)', function () {
     expect(securedByLoginURLRegex.test(url)).to.be(true);
   });
 
-  it('secures URLs with announcements/new', function () {
-    var url = 'http://host/announcements/new';
-    expect(securedByLoginURLRegex.test(url)).to.be(true);
-  });
-
   it('secures URLs with groups/new', function () {
     var url = 'http://host/groups/new';
     expect(securedByLoginURLRegex.test(url)).to.be(true);
@@ -104,11 +99,6 @@ describe('SecuredByLoginURLRedirect Rule (*/edit)', function () {
 
   it('secures URLs with activities/edit', function () {
     var url = 'http://host/activities/edit';
-    expect(securedByLoginURLRegex.test(url)).to.be(true);
-  });
-
-  it('secures URLs with announcements/edit', function () {
-    var url = 'http://host/announcements/edit';
     expect(securedByLoginURLRegex.test(url)).to.be(true);
   });
 

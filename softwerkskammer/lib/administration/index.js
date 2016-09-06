@@ -10,7 +10,6 @@ var groupsService = beans.get('groupsService');
 var groupsAndMembersService = beans.get('groupsAndMembersService');
 var activitystore = beans.get('activitystore');
 var activitiesService = beans.get('activitiesService');
-var announcementstore = beans.get('announcementstore');
 var misc = beans.get('misc');
 var Group = beans.get('group');
 
@@ -50,13 +49,6 @@ app.get('/activityTable', function (req, res, next) {
   return activitiesService.getActivitiesForDisplay(activitystore.allActivities, function (err, activities) {
     if (err) { return next(err); }
     res.render('activityTable', { activities: activities});
-  });
-});
-
-app.get('/announcementTable', function (req, res, next) {
-  announcementstore.allAnnouncements(function (err, announcements) {
-    if (err) { return next(err); }
-    res.render('announcementTable', { announcements: announcements });
   });
 });
 

@@ -2,7 +2,6 @@
   "activitiesApp": {"module": "./softwerkskammer/lib/activities"},
   "activityresultsApp" : {"module": "./softwerkskammer/lib/activityresults"},
   "administrationApp": {"module": "./softwerkskammer/lib/administration"},
-  "announcementsApp": {"module": "./softwerkskammer/lib/announcements"},
   "authenticationApp": {"module": "./softwerkskammer/lib/authentication"},
   "dashboardApp": {"module": "./softwerkskammer/lib/dashboard"},
   "groupsApp": {"module": "./softwerkskammer/lib/groups"},
@@ -17,7 +16,6 @@
 
   "activitiesService": {"module": "./softwerkskammer/lib/activities/activitiesService"},
   "activityresultsService": {"module": "./softwerkskammer/lib/activityresults/activityresultsService"},
-  "announcementsService": {"module": "./softwerkskammer/lib/announcements/announcementsService"},
   "authenticationService": {"module": "./softwerkskammer/lib/authentication/authenticationService"},
   "calendarService": {"module": "./softwerkskammer/lib/activities/calendarService"},
   "dashboardService": {"module": "./softwerkskammer/lib/dashboard/dashboardService"},
@@ -35,7 +33,6 @@
   "avatarProvider": {"module": "./softwerkskammer/lib/commons/avatarProvider"},
 
   "activitystore": {"module": "./softwerkskammer/lib/activities/activitystore"},
-  "announcementstore": {"module": "./softwerkskammer/lib/announcements/announcementstore"},
   "groupstore": {"module": "./softwerkskammer/lib/groups/groupstore"},
   "memberstore": {"module": "./softwerkskammer/lib/members/memberstore"},
 
@@ -49,10 +46,6 @@
   "activityresultsPersistence": {
     "module": "./softwerkskammer/lib/persistence/persistence",
     "constructorArgs": { "collectionName": "activityresultstore" }
-  },
-  "announcementsPersistence": {
-    "module": "./softwerkskammer/lib/persistence/persistence",
-    "constructorArgs": { "collectionName": "announcementstore" }
   },
   "groupsPersistence": {
     "module": "./softwerkskammer/lib/persistence/persistence",
@@ -82,7 +75,6 @@
   "activity": {"module": "./softwerkskammer/lib/activities/activity"},
   "socratesActivity": {"module": "./softwerkskammer/lib/activities/socratesActivity"},
   "activityresult": {"module": "./softwerkskammer/lib/activityresults/activityresult"},
-  "announcement": {"module": "./softwerkskammer/lib/announcements/announcement"},
   "archivedMail": {"module": "./softwerkskammer/lib/mailarchive/archivedMail"},
   "gitDiff": {"module": "./softwerkskammer/lib/wiki/gitDiff"},
   "group": {"module": "./softwerkskammer/lib/groups/group"},
@@ -106,7 +98,6 @@
   
   "accessrights": {"module": "./softwerkskammer/lib/middleware/accessrights"},
   "addCsrfTokenToLocals": {"module": "./softwerkskammer/lib/middleware/addCsrfTokenToLocals"},
-  "announcementsInSidebar": {"module": "./softwerkskammer/lib/middleware/announcementsInSidebar"},
   "detectBrowser": {"module": "./softwerkskammer/lib/middleware/detectBrowser"},
   "expressSessionConfigurator": {"module": "./softwerkskammer/lib/middleware/expressSessionConfigurator"},
   "expressViewHelper": {"module": "./softwerkskammer/lib/middleware/expressViewHelper"},

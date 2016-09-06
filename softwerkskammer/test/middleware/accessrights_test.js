@@ -5,7 +5,6 @@ var moment = require('moment-timezone');
 var beans = require('../../testutil/configureForTest').get('beans');
 var accessrights = beans.get('accessrights');
 var Activity = beans.get('activity');
-var Announcement = beans.get('announcement');
 var Member = beans.get('member');
 var Group = beans.get('group');
 var expect = require('must-dist');
@@ -93,28 +92,6 @@ describe('Accessrights for Activities', function () {
 
     expect(standardMember({id: 'id'}).canDeleteActivity(activity)).to.be(false);
     expect(guest().canDeleteActivity(activity)).to.be(false);
-  });
-});
-
-describe('Accessrights for Announcements', function () {
-  it('disallows the creation for members', function () {
-    expect(standardMember().canCreateAnnouncement()).to.be(true);
-  });
-
-  it('allows the creation for superusers', function () {
-    expect(superuser().canCreateAnnouncement()).to.be(true);
-  });
-
-  it('disallows editing for members', function () {
-    expect(standardMember().canEditAnnouncement(new Announcement({url: 'url', author: 'author'}))).to.be(false);
-  });
-
-  it('allows editing for authors', function () {
-    expect(standardMember({id: 'authorX'}).canEditAnnouncement(new Announcement({url: 'url', author: 'authorX'}))).to.be(true);
-  });
-
-  it('allows editing for superusers', function () {
-    expect(superuser().canEditAnnouncement()).to.be(true);
   });
 });
 

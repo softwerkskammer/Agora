@@ -101,17 +101,6 @@
     "record_image": "Record",
     "submit": "Submit"
   },
-  "announcements": {
-    "announcement": "Announcement",
-    "announcements": "Announcements",
-    "automatic": "automatic",
-    "create": "Create announcement",
-    "edit": "Edit announcement",
-    "latest_news": "Latest News",
-    "new": "New Announcement",
-    "show_until": "Show until (and including)",
-    "text": "Announcement text"
-  },
   "authentication": {
     "alternative_url": "(optional) Enter the URL of an alternative OpenID provider",
     "authenticate": "Authenticate",
@@ -371,9 +360,6 @@
       },
       "addon": {
         "saved": "Your additional information has been saved."
-      },
-      "announcements": {
-        "saved": "Your announcement has been saved."
       },
       "colors": {
         "saved": "Your colors have been saved.",

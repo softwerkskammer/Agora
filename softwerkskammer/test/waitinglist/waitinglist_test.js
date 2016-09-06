@@ -26,7 +26,7 @@ describe('Waitinglist application', function () {
     sinon.restore();
   });
 
-  it('shows the list of announcements as retrieved from the store', function (done) {
+  it('shows the waitinglist as retrieved from the store', function (done) {
     request(app)
       .get('/activity')
       .expect(200)

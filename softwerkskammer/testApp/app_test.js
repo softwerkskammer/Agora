@@ -6,7 +6,6 @@ var conf = require('../testutil/configureForTest');
 var beans = conf.get('beans');
 var groupsService = beans.get('groupsService');
 var groupstore = beans.get('groupstore');
-var announcementstore = beans.get('announcementstore');
 
 var baseUri = 'http://localhost:' + parseInt(conf.get('port'), 10);
 
@@ -16,7 +15,6 @@ describe('SWK Plattform server', function () {
   beforeEach(function (done) {
     sinon.stub(groupstore, 'allGroups', function (callback) {return callback(null, []); });
     sinon.stub(groupsService, 'getAllAvailableGroups', function (callback) {return callback(null, []); });
-    sinon.stub(announcementstore, 'allAnnouncementsUntilToday', function (callback) {return callback(null, []); });
     app.start(done);
   });
 
@@ -79,7 +77,6 @@ describe('SWK Plattform server with Error', function () {
   beforeEach(function (done) {
     sinon.stub(groupstore, 'allGroups', function (callback) {return callback(new Error(), []); });
     sinon.stub(groupsService, 'getAllAvailableGroups', function (callback) {return callback(null, []); });
-    sinon.stub(announcementstore, 'allAnnouncementsUntilToday', function (callback) {return callback(null, []); });
     app.start(done);
   });
 
