@@ -7,6 +7,10 @@
       testglobals.mandatoryChecker(addon_validator, selector);
     };
 
+    beforeEach(function (done) {
+      $(document).ready(function () { done(); });
+    });
+
     it('checks that "description" is mandatory', function () {
       checkFieldMandatory('#paymentform [name=description]');
     });

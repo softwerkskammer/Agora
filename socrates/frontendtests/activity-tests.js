@@ -3,6 +3,10 @@
   'use strict';
 
   describe('Activitiy Form', function () {
+    beforeEach(function (done) {
+      $(document).ready(function () { done(); });
+    });
+
     afterEach(function () {
       activity_validator.resetForm();
     });

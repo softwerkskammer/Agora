@@ -6,6 +6,10 @@
     var expected = '<a href="/members/interests?interest=a">a</a>,<a href="/members/interests?interest=b"> b</a>,' +
       '<a href="/members/interests?interest=a%20b"> a b</a>,<a href="/members/interests?interest=a%3Bb"> a;b </a>,<a href="/members/interests?interest=cb">cb</a>';
 
+    beforeEach(function (done) {
+      $(document).ready(function () { done(); });
+    });
+
     it('creates links for each interest in an interests string (comma separated)', function () {
       var result = surroundInterestsWithLinks('a, b, a b, a;b ,cb');
       expect(result).to.equal(expected);

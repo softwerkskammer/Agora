@@ -5,6 +5,10 @@
   describe('Activitiy Form', function () {
     var url = $('#activityform [name=url]');
 
+    beforeEach(function (done) {
+      $(document).ready(function () { done(); });
+    });
+
     afterEach(function () {
       activity_validator.resetForm();
     });

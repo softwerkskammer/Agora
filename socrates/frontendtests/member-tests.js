@@ -6,6 +6,10 @@
     var nickname = $('[name=nickname]');
     var email = $('[name=email]');
 
+    beforeEach(function (done) {
+      $(document).ready(function () { done(); });
+    });
+
     afterEach(function () {
       member_validator.resetForm();
     });

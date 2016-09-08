@@ -8,6 +8,10 @@
       testglobals.mandatoryChecker(mail_validator, selector);
     };
 
+    beforeEach(function (done) {
+      $(document).ready(function () { done(); });
+    });
+
     it('checks that "subject" is mandatory', function () {
       checkFieldMandatory('#mailform [name=subject]');
     });
