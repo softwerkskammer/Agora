@@ -1,0 +1,41 @@
+mixin pageHeader(group, range)
+  .btn-group.pull-right
+    .btn-group
+      a.btn.btn-default.dropdown-toggle(data-toggle='dropdown')
+        | #{range} &nbsp;
+        span.caret
+      ul.dropdown-menu
+        li: a(href='../threaded/' + encodeURIComponent(group)) #{t('mailarchive.threaded')}
+        li: a(href='../flat/' + encodeURIComponent(group)) #{t('mailarchive.unthreaded')}
+  h2 #{group}&nbsp;
+    small #{t('mailarchive.archive')}
+
+mixin mailIndex(mailHeaders)
+  if (mailHeaders)
+    ul.list-unstyled
+      +internalMailIndex(mailHeaders)
+
+mixin internalMailIndex(mailHeaders)
+  if (mailHeaders)
+    each mailHeader in mailHeaders
+      div(id='messageDetails' + mailHeader.timeUnix, tabindex='-1').modal.fade.bs-modal-lg
+        .modal-dialog.modal-lg
+          .modal-content
+      li.dashboard-line
+        a(href='/mailarchive/puremessage/'+ encodeURIComponent(mailHeader.id))
+          i.fa.fa-external-link-square.tooltipify(data-toggle='tooltip' title=t('mailarchive.open_as_distinct_page'))
+        | &nbsp;
+        a(data-toggle='modal', data-target='#messageDetails' + mailHeader.timeUnix, href='/mailarchive/message/' + encodeURIComponent(mailHeader.id)) #{mailHeader.subject}
+        small
+          +mailattributes(mailHeader)
+      +internalMailIndex(mailHeader.sortedResponses())
+
+mixin mailattributes(mailHeader, noPullRight)
+  span(class = noPullRight ? '' : 'pull-right')
+    if (mailHeader.memberNickname())
+      a(href='/members/' + encodeURIComponent(mailHeader.memberNickname())) #{mailHeader.displayedSenderName()}
+    else
+      | #{mailHeader.displayedSenderName()}
+    | , #{mailHeader.time && mailHeader.time.locale(language).format('L')}
+  .clearfix
+

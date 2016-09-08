@@ -1,0 +1,40 @@
+extends ../../../views/layout
+include  ../../../views/formComponents
+
+block title
+  | #{pageName} : #{subdir}
+
+block content
+  #renameDialog(tabindex='-1').modal.fade
+    .modal-dialog
+      .modal-content
+        .modal-header
+          button.close(type='button', data-dismiss='modal', aria-hidden='true') &times;
+          h3 #{t('wiki.rename', {pageName: pageName})}
+        .modal-body
+          .row
+            .col-md-12
+              !=t('wiki.rename_info', { postProcess: 'pug' }) 
+              form#addonform(action='/wiki/rename/' + subdir + '/' + pageName, method='post')
+                +csrf
+                fieldset
+                  +text('newName', t('wiki.newname'), '')
+                  button.btn.btn-primary.pull-right(type='submit') #{t('general.save')}
+
+
+  .row
+    .col-md-12
+      .btn-group.pull-right
+          a.btn.btn-default(href='/wiki/list/' + subdir + '/', title=t('wiki.all_pages') + ' "' + subdir + '"'): i.fa.fa-list.fa-fw
+          a.btn.btn-default(href='/wiki/versions/' + subdir + '/' + pageName, title=t('wiki.revisions')): i.fa.fa-sort-amount-desc.fa-fw
+          if (canEdit)
+            a.btn.btn-default(data-toggle='modal', href='#renameDialog', title=t('general.rename')): i.fa.fa-cogs.fa-fw
+            a.btn.btn-default(href='/wiki/edit/' + subdir + '/' + pageName, title=t('general.edit')): i.fa.fa-edit.fa-fw
+      form.hidden-print.form-search.pull-right(action='/wiki/search', method='post')
+        +csrf
+        input.form-control(type='text', name='searchtext', placeholder=t('wiki.search'))
+      h2 #{title}
+
+  .row
+    .col-md-12
+      | !{content}

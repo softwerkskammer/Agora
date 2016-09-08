@@ -1,0 +1,7 @@
+extends ../../../views/layout
+block title
+  | Good-Bye
+block content
+  .jumbotron
+    .container
+      !=t('general.goodbye_text', { postProcess: 'pug' })

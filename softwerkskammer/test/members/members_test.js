@@ -128,14 +128,14 @@ describe('Members application', function () {
     request(createApp({id: 'superuserID'}))
       .get('/edit/hada')
       .expect(200)
-      .expect(/<input id="additionalAuthentication" type="text"/, done);
+      .expect(/<input class="form-control" id="additionalAuthentication" type="text"/, done);
   });
 
   it('does not allow a member to add another authentication to her own profile', function (done) {
     request(createApp({id: 'memberID'}))
       .get('/edit/hada')
       .expect(200, function (err, res) {
-        expect(res.text).to.not.contain('<input id="additionalAuthentication" type="text"');
+        expect(res.text).to.not.contain('<input class="form-control" id="additionalAuthentication" type="text"');
         done(err);
       });
   });

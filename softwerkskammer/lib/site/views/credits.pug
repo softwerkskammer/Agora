@@ -1,0 +1,115 @@
+extends ../../../views/layoutOnlyMain
+
+mixin defItem(title, url, text)
+  dt #{title}:
+  dd: a(href=url, target='_blank')
+    i.fa.fa-external-link
+    | &nbsp;#{text}
+
+block title
+  | Credits
+block content
+  .row
+    .col-md-4
+      .well
+        h3 Credits
+        p.
+          Diese Site ist freie Software und ihre Entstehung wäre ohne das Vorhandensein freier Software undenkbar. An dieser
+          Stelle möchten wir uns ausdrücklich bei allen bedanken, die ihre Arbeit uneigennützig zur freien Verwendung zulassen,
+          indem wir diese Arbeit hier erwähnen.
+
+      h2 Backend
+
+      h4 Infrastruktur / Framework / Middleware
+      dl.dl-horizontal
+        +defItem('Uberspace', 'http://uberspace.de', 'Webhoster')
+        +defItem('Node.js', 'http://nodejs.org', 'Plattform')
+        +defItem('Express', 'http://expressjs.com/api.html', 'Applikationsframework')
+        +defItem('Passport', 'http://passportjs.org/', 'Authorisierung in Express')
+        +defItem('simple-configure', 'https://github.com/NicoleRauch/simple-configure', 'Variablen konfigurierbar setzen')
+        +defItem('Cool Beans', 'https://github.com/dhughes/CoolBeans', 'Dependency Injection à la Spring')
+        +defItem('MongoDB Treiber', 'http://mongodb.github.io/node-mongodb-native/', 'Persistenz')
+        +defItem('Connect-Mongostore', 'https://github.com/diversario/connect-mongostore', 'Persistente Sessions')
+        +defItem('Winston', 'https://github.com/flatiron/winston', 'Logging')
+        +defItem('Winston-Config', 'https://github.com/triplem/winston-config', 'Logging Einfach')
+        +defItem('icalendar', 'https://github.com/tritech/node-icalendar', 'Einfaches Erstellen von vcal/ical Dateien')
+        +defItem('Mailparser', 'https://github.com/andris9/mailparser', 'Mime Mails dekodieren - für das Mailarchiv')
+        +defItem('Nodemailer', 'https://github.com/andris9/Nodemailer', 'Mails versenden')
+        +defItem('Node-html-Encoder', 'https://github.com/minchenkov/node-html-encoder', 'Text sicher enkodieren')
+        +defItem('Useragent', 'https://github.com/3rd-Eden/useragent', 'Browsererkennung')
+        +defItem('ezmlm', 'https://github.com/leider/ezmlm-node', 'JavaScript adapter for ezmlm, the qmail based mailing list software')
+
+      h4 Express Middleware
+      dl.dl-horizontal
+        +defItem('Body Parser', 'https://github.com/expressjs/body-parser', 'HTML-Form Aufbereitung')
+        +defItem('Compression', 'https://github.com/expressjs/compression', 'Komprimieren der HTTP-Streams')
+        +defItem('Cookie Parser', 'https://github.com/expressjs/cookie-parser', 'Notwendig für Sessionverwaltung')
+        +defItem('Csurf', 'https://github.com/expressjs/csurf', 'Verhindern von Cross-Site-Request-Forging')
+        +defItem('Express Session', 'https://github.com/expressjs/session', 'Sessionunterstützung')
+        +defItem('Favicon', 'https://github.com/expressjs/favicon', 'Übermitteln von Favicons')
+        +defItem('Morgan', 'https://github.com/expressjs/morgan', 'Für Logging')
+        +defItem('Serve Static', 'https://github.com/expressjs/serve-static', 'Zum Übermitteln statischer Dateien')
+
+    .col-md-4
+      h2 UI
+      h4 Frontend Basis
+      dl.dl-horizontal
+        +defItem('Twitter Bootstrap', 'http://getbootstrap.com', 'UI Basis Framework')
+        +defItem('JQuery', 'http://jquery.com', 'DOM Manipulation')
+        +defItem('JQuery Validation', 'https://github.com/jzaefferer/jquery-validation', 'Frontend Validierung')
+        +defItem('Font-Awesome', 'http://fortawesome.github.com/Font-Awesome/', 'Bessere Icons für Buttons etc.')
+      
+      h4 Frontend Widgets
+      dl.dl-horizontal
+        +defItem('Bootstrap-Markdown', 'http://toopay.github.com/bootstrap-markdown/', 'Markdown Editor für Textareas')
+        +defItem('jQCloud', 'https://github.com/leider/jQCloud', 'Die [tag] Cloud')
+        +defItem('Colorpicker for Bootstrap', 'https://github.com/mjolnic/bootstrap-colorpicker/', 'Farben auswählen im Bootstrap Stil')
+        +defItem('Tiny Color', 'https://github.com/bgrins/TinyColor', 'Arbeiten mit Farben')
+        +defItem('Tiny Gradient', 'https://github.com/mistic100/tinygradient', 'Gradienten - basierend auf Tiny Color')
+        +defItem('Full Calendar', 'http://arshaw.com/fullcalendar/', 'Der Kalender')
+        +defItem('Bootstrap-Datepicker', 'https://github.com/eternicode/bootstrap-datepicker', 'Datumseingabe')
+        +defItem('Simple-Timepicker', 'https://github.com/leider/simple-timepicker', 'Zeiteingabe')
+        +defItem('Datatables', 'http://www.datatables.net/', 'Für Administration')
+        +defItem('Datatables Plugins', 'http://datatables.net/plug-ins/', 'Bootstrap / FontAwesome /Internationalization Integration')
+        +defItem('jquery-guillotine', 'http://matiasgagliano.github.io/guillotine/', 'sizing, rotating, cropping of images inside the browser')
+        +defItem('select2', 'http://ivaynberg.github.io/select2/', 'Tag Darstellung in Inputboxen')
+        +defItem('select2-bootstrap-css', 'http://fk.github.io/select2-bootstrap-css/', 'Bootstrap Integration für Select2')
+        +defItem('smartmenus', 'https://github.com/drmonty/smartmenus', 'Hierarchische Menus / Dropdowns (http://www.smartmenus.org/)')
+        +defItem('autonumeric', 'http://www.decorplanit.com/plugin/', 'Währungsformatierung')
+
+      h4 Backend Rendering
+      dl.dl-horizontal
+        +defItem('pug', 'https://pugjs.org', 'Template Engine')
+        +defItem('Marked', 'https://github.com/chjj/marked', 'Markdown nach HTML')
+        +defItem('Syntaxhighlighter', 'https://github.com/thlorenz/node-syntaxhighlighter', 'Syntax Highlighting in markdown')
+        +defItem('iconv-lite', 'https://github.com/ashtuchkin/iconv-lite', 'Text Recoding')
+        +defItem('node-imagemagick', 'https://github.com/rsms/node-imagemagick', 'Ein Wrapper für die imagemagick Werkzeuge')
+        +defItem('Image Magick', 'http://imagemagick.org/', 'Erzeugen, bearbeiten, kombinieren, konvertieren von Bitmaps')
+        +defItem('i18next', 'http://i18next.com/', 'Internationalisierung')
+
+    .col-md-4
+      h2 Allgemeine Bibliotheken
+      dl.dl-horizontal
+        +defItem('Async', 'https://github.com/caolan/async', 'Funktionale Erweiterungen, asynchron')
+        +defItem('Lo-Dash "_"', 'http://lodash.com', 'Funktionale Erweiterungen, synchron')
+        +defItem('"_s"', 'http://epeli.github.com/underscore.string/', 'String Erweiterungen')
+        +defItem('Moment', 'http://momentjs.com/', 'Datum und Uhrzeit leicht gemacht')
+
+      h2 Dev/Build/Test
+      dl.dl-horizontal
+        +defItem('Grunt', 'http://gruntjs.com', 'Build-Runner')
+        +defItem('ESLint (grunt)', 'https://github.com/sindresorhus/grunt-eslint', 'Grunt Integration für ESLint')
+        +defItem('Grunt Less', 'https://github.com/gruntjs/grunt-contrib-less', 'Grunt Integration für LESS Compilierung')
+        +defItem('Grunt Uglify', 'https://github.com/gruntjs/grunt-contrib-uglify', 'Grunt Minifizierung für JS-Files')
+        +defItem('Grunt Mocha Istanbul', 'https://github.com/pocesar/grunt-mocha-istanbul', 'Mocha Tests im Grunt + Coverage')
+        +defItem('Must', 'https://github.com/moll/js-must', 'BDD TDD Assertion Library')
+        +defItem('Sinon', 'http://sinonjs.org', 'Mock Framework')
+        +defItem('Request', 'http://github.com/mikeal/request.git', 'Für Integrationstests')
+        +defItem('Supertest', 'https://github.com/visionmedia/supertest', 'Einfache Integrationstests')
+        +defItem('ESLint', 'http://eslint.org/', 'Metrik/Qualitäts/Style Checker')
+        +defItem('Mocha', 'http://visionmedia.github.io/mocha/', 'Test Framework')
+        +defItem('Karma', 'http://karma-runner.github.io/', 'Test runner für Frontendtests')
+        +defItem('Karma-Mocha', 'https://github.com/karma-runner/karma-mocha', 'Mocha in Frontendtests benutzen')
+        +defItem('Karma-Must', 'https://github.com/verkholantsev/karma-must', 'Must in Frontendtests benutzen')
+        +defItem('Karma Coverage', 'https://github.com/karma-runner/karma-coverage', 'Code Coverage bei Frontendtests erfassen')
+

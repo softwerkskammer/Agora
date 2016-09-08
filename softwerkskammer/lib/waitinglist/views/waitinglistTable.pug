@@ -1,0 +1,81 @@
+extends ../../../views/layout
+include  ../../../views/formComponents
+include ../../members/views/memberlist-mixin
+include ../../../views/dataTables-mixin
+
+block scripts
+  +dataTableImport
+  +dataTable('#waitinglisttable', "[[ 3, 'asc' ]]", "[{ bSortable : false }, null, null, { sType: 'date-eu' }, { sType: 'date-eu' }, null]", true)
+  script.
+    function removeFromWaitinglist(activityUrl, resourceName, nickname, buttonid) {
+      $.ajax({
+      type: 'post',
+      url: '/waitinglist/remove',
+      data: {_csrf: '#{csrf_token}', activityUrl: activityUrl, resourceName: resourceName, nickname: nickname} }).success(function() {
+        $('#' + buttonid).parent().parent().remove();
+      });
+    }
+
+block title
+  | #{t('activities.waitinglist')}
+block content
+  form(id='allowRegistrationForm', name='allowRegistrationForm', action='/waitinglist/allowRegistration',method='post')
+    +csrf
+    +hidden('activityUrl', activity.url())
+    .row
+      .col-md-12
+        .page-header
+          h2 #{activity.title()}
+            small  #{t('activities.waitinglist')}
+            a.btn.pull-right.btn-default(href=activity.fullyQualifiedUrl()) Zurück
+        .panel.scrollable-box
+          table.table.table-condensed.table-hover.table-striped#waitinglisttable
+            thead
+              tr
+                th #{t('activities.select')}
+                th #{t('members.nickname')}
+                th #{t('activities.resource')}
+                th #{t('activities.listed')}
+                th #{t('activities.register_until')}
+                th #{t('general.logout')}
+            tbody
+              - var count = 0
+              for waitinglistEntry in waitinglist
+                - var checkboxid = '{"nickname": "' + waitinglistEntry.registrantNickname + '", "activityUrl": "' + activity.url() + '", "resourcename": "' + waitinglistEntry.resourceName() + '"}';
+                - count++;
+                tr
+                  td: .checkbox(style='margin-top:0px;margin-bottom:0px;')
+                    label
+                      input(type='checkbox', name='selectedRow', value=checkboxid)
+
+                  td: +linkedMember(waitinglistEntry.registrantNickname)
+                  td #{waitinglistEntry.resourceName()}
+                  td #{waitinglistEntry.registrationDate()}
+                  td #{waitinglistEntry.registrationValidUntil()}
+                  td
+                    a.btn.btn-primary.btn-xs.btn-block(id=count + '-button',
+                      href='javascript:removeFromWaitinglist(' + encodeURIComponent(activity.url()) + ',' + encodeURIComponent(waitinglistEntry.resourceName()) + ',' + encodeURIComponent(waitinglistEntry.registrantNickname) +',' + '\"' + count + '-button\)') #{t("activities.remove_from_waitinglist")}
+
+        .form-inline
+          | #{t('activities.activate_registration_1')}
+          input.form-control(id='registrationValidForHours', type='text', name='registrationValidForHours', style='width: 50px;')
+          |  #{t('activities.activate_registration_2')}
+          button.btn.btn-primary.pull-right(type='submit') #{t('activities.save_and_notify')}
+  if(accessrights.isSuperuser())
+    hr
+    form(id='waitinglistForm', action='/waitinglist/add',method='post')
+      +csrf
+      +hidden('activityUrl', activity.url())
+      legend #{t('activities.waitinglist_new')}
+      .row
+        .col-sm-4
+          input.form-control(id='nickname', type='text', name='nickname', placeholder=t('members.nickname'))
+        .col-sm-4
+          if (activity.resourceNames().length > 2)
+            select#nickname.form-control(name='resourceName')
+              for resource in activity.resourceNames()
+                option(value=resourceName) #{resource}
+          else
+            input.form-control(disabled, id='resourceName', type='text', name='resourceName', placeholder=activity.resourceNames()[0])
+        .col-sm-4
+          button.btn.btn-primary.pull-right(type='submit') #{t('general.add')}

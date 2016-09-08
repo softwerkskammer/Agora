@@ -1,0 +1,22 @@
+mixin grouplist(title, groupsOfAKind)
+  h3 #{groupsOfAKind.length} #{title}
+  ul.list-unstyled
+    each group in groupsOfAKind
+      li
+        span.label(style='background-color: ' + group.color + '; min-width:32px; text-align:right; display:inline-block') #{group.membercount}
+        | &nbsp;&nbsp;
+        span.popover-highlight(rel='tooltip-in-body', data-content=group.descriptionHTMLFiltered('img'))
+          strong: a(href=group.id) #{group.longName}
+        | &nbsp;&nbsp;
+        if (wikisubdirs && wikisubdirs.indexOf(group.id) > -1)
+          span.tooltiplabel(data-original-title=t('wiki.gotowiki'))
+            a(href='/wiki/' + group.id + '/'): i.fa.fa-book.fa-fw
+  script.
+    $('.tooltiplabel').each(function () {$(this).tooltip()})
+
+mixin placeGroupLabels(groupsOfAKind)
+  each group in groupsOfAKind
+    if (group.mapX && group.mapY && group.shortName)
+      .label.group(style='background-color: ' +group.color + '; top: ' + group.mapYrelative() + '%; left: ' + group.mapXrelative() + '%;')
+        span(rel='tooltip-in-body', data-title='<h4>' + group.longName + '</h4>', data-content=group.descriptionHTMLFiltered('img'))
+          a.group(href='/groups/' + group.id) #{group.shortName}

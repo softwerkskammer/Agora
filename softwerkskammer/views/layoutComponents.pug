@@ -1,0 +1,128 @@
+mixin administrationMenu
+  if (accessrights.isSuperuser())
+    li(data-agoranav='administration').dropdown.nav
+      a(href='#')
+        i.fa.fa-dashboard.fa-fw
+        | &nbsp;#{t('general.administration')}&nbsp;
+      ul.dropdown-menu
+        li: a(href='/administration/activityTable')
+          i.fa.fa-calendar.fa-fw
+          | &nbsp;#{t('activities.activities')}
+        li: a(href='/administration/groupTable')
+          i.fa.fa-group.fa-fw
+          | &nbsp;#{t('groups.groups')}
+        li: a(href='/administration/memberTable')
+          i.fa.fa-user.fa-fw
+          | &nbsp;#{t('members.members')}
+        li: a(href='/administration/memberAndGroupTable')
+          i.fa.fa-retweet.fa-fw
+          | &nbsp;#{t('members.members') + ' & ' + t('groups.groups')}
+        li: a(href='/administration/interests')
+          i.fa.fa-thumbs-o-up.fa-fw
+          | &nbsp; Interessen
+
+mixin loginMenu(forInline)
+  li.dropdown(class=forInline ? 'visible-xs' : '')
+    a(href='#')
+      i.fa.fa-info-circle.fa-fw &nbsp;
+      if accessrights.isRegistered()
+        | #{user.member.nickname()}
+      else 
+        | #{t('general.guest')}
+    ul.dropdown-menu
+      if accessrights.isRegistered()
+        li: a(href='/members/edit/' + encodeURIComponent(user.member.nickname()))
+          i.fa.fa-edit.fa-fw
+          | &nbsp;#{t('members.edit')}
+        li: a(href='/auth/logout')
+          i.fa.fa-sign-out.fa-fw
+          | &nbsp;#{t('general.logout')}
+        li: a(href='/mailsender/resign/' + encodeURIComponent(user.member.nickname()))
+          i.fa.fa-ban.fa-fw
+          | &nbsp;#{t('members.resign')}
+      else
+        li: a(data-toggle='modal', data-target='#login', href='/loginDialog?returnUrl=' + encodeURIComponent(currentUrl ||  '/'))
+          i.fa.fa-sign-in.fa-fw
+          | &nbsp;#{t('general.login')}
+      li: a(href='https://github.com/softwerkskammer/Agora/issues', title=t('general.what_does_not_work'), target='_blank')
+        i.fa.fa-ambulance.fa-fw
+        | &nbsp;#{t('general.feedback')}
+      li: include ../version
+  if language === 'de'
+    +languageEntry(forInline, 'en-gb', 'switch to English', 'United-Kingdom.png')
+  else
+    +languageEntry(forInline, 'de', 'auf Deutsch umschalten', 'Germany.png')
+
+mixin languageEntry(forInline, lang, title, img)
+  li(class=forInline ? 'visible-xs' : '')
+    a.no-left-margin(href='/language/' + lang + '?currentUrl=' + encodeURIComponent(currentUrl), title=title)
+      img.fa-fw(src='/img/flags/' + img, height='16', style='vertical-align: baseline;', alt='title')
+      if(forInline)
+        | &nbsp;#{title}
+
+mixin navbar-inside
+  .navbar-collapse.collapse.collapse-btom
+    ul.nav.navbar-nav.navbar-right
+      +administrationMenu
+      li: a(href='/help.html') #{t('general.faq')}
+      li: a(href='/credits.html') #{t('general.credits')}
+      li: a(href='/impressum.html') #{t('general.legal_notice')}
+  .navbar-header
+    a.btn.btn-default.navbar-toggle(data-toggle='collapse', data-target='.collapse-btom')
+      span.sr-only Toggle
+      i.fa.fa-bars.fa-lg
+
+mixin bottomNavbar
+  .navbar.navbar-default.bottom.hidden-print.visible-xs
+    +navbar-inside
+  .navbar.navbar-default.navbar-fixed-bottom.hidden-print.hidden-xs
+    +navbar-inside
+
+mixin notificationsBlock(notificationmessage)
+  -notificationmessage.kill()
+  -var contents = notificationmessage.contents()
+  #notifications(class='alert alert-block hidden-print ' + contents.type)
+    button.close(type='button', data-dismiss='alert') &times;
+    h4 #{t(contents.title)}
+    | #{t(contents.text, contents.additionalArguments)}
+
+mixin topNavbar(xs)
+  .navbar-header
+    a.navbar-brand.no-padding(href='/')
+      img(src='/img/SoftwerkskammerWappenLinks.png', alt='Softwerkskammer', width='234', height='60')
+    a.btn.btn-default.navbar-toggle(data-toggle='collapse', data-target='.collapse-top')
+      span.sr-only Toggle
+      i.fa.fa-bars.fa-lg
+
+  .navbar-collapse.collapse.collapse-top
+    if (!xs)
+      ul.nav.navbar-nav.navbar-right.bottom
+        +loginMenu
+    ul.nav.navbar-nav.bottom
+      li(data-agoranav='activities'): a(href='/activities/upcoming')
+        i.fa.fa-calendar.fa-fw
+        span.hidden-sm &nbsp;#{t('activities.activities')}
+      li(data-agoranav='groups'): a(href='/groups')
+        i.fa.fa-group.fa-fw
+        span.hidden-sm &nbsp;#{t('groups.groups')}
+      li(data-agoranav='wiki')
+        a(href='#')
+          i.fa.fa-book.fa-fw
+          span.hidden-sm &nbsp;#{t('wiki.wiki')}&nbsp;
+        ul.dropdown-menu
+          if (structuredWikisubdirs)
+            for wikisubdirs, key in structuredWikisubdirs
+              li
+                a(href='#') #{t('groups.' + key)}
+                ul.dropdown-menu
+                  if (wikisubdirs.length)
+                    for subdir in wikisubdirs
+                      li: a(href='/wiki/' + subdir + '/') #{subdir}
+                  else
+                    li: a(href='#') <i>#{t('general.none')}</i>
+      li(data-agoranav='members'): a(href='/members')
+        if (accessrights.isRegistered())
+          i.fa.fa-user.fa-fw
+          span.hidden-sm &nbsp;#{t('members.members')}
+      +loginMenu(true)
+

@@ -16,7 +16,6 @@
 .vagrant
 
 node_modules/
-bower_components
 
 config/*.json*
 !config/example*.json
@@ -27,16 +26,15 @@ config/*.json*
 !config/testbeansWithDB.json
 
 *.log
-softwerkskammer/version.jade
+softwerkskammer/version.pug
 **/fixtures/*.html
 **/build
 **/public/clientscripts
 **/public/fonts
 softwerkskammer/public/img/bootstrap-colorpicker
-softwerkskammer/public/images
+**/public/images
 **/public/stylesheets
 **/*coverage*
 local
 
 test.html
-socrates/public/images
