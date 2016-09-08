@@ -48,13 +48,12 @@ module.exports = function (grunt) {
   };
 
   var puglintOptions = {
-    disallowAttributeInterpolation: true
+    disallowAttributeInterpolation: true,
+    disallowAttributeTemplateString: true,
+    disallowDuplicateAttributes: true,
+    disallowIdAttributeWithStaticValue: true
   };
   // var puglintOptions = {
-  //   disallowAttributeInterpolation: false,
-  //   disallowAttributeTemplateString: true,
-  //   disallowDuplicateAttributes: true,
-  //   disallowIdAttributeWithStaticValue: true,
   //   disallowLegacyMixinCall: true,
   //   disallowSpaceAfterCodeOperator: true,
   //   disallowTemplateString: true,

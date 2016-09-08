@@ -6,7 +6,7 @@ block title
   | #{t('mailsender.resign')}
 
 block content
-  form(id='mailform', action='/mailsender/resign', method='post')
+  form#mailform(action='/mailsender/resign', method='post')
     +csrf
     fieldset
       .row

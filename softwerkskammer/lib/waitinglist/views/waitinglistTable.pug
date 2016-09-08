@@ -19,7 +19,7 @@ block scripts
 block title
   | #{t('activities.waitinglist')}
 block content
-  form(id='allowRegistrationForm', name='allowRegistrationForm', action='/waitinglist/allowRegistration',method='post')
+  form#allowRegistrationForm(name='allowRegistrationForm', action='/waitinglist/allowRegistration',method='post')
     +csrf
     +hidden('activityUrl', activity.url())
     .row
@@ -58,24 +58,24 @@ block content
 
         .form-inline
           | #{t('activities.activate_registration_1')}
-          input.form-control(id='registrationValidForHours', type='text', name='registrationValidForHours', style='width: 50px;')
+          input.form-control#registrationValidForHours(type='text', name='registrationValidForHours', style='width: 50px;')
           |  #{t('activities.activate_registration_2')}
           button.btn.btn-primary.pull-right(type='submit') #{t('activities.save_and_notify')}
   if(accessrights.isSuperuser())
     hr
-    form(id='waitinglistForm', action='/waitinglist/add',method='post')
+    form#waitinglistForm(action='/waitinglist/add',method='post')
       +csrf
       +hidden('activityUrl', activity.url())
       legend #{t('activities.waitinglist_new')}
       .row
         .col-sm-4
-          input.form-control(id='nickname', type='text', name='nickname', placeholder=t('members.nickname'))
+          input.form-control#nickname(type='text', name='nickname', placeholder=t('members.nickname'))
         .col-sm-4
           if (activity.resourceNames().length > 2)
             select#nickname.form-control(name='resourceName')
               for resource in activity.resourceNames()
                 option(value=resourceName) #{resource}
           else
-            input.form-control(disabled, id='resourceName', type='text', name='resourceName', placeholder=activity.resourceNames()[0])
+            input.form-control#resourceName(disabled, type='text', name='resourceName', placeholder=activity.resourceNames()[0])
         .col-sm-4
           button.btn.btn-primary.pull-right(type='submit') #{t('general.add')}

@@ -45,7 +45,7 @@ block content
     .btn-group.pull-right
       a.btn.btn-default(href='javascript:history.back()', type='cancel') #{t('general.back')}
       if (accessrights.isRegistered())
-        button(id='rev-compare', data-pageName=pageName, data-subdir=subdir).btn.btn-default
+        button#rev-compare(data-pageName=pageName, data-subdir=subdir).btn.btn-default
           i.fa.fa-stethoscope.fa-fw
           | &nbsp; #{t('general.compare')}…
     h2 #{subdir}/#{pageName}

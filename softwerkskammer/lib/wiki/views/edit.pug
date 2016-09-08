@@ -21,5 +21,5 @@ block content
           +hightextarea('content', t('wiki.contents'), page.content)
           +text('comment', t('wiki.message'), page.comment, t('wiki.commit_message'), t('wiki.commit_template'))
           +hidden('metadata', page.metadata)
-          input(id='subdir', type='hidden', name='subdir', value=subdir)
+          input#subdir(type='hidden', name='subdir', value=subdir)
           +submitButtons('general.save')

@@ -1,7 +1,7 @@
 include  ../../../views/formComponents
 
 mixin activityform(activity, groups, editorNames, participantNames)
-  form(id='activityform', action='/activities/submit', method='post')
+  form#activityform(action='/activities/submit', method='post')
     +csrf
     if (activity.id())
       +hidden('id', activity.id())

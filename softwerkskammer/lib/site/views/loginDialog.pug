@@ -30,6 +30,6 @@ html
               a.accordion-toggle(href='#openIDinput', data-toggle='collapse') #{t('authentication.alternative_url')}:
             #openIDinput.collapse.panel-collapse
               .input-group
-                input.form-control(id='openid_identifier', type='text', name='openid_identifier')
+                input.form-control#openid_identifier(type='text', name='openid_identifier')
                 .input-group-btn
                   button.btn.btn-default(type='submit') #{t('authentication.authenticate')}

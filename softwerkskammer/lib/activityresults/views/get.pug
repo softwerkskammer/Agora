@@ -18,7 +18,7 @@ block content
       .col-xs-12
         .page-header
           .pull-right
-            form(id='recordForm', role='form', method='POST', action='/activityresults/' + encodeURIComponent(activityResult.id()) + '/upload' + '?_csrf=' + encodeURIComponent(csrf_token), enctype='multipart/form-data')
+            form#recordForm(role='form', method='POST', action='/activityresults/' + encodeURIComponent(activityResult.id()) + '/upload' + '?_csrf=' + encodeURIComponent(csrf_token), enctype='multipart/form-data')
               +imageUpload
           h1 #{activityResult.id()}
     each days in activityResult.photosByDay()
