@@ -49,9 +49,6 @@ var initParameterisedCalendar, interestify, surroundInterestsWithLinks, surround
         center: '',
         right: isForActivities ? 'prev,today,next' : ''
       },
-      titleFormat: {
-        month: isForActivities ? 'MMM \'YY' : 'MMMM'
-      },
       timezone: 'Europe/Berlin',
       events: isForActivities ? '/activities/eventsForSidebar' : '/wiki/eventsFor',
       eventMouseover: function (event) {
@@ -82,6 +79,7 @@ var initParameterisedCalendar, interestify, surroundInterestsWithLinks, surround
       height: 'auto',
       views: {
         month: {
+          titleFormat: isForActivities ? 'MMM \'YY' : 'MMMM',
           lang: fc_lang,
           fixedWeekCount: false
         }

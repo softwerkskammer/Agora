@@ -2,7 +2,7 @@ Index: node_modules/fullcalendar/dist/fullcalendar.js
 ===================================================================
 --- softwerkskammer/build/javascript/fullcalendar.js	(revision )
 +++ softwerkskammer/build/javascript/fullcalendar.js	(revision )
-@@ -6173,12 +6173,7 @@
+@@ -6010,12 +6010,7 @@
  		classes.unshift('fc-day-grid-event', 'fc-h-event');
  
  		// Only display a timed events time if it is the starting segment
@@ -16,7 +16,7 @@ Index: node_modules/fullcalendar/dist/fullcalendar.js
  
  		titleHtml =
  			'<span class="fc-title">' +
-@@ -10702,11 +10697,14 @@
+@@ -10629,11 +10624,14 @@
  									options.buttonIcons[buttonName];
  
  							if (overrideText) {
@@ -32,7 +32,7 @@ Index: node_modules/fullcalendar/dist/fullcalendar.js
  							else if (normalIcon && !options.theme) {
  								innerHtml = "<span class='fc-icon fc-icon-" + normalIcon + "'></span>";
  							}
-@@ -10714,22 +10712,30 @@
+@@ -10641,22 +10639,30 @@
  								innerHtml = htmlEscape(defaultText);
  							}
  
@@ -74,7 +74,7 @@ Index: node_modules/fullcalendar/dist/fullcalendar.js
  
  										// after the click action, if the button becomes the "active" tab, or disabled,
  										// it should never have a hover class, so remove it now.
-@@ -10754,28 +10760,28 @@
+@@ -10681,28 +10687,28 @@
  									button.removeClass(tm + '-state-down');
  								})
  								.hover(
@@ -119,7 +119,7 @@ Index: node_modules/fullcalendar/dist/fullcalendar.js
  					groupChildren
  						.first().addClass(tm + '-corner-left').end()
  						.last().addClass(tm + '-corner-right').end();
-@@ -10784,7 +10790,11 @@
+@@ -10711,7 +10717,11 @@
  				if (groupChildren.length > 1) {
  					groupEl = $('<div/>');
  					if (isOnlyButtons) {
