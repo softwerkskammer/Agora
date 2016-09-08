@@ -51,13 +51,13 @@ module.exports = function (grunt) {
     disallowAttributeInterpolation: true,
     disallowAttributeTemplateString: true,
     disallowDuplicateAttributes: true,
-    disallowIdAttributeWithStaticValue: true
+    disallowIdAttributeWithStaticValue: true,
+    disallowLegacyMixinCall: true,
+    disallowSpaceAfterCodeOperator: true,
+    disallowTemplateString: true,
+    requireClassLiteralsBeforeAttributes: true
   };
   // var puglintOptions = {
-  //   disallowLegacyMixinCall: true,
-  //   disallowSpaceAfterCodeOperator: true,
-  //   disallowTemplateString: true,
-  //   requireClassLiteralsBeforeAttributes: true,
   //   requireIdLiteralsBeforeAttributes: true,
   //   requireLowerCaseTags: true,
   //   requireStrictEqualityOperators: true,

@@ -26,7 +26,7 @@ mixin mailIndex(mailHeaders)
     ul.list-unstyled
       each mailHeader in mailHeaders
         li
-          div(id='messageDetails' + mailHeader.timeUnix, tabindex='-1').modal.fade.bs-modal-lg
+          .modal.fade.bs-modal-lg(id='messageDetails' + mailHeader.timeUnix, tabindex='-1')
             .modal-dialog.modal-lg
               .modal-content
           a(data-toggle='modal', data-target='#messageDetails' + mailHeader.timeUnix, href='/mailarchive/message/' + encodeURIComponent(mailHeader.id)) #{mailHeader.subject}
@@ -91,7 +91,7 @@ mixin wikichangesOrBlogs(items, panelid, prefix, title)
       ul.list-unstyled
         each item in items
           li
-            div(id=item.dialogId, tabindex='-1').modal.fade.bs-modal-lg
+            .modal.fade.bs-modal-lg(id=item.dialogId, tabindex='-1')
               .modal-dialog.modal-lg
                 .modal-content
             a(data-toggle='modal', data-target='#' + item.dialogId, href=item.dialogUrl) #{item.pureName}

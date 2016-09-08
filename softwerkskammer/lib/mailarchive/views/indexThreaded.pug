@@ -11,9 +11,9 @@ block content
       .page-header
         +pageHeader(group, t('mailarchive.threaded'))
       #mails.panel-group.scrollable-box
-        - var mailNumber = 0;
+        -var mailNumber = 0;
         for mailHeader in mailHeaders
-          - mailNumber = mailNumber + 1;
+          -mailNumber = mailNumber + 1;
             .panel.panel-default
               .panel-heading
                 h4.panel-title

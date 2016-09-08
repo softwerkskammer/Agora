@@ -6,9 +6,9 @@ block scripts
   script(src='/clientscripts/check-memberform.js')
 
 block title
-  - if (accessrights.isRegistered())
+  if (accessrights.isRegistered())
     | #{t('members.edit')}
-  - else
+  else
     | #{t('members.create')}
 
 block content

@@ -63,7 +63,7 @@ mixin activityform(activity, groups, editorNames, participantNames)
                   .col-xs-2.col-sm-2
                     +controlLabel('registrierung', t('activities.waitinglist'), t('activities.tooltip.waitinglist'))
                 each name in activity.resourceNames()
-                  - var resource = activity.resourceNamed(name)
+                  -var resource = activity.resourceNamed(name)
                   +resourceRow(name, resource.limit(), resource.isRegistrationOpen(), resource.canUnsubscribe(), resource.hasWaitinglist())
                   +hidden('resources[previousNames]', name)
                 .row.form-group

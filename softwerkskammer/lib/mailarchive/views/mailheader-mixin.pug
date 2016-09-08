@@ -18,7 +18,7 @@ mixin mailIndex(mailHeaders)
 mixin internalMailIndex(mailHeaders)
   if (mailHeaders)
     each mailHeader in mailHeaders
-      div(id='messageDetails' + mailHeader.timeUnix, tabindex='-1').modal.fade.bs-modal-lg
+      .modal.fade.bs-modal-lg(id='messageDetails' + mailHeader.timeUnix, tabindex='-1')
         .modal-dialog.modal-lg
           .modal-content
       li.dashboard-line

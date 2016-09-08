@@ -39,10 +39,10 @@ block content
                 th #{t('activities.register_until')}
                 th #{t('general.logout')}
             tbody
-              - var count = 0
+              -var count = 0
               for waitinglistEntry in waitinglist
-                - var checkboxid = '{"nickname": "' + waitinglistEntry.registrantNickname + '", "activityUrl": "' + activity.url() + '", "resourcename": "' + waitinglistEntry.resourceName() + '"}';
-                - count++;
+                -var checkboxid = '{"nickname": "' + waitinglistEntry.registrantNickname + '", "activityUrl": "' + activity.url() + '", "resourcename": "' + waitinglistEntry.resourceName() + '"}';
+                -count++;
                 tr
                   td: .checkbox(style='margin-top:0px;margin-bottom:0px;')
                     label

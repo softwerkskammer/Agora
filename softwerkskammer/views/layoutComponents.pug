@@ -1,6 +1,6 @@
 mixin administrationMenu
   if (accessrights.isSuperuser())
-    li(data-agoranav='administration').dropdown.nav
+    li.dropdown.nav(data-agoranav='administration')
       a(href='#')
         i.fa.fa-dashboard.fa-fw
         | &nbsp;#{t('general.administration')}&nbsp;
