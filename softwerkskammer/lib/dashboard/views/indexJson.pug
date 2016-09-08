@@ -53,7 +53,7 @@ mixin my_groups
             a.inherit-color.chevron(data-toggle='collapse', data-target='#' + panelid): b
               i.fa.fa-toggle-down.fa-fw.blog
             | &nbsp;#{group.longName}
-            a.inherit-color(href='/groups/' + group.id): span.pull-right: i.fa.fa-group.fa-fw.tooltipify(data-toggle='tooltip' title=t('groups.tooltip.gotogroup'))
+            a.inherit-color(href='/groups/' + group.id): span.pull-right: i.fa.fa-group.fa-fw.tooltipify(data-toggle='tooltip', title=t('groups.tooltip.gotogroup'))
           .panel-body.collapse.in(id=panelid)
             +wikichangesOrBlogs(postsByGroup[group.id], panelid, 'blogs', t('wiki.blogposts'))
             +wikichangesOrBlogs(changesByGroup[group.id], panelid, 'changes', t('wiki.changes'))
@@ -74,9 +74,9 @@ mixin my_activities
         -var angemeldet = (memberId && activity.allRegisteredMembers.indexOf(memberId) > -1)
         li.list-group-item
           if (angemeldet)
-            i.fa.fa-check.fa-fw.text-success.tooltipify(data-toggle='tooltip' title=t('activities.tooltip.registered'))
+            i.fa.fa-check.fa-fw.text-success.tooltipify(data-toggle='tooltip', title=t('activities.tooltip.registered'))
           else
-            i.fa.fa-question.fa-fw.tooltipify(data-toggle='tooltip' title=t('activities.tooltip.unknown'))
+            i.fa.fa-question.fa-fw.tooltipify(data-toggle='tooltip', title=t('activities.tooltip.unknown'))
           | &nbsp; #{activity.startMoment} &nbsp;
           a(href='/activities/' + encodeURIComponent(activity.url)) #{activity.title}
           span.pull-right(style='color: ' + activity.colorRGB + ';') #{activity.groupName}
@@ -96,5 +96,5 @@ mixin wikichangesOrBlogs(items, panelid, prefix, title)
                 .modal-content
             a(data-toggle='modal', data-target='#' + item.dialogId, href=item.dialogUrl) #{item.pureName}
             small.pull-right #{item.date}&nbsp;
-              a(href=item.url): i.fa.fa-book.fa-fw.tooltipify(data-toggle='tooltip' title=t('wiki.tooltip.gotopage'))
+              a(href=item.url): i.fa.fa-book.fa-fw.tooltipify(data-toggle='tooltip', title=t('wiki.tooltip.gotopage'))
     hr

@@ -1,6 +1,6 @@
+'use strict';
 module.exports = function (grunt) {
   /*eslint camelcase: 0*/
-  'use strict';
 
   var commonJSfiles = [
     'node_modules/jquery/dist/jquery.js',
@@ -47,23 +47,6 @@ module.exports = function (grunt) {
     ])
   };
 
-  var puglintOptions = {
-    disallowAttributeInterpolation: true,
-    disallowAttributeTemplateString: true,
-    disallowDuplicateAttributes: true,
-    disallowIdAttributeWithStaticValue: true,
-    disallowLegacyMixinCall: true,
-    disallowSpaceAfterCodeOperator: true,
-    disallowTemplateString: true,
-    requireClassLiteralsBeforeAttributes: true
-  };
-  // var puglintOptions = {
-  //   requireIdLiteralsBeforeAttributes: true,
-  //   requireLowerCaseTags: true,
-  //   requireStrictEqualityOperators: true,
-  //   validateAttributeQuoteMarks: '\'',
-  //   validateAttributeSeparator: ', '
-  // };
   grunt.initConfig({
     clean: {
       build: ['softwerkskammer/build', 'softwerkskammer/frontendtests/fixtures/*.html'],
@@ -294,7 +277,21 @@ module.exports = function (grunt) {
     },
     puglint: {
       standard: {
-        options: puglintOptions,
+        options: {
+          disallowAttributeInterpolation: true,
+          disallowAttributeTemplateString: true,
+          disallowDuplicateAttributes: true,
+          disallowIdAttributeWithStaticValue: true,
+          disallowLegacyMixinCall: true,
+          disallowSpaceAfterCodeOperator: true,
+          disallowTemplateString: true,
+          requireClassLiteralsBeforeAttributes: true,
+          requireIdLiteralsBeforeAttributes: true,
+          requireLowerCaseTags: true,
+          requireStrictEqualityOperators: true,
+          validateAttributeQuoteMarks: '\'',
+          validateAttributeSeparator: ', '
+        },
         src: ['softwerkskammer/**/*.pug']
       }
     }

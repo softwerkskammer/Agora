@@ -19,7 +19,7 @@ block scripts
 block title
   | #{t('activities.waitinglist')}
 block content
-  form#allowRegistrationForm(name='allowRegistrationForm', action='/waitinglist/allowRegistration',method='post')
+  form#allowRegistrationForm(name='allowRegistrationForm', action='/waitinglist/allowRegistration', method='post')
     +csrf
     +hidden('activityUrl', activity.url())
     .row
@@ -43,6 +43,7 @@ block content
               for waitinglistEntry in waitinglist
                 -var checkboxid = '{"nickname": "' + waitinglistEntry.registrantNickname + '", "activityUrl": "' + activity.url() + '", "resourcename": "' + waitinglistEntry.resourceName() + '"}';
                 -count++;
+                -var buttonHref = 'javascript:removeFromWaitinglist(' + encodeURIComponent(activity.url()) + ',' + encodeURIComponent(waitinglistEntry.resourceName()) + ',' + encodeURIComponent(waitinglistEntry.registrantNickname) + ',\"' + count + '-button\")';
                 tr
                   td: .checkbox(style='margin-top:0px;margin-bottom:0px;')
                     label
@@ -53,8 +54,7 @@ block content
                   td #{waitinglistEntry.registrationDate()}
                   td #{waitinglistEntry.registrationValidUntil()}
                   td
-                    a.btn.btn-primary.btn-xs.btn-block(id=count + '-button',
-                      href='javascript:removeFromWaitinglist(' + encodeURIComponent(activity.url()) + ',' + encodeURIComponent(waitinglistEntry.resourceName()) + ',' + encodeURIComponent(waitinglistEntry.registrantNickname) +',' + '\"' + count + '-button\)') #{t("activities.remove_from_waitinglist")}
+                    a.btn.btn-primary.btn-xs.btn-block(id=count + '-button', href=buttonHref) #{t("activities.remove_from_waitinglist")}
 
         .form-inline
           | #{t('activities.activate_registration_1')}
@@ -63,7 +63,7 @@ block content
           button.btn.btn-primary.pull-right(type='submit') #{t('activities.save_and_notify')}
   if(accessrights.isSuperuser())
     hr
-    form#waitinglistForm(action='/waitinglist/add',method='post')
+    form#waitinglistForm(action='/waitinglist/add', method='post')
       +csrf
       +hidden('activityUrl', activity.url())
       legend #{t('activities.waitinglist_new')}

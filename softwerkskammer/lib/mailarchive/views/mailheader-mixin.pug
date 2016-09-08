@@ -23,7 +23,7 @@ mixin internalMailIndex(mailHeaders)
           .modal-content
       li.dashboard-line
         a(href='/mailarchive/puremessage/'+ encodeURIComponent(mailHeader.id))
-          i.fa.fa-external-link-square.tooltipify(data-toggle='tooltip' title=t('mailarchive.open_as_distinct_page'))
+          i.fa.fa-external-link-square.tooltipify(data-toggle='tooltip', title=t('mailarchive.open_as_distinct_page'))
         | &nbsp;
         a(data-toggle='modal', data-target='#messageDetails' + mailHeader.timeUnix, href='/mailarchive/message/' + encodeURIComponent(mailHeader.id)) #{mailHeader.subject}
         small

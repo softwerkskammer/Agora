@@ -11,7 +11,7 @@ block content
       .page-header
         h2 #{t('activityresults.new')}
 
-      form(role='form',method='POST',action='/activityresults/')
+      form(role='form', method='POST', action='/activityresults/')
         +csrf
         +text('activityResultName', 'Name', activityResultName, '', '', true)
         +textWithTags('tags', 'Tags', [], [])

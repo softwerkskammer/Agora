@@ -1,7 +1,7 @@
 include  ../../../views/formComponents
 
 mixin memberform(member, regionalgroups, themegroups, tags)
-  form#memberform(action='/members/submit',method='post')
+  form#memberform(action='/members/submit', method='post')
     +csrf
     fieldset
       .row
