@@ -1,0 +1,21 @@
+doctype html
+html
+  body
+    h3 SoCraTes Change of Registration
+    p.
+      Hello #{member.displayName()},
+    p We have changed your registration for the SoCraTes Conference 2016 as follows:
+    p
+      | You have booked a #{' '} 
+      b #{bookingdetails.room}
+      | #{' '} for #{' '}
+      b #{bookingdetails.nights}
+      | #{' '} nights until #{' '}
+      b #{bookingdetails.until}
+      | .
+    p You can review your booking information at #{' '}
+      a(href=url + '/registration') #{url}/registration
+
+    p If you have questions, need help or want to give feedback, just reply to this e-mail.
+
+    p The SoCraTes organisers

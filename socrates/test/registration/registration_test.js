@@ -97,8 +97,8 @@ describe('SoCraTes registration application', function () {
     it('shows a disabled registration table and the "registration date button"', function (done) {
       appWithoutMember
         .get('/')
-        .expect(/<form id="participationinfoform" action="\/registration\/startRegistration" method="post" class="relaxed"><fieldset disabled="disabled"/)
-        .expect(/<button type="submit" disabled="disabled" class="pull-right btn btn-primary">Registration will open /)
+        .expect(/<form class="relaxed" id="participationinfoform" action="\/registration\/startRegistration" method="post"><fieldset class="disabled-text" disabled="disabled"/)
+        .expect(/<button class="pull-right btn btn-primary" type="submit" disabled="disabled">Registration will open /)
         .expect(200, done);
     });
 
@@ -113,9 +113,9 @@ describe('SoCraTes registration application', function () {
     it('shows an enabled registration table with initially disabled register button if the registration param is passed along', function (done) {
       appWithoutMember
         .get('/?registration=secretCode')
-        .expect(/<form id="participationinfoform" action="\/registration\/startRegistration" method="post" class="relaxed"><fieldset>/)
+        .expect(/<form class="relaxed" id="participationinfoform" action="\/registration\/startRegistration" method="post"><fieldset>/)
         .expect(/<th>Junior shared<\/th><td class="text-center"><div class="radio-inline"><label><input type="radio" name="nightsOptions" value="bed_in_junior,2"/)
-        .expect(/<button type="submit" disabled="disabled" class="pull-right btn btn-primary">I really do want to participate!/)
+        .expect(/<button class="pull-right btn btn-primary" type="submit" disabled="disabled">I really do want to participate!/)
         .expect(200, done);
     });
 
@@ -126,9 +126,9 @@ describe('SoCraTes registration application', function () {
     it('shows an enabled registration table with initially disabled register button if the registration is open and nobody is logged in', function (done) {
       appWithoutMember
         .get('/')
-        .expect(/<form id="participationinfoform" action="\/registration\/startRegistration" method="post" class="relaxed"><fieldset>/)
+        .expect(/<form class="relaxed" id="participationinfoform" action="\/registration\/startRegistration" method="post"><fieldset>/)
         .expect(/<th>Junior shared<\/th><td class="text-center"><div class="radio-inline"><label><input type="radio" name="nightsOptions" value="bed_in_junior,2"/)
-        .expect(/<button type="submit" disabled="disabled" class="pull-right btn btn-primary">I really do want to participate!/)
+        .expect(/<button class="pull-right btn btn-primary" type="submit" disabled="disabled">I really do want to participate!/)
         .expect(200, done);
     });
 
@@ -149,7 +149,7 @@ describe('SoCraTes registration application', function () {
 
       appWithSocratesMember
         .get('/')
-        .expect(/<form id="participationinfoform" action="\/registration\/startRegistration" method="post" class="relaxed"><fieldset disabled="disabled"/)
+        .expect(/<form class="relaxed" id="participationinfoform" action="\/registration\/startRegistration" method="post"><fieldset class="disabled-text" disabled="disabled"/)
         .expect(/<th>Single<div class="radio-inline pull-right"><label><input type="checkbox" name="nightsOptions" value="single,waitinglist"/)
         .expect(/<th>Double shared<\/th><td class="text-center"><div class="radio-inline"><label><input type="radio" name="nightsOptions" value="bed_in_double,2"/)
         .expect(/<th>Junior \(exclusively\)<\/th><td class="text-center"><div class="radio-inline"><label><input type="radio" name="nightsOptions" value="junior,2"/)

@@ -98,19 +98,6 @@ describe('Payment Service', function () {
     });
   });
 
-  describe('Payment with credit card', function () {
-    xit('does not require a member: ', function (done) {
-      sinon.stub(stripeService, 'transaction', function () { return { charges: { create: function (charge, callback) {
-        callback(null); }}}; });
-
-      paymentService.payWithCreditCard(null, 100, 'Credit Card Payment', 'stripe-id', function (err, message) {
-        expect(message).to.exist();
-        expect(err).to.not.exist();
-        done(err);
-      });
-    });
-  });
-
   describe('Fee Calculation', function () {
     it('returns the correct fee for valid inputs, rounded to two digits', function () {
       expect(paymentService.calcFee(100)).to.be(3.3);

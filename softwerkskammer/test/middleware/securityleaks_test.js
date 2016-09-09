@@ -63,7 +63,7 @@ describe('Security regarding', function () {
 
     it('blocks updates that do not come with a csrf token', function (done) {
 
-      // we need to load accessrights and jade support code before the csrf handling
+      // we need to load accessrights and pug support code before the csrf handling
       var app = setupApp('membersApp').createApp({id: 'memberId', middlewares: [beans.get('accessrights'), beans.get('serverpathRemover'), csurf(), addCsrfTokenToLocals]});
 
       request(app)

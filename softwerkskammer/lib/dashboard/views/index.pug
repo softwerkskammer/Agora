@@ -1,0 +1,80 @@
+extends ../../../views/layoutOnlyMain
+include ../../activities/views/activities-mixins
+include ../../mailarchive/views/mailheader-mixin
+
+block scripts
+  script.
+    $(document).ready(function () {
+      $('a.chevron').click(function() {$(this).find('i').toggleClass('fa-toggle-down fa-toggle-right')});
+    });
+
+block title
+  | Dashboard
+block content
+  .row
+    .col-sm-6
+      +my_activities
+    .col-sm-6
+      .panel.panel-default
+        .panel-heading
+          b Dashboard
+        .panel-body
+          !=t('dashboard.description', { postProcess: 'pug' })
+  +my_groups
+
+mixin my_groups
+  .row
+    each groups in groupsPerColumn
+      .col-sm-4
+        each group in groups
+          -var panelid = group.id + '-grouppanel'
+          .panel.panel-default
+            .panel-heading(style='background-color: ' + group.color + '; color: #FFFFFF;')
+              a.inherit-color.chevron(data-toggle='collapse', data-target='#' + panelid): b
+                i.fa.fa-toggle-down.fa-fw.blog
+              | &nbsp;#{group.longName}
+              a.inherit-color(href='/groups/' + group.id): span.pull-right: i.fa.fa-group.fa-fw.tooltipify(data-toggle='tooltip', title=t('groups.tooltip.gotogroup'))
+            .panel-body.collapse.in(id=panelid)
+              +wikichangesOrBlogs(postsByGroup[group.id], panelid, 'blogs', t('wiki.blogposts'))
+              +wikichangesOrBlogs(changesByGroup[group.id], panelid, 'changes', t('wiki.changes'))
+              if (mailsByGroup[group.id].length > 0)
+                h5
+                  a.chevron(data-toggle='collapse', data-target='#' + panelid + ' .mails')
+                    i.fa.fa-toggle-down.fa-fw.blog
+                    | &nbsp;#{t('mailarchive.recent')}
+                .mails.collapse.in
+                  +mailIndex(mailsByGroup[group.id])
+
+mixin my_activities
+  .panel.panel-default
+    .panel-heading
+      b #{t('activities.upcoming_activities')}
+    ul.list-group
+      each activity in activities
+        -var angemeldet = (member && activity.allRegisteredMembers().indexOf(member.id()) > -1)
+        li.list-group-item
+          if (angemeldet)
+            i.fa.fa-check.fa-fw.text-success.tooltipify(data-toggle='tooltip', title=t('activities.tooltip.registered'))
+          else
+            i.fa.fa-question.fa-fw.tooltipify(data-toggle='tooltip', title=t('activities.tooltip.unknown'))
+          | &nbsp; #{activity.startMoment().locale(language).format('L')} &nbsp;
+          a(href=activity.fullyQualifiedUrl()) #{activity.title()}
+          span.pull-right(style='color: ' + activity.colorRGB +';') #{activity.groupName()}
+
+mixin wikichangesOrBlogs(items, panelid, prefix, title)
+  if (items.length > 0)
+    h5
+      a.chevron(data-toggle='collapse', data-target='#' + panelid + ' .' + prefix)
+        i.fa.fa-toggle-down.fa-fw.blog
+      | &nbsp;#{title}
+    div(class=prefix + ' collapse in')
+      ul.list-unstyled
+        each item in items
+          li.dashboard-line
+            .modal.fade.bs-modal-lg(id=item.dialogId(), tabindex='-1')
+              .modal-dialog.modal-lg
+                .modal-content
+            a(data-toggle='modal', data-target='#' + item.dialogId(), href=item.dialogUrl()) #{item.pureName()}
+            small.pull-right #{item.date().locale(language).format('L')}&nbsp;
+              a(href=item.url()): i.fa.fa-book.fa-fw.tooltipify(data-toggle='tooltip', title=t('wiki.tooltip.gotopage'))
+    hr

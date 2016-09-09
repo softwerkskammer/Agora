@@ -8,8 +8,8 @@ module.exports = function (appLogger) {
     appLogger.error(req.originalUrl);
     appLogger.error(error.stack);
     if (/InternalOpenIDError|BadRequestError|InternalOAuthError/.test(error.name)) {
-      return res.render('errorPages/authenticationError.jade', {error: error, status: status});
+      return res.render('errorPages/authenticationError.pug', {error: error, status: status});
     }
-    res.render('errorPages/500.jade', {error: error, status: status});
+    res.render('errorPages/500.pug', {error: error, status: status});
   };
 };

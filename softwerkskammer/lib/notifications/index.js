@@ -11,7 +11,7 @@ var memberstore = beans.get('memberstore');
 var Member = beans.get('member');
 var transport = beans.get('mailtransport');
 var logger = require('winston').loggers.get('transactions');
-var jade = require('jade');
+var pug = require('pug');
 var path = require('path');
 
 var defaultRenderingOptions = {
@@ -68,8 +68,8 @@ function activityParticipation(activity, visitorID, ressourceName, content, type
         visitor: results.visitor
       };
       _.defaults(renderingOptions, defaultRenderingOptions);
-      var filename = path.join(__dirname, 'jade/activitytemplate.jade');
-      sendMail(organizersEmails, type, jade.renderFile(filename, renderingOptions), callback);
+      var filename = path.join(__dirname, 'pug/activitytemplate.pug');
+      sendMail(organizersEmails, type, pug.renderFile(filename, renderingOptions), callback);
     }
   );
 }
@@ -97,9 +97,9 @@ module.exports.wikiChanges = function (changes, callback) {
       directories: _.sortBy(changes, 'dir')
     };
     _.defaults(renderingOptions, defaultRenderingOptions);
-    var filename = path.join(__dirname, 'jade/wikichangetemplate.jade');
+    var filename = path.join(__dirname, 'pug/wikichangetemplate.pug');
     var receivers = _.union(Member.superuserEmails(members), Member.wikiNotificationMembers(members));
-    sendMail(receivers, 'Wiki Änderungen', jade.renderFile(filename, renderingOptions), callback);
+    sendMail(receivers, 'Wiki Änderungen', pug.renderFile(filename, renderingOptions), callback);
   });
 };
 
@@ -112,9 +112,9 @@ module.exports.newMemberRegistered = function (member, subscriptions) {
       count: members.length
     };
     _.defaults(renderingOptions, defaultRenderingOptions);
-    var filename = path.join(__dirname, 'jade/newmembertemplate.jade');
+    var filename = path.join(__dirname, 'pug/newmembertemplate.pug');
     var receivers = Member.superuserEmails(members);
-    sendMail(receivers, 'Neues Mitglied', jade.renderFile(filename, renderingOptions));
+    sendMail(receivers, 'Neues Mitglied', pug.renderFile(filename, renderingOptions));
   });
 };
 

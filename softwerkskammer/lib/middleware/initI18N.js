@@ -4,21 +4,21 @@ var i18n = require('i18next');
 var middleware = require('i18next-express-middleware');
 var Backend = require('i18next-node-fs-backend');
 var intervalPlural = require('i18next-intervalplural-postprocessor');
-var jade = require('jade');
+var pug = require('pug');
 
 module.exports = function initI18N(languages) {
-  var JadePostProcessor = {
-    name: 'jade',
+  var pugPostProcessor = {
+    name: 'pug',
     type: 'postProcessor',
     process: function (val, key, opts) {
-      return jade.compile(val, opts)();
+      return pug.compile(val, opts)();
     }
   };
   var langs = languages.split(',');
   i18n
     .use(Backend)
     .use(middleware.LanguageDetector)
-    .use(JadePostProcessor)
+    .use(pugPostProcessor)
     .use(intervalPlural)
     .init({
       debug: false,
