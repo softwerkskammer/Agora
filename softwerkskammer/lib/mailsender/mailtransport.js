@@ -1,5 +1,7 @@
 'use strict';
 
+var _ = require('lodash');
+
 var conf = require('simple-configure');
 
 var beans = conf.get('beans');
@@ -27,9 +29,34 @@ function sendMail(message, type, senderAddress, callback) {
   });
 }
 
+function sendBulkMail(receiverEmailAddresses, subject, html, fromName, fromAddress, callback) {
+  /* eslint consistent-return: 0 */
+  if (!receiverEmailAddresses || receiverEmailAddresses.length === 0) {
+    if (callback) { return callback(null); }
+    return;
+  }
+
+  var mailoptions = {
+    from: '"' + fromName + '" <' + fromAddress + '>',
+    bcc: _.uniq(receiverEmailAddresses).toString(),
+    subject: subject,
+    html: html,
+    generateTextFromHTML: true
+  };
+
+  if (callback) { return transport.sendMail(mailoptions, callback); }
+
+  transport.sendMail(mailoptions, function (err) {
+    if (err) { return logger.error(err); }
+    logger.info('Notification sent. Content: ' + JSON.stringify(mailoptions));
+  });
+}
+
+
 module.exports = {
   transport: transport,
   sendMail: sendMail,
+  sendBulkMail: sendBulkMail,
   statusmessageForError: statusmessageForError,
   statusmessageForSuccess: statusmessageForSuccess
 };

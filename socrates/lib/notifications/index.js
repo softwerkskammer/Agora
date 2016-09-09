@@ -7,12 +7,17 @@ var path = require('path');
 var _ = require('lodash');
 
 var beans = conf.get('beans');
-var notifications = beans.get('notifications');
 var memberstore = beans.get('memberstore');
 var membersService = beans.get('socratesMembersService');
 var subscriberstore = beans.get('subscriberstore');
 var subscriberService = beans.get('subscriberService');
 var socratesConstants = beans.get('socratesConstants');
+var sendBulkMail = beans.get('mailtransport').sendBulkMail;
+
+function sendMail(emailAddresses, subject, html, callback) {
+  var fromName = conf.get('sender-name') || 'Softwerkskammer Benachrichtigungen';
+  sendBulkMail(emailAddresses, subject, html, fromName, conf.get('sender-address'), callback);
+}
 
 function renderingOptions(member) {
   return {
@@ -29,13 +34,14 @@ function notifyConcernedParties(member, bookingdetails, participantFilename, par
   var options = renderingOptions(member);
   options.bookingdetails = bookingdetails;
   var filename = path.join(__dirname, 'pug/' + participantFilename + '.pug');
-  notifications._sendMail([member.email()], participantSubject, pug.renderFile(filename, options));
+  sendMail([member.email()], participantSubject, pug.renderFile(filename, options));
   membersService.registrationNotificationEmailAddresses(function (err, receivers) {
     if (err || !receivers) { return logger.error(err); }
     var file = path.join(__dirname, 'pug/' + organizersFilename + '.pug');
-    notifications._sendMail(receivers, organizersSubject, pug.renderFile(file, options));
+    sendMail(receivers, organizersSubject, pug.renderFile(file, options));
   });
 }
+
 module.exports = {
   newSoCraTesMemberRegistered: function (member) {
     membersService.registrationNotificationEmailAddresses(function (err, receivers) {
@@ -45,7 +51,7 @@ module.exports = {
         var options = renderingOptions(member);
         options.count = subscribers.length;
         var filename = path.join(__dirname, 'pug/newmembertemplate.pug');
-        notifications._sendMail(receivers, 'Neuer Interessent', pug.renderFile(filename, options));
+        sendMail(receivers, 'Neuer Interessent', pug.renderFile(filename, options));
       });
     });
   },
@@ -99,7 +105,7 @@ module.exports = {
     subscriberService.emailAddressesForWikiNotifications(function (err1, emails) {
       if (err1 || emails.length === 0) { return callback(err1); }
       var filename = path.join(__dirname, 'pug/wikichangetemplate.pug');
-      notifications._sendMail(emails, 'SoCraTes Wiki Changes', pug.renderFile(filename, options), callback);
+      sendMail(emails, 'SoCraTes Wiki Changes', pug.renderFile(filename, options), callback);
     });
   }
 
