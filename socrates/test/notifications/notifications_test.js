@@ -11,7 +11,7 @@ var membersService = beans.get('socratesMembersService');
 var subscriberstore = beans.get('subscriberstore');
 
 var Member = beans.get('member');
-var transport = beans.get('mailtransport');
+var transport = beans.get('mailtransport').transport;
 var roomOptions = beans.get('roomOptions');
 var supermanEmail = 'superman@email.de';
 

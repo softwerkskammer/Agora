@@ -19,7 +19,7 @@ var misc = beans.get('misc');
 var statusmessage = beans.get('statusmessage');
 var logger = require('winston').loggers.get('application');
 
-var transport = beans.get('mailtransport');
+var transport = beans.get('mailtransport').transport;
 
 function buttonFor(activity, resourceName) {
   var url = misc.toFullQualifiedUrl('activities/subscribe', activity.url() + '/' + resourceName);

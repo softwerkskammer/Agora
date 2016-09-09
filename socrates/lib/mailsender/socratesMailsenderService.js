@@ -11,7 +11,7 @@ var activityParticipantService = beans.get('activityParticipantService');
 var statusmessage = beans.get('statusmessage');
 var logger = require('winston').loggers.get('application');
 
-var transport = beans.get('mailtransport');
+var transport = beans.get('mailtransport').transport;
 
 function statusmessageForError(type, err) {
   return statusmessage.errorMessage('message.title.email_problem', 'message.content.mailsender.error_reason', {

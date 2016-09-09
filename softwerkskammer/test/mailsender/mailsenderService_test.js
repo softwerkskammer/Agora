@@ -16,7 +16,7 @@ var Member = beans.get('member');
 var Message = beans.get('message');
 var Group = beans.get('group');
 var fieldHelpers = beans.get('fieldHelpers');
-var mailtransport = beans.get('mailtransport');
+var mailtransport = beans.get('mailtransport').transport;
 
 var emptyActivity;
 
