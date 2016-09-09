@@ -1,5 +1,6 @@
 // to use this variant, strip "example-socrates-" from the filename, delete this comment and adapt the settings below
 {
-  "sender-name": "SoCraTes Notifications",
-  "registrationListEmailAddress": "info@socrates-conference.de"
+  "infoListEmailAddress": "info@socrates-conference.de",
+  "registrationListEmailAddress": "info@socrates-conference.de",
+  "notificationListEmailAddress": "info@socrates-conference.de"
 }
