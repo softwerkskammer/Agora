@@ -3,9 +3,6 @@ language: node_js
 # Use faster Docker architecture on Travis. (http://blog.travis-ci.com/2014-12-17-faster-builds-with-container-based-infrastructure/)
 sudo: false
 
-notifications:
-    slack: softwarecraftsmanship:AJPQ1HMqrsg2dEV5js9qt4rc
-
 # Run the build twice, once with mongodb 2 and 3
 # run for mongo 3 requires mongodb service to pull in all dependencies
 matrix:
