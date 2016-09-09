@@ -16,33 +16,13 @@ var activitystore = beans.get('activitystore');
 var Message = beans.get('message');
 var Group = beans.get('group');
 var misc = beans.get('misc');
-var statusmessage = beans.get('statusmessage');
-var logger = require('winston').loggers.get('application');
 
-var transport = beans.get('mailtransport').transport;
+var mailtransport = beans.get('mailtransport');
 
 function buttonFor(activity, resourceName) {
   var url = misc.toFullQualifiedUrl('activities/subscribe', activity.url() + '/' + resourceName);
   var text = ((activity.resourceNames().length === 1) ? '' : resourceName + ': ') + 'Count me in! - Ich bin dabei!';
   return {text: text, url: url};
-}
-
-function statusmessageForError(type, err) {
-  return statusmessage.errorMessage('message.title.email_problem', 'message.content.mailsender.error_reason', {
-    type: type,
-    err: err.toString()
-  });
-}
-
-function statusmessageForSuccess(type) {
-  return statusmessage.successMessage('message.title.email_successful', 'message.content.mailsender.success', {type: type});
-}
-
-function sendMail(message, type, callback) {
-  transport.sendMail(message.toTransportObject(conf.get('sender-address')), function (err) {
-    if (err) { logger.error(err.stack); }
-    callback(null, err ? statusmessageForError(type, err) : statusmessageForSuccess(type));
-  });
 }
 
 function activityMarkdown(activity, language) {
@@ -101,26 +81,26 @@ module.exports = {
   sendMailToParticipantsOf: function (activityURL, message, callback) {
     var type = '$t(mailsender.reminder)';
     return activitiesService.getActivityWithGroupAndParticipants(activityURL, function (err, activity) {
-      if (err) { return callback(err, statusmessageForError(type, err)); }
+      if (err) { return callback(err, mailtransport.statusmessageForError(type, err)); }
       message.setBccToMemberAddresses(activity.participants);
       message.setIcal(icalService.activityAsICal(activity).toString());
-      sendMail(message, type, callback);
+      mailtransport.sendMail(message, type, callback);
     });
   },
 
   sendMailToInvitedGroups: function (invitedGroups, activityURL, message, callback) {
     var type = '$t(mailsender.invitation)';
     return groupsService.getGroups(invitedGroups, function (err, groups) {
-      if (err) { return callback(err, statusmessageForError(type, err)); }
-      if (groups.length === 0) { return callback(null, statusmessageForError(type, new Error('Keine der Gruppen wurde gefunden.'))); }
+      if (err) { return callback(err, mailtransport.statusmessageForError(type, err)); }
+      if (groups.length === 0) { return callback(null, mailtransport.statusmessageForError(type, new Error('Keine der Gruppen wurde gefunden.'))); }
       async.map(groups, groupsAndMembersService.addMembersToGroup, function (err1, groups1) {
-        if (err1) { return callback(err1, statusmessageForError(type, err1)); }
+        if (err1) { return callback(err1, mailtransport.statusmessageForError(type, err1)); }
         message.setBccToGroupMemberAddresses(groups1);
         activitystore.getActivity(activityURL, function (err2, activity) {
           if (activity) {
             message.setIcal(icalService.activityAsICal(activity).toString());
           }
-          sendMail(message, type, callback);
+          mailtransport.sendMail(message, type, callback);
         });
       });
     });
@@ -129,10 +109,10 @@ module.exports = {
   sendMailToMember: function (nickname, message, callback) {
     var type = '$t(mailsender.notification)';
     return memberstore.getMember(nickname, function (err, member) {
-      if (err) {return callback(err, statusmessageForError(type, err)); }
-      if (!member) {return callback(null, statusmessageForError(type, new Error('Empfänger wurde nicht gefunden.'))); }
+      if (err) {return callback(err, mailtransport.statusmessageForError(type, err)); }
+      if (!member) {return callback(null, mailtransport.statusmessageForError(type, new Error('Empfänger wurde nicht gefunden.'))); }
       message.setReceiver(member);
-      sendMail(message, type, callback);
+      mailtransport.sendMail(message, type, callback);
     });
   },
 
@@ -147,7 +127,7 @@ module.exports = {
     message.setSubject('Moving up for / Nachrücken für "' + activity.title() + '"');
     message.setMarkdown(markdownEnglish + '\n\n---\n\n' + markdownGerman);
     message.addToButtons(buttonFor(activity, waitinglistEntry.resourceName())); // TODO change to message.addToButtons(invitationLinkFor(activity));
-    sendMail(message, 'Nachricht', callback);
+    mailtransport.sendMail(message, 'Nachricht', callback);
   },
 
   sendResignment: function (markdown, member, callback) {
@@ -161,7 +141,7 @@ module.exports = {
     membersService.superuserEmails(function (err, superusers) {
       if (err) { return callback(err); }
       message.setTo(superusers);
-      sendMail(message, 'E-Mail zum Austrittswunsch', callback);
+      mailtransport.sendMail(message, 'E-Mail zum Austrittswunsch', callback);
     });
   }
 
