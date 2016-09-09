@@ -1,13 +1,11 @@
-'use strict';
+const _ = require('lodash');
+const express = require('express');
+const path = require('path');
+const conf = require('simple-configure');
+const mimetypes = require('mime-types');
 
-var _ = require('lodash');
-var express = require('express');
-var path = require('path');
-var conf = require('simple-configure');
-var mimetypes = require('mime-types');
-
-var imageExtensions = _(mimetypes.extensions)
-  .filter(function (value, key) { return key.match(/^image/); })
+const imageExtensions = _(mimetypes.extensions)
+  .filter((value, key) => key.match(/^image/))
   .flatten().value();
 
 function regexEscape(string) {
@@ -19,37 +17,37 @@ function asWholeWordEscaped(string) {
 }
 
 module.exports = {
-  toObject: function (Constructor, callback, err, jsobject) {
+  toObject: function toObject(Constructor, callback, err, jsobject) {
     if (err) {return callback(err); }
     if (jsobject) { return callback(null, new Constructor(jsobject)); }
     callback(null, null);
   },
 
-  toObjectList: function (Constructor, callback, err, jsobjects) {
+  toObjectList: function toObjectList(Constructor, callback, err, jsobjects) {
     if (err) { return callback(err); }
     callback(null, _.map(jsobjects, function (each) { return new Constructor(each); }));
   },
 
-  toArray: function (elem) {
+  toArray: function toArray(elem) {
     if (!elem) { return []; }
     if (elem instanceof Array) { return elem; }
     if (typeof elem === 'string') { return elem.split(','); }
     return [elem];
   },
 
-  toLowerCaseRegExp: function (string) {
+  toLowerCaseRegExp: function toLowerCaseRegExp(string) {
     return new RegExp(asWholeWordEscaped(string), 'i');
   },
 
-  arrayToLowerCaseRegExp: function (stringsArray) {
+  arrayToLowerCaseRegExp: function arrayToLowerCaseRegExp(stringsArray) {
     return new RegExp(_(stringsArray).compact().map(asWholeWordEscaped).join('|'), 'i');
   },
 
-  arraysAreEqual: function (array1, array2) {
+  arraysAreEqual: function arraysAreEqual(array1, array2) {
     return array1.length === array2.length && array1.every((v, i)=> v === array2[i]);
   },
 
-  differenceCaseInsensitive: function (strings, stringsToReduce) {
+  differenceCaseInsensitive: function differenceCaseInsensitive(strings, stringsToReduce) {
     function prepare(strs) {
       return _(strs).compact().invokeMap('toLowerCase').value();
     }
@@ -57,7 +55,7 @@ module.exports = {
     return _.difference(prepare(strings), prepare(stringsToReduce));
   },
 
-  toFullQualifiedUrl: function (prefix, localUrl) {
+  toFullQualifiedUrl: function toFullQualifiedUrl(prefix, localUrl) {
     function trimLeadingAndTrailingSlash(string) {
       return string.replace(/(^\/)|(\/$)/g, '');
     }
@@ -65,34 +63,34 @@ module.exports = {
     return conf.get('publicUrlPrefix') + '/' + trimLeadingAndTrailingSlash(prefix) + '/' + trimLeadingAndTrailingSlash(localUrl);
   },
 
-  betweenBraces: string => {
-    var replaced = string.replace(/^.* \(/, '');
+  betweenBraces: function betweenBraces(string) {
+    const replaced = string.replace(/^.* \(/, '');
     return replaced === string ? string : replaced.replace(/\)$/, '');
   },
 
-  expressAppIn: function (directory) {
-    var app = express();
+  expressAppIn: function expressAppIn(directory) {
+    const app = express();
     app.set('views', path.join(directory, 'views'));
     app.set('view engine', 'pug');
     return app;
   },
 
-  validate: function (currentValue, previousValue, validator, callback) {
+  validate: function validate(currentValue, previousValue, validator, callback) {
     if (currentValue) { currentValue = currentValue.trim(); }
     if (previousValue) { previousValue = previousValue.trim(); }
 
     if (previousValue === currentValue) {
       return callback('true');
     }
-    validator(currentValue, function (err, result) {
+    validator(currentValue, (err, result) => {
       if (err) { return callback('false'); }
       callback(result.toString());
     });
   },
 
-  representsImage: function (filenameOrExtension) {
-    var extension = filenameOrExtension.indexOf('.') < 1 ? filenameOrExtension : path.extname(filenameOrExtension);
-    return imageExtensions.indexOf(extension.replace(/\./, '')) > -1;
+  representsImage: function representsImage(filenameOrExtension) {
+    const extension = filenameOrExtension.indexOf('.') < 1 ? filenameOrExtension : path.extname(filenameOrExtension);
+    return imageExtensions.includes(extension.replace(/\./, ''));
   },
 
   regexEscape: regexEscape

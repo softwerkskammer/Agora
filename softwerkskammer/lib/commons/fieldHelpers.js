@@ -1,39 +1,38 @@
-'use strict';
 /* eslint no-underscore-dangle: 0 */
 
-var _ = require('lodash');
-var moment = require('moment-timezone');
-var numeral = require('numeral');
+const _ = require('lodash');
+const moment = require('moment-timezone');
+const numeral = require('numeral');
 numeral.language('de', require('numeral/languages/de'));
 numeral.language('en-gb', require('numeral/languages/en-gb'));
 
 module.exports = {
-  isFilled: function (someValue) {
+  isFilled: function isFilled(someValue) {
     return someValue !== undefined && someValue !== null && someValue !== 'undefined' &&
       (typeof someValue === 'string' ? someValue.trim().length > 0 : true);
   },
 
-  valueOrFallback: function (value, fallback) {
+  valueOrFallback: function valueOrFallback(value, fallback) {
     return this.isFilled(value) ? value : fallback;
   },
 
-  removePrefixFrom: function (prefix, string) {
-    var regexp = new RegExp('^' + prefix);
+  removePrefixFrom: function removePrefixFrom(prefix, string) {
+    const regexp = new RegExp('^' + prefix);
     return string ? string.replace(regexp, '') : null;
   },
 
-  addPrefixTo: function (prefix, string, additionalPrefixToCheck) {
+  addPrefixTo: function addPrefixTo(prefix, string, additionalPrefixToCheck) {
     if (string && !_.startsWith(string, prefix) && !_.startsWith(string, additionalPrefixToCheck)) {
       return prefix + string;
     }
     return string;
   },
 
-  createLinkFrom: function (fieldArray) {
+  createLinkFrom: function createLinkFrom(fieldArray) {
     return fieldArray.join('_').replace(/[ #,!?ßöäü:"']/g, '_');
   },
 
-  replaceMailAddresses: function (text) {
+  replaceMailAddresses: function replaceMailAddresses(text) {
     if (text) {
       return text.replace(/[\w.\-]+@[\w.\-]+\.[\w.\-]{2,3}(?!\w)/g, '...@...');
       // this means: some chars @ some chars . 2 or 3 chars, not followed by a char
@@ -42,7 +41,7 @@ module.exports = {
     return text;
   },
 
-  replaceLongNumbers: function (text) {
+  replaceLongNumbers: function replaceLongNumbers(text) {
     if (text) {
       return text.replace(/[\-+()\/\d][\-()\/\d\s]{4,}[\-()\/\d]/g, '...');
       // this means: first we need a number or + or - or ( or ) or /
@@ -52,51 +51,51 @@ module.exports = {
     return text;
   },
 
-  killHtmlHead: function (text) {
+  killHtmlHead: function killHtmlHead(text) {
     if (text) {
       return text.replace(/<head>(?:\S|\s|\r)*<\/head>/, '');
     }
     return text;
   },
 
-  readableDate: function (unixtimestamp) {
+  readableDate: function readableDate(unixtimestamp) {
     return moment.unix(unixtimestamp).utc().format('DD.MM.YYYY');
   },
 
-  parseToUnixUsingDefaultTimezone: function (dateString, timeString) {
-    var result = this.parseToMomentUsingDefaultTimezone(dateString, timeString);
+  parseToUnixUsingDefaultTimezone: function parseToUnixUsingDefaultTimezone(dateString, timeString) {
+    const result = this.parseToMomentUsingDefaultTimezone(dateString, timeString);
     return result ? result.unix() : undefined;
   },
 
-  parseToMomentUsingDefaultTimezone: function (dateString, timeString) {
+  parseToMomentUsingDefaultTimezone: function parseToMomentUsingDefaultTimezone(dateString, timeString) {
     return this.parseToMomentUsingTimezone(dateString, timeString, this.defaultTimezone());
   },
 
-  parseToMomentUsingTimezone: function (dateString, timeString, timezoneName) {
+  parseToMomentUsingTimezone: function parseToMomentUsingTimezone(dateString, timeString, timezoneName) {
     if (dateString) {
-      var timeStringOrDefault = timeString || '00:00';
+      const timeStringOrDefault = timeString || '00:00';
       return moment.tz(dateString + ' ' + timeStringOrDefault, 'D.M.YYYY H:m', timezoneName);
     }
   },
 
-  defaultTimezone: function () {
+  defaultTimezone: function defaultTimezone() {
     return 'Europe/Berlin';
   },
 
-  formatNumberWithCurrentLocale: function (res, number) {
+  formatNumberWithCurrentLocale: function formatNumberWithCurrentLocale(res, number) {
     return numeral.language(res.locals.language)(number).format('0.00');
   },
 
-  parseNumberWithCurrentLocale: function (language, numberString) {
+  parseNumberWithCurrentLocale: function parseNumberWithCurrentLocale(language, numberString) {
     return parseFloat(numberString.replace(',', '.'));
     // return numeral.language(language)().unformat(numberString);
   },
 
-  roundNumber: function (number) {
+  roundNumber: function roundNumber(number) {
     return numeral().unformat(numeral(number).format('0.00'));
   },
 
-  containsSlash: function (string) {
+  containsSlash: function containsSlash(string) {
     return (/\//).test(string);
   }
 

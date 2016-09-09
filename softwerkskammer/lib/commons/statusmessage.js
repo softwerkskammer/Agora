@@ -1,8 +1,6 @@
-'use strict';
-
 function statusMessage(type, title, text, additionalArguments) {
   return {
-    contents: function () {
+    contents: function contents() {
       return {
         type: type,
         title: title,
@@ -11,11 +9,11 @@ function statusMessage(type, title, text, additionalArguments) {
       };
     },
 
-    kill: function () {
+    kill: function kill() {
       delete this.req.session.statusmessage;
     },
 
-    putIntoSession: function (req, res) {
+    putIntoSession: function putIntoSession(req, res) {
       if (!req.session.statusmessage) {
         req.session.statusmessage = this.contents();
       }
@@ -28,15 +26,15 @@ function statusMessage(type, title, text, additionalArguments) {
 }
 
 module.exports = {
-  fromObject: function (object) {
+  fromObject: function fromObject(object) {
     return statusMessage(object.type, object.title, object.text, object.additionalArguments);
   },
 
-  errorMessage: function (title, text, additionalArguments) {
+  errorMessage: function errorMessage(title, text, additionalArguments) {
     return statusMessage('alert-danger', title, text, additionalArguments);
   },
 
-  successMessage: function (title, text, additionalArguments) {
+  successMessage: function successMessage(title, text, additionalArguments) {
     return statusMessage('alert-success', title, text, additionalArguments);
   }
 };

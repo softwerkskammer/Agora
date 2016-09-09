@@ -6,6 +6,10 @@
     var id = $('#groupform [name=id]');
     var emailPrefix = $('#groupform [name=emailPrefix]');
 
+    beforeEach(function (done) {
+      $(document).ready(function () { done(); });
+    });
+
     afterEach(function () {
       groups_validator.resetForm();
     });
@@ -113,5 +117,6 @@
     });
 
   });
+
 }());
 
