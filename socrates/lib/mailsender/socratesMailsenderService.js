@@ -12,6 +12,10 @@ var logger = require('winston').loggers.get('application');
 
 var mailtransport = beans.get('mailtransport');
 
+function sendMail(message, type, callback) {
+  mailtransport.sendMail(message, type, conf.get('sender-address'), callback);
+}
+
 module.exports = {
 
   sendMailToAllSubscribers: function (message, globalCallback) {
@@ -23,7 +27,7 @@ module.exports = {
         if (err1) { return globalCallback(err1, mailtransport.statusmessageForError(type, err1)); }
         message.setBccToMemberAddresses(members);
         logger.info('BCC: ' + message.bcc);
-        mailtransport.sendMail(message, type, globalCallback);
+        sendMail(message, type, globalCallback);
       });
 
     });
@@ -34,7 +38,7 @@ module.exports = {
     return activityParticipantService.getParticipantsFor(year, function (err, participants) {
       if (err) { return callback(err, mailtransport.statusmessageForError(type, err)); }
       message.setBccToMemberAddresses(participants);
-      mailtransport.sendMail(message, type, callback);
+      sendMail(message, type, callback);
     });
   }
 

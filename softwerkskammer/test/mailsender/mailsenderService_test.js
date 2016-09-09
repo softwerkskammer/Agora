@@ -16,7 +16,7 @@ var Member = beans.get('member');
 var Message = beans.get('message');
 var Group = beans.get('group');
 var fieldHelpers = beans.get('fieldHelpers');
-var mailtransport = beans.get('mailtransport').transport;
+var transport = beans.get('mailtransport').transport;
 
 var emptyActivity;
 
@@ -54,7 +54,7 @@ describe('MailsenderService', function () {
       if (url === 'activityUrlForMock') { return callback(null, emptyActivity); }
       callback(new Error());
     });
-    sendmail = sinon.stub(mailtransport, 'sendMail', function (transportobject, callback) {
+    sendmail = sinon.stub(transport, 'sendMail', function (transportobject, callback) {
       if (!transportobject.to && (!transportobject.bcc || transportobject.bcc.length === 0)) {
         // simulating the behaviour of nodemailer
         return callback(new Error());

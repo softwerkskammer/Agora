@@ -19,6 +19,9 @@ var misc = beans.get('misc');
 
 var mailtransport = beans.get('mailtransport');
 
+function sendMail(message, type, callback) {
+  mailtransport.sendMail(message, type, conf.get('sender-address'), callback);
+}
 function buttonFor(activity, resourceName) {
   var url = misc.toFullQualifiedUrl('activities/subscribe', activity.url() + '/' + resourceName);
   var text = ((activity.resourceNames().length === 1) ? '' : resourceName + ': ') + 'Count me in! - Ich bin dabei!';
@@ -84,7 +87,7 @@ module.exports = {
       if (err) { return callback(err, mailtransport.statusmessageForError(type, err)); }
       message.setBccToMemberAddresses(activity.participants);
       message.setIcal(icalService.activityAsICal(activity).toString());
-      mailtransport.sendMail(message, type, callback);
+      sendMail(message, type, callback);
     });
   },
 
@@ -100,7 +103,7 @@ module.exports = {
           if (activity) {
             message.setIcal(icalService.activityAsICal(activity).toString());
           }
-          mailtransport.sendMail(message, type, callback);
+          sendMail(message, type, callback);
         });
       });
     });
@@ -112,7 +115,7 @@ module.exports = {
       if (err) {return callback(err, mailtransport.statusmessageForError(type, err)); }
       if (!member) {return callback(null, mailtransport.statusmessageForError(type, new Error('Empfänger wurde nicht gefunden.'))); }
       message.setReceiver(member);
-      mailtransport.sendMail(message, type, callback);
+      sendMail(message, type, callback);
     });
   },
 
@@ -127,7 +130,7 @@ module.exports = {
     message.setSubject('Moving up for / Nachrücken für "' + activity.title() + '"');
     message.setMarkdown(markdownEnglish + '\n\n---\n\n' + markdownGerman);
     message.addToButtons(buttonFor(activity, waitinglistEntry.resourceName()));
-    mailtransport.sendMail(message, 'Nachricht', callback);
+    sendMail(message, 'Nachricht', callback);
   },
 
   sendResignment: function (markdown, member, callback) {
@@ -141,7 +144,7 @@ module.exports = {
     membersService.superuserEmails(function (err, superusers) {
       if (err) { return callback(err); }
       message.setTo(superusers);
-      mailtransport.sendMail(message, 'E-Mail zum Austrittswunsch', callback);
+      sendMail(message, 'E-Mail zum Austrittswunsch', callback);
     });
   }
 
