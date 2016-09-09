@@ -1,0 +1,75 @@
+include ../../../views/formComponents
+include ../../../views/imageUpload
+
+mixin avatar(member, returnToParticipantsListing)
+  if(accessrights.canEditMember(member))
+    +editavatar(member, returnToParticipantsListing)
+  else
+    div(style='width: 200px')
+      img(src=member.avatarUrl())
+
+mixin editavatar(member, returnToParticipantsListing)
+  -var deleteURL = returnToParticipantsListing ? '/members/deleteAvatarInOverviewFor/' : '/members/deleteAvatarFor/'
+  -var deleteoptions = {url: deleteURL, params: {nickname: member.nickname()}}
+  +reallyDeleteModalOnly('photo.delete', deleteoptions)
+  div(style='width: 200px')
+    form#recordForm(role='form', method='POST', action='/members/submitavatar' + '?_csrf=' + encodeURIComponent(csrf_token), enctype='multipart/form-data')
+      +hidden('returnToParticipantsListing', returnToParticipantsListing)
+      #selectFileButton
+        img(src=member.avatarUrl())
+        if(accessrights.canEditMember(member))
+          .btn-group(style='display: table; margin-left: auto; margin-right: auto; margin-top: 5px;')
+            +selectFileButton(member.hasCustomAvatar() ? 'photo.replace' : 'general.new', 'btn-sm')
+            if member.hasCustomAvatar()
+              +reallyDeleteButtonOnly('photo.delete', deleteoptions, 'btn-sm')
+      #previewContainer
+        div
+          div(style='margin-top: 5px; width: 200px; height:200px;')
+            img#preview
+          .clearfix
+          .btn-group(style='display: table; margin-left: auto; margin-right: auto; margin-top: 5px;')
+            span#rotate-left.btn.btn-xs.btn-default(title=t('photo.rotate-left')): i.fa.fa-fw.fa-rotate-left
+            span#zoom-in.btn.btn-xs.btn-default(title=t('photo.zoom-in')): i.fa.fa-fw.fa-search-plus
+            span#fit.btn.btn-xs.btn-default(title=t('photo.fit')): i.fa.fa-fw.fa-arrows-alt
+            span#zoom-out.btn.btn-xs.btn-default(title=t('photo.zoom-out')): i.fa.fa-fw.fa-search-minus
+            span#rotate-right.btn.btn-xs.btn-default(title=t('photo.rotate-right')): i.fa.fa-fw.fa-rotate-right
+          .btn-group(style='display: table; margin-left: auto; margin-right: auto; margin-top: 5px; margin-bottom: 25px;')
+            span#btn-cancel.btn.btn-xs.btn-danger(title=t('general.cancel'))
+              i.fa.fa-fw.fa-times
+              | &nbsp; #{t('general.cancel')}
+            button.btn.btn-xs.btn-primary(type='submit', title=t('general.save'))
+              i.fa.fa-fw.fa-check
+              | &nbsp; #{t('general.save')}
+      +imageScripts
+
+      +hidden('nickname', member.nickname())
+      +hidden('scale')
+      +hidden('angle')
+      +hidden('x')
+      +hidden('y')
+      +hidden('h')
+      +hidden('w')
+  script.
+    $(function () {
+      var preview = $('img#preview');
+      $('img#preview').on('load', function () {
+        preview.guillotine({
+          width: 200,
+          height: 200,
+          onChange: function (data, action) {
+            for (var key in data) {
+              $('input[name="' + key + '"]').val(data[key]);
+            }
+          }
+        });
+        preview.guillotine('fit');
+      });
+      $('#btn-cancel').click(function () {
+        preview.guillotine('remove');
+      });
+      $('#rotate-left').click(function () {preview.guillotine('rotateLeft')});
+      $('#rotate-right').click(function () {preview.guillotine('rotateRight')});
+      $('#zoom-in').click(function () {preview.guillotine('zoomIn')});
+      $('#zoom-out').click(function () {preview.guillotine('zoomOut')});
+      $('#fit').click(function () {preview.guillotine('fit')});
+    });

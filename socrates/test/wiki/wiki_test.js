@@ -49,7 +49,7 @@ describe('SoCraTes wiki application', function () {
     it('and shows an editing option for the current user', function (done) {
       request(createApp({id: 'userid'}))
         .get('/2016/participantsOverview')
-        .expect(/<h4><div class="btn-group"><a href="\/members\/editForParticipantListing" title="Edit" class="btn btn-primary"><i class="fa fa-edit fa-fw"><\/i> first last/)
+        .expect(/<h4><div class="btn-group"><a class="btn btn-primary" href="\/members\/editForParticipantListing" title="Edit"><i class="fa fa-edit fa-fw"><\/i> first last/)
         .expect(200, done);
     });
   });

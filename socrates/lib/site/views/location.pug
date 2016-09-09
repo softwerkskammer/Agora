@@ -1,0 +1,87 @@
+extends ../../../views/layout
+block title
+  | Location - SoCraTes
+block content
+  .row
+    .col-sm-12
+      .page-header
+        h1 Location
+  .row
+    .col-md-7
+      h3 Hotelpark Soltau
+      p  Out in the country, approximately one hour from Hamburg.
+      p.
+        It offers great facilities for community-centered events with included accommodation. We have rented most
+        of the facility, so we can concentrate on what we like to do most.
+      p
+        +extlink('http://www.hotel-park-soltau.de/', 'The hotel\'s website (German only)')
+      h4 Directions to SoCraTes Venue
+      p
+        | The address:
+        strong  Hotel Park Soltau, Winsener Str. 111, 29614 Soltau
+        h5 By Train
+        p
+          | Here are several predefined trips that might suit you:
+          ul
+            li #{''}
+              +extlink('http://reiseauskunft.bahn.de/bin/query.exe/en?revia=yes&existOptimizePrice=1&country=DEU&dbkanal_007=L01_S01_D001_KIN0001_qf-bahn_LZ003&ignoreTypeCheck=yes&S=Hamburg+Airport&REQ0JourneyStopsSID=&REQ0JourneyStopsS0A=7&Z=Soltau+Nord&REQ0JourneyStopsZID=&REQ0JourneyStopsZ0A=7&trip-type=single&date=Th%2C+27.08.15&time=13%3A52&timesel=depart&returnTimesel=depart&optimize=0&travelProfile=-1&adult-number=1&children-number=0&infant-number=0&tariffTravellerType.1=E&tariffTravellerReductionClass.1=0&tariffTravellerAge.1=&qf-trav-bday-1=&tariffTravellerReductionClass.2=0&tariffTravellerReductionClass.3=0&tariffTravellerReductionClass.4=0&tariffTravellerReductionClass.5=0&tariffClass=2&start=1&qf.bahn.button.suchen=', 'From Hamburg Airport')
+            li #{''}
+              +extlink('http://reiseauskunft.bahn.de/bin/query.exe/en?revia=yes&existOptimizePrice=1&country=DEU&dbkanal_007=L01_S01_D001_KIN0001_qf-bahn_LZ003&ignoreTypeCheck=yes&S=Hamburg+Hbf&REQ0JourneyStopsSID=&REQ0JourneyStopsS0A=7&Z=Soltau+Nord&REQ0JourneyStopsZID=&REQ0JourneyStopsZ0A=7&trip-type=single&date=Th%2C+27.08.15&time=13%3A52&timesel=depart&returnTimesel=depart&optimize=0&travelProfile=-1&adult-number=1&children-number=0&infant-number=0&tariffTravellerType.1=E&tariffTravellerReductionClass.1=0&tariffTravellerAge.1=&qf-trav-bday-1=&tariffTravellerReductionClass.2=0&tariffTravellerReductionClass.3=0&tariffTravellerReductionClass.4=0&tariffTravellerReductionClass.w5=0&tariffClass=2&start=1&qf.bahn.button.suchen=', 'From Hamburg central station')
+            li #{''}
+              +extlink('http://reiseauskunft.bahn.de/bin/query.exe/en?revia=yes&existOptimizePrice=1&country=DEU&dbkanal_007=L01_S01_D001_KIN0001_qf-bahn_LZ003&ignoreTypeCheck=yes&S=Frankfurt%28Main%29+Hbf&REQ0JourneyStopsSID=&REQ0JourneyStopsS0A=7&Z=Soltau+Nord&REQ0JourneyStopsZID=&REQ0JourneyStopsZ0A=7&trip-type=single&date=Th%2C+27.08.15&time=13%3A52&timesel=depart&returnTimesel=depart&optimize=0&travelProfile=-1&adult-number=1&children-number=0&infant-number=0&tariffTravellerType.1=E&tariffTravellerReductionClass.1=0&tariffTravellerAge.1=&qf-trav-bday-1=&tariffTravellerReductionClass.2=0&tariffTravellerReductionClass.3=0&tariffTravellerReductionClass.4=0&tariffTravellerReductionClass.5=0&tariffClass=2&start=1&qf.bahn.button.suchen=', 'From Frankfurt central station')
+            li #{''}
+              +extlink('http://reiseauskunft.bahn.de/bin/query.exe/en?revia=yes&existOptimizePrice=1&country=DEU&dbkanal_007=L01_S01_D001_KIN0001_qf-bahn_LZ003&ignoreTypeCheck=yes&S=Berlin+Hbf&REQ0JourneyStopsSID=&REQ0JourneyStopsS0A=7&Z=Soltau+Nord&REQ0JourneyStopsZID=&REQ0JourneyStopsZ0A=7&trip-type=single&date=Th%2C+27.08.15&time=13%3A52&timesel=depart&returnTimesel=depart&optimize=0&travelProfile=-1&adult-number=1&children-number=0&infant-number=0&tariffTravellerType.1=E&tariffTravellerReductionClass.1=0&tariffTravellerAge.1=&qf-trav-bday-1=&tariffTravellerReductionClass.2=0&tariffTravellerReductionClass.3=0&tariffTravellerReductionClass.4=0&tariffTravellerReductionClass.5=0&tariffClass=2&start=1&qf.bahn.button.suchen=', 'From Berlin central station')
+        p
+          | If you are searching for a connection yourself, be sure to give
+          strong "Soltau Nord"
+          | as the destination station. It's the railway station that's right
+          | next to the venue.
+        p.
+          There is another station called "Soltau" which is serviced more frequently but
+          which may make a taxi ride necessary. Please check Google Maps for distances.
+        p
+          | The portal of the german railway is at #{''}
+          +extlink('http://www.bahn.de/p_en/view/index.shtml', 'bahn.de and in english')
+          | .
+        h5 By Car
+        p
+          | #{''}
+          +extlink('https://www.google.de/maps/dir//Winsener+Straße+111,+29614+Soltau/@53.0017002,9.7903546,12z/data=!3m1!4b1!4m8!4m7!1m0!1m5!1m1!1s0x47b1b35f8a0e5ea9:0x581ef3c0be6300d0!2m2!1d9.85902!2d53.00172', 'Try searching for direction on Google Maps')
+    .col-md-5
+      #map-canvas(style='width: 100%; height: 300px;')
+      small
+        | Show Location #{''}
+        +extlink('https://goo.gl/maps/xpaf3', 'on a larger map')
+  hr
+  .row
+    .col-md-7
+      h3 Atmosphere
+      p We prepare a great stage for you. 24 hours a day.
+      p.
+        You will definitely not only hang around in the meeting rooms. Since we have rented most of the
+        facility there will be many places to meet and discuss in a relaxed way. Enjoy the air, the sun, the landscape.
+    .col-md-5
+      img.featurette-image.img-responsive(src='img/soltau-inner-yard.jpg', alt='Soltau inner yard')
+  hr
+  h3 Rooms
+  p.
+    Some of the venue's rooms are twin rooms. An important aspect of SoCraTes is
+    its closedness where everything happens in the same location. Therefore, we
+    can only accept as many participants as there are beds available.
+  p.
+    When you register, you can let us know whom you'd be willing to share a room with. Even if you don't know
+    anybody just yet, we will do all we can to find a suitable roommate for you. After registration you'll be
+    able to access the SoCraTes Wiki, where you can get to know other participants before the conference, share information about Taxi- and
+    Ride sharing and other organisational matters.
+
+  script(type='text/javascript', src='https://maps.googleapis.com/maps/api/js?key=AIzaSyBHet1NLP9NBFGt-q-x42TE00L4EDTJnXU&sensor=false')
+  script.
+    function initialize() {
+      var mapOptions = {
+        center: new google.maps.LatLng(53.00172, 9.85902),
+        zoom: 16,
+        mapTypeId: google.maps.MapTypeId.HYBRID
+      };
+      var map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+    }
+    google.maps.event.addDomListener(window, 'load', initialize);

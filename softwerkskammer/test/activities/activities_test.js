@@ -270,7 +270,7 @@ describe('Activity application', function () {
         .expect(/action="subscribe"/)
         .expect(/input type="hidden" name="url" value="urlForInteresting"/)
         .expect(/input type="hidden" name="resource" value="default"/)
-        .expect(/type="submit" class="btn btn-primary">Ich bin dabei!/)
+        .expect(/class="btn btn-primary" type="submit">Ich bin dabei!/)
         .expect(/participant1/)
         .expect(/participant2/, done);
     });
@@ -283,7 +283,7 @@ describe('Activity application', function () {
         .expect(/action="unsubscribe"/)
         .expect(/input type="hidden" name="url" value="urlForInteresting"/)
         .expect(/input type="hidden" name="resource" value="default"/)
-        .expect(/type="submit" class="btn btn-default">Ich kann doch nicht/)
+        .expect(/class="btn btn-default" type="submit">Ich kann doch nicht/)
         .expect(/participant1/)
         .expect(/participant2/, done);
     });
@@ -296,11 +296,11 @@ describe('Activity application', function () {
         .expect(/action="unsubscribe"/)
         .expect(/input type="hidden" name="url" value="urlForMultiple"/)
         .expect(/input type="hidden" name="resource" value="Einzelzimmer"/)
-        .expect(/type="submit" class="btn btn-default">Absagen/)
+        .expect(/class="btn btn-default" type="submit">Absagen/)
         .expect(/action="subscribe"/)
         .expect(/input type="hidden" name="url" value="urlForMultiple"/)
         .expect(/input type="hidden" name="resource" value="Doppelzimmer"/)
-        .expect(/type="submit" class="btn btn-primary">Anmelden/)
+        .expect(/class="btn btn-primary" type="submit">Anmelden/)
         .expect(/participant1/)
         .expect(/participant2/)
         .expect(/participant3/)
@@ -398,7 +398,7 @@ describe('Activity application', function () {
         .expect(/action="unsubscribe"/)
         .expect(/input type="hidden" name="url" value="urlForInteresting"/)
         .expect(/input type="hidden" name="resource" value="default"/)
-        .expect(/type="submit" class="btn btn-default">Ich kann doch nicht/)
+        .expect(/class="btn btn-default" type="submit">Ich kann doch nicht/)
         .expect(/participant1/)
         .expect(/participant2/, done);
     });
@@ -414,7 +414,7 @@ describe('Activity application', function () {
         .expect(/action="unsubscribe"/)
         .expect(/input type="hidden" name="url" value="urlForMultiple"/)
         .expect(/input type="hidden" name="resource" value="Einzelzimmer"/)
-        .expect(/type="submit" class="btn btn-default">Absagen/)
+        .expect(/class="btn btn-default" type="submit">Absagen/)
         .expect(/Doppelzimmer:<\/label>(\S|\s)*Anmeldung ist zur Zeit nicht möglich\./)
         .expect(/participant1/)
         .expect(/participant2/)
@@ -492,7 +492,7 @@ describe('Activity application', function () {
         .expect(/action="addToWaitinglist"/)
         .expect(/input type="hidden" name="url" value="urlForMultiple"/)
         .expect(/input type="hidden" name="resource" value="Einzelzimmer"/)
-        .expect(/type="submit" class="btn btn-primary">Auf die Warteliste!/, done);
+        .expect(/class="btn btn-primary" type="submit">Auf die Warteliste!/, done);
     });
 
   });

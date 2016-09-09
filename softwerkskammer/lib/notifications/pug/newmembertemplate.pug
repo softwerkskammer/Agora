@@ -1,0 +1,36 @@
+doctype html
+html
+  body
+    p Es hat sich ein neues Mitglied registriert:
+
+    strong #{member.firstname()} #{member.lastname()} (
+      a(href=url + '/members/' + encodeURIComponent(member.nickname())) #{member.nickname()}
+      | )
+    br
+    if (member.twitter())
+      strong Twitter:
+      |  @#{member.twitter()}
+      br
+    strong E-Mail:
+    |  #{member.email()}
+    br
+    strong Ort:
+    |  #{member.location()}
+    br
+    strong Beruf:
+    |  #{member.profession()}
+    br
+    strong Interessen:
+    |  #{member.interests()}
+    br
+    strong Website:
+    |  #{member.site()}
+    br
+    strong Referenz:
+    |  #{member.reference()}
+    br
+    strong Eingetragene Gruppen:
+    |  #{groups}
+    br
+
+    p Damit hat die Softwerkskammer jetzt #{count} Mitglieder. 

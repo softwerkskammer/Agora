@@ -1,0 +1,25 @@
+extends ../../../views/layoutNoFooter
+
+include  ../../../views/formComponents
+
+block title
+  | #{pageName} : #{subdir} - #{t('general.edit')}
+
+block content
+  form.relaxed(action='/wiki/' +subdir + '/' + pageName, method='post')
+    +csrf
+    fieldset
+      .row
+        .col-md-12
+          +submitButtons('general.save')
+          legend
+            -var params = {pageName: pageName, subdir: subdir}
+            if page.content === ''
+              | #{t('wiki.create', params)}
+            else 
+              | #{t('wiki.edit', params)}
+          +hightextarea('content', t('wiki.contents'), page.content)
+          +text('comment', t('wiki.message'), page.comment, t('wiki.commit_message'), t('wiki.commit_template'))
+          +hidden('metadata', page.metadata)
+          input#subdir(type='hidden', name='subdir', value=subdir)
+          +submitButtons('general.save')

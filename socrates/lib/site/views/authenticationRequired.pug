@@ -1,0 +1,13 @@
+extends ../../../views/layout
+
+block title
+  | #{t('authentication.please_authenticate')}
+block content
+  .row
+    .col-md-6
+      !=t('authentication.required_text', { postProcess: 'pug' })
+    .col-md-6
+      h3 #{t('authentication.please_authenticate')}
+      p: a.btn.btn-primary(data-toggle='modal', data-target='#login', href='/loginDialog?returnUrl=' + encodeURIComponent(currentUrl ||  '/'))
+        i.fa.fa-sign-in.fa-fw
+        | &nbsp;#{t('general.login')}
