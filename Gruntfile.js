@@ -1,6 +1,6 @@
+'use strict';
 module.exports = function (grunt) {
   /*eslint camelcase: 0*/
-  'use strict';
 
   var commonJSfiles = [
     'node_modules/jquery/dist/jquery.js',
@@ -262,7 +262,7 @@ module.exports = function (grunt) {
         }
       }
     },
-    jade: {
+    pug: {
       compile: {
         options: {
           pretty: true,
@@ -271,8 +271,28 @@ module.exports = function (grunt) {
           }
         },
         files: {
-          'softwerkskammer/frontendtests/fixtures/forms.html': 'softwerkskammer/frontendtests/fixtures/forms.jade'
+          'softwerkskammer/frontendtests/fixtures/forms.html': 'softwerkskammer/frontendtests/fixtures/forms.pug'
         }
+      }
+    },
+    puglint: {
+      standard: {
+        options: {
+          disallowAttributeInterpolation: true,
+          disallowAttributeTemplateString: true,
+          disallowDuplicateAttributes: true,
+          disallowIdAttributeWithStaticValue: true,
+          disallowLegacyMixinCall: true,
+          disallowSpaceAfterCodeOperator: true,
+          disallowTemplateString: true,
+          requireClassLiteralsBeforeAttributes: true,
+          requireIdLiteralsBeforeAttributes: true,
+          requireLowerCaseTags: true,
+          requireStrictEqualityOperators: true,
+          validateAttributeQuoteMarks: '\'',
+          validateAttributeSeparator: ', '
+        },
+        src: ['softwerkskammer/**/*.pug']
       }
     }
   });
@@ -280,17 +300,18 @@ module.exports = function (grunt) {
   // These plugins provide necessary tasks.
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-copy');
-  grunt.loadNpmTasks('grunt-contrib-jade');
+  grunt.loadNpmTasks('grunt-contrib-pug');
   grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-eslint');
   grunt.loadNpmTasks('grunt-karma');
   grunt.loadNpmTasks('grunt-mocha-istanbul');
   grunt.loadNpmTasks('grunt-patch');
+  grunt.loadNpmTasks('grunt-puglint');
 
   grunt.registerTask('prepare', ['copy', 'patch', 'less']);
-  grunt.registerTask('frontendtests', ['clean', 'prepare', 'jade', 'uglify:production_de', 'karma:once', 'uglify:development_de', 'karma:once', 'istanbul_check_coverage:frontend']);
-  grunt.registerTask('tests', ['eslint', 'frontendtests', 'mocha_istanbul', 'istanbul_check_coverage:server']);
+  grunt.registerTask('frontendtests', ['clean', 'prepare', 'pug', 'uglify:production_de', 'karma:once', 'uglify:development_de', 'karma:once', 'istanbul_check_coverage:frontend']);
+  grunt.registerTask('tests', ['eslint', 'puglint', 'frontendtests', 'mocha_istanbul', 'istanbul_check_coverage:server']);
   grunt.registerTask('deploy_development', ['prepare', 'uglify:development_de', 'uglify:development_en']);
 
   // Default task.

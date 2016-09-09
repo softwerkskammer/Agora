@@ -71,7 +71,7 @@ module.exports = {
   expressAppIn: function expressAppIn(directory) {
     const app = express();
     app.set('views', path.join(directory, 'views'));
-    app.set('view engine', 'jade');
+    app.set('view engine', 'pug');
     return app;
   },
 

@@ -1,7 +1,7 @@
 'use strict';
 
 var _ = require('lodash');
-var jade = require('jade');
+var pug = require('pug');
 var path = require('path');
 var conf = require('simple-configure');
 var beans = conf.get('beans');
@@ -37,7 +37,7 @@ Message.prototype.setBccToMemberAddresses = function (members) {
 };
 
 Message.prototype.setReceiver = function (member) {
-  this.receiver = member; // required for UI (see jade-file)
+  this.receiver = member; // required for UI (see pug-file)
   this.bcc = member.email();
 };
 
@@ -75,8 +75,8 @@ Message.prototype.toTransportObject = function (senderAddress) {
     plain: modifiedMarkdown,
     buttons: this.buttons
   };
-  var filename = path.join(__dirname, 'views/mailtemplate.jade');
-  var filenameTextonly = path.join(__dirname, 'views/mailtemplate-textonly.jade');
+  var filename = path.join(__dirname, 'views/mailtemplate.pug');
+  var filenameTextonly = path.join(__dirname, 'views/mailtemplate-textonly.pug');
 
   var fromName = (this.senderName ? this.senderName + ' via ' : '') + (conf.get('domainname') || 'softwerkskammer.org');
   var replyTo = this.senderName ? formatEMailAddress(this.senderName, this.senderAddress) : undefined;
@@ -87,8 +87,8 @@ Message.prototype.toTransportObject = function (senderAddress) {
     cc: this.cc,
     bcc: this.bcc,
     subject: this.subject,
-    text: jade.renderFile(filenameTextonly, renderingOptions),
-    html: jade.renderFile(filename, renderingOptions),
+    text: pug.renderFile(filenameTextonly, renderingOptions),
+    html: pug.renderFile(filename, renderingOptions),
     icalEvent: this.icalEvent
   };
 };

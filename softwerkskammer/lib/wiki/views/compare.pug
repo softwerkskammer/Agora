@@ -1,0 +1,18 @@
+extends ../../../views/layout
+
+block title
+  | #{pageName} : #{subdir} - #{t('general.compare')}
+
+block content
+  .page-header
+    .btn-group.pull-right
+      a.btn.btn-default(href='javascript:history.back()', type='cancel') #{t('general.back')}
+    h2 #{t('wiki.comparison_of')} "#{pageName}"&nbsp;
+      small #{t('wiki.in')} '#{subdir}'
+
+  table.compare.table.table-bordered.table-hover.table-condensed
+    each line in lines
+      tr
+        td.ln #{line.ldln}
+        td.ln #{line.rdln}
+        td(class=line.class) #{line.text}

@@ -1,0 +1,18 @@
+doctype html
+html
+  body
+    p Es hat sich ein neuer SoCraTes-Interessent registriert:
+
+    strong #{member.firstname()} #{member.lastname()} (
+      a(href=url + '/members/' + encodeURIComponent(member.nickname())) #{member.nickname()}
+      | )
+    br
+    if (member.twitter())
+      strong Twitter:
+      |  @#{member.twitter()}
+      br
+    strong E-Mail:
+    |  #{member.email()}
+    br
+
+    p Damit hat die SoCraTes jetzt #{count} Interessenten.

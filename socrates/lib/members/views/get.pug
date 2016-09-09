@@ -1,0 +1,62 @@
+extends ../../../views/layout
+
+include ../../../views/formComponents
+include ../../../../softwerkskammer/lib/members/views/editavatar
+include ../../../../softwerkskammer/lib/members/views/memberlist-mixin
+include resignBanner
+
+block title
+  | #{member.firstname()} #{member.lastname()} - #{t('members.profile')}
+
+block content
+  .row
+    .col-md-12
+      +resignBanner(registration)
+      .page-header
+        .btn-group.pull-right
+          if (accessrights.canEditMember(member))
+            a.btn.btn-default(href='/members/edit'): i.fa.fa-edit.fa-fw
+          if (accessrights.canDeleteMember(member))
+            -var deleteoptions = {url: '/members/delete', params: {nickname: member.nickname()}}
+            +reallyDeleteModalPost('members.delete', deleteoptions)
+        h2
+          | #{member.nickname()}
+          small
+            | &nbsp;#{t('members.profile')}
+  .row
+    .col-md-8
+      p
+        strong #{t('members.firstname')}:&nbsp;
+        | #{member.firstname()}
+      p
+        strong #{t('members.lastname')}:&nbsp;
+        | #{member.lastname()}
+      p
+        strong #{t('members.twitter')}:&nbsp;
+        span.twitterify
+          | #{member.twitter()}
+
+      if(accessrights.canEditMember(member) && registration.isInDoubleBedRoom)
+        p
+          if roommate
+            strong #{t('members.roommate')}:&nbsp;
+            | #{roommate.displayName()}
+          else
+            strong #{t('members.roommate')}:&nbsp;
+            | You do not have a roommate yet.
+            p
+            | The following participants are looking for a roommate as well. If you would like to share a room with one of them, please discuss this with them :-)#{' '}
+            a(href='mailto:registration@socrates-conference.de') When you both agree, tell us.
+            | #{' '}Otherwise, we will match you up at random.
+            p
+            +memberlist(potentialRoommates)
+
+      p &nbsp;
+    .col-md-4
+      +avatar(member)
+
+  .row
+    .col-md-12
+      a.btn.btn-primary(href='/mailsender/contactMember/' + encodeURIComponent(member.nickname()))
+        i.fa.fa-envelope
+        | &nbsp;#{t('members.send_email', {firstname: member.firstname(), lastname: member.lastname()})}

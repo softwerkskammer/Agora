@@ -2,7 +2,7 @@
 
 var conf = require('simple-configure');
 var logger = require('winston').loggers.get('transactions');
-var jade = require('jade');
+var pug = require('pug');
 var path = require('path');
 var _ = require('lodash');
 
@@ -28,12 +28,12 @@ function notifyConcernedParties(member, bookingdetails, participantFilename, par
 
   var options = renderingOptions(member);
   options.bookingdetails = bookingdetails;
-  var filename = path.join(__dirname, 'jade/' + participantFilename + '.jade');
-  notifications._sendMail([member.email()], participantSubject, jade.renderFile(filename, options));
+  var filename = path.join(__dirname, 'pug/' + participantFilename + '.pug');
+  notifications._sendMail([member.email()], participantSubject, pug.renderFile(filename, options));
   membersService.registrationNotificationEmailAddresses(function (err, receivers) {
     if (err || !receivers) { return logger.error(err); }
-    var file = path.join(__dirname, 'jade/' + organizersFilename + '.jade');
-    notifications._sendMail(receivers, organizersSubject, jade.renderFile(file, options));
+    var file = path.join(__dirname, 'pug/' + organizersFilename + '.pug');
+    notifications._sendMail(receivers, organizersSubject, pug.renderFile(file, options));
   });
 }
 module.exports = {
@@ -44,8 +44,8 @@ module.exports = {
         if (err1 || !subscribers) { return logger.error(err1); }
         var options = renderingOptions(member);
         options.count = subscribers.length;
-        var filename = path.join(__dirname, 'jade/newmembertemplate.jade');
-        notifications._sendMail(receivers, 'Neuer Interessent', jade.renderFile(filename, options));
+        var filename = path.join(__dirname, 'pug/newmembertemplate.pug');
+        notifications._sendMail(receivers, 'Neuer Interessent', pug.renderFile(filename, options));
       });
     });
   },
@@ -98,8 +98,8 @@ module.exports = {
     _.defaults(options, renderingOptions());
     subscriberService.emailAddressesForWikiNotifications(function (err1, emails) {
       if (err1 || emails.length === 0) { return callback(err1); }
-      var filename = path.join(__dirname, 'jade/wikichangetemplate.jade');
-      notifications._sendMail(emails, 'SoCraTes Wiki Changes', jade.renderFile(filename, options), callback);
+      var filename = path.join(__dirname, 'pug/wikichangetemplate.pug');
+      notifications._sendMail(emails, 'SoCraTes Wiki Changes', pug.renderFile(filename, options), callback);
     });
   }
 

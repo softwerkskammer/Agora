@@ -1,0 +1,178 @@
+extends ../../../views/layout
+include ../../../../softwerkskammer/lib/members/views/memberlist-mixin
+include ../../../../softwerkskammer/views/format-mixin
+include ../../../../softwerkskammer/views/formComponents
+include ../../../../softwerkskammer/views/dataTables-mixin
+
+mixin individualRoom(roomType)
+  -var participants = participantsOf[roomType]
+  .panel
+    table.table.table-condensed.table-hover.table-striped.unsortedtable
+      thead
+        tr
+          th Donnerstag - Samstag
+          th Samstag - Sonntag
+          th Sonntag - Montag
+      tbody
+        for member in participants
+          -var duration = registrationReadModel.participantEventFor(member.id()).duration
+          -var name = member.displayName()
+          tr
+            td #{name}
+            td #{duration > 2 ? name : ""}
+            td #{duration > 4 ? name : ""}
+
+mixin sharedRoom(roomType)
+  .panel
+    table.table.table-condensed.table-hover.table-striped.unsortedtable
+      thead
+        tr
+          th(colspan='2') Donnerstag - Samstag
+          th(colspan='2') Samstag - Sonntag
+          th(colspan='2') Sonntag - Montag
+        tr
+          th 1. Teilnehmer
+          th 2. Teilnehmer
+          th 1. Teilnehmer
+          th 2. Teilnehmer
+          th 1. Teilnehmer
+          th 2. Teilnehmer
+      tbody
+        for pair in rooms[roomType].roomPairs
+          -var name1 = pair.participant1.displayName()
+          -var name2 = pair.participant2.displayName()
+          -var duration1 = registrationReadModel.participantEventFor(pair.participant1.id()).duration
+          -var duration2 = registrationReadModel.participantEventFor(pair.participant2.id()).duration
+          tr
+            td #{name1}
+            td #{name2}
+            td #{duration1 > 2 ? name1 : ""}
+            td #{duration2 > 2 ? name2 : ""}
+            td #{duration1 > 4 ? name1 : ""}
+            td #{duration2 > 4 ? name2 : ""}
+        for participant in rooms[roomType].unpairedParticipants
+          -var name = participant.displayName()
+          -var duration = registrationReadModel.participantEventFor(participant.id()).duration
+          tr
+            td #{name}
+            td
+            td #{duration > 2 ? name : ""}
+            td
+            td #{duration > 4 ? name : ""}
+            td
+
+mixin roomCountLine(firstColumn, thursdayToSaturday, saturdayToSunday, sundayToMonday)
+  td #{firstColumn}
+  td #{thursdayToSaturday}
+  td #{saturdayToSunday}
+  td #{sundayToMonday}
+
+mixin roomCountFor(firstColumn, roomType, totalRoomCount)
+  -var thursdayToSaturday = 0
+  -var saturdayToSunday = 0
+  -var sundayToMonday = 0
+  -var participants = participantsOf[roomType]
+
+  for member in participants
+    -var duration = registrationReadModel.participantEventFor(member.id()).duration
+    -thursdayToSaturday = thursdayToSaturday + 1
+    -if(duration > 2)
+      -saturdayToSunday = saturdayToSunday + 1
+    -if(duration > 4)
+      -sundayToMonday = sundayToMonday + 1
+
+  -totalRoomCount.thursdayToSaturday = totalRoomCount.thursdayToSaturday + thursdayToSaturday
+  -totalRoomCount.saturdayToSunday = totalRoomCount.saturdayToSunday + saturdayToSunday
+  -totalRoomCount.sundayToMonday = totalRoomCount.sundayToMonday + sundayToMonday
+  tr
+    +roomCountLine(firstColumn, thursdayToSaturday, saturdayToSunday, sundayToMonday)
+
+
+block scripts
+  +dataTableImport
+  +dataTable('.unsortedtable', '[]', '[]')
+block title
+  | Hotel-Informationen
+block content
+  .row
+    .col-md-12
+      .page-header
+        h2 Hotel-Informationen
+          a.btn.pull-right.btn-default(href='/registration') Zurück
+    ul.nav.nav-tabs
+      li.active: a(href='#addresses', data-toggle='tab') Adressen
+      li: a(href='#single', data-toggle='tab') Einzelzimmer
+      li: a(href='#bed_in_double', data-toggle='tab') Doppelzimmer
+      li: a(href='#bed_in_junior', data-toggle='tab') Junior-DZ Doppelbelegung
+      li: a(href='#junior', data-toggle='tab') Junior-DZ Einzelbelegung
+      li: a(href='#total', data-toggle='tab') Gesamt-Personenzahl
+  .row
+    .col-md-12
+      .tab-content
+        .tab-pane#addresses
+          .panel
+            table.table.table-condensed.table-hover.table-striped.unsortedtable
+              thead
+                tr
+                  th Vorname
+                  th Nachname
+                  th Heimatadresse
+                  th Rechnungsadresse
+              tbody
+                for line in addonLines
+                  tr
+                    td #{line.member.firstname()}
+                    td #{line.member.lastname()}
+                    td: +formatAsLines(line.addon.homeAddressLines())
+                    td: +formatAsLines(line.addon.billingAddressLines())
+
+        .tab-pane#single
+          +individualRoom('single')
+
+        .tab-pane#bed_in_double
+          +sharedRoom('bed_in_double')
+
+        .tab-pane#bed_in_junior
+          +sharedRoom('bed_in_junior')
+
+        .tab-pane#junior
+          +individualRoom('junior')
+
+        .tab-pane#total
+          h4 Zimmerbelegung Personenzahl
+          .panel
+            table.table.table-condensed.table-hover.table-striped
+              thead
+                tr
+                  th #{' '}
+                  th Donnerstag - Samstag
+                  th Samstag - Sonntag
+                  th Sonntag - Montag
+              tbody
+                -var totalRoomCount = { thursdayToSaturday: 0, saturdayToSunday: 0, sundayToMonday: 0 }
+                +roomCountFor('Einzelzimmer', 'single', totalRoomCount)
+                +roomCountFor('Doppelzimmer', 'bed_in_double', totalRoomCount)
+                +roomCountFor('Junior-DZ Doppelbelegung', 'bed_in_junior', totalRoomCount)
+                +roomCountFor('Junior-DZ Einzelbelegung', 'junior', totalRoomCount)
+                +roomCountLine('Personen gesamt', totalRoomCount.thursdayToSaturday, totalRoomCount.saturdayToSunday, totalRoomCount.sundayToMonday)
+
+          h4 Tagesgäste
+          .panel
+            table.table.table-condensed.table-hover.table-striped
+              thead
+                tr
+                  th Freitag und Samstag
+                  th Sonntag
+              tbody
+                -var fridayAndSaturday = 0
+                -var sunday = 0
+                for roomType in ['single', 'bed_in_double', 'bed_in_junior', 'junior']
+                  -var participants = participantsOf[roomType]
+                  for member in participants
+                    -var duration = registrationReadModel.participantEventFor(member.id()).duration
+                    -fridayAndSaturday = fridayAndSaturday + 1
+                    -if(duration > 3)
+                      -sunday = sunday + 1
+                tr
+                  td #{fridayAndSaturday}
+                  td #{sunday}
