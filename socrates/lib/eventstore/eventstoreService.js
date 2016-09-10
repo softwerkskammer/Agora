@@ -26,13 +26,31 @@ function keyFor(url, key) {
   return url + '_' + key;
 }
 
+function getGlobalEventStoreForWriting(url, callback) {
+  const cacheKey = keyFor(url, GLOBAL_EVENT_STORE_FOR_WRITING);
+  const cachedStore = cache.get(cacheKey);
+  if (cachedStore) {
+    return callback(null, cachedStore);
+  }
+
+  eventstore.getEventStore(url, function (err, eventStore) {
+    if (err || !eventStore) { return callback(err); }
+    const cachedWhileFetching = cache.get(cacheKey);
+    if (cachedWhileFetching) {
+      return callback(null, cachedWhileFetching);
+    }
+    cache.set(cacheKey, eventStore);
+    callback(null, eventStore);
+  });
+}
+
 function getReadModel(url, key, ReadModel, callback) {
   const cacheKey = keyFor(url, key);
   const cachedModel = cache.get(cacheKey);
   if (cachedModel) {
     return callback(null, cachedModel);
   }
-  eventstore.getEventStore(url, function (err, eventStore) {
+  getGlobalEventStoreForWriting(url, function (err, eventStore) {
     // for the read models, there must be an eventstore already:
     if (err || !eventStore) { return callback(err); }
     const cachedWhileFetching = cache.get(cacheKey);
@@ -51,7 +69,7 @@ function getReadModelWithArg(url, key, ReadModel, argument, callback) {
   if (cachedModel) {
     return callback(null, cachedModel);
   }
-  eventstore.getEventStore(url, function (err, eventStore) {
+  getGlobalEventStoreForWriting(url, function (err, eventStore) {
     // for the read models, there must be an eventstore already:
     if (err || !eventStore) { return callback(err); }
     const cachedWhileFetching = cache.get(cacheKey);
@@ -61,24 +79,6 @@ function getReadModelWithArg(url, key, ReadModel, argument, callback) {
     const newModel = new ReadModel(eventStore, argument);
     cache.set(cacheKey, newModel);
     callback(null, newModel);
-  });
-}
-
-function getGlobalEventStoreForWriting(url, callback) {
-  const cacheKey = keyFor(url, GLOBAL_EVENT_STORE_FOR_WRITING);
-  const cachedStore = cache.get(cacheKey);
-  if (cachedStore) {
-    return callback(null, cachedStore);
-  }
-
-  eventstore.getEventStore(url, function (err, eventStore) {
-    if (err || !eventStore) { return callback(err); }
-    const cachedWhileFetching = cache.get(cacheKey);
-    if (cachedWhileFetching) {
-      return callback(null, cachedWhileFetching);
-    }
-    cache.set(cacheKey, eventStore);
-    callback(null, eventStore);
   });
 }
 
