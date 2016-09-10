@@ -117,13 +117,6 @@ RegistrationCommandProcessor.prototype.fromWaitinglistToParticipant = function (
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-RegistrationCommandProcessor.prototype.updateEventStore = function (newEvents) {
-  if (!(newEvents instanceof Array)) {
-    newEvents = [newEvents];
-  }
-  this.writeModel.updateEvents(newEvents);
-};
-
 RegistrationCommandProcessor.prototype.eventStore = function () {
   return this.writeModel.eventStore();
 };

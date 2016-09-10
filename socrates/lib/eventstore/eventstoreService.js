@@ -160,16 +160,14 @@ module.exports = {
 
     let eventStore;
     if (commandProcessor instanceof Array) {
-      // sometimes we need to update several parts of the event store
-      commandProcessor.map((processor, index) => processor.updateEventStore(events[index]));
       eventStore = commandProcessor[0].eventStore();
       events = R.flatten(events);
     } else {
-      commandProcessor.updateEventStore(events);
       eventStore = commandProcessor.eventStore();
     }
 
     const url = eventStore.state.url;
+    eventStore.updateEvents(events);
 
     // update all read models:
     R.values(cache.mget([keyFor(url, SOCRATES_READ_MODEL), keyFor(url, REGISTRATION_READ_MODEL), keyFor(url, ROOMS_READ_MODEL)])).forEach(model => model.update(events));
