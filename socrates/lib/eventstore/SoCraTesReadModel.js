@@ -19,7 +19,7 @@ function SoCraTesReadModel(eventStore) {
   this._endTimeInMillis = undefined;
   this._quota = {};
 
-  this.update(this._eventStore.socratesEvents());
+  this.update(this._eventStore.events());
 }
 
 var processUrl = function (url, event) { return event.event === e.URL_WAS_SET ? event.url : url; };

@@ -11,7 +11,7 @@ var store = beans.get('eventstore');
 describe('eventstore', function () {
   var eventStore = {
     url: 'socrates-url',
-    socratesEvents: [{event: 'EVENT-1'}],
+    events: [{event: 'EVENT-1'}],
     resourceEvents: [{event: 'EVENT-2'}]
   };
 
@@ -31,7 +31,7 @@ describe('eventstore', function () {
     store.getEventStore('socrates-url', function (err, globalEventStore) {
       expect(getByField.calledWith({url: 'socrates-url'})).to.be(true);
       expect(globalEventStore.state.url).to.equal('socrates-url');
-      expect(globalEventStore.state.socratesEvents).to.eql([{event: 'EVENT-1'}]);
+      expect(globalEventStore.state.events).to.eql([{event: 'EVENT-1'}]);
       done(err);
     });
   });

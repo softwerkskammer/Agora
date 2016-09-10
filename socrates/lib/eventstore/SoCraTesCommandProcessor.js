@@ -37,7 +37,7 @@ SoCraTesCommandProcessor.prototype.updateEventStore = function (newEvents) {
   if (!(newEvents instanceof Array)) {
     newEvents = [newEvents];
   }
-  this.writeModel.updateSoCraTesEvents(newEvents);
+  this.writeModel.updateEvents(newEvents);
 };
 
 SoCraTesCommandProcessor.prototype.eventStore = function () {

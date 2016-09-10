@@ -44,7 +44,7 @@ describe('Room Options', function () {
       var roomIds = roomOptions.allIds();
 
       var eventStore = new GlobalEventStore();
-      eventStore.state.socratesEvents = [
+      eventStore.state.events = [
         events.roomQuotaWasSet(roomIds[0], 100),
         events.roomQuotaWasSet(roomIds[1], 1),
         events.roomQuotaWasSet(roomIds[2], 100),

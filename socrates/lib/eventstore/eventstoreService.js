@@ -106,7 +106,7 @@ module.exports = {
       if (!eventStore) {
         eventStore = new GlobalEventStore({
           url: url,
-          socratesEvents: [],
+          events: [],
           registrationEvents: [],
           roomsEvents: []
         });

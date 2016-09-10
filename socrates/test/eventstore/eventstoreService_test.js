@@ -13,7 +13,7 @@ var eventstoreService = beans.get('eventstoreService');
 describe('eventstoreService', function () {
   var eventStore = {
     url: 'socrates-url',
-    socratesEvents: [{event: 'EVENT-1'}],
+    events: [{event: 'EVENT-1'}],
     resourceEvents: [{event: 'EVENT-2'}]
   };
 

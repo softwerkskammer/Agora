@@ -114,7 +114,7 @@ describe('SoCraTes Activities Service', function () {
     });
 
     it('registers the user even when the limit is 0', function (done) {
-      eventStore.state.socratesEvents = [events.roomQuotaWasSet('single', 0)];
+      eventStore.state.events = [events.roomQuotaWasSet('single', 0)];
       eventStore.state.registrationEvents = [
         events.waitinglistParticipantWasRegistered(['single'], 'sessionId', 'memberId', aLongTimeAgo)];
 
@@ -129,7 +129,7 @@ describe('SoCraTes Activities Service', function () {
     });
 
     it('registers the user even when the resource is full', function (done) {
-      eventStore.state.socratesEvents = [events.roomQuotaWasSet('single', 1)];
+      eventStore.state.events = [events.roomQuotaWasSet('single', 1)];
       eventStore.state.registrationEvents = [
         events.participantWasRegistered('single', 3, 'otherSessionId', 'otherMemberId', aLongTimeAgo),
         events.waitinglistParticipantWasRegistered(['single'], 'sessionId', 'memberId', aLongTimeAgo)

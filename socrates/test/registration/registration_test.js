@@ -64,7 +64,7 @@ describe('SoCraTes registration application', function () {
     cache.flushAll();
 
     eventStore = new GlobalEventStore();
-    eventStore.state.socratesEvents = [
+    eventStore.state.events = [
       events.roomQuotaWasSet('single', 0),
       events.roomQuotaWasSet('bed_in_double', 10),
       events.roomQuotaWasSet('junior', 10),

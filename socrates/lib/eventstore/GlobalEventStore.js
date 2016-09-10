@@ -8,18 +8,18 @@ var socratesConstants = beans.get('socratesConstants');
 function GlobalEventStore(object) {
   this.state = object || {
       url: socratesConstants.currentUrl,
-      socratesEvents: [],
+      events: [],
       registrationEvents: [],
       roomsEvents: []
     };
 }
 
-GlobalEventStore.prototype.socratesEvents = function () {
-  return this.state.socratesEvents;
+GlobalEventStore.prototype.events = function () {
+  return this.state.events;
 };
 
-GlobalEventStore.prototype.updateSoCraTesEvents = function (newEvents) {
-  this.state.socratesEvents = this.state.socratesEvents.concat(newEvents);
+GlobalEventStore.prototype.updateEvents = function (newEvents) {
+  this.state.events = this.state.events.concat(newEvents);
 };
 
 GlobalEventStore.prototype.registrationEvents = function () {

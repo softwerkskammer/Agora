@@ -20,7 +20,7 @@ describe('The SoCraTes read model', function () {
   });
 
   it('reads the latest start and end time from the events', function () {
-    eventStore.state.socratesEvents = [
+    eventStore.state.events = [
       events.startTimeWasSet(moment('2015-12-15T12:30:00+02:00')),
       events.startTimeWasSet(moment('2015-06-15T12:30:00+02:00')),
       events.endTimeWasSet(moment('2015-11-15T12:30:00+02:00')),
@@ -38,14 +38,14 @@ describe('The SoCraTes read model', function () {
   });
 
   it('determines the quota from the socrates event', function () {
-    eventStore.state.socratesEvents = [events.roomQuotaWasSet(singleBedRoom, 100)];
+    eventStore.state.events = [events.roomQuotaWasSet(singleBedRoom, 100)];
     const readModel = new SoCraTesReadModel(eventStore);
 
     expect(readModel.quotaFor(singleBedRoom)).to.be(100);
   });
 
   it('determines the quota from the latest socrates event for the requested room type', function () {
-    eventStore.state.socratesEvents = [
+    eventStore.state.events = [
       events.roomQuotaWasSet(singleBedRoom, 100),
       events.roomQuotaWasSet(singleBedRoom, 200),
       events.roomQuotaWasSet(bedInDouble, 300)];

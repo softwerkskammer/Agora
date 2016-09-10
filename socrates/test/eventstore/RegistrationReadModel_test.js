@@ -380,7 +380,7 @@ describe('The registration read model', function () {
 
   describe('knows if rooms are full (isFull)', function () {
     it('returns true when the room is full', function () {
-      eventStore.state.socratesEvents = [events.roomQuotaWasSet(singleBedRoom, 1)];
+      eventStore.state.events = [events.roomQuotaWasSet(singleBedRoom, 1)];
       eventStore.state.registrationEvents = [
         events.participantWasRegistered(singleBedRoom, untilSaturday, sessionId1, memberId1, aLongTimeAgo)
       ];
@@ -389,14 +389,14 @@ describe('The registration read model', function () {
       expect(readModel.isFull(singleBedRoom)).to.eql(true);
     });
     it('returns false if the room quota was not set', function () {
-      eventStore.state.socratesEvents = [events.roomQuotaWasSet(bedInDouble, 100)];
+      eventStore.state.events = [events.roomQuotaWasSet(bedInDouble, 100)];
       const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
       expect(readModel.isFull(singleBedRoom)).to.eql(false);
     });
 
     it('is no longer full when participant was removed from full room', function () {
-      eventStore.state.socratesEvents = [events.roomQuotaWasSet(singleBedRoom, 1)];
+      eventStore.state.events = [events.roomQuotaWasSet(singleBedRoom, 1)];
       eventStore.state.registrationEvents = [
         events.participantWasRegistered(singleBedRoom, untilSaturday, sessionId1, memberId1, aLongTimeAgo),
         events.participantWasRemoved(singleBedRoom, memberId1)
@@ -407,7 +407,7 @@ describe('The registration read model', function () {
     });
 
     it('returns true if participant was registered from waitinglist', function () {
-      eventStore.state.socratesEvents = [events.roomQuotaWasSet(singleBedRoom, 1)];
+      eventStore.state.events = [events.roomQuotaWasSet(singleBedRoom, 1)];
       eventStore.state.registrationEvents = [
         events.registeredParticipantFromWaitinglist(singleBedRoom, untilSaturday, memberId1, aLongTimeAgo)
       ];
@@ -417,7 +417,7 @@ describe('The registration read model', function () {
     });
 
     it('returns true when person is moved by changing his room type', function () {
-      eventStore.state.socratesEvents = [
+      eventStore.state.events = [
         events.roomQuotaWasSet(singleBedRoom, 1),
         events.roomQuotaWasSet(bedInDouble, 1)
       ];
