@@ -106,8 +106,7 @@ module.exports = {
       if (!eventStore) {
         eventStore = new GlobalEventStore({
           url: url,
-          events: [],
-          roomsEvents: []
+          events: []
         });
       }
       cache.set(keyFor(url, GLOBAL_EVENT_STORE_FOR_WRITING), eventStore);

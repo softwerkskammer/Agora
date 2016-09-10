@@ -45,7 +45,7 @@ function RoomsReadModel(eventStore, registrationReadModel) {
     this._participantsIn[roomType] = [];
   });
 
-  this.update(eventStore.roomsEvents());
+  this.update(eventStore.events());
 }
 
 RoomsReadModel.prototype.update = function (events) {

@@ -28,8 +28,7 @@ describe('SoCraTes activities application', function () {
 
     const eventStore = new GlobalEventStore({
       url: 'socrates-2015',
-      events: [],
-      roomsEvents: []
+      events: []
     });
 
     saveEventStoreStub = sinon.stub(eventstore, 'saveEventStore', function (store, callback) { callback(); });

@@ -69,7 +69,7 @@ RoomsCommandProcessor.prototype.updateEventStore = function (newEvents) {
   if (!(newEvents instanceof Array)) {
     newEvents = [newEvents];
   }
-  this.writeModel.updateRoomsEvents(newEvents);
+  this.writeModel.updateEvents(newEvents);
 };
 
 RoomsCommandProcessor.prototype.eventStore = function () {

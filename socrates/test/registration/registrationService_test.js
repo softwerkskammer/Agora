@@ -59,8 +59,7 @@ describe('Registration Service', function () {
 
     eventStore = new GlobalEventStore({
       url: 'socrates-url',
-      events: [],
-      roomsEvents: []
+      events: []
     });
     eventStore.state.events = [
       events.roomQuotaWasSet('single', 10)

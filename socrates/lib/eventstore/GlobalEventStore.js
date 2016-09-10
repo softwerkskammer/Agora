@@ -8,8 +8,7 @@ var socratesConstants = beans.get('socratesConstants');
 function GlobalEventStore(object) {
   this.state = object || {
       url: socratesConstants.currentUrl,
-      events: [],
-      roomsEvents: []
+      events: []
     };
 }
 
@@ -19,14 +18,6 @@ GlobalEventStore.prototype.events = function () {
 
 GlobalEventStore.prototype.updateEvents = function (newEvents) {
   this.state.events = this.state.events.concat(newEvents);
-};
-
-GlobalEventStore.prototype.roomsEvents = function () {
-  return this.state.roomsEvents;
-};
-
-GlobalEventStore.prototype.updateRoomsEvents = function (newEvents) {
-  this.state.roomsEvents = this.state.roomsEvents.concat(newEvents);
 };
 
 // TODO why can't the id be just the URL? Why can't we simply use the id === url to find the eventstore? And remove the state.url?

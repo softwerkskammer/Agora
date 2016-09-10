@@ -1,6 +1,7 @@
 /* eslint no-underscore-dangle: 0 */
 'use strict';
 
+var R = require('ramda');
 var request = require('supertest');
 var sinon = require('sinon').sandbox.create();
 var expect = require('must-dist');
@@ -203,9 +204,9 @@ describe('SoCraTes members application', function () {
       });
 
       it('does not display anything about roommates if the subscriber is in a single-bed room', function (done) {
-        eventStore.state.events = [
+        eventStore.state.events = R.concat(eventStore.state.events, [
           events.participantWasRegistered('single', 3, 'session-id', 'memberId2', aShortTimeAgo)
-        ];
+        ]);
         socratesSubscriber.state.participations[currentYear] = {};
 
         appWithSocratesMember
@@ -217,10 +218,10 @@ describe('SoCraTes members application', function () {
       });
 
       it('displays other unmatched roommates if the subscriber is in a double-bed room but has no roommate associated', function (done) {
-        eventStore.state.events = [
+        eventStore.state.events = R.concat(eventStore.state.events, [
           events.participantWasRegistered('bed_in_double', 3, 'session-id', 'memberId', aShortTimeAgo),
           events.participantWasRegistered('bed_in_double', 3, 'session-id-2', 'memberId2', aShortTimeAgo)
-        ];
+        ]);
         socratesSubscriber.state.participations[currentYear] = {};
 
         appWithSocratesMember
@@ -234,13 +235,11 @@ describe('SoCraTes members application', function () {
       });
 
       it('displays the name of the roommate if the subscriber is in a double-bed room and has a roommate associated', function (done) {
-        eventStore.state.events = [
+        eventStore.state.events = R.concat(eventStore.state.events, [
           events.participantWasRegistered('bed_in_double', 3, 'session-id', 'memberId', aShortTimeAgo),
-          events.participantWasRegistered('bed_in_double', 3, 'session-id-2', 'memberId2', aShortTimeAgo)
-        ];
-        eventStore.state.roomsEvents = [
+          events.participantWasRegistered('bed_in_double', 3, 'session-id-2', 'memberId2', aShortTimeAgo),
           events.roomPairWasAdded('bed_in_double', 'memberId', 'memberId2')
-        ];
+        ]);
         socratesSubscriber.state.participations[currentYear] = {};
 
         appWithSocratesMember
@@ -250,13 +249,11 @@ describe('SoCraTes members application', function () {
       });
 
       it('does not display anything about roommates on a different member\'s profile', function (done) {
-        eventStore.state.events = [
+        eventStore.state.events = R.concat(eventStore.state.events, [
           events.participantWasRegistered('bed_in_double', 3, 'session-id', 'memberId', aShortTimeAgo),
-          events.participantWasRegistered('bed_in_double', 3, 'session-id-2', 'memberId2', aShortTimeAgo)
-        ];
-        eventStore.state.roomsEvents = [
+          events.participantWasRegistered('bed_in_double', 3, 'session-id-2', 'memberId2', aShortTimeAgo),
           events.roomPairWasAdded('bed_in_double', 'memberId', 'memberId2')
-        ];
+        ]);
         socratesSubscriber.state.participations[currentYear] = {};
 
         appWithSocratesMember
@@ -315,9 +312,9 @@ describe('SoCraTes members application', function () {
       });
 
       it('does not allow a subscriber who is registered for a single-bed-room to enter a desired roommate', function (done) {
-        eventStore.state.events = [
+        eventStore.state.events = R.concat(eventStore.state.events, [
           events.participantWasRegistered('single', 3, 'session-id', 'memberId2', aShortTimeAgo)
-        ];
+        ]);
         socratesSubscriber.state.participations[currentYear] = {};
         sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
 
@@ -332,9 +329,9 @@ describe('SoCraTes members application', function () {
       });
 
       it('does not allow a subscriber who is registered for an exclusive junior room to enter a desired roommate', function (done) {
-        eventStore.state.events = [
+        eventStore.state.events = R.concat(eventStore.state.events, [
           events.participantWasRegistered('junior', 3, 'session-id', 'memberId2', aShortTimeAgo)
-        ];
+        ]);
         socratesSubscriber.state.participations[currentYear] = {};
         sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
 
@@ -349,9 +346,9 @@ describe('SoCraTes members application', function () {
       });
 
       it('allows a subscriber who is registered for a bed in a double-bed room to enter a desired roommate', function (done) {
-        eventStore.state.events = [
+        eventStore.state.events = R.concat(eventStore.state.events, [
           events.participantWasRegistered('bed_in_double', 3, 'session-id', 'memberId2', aShortTimeAgo)
-        ];
+        ]);
         socratesSubscriber.state.participations[currentYear] = {};
         sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
 
@@ -363,9 +360,9 @@ describe('SoCraTes members application', function () {
       });
 
       it('allows a subscriber who is registered for a bed in a junior room to enter a desired roommate', function (done) {
-        eventStore.state.events = [
+        eventStore.state.events = R.concat(eventStore.state.events, [
           events.participantWasRegistered('bed_in_junior', 3, 'session-id', 'memberId2', aShortTimeAgo)
-        ];
+        ]);
         socratesSubscriber.state.participations[currentYear] = {};
         sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
 
@@ -402,9 +399,9 @@ describe('SoCraTes members application', function () {
     });
 
     it('allows a subscriber who is registered to enter the home address', function (done) {
-      eventStore.state.events = [
+      eventStore.state.events = R.concat(eventStore.state.events, [
         events.participantWasRegistered('bed_in_double', 3, 'session-id', 'memberId2', aShortTimeAgo)
-      ];
+      ]);
       sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
 
       appWithSocratesMember
