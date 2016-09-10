@@ -68,7 +68,7 @@ describe('activityParticipantService', function () {
   });
 
   it('loads the participants and their participation information for a year (on or after 2016)', function (done) {
-    eventStore.state.registrationEvents = [
+    eventStore.state.events = [
       events.participantWasRegistered('single', 2, 'session-id', 'memberId', moment.tz())
     ];
 
@@ -83,7 +83,7 @@ describe('activityParticipantService', function () {
   });
 
   it('loads the waitinglist participants and their participation information for a year (on or after 2016)', function (done) {
-    eventStore.state.registrationEvents = [
+    eventStore.state.events = [
       events.waitinglistParticipantWasRegistered(['single', 'junior'], 'session-id', 'memberId', moment.tz())
     ];
 

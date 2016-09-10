@@ -34,7 +34,7 @@ describe('The rooms command processor', function () {
   beforeEach(function () {
     eventStore = new GlobalEventStore();
 
-    eventStore.state.registrationEvents = [
+    eventStore.state.events = [
       events.participantWasRegistered(bedInDouble, 2, 'sessionId1', 'memberId1', aLongTimeAgo),
       events.participantWasRegistered(bedInDouble, 2, 'sessionId2', 'memberId2', aLongTimeAgo),
       events.participantWasRegistered(bedInDouble, 2, 'sessionId3', 'memberId3', aLongTimeAgo),

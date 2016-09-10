@@ -121,7 +121,7 @@ RegistrationCommandProcessor.prototype.updateEventStore = function (newEvents) {
   if (!(newEvents instanceof Array)) {
     newEvents = [newEvents];
   }
-  this.writeModel.updateRegistrationEvents(newEvents);
+  this.writeModel.updateEvents(newEvents);
 };
 
 RegistrationCommandProcessor.prototype.eventStore = function () {

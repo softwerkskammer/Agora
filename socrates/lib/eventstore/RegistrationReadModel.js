@@ -73,7 +73,7 @@ function RegistrationReadModel(eventStore, soCraTesReadModel) {
   this._waitinglistParticipantsByMemberIdFor = {};
   this._durations = [];
 
-  this.update(eventStore.registrationEvents());
+  this.update(eventStore.events());
 }
 
 RegistrationReadModel.prototype.update = function (events) {

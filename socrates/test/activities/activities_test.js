@@ -29,7 +29,6 @@ describe('SoCraTes activities application', function () {
     const eventStore = new GlobalEventStore({
       url: 'socrates-2015',
       events: [],
-      registrationEvents: [],
       roomsEvents: []
     });
 

@@ -9,7 +9,6 @@ function GlobalEventStore(object) {
   this.state = object || {
       url: socratesConstants.currentUrl,
       events: [],
-      registrationEvents: [],
       roomsEvents: []
     };
 }
@@ -20,14 +19,6 @@ GlobalEventStore.prototype.events = function () {
 
 GlobalEventStore.prototype.updateEvents = function (newEvents) {
   this.state.events = this.state.events.concat(newEvents);
-};
-
-GlobalEventStore.prototype.registrationEvents = function () {
-  return this.state.registrationEvents;
-};
-
-GlobalEventStore.prototype.updateRegistrationEvents = function (newEvents) {
-  this.state.registrationEvents = this.state.registrationEvents.concat(newEvents);
 };
 
 GlobalEventStore.prototype.roomsEvents = function () {
