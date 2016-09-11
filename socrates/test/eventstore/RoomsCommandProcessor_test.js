@@ -134,7 +134,7 @@ describe('The rooms command processor', function () {
   });
 
   it('does not create a room if the first participant already is in a room', function () {
-    eventStore.state.events = R.concat(eventStore.state.events, [
+    eventStore.state.events = eventStore.state.events.concat([
       events.roomPairWasAdded(bedInDouble, 'memberId1', 'memberId2')
     ]);
 
@@ -149,7 +149,7 @@ describe('The rooms command processor', function () {
   });
 
   it('does not create a room if the second participant already is in a room', function () {
-    eventStore.state.events = R.concat(eventStore.state.events, [
+    eventStore.state.events = eventStore.state.events.concat([
       events.roomPairWasAdded(bedInDouble, 'memberId1', 'memberId2')
     ]);
 
@@ -164,7 +164,7 @@ describe('The rooms command processor', function () {
   });
 
   it('does not create a room if the participants already are in a room but in reverse order', function () {
-    eventStore.state.events = R.concat(eventStore.state.events, [
+    eventStore.state.events = eventStore.state.events.concat([
       events.roomPairWasAdded(bedInDouble, 'memberId1', 'memberId2')
     ]);
 
@@ -180,7 +180,7 @@ describe('The rooms command processor', function () {
   });
 
   it('removes a pair if the members are given in the right order', function () {
-    eventStore.state.events = R.concat(eventStore.state.events, [
+    eventStore.state.events = eventStore.state.events.concat([
       events.roomPairWasAdded(bedInDouble, 'memberId1', 'memberId2')
     ]);
 
@@ -195,7 +195,7 @@ describe('The rooms command processor', function () {
   });
 
   it('does not remove a pair if the members are given in the wrong order', function () {
-    eventStore.state.events = R.concat(eventStore.state.events, [
+    eventStore.state.events = eventStore.state.events.concat([
       events.roomPairWasAdded(bedInDouble, 'memberId1', 'memberId2')
     ]);
 
@@ -209,7 +209,7 @@ describe('The rooms command processor', function () {
   });
 
   it('removes a pair if the first member is given', function () {
-    eventStore.state.events = R.concat(eventStore.state.events, [
+    eventStore.state.events = eventStore.state.events.concat([
       events.roomPairWasAdded(bedInDouble, 'memberId1', 'memberId2')
     ]);
 
@@ -223,7 +223,7 @@ describe('The rooms command processor', function () {
   });
 
   it('removes a pair if the second member is given', function () {
-    eventStore.state.events = R.concat(eventStore.state.events, [
+    eventStore.state.events = eventStore.state.events.concat([
       events.roomPairWasAdded(bedInDouble, 'memberId1', 'memberId2')
     ]);
     const registrationReadModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
@@ -236,7 +236,7 @@ describe('The rooms command processor', function () {
   });
 
   it('does not remove a pair if the participant is not in any pairs', function () {
-    eventStore.state.events = R.concat(eventStore.state.events, [
+    eventStore.state.events = eventStore.state.events.concat([
       events.roomPairWasAdded(bedInDouble, 'memberId1', 'memberId2')
     ]);
     const registrationReadModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));

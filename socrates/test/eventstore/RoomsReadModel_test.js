@@ -2,7 +2,6 @@
 'use strict';
 
 var moment = require('moment-timezone');
-var R = require('ramda');
 var expect = require('must-dist');
 
 var beans = require('../../testutil/configureForTest').get('beans');
@@ -34,7 +33,7 @@ describe('The rooms read model', function () {
   });
 
   it('lists those participants that already are in a room', function () {
-    eventStore.state.events = R.concat(eventStore.state.events, [
+    eventStore.state.events = eventStore.state.events.concat([
       events.roomPairWasAdded(bedInDouble, 'memberId1', 'memberId2')
     ]);
     const readModel = new RoomsReadModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore)));
@@ -46,7 +45,7 @@ describe('The rooms read model', function () {
 
 
   it('lists those participants that are not yet in a room', function () {
-    eventStore.state.events = R.concat(eventStore.state.events, [
+    eventStore.state.events = eventStore.state.events.concat([
       events.roomPairWasAdded(bedInDouble, 'memberId1', 'memberId2')
     ]);
     const readModel = new RoomsReadModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore)));
@@ -57,7 +56,7 @@ describe('The rooms read model', function () {
   });
 
   it('returns the id of a member\'s roommate', function () {
-    eventStore.state.events = R.concat(eventStore.state.events, [
+    eventStore.state.events = eventStore.state.events.concat([
       events.roomPairWasAdded(bedInDouble, 'memberId1', 'memberId2')
     ]);
     const readModel = new RoomsReadModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore)));
@@ -79,7 +78,7 @@ describe('The rooms read model', function () {
       new Member({id: 'memberId4'}),
       new Member({id: 'memberId5'})
     ];
-    eventStore.state.events = R.concat(eventStore.state.events, [
+    eventStore.state.events = eventStore.state.events.concat([
       events.roomPairWasAdded(bedInDouble, 'memberId1', 'memberId2'),
       events.roomPairWasAdded(bedInDouble, 'memberId3', 'memberId4')
     ]);
