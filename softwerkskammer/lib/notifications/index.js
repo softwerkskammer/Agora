@@ -9,7 +9,7 @@ var beans = conf.get('beans');
 var groupsAndMembers = beans.get('groupsAndMembersService');
 var memberstore = beans.get('memberstore');
 var Member = beans.get('member');
-var transport = beans.get('mailtransport');
+var sendBulkMail = beans.get('mailtransport').sendBulkMail;
 var logger = require('winston').loggers.get('transactions');
 var pug = require('pug');
 var path = require('path');
@@ -20,27 +20,8 @@ var defaultRenderingOptions = {
 };
 
 function sendMail(emailAddresses, subject, html, callback) {
-  /* eslint consistent-return: 0 */
-  if (!emailAddresses || emailAddresses.length === 0) {
-    if (callback) { return callback(null); }
-    return;
-  }
-
   var fromName = conf.get('sender-name') || 'Softwerkskammer Benachrichtigungen';
-  var mailoptions = {
-    from: '"' + fromName + '" <' + conf.get('sender-address') + '>',
-    bcc: _.uniq(emailAddresses).toString(),
-    subject: subject,
-    html: html,
-    generateTextFromHTML: true
-  };
-
-  if (callback) { return transport.sendMail(mailoptions, callback); }
-
-  transport.sendMail(mailoptions, function (err) {
-    if (err) { return logger.error(err); }
-    logger.info('Notification sent. Content: ' + JSON.stringify(mailoptions));
-  });
+  sendBulkMail(emailAddresses, subject, html, fromName, conf.get('sender-address'), callback);
 }
 
 function activityParticipation(activity, visitorID, ressourceName, content, type, callback) {
@@ -117,6 +98,3 @@ module.exports.newMemberRegistered = function (member, subscriptions) {
     sendMail(receivers, 'Neues Mitglied', pug.renderFile(filename, renderingOptions));
   });
 };
-
-// this is only exported for reuse in socratesNotifications.
-module.exports._sendMail = sendMail;

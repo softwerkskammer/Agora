@@ -45,9 +45,5 @@ module.exports = {
         });
     });
 
-  },
-
-  registrationNotificationEmailAddresses: function (callback) {
-    callback(null, [conf.get('registrationListEmailAddress')]);
   }
 };

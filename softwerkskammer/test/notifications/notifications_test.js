@@ -12,7 +12,7 @@ var Activity = beans.get('activity');
 var Member = beans.get('member');
 var Group = beans.get('group');
 var notifications = beans.get('notifications');
-var transport = beans.get('mailtransport');
+var transport = beans.get('mailtransport').transport;
 
 var activity;
 var activity2;

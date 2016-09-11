@@ -287,7 +287,7 @@
     "copy_to_self": "Send a copy to myself",
     "invitation": "Invitation",
     "notes-resign": "Please let us know what you think about this site",
-    "notification": "Notification",
+    "notification": "Message",
     "others": "Others",
     "reminder": "Reminder",
     "resign": "Write Resignment E-mail",
@@ -301,7 +301,7 @@
     "to_member": "To member",
     "to_participants": "only to the activity's participants (not to groups)",
     "why-resign": "Why do you want to resign",
-    "write": "Compose Notification"
+    "write": "Compose Message"
   },
   "members": {
     "authenticate": "Authenticate elsewhere",
