@@ -2,12 +2,11 @@
 /* eslint no-console: 0 */
 'use strict';
 
-require('./configure'); // initializing parameters
-var _ = require('lodash');
-var async = require('async');
+require('../socrates/configure'); // initializing parameters
+var R = require('ramda');
 var beans = require('simple-configure').get('beans');
-var memberstore = beans.get('memberstore');
-var groupsAndMembersService = beans.get('groupsAndMembersService');
+
+var persistence = beans.get('eventstorePersistence');
 
 var really = process.argv[2];
 var doSave = process.argv[3] === 'doSave';
@@ -17,31 +16,24 @@ if (!really || really !== 'really') {
   process.exit();
 }
 
-// set "socratesOnly" to false for all members.
-groupsAndMembersService.getAllMembersWithTheirGroups(function (err, members) {
+// merge event streams.
+persistence.getByField({url: 'socrates-2016'}, function (err, eventstore) {
   if (err) {
     console.log(err);
     process.exit();
   }
-  async.each(members,
-    function (member, callback) {
-      // set to true if member is only in socrates list
-      var groups = _(member.subscribedGroups).map('id').filter(function (groupId) {
-        return groupId !== 'alle' && groupId !== 'commercial';
-      }).value();
 
-      member.state.socratesOnly = groups.length === 1 && groups[0] === 'socrates2014';
+  const events = eventstore.socratesEvents.concat(eventstore.registrationEvents).concat(eventstore.roomsEvents);
+  const byTimestamp = (e1, e2) => e1.timestamp - e2.timestamp;
+  eventstore.events = R.sort(byTimestamp, events);
 
-      if (member.state.socratesOnly) {
-        console.log('Socrates-only: ' + member.displayName());
-      }
-      if (doSave) {
-        return memberstore.saveMember(member, callback);
-      }
-      callback(null, null);
-    },
-    function (err1) {
+  console.log(eventstore.events);
+  console.log(eventstore.events.length + ' events.');
+
+  if (doSave) {
+    return persistence.save(eventstore, function (err1) {
       if (err1) { console.log(err1); }
       process.exit();
     });
+  }
 });
