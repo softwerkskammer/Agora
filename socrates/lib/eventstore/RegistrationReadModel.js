@@ -11,7 +11,7 @@ var roomOptions = beans.get('roomOptions');
 
 var earliestValidRegistrationTime = moment.tz().subtract(socratesConstants.registrationPeriodinMinutes, 'minutes');
 
-var projectReservationsBySessionId = function (reservationsBySessionId, event) {
+var processReservationsBySessionId = function (reservationsBySessionId, event) {
   if (event.event === e.RESERVATION_WAS_ISSUED && moment(event.joinedSoCraTes).isAfter(earliestValidRegistrationTime)) {
     reservationsBySessionId[event.sessionId] = event;
   }
@@ -21,7 +21,7 @@ var projectReservationsBySessionId = function (reservationsBySessionId, event) {
   return reservationsBySessionId;
 };
 
-var projectParticipantsByMemberId = function (participantsByMemberId, event) {
+var processParticipantsByMemberId = function (participantsByMemberId, event) {
   if (event.event === e.PARTICIPANT_WAS_REGISTERED
     || event.event === e.ROOM_TYPE_WAS_CHANGED
     || event.event === e.DURATION_WAS_CHANGED
@@ -34,7 +34,7 @@ var projectParticipantsByMemberId = function (participantsByMemberId, event) {
   return participantsByMemberId;
 };
 
-var projectWaitinglistReservationsBySessionId = function (waitinglistReservationsBySessionId, event) {
+var processWaitinglistReservationsBySessionId = function (waitinglistReservationsBySessionId, event) {
   if (event.event === e.WAITINGLIST_RESERVATION_WAS_ISSUED && moment(event.joinedWaitinglist).isAfter(earliestValidRegistrationTime)) {
     waitinglistReservationsBySessionId[event.sessionId] = event;
   }
@@ -44,7 +44,7 @@ var projectWaitinglistReservationsBySessionId = function (waitinglistReservation
   return waitinglistReservationsBySessionId;
 };
 
-var projectWaitinglistParticipantsByMemberId = function (waitinglistParticipantsByMemberId, event) {
+var processWaitinglistParticipantsByMemberId = function (waitinglistParticipantsByMemberId, event) {
   if (event.event === e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED || event.event === e.DESIRED_ROOM_TYPES_WERE_CHANGED) {
     waitinglistParticipantsByMemberId[event.memberId] = event;
   }
@@ -73,15 +73,15 @@ function RegistrationReadModel(eventStore, soCraTesReadModel) {
   this._waitinglistParticipantsByMemberIdFor = {};
   this._durations = [];
 
-  this.update(eventStore.registrationEvents());
+  this.update(eventStore.events());
 }
 
 RegistrationReadModel.prototype.update = function (events) {
   // core data:
-  this._reservationsBySessionId = R.reduce(projectReservationsBySessionId, this._reservationsBySessionId, events);
-  this._participantsByMemberId = R.reduce(projectParticipantsByMemberId, this._participantsByMemberId, events);
-  this._waitinglistReservationsBySessionId = R.reduce(projectWaitinglistReservationsBySessionId, this._waitinglistReservationsBySessionId, events);
-  this._waitinglistParticipantsByMemberId = R.reduce(projectWaitinglistParticipantsByMemberId, this._waitinglistParticipantsByMemberId, events);
+  this._reservationsBySessionId = R.reduce(processReservationsBySessionId, this._reservationsBySessionId, events);
+  this._participantsByMemberId = R.reduce(processParticipantsByMemberId, this._participantsByMemberId, events);
+  this._waitinglistReservationsBySessionId = R.reduce(processWaitinglistReservationsBySessionId, this._waitinglistReservationsBySessionId, events);
+  this._waitinglistParticipantsByMemberId = R.reduce(processWaitinglistParticipantsByMemberId, this._waitinglistParticipantsByMemberId, events);
 
   // derived data:
   roomOptions.allIds().forEach(roomType => {

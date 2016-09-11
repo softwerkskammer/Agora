@@ -19,21 +19,21 @@ function SoCraTesReadModel(eventStore) {
   this._endTimeInMillis = undefined;
   this._quota = {};
 
-  this.update(this._eventStore.socratesEvents());
+  this.update(this._eventStore.events());
 }
 
-var projectUrl = function (url, event) { return event.event === e.URL_WAS_SET ? event.url : url; };
-var projectStartTime = function (startTimeInMillis, event) { return event.event === e.START_TIME_WAS_SET ? event.startTimeInMillis : startTimeInMillis; };
-var projectEndTime = function (endTimeInMillis, event) { return event.event === e.END_TIME_WAS_SET ? event.endTimeInMillis : endTimeInMillis; };
-var projectQuota = function (roomType, quota, event) { return event.event === e.ROOM_QUOTA_WAS_SET && event.roomType === roomType ? parseInt(event.quota, 10) : quota; };
+var processUrl = function (url, event) { return event.event === e.URL_WAS_SET ? event.url : url; };
+var processStartTime = function (startTimeInMillis, event) { return event.event === e.START_TIME_WAS_SET ? event.startTimeInMillis : startTimeInMillis; };
+var processEndTime = function (endTimeInMillis, event) { return event.event === e.END_TIME_WAS_SET ? event.endTimeInMillis : endTimeInMillis; };
+var processQuota = function (roomType, quota, event) { return event.event === e.ROOM_QUOTA_WAS_SET && event.roomType === roomType ? parseInt(event.quota, 10) : quota; };
 
 SoCraTesReadModel.prototype.update = function (events) {
   // these are our projections :-)
-  this._url = R.reduce(projectUrl, this._url, events);
-  this._startTimeInMillis = R.reduce(projectStartTime, this._startTimeInMillis, events);
-  this._endTimeInMillis = R.reduce(projectEndTime, this._endTimeInMillis, events);
+  this._url = R.reduce(processUrl, this._url, events);
+  this._startTimeInMillis = R.reduce(processStartTime, this._startTimeInMillis, events);
+  this._endTimeInMillis = R.reduce(processEndTime, this._endTimeInMillis, events);
   roomOptions.allIds().forEach(roomType => {
-    this._quota[roomType] = R.reduce(R.partial(projectQuota, [roomType]), this._quota[roomType], events);
+    this._quota[roomType] = R.reduce(R.partial(processQuota, [roomType]), this._quota[roomType], events);
   });
 };
 

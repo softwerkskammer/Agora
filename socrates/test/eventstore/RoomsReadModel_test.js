@@ -23,7 +23,7 @@ describe('The rooms read model', function () {
   beforeEach(function () {
     eventStore = new GlobalEventStore();
 
-    eventStore.state.registrationEvents = [
+    eventStore.state.events = [
       events.participantWasRegistered(bedInDouble, 2, 'sessionId1', 'memberId1', aLongTimeAgo),
       events.participantWasRegistered(bedInDouble, 2, 'sessionId2', 'memberId2', aLongTimeAgo),
       events.participantWasRegistered(bedInDouble, 2, 'sessionId3', 'memberId3', aLongTimeAgo),
@@ -33,9 +33,9 @@ describe('The rooms read model', function () {
   });
 
   it('lists those participants that already are in a room', function () {
-    eventStore.state.roomsEvents = [
+    eventStore.state.events = eventStore.state.events.concat([
       events.roomPairWasAdded(bedInDouble, 'memberId1', 'memberId2')
-    ];
+    ]);
     const readModel = new RoomsReadModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore)));
 
     var participantsInRoom = readModel.participantsInRoom(bedInDouble);
@@ -45,9 +45,9 @@ describe('The rooms read model', function () {
 
 
   it('lists those participants that are not yet in a room', function () {
-    eventStore.state.roomsEvents = [
+    eventStore.state.events = eventStore.state.events.concat([
       events.roomPairWasAdded(bedInDouble, 'memberId1', 'memberId2')
-    ];
+    ]);
     const readModel = new RoomsReadModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore)));
 
     var participantsWithoutRoom = readModel.participantsWithoutRoomIn(bedInDouble);
@@ -56,9 +56,9 @@ describe('The rooms read model', function () {
   });
 
   it('returns the id of a member\'s roommate', function () {
-    eventStore.state.roomsEvents = [
+    eventStore.state.events = eventStore.state.events.concat([
       events.roomPairWasAdded(bedInDouble, 'memberId1', 'memberId2')
-    ];
+    ]);
     const readModel = new RoomsReadModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore)));
 
     expect(readModel.roommateFor(bedInDouble, 'memberId1')).to.be('memberId2');
@@ -78,10 +78,10 @@ describe('The rooms read model', function () {
       new Member({id: 'memberId4'}),
       new Member({id: 'memberId5'})
     ];
-    eventStore.state.roomsEvents = [
+    eventStore.state.events = eventStore.state.events.concat([
       events.roomPairWasAdded(bedInDouble, 'memberId1', 'memberId2'),
       events.roomPairWasAdded(bedInDouble, 'memberId3', 'memberId4')
-    ];
+    ]);
     const readModel = new RoomsReadModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore)));
 
     var roomPairs = readModel.roomPairsWithFullMembersFrom(bedInDouble, allKnownMembers);

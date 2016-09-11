@@ -26,44 +26,6 @@ function keyFor(url, key) {
   return url + '_' + key;
 }
 
-function getReadModel(url, key, ReadModel, callback) {
-  const cacheKey = keyFor(url, key);
-  var cachedModel = cache.get(cacheKey);
-  if (cachedModel) {
-    return callback(null, cachedModel);
-  }
-  eventstore.getEventStore(url, function (err, eventStore) {
-    // for the read models, there must be an eventstore already:
-    if (err || !eventStore) { return callback(err); }
-    const newModel = new ReadModel(eventStore);
-    var cachedModel2 = cache.get(cacheKey);
-    if (cachedModel2) {
-      return callback(null, cachedModel2);
-    }
-    cache.set(cacheKey, newModel);
-    callback(null, newModel);
-  });
-}
-
-function getReadModelWithArg(url, key, ReadModel, argument, callback) {
-  const cacheKey = keyFor(url, key);
-  var cachedModel = cache.get(cacheKey);
-  if (cachedModel) {
-    return callback(null, cachedModel);
-  }
-  eventstore.getEventStore(url, function (err, eventStore) {
-    // for the read models, there must be an eventstore already:
-    if (err || !eventStore) { return callback(err); }
-    const newModel = new ReadModel(eventStore, argument);
-    var cachedModel2 = cache.get(cacheKey);
-    if (cachedModel2) {
-      return callback(null, cachedModel2);
-    }
-    cache.set(cacheKey, newModel);
-    callback(null, newModel);
-  });
-}
-
 function getGlobalEventStoreForWriting(url, callback) {
   const cacheKey = keyFor(url, GLOBAL_EVENT_STORE_FOR_WRITING);
   const cachedStore = cache.get(cacheKey);
@@ -73,16 +35,40 @@ function getGlobalEventStoreForWriting(url, callback) {
 
   eventstore.getEventStore(url, function (err, eventStore) {
     if (err || !eventStore) { return callback(err); }
-    const cachedStore2 = cache.get(cacheKey);
-    if (cachedStore2) {
-      return callback(null, cachedStore2);
+    const cachedWhileFetching = cache.get(cacheKey);
+    if (cachedWhileFetching) {
+      return callback(null, cachedWhileFetching);
     }
     cache.set(cacheKey, eventStore);
     callback(null, eventStore);
   });
 }
 
+function getReadModelWithArg(url, key, ReadModel, argument, callback) {
+  const cacheKey = keyFor(url, key);
+  const cachedModel = cache.get(cacheKey);
+  if (cachedModel) {
+    return callback(null, cachedModel);
+  }
+  getGlobalEventStoreForWriting(url, function (err, eventStore) {
+    // for the read models, there must be an eventstore already:
+    if (err || !eventStore) { return callback(err); }
+    const cachedWhileFetching = cache.get(cacheKey);
+    if (cachedWhileFetching) {
+      return callback(null, cachedWhileFetching);
+    }
+    const newModel = new ReadModel(eventStore, argument);
+    cache.set(cacheKey, newModel);
+    callback(null, newModel);
+  });
+}
+
+function getReadModel(url, key, ReadModel, callback) {
+  return getReadModelWithArg(url, key, ReadModel, undefined, callback);
+}
+
 module.exports = {
+  // "valid" has the notion of "not yet in use"
   isValidUrl: function (url, callback) {
     eventstore.getEventStore(url, function (err, result) {
       if (err) { return callback(err); }
@@ -105,9 +91,7 @@ module.exports = {
       if (!eventStore) {
         eventStore = new GlobalEventStore({
           url: url,
-          socratesEvents: [],
-          registrationEvents: [],
-          roomsEvents: []
+          events: []
         });
       }
       cache.set(keyFor(url, GLOBAL_EVENT_STORE_FOR_WRITING), eventStore);
@@ -122,7 +106,7 @@ module.exports = {
   },
 
   getRegistrationCommandProcessor: function (url, callback) {
-    var self = this;
+    const self = this;
     getGlobalEventStoreForWriting(url, function (err, eventStore) {
       // when adding a new registration, we require the event store to be already in place:
       if (err || !eventStore) { return callback(err); }
@@ -134,7 +118,7 @@ module.exports = {
   },
 
   getRoomsCommandProcessor: function (url, callback) {
-    var self = this;
+    const self = this;
     getGlobalEventStoreForWriting(url, function (err, eventStore) {
       // when adding a new rooms combination, we require the event store to be already in place:
       if (err || !eventStore) { return callback(err); }
@@ -161,16 +145,14 @@ module.exports = {
 
     let eventStore;
     if (commandProcessor instanceof Array) {
-      // sometimes we need to update several parts of the event store
-      commandProcessor.map((processor, index) => processor.updateEventStore(events[index]));
       eventStore = commandProcessor[0].eventStore();
       events = R.flatten(events);
     } else {
-      commandProcessor.updateEventStore(events);
       eventStore = commandProcessor.eventStore();
     }
 
     const url = eventStore.state.url;
+    eventStore.updateEvents(events);
 
     // update all read models:
     R.values(cache.mget([keyFor(url, SOCRATES_READ_MODEL), keyFor(url, REGISTRATION_READ_MODEL), keyFor(url, ROOMS_READ_MODEL)])).forEach(model => model.update(events));

@@ -64,7 +64,7 @@ describe('SoCraTes registration application', function () {
     cache.flushAll();
 
     eventStore = new GlobalEventStore();
-    eventStore.state.socratesEvents = [
+    eventStore.state.events = [
       events.roomQuotaWasSet('single', 0),
       events.roomQuotaWasSet('bed_in_double', 10),
       events.roomQuotaWasSet('junior', 10),
@@ -144,8 +144,8 @@ describe('SoCraTes registration application', function () {
     it('displays the options (but disabled) if the user is registered', function (done) {
       /* eslint no-underscore-dangle: 0 */
 
-      eventStore.state.registrationEvents = [
-        events.participantWasRegistered('bed_in_junior', 'some-duration', 'some-session-id', 'memberId2', aShortTimeAgo)];
+      eventStore.state.events = eventStore.state.events.concat([
+        events.participantWasRegistered('bed_in_junior', 'some-duration', 'some-session-id', 'memberId2', aShortTimeAgo)]);
 
       appWithSocratesMember
         .get('/')
@@ -179,8 +179,8 @@ describe('SoCraTes registration application', function () {
     });
 
     it('does not display the roommate banner on the registration page when the user is subscribed in a single-bed room', function (done) {
-      eventStore.state.registrationEvents = [
-        events.participantWasRegistered('single', 'some-duration', 'some-session-id', 'memberId2', aShortTimeAgo)];
+      eventStore.state.events = eventStore.state.events.concat([
+        events.participantWasRegistered('single', 'some-duration', 'some-session-id', 'memberId2', aShortTimeAgo)]);
 
       appWithSocratesMember
         .get('/')
@@ -191,8 +191,8 @@ describe('SoCraTes registration application', function () {
     });
 
     it('does not display the roommate banner on the registration page when the user is subscribed in a junior room', function (done) {
-      eventStore.state.registrationEvents = [
-        events.participantWasRegistered('junior', 'some-duration', 'some-session-id', 'memberId2', aShortTimeAgo)];
+      eventStore.state.events = eventStore.state.events.concat([
+        events.participantWasRegistered('junior', 'some-duration', 'some-session-id', 'memberId2', aShortTimeAgo)]);
 
       appWithSocratesMember
         .get('/')
@@ -203,8 +203,8 @@ describe('SoCraTes registration application', function () {
     });
 
     it('does not display the roommate banner on the registration page when the user is on the waitinglist for a double-bed room', function (done) {
-      eventStore.state.registrationEvents = [
-        events.waitinglistParticipantWasRegistered(['bed_in_double'], 'some-session-id', 'memberId2', aShortTimeAgo)];
+      eventStore.state.events = eventStore.state.events.concat([
+        events.waitinglistParticipantWasRegistered(['bed_in_double'], 'some-session-id', 'memberId2', aShortTimeAgo)]);
 
       appWithSocratesMember
         .get('/')
@@ -215,8 +215,8 @@ describe('SoCraTes registration application', function () {
     });
 
     it('does not display the roommate banner on the registration page when the user is on the waitinglist for a shared junior room', function (done) {
-      eventStore.state.registrationEvents = [
-        events.waitinglistParticipantWasRegistered(['bed_in_junior'], 'some-session-id', 'memberId2', aShortTimeAgo)];
+      eventStore.state.events = eventStore.state.events.concat([
+        events.waitinglistParticipantWasRegistered(['bed_in_junior'], 'some-session-id', 'memberId2', aShortTimeAgo)]);
 
       appWithSocratesMember
         .get('/')
@@ -227,8 +227,8 @@ describe('SoCraTes registration application', function () {
     });
 
     it('displays the roommate banner on the registration page when the user is subscribed for a double-bed room', function (done) {
-      eventStore.state.registrationEvents = [
-        events.participantWasRegistered('bed_in_double', 'some-duration', 'some-session-id', 'memberId2', aShortTimeAgo)];
+      eventStore.state.events = eventStore.state.events.concat([
+        events.participantWasRegistered('bed_in_double', 'some-duration', 'some-session-id', 'memberId2', aShortTimeAgo)]);
 
       appWithSocratesMember
         .get('/')
@@ -236,8 +236,8 @@ describe('SoCraTes registration application', function () {
     });
 
     it('displays the roommate banner on the registration page when the user is subscribed for a shared junior room', function (done) {
-      eventStore.state.registrationEvents = [
-        events.participantWasRegistered('bed_in_junior', 'some-duration', 'some-session-id', 'memberId2', aShortTimeAgo)];
+      eventStore.state.events = eventStore.state.events.concat([
+        events.participantWasRegistered('bed_in_junior', 'some-duration', 'some-session-id', 'memberId2', aShortTimeAgo)]);
 
       appWithSocratesMember
         .get('/')
@@ -245,13 +245,10 @@ describe('SoCraTes registration application', function () {
     });
 
     it('does not display the roommate banner on the registration page when the user is subscribed for a double-bed room and already has a roommate', function (done) {
-      eventStore.state.registrationEvents = [
+      eventStore.state.events = eventStore.state.events.concat([
         events.participantWasRegistered('bed_in_double', 'some-duration', 'some-session-id', 'other-member-id', aShortTimeAgo),
-        events.participantWasRegistered('bed_in_double', 'some-duration', 'some-session-id', 'memberId2', aShortTimeAgo)
-      ];
-      eventStore.state.roomsEvents = [
-        events.roomPairWasAdded('bed_in_double', 'other-member-id', 'memberId2')];
-
+        events.participantWasRegistered('bed_in_double', 'some-duration', 'some-session-id', 'memberId2', aShortTimeAgo),
+        events.roomPairWasAdded('bed_in_double', 'other-member-id', 'memberId2')]);
 
       appWithSocratesMember
         .get('/')
@@ -262,12 +259,10 @@ describe('SoCraTes registration application', function () {
     });
 
     it('does not display the roommate banner on the registration page when the user is subscribed for a shared junior room and already has a roommate', function (done) {
-      eventStore.state.registrationEvents = [
+      eventStore.state.events = eventStore.state.events.concat([
         events.participantWasRegistered('bed_in_junior', 'some-duration', 'some-session-id', 'other-member-id', aShortTimeAgo),
-        events.participantWasRegistered('bed_in_junior', 'some-duration', 'some-session-id', 'memberId2', aShortTimeAgo)
-      ];
-      eventStore.state.roomsEvents = [
-        events.roomPairWasAdded('bed_in_junior', 'other-member-id', 'memberId2')];
+        events.participantWasRegistered('bed_in_junior', 'some-duration', 'some-session-id', 'memberId2', aShortTimeAgo),
+        events.roomPairWasAdded('bed_in_junior', 'other-member-id', 'memberId2')]);
 
       appWithSocratesMember
         .get('/')
@@ -427,8 +422,8 @@ describe('SoCraTes registration application', function () {
   describe('submission of the participate form to become a participant', function () {
 
     it('is accepted when a room is selected', function (done) {
-      eventStore.state.registrationEvents = [
-        events.reservationWasIssued('single', 5, 'session-id', 'memberId', aShortTimeAgo)];
+      eventStore.state.events = eventStore.state.events.concat([
+        events.reservationWasIssued('single', 5, 'session-id', 'memberId', aShortTimeAgo)]);
 
       appWithSocratesMemberAndFixedSessionId
         .post('/completeRegistration')
@@ -449,7 +444,11 @@ describe('SoCraTes registration application', function () {
         .expect(302)
         .expect('location', '/registration', function (err) {
           expect(eventStoreSave.called).to.be(true);
-          expect(stripTimestampsAndJoins(eventStore.state.registrationEvents)).to.eql([
+          expect(stripTimestampsAndJoins(eventStore.state.events)).to.eql([
+            {event: e.ROOM_QUOTA_WAS_SET, roomType: 'single', quota: 0},
+            {event: e.ROOM_QUOTA_WAS_SET, roomType: 'bed_in_double', quota: 10},
+            {event: e.ROOM_QUOTA_WAS_SET, roomType: 'junior', quota: 10},
+            {event: e.ROOM_QUOTA_WAS_SET, roomType: 'bed_in_junior', quota: 10},
             {event: e.RESERVATION_WAS_ISSUED, sessionId: 'session-id', memberId: 'memberId', roomType: 'single', duration: 5},
             {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: 'session-id', memberId: 'memberId2', roomType: 'single', duration: 5}
           ]);
@@ -462,9 +461,9 @@ describe('SoCraTes registration application', function () {
 
   describe('submission of the participate form to become a waitinglist participant', function () {
     it('is accepted when a waitinglist option is selected', function (done) {
-      eventStore.state.registrationEvents = [
+      eventStore.state.events = eventStore.state.events.concat([
         events.waitinglistReservationWasIssued(['single'], 'session-id', 'memberId', aShortTimeAgo)
-      ];
+      ]);
 
       appWithSocratesMemberAndFixedSessionId
         .post('/completeRegistration')
@@ -485,7 +484,11 @@ describe('SoCraTes registration application', function () {
         .expect(302)
         .expect('location', '/registration', function (err) {
           expect(eventStoreSave.called).to.be(true);
-          expect(stripTimestampsAndJoins(eventStore.state.registrationEvents)).to.eql([
+          expect(stripTimestampsAndJoins(eventStore.state.events)).to.eql([
+            {event: e.ROOM_QUOTA_WAS_SET, roomType: 'single', quota: 0},
+            {event: e.ROOM_QUOTA_WAS_SET, roomType: 'bed_in_double', quota: 10},
+            {event: e.ROOM_QUOTA_WAS_SET, roomType: 'junior', quota: 10},
+            {event: e.ROOM_QUOTA_WAS_SET, roomType: 'bed_in_junior', quota: 10},
             {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionId: 'session-id', desiredRoomTypes: ['single'], memberId: 'memberId'},
             {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionId: 'session-id', desiredRoomTypes: ['single'], memberId: 'memberId2'}
           ]);
@@ -496,10 +499,10 @@ describe('SoCraTes registration application', function () {
 
   describe('submission of the participate form to book a room and to become a waitinglist participant', function () {
     it('is accepted when a room and at least a waitinglist option is selected', function (done) {
-      eventStore.state.registrationEvents = [
+      eventStore.state.events = eventStore.state.events.concat([
         events.reservationWasIssued('bed_in_double', 2, 'session-id', 'memberId', aShortTimeAgo),
         events.waitinglistReservationWasIssued(['single', 'junior'], 'session-id', 'memberId', aShortTimeAgo)
-      ];
+      ]);
 
       appWithSocratesMemberAndFixedSessionId
         .post('/completeRegistration')
@@ -520,7 +523,11 @@ describe('SoCraTes registration application', function () {
         .expect(302)
         .expect('location', '/registration', function (err) {
           expect(eventStoreSave.called).to.be(true);
-          expect(stripTimestampsAndJoins(eventStore.state.registrationEvents)).to.eql([
+          expect(stripTimestampsAndJoins(eventStore.state.events)).to.eql([
+            {event: e.ROOM_QUOTA_WAS_SET, roomType: 'single', quota: 0},
+            {event: e.ROOM_QUOTA_WAS_SET, roomType: 'bed_in_double', quota: 10},
+            {event: e.ROOM_QUOTA_WAS_SET, roomType: 'junior', quota: 10},
+            {event: e.ROOM_QUOTA_WAS_SET, roomType: 'bed_in_junior', quota: 10},
             {event: e.RESERVATION_WAS_ISSUED, sessionId: 'session-id', memberId: 'memberId', roomType: 'bed_in_double', duration: 2},
             {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionId: 'session-id', desiredRoomTypes: ['single', 'junior'], memberId: 'memberId'},
             {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: 'session-id', memberId: 'memberId2', roomType: 'bed_in_double', duration: 2},

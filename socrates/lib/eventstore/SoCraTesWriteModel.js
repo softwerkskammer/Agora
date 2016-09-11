@@ -7,10 +7,6 @@ function SoCraTesWriteModel(eventStore) {
   this._eventStore = eventStore;
 }
 
-SoCraTesWriteModel.prototype.updateSoCraTesEvents = function (newEvents) {
-  this._eventStore.updateSoCraTesEvents(newEvents);
-};
-
 SoCraTesWriteModel.prototype.eventStore = function () {
   // persistence needs an id:
   this._eventStore.setId();

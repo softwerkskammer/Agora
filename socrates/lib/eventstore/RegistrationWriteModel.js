@@ -48,10 +48,6 @@ RegistrationWriteModel.prototype.roomTypesOf = function (memberId) {
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////
-RegistrationWriteModel.prototype.updateRegistrationEvents = function (newEvents) {
-  this._eventStore.updateRegistrationEvents(newEvents);
-};
-
 RegistrationWriteModel.prototype.isFull = function (roomType) {
   return this._registrationReadModel.isFull(roomType);
 };

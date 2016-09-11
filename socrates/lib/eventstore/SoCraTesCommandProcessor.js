@@ -33,13 +33,6 @@ SoCraTesCommandProcessor.prototype.setConferenceDetails = function (uiData) {
   return evts;
 };
 
-SoCraTesCommandProcessor.prototype.updateEventStore = function (newEvents) {
-  if (!(newEvents instanceof Array)) {
-    newEvents = [newEvents];
-  }
-  this.writeModel.updateSoCraTesEvents(newEvents);
-};
-
 SoCraTesCommandProcessor.prototype.eventStore = function () {
   return this.writeModel.eventStore();
 };

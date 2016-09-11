@@ -24,7 +24,7 @@ describe('Management Service', function () {
     });
 
     it('counts each value', function () {
-      eventStore.state.registrationEvents = [
+      eventStore.state.events = [
         events.participantWasRegistered('single', 2, 'session-id', 'member-id1', aLongTimeAgo),
         events.participantWasRegistered('single', 2, 'session-id', 'member-id2', aLongTimeAgo),
         events.participantWasRegistered('single', 4, 'session-id', 'member-id3', aLongTimeAgo),
@@ -52,7 +52,7 @@ describe('Management Service', function () {
     });
 
     it('counts only durations that are present', function () {
-      eventStore.state.registrationEvents = [
+      eventStore.state.events = [
         events.participantWasRegistered('single', 2, 'session-id', 'member-id1', aLongTimeAgo),
         events.participantWasRegistered('single', 2, 'session-id', 'member-id2', aLongTimeAgo),
         events.participantWasRegistered('single', 5, 'session-id', 'member-id3', aLongTimeAgo),

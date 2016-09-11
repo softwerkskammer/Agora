@@ -44,12 +44,11 @@ describe('Room Options', function () {
       var roomIds = roomOptions.allIds();
 
       var eventStore = new GlobalEventStore();
-      eventStore.state.socratesEvents = [
+      eventStore.state.events = [
         events.roomQuotaWasSet(roomIds[0], 100),
         events.roomQuotaWasSet(roomIds[1], 1),
         events.roomQuotaWasSet(roomIds[2], 100),
-        events.roomQuotaWasSet(roomIds[3], 0)];
-      eventStore.state.registrationEvents = [
+        events.roomQuotaWasSet(roomIds[3], 0),
         events.participantWasRegistered(roomIds[0], untilSaturday, sessionId1, memberId1, moment()),
         events.waitinglistParticipantWasRegistered(roomIds[1], sessionId1, memberId1, moment()),
         events.participantWasRegistered(roomIds[1], untilSaturday, sessionId2, memberId2, moment()),

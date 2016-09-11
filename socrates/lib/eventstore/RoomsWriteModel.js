@@ -28,10 +28,6 @@ RoomsWriteModel.prototype.roomPairContaining = function (roomType, memberId) {
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////
-RoomsWriteModel.prototype.updateRoomsEvents = function (newEvents) {
-  this._eventStore.updateRoomsEvents(newEvents);
-};
-
 RoomsWriteModel.prototype.eventStore = function () {
   // persistence needs an id:
   this._eventStore.setId();

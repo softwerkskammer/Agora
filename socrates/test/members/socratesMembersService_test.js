@@ -70,7 +70,7 @@ describe('SoCraTes Members Service', function () {
       sinon.stub(activitystore, 'activitiesForGroupIdsAndRegisteredMemberId', function (groups, memberId, upcoming, callback) {
         return callback(null, []);
       });
-      globalEventStore.state.registrationEvents = [
+      globalEventStore.state.events = [
         events.participantWasRegistered('single', 3, 'sessionId', 'memberId', aLongTimeAgo)
       ];
 

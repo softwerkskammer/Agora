@@ -28,9 +28,7 @@ describe('SoCraTes activities application', function () {
 
     const eventStore = new GlobalEventStore({
       url: 'socrates-2015',
-      socratesEvents: [],
-      registrationEvents: [],
-      roomsEvents: []
+      events: []
     });
 
     saveEventStoreStub = sinon.stub(eventstore, 'saveEventStore', function (store, callback) { callback(); });
@@ -60,7 +58,7 @@ describe('SoCraTes activities application', function () {
           .expect('Location', '/registration/')
           .end(function (err) {
             const savedEventStore = saveEventStoreStub.firstCall.args[0];
-            expect(savedEventStore.state.socratesEvents.length).to.eql(7);
+            expect(savedEventStore.state.events.length).to.eql(7);
 
             const readModel = cache.get('socrates-2015_soCraTesReadModel');
             expect(readModel.quotaFor('single')).to.eql(100);
