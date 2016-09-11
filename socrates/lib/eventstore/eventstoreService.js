@@ -44,25 +44,6 @@ function getGlobalEventStoreForWriting(url, callback) {
   });
 }
 
-function getReadModel(url, key, ReadModel, callback) {
-  const cacheKey = keyFor(url, key);
-  const cachedModel = cache.get(cacheKey);
-  if (cachedModel) {
-    return callback(null, cachedModel);
-  }
-  getGlobalEventStoreForWriting(url, function (err, eventStore) {
-    // for the read models, there must be an eventstore already:
-    if (err || !eventStore) { return callback(err); }
-    const cachedWhileFetching = cache.get(cacheKey);
-    if (cachedWhileFetching) {
-      return callback(null, cachedWhileFetching);
-    }
-    const newModel = new ReadModel(eventStore);
-    cache.set(cacheKey, newModel);
-    callback(null, newModel);
-  });
-}
-
 function getReadModelWithArg(url, key, ReadModel, argument, callback) {
   const cacheKey = keyFor(url, key);
   const cachedModel = cache.get(cacheKey);
@@ -80,6 +61,10 @@ function getReadModelWithArg(url, key, ReadModel, argument, callback) {
     cache.set(cacheKey, newModel);
     callback(null, newModel);
   });
+}
+
+function getReadModel(url, key, ReadModel, callback) {
+  return getReadModelWithArg(url, key, ReadModel, undefined, callback);
 }
 
 module.exports = {
