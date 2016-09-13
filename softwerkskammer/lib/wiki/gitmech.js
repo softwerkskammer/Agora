@@ -24,16 +24,11 @@ module.exports = {
   },
 
   readFileFs: function (path, callback) {
-    Fs.readFile(this.absPath(path), function (err, data) {
-      callback(err, data);
-    });
+    Fs.readFile(this.absPath(path), callback);
   },
 
   readFile: function (path, version, callback) {
-    gitExec.command(['show', version + ':' + path], function (err, data) {
-      if (err) { return callback(err); }
-      callback(null, data);
-    });
+    gitExec.command(['show', version + ':' + path], callback);
   },
 
   log: function (path, version, howMany, callback) {
@@ -124,9 +119,7 @@ module.exports = {
   },
 
   diff: function (path, revisions, callback) {
-    gitExec.command(['diff', '--no-color', '-b', revisions, '--', path], function (err, data) {
-      callback(err, data);
-    });
+    gitExec.command(['diff', '--no-color', '-b', revisions, '--', path], callback);
   },
 
   ls: function (subdir, callback) {
