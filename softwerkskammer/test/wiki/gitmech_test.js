@@ -16,7 +16,7 @@ describe('the gitmech module', function () {
   describe('- read operations', function () {
     it('"readFile" returns file contents as string', function (done) {
       sinon.stub(gitExec, 'command', function (args, callback) {
-        if (args[0] === 'show' && args[1] === '1:path') { callback(null, new Buffer('string')); }
+        if (args[0] === 'show' && args[1] === '1:path') { callback(null, 'string'); }
       });
       Git.readFile('path', 1, function (err, string) {
         expect(string).to.equal('string');
@@ -35,12 +35,12 @@ describe('the gitmech module', function () {
     it('produces sensible metadata via "git log" for editing', function (done) {
       sinon.stub(gitExec, 'command', function (args, callback) {
         if (args[0] === 'log') {
-          callback(null, new Buffer('7f91fc6\n' +
+          callback(null, '7f91fc6\n' +
             '7f91fc607da7947e62b2d8a52088ee0ce29a88c8\n' +
             'leider\n' +
             '2014-03-01 18:36:29 +0100\n' +
             'no comment\n' +
-            'path/file.md\n\n'));
+            'path/file.md\n\n');
         }
       });
       Git.log('path', 'HEAD', 1, function (err, metadatas) {
@@ -59,7 +59,7 @@ describe('the gitmech module', function () {
     it('produces sensible metadata via "git log" for viewing the history', function (done) {
       sinon.stub(gitExec, 'command', function (args, callback) {
         if (args[0] === 'log') {
-          callback(null, new Buffer('7f91fc6\n' +
+          callback(null, '7f91fc6\n' +
             '7f91fc607da7947e62b2d8a52088ee0ce29a88c8\n' +
             'leider\n' +
             '2014-03-01 18:36:29 +0100\n' +
@@ -88,7 +88,7 @@ describe('the gitmech module', function () {
             'trauerleider\n' +
             '2013-12-08 12:53:42 +0100\n' +
             'no comment\n' +
-            'path/file.md\n\n'));
+            'path/file.md\n\n');
         }
       });
       Git.log('path', 'HEAD', 1, function (err, metadatas) {
@@ -113,7 +113,7 @@ describe('the gitmech module', function () {
     it('can handle renames via "git log" for viewing the history', function (done) {
       sinon.stub(gitExec, 'command', function (args, callback) {
         if (args[0] === 'log') {
-          callback(null, new Buffer('7f91fc6\n' +
+          callback(null, '7f91fc6\n' +
             '7f91fc607da7947e62b2d8a52088ee0ce29a88c8\n' +
             'leider\n' +
             '2014-03-01 18:36:29 +0100\n' +
@@ -125,7 +125,7 @@ describe('the gitmech module', function () {
             'leider\n' +
             '2014-03-01 18:36:29 +0100\n' +
             'no comment\n' +
-            'path/file.md\n\n'));
+            'path/file.md\n\n');
         }
       });
       Git.log('path', 'HEAD', 1, function (err, metadatas) {
@@ -157,7 +157,7 @@ describe('the gitmech module', function () {
     it('produces sensible metadata via "latestChanges" for sending change emails', function (done) {
       sinon.stub(gitExec, 'command', function (args, callback) {
         if (args[0] === 'log') {
-          callback(null, new Buffer('60ca4ed\n' +
+          callback(null, '60ca4ed\n' +
             '60ca4eda5b79fd55461a78725ff0815cfd3f8550\n' +
             'leider\n' +
             '2014-03-13 20:06:51 +0100\n' +
@@ -171,7 +171,7 @@ describe('the gitmech module', function () {
             'f327d711e3e8f0104cde2902198512444af46df3\n' +
             'leider\n' +
             '2014-03-09 14:37:59 +0100\n' +
-            'no comment\n'));
+            'no comment\n');
         }
       });
       Git.latestChanges('path', moment(), function (err, metadatas) {
@@ -254,10 +254,10 @@ describe('the gitmech module', function () {
     it('finds in file contents', function (done) {
       sinon.stub(gitExec, 'command', function (args, callback) {
         if (args[0] === 'grep') {
-          callback(null, new Buffer('global/index.md:8:Dies ist der Index [für] das [[andreas:test]] -dudelo\n' +
+          callback(null, 'global/index.md:8:Dies ist der Index [für] das [[andreas:test]] -dudelo\n' +
             'global/veran.md:12:[UK Tester Forums - Test Management Forum](http://uktmf.com/index.php?q=node/5271)                                             | London                  | 5.2.             \n' +
             'global/veran.md:16:[Belgium Testing Days](http://btdconf.com/)                                                                                    | Brügge                  | 17.3. - 20.3.    \n' +
-            'global/veran.md:20:[SIGIST (Specialist Group in Software Testing) Spring Conference](http://www.bcs.org/category/9264)                            | London                  | 11.3.            '));
+            'global/veran.md:20:[SIGIST (Specialist Group in Software Testing) Spring Conference](http://www.bcs.org/category/9264)                            | London                  | 11.3.            ');
         }
         if (args[0] === 'ls-files') {
           callback();
@@ -276,9 +276,9 @@ describe('the gitmech module', function () {
           callback();
         }
         if (args[0] === 'ls-files') {
-          callback(null, new Buffer('andex.md\n' +
+          callback(null, 'andex.md\n' +
             'andreas.md\n' +
-            'andreastest.md'));
+            'andreastest.md');
         }
       });
       Git.grep('test', function (err, chunks) {
@@ -325,9 +325,9 @@ describe('the gitmech module', function () {
     it('"ls" - converts the data to an array of single non empty lines', function (done) {
       sinon.stub(gitExec, 'command', function (args, callback) {
         if (args[0] === 'ls-tree') {
-          callback(null, new Buffer('andex.md\n' +
+          callback(null, 'andex.md\n' +
             '\n' +
-            'andreastest.md'));
+            'andreastest.md');
         }
       });
       Git.ls('subdir', function (err, lines) {
@@ -350,9 +350,9 @@ describe('the gitmech module', function () {
     it('"lsdirs" - converts the data to an array of single non empty lines', function (done) {
       sinon.stub(gitExec, 'command', function (args, callback) {
         if (args[0] === 'ls-tree') {
-          callback(null, new Buffer('andex.md\n' +
+          callback(null, 'andex.md\n' +
             '\n' +
-            'andreastest.md'));
+            'andreastest.md');
         }
       });
       Git.lsdirs(function (err, lines) {
@@ -375,9 +375,9 @@ describe('the gitmech module', function () {
     it('"lsblogposts" - converts the data to an array of single non empty lines', function (done) {
       sinon.stub(gitExec, 'command', function (args, callback) {
         if (args[0] === 'ls-files') {
-          callback(null, new Buffer('andex.md\n' +
+          callback(null, 'andex.md\n' +
             '\n' +
-            'andreastest.md'));
+            'andreastest.md');
         }
       });
       Git.lsblogposts('group', 'pattern', function (err, lines) {
