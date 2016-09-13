@@ -40,9 +40,8 @@ module.exports = {
     gitExec.command(['log', '-' + howMany, '--no-notes', '--follow', '--pretty=format:%h%n%H%n%an%n%ai%n%s', version, '--name-only', '--', path], function (err, data) {
       if (err) { return callback(err); }
       var logdata = data ? data.toString().split('\n\n') : [];
-      var group;
       var metadata = _(logdata).compact().map(function (chunk) {
-        group = chunk.split('\n');
+        const group = chunk.split('\n');
         return new Metadata({
           hashRef: group[0],
           fullhash: group[1],
@@ -63,11 +62,9 @@ module.exports = {
     gitExec.command(['log', '--since="' + moment.format('MM/DD/YYYY hh:mm:ss') + '"', '--pretty=format:%h%n%H%n%an%n%ai%n%s', '--', path], function (err, data) {
       if (err) { return callback(err); }
       var logdata = data ? data.toString().split('\n') : [];
-      var group;
       var metadata = [];
-      var i;
-      for (i = Math.floor(logdata.length / 5); i > 0; i = i - 1) {
-        group = logdata.slice((i - 1) * 5, i * 5);
+      for (var i = Math.floor(logdata.length / 5); i > 0; i = i - 1) {
+        const group = logdata.slice((i - 1) * 5, i * 5);
         metadata.push(new Metadata({
           name: path.replace('.md', ''),
           hashRef: group[0],
