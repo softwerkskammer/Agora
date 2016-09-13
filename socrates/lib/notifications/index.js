@@ -167,6 +167,7 @@ module.exports = {
   },
 
   wikiChanges: function (changes, callback) {
+    const self = this;
     var options = {
       directories: _.sortBy(changes, 'dir')
     };
@@ -176,7 +177,7 @@ module.exports = {
       var filename = path.join(__dirname, 'pug/wikichangetemplate.pug');
       sendMail({
         fromName: 'SoCraTes Notifications',
-        fromAddress: this.infoListEmailAddress(),
+        fromAddress: self.infoListEmailAddress(),
         receivers: emails,
         subject: 'SoCraTes Wiki Changes',
         html: pug.renderFile(filename, options),
