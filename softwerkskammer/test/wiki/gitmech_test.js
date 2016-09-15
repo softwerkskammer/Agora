@@ -1,12 +1,12 @@
 'use strict';
 
-var moment = require('moment-timezone');
-var _ = require('lodash');
-var sinon = require('sinon').sandbox.create();
-var expect = require('must-dist');
-var beans = require('../../testutil/configureForTest').get('beans');
-var Git = beans.get('gitmech');
-var gitExec = beans.get('gitExec');
+const moment = require('moment-timezone');
+const _ = require('lodash');
+const sinon = require('sinon').sandbox.create();
+const expect = require('must-dist');
+const beans = require('../../testutil/configureForTest').get('beans');
+const Git = beans.get('gitmech');
+const gitExec = beans.get('gitExec');
 
 describe('the gitmech module', function () {
   afterEach(function () {
@@ -44,7 +44,7 @@ describe('the gitmech module', function () {
         }
       });
       Git.log('path', 'HEAD', 1, function (err, metadatas) {
-        var metadata = metadatas[0];
+        const metadata = metadatas[0];
         expect(metadatas).to.have.length(1);
         expect(metadata.name).to.equal('path/file.md');
         expect(metadata.hashRef).to.equal('HEAD');
@@ -92,7 +92,7 @@ describe('the gitmech module', function () {
         }
       });
       Git.log('path', 'HEAD', 1, function (err, metadatas) {
-        var metadata = metadatas[0];
+        const metadata = metadatas[0];
         expect(metadatas).to.have.length(5);
 
         expect(metadata.name).to.equal('path/file.md');
@@ -147,7 +147,7 @@ describe('the gitmech module', function () {
     });
 
     it('calls the callback with an error when failing at "log"', function (done) {
-      sinon.stub(gitExec, 'command', function (args, callback) { callback(new Error()); });
+      sinon.stub(gitExec, 'command', (args, callback) => callback(new Error()));
       Git.log('path', 'HEAD', 1, function (err) {
         expect(err).to.exist();
         done();
@@ -184,7 +184,7 @@ describe('the gitmech module', function () {
     });
 
     it('calls the callback with an error when failing at "latestChanges"', function (done) {
-      sinon.stub(gitExec, 'command', function (args, callback) { callback(new Error()); });
+      sinon.stub(gitExec, 'command', (args, callback) => callback(new Error()));
       Git.latestChanges('path', moment(), function (err) {
         expect(err).to.exist();
         done();
@@ -192,7 +192,7 @@ describe('the gitmech module', function () {
     });
   });
 
-  var runTestsFor = function (commandName, gitmechCommand) {
+  const runTestsFor = function (commandName, gitmechCommand) {
     return function () {
       it('calls commit when successful', function (done) {
         var commitcalled = false;
