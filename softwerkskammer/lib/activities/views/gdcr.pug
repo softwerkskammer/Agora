@@ -16,7 +16,7 @@ mixin placeGroupLabels(activities)
     -var group = activity.group
     -counter[group.longName] = counter[group.longName] + 1 || 0;
     if (group.shortName)
-      .label.group(style='background-color: ' + activity.colorRGB + '; top: ' + (group.mapYrelative() || 0) + (counter[group.longName] * 4) + '%; left: ' + group.mapXrelative() || 2 + '%;')
+      .label.group(style='background-color: ' + activity.colorRGB + '; top: ' + ((group.mapYrelative() || 0) + (counter[group.longName] * 4)) + '%; left: ' + (group.mapXrelative() || 2) + '%;')
         span(rel='tooltip-in-body', data-title='<h4>' + activity.title() + '</h4>', data-content=activity.descriptionHTML().substring(0,500))
           a.group(href=activity.fullyQualifiedUrl()) #{group.shortName}
 
