@@ -24,7 +24,7 @@ module.exports = {
   },
 
   readFileFs: function (path, callback) {
-    Fs.readFile(this.absPath(path), callback);
+    Fs.readFile(this.absPath(path), 'utf8', callback);
   },
 
   readFile: function (path, version, callback) {
