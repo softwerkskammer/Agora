@@ -136,6 +136,7 @@
     "colors": "Colours"
   },
   "dashboard": {
+    "dashboard": "Dashboard",
     "description": [
       "p Your personal view to softwerkskammer. It shows your groups and their upcoming activities."
     ]
