@@ -15,7 +15,7 @@ var activitiesService = beans.get('activitiesService');
 
 var app = misc.expressAppIn(__dirname);
 
-app.get('/', function (req, res, next) {
+app.get('/legacy', function (req, res, next) {
   dashboardService.dataForDashboard(req.user.member.nickname(), function (err, result) {
     if (err) { return next(err); }
     res.render('index', result);
@@ -126,7 +126,7 @@ var transformResult = function (result, language) {
   result.mailsByGroup = transformMailsByGroup(groupIds, result.mailsByGroup, language);
 };
 
-app.get('/json', function (req, res, next) {
+app.get('/', function (req, res, next) {
   dashboardService.dataForDashboard(req.user.member.nickname(), function (err, result) {
     if (err) { return next(err); }
 
