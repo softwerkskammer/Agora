@@ -128,6 +128,7 @@
     "colors": "Farben"
   },
   "dashboard": {
+    "dashboard": "Überblick",
     "description": [
       "p Deine persönliche Softwerkskammer. Wir zeigen Dir hier Deine Gruppen und ihre Aktivitäten."
     ]

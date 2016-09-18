@@ -24,7 +24,7 @@ app.get('/', function (req, res, next) {
 
 var transformActivity = function (language, activity) {
   return { allRegisteredMembers: activity.allRegisteredMembers(),
-    startMoment: activity.startMoment().lang(language).format('L'),
+    startMoment: activity.startMoment().locale(language).format('L'),
     url: activity.url(),
     title: activity.title(),
     groupName: activity.groupName(),

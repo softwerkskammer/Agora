@@ -99,6 +99,9 @@ mixin topNavbar(xs)
       ul.nav.navbar-nav.navbar-right.bottom
         +loginMenu
     ul.nav.navbar-nav.bottom
+      li(data-agoranav='dashboard'): a(href='/dashboard/json')
+        i.fa.fa-th-list.fa-fw
+        span.hidden-sm &nbsp;#{t('dashboard.dashboard')}
       li(data-agoranav='activities'): a(href='/activities/upcoming')
         i.fa.fa-calendar.fa-fw
         span.hidden-sm &nbsp;#{t('activities.activities')}
