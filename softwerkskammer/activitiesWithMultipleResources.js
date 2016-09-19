@@ -20,7 +20,7 @@ activitystore.allActivities((err, activities) => {
   var simple = activities.filter(activity => activity.resourceNames().length === 1);
   var more = activities.filter(activity => activity.resourceNames().length > 1);
 
-  more.forEach(activity => console.log(activity.title() + ' (url: ' + activity.url() + ')'))
+  more.forEach(activity => console.log(activity.title() + ' (url: ' + activity.url() + ')'));
   console.log(more.length + ' activites with multiple resources');
   console.log(simple.length + ' activites with onle one resource');
   console.log(activities.length + ' activites total');
