@@ -1,15 +1,14 @@
 'use strict';
 
-var moment = require('moment-timezone');
-var _ = require('lodash');
+const moment = require('moment-timezone');
 
-var conf = require('simple-configure');
-var beans = conf.get('beans');
-var Resources = beans.get('resources');
-var fieldHelpers = beans.get('fieldHelpers');
-var Renderer = beans.get('renderer');
+const conf = require('simple-configure');
+const beans = conf.get('beans');
+const Resources = beans.get('resources');
+const fieldHelpers = beans.get('fieldHelpers');
+const Renderer = beans.get('renderer');
 
-var standardName = 'Veranstaltung';
+const standardName = 'Veranstaltung';
 
 function Activity(object) {
   /* eslint no-underscore-dangle: 0 */
@@ -82,7 +81,7 @@ Activity.prototype.editorIds = function () {
 
 // XXX remove duplication with copyFrom
 Activity.prototype.fillFromUI = function (object, editorIds) {
-  var self = this;
+  const self = this;
   self.state.url = object.url;
 
   self.state.editorIds = editorIds;
@@ -156,7 +155,7 @@ Activity.prototype.groupName = function () {
 };
 
 Activity.prototype.groupFrom = function (groups) {
-  this.group = _.find(groups, {id: this.assignedGroup()});
+  this.group = groups.find(group => group.id === this.assignedGroup());
 };
 
 // Resources
@@ -182,21 +181,17 @@ Activity.prototype.isAlreadyRegistered = function (memberID) {
 };
 
 Activity.prototype.isAlreadyOnWaitinglist = function (memberID) {
-  return _(this.allWaitinglistEntries()).find(function (entry) { return entry.registrantId() === memberID; });
+  return this.allWaitinglistEntries().find(entry => entry.registrantId() === memberID);
 };
 
 Activity.prototype.registeredResourcesFor = function (memberID) {
-  var self = this;
-  return _.map(self.resources().resourceNamesOf(memberID), function (resourceName) {
-    return self.resourceNamed(resourceName);
-  });
+  const self = this;
+  return self.resources().resourceNamesOf(memberID).map(resourceName => self.resourceNamed(resourceName));
 };
 
 Activity.prototype.waitinglistResourcesFor = function (memberID) {
-  var self = this;
-  return _.map(self.resources().waitinglistResourceNamesOf(memberID), function (resourceName) {
-    return self.resourceNamed(resourceName);
-  });
+  const self = this;
+  return self.resources().waitinglistResourceNamesOf(memberID).map(resourceName => self.resourceNamed(resourceName));
 };
 
 Activity.prototype.allWaitinglistEntries = function () {
@@ -233,16 +228,14 @@ Activity.prototype.colorFrom = function (groupsColors) {
 
 Activity.prototype.participantsOf = function (resourceName) {
   if (!this.participants) { return []; }
-  var resource = this.resourceNamed(resourceName);
-  var memberIds = resource.registeredMembers();
-  return _(this.participants).filter(function (participant) {
-    return _.some(memberIds, function (memberId) {
-      return memberId === participant.id();
-    });
-  }).map(function (member) {
-    member.registeredAt = resource.registrationDateOf(member.id());
-    return member;
-  }).value();
+  const resource = this.resourceNamed(resourceName);
+  const memberIds = resource.registeredMembers();
+  return this.participants
+             .filter(participant => memberIds.some(memberId => memberId === participant.id()))
+             .map(member => {
+               member.registeredAt = resource.registrationDateOf(member.id());
+               return member;
+             });
 };
 
 module.exports = Activity;

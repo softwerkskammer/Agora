@@ -3,7 +3,6 @@
 'use strict';
 
 require('./configure'); // initializing parameters
-var _ = require('lodash');
 var beans = require('simple-configure').get('beans');
 var memberstore = beans.get('memberstore');
 
@@ -18,13 +17,9 @@ memberstore.allMembers(function (err, members) {
     console.log(err);
     process.exit();
   }
-  var googleOnlyMembers = _.filter(members, function (member) {
-    return member.authentications().length === 1 && member.authentications()[0].indexOf('https://www.google.com/accounts/o8/id?id=') !== -1;
-  });
+  var googleOnlyMembers = members.filter(member => member.authentications().length === 1 && member.authentications()[0].indexOf('https://www.google.com/accounts/o8/id?id=') !== -1);
 
-  _.each(googleOnlyMembers, function (member) {
-    console.log(member.displayName());
-  });
+  googleOnlyMembers.forEach(member => console.log(member.displayName()));
   console.log(googleOnlyMembers.length + ' members can only authenticate via Google OpenID');
   process.exit();
 
