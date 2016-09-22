@@ -4,7 +4,7 @@
 
 It is a node.js project. Therefore you need node.js installed. Get it from [http://nodejs.org](http://nodejs.org).
 
-You need a current 6.x version to run the software (4.x should also be OK).
+You need a current 6.x version to run the software.
 
 Your node.js ships npm in a suitable version.
 
