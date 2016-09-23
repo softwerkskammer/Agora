@@ -70,7 +70,7 @@ mixin wikichangesOrBlogs(items, panelid, prefix, title)
     div(class=prefix + ' collapse in')
       ul.list-unstyled
         each item in items
-          li.dashboard-line
+          li
             .modal.fade.bs-modal-lg(id=item.dialogId(), tabindex='-1')
               .modal-dialog.modal-lg
                 .modal-content
