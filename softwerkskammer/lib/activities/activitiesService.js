@@ -25,7 +25,7 @@ module.exports = {
 
       (err, results) => {
         if (err) { callback(err); }
-        results.activities.forEach((activity) => {
+        results.activities.forEach(activity => {
           activity.colorRGB = activity.colorFrom(results.groupColors);
           activity.groupFrom(results.groups); // sets the group object in activity
         });
@@ -124,7 +124,6 @@ module.exports = {
   },
 
   addToWaitinglist: function addToWaitinglist(memberId, activityUrl, resourceName, moment, callback) {
-    const self = this;
     activitystore.getActivity(activityUrl, (err, activity) => {
       if (err || !activity) { return callback(err, 'message.title.problem', 'message.content.activities.does_not_exist'); }
       const resource = activity.resourceNamed(resourceName);
@@ -133,7 +132,7 @@ module.exports = {
         return activitystore.saveActivity(activity, err1 => {
           if (err1 && err1.message === CONFLICTING_VERSIONS) {
             // we try again because of a racing condition during save:
-            return self.addToWaitinglist(memberId, activityUrl, resourceName, moment, callback);
+            return this.addToWaitinglist(memberId, activityUrl, resourceName, moment, callback);
           }
           notifications.waitinglistAddition(activity, memberId, resourceName);
           return callback(err1);
