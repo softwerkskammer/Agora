@@ -356,16 +356,6 @@ app.post('/removeFromWaitinglist', function (req, res, next) { // removeFromWait
   });
 });
 
-app.get('/addons/:url', function (req, res, next) {
-  activitiesService.getActivityWithGroupAndParticipants(req.params.url, function (err, activity) {
-    if (err) { return next(err); }
-    if (!res.locals.accessrights.canEditActivity(activity)) {
-      return res.redirect('/activities/' + encodeURIComponent(req.params.url));
-    }
-    res.render('managementTables', {activity: activity});
-  });
-});
-
 app.post('/delete', function (req, res, next) {
   var url = req.body.activityUrl;
   activitystore.getActivity(url, function (err, activity) {

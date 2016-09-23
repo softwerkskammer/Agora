@@ -23,9 +23,6 @@ function Activity(object) {
     this.state.resources[standardName] = {_registeredMembers: [], _registrationOpen: true};
   }
 
-  if (!this.state._addons) {
-    this.state._addons = {};
-  }
   return this;
 }
 
