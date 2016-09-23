@@ -72,7 +72,7 @@ mixin my_activities
     ul.list-group
       each activity in activities
         -var angemeldet = (memberId && activity.allRegisteredMembers.indexOf(memberId) > -1)
-        li.list-group-item
+        li.list-group-item.clearfix
           if (angemeldet)
             i.fa.fa-check.fa-fw.text-success.tooltipify(data-toggle='tooltip', title=t('activities.tooltip.registered'))
           else
