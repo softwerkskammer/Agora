@@ -1,34 +1,32 @@
 'use strict';
 
-var async = require('async');
-var _ = require('lodash');
+const async = require('async');
+const R = require('ramda');
 
-var beans = require('simple-configure').get('beans');
+const beans = require('simple-configure').get('beans');
 
-var activitystore = beans.get('activitystore');
-var groupsService = beans.get('groupsService');
-var groupstore = beans.get('groupstore');
-var membersService = beans.get('membersService');
-var memberstore = beans.get('memberstore');
-var notifications = beans.get('notifications');
-var fieldHelpers = beans.get('fieldHelpers');
-var CONFLICTING_VERSIONS = beans.get('constants').CONFLICTING_VERSIONS;
+const activitystore = beans.get('activitystore');
+const groupsService = beans.get('groupsService');
+const groupstore = beans.get('groupstore');
+const membersService = beans.get('membersService');
+const memberstore = beans.get('memberstore');
+const notifications = beans.get('notifications');
+const fieldHelpers = beans.get('fieldHelpers');
+const CONFLICTING_VERSIONS = beans.get('constants').CONFLICTING_VERSIONS;
 
 module.exports = {
-  getActivitiesForDisplay: function (activitiesFetcher, callback) {
+  getActivitiesForDisplay: function getActivitiesForDisplay(activitiesFetcher, callback) {
     async.parallel(
       {
         activities: activitiesFetcher,
-        groups: function (cb) { groupsService.getAllAvailableGroups(cb); },
-        groupColors: function (cb) { groupsService.allGroupColors(cb); }
+        groups: groupsService.getAllAvailableGroups,
+        groupColors: groupsService.allGroupColors.bind(groupsService)
       },
 
-      function (err, results) {
+      (err, results) => {
         if (err) { callback(err); }
-        _.each(results.activities, function (activity) {
+        results.activities.forEach(activity => {
           activity.colorRGB = activity.colorFrom(results.groupColors);
-        });
-        _.each(results.activities, function (activity) {
           activity.groupFrom(results.groups); // sets the group object in activity
         });
         callback(null, results.activities);
@@ -36,42 +34,37 @@ module.exports = {
     );
   },
 
-  getUpcomingActivitiesOfMemberAndHisGroups: function (member, callback) {
-    var activitiesFetcher = function (mem) {
-      var groupIds = _.map(mem.subscribedGroups, 'id');
-      return _.partial(activitystore.activitiesForGroupIdsAndRegisteredMemberId, groupIds, mem.id(), true);
-    };
+  getUpcomingActivitiesOfMemberAndHisGroups: function getUpcomingActivitiesOfMemberAndHisGroups(member, callback) {
+    const groupIds = member.subscribedGroups.map(group => group.id);
+    const activitiesFetcher = R.partial(activitystore.activitiesForGroupIdsAndRegisteredMemberId, [groupIds, member.id(), true]);
 
-    return this.getActivitiesForDisplay(activitiesFetcher(member), callback);
+    return this.getActivitiesForDisplay(activitiesFetcher, callback);
   },
 
-  getPastActivitiesOfMember: function (member, callback) {
-    var activitiesFetcher = function (mem) {
-      return _.partial(activitystore.activitiesForGroupIdsAndRegisteredMemberId, [], mem.id(), false);
-    };
+  getPastActivitiesOfMember: function getPastActivitiesOfMember(member, callback) {
+    const activitiesFetcher = R.partial(activitystore.activitiesForGroupIdsAndRegisteredMemberId, [[], member.id(), false]);
 
-    return this.getActivitiesForDisplay(activitiesFetcher(member), callback);
+    return this.getActivitiesForDisplay(activitiesFetcher, callback);
   },
 
-  getActivityWithGroupAndParticipants: function (url, callback) {
-    activitystore.getActivity(url, function (err, activity) {
+  getActivityWithGroupAndParticipants: function getActivityWithGroupAndParticipants(url, callback) {
+    activitystore.getActivity(url, (err, activity) => {
       if (err || !activity) { return callback(err); }
 
-      var participantsLoader = function (cb) {
-        memberstore.getMembersForIds(activity.allRegisteredMembers(), function (err1, members) {
-          async.each(members, membersService.putAvatarIntoMemberAndSave, function () {
-            cb(err1, members);
-          });
+      function participantsLoader(cb) {
+        memberstore.getMembersForIds(activity.allRegisteredMembers(), (err1, members) => {
+          async.each(members, membersService.putAvatarIntoMemberAndSave, () => cb(err1, members));
         });
-      };
+      }
+
       async.parallel(
         {
-          group: function (cb) { groupstore.getGroup(activity.assignedGroup(), cb); },
+          group: cb => groupstore.getGroup(activity.assignedGroup(), cb),
           participants: participantsLoader,
-          owner: function (cb) { memberstore.getMemberForId(activity.owner(), cb); }
+          owner: cb => memberstore.getMemberForId(activity.owner(), cb)
         },
 
-        function (err1, results) {
+        (err1, results) => {
           if (err1) {return callback(err1); }
           activity.group = results.group;
           activity.participants = results.participants;
@@ -82,25 +75,25 @@ module.exports = {
     });
   },
 
-  isValidUrl: function (reservedURLs, url, callback) {
-    var isReserved = new RegExp(reservedURLs, 'i').test(url);
+  isValidUrl: function isValidUrl(reservedURLs, url, callback) {
+    const isReserved = new RegExp(reservedURLs, 'i').test(url);
     if (fieldHelpers.containsSlash(url) || isReserved) { return callback(null, false); }
-    activitystore.getActivity(url, function (err, result) {
+    activitystore.getActivity(url, (err, result) => {
       if (err) { return callback(err); }
       callback(null, result === null);
     });
   },
 
-  activitiesBetween: function (startMoment, endMoment, callback) {
+  activitiesBetween: function activitiesBetween(startMoment, endMoment, callback) {
     activitystore.allActivitiesByDateRangeInAscendingOrder(startMoment.unix(), endMoment.unix(), callback);
   },
 
-  addVisitorTo: function (memberId, activityUrl, resourceName, moment, callback) {
-    var self = this;
-    activitystore.getActivity(activityUrl, function (err, activity) {
+  addVisitorTo: function addVisitorTo(memberId, activityUrl, resourceName, moment, callback) {
+    const self = this;
+    activitystore.getActivity(activityUrl, (err, activity) => {
       if (err || !activity) { return callback(err, 'message.title.problem', 'message.content.activities.does_not_exist'); }
       if (activity.resourceNamed(resourceName).addMemberId(memberId, moment)) {
-        return activitystore.saveActivity(activity, function (err1) {
+        return activitystore.saveActivity(activity, err1 => {
           if (err1 && err1.message === CONFLICTING_VERSIONS) {
             // we try again because of a racing condition during save:
             return self.addVisitorTo(memberId, activityUrl, resourceName, moment, callback);
@@ -114,12 +107,12 @@ module.exports = {
     });
   },
 
-  removeVisitorFrom: function (memberId, activityUrl, resourceName, callback) {
-    var self = this;
-    activitystore.getActivity(activityUrl, function (err, activity) {
+  removeVisitorFrom: function removeVisitorFrom(memberId, activityUrl, resourceName, callback) {
+    const self = this;
+    activitystore.getActivity(activityUrl, (err, activity) => {
       if (err || !activity) { return callback(err, 'message.title.problem', 'message.content.activities.does_not_exist'); }
       activity.resourceNamed(resourceName).removeMemberId(memberId);
-      activitystore.saveActivity(activity, function (err1) {
+      activitystore.saveActivity(activity, err1 => {
         if (err1 && err1.message === CONFLICTING_VERSIONS) {
           // we try again because of a racing condition during save:
           return self.removeVisitorFrom(memberId, activityUrl, resourceName, callback);
@@ -130,17 +123,16 @@ module.exports = {
     });
   },
 
-  addToWaitinglist: function (memberId, activityUrl, resourceName, moment, callback) {
-    var self = this;
-    activitystore.getActivity(activityUrl, function (err, activity) {
+  addToWaitinglist: function addToWaitinglist(memberId, activityUrl, resourceName, moment, callback) {
+    activitystore.getActivity(activityUrl, (err, activity) => {
       if (err || !activity) { return callback(err, 'message.title.problem', 'message.content.activities.does_not_exist'); }
-      var resource = activity.resourceNamed(resourceName);
+      const resource = activity.resourceNamed(resourceName);
       if (resource.hasWaitinglist()) {
         resource.addToWaitinglist(memberId, moment);
-        return activitystore.saveActivity(activity, function (err1) {
+        return activitystore.saveActivity(activity, err1 => {
           if (err1 && err1.message === CONFLICTING_VERSIONS) {
             // we try again because of a racing condition during save:
-            return self.addToWaitinglist(memberId, activityUrl, resourceName, moment, callback);
+            return this.addToWaitinglist(memberId, activityUrl, resourceName, moment, callback);
           }
           notifications.waitinglistAddition(activity, memberId, resourceName);
           return callback(err1);
@@ -150,12 +142,12 @@ module.exports = {
     });
   },
 
-  removeFromWaitinglist: function (memberId, activityUrl, resourceName, callback) {
-    var self = this;
-    activitystore.getActivity(activityUrl, function (err, activity) {
+  removeFromWaitinglist: function removeFromWaitinglist(memberId, activityUrl, resourceName, callback) {
+    const self = this;
+    activitystore.getActivity(activityUrl, (err, activity) => {
       if (err || !activity) { return callback(err, 'message.title.problem', 'message.content.activities.does_not_exist'); }
       activity.resourceNamed(resourceName).removeFromWaitinglist(memberId);
-      return activitystore.saveActivity(activity, function (err1) {
+      return activitystore.saveActivity(activity, err1 => {
         if (err1 && err1.message === CONFLICTING_VERSIONS) {
           // we try again because of a racing condition during save:
           return self.removeFromWaitinglist(memberId, activityUrl, resourceName, callback);
