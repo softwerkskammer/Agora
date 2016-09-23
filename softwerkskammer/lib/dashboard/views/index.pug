@@ -11,6 +11,8 @@ block scripts
 block title
   | Dashboard
 block content
+  h1 #{t('dashboard.dashboard')}
+  !=t('dashboard.description', { postProcess: 'pug' })
   .row
     .col-sm-6
       +my_activities
