@@ -16,12 +16,6 @@ block content
   .row
     .col-sm-6
       +my_activities
-    .col-sm-6
-      .panel.panel-default
-        .panel-heading
-          b #{t('dashboard.dashboard')}
-        .panel-body
-          !=t('dashboard.description', { postProcess: 'pug' })
   +my_groups
 
 mixin my_groups
