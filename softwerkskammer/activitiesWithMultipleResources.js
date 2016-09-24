@@ -2,6 +2,8 @@
 /* eslint no-console: 0 */
 'use strict';
 
+const R = require('ramda');
+
 require('./configure'); // initializing parameters
 var beans = require('simple-configure').get('beans');
 var activitystore = beans.get('activitystore');
@@ -20,9 +22,10 @@ activitystore.allActivities((err, activities) => {
   var simple = activities.filter(activity => activity.resourceNames().length === 1);
   var more = activities.filter(activity => activity.resourceNames().length > 1);
 
-  more.forEach(activity => console.log(activity.title() + ' (url: ' + activity.url() + ')'));
+  more.forEach(activity => console.log(activity.title() + ' (url: ' + activity.url() + '-' + activity.resourceNames() + ')'));
   console.log(more.length + ' activites with multiple resources');
   console.log(simple.length + ' activites with onle one resource');
+  console.log(R.uniq(simple.map(each => each.resourceNames())));
   console.log(activities.length + ' activites total');
 
   process.exit();
