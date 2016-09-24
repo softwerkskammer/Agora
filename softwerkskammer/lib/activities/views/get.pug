@@ -50,7 +50,7 @@ block content
         if (allowsRegistration)
           p #{t('activities.count_participants_interval', { postProcess: 'interval', count: activity.participants.length })}
         each resourceName in activity.resourceNames()
-          +subscriptionButtons(activity, resourceName, resourceRegistrationRenderer)
+          +subscriptionButtons(activity, resourceRegistrationRenderer)
         if (accessrights.isRegistered() && activity.participants.length > 0)
           h4 #{t('activities.accepted_by')}:
           +memberlist(activity.participants)

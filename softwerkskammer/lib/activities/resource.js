@@ -1,12 +1,11 @@
 'use strict';
 
-var _ = require('lodash');
-var moment = require('moment-timezone');
-var WaitinglistEntry = require('simple-configure').get('beans').get('waitinglistEntry');
+const moment = require('moment-timezone');
+const WaitinglistEntry = require('simple-configure').get('beans').get('waitinglistEntry');
 
-function Resource(resourceObject, resourceName) {
-  this.resourceName = resourceName;
-  this.state = resourceObject || {}; // this must be *the* object that is referenced by activity.resources[resourceName]
+function Resource(resourceObject) {
+  this.resourceName = 'Veranstaltung';
+  this.state = resourceObject || {}; // this must be *the* object that is referenced by activity.resources.Veranstaltung
   return this;
 }
 
@@ -24,7 +23,7 @@ Resource.prototype.fillFromUI = function (uiInputObject) {
   }
 
   // adjust the limit
-  var intLimit = parseInt(uiInputObject.limit, 10);
+  const intLimit = parseInt(uiInputObject.limit, 10);
   if (intLimit >= 0) {
     this.state._limit = intLimit;
   } else {
@@ -38,15 +37,14 @@ Resource.prototype.registeredMembers = function () {
   if (!this.state._registeredMembers) {
     this.state._registeredMembers = [];
   }
-  return _.map(this.state._registeredMembers, 'memberId');
+  return this.state._registeredMembers.map(each => each.memberId);
 };
 
 Resource.prototype.registrationDateOf = function (memberId) {
-  var self = this;
-  if (!self.state._registeredMembers) {
-    self.state._registeredMembers = [];
+  if (!this.state._registeredMembers) {
+    this.state._registeredMembers = [];
   }
-  var registration = _.find(self.state._registeredMembers, {'memberId': memberId});
+  const registration = this.state._registeredMembers.find(each => each.memberId === memberId);
   return registration ? moment(registration.registeredAt) : undefined;
 };
 
@@ -71,7 +69,7 @@ Resource.prototype.isAlreadyRegistered = function (memberId) {
 
 Resource.prototype.removeMemberId = function (memberId) {
   if (this.canUnsubscribe()) {
-    var index = this.registeredMembers().indexOf(memberId);
+    const index = this.registeredMembers().indexOf(memberId);
     if (index > -1) {
       this.state._registeredMembers.splice(index, 1);
     }
@@ -92,31 +90,21 @@ Resource.prototype.addToWaitinglist = function (memberId, momentOfRegistration) 
 
 Resource.prototype.removeFromWaitinglist = function (memberId) {
   if (!this.hasWaitinglist()) { return; }
-  var index = _.map(this.state._waitinglist, '_memberId').indexOf(memberId);
+  const index = this.state._waitinglist.findIndex(each => each._memberId === memberId);
   if (index > -1) {
     this.state._waitinglist.splice(index, 1);
   }
 };
 
 Resource.prototype.waitinglistEntries = function () {
-  var self = this;
-  if (!self.hasWaitinglist()) {
-    return [];
-  }
-  return _.map(self.state._waitinglist, function (waitinglistEntry) {
-    return new WaitinglistEntry(waitinglistEntry, self.resourceName);
-  });
+  if (!this.hasWaitinglist()) { return []; }
+  return this.state._waitinglist.map(waitinglistEntry => new WaitinglistEntry(waitinglistEntry));
 };
 
 Resource.prototype.waitinglistEntryFor = function (memberId) {
   if (!this.hasWaitinglist()) { return undefined; }
-  var entry = _.find(this.state._waitinglist, function (waitinglistEntry) {
-    return waitinglistEntry._memberId === memberId;
-  });
-  if (entry) {
-    return new WaitinglistEntry(entry, this.resourceName);
-  }
-  return entry;
+  const entry = this.state._waitinglist.find(waitinglistEntry => waitinglistEntry._memberId === memberId);
+  return entry ? new WaitinglistEntry(entry) : undefined;
 };
 
 Resource.prototype.copyFrom = function (originalResource) {
@@ -139,7 +127,7 @@ Resource.prototype.canSubscribe = function () {
 };
 
 Resource.prototype.canSubscribeFromWaitinglist = function (memberId) {
-  var waitingListEntry = this.waitinglistEntryFor(memberId);
+  const waitingListEntry = this.waitinglistEntryFor(memberId);
   return waitingListEntry && waitingListEntry.canSubscribe();
 };
 

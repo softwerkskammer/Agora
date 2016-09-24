@@ -256,7 +256,7 @@ app.get('/:url', function (req, res, next) {
     memberstore.getMembersForIds(activity.editorIds(), function (err1, editors) {
       if (err1 || !editors) { return next(err1); }
       var editorNicknames = _.map(editors, function (editor) { return editor.nickname(); });
-      var allowsRegistration = _.every(activity.resources().resourceNames(), function (resourceName) {
+      var allowsRegistration = _.every(activity.resourceNames(), function (resourceName) {
         return activity.resourceNamed(resourceName).limit() !== 0;
       });
       res.render('get', {

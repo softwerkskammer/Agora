@@ -30,7 +30,7 @@ describe('Waitinglist Service with DB', function () {
   beforeEach(function (done) { // if this fails, you need to start your mongo DB
     activityBeforeConcurrentAccess = new Activity(
       {id: 'activityId', url: activityUrl, resources: {
-        'default': {_registeredMembers: [], _waitinglist: [
+        'Veranstaltung': {_registeredMembers: [], _waitinglist: [
           {_memberId: 'memberIdWaiting'}
         ], _registrationOpen: true }
       }, version: 1}
@@ -38,7 +38,7 @@ describe('Waitinglist Service with DB', function () {
 
     activityAfterConcurrentAccess = new Activity(
       {id: 'activityId', url: activityUrl, resources: {
-        'default': {_registeredMembers: [
+        'Veranstaltung': {_registeredMembers: [
           {memberId: 'memberId1'}
         ], _waitinglist: [
           {_memberId: 'memberIdWaiting'}
@@ -88,12 +88,12 @@ describe('Waitinglist Service with DB', function () {
   it('saveWaitinglistEntry keeps the registrant that is in the database although it only reads an activity without registrant', function (done) {
     // here, we save an activity with a member that is different from the member in the database.
     // To mimick a racing condition, we return an activity without members for the first "getActivity".
-    waitinglistService.saveWaitinglistEntry({nickname: 'nick', activityUrl: activityUrl, resourcename: 'default'}, function (err) {
+    waitinglistService.saveWaitinglistEntry({nickname: 'nick', activityUrl: activityUrl, resourcename: 'Veranstaltung'}, function (err) {
       if (err) { return done(err); }
       getActivity(activityUrl, function (err1, activity) {
-        expect(activity.resourceNamed('default').waitinglistEntries()[0].registrantId(), 'Waiting member is still in the waitinglist').to.equal('memberIdWaiting');
-        expect(activity.resourceNamed('default').waitinglistEntries()[1].registrantId(), 'New member is stored in the waitinglist').to.equal('memberIdNew');
-        expect(activity.resourceNamed('default').registeredMembers(), 'First registered member is still there').to.contain('memberId1');
+        expect(activity.resourceNamed('Veranstaltung').waitinglistEntries()[0].registrantId(), 'Waiting member is still in the waitinglist').to.equal('memberIdWaiting');
+        expect(activity.resourceNamed('Veranstaltung').waitinglistEntries()[1].registrantId(), 'New member is stored in the waitinglist').to.equal('memberIdNew');
+        expect(activity.resourceNamed('Veranstaltung').registeredMembers(), 'First registered member is still there').to.contain('memberId1');
         done(err1);
       });
     });
@@ -102,11 +102,11 @@ describe('Waitinglist Service with DB', function () {
   it('allowRegistrationForWaitinglistEntry keeps the registrant that is in the database although it only reads an activity without registrant', function (done) {
     // here, we save an activity after removing a member that is different from the member in the database.
     // To mimick a racing condition, we return an activity without members for the first 'getActivity'.
-    waitinglistService.allowRegistrationForWaitinglistEntry({nickname: 'waiting', activityUrl: activityUrl, resourcename: 'default', hoursstring: '10'}, function (err) {
+    waitinglistService.allowRegistrationForWaitinglistEntry({nickname: 'waiting', activityUrl: activityUrl, resourcename: 'Veranstaltung', hoursstring: '10'}, function (err) {
       if (err) { return done(err); }
       getActivity(activityUrl, function (err1, activity) {
-        expect(activity.resourceNamed('default').waitinglistEntries()[0].canSubscribe(), 'Waiting member is now allowed to subscribe').to.be(true);
-        expect(activity.resourceNamed('default').registeredMembers(), 'First registered member is still there').to.contain('memberId1');
+        expect(activity.resourceNamed('Veranstaltung').waitinglistEntries()[0].canSubscribe(), 'Waiting member is now allowed to subscribe').to.be(true);
+        expect(activity.resourceNamed('Veranstaltung').registeredMembers(), 'First registered member is still there').to.contain('memberId1');
         done(err1);
       });
     });

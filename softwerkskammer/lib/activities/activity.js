@@ -161,12 +161,12 @@ Activity.prototype.resources = function () {
   return new Resources(this.state.resources);
 };
 
-Activity.prototype.resourceNamed = function (resourceName) {
-  return this.resources().named(resourceName);
+Activity.prototype.resourceNamed = function () {
+  return this.resources().veranstaltung();
 };
 
 Activity.prototype.resourceNames = function () {
-  return this.resources().resourceNames();
+  return [standardName];
 };
 
 Activity.prototype.allRegisteredMembers = function () {
@@ -179,16 +179,6 @@ Activity.prototype.isAlreadyRegistered = function (memberID) {
 
 Activity.prototype.isAlreadyOnWaitinglist = function (memberID) {
   return this.allWaitinglistEntries().find(entry => entry.registrantId() === memberID);
-};
-
-Activity.prototype.registeredResourcesFor = function (memberID) {
-  const self = this;
-  return self.resources().resourceNamesOf(memberID).map(resourceName => self.resourceNamed(resourceName));
-};
-
-Activity.prototype.waitinglistResourcesFor = function (memberID) {
-  const self = this;
-  return self.resources().waitinglistResourceNamesOf(memberID).map(resourceName => self.resourceNamed(resourceName));
 };
 
 Activity.prototype.allWaitinglistEntries = function () {

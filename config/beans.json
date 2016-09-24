@@ -27,7 +27,7 @@
   "mailsenderService": {"module": "./softwerkskammer/lib/mailsender/mailsenderService"},
   "membersService": {"module": "./softwerkskammer/lib/members/membersService"},
   "paymentService": {"module": "./softwerkskammer/lib/payment/paymentService"},
-  "stripeService": {"module": "./softwerkskammer/lib/activities/stripeService"},
+  "stripeService": {"module": "./softwerkskammer/lib/payment/stripeService"},
   "waitinglistService": {"module": "./softwerkskammer/lib/waitinglist/waitinglistService"},
   "wikiService": {"module": "./softwerkskammer/lib/wiki/wikiService"},
   "avatarProvider": {"module": "./softwerkskammer/lib/commons/avatarProvider"},

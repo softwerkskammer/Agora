@@ -45,7 +45,7 @@ var waitinglistMembersOf = function (activity, resourceName) {
 };
 
 var activityWithEinzelzimmer = function (ressource) {
-  var state = {resources: {Einzelzimmer: ressource}};
+  var state = {resources: {Veranstaltung: ressource}};
   var activity = new Activity(state);
   sinon.stub(activitystore, 'saveActivity', function (id, callback) { callback(null); });
   sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, activity); });

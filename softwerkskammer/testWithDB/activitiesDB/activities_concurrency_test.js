@@ -29,7 +29,7 @@ describe('Activities Service with DB', function () {
   beforeEach(function (done) { // if this fails, you need to start your mongo DB
     activityBeforeConcurrentAccess = new Activity(
       {id: 'activityId', url: activityUrl, resources: {
-        'default': { _registeredMembers: [
+        'Veranstaltung': { _registeredMembers: [
           {memberId: 'memberIdX'}
         ], _waitinglist: [
           {_memberId: 'memberIdY'}
@@ -39,7 +39,7 @@ describe('Activities Service with DB', function () {
 
     activityAfterConcurrentAccess = new Activity(
       {id: 'activityId', url: activityUrl, resources: {
-        'default': {_registeredMembers: [
+        'Veranstaltung': {_registeredMembers: [
           {memberId: 'memberId1'},
           {memberId: 'memberIdX'}
         ], _waitinglist: [
@@ -80,12 +80,12 @@ describe('Activities Service with DB', function () {
   it('addVisitor keeps the registrant that is in the database although it only reads an activity without registrant', function (done) {
     // here, we save an activity with a member that is different from the member in the database.
     // To mimick a racing condition, we return an activity without members for the first "getActivity".
-    activitiesService.addVisitorTo('memberId2', activityUrl, 'default', moment(), function (err) {
+    activitiesService.addVisitorTo('memberId2', activityUrl, 'Veranstaltung', moment(), function (err) {
       if (err) { return done(err); }
       getActivity(activityUrl, function (err1, activity) {
         if (err1) { return done(err1); }
-        expect(activity.resourceNamed('default').registeredMembers(), 'Second registered member is stored in the database').to.contain('memberId2');
-        expect(activity.resourceNamed('default').registeredMembers(), 'First registered member is still there').to.contain('memberId1');
+        expect(activity.resourceNamed('Veranstaltung').registeredMembers(), 'Second registered member is stored in the database').to.contain('memberId2');
+        expect(activity.resourceNamed('Veranstaltung').registeredMembers(), 'First registered member is still there').to.contain('memberId1');
         done(err1);
       });
     });
@@ -94,12 +94,12 @@ describe('Activities Service with DB', function () {
   it('removeVisitor keeps the registrant that is in the database although it only reads an activity without registrant', function (done) {
     // here, we save an activity after removing a member that is different from the member in the database.
     // To mimick a racing condition, we return an activity without members for the first 'getActivity'.
-    activitiesService.removeVisitorFrom('memberIdX', activityUrl, 'default', function (err) {
+    activitiesService.removeVisitorFrom('memberIdX', activityUrl, 'Veranstaltung', function (err) {
       if (err) { return done(err); }
       getActivity(activityUrl, function (err1, activity) {
         if (err1) { return done(err1); }
-        expect(activity.resourceNamed('default').registeredMembers(), 'Second removed member is no longer in the database').to.not.contain('memberIdX');
-        expect(activity.resourceNamed('default').registeredMembers(), 'First registered member is still there').to.contain('memberId1');
+        expect(activity.resourceNamed('Veranstaltung').registeredMembers(), 'Second removed member is no longer in the database').to.not.contain('memberIdX');
+        expect(activity.resourceNamed('Veranstaltung').registeredMembers(), 'First registered member is still there').to.contain('memberId1');
         done(err1);
       });
     });
@@ -108,13 +108,13 @@ describe('Activities Service with DB', function () {
   it('addToWaitinglist keeps the registrant that is in the database although it only reads an activity without registrant', function (done) {
     // here, we save an activity with a member that is different from the member in the database.
     // To mimick a racing condition, we return an activity without members for the first "getActivity".
-    activitiesService.addToWaitinglist('memberId2', activityUrl, 'default', moment(), function (err) {
+    activitiesService.addToWaitinglist('memberId2', activityUrl, 'Veranstaltung', moment(), function (err) {
       if (err) { return done(err); }
       getActivity(activityUrl, function (err1, activity) {
         if (err1) { return done(err1); }
-        expect(activity.resourceNamed('default').waitinglistEntries()[0].registrantId(), 'Previous member is still in the waitinglist').to.equal('memberIdY');
-        expect(activity.resourceNamed('default').waitinglistEntries()[1].registrantId(), 'Second member is stored in the waitinglist').to.equal('memberId2');
-        expect(activity.resourceNamed('default').registeredMembers(), 'First registered member is still there').to.contain('memberId1');
+        expect(activity.resourceNamed('Veranstaltung').waitinglistEntries()[0].registrantId(), 'Previous member is still in the waitinglist').to.equal('memberIdY');
+        expect(activity.resourceNamed('Veranstaltung').waitinglistEntries()[1].registrantId(), 'Second member is stored in the waitinglist').to.equal('memberId2');
+        expect(activity.resourceNamed('Veranstaltung').registeredMembers(), 'First registered member is still there').to.contain('memberId1');
         done(err1);
       });
     });
@@ -123,12 +123,12 @@ describe('Activities Service with DB', function () {
   it('removeFromWaitinglist keeps the registrant that is in the database although it only reads an activity without registrant', function (done) {
     // here, we save an activity after removing a member that is different from the member in the database.
     // To mimick a racing condition, we return an activity without members for the first "getActivity".
-    activitiesService.removeFromWaitinglist('memberIdY', activityUrl, 'default', function (err) {
+    activitiesService.removeFromWaitinglist('memberIdY', activityUrl, 'Veranstaltung', function (err) {
       if (err) { return done(err); }
       getActivity(activityUrl, function (err1, activity) {
         if (err1) { return done(err1); }
-        expect(activity.resourceNamed('default').waitinglistEntries().length, 'Waitinglist member is no longer in the database').to.equal(0);
-        expect(activity.resourceNamed('default').registeredMembers(), 'First registered member is still there').to.contain('memberId1');
+        expect(activity.resourceNamed('Veranstaltung').waitinglistEntries().length, 'Waitinglist member is no longer in the database').to.equal(0);
+        expect(activity.resourceNamed('Veranstaltung').registeredMembers(), 'First registered member is still there').to.contain('memberId1');
         done(err1);
       });
     });

@@ -1,13 +1,12 @@
 'use strict';
 
-var _ = require('lodash');
-var icalendar = require('icalendar');
+const icalendar = require('icalendar');
 
-var beans = require('simple-configure').get('beans');
-var misc = beans.get('misc');
+const beans = require('simple-configure').get('beans');
+const misc = beans.get('misc');
 
 function activityAsICal(activity) {
-  var event = new icalendar.VEvent(activity.url());
+  const event = new icalendar.VEvent(activity.url());
   event.setSummary(activity.title());
   event.setDescription(activity.description().replace(/\r\n/g, '\n'));
   event.addProperty('LOCATION', activity.location().replace(/\r\n/g, '\n'));
@@ -21,10 +20,8 @@ module.exports = {
 
   icalForActivities: function (activities) {
     /* eslint new-cap: 0 */
-    var ical = new icalendar.iCalendar();
-    _.each(activities, function (activity) {
-      ical.addComponent(activityAsICal(activity));
-    });
+    const ical = new icalendar.iCalendar();
+    activities.forEach(activity => ical.addComponent(activityAsICal(activity)));
     return ical;
   }
 };

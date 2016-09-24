@@ -15,7 +15,7 @@ describe('ResourceRegistrationRenderer', function () {
 
   function resultForState(state) {
     sinon.stub(resource, 'registrationStateFor', function () { return state; });
-    return resourceRegistrationRenderer.htmlRepresentationOf(activity, 'resourceName');
+    return resourceRegistrationRenderer.htmlRepresentationOf(activity);
   }
 
   beforeEach(function () {

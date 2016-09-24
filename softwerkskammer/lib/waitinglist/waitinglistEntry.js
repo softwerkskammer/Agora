@@ -3,13 +3,13 @@
 
 var moment = require('moment-timezone');
 
-function WaitinglistEntry(object, resourceName) {
+function WaitinglistEntry(object) {
   if (object) {
     this.state = object;
   } else {
     this.state = {};
   }
-  this._resourceName = resourceName;
+  this._resourceName = 'Veranstaltung';
   return this;
 }
 

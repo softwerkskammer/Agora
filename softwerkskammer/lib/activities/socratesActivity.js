@@ -1,8 +1,8 @@
 'use strict';
 
-var conf = require('simple-configure');
-var beans = conf.get('beans');
-var Activity = beans.get('activity');
+const conf = require('simple-configure');
+const beans = conf.get('beans');
+const Activity = beans.get('activity');
 
 function SoCraTesActivity(object) {
   this.state = new Activity(object).state; // required for persisting
