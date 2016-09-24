@@ -21,8 +21,8 @@ describe('Resources (fillFromUI)', function () {
 
       resources.fillFromUI({names: 'Veranstaltung', limits: '', previousNames: 'Veranstaltung'});
 
-      expect(resources.named('Veranstaltung').registeredMembers().length).to.equal(1);
-      expect(resources.named('Veranstaltung').registeredMembers()).to.contain('memberId');
+      expect(resources.veranstaltung().registeredMembers().length).to.equal(1);
+      expect(resources.veranstaltung().registeredMembers()).to.contain('memberId');
     });
 
     it('creates the key if the previous name is empty', function () {
@@ -30,7 +30,7 @@ describe('Resources (fillFromUI)', function () {
 
       resources.fillFromUI({names: 'Veranstaltung', limits: '', previousNames: ''});
 
-      expect(resources.named('Veranstaltung').registeredMembers().length).to.equal(0);
+      expect(resources.veranstaltung().registeredMembers().length).to.equal(0);
     });
   });
 
@@ -39,9 +39,9 @@ describe('Resources (fillFromUI)', function () {
     it('adheres to values in constructor', function () {
       var resources = new Resources({Veranstaltung: {_limit: 20, _registrationOpen: true, _waitinglist: []}});
 
-      expect(resources.named('Veranstaltung').limit()).to.equal(20);
-      expect(resources.named('Veranstaltung').isRegistrationOpen()).to.be(true);
-      expect(resources.named('Veranstaltung').hasWaitinglist()).to.be(true);
+      expect(resources.veranstaltung().limit()).to.equal(20);
+      expect(resources.veranstaltung().isRegistrationOpen()).to.be(true);
+      expect(resources.veranstaltung().hasWaitinglist()).to.be(true);
     });
 
     it('adds values if given', function () {
@@ -55,9 +55,9 @@ describe('Resources (fillFromUI)', function () {
         hasWaitinglist: 'yes'
       });
 
-      expect(resources.named('Veranstaltung').limit()).to.equal(10);
-      expect(resources.named('Veranstaltung').isRegistrationOpen()).to.be(true);
-      expect(resources.named('Veranstaltung').hasWaitinglist()).to.be(true);
+      expect(resources.veranstaltung().limit()).to.equal(10);
+      expect(resources.veranstaltung().isRegistrationOpen()).to.be(true);
+      expect(resources.veranstaltung().hasWaitinglist()).to.be(true);
     });
 
     it('removes value if not given', function () {
@@ -65,9 +65,9 @@ describe('Resources (fillFromUI)', function () {
 
       resources.fillFromUI({names: 'Veranstaltung', limits: '', previousNames: 'Veranstaltung'});
 
-      expect(resources.named('Veranstaltung').limit()).to.be(undefined);
-      expect(resources.named('Veranstaltung').isRegistrationOpen()).to.be(false);
-      expect(resources.named('Veranstaltung').hasWaitinglist()).to.be(false);
+      expect(resources.veranstaltung().limit()).to.be(undefined);
+      expect(resources.veranstaltung().isRegistrationOpen()).to.be(false);
+      expect(resources.veranstaltung().hasWaitinglist()).to.be(false);
     });
   });
 

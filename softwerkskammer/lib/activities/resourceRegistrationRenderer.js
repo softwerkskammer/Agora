@@ -2,21 +2,23 @@
 
 const Resource = require('simple-configure').get('beans').get('resource');
 
-function RenderingInformation(type, url, displayText) {
-  this.type = type;
-  this.url = url;
-  this.resourcename = 'Veranstaltung';
-  this.displayText = displayText;
-  return this;
+class RenderingInformation {
+  constructor(type, url, displayText) {
+    this.type = type;
+    this.url = url;
+    this.resourcename = 'Veranstaltung';
+    this.displayText = displayText;
+  }
+
+  representsButton() {
+    return !!this.url;
+  }
+
+  isWithdrawal() {
+    return this.representsButton() && (this.type.indexOf('un') === 0 || this.type.indexOf('remove') === 0);
+  }
+
 }
-
-RenderingInformation.prototype.representsButton = function () {
-  return !!this.url;
-};
-
-RenderingInformation.prototype.isWithdrawal = function () {
-  return this.representsButton() && (this.type.indexOf('un') === 0 || this.type.indexOf('remove') === 0);
-};
 
 module.exports.htmlRepresentationOf = function (activity, memberId) {
   const resource = activity.resourceNamed();

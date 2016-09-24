@@ -152,7 +152,7 @@ describe('Activity resource management', function () {
   describe('- when copying an activity -', function () {
     it('does not copy the owner', function () {
       var activity = new Activity({owner: 'owner'});
-      var copy = new Activity().copyFrom(activity);
+      var copy = activity.resetForClone();
       expect(copy.owner()).to.not.equal('owner');
     });
 
@@ -160,14 +160,14 @@ describe('Activity resource management', function () {
       // this constructor behaviour also affects loading of stored activities
       var activity = new Activity({url: 'url'});
       activity.resourceNamed(defaultName).addMemberId('memberID');
-      var copy = new Activity().copyFrom(activity);
+      var copy = activity.resetForClone();
       expect(copy.resourceNamed(defaultName).registeredMembers()).to.be.empty();
     });
 
     it('allows registration in a copied activity', function () {
       // this constructor behaviour also affects loading of stored activities
       var activity = new Activity({url: 'url'});
-      var copy = new Activity().copyFrom(activity);
+      var copy = activity.resetForClone();
       expect(copy.resourceNamed(defaultName).isRegistrationOpen()).to.be(true);
     });
 
@@ -175,7 +175,7 @@ describe('Activity resource management', function () {
       // this constructor behaviour also affects loading of stored activities
       var activity = new Activity({url: 'url'});
       activity.state.resources[defaultName]._registrationOpen = false;
-      var copy = new Activity().copyFrom(activity);
+      var copy = activity.resetForClone();
       expect(copy.resourceNamed(defaultName).isRegistrationOpen()).to.be(true);
     });
 
@@ -183,14 +183,14 @@ describe('Activity resource management', function () {
       // this constructor behaviour also affects loading of stored activities
       var activity = new Activity({url: 'url'});
       activity.resourceNamed('non-default').addMemberId('memberID');
-      var copy = new Activity().copyFrom(activity);
+      var copy = activity.resetForClone();
       expect(copy.resourceNamed('non-default').registeredMembers()).to.be.empty();
     });
 
     it('can add a new member to a copied activity', function () {
       var activity = new Activity({url: 'url'});
       activity.resourceNamed(defaultName).addMemberId('memberID');
-      var copy = new Activity().copyFrom(activity);
+      var copy = activity.resetForClone();
       copy.resourceNamed(defaultName).addMemberId('memberID2');
       expect(copy.resourceNamed(defaultName).registeredMembers()).to.contain('memberID2');
     });
@@ -198,7 +198,7 @@ describe('Activity resource management', function () {
     it('does not add a state property to any of its resources when copying', function () {
       var activity = new Activity({url: 'url'});
       activity.resourceNamed(defaultName).addMemberId('memberID');
-      var copy = new Activity().copyFrom(activity);
+      var copy = activity.resetForClone();
       expect(copy.state.resources[defaultName].state).to.be(undefined);
     });
 
@@ -209,7 +209,7 @@ describe('Activity resource management', function () {
           Doppelzimmer: {_registeredMembers: []}
         }
       });
-      var copy = new Activity().copyFrom(activity);
+      var copy = activity.resetForClone();
       copy.resourceNamed('Einzelzimmer').addMemberId('memberID2');
       copy.resourceNamed('Doppelzimmer').addMemberId('memberID3');
       expect(copy.resourceNamed('Einzelzimmer').registeredMembers()).to.contain('memberID2');
@@ -223,7 +223,7 @@ describe('Activity resource management', function () {
           Doppelzimmer: {_registeredMembers: ['memberID']}
         }
       });
-      var copy = new Activity().copyFrom(activity);
+      var copy = activity.resetForClone();
       expect(copy.resourceNamed('Einzelzimmer').registeredMembers()).to.be.empty();
       expect(copy.resourceNamed('Doppelzimmer').registeredMembers()).to.be.empty();
     });
@@ -238,7 +238,7 @@ describe('Activity resource management', function () {
           }
         }
       });
-      new Activity().copyFrom(activity);
+      activity.resetForClone();
       expect(activity.resourceNamed('Veranstaltung').registeredMembers()).to.contain('memberID');
     });
 
@@ -248,7 +248,7 @@ describe('Activity resource management', function () {
           Veranstaltung: {_registeredMembers: [], _limit: 10}
         }
       });
-      var copy = new Activity().copyFrom(activity);
+      var copy = activity.resetForClone();
       expect(copy.resourceNamed('Veranstaltung').numberOfFreeSlots()).to.equal(10);
     });
   });
