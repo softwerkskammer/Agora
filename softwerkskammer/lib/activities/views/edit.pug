@@ -5,16 +5,6 @@ block scripts
   script(src='/clientscripts/activityDateModel.js')
   script(src='/clientscripts/activityform-dateAdapter.js')
   script(src='/clientscripts/check-activityform.js')
-  script.
-    $(document).ready(function () {
-      $('#resources .add').on('click', function () {
-          var resource_row = $($('#resource-template').text().trim());
-          $(this).closest('.form-group').before(resource_row);
-          resource_row.find('input').first().focus();
-        });
-    });
-  script#resource-template(type='text/html')
-    +resourceRow(undefined, undefined, true, true, false)
 
 block title
   | #{t('activities.activity')}

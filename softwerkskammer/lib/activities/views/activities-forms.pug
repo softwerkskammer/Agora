@@ -15,82 +15,65 @@ mixin activityform(activity, groups, editorNames, participantNames)
               | #{t('activities.edit')}
             else
               | #{t('activities.create')}
-          ul.nav.nav-tabs
-            li.active: a(href='#main', data-toggle='tab') #{t('general.general')}
-            li: a(href='#ressources', data-toggle='tab') #{t('activities.resources')}
-      .tab-content
-        .tab-pane.active#main
+      .row
+        .col-md-6
+          +text('title', t('activities.title'), activity.title(), t('activities.tooltip.title'))
           .row
-            .col-md-6
-              +text('title', t('activities.title'), activity.title(), t('activities.tooltip.title'))
-              .row
-                .col-xs-6(style='padding-right:5px')
-                  .col-xs-6(style='padding-left:0px;padding-right:3px')
-                    +date('startDate', t('activities.start'), activity.startMoment().locale(language).format('L'), t('activities.tooltip.start'))
-                  .col-xs-6(style='padding-left:3px;padding-right:0px')
-                    +time('startTime', activity.startMoment().locale(language).format('LT'))
-                .col-xs-6(style='padding-left:5px')
-                  .col-xs-6(style='padding-left:0px;padding-right:3px')
-                    +date('endDate', t('activities.end'), activity.endMoment().locale(language).format('L'), t('activities.tooltip.end'))
-                  #dates.col-xs-6(style='padding-left:3px;padding-right:0px')
-                    +time('endTime', activity.endMoment().locale(language).format('LT'))
-              +textarea('description', t('general.description'), activity.description())
-              +editableMultiselect('editorIds', t('activities.editors'), editorNames, participantNames)
-            .col-md-6
-              .form-group
-                +controlLabel('url', t('activities.address_suffix'), t('activities.tooltip.address_suffix'))
-                input.form-control#url(type='text', name='url', value=activity.url())
-              +text('location', t('activities.location'), activity.location())
-              +textarea('direction', t('activities.directions'), activity.direction())
-              .form-group
-                label.control-label(for='assignedGroup') #{t('groups.group')}:
-                select#assignedGroup.form-control(name='assignedGroup')
-                  for group in groups
-                    option(value=group.id, selected = (activity.assignedGroup() != undefined && activity.assignedGroup() == group.id)) #{group.longName}
-        .tab-pane#ressources
-          .row
-            .col-md-12
-              #resources
-                .row
-                  .col-xs-3.col-sm-4
-                    +controlLabel('bezeichnung', t('activities.resourcelabel'), t('activities.tooltip.resourcelabel'))
-                  .col-xs-3.col-sm-2
-                    +controlLabel('anzahl', t('activities.count'), t('activities.tooltip.count'))
-                  .col-xs-2.col-sm-2
-                    +controlLabel('registrierung', t('activities.registration'), t('activities.tooltip.registration'))
-                  .col-xs-2.col-sm-2
-                    +controlLabel('registrierung', t('activities.deregistration'), t('activities.tooltip.deregistration'))
-                  .col-xs-2.col-sm-2
-                    +controlLabel('registrierung', t('activities.waitinglist'), t('activities.tooltip.waitinglist'))
-                each name in activity.resourceNames()
-                  -var resource = activity.resourceNamed(name)
-                  +resourceRow(name, resource.limit(), resource.isRegistrationOpen(), resource.canUnsubscribe(), resource.hasWaitinglist())
-                  +hidden('resources[previousNames]', name)
-                .row.form-group
-                  .col-md-12
-                    button.add.btn.btn-sm.btn-default(type='button')
-                      i.fa.fa-plus
-                      | &nbsp;#{t('activities.resource')}
+            .col-xs-6(style='padding-right:5px')
+              .col-xs-6(style='padding-left:0px;padding-right:3px')
+                +date('startDate', t('activities.start'), activity.startMoment().locale(language).format('L'), t('activities.tooltip.start'))
+              .col-xs-6(style='padding-left:3px;padding-right:0px')
+                +time('startTime', activity.startMoment().locale(language).format('LT'))
+            .col-xs-6(style='padding-left:5px')
+              .col-xs-6(style='padding-left:0px;padding-right:3px')
+                +date('endDate', t('activities.end'), activity.endMoment().locale(language).format('L'), t('activities.tooltip.end'))
+              #dates.col-xs-6(style='padding-left:3px;padding-right:0px')
+                +time('endTime', activity.endMoment().locale(language).format('LT'))
+          +textarea('description', t('general.description'), activity.description())
+          +editableMultiselect('editorIds', t('activities.editors'), editorNames, participantNames)
+        .col-md-6
+          .form-group
+            +controlLabel('url', t('activities.address_suffix'), t('activities.tooltip.address_suffix'))
+            input.form-control#url(type='text', name='url', value=activity.url())
+          +text('location', t('activities.location'), activity.location())
+          +textarea('direction', t('activities.directions'), activity.direction())
+          .form-group
+            label.control-label(for='assignedGroup') #{t('groups.group')}:
+            select#assignedGroup.form-control(name='assignedGroup')
+              for group in groups
+                option(value=group.id, selected = (activity.assignedGroup() != undefined && activity.assignedGroup() == group.id)) #{group.longName}
+      .row
+        .col-md-12
+          #resources
+            .row
+              .col-xs-3
+                +controlLabel('anzahl', t('activities.count'), t('activities.tooltip.count'))
+              .col-xs-3
+                +controlLabel('registrierung', t('activities.registration'), t('activities.tooltip.registration'))
+              .col-xs-3
+                +controlLabel('registrierung', t('activities.deregistration'), t('activities.tooltip.deregistration'))
+              .col-xs-3
+                +controlLabel('registrierung', t('activities.waitinglist'), t('activities.tooltip.waitinglist'))
+            each name in activity.resourceNames()
+              -var resource = activity.resourceNamed(name)
+              +hidden('resources[names]', name)
+              .row.form-group
+                .col-xs-3
+                  input.form-control(name='resources[limits]', value=resource.limit(), type='text', placeholder=t('activities.unlimited'))
+                .col-xs-3
+                  select.form-control(name='resources[isRegistrationOpen]')
+                    option(value='yes', selected=(resource.isRegistrationOpen())) #{t('activities.possible')}
+                    option(value='no', selected=(!resource.isRegistrationOpen())) #{t('activities.impossible')}
+                .col-xs-3
+                  select.form-control(name='resources[canUnsubscribe]')
+                    option(value='yes', selected=resource.canUnsubscribe()) #{t('activities.possible')}
+                    option(value='no', selected=!resource.canUnsubscribe()) #{t('activities.impossible')}
+                .col-xs-3
+                  select.form-control(name='resources[hasWaitinglist]')
+                    option(value='yes', selected=resource.hasWaitinglist()) #{t('general.yes')}
+                    option(value='no', selected=!resource.hasWaitinglist()) #{t('general.no')}
+
       .row
         .col-md-12
           hr
           +submitButtons('general.save')
-
-mixin resourceRow(name, limit, isRegistrationOpen, canUnsubscribe, hasWaitinglist)
-  .row.form-group
-    .col-xs-3.col-sm-4
-      input.form-control(name='resources[names]', value=name, type='text', placeholder=t('activities.label'))
-    .col-xs-3.col-sm-2
-      input.form-control(name='resources[limits]', value=limit, type='text', placeholder=t('activities.unlimited'))
-    .col-xs-2.col-sm-2
-      select.form-control(name='resources[isRegistrationOpen]')
-        option(value='yes', selected=(isRegistrationOpen ? true : false)) #{t('activities.possible')}
-        option(value='no', selected=(isRegistrationOpen ? false : true)) #{t('activities.impossible')}
-    .col-xs-2.col-sm-2
-      select.form-control(name='resources[canUnsubscribe]')
-        option(value='yes', selected=(canUnsubscribe ? true : false)) #{t('activities.possible')}
-        option(value='no', selected=(canUnsubscribe ? false : true)) #{t('activities.impossible')}
-    .col-xs-2.col-sm-2
-      select.form-control(name='resources[hasWaitinglist]')
-        option(value='yes', selected=(hasWaitinglist ? true : false)) #{t('general.yes')}
-        option(value='no', selected=(hasWaitinglist ? false : true)) #{t('general.no')}
