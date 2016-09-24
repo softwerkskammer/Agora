@@ -340,8 +340,6 @@
         "deleted": "Die Aktivität wurde gelöscht.",
         "does_not_exist": "Die Aktivität existiert nicht.",
         "participation_added": "Deine Teilnahme wurde eingetragen.",
-        "participation_for_resource_added": "Deine Teilnahme wurde für \"{{resourceName}}\" eingetragen.",
-        "participation_for_resource_removed": "Schade, dass Du bei \"{{resourceName}}\" nicht dabei sein wirst.",
         "participation_removed": "Schade, dass Du nicht dabei sein wirst.",
         "saved": "Deine Aktivität wurde gespeichert.",
         "transfer_paid": "Deine Überweisungsbestätigung wurde gespeichert.",

@@ -351,8 +351,6 @@
         "deleted": "The activity is history.",
         "does_not_exist": "The activity does not exist.",
         "participation_added": "Your participation has been registered.",
-        "participation_for_resource_added": "Your participation in \"{{resourceName}}\" has been registered.",
-        "participation_for_resource_removed": "What a pity that you will not participate in \"{{resourceName}}\".",
         "participation_removed": "What a pity that you will not participate.",
         "saved": "Your activity has been saved.",
         "transfer_paid": "Your money transfer confirmation was saved.",

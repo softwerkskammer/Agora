@@ -211,6 +211,4 @@ class Activity {
   }
 }
 
-Activity.standardName = standardName;
-
 module.exports = Activity;
