@@ -1,5 +1,10 @@
 {
   "extends": "eslint:recommended",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "experimentalObjectRestSpread": true
+    }
+  },
   "env": {
     "node": true,
     "es6": true
