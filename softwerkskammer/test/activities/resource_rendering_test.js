@@ -40,24 +40,10 @@ describe('ResourceRegistrationRenderer', function () {
     expect(result.displayText).to.equal('activities.unsubscribe_single');
   });
 
-  it('gives different values for state "registered" if more than 1 resource', function () {
-    resourceNamesList.push('name2');
-    var result = resultForState(Resource.registered);
-    expect(result.type).to.be('unsubscribe');
-    expect(result.displayText).to.equal('activities.unsubscribe_multiple');
-  });
-
   it('gives values for state "registrationPossible" if only 1 resource', function () {
     var result = resultForState(Resource.registrationPossible);
     expect(result.type).to.be('subscribe');
     expect(result.displayText).to.equal('activities.subscribe_single');
-  });
-
-  it('gives different values for state "registrationPossible" if more than 1 resource', function () {
-    resourceNamesList.push('name2');
-    var result = resultForState(Resource.registrationPossible);
-    expect(result.type).to.be('subscribe');
-    expect(result.displayText).to.equal('activities.subscribe_multiple');
   });
 
   it('gives values for state "registrationElsewhere"', function () {

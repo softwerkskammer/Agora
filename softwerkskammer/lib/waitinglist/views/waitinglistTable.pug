@@ -5,13 +5,15 @@ include ../../../views/dataTables-mixin
 
 block scripts
   +dataTableImport
-  +dataTable('#waitinglisttable', "[[ 3, 'asc' ]]", "[{ bSortable : false }, null, null, { sType: 'date-eu' }, { sType: 'date-eu' }, null]", true)
+  +dataTable('#activitytable', '[ 1, "asc" ]', '[{targets: 0, sortable: false}, {targets: [3,4], type: "date-eu"}]', true)
+
+  +dataTable('#waitinglisttable', '[ 2, "asc" ]', '[{targets: 0, sortable: false}, {targets: [2,3], type: "date-eu"}]', true)
   script.
-    function removeFromWaitinglist(activityUrl, resourceName, nickname, buttonid) {
+    function removeFromWaitinglist(activityUrl, nickname, buttonid) {
       $.ajax({
       type: 'post',
       url: '/waitinglist/remove',
-      data: {_csrf: '#{csrf_token}', activityUrl: activityUrl, resourceName: resourceName, nickname: nickname} }).success(function() {
+      data: {_csrf: '#{csrf_token}', activityUrl: activityUrl, nickname: nickname} }).done(function() {
         $('#' + buttonid).parent().parent().remove();
       });
     }
@@ -34,23 +36,21 @@ block content
               tr
                 th #{t('activities.select')}
                 th #{t('members.nickname')}
-                th #{t('activities.resource')}
                 th #{t('activities.listed')}
                 th #{t('activities.register_until')}
                 th #{t('general.logout')}
             tbody
               -var count = 0
               for waitinglistEntry in waitinglist
-                -var checkboxid = '{"nickname": "' + waitinglistEntry.registrantNickname + '", "activityUrl": "' + activity.url() + '", "resourcename": "' + waitinglistEntry.resourceName() + '"}';
+                -var checkboxid = '{"nickname": "' + waitinglistEntry.registrantNickname + '", "activityUrl": "' + activity.url() + '"}';
                 -count++;
-                -var buttonHref = 'javascript:removeFromWaitinglist(' + encodeURIComponent(activity.url()) + ',' + encodeURIComponent(waitinglistEntry.resourceName()) + ',' + encodeURIComponent(waitinglistEntry.registrantNickname) + ',\"' + count + '-button\")';
+                -var buttonHref = 'javascript:removeFromWaitinglist(\"' + encodeURIComponent(activity.url()) + '\",\"' + encodeURIComponent(waitinglistEntry.registrantNickname) + '\",\"' + count + '-button\")';
                 tr
                   td: .checkbox(style='margin-top:0px;margin-bottom:0px;')
                     label
                       input(type='checkbox', name='selectedRow', value=checkboxid)
 
                   td: +linkedMember(waitinglistEntry.registrantNickname)
-                  td #{waitinglistEntry.resourceName()}
                   td #{waitinglistEntry.registrationDate()}
                   td #{waitinglistEntry.registrationValidUntil()}
                   td
@@ -71,11 +71,5 @@ block content
         .col-sm-4
           input.form-control#nickname(type='text', name='nickname', placeholder=t('members.nickname'))
         .col-sm-4
-          if (activity.resourceNames().length > 2)
-            select#nickname.form-control(name='resourceName')
-              for resource in activity.resourceNames()
-                option(value=resourceName) #{resource}
-          else
-            input.form-control#resourceName(disabled, type='text', name='resourceName', placeholder=activity.resourceNames()[0])
         .col-sm-4
           button.btn.btn-primary.pull-right(type='submit') #{t('general.add')}

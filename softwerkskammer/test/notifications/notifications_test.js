@@ -60,11 +60,11 @@ describe('Notifications', function () {
   it('creates a meaningful text and subject', function (done) {
     activity.state.owner = 'hans';
 
-    notifications.visitorRegistration(activity, 'bob', 'Kaffeekranz', function (err) {
+    notifications.visitorRegistration(activity, 'bob', function (err) {
       expect(transport.sendMail.calledOnce).to.be(true);
       var options = transport.sendMail.firstCall.args[0];
       expect(options.subject).to.equal('Neue Anmeldung für Aktivität');
-      expect(options.html).to.contain('Für die Aktivität "Title of the Activity" (Kaffeekranz) hat sich ein neuer Besucher angemeldet:');
+      expect(options.html).to.contain('Für die Aktivität "Title of the Activity" () hat sich ein neuer Besucher angemeldet:');
       expect(options.html).to.contain('firstname of bob lastname of bob (nickbob)');
       expect(options.html).to.contain('/activities/urlurl');
       done(err);
@@ -75,20 +75,20 @@ describe('Notifications', function () {
     activity.state.owner = 'hans';
     activity2.state.owner = 'hans';
 
-    notifications.visitorRegistration(activity, 'bob', 'Kaffeekranz', function (err) {
+    notifications.visitorRegistration(activity, 'bob', function (err) {
       if (err) { return done(err); }
-      notifications.visitorRegistration(activity2, 'alice', 'Biertrinken', function (err1) {
+      notifications.visitorRegistration(activity2, 'alice', function (err1) {
 
         expect(transport.sendMail.calledTwice).to.be(true);
         var options = transport.sendMail.firstCall.args[0];
         expect(options.subject).to.equal('Neue Anmeldung für Aktivität');
-        expect(options.html).to.contain('Für die Aktivität "Title of the Activity" (Kaffeekranz) hat sich ein neuer Besucher angemeldet:');
+        expect(options.html).to.contain('Für die Aktivität "Title of the Activity" () hat sich ein neuer Besucher angemeldet:');
         expect(options.html).to.contain('firstname of bob lastname of bob (nickbob)');
         expect(options.html).to.contain('/activities/urlurl');
 
         options = transport.sendMail.secondCall.args[0];
         expect(options.subject).to.equal('Neue Anmeldung für Aktivität');
-        expect(options.html).to.contain('Für die Aktivität "Another Nice Activity" (Biertrinken) hat sich ein neuer Besucher angemeldet:');
+        expect(options.html).to.contain('Für die Aktivität "Another Nice Activity" () hat sich ein neuer Besucher angemeldet:');
         expect(options.html).to.contain('firstname of alice lastname of alice ()');
         expect(options.html).to.contain('/activities/niceurl');
         done(err1);
@@ -101,7 +101,7 @@ describe('Notifications', function () {
     group.organizers = ['alice'];
     group.members = [hans, alice, bob];
 
-    notifications.visitorRegistration(activity, 'bob', 'Kaffeekranz', function (err) {
+    notifications.visitorRegistration(activity, 'bob', function (err) {
       expect(transport.sendMail.calledOnce).to.be(true);
       var options = transport.sendMail.firstCall.args[0];
       expect(options.bcc).to.contain('hans@email.de');
@@ -116,7 +116,7 @@ describe('Notifications', function () {
     group.organizers = ['alice'];
     group.members = [hans, alice, bob];
 
-    notifications.visitorRegistration(activity, 'bob', 'Kaffeekranz');
+    notifications.visitorRegistration(activity, 'bob');
     expect(transport.sendMail.calledOnce).to.be(true);
     var options = transport.sendMail.firstCall.args[0];
     expect(options.bcc).to.equal('alice@email.de');
@@ -127,7 +127,7 @@ describe('Notifications', function () {
   it('does not trigger mail sending if activity has no owner and no group organizers', function () {
     group.members = [hans, alice, bob];
 
-    notifications.visitorRegistration(activity, 'bob', 'Kaffeekranz');
+    notifications.visitorRegistration(activity, 'bob');
     expect(transport.sendMail.called).to.be(false);
   });
 

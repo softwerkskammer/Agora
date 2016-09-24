@@ -28,7 +28,7 @@ describe('Validation', function () {
     it('performs many checks simultaneously', function () {
       var result = validation.isValidForActivity({});
 
-      expect(result.length).to.equal(9);
+      expect(result.length).to.equal(8);
     });
 
     it('does not validate activity input without title', function () {
@@ -47,48 +47,6 @@ describe('Validation', function () {
       var result = validation.isValidForActivity({url: '/'});
 
       expect(result).to.contain('URL darf kein "/" enthalten.');
-    });
-
-    it('does not validate resource names of activity input without resources', function () {
-      var result = validation.isValidForActivity({});
-
-      expect(result).to.contain('Es muss mindestens eine Ressourcenbezeichnung angegeben werden.');
-    });
-
-    it('does not validate resource names of activity input without resource names', function () {
-      var result = validation.isValidForActivity({resources: {}});
-
-      expect(result).to.contain('Es muss mindestens eine Ressourcenbezeichnung angegeben werden.');
-    });
-
-    it('does not validate resource names of activity input with an empty resource name', function () {
-      var result = validation.isValidForActivity({resources: {names: ''}});
-
-      expect(result).to.contain('Es muss mindestens eine Ressourcenbezeichnung angegeben werden.');
-    });
-
-    it('does not validate resource names of activity input with an empty resource name array', function () {
-      var result = validation.isValidForActivity({resources: {names: []}});
-
-      expect(result).to.contain('Es muss mindestens eine Ressourcenbezeichnung angegeben werden.');
-    });
-
-    it('does not validate resource names of activity input with several empty resource names', function () {
-      var result = validation.isValidForActivity({resources: {names: ['', '']}});
-
-      expect(result).to.contain('Es muss mindestens eine Ressourcenbezeichnung angegeben werden.');
-    });
-
-    it('validates resource names of activity input with a non-empty resource name', function () {
-      var result = validation.isValidForActivity({resources: {names: 'hello'}});
-
-      expect(result).to.not.contain('Es muss mindestens eine Ressourcenbezeichnung angegeben werden.');
-    });
-
-    it('validates resource names of activity input with at least one non-empty resource name', function () {
-      var result = validation.isValidForActivity({resources: {names: ['', 'hello', '']}});
-
-      expect(result).to.not.contain('Es muss mindestens eine Ressourcenbezeichnung angegeben werden.');
     });
 
     //////
@@ -148,30 +106,6 @@ describe('Validation', function () {
     });
 
     //////
-
-    it('does not validate uniqueness of activity input with two identical resource names', function () {
-      var result = validation.isValidForActivity({resources: {names: ['a', 'a']}});
-
-      expect(result).to.contain('Die Bezeichnungen der Ressourcen müssen eindeutig sein.');
-    });
-
-    it('validates uniqueness of activity input with one resource name', function () {
-      var result = validation.isValidForActivity({resources: {names: 'a'}});
-
-      expect(result).to.not.contain('Die Bezeichnungen der Ressourcen müssen eindeutig sein.');
-    });
-
-    it('validates uniqueness of activity input with two different resource names', function () {
-      var result = validation.isValidForActivity({resources: {names: ['a', 'b']}});
-
-      expect(result).to.not.contain('Die Bezeichnungen der Ressourcen müssen eindeutig sein.');
-    });
-
-    it('validates uniqueness of activity input with two empty resource names', function () {
-      var result = validation.isValidForActivity({resources: {names: ['', '']}});
-
-      expect(result).to.not.contain('Die Bezeichnungen der Ressourcen müssen eindeutig sein.');
-    });
 
     it('does not validate start and end of activity input when end date is before start date', function () {
       var result = validation.isValidForActivity({

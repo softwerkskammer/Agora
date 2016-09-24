@@ -269,10 +269,9 @@ app.get('/:url', (req, res, next) => {
 });
 
 function subscribe(body, req, res, next) {
-  const resourceName = body.resource;
   const activityUrl = body.url;
 
-  activitiesService.addVisitorTo(req.user.member.id(), activityUrl, resourceName, moment(), (err, statusTitle, statusText) => {
+  activitiesService.addVisitorTo(req.user.member.id(), activityUrl, moment(), (err, statusTitle, statusText) => {
     if (err) { return next(err); }
     if (statusTitle && statusText) {
       statusmessage.errorMessage(statusTitle, statusText).putIntoSession(req);
@@ -295,9 +294,8 @@ app.get('/subscribe', (req, res, next) => {
 });
 
 app.post('/unsubscribe', (req, res, next) => { // unsubscribe can only be called when user is already logged in
-  const resourceName = req.body.resource;
   const activityUrl = req.body.url;
-  activitiesService.removeVisitorFrom(req.user.member.id(), activityUrl, resourceName, (err, statusTitle, statusText) => {
+  activitiesService.removeVisitorFrom(req.user.member.id(), activityUrl, (err, statusTitle, statusText) => {
     if (err) { return next(err); }
     if (statusTitle && statusText) {
       statusmessage.errorMessage(statusTitle, statusText).putIntoSession(req);
@@ -309,7 +307,7 @@ app.post('/unsubscribe', (req, res, next) => { // unsubscribe can only be called
 });
 
 function addToWaitinglist(body, req, res, next) {
-  activitiesService.addToWaitinglist(req.user.member.id(), body.url, body.resource, moment(), (err, statusTitle, statusText) => {
+  activitiesService.addToWaitinglist(req.user.member.id(), body.url, moment(), (err, statusTitle, statusText) => {
     if (err) { return next(err); }
     if (statusTitle && statusText) {
       statusmessage.errorMessage(statusTitle, statusText).putIntoSession(req);
@@ -333,7 +331,7 @@ app.get('/addToWaitinglist', (req, res, next) => {
 });
 
 app.post('/removeFromWaitinglist', (req, res, next) => { // removeFromWaitinglist can only be called when user is already logged in
-  activitiesService.removeFromWaitinglist(req.user.member.id(), req.body.url, req.body.resource, (err, statusTitle, statusText) => {
+  activitiesService.removeFromWaitinglist(req.user.member.id(), req.body.url, (err, statusTitle, statusText) => {
     if (err) { return next(err); }
     if (statusTitle && statusText) {
       statusmessage.errorMessage(statusTitle, statusText).putIntoSession(req);

@@ -23,15 +23,14 @@ class RenderingInformation {
 module.exports.htmlRepresentationOf = function (activity, memberId) {
   const resource = activity.resourceNamed();
   const state = resource.registrationStateFor(memberId);
-  const isSingle = activity.resourceNames().length === 1;
   if (state === Resource.registered) {
-    return new RenderingInformation('unsubscribe', activity.url(), isSingle ? 'activities.unsubscribe_single' : 'activities.unsubscribe_multiple');
+    return new RenderingInformation('unsubscribe', activity.url(), 'activities.unsubscribe_single');
   }
   if (state === Resource.registrationPossible) {
-    return new RenderingInformation('subscribe', activity.url(), isSingle ? 'activities.subscribe_single' : 'activities.subscribe_multiple');
+    return new RenderingInformation('subscribe', activity.url(), 'activities.subscribe_single');
   }
   if (state === Resource.canSubscribeFromWaitinglist) {
-    return new RenderingInformation('subscribe', activity.url(), isSingle ? 'activities.subscribe_single' : 'activities.subscribe_multiple');
+    return new RenderingInformation('subscribe', activity.url(), 'activities.subscribe_single');
   }
   if (state === Resource.registrationElsewhere) {
     return new RenderingInformation(null, null, 'activities.registration_not_here');

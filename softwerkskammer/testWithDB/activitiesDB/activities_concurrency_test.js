@@ -80,7 +80,7 @@ describe('Activities Service with DB', function () {
   it('addVisitor keeps the registrant that is in the database although it only reads an activity without registrant', function (done) {
     // here, we save an activity with a member that is different from the member in the database.
     // To mimick a racing condition, we return an activity without members for the first "getActivity".
-    activitiesService.addVisitorTo('memberId2', activityUrl, 'Veranstaltung', moment(), function (err) {
+    activitiesService.addVisitorTo('memberId2', activityUrl, moment(), function (err) {
       if (err) { return done(err); }
       getActivity(activityUrl, function (err1, activity) {
         if (err1) { return done(err1); }
@@ -94,7 +94,7 @@ describe('Activities Service with DB', function () {
   it('removeVisitor keeps the registrant that is in the database although it only reads an activity without registrant', function (done) {
     // here, we save an activity after removing a member that is different from the member in the database.
     // To mimick a racing condition, we return an activity without members for the first 'getActivity'.
-    activitiesService.removeVisitorFrom('memberIdX', activityUrl, 'Veranstaltung', function (err) {
+    activitiesService.removeVisitorFrom('memberIdX', activityUrl, function (err) {
       if (err) { return done(err); }
       getActivity(activityUrl, function (err1, activity) {
         if (err1) { return done(err1); }
@@ -108,7 +108,7 @@ describe('Activities Service with DB', function () {
   it('addToWaitinglist keeps the registrant that is in the database although it only reads an activity without registrant', function (done) {
     // here, we save an activity with a member that is different from the member in the database.
     // To mimick a racing condition, we return an activity without members for the first "getActivity".
-    activitiesService.addToWaitinglist('memberId2', activityUrl, 'Veranstaltung', moment(), function (err) {
+    activitiesService.addToWaitinglist('memberId2', activityUrl, moment(), function (err) {
       if (err) { return done(err); }
       getActivity(activityUrl, function (err1, activity) {
         if (err1) { return done(err1); }
@@ -123,7 +123,7 @@ describe('Activities Service with DB', function () {
   it('removeFromWaitinglist keeps the registrant that is in the database although it only reads an activity without registrant', function (done) {
     // here, we save an activity after removing a member that is different from the member in the database.
     // To mimick a racing condition, we return an activity without members for the first "getActivity".
-    activitiesService.removeFromWaitinglist('memberIdY', activityUrl, 'Veranstaltung', function (err) {
+    activitiesService.removeFromWaitinglist('memberIdY', activityUrl, function (err) {
       if (err) { return done(err); }
       getActivity(activityUrl, function (err1, activity) {
         if (err1) { return done(err1); }

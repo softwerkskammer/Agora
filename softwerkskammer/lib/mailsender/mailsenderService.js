@@ -22,9 +22,9 @@ var mailtransport = beans.get('mailtransport');
 function sendMail(message, type, callback) {
   mailtransport.sendMail(message, type, conf.get('sender-address'), callback);
 }
-function buttonFor(activity, resourceName) {
-  var url = misc.toFullQualifiedUrl('activities/subscribe', activity.url() + '/' + resourceName);
-  var text = ((activity.resourceNames().length === 1) ? '' : resourceName + ': ') + 'Count me in! - Ich bin dabei!';
+function buttonFor(activity) { // FIXME: this is currently not working, see https://github.com/softwerkskammer/Agora/issues/1151
+  var url = misc.toFullQualifiedUrl('activities/subscribe', activity.url());
+  var text = 'Count me in! - Ich bin dabei!';
   return {text: text, url: url};
 }
 
@@ -129,7 +129,7 @@ module.exports = {
     message.setReceiver(member);
     message.setSubject('Moving up for / Nachrücken für "' + activity.title() + '"');
     message.setMarkdown(markdownEnglish + '\n\n---\n\n' + markdownGerman);
-    message.addToButtons(buttonFor(activity, waitinglistEntry.resourceName()));
+    message.addToButtons(buttonFor(activity));
     sendMail(message, 'Nachricht', callback);
   },
 

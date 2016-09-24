@@ -2,16 +2,6 @@
 'use strict';
 var moment = require('moment-timezone');
 
-var addonConfig = {
-  addonInformation: function () { return 'addonInformation'; },
-  addonInformationHTML: function () { return 'addonInformationHTML'; },
-  homeAddress: function () { return 'yes'; },
-  billingAddress: function () { return 'yes'; },
-  tShirtSize: function () { return 'yes'; },
-  roommate: function () { return 'yes'; },
-  deposit: function () { return ''; }
-};
-
 module.exports = {
   language: 'de',
   t: function (string) { return string; },
@@ -29,12 +19,17 @@ module.exports = {
     description: function () { return ''; },
     location: function () { return ''; },
     direction: function () { return ''; },
-    resourceNames: function () { return []; },
-    addonConfig: function () {return addonConfig; }
+    veranstaltung: function () {
+      return {
+        limit: function () { return ''; },
+        isRegistrationOpen: function () { return ''; },
+        canUnsubscribe: function () { return ''; },
+        hasWaitinglist: function () { return ''; }
+      };
+    }
   },
   groups: [],
-  group: {
-  },
+  group: {},
   allTypes: ['Themengruppe', 'Regionalgruppe'],
   organizersChecked: [],
   message: {

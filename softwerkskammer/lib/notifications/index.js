@@ -44,7 +44,7 @@ function activityParticipation(activity, visitorID, ressourceName, content, type
         activity: activity,
         ressourceName: ressourceName,
         content: content,
-        count: activity.resourceNamed(ressourceName).registeredMembers().length,
+        count: activity.allRegisteredMembers().length,
         totalcount: activity.allRegisteredMembers().length,
         visitor: results.visitor
       };
@@ -55,20 +55,20 @@ function activityParticipation(activity, visitorID, ressourceName, content, type
   );
 }
 
-module.exports.visitorRegistration = function (activity, visitorID, resourceName, callback) {
-  activityParticipation(activity, visitorID, resourceName, 'hat sich ein neuer Besucher angemeldet', 'Neue Anmeldung für Aktivität', callback);
+module.exports.visitorRegistration = function (activity, visitorID, callback) {
+  activityParticipation(activity, visitorID, '', 'hat sich ein neuer Besucher angemeldet', 'Neue Anmeldung für Aktivität', callback);
 };
 
-module.exports.visitorUnregistration = function (activity, visitorID, resourceName, callback) {
-  activityParticipation(activity, visitorID, resourceName, 'hat sich ein Besucher abgemeldet', 'Abmeldung für Aktivität', callback);
+module.exports.visitorUnregistration = function (activity, visitorID, callback) {
+  activityParticipation(activity, visitorID, '', 'hat sich ein Besucher abgemeldet', 'Abmeldung für Aktivität', callback);
 };
 
-module.exports.waitinglistAddition = function (activity, visitorID, resourceName, callback) {
-  activityParticipation(activity, visitorID, resourceName, 'hat sich jemand auf die Warteliste eingetragen', 'Zugang auf Warteliste', callback);
+module.exports.waitinglistAddition = function (activity, visitorID, callback) {
+  activityParticipation(activity, visitorID, '', 'hat sich jemand auf die Warteliste eingetragen', 'Zugang auf Warteliste', callback);
 };
 
-module.exports.waitinglistRemoval = function (activity, visitorID, resourceName, callback) {
-  activityParticipation(activity, visitorID, resourceName, 'hat sich jemand von der Warteliste entfernt', 'Streichung aus Warteliste', callback);
+module.exports.waitinglistRemoval = function (activity, visitorID, callback) {
+  activityParticipation(activity, visitorID, '', 'hat sich jemand von der Warteliste entfernt', 'Streichung aus Warteliste', callback);
 };
 
 module.exports.wikiChanges = function (changes, callback) {

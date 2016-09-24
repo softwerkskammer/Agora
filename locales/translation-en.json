@@ -61,7 +61,6 @@
     "save_and_notify": "Save and notify",
     "select": "Select",
     "start": "Start",
-    "subscribe_multiple": "Subscribe",
     "subscribe_single": "I'm in!",
     "successfully_added_to_waitinglist": "You are now on the waitinglist. You will receive a confirmation e-mail in a few seconds.",
     "successfully_registered": "Your registration was successful. You will receive a confirmation e-mail in a few seconds.",
@@ -81,7 +80,6 @@
       "waitinglist": "Should the resource have a waiting list?"
     },
     "unlimited": "unlimited",
-    "unsubscribe_multiple": "Unsubscribe",
     "unsubscribe_not_possible": "Subscribed",
     "unsubscribe_single": "I cannot participate…",
     "upcoming": "Upcoming",

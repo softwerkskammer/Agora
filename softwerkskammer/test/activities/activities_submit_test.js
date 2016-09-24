@@ -114,26 +114,6 @@ describe('Activity application - on submit -', function () {
       .expect(/Titel ist ein Pflichtfeld\./, done);
   });
 
-  it('rejects an activity with two identical resource names', function (done) {
-    request(createApp())
-      .post('/submit')
-      .send('url=uhu&previousUrl=uhu&location=X&title=bla&startDate=02.07.2000&startTime=19:00&endDate=02.07.2000&endTime=21:00')
-      .send('resources[names]=Doppelzimmer&resources[names]=Doppelzimmer')
-      .expect(200)
-      .expect(/Validierungsfehler/)
-      .expect(/Die Bezeichnungen der Ressourcen müssen eindeutig sein\./, done);
-  });
-
-  it('rejects an activity whose resource names are empty', function (done) {
-    request(createApp())
-      .post('/submit')
-      .send('url=uhu&previousUrl=uhu&location=X&title=bla&startDate=02.07.2000&startTime=19:00&endDate=02.07.2000&endTime=21:00')
-      .send('resources[names]=&resources[names]=')
-      .expect(200)
-      .expect(/Validierungsfehler/)
-      .expect(/Es muss mindestens eine Ressourcenbezeichnung angegeben werden\./, done);
-  });
-
   it('rejects an activity whose resource limits are non-integral', function (done) {
     request(createApp())
       .post('/submit')

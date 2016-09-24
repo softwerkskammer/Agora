@@ -240,7 +240,6 @@ describe('Activity application', function () {
         .expect(/Bislang haben 2 Mitglieder ihre Teilnahme zugesagt\./)
         .expect(/action="subscribe"/)
         .expect(/input type="hidden" name="url" value="urlForInteresting"/)
-        .expect(/input type="hidden" name="resource" value="Veranstaltung"/)
         .expect(/class="btn btn-primary" type="submit">Ich bin dabei!/)
         .expect(/participant1/)
         .expect(/participant2/, done);
@@ -253,7 +252,6 @@ describe('Activity application', function () {
         .expect(/Bislang haben 2 Mitglieder ihre Teilnahme zugesagt\./)
         .expect(/action="unsubscribe"/)
         .expect(/input type="hidden" name="url" value="urlForInteresting"/)
-        .expect(/input type="hidden" name="resource" value="Veranstaltung"/)
         .expect(/class="btn btn-default" type="submit">Ich kann doch nicht/)
         .expect(/participant1/)
         .expect(/participant2/, done);
@@ -350,7 +348,6 @@ describe('Activity application', function () {
         .expect(/Bislang haben 2 Mitglieder ihre Teilnahme zugesagt\./)
         .expect(/action="unsubscribe"/)
         .expect(/input type="hidden" name="url" value="urlForInteresting"/)
-        .expect(/input type="hidden" name="resource" value="Veranstaltung"/)
         .expect(/class="btn btn-default" type="submit">Ich kann doch nicht/)
         .expect(/participant1/)
         .expect(/participant2/, done);

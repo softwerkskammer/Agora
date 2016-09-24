@@ -147,12 +147,24 @@ class Activity {
     return new Resources(this.state.resources);
   }
 
-  resourceNamed() {
+  veranstaltung() {
     return this.resources().veranstaltung();
+  }
+
+  resourceNamed() {
+    return this.veranstaltung();
   }
 
   resourceNames() {
     return [standardName];
+  }
+
+  addMemberId(memberId, momentOfRegistration) {
+    return this.resources().veranstaltung().addMemberId(memberId, momentOfRegistration);
+  }
+
+  removeMemberId(memberId) {
+    this.resources().veranstaltung().removeMemberId(memberId);
   }
 
   allRegisteredMembers() {
@@ -163,12 +175,29 @@ class Activity {
     return this.allRegisteredMembers().indexOf(memberID) > -1;
   }
 
+  // Waitinglist stuff
   isAlreadyOnWaitinglist(memberID) {
     return this.allWaitinglistEntries().find(entry => entry.registrantId() === memberID);
   }
 
   allWaitinglistEntries() {
     return this.resources().allWaitinglistEntries();
+  }
+
+  addToWaitinglist(memberId, momentOfRegistration) {
+    this.resources().veranstaltung().addToWaitinglist(memberId, momentOfRegistration);
+  }
+
+  removeFromWaitinglist(memberId) {
+    this.resources().veranstaltung().removeFromWaitinglist(memberId);
+  }
+
+  waitinglistEntryFor(memberId) {
+    return this.resources().veranstaltung().waitinglistEntryFor(memberId);
+  }
+
+  hasWaitinglist() {
+    return this.resources().veranstaltung().hasWaitinglist();
   }
 
   // Display Dates and Times

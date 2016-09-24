@@ -1,15 +1,13 @@
 mixin subscriptionButtons(activity, resourceRegistrationRenderer)
   -var result = resourceRegistrationRenderer.htmlRepresentationOf(activity, accessrights.memberId())
   -var btnClass = result.isWithdrawal() ? 'btn-default' : 'btn-primary'
-  if (activity.resourceNames().length === 1)
-    if (!result.representsButton())
-      | #{t(result.displayText)}
-    else
-      form(role='form', method='POST', action=result.type)
-        +csrf
-        +hidden('url', result.url)
-        +hidden('resource', result.resourcename)
-        button.btn(type='submit', class=btnClass) #{t(result.displayText)}
+  if (!result.representsButton())
+    | #{t(result.displayText)}
+  else
+    form(role='form', method='POST', action=result.type)
+      +csrf
+      +hidden('url', result.url)
+      button.btn(type='submit', class=btnClass) #{t(result.displayText)}
 
 mixin activityList(activities, member)
   dl.dl-horizontal
