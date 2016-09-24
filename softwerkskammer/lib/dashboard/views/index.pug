@@ -13,11 +13,12 @@ block title
 block content
   .page-header
     h2 #{t('dashboard.dashboard')}
-    !=t('dashboard.description', { postProcess: 'pug' })
-    .row
-      .col-sm-6
-        +my_activities
-    +my_groups
+      small
+        !=t('dashboard.description', { postProcess: 'pug' })
+  .row
+    .col-sm-6
+      +my_activities
+  +my_groups
 
 mixin my_groups
   .row
