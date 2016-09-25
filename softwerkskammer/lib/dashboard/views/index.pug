@@ -14,13 +14,14 @@ block content
   .page-header
     h2 #{t('dashboard.dashboard')}
       small
-        !=t('dashboard.description', { postProcess: 'pug' })
+        p #{t('dashboard.description')}
   .row
     .col-sm-6
       +my_activities
   +my_groups
 
 mixin my_groups
+  h3 #{t('dashboard.your_groups')}
   .row
     each groups in groupsPerColumn
       .col-sm-4
@@ -46,7 +47,7 @@ mixin my_groups
 mixin my_activities
   .panel.panel-default
     .panel-heading
-      b #{t('activities.upcoming_activities')}
+      b #{t('dashboard.upcoming_activities')}
     ul.list-group
       each activity in activities
         -var angemeldet = (member && activity.allRegisteredMembers().indexOf(member.id()) > -1)
