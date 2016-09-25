@@ -136,8 +136,10 @@
   "dashboard": {
     "dashboard": "Dashboard",
     "description": [
-      "p Your personal view to softwerkskammer. It shows your groups and their upcoming activities."
-    ]
+      "Your personal view to softwerkskammer"
+    ],
+    "upcoming_activities": "$t(activities.upcoming_activities) of your groups",
+    "your_groups": "Your groups"
   },
   "error": {
     "click_links": "I'd suggest you click on one of the links in the header.",

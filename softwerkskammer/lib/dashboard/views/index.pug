@@ -11,18 +11,17 @@ block scripts
 block title
   | Dashboard
 block content
+  .page-header
+    h2 #{t('dashboard.dashboard')}
+      small
+        p #{t('dashboard.description')}
   .row
     .col-sm-6
       +my_activities
-    .col-sm-6
-      .panel.panel-default
-        .panel-heading
-          b #{t('dashboard.dashboard')}
-        .panel-body
-          !=t('dashboard.description', { postProcess: 'pug' })
   +my_groups
 
 mixin my_groups
+  h3 #{t('dashboard.your_groups')}
   .row
     each groups in groupsPerColumn
       .col-sm-4
@@ -48,7 +47,7 @@ mixin my_groups
 mixin my_activities
   .panel.panel-default
     .panel-heading
-      b #{t('activities.upcoming_activities')}
+      b #{t('dashboard.upcoming_activities')}
     ul.list-group
       each activity in activities
         -var angemeldet = (member && activity.allRegisteredMembers().indexOf(member.id()) > -1)
@@ -70,7 +69,7 @@ mixin wikichangesOrBlogs(items, panelid, prefix, title)
     div(class=prefix + ' collapse in')
       ul.list-unstyled
         each item in items
-          li.dashboard-line
+          li
             .modal.fade.bs-modal-lg(id=item.dialogId(), tabindex='-1')
               .modal-dialog.modal-lg
                 .modal-content

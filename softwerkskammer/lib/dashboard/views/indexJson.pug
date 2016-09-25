@@ -10,15 +10,13 @@ block scripts
 block title
   | Dashboard
 block content
+  .page-header
+    h2 #{t('dashboard.dashboard')}
+      small
+        p #{t('dashboard.description')}
   .row
     .col-sm-6
       +my_activities
-    .col-sm-6
-      .panel.panel-default
-        .panel-heading
-          b #{t('dashboard.dashboard')}
-        .panel-body
-          !=t('dashboard.description', { postProcess: 'pug' })
   +my_groups
 
 mixin mailIndex(mailHeaders)
@@ -44,31 +42,33 @@ mixin mailattributes(mailHeader)
   .clearfix
 
 mixin my_groups
-  each groups in groupsPerColumn
-    .col-sm-4
-      each group in groups
-        -var panelid = group.id + '-grouppanel'
-        .panel.panel-default
-          .panel-heading(style='background-color: ' + group.color + '; color: #FFFFFF;')
-            a.inherit-color.chevron(data-toggle='collapse', data-target='#' + panelid): b
-              i.fa.fa-toggle-down.fa-fw.blog
-            | &nbsp;#{group.longName}
-            a.inherit-color(href='/groups/' + group.id): span.pull-right: i.fa.fa-group.fa-fw.tooltipify(data-toggle='tooltip', title=t('groups.tooltip.gotogroup'))
-          .panel-body.collapse.in(id=panelid)
-            +wikichangesOrBlogs(postsByGroup[group.id], panelid, 'blogs', t('wiki.blogposts'))
-            +wikichangesOrBlogs(changesByGroup[group.id], panelid, 'changes', t('wiki.changes'))
-            if (mailsByGroup[group.id].length > 0)
-            h5
-            a.chevron(data-toggle='collapse', data-target='#' + panelid + ' .mails')
-              i.fa.fa-toggle-down.fa-fw.blog
-              | &nbsp;#{t('mailarchive.recent')}
-              .mails.collapse.in
-                +mailIndex(mailsByGroup[group.id])
+  h3 #{t('dashboard.your_groups')}
+  .row
+    each groups in groupsPerColumn
+      .col-sm-4
+        each group in groups
+          -var panelid = group.id + '-grouppanel'
+          .panel.panel-default
+            .panel-heading(style='background-color: ' + group.color + '; color: #FFFFFF;')
+              a.inherit-color.chevron(data-toggle='collapse', data-target='#' + panelid): b
+                i.fa.fa-toggle-down.fa-fw.blog
+              | &nbsp;#{group.longName}
+              a.inherit-color(href='/groups/' + group.id): span.pull-right: i.fa.fa-group.fa-fw.tooltipify(data-toggle='tooltip', title=t('groups.tooltip.gotogroup'))
+            .panel-body.collapse.in(id=panelid)
+              +wikichangesOrBlogs(postsByGroup[group.id], panelid, 'blogs', t('wiki.blogposts'))
+              +wikichangesOrBlogs(changesByGroup[group.id], panelid, 'changes', t('wiki.changes'))
+              if (mailsByGroup[group.id].length > 0)
+              h5
+              a.chevron(data-toggle='collapse', data-target='#' + panelid + ' .mails')
+                i.fa.fa-toggle-down.fa-fw.blog
+                | &nbsp;#{t('mailarchive.recent')}
+                .mails.collapse.in
+                  +mailIndex(mailsByGroup[group.id])
 
 mixin my_activities
   .panel.panel-default
     .panel-heading
-      b #{t('activities.upcoming_activities')}
+      b #{t('dashboard.upcoming_activities')}
     ul.list-group
       each activity in activities
         -var angemeldet = (memberId && activity.allRegisteredMembers.indexOf(memberId) > -1)

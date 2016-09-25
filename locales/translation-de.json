@@ -128,8 +128,10 @@
   "dashboard": {
     "dashboard": "Überblick",
     "description": [
-      "p Deine persönliche Softwerkskammer. Wir zeigen Dir hier Deine Gruppen und ihre Aktivitäten."
-    ]
+      "Deine persönliche Softwerkskammer"
+    ],
+    "upcoming_activities": "$t(activities.upcoming_activities) Deiner Gruppen",
+    "your_groups": "Deine Gruppen"
   },
   "error": {
     "click_links": "Am Besten klickst Du auf einen unserer Links im Header.",
