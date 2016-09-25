@@ -5,8 +5,6 @@ include ../../../views/dataTables-mixin
 
 block scripts
   +dataTableImport
-  +dataTable('#activitytable', '[ 1, "asc" ]', '[{targets: 0, sortable: false}, {targets: [3,4], type: "date-eu"}]', true)
-
   +dataTable('#waitinglisttable', '[ 2, "asc" ]', '[{targets: 0, sortable: false}, {targets: [2,3], type: "date-eu"}]', true)
   script.
     function removeFromWaitinglist(activityUrl, nickname, buttonid) {
