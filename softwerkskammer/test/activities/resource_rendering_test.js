@@ -40,7 +40,7 @@ describe('ResourceRegistrationRenderer', function () {
     expect(result.displayText).to.equal('activities.unsubscribe_single');
   });
 
-  it('gives values for state "registrationPossible" if only 1 resource', function () {
+  it('gives values for state "registrationPossible"', function () {
     var result = resultForState(Resource.registrationPossible);
     expect(result.type).to.be('subscribe');
     expect(result.displayText).to.equal('activities.subscribe_single');

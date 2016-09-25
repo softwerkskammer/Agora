@@ -37,7 +37,7 @@ function activitySubmitted(req, res, next) {
     // editor can be either a name in the format editorNameOf() - for participants - or just a nickname - for manually entered
     const nicknames = editorNames.map(misc.betweenBraces);
     async.map(nicknames, memberstore.getMember, (err1, members) => {
-      const membersForEditors = members.filter(m => m); // only truey members
+      const membersForEditors = members.filter(m => m); // only truthy members
       const editorIds = membersForEditors.map(editor => editor.id());
       activity.fillFromUI(req.body, editorIds);
       activitystore.saveActivity(activity, err2 => {
@@ -91,29 +91,17 @@ function renderGdcrFor(gdcrDay, res, next) {
     });
   });
 }
-app.get('/gdcr2013', (req, res, next) => {
-  return renderGdcrFor('2013-12-14', res, next);
-});
+app.get('/gdcr2013', (req, res, next) => renderGdcrFor('2013-12-14', res, next));
 
-app.get('/gdcr2014', (req, res, next) => {
-  return renderGdcrFor('2014-11-15', res, next);
-});
+app.get('/gdcr2014', (req, res, next) => renderGdcrFor('2014-11-15', res, next));
 
-app.get('/gdcr2015', (req, res, next) => {
-  return renderGdcrFor('2015-11-14', res, next);
-});
+app.get('/gdcr2015', (req, res, next) => renderGdcrFor('2015-11-14', res, next));
 
-app.get('/gdcr', (req, res, next) => {
-  return renderGdcrFor('2016-10-22', res, next);
-});
+app.get('/gdcr', (req, res, next) => renderGdcrFor('2016-10-22', res, next));
 
-app.get('/upcoming', (req, res, next) => {
-  activitiesForDisplay(activitystore.upcomingActivities, next, res, req.i18n.t('activities.upcoming'));
-});
+app.get('/upcoming', (req, res, next) => activitiesForDisplay(activitystore.upcomingActivities, next, res, req.i18n.t('activities.upcoming')));
 
-app.get('/past', (req, res, next) => {
-  activitiesForDisplay(activitystore.pastActivities, next, res, req.i18n.t('activities.past'));
-});
+app.get('/past', (req, res, next) => activitiesForDisplay(activitystore.pastActivities, next, res, req.i18n.t('activities.past')));
 
 app.get('/ical', (req, res, next) => {
   activitystore.upcomingActivities((err, activities) => {
@@ -193,9 +181,7 @@ function renderActivityCombinedWithGroups(res, next, activity) {
   });
 }
 
-app.get('/new', (req, res, next) => {
-  renderActivityCombinedWithGroups(res, next, new Activity());
-});
+app.get('/new', (req, res, next) => renderActivityCombinedWithGroups(res, next, new Activity()));
 
 app.get('/newLike/:url', (req, res, next) => {
   activitystore.getActivity(req.params.url, (err, activity) => {
@@ -233,7 +219,7 @@ app.post('/submit', (req, res, next) => {
     ],
     (err, errorMessages) => {
       if (err) { return next(err); }
-      const realErrors = R.flatten(errorMessages).filter(message => !!message);
+      const realErrors = R.flatten(errorMessages).filter(message => message);
       if (realErrors.length === 0) {
         return activitySubmitted(req, res, next);
       }
@@ -242,9 +228,7 @@ app.post('/submit', (req, res, next) => {
   );
 });
 
-app.get('/checkurl', (req, res) => {
-  misc.validate(req.query.url, req.query.previousUrl, R.partial(activitiesService.isValidUrl, [reservedURLs]), res.end);
-});
+app.get('/checkurl', (req, res) => misc.validate(req.query.url, req.query.previousUrl, R.partial(activitiesService.isValidUrl, [reservedURLs]), res.end));
 
 app.get('/:url', (req, res, next) => {
   activitiesService.getActivityWithGroupAndParticipants(req.params.url, (err, activity) => {
@@ -281,9 +265,7 @@ function subscribe(body, req, res, next) {
     res.redirect('/activities/' + encodeURIComponent(activityUrl));
   });
 }
-app.post('/subscribe', (req, res, next) => {
-  subscribe(req.body, req, res, next);
-});
+app.post('/subscribe', (req, res, next) => subscribe(req.body, req, res, next));
 
 app.get('/subscribe', (req, res, next) => {
   // in case the call was redirected via login, we get called with "get"
