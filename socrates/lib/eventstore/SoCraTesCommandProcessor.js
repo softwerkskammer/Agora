@@ -14,7 +14,7 @@ function SoCraTesCommandProcessor(writeModel) {
   this.writeModel = writeModel;
 }
 
-SoCraTesCommandProcessor.prototype.setConferenceDetails = function (uiData) {
+SoCraTesCommandProcessor.prototype.createConferenceEvents = function (uiData) {
   function matchArrayEntries(input) {
     return R.zipObj(misc.toArray(input.names), misc.toArray(input.limits));
   }
