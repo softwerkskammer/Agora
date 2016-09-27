@@ -84,17 +84,17 @@ module.exports = {
     return new SoCraTesReadModel(new GlobalEventStore());
   },
 
-  getSoCraTesCommandProcessor: function (url, callback) {
-    getGlobalEventStoreForWriting(url, function (err, eventStore) {
+  getSoCraTesCommandProcessor: function (existingUrl, newUrl, callback) {
+    getGlobalEventStoreForWriting(existingUrl, function (err, eventStore) {
       if (err) { return callback(err); }
       // when creating a new SoCraTes, we want to create a new event store for it:
       if (!eventStore) {
         eventStore = new GlobalEventStore({
-          url: url,
+          url: newUrl,
           events: []
         });
       }
-      cache.set(keyFor(url, GLOBAL_EVENT_STORE_FOR_WRITING), eventStore);
+      cache.set(keyFor(newUrl, GLOBAL_EVENT_STORE_FOR_WRITING), eventStore);
       callback(null, new SoCraTesCommandProcessor(new SoCraTesWriteModel(eventStore)));
     });
   },
