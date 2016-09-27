@@ -23,7 +23,7 @@ var reservedURLs = '^new$|^edit$|^submit$|^checkurl$\\+';
 var app = misc.expressAppIn(__dirname);
 
 function activitySubmitted(req, res, next) {
-  eventstoreService.getSoCraTesCommandProcessor(req.body.previousUrl, function (err, socratesCommandProcessor) {
+  eventstoreService.getSoCraTesCommandProcessor(req.body.previousUrl, req.body.url, function (err, socratesCommandProcessor) {
     if (err) { return next(err); }
     const events = socratesCommandProcessor.createConferenceEvents(req.body);
     eventstoreService.saveCommandProcessor(socratesCommandProcessor, events, function (err1) {
