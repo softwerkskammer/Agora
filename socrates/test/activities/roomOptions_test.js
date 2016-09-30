@@ -106,11 +106,24 @@ describe('Room Options', function () {
     it('returns whether the duration is valid', function () {
       expect(roomOptions.isValidDuration(0)).to.be(false);
       expect(roomOptions.isValidDuration(1)).to.be(false);
+
       expect(roomOptions.isValidDuration(2)).to.be(true);
       expect(roomOptions.isValidDuration(3)).to.be(true);
       expect(roomOptions.isValidDuration(4)).to.be(true);
       expect(roomOptions.isValidDuration(5)).to.be(true);
+
       expect(roomOptions.isValidDuration(6)).to.be(false);
+    });
+
+    it('returns whether the room type is valid', function () {
+      expect(roomOptions.isValidRoomType('single')).to.be(true);
+      expect(roomOptions.isValidRoomType('bed_in_double')).to.be(true);
+      expect(roomOptions.isValidRoomType('junior')).to.be(true);
+      expect(roomOptions.isValidRoomType('bed_in_junior')).to.be(true);
+
+      expect(roomOptions.isValidRoomType('0')).to.be(false);
+      expect(roomOptions.isValidRoomType('')).to.be(false);
+      expect(roomOptions.isValidRoomType('bed_in')).to.be(false);
     });
 
   });

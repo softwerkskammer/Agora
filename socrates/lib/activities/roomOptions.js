@@ -58,6 +58,10 @@ module.exports = {
     return !!this.endOfStayFor(duration);
   },
 
+  isValidRoomType: function (roomType) {
+    return !!_.find(rooms, {id: roomType});
+  },
+
   waitinglistInformationFor: function (id) {
     return {room: _.find(rooms, {id: id}).display};
   }
