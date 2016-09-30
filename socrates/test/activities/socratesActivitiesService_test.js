@@ -427,7 +427,8 @@ describe('SoCraTes Activities Service', function () {
         events.waitinglistParticipantWasRegistered(['single'], 'session-id', 'memberId', aLongTimeAgo)
       ];
 
-      socratesActivitiesService.removeWaitinglistMemberFor(['single'], 'nickname', function (err) {
+      const params = {desiredRoomTypes: ['single'], waitinglistMemberNick: 'nickname'};
+      socratesActivitiesService.removeWaitinglistMemberFor(params, function (err) {
         const savedEventStore = saveEventStore.firstCall.args[0];
         expect(stripTimestamps(savedEventStore.state.events)).to.eql([
           {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionId: 'session-id', desiredRoomTypes: ['single'], memberId: 'memberId', joinedWaitinglist: aLongTimeAgo.valueOf()},
@@ -445,7 +446,8 @@ describe('SoCraTes Activities Service', function () {
     it('does not remove a waitinglist member if they are not registered', function (done) {
       eventStore.state.events = [];
 
-      socratesActivitiesService.removeWaitinglistMemberFor(['single'], 'nickname', function (err) {
+      const params = {desiredRoomTypes: ['single'], waitinglistMemberNick: 'nickname'};
+      socratesActivitiesService.removeWaitinglistMemberFor(params, function (err) {
         const savedEventStore = saveEventStore.firstCall.args[0];
         expect(stripTimestamps(savedEventStore.state.events)).to.eql([
           {event: e.DID_NOT_REMOVE_WAITINGLIST_PARTICIPANT_BECAUSE_THEY_ARE_NOT_REGISTERED, desiredRoomTypes: ['single'], memberId: 'memberId'}

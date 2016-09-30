@@ -169,7 +169,8 @@ app.post('/removeParticipant', function (req, res, next) {
 });
 
 app.post('/removeWaitinglistMember', function (req, res, next) {
-  socratesActivitiesService.removeWaitinglistMemberFor([req.body.roomType], req.body.waitinglistMember, function (err) {
+  const params = {desiredRoomTypes: [req.body.roomType], waitinglistMemberNick: req.body.waitinglistMember};
+  socratesActivitiesService.removeWaitinglistMemberFor(params, function (err) {
     if (err) { return next(err); }
     res.redirect('/registration/management');
   });

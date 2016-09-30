@@ -211,11 +211,11 @@ module.exports = {
     );
   },
 
-  removeWaitinglistMemberFor: function (desiredRoomTypes, waitinglistMemberNick, callback) {
+  removeWaitinglistMemberFor: function (params, callback) {
 
     async.series(
       [
-        _.partial(memberstore.getMember, waitinglistMemberNick),
+        _.partial(memberstore.getMember, params.waitinglistMemberNick),
         _.partial(eventstoreService.getRegistrationCommandProcessor, currentUrl).bind(eventstoreService)
       ],
       function (err, results) {
@@ -224,7 +224,7 @@ module.exports = {
         const registrationCommandProcessor = results[1];
         if (!registrationCommandProcessor || !waitinglistMember) { return callback(); }
 
-        const event = registrationCommandProcessor.removeWaitinglistParticipant(desiredRoomTypes, waitinglistMember.id());
+        const event = registrationCommandProcessor.removeWaitinglistParticipant(params.desiredRoomTypes, waitinglistMember.id());
 
         const args = {commandProcessor: registrationCommandProcessor, events: [event], callback: callback};
 
