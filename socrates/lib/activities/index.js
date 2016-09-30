@@ -23,7 +23,7 @@ var reservedURLs = '^new$|^edit$|^submit$|^checkurl$\\+';
 var app = misc.expressAppIn(__dirname);
 
 function activitySubmitted(req, res, next) {
-  eventstoreService.getSoCraTesCommandProcessor(req.body.previousUrl, req.body.url, function (err, socratesCommandProcessor) {
+  eventstoreService.getSoCraTesCommandProcessor(req.body.url, function (err, socratesCommandProcessor) {
     if (err) { return next(err); }
     const events = socratesCommandProcessor.createConferenceEvents(req.body);
     eventstoreService.saveCommandProcessor(socratesCommandProcessor, events, function (err1) {
@@ -35,7 +35,7 @@ function activitySubmitted(req, res, next) {
       if (err1) { return next(err1); }
 
       // update the activity because we need it for the display in the SWK calendar
-      activitiesService.getActivityWithGroupAndParticipants(req.body.previousUrl, function (err2, activity) { // here we need a real activity
+      activitiesService.getActivityWithGroupAndParticipants(req.body.url, function (err2, activity) { // here we need a real activity
         if (err2) { return next(err2); }
         if (!activity) { activity = new Activity({owner: req.user.member.id()}); }
         req.body.isSoCraTes = true; // mark activity as SoCraTes activity (important for SWK)
