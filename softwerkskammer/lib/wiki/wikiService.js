@@ -143,11 +143,11 @@ module.exports = {
     Git.lsdirs(function (err, subdirs) {
       if (err) { return callback(err); }
       var result = [];
-      async.each(subdirs, function (directory, directoryCallback) {
+      async.eachLimit(subdirs, 5, function (directory, directoryCallback) {
         var resultLine = new DirectoryWithChangedFiles({dir: directory, files: []});
         self.pageList(directory, function (listErr, items) {
           if (listErr) { return directoryCallback(listErr); }
-          async.each(items, function (item, itemsCallback) {
+          async.eachLimit(items, 5, function (item, itemsCallback) {
             Git.latestChanges(item.fullname + '.md', moment, function (err1, metadata) {
               if (err1) { return itemsCallback(err1); }
               if (metadata.length > 0) {
