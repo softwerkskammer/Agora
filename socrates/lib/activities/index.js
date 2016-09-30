@@ -168,12 +168,16 @@ app.post('/removeParticipant', function (req, res, next) {
   });
 });
 
-app.post('/removeWaitinglistMember', function (req, res, next) {
-  const params = {desiredRoomTypes: [req.body.roomType], waitinglistMemberNick: req.body.waitinglistMember};
-  socratesActivitiesService.removeWaitinglistMemberFor(params, function (err) {
+function updateFor(updater, params, res, next) {
+  updater(params, function (err) {
     if (err) { return next(err); }
     res.redirect('/registration/management');
   });
+}
+
+app.post('/removeWaitinglistMember', function (req, res, next) {
+  updateFor(socratesActivitiesService.removeWaitinglistMemberFor,
+    {desiredRoomTypes: [req.body.roomType], waitinglistMemberNick: req.body.waitinglistMember}, res, next);
 });
 
 module.exports = app;
