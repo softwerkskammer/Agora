@@ -30,7 +30,7 @@ describe('The SoCraTes command processor', function () {
 
   it('creates a new url event, start time event, end time event and room quota events on update', function () {
     // When (issued command)
-    const evts = commandHandler.setConferenceDetails({
+    const evts = commandHandler.createConferenceEvents({
       url: 'new-socrates',
       startDate: '15/06/2015',
       startTime: '12:30',

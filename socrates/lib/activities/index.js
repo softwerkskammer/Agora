@@ -23,9 +23,9 @@ var reservedURLs = '^new$|^edit$|^submit$|^checkurl$\\+';
 var app = misc.expressAppIn(__dirname);
 
 function activitySubmitted(req, res, next) {
-  eventstoreService.getSoCraTesCommandProcessor(req.body.previousUrl, function (err, socratesCommandProcessor) {
+  eventstoreService.getSoCraTesCommandProcessor(req.body.url, function (err, socratesCommandProcessor) {
     if (err) { return next(err); }
-    const events = socratesCommandProcessor.setConferenceDetails(req.body);
+    const events = socratesCommandProcessor.createConferenceEvents(req.body);
     eventstoreService.saveCommandProcessor(socratesCommandProcessor, events, function (err1) {
       if (err1 && err1.message === CONFLICTING_VERSIONS) {
         // we try again because of a racing condition during save:
@@ -35,7 +35,7 @@ function activitySubmitted(req, res, next) {
       if (err1) { return next(err1); }
 
       // update the activity because we need it for the display in the SWK calendar
-      activitiesService.getActivityWithGroupAndParticipants(req.body.previousUrl, function (err2, activity) { // here we need a real activity
+      activitiesService.getActivityWithGroupAndParticipants(req.body.url, function (err2, activity) { // here we need a real activity
         if (err2) { return next(err2); }
         if (!activity) { activity = new Activity({owner: req.user.member.id()}); }
         req.body.isSoCraTes = true; // mark activity as SoCraTes activity (important for SWK)
@@ -86,11 +86,18 @@ app.post('/submit', function (req, res, next) {
       function (callback) {
         var errors = validation.isValidForActivity(req.body);
         return callback(null, errors);
+      },
+      function (callback) {
+        let errors = [];
+        if (req.body.previousUrl && req.body.previousUrl !== req.body.url) {
+          errors.push('It is impossible to alter the year of an existing SoCraTes conference.');
+        }
+        return callback(null, errors);
       }
     ],
     function (err, errorMessages) {
       if (err) { return next(err); }
-      var realErrors = _.filter(_.flatten(errorMessages), function (message) { return !!message; });
+      var realErrors = _.filter(_.flatten(errorMessages), message => message);
       if (realErrors.length === 0) {
         return activitySubmitted(req, res, next);
       }
