@@ -85,7 +85,6 @@ describe('Room Options', function () {
       expect(optionsForMemberId3[2].displayRegistrationCheckboxes).to.eql(true);
       expect(optionsForMemberId3[3].displayRegistrationCheckboxes).to.eql(false);
 
-
       // if the registration is not open, the checkboxes are always displayed, no matter the status of the resource
       var registrationIsNotOpen = false;
       expect(roomOptions.allRoomOptions(readModel, memberId1, registrationIsNotOpen)[0].displayRegistrationCheckboxes).to.eql(true);
@@ -102,6 +101,16 @@ describe('Room Options', function () {
       expect(roomOptions.allRoomOptions(readModel, memberId3, registrationIsNotOpen)[1].displayRegistrationCheckboxes).to.eql(true);
       expect(roomOptions.allRoomOptions(readModel, memberId3, registrationIsNotOpen)[2].displayRegistrationCheckboxes).to.eql(true);
       expect(roomOptions.allRoomOptions(readModel, memberId3, registrationIsNotOpen)[3].displayRegistrationCheckboxes).to.eql(true);
+    });
+
+    it('returns whether the duration is valid', function () {
+      expect(roomOptions.isValidDuration(0)).to.be(false);
+      expect(roomOptions.isValidDuration(1)).to.be(false);
+      expect(roomOptions.isValidDuration(2)).to.be(true);
+      expect(roomOptions.isValidDuration(3)).to.be(true);
+      expect(roomOptions.isValidDuration(4)).to.be(true);
+      expect(roomOptions.isValidDuration(5)).to.be(true);
+      expect(roomOptions.isValidDuration(6)).to.be(false);
     });
 
   });
