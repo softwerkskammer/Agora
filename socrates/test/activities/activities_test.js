@@ -90,6 +90,38 @@ describe('SoCraTes activities application', function () {
       });
     });
 
+    it('changing the year of an existing SoCraTes is not allowed (and has no effect)', function (done) {
+      sinon.stub(eventstore, 'getEventStore', function (url, callback) {
+        if (url === 'socrates-2014') {
+          return callback(null, new GlobalEventStore({url: 'socrates-2014', events: [{event: 'EVENT1'}, {event: 'EVENT2'}, {event: 'EVENT3'}]}));
+        }
+        return callback(null, null);
+      });
+
+      // first, initialise the cache with a read model:
+      eventstoreService.getSoCraTesReadModel('socrates-2014', function () {
+
+        appWithSocratesMember
+          .post('/submit')
+          .send('previousUrl=socrates-2014')
+          .send('startDate=15/06/2015&startTime=12:30&endDate=10/08/2015&endTime=10:30')
+          .send('resources[names]=single&resources[names]=bed_in_double&resources[names]=bed_in_junior&resources[names]=junior')
+          .send('resources[limits]=100&resources[limits]=200&resources[limits]=300&resources[limits]=400')
+          .expect(200)
+          .expect(/It is impossible to alter the year of an existing SoCraTes conference./)
+          .end(function (err) {
+            const cachedStore = cache.get('socrates-2014' + '_' + 'globalEventStoreForWriting');
+            expect(cachedStore.state.events.length).to.eql(3);
+            expect(cachedStore.state.url).to.eql('socrates-2014');
+
+            expect(cache.get('socrates-2015' + '_' + 'globalEventStoreForWriting')).to.not.exist();
+
+            expect(saveEventStoreStub.called).to.be(false);
+            done(err);
+          });
+      });
+    });
+
   });
 
 });

@@ -86,11 +86,18 @@ app.post('/submit', function (req, res, next) {
       function (callback) {
         var errors = validation.isValidForActivity(req.body);
         return callback(null, errors);
+      },
+      function (callback) {
+        let errors = [];
+        if (req.body.previousUrl && req.body.previousUrl !== req.body.url) {
+          errors.push('It is impossible to alter the year of an existing SoCraTes conference.');
+        }
+        return callback(null, errors);
       }
     ],
     function (err, errorMessages) {
       if (err) { return next(err); }
-      var realErrors = _.filter(_.flatten(errorMessages), function (message) { return !!message; });
+      var realErrors = _.filter(_.flatten(errorMessages), message => message);
       if (realErrors.length === 0) {
         return activitySubmitted(req, res, next);
       }
