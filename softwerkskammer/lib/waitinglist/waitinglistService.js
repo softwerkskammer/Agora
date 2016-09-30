@@ -32,7 +32,7 @@ module.exports = {
       },
       function (err, results) {
         if (err || !results.member || !results.activity) { return callback(err); }
-        results.activity.resourceNamed(args.resourcename).addToWaitinglist(results.member.id(), moment());
+        results.activity.addToWaitinglist(results.member.id(), moment());
         activitystore.saveActivity(results.activity, function (err1) {
           if (err1 && err1.message === CONFLICTING_VERSIONS) {
             // we try again because of a racing condition during save:
@@ -53,7 +53,7 @@ module.exports = {
       },
       function (err, results) {
         if (err || !results.member || !results.activity) { return outerCallback(err); }
-        var entry = results.activity.resourceNamed(args.resourcename).waitinglistEntryFor(results.member.id());
+        var entry = results.activity.waitinglistEntryFor(results.member.id());
         if (!entry) { return outerCallback(null); }
         entry.setRegistrationValidityFor(args.hoursstring);
         activitystore.saveActivity(results.activity, function (err1) {

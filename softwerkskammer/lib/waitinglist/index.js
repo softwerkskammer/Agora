@@ -38,8 +38,7 @@ app.post('/add', function (req, res, next) {
   accessAllowedTo(activityUrl, res, function (err, activity) {
     if (err || !activity) { return res.redirect('/activities/upcoming'); }
 
-    var resourcename = req.body.resourceName || activity.resourceNames()[0];
-    var args = {nickname: req.body.nickname, activityUrl: activityUrl, resourcename: resourcename};
+    var args = {nickname: req.body.nickname, activityUrl: activityUrl};
     waitinglistService.saveWaitinglistEntry(args, function (err1) {
       if (err1) { return next(err1); }
       res.redirect('/waitinglist/' + encodeURIComponent(activityUrl));
@@ -78,7 +77,7 @@ app.post('/remove', function (req, res, next) {
     }
     memberstore.getMember(req.body.nickname, function (err1, member) {
       if (err1) { return res.send(400); }
-      activitiesService.removeFromWaitinglist(member.id(), activityUrl, req.body.resourceName, function (err2) {
+      activitiesService.removeFromWaitinglist(member.id(), activityUrl, function (err2) {
         if (err2) { return next(err2); }
         res.send('ok');
       });

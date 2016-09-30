@@ -52,7 +52,7 @@ describe('activityParticipantService', function () {
 
   it('loads the participants and their participation information for a year (before 2016)', function (done) {
     /*eslint camelcase: 0*/
-    var socrates = {resources: {single: {_registeredMembers: [{memberId: 'memberId', duration: 2}]}}};
+    var socrates = {resources: {Veranstaltung: {_registeredMembers: [{memberId: 'memberId', duration: 2}]}}};
     sinon.stub(activitystore, 'getActivity', function (url, callback) {
       callback(null, new SoCraTesActivity(socrates));
     });

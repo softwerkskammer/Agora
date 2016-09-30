@@ -18,7 +18,7 @@ describe('Waitinglist Entry', function () {
   it('without argument yields undefined for each query', function () {
 
     expect(entryWithoutParam.registrantId()).to.be(undefined);
-    expect(entryWithoutParam.resourceName()).to.be(undefined);
+    expect(entryWithoutParam.resourceName()).to.be('Veranstaltung');
     expect(entryWithoutParam.registrationDate()).to.be(undefined);
     expect(entryWithoutParam.registrationValidUntil()).to.be(undefined);
   });
@@ -28,7 +28,7 @@ describe('Waitinglist Entry', function () {
   });
 
   it('returns the resource name', function () {
-    expect(entryWithParam.resourceName()).to.equal('Meine Ressource');
+    expect(entryWithParam.resourceName()).to.equal('Veranstaltung');
   });
 
   it('returns the registration date', function () {

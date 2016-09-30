@@ -1,49 +1,46 @@
 'use strict';
 
-var moment = require('moment-timezone');
-var async = require('async');
-var _ = require('lodash');
+const moment = require('moment-timezone');
+const async = require('async');
+const R = require('ramda');
 
-var conf = require('simple-configure');
-var beans = conf.get('beans');
-var misc = beans.get('misc');
-var CONFLICTING_VERSIONS = beans.get('constants').CONFLICTING_VERSIONS;
-var activitiesService = beans.get('activitiesService');
-var calendarService = beans.get('calendarService');
-var icalService = beans.get('icalService');
-var groupsService = beans.get('groupsService');
-var activitystore = beans.get('activitystore');
-var memberstore = beans.get('memberstore');
+const conf = require('simple-configure');
+const beans = conf.get('beans');
+const misc = beans.get('misc');
+const CONFLICTING_VERSIONS = beans.get('constants').CONFLICTING_VERSIONS;
+const activitiesService = beans.get('activitiesService');
+const calendarService = beans.get('calendarService');
+const icalService = beans.get('icalService');
+const groupsService = beans.get('groupsService');
+const activitystore = beans.get('activitystore');
+const memberstore = beans.get('memberstore');
 
-var Activity = beans.get('activity');
-var Group = beans.get('group');
-var validation = beans.get('validation');
-var statusmessage = beans.get('statusmessage');
-var resourceRegistrationRenderer = beans.get('resourceRegistrationRenderer');
+const Activity = beans.get('activity');
+const Group = beans.get('group');
+const validation = beans.get('validation');
+const statusmessage = beans.get('statusmessage');
+const resourceRegistrationRenderer = beans.get('resourceRegistrationRenderer');
 
-var standardResourceName = Activity.standardName;
-var reservedURLs = conf.get('reservedActivityURLs');
+const reservedURLs = conf.get('reservedActivityURLs');
 
-var app = misc.expressAppIn(__dirname);
+const app = misc.expressAppIn(__dirname);
 
 function editorNameOf(member) {
   return member.displayName() + ' (' + member.nickname() + ')'.replace(',', '');
 }
 
 function activitySubmitted(req, res, next) {
-  activitiesService.getActivityWithGroupAndParticipants(req.body.previousUrl, function (err, activity) {
+  activitiesService.getActivityWithGroupAndParticipants(req.body.previousUrl, (err, activity) => {
     if (err) { return next(err); }
     if (!activity) { activity = new Activity({owner: req.user.member.id()}); }
-    var editorNames = misc.toArray(req.body.editorIds);
+    const editorNames = misc.toArray(req.body.editorIds);
     // editor can be either a name in the format editorNameOf() - for participants - or just a nickname - for manually entered
-    var nicknames = _.map(editorNames, misc.betweenBraces);
-    async.map(nicknames, memberstore.getMember, function(err1, members) {
-      var membersForEditors = _.compact(members);
-      var editorIds = _.map(membersForEditors, editor => {
-        return editor.id();
-      });
+    const nicknames = editorNames.map(misc.betweenBraces);
+    async.map(nicknames, memberstore.getMember, (err1, members) => {
+      const membersForEditors = members.filter(m => m); // only truthy members
+      const editorIds = membersForEditors.map(editor => editor.id());
       activity.fillFromUI(req.body, editorIds);
-      activitystore.saveActivity(activity, function (err2) {
+      activitystore.saveActivity(activity, err2 => {
         if (err2 && err2.message === CONFLICTING_VERSIONS) {
           // we try again because of a racing condition during save:
           statusmessage.errorMessage('message.title.conflict', 'message.content.save_error_retry').putIntoSession(req);
@@ -58,7 +55,7 @@ function activitySubmitted(req, res, next) {
 }
 
 function activitiesForDisplay(activitiesFetcher, next, res, title) {
-  return activitiesService.getActivitiesForDisplay(activitiesFetcher, function (err, activities) {
+  return activitiesService.getActivitiesForDisplay(activitiesFetcher, (err, activities) => {
     if (err) { next(err); }
     res.render('index', {
       activities: activities,
@@ -74,79 +71,68 @@ function sendCalendarStringNamedToResult(ical, filename, res) {
   res.send(ical.toString());
 }
 
-app.get('/', function (req, res, next) {
+app.get('/', (req, res, next) => {
   activitiesForDisplay(activitystore.allActivities, next, res, req.i18n.t('general.all'));
 });
 
-function renderGdcrFor(gdcrDate, res, next) {
-  var gdcrActivities = _.partial(activitiesService.activitiesBetween, gdcrDate, gdcrDate.clone().add(1, 'days'));
+function renderGdcrFor(gdcrDay, res, next) {
+  const gdcrDate = moment(gdcrDay, 'YYYY-MM-DD');
+  const gdcrActivities = R.partial(activitiesService.activitiesBetween, [gdcrDate, gdcrDate.clone().add(1, 'days')]);
 
-  return activitiesService.getActivitiesForDisplay(gdcrActivities, function (err, activities) {
+  return activitiesService.getActivitiesForDisplay(gdcrActivities, (err, activities) => {
     if (err) { next(err); }
-    var gdcrYear = gdcrDate.year();
+    const gdcrYear = gdcrDate.year();
     res.render('gdcr', {
       calViewYear: gdcrYear,
       calViewMonth: gdcrDate.month(),
       activities: activities,
       year: String(gdcrYear),
-      previousYears: _.range(2013, gdcrYear).map(function (year) { return String(year); })
+      previousYears: R.range(2013, gdcrYear).map(year => String(year))
     });
   });
 }
-app.get('/gdcr2013', function (req, res, next) {
-  return renderGdcrFor(moment('2013-12-14', 'YYYY-MM-DD'), res, next);
-});
+app.get('/gdcr2013', (req, res, next) => renderGdcrFor('2013-12-14', res, next));
 
-app.get('/gdcr2014', function (req, res, next) {
-  return renderGdcrFor(moment('2014-11-15', 'YYYY-MM-DD'), res, next);
-});
+app.get('/gdcr2014', (req, res, next) => renderGdcrFor('2014-11-15', res, next));
 
-app.get('/gdcr2015', function (req, res, next) {
-  return renderGdcrFor(moment('2015-11-14', 'YYYY-MM-DD'), res, next);
-});
+app.get('/gdcr2015', (req, res, next) => renderGdcrFor('2015-11-14', res, next));
 
-app.get('/gdcr', function (req, res, next) {
-  return renderGdcrFor(moment('2016-10-22', 'YYYY-MM-DD'), res, next);
-});
+app.get('/gdcr', (req, res, next) => renderGdcrFor('2016-10-22', res, next));
 
-app.get('/upcoming', function (req, res, next) {
-  activitiesForDisplay(activitystore.upcomingActivities, next, res, req.i18n.t('activities.upcoming'));
-});
+app.get('/upcoming', (req, res, next) => activitiesForDisplay(activitystore.upcomingActivities, next, res, req.i18n.t('activities.upcoming')));
 
-app.get('/past', function (req, res, next) {
-  activitiesForDisplay(activitystore.pastActivities, next, res, req.i18n.t('activities.past'));
-});
+app.get('/past', (req, res, next) => activitiesForDisplay(activitystore.pastActivities, next, res, req.i18n.t('activities.past')));
 
-app.get('/ical', function (req, res, next) {
-  activitystore.upcomingActivities(function (err, activities) {
+app.get('/ical', (req, res, next) => {
+  activitystore.upcomingActivities((err, activities) => {
     if (err || !activities) { return next(err); }
     sendCalendarStringNamedToResult(icalService.icalForActivities(activities), 'events', res);
   });
 });
 
-app.get('/icalForGroup/:group', function (req, res, next) {
-  activitystore.upcomingActivities(function (err, activities) {
+app.get('/icalForGroup/:group', (req, res, next) => {
+  activitystore.upcomingActivities((err, activities) => {
     if (err || !activities) { return next(err); }
-    var groupsActivities = _.filter(activities, function (activity) { return activity.assignedGroup() === req.params.group; });
+    const groupsActivities = activities.filter(activity => activity.assignedGroup() === req.params.group);
     sendCalendarStringNamedToResult(icalService.icalForActivities(groupsActivities), 'events', res);
   });
 });
 
-app.get('/ical/:url', function (req, res, next) {
-  activitystore.getActivity(req.params.url, function (err, activity) {
+app.get('/ical/:url', (req, res, next) => {
+  activitystore.getActivity(req.params.url, (err, activity) => {
     if (err || !activity) { return next(err); }
     sendCalendarStringNamedToResult(icalService.activityAsICal(activity), activity.url(), res);
   });
 });
 
-app.get('/eventsForSidebar', function (req, res, next) {
-  var from = moment(req.query.start).utc();
+app.get('/eventsForSidebar', (req, res, next) => {
+  const from = moment(req.query.start).utc();
   if (from.date() > 1) { from.add(1, 'M'); }
   req.session.calViewYear = from.year();
   req.session.calViewMonth = from.month();
 
-  var start = moment(req.query.start).utc();
-  var end = moment(req.query.end).utc();
+  const start = moment(req.query.start).utc();
+  const end = moment(req.query.end).utc();
 
   async.parallel(
     {
@@ -154,7 +140,7 @@ app.get('/eventsForSidebar', function (req, res, next) {
     },
     function (err, collectedColors) {
       if (err) { next(err); }
-      calendarService.eventsBetween(start, end, collectedColors.groupColors, function (err1, events) {
+      calendarService.eventsBetween(start, end, collectedColors.groupColors, (err1, events) => {
         if (err1) { return next(err1); }
         res.end(JSON.stringify(events));
       });
@@ -163,20 +149,21 @@ app.get('/eventsForSidebar', function (req, res, next) {
 });
 
 function renderActivityCombinedWithGroups(res, next, activity) {
-  var render = function (groups) {
-    memberstore.getMembersForIds(activity.editorIds(), function (err, editors) {
+  const render = function (groups) {
+    memberstore.getMembersForIds(activity.editorIds(), (err, editors) => {
       if (err || !editors) { return next(err); }
-      var editorNames = _.map(editors, editorNameOf);
-      _.remove(activity.participants || [], function (participant) { return participant.nickname() === activity.ownerNickname; });
-      var participantNames = _.map(activity.participants || [], editorNameOf);
-      if (activity.group && !_(groups).map(group => group.id).includes(activity.assignedGroup())) {
+      const editorNames = editors.map(editorNameOf);
+      activity.participants = (activity.participants || []).filter(participant => participant.id() !== activity.owner());
+      const participantNames = (activity.participants || []).map(editorNameOf);
+
+      if (activity.group && !groups.find(group => group.id === activity.assignedGroup())) {
         groups.push(activity.group);
       }
       res.render('edit', {
         activity: activity,
         groups: groups,
         editorNames: editorNames,
-        participantNames: _.union(editorNames, participantNames)
+        participantNames: R.union(editorNames, participantNames)
       });
     });
   };
@@ -194,19 +181,17 @@ function renderActivityCombinedWithGroups(res, next, activity) {
   });
 }
 
-app.get('/new', function (req, res, next) {
-  renderActivityCombinedWithGroups(res, next, new Activity());
-});
+app.get('/new', (req, res, next) => renderActivityCombinedWithGroups(res, next, new Activity()));
 
-app.get('/newLike/:url', function (req, res, next) {
-  activitystore.getActivity(req.params.url, function (err, activity) {
+app.get('/newLike/:url', (req, res, next) => {
+  activitystore.getActivity(req.params.url, (err, activity) => {
     if (err || activity === null) { return next(err); }
     renderActivityCombinedWithGroups(res, next, activity.resetForClone());
   });
 });
 
-app.get('/edit/:url', function (req, res, next) {
-  activitiesService.getActivityWithGroupAndParticipants(req.params.url, function (err, activity) {
+app.get('/edit/:url', (req, res, next) => {
+  activitiesService.getActivityWithGroupAndParticipants(req.params.url, (err, activity) => {
     if (err || activity === null) { return next(err); }
     if (activity.isSoCraTes()) {
       return res.redirect(activity.fullyQualifiedUrl());
@@ -218,23 +203,23 @@ app.get('/edit/:url', function (req, res, next) {
   });
 });
 
-app.post('/submit', function (req, res, next) {
+app.post('/submit', (req, res, next) => {
 
   async.parallel(
     [
-      function (callback) {
+      callback => {
         // we need this helper function (in order to have a closure?!)
-        var validityChecker = function (url, cb) { activitiesService.isValidUrl(reservedURLs, url, cb); };
+        const validityChecker = (url, cb) => { activitiesService.isValidUrl(reservedURLs, url, cb); };
         validation.checkValidity(req.body.previousUrl.trim(), req.body.url.trim(), validityChecker, req.i18n.t('validation.url_not_available'), callback);
       },
-      function (callback) {
-        var errors = validation.isValidForActivity(req.body);
+      callback => {
+        const errors = validation.isValidForActivity(req.body);
         return callback(null, errors);
       }
     ],
-    function (err, errorMessages) {
+    (err, errorMessages) => {
       if (err) { return next(err); }
-      var realErrors = _.filter(_.flatten(errorMessages), function (message) { return !!message; });
+      const realErrors = R.flatten(errorMessages).filter(message => message);
       if (realErrors.length === 0) {
         return activitySubmitted(req, res, next);
       }
@@ -243,22 +228,18 @@ app.post('/submit', function (req, res, next) {
   );
 });
 
-app.get('/checkurl', function (req, res) {
-  misc.validate(req.query.url, req.query.previousUrl, _.partial(activitiesService.isValidUrl, reservedURLs), res.end);
-});
+app.get('/checkurl', (req, res) => misc.validate(req.query.url, req.query.previousUrl, R.partial(activitiesService.isValidUrl, [reservedURLs]), res.end));
 
-app.get('/:url', function (req, res, next) {
-  activitiesService.getActivityWithGroupAndParticipants(req.params.url, function (err, activity) {
+app.get('/:url', (req, res, next) => {
+  activitiesService.getActivityWithGroupAndParticipants(req.params.url, (err, activity) => {
     if (err || !activity) { return next(err); }
     if (activity.isSoCraTes()) {
       return res.redirect(activity.fullyQualifiedUrl());
     }
-    memberstore.getMembersForIds(activity.editorIds(), function (err1, editors) {
+    memberstore.getMembersForIds(activity.editorIds(), (err1, editors) => {
       if (err1 || !editors) { return next(err1); }
-      var editorNicknames = _.map(editors, function (editor) { return editor.nickname(); });
-      var allowsRegistration = _.every(activity.resources().resourceNames(), function (resourceName) {
-        return activity.resourceNamed(resourceName).limit() !== 0;
-      });
+      const editorNicknames = editors.map(editor => editor.nickname());
+      const allowsRegistration = activity.resourceNames().every(resourceName => activity.resourceNamed(resourceName).limit() !== 0);
       res.render('get', {
         activity: activity,
         allowsRegistration: allowsRegistration,
@@ -272,56 +253,43 @@ app.get('/:url', function (req, res, next) {
 });
 
 function subscribe(body, req, res, next) {
-  var resourceName = body.resource;
-  var activityUrl = body.url;
+  const activityUrl = body.url;
 
-  activitiesService.addVisitorTo(req.user.member.id(), activityUrl, resourceName, moment(), function (err, statusTitle, statusText) {
+  activitiesService.addVisitorTo(req.user.member.id(), activityUrl, moment(), (err, statusTitle, statusText) => {
     if (err) { return next(err); }
     if (statusTitle && statusText) {
       statusmessage.errorMessage(statusTitle, statusText).putIntoSession(req);
-    } else if (resourceName === standardResourceName) {
-      statusmessage.successMessage('message.title.save_successful', 'message.content.activities.participation_added').putIntoSession(req);
     } else {
-      statusmessage.successMessage('message.title.save_successful', 'message.content.activities.participation_for_resource_added', {resourceName: resourceName}).putIntoSession(req);
+      statusmessage.successMessage('message.title.save_successful', 'message.content.activities.participation_added').putIntoSession(req);
     }
     res.redirect('/activities/' + encodeURIComponent(activityUrl));
   });
 }
-app.post('/subscribe', function (req, res, next) {
-  subscribe(req.body, req, res, next);
-});
+app.post('/subscribe', (req, res, next) => subscribe(req.body, req, res, next));
 
-app.get('/subscribe/:activity/:resource', function (req, res) {
-  // TODO: remove in June 2015 - just here for legacy invitation emails
-  res.redirect('/activities/' + encodeURIComponent(req.params.activity));
-});
-
-app.get('/subscribe', function (req, res, next) {
+app.get('/subscribe', (req, res, next) => {
   // in case the call was redirected via login, we get called with "get"
-  var body = req.session.previousBody;
+  const body = req.session.previousBody;
   if (!body) { return next(); }
   delete req.session.previousBody;
   subscribe(body, req, res, next);
 });
 
-app.post('/unsubscribe', function (req, res, next) { // unsubscribe can only be called when user is already logged in
-  var resourceName = req.body.resource;
-  var activityUrl = req.body.url;
-  activitiesService.removeVisitorFrom(req.user.member.id(), activityUrl, resourceName, function (err, statusTitle, statusText) {
+app.post('/unsubscribe', (req, res, next) => { // unsubscribe can only be called when user is already logged in
+  const activityUrl = req.body.url;
+  activitiesService.removeVisitorFrom(req.user.member.id(), activityUrl, (err, statusTitle, statusText) => {
     if (err) { return next(err); }
     if (statusTitle && statusText) {
       statusmessage.errorMessage(statusTitle, statusText).putIntoSession(req);
-    } else if (resourceName === standardResourceName) {
-      statusmessage.successMessage('message.title.save_successful', 'message.content.activities.participation_removed').putIntoSession(req);
     } else {
-      statusmessage.successMessage('message.title.save_successful', 'message.content.activities.participation_for_resource_removed', {resourceName: resourceName}).putIntoSession(req);
+      statusmessage.successMessage('message.title.save_successful', 'message.content.activities.participation_removed').putIntoSession(req);
     }
     res.redirect('/activities/' + encodeURIComponent(activityUrl));
   });
 });
 
 function addToWaitinglist(body, req, res, next) {
-  activitiesService.addToWaitinglist(req.user.member.id(), body.url, body.resource, moment(), function (err, statusTitle, statusText) {
+  activitiesService.addToWaitinglist(req.user.member.id(), body.url, moment(), (err, statusTitle, statusText) => {
     if (err) { return next(err); }
     if (statusTitle && statusText) {
       statusmessage.errorMessage(statusTitle, statusText).putIntoSession(req);
@@ -332,20 +300,20 @@ function addToWaitinglist(body, req, res, next) {
   });
 }
 
-app.post('/addToWaitinglist', function (req, res, next) {
+app.post('/addToWaitinglist', (req, res, next) => {
   // in case the call was redirected via login, we get called with "get"
   addToWaitinglist(req.body, req, res, next);
 });
 
-app.get('/addToWaitinglist', function (req, res, next) {
-  var body = req.session.previousBody;
+app.get('/addToWaitinglist', (req, res, next) => {
+  const body = req.session.previousBody;
   if (!body) { return next(); }
   delete req.session.previousBody;
   addToWaitinglist(body, req, res, next);
 });
 
-app.post('/removeFromWaitinglist', function (req, res, next) { // removeFromWaitinglist can only be called when user is already logged in
-  activitiesService.removeFromWaitinglist(req.user.member.id(), req.body.url, req.body.resource, function (err, statusTitle, statusText) {
+app.post('/removeFromWaitinglist', (req, res, next) => { // removeFromWaitinglist can only be called when user is already logged in
+  activitiesService.removeFromWaitinglist(req.user.member.id(), req.body.url, (err, statusTitle, statusText) => {
     if (err) { return next(err); }
     if (statusTitle && statusText) {
       statusmessage.errorMessage(statusTitle, statusText).putIntoSession(req);
@@ -356,24 +324,14 @@ app.post('/removeFromWaitinglist', function (req, res, next) { // removeFromWait
   });
 });
 
-app.get('/addons/:url', function (req, res, next) {
-  activitiesService.getActivityWithGroupAndParticipants(req.params.url, function (err, activity) {
-    if (err) { return next(err); }
-    if (!res.locals.accessrights.canEditActivity(activity)) {
-      return res.redirect('/activities/' + encodeURIComponent(req.params.url));
-    }
-    res.render('managementTables', {activity: activity});
-  });
-});
-
-app.post('/delete', function (req, res, next) {
-  var url = req.body.activityUrl;
-  activitystore.getActivity(url, function (err, activity) {
+app.post('/delete', (req, res, next) => {
+  const url = req.body.activityUrl;
+  activitystore.getActivity(url, (err, activity) => {
     if (err || !activity) { return next(err); }
     if (!res.locals.accessrights.canDeleteActivity(activity)) {
       return res.redirect('/activities/' + encodeURIComponent(url));
     }
-    activitystore.removeActivity(activity, function (err1) {
+    activitystore.removeActivity(activity, err1 => {
       if (err1) { return next(err1); }
       statusmessage.successMessage('message.title.save_successful', 'message.content.activities.deleted').putIntoSession(req);
       res.redirect('/activities/');

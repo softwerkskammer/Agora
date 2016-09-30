@@ -302,12 +302,12 @@ describe('Resource', function () {
       activity1 = new Activity({
         id: 'Meine Aktivität',
         url: 'myActivity',
-        resources: {'Meine Ressource': {_registrationOpen: true, _waitinglist: []}}
+        resources: {'Veranstaltung': {_registrationOpen: true, _waitinglist: []}}
       });
     });
 
     it('does not allow to subscribe if the registration is not allowed for the waiting list member', function () {
-      var resource = activity1.resourceNamed('Meine Ressource');
+      var resource = activity1.resourceNamed('Veranstaltung');
       resource.addToWaitinglist('12345', moment());
       resource.waitinglistEntryFor('12345').setRegistrationValidityFor();
 
@@ -315,7 +315,7 @@ describe('Resource', function () {
     });
 
     it('does not allow to subscribe if the registration timeslot is already past', function () {
-      var resource = activity1.resourceNamed('Meine Ressource');
+      var resource = activity1.resourceNamed('Veranstaltung');
       resource.addToWaitinglist('12345', moment());
       resource.waitinglistEntryFor('12345').setRegistrationValidityFor('-1');
 
@@ -323,7 +323,7 @@ describe('Resource', function () {
     });
 
     it('allows to subscribe if the end of the registration timeslot is not reached yet', function () {
-      var resource = activity1.resourceNamed('Meine Ressource');
+      var resource = activity1.resourceNamed('Veranstaltung');
       resource.addToWaitinglist('12345', moment());
       resource.waitinglistEntryFor('12345').setRegistrationValidityFor('1');
 
@@ -331,7 +331,7 @@ describe('Resource', function () {
     });
 
     it('does not add a member to waitinglist if this member is already registered', function () {
-      var resource = activity1.resourceNamed('Meine Ressource');
+      var resource = activity1.resourceNamed('Veranstaltung');
       resource.addMemberId('12345');
 
       expect(resource.isAlreadyRegistered('12345')).to.be(true);

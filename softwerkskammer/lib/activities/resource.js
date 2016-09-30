@@ -1,166 +1,180 @@
 'use strict';
 
-var _ = require('lodash');
-var moment = require('moment-timezone');
-var WaitinglistEntry = require('simple-configure').get('beans').get('waitinglistEntry');
+const moment = require('moment-timezone');
+const WaitinglistEntry = require('simple-configure').get('beans').get('waitinglistEntry');
 
-function Resource(resourceObject, resourceName) {
-  this.resourceName = resourceName;
-  this.state = resourceObject || {}; // this must be *the* object that is referenced by activity.resources[resourceName]
-  return this;
-}
-
-Resource.prototype.fillFromUI = function (uiInputObject) {
-  /* eslint no-underscore-dangle: 0 */
-
-  this.state._registrationOpen = uiInputObject.isRegistrationOpen === 'yes';
-  this.state._canUnsubscribe = uiInputObject.canUnsubscribe === 'yes';
-  this.state._position = uiInputObject.position;
-
-  if (uiInputObject.hasWaitinglist === 'yes') {
-    this.state._waitinglist = this.state._waitinglist || [];
-  } else {
-    delete this.state._waitinglist;
+class Resource {
+  constructor(resourceObject) {
+    this.resourceName = 'Veranstaltung';
+    this.state = resourceObject || {}; // this must be *the* object that is referenced by activity.resources.Veranstaltung
   }
 
-  // adjust the limit
-  var intLimit = parseInt(uiInputObject.limit, 10);
-  if (intLimit >= 0) {
-    this.state._limit = intLimit;
-  } else {
-    delete this.state._limit;
+  fillFromUI(uiInputObject) {
+    /* eslint no-underscore-dangle: 0 */
+
+    this.state._registrationOpen = uiInputObject.isRegistrationOpen === 'yes';
+    this.state._canUnsubscribe = uiInputObject.canUnsubscribe === 'yes';
+    this.state._position = uiInputObject.position;
+
+    if (uiInputObject.hasWaitinglist === 'yes') {
+      this.state._waitinglist = this.state._waitinglist || [];
+    } else {
+      delete this.state._waitinglist;
+    }
+
+    // adjust the limit
+    const intLimit = parseInt(uiInputObject.limit, 10);
+    if (intLimit >= 0) {
+      this.state._limit = intLimit;
+    } else {
+      delete this.state._limit;
+    }
+
+    return this;
   }
 
-  return this;
-};
-
-Resource.prototype.registeredMembers = function () {
-  if (!this.state._registeredMembers) {
-    this.state._registeredMembers = [];
+  registeredMembers() {
+    if (!this.state._registeredMembers) {
+      this.state._registeredMembers = [];
+    }
+    return this.state._registeredMembers.map(each => each.memberId);
   }
-  return _.map(this.state._registeredMembers, 'memberId');
-};
 
-Resource.prototype.registrationDateOf = function (memberId) {
-  var self = this;
-  if (!self.state._registeredMembers) {
-    self.state._registeredMembers = [];
+  registrationDateOf(memberId) {
+    if (!this.state._registeredMembers) {
+      this.state._registeredMembers = [];
+    }
+    const registration = this.state._registeredMembers.find(each => each.memberId === memberId);
+    return registration ? moment(registration.registeredAt) : undefined;
   }
-  var registration = _.find(self.state._registeredMembers, {'memberId': memberId});
-  return registration ? moment(registration.registeredAt) : undefined;
-};
 
-Resource.prototype.addMemberId = function (memberId, momentOfRegistration) {
-  if (this.canSubscribe() || this.canSubscribeFromWaitinglist(memberId)) {
-    if (this.registeredMembers().indexOf(memberId) === -1) {
-      this.state._registeredMembers.push({
-        memberId: memberId,
-        registeredAt: (momentOfRegistration || moment()).toDate()
+  addMemberId(memberId, momentOfRegistration) {
+    if (this.canSubscribe() || this.canSubscribeFromWaitinglist(memberId)) {
+      if (this.registeredMembers().indexOf(memberId) === -1) {
+        this.state._registeredMembers.push({
+          memberId: memberId,
+          registeredAt: (momentOfRegistration || moment()).toDate()
+        });
+      }
+      this.removeFromWaitinglist(memberId);
+      if (this.isFull()) { this.state._registrationOpen = false; }
+      return true;
+    }
+    return false;
+  }
+
+  isAlreadyRegistered(memberId) {
+    return this.registeredMembers().indexOf(memberId) > -1;
+  }
+
+  removeMemberId(memberId) {
+    if (this.canUnsubscribe()) {
+      const index = this.registeredMembers().indexOf(memberId);
+      if (index > -1) {
+        this.state._registeredMembers.splice(index, 1);
+      }
+    }
+  }
+
+  addToWaitinglist(memberId, momentOfRegistration) {
+    if (!this.hasWaitinglist()) { return false; }
+    if (this.isAlreadyRegistered(memberId)) { return false; }
+    if (!this.waitinglistEntryFor(memberId)) {
+      this.state._waitinglist.push({
+        _memberId: memberId,
+        _registeredAt: (momentOfRegistration || moment()).toDate()
       });
     }
-    this.removeFromWaitinglist(memberId);
-    if (this.isFull()) { this.state._registrationOpen = false; }
     return true;
   }
-  return false;
-};
 
-Resource.prototype.isAlreadyRegistered = function (memberId) {
-  return this.registeredMembers().indexOf(memberId) > -1;
-};
-
-Resource.prototype.removeMemberId = function (memberId) {
-  if (this.canUnsubscribe()) {
-    var index = this.registeredMembers().indexOf(memberId);
+  removeFromWaitinglist(memberId) {
+    if (!this.hasWaitinglist()) { return; }
+    const index = this.state._waitinglist.findIndex(each => each._memberId === memberId);
     if (index > -1) {
-      this.state._registeredMembers.splice(index, 1);
+      this.state._waitinglist.splice(index, 1);
     }
   }
-};
 
-Resource.prototype.addToWaitinglist = function (memberId, momentOfRegistration) {
-  if (!this.hasWaitinglist()) { return false; }
-  if (this.isAlreadyRegistered(memberId)) { return false; }
-  if (!this.waitinglistEntryFor(memberId)) {
-    this.state._waitinglist.push({
-      _memberId: memberId,
-      _registeredAt: (momentOfRegistration || moment()).toDate()
-    });
+  waitinglistEntries() {
+    if (!this.hasWaitinglist()) { return []; }
+    return this.state._waitinglist.map(waitinglistEntry => new WaitinglistEntry(waitinglistEntry));
   }
-  return true;
-};
 
-Resource.prototype.removeFromWaitinglist = function (memberId) {
-  if (!this.hasWaitinglist()) { return; }
-  var index = _.map(this.state._waitinglist, '_memberId').indexOf(memberId);
-  if (index > -1) {
-    this.state._waitinglist.splice(index, 1);
+  waitinglistEntryFor(memberId) {
+    if (!this.hasWaitinglist()) { return undefined; }
+    const entry = this.state._waitinglist.find(waitinglistEntry => waitinglistEntry._memberId === memberId);
+    return entry ? new WaitinglistEntry(entry) : undefined;
   }
-};
 
-Resource.prototype.waitinglistEntries = function () {
-  var self = this;
-  if (!self.hasWaitinglist()) {
-    return [];
+  copyFrom(originalResource) {
+    this.state._registeredMembers = [];
+    this.state._limit = originalResource.limit();
+    this.state._registrationOpen = true;
+    return this;
   }
-  return _.map(self.state._waitinglist, function (waitinglistEntry) {
-    return new WaitinglistEntry(waitinglistEntry, self.resourceName);
-  });
-};
 
-Resource.prototype.waitinglistEntryFor = function (memberId) {
-  if (!this.hasWaitinglist()) { return undefined; }
-  var entry = _.find(this.state._waitinglist, function (waitinglistEntry) {
-    return waitinglistEntry._memberId === memberId;
-  });
-  if (entry) {
-    return new WaitinglistEntry(entry, this.resourceName);
+  limit() {
+    return this.state._limit;
   }
-  return entry;
-};
 
-Resource.prototype.copyFrom = function (originalResource) {
-  this.state._registeredMembers = [];
-  this.state._limit = originalResource.limit();
-  this.state._registrationOpen = true;
-  return this;
-};
-
-Resource.prototype.limit = function () {
-  return this.state._limit;
-};
-
-Resource.prototype.isFull = function () {
-  return (this.limit() >= 0) && (this.limit() <= this.registeredMembers().length);
-};
-
-Resource.prototype.canSubscribe = function () {
-  return this.isRegistrationOpen() && !this.isFull();
-};
-
-Resource.prototype.canSubscribeFromWaitinglist = function (memberId) {
-  var waitingListEntry = this.waitinglistEntryFor(memberId);
-  return waitingListEntry && waitingListEntry.canSubscribe();
-};
-
-Resource.prototype.numberOfFreeSlots = function () {
-  if (this.limit() >= 0) {
-    return Math.max(0, this.limit() - this.registeredMembers().length);
+  isFull() {
+    return (this.limit() >= 0) && (this.limit() <= this.registeredMembers().length);
   }
-  return 'unbegrenzt';
-};
 
-Resource.prototype.isRegistrationOpen = function () {
-  return this.state._registrationOpen;
-};
+  canSubscribe() {
+    return this.isRegistrationOpen() && !this.isFull();
+  }
 
-Resource.prototype.canUnsubscribe = function () {
-  return (this.state._canUnsubscribe === undefined) || this.state._canUnsubscribe;
-};
+  canSubscribeFromWaitinglist(memberId) {
+    const waitingListEntry = this.waitinglistEntryFor(memberId);
+    return waitingListEntry && waitingListEntry.canSubscribe();
+  }
 
-Resource.prototype.hasWaitinglist = function () {
-  return !!this.state._waitinglist;
-};
+  numberOfFreeSlots() {
+    if (this.limit() >= 0) {
+      return Math.max(0, this.limit() - this.registeredMembers().length);
+    }
+    return 'unbegrenzt';
+  }
+
+  isRegistrationOpen() {
+    return this.state._registrationOpen;
+  }
+
+  canUnsubscribe() {
+    return (this.state._canUnsubscribe === undefined) || this.state._canUnsubscribe;
+  }
+
+  hasWaitinglist() {
+    return !!this.state._waitinglist;
+  }
+
+  registrationStateFor(memberId) {
+    if (this.isAlreadyRegistered(memberId)) {
+      return this.canUnsubscribe() ? Resource.registered : Resource.fixed;
+    }
+    if (this.canSubscribeFromWaitinglist(memberId)) {
+      return Resource.canSubscribeFromWaitinglist;
+    }
+    if (this.canSubscribe()) {
+      return Resource.registrationPossible;
+    }
+    if (this.limit() === 0) {
+      return Resource.registrationElsewhere;
+    }
+    if ((!this.isRegistrationOpen() && !this.limit()) || (this.limit() && this.registeredMembers().length === 0)) {
+      return Resource.registrationClosed;
+    }
+    if (this.hasWaitinglist() && this.waitinglistEntryFor(memberId)) {
+      return Resource.onWaitinglist;
+    }
+    if (this.hasWaitinglist()) {
+      return Resource.waitinglistPossible;
+    }
+    return Resource.full;
+  }
+}
 
 // registration states
 
@@ -173,30 +187,5 @@ Resource.waitinglistPossible = 'waitinglistPossible';
 Resource.onWaitinglist = 'onWaitinglist';
 Resource.full = 'full';
 Resource.canSubscribeFromWaitinglist = 'canSubscribeFromWaitinglist'; // is on waitinglist and entitled to subscribe
-
-Resource.prototype.registrationStateFor = function (memberId) {
-  if (this.isAlreadyRegistered(memberId)) {
-    return this.canUnsubscribe() ? Resource.registered : Resource.fixed;
-  }
-  if (this.canSubscribeFromWaitinglist(memberId)) {
-    return Resource.canSubscribeFromWaitinglist;
-  }
-  if (this.canSubscribe()) {
-    return Resource.registrationPossible;
-  }
-  if (this.limit() === 0) {
-    return Resource.registrationElsewhere;
-  }
-  if ((!this.isRegistrationOpen() && !this.limit()) || (this.limit() && this.registeredMembers().length === 0)) {
-    return Resource.registrationClosed;
-  }
-  if (this.hasWaitinglist() && this.waitinglistEntryFor(memberId)) {
-    return Resource.onWaitinglist;
-  }
-  if (this.hasWaitinglist()) {
-    return Resource.waitinglistPossible;
-  }
-  return Resource.full;
-};
 
 module.exports = Resource;

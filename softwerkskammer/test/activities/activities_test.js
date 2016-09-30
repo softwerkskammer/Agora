@@ -63,7 +63,7 @@ var activityWithParticipants = new Activity({
   startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'),
   url: 'urlForInteresting',
   resources: {
-    'default': {
+    Veranstaltung: {
       _registeredMembers: [
         {memberId: 'memberId1'},
         {memberId: 'memberId2'}
@@ -75,34 +75,6 @@ var activityWithParticipants = new Activity({
 activityWithParticipants.participants = [member1, member2];
 activityWithParticipants.colorRGB = '#123456';
 activityWithParticipants.group = new Group({id: 'group', longName: 'The name of the assigned Group'});
-
-var activityWithMultipleResources = new Activity({
-  title: 'Interesting Activity',
-  description: 'description2',
-  assignedGroup: 'groupname',
-  location: 'location2',
-  direction: 'direction2',
-  startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'),
-  url: 'urlForMultiple',
-  resources: {
-    Einzelzimmer: {
-      _registeredMembers: [
-        {memberId: 'memberId1'},
-        {memberId: 'memberId2'}
-      ]
-    },
-    Doppelzimmer: {
-      _registeredMembers: [
-        {memberId: 'memberId3'},
-        {memberId: 'memberId4'}
-      ],
-      _registrationOpen: true
-    }
-  }
-});
-activityWithMultipleResources.participants = [member1, member2, member3, member4];
-activityWithMultipleResources.colorRGB = '#123456';
-activityWithMultipleResources.group = new Group({id: 'group', longName: 'The name of the assigned Group'});
 
 var activityWithEditors = new Activity({
   title: 'Activity with Editors',
@@ -153,7 +125,6 @@ describe('Activity application', function () {
     function activityToReturnFor(url) {
       if (url === 'urlOfTheActivity') { return emptyActivity; }
       if (url === 'urlForInteresting') { return activityWithParticipants; }
-      if (url === 'urlForMultiple') { return activityWithMultipleResources; }
       if (url === 'urlForEditors') { return activityWithEditors; }
       return null;
     }
@@ -269,7 +240,6 @@ describe('Activity application', function () {
         .expect(/Bislang haben 2 Mitglieder ihre Teilnahme zugesagt\./)
         .expect(/action="subscribe"/)
         .expect(/input type="hidden" name="url" value="urlForInteresting"/)
-        .expect(/input type="hidden" name="resource" value="default"/)
         .expect(/class="btn btn-primary" type="submit">Ich bin dabei!/)
         .expect(/participant1/)
         .expect(/participant2/, done);
@@ -282,36 +252,17 @@ describe('Activity application', function () {
         .expect(/Bislang haben 2 Mitglieder ihre Teilnahme zugesagt\./)
         .expect(/action="unsubscribe"/)
         .expect(/input type="hidden" name="url" value="urlForInteresting"/)
-        .expect(/input type="hidden" name="resource" value="default"/)
         .expect(/class="btn btn-default" type="submit">Ich kann doch nicht/)
         .expect(/participant1/)
         .expect(/participant2/, done);
     });
 
-    it('shows the registration button for an activity with multiple resources where the current user has booked one resource', function (done) {
-      request(createApp({member: member1}))
-        .get('/' + 'urlForMultiple')
-        .expect(200)
-        .expect(/Bislang haben 4 Mitglieder ihre Teilnahme zugesagt\./)
-        .expect(/action="unsubscribe"/)
-        .expect(/input type="hidden" name="url" value="urlForMultiple"/)
-        .expect(/input type="hidden" name="resource" value="Einzelzimmer"/)
-        .expect(/class="btn btn-default" type="submit">Absagen/)
-        .expect(/action="subscribe"/)
-        .expect(/input type="hidden" name="url" value="urlForMultiple"/)
-        .expect(/input type="hidden" name="resource" value="Doppelzimmer"/)
-        .expect(/class="btn btn-primary" type="submit">Anmelden/)
-        .expect(/participant1/)
-        .expect(/participant2/)
-        .expect(/participant3/)
-        .expect(/participant4/, done);
-    });
   });
 
   describe('- when registration is not open -', function () {
     /* eslint no-underscore-dangle: 0 */
     it('shows the registration button for an activity with participants when a user is logged in who is not participant', function (done) {
-      activityWithParticipants.state.resources.default._registrationOpen = false;
+      activityWithParticipants.state.resources.Veranstaltung._registrationOpen = false;
 
       request(createApp({member: member3}))
         .get('/' + 'urlForInteresting')
@@ -322,7 +273,7 @@ describe('Activity application', function () {
     });
 
     it('shows that registration is not possible if registrationClosed and no limit set', function (done) {
-      activityWithParticipants.state.resources.default._registrationOpen = false;
+      activityWithParticipants.state.resources.Veranstaltung._registrationOpen = false;
 
       request(createApp({member: member3}))
         .get('/' + 'urlForInteresting')
@@ -331,8 +282,8 @@ describe('Activity application', function () {
     });
 
     it('shows that registration is somewhere else if registrationClosed and limit is "0"', function (done) {
-      activityWithParticipants.state.resources.default._registrationOpen = false;
-      activityWithParticipants.state.resources.default._limit = 0;
+      activityWithParticipants.state.resources.Veranstaltung._registrationOpen = false;
+      activityWithParticipants.state.resources.Veranstaltung._limit = 0;
 
       request(createApp({member: member3}))
         .get('/' + 'urlForInteresting')
@@ -341,8 +292,8 @@ describe('Activity application', function () {
     });
 
     it('shows that the event is full if registrationClosed and some limit set', function (done) {
-      activityWithParticipants.state.resources.default._registrationOpen = false;
-      activityWithParticipants.state.resources.default._limit = 1;
+      activityWithParticipants.state.resources.Veranstaltung._registrationOpen = false;
+      activityWithParticipants.state.resources.Veranstaltung._limit = 1;
 
       request(createApp({member: member3}))
         .get('/' + 'urlForInteresting')
@@ -351,9 +302,9 @@ describe('Activity application', function () {
     });
 
     it('shows the link to the waitinglist if registrationClosed and some limit set and waitinglist is enabled', function (done) {
-      activityWithParticipants.state.resources.default._registrationOpen = false;
-      activityWithParticipants.state.resources.default._limit = 1;
-      activityWithParticipants.state.resources.default._waitinglist = [];
+      activityWithParticipants.state.resources.Veranstaltung._registrationOpen = false;
+      activityWithParticipants.state.resources.Veranstaltung._limit = 1;
+      activityWithParticipants.state.resources.Veranstaltung._waitinglist = [];
 
       request(createApp({member: member3}))
         .get('/' + 'urlForInteresting')
@@ -362,9 +313,9 @@ describe('Activity application', function () {
     });
 
     it('allows to leave the waitinglist if member is on waitinglist', function (done) {
-      activityWithParticipants.state.resources.default._registrationOpen = false;
-      activityWithParticipants.state.resources.default._limit = 1;
-      activityWithParticipants.state.resources.default._waitinglist = [{
+      activityWithParticipants.state.resources.Veranstaltung._registrationOpen = false;
+      activityWithParticipants.state.resources.Veranstaltung._limit = 1;
+      activityWithParticipants.state.resources.Veranstaltung._waitinglist = [{
         _memberId: 'memberId3'
       }];
 
@@ -375,9 +326,9 @@ describe('Activity application', function () {
     });
 
     it('shows the subscription link if waitinglist participant is entitled to subscribe', function (done) {
-      activityWithParticipants.state.resources.default._registrationOpen = false;
-      activityWithParticipants.state.resources.default._limit = 1;
-      activityWithParticipants.state.resources.default._waitinglist = [{
+      activityWithParticipants.state.resources.Veranstaltung._registrationOpen = false;
+      activityWithParticipants.state.resources.Veranstaltung._limit = 1;
+      activityWithParticipants.state.resources.Veranstaltung._waitinglist = [{
         _memberId: 'memberId3',
         _registrationValidUntil: moment().add(1, 'days')
       }];
@@ -389,7 +340,7 @@ describe('Activity application', function () {
     });
 
     it('shows the deregistration button for an activity with participants when a user is logged in who already is participant', function (done) {
-      activityWithParticipants.state.resources.default._registrationOpen = false;
+      activityWithParticipants.state.resources.Veranstaltung._registrationOpen = false;
 
       request(createApp({member: member1}))
         .get('/' + 'urlForInteresting')
@@ -397,68 +348,14 @@ describe('Activity application', function () {
         .expect(/Bislang haben 2 Mitglieder ihre Teilnahme zugesagt\./)
         .expect(/action="unsubscribe"/)
         .expect(/input type="hidden" name="url" value="urlForInteresting"/)
-        .expect(/input type="hidden" name="resource" value="default"/)
         .expect(/class="btn btn-default" type="submit">Ich kann doch nicht/)
         .expect(/participant1/)
         .expect(/participant2/, done);
     });
 
-    it('shows the registration button for an activity with multiple resources where the current user has booked one resource', function (done) {
-      activityWithMultipleResources.state.resources.Einzelzimmer._registrationOpen = false;
-      activityWithMultipleResources.state.resources.Doppelzimmer._registrationOpen = false;
-
-      request(createApp({member: member1}))
-        .get('/' + 'urlForMultiple')
-        .expect(200)
-        .expect(/Bislang haben 4 Mitglieder ihre Teilnahme zugesagt\./)
-        .expect(/action="unsubscribe"/)
-        .expect(/input type="hidden" name="url" value="urlForMultiple"/)
-        .expect(/input type="hidden" name="resource" value="Einzelzimmer"/)
-        .expect(/class="btn btn-default" type="submit">Absagen/)
-        .expect(/Doppelzimmer:<\/label>(\S|\s)*Anmeldung ist zur Zeit nicht möglich\./)
-        .expect(/participant1/)
-        .expect(/participant2/)
-        .expect(/participant3/)
-        .expect(/participant4/, done);
-    });
-
-    it('shows that registration is not possible if registrationClosed and no limit set', function (done) {
-      activityWithMultipleResources.state.resources.Einzelzimmer._registrationOpen = false;
-      activityWithMultipleResources.state.resources.Doppelzimmer._registrationOpen = false;
-
-      request(createApp({member: member3}))
-        .get('/' + 'urlForMultiple')
-        .expect(200)
-        .expect(/Anmeldung ist zur Zeit nicht möglich\./, done);
-    });
-
-    it('shows that registration is somewhere else if registrationClosed and limit is "0"', function (done) {
-      activityWithMultipleResources.state.resources.Einzelzimmer._registrationOpen = false;
-      activityWithMultipleResources.state.resources.Doppelzimmer._registrationOpen = false;
-      activityWithMultipleResources.state.resources.Einzelzimmer._limit = 0;
-      activityWithMultipleResources.state.resources.Doppelzimmer._limit = 0;
-
-      request(createApp({member: member3}))
-        .get('/' + 'urlForMultiple')
-        .expect(200)
-        .expect(/Anmeldung ist nicht über die Softwerkskammer möglich\./, done);
-    });
-
-    it('shows that the event is full if registrationClosed and some limit set', function (done) {
-      activityWithMultipleResources.state.resources.Einzelzimmer._registrationOpen = false;
-      activityWithMultipleResources.state.resources.Doppelzimmer._registrationOpen = false;
-      activityWithMultipleResources.state.resources.Einzelzimmer._limit = 2;
-      activityWithMultipleResources.state.resources.Doppelzimmer._limit = 2;
-
-      request(createApp({member: member3}))
-        .get('/' + 'urlForMultiple')
-        .expect(200)
-        .expect(/Alle Plätze sind belegt\./, done);
-    });
-
     it('shows the number of participants if the total limit is greater than 0', function (done) {
       emptyActivity.participants = [];
-      emptyActivity.state.resources.default = {_registrationOpen: false, _limit: 1};
+      emptyActivity.state.resources.Veranstaltung = {_registrationOpen: false, _limit: 1};
 
       request(createApp({member: member3}))
         .get('/' + 'urlOfTheActivity')
@@ -468,7 +365,7 @@ describe('Activity application', function () {
 
     it('does not show the number of participants if the total limit is 0', function (done) {
       emptyActivity.participants = [];
-      emptyActivity.state.resources.default = {_registrationOpen: false, _limit: 0};
+      emptyActivity.state.resources.Veranstaltung = {_registrationOpen: false, _limit: 0};
 
       request(createApp({member: member3}))
         .get('/' + 'urlOfTheActivity')
@@ -477,22 +374,6 @@ describe('Activity application', function () {
           expect(res.text).to.not.contain('Bislang gibt es keine Teilnahmezusagen.');
         })
         .end(done);
-    });
-
-    it('shows the link to the waitinglist if registrationClosed and some limit set and waitinglist is enabled for multiple resources', function (done) {
-      activityWithMultipleResources.state.resources.Einzelzimmer._registrationOpen = false;
-      activityWithMultipleResources.state.resources.Doppelzimmer._registrationOpen = false;
-      activityWithMultipleResources.state.resources.Einzelzimmer._limit = 2;
-      activityWithMultipleResources.state.resources.Doppelzimmer._limit = 2;
-      activityWithMultipleResources.state.resources.Einzelzimmer._waitinglist = [];
-
-      request(createApp({member: member3}))
-        .get('/' + 'urlForMultiple')
-        .expect(200)
-        .expect(/action="addToWaitinglist"/)
-        .expect(/input type="hidden" name="url" value="urlForMultiple"/)
-        .expect(/input type="hidden" name="resource" value="Einzelzimmer"/)
-        .expect(/class="btn btn-primary" type="submit">Auf die Warteliste!/, done);
     });
 
   });

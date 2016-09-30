@@ -65,7 +65,6 @@ module.exports = {
 
   isValidForActivity: function isValidForActivity(activityInput) {
     const validator = new Validator();
-    const nonEmptyResourceNames = activityInput.resources ? _.compact(misc.toArray(activityInput.resources.names)) : [];
     const nonEmptyResourceLimits = activityInput.resources ? _.compact(misc.toArray(activityInput.resources.limits)) : [];
 
     validator.check(activityInput.url, 'URL ist ein Pflichtfeld.').notEmpty();
@@ -78,13 +77,6 @@ module.exports = {
     validator.check(activityInput.endTime, 'Enduhrzeit ist ein Pflichtfeld.').notEmpty();
     validator.check(activityInput.assignedGroup, 'Gruppe ist ein Pflichtfeld.').notEmpty();
     _.each(nonEmptyResourceLimits, limit => validator.check(limit, 'Die Ressourcenbeschränkungen dürfen nur aus Ziffern bestehen.').isInt());
-
-    if (nonEmptyResourceNames.length === 0) {
-      validator.error('Es muss mindestens eine Ressourcenbezeichnung angegeben werden.');
-    }
-    if (nonEmptyResourceNames.length !== _.uniq(nonEmptyResourceNames).length) {
-      validator.error('Die Bezeichnungen der Ressourcen müssen eindeutig sein.');
-    }
 
     const startUnix = fieldHelpers.parseToUnixUsingDefaultTimezone(activityInput.startDate, activityInput.startTime);
     const endUnix = fieldHelpers.parseToUnixUsingDefaultTimezone(activityInput.endDate, activityInput.endTime);

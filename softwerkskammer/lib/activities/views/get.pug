@@ -12,20 +12,12 @@ block opengraph
   meta(property='og:title', content=activity.title())
 
 block content
-  #addOn.modal.fade(tabindex='-1')
-    .modal-dialog
-      .modal-content
-  #payment.modal.fade(tabindex='-1')
-    .modal-dialog.modal-lg
-      .modal-content
   .row
     .col-md-12
       .page-header
         .pull-right.visible-print
           img(height='80px', src='/qrcode?url=' + encodeURIComponent(activity.fullyQualifiedUrl()))
         .btn-group.pull-right
-          if (accessrights.canEditActivity(activity))
-            a.btn.btn-default(href='/activities/addons/' + encodeURIComponent(activity.url()), title=t('activities.participants')): i.fa.fa-list-ol.fa-fw
           a.btn.btn-default(href='/activities/ical/' + encodeURIComponent(activity.url()), title=t('activities.export')): i.fa.fa-calendar.fa-fw
           if (accessrights.canCreateActivity())
             a.btn.btn-default(href='/activities/newLike/' + encodeURIComponent(activity.url()), title=t('activities.new_copy')): i.fa.fa-copy.fa-fw
@@ -57,8 +49,7 @@ block content
       .hidden-print
         if (allowsRegistration)
           p #{t('activities.count_participants_interval', { postProcess: 'interval', count: activity.participants.length })}
-        each resourceName in activity.resourceNames()
-          +subscriptionButtons(activity, resourceName, resourceRegistrationRenderer)
+        +subscriptionButtons(activity, resourceRegistrationRenderer)
         if (accessrights.isRegistered() && activity.participants.length > 0)
           h4 #{t('activities.accepted_by')}:
           +memberlist(activity.participants)

@@ -1,14 +1,12 @@
 'use strict';
 
-var beans = require('simple-configure').get('beans');
+const beans = require('simple-configure').get('beans');
 
-//var util = require('util');
-
-var activitystore = beans.get('activitystore');
+const activitystore = beans.get('activitystore');
 
 module.exports = {
 
-  eventsBetween: function (startMoment, endMoment, groupsColors, callback) {
+  eventsBetween: function eventsBetween(startMoment, endMoment, groupsColors, callback) {
     function asCalendarEvent(activity) {
       return {
         start: activity.startMoment().format(),
@@ -20,11 +18,9 @@ module.exports = {
       };
     }
 
-    activitystore.allActivitiesByDateRangeInAscendingOrder(startMoment.unix(), endMoment.unix(), function (err, activities) {
+    activitystore.allActivitiesByDateRangeInAscendingOrder(startMoment.unix(), endMoment.unix(), (err, activities) => {
       if (err) { return callback(err); }
-      callback(null, activities.map(function (activity) {
-        return asCalendarEvent(activity);
-      }));
+      callback(null, activities.map(asCalendarEvent));
     });
   }
 

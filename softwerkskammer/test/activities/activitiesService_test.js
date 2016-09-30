@@ -40,12 +40,12 @@ var dummyActivity = new Activity({
 
 var group = new Group({id: 'groupname', longName: 'Buxtehude'});
 
-var waitinglistMembersOf = function (activity, resourceName) {
-  return _.map(_.map(activity.resourceNamed(resourceName).waitinglistEntries(), 'state'), '_memberId');
+var waitinglistMembersOf = function (activity) {
+  return _.map(_.map(activity.allWaitinglistEntries(), 'state'), '_memberId');
 };
 
 var activityWithEinzelzimmer = function (ressource) {
-  var state = {resources: {Einzelzimmer: ressource}};
+  var state = {resources: {Veranstaltung: ressource}};
   var activity = new Activity(state);
   sinon.stub(activitystore, 'saveActivity', function (id, callback) { callback(null); });
   sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, activity); });
@@ -196,13 +196,13 @@ describe('Activities Service', function () {
     });
 
     function activityWithAddMemberIdReturning(truthValue) {
-      return {resourceNamed: function () { return {addMemberId: function () { return truthValue; }}; }};
+      return {addMemberId: function () { return truthValue; }};
     }
 
     it('does not show a status message when member addition succeeds', function (done) {
       sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, activityWithAddMemberIdReturning(true)); });
 
-      activitiesService.addVisitorTo('memberId', 'activity-url', 'Einzelzimmer', moment(), function (err, statusTitle, statusText) {
+      activitiesService.addVisitorTo('memberId', 'activity-url', moment(), function (err, statusTitle, statusText) {
         expect(statusTitle).to.not.exist();
         expect(statusText).to.not.exist();
         done(err);
@@ -212,7 +212,7 @@ describe('Activities Service', function () {
     it('shows a status message when member addition fails', function (done) {
       sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, activityWithAddMemberIdReturning(false)); });
 
-      activitiesService.addVisitorTo('memberId', 'activity-url', 'Einzelzimmer', moment(), function (err, statusTitle, statusText) {
+      activitiesService.addVisitorTo('memberId', 'activity-url', moment(), function (err, statusTitle, statusText) {
         expect(statusTitle).to.be('activities.registration_not_now');
         expect(statusText).to.be('activities.registration_not_possible');
         done(err);
@@ -223,11 +223,10 @@ describe('Activities Service', function () {
       var activity = activityWithAddMemberIdReturning(true);
       sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, activity); });
 
-      activitiesService.addVisitorTo('memberId', 'activity-url', 'Einzelzimmer', moment(), function (err) {
+      activitiesService.addVisitorTo('memberId', 'activity-url', moment(), function (err) {
         expect(notifications.visitorRegistration.calledOnce).to.be(true);
         expect(notifications.visitorRegistration.firstCall.args[0]).to.eql(activity);
         expect(notifications.visitorRegistration.firstCall.args[1]).to.equal('memberId');
-        expect(notifications.visitorRegistration.firstCall.args[2]).to.equal('Einzelzimmer');
         done(err);
       });
     });
@@ -235,7 +234,7 @@ describe('Activities Service', function () {
     it('does not notify of the registration when member addition fails', function (done) {
       sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, activityWithAddMemberIdReturning(false)); });
 
-      activitiesService.addVisitorTo('memberId', 'activity-url', 'Einzelzimmer', moment(), function (err) {
+      activitiesService.addVisitorTo('memberId', 'activity-url', moment(), function (err) {
         expect(notifications.visitorRegistration.called).to.be(false);
         done(err);
       });
@@ -244,7 +243,7 @@ describe('Activities Service', function () {
     it('gives an error when activity could not be loaded', function (done) {
       sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(new Error('error')); });
 
-      activitiesService.addVisitorTo('memberId', 'activity-url', 'Einzelzimmer', moment(), function (err) {
+      activitiesService.addVisitorTo('memberId', 'activity-url', moment(), function (err) {
         expect(err).to.exist();
         done(); // error condition - do not pass err
       });
@@ -263,9 +262,9 @@ describe('Activities Service', function () {
       });
       sinon.stub(notifications, 'visitorUnregistration');
 
-      activitiesService.removeVisitorFrom('memberId', 'activity-url', 'Einzelzimmer', function (err) {
-        expect(activity.resourceNamed('Einzelzimmer').registeredMembers()).to.not.contain('memberId');
-        expect(activity.resourceNamed('Einzelzimmer').registeredMembers()).to.contain('otherId');
+      activitiesService.removeVisitorFrom('memberId', 'activity-url', function (err) {
+        expect(activity.allRegisteredMembers()).to.not.contain('memberId');
+        expect(activity.allRegisteredMembers()).to.contain('otherId');
         done(err);
       });
     });
@@ -280,9 +279,9 @@ describe('Activities Service', function () {
       });
       sinon.stub(notifications, 'visitorUnregistration');
 
-      activitiesService.removeVisitorFrom('memberId', 'activity-url', 'Einzelzimmer', function (err) {
-        expect(activity.resourceNamed('Einzelzimmer').registeredMembers()).to.not.contain('memberId');
-        expect(activity.resourceNamed('Einzelzimmer').registeredMembers()).to.contain('otherId');
+      activitiesService.removeVisitorFrom('memberId', 'activity-url', function (err) {
+        expect(activity.allRegisteredMembers()).to.not.contain('memberId');
+        expect(activity.allRegisteredMembers()).to.contain('otherId');
         done(err);
       });
     });
@@ -297,11 +296,10 @@ describe('Activities Service', function () {
       });
       sinon.stub(notifications, 'visitorUnregistration');
 
-      activitiesService.removeVisitorFrom('memberId', 'activity-url', 'Einzelzimmer', function (err) {
+      activitiesService.removeVisitorFrom('memberId', 'activity-url', function (err) {
         expect(notifications.visitorUnregistration.calledOnce).to.be(true);
         expect(notifications.visitorUnregistration.firstCall.args[0]).to.eql(activity);
         expect(notifications.visitorUnregistration.firstCall.args[1]).to.equal('memberId');
-        expect(notifications.visitorUnregistration.firstCall.args[2]).to.equal('Einzelzimmer');
         done(err);
       });
     });
@@ -309,7 +307,7 @@ describe('Activities Service', function () {
     it('gives an error when activity could not be loaded', function (done) {
       sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(new Error('error')); });
 
-      activitiesService.removeVisitorFrom('memberId', 'activity-url', 'Einzelzimmer', function (err) {
+      activitiesService.removeVisitorFrom('memberId', 'activity-url', function (err) {
         expect(err, 'Error').to.exist();
         done(); // error condition - do not pass err
       });
@@ -322,10 +320,10 @@ describe('Activities Service', function () {
       var activity = activityWithEinzelzimmer({_waitinglist: []});
       sinon.stub(notifications, 'waitinglistAddition');
 
-      activitiesService.addToWaitinglist('memberId', 'activity-url', 'Einzelzimmer', moment(), function (err, statusTitle, statusText) {
+      activitiesService.addToWaitinglist('memberId', 'activity-url', moment(), function (err, statusTitle, statusText) {
         expect(statusTitle, 'Status Title').to.not.exist();
         expect(statusText, 'Status Text').to.not.exist();
-        var waitinglistMembers = waitinglistMembersOf(activity, 'Einzelzimmer');
+        var waitinglistMembers = waitinglistMembersOf(activity);
         expect(waitinglistMembers).to.contain('memberId');
         done(err);
       });
@@ -335,11 +333,10 @@ describe('Activities Service', function () {
       var activity = activityWithEinzelzimmer({_waitinglist: []});
       sinon.stub(notifications, 'waitinglistAddition');
 
-      activitiesService.addToWaitinglist('memberId', 'activity-url', 'Einzelzimmer', moment(), function (err) {
+      activitiesService.addToWaitinglist('memberId', 'activity-url', moment(), function (err) {
         expect(notifications.waitinglistAddition.calledOnce).to.be(true);
         expect(notifications.waitinglistAddition.firstCall.args[0]).to.eql(activity);
         expect(notifications.waitinglistAddition.firstCall.args[1]).to.equal('memberId');
-        expect(notifications.waitinglistAddition.firstCall.args[2]).to.equal('Einzelzimmer');
         done(err);
       });
     });
@@ -347,10 +344,10 @@ describe('Activities Service', function () {
     it('gives a status message when there is no waitinglist', function (done) {
       var activity = activityWithEinzelzimmer({});
 
-      activitiesService.addToWaitinglist('memberId', 'activity-url', 'Einzelzimmer', moment(), function (err, statusTitle, statusText) {
+      activitiesService.addToWaitinglist('memberId', 'activity-url', moment(), function (err, statusTitle, statusText) {
         expect(statusTitle, 'Status Title').to.equal('activities.waitinglist_not_possible');
         expect(statusText, 'Status Text').to.equal('activities.no_waitinglist');
-        var waitinglistMembers = waitinglistMembersOf(activity, 'Einzelzimmer');
+        var waitinglistMembers = waitinglistMembersOf(activity);
         expect(waitinglistMembers).to.not.contain('memberId');
         done(err);
       });
@@ -359,7 +356,7 @@ describe('Activities Service', function () {
     it('gives an error when activity could not be loaded', function (done) {
       sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(new Error('error')); });
 
-      activitiesService.addToWaitinglist('memberId', 'activity-url', 'Einzelzimmer', moment(), function (err) {
+      activitiesService.addToWaitinglist('memberId', 'activity-url', moment(), function (err) {
         expect(err, 'Error').to.exist();
         done(); // error condition - do not pass err
       });
@@ -377,8 +374,8 @@ describe('Activities Service', function () {
       });
       sinon.stub(notifications, 'waitinglistRemoval');
 
-      activitiesService.removeFromWaitinglist('memberId', 'activity-url', 'Einzelzimmer', function (err) {
-        var waitinglistMembers = waitinglistMembersOf(activity, 'Einzelzimmer');
+      activitiesService.removeFromWaitinglist('memberId', 'activity-url', function (err) {
+        var waitinglistMembers = waitinglistMembersOf(activity);
         expect(waitinglistMembers).to.not.contain('memberId');
         expect(waitinglistMembers).to.contain('otherId');
         done(err);
@@ -395,11 +392,10 @@ describe('Activities Service', function () {
       });
       sinon.stub(notifications, 'waitinglistRemoval');
 
-      activitiesService.removeFromWaitinglist('memberId', 'activity-url', 'Einzelzimmer', function (err) {
+      activitiesService.removeFromWaitinglist('memberId', 'activity-url', function (err) {
         expect(notifications.waitinglistRemoval.calledOnce).to.be(true);
         expect(notifications.waitinglistRemoval.firstCall.args[0]).to.eql(activity);
         expect(notifications.waitinglistRemoval.firstCall.args[1]).to.equal('memberId');
-        expect(notifications.waitinglistRemoval.firstCall.args[2]).to.equal('Einzelzimmer');
         done(err);
       });
     });
@@ -407,7 +403,7 @@ describe('Activities Service', function () {
     it('gives an error when activity could not be loaded', function (done) {
       sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(new Error('error')); });
 
-      activitiesService.removeFromWaitinglist('memberId', 'activity-url', 'Einzelzimmer', function (err) {
+      activitiesService.removeFromWaitinglist('memberId', 'activity-url', function (err) {
         expect(err, 'Error').to.exist();
         done(); // error condition - do not pass err
       });

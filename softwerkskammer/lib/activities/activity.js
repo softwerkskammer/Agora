@@ -10,232 +10,234 @@ const Renderer = beans.get('renderer');
 
 const standardName = 'Veranstaltung';
 
-function Activity(object) {
+class Activity {
   /* eslint no-underscore-dangle: 0 */
-  if (object) {
-    this.state = object;
-  } else {
-    this.state = {};
+  constructor(object) {
+    this.state = object ? object : {};
+
+    if (!this.state.resources) {
+      this.state.resources = {};
+      this.state.resources[standardName] = {_registeredMembers: [], _registrationOpen: true};
+    }
   }
 
-  if (!this.state.resources) {
-    this.state.resources = {};
-    this.state.resources[standardName] = {_registeredMembers: [], _registrationOpen: true};
+  id() {
+    return this.state.id;
   }
 
-  if (!this.state._addons) {
-    this.state._addons = {};
+  url() {
+    return this.state.url ? this.state.url.trim() : undefined;
   }
-  return this;
+
+  fullyQualifiedUrl() {
+    return this.url() ? conf.get('publicUrlPrefix') + '/activities/' + encodeURIComponent(this.url()) : undefined;
+  }
+
+  title() {
+    return this.state.title;
+  }
+
+  description() {
+    return this.state.description;
+  }
+
+  location() {
+    return this.state.location;
+  }
+
+  direction() {
+    return this.state.direction;
+  }
+
+  startUnix() {
+    return this.state.startUnix || moment().unix();
+  }
+
+  endUnix() {
+    return this.state.endUnix || moment().add(2, 'hours').unix();
+  }
+
+  assignedGroup() {
+    return this.state.assignedGroup;
+  }
+
+  owner() {
+    return this.state.owner;
+  }
+
+  editorIds() {
+    return this.state.editorIds || [];
+  }
+
+  fillFromUI(object, editorIds) {
+    this.state.url = object.url;
+
+    this.state.editorIds = editorIds;
+
+    this.state.title = object.title;
+    this.state.description = object.description;
+    this.state.assignedGroup = object.assignedGroup;
+    this.state.location = object.location;
+    this.state.direction = object.direction;
+    // currently we only support MEZ/MESZ for events
+    this.state.startUnix = fieldHelpers.parseToUnixUsingDefaultTimezone(object.startDate, object.startTime);
+    this.state.endUnix = fieldHelpers.parseToUnixUsingDefaultTimezone(object.endDate, object.endTime);
+
+    if (!this.id() || this.id() === 'undefined') {
+      this.state.id = fieldHelpers.createLinkFrom([this.assignedGroup(), this.title(), this.startMoment()]);
+    }
+
+    // these are the resource definitions in the edit page:
+    if (object.resources) {
+      this.resources().fillFromUI(object.resources);
+    }
+
+    this.state.isSoCraTes = object.isSoCraTes;
+
+    return this;
+  }
+
+  resetForClone() {
+    let result = new Activity();
+    result.state.editorIds = this.editorIds();
+    result.state.title = this.title();
+    result.state.description = this.description();
+    result.state.assignedGroup = this.assignedGroup();
+    result.state.location = this.location();
+    result.state.direction = this.direction();
+    result.state.startUnix = this.startUnix();
+    result.state.endUnix = this.endUnix();
+
+    result.state.resources = {};
+    result.resources().copyFrom(this.resources());
+    return result;
+  }
+
+  isSoCraTes() {
+    return this.state.isSoCraTes;
+  }
+
+  descriptionHTML() {
+    return Renderer.render(this.description(), this.assignedGroup());
+  }
+
+  descriptionPlain() {
+    return this.descriptionHTML().replace(/<(?:\S|\s)*?>/gm, '');
+  }
+
+  hasDirection() {
+    return fieldHelpers.isFilled(this.direction());
+  }
+
+  directionHTML() {
+    return Renderer.render(this.direction(), this.assignedGroup());
+  }
+
+  groupName() {
+    return this.group ? this.group.longName : '';
+  }
+
+  groupFrom(groups) {
+    this.group = groups.find(group => group.id === this.assignedGroup());
+  }
+
+  // Resources
+
+  resources() {
+    return new Resources(this.state.resources);
+  }
+
+  veranstaltung() {
+    return this.resources().veranstaltung();
+  }
+
+  resourceNamed() {
+    return this.veranstaltung();
+  }
+
+  resourceNames() {
+    return [standardName];
+  }
+
+  addMemberId(memberId, momentOfRegistration) {
+    return this.resources().veranstaltung().addMemberId(memberId, momentOfRegistration);
+  }
+
+  removeMemberId(memberId) {
+    this.resources().veranstaltung().removeMemberId(memberId);
+  }
+
+  allRegisteredMembers() {
+    return this.resources().allRegisteredMembers();
+  }
+
+  isAlreadyRegistered(memberID) {
+    return this.allRegisteredMembers().indexOf(memberID) > -1;
+  }
+
+  // Waitinglist stuff
+  isAlreadyOnWaitinglist(memberID) {
+    return this.allWaitinglistEntries().find(entry => entry.registrantId() === memberID);
+  }
+
+  allWaitinglistEntries() {
+    return this.resources().allWaitinglistEntries();
+  }
+
+  addToWaitinglist(memberId, momentOfRegistration) {
+    this.resources().veranstaltung().addToWaitinglist(memberId, momentOfRegistration);
+  }
+
+  removeFromWaitinglist(memberId) {
+    this.resources().veranstaltung().removeFromWaitinglist(memberId);
+  }
+
+  waitinglistEntryFor(memberId) {
+    return this.resources().veranstaltung().waitinglistEntryFor(memberId);
+  }
+
+  hasWaitinglist() {
+    return this.resources().veranstaltung().hasWaitinglist();
+  }
+
+  // Display Dates and Times
+
+  isMultiDay() {
+    return this.endMoment().dayOfYear() !== this.startMoment().dayOfYear();
+  }
+
+  startMoment() {
+    return moment.unix(this.startUnix()).tz(fieldHelpers.defaultTimezone());
+  }
+
+  endMoment() {
+    return moment.unix(this.endUnix()).tz(fieldHelpers.defaultTimezone());
+  }
+
+  month() {
+    return this.startMoment().month();
+  }
+
+  year() {
+    return this.startMoment().year();
+  }
+
+  colorFrom(groupsColors) {
+    return groupsColors && groupsColors[this.assignedGroup()] ? groupsColors[this.assignedGroup()] : '#353535';
+  }
+
+  // Helper functions for non-persistent information
+  participantsOf(resourceName) {
+    if (!this.participants) { return []; }
+    const resource = this.resourceNamed(resourceName);
+    const memberIds = resource.registeredMembers();
+    return this.participants
+               .filter(participant => memberIds.some(memberId => memberId === participant.id()))
+               .map(member => {
+                 member.registeredAt = resource.registrationDateOf(member.id());
+                 return member;
+               });
+  }
 }
-
-Activity.standardName = standardName;
-
-Activity.prototype.id = function () {
-  return this.state.id;
-};
-
-Activity.prototype.url = function () {
-  return this.state.url ? this.state.url.trim() : undefined;
-};
-
-Activity.prototype.fullyQualifiedUrl = function () {
-  return this.url() ? conf.get('publicUrlPrefix') + '/activities/' + encodeURIComponent(this.url()) : undefined;
-};
-
-Activity.prototype.title = function () {
-  return this.state.title;
-};
-
-Activity.prototype.description = function () {
-  return this.state.description;
-};
-
-Activity.prototype.location = function () {
-  return this.state.location;
-};
-
-Activity.prototype.direction = function () {
-  return this.state.direction;
-};
-
-Activity.prototype.startUnix = function () {
-  return this.state.startUnix || moment().unix();
-};
-
-Activity.prototype.endUnix = function () {
-  return this.state.endUnix || moment().add(2, 'hours').unix();
-};
-
-Activity.prototype.assignedGroup = function () {
-  return this.state.assignedGroup;
-};
-
-Activity.prototype.owner = function () {
-  return this.state.owner;
-};
-
-Activity.prototype.editorIds = function () {
-  return this.state.editorIds || [];
-};
-
-// XXX remove duplication with copyFrom
-Activity.prototype.fillFromUI = function (object, editorIds) {
-  const self = this;
-  self.state.url = object.url;
-
-  self.state.editorIds = editorIds;
-
-  self.state.title = object.title;
-  self.state.description = object.description;
-  self.state.assignedGroup = object.assignedGroup;
-  self.state.location = object.location;
-  self.state.direction = object.direction;
-  // currently we only support MEZ/MESZ for events
-  self.state.startUnix = fieldHelpers.parseToUnixUsingDefaultTimezone(object.startDate, object.startTime);
-  self.state.endUnix = fieldHelpers.parseToUnixUsingDefaultTimezone(object.endDate, object.endTime);
-
-  if (!self.id() || self.id() === 'undefined') {
-    self.state.id = fieldHelpers.createLinkFrom([self.assignedGroup(), self.title(), self.startMoment()]);
-  }
-
-  // these are the resource definitions in the edit page:
-  if (object.resources) {
-    this.resources().fillFromUI(object.resources);
-  }
-
-  self.state.isSoCraTes = object.isSoCraTes;
-
-  return self;
-};
-
-// TODO merge resetForClone and copyFrom
-Activity.prototype.resetForClone = function () {
-  return new Activity().copyFrom(this);
-};
-
-// XXX remove duplication with fillFromUI
-Activity.prototype.copyFrom = function (originalActivity) {
-  this.state.editorIds = originalActivity.editorIds();
-  this.state.title = originalActivity.title();
-  this.state.description = originalActivity.description();
-  this.state.assignedGroup = originalActivity.assignedGroup();
-  this.state.location = originalActivity.location();
-  this.state.direction = originalActivity.direction();
-  this.state.startUnix = originalActivity.startUnix();
-  this.state.endUnix = originalActivity.endUnix();
-
-  this.state.resources = {};
-  this.resources().copyFrom(originalActivity.resources());
-  return this;
-};
-
-Activity.prototype.isSoCraTes = function () {
-  return this.state.isSoCraTes;
-};
-
-Activity.prototype.descriptionHTML = function () {
-  return Renderer.render(this.description(), this.assignedGroup());
-};
-
-Activity.prototype.descriptionPlain = function () {
-  return this.descriptionHTML().replace(/<(?:\S|\s)*?>/gm, '');
-};
-
-Activity.prototype.hasDirection = function () {
-  return fieldHelpers.isFilled(this.direction());
-};
-
-Activity.prototype.directionHTML = function () {
-  return Renderer.render(this.direction(), this.assignedGroup());
-};
-
-Activity.prototype.groupName = function () {
-  return this.group ? this.group.longName : '';
-};
-
-Activity.prototype.groupFrom = function (groups) {
-  this.group = groups.find(group => group.id === this.assignedGroup());
-};
-
-// Resources
-
-Activity.prototype.resources = function () {
-  return new Resources(this.state.resources);
-};
-
-Activity.prototype.resourceNamed = function (resourceName) {
-  return this.resources().named(resourceName);
-};
-
-Activity.prototype.resourceNames = function () {
-  return this.resources().resourceNames();
-};
-
-Activity.prototype.allRegisteredMembers = function () {
-  return this.resources().allRegisteredMembers();
-};
-
-Activity.prototype.isAlreadyRegistered = function (memberID) {
-  return this.allRegisteredMembers().indexOf(memberID) > -1;
-};
-
-Activity.prototype.isAlreadyOnWaitinglist = function (memberID) {
-  return this.allWaitinglistEntries().find(entry => entry.registrantId() === memberID);
-};
-
-Activity.prototype.registeredResourcesFor = function (memberID) {
-  const self = this;
-  return self.resources().resourceNamesOf(memberID).map(resourceName => self.resourceNamed(resourceName));
-};
-
-Activity.prototype.waitinglistResourcesFor = function (memberID) {
-  const self = this;
-  return self.resources().waitinglistResourceNamesOf(memberID).map(resourceName => self.resourceNamed(resourceName));
-};
-
-Activity.prototype.allWaitinglistEntries = function () {
-  return this.resources().allWaitinglistEntries();
-};
-
-// Display Dates and Times
-
-Activity.prototype.isMultiDay = function () {
-  return this.endMoment().dayOfYear() !== this.startMoment().dayOfYear();
-};
-
-Activity.prototype.startMoment = function () {
-  return moment.unix(this.startUnix()).tz(fieldHelpers.defaultTimezone());
-};
-
-Activity.prototype.endMoment = function () {
-  return moment.unix(this.endUnix()).tz(fieldHelpers.defaultTimezone());
-};
-
-Activity.prototype.month = function () {
-  return this.startMoment().month();
-};
-
-Activity.prototype.year = function () {
-  return this.startMoment().year();
-};
-
-Activity.prototype.colorFrom = function (groupsColors) {
-  return groupsColors && groupsColors[this.assignedGroup()] ? groupsColors[this.assignedGroup()] : '#353535';
-};
-
-// Helper functions for non-persistent information
-
-Activity.prototype.participantsOf = function (resourceName) {
-  if (!this.participants) { return []; }
-  const resource = this.resourceNamed(resourceName);
-  const memberIds = resource.registeredMembers();
-  return this.participants
-             .filter(participant => memberIds.some(memberId => memberId === participant.id()))
-             .map(member => {
-               member.registeredAt = resource.registrationDateOf(member.id());
-               return member;
-             });
-};
 
 module.exports = Activity;

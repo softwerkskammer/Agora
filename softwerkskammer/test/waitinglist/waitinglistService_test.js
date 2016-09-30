@@ -23,7 +23,7 @@ var waitinglistMembersOf = function (activity, resourceName) {
 };
 
 var activityWithEinzelzimmer = function (resource) {
-  var state = {url: 'activity-url', resources: {Einzelzimmer: resource }};
+  var state = {url: 'activity-url', resources: {Veranstaltung: resource }};
   var activity = new Activity(state);
   sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, activity); });
   return activity;
@@ -40,7 +40,7 @@ describe('Waitinglist Service', function () {
     beforeEach(function () {
       var member1 = new Member({id: '12345', nickname: 'hansdampf'});
       var member2 = new Member({id: 'abcxyz', nickname: 'nickinick'});
-      activity1 = new Activity({id: 'Meine Aktivität', url: 'myActivity', resources: {'Meine Ressource': {_waitinglist: []}}});
+      activity1 = new Activity({id: 'Meine Aktivität', url: 'myActivity', resources: {'Veranstaltung': {_waitinglist: []}}});
 
       sinon.stub(memberstore, 'getMemberForId', function (memberId, callback) {
         if (memberId === member1.id()) { return callback(null, member1); }
@@ -59,12 +59,12 @@ describe('Waitinglist Service', function () {
     });
 
     it('returns one entry with its member nickname when the waitinglist contains one entry', function (done) {
-      activity1.resourceNamed('Meine Ressource').addToWaitinglist('12345', moment());
+      activity1.resourceNamed('Veranstaltung').addToWaitinglist('12345', moment());
 
       waitinglistService.waitinglistFor('myActivity', function (err, waitinglist) {
         expect(waitinglist.length).to.equal(1);
         expect(waitinglist[0].registrantNickname).to.equal('hansdampf');
-        expect(waitinglist[0].resourceName()).to.equal('Meine Ressource');
+        expect(waitinglist[0].resourceName()).to.equal('Veranstaltung');
         expect(waitinglist[0].registrationDate()).to.not.be(undefined);
         expect(waitinglist[0].registrationValidUntil()).to.be(undefined);
         done(err);
@@ -72,8 +72,8 @@ describe('Waitinglist Service', function () {
     });
 
     it('returns two entries with their member nicknames when the waitinglist contains two entries', function (done) {
-      activity1.resourceNamed('Meine Ressource').addToWaitinglist('12345', moment());
-      activity1.resourceNamed('Meine Ressource').addToWaitinglist('abcxyz', moment());
+      activity1.resourceNamed('Veranstaltung').addToWaitinglist('12345', moment());
+      activity1.resourceNamed('Veranstaltung').addToWaitinglist('abcxyz', moment());
 
       waitinglistService.waitinglistFor('myActivity', function (err, waitinglist) {
         expect(waitinglist.length).to.equal(2);
