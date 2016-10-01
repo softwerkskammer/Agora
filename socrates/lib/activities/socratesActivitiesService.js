@@ -37,6 +37,7 @@ function validate(params) {
   }).filter(m => m);
 
   if (validationErrors.length > 0) { return new ValidationErrors(validationErrors); }
+  return null;
 }
 
 module.exports = {
