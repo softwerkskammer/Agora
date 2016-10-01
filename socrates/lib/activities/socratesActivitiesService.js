@@ -76,11 +76,11 @@ module.exports = {
     );
   },
 
-  newRoomTypeFor: function (nickname, newRoomType, callback) {
+  newRoomTypeFor: function (params, callback) {
 
     async.series(
       [
-        _.partial(memberstore.getMember, nickname),
+        _.partial(memberstore.getMember, params.nickname),
         _.partial(eventstoreService.getRegistrationCommandProcessor, currentUrl).bind(eventstoreService)
       ],
       function (err, results) {
@@ -89,13 +89,13 @@ module.exports = {
         const registrationCommandProcessor = results[1];
         if (!registrationCommandProcessor || !member) { return callback(); }
 
-        const event = registrationCommandProcessor.moveParticipantToNewRoomType(member.id(), newRoomType);
+        const event = registrationCommandProcessor.moveParticipantToNewRoomType(member.id(), params.newRoomType);
 
         const args = {commandProcessor: registrationCommandProcessor, events: [event], callback: callback};
 
         if (event.event === e.ROOM_TYPE_WAS_CHANGED) {
           args.handleSuccess = function () {
-            notifications.changedResource(member, roomOptions.informationFor(newRoomType, event.duration)); // this is a bit hacky, we should better go through a read model
+            notifications.changedResource(member, roomOptions.informationFor(params.newRoomType, event.duration)); // this is a bit hacky, we should better go through a read model
           };
         }
         saveCommandProcessor(args);
@@ -103,11 +103,11 @@ module.exports = {
     );
   },
 
-  newWaitinglistFor: function (nickname, newDesiredResourceNames, callback) {
+  newWaitinglistFor: function (params, callback) {
 
     async.series(
       [
-        _.partial(memberstore.getMember, nickname),
+        _.partial(memberstore.getMember, params.nickname),
         _.partial(eventstoreService.getRegistrationCommandProcessor, currentUrl).bind(eventstoreService)
       ],
       function (err, results) {
@@ -116,13 +116,13 @@ module.exports = {
         const registrationCommandProcessor = results[1];
         if (!registrationCommandProcessor || !member) { return callback(); }
 
-        const event = registrationCommandProcessor.changeDesiredRoomTypes(member.id(), newDesiredResourceNames);
+        const event = registrationCommandProcessor.changeDesiredRoomTypes(member.id(), params.newDesiredRoomTypes);
 
         const args = {commandProcessor: registrationCommandProcessor, events: [event], callback: callback};
 
         if (event.event === e.DESIRED_ROOM_TYPES_WERE_CHANGED) {
           args.handleSuccess = function () {
-            notifications.changedWaitinglist(member, newDesiredResourceNames.map(name => roomOptions.informationFor(name, 'waitinglist')));
+            notifications.changedWaitinglist(member, params.newDesiredRoomTypes.map(name => roomOptions.informationFor(name, 'waitinglist')));
           };
         }
         saveCommandProcessor(args);

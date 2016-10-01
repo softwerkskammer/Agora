@@ -134,22 +134,15 @@ app.post('/newDuration', function (req, res, next) {
 });
 
 app.post('/newResource', function (req, res, next) {
-  socratesActivitiesService.newRoomTypeFor(req.body.nickname, req.body.newResourceName, function (err) {
-    if (err) {return next(err); }
-    res.redirect('/registration/management');
-  });
+  updateFor(socratesActivitiesService.newRoomTypeFor, {nickname: req.body.nickname, newRoomType: req.body.newResourceName}, res, next);
 });
 
 app.post('/newWaitinglist', function (req, res, next) {
-  const waitinglistOptions = 'waitinglistOptions_' + encodeURIComponent(req.body.nickname);
-  let desiredRoomTypes = req.body[waitinglistOptions];
+  let desiredRoomTypes = req.body['waitinglistOptions_' + encodeURIComponent(req.body.nickname)];
   if (desiredRoomTypes && !(desiredRoomTypes instanceof Array)) {
     desiredRoomTypes = [desiredRoomTypes];
   }
-  socratesActivitiesService.newWaitinglistFor(req.body.nickname, desiredRoomTypes, function (err) {
-    if (err) {return next(err); }
-    res.redirect('/registration/management');
-  });
+  updateFor(socratesActivitiesService.newWaitinglistFor, {nickname: req.body.nickname, newDesiredRoomTypes: desiredRoomTypes}, res, next);
 });
 
 app.post('/newParticipantPair', function (req, res, next) {

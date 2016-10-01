@@ -209,7 +209,8 @@ describe('SoCraTes Activities Service', function () {
         events.participantWasRegistered('single', 2, 'sessionId', 'memberId', aLongTimeAgo)
       ];
 
-      socratesActivitiesService.newRoomTypeFor('nickname', 'bed_in_double', function (err) {
+      const params = {nickname: 'nickname', newRoomType: 'bed_in_double'};
+      socratesActivitiesService.newRoomTypeFor(params, function (err) {
         expect(stripTimestamps(saveEventStore.firstCall.args[0].state.events)).to.eql([
           {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: 'sessionId', roomType: 'single', memberId: 'memberId', duration: 2, joinedSoCraTes: aLongTimeAgo.valueOf()},
           {event: e.ROOM_TYPE_WAS_CHANGED, roomType: 'bed_in_double', memberId: 'memberId', duration: 2, joinedSoCraTes: aLongTimeAgo.valueOf()}]);
@@ -226,7 +227,8 @@ describe('SoCraTes Activities Service', function () {
     it('does not change the room type for a non-participant and updates event store and read model', function (done) {
       eventStore.state.events = [];
 
-      socratesActivitiesService.newRoomTypeFor('nickname', 'bed_in_double', function (err) {
+      const params = {nickname: 'nickname', newRoomType: 'bed_in_double'};
+      socratesActivitiesService.newRoomTypeFor(params, function (err) {
         expect(stripTimestamps(saveEventStore.firstCall.args[0].state.events)).to.eql([
           {event: e.DID_NOT_CHANGE_ROOM_TYPE_FOR_NON_PARTICIPANT, roomType: 'bed_in_double', memberId: 'memberId'}]);
 
@@ -372,7 +374,7 @@ describe('SoCraTes Activities Service', function () {
         events.waitinglistParticipantWasRegistered(['single'], 'session-id', 'memberId', aLongTimeAgo)
       ];
 
-      socratesActivitiesService.newWaitinglistFor('nickname', ['bed_in_double'], function (err) {
+      socratesActivitiesService.newWaitinglistFor({nickname: 'nickname', newDesiredRoomTypes: ['bed_in_double']}, function (err) {
         const savedEventStore = saveEventStore.firstCall.args[0];
         expect(stripTimestamps(savedEventStore.state.events)).to.eql([
           {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, desiredRoomTypes: ['single'], memberId: 'memberId', joinedWaitinglist: aLongTimeAgo.valueOf(), sessionId: 'session-id'},
@@ -392,7 +394,7 @@ describe('SoCraTes Activities Service', function () {
     it('does not change the waitinglist of a non-waitinglist member and updates the event store and the read model', function (done) {
       eventStore.state.events = [];
 
-      socratesActivitiesService.newWaitinglistFor('nickname', ['bed_in_double'], function (err) {
+      socratesActivitiesService.newWaitinglistFor({nickname: 'nickname', newDesiredRoomTypes: ['bed_in_double']}, function (err) {
         const savedEventStore = saveEventStore.firstCall.args[0];
         expect(stripTimestamps(savedEventStore.state.events)).to.eql([
           {event: e.DID_NOT_CHANGE_DESIRED_ROOM_TYPES_BECAUSE_PARTICIPANT_IS_NOT_ON_WAITINGLIST, desiredRoomTypes: ['bed_in_double'], memberId: 'memberId'}
@@ -408,7 +410,7 @@ describe('SoCraTes Activities Service', function () {
         events.waitinglistParticipantWasRegistered(['single'], 'session-id', 'memberId', aLongTimeAgo)
       ];
 
-      socratesActivitiesService.newWaitinglistFor('nickname', ['single'], function (err) {
+      socratesActivitiesService.newWaitinglistFor({nickname: 'nickname', newDesiredRoomTypes: ['single']}, function (err) {
         const savedEventStore = saveEventStore.firstCall.args[0];
         expect(stripTimestamps(savedEventStore.state.events)).to.eql([
           {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, desiredRoomTypes: ['single'], memberId: 'memberId', joinedWaitinglist: aLongTimeAgo.valueOf(), sessionId: 'session-id'},
