@@ -1,26 +1,26 @@
 'use strict';
 
-var async = require('async');
-var _ = require('lodash');
-var moment = require('moment-timezone');
+const async = require('async');
+const _ = require('lodash');
+const moment = require('moment-timezone');
 
-var beans = require('simple-configure').get('beans');
-var misc = beans.get('misc');
-var CONFLICTING_VERSIONS = beans.get('constants').CONFLICTING_VERSIONS;
-var socratesActivitiesService = beans.get('socratesActivitiesService');
+const beans = require('simple-configure').get('beans');
+const misc = beans.get('misc');
+const CONFLICTING_VERSIONS = beans.get('constants').CONFLICTING_VERSIONS;
+const socratesActivitiesService = beans.get('socratesActivitiesService');
 
-var eventstoreService = beans.get('eventstoreService');
-var validation = beans.get('validation');
-var statusmessage = beans.get('statusmessage');
-var roomOptions = beans.get('roomOptions');
+const eventstoreService = beans.get('eventstoreService');
+const validation = beans.get('validation');
+const statusmessage = beans.get('statusmessage');
+const roomOptions = beans.get('roomOptions');
 
-var activitiesService = beans.get('activitiesService');  // for fetching the SoCraTes activity from SWK
-var Activity = beans.get('activity'); // for creating a new activity for SWK
-var activitystore = beans.get('activitystore'); // for storing the SoCraTes activity in SWK
+const activitiesService = beans.get('activitiesService');  // for fetching the SoCraTes activity from SWK
+const Activity = beans.get('activity'); // for creating a new activity for SWK
+const activitystore = beans.get('activitystore'); // for storing the SoCraTes activity in SWK
 
-var reservedURLs = '^new$|^edit$|^submit$|^checkurl$\\+';
+const reservedURLs = '^new$|^edit$|^submit$|^checkurl$\\+';
 
-var app = misc.expressAppIn(__dirname);
+const app = misc.expressAppIn(__dirname);
 
 function activitySubmitted(req, res, next) {
   eventstoreService.getSoCraTesCommandProcessor(req.body.url, function (err, socratesCommandProcessor) {
@@ -70,7 +70,7 @@ app.get('/edit/:url', function (req, res, next) {
 });
 
 app.post('/submit', function (req, res, next) {
-  var year = req.body.startDate.split('/')[2];
+  const year = req.body.startDate.split('/')[2];
   req.body.title = 'SoCraTes ' + year;
   req.body.url = 'socrates-' + year;
   req.body.location = 'Soltau, Germany'; // important because it shows up in the iCal data :-)
@@ -80,11 +80,11 @@ app.post('/submit', function (req, res, next) {
     [
       function (callback) {
         // we need this helper function (in order to have a closure?!)
-        var validityChecker = function (url, cb) { eventstoreService.isValidUrl(url, cb); };
+        const validityChecker = function (url, cb) { eventstoreService.isValidUrl(url, cb); };
         validation.checkValidity(req.body.previousUrl.trim(), req.body.url.trim(), validityChecker, req.i18n.t('validation.url_not_available'), callback);
       },
       function (callback) {
-        var errors = validation.isValidForActivity(req.body);
+        const errors = validation.isValidForActivity(req.body);
         return callback(null, errors);
       },
       function (callback) {
@@ -97,7 +97,7 @@ app.post('/submit', function (req, res, next) {
     ],
     function (err, errorMessages) {
       if (err) { return next(err); }
-      var realErrors = _.filter(_.flatten(errorMessages), message => message);
+      const realErrors = _.filter(_.flatten(errorMessages), message => message);
       if (realErrors.length === 0) {
         return activitySubmitted(req, res, next);
       }
@@ -113,7 +113,7 @@ app.get('/checkurl', function (req, res) {
 // for management tables:
 
 app.get('/fromWaitinglistToParticipant/:roomType/:nickname', function (req, res) {
-  var duration = 2;
+  const duration = 2;
 
   socratesActivitiesService.fromWaitinglistToParticipant(req.params.nickname, req.params.roomType, duration, moment.tz(), function (err) {
     if (err) { return res.send('Error: ' + err); }
@@ -136,8 +136,8 @@ app.post('/newResource', function (req, res, next) {
 });
 
 app.post('/newWaitinglist', function (req, res, next) {
-  var waitinglistOptions = 'waitinglistOptions_' + encodeURIComponent(req.body.nickname);
-  var desiredRoomTypes = req.body[waitinglistOptions];
+  const waitinglistOptions = 'waitinglistOptions_' + encodeURIComponent(req.body.nickname);
+  let desiredRoomTypes = req.body[waitinglistOptions];
   if (desiredRoomTypes && !(desiredRoomTypes instanceof Array)) {
     desiredRoomTypes = [desiredRoomTypes];
   }
