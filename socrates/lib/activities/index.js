@@ -146,29 +146,19 @@ app.post('/newWaitinglist', function (req, res, next) {
 });
 
 app.post('/newParticipantPair', function (req, res, next) {
-  socratesActivitiesService.addParticipantPairFor(req.body.roomType, req.body.participant1, req.body.participant2, function (err) {
-    if (err) { return next(err); }
-    res.redirect('/registration/management');
-  });
+  updateFor(socratesActivitiesService.addParticipantPairFor, {roomType: req.body.roomType, participant1Nick: req.body.participant1, participant2Nick: req.body.participant2}, res, next);
 });
 
 app.post('/removeParticipantPair', function (req, res, next) {
-  socratesActivitiesService.removeParticipantPairFor(req.body.roomType, req.body.participant1, req.body.participant2, function (err) {
-    if (err) { return next(err); }
-    res.redirect('/registration/management');
-  });
+  updateFor(socratesActivitiesService.removeParticipantPairFor, {roomType: req.body.roomType, participant1Nick: req.body.participant1, participant2Nick: req.body.participant2}, res, next);
 });
 
 app.post('/removeParticipant', function (req, res, next) {
-  socratesActivitiesService.removeParticipantFor(req.body.roomType, req.body.participant, function (err) {
-    if (err) { return next(err); }
-    res.redirect('/registration/management');
-  });
+  updateFor(socratesActivitiesService.removeParticipantFor, {roomType: req.body.roomType, participantNick: req.body.participant}, res, next);
 });
 
 app.post('/removeWaitinglistMember', function (req, res, next) {
-  updateFor(socratesActivitiesService.removeWaitinglistMemberFor,
-    {desiredRoomTypes: [req.body.roomType], waitinglistMemberNick: req.body.waitinglistMember}, res, next);
+  updateFor(socratesActivitiesService.removeWaitinglistMemberFor, {desiredRoomTypes: [req.body.roomType], waitinglistMemberNick: req.body.waitinglistMember}, res, next);
 });
 
 module.exports = app;

@@ -245,7 +245,7 @@ describe('SoCraTes Activities Service', function () {
       events.participantWasRegistered('bed_in_double', 2, 'session-id', 'memberIdForPair2', aLongTimeAgo)
     ];
 
-    socratesActivitiesService.addParticipantPairFor('bed_in_double', 'nicknameForPair1', 'nicknameForPair2', function (err) {
+    socratesActivitiesService.addParticipantPairFor({roomType: 'bed_in_double', participant1Nick: 'nicknameForPair1', participant2Nick: 'nicknameForPair2'}, function (err) {
       var pairEvents = saveEventStore.firstCall.args[0].state.events;
       expect(pairEvents).to.have.length(3);
       expect(pairEvents[2].participant1Id).to.be('memberIdForPair1');
@@ -270,7 +270,7 @@ describe('SoCraTes Activities Service', function () {
       participant2Id: 'memberIdForPair2'
     }]);
 
-    socratesActivitiesService.removeParticipantPairFor('bed_in_double', 'nicknameForPair1', 'nicknameForPair2', function (err) {
+    socratesActivitiesService.removeParticipantPairFor({roomType: 'bed_in_double', participant1Nick: 'nicknameForPair1', participant2Nick: 'nicknameForPair2'}, function (err) {
       const savedEventStore = saveEventStore.firstCall.args[0];
       expect(stripTimestamps(savedEventStore.state.events)).to.eql([
         {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: 'session-id', roomType: 'bed_in_double', memberId: 'memberIdForPair1', duration: 2, joinedSoCraTes: aLongTimeAgo.valueOf()},
@@ -294,7 +294,7 @@ describe('SoCraTes Activities Service', function () {
         events.participantWasRegistered('bed_in_double', 2, 'session-id', 'memberId', aLongTimeAgo)
       ];
 
-      socratesActivitiesService.removeParticipantFor('bed_in_double', 'nickname', function (err) {
+      socratesActivitiesService.removeParticipantFor({roomType: 'bed_in_double', participantNick: 'nickname'}, function (err) {
         const savedEventStore = saveEventStore.firstCall.args[0];
         expect(stripTimestamps(savedEventStore.state.events)).to.eql([
           {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: 'session-id', roomType: 'bed_in_double', memberId: 'memberId', duration: 2, joinedSoCraTes: aLongTimeAgo.valueOf()},
@@ -315,7 +315,7 @@ describe('SoCraTes Activities Service', function () {
         events.roomPairWasAdded('bed_in_double', 'memberIdForPair1', 'memberIdForPair2')
       ];
 
-      socratesActivitiesService.removeParticipantFor('bed_in_double', 'nicknameForPair1', function (err) {
+      socratesActivitiesService.removeParticipantFor({roomType: 'bed_in_double', participantNick: 'nicknameForPair1'}, function (err) {
         const savedEventStore = saveEventStore.firstCall.args[0];
         expect(stripTimestamps(savedEventStore.state.events)).to.eql([
           {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: 'session-id', roomType: 'bed_in_double', memberId: 'memberIdForPair1', duration: 2, joinedSoCraTes: aLongTimeAgo.valueOf()},
@@ -338,7 +338,7 @@ describe('SoCraTes Activities Service', function () {
     it('does not send a notification when the removal fails because the participant was not registered', function (done) {
       eventStore.state.events = [];
 
-      socratesActivitiesService.removeParticipantFor('bed_in_double', 'nickname', function (err) {
+      socratesActivitiesService.removeParticipantFor({roomType: 'bed_in_double', participantNick: 'nickname'}, function (err) {
         const savedEventStore = saveEventStore.firstCall.args[0];
         expect(stripTimestamps(savedEventStore.state.events)).to.eql([
           {event: e.DID_NOT_REMOVE_PARTICIPANT_BECAUSE_THEY_ARE_NOT_REGISTERED, roomType: 'bed_in_double', memberId: 'memberId'}
@@ -354,7 +354,7 @@ describe('SoCraTes Activities Service', function () {
         events.participantWasRegistered('bed_in_double', 2, 'session-id', 'memberId', aLongTimeAgo)
       ];
 
-      socratesActivitiesService.removeParticipantFor('single', 'nickname', function (err) {
+      socratesActivitiesService.removeParticipantFor({roomType: 'single', participantNick: 'nickname'}, function (err) {
         const savedEventStore = saveEventStore.firstCall.args[0];
         expect(stripTimestamps(savedEventStore.state.events)).to.eql([
           {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: 'session-id', roomType: 'bed_in_double', memberId: 'memberId', duration: 2, joinedSoCraTes: aLongTimeAgo.valueOf()},

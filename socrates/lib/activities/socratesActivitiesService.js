@@ -130,12 +130,12 @@ module.exports = {
     );
   },
 
-  addParticipantPairFor: function (roomType, participant1Nick, participant2Nick, callback) {
+  addParticipantPairFor: function (params, callback) {
 
     async.series(
       [
-        _.partial(memberstore.getMember, participant1Nick),
-        _.partial(memberstore.getMember, participant2Nick),
+        _.partial(memberstore.getMember, params.participant1Nick),
+        _.partial(memberstore.getMember, params.participant2Nick),
         _.partial(eventstoreService.getRoomsCommandProcessor, currentUrl).bind(eventstoreService)
       ],
       function (err, results) {
@@ -145,7 +145,7 @@ module.exports = {
         const roomsCommandProcessor = results[2];
         if (!roomsCommandProcessor || !participant1 || !participant2) { return callback(); }
 
-        const events = roomsCommandProcessor.addParticipantPairFor(roomType, participant1.id(), participant2.id());
+        const events = roomsCommandProcessor.addParticipantPairFor(params.roomType, participant1.id(), participant2.id());
 
         saveCommandProcessor({
           commandProcessor: roomsCommandProcessor,
@@ -156,12 +156,12 @@ module.exports = {
     );
   },
 
-  removeParticipantPairFor: function (roomType, participant1Nick, participant2Nick, callback) {
+  removeParticipantPairFor: function (params, callback) {
 
     async.series(
       [
-        _.partial(memberstore.getMember, participant1Nick),
-        _.partial(memberstore.getMember, participant2Nick),
+        _.partial(memberstore.getMember, params.participant1Nick),
+        _.partial(memberstore.getMember, params.participant2Nick),
         _.partial(eventstoreService.getRoomsCommandProcessor, currentUrl).bind(eventstoreService)
       ],
       function (err, results) {
@@ -171,7 +171,7 @@ module.exports = {
         const roomsCommandProcessor = results[2];
         if (!roomsCommandProcessor || !participant1 || !participant2) { return callback(); }
 
-        const events = roomsCommandProcessor.removeParticipantPairFor(roomType, participant1.id(), participant2.id());
+        const events = roomsCommandProcessor.removeParticipantPairFor(params.roomType, participant1.id(), participant2.id());
 
         saveCommandProcessor({
           commandProcessor: roomsCommandProcessor,
@@ -182,11 +182,11 @@ module.exports = {
     );
   },
 
-  removeParticipantFor: function (roomType, participantNick, callback) {
+  removeParticipantFor: function (params, callback) {
 
     async.series(
       [
-        _.partial(memberstore.getMember, participantNick),
+        _.partial(memberstore.getMember, params.participantNick),
         _.partial(eventstoreService.getRoomsCommandProcessor, currentUrl).bind(eventstoreService),
         _.partial(eventstoreService.getRegistrationCommandProcessor, currentUrl).bind(eventstoreService)
       ],
@@ -197,8 +197,8 @@ module.exports = {
         const registrationCommandProcessor = results[2];
         if (!roomsCommandProcessor || !registrationCommandProcessor || !participant) { return callback(); }
 
-        const roomsEvents = roomsCommandProcessor.removeParticipantPairContaining(roomType, participant.id());
-        const registrationEvent = registrationCommandProcessor.removeParticipant(roomType, participant.id());
+        const roomsEvents = roomsCommandProcessor.removeParticipantPairContaining(params.roomType, participant.id());
+        const registrationEvent = registrationCommandProcessor.removeParticipant(params.roomType, participant.id());
 
         const args = {commandProcessor: [roomsCommandProcessor, registrationCommandProcessor], events: [roomsEvents, [registrationEvent]], callback: callback};
         if (registrationEvent.event === e.PARTICIPANT_WAS_REMOVED) {
