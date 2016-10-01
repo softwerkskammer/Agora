@@ -239,7 +239,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-eslint');
   grunt.loadNpmTasks('grunt-karma');
   grunt.loadNpmTasks('grunt-mocha-istanbul');
-  grunt.loadNpmTasks('grunt-patch');
+  grunt.loadNpmTasks('grunt-patcher');
   grunt.loadNpmTasks('grunt-puglint');
 
   grunt.registerTask('prepare', ['eslint', 'puglint', 'copy', 'patch', 'less']);
