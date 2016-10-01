@@ -29,6 +29,8 @@ function validate(params) {
       if (!params.nickname) { return 'An empty nickname is invalid!'; } else { return null; }
     case 'roomType':
       if (!roomOptions.isValidRoomType(params.roomType)) { return 'The room type is invalid!'; } else { return null; }
+    case 'duration':
+      if (!roomOptions.isValidDuration(params.duration)) { return 'The duration is invalid!'; } else { return null; }
     default:
       return null;
     }
@@ -68,9 +70,8 @@ module.exports = {
 
   newDurationFor: function (params, callback) {
 
-    if (!params.nickname || !roomOptions.isValidRoomType(params.roomType) || !roomOptions.isValidDuration(params.duration)) {
-      return callback();
-    }
+    const validationErrors = validate(params);
+    if (validationErrors.length > 0) { return callback(new ValidationErrors(validationErrors)); }
 
     async.series(
       [

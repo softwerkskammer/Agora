@@ -188,7 +188,7 @@ describe('SoCraTes Activities Service', function () {
       });
     });
 
-    it('does not add a duration for a non-participant', function (done) {
+    it('does not change the duration for a non-participant', function (done) {
       eventStore.state.events = [];
 
       const params = {nickname: 'nickname', roomType: 'single', duration: 4};
@@ -201,27 +201,30 @@ describe('SoCraTes Activities Service', function () {
       });
     });
 
-    it('does not add a duration if the nickname is empty', function (done) {
+    it('does not change the duration if the nickname is empty', function (done) {
       socratesActivitiesService.newDurationFor({nickname: '', roomType: 'single', duration: 4}, function (err) {
         expect(saveEventStore.called).to.be.false();
         expect(changedDurationNotification.called).to.be.false();
-        done(err);
+        expect(err.errors).to.eql(['An empty nickname is invalid!']);
+        done();
       });
     });
 
-    it('does not add a duration if the room type is invalid', function (done) {
+    it('does not change the duration if the room type is invalid', function (done) {
       socratesActivitiesService.newDurationFor({nickname: 'nickname', roomType: 'unknown', duration: 4}, function (err) {
         expect(saveEventStore.called).to.be.false();
         expect(changedDurationNotification.called).to.be.false();
-        done(err);
+        expect(err.errors).to.eql(['The room type is invalid!']);
+        done();
       });
     });
 
-    it('does not add a duration if the duration is invalid', function (done) {
+    it('does not change the duration if the duration is invalid', function (done) {
       socratesActivitiesService.newDurationFor({nickname: 'nickname', roomType: 'single', duration: 0}, function (err) {
         expect(saveEventStore.called).to.be.false();
         expect(changedDurationNotification.called).to.be.false();
-        done(err);
+        expect(err.errors).to.eql(['The duration is invalid!']);
+        done();
       });
     });
   });
