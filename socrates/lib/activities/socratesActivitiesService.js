@@ -1,6 +1,7 @@
 'use strict';
 
 var _ = require('lodash');
+const R = require('ramda');
 var async = require('async');
 var beans = require('simple-configure').get('beans');
 var e = beans.get('eventConstants');
@@ -20,6 +21,20 @@ function saveCommandProcessor(args) {
     return args.callback();
   });
 }
+
+function validate(params) {
+  return R.keys(params).map(key => {
+    switch (key) {
+    case 'nickname':
+      if (!params.nickname) { return 'An empty nickname is invalid!'; } else { return null; }
+    case 'roomType':
+      if (!roomOptions.isValidRoomType(params.roomType)) { return 'The room type is invalid!'; } else { return null; }
+    default:
+      return null;
+    }
+  }).filter(m => m);
+}
+
 
 module.exports = {
 
@@ -84,9 +99,7 @@ module.exports = {
 
   newRoomTypeFor: function (params, callback) {
 
-    const validationErrors = [];
-    if (!params.nickname) { validationErrors.push('An empty nickname is invalid!'); }
-    if (!roomOptions.isValidRoomType(params.newRoomType)) { validationErrors.push('The room type is invalid!'); }
+    const validationErrors = validate({nickname: params.nickname, roomType: params.newRoomType});
     if (validationErrors.length > 0) { return callback(new ValidationErrors(validationErrors)); }
 
     async.series(
