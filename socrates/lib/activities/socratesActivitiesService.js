@@ -23,7 +23,7 @@ function saveCommandProcessor(args) {
 }
 
 function validate(params) {
-  return R.keys(params).map(key => {
+  const validationErrors = R.keys(params).map(key => {
     switch (key) {
     case 'nickname':
       if (!params.nickname) { return 'An empty nickname is invalid!'; } else { return null; }
@@ -35,8 +35,9 @@ function validate(params) {
       return null;
     }
   }).filter(m => m);
-}
 
+  if (validationErrors.length > 0) { return new ValidationErrors(validationErrors); }
+}
 
 module.exports = {
 
@@ -71,7 +72,7 @@ module.exports = {
   newDurationFor: function (params, callback) {
 
     const validationErrors = validate(params);
-    if (validationErrors.length > 0) { return callback(new ValidationErrors(validationErrors)); }
+    if (validationErrors) { return callback(validationErrors); }
 
     async.series(
       [
@@ -101,7 +102,7 @@ module.exports = {
   newRoomTypeFor: function (params, callback) {
 
     const validationErrors = validate({nickname: params.nickname, roomType: params.newRoomType});
-    if (validationErrors.length > 0) { return callback(new ValidationErrors(validationErrors)); }
+    if (validationErrors) { return callback(validationErrors); }
 
     async.series(
       [
