@@ -200,6 +200,30 @@ describe('SoCraTes Activities Service', function () {
         done(err);
       });
     });
+
+    it('does not add a duration if the nickname is empty', function (done) {
+      socratesActivitiesService.newDurationFor({nickname: '', roomType: 'single', duration: 4}, function (err) {
+        expect(saveEventStore.called).to.be.false();
+        expect(changedDurationNotification.called).to.be.false();
+        done(err);
+      });
+    });
+
+    it('does not add a duration if the room type is invalid', function (done) {
+      socratesActivitiesService.newDurationFor({nickname: 'nickname', roomType: 'unknown', duration: 4}, function (err) {
+        expect(saveEventStore.called).to.be.false();
+        expect(changedDurationNotification.called).to.be.false();
+        done(err);
+      });
+    });
+
+    it('does not add a duration if the duration is invalid', function (done) {
+      socratesActivitiesService.newDurationFor({nickname: 'nickname', roomType: 'single', duration: 0}, function (err) {
+        expect(saveEventStore.called).to.be.false();
+        expect(changedDurationNotification.called).to.be.false();
+        done(err);
+      });
+    });
   });
 
   describe('newRoomTypeFor', function () {

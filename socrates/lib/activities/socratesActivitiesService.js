@@ -51,6 +51,10 @@ module.exports = {
 
   newDurationFor: function (params, callback) {
 
+    if (!params.nickname || !roomOptions.isValidRoomType(params.roomType) || !roomOptions.isValidDuration(params.duration)) {
+      return callback();
+    }
+
     async.series(
       [
         _.partial(memberstore.getMember, params.nickname),
