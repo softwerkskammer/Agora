@@ -82,6 +82,13 @@ module.exports = {
 
   newRoomTypeFor: function (params, callback) {
 
+    const validationErrors = [];
+    if (!params.nickname) {validationErrors.push('An empty nickname is invalid!'); }
+    if (!roomOptions.isValidRoomType(params.newRoomType)) {
+      validationErrors.push('The room type "' + params.newRoomType + '" is invalid!');
+    }
+    if (validationErrors.length > 0) { return callback(validationErrors); }
+
     async.series(
       [
         _.partial(memberstore.getMember, params.nickname),

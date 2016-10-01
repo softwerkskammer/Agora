@@ -260,6 +260,25 @@ describe('SoCraTes Activities Service', function () {
         done(err);
       });
     });
+
+    it('does not add a duration if the nickname is empty', function (done) {
+      socratesActivitiesService.newRoomTypeFor({nickname: '', newRoomType: 'single'}, function (err) {
+        expect(saveEventStore.called).to.be.false();
+        expect(changedRoomTypeNotification.called).to.be.false();
+        expect(err).to.eql(['An empty nickname is invalid!']);
+        done();
+      });
+    });
+
+    it('does not add a duration if the room type is invalid', function (done) {
+      socratesActivitiesService.newRoomTypeFor({nickname: 'nickname', newRoomType: 'unknown'}, function (err) {
+        expect(saveEventStore.called).to.be.false();
+        expect(changedRoomTypeNotification.called).to.be.false();
+        expect(err).to.eql(['The room type "unknown" is invalid!']);
+        done();
+      });
+    });
+
   });
 
   it('joins two members to form a room, updates the eventstore and the read model', function (done) {
