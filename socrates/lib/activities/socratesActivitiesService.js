@@ -11,6 +11,8 @@ var roomOptions = beans.get('roomOptions');
 
 var currentUrl = beans.get('socratesConstants').currentUrl;
 
+const ValidationErrors = beans.get('validationErrors');
+
 function saveCommandProcessor(args) {
   eventstoreService.saveCommandProcessor(args.commandProcessor, args.events, function (err) {
     if (err) { return args.callback(err); }
@@ -83,11 +85,9 @@ module.exports = {
   newRoomTypeFor: function (params, callback) {
 
     const validationErrors = [];
-    if (!params.nickname) {validationErrors.push('An empty nickname is invalid!'); }
-    if (!roomOptions.isValidRoomType(params.newRoomType)) {
-      validationErrors.push('The room type "' + params.newRoomType + '" is invalid!');
-    }
-    if (validationErrors.length > 0) { return callback(validationErrors); }
+    if (!params.nickname) { validationErrors.push('An empty nickname is invalid!'); }
+    if (!roomOptions.isValidRoomType(params.newRoomType)) { validationErrors.push('The room type is invalid!'); }
+    if (validationErrors.length > 0) { return callback(new ValidationErrors(validationErrors)); }
 
     async.series(
       [

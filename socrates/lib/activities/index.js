@@ -19,6 +19,8 @@ const activitiesService = beans.get('activitiesService');  // for fetching the S
 const Activity = beans.get('activity'); // for creating a new activity for SWK
 const activitystore = beans.get('activitystore'); // for storing the SoCraTes activity in SWK
 
+const ValidationErrors = beans.get('validationErrors');
+
 const reservedURLs = '^new$|^edit$|^submit$|^checkurl$\\+';
 
 const app = misc.expressAppIn(__dirname);
@@ -124,6 +126,9 @@ app.get('/fromWaitinglistToParticipant/:roomType/:nickname', function (req, res)
 
 function updateFor(updater, params, res, next) {
   updater(params, function (err) {
+    if (err && err instanceof ValidationErrors) {
+      return res.render('../../../views/errorPages/validationError', {errors: err.errors});
+    }
     if (err) { return next(err); }
     res.redirect('/registration/management');
   });
