@@ -49,11 +49,11 @@ module.exports = {
     );
   },
 
-  newDurationFor: function (nickname, roomType, duration, callback) {
+  newDurationFor: function (params, callback) {
 
     async.series(
       [
-        _.partial(memberstore.getMember, nickname),
+        _.partial(memberstore.getMember, params.nickname),
         _.partial(eventstoreService.getRegistrationCommandProcessor, currentUrl).bind(eventstoreService)
       ],
       function (err, results) {
@@ -62,13 +62,13 @@ module.exports = {
         const registrationCommandProcessor = results[1];
         if (!registrationCommandProcessor || !member) { return callback(); }
 
-        const event = registrationCommandProcessor.setNewDurationForParticipant(member.id(), duration);
+        const event = registrationCommandProcessor.setNewDurationForParticipant(member.id(), params.duration);
 
         const args = {commandProcessor: registrationCommandProcessor, events: [event], callback: callback};
 
         if (event.event === e.DURATION_WAS_CHANGED) {
           args.handleSuccess = function () {
-            notifications.changedDuration(member, roomOptions.informationFor(roomType, duration));
+            notifications.changedDuration(member, roomOptions.informationFor(params.roomType, params.duration));
           };
         }
         saveCommandProcessor(args);

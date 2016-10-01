@@ -173,7 +173,8 @@ describe('SoCraTes Activities Service', function () {
         events.participantWasRegistered('single', 2, 'sessionId', 'memberId', aLongTimeAgo)
       ];
 
-      socratesActivitiesService.newDurationFor('nickname', 'single', 4, function (err) {
+      const params = {nickname: 'nickname', roomType: 'single', duration: 4};
+      socratesActivitiesService.newDurationFor(params, function (err) {
         expect(stripTimestamps(saveEventStore.firstCall.args[0].state.events)).to.eql([
           {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: 'sessionId', roomType: 'single', memberId: 'memberId', duration: 2, joinedSoCraTes: aLongTimeAgo.valueOf()},
           {event: e.DURATION_WAS_CHANGED, roomType: 'single', memberId: 'memberId', duration: 4, joinedSoCraTes: aLongTimeAgo.valueOf()}]);
@@ -190,7 +191,8 @@ describe('SoCraTes Activities Service', function () {
     it('does not add a duration for a non-participant', function (done) {
       eventStore.state.events = [];
 
-      socratesActivitiesService.newDurationFor('nickname', 'single', 4, function (err) {
+      const params = {nickname: 'nickname', roomType: 'single', duration: 4};
+      socratesActivitiesService.newDurationFor(params, function (err) {
         expect(stripTimestamps(saveEventStore.firstCall.args[0].state.events)).to.eql([
           {event: e.DID_NOT_CHANGE_DURATION_FOR_NON_PARTICIPANT, memberId: 'memberId', duration: 4}]);
 

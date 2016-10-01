@@ -1,6 +1,7 @@
 'use strict';
 
 const async = require('async');
+const R = require('ramda');
 const _ = require('lodash');
 const moment = require('moment-timezone');
 
@@ -121,11 +122,15 @@ app.get('/fromWaitinglistToParticipant/:roomType/:nickname', function (req, res)
   });
 });
 
-app.post('/newDuration', function (req, res, next) {
-  socratesActivitiesService.newDurationFor(req.body.nickname, req.body.roomType, req.body.duration, function (err) {
-    if (err) {return next(err); }
+function updateFor(updater, params, res, next) {
+  updater(params, function (err) {
+    if (err) { return next(err); }
     res.redirect('/registration/management');
   });
+}
+
+app.post('/newDuration', function (req, res, next) {
+  updateFor(socratesActivitiesService.newDurationFor, R.pick(['nickname', 'roomType', 'duration'], req.body), res, next);
 });
 
 app.post('/newResource', function (req, res, next) {
@@ -167,13 +172,6 @@ app.post('/removeParticipant', function (req, res, next) {
     res.redirect('/registration/management');
   });
 });
-
-function updateFor(updater, params, res, next) {
-  updater(params, function (err) {
-    if (err) { return next(err); }
-    res.redirect('/registration/management');
-  });
-}
 
 app.post('/removeWaitinglistMember', function (req, res, next) {
   updateFor(socratesActivitiesService.removeWaitinglistMemberFor,
