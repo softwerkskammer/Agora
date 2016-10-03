@@ -102,19 +102,18 @@ describe('SoCraTes registration application', function () {
         .expect(200, done);
     });
 
-    it('does not display that options 1 to 3 are not available', function (done) {
+    it('shows different room options', function (done) {
       appWithoutMember
         .get('/')
-        .expect(/<th>Single<\/th><td class="text-center"><div class="radio-inline"><label><input type="radio" name="nightsOptions" value="single,2"/)
-        .expect(/<th>Double shared<\/th><td class="text-center"><div class="radio-inline"><label><input type="radio" name="nightsOptions" value="bed_in_double,2"/)
-        .expect(/<th>Junior \(exclusively\)<\/th><td class="text-center"><div class="radio-inline"><label><input type="radio" name="nightsOptions" value="junior,2"/, done);
+        .expect(/<th><div class="radio-inline"><label><input type="checkbox" name="roomsOptions" value="single"\/><b>&nbsp; Single<\/b><\/label><\/div><\/th>/)
+        .expect(/<th><div class="radio-inline"><label><input type="checkbox" name="roomsOptions" value="bed_in_double"\/><b>&nbsp; Double shared<\/b><\/label><\/div><\/th>/)
+        .expect(/<th><div class="radio-inline"><label><input type="checkbox" name="roomsOptions" value="junior"\/><b>&nbsp; Junior \(exclusively\)<\/b><\/label><\/div><\/th>/, done);
     });
 
     it('shows an enabled registration table with initially disabled register button if the registration param is passed along', function (done) {
       appWithoutMember
         .get('/?registration=secretCode')
         .expect(/<form class="relaxed" id="participationinfoform" action="\/registration\/startRegistration" method="post"><fieldset>/)
-        .expect(/<th>Junior shared<\/th><td class="text-center"><div class="radio-inline"><label><input type="radio" name="nightsOptions" value="bed_in_junior,2"/)
         .expect(/<button class="pull-right btn btn-primary" type="submit" disabled="disabled">I really do want to participate!/)
         .expect(200, done);
     });
@@ -127,18 +126,9 @@ describe('SoCraTes registration application', function () {
       appWithoutMember
         .get('/')
         .expect(/<form class="relaxed" id="participationinfoform" action="\/registration\/startRegistration" method="post"><fieldset>/)
-        .expect(/<th>Junior shared<\/th><td class="text-center"><div class="radio-inline"><label><input type="radio" name="nightsOptions" value="bed_in_junior,2"/)
+        .expect(/<th><div class="radio-inline"><label><input type="checkbox" name="roomsOptions" value="bed_in_double"\/><b>&nbsp; Double shared<\/b><\/label><\/div><\/th>/)
         .expect(/<button class="pull-right btn btn-primary" type="submit" disabled="disabled">I really do want to participate!/)
         .expect(200, done);
-    });
-
-    it('displays that only option 1 has a waitinglist button if nobody is logged in', function (done) {
-      appWithoutMember
-        .get('/')
-        .expect(/<th>Double shared<\/th>/)
-        .expect(/<th>Junior shared<\/th>/)
-        .expect(/<th>Junior \(exclusively\)<\/th>/)
-        .expect(/<th>Single<div class="radio-inline/, done);
     });
 
     it('displays the options (but disabled) if the user is registered', function (done) {
@@ -150,9 +140,9 @@ describe('SoCraTes registration application', function () {
       appWithSocratesMember
         .get('/')
         .expect(/<form class="relaxed" id="participationinfoform" action="\/registration\/startRegistration" method="post"><fieldset class="disabled-text" disabled="disabled"/)
-        .expect(/<th>Single<div class="radio-inline pull-right"><label><input type="checkbox" name="nightsOptions" value="single,waitinglist"/)
-        .expect(/<th>Double shared<\/th><td class="text-center"><div class="radio-inline"><label><input type="radio" name="nightsOptions" value="bed_in_double,2"/)
-        .expect(/<th>Junior \(exclusively\)<\/th><td class="text-center"><div class="radio-inline"><label><input type="radio" name="nightsOptions" value="junior,2"/)
+        .expect(/<th><div class="radio-inline"><label><input type="checkbox" name="roomsOptions" value="single"\/><b>&nbsp; Single<\/b><\/label><\/div><\/th>/)
+        .expect(/<th><div class="radio-inline"><label><input type="checkbox" name="roomsOptions" value="bed_in_double"\/><b>&nbsp; Double shared<\/b><\/label><\/div><\/th>/)
+        .expect(/<th><div class="radio-inline"><label><input type="checkbox" name="roomsOptions" value="junior"\/><b>&nbsp; Junior \(exclusively\)<\/b><\/label><\/div><\/th>/, done)
         .expect(/<div class="btn pull-right btn btn-success">You are already registered\./, done);
     });
 
