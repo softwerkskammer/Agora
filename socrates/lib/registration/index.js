@@ -104,25 +104,15 @@ app.get('/interested', function (req, res) {
 
 app.post('/startRegistration', function (req, res, next) {
 
-  if (!isRegistrationOpen(req.body.registrationParam) || !req.body.nightsOptions) { return res.redirect('/registration'); }
-
-  var nightsOptions = req.body.nightsOptions instanceof Array ? req.body.nightsOptions : [req.body.nightsOptions];
-
+  if (!isRegistrationOpen(req.body.registrationParam) || !req.body.nightsOption || !req.body.roomsOptions) {
+    return res.redirect('/registration');
+  }
   var registrationTuple = {
     activityUrl: socratesConstants.currentUrl,
     sessionId: req.sessionID,
-    desiredRoomTypes: []
+    desiredRoomTypes: misc.toArray(req.body.roomsOptions),
+    duration: req.body.nightsOption
   };
-
-  nightsOptions.forEach(option => {
-    var splitArray = option.split(',');
-    if (splitArray[1] === 'waitinglist') {
-      registrationTuple.desiredRoomTypes.push(splitArray[0]);
-    } else {
-      registrationTuple.roomType = splitArray[0];  // TODO roomType
-      registrationTuple.duration = parseInt(splitArray[1], 10);
-    }
-  });
 
   var participateURL = '/registration/participate';
   req.session.registrationTuple = registrationTuple; // so that we can access it again when finishing the registration

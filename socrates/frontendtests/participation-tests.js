@@ -10,7 +10,7 @@
       expect($('#participationinfoform :checked').length).to.be(0);
       expect($('#participationinfoform :submit').prop('disabled')).to.be.true();
 
-      var radio = $('[name=nightsOptions]').filter('[value="2"]');
+      var radio = $('[name=nightsOption]').filter('[value="2"]');
       radio.click();
       radio.trigger('change');
       var check = $('[name=roomsOptions]').filter('[value="single"]');

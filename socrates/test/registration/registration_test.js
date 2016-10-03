@@ -142,7 +142,7 @@ describe('SoCraTes registration application', function () {
         .expect(/<form class="relaxed" id="participationinfoform" action="\/registration\/startRegistration" method="post"><fieldset class="disabled-text" disabled="disabled"/)
         .expect(/<th><div class="radio-inline"><label><input type="checkbox" name="roomsOptions" value="single"\/><b>&nbsp; Single<\/b><\/label><\/div><\/th>/)
         .expect(/<th><div class="radio-inline"><label><input type="checkbox" name="roomsOptions" value="bed_in_double"\/><b>&nbsp; Double shared<\/b><\/label><\/div><\/th>/)
-        .expect(/<th><div class="radio-inline"><label><input type="checkbox" name="roomsOptions" value="junior"\/><b>&nbsp; Junior \(exclusively\)<\/b><\/label><\/div><\/th>/, done)
+        .expect(/<th><div class="radio-inline"><label><input type="checkbox" name="roomsOptions" value="junior"\/><b>&nbsp; Junior \(exclusively\)<\/b><\/label><\/div><\/th>/)
         .expect(/<div class="btn pull-right btn btn-success">You are already registered\./, done);
     });
 
@@ -275,32 +275,10 @@ describe('SoCraTes registration application', function () {
         });
     });
 
-    it('redirects to the registration page when a room is selected that is full', function (done) {
+    it('redirects to the participate form page when a room is selected (full or not)', function (done) {
       appWithSocratesMember
         .post('/startRegistration')
-        .send('nightsOptions=single,3')
-        .expect(302)
-        .expect('location', '/registration', function (err) {
-          expect(eventStoreSave.called).to.be(true);
-          done(err);
-        });
-    });
-
-    it('redirects to the participate form page when a room is selected that is not full', function (done) {
-      appWithSocratesMember
-        .post('/startRegistration')
-        .send('nightsOptions=bed_in_double,3')
-        .expect(302)
-        .expect('location', '/registration/participate', function (err) {
-          expect(eventStoreSave.called).to.be(true);
-          done(err);
-        });
-    });
-
-    it('redirects to the participate form page when a waitinglist option is selected (especially when the corresponding room is full)', function (done) {
-      appWithSocratesMember
-        .post('/startRegistration')
-        .send('nightsOptions=single,waitinglist&nightsOptions=bed_in_double,waitinglist')
+        .send('roomsOptions=single&nightsOption=3')
         .expect(302)
         .expect('location', '/registration/participate', function (err) {
           expect(eventStoreSave.called).to.be(true);
@@ -315,7 +293,7 @@ describe('SoCraTes registration application', function () {
 
       appWithoutMember
         .post('/startRegistration')
-        .send('nightsOptions=bed_in_double,3')
+        .send('roomsOptions=single&nightsOption=3')
         .expect(302)
         .expect('location', '/registration/participate', function (err) {
           expect(startRegistration.firstCall.args[1]).to.be(null);
@@ -328,7 +306,7 @@ describe('SoCraTes registration application', function () {
 
       appWithSocratesMember
         .post('/startRegistration')
-        .send('nightsOptions=bed_in_double,3')
+        .send('roomsOptions=single&nightsOption=3')
         .expect(302)
         .expect('location', '/registration/participate', function (err) {
           expect(startRegistration.firstCall.args[1]).to.be('memberId2');
@@ -340,36 +318,19 @@ describe('SoCraTes registration application', function () {
 
   describe('startRegistration splits up the form params', function () {
 
-    it('for a room registration', function (done) {
+    it('for a single waitinglist registration', function (done) {
       const startRegistration = sinon.spy(registrationService, 'startRegistration');
 
       appWithSocratesMember
         .post('/startRegistration')
-        .send('nightsOptions=bed_in_double,3')
-        .expect(302)
-        .expect('location', '/registration/participate', function (err) {
-
-          const registrationTuple = startRegistration.firstCall.args[0];
-          expect(registrationTuple.roomType).to.eql('bed_in_double');
-          expect(registrationTuple.duration).to.eql(3);
-          expect(registrationTuple.desiredRoomTypes).to.eql([]);
-          done(err);
-        });
-    });
-
-    it('for a waitinglist registration', function (done) {
-      const startRegistration = sinon.spy(registrationService, 'startRegistration');
-
-      appWithSocratesMember
-        .post('/startRegistration')
-        .send('nightsOptions=bed_in_double,waitinglist')
+        .send('roomsOptions=single&nightsOption=3')
         .expect(302)
         .expect('location', '/registration/participate', function (err) {
 
           const registrationTuple = startRegistration.firstCall.args[0];
           expect(registrationTuple.roomType).to.eql(undefined);
-          expect(registrationTuple.duration).to.eql(undefined);
-          expect(registrationTuple.desiredRoomTypes).to.eql(['bed_in_double']);
+          expect(registrationTuple.duration).to.eql('3');
+          expect(registrationTuple.desiredRoomTypes).to.eql(['single']);
           done(err);
         });
     });
@@ -379,31 +340,14 @@ describe('SoCraTes registration application', function () {
 
       appWithSocratesMember
         .post('/startRegistration')
-        .send('nightsOptions=single,waitinglist&nightsOptions=bed_in_double,waitinglist&nightsOptions=junior,waitinglist')
+        .send('roomsOptions=single&roomsOptions=bed_in_double&roomsOptions=junior&nightsOption=3')
         .expect(302)
         .expect('location', '/registration/participate', function (err) {
 
           const registrationTuple = startRegistration.firstCall.args[0];
           expect(registrationTuple.roomType).to.eql(undefined);
-          expect(registrationTuple.duration).to.eql(undefined);
+          expect(registrationTuple.duration).to.eql('3');
           expect(registrationTuple.desiredRoomTypes).to.eql(['single', 'bed_in_double', 'junior']);
-          done(err);
-        });
-    });
-
-    it('for a room registration and multiple waitinglist registrations', function (done) {
-      const startRegistration = sinon.spy(registrationService, 'startRegistration');
-
-      appWithSocratesMember
-        .post('/startRegistration')
-        .send('nightsOptions=bed_in_junior,3&nightsOptions=bed_in_double,waitinglist&nightsOptions=junior,waitinglist')
-        .expect(302)
-        .expect('location', '/registration/participate', function (err) {
-
-          const registrationTuple = startRegistration.firstCall.args[0];
-          expect(registrationTuple.roomType).to.eql('bed_in_junior');
-          expect(registrationTuple.duration).to.eql(3);
-          expect(registrationTuple.desiredRoomTypes).to.eql(['bed_in_double', 'junior']);
           done(err);
         });
     });

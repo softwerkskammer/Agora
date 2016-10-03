@@ -2,7 +2,7 @@
 (function () {
   'use strict';
   function disableParticipationSubmitButton() {
-    $('#participationinfoform :submit').prop('disabled', ($('[name=nightsOptions]:checked').length === 0) || ($('[name=roomsOptions]:checked').length === 0));
+    $('#participationinfoform :submit').prop('disabled', ($('[name=nightsOption]:checked').length === 0) || ($('[name=roomsOptions]:checked').length === 0));
   }
 
   $(function () {
