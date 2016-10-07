@@ -199,6 +199,9 @@ module.exports = {
 
   removeParticipantPairFor: function (params, callback) {
 
+    const validationErrors = validate({nickname1: params.participant1Nick, nickname2: params.participant2Nick, roomType: params.roomType});
+    if (validationErrors) { return callback(validationErrors); }
+
     async.series(
       [
         _.partial(memberstore.getMember, params.participant1Nick),

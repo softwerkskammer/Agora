@@ -335,33 +335,64 @@ describe('SoCraTes Activities Service', function () {
 
   });
 
-  it('removes a room pair', function (done) {
-    eventStore.state.events = [
-      events.participantWasRegistered('bed_in_double', 2, 'session-id', 'memberIdForPair1', aLongTimeAgo),
-      events.participantWasRegistered('bed_in_double', 2, 'session-id', 'memberIdForPair2', aLongTimeAgo),
-      events.roomPairWasAdded('bed_in_double', 'memberIdForPair1', 'memberIdForPair2')
-    ];
+  describe('removeParticipantPairFor', function () {
 
-    expect(new RoomsReadModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))).roomPairsFor('bed_in_double')).to.eql([{ // TODO extract to its own test!
-      participant1Id: 'memberIdForPair1',
-      participant2Id: 'memberIdForPair2'
-    }]);
+    it('removes a room pair', function (done) {
+      eventStore.state.events = [
+        events.participantWasRegistered('bed_in_double', 2, 'session-id', 'memberIdForPair1', aLongTimeAgo),
+        events.participantWasRegistered('bed_in_double', 2, 'session-id', 'memberIdForPair2', aLongTimeAgo),
+        events.roomPairWasAdded('bed_in_double', 'memberIdForPair1', 'memberIdForPair2')
+      ];
 
-    socratesActivitiesService.removeParticipantPairFor({roomType: 'bed_in_double', participant1Nick: 'nicknameForPair1', participant2Nick: 'nicknameForPair2'}, function (err) {
-      const savedEventStore = saveEventStore.firstCall.args[0];
-      expect(stripTimestamps(savedEventStore.state.events)).to.eql([
-        {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: 'session-id', roomType: 'bed_in_double', memberId: 'memberIdForPair1', duration: 2, joinedSoCraTes: aLongTimeAgo.valueOf()},
-        {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: 'session-id', roomType: 'bed_in_double', memberId: 'memberIdForPair2', duration: 2, joinedSoCraTes: aLongTimeAgo.valueOf()},
-        {event: e.ROOM_PAIR_WAS_ADDED, roomType: 'bed_in_double', participant1Id: 'memberIdForPair1', participant2Id: 'memberIdForPair2'},
-        {event: e.ROOM_PAIR_WAS_REMOVED, roomType: 'bed_in_double', participant1Id: 'memberIdForPair1', participant2Id: 'memberIdForPair2'}
-      ]);
+      expect(new RoomsReadModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))).roomPairsFor('bed_in_double')).to.eql([{ // TODO extract to its own test!
+        participant1Id: 'memberIdForPair1',
+        participant2Id: 'memberIdForPair2'
+      }]);
 
-      const readModel = cache.get(socratesConstants.currentUrl + '_roomsReadModel');
-      expect(readModel.roomPairsFor('bed_in_double')).to.have.length(0);
+      socratesActivitiesService.removeParticipantPairFor({roomType: 'bed_in_double', participant1Nick: 'nicknameForPair1', participant2Nick: 'nicknameForPair2'}, function (err) {
+        const savedEventStore = saveEventStore.firstCall.args[0];
+        expect(stripTimestamps(savedEventStore.state.events)).to.eql([
+          {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: 'session-id', roomType: 'bed_in_double', memberId: 'memberIdForPair1', duration: 2, joinedSoCraTes: aLongTimeAgo.valueOf()},
+          {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: 'session-id', roomType: 'bed_in_double', memberId: 'memberIdForPair2', duration: 2, joinedSoCraTes: aLongTimeAgo.valueOf()},
+          {event: e.ROOM_PAIR_WAS_ADDED, roomType: 'bed_in_double', participant1Id: 'memberIdForPair1', participant2Id: 'memberIdForPair2'},
+          {event: e.ROOM_PAIR_WAS_REMOVED, roomType: 'bed_in_double', participant1Id: 'memberIdForPair1', participant2Id: 'memberIdForPair2'}
+        ]);
 
-      //      expect(new RoomsReadModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))).roomPairsFor('bed_in_double')).to.eql([]);
-      done(err);
+        const readModel = cache.get(socratesConstants.currentUrl + '_roomsReadModel');
+        expect(readModel.roomPairsFor('bed_in_double')).to.have.length(0);
+
+        //      expect(new RoomsReadModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))).roomPairsFor('bed_in_double')).to.eql([]);
+        done(err);
+      });
     });
+
+    it('does not remove a participant pair if the first nickname is empty', function (done) {
+      socratesActivitiesService.removeParticipantPairFor({roomType: 'bed_in_double', participant1Nick: '', participant2Nick: 'nicknameForPair2'}, function (err) {
+        expect(saveEventStore.called).to.be.false();
+        expect(changedRoomTypeNotification.called).to.be.false();
+        expect(err.errors).to.eql(['An empty first nickname is invalid!']);
+        done();
+      });
+    });
+
+    it('does not remove a participant pair if the second nickname is empty', function (done) {
+      socratesActivitiesService.removeParticipantPairFor({roomType: 'bed_in_double', participant1Nick: 'nicknameForPair1', participant2Nick: ''}, function (err) {
+        expect(saveEventStore.called).to.be.false();
+        expect(changedRoomTypeNotification.called).to.be.false();
+        expect(err.errors).to.eql(['An empty second nickname is invalid!']);
+        done();
+      });
+    });
+
+    it('does not remove a participant pair if the room type is invalid', function (done) {
+      socratesActivitiesService.removeParticipantPairFor({roomType: 'unknown', participant1Nick: 'nicknameForPair1', participant2Nick: 'nicknameForPair2'}, function (err) {
+        expect(saveEventStore.called).to.be.false();
+        expect(changedRoomTypeNotification.called).to.be.false();
+        expect(err.errors).to.eql(['The room type is invalid!']);
+        done();
+      });
+    });
+
   });
 
   describe('removeParticipant', function () {
