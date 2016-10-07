@@ -51,6 +51,10 @@ function validate(params) {
 module.exports = {
 
   fromWaitinglistToParticipant: function (params, now, callback) {
+
+    const validationErrors = validate(params);
+    if (validationErrors) { return callback(validationErrors); }
+
     async.series(
       [
         _.partial(memberstore.getMember, params.nickname),

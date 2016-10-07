@@ -164,6 +164,34 @@ describe('SoCraTes Activities Service', function () {
         done(err);
       });
     });
+
+    it('does not register the user if the nickname is empty', function (done) {
+      socratesActivitiesService.fromWaitinglistToParticipant({nickname: '', roomType: 'single', duration: 4}, now, function (err) {
+        expect(saveEventStore.called).to.be.false();
+        expect(newParticipantNotification.called).to.be.false();
+        expect(err.errors).to.eql(['An empty nickname is invalid!']);
+        done();
+      });
+    });
+
+    it('does not register the user if the room type is invalid', function (done) {
+      socratesActivitiesService.fromWaitinglistToParticipant({nickname: 'nickname', roomType: 'unknown', duration: 4}, now, function (err) {
+        expect(saveEventStore.called).to.be.false();
+        expect(newParticipantNotification.called).to.be.false();
+        expect(err.errors).to.eql(['The room type is invalid!']);
+        done();
+      });
+    });
+
+    it('does not register the user if the duration is invalid', function (done) {
+      socratesActivitiesService.fromWaitinglistToParticipant({nickname: 'nickname', roomType: 'single', duration: 0}, now, function (err) {
+        expect(saveEventStore.called).to.be.false();
+        expect(newParticipantNotification.called).to.be.false();
+        expect(err.errors).to.eql(['The duration is invalid!']);
+        done();
+      });
+    });
+
   });
 
   describe('newDurationFor', function () {
