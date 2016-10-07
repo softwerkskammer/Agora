@@ -1,6 +1,5 @@
 'use strict';
 
-var _ = require('lodash');
 const R = require('ramda');
 var async = require('async');
 var beans = require('simple-configure').get('beans');
@@ -15,7 +14,7 @@ var currentUrl = beans.get('socratesConstants').currentUrl;
 const ValidationErrors = beans.get('validationErrors');
 
 function saveCommandProcessor(args) {
-  eventstoreService.saveCommandProcessor(args.commandProcessor, args.events, function (err) {
+  eventstoreService.saveCommandProcessor(args.commandProcessor, args.events, err => {
     if (err) { return args.callback(err); }
     if (args.handleSuccess) { args.handleSuccess(); }
     return args.callback();
@@ -57,10 +56,10 @@ module.exports = {
 
     async.series(
       [
-        _.partial(memberstore.getMember, params.nickname),
-        _.partial(eventstoreService.getRegistrationCommandProcessor, currentUrl).bind(eventstoreService)
+        R.partial(memberstore.getMember, [params.nickname]),
+        R.partial(eventstoreService.getRegistrationCommandProcessor, [currentUrl]).bind(eventstoreService)
       ],
-      function (err, results) {
+      (err, results) => {
         if (err) { return callback(err); }
         const member = results[0];
         const registrationCommandProcessor = results[1];
@@ -71,7 +70,7 @@ module.exports = {
         const args = {commandProcessor: registrationCommandProcessor, events: [event], callback: callback};
 
         if (event.event === e.PARTICIPANT_WAS_REGISTERED || event.event === e.REGISTERED_PARTICIPANT_FROM_WAITINGLIST) {
-          args.handleSuccess = function () {
+          args.handleSuccess = () => {
             var bookingdetails = roomOptions.informationFor(params.roomType, params.duration);
             bookingdetails.fromWaitinglist = true;
             notifications.newParticipant(member.id(), bookingdetails);
@@ -89,10 +88,10 @@ module.exports = {
 
     async.series(
       [
-        _.partial(memberstore.getMember, params.nickname),
-        _.partial(eventstoreService.getRegistrationCommandProcessor, currentUrl).bind(eventstoreService)
+        R.partial(memberstore.getMember, [params.nickname]),
+        R.partial(eventstoreService.getRegistrationCommandProcessor, [currentUrl]).bind(eventstoreService)
       ],
-      function (err, results) {
+      (err, results) => {
         if (err) { return callback(err); }
         const member = results[0];
         const registrationCommandProcessor = results[1];
@@ -103,7 +102,7 @@ module.exports = {
         const args = {commandProcessor: registrationCommandProcessor, events: [event], callback: callback};
 
         if (event.event === e.DURATION_WAS_CHANGED) {
-          args.handleSuccess = function () {
+          args.handleSuccess = () => {
             notifications.changedDuration(member, roomOptions.informationFor(params.roomType, params.duration));
           };
         }
@@ -119,10 +118,10 @@ module.exports = {
 
     async.series(
       [
-        _.partial(memberstore.getMember, params.nickname),
-        _.partial(eventstoreService.getRegistrationCommandProcessor, currentUrl).bind(eventstoreService)
+        R.partial(memberstore.getMember, [params.nickname]),
+        R.partial(eventstoreService.getRegistrationCommandProcessor, [currentUrl]).bind(eventstoreService)
       ],
-      function (err, results) {
+      (err, results) => {
         if (err) { return callback(err); }
         const member = results[0];
         const registrationCommandProcessor = results[1];
@@ -133,7 +132,7 @@ module.exports = {
         const args = {commandProcessor: registrationCommandProcessor, events: [event], callback: callback};
 
         if (event.event === e.ROOM_TYPE_WAS_CHANGED) {
-          args.handleSuccess = function () {
+          args.handleSuccess = () => {
             notifications.changedResource(member, roomOptions.informationFor(params.newRoomType, event.duration)); // this is a bit hacky, we should better go through a read model
           };
         }
@@ -149,10 +148,10 @@ module.exports = {
 
     async.series(
       [
-        _.partial(memberstore.getMember, params.nickname),
-        _.partial(eventstoreService.getRegistrationCommandProcessor, currentUrl).bind(eventstoreService)
+        R.partial(memberstore.getMember, [params.nickname]),
+        R.partial(eventstoreService.getRegistrationCommandProcessor, [currentUrl]).bind(eventstoreService)
       ],
-      function (err, results) {
+      (err, results) => {
         if (err) { return callback(err); }
         const member = results[0];
         const registrationCommandProcessor = results[1];
@@ -163,7 +162,7 @@ module.exports = {
         const args = {commandProcessor: registrationCommandProcessor, events: [event], callback: callback};
 
         if (event.event === e.DESIRED_ROOM_TYPES_WERE_CHANGED) {
-          args.handleSuccess = function () {
+          args.handleSuccess = () => {
             notifications.changedWaitinglist(member, params.newDesiredRoomTypes.map(name => roomOptions.informationFor(name, 'waitinglist')));
           };
         }
@@ -179,11 +178,11 @@ module.exports = {
 
     async.series(
       [
-        _.partial(memberstore.getMember, params.participant1Nick),
-        _.partial(memberstore.getMember, params.participant2Nick),
-        _.partial(eventstoreService.getRoomsCommandProcessor, currentUrl).bind(eventstoreService)
+        R.partial(memberstore.getMember, [params.participant1Nick]),
+        R.partial(memberstore.getMember, [params.participant2Nick]),
+        R.partial(eventstoreService.getRoomsCommandProcessor, [currentUrl]).bind(eventstoreService)
       ],
-      function (err, results) {
+      (err, results) => {
         if (err) { return callback(err); }
         const participant1 = results[0];
         const participant2 = results[1];
@@ -208,11 +207,11 @@ module.exports = {
 
     async.series(
       [
-        _.partial(memberstore.getMember, params.participant1Nick),
-        _.partial(memberstore.getMember, params.participant2Nick),
-        _.partial(eventstoreService.getRoomsCommandProcessor, currentUrl).bind(eventstoreService)
+        R.partial(memberstore.getMember, [params.participant1Nick]),
+        R.partial(memberstore.getMember, [params.participant2Nick]),
+        R.partial(eventstoreService.getRoomsCommandProcessor, [currentUrl]).bind(eventstoreService)
       ],
-      function (err, results) {
+      (err, results) => {
         if (err) { return callback(err); }
         const participant1 = results[0];
         const participant2 = results[1];
@@ -237,11 +236,11 @@ module.exports = {
 
     async.series(
       [
-        _.partial(memberstore.getMember, params.participantNick),
-        _.partial(eventstoreService.getRoomsCommandProcessor, currentUrl).bind(eventstoreService),
-        _.partial(eventstoreService.getRegistrationCommandProcessor, currentUrl).bind(eventstoreService)
+        R.partial(memberstore.getMember, [params.participantNick]),
+        R.partial(eventstoreService.getRoomsCommandProcessor, [currentUrl]).bind(eventstoreService),
+        R.partial(eventstoreService.getRegistrationCommandProcessor, [currentUrl]).bind(eventstoreService)
       ],
-      function (err, results) {
+      (err, results) => {
         if (err) { return callback(err); }
         const participant = results[0];
         const roomsCommandProcessor = results[1];
@@ -253,7 +252,7 @@ module.exports = {
 
         const args = {commandProcessor: [roomsCommandProcessor, registrationCommandProcessor], events: [roomsEvents, [registrationEvent]], callback: callback};
         if (registrationEvent.event === e.PARTICIPANT_WAS_REMOVED) {
-          args.handleSuccess = function () {
+          args.handleSuccess = () => {
             notifications.removedFromParticipants(participant);
           };
         }
@@ -269,10 +268,10 @@ module.exports = {
 
     async.series(
       [
-        _.partial(memberstore.getMember, params.waitinglistMemberNick),
-        _.partial(eventstoreService.getRegistrationCommandProcessor, currentUrl).bind(eventstoreService)
+        R.partial(memberstore.getMember, [params.waitinglistMemberNick]),
+        R.partial(eventstoreService.getRegistrationCommandProcessor, [currentUrl]).bind(eventstoreService)
       ],
-      function (err, results) {
+      (err, results) => {
         if (err) { return callback(err); }
         const waitinglistMember = results[0];
         const registrationCommandProcessor = results[1];
@@ -283,7 +282,7 @@ module.exports = {
         const args = {commandProcessor: registrationCommandProcessor, events: [event], callback: callback};
 
         if (event.event === e.WAITINGLIST_PARTICIPANT_WAS_REMOVED) {
-          args.handleSuccess = function () {
+          args.handleSuccess = () => {
             notifications.removedFromWaitinglist(waitinglistMember);
           };
         }

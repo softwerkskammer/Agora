@@ -2,7 +2,6 @@
 
 const async = require('async');
 const R = require('ramda');
-const _ = require('lodash');
 const moment = require('moment-timezone');
 
 const beans = require('simple-configure').get('beans');
@@ -100,7 +99,7 @@ app.post('/submit', function (req, res, next) {
     ],
     function (err, errorMessages) {
       if (err) { return next(err); }
-      const realErrors = _.filter(_.flatten(errorMessages), message => message);
+      const realErrors = R.flatten(errorMessages).filter(message => message);
       if (realErrors.length === 0) {
         return activitySubmitted(req, res, next);
       }
@@ -110,7 +109,7 @@ app.post('/submit', function (req, res, next) {
 });
 
 app.get('/checkurl', function (req, res) {
-  misc.validate(req.query.url, req.query.previousUrl, _.partial(eventstoreService.isValidUrl, reservedURLs), res.end);
+  misc.validate(req.query.url, req.query.previousUrl, R.partial(eventstoreService.isValidUrl, [reservedURLs]), res.end);
 });
 
 // for management tables:

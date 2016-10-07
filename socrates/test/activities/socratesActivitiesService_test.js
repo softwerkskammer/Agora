@@ -5,7 +5,6 @@ var moment = require('moment-timezone');
 
 var sinon = require('sinon').sandbox.create();
 var expect = require('must-dist');
-var _ = require('lodash');
 var R = require('ramda');
 
 const config = require('../../testutil/configureForTest');
@@ -75,7 +74,7 @@ describe('SoCraTes Activities Service', function () {
   });
 
   function stripTimestamps(someEvents) {
-    return _.map(someEvents, function (event) {
+    return someEvents.map(event => {
       var newEvent = R.clone(event);
       delete newEvent.timestamp;
       return newEvent;
