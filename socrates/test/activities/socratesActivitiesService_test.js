@@ -337,7 +337,6 @@ describe('SoCraTes Activities Service', function () {
     it('does not add a participant pair if the first nickname is empty', function (done) {
       socratesActivitiesService.addParticipantPairFor({roomType: 'bed_in_double', participant1Nick: '', participant2Nick: 'nicknameForPair2'}, function (err) {
         expect(saveEventStore.called).to.be.false();
-        expect(changedRoomTypeNotification.called).to.be.false();
         expect(err.errors).to.eql(['An empty first nickname is invalid!']);
         done();
       });
@@ -346,7 +345,6 @@ describe('SoCraTes Activities Service', function () {
     it('does not add a participant pair if the second nickname is empty', function (done) {
       socratesActivitiesService.addParticipantPairFor({roomType: 'bed_in_double', participant1Nick: 'nicknameForPair1', participant2Nick: ''}, function (err) {
         expect(saveEventStore.called).to.be.false();
-        expect(changedRoomTypeNotification.called).to.be.false();
         expect(err.errors).to.eql(['An empty second nickname is invalid!']);
         done();
       });
@@ -355,7 +353,6 @@ describe('SoCraTes Activities Service', function () {
     it('does not add a participant pair if the room type is invalid', function (done) {
       socratesActivitiesService.addParticipantPairFor({roomType: 'unknown', participant1Nick: 'nicknameForPair1', participant2Nick: 'nicknameForPair2'}, function (err) {
         expect(saveEventStore.called).to.be.false();
-        expect(changedRoomTypeNotification.called).to.be.false();
         expect(err.errors).to.eql(['The room type is invalid!']);
         done();
       });
@@ -397,7 +394,6 @@ describe('SoCraTes Activities Service', function () {
     it('does not remove a participant pair if the first nickname is empty', function (done) {
       socratesActivitiesService.removeParticipantPairFor({roomType: 'bed_in_double', participant1Nick: '', participant2Nick: 'nicknameForPair2'}, function (err) {
         expect(saveEventStore.called).to.be.false();
-        expect(changedRoomTypeNotification.called).to.be.false();
         expect(err.errors).to.eql(['An empty first nickname is invalid!']);
         done();
       });
@@ -406,7 +402,6 @@ describe('SoCraTes Activities Service', function () {
     it('does not remove a participant pair if the second nickname is empty', function (done) {
       socratesActivitiesService.removeParticipantPairFor({roomType: 'bed_in_double', participant1Nick: 'nicknameForPair1', participant2Nick: ''}, function (err) {
         expect(saveEventStore.called).to.be.false();
-        expect(changedRoomTypeNotification.called).to.be.false();
         expect(err.errors).to.eql(['An empty second nickname is invalid!']);
         done();
       });
@@ -415,7 +410,6 @@ describe('SoCraTes Activities Service', function () {
     it('does not remove a participant pair if the room type is invalid', function (done) {
       socratesActivitiesService.removeParticipantPairFor({roomType: 'unknown', participant1Nick: 'nicknameForPair1', participant2Nick: 'nicknameForPair2'}, function (err) {
         expect(saveEventStore.called).to.be.false();
-        expect(changedRoomTypeNotification.called).to.be.false();
         expect(err.errors).to.eql(['The room type is invalid!']);
         done();
       });
@@ -505,7 +499,7 @@ describe('SoCraTes Activities Service', function () {
     it('does not remove a participant if the nickname is empty', function (done) {
       socratesActivitiesService.removeParticipantFor({roomType: 'bed_in_double', participantNick: ''}, function (err) {
         expect(saveEventStore.called).to.be.false();
-        expect(changedRoomTypeNotification.called).to.be.false();
+        expect(removedFromParticipantsNotification.called).to.be.false();
         expect(err.errors).to.eql(['An empty nickname is invalid!']);
         done();
       });
@@ -514,7 +508,7 @@ describe('SoCraTes Activities Service', function () {
     it('does not remove a participant if the room type is invalid', function (done) {
       socratesActivitiesService.removeParticipantFor({roomType: 'unknown', participantNick: 'nickname'}, function (err) {
         expect(saveEventStore.called).to.be.false();
-        expect(changedRoomTypeNotification.called).to.be.false();
+        expect(removedFromParticipantsNotification.called).to.be.false();
         expect(err.errors).to.eql(['The room type is invalid!']);
         done();
       });
@@ -580,7 +574,7 @@ describe('SoCraTes Activities Service', function () {
     it('does not change the waitinglist if the nickname is empty', function (done) {
       socratesActivitiesService.newWaitinglistFor({nickname: '', newDesiredRoomTypes: ['single']}, function (err) {
         expect(saveEventStore.called).to.be.false();
-        expect(changedRoomTypeNotification.called).to.be.false();
+        expect(changedWaitinglistNotification.called).to.be.false();
         expect(err.errors).to.eql(['An empty nickname is invalid!']);
         done();
       });
@@ -589,7 +583,7 @@ describe('SoCraTes Activities Service', function () {
     it('does not change the waitinglist if one of the room types is invalid', function (done) {
       socratesActivitiesService.newWaitinglistFor({nickname: 'nickname', newDesiredRoomTypes: ['single', 'unknown']}, function (err) {
         expect(saveEventStore.called).to.be.false();
-        expect(changedRoomTypeNotification.called).to.be.false();
+        expect(changedWaitinglistNotification.called).to.be.false();
         expect(err.errors).to.eql(['One of the room types is invalid!']);
         done();
       });
@@ -598,7 +592,7 @@ describe('SoCraTes Activities Service', function () {
     it('does not change the waitinglist if the list of room types is empty', function (done) {
       socratesActivitiesService.newWaitinglistFor({nickname: 'nickname', newDesiredRoomTypes: []}, function (err) {
         expect(saveEventStore.called).to.be.false();
-        expect(changedRoomTypeNotification.called).to.be.false();
+        expect(changedWaitinglistNotification.called).to.be.false();
         expect(err.errors).to.eql(['Please select at least one desired room type!']);
         done();
       });
@@ -647,7 +641,7 @@ describe('SoCraTes Activities Service', function () {
     it('does not remove from the waitinglist if the nickname is empty', function (done) {
       socratesActivitiesService.removeWaitinglistMemberFor({waitinglistMemberNick: '', desiredRoomTypes: ['single']}, function (err) {
         expect(saveEventStore.called).to.be.false();
-        expect(changedRoomTypeNotification.called).to.be.false();
+        expect(removedFromWaitinglistNotification.called).to.be.false();
         expect(err.errors).to.eql(['An empty nickname is invalid!']);
         done();
       });
@@ -656,7 +650,7 @@ describe('SoCraTes Activities Service', function () {
     it('does not remove from the waitinglist if one of the room types is invalid', function (done) {
       socratesActivitiesService.removeWaitinglistMemberFor({waitinglistMemberNick: 'nickname', desiredRoomTypes: ['single', 'unknown']}, function (err) {
         expect(saveEventStore.called).to.be.false();
-        expect(changedRoomTypeNotification.called).to.be.false();
+        expect(removedFromWaitinglistNotification.called).to.be.false();
         expect(err.errors).to.eql(['One of the room types is invalid!']);
         done();
       });
@@ -665,7 +659,7 @@ describe('SoCraTes Activities Service', function () {
     it('does not remove from the waitinglist if the list of room types is empty', function (done) {
       socratesActivitiesService.removeWaitinglistMemberFor({waitinglistMemberNick: 'nickname', desiredRoomTypes: []}, function (err) {
         expect(saveEventStore.called).to.be.false();
-        expect(changedRoomTypeNotification.called).to.be.false();
+        expect(removedFromWaitinglistNotification.called).to.be.false();
         expect(err.errors).to.eql(['Please select at least one desired room type!']);
         done();
       });
