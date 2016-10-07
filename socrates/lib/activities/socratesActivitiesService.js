@@ -51,7 +51,7 @@ function validate(params) {
 
 module.exports = {
 
-  fromWaitinglistToParticipant: function (params, now, callback) {
+  fromWaitinglistToParticipant: function fromWaitinglistToParticipant(params, now, callback) {
 
     const validationErrors = validate(params);
     if (validationErrors) { return callback(validationErrors); }
@@ -83,7 +83,7 @@ module.exports = {
     );
   },
 
-  newDurationFor: function (params, callback) {
+  newDurationFor: function newDurationFor(params, callback) {
 
     const validationErrors = validate(params);
     if (validationErrors) { return callback(validationErrors); }
@@ -111,7 +111,7 @@ module.exports = {
     );
   },
 
-  newRoomTypeFor: function (params, callback) {
+  newRoomTypeFor: function newRoomTypeFor(params, callback) {
 
     const validationErrors = validate({nickname: params.nickname, roomType: params.newRoomType});
     if (validationErrors) { return callback(validationErrors); }
@@ -139,7 +139,7 @@ module.exports = {
     );
   },
 
-  newWaitinglistFor: function (params, callback) {
+  newWaitinglistFor: function newWaitinglistFor(params, callback) {
 
     const validationErrors = validate({nickname: params.nickname, roomTypes: params.newDesiredRoomTypes});
     if (validationErrors) { return callback(validationErrors); }
@@ -167,7 +167,7 @@ module.exports = {
     );
   },
 
-  addParticipantPairFor: function (params, callback) {
+  addParticipantPairFor: function addParticipantPairFor(params, callback) {
 
     const validationErrors = validate({nickname1: params.participant1Nick, nickname2: params.participant2Nick, roomType: params.roomType});
     if (validationErrors) { return callback(validationErrors); }
@@ -192,7 +192,7 @@ module.exports = {
     );
   },
 
-  removeParticipantPairFor: function (params, callback) {
+  removeParticipantPairFor: function removeParticipantPairFor(params, callback) {
 
     const validationErrors = validate({nickname1: params.participant1Nick, nickname2: params.participant2Nick, roomType: params.roomType});
     if (validationErrors) { return callback(validationErrors); }
@@ -217,7 +217,7 @@ module.exports = {
     );
   },
 
-  removeParticipantFor: function (params, callback) {
+  removeParticipantFor: function removeParticipantFor(params, callback) {
 
     const validationErrors = validate({nickname: params.participantNick, roomType: params.roomType});
     if (validationErrors) { return callback(validationErrors); }
@@ -248,7 +248,7 @@ module.exports = {
     );
   },
 
-  removeWaitinglistMemberFor: function (params, callback) {
+  removeWaitinglistMemberFor: function removeWaitinglistMemberFor(params, callback) {
 
     const validationErrors = validate({nickname: params.waitinglistMemberNick, roomTypes: params.desiredRoomTypes});
     if (validationErrors) { return callback(validationErrors); }
