@@ -27,6 +27,10 @@ function validate(params) {
     switch (key) {
     case 'nickname':
       if (!params.nickname) { return 'An empty nickname is invalid!'; } else { return null; }
+    case 'roomTypes':
+      if (!params.roomTypes || params.roomTypes.length === 0) { return 'Please select at least one desired room type!'; } else {
+        return R.all(roomOptions.isValidRoomType, params.roomTypes) ? null : 'One of the room types is invalid!';
+      }
     case 'roomType':
       if (!roomOptions.isValidRoomType(params.roomType)) { return 'The room type is invalid!'; } else { return null; }
     case 'duration':
@@ -131,6 +135,9 @@ module.exports = {
   },
 
   newWaitinglistFor: function (params, callback) {
+
+    const validationErrors = validate({nickname: params.nickname, roomTypes: params.newDesiredRoomTypes});
+    if (validationErrors) { return callback(validationErrors); }
 
     async.series(
       [
