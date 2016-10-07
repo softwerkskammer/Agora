@@ -33,7 +33,9 @@ function validate(params) {
     case 'roomType':
       if (!roomOptions.isValidRoomType(params.roomType)) { return 'The room type is invalid!'; } else { return null; }
     case 'roomTypes':
-      if (!params.roomTypes || params.roomTypes.length === 0) { return 'Please select at least one desired room type!'; } else {
+      if (!params.roomTypes || params.roomTypes.length === 0) {
+        return 'Please select at least one desired room type!';
+      } else {
         return R.all(roomOptions.isValidRoomType, params.roomTypes) ? null : 'One of the room types is invalid!';
       }
     case 'duration':
@@ -99,12 +101,10 @@ module.exports = {
 
         const event = registrationCommandProcessor.setNewDurationForParticipant(member.id(), params.duration);
 
-        const args = {commandProcessor: registrationCommandProcessor, events: [event], callback: callback};
+        const args = {commandProcessor: registrationCommandProcessor, events: [event], callback};
 
         if (event.event === e.DURATION_WAS_CHANGED) {
-          args.handleSuccess = () => {
-            notifications.changedDuration(member, roomOptions.informationFor(params.roomType, params.duration));
-          };
+          args.handleSuccess = () => notifications.changedDuration(member, roomOptions.informationFor(params.roomType, params.duration));
         }
         saveCommandProcessor(args);
       }
@@ -129,12 +129,10 @@ module.exports = {
 
         const event = registrationCommandProcessor.moveParticipantToNewRoomType(member.id(), params.newRoomType);
 
-        const args = {commandProcessor: registrationCommandProcessor, events: [event], callback: callback};
+        const args = {commandProcessor: registrationCommandProcessor, events: [event], callback};
 
         if (event.event === e.ROOM_TYPE_WAS_CHANGED) {
-          args.handleSuccess = () => {
-            notifications.changedResource(member, roomOptions.informationFor(params.newRoomType, event.duration)); // this is a bit hacky, we should better go through a read model
-          };
+          args.handleSuccess = () => notifications.changedResource(member, roomOptions.informationFor(params.newRoomType, event.duration)); // this is a bit hacky, we should better go through a read model
         }
         saveCommandProcessor(args);
       }
@@ -159,12 +157,10 @@ module.exports = {
 
         const event = registrationCommandProcessor.changeDesiredRoomTypes(member.id(), params.newDesiredRoomTypes);
 
-        const args = {commandProcessor: registrationCommandProcessor, events: [event], callback: callback};
+        const args = {commandProcessor: registrationCommandProcessor, events: [event], callback};
 
         if (event.event === e.DESIRED_ROOM_TYPES_WERE_CHANGED) {
-          args.handleSuccess = () => {
-            notifications.changedWaitinglist(member, params.newDesiredRoomTypes.map(name => roomOptions.informationFor(name, 'waitinglist')));
-          };
+          args.handleSuccess = () => notifications.changedWaitinglist(member, params.newDesiredRoomTypes.map(name => roomOptions.informationFor(name, 'waitinglist')));
         }
         saveCommandProcessor(args);
       }
@@ -191,11 +187,7 @@ module.exports = {
 
         const events = roomsCommandProcessor.addParticipantPairFor(params.roomType, participant1.id(), participant2.id());
 
-        saveCommandProcessor({
-          commandProcessor: roomsCommandProcessor,
-          events: events,
-          callback: callback
-        });
+        saveCommandProcessor({commandProcessor: roomsCommandProcessor, events, callback});
       }
     );
   },
@@ -220,11 +212,7 @@ module.exports = {
 
         const events = roomsCommandProcessor.removeParticipantPairFor(params.roomType, participant1.id(), participant2.id());
 
-        saveCommandProcessor({
-          commandProcessor: roomsCommandProcessor,
-          events: events,
-          callback: callback
-        });
+        saveCommandProcessor({commandProcessor: roomsCommandProcessor, events, callback});
       }
     );
   },
@@ -250,11 +238,10 @@ module.exports = {
         const roomsEvents = roomsCommandProcessor.removeParticipantPairContaining(params.roomType, participant.id());
         const registrationEvent = registrationCommandProcessor.removeParticipant(params.roomType, participant.id());
 
-        const args = {commandProcessor: [roomsCommandProcessor, registrationCommandProcessor], events: [roomsEvents, [registrationEvent]], callback: callback};
+        const args = {commandProcessor: [roomsCommandProcessor, registrationCommandProcessor], events: [roomsEvents, [registrationEvent]], callback};
+
         if (registrationEvent.event === e.PARTICIPANT_WAS_REMOVED) {
-          args.handleSuccess = () => {
-            notifications.removedFromParticipants(participant);
-          };
+          args.handleSuccess = () => notifications.removedFromParticipants(participant);
         }
         saveCommandProcessor(args);
       }
@@ -279,12 +266,10 @@ module.exports = {
 
         const event = registrationCommandProcessor.removeWaitinglistParticipant(params.desiredRoomTypes, waitinglistMember.id());
 
-        const args = {commandProcessor: registrationCommandProcessor, events: [event], callback: callback};
+        const args = {commandProcessor: registrationCommandProcessor, events: [event], callback};
 
         if (event.event === e.WAITINGLIST_PARTICIPANT_WAS_REMOVED) {
-          args.handleSuccess = () => {
-            notifications.removedFromWaitinglist(waitinglistMember);
-          };
+          args.handleSuccess = () => notifications.removedFromWaitinglist(waitinglistMember);
         }
         saveCommandProcessor(args);
       }
