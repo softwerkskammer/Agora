@@ -118,7 +118,7 @@ app.get('/checkurl', function (req, res) {
 app.get('/fromWaitinglistToParticipant/:roomType/:nickname', function (req, res) {
   const duration = 2;
 
-  socratesActivitiesService.fromWaitinglistToParticipant(req.params.nickname, req.params.roomType, duration, moment.tz(), function (err) {
+  socratesActivitiesService.fromWaitinglistToParticipant({nickname: req.params.nickname, roomType: req.params.roomType, duration}, moment.tz(), function (err) {
     if (err) { return res.send('Error: ' + err); }
     res.send('-> Teilnehmer');
   });

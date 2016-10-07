@@ -50,10 +50,10 @@ function validate(params) {
 
 module.exports = {
 
-  fromWaitinglistToParticipant: function (nickname, roomType, duration, now, callback) {
+  fromWaitinglistToParticipant: function (params, now, callback) {
     async.series(
       [
-        _.partial(memberstore.getMember, nickname),
+        _.partial(memberstore.getMember, params.nickname),
         _.partial(eventstoreService.getRegistrationCommandProcessor, currentUrl).bind(eventstoreService)
       ],
       function (err, results) {
@@ -62,13 +62,13 @@ module.exports = {
         const registrationCommandProcessor = results[1];
         if (!registrationCommandProcessor || !member) { return callback(); }
 
-        const event = registrationCommandProcessor.fromWaitinglistToParticipant(roomType, member.id(), duration, now);
+        const event = registrationCommandProcessor.fromWaitinglistToParticipant(params.roomType, member.id(), params.duration, now);
 
         const args = {commandProcessor: registrationCommandProcessor, events: [event], callback: callback};
 
         if (event.event === e.PARTICIPANT_WAS_REGISTERED || event.event === e.REGISTERED_PARTICIPANT_FROM_WAITINGLIST) {
           args.handleSuccess = function () {
-            var bookingdetails = roomOptions.informationFor(roomType, duration);
+            var bookingdetails = roomOptions.informationFor(params.roomType, params.duration);
             bookingdetails.fromWaitinglist = true;
             notifications.newParticipant(member.id(), bookingdetails);
           };
