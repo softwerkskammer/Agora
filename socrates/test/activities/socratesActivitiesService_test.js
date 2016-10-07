@@ -615,5 +615,33 @@ describe('SoCraTes Activities Service', function () {
         done(err);
       });
     });
+
+    it('does not remove from the waitinglist if the nickname is empty', function (done) {
+      socratesActivitiesService.removeWaitinglistMemberFor({waitinglistMemberNick: '', desiredRoomTypes: ['single']}, function (err) {
+        expect(saveEventStore.called).to.be.false();
+        expect(changedRoomTypeNotification.called).to.be.false();
+        expect(err.errors).to.eql(['An empty nickname is invalid!']);
+        done();
+      });
+    });
+
+    it('does not remove from the waitinglist if one of the room types is invalid', function (done) {
+      socratesActivitiesService.removeWaitinglistMemberFor({waitinglistMemberNick: 'nickname', desiredRoomTypes: ['single', 'unknown']}, function (err) {
+        expect(saveEventStore.called).to.be.false();
+        expect(changedRoomTypeNotification.called).to.be.false();
+        expect(err.errors).to.eql(['One of the room types is invalid!']);
+        done();
+      });
+    });
+
+    it('does not remove from the waitinglist if the list of room types is empty', function (done) {
+      socratesActivitiesService.removeWaitinglistMemberFor({waitinglistMemberNick: 'nickname', desiredRoomTypes: []}, function (err) {
+        expect(saveEventStore.called).to.be.false();
+        expect(changedRoomTypeNotification.called).to.be.false();
+        expect(err.errors).to.eql(['Please select at least one desired room type!']);
+        done();
+      });
+    });
+
   });
 });

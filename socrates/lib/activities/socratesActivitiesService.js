@@ -260,6 +260,9 @@ module.exports = {
 
   removeWaitinglistMemberFor: function (params, callback) {
 
+    const validationErrors = validate({nickname: params.waitinglistMemberNick, roomTypes: params.desiredRoomTypes});
+    if (validationErrors) { return callback(validationErrors); }
+
     async.series(
       [
         _.partial(memberstore.getMember, params.waitinglistMemberNick),
