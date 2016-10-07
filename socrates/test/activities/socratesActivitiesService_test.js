@@ -473,6 +473,25 @@ describe('SoCraTes Activities Service', function () {
         done(err);
       });
     });
+
+    it('does not remove a participant if the nickname is empty', function (done) {
+      socratesActivitiesService.removeParticipantFor({roomType: 'bed_in_double', participantNick: ''}, function (err) {
+        expect(saveEventStore.called).to.be.false();
+        expect(changedRoomTypeNotification.called).to.be.false();
+        expect(err.errors).to.eql(['An empty nickname is invalid!']);
+        done();
+      });
+    });
+
+    it('does not remove a participant if the room type is invalid', function (done) {
+      socratesActivitiesService.removeParticipantFor({roomType: 'unknown', participantNick: 'nickname'}, function (err) {
+        expect(saveEventStore.called).to.be.false();
+        expect(changedRoomTypeNotification.called).to.be.false();
+        expect(err.errors).to.eql(['The room type is invalid!']);
+        done();
+      });
+    });
+
   });
 
   describe('newWaitinglistFor', function () {

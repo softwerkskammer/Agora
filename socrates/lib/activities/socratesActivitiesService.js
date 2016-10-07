@@ -228,6 +228,9 @@ module.exports = {
 
   removeParticipantFor: function (params, callback) {
 
+    const validationErrors = validate({nickname: params.participantNick, roomType: params.roomType});
+    if (validationErrors) { return callback(validationErrors); }
+
     async.series(
       [
         _.partial(memberstore.getMember, params.participantNick),
