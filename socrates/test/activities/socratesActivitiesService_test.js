@@ -284,24 +284,55 @@ describe('SoCraTes Activities Service', function () {
 
   });
 
-  it('joins two members to form a room, updates the eventstore and the read model', function (done) {
+  describe('addParticipantPairFor', function () {
 
-    eventStore.state.events = [
-      events.participantWasRegistered('bed_in_double', 2, 'session-id', 'memberIdForPair1', aLongTimeAgo),
-      events.participantWasRegistered('bed_in_double', 2, 'session-id', 'memberIdForPair2', aLongTimeAgo)
-    ];
+    it('joins two members to form a room, updates the eventstore and the read model', function (done) {
 
-    socratesActivitiesService.addParticipantPairFor({roomType: 'bed_in_double', participant1Nick: 'nicknameForPair1', participant2Nick: 'nicknameForPair2'}, function (err) {
-      var pairEvents = saveEventStore.firstCall.args[0].state.events;
-      expect(pairEvents).to.have.length(3);
-      expect(pairEvents[2].participant1Id).to.be('memberIdForPair1');
-      expect(pairEvents[2].participant2Id).to.be('memberIdForPair2');
+      eventStore.state.events = [
+        events.participantWasRegistered('bed_in_double', 2, 'session-id', 'memberIdForPair1', aLongTimeAgo),
+        events.participantWasRegistered('bed_in_double', 2, 'session-id', 'memberIdForPair2', aLongTimeAgo)
+      ];
 
-      const readModel = cache.get(socratesConstants.currentUrl + '_roomsReadModel');
-      expect(readModel.roomPairsFor('bed_in_double')).to.have.length(1);
+      socratesActivitiesService.addParticipantPairFor({roomType: 'bed_in_double', participant1Nick: 'nicknameForPair1', participant2Nick: 'nicknameForPair2'}, function (err) {
+        var pairEvents = saveEventStore.firstCall.args[0].state.events;
+        expect(pairEvents).to.have.length(3);
+        expect(pairEvents[2].participant1Id).to.be('memberIdForPair1');
+        expect(pairEvents[2].participant2Id).to.be('memberIdForPair2');
 
-      done(err);
+        const readModel = cache.get(socratesConstants.currentUrl + '_roomsReadModel');
+        expect(readModel.roomPairsFor('bed_in_double')).to.have.length(1);
+
+        done(err);
+      });
     });
+
+    it('does not add a participant pair if the first nickname is empty', function (done) {
+      socratesActivitiesService.addParticipantPairFor({roomType: 'bed_in_double', participant1Nick: '', participant2Nick: 'nicknameForPair2'}, function (err) {
+        expect(saveEventStore.called).to.be.false();
+        expect(changedRoomTypeNotification.called).to.be.false();
+        expect(err.errors).to.eql(['An empty first nickname is invalid!']);
+        done();
+      });
+    });
+
+    it('does not add a participant pair if the second nickname is empty', function (done) {
+      socratesActivitiesService.addParticipantPairFor({roomType: 'bed_in_double', participant1Nick: 'nicknameForPair1', participant2Nick: ''}, function (err) {
+        expect(saveEventStore.called).to.be.false();
+        expect(changedRoomTypeNotification.called).to.be.false();
+        expect(err.errors).to.eql(['An empty second nickname is invalid!']);
+        done();
+      });
+    });
+
+    it('does not add a participant pair if the room type is invalid', function (done) {
+      socratesActivitiesService.addParticipantPairFor({roomType: 'unknown', participant1Nick: 'nicknameForPair1', participant2Nick: 'nicknameForPair2'}, function (err) {
+        expect(saveEventStore.called).to.be.false();
+        expect(changedRoomTypeNotification.called).to.be.false();
+        expect(err.errors).to.eql(['The room type is invalid!']);
+        done();
+      });
+    });
+
   });
 
   it('removes a room pair', function (done) {
