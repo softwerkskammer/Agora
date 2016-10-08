@@ -20,8 +20,6 @@ const activitystore = beans.get('activitystore'); // for storing the SoCraTes ac
 
 const ValidationErrors = beans.get('validationErrors');
 
-const reservedURLs = '^new$|^edit$|^submit$|^checkurl$\\+';
-
 const app = misc.expressAppIn(__dirname);
 
 function activitySubmitted(req, res, next) {
@@ -100,9 +98,6 @@ app.post('/submit', (req, res, next) => {
     }
   );
 });
-
-app.get('/checkurl', (req, res) =>
-  misc.validate(req.query.url, req.query.previousUrl, R.partial(eventstoreService.isValidUrl, [reservedURLs]), res.end));
 
 // for management tables:
 
