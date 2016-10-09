@@ -93,14 +93,16 @@ RegistrationCommandProcessor.prototype.issueWaitinglistReservation = function (d
   }
 };
 
-RegistrationCommandProcessor.prototype.registerWaitinglistParticipant = function (desiredRoomTypes, sessionId, memberId) {
+RegistrationCommandProcessor.prototype.registerWaitinglistParticipant = function (desiredRoomTypes, duration, sessionId, memberId) {
   if (this.writeModel.isAlreadyRegistered(memberId) || this.writeModel.isAlreadyOnWaitinglist(memberId)) {
+    // TODO change that in order to enable changes to the waitinglist by the user
     return events.didNotRegisterWaitinglistParticipantASecondTime(desiredRoomTypes, sessionId, memberId);
   } else if (!this.writeModel.alreadyHasWaitinglistReservation(sessionId)) {
+    // TODO change that in order to enable changes to the waitinglist by the user
     return events.didNotRegisterWaitinglistParticipantWithExpiredOrMissingReservation(desiredRoomTypes, sessionId, memberId);
   } else {
     // all is well
-    return events.waitinglistParticipantWasRegistered(desiredRoomTypes, sessionId, memberId, this.writeModel.waitinglistReservation(sessionId).joinedWaitinglist);
+    return events.waitinglistParticipantWasRegistered(desiredRoomTypes, duration, sessionId, memberId, this.writeModel.waitinglistReservation(sessionId).joinedWaitinglist);
   }
 };
 

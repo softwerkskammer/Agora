@@ -57,7 +57,14 @@ describe('The registration command processor', function () {
 
       // Then (new events)
       expect(stripTimestamps([event])).to.eql([
-        {event: e.RESERVATION_WAS_ISSUED, sessionId: sessionId1, memberId: memberId1, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: aShortTimeAgo.valueOf()}]);
+        {
+          event: e.RESERVATION_WAS_ISSUED,
+          sessionId: sessionId1,
+          memberId: memberId1,
+          roomType: singleBedRoom,
+          duration: untilSaturday,
+          joinedSoCraTes: aShortTimeAgo.valueOf()
+        }]);
     });
 
     it('does not reserve a room if the quota is already exhausted by an active reservation', function () {
@@ -72,7 +79,13 @@ describe('The registration command processor', function () {
 
       // Then (new events)
       expect(stripTimestamps([event])).to.eql([
-        {event: e.DID_NOT_ISSUE_RESERVATION_FOR_FULL_RESOURCE, sessionId: sessionId2, memberId: memberId2, roomType: singleBedRoom, duration: untilSundayMorning}
+        {
+          event: e.DID_NOT_ISSUE_RESERVATION_FOR_FULL_RESOURCE,
+          sessionId: sessionId2,
+          memberId: memberId2,
+          roomType: singleBedRoom,
+          duration: untilSundayMorning
+        }
       ]);
     });
 
@@ -88,7 +101,14 @@ describe('The registration command processor', function () {
 
       // Then (new events)
       expect(stripTimestamps([event])).to.eql([
-        {event: e.RESERVATION_WAS_ISSUED, sessionId: sessionId2, memberId: memberId2, roomType: singleBedRoom, duration: untilSundayMorning, joinedSoCraTes: aShortTimeAgo.valueOf()}]);
+        {
+          event: e.RESERVATION_WAS_ISSUED,
+          sessionId: sessionId2,
+          memberId: memberId2,
+          roomType: singleBedRoom,
+          duration: untilSundayMorning,
+          joinedSoCraTes: aShortTimeAgo.valueOf()
+        }]);
     });
 
     it('does not reserve a room if the quota is already exhausted by a registration', function () {
@@ -104,7 +124,13 @@ describe('The registration command processor', function () {
 
       // Then (new events)
       expect(stripTimestamps([event])).to.eql([
-        {event: e.DID_NOT_ISSUE_RESERVATION_FOR_FULL_RESOURCE, sessionId: sessionId2, memberId: memberId2, roomType: singleBedRoom, duration: untilSaturday}
+        {
+          event: e.DID_NOT_ISSUE_RESERVATION_FOR_FULL_RESOURCE,
+          sessionId: sessionId2,
+          memberId: memberId2,
+          roomType: singleBedRoom,
+          duration: untilSaturday
+        }
       ]);
     });
 
@@ -121,7 +147,14 @@ describe('The registration command processor', function () {
 
       // Then (new events)
       expect(stripTimestamps([event])).to.eql([
-        {event: e.RESERVATION_WAS_ISSUED, sessionId: sessionId2, memberId: memberId2, roomType: singleBedRoom, duration: untilSaturday, joinedSoCraTes: aShorterTimeAgo.valueOf()}]);
+        {
+          event: e.RESERVATION_WAS_ISSUED,
+          sessionId: sessionId2,
+          memberId: memberId2,
+          roomType: singleBedRoom,
+          duration: untilSaturday,
+          joinedSoCraTes: aShorterTimeAgo.valueOf()
+        }]);
     });
 
     it('does not allow a registration for any resource if there is already an active registration for the same session id', function () {
@@ -137,7 +170,13 @@ describe('The registration command processor', function () {
 
       // Then (new events)
       expect(stripTimestamps([event])).to.eql([
-        {event: e.DID_NOT_ISSUE_RESERVATION_FOR_ALREADY_RESERVED_SESSION, sessionId: sessionId1, memberId: memberId1, roomType: bedInDouble, duration: untilSaturday}]);
+        {
+          event: e.DID_NOT_ISSUE_RESERVATION_FOR_ALREADY_RESERVED_SESSION,
+          sessionId: sessionId1,
+          memberId: memberId1,
+          roomType: bedInDouble,
+          duration: untilSaturday
+        }]);
     });
   });
 
@@ -155,7 +194,14 @@ describe('The registration command processor', function () {
 
       // Then (new events)
       expect(stripTimestamps([event])).to.eql([
-        {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1, joinedSoCraTes: aShortTimeAgo.valueOf()}]);
+        {
+          event: e.PARTICIPANT_WAS_REGISTERED,
+          sessionId: sessionId1,
+          roomType: singleBedRoom,
+          duration: untilSaturday,
+          memberId: memberId1,
+          joinedSoCraTes: aShortTimeAgo.valueOf()
+        }]);
     });
 
     it('registers a room even if the matching reservation filled up the room', function () { // TODO books a room?
@@ -170,7 +216,14 @@ describe('The registration command processor', function () {
 
       // Then (new events)
       expect(stripTimestamps([event])).to.eql([
-        {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1, joinedSoCraTes: aShortTimeAgo.valueOf()}]);
+        {
+          event: e.PARTICIPANT_WAS_REGISTERED,
+          sessionId: sessionId1,
+          roomType: singleBedRoom,
+          duration: untilSaturday,
+          memberId: memberId1,
+          joinedSoCraTes: aShortTimeAgo.valueOf()
+        }]);
     });
 
     it('registers a room for the given duration even if the reservation was for a different duration', function () { // TODO books a room?
@@ -185,7 +238,14 @@ describe('The registration command processor', function () {
 
       // Then (new events)
       expect(stripTimestamps([event])).to.eql([
-        {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1, joinedSoCraTes: aShortTimeAgo.valueOf()}]);
+        {
+          event: e.PARTICIPANT_WAS_REGISTERED,
+          sessionId: sessionId1,
+          roomType: singleBedRoom,
+          duration: untilSaturday,
+          memberId: memberId1,
+          joinedSoCraTes: aShortTimeAgo.valueOf()
+        }]);
     });
 
     it('does not register a room if there was only an expired reservation, even if there was enough space', function () { // TODO books a room?
@@ -200,7 +260,13 @@ describe('The registration command processor', function () {
 
       // Then (new events)
       expect(stripTimestamps([event])).to.eql([
-        {event: e.DID_NOT_REGISTER_PARTICIPANT_WITH_EXPIRED_OR_MISSING_RESERVATION, sessionId: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1}]);
+        {
+          event: e.DID_NOT_REGISTER_PARTICIPANT_WITH_EXPIRED_OR_MISSING_RESERVATION,
+          sessionId: sessionId1,
+          roomType: singleBedRoom,
+          duration: untilSaturday,
+          memberId: memberId1
+        }]);
     });
 
     it('does not register a room if there was an expired reservation and if there was not enough space', function () { // TODO books a room?
@@ -216,7 +282,13 @@ describe('The registration command processor', function () {
 
       // Then (new events)
       expect(stripTimestamps([event])).to.eql([
-        {event: e.DID_NOT_REGISTER_PARTICIPANT_WITH_EXPIRED_OR_MISSING_RESERVATION, sessionId: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1}
+        {
+          event: e.DID_NOT_REGISTER_PARTICIPANT_WITH_EXPIRED_OR_MISSING_RESERVATION,
+          sessionId: sessionId1,
+          roomType: singleBedRoom,
+          duration: untilSaturday,
+          memberId: memberId1
+        }
       ]);
     });
 
@@ -230,7 +302,13 @@ describe('The registration command processor', function () {
 
       // Then (new events)
       expect(stripTimestamps([event])).to.eql([
-        {event: e.DID_NOT_REGISTER_PARTICIPANT_WITH_EXPIRED_OR_MISSING_RESERVATION, sessionId: sessionId1, roomType: singleBedRoom, duration: untilSaturday, memberId: memberId1}]);
+        {
+          event: e.DID_NOT_REGISTER_PARTICIPANT_WITH_EXPIRED_OR_MISSING_RESERVATION,
+          sessionId: sessionId1,
+          roomType: singleBedRoom,
+          duration: untilSaturday,
+          memberId: memberId1
+        }]);
     });
 
     it('does not register two rooms for the same member, not even different rooms', function () { // TODO books a room?
@@ -246,7 +324,13 @@ describe('The registration command processor', function () {
 
       // Then (new events)
       expect(stripTimestamps([event])).to.eql([
-        {event: e.DID_NOT_REGISTER_PARTICIPANT_A_SECOND_TIME, sessionId: sessionId1, roomType: bedInDouble, duration: untilSaturday, memberId: memberId1}
+        {
+          event: e.DID_NOT_REGISTER_PARTICIPANT_A_SECOND_TIME,
+          sessionId: sessionId1,
+          roomType: bedInDouble,
+          duration: untilSaturday,
+          memberId: memberId1
+        }
       ]);
     });
   });
@@ -276,7 +360,11 @@ describe('The registration command processor', function () {
 
       //Then (new events)
       expect(stripTimestamps([event])).to.eql([
-        {event: e.DID_NOT_REMOVE_PARTICIPANT_BECAUSE_THEY_ARE_NOT_REGISTERED, roomType: singleBedRoom, memberId: memberId1}
+        {
+          event: e.DID_NOT_REMOVE_PARTICIPANT_BECAUSE_THEY_ARE_NOT_REGISTERED,
+          roomType: singleBedRoom,
+          memberId: memberId1
+        }
       ]);
     });
     it('doesnt remove the participant because its not the right room', function () {
@@ -289,7 +377,11 @@ describe('The registration command processor', function () {
 
       //Then (new events)
       expect(stripTimestamps([event])).to.eql([
-        {event: e.DID_NOT_REMOVE_PARTICIPANT_BECAUSE_THEY_ARE_NOT_REGISTERED_FOR_THIS_ROOM_TYPE, roomType: bedInDouble, memberId: memberId1}
+        {
+          event: e.DID_NOT_REMOVE_PARTICIPANT_BECAUSE_THEY_ARE_NOT_REGISTERED_FOR_THIS_ROOM_TYPE,
+          roomType: bedInDouble,
+          memberId: memberId1
+        }
       ]);
     });
   });
@@ -298,7 +390,7 @@ describe('The registration command processor', function () {
     it('removes a waitinglist participant', function () {
       //Given (saved events)
       eventStore.state.events = [
-        events.waitinglistParticipantWasRegistered([singleBedRoom], sessionId1, memberId1, aLongTimeAgo)
+        events.waitinglistParticipantWasRegistered([singleBedRoom], 2, sessionId1, memberId1, aLongTimeAgo)
       ];
       const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
@@ -310,10 +402,11 @@ describe('The registration command processor', function () {
         {event: e.WAITINGLIST_PARTICIPANT_WAS_REMOVED, desiredRoomTypes: [singleBedRoom], memberId: memberId1}
       ]);
     });
+
     it('does not remove waitinglist participant because he is not registered', function () {
       //Given (saved events)
       eventStore.state.events = [
-        events.waitinglistParticipantWasRegistered([singleBedRoom], sessionId2, memberId2, aLongTimeAgo)
+        events.waitinglistParticipantWasRegistered([singleBedRoom], 2, sessionId2, memberId2, aLongTimeAgo)
       ];
       const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
@@ -322,13 +415,18 @@ describe('The registration command processor', function () {
 
       //Then (saved events)
       expect(stripTimestamps([event])).to.eql([
-        {event: e.DID_NOT_REMOVE_WAITINGLIST_PARTICIPANT_BECAUSE_THEY_ARE_NOT_REGISTERED, desiredRoomTypes: [singleBedRoom], memberId: memberId1}
+        {
+          event: e.DID_NOT_REMOVE_WAITINGLIST_PARTICIPANT_BECAUSE_THEY_ARE_NOT_REGISTERED,
+          desiredRoomTypes: [singleBedRoom],
+          memberId: memberId1
+        }
       ]);
     });
+
     it('removes waitinglist participant even if the rooms do not match', function () {
       //Given (saved events)
       eventStore.state.events = [
-        events.waitinglistParticipantWasRegistered([singleBedRoom, bedInDouble], sessionId1, memberId1, aLongTimeAgo)
+        events.waitinglistParticipantWasRegistered([singleBedRoom, bedInDouble], 2, sessionId1, memberId1, aLongTimeAgo)
       ];
       const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
@@ -345,7 +443,7 @@ describe('The registration command processor', function () {
     it('changed the desired room types', function () {
       //Given (saved events)
       eventStore.state.events = [
-        events.waitinglistParticipantWasRegistered([singleBedRoom], sessionId1, memberId1, aLongTimeAgo)
+        events.waitinglistParticipantWasRegistered([singleBedRoom], 2, sessionId1, memberId1, aLongTimeAgo)
       ];
       const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
@@ -354,9 +452,15 @@ describe('The registration command processor', function () {
 
       //Then (new events)
       expect(stripTimestamps([event])).to.eql([
-        {event: e.DESIRED_ROOM_TYPES_WERE_CHANGED, desiredRoomTypes: [bedInDouble], memberId: memberId1, joinedWaitinglist: aLongTimeAgo.valueOf()}
+        {
+          event: e.DESIRED_ROOM_TYPES_WERE_CHANGED,
+          desiredRoomTypes: [bedInDouble],
+          memberId: memberId1,
+          joinedWaitinglist: aLongTimeAgo.valueOf()
+        }
       ]);
     });
+
     it('does not change the desired room types because participant is not on waitinglist', function () {
       //Given (saved events)
       eventStore.state.events = [];
@@ -367,13 +471,18 @@ describe('The registration command processor', function () {
 
       //Then (new events)
       expect(stripTimestamps([event])).to.eql([
-        {event: e.DID_NOT_CHANGE_DESIRED_ROOM_TYPES_BECAUSE_PARTICIPANT_IS_NOT_ON_WAITINGLIST, desiredRoomTypes: [bedInDouble], memberId: memberId1}
+        {
+          event: e.DID_NOT_CHANGE_DESIRED_ROOM_TYPES_BECAUSE_PARTICIPANT_IS_NOT_ON_WAITINGLIST,
+          desiredRoomTypes: [bedInDouble],
+          memberId: memberId1
+        }
       ]);
     });
+
     it('does not change the desired room types because it would not change anything', function () {
       //Given (saved events)
       eventStore.state.events = [
-        events.waitinglistParticipantWasRegistered([singleBedRoom], sessionId1, memberId1, aLongTimeAgo)
+        events.waitinglistParticipantWasRegistered([singleBedRoom], 2, sessionId1, memberId1, aLongTimeAgo)
       ];
       const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
@@ -382,7 +491,11 @@ describe('The registration command processor', function () {
 
       //Then (new events)
       expect(stripTimestamps([event])).to.eql([
-        {event: e.DID_NOT_CHANGE_DESIRED_ROOM_TYPES_BECAUSE_THERE_WAS_NO_CHANGE, desiredRoomTypes: [singleBedRoom], memberId: memberId1}
+        {
+          event: e.DID_NOT_CHANGE_DESIRED_ROOM_TYPES_BECAUSE_THERE_WAS_NO_CHANGE,
+          desiredRoomTypes: [singleBedRoom],
+          memberId: memberId1
+        }
       ]);
     });
   });
@@ -401,7 +514,13 @@ describe('The registration command processor', function () {
 
       // Then (new events)
       expect(stripTimestamps([event])).to.eql([
-        {event: e.ROOM_TYPE_WAS_CHANGED, memberId: memberId1, roomType: bedInDouble, duration: untilSaturday, joinedSoCraTes: aShortTimeAgo.valueOf()}]);
+        {
+          event: e.ROOM_TYPE_WAS_CHANGED,
+          memberId: memberId1,
+          roomType: bedInDouble,
+          duration: untilSaturday,
+          joinedSoCraTes: aShortTimeAgo.valueOf()
+        }]);
     });
 
     it('multiple room changes keep moving the participant to the new room types', function () {
@@ -419,7 +538,13 @@ describe('The registration command processor', function () {
 
       // Then (new events)
       expect(stripTimestamps([event])).to.eql([
-        {event: e.ROOM_TYPE_WAS_CHANGED, memberId: memberId1, roomType: junior, duration: untilSaturday, joinedSoCraTes: aShortTimeAgo.valueOf()}
+        {
+          event: e.ROOM_TYPE_WAS_CHANGED,
+          memberId: memberId1,
+          roomType: junior,
+          duration: untilSaturday,
+          joinedSoCraTes: aShortTimeAgo.valueOf()
+        }
       ]);
     });
 
@@ -451,7 +576,13 @@ describe('The registration command processor', function () {
 
       // Then (new events)
       expect(stripTimestamps([event])).to.eql([
-        {event: e.DURATION_WAS_CHANGED, memberId: memberId1, roomType: singleBedRoom, duration: untilSundayMorning, joinedSoCraTes: aShortTimeAgo.valueOf()}]);
+        {
+          event: e.DURATION_WAS_CHANGED,
+          memberId: memberId1,
+          roomType: singleBedRoom,
+          duration: untilSundayMorning,
+          joinedSoCraTes: aShortTimeAgo.valueOf()
+        }]);
     });
 
     it('multiple duration changes keep moving the participant to the new duration', function () {
@@ -469,7 +600,13 @@ describe('The registration command processor', function () {
 
       // Then (new events)
       expect(stripTimestamps([event])).to.eql([
-        {event: e.DURATION_WAS_CHANGED, memberId: memberId1, roomType: singleBedRoom, duration: untilSundayEvening, joinedSoCraTes: aShortTimeAgo.valueOf()}
+        {
+          event: e.DURATION_WAS_CHANGED,
+          memberId: memberId1,
+          roomType: singleBedRoom,
+          duration: untilSundayEvening,
+          joinedSoCraTes: aShortTimeAgo.valueOf()
+        }
       ]);
     });
 
@@ -497,7 +634,14 @@ describe('The registration command processor', function () {
 
       // Then (new events)
       expect(stripTimestamps([event])).to.eql([
-        {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, duration: 2, sessionId: sessionId1, memberId: memberId1, desiredRoomTypes: [singleBedRoom], joinedWaitinglist: aShortTimeAgo.valueOf()}]);
+        {
+          event: e.WAITINGLIST_RESERVATION_WAS_ISSUED,
+          duration: 2,
+          sessionId: sessionId1,
+          memberId: memberId1,
+          desiredRoomTypes: [singleBedRoom],
+          joinedWaitinglist: aShortTimeAgo.valueOf()
+        }]);
     });
 
     it('reserves a spot on the waitinglist when an expired reservation (from somebody else) exists', function () {
@@ -511,14 +655,21 @@ describe('The registration command processor', function () {
 
       // Then (new events)
       expect(stripTimestamps([event])).to.eql([
-        {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, duration: 2, sessionId: sessionId2, memberId: memberId2, desiredRoomTypes: [singleBedRoom], joinedWaitinglist: aShorterTimeAgo.valueOf()}]);
+        {
+          event: e.WAITINGLIST_RESERVATION_WAS_ISSUED,
+          duration: 2,
+          sessionId: sessionId2,
+          memberId: memberId2,
+          desiredRoomTypes: [singleBedRoom],
+          joinedWaitinglist: aShorterTimeAgo.valueOf()
+        }]);
     });
 
     it('disregards a reservation if there is a matching booking', function () {
       // Given (saved events)
       eventStore.state.events = [
         events.waitinglistReservationWasIssued([singleBedRoom], 2, sessionId1, memberId1, aShortTimeAgo),
-        events.waitinglistParticipantWasRegistered([singleBedRoom], sessionId1, memberId1, aLongTimeAgo)];
+        events.waitinglistParticipantWasRegistered([singleBedRoom], 2, sessionId1, memberId1, aLongTimeAgo)];
       const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       // When (issued command)
@@ -526,7 +677,14 @@ describe('The registration command processor', function () {
 
       // Then (new events)
       expect(stripTimestamps([event])).to.eql([
-        {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, duration: 3, sessionId: sessionId2, memberId: memberId2, desiredRoomTypes: [singleBedRoom], joinedWaitinglist: aShorterTimeAgo.valueOf()}]);
+        {
+          event: e.WAITINGLIST_RESERVATION_WAS_ISSUED,
+          duration: 3,
+          sessionId: sessionId2,
+          memberId: memberId2,
+          desiredRoomTypes: [singleBedRoom],
+          joinedWaitinglist: aShorterTimeAgo.valueOf()
+        }]);
     });
 
     it('does not allow a registration for any resource if there is already an active registration for the same session id', function () {
@@ -540,7 +698,12 @@ describe('The registration command processor', function () {
 
       // Then (new events)
       expect(stripTimestamps([event])).to.eql([
-        {event: e.DID_NOT_ISSUE_WAITINGLIST_RESERVATION_FOR_ALREADY_RESERVED_SESSION, sessionId: sessionId1, memberId: memberId1, desiredRoomTypes: [bedInDouble]}]);
+        {
+          event: e.DID_NOT_ISSUE_WAITINGLIST_RESERVATION_FOR_ALREADY_RESERVED_SESSION,
+          sessionId: sessionId1,
+          memberId: memberId1,
+          desiredRoomTypes: [bedInDouble]
+        }]);
     });
 
     it('reserves a spot on the waitinglist for multiple rooms', function () {
@@ -553,7 +716,14 @@ describe('The registration command processor', function () {
 
       // Then (new events)
       expect(stripTimestamps([event])).to.eql([
-        {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, duration: 2, sessionId: sessionId1, memberId: memberId1, desiredRoomTypes: [singleBedRoom, bedInDouble], joinedWaitinglist: aShortTimeAgo.valueOf()}]);
+        {
+          event: e.WAITINGLIST_RESERVATION_WAS_ISSUED,
+          duration: 2,
+          sessionId: sessionId1,
+          memberId: memberId1,
+          desiredRoomTypes: [singleBedRoom, bedInDouble],
+          joinedWaitinglist: aShortTimeAgo.valueOf()
+        }]);
     });
 
   });
@@ -566,11 +736,18 @@ describe('The registration command processor', function () {
       const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       // When (issued command)
-      const event = commandProcessor.registerWaitinglistParticipant([singleBedRoom], sessionId1, memberId1);
+      const event = commandProcessor.registerWaitinglistParticipant([singleBedRoom], 2, sessionId1, memberId1);
 
       // Then (new events)
       expect(stripTimestamps([event])).to.eql([
-        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionId: sessionId1, desiredRoomTypes: [singleBedRoom], memberId: memberId1, joinedWaitinglist: aShortTimeAgo.valueOf()}]);
+        {
+          event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED,
+          sessionId: sessionId1,
+          desiredRoomTypes: [singleBedRoom],
+          duration: 2,
+          memberId: memberId1,
+          joinedWaitinglist: aShortTimeAgo.valueOf()
+        }]);
     });
 
     it('does not register a spot on the waitinglist if there was an expired reservation', function () { // TODO books a room?
@@ -580,11 +757,16 @@ describe('The registration command processor', function () {
       const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       // When (issued command)
-      const event = commandProcessor.registerWaitinglistParticipant([singleBedRoom], sessionId1, memberId1);
+      const event = commandProcessor.registerWaitinglistParticipant([singleBedRoom], 2, sessionId1, memberId1);
 
       // Then (new events)
       expect(stripTimestamps([event])).to.eql([
-        {event: e.DID_NOT_REGISTER_WAITINGLIST_PARTICIPANT_WITH_EXPIRED_OR_MISSING_RESERVATION, sessionId: sessionId1, desiredRoomTypes: [singleBedRoom], memberId: memberId1}]);
+        {
+          event: e.DID_NOT_REGISTER_WAITINGLIST_PARTICIPANT_WITH_EXPIRED_OR_MISSING_RESERVATION,
+          sessionId: sessionId1,
+          desiredRoomTypes: [singleBedRoom],
+          memberId: memberId1
+        }]);
     });
 
     it('does not register a spot on the waitinglist if there was no reservation', function () { // TODO books a room?
@@ -593,41 +775,56 @@ describe('The registration command processor', function () {
       const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       // When (issued command)
-      const event = commandProcessor.registerWaitinglistParticipant([singleBedRoom], sessionId1, memberId1);
+      const event = commandProcessor.registerWaitinglistParticipant([singleBedRoom], 2, sessionId1, memberId1);
 
       // Then (new events)
       expect(stripTimestamps([event])).to.eql([
-        {event: e.DID_NOT_REGISTER_WAITINGLIST_PARTICIPANT_WITH_EXPIRED_OR_MISSING_RESERVATION, sessionId: sessionId1, desiredRoomTypes: [singleBedRoom], memberId: memberId1}]);
+        {
+          event: e.DID_NOT_REGISTER_WAITINGLIST_PARTICIPANT_WITH_EXPIRED_OR_MISSING_RESERVATION,
+          sessionId: sessionId1,
+          desiredRoomTypes: [singleBedRoom],
+          memberId: memberId1
+        }]);
     });
 
     it('does not register the participant again if already registered', function () {
       //Given (saved events)
       eventStore.state.events = [
-        events.waitinglistParticipantWasRegistered([singleBedRoom], sessionId1, memberId1, aLongTimeAgo)
+        events.waitinglistParticipantWasRegistered([singleBedRoom], 2, sessionId1, memberId1, aLongTimeAgo)
       ];
       const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       //When (issued command)
-      const event = commandProcessor.registerWaitinglistParticipant([singleBedRoom], sessionId1, memberId1);
+      const event = commandProcessor.registerWaitinglistParticipant([singleBedRoom], 2, sessionId1, memberId1);
 
       //Then (new events)
       expect(stripTimestamps([event])).to.eql([
-        {event: e.DID_NOT_REGISTER_WAITINGLIST_PARTICIPANT_A_SECOND_TIME, desiredRoomTypes: [singleBedRoom], sessionId: sessionId1, memberId: memberId1}]);
+        {
+          event: e.DID_NOT_REGISTER_WAITINGLIST_PARTICIPANT_A_SECOND_TIME,
+          desiredRoomTypes: [singleBedRoom],
+          sessionId: sessionId1,
+          memberId: memberId1
+        }]);
     });
 
     it('does not register waitinglist participant a second time, even if the desired room types differ', function () {
       //Given (saved events)
       eventStore.state.events = [
-        events.waitinglistParticipantWasRegistered([singleBedRoom], sessionId1, memberId1, aLongTimeAgo)
+        events.waitinglistParticipantWasRegistered([singleBedRoom], 2, sessionId1, memberId1, aLongTimeAgo)
       ];
       const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       //When (issued command)
-      const event = commandProcessor.registerWaitinglistParticipant([singleBedRoom, bedInDouble], sessionId1, memberId1);
+      const event = commandProcessor.registerWaitinglistParticipant([singleBedRoom, bedInDouble], 2, sessionId1, memberId1);
 
       //Then (new events)
       expect(stripTimestamps([event])).to.eql([
-        {event: e.DID_NOT_REGISTER_WAITINGLIST_PARTICIPANT_A_SECOND_TIME, desiredRoomTypes: [singleBedRoom, bedInDouble], sessionId: sessionId1, memberId: memberId1}]);
+        {
+          event: e.DID_NOT_REGISTER_WAITINGLIST_PARTICIPANT_A_SECOND_TIME,
+          desiredRoomTypes: [singleBedRoom, bedInDouble],
+          sessionId: sessionId1,
+          memberId: memberId1
+        }]);
     });
 
     it('registers a spot on the waitinglist for multiple desired rooms', function () {
@@ -637,11 +834,18 @@ describe('The registration command processor', function () {
       const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       // When (issued command)
-      const event = commandProcessor.registerWaitinglistParticipant([singleBedRoom, bedInDouble], sessionId1, memberId1);
+      const event = commandProcessor.registerWaitinglistParticipant([singleBedRoom, bedInDouble], 2, sessionId1, memberId1);
 
       // Then (new events)
       expect(stripTimestamps([event])).to.eql([
-        {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionId: sessionId1, desiredRoomTypes: [singleBedRoom, bedInDouble], memberId: memberId1, joinedWaitinglist: aShortTimeAgo.valueOf()}]);
+        {
+          event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED,
+          sessionId: sessionId1,
+          desiredRoomTypes: [singleBedRoom, bedInDouble],
+          duration: 2,
+          memberId: memberId1,
+          joinedWaitinglist: aShortTimeAgo.valueOf()
+        }]);
     });
   });
 
@@ -656,14 +860,21 @@ describe('The registration command processor', function () {
 
       //Then (new events)
       expect(stripTimestamps([event])).to.eql([
-        {event: e.PARTICIPANT_WAS_REGISTERED, roomType: singleBedRoom, memberId: memberId1, sessionId: undefined, duration: untilSaturday, joinedSoCraTes: aShortTimeAgo.valueOf()}
+        {
+          event: e.PARTICIPANT_WAS_REGISTERED,
+          roomType: singleBedRoom,
+          memberId: memberId1,
+          sessionId: undefined,
+          duration: untilSaturday,
+          joinedSoCraTes: aShortTimeAgo.valueOf()
+        }
       ]);
     });
 
     it('registers a participant who is on the waitinglist', function () {
       //Given (saved events)
       eventStore.state.events = [
-        events.waitinglistParticipantWasRegistered([singleBedRoom, bedInDouble], sessionId1, memberId1, aLongTimeAgo)
+        events.waitinglistParticipantWasRegistered([singleBedRoom, bedInDouble], 2, sessionId1, memberId1, aLongTimeAgo)
       ];
       const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
@@ -672,9 +883,16 @@ describe('The registration command processor', function () {
 
       //Then (new events)
       expect(stripTimestamps([event])).to.eql([
-        {event: e.REGISTERED_PARTICIPANT_FROM_WAITINGLIST, roomType: singleBedRoom, memberId: memberId1, duration: untilSaturday, joinedSoCraTes: aShortTimeAgo.valueOf()}
+        {
+          event: e.REGISTERED_PARTICIPANT_FROM_WAITINGLIST,
+          roomType: singleBedRoom,
+          memberId: memberId1,
+          duration: untilSaturday,
+          joinedSoCraTes: aShortTimeAgo.valueOf()
+        }
       ]);
     });
+
     it('does not register the participant again if he registered directly', function () {
       //Given (saved events)
       eventStore.state.events = [
@@ -687,7 +905,12 @@ describe('The registration command processor', function () {
 
       //Then (new events)
       expect(stripTimestamps([event])).to.eql([
-        {event: e.DID_NOT_REGISTER_PARTICIPANT_FROM_WAITINGLIST_A_SECOND_TIME, memberId: memberId1, duration: untilSaturday, roomType: singleBedRoom}
+        {
+          event: e.DID_NOT_REGISTER_PARTICIPANT_FROM_WAITINGLIST_A_SECOND_TIME,
+          memberId: memberId1,
+          duration: untilSaturday,
+          roomType: singleBedRoom
+        }
       ]);
     });
     it('does not register the participant again if he registered from the waitinglist', function () {
@@ -702,7 +925,12 @@ describe('The registration command processor', function () {
 
       //Then (new events)
       expect(stripTimestamps([event])).to.eql([
-        {event: e.DID_NOT_REGISTER_PARTICIPANT_FROM_WAITINGLIST_A_SECOND_TIME, memberId: memberId1, duration: untilSaturday, roomType: singleBedRoom}
+        {
+          event: e.DID_NOT_REGISTER_PARTICIPANT_FROM_WAITINGLIST_A_SECOND_TIME,
+          memberId: memberId1,
+          duration: untilSaturday,
+          roomType: singleBedRoom
+        }
       ]);
     });
   });

@@ -194,7 +194,7 @@ describe('SoCraTes registration application', function () {
 
     it('does not display the roommate banner on the registration page when the user is on the waitinglist for a double-bed room', function (done) {
       eventStore.state.events = eventStore.state.events.concat([
-        events.waitinglistParticipantWasRegistered(['bed_in_double'], 'some-session-id', 'memberId2', aShortTimeAgo)]);
+        events.waitinglistParticipantWasRegistered(['bed_in_double'], 2, 'some-session-id', 'memberId2', aShortTimeAgo)]);
 
       appWithSocratesMember
         .get('/')
@@ -206,7 +206,7 @@ describe('SoCraTes registration application', function () {
 
     it('does not display the roommate banner on the registration page when the user is on the waitinglist for a shared junior room', function (done) {
       eventStore.state.events = eventStore.state.events.concat([
-        events.waitinglistParticipantWasRegistered(['bed_in_junior'], 'some-session-id', 'memberId2', aShortTimeAgo)]);
+        events.waitinglistParticipantWasRegistered(['bed_in_junior'], 2, 'some-session-id', 'memberId2', aShortTimeAgo)]);
 
       appWithSocratesMember
         .get('/')
@@ -362,8 +362,7 @@ describe('SoCraTes registration application', function () {
       appWithSocratesMemberAndFixedSessionId
         .post('/completeRegistration')
         .send('activityUrl=socrates-url')
-        .send('roomType=')
-        .send('duration=')
+        .send('duration=2')
         .send('desiredRoomTypes=single')
         .send('country=ZZ')
         .send('homeAddress=At home')
@@ -384,7 +383,7 @@ describe('SoCraTes registration application', function () {
             {event: e.ROOM_QUOTA_WAS_SET, roomType: 'junior', quota: 10},
             {event: e.ROOM_QUOTA_WAS_SET, roomType: 'bed_in_junior', quota: 10},
             {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionId: 'session-id', desiredRoomTypes: ['single'], duration: 2, memberId: 'memberId'},
-            {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionId: 'session-id', desiredRoomTypes: ['single'], memberId: 'memberId2'}
+            {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionId: 'session-id', desiredRoomTypes: ['single'], duration: 2, memberId: 'memberId2'}
           ]);
           done(err);
         });
@@ -394,14 +393,12 @@ describe('SoCraTes registration application', function () {
   describe('submission of the participate form to book a room and to become a waitinglist participant', function () {
     it('is accepted when a room and at least a waitinglist option is selected', function (done) {
       eventStore.state.events = eventStore.state.events.concat([
-        events.reservationWasIssued('bed_in_double', 2, 'session-id', 'memberId', aShortTimeAgo),
         events.waitinglistReservationWasIssued(['single', 'junior'], 2, 'session-id', 'memberId', aShortTimeAgo)
       ]);
 
       appWithSocratesMemberAndFixedSessionId
         .post('/completeRegistration')
         .send('activityUrl=socrates-url')
-        .send('roomType=bed_in_double')
         .send('duration=2')
         .send('desiredRoomTypes=single,junior')
         .send('country=UU')
@@ -422,10 +419,8 @@ describe('SoCraTes registration application', function () {
             {event: e.ROOM_QUOTA_WAS_SET, roomType: 'bed_in_double', quota: 10},
             {event: e.ROOM_QUOTA_WAS_SET, roomType: 'junior', quota: 10},
             {event: e.ROOM_QUOTA_WAS_SET, roomType: 'bed_in_junior', quota: 10},
-            {event: e.RESERVATION_WAS_ISSUED, sessionId: 'session-id', memberId: 'memberId', roomType: 'bed_in_double', duration: 2},
             {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionId: 'session-id', desiredRoomTypes: ['single', 'junior'], duration: 2, memberId: 'memberId'},
-            {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: 'session-id', memberId: 'memberId2', roomType: 'bed_in_double', duration: 2},
-            {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionId: 'session-id', desiredRoomTypes: ['single', 'junior'], memberId: 'memberId2'}
+            {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionId: 'session-id', desiredRoomTypes: ['single', 'junior'], duration: 2, memberId: 'memberId2'}
           ]);
           done(err);
         });
