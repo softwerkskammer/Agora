@@ -4,16 +4,17 @@ include ../../members/views/roommateBanner
 
 
 block title
-  | SoCraTes 2016 - 6th International Software Craftsmanship and Testing Conference, 25-28 August 2016, Soltau, Germany
+  | SoCraTes 2017 - 7th International Software Craftsmanship and Testing Conference, 24-27 August 2017, Soltau, Germany
 block before-container
   +resignBanner(registration)
   +roommateBanner(registration)
   .jumbotron.stage-background
     .container
-      img.logo-left(src='img/socrates2016_logo.png', alt='SoCraTes Conference 2016 - Software Craftsmanship and Testing')
-      h1 SoCraTes 2016
-      h2: small 6th International Software Craftsmanship and Testing Conference in Germany
-      h2: small 25 - 28 August 2016, Soltau, Germany
+      img.logo-left(src='img/socrates2017_logo.png', alt='SoCraTes Conference 2017 - Software Craftsmanship and ' +
+      'Testing')
+      h1 SoCraTes 2017
+      h2: small 7th International Software Craftsmanship and Testing Conference in Germany
+      h2: small 24 - 27 August 2017, Soltau, Germany
       p: a.btn.btn-primary.pull-right(href='/registration') Pricing and Registration…
 
 block content
@@ -66,7 +67,7 @@ block content
               h5
                 +extlink('http://www.codefreeze.fi/', 'CodeFreeze')
                 br
-                small 11 - 12 Jan 2016 , Kiilopää, Finland
+                small 15 - 19 Jan 2017 , Kiilopää, Finland
             .col-sm-6
               h5
                 +extlink('http://www.socrates-conference.es/', 'SoCraTes Canaries')
@@ -91,7 +92,7 @@ block content
               h5
                 +extlink('http://socratesuk.org/', 'SoCraTes UK')
                 br
-                small 2 - 5 June 2016, Dorking
+                small 15 - 18 June 2017, Dorking
             .col-sm-6
               h5
                 +extlink('https://www.socrates-conference.cl/', 'SoCraTes Chile')
