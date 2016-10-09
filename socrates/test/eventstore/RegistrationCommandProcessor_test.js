@@ -492,52 +492,51 @@ describe('The registration command processor', function () {
       // Given (saved events)
       eventStore.state.events = [];
       const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
-
       // When (issued command)
-      const event = commandProcessor.issueWaitinglistReservation([singleBedRoom], sessionId1, memberId1, aShortTimeAgo);
+      const event = commandProcessor.issueWaitinglistReservation([singleBedRoom], 2, sessionId1, memberId1, aShortTimeAgo);
 
       // Then (new events)
       expect(stripTimestamps([event])).to.eql([
-        {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionId: sessionId1, memberId: memberId1, desiredRoomTypes: [singleBedRoom], joinedWaitinglist: aShortTimeAgo.valueOf()}]);
+        {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, duration: 2, sessionId: sessionId1, memberId: memberId1, desiredRoomTypes: [singleBedRoom], joinedWaitinglist: aShortTimeAgo.valueOf()}]);
     });
 
     it('reserves a spot on the waitinglist when an expired reservation (from somebody else) exists', function () {
       // Given (saved events)
       eventStore.state.events = [
-        events.waitinglistReservationWasIssued([singleBedRoom], sessionId1, memberId1, aLongTimeAgo)];
+        events.waitinglistReservationWasIssued([singleBedRoom], 3, sessionId1, memberId1, aLongTimeAgo)];
       const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       // When (issued command)
-      const event = commandProcessor.issueWaitinglistReservation([singleBedRoom], sessionId2, memberId2, aShorterTimeAgo);
+      const event = commandProcessor.issueWaitinglistReservation([singleBedRoom], 2, sessionId2, memberId2, aShorterTimeAgo);
 
       // Then (new events)
       expect(stripTimestamps([event])).to.eql([
-        {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionId: sessionId2, memberId: memberId2, desiredRoomTypes: [singleBedRoom], joinedWaitinglist: aShorterTimeAgo.valueOf()}]);
+        {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, duration: 2, sessionId: sessionId2, memberId: memberId2, desiredRoomTypes: [singleBedRoom], joinedWaitinglist: aShorterTimeAgo.valueOf()}]);
     });
 
     it('disregards a reservation if there is a matching booking', function () {
       // Given (saved events)
       eventStore.state.events = [
-        events.waitinglistReservationWasIssued([singleBedRoom], sessionId1, memberId1, aShortTimeAgo),
+        events.waitinglistReservationWasIssued([singleBedRoom], 2, sessionId1, memberId1, aShortTimeAgo),
         events.waitinglistParticipantWasRegistered([singleBedRoom], sessionId1, memberId1, aLongTimeAgo)];
       const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       // When (issued command)
-      const event = commandProcessor.issueWaitinglistReservation([singleBedRoom], sessionId2, memberId2, aShorterTimeAgo);
+      const event = commandProcessor.issueWaitinglistReservation([singleBedRoom], 3, sessionId2, memberId2, aShorterTimeAgo);
 
       // Then (new events)
       expect(stripTimestamps([event])).to.eql([
-        {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionId: sessionId2, memberId: memberId2, desiredRoomTypes: [singleBedRoom], joinedWaitinglist: aShorterTimeAgo.valueOf()}]);
+        {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, duration: 3, sessionId: sessionId2, memberId: memberId2, desiredRoomTypes: [singleBedRoom], joinedWaitinglist: aShorterTimeAgo.valueOf()}]);
     });
 
     it('does not allow a registration for any resource if there is already an active registration for the same session id', function () {
       // Given (saved events)
       eventStore.state.events = [
-        events.waitinglistReservationWasIssued([singleBedRoom], sessionId1, memberId1, aShortTimeAgo)];
+        events.waitinglistReservationWasIssued([singleBedRoom], 2, sessionId1, memberId1, aShortTimeAgo)];
       const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       // When (issued command)
-      const event = commandProcessor.issueWaitinglistReservation([bedInDouble], sessionId1, memberId1, aShorterTimeAgo);
+      const event = commandProcessor.issueWaitinglistReservation([bedInDouble], 3, sessionId1, memberId1, aShorterTimeAgo);
 
       // Then (new events)
       expect(stripTimestamps([event])).to.eql([
@@ -550,11 +549,11 @@ describe('The registration command processor', function () {
       const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       // When (issued command)
-      const event = commandProcessor.issueWaitinglistReservation([singleBedRoom, bedInDouble], sessionId1, memberId1, aShortTimeAgo);
+      const event = commandProcessor.issueWaitinglistReservation([singleBedRoom, bedInDouble], 2, sessionId1, memberId1, aShortTimeAgo);
 
       // Then (new events)
       expect(stripTimestamps([event])).to.eql([
-        {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionId: sessionId1, memberId: memberId1, desiredRoomTypes: [singleBedRoom, bedInDouble], joinedWaitinglist: aShortTimeAgo.valueOf()}]);
+        {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, duration: 2, sessionId: sessionId1, memberId: memberId1, desiredRoomTypes: [singleBedRoom, bedInDouble], joinedWaitinglist: aShortTimeAgo.valueOf()}]);
     });
 
   });
@@ -563,7 +562,7 @@ describe('The registration command processor', function () {
     it('registers a spot on the waitinglist', function () {
       // Given (saved events)
       eventStore.state.events = [
-        events.waitinglistReservationWasIssued([singleBedRoom], sessionId1, memberId1, aShortTimeAgo)];
+        events.waitinglistReservationWasIssued([singleBedRoom], 2, sessionId1, memberId1, aShortTimeAgo)];
       const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       // When (issued command)
@@ -577,7 +576,7 @@ describe('The registration command processor', function () {
     it('does not register a spot on the waitinglist if there was an expired reservation', function () { // TODO books a room?
       // Given (saved events)
       eventStore.state.events = [
-        events.waitinglistReservationWasIssued([singleBedRoom], sessionId1, memberId1, aLongTimeAgo)];
+        events.waitinglistReservationWasIssued([singleBedRoom], 2, sessionId1, memberId1, aLongTimeAgo)];
       const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       // When (issued command)
@@ -634,7 +633,7 @@ describe('The registration command processor', function () {
     it('registers a spot on the waitinglist for multiple desired rooms', function () {
       // Given (saved events)
       eventStore.state.events = [
-        events.waitinglistReservationWasIssued([singleBedRoom, bedInDouble], sessionId1, memberId1, aShortTimeAgo)];
+        events.waitinglistReservationWasIssued([singleBedRoom, bedInDouble], 2, sessionId1, memberId1, aShortTimeAgo)];
       const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       // When (issued command)

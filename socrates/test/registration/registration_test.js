@@ -396,7 +396,7 @@ describe('SoCraTes registration application', function () {
   describe('submission of the participate form to become a waitinglist participant', function () {
     it('is accepted when a waitinglist option is selected', function (done) {
       eventStore.state.events = eventStore.state.events.concat([
-        events.waitinglistReservationWasIssued(['single'], 'session-id', 'memberId', aShortTimeAgo)
+        events.waitinglistReservationWasIssued(['single'], 2, 'session-id', 'memberId', aShortTimeAgo)
       ]);
 
       appWithSocratesMemberAndFixedSessionId
@@ -423,7 +423,7 @@ describe('SoCraTes registration application', function () {
             {event: e.ROOM_QUOTA_WAS_SET, roomType: 'bed_in_double', quota: 10},
             {event: e.ROOM_QUOTA_WAS_SET, roomType: 'junior', quota: 10},
             {event: e.ROOM_QUOTA_WAS_SET, roomType: 'bed_in_junior', quota: 10},
-            {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionId: 'session-id', desiredRoomTypes: ['single'], memberId: 'memberId'},
+            {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionId: 'session-id', desiredRoomTypes: ['single'], duration: 2, memberId: 'memberId'},
             {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionId: 'session-id', desiredRoomTypes: ['single'], memberId: 'memberId2'}
           ]);
           done(err);
@@ -435,7 +435,7 @@ describe('SoCraTes registration application', function () {
     it('is accepted when a room and at least a waitinglist option is selected', function (done) {
       eventStore.state.events = eventStore.state.events.concat([
         events.reservationWasIssued('bed_in_double', 2, 'session-id', 'memberId', aShortTimeAgo),
-        events.waitinglistReservationWasIssued(['single', 'junior'], 'session-id', 'memberId', aShortTimeAgo)
+        events.waitinglistReservationWasIssued(['single', 'junior'], 2, 'session-id', 'memberId', aShortTimeAgo)
       ]);
 
       appWithSocratesMemberAndFixedSessionId
@@ -463,7 +463,7 @@ describe('SoCraTes registration application', function () {
             {event: e.ROOM_QUOTA_WAS_SET, roomType: 'junior', quota: 10},
             {event: e.ROOM_QUOTA_WAS_SET, roomType: 'bed_in_junior', quota: 10},
             {event: e.RESERVATION_WAS_ISSUED, sessionId: 'session-id', memberId: 'memberId', roomType: 'bed_in_double', duration: 2},
-            {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionId: 'session-id', desiredRoomTypes: ['single', 'junior'], memberId: 'memberId'},
+            {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionId: 'session-id', desiredRoomTypes: ['single', 'junior'], duration: 2, memberId: 'memberId'},
             {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: 'session-id', memberId: 'memberId2', roomType: 'bed_in_double', duration: 2},
             {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionId: 'session-id', desiredRoomTypes: ['single', 'junior'], memberId: 'memberId2'}
           ]);

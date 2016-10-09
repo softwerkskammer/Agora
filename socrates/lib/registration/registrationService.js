@@ -13,27 +13,17 @@ const eventConstants = beans.get('eventConstants');
 module.exports = {
 
   startRegistration: function startRegistration(registrationTuple, memberIdIfKnown, now, callback) {
-    let reservationEvent;
     let waitinglistReservationEvent;
     eventstoreService.getRegistrationCommandProcessor(registrationTuple.activityUrl, (err, registrationCommandProcessor) => {
       if (err || !registrationCommandProcessor) { return callback(err, 'message.title.problem', 'message.content.activities.does_not_exist'); }
       if (registrationTuple.desiredRoomTypes.length > 0) {
-        waitinglistReservationEvent = registrationCommandProcessor.issueWaitinglistReservation(registrationTuple.desiredRoomTypes, registrationTuple.sessionId, memberIdIfKnown, now);
-      }
-      if (registrationTuple.roomType && registrationTuple.duration) {
-        reservationEvent = registrationCommandProcessor.issueReservation(registrationTuple.roomType, registrationTuple.duration, registrationTuple.sessionId, memberIdIfKnown, now);
+        waitinglistReservationEvent = registrationCommandProcessor.issueWaitinglistReservation(registrationTuple.desiredRoomTypes, registrationTuple.duration, registrationTuple.sessionId, memberIdIfKnown, now);
       }
 
-      const reservationEventMsg = reservationEvent && reservationEvent.event;
       const waitinglistReservationEventMsg = waitinglistReservationEvent && waitinglistReservationEvent.event;
-      return eventstoreService.saveCommandProcessor(registrationCommandProcessor, R.filter(R.identity, [reservationEvent, waitinglistReservationEvent]), err1 => {
+      return eventstoreService.saveCommandProcessor(registrationCommandProcessor, R.filter(R.identity, [waitinglistReservationEvent]), err1 => {
         if (err1) { return callback(err1); }
-        if (reservationEventMsg === eventConstants.DID_NOT_ISSUE_RESERVATION_FOR_FULL_RESOURCE) {
-          return callback(null, 'activities.registration_problem', 'activities.registration_is_full');
-        }
-        if (reservationEventMsg === eventConstants.RESERVATION_WAS_ISSUED
-          || reservationEventMsg === eventConstants.DID_NOT_ISSUE_RESERVATION_FOR_ALREADY_RESERVED_SESSION
-          || waitinglistReservationEventMsg === eventConstants.WAITINGLIST_RESERVATION_WAS_ISSUED
+        if (waitinglistReservationEventMsg === eventConstants.WAITINGLIST_RESERVATION_WAS_ISSUED
           || waitinglistReservationEventMsg === eventConstants.DID_NOT_ISSUE_WAITINGLIST_RESERVATION_FOR_ALREADY_RESERVED_SESSION
         ) {
           return callback(null); // let the user continue normally even in case he already has a reservation

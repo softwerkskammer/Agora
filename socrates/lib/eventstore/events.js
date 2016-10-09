@@ -102,8 +102,8 @@ module.exports = {
   // ***** Waitinglist *****
 
   // reservation:
-  waitinglistReservationWasIssued: function (desiredRoomTypes, sessionId, memberId, joinedWaitinglist) {
-    return enrich({event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionId, desiredRoomTypes, memberId, joinedWaitinglist: joinedWaitinglist.valueOf()});
+  waitinglistReservationWasIssued: function (desiredRoomTypes, duration, sessionId, memberId, joinedWaitinglist) {
+    return enrich({event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionId, desiredRoomTypes, duration: duration, memberId, joinedWaitinglist: joinedWaitinglist.valueOf()});
   },
 
   didNotIssueWaitinglistReservationForAlreadyReservedSession: function (desiredRoomTypes, sessionId, memberId) {
