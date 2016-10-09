@@ -1,21 +1,21 @@
 'use strict';
 
 const R = require('ramda');
-var beans = require('simple-configure').get('beans');
+const beans = require('simple-configure').get('beans');
 
-var subscriberstore = beans.get('subscriberstore');
-var socratesNotifications = beans.get('socratesNotifications');
-var roomOptions = beans.get('roomOptions');
-var eventstoreService = beans.get('eventstoreService');
-var eventConstants = beans.get('eventConstants');
+const subscriberstore = beans.get('subscriberstore');
+const socratesNotifications = beans.get('socratesNotifications');
+const roomOptions = beans.get('roomOptions');
+const eventstoreService = beans.get('eventstoreService');
+const eventConstants = beans.get('eventConstants');
 
 
 module.exports = {
 
-  startRegistration: function (registrationTuple, memberIdIfKnown, now, callback) {
-    var reservationEvent;
-    var waitinglistReservationEvent;
-    eventstoreService.getRegistrationCommandProcessor(registrationTuple.activityUrl, function (err, registrationCommandProcessor) {
+  startRegistration: function startRegistration(registrationTuple, memberIdIfKnown, now, callback) {
+    let reservationEvent;
+    let waitinglistReservationEvent;
+    eventstoreService.getRegistrationCommandProcessor(registrationTuple.activityUrl, (err, registrationCommandProcessor) => {
       if (err || !registrationCommandProcessor) { return callback(err, 'message.title.problem', 'message.content.activities.does_not_exist'); }
       if (registrationTuple.desiredRoomTypes.length > 0) {
         waitinglistReservationEvent = registrationCommandProcessor.issueWaitinglistReservation(registrationTuple.desiredRoomTypes, registrationTuple.sessionId, memberIdIfKnown, now);
@@ -26,10 +26,8 @@ module.exports = {
 
       const reservationEventMsg = reservationEvent && reservationEvent.event;
       const waitinglistReservationEventMsg = waitinglistReservationEvent && waitinglistReservationEvent.event;
-      return eventstoreService.saveCommandProcessor(registrationCommandProcessor, R.filter(R.identity, [reservationEvent, waitinglistReservationEvent]), function (err1) {
-        if (err1) {
-          return callback(err1);
-        }
+      return eventstoreService.saveCommandProcessor(registrationCommandProcessor, R.filter(R.identity, [reservationEvent, waitinglistReservationEvent]), err1 => {
+        if (err1) { return callback(err1); }
         if (reservationEventMsg === eventConstants.DID_NOT_ISSUE_RESERVATION_FOR_FULL_RESOURCE) {
           return callback(null, 'activities.registration_problem', 'activities.registration_is_full');
         }
@@ -46,10 +44,10 @@ module.exports = {
     });
   },
 
-  completeRegistration: function (memberID, sessionId, body, callback) {
-    var registrationEvent;
-    var waitinglistRegistrationEvent;
-    var registrationTuple = {
+  completeRegistration: function completeRegistration(memberID, sessionId, body, callback) {
+    let registrationEvent;
+    let waitinglistRegistrationEvent;
+    const registrationTuple = {
       sessionId: sessionId,
       activityUrl: body.activityUrl,
       roomType: body.roomType,
@@ -57,12 +55,12 @@ module.exports = {
       desiredRoomTypes: body.desiredRoomTypes ? body.desiredRoomTypes.split(',') : [] // attention, empty string gets split as well...
     };
 
-    subscriberstore.getSubscriber(memberID, function (err2, subscriber) {
+    subscriberstore.getSubscriber(memberID, (err2, subscriber) => {
       if (err2) { return callback(err2); }
       subscriber.fillFromUI(body);
-      subscriberstore.saveSubscriber(subscriber, function () {
+      subscriberstore.saveSubscriber(subscriber, () => {
 
-        eventstoreService.getRegistrationCommandProcessor(registrationTuple.activityUrl, function (err, commandProcessor) {
+        eventstoreService.getRegistrationCommandProcessor(registrationTuple.activityUrl, (err, commandProcessor) => {
           if (err || !commandProcessor) { return callback(err); }
 
           if (registrationTuple.desiredRoomTypes.length > 0) {
@@ -73,7 +71,7 @@ module.exports = {
           }
           const registrationEventMsg = registrationEvent && registrationEvent.event;
           const waitinglistRegistrationEventMsg = waitinglistRegistrationEvent && waitinglistRegistrationEvent.event;
-          return eventstoreService.saveCommandProcessor(commandProcessor, R.filter(R.identity, [registrationEvent, waitinglistRegistrationEvent]), function (err1) {
+          return eventstoreService.saveCommandProcessor(commandProcessor, R.filter(R.identity, [registrationEvent, waitinglistRegistrationEvent]), err1 => {
             if (err1) { return callback(err1); }
 
             // error and success handling as indicated by the event:
