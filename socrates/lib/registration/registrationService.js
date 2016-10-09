@@ -41,8 +41,8 @@ module.exports = {
       sessionId: sessionId,
       activityUrl: body.activityUrl,
       roomType: body.roomType,
-      duration: body.duration && parseInt(body.duration, 10),
-      desiredRoomTypes: body.desiredRoomTypes ? body.desiredRoomTypes.split(',') : [] // attention, empty string gets split as well...
+      duration: parseInt(body.duration, 10),
+      desiredRoomTypes: body.desiredRoomTypes.split(',')
     };
 
     subscriberstore.getSubscriber(memberID, (err2, subscriber) => {

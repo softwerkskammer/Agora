@@ -353,46 +353,6 @@ describe('SoCraTes registration application', function () {
     });
   });
 
-  describe('submission of the participate form to become a participant', function () {
-
-    it('is accepted when a room is selected', function (done) {
-      eventStore.state.events = eventStore.state.events.concat([
-        events.reservationWasIssued('single', 5, 'session-id', 'memberId', aShortTimeAgo)]);
-
-      appWithSocratesMemberAndFixedSessionId
-        .post('/completeRegistration')
-        .send('activityUrl=socrates-url')
-        .send('roomType=single')
-        .send('duration=5')
-        .send('desiredRoomTypes=')
-        .send('country=XX')
-        .send('homeAddress=At home')
-        .send('billingAddress=')
-        .send('tShirtSize=XXXL')
-        .send('remarks=vegan')
-        .send('roommate=My buddy')
-        .send('hasParticipationInformation=true')
-        .send('previousNickname=Nick&nickname=Nick')
-        .send('previousEmail=me@you.com&email=me@you.com')
-        .send('firstname=Peter&lastname=Miller')
-        .expect(302)
-        .expect('location', '/registration', function (err) {
-          expect(eventStoreSave.called).to.be(true);
-          expect(stripTimestampsAndJoins(eventStore.state.events)).to.eql([
-            {event: e.ROOM_QUOTA_WAS_SET, roomType: 'single', quota: 0},
-            {event: e.ROOM_QUOTA_WAS_SET, roomType: 'bed_in_double', quota: 10},
-            {event: e.ROOM_QUOTA_WAS_SET, roomType: 'junior', quota: 10},
-            {event: e.ROOM_QUOTA_WAS_SET, roomType: 'bed_in_junior', quota: 10},
-            {event: e.RESERVATION_WAS_ISSUED, sessionId: 'session-id', memberId: 'memberId', roomType: 'single', duration: 5},
-            {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: 'session-id', memberId: 'memberId2', roomType: 'single', duration: 5}
-          ]);
-          done(err);
-        });
-
-    });
-
-  });
-
   describe('submission of the participate form to become a waitinglist participant', function () {
     it('is accepted when a waitinglist option is selected', function (done) {
       eventStore.state.events = eventStore.state.events.concat([
