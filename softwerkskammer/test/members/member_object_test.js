@@ -285,3 +285,18 @@ describe('avatar handling', function () {
     expect(member.hasImage()).to.be(true);
   });
 });
+
+describe('The interests', function () {
+
+  it('creates an array for the select2 widget (good case)', function () {
+    var member = new Member();
+    member.state.interests = 'peter,paul und mary';
+    expect(member.interestsForSelect2()).to.eql(['peter', 'paul und mary']);
+  });
+
+  it('creates an array for the select2 widget (with blanks)', function () {
+    var member = new Member();
+    member.state.interests = 'peter , paul und mary';
+    expect(member.interestsForSelect2()).to.eql(['peter', 'paul und mary']);
+  });
+});
