@@ -2,7 +2,6 @@ extends ../../../views/layoutOnlyMain
 include ../../../views/dataTables-mixin
 
 block scripts
-  +dataTableImport
   +dataTable('#grouptable', '[ 1, "asc" ]', '[{targets: 0, sortable: false}]', true)
 
 block title

@@ -22,7 +22,6 @@ mixin linkedMember(nickname)
   a(href='/members/' + encodeURIComponent(nickname)) #{nickname}
 
 mixin tagCloud(members, startcolor)
-  #tag-cloud
   script.
     $(document).ready(function() {
       $('#tag-cloud').jQCloud(
