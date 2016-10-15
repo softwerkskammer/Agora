@@ -11,13 +11,13 @@ notifications:
 # run for mongo 3 requires mongodb service to pull in all dependencies
 matrix:
   include:
-  - node_js: "6.1"
+  - node_js: "6.5"
     services:
     - mongodb
     before_script:
       - npm install -g grunt-cli
       - mongod --version
-  - node_js: "6.1"
+  - node_js: "6.5"
     env: MONGODB=3.2.9
     before_script:
       - wget http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-ubuntu1204-${MONGODB}.tgz -O /tmp/mongodb.tgz
