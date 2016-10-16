@@ -3,7 +3,6 @@ include ../../members/views/memberlist-mixin
 include ../../../views/dataTables-mixin
 
 block scripts
-  +dataTableImport
   +dataTable('#membertable', '[ 1, "desc" ]', '[{targets: 0, sortable: false}, {targets: [1], type: "date-eu"}]', true)
 
 block title

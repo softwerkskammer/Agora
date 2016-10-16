@@ -3,41 +3,28 @@ mixin text(name, label, value, tooltip, placeholder, readonly)
     if (readonly)
       +hidden(name, value)
     +controlLabel(name, label, tooltip)
-    input.form-control(id=name, type='text', name=name, value=value, placeholder=placeholder, disabled=readonly)
-    script.
-      $(#{name}).on('blur', function () {
-        $(this).val($(this).val().trim());
-      });
+    input.form-control.trimtext(id=name, type='text', name=name, value=value, placeholder=placeholder, disabled=readonly)
 
 mixin textWithTags(name, label, value, tags)
   .form-group
     +controlLabel(name, label)
-    select.form-control(multiple, id=name, name=name)
+    select.form-control.textWithTags(multiple, id=name, name=name)
       each tag in tags
         option(selected = value.indexOf(tag) > -1) #{tag}
-    script.
-      $(#{name}).select2({
-        tags: true, 
-        tokenSeparators: [',', ', ']
-      });
 
 mixin multiselect(name, label, value, tags)
   .form-group
     +controlLabel(name, label)
-    select.form-control(multiple, id=name, name=name)
+    select.form-control.multiselect(multiple, id=name, name=name)
       each tag in tags
         option(selected = value.indexOf(tag) > -1) #{tag}
-    script.
-      $(#{name}).select2();
 
 mixin editableMultiselect(name, label, value, tags)
   .form-group
     +controlLabel(name, label)
-    select.form-control(multiple, id=name, name=name)
+    select.form-control.multiselectEditable(multiple, id=name, name=name)
       each tag in tags
         option(selected = value.indexOf(tag) > -1) #{tag}
-    script.
-      $(#{name}).select2({tags: true});
 
 
 mixin currency(name, label, value, tooltip, placeholder, readonly)
@@ -46,8 +33,6 @@ mixin currency(name, label, value, tooltip, placeholder, readonly)
       +hidden(name, value)
     +controlLabel(name, label, tooltip)
     input.form-control.currency(id=name, type='text', name=name, placeholder=placeholder, disabled=readonly, data-a-sign=' €', data-p-sign='s', data-a-dec=t('general.separator'), data-a-sep='')
-    script.
-      $('.currency').autoNumeric('init');
 
 mixin textareaPure(name, label, value)
   +textareaInternal('form-control', '4', name, label, value)
@@ -108,8 +93,6 @@ mixin colorPicker(name, value)
     .input-group.c-picker
       span.input-group-addon: i
       input.form-control(id=name, type='text', name=name, value=value)
-    script.
-      $('.c-picker').colorpicker();
 
 mixin twitter(name, label, value)
   .form-group
@@ -126,8 +109,6 @@ mixin controlLabel(name, label, tooltip)
     -if (tooltip)
       span.tooltiplabel(data-original-title=tooltip) #{label}:&nbsp;
         i.fa.fa-question-circle
-      script.
-        $('.tooltiplabel').each(function() {$(this).tooltip()})
     -else
       | #{label}:
 

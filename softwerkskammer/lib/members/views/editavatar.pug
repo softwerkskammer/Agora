@@ -40,7 +40,6 @@ mixin editavatar(member, returnToParticipantsListing)
             button.btn.btn-xs.btn-primary(type='submit', title=t('general.save'))
               i.fa.fa-fw.fa-check
               | &nbsp; #{t('general.save')}
-      +imageScripts
 
       +hidden('nickname', member.nickname())
       +hidden('scale')
@@ -49,27 +48,3 @@ mixin editavatar(member, returnToParticipantsListing)
       +hidden('y')
       +hidden('h')
       +hidden('w')
-  script.
-    $(function () {
-      var preview = $('img#preview');
-      $('img#preview').on('load', function () {
-        preview.guillotine({
-          width: 200,
-          height: 200,
-          onChange: function (data, action) {
-            for (var key in data) {
-              $('input[name="' + key + '"]').val(data[key]);
-            }
-          }
-        });
-        preview.guillotine('fit');
-      });
-      $('#btn-cancel').click(function () {
-        preview.guillotine('remove');
-      });
-      $('#rotate-left').click(function () {preview.guillotine('rotateLeft')});
-      $('#rotate-right').click(function () {preview.guillotine('rotateRight')});
-      $('#zoom-in').click(function () {preview.guillotine('zoomIn')});
-      $('#zoom-out').click(function () {preview.guillotine('zoomOut')});
-      $('#fit').click(function () {preview.guillotine('fit')});
-    });

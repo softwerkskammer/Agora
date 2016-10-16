@@ -71,8 +71,6 @@ mixin paymentMoneyTransfer(paymentInfo, actionUrl, amount, id)
             button.btn.btn-primary.pull-right(type='submit') #{t('payment.transferred')}
 
 mixin paymentCreditCard(paymentInfo, placeholder, actionUrl, amount, fee, description, id)
-  +stripeScript(paymentInfo)
-  script(src='/clientscripts/check-paymentform.js')
   .panel.panel-default
     .panel-heading
       h4.panel-title #{t('payment.credit_card')} &nbsp;
@@ -106,7 +104,6 @@ mixin paymentCreditCard(paymentInfo, placeholder, actionUrl, amount, fee, descri
           else
             +text('description', t('payment.description'), paymentInfo.description, undefined, t('payment.description'))
             +currency('amount', t('payment.amount'), '', undefined, placeholder + ' €')
-            script $('#amount').keyup(amountHandler)
           p
             b #{t('payment.handling_fee')}:
             if (fee)
