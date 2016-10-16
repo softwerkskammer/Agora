@@ -9,6 +9,18 @@ html
     link(rel='apple-touch-icon', href='/img/apple-touch-icon-76x76-precomposed.png')
     link(rel='apple-touch-icon', href='/img/apple-touch-icon-120x120-precomposed.png')
     link(rel='apple-touch-icon', href='/img/apple-touch-icon-152x152-precomposed.png')
+    if (language === 'de')
+      script(src='/clientscripts/global_de.js')
+    else
+      script(src='/clientscripts/global_en.js')
+    if (!!calViewYear)
+      script.
+        $(document).ready(function () {
+          var date = moment().year(#{calViewYear}).month(#{calViewMonth});
+          $('#calendar').fullCalendar('gotoDate', date);      
+        });
+    block scripts
+
     title
       block title
       | &nbsp;- SWK
@@ -53,18 +65,3 @@ html
         block specific
       +bottomNavbar
   
-    if (language === 'de')
-      script(src='/clientscripts/global_de.js')
-    else
-      script(src='/clientscripts/global_en.js')
-    if (!!calViewYear)
-      script.
-        $(document).ready(function () {
-          var date = moment().year(#{calViewYear}).month(#{calViewMonth});
-          $('#calendar').fullCalendar('gotoDate', date);
-        });
-    script.
-
-
-  block scripts
-

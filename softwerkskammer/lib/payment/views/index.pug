@@ -15,8 +15,3 @@ block content
       +paymentMoneyTransfer(paymentInfo)
     .col-md-6
       +paymentCreditCard(paymentInfo, placeholder, '/payment/submitCreditCard')
-
-block scripts
-  +stripeScript(paymentInfo)
-  script(src='/clientscripts/check-paymentform.js')
-  script $('#amount').keyup(amountHandler)

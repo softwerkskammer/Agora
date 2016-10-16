@@ -54,3 +54,10 @@ block content
         p
           strong Kurz:
           | Wir wollen die richtige Software entwickeln, und wir wollen die Software richtig entwickeln.
+
+  script.
+    function adjustMapsize() {
+      $('.groupsmap').each(function() {$(this).height(1.289 * $(this).width()); })
+    }
+    $(document).ready(adjustMapsize);
+    $.event.add(window, 'resize', adjustMapsize);

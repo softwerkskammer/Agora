@@ -1,50 +1,49 @@
-mixin mapscripts(location)
+mixin map(location, width, height)
+  #map.hidden-print(style='width: ' + width + '; height: ' + height)
   script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyBicQlzzNdi4OKA5uxV7SRwPpU8s4qUcS8', type='text/javascript')
   script.
     $(document).ready(function () {
       var mapOptions = {
-        center: new google.maps.LatLng(50.77740690, 10.0987599999999),
-        zoom: 6,
-        disableDefaultUI: true,
-        zoomControl: true,
-        scrollwheel: false,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-      };
+          center: new google.maps.LatLng(50.77740690, 10.0987599999999),
+          zoom: 6,
+          disableDefaultUI: true,
+          zoomControl: true,
+          scrollwheel: false,
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
       var map = new google.maps.Map($('#map')[0], mapOptions);
       var styles = [
         {
           stylers: [
-            {hue: '##c8cf7e'},
-            {saturation: -50}
+            { hue: '##c8cf7e' },
+            { saturation: -50 }
           ]
-        }, {
+        },{
           featureType: 'road',
           elementType: 'geometry',
           stylers: [
-            {lightness: 20},
-            {visibility: 'simplified'}
+            { lightness: 20 },
+            { visibility: 'simplified' }
           ]
-        }, {
+        },{
           featureType: 'poi.business',
           elementType: 'labels',
           stylers: [
-            {visibility: 'off'}
+            { visibility: 'off' }
           ]
         }
       ];
       map.setOptions({styles: styles});
       var geocoder = new google.maps.Geocoder();
-      geocoder.geocode({'address': '#{location}', region: 'de'}, function (results, status) {
+      geocoder.geocode( { 'address': '#{location}', region: 'de'}, function(results, status) {
         if (status == google.maps.GeocoderStatus.OK) {
           map.setCenter(results[0].geometry.location);
           var marker = new google.maps.Marker({
-            map: map,
-            position: results[0].geometry.location
+              map: map,
+              position: results[0].geometry.location
           });
           map.setZoom(13);
         }
       });
     });
-
-mixin map(location, width, height)
-  #map.hidden-print(style='width: ' + width + '; height: ' + height)
+  

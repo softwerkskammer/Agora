@@ -13,8 +13,3 @@ include ../../lib/payment/views/paymentFormComponents
 +memberform(member, regionalgroups, themegroups, [])
 
 +paymentCreditCard(paymentInfo)
-
-block scripts
-  +stripeScript(paymentInfo)
-  script(src='/clientscripts/check-paymentform.js')
-  script $('#amount').keyup(amountHandler)

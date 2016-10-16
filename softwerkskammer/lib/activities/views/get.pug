@@ -71,7 +71,6 @@ block content
 
 block scripts
   script(type='text/javascript', src='https://js.stripe.com/v2/')
-  +mapscripts(activity.location())
   script.
     displayedActivityStart = moment('#{activity.startMoment().toISOString()}');
     displayedActivityEnd = moment('#{activity.endMoment().toISOString()}');

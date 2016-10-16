@@ -20,3 +20,10 @@ block content
       +placeGroupLabels(regionalgroups)
     .col-md-6.hidden-xs.hidden-sm.groupsmap(style='position: relative; width: 50%; height: 100px; background-image:url("/img/map.svg"); background-size: 100% 100%; background-repeat: no-repeat;')
       +placeGroupLabels(regionalgroups)
+  script.
+    function adjustMapsize() {
+      $('.groupsmap').each(function() {$(this).height(1.289 * $(this).width()); })
+    }
+    $(document).ready(adjustMapsize);
+    $.event.add(window, 'resize', adjustMapsize);
+

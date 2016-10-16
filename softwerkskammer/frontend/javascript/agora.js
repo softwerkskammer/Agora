@@ -227,76 +227,7 @@ var initParameterisedCalendar, interestify, surroundInterestsWithLinks, surround
     };
   }
 
-  function enhanceWidgets() {
-    $('.trimtext').on('blur', function () {
-      $(this).val($(this).val().trim());
-    });
-    $('.textWithTags').select2({
-      tags: true,
-      tokenSeparators: [',', ', ']
-    });
-    $('.multiselect').select2();
-    $('.multiselectEditable').select2({tags: true});
-    $('.currency').autoNumeric('init');
-    $('.c-picker').colorpicker();
-    $('.tooltiplabel').each(function () { $(this).tooltip(); });
-    function adjustMapsize() {
-      $('.groupsmap').each(function () {$(this).height(1.289 * $(this).width()); });
-    }
-
-    $(document).ready(adjustMapsize);
-    $.event.add(window, 'resize', adjustMapsize);
-
-    // for imageUploading
-    $('#recordForm').on('submit', function () {
-      $('#recordForm button[type="submit"]').prepend($('<i class="fa fa-fw fa-spinner fa-spin"/>&nbsp;'));
-    });
-    $('#input-file').on('change', function () {
-      if (!this.files || !this.files[0]) { return null; }
-      var reader = new FileReader();
-      reader.onload = function (event) {
-        $('img#preview').attr('src', event.target.result);
-        $('#previewContainer').show();
-        $('#selectFileButton').hide();
-        $('#uploadButtons').show();
-      };
-      reader.readAsDataURL(this.files[0]);
-    });
-    $('#btn-cancel').click(function () {
-      $('#previewContainer').hide();
-      $('#uploadButtons').hide();
-      $('#selectFileButton').show();
-      $('#input-file').val(null);
-    });
-    $('#previewContainer').hide();
-    $('#uploadButtons').hide();
-
-    var preview = $('img#preview');
-    preview.on('load', function () {
-      preview.guillotine({
-        width: 200,
-        height: 200,
-        onChange: function (data) {
-          for (var key in data) {
-            $('input[name="' + key + '"]').val(data[key]);
-          }
-        }
-      });
-      preview.guillotine('fit');
-    });
-    $('#btn-cancel').click(function () {
-      preview.guillotine('remove');
-    });
-    $('#rotate-left').click(function () { preview.guillotine('rotateLeft'); });
-    $('#rotate-right').click(function () { preview.guillotine('rotateRight'); });
-    $('#zoom-in').click(function () { preview.guillotine('zoomIn'); });
-    $('#zoom-out').click(function () { preview.guillotine('zoomOut'); });
-    $('#fit').click(function () { preview.guillotine('fit'); });
-
-  }
-
   patchBootstrapPopover();
-  enhanceWidgets();
   $.event.add(window, 'resize', adaptScrollableBox);
   $(document).ready(highlightCurrentSection);
   $(document).ready(addHelpButtonToTextarea);

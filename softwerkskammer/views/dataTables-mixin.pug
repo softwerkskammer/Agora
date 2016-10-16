@@ -1,6 +1,9 @@
-mixin dataTable(clazz, sorting, columns, stateSaveAndSearch)
+
+mixin dataTableImport()
   script(src='/clientscripts/jquery.dataTables.js')
   script(src='/clientscripts/dataTables.bootstrap.js')
+
+mixin dataTable(clazz, sorting, columns, stateSaveAndSearch)
   script.
     $(document).ready(function() {
       $('#{clazz}').dataTable({
