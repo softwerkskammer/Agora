@@ -34,15 +34,6 @@ mixin multiselect(name, label, value, tags)
     script.
       $(#{name}).select2();
 
-mixin currency(name, label, value, tooltip, placeholder, readonly)
-  .form-group
-    if (readonly)
-      +hidden(name, value)
-    +controlLabel(name, label, tooltip)
-    input.form-control.currency(id=name, type='text', name=name, placeholder=placeholder, disabled=readonly, data-a-sign=' €', data-p-sign='s', data-a-dec=t('general.separator'), data-a-sep='')
-    script.
-      $('.currency').autoNumeric('init');
-
 mixin textareaPure(name, label, value, placeholder)
   +textareaInternal('form-control', '4', name, label, value, null, placeholder)
 
@@ -63,19 +54,6 @@ mixin checkboxWithDescription(name, label, checked, description, optionalValue)
 
 mixin checkbox(name, label, checked, optionalValue)
   +checkboxWithDescription(name, label, checked, undefined, optionalValue)
-
-mixin groupCheckboxes(checkboxName, regionalgroups, themegroups)
-  .row
-    .col-md-6
-      +controlLabel(t('groups.regional'), t('groups.regional'))
-      .form-group
-        each markedGroup in regionalgroups
-          +checkboxWithDescription(checkboxName, markedGroup.group.longName, markedGroup.selected, markedGroup.group.descriptionHTMLFiltered('img'), markedGroup.group.id)
-    .col-md-6
-      +controlLabel(t('groups.themed'), t('groups.themed'))
-      .form-group
-        each markedGroup in themegroups
-          +checkboxWithDescription(checkboxName, markedGroup.group.longName, markedGroup.selected, markedGroup.group.descriptionHTMLFiltered('img'), markedGroup.group.id)
 
 mixin submitButtons(submitTextToken)
   .btn-group.pull-right
@@ -102,15 +80,6 @@ mixin time(name, value)
   .form-group
     label.control-label(for=name) &nbsp;
     input.form-control.timepicker(id=name, type='text', name=name, value=value)
-
-mixin colorPicker(name, value)
-  .form-group
-    +controlLabel(name, t('colors.color'))
-    .input-group.c-picker
-      span.input-group-addon: i
-      input.form-control(id=name, type='text', name=name, value=value, placeholder='#HEXHEX')
-    script.
-      $('.c-picker').colorpicker();
 
 mixin twitter(name, label, value)
   .form-group
