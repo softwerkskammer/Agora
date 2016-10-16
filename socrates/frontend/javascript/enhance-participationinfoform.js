@@ -6,7 +6,7 @@
   }
 
   $(function () {
-    $('[name|=nightsOptions]').on('change', disableParticipationSubmitButton);
+    $('[name|=nightsOption]').on('change', disableParticipationSubmitButton);
     $('[name|=roomsOptions]').on('change', disableParticipationSubmitButton);
   });
 }());
