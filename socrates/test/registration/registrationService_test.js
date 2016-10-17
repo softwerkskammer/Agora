@@ -226,28 +226,6 @@ describe('Registration Service', function () {
 
   describe('finishing the registration - normal registration', function () {
 
-    it.skip('adds the registrant to the resource if he had a valid session entry, saves the eventstore and updates the read model', function (done) {
-      eventStore.state.events = [
-        events.reservationWasIssued(registrationBody.roomType, registrationBody.duration, registrationBody.sessionId, 'memberId', aShortTimeAgo)
-      ];
-
-      registrationService.completeRegistration('memberId', 'sessionId', registrationBody, function (err, statusTitle, statusText) {
-        expect(statusTitle).to.not.exist();
-        expect(statusText).to.not.exist();
-
-        const readModel = cache.get('socrates-url_registrationReadModel');
-        expect(readModel.reservationsAndParticipantsFor('single')).to.have.length(1);
-        expect(readModel.waitinglistReservationsAndParticipantsFor('single')).to.have.length(0);
-
-        const savedEventStore = saveEventStoreStub.firstCall.args[0];
-        expect(stripTimestamps(savedEventStore.state.events)).to.eql([
-          {event: e.RESERVATION_WAS_ISSUED, roomType: 'single', duration: 2, sessionId: 'sessionId', memberId: 'memberId', joinedSoCraTes: aShortTimeAgo.valueOf()},
-          {event: e.PARTICIPANT_WAS_REGISTERED, roomType: 'single', duration: 2, sessionId: 'sessionId', memberId: 'memberId', joinedSoCraTes: aShortTimeAgo.valueOf()}
-        ]);
-        done(err);
-      });
-    });
-
     it('adds the registrant to the resource if he has a waitinglist reservation and has a valid session entry', function (done) {
       eventStore.state.events = [
         events.waitinglistReservationWasIssued(registrationBody.desiredRoomTypes, 2, registrationBody.sessionId, 'memberId', aShortTimeAgo),
@@ -275,40 +253,6 @@ describe('Registration Service', function () {
         ]);
         expect(statusTitle).to.be('activities.registration_problem');
         expect(statusText).to.be('activities.registration_timed_out');
-        done(err);
-      });
-    });
-
-    it.skip('does not add the registrant to the resource if the sessionId entry is already expired, even if there is enough space', function (done) {
-      eventStore.state.events = [
-        events.reservationWasIssued(registrationBody.roomType, registrationBody.duration, registrationBody.sessionId, 'memberId', aLongTimeAgo)];
-
-      registrationService.completeRegistration('memberId', 'sessionId', registrationBody, function (err, statusTitle, statusText) {
-
-        const savedEventStore = saveEventStoreStub.firstCall.args[0];
-        expect(stripTimestamps(savedEventStore.state.events)).to.eql([
-          {duration: 2, event: e.RESERVATION_WAS_ISSUED, roomType: 'single', sessionId: 'sessionId', memberId: 'memberId', joinedSoCraTes: aLongTimeAgo.valueOf()},
-          {duration: 2, event: e.DID_NOT_REGISTER_PARTICIPANT_WITH_EXPIRED_OR_MISSING_RESERVATION, memberId: 'memberId', roomType: 'single', sessionId: 'sessionId'}
-        ]);
-        expect(statusTitle).to.be('activities.registration_problem');
-        expect(statusText).to.be('activities.registration_timed_out');
-        done(err);
-      });
-    });
-
-    it.skip('does not add the registrant to the resource if he is already registered', function (done) {
-      eventStore.state.events = [
-        events.participantWasRegistered(registrationBody.roomType, registrationBody.duration, registrationBody.sessionId, 'memberId', aShortTimeAgo)];
-
-      registrationService.completeRegistration('memberId', 'sessionId', registrationBody, function (err, statusTitle, statusText) {
-
-        const savedEventStore = saveEventStoreStub.firstCall.args[0];
-        expect(stripTimestamps(savedEventStore.state.events)).to.eql([
-          {event: e.PARTICIPANT_WAS_REGISTERED, roomType: 'single', memberId: 'memberId', sessionId: 'sessionId', duration: 2, joinedSoCraTes: aShortTimeAgo.valueOf()},
-          {event: e.DID_NOT_REGISTER_PARTICIPANT_A_SECOND_TIME, roomType: 'single', memberId: 'memberId', sessionId: 'sessionId', duration: 2}
-        ]);
-        expect(statusTitle).to.be('activities.registration_problem');
-        expect(statusText).to.be('activities.already_registered');
         done(err);
       });
     });
