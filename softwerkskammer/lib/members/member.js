@@ -148,7 +148,7 @@ Member.prototype.interests = function () {
 };
 
 Member.prototype.interestsForSelect2 = function () {
-  return _(this.interests()).words(/[^,]+/g);
+  return _(this.interests()).words(/[^,]+/g).map(s => s.trim()).value();
 };
 
 Member.prototype.reference = function () {

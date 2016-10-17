@@ -45,7 +45,7 @@ function messageSubmitted(req, res, next) {
 app.get('/massMailing', function (req, res) {
   var message = new Message();
   message.addToButtons({
-    text: 'To SoCraTes 2016',
+    text: 'To SoCraTes 2017',
     url: conf.get('publicUrlPrefix')
   });
   res.render('compose', {message: message, successURL: '/', massMailing: true});
