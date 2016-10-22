@@ -50,9 +50,9 @@ describe('Room Options', function () {
         events.roomQuotaWasSet(roomIds[2], 100),
         events.roomQuotaWasSet(roomIds[3], 0),
         events.participantWasRegistered(roomIds[0], untilSaturday, sessionId1, memberId1, moment()),
-        events.waitinglistParticipantWasRegistered(roomIds[1], sessionId1, memberId1, moment()),
+        events.waitinglistParticipantWasRegistered(roomIds[1], 2, sessionId1, memberId1, moment()),
         events.participantWasRegistered(roomIds[1], untilSaturday, sessionId2, memberId2, moment()),
-        events.waitinglistParticipantWasRegistered(roomIds[2], sessionId2, memberId2, moment())
+        events.waitinglistParticipantWasRegistered(roomIds[2], 3, sessionId2, memberId2, moment())
       ];
 
       var readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));

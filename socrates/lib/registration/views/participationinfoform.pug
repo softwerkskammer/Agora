@@ -49,50 +49,42 @@ mixin participationinfoform(roomOptions, registration)
               thead
                 tr
                   th Room until
-                  th.text-center Sat evening
-                  th.text-center Sun morning
-                  th.text-center Sun evening*
-                  th.text-center Mon morning*
+                  th.text-center
+                    .radio-inline
+                      label
+                        input(type='radio', name='nightsOption', value='2')
+                        b Sat evening
+                  th.text-center
+                    .radio-inline
+                      label
+                        input(type='radio', name='nightsOption', value='3')
+                        b Sun morning
+                  th.text-center
+                    .radio-inline
+                      label
+                        input(type='radio', name='nightsOption', value='4')
+                        b Sun evening*
+                  th.text-center
+                    .radio-inline
+                      label
+                        input(type='radio', name='nightsOption', value='5')
+                        b Mon morning*
               tbody
                 for option in roomOptions
-                  if option.displayRegistrationCheckboxes
-                    tr
-                      th #{option.name}
-                      td.text-center
-                        .radio-inline
-                          label
-                            input(type='radio', name='nightsOptions', value=option.id + ',2')
-                            | #{option.two}&nbsp;€
-                      td.text-center
-                        .radio-inline
-                          label
-                            input(type='radio', name='nightsOptions', value=option.id + ',3')
-                            | #{option.three}&nbsp;€
-                      td.text-center
-                        .radio-inline
-                          label
-                            input(type='radio', name='nightsOptions', value=option.id + ',4')
-                            | #{option.threePlus}&nbsp;€
-                      td.text-center
-                        .radio-inline
-                          label
-                            input(type='radio', name='nightsOptions', value=option.id + ',5')
-                            | #{option.four}&nbsp;€
-                  else
-                    tr
-                      th #{option.name}
-                        .radio-inline.pull-right
-                          label
-                            input(type='checkbox', name='nightsOptions', value=option.id + ',waitinglist')
-                            |  Waitinglist
-                      td.text-center.disabled-text
-                        span(style='margin-left:20px;') #{option.two}&nbsp;€
-                      td.text-center.disabled-text
-                        span(style='margin-left:20px;') #{option.three}&nbsp;€
-                      td.text-center.disabled-text
-                        span(style='margin-left:20px;') #{option.threePlus}&nbsp;€
-                      td.text-center.disabled-text
-                        span(style='margin-left:20px;') #{option.four}&nbsp;€
+                  tr
+                    th
+                      .radio-inline
+                        label
+                          input(type='checkbox', name='roomsOptions', value=option.id)
+                          b &nbsp; #{option.name}
+                    td.text-center
+                      span(id=option.id + '2', style='margin-left:20px;') #{option.two}&nbsp;€
+                    td.text-center
+                      span(id=option.id + '3', style='margin-left:20px;') #{option.three}&nbsp;€
+                    td.text-center
+                      span(id=option.id + '4', style='margin-left:20px;') #{option.threePlus}&nbsp;€
+                    td.text-center
+                      span(id=option.id + '5', style='margin-left:20px;') #{option.four}&nbsp;€
 
         .row(style='margin-top:-15px; margin-bottom:15px')
           .col-xs-12
@@ -118,12 +110,16 @@ mixin participationinfoform(roomOptions, registration)
         script.
           $(function () {
             var selectedOptions = '#{registration.selectedOptions}'.split(';');
-            console.log(selectedOptions)
             selectedOptions.forEach(function (option) {
-              var selectedInput = $('input[value="' + option + '"]')
-              selectedInput.attr('checked', 'checked');
-              selectedInput.parent().parent().parent().addClass('bg-success')
-              selectedInput.parent().addClass('text-success')
+              const roomWithDuration = option.split(',');
+              if (roomWithDuration.length === 3) { //waitinglist
+                $('input[value="' + roomWithDuration[2] + '"]').attr('checked', 'checked');
+                $('input[value="' + roomWithDuration[0] + '"]').attr('checked', 'checked');
+              } else { //must be the booked bed
+                var bookedRoom = $('#' + roomWithDuration[0] + roomWithDuration[1])
+                bookedRoom.parent().addClass('bg-success')
+                bookedRoom.addClass('text-success')
+              }
             });
           })
                                 
