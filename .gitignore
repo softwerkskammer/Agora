@@ -1,4 +1,3 @@
-/softwerkskammer/chado-result.json
 /.settings
 /.c9revisions/
 *.sublime*
@@ -7,13 +6,14 @@
 
 .idea/codeStyleSettings.xml
 .idea/dictionaries
+.idea/jsLibraryMappings.xml
 .idea/modules.xml
-.idea/libraries
 .idea/workspace.xml
 .idea/*.iml
-.idea/jsLibraryMappings.xml
 
 .vagrant
+
+*.log
 
 node_modules/
 
@@ -25,16 +25,21 @@ config/*.json*
 !config/testbeans-socrates.json
 !config/testbeansWithDB.json
 
-*.log
-softwerkskammer/version.pug
-**/fixtures/*.html
+dev-goodies
+!dev-goodies/icon_WebStorm.png
+!dev-goodies/mongo snippets.txt
+
 **/build
+**/*coverage*
+**/fixtures/*.html
 **/public/clientscripts
 **/public/fonts
-softwerkskammer/public/img/bootstrap-colorpicker
 **/public/images
 **/public/stylesheets
-**/*coverage*
+
+softwerkskammer/chado-result.json
+softwerkskammer/public/img/bootstrap-colorpicker
+softwerkskammer/version.pug
 local
 
 test.html

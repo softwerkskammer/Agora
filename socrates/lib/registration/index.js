@@ -1,35 +1,35 @@
 'use strict';
-var moment = require('moment-timezone');
-var async = require('async');
-var R = require('ramda');
+const moment = require('moment-timezone');
+const async = require('async');
+const R = require('ramda');
 
-var conf = require('simple-configure');
-var beans = conf.get('beans');
-var misc = beans.get('misc');
-var allCountries = beans.get('allCountries');
-var memberstore = beans.get('memberstore');
-var Member = beans.get('member');
-var subscriberstore = beans.get('subscriberstore');
-var activityParticipantService = beans.get('activityParticipantService');
-var subscriberService = beans.get('subscriberService');
-var registrationService = beans.get('registrationService');
-var icalService = beans.get('icalService');
-var activitystore = beans.get('activitystore'); // only for iCal info
-var statusmessage = beans.get('statusmessage');
-var memberSubmitHelper = beans.get('memberSubmitHelper');
-var socratesConstants = beans.get('socratesConstants');
-var Addon = beans.get('socratesAddon');
-var addonLineUtilities = beans.get('socratesAddonLineUtilities');
-var Participation = beans.get('socratesParticipation');
-var roomOptions = beans.get('roomOptions');
-var managementService = beans.get('managementService');
-var nametagService = beans.get('nametagService');
-var currentUrl = beans.get('socratesConstants').currentUrl;
-var currentYear = beans.get('socratesConstants').currentYear;
+const conf = require('simple-configure');
+const beans = conf.get('beans');
+const misc = beans.get('misc');
+const allCountries = beans.get('allCountries');
+const memberstore = beans.get('memberstore');
+const Member = beans.get('member');
+const subscriberstore = beans.get('subscriberstore');
+const activityParticipantService = beans.get('activityParticipantService');
+const subscriberService = beans.get('subscriberService');
+const registrationService = beans.get('registrationService');
+const icalService = beans.get('icalService');
+const activitystore = beans.get('activitystore'); // only for iCal info
+const statusmessage = beans.get('statusmessage');
+const memberSubmitHelper = beans.get('memberSubmitHelper');
+const socratesConstants = beans.get('socratesConstants');
+const Addon = beans.get('socratesAddon');
+const addonLineUtilities = beans.get('socratesAddonLineUtilities');
+const Participation = beans.get('socratesParticipation');
+const roomOptions = beans.get('roomOptions');
+const managementService = beans.get('managementService');
+const nametagService = beans.get('nametagService');
+const currentUrl = beans.get('socratesConstants').currentUrl;
+const currentYear = beans.get('socratesConstants').currentYear;
 
-var eventstoreService = beans.get('eventstoreService');
+const eventstoreService = beans.get('eventstoreService');
 
-var app = misc.expressAppIn(__dirname);
+const app = misc.expressAppIn(__dirname);
 
 function registrationOpening() {
   return moment(conf.get('registrationOpensAt'));
@@ -41,25 +41,25 @@ function isRegistrationOpen(registrationParam) {
 }
 
 function registrationOpensIn() {
-  var registrationOpeningTime = registrationOpening();
-  var reference = moment();
+  const registrationOpeningTime = registrationOpening();
+  const reference = moment();
   if (registrationOpeningTime.isAfter(reference)) {
-    var inDays = registrationOpeningTime.diff(reference, 'days');
-    var inHours = registrationOpeningTime.diff(reference.add(inDays, 'days'), 'hours');
-    var inMinutes = registrationOpeningTime.diff(reference.add(inHours, 'hours'), 'minutes');
+    const inDays = registrationOpeningTime.diff(reference, 'days');
+    const inHours = registrationOpeningTime.diff(reference.add(inDays, 'days'), 'hours');
+    const inMinutes = registrationOpeningTime.diff(reference.add(inHours, 'hours'), 'minutes');
     return {days: inDays, hours: inHours, minutes: inMinutes};
   }
   return undefined;
 }
 
-app.get('/', function (req, res, next) {
-  eventstoreService.getRegistrationReadModel(socratesConstants.currentUrl, function (err, registrationReadModel) {
+app.get('/', (req, res, next) => {
+  eventstoreService.getRegistrationReadModel(socratesConstants.currentUrl, (err, registrationReadModel) => {
     if (err || !registrationReadModel) { return next(err); }
-    eventstoreService.getRoomsReadModel(socratesConstants.currentUrl, function (err2, roomsReadModel) {
+    eventstoreService.getRoomsReadModel(socratesConstants.currentUrl, (err2, roomsReadModel) => {
       if (err2 || !roomsReadModel) { return next(err2); }
-      var memberId = res.locals.accessrights.memberId();
-      var options = roomOptions.allRoomOptions(registrationReadModel, memberId, isRegistrationOpen(req.query.registration));
-      var registration = {
+      const memberId = res.locals.accessrights.memberId();
+      const options = roomOptions.allRoomOptions(registrationReadModel, memberId, isRegistrationOpen(req.query.registration));
+      const registration = {
         isPossible: isRegistrationOpen(req.query.registration),
         queryParam: req.query.registration,
         alreadyRegistered: registrationReadModel.isAlreadyRegistered(memberId),
@@ -83,7 +83,7 @@ app.get('/', function (req, res, next) {
   });
 });
 
-app.get('/ical', function (req, res, next) {
+app.get('/ical', (req, res, next) => {
   function sendCalendarStringNamedToResult(ical, filename, localRes) {
     localRes.type('text/calendar; charset=utf-8');
     localRes.header('Content-Disposition', 'inline; filename=' + filename + '.ics');
@@ -91,42 +91,32 @@ app.get('/ical', function (req, res, next) {
   }
 
   // here we want to continue using the real activity:
-  activitystore.getActivity(socratesConstants.currentUrl, function (err, activity) {
+  activitystore.getActivity(socratesConstants.currentUrl, (err, activity) => {
     if (err || !activity) { return next(err); }
     activity.state.description = '';
     sendCalendarStringNamedToResult(icalService.activityAsICal(activity), activity.url(), res);
   });
 });
 
-app.get('/interested', function (req, res) {
+app.get('/interested', (req, res) => {
   res.render('iAmInterested');
 });
 
-app.post('/startRegistration', function (req, res, next) {
+app.post('/startRegistration', (req, res, next) => {
 
-  if (!isRegistrationOpen(req.body.registrationParam) || !req.body.nightsOptions) { return res.redirect('/registration'); }
-
-  var nightsOptions = req.body.nightsOptions instanceof Array ? req.body.nightsOptions : [req.body.nightsOptions];
-
-  var registrationTuple = {
+  if (!isRegistrationOpen(req.body.registrationParam) || !req.body.nightsOption || !req.body.roomsOptions) {
+    return res.redirect('/registration');
+  }
+  const registrationTuple = {
     activityUrl: socratesConstants.currentUrl,
     sessionId: req.sessionID,
-    desiredRoomTypes: []
+    desiredRoomTypes: misc.toArray(req.body.roomsOptions),
+    duration: req.body.nightsOption
   };
 
-  nightsOptions.forEach(option => {
-    var splitArray = option.split(',');
-    if (splitArray[1] === 'waitinglist') {
-      registrationTuple.desiredRoomTypes.push(splitArray[0]);
-    } else {
-      registrationTuple.roomType = splitArray[0];  // TODO roomType
-      registrationTuple.duration = parseInt(splitArray[1], 10);
-    }
-  });
-
-  var participateURL = '/registration/participate';
+  const participateURL = '/registration/participate';
   req.session.registrationTuple = registrationTuple; // so that we can access it again when finishing the registration
-  registrationService.startRegistration(registrationTuple, res.locals.accessrights.memberId(), moment.tz(), function (err, statusTitle, statusText) {
+  registrationService.startRegistration(registrationTuple, res.locals.accessrights.memberId(), moment.tz(), (err, statusTitle, statusText) => {
     if (err) { return next(err); }
     if (statusTitle && statusText) {
       statusmessage.errorMessage(statusTitle, statusText).putIntoSession(req);
@@ -140,23 +130,23 @@ app.post('/startRegistration', function (req, res, next) {
   });
 });
 
-app.get('/participate', function (req, res, next) {
-  var registrationTuple = req.session.registrationTuple;
+app.get('/participate', (req, res, next) => {
+  const registrationTuple = req.session.registrationTuple;
   if (!registrationTuple) { return res.redirect('/registration'); }
   if (!req.user) { return res.redirect('/registration'); }
-  var member = req.user.member || new Member().initFromSessionUser(req.user, true);
+  const member = req.user.member || new Member().initFromSessionUser(req.user, true);
 
-  eventstoreService.getRegistrationReadModel(socratesConstants.currentUrl, function (err, readModel) {
+  eventstoreService.getRegistrationReadModel(socratesConstants.currentUrl, (err, readModel) => {
     if (err || !readModel) { return next(err); }
     if (readModel.isAlreadyRegistered(member.id())) {
       statusmessage.successMessage('general.info', 'activities.already_registered').putIntoSession(req);
       return res.redirect('/registration');
     }
-    subscriberstore.getSubscriber(member.id(), function (err1, subscriber) {
+    subscriberstore.getSubscriber(member.id(), (err1, subscriber) => {
       if (err1) { return next(err1); }
-      var addon = (subscriber && subscriber.addon()) || new Addon({});
-      var participation = (subscriber && subscriber.currentParticipation()) || new Participation();
-      var expiresAt = readModel.reservationExpiration(registrationTuple.sessionId);
+      const addon = (subscriber && subscriber.addon()) || new Addon({});
+      const participation = (subscriber && subscriber.currentParticipation()) || new Participation();
+      const expiresAt = readModel.reservationExpiration(registrationTuple.sessionId);
       res.render('participate', {
         member: member,
         addon: addon,
@@ -171,11 +161,11 @@ app.get('/participate', function (req, res, next) {
   });
 });
 
-app.post('/completeRegistration', function (req, res, next) {
-  memberSubmitHelper(req, res, next, function (err) {
+app.post('/completeRegistration', (req, res, next) => {
+  memberSubmitHelper(req, res, next, err => {
     if (err) { return next(err); }
-    var body = req.body;
-    registrationService.completeRegistration(req.user.member.id(), req.sessionID, body, function (err1, statusTitle, statusText) {
+    const body = req.body;
+    registrationService.completeRegistration(req.user.member.id(), req.sessionID, body, (err1, statusTitle, statusText) => {
       if (err1) { return next(err1); }
       delete req.session.statusmessage;
       delete req.session.registrationTuple;
@@ -193,14 +183,14 @@ app.post('/completeRegistration', function (req, res, next) {
   });
 });
 
-app.get('/reception', function (req, res, next) {
+app.get('/reception', (req, res, next) => {
   if (!res.locals.accessrights.canEditActivity()) {
     return res.redirect('/registration');
   }
 
-  activityParticipantService.getParticipantsFor(currentYear, function (err, participants) {
+  activityParticipantService.getParticipantsFor(currentYear, (err, participants) => {
     if (err) { return next(err); }
-    managementService.addonLinesOf(participants, function (err1, addonLines) {
+    managementService.addonLinesOf(participants, (err1, addonLines) => {
       if (err1) { return next(err1); }
       res.render('reception', {
         addonLines: addonLineUtilities.groupAndSortAddonlines(addonLines)
@@ -211,54 +201,44 @@ app.get('/reception', function (req, res, next) {
 
 // for management tables:
 
-app.get('/management', function (req, res, next) {
+app.get('/management', (req, res, next) => {
   if (!res.locals.accessrights.canEditActivity()) {
     return res.redirect('/registration');
   }
 
-  eventstoreService.getRoomsReadModel(currentUrl, function (err0, roomsReadModel) {
+  eventstoreService.getRoomsReadModel(currentUrl, (err0, roomsReadModel) => {
     if (err0 || !roomsReadModel) { return next(err0); }
-    eventstoreService.getRegistrationReadModel(currentUrl, function (err00, registrationReadModel) {
+    eventstoreService.getRegistrationReadModel(currentUrl, (err00, registrationReadModel) => {
       if (err00 || !registrationReadModel) { return next(err00); }
-      eventstoreService.getSoCraTesReadModel(currentUrl, function (err000, socratesReadModel) {
+      eventstoreService.getSoCraTesReadModel(currentUrl, (err000, socratesReadModel) => {
         if (err000 || !socratesReadModel) { return next(err000); }
 
-        activityParticipantService.getParticipantsFor(currentYear, function (err_, participants) {
+        activityParticipantService.getParticipantsFor(currentYear, (err_, participants) => {
           if (err_) { return next(err_); }
-          managementService.addonLinesOf(participants, function (err1, addonLines) {
+          managementService.addonLinesOf(participants, (err1, addonLines) => {
             if (err1) { return next(err1); }
 
-            activityParticipantService.getWaitinglistParticipantsFor(currentYear, function (err17, waitinglistParticipants) {
+            activityParticipantService.getWaitinglistParticipantsFor(currentYear, (err17, waitinglistParticipants) => {
               if (err17) { return next(err17); }
-              managementService.addonLinesOf(waitinglistParticipants, function (err18, waitinglistAddonLines) {
+              managementService.addonLinesOf(waitinglistParticipants, (err18, waitinglistAddonLines) => {
                 if (err18) { return next(err18); }
 
-                var formatDate = function (date) {
-                  return moment(date).locale('de').format('L');
-                };
-                var formatDateTime = function (date) {
-                  return moment(date).locale('de').format('D.M.YY H:mm');
-                };
-                var formatList = function (list) {
-                  return list.join(', ');
-                };
-
-                subscriberService.getMembersAndSubscribersForIds(roomsReadModel.participantsWithoutRoomIn('bed_in_double'), function (errA, unpairedDoubleParticipants) {
+                subscriberService.getMembersAndSubscribersForIds(roomsReadModel.participantsWithoutRoomIn('bed_in_double'), (errA, unpairedDoubleParticipants) => {
                   if (errA) { return next(errA); }
-                  subscriberService.getMembersAndSubscribersForIds(roomsReadModel.participantsWithoutRoomIn('bed_in_junior'), function (errB, unpairedJuniorParticipants) {
+                  subscriberService.getMembersAndSubscribersForIds(roomsReadModel.participantsWithoutRoomIn('bed_in_junior'), (errB, unpairedJuniorParticipants) => {
                     if (errB) { return next(errB); }
-                    subscriberService.getMembersAndSubscribersForIds(roomsReadModel.participantsInRoom('bed_in_double'), function (errC, pairedDoubleParticipants) {
+                    subscriberService.getMembersAndSubscribersForIds(roomsReadModel.participantsInRoom('bed_in_double'), (errC, pairedDoubleParticipants) => {
                       if (errC) { return next(errC); }
-                      subscriberService.getMembersAndSubscribersForIds(roomsReadModel.participantsInRoom('bed_in_junior'), function (errD, pairedJuniorParticipants) {
+                      subscriberService.getMembersAndSubscribersForIds(roomsReadModel.participantsInRoom('bed_in_junior'), (errD, pairedJuniorParticipants) => {
                         if (errD) { return next(errD); }
 
-                        var participantLinesOf = {};
+                        const participantLinesOf = {};
                         roomOptions.allIds().forEach(roomType => { participantLinesOf[roomType] = []; });
                         addonLines.forEach(line => {
                           registrationReadModel.roomTypesOf(line.member.id()).forEach(roomType => { participantLinesOf[roomType].push(line); });
                         });
 
-                        var waitinglistLinesOf = {};
+                        const waitinglistLinesOf = {};
                         roomOptions.allIds().forEach(roomType => { waitinglistLinesOf[roomType] = []; });
                         waitinglistAddonLines.forEach(line => {
                           registrationReadModel.roomTypesOf(line.member.id()).forEach(roomType => { waitinglistLinesOf[roomType].push(line); });
@@ -287,9 +267,9 @@ app.get('/management', function (req, res, next) {
                               roomPairs: roomsReadModel.roomPairsWithFullMembersFrom('bed_in_junior', pairedJuniorParticipants)
                             }
                           },
-                          formatDate: formatDate,
-                          formatDateTime: formatDateTime,
-                          formatList: formatList
+                          formatDate: date => moment(date).locale('de').format('L'),
+                          formatDateTime: date => moment(date).locale('de').format('D.M.YY H:mm'),
+                          formatList: list => list.join(', ')
                         });
                       });
                     });
@@ -304,36 +284,36 @@ app.get('/management', function (req, res, next) {
   });
 });
 
-app.get('/hotelInfo', function (req, res, next) {
+app.get('/hotelInfo', (req, res, next) => {
   if (!res.locals.accessrights.canEditActivity()) {
     return res.redirect('/registration');
   }
 
-  eventstoreService.getRoomsReadModel(currentUrl, function (err0, roomsReadModel) {
+  eventstoreService.getRoomsReadModel(currentUrl, (err0, roomsReadModel) => {
     if (err0 || !roomsReadModel) { return next(err0); }
-    eventstoreService.getRegistrationReadModel(currentUrl, function (err00, registrationReadModel) {
+    eventstoreService.getRegistrationReadModel(currentUrl, (err00, registrationReadModel) => {
       if (err00 || !registrationReadModel) { return next(err00); }
-      activityParticipantService.getParticipantsFor(currentYear, function (err, participants) {
+      activityParticipantService.getParticipantsFor(currentYear, (err, participants) => {
         if (err) { return next(err); }
-        managementService.addonLinesOf(participants, function (err1, addonLines) {
+        managementService.addonLinesOf(participants, (err1, addonLines) => {
           if (err1) { return next(err1); }
-          subscriberService.getMembersAndSubscribersForIds(roomsReadModel.participantsWithoutRoomIn('bed_in_double'), function (errA, unpairedDoubleParticipants) {
+          subscriberService.getMembersAndSubscribersForIds(roomsReadModel.participantsWithoutRoomIn('bed_in_double'), (errA, unpairedDoubleParticipants) => {
             if (errA) { return next(errA); }
-            subscriberService.getMembersAndSubscribersForIds(roomsReadModel.participantsWithoutRoomIn('bed_in_junior'), function (errB, unpairedJuniorParticipants) {
+            subscriberService.getMembersAndSubscribersForIds(roomsReadModel.participantsWithoutRoomIn('bed_in_junior'), (errB, unpairedJuniorParticipants) => {
               if (errB) { return next(errB); }
-              subscriberService.getMembersAndSubscribersForIds(roomsReadModel.participantsInRoom('bed_in_double'), function (errC, pairedDoubleParticipants) {
+              subscriberService.getMembersAndSubscribersForIds(roomsReadModel.participantsInRoom('bed_in_double'), (errC, pairedDoubleParticipants) => {
                 if (errC) { return next(errC); }
-                subscriberService.getMembersAndSubscribersForIds(roomsReadModel.participantsInRoom('bed_in_junior'), function (errD, pairedJuniorParticipants) {
+                subscriberService.getMembersAndSubscribersForIds(roomsReadModel.participantsInRoom('bed_in_junior'), (errD, pairedJuniorParticipants) => {
                   if (errD) { return next(errD); }
 
-                  var participantsOf = {};
-                  async.each(roomOptions.allIds(), function (roomType, callback) {
-                    memberstore.getMembersForIds(registrationReadModel.allParticipantsIn(roomType), function (errE, members) {
+                  const participantsOf = {};
+                  async.each(roomOptions.allIds(), (roomType, callback) => {
+                    memberstore.getMembersForIds(registrationReadModel.allParticipantsIn(roomType), (errE, members) => {
                       if (errE || !members) { return callback(errE); }
                       participantsOf[roomType] = members;
                       return callback(null);
                     });
-                  }, function (errX) {
+                  }, errX => {
                     if (errX) { return next(errX); }
 
                     res.render('hotelInfoTables', {
@@ -362,12 +342,12 @@ app.get('/hotelInfo', function (req, res, next) {
   });
 });
 
-app.get('/nametags.tex', function (req, res, next) {
+app.get('/nametags.tex', (req, res, next) => {
   if (!res.locals.accessrights.canEditActivity()) {
     return res.redirect('/registration');
   }
 
-  activityParticipantService.getParticipantsFor(currentYear, function (err, participants) {
+  activityParticipantService.getParticipantsFor(currentYear, (err, participants) => {
     if (err) { return next(err); }
     res.type('text/plain; charset=utf-8');
     res.header('Content-Disposition', 'attachment; filename=nametags.tex');

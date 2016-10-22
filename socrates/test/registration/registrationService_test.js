@@ -45,15 +45,15 @@ describe('Registration Service', function () {
   var eventStore;
   var saveSubscriberCount;
   var saveEventStoreStub;
+  var desiredRoomsArray = ['single', 'junior'];
 
   beforeEach(function () {
     cache.flushAll();
 
     registrationBody = {
       activityUrl: 'socrates-url',
-      roomType: 'single',
       duration: 2,
-      desiredRoomTypes: '',
+      desiredRoomTypes: desiredRoomsArray.toString(),
       sessionId: 'sessionId'
     };
 
@@ -105,9 +105,8 @@ describe('Registration Service', function () {
     beforeEach(function () {
       registrationTuple = {
         activityUrl: 'socrates-url',
-        roomType: 'single',
         duration: 2,
-        desiredRoomTypes: [],
+        desiredRoomTypes: ['single'],
         sessionId: 'sessionId'
       };
     });
@@ -129,36 +128,7 @@ describe('Registration Service', function () {
       });
     });
 
-    it('adds the registrant to the resource, if the registration data says so, stores the event and updates the read model', function (done) {
-
-      registrationService.startRegistration(registrationTuple, 'memberId', now, function (err, statusTitle, statusText) {
-        expect(statusTitle).to.not.exist();
-        expect(statusText).to.not.exist();
-        const readModel = cache.get('socrates-url_registrationReadModel');
-
-        expect(readModel.reservationsAndParticipantsFor('single')).to.have.length(1);
-        expect(readModel.reservationsAndParticipantsFor('single')[0].event).to.eql('RESERVATION-WAS-ISSUED');
-        expect(readModel.reservationsAndParticipantsFor('single')[0].sessionId).to.eql('sessionId');
-        expect(readModel.reservationsAndParticipantsFor('single')[0].memberId).to.eql('memberId');
-        expect(readModel.reservationsAndParticipantsFor('single')[0].roomType).to.eql('single');
-        expect(readModel.reservationsAndParticipantsFor('single')[0].duration).to.eql(2);
-        expect(readModel.reservationsAndParticipantsFor('single')[0].joinedSoCraTes).to.eql(now.valueOf());
-        expect(readModel.waitinglistReservationsAndParticipantsFor('single')).to.have.length(0);
-
-        const savedEventStore = saveEventStoreStub.firstCall.args[0];
-        expect(stripTimestamps(savedEventStore.state.events)).to.eql([
-          {event: e.ROOM_QUOTA_WAS_SET, roomType: 'single', quota: 10},
-          {event: e.RESERVATION_WAS_ISSUED, sessionId: 'sessionId', roomType: 'single', memberId: 'memberId', duration: 2, joinedSoCraTes: now.valueOf()}
-        ]);
-        done(err);
-      });
-    });
-
-    it('adds the registrant to the waitinglist, if the registration data says so, stores the event and updates the read model', function (done) {
-      registrationTuple.duration = undefined;
-      registrationTuple.roomType = undefined;
-      registrationTuple.desiredRoomTypes = ['single'];
-
+    it('adds the registrant to the waitinglist, stores the event and updates the read model', function (done) {
       registrationService.startRegistration(registrationTuple, 'memberId', now, function (err, statusTitle, statusText) {
         expect(statusTitle).to.not.exist();
         expect(statusText).to.not.exist();
@@ -175,45 +145,22 @@ describe('Registration Service', function () {
         const savedEventStore = saveEventStoreStub.firstCall.args[0];
         expect(stripTimestamps(savedEventStore.state.events)).to.eql([
           {event: e.ROOM_QUOTA_WAS_SET, roomType: 'single', quota: 10},
-          {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionId: 'sessionId', desiredRoomTypes: ['single'], memberId: 'memberId', joinedWaitinglist: now.valueOf()}
+          {
+            event: e.WAITINGLIST_RESERVATION_WAS_ISSUED,
+            sessionId: 'sessionId',
+            desiredRoomTypes: ['single'],
+            memberId: 'memberId',
+            duration: 2,
+            joinedWaitinglist: now.valueOf()
+          }
         ]);
-        done(err);
-      });
-    });
-
-    it('returns no error if reservation fails due to duplicate reservation - let the user continue', function (done) {
-      registrationTuple.duration = 3;
-      registrationTuple.roomType = 'junior';
-      registrationTuple.desiredRoomTypes = ['single'];
-      sinon.stub(RegistrationCommandProcessor.prototype, 'issueReservation', function () {return {event: e.DID_NOT_ISSUE_RESERVATION_FOR_ALREADY_RESERVED_SESSION};});
-      sinon.stub(RegistrationCommandProcessor.prototype, 'issueWaitinglistReservation', function () {return undefined;});
-
-      registrationService.startRegistration(registrationTuple, 'memberId', now, function (err, statusTitle, statusText) {
-        expect(statusTitle).to.not.exist();
-        expect(statusText).to.not.exist();
-        done(err);
-      });
-    });
-
-    it('returns error if reservation fails due to full ressource', function (done) {
-      registrationTuple.duration = 3;
-      registrationTuple.roomType = 'junior';
-      registrationTuple.desiredRoomTypes = ['single'];
-      sinon.stub(RegistrationCommandProcessor.prototype, 'issueReservation', function () {return {event: e.DID_NOT_ISSUE_RESERVATION_FOR_FULL_RESOURCE};});
-      sinon.stub(RegistrationCommandProcessor.prototype, 'issueWaitinglistReservation', function () {return undefined;});
-
-      registrationService.startRegistration(registrationTuple, 'memberId', now, function (err, statusTitle, statusText) {
-        expect(statusTitle).to.be('activities.registration_problem');
-        expect(statusText).to.be('activities.registration_is_full');
         done(err);
       });
     });
 
     it('returns no error if waitinglist reservation fails due to duplicate reservation - let the user continue', function (done) {
       registrationTuple.duration = 3;
-      registrationTuple.roomType = 'junior';
       registrationTuple.desiredRoomTypes = ['single'];
-      sinon.stub(RegistrationCommandProcessor.prototype, 'issueReservation', function () {return undefined;});
       sinon.stub(RegistrationCommandProcessor.prototype, 'issueWaitinglistReservation', function () {return {event: e.DID_NOT_ISSUE_WAITINGLIST_RESERVATION_FOR_ALREADY_RESERVED_SESSION}; });
 
       registrationService.startRegistration(registrationTuple, 'memberId', now, function (err, statusTitle, statusText) {
@@ -244,26 +191,9 @@ describe('Registration Service', function () {
       });
     });
 
-    it('returns error and saves subscriber info if registration fails due to expired session', function (done) {
-      registrationBody.duration = 3;
-      registrationBody.roomType = 'junior';
-      registrationBody.desiredRoomTypes = 'single';
-      sinon.stub(RegistrationCommandProcessor.prototype, 'registerParticipant', function () {return {event: e.DID_NOT_REGISTER_PARTICIPANT_WITH_EXPIRED_OR_MISSING_RESERVATION};});
-      sinon.stub(RegistrationCommandProcessor.prototype, 'registerWaitinglistParticipant', function () {return undefined;});
-
-      registrationService.completeRegistration('memberId', 'sessionId', registrationBody, function (err, statusTitle, statusText) {
-        expect(statusTitle).to.be('activities.registration_problem');
-        expect(statusText).to.be('activities.registration_timed_out');
-        expect(saveSubscriberCount).to.be(1);
-        done(err);
-      });
-    });
-
     it('returns error and saves subscriber info if waitinglist registration fails due to expired session', function (done) {
       registrationBody.duration = 3;
-      registrationBody.roomType = 'junior';
       registrationBody.desiredRoomTypes = 'single';
-      sinon.stub(RegistrationCommandProcessor.prototype, 'registerParticipant', function () {return undefined;});
       sinon.stub(RegistrationCommandProcessor.prototype, 'registerWaitinglistParticipant', function () {return {event: e.DID_NOT_REGISTER_WAITINGLIST_PARTICIPANT_WITH_EXPIRED_OR_MISSING_RESERVATION};});
 
       registrationService.completeRegistration('memberId', 'sessionId', registrationBody, function (err, statusTitle, statusText) {
@@ -274,26 +204,9 @@ describe('Registration Service', function () {
       });
     });
 
-    it('returns error and saves subscriber info if registration fails due to duplicate booking', function (done) {
-      registrationBody.duration = 3;
-      registrationBody.roomType = 'junior';
-      registrationBody.desiredRoomTypes = 'single';
-      sinon.stub(RegistrationCommandProcessor.prototype, 'registerParticipant', function () {return {event: e.DID_NOT_REGISTER_PARTICIPANT_A_SECOND_TIME};});
-      sinon.stub(RegistrationCommandProcessor.prototype, 'registerWaitinglistParticipant', function () {return undefined;});
-
-      registrationService.completeRegistration('memberId', 'sessionId', registrationBody, function (err, statusTitle, statusText) {
-        expect(statusTitle).to.be('activities.registration_problem');
-        expect(statusText).to.be('activities.already_registered');
-        expect(saveSubscriberCount).to.be(1);
-        done(err);
-      });
-    });
-
     it('returns error and saves subscriber info if waitinglist registration fails due to duplicate booking', function (done) {
       registrationBody.duration = 3;
-      registrationBody.roomType = 'junior';
       registrationBody.desiredRoomTypes = 'single';
-      sinon.stub(RegistrationCommandProcessor.prototype, 'registerParticipant', function () {return undefined;});
       sinon.stub(RegistrationCommandProcessor.prototype, 'registerWaitinglistParticipant', function () {return {event: e.DID_NOT_REGISTER_WAITINGLIST_PARTICIPANT_A_SECOND_TIME};});
 
       registrationService.completeRegistration('memberId', 'sessionId', registrationBody, function (err, statusTitle, statusText) {
@@ -304,27 +217,10 @@ describe('Registration Service', function () {
       });
     });
 
-    it('returns nothing and saves subscriber info if registration succeeds', function (done) {
-      registrationBody.duration = 3;
-      registrationBody.roomType = 'junior';
-      registrationBody.desiredRoomTypes = 'single';
-      sinon.stub(RegistrationCommandProcessor.prototype, 'registerParticipant', function () {return events.participantWasRegistered('junior', 3, 'sessionId', 'memberId', aShortTimeAgo);});
-      sinon.stub(RegistrationCommandProcessor.prototype, 'registerWaitinglistParticipant', function () {return undefined;});
-
-      registrationService.completeRegistration('memberId', 'sessionId', registrationBody, function (err, statusTitle, statusText) {
-        expect(statusTitle).to.not.exist();
-        expect(statusText).to.not.exist();
-        expect(saveSubscriberCount).to.be(1);
-        done(err);
-      });
-    });
-
     it('returns nothing and saves subscriber info if waitinglist registration succeeds', function (done) {
       registrationBody.duration = 3;
-      registrationBody.roomType = 'junior';
       registrationBody.desiredRoomTypes = 'single';
-      sinon.stub(RegistrationCommandProcessor.prototype, 'registerParticipant', function () {return undefined;});
-      sinon.stub(RegistrationCommandProcessor.prototype, 'registerWaitinglistParticipant', function () {return events.waitinglistParticipantWasRegistered(['single'], 'sessionId', 'memberId', aShortTimeAgo);});
+      sinon.stub(RegistrationCommandProcessor.prototype, 'registerWaitinglistParticipant', function () {return events.waitinglistParticipantWasRegistered(['single'], 2, 'sessionId', 'memberId', aShortTimeAgo);});
 
       registrationService.completeRegistration('memberId', 'sessionId', registrationBody, function (err, statusTitle, statusText) {
         expect(statusTitle).to.not.exist();
@@ -338,32 +234,9 @@ describe('Registration Service', function () {
 
   describe('finishing the registration - normal registration', function () {
 
-    it('adds the registrant to the resource if he had a valid session entry, saves the eventstore and updates the read model', function (done) {
-      eventStore.state.events = [
-        events.reservationWasIssued(registrationBody.roomType, registrationBody.duration, registrationBody.sessionId, 'memberId', aShortTimeAgo)
-      ];
-
-      registrationService.completeRegistration('memberId', 'sessionId', registrationBody, function (err, statusTitle, statusText) {
-        expect(statusTitle).to.not.exist();
-        expect(statusText).to.not.exist();
-
-        const readModel = cache.get('socrates-url_registrationReadModel');
-        expect(readModel.reservationsAndParticipantsFor('single')).to.have.length(1);
-        expect(readModel.waitinglistReservationsAndParticipantsFor('single')).to.have.length(0);
-
-        const savedEventStore = saveEventStoreStub.firstCall.args[0];
-        expect(stripTimestamps(savedEventStore.state.events)).to.eql([
-          {event: e.RESERVATION_WAS_ISSUED, roomType: 'single', duration: 2, sessionId: 'sessionId', memberId: 'memberId', joinedSoCraTes: aShortTimeAgo.valueOf()},
-          {event: e.PARTICIPANT_WAS_REGISTERED, roomType: 'single', duration: 2, sessionId: 'sessionId', memberId: 'memberId', joinedSoCraTes: aShortTimeAgo.valueOf()}
-        ]);
-        done(err);
-      });
-    });
-
     it('adds the registrant to the resource if he has a waitinglist reservation and has a valid session entry', function (done) {
       eventStore.state.events = [
-        events.waitinglistReservationWasIssued(registrationBody.roomType, registrationBody.sessionId, 'memberId', aShortTimeAgo),
-        events.reservationWasIssued(registrationBody.roomType, registrationBody.duration, registrationBody.sessionId, 'memberId', aShortTimeAgo)
+        events.waitinglistReservationWasIssued(registrationBody.desiredRoomTypes, 2, registrationBody.sessionId, 'memberId', aShortTimeAgo),
       ];
 
       registrationService.completeRegistration('memberId', 'sessionId', registrationBody, function (err, statusTitle, statusText) {
@@ -371,9 +244,22 @@ describe('Registration Service', function () {
         expect(statusText).to.not.exist();
         const savedEventStore = saveEventStoreStub.firstCall.args[0];
         expect(stripTimestamps(savedEventStore.state.events)).to.eql([
-          {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, desiredRoomTypes: 'single', sessionId: 'sessionId', memberId: 'memberId', joinedWaitinglist: aShortTimeAgo.valueOf()},
-          {event: e.RESERVATION_WAS_ISSUED, roomType: 'single', duration: 2, sessionId: 'sessionId', memberId: 'memberId', joinedSoCraTes: aShortTimeAgo.valueOf()},
-          {event: e.PARTICIPANT_WAS_REGISTERED, roomType: 'single', duration: 2, sessionId: 'sessionId', memberId: 'memberId', joinedSoCraTes: aShortTimeAgo.valueOf()}
+          {
+            event: e.WAITINGLIST_RESERVATION_WAS_ISSUED,
+            desiredRoomTypes: 'single,junior',
+            duration: 2,
+            sessionId: 'sessionId',
+            memberId: 'memberId',
+            joinedWaitinglist: aShortTimeAgo.valueOf()
+          },
+          {
+            event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED,
+            desiredRoomTypes: ['single', 'junior'],
+            duration: 2,
+            sessionId: 'sessionId',
+            memberId: 'memberId',
+            joinedWaitinglist: aShortTimeAgo.valueOf()
+          }
         ]);
         done(err);
       });
@@ -385,58 +271,41 @@ describe('Registration Service', function () {
         const savedEventStore = saveEventStoreStub.firstCall.args[0];
         expect(stripTimestamps(savedEventStore.state.events)).to.eql([
           {event: e.ROOM_QUOTA_WAS_SET, roomType: 'single', quota: 10},
-          {event: e.DID_NOT_REGISTER_PARTICIPANT_WITH_EXPIRED_OR_MISSING_RESERVATION, memberId: 'memberId', sessionId: 'sessionId', roomType: 'single', duration: 2}
+          {
+            event: e.DID_NOT_REGISTER_WAITINGLIST_PARTICIPANT_WITH_EXPIRED_OR_MISSING_RESERVATION,
+            memberId: 'memberId',
+            sessionId: 'sessionId',
+            desiredRoomTypes: ['single', 'junior']
+          }
         ]);
         expect(statusTitle).to.be('activities.registration_problem');
         expect(statusText).to.be('activities.registration_timed_out');
-        done(err);
-      });
-    });
-
-    it('does not add the registrant to the resource if the sessionId entry is already expired, even if there is enough space', function (done) {
-      eventStore.state.events = [
-        events.reservationWasIssued(registrationBody.roomType, registrationBody.duration, registrationBody.sessionId, 'memberId', aLongTimeAgo)];
-
-      registrationService.completeRegistration('memberId', 'sessionId', registrationBody, function (err, statusTitle, statusText) {
-
-        const savedEventStore = saveEventStoreStub.firstCall.args[0];
-        expect(stripTimestamps(savedEventStore.state.events)).to.eql([
-          {duration: 2, event: e.RESERVATION_WAS_ISSUED, roomType: 'single', sessionId: 'sessionId', memberId: 'memberId', joinedSoCraTes: aLongTimeAgo.valueOf()},
-          {duration: 2, event: e.DID_NOT_REGISTER_PARTICIPANT_WITH_EXPIRED_OR_MISSING_RESERVATION, memberId: 'memberId', roomType: 'single', sessionId: 'sessionId'}
-        ]);
-        expect(statusTitle).to.be('activities.registration_problem');
-        expect(statusText).to.be('activities.registration_timed_out');
-        done(err);
-      });
-    });
-
-    it('does not add the registrant to the resource if he is already registered', function (done) {
-      eventStore.state.events = [
-        events.participantWasRegistered(registrationBody.roomType, registrationBody.duration, registrationBody.sessionId, 'memberId', aShortTimeAgo)];
-
-      registrationService.completeRegistration('memberId', 'sessionId', registrationBody, function (err, statusTitle, statusText) {
-
-        const savedEventStore = saveEventStoreStub.firstCall.args[0];
-        expect(stripTimestamps(savedEventStore.state.events)).to.eql([
-          {event: e.PARTICIPANT_WAS_REGISTERED, roomType: 'single', memberId: 'memberId', sessionId: 'sessionId', duration: 2, joinedSoCraTes: aShortTimeAgo.valueOf()},
-          {event: e.DID_NOT_REGISTER_PARTICIPANT_A_SECOND_TIME, roomType: 'single', memberId: 'memberId', sessionId: 'sessionId', duration: 2}
-        ]);
-        expect(statusTitle).to.be('activities.registration_problem');
-        expect(statusText).to.be('activities.already_registered');
         done(err);
       });
     });
 
     it('does not add the registrant to a room if he is on the waitinglist', function (done) {
       eventStore.state.events = [
-        events.waitinglistParticipantWasRegistered([registrationBody.roomType], registrationBody.sessionId, 'memberId', aShortTimeAgo)
+        events.waitinglistParticipantWasRegistered(desiredRoomsArray, 2, registrationBody.sessionId, 'memberId', aShortTimeAgo)
       ];
 
       registrationService.completeRegistration('memberId', 'sessionId', registrationBody, function (err, statusTitle, statusText) {
         const savedEventStore = saveEventStoreStub.firstCall.args[0];
         expect(stripTimestamps(savedEventStore.state.events)).to.eql([
-          {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, desiredRoomTypes: ['single'], sessionId: 'sessionId', memberId: 'memberId', joinedWaitinglist: aShortTimeAgo.valueOf()},
-          {event: e.DID_NOT_REGISTER_PARTICIPANT_A_SECOND_TIME, roomType: 'single', memberId: 'memberId', sessionId: 'sessionId', duration: 2}
+          {
+            event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED,
+            desiredRoomTypes: ['single', 'junior'],
+            duration: 2,
+            sessionId: 'sessionId',
+            memberId: 'memberId',
+            joinedWaitinglist: aShortTimeAgo.valueOf()
+          },
+          {
+            event: e.DID_NOT_REGISTER_WAITINGLIST_PARTICIPANT_A_SECOND_TIME,
+            desiredRoomTypes: ['single', 'junior'],
+            memberId: 'memberId',
+            sessionId: 'sessionId'
+          }
         ]);
 
         expect(statusTitle).to.be('activities.registration_problem');
@@ -450,20 +319,30 @@ describe('Registration Service', function () {
   describe('finishing the registration - waitinglist registration', function () {
 
     it('adds the registrant to the waitinglist if he had a valid session entry', function (done) {
-      registrationBody.roomType = '';
-      registrationBody.duration = '';
-      registrationBody.desiredRoomTypes = 'single';
-
       eventStore.state.events = [
-        events.waitinglistReservationWasIssued([registrationBody.desiredRoomTypes], registrationBody.sessionId, 'memberId', aShortTimeAgo)];
+        events.waitinglistReservationWasIssued(registrationBody.desiredRoomTypes.split(','), 2, registrationBody.sessionId, 'memberId', aShortTimeAgo)];
 
       registrationService.completeRegistration('memberId', 'sessionId', registrationBody, function (err, statusTitle, statusText) {
         expect(statusTitle).to.not.exist();
         expect(statusText).to.not.exist();
         const savedEventStore = saveEventStoreStub.firstCall.args[0];
         expect(stripTimestamps(savedEventStore.state.events)).to.eql([
-          {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionId: 'sessionId', desiredRoomTypes: ['single'], memberId: 'memberId', joinedWaitinglist: aShortTimeAgo.valueOf()},
-          {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionId: 'sessionId', memberId: 'memberId', desiredRoomTypes: ['single'], joinedWaitinglist: aShortTimeAgo.valueOf()}]);
+          {
+            event: e.WAITINGLIST_RESERVATION_WAS_ISSUED,
+            sessionId: 'sessionId',
+            desiredRoomTypes: ['single', 'junior'],
+            duration: 2,
+            memberId: 'memberId',
+            joinedWaitinglist: aShortTimeAgo.valueOf()
+          },
+          {
+            event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED,
+            sessionId: 'sessionId',
+            memberId: 'memberId',
+            desiredRoomTypes: ['single', 'junior'],
+            duration: 2,
+            joinedWaitinglist: aShortTimeAgo.valueOf()
+          }]);
 
         done(err);
       });
@@ -479,7 +358,12 @@ describe('Registration Service', function () {
         const savedEventStore = saveEventStoreStub.firstCall.args[0];
         expect(stripTimestamps(savedEventStore.state.events)).to.eql([
           {event: e.ROOM_QUOTA_WAS_SET, roomType: 'single', quota: 10},
-          {event: e.DID_NOT_REGISTER_WAITINGLIST_PARTICIPANT_WITH_EXPIRED_OR_MISSING_RESERVATION, sessionId: 'sessionId', memberId: 'memberId', desiredRoomTypes: ['single']}
+          {
+            event: e.DID_NOT_REGISTER_WAITINGLIST_PARTICIPANT_WITH_EXPIRED_OR_MISSING_RESERVATION,
+            sessionId: 'sessionId',
+            memberId: 'memberId',
+            desiredRoomTypes: ['single']
+          }
         ]);
         expect(statusTitle).to.be('activities.registration_problem');
         expect(statusText).to.be('activities.registration_timed_out');
@@ -488,18 +372,28 @@ describe('Registration Service', function () {
     });
 
     it('does not add the registrant to the waitinglist if the reservation is already expired', function (done) {
-      registrationBody.roomType = '';
-      registrationBody.duration = '';
       registrationBody.desiredRoomTypes = 'single';
 
       eventStore.state.events = [
-        events.waitinglistReservationWasIssued([registrationBody.desiredRoomTypes], registrationBody.sessionId, 'memberId', aLongTimeAgo)];
+        events.waitinglistReservationWasIssued([registrationBody.desiredRoomTypes], 2, registrationBody.sessionId, 'memberId', aLongTimeAgo)];
 
       registrationService.completeRegistration('memberId', 'sessionId', registrationBody, function (err, statusTitle, statusText) {
         const savedEventStore = saveEventStoreStub.firstCall.args[0];
         expect(stripTimestamps(savedEventStore.state.events)).to.eql([
-          {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionId: 'sessionId', desiredRoomTypes: ['single'], memberId: 'memberId', joinedWaitinglist: aLongTimeAgo.valueOf()},
-          {event: e.DID_NOT_REGISTER_WAITINGLIST_PARTICIPANT_WITH_EXPIRED_OR_MISSING_RESERVATION, sessionId: 'sessionId', memberId: 'memberId', desiredRoomTypes: ['single']}
+          {
+            event: e.WAITINGLIST_RESERVATION_WAS_ISSUED,
+            sessionId: 'sessionId',
+            desiredRoomTypes: ['single'],
+            duration: 2,
+            memberId: 'memberId',
+            joinedWaitinglist: aLongTimeAgo.valueOf()
+          },
+          {
+            event: e.DID_NOT_REGISTER_WAITINGLIST_PARTICIPANT_WITH_EXPIRED_OR_MISSING_RESERVATION,
+            sessionId: 'sessionId',
+            memberId: 'memberId',
+            desiredRoomTypes: ['single']
+          }
         ]);
         expect(statusTitle).to.be('activities.registration_problem');
         expect(statusText).to.be('activities.registration_timed_out');
@@ -514,15 +408,34 @@ describe('Registration Service', function () {
 
       eventStore.state.events = [
         events.participantWasRegistered('single', 2, registrationBody.sessionId, 'memberId', aShortTimeAgo),
-        events.waitinglistReservationWasIssued([registrationBody.desiredRoomTypes], registrationBody.sessionId, 'memberId', aShortTimeAgo)
+        events.waitinglistReservationWasIssued([registrationBody.desiredRoomTypes], 2, registrationBody.sessionId, 'memberId', aShortTimeAgo)
       ];
 
       registrationService.completeRegistration('memberId', 'sessionId', registrationBody, function (err, statusTitle, statusText) {
         const savedEventStore = saveEventStoreStub.firstCall.args[0];
         expect(stripTimestamps(savedEventStore.state.events)).to.eql([
-          {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: 'sessionId', roomType: 'single', duration: 2, memberId: 'memberId', joinedSoCraTes: aShortTimeAgo.valueOf()},
-          {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionId: 'sessionId', desiredRoomTypes: ['single'], memberId: 'memberId', joinedWaitinglist: aShortTimeAgo.valueOf()},
-          {event: e.DID_NOT_REGISTER_WAITINGLIST_PARTICIPANT_A_SECOND_TIME, sessionId: 'sessionId', memberId: 'memberId', desiredRoomTypes: ['single']}
+          {
+            event: e.PARTICIPANT_WAS_REGISTERED,
+            sessionId: 'sessionId',
+            roomType: 'single',
+            duration: 2,
+            memberId: 'memberId',
+            joinedSoCraTes: aShortTimeAgo.valueOf()
+          },
+          {
+            event: e.WAITINGLIST_RESERVATION_WAS_ISSUED,
+            sessionId: 'sessionId',
+            desiredRoomTypes: ['single'],
+            duration: 2,
+            memberId: 'memberId',
+            joinedWaitinglist: aShortTimeAgo.valueOf()
+          },
+          {
+            event: e.DID_NOT_REGISTER_WAITINGLIST_PARTICIPANT_A_SECOND_TIME,
+            sessionId: 'sessionId',
+            memberId: 'memberId',
+            desiredRoomTypes: ['single']
+          }
         ]);
 
         expect(statusTitle).to.be('activities.registration_problem');

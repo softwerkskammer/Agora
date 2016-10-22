@@ -83,24 +83,26 @@ RegistrationCommandProcessor.prototype.setNewDurationForParticipant = function (
     : events.didNotChangeDurationForNonParticipant(memberId, duration);
 };
 
-RegistrationCommandProcessor.prototype.issueWaitinglistReservation = function (desiredRoomTypes, sessionId, memberId, joinedWaitinglist) {
+RegistrationCommandProcessor.prototype.issueWaitinglistReservation = function (desiredRoomTypes, duration, sessionId, memberId, joinedWaitinglist) {
   if (this.writeModel.alreadyHasWaitinglistReservation(sessionId)) {
-    // session id already reserved a spot
+    // session id already reserved a spot -> TODO change that in order to enable changes to the waitinglist by the user
     return events.didNotIssueWaitinglistReservationForAlreadyReservedSession(desiredRoomTypes, sessionId, memberId);
   } else {
     // all is good
-    return events.waitinglistReservationWasIssued(desiredRoomTypes, sessionId, memberId, joinedWaitinglist);
+    return events.waitinglistReservationWasIssued(desiredRoomTypes, duration, sessionId, memberId, joinedWaitinglist);
   }
 };
 
-RegistrationCommandProcessor.prototype.registerWaitinglistParticipant = function (desiredRoomTypes, sessionId, memberId) {
+RegistrationCommandProcessor.prototype.registerWaitinglistParticipant = function (desiredRoomTypes, duration, sessionId, memberId) {
   if (this.writeModel.isAlreadyRegistered(memberId) || this.writeModel.isAlreadyOnWaitinglist(memberId)) {
+    // TODO change that in order to enable changes to the waitinglist by the user
     return events.didNotRegisterWaitinglistParticipantASecondTime(desiredRoomTypes, sessionId, memberId);
   } else if (!this.writeModel.alreadyHasWaitinglistReservation(sessionId)) {
+    // TODO change that in order to enable changes to the waitinglist by the user
     return events.didNotRegisterWaitinglistParticipantWithExpiredOrMissingReservation(desiredRoomTypes, sessionId, memberId);
   } else {
     // all is well
-    return events.waitinglistParticipantWasRegistered(desiredRoomTypes, sessionId, memberId, this.writeModel.waitinglistReservation(sessionId).joinedWaitinglist);
+    return events.waitinglistParticipantWasRegistered(desiredRoomTypes, duration, sessionId, memberId, this.writeModel.waitinglistReservation(sessionId).joinedWaitinglist);
   }
 };
 
