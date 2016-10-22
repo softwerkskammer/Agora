@@ -64,7 +64,8 @@ describe('The registration command processor', function () {
           roomType: singleBedRoom,
           duration: untilSaturday,
           joinedSoCraTes: aShortTimeAgo.valueOf()
-        }]);
+        }
+      ]);
     });
 
     it('does not reserve a room if the quota is already exhausted by an active reservation', function () {

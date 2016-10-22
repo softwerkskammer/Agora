@@ -234,7 +234,7 @@ RegistrationReadModel.prototype.selectedOptionsFor = function (memberID) {
 
   var waitinglistParticipantEvent = this.waitinglistParticipantEventFor(memberID);
   if (waitinglistParticipantEvent) {
-    waitinglistParticipantEvent.desiredRoomTypes.forEach(roomType => options.push(roomType + ',waitinglist' + ',' + waitinglistParticipantEvent.duration));
+    waitinglistParticipantEvent.desiredRoomTypes.forEach(roomType => options.push(roomType + ',waitinglist,' + waitinglistParticipantEvent.duration));
   }
   return options.join(';');
 };
