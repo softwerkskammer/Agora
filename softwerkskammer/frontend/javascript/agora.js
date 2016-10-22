@@ -1,4 +1,4 @@
-/*global moment, datepicker_lang, datepicker_format, fc_lang, URI, help */
+/*global moment, fc_lang, URI*/
 
 var displayedActivityStart, displayedActivityEnd;
 
@@ -72,127 +72,6 @@ function interestify() {
   });
 }
 
-function surroundWithLink(text) {
-  'use strict';
-
-  // shamelessly stolen from http://stackoverflow.com/questions/1500260/detect-urls-in-text-with-javascript
-  var urlRegex = /(\b(https?|ftp|file):\/\/[\-A-Z0-9+&@#\/%?=~_|!:,.;]*[\-A-Z0-9+&@#\/%=~_|])/ig;
-  return text.replace(urlRegex, function (url) {
-    return '<a href="' + url + '" target="_blank">' + '<i class="fa fa-external-link"/> ' + url + '</a>';
-  });
-}
-
-function surroundTwitterName(twittername) {
-  'use strict';
-
-  if (twittername.trim().length === 0) {
-    return twittername;
-  }
-  return '<a href="http://twitter.com/' + twittername + '" target="_blank">@' + twittername + '</a>';
-}
-
-function surroundEmail(email) {
-  'use strict';
-
-  return '<a href="mailto:' + email + '">' + email + '</a>';
-}
-
-function initPickers() {
-  'use strict';
-
-  $('.datepicker').datepicker({
-    autoclose: true,
-    format: datepicker_format,
-    weekStart: 1,
-    viewMode: 'days',
-    minViewMode: 'days',
-    language: datepicker_lang
-  });
-
-  $('.timepicker').timepicker({
-    template: false,
-    minuteStep: 15,
-    showSeconds: false,
-    showMeridian: false
-  });
-}
-
-function addHelpButtonToTextarea() {
-  'use strict';
-
-  $('.md-textarea').each(function () {
-    $(this).markdown({
-        additionalButtons: [[{
-          name: 'groupCustom',
-          data: [{
-            name: 'cmdHelp',
-            title: help,
-            icon: 'fa fa-question-circle',
-            callback: function () { $('#cheatsheet').modal({remote: '/cheatsheet.html'}); }
-          }]
-        }]],
-        onPreview: function (e) {
-          $.post('/preview', {
-              data: e.getContent(),
-              subdir: ($('[name=subdir]').val() || $('[name=assignedGroup]').val() || $('[name=id]').val()),
-              '_csrf': $('[name=_csrf]').val()
-            },
-            function (data) { e.$element.parent().find('.md-preview').html(data); });
-          return ''; // to clearly indicate the loading...
-        },
-        iconlibrary: 'fa',
-        language: datepicker_lang,
-        resize: 'vertical'
-      }
-    );
-  });
-}
-
-function extendDataTables() {
-  'use strict';
-
-  if (!$.fn.dataTableExt) { return; }
-  $.extend($.fn.dataTableExt.oSort, {
-    'date-eu-pre': function (dateString) { return moment(dateString, 'DD.MM.YYYY HH:mm').unix(); },
-    'date-eu-asc': function (a, b) { return a - b; },
-    'date-eu-desc': function (a, b) { return b - a; }
-  });
-}
-
-function createLinks() {
-  'use strict';
-
-  $('.urlify').each(function () {
-    $(this).html(surroundWithLink(this.innerHTML));
-  });
-
-  $('.twitterify').each(function () {
-    $(this).html(surroundTwitterName(this.innerHTML));
-  });
-
-  $('.mailtoify').each(function () {
-    $(this).html(surroundEmail(this.innerHTML));
-  });
-  interestify();
-}
-
-function initTooltipsAndHovers() {
-  'use strict';
-
-  $('[rel=tooltip]').each(function () {
-    $(this).popover({html: true, trigger: 'hover', delay: {hide: 50}});
-  });
-
-  $('[rel=tooltip-in-body]').each(function () {
-    $(this).popover({container: 'body', html: true, trigger: 'hover', delay: {hide: 50}});
-  });
-
-  $('.tooltipify').each(function () {
-    $(this).tooltip();
-    $(this).addClass('popover-highlight');
-  });
-}
-
 (function () {
   'use strict';
 
@@ -244,11 +123,7 @@ function initTooltipsAndHovers() {
   patchBootstrapPopover();
   $.event.add(window, 'resize', adaptScrollableBox);
   $(document).ready(highlightCurrentSection);
-  $(document).ready(addHelpButtonToTextarea);
-  $(document).ready(initPickers);
   $(document).ready(adaptScrollableBox);
   $(document).ready(initActivitiesCalendar);
-  $(document).ready(extendDataTables);
-  $(document).ready(createLinks);
-  $(document).ready(initTooltipsAndHovers);
+  $(document).ready(interestify);
 }());

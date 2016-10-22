@@ -21,6 +21,7 @@ module.exports = function (grunt) {
       'node_modules/simple-timepicker/dist/simple-timepicker.js',
       'node_modules/urijs/src/URI.js',
       'locales/frontend_en.js',
+      'commonComponents/frontend-js/frontendutils.js',
       'socrates/frontend/javascript/socrates.js'
     ]
   };
