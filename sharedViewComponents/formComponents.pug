@@ -16,10 +16,17 @@ mixin textWithTags(name, label, value, tags)
       each tag in tags
         option(selected = value.indexOf(tag) > -1) #{tag}
     script.
-      $(#{name}).select2({
-        tags: true, 
-        tokenSeparators: [',', ', ']
-      });
+      $(#{name}).select2({tags: true, tokenSeparators: [',', ', ']});
+
+mixin singleselect(name, label, value, placeholder, tags)
+  .form-group
+    +controlLabel(name, label)
+    select.form-control(id=name, name=name)
+      option(value='') #{' '}
+      each tag in tags
+        option(value = tag.iso, selected = value && value.indexOf(tag.iso) === 0) #{tag.name}
+    script.
+      $("##{name}").select2({placeholder: "#{placeholder}"});
 
 mixin multiselect(name, label, value, tags)
   .form-group
@@ -39,7 +46,6 @@ mixin editableMultiselect(name, label, value, tags)
     script.
       $(#{name}).select2({tags: true});
 
-
 mixin currency(name, label, value, tooltip, placeholder, readonly)
   .form-group
     if (readonly)
@@ -49,14 +55,14 @@ mixin currency(name, label, value, tooltip, placeholder, readonly)
     script.
       $('.currency').autoNumeric('init');
 
-mixin textareaPure(name, label, value)
-  +textareaInternal('form-control', '4', name, label, value)
+mixin textareaPure(name, label, value, placeholder)
+  +textareaInternal('form-control', '4', name, label, value, null, placeholder)
 
-mixin textarea(name, label, value, tooltip)
-  +textareaInternal('md-textarea', '7', name, label, value, tooltip)
+mixin textarea(name, label, value, tooltip, placeholder)
+  +textareaInternal('md-textarea', '7', name, label, value, tooltip, placeholder)
 
-mixin hightextarea(name, label, value, tooltip)
-  +textareaInternal('md-textarea', '15', name, label, value, tooltip)
+mixin hightextarea(name, label, value, tooltip, placeholder)
+  +textareaInternal('md-textarea', '15', name, label, value, tooltip, placeholder)
 
 mixin checkboxWithDescription(name, label, checked, description, optionalValue)
   .checkbox
@@ -88,7 +94,14 @@ mixin submitButtons(submitTextToken)
     a.btn.btn-default(href='javascript:history.back()', type='cancel') #{t('general.back')}
     button.btn.btn-primary(type='submit') #{t(submitTextToken)}
 
-
+mixin memberSubmitButtons(submitText)
+  .btn-group.pull-right
+    if (accessrights.isRegistered())
+      a.btn.btn-default(href='javascript:history.back()', type='cancel') #{t('general.back')}
+    else
+      a.btn.btn-danger(href='/auth/logout', type='cancel') #{t('members.cancel')}
+    button.btn.btn-primary(type='submit') #{submitText}
+    
 mixin hidden(name, value)
   input(type='hidden', name=name, value=value)
 
@@ -131,10 +144,10 @@ mixin controlLabel(name, label, tooltip)
     -else
       | #{label}:
 
-mixin textareaInternal(classname, rowCount, name, label, value, tooltip)
+mixin textareaInternal(classname, rowCount, name, label, value, tooltip, placeholder)
   .form-group
     +controlLabel(name, label, tooltip)
-    textarea(class=classname, id=name, rows=rowCount, type='text', name=name) #{value}
+    textarea(class=classname, id=name, rows=rowCount, type='text', name=name, placeholder=placeholder) #{value}
 
 mixin reallyDeleteModalPost(header, options, extraclasses)
   +reallyDeleteModalOnly(header, options)

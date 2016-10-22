@@ -1,4 +1,4 @@
-include  ../../../views/formComponents
+include  ../../../../sharedViewComponents/formComponents
 
 mixin memberform(member, regionalgroups, themegroups, tags)
   form#memberform(action='/members/submit', method='post')
@@ -12,7 +12,7 @@ mixin memberform(member, regionalgroups, themegroups, tags)
               | #{member.nickname()}
             else
               | #{t('members.new')}
-            +memberSubmitButtons
+            +memberSubmitButtons(t('general.save'))
 
       .row
         .col-md-12
@@ -62,12 +62,4 @@ mixin memberform(member, regionalgroups, themegroups, tags)
               +text('additionalAuthentication', t('members.authenticate'), '')
       .row
         .col-md-12
-          +memberSubmitButtons
-
-mixin memberSubmitButtons
-  .btn-group.pull-right
-    if (accessrights.isRegistered())
-      a.btn.btn-default(href='javascript:history.back()', type='cancel') #{t('general.back')}
-    else
-      a.btn.btn-danger(href='/auth/logout', type='cancel') #{t('members.cancel')}
-    button.btn.btn-primary(type='submit') #{t('general.save')}
+          +memberSubmitButtons(t('general.save'))
