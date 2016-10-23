@@ -31,30 +31,9 @@ module.exports = {
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // ***** Participation *****
 
-  // reservation:
-  reservationWasIssued: function (roomType, duration, sessionId, memberId, joinedSoCraTes) {
-    return enrich({event: e.RESERVATION_WAS_ISSUED, sessionId, memberId, roomType, duration, joinedSoCraTes: joinedSoCraTes.valueOf()});
-  },
-
-  didNotIssueReservationForAlreadyReservedSession: function (roomType, duration, sessionId, memberId) {
-    return enrich({event: e.DID_NOT_ISSUE_RESERVATION_FOR_ALREADY_RESERVED_SESSION, sessionId, memberId, roomType, duration});
-  },
-
-  didNotIssueReservationForFullResource: function (roomType, duration, sessionId, memberId) {
-    return enrich({event: e.DID_NOT_ISSUE_RESERVATION_FOR_FULL_RESOURCE, sessionId, memberId, roomType, duration});
-  },
-
   // registration:
   participantWasRegistered: function (roomType, duration, sessionId, memberId, joinedSoCraTes) {
     return enrich({event: e.PARTICIPANT_WAS_REGISTERED, sessionId, roomType, duration, memberId, joinedSoCraTes: joinedSoCraTes.valueOf()});
-  },
-
-  didNotRegisterParticipantASecondTime: function (roomType, duration, sessionId, memberId) {
-    return enrich({event: e.DID_NOT_REGISTER_PARTICIPANT_A_SECOND_TIME, sessionId, roomType, duration, memberId});
-  },
-
-  didNotRegisterParticipantWithExpiredOrMissingReservation: function (roomType, duration, sessionId, memberId) {
-    return enrich({event: e.DID_NOT_REGISTER_PARTICIPANT_WITH_EXPIRED_OR_MISSING_RESERVATION, sessionId, roomType, duration, memberId});
   },
 
   registeredParticipantFromWaitinglist: function (roomType, duration, memberId, joinedSoCraTes) {
