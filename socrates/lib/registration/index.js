@@ -58,7 +58,6 @@ app.get('/', (req, res, next) => {
     eventstoreService.getRoomsReadModel(socratesConstants.currentUrl, (err2, roomsReadModel) => {
       if (err2 || !roomsReadModel) { return next(err2); }
       const memberId = res.locals.accessrights.memberId();
-      const options = roomOptions.allRoomOptions(registrationReadModel, memberId, isRegistrationOpen(req.query.registration));
       const registration = {
         isPossible: isRegistrationOpen(req.query.registration),
         queryParam: req.query.registration,
@@ -76,7 +75,7 @@ app.get('/', (req, res, next) => {
           url: socratesConstants.currentUrl,
           fullyQualifiedUrl: conf.get('socratesURL')
         },
-        roomOptions: options,
+        roomOptions: roomOptions.allRoomOptions(),
         registration: registration
       });
     });
