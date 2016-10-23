@@ -110,6 +110,9 @@ function surroundEmail(email) {
     });
 
     $('.currency').each(function () {
+      /* eslint no-console: 0 */
+      console.log('travis-debug (autoNumeric): $(this) - ' + $(this));
+      console.log('travis-debug (autoNumeric): $(this)autoNumeric - ' + $(this).autoNumeric);
       $(this).autoNumeric('init');
     });
   }
