@@ -80,7 +80,7 @@ function surroundEmail(email) {
     });
   }
 
-  function initPickers() {
+  function initPickersAndWidgets() {
     $('.datepicker').datepicker({
       autoclose: true,
       format: datepicker_format,
@@ -95,6 +95,22 @@ function surroundEmail(email) {
       minuteStep: 15,
       showSeconds: false,
       showMeridian: false
+    });
+
+    $('.c-picker').each(function () {
+      $(this).colorpicker();
+    });
+
+    $('select').each(function () {
+      $(this).select2({theme: 'bootstrap'});
+    });
+
+    $('.trim-text').on('blur', function () {
+      $(this).val($(this).val().trim());
+    });
+
+    $('.currency').each(function () {
+      $(this).autoNumeric('init');
     });
   }
 
@@ -134,11 +150,15 @@ function surroundEmail(email) {
       $(this).tooltip();
       $(this).addClass('popover-highlight');
     });
+
+    $('.tooltiplabel').each(function () {
+      $(this).tooltip();
+    });
   }
 
   patchBootstrapPopover();
   $(document).ready(addHelpButtonToTextarea);
-  $(document).ready(initPickers);
+  $(document).ready(initPickersAndWidgets);
   $(document).ready(extendDataTables);
   $(document).ready(createLinks);
   $(document).ready(initTooltipsAndHovers);
