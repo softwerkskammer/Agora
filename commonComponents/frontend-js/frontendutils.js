@@ -102,6 +102,9 @@ function surroundEmail(email) {
     });
 
     $('select').each(function () {
+      /* eslint no-console: 0 */
+      console.log('travis-debug (select2): $(this) - ' + $(this));
+      console.log('travis-debug (select2): $(this).select2 - ' + $(this).select2);
       $(this).select2({theme: 'bootstrap'});
     });
 
@@ -112,7 +115,7 @@ function surroundEmail(email) {
     $('.currency').each(function () {
       /* eslint no-console: 0 */
       console.log('travis-debug (autoNumeric): $(this) - ' + $(this));
-      console.log('travis-debug (autoNumeric): $(this)autoNumeric - ' + $(this).autoNumeric);
+      console.log('travis-debug (autoNumeric): $(this).autoNumeric - ' + $(this).autoNumeric);
       $(this).autoNumeric('init');
     });
   }
