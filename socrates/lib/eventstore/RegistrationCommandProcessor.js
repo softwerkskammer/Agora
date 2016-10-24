@@ -86,8 +86,7 @@ RegistrationCommandProcessor.prototype.fromWaitinglistToParticipant = function (
   if (this.writeModel.isAlreadyRegistered(memberId)) {
     return events.didNotRegisterParticipantFromWaitinglistASecondTime(roomType, duration, memberId);
   } else if (!this.writeModel.isAlreadyOnWaitinglist(memberId)) {
-    // we gracefully register them nonetheless:
-    return events.participantWasRegistered(roomType, duration, undefined, memberId, joinedSoCraTes);
+    return events.didNotRegisterParticipantFromWaitinglistBecauseTheyWereNotOnWaitinglist(roomType, duration, memberId);
   } else {
     // all is well
     return events.registeredParticipantFromWaitinglist(roomType, duration, memberId, joinedSoCraTes);

@@ -101,13 +101,13 @@ describe('SoCraTes Activities Service', function () {
       });
     });
 
-    it('registers the user even when he is not on the waitinglist', function (done) {
+    it('does not register the user when he is not on the waitinglist', function (done) {
 
       socratesActivitiesService.fromWaitinglistToParticipant({nickname: 'nickname', roomType: 'single', duration: 2}, now, function (err) {
         expect(stripTimestamps(saveEventStore.firstCall.args[0].state.events)).to.eql([
-          {event: e.PARTICIPANT_WAS_REGISTERED, sessionId: undefined, roomType: 'single', memberId: 'memberId', duration: 2, joinedSoCraTes: now.valueOf()}]);
+          {event: e.DID_NOT_REGISTER_PARTICIPANT_FROM_WAITINGLIST_BECAUSE_THEY_WERE_NOT_ON_WAITINGLIST, roomType: 'single', memberId: 'memberId', duration: 2}]);
 
-        expect(newParticipantNotification.called).to.be.true();
+        expect(newParticipantNotification.called).to.be.false();
         done(err);
       });
     });

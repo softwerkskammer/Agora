@@ -563,7 +563,7 @@ describe('The registration command processor', function () {
   });
 
   describe('for registering participants from the waitinglist (fromWaitinglistToParticipant)', function () {
-    it('registers a participant even if he is not on the waitinglist', function () {
+    it('does not register a participant if he is not on the waitinglist', function () {
       //Given (saved events)
       eventStore.state.events = [];
       const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
@@ -574,12 +574,10 @@ describe('The registration command processor', function () {
       //Then (new events)
       expect(stripTimestamps([event])).to.eql([
         {
-          event: e.PARTICIPANT_WAS_REGISTERED,
+          event: e.DID_NOT_REGISTER_PARTICIPANT_FROM_WAITINGLIST_BECAUSE_THEY_WERE_NOT_ON_WAITINGLIST,
           roomType: singleBedRoom,
           memberId: memberId1,
-          sessionId: undefined,
-          duration: untilSaturday,
-          joinedSoCraTes: aShortTimeAgo.valueOf()
+          duration: untilSaturday
         }
       ]);
     });
