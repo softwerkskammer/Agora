@@ -407,7 +407,7 @@ describe('Registration Service', function () {
       registrationBody.desiredRoomTypes = 'single';
 
       eventStore.state.events = [
-        events.participantWasRegistered('single', 2, registrationBody.sessionId, 'memberId', aShortTimeAgo),
+        events.registeredParticipantFromWaitinglist('single', 2, 'memberId', aShortTimeAgo),
         events.waitinglistReservationWasIssued([registrationBody.desiredRoomTypes], 2, registrationBody.sessionId, 'memberId', aShortTimeAgo)
       ];
 
@@ -415,8 +415,7 @@ describe('Registration Service', function () {
         const savedEventStore = saveEventStoreStub.firstCall.args[0];
         expect(stripTimestamps(savedEventStore.state.events)).to.eql([
           {
-            event: e.PARTICIPANT_WAS_REGISTERED,
-            sessionId: 'sessionId',
+            event: e.REGISTERED_PARTICIPANT_FROM_WAITINGLIST,
             roomType: 'single',
             duration: 2,
             memberId: 'memberId',

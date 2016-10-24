@@ -25,20 +25,20 @@ describe('Management Service', function () {
 
     it('counts each value', function () {
       eventStore.state.events = [
-        events.participantWasRegistered('single', 2, 'session-id', 'member-id1', aLongTimeAgo),
-        events.participantWasRegistered('single', 2, 'session-id', 'member-id2', aLongTimeAgo),
-        events.participantWasRegistered('single', 4, 'session-id', 'member-id3', aLongTimeAgo),
-        events.participantWasRegistered('single', 3, 'session-id', 'member-id4', aLongTimeAgo),
-        events.participantWasRegistered('single', 5, 'session-id', 'member-id5', aLongTimeAgo),
-        events.participantWasRegistered('single', 2, 'session-id', 'member-id6', aLongTimeAgo),
-        events.participantWasRegistered('single', 3, 'session-id', 'member-id7', aLongTimeAgo),
-        events.participantWasRegistered('junior', 2, 'session-id', 'member-id8', aLongTimeAgo),
-        events.participantWasRegistered('junior', 2, 'session-id', 'member-id9', aLongTimeAgo),
-        events.participantWasRegistered('junior', 4, 'session-id', 'member-id10', aLongTimeAgo),
-        events.participantWasRegistered('junior', 3, 'session-id', 'member-id11', aLongTimeAgo),
-        events.participantWasRegistered('junior', 5, 'session-id', 'member-id12', aLongTimeAgo),
-        events.participantWasRegistered('junior', 2, 'session-id', 'member-id13', aLongTimeAgo),
-        events.participantWasRegistered('junior', 3, 'session-id', 'member-id14', aLongTimeAgo)
+        events.registeredParticipantFromWaitinglist('single', 2, 'member-id1', aLongTimeAgo),
+        events.registeredParticipantFromWaitinglist('single', 2, 'member-id2', aLongTimeAgo),
+        events.registeredParticipantFromWaitinglist('single', 4, 'member-id3', aLongTimeAgo),
+        events.registeredParticipantFromWaitinglist('single', 3, 'member-id4', aLongTimeAgo),
+        events.registeredParticipantFromWaitinglist('single', 5, 'member-id5', aLongTimeAgo),
+        events.registeredParticipantFromWaitinglist('single', 2, 'member-id6', aLongTimeAgo),
+        events.registeredParticipantFromWaitinglist('single', 3, 'member-id7', aLongTimeAgo),
+        events.registeredParticipantFromWaitinglist('junior', 2, 'member-id8', aLongTimeAgo),
+        events.registeredParticipantFromWaitinglist('junior', 2, 'member-id9', aLongTimeAgo),
+        events.registeredParticipantFromWaitinglist('junior', 4, 'member-id10', aLongTimeAgo),
+        events.registeredParticipantFromWaitinglist('junior', 3, 'member-id11', aLongTimeAgo),
+        events.registeredParticipantFromWaitinglist('junior', 5, 'member-id12', aLongTimeAgo),
+        events.registeredParticipantFromWaitinglist('junior', 2, 'member-id13', aLongTimeAgo),
+        events.registeredParticipantFromWaitinglist('junior', 3, 'member-id14', aLongTimeAgo)
       ];
       const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
@@ -53,12 +53,12 @@ describe('Management Service', function () {
 
     it('counts only durations that are present', function () {
       eventStore.state.events = [
-        events.participantWasRegistered('single', 2, 'session-id', 'member-id1', aLongTimeAgo),
-        events.participantWasRegistered('single', 2, 'session-id', 'member-id2', aLongTimeAgo),
-        events.participantWasRegistered('single', 5, 'session-id', 'member-id3', aLongTimeAgo),
-        events.participantWasRegistered('junior', 2, 'session-id', 'member-id4', aLongTimeAgo),
-        events.participantWasRegistered('junior', 2, 'session-id', 'member-id5', aLongTimeAgo),
-        events.participantWasRegistered('junior', 4, 'session-id', 'member-id6', aLongTimeAgo)
+        events.registeredParticipantFromWaitinglist('single', 2, 'member-id1', aLongTimeAgo),
+        events.registeredParticipantFromWaitinglist('single', 2, 'member-id2', aLongTimeAgo),
+        events.registeredParticipantFromWaitinglist('single', 5, 'member-id3', aLongTimeAgo),
+        events.registeredParticipantFromWaitinglist('junior', 2, 'member-id4', aLongTimeAgo),
+        events.registeredParticipantFromWaitinglist('junior', 2, 'member-id5', aLongTimeAgo),
+        events.registeredParticipantFromWaitinglist('junior', 4, 'member-id6', aLongTimeAgo)
       ];
       const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 

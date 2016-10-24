@@ -32,10 +32,6 @@ module.exports = {
   // ***** Participation *****
 
   // registration:
-  participantWasRegistered: function (roomType, duration, sessionId, memberId, joinedSoCraTes) {
-    return enrich({event: e.PARTICIPANT_WAS_REGISTERED, sessionId, roomType, duration, memberId, joinedSoCraTes: joinedSoCraTes.valueOf()});
-  },
-
   registeredParticipantFromWaitinglist: function (roomType, duration, memberId, joinedSoCraTes) {
     return enrich({event: e.REGISTERED_PARTICIPANT_FROM_WAITINGLIST, roomType, duration, memberId, joinedSoCraTes: joinedSoCraTes.valueOf()});
   },
