@@ -15,15 +15,11 @@ var processReservationsBySessionId = function (reservationsBySessionId, event) {
   if (event.event === e.RESERVATION_WAS_ISSUED && moment(event.joinedSoCraTes).isAfter(earliestValidRegistrationTime)) {
     reservationsBySessionId[event.sessionId] = event;
   }
-  if (event.event === e.PARTICIPANT_WAS_REGISTERED) {
-    delete reservationsBySessionId[event.sessionId];
-  }
   return reservationsBySessionId;
 };
 
 var processParticipantsByMemberId = function (participantsByMemberId, event) {
-  if (event.event === e.PARTICIPANT_WAS_REGISTERED
-    || event.event === e.ROOM_TYPE_WAS_CHANGED
+  if (event.event === e.ROOM_TYPE_WAS_CHANGED
     || event.event === e.DURATION_WAS_CHANGED
     || event.event === e.REGISTERED_PARTICIPANT_FROM_WAITINGLIST) {
     participantsByMemberId[event.memberId] = event;
@@ -38,7 +34,7 @@ var processWaitinglistReservationsBySessionId = function (waitinglistReservation
   if (event.event === e.WAITINGLIST_RESERVATION_WAS_ISSUED && moment(event.joinedWaitinglist).isAfter(earliestValidRegistrationTime)) {
     waitinglistReservationsBySessionId[event.sessionId] = event;
   }
-  if (event.event === e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED || event.event === e.PARTICIPANT_WAS_REGISTERED) {
+  if (event.event === e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED) {
     delete waitinglistReservationsBySessionId[event.sessionId];
   }
   return waitinglistReservationsBySessionId;

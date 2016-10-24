@@ -71,7 +71,7 @@ module.exports = {
 
         const args = {commandProcessor: registrationCommandProcessor, events: [event], callback: callback};
 
-        if (event.event === e.PARTICIPANT_WAS_REGISTERED || event.event === e.REGISTERED_PARTICIPANT_FROM_WAITINGLIST) {
+        if (event.event === e.REGISTERED_PARTICIPANT_FROM_WAITINGLIST) {
           args.handleSuccess = () => {
             var bookingdetails = roomOptions.informationFor(params.roomType, params.duration);
             bookingdetails.fromWaitinglist = true;
