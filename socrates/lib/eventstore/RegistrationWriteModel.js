@@ -40,10 +40,6 @@ RegistrationWriteModel.prototype.roomTypesOf = function (memberId) {
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////
-RegistrationWriteModel.prototype.isFull = function (roomType) {
-  return this._registrationReadModel.isFull(roomType);
-};
-
 RegistrationWriteModel.prototype.eventStore = function () {
   // persistence needs an id:
   this._eventStore.setId();

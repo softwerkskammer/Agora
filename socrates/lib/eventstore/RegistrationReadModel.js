@@ -55,7 +55,6 @@ function RegistrationReadModel(eventStore, soCraTesReadModel) {
   this._waitinglistParticipantsByMemberId = {};
 
   this._participantsByMemberIdFor = {};
-  this._participantsFor = {};
   this._waitinglistReservationsBySessionIdFor = {};
   this._waitinglistParticipantsByMemberIdFor = {};
   this._durations = [];
@@ -72,7 +71,6 @@ RegistrationReadModel.prototype.update = function (events) {
   // derived data:
   roomOptions.allIds().forEach(roomType => {
     this._participantsByMemberIdFor[roomType] = R.filter(function (event) { return event.roomType === roomType; }, this.participantsByMemberId());
-    this._participantsFor[roomType] = R.values(this.participantsByMemberIdFor(roomType));
     this._waitinglistReservationsBySessionIdFor[roomType] = R.filter(function (event) { return R.contains(roomType, event.desiredRoomTypes); }, this.waitinglistReservationsBySessionId());
     this._waitinglistParticipantsByMemberIdFor[roomType] = R.filter(function (event) { return R.contains(roomType, event.desiredRoomTypes); }, this.waitinglistParticipantsByMemberId());
   });
@@ -136,10 +134,6 @@ RegistrationReadModel.prototype.allParticipantsIn = function (roomType) {
   return R.keys(this.participantsByMemberIdFor(roomType));
 };
 
-RegistrationReadModel.prototype.reservationsAndParticipantsFor = function (roomType) {
-  return this._participantsFor[roomType];
-};
-
 RegistrationReadModel.prototype.waitinglistReservationsBySessionId = function () {
   return this._waitinglistReservationsBySessionId;
 };
@@ -162,10 +156,6 @@ RegistrationReadModel.prototype.waitinglistParticipantCountFor = function (roomT
 
 RegistrationReadModel.prototype.waitinglistParticipantsByMemberIdFor = function (roomType) {
   return this._waitinglistParticipantsByMemberIdFor[roomType];
-};
-
-RegistrationReadModel.prototype.isFull = function (roomType) {
-  return this._soCraTesReadModel.quotaFor(roomType) <= this.reservationsAndParticipantsFor(roomType).length;
 };
 
 RegistrationReadModel.prototype._waitinglistReservationEventFor = function (sessionId) {

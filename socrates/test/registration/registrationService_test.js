@@ -134,7 +134,6 @@ describe('Registration Service', function () {
         expect(statusText).to.not.exist();
         const readModel = cache.get('socrates-url_registrationReadModel');
 
-        expect(readModel.reservationsAndParticipantsFor('single')).to.have.length(0);
         expect(readModel.waitinglistReservationsAndParticipantsFor('single')).to.have.length(1);
         expect(readModel.waitinglistReservationsAndParticipantsFor('single')[0].event).to.eql('WAITINGLIST-RESERVATION-WAS-ISSUED');
         expect(readModel.waitinglistReservationsAndParticipantsFor('single')[0].sessionId).to.eql('sessionId');

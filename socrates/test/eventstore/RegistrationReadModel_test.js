@@ -73,72 +73,6 @@ describe('The registration read model', () => {
     });
   });
 
-  describe('giving the reservations and participants for a room type (reservationsAndParticipantsFor)', () => {
-
-    it('does not consider any reservations or participants when there are no events', () => {
-      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
-
-      expect(readModel.reservationsAndParticipantsFor(singleBedRoom)).to.eql([]);
-    });
-
-    it('considers participations', () => {
-      eventStore.state.events = [
-        events.registeredParticipantFromWaitinglist(singleBedRoom, untilSaturday, memberId1, aLongTimeAgo),
-        events.registeredParticipantFromWaitinglist(singleBedRoom, untilSundayMorning, memberId2, aShortTimeAgo)];
-      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
-
-      expect(stripTimestamps(readModel.reservationsAndParticipantsFor(singleBedRoom))).to.eql([
-        {
-          event: e.REGISTERED_PARTICIPANT_FROM_WAITINGLIST,
-          memberId: memberId1,
-          roomType: singleBedRoom,
-          duration: untilSaturday,
-          joinedSoCraTes: aLongTimeAgo.valueOf()
-        },
-        {
-          event: e.REGISTERED_PARTICIPANT_FROM_WAITINGLIST,
-          memberId: memberId2,
-          roomType: singleBedRoom,
-          duration: untilSundayMorning,
-          joinedSoCraTes: aShortTimeAgo.valueOf()
-        }]);
-    });
-
-    it('returns only the events belonging to the queried room type', () => {
-      eventStore.state.events = [
-        events.registeredParticipantFromWaitinglist(bedInDouble, untilSaturday, memberId2, aShortTimeAgo),
-        events.registeredParticipantFromWaitinglist(singleBedRoom, untilSundayMorning, memberId1, anEvenShorterTimeAgo)];
-      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
-
-      expect(stripTimestamps(readModel.reservationsAndParticipantsFor(singleBedRoom))).to.eql([
-        {
-          event: e.REGISTERED_PARTICIPANT_FROM_WAITINGLIST,
-          memberId: memberId1,
-          roomType: singleBedRoom,
-          duration: untilSundayMorning,
-          joinedSoCraTes: anEvenShorterTimeAgo.valueOf()
-        }]);
-      expect(stripTimestamps(readModel.reservationsAndParticipantsFor(bedInDouble))).to.eql([
-        {
-          event: e.REGISTERED_PARTICIPANT_FROM_WAITINGLIST,
-          memberId: memberId2,
-          roomType: bedInDouble,
-          duration: untilSaturday,
-          joinedSoCraTes: aShortTimeAgo.valueOf()
-        }]);
-    });
-
-    it('does not list the registration event of a participant that has been removed', () => {
-      eventStore.state.events = [
-        events.registeredParticipantFromWaitinglist(singleBedRoom, untilSaturday, memberId1, aShortTimeAgo),
-        events.participantWasRemoved(singleBedRoom, memberId1)];
-      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
-
-      expect(readModel.reservationsAndParticipantsFor(singleBedRoom)).to.eql([]);
-    });
-
-  });
-
   describe('considering removals (participantsByMemberIdFor)', () => {
 
     it('does not return the member id  and information of a participant that has been removed', () => {
@@ -349,57 +283,6 @@ describe('The registration read model', () => {
       expect(readModel.isAlreadyOnWaitinglist(memberId1)).to.eql(true);
     });
 
-  });
-
-  describe('knows if rooms are full (isFull)', () => {
-    it('returns true when the room is full', () => {
-      eventStore.state.events = [
-        events.roomQuotaWasSet(singleBedRoom, 1),
-        events.registeredParticipantFromWaitinglist(singleBedRoom, untilSaturday, memberId1, aLongTimeAgo)
-      ];
-      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
-
-      expect(readModel.isFull(singleBedRoom)).to.eql(true);
-    });
-    it('returns false if the room quota was not set', () => {
-      eventStore.state.events = [events.roomQuotaWasSet(bedInDouble, 100)];
-      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
-
-      expect(readModel.isFull(singleBedRoom)).to.eql(false);
-    });
-
-    it('is no longer full when participant was removed from full room', () => {
-      eventStore.state.events = [
-        events.roomQuotaWasSet(singleBedRoom, 1),
-        events.registeredParticipantFromWaitinglist(singleBedRoom, untilSaturday, memberId1, aLongTimeAgo),
-        events.participantWasRemoved(singleBedRoom, memberId1)
-      ];
-      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
-
-      expect(readModel.isFull(singleBedRoom)).to.eql(false);
-    });
-
-    it('returns true if participant was registered from waitinglist', () => {
-      eventStore.state.events = [
-        events.roomQuotaWasSet(singleBedRoom, 1),
-        events.registeredParticipantFromWaitinglist(singleBedRoom, untilSaturday, memberId1, aLongTimeAgo)
-      ];
-      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
-
-      expect(readModel.isFull(singleBedRoom)).to.eql(true);
-    });
-
-    it('returns true when person is moved by changing his room type', () => {
-      eventStore.state.events = [
-        events.roomQuotaWasSet(singleBedRoom, 1),
-        events.roomQuotaWasSet(bedInDouble, 1),
-        events.registeredParticipantFromWaitinglist(singleBedRoom, untilSaturday, memberId1, aLongTimeAgo),
-        events.roomTypeWasChanged(memberId1, bedInDouble, untilSaturday, aLongTimeAgo)];
-      const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
-
-      expect(readModel.isFull(singleBedRoom)).to.eql(false);
-      expect(readModel.isFull(bedInDouble)).to.eql(true);
-    });
   });
 
   describe('knows in what room type the participant is registered (registeredInRoomType)', () => {
