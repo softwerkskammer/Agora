@@ -312,7 +312,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-puglint');
 
   grunt.registerTask('prepare', ['copy', 'patch', 'less']);
-  grunt.registerTask('frontendtests', ['clean', 'prepare', 'pug', 'uglify:development_de', 'karma:once', 'uglify:production_de', 'karma:once', 'istanbul_check_coverage:frontend']);
+  grunt.registerTask('frontendtests', ['clean', 'prepare', 'pug', 'uglify:production_de', 'karma:once', 'uglify:development_de', 'karma:once', 'istanbul_check_coverage:frontend']);
   grunt.registerTask('tests', ['eslint', 'puglint', 'frontendtests', 'mocha_istanbul', 'istanbul_check_coverage:server']);
   grunt.registerTask('deploy_development', ['prepare', 'uglify:development_de', 'uglify:development_en']);
 
