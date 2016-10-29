@@ -6,14 +6,6 @@ function RegistrationWriteModel(eventStore, registrationReadModel) {
   this._registrationReadModel = registrationReadModel;
 }
 
-RegistrationWriteModel.prototype.reservationFor = function (sessionId) {
-  return this._registrationReadModel.reservationsBySessionId()[sessionId];
-};
-
-RegistrationWriteModel.prototype.alreadyHasReservation = function (sessionId) {
-  return !!this.reservationFor(sessionId);
-};
-
 RegistrationWriteModel.prototype.waitinglistReservation = function (sessionId) {
   return this._registrationReadModel.waitinglistReservationsBySessionId()[sessionId];
 };
@@ -48,10 +40,6 @@ RegistrationWriteModel.prototype.roomTypesOf = function (memberId) {
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////
-RegistrationWriteModel.prototype.isFull = function (roomType) {
-  return this._registrationReadModel.isFull(roomType);
-};
-
 RegistrationWriteModel.prototype.eventStore = function () {
   // persistence needs an id:
   this._eventStore.setId();
