@@ -8,9 +8,9 @@ include ajax
 mixin localdate(momentOrNull)
   | #{momentOrNull ? momentOrNull.locale('de').format('L') : '-'}
 
-mixin fromWaitinglistToParticipant(roomType, nickname)
+mixin fromWaitinglistToParticipant(roomType, nickname, duration)
   -var roomURI = encodeURIComponent(roomType)
-  +ajaxButton(nickname, "/activities/fromWaitinglistToParticipant/" + roomURI + "/" + encodeURIComponent(nickname), roomURI + '-WLP', 'Teilnehmen lassen…')
+  +ajaxButton(nickname, '/activities/fromWaitinglistToParticipant/' + roomURI + '/' + encodeURIComponent(nickname) + '/' + duration, roomURI + '-WLP', 'Teilnehmen lassen…')
 
 mixin newDuration(roomType, nickname, currentSelection)
   form#activityform(action='/activities/newDuration', method='post')
@@ -259,8 +259,8 @@ block content
 
         .tab-pane#waitinglistByRoom
           each roomType in roomOptionIds
-            -var waitinglistLines = waitinglistLinesOf[roomType]
-            h4 Wartende in #{roomType} (#{waitinglistLines.length})
+            -var lines = waitinglistLinesOf[roomType]
+            h4 Wartende in #{roomType} (#{lines.length})
             .panel
               table.table.table-condensed.table-hover.table-striped.membertable
                 thead
@@ -274,7 +274,7 @@ block content
                     th Diversity?
                     th Übernehmen
                 tbody
-                  for line in waitinglistLines
+                  for line in lines
                     tr
                       td #{formatDateTime(registrationReadModel.joinedWaitinglistAt(line.member.id()))}
                       td: +linkedMember(line.member.nickname())
@@ -283,7 +283,7 @@ block content
                       td #{line.member.location()}
                       td #{formatList(registrationReadModel.roomTypesOf(line.member.id()))}
                       td #{line.addon.ladiesTShirt() || !line.subscriber.livesInGermany() ? 'yes' : ''}
-                      td: +fromWaitinglistToParticipant(roomType, line.member.nickname())
+                      td: +fromWaitinglistToParticipant(roomType, line.member.nickname(), registrationReadModel.waitinglistParticipantEventFor(line.member.id()).duration)
             hr
         .tab-pane#waitinglist
           h4 Wartende (#{waitinglistLines.length})
