@@ -95,6 +95,7 @@ describe('SoCraTes Activities Service', function () {
         expect(newParticipantNotification.called).to.be.true();
 
         const readModel = cache.get(socratesConstants.currentUrl + '_registrationReadModel');
+        expect(R.keys(readModel.participantsByMemberIdFor('single'))).to.eql(['memberId']);
 
         done(err);
       });
@@ -208,6 +209,7 @@ describe('SoCraTes Activities Service', function () {
         expect(changedDurationNotification.called).to.be.true();
 
         const readModel = cache.get(socratesConstants.currentUrl + '_registrationReadModel');
+        expect(R.keys(readModel.participantsByMemberIdFor('single'))).to.eql(['memberId']);
         done(err);
       });
     });
@@ -269,6 +271,8 @@ describe('SoCraTes Activities Service', function () {
         expect(changedRoomTypeNotification.called).to.be.true();
 
         const readModel = cache.get(socratesConstants.currentUrl + '_registrationReadModel');
+        expect(R.keys(readModel.participantsByMemberIdFor('single'))).to.eql([]);
+        expect(R.keys(readModel.participantsByMemberIdFor('bed_in_double'))).to.eql(['memberId']);
         done(err);
       });
     });
