@@ -35,11 +35,11 @@ describe('The rooms command processor', function () {
     eventStore = new GlobalEventStore();
 
     eventStore.state.events = [
-      events.participantWasRegistered(bedInDouble, 2, 'sessionId1', 'memberId1', aLongTimeAgo),
-      events.participantWasRegistered(bedInDouble, 2, 'sessionId2', 'memberId2', aLongTimeAgo),
-      events.participantWasRegistered(bedInDouble, 2, 'sessionId3', 'memberId3', aLongTimeAgo),
-      events.participantWasRegistered(bedInDouble, 2, 'sessionId4', 'memberId4', aLongTimeAgo),
-      events.participantWasRegistered(bedInDouble, 2, 'sessionId5', 'memberId5', aLongTimeAgo)
+      events.registeredParticipantFromWaitinglist(bedInDouble, 2, 'memberId1', aLongTimeAgo),
+      events.registeredParticipantFromWaitinglist(bedInDouble, 2, 'memberId2', aLongTimeAgo),
+      events.registeredParticipantFromWaitinglist(bedInDouble, 2, 'memberId3', aLongTimeAgo),
+      events.registeredParticipantFromWaitinglist(bedInDouble, 2, 'memberId4', aLongTimeAgo),
+      events.registeredParticipantFromWaitinglist(bedInDouble, 2, 'memberId5', aLongTimeAgo)
     ];
   });
 

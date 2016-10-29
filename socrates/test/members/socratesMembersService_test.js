@@ -71,7 +71,7 @@ describe('SoCraTes Members Service', function () {
         return callback(null, []);
       });
       globalEventStore.state.events = [
-        events.participantWasRegistered('single', 3, 'sessionId', 'memberId', aLongTimeAgo)
+        events.registeredParticipantFromWaitinglist('single', 3, 'memberId', aLongTimeAgo)
       ];
 
       socratesMembersService.participationStatus(new Subscriber({id: 'memberId'}), function (err, result) {

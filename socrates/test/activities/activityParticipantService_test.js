@@ -69,7 +69,7 @@ describe('activityParticipantService', function () {
 
   it('loads the participants and their participation information for a year (on or after 2016)', function (done) {
     eventStore.state.events = [
-      events.participantWasRegistered('single', 2, 'session-id', 'memberId', moment.tz())
+      events.registeredParticipantFromWaitinglist('single', 2, 'memberId', moment.tz())
     ];
 
     subscriber = new Subscriber({id: 'memberId'});
