@@ -101,8 +101,8 @@ app.post('/submit', (req, res, next) => {
 
 // for management tables:
 
-app.get('/fromWaitinglistToParticipant/:roomType/:nickname', (req, res) => {
-  const duration = 2;
+app.get('/fromWaitinglistToParticipant/:roomType/:nickname/:duration', (req, res) => {
+  const duration = parseInt(req.params.duration, 10) || 2;
 
   socratesActivitiesService.fromWaitinglistToParticipant({nickname: req.params.nickname, roomType: req.params.roomType, duration}, moment.tz(), err => {
     if (err) { return res.send('Error: ' + err); }
