@@ -7,7 +7,22 @@ include ../../members/views/roommateBanner
 
 block scripts
   script(src='/clientscripts/enhance-participationinfoform.js')
-
+  script.
+    $(function () {
+      var selectedOptions = '#{registration.selectedOptions}'.split(';');
+      selectedOptions.forEach(function (option) {
+        const roomWithDuration = option.split(',');
+        if (roomWithDuration.length === 3) { //waitinglist
+          $('input[value="' + roomWithDuration[2] + '"]').attr('checked', 'checked');
+          $('input[value="' + roomWithDuration[0] + '"]').attr('checked', 'checked');
+        } else { //must be the booked bed
+          var bookedRoom = $('#' + roomWithDuration[0] + roomWithDuration[1])
+          bookedRoom.parent().addClass('bg-success')
+          bookedRoom.addClass('text-success')
+        }
+      });
+    })
+  
 block title
   | #{activity.title} - Registration
 

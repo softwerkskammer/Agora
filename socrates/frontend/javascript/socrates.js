@@ -66,8 +66,23 @@
     });
   }
 
+  function tShirtCombos() {
+    $('#tShirtSizeMale').on('change', function () {
+      if ($(this).val() !== '') {
+        $('#tShirtSizeFemale').val('').trigger('change');
+      }
+    });
+    $('#tShirtSizeFemale').on('change', function () {
+      if ($(this).val() !== '') {
+        $('#tShirtSizeMale').val('').trigger('change');
+      }
+    });
+  }
+
+
   $(document).ready(highlightCurrentSection);
   $(document).ready(twitterUtil);
   $(document).ready(addCount);
+  $(document).ready(tShirtCombos);
 
 }());

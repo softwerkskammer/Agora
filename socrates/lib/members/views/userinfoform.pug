@@ -57,13 +57,13 @@ mixin userinfoform(addon, participation, sharesARoom)
             label.control-label(for='tShirtSizeMale') T-Shirt (Male):
             select#tShirtSizeMale.form-control(name='tShirtSize')
               for item in ['', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL', 'No Shirt' ]
-                option(selected=addon.tShirtSize() === item) #{item}
+                option(value=item, selected=addon.tShirtSize() === item) #{item}
         .col-sm-6
           .form-group(style='margin-bottom:0;')
             label.control-label(for='tShirtSizeFemale') T-Shirt (Female):
             select#tShirtSizeFemale.form-control(name='tShirtSize')
               for item in ['', 'Ladies\' XS', 'Ladies\' S', 'Ladies\' M', 'Ladies\' L', 'Ladies\' XL', 'Ladies\' XXL', 'Ladies\' No Shirt' ]
-                option(selected=addon.tShirtSize() === item) #{item}
+                option(value=item, selected=addon.tShirtSize() === item) #{item}
     .col-sm-6
       +textareaPure('remarks', 'Remarks (e.g. dietary restrictions)', addon.remarks())
   if participation
@@ -73,14 +73,3 @@ mixin userinfoform(addon, participation, sharesARoom)
         .col-sm-12
           hr
           +text('roommate', 'Who do you want to share your room with', participation.roommate())
-  script.
-    $('#tShirtSizeMale').on('change', function (e) {
-      if ($(this).val() !== '') {
-        $('#tShirtSizeFemale').val('');    
-      }
-    });
-    $('#tShirtSizeFemale').on('change', function (e) {
-      if ($(this).val() !== '') {
-        $('#tShirtSizeMale').val('');    
-      }
-    });
