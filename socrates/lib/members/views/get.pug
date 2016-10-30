@@ -60,3 +60,7 @@ block content
       a.btn.btn-primary(href='/mailsender/contactMember/' + encodeURIComponent(member.nickname()))
         i.fa.fa-envelope
         | &nbsp;#{t('members.send_email', {firstname: member.firstname(), lastname: member.lastname()})}
+
+block scripts
+  +avatarscript
+      

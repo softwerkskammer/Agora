@@ -67,10 +67,10 @@ block content
               | &nbsp;
               a(href='/members/' + editor) #{editor}
     .col-md-6
-      +map(activity.location(), '100%', '450px')
+      #map.hidden-print(style='width: ' + width + '; height: ' + height)
 
 block scripts
-  script(type='text/javascript', src='https://js.stripe.com/v2/')
+  +map(activity.location(), '100%', '450px')
   script.
     displayedActivityStart = moment('#{activity.startMoment().toISOString()}');
     displayedActivityEnd = moment('#{activity.endMoment().toISOString()}');

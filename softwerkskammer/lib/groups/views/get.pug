@@ -53,6 +53,9 @@ block content
       if (upcomingGroupActivities.length > 0)
         h4 #{t('activities.upcoming_activities')}:
         +activityList(upcomingGroupActivities)
-      +tagCloud(users, group.color)   
+      +tagCloud
       if (blogposts.length > 0)
          +blogposts-panel(blogposts)
+
+block scripts
+  +tagCloudScript(users, group.color)

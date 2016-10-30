@@ -19,7 +19,8 @@ block content
 block scripts
   script.
     $('.currency').each(function () {
-      /* eslint no-console: 0 */
       $(this).autoNumeric('init');
     });
+  +stripeScript(paymentInfo)
+  script(src='/clientscripts/check-paymentform.js')
       
