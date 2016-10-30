@@ -36,12 +36,12 @@ module.exports = {
     return enrich({event: e.REGISTERED_PARTICIPANT_FROM_WAITINGLIST, roomType, duration, memberId, joinedSoCraTes: joinedSoCraTes.valueOf()});
   },
 
-  didNotRegisterParticipantFromWaitinglistASecondTime: function (roomType, duration, memberId) {
-    return enrich({event: e.DID_NOT_REGISTER_PARTICIPANT_FROM_WAITINGLIST_A_SECOND_TIME, roomType, duration, memberId});
+  didNotRegisterParticipantFromWaitinglistASecondTime: function (roomType, memberId) {
+    return enrich({event: e.DID_NOT_REGISTER_PARTICIPANT_FROM_WAITINGLIST_A_SECOND_TIME, roomType, memberId});
   },
 
-  didNotRegisterParticipantFromWaitinglistBecauseTheyWereNotOnWaitinglist: function (roomType, duration, memberId) {
-    return enrich({event: e.DID_NOT_REGISTER_PARTICIPANT_FROM_WAITINGLIST_BECAUSE_THEY_WERE_NOT_ON_WAITINGLIST, roomType, duration, memberId});
+  didNotRegisterParticipantFromWaitinglistBecauseTheyWereNotOnWaitinglist: function (roomType, memberId) {
+    return enrich({event: e.DID_NOT_REGISTER_PARTICIPANT_FROM_WAITINGLIST_BECAUSE_THEY_WERE_NOT_ON_WAITINGLIST, roomType, memberId});
   },
 
   // removal:

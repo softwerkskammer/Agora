@@ -102,9 +102,7 @@ app.post('/submit', (req, res, next) => {
 // for management tables:
 
 app.get('/fromWaitinglistToParticipant/:roomType/:nickname', (req, res) => {
-  const duration = 2;
-
-  socratesActivitiesService.fromWaitinglistToParticipant({nickname: req.params.nickname, roomType: req.params.roomType, duration}, moment.tz(), err => {
+  socratesActivitiesService.fromWaitinglistToParticipant({nickname: req.params.nickname, roomType: req.params.roomType}, moment.tz(), err => {
     if (err) { return res.send('Error: ' + err); }
     res.send('-> Teilnehmer');
   });
