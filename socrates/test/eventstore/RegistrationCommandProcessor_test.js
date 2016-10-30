@@ -1,53 +1,52 @@
 /*eslint no-underscore-dangle: 0*/
 'use strict';
 
-var expect = require('must-dist');
-var moment = require('moment-timezone');
-var _ = require('lodash');
-var R = require('ramda');
+const expect = require('must-dist');
+const moment = require('moment-timezone');
+const R = require('ramda');
 
-var beans = require('../../testutil/configureForTest').get('beans');
-var events = beans.get('events');
-var GlobalEventStore = beans.get('GlobalEventStore');
-var RegistrationWriteModel = beans.get('RegistrationWriteModel');
-var RegistrationReadModel = beans.get('RegistrationReadModel');
-var SoCraTesReadModel = beans.get('SoCraTesReadModel');
-var RegistrationCommandProcessor = beans.get('RegistrationCommandProcessor');
-var e = beans.get('eventConstants');
+const beans = require('../../testutil/configureForTest').get('beans');
+const events = beans.get('events');
+const GlobalEventStore = beans.get('GlobalEventStore');
+const RegistrationWriteModel = beans.get('RegistrationWriteModel');
+const RegistrationReadModel = beans.get('RegistrationReadModel');
+const SoCraTesReadModel = beans.get('SoCraTesReadModel');
+const RegistrationCommandProcessor = beans.get('RegistrationCommandProcessor');
+const e = beans.get('eventConstants');
 
 function stripTimestamps(someEvents) {
-  return _.map(someEvents, function (event) {
-    var newEvent = R.clone(event);
+  return someEvents.map((event) => {
+    const newEvent = R.clone(event);
     delete newEvent.timestamp;
     return newEvent;
   });
 }
 
-var aLongTimeAgo = moment.tz().subtract(40, 'minutes');
-var aShortTimeAgo = moment.tz().subtract(10, 'minutes');
-var aShorterTimeAgo = moment.tz().subtract(5, 'minutes');
+const aLongTimeAgo = moment.tz().subtract(40, 'minutes');
+const aShortTimeAgo = moment.tz().subtract(10, 'minutes');
+const aShorterTimeAgo = moment.tz().subtract(5, 'minutes');
 
-var sessionId1 = 'session-id-1';
-var sessionId2 = 'session-id-2';
-var singleBedRoom = 'single';
-var bedInDouble = 'bed_in_double';
-var junior = 'junior';
-var untilSaturday = 'untilSaturday';
-var untilSundayMorning = 'untilSundayMorning';
-var untilSundayEvening = 'untilSundayEvening';
-var memberId1 = 'member-id-1';
-var memberId2 = 'member-id-2';
+const sessionId1 = 'session-id-1';
+const sessionId2 = 'session-id-2';
+const singleBedRoom = 'single';
+const bedInDouble = 'bed_in_double';
+const junior = 'junior';
+const untilSaturday = 'untilSaturday';
+const untilSundayMorning = 'untilSundayMorning';
+const untilSundayEvening = 'untilSundayEvening';
+const memberId1 = 'member-id-1';
+const memberId2 = 'member-id-2';
 
-describe('The registration command processor', function () {
+describe('The registration command processor', () => {
 
-  var eventStore;
+  let eventStore;
 
-  beforeEach(function () {
+  beforeEach(() => {
     eventStore = new GlobalEventStore();
   });
 
-  describe('for removing registrations (removeParticipant)', function () {
-    it('removes a participant', function () {
+  describe('for removing registrations (removeParticipant)', () => {
+    it('removes a participant', () => {
       //Given (saved events)
       eventStore.state.events = [
         events.registeredParticipantFromWaitinglist(singleBedRoom, untilSaturday, memberId1, aShortTimeAgo)];
@@ -61,7 +60,8 @@ describe('The registration command processor', function () {
         {event: e.PARTICIPANT_WAS_REMOVED, roomType: singleBedRoom, memberId: memberId1}
       ]);
     });
-    it('removes no participant when not registered', function () {
+
+    it('removes no participant when not registered', () => {
       //Given (saved events)
       eventStore.state.events = [
         events.registeredParticipantFromWaitinglist(singleBedRoom, untilSaturday, memberId2, aShortTimeAgo)];
@@ -79,7 +79,8 @@ describe('The registration command processor', function () {
         }
       ]);
     });
-    it('doesnt remove the participant because its not the right room', function () {
+
+    it('doesnt remove the participant because its not the right room', () => {
       //Given (saved events)
       eventStore.state.events = [
         events.registeredParticipantFromWaitinglist(singleBedRoom, untilSaturday, memberId1, aShortTimeAgo)];
@@ -99,8 +100,8 @@ describe('The registration command processor', function () {
     });
   });
 
-  describe('for removing a waitinglist Participant (removeWaitinglistParticipant)', function () {
-    it('removes a waitinglist participant', function () {
+  describe('for removing a waitinglist Participant (removeWaitinglistParticipant)', () => {
+    it('removes a waitinglist participant', () => {
       //Given (saved events)
       eventStore.state.events = [
         events.waitinglistParticipantWasRegistered([singleBedRoom], 2, sessionId1, memberId1, aLongTimeAgo)
@@ -116,7 +117,7 @@ describe('The registration command processor', function () {
       ]);
     });
 
-    it('does not remove waitinglist participant because he is not registered', function () {
+    it('does not remove waitinglist participant because he is not registered', () => {
       //Given (saved events)
       eventStore.state.events = [
         events.waitinglistParticipantWasRegistered([singleBedRoom], 2, sessionId2, memberId2, aLongTimeAgo)
@@ -136,7 +137,7 @@ describe('The registration command processor', function () {
       ]);
     });
 
-    it('removes waitinglist participant even if the rooms do not match', function () {
+    it('removes waitinglist participant even if the rooms do not match', () => {
       //Given (saved events)
       eventStore.state.events = [
         events.waitinglistParticipantWasRegistered([singleBedRoom, bedInDouble], 2, sessionId1, memberId1, aLongTimeAgo)
@@ -152,8 +153,8 @@ describe('The registration command processor', function () {
     });
   });
 
-  describe('for changing the desired room types (changeDesiredRoomTypes)', function () {
-    it('changed the desired room types', function () {
+  describe('for changing the desired room types (changeDesiredRoomTypes)', () => {
+    it('changed the desired room types', () => {
       //Given (saved events)
       eventStore.state.events = [
         events.waitinglistParticipantWasRegistered([singleBedRoom], 2, sessionId1, memberId1, aLongTimeAgo)
@@ -174,7 +175,7 @@ describe('The registration command processor', function () {
       ]);
     });
 
-    it('does not change the desired room types because participant is not on waitinglist', function () {
+    it('does not change the desired room types because participant is not on waitinglist', () => {
       //Given (saved events)
       eventStore.state.events = [];
       const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
@@ -192,7 +193,7 @@ describe('The registration command processor', function () {
       ]);
     });
 
-    it('does not change the desired room types because it would not change anything', function () {
+    it('does not change the desired room types because it would not change anything', () => {
       //Given (saved events)
       eventStore.state.events = [
         events.waitinglistParticipantWasRegistered([singleBedRoom], 2, sessionId1, memberId1, aLongTimeAgo)
@@ -213,8 +214,8 @@ describe('The registration command processor', function () {
     });
   });
 
-  describe('for room type changes (moveParticipantToNewRoomType)', function () {
-    it('moves the participant to the new room type without caring about the new room limit', function () {
+  describe('for room type changes (moveParticipantToNewRoomType)', () => {
+    it('moves the participant to the new room type without caring about the new room limit', () => {
       // Given (saved events)
       eventStore.state.events = [
         events.roomQuotaWasSet(bedInDouble, 0),
@@ -236,7 +237,7 @@ describe('The registration command processor', function () {
         }]);
     });
 
-    it('multiple room changes keep moving the participant to the new room types', function () {
+    it('multiple room changes keep moving the participant to the new room types', () => {
       // Given (saved events)
       eventStore.state.events = [
         events.roomQuotaWasSet(bedInDouble, 0),
@@ -261,7 +262,7 @@ describe('The registration command processor', function () {
       ]);
     });
 
-    it('appends an error event if the member has not actually been a participant', function () {
+    it('appends an error event if the member has not actually been a participant', () => {
       // Given (saved events)
       eventStore.state.events = [events.roomQuotaWasSet(bedInDouble, 10)];
       const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
@@ -275,8 +276,8 @@ describe('The registration command processor', function () {
     });
   });
 
-  describe('for duration changes (setNewDurationForParticipant)', function () {
-    it('moves the participant to the new duration', function () {
+  describe('for duration changes (setNewDurationForParticipant)', () => {
+    it('moves the participant to the new duration', () => {
       // Given (saved events)
       eventStore.state.events = [
         events.roomQuotaWasSet(singleBedRoom, 10),
@@ -298,7 +299,7 @@ describe('The registration command processor', function () {
         }]);
     });
 
-    it('multiple duration changes keep moving the participant to the new duration', function () {
+    it('multiple duration changes keep moving the participant to the new duration', () => {
       // Given (saved events)
       eventStore.state.events = [
         events.roomQuotaWasSet(bedInDouble, 0),
@@ -323,7 +324,7 @@ describe('The registration command processor', function () {
       ]);
     });
 
-    it('appends an error event if the member has not actually been a participant', function () {
+    it('appends an error event if the member has not actually been a participant', () => {
       // Given (saved events)
       eventStore.state.events = [events.roomQuotaWasSet(bedInDouble, 10)];
       const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
@@ -337,8 +338,8 @@ describe('The registration command processor', function () {
     });
   });
 
-  describe('for waitinglist reservations (issueWaitinglistReservation)', function () {
-    it('reserves a spot on the waitinglist', function () {
+  describe('for waitinglist reservations (issueWaitinglistReservation)', () => {
+    it('reserves a spot on the waitinglist', () => {
       // Given (saved events)
       eventStore.state.events = [];
       const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
@@ -357,7 +358,7 @@ describe('The registration command processor', function () {
         }]);
     });
 
-    it('reserves a spot on the waitinglist when an expired reservation (from somebody else) exists', function () {
+    it('reserves a spot on the waitinglist when an expired reservation (from somebody else) exists', () => {
       // Given (saved events)
       eventStore.state.events = [
         events.waitinglistReservationWasIssued([singleBedRoom], 3, sessionId1, memberId1, aLongTimeAgo)];
@@ -378,7 +379,7 @@ describe('The registration command processor', function () {
         }]);
     });
 
-    it('disregards a reservation if there is a matching booking', function () {
+    it('disregards a reservation if there is a matching booking', () => {
       // Given (saved events)
       eventStore.state.events = [
         events.waitinglistReservationWasIssued([singleBedRoom], 2, sessionId1, memberId1, aShortTimeAgo),
@@ -400,7 +401,7 @@ describe('The registration command processor', function () {
         }]);
     });
 
-    it('does not allow a registration for any resource if there is already an active registration for the same session id', function () {
+    it('does not allow a registration for any resource if there is already an active registration for the same session id', () => {
       // Given (saved events)
       eventStore.state.events = [
         events.waitinglistReservationWasIssued([singleBedRoom], 2, sessionId1, memberId1, aShortTimeAgo)];
@@ -419,7 +420,7 @@ describe('The registration command processor', function () {
         }]);
     });
 
-    it('reserves a spot on the waitinglist for multiple rooms', function () {
+    it('reserves a spot on the waitinglist for multiple rooms', () => {
       // Given (saved events)
       eventStore.state.events = [];
       const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
@@ -441,8 +442,8 @@ describe('The registration command processor', function () {
 
   });
 
-  describe('for waitinglist registrations (registerWaitinglistParticipant)', function () {
-    it('registers a spot on the waitinglist', function () {
+  describe('for waitinglist registrations (registerWaitinglistParticipant)', () => {
+    it('registers a spot on the waitinglist', () => {
       // Given (saved events)
       eventStore.state.events = [
         events.waitinglistReservationWasIssued([singleBedRoom], 2, sessionId1, memberId1, aShortTimeAgo)];
@@ -463,7 +464,7 @@ describe('The registration command processor', function () {
         }]);
     });
 
-    it('does not register a spot on the waitinglist if there was an expired reservation', function () { // TODO books a room?
+    it('does not register a spot on the waitinglist if there was an expired reservation', () => { // TODO books a room?
       // Given (saved events)
       eventStore.state.events = [
         events.waitinglistReservationWasIssued([singleBedRoom], 2, sessionId1, memberId1, aLongTimeAgo)];
@@ -482,7 +483,7 @@ describe('The registration command processor', function () {
         }]);
     });
 
-    it('does not register a spot on the waitinglist if there was no reservation', function () { // TODO books a room?
+    it('does not register a spot on the waitinglist if there was no reservation', () => { // TODO books a room?
       // Given (saved events)
       eventStore.state.events = [];
       const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
@@ -500,7 +501,7 @@ describe('The registration command processor', function () {
         }]);
     });
 
-    it('does not register the participant again if already registered', function () {
+    it('does not register the participant again if already registered', () => {
       //Given (saved events)
       eventStore.state.events = [
         events.waitinglistParticipantWasRegistered([singleBedRoom], 2, sessionId1, memberId1, aLongTimeAgo)
@@ -520,7 +521,7 @@ describe('The registration command processor', function () {
         }]);
     });
 
-    it('does not register waitinglist participant a second time, even if the desired room types differ', function () {
+    it('does not register waitinglist participant a second time, even if the desired room types differ', () => {
       //Given (saved events)
       eventStore.state.events = [
         events.waitinglistParticipantWasRegistered([singleBedRoom], 2, sessionId1, memberId1, aLongTimeAgo)
@@ -540,7 +541,7 @@ describe('The registration command processor', function () {
         }]);
     });
 
-    it('registers a spot on the waitinglist for multiple desired rooms', function () {
+    it('registers a spot on the waitinglist for multiple desired rooms', () => {
       // Given (saved events)
       eventStore.state.events = [
         events.waitinglistReservationWasIssued([singleBedRoom, bedInDouble], 2, sessionId1, memberId1, aShortTimeAgo)];
@@ -562,35 +563,34 @@ describe('The registration command processor', function () {
     });
   });
 
-  describe('for registering participants from the waitinglist (fromWaitinglistToParticipant)', function () {
-    it('does not register a participant if he is not on the waitinglist', function () {
+  describe('for registering participants from the waitinglist (fromWaitinglistToParticipant)', () => {
+    it('does not register a participant if he is not on the waitinglist', () => {
       //Given (saved events)
       eventStore.state.events = [];
       const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       //When (issued command)
-      const event = commandProcessor.fromWaitinglistToParticipant(singleBedRoom, memberId1, untilSaturday, aShortTimeAgo);
+      const event = commandProcessor.fromWaitinglistToParticipant(singleBedRoom, memberId1, aShortTimeAgo);
 
       //Then (new events)
       expect(stripTimestamps([event])).to.eql([
         {
           event: e.DID_NOT_REGISTER_PARTICIPANT_FROM_WAITINGLIST_BECAUSE_THEY_WERE_NOT_ON_WAITINGLIST,
           roomType: singleBedRoom,
-          memberId: memberId1,
-          duration: untilSaturday
+          memberId: memberId1
         }
       ]);
     });
 
-    it('registers a participant who is on the waitinglist', function () {
+    it('registers a participant who is on the waitinglist', () => {
       //Given (saved events)
       eventStore.state.events = [
-        events.waitinglistParticipantWasRegistered([singleBedRoom, bedInDouble], 2, sessionId1, memberId1, aLongTimeAgo)
+        events.waitinglistParticipantWasRegistered([singleBedRoom, bedInDouble], 3, sessionId1, memberId1, aLongTimeAgo)
       ];
       const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       //When (issued command)
-      const event = commandProcessor.fromWaitinglistToParticipant(singleBedRoom, memberId1, untilSaturday, aShortTimeAgo);
+      const event = commandProcessor.fromWaitinglistToParticipant(singleBedRoom, memberId1, aShortTimeAgo);
 
       //Then (new events)
       expect(stripTimestamps([event])).to.eql([
@@ -598,48 +598,28 @@ describe('The registration command processor', function () {
           event: e.REGISTERED_PARTICIPANT_FROM_WAITINGLIST,
           roomType: singleBedRoom,
           memberId: memberId1,
-          duration: untilSaturday,
+          duration: 3,
           joinedSoCraTes: aShortTimeAgo.valueOf()
         }
       ]);
     });
 
-    it('does not register the participant again if he registered directly', function () {
+    it('does not register the participant again if he is already registered', () => {
       //Given (saved events)
       eventStore.state.events = [
-        events.registeredParticipantFromWaitinglist(singleBedRoom, untilSaturday, memberId1, aShortTimeAgo)
+        events.waitinglistParticipantWasRegistered([singleBedRoom, bedInDouble], 2, sessionId1, memberId1, aLongTimeAgo),
+        events.registeredParticipantFromWaitinglist(singleBedRoom, 2, memberId1, aShortTimeAgo)
       ];
       const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       //When (issued command)
-      const event = commandProcessor.fromWaitinglistToParticipant(singleBedRoom, memberId1, untilSaturday, aShorterTimeAgo);
+      const event = commandProcessor.fromWaitinglistToParticipant(singleBedRoom, memberId1, aShorterTimeAgo);
 
       //Then (new events)
       expect(stripTimestamps([event])).to.eql([
         {
           event: e.DID_NOT_REGISTER_PARTICIPANT_FROM_WAITINGLIST_A_SECOND_TIME,
           memberId: memberId1,
-          duration: untilSaturday,
-          roomType: singleBedRoom
-        }
-      ]);
-    });
-    it('does not register the participant again if he registered from the waitinglist', function () {
-      //Given (saved events)
-      eventStore.state.events = [
-        events.registeredParticipantFromWaitinglist(singleBedRoom, untilSaturday, memberId1, aLongTimeAgo)
-      ];
-      const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
-
-      //When (issued command)
-      const event = commandProcessor.fromWaitinglistToParticipant(singleBedRoom, memberId1, untilSaturday, aShortTimeAgo);
-
-      //Then (new events)
-      expect(stripTimestamps([event])).to.eql([
-        {
-          event: e.DID_NOT_REGISTER_PARTICIPANT_FROM_WAITINGLIST_A_SECOND_TIME,
-          memberId: memberId1,
-          duration: untilSaturday,
           roomType: singleBedRoom
         }
       ]);

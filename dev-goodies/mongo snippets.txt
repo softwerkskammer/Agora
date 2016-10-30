@@ -11,10 +11,10 @@ db.activitystore.remove({url: "socrates-2015"})
 -- delete SoCraTes 2016
 db.eventstore.remove({url: "socrates-2016"})
 
--- delete all registration events:
-db.eventstore.update({url: "socrates-2016"}, {$set: {"registrationEvents": []}})
--- delete all rooms events:
-db.eventstore.update({url: "socrates-2016"}, {$set: {"roomsEvents": []}})
+-- delete all events:
+db.eventstore.update({url: "socrates-2017"}, {$set: {"events": []}})
+-- delete all events of type "REGISTERED_PARTICIPANT_FROM_WAITINGLIST":
+db.eventstore.update({url: "socrates-2017"}, {$pull: {"events": {event: "REGISTERED_PARTICIPANT_FROM_WAITINGLIST"}}})
 
 -- delete the registration of a member whose id matches /git/ from SoCraTes activities
 db.activitystore.update({url: "socrates-2015"}, {$pull: {"resources.bed_in_double._registeredMembers": {memberId: /git/}}})
