@@ -1,17 +1,17 @@
 /*eslint no-underscore-dangle: 0*/
 'use strict';
 
-var moment = require('moment-timezone');
+const moment = require('moment-timezone');
 
-var beans = require('simple-configure').get('beans');
-var events = beans.get('events');
-var misc = beans.get('misc');
+const beans = require('simple-configure').get('beans');
+const events = beans.get('events');
+const misc = beans.get('misc');
 
 function RegistrationCommandProcessor(writeModel) {
   this.writeModel = writeModel;
 }
 
-RegistrationCommandProcessor.prototype.removeParticipant = function (roomType, memberId) {
+RegistrationCommandProcessor.prototype.removeParticipant = function removeParticipant(roomType, memberId) {
   if (!this.writeModel.isAlreadyRegistered(memberId)) {
     return events.didNotRemoveParticipantBecauseTheyAreNotRegistered(roomType, memberId);
   } else if (!this.writeModel.isRegisteredInRoomType(memberId, roomType)) {
@@ -22,7 +22,7 @@ RegistrationCommandProcessor.prototype.removeParticipant = function (roomType, m
   }
 };
 
-RegistrationCommandProcessor.prototype.removeWaitinglistParticipant = function (desiredRoomTypes, memberId) {
+RegistrationCommandProcessor.prototype.removeWaitinglistParticipant = function removeWaitinglistParticipant(desiredRoomTypes, memberId) {
   if (!this.writeModel.isAlreadyOnWaitinglist(memberId)) {
     return events.didNotRemoveWaitinglistParticipantBecauseTheyAreNotRegistered(desiredRoomTypes, memberId);
   } else {
@@ -31,7 +31,7 @@ RegistrationCommandProcessor.prototype.removeWaitinglistParticipant = function (
   }
 };
 
-RegistrationCommandProcessor.prototype.changeDesiredRoomTypes = function (memberId, desiredRoomTypes) {
+RegistrationCommandProcessor.prototype.changeDesiredRoomTypes = function changeDesiredRoomTypes(memberId, desiredRoomTypes) {
   if (!desiredRoomTypes) {
     return events.didNotChangeDesiredRoomTypesBecauseNoRoomTypesWereSelected(memberId);
   } else if (!this.writeModel.isAlreadyOnWaitinglist(memberId)) {
@@ -40,26 +40,26 @@ RegistrationCommandProcessor.prototype.changeDesiredRoomTypes = function (member
     return events.didNotChangeDesiredRoomTypesBecauseThereWasNoChange(memberId, desiredRoomTypes);
   } else {
     // all is well
-    var waitinglistReservation = this.writeModel.waitinglistParticipantEventFor(memberId);
+    const waitinglistReservation = this.writeModel.waitinglistParticipantEventFor(memberId);
     return events.desiredRoomTypesWereChanged(memberId, desiredRoomTypes, moment(waitinglistReservation.joinedWaitinglist));
   }
 };
 
-RegistrationCommandProcessor.prototype.moveParticipantToNewRoomType = function (memberId, roomType) {
-  var existingParticipantEvent = this.writeModel.participantEventFor(memberId);
+RegistrationCommandProcessor.prototype.moveParticipantToNewRoomType = function moveParticipantToNewRoomType(memberId, roomType) {
+  const existingParticipantEvent = this.writeModel.participantEventFor(memberId);
   return existingParticipantEvent
     ? events.roomTypeWasChanged(memberId, roomType, existingParticipantEvent.duration, moment(existingParticipantEvent.joinedSoCraTes))
     : events.didNotChangeRoomTypeForNonParticipant(memberId, roomType);
 };
 
-RegistrationCommandProcessor.prototype.setNewDurationForParticipant = function (memberId, duration) {
-  var existingParticipantEvent = this.writeModel.participantEventFor(memberId);
+RegistrationCommandProcessor.prototype.setNewDurationForParticipant = function setNewDurationForParticipant(memberId, duration) {
+  const existingParticipantEvent = this.writeModel.participantEventFor(memberId);
   return existingParticipantEvent
     ? events.durationWasChanged(memberId, existingParticipantEvent.roomType, duration, moment(existingParticipantEvent.joinedSoCraTes))
     : events.didNotChangeDurationForNonParticipant(memberId, duration);
 };
 
-RegistrationCommandProcessor.prototype.issueWaitinglistReservation = function (desiredRoomTypes, duration, sessionId, memberId, joinedWaitinglist) {
+RegistrationCommandProcessor.prototype.issueWaitinglistReservation = function issueWaitinglistReservation(desiredRoomTypes, duration, sessionId, memberId, joinedWaitinglist) {
   if (this.writeModel.alreadyHasWaitinglistReservation(sessionId)) {
     // session id already reserved a spot -> TODO change that in order to enable changes to the waitinglist by the user
     return events.didNotIssueWaitinglistReservationForAlreadyReservedSession(desiredRoomTypes, sessionId, memberId);
@@ -69,7 +69,7 @@ RegistrationCommandProcessor.prototype.issueWaitinglistReservation = function (d
   }
 };
 
-RegistrationCommandProcessor.prototype.registerWaitinglistParticipant = function (desiredRoomTypes, duration, sessionId, memberId) {
+RegistrationCommandProcessor.prototype.registerWaitinglistParticipant = function registerWaitinglistParticipant(desiredRoomTypes, duration, sessionId, memberId) {
   if (this.writeModel.isAlreadyRegistered(memberId) || this.writeModel.isAlreadyOnWaitinglist(memberId)) {
     // TODO change that in order to enable changes to the waitinglist by the user
     return events.didNotRegisterWaitinglistParticipantASecondTime(desiredRoomTypes, sessionId, memberId);
@@ -82,19 +82,20 @@ RegistrationCommandProcessor.prototype.registerWaitinglistParticipant = function
   }
 };
 
-RegistrationCommandProcessor.prototype.fromWaitinglistToParticipant = function (roomType, memberId, duration, joinedSoCraTes) {
+RegistrationCommandProcessor.prototype.fromWaitinglistToParticipant = function fromWaitinglistToParticipant(roomType, memberId, joinedSoCraTes) {
   if (this.writeModel.isAlreadyRegistered(memberId)) {
-    return events.didNotRegisterParticipantFromWaitinglistASecondTime(roomType, duration, memberId);
+    return events.didNotRegisterParticipantFromWaitinglistASecondTime(roomType, memberId);
   } else if (!this.writeModel.isAlreadyOnWaitinglist(memberId)) {
-    return events.didNotRegisterParticipantFromWaitinglistBecauseTheyWereNotOnWaitinglist(roomType, duration, memberId);
+    return events.didNotRegisterParticipantFromWaitinglistBecauseTheyWereNotOnWaitinglist(roomType, memberId);
   } else {
     // all is well
-    return events.registeredParticipantFromWaitinglist(roomType, duration, memberId, joinedSoCraTes);
+    const waitinglistEvent = this.writeModel.waitinglistParticipantEventFor(memberId);
+    return events.registeredParticipantFromWaitinglist(roomType, waitinglistEvent.duration, memberId, joinedSoCraTes);
   }
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-RegistrationCommandProcessor.prototype.eventStore = function () {
+RegistrationCommandProcessor.prototype.eventStore = function eventStore() {
   return this.writeModel.eventStore();
 };
 

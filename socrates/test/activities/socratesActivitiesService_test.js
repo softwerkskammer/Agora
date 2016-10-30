@@ -87,7 +87,7 @@ describe('SoCraTes Activities Service', function () {
       eventStore.state.events = [
         events.waitinglistParticipantWasRegistered(['single'], 2, 'sessionId', 'memberId', aLongTimeAgo)];
 
-      socratesActivitiesService.fromWaitinglistToParticipant({nickname: 'nickname', roomType: 'single', duration: 2}, now, function (err) {
+      socratesActivitiesService.fromWaitinglistToParticipant({nickname: 'nickname', roomType: 'single'}, now, function (err) {
         expect(stripTimestamps(saveEventStore.firstCall.args[0].state.events)).to.eql([
           {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionId: 'sessionId', desiredRoomTypes: ['single'], duration: 2, memberId: 'memberId', joinedWaitinglist: aLongTimeAgo.valueOf()},
           {event: e.REGISTERED_PARTICIPANT_FROM_WAITINGLIST, roomType: 'single', memberId: 'memberId', duration: 2, joinedSoCraTes: now.valueOf()}]);
@@ -103,9 +103,9 @@ describe('SoCraTes Activities Service', function () {
 
     it('does not register the user when he is not on the waitinglist', function (done) {
 
-      socratesActivitiesService.fromWaitinglistToParticipant({nickname: 'nickname', roomType: 'single', duration: 2}, now, function (err) {
+      socratesActivitiesService.fromWaitinglistToParticipant({nickname: 'nickname', roomType: 'single'}, now, function (err) {
         expect(stripTimestamps(saveEventStore.firstCall.args[0].state.events)).to.eql([
-          {event: e.DID_NOT_REGISTER_PARTICIPANT_FROM_WAITINGLIST_BECAUSE_THEY_WERE_NOT_ON_WAITINGLIST, roomType: 'single', memberId: 'memberId', duration: 2}]);
+          {event: e.DID_NOT_REGISTER_PARTICIPANT_FROM_WAITINGLIST_BECAUSE_THEY_WERE_NOT_ON_WAITINGLIST, roomType: 'single', memberId: 'memberId'}]);
 
         expect(newParticipantNotification.called).to.be.false();
         done(err);
@@ -117,7 +117,7 @@ describe('SoCraTes Activities Service', function () {
         events.roomQuotaWasSet('single', 0),
         events.waitinglistParticipantWasRegistered(['single'], 2, 'sessionId', 'memberId', aLongTimeAgo)];
 
-      socratesActivitiesService.fromWaitinglistToParticipant({nickname: 'nickname', roomType: 'single', duration: 2}, now, function (err) {
+      socratesActivitiesService.fromWaitinglistToParticipant({nickname: 'nickname', roomType: 'single'}, now, function (err) {
         expect(stripTimestamps(saveEventStore.firstCall.args[0].state.events)).to.eql([
           {event: e.ROOM_QUOTA_WAS_SET, roomType: 'single', quota: 0},
           {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionId: 'sessionId', desiredRoomTypes: ['single'], duration: 2, memberId: 'memberId', joinedWaitinglist: aLongTimeAgo.valueOf()},
@@ -135,7 +135,7 @@ describe('SoCraTes Activities Service', function () {
         events.waitinglistParticipantWasRegistered(['single'], 2, 'sessionId', 'memberId', aLongTimeAgo)
       ];
 
-      socratesActivitiesService.fromWaitinglistToParticipant({nickname: 'nickname', roomType: 'single', duration: 2}, now, function (err) {
+      socratesActivitiesService.fromWaitinglistToParticipant({nickname: 'nickname', roomType: 'single'}, now, function (err) {
         expect(stripTimestamps(saveEventStore.firstCall.args[0].state.events)).to.eql([
           {event: e.ROOM_QUOTA_WAS_SET, roomType: 'single', quota: 1},
           {event: e.REGISTERED_PARTICIPANT_FROM_WAITINGLIST, roomType: 'single', memberId: 'otherMemberId', duration: 3, joinedSoCraTes: aLongTimeAgo.valueOf()},
@@ -153,11 +153,11 @@ describe('SoCraTes Activities Service', function () {
         events.waitinglistParticipantWasRegistered(['single'], 2, 'sessionId', 'memberId', aLongTimeAgo)
       ];
 
-      socratesActivitiesService.fromWaitinglistToParticipant({nickname: 'nickname', roomType: 'single', duration: 2}, now, function (err) {
+      socratesActivitiesService.fromWaitinglistToParticipant({nickname: 'nickname', roomType: 'single'}, now, function (err) {
         expect(stripTimestamps(saveEventStore.firstCall.args[0].state.events)).to.eql([
           {event: e.REGISTERED_PARTICIPANT_FROM_WAITINGLIST, roomType: 'junior', memberId: 'memberId', duration: 3, joinedSoCraTes: aLongTimeAgo.valueOf()},
           {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, sessionId: 'sessionId', desiredRoomTypes: ['single'], duration: 2, memberId: 'memberId', joinedWaitinglist: aLongTimeAgo.valueOf()},
-          {event: e.DID_NOT_REGISTER_PARTICIPANT_FROM_WAITINGLIST_A_SECOND_TIME, roomType: 'single', memberId: 'memberId', duration: 2}]);
+          {event: e.DID_NOT_REGISTER_PARTICIPANT_FROM_WAITINGLIST_A_SECOND_TIME, roomType: 'single', memberId: 'memberId'}]);
 
         expect(newParticipantNotification.called).to.be.false();
         done(err);
@@ -165,7 +165,7 @@ describe('SoCraTes Activities Service', function () {
     });
 
     it('does not register the user if the nickname is empty', function (done) {
-      socratesActivitiesService.fromWaitinglistToParticipant({nickname: '', roomType: 'single', duration: 4}, now, function (err) {
+      socratesActivitiesService.fromWaitinglistToParticipant({nickname: '', roomType: 'single'}, now, function (err) {
         expect(saveEventStore.called).to.be.false();
         expect(newParticipantNotification.called).to.be.false();
         expect(err.errors).to.eql(['An empty nickname is invalid!']);
@@ -174,19 +174,10 @@ describe('SoCraTes Activities Service', function () {
     });
 
     it('does not register the user if the room type is invalid', function (done) {
-      socratesActivitiesService.fromWaitinglistToParticipant({nickname: 'nickname', roomType: 'unknown', duration: 4}, now, function (err) {
+      socratesActivitiesService.fromWaitinglistToParticipant({nickname: 'nickname', roomType: 'unknown'}, now, function (err) {
         expect(saveEventStore.called).to.be.false();
         expect(newParticipantNotification.called).to.be.false();
         expect(err.errors).to.eql(['The room type is invalid!']);
-        done();
-      });
-    });
-
-    it('does not register the user if the duration is invalid', function (done) {
-      socratesActivitiesService.fromWaitinglistToParticipant({nickname: 'nickname', roomType: 'single', duration: 0}, now, function (err) {
-        expect(saveEventStore.called).to.be.false();
-        expect(newParticipantNotification.called).to.be.false();
-        expect(err.errors).to.eql(['The duration is invalid!']);
         done();
       });
     });
