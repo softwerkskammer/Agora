@@ -1,8 +1,8 @@
 extends ../../../views/layout
 include ../../../../softwerkskammer/lib/members/views/memberlist-mixin
-include ../../../../softwerkskammer/views/format-mixin
-include ../../../../softwerkskammer/views/formComponents
-include ../../../../softwerkskammer/views/dataTables-mixin
+include ../../../../commonComponents/pug/format-mixin
+include ../../../../commonComponents/pug/formComponents
+include ../../../../commonComponents/pug/dataTables-mixin
 
 mixin individualRoom(roomType)
   -var participants = participantsOf[roomType]

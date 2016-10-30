@@ -1,5 +1,5 @@
-include ../../../views/formComponents
-include ../../../views/imageUpload
+include ../../../../commonComponents/pug/formComponents
+include ../../../../commonComponents/pug/imageUpload
 
 mixin avatar(member, returnToParticipantsListing)
   if(accessrights.canEditMember(member))
@@ -49,6 +49,8 @@ mixin editavatar(member, returnToParticipantsListing)
       +hidden('y')
       +hidden('h')
       +hidden('w')
+
+mixin avatarscript
   script.
     $(function () {
       var preview = $('img#preview');

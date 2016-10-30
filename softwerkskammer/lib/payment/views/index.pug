@@ -15,3 +15,12 @@ block content
       +paymentMoneyTransfer(paymentInfo)
     .col-md-6
       +paymentCreditCard(paymentInfo, placeholder, '/payment/submitCreditCard')
+
+block scripts
+  script.
+    $('.currency').each(function () {
+      $(this).autoNumeric('init');
+    });
+  +stripeScript(paymentInfo)
+  script(src='/clientscripts/check-paymentform.js')
+      

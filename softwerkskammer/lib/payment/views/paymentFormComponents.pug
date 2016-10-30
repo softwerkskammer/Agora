@@ -1,4 +1,4 @@
-include ../../../views/formComponents
+include ../../../../commonComponents/pug/formComponents
 
 mixin stripeScript(paymentInfo)
   script(type='text/javascript', src='https://js.stripe.com/v2/')
@@ -33,13 +33,19 @@ mixin stripeScript(paymentInfo)
     };
 
     $(connectHandlers);
-    
+
+    $('.currency').each(function () {
+      $(this).autoNumeric();
+    });
+
     function amountHandler() {
-      var amount = $('#amount').autoNumeric('get');
+      var amount = $('.currency').autoNumeric('get');
         $.get('/payment/calcFee/' + amount, null, function (fee) {
         $('.fee').each(function () { $(this).html(fee); });
       });
     }
+    $('.currency').keyup(amountHandler)
+
 
 
 mixin paymentMoneyTransfer(paymentInfo, actionUrl, amount, id)
@@ -71,8 +77,6 @@ mixin paymentMoneyTransfer(paymentInfo, actionUrl, amount, id)
             button.btn.btn-primary.pull-right(type='submit') #{t('payment.transferred')}
 
 mixin paymentCreditCard(paymentInfo, placeholder, actionUrl, amount, fee, description, id)
-  +stripeScript(paymentInfo)
-  script(src='/clientscripts/check-paymentform.js')
   .panel.panel-default
     .panel-heading
       h4.panel-title #{t('payment.credit_card')} &nbsp;
@@ -106,7 +110,6 @@ mixin paymentCreditCard(paymentInfo, placeholder, actionUrl, amount, fee, descri
           else
             +text('description', t('payment.description'), paymentInfo.description, undefined, t('payment.description'))
             +currency('amount', t('payment.amount'), '', undefined, placeholder + ' €')
-            script $('#amount').keyup(amountHandler)
           p
             b #{t('payment.handling_fee')}:
             if (fee)

@@ -1,4 +1,4 @@
-include  ../../../views/formComponents
+include ../../../../commonComponents/pug/formComponents
 mixin participationinfoform(roomOptions, registration)
   .row
     .col-md-6
@@ -106,20 +106,3 @@ mixin participationinfoform(roomOptions, registration)
                 if (!registration.isPossible)
                   .row
                   p.pull-right (i.e. in #{registration.opensIn.days} days, #{registration.opensIn.hours} hours, #{registration.opensIn.minutes} minutes)
-
-        script.
-          $(function () {
-            var selectedOptions = '#{registration.selectedOptions}'.split(';');
-            selectedOptions.forEach(function (option) {
-              const roomWithDuration = option.split(',');
-              if (roomWithDuration.length === 3) { //waitinglist
-                $('input[value="' + roomWithDuration[2] + '"]').attr('checked', 'checked');
-                $('input[value="' + roomWithDuration[0] + '"]').attr('checked', 'checked');
-              } else { //must be the booked bed
-                var bookedRoom = $('#' + roomWithDuration[0] + roomWithDuration[1])
-                bookedRoom.parent().addClass('bg-success')
-                bookedRoom.addClass('text-success')
-              }
-            });
-          })
-                                

@@ -35,6 +35,7 @@ module.exports = function (grunt) {
       'node_modules/select2/dist/js/i18n/de.js',
       'node_modules/fullcalendar/dist/locale/de.js',
       'locales/frontend_de.js',
+      'commonComponents/frontend-js/frontendutils.js',
       'softwerkskammer/frontend/javascript/agora.js'
     ])
   };
@@ -43,6 +44,7 @@ module.exports = function (grunt) {
     'softwerkskammer/public/clientscripts/global_en.js': commonJSfiles.concat([
       'node_modules/fullcalendar/dist/locale/en-gb.js',
       'locales/frontend_en.js',
+      'commonComponents/frontend-js/frontendutils.js',
       'softwerkskammer/frontend/javascript/agora.js'
     ])
   };
@@ -174,7 +176,7 @@ module.exports = function (grunt) {
             'softwerkskammer/frontend/3rd_party_css/dataTables.bootstrap.css',
             'softwerkskammer/frontend/3rd_party_css/dataTables.fontAwesome.css',
             'node_modules/select2/dist/css/select2.css',
-            'node_modules/select2-bootstrap-css/select2-bootstrap.css',
+            'node_modules/select2-bootstrap-theme/dist/select2-bootstrap.css',
             'node_modules/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css',
             'node_modules/guillotine/css/jquery.guillotine.css',
             'softwerkskammer/build/stylesheets/less/agora.less'

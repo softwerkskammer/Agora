@@ -11,8 +11,6 @@ mixin grouplist(title, groupsOfAKind)
         if (wikisubdirs && wikisubdirs.indexOf(group.id) > -1)
           span.tooltiplabel(data-original-title=t('wiki.gotowiki'))
             a(href='/wiki/' + group.id + '/'): i.fa.fa-book.fa-fw
-  script.
-    $('.tooltiplabel').each(function () {$(this).tooltip()})
 
 mixin placeGroupLabels(groupsOfAKind)
   each group in groupsOfAKind
