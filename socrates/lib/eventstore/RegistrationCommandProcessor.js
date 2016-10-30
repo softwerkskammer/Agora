@@ -11,30 +11,6 @@ function RegistrationCommandProcessor(writeModel) {
   this.writeModel = writeModel;
 }
 
-RegistrationCommandProcessor.prototype.issueReservation = function (roomType, duration, sessionId, memberId, joinedSoCraTes) {
-  if (this.writeModel.isFull(roomType)) {
-    return events.didNotIssueReservationForFullResource(roomType, duration, sessionId, memberId);
-  } else if (this.writeModel.alreadyHasReservation(sessionId)) {
-    // session id already reserved a spot
-    return events.didNotIssueReservationForAlreadyReservedSession(roomType, duration, sessionId, memberId);
-  } else {
-    // all is good
-    return events.reservationWasIssued(roomType, duration, sessionId, memberId, joinedSoCraTes);
-  }
-};
-
-RegistrationCommandProcessor.prototype.registerParticipant = function (roomType, duration, sessionId, memberId) {
-  if (this.writeModel.isAlreadyRegistered(memberId) || this.writeModel.isAlreadyOnWaitinglist(memberId)) {
-    return events.didNotRegisterParticipantASecondTime(roomType, duration, sessionId, memberId);
-  } else if (!this.writeModel.alreadyHasReservation(sessionId)) {
-    return events.didNotRegisterParticipantWithExpiredOrMissingReservation(roomType, duration, sessionId, memberId);
-  } else {
-    // all is well
-    const reservation = this.writeModel.reservationFor(sessionId);
-    return events.participantWasRegistered(roomType, duration, sessionId, memberId, reservation.joinedSoCraTes);
-  }
-};
-
 RegistrationCommandProcessor.prototype.removeParticipant = function (roomType, memberId) {
   if (!this.writeModel.isAlreadyRegistered(memberId)) {
     return events.didNotRemoveParticipantBecauseTheyAreNotRegistered(roomType, memberId);
@@ -110,8 +86,7 @@ RegistrationCommandProcessor.prototype.fromWaitinglistToParticipant = function (
   if (this.writeModel.isAlreadyRegistered(memberId)) {
     return events.didNotRegisterParticipantFromWaitinglistASecondTime(roomType, duration, memberId);
   } else if (!this.writeModel.isAlreadyOnWaitinglist(memberId)) {
-    // we gracefully register them nonetheless:
-    return events.participantWasRegistered(roomType, duration, undefined, memberId, joinedSoCraTes);
+    return events.didNotRegisterParticipantFromWaitinglistBecauseTheyWereNotOnWaitinglist(roomType, duration, memberId);
   } else {
     // all is well
     return events.registeredParticipantFromWaitinglist(roomType, duration, memberId, joinedSoCraTes);

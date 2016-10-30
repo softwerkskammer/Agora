@@ -134,7 +134,6 @@ describe('Registration Service', function () {
         expect(statusText).to.not.exist();
         const readModel = cache.get('socrates-url_registrationReadModel');
 
-        expect(readModel.reservationsAndParticipantsFor('single')).to.have.length(0);
         expect(readModel.waitinglistReservationsAndParticipantsFor('single')).to.have.length(1);
         expect(readModel.waitinglistReservationsAndParticipantsFor('single')[0].event).to.eql('WAITINGLIST-RESERVATION-WAS-ISSUED');
         expect(readModel.waitinglistReservationsAndParticipantsFor('single')[0].sessionId).to.eql('sessionId');
@@ -407,7 +406,7 @@ describe('Registration Service', function () {
       registrationBody.desiredRoomTypes = 'single';
 
       eventStore.state.events = [
-        events.participantWasRegistered('single', 2, registrationBody.sessionId, 'memberId', aShortTimeAgo),
+        events.registeredParticipantFromWaitinglist('single', 2, 'memberId', aShortTimeAgo),
         events.waitinglistReservationWasIssued([registrationBody.desiredRoomTypes], 2, registrationBody.sessionId, 'memberId', aShortTimeAgo)
       ];
 
@@ -415,8 +414,7 @@ describe('Registration Service', function () {
         const savedEventStore = saveEventStoreStub.firstCall.args[0];
         expect(stripTimestamps(savedEventStore.state.events)).to.eql([
           {
-            event: e.PARTICIPANT_WAS_REGISTERED,
-            sessionId: 'sessionId',
+            event: e.REGISTERED_PARTICIPANT_FROM_WAITINGLIST,
             roomType: 'single',
             duration: 2,
             memberId: 'memberId',
