@@ -12,12 +12,11 @@ html
     meta(charset='utf-8')
     meta(name='viewport', content='width=device-width, initial-scale=1.0')
     link(href='/stylesheets/screen.css', rel='stylesheet')
-    link(href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,400italic,600italic|PT+Serif+Caption:400,400italic|PT+Serif:400,700,400italic,700italic|Source+Code+Pro:400,600', rel='stylesheet', type='text/css')
     link(rel='apple-touch-icon', href='/img/apple-touch-icon-60x60-precomposed.png')
     link(rel='apple-touch-icon', href='/img/apple-touch-icon-76x76-precomposed.png')
     link(rel='apple-touch-icon', href='/img/apple-touch-icon-120x120-precomposed.png')
     link(rel='apple-touch-icon', href='/img/apple-touch-icon-152x152-precomposed.png')
-      
+  
     title
       block title
     block extrahead
@@ -30,5 +29,6 @@ html
         .modal-content
     block specific
 
-  script(src='/clientscripts/global.js')
-  block scripts
+link(href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,400italic,600italic|PT+Serif+Caption:400,400italic|PT+Serif:400,700,400italic,700italic|Source+Code+Pro:400,600', rel='stylesheet', type='text/css')
+script(src='/clientscripts/global.js')
+block scripts

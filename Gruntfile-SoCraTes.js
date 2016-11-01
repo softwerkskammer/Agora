@@ -125,7 +125,9 @@ module.exports = function (grunt) {
     less: {
       minify: {
         options: {
-          cleancss: true,
+          plugins: [
+            new (require('less-plugin-clean-css'))()
+          ],
           report: 'min'
         },
         files: {
@@ -135,8 +137,8 @@ module.exports = function (grunt) {
             'node_modules/node-syntaxhighlighter/lib/styles/shCoreDefault.css',
             'node_modules/drmonty-smartmenus/css/jquery.smartmenus.bootstrap.css',
             'socrates/build/stylesheets/less/bootstrap-markdown-patched.less',
-            'node_modules/datatables.net-dt/css/jquery.dataTables.css',
-            'softwerkskammer/frontend/3rd_party_css/dataTables.bootstrap.css',
+            'node_modules/datatables.net-bs/css/dataTables.bootstrap.css',
+            'softwerkskammer/frontend/3rd_party_css/dataTables.fontAwesome.css',
             'node_modules/select2/dist/css/select2.css',
             'node_modules/select2-bootstrap-theme/dist/select2-bootstrap.css',
             'softwerkskammer/frontend/3rd_party_css/dataTables.fontAwesome.css',
