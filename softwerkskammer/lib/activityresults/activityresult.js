@@ -1,93 +1,75 @@
 'use strict';
-var _ = require('lodash');
-var moment = require('moment-timezone');
+const R = require('ramda');
+const moment = require('moment-timezone');
 
-function Photo(data) {
-  this.state = data || {};
+class Photo {
+  constructor(data) { this.state = data || {}; }
+
+  id() { return this.state.id; }
+
+  tags() { return this.state.tags || []; }
+
+  title() { return this.state.title; }
+
+  uri() { return this.state.uri || '/gallery/' + this.id(); }
+
+  uploadedBy() { return this.state.uploaded_by; }
+
+  time() { return moment(this.state.timestamp); }
+
+  updateTitleTagsAndTimestamp(data) {
+    this.state.title = data.title;
+    this.state.tags = data.tags;
+    this.state.timestamp = data.timestamp;
+  }
 }
 
-Photo.prototype.id = function () {
-  return this.state.id;
-};
+class ActivityResult {
+  constructor(data) {
+    if (!data.photos) { data.photos = []; }
+    if (!data.tags) { data.tags = []; }
+    this.state = data;
+  }
 
-Photo.prototype.tags = function () {
-  return this.state.tags || [];
-};
+  id() { return this.state.id; }
 
-Photo.prototype.title = function () {
-  return this.state.title;
-};
+  photos() {
+    return this.state.photos.map(photo => new Photo(photo));
+  }
 
-Photo.prototype.uri = function () {
-  return this.state.uri || '/gallery/' + this.id();
-};
+  tags() { return this.state.tags; }
 
-Photo.prototype.uploadedBy = function () {
-  return this.state.uploaded_by;
-};
+  getPhotoById(id) {
+    return this.photos().find(photo => photo.id() === id);
+  }
 
-Photo.prototype.time = function () {
-  return moment(this.state.timestamp);
-};
+  updatePhotoById(id, data) {
+    this.getPhotoById(id).updateTitleTagsAndTimestamp(data);
+  }
 
-function ActivityResult(data) {
-  if (!data.photos) { data.photos = []; }
-  if (!data.tags) { data.tags = []; }
-  this.state = data;
-}
+  deletePhotoById(id) {
+    this.state.photos = R.reject(photo => photo.id === id, this.state.photos);
+  }
 
-ActivityResult.prototype.id = function () {
-  return this.state.id;
-};
+  addPhoto(photo) { this.state.photos.push(photo); }
 
-ActivityResult.prototype.photos = function () {
-  return _.map(this.state.photos, function (photo) {
-    return new Photo(photo);
-  });
-};
+  getDistinctPresentTags() {
+    const onlyUniqValidEntries = R.compose(R.filter(x => x), R.uniq, R.flatten);
+    return onlyUniqValidEntries(this.state.photos.map(photo => photo.tags));
+  }
 
-ActivityResult.prototype.tags = function () {
-  return this.state.tags;
-};
-
-ActivityResult.prototype.getPhotoById = function (id) {
-  return _.find(this.photos(), function (photo) {
-    return photo.id() === id;
-  });
-};
-
-ActivityResult.prototype.updatePhotoById = function (id, data) {
-  _.assign(this.getPhotoById(id).state, data);
-};
-
-ActivityResult.prototype.deletePhotoById = function (id) {
-  _.remove(this.state.photos, {id: id});
-};
-
-ActivityResult.prototype.addPhoto = function (photo) {
-  this.state.photos.push(photo);
-};
-
-ActivityResult.prototype.getDistinctPresentTags = function () {
-  return _(this.state.photos).map('tags').flatten().uniq().compact().value();
-};
-
-ActivityResult.prototype.photosByDay = function () {
-  var groupedByDay = _(this.photos()).sortBy(function (photo) {
-    return photo.time();
-  }).groupBy(function (photo) {
-    return photo.time().startOf('day').valueOf();
-  }).value();
-
-  return _.transform(groupedByDay, function (result, photosOfDay, currentDayAsUnix) {
-    result.push({
-      day: moment(parseInt(currentDayAsUnix, 10)),
-      photosByTag: _.groupBy(photosOfDay, function groupByFirstTag(photo) {
-        return photo.tags()[0] || 'Everywhere';
-      })
+  photosByDay() {
+    const result = [];
+    const groupedByDay = R.groupBy(photo => photo.time().startOf('day').valueOf(), R.sortBy(photo => photo.time(), this.photos()));
+    R.keys(groupedByDay).forEach(key => {
+      result.unshift({
+        day: moment(parseInt(key, 10)),
+        photosByTag: R.groupBy(photo => { return photo.tags()[0] || 'Everywhere'; }, groupedByDay[key])
+      });
     });
-  }, []).reverse();
+    return result;
+  }
 
-};
+}
 
 module.exports = ActivityResult;
