@@ -38,7 +38,6 @@ module.exports = {
     const registrationTuple = {
       sessionId: sessionId,
       activityUrl: body.activityUrl,
-      duration: parseInt(body.duration, 10),
       desiredRoomTypes: body.desiredRoomTypes.split(',')
     };
 
@@ -50,7 +49,7 @@ module.exports = {
         eventstoreService.getRegistrationCommandProcessor(registrationTuple.activityUrl, (err, commandProcessor) => {
           if (err || !commandProcessor) { return callback(err); }
 
-          const waitinglistRegistrationEvent = commandProcessor.registerWaitinglistParticipant(registrationTuple.desiredRoomTypes, registrationTuple.duration, registrationTuple.sessionId, memberID);
+          const waitinglistRegistrationEvent = commandProcessor.registerWaitinglistParticipant(registrationTuple.desiredRoomTypes, registrationTuple.sessionId, memberID);
           return eventstoreService.saveCommandProcessor(commandProcessor, R.filter(R.identity, [waitinglistRegistrationEvent]), err1 => {
             if (err1) { return callback(err1); }
 

@@ -30,8 +30,6 @@ block content
       .col-sm-12
         +csrf
         +hidden('activityUrl', registrationTuple.activityUrl)
-        +hidden('roomType', registrationTuple.roomType)
-        +hidden('duration', registrationTuple.duration)
         +hidden('desiredRoomTypes', registrationTuple.desiredRoomTypes.toString())
         fieldset
           +memberinfoform(member, subscriber, 'members.edit_registration', allCountries)

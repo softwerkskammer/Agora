@@ -1,58 +1,57 @@
 /* eslint no-underscore-dangle: 0 */
 'use strict';
 
-var sinon = require('sinon').sandbox.create();
-var expect = require('must-dist');
-var moment = require('moment-timezone');
-var R = require('ramda');
+const sinon = require('sinon').sandbox.create();
+const expect = require('must-dist');
+const moment = require('moment-timezone');
+const R = require('ramda');
 
 const conf = require('../../testutil/configureForTest');
-var beans = conf.get('beans');
+const beans = conf.get('beans');
 const cache = conf.get('cache');
 
-var registrationService = beans.get('registrationService');
+const registrationService = beans.get('registrationService');
 
-var memberstore = beans.get('memberstore');
-var subscriberstore = beans.get('subscriberstore');
+const memberstore = beans.get('memberstore');
+const subscriberstore = beans.get('subscriberstore');
 
-var Member = beans.get('member');
-var Subscriber = beans.get('subscriber');
+const Member = beans.get('member');
+const Subscriber = beans.get('subscriber');
 
-var notifications = beans.get('socratesNotifications');
+const notifications = beans.get('socratesNotifications');
 
-var events = beans.get('events');
-var GlobalEventStore = beans.get('GlobalEventStore');
-var RegistrationCommandProcessor = beans.get('RegistrationCommandProcessor');
-var eventstore = beans.get('eventstore');
-var e = beans.get('eventConstants');
+const events = beans.get('events');
+const GlobalEventStore = beans.get('GlobalEventStore');
+const RegistrationCommandProcessor = beans.get('RegistrationCommandProcessor');
+const eventstore = beans.get('eventstore');
+const e = beans.get('eventConstants');
 
 function stripTimestamps(someEvents) {
-  return someEvents.map(function (event) {
-    var newEvent = R.clone(event);
+  return someEvents.map(event => {
+    const newEvent = R.clone(event);
     delete newEvent.timestamp;
     return newEvent;
   });
 }
 
-var now = moment.tz();
-var aShortTimeAgo = moment.tz().subtract(10, 'minutes');
-var aLongTimeAgo = moment.tz().subtract(40, 'minutes');
+const now = moment.tz();
+const aShortTimeAgo = moment.tz().subtract(10, 'minutes');
+const aLongTimeAgo = moment.tz().subtract(40, 'minutes');
 
-describe('Registration Service', function () {
+describe('Registration Service', () => {
 
-  var registrationBody;
+  let registrationBody;
 
-  var eventStore;
-  var saveSubscriberCount;
-  var saveEventStoreStub;
-  var desiredRoomsArray = ['single', 'junior'];
+  let eventStore;
+  let saveSubscriberCount;
+  let saveEventStoreStub;
+  const desiredRoomsArray = ['single', 'junior'];
 
-  beforeEach(function () {
+  beforeEach(() => {
     cache.flushAll();
 
     registrationBody = {
       activityUrl: 'socrates-url',
-      duration: 2,
       desiredRoomTypes: desiredRoomsArray.toString(),
       sessionId: 'sessionId'
     };
@@ -68,13 +67,13 @@ describe('Registration Service', function () {
     sinon.stub(notifications, 'newParticipant');
     sinon.stub(notifications, 'newWaitinglistEntry');
 
-    sinon.stub(memberstore, 'getMember', function (nickname, callback) {
+    sinon.stub(memberstore, 'getMember', (nickname, callback) => {
       callback(null, new Member({id: 'memberId'}));
     });
-    sinon.stub(subscriberstore, 'getSubscriber', function (memberId, callback) {
+    sinon.stub(subscriberstore, 'getSubscriber', (memberId, callback) => {
       callback(null, new Subscriber({id: 'memberId'}));
     });
-    sinon.stub(eventstore, 'getEventStore', function (url, callback) {
+    sinon.stub(eventstore, 'getEventStore', (url, callback) => {
       if (url === 'wrongUrl') {
         return callback(new Error('Wrong URL!'));
       }
@@ -84,25 +83,25 @@ describe('Registration Service', function () {
       return callback(null);
     });
 
-    saveEventStoreStub = sinon.stub(eventstore, 'saveEventStore', function (activity, callback) {callback();});
+    saveEventStoreStub = sinon.stub(eventstore, 'saveEventStore', (activity, callback) => {callback();});
     saveSubscriberCount = 0;
-    sinon.stub(subscriberstore, 'saveSubscriber', function (activity, callback) {
+    sinon.stub(subscriberstore, 'saveSubscriber', (activity, callback) => {
       saveSubscriberCount += 1;
       callback();
     });
   });
 
-  afterEach(function () {
+  afterEach(() => {
     sinon.restore();
   });
 
   // TODO check that other entries remain intact!
 
-  describe('starting the registration', function () {
+  describe('starting the registration', () => {
 
-    var registrationTuple;
+    let registrationTuple;
 
-    beforeEach(function () {
+    beforeEach(() => {
       registrationTuple = {
         activityUrl: 'socrates-url',
         duration: 2,
@@ -111,25 +110,25 @@ describe('Registration Service', function () {
       };
     });
 
-    it('returns an error if fetching the activity produces an error', function (done) {
+    it('returns an error if fetching the activity produces an error', done => {
       registrationTuple.activityUrl = 'wrongUrl';
-      registrationService.startRegistration(registrationTuple, 'memberId', now, function (err) {
+      registrationService.startRegistration(registrationTuple, 'memberId', now, err => {
         expect(err.message).to.be('Wrong URL!');
         done();
       });
     });
 
-    it('returns a status message title and text if the activity cannot be found', function (done) {
+    it('returns a status message title and text if the activity cannot be found', done => {
       registrationTuple.activityUrl = 'unknown-url';
-      registrationService.startRegistration(registrationTuple, 'memberId', now, function (err, statusTitle, statusText) {
+      registrationService.startRegistration(registrationTuple, 'memberId', now, (err, statusTitle, statusText) => {
         expect(statusTitle).to.be('message.title.problem');
         expect(statusText).to.be('message.content.activities.does_not_exist');
         done(err);
       });
     });
 
-    it('adds the registrant to the waitinglist, stores the event and updates the read model', function (done) {
-      registrationService.startRegistration(registrationTuple, 'memberId', now, function (err, statusTitle, statusText) {
+    it('adds the registrant to the waitinglist, stores the event and updates the read model', done => {
+      registrationService.startRegistration(registrationTuple, 'memberId', now, (err, statusTitle, statusText) => {
         expect(statusTitle).to.not.exist();
         expect(statusText).to.not.exist();
         const readModel = cache.get('socrates-url_registrationReadModel');
@@ -157,12 +156,12 @@ describe('Registration Service', function () {
       });
     });
 
-    it('returns no error if waitinglist reservation fails due to duplicate reservation - let the user continue', function (done) {
+    it('returns no error if waitinglist reservation fails due to duplicate reservation - let the user continue', done => {
       registrationTuple.duration = 3;
       registrationTuple.desiredRoomTypes = ['single'];
-      sinon.stub(RegistrationCommandProcessor.prototype, 'issueWaitinglistReservation', function () {return {event: e.DID_NOT_ISSUE_WAITINGLIST_RESERVATION_FOR_ALREADY_RESERVED_SESSION}; });
+      sinon.stub(RegistrationCommandProcessor.prototype, 'issueWaitinglistReservation', () => {return {event: e.DID_NOT_ISSUE_WAITINGLIST_RESERVATION_FOR_ALREADY_RESERVED_SESSION}; });
 
-      registrationService.startRegistration(registrationTuple, 'memberId', now, function (err, statusTitle, statusText) {
+      registrationService.startRegistration(registrationTuple, 'memberId', now, (err, statusTitle, statusText) => {
         expect(statusTitle).not.exist();
         expect(statusText).to.not.exist();
         done(err);
@@ -171,31 +170,30 @@ describe('Registration Service', function () {
 
   });
 
-  describe('finishing the registration - general errors', function () {
+  describe('finishing the registration - general errors', () => {
 
-    it('returns an error if fetching the activity produces an error', function (done) {
+    it('returns an error if fetching the activity produces an error', done => {
       registrationBody.activityUrl = 'wrongUrl';
-      registrationService.completeRegistration('memberId', 'sessionId', registrationBody, function (err) {
+      registrationService.completeRegistration('memberId', 'sessionId', registrationBody, err => {
         expect(err.message).to.be('Wrong URL!');
         done();
       });
     });
 
-    it('returns nothing if the activity cannot be found', function (done) {
+    it('returns nothing if the activity cannot be found', done => {
       registrationBody.activityUrl = 'unknown-url';
-      registrationService.completeRegistration('memberId', 'sessionId', registrationBody, function (err, statusTitle, statusText) {
+      registrationService.completeRegistration('memberId', 'sessionId', registrationBody, (err, statusTitle, statusText) => {
         expect(statusTitle).to.not.exist();
         expect(statusText).to.not.exist();
         done(err);
       });
     });
 
-    it('returns error and saves subscriber info if waitinglist registration fails due to expired session', function (done) {
-      registrationBody.duration = 3;
+    it('returns error and saves subscriber info if waitinglist registration fails due to expired session', done => {
       registrationBody.desiredRoomTypes = 'single';
-      sinon.stub(RegistrationCommandProcessor.prototype, 'registerWaitinglistParticipant', function () {return {event: e.DID_NOT_REGISTER_WAITINGLIST_PARTICIPANT_WITH_EXPIRED_OR_MISSING_RESERVATION};});
+      sinon.stub(RegistrationCommandProcessor.prototype, 'registerWaitinglistParticipant', () => {return {event: e.DID_NOT_REGISTER_WAITINGLIST_PARTICIPANT_WITH_EXPIRED_OR_MISSING_RESERVATION};});
 
-      registrationService.completeRegistration('memberId', 'sessionId', registrationBody, function (err, statusTitle, statusText) {
+      registrationService.completeRegistration('memberId', 'sessionId', registrationBody, (err, statusTitle, statusText) => {
         expect(statusTitle).to.be('activities.registration_problem');
         expect(statusText).to.be('activities.registration_timed_out');
         expect(saveSubscriberCount).to.be(1);
@@ -203,12 +201,11 @@ describe('Registration Service', function () {
       });
     });
 
-    it('returns error and saves subscriber info if waitinglist registration fails due to duplicate booking', function (done) {
-      registrationBody.duration = 3;
+    it('returns error and saves subscriber info if waitinglist registration fails due to duplicate booking', done => {
       registrationBody.desiredRoomTypes = 'single';
-      sinon.stub(RegistrationCommandProcessor.prototype, 'registerWaitinglistParticipant', function () {return {event: e.DID_NOT_REGISTER_WAITINGLIST_PARTICIPANT_A_SECOND_TIME};});
+      sinon.stub(RegistrationCommandProcessor.prototype, 'registerWaitinglistParticipant', () => {return {event: e.DID_NOT_REGISTER_WAITINGLIST_PARTICIPANT_A_SECOND_TIME};});
 
-      registrationService.completeRegistration('memberId', 'sessionId', registrationBody, function (err, statusTitle, statusText) {
+      registrationService.completeRegistration('memberId', 'sessionId', registrationBody, (err, statusTitle, statusText) => {
         expect(statusTitle).to.be('activities.registration_problem');
         expect(statusText).to.be('activities.already_registered');
         expect(saveSubscriberCount).to.be(1);
@@ -216,12 +213,11 @@ describe('Registration Service', function () {
       });
     });
 
-    it('returns nothing and saves subscriber info if waitinglist registration succeeds', function (done) {
-      registrationBody.duration = 3;
+    it('returns nothing and saves subscriber info if waitinglist registration succeeds', done => {
       registrationBody.desiredRoomTypes = 'single';
-      sinon.stub(RegistrationCommandProcessor.prototype, 'registerWaitinglistParticipant', function () {return events.waitinglistParticipantWasRegistered(['single'], 2, 'sessionId', 'memberId', aShortTimeAgo);});
+      sinon.stub(RegistrationCommandProcessor.prototype, 'registerWaitinglistParticipant', () => {return events.waitinglistParticipantWasRegistered(['single'], 2, 'sessionId', 'memberId', aShortTimeAgo);});
 
-      registrationService.completeRegistration('memberId', 'sessionId', registrationBody, function (err, statusTitle, statusText) {
+      registrationService.completeRegistration('memberId', 'sessionId', registrationBody, (err, statusTitle, statusText) => {
         expect(statusTitle).to.not.exist();
         expect(statusText).to.not.exist();
         expect(saveSubscriberCount).to.be(1);
@@ -231,14 +227,14 @@ describe('Registration Service', function () {
 
   });
 
-  describe('finishing the registration - normal registration', function () {
+  describe('finishing the registration - normal registration', () => {
 
-    it('adds the registrant to the resource if he has a waitinglist reservation and has a valid session entry', function (done) {
+    it('adds the registrant to the resource if he has a waitinglist reservation and has a valid session entry', done => {
       eventStore.state.events = [
         events.waitinglistReservationWasIssued(registrationBody.desiredRoomTypes, 2, registrationBody.sessionId, 'memberId', aShortTimeAgo),
       ];
 
-      registrationService.completeRegistration('memberId', 'sessionId', registrationBody, function (err, statusTitle, statusText) {
+      registrationService.completeRegistration('memberId', 'sessionId', registrationBody, (err, statusTitle, statusText) => {
         expect(statusTitle).to.not.exist();
         expect(statusText).to.not.exist();
         const savedEventStore = saveEventStoreStub.firstCall.args[0];
@@ -264,8 +260,8 @@ describe('Registration Service', function () {
       });
     });
 
-    it('does not add the registrant to the resource if no sessionId entry exists, even if there is enough space', function (done) {
-      registrationService.completeRegistration('memberId', 'sessionId', registrationBody, function (err, statusTitle, statusText) {
+    it('does not add the registrant to the resource if no sessionId entry exists, even if there is enough space', done => {
+      registrationService.completeRegistration('memberId', 'sessionId', registrationBody, (err, statusTitle, statusText) => {
 
         const savedEventStore = saveEventStoreStub.firstCall.args[0];
         expect(stripTimestamps(savedEventStore.state.events)).to.eql([
@@ -283,12 +279,12 @@ describe('Registration Service', function () {
       });
     });
 
-    it('does not add the registrant to a room if he is on the waitinglist', function (done) {
+    it('does not add the registrant to a room if he is on the waitinglist', done => {
       eventStore.state.events = [
         events.waitinglistParticipantWasRegistered(desiredRoomsArray, 2, registrationBody.sessionId, 'memberId', aShortTimeAgo)
       ];
 
-      registrationService.completeRegistration('memberId', 'sessionId', registrationBody, function (err, statusTitle, statusText) {
+      registrationService.completeRegistration('memberId', 'sessionId', registrationBody, (err, statusTitle, statusText) => {
         const savedEventStore = saveEventStoreStub.firstCall.args[0];
         expect(stripTimestamps(savedEventStore.state.events)).to.eql([
           {
@@ -315,13 +311,13 @@ describe('Registration Service', function () {
 
   });
 
-  describe('finishing the registration - waitinglist registration', function () {
+  describe('finishing the registration - waitinglist registration', () => {
 
-    it('adds the registrant to the waitinglist if he had a valid session entry', function (done) {
+    it('adds the registrant to the waitinglist if he had a valid session entry', done => {
       eventStore.state.events = [
         events.waitinglistReservationWasIssued(registrationBody.desiredRoomTypes.split(','), 2, registrationBody.sessionId, 'memberId', aShortTimeAgo)];
 
-      registrationService.completeRegistration('memberId', 'sessionId', registrationBody, function (err, statusTitle, statusText) {
+      registrationService.completeRegistration('memberId', 'sessionId', registrationBody, (err, statusTitle, statusText) => {
         expect(statusTitle).to.not.exist();
         expect(statusText).to.not.exist();
         const savedEventStore = saveEventStoreStub.firstCall.args[0];
@@ -347,12 +343,12 @@ describe('Registration Service', function () {
       });
     });
 
-    it('does not add the registrant to the waitinglist if there is no reservation for the session id', function (done) {
+    it('does not add the registrant to the waitinglist if there is no reservation for the session id', done => {
       registrationBody.roomType = '';
       registrationBody.duration = '';
       registrationBody.desiredRoomTypes = 'single';
 
-      registrationService.completeRegistration('memberId', 'sessionId', registrationBody, function (err, statusTitle, statusText) {
+      registrationService.completeRegistration('memberId', 'sessionId', registrationBody, (err, statusTitle, statusText) => {
 
         const savedEventStore = saveEventStoreStub.firstCall.args[0];
         expect(stripTimestamps(savedEventStore.state.events)).to.eql([
@@ -370,13 +366,13 @@ describe('Registration Service', function () {
       });
     });
 
-    it('does not add the registrant to the waitinglist if the reservation is already expired', function (done) {
+    it('does not add the registrant to the waitinglist if the reservation is already expired', done => {
       registrationBody.desiredRoomTypes = 'single';
 
       eventStore.state.events = [
         events.waitinglistReservationWasIssued([registrationBody.desiredRoomTypes], 2, registrationBody.sessionId, 'memberId', aLongTimeAgo)];
 
-      registrationService.completeRegistration('memberId', 'sessionId', registrationBody, function (err, statusTitle, statusText) {
+      registrationService.completeRegistration('memberId', 'sessionId', registrationBody, (err, statusTitle, statusText) => {
         const savedEventStore = saveEventStoreStub.firstCall.args[0];
         expect(stripTimestamps(savedEventStore.state.events)).to.eql([
           {
@@ -400,7 +396,7 @@ describe('Registration Service', function () {
       });
     });
 
-    it('does not add the registrant to the waitinglist if he is already registered', function (done) {
+    it('does not add the registrant to the waitinglist if he is already registered', done => {
       registrationBody.roomType = '';
       registrationBody.duration = '';
       registrationBody.desiredRoomTypes = 'single';
@@ -410,7 +406,7 @@ describe('Registration Service', function () {
         events.waitinglistReservationWasIssued([registrationBody.desiredRoomTypes], 2, registrationBody.sessionId, 'memberId', aShortTimeAgo)
       ];
 
-      registrationService.completeRegistration('memberId', 'sessionId', registrationBody, function (err, statusTitle, statusText) {
+      registrationService.completeRegistration('memberId', 'sessionId', registrationBody, (err, statusTitle, statusText) => {
         const savedEventStore = saveEventStoreStub.firstCall.args[0];
         expect(stripTimestamps(savedEventStore.state.events)).to.eql([
           {

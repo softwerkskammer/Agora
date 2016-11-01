@@ -446,11 +446,11 @@ describe('The registration command processor', () => {
     it('registers a spot on the waitinglist', () => {
       // Given (saved events)
       eventStore.state.events = [
-        events.waitinglistReservationWasIssued([singleBedRoom], 2, sessionId1, memberId1, aShortTimeAgo)];
+        events.waitinglistReservationWasIssued([singleBedRoom], 3, sessionId1, memberId1, aShortTimeAgo)];
       const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       // When (issued command)
-      const event = commandProcessor.registerWaitinglistParticipant([singleBedRoom], 2, sessionId1, memberId1);
+      const event = commandProcessor.registerWaitinglistParticipant([singleBedRoom], sessionId1, memberId1);
 
       // Then (new events)
       expect(stripTimestamps([event])).to.eql([
@@ -458,7 +458,7 @@ describe('The registration command processor', () => {
           event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED,
           sessionId: sessionId1,
           desiredRoomTypes: [singleBedRoom],
-          duration: 2,
+          duration: 3,
           memberId: memberId1,
           joinedWaitinglist: aShortTimeAgo.valueOf()
         }]);
@@ -471,7 +471,7 @@ describe('The registration command processor', () => {
       const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       // When (issued command)
-      const event = commandProcessor.registerWaitinglistParticipant([singleBedRoom], 2, sessionId1, memberId1);
+      const event = commandProcessor.registerWaitinglistParticipant([singleBedRoom], sessionId1, memberId1);
 
       // Then (new events)
       expect(stripTimestamps([event])).to.eql([
@@ -489,7 +489,7 @@ describe('The registration command processor', () => {
       const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       // When (issued command)
-      const event = commandProcessor.registerWaitinglistParticipant([singleBedRoom], 2, sessionId1, memberId1);
+      const event = commandProcessor.registerWaitinglistParticipant([singleBedRoom], sessionId1, memberId1);
 
       // Then (new events)
       expect(stripTimestamps([event])).to.eql([
@@ -509,7 +509,7 @@ describe('The registration command processor', () => {
       const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       //When (issued command)
-      const event = commandProcessor.registerWaitinglistParticipant([singleBedRoom], 2, sessionId1, memberId1);
+      const event = commandProcessor.registerWaitinglistParticipant([singleBedRoom], sessionId1, memberId1);
 
       //Then (new events)
       expect(stripTimestamps([event])).to.eql([
@@ -529,7 +529,7 @@ describe('The registration command processor', () => {
       const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       //When (issued command)
-      const event = commandProcessor.registerWaitinglistParticipant([singleBedRoom, bedInDouble], 2, sessionId1, memberId1);
+      const event = commandProcessor.registerWaitinglistParticipant([singleBedRoom, bedInDouble], sessionId1, memberId1);
 
       //Then (new events)
       expect(stripTimestamps([event])).to.eql([
@@ -544,11 +544,11 @@ describe('The registration command processor', () => {
     it('registers a spot on the waitinglist for multiple desired rooms', () => {
       // Given (saved events)
       eventStore.state.events = [
-        events.waitinglistReservationWasIssued([singleBedRoom, bedInDouble], 2, sessionId1, memberId1, aShortTimeAgo)];
+        events.waitinglistReservationWasIssued([singleBedRoom, bedInDouble], 3, sessionId1, memberId1, aShortTimeAgo)];
       const commandProcessor = new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore))));
 
       // When (issued command)
-      const event = commandProcessor.registerWaitinglistParticipant([singleBedRoom, bedInDouble], 2, sessionId1, memberId1);
+      const event = commandProcessor.registerWaitinglistParticipant([singleBedRoom, bedInDouble], sessionId1, memberId1);
 
       // Then (new events)
       expect(stripTimestamps([event])).to.eql([
@@ -556,7 +556,7 @@ describe('The registration command processor', () => {
           event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED,
           sessionId: sessionId1,
           desiredRoomTypes: [singleBedRoom, bedInDouble],
-          duration: 2,
+          duration: 3,
           memberId: memberId1,
           joinedWaitinglist: aShortTimeAgo.valueOf()
         }]);
