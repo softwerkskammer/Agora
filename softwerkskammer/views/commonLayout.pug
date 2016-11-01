@@ -3,12 +3,11 @@ html
   head
     meta(charset='utf-8')
     meta(name='viewport', content='width=device-width, initial-scale=1.0')
-    link(href='/stylesheets/screen.css', rel='stylesheet')
-    link(href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,400italic,600italic|PT+Serif+Caption:400,400italic|PT+Serif:400,700,400italic,700italic|Source+Code+Pro:400,600', rel='stylesheet', type='text/css')
     link(rel='apple-touch-icon', href='/img/apple-touch-icon-60x60-precomposed.png')
     link(rel='apple-touch-icon', href='/img/apple-touch-icon-76x76-precomposed.png')
     link(rel='apple-touch-icon', href='/img/apple-touch-icon-120x120-precomposed.png')
     link(rel='apple-touch-icon', href='/img/apple-touch-icon-152x152-precomposed.png')
+    link(href='/stylesheets/screen.css', rel='stylesheet')
 
     title
       block title
@@ -54,14 +53,15 @@ html
         block specific
       +bottomNavbar
   
-  if (language === 'de')
-    script(src='/clientscripts/global_de.js')
-  else
-    script(src='/clientscripts/global_en.js')
-  if (!!calViewYear)
-    script.
-      $(document).ready(function () {
-        var date = moment().year(#{calViewYear}).month(#{calViewMonth});
-        $('#calendar').fullCalendar('gotoDate', date);
-      });
-  block scripts
+link(href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,400italic,600italic|PT+Serif+Caption:400,400italic|PT+Serif:400,700,400italic,700italic|Source+Code+Pro:400,600', rel='stylesheet', type='text/css')
+if (language === 'de')
+  script(src='/clientscripts/global_de.js')
+else
+  script(src='/clientscripts/global_en.js')
+if (!!calViewYear)
+  script.
+    $(document).ready(function () {
+      var date = moment().year(#{calViewYear}).month(#{calViewMonth});
+      $('#calendar').fullCalendar('gotoDate', date);
+    });
+block scripts
