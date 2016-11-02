@@ -1,11 +1,11 @@
 'use strict';
 
-var _ = require('lodash');
-var async = require('async');
-var beans = require('simple-configure').get('beans');
-var Git = beans.get('gitmech');
-var Group = beans.get('group');
-var groupstore = beans.get('groupstore');
+const R = require('ramda');
+const async = require('async');
+const beans = require('simple-configure').get('beans');
+const Git = beans.get('gitmech');
+const Group = beans.get('group');
+const groupstore = beans.get('groupstore');
 
 module.exports = function subdirs(req, res, next) {
   async.parallel(
@@ -13,12 +13,12 @@ module.exports = function subdirs(req, res, next) {
       gitdirs: Git.lsdirs,
       groups: groupstore.allGroups
     },
-    function (err, results) {
+    (err, results) => {
       if (err) { return next(err); }
-      var gitdirs = results.gitdirs;
-      var regionals = _(Group.regionalsFrom(results.groups)).map('id').intersection(gitdirs).value();
-      var thematics = _(Group.thematicsFrom(results.groups)).map('id').intersection(gitdirs).value();
-      var additionalWikis = _.difference(gitdirs, _.map(results.groups, 'id'));
+      const gitdirs = results.gitdirs;
+      const regionals = R.intersection(Group.regionalsFrom(results.groups).map(group => group.id), gitdirs);
+      const thematics = R.intersection(Group.thematicsFrom(results.groups).map(group => group.id), gitdirs);
+      const additionalWikis = R.difference(gitdirs, results.groups.map(group => group.id));
       res.locals.wikisubdirs = gitdirs;
       res.locals.structuredWikisubdirs = {
         regional: regionals,
