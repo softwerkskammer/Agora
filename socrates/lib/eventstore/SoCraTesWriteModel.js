@@ -9,8 +9,6 @@ class SoCraTesWriteModel {
   }
 
   eventStore() {
-    // persistence needs an id:
-    this._eventStore.setId();
     return this._eventStore;
   }
 }

@@ -11,6 +11,10 @@ class GlobalEventStore {
         url: socratesConstants.currentUrl,
         events: []
       };
+    if (!this.state.id) {
+      // persistence needs an id:
+      this.state.id = this.state.url || socratesConstants.currentUrl;
+    }
   }
 
   events() {
@@ -21,18 +25,9 @@ class GlobalEventStore {
     this.state.events = this.state.events.concat(newEvents);
   }
 
-  // TODO why can't the id be just the URL? Why can't we simply use the id === url to find the eventstore? And remove the state.url?
-  setId() {
-    if (!this.state.id) {
-      // persistence needs an id:
-      this.state.id = moment().valueOf() + '-' + this.state.url;
-    }
-  }
-
   id() {
     return this.state.id;
   }
 }
-
 
 module.exports = GlobalEventStore;
