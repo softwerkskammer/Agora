@@ -1,25 +1,25 @@
 'use strict';
 
-var beans = require('simple-configure').get('beans');
-var async = require('async');
-var _ = require('lodash');
-var moment = require('moment-timezone');
+const beans = require('simple-configure').get('beans');
+const async = require('async');
+const R = require('ramda');
+const moment = require('moment-timezone');
 
-var wikiService = beans.get('wikiService');
-var groupsAndMembersService = beans.get('groupsAndMembersService');
-var activitiesService = beans.get('activitiesService');
-var mailarchiveService = beans.get('mailarchiveService');
+const wikiService = beans.get('wikiService');
+const groupsAndMembersService = beans.get('groupsAndMembersService');
+const activitiesService = beans.get('activitiesService');
+const mailarchiveService = beans.get('mailarchiveService');
 
-function groupsByColumns(groups, linesPerGroup) {
-  var result = [
+function groupsByColumns(groups = [], linesPerGroup) {
+  const result = [
     [],
     [],
     []
   ];
-  var heightPerCol = _.reduce(linesPerGroup, function (sum, num) { return sum + num; }) / 3;
-  var currentColHeight = 0;
-  var currentCol = 0;
-  _.each(groups, function (group) {
+  const heightPerCol = R.values(linesPerGroup).reduce(function (sum, num) { return sum + num; }, 0) / 3;
+  let currentColHeight = 0;
+  let currentCol = 0;
+  groups.forEach(function (group) {
     result[currentCol].push(group);
     currentColHeight += linesPerGroup[group.id];
     if (currentColHeight >= heightPerCol) {
@@ -33,26 +33,26 @@ function groupsByColumns(groups, linesPerGroup) {
 module.exports = {
   groupsByColumns: groupsByColumns,
 
-  dataForDashboard: function (nickname, callback) {
-    groupsAndMembersService.getMemberWithHisGroups(nickname, function (err, member) {
+  dataForDashboard: function dataForDashboard(nickname, callback) {
+    groupsAndMembersService.getMemberWithHisGroups(nickname, (err, member) => {
       if (err) { return callback(err); }
       if (!member) { return callback(new Error('no member found')); }
-      activitiesService.getUpcomingActivitiesOfMemberAndHisGroups(member, function (err1, activities) {
+      activitiesService.getUpcomingActivitiesOfMemberAndHisGroups(member, (err1, activities) => {
         if (err1) { return callback(err1); }
-        var basicHeight = 3;
-        var basicHeightPerSection = 1;
-        var postsByGroup = {};
-        var changesByGroup = {};
-        var mailsByGroup = {};
-        var linesPerGroup = {};
-        var oneMonthAgo = moment().subtract(1, 'months');
-        async.each(member.subscribedGroups || [], function (group, cb) {
+        const basicHeight = 3;
+        const basicHeightPerSection = 1;
+        const postsByGroup = {};
+        const changesByGroup = {};
+        const mailsByGroup = {};
+        const linesPerGroup = {};
+        const oneMonthAgo = moment().subtract(1, 'months');
+        async.each(member.subscribedGroups || [], (group, cb) => {
           linesPerGroup[group.id] = basicHeight;
-          wikiService.getBlogpostsForGroup(group.id, function (err2, blogposts) {
+          wikiService.getBlogpostsForGroup(group.id, (err2, blogposts) => {
             if (err2) { return cb(err2); }
             postsByGroup[group.id] = blogposts;
             linesPerGroup[group.id] = linesPerGroup[group.id] + basicHeightPerSection + blogposts.length;
-            wikiService.listChangedFilesinDirectory(group.id, function (err3, metadatas) {
+            wikiService.listChangedFilesinDirectory(group.id, (err3, metadatas) => {
               if (err3) { return cb(err3); }
               changesByGroup[group.id] = metadatas;
               linesPerGroup[group.id] = linesPerGroup[group.id] + basicHeightPerSection + metadatas.length;
@@ -65,7 +65,7 @@ module.exports = {
               });
             });
           });
-        }, function (err2) {
+        }, err2 => {
           callback(err2, {
             member: member,
             activities: activities,
