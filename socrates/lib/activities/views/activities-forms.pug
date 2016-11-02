@@ -3,15 +3,13 @@ include  ../../../../commonComponents/pug/formComponents
 mixin activityform(socratesReadModel, roomTypes)
   form#activityform(action='/activities/submit', method='post')
     +csrf
-    if (socratesReadModel.id())
-      +hidden('id', socratesReadModel.id())
     +hidden('previousUrl', socratesReadModel.url())
     fieldset
       .row
         .col-md-12
           +submitButtons('general.save')
           legend
-            if (socratesReadModel.id())
+            if (socratesReadModel.url())
               | Edit SoCraTes
             else
               | Create SoCraTes
