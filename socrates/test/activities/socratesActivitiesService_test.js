@@ -1,46 +1,46 @@
 /* eslint no-underscore-dangle: 0 */
 'use strict';
 
-var moment = require('moment-timezone');
+const moment = require('moment-timezone');
 
-var sinon = require('sinon').sandbox.create();
-var expect = require('must-dist');
-var R = require('ramda');
+const sinon = require('sinon').sandbox.create();
+const expect = require('must-dist');
+const R = require('ramda');
 
 const config = require('../../testutil/configureForTest');
-var beans = config.get('beans');
+const beans = config.get('beans');
 const cache = config.get('cache');
 
-var socratesActivitiesService = beans.get('socratesActivitiesService');
-var Member = beans.get('member');
+const socratesActivitiesService = beans.get('socratesActivitiesService');
+const Member = beans.get('member');
 
-var memberstore = beans.get('memberstore');
-var notifications = beans.get('socratesNotifications');
+const memberstore = beans.get('memberstore');
+const notifications = beans.get('socratesNotifications');
 
-var events = beans.get('events');
-var e = beans.get('eventConstants');
-var eventstore = beans.get('eventstore');
-var GlobalEventStore = beans.get('GlobalEventStore');
-var RoomsReadModel = beans.get('RoomsReadModel');
-var RegistrationReadModel = beans.get('RegistrationReadModel');
-var SoCraTesReadModel = beans.get('SoCraTesReadModel');
-var socratesConstants = beans.get('socratesConstants');
+const events = beans.get('events');
+const e = beans.get('eventConstants');
+const eventstore = beans.get('eventstore');
+const GlobalEventStore = beans.get('GlobalEventStore');
+const RoomsReadModel = beans.get('RoomsReadModel');
+const RegistrationReadModel = beans.get('RegistrationReadModel');
+const SoCraTesReadModel = beans.get('SoCraTesReadModel');
+const socratesConstants = beans.get('socratesConstants');
 
-var aLongTimeAgo = moment.tz().subtract(40, 'minutes');
-var now = moment.tz();
+const aLongTimeAgo = moment.tz().subtract(40, 'minutes');
+const now = moment.tz();
 
 describe('SoCraTes Activities Service', function () {
 
-  var eventStore;
-  var changedResource;
-  var saveEventStore;
+  let eventStore;
+  let changedResource;
+  let saveEventStore;
 
-  var newParticipantNotification;
-  var changedDurationNotification;
-  var changedRoomTypeNotification;
-  var changedWaitinglistNotification;
-  var removedFromParticipantsNotification;
-  var removedFromWaitinglistNotification;
+  let newParticipantNotification;
+  let changedDurationNotification;
+  let changedRoomTypeNotification;
+  let changedWaitinglistNotification;
+  let removedFromParticipantsNotification;
+  let removedFromWaitinglistNotification;
 
   beforeEach(function () {
     cache.flushAll();
@@ -75,7 +75,7 @@ describe('SoCraTes Activities Service', function () {
 
   function stripTimestamps(someEvents) {
     return someEvents.map(event => {
-      var newEvent = R.clone(event);
+      const newEvent = R.clone(event);
       delete newEvent.timestamp;
       return newEvent;
     });
@@ -311,7 +311,7 @@ describe('SoCraTes Activities Service', function () {
       ];
 
       socratesActivitiesService.addParticipantPairFor({roomType: 'bed_in_double', participant1Nick: 'nicknameForPair1', participant2Nick: 'nicknameForPair2'}, function (err) {
-        var pairEvents = saveEventStore.firstCall.args[0].state.events;
+        const pairEvents = saveEventStore.firstCall.args[0].state.events;
         expect(pairEvents).to.have.length(3);
         expect(pairEvents[2].participant1Id).to.be('memberIdForPair1');
         expect(pairEvents[2].participant2Id).to.be('memberIdForPair2');

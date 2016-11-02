@@ -1,24 +1,24 @@
 /*eslint no-underscore-dangle: 0*/
 'use strict';
 
-var moment = require('moment-timezone');
-var expect = require('must-dist');
+const moment = require('moment-timezone');
+const expect = require('must-dist');
 
-var beans = require('../../testutil/configureForTest').get('beans');
-var events = beans.get('events');
-var GlobalEventStore = beans.get('GlobalEventStore');
-var RoomsReadModel = beans.get('RoomsReadModel');
-var RegistrationReadModel = beans.get('RegistrationReadModel');
-var SoCraTesReadModel = beans.get('SoCraTesReadModel');
-var Member = beans.get('member');
+const beans = require('../../testutil/configureForTest').get('beans');
+const events = beans.get('events');
+const GlobalEventStore = beans.get('GlobalEventStore');
+const RoomsReadModel = beans.get('RoomsReadModel');
+const RegistrationReadModel = beans.get('RegistrationReadModel');
+const SoCraTesReadModel = beans.get('SoCraTesReadModel');
+const Member = beans.get('member');
 
-var bedInDouble = 'bed_in_double';
+const bedInDouble = 'bed_in_double';
 
-var aLongTimeAgo = moment.tz().subtract(40, 'minutes');
+const aLongTimeAgo = moment.tz().subtract(40, 'minutes');
 
 describe('The rooms read model', function () {
 
-  var eventStore;
+  let eventStore;
 
   beforeEach(function () {
     eventStore = new GlobalEventStore();
@@ -38,7 +38,7 @@ describe('The rooms read model', function () {
     ]);
     const readModel = new RoomsReadModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore)));
 
-    var participantsInRoom = readModel.participantsInRoom(bedInDouble);
+    const participantsInRoom = readModel.participantsInRoom(bedInDouble);
 
     expect(participantsInRoom).to.eql(['memberId1', 'memberId2']);
   });
@@ -50,7 +50,7 @@ describe('The rooms read model', function () {
     ]);
     const readModel = new RoomsReadModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore)));
 
-    var participantsWithoutRoom = readModel.participantsWithoutRoomIn(bedInDouble);
+    const participantsWithoutRoom = readModel.participantsWithoutRoomIn(bedInDouble);
 
     expect(participantsWithoutRoom).to.eql(['memberId3', 'memberId4', 'memberId5']);
   });
@@ -71,7 +71,7 @@ describe('The rooms read model', function () {
   });
 
   it('lists the room pairs', function () {
-    var allKnownMembers = [
+    const allKnownMembers = [
       new Member({id: 'memberId1'}),
       new Member({id: 'memberId2'}),
       new Member({id: 'memberId3'}),
@@ -84,7 +84,7 @@ describe('The rooms read model', function () {
     ]);
     const readModel = new RoomsReadModel(eventStore, new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore)));
 
-    var roomPairs = readModel.roomPairsWithFullMembersFrom(bedInDouble, allKnownMembers);
+    const roomPairs = readModel.roomPairsWithFullMembersFrom(bedInDouble, allKnownMembers);
 
     expect(roomPairs).to.have.length(2);
     expect(roomPairs[0].participant1.id()).to.be('memberId1');

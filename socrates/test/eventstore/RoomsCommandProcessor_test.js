@@ -1,35 +1,35 @@
 /*eslint no-underscore-dangle: 0*/
 'use strict';
 
-var expect = require('must-dist');
-var R = require('ramda');
-var moment = require('moment-timezone');
+const expect = require('must-dist');
+const R = require('ramda');
+const moment = require('moment-timezone');
 
-var beans = require('../../testutil/configureForTest').get('beans');
-var events = beans.get('events');
-var GlobalEventStore = beans.get('GlobalEventStore');
-var RoomsWriteModel = beans.get('RoomsWriteModel');
-var RoomsReadModel = beans.get('RoomsReadModel');
-var RegistrationReadModel = beans.get('RegistrationReadModel');
-var SoCraTesReadModel = beans.get('SoCraTesReadModel');
-var RoomsCommandProcessor = beans.get('RoomsCommandProcessor');
-var e = beans.get('eventConstants');
+const beans = require('../../testutil/configureForTest').get('beans');
+const events = beans.get('events');
+const GlobalEventStore = beans.get('GlobalEventStore');
+const RoomsWriteModel = beans.get('RoomsWriteModel');
+const RoomsReadModel = beans.get('RoomsReadModel');
+const RegistrationReadModel = beans.get('RegistrationReadModel');
+const SoCraTesReadModel = beans.get('SoCraTesReadModel');
+const RoomsCommandProcessor = beans.get('RoomsCommandProcessor');
+const e = beans.get('eventConstants');
 
-var aLongTimeAgo = moment.tz().subtract(40, 'minutes');
+const aLongTimeAgo = moment.tz().subtract(40, 'minutes');
 
 function stripTimestamps(someEvents) {
   return R.map(function (event) {
-    var newEvent = R.clone(event);
+    const newEvent = R.clone(event);
     delete newEvent.timestamp;
     return newEvent;
   }, someEvents);
 }
 
-var bedInDouble = 'bed_in_double';
+const bedInDouble = 'bed_in_double';
 
 describe('The rooms command processor', function () {
 
-  var eventStore;
+  let eventStore;
 
   beforeEach(function () {
     eventStore = new GlobalEventStore();

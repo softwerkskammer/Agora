@@ -1,19 +1,19 @@
 'use strict';
 
-var expect = require('must-dist');
-var moment = require('moment-timezone');
+const expect = require('must-dist');
+const moment = require('moment-timezone');
 
-var beans = require('../../testutil/configureForTest').get('beans');
-var events = beans.get('events');
-var GlobalEventStore = beans.get('GlobalEventStore');
-var SoCraTesReadModel = beans.get('SoCraTesReadModel');
+const beans = require('../../testutil/configureForTest').get('beans');
+const events = beans.get('events');
+const GlobalEventStore = beans.get('GlobalEventStore');
+const SoCraTesReadModel = beans.get('SoCraTesReadModel');
 
-var singleBedRoom = 'single';
-var bedInDouble = 'bed_in_double';
+const singleBedRoom = 'single';
+const bedInDouble = 'bed_in_double';
 
 describe('The SoCraTes read model', function () {
 
-  var eventStore;
+  let eventStore;
 
   beforeEach(function () {
     eventStore = new GlobalEventStore();

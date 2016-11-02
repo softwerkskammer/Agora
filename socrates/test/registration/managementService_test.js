@@ -1,23 +1,23 @@
 'use strict';
 
-var moment = require('moment-timezone');
-var expect = require('must-dist');
+const moment = require('moment-timezone');
+const expect = require('must-dist');
 
-var beans = require('../../testutil/configureForTest').get('beans');
-var events = beans.get('events');
-var GlobalEventStore = beans.get('GlobalEventStore');
-var RegistrationReadModel = beans.get('RegistrationReadModel');
-var SoCraTesReadModel = beans.get('SoCraTesReadModel');
+const beans = require('../../testutil/configureForTest').get('beans');
+const events = beans.get('events');
+const GlobalEventStore = beans.get('GlobalEventStore');
+const RegistrationReadModel = beans.get('RegistrationReadModel');
+const SoCraTesReadModel = beans.get('SoCraTesReadModel');
 
-var managementService = beans.get('managementService');
+const managementService = beans.get('managementService');
 
-var aLongTimeAgo = moment.tz().subtract(40, 'minutes');
+const aLongTimeAgo = moment.tz().subtract(40, 'minutes');
 
 describe('Management Service', function () {
 
   describe('when calculating durations', function () {
 
-    var eventStore;
+    let eventStore;
 
     beforeEach(function () {
       eventStore = new GlobalEventStore();
@@ -42,7 +42,7 @@ describe('Management Service', function () {
       ];
       const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
-      var durations = managementService.durations(readModel);
+      const durations = managementService.durations(readModel);
 
       expect(durations).to.have.ownKeys(['2', '3', '4', '5']);
       expect(durations[2]).to.eql({count: 6, duration: 'saturday evening', total: 14});
@@ -62,7 +62,7 @@ describe('Management Service', function () {
       ];
       const readModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
 
-      var durations = managementService.durations(readModel);
+      const durations = managementService.durations(readModel);
 
       expect(durations).to.have.ownKeys(['2', '4', '5']);
       expect(durations[2]).to.eql({count: 4, duration: 'saturday evening', total: 6});
