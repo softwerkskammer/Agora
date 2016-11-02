@@ -2,7 +2,7 @@
 module.exports = function (grunt) {
   /*eslint camelcase: 0*/
 
-  var commonJSfiles = [
+  const commonJSfiles = [
     'node_modules/jquery/dist/jquery.js',
     'node_modules/guillotine/js/jquery.guillotine.js',
     'node_modules/select2/dist/js/select2.js',
@@ -27,7 +27,7 @@ module.exports = function (grunt) {
   ];
 
   // filesets for uglify
-  var files_de = {
+  const files_de = {
     'softwerkskammer/public/clientscripts/global_de.js': commonJSfiles.concat([
       'node_modules/jquery-validation/dist/localization/messages_de.js',
       'node_modules/jquery-validation/dist/localization/methods_de.js',
@@ -40,7 +40,7 @@ module.exports = function (grunt) {
     ])
   };
 
-  var files_en = {
+  const files_en = {
     'softwerkskammer/public/clientscripts/global_en.js': commonJSfiles.concat([
       'node_modules/fullcalendar/dist/locale/en-gb.js',
       'locales/frontend_en.js',
@@ -49,6 +49,24 @@ module.exports = function (grunt) {
     ])
   };
 
+  const filesForCss = {
+    'softwerkskammer/public/stylesheets/screen.css': [
+      'node_modules/fullcalendar/dist/fullcalendar.css',
+      'softwerkskammer/build/stylesheets/less/bootstrap.less',
+      'node_modules/bootstrap-datepicker/css/datepicker3.css',
+      'softwerkskammer/build/stylesheets/less/bootstrap-markdown-patched.less',
+      'node_modules/font-awesome/css/font-awesome.css',
+      'node_modules/node-syntaxhighlighter/lib/styles/shCoreDefault.css',
+      'node_modules/drmonty-smartmenus/css/jquery.smartmenus.bootstrap.css',
+      'node_modules/datatables.net-bs/css/dataTables.bootstrap.css',
+      'softwerkskammer/frontend/3rd_party_css/dataTables.fontAwesome.css',
+      'node_modules/select2/dist/css/select2.css',
+      'node_modules/select2-bootstrap-theme/dist/select2-bootstrap.css',
+      'node_modules/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css',
+      'node_modules/guillotine/css/jquery.guillotine.css',
+      'softwerkskammer/build/stylesheets/less/agora.less'
+    ]
+  };
   grunt.initConfig({
     clean: {
       build: ['softwerkskammer/build', 'softwerkskammer/frontendtests/fixtures/*.html'],
@@ -158,31 +176,17 @@ module.exports = function (grunt) {
       }
     },
     less: {
-      minify: {
+      development: {
+        files: filesForCss
+      },
+      production: {
         options: {
           plugins: [
             new (require('less-plugin-clean-css'))()
           ],
           report: 'min'
         },
-        files: {
-          'softwerkskammer/public/stylesheets/screen.css': [
-            'node_modules/fullcalendar/dist/fullcalendar.css',
-            'softwerkskammer/build/stylesheets/less/bootstrap.less',
-            'node_modules/bootstrap-datepicker/css/datepicker3.css',
-            'softwerkskammer/build/stylesheets/less/bootstrap-markdown-patched.less',
-            'node_modules/font-awesome/css/font-awesome.css',
-            'node_modules/node-syntaxhighlighter/lib/styles/shCoreDefault.css',
-            'node_modules/drmonty-smartmenus/css/jquery.smartmenus.bootstrap.css',
-            'node_modules/datatables.net-bs/css/dataTables.bootstrap.css',
-            'softwerkskammer/frontend/3rd_party_css/dataTables.fontAwesome.css',
-            'node_modules/select2/dist/css/select2.css',
-            'node_modules/select2-bootstrap-theme/dist/select2-bootstrap.css',
-            'node_modules/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css',
-            'node_modules/guillotine/css/jquery.guillotine.css',
-            'softwerkskammer/build/stylesheets/less/agora.less'
-          ]
-        }
+        files: filesForCss
       }
     },
     uglify: {
@@ -312,13 +316,13 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-patcher');
   grunt.loadNpmTasks('grunt-puglint');
 
-  grunt.registerTask('prepare', ['copy', 'patch', 'less']);
-  grunt.registerTask('frontendtests', ['clean', 'prepare', 'pug', 'uglify:production_de', 'karma:once', 'uglify:development_de', 'karma:once', 'istanbul_check_coverage:frontend']);
+  grunt.registerTask('prepare', ['clean', 'copy', 'patch']);
+  grunt.registerTask('frontendtests', ['clean', 'prepare', 'less:development', 'pug', 'uglify:production_de', 'karma:once', 'uglify:development_de', 'karma:once', 'istanbul_check_coverage:frontend']);
   grunt.registerTask('tests', ['eslint', 'puglint', 'frontendtests', 'mocha_istanbul', 'istanbul_check_coverage:server']);
-  grunt.registerTask('deploy_development', ['prepare', 'uglify:development_de', 'uglify:development_en']);
+  grunt.registerTask('deploy_development', ['prepare', 'less:development', 'uglify:development_de', 'uglify:development_en']);
 
   // Default task.
   grunt.registerTask('default', ['tests', 'uglify:development_en']);
 
-  grunt.registerTask('deploy_production', ['clean', 'prepare', 'uglify:production_de', 'uglify:production_en']);
+  grunt.registerTask('deploy_production', ['prepare', 'less:production', 'uglify:production_de', 'uglify:production_en']);
 };
