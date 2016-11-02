@@ -1,13 +1,13 @@
 /*eslint no-underscore-dangle: 0*/
 'use strict';
 
-var R = require('ramda');
+const R = require('ramda');
 
-var beans = require('simple-configure').get('beans');
-var e = beans.get('eventConstants');
+const beans = require('simple-configure').get('beans');
+const e = beans.get('eventConstants');
 const roomOptions = beans.get('roomOptions');
 
-var projectRoomPairs = function (roomType, roomPairs, event) {
+function projectRoomPairs(roomType, roomPairs, event) {
   if (event.event === e.ROOM_PAIR_WAS_ADDED && event.roomType === roomType) {
     return R.append({participant1Id: event.participant1Id, participant2Id: event.participant2Id}, roomPairs);
   }
@@ -18,9 +18,9 @@ var projectRoomPairs = function (roomType, roomPairs, event) {
   }
 
   return roomPairs;
-};
+}
 
-var projectParticpantsInRoom = function (roomType, participants, event) {
+function projectParticpantsInRoom(roomType, participants, event) {
   if (event.event === e.ROOM_PAIR_WAS_ADDED && event.roomType === roomType) {
     return R.append(event.participant2Id, R.append(event.participant1Id, participants));
   }
@@ -31,66 +31,68 @@ var projectParticpantsInRoom = function (roomType, participants, event) {
   }
 
   return participants;
-};
-
-
-function RoomsReadModel(eventStore, registrationReadModel) {
-  this._registrationReadModel = registrationReadModel;
-
-  // read model state:
-  this._roomPairsFor = {};
-  this._participantsIn = {};
-  roomOptions.allIds().forEach(roomType => {
-    this._roomPairsFor[roomType] = [];
-    this._participantsIn[roomType] = [];
-  });
-
-  this.update(eventStore.events());
 }
 
-RoomsReadModel.prototype.update = function (events) {
-  roomOptions.allIds().forEach(roomType => {
-    this._roomPairsFor[roomType] = R.reduce(R.partial(projectRoomPairs, [roomType]), this._roomPairsFor[roomType], events);
-    this._participantsIn[roomType] = R.reduce(R.partial(projectParticpantsInRoom, [roomType]), this._participantsIn[roomType], events);
-  });
-};
 
-RoomsReadModel.prototype.roomPairsFor = function (roomType) {
-  return this._roomPairsFor[roomType];
-};
+class RoomsReadModel {
+  constructor(eventStore, registrationReadModel) {
+    this._registrationReadModel = registrationReadModel;
 
-RoomsReadModel.prototype.isRoomPairIn = function (roomType, participant1Id, participant2Id) {
-  return R.find(function (pair) {
-    return pair.participant1Id === participant1Id || pair.participant2Id === participant2Id;
-  }, this.roomPairsFor(roomType));
-};
+    // read model state:
+    this._roomPairsFor = {};
+    this._participantsIn = {};
+    roomOptions.allIds().forEach(roomType => {
+      this._roomPairsFor[roomType] = [];
+      this._participantsIn[roomType] = [];
+    });
 
-RoomsReadModel.prototype.participantsInRoom = function (roomType) {
-  return this._participantsIn[roomType];
-};
-
-RoomsReadModel.prototype.participantsWithoutRoomIn = function (roomType) {
-  return R.difference(this._registrationReadModel.allParticipantsIn(roomType), this.participantsInRoom(roomType));
-};
-
-RoomsReadModel.prototype.roommateFor = function (roomType, memberId) {
-  var pairWithMember = R.find(function (pair) {
-    return pair.participant1Id === memberId || pair.participant2Id === memberId;
-  }, this.roomPairsFor(roomType));
-
-  if (pairWithMember) {
-    return pairWithMember.participant1Id === memberId ? pairWithMember.participant2Id : pairWithMember.participant1Id;
+    this.update(eventStore.events());
   }
-  return undefined;
-};
 
-RoomsReadModel.prototype.roomPairsWithFullMembersFrom = function (roomType, memberList) {
-  return R.map(function (roomPair) {
-    return {
-      participant1: R.find(function (member) { return member.id() === roomPair.participant1Id; }, memberList),
-      participant2: R.find(function (member) { return member.id() === roomPair.participant2Id; }, memberList)
-    };
-  }, this.roomPairsFor(roomType));
-};
+  update(events) {
+    roomOptions.allIds().forEach(roomType => {
+      this._roomPairsFor[roomType] = R.reduce(R.partial(projectRoomPairs, [roomType]), this._roomPairsFor[roomType], events);
+      this._participantsIn[roomType] = R.reduce(R.partial(projectParticpantsInRoom, [roomType]), this._participantsIn[roomType], events);
+    });
+  }
+
+  roomPairsFor(roomType) {
+    return this._roomPairsFor[roomType];
+  }
+
+  isRoomPairIn(roomType, participant1Id, participant2Id) {
+    return R.find(function (pair) {
+      return pair.participant1Id === participant1Id || pair.participant2Id === participant2Id;
+    }, this.roomPairsFor(roomType));
+  }
+
+  participantsInRoom(roomType) {
+    return this._participantsIn[roomType];
+  }
+
+  participantsWithoutRoomIn(roomType) {
+    return R.difference(this._registrationReadModel.allParticipantsIn(roomType), this.participantsInRoom(roomType));
+  }
+
+  roommateFor(roomType, memberId) {
+    const pairWithMember = R.find(function (pair) {
+      return pair.participant1Id === memberId || pair.participant2Id === memberId;
+    }, this.roomPairsFor(roomType));
+
+    if (pairWithMember) {
+      return pairWithMember.participant1Id === memberId ? pairWithMember.participant2Id : pairWithMember.participant1Id;
+    }
+    return undefined;
+  }
+
+  roomPairsWithFullMembersFrom(roomType, memberList) {
+    return R.map(function (roomPair) {
+      return {
+        participant1: R.find(function (member) { return member.id() === roomPair.participant1Id; }, memberList),
+        participant2: R.find(function (member) { return member.id() === roomPair.participant2Id; }, memberList)
+      };
+    }, this.roomPairsFor(roomType));
+  }
+}
 
 module.exports = RoomsReadModel;
