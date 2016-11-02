@@ -57,7 +57,7 @@ function getReadModelWithArg(url, key, ReadModel, argument, callback) {
     if (cachedWhileFetching) {
       return callback(null, cachedWhileFetching);
     }
-    const newModel = new ReadModel(eventStore, argument);
+    const newModel = new ReadModel(eventStore.events(), argument);
     cache.set(cacheKey, newModel);
     callback(null, newModel);
   });

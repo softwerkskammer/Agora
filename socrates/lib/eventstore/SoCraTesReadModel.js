@@ -17,7 +17,7 @@ function processQuota(roomType, quota, event) { return event.event === e.ROOM_QU
 
 class SoCraTesReadModel {
 
-  constructor(eventStore) {
+  constructor(events) {
 
     // read model state:
     this._url = undefined;
@@ -25,7 +25,7 @@ class SoCraTesReadModel {
     this._endTimeInMillis = undefined;
     this._quota = {};
 
-    this.update(eventStore.events());
+    this.update(events);
   }
 
   update(events) {

@@ -35,7 +35,7 @@ function projectParticpantsInRoom(roomType, participants, event) {
 
 
 class RoomsReadModel {
-  constructor(eventStore, registrationReadModel) {
+  constructor(events, registrationReadModel) {
     this._registrationReadModel = registrationReadModel;
 
     // read model state:
@@ -46,7 +46,7 @@ class RoomsReadModel {
       this._participantsIn[roomType] = [];
     });
 
-    this.update(eventStore.events());
+    this.update(events);
   }
 
   update(events) {

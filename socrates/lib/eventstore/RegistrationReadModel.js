@@ -53,7 +53,7 @@ function expirationTimeOf(event) {
 
 class RegistrationReadModel {
 
-  constructor(eventStore, soCraTesReadModel) {
+  constructor(events, soCraTesReadModel) {
     this._soCraTesReadModel = soCraTesReadModel;
 
     // read model state:
@@ -66,7 +66,7 @@ class RegistrationReadModel {
     this._waitinglistParticipantsByMemberIdFor = {};
     this._durations = [];
 
-    this.update(eventStore.events());
+    this.update(events);
   }
 
   update(events) {
