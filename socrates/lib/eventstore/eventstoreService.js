@@ -142,14 +142,9 @@ module.exports = {
     if (!(events instanceof Array)) {
       events = [events];
     }
+    events = R.flatten(events);
 
-    let eventStore;
-    if (commandProcessor instanceof Array) {
-      eventStore = commandProcessor[0].eventStore();
-      events = R.flatten(events);
-    } else {
-      eventStore = commandProcessor.eventStore();
-    }
+    const eventStore = (commandProcessor instanceof Array) ? commandProcessor[0].eventStore() : commandProcessor.eventStore();
 
     const url = eventStore.state.url;
     eventStore.updateEvents(events);
