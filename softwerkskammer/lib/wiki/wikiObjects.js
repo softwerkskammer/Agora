@@ -1,91 +1,83 @@
 'use strict';
-var moment = require('moment-timezone');
-var _ = require('lodash');
-var path = require('path');
+const moment = require('moment-timezone');
+const R = require('ramda');
+const path = require('path');
 
-var beans = require('simple-configure').get('beans');
-var Renderer = beans.get('renderer');
+const beans = require('simple-configure').get('beans');
+const Renderer = beans.get('renderer');
 
-var BLOG_ENTRY_REGEX = /blog_(\d{4}-\d{1,2}-\d{1,2})/;
+const BLOG_ENTRY_REGEX = /blog_(\d{4}-\d{1,2}-\d{1,2})/;
 
-var pathFunctions = function (name) {
+function pathFunctions(name) {
   return {
     dialogUrl: function () { return '/wiki/modal/' + this.dialogId('/'); },
     url: function () { return '/wiki/' + this.dialogId('/'); },
     dialogId: function (separator) { return path.dirname(name) + (separator || '-') + path.basename(name, '.md'); }
   };
-};
-
-function Metadata(object) {
-  this.name = object.name;
-  this.hashRef = object.hashRef;
-  this.fullhash = object.fullhash;
-  this.author = object.author;
-  this.datestring = object.date;
-  this.comment = object.comment;
-
-  var pf = pathFunctions(this.name);
-  this.dialogId = pf.dialogId;
-  this.dialogUrl = pf.dialogUrl;
-  this.url = pf.url;
 }
 
-Metadata.prototype.date = function () {
-  return moment(this.datestring, 'YYYY-MM-DD hh:mm:ss ZZ');
-};
+class Metadata {
+  constructor(object) {
+    this.name = object.name;
+    this.hashRef = object.hashRef;
+    this.fullhash = object.fullhash;
+    this.author = object.author;
+    this.datestring = object.date;
+    this.comment = object.comment;
 
-Metadata.prototype.pureName = function () {
-  return path.basename(this.name, '.md');
-};
+    const pf = pathFunctions(this.name);
+    this.dialogId = pf.dialogId;
+    this.dialogUrl = pf.dialogUrl;
+    this.url = pf.url;
+  }
 
-function Blogpost(name, post) {
-  this.name = name;
-  this.title = Renderer.firstTokentextOf(post).replace(/^(#|\s)*/, '');
-  this.teaser = Renderer.secondTokentextOf(post);
+  date() { return moment(this.datestring, 'YYYY-MM-DD hh:mm:ss ZZ'); }
 
-  var match = name.match(BLOG_ENTRY_REGEX);
-  this.datestring = match && match[1];
-
-  var pf = pathFunctions(this.name);
-  this.dialogId = pf.dialogId;
-  this.dialogUrl = pf.dialogUrl;
-  this.url = pf.url;
+  pureName() { return path.basename(this.name, '.md'); }
 }
 
-Blogpost.prototype.isValid = function () {
-  return !!this.title && this.date().isValid();
-};
+class Blogpost {
+  constructor(name, post) {
+    this.name = name;
+    this.title = Renderer.firstTokentextOf(post).replace(/^(#|\s)*/, '');
+    this.teaser = Renderer.secondTokentextOf(post);
 
-Blogpost.prototype.date = function () {
-  return moment(this.datestring, 'YYYY-MM-DD');
-};
+    const match = name.match(BLOG_ENTRY_REGEX);
+    this.datestring = match && match[1];
 
-Blogpost.prototype.pureName = function () {
-  return this.title;
-};
+    const pf = pathFunctions(this.name);
+    this.dialogId = pf.dialogId;
+    this.dialogUrl = pf.dialogUrl;
+    this.url = pf.url;
+  }
 
-function FileWithChangelist(object) {
-  this.file = object.file;
-  this.changelist = object.changelist;
-  this.diff = object.diff;
+  isValid() { return !!this.title && this.date().isValid(); }
+
+  date() { return moment(this.datestring, 'YYYY-MM-DD'); }
+
+  pureName() { return this.title; }
 }
 
-FileWithChangelist.prototype.authorsString = function () {
-  return _(this.changelist).map('author').uniq().value().toString();
-};
+class FileWithChangelist {
+  constructor(object) {
+    this.file = object.file;
+    this.changelist = object.changelist;
+    this.diff = object.diff;
+  }
 
-function DirectoryWithChangedFiles(object) {
-  this.dir = object.dir;
-  this.files = object.files;
+  authorsString() { return R.uniq(this.changelist.map(change => change.author)).toString(); }
 }
 
-DirectoryWithChangedFiles.prototype.sortedFiles = function () {
-  return _.sortBy(this.files, 'file');
-};
+class DirectoryWithChangedFiles {
+  constructor(object) {
+    this.dir = object.dir;
+    this.files = object.files;
+  }
 
-DirectoryWithChangedFiles.prototype.addFile = function (fileWithChanges) {
-  this.files.push(fileWithChanges);
-};
+  sortedFiles() { return this.files.sort((a, b) => {return a.file.localeCompare(b.file);}); }
+
+  addFile (fileWithChanges) { this.files.push(fileWithChanges); }
+}
 
 module.exports.Metadata = Metadata;
 module.exports.Blogpost = Blogpost;

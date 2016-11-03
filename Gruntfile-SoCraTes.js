@@ -3,7 +3,7 @@ module.exports = function (grunt) {
   /*eslint camelcase: 0*/
 
   // filesets for uglify
-  var files = {
+  const files = {
     'socrates/public/clientscripts/global.js': [
       'node_modules/jquery/dist/jquery.js',
       'node_modules/guillotine/js/jquery.guillotine.js',
@@ -26,6 +26,22 @@ module.exports = function (grunt) {
     ]
   };
 
+  const filesForCss = {
+    'socrates/public/stylesheets/screen.css': [
+      'socrates/build/stylesheets/less/bootstrap.less',
+      'node_modules/font-awesome/css/font-awesome.css',
+      'node_modules/node-syntaxhighlighter/lib/styles/shCoreDefault.css',
+      'node_modules/drmonty-smartmenus/css/jquery.smartmenus.bootstrap.css',
+      'socrates/build/stylesheets/less/bootstrap-markdown-patched.less',
+      'node_modules/datatables.net-bs/css/dataTables.bootstrap.css',
+      'softwerkskammer/frontend/3rd_party_css/dataTables.fontAwesome.css',
+      'node_modules/select2/dist/css/select2.css',
+      'node_modules/select2-bootstrap-theme/dist/select2-bootstrap.css',
+      'softwerkskammer/frontend/3rd_party_css/dataTables.fontAwesome.css',
+      'node_modules/guillotine/css/jquery.guillotine.css',
+      'socrates/build/stylesheets/less/socrates.less'
+    ]
+  };
   grunt.initConfig({
     clean: {
       build: ['socrates/build/'],
@@ -123,29 +139,17 @@ module.exports = function (grunt) {
       }
     },
     less: {
-      minify: {
+      development: {
+        files: filesForCss
+      },
+      production: {
         options: {
           plugins: [
             new (require('less-plugin-clean-css'))()
           ],
           report: 'min'
         },
-        files: {
-          'socrates/public/stylesheets/screen.css': [
-            'socrates/build/stylesheets/less/bootstrap.less',
-            'node_modules/font-awesome/css/font-awesome.css',
-            'node_modules/node-syntaxhighlighter/lib/styles/shCoreDefault.css',
-            'node_modules/drmonty-smartmenus/css/jquery.smartmenus.bootstrap.css',
-            'socrates/build/stylesheets/less/bootstrap-markdown-patched.less',
-            'node_modules/datatables.net-bs/css/dataTables.bootstrap.css',
-            'softwerkskammer/frontend/3rd_party_css/dataTables.fontAwesome.css',
-            'node_modules/select2/dist/css/select2.css',
-            'node_modules/select2-bootstrap-theme/dist/select2-bootstrap.css',
-            'softwerkskammer/frontend/3rd_party_css/dataTables.fontAwesome.css',
-            'node_modules/guillotine/css/jquery.guillotine.css',
-            'socrates/build/stylesheets/less/socrates.less'
-          ]
-        }
+        files: filesForCss
       }
     },
     uglify: {
@@ -245,12 +249,12 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-patcher');
   grunt.loadNpmTasks('grunt-puglint');
 
-  grunt.registerTask('prepare', ['eslint', 'puglint', 'copy', 'patch', 'less']);
-  grunt.registerTask('frontendtests', ['clean', 'prepare', 'pug', 'uglify:production', 'karma:once', 'uglify:development', 'karma:once', 'istanbul_check_coverage:frontend']);
-  grunt.registerTask('tests', ['prepare', 'frontendtests', 'mocha_istanbul', 'istanbul_check_coverage:server']);
-  grunt.registerTask('deploy_development', ['prepare', 'uglify:development']);
-  grunt.registerTask('deploy_production', ['clean', 'prepare', 'uglify:production']);
+  grunt.registerTask('prepare', ['clean', 'eslint', 'puglint', 'copy', 'patch']);
+  grunt.registerTask('frontendtests', ['prepare', 'less:development', 'pug', 'uglify:production', 'karma:once', 'uglify:development', 'karma:once', 'istanbul_check_coverage:frontend']);
+  grunt.registerTask('tests', ['frontendtests', 'mocha_istanbul', 'istanbul_check_coverage:server']);
+  grunt.registerTask('deploy_development', ['prepare', 'less:development', 'uglify:development']);
+  grunt.registerTask('deploy_production', ['prepare', 'less:production', 'uglify:production']);
 
   // Default task.
-  grunt.registerTask('default', ['tests', 'uglify:development']);
+  grunt.registerTask('default', ['tests']);
 };
