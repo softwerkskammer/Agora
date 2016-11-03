@@ -1,7 +1,5 @@
 'use strict';
 
-var moment = require('moment-timezone');
-
 var beans = require('simple-configure').get('beans');
 var socratesConstants = beans.get('socratesConstants');
 
