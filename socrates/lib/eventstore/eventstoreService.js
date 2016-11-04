@@ -95,7 +95,7 @@ module.exports = {
         });
       }
       cache.set(keyFor(url, GLOBAL_EVENT_STORE_FOR_WRITING), eventStore);
-      callback(null, new SoCraTesCommandProcessor(new SoCraTesWriteModel(eventStore)));
+      callback(null, new SoCraTesCommandProcessor(new SoCraTesWriteModel(url)));
     });
   },
 

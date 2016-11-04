@@ -4,8 +4,8 @@
 
 
 class SoCraTesWriteModel {
-  constructor(eventStore) {
-    this._url = eventStore.state.url;
+  constructor(url) {
+    this._url = url;
   }
 
   url() {
