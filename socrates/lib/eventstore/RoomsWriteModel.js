@@ -23,7 +23,7 @@ class RoomsWriteModel {
   }
 
   roomPairContaining(roomType, memberId) {
-    return R.find(pair => pair.participant1Id === memberId || pair.participant2Id === memberId, this._roomsReadModel.roomPairsFor(roomType));
+    return this._roomsReadModel.roomPairsFor(roomType).find(pair => pair.participant1Id === memberId || pair.participant2Id === memberId);
   }
 
   /////////////////////////////////////////////////////////////////////////////////////////
