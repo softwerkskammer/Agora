@@ -98,10 +98,6 @@ class RegistrationCommandProcessor {
   }
 
   ///////////////////////////////////////////////////////////////////////////////////////////////////
-  eventStore() {
-    return this.writeModel.eventStore();
-  }
-
   url() {
     return this.writeModel.url();
   }
