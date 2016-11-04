@@ -144,14 +144,15 @@ module.exports = {
     }
     events = R.flatten(events);
 
-    const eventStore = (commandProcessor instanceof Array) ? commandProcessor[0].eventStore() : commandProcessor.eventStore();
+    const url = (commandProcessor instanceof Array) ? commandProcessor[0].url() : commandProcessor.url();
 
-    const url = eventStore.state.url;
-    eventStore.updateEvents(events);
+    const eventStoreFromCache = cache.get(keyFor(url, GLOBAL_EVENT_STORE_FOR_WRITING));
+
+    eventStoreFromCache.updateEvents(events);
 
     // update all read models:
     R.values(cache.mget([keyFor(url, SOCRATES_READ_MODEL), keyFor(url, REGISTRATION_READ_MODEL), keyFor(url, ROOMS_READ_MODEL)])).forEach(model => model.update(events));
 
-    eventstore.saveEventStore(eventStore, callback);
+    eventstore.saveEventStore(eventStoreFromCache, callback);
   }
 };

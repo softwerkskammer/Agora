@@ -6,6 +6,7 @@ const R = require('ramda');
 class RoomsWriteModel {
   constructor(eventStore, roomsReadModel, registrationReadModel) {
     this._eventStore = eventStore;
+    this._url = eventStore.state.url;
     this._roomsReadModel = roomsReadModel;
     this._registrationReadModel = registrationReadModel;
   }
@@ -29,6 +30,10 @@ class RoomsWriteModel {
   /////////////////////////////////////////////////////////////////////////////////////////
   eventStore() {
     return this._eventStore;
+  }
+
+  url() {
+    return this._url;
   }
 }
 

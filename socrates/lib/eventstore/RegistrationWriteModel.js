@@ -5,6 +5,7 @@ class RegistrationWriteModel {
 
   constructor(eventStore, registrationReadModel) {
     this._eventStore = eventStore;
+    this._url = eventStore.state.url;
     this._registrationReadModel = registrationReadModel;
   }
 
@@ -44,6 +45,10 @@ class RegistrationWriteModel {
   /////////////////////////////////////////////////////////////////////////////////////////
   eventStore() {
     return this._eventStore;
+  }
+
+  url() {
+    return this._url;
   }
 }
 

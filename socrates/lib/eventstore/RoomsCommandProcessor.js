@@ -70,6 +70,10 @@ class RoomsCommandProcessor {
   eventStore() {
     return this.writeModel.eventStore();
   }
+
+  url() {
+    return this.writeModel.url();
+  }
 }
 
 module.exports = RoomsCommandProcessor;
