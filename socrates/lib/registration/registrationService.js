@@ -15,6 +15,7 @@ module.exports = {
     let waitinglistReservationEvent;
     eventstoreService.getRegistrationCommandProcessor(registrationTuple.activityUrl, (err, registrationCommandProcessor) => {
       if (err || !registrationCommandProcessor) { return callback(err, 'message.title.problem', 'message.content.activities.does_not_exist'); }
+
       if (registrationTuple.desiredRoomTypes.length > 0) {
         waitinglistReservationEvent = registrationCommandProcessor.issueWaitinglistReservation(registrationTuple.desiredRoomTypes, registrationTuple.duration, registrationTuple.sessionId, memberIdIfKnown, now);
       }

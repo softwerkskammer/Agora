@@ -58,13 +58,12 @@ describe('SoCraTes registration application', function () {
 
   var eventStoreSave;
 
-  var eventStore;
+  let listOfEvents;
 
   beforeEach(function () {
     cache.flushAll();
 
-    eventStore = new GlobalEventStore();
-    eventStore.state.events = [
+    listOfEvents = [
       events.roomQuotaWasSet('single', 0),
       events.roomQuotaWasSet('bed_in_double', 10),
       events.roomQuotaWasSet('junior', 10),
@@ -78,7 +77,12 @@ describe('SoCraTes registration application', function () {
     sinon.stub(subscriberstore, 'getSubscriber', function (memberId, callback) { callback(null, new Subscriber({})); });
     sinon.stub(subscriberstore, 'saveSubscriber', function (subscriber, callback) { callback(); });
 
-    sinon.stub(eventstore, 'getEventStore', function (url, callback) { callback(null, eventStore); });
+    sinon.stub(eventstore, 'getEventStore', function (url, callback) {
+      callback(null, new GlobalEventStore({
+        url: url,
+        events: listOfEvents
+      }));
+    });
 
     sinon.stub(notifications, 'newParticipant');
     sinon.stub(notifications, 'newWaitinglistEntry');
@@ -134,7 +138,7 @@ describe('SoCraTes registration application', function () {
     it('displays the options (but disabled) if the user is registered', function (done) {
       /* eslint no-underscore-dangle: 0 */
 
-      eventStore.state.events = eventStore.state.events.concat([
+      listOfEvents = listOfEvents.concat([
         events.registeredParticipantFromWaitinglist('bed_in_junior', 'some-duration', 'memberId2', aShortTimeAgo)]);
 
       appWithSocratesMember
@@ -169,7 +173,7 @@ describe('SoCraTes registration application', function () {
     });
 
     it('does not display the roommate banner on the registration page when the user is subscribed in a single-bed room', function (done) {
-      eventStore.state.events = eventStore.state.events.concat([
+      listOfEvents = listOfEvents.concat([
         events.registeredParticipantFromWaitinglist('single', 'some-duration', 'memberId2', aShortTimeAgo)]);
 
       appWithSocratesMember
@@ -181,7 +185,7 @@ describe('SoCraTes registration application', function () {
     });
 
     it('does not display the roommate banner on the registration page when the user is subscribed in a junior room', function (done) {
-      eventStore.state.events = eventStore.state.events.concat([
+      listOfEvents = listOfEvents.concat([
         events.registeredParticipantFromWaitinglist('junior', 'some-duration', 'memberId2', aShortTimeAgo)]);
 
       appWithSocratesMember
@@ -193,7 +197,7 @@ describe('SoCraTes registration application', function () {
     });
 
     it('does not display the roommate banner on the registration page when the user is on the waitinglist for a double-bed room', function (done) {
-      eventStore.state.events = eventStore.state.events.concat([
+      listOfEvents = listOfEvents.concat([
         events.waitinglistParticipantWasRegistered(['bed_in_double'], 2, 'some-session-id', 'memberId2', aShortTimeAgo)]);
 
       appWithSocratesMember
@@ -205,7 +209,7 @@ describe('SoCraTes registration application', function () {
     });
 
     it('does not display the roommate banner on the registration page when the user is on the waitinglist for a shared junior room', function (done) {
-      eventStore.state.events = eventStore.state.events.concat([
+      listOfEvents = listOfEvents.concat([
         events.waitinglistParticipantWasRegistered(['bed_in_junior'], 2, 'some-session-id', 'memberId2', aShortTimeAgo)]);
 
       appWithSocratesMember
@@ -217,7 +221,7 @@ describe('SoCraTes registration application', function () {
     });
 
     it('displays the roommate banner on the registration page when the user is subscribed for a double-bed room', function (done) {
-      eventStore.state.events = eventStore.state.events.concat([
+      listOfEvents = listOfEvents.concat([
         events.registeredParticipantFromWaitinglist('bed_in_double', 'some-duration', 'memberId2', aShortTimeAgo)]);
 
       appWithSocratesMember
@@ -226,7 +230,7 @@ describe('SoCraTes registration application', function () {
     });
 
     it('displays the roommate banner on the registration page when the user is subscribed for a shared junior room', function (done) {
-      eventStore.state.events = eventStore.state.events.concat([
+      listOfEvents = listOfEvents.concat([
         events.registeredParticipantFromWaitinglist('bed_in_junior', 'some-duration', 'memberId2', aShortTimeAgo)]);
 
       appWithSocratesMember
@@ -235,7 +239,7 @@ describe('SoCraTes registration application', function () {
     });
 
     it('does not display the roommate banner on the registration page when the user is subscribed for a double-bed room and already has a roommate', function (done) {
-      eventStore.state.events = eventStore.state.events.concat([
+      listOfEvents = listOfEvents.concat([
         events.registeredParticipantFromWaitinglist('bed_in_double', 'some-duration', 'other-member-id', aShortTimeAgo),
         events.registeredParticipantFromWaitinglist('bed_in_double', 'some-duration', 'memberId2', aShortTimeAgo),
         events.roomPairWasAdded('bed_in_double', 'other-member-id', 'memberId2')]);
@@ -249,7 +253,7 @@ describe('SoCraTes registration application', function () {
     });
 
     it('does not display the roommate banner on the registration page when the user is subscribed for a shared junior room and already has a roommate', function (done) {
-      eventStore.state.events = eventStore.state.events.concat([
+      listOfEvents = listOfEvents.concat([
         events.registeredParticipantFromWaitinglist('bed_in_junior', 'some-duration', 'other-member-id', aShortTimeAgo),
         events.registeredParticipantFromWaitinglist('bed_in_junior', 'some-duration', 'memberId2', aShortTimeAgo),
         events.roomPairWasAdded('bed_in_junior', 'other-member-id', 'memberId2')]);
@@ -355,7 +359,7 @@ describe('SoCraTes registration application', function () {
 
   describe('submission of the participate form to become a waitinglist participant', function () {
     it('is accepted when a waitinglist option is selected', function (done) {
-      eventStore.state.events = eventStore.state.events.concat([
+      listOfEvents = listOfEvents.concat([
         events.waitinglistReservationWasIssued(['single'], 2, 'session-id', 'memberId', aShortTimeAgo)
       ]);
 
@@ -377,7 +381,7 @@ describe('SoCraTes registration application', function () {
         .expect(302)
         .expect('location', '/registration', function (err) {
           expect(eventStoreSave.called).to.be(true);
-          expect(stripTimestampsAndJoins(eventStore.state.events)).to.eql([
+          expect(stripTimestampsAndJoins(eventStoreSave.firstCall.args[0].state.events)).to.eql([
             {event: e.ROOM_QUOTA_WAS_SET, roomType: 'single', quota: 0},
             {event: e.ROOM_QUOTA_WAS_SET, roomType: 'bed_in_double', quota: 10},
             {event: e.ROOM_QUOTA_WAS_SET, roomType: 'junior', quota: 10},
@@ -392,7 +396,7 @@ describe('SoCraTes registration application', function () {
 
   describe('submission of the participate form to book a room and to become a waitinglist participant', function () {
     it('is accepted when a room and at least a waitinglist option is selected', function (done) {
-      eventStore.state.events = eventStore.state.events.concat([
+      listOfEvents = listOfEvents.concat([
         events.waitinglistReservationWasIssued(['single', 'junior'], 2, 'session-id', 'memberId', aShortTimeAgo)
       ]);
 
@@ -414,7 +418,7 @@ describe('SoCraTes registration application', function () {
         .expect(302)
         .expect('location', '/registration', function (err) {
           expect(eventStoreSave.called).to.be(true);
-          expect(stripTimestampsAndJoins(eventStore.state.events)).to.eql([
+          expect(stripTimestampsAndJoins(eventStoreSave.firstCall.args[0].state.events)).to.eql([
             {event: e.ROOM_QUOTA_WAS_SET, roomType: 'single', quota: 0},
             {event: e.ROOM_QUOTA_WAS_SET, roomType: 'bed_in_double', quota: 10},
             {event: e.ROOM_QUOTA_WAS_SET, roomType: 'junior', quota: 10},
