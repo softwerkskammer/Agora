@@ -10,15 +10,15 @@ const SoCraTesReadModel = beans.get('SoCraTesReadModel');
 const singleBedRoom = 'single';
 const bedInDouble = 'bed_in_double';
 
-describe('The SoCraTes read model', function () {
+describe('The SoCraTes read model', () => {
 
   let listOfEvents;
 
-  beforeEach(function () {
+  beforeEach(() => {
     listOfEvents = [];
   });
 
-  it('reads the latest start and end time from the events', function () {
+  it('reads the latest start and end time from the events', () => {
     listOfEvents = [
       events.startTimeWasSet(moment('2015-12-15T12:30:00+02:00')),
       events.startTimeWasSet(moment('2015-06-15T12:30:00+02:00')),
@@ -31,19 +31,19 @@ describe('The SoCraTes read model', function () {
     expect(readModel.endTime().valueOf()).to.eql(moment('2015-08-15T12:30:00+02:00').valueOf());
   });
 
-  it('does not know the quota if it has not been set', function () {
+  it('does not know the quota if it has not been set', () => {
     const readModel = new SoCraTesReadModel(listOfEvents);
     expect(readModel.quotaFor(singleBedRoom)).to.be(undefined);
   });
 
-  it('determines the quota from the socrates event', function () {
+  it('determines the quota from the socrates event', () => {
     listOfEvents = [events.roomQuotaWasSet(singleBedRoom, 100)];
     const readModel = new SoCraTesReadModel(listOfEvents);
 
     expect(readModel.quotaFor(singleBedRoom)).to.be(100);
   });
 
-  it('determines the quota from the latest socrates event for the requested room type', function () {
+  it('determines the quota from the latest socrates event for the requested room type', () => {
     listOfEvents = [
       events.roomQuotaWasSet(singleBedRoom, 100),
       events.roomQuotaWasSet(singleBedRoom, 200),

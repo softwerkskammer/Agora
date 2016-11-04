@@ -12,9 +12,7 @@ function projectRoomPairs(roomType, roomPairs, event) {
     return R.append({participant1Id: event.participant1Id, participant2Id: event.participant2Id}, roomPairs);
   }
   if ((event.event === e.ROOM_PAIR_WAS_REMOVED || event.event === e.ROOM_PAIR_CONTAINING_A_PARTICIPANT_WAS_REMOVED) && event.roomType === roomType) {
-    return R.reject(function (pair) {
-      return pair.participant1Id === event.participant1Id && pair.participant2Id === event.participant2Id;
-    }, roomPairs);
+    return R.reject(pair => pair.participant1Id === event.participant1Id && pair.participant2Id === event.participant2Id, roomPairs);
   }
 
   return roomPairs;
@@ -25,9 +23,7 @@ function projectParticpantsInRoom(roomType, participants, event) {
     return R.append(event.participant2Id, R.append(event.participant1Id, participants));
   }
   if ((event.event === e.ROOM_PAIR_WAS_REMOVED || event.event === e.ROOM_PAIR_CONTAINING_A_PARTICIPANT_WAS_REMOVED) && event.roomType === roomType) {
-    return R.reject(function (participant) {
-      return participant === event.participant1Id || participant === event.participant2Id;
-    }, participants);
+    return R.reject(participant => participant === event.participant1Id || participant === event.participant2Id, participants);
   }
 
   return participants;
@@ -61,9 +57,7 @@ class RoomsReadModel {
   }
 
   isRoomPairIn(roomType, participant1Id, participant2Id) {
-    return R.find(function (pair) {
-      return pair.participant1Id === participant1Id || pair.participant2Id === participant2Id;
-    }, this.roomPairsFor(roomType));
+    return R.find(pair => pair.participant1Id === participant1Id || pair.participant2Id === participant2Id, this.roomPairsFor(roomType));
   }
 
   participantsInRoom(roomType) {
@@ -75,9 +69,7 @@ class RoomsReadModel {
   }
 
   roommateFor(roomType, memberId) {
-    const pairWithMember = R.find(function (pair) {
-      return pair.participant1Id === memberId || pair.participant2Id === memberId;
-    }, this.roomPairsFor(roomType));
+    const pairWithMember = R.find(pair => pair.participant1Id === memberId || pair.participant2Id === memberId, this.roomPairsFor(roomType));
 
     if (pairWithMember) {
       return pairWithMember.participant1Id === memberId ? pairWithMember.participant2Id : pairWithMember.participant1Id;
@@ -86,10 +78,10 @@ class RoomsReadModel {
   }
 
   roomPairsWithFullMembersFrom(roomType, memberList) {
-    return R.map(function (roomPair) {
+    return R.map(roomPair => {
       return {
-        participant1: R.find(function (member) { return member.id() === roomPair.participant1Id; }, memberList),
-        participant2: R.find(function (member) { return member.id() === roomPair.participant2Id; }, memberList)
+        participant1: R.find(member => member.id() === roomPair.participant1Id, memberList),
+        participant2: R.find(member => member.id() === roomPair.participant2Id, memberList)
       };
     }, this.roomPairsFor(roomType));
   }

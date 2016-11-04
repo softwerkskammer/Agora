@@ -16,9 +16,7 @@ class SoCraTesCommandProcessor {
   }
 
   createConferenceEvents(uiData) {
-    function matchArrayEntries(input) {
-      return R.zipObj(misc.toArray(input.names), misc.toArray(input.limits));
-    }
+    const matchArrayEntries = input => R.zipObj(misc.toArray(input.names), misc.toArray(input.limits));
 
     const evts = [];
     evts.push(events.urlWasSet(uiData.url));

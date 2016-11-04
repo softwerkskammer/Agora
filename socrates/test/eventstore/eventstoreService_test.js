@@ -10,7 +10,7 @@ var eventstore = beans.get('eventstore');
 var GlobalEventStore = beans.get('GlobalEventStore');
 var eventstoreService = beans.get('eventstoreService');
 
-describe('eventstoreService', function () {
+describe('eventstoreService', () => {
   var eventStore = {
     url: 'socrates-url',
     events: [{event: 'EVENT-1'}]
@@ -18,18 +18,16 @@ describe('eventstoreService', function () {
 
   let getEventStore;
 
-  beforeEach(function () {
+  beforeEach(() => {
     cache.flushAll();
-    getEventStore = sinon.stub(eventstore, 'getEventStore', function (url, callback) {
-      callback(null, new GlobalEventStore(eventStore));
-    });
+    getEventStore = sinon.stub(eventstore, 'getEventStore', (url, callback) => callback(null, new GlobalEventStore(eventStore)));
   });
 
-  afterEach(function () {
+  afterEach(() => {
     sinon.restore();
   });
 
-  it('calls getEventStore once on startup', function (done) {
+  it('calls getEventStore once on startup', done => {
     eventstoreService.getSoCraTesReadModel('socrates-url', function (err) {
       expect(getEventStore.callCount).to.be(1);
       expect(getEventStore.calledWith('socrates-url')).to.be(true);
@@ -37,15 +35,15 @@ describe('eventstoreService', function () {
     });
   });
 
-  it('calls getEventStore once even when fetching the model multiple times', function (done) {
-    eventstoreService.getSoCraTesReadModel('socrates-url', function (err1) {
-      eventstoreService.getSoCraTesReadModel('socrates-url', function (err2) {
-        eventstoreService.getSoCraTesReadModel('socrates-url', function (err3) {
+  it('calls getEventStore once even when fetching the model multiple times', done => {
+    eventstoreService.getSoCraTesReadModel('socrates-url', err1 =>
+      eventstoreService.getSoCraTesReadModel('socrates-url', err2 =>
+        eventstoreService.getSoCraTesReadModel('socrates-url', err3 => {
           expect(getEventStore.callCount).to.be(1);
           done(err1 || err2 || err3);
-        });
-      });
-    });
+        })
+      )
+    );
   });
 
 });

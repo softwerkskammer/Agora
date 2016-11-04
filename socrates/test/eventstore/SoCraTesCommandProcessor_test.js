@@ -11,22 +11,22 @@ var SoCraTesWriteModel = beans.get('SoCraTesWriteModel');
 var SoCraTesCommandProcessor = beans.get('SoCraTesCommandProcessor');
 
 function stripTimestamps(someEvents) {
-  return R.map(function (event) {
+  return R.map(event => {
     var newEvent = R.clone(event);
     delete newEvent.timestamp;
     return newEvent;
   }, someEvents);
 }
 
-describe('The SoCraTes command processor', function () {
+describe('The SoCraTes command processor', () => {
   var commandHandler;
 
-  beforeEach(function () {
+  beforeEach(() => {
     const listOfEvents = [];
     commandHandler = new SoCraTesCommandProcessor(new SoCraTesWriteModel(listOfEvents));
   });
 
-  it('creates a new url event, start time event, end time event and room quota events on update', function () {
+  it('creates a new url event, start time event, end time event and room quota events on update', () => {
     // When (issued command)
     const evts = commandHandler.createConferenceEvents({
       url: 'new-socrates',

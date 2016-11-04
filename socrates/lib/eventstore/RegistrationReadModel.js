@@ -77,16 +77,16 @@ class RegistrationReadModel {
 
     // derived data:
     roomOptions.allIds().forEach(roomType => {
-      this._participantsByMemberIdFor[roomType] = R.filter(function (event) { return event.roomType === roomType; }, this.participantsByMemberId());
-      this._waitinglistReservationsBySessionIdFor[roomType] = R.filter(function (event) { return R.contains(roomType, event.desiredRoomTypes); }, this.waitinglistReservationsBySessionId());
-      this._waitinglistParticipantsByMemberIdFor[roomType] = R.filter(function (event) { return R.contains(roomType, event.desiredRoomTypes); }, this.waitinglistParticipantsByMemberId());
+      this._participantsByMemberIdFor[roomType] = R.filter(event => event.roomType === roomType, this.participantsByMemberId());
+      this._waitinglistReservationsBySessionIdFor[roomType] = R.filter(event => R.contains(roomType, event.desiredRoomTypes), this.waitinglistReservationsBySessionId());
+      this._waitinglistParticipantsByMemberIdFor[roomType] = R.filter(event => R.contains(roomType, event.desiredRoomTypes), this.waitinglistParticipantsByMemberId());
     });
 
     this._durations = R.pipe(
       R.values, // only the events
       R.pluck('duration'), // pull out each duration
       R.groupBy(R.identity), // group same durations
-      R.mapObjIndexed(function (value, key) { return {count: value.length, duration: roomOptions.endOfStayFor(key)}; })
+      R.mapObjIndexed((value, key) => { return {count: value.length, duration: roomOptions.endOfStayFor(key)}; })
     )(this.participantsByMemberId());
 
   }

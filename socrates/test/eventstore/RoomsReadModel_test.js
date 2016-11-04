@@ -15,11 +15,11 @@ const bedInDouble = 'bed_in_double';
 
 const aLongTimeAgo = moment.tz().subtract(40, 'minutes');
 
-describe('The rooms read model', function () {
+describe('The rooms read model', () => {
 
   let listOfEvents;
 
-  beforeEach(function () {
+  beforeEach(() => {
     listOfEvents = [];
 
     listOfEvents = [
@@ -31,7 +31,7 @@ describe('The rooms read model', function () {
     ];
   });
 
-  it('lists those participants that already are in a room', function () {
+  it('lists those participants that already are in a room', () => {
     listOfEvents = listOfEvents.concat([
       events.roomPairWasAdded(bedInDouble, 'memberId1', 'memberId2')
     ]);
@@ -43,7 +43,7 @@ describe('The rooms read model', function () {
   });
 
 
-  it('lists those participants that are not yet in a room', function () {
+  it('lists those participants that are not yet in a room', () => {
     listOfEvents = listOfEvents.concat([
       events.roomPairWasAdded(bedInDouble, 'memberId1', 'memberId2')
     ]);
@@ -54,7 +54,7 @@ describe('The rooms read model', function () {
     expect(participantsWithoutRoom).to.eql(['memberId3', 'memberId4', 'memberId5']);
   });
 
-  it('returns the id of a member\'s roommate', function () {
+  it('returns the id of a member\'s roommate', () => {
     listOfEvents = listOfEvents.concat([
       events.roomPairWasAdded(bedInDouble, 'memberId1', 'memberId2')
     ]);
@@ -64,12 +64,12 @@ describe('The rooms read model', function () {
     expect(readModel.roommateFor(bedInDouble, 'memberId2')).to.be('memberId1');
   });
 
-  it('returns undefined if the member is not associated to a roommate', function () {
+  it('returns undefined if the member is not associated to a roommate', () => {
     const readModel = new RoomsReadModel(listOfEvents, new RegistrationReadModel(listOfEvents, new SoCraTesReadModel(listOfEvents)));
     expect(readModel.roommateFor(bedInDouble, 'memberId1')).to.be(undefined);
   });
 
-  it('lists the room pairs', function () {
+  it('lists the room pairs', () => {
     const allKnownMembers = [
       new Member({id: 'memberId1'}),
       new Member({id: 'memberId2'}),
