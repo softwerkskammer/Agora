@@ -126,7 +126,7 @@ module.exports = {
         if (err2 || !registrationReadModel) { return callback(err2); }
         self.getRoomsReadModel(url, function (err1, roomsReadModel) {
           if (err1 || !roomsReadModel) { return callback(err1); }
-          callback(null, new RoomsCommandProcessor(new RoomsWriteModel(eventStore, roomsReadModel, registrationReadModel)));
+          callback(null, new RoomsCommandProcessor(new RoomsWriteModel(url, roomsReadModel, registrationReadModel)));
         });
       });
     });

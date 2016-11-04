@@ -4,8 +4,8 @@
 const R = require('ramda');
 
 class RoomsWriteModel {
-  constructor(eventStore, roomsReadModel, registrationReadModel) {
-    this._url = eventStore.state.url;
+  constructor(url, roomsReadModel, registrationReadModel) {
+    this._url = url;
     this._roomsReadModel = roomsReadModel;
     this._registrationReadModel = registrationReadModel;
   }
