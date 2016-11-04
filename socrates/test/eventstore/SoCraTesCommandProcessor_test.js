@@ -12,11 +12,11 @@ var SoCraTesWriteModel = beans.get('SoCraTesWriteModel');
 var SoCraTesCommandProcessor = beans.get('SoCraTesCommandProcessor');
 
 function stripTimestamps(someEvents) {
-  return R.map(event => {
+  return someEvents.map(event => {
     var newEvent = R.clone(event);
     delete newEvent.timestamp;
     return newEvent;
-  }, someEvents);
+  });
 }
 
 function eventStoreWith(listOfEvents) {

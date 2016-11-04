@@ -78,12 +78,12 @@ class RoomsReadModel {
   }
 
   roomPairsWithFullMembersFrom(roomType, memberList) {
-    return R.map(roomPair => {
+    return this.roomPairsFor(roomType).map(roomPair => {
       return {
         participant1: memberList.find(member => member.id() === roomPair.participant1Id),
         participant2: memberList.find(member => member.id() === roomPair.participant2Id)
       };
-    }, this.roomPairsFor(roomType));
+    });
   }
 }
 

@@ -18,11 +18,11 @@ const e = beans.get('eventConstants');
 const aLongTimeAgo = moment.tz().subtract(40, 'minutes');
 
 function stripTimestamps(someEvents) {
-  return R.map(event => {
+  return someEvents.map(event => {
     const newEvent = R.clone(event);
     delete newEvent.timestamp;
     return newEvent;
-  }, someEvents);
+  });
 }
 
 function eventStoreWith(listOfEvents) {
