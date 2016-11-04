@@ -1,8 +1,8 @@
 'use strict';
 
-const R = require('ramda');
 const beans = require('simple-configure').get('beans');
 
+const misc = beans.get('misc');
 const subscriberstore = beans.get('subscriberstore');
 const socratesNotifications = beans.get('socratesNotifications');
 const roomOptions = beans.get('roomOptions');
@@ -20,7 +20,7 @@ module.exports = {
       }
 
       const waitinglistReservationEventMsg = waitinglistReservationEvent && waitinglistReservationEvent.event;
-      return eventstoreService.saveCommandProcessor(registrationCommandProcessor, R.filter(R.identity, [waitinglistReservationEvent]), err1 => {
+      return eventstoreService.saveCommandProcessor(registrationCommandProcessor, misc.compact([waitinglistReservationEvent]), err1 => {
         if (err1) { return callback(err1); }
         if (waitinglistReservationEventMsg === eventConstants.WAITINGLIST_RESERVATION_WAS_ISSUED
           || waitinglistReservationEventMsg === eventConstants.DID_NOT_ISSUE_WAITINGLIST_RESERVATION_FOR_ALREADY_RESERVED_SESSION
@@ -50,7 +50,7 @@ module.exports = {
           if (err || !commandProcessor) { return callback(err); }
 
           const waitinglistRegistrationEvent = commandProcessor.registerWaitinglistParticipant(registrationTuple.desiredRoomTypes, registrationTuple.sessionId, memberID);
-          return eventstoreService.saveCommandProcessor(commandProcessor, R.filter(R.identity, [waitinglistRegistrationEvent]), err1 => {
+          return eventstoreService.saveCommandProcessor(commandProcessor, misc.compact([waitinglistRegistrationEvent]), err1 => {
             if (err1) { return callback(err1); }
 
             const waitinglistRegistrationEventMsg = waitinglistRegistrationEvent && waitinglistRegistrationEvent.event;
