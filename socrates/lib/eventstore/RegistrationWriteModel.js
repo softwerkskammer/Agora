@@ -3,8 +3,8 @@
 
 class RegistrationWriteModel {
 
-  constructor(eventStore, registrationReadModel) {
-    this._url = eventStore.state.url;
+  constructor(url, registrationReadModel) {
+    this._url = url;
     this._registrationReadModel = registrationReadModel;
   }
 

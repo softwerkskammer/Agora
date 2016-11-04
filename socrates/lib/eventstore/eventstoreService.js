@@ -112,7 +112,7 @@ module.exports = {
       if (err || !eventStore) { return callback(err); }
       self.getRegistrationReadModel(url, function (err1, registrationReadModel) {
         if (err1 || !registrationReadModel) { return callback(err1); }
-        callback(null, new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, registrationReadModel)));
+        callback(null, new RegistrationCommandProcessor(new RegistrationWriteModel(url, registrationReadModel)));
       });
     });
   },
