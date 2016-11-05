@@ -1,40 +1,45 @@
 /*eslint no-underscore-dangle: 0*/
 'use strict';
 
-var expect = require('must-dist');
-var R = require('ramda');
-var moment = require('moment-timezone');
+const expect = require('must-dist');
+const R = require('ramda');
+const moment = require('moment-timezone');
 
-var beans = require('../../testutil/configureForTest').get('beans');
-var events = beans.get('events');
-var GlobalEventStore = beans.get('GlobalEventStore');
-var RoomsWriteModel = beans.get('RoomsWriteModel');
-var RoomsReadModel = beans.get('RoomsReadModel');
-var RegistrationReadModel = beans.get('RegistrationReadModel');
-var SoCraTesReadModel = beans.get('SoCraTesReadModel');
-var RoomsCommandProcessor = beans.get('RoomsCommandProcessor');
-var e = beans.get('eventConstants');
+const beans = require('../../testutil/configureForTest').get('beans');
+const events = beans.get('events');
+const RoomsWriteModel = beans.get('RoomsWriteModel');
+const RoomsReadModel = beans.get('RoomsReadModel');
+const RegistrationReadModel = beans.get('RegistrationReadModel');
+const SoCraTesReadModel = beans.get('SoCraTesReadModel');
+const RoomsCommandProcessor = beans.get('RoomsCommandProcessor');
+const GlobalEventStore = beans.get('GlobalEventStore');
+const e = beans.get('eventConstants');
 
-var aLongTimeAgo = moment.tz().subtract(40, 'minutes');
+const aLongTimeAgo = moment.tz().subtract(40, 'minutes');
 
 function stripTimestamps(someEvents) {
-  return R.map(function (event) {
-    var newEvent = R.clone(event);
+  return someEvents.map(event => {
+    const newEvent = R.clone(event);
     delete newEvent.timestamp;
     return newEvent;
-  }, someEvents);
+  });
 }
 
-var bedInDouble = 'bed_in_double';
+function eventStoreWith(listOfEvents) {
+  return new GlobalEventStore({url: 'socrates-url', events: listOfEvents});
+}
 
-describe('The rooms command processor', function () {
+const bedInDouble = 'bed_in_double';
 
-  var eventStore;
+describe('The rooms command processor', () => {
 
-  beforeEach(function () {
-    eventStore = new GlobalEventStore();
+  //let listOfEvents;
+  let listOfEvents;
 
-    eventStore.state.events = [
+  beforeEach(() => {
+    //listOfEvents = new GlobalEventStore();
+
+    listOfEvents = [
       events.registeredParticipantFromWaitinglist(bedInDouble, 2, 'memberId1', aLongTimeAgo),
       events.registeredParticipantFromWaitinglist(bedInDouble, 2, 'memberId2', aLongTimeAgo),
       events.registeredParticipantFromWaitinglist(bedInDouble, 2, 'memberId3', aLongTimeAgo),
@@ -43,9 +48,9 @@ describe('The rooms command processor', function () {
     ];
   });
 
-  it('can put two participants into a room', function () {
-    const registrationReadModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
-    const commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStore, new RoomsReadModel(eventStore, registrationReadModel), registrationReadModel));
+  it('can put two participants into a room', () => {
+    const registrationReadModel = new RegistrationReadModel(listOfEvents, new SoCraTesReadModel(listOfEvents));
+    const commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStoreWith(listOfEvents), new RoomsReadModel(listOfEvents, registrationReadModel), registrationReadModel));
 
     const evts = commandProcessor.addParticipantPairFor(bedInDouble, 'memberId1', 'memberId2');
 
@@ -54,9 +59,9 @@ describe('The rooms command processor', function () {
     ]);
   });
 
-  it('does not create a room if one of the participants is undefined', function () {
-    const registrationReadModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
-    const commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStore, new RoomsReadModel(eventStore, registrationReadModel), registrationReadModel));
+  it('does not create a room if one of the participants is undefined', () => {
+    const registrationReadModel = new RegistrationReadModel(listOfEvents, new SoCraTesReadModel(listOfEvents));
+    const commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStoreWith(listOfEvents), new RoomsReadModel(listOfEvents, registrationReadModel), registrationReadModel));
 
     const evts = commandProcessor.addParticipantPairFor(bedInDouble, 'memberId1', undefined);
 
@@ -65,9 +70,9 @@ describe('The rooms command processor', function () {
     ]);
   });
 
-  it('does not create a room if one of the participants is null', function () {
-    const registrationReadModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
-    const commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStore, new RoomsReadModel(eventStore, registrationReadModel), registrationReadModel));
+  it('does not create a room if one of the participants is null', () => {
+    const registrationReadModel = new RegistrationReadModel(listOfEvents, new SoCraTesReadModel(listOfEvents));
+    const commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStoreWith(listOfEvents), new RoomsReadModel(listOfEvents, registrationReadModel), registrationReadModel));
 
     const evts = commandProcessor.addParticipantPairFor(bedInDouble, null, 'memberId5');
 
@@ -76,9 +81,9 @@ describe('The rooms command processor', function () {
     ]);
   });
 
-  it('does not create a room if both participants do not exist', function () {
-    const registrationReadModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
-    const commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStore, new RoomsReadModel(eventStore, registrationReadModel), registrationReadModel));
+  it('does not create a room if both participants do not exist', () => {
+    const registrationReadModel = new RegistrationReadModel(listOfEvents, new SoCraTesReadModel(listOfEvents));
+    const commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStoreWith(listOfEvents), new RoomsReadModel(listOfEvents, registrationReadModel), registrationReadModel));
 
     const evts = commandProcessor.addParticipantPairFor(bedInDouble, undefined, null);
 
@@ -88,9 +93,9 @@ describe('The rooms command processor', function () {
     ]);
   });
 
-  it('does not create a room if the first participant is not known', function () {
-    const registrationReadModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
-    const commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStore, new RoomsReadModel(eventStore, registrationReadModel), registrationReadModel));
+  it('does not create a room if the first participant is not known', () => {
+    const registrationReadModel = new RegistrationReadModel(listOfEvents, new SoCraTesReadModel(listOfEvents));
+    const commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStoreWith(listOfEvents), new RoomsReadModel(listOfEvents, registrationReadModel), registrationReadModel));
 
     const evts = commandProcessor.addParticipantPairFor(bedInDouble, 'unknownMemberId', 'memberId5');
 
@@ -99,9 +104,9 @@ describe('The rooms command processor', function () {
     ]);
   });
 
-  it('does not create a room if the second participant is not known', function () {
-    const registrationReadModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
-    const commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStore, new RoomsReadModel(eventStore, registrationReadModel), registrationReadModel));
+  it('does not create a room if the second participant is not known', () => {
+    const registrationReadModel = new RegistrationReadModel(listOfEvents, new SoCraTesReadModel(listOfEvents));
+    const commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStoreWith(listOfEvents), new RoomsReadModel(listOfEvents, registrationReadModel), registrationReadModel));
 
     const evts = commandProcessor.addParticipantPairFor(bedInDouble, 'memberId1', 'unknownMemberId');
 
@@ -110,9 +115,9 @@ describe('The rooms command processor', function () {
     ]);
   });
 
-  it('does not create a room if both participants are not known', function () {
-    const registrationReadModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
-    const commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStore, new RoomsReadModel(eventStore, registrationReadModel), registrationReadModel));
+  it('does not create a room if both participants are not known', () => {
+    const registrationReadModel = new RegistrationReadModel(listOfEvents, new SoCraTesReadModel(listOfEvents));
+    const commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStoreWith(listOfEvents), new RoomsReadModel(listOfEvents, registrationReadModel), registrationReadModel));
 
     const evts = commandProcessor.addParticipantPairFor(bedInDouble, 'unknownMemberId', 'anotherUnknownMemberId');
 
@@ -122,9 +127,9 @@ describe('The rooms command processor', function () {
     ]);
   });
 
-  it('does not create a room if the two participants are identical', function () {
-    const registrationReadModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
-    const commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStore, new RoomsReadModel(eventStore, registrationReadModel), registrationReadModel));
+  it('does not create a room if the two participants are identical', () => {
+    const registrationReadModel = new RegistrationReadModel(listOfEvents, new SoCraTesReadModel(listOfEvents));
+    const commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStoreWith(listOfEvents), new RoomsReadModel(listOfEvents, registrationReadModel), registrationReadModel));
 
     const evts = commandProcessor.addParticipantPairFor(bedInDouble, 'memberId1', 'memberId1');
 
@@ -133,13 +138,13 @@ describe('The rooms command processor', function () {
     ]);
   });
 
-  it('does not create a room if the first participant already is in a room', function () {
-    eventStore.state.events = eventStore.state.events.concat([
+  it('does not create a room if the first participant already is in a room', () => {
+    listOfEvents = listOfEvents.concat([
       events.roomPairWasAdded(bedInDouble, 'memberId1', 'memberId2')
     ]);
 
-    const registrationReadModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
-    const commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStore, new RoomsReadModel(eventStore, registrationReadModel), registrationReadModel));
+    const registrationReadModel = new RegistrationReadModel(listOfEvents, new SoCraTesReadModel(listOfEvents));
+    const commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStoreWith(listOfEvents), new RoomsReadModel(listOfEvents, registrationReadModel), registrationReadModel));
 
     const evts = commandProcessor.addParticipantPairFor(bedInDouble, 'memberId1', 'memberId3');
 
@@ -148,13 +153,13 @@ describe('The rooms command processor', function () {
     ]);
   });
 
-  it('does not create a room if the second participant already is in a room', function () {
-    eventStore.state.events = eventStore.state.events.concat([
+  it('does not create a room if the second participant already is in a room', () => {
+    listOfEvents = listOfEvents.concat([
       events.roomPairWasAdded(bedInDouble, 'memberId1', 'memberId2')
     ]);
 
-    const registrationReadModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
-    const commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStore, new RoomsReadModel(eventStore, registrationReadModel), registrationReadModel));
+    const registrationReadModel = new RegistrationReadModel(listOfEvents, new SoCraTesReadModel(listOfEvents));
+    const commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStoreWith(listOfEvents), new RoomsReadModel(listOfEvents, registrationReadModel), registrationReadModel));
 
     const evts = commandProcessor.addParticipantPairFor(bedInDouble, 'memberId4', 'memberId2');
 
@@ -163,13 +168,13 @@ describe('The rooms command processor', function () {
     ]);
   });
 
-  it('does not create a room if the participants already are in a room but in reverse order', function () {
-    eventStore.state.events = eventStore.state.events.concat([
+  it('does not create a room if the participants already are in a room but in reverse order', () => {
+    listOfEvents = listOfEvents.concat([
       events.roomPairWasAdded(bedInDouble, 'memberId1', 'memberId2')
     ]);
 
-    const registrationReadModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
-    const commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStore, new RoomsReadModel(eventStore, registrationReadModel), registrationReadModel));
+    const registrationReadModel = new RegistrationReadModel(listOfEvents, new SoCraTesReadModel(listOfEvents));
+    const commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStoreWith(listOfEvents), new RoomsReadModel(listOfEvents, registrationReadModel), registrationReadModel));
 
     const evts = commandProcessor.addParticipantPairFor(bedInDouble, 'memberId2', 'memberId1');
 
@@ -179,13 +184,13 @@ describe('The rooms command processor', function () {
     ]);
   });
 
-  it('removes a pair if the members are given in the right order', function () {
-    eventStore.state.events = eventStore.state.events.concat([
+  it('removes a pair if the members are given in the right order', () => {
+    listOfEvents = listOfEvents.concat([
       events.roomPairWasAdded(bedInDouble, 'memberId1', 'memberId2')
     ]);
 
-    const registrationReadModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
-    const commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStore, new RoomsReadModel(eventStore, registrationReadModel), registrationReadModel));
+    const registrationReadModel = new RegistrationReadModel(listOfEvents, new SoCraTesReadModel(listOfEvents));
+    const commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStoreWith(listOfEvents), new RoomsReadModel(listOfEvents, registrationReadModel), registrationReadModel));
 
     const evts = commandProcessor.removeParticipantPairFor(bedInDouble, 'memberId1', 'memberId2');
 
@@ -194,13 +199,13 @@ describe('The rooms command processor', function () {
     ]);
   });
 
-  it('does not remove a pair if the members are given in the wrong order', function () {
-    eventStore.state.events = eventStore.state.events.concat([
+  it('does not remove a pair if the members are given in the wrong order', () => {
+    listOfEvents = listOfEvents.concat([
       events.roomPairWasAdded(bedInDouble, 'memberId1', 'memberId2')
     ]);
 
-    const registrationReadModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
-    const commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStore, new RoomsReadModel(eventStore, registrationReadModel), registrationReadModel));
+    const registrationReadModel = new RegistrationReadModel(listOfEvents, new SoCraTesReadModel(listOfEvents));
+    const commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStoreWith(listOfEvents), new RoomsReadModel(listOfEvents, registrationReadModel), registrationReadModel));
     const evts = commandProcessor.removeParticipantPairFor(bedInDouble, 'memberId2', 'memberId1');
 
     expect(stripTimestamps(evts)).to.eql([
@@ -208,13 +213,13 @@ describe('The rooms command processor', function () {
     ]);
   });
 
-  it('removes a pair if the first member is given', function () {
-    eventStore.state.events = eventStore.state.events.concat([
+  it('removes a pair if the first member is given', () => {
+    listOfEvents = listOfEvents.concat([
       events.roomPairWasAdded(bedInDouble, 'memberId1', 'memberId2')
     ]);
 
-    const registrationReadModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
-    const commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStore, new RoomsReadModel(eventStore, registrationReadModel), registrationReadModel));
+    const registrationReadModel = new RegistrationReadModel(listOfEvents, new SoCraTesReadModel(listOfEvents));
+    const commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStoreWith(listOfEvents), new RoomsReadModel(listOfEvents, registrationReadModel), registrationReadModel));
     const evts = commandProcessor.removeParticipantPairContaining(bedInDouble, 'memberId1');
 
     expect(stripTimestamps(evts)).to.eql([
@@ -222,12 +227,12 @@ describe('The rooms command processor', function () {
     ]);
   });
 
-  it('removes a pair if the second member is given', function () {
-    eventStore.state.events = eventStore.state.events.concat([
+  it('removes a pair if the second member is given', () => {
+    listOfEvents = listOfEvents.concat([
       events.roomPairWasAdded(bedInDouble, 'memberId1', 'memberId2')
     ]);
-    const registrationReadModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
-    const commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStore, new RoomsReadModel(eventStore, registrationReadModel), registrationReadModel));
+    const registrationReadModel = new RegistrationReadModel(listOfEvents, new SoCraTesReadModel(listOfEvents));
+    const commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStoreWith(listOfEvents), new RoomsReadModel(listOfEvents, registrationReadModel), registrationReadModel));
     const evts = commandProcessor.removeParticipantPairContaining(bedInDouble, 'memberId2');
 
     expect(stripTimestamps(evts)).to.eql([
@@ -235,30 +240,30 @@ describe('The rooms command processor', function () {
     ]);
   });
 
-  it('does not remove a pair if the participant is not in any pairs', function () {
-    eventStore.state.events = eventStore.state.events.concat([
+  it('does not remove a pair if the participant is not in any pairs', () => {
+    listOfEvents = listOfEvents.concat([
       events.roomPairWasAdded(bedInDouble, 'memberId1', 'memberId2')
     ]);
-    const registrationReadModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
-    const commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStore, new RoomsReadModel(eventStore, registrationReadModel), registrationReadModel));
+    const registrationReadModel = new RegistrationReadModel(listOfEvents, new SoCraTesReadModel(listOfEvents));
+    const commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStoreWith(listOfEvents), new RoomsReadModel(listOfEvents, registrationReadModel), registrationReadModel));
     const evts = commandProcessor.removeParticipantPairContaining(bedInDouble, 'memberId3');
 
     expect(stripTimestamps(evts)).to.eql([]);
   });
 
-  it('does not do anything if asked for a single room', function () {
+  it('does not do anything if asked for a single room', () => {
 
-    const registrationReadModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
-    const commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStore, new RoomsReadModel(eventStore, registrationReadModel), registrationReadModel));
+    const registrationReadModel = new RegistrationReadModel(listOfEvents, new SoCraTesReadModel(listOfEvents));
+    const commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStoreWith(listOfEvents), new RoomsReadModel(listOfEvents, registrationReadModel), registrationReadModel));
     const evts = commandProcessor.removeParticipantPairContaining('single', 'memberId');
 
     expect(stripTimestamps(evts)).to.eql([]);
   });
 
-  it('does not do anything if asked for a junior room', function () {
+  it('does not do anything if asked for a junior room', () => {
 
-    const registrationReadModel = new RegistrationReadModel(eventStore, new SoCraTesReadModel(eventStore));
-    const commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStore, new RoomsReadModel(eventStore, registrationReadModel), registrationReadModel));
+    const registrationReadModel = new RegistrationReadModel(listOfEvents, new SoCraTesReadModel(listOfEvents));
+    const commandProcessor = new RoomsCommandProcessor(new RoomsWriteModel(eventStoreWith(listOfEvents), new RoomsReadModel(listOfEvents, registrationReadModel), registrationReadModel));
     const evts = commandProcessor.removeParticipantPairContaining('junior', 'memberId');
 
     expect(stripTimestamps(evts)).to.eql([]);

@@ -2,6 +2,9 @@
 const R = require('ramda');
 const moment = require('moment-timezone');
 
+const beans = require('simple-configure').get('beans');
+const misc = beans.get('misc');
+
 class Photo {
   constructor(data) { this.state = data || {}; }
 
@@ -54,7 +57,7 @@ class ActivityResult {
   addPhoto(photo) { this.state.photos.push(photo); }
 
   getDistinctPresentTags() {
-    const onlyUniqValidEntries = R.compose(R.filter(x => x), R.uniq, R.flatten);
+    const onlyUniqValidEntries = R.compose(misc.compact, R.uniq, R.flatten);
     return onlyUniqValidEntries(this.state.photos.map(photo => photo.tags));
   }
 

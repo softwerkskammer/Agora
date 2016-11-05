@@ -78,7 +78,7 @@ app.post('/submit', (req, res, next) => {
   async.parallel(
     [
       callback =>
-        validation.checkValidity(req.body.previousUrl.trim(), req.body.url.trim(), eventstoreService.isValidUrl, req.i18n.t('validation.url_not_available'), callback),
+        validation.checkValidity(req.body.previousUrl.trim(), req.body.url.trim(), eventstoreService.isValidUrl, 'A SoCraTes for this year has already been created. Please select a different date or edit the existing activity.', callback),
       callback => callback(null, validation.isValidForActivity(req.body)),
       callback => {
         let errors = [];

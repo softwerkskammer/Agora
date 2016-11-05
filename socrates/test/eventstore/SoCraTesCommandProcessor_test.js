@@ -12,23 +12,26 @@ var SoCraTesWriteModel = beans.get('SoCraTesWriteModel');
 var SoCraTesCommandProcessor = beans.get('SoCraTesCommandProcessor');
 
 function stripTimestamps(someEvents) {
-  return R.map(function (event) {
+  return someEvents.map(event => {
     var newEvent = R.clone(event);
     delete newEvent.timestamp;
     return newEvent;
-  }, someEvents);
+  });
 }
 
-describe('The SoCraTes command processor', function () {
-  var eventStore;
+function eventStoreWith(listOfEvents) {
+  return new GlobalEventStore({url: 'socrates-url', events: listOfEvents});
+}
+
+describe('The SoCraTes command processor', () => {
   var commandHandler;
 
-  beforeEach(function () {
-    eventStore = new GlobalEventStore();
-    commandHandler = new SoCraTesCommandProcessor(new SoCraTesWriteModel(eventStore));
+  beforeEach(() => {
+    const listOfEvents = [];
+    commandHandler = new SoCraTesCommandProcessor(new SoCraTesWriteModel(eventStoreWith(listOfEvents)));
   });
 
-  it('creates a new url event, start time event, end time event and room quota events on update', function () {
+  it('creates a new url event, start time event, end time event and room quota events on update', () => {
     // When (issued command)
     const evts = commandHandler.createConferenceEvents({
       url: 'new-socrates',

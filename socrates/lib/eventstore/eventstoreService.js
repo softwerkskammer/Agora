@@ -3,19 +3,19 @@
 const R = require('ramda');
 
 const conf = require('simple-configure');
-var beans = conf.get('beans');
-var cache = conf.get('cache');
-var eventstore = beans.get('eventstore');
-var GlobalEventStore = beans.get('GlobalEventStore');
-var SoCraTesReadModel = beans.get('SoCraTesReadModel');
-var SoCraTesWriteModel = beans.get('SoCraTesWriteModel');
-var SoCraTesCommandProcessor = beans.get('SoCraTesCommandProcessor');
-var RegistrationReadModel = beans.get('RegistrationReadModel');
-var RegistrationWriteModel = beans.get('RegistrationWriteModel');
-var RegistrationCommandProcessor = beans.get('RegistrationCommandProcessor');
-var RoomsReadModel = beans.get('RoomsReadModel');
-var RoomsWriteModel = beans.get('RoomsWriteModel');
-var RoomsCommandProcessor = beans.get('RoomsCommandProcessor');
+const beans = conf.get('beans');
+const cache = conf.get('cache');
+const eventstore = beans.get('eventstore');
+const GlobalEventStore = beans.get('GlobalEventStore');
+const SoCraTesReadModel = beans.get('SoCraTesReadModel');
+const SoCraTesWriteModel = beans.get('SoCraTesWriteModel');
+const SoCraTesCommandProcessor = beans.get('SoCraTesCommandProcessor');
+const RegistrationReadModel = beans.get('RegistrationReadModel');
+const RegistrationWriteModel = beans.get('RegistrationWriteModel');
+const RegistrationCommandProcessor = beans.get('RegistrationCommandProcessor');
+const RoomsReadModel = beans.get('RoomsReadModel');
+const RoomsWriteModel = beans.get('RoomsWriteModel');
+const RoomsCommandProcessor = beans.get('RoomsCommandProcessor');
 
 const SOCRATES_READ_MODEL = 'soCraTesReadModel';
 const REGISTRATION_READ_MODEL = 'registrationReadModel';
@@ -57,7 +57,7 @@ function getReadModelWithArg(url, key, ReadModel, argument, callback) {
     if (cachedWhileFetching) {
       return callback(null, cachedWhileFetching);
     }
-    const newModel = new ReadModel(eventStore, argument);
+    const newModel = new ReadModel(eventStore.events(), argument);
     cache.set(cacheKey, newModel);
     callback(null, newModel);
   });
@@ -142,14 +142,9 @@ module.exports = {
     if (!(events instanceof Array)) {
       events = [events];
     }
+    events = R.flatten(events);
 
-    let eventStore;
-    if (commandProcessor instanceof Array) {
-      eventStore = commandProcessor[0].eventStore();
-      events = R.flatten(events);
-    } else {
-      eventStore = commandProcessor.eventStore();
-    }
+    const eventStore = (commandProcessor instanceof Array) ? commandProcessor[0].eventStore() : commandProcessor.eventStore();
 
     const url = eventStore.state.url;
     eventStore.updateEvents(events);

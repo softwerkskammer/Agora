@@ -277,3 +277,23 @@ describe('betweenBraces', function () {
     expect(misc.betweenBraces('nickname(only)')).to.be('nickname(only)');
   });
 });
+
+describe('compact', () => {
+  it('compacts an array', () => {
+    expect(misc.compact([])).to.eql([]);
+    expect(misc.compact([false, undefined, null, 0, ''])).to.eql([]);
+    expect(misc.compact([true, 1, []])).to.eql([true, 1, []]);
+  });
+
+  it('turns a non-array into an empty array', () => {
+    expect(misc.compact(0)).to.eql([]);
+    expect(misc.compact(false)).to.eql([]);
+    expect(misc.compact('')).to.eql([]);
+    expect(misc.compact(1)).to.eql([]);
+    expect(misc.compact(true)).to.eql([]);
+  });
+
+  it('explodes a string', () => {
+    expect(misc.compact('abc')).to.eql(['a', 'b', 'c']);
+  });
+});

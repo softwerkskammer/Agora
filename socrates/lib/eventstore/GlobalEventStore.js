@@ -1,35 +1,31 @@
 'use strict';
 
-var moment = require('moment-timezone');
-
 var beans = require('simple-configure').get('beans');
 var socratesConstants = beans.get('socratesConstants');
 
-function GlobalEventStore(object) {
-  this.state = object || {
-      url: socratesConstants.currentUrl,
-      events: []
-    };
-}
-
-GlobalEventStore.prototype.events = function () {
-  return this.state.events;
-};
-
-GlobalEventStore.prototype.updateEvents = function (newEvents) {
-  this.state.events = this.state.events.concat(newEvents);
-};
-
-// TODO why can't the id be just the URL? Why can't we simply use the id === url to find the eventstore? And remove the state.url?
-GlobalEventStore.prototype.setId = function () {
-  if (!this.state.id) {
-    // persistence needs an id:
-    this.state.id = moment().valueOf() + '-' + this.state.url;
+class GlobalEventStore {
+  constructor(object) {
+    this.state = object || {
+        url: socratesConstants.currentUrl,
+        events: []
+      };
+    if (!this.state.id) {
+      // persistence needs an id:
+      this.state.id = this.state.url || socratesConstants.currentUrl;
+    }
   }
-};
 
-GlobalEventStore.prototype.id = function () {
-  return this.state.id;
-};
+  events() {
+    return this.state.events;
+  }
+
+  updateEvents(newEvents) {
+    this.state.events = this.state.events.concat(newEvents);
+  }
+
+  id() {
+    return this.state.id;
+  }
+}
 
 module.exports = GlobalEventStore;

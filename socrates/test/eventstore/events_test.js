@@ -6,8 +6,8 @@ var expect = require('must-dist');
 var beans = require('../../testutil/configureForTest').get('beans');
 var events = beans.get('events');
 
-describe('The socrates events', function () {
-  it('have a unix offset', function () {
+describe('The socrates events', () => {
+  it('have a unix offset', () => {
 
     var now = moment();
     var event = events.roomQuotaWasSet('bedroom-format', 100);

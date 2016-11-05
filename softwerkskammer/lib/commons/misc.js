@@ -1,4 +1,5 @@
 const _ = require('lodash');
+const R = require('ramda');
 const express = require('express');
 const path = require('path');
 const conf = require('simple-configure');
@@ -93,6 +94,10 @@ module.exports = {
     return imageExtensions.includes(extension.replace(/\./, ''));
   },
 
-  regexEscape: regexEscape
+  regexEscape: regexEscape,
+
+  compact: function compact(array) {
+    return R.filter(R.identity, array);
+  }
 };
 
