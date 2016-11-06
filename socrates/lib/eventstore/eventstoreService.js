@@ -80,7 +80,7 @@ module.exports = {
   },
 
   newSoCraTesReadModel: function () {
-    return new SoCraTesReadModel(new GlobalEventStore());
+    return new SoCraTesReadModel([]);
   },
 
   getSoCraTesCommandProcessor: function (url, callback) {
