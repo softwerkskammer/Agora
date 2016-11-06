@@ -6,7 +6,6 @@ const expect = require('must-dist');
 const beans = require('../../testutil/configureForTest').get('beans');
 const events = beans.get('events');
 const RegistrationReadModel = beans.get('RegistrationReadModel');
-const SoCraTesReadModel = beans.get('SoCraTesReadModel');
 
 const managementService = beans.get('managementService');
 
@@ -39,7 +38,7 @@ describe('Management Service', function () {
         events.registeredParticipantFromWaitinglist('junior', 2, 'member-id13', aLongTimeAgo),
         events.registeredParticipantFromWaitinglist('junior', 3, 'member-id14', aLongTimeAgo)
       ];
-      const readModel = new RegistrationReadModel(listOfEvents, new SoCraTesReadModel(listOfEvents));
+      const readModel = new RegistrationReadModel(listOfEvents);
 
       const durations = managementService.durations(readModel);
 
@@ -59,7 +58,7 @@ describe('Management Service', function () {
         events.registeredParticipantFromWaitinglist('junior', 2, 'member-id5', aLongTimeAgo),
         events.registeredParticipantFromWaitinglist('junior', 4, 'member-id6', aLongTimeAgo)
       ];
-      const readModel = new RegistrationReadModel(listOfEvents, new SoCraTesReadModel(listOfEvents));
+      const readModel = new RegistrationReadModel(listOfEvents);
 
       const durations = managementService.durations(readModel);
 

@@ -99,9 +99,7 @@ module.exports = {
   },
 
   getRegistrationReadModel: function (url, callback) {
-    this.getSoCraTesReadModel(url, function (err, soCraTesReadModel) {
-      return getReadModelWithArg(url, REGISTRATION_READ_MODEL, RegistrationReadModel, soCraTesReadModel, callback);
-    });
+    return getReadModel(url, REGISTRATION_READ_MODEL, RegistrationReadModel, callback);
   },
 
   getRegistrationCommandProcessor: function (url, callback) {

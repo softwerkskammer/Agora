@@ -23,7 +23,6 @@ const eventstore = beans.get('eventstore');
 const GlobalEventStore = beans.get('GlobalEventStore');
 const RoomsReadModel = beans.get('RoomsReadModel');
 const RegistrationReadModel = beans.get('RegistrationReadModel');
-const SoCraTesReadModel = beans.get('SoCraTesReadModel');
 const socratesConstants = beans.get('socratesConstants');
 
 const aLongTimeAgo = moment.tz().subtract(40, 'minutes');
@@ -358,7 +357,7 @@ describe('SoCraTes Activities Service', function () {
         events.roomPairWasAdded('bed_in_double', 'memberIdForPair1', 'memberIdForPair2')
       ];
 
-      expect(new RoomsReadModel(listOfEvents, new RegistrationReadModel(listOfEvents, new SoCraTesReadModel(listOfEvents))).roomPairsFor('bed_in_double')).to.eql([{ // TODO extract to its own test!
+      expect(new RoomsReadModel(listOfEvents, new RegistrationReadModel(listOfEvents)).roomPairsFor('bed_in_double')).to.eql([{ // TODO extract to its own test!
         participant1Id: 'memberIdForPair1',
         participant2Id: 'memberIdForPair2'
       }]);

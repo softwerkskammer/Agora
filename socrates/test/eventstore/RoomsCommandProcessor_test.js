@@ -10,7 +10,6 @@ const events = beans.get('events');
 const RoomsWriteModel = beans.get('RoomsWriteModel');
 const RoomsReadModel = beans.get('RoomsReadModel');
 const RegistrationReadModel = beans.get('RegistrationReadModel');
-const SoCraTesReadModel = beans.get('SoCraTesReadModel');
 const RoomsCommandProcessor = beans.get('RoomsCommandProcessor');
 const e = beans.get('eventConstants');
 
@@ -46,7 +45,7 @@ describe('The rooms command processor', () => {
   });
 
   it('can put two participants into a room', () => {
-    const registrationReadModel = new RegistrationReadModel(listOfEvents, new SoCraTesReadModel(listOfEvents));
+    const registrationReadModel = new RegistrationReadModel(listOfEvents);
     const commandProcessor = new RoomsCommandProcessor(url, new RoomsWriteModel(new RoomsReadModel(listOfEvents, registrationReadModel), registrationReadModel));
 
     const evts = commandProcessor.addParticipantPairFor(bedInDouble, 'memberId1', 'memberId2');
@@ -57,7 +56,7 @@ describe('The rooms command processor', () => {
   });
 
   it('does not create a room if one of the participants is undefined', () => {
-    const registrationReadModel = new RegistrationReadModel(listOfEvents, new SoCraTesReadModel(listOfEvents));
+    const registrationReadModel = new RegistrationReadModel(listOfEvents);
     const commandProcessor = new RoomsCommandProcessor(url, new RoomsWriteModel(new RoomsReadModel(listOfEvents, registrationReadModel), registrationReadModel));
 
     const evts = commandProcessor.addParticipantPairFor(bedInDouble, 'memberId1', undefined);
@@ -68,7 +67,7 @@ describe('The rooms command processor', () => {
   });
 
   it('does not create a room if one of the participants is null', () => {
-    const registrationReadModel = new RegistrationReadModel(listOfEvents, new SoCraTesReadModel(listOfEvents));
+    const registrationReadModel = new RegistrationReadModel(listOfEvents);
     const commandProcessor = new RoomsCommandProcessor(url, new RoomsWriteModel(new RoomsReadModel(listOfEvents, registrationReadModel), registrationReadModel));
 
     const evts = commandProcessor.addParticipantPairFor(bedInDouble, null, 'memberId5');
@@ -79,7 +78,7 @@ describe('The rooms command processor', () => {
   });
 
   it('does not create a room if both participants do not exist', () => {
-    const registrationReadModel = new RegistrationReadModel(listOfEvents, new SoCraTesReadModel(listOfEvents));
+    const registrationReadModel = new RegistrationReadModel(listOfEvents);
     const commandProcessor = new RoomsCommandProcessor(url, new RoomsWriteModel(new RoomsReadModel(listOfEvents, registrationReadModel), registrationReadModel));
 
     const evts = commandProcessor.addParticipantPairFor(bedInDouble, undefined, null);
@@ -91,7 +90,7 @@ describe('The rooms command processor', () => {
   });
 
   it('does not create a room if the first participant is not known', () => {
-    const registrationReadModel = new RegistrationReadModel(listOfEvents, new SoCraTesReadModel(listOfEvents));
+    const registrationReadModel = new RegistrationReadModel(listOfEvents);
     const commandProcessor = new RoomsCommandProcessor(url, new RoomsWriteModel(new RoomsReadModel(listOfEvents, registrationReadModel), registrationReadModel));
 
     const evts = commandProcessor.addParticipantPairFor(bedInDouble, 'unknownMemberId', 'memberId5');
@@ -102,7 +101,7 @@ describe('The rooms command processor', () => {
   });
 
   it('does not create a room if the second participant is not known', () => {
-    const registrationReadModel = new RegistrationReadModel(listOfEvents, new SoCraTesReadModel(listOfEvents));
+    const registrationReadModel = new RegistrationReadModel(listOfEvents);
     const commandProcessor = new RoomsCommandProcessor(url, new RoomsWriteModel(new RoomsReadModel(listOfEvents, registrationReadModel), registrationReadModel));
 
     const evts = commandProcessor.addParticipantPairFor(bedInDouble, 'memberId1', 'unknownMemberId');
@@ -113,7 +112,7 @@ describe('The rooms command processor', () => {
   });
 
   it('does not create a room if both participants are not known', () => {
-    const registrationReadModel = new RegistrationReadModel(listOfEvents, new SoCraTesReadModel(listOfEvents));
+    const registrationReadModel = new RegistrationReadModel(listOfEvents);
     const commandProcessor = new RoomsCommandProcessor(url, new RoomsWriteModel(new RoomsReadModel(listOfEvents, registrationReadModel), registrationReadModel));
 
     const evts = commandProcessor.addParticipantPairFor(bedInDouble, 'unknownMemberId', 'anotherUnknownMemberId');
@@ -125,7 +124,7 @@ describe('The rooms command processor', () => {
   });
 
   it('does not create a room if the two participants are identical', () => {
-    const registrationReadModel = new RegistrationReadModel(listOfEvents, new SoCraTesReadModel(listOfEvents));
+    const registrationReadModel = new RegistrationReadModel(listOfEvents);
     const commandProcessor = new RoomsCommandProcessor(url, new RoomsWriteModel(new RoomsReadModel(listOfEvents, registrationReadModel), registrationReadModel));
 
     const evts = commandProcessor.addParticipantPairFor(bedInDouble, 'memberId1', 'memberId1');
@@ -140,7 +139,7 @@ describe('The rooms command processor', () => {
       events.roomPairWasAdded(bedInDouble, 'memberId1', 'memberId2')
     ]);
 
-    const registrationReadModel = new RegistrationReadModel(listOfEvents, new SoCraTesReadModel(listOfEvents));
+    const registrationReadModel = new RegistrationReadModel(listOfEvents);
     const commandProcessor = new RoomsCommandProcessor(url, new RoomsWriteModel(new RoomsReadModel(listOfEvents, registrationReadModel), registrationReadModel));
 
     const evts = commandProcessor.addParticipantPairFor(bedInDouble, 'memberId1', 'memberId3');
@@ -155,7 +154,7 @@ describe('The rooms command processor', () => {
       events.roomPairWasAdded(bedInDouble, 'memberId1', 'memberId2')
     ]);
 
-    const registrationReadModel = new RegistrationReadModel(listOfEvents, new SoCraTesReadModel(listOfEvents));
+    const registrationReadModel = new RegistrationReadModel(listOfEvents);
     const commandProcessor = new RoomsCommandProcessor(url, new RoomsWriteModel(new RoomsReadModel(listOfEvents, registrationReadModel), registrationReadModel));
 
     const evts = commandProcessor.addParticipantPairFor(bedInDouble, 'memberId4', 'memberId2');
@@ -170,7 +169,7 @@ describe('The rooms command processor', () => {
       events.roomPairWasAdded(bedInDouble, 'memberId1', 'memberId2')
     ]);
 
-    const registrationReadModel = new RegistrationReadModel(listOfEvents, new SoCraTesReadModel(listOfEvents));
+    const registrationReadModel = new RegistrationReadModel(listOfEvents);
     const commandProcessor = new RoomsCommandProcessor(url, new RoomsWriteModel(new RoomsReadModel(listOfEvents, registrationReadModel), registrationReadModel));
 
     const evts = commandProcessor.addParticipantPairFor(bedInDouble, 'memberId2', 'memberId1');
@@ -186,7 +185,7 @@ describe('The rooms command processor', () => {
       events.roomPairWasAdded(bedInDouble, 'memberId1', 'memberId2')
     ]);
 
-    const registrationReadModel = new RegistrationReadModel(listOfEvents, new SoCraTesReadModel(listOfEvents));
+    const registrationReadModel = new RegistrationReadModel(listOfEvents);
     const commandProcessor = new RoomsCommandProcessor(url, new RoomsWriteModel(new RoomsReadModel(listOfEvents, registrationReadModel), registrationReadModel));
 
     const evts = commandProcessor.removeParticipantPairFor(bedInDouble, 'memberId1', 'memberId2');
@@ -201,7 +200,7 @@ describe('The rooms command processor', () => {
       events.roomPairWasAdded(bedInDouble, 'memberId1', 'memberId2')
     ]);
 
-    const registrationReadModel = new RegistrationReadModel(listOfEvents, new SoCraTesReadModel(listOfEvents));
+    const registrationReadModel = new RegistrationReadModel(listOfEvents);
     const commandProcessor = new RoomsCommandProcessor(url, new RoomsWriteModel(new RoomsReadModel(listOfEvents, registrationReadModel), registrationReadModel));
     const evts = commandProcessor.removeParticipantPairFor(bedInDouble, 'memberId2', 'memberId1');
 
@@ -215,7 +214,7 @@ describe('The rooms command processor', () => {
       events.roomPairWasAdded(bedInDouble, 'memberId1', 'memberId2')
     ]);
 
-    const registrationReadModel = new RegistrationReadModel(listOfEvents, new SoCraTesReadModel(listOfEvents));
+    const registrationReadModel = new RegistrationReadModel(listOfEvents);
     const commandProcessor = new RoomsCommandProcessor(url, new RoomsWriteModel(new RoomsReadModel(listOfEvents, registrationReadModel), registrationReadModel));
     const evts = commandProcessor.removeParticipantPairContaining(bedInDouble, 'memberId1');
 
@@ -228,7 +227,7 @@ describe('The rooms command processor', () => {
     listOfEvents = listOfEvents.concat([
       events.roomPairWasAdded(bedInDouble, 'memberId1', 'memberId2')
     ]);
-    const registrationReadModel = new RegistrationReadModel(listOfEvents, new SoCraTesReadModel(listOfEvents));
+    const registrationReadModel = new RegistrationReadModel(listOfEvents);
     const commandProcessor = new RoomsCommandProcessor(url, new RoomsWriteModel(new RoomsReadModel(listOfEvents, registrationReadModel), registrationReadModel));
     const evts = commandProcessor.removeParticipantPairContaining(bedInDouble, 'memberId2');
 
@@ -241,7 +240,7 @@ describe('The rooms command processor', () => {
     listOfEvents = listOfEvents.concat([
       events.roomPairWasAdded(bedInDouble, 'memberId1', 'memberId2')
     ]);
-    const registrationReadModel = new RegistrationReadModel(listOfEvents, new SoCraTesReadModel(listOfEvents));
+    const registrationReadModel = new RegistrationReadModel(listOfEvents);
     const commandProcessor = new RoomsCommandProcessor(url, new RoomsWriteModel(new RoomsReadModel(listOfEvents, registrationReadModel), registrationReadModel));
     const evts = commandProcessor.removeParticipantPairContaining(bedInDouble, 'memberId3');
 
@@ -250,7 +249,7 @@ describe('The rooms command processor', () => {
 
   it('does not do anything if asked for a single room', () => {
 
-    const registrationReadModel = new RegistrationReadModel(listOfEvents, new SoCraTesReadModel(listOfEvents));
+    const registrationReadModel = new RegistrationReadModel(listOfEvents);
     const commandProcessor = new RoomsCommandProcessor(url, new RoomsWriteModel(new RoomsReadModel(listOfEvents, registrationReadModel), registrationReadModel));
     const evts = commandProcessor.removeParticipantPairContaining('single', 'memberId');
 
@@ -259,7 +258,7 @@ describe('The rooms command processor', () => {
 
   it('does not do anything if asked for a junior room', () => {
 
-    const registrationReadModel = new RegistrationReadModel(listOfEvents, new SoCraTesReadModel(listOfEvents));
+    const registrationReadModel = new RegistrationReadModel(listOfEvents);
     const commandProcessor = new RoomsCommandProcessor(url, new RoomsWriteModel(new RoomsReadModel(listOfEvents, registrationReadModel), registrationReadModel));
     const evts = commandProcessor.removeParticipantPairContaining('junior', 'memberId');
 

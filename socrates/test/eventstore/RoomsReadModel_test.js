@@ -8,7 +8,6 @@ const beans = require('../../testutil/configureForTest').get('beans');
 const events = beans.get('events');
 const RoomsReadModel = beans.get('RoomsReadModel');
 const RegistrationReadModel = beans.get('RegistrationReadModel');
-const SoCraTesReadModel = beans.get('SoCraTesReadModel');
 const Member = beans.get('member');
 
 const bedInDouble = 'bed_in_double';
@@ -35,7 +34,7 @@ describe('The rooms read model', () => {
     listOfEvents = listOfEvents.concat([
       events.roomPairWasAdded(bedInDouble, 'memberId1', 'memberId2')
     ]);
-    const readModel = new RoomsReadModel(listOfEvents, new RegistrationReadModel(listOfEvents, new SoCraTesReadModel(listOfEvents)));
+    const readModel = new RoomsReadModel(listOfEvents, new RegistrationReadModel(listOfEvents));
 
     const participantsInRoom = readModel.participantsInRoom(bedInDouble);
 
@@ -47,7 +46,7 @@ describe('The rooms read model', () => {
     listOfEvents = listOfEvents.concat([
       events.roomPairWasAdded(bedInDouble, 'memberId1', 'memberId2')
     ]);
-    const readModel = new RoomsReadModel(listOfEvents, new RegistrationReadModel(listOfEvents, new SoCraTesReadModel(listOfEvents)));
+    const readModel = new RoomsReadModel(listOfEvents, new RegistrationReadModel(listOfEvents));
 
     const participantsWithoutRoom = readModel.participantsWithoutRoomIn(bedInDouble);
 
@@ -58,14 +57,14 @@ describe('The rooms read model', () => {
     listOfEvents = listOfEvents.concat([
       events.roomPairWasAdded(bedInDouble, 'memberId1', 'memberId2')
     ]);
-    const readModel = new RoomsReadModel(listOfEvents, new RegistrationReadModel(listOfEvents, new SoCraTesReadModel(listOfEvents)));
+    const readModel = new RoomsReadModel(listOfEvents, new RegistrationReadModel(listOfEvents));
 
     expect(readModel.roommateFor(bedInDouble, 'memberId1')).to.be('memberId2');
     expect(readModel.roommateFor(bedInDouble, 'memberId2')).to.be('memberId1');
   });
 
   it('returns undefined if the member is not associated to a roommate', () => {
-    const readModel = new RoomsReadModel(listOfEvents, new RegistrationReadModel(listOfEvents, new SoCraTesReadModel(listOfEvents)));
+    const readModel = new RoomsReadModel(listOfEvents, new RegistrationReadModel(listOfEvents));
     expect(readModel.roommateFor(bedInDouble, 'memberId1')).to.be(undefined);
   });
 
@@ -81,7 +80,7 @@ describe('The rooms read model', () => {
       events.roomPairWasAdded(bedInDouble, 'memberId1', 'memberId2'),
       events.roomPairWasAdded(bedInDouble, 'memberId3', 'memberId4')
     ]);
-    const readModel = new RoomsReadModel(listOfEvents, new RegistrationReadModel(listOfEvents, new SoCraTesReadModel(listOfEvents)));
+    const readModel = new RoomsReadModel(listOfEvents, new RegistrationReadModel(listOfEvents));
 
     const roomPairs = readModel.roomPairsWithFullMembersFrom(bedInDouble, allKnownMembers);
 
