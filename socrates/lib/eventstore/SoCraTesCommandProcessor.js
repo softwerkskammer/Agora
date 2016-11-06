@@ -11,8 +11,8 @@ const events = beans.get('events');
 const roomOptions = beans.get('roomOptions');
 
 class SoCraTesCommandProcessor {
-  constructor(writeModel) {
-    this.writeModel = writeModel;
+  constructor(url) {
+    this._url = url;
   }
 
   createConferenceEvents(uiData) {
@@ -32,8 +32,9 @@ class SoCraTesCommandProcessor {
     return evts;
   }
 
-  eventStore() {
-    return this.writeModel.eventStore();
+  ///////////////////////////////////////////////////////////////////////////////////////////////////
+  url() {
+    return this._url;
   }
 }
 

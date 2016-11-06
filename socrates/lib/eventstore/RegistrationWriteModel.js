@@ -3,8 +3,7 @@
 
 class RegistrationWriteModel {
 
-  constructor(eventStore, registrationReadModel) {
-    this._eventStore = eventStore;
+  constructor(registrationReadModel) {
     this._registrationReadModel = registrationReadModel;
   }
 
@@ -39,11 +38,6 @@ class RegistrationWriteModel {
 
   roomTypesOf(memberId) {
     return this._registrationReadModel.roomTypesOf(memberId);
-  }
-
-  /////////////////////////////////////////////////////////////////////////////////////////
-  eventStore() {
-    return this._eventStore;
   }
 }
 

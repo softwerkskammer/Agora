@@ -4,8 +4,7 @@
 const R = require('ramda');
 
 class RoomsWriteModel {
-  constructor(eventStore, roomsReadModel, registrationReadModel) {
-    this._eventStore = eventStore;
+  constructor(roomsReadModel, registrationReadModel) {
     this._roomsReadModel = roomsReadModel;
     this._registrationReadModel = registrationReadModel;
   }
@@ -24,11 +23,6 @@ class RoomsWriteModel {
 
   roomPairContaining(roomType, memberId) {
     return this._roomsReadModel.roomPairsFor(roomType).find(pair => pair.participant1Id === memberId || pair.participant2Id === memberId);
-  }
-
-  /////////////////////////////////////////////////////////////////////////////////////////
-  eventStore() {
-    return this._eventStore;
   }
 }
 

@@ -7,8 +7,6 @@ var R = require('ramda');
 var beans = require('../../testutil/configureForTest').get('beans');
 var e = beans.get('eventConstants');
 
-var GlobalEventStore = beans.get('GlobalEventStore');
-var SoCraTesWriteModel = beans.get('SoCraTesWriteModel');
 var SoCraTesCommandProcessor = beans.get('SoCraTesCommandProcessor');
 
 function stripTimestamps(someEvents) {
@@ -19,16 +17,13 @@ function stripTimestamps(someEvents) {
   });
 }
 
-function eventStoreWith(listOfEvents) {
-  return new GlobalEventStore({url: 'socrates-url', events: listOfEvents});
-}
+const url = 'socrates-url';
 
 describe('The SoCraTes command processor', () => {
   var commandHandler;
 
   beforeEach(() => {
-    const listOfEvents = [];
-    commandHandler = new SoCraTesCommandProcessor(new SoCraTesWriteModel(eventStoreWith(listOfEvents)));
+    commandHandler = new SoCraTesCommandProcessor(url);
   });
 
   it('creates a new url event, start time event, end time event and room quota events on update', () => {

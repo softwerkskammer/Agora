@@ -8,7 +8,6 @@ const cache = conf.get('cache');
 const eventstore = beans.get('eventstore');
 const GlobalEventStore = beans.get('GlobalEventStore');
 const SoCraTesReadModel = beans.get('SoCraTesReadModel');
-const SoCraTesWriteModel = beans.get('SoCraTesWriteModel');
 const SoCraTesCommandProcessor = beans.get('SoCraTesCommandProcessor');
 const RegistrationReadModel = beans.get('RegistrationReadModel');
 const RegistrationWriteModel = beans.get('RegistrationWriteModel');
@@ -95,7 +94,7 @@ module.exports = {
         });
       }
       cache.set(keyFor(url, GLOBAL_EVENT_STORE_FOR_WRITING), eventStore);
-      callback(null, new SoCraTesCommandProcessor(new SoCraTesWriteModel(eventStore)));
+      callback(null, new SoCraTesCommandProcessor(url));
     });
   },
 
@@ -112,7 +111,7 @@ module.exports = {
       if (err || !eventStore) { return callback(err); }
       self.getRegistrationReadModel(url, function (err1, registrationReadModel) {
         if (err1 || !registrationReadModel) { return callback(err1); }
-        callback(null, new RegistrationCommandProcessor(new RegistrationWriteModel(eventStore, registrationReadModel)));
+        callback(null, new RegistrationCommandProcessor(url, new RegistrationWriteModel(registrationReadModel)));
       });
     });
   },
@@ -126,7 +125,7 @@ module.exports = {
         if (err2 || !registrationReadModel) { return callback(err2); }
         self.getRoomsReadModel(url, function (err1, roomsReadModel) {
           if (err1 || !roomsReadModel) { return callback(err1); }
-          callback(null, new RoomsCommandProcessor(new RoomsWriteModel(eventStore, roomsReadModel, registrationReadModel)));
+          callback(null, new RoomsCommandProcessor(url, new RoomsWriteModel(roomsReadModel, registrationReadModel)));
         });
       });
     });
@@ -144,14 +143,15 @@ module.exports = {
     }
     events = R.flatten(events);
 
-    const eventStore = (commandProcessor instanceof Array) ? commandProcessor[0].eventStore() : commandProcessor.eventStore();
+    const url = (commandProcessor instanceof Array) ? commandProcessor[0].url() : commandProcessor.url();
 
-    const url = eventStore.state.url;
-    eventStore.updateEvents(events);
+    const eventStoreFromCache = cache.get(keyFor(url, GLOBAL_EVENT_STORE_FOR_WRITING));
+
+    eventStoreFromCache.updateEvents(events);
 
     // update all read models:
     R.values(cache.mget([keyFor(url, SOCRATES_READ_MODEL), keyFor(url, REGISTRATION_READ_MODEL), keyFor(url, ROOMS_READ_MODEL)])).forEach(model => model.update(events));
 
-    eventstore.saveEventStore(eventStore, callback);
+    eventstore.saveEventStore(eventStoreFromCache, callback);
   }
 };
