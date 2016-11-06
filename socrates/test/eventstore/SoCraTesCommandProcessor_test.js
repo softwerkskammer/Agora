@@ -24,7 +24,7 @@ describe('The SoCraTes command processor', () => {
   var commandHandler;
 
   beforeEach(() => {
-    commandHandler = new SoCraTesCommandProcessor(new SoCraTesWriteModel(url));
+    commandHandler = new SoCraTesCommandProcessor(url, new SoCraTesWriteModel());
   });
 
   it('creates a new url event, start time event, end time event and room quota events on update', () => {

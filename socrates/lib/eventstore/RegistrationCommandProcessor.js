@@ -9,7 +9,8 @@ const misc = beans.get('misc');
 
 class RegistrationCommandProcessor {
 
-  constructor(writeModel) {
+  constructor(url, writeModel) {
+    this._url = url;
     this.writeModel = writeModel;
   }
 
@@ -99,7 +100,7 @@ class RegistrationCommandProcessor {
 
   ///////////////////////////////////////////////////////////////////////////////////////////////////
   url() {
-    return this.writeModel.url();
+    return this._url;
   }
 }
 module.exports = RegistrationCommandProcessor;

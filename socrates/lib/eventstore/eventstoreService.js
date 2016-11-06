@@ -95,7 +95,7 @@ module.exports = {
         });
       }
       cache.set(keyFor(url, GLOBAL_EVENT_STORE_FOR_WRITING), eventStore);
-      callback(null, new SoCraTesCommandProcessor(new SoCraTesWriteModel(url)));
+      callback(null, new SoCraTesCommandProcessor(url, new SoCraTesWriteModel()));
     });
   },
 
@@ -112,7 +112,7 @@ module.exports = {
       if (err || !eventStore) { return callback(err); }
       self.getRegistrationReadModel(url, function (err1, registrationReadModel) {
         if (err1 || !registrationReadModel) { return callback(err1); }
-        callback(null, new RegistrationCommandProcessor(new RegistrationWriteModel(url, registrationReadModel)));
+        callback(null, new RegistrationCommandProcessor(url, new RegistrationWriteModel(registrationReadModel)));
       });
     });
   },
@@ -126,7 +126,7 @@ module.exports = {
         if (err2 || !registrationReadModel) { return callback(err2); }
         self.getRoomsReadModel(url, function (err1, roomsReadModel) {
           if (err1 || !roomsReadModel) { return callback(err1); }
-          callback(null, new RoomsCommandProcessor(new RoomsWriteModel(url, roomsReadModel, registrationReadModel)));
+          callback(null, new RoomsCommandProcessor(url, new RoomsWriteModel(roomsReadModel, registrationReadModel)));
         });
       });
     });

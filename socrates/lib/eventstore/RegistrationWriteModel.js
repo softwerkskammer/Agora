@@ -3,8 +3,7 @@
 
 class RegistrationWriteModel {
 
-  constructor(url, registrationReadModel) {
-    this._url = url;
+  constructor(registrationReadModel) {
     this._registrationReadModel = registrationReadModel;
   }
 
@@ -39,11 +38,6 @@ class RegistrationWriteModel {
 
   roomTypesOf(memberId) {
     return this._registrationReadModel.roomTypesOf(memberId);
-  }
-
-  /////////////////////////////////////////////////////////////////////////////////////////
-  url() {
-    return this._url;
   }
 }
 

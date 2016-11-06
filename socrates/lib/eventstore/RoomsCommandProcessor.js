@@ -6,7 +6,8 @@ const events = beans.get('events');
 
 class RoomsCommandProcessor {
 
-  constructor(writeModel) {
+  constructor(url, writeModel) {
+    this._url = url;
     this.writeModel = writeModel;
   }
 
@@ -68,7 +69,7 @@ class RoomsCommandProcessor {
 
   ///////////////////////////////////////////////////////////////////////////////////////////////////
   url() {
-    return this.writeModel.url();
+    return this._url;
   }
 }
 

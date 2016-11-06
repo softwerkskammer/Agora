@@ -2,14 +2,8 @@
 'use strict';
 
 
-
 class SoCraTesWriteModel {
-  constructor(url) {
-    this._url = url;
-  }
-
-  url() {
-    return this._url;
+  constructor() {
   }
 }
 
