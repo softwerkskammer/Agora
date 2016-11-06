@@ -8,7 +8,6 @@ const cache = conf.get('cache');
 const eventstore = beans.get('eventstore');
 const GlobalEventStore = beans.get('GlobalEventStore');
 const SoCraTesReadModel = beans.get('SoCraTesReadModel');
-const SoCraTesWriteModel = beans.get('SoCraTesWriteModel');
 const SoCraTesCommandProcessor = beans.get('SoCraTesCommandProcessor');
 const RegistrationReadModel = beans.get('RegistrationReadModel');
 const RegistrationWriteModel = beans.get('RegistrationWriteModel');
@@ -95,7 +94,7 @@ module.exports = {
         });
       }
       cache.set(keyFor(url, GLOBAL_EVENT_STORE_FOR_WRITING), eventStore);
-      callback(null, new SoCraTesCommandProcessor(url, new SoCraTesWriteModel()));
+      callback(null, new SoCraTesCommandProcessor(url));
     });
   },
 

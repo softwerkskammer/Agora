@@ -7,7 +7,6 @@ var R = require('ramda');
 var beans = require('../../testutil/configureForTest').get('beans');
 var e = beans.get('eventConstants');
 
-var SoCraTesWriteModel = beans.get('SoCraTesWriteModel');
 var SoCraTesCommandProcessor = beans.get('SoCraTesCommandProcessor');
 
 function stripTimestamps(someEvents) {
@@ -24,7 +23,7 @@ describe('The SoCraTes command processor', () => {
   var commandHandler;
 
   beforeEach(() => {
-    commandHandler = new SoCraTesCommandProcessor(url, new SoCraTesWriteModel());
+    commandHandler = new SoCraTesCommandProcessor(url);
   });
 
   it('creates a new url event, start time event, end time event and room quota events on update', () => {
