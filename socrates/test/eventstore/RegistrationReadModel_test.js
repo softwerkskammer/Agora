@@ -83,18 +83,6 @@ describe('The registration read model', () => {
     });
   });
 
-  describe('calculating the existence of a valid reservation (hasValidReservationFor)', () => {
-
-    it('returns true if there is a waitinglist reservation', () => {
-      listOfEvents = [
-        events.waitinglistReservationWasIssued(singleBedRoom, 2, sessionId1, memberId1, aShortTimeAgo)
-      ];
-      const readModel = new RegistrationReadModel(listOfEvents);
-
-      expect(readModel.hasValidReservationFor(sessionId1)).to.be(true);
-    });
-  });
-
   describe('for waitinglist reservations and participants (waitinglistReservationsAndParticipantsFor)', () => {
     it('does not consider any waitinglist reservations or participants when there are no events', () => {
       const readModel = new RegistrationReadModel(listOfEvents);

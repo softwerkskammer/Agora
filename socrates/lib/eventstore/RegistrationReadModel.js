@@ -173,10 +173,6 @@ class RegistrationReadModel {
     return event && expirationTimeOf(event);
   }
 
-  hasValidReservationFor(sessionId) {
-    return !!this._waitinglistReservationEventFor(sessionId);
-  }
-
   registeredInRoomType(memberId) {
     const participantEvent = this.participantEventFor(memberId);
     return participantEvent ? participantEvent.roomType : null;
