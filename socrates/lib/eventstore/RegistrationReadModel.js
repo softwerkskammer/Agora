@@ -6,10 +6,7 @@ const moment = require('moment-timezone');
 
 const beans = require('simple-configure').get('beans');
 const e = beans.get('eventConstants');
-const socratesConstants = beans.get('socratesConstants');
 const roomOptions = beans.get('roomOptions');
-
-const earliestValidRegistrationTime = moment.tz().subtract(socratesConstants.registrationPeriodinMinutes, 'minutes');
 
 function processParticipantsByMemberId(participantsByMemberId, event) {
   if (event.event === e.ROOM_TYPE_WAS_CHANGED
@@ -21,16 +18,6 @@ function processParticipantsByMemberId(participantsByMemberId, event) {
     delete participantsByMemberId[event.memberId];
   }
   return participantsByMemberId;
-}
-
-function processWaitinglistReservationsBySessionId(waitinglistReservationsBySessionId, event) {
-  if (event.event === e.WAITINGLIST_RESERVATION_WAS_ISSUED && moment(event.joinedWaitinglist).isAfter(earliestValidRegistrationTime)) {
-    waitinglistReservationsBySessionId[event.sessionId] = event;
-  }
-  if (event.event === e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED) {
-    delete waitinglistReservationsBySessionId[event.sessionId];
-  }
-  return waitinglistReservationsBySessionId;
 }
 
 function processWaitinglistParticipantsByMemberId(waitinglistParticipantsByMemberId, event) {
@@ -68,7 +55,7 @@ class RegistrationReadModel {
 
     // derived data:
     roomOptions.allIds().forEach(roomType => {
-      this._participantsByMemberIdFor[roomType] = R.filter(event => event.roomType === roomType, this.participantsByMemberId());
+      this._participantsByMemberIdFor[roomType] = R.filter(event => event.roomType === roomType, this._participantsByMemberId);
       this._waitinglistParticipantsByMemberIdFor[roomType] = R.filter(event => R.contains(roomType, event.desiredRoomTypes), this.waitinglistParticipantsByMemberId());
     });
 
@@ -77,12 +64,11 @@ class RegistrationReadModel {
       R.pluck('duration'), // pull out each duration
       R.groupBy(R.identity), // group same durations
       R.mapObjIndexed((value, key) => { return {count: value.length, duration: roomOptions.endOfStayFor(key)}; })
-    )(this.participantsByMemberId());
-
+    )(this._participantsByMemberId);
   }
 
-  participantsByMemberId() {
-    return this._participantsByMemberId;
+  registeredMemberIds() {
+    return R.keys(this._participantsByMemberId);
   }
 
   participantsByMemberIdFor(roomType) {
@@ -95,7 +81,7 @@ class RegistrationReadModel {
 
   // TODO from write model? Only used for duration & roomType?
   participantEventFor(memberId) {
-    return this.participantsByMemberId()[memberId];
+    return this._participantsByMemberId[memberId];
   }
 
   durationFor(memberId) {
@@ -116,16 +102,6 @@ class RegistrationReadModel {
 
   isAlreadyRegistered(memberId) {
     return !!this.participantEventFor(memberId);
-  }
-
-  isAlreadyRegisteredFor(memberId, roomType) {
-    const event = this.participantEventFor(memberId);
-    return event && event.roomType === roomType;
-  }
-
-  isAlreadyOnWaitinglistFor(memberId, roomType) {
-    const event = this.waitinglistParticipantEventFor(memberId);
-    return event && R.contains(roomType, event.desiredRoomTypes);
   }
 
   allParticipantsIn(roomType) {

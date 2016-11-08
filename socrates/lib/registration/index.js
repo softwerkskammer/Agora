@@ -135,6 +135,7 @@ app.get('/participate', (req, res, next) => {
   if (!req.user) { return res.redirect('/registration'); }
   const member = req.user.member || new Member().initFromSessionUser(req.user, true);
 
+  // here we must use the write model because this is part of the registration process:
   eventstoreService.getRegistrationWriteModel(socratesConstants.currentUrl, (err, writeModel) => {
     if (err || !writeModel) { return next(err); }
     if (writeModel.isAlreadyRegistered(member.id())) {

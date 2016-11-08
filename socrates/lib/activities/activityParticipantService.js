@@ -35,7 +35,7 @@ module.exports = {
     } else {
       eventstoreService.getRegistrationReadModel('socrates-' + year, function (err, readModel) {
         if (err || !readModel) { return callback(err); }
-        return getMembers(R.keys(readModel.participantsByMemberId()), year, callback);
+        return getMembers(readModel.registeredMemberIds(), year, callback);
       });
     }
   },
