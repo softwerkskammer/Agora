@@ -72,10 +72,6 @@ class RegistrationWriteModel {
     return this._waitinglistReservationsBySessionId[sessionId];
   }
 
-  waitinglistReservationsBySessionId() {
-    return this._waitinglistReservationsBySessionId;
-  }
-
   alreadyHasWaitinglistReservation(sessionId) {
     return !!this.waitinglistReservation(sessionId);
   }
@@ -89,7 +85,8 @@ class RegistrationWriteModel {
   }
 
   isRegisteredInRoomType(memberId, roomType) {
-    return this._registeredInRoomType(memberId) === roomType;
+    const participantEvent = this.participantEventFor(memberId);
+    return participantEvent ? participantEvent.roomType === roomType : false;
   }
 
   waitinglistParticipantEventFor(memberId) {
@@ -101,7 +98,7 @@ class RegistrationWriteModel {
   }
 
   reservationExpiration(sessionId) {
-    const event = this._waitinglistReservationEventFor(sessionId);
+    const event = this._waitinglistReservationsBySessionId[sessionId];
     return event && expirationTimeOf(event);
   }
 
@@ -113,15 +110,6 @@ class RegistrationWriteModel {
 
     const waitinglistParticipantEvent = this.waitinglistParticipantEventFor(memberId);
     return waitinglistParticipantEvent ? waitinglistParticipantEvent.desiredRoomTypes : [];
-  }
-
-  _waitinglistReservationEventFor(sessionId) {
-    return this.waitinglistReservationsBySessionId()[sessionId];
-  }
-
-  _registeredInRoomType(memberId) {
-    const participantEvent = this.participantEventFor(memberId);
-    return participantEvent ? participantEvent.roomType : null;
   }
 }
 
