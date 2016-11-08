@@ -52,11 +52,9 @@ class RegistrationReadModel {
 
     // read model state:
     this._participantsByMemberId = {};
-    this._waitinglistReservationsBySessionId = {};
     this._waitinglistParticipantsByMemberId = {};
 
     this._participantsByMemberIdFor = {};
-    this._waitinglistReservationsBySessionIdFor = {};
     this._waitinglistParticipantsByMemberIdFor = {};
     this._durations = [];
 
@@ -66,13 +64,11 @@ class RegistrationReadModel {
   update(events) {
     // core data:
     this._participantsByMemberId = R.reduce(processParticipantsByMemberId, this._participantsByMemberId, events);
-    this._waitinglistReservationsBySessionId = R.reduce(processWaitinglistReservationsBySessionId, this._waitinglistReservationsBySessionId, events);
     this._waitinglistParticipantsByMemberId = R.reduce(processWaitinglistParticipantsByMemberId, this._waitinglistParticipantsByMemberId, events);
 
     // derived data:
     roomOptions.allIds().forEach(roomType => {
       this._participantsByMemberIdFor[roomType] = R.filter(event => event.roomType === roomType, this.participantsByMemberId());
-      this._waitinglistReservationsBySessionIdFor[roomType] = R.filter(event => R.contains(roomType, event.desiredRoomTypes), this._waitinglistReservationsBySessionId);
       this._waitinglistParticipantsByMemberIdFor[roomType] = R.filter(event => R.contains(roomType, event.desiredRoomTypes), this.waitinglistParticipantsByMemberId());
     });
 
@@ -136,10 +132,6 @@ class RegistrationReadModel {
     return R.keys(this.participantsByMemberIdFor(roomType));
   }
 
-  waitinglistReservationsBySessionIdFor(roomType) {
-    return this._waitinglistReservationsBySessionIdFor[roomType];
-  }
-
   waitinglistParticipantsByMemberId() {
     return this._waitinglistParticipantsByMemberId;
   }
@@ -194,8 +186,8 @@ class RegistrationReadModel {
   }
 
   // TODO this is currently for tests only...:
-  waitinglistReservationsAndParticipantsFor(roomType) {
-    return R.concat(R.values(this.waitinglistReservationsBySessionIdFor(roomType)), R.values(this.waitinglistParticipantsByMemberIdFor(roomType)));
+  waitinglistParticipantValuesFor(roomType) {
+    return R.values(this.waitinglistParticipantsByMemberIdFor(roomType));
   }
 }
 

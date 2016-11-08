@@ -54,33 +54,9 @@ describe('The registration read model', () => {
   });
 
   describe('for waitinglist reservations and participants (waitinglistReservationsAndParticipantsFor)', () => {
-    it('does not consider any waitinglist reservations or participants when there are no events', () => {
+    it('does not consider any waitinglist participants when there are no events', () => {
       const readModel = new RegistrationReadModel(listOfEvents);
-      expect(readModel.waitinglistReservationsAndParticipantsFor(singleBedRoom)).to.eql([]);
-    });
-
-    it('does not consider reservations that are already expired', () => {
-      listOfEvents = [
-        events.waitinglistReservationWasIssued(singleBedRoom, 2, sessionId1, memberId1, aLongTimeAgo)];
-      const readModel = new RegistrationReadModel(listOfEvents);
-
-      expect(readModel.waitinglistReservationsAndParticipantsFor(singleBedRoom)).to.eql([]);
-    });
-
-    it('considers reservations that are still active', () => {
-      listOfEvents = [
-        events.waitinglistReservationWasIssued([singleBedRoom], 2, sessionId1, memberId1, aShortTimeAgo)];
-      const readModel = new RegistrationReadModel(listOfEvents);
-
-      expect(stripTimestamps(readModel.waitinglistReservationsAndParticipantsFor(singleBedRoom))).to.eql([
-        {
-          event: e.WAITINGLIST_RESERVATION_WAS_ISSUED,
-          sessionId: sessionId1,
-          memberId: memberId1,
-          desiredRoomTypes: [singleBedRoom],
-          duration: 2,
-          joinedWaitinglist: aShortTimeAgo.valueOf()
-        }]);
+      expect(readModel.waitinglistParticipantValuesFor(singleBedRoom)).to.eql([]);
     });
 
     it('considers participations', () => {
@@ -89,7 +65,7 @@ describe('The registration read model', () => {
         events.waitinglistParticipantWasRegistered([singleBedRoom], 3, sessionId2, memberId2, aShortTimeAgo)];
       const readModel = new RegistrationReadModel(listOfEvents);
 
-      expect(stripTimestamps(readModel.waitinglistReservationsAndParticipantsFor(singleBedRoom))).to.eql([
+      expect(stripTimestamps(readModel.waitinglistParticipantValuesFor(singleBedRoom))).to.eql([
         {
           event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED,
           sessionId: sessionId1,
@@ -115,7 +91,7 @@ describe('The registration read model', () => {
         events.waitinglistParticipantWasRegistered([singleBedRoom], 2, sessionId1, memberId1, anEvenShorterTimeAgo)];
       const readModel = new RegistrationReadModel(listOfEvents);
 
-      expect(stripTimestamps(readModel.waitinglistReservationsAndParticipantsFor(singleBedRoom))).to.eql([
+      expect(stripTimestamps(readModel.waitinglistParticipantValuesFor(singleBedRoom))).to.eql([
         {
           event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED,
           sessionId: sessionId1,
@@ -128,23 +104,23 @@ describe('The registration read model', () => {
 
     it('does not consider DID_NOT_... reservation and registration events', () => {
       listOfEvents = [
-        events.waitinglistReservationWasIssued([singleBedRoom], 2, sessionId1, memberId1, aShortTimeAgo),
+        events.waitinglistParticipantWasRegistered([singleBedRoom], 2, sessionId1, memberId1, aShortTimeAgo),
         events.didNotIssueWaitinglistReservationForAlreadyReservedSession([bedInDouble], sessionId1, memberId1),
         events.didNotRegisterWaitinglistParticipantASecondTime([singleBedRoom], sessionId1, memberId1),
         events.didNotRegisterWaitinglistParticipantWithExpiredOrMissingReservation([singleBedRoom], sessionId1, memberId1)
       ];
       const readModel = new RegistrationReadModel(listOfEvents);
 
-      expect(stripTimestamps(readModel.waitinglistReservationsAndParticipantsFor(singleBedRoom))).to.eql([
+      expect(stripTimestamps(readModel.waitinglistParticipantValuesFor(singleBedRoom))).to.eql([
         {
-          event: e.WAITINGLIST_RESERVATION_WAS_ISSUED,
+          event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED,
           sessionId: sessionId1,
           memberId: memberId1,
           desiredRoomTypes: [singleBedRoom],
           duration: 2,
           joinedWaitinglist: aShortTimeAgo.valueOf()
         }]);
-      expect(readModel.waitinglistReservationsAndParticipantsFor(bedInDouble)).to.eql([]);
+      expect(readModel.waitinglistParticipantValuesFor(bedInDouble)).to.eql([]);
     });
 
     it('returns only the events belonging to the queried room type', () => {
@@ -155,7 +131,7 @@ describe('The registration read model', () => {
         events.waitinglistParticipantWasRegistered([singleBedRoom], 2, sessionId1, memberId1, anEvenShorterTimeAgo)];
       const readModel = new RegistrationReadModel(listOfEvents);
 
-      expect(stripTimestamps(readModel.waitinglistReservationsAndParticipantsFor(singleBedRoom))).to.eql([
+      expect(stripTimestamps(readModel.waitinglistParticipantValuesFor(singleBedRoom))).to.eql([
         {
           event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED,
           sessionId: sessionId1,
@@ -164,7 +140,7 @@ describe('The registration read model', () => {
           duration: 2,
           joinedWaitinglist: anEvenShorterTimeAgo.valueOf()
         }]);
-      expect(stripTimestamps(readModel.waitinglistReservationsAndParticipantsFor(bedInDouble))).to.eql([
+      expect(stripTimestamps(readModel.waitinglistParticipantValuesFor(bedInDouble))).to.eql([
         {
           event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED,
           sessionId: sessionId2,
