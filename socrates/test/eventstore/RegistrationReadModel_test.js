@@ -321,7 +321,7 @@ describe('The registration read model', () => {
       const readModel = new RegistrationReadModel(listOfEvents);
 
       expect(readModel.allParticipantsIn(singleBedRoom)).to.eql([memberId1]);
-      expect(readModel.waitinglistParticipantsByMemberIdFor(singleBedRoom)).to.eql({});
+      expect(readModel.allWaitinglistParticipantsIn(singleBedRoom)).to.eql([]);
     });
   });
 
@@ -390,7 +390,7 @@ describe('The registration read model', () => {
     const readModel = new RegistrationReadModel(listOfEvents);
 
     expect(readModel.allParticipantsIn(singleBedRoom)).to.eql([memberId1]);
-    expect(readModel.waitinglistParticipantsByMemberIdFor(singleBedRoom)).to.eql({});
+    expect(readModel.allWaitinglistParticipantsIn(singleBedRoom)).to.eql([]);
   });
 
   it('for a waitinglist reservation', () => {
@@ -401,7 +401,7 @@ describe('The registration read model', () => {
     const readModel = new RegistrationReadModel(listOfEvents);
 
     expect(readModel.allParticipantsIn(singleBedRoom)).to.eql([memberId1]);
-    expect(readModel.waitinglistParticipantsByMemberIdFor(singleBedRoom)).to.eql({});
+    expect(readModel.allWaitinglistParticipantsIn(singleBedRoom)).to.eql([]);
   });
 
   it('for a waitinglist participant to a participant', () => {
@@ -412,7 +412,7 @@ describe('The registration read model', () => {
     const readModel = new RegistrationReadModel(listOfEvents);
 
     expect(readModel.allParticipantsIn(singleBedRoom)).to.eql([memberId1]);
-    expect(R.keys(readModel.waitinglistParticipantsByMemberIdFor(singleBedRoom))).to.eql([]);
+    expect(readModel.allWaitinglistParticipantsIn(singleBedRoom)).to.eql([]);
   });
 
   it('for a waitinglist participant registering with reservation', () => {
@@ -423,7 +423,7 @@ describe('The registration read model', () => {
     const readModel = new RegistrationReadModel(listOfEvents);
 
     expect(readModel.allParticipantsIn(singleBedRoom)).to.eql([]);
-    expect(R.keys(readModel.waitinglistParticipantsByMemberIdFor(singleBedRoom))).to.eql([memberId1]);
+    expect(readModel.allWaitinglistParticipantsIn(singleBedRoom)).to.eql([memberId1]);
   });
 
   it('for a waitinglist participant registering without reservation', () => {
@@ -432,7 +432,7 @@ describe('The registration read model', () => {
     ];
     const readModel = new RegistrationReadModel(listOfEvents);
     expect(readModel.allParticipantsIn(singleBedRoom)).to.eql([]);
-    expect(R.keys(readModel.waitinglistParticipantsByMemberIdFor(singleBedRoom))).to.eql([memberId1]);
+    expect(readModel.allWaitinglistParticipantsIn(singleBedRoom)).to.eql([memberId1]);
   });
 
   it('for a registered participant', () => {
@@ -442,7 +442,7 @@ describe('The registration read model', () => {
     const readModel = new RegistrationReadModel(listOfEvents);
 
     expect(readModel.allParticipantsIn(singleBedRoom)).to.eql([memberId1]);
-    expect(readModel.waitinglistParticipantsByMemberIdFor(singleBedRoom)).to.eql({});
+    expect(readModel.allWaitinglistParticipantsIn(singleBedRoom)).to.eql([]);
   });
 
 });

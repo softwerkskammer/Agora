@@ -71,11 +71,6 @@ class RegistrationReadModel {
     return R.keys(this._participantsByMemberId);
   }
 
-  participantCountFor(roomType) {
-    return this.allParticipantsIn(roomType).length;
-  }
-
-  // TODO from write model? Only used for duration & roomType?
   participantEventFor(memberId) {
     return this._participantsByMemberId[memberId];
   }
@@ -104,20 +99,20 @@ class RegistrationReadModel {
     return R.keys(this._participantsByMemberIdFor[roomType]);
   }
 
+  participantCountFor(roomType) {
+    return this.allParticipantsIn(roomType).length;
+  }
+
   waitinglistParticipantsByMemberId() {
     return this._waitinglistParticipantsByMemberId;
   }
 
   allWaitinglistParticipantsIn(roomType) {
-    return R.keys(this.waitinglistParticipantsByMemberIdFor(roomType));
+    return R.keys(this._waitinglistParticipantsByMemberIdFor[roomType]);
   }
 
   waitinglistParticipantCountFor(roomType) {
     return this.allWaitinglistParticipantsIn(roomType).length;
-  }
-
-  waitinglistParticipantsByMemberIdFor(roomType) {
-    return this._waitinglistParticipantsByMemberIdFor[roomType];
   }
 
   registeredInRoomType(memberId) {
@@ -159,7 +154,7 @@ class RegistrationReadModel {
 
   // TODO this is currently for tests only...:
   waitinglistParticipantValuesFor(roomType) {
-    return R.values(this.waitinglistParticipantsByMemberIdFor(roomType));
+    return R.values(this._waitinglistParticipantsByMemberIdFor[roomType]);
   }
 }
 
