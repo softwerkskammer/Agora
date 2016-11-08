@@ -177,12 +177,9 @@ class RegistrationReadModel {
     return !!this._waitinglistReservationEventFor(sessionId);
   }
 
-  registeredInRoomType(memberID) {
-    const participantEvent = this.participantEventFor(memberID);
-    if (participantEvent) {
-      return participantEvent.roomType;
-    }
-    return null;
+  registeredInRoomType(memberId) {
+    const participantEvent = this.participantEventFor(memberId);
+    return participantEvent ? participantEvent.roomType : null;
   }
 
   waitinglistParticipantEventFor(memberId) {
@@ -214,10 +211,7 @@ class RegistrationReadModel {
     }
 
     const waitinglistParticipantEvent = this.waitinglistParticipantEventFor(memberId);
-    if (waitinglistParticipantEvent) {
-      return waitinglistParticipantEvent.desiredRoomTypes;
-    }
-    return [];
+    return waitinglistParticipantEvent ? waitinglistParticipantEvent.desiredRoomTypes : [];
   }
 
   // TODO this is currently for tests only...:

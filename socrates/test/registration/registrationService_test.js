@@ -127,30 +127,20 @@ describe('Registration Service', () => {
       });
     });
 
-    it('adds the registrant to the waitinglist, stores the event and updates the read model', done => {
+    it('adds the registrant to the waitinglist, stores the event and updates the write model', done => {
       registrationService.startRegistration(registrationTuple, 'memberId', now, (err, statusTitle, statusText) => {
         expect(statusTitle).to.not.exist();
         expect(statusText).to.not.exist();
-        const readModel = cache.get('socrates-url_registrationReadModel');
+        const writeModel = cache.get('socrates-url_registrationWriteModel');
 
-        expect(readModel.waitinglistReservationsAndParticipantsFor('single')).to.have.length(1);
-        expect(readModel.waitinglistReservationsAndParticipantsFor('single')[0].event).to.eql('WAITINGLIST-RESERVATION-WAS-ISSUED');
-        expect(readModel.waitinglistReservationsAndParticipantsFor('single')[0].sessionId).to.eql('sessionId');
-        expect(readModel.waitinglistReservationsAndParticipantsFor('single')[0].memberId).to.eql('memberId');
-        expect(readModel.waitinglistReservationsAndParticipantsFor('single')[0].desiredRoomTypes).to.eql(['single']);
-        expect(readModel.waitinglistReservationsAndParticipantsFor('single')[0].joinedWaitinglist).to.eql(now.valueOf());
+        const reservationEvent = {event: e.WAITINGLIST_RESERVATION_WAS_ISSUED, sessionId: 'sessionId', desiredRoomTypes: ['single'], memberId: 'memberId', duration: 2, joinedWaitinglist: now.valueOf()};
+
+        expect(stripTimestamps([writeModel.waitinglistReservation('sessionId')])).to.eql([reservationEvent]);
 
         const savedEventStore = saveEventStoreStub.firstCall.args[0];
         expect(stripTimestamps(savedEventStore.state.events)).to.eql([
           {event: e.ROOM_QUOTA_WAS_SET, roomType: 'single', quota: 10},
-          {
-            event: e.WAITINGLIST_RESERVATION_WAS_ISSUED,
-            sessionId: 'sessionId',
-            desiredRoomTypes: ['single'],
-            memberId: 'memberId',
-            duration: 2,
-            joinedWaitinglist: now.valueOf()
-          }
+          reservationEvent
         ]);
         done(err);
       });
