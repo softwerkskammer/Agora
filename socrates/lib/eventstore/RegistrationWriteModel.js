@@ -45,6 +45,11 @@ function processWaitinglistParticipantsByMemberId(waitinglistParticipantsByMembe
   return waitinglistParticipantsByMemberId;
 }
 
+function expirationTimeOf(event) {
+  const joinedAt = event.joinedSoCraTes || event.joinedWaitinglist;
+  return joinedAt ? moment(joinedAt).add(socratesConstants.registrationPeriodinMinutes, 'minutes') : undefined;
+}
+
 class RegistrationWriteModel {
 
   constructor(events) {
@@ -67,6 +72,10 @@ class RegistrationWriteModel {
     return this._waitinglistReservationsBySessionId[sessionId];
   }
 
+  waitinglistReservationsBySessionId() {
+    return this._waitinglistReservationsBySessionId;
+  }
+
   alreadyHasWaitinglistReservation(sessionId) {
     return !!this.waitinglistReservation(sessionId);
   }
@@ -77,11 +86,6 @@ class RegistrationWriteModel {
 
   isAlreadyRegistered(memberId) {
     return !!this.participantEventFor(memberId);
-  }
-
-  _registeredInRoomType(memberId) {
-    const participantEvent = this.participantEventFor(memberId);
-    return participantEvent ? participantEvent.roomType : null;
   }
 
   isRegisteredInRoomType(memberId, roomType) {
@@ -96,6 +100,11 @@ class RegistrationWriteModel {
     return !!this.waitinglistParticipantEventFor(memberId);
   }
 
+  reservationExpiration(sessionId) {
+    const event = this._waitinglistReservationEventFor(sessionId);
+    return event && expirationTimeOf(event);
+  }
+
   roomTypesOf(memberId) {
     const participantEvent = this.participantEventFor(memberId);
     if (participantEvent) {
@@ -104,6 +113,15 @@ class RegistrationWriteModel {
 
     const waitinglistParticipantEvent = this.waitinglistParticipantEventFor(memberId);
     return waitinglistParticipantEvent ? waitinglistParticipantEvent.desiredRoomTypes : [];
+  }
+
+  _waitinglistReservationEventFor(sessionId) {
+    return this.waitinglistReservationsBySessionId()[sessionId];
+  }
+
+  _registeredInRoomType(memberId) {
+    const participantEvent = this.participantEventFor(memberId);
+    return participantEvent ? participantEvent.roomType : null;
   }
 }
 

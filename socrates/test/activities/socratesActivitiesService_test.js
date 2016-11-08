@@ -373,7 +373,7 @@ describe('SoCraTes Activities Service', function () {
         const readModel = cache.get(socratesConstants.currentUrl + '_roomsReadModel');
         expect(readModel.roomPairsFor('bed_in_double')).to.have.length(0);
 
-        //      expect(new RoomsReadModel(listOfEvents, new RegistrationReadModel(listOfEvents, new SoCraTesReadModel(listOfEvents))).roomPairsFor('bed_in_double')).to.eql([]);
+        //      expect(new RoomsReadModel(listOfEvents, new RegistrationWriteModel(listOfEvents, new SoCraTesReadModel(listOfEvents))).roomPairsFor('bed_in_double')).to.eql([]);
         done(err);
       });
     });
@@ -420,7 +420,7 @@ describe('SoCraTes Activities Service', function () {
 
         expect(removedFromParticipantsNotification.called).to.be.true();
 
-        //      expect(R.keys(new RegistrationReadModel(listOfEvents, new SoCraTesReadModel(listOfEvents)).participantsByMemberIdFor('bed_in_double'))).to.eql([]);
+        //      expect(R.keys(new RegistrationWriteModel(listOfEvents, new SoCraTesReadModel(listOfEvents)).participantsByMemberIdFor('bed_in_double'))).to.eql([]);
         done(err);
       });
     });

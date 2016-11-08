@@ -135,9 +135,9 @@ app.get('/participate', (req, res, next) => {
   if (!req.user) { return res.redirect('/registration'); }
   const member = req.user.member || new Member().initFromSessionUser(req.user, true);
 
-  eventstoreService.getRegistrationReadModel(socratesConstants.currentUrl, (err, readModel) => {
-    if (err || !readModel) { return next(err); }
-    if (readModel.isAlreadyRegistered(member.id())) {
+  eventstoreService.getRegistrationWriteModel(socratesConstants.currentUrl, (err, writeModel) => {
+    if (err || !writeModel) { return next(err); }
+    if (writeModel.isAlreadyRegistered(member.id())) {
       statusmessage.successMessage('general.info', 'activities.already_registered').putIntoSession(req);
       return res.redirect('/registration');
     }
@@ -145,7 +145,7 @@ app.get('/participate', (req, res, next) => {
       if (err1) { return next(err1); }
       const addon = (subscriber && subscriber.addon()) || new Addon({});
       const participation = (subscriber && subscriber.currentParticipation()) || new Participation();
-      const expiresAt = readModel.reservationExpiration(registrationTuple.sessionId);
+      const expiresAt = writeModel.reservationExpiration(registrationTuple.sessionId);
       res.render('participate', {
         member: member,
         addon: addon,

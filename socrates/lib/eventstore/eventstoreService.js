@@ -103,11 +103,16 @@ module.exports = {
     return getModel(url, REGISTRATION_READ_MODEL, RegistrationReadModel, callback);
   },
 
+  getRegistrationWriteModel: function (url, callback) {
+    return getModel(url, REGISTRATION_WRITE_MODEL, RegistrationWriteModel, callback);
+  },
+
   getRegistrationCommandProcessor: function (url, callback) {
+    const self = this;
     getGlobalEventStoreForWriting(url, function (err, eventStore) {
       // when adding a new registration, we require the event store to be already in place:
       if (err || !eventStore) { return callback(err); }
-      getModel(url, REGISTRATION_WRITE_MODEL, RegistrationWriteModel, (err1, model) => {
+      self.getRegistrationWriteModel(url, (err1, model) => {
         if (err1 || !model) { return callback(err1); }
         callback(null, new RegistrationCommandProcessor(url, model));
       });

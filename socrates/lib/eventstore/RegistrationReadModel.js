@@ -46,11 +46,6 @@ function processWaitinglistParticipantsByMemberId(waitinglistParticipantsByMembe
   return waitinglistParticipantsByMemberId;
 }
 
-function expirationTimeOf(event) {
-  const joinedAt = event.joinedSoCraTes || event.joinedWaitinglist;
-  return joinedAt ? moment(joinedAt).add(socratesConstants.registrationPeriodinMinutes, 'minutes') : undefined;
-}
-
 class RegistrationReadModel {
 
   constructor(events) {
@@ -77,7 +72,7 @@ class RegistrationReadModel {
     // derived data:
     roomOptions.allIds().forEach(roomType => {
       this._participantsByMemberIdFor[roomType] = R.filter(event => event.roomType === roomType, this.participantsByMemberId());
-      this._waitinglistReservationsBySessionIdFor[roomType] = R.filter(event => R.contains(roomType, event.desiredRoomTypes), this.waitinglistReservationsBySessionId());
+      this._waitinglistReservationsBySessionIdFor[roomType] = R.filter(event => R.contains(roomType, event.desiredRoomTypes), this._waitinglistReservationsBySessionId);
       this._waitinglistParticipantsByMemberIdFor[roomType] = R.filter(event => R.contains(roomType, event.desiredRoomTypes), this.waitinglistParticipantsByMemberId());
     });
 
@@ -102,6 +97,7 @@ class RegistrationReadModel {
     return this.allParticipantsIn(roomType).length;
   }
 
+  // TODO from write model? Only used for duration & roomType?
   participantEventFor(memberId) {
     return this.participantsByMemberId()[memberId];
   }
@@ -140,10 +136,6 @@ class RegistrationReadModel {
     return R.keys(this.participantsByMemberIdFor(roomType));
   }
 
-  waitinglistReservationsBySessionId() {
-    return this._waitinglistReservationsBySessionId;
-  }
-
   waitinglistReservationsBySessionIdFor(roomType) {
     return this._waitinglistReservationsBySessionIdFor[roomType];
   }
@@ -162,15 +154,6 @@ class RegistrationReadModel {
 
   waitinglistParticipantsByMemberIdFor(roomType) {
     return this._waitinglistParticipantsByMemberIdFor[roomType];
-  }
-
-  _waitinglistReservationEventFor(sessionId) {
-    return this.waitinglistReservationsBySessionId()[sessionId];
-  }
-
-  reservationExpiration(sessionId) {
-    const event = this._waitinglistReservationEventFor(sessionId);
-    return event && expirationTimeOf(event);
   }
 
   registeredInRoomType(memberId) {
