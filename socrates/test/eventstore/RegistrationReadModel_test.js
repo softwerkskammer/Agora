@@ -49,7 +49,7 @@ describe('The registration read model', () => {
         events.participantWasRemoved(singleBedRoom, memberId1)];
       const readModel = new RegistrationReadModel(listOfEvents);
 
-      expect(readModel.participantsByMemberIdFor(singleBedRoom)).to.eql({});
+      expect(readModel.allParticipantsIn(singleBedRoom)).to.eql([]);
     });
   });
 
@@ -320,7 +320,7 @@ describe('The registration read model', () => {
       ];
       const readModel = new RegistrationReadModel(listOfEvents);
 
-      expect(R.keys(readModel.participantsByMemberIdFor(singleBedRoom))).to.eql([memberId1]);
+      expect(readModel.allParticipantsIn(singleBedRoom)).to.eql([memberId1]);
       expect(readModel.waitinglistParticipantsByMemberIdFor(singleBedRoom)).to.eql({});
     });
   });
@@ -389,7 +389,7 @@ describe('The registration read model', () => {
     ];
     const readModel = new RegistrationReadModel(listOfEvents);
 
-    expect(R.keys(readModel.participantsByMemberIdFor(singleBedRoom))).to.eql([memberId1]);
+    expect(readModel.allParticipantsIn(singleBedRoom)).to.eql([memberId1]);
     expect(readModel.waitinglistParticipantsByMemberIdFor(singleBedRoom)).to.eql({});
   });
 
@@ -400,7 +400,7 @@ describe('The registration read model', () => {
     ];
     const readModel = new RegistrationReadModel(listOfEvents);
 
-    expect(R.keys(readModel.participantsByMemberIdFor(singleBedRoom))).to.eql([memberId1]);
+    expect(readModel.allParticipantsIn(singleBedRoom)).to.eql([memberId1]);
     expect(readModel.waitinglistParticipantsByMemberIdFor(singleBedRoom)).to.eql({});
   });
 
@@ -411,7 +411,7 @@ describe('The registration read model', () => {
     ];
     const readModel = new RegistrationReadModel(listOfEvents);
 
-    expect(R.keys(readModel.participantsByMemberIdFor(singleBedRoom))).to.eql([memberId1]);
+    expect(readModel.allParticipantsIn(singleBedRoom)).to.eql([memberId1]);
     expect(R.keys(readModel.waitinglistParticipantsByMemberIdFor(singleBedRoom))).to.eql([]);
   });
 
@@ -422,7 +422,7 @@ describe('The registration read model', () => {
     ];
     const readModel = new RegistrationReadModel(listOfEvents);
 
-    expect(readModel.participantsByMemberIdFor(singleBedRoom)).to.eql({});
+    expect(readModel.allParticipantsIn(singleBedRoom)).to.eql([]);
     expect(R.keys(readModel.waitinglistParticipantsByMemberIdFor(singleBedRoom))).to.eql([memberId1]);
   });
 
@@ -431,7 +431,7 @@ describe('The registration read model', () => {
       events.waitinglistParticipantWasRegistered([singleBedRoom], 2, sessionId1, memberId1, aLongTimeAgo)
     ];
     const readModel = new RegistrationReadModel(listOfEvents);
-    expect(readModel.participantsByMemberIdFor(singleBedRoom)).to.eql({});
+    expect(readModel.allParticipantsIn(singleBedRoom)).to.eql([]);
     expect(R.keys(readModel.waitinglistParticipantsByMemberIdFor(singleBedRoom))).to.eql([memberId1]);
   });
 
@@ -441,7 +441,7 @@ describe('The registration read model', () => {
     ];
     const readModel = new RegistrationReadModel(listOfEvents);
 
-    expect(R.keys(readModel.participantsByMemberIdFor(singleBedRoom))).to.eql([memberId1]);
+    expect(readModel.allParticipantsIn(singleBedRoom)).to.eql([memberId1]);
     expect(readModel.waitinglistParticipantsByMemberIdFor(singleBedRoom)).to.eql({});
   });
 

@@ -71,10 +71,6 @@ class RegistrationReadModel {
     return R.keys(this._participantsByMemberId);
   }
 
-  participantsByMemberIdFor(roomType) {
-    return this._participantsByMemberIdFor[roomType];
-  }
-
   participantCountFor(roomType) {
     return this.allParticipantsIn(roomType).length;
   }
@@ -105,7 +101,7 @@ class RegistrationReadModel {
   }
 
   allParticipantsIn(roomType) {
-    return R.keys(this.participantsByMemberIdFor(roomType));
+    return R.keys(this._participantsByMemberIdFor[roomType]);
   }
 
   waitinglistParticipantsByMemberId() {
