@@ -253,7 +253,7 @@ block content
                     td #{line.member.lastname()}
                     td #{line.member.email()}
                     td #{registrationReadModel.durationFor(line.member.id())}
-                    td: +newDuration(event.roomType, line.member.nickname(), registrationReadModel.participantEventFor(line.member.id()).duration)
+                    td: +newDuration(event.roomType, line.member.nickname(), event.duration)
                     td #{event.roomType}
                     td: +newResource(event.roomType, line.member.nickname())
 

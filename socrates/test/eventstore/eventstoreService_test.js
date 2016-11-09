@@ -1,17 +1,18 @@
 'use strict';
 
-var expect = require('must-dist');
-var sinon = require('sinon').sandbox.create();
+const expect = require('must-dist');
+const sinon = require('sinon').sandbox.create();
 
 const conf = require('../../testutil/configureForTest');
-var beans = conf.get('beans');
-var cache = conf.get('cache');
-var eventstore = beans.get('eventstore');
-var GlobalEventStore = beans.get('GlobalEventStore');
-var eventstoreService = beans.get('eventstoreService');
+const cache = conf.get('cache');
+const beans = conf.get('beans');
+const roomOptions = beans.get('roomOptions');
+const eventstore = beans.get('eventstore');
+const GlobalEventStore = beans.get('GlobalEventStore');
+const eventstoreService = beans.get('eventstoreService');
 
 describe('eventstoreService', () => {
-  var eventStore = {
+  const eventStore = {
     url: 'socrates-url',
     events: [{event: 'EVENT-1'}]
   };
@@ -46,4 +47,11 @@ describe('eventstoreService', () => {
     );
   });
 
+  it('creates a new SoCraTes read model which does not know about url or quotas', () => {
+    const readModel = eventstoreService.newSoCraTesReadModel();
+    expect(readModel.url()).to.be(undefined);
+    roomOptions.allIds().forEach(roomType => {
+      expect(readModel.quotaFor(roomType)).to.be(undefined);
+    });
+  });
 });

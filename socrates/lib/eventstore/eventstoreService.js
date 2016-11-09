@@ -16,6 +16,7 @@ const RoomsReadModel = beans.get('RoomsReadModel');
 const RoomsWriteModel = beans.get('RoomsWriteModel');
 const RoomsCommandProcessor = beans.get('RoomsCommandProcessor');
 
+const REGISTRATION_WRITE_MODEL = 'registrationWriteModel';
 const SOCRATES_READ_MODEL = 'soCraTesReadModel';
 const REGISTRATION_READ_MODEL = 'registrationReadModel';
 const ROOMS_READ_MODEL = 'roomsReadModel';
@@ -43,27 +44,27 @@ function getGlobalEventStoreForWriting(url, callback) {
   });
 }
 
-function getReadModelWithArg(url, key, ReadModel, argument, callback) {
+function getModelWithArg(url, key, Model, argument, callback) {
   const cacheKey = keyFor(url, key);
   const cachedModel = cache.get(cacheKey);
   if (cachedModel) {
     return callback(null, cachedModel);
   }
   getGlobalEventStoreForWriting(url, function (err, eventStore) {
-    // for the read models, there must be an eventstore already:
+    // for the read and write models, there must be an eventstore already:
     if (err || !eventStore) { return callback(err); }
     const cachedWhileFetching = cache.get(cacheKey);
     if (cachedWhileFetching) {
       return callback(null, cachedWhileFetching);
     }
-    const newModel = new ReadModel(eventStore.events(), argument);
+    const newModel = new Model(eventStore.events(), argument);
     cache.set(cacheKey, newModel);
     callback(null, newModel);
   });
 }
 
-function getReadModel(url, key, ReadModel, callback) {
-  return getReadModelWithArg(url, key, ReadModel, undefined, callback);
+function getModel(url, key, Model, callback) {
+  return getModelWithArg(url, key, Model, undefined, callback);
 }
 
 module.exports = {
@@ -76,11 +77,11 @@ module.exports = {
   },
 
   getSoCraTesReadModel: function (url, callback) {
-    return getReadModel(url, SOCRATES_READ_MODEL, SoCraTesReadModel, callback);
+    return getModel(url, SOCRATES_READ_MODEL, SoCraTesReadModel, callback);
   },
 
   newSoCraTesReadModel: function () {
-    return new SoCraTesReadModel(new GlobalEventStore());
+    return new SoCraTesReadModel([]);
   },
 
   getSoCraTesCommandProcessor: function (url, callback) {
@@ -99,9 +100,11 @@ module.exports = {
   },
 
   getRegistrationReadModel: function (url, callback) {
-    this.getSoCraTesReadModel(url, function (err, soCraTesReadModel) {
-      return getReadModelWithArg(url, REGISTRATION_READ_MODEL, RegistrationReadModel, soCraTesReadModel, callback);
-    });
+    return getModel(url, REGISTRATION_READ_MODEL, RegistrationReadModel, callback);
+  },
+
+  getRegistrationWriteModel: function (url, callback) {
+    return getModel(url, REGISTRATION_WRITE_MODEL, RegistrationWriteModel, callback);
   },
 
   getRegistrationCommandProcessor: function (url, callback) {
@@ -109,9 +112,9 @@ module.exports = {
     getGlobalEventStoreForWriting(url, function (err, eventStore) {
       // when adding a new registration, we require the event store to be already in place:
       if (err || !eventStore) { return callback(err); }
-      self.getRegistrationReadModel(url, function (err1, registrationReadModel) {
-        if (err1 || !registrationReadModel) { return callback(err1); }
-        callback(null, new RegistrationCommandProcessor(url, new RegistrationWriteModel(registrationReadModel)));
+      self.getRegistrationWriteModel(url, (err1, model) => {
+        if (err1 || !model) { return callback(err1); }
+        callback(null, new RegistrationCommandProcessor(url, model));
       });
     });
   },
@@ -133,7 +136,7 @@ module.exports = {
 
   getRoomsReadModel: function (url, callback) {
     this.getRegistrationReadModel(url, function (err, registrationReadModel) {
-      return getReadModelWithArg(url, ROOMS_READ_MODEL, RoomsReadModel, registrationReadModel, callback);
+      return getModelWithArg(url, ROOMS_READ_MODEL, RoomsReadModel, registrationReadModel, callback);
     });
   },
 
@@ -149,8 +152,8 @@ module.exports = {
 
     eventStoreFromCache.updateEvents(events);
 
-    // update all read models:
-    R.values(cache.mget([keyFor(url, SOCRATES_READ_MODEL), keyFor(url, REGISTRATION_READ_MODEL), keyFor(url, ROOMS_READ_MODEL)])).forEach(model => model.update(events));
+    // update all models:
+    R.values(cache.mget([SOCRATES_READ_MODEL, REGISTRATION_READ_MODEL, ROOMS_READ_MODEL, REGISTRATION_WRITE_MODEL].map(R.partial(keyFor, [url])))).forEach(model => model.update(events));
 
     eventstore.saveEventStore(eventStoreFromCache, callback);
   }

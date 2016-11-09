@@ -6,10 +6,7 @@ const moment = require('moment-timezone');
 
 const beans = require('simple-configure').get('beans');
 const e = beans.get('eventConstants');
-const socratesConstants = beans.get('socratesConstants');
 const roomOptions = beans.get('roomOptions');
-
-const earliestValidRegistrationTime = moment.tz().subtract(socratesConstants.registrationPeriodinMinutes, 'minutes');
 
 function processParticipantsByMemberId(participantsByMemberId, event) {
   if (event.event === e.ROOM_TYPE_WAS_CHANGED
@@ -21,16 +18,6 @@ function processParticipantsByMemberId(participantsByMemberId, event) {
     delete participantsByMemberId[event.memberId];
   }
   return participantsByMemberId;
-}
-
-function processWaitinglistReservationsBySessionId(waitinglistReservationsBySessionId, event) {
-  if (event.event === e.WAITINGLIST_RESERVATION_WAS_ISSUED && moment(event.joinedWaitinglist).isAfter(earliestValidRegistrationTime)) {
-    waitinglistReservationsBySessionId[event.sessionId] = event;
-  }
-  if (event.event === e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED) {
-    delete waitinglistReservationsBySessionId[event.sessionId];
-  }
-  return waitinglistReservationsBySessionId;
 }
 
 function processWaitinglistParticipantsByMemberId(waitinglistParticipantsByMemberId, event) {
@@ -46,23 +33,15 @@ function processWaitinglistParticipantsByMemberId(waitinglistParticipantsByMembe
   return waitinglistParticipantsByMemberId;
 }
 
-function expirationTimeOf(event) {
-  const joinedAt = event.joinedSoCraTes || event.joinedWaitinglist;
-  return joinedAt ? moment(joinedAt).add(socratesConstants.registrationPeriodinMinutes, 'minutes') : undefined;
-}
-
 class RegistrationReadModel {
 
-  constructor(events, soCraTesReadModel) {
-    this._soCraTesReadModel = soCraTesReadModel;
+  constructor(events) {
 
     // read model state:
     this._participantsByMemberId = {};
-    this._waitinglistReservationsBySessionId = {};
     this._waitinglistParticipantsByMemberId = {};
 
     this._participantsByMemberIdFor = {};
-    this._waitinglistReservationsBySessionIdFor = {};
     this._waitinglistParticipantsByMemberIdFor = {};
     this._durations = [];
 
@@ -72,13 +51,11 @@ class RegistrationReadModel {
   update(events) {
     // core data:
     this._participantsByMemberId = R.reduce(processParticipantsByMemberId, this._participantsByMemberId, events);
-    this._waitinglistReservationsBySessionId = R.reduce(processWaitinglistReservationsBySessionId, this._waitinglistReservationsBySessionId, events);
     this._waitinglistParticipantsByMemberId = R.reduce(processWaitinglistParticipantsByMemberId, this._waitinglistParticipantsByMemberId, events);
 
     // derived data:
     roomOptions.allIds().forEach(roomType => {
-      this._participantsByMemberIdFor[roomType] = R.filter(event => event.roomType === roomType, this.participantsByMemberId());
-      this._waitinglistReservationsBySessionIdFor[roomType] = R.filter(event => R.contains(roomType, event.desiredRoomTypes), this.waitinglistReservationsBySessionId());
+      this._participantsByMemberIdFor[roomType] = R.filter(event => event.roomType === roomType, this._participantsByMemberId);
       this._waitinglistParticipantsByMemberIdFor[roomType] = R.filter(event => R.contains(roomType, event.desiredRoomTypes), this.waitinglistParticipantsByMemberId());
     });
 
@@ -87,24 +64,15 @@ class RegistrationReadModel {
       R.pluck('duration'), // pull out each duration
       R.groupBy(R.identity), // group same durations
       R.mapObjIndexed((value, key) => { return {count: value.length, duration: roomOptions.endOfStayFor(key)}; })
-    )(this.participantsByMemberId());
-
+    )(this._participantsByMemberId);
   }
 
-  participantsByMemberId() {
-    return this._participantsByMemberId;
-  }
-
-  participantsByMemberIdFor(roomType) {
-    return this._participantsByMemberIdFor[roomType];
-  }
-
-  participantCountFor(roomType) {
-    return this.allParticipantsIn(roomType).length;
+  registeredMemberIds() {
+    return R.keys(this._participantsByMemberId);
   }
 
   participantEventFor(memberId) {
-    return this.participantsByMemberId()[memberId];
+    return this._participantsByMemberId[memberId];
   }
 
   durationFor(memberId) {
@@ -127,26 +95,12 @@ class RegistrationReadModel {
     return !!this.participantEventFor(memberId);
   }
 
-  isAlreadyRegisteredFor(memberId, roomType) {
-    const event = this.participantEventFor(memberId);
-    return event && event.roomType === roomType;
-  }
-
-  isAlreadyOnWaitinglistFor(memberId, roomType) {
-    const event = this.waitinglistParticipantEventFor(memberId);
-    return event && R.contains(roomType, event.desiredRoomTypes);
-  }
-
   allParticipantsIn(roomType) {
-    return R.keys(this.participantsByMemberIdFor(roomType));
+    return R.keys(this._participantsByMemberIdFor[roomType]);
   }
 
-  waitinglistReservationsBySessionId() {
-    return this._waitinglistReservationsBySessionId;
-  }
-
-  waitinglistReservationsBySessionIdFor(roomType) {
-    return this._waitinglistReservationsBySessionIdFor[roomType];
+  participantCountFor(roomType) {
+    return this.allParticipantsIn(roomType).length;
   }
 
   waitinglistParticipantsByMemberId() {
@@ -154,36 +108,16 @@ class RegistrationReadModel {
   }
 
   allWaitinglistParticipantsIn(roomType) {
-    return R.keys(this.waitinglistParticipantsByMemberIdFor(roomType));
+    return R.keys(this._waitinglistParticipantsByMemberIdFor[roomType]);
   }
 
   waitinglistParticipantCountFor(roomType) {
     return this.allWaitinglistParticipantsIn(roomType).length;
   }
 
-  waitinglistParticipantsByMemberIdFor(roomType) {
-    return this._waitinglistParticipantsByMemberIdFor[roomType];
-  }
-
-  _waitinglistReservationEventFor(sessionId) {
-    return this.waitinglistReservationsBySessionId()[sessionId];
-  }
-
-  reservationExpiration(sessionId) {
-    const event = this._waitinglistReservationEventFor(sessionId);
-    return event && expirationTimeOf(event);
-  }
-
-  hasValidReservationFor(sessionId) {
-    return !!this._waitinglistReservationEventFor(sessionId);
-  }
-
-  registeredInRoomType(memberID) {
-    const participantEvent = this.participantEventFor(memberID);
-    if (participantEvent) {
-      return participantEvent.roomType;
-    }
-    return null;
+  registeredInRoomType(memberId) {
+    const participantEvent = this.participantEventFor(memberId);
+    return participantEvent ? participantEvent.roomType : null;
   }
 
   waitinglistParticipantEventFor(memberId) {
@@ -215,15 +149,12 @@ class RegistrationReadModel {
     }
 
     const waitinglistParticipantEvent = this.waitinglistParticipantEventFor(memberId);
-    if (waitinglistParticipantEvent) {
-      return waitinglistParticipantEvent.desiredRoomTypes;
-    }
-    return [];
+    return waitinglistParticipantEvent ? waitinglistParticipantEvent.desiredRoomTypes : [];
   }
 
   // TODO this is currently for tests only...:
-  waitinglistReservationsAndParticipantsFor(roomType) {
-    return R.concat(R.values(this.waitinglistReservationsBySessionIdFor(roomType)), R.values(this.waitinglistParticipantsByMemberIdFor(roomType)));
+  waitinglistParticipantValuesFor(roomType) {
+    return R.values(this._waitinglistParticipantsByMemberIdFor[roomType]);
   }
 }
 
