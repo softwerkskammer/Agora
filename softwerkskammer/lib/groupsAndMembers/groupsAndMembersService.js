@@ -2,6 +2,7 @@
 
 const async = require('async');
 const _ = require('lodash');
+const R = require('ramda');
 
 const conf = require('simple-configure');
 const beans = conf.get('beans');
@@ -75,7 +76,7 @@ function updateAndSaveSubmittedMember(self, sessionUser, memberformData, accessr
 function groupsWithExtraEmailAddresses(members, groupNamesWithEmails) {
   const allEmailAddresses = members.map(member => member.email().toLowerCase());
   return _.transform(groupNamesWithEmails, (result, value, key) => {
-    const diff = _.difference(value, allEmailAddresses);
+    const diff = R.difference(value, allEmailAddresses);
     if (diff.length > 0) { result.push({group: key, extraAddresses: diff}); }
   }, []);
 }
@@ -150,7 +151,7 @@ module.exports = {
       const adminListName = conf.get('adminListName');
       groupsService.getMailinglistUsersOfList(adminListName, (err2, emailAddresses) => {
         if (err2) { return callback(err2); }
-        const isInAdminList = emailAddresses.includes(member.email());
+        const isInAdminList = (emailAddresses || []).includes(member.email());
         if (member.isContactperson() && !isInAdminList) {
           return groupsService.addUserToList(member.email(), adminListName, callback);
         }

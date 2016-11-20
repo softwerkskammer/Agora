@@ -10,21 +10,21 @@ const persistence = beans.get('mailinglistPersistence');
 module.exports = {
   getAllAvailableLists: function getAllAvailableLists(callback) {
     persistence.list({id: 1}, (err, lists) => {
-      if (err || !lists) {return callback(err); }
+      if (err || !lists) { return callback(err); }
       callback(null, lists.map(list => list.id));
     });
   },
 
   getUsersOfList: function getUsersOfList(listName, callback) {
     persistence.getById(listName, (err, list) => {
-      if (err || !list) {return callback(err); }
+      if (err || !list) { return callback(err); }
       callback(null, list.users);
     });
   },
 
   addUserToList: function addUserToList(user, listName, callback) {
     persistence.getById(listName, (err, list) => {
-      if (err || !list) {return callback(err); }
+      if (err || !list) { return callback(err); }
       list.users.push(user);
       persistence.save(list, err1 => callback(err1, true));
     });
@@ -32,7 +32,7 @@ module.exports = {
 
   removeUserFromList: function removeUserFromList(user, listName, callback) {
     persistence.getById(listName, (err, list) => {
-      if (err || !list) {return callback(err); }
+      if (err || !list || !list.users) { return callback(err); }
       list.users = R.reject(entry => entry.trim() === user.trim(), list.users);
       persistence.save(list, err1 => callback(err1, true));
     });
