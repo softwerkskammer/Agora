@@ -1,21 +1,21 @@
 'use strict';
 
-var request = require('supertest');
-var sinon = require('sinon').sandbox.create();
+const request = require('supertest');
+const sinon = require('sinon').sandbox.create();
 
-var beans = require('../../testutil/configureForTest').get('beans');
-var groupsPersistence = beans.get('groupsPersistence');
-var membersPersistence = beans.get('membersPersistence');
-var membersService = beans.get('membersService');
-var activitystore = beans.get('activitystore');
-var Group = beans.get('group');
-var Activity = beans.get('activity');
-var fakeListAdapter = beans.get('fakeListAdapter');
-var fieldHelpers = beans.get('fieldHelpers');
+const beans = require('../../testutil/configureForTest').get('beans');
+const groupsPersistence = beans.get('groupsPersistence');
+const membersPersistence = beans.get('membersPersistence');
+const membersService = beans.get('membersService');
+const activitystore = beans.get('activitystore');
+const Group = beans.get('group');
+const Activity = beans.get('activity');
+const fakeListAdapter = beans.get('fakeListAdapter');
+const fieldHelpers = beans.get('fieldHelpers');
 
-var createApp = require('../../testutil/testHelper')('groupsApp').createApp;
+const createApp = require('../../testutil/testHelper')('groupsApp').createApp;
 
-var GroupA = new Group({
+const GroupA = new Group({
   id: 'GroupA',
   longName: 'Gruppe A',
   description: 'Dies ist Gruppe A.',
@@ -24,60 +24,58 @@ var GroupA = new Group({
   organizers: ['organizer']
 });
 
-describe('Groups application', function () {
+describe('Groups application', () => {
 
-  before(function () {
-    sinon.stub(fakeListAdapter, 'getAllAvailableLists', function (callback) {
-      return callback(null, ['GroupA']);
-    });
+  before(() => {
+    sinon.stub(fakeListAdapter, 'getAllAvailableLists', callback => callback(null, ['GroupA']));
 
-    sinon.stub(fakeListAdapter, 'getUsersOfList', function (groupname, callback) {
+    sinon.stub(fakeListAdapter, 'getUsersOfList', (groupname, callback) => {
       if (groupname === 'groupa') {
         return callback(null, ['peter@google.de', 'hans@aol.com']);
       }
       callback(null, []);
     });
 
-    sinon.stub(membersPersistence, 'list', function (sortorder, callback) {
+    sinon.stub(membersPersistence, 'list', (sortorder, callback) => {
       callback(null, [
         {nickname: 'hada', firstname: 'Hans', lastname: 'Dampf', email: 'hans@aol.com'},
         {nickname: 'pepe', firstname: 'Peter', lastname: 'Meyer', email: 'peter@google.de'}
       ]);
     });
 
-    sinon.stub(membersPersistence, 'listByField', function (email, sortOrder, callback) {
+    sinon.stub(membersPersistence, 'listByField', (email, sortOrder, callback) => {
       callback(null, [
         {nickname: 'hada', firstname: 'Hans', lastname: 'Dampf', email: 'hans@aol.com'},
         {nickname: 'pepe', firstname: 'Peter', lastname: 'Meyer', email: 'peter@google.de'}
       ]);
     });
 
-    sinon.stub(membersService, 'putAvatarIntoMemberAndSave', function (member, callback) {
+    sinon.stub(membersService, 'putAvatarIntoMemberAndSave', (member, callback) => {
       callback();
     });
 
-    sinon.stub(groupsPersistence, 'listByIds', function (list, sortOrder, callback) {
+    sinon.stub(groupsPersistence, 'listByIds', (list, sortOrder, callback) => {
       if (list[0] === 'GroupA') { return callback(null, [GroupA]); }
       return callback(null, []);
     });
 
-    sinon.stub(groupsPersistence, 'getById', function (list, callback) {
+    sinon.stub(groupsPersistence, 'getById', (list, callback) => {
       if (list.test('GroupA')) { return callback(null, GroupA); }
       return callback(null, null);
     });
 
-    sinon.stub(groupsPersistence, 'getByField', function (list, callback) {
+    sinon.stub(groupsPersistence, 'getByField', (list, callback) => {
       if (list.emailPrefix.test('Group-A')) { return callback(null, GroupA); }
       return callback(null, null);
     });
   });
 
-  after(function () {
+  after(() => {
     sinon.restore();
   });
 
-  describe('index page', function () {
-    it('shows all available groups', function (done) {
+  describe('index page', () => {
+    it('shows all available groups', done => {
       request(createApp())
         .get('/')
         .expect(200)
@@ -87,30 +85,30 @@ describe('Groups application', function () {
     });
   });
 
-  describe('groupname check', function () {
+  describe('groupname check', () => {
 
-    it('returns false for checkgroupname when the group name already exists', function (done) {
+    it('returns false for checkgroupname when the group name already exists', done => {
       request(createApp())
         .get('/checkgroupname?id=GroupA')
         .expect(200)
         .expect(/false/, done);
     });
 
-    it('returns true for checkgroupname when the group name does not exist', function (done) {
+    it('returns true for checkgroupname when the group name does not exist', done => {
       request(createApp())
         .get('/checkgroupname?id=UnknownGroup')
         .expect(200)
         .expect(/true/, done);
     });
 
-    it('allows dashes and underscores in the groupname', function (done) {
+    it('allows dashes and underscores in the groupname', done => {
       request(createApp())
         .get('/checkgroupname?id=Un_known-Group')
         .expect(200)
         .expect(/true/, done);
     });
 
-    it('allows an empty groupname', function (done) {
+    it('allows an empty groupname', done => {
       request(createApp())
         .get('/checkgroupname?id=')
         .expect(200)
@@ -118,30 +116,30 @@ describe('Groups application', function () {
     });
   });
 
-  describe('eMail-Prefix check', function () {
+  describe('eMail-Prefix check', () => {
 
-    it('returns false for checkemailprefix when the prefix already exists', function (done) {
+    it('returns false for checkemailprefix when the prefix already exists', done => {
       request(createApp())
         .get('/checkemailprefix?emailPrefix=Group-A')
         .expect(200)
         .expect(/false/, done);
     });
 
-    it('returns true for checkemailprefix when the prefix does not exist', function (done) {
+    it('returns true for checkemailprefix when the prefix does not exist', done => {
       request(createApp())
         .get('/checkemailprefix?emailPrefix=UnknownPrefix')
         .expect(200)
         .expect(/true/, done);
     });
 
-    it('allows dashes and underscores in the prefix', function (done) {
+    it('allows dashes and underscores in the prefix', done => {
       request(createApp())
         .get('/checkemailprefix?emailPrefix=Un_known-Prefix')
         .expect(200)
         .expect(/true/, done);
     });
 
-    it('allows an empty prefix', function (done) {
+    it('allows an empty prefix', done => {
       request(createApp())
         .get('/checkemailprefix?emailPrefix=')
         .expect(200)
@@ -149,9 +147,9 @@ describe('Groups application', function () {
     });
   });
 
-  describe('group page', function () {
+  describe('group page', () => {
 
-    it('displays an existing group and membercount if nobody is logged in', function (done) {
+    it('displays an existing group and membercount if nobody is logged in', done => {
       request(createApp())
         .get('/GroupA')
         .expect(200)
@@ -163,7 +161,7 @@ describe('Groups application', function () {
         .expect(/Diese Gruppe hat 2 Mitglieder\./, done);
     });
 
-    it('displays an existing group and its members if somebody is logged in', function (done) {
+    it('displays an existing group and its members if somebody is logged in', done => {
       request(createApp({id: 'someMember'}))
         .get('/GroupA')
         .expect(200)
@@ -177,19 +175,17 @@ describe('Groups application', function () {
         .expect(/Hans Dampf/, done);
     });
 
-    it('displays the group\'s upcoming activities', function (done) {
-      var date1 = fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013');
-      var date2 = fieldHelpers.parseToUnixUsingDefaultTimezone('01.05.2013');
+    it('displays the group\'s upcoming activities', done => {
+      const date1 = fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013');
+      const date2 = fieldHelpers.parseToUnixUsingDefaultTimezone('01.05.2013');
 
-      sinon.stub(activitystore, 'upcomingActivitiesForGroupIds', function (list, callback) {
-        return callback(null, [new Activity({
-          title: 'Erste Aktivität',
-          startUnix: date1
-        }), new Activity({
-          title: 'Zweite Aktivität',
-          startUnix: date2
-        })]);
-      });
+      sinon.stub(activitystore, 'upcomingActivitiesForGroupIds', (list, callback) => callback(null, [new Activity({
+        title: 'Erste Aktivität',
+        startUnix: date1
+      }), new Activity({
+        title: 'Zweite Aktivität',
+        startUnix: date2
+      })]));
 
       request(createApp())
         .get('/GroupA')
@@ -204,8 +200,8 @@ describe('Groups application', function () {
 
   });
 
-  describe('group creation', function () {
-    it('opens the group creation page', function (done) {
+  describe('group creation', () => {
+    it('opens the group creation page', done => {
       request(createApp({id: 'someMember'}))
         .get('/new')
         .expect(200)
@@ -213,7 +209,7 @@ describe('Groups application', function () {
         .expect(/Gruppe anlegen/, done);
     });
 
-    it('lists the group creator as contact', function (done) {
+    it('lists the group creator as contact', done => {
       request(createApp({id: 'theMemberThatCreatesTheGroup'}))
         .get('/new')
         .expect(200)
@@ -222,8 +218,8 @@ describe('Groups application', function () {
     });
   });
 
-  describe('group editing', function () {
-    it('opens the group editing page', function (done) {
+  describe('group editing', () => {
+    it('opens the group editing page', done => {
       request(createApp({id: 'organizer'}))
         .get('/edit/GroupA')
         .expect(200)
@@ -231,7 +227,7 @@ describe('Groups application', function () {
         .expect(/Gruppe &quot;groupa&quot; bearbeiten/, done);
     });
 
-    it('lists all group members as possible contacts', function (done) {
+    it('lists all group members as possible contacts', done => {
       request(createApp({id: 'organizer'}))
         .get('/edit/GroupA')
         .expect(200)
@@ -240,7 +236,7 @@ describe('Groups application', function () {
         .expect(/hada/, done);
     });
 
-    it('disallows editing an existing group for non contact persons', function (done) {
+    it('disallows editing an existing group for non contact persons', done => {
       request(createApp({id: 'someMember'}))
         .get('/edit/GroupA')
         .expect(302)

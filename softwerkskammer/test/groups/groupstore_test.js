@@ -1,43 +1,42 @@
 'use strict';
 
-var sinon = require('sinon');
-var expect = require('must-dist');
+const sinon = require('sinon');
+const expect = require('must-dist');
 
-var beans = require('../../testutil/configureForTest').get('beans');
-var persistence = beans.get('groupsPersistence');
-var store = beans.get('groupstore');
+const beans = require('../../testutil/configureForTest').get('beans');
+const persistence = beans.get('groupsPersistence');
+const store = beans.get('groupstore');
 
-describe('Groups store', function () {
+describe('Groups store', () => {
 
-  var sampleGroup = {id: 'groupa'};
-  var getById;
+  const sampleGroup = {id: 'groupa'};
+  let getById;
 
-  before(function () {
+  before(() => {
     getById = sinon.stub(persistence, 'getById');
     getById.callsArgWith(1, null, sampleGroup);
   });
 
-  after(function () {
+  after(() => {
     persistence.getById.restore();
   });
 
-  it('retrieves groupnames given the intended case', function (done) {
-    var queriedId = 'groupA';
-    store.getGroup(queriedId, function (err, group) {
+  it('retrieves groupnames given the intended case', done => {
+    const queriedId = 'groupA';
+    store.getGroup(queriedId, (err, group) => {
       expect(group.id).to.equal(sampleGroup.id);
       expect(getById.calledWith(new RegExp('^' + queriedId + '$', 'i'))).to.be(true);
       done(err);
     });
   });
 
-  it('retrieves groupnames given a different case', function (done) {
-    var queriedId = 'GRouPA';
-    store.getGroup(queriedId, function (err, group) {
+  it('retrieves groupnames given a different case', done => {
+    const queriedId = 'GRouPA';
+    store.getGroup(queriedId, (err, group) => {
       expect(group.id).to.equal(sampleGroup.id);
       expect(getById.calledWith(new RegExp('^' + queriedId + '$', 'i'))).to.be(true);
       done(err);
     });
   });
-
 
 });

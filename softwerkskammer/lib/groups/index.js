@@ -1,24 +1,24 @@
 'use strict';
 
-var conf = require('simple-configure');
-var beans = conf.get('beans');
-var async = require('async');
+const conf = require('simple-configure');
+const beans = conf.get('beans');
+const async = require('async');
 
-var misc = beans.get('misc');
-var groupsService = beans.get('groupsService');
-var wikiService = beans.get('wikiService');
-var Group = beans.get('group');
-var groupsAndMembers = beans.get('groupsAndMembersService');
-var activitystore = beans.get('activitystore');
-var statusmessage = beans.get('statusmessage');
+const misc = beans.get('misc');
+const groupsService = beans.get('groupsService');
+const wikiService = beans.get('wikiService');
+const Group = beans.get('group');
+const groupsAndMembers = beans.get('groupsAndMembersService');
+const activitystore = beans.get('activitystore');
+const statusmessage = beans.get('statusmessage');
 
-var app = misc.expressAppIn(__dirname);
+const app = misc.expressAppIn(__dirname);
 
 function groupSubmitted(req, res, next) {
-  var group = new Group(req.body);
-  groupsService.isGroupValid(group, function (errors) {
+  const group = new Group(req.body);
+  groupsService.isGroupValid(group, errors => {
     if (errors.length !== 0) { return res.render('../../../views/errorPages/validationError', {errors: errors}); }
-    groupsAndMembers.saveGroup(group, function (err) {
+    groupsAndMembers.saveGroup(group, err => {
       if (err) { return next(err); }
       statusmessage.successMessage('message.title.save_successful', 'message.content.groups.saved').putIntoSession(req);
       res.redirect('/groups/' + group.id);
@@ -27,11 +27,11 @@ function groupSubmitted(req, res, next) {
 }
 
 // display all groups
-app.get('/', function (req, res, next) {
-  groupsService.getAllAvailableGroups(function (err, groups) {
+app.get('/', (req, res, next) => {
+  groupsService.getAllAvailableGroups((err, groups) => {
     if (err) { return next(err); }
-    async.map(groups, function (group, callback) { groupsAndMembers.addMembercountToGroup(group, callback); },
-      function (err1, groupsWithMembers) {
+    async.map(groups, (group, callback) => groupsAndMembers.addMembercountToGroup(group, callback),
+      (err1, groupsWithMembers) => {
         if (err1) { return next(err1); }
         res.render('index', {
           regionalgroups: Group.regionalsFrom(groupsWithMembers),
@@ -41,7 +41,7 @@ app.get('/', function (req, res, next) {
   });
 });
 
-app.get('/new', function (req, res) {
+app.get('/new', (req, res) => {
   res.render('edit', {
     group: new Group(),
     allTypes: Group.allTypes(),
@@ -51,34 +51,32 @@ app.get('/new', function (req, res) {
   });
 });
 
-app.post('/submit', function (req, res, next) {
-  groupSubmitted(req, res, next);
-});
+app.post('/submit', (req, res, next) => groupSubmitted(req, res, next));
 
 // the parameterized routes must come after the fixed ones!
 
-app.get('/edit/:groupname', function (req, res, next) {
-  groupsAndMembers.getGroupAndMembersForList(req.params.groupname, function (err, group) {
+app.get('/edit/:groupname', (req, res, next) => {
+  groupsAndMembers.getGroupAndMembersForList(req.params.groupname, (err, group) => {
     if (err || !group) { return next(err); }
     if (!res.locals.accessrights.canEditGroup(group)) {
       return res.redirect('/groups/' + encodeURIComponent(req.params.groupname));
     }
-    var realGroup = group || new Group();
-    var organizersChecked = realGroup.checkedOrganizers(realGroup.members);
+    const realGroup = group || new Group();
+    const organizersChecked = realGroup.checkedOrganizers(realGroup.members);
     res.render('edit', {group: realGroup, allTypes: Group.allTypes(), organizersChecked: organizersChecked});
   });
 });
 
-app.get('/checkgroupname', function (req, res) {
+app.get('/checkgroupname', (req, res) => {
   misc.validate(req.query.id, null, groupsService.isGroupNameAvailable, res.end);
 });
 
-app.get('/checkemailprefix', function (req, res) {
+app.get('/checkemailprefix', (req, res) => {
   misc.validate(req.query.emailPrefix, null, groupsService.isEmailPrefixAvailable, res.end);
 });
 
-app.post('/subscribe', function (req, res) {
-  groupsAndMembers.subscribeMemberToGroup(req.user.member, req.body.groupname, function (err) {
+app.post('/subscribe', (req, res) => {
+  groupsAndMembers.subscribeMemberToGroup(req.user.member, req.body.groupname, err => {
     if (err) {
       statusmessage.errorMessage('message.title.problem', 'message.content.save_error_reason', {err: err.toString()}).putIntoSession(req);
     } else {
@@ -88,8 +86,8 @@ app.post('/subscribe', function (req, res) {
   });
 });
 
-app.post('/unsubscribe', function (req, res) {
-  groupsAndMembers.unsubscribeMemberFromGroup(req.user.member, req.body.groupname, function (err) {
+app.post('/unsubscribe', (req, res) => {
+  groupsAndMembers.unsubscribeMemberFromGroup(req.user.member, req.body.groupname, err => {
     if (err) {
       statusmessage.errorMessage('message.title.problem', 'message.content.save_error_reason', {err: err.toString()}).putIntoSession(req);
     } else {
@@ -99,21 +97,19 @@ app.post('/unsubscribe', function (req, res) {
   });
 });
 
-app.get('/:groupname', function (req, res, next) {
-  function registeredUserId() {
-    return req && req.user ? req.user.member.id() : undefined;
-  }
+app.get('/:groupname', (req, res, next) => {
 
-  groupsAndMembers.getGroupAndMembersForList(req.params.groupname, function (err, group) {
+  groupsAndMembers.getGroupAndMembersForList(req.params.groupname, (err, group) => {
     if (err || !group) { return next(err); }
-    wikiService.getBlogpostsForGroup(req.params.groupname, function (err1, blogposts) {
+    wikiService.getBlogpostsForGroup(req.params.groupname, (err1, blogposts) => {
       if (err1) { return next(err1); }
-      activitystore.upcomingActivitiesForGroupIds([group.id], function (err2, activities) {
+      activitystore.upcomingActivitiesForGroupIds([group.id], (err2, activities) => {
         if (err2) { return next(err2); }
+        const registeredUserId = req && req.user ? req.user.member.id() : undefined;
         res.render('get', {
           group: group,
           users: group.members,
-          userIsGroupMember: groupsAndMembers.memberIsInMemberList(registeredUserId(), group.members),
+          userIsGroupMember: groupsAndMembers.memberIsInMemberList(registeredUserId, group.members),
           organizers: group.organizers,
           blogposts: blogposts,
           webcalURL: conf.get('publicUrlPrefix').replace('http', 'webcal') + '/activities/icalForGroup/' + group.id,
