@@ -1,25 +1,27 @@
-/*eslint no-process-exit: 0 */
+/* eslint no-process-exit: 0 */
 /* eslint no-console: 0 */
 'use strict';
 
 require('./configure'); // initializing parameters
-var async = require('async');
-var beans = require('simple-configure').get('beans');
-var mailsPersistence = beans.get('mailsPersistence');
-var groupsPersistence = beans.get('groupsPersistence');
-var activitiesPersistence = beans.get('activitiesPersistence');
-var Git = beans.get('gitmech');
+const async = require('async');
+const beans = require('simple-configure').get('beans');
+const mailsPersistence = beans.get('mailsPersistence');
+const groupsPersistence = beans.get('groupsPersistence');
+const groupsAndMembers = beans.get('groupsAndMembersService');
+const activitiesPersistence = beans.get('activitiesPersistence');
+const Git = beans.get('gitmech');
 
-var really = process.argv[2];
+const really = process.argv[2];
 
+const oldId = 'dortmund';
+const newId = 'ruhrgebiet';
+
+console.log('This script assumes that you want to "rename" a group. This is done by creating a new mailinglist.');
+console.log('You need to create the target group manually as a new group inside Agora.');
 if (!really || really !== 'really') {
-  console.log('If you really want to rename the group, append "really" to the command line.');
+  console.log('If you really want to move the group\'s references and members, append "really" to the command line.');
   process.exit();
 }
-
-var oldId = 'socrates2014';
-var newId = 'socrates-orga';
-var newPrefix = 'SoCraTes Orga';
 
 function closeDBsAndExit() {
   groupsPersistence.closeDB();
@@ -36,32 +38,33 @@ function handle(err) {
 }
 
 // change the group's id:
-groupsPersistence.getById(oldId, function (err, group) {
+groupsAndMembers.getGroupAndMembersForList(oldId, (err, group) => {
   handle(err);
-  group.id = newId;
-  group.emailPrefix = newPrefix;
-  groupsPersistence.update(group, oldId, function (err1) {
+  async.each(group.members, (member, callback) => {
+    groupsAndMembers.subscribeMemberToGroup(member, newId, callback);
+  }, err1 => {
     handle(err1);
+
     // change each activity that belongs to the group:
-    activitiesPersistence.listByField({assignedGroup: oldId}, {}, function (err2, results) {
+    activitiesPersistence.listByField({assignedGroup: oldId}, {}, (err2, results) => {
       handle(err2);
       async.each(results,
-        function (each, callback) {
+        (each, callback) => {
           each.assignedGroup = newId;
           activitiesPersistence.save(each, callback);
         },
-        function (err3) {
+        err3 => {
           handle(err3);
           // change each archived email that belongs to the group:
-          mailsPersistence.listByField({group: oldId}, {}, function (err4, results1) {
+          mailsPersistence.listByField({group: oldId}, {}, (err4, results1) => {
             async.each(results1,
-              function (each, callback) {
+              (each, callback) => {
                 each.group = newId;
                 mailsPersistence.save(each, callback);
               },
-              function (err5) {
+              err5 => {
                 handle(err5);
-                Git.mv(oldId, newId, 'Group rename: ' + oldId + ' -> ' + newId, 'Nicole <Nicole@softwerkskammer.org>', function (err6) {
+                Git.mv(oldId, newId, 'Group rename: ' + oldId + ' -> ' + newId, 'Nicole <Nicole@softwerkskammer.org>', err6 => {
                   handle(err6);
                   closeDBsAndExit();
                 });
