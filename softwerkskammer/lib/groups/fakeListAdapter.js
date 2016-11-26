@@ -1,58 +1,50 @@
 'use strict';
 
-var _ = require('lodash');
-var beans = require('simple-configure').get('beans');
+const R = require('ramda');
+const beans = require('simple-configure').get('beans');
 
-var persistence = beans.get('mailinglistPersistence');
+const persistence = beans.get('mailinglistPersistence');
 
 
 // Mock for the groupsService with underlying database and proper behavior
 module.exports = {
-  getAllAvailableLists: function (callback) {
-    persistence.list({id: 1}, function (err, lists) {
-      if (err || !lists) {return callback(err); }
-      callback(null, _.map(lists, 'id'));
+  getAllAvailableLists: function getAllAvailableLists(callback) {
+    persistence.list({id: 1}, (err, lists) => {
+      if (err || !lists) { return callback(err); }
+      callback(null, lists.map(list => list.id));
     });
   },
 
-  getUsersOfList: function (listName, callback) {
-    persistence.getById(listName, function (err, list) {
-      if (err || !list) {return callback(err); }
+  getUsersOfList: function getUsersOfList(listName, callback) {
+    persistence.getById(listName, (err, list) => {
+      if (err || !list) { return callback(err); }
       callback(null, list.users);
     });
   },
 
-  addUserToList: function (user, listName, callback) {
-    persistence.getById(listName, function (err, list) {
-      if (err || !list) {return callback(err); }
+  addUserToList: function addUserToList(user, listName, callback) {
+    persistence.getById(listName, (err, list) => {
+      if (err || !list) { return callback(err); }
       list.users.push(user);
-      persistence.save(list, function (err1) { callback(err1, true); });
+      persistence.save(list, err1 => callback(err1, true));
     });
   },
 
-  removeUserFromList: function (user, listName, callback) {
-    persistence.getById(listName, function (err, list) {
-      if (err || !list) {return callback(err); }
-      _.remove(list.users, function (entry) { return entry.trim() === user.trim(); });
-      persistence.save(list, function (err1) { callback(err1, true); });
+  removeUserFromList: function removeUserFromList(user, listName, callback) {
+    persistence.getById(listName, (err, list) => {
+      if (err || !list || !list.users) { return callback(err); }
+      list.users = R.reject(entry => entry.trim() === user.trim(), list.users);
+      persistence.save(list, err1 => callback(err1, true));
     });
   },
 
-  getSubscribedListsForUser: function (userEmail, callback) {
-    persistence.list({id: 1}, function (err, lists) {
-      if (err) {return callback(err); }
-
-      var subscribed = _.filter(lists, function (list) { return _.some(list.users, function (user) {return user === userEmail; }); });
-
-      callback(null, _.map(subscribed, 'id'));
-    });
+  getSubscribedListsForUser: function getSubscribedListsForUser(userEmail, callback) {
+    persistence.list({id: 1}, (err, lists) => callback(err, (lists || []).filter(list => list.users.some(user => user === userEmail)).map(each => each.id)));
   },
 
-  createList: function (listName, emailPrefix, callback) {
+  createList: function createList(listName, emailPrefix, callback) {
     persistence.save({id: listName, users: []}, function (err) {
       callback(err);
     });
-
-//    callback(null);
   }
 };

@@ -1,33 +1,33 @@
 'use strict';
 
-var beans = require('simple-configure').get('beans');
-var _ = require('lodash');
+const beans = require('simple-configure').get('beans');
+const R = require('ramda');
 
-var persistence = beans.get('groupsPersistence');
-var Group = beans.get('group');
-var misc = beans.get('misc');
+const persistence = beans.get('groupsPersistence');
+const Group = beans.get('group');
+const misc = beans.get('misc');
 
-var toGroup = _.partial(misc.toObject, Group);
-var toGroupList = _.partial(misc.toObjectList, Group);
+const toGroup = R.partial(misc.toObject, [Group]);
+const toGroupList = R.partial(misc.toObjectList, [Group]);
 
 module.exports = {
-  allGroups: function (callbackForGroups) {
-    persistence.list({longName: 1}, _.partial(toGroupList, callbackForGroups));
+  allGroups: function allGroups(callback) {
+    persistence.list({longName: 1}, R.partial(toGroupList, [callback]));
   },
 
-  groupsByLists: function (lists, callbackForGroups) {
-    persistence.listByIds(lists, {longName: 1}, _.partial(toGroupList, callbackForGroups));
+  groupsByLists: function groupsByLists(lists, callback) {
+    persistence.listByIds(lists, {longName: 1}, R.partial(toGroupList, [callback]));
   },
 
-  getGroup: function (name, callbackForGroup) {
-    persistence.getById(misc.toLowerCaseRegExp(name), _.partial(toGroup, callbackForGroup));
+  getGroup: function getGroup(name, callback) {
+    persistence.getById(misc.toLowerCaseRegExp(name), R.partial(toGroup, [callback]));
   },
 
-  getGroupForPrefix: function (prefix, callbackForGroup) {
-    persistence.getByField({emailPrefix: misc.toLowerCaseRegExp(prefix)}, _.partial(toGroup, callbackForGroup));
+  getGroupForPrefix: function getGroupForPrefix(prefix, callback) {
+    persistence.getByField({emailPrefix: misc.toLowerCaseRegExp(prefix)}, R.partial(toGroup, [callback]));
   },
 
-  saveGroup: function (group, callback) {
+  saveGroup: function saveGroup(group, callback) {
     delete group.members; // we do not want to persist the group members
     persistence.save(group, callback);
   }

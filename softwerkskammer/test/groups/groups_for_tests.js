@@ -1,8 +1,8 @@
 'use strict';
 
-var conf = require('../../testutil/configureForTest');
-var beans = conf.get('beans');
-var Group = beans.get('group');
+const conf = require('../../testutil/configureForTest');
+const beans = conf.get('beans');
+const Group = beans.get('group');
 
 module.exports = {
   GroupA: new Group({id: 'GroupA', longName: 'Gruppe A', description: 'Dies ist Gruppe A.', type: 'Themengruppe'}),

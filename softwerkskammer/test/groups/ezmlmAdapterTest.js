@@ -1,72 +1,73 @@
 'use strict';
 
-var expect = require('must-dist');
-var sinon = require('sinon').sandbox.create();
-var proxyquire = require('proxyquire');
+const expect = require('must-dist');
+const sinon = require('sinon').sandbox.create();
+const proxyquire = require('proxyquire');
 
-var ezmlmStub = {
+const ezmlmStub = {
   allLists: null,
   usersOfList: null,
   subscribeUserToList: null,
   unsubscribeUserFromList: null
 };
-var ezmlmAdapter = proxyquire('../../lib/groups/ezmlmAdapter', {'ezmlm-node': function () { return ezmlmStub; }});
+const ezmlmAdapter = proxyquire('../../lib/groups/ezmlmAdapter', {'ezmlm-node': () => ezmlmStub});
 
-describe('The ezmlm adapter', function () {
+describe('The ezmlm adapter', () => {
 
-  afterEach(function () {
+  afterEach(() => {
     sinon.restore();
   });
 
-  describe(' - Standard Calls', function () {
-    beforeEach(function () {
-      sinon.stub(ezmlmStub, 'allLists', function (callback) { callback(null, ['a', 'b']); });
-      sinon.stub(ezmlmStub, 'usersOfList', function (listname, callback) { // !!!always lowercase here!!!
+  describe(' - Standard Calls', () => {
+
+    beforeEach(() => {
+      sinon.stub(ezmlmStub, 'allLists', callback => { callback(null, ['a', 'b']); });
+      sinon.stub(ezmlmStub, 'usersOfList', (listname, callback) => { // !!!always lowercase here!!!
         if (listname === 'a') { return callback(null, ['hans@here.org', 'gerd@there.org']); }
         callback(null, ['anna@localhost', 'gudrun@localhost']);
       });
-      sinon.stub(ezmlmStub, 'subscribeUserToList', function (user, list, callback) {
+      sinon.stub(ezmlmStub, 'subscribeUserToList', (user, list, callback) => {
         callback(null, {user: user, list: list});
       });
-      sinon.stub(ezmlmStub, 'unsubscribeUserFromList', function (user, list, callback) {
+      sinon.stub(ezmlmStub, 'unsubscribeUserFromList', (user, list, callback) => {
         callback(null, {user: user, list: list});
       });
     });
 
-    it('"getAllAvailableLists" - results is an Array of listnames without domain', function (done) {
-      ezmlmAdapter.getAllAvailableLists(function (err, result) {
+    it('"getAllAvailableLists" - results is an Array of listnames without domain', done => {
+      ezmlmAdapter.getAllAvailableLists((err, result) => {
         expect(result).to.contain('a');
         expect(result).to.contain('b');
         done(err);
       });
     });
 
-    it('"getSubscribedListsForUser" - collects the right information', function (done) {
-      ezmlmAdapter.getSubscribedListsForUser('Hans@here.org', function (err, result) {
+    it('"getSubscribedListsForUser" - collects the right information', done => {
+      ezmlmAdapter.getSubscribedListsForUser('Hans@here.org', (err, result) => {
         expect(result).to.contain('a');
         expect(result).to.not.contain('b');
         done(err);
       });
     });
 
-    it('"getUsersOfList" - forwards the call', function (done) {
-      ezmlmAdapter.getUsersOfList('listname', function (err, result) {
+    it('"getUsersOfList" - forwards the call', done => {
+      ezmlmAdapter.getUsersOfList('listname', (err, result) => {
         expect(result).to.contain('anna@localhost');
         expect(result).to.contain('gudrun@localhost');
         done(err);
       });
     });
 
-    it('"addUserToList" - forwards the call', function (done) {
-      ezmlmAdapter.addUserToList('email', 'listname', function (err, result) {
+    it('"addUserToList" - forwards the call', done => {
+      ezmlmAdapter.addUserToList('email', 'listname', (err, result) => {
         expect(result).to.have.ownProperty('user', 'email');
         expect(result).to.have.ownProperty('list', 'listname');
         done(err);
       });
     });
 
-    it('"removeUserFromList" - forwards the call', function (done) {
-      ezmlmAdapter.removeUserFromList('email', 'listname', function (err, result) {
+    it('"removeUserFromList" - forwards the call', done => {
+      ezmlmAdapter.removeUserFromList('email', 'listname', (err, result) => {
         expect(result).to.have.ownProperty('user', 'email');
         expect(result).to.have.ownProperty('list', 'listname');
         done(err);
@@ -74,51 +75,51 @@ describe('The ezmlm adapter', function () {
     });
   });
 
-  describe('- Error handling', function () {
-    beforeEach(function () {
-      sinon.stub(ezmlmStub, 'allLists', function (callback) { callback(new Error()); });
-      sinon.stub(ezmlmStub, 'usersOfList', function (listname, callback) {
+  describe('- Error handling', () => {
+    beforeEach(() => {
+      sinon.stub(ezmlmStub, 'allLists', callback => callback(new Error()));
+      sinon.stub(ezmlmStub, 'usersOfList', (listname, callback) => {
         if (listname === 'a') { return callback(new Error()); }
         callback(new Error());
       });
-      sinon.stub(ezmlmStub, 'subscribeUserToList', function (user, list, callback) {
+      sinon.stub(ezmlmStub, 'subscribeUserToList', (user, list, callback) => {
         callback(new Error());
       });
-      sinon.stub(ezmlmStub, 'unsubscribeUserFromList', function (user, list, callback) {
+      sinon.stub(ezmlmStub, 'unsubscribeUserFromList', (user, list, callback) => {
         callback(new Error());
       });
     });
 
-    it('"getAllAvailableLists" - passes error to callback', function (done) {
-      ezmlmAdapter.getAllAvailableLists(function (err) {
+    it('"getAllAvailableLists" - passes error to callback', done => {
+      ezmlmAdapter.getAllAvailableLists(err => {
         expect(err).to.exist();
         done();
       });
     });
 
-    it('"getSubscribedListsForUser" - passes error to callback', function (done) {
-      ezmlmAdapter.getSubscribedListsForUser('Hans@here.org', function (err) {
+    it('"getSubscribedListsForUser" - passes error to callback', done => {
+      ezmlmAdapter.getSubscribedListsForUser('Hans@here.org', err => {
         expect(err).to.exist();
         done();
       });
     });
 
-    it('"getUsersOfList" - passes error to callback', function (done) {
-      ezmlmAdapter.getUsersOfList('listname', function (err) {
+    it('"getUsersOfList" - passes error to callback', done => {
+      ezmlmAdapter.getUsersOfList('listname', err => {
         expect(err).to.exist();
         done();
       });
     });
 
-    it('"addUserToList" - passes error to callback', function (done) {
-      ezmlmAdapter.addUserToList('email', 'listname', function (err) {
+    it('"addUserToList" - passes error to callback', done => {
+      ezmlmAdapter.addUserToList('email', 'listname', err => {
         expect(err).to.exist();
         done();
       });
     });
 
-    it('"removeUserFromList" - passes error to callback', function (done) {
-      ezmlmAdapter.removeUserFromList('email', 'listname', function (err) {
+    it('"removeUserFromList" - passes error to callback', done => {
+      ezmlmAdapter.removeUserFromList('email', 'listname', err => {
         expect(err).to.exist();
         done();
       });
