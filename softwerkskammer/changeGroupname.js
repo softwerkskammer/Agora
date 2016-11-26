@@ -17,7 +17,7 @@ const oldId = 'dortmund';
 const newId = 'ruhrgebiet';
 
 console.log('This script assumes that you want to "rename" a group. This is done by creating a new mailinglist.');
-console.log('You need to create the target group manually as a new group inside Agora.');
+console.log('Before running this script, you need to create the target group manually as a new group inside Agora.');
 if (!really || really !== 'really') {
   console.log('If you really want to move the group\'s references and members, append "really" to the command line.');
   process.exit();
