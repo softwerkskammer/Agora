@@ -21,9 +21,9 @@ Run the tests with `npm test`.
 
 For running specific tests only, use either of these:
 - `./node_modules/.bin/grunt karma:once`
-- `./node_modules/.bin/grunt mocha_istanbul:test`
-- `./node_modules/.bin/grunt mocha_istanbul:testApp`
-- `./node_modules/.bin/grunt mocha_istanbul:testWithDB`
+- `./node_modules/.bin/grunt mocha_istanbul:test` (unit tests)
+- `./node_modules/.bin/grunt mocha_istanbul:testApp` (server application test)
+- `./node_modules/.bin/grunt mocha_istanbul:testIntegration` (integration test)
 
 
 We are using [JetBrains' WebStorm](http://www.jetbrains.com/webstorm/) as IDE
