@@ -22,7 +22,7 @@ Run the tests with `npm test`.
 For running specific tests only, use either of these:
 - `./node_modules/.bin/grunt karma:once`
 - `./node_modules/.bin/grunt mocha_istanbul:test` (unit tests)
-- `./node_modules/.bin/grunt mocha_istanbul:testIntegration` (integration test)
+- `./node_modules/.bin/grunt mocha_istanbul:testIntegration` (integration tests)
 
 
 We are using [JetBrains' WebStorm](http://www.jetbrains.com/webstorm/) as IDE
