@@ -31,6 +31,12 @@ The sympton will be recognizable by errors during an `npm install` that contains
 
 * Install MongoDB (Version 2.4 or greater) [http://www.mongodb.org/downloads](http://www.mongodb.org/downloads)
 
+### ImageMagick
+
+The ImageMagick command line tools are used to convert images. If you're seeing
+`Uncaught Error: spawn convert ENOENT` when running the integration tests, make
+sure that it is installed an available in your $PATH.
+
 ### Grunt-CLI
 
 We propose to install grunt-cli globally via the -g option of npm. To find out more about this option, see [https://npmjs.org/doc/global.html](https://npmjs.org/doc/global.html).:
