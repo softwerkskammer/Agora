@@ -20,7 +20,7 @@ Tests
 Run the tests with `npm test`.
 
 For running specific tests only, use either of these:
-- `./node_modules/.bin/grunt karma:once`
+- `./node_modules/.bin/grunt karma:once` (frontend tests)
 - `./node_modules/.bin/grunt mocha_istanbul:test` (unit tests)
 - `./node_modules/.bin/grunt mocha_istanbul:testIntegration` (integration tests)
 
