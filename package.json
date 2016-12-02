@@ -58,7 +58,7 @@
     "jquery-validation": "1.16.0",
     "jwt-simple": "0.5.1",
     "less-plugin-clean-css": "1.5.1",
-    "lodash": "4.16.4",
+    "lodash": "4.17.2",
     "mailparser": "0.6.1",
     "marked": "0.3.6",
     "mime-types": "2.1.13",
@@ -96,7 +96,7 @@
     "winston-config": "0.5.1"
   },
   "devDependencies": {
-    "chado": "0.2.5",
+    "chado": "0.3.1",
     "grunt": "1.0.1",
     "grunt-cli": "1.2.0",
     "grunt-contrib-clean": "1.0.0",
