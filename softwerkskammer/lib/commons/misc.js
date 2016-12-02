@@ -98,6 +98,10 @@ module.exports = {
 
   compact: function compact(array) {
     return R.filter(R.identity, array);
+  },
+
+  startsWith: function startsWith(string) {
+    return _.startsWith(string);
   }
 };
 
