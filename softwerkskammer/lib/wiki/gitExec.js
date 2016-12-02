@@ -6,8 +6,8 @@ const Fs = require('fs');
 
 const conf = require('simple-configure');
 
-var gitCommands = [];
-var workTree = conf.get('wikipath');
+let gitCommands = [];
+let workTree = conf.get('wikipath');
 
 if (workTree) {
   Fs.realpath(workTree, (err, absWorkTree) => {

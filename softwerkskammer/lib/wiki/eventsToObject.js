@@ -1,13 +1,13 @@
 'use strict';
 
-var _ = require('lodash');
-var moment = require('moment-timezone');
+const moment = require('moment-timezone');
+const misc = require('../commons/misc');
 
 function contentsToObject(contents, year) {
   if (!contents) { return {}; }
 
   function titleAndLinkToObject(element) {
-    var titleAndLink = element.replace(/[\[\)]/g, '').split(/\]\s*\(/);
+    const titleAndLink = element.replace(/[\[\)]/g, '').split(/\]\s*\(/);
     if (titleAndLink.length === 2) {
       return titleAndLink;
     }
@@ -15,19 +15,19 @@ function contentsToObject(contents, year) {
 
   function dates(element) {
     if (element.trim()) {
-      var fromAndUntil = _(element.split('-')).map(function (each) { return each.trim(); }).compact().value();
-      var from = moment.utc(fromAndUntil[0] + year, 'D.M.YYYY');
-      var until = moment.utc((fromAndUntil[1] || fromAndUntil[0]) + year, 'D.M.YYYY');
+      const fromAndUntil = misc.compact(element.split('-').map(each => each.trim()));
+      const from = moment.utc(fromAndUntil[0] + year, 'D.M.YYYY');
+      const until = moment.utc((fromAndUntil[1] || fromAndUntil[0]) + year, 'D.M.YYYY');
       until.add(23, 'hours');
       return [from.format(), until.format()];
     }
   }
 
   function lineToObject(line) {
-    var elements = line.split('|');
+    const elements = line.split('|');
     if (elements.length === 3) {
-      var titleAndLink = titleAndLinkToObject(elements[0]);
-      var fromUntil = dates(elements[2]);
+      const titleAndLink = titleAndLinkToObject(elements[0]);
+      const fromUntil = dates(elements[2]);
       if (titleAndLink && fromUntil) {
         return {
           start: fromUntil[0],
@@ -40,8 +40,8 @@ function contentsToObject(contents, year) {
     }
   }
 
-  var lines = contents.split(/[\n\r]/);
-  return _(lines).map(lineToObject).compact().value();
+  const lines = contents.split(/[\n\r]/);
+  return misc.compact(lines.map(lineToObject));
 }
 
 module.exports = contentsToObject;
