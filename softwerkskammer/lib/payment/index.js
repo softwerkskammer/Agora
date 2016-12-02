@@ -1,15 +1,15 @@
 'use strict';
 
-var beans = require('simple-configure').get('beans');
+const beans = require('simple-configure').get('beans');
 
-var misc = beans.get('misc');
-var paymentService = beans.get('paymentService');
-var fieldHelpers = beans.get('fieldHelpers');
+const misc = beans.get('misc');
+const paymentService = beans.get('paymentService');
+const fieldHelpers = beans.get('fieldHelpers');
 
-var app = misc.expressAppIn(__dirname);
+const app = misc.expressAppIn(__dirname);
 
-app.get('/', function (req, res, next) {
-  paymentService.getPaymentInfo(function (err, paymentInfo) {
+app.get('/', (req, res, next) => {
+  paymentService.getPaymentInfo((err, paymentInfo) => {
     if (err || !paymentInfo) { return next(err); }
     res.render('index', {
       paymentInfo: paymentInfo,
@@ -18,20 +18,18 @@ app.get('/', function (req, res, next) {
   });
 });
 
-app.get('/calcFee/:amount', function (req, res) {
-  var amount = fieldHelpers.parseNumberWithCurrentLocale(res.locals.language, req.params.amount);
+app.get('/calcFee/:amount', (req, res) => {
+  let amount = fieldHelpers.parseNumberWithCurrentLocale(res.locals.language, req.params.amount);
   if (!amount) { return res.end(''); }
   res.end(fieldHelpers.formatNumberWithCurrentLocale(res, paymentService.calcFee(amount)) + ' €');
 });
 
-app.get('/calcFee', function (req, res) {
-  return res.end('');
-});
+app.get('/calcFee', (req, res) => res.end(''));
 
-app.post('/submitCreditCard', function (req, res, next) {
-  var saveCreditCardPayment = function (callback) { callback(null); };
+app.post('/submitCreditCard', (req, res, next) => {
+  const saveCreditCardPayment = callback => { callback(null); };
   paymentService.payWithCreditCard(saveCreditCardPayment, parseFloat(req.body.amount.replace(',', '.')), req.body.description,
-    req.body.stripeId, function (err, message) {
+    req.body.stripeId, (err, message) => {
       if (err) { return next(err); }
       message.putIntoSession(req);
       res.redirect('/payment/');
