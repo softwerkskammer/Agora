@@ -1,12 +1,12 @@
 'use strict';
 
-var conf = require('simple-configure');
-var logger = require('winston').loggers.get('authorization');
-var securedBySuperuserURLRegex = new RegExp(conf.get('securedBySuperuserURLPattern'));
+const conf = require('simple-configure');
+const logger = require('winston').loggers.get('authorization');
+const securedBySuperuserURLRegex = new RegExp(conf.get('securedBySuperuserURLPattern'));
 
 module.exports = function redirectIfNotSuperuser(req, res, next) {
-  var originalUrl = req.originalUrl;
-  var user = req.user;
+  const originalUrl = req.originalUrl;
+  const user = req.user;
 
   if (securedBySuperuserURLRegex.test(originalUrl)) {
     if (!res.locals.accessrights.isSuperuser()) {

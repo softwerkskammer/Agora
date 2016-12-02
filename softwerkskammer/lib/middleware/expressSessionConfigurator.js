@@ -1,13 +1,13 @@
 'use strict';
-var conf = require('simple-configure');
-var expressSession = require('express-session');
-var sevenDays = 86400 * 1000 * 7;
-var oneHour = 3600;
+const conf = require('simple-configure');
+const expressSession = require('express-session');
+const sevenDays = 86400 * 1000 * 7;
+const oneHour = 3600;
 
-var sessionStore;
+let sessionStore;
 
 if (!conf.get('dontUsePersistentSessions')) {
-  var MongoStore = require('connect-mongo')(expressSession);
+  const MongoStore = require('connect-mongo')(expressSession);
   sessionStore = new MongoStore({
     url: conf.get('mongoURL'),
     touchAfter: oneHour

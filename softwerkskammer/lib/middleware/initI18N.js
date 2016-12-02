@@ -1,20 +1,18 @@
 'use strict';
 
-var i18n = require('i18next');
-var middleware = require('i18next-express-middleware');
-var Backend = require('i18next-node-fs-backend');
-var intervalPlural = require('i18next-intervalplural-postprocessor');
-var pug = require('pug');
+const i18n = require('i18next');
+const middleware = require('i18next-express-middleware');
+const Backend = require('i18next-node-fs-backend');
+const intervalPlural = require('i18next-intervalplural-postprocessor');
+const pug = require('pug');
 
 module.exports = function initI18N(languages) {
-  var pugPostProcessor = {
+  const pugPostProcessor = {
     name: 'pug',
     type: 'postProcessor',
-    process: function (val, key, opts) {
-      return pug.compile(val, opts)();
-    }
+    process: (val, key, opts) => pug.compile(val, opts)()
   };
-  var langs = languages.split(',');
+  const langs = languages.split(',');
   i18n
     .use(Backend)
     .use(middleware.LanguageDetector)

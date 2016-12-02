@@ -1,7 +1,7 @@
 'use strict';
-var beans = require('simple-configure').get('beans');
-var passport = require('passport');
-var memberstore = beans.get('memberstore');
+const beans = require('simple-configure').get('beans');
+const passport = require('passport');
+const memberstore = beans.get('memberstore');
 
 function serializeUser(user, done) {
   if (user.profile) {
@@ -13,7 +13,7 @@ function serializeUser(user, done) {
 
 function deserializeUser(user, done) {
   if (user.profile) { return done(null, user); } // new user
-  memberstore.getMemberForAuthentication(user.authenticationId, function (err, member) {
+  memberstore.getMemberForAuthentication(user.authenticationId, (err, member) => {
     if (err) { return done(err); }
     done(null, {authenticationId: user.authenticationId, member: member});
   });
@@ -21,7 +21,5 @@ function deserializeUser(user, done) {
 
 passport.serializeUser(serializeUser);
 passport.deserializeUser(deserializeUser);
-
-
 
 module.exports = [passport.initialize(), passport.session()];

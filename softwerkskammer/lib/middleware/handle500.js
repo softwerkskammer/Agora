@@ -1,8 +1,8 @@
 'use strict';
 
-module.exports = function (appLogger) {
+module.exports = function handle500(appLogger) {
   /* eslint no-unused-vars: 0 */
-  return function (error, req, res, next) { // express needs four arguments!
+  return (error, req, res, next) => { // express needs four arguments!
     var status = error.status || 500;
     res.status(status);
     appLogger.error(req.originalUrl);
@@ -12,4 +12,4 @@ module.exports = function (appLogger) {
     }
     res.render('errorPages/500.pug', {error: error, status: status});
   };
-};
+}
