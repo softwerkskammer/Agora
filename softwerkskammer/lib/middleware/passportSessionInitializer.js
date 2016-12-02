@@ -16,4 +16,4 @@ module.exports = function passportSessionInitializer(req, res, next) {
   }
 
   next();
-}
+};

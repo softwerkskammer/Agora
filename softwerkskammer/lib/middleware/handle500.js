@@ -12,4 +12,4 @@ module.exports = function handle500(appLogger) {
     }
     res.render('errorPages/500.pug', {error: error, status: status});
   };
-}
+};
