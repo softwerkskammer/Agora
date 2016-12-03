@@ -1,102 +1,95 @@
 /* eslint no-underscore-dangle: 0 */
 'use strict';
 
-var async = require('async');
-var conf = require('simple-configure');
-var beans = conf.get('beans');
-var _ = require('lodash');
-var persistence = beans.get('membersPersistence');
-var subscriberPersistence = beans.get('subscribersPersistence');
-var Member = beans.get('member');
-var misc = beans.get('misc');
-var naturalCmp = require('underscore.string/naturalCmp');
-var logger = require('winston').loggers.get('transactions');
-var toMember = _.partial(misc.toObject, Member);
+const async = require('async');
+const conf = require('simple-configure');
+const beans = conf.get('beans');
+const R = require('ramda');
+const persistence = beans.get('membersPersistence');
+const subscriberPersistence = beans.get('subscribersPersistence');
+const Member = beans.get('member');
+const misc = beans.get('misc');
+const naturalCmp = require('underscore.string/naturalCmp');
+const logger = require('winston').loggers.get('transactions');
+const toMember = R.partial(misc.toObject, [Member]);
 
-var sortCaseInsensitive = function (objectlist) {
-  return objectlist.sort(function (a, b) {
-    return naturalCmp(a.lastname.toLowerCase() + ' ' + a.firstname.toLowerCase(), b.lastname.toLowerCase() + ' ' + b.firstname.toLowerCase());
-  });
+function sortCaseInsensitive(objectlist) {
+  return objectlist.sort((a, b) => naturalCmp(a.lastname.toLowerCase() + ' ' + a.firstname.toLowerCase(), b.lastname.toLowerCase() + ' ' + b.firstname.toLowerCase()));
+}
 
-};
-
-var toMemberList = function (callback, err, result) {
+function toMemberList(callback, err, result) {
   if (err) { return callback(err); }
-  callback(null, _.map(sortCaseInsensitive(result), function (each) { return new Member(each); }));
-};
+  callback(null, sortCaseInsensitive(result).map(each => new Member(each)));
+}
 
 module.exports = {
-  allMembers: function (callback) {
-    persistence.listByField({'socratesOnly': false}, {lastname: 1, firstname: 1}, _.partial(toMemberList, callback));
+  allMembers: function allMembers(callback) {
+    persistence.listByField({'socratesOnly': false}, {lastname: 1, firstname: 1}, R.partial(toMemberList, [callback]));
   },
 
-  socratesOnlyMembers: function (callback) {
-    persistence.listByField({'socratesOnly': true}, {lastname: 1, firstname: 1}, _.partial(toMemberList, callback));
+  socratesOnlyMembers: function socratesOnlyMembers(callback) {
+    persistence.listByField({'socratesOnly': true}, {lastname: 1, firstname: 1}, R.partial(toMemberList, [callback]));
   },
 
-  superUsers: function (callback) {
-    var superusersids = conf.get('superuser');
+  superUsers: function superUsers(callback) {
+    const superusersids = conf.get('superuser');
     persistence.listByField({'id': misc.arrayToLowerCaseRegExp(superusersids)}, {
       lastname: 1,
       firstname: 1
-    }, _.partial(toMemberList, callback));
+    }, R.partial(toMemberList, [callback]));
   },
 
-  getMembersForEMails: function (emails, callback) {
+  getMembersForEMails: function getMembersForEMails(emails, callback) {
     if (emails.length === 0) { return callback(null, []); }
-    async.map(_.chunk(emails, 500),
-      function (chunk, callbackOfChunk) {
-        persistence.listByField({email: misc.arrayToLowerCaseRegExp(chunk)}, {}, _.partial(toMemberList, callbackOfChunk));
-      },
-      function (err, members) {
-        callback(err, _.flatten(members));
-      }
+    async.map(R.splitEvery(500, emails),
+      (chunk, callbackOfChunk) => persistence.listByField({email: misc.arrayToLowerCaseRegExp(chunk)},
+        {},
+        R.partial(toMemberList, [callbackOfChunk])),
+      (err, members) => callback(err, R.flatten(members))
     );
   },
 
-  getMember: function (nickname, callback) {
-    persistence.getByField({nickname: misc.toLowerCaseRegExp(nickname.trim())}, _.partial(toMember, callback));
+  getMember: function getMember(nickname, callback) {
+    persistence.getByField({nickname: misc.toLowerCaseRegExp(nickname.trim())}, R.partial(toMember, [callback]));
   },
 
-  getMemberForId: function (id, callback) {
-    persistence.getById(id, _.partial(toMember, callback));
+  getMemberForId: function getMemberForId(id, callback) {
+    persistence.getById(id, R.partial(toMember, [callback]));
   },
 
-  getMemberForAuthentication: function (authenticationId, callback) {
-    persistence.getByField({authentications: authenticationId}, _.partial(toMember, callback));
+  getMemberForAuthentication: function getMemberForAuthentication(authenticationId, callback) {
+    persistence.getByField({authentications: authenticationId}, R.partial(toMember, [callback]));
   },
 
-  getMembersForIds: function (ids, callback) {
-    persistence.listByIds(ids, {}, _.partial(toMemberList, callback));
+  getMembersForIds: function getMembersForIds(ids, callback) {
+    persistence.listByIds(ids, {}, R.partial(toMemberList, [callback]));
   },
 
-  getMemberForEMail: function (email, callback) {
-    persistence.getByField({email: misc.toLowerCaseRegExp(email)}, _.partial(toMember, callback));
+  getMemberForEMail: function getMemberForEMail(email, callback) {
+    persistence.getByField({email: misc.toLowerCaseRegExp(email)}, R.partial(toMember, [callback]));
   },
 
-  getMembersWithInterest: function (interest, options, callback) {
+  getMembersWithInterest: function getMembersWithInterest(interest, options, callback) {
     persistence.listByField(
       {interests: {$regex: '(^|\\s*,\\s*)' + misc.regexEscape(interest.trim()) + '($|\\s*,\\s*)', $options: options}},
       {},
-      _.partial(toMemberList, callback)
+      R.partial(toMemberList, [callback])
     );
   },
 
-  saveMember: function (member, callback) {
+  saveMember: function saveMember(member, callback) {
     persistence.save(member.state, callback);
   },
 
-  removeMember: function (member, callback) {
-    persistence.remove(member.id(), function (err) {
+  removeMember: function removeMember(member, callback) {
+    persistence.remove(member.id(), err => {
       logger.info('Member removed:' + JSON.stringify(member));
       callback(err);
     });
   },
 
-  isSoCraTesSubscriber: function (id, callback) {
-    subscriberPersistence.getById(id, function (err, subscriber) {
-      callback(err, !!subscriber);
-    });
+  isSoCraTesSubscriber: function isSoCraTesSubscriber(id, callback) {
+    subscriberPersistence.getById(id, (err, subscriber) => callback(err, !!subscriber));
   }
 };
 

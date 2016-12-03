@@ -174,9 +174,9 @@ describe('MembersService', function () {
       members.push(new Member({interests: 'Heinz, heinz, HeInZ, Heinz, Heinz, heinz'}));
       var result = membersService.toUngroupedWordList(members);
       expect(result).to.have.length(3);
-      expect(result[0]).to.eql({text: 'HeInZ', weight: 1, html: {class: 'interestify'}});
+      expect(result[0]).to.eql({text: 'heinz', weight: 2, html: {class: 'interestify'}});
       expect(result[1]).to.eql({text: 'Heinz', weight: 3, html: {class: 'interestify'}});
-      expect(result[2]).to.eql({text: 'heinz', weight: 2, html: {class: 'interestify'}});
+      expect(result[2]).to.eql({text: 'HeInZ', weight: 1, html: {class: 'interestify'}});
     });
 
     it('sums tags of two members', function () {
