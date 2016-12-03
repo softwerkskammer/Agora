@@ -67,11 +67,10 @@ module.exports = function (grunt) {
       'softwerkskammer/build/stylesheets/less/agora.less'
     ]
   };
-  const integrationTestCoverageDataFolder =  'softwerkskammer/coverageIntegration';
   grunt.initConfig({
     clean: {
       build: ['softwerkskammer/build', 'softwerkskammer/frontendtests/fixtures/*.html'],
-      coverage: ['softwerkskammer/coverage', integrationTestCoverageDataFolder, 'softwerkskammer/karma-coverage'],
+      coverage: ['softwerkskammer/coverage', 'softwerkskammer/coverageIntegration', 'softwerkskammer/karma-coverage'],
       public: ['softwerkskammer/public/clientscripts', 'softwerkskammer/public/fonts', 'softwerkskammer/public/img/bootstrap-colorpicker', 'softwerkskammer/public/images', 'softwerkskammer/public/stylesheets'],
       options: {force: true}
     },
@@ -214,7 +213,7 @@ module.exports = function (grunt) {
       testIntegration: {
         src: 'softwerkskammer/testIntegration',
         options: {
-          coverageFolder: integrationTestCoverageDataFolder,
+          coverageFolder: 'softwerkskammer/coverageIntegration',
           excludes: ['**/activitystore.js'],
           timeout: 6000,
           slow: 100,
