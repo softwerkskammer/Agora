@@ -1,20 +1,20 @@
 'use strict';
-var moment = require('moment-timezone');
-var beans = require('simple-configure').get('beans');
-var fieldHelpers = beans.get('fieldHelpers');
-var memberstore = beans.get('memberstore');
+const moment = require('moment-timezone');
+const beans = require('simple-configure').get('beans');
+const fieldHelpers = beans.get('fieldHelpers');
+const memberstore = beans.get('memberstore');
 
-var path = require('path');
+const path = require('path');
 
 /*eslint no-sync: 0 */
-var winston = require('winston-config').fromFileSync(path.join(__dirname, '../../../config/winston-config.json'));
-var logger = winston.loggers.get('scripts');
+const winston = require('winston-config').fromFileSync(path.join(__dirname, '../../../config/winston-config.json'));
+const logger = winston.loggers.get('scripts');
 
-var MailParser = require('mailparser').MailParser;
-var fs = require('fs');
-var crypto = require('crypto');
+const MailParser = require('mailparser').MailParser;
+const fs = require('fs');
+const crypto = require('crypto');
 
-module.exports = function (file, group, done) {
+module.exports = function importMails(file, group, done) {
   function date(parsedObject) {
     if (fieldHelpers.isFilled(parsedObject.headers.date)) {
       return moment(parsedObject.headers.date, 'ddd, DD MMM YYYY HH:mm:ss ZZ', 'en');
@@ -31,14 +31,12 @@ module.exports = function (file, group, done) {
       return;
     }
 
-    var shasum = crypto.createHash('sha1');
-    var s = fs.ReadStream(file);
-    s.on('data', function (d) {
-      shasum.update(d);
-    });
+    const shasum = crypto.createHash('sha1');
+    const s = fs.ReadStream(file);
+    s.on('data', d => shasum.update(d));
 
-    s.on('end', function () {
-      var d = shasum.digest('hex');
+    s.on('end', () => {
+      const d = shasum.digest('hex');
       mailDbObject.id = 'mail-sha1-' + d + '@softwerkskammer.org';
       done1(null, mailDbObject);
     });
@@ -62,14 +60,14 @@ module.exports = function (file, group, done) {
     return fromStructure.address.replace(/@.*/, '');
   }
 
-  var mailparser = new MailParser({
+  const mailparser = new MailParser({
     // remove mail attachments
     streamAttachments: true
   });
 
-  mailparser.on('end', function (parsedObject) {
+  mailparser.on('end', parsedObject => {
     logger.info('Starting to parse eMail');
-    var mailDbObject = {};
+    const mailDbObject = {};
     mailDbObject.group = group;
     mailDbObject.subject = parsedObject.subject;
 
@@ -79,17 +77,17 @@ module.exports = function (file, group, done) {
     mailDbObject.text = parsedObject.text;
     mailDbObject.html = parsedObject.html;
 
-    var from = parsedObject.from[0];
+    const from = parsedObject.from[0];
     mailDbObject.from = {
       name: name(from)
     };
-    memberstore.getMemberForEMail(from.address, function (err, member) {
+    memberstore.getMemberForEMail(from.address, (err, member) => {
       if (err) {
         logger.error('Could not get member for eMail: ' + err);
         return done(err);
       }
       if (member) { mailDbObject.from.id = member.id(); }
-      assignMessageId(parsedObject, mailDbObject, function () {
+      assignMessageId(parsedObject, mailDbObject, () => {
         logger.info('Message ID assigned to eMail: ' + mailDbObject.id);
         done(null, mailDbObject);
       });
