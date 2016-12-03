@@ -1,15 +1,15 @@
 /* eslint no-underscore-dangle: 0 */
 'use strict';
 
-var passport = require('passport');
-var logger = require('winston').loggers.get('authorization');
+const passport = require('passport');
+const logger = require('winston').loggers.get('authorization');
 
-var conf = require('simple-configure');
-var beans = conf.get('beans');
-var authenticationService = beans.get('authenticationService');
-var misc = beans.get('misc');
+const conf = require('simple-configure');
+const beans = conf.get('beans');
+const authenticationService = beans.get('authenticationService');
+const misc = beans.get('misc');
 
-var urlPrefix = conf.get('publicUrlPrefix');
+const urlPrefix = conf.get('publicUrlPrefix');
 
 
 function createProviderAuthenticationRoutes(app1, provider) {
@@ -42,7 +42,7 @@ function createProviderAuthenticationRoutes(app1, provider) {
 }
 
 function setupOpenID(app1) {
-  var OpenIDStrategy = require('passport-openid').Strategy;
+  const OpenIDStrategy = require('passport-openid').Strategy;
   passport.use(new OpenIDStrategy(
     { // openID can always be used
       returnURL: urlPrefix + '/auth/openid/callback',
@@ -56,10 +56,10 @@ function setupOpenID(app1) {
 }
 
 function setupGithub(app1) {
-  var githubClientID = conf.get('githubClientID');
+  const githubClientID = conf.get('githubClientID');
   if (githubClientID) {
-    var GithubStrategy = require('passport-github').Strategy;
-    var strategy = new GithubStrategy(
+    const GithubStrategy = require('passport-github').Strategy;
+    const strategy = new GithubStrategy(
       {
         clientID: githubClientID,
         clientSecret: conf.get('githubClientSecret'),
@@ -76,11 +76,11 @@ function setupGithub(app1) {
 }
 
 function setupGooglePlus(app1) {
-  var googlePlusClientID = conf.get('googlePlusClientID');
+  const googlePlusClientID = conf.get('googlePlusClientID');
   if (googlePlusClientID) {
-    var GooglePlusStrategy = require('openidconnect-for-passport').Strategy;
+    const GooglePlusStrategy = require('openidconnect-for-passport').Strategy;
 
-    var strategy = new GooglePlusStrategy(
+    const strategy = new GooglePlusStrategy(
       {
         authorizationURL: 'https://accounts.google.com/o/oauth2/auth',
         tokenURL: 'https://www.googleapis.com/oauth2/v3/token',
@@ -107,9 +107,9 @@ function setupGooglePlus(app1) {
   }
 }
 
-var app = misc.expressAppIn(__dirname);
+const app = misc.expressAppIn(__dirname);
 
-app.get('/logout', function (req, res) {
+app.get('/logout', (req, res) => {
   req.logout();
   if (req.isAuthenticated && req.isAuthenticated()) {
     logger.info('Had to log out twice. IE problem?' + (req.user ? ' - User was: ' + req.user.authenticationId : ''));
