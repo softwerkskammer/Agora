@@ -1,4 +1,3 @@
-const _ = require('lodash');
 const beans = require('simple-configure').get('beans');
 const misc = beans.get('misc');
 const fieldHelpers = beans.get('fieldHelpers');
@@ -65,7 +64,7 @@ module.exports = {
 
   isValidForActivity: function isValidForActivity(activityInput) {
     const validator = new Validator();
-    const nonEmptyResourceLimits = activityInput.resources ? _.compact(misc.toArray(activityInput.resources.limits)) : [];
+    const nonEmptyResourceLimits = activityInput.resources ? misc.compact(misc.toArray(activityInput.resources.limits)) : [];
 
     validator.check(activityInput.url, 'URL ist ein Pflichtfeld.').notEmpty();
     validator.check(activityInput.url, 'URL darf kein "/" enthalten.').noSlash();
@@ -76,7 +75,7 @@ module.exports = {
     validator.check(activityInput.endDate, 'Endedatum ist ein Pflichtfeld.').notEmpty();
     validator.check(activityInput.endTime, 'Enduhrzeit ist ein Pflichtfeld.').notEmpty();
     validator.check(activityInput.assignedGroup, 'Gruppe ist ein Pflichtfeld.').notEmpty();
-    _.each(nonEmptyResourceLimits, limit => validator.check(limit, 'Die Ressourcenbeschränkungen dürfen nur aus Ziffern bestehen.').isInt());
+    nonEmptyResourceLimits.forEach(limit => validator.check(limit, 'Die Ressourcenbeschränkungen dürfen nur aus Ziffern bestehen.').isInt());
 
     const startUnix = fieldHelpers.parseToUnixUsingDefaultTimezone(activityInput.startDate, activityInput.startTime);
     const endUnix = fieldHelpers.parseToUnixUsingDefaultTimezone(activityInput.endDate, activityInput.endTime);

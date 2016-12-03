@@ -64,7 +64,7 @@ function evalTags(text, subdir) {
 function enhanceTableTag(rendered) {
   return rendered.replace(/<table>/g, '<table class="table table-condensed table-hover table-striped">').replace(/<img src=/g, '<img class="img-responsive" src=');
 }
-const Renderer = {
+module.exports = {
   render: function render(content, subdir) {
     if (content === undefined || content === null) { return ''; }
     const rendered = marked(evalTags(content, subdir));
@@ -92,5 +92,3 @@ const Renderer = {
     };
   }
 };
-
-module.exports = Renderer;
