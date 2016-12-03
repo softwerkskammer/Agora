@@ -2,7 +2,7 @@
 
 var expect = require('must-dist');
 
-var beans = require('../../testutil/configureForTest').get('beans');
+var beans = require('../../testutil/configureForTestWithDB').get('beans');
 var Member = beans.get('member');
 var avatarProvider = beans.get('avatarProvider');
 

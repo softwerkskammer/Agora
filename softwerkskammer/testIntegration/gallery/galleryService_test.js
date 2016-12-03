@@ -1,7 +1,7 @@
 'use strict';
 /*eslint no-sync: 0 */
 
-var conf = require('../../testutil/configureForTest');
+var conf = require('../../testutil/configureForTestWithDB');
 var expect = require('must-dist');
 var beans = require('simple-configure').get('beans');
 var fs = require('fs');
