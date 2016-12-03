@@ -8,9 +8,10 @@ var Member = beans.get('member');
 var memberstore = beans.get('memberstore');
 var membersService = beans.get('membersService');
 var avatarProvider = beans.get('avatarProvider');
+var galleryService = beans.get('galleryService');
 
 describe('MembersService', function () {
-  var imagePath = __dirname + '/../gallery/fixtures/image.jpg';
+  var imagePath = __dirname + '/../../testutil/fixtures/image.jpg';
   var member;
 
   beforeEach(function () {
@@ -226,6 +227,8 @@ describe('MembersService', function () {
       getImageFromAvatarProvider = sinon.stub(avatarProvider, 'getImage', function (anyMember, callback) {
         callback(gravatarData);
       });
+      sinon.stub(galleryService, 'storeAvatar').yields(null, 'filename.jpg');
+      sinon.stub(galleryService, 'retrieveScaledImage').yields(null, imagePath);
     });
 
     it('updates a member with information about a saved avatar', function (done) {

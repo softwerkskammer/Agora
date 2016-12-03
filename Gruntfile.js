@@ -70,7 +70,7 @@ module.exports = function (grunt) {
   grunt.initConfig({
     clean: {
       build: ['softwerkskammer/build', 'softwerkskammer/frontendtests/fixtures/*.html'],
-      coverage: ['softwerkskammer/coverage', 'softwerkskammer/coverageWithDB', 'softwerkskammer/karma-coverage'],
+      coverage: ['softwerkskammer/coverage', 'softwerkskammer/coverageIntegration', 'softwerkskammer/karma-coverage'],
       public: ['softwerkskammer/public/clientscripts', 'softwerkskammer/public/fonts', 'softwerkskammer/public/img/bootstrap-colorpicker', 'softwerkskammer/public/images', 'softwerkskammer/public/stylesheets'],
       options: {force: true}
     },
@@ -210,22 +210,11 @@ module.exports = function (grunt) {
     },
 
     mocha_istanbul: {
-      testWithDB: {
-        src: 'softwerkskammer/testWithDB',
+      testIntegration: {
+        src: 'softwerkskammer/testIntegration',
         options: {
-          coverageFolder: 'softwerkskammer/coverageWithDB',
+          coverageFolder: 'softwerkskammer/coverageIntegration',
           excludes: ['**/activitystore.js'],
-          timeout: 6000,
-          slow: 100,
-          mask: '**/*.js',
-          root: 'softwerkskammer/lib',
-          reporter: 'dot'
-        }
-      },
-      testApp: {
-        src: 'softwerkskammer/testApp',
-        options: {
-          coverageFolder: 'softwerkskammer/coverageApp',
           timeout: 6000,
           slow: 100,
           mask: '**/*.js',
@@ -243,8 +232,8 @@ module.exports = function (grunt) {
           root: 'softwerkskammer/lib',
           reporter: 'dot',
           check: {
-            lines: 80,
-            statements: 76
+            lines: 78.76,
+            statements: 74.65
           }
         }
       }
