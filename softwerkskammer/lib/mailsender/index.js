@@ -1,18 +1,18 @@
 'use strict';
 
-var beans = require('simple-configure').get('beans');
+const beans = require('simple-configure').get('beans');
 
-var misc = beans.get('misc');
-var validation = beans.get('validation');
-var statusmessage = beans.get('statusmessage');
-var mailsenderService = beans.get('mailsenderService');
-var Message = beans.get('message');
+const misc = beans.get('misc');
+const validation = beans.get('validation');
+const statusmessage = beans.get('statusmessage');
+const mailsenderService = beans.get('mailsenderService');
+const Message = beans.get('message');
 
 function messageSubmitted(req, res, next) {
-  var errors = validation.isValidMessage(req.body);
+  const errors = validation.isValidMessage(req.body);
   if (errors.length !== 0) { return res.render('../../../views/errorPages/validationError', {errors: errors}); }
 
-  var message = new Message(req.body, req.user.member);
+  const message = new Message(req.body, req.user.member);
 
   function processResult(err, statusmsg) {
     if (err) { return next(err); }
@@ -20,7 +20,7 @@ function messageSubmitted(req, res, next) {
     res.redirect(req.body.successURL);
   }
 
-  var activityURL = req.body.successURL.replace('/activities/', '');
+  const activityURL = req.body.successURL.replace('/activities/', '');
   if (req.body.toParticipants) {
     message.removeAllButFirstButton();
     return mailsenderService.sendMailToParticipantsOf(activityURL, message, processResult);
@@ -37,17 +37,17 @@ function messageSubmitted(req, res, next) {
 
 function resignmentSubmitted(req, res) {
   /* eslint handle-callback-err: 0 */
-  var markdown = '**' + req.i18n.t('mailsender.why-resign') + '**\n' + req.body.why + '\n\n**' + req.i18n.t('mailsender.notes-resign') + '**\n' + req.body.notes;
-  return mailsenderService.sendResignment(markdown, req.user.member, function (err, statusmsg) {
+  const markdown = '**' + req.i18n.t('mailsender.why-resign') + '**\n' + req.body.why + '\n\n**' + req.i18n.t('mailsender.notes-resign') + '**\n' + req.body.notes;
+  return mailsenderService.sendResignment(markdown, req.user.member, (err, statusmsg) => {
     statusmsg.putIntoSession(req);
     res.redirect('/members/' + req.user.member.nickname());
   });
 }
 
-var app = misc.expressAppIn(__dirname);
+const app = misc.expressAppIn(__dirname);
 
-app.get('/invitation/:activityUrl', function (req, res, next) {
-  mailsenderService.dataForShowingMessageForActivity(req.params.activityUrl, req.session.language, function (err, result) {
+app.get('/invitation/:activityUrl', (req, res, next) => {
+  mailsenderService.dataForShowingMessageForActivity(req.params.activityUrl, req.session.language, (err, result) => {
     if (err) { return next(err); }
     if (!res.locals.accessrights.canEditActivity(result.activity)) {
       return res.redirect('/activities/' + encodeURIComponent(req.params.activityUrl));
@@ -56,27 +56,23 @@ app.get('/invitation/:activityUrl', function (req, res, next) {
   });
 });
 
-app.post('/', function (req, res) {
+app.post('/', (req, res) => {
   res.render('compose', {});
 });
 
-app.get('/contactMember/:nickname', function (req, res, next) {
-  mailsenderService.dataForShowingMessageToMember(req.params.nickname, function (err, result) {
+app.get('/contactMember/:nickname', (req, res, next) => {
+  mailsenderService.dataForShowingMessageToMember(req.params.nickname, (err, result) => {
     if (err || !result) {return next(err); }
     res.render('compose', result);
   });
 });
 
-app.post('/send', function (req, res, next) {
-  messageSubmitted(req, res, next);
-});
+app.post('/send', messageSubmitted);
 
-app.get('/resign/:nickname', function (req, res) {
+app.get('/resign/:nickname', (req, res) => {
   res.render('compose-resign', {nickname: req.params.nickname});
 });
 
-app.post('/resign', function (req, res, next) {
-  resignmentSubmitted(req, res, next);
-});
+app.post('/resign', resignmentSubmitted);
 
 module.exports = app;

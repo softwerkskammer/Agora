@@ -97,7 +97,7 @@ module.exports = {
   regexEscape: regexEscape,
 
   compact: function compact(array) {
-    return R.filter(R.identity, array);
+    return R.filter(R.identity, array || []);
   },
 
   startsWith: function startsWith(string) {
