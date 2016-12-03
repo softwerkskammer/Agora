@@ -226,7 +226,7 @@ module.exports = function (grunt) {
         src: 'softwerkskammer/test',
         options: {
           coverageFolder: 'softwerkskammer/coverage',
-          timeout: 1000,
+          timeout: 6000,
           slow: 100,
           mask: '**/*.js',
           root: 'softwerkskammer/lib',
