@@ -7,7 +7,6 @@ const path = require('path');
 const fs = require('fs');
 const glob = require('glob');
 const async = require('async');
-const _ = require('lodash');
 const misc = conf.get('beans').get('misc');
 
 const widths = {mini: 16, thumb: 400};
@@ -32,14 +31,10 @@ function fullPathFor(name) {
   return path.join(conf.get('imageDirectory') || conf.get('TMPDIR') || '/tmp/', name);
 }
 
-function representsImage(file) {
-  return misc.representsImage(file);
-}
-
 function deleteAllImagesMatching(pattern, callback) {
   glob(fullPathFor(pattern), (err, files) => {
     if (err) { return callback(err); }
-    async.each(_.filter(files, representsImage), fs.unlink, callback);
+    async.each(files.filter(misc.representsImage), fs.unlink, callback);
   });
 }
 

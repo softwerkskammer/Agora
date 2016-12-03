@@ -1,6 +1,6 @@
 'use strict';
 
-const _ = require('lodash');
+const R = require('ramda');
 
 const conf = require('simple-configure');
 
@@ -38,7 +38,7 @@ function sendBulkMail(receiverEmailAddresses, subject, html, fromName, fromAddre
 
   const mailoptions = {
     from: '"' + fromName + '" <' + fromAddress + '>',
-    bcc: _.uniq(receiverEmailAddresses).toString(),
+    bcc: R.uniq(receiverEmailAddresses).toString(),
     subject: subject,
     html: html,
     generateTextFromHTML: true

@@ -1,7 +1,6 @@
 'use strict';
 
 const beans = require('simple-configure').get('beans');
-const _ = require('lodash');
 const persistence = beans.get('mailsPersistence');
 const Mail = beans.get('archivedMail');
 const memberstore = beans.get('memberstore');
@@ -25,7 +24,7 @@ function mailHeadersWithProfileData(group, callback) {
   persistence.listByField({group: group}, {timeUnix: -1},
     (err, mails) => {
       if (err) { return callback(err); }
-      const theHeaders = _.map(mails, mail => new Mail(mail));
+      const theHeaders = mails.map(mail => new Mail(mail));
       addProfileDataForMembers(theHeaders, callback);
     });
 }
@@ -63,7 +62,7 @@ module.exports = {
       ]
     }, {timeUnix: -1}, (err, mails) => {
       if (err) { return callback(err); }
-      callback(null, _.map(mails, mail => new Mail(mail)));
+      callback(null, mails.map(mail => new Mail(mail)));
     });
   }
 };

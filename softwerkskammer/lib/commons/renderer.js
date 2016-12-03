@@ -2,7 +2,7 @@ const marked = require('marked');
 const Crypto = require('crypto');
 const Nsh = require('node-syntaxhighlighter');
 const iconv = require('iconv-lite');
-const _ = require('lodash');
+const R = require('ramda');
 
 function normalize(str) {
   if (typeof str !== 'string' || str.trim() === '') {
@@ -49,8 +49,8 @@ function evalTags(text, subdir) {
       result = result.replace(tag[0], id);
     }
   }
-  _.forIn(tagmap, function (value, key) {
-    const parts = value.split('|');
+  R.keys(tagmap).forEach(key => {
+    const parts = tagmap[key].split('|');
     const name = parts[0];
     const pageName = parts[1] || name;
 
