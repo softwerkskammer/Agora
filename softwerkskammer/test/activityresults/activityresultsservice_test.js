@@ -1,85 +1,81 @@
 'use strict';
 
-var expect = require('must-dist');
-var sinon = require('sinon').sandbox.create();
+const expect = require('must-dist');
+const sinon = require('sinon').sandbox.create();
 
-var beans = require('../../testutil/configureForTest').get('beans');
+const beans = require('../../testutil/configureForTest').get('beans');
 
-var galleryService = beans.get('galleryService');
-var persistence = beans.get('activityresultsPersistence');
-var service = beans.get('activityresultsService');
-var ActivityResult = beans.get('activityresult');
+const galleryService = beans.get('galleryService');
+const persistence = beans.get('activityresultsPersistence');
+const service = beans.get('activityresultsService');
+const ActivityResult = beans.get('activityresult');
 
-describe('ActivityResult service', function () {
-  var activityResult;
-  var getById;
+describe('ActivityResult service', () => {
+  let activityResult;
+  let getById;
 
-  beforeEach(function () {
+  beforeEach(() => {
     activityResult = {id: 'Hackergarten2', photos: [{id: 'image1.jpg'}]};
-    getById = sinon.stub(persistence, 'getById', function (object, callback) {
-      return callback(null, activityResult);
-    });
+    getById = sinon.stub(persistence, 'getById', (object, callback) => callback(null, activityResult));
   });
 
-  afterEach(function () {
+  afterEach(() => {
     sinon.restore();
   });
 
-  describe('the getActivityResultByName method', function () {
-    it('should return the activityResult for an id', function (done) {
-      service.getActivityResultByName(activityResult.id, function (err, returnedActivityResult) {
+  describe('the getActivityResultByName method', () => {
+    it('should return the activityResult for an id', done => {
+      service.getActivityResultByName(activityResult.id, (err, returnedActivityResult) => {
         expect(returnedActivityResult.id()).to.equal(activityResult.id);
         done(err);
       });
     });
 
-    it('should return an error if activity does not exist', function (done) {
+    it('should return an error if activity does not exist', done => {
       getById.restore();
-      sinon.stub(persistence, 'getById', function (object, callback) {
-        return callback(new Error('not found'), null);
-      });
+      sinon.stub(persistence, 'getById', (object, callback) => callback(new Error('not found'), null));
 
-      service.getActivityResultByName('non-existing-id', function (err, result) {
+      service.getActivityResultByName('non-existing-id', (err, result) => {
         expect(err).to.exist();
         expect(result).to.be(undefined);
         done();
       });
     });
 
-    it('return an activitymodel instance', function (done) {
-      service.getActivityResultByName(activityResult.id, function (err, model) {
+    it('return an activitymodel instance', done => {
+      service.getActivityResultByName(activityResult.id, (err, model) => {
         expect(model).to.be.an.instanceOf(ActivityResult);
         done(err);
       });
     });
   });
 
-  it('addPhotoToActivityResult should add an image to an activityresult', function (done) {
-    var saveStub = sinon.stub(persistence, 'save', function (object, callback) {
+  it('addPhotoToActivityResult should add an image to an activityresult', done => {
+    const saveStub = sinon.stub(persistence, 'save', (object, callback) => {
       callback();
     });
 
-    sinon.stub(galleryService, 'storeImage', function (path, callback) { callback(null, path); });
-    sinon.stub(galleryService, 'getMetadataForImage', function (path, callback) { callback(null); });
+    sinon.stub(galleryService, 'storeImage', (path, callback) => { callback(null, path); });
+    sinon.stub(galleryService, 'getMetadataForImage', (path, callback) => { callback(null); });
 
-    service.addPhotoToActivityResult('Hackergarten2', {path: 'my_uri'}, 'memberId', function (err, imageUri) {
+    service.addPhotoToActivityResult('Hackergarten2', {path: 'my_uri'}, 'memberId', (err, imageUri) => {
       expect(saveStub.called).to.be(true);
-      var objectToSave = saveStub.args[0][0];
+      const objectToSave = saveStub.args[0][0];
       expect(objectToSave.photos).to.have.length(2);
       expect(imageUri).to.be('my_uri');
       done(err);
     });
   });
 
-  it('updatePhotoOfActivityResult should change an image in an activityresult', function (done) {
-    var saveStub = sinon.stub(persistence, 'save', function (object, callback) {
+  it('updatePhotoOfActivityResult should change an image in an activityresult', done => {
+    const saveStub = sinon.stub(persistence, 'save', (object, callback) => {
       callback();
     });
 
     service.updatePhotoOfActivityResult('Hackergarten2', 'image1.jpg', {title: 'Photo 1'},
-      {canEditPhoto: function () { return true; }}, function (err) {
+      {canEditPhoto: () => true}, err => {
         expect(saveStub.called).to.be(true);
-        var objectToSave = saveStub.args[0][0];
+        const objectToSave = saveStub.args[0][0];
         expect(objectToSave.photos).to.have.length(1);
         expect(objectToSave.photos[0]).to.have.ownProperty('title', 'Photo 1');
         done(err);
