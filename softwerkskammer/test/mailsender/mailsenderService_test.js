@@ -1,35 +1,35 @@
 'use strict';
 
-var expect = require('must-dist');
-var sinon = require('sinon').sandbox.create();
-var beans = require('../../testutil/configureForTest').get('beans');
+const expect = require('must-dist');
+const sinon = require('sinon').sandbox.create();
+const beans = require('../../testutil/configureForTest').get('beans');
 
-var memberstore = beans.get('memberstore');
-var groupsService = beans.get('groupsService');
-var groupsAndMembersService = beans.get('groupsAndMembersService');
-var activitiesService = beans.get('activitiesService');
-var activitystore = beans.get('activitystore');
+const memberstore = beans.get('memberstore');
+const groupsService = beans.get('groupsService');
+const groupsAndMembersService = beans.get('groupsAndMembersService');
+const activitiesService = beans.get('activitiesService');
+const activitystore = beans.get('activitystore');
 
-var mailsenderService = beans.get('mailsenderService');
-var Activity = beans.get('activity');
-var Member = beans.get('member');
-var Message = beans.get('message');
-var Group = beans.get('group');
-var fieldHelpers = beans.get('fieldHelpers');
-var transport = beans.get('mailtransport').transport;
+const mailsenderService = beans.get('mailsenderService');
+const Activity = beans.get('activity');
+const Member = beans.get('member');
+const Message = beans.get('message');
+const Group = beans.get('group');
+const fieldHelpers = beans.get('fieldHelpers');
+const transport = beans.get('mailtransport').transport;
 
-var emptyActivity;
+let emptyActivity;
 
-var sender = new Member();
-var message;
-var sendmail;
+const sender = new Member();
+let message;
+let sendmail;
 
-describe('MailsenderService', function () {
-  var activityURL = 'acti_vi_ty';
-  var nickname = 'nickyNamy';
+describe('MailsenderService', () => {
+  const activityURL = 'acti_vi_ty';
+  const nickname = 'nickyNamy';
 
-  beforeEach(function () {
-    var availableGroups = [];
+  beforeEach(() => {
+    const availableGroups = [];
     message = new Message({subject: 'subject', markdown: 'mark down'}, sender);
     emptyActivity = new Activity({
       title: 'Title of the Activity',
@@ -40,21 +40,21 @@ describe('MailsenderService', function () {
       startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'),
       url: 'urlOfTheActivity'
     });
-    sinon.stub(groupsService, 'getAllAvailableGroups', function (callback) { callback(null, availableGroups); });
-    sinon.stub(activitiesService, 'getActivityWithGroupAndParticipants', function (actURL, callback) {
+    sinon.stub(groupsService, 'getAllAvailableGroups', callback => { callback(null, availableGroups); });
+    sinon.stub(activitiesService, 'getActivityWithGroupAndParticipants', (actURL, callback) => {
       if (actURL === null) { return callback(new Error()); }
       callback(null, emptyActivity);
     });
-    sinon.stub(memberstore, 'getMember', function (nick, callback) {
+    sinon.stub(memberstore, 'getMember', (nick, callback) => {
       if (nick === null) { return callback(null); }
       if (nick === 'broken') { return callback(new Error()); }
       callback(null, new Member({email: 'email@mail.de'}));
     });
-    sinon.stub(activitystore, 'getActivity', function (url, callback) {
+    sinon.stub(activitystore, 'getActivity', (url, callback) => {
       if (url === 'activityUrlForMock') { return callback(null, emptyActivity); }
       callback(new Error());
     });
-    sendmail = sinon.stub(transport, 'sendMail', function (transportobject, callback) {
+    sendmail = sinon.stub(transport, 'sendMail', (transportobject, callback) => {
       if (!transportobject.to && (!transportobject.bcc || transportobject.bcc.length === 0)) {
         // simulating the behaviour of nodemailer
         return callback(new Error());
@@ -63,13 +63,13 @@ describe('MailsenderService', function () {
     });
   });
 
-  afterEach(function () {
+  afterEach(() => {
     sinon.restore();
   });
 
-  describe('preparing data', function () {
-    it('for showing the edit form for an activity', function (done) {
-      mailsenderService.dataForShowingMessageForActivity(activityURL, 'de', function (err, result) {
+  describe('preparing data', () => {
+    it('for showing the edit form for an activity', done => {
+      mailsenderService.dataForShowingMessageForActivity(activityURL, 'de', (err, result) => {
         expect(result.message).to.exist();
         expect(result.regionalgroups).to.exist();
         expect(result.themegroups).to.exist();
@@ -78,17 +78,17 @@ describe('MailsenderService', function () {
       });
     });
 
-    it('URIescapes the url for an activity', function (done) {
-      var url = 'some%20thing';
-      var encodedURL = encodeURIComponent(url);
-      mailsenderService.dataForShowingMessageForActivity(url, 'de', function (err, result) {
+    it('URIescapes the url for an activity', done => {
+      const url = 'some%20thing';
+      const encodedURL = encodeURIComponent(url);
+      mailsenderService.dataForShowingMessageForActivity(url, 'de', (err, result) => {
         expect(result.successURL).to.contain(encodedURL);
         done(err);
       });
     });
 
-    it('for showing the edit form for a member', function (done) {
-      mailsenderService.dataForShowingMessageToMember(nickname, function (err, result) {
+    it('for showing the edit form for a member', done => {
+      mailsenderService.dataForShowingMessageToMember(nickname, (err, result) => {
         expect(result.message).to.exist();
         expect(result.regionalgroups).not.to.exist();
         expect(result.themegroups).not.to.exist();
@@ -97,27 +97,27 @@ describe('MailsenderService', function () {
       });
     });
 
-    it('URIescapes the nickname for a member', function (done) {
-      var nick = 'some%20thing';
-      var encodedNick = encodeURIComponent(nick);
-      mailsenderService.dataForShowingMessageToMember(nick, function (err, result) {
+    it('URIescapes the nickname for a member', done => {
+      const nick = 'some%20thing';
+      const encodedNick = encodeURIComponent(nick);
+      mailsenderService.dataForShowingMessageToMember(nick, (err, result) => {
         expect(result.successURL).to.contain(encodedNick);
         done(err);
       });
     });
   });
 
-  describe('activity markdown', function () {
-    it('with direction', function () {
-      var activity = new Activity().fillFromUI({
-                                                 url: 'url',
-                                                 description: 'description',
-                                                 location: 'location',
-                                                 direction: 'direction',
-                                                 startDate: '4.5.2013',
-                                                 startTime: '12:21'
-                                               });
-      var markdown = mailsenderService.activityMarkdown(activity);
+  describe('activity markdown', () => {
+    it('with direction', () => {
+      const activity = new Activity().fillFromUI({
+        url: 'url',
+        description: 'description',
+        location: 'location',
+        direction: 'direction',
+        startDate: '4.5.2013',
+        startTime: '12:21'
+      });
+      const markdown = mailsenderService.activityMarkdown(activity);
       expect(markdown).to.contain('description');
       expect(markdown).to.contain('4. Mai 2013');
       expect(markdown).to.contain('12:21');
@@ -126,8 +126,8 @@ describe('MailsenderService', function () {
       expect(markdown).to.contain('direction');
     });
 
-    it('without direction', function () {
-      var activity = new Activity({
+    it('without direction', () => {
+      const activity = new Activity({
         url: 'url',
         description: 'description',
         location: 'location',
@@ -139,14 +139,14 @@ describe('MailsenderService', function () {
     });
   });
 
-  describe('sending mail as reminder for activity', function () {
-    it('sends to participants', function (done) {
-      var emailAddress = 'emailAddress@e.mail';
+  describe('sending mail as reminder for activity', () => {
+    it('sends to participants', done => {
+      const emailAddress = 'emailAddress@e.mail';
       emptyActivity.participants = [new Member({email: emailAddress})];
 
-      mailsenderService.sendMailToParticipantsOf(activityURL, message, function (err, statusmessage) {
+      mailsenderService.sendMailToParticipantsOf(activityURL, message, (err, statusmessage) => {
         expect(sendmail.calledOnce).to.be(true);
-        var transportobject = sendmail.args[0][0];
+        const transportobject = sendmail.args[0][0];
         expect(transportobject.bcc).to.contain(emailAddress);
         expect(transportobject.html).to.contain('mark down');
         expect(transportobject.icalEvent).to.contain('BEGIN:VCALENDAR');
@@ -156,16 +156,16 @@ describe('MailsenderService', function () {
       });
     });
 
-    it('does not send mail if no participants', function (done) {
-      mailsenderService.sendMailToParticipantsOf(activityURL, message, function (err, statusmessage) {
+    it('does not send mail if no participants', done => {
+      mailsenderService.sendMailToParticipantsOf(activityURL, message, (err, statusmessage) => {
         expect(sendmail.calledOnce).to.be(true);
         expect(statusmessage.contents().type).to.equal('alert-danger');
         done(err);
       });
     });
 
-    it('does not send mail if activity canot be found', function (done) {
-      mailsenderService.sendMailToParticipantsOf(null, message, function (err, statusmessage) {
+    it('does not send mail if activity canot be found', done => {
+      mailsenderService.sendMailToParticipantsOf(null, message, (err, statusmessage) => {
         expect(sendmail.calledOnce).to.not.be(true);
         expect(err).to.exist();
         expect(statusmessage.contents().type).to.equal('alert-danger');
@@ -174,11 +174,11 @@ describe('MailsenderService', function () {
     });
   });
 
-  describe('sending mail to distinct member', function () {
-    it('sends the email', function (done) {
-      mailsenderService.sendMailToMember('nickname', message, function (err, statusmessage) {
+  describe('sending mail to distinct member', () => {
+    it('sends the email', done => {
+      mailsenderService.sendMailToMember('nickname', message, (err, statusmessage) => {
         expect(sendmail.calledOnce).to.be(true);
-        var transportobject = sendmail.args[0][0];
+        const transportobject = sendmail.args[0][0];
         expect(transportobject.bcc).to.contain('email@mail.de');
         expect(transportobject.html).to.contain('mark down');
         expect(statusmessage.contents().type).to.equal('alert-success');
@@ -186,16 +186,16 @@ describe('MailsenderService', function () {
       });
     });
 
-    it('does not send the email if member cannot be found', function (done) {
-      mailsenderService.sendMailToMember(null, message, function (err, statusmessage) {
+    it('does not send the email if member cannot be found', done => {
+      mailsenderService.sendMailToMember(null, message, (err, statusmessage) => {
         expect(err).not.to.exist();
         expect(statusmessage.contents().type).to.equal('alert-danger');
         done();
       });
     });
 
-    it('does not send the email if finding member causes error', function (done) {
-      mailsenderService.sendMailToMember('broken', message, function (err, statusmessage) {
+    it('does not send the email if finding member causes error', done => {
+      mailsenderService.sendMailToMember('broken', message, (err, statusmessage) => {
         expect(err).to.exist();
         expect(statusmessage.contents().type).to.equal('alert-danger');
         done();
@@ -203,19 +203,19 @@ describe('MailsenderService', function () {
     });
   });
 
-  describe('sending resignment mail', function () {
-    var superuser = new Member({id: 'superuserID', email: 'email@super.user'});
+  describe('sending resignment mail', () => {
+    const superuser = new Member({id: 'superuserID', email: 'email@super.user'});
 
-    beforeEach(function () {
-      sinon.stub(memberstore, 'superUsers', function (callback) { callback(null, [superuser]); });
+    beforeEach(() => {
+      sinon.stub(memberstore, 'superUsers', callback => { callback(null, [superuser]); });
     });
 
-    it('sends the email', function (done) {
-      var markdown = '';
-      var member = new Member({nickname: 'nick', firstname: 'first', lastname: 'last'});
-      mailsenderService.sendResignment(markdown, member, function (err, statusmessage) {
+    it('sends the email', done => {
+      const markdown = '';
+      const member = new Member({nickname: 'nick', firstname: 'first', lastname: 'last'});
+      mailsenderService.sendResignment(markdown, member, (err, statusmessage) => {
         expect(sendmail.calledOnce).to.be(true);
-        var transportobject = sendmail.args[0][0];
+        const transportobject = sendmail.args[0][0];
         expect(transportobject.from).to.contain('first last');
         expect(transportobject.subject).to.contain('Austrittswunsch');
         expect(transportobject.to).to.contain('email@super.user');
@@ -224,16 +224,16 @@ describe('MailsenderService', function () {
       });
     });
 
-    it('does not send the email if member cannot be found', function (done) {
-      mailsenderService.sendMailToMember(null, message, function (err, statusmessage) {
+    it('does not send the email if member cannot be found', done => {
+      mailsenderService.sendMailToMember(null, message, (err, statusmessage) => {
         expect(err).not.to.exist();
         expect(statusmessage.contents().type).to.equal('alert-danger');
         done();
       });
     });
 
-    it('does not send the email if finding member causes error', function (done) {
-      mailsenderService.sendMailToMember('broken', message, function (err, statusmessage) {
+    it('does not send the email if finding member causes error', done => {
+      mailsenderService.sendMailToMember('broken', message, (err, statusmessage) => {
         expect(err).to.exist();
         expect(statusmessage.contents().type).to.equal('alert-danger');
         done();
@@ -241,29 +241,29 @@ describe('MailsenderService', function () {
     });
   });
 
-  describe('sending mail as invitation for activity ', function () {
-    var groupA = new Group({id: 'groupA'});
-    var groupB = new Group({id: 'groupB'});
+  describe('sending mail as invitation for activity ', () => {
+    const groupA = new Group({id: 'groupA'});
+    const groupB = new Group({id: 'groupB'});
 
-    beforeEach(function () {
-      sinon.stub(groupsService, 'getGroups', function (groupnames, callback) {
+    beforeEach(() => {
+      sinon.stub(groupsService, 'getGroups', (groupnames, callback) => {
         if (groupnames === null) { return callback(new Error()); }
         if (groupnames.length === 0) { return callback(null, []); }
         callback(null, [groupA, groupB]);
       });
     });
 
-    it('sends to members of selected groups', function (done) {
-      sinon.stub(groupsAndMembersService, 'addMembersToGroup', function (group, callback) {
+    it('sends to members of selected groups', done => {
+      sinon.stub(groupsAndMembersService, 'addMembersToGroup', (group, callback) => {
         if (group === null) { return callback(null); }
         if (group === groupA) { group.members = [new Member({email: 'memberA'})]; }
         if (group === groupB) { group.members = [new Member({email: 'memberB'})]; }
         group.membercount = 1;
         callback(null, group);
       });
-      mailsenderService.sendMailToInvitedGroups(['GroupA', 'GroupB'], 'activityUrlForMock', message, function (err, statusmessage) {
+      mailsenderService.sendMailToInvitedGroups(['GroupA', 'GroupB'], 'activityUrlForMock', message, (err, statusmessage) => {
         expect(sendmail.calledOnce).to.be(true);
-        var transportobject = sendmail.args[0][0];
+        const transportobject = sendmail.args[0][0];
         expect(transportobject.bcc).to.contain('memberA');
         expect(transportobject.bcc).to.contain('memberB');
         expect(transportobject.html).to.contain('mark down');
@@ -274,17 +274,17 @@ describe('MailsenderService', function () {
       });
     });
 
-    it('ignores errors finding the activity when sending to members of selected groups', function (done) {
-      sinon.stub(groupsAndMembersService, 'addMembersToGroup', function (group, callback) {
+    it('ignores errors finding the activity when sending to members of selected groups', done => {
+      sinon.stub(groupsAndMembersService, 'addMembersToGroup', (group, callback) => {
         if (group === null) { return callback(null); }
         if (group === groupA) { group.members = [new Member({email: 'memberA'})]; }
         if (group === groupB) { group.members = [new Member({email: 'memberB'})]; }
         group.membercount = 1;
         callback(null, group);
       });
-      mailsenderService.sendMailToInvitedGroups(['GroupA', 'GroupB'], 'errorProvokingUrl', message, function (err, statusmessage) {
+      mailsenderService.sendMailToInvitedGroups(['GroupA', 'GroupB'], 'errorProvokingUrl', message, (err, statusmessage) => {
         expect(sendmail.calledOnce).to.be(true);
-        var transportobject = sendmail.args[0][0];
+        const transportobject = sendmail.args[0][0];
         expect(transportobject.bcc).to.contain('memberA');
         expect(transportobject.bcc).to.contain('memberB');
         expect(transportobject.html).to.contain('mark down');
@@ -294,8 +294,8 @@ describe('MailsenderService', function () {
       });
     });
 
-    it('does not send to members if no groups selected', function (done) {
-      mailsenderService.sendMailToInvitedGroups([], 'activityUrlForMock', message, function (err, statusmessage) {
+    it('does not send to members if no groups selected', done => {
+      mailsenderService.sendMailToInvitedGroups([], 'activityUrlForMock', message, (err, statusmessage) => {
         expect(sendmail.calledOnce).to.not.be(true);
         expect(err).not.to.exist();
         expect(statusmessage.contents().type).to.equal('alert-danger');
@@ -303,8 +303,8 @@ describe('MailsenderService', function () {
       });
     });
 
-    it('does not send to members if finding groups causes error', function (done) {
-      mailsenderService.sendMailToInvitedGroups(null, 'activityUrlForMock', message, function (err, statusmessage) {
+    it('does not send to members if finding groups causes error', done => {
+      mailsenderService.sendMailToInvitedGroups(null, 'activityUrlForMock', message, (err, statusmessage) => {
         expect(sendmail.calledOnce).to.not.be(true);
         expect(err).to.exist();
         expect(statusmessage.contents().type).to.equal('alert-danger');
@@ -312,12 +312,12 @@ describe('MailsenderService', function () {
       });
     });
 
-    it('does not send to members if filling groups with members causes error', function (done) {
-      sinon.stub(groupsAndMembersService, 'addMembersToGroup', function (group, callback) {
+    it('does not send to members if filling groups with members causes error', done => {
+      sinon.stub(groupsAndMembersService, 'addMembersToGroup', (group, callback) => {
         callback(new Error());
       });
 
-      mailsenderService.sendMailToInvitedGroups(['GroupA', 'GroupB'], 'activityUrlForMock', message, function (err, statusmessage) {
+      mailsenderService.sendMailToInvitedGroups(['GroupA', 'GroupB'], 'activityUrlForMock', message, (err, statusmessage) => {
         expect(sendmail.calledOnce).to.not.be(true);
         expect(err).to.exist();
         expect(statusmessage.contents().type).to.equal('alert-danger');
