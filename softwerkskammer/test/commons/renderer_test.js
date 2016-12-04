@@ -1,49 +1,49 @@
 'use strict';
-var expect = require('must-dist');
+const expect = require('must-dist');
 
 require('../../testutil/configureForTest');
-var Renderer = require('simple-configure').get('beans').get('renderer');
+const Renderer = require('simple-configure').get('beans').get('renderer');
 
-describe('Renderer', function () {
-  describe('should render bracket tags', function () {
+describe('Renderer', () => {
+  describe('should render bracket tags', () => {
 
-    it('1', function () {
-      var text = 'a [[Foo]] b';
+    it('1', () => {
+      const text = 'a [[Foo]] b';
       expect(Renderer.render(text, 'subdir')).to.equal('<p>a <a class="internal" href="/wiki/subdir/foo">Foo</a> b</p>\n');
     });
 
-    it('2', function () {
-      var text = 'a [[Foo]][[Foo]][[Foo]] b';
+    it('2', () => {
+      const text = 'a [[Foo]][[Foo]][[Foo]] b';
       expect(Renderer.render(text, 'subdir')).to.be.equal('<p>a <a class="internal" href="/wiki/subdir/foo">Foo</a><a class="internal" href="/wiki/subdir/foo">Foo</a><a class="internal" href="/wiki/subdir/foo">Foo</a> b</p>\n');
     });
 
-    it('3', function () {
-      var text = 'a [[Foo Bar]] b';
+    it('3', () => {
+      const text = 'a [[Foo Bar]] b';
       expect(Renderer.render(text, 'subdir')).to.be.equal('<p>a <a class="internal" href="/wiki/subdir/foo-bar">Foo Bar</a> b</p>\n');
     });
 
-    it('4', function () {
-      var text = 'a [[Foo]][[Bar]] b';
+    it('4', () => {
+      const text = 'a [[Foo]][[Bar]] b';
       expect(Renderer.render(text, 'subdir')).to.be.equal('<p>a <a class="internal" href="/wiki/subdir/foo">Foo</a><a class="internal" href="/wiki/subdir/bar">Bar</a> b</p>\n');
     });
 
-    it('5', function () {
-      var text = 'a [[Foo]] [[Bar]] b';
+    it('5', () => {
+      const text = 'a [[Foo]] [[Bar]] b';
       expect(Renderer.render(text, 'subdir')).to.be.equal('<p>a <a class="internal" href="/wiki/subdir/foo">Foo</a> <a class="internal" href="/wiki/subdir/bar">Bar</a> b</p>\n');
     });
 
-    it('6', function () {
-      var text = 'a [[Il marito di Foo|Foobar]] [[Bar]] b';
+    it('6', () => {
+      const text = 'a [[Il marito di Foo|Foobar]] [[Bar]] b';
       expect(Renderer.render(text, 'subdir')).to.be.equal('<p>a <a class="internal" href="/wiki/subdir/foobar">Il marito di Foo</a> <a class="internal" href="/wiki/subdir/bar">Bar</a> b</p>\n');
     });
 
-    it('7', function () {
-      var text = 'a [[Foo / Bar]] b';
+    it('7', () => {
+      const text = 'a [[Foo / Bar]] b';
       expect(Renderer.render(text, 'subdir')).to.be.equal('<p>a <a class="internal" href="/wiki/subdir/foo---bar">Foo / Bar</a> b</p>\n');
     });
   });
 
-  it('should normalize a string', function () {
+  it('should normalize a string', () => {
     expect(Renderer.normalize('34')).to.equal('34');
     expect(Renderer.normalize('    ')).to.equal('');
     expect(Renderer.normalize('')).to.equal('');
@@ -63,39 +63,39 @@ describe('Renderer', function () {
     expect(Renderer.normalize('Per favore: nessun, dico; E un punto...')).to.equal('per-favore-nessun-dico-e-un-punto');
   });
 
-  it('should render source code', function () {
+  it('should render source code', () => {
     expect(Renderer.render('```javascript \n ```')).to.match(/class="lang-javascript"/);
   });
 
-  it('should render source code even if language not found, instead of crashing', function () {
+  it('should render source code even if language not found, instead of crashing', () => {
     expect(Renderer.render('```unknown \n ```')).to.match(/class="lang-unknown"/);
   });
 
-  it('splits a text into header and remainder if "header" is paragraph', function () {
-    var result = Renderer.titleAndRenderedTail('Hallo\n\nDresden');
+  it('splits a text into header and remainder if "header" is paragraph', () => {
+    const result = Renderer.titleAndRenderedTail('Hallo\n\nDresden');
     expect(result).to.have.property('title', 'Hallo');
     expect(result).to.have.property('body', '<p>Dresden</p>\n');
   });
 
-  it('splits a text into header and remainder if header is really header', function () {
-    var result = Renderer.titleAndRenderedTail('## Hallo\n\nDresden');
+  it('splits a text into header and remainder if header is really header', () => {
+    const result = Renderer.titleAndRenderedTail('## Hallo\n\nDresden');
     expect(result).to.have.property('title', 'Hallo');
     expect(result).to.have.property('body', '<p>Dresden</p>\n');
   });
 
-  it('splits a text into header and remainder if header is really header', function () {
-    var result = Renderer.titleAndRenderedTail('Hallo\n----\nDresden');
+  it('splits a text into header and remainder if header is really header', () => {
+    const result = Renderer.titleAndRenderedTail('Hallo\n----\nDresden');
     expect(result).to.have.property('title', 'Hallo');
     expect(result).to.have.property('body', '<p>Dresden</p>\n');
   });
 
-  it('splits a text into header and remainder if header has nested markdown', function () {
-    var result = Renderer.titleAndRenderedTail('## Hallo *kursiv* jj\n\nDresden');
+  it('splits a text into header and remainder if header has nested markdown', () => {
+    const result = Renderer.titleAndRenderedTail('## Hallo *kursiv* jj\n\nDresden');
     expect(result).to.have.property('title', 'Hallo *kursiv* jj');
     expect(result).to.have.property('body', '<p>Dresden</p>\n');
   });
 
-  it('should get along with "null" or "undefined" input when rendering', function () {
+  it('should get along with "null" or "undefined" input when rendering', () => {
     expect(Renderer.render(undefined, '')).to.be('');
     expect(Renderer.render(null, '')).to.be('');
   });
