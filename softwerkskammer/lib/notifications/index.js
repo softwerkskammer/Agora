@@ -14,7 +14,7 @@ const logger = require('winston').loggers.get('transactions');
 const pug = require('pug');
 const path = require('path');
 
-function setRenderingDefaults(object) {
+function addPrettyAndUrlTo(object) {
   object.pretty = true; // makes the generated html nicer, in case someone looks at the mail body
   object.url = conf.get('publicUrlPrefix');
 }
@@ -48,7 +48,7 @@ function activityParticipation(activity, visitorID, ressourceName, content, type
         totalcount: activity.allRegisteredMembers().length,
         visitor: results.visitor
       };
-      setRenderingDefaults(renderingOptions);
+      addPrettyAndUrlTo(renderingOptions);
       const filename = path.join(__dirname, 'pug/activitytemplate.pug');
       sendMail(organizersEmails, type, pug.renderFile(filename, renderingOptions), callback);
     }
@@ -78,7 +78,7 @@ module.exports = {
       const renderingOptions = {
         directories: R.sortBy(R.prop('dir'), changes)
       };
-      setRenderingDefaults(renderingOptions);
+      addPrettyAndUrlTo(renderingOptions);
       const filename = path.join(__dirname, 'pug/wikichangetemplate.pug');
       const receivers = R.union(Member.superuserEmails(members), Member.wikiNotificationMembers(members));
       sendMail(receivers, 'Wiki Änderungen', pug.renderFile(filename, renderingOptions), callback);
@@ -93,7 +93,7 @@ module.exports = {
         groups: subscriptions,
         count: members.length
       };
-      setRenderingDefaults(renderingOptions);
+      addPrettyAndUrlTo(renderingOptions);
       const filename = path.join(__dirname, 'pug/newmembertemplate.pug');
       const receivers = Member.superuserEmails(members);
       sendMail(receivers, 'Neues Mitglied', pug.renderFile(filename, renderingOptions));
