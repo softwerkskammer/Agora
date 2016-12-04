@@ -1,21 +1,19 @@
 'use strict';
 
 require('../../testutil/configureForTest');
-var beans = require('simple-configure').get('beans');
-var expect = require('must-dist');
+const beans = require('simple-configure').get('beans');
+const expect = require('must-dist');
 
-var WaitinglistEntry = beans.get('waitinglistEntry');
-var moment = require('moment-timezone');
+const WaitinglistEntry = beans.get('waitinglistEntry');
+const moment = require('moment-timezone');
 
+const entryWithoutParam = new WaitinglistEntry();
+const registrationDate = moment('23.02.2013 17:44', 'DD.MM.YYYY HH:mm').toDate();
+const entryWithParam = new WaitinglistEntry({_memberId: '12345', _registeredAt: registrationDate}, 'Meine Ressource');
 
-var entryWithoutParam = new WaitinglistEntry();
-var registrationDate = moment('23.02.2013 17:44', 'DD.MM.YYYY HH:mm').toDate();
-var entryWithParam = new WaitinglistEntry({_memberId: '12345', _registeredAt: registrationDate}, 'Meine Ressource');
+describe('Waitinglist Entry', () => {
 
-
-describe('Waitinglist Entry', function () {
-
-  it('without argument yields undefined for each query', function () {
+  it('without argument yields undefined for each query', () => {
 
     expect(entryWithoutParam.registrantId()).to.be(undefined);
     expect(entryWithoutParam.resourceName()).to.be('Veranstaltung');
@@ -23,28 +21,28 @@ describe('Waitinglist Entry', function () {
     expect(entryWithoutParam.registrationValidUntil()).to.be(undefined);
   });
 
-  it('returns the id of the registrant', function () {
+  it('returns the id of the registrant', () => {
     expect(entryWithParam.registrantId()).to.equal('12345');
   });
 
-  it('returns the resource name', function () {
+  it('returns the resource name', () => {
     expect(entryWithParam.resourceName()).to.equal('Veranstaltung');
   });
 
-  it('returns the registration date', function () {
+  it('returns the registration date', () => {
     expect(entryWithParam.registrationDate()).to.equal('23.02.2013 17:44');
   });
 
-  it('initially has no registration validity limit', function () {
+  it('initially has no registration validity limit', () => {
     expect(entryWithParam.registrationValidUntil()).to.be(undefined);
   });
 
-  it('has a registration validity limit when it is set', function () {
+  it('has a registration validity limit when it is set', () => {
     entryWithParam.setRegistrationValidityFor('3');
     expect(entryWithParam.registrationValidUntil()).to.not.be(undefined);
   });
 
-  it('can remove the registration validity limit after setting it', function () {
+  it('can remove the registration validity limit after setting it', () => {
     entryWithParam.setRegistrationValidityFor('3');
     entryWithParam.setRegistrationValidityFor();
     expect(entryWithParam.registrationValidUntil()).to.be(undefined);

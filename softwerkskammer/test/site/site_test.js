@@ -1,18 +1,18 @@
 'use strict';
 
-var request = require('supertest');
+const request = require('supertest');
 
-var app = require('../../testutil/testHelper')('siteApp').createApp();
+const app = require('../../testutil/testHelper')('siteApp').createApp();
 
-describe('The router for the site\' pages', function () {
-  it('redirects after switching the language', function (done) {
+describe('The router for the site\' pages', () => {
+  it('redirects after switching the language', done => {
     request(app)
       .get('/language/de?currentUrl=%2Fpeter%2F')
       .expect(302)
       .expect('location', /\/peter\//, done);
   });
 
-  it('calculates a qrcode', function (done) {
+  it('calculates a qrcode', done => {
     request(app)
       .get('/qrcode?url=%2Fpeter%2F')
       .expect(200)
