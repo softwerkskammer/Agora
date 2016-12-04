@@ -27,19 +27,13 @@ module.exports = function importMails(file, group, done) {
   function assignMessageId(parsedObject, mailDbObject, callback) {
     /* eslint new-cap: 0 */
     if (parsedObject.messageId) {
-      mailDbObject.id = parsedObject.messageId;
-      return callback();
+      return callback(parsedObject.messageId);
     }
 
     const shasum = crypto.createHash('sha1');
     const s = fs.createReadStream(file); // file may be big -> stream instead of readFile
-
     s.on('data', d => shasum.update(d));
-
-    s.on('end', () => {
-      mailDbObject.id = 'mail-sha1-' + shasum.digest('hex') + '@softwerkskammer.org';
-      callback();
-    });
+    s.on('end', () => callback('mail-sha1-' + shasum.digest('hex') + '@softwerkskammer.org'));
   }
 
   function references(parsedObject) {
@@ -60,27 +54,28 @@ module.exports = function importMails(file, group, done) {
 
   mailparser.on('end', parsedObject => {
     logger.info('Starting to parse eMail');
-    const mailDbObject = {};
-    mailDbObject.group = group;
-    mailDbObject.subject = parsedObject.subject;
-
-    mailDbObject.timeUnix = date(parsedObject).unix();
-
-    mailDbObject.references = references(parsedObject);
-    mailDbObject.text = parsedObject.text;
-    mailDbObject.html = parsedObject.html;
-
     const from = parsedObject.from[0];
-    mailDbObject.from = {
-      name: from.name || from.address.replace(/@.*/, '')
-    };
+
     memberstore.getMemberForEMail(from.address, (err, member) => {
       if (err) {
-        logger.error('Could not get member for eMail: ' + err);
+        logger.error('Could not get member for eMail, error is: ' + err);
         return done(err);
       }
+      const mailDbObject = {};
+      mailDbObject.group = group;
+      mailDbObject.subject = parsedObject.subject;
+      mailDbObject.text = parsedObject.text;
+      mailDbObject.html = parsedObject.html;
+
+      mailDbObject.timeUnix = date(parsedObject).unix();
+      mailDbObject.references = references(parsedObject);
+
+      mailDbObject.from = {
+        name: from.name || from.address.replace(/@.*/, '')
+      };
       if (member) { mailDbObject.from.id = member.id(); }
-      assignMessageId(parsedObject, mailDbObject, () => {
+      assignMessageId(parsedObject, mailDbObject, (id) => {
+        mailDbObject.id = id;
         logger.info('Message ID assigned to eMail: ' + mailDbObject.id);
         done(null, mailDbObject);
       });
