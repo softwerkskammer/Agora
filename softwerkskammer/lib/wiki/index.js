@@ -1,21 +1,21 @@
 'use strict';
 
-var moment = require('moment-timezone');
-var beans = require('simple-configure').get('beans');
-var Renderer = beans.get('renderer');
-var wikiService = beans.get('wikiService');
-var statusmessage = beans.get('statusmessage');
-var misc = beans.get('misc');
+const moment = require('moment-timezone');
+const beans = require('simple-configure').get('beans');
+const renderer = beans.get('renderer');
+const wikiService = beans.get('wikiService');
+const statusmessage = beans.get('statusmessage');
+const misc = beans.get('misc');
 
 function showPage(subdir, pageName, pageVersion, req, res, next) {
-  var normalizedPageName = Renderer.normalize(pageName);
-  var completePageName = subdir + '/' + normalizedPageName;
-  wikiService.showPage(completePageName, pageVersion, function (err, content) {
+  const normalizedPageName = renderer.normalize(pageName);
+  const completePageName = subdir + '/' + normalizedPageName;
+  wikiService.showPage(completePageName, pageVersion, (err, content) => {
     if (err || !content) {
       if (req.user) { return res.redirect('/wiki/edit/' + completePageName); }
       return next();
     }
-    var headerAndBody = Renderer.titleAndRenderedTail(content, subdir);
+    const headerAndBody = renderer.titleAndRenderedTail(content, subdir);
     res.render('get', {
       content: headerAndBody.body,
       title: headerAndBody.title,
@@ -26,18 +26,18 @@ function showPage(subdir, pageName, pageVersion, req, res, next) {
   });
 }
 
-var app = misc.expressAppIn(__dirname);
+const app = misc.expressAppIn(__dirname);
 
 // the calendar for events
-app.get('/events/:year', function (req, res) {
+app.get('/events/:year', (req, res) => {
   res.render('eventsWithCalendars', {year: req.params.year});
 });
 
-app.get('/eventsFor', function (req, res, next) {
-  var from = moment(req.query.start);
+app.get('/eventsFor', (req, res, next) => {
+  const from = moment(req.query.start);
   if (from.date() > 1) { from.add(1, 'M'); }
 
-  wikiService.parseEvents(from.year(), function (err, events) {
+  wikiService.parseEvents(from.year(), (err, events) => {
     if (err) { return next(err); }
     res.end(JSON.stringify(events));
   });
@@ -45,11 +45,11 @@ app.get('/eventsFor', function (req, res, next) {
 
 // wiki pages
 
-app.get('/versions/:subdir/:page', function (req, res, next) {
-  var pageName = req.params.page;
-  var subdir = req.params.subdir;
-  var completePageName = subdir + '/' + pageName;
-  wikiService.pageHistory(completePageName, function (err, metadata) {
+app.get('/versions/:subdir/:page', (req, res, next) => {
+  const pageName = req.params.page;
+  const subdir = req.params.subdir;
+  const completePageName = subdir + '/' + pageName;
+  wikiService.pageHistory(completePageName, (err, metadata) => {
     if (err || !metadata) { return next(); }
     res.render('history', {
       pageName: pageName,
@@ -59,12 +59,12 @@ app.get('/versions/:subdir/:page', function (req, res, next) {
   });
 });
 
-app.get('/compare/:subdir/:page/:revisions', function (req, res, next) {
-  var pageName = req.params.page;
-  var subdir = req.params.subdir;
-  var completePageName = subdir + '/' + pageName;
-  var revisions = req.params.revisions;
-  wikiService.pageCompare(completePageName, revisions, function (err, diff) {
+app.get('/compare/:subdir/:page/:revisions', (req, res, next) => {
+  const pageName = req.params.page;
+  const subdir = req.params.subdir;
+  const completePageName = subdir + '/' + pageName;
+  const revisions = req.params.revisions;
+  wikiService.pageCompare(completePageName, revisions, (err, diff) => {
     if (err || !diff) { return next(); }
     res.render('compare', {
       pageName: pageName,
@@ -76,11 +76,11 @@ app.get('/compare/:subdir/:page/:revisions', function (req, res, next) {
 
 // editing pages
 
-app.get('/edit/:subdir/:page', function (req, res, next) {
-  var pageName = Renderer.normalize(req.params.page);
-  var subdir = req.params.subdir;
-  var completePageName = subdir + '/' + pageName;
-  wikiService.pageEdit(completePageName, function (err, content, metadata) {
+app.get('/edit/:subdir/:page', (req, res, next) => {
+  const pageName = renderer.normalize(req.params.page);
+  const subdir = req.params.subdir;
+  const completePageName = subdir + '/' + pageName;
+  wikiService.pageEdit(completePageName, (err, content, metadata) => {
     if (err) { return next(err); }
     res.render('edit', {
       page: {content: content, comment: '', metadata: metadata[0].fullhash},
@@ -90,10 +90,10 @@ app.get('/edit/:subdir/:page', function (req, res, next) {
   });
 });
 
-app.post('/:subdir/:page', function (req, res) {
-  var pageName = Renderer.normalize(req.params.page);
-  var subdir = req.params.subdir;
-  wikiService.pageSave(subdir, pageName, req.body, req.user.member, function (err, conflict) {
+app.post('/:subdir/:page', (req, res) => {
+  const pageName = renderer.normalize(req.params.page);
+  const subdir = req.params.subdir;
+  wikiService.pageSave(subdir, pageName, req.body, req.user.member, (err, conflict) => {
     if (err) {
       statusmessage.errorMessage('message.title.problem', 'message.content.save_error').putIntoSession(req);
     } else if (conflict) {
@@ -105,10 +105,10 @@ app.post('/:subdir/:page', function (req, res) {
   });
 });
 
-app.post('/rename/:subdir/:page', function (req, res, next) {
-  var pageNameNew = Renderer.normalize(req.body.newName);
-  var subdir = req.params.subdir;
-  wikiService.pageRename(subdir, req.params.page, pageNameNew, req.user.member, function (err) {
+app.post('/rename/:subdir/:page', (req, res, next) => {
+  const pageNameNew = renderer.normalize(req.body.newName);
+  const subdir = req.params.subdir;
+  wikiService.pageRename(subdir, req.params.page, pageNameNew, req.user.member, err => {
     if (err) {
       statusmessage.errorMessage('message.title.problem', 'message.content.save_error').putIntoSession(req);
       return next(err);
@@ -120,47 +120,47 @@ app.post('/rename/:subdir/:page', function (req, res, next) {
 
 // showing pages
 
-app.get('/list/:subdir/', function (req, res, next) {
-  var subdir = req.params.subdir;
-  wikiService.pageList(subdir, function (err, items) {
+app.get('/list/:subdir/', (req, res, next) => {
+  const subdir = req.params.subdir;
+  wikiService.pageList(subdir, (err, items) => {
     if (err) { return next(err); }
     res.render('list', {items: items, subdir: subdir});
   });
 });
 
-app.get('/modal/:subdir/:page', function (req, res, next) {
-  var subdir = req.params.subdir;
-  var completePageName = subdir + '/' + req.params.page;
-  wikiService.showPage(completePageName, 'HEAD', function (err, content) {
+app.get('/modal/:subdir/:page', (req, res, next) => {
+  const subdir = req.params.subdir;
+  const completePageName = subdir + '/' + req.params.page;
+  wikiService.showPage(completePageName, 'HEAD', (err, content) => {
     if (err) { return next(err); }
-    res.render('modal', {content: content && Renderer.render(content, subdir), subdir: subdir});
+    res.render('modal', {content: content && renderer.render(content, subdir), subdir: subdir});
   });
 });
 
-app.get('/:subdir/:page', function (req, res, next) {
-  var version = req.query.version || 'HEAD';
+app.get('/:subdir/:page', (req, res, next) => {
+  const version = req.query.version || 'HEAD';
   showPage(req.params.subdir, req.params.page, version, req, res, next);
 });
 
-app.get('/:subdir/', function (req, res) {
+app.get('/:subdir/', (req, res) => {
   res.redirect('/wiki/' + req.params.subdir + '/index');
 });
 
-app.get('/:subdir', function (req, res) {
+app.get('/:subdir', (req, res) => {
   res.redirect('/wiki/' + req.params.subdir + '/index');
 });
 
-app.get('/', function (req, res) {
+app.get('/', (req, res) => {
   res.redirect('/wiki/alle/index');
 });
 
-app.post('/search', function (req, res, next) {
-  var searchtext = req.body.searchtext;
+app.post('/search', (req, res, next) => {
+  const searchtext = req.body.searchtext;
   if (searchtext.length < 2) {
     statusmessage.errorMessage('message.title.query', 'message.content.query').putIntoSession(req);
     return res.redirect(req.headers.referer);
   }
-  wikiService.search(searchtext, function (err, results) {
+  wikiService.search(searchtext, (err, results) => {
     if (err) {return next(err); }
     res.render('searchresults', {searchtext: searchtext, matches: results});
   });

@@ -1,20 +1,20 @@
 'use strict';
 
-var expect = require('must-dist');
-var sinon = require('sinon').sandbox.create();
+const expect = require('must-dist');
+const sinon = require('sinon').sandbox.create();
 
-var beans = require('../../testutil/configureForTest').get('beans');
-var fieldHelpers = beans.get('fieldHelpers');
-var persistence = beans.get('activitiesPersistence');
-var store = beans.get('activitystore');
-var Activity = beans.get('activity');
-var Resource = beans.get('resource');
-var SoCraTesActivity = beans.get('socratesActivity');
+const beans = require('../../testutil/configureForTest').get('beans');
+const fieldHelpers = beans.get('fieldHelpers');
+const persistence = beans.get('activitiesPersistence');
+const store = beans.get('activitystore');
+const Activity = beans.get('activity');
+const Resource = beans.get('resource');
+const SoCraTesActivity = beans.get('socratesActivity');
 
-describe('Activity store', function () {
-  var activity1 = {title: 'CodingDojo1', url: 'CodingDojo1', description: 'bli'};
-  var activity2 = {title: 'CodingDojo2', url: 'CodingDojo2', description: 'bla'};
-  var socrates = {
+describe('Activity store', () => {
+  const activity1 = {title: 'CodingDojo1', url: 'CodingDojo1', description: 'bli'};
+  const activity2 = {title: 'CodingDojo2', url: 'CodingDojo2', description: 'bla'};
+  const socrates = {
     id: 'socratesId',
     title: 'SoCraTes',
     description: 'Coolest event ever :-)',
@@ -27,24 +27,18 @@ describe('Activity store', function () {
     assignedGroup: 'assignedGroup',
     group: {groupLongName: 'longName'}
   };
-  var sampleList;
-  var getByField;
-  var getById;
-  var list;
+  let sampleList;
+  let getByField;
+  let getById;
+  let list;
 
-  beforeEach(function () {
+  beforeEach(() => {
     sampleList = [activity1, activity2];
 
-    list = sinon.stub(persistence, 'list', function (sortOrder, callback) {
-      return callback(null, sampleList);
-    });
-    sinon.stub(persistence, 'listByField', function (searchObject, sortOrder, callback) {
-      return callback(null, sampleList);
-    });
-    getByField = sinon.stub(persistence, 'getByField', function (object, callback) {
-      return callback(null, activity1);
-    });
-    getById = sinon.stub(persistence, 'getById', function (id, callback) {
+    list = sinon.stub(persistence, 'list', (sortOrder, callback) => callback(null, sampleList));
+    sinon.stub(persistence, 'listByField', (searchObject, sortOrder, callback) => callback(null, sampleList));
+    getByField = sinon.stub(persistence, 'getByField', (object, callback) => callback(null, activity1));
+    getById = sinon.stub(persistence, 'getById', (id, callback) => {
       if (id === 'socrates') {
         return callback(null, socrates);
       }
@@ -52,12 +46,12 @@ describe('Activity store', function () {
     });
   });
 
-  afterEach(function () {
+  afterEach(() => {
     sinon.restore();
   });
 
-  it('calls persistence.list for store.allActivities and transforms the result to an Activity', function (done) {
-    store.allActivities(function (err, activities) {
+  it('calls persistence.list for store.allActivities and transforms the result to an Activity', done => {
+    store.allActivities((err, activities) => {
       expect(activities[0].title()).to.equal(activity1.title);
       expect(activities[1].title()).to.equal(activity2.title);
       expect(activities[0].descriptionHTML()).to.contain('bli');
@@ -66,9 +60,9 @@ describe('Activity store', function () {
     });
   });
 
-  it('calls persistence.getByField for store.getActivity and transforms the result to an Activity', function (done) {
-    var url = activity1.url;
-    store.getActivity(url, function (err, activity) {
+  it('calls persistence.getByField for store.getActivity and transforms the result to an Activity', done => {
+    const url = activity1.url;
+    store.getActivity(url, (err, activity) => {
       expect(activity.title()).to.equal(activity1.title);
       expect(getByField.calledWith({url: url})).to.be(true);
       expect(activity.descriptionHTML()).to.contain('bli');
@@ -76,9 +70,9 @@ describe('Activity store', function () {
     });
   });
 
-  it('calls persistence.getById for store.getActivityForId and transforms the result to an Activity', function (done) {
-    var id = 'id';
-    store.getActivityForId(id, function (err, activity) {
+  it('calls persistence.getById for store.getActivityForId and transforms the result to an Activity', done => {
+    const id = 'id';
+    store.getActivityForId(id, (err, activity) => {
       expect(activity.title()).to.equal(activity1.title);
       expect(getById.calledWith(id)).to.be(true);
       expect(activity.descriptionHTML()).to.contain('bli');
@@ -86,92 +80,92 @@ describe('Activity store', function () {
     });
   });
 
-  it('returns an activity object for the given id although the persistence only returns a JS object', function (done) {
+  it('returns an activity object for the given id although the persistence only returns a JS object', done => {
     getByField.restore();
-    sinon.stub(persistence, 'getByField', function (id, callback) { return callback(null, {url: 'activityUrl'}); });
+    sinon.stub(persistence, 'getByField', (id, callback) => callback(null, {url: 'activityUrl'}));
 
-    store.getActivity('activityUrl', function (err, result) {
+    store.getActivity('activityUrl', (err, result) => {
       expect(result.url()).to.equal('activityUrl');
       done(err);
     });
   });
 
-  it('returns null when id does not exist', function (done) {
+  it('returns null when id does not exist', done => {
     getByField.restore();
-    sinon.stub(persistence, 'getByField', function (id, callback) { callback(); });
+    sinon.stub(persistence, 'getByField', (id, callback) => { callback(); });
 
-    store.getActivity(1234, function (err, result) {
+    store.getActivity(1234, (err, result) => {
       expect(result).to.be(null);
       done(err);
     });
   });
 
-  it('returns undefined when persistence yields an error', function (done) {
+  it('returns undefined when persistence yields an error', done => {
     getByField.restore();
-    sinon.stub(persistence, 'getByField', function (id, callback) { callback(new Error('error')); });
+    sinon.stub(persistence, 'getByField', (id, callback) => { callback(new Error('error')); });
 
-    store.getActivity(1234, function (err, result) {
+    store.getActivity(1234, (err, result) => {
       expect(err).to.exist();
       expect(result).to.not.exist();
       done(); // error condition - do not pass err
     });
   });
 
-  it('returns all activites although the persistence only returns JS objects', function (done) {
+  it('returns all activites although the persistence only returns JS objects', done => {
     list.restore();
-    sinon.stub(persistence, 'list', function (sortOrder, callback) { callback(null, [{url: 'activityUrl'}]); });
+    sinon.stub(persistence, 'list', (sortOrder, callback) => { callback(null, [{url: 'activityUrl'}]); });
 
-    store.allActivities(function (err, result) {
+    store.allActivities((err, result) => {
       expect(result).to.have.length(1);
       expect(result[0].url()).to.equal('activityUrl');
       done(err);
     });
   });
 
-  it('returns upcoming activities', function (done) {
-    store.upcomingActivities(function (err, result) {
+  it('returns upcoming activities', done => {
+    store.upcomingActivities((err, result) => {
       expect(result).to.have.length(2);
       done(err);
     });
   });
 
-  it('returns past activities', function (done) {
-    store.pastActivities(function (err, result) {
+  it('returns past activities', done => {
+    store.pastActivities((err, result) => {
       expect(result).to.have.length(2);
       done(err);
     });
   });
 
-  it('calls persistence.remove for store.removeActivity and passes on the given callback', function (done) {
-    var remove = sinon.stub(persistence, 'remove', function (memberId, callback) { callback(); });
-    var activity = new Activity(activity1);
+  it('calls persistence.remove for store.removeActivity and passes on the given callback', done => {
+    const remove = sinon.stub(persistence, 'remove', (memberId, callback) => { callback(); });
+    const activity = new Activity(activity1);
     activity.state.id = 'I D';
-    store.removeActivity(activity, function (err) {
+    store.removeActivity(activity, err => {
       expect(remove.calledWith('I D')).to.be(true);
       done(err);
     });
   });
 
-  describe('builds a SoCraTesActivity', function () {
-    var id = 'socrates';
-    it('on fetching a single activity - when the isSoCraTes flag is set', function (done) {
-      store.getActivityForId(id, function (err, activity) {
+  describe('builds a SoCraTesActivity', () => {
+    const id = 'socrates';
+    it('on fetching a single activity - when the isSoCraTes flag is set', done => {
+      store.getActivityForId(id, (err, activity) => {
         expect(activity).to.be.a(SoCraTesActivity);
         done(err);
       });
     });
 
-    it('on fetching all activities - when the isSoCraTes flag is set', function (done) {
+    it('on fetching all activities - when the isSoCraTes flag is set', done => {
       sampleList = [socrates];
 
-      store.allActivities(function (err, activities) {
+      store.allActivities((err, activities) => {
         expect(activities[0]).to.be.a(SoCraTesActivity);
         done(err);
       });
     });
 
-    it('that shows all required data for the overview and the calendar in SWK and for display and edit in SoCraTes', function (done) {
-      store.getActivityForId(id, function (err, activity) {
+    it('that shows all required data for the overview and the calendar in SWK and for display and edit in SoCraTes', done => {
+      store.getActivityForId(id, (err, activity) => {
         expect(activity.id()).to.equal('socratesId');
         expect(activity.title()).to.equal('SoCraTes');
         expect(activity.startMoment().toString()).to.equal('Sat Feb 01 2014 00:00:00 GMT+0100');
@@ -195,8 +189,8 @@ describe('Activity store', function () {
       });
     });
 
-    it('flattensAndSorts a mongo result completely', function () {
-      var nestedMongoResult = [{
+    it('flattensAndSorts a mongo result completely', () => {
+      const nestedMongoResult = [{
         value: [
           [
             [
@@ -207,7 +201,7 @@ describe('Activity store', function () {
           {startUnix: 4}, {startUnix: 9}, {startUnix: 8}
         ]
       }];
-      var result = store.flattenAndSortMongoResultCollection(nestedMongoResult);
+      const result = store.flattenAndSortMongoResultCollection(nestedMongoResult);
       expect(result).to.eql([
         {startUnix: 1}, {startUnix: 2}, {startUnix: 3},
         {startUnix: 4}, {startUnix: 5}, {startUnix: 6},

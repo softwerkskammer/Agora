@@ -1,68 +1,79 @@
 'use strict';
 
-var sinon = require('sinon').sandbox.create();
-var expect = require('must-dist');
+const sinon = require('sinon').sandbox.create();
+const expect = require('must-dist');
 
-var beans = require('../../testutil/configureForTest').get('beans');
+const beans = require('../../testutil/configureForTest').get('beans');
 
-var groupsAndMembersService = beans.get('groupsAndMembersService');
-var memberstore = beans.get('memberstore');
+const groupsAndMembersService = beans.get('groupsAndMembersService');
+const memberstore = beans.get('memberstore');
 
-var Activity = beans.get('activity');
-var Member = beans.get('member');
-var Group = beans.get('group');
-var notifications = beans.get('notifications');
-var transport = beans.get('mailtransport').transport;
+const Activity = beans.get('activity');
+const Member = beans.get('member');
+const Group = beans.get('group');
+const notifications = beans.get('notifications');
+const transport = beans.get('mailtransport').transport;
 
-var activity;
-var activity2;
-var group;
-var hans = new Member({
+let activity;
+let activity2;
+let group;
+const hans = new Member({
   id: 'hans',
   firstname: 'firstname of hans',
   lastname: 'lastname of hans',
-  email: 'hans@email.de'
+  email: 'hans@email.de',
+  notifyOnWikiChanges: true
 });
-var alice = new Member({
+const alice = new Member({
   id: 'alice',
   firstname: 'firstname of alice',
   lastname: 'lastname of alice',
   email: 'alice@email.de'
 });
-var bob = new Member({
+const bob = new Member({
   id: 'bob',
   firstname: 'firstname of bob',
   lastname: 'lastname of bob',
   email: 'bob@email.de',
   nickname: 'nickbob'
 });
+const superuser = new Member({
+  id: 'superuserID',
+  firstname: 'firstname of superuser',
+  lastname: 'lastname of superuser',
+  email: 'superuser@email.de',
+  nickname: 'nicksuperuser'
+});
 
-describe('Notifications', function () {
+describe('Notifications', () => {
 
-  beforeEach(function () {
+  beforeEach(() => {
     group = new Group({id: 'groupname', longName: 'Buxtehude'});
     activity = new Activity({title: 'Title of the Activity', assignedGroup: 'groupname', url: 'urlurl'});
     activity2 = new Activity({title: 'Another Nice Activity', assignedGroup: 'groupname', url: 'niceurl'});
-    sinon.stub(groupsAndMembersService, 'getGroupAndMembersForList', function (groupID, callback) { callback(null, group); });
-    sinon.stub(memberstore, 'getMemberForId', function (memberID, callback) {
+    sinon.stub(groupsAndMembersService, 'getGroupAndMembersForList', (groupID, callback) => { callback(null, group); });
+    sinon.stub(memberstore, 'getMemberForId', (memberID, callback) => {
       if (memberID === 'hans') { return callback(null, hans); }
       if (memberID === 'alice') { return callback(null, alice); }
       if (memberID === 'bob') { return callback(null, bob); }
       callback(null);
     });
-    sinon.stub(transport, 'sendMail', function (opts, callback) { return callback(); });
+    sinon.stub(memberstore, 'allMembers', callback => {
+      callback(null, [hans, alice, bob, superuser]);
+    });
+    sinon.stub(transport, 'sendMail', (opts, callback) => callback());
   });
 
-  afterEach(function () {
+  afterEach(() => {
     sinon.restore();
   });
 
-  it('creates a meaningful text and subject', function (done) {
+  it('creates a meaningful text and subject', done => {
     activity.state.owner = 'hans';
 
-    notifications.visitorRegistration(activity, 'bob', function (err) {
+    notifications.visitorRegistration(activity, 'bob', err => {
       expect(transport.sendMail.calledOnce).to.be(true);
-      var options = transport.sendMail.firstCall.args[0];
+      const options = transport.sendMail.firstCall.args[0];
       expect(options.subject).to.equal('Neue Anmeldung für Aktivität');
       expect(options.html).to.contain('Für die Aktivität "Title of the Activity" () hat sich ein neuer Besucher angemeldet:');
       expect(options.html).to.contain('firstname of bob lastname of bob (nickbob)');
@@ -71,16 +82,16 @@ describe('Notifications', function () {
     });
   });
 
-  it('creates a meaningful text and subject on each invocation when invoked twice', function (done) {
+  it('creates a meaningful text and subject on each invocation when invoked twice', done => {
     activity.state.owner = 'hans';
     activity2.state.owner = 'hans';
 
-    notifications.visitorRegistration(activity, 'bob', function (err) {
+    notifications.visitorRegistration(activity, 'bob', err => {
       if (err) { return done(err); }
-      notifications.visitorRegistration(activity2, 'alice', function (err1) {
+      notifications.visitorRegistration(activity2, 'alice', err1 => {
 
         expect(transport.sendMail.calledTwice).to.be(true);
-        var options = transport.sendMail.firstCall.args[0];
+        let options = transport.sendMail.firstCall.args[0];
         expect(options.subject).to.equal('Neue Anmeldung für Aktivität');
         expect(options.html).to.contain('Für die Aktivität "Title of the Activity" () hat sich ein neuer Besucher angemeldet:');
         expect(options.html).to.contain('firstname of bob lastname of bob (nickbob)');
@@ -96,14 +107,14 @@ describe('Notifications', function () {
     });
   });
 
-  it('triggers mail sending for group organizers and activity owner', function (done) {
+  it('triggers mail sending for group organizers and activity owner', done => {
     activity.state.owner = 'hans';
     group.organizers = ['alice'];
     group.members = [hans, alice, bob];
 
-    notifications.visitorRegistration(activity, 'bob', function (err) {
+    notifications.visitorRegistration(activity, 'bob', err => {
       expect(transport.sendMail.calledOnce).to.be(true);
-      var options = transport.sendMail.firstCall.args[0];
+      const options = transport.sendMail.firstCall.args[0];
       expect(options.bcc).to.contain('hans@email.de');
       expect(options.bcc).to.contain('alice@email.de');
       expect(options.bcc).to.not.contain('bob');
@@ -112,23 +123,48 @@ describe('Notifications', function () {
     });
   });
 
-  it('triggers mail sending for only group organizers if activity has no owner', function () {
+  it('triggers mail sending for only group organizers if activity has no owner', () => {
     group.organizers = ['alice'];
     group.members = [hans, alice, bob];
 
     notifications.visitorRegistration(activity, 'bob');
     expect(transport.sendMail.calledOnce).to.be(true);
-    var options = transport.sendMail.firstCall.args[0];
+    const options = transport.sendMail.firstCall.args[0];
     expect(options.bcc).to.equal('alice@email.de');
     expect(options.bcc).to.not.contain('bob');
     expect(options.bcc).to.not.contain('hans');
   });
 
-  it('does not trigger mail sending if activity has no owner and no group organizers', function () {
+  it('does not trigger mail sending if activity has no owner and no group organizers', () => {
     group.members = [hans, alice, bob];
 
     notifications.visitorRegistration(activity, 'bob');
     expect(transport.sendMail.called).to.be(false);
+  });
+
+  it('sorts directories in wikiChanges', done => {
+    const changes = [
+      {dir: 'A', sortedFiles: () => []},
+      {dir: 'Z', sortedFiles: () => []},
+      {dir: 'C', sortedFiles: () => []}
+    ];
+    notifications.wikiChanges(changes, err => {
+      const options = transport.sendMail.firstCall.args[0];
+      expect(options.html).to.contain('<h3>Wiki \"A\"</h3>\n    <hr>\n    <h3>Wiki \"C\"</h3>\n    <hr>\n    <h3>Wiki \"Z\"</h3>');
+      done(err);
+    });
+  });
+
+  it('unions superusers and wikisubscribers', done => {
+    const changes = [{dir: 'A', sortedFiles: () => []}];
+    notifications.wikiChanges(changes, err => {
+      const options = transport.sendMail.firstCall.args[0];
+      expect(options.bcc).to.contain('superuser');
+      expect(options.bcc).to.contain('hans');
+      expect(options.bcc).to.not.contain('alice');
+      expect(options.bcc).to.not.contain('bob');
+      done(err);
+    });
   });
 
 });

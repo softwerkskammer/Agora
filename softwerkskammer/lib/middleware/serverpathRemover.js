@@ -1,7 +1,7 @@
 'use strict';
 
-module.exports = function (req, res, next) {
-  res.locals.removeServerpaths = function (msg) {
+module.exports = function serverpathRemover(req, res, next) {
+  res.locals.removeServerpaths = msg => {
     // find the path that comes before node_modules or lib:
     var pathToBeRemoved = /\/[^ ]*?\/(?=(node_modules|softwerkskammer\/lib)\/)/.exec(msg);
     if (pathToBeRemoved) {

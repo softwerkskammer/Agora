@@ -8,7 +8,7 @@ module.exports = function redirectRuleForNewUser(req, res, next) {
   if (!req.user || proceed()) {
     return next();
   }
-  var member = req.user.member;
+  const member = req.user.member;
 
   if (!member) {
     return res.redirect('/members/new');

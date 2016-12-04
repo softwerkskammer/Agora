@@ -1,35 +1,34 @@
 'use strict';
 
-var _ = require('lodash');
-var async = require('async');
+const async = require('async');
 
-var conf = require('simple-configure');
+const conf = require('simple-configure');
 
-var beans = conf.get('beans');
-var groupsService = beans.get('groupsService');
-var groupsAndMembersService = beans.get('groupsAndMembersService');
-var activitiesService = beans.get('activitiesService');
-var membersService = beans.get('membersService');
-var icalService = beans.get('icalService');
-var memberstore = beans.get('memberstore');
-var activitystore = beans.get('activitystore');
-var Message = beans.get('message');
-var Group = beans.get('group');
-var misc = beans.get('misc');
+const beans = conf.get('beans');
+const groupsService = beans.get('groupsService');
+const groupsAndMembersService = beans.get('groupsAndMembersService');
+const activitiesService = beans.get('activitiesService');
+const membersService = beans.get('membersService');
+const icalService = beans.get('icalService');
+const memberstore = beans.get('memberstore');
+const activitystore = beans.get('activitystore');
+const Message = beans.get('message');
+const Group = beans.get('group');
+const misc = beans.get('misc');
 
-var mailtransport = beans.get('mailtransport');
+const mailtransport = beans.get('mailtransport');
 
 function sendMail(message, type, callback) {
   mailtransport.sendMail(message, type, conf.get('sender-address'), callback);
 }
 function buttonFor(activity) { // FIXME: this is currently not working, see https://github.com/softwerkskammer/Agora/issues/1151
-  var url = misc.toFullQualifiedUrl('activities/subscribe', activity.url());
-  var text = 'Count me in! - Ich bin dabei!';
+  const url = misc.toFullQualifiedUrl('activities/subscribe', activity.url());
+  const text = 'Count me in! - Ich bin dabei!';
   return {text: text, url: url};
 }
 
 function activityMarkdown(activity, language) {
-  var markdown = activity.description() + '\n\n**Datum:** ' + activity.startMoment().locale(language || 'de').format('LLL') + '\n\n**Ort:** ' + activity.location();
+  let markdown = activity.description() + '\n\n**Datum:** ' + activity.startMoment().locale(language || 'de').format('LLL') + '\n\n**Ort:** ' + activity.location();
   if (activity.hasDirection()) {
     markdown = markdown + '\n\n**Wegbeschreibung:**\n\n' + activity.direction();
   }
@@ -42,24 +41,24 @@ module.exports = {
   dataForShowingMessageForActivity: function (activityURL, language, globalCallback) {
     async.parallel(
       {
-        activity: function (callback) { activitiesService.getActivityWithGroupAndParticipants(activityURL, callback); },
-        groups: function (callback) { groupsService.getAllAvailableGroups(callback); }
+        activity: callback => activitiesService.getActivityWithGroupAndParticipants(activityURL, callback),
+        groups: callback => groupsService.getAllAvailableGroups(callback)
       },
-      function (err, results) {
+      (err, results) => {
         if (err || !results.activity) { return globalCallback(err); }
-        var activity = results.activity;
-        var invitationGroup = _.find(results.groups, function (group) { return group.id === activity.assignedGroup(); });
-        var regionalGroups = groupsService.combineSubscribedAndAvailableGroups([invitationGroup], Group.regionalsFrom(results.groups));
-        var thematicGroups = groupsService.combineSubscribedAndAvailableGroups([invitationGroup], Group.thematicsFrom(results.groups));
+        const activity = results.activity;
+        const invitationGroup = results.groups.find(group => group.id === activity.assignedGroup());
+        const regionalGroups = groupsService.combineSubscribedAndAvailableGroups([invitationGroup], Group.regionalsFrom(results.groups));
+        const thematicGroups = groupsService.combineSubscribedAndAvailableGroups([invitationGroup], Group.thematicsFrom(results.groups));
 
-        var message = new Message();
+        const message = new Message();
         message.setSubject('Einladung: ' + activity.title());
         message.setMarkdown(activityMarkdown(activity, language));
         message.addToButtons({
-                               text: 'Zur Aktivität',
-                               url: misc.toFullQualifiedUrl('activities', encodeURIComponent(activity.url()))
-                             });
-        var result = {
+          text: 'Zur Aktivität',
+          url: misc.toFullQualifiedUrl('activities', encodeURIComponent(activity.url()))
+        });
+        const result = {
           message: message,
           regionalgroups: regionalGroups,
           themegroups: thematicGroups,
@@ -71,19 +70,19 @@ module.exports = {
     );
   },
 
-  dataForShowingMessageToMember: function (nickname, callback) {
-    memberstore.getMember(nickname, function (err, member) {
+  dataForShowingMessageToMember: function dataForShowingMessageToMember(nickname, callback) {
+    memberstore.getMember(nickname, (err, member) => {
       if (err) {return callback(err); }
       if (!member) {return callback(new Error('Empfänger wurde nicht gefunden.')); }
-      var message = new Message();
+      const message = new Message();
       message.setReceiver(member);
       callback(null, {message: message, successURL: '/members/' + encodeURIComponent(nickname)});
     });
   },
 
-  sendMailToParticipantsOf: function (activityURL, message, callback) {
-    var type = '$t(mailsender.reminder)';
-    return activitiesService.getActivityWithGroupAndParticipants(activityURL, function (err, activity) {
+  sendMailToParticipantsOf: function sendMailToParticipantsOf(activityURL, message, callback) {
+    const type = '$t(mailsender.reminder)';
+    return activitiesService.getActivityWithGroupAndParticipants(activityURL, (err, activity) => {
       if (err) { return callback(err, mailtransport.statusmessageForError(type, err)); }
       message.setBccToMemberAddresses(activity.participants);
       message.setIcal(icalService.activityAsICal(activity).toString());
@@ -91,15 +90,15 @@ module.exports = {
     });
   },
 
-  sendMailToInvitedGroups: function (invitedGroups, activityURL, message, callback) {
-    var type = '$t(mailsender.invitation)';
-    return groupsService.getGroups(invitedGroups, function (err, groups) {
+  sendMailToInvitedGroups: function sendMailToInvitedGroups(invitedGroups, activityURL, message, callback) {
+    const type = '$t(mailsender.invitation)';
+    return groupsService.getGroups(invitedGroups, (err, groups) => {
       if (err) { return callback(err, mailtransport.statusmessageForError(type, err)); }
       if (groups.length === 0) { return callback(null, mailtransport.statusmessageForError(type, new Error('Keine der Gruppen wurde gefunden.'))); }
-      async.map(groups, groupsAndMembersService.addMembersToGroup, function (err1, groups1) {
+      async.map(groups, groupsAndMembersService.addMembersToGroup, (err1, groups1) => {
         if (err1) { return callback(err1, mailtransport.statusmessageForError(type, err1)); }
         message.setBccToGroupMemberAddresses(groups1);
-        activitystore.getActivity(activityURL, function (err2, activity) {
+        activitystore.getActivity(activityURL, (err2, activity) => {
           if (activity) {
             message.setIcal(icalService.activityAsICal(activity).toString());
           }
@@ -109,9 +108,9 @@ module.exports = {
     });
   },
 
-  sendMailToMember: function (nickname, message, callback) {
-    var type = '$t(mailsender.notification)';
-    return memberstore.getMember(nickname, function (err, member) {
+  sendMailToMember: function sendMailToMember(nickname, message, callback) {
+    const type = '$t(mailsender.notification)';
+    return memberstore.getMember(nickname, (err, member) => {
       if (err) {return callback(err, mailtransport.statusmessageForError(type, err)); }
       if (!member) {return callback(null, mailtransport.statusmessageForError(type, new Error('Empfänger wurde nicht gefunden.'))); }
       message.setReceiver(member);
@@ -119,13 +118,13 @@ module.exports = {
     });
   },
 
-  sendRegistrationAllowed: function (member, activity, waitinglistEntry, callback) {
-    var activityFullUrl = conf.get('publicUrlPrefix') + '/activities/' + encodeURIComponent(activity.url());
-    var markdownGerman = 'Für die Veranstaltung ["' + activity.title() + '"](' + activityFullUrl + ') sind wieder Plätze frei.\n\nDu kannst Dich bis ' +
+  sendRegistrationAllowed: function sendRegistrationAllowed(member, activity, waitinglistEntry, callback) {
+    const activityFullUrl = conf.get('publicUrlPrefix') + '/activities/' + encodeURIComponent(activity.url());
+    const markdownGerman = 'Für die Veranstaltung ["' + activity.title() + '"](' + activityFullUrl + ') sind wieder Plätze frei.\n\nDu kannst Dich bis ' +
       waitinglistEntry.registrationValidUntil() + ' Uhr registrieren.';
-    var markdownEnglish = 'There are a few more places for activity ["' + activity.title() + '"](' + activityFullUrl + ').\n\nYou can register until ' +
+    const markdownEnglish = 'There are a few more places for activity ["' + activity.title() + '"](' + activityFullUrl + ').\n\nYou can register until ' +
       waitinglistEntry.registrationValidUntil() + '.';
-    var message = new Message();
+    const message = new Message();
     message.setReceiver(member);
     message.setSubject('Moving up for / Nachrücken für "' + activity.title() + '"');
     message.setMarkdown(markdownEnglish + '\n\n---\n\n' + markdownGerman);
@@ -133,15 +132,15 @@ module.exports = {
     sendMail(message, 'Nachricht', callback);
   },
 
-  sendResignment: function (markdown, member, callback) {
-    var memberUrl = conf.get('publicUrlPrefix') + '/members/' + encodeURIComponent(member.nickname());
-    var messageData = {
+  sendResignment: function sendResignment(markdown, member, callback) {
+    const memberUrl = conf.get('publicUrlPrefix') + '/members/' + encodeURIComponent(member.nickname());
+    const messageData = {
       markdown: member.displayName() + ' ([' + member.nickname() + '](' + memberUrl + ')) möchte gerne austreten.\n\n' + markdown,
       subject: 'Austrittswunsch',
       sendCopyToSelf: true
     };
-    var message = new Message(messageData, member);
-    membersService.superuserEmails(function (err, superusers) {
+    const message = new Message(messageData, member);
+    membersService.superuserEmails((err, superusers) => {
       if (err) { return callback(err); }
       message.setTo(superusers);
       sendMail(message, 'E-Mail zum Austrittswunsch', callback);

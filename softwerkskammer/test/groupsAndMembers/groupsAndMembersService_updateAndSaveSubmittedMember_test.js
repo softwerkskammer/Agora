@@ -1,63 +1,60 @@
 'use strict';
 
-var sinon = require('sinon').sandbox.create();
-var beans = require('../../testutil/configureForTest').get('beans');
+const sinon = require('sinon').sandbox.create();
+const expect = require('must-dist');
 
-var expect = require('must-dist');
+const beans = require('../../testutil/configureForTest').get('beans');
+const Member = beans.get('member');
+const memberstore = beans.get('memberstore');
+const groupsAndMembersService = beans.get('groupsAndMembersService');
 
-var Member = beans.get('member');
+describe('Groups and Members Service', () => {
+  let accessrights;
 
-var memberstore = beans.get('memberstore');
-
-var groupsAndMembersService = beans.get('groupsAndMembersService');
-
-describe('Groups and Members Service', function () {
-  var accessrights;
-
-  beforeEach(function () {
+  beforeEach(() => {
     accessrights = {
-      isSuperuser: function () { return false; },
-      canEditMember: function () { return false; }
+      isSuperuser: () => false,
+      canEditMember: () => false
     };
   });
 
-  afterEach(function () {
+  afterEach(() => {
     sinon.restore();
   });
 
-  describe('- updateAndSaveSubmittedMember -', function () {
-    var memberformData = {previousNickname: 'nick', nickname: 'nick in memberform'};
-    var member = new Member({id: 'memberId', nickname: 'nick nack'});
+  describe('- updateAndSaveSubmittedMember -', () => {
+    const memberformData = {previousNickname: 'nick', nickname: 'nick in memberform'};
+    const member = new Member({id: 'memberId', nickname: 'nick nack'});
 
-    describe('when some error occurs', function () {
+    describe('when some error occurs', () => {
 
-      it('returns an error when the member loading caused an error', function (done) {
-        sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups', function (nickname, callback) { callback(new Error('some error')); });
+      it('returns an error when the member loading caused an error', done => {
+        sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups', (nickname, callback) => { callback(new Error('some error')); });
 
-        groupsAndMembersService.updateAndSaveSubmittedMemberWithSubscriptions(undefined, {previousNickname: 'nick'}, accessrights, undefined, function (err, nickname) {
+        groupsAndMembersService.updateAndSaveSubmittedMemberWithSubscriptions(undefined, {previousNickname: 'nick'}, accessrights, undefined, (err, nickname) => {
           expect(err.message).to.equal('some error');
           expect(nickname).to.be.undefined();
           done();
         });
       });
 
-      it('returns an error when the submitted member is a new member and saving the member caused an error', function (done) {
-        sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups', function (nickname, callback) { callback(null, null); });
-        sinon.stub(memberstore, 'saveMember', function (anyMember, callback) { callback(new Error('some error')); });
+      it('returns an error when the submitted member is a new member and saving the member caused an error', done => {
+        sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups', (nickname, callback) => { callback(null, null); });
+        sinon.stub(memberstore, 'saveMember', (anyMember, callback) => { callback(new Error('some error')); });
 
-        groupsAndMembersService.updateAndSaveSubmittedMemberWithSubscriptions(undefined, {previousNickname: 'nick'}, accessrights, undefined, function (err, nickname) {
+        groupsAndMembersService.updateAndSaveSubmittedMemberWithSubscriptions(undefined, {previousNickname: 'nick'}, accessrights, undefined, (err, nickname) => {
           expect(err.message).to.equal('some error');
           expect(nickname).to.be.undefined();
           done();
         });
       });
 
-      it('returns an error when the submitted member is an existing member and we are allowed to edit the member but saving causes an error', function (done) {
-        sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups', function (nickname, callback) { callback(null, member); });
-        accessrights.canEditMember = function () { return true; };
-        sinon.stub(memberstore, 'saveMember', function (anyMember, callback) { callback(new Error('some error')); });
+      it('returns an error when the submitted member is an existing member and we are allowed to edit the member but saving causes an error', done => {
+        sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups', (nickname, callback) => { callback(null, member); });
+        accessrights.canEditMember = () => true;
+        sinon.stub(memberstore, 'saveMember', (anyMember, callback) => { callback(new Error('some error')); });
 
-        groupsAndMembersService.updateAndSaveSubmittedMemberWithSubscriptions(undefined, memberformData, accessrights, undefined, function (err, nickname) {
+        groupsAndMembersService.updateAndSaveSubmittedMemberWithSubscriptions(undefined, memberformData, accessrights, undefined, (err, nickname) => {
           expect(err.message).to.equal('some error');
           expect(nickname).to.be.undefined();
           done();
@@ -66,48 +63,48 @@ describe('Groups and Members Service', function () {
 
     });
 
-    describe('when the submitted member is a new member', function () {
+    describe('when the submitted member is a new member', () => {
 
-      beforeEach(function () {
-        sinon.stub(memberstore, 'saveMember', function (anyMember, callback) { callback(null); });
-        sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups', function (nickname, callback) { callback(null, null); });
-        sinon.stub(groupsAndMembersService, 'updateSubscriptions', function (anyMember, oldEmail, subscriptions, callback) { callback(null); });
+      beforeEach(() => {
+        sinon.stub(memberstore, 'saveMember', (anyMember, callback) => { callback(null); });
+        sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups', (nickname, callback) => { callback(null, null); });
+        sinon.stub(groupsAndMembersService, 'updateSubscriptions', (anyMember, oldEmail, subscriptions, callback) => { callback(null); });
       });
 
-      it('adds the new member to the sessionUser', function (done) {
-        var sessionUser = {authenticationId: 'member authentication id'};
-        accessrights.canEditMember = function () { return true; };
+      it('adds the new member to the sessionUser', done => {
+        const sessionUser = {authenticationId: 'member authentication id'};
+        accessrights.canEditMember = () => true;
 
-        groupsAndMembersService.updateAndSaveSubmittedMemberWithSubscriptions(sessionUser, memberformData, accessrights, function () { return; },
-                                                                              function (err, nickname) {
-                                                                                expect(nickname).to.equal('nick in memberform');
-                                                                                expect(sessionUser.member.id()).to.equal('member authentication id');
-                                                                                done(err);
-                                                                              });
+        groupsAndMembersService.updateAndSaveSubmittedMemberWithSubscriptions(sessionUser, memberformData, accessrights, () => { return; },
+          (err, nickname) => {
+            expect(nickname).to.equal('nick in memberform');
+            expect(sessionUser.member.id()).to.equal('member authentication id');
+            done(err);
+          });
       });
     });
 
-    describe('when the submitted member is an existing member', function () {
+    describe('when the submitted member is an existing member', () => {
 
-      beforeEach(function () {
-        sinon.stub(memberstore, 'saveMember', function (anyMember, callback) { callback(null); });
-        sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups', function (nickname, callback) { callback(null, member); });
-        sinon.stub(groupsAndMembersService, 'updateSubscriptions', function (anyMember, oldEmail, subscriptions, callback) { callback(null); });
+      beforeEach(() => {
+        sinon.stub(memberstore, 'saveMember', (anyMember, callback) => { callback(null); });
+        sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups', (nickname, callback) => { callback(null, member); });
+        sinon.stub(groupsAndMembersService, 'updateSubscriptions', (anyMember, oldEmail, subscriptions, callback) => { callback(null); });
       });
 
-      it('returns null when we are not allowed to edit the member', function (done) {
-        groupsAndMembersService.updateAndSaveSubmittedMemberWithSubscriptions(undefined, memberformData, accessrights, undefined, function (err, nickname) {
+      it('returns null when we are not allowed to edit the member', done => {
+        groupsAndMembersService.updateAndSaveSubmittedMemberWithSubscriptions(undefined, memberformData, accessrights, undefined, (err, nickname) => {
           expect(err).to.be.null();
           expect(nickname).to.be.undefined();
           done();
         });
       });
 
-      it('adds the member to and removes the profile from the sessionUser when the sessionUser does not contain a member', function (done) {
-        var sessionUser = {profile: {}};
-        accessrights.canEditMember = function () { return true; };
+      it('adds the member to and removes the profile from the sessionUser when the sessionUser does not contain a member', done => {
+        const sessionUser = {profile: {}};
+        accessrights.canEditMember = () => true;
 
-        groupsAndMembersService.updateAndSaveSubmittedMemberWithSubscriptions(sessionUser, memberformData, accessrights, undefined, function (err, nickname) {
+        groupsAndMembersService.updateAndSaveSubmittedMemberWithSubscriptions(sessionUser, memberformData, accessrights, undefined, (err, nickname) => {
           expect(nickname).to.equal('nick in memberform');
           expect(sessionUser.member).to.equal(member);
           expect(sessionUser.hasOwnProperty('profile')).to.be.false();
@@ -115,12 +112,12 @@ describe('Groups and Members Service', function () {
         });
       });
 
-      it('modifies the sessionUser when the sessionUser contains a member with the same id', function (done) {
-        var differentMemberWithSameId = new Member({id: 'memberId'});
-        var sessionUser = {member: differentMemberWithSameId};
-        accessrights.canEditMember = function () { return true; };
+      it('modifies the sessionUser when the sessionUser contains a member with the same id', done => {
+        const differentMemberWithSameId = new Member({id: 'memberId'});
+        const sessionUser = {member: differentMemberWithSameId};
+        accessrights.canEditMember = () => true;
 
-        groupsAndMembersService.updateAndSaveSubmittedMemberWithSubscriptions(sessionUser, memberformData, accessrights, undefined, function (err, nickname) {
+        groupsAndMembersService.updateAndSaveSubmittedMemberWithSubscriptions(sessionUser, memberformData, accessrights, undefined, (err, nickname) => {
           expect(nickname).to.equal('nick in memberform');
           expect(sessionUser.member).to.equal(member);
           expect(sessionUser.member).to.not.equal(differentMemberWithSameId);
@@ -128,12 +125,12 @@ describe('Groups and Members Service', function () {
         });
       });
 
-      it('does not modify the sessionUser when the sessionUser contains a member with a different id', function (done) {
-        var anotherMember = new Member({id: 'anotherMemberId'});
-        var sessionUser = {member: anotherMember};
-        accessrights.canEditMember = function () { return true; };
+      it('does not modify the sessionUser when the sessionUser contains a member with a different id', done => {
+        const anotherMember = new Member({id: 'anotherMemberId'});
+        const sessionUser = {member: anotherMember};
+        accessrights.canEditMember = () => true;
 
-        groupsAndMembersService.updateAndSaveSubmittedMemberWithSubscriptions(sessionUser, memberformData, accessrights, undefined, function (err, nickname) {
+        groupsAndMembersService.updateAndSaveSubmittedMemberWithSubscriptions(sessionUser, memberformData, accessrights, undefined, (err, nickname) => {
           expect(nickname).to.equal('nick in memberform');
           expect(sessionUser.member).to.equal(anotherMember);
           done(err);
@@ -142,20 +139,20 @@ describe('Groups and Members Service', function () {
 
     });
 
-    describe('called from SoCraTes', function () {
-      beforeEach(function () {
-        sinon.stub(memberstore, 'saveMember', function (anyMember, callback) { callback(null); });
-        sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups', function (nickname, callback) { callback(null, member); });
-        sinon.stub(groupsAndMembersService, 'updateSubscriptions', function (anyMember, oldEmail, subscriptions, callback) { callback(null); });
+    describe('called from SoCraTes', () => {
+      beforeEach(() => {
+        sinon.stub(memberstore, 'saveMember', (anyMember, callback) => { callback(null); });
+        sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups', (nickname, callback) => { callback(null, member); });
+        sinon.stub(groupsAndMembersService, 'updateSubscriptions', (anyMember, oldEmail, subscriptions, callback) => { callback(null); });
       });
 
-      it('does _not_ set to SoCraTes only if the member seems to be a Softwerkskammer member', function (done) {
+      it('does _not_ set to SoCraTes only if the member seems to be a Softwerkskammer member', done => {
         member.state.location = 'Karlsruhe';
-        var sessionUser = {profile: {}};
-        accessrights.canEditMember = function () { return true; };
+        const sessionUser = {profile: {}};
+        accessrights.canEditMember = () => true;
         expect(member.socratesOnly()).to.be(false); // just to be sure
 
-        groupsAndMembersService.updateAndSaveSubmittedMemberWithoutSubscriptions(sessionUser, memberformData, accessrights, undefined, function (err, nickname) {
+        groupsAndMembersService.updateAndSaveSubmittedMemberWithoutSubscriptions(sessionUser, memberformData, accessrights, undefined, (err, nickname) => {
           expect(nickname).to.equal('nick in memberform');
           expect(sessionUser.member).to.equal(member);
           expect(sessionUser.hasOwnProperty('profile')).to.be.false();
@@ -165,12 +162,12 @@ describe('Groups and Members Service', function () {
         });
       });
 
-      it('does set to SoCraTes only if the member does not appear like a Softwerkskammer member', function (done) {
-        var sessionUser = {profile: {}};
-        accessrights.canEditMember = function () { return true; };
+      it('does set to SoCraTes only if the member does not appear like a Softwerkskammer member', done => {
+        const sessionUser = {profile: {}};
+        accessrights.canEditMember = () => true;
         expect(member.socratesOnly()).to.be(false); // just to be sure
 
-        groupsAndMembersService.updateAndSaveSubmittedMemberWithoutSubscriptions(sessionUser, memberformData, accessrights, undefined, function (err, nickname) {
+        groupsAndMembersService.updateAndSaveSubmittedMemberWithoutSubscriptions(sessionUser, memberformData, accessrights, undefined, (err, nickname) => {
           expect(nickname).to.equal('nick in memberform');
           expect(sessionUser.member).to.equal(member);
           expect(sessionUser.hasOwnProperty('profile')).to.be.false();

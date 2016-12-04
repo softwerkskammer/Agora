@@ -1,15 +1,15 @@
 'use strict';
 
-var beans = require('simple-configure').get('beans');
-var mailarchiveService = beans.get('mailarchiveService');
-var misc = beans.get('misc');
+const beans = require('simple-configure').get('beans');
+const mailarchiveService = beans.get('mailarchiveService');
+const misc = beans.get('misc');
 
-var app = misc.expressAppIn(__dirname);
+const app = misc.expressAppIn(__dirname);
 
 function mailIndexRender(viewKind, req, res, next) {
-  return function (err, mailHeaders) {
+  return (err, mailHeaders) => {
     if (err) { return next(err); }
-    var view = mailHeaders.length === 0 ? 'indexNoMails' : viewKind;
+    const view = mailHeaders.length === 0 ? 'indexNoMails' : viewKind;
     res.render(view, {group: req.params.groupname, mailHeaders: mailHeaders});
   };
 }
@@ -23,16 +23,14 @@ app.get('/list/flat/:groupname', function (req, res, next) {
 });
 
 app.get('/message/:id', function (req, res, next) {
-  mailarchiveService.mailForId(req.params.id,
-    function (err, mail) {
+  mailarchiveService.mailForId(req.params.id, (err, mail) => {
       if (err) { return next(err); }
       res.render('message', {mail: mail});
     });
 });
 
 app.get('/puremessage/:id', function (req, res, next) {
-  mailarchiveService.mailForId(req.params.id,
-    function (err, mail) {
+  mailarchiveService.mailForId(req.params.id, (err, mail) => {
       if (err) { return next(err); }
       res.render('puremessage', {mail: mail});
     });

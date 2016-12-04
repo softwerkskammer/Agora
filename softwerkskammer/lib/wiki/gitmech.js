@@ -2,9 +2,9 @@
 
 const Fs = require('fs');
 const conf = require('simple-configure');
-const _ = require('lodash');
 const workTree = conf.get('wikipath');
 const beans = conf.get('beans');
+const misc = beans.get('misc');
 const gitExec = beans.get('gitExec');
 const wikiObjects = beans.get('wikiObjects');
 const Metadata = wikiObjects.Metadata;
@@ -19,23 +19,23 @@ function commit(path, message, author, callback) {
 
 module.exports = {
 
-  absPath: function (path) {
+  absPath: function absPath(path) {
     return workTree + '/' + path;
   },
 
-  readFileFs: function (path, callback) {
+  readFileFs: function readFileFs(path, callback) {
     Fs.readFile(this.absPath(path), 'utf8', callback);
   },
 
-  readFile: function (path, version, callback) {
+  readFile: function readFile(path, version, callback) {
     gitExec.command(['show', version + ':' + path], callback);
   },
 
-  log: function (path, version, howMany, callback) {
+  log: function log(path, version, howMany, callback) {
     gitExec.command(['log', '-' + howMany, '--no-notes', '--follow', '--pretty=format:%h%n%H%n%an%n%ai%n%s', version, '--name-only', '--', path], (err, data) => {
       if (err) { return callback(err); }
       const logdata = data ? data.split('\n\n') : [];
-      const metadata = _(logdata).compact().map(chunk => {
+      const metadata = misc.compact(logdata).map(chunk => {
         const group = chunk.split('\n');
         return new Metadata({
           hashRef: group[0],
@@ -45,7 +45,7 @@ module.exports = {
           comment: group[4],
           name: group[5]
         });
-      }).value();
+      });
       if (metadata[0]) {
         metadata[0].hashRef = 'HEAD'; // This can be used linking this version, but needs to be empty for HEAD
       }
@@ -53,7 +53,7 @@ module.exports = {
     });
   },
 
-  latestChanges: function (path, moment, callback) {
+  latestChanges: function latestChanges(path, moment, callback) {
     gitExec.command(['log', '--since="' + moment.format('MM/DD/YYYY hh:mm:ss') + '"', '--pretty=format:%h%n%H%n%an%n%ai%n%s', '--', path], (err, data) => {
       if (err) { return callback(err); }
       const logdata = data ? data.split('\n') : [];
@@ -73,28 +73,28 @@ module.exports = {
     });
   },
 
-  add: function (path, message, author, callback) {
+  add: function add(path, message, author, callback) {
     gitExec.command(['add', path], err => {
       if (err) { return callback(err); }
       return commit(path, message, author, callback);
     });
   },
 
-  mv: function (oldpath, newpath, message, author, callback) {
+  mv: function mv(oldpath, newpath, message, author, callback) {
     gitExec.command(['mv', oldpath, newpath], err => {
       if (err) { return callback(err); }
       return commit('', message, author, callback);
     });
   },
 
-  rm: function (path, message, author, callback) {
+  rm: function rm(path, message, author, callback) {
     gitExec.command(['rm', path], err => {
       if (err) { return callback(err); }
       return commit(path, message, author, callback);
     });
   },
 
-  grep: function (pattern, callback) {
+  grep: function grep(pattern, callback) {
     gitExec.command(['grep', '--no-color', '-F', '-n', '-i', '-I', pattern], (err, data) => {
       if (err) {
         if (err.message.split('\n').length < 3) {
@@ -115,18 +115,18 @@ module.exports = {
     });
   },
 
-  diff: function (path, revisions, callback) {
+  diff: function diff(path, revisions, callback) {
     gitExec.command(['diff', '--no-color', '-b', revisions, '--', path], callback);
   },
 
-  ls: function (subdir, callback) {
+  ls: function ls(subdir, callback) {
     gitExec.command(['ls-tree', '--name-only', '-r', 'HEAD', subdir], (err, data) => {
       if (err) { return callback(err); }
       return callback(null, dataToLines(data));
     });
   },
 
-  lsdirs: function (callback) {
+  lsdirs: function lsdirs(callback) {
     if (!workTree) { return callback(null, []); } // to make it run on dev systems
     return gitExec.command(['ls-tree', '--name-only', '-d', 'HEAD'], (err, data) => {
       if (err || !data) { return callback(err); }
@@ -134,7 +134,7 @@ module.exports = {
     });
   },
 
-  lsblogposts: function (groupname, pattern, callback) {
+  lsblogposts: function lsblogposts(groupname, pattern, callback) {
     gitExec.command(['ls-files', groupname + '/' + pattern], (err, data) => {
       if (err) { return callback(err); }
       return callback(null, dataToLines(data));

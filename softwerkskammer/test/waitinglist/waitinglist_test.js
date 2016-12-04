@@ -1,32 +1,32 @@
 'use strict';
 
-var request = require('supertest');
-var sinon = require('sinon').sandbox.create();
+const request = require('supertest');
+const sinon = require('sinon').sandbox.create();
 
-var beans = require('../../testutil/configureForTest').get('beans');
+const beans = require('../../testutil/configureForTest').get('beans');
 
-var Activity = beans.get('activity');
-var activitiesService = beans.get('activitiesService');
-var waitinglistService = beans.get('waitinglistService');
+const Activity = beans.get('activity');
+const activitiesService = beans.get('activitiesService');
+const waitinglistService = beans.get('waitinglistService');
 
-var app = require('../../testutil/testHelper')('waitinglistApp').createApp({id: 'superuser'});
+const app = require('../../testutil/testHelper')('waitinglistApp').createApp({id: 'superuser'});
 
-describe('Waitinglist application', function () {
+describe('Waitinglist application', () => {
 
-  beforeEach(function () {
-    sinon.stub(activitiesService, 'getActivityWithGroupAndParticipants', function (url, callback) {
+  beforeEach(() => {
+    sinon.stub(activitiesService, 'getActivityWithGroupAndParticipants', (url, callback) => {
       callback(null, new Activity({url: url, title: 'Activity\'s Title'}));
     });
-    sinon.stub(waitinglistService, 'waitinglistFor', function (url, callback) {
+    sinon.stub(waitinglistService, 'waitinglistFor', (url, callback) => {
       callback(null, []);
     });
   });
 
-  afterEach(function () {
+  afterEach(() => {
     sinon.restore();
   });
 
-  it('shows the waitinglist as retrieved from the store', function (done) {
+  it('shows the waitinglist as retrieved from the store', done => {
     request(app)
       .get('/activity')
       .expect(200)

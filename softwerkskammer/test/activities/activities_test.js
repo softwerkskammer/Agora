@@ -1,50 +1,49 @@
 'use strict';
 
-var request = require('supertest');
-var sinon = require('sinon').sandbox.create();
-var expect = require('must-dist');
-var _ = require('lodash');
-var moment = require('moment-timezone');
+const request = require('supertest');
+const sinon = require('sinon').sandbox.create();
+const expect = require('must-dist');
+const moment = require('moment-timezone');
 
-var chado = require('chado');
-var cb = chado.callback;
-var assume = chado.assume;
+const chado = require('chado');
+const cb = chado.callback;
+const assume = chado.assume;
 
-var createApp = require('../../testutil/testHelper')('activitiesApp').createApp;
+const createApp = require('../../testutil/testHelper')('activitiesApp').createApp;
 
-var beans = require('../../testutil/configureForTest').get('beans');
-var fieldHelpers = beans.get('fieldHelpers');
-var activitystore = beans.get('activitystore');
-var Activity = beans.get('activity');
-var Member = beans.get('member');
-var Group = beans.get('group');
+const beans = require('../../testutil/configureForTest').get('beans');
+const fieldHelpers = beans.get('fieldHelpers');
+const activitystore = beans.get('activitystore');
+const Activity = beans.get('activity');
+const Member = beans.get('member');
+const Group = beans.get('group');
 
-var activitiesService = beans.get('activitiesService');
-var groupsService = beans.get('groupsService');
-var memberstore = beans.get('memberstore');
+const activitiesService = beans.get('activitiesService');
+const groupsService = beans.get('groupsService');
+const memberstore = beans.get('memberstore');
 
-var member1 = new Member({
+const member1 = new Member({
   id: 'memberId1',
   nickname: 'participant1',
   email: 'nick1@b.c',
   firstname: 'Firstname1',
   lastname: 'Lastname1'
 });
-var member2 = new Member({
+const member2 = new Member({
   id: 'memberId2',
   nickname: 'participant2',
   email: 'nick2@b.c',
   firstname: 'Firstname2',
   lastname: 'Lastname2'
 });
-var member3 = new Member({
+const member3 = new Member({
   id: 'memberId3',
   nickname: 'participant3',
   email: 'nick3@b.c',
   firstname: 'Firstname3',
   lastname: 'Lastname3'
 });
-var member4 = new Member({
+const member4 = new Member({
   id: 'memberId4',
   nickname: 'participant4',
   email: 'nick4@b.c',
@@ -52,9 +51,9 @@ var member4 = new Member({
   lastname: 'Lastname4'
 });
 
-var group = new Group({id: 'groupname', longName: 'Buxtehude'});
+const group = new Group({id: 'groupname', longName: 'Buxtehude'});
 
-var activityWithParticipants = new Activity({
+const activityWithParticipants = new Activity({
   title: 'Interesting Activity',
   description: 'description2',
   assignedGroup: 'groupname',
@@ -76,7 +75,7 @@ activityWithParticipants.participants = [member1, member2];
 activityWithParticipants.colorRGB = '#123456';
 activityWithParticipants.group = new Group({id: 'group', longName: 'The name of the assigned Group'});
 
-var activityWithEditors = new Activity({
+const activityWithEditors = new Activity({
   title: 'Activity with Editors',
   description: 'description5',
   assignedGroup: 'groupname5',
@@ -103,22 +102,22 @@ activityWithEditors.colorRGB = '#123456';
 activityWithEditors.group = new Group({id: 'group', longName: 'The name of the group with editors'});
 activityWithEditors.ownerNickname = 'participant4';
 
-describe('Activity application', function () {
-  var emptyActivity;
+describe('Activity application', () => {
+  let emptyActivity;
 
-  beforeEach(function () {
+  beforeEach(() => {
     emptyActivity = new Activity({
       title: 'Title of the Activity',
       url: 'urlOfTheActivity',
       assignedGroup: 'groupname',
       owner: 'ownerId'
     });
-    sinon.stub(activitystore, 'upcomingActivities', function (callback) {callback(null, [emptyActivity]); });
-    sinon.stub(activitiesService, 'getActivitiesForDisplay', function (fetcher, callback) {
+    sinon.stub(activitystore, 'upcomingActivities', callback => {callback(null, [emptyActivity]); });
+    sinon.stub(activitiesService, 'getActivitiesForDisplay', (fetcher, callback) => {
       callback(null, [emptyActivity]);
     });
-    sinon.stub(memberstore, 'getMembersForIds', function (ids, callback) {
-      var members = _.map(ids, function (id) { return id === 'memberId1' ? member1 : (id === 'memberId2' ? member2 : (id === 'memberId3' ? member3 : (id === 'memberId4' ? member4 : undefined))); });
+    sinon.stub(memberstore, 'getMembersForIds', (ids, callback) => {
+      const members = ids.map(id => id === 'memberId1' ? member1 : (id === 'memberId2' ? member2 : (id === 'memberId3' ? member3 : (id === 'memberId4' ? member4 : undefined))));
       callback(null, members);
     });
 
@@ -129,21 +128,21 @@ describe('Activity application', function () {
       return null;
     }
 
-    sinon.stub(activitiesService, 'getActivityWithGroupAndParticipants', function (url, callback) {
+    sinon.stub(activitiesService, 'getActivityWithGroupAndParticipants', (url, callback) => {
       callback(null, activityToReturnFor(url));
     });
-    sinon.stub(activitystore, 'getActivity', function (url, callback) {
+    sinon.stub(activitystore, 'getActivity', (url, callback) => {
       callback(null, activityToReturnFor(url));
     });
   });
 
-  afterEach(function () {
+  afterEach(() => {
     sinon.restore();
   });
 
-  it('shows enriched activities when in detail', function (done) {
+  it('shows enriched activities when in detail', done => {
     chado.createDouble('activitiesService', activitiesService);
-    var expectedActivity = new Activity({
+    const expectedActivity = new Activity({
       title: 'Title of the Activity',
       url: 'urlOfTheActivity',
       assignedGroup: 'groupname',
@@ -162,13 +161,13 @@ describe('Activity application', function () {
       .get('/' + 'urlOfTheActivity')
       .expect(200)
       .expect(/<h2>Title of the Activity/)
-      .expect(/Bislang haben 2 Mitglieder ihre Teilnahme zugesagt\./, function (err) {
+      .expect(/Bislang haben 2 Mitglieder ihre Teilnahme zugesagt\./, err => {
         chado.reset();
         done(err);
       });
   });
 
-  it('shows the list of activities with "webcal:" link', function (done) {
+  it('shows the list of activities with "webcal:" link', done => {
     emptyActivity.colorRGB = '#123456';
     emptyActivity.group = group;
     emptyActivity.state.startUnix = fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013');
@@ -185,7 +184,7 @@ describe('Activity application', function () {
       .expect(/Buxtehude/, done);
   });
 
-  it('shows the details of an activity without participants', function (done) {
+  it('shows the details of an activity without participants', done => {
     emptyActivity.participants = [];
     emptyActivity.state.startUnix = fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013');
     emptyActivity.state.direction = 'direction1';
@@ -200,13 +199,13 @@ describe('Activity application', function () {
       .expect(/location1/)
       .expect(/direction1/)
       .expect(/script src="https:\/\/maps\.googleapis\.com\/maps\/api\/js\?key/)
-      .expect(/Bislang gibt es keine Teilnahmezusagen\./, function (err, res) {
+      .expect(/Bislang gibt es keine Teilnahmezusagen\./, (err, res) => {
         expect(res.text).to.not.contain('Angelegt von');
         done(err);
       });
   });
 
-  it('shows the details of an activity with Owner', function (done) {
+  it('shows the details of an activity with Owner', done => {
     emptyActivity.group = group;
     emptyActivity.participants = [];
     emptyActivity.ownerNickname = 'owner';
@@ -214,12 +213,12 @@ describe('Activity application', function () {
       .get('/' + 'urlOfTheActivity')
       .expect(200)
       .expect(/Angelegt von/)
-      .expect(/owner/, function (err) {
+      .expect(/owner/, err => {
         done(err);
       });
   });
 
-  it('shows the details of an activity with participants', function (done) {
+  it('shows the details of an activity with participants', done => {
     request(createApp('guest'))
       .get('/' + 'urlForInteresting')
       .expect(200)
@@ -231,9 +230,9 @@ describe('Activity application', function () {
       .expect(/Bislang haben 2 Mitglieder ihre Teilnahme zugesagt\./, done);
   });
 
-  describe('- when registration is open -', function () {
+  describe('- when registration is open -', () => {
 
-    it('shows the registration button for an activity with participants when a user is logged in who is not participant', function (done) {
+    it('shows the registration button for an activity with participants when a user is logged in who is not participant', done => {
       request(createApp({member: member3}))
         .get('/' + 'urlForInteresting')
         .expect(200)
@@ -245,7 +244,7 @@ describe('Activity application', function () {
         .expect(/participant2/, done);
     });
 
-    it('shows the registration button for an activity with participants when a user is logged in who already is participant', function (done) {
+    it('shows the registration button for an activity with participants when a user is logged in who already is participant', done => {
       request(createApp({member: member1}))
         .get('/' + 'urlForInteresting')
         .expect(200)
@@ -259,9 +258,9 @@ describe('Activity application', function () {
 
   });
 
-  describe('- when registration is not open -', function () {
+  describe('- when registration is not open -', () => {
     /* eslint no-underscore-dangle: 0 */
-    it('shows the registration button for an activity with participants when a user is logged in who is not participant', function (done) {
+    it('shows the registration button for an activity with participants when a user is logged in who is not participant', done => {
       activityWithParticipants.state.resources.Veranstaltung._registrationOpen = false;
 
       request(createApp({member: member3}))
@@ -272,7 +271,7 @@ describe('Activity application', function () {
         .expect(/participant2/, done);
     });
 
-    it('shows that registration is not possible if registrationClosed and no limit set', function (done) {
+    it('shows that registration is not possible if registrationClosed and no limit set', done => {
       activityWithParticipants.state.resources.Veranstaltung._registrationOpen = false;
 
       request(createApp({member: member3}))
@@ -281,7 +280,7 @@ describe('Activity application', function () {
         .expect(/Anmeldung ist zur Zeit nicht möglich\./, done);
     });
 
-    it('shows that registration is somewhere else if registrationClosed and limit is "0"', function (done) {
+    it('shows that registration is somewhere else if registrationClosed and limit is "0"', done => {
       activityWithParticipants.state.resources.Veranstaltung._registrationOpen = false;
       activityWithParticipants.state.resources.Veranstaltung._limit = 0;
 
@@ -291,7 +290,7 @@ describe('Activity application', function () {
         .expect(/Anmeldung ist nicht über die Softwerkskammer möglich\./, done);
     });
 
-    it('shows that the event is full if registrationClosed and some limit set', function (done) {
+    it('shows that the event is full if registrationClosed and some limit set', done => {
       activityWithParticipants.state.resources.Veranstaltung._registrationOpen = false;
       activityWithParticipants.state.resources.Veranstaltung._limit = 1;
 
@@ -301,7 +300,7 @@ describe('Activity application', function () {
         .expect(/Alle Plätze sind belegt\./, done);
     });
 
-    it('shows the link to the waitinglist if registrationClosed and some limit set and waitinglist is enabled', function (done) {
+    it('shows the link to the waitinglist if registrationClosed and some limit set and waitinglist is enabled', done => {
       activityWithParticipants.state.resources.Veranstaltung._registrationOpen = false;
       activityWithParticipants.state.resources.Veranstaltung._limit = 1;
       activityWithParticipants.state.resources.Veranstaltung._waitinglist = [];
@@ -312,7 +311,7 @@ describe('Activity application', function () {
         .expect(/Auf die Warteliste/, done);
     });
 
-    it('allows to leave the waitinglist if member is on waitinglist', function (done) {
+    it('allows to leave the waitinglist if member is on waitinglist', done => {
       activityWithParticipants.state.resources.Veranstaltung._registrationOpen = false;
       activityWithParticipants.state.resources.Veranstaltung._limit = 1;
       activityWithParticipants.state.resources.Veranstaltung._waitinglist = [{
@@ -325,7 +324,7 @@ describe('Activity application', function () {
         .expect(/Warteliste verlassen/, done);
     });
 
-    it('shows the subscription link if waitinglist participant is entitled to subscribe', function (done) {
+    it('shows the subscription link if waitinglist participant is entitled to subscribe', done => {
       activityWithParticipants.state.resources.Veranstaltung._registrationOpen = false;
       activityWithParticipants.state.resources.Veranstaltung._limit = 1;
       activityWithParticipants.state.resources.Veranstaltung._waitinglist = [{
@@ -339,7 +338,7 @@ describe('Activity application', function () {
         .expect(/Ich bin dabei!/, done);
     });
 
-    it('shows the deregistration button for an activity with participants when a user is logged in who already is participant', function (done) {
+    it('shows the deregistration button for an activity with participants when a user is logged in who already is participant', done => {
       activityWithParticipants.state.resources.Veranstaltung._registrationOpen = false;
 
       request(createApp({member: member1}))
@@ -353,7 +352,7 @@ describe('Activity application', function () {
         .expect(/participant2/, done);
     });
 
-    it('shows the number of participants if the total limit is greater than 0', function (done) {
+    it('shows the number of participants if the total limit is greater than 0', done => {
       emptyActivity.participants = [];
       emptyActivity.state.resources.Veranstaltung = {_registrationOpen: false, _limit: 1};
 
@@ -363,14 +362,14 @@ describe('Activity application', function () {
         .expect(/Bislang gibt es keine Teilnahmezusagen\./, done);
     });
 
-    it('does not show the number of participants if the total limit is 0', function (done) {
+    it('does not show the number of participants if the total limit is 0', done => {
       emptyActivity.participants = [];
       emptyActivity.state.resources.Veranstaltung = {_registrationOpen: false, _limit: 0};
 
       request(createApp({member: member3}))
         .get('/' + 'urlOfTheActivity')
         .expect(200)
-        .expect(function (res) {
+        .expect(res => {
           expect(res.text).to.not.contain('Bislang gibt es keine Teilnahmezusagen.');
         })
         .end(done);
@@ -378,7 +377,7 @@ describe('Activity application', function () {
 
   });
 
-  it('upcoming activities are exposed as iCalendar', function (done) {
+  it('upcoming activities are exposed as iCalendar', done => {
     emptyActivity.state.location = 'location1';
     emptyActivity.state.description = 'description1';
 
@@ -392,7 +391,7 @@ describe('Activity application', function () {
       .end(done);
   });
 
-  it('activity is exposed as iCalendar', function (done) {
+  it('activity is exposed as iCalendar', done => {
     emptyActivity.state.location = 'location1';
     emptyActivity.state.description = 'description1';
 
@@ -406,14 +405,14 @@ describe('Activity application', function () {
       .end(done);
   });
 
-  it('shows a 404 if the id cannot be found in the store for the detail page', function (done) {
+  it('shows a 404 if the id cannot be found in the store for the detail page', done => {
     request(createApp())
       .get('/' + emptyActivity.url() + '4711')
       .expect(404, done);
   });
 
-  it('allows to create a new activity', function (done) {
-    sinon.stub(groupsService, 'getSubscribedGroupsForUser', function (email, callback) { callback(null, []); });
+  it('allows to create a new activity', done => {
+    sinon.stub(groupsService, 'getSubscribedGroupsForUser', (email, callback) => { callback(null, []); });
 
     // in the test setup anybody can create an activity because the middleware is not plugged in
     request(createApp({member: member1}))
@@ -422,8 +421,8 @@ describe('Activity application', function () {
       .expect(/activities/, done);
   });
 
-  it('allows the owner to edit an activity', function (done) {
-    sinon.stub(groupsService, 'getSubscribedGroupsForUser', function (email, callback) { callback(null, []); });
+  it('allows the owner to edit an activity', done => {
+    sinon.stub(groupsService, 'getSubscribedGroupsForUser', (email, callback) => { callback(null, []); });
 
     request(createApp({id: 'ownerId'}))
       .get('/edit/urlOfTheActivity')
@@ -431,43 +430,43 @@ describe('Activity application', function () {
       .expect(/activities/, done);
   });
 
-  it('disallows a member to edit another user\'s activity', function (done) {
+  it('disallows a member to edit another user\'s activity', done => {
     request(createApp({id: 'owner1'}))
       .get('/edit/urlOfTheActivity')
       .expect(302)
       .expect('location', /activities\/urlOfTheActivity/, done);
   });
 
-  it('disallows a guest to edit any user\'s activity', function (done) {
+  it('disallows a guest to edit any user\'s activity', done => {
     request(createApp())
       .get('/edit/urlOfTheActivity')
       .expect(302)
       .expect('location', /activities\/urlOfTheActivity/, done);
   });
 
-  it('offers the owner only his groups to choose from', function (done) {
-    var groupA = new Group({id: 'groupA', longName: 'groupA', type: 'Themengruppe'});
-    var groupB = new Group({id: 'groupB', longName: 'groupB', type: 'Themengruppe'});
-    var groupC = new Group({id: 'groupC', longName: 'groupC', type: 'Themengruppe'});
-    sinon.stub(groupsService, 'getAllAvailableGroups', function (callback) { callback(null, [groupA, groupB, groupC]); });
-    sinon.stub(groupsService, 'getSubscribedGroupsForUser', function (email, callback) { callback(null, [groupA, groupB]); });
+  it('offers the owner only his groups to choose from', done => {
+    const groupA = new Group({id: 'groupA', longName: 'groupA', type: 'Themengruppe'});
+    const groupB = new Group({id: 'groupB', longName: 'groupB', type: 'Themengruppe'});
+    const groupC = new Group({id: 'groupC', longName: 'groupC', type: 'Themengruppe'});
+    sinon.stub(groupsService, 'getAllAvailableGroups', callback => { callback(null, [groupA, groupB, groupC]); });
+    sinon.stub(groupsService, 'getSubscribedGroupsForUser', (email, callback) => { callback(null, [groupA, groupB]); });
 
     request(createApp({id: 'owner'}))
       .get('/new')
       .expect(200)
       .expect(/groupA/)
       .expect(/groupB/)
-      .end(function (err, res) {
+      .end((err, res) => {
         expect(res.text).to.not.contain('groupC');
         done(err);
       });
   });
 
-  it('offers a superuser all groups to choose from', function (done) {
-    var groupA = new Group({id: 'groupA', longName: 'groupA'});
-    var groupB = new Group({id: 'groupB', longName: 'groupB'});
-    var groupC = new Group({id: 'groupC', longName: 'groupC'});
-    sinon.stub(groupsService, 'getAllAvailableGroups', function (callback) { callback(null, [groupA, groupB, groupC]); });
+  it('offers a superuser all groups to choose from', done => {
+    const groupA = new Group({id: 'groupA', longName: 'groupA'});
+    const groupB = new Group({id: 'groupB', longName: 'groupB'});
+    const groupC = new Group({id: 'groupC', longName: 'groupC'});
+    sinon.stub(groupsService, 'getAllAvailableGroups', callback => { callback(null, [groupA, groupB, groupC]); });
 
     request(createApp({id: 'superuserID'}))
       .get('/new')
@@ -478,16 +477,16 @@ describe('Activity application', function () {
       .end(done);
   });
 
-  it('shows a superuser all groups in the order of appearance, no matter whether they are regional or thematic groups', function (done) {
-    var groupA = new Group({id: 'groupA', longName: 'groupA', type: 'Themengruppe'});
-    var groupB = new Group({id: 'groupB', longName: 'groupB', type: 'Themengruppe'});
-    var groupC = new Group({id: 'groupC', longName: 'groupC', type: 'Regionalgruppe'});
-    sinon.stub(groupsService, 'getAllAvailableGroups', function (callback) { callback(null, [groupA, groupB, groupC]); });
+  it('shows a superuser all groups in the order of appearance, no matter whether they are regional or thematic groups', done => {
+    const groupA = new Group({id: 'groupA', longName: 'groupA', type: 'Themengruppe'});
+    const groupB = new Group({id: 'groupB', longName: 'groupB', type: 'Themengruppe'});
+    const groupC = new Group({id: 'groupC', longName: 'groupC', type: 'Regionalgruppe'});
+    sinon.stub(groupsService, 'getAllAvailableGroups', callback => { callback(null, [groupA, groupB, groupC]); });
 
     request(createApp({id: 'superuserID'}))
       .get('/new')
       .expect(200)
-      .end(function (err, res) {
+      .end((err, res) => {
         expect(res.text).to.contain('groupA');
         expect(res.text.indexOf('groupA')).to.be.below(res.text.indexOf('groupB'));
         expect(res.text.indexOf('groupB')).to.be.below(res.text.indexOf('groupC'));
@@ -495,16 +494,16 @@ describe('Activity application', function () {
       });
   });
 
-  it('shows regional groups first on activity creation for regular users', function (done) {
-    var groupA = new Group({id: 'groupA', longName: 'groupA', type: 'Themengruppe'});
-    var groupB = new Group({id: 'groupB', longName: 'groupB', type: 'Themengruppe'});
-    var groupC = new Group({id: 'groupC', longName: 'groupC', type: 'Regionalgruppe'});
-    sinon.stub(groupsService, 'getSubscribedGroupsForUser', function (email, callback) { callback(null, [groupA, groupB, groupC]); });
+  it('shows regional groups first on activity creation for regular users', done => {
+    const groupA = new Group({id: 'groupA', longName: 'groupA', type: 'Themengruppe'});
+    const groupB = new Group({id: 'groupB', longName: 'groupB', type: 'Themengruppe'});
+    const groupC = new Group({id: 'groupC', longName: 'groupC', type: 'Regionalgruppe'});
+    sinon.stub(groupsService, 'getSubscribedGroupsForUser', (email, callback) => { callback(null, [groupA, groupB, groupC]); });
 
     request(createApp({id: 'owner'}))
       .get('/new')
       .expect(200)
-      .end(function (err, res) {
+      .end((err, res) => {
         expect(res.text).to.contain('groupC');
         expect(res.text.indexOf('groupC')).to.be.below(res.text.indexOf('groupA'));
         expect(res.text.indexOf('groupA')).to.be.below(res.text.indexOf('groupB'));
@@ -512,16 +511,16 @@ describe('Activity application', function () {
       });
   });
 
-  it('shows regional groups first on activity editing for regular users', function (done) {
-    var groupA = new Group({id: 'groupA', longName: 'groupA', type: 'Themengruppe'});
-    var groupB = new Group({id: 'groupB', longName: 'groupB', type: 'Themengruppe'});
-    var groupC = new Group({id: 'groupC', longName: 'groupC', type: 'Regionalgruppe'});
-    sinon.stub(groupsService, 'getSubscribedGroupsForUser', function (email, callback) { callback(null, [groupA, groupB, groupC]); });
+  it('shows regional groups first on activity editing for regular users', done => {
+    const groupA = new Group({id: 'groupA', longName: 'groupA', type: 'Themengruppe'});
+    const groupB = new Group({id: 'groupB', longName: 'groupB', type: 'Themengruppe'});
+    const groupC = new Group({id: 'groupC', longName: 'groupC', type: 'Regionalgruppe'});
+    sinon.stub(groupsService, 'getSubscribedGroupsForUser', (email, callback) => { callback(null, [groupA, groupB, groupC]); });
 
     request(createApp({id: 'ownerId'}))
       .get('/edit/urlOfTheActivity')
       .expect(200)
-      .end(function (err, res) {
+      .end((err, res) => {
         expect(res.text).to.contain('groupC');
         expect(res.text.indexOf('groupC')).to.be.below(res.text.indexOf('groupA'));
         expect(res.text.indexOf('groupA')).to.be.below(res.text.indexOf('groupB'));
@@ -529,18 +528,18 @@ describe('Activity application', function () {
       });
   });
 
-  it('shows no group name if no groups are available', function (done) {
+  it('shows no group name if no groups are available', done => {
     emptyActivity.participants = [];
     request(createApp('guest'))
       .get('/urlOfTheActivity')
       .expect(200)
-      .end(function (err, res) {
+      .end((err, res) => {
         expect(res.text).to.not.contain('Veranstaltet von der Gruppe');
         done(err);
       });
   });
 
-  it('shows the name of the assigned group if the group exists', function (done) {
+  it('shows the name of the assigned group if the group exists', done => {
     emptyActivity.group = group;
     emptyActivity.participants = [];
     request(createApp('guest'))
@@ -549,7 +548,7 @@ describe('Activity application', function () {
       .expect(/Veranstaltet von der Gruppe&nbsp;<a href="\/groups\/groupname">Buxtehude<\/a>/, done);
   });
 
-  it('shows all activities that take place at the day of the global code retreat', function (done) {
+  it('shows all activities that take place at the day of the global code retreat', done => {
     emptyActivity.group = group;
     request(createApp())
       .get('/gdcr')
@@ -557,16 +556,16 @@ describe('Activity application', function () {
       .expect(/1 Coderetreats/, done);
   });
 
-  describe('url check', function () {
+  describe('url check', () => {
 
-    it('returns false for checkurl when the url already exists', function (done) {
+    it('returns false for checkurl when the url already exists', done => {
       request(createApp())
         .get('/checkurl?url=urlOfTheActivity&previousUrl=x')
         .expect(200)
         .expect(/false/, done);
     });
 
-    it('returns true for checkurl when the url does not exist', function (done) {
+    it('returns true for checkurl when the url does not exist', done => {
       request(createApp())
         .get('/checkurl?url=UnknownURL&previousUrl=x')
         .expect(200)
@@ -574,12 +573,12 @@ describe('Activity application', function () {
     });
   });
 
-  describe('- when editors are being utilized -', function () {
-    it('does not show the names of the editors for a guest visitor', function (done) {
+  describe('- when editors are being utilized -', () => {
+    it('does not show the names of the editors for a guest visitor', done => {
       request(createApp())
         .get('/urlForEditors')
         .expect(200)
-        .end(function (err, res) {
+        .end((err, res) => {
           expect(res.text).to.not.contain('Editoren:');
           expect(res.text).to.not.contain('participant1');
           expect(res.text).to.not.contain('participant3');
@@ -587,15 +586,15 @@ describe('Activity application', function () {
         });
     });
 
-    it('shows the names of the editors for a registered member', function (done) {
+    it('shows the names of the editors for a registered member', done => {
       request(createApp({member: member1}))
         .get('/urlForEditors')
         .expect(200)
         .expect(/Editoren:&nbsp;<a href="\/members\/participant1">participant1<\/a>&nbsp;<a href="\/members\/participant3">participant3<\/a>\s*<\/p>/, done);
     });
 
-    it('allows editing by the owner, displays the current editors and the possible editors (all participants but not the owner)', function (done) {
-      sinon.stub(groupsService, 'getSubscribedGroupsForUser', function (user, callback) { callback(null, []); });
+    it('allows editing by the owner, displays the current editors and the possible editors (all participants but not the owner)', done => {
+      sinon.stub(groupsService, 'getSubscribedGroupsForUser', (user, callback) => { callback(null, []); });
 
       request(createApp({member: member4}))
         .get('/edit/urlForEditors')
@@ -606,8 +605,8 @@ describe('Activity application', function () {
         .end(done);
     });
 
-    it('allows editing by an editor, displays the current editors and the possible editors (all participants but not the owner)', function (done) {
-      sinon.stub(groupsService, 'getSubscribedGroupsForUser', function (user, callback) { callback(null, []); });
+    it('allows editing by an editor, displays the current editors and the possible editors (all participants but not the owner)', done => {
+      sinon.stub(groupsService, 'getSubscribedGroupsForUser', (user, callback) => { callback(null, []); });
 
       request(createApp({member: member1}))
         .get('/edit/urlForEditors')
@@ -618,8 +617,8 @@ describe('Activity application', function () {
         .end(done);
     });
 
-    it('always shows the already assigned group for selection even if it is not returned for the current user', function (done) {
-      sinon.stub(groupsService, 'getSubscribedGroupsForUser', function (user, callback) { callback(null, []); });
+    it('always shows the already assigned group for selection even if it is not returned for the current user', done => {
+      sinon.stub(groupsService, 'getSubscribedGroupsForUser', (user, callback) => { callback(null, []); });
 
       request(createApp({member: member1}))
         .get('/edit/urlForEditors')

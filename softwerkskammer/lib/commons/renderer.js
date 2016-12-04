@@ -2,7 +2,7 @@ const marked = require('marked');
 const Crypto = require('crypto');
 const Nsh = require('node-syntaxhighlighter');
 const iconv = require('iconv-lite');
-const _ = require('lodash');
+const R = require('ramda');
 
 function normalize(str) {
   if (typeof str !== 'string' || str.trim() === '') {
@@ -49,8 +49,8 @@ function evalTags(text, subdir) {
       result = result.replace(tag[0], id);
     }
   }
-  _.forIn(tagmap, function (value, key) {
-    const parts = value.split('|');
+  R.keys(tagmap).forEach(key => {
+    const parts = tagmap[key].split('|');
     const name = parts[0];
     const pageName = parts[1] || name;
 
@@ -64,7 +64,7 @@ function evalTags(text, subdir) {
 function enhanceTableTag(rendered) {
   return rendered.replace(/<table>/g, '<table class="table table-condensed table-hover table-striped">').replace(/<img src=/g, '<img class="img-responsive" src=');
 }
-const Renderer = {
+module.exports = {
   render: function render(content, subdir) {
     if (content === undefined || content === null) { return ''; }
     const rendered = marked(evalTags(content, subdir));
@@ -92,5 +92,3 @@ const Renderer = {
     };
   }
 };
-
-module.exports = Renderer;

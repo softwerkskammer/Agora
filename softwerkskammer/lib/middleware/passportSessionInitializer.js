@@ -1,7 +1,7 @@
 'use strict';
-module.exports = function (req, res, next) {
+module.exports = function passportSessionInitializer(req, res, next) {
   /* eslint no-underscore-dangle: 0 */
-  var passport = req._passport.instance;
+  const passport = req._passport.instance;
 
   if (req.session && req.session[passport._key]) {
     // load data from existing session

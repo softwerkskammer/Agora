@@ -1,43 +1,41 @@
 'use strict';
 
-var conf = require('simple-configure');
+const conf = require('simple-configure');
 
 
-function PaymentInfo(state) {
-  this.state = state;
-  return this;
+class PaymentInfo {
+  constructor(state) {
+    this.state = state;
+  }
+
+  bic() {
+    return conf.get('paymentBic');
+  }
+
+  iban() {
+    return conf.get('paymentIban');
+  }
+
+  paymentReceiver() {
+    return conf.get('paymentReceiver');
+  }
+
+  paymentKey() {
+    return conf.get('publicPaymentKey');
+  }
+
+  moneyTransferred() {
+    return this.state.moneyTransferred;
+  }
+
+  creditCardPaid() {
+    return this.state.creditCardPaid;
+  }
+
+  paymentDone() {
+    return !!(this.creditCardPaid() || this.moneyTransferred());
+  }
 }
-
-PaymentInfo.prototype.bic = function () {
-  return conf.get('paymentBic');
-};
-
-PaymentInfo.prototype.iban = function () {
-  return conf.get('paymentIban');
-};
-
-PaymentInfo.prototype.paymentReceiver = function () {
-  return conf.get('paymentReceiver');
-};
-
-
-PaymentInfo.prototype.paymentKey = function () {
-  return conf.get('publicPaymentKey');
-};
-
-
-PaymentInfo.prototype.moneyTransferred = function () {
-  return this.state.moneyTransferred;
-};
-
-PaymentInfo.prototype.creditCardPaid = function () {
-  return this.state.creditCardPaid;
-};
-
-PaymentInfo.prototype.paymentDone = function () {
-  return !!(this.creditCardPaid() || this.moneyTransferred());
-};
-
 
 module.exports = PaymentInfo;
 

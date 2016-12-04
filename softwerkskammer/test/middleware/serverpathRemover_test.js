@@ -1,39 +1,39 @@
 'use strict';
 
-var expect = require('must-dist');
+const expect = require('must-dist');
 
-var beans = require('../../testutil/configureForTest').get('beans');
-var serverpathRemover = beans.get('serverpathRemover');
+const beans = require('../../testutil/configureForTest').get('beans');
+const serverpathRemover = beans.get('serverpathRemover');
 
-describe('serverpathRemover removes any paths', function () {
+describe('serverpathRemover removes any paths', () => {
 
-  var removeServerpaths;
+  let removeServerpaths;
 
-  before(function () {
-    var res = {locals: {}};
-    var next = function () { return undefined; };
+  before(() => {
+    const res = {locals: {}};
+    const next = () => undefined;
     serverpathRemover(null, res, next);
     removeServerpaths = res.locals.removeServerpaths;
   });
 
-  it('that comes before node_modules', function () {
+  it('that comes before node_modules', () => {
     expect(removeServerpaths('error message /usr/local/something/node_modules/some_other/lib/')).to.equal('error message node_modules/some_other/lib/');
   });
 
-  it('that comes before lib', function () {
+  it('that comes before lib', () => {
     expect(removeServerpaths('error 500 /usr/home/username/path_to_installation/agora/softwerkskammer/lib/paaath/node_modules/')).to.equal('error 500 softwerkskammer/lib/paaath/node_modules/');
   });
 
-  it('that comes before lib or node_modules', function () {
+  it('that comes before lib or node_modules', () => {
     expect(removeServerpaths('error 500 /dir1/dir2/dir3/softwerkskammer/lib/node_modules/etc and also /dir1/dir2/dir3/node_modules/lib/etc')).to.equal('error 500 softwerkskammer/lib/node_modules/etc and also node_modules/lib/etc');
   });
 
-  it('that occur in the string, even if not followed by lib or node_modules', function () {
+  it('that occur in the string, even if not followed by lib or node_modules', () => {
     expect(removeServerpaths('error 500 /dir1/dir2/dir3/softwerkskammer/lib/node_modules/etc and also /dir1/dir2/dir3/some_file.js')).to.equal('error 500 softwerkskammer/lib/node_modules/etc and also some_file.js');
   });
 
-  it('copes with long strings', function () {
-    var original = 'Error: Empfänger wurde nicht gefunden.\n' +
+  it('copes with long strings', () => {
+    const original = 'Error: Empfänger wurde nicht gefunden.\n' +
       'at /Users/user/Developer/GitRepositories/Agora/lib/mailsender/mailsenderService.js:76:37\n' +
       'at toMember (/Users/user/Developer/GitRepositories/Agora/lib/members/memberstore.js:12:3)\n' +
       'at bound (/Users/user/Developer/GitRepositories/Agora/node_modules/lodash/dist/lodash.js:957:21)\n' +
@@ -45,7 +45,7 @@ describe('serverpathRemover removes any paths', function () {
       'at /Users/user/Developer/GitRepositories/Agora/node_modules/mongodb/lib/mongodb/connection/server.js:485:18\n' +
       'at MongoReply.parseBody (/Users/user/Developer/GitRepositories/Agora/node_modules/mongodb/lib/mongodb/responses/mongo_reply.js:68:5)';
 
-    var shortened = 'Error: Empfänger wurde nicht gefunden.\n' +
+    const shortened = 'Error: Empfänger wurde nicht gefunden.\n' +
       'at lib/mailsender/mailsenderService.js:76:37\n' +
       'at toMember (lib/members/memberstore.js:12:3)\n' +
       'at bound (node_modules/lodash/dist/lodash.js:957:21)\n' +

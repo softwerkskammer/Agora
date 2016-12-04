@@ -1,32 +1,32 @@
 'use strict';
 
-var request = require('supertest');
+const request = require('supertest');
 
-var conf = require('../../testutil/configureForTest');
-var beans = conf.get('beans');
-var reservedURLs = conf.get('reservedActivityURLs');
+const conf = require('../../testutil/configureForTest');
+const beans = conf.get('beans');
+const reservedURLs = conf.get('reservedActivityURLs');
 
-var activitiesService = beans.get('activitiesService');
+const activitiesService = beans.get('activitiesService');
 
-var chado = require('chado');
-var cb = chado.callback;
-var assume = chado.assume;
+const chado = require('chado');
+const cb = chado.callback;
+const assume = chado.assume;
 
-var createApp = require('../../testutil/testHelper')('activitiesApp').createApp;
+const createApp = require('../../testutil/testHelper')('activitiesApp').createApp;
 
-describe('Activity application - on submit -', function () {
+describe('Activity application - on submit -', () => {
 
-  beforeEach(function() {
+  beforeEach(() => {
     // will enhance the activitiesService with chado properties
     chado.createDouble('activitiesService', activitiesService);
   });
 
-  afterEach(function () {
+  afterEach(() => {
     // will undo the enhancements of the activitiesService with chado properties
     chado.reset();
   });
 
-  it('rejects an activity with invalid and different url', function (done) {
+  it('rejects an activity with invalid and different url', done => {
     assume(activitiesService)
       .canHandle('isValidUrl')
       .withArgs(reservedURLs, 'edit', cb)
@@ -41,7 +41,7 @@ describe('Activity application - on submit -', function () {
       .expect(/Diese URL ist leider nicht verfügbar\./, done);
   });
 
-  it('rejects an activity with a url containing "/"', function (done) {
+  it('rejects an activity with a url containing "/"', done => {
     assume(activitiesService)
       .canHandle('isValidUrl')
       .withArgs(reservedURLs, 'legal/egal', cb)
@@ -56,7 +56,7 @@ describe('Activity application - on submit -', function () {
       .expect(/Diese URL ist leider nicht verfügbar\./, done);
   });
 
-  it('rejects an activity with a url containing "socrates-"', function (done) {
+  it('rejects an activity with a url containing "socrates-"', done => {
     request(createApp())
       .post('/submit')
       .send('url=socrates-2016')
@@ -66,8 +66,8 @@ describe('Activity application - on submit -', function () {
       .expect(/Diese URL ist leider nicht verfügbar\./, done);
   });
 
-   it('rejects an activity with a url containing "SoCraTes-"', function (done) {
-     request(createApp())
+  it('rejects an activity with a url containing "SoCraTes-"', done => {
+    request(createApp())
       .post('/submit')
       .send('url=SoCraTes-')
       .send('previousUrl=aha')
@@ -76,7 +76,7 @@ describe('Activity application - on submit -', function () {
       .expect(/Diese URL ist leider nicht verfügbar\./, done);
   });
 
-  it('accepts an activity with valid and different url', function (done) {
+  it('accepts an activity with valid and different url', done => {
     assume(activitiesService)
       .canHandle('isValidUrl')
       .withArgs(reservedURLs, 'uhu', cb)
@@ -89,7 +89,7 @@ describe('Activity application - on submit -', function () {
       .expect(200, done);
   });
 
-  it('rejects an activity with empty title', function (done) {
+  it('rejects an activity with empty title', done => {
     request(createApp())
       .post('/submit')
       .send('url=uhu&previousUrl=uhu&location=X&startDate=02.07.2000&startTime=19:00&endDate=02.07.2000&endTime=21:00&resources[names]=x')
@@ -99,7 +99,7 @@ describe('Activity application - on submit -', function () {
       .expect(/Titel ist ein Pflichtfeld\./, done);
   });
 
-  it('rejects an activity with different but valid url and with empty title', function (done) {
+  it('rejects an activity with different but valid url and with empty title', done => {
     assume(activitiesService)
       .canHandle('isValidUrl')
       .withArgs(reservedURLs, 'uhu', cb)
@@ -114,7 +114,7 @@ describe('Activity application - on submit -', function () {
       .expect(/Titel ist ein Pflichtfeld\./, done);
   });
 
-  it('rejects an activity whose resource limits are non-integral', function (done) {
+  it('rejects an activity whose resource limits are non-integral', done => {
     request(createApp())
       .post('/submit')
       .send('url=uhu&previousUrl=uhu&location=X&title=bla&startDate=02.07.2000&startTime=19:00&endDate=02.07.2000&endTime=21:00&resources[names]=test')

@@ -1,13 +1,13 @@
 'use strict';
 
-var request = require('supertest');
+const request = require('supertest');
 require('../../testutil/configureForTest');
 
-var app = require('../../app').create();
+const app = require('../../app').create();
 
-describe('Activity results application security for normal visitors does not allow to access for', function () {
+describe('Activity results application security for normal visitors does not allow to access for', () => {
 
-  it('/{name}', function (done) {
+  it('/{name}', done => {
     request(app).get('/activityresults/socrates').expect(302).expect('location', /login/, done);
   });
 

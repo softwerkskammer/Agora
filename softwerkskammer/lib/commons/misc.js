@@ -1,13 +1,13 @@
-const _ = require('lodash');
 const R = require('ramda');
 const express = require('express');
 const path = require('path');
 const conf = require('simple-configure');
 const mimetypes = require('mime-types');
 
-const imageExtensions = _(mimetypes.extensions)
-  .filter((value, key) => key.match(/^image/))
-  .flatten().value();
+const imageExtensions = R.flatten(
+  R.keys(mimetypes.extensions).filter(type => type.match(/^image/))
+    .map(type => mimetypes.extensions[type])
+);
 
 function regexEscape(string) {
   return string.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
@@ -15,6 +15,10 @@ function regexEscape(string) {
 
 function asWholeWordEscaped(string) {
   return '^' + regexEscape(string) + '$';
+}
+
+function compact(array) {
+  return R.filter(R.identity, array || []);
 }
 
 module.exports = {
@@ -26,7 +30,7 @@ module.exports = {
 
   toObjectList: function toObjectList(Constructor, callback, err, jsobjects) {
     if (err) { return callback(err); }
-    callback(null, _.map(jsobjects, function (each) { return new Constructor(each); }));
+    callback(null, jsobjects.map(each => new Constructor(each)));
   },
 
   toArray: function toArray(elem) {
@@ -41,19 +45,19 @@ module.exports = {
   },
 
   arrayToLowerCaseRegExp: function arrayToLowerCaseRegExp(stringsArray) {
-    return new RegExp(_(stringsArray).compact().map(asWholeWordEscaped).join('|'), 'i');
+    return new RegExp(compact(stringsArray).map(asWholeWordEscaped).join('|'), 'i');
   },
 
   arraysAreEqual: function arraysAreEqual(array1, array2) {
-    return array1.length === array2.length && array1.every((v, i)=> v === array2[i]);
+    return array1.length === array2.length && array1.every((v, i) => v === array2[i]);
   },
 
   differenceCaseInsensitive: function differenceCaseInsensitive(strings, stringsToReduce) {
     function prepare(strs) {
-      return _(strs).compact().invokeMap('toLowerCase').value();
+      return compact(strs).map(str => str.toLowerCase());
     }
 
-    return _.difference(prepare(strings), prepare(stringsToReduce));
+    return R.difference(prepare(strings), prepare(stringsToReduce));
   },
 
   toFullQualifiedUrl: function toFullQualifiedUrl(prefix, localUrl) {
@@ -96,8 +100,10 @@ module.exports = {
 
   regexEscape: regexEscape,
 
-  compact: function compact(array) {
-    return R.filter(R.identity, array);
+  compact: compact,
+
+  startsWith: function startsWith(string, start) {
+    return string.indexOf(start) === 0;
   }
 };
 

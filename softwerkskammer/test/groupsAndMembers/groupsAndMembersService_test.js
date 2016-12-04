@@ -1,54 +1,54 @@
 'use strict';
 
-var sinon = require('sinon').sandbox.create();
-var beans = require('../../testutil/configureForTest').get('beans');
+const sinon = require('sinon').sandbox.create();
+const beans = require('../../testutil/configureForTest').get('beans');
 
-var expect = require('must-dist');
+const expect = require('must-dist');
 
-var Member = beans.get('member');
+const Member = beans.get('member');
 
-var dummymember = new Member().initFromSessionUser({authenticationId: 'hada', profile: {emails: [{value: 'email'}]}});
-var dummymember2 = new Member().initFromSessionUser({authenticationId: 'hada2', profile: {emails: [{value: 'email'}]}});
+const dummymember = new Member().initFromSessionUser({authenticationId: 'hada', profile: {emails: [{value: 'email'}]}});
+const dummymember2 = new Member().initFromSessionUser({authenticationId: 'hada2', profile: {emails: [{value: 'email'}]}});
 
-var Group = beans.get('group');
+const Group = beans.get('group');
 
-var GroupA = new Group({id: 'GroupA', longName: 'Gruppe A', description: 'Dies ist Gruppe A.', type: 'Themengruppe'});
-var GroupB = new Group({id: 'GroupB', longName: 'Gruppe B', description: 'Dies ist Gruppe B.', type: 'Regionalgruppe'});
+const GroupA = new Group({id: 'GroupA', longName: 'Gruppe A', description: 'Dies ist Gruppe A.', type: 'Themengruppe'});
+const GroupB = new Group({id: 'GroupB', longName: 'Gruppe B', description: 'Dies ist Gruppe B.', type: 'Regionalgruppe'});
 
-var memberstore = beans.get('memberstore');
-var membersService = beans.get('membersService');
-var groupsService = beans.get('groupsService');
-var groupstore = beans.get('groupstore');
+const memberstore = beans.get('memberstore');
+const membersService = beans.get('membersService');
+const groupsService = beans.get('groupsService');
+const groupstore = beans.get('groupstore');
 
-var groupsAndMembersService = beans.get('groupsAndMembersService');
+const groupsAndMembersService = beans.get('groupsAndMembersService');
 
-describe('Groups and Members Service (getMemberWithHisGroups or getMemberWithHisGroupsByMemberId)', function () {
+describe('Groups and Members Service (getMemberWithHisGroups or getMemberWithHisGroupsByMemberId)', () => {
 
-  afterEach(function () {
+  afterEach(() => {
     sinon.restore();
   });
 
-  describe('- getMemberWithHisGroups -', function () {
-    it('returns no member when there is no member for the given nickname', function (done) {
-      sinon.stub(memberstore, 'getMember', function (nickname, callback) {
+  describe('- getMemberWithHisGroups -', () => {
+    it('returns no member when there is no member for the given nickname', done => {
+      sinon.stub(memberstore, 'getMember', (nickname, callback) => {
         callback(null, null);
       });
 
-      groupsAndMembersService.getMemberWithHisGroups('nickname', function (err, member) {
+      groupsAndMembersService.getMemberWithHisGroups('nickname', (err, member) => {
         expect(member).to.not.exist();
         done(err);
       });
     });
 
-    it('returns the member and his groups when there is a member for the given nickname', function (done) {
-      sinon.stub(memberstore, 'getMember', function (nickname, callback) {
+    it('returns the member and his groups when there is a member for the given nickname', done => {
+      sinon.stub(memberstore, 'getMember', (nickname, callback) => {
         callback(null, dummymember);
       });
-      sinon.stub(groupsService, 'getSubscribedGroupsForUser', function (userMail, globalCallback) {
+      sinon.stub(groupsService, 'getSubscribedGroupsForUser', (userMail, globalCallback) => {
         globalCallback(null, [GroupA, GroupB]);
       });
 
-      groupsAndMembersService.getMemberWithHisGroups('nickname', function (err, member) {
+      groupsAndMembersService.getMemberWithHisGroups('nickname', (err, member) => {
         expect(member).to.equal(dummymember);
         expect(member.subscribedGroups).to.not.be(null);
         expect(member.subscribedGroups.length).to.equal(2);
@@ -59,27 +59,27 @@ describe('Groups and Members Service (getMemberWithHisGroups or getMemberWithHis
     });
   });
 
-  describe('- getMemberWithHisGroupsByMemberId -', function () {
-    it('returns no member when there is no member for the given memberID', function (done) {
-      sinon.stub(memberstore, 'getMemberForId', function (memberID, callback) {
+  describe('- getMemberWithHisGroupsByMemberId -', () => {
+    it('returns no member when there is no member for the given memberID', done => {
+      sinon.stub(memberstore, 'getMemberForId', (memberID, callback) => {
         callback(null, null);
       });
 
-      groupsAndMembersService.getMemberWithHisGroupsByMemberId('id', function (err, member) {
+      groupsAndMembersService.getMemberWithHisGroupsByMemberId('id', (err, member) => {
         expect(member).to.not.exist();
         done(err);
       });
     });
 
-    it('returns the member and his groups when there is a member for the given memberID', function (done) {
-      sinon.stub(memberstore, 'getMemberForId', function (memberID, callback) {
+    it('returns the member and his groups when there is a member for the given memberID', done => {
+      sinon.stub(memberstore, 'getMemberForId', (memberID, callback) => {
         callback(null, dummymember);
       });
-      sinon.stub(groupsService, 'getSubscribedGroupsForUser', function (userMail, globalCallback) {
+      sinon.stub(groupsService, 'getSubscribedGroupsForUser', (userMail, globalCallback) => {
         globalCallback(null, [GroupA, GroupB]);
       });
 
-      groupsAndMembersService.getMemberWithHisGroupsByMemberId('id', function (err, member) {
+      groupsAndMembersService.getMemberWithHisGroupsByMemberId('id', (err, member) => {
         expect(member).to.equal(dummymember);
         expect(member.subscribedGroups).to.not.be(null);
         expect(member.subscribedGroups.length).to.equal(2);
@@ -91,52 +91,52 @@ describe('Groups and Members Service (getMemberWithHisGroups or getMemberWithHis
   });
 });
 
-describe('Groups and Members Service (getGroupAndMembersForList)', function () {
+describe('Groups and Members Service (getGroupAndMembersForList)', () => {
 
-  beforeEach(function () {
-    sinon.stub(memberstore, 'allMembers', function (callback) { callback(null, null); });
+  beforeEach(() => {
+    sinon.stub(memberstore, 'allMembers', callback => { callback(null, null); });
   });
 
-  afterEach(function () {
+  afterEach(() => {
     sinon.restore();
   });
 
-  it('returns no group when there is no group and no mailing-list', function (done) {
-    sinon.stub(memberstore, 'getMembersForEMails', function (member, callback) { callback(); });
-    sinon.stub(groupsService, 'getMailinglistUsersOfList', function (ignoredErr, callback) { callback(null, []); });
-    sinon.stub(groupstore, 'getGroup', function (groupname, callback) { callback(null, null); });
+  it('returns no group when there is no group and no mailing-list', done => {
+    sinon.stub(memberstore, 'getMembersForEMails', (member, callback) => { callback(); });
+    sinon.stub(groupsService, 'getMailinglistUsersOfList', (ignoredErr, callback) => { callback(null, []); });
+    sinon.stub(groupstore, 'getGroup', (groupname, callback) => { callback(null, null); });
 
-    groupsAndMembersService.getGroupAndMembersForList('unbekannteListe', function (err, group) {
+    groupsAndMembersService.getGroupAndMembersForList('unbekannteListe', (err, group) => {
       expect(group).to.not.exist();
       done(err);
     });
   });
 
-  it('returns no group when there is no group but a mailing-list', function (done) {
-    sinon.stub(groupsService, 'getMailinglistUsersOfList', function (ignoredErr, callback) {
+  it('returns no group when there is no group but a mailing-list', done => {
+    sinon.stub(groupsService, 'getMailinglistUsersOfList', (ignoredErr, callback) => {
       callback(null, ['user1@mail1.com', 'user2@mail2.com']);
     });
-    sinon.stub(memberstore, 'getMembersForEMails', function (member, callback) {
+    sinon.stub(memberstore, 'getMembersForEMails', (member, callback) => {
       callback(null, [dummymember, dummymember2]);
     });
-    sinon.stub(groupstore, 'getGroup', function (groupname, callback) { callback(null, null); });
+    sinon.stub(groupstore, 'getGroup', (groupname, callback) => { callback(null, null); });
 
-    groupsAndMembersService.getGroupAndMembersForList('mailingListWithoutGroup', function (err, group) {
+    groupsAndMembersService.getGroupAndMembersForList('mailingListWithoutGroup', (err, group) => {
       expect(group).to.not.exist();
       done(err);
     });
   });
 
-  it('returns the group with the given name and an empty list of subscribed users when there is no mailing-list or when there are no subscribers', function (done) {
-    sinon.stub(groupsService, 'getMailinglistUsersOfList', function (ignoredErr, callback) { callback(null, []); });
-    sinon.stub(groupstore, 'getGroup', function (groupname, callback) {
+  it('returns the group with the given name and an empty list of subscribed users when there is no mailing-list or when there are no subscribers', done => {
+    sinon.stub(groupsService, 'getMailinglistUsersOfList', (ignoredErr, callback) => { callback(null, []); });
+    sinon.stub(groupstore, 'getGroup', (groupname, callback) => {
       callback(null, GroupA);
     });
-    sinon.stub(memberstore, 'getMembersForEMails', function (member, callback) {
+    sinon.stub(memberstore, 'getMembersForEMails', (member, callback) => {
       callback(null, []);
     });
 
-    groupsAndMembersService.getGroupAndMembersForList('GroupA', function (err, group) {
+    groupsAndMembersService.getGroupAndMembersForList('GroupA', (err, group) => {
       expect(group).to.equal(GroupA);
       expect(group.members).to.not.be(null);
       expect(group.members.length).to.equal(0);
@@ -144,19 +144,19 @@ describe('Groups and Members Service (getGroupAndMembersForList)', function () {
     });
   });
 
-  it('returns the group with the given name and a list of one subscribed user when there is one subscriber in mailinglist', function (done) {
-    sinon.stub(groupsService, 'getMailinglistUsersOfList', function (ignoredErr, callback) { callback(null, ['user@email.com']); });
-    sinon.stub(groupstore, 'getGroup', function (groupname, callback) {
+  it('returns the group with the given name and a list of one subscribed user when there is one subscriber in mailinglist', done => {
+    sinon.stub(groupsService, 'getMailinglistUsersOfList', (ignoredErr, callback) => { callback(null, ['user@email.com']); });
+    sinon.stub(groupstore, 'getGroup', (groupname, callback) => {
       callback(null, GroupA);
     });
-    sinon.stub(memberstore, 'getMembersForEMails', function (member, callback) {
+    sinon.stub(memberstore, 'getMembersForEMails', (member, callback) => {
       callback(null, [dummymember]);
     });
-    sinon.stub(membersService, 'putAvatarIntoMemberAndSave', function (member, callback) {
+    sinon.stub(membersService, 'putAvatarIntoMemberAndSave', (member, callback) => {
       callback();
     });
 
-    groupsAndMembersService.getGroupAndMembersForList('GroupA', function (err, group) {
+    groupsAndMembersService.getGroupAndMembersForList('GroupA', (err, group) => {
       expect(group).to.equal(GroupA);
       expect(group.members).to.not.be(null);
       expect(group.members.length).to.equal(1);
@@ -165,13 +165,13 @@ describe('Groups and Members Service (getGroupAndMembersForList)', function () {
     });
   });
 
-  it('fails gracefully if groupsService has an error', function (done) {
-    sinon.stub(groupsService, 'getMailinglistUsersOfList', function (ignoredErr, callback) { callback(new Error()); });
-    sinon.stub(groupstore, 'getGroup', function (groupname, callback) {
+  it('fails gracefully if groupsService has an error', done => {
+    sinon.stub(groupsService, 'getMailinglistUsersOfList', (ignoredErr, callback) => { callback(new Error()); });
+    sinon.stub(groupstore, 'getGroup', (groupname, callback) => {
       callback(null, GroupA);
     });
 
-    groupsAndMembersService.getGroupAndMembersForList('GroupA', function (err) {
+    groupsAndMembersService.getGroupAndMembersForList('GroupA', err => {
       expect(err).to.exist();
       done();
     });
@@ -179,36 +179,36 @@ describe('Groups and Members Service (getGroupAndMembersForList)', function () {
 
 });
 
-describe('Groups and Members Service (addMembercountToGroup)', function () {
-  afterEach(function () {
+describe('Groups and Members Service (addMembercountToGroup)', () => {
+  afterEach(() => {
     sinon.restore();
   });
 
-  it('returns no group when the group is null', function (done) {
-    groupsAndMembersService.addMembercountToGroup(null, function (err, group) {
+  it('returns no group when the group is null', done => {
+    groupsAndMembersService.addMembercountToGroup(null, (err, group) => {
       expect(group).to.not.exist();
       done(err);
     });
   });
 
-  it('returns no group when the group is undefined', function (done) {
-    groupsAndMembersService.addMembercountToGroup(undefined, function (err, group) {
+  it('returns no group when the group is undefined', done => {
+    groupsAndMembersService.addMembercountToGroup(undefined, (err, group) => {
       expect(group).to.not.exist();
       done(err);
     });
   });
 
-  it('adds zero to group if there are no subscribers', function (done) {
-    sinon.stub(groupsService, 'getMailinglistUsersOfList', function (ignoredErr, callback) { callback(null, []); });
-    groupsAndMembersService.addMembercountToGroup({}, function (err, group) {
+  it('adds zero to group if there are no subscribers', done => {
+    sinon.stub(groupsService, 'getMailinglistUsersOfList', (ignoredErr, callback) => { callback(null, []); });
+    groupsAndMembersService.addMembercountToGroup({}, (err, group) => {
       expect(group.membercount).to.equal(0);
       done(err);
     });
   });
 
-  it('adds the number of subscribers to the group', function (done) {
-    sinon.stub(groupsService, 'getMailinglistUsersOfList', function (ignoredErr, callback) { callback(null, ['1', '2', '4']); });
-    groupsAndMembersService.addMembercountToGroup({}, function (err, group) {
+  it('adds the number of subscribers to the group', done => {
+    sinon.stub(groupsService, 'getMailinglistUsersOfList', (ignoredErr, callback) => { callback(null, ['1', '2', '4']); });
+    groupsAndMembersService.addMembercountToGroup({}, (err, group) => {
       expect(group.membercount).to.equal(3);
       done(err);
     });
@@ -216,43 +216,43 @@ describe('Groups and Members Service (addMembercountToGroup)', function () {
 
 });
 
-describe('Groups and Members Service (addMembersToGroup)', function () {
+describe('Groups and Members Service (addMembersToGroup)', () => {
 
-  beforeEach(function () {
-    sinon.stub(memberstore, 'allMembers', function (callback) { callback(null, null); });
+  beforeEach(() => {
+    sinon.stub(memberstore, 'allMembers', callback => { callback(null, null); });
   });
 
-  afterEach(function () {
+  afterEach(() => {
     sinon.restore();
   });
 
-  it('returns no group when the group is null', function (done) {
-    sinon.stub(groupsService, 'getMailinglistUsersOfList', function () { return undefined; });
-    sinon.stub(memberstore, 'getMembersForEMails', function () { return undefined; });
+  it('returns no group when the group is null', done => {
+    sinon.stub(groupsService, 'getMailinglistUsersOfList', () => undefined);
+    sinon.stub(memberstore, 'getMembersForEMails', () => undefined);
 
-    groupsAndMembersService.addMembersToGroup(null, function (err, group) {
+    groupsAndMembersService.addMembersToGroup(null, (err, group) => {
       expect(group).to.not.exist();
       done(err);
     });
   });
 
-  it('returns no group when the group is undefined', function (done) {
-    sinon.stub(groupsService, 'getMailinglistUsersOfList', function () { return undefined; });
-    sinon.stub(memberstore, 'getMembersForEMails', function () { return undefined; });
+  it('returns no group when the group is undefined', done => {
+    sinon.stub(groupsService, 'getMailinglistUsersOfList', () => undefined);
+    sinon.stub(memberstore, 'getMembersForEMails', () => undefined);
 
-    groupsAndMembersService.addMembersToGroup(undefined, function (err, group) {
+    groupsAndMembersService.addMembersToGroup(undefined, (err, group) => {
       expect(group).to.not.exist();
       done(err);
     });
   });
 
-  it('returns the group with an empty list of subscribed users when there are no subscribers', function (done) {
-    sinon.stub(groupsService, 'getMailinglistUsersOfList', function (ignoredErr, callback) { callback(null, []); });
-    sinon.stub(memberstore, 'getMembersForEMails', function (member, callback) {
+  it('returns the group with an empty list of subscribed users when there are no subscribers', done => {
+    sinon.stub(groupsService, 'getMailinglistUsersOfList', (ignoredErr, callback) => { callback(null, []); });
+    sinon.stub(memberstore, 'getMembersForEMails', (member, callback) => {
       callback(null, []);
     });
 
-    groupsAndMembersService.addMembersToGroup(GroupA, function (err, group) {
+    groupsAndMembersService.addMembersToGroup(GroupA, (err, group) => {
       expect(group).to.equal(GroupA);
       expect(group.members).to.not.be(null);
       expect(group.members.length).to.equal(0);
@@ -262,16 +262,16 @@ describe('Groups and Members Service (addMembersToGroup)', function () {
     });
   });
 
-  it('returns the group with a list of one subscribed user when there is one subscriber in mailinglist', function (done) {
-    sinon.stub(groupsService, 'getMailinglistUsersOfList', function (ignoredErr, callback) { callback(null, ['user@email.com']); });
-    sinon.stub(memberstore, 'getMembersForEMails', function (member, callback) {
+  it('returns the group with a list of one subscribed user when there is one subscriber in mailinglist', done => {
+    sinon.stub(groupsService, 'getMailinglistUsersOfList', (ignoredErr, callback) => { callback(null, ['user@email.com']); });
+    sinon.stub(memberstore, 'getMembersForEMails', (member, callback) => {
       callback(null, [dummymember]);
     });
-    sinon.stub(membersService, 'putAvatarIntoMemberAndSave', function (member, callback) {
+    sinon.stub(membersService, 'putAvatarIntoMemberAndSave', (member, callback) => {
       callback();
     });
 
-    groupsAndMembersService.addMembersToGroup(GroupA, function (err, group) {
+    groupsAndMembersService.addMembersToGroup(GroupA, (err, group) => {
       expect(group).to.equal(GroupA);
       expect(group.members).to.not.be(null);
       expect(group.members.length).to.equal(1);
@@ -284,21 +284,21 @@ describe('Groups and Members Service (addMembersToGroup)', function () {
 
 });
 
-describe('Groups and Members Service (memberIsInMemberList)', function () {
+describe('Groups and Members Service (memberIsInMemberList)', () => {
 
-  it('returns false if the user id is undefined', function () {
+  it('returns false if the user id is undefined', () => {
     expect(groupsAndMembersService.memberIsInMemberList(undefined, [dummymember, dummymember2])).to.be(false);
   });
 
-  it('returns false if the member list is empty', function () {
+  it('returns false if the member list is empty', () => {
     expect(groupsAndMembersService.memberIsInMemberList('hada', [])).to.be(false);
   });
 
-  it('returns false if the user is not in the member list', function () {
+  it('returns false if the user is not in the member list', () => {
     expect(groupsAndMembersService.memberIsInMemberList('trallala', [dummymember])).to.be(false);
   });
 
-  it('returns true if the user is in the member list', function () {
+  it('returns true if the user is in the member list', () => {
     expect(groupsAndMembersService.memberIsInMemberList('hada', [dummymember, dummymember2])).to.be(true);
   });
 });

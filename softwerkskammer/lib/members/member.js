@@ -1,214 +1,218 @@
 'use strict';
-var conf = require('simple-configure');
-var beans = conf.get('beans');
-var fieldHelpers = beans.get('fieldHelpers');
-var avatarProvider = beans.get('avatarProvider');
-var moment = require('moment-timezone');
-var _ = require('lodash');
+const conf = require('simple-configure');
+const beans = conf.get('beans');
+const fieldHelpers = beans.get('fieldHelpers');
+const avatarProvider = beans.get('avatarProvider');
+const moment = require('moment-timezone');
+const R = require('ramda');
 
-function Member(object) {
-  this.state = object || {};
-}
-
-Member.prototype.fillFromUI = function (object) {
-  var self = this;
-  _.each(['nickname', 'firstname', 'lastname', 'email', 'location', 'profession', 'reference', 'customAvatar'], function (property) {
-    if (object.hasOwnProperty(property) && object[property]) { self.state[property] = object[property].trim(); }
-  });
-  _.each(['notifyOnWikiChanges', 'socratesOnly'], function (property) {
-    self.state[property] = !!object[property];
-  });
-  if (object.twitter) {
-    self.state.twitter = fieldHelpers.removePrefixFrom('@', object.twitter.trim());
-  }
-  if (object.site) {
-    self.state.site = fieldHelpers.addPrefixTo('http://', object.site.trim(), 'https://');
-  }
-  if (object.interests) {
-    self.state.interests = object.interests.toString();
+class Member {
+  constructor(object) {
+    this.state = object || {};
   }
 
-  return self;
-};
+  fillFromUI(object) {
+    ['nickname', 'firstname', 'lastname', 'email', 'location', 'profession', 'reference', 'customAvatar'].forEach(property => {
+      if (object.hasOwnProperty(property) && object[property]) { this.state[property] = object[property].trim(); }
+    });
+    ['notifyOnWikiChanges', 'socratesOnly'].forEach(property => {
+      this.state[property] = !!object[property];
+    });
+    if (object.twitter) {
+      this.state.twitter = fieldHelpers.removePrefixFrom('@', object.twitter.trim());
+    }
+    if (object.site) {
+      this.state.site = fieldHelpers.addPrefixTo('http://', object.site.trim(), 'https://');
+    }
+    if (object.interests) {
+      this.state.interests = object.interests.toString();
+    }
 
-Member.prototype.displayName = function () {
-  return this.firstname() + ' ' + this.lastname();
-};
-
-Member.prototype.initFromSessionUser = function (sessionUser, socratesOnly) {
-  /* eslint no-underscore-dangle: 0 */
-  // this is THE ONLY VALID WAY to create and initialize a new user in real life (not tests)
-  if (!sessionUser || this.id()) {
     return this;
   }
-  this.state.created = moment().format('DD.MM.YY');
-  this.state.id = sessionUser.authenticationId;
 
-  var profile = sessionUser.profile;
-  if (profile) {
-    this.state.email = fieldHelpers.valueOrFallback(profile.emails && profile.emails[0] && profile.emails[0].value, this.email());
-    var name = profile.name;
-    if (name) {
-      this.state.firstname = fieldHelpers.valueOrFallback(name.givenName, this.firstname());
-      this.state.lastname = fieldHelpers.valueOrFallback(name.familyName, this.lastname());
+  displayName() {
+    return this.firstname() + ' ' + this.lastname();
+  }
+
+  initFromSessionUser(sessionUser, socratesOnly) {
+    /* eslint no-underscore-dangle: 0 */
+    // this is THE ONLY VALID WAY to create and initialize a new user in real life (not tests)
+    if (!sessionUser || this.id()) {
+      return this;
     }
-    this.state.site = fieldHelpers.valueOrFallback(profile.profileUrl, this.site());
-    if (profile._json && fieldHelpers.isFilled(profile._json.blog)) {
-      this.state.site += (this.site() ? ', ' : '') + fieldHelpers.addPrefixTo('http://', profile._json.blog, 'https://');
+    this.state.created = moment().format('DD.MM.YY');
+    this.state.id = sessionUser.authenticationId;
+
+    const profile = sessionUser.profile;
+    if (profile) {
+      this.state.email = fieldHelpers.valueOrFallback(profile.emails && profile.emails[0] && profile.emails[0].value, this.email());
+      const name = profile.name;
+      if (name) {
+        this.state.firstname = fieldHelpers.valueOrFallback(name.givenName, this.firstname());
+        this.state.lastname = fieldHelpers.valueOrFallback(name.familyName, this.lastname());
+      }
+      this.state.site = fieldHelpers.valueOrFallback(profile.profileUrl, this.site());
+      if (profile._json && fieldHelpers.isFilled(profile._json.blog)) {
+        this.state.site += (this.site() ? ', ' : '') + fieldHelpers.addPrefixTo('http://', profile._json.blog, 'https://');
+      }
+    }
+    this.state.socratesOnly = !!socratesOnly;
+    return this;
+  }
+
+  avatarUrl(size) {
+    if (this.hasCustomAvatar()) {
+      return '/gallery/avatarFor/' + this.customAvatar();
+    }
+    return avatarProvider.avatarUrl(this.email(), size || 200);
+  }
+
+  hasImage() {
+    return (this.getAvatarData() && this.getAvatarData().hasNoImage) === false;
+  }
+
+  setAvatarData(data) {
+    this.state.avatardata = data;
+  }
+
+  getAvatarData() {
+    return this.state.avatardata;
+  }
+
+  inlineAvatar() {
+    return (this.getAvatarData() && this.getAvatarData().image) || '';
+  }
+
+  hasCustomAvatar() {
+    return !!this.customAvatar();
+  }
+
+  customAvatar() {
+    return this.state.customAvatar;
+  }
+
+  setCustomAvatar(data) {
+    this.state.customAvatar = data;
+  }
+
+  deleteCustomAvatar() {
+    delete this.state.customAvatar;
+    delete this.state.avatardata;
+  }
+
+  asGitAuthor() {
+    return this.nickname() + ' <' + this.nickname() + '@softwerkskammer.org>';
+  }
+
+  addAuthentication(authenticationId) {
+    if (!this.state.authentications) {
+      this.state.authentications = [];
+    }
+    if (authenticationId) {
+      this.state.authentications.push(authenticationId);
+      this.state.authentications = R.uniq(this.authentications());
     }
   }
-  this.state.socratesOnly = !!socratesOnly;
-  return this;
-};
 
-Member.prototype.avatarUrl = function (size) {
-  if (this.hasCustomAvatar()) {
-    return '/gallery/avatarFor/' + this.customAvatar();
+  id() {
+    return this.state.id;
   }
-  return avatarProvider.avatarUrl(this.email(), size || 200);
-};
 
-Member.prototype.hasImage = function () {
-  return (this.getAvatarData() && this.getAvatarData().hasNoImage) === false;
-};
-
-Member.prototype.setAvatarData = function (data) {
-  this.state.avatardata = data;
-};
-
-Member.prototype.getAvatarData = function () {
-  return this.state.avatardata;
-};
-
-Member.prototype.inlineAvatar = function () {
-  return (this.getAvatarData() && this.getAvatarData().image) || '';
-};
-
-Member.prototype.hasCustomAvatar = function () {
-  return !!this.customAvatar();
-};
-
-Member.prototype.customAvatar = function () {
-  return this.state.customAvatar;
-};
-
-Member.prototype.setCustomAvatar = function (data) {
-  this.state.customAvatar = data;
-};
-
-Member.prototype.deleteCustomAvatar = function () {
-  delete this.state.customAvatar;
-  delete this.state.avatardata;
-};
-
-Member.prototype.asGitAuthor = function () {
-  return this.nickname() + ' <' + this.nickname() + '@softwerkskammer.org>';
-};
-
-Member.prototype.addAuthentication = function (authenticationId) {
-  if (!this.state.authentications) {
-    this.state.authentications = [];
+  nickname() {
+    return this.state.nickname;
   }
-  if (authenticationId) {
-    this.state.authentications.push(authenticationId);
-    this.state.authentications = _.uniq(this.authentications());
+
+  firstname() {
+    return this.state.firstname;
   }
-};
 
-Member.prototype.id = function () {
-  return this.state.id;
-};
+  lastname() {
+    return this.state.lastname;
+  }
 
-Member.prototype.nickname = function () {
-  return this.state.nickname;
-};
+  email() {
+    return this.state.email;
+  }
 
-Member.prototype.firstname = function () {
-  return this.state.firstname;
-};
+  location() {
+    return this.state.location;
+  }
 
-Member.prototype.lastname = function () {
-  return this.state.lastname;
-};
+  profession() {
+    return this.state.profession;
+  }
 
-Member.prototype.email = function () {
-  return this.state.email;
-};
+  interests() {
+    return this.state.interests;
+  }
 
-Member.prototype.location = function () {
-  return this.state.location;
-};
+  interestsForSelect2() {
+    return (this.interests() || '').split(',').map(s => s.trim());
+  }
 
-Member.prototype.profession = function () {
-  return this.state.profession;
-};
+  reference() {
+    return this.state.reference;
+  }
 
-Member.prototype.interests = function () {
-  return this.state.interests;
-};
+  authentications() {
+    return this.state.authentications;
+  }
 
-Member.prototype.interestsForSelect2 = function () {
-  return _(this.interests()).words(/[^,]+/g).map(s => s.trim()).value();
-};
+  twitter() {
+    return this.state.twitter;
+  }
 
-Member.prototype.reference = function () {
-  return this.state.reference;
-};
+  site() {
+    return this.state.site;
+  }
 
-Member.prototype.authentications = function () {
-  return this.state.authentications;
-};
+  created() {
+    return this.state.created;
+  }
 
-Member.prototype.twitter = function () {
-  return this.state.twitter;
-};
+  notifyOnWikiChanges() {
+    return this.state.notifyOnWikiChanges;
+  }
 
-Member.prototype.site = function () {
-  return this.state.site;
-};
+  isContactperson() {
+    return this.subscribedGroups && R.flatten(this.subscribedGroups.map(group => group.organizers)).some(organizer => organizer === this.id());
+  }
 
-Member.prototype.created = function () {
-  return this.state.created;
-};
+  isInGroup(groupId) {
+    return this.subscribedGroups && this.subscribedGroups.some(group => group.id === groupId);
+  }
 
-Member.prototype.notifyOnWikiChanges = function () {
-  return this.state.notifyOnWikiChanges;
-};
+  isSuperuser() {
+    return Member.isSuperuser(this.id());
+  }
 
-Member.prototype.isContactperson = function () {
-  return this.subscribedGroups && _(this.subscribedGroups).map('organizers').flatten().uniq().value().indexOf(this.id()) > -1;
-};
+  socratesOnly() {
+    return this.state.socratesOnly;
+  }
 
-Member.prototype.isInGroup = function (groupId) {
-  return !!this.subscribedGroups && _.some(this.subscribedGroups, {id: groupId});
-};
+  fillSubscribedGroups(groupNamesWithEmails, groups) {
+    const result = [];
+    R.keys(groupNamesWithEmails).forEach(name => {
+      if (groupNamesWithEmails[name].includes(this.email().toLowerCase())) {
+        result.push(groups.find(group => group.id === name));
+      }
+    });
+    this.subscribedGroups = result;
+  }
 
-Member.prototype.isSuperuser = function () {
-  return Member.isSuperuser(this.id());
-};
+  static isSuperuser(id) {
+    const superusers = conf.get('superuser');
+    return superusers && superusers.indexOf(id) > -1;
+  }
 
-Member.prototype.socratesOnly = function () {
-  return this.state.socratesOnly;
-};
+  static wikiNotificationMembers(members) {
+    return members.filter(member => member.notifyOnWikiChanges()).map(member => member.email());
+  }
 
-Member.isSuperuser = function (id) {
-  var superusers = conf.get('superuser');
-  return superusers && superusers.indexOf(id) > -1;
-};
-
-Member.wikiNotificationMembers = function (members) {
-  return _(members).filter(function (member) { return member.notifyOnWikiChanges(); }).map(function (member) {return member.email(); }).value();
-};
-
-Member.superuserEmails = function (members) {
-  return _(members).filter(function (member) { return member.isSuperuser(); }).map(function (member) {return member.email(); }).value();
-};
-
-Member.prototype.fillSubscribedGroups = function (groupNamesWithEmails, groups) {
-  var self = this;
-  this.subscribedGroups = _.transform(groupNamesWithEmails, function (result, value, key) {
-    if (_.includes(value, self.email().toLowerCase())) { result.push(_.find(groups, {id: key})); }
-  }, []);
-};
+  static superuserEmails(members) {
+    return members.filter(member => member.isSuperuser()).map(member => member.email());
+  }
+}
 
 module.exports = Member;

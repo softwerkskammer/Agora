@@ -4,22 +4,18 @@
 
 require('../../configure'); // initializing parameters
 
-var _ = require('lodash');
-var async = require('async');
-var beans = require('simple-configure').get('beans');
-var store = beans.get('memberstore');
-var service = beans.get('membersService');
+const R = require('ramda');
+const async = require('async');
+const beans = require('simple-configure').get('beans');
+const store = beans.get('memberstore');
+const service = beans.get('membersService');
 
-function updateMembersAvatar(member, callback) {
-  service.updateImage(member, callback);
-}
-
-store.allMembers(function (err, members) {
+store.allMembers((err, members) => {
   if (err || !members) { console.log('avatar updater had problems loading members'); }
-  store.socratesOnlyMembers(function (err1, socMembers) {
+  store.socratesOnlyMembers((err1, socMembers) => {
     if (err1 || !members) { console.log('avatar updater had problems loading members'); }
     console.log('starting avatar update');
-    async.each(_.union(members, socMembers), updateMembersAvatar, function (err2) {
+    async.each(R.union(members, socMembers), service.updateImage, err2 => {
       if (err2) {
         console.log('avatar updater encountered an error: ' + err2.message);
       }

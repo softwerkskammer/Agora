@@ -1,10 +1,12 @@
 /* eslint no-underscore-dangle: 0 */
 
-const _ = require('lodash');
 const moment = require('moment-timezone');
 const numeral = require('numeral');
 numeral.language('de', require('numeral/languages/de'));
 numeral.language('en-gb', require('numeral/languages/en-gb'));
+
+const conf = require('simple-configure');
+const misc = conf.get('beans').get('misc');
 
 module.exports = {
   isFilled: function isFilled(someValue) {
@@ -22,7 +24,7 @@ module.exports = {
   },
 
   addPrefixTo: function addPrefixTo(prefix, string, additionalPrefixToCheck) {
-    if (string && !_.startsWith(string, prefix) && !_.startsWith(string, additionalPrefixToCheck)) {
+    if (string && !misc.startsWith(string, prefix) && !misc.startsWith(string, additionalPrefixToCheck)) {
       return prefix + string;
     }
     return string;

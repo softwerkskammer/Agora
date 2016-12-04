@@ -1,7 +1,6 @@
 'use strict';
 
 const async = require('async');
-const _ = require('lodash');
 const R = require('ramda');
 
 const conf = require('simple-configure');
@@ -74,11 +73,13 @@ function updateAndSaveSubmittedMember(self, sessionUser, memberformData, accessr
 }
 
 function groupsWithExtraEmailAddresses(members, groupNamesWithEmails) {
+  const result = [];
   const allEmailAddresses = members.map(member => member.email().toLowerCase());
-  return _.transform(groupNamesWithEmails, (result, value, key) => {
-    const diff = R.difference(value, allEmailAddresses);
-    if (diff.length > 0) { result.push({group: key, extraAddresses: diff}); }
-  }, []);
+  R.keys(groupNamesWithEmails).forEach(name => {
+    const diff = R.difference(groupNamesWithEmails[name], allEmailAddresses);
+    if (diff.length > 0) { result.push({group: name, extraAddresses: diff}); }
+  });
+  return result;
 }
 
 module.exports = {

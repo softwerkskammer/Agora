@@ -1,67 +1,63 @@
 'use strict';
 
-var sinon = require('sinon').sandbox.create();
-var expect = require('must-dist');
-var moment = require('moment-timezone');
-var _ = require('lodash');
+const sinon = require('sinon').sandbox.create();
+const expect = require('must-dist');
+const moment = require('moment-timezone');
 
-//var util = require('util');
+const beans = require('../../testutil/configureForTest').get('beans');
+const waitinglistService = beans.get('waitinglistService');
 
-var beans = require('../../testutil/configureForTest').get('beans');
-var waitinglistService = beans.get('waitinglistService');
+const activitystore = beans.get('activitystore');
+const memberstore = beans.get('memberstore');
+const mailsenderService = beans.get('mailsenderService');
+const Member = beans.get('member');
+const Activity = beans.get('activity');
 
-var activitystore = beans.get('activitystore');
-var memberstore = beans.get('memberstore');
-var mailsenderService = beans.get('mailsenderService');
-var Member = beans.get('member');
-var Activity = beans.get('activity');
+let activity1;
 
-var activity1;
+function waitinglistMembersOf(activity, resourceName) {
+  /* eslint no-underscore-dangle: 0 */
+  return activity.resourceNamed(resourceName).waitinglistEntries().map(entry => entry.state).map(state => state._memberId);
+}
 
-var waitinglistMembersOf = function (activity, resourceName) {
-  return _.map(_.map(activity.resourceNamed(resourceName).waitinglistEntries(), 'state'), '_memberId');
-};
-
-var activityWithEinzelzimmer = function (resource) {
-  var state = {url: 'activity-url', resources: {Veranstaltung: resource }};
-  var activity = new Activity(state);
-  sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, activity); });
+function activityWithEinzelzimmer(resource) {
+  const state = {url: 'activity-url', resources: {Veranstaltung: resource}};
+  const activity = new Activity(state);
+  sinon.stub(activitystore, 'getActivity', (id, callback) => { callback(null, activity); });
   return activity;
-};
+}
 
-describe('Waitinglist Service', function () {
+describe('Waitinglist Service', () => {
 
-  afterEach(function () {
+  afterEach(() => {
     sinon.restore();
   });
 
-  describe('- waitinglist - ', function () {
+  describe('- waitinglist - ', () => {
 
-    beforeEach(function () {
-      var member1 = new Member({id: '12345', nickname: 'hansdampf'});
-      var member2 = new Member({id: 'abcxyz', nickname: 'nickinick'});
+    beforeEach(() => {
+      const member1 = new Member({id: '12345', nickname: 'hansdampf'});
+      const member2 = new Member({id: 'abcxyz', nickname: 'nickinick'});
       activity1 = new Activity({id: 'Meine Aktivität', url: 'myActivity', resources: {'Veranstaltung': {_waitinglist: []}}});
 
-      sinon.stub(memberstore, 'getMemberForId', function (memberId, callback) {
+      sinon.stub(memberstore, 'getMemberForId', (memberId, callback) => {
         if (memberId === member1.id()) { return callback(null, member1); }
         if (memberId === member2.id()) { return callback(null, member2); }
       });
-      sinon.stub(activitystore, 'getActivity', function (activity, callback) {
-        return callback(null, activity1);
-      });
+      sinon.stub(activitystore, 'getActivity', (activity, callback) => callback(null, activity1));
     });
 
-    it('returns an empty list when the waitinglist is empty', function (done) {
-      waitinglistService.waitinglistFor('myActivity', function (err, waitinglist) {
+    it('returns an empty list when the waitinglist is empty', done => {
+      waitinglistService.waitinglistFor('myActivity', (err, waitinglist) => {
         expect(waitinglist).to.be.empty();
         done(err);
       });
     });
 
-    it('returns one entry with its member nickname when the waitinglist contains one entry', function (done) {
+    it('returns one entry with its member nickname when the waitinglist contains one entry', done => {
       activity1.resourceNamed('Veranstaltung').addToWaitinglist('12345', moment());
 
-      waitinglistService.waitinglistFor('myActivity', function (err, waitinglist) {
+      waitinglistService.waitinglistFor('myActivity', (err, waitinglist) => {
         expect(waitinglist.length).to.equal(1);
         expect(waitinglist[0].registrantNickname).to.equal('hansdampf');
         expect(waitinglist[0].resourceName()).to.equal('Veranstaltung');
@@ -71,11 +67,11 @@ describe('Waitinglist Service', function () {
       });
     });
 
-    it('returns two entries with their member nicknames when the waitinglist contains two entries', function (done) {
+    it('returns two entries with their member nicknames when the waitinglist contains two entries', done => {
       activity1.resourceNamed('Veranstaltung').addToWaitinglist('12345', moment());
       activity1.resourceNamed('Veranstaltung').addToWaitinglist('abcxyz', moment());
 
-      waitinglistService.waitinglistFor('myActivity', function (err, waitinglist) {
+      waitinglistService.waitinglistFor('myActivity', (err, waitinglist) => {
         expect(waitinglist.length).to.equal(2);
         expect(waitinglist[0].registrantNickname).to.equal('hansdampf');
         expect(waitinglist[1].registrantNickname).to.equal('nickinick');
@@ -84,80 +80,84 @@ describe('Waitinglist Service', function () {
     });
   });
 
-  describe('- when saving a waitinglist entry -', function () {
+  describe('- when saving a waitinglist entry -', () => {
 
-    beforeEach(function () { return undefined; });
+    beforeEach(() => undefined);
 
-    it('succeeds no matter whether registration is open or not', function (done) {
-      activityWithEinzelzimmer({_waitinglist: [
-        {_memberId: 'otherId'}
-      ]});
-      var savedActivity;
-      sinon.stub(activitystore, 'saveActivity', function (activityToSave, callback) {
+    it('succeeds no matter whether registration is open or not', done => {
+      activityWithEinzelzimmer({
+        _waitinglist: [
+          {_memberId: 'otherId'}
+        ]
+      });
+      let savedActivity;
+      sinon.stub(activitystore, 'saveActivity', (activityToSave, callback) => {
         savedActivity = activityToSave;
         callback(null);
       });
-      sinon.stub(memberstore, 'getMember', function (nickname, callback) { callback(null, new Member({id: 'memberId', nickname: 'hansdampf'})); });
+      sinon.stub(memberstore, 'getMember', (nickname, callback) => { callback(null, new Member({id: 'memberId', nickname: 'hansdampf'})); });
 
-      var args = {nickname: 'memberId', activityUrl: 'activity-url', resourcename: 'Einzelzimmer'};
-      waitinglistService.saveWaitinglistEntry(args, function (err) {
-        var waitinglistMembers = waitinglistMembersOf(savedActivity, 'Einzelzimmer');
+      const args = {nickname: 'memberId', activityUrl: 'activity-url', resourcename: 'Einzelzimmer'};
+      waitinglistService.saveWaitinglistEntry(args, err => {
+        const waitinglistMembers = waitinglistMembersOf(savedActivity, 'Einzelzimmer');
         expect(waitinglistMembers).to.contain('memberId');
         expect(waitinglistMembers).to.contain('otherId');
         done(err);
       });
     });
 
-    it('gives an error when activity could not be loaded', function (done) {
-      sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(new Error('error')); });
-      sinon.stub(memberstore, 'getMember', function (nickname, callback) { callback(null, new Member({id: 'memberId', nickname: 'hansdampf'})); });
+    it('gives an error when activity could not be loaded', done => {
+      sinon.stub(activitystore, 'getActivity', (id, callback) => { callback(new Error('error')); });
+      sinon.stub(memberstore, 'getMember', (nickname, callback) => { callback(null, new Member({id: 'memberId', nickname: 'hansdampf'})); });
 
-      var args = {nickname: 'memberId', activityUrl: 'activity-url', resourcename: 'Einzelzimmer'};
-      waitinglistService.saveWaitinglistEntry(args, function (err) {
+      const args = {nickname: 'memberId', activityUrl: 'activity-url', resourcename: 'Einzelzimmer'};
+      waitinglistService.saveWaitinglistEntry(args, err => {
         expect(err, 'Error').to.exist();
         done(); // error condition - do not pass err
       });
     });
 
-    it('gives an error when member could not be loaded', function (done) {
-      sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, new Activity()); });
-      sinon.stub(memberstore, 'getMember', function (id, callback) { callback(new Error('error')); });
+    it('gives an error when member could not be loaded', done => {
+      sinon.stub(activitystore, 'getActivity', (id, callback) => { callback(null, new Activity()); });
+      sinon.stub(memberstore, 'getMember', (id, callback) => { callback(new Error('error')); });
 
-      var args = {nickname: 'memberId', activityUrl: 'activity-url', resourcename: 'Einzelzimmer'};
-      waitinglistService.saveWaitinglistEntry(args, function (err) {
+      const args = {nickname: 'memberId', activityUrl: 'activity-url', resourcename: 'Einzelzimmer'};
+      waitinglistService.saveWaitinglistEntry(args, err => {
         expect(err, 'Error').to.exist();
         done(); // error condition - do not pass err
       });
     });
   });
 
-  describe('- when allowing registration for a waitinglist entry -', function () {
+  describe('- when allowing registration for a waitinglist entry -', () => {
 
-    var mailNotification;
+    let mailNotification;
 
-    beforeEach(function () {
+    beforeEach(() => {
       mailNotification = undefined;
-      sinon.stub(mailsenderService, 'sendRegistrationAllowed', function (member, activity, entry, callback) {
+      sinon.stub(mailsenderService, 'sendRegistrationAllowed', (member, activity, entry, callback) => {
         mailNotification = {member: member, activity: activity, entry: entry};
         callback(null);
       });
     });
 
-    it('succeeds no matter whether registration is open or not', function (done) {
-      activityWithEinzelzimmer({_waitinglist: [
-        {_memberId: 'memberId'},
-        {_memberId: 'otherId'}
-      ]});
-      var savedActivity;
-      sinon.stub(activitystore, 'saveActivity', function (activityToSave, callback) {
+    it('succeeds no matter whether registration is open or not', done => {
+      activityWithEinzelzimmer({
+        _waitinglist: [
+          {_memberId: 'memberId'},
+          {_memberId: 'otherId'}
+        ]
+      });
+      let savedActivity;
+      sinon.stub(activitystore, 'saveActivity', (activityToSave, callback) => {
         savedActivity = activityToSave;
         callback(null);
       });
-      sinon.stub(memberstore, 'getMember', function (nickname, callback) { callback(null, new Member({id: 'memberId', nickname: 'hansdampf'})); });
+      sinon.stub(memberstore, 'getMember', (nickname, callback) => { callback(null, new Member({id: 'memberId', nickname: 'hansdampf'})); });
 
-      var args = {nickname: 'memberId', activityUrl: 'activity-url', resourcename: 'Einzelzimmer'};
-      waitinglistService.allowRegistrationForWaitinglistEntry(args, function (err) {
-        var waitinglistMembers = waitinglistMembersOf(savedActivity, 'Einzelzimmer');
+      const args = {nickname: 'memberId', activityUrl: 'activity-url', resourcename: 'Einzelzimmer'};
+      waitinglistService.allowRegistrationForWaitinglistEntry(args, err => {
+        const waitinglistMembers = waitinglistMembersOf(savedActivity, 'Einzelzimmer');
         expect(waitinglistMembers).to.contain('memberId');
         expect(waitinglistMembers).to.contain('otherId');
 
@@ -168,65 +168,68 @@ describe('Waitinglist Service', function () {
       });
     });
 
-    it('gives an error and does not notify when save failed', function (done) {
-      activityWithEinzelzimmer({_waitinglist: [
-        {_memberId: 'memberId'},
-        {_memberId: 'otherId'}
-      ]});
-      sinon.stub(activitystore, 'saveActivity', function (activityToSave, callback) {
+    it('gives an error and does not notify when save failed', done => {
+      activityWithEinzelzimmer({
+        _waitinglist: [
+          {_memberId: 'memberId'},
+          {_memberId: 'otherId'}
+        ]
+      });
+      sinon.stub(activitystore, 'saveActivity', (activityToSave, callback) => {
         callback(new Error('Some problem during save'));
       });
-      sinon.stub(memberstore, 'getMember', function (nickname, callback) { callback(null, new Member({id: 'memberId', nickname: 'hansdampf'})); });
+      sinon.stub(memberstore, 'getMember', (nickname, callback) => { callback(null, new Member({id: 'memberId', nickname: 'hansdampf'})); });
 
-      var args = {nickname: 'memberId', activityUrl: 'activity-url', resourcename: 'Einzelzimmer'};
-      waitinglistService.allowRegistrationForWaitinglistEntry(args, function (err) {
+      const args = {nickname: 'memberId', activityUrl: 'activity-url', resourcename: 'Einzelzimmer'};
+      waitinglistService.allowRegistrationForWaitinglistEntry(args, err => {
         expect(mailNotification, 'Notification was not sent').to.be(undefined);
         expect(err, 'Error').to.exist();
         done(); // error condition - do not pass err
       });
     });
 
-
-    it('does not change anything when member is not in waitinglist', function (done) {
-      var activity = activityWithEinzelzimmer({_waitinglist: [
-        {_memberId: 'otherId'}
-      ]});
-      var savedActivity;
-      sinon.stub(activitystore, 'saveActivity', function (activityToSave, callback) {
+    it('does not change anything when member is not in waitinglist', done => {
+      const activity = activityWithEinzelzimmer({
+        _waitinglist: [
+          {_memberId: 'otherId'}
+        ]
+      });
+      let savedActivity;
+      sinon.stub(activitystore, 'saveActivity', (activityToSave, callback) => {
         savedActivity = activityToSave;
         callback(null);
       });
-      sinon.stub(memberstore, 'getMember', function (nickname, callback) { callback(null, new Member({id: 'memberId', nickname: 'hansdampf'})); });
+      sinon.stub(memberstore, 'getMember', (nickname, callback) => { callback(null, new Member({id: 'memberId', nickname: 'hansdampf'})); });
 
-      var args = {nickname: 'memberId', activityUrl: 'activity-url', resourcename: 'Einzelzimmer'};
-      waitinglistService.allowRegistrationForWaitinglistEntry(args, function (err) {
+      const args = {nickname: 'memberId', activityUrl: 'activity-url', resourcename: 'Einzelzimmer'};
+      waitinglistService.allowRegistrationForWaitinglistEntry(args, err => {
         expect(savedActivity, 'Activity was not saved').to.be(undefined);
         expect(mailNotification, 'Notification was not sent').to.be(undefined);
-        var waitinglistMembers = waitinglistMembersOf(activity, 'Einzelzimmer');
+        const waitinglistMembers = waitinglistMembersOf(activity, 'Einzelzimmer');
         expect(waitinglistMembers, 'Activity remains unchanged: memberId was not added').to.not.contain('memberId');
         expect(waitinglistMembers, 'Activity remains unchanged: otherId is still there').to.contain('otherId');
         done(err);
       });
     });
 
-    it('gives an error when activity could not be loaded', function (done) {
-      sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(new Error('error')); });
-      sinon.stub(memberstore, 'getMember', function (nickname, callback) { callback(null, new Member({id: 'memberId', nickname: 'hansdampf'})); });
+    it('gives an error when activity could not be loaded', done => {
+      sinon.stub(activitystore, 'getActivity', (id, callback) => { callback(new Error('error')); });
+      sinon.stub(memberstore, 'getMember', (nickname, callback) => { callback(null, new Member({id: 'memberId', nickname: 'hansdampf'})); });
 
-      var args = {nickname: 'memberId', activityUrl: 'activity-url', resourcename: 'Einzelzimmer'};
-      waitinglistService.allowRegistrationForWaitinglistEntry(args, function (err) {
+      const args = {nickname: 'memberId', activityUrl: 'activity-url', resourcename: 'Einzelzimmer'};
+      waitinglistService.allowRegistrationForWaitinglistEntry(args, err => {
         expect(mailNotification, 'Notification was not sent').to.be(undefined);
         expect(err, 'Error').to.exist();
         done(); // error condition - do not pass err
       });
     });
 
-    it('gives an error when member could not be loaded', function (done) {
-      sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, new Activity()); });
-      sinon.stub(memberstore, 'getMember', function (id, callback) { callback(new Error('error')); });
+    it('gives an error when member could not be loaded', done => {
+      sinon.stub(activitystore, 'getActivity', (id, callback) => { callback(null, new Activity()); });
+      sinon.stub(memberstore, 'getMember', (id, callback) => { callback(new Error('error')); });
 
-      var args = {nickname: 'memberId', activityUrl: 'activity-url', resourcename: 'Einzelzimmer'};
-      waitinglistService.allowRegistrationForWaitinglistEntry(args, function (err) {
+      const args = {nickname: 'memberId', activityUrl: 'activity-url', resourcename: 'Einzelzimmer'};
+      waitinglistService.allowRegistrationForWaitinglistEntry(args, err => {
         expect(mailNotification, 'Notification was not sent').to.be(undefined);
         expect(err, 'Error').to.exist();
         done(); // error condition - do not pass err

@@ -1,11 +1,11 @@
 'use strict';
-var expect = require('must-dist');
-var fs = require('fs');
-var chado = require('chado');
+const expect = require('must-dist');
+const fs = require('fs');
+const chado = require('chado');
 
-after(function () {
-  var analyzer = chado.analyzer;
-  var reportArray = analyzer.read(chado.repo);
+after(() => {
+  const analyzer = chado.analyzer;
+  const reportArray = analyzer.read(chado.repo);
   chado.consoleReporter.logReport();
 
   /*eslint no-sync: 0*/

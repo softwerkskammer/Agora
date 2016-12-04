@@ -1,39 +1,39 @@
 'use strict';
 
 const moment = require('moment-timezone');
-const _ = require('lodash');
+const R = require('ramda');
 const sinon = require('sinon').sandbox.create();
 const expect = require('must-dist');
 const beans = require('../../testutil/configureForTest').get('beans');
 const Git = beans.get('gitmech');
 const gitExec = beans.get('gitExec');
 
-describe('the gitmech module', function () {
-  afterEach(function () {
+describe('the gitmech module', () => {
+  afterEach(() => {
     sinon.restore();
   });
 
-  describe('- read operations', function () {
-    it('"readFile" returns file contents as string', function (done) {
-      sinon.stub(gitExec, 'command', function (args, callback) {
+  describe('- read operations', () => {
+    it('"readFile" returns file contents as string', done => {
+      sinon.stub(gitExec, 'command', (args, callback) => {
         if (args[0] === 'show' && args[1] === '1:path') { callback(null, 'string'); }
       });
-      Git.readFile('path', 1, function (err, string) {
+      Git.readFile('path', 1, (err, string) => {
         expect(string).to.equal('string');
         done(err);
       });
     });
 
-    it('"readFile" returns error on error', function (done) {
-      sinon.stub(gitExec, 'command', function (args, callback) { callback(new Error()); });
-      Git.readFile('path', 1, function (err) {
+    it('"readFile" returns error on error', done => {
+      sinon.stub(gitExec, 'command', (args, callback) => { callback(new Error()); });
+      Git.readFile('path', 1, err => {
         expect(err).to.exist();
         done();
       });
     });
 
-    it('produces sensible metadata via "git log" for editing', function (done) {
-      sinon.stub(gitExec, 'command', function (args, callback) {
+    it('produces sensible metadata via "git log" for editing', done => {
+      sinon.stub(gitExec, 'command', (args, callback) => {
         if (args[0] === 'log') {
           callback(null, '7f91fc6\n' +
             '7f91fc607da7947e62b2d8a52088ee0ce29a88c8\n' +
@@ -43,7 +43,7 @@ describe('the gitmech module', function () {
             'path/file.md\n\n');
         }
       });
-      Git.log('path', 'HEAD', 1, function (err, metadatas) {
+      Git.log('path', 'HEAD', 1, (err, metadatas) => {
         const metadata = metadatas[0];
         expect(metadatas).to.have.length(1);
         expect(metadata.name).to.equal('path/file.md');
@@ -56,8 +56,8 @@ describe('the gitmech module', function () {
       });
     });
 
-    it('produces sensible metadata via "git log" for viewing the history', function (done) {
-      sinon.stub(gitExec, 'command', function (args, callback) {
+    it('produces sensible metadata via "git log" for viewing the history', done => {
+      sinon.stub(gitExec, 'command', (args, callback) => {
         if (args[0] === 'log') {
           callback(null, '7f91fc6\n' +
             '7f91fc607da7947e62b2d8a52088ee0ce29a88c8\n' +
@@ -91,7 +91,7 @@ describe('the gitmech module', function () {
             'path/file.md\n\n');
         }
       });
-      Git.log('path', 'HEAD', 1, function (err, metadatas) {
+      Git.log('path', 'HEAD', 1, (err, metadatas) => {
         const metadata = metadatas[0];
         expect(metadatas).to.have.length(5);
 
@@ -110,8 +110,8 @@ describe('the gitmech module', function () {
       });
     });
 
-    it('can handle renames via "git log" for viewing the history', function (done) {
-      sinon.stub(gitExec, 'command', function (args, callback) {
+    it('can handle renames via "git log" for viewing the history', done => {
+      sinon.stub(gitExec, 'command', (args, callback) => {
         if (args[0] === 'log') {
           callback(null, '7f91fc6\n' +
             '7f91fc607da7947e62b2d8a52088ee0ce29a88c8\n' +
@@ -128,7 +128,7 @@ describe('the gitmech module', function () {
             'path/file.md\n\n');
         }
       });
-      Git.log('path', 'HEAD', 1, function (err, metadatas) {
+      Git.log('path', 'HEAD', 1, (err, metadatas) => {
         var metadata = metadatas[0];
         expect(metadatas).to.have.length(2);
 
@@ -146,16 +146,16 @@ describe('the gitmech module', function () {
       });
     });
 
-    it('calls the callback with an error when failing at "log"', function (done) {
+    it('calls the callback with an error when failing at "log"', done => {
       sinon.stub(gitExec, 'command', (args, callback) => callback(new Error()));
-      Git.log('path', 'HEAD', 1, function (err) {
+      Git.log('path', 'HEAD', 1, err => {
         expect(err).to.exist();
         done();
       });
     });
 
-    it('produces sensible metadata via "latestChanges" for sending change emails', function (done) {
-      sinon.stub(gitExec, 'command', function (args, callback) {
+    it('produces sensible metadata via "latestChanges" for sending change emails', done => {
+      sinon.stub(gitExec, 'command', (args, callback) => {
         if (args[0] === 'log') {
           callback(null, '60ca4ed\n' +
             '60ca4eda5b79fd55461a78725ff0815cfd3f8550\n' +
@@ -174,7 +174,7 @@ describe('the gitmech module', function () {
             'no comment\n');
         }
       });
-      Git.latestChanges('path', moment(), function (err, metadatas) {
+      Git.latestChanges('path', moment(), (err, metadatas) => {
         expect(metadatas).to.have.length(3);
         expect(metadatas[0].hashRef).to.equal('f327d71');
         expect(metadatas[1].hashRef).to.equal('19c89ae');
@@ -183,76 +183,74 @@ describe('the gitmech module', function () {
       });
     });
 
-    it('calls the callback with an error when failing at "latestChanges"', function (done) {
+    it('calls the callback with an error when failing at "latestChanges"', done => {
       sinon.stub(gitExec, 'command', (args, callback) => callback(new Error()));
-      Git.latestChanges('path', moment(), function (err) {
+      Git.latestChanges('path', moment(), err => {
         expect(err).to.exist();
         done();
       });
     });
   });
 
-  const runTestsFor = function (commandName, gitmechCommand) {
-    return function () {
-      it('calls commit when successful', function (done) {
-        var commitcalled = false;
-        sinon.stub(gitExec, 'command', function (args, callback) {
-          if (args[0] === commandName) { callback(null); }
-          if (args[0] === 'commit') {
-            commitcalled = true;
-            callback(null);
-          }
-        });
-        gitmechCommand('message', 'author', function (err) {
-          expect(err).to.be(null);
-          expect(commitcalled).to.be(true);
-          done(err);
-        });
+  const runTestsFor = (commandName, gitmechCommand) => () => {
+    it('calls commit when successful', done => {
+      var commitcalled = false;
+      sinon.stub(gitExec, 'command', (args, callback) => {
+        if (args[0] === commandName) { callback(null); }
+        if (args[0] === 'commit') {
+          commitcalled = true;
+          callback(null);
+        }
       });
+      gitmechCommand('message', 'author', err => {
+        expect(err).to.be(null);
+        expect(commitcalled).to.be(true);
+        done(err);
+      });
+    });
 
-      it('does not call commit when failing', function (done) {
-        var commitcalled = false;
-        sinon.stub(gitExec, 'command', function (args, callback) {
-          if (args[0] === commandName) { callback(new Error()); }
-          if (args[0] === 'commit') {
-            commitcalled = true;
-            callback(null);
-          }
-        });
-        gitmechCommand('message', 'author', function (err) {
-          expect(err).to.exist();
-          expect(commitcalled).to.be(false);
-          done();
-        });
+    it('does not call commit when failing', done => {
+      var commitcalled = false;
+      sinon.stub(gitExec, 'command', (args, callback) => {
+        if (args[0] === commandName) { callback(new Error()); }
+        if (args[0] === 'commit') {
+          commitcalled = true;
+          callback(null);
+        }
       });
+      gitmechCommand('message', 'author', err => {
+        expect(err).to.exist();
+        expect(commitcalled).to.be(false);
+        done();
+      });
+    });
 
-      it('handles "commit" errors', function (done) {
-        var commitcalled = false;
-        sinon.stub(gitExec, 'command', function (args, callback) {
-          if (args[0] === commandName) { callback(null); }
-          if (args[0] === 'commit') {
-            commitcalled = true;
-            callback(new Error());
-          }
-        });
-        gitmechCommand('message', 'author', function (err) {
-          expect(err).to.exist();
-          expect(commitcalled).to.be(true);
-          done();
-        });
+    it('handles "commit" errors', done => {
+      var commitcalled = false;
+      sinon.stub(gitExec, 'command', (args, callback) => {
+        if (args[0] === commandName) { callback(null); }
+        if (args[0] === 'commit') {
+          commitcalled = true;
+          callback(new Error());
+        }
       });
-    };
+      gitmechCommand('message', 'author', err => {
+        expect(err).to.exist();
+        expect(commitcalled).to.be(true);
+        done();
+      });
+    });
   };
 
-  describe(' - write operations', function () {
-    describe('"add" command', runTestsFor('add', _.partial(Git.add, 'path')));
-    describe('"rm" command', runTestsFor('rm', _.partial(Git.rm, 'path')));
-    describe('"mv" command', runTestsFor('mv', _.partial(Git.mv, 'oldpath', 'newpath')));
+  describe(' - write operations', () => {
+    describe('"add" command', runTestsFor('add', R.partial(Git.add, ['path'])));
+    describe('"rm" command', runTestsFor('rm', R.partial(Git.rm, ['path'])));
+    describe('"mv" command', runTestsFor('mv', R.partial(Git.mv, ['oldpath', 'newpath'])));
   });
 
-  describe(' - searching', function () {
-    it('finds in file contents', function (done) {
-      sinon.stub(gitExec, 'command', function (args, callback) {
+  describe(' - searching', () => {
+    it('finds in file contents', done => {
+      sinon.stub(gitExec, 'command', (args, callback) => {
         if (args[0] === 'grep') {
           callback(null, 'global/index.md:8:Dies ist der Index [für] das [[andreas:test]] -dudelo\n' +
             'global/veran.md:12:[UK Tester Forums - Test Management Forum](http://uktmf.com/index.php?q=node/5271)                                             | London                  | 5.2.             \n' +
@@ -263,15 +261,15 @@ describe('the gitmech module', function () {
           callback();
         }
       });
-      Git.grep('test', function (err, chunks) {
+      Git.grep('test', (err, chunks) => {
         expect(chunks).to.have.length(4);
         expect(chunks).to.contain('global/veran.md:16:[Belgium Testing Days](http://btdconf.com/)                                                                                    | Brügge                  | 17.3. - 20.3.    ');
         done(err);
       });
     });
 
-    it('finds in file names', function (done) {
-      sinon.stub(gitExec, 'command', function (args, callback) {
+    it('finds in file names', done => {
+      sinon.stub(gitExec, 'command', (args, callback) => {
         if (args[0] === 'grep') {
           callback();
         }
@@ -281,117 +279,117 @@ describe('the gitmech module', function () {
             'andreastest.md');
         }
       });
-      Git.grep('test', function (err, chunks) {
+      Git.grep('test', (err, chunks) => {
         expect(chunks).to.have.length(3);
         expect(chunks).to.contain('andex.md');
         done(err);
       });
     });
 
-    it('handles errors in grep search with more than two lines', function (done) {
-      sinon.stub(gitExec, 'command', function (args, callback) {
+    it('handles errors in grep search with more than two lines', done => {
+      sinon.stub(gitExec, 'command', (args, callback) => {
         if (args[0] === 'grep') { callback(new Error('line1\nline2\nline3')); }
       });
-      Git.grep('test', function (err) {
+      Git.grep('test', err => {
         expect(err).to.exist();
         done();
       });
     });
 
-    it('handles errors in grep search with less than two lines', function (done) {
-      sinon.stub(gitExec, 'command', function (args, callback) {
+    it('handles errors in grep search with less than two lines', done => {
+      sinon.stub(gitExec, 'command', (args, callback) => {
         if (args[0] === 'grep') { callback(new Error('line1\nline2')); }
       });
-      Git.grep('test', function (err, result) {
+      Git.grep('test', (err, result) => {
         expect(err).to.not.exist();
         expect(result).to.eql([]);
         done();
       });
     });
 
-    it('handles errors in file search', function (done) {
-      sinon.stub(gitExec, 'command', function (args, callback) {
+    it('handles errors in file search', done => {
+      sinon.stub(gitExec, 'command', (args, callback) => {
         if (args[0] === 'grep') { callback(); }
         if (args[0] === 'ls-files') { callback(new Error()); }
       });
-      Git.grep('test', function (err) {
+      Git.grep('test', err => {
         expect(err).to.exist();
         done();
       });
     });
   });
 
-  describe(' - listing files', function () {
-    it('"ls" - converts the data to an array of single non empty lines', function (done) {
-      sinon.stub(gitExec, 'command', function (args, callback) {
+  describe(' - listing files', () => {
+    it('"ls" - converts the data to an array of single non empty lines', done => {
+      sinon.stub(gitExec, 'command', (args, callback) => {
         if (args[0] === 'ls-tree') {
           callback(null, 'andex.md\n' +
             '\n' +
             'andreastest.md');
         }
       });
-      Git.ls('subdir', function (err, lines) {
+      Git.ls('subdir', (err, lines) => {
         expect(err).to.not.exist();
         expect(lines).to.have.length(2);
         done();
       });
     });
 
-    it('"ls" - handles errors correct', function (done) {
-      sinon.stub(gitExec, 'command', function (args, callback) {
+    it('"ls" - handles errors correct', done => {
+      sinon.stub(gitExec, 'command', (args, callback) => {
         if (args[0] === 'ls-tree') { callback(new Error()); }
       });
-      Git.ls('subdir', function (err) {
+      Git.ls('subdir', err => {
         expect(err).to.exist();
         done();
       });
     });
 
-    it('"lsdirs" - converts the data to an array of single non empty lines', function (done) {
-      sinon.stub(gitExec, 'command', function (args, callback) {
+    it('"lsdirs" - converts the data to an array of single non empty lines', done => {
+      sinon.stub(gitExec, 'command', (args, callback) => {
         if (args[0] === 'ls-tree') {
           callback(null, 'andex.md\n' +
             '\n' +
             'andreastest.md');
         }
       });
-      Git.lsdirs(function (err, lines) {
+      Git.lsdirs((err, lines) => {
         expect(err).to.not.exist();
         expect(lines).to.have.length(2);
         done();
       });
     });
 
-    it('"lsdirs" - handles errors correct', function (done) {
-      sinon.stub(gitExec, 'command', function (args, callback) {
+    it('"lsdirs" - handles errors correct', done => {
+      sinon.stub(gitExec, 'command', (args, callback) => {
         if (args[0] === 'ls-tree') { callback(new Error()); }
       });
-      Git.lsdirs(function (err) {
+      Git.lsdirs(err => {
         expect(err).to.exist();
         done();
       });
     });
 
-    it('"lsblogposts" - converts the data to an array of single non empty lines', function (done) {
-      sinon.stub(gitExec, 'command', function (args, callback) {
+    it('"lsblogposts" - converts the data to an array of single non empty lines', done => {
+      sinon.stub(gitExec, 'command', (args, callback) => {
         if (args[0] === 'ls-files') {
           callback(null, 'andex.md\n' +
             '\n' +
             'andreastest.md');
         }
       });
-      Git.lsblogposts('group', 'pattern', function (err, lines) {
+      Git.lsblogposts('group', 'pattern', (err, lines) => {
         expect(err).to.not.exist();
         expect(lines).to.have.length(2);
         done();
       });
     });
 
-    it('"lsblogposts" - handles errors correct', function (done) {
-      sinon.stub(gitExec, 'command', function (args, callback) {
+    it('"lsblogposts" - handles errors correct', done => {
+      sinon.stub(gitExec, 'command', (args, callback) => {
         if (args[0] === 'ls-files') { callback(new Error()); }
       });
-      Git.lsblogposts('group', 'pattern', function (err) {
+      Git.lsblogposts('group', 'pattern', err => {
         expect(err).to.exist();
         done();
       });

@@ -4,9 +4,10 @@ const sinon = require('sinon').sandbox.create();
 
 const expect = require('must-dist');
 const beans = require('../../testutil/configureForTest').get('beans');
-const Group = beans.get('group');
-const GroupA = new Group({id: 'GroupA', longName: 'Gruppe A', description: 'Dies ist Gruppe A.', type: 'Themengruppe'});
-const GroupB = new Group({id: 'GroupB', longName: 'Gruppe B', description: 'Dies ist Gruppe B.', type: 'Regionalgruppe'});
+
+const groupsForTest = require('./groups_for_tests');
+const GroupA = groupsForTest.GroupA;
+const GroupB = groupsForTest.GroupB;
 
 const fakeListAdapter = beans.get('fakeListAdapter');
 const systemUnderTest = beans.get('groupsService');

@@ -1,8 +1,8 @@
 'use strict';
 
-var beans = require('simple-configure').get('beans');
-var statusmessage = beans.get('statusmessage');
-var membersService = beans.get('membersService');
+const beans = require('simple-configure').get('beans');
+const statusmessage = beans.get('statusmessage');
+const membersService = beans.get('membersService');
 
 module.exports = function expressViewHelper(req, res, next) {
   res.locals.language = 'de';

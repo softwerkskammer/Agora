@@ -1,18 +1,18 @@
 'use strict';
 
-var sinon = require('sinon').sandbox.create();
-var expect = require('must-dist');
-var beans = require('../../testutil/configureForTest').get('beans');
-var wikiService = beans.get('wikiService');
-var Git = beans.get('gitmech');
+const sinon = require('sinon').sandbox.create();
+const expect = require('must-dist');
+const beans = require('../../testutil/configureForTest').get('beans');
+const wikiService = beans.get('wikiService');
+const Git = beans.get('gitmech');
 
-describe('Wiki Service - Event Parsing', function () {
-  afterEach(function () {
+describe('Wiki Service - Event Parsing', () => {
+  afterEach(() => {
     sinon.restore();
   });
 
-  it('parses an expected content', function (done) {
-    var wikifile =
+  it('parses an expected content', done => {
+    const wikifile =
       '## Europaweite Veranstaltungen 2016\n' +
       '\n' +
       'Diese Seite bietet eine Übersicht über Konferenzen und ähnliche Veranstaltungen rund um Craftsmanship und Softwareentwicklung.\n' +
@@ -30,11 +30,11 @@ describe('Wiki Service - Event Parsing', function () {
       '[OOP](http://www.oop-konferenz.de/) | München  | 1.2.\n' +
       '[microXchg - The Microservices Conference](http://microxchg.io) | Berlin | 4.2.  - 5.2.';
 
-    sinon.stub(Git, 'readFile', function (name, version, callback) {
+    sinon.stub(Git, 'readFile', (name, version, callback) => {
       callback(null, wikifile);
     });
 
-    wikiService.parseEvents('some date', function (err, events) {
+    wikiService.parseEvents('some date', (err, events) => {
       expect(events).to.have.length(4);
       done();
     });
