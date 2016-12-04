@@ -9,7 +9,7 @@ var path = require('path');
 
 var service = beans.get('galleryService');
 
-var sourceImage = path.join(__dirname, '../../testutil/fixtures/image.jpg');
+var sourceImage = path.join(__dirname, '/fixtures/image.jpg');
 
 function tmpPathFor(name) {
   return path.join(conf.get('imageDirectory') || conf.get('TMPDIR') || '/tmp/', name);
@@ -23,7 +23,7 @@ describe('the gallery repository on real files', function () {
 
   describe('metadata for images', function () {
     it('provides exif data for a given image', function (done) {
-      var exifPath = path.join(__dirname, '../../testutil/fixtures/exif_image.jpg');
+      var exifPath = path.join(__dirname, '/fixtures/exif_image.jpg');
       service.storeImage(exifPath, function (err, imageId) {
         if (err) { return done(err); }
         service.getMetadataForImage(imageId, function (err1, metadata) {

@@ -11,7 +11,7 @@ var avatarProvider = beans.get('avatarProvider');
 var galleryService = beans.get('galleryService');
 
 describe('MembersService', function () {
-  var imagePath = __dirname + '/../../testutil/fixtures/image.jpg';
+  var imagePath = __dirname + '/../gallery/fixtures/image.jpg';
   var member;
 
   beforeEach(function () {
