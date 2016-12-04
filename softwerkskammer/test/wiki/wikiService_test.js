@@ -1,46 +1,44 @@
 'use strict';
 
-var sinon = require('sinon').sandbox.create();
-var expect = require('must-dist');
-var beans = require('../../testutil/configureForTest').get('beans');
-var wikiService = beans.get('wikiService');
-var moment = require('moment-timezone');
-var Git = beans.get('gitmech');
+const sinon = require('sinon').sandbox.create();
+const expect = require('must-dist');
+const beans = require('../../testutil/configureForTest').get('beans');
+const wikiService = beans.get('wikiService');
+const moment = require('moment-timezone');
+const Git = beans.get('gitmech');
 
-describe('Wiki Service', function () {
+describe('Wiki Service', () => {
 
-  var content = 'Hallo, ich bin der Dateiinhalt';
-  var nonExistingPage = 'global/nonExisting';
+  const content = 'Hallo, ich bin der Dateiinhalt';
+  const nonExistingPage = 'global/nonExisting';
 
-  beforeEach(function () {
-    sinon.stub(Git, 'readFile', function (completePageName, pageVersion, callback) {
+  beforeEach(() => {
+    sinon.stub(Git, 'readFile', (completePageName, pageVersion, callback) => {
       if (completePageName === nonExistingPage + '.md') {
         return callback(new Error());
       }
       callback(null, content);
     });
-    sinon.stub(Git, 'log', function (path, version, howMany, callback) {
+    sinon.stub(Git, 'log', (path, version, howMany, callback) => {
       callback(null, []);
     });
-    sinon.stub(Git, 'absPath', function (path) {
-      return path;
-    });
+    sinon.stub(Git, 'absPath', path => path);
   });
 
-  afterEach(function () {
+  afterEach(() => {
     sinon.restore();
   });
 
-  describe('(showPage)', function () {
-    it('returns content for a requested existing page', function (done) {
-      wikiService.showPage('pageName', '11', function (err, cont) {
+  describe('(showPage)', () => {
+    it('returns content for a requested existing page', done => {
+      wikiService.showPage('pageName', '11', (err, cont) => {
         expect(content).to.equal(cont);
         done(err);
       });
     });
 
-    it('returns an error if the requested page is not found', function (done) {
-      wikiService.showPage(nonExistingPage, '11', function (err, cont) {
+    it('returns an error if the requested page is not found', done => {
+      wikiService.showPage(nonExistingPage, '11', (err, cont) => {
         expect(err).to.exist();
         expect(cont).to.not.exist();
         done(); // error condition - do not pass err
@@ -48,17 +46,17 @@ describe('Wiki Service', function () {
     });
   });
 
-  describe('(editPage)', function () {
-    it('indicates that the file is none existent', function (done) {
-      wikiService.pageEdit('pageName', function (err, cont, metadata) {
+  describe('(editPage)', () => {
+    it('indicates that the file is none existent', done => {
+      wikiService.pageEdit('pageName', (err, cont, metadata) => {
         expect('').to.equal(cont);
         expect(metadata).to.contain('NEW');
         done(err);
       });
     });
 
-    it('returns the content of the file to edit if it exists', function (done) {
-      wikiService.pageEdit('README', function (err, cont, metadata) {
+    it('returns the content of the file to edit if it exists', done => {
+      wikiService.pageEdit('README', (err, cont, metadata) => {
         expect(cont).to.equal(content);
         expect(metadata).to.be.empty();
         done(err);
@@ -68,9 +66,9 @@ describe('Wiki Service', function () {
 
 });
 
-describe('WikiService (list for dashboard)', function () {
-  beforeEach(function () {
-    var metadatas = [
+describe('WikiService (list for dashboard)', () => {
+  beforeEach(() => {
+    const metadatas = [
       {
         'name': 'craftsmanswap/index.md',
         'hashRef': 'HEAD',
@@ -128,17 +126,17 @@ describe('WikiService (list for dashboard)', function () {
         'comment': 'no comment'
       }
     ];
-    sinon.stub(Git, 'log', function (path, version, howMany, callback) {
+    sinon.stub(Git, 'log', (path, version, howMany, callback) => {
       callback(null, metadatas);
     });
   });
 
-  afterEach(function () {
+  afterEach(() => {
     sinon.restore();
   });
 
-  it('removes duplicate entries and blogposts for the dashboard', function (done) {
-    wikiService.listChangedFilesinDirectory('craftsmanswap', function (err, metadata) {
+  it('removes duplicate entries and blogposts for the dashboard', done => {
+    wikiService.listChangedFilesinDirectory('craftsmanswap', (err, metadata) => {
       expect(metadata).to.have.length(2);
       expect(metadata[0].name).to.equal('craftsmanswap/index.md');
       expect(metadata[0].datestring).to.equal('2014-04-30 17:25:48 +0200');
@@ -150,10 +148,10 @@ describe('WikiService (list for dashboard)', function () {
 
 });
 //This is an extra group because the Git.readFile mock has a different objective
-describe('WikiService (getBlogPosts)', function () {
+describe('WikiService (getBlogPosts)', () => {
 
-  beforeEach(function () {
-    sinon.stub(Git, 'lsblogposts', function (groupname, pattern, callback) {
+  beforeEach(() => {
+    sinon.stub(Git, 'lsblogposts', (groupname, pattern, callback) => {
       if (groupname === 'internet') {
         callback(null, ['internet/blog_2013-10-01AgoraCodeKata.md', 'internet/blog_2013-11-01LeanCoffeeTest.md']);
       } else if (groupname === 'alle') {
@@ -162,7 +160,7 @@ describe('WikiService (getBlogPosts)', function () {
         callback(null, ['error/blog_2013-10-01.md', 'error/blog_notadate.md', 'error/blog_2013-05-01.md', 'error/blog_2013-05-1.md', 'error/blog_2013-5-01.md', 'error/blog_.md']);
       }
     });
-    sinon.stub(Git, 'readFileFs', function (path, callback) {
+    sinon.stub(Git, 'readFileFs', (path, callback) => {
       if (path === 'internet/blog_2013-11-01LeanCoffeeTest.md') {
         callback(null,
           '####   Lean Coffee November 2013\n' +
@@ -194,21 +192,21 @@ describe('WikiService (getBlogPosts)', function () {
     });
   });
 
-  afterEach(function () {
+  afterEach(() => {
     sinon.restore();
   });
 
-  it('returns two properly parsed blog posts for the group internet', function (done) {
-    wikiService.getBlogpostsForGroup('internet', function (err, result) {
+  it('returns two properly parsed blog posts for the group internet', done => {
+    wikiService.getBlogpostsForGroup('internet', (err, result) => {
       expect(result.length === 2).to.be(true);
 
-      var post1 = result[0];
+      const post1 = result[0];
       expect(post1.title).to.equal('Lean Coffee November 2013');
       expect(post1.teaser).to.equal('Und beim nächsten Mal haben wir dann.');
       expect(post1.dialogId()).to.equal('internet-blog_2013-11-01LeanCoffeeTest');
       expect(post1.date().isSame(moment('2013-11-01'))).to.be(true);
 
-      var post2 = result[1];
+      const post2 = result[1];
       expect(post2.title).to.equal('Agora Code-Kata Oktober 2013');
       expect(post2.teaser).to.equal('Weil viele uns weder JavaScript noch populäre JavaScript...');
       expect(post2.dialogId()).to.equal('internet-blog_2013-10-01AgoraCodeKata');
@@ -218,17 +216,17 @@ describe('WikiService (getBlogPosts)', function () {
     });
   });
 
-  it('returns no blog posts if there are none', function (done) {
-    wikiService.getBlogpostsForGroup('alle', function (err, result) {
+  it('returns no blog posts if there are none', done => {
+    wikiService.getBlogpostsForGroup('alle', (err, result) => {
       expect(result.length === 0).to.be(true);
       done(err);
     });
   });
 
-  it('skips empty posts and posts without proper date', function (done) {
-    wikiService.getBlogpostsForGroup('error', function (err, result) {
+  it('skips empty posts and posts without proper date', done => {
+    wikiService.getBlogpostsForGroup('error', (err, result) => {
       expect(result.length).to.equal(4);
-      var titles = result.map(post => post.title);
+      const titles = result.map(post => post.title);
       expect(titles).to.contain('1');
       expect(titles).to.contain('3');
       expect(titles).to.contain('4');
@@ -238,61 +236,61 @@ describe('WikiService (getBlogPosts)', function () {
   });
 });
 
-describe('WikiService (parseBlogPost)', function () {
+describe('WikiService (parseBlogPost)', () => {
 
-  it('returns undefined when Blogpost invalid', function () {
+  it('returns undefined when Blogpost invalid', () => {
     expect(wikiService.parseBlogPost('', '')).to.be.undefined();
   });
 
-  it('returns the Blogpost if it is valid', function () {
+  it('returns the Blogpost if it is valid', () => {
     expect(wikiService.parseBlogPost('blog_2013-11-01LeanCoffeeTest.md', '#Lean Coffee November 2013')).to.not.be.undefined();
   });
 });
 
-describe('Wiki Service (daily digest)', function () {
+describe('Wiki Service (daily digest)', () => {
 
-  var subdirs = ['dirA', 'dirB'];
-  var filesForDirA = ['dirA/fileA1', 'dirA/fileA2'];
-  var filesForDirB = ['dirB/fileB1', 'dirB/fileB2'];
-  var metadataA1 = {author: 'authorA1', fullhash: 'hashA1', date: '2014-01-11 18:45:29 +0100'};
-  var metadataA2 = {author: 'authorA2', fullhash: 'hashA2', date: '2014-01-10 18:45:29 +0100'};
-  var metadataB1 = {author: 'authorB1', fullhash: 'hashB1', date: '2014-01-11 18:45:29 +0100'};
+  const subdirs = ['dirA', 'dirB'];
+  const filesForDirA = ['dirA/fileA1', 'dirA/fileA2'];
+  const filesForDirB = ['dirB/fileB1', 'dirB/fileB2'];
+  const metadataA1 = {author: 'authorA1', fullhash: 'hashA1', date: '2014-01-11 18:45:29 +0100'};
+  const metadataA2 = {author: 'authorA2', fullhash: 'hashA2', date: '2014-01-10 18:45:29 +0100'};
+  const metadataB1 = {author: 'authorB1', fullhash: 'hashB1', date: '2014-01-11 18:45:29 +0100'};
 
-  beforeEach(function () {
-    sinon.stub(Git, 'ls', function (dirname, callback) {
+  beforeEach(() => {
+    sinon.stub(Git, 'ls', (dirname, callback) => {
       if (dirname === 'dirA') { return callback(null, filesForDirA); }
       if (dirname === 'dirB') { return callback(null, filesForDirB); }
     });
 
-    sinon.stub(Git, 'latestChanges', function (filename, someMoment, callback) {
+    sinon.stub(Git, 'latestChanges', (filename, someMoment, callback) => {
       if (filename.indexOf('A1') > -1) { return callback(null, [metadataA1]); }
       if (filename.indexOf('A2') > -1) { return callback(null, [metadataA2]); }
       if (filename.indexOf('B1') > -1) { return callback(null, [metadataB1]); }
       callback(null, []);
     });
 
-    sinon.stub(Git, 'readFile', function (filename, tag, callback) {
+    sinon.stub(Git, 'readFile', (filename, tag, callback) => {
       callback(null);
     });
   });
 
-  afterEach(function () {
+  afterEach(() => {
     sinon.restore();
   });
 
-  describe('Digest', function () {
-    it('finds all changed pages', function (done) {
-      sinon.stub(Git, 'lsdirs', function (callback) {
+  describe('Digest', () => {
+    it('finds all changed pages', done => {
+      sinon.stub(Git, 'lsdirs', callback => {
         callback(null, subdirs);
       });
 
-      sinon.stub(Git, 'diff', function (path, revisions, callback) {
+      sinon.stub(Git, 'diff', (path, revisions, callback) => {
         callback(null, '');
       });
 
-      wikiService.findPagesForDigestSince(moment(), function (err, pages) {
+      wikiService.findPagesForDigestSince(moment(), (err, pages) => {
         expect(pages.length).to.equal(2);
-        pages.forEach(function (page) {
+        pages.forEach(page => {
           if (page.dir === 'dirA') {
             expect(page.files.length).to.equal(2);
           } else {
@@ -303,12 +301,12 @@ describe('Wiki Service (daily digest)', function () {
       });
     });
 
-    it('handles an error correctly', function (done) {
-      sinon.stub(Git, 'lsdirs', function (callback) {
+    it('handles an error correctly', done => {
+      sinon.stub(Git, 'lsdirs', callback => {
         callback(new Error());
       });
 
-      wikiService.findPagesForDigestSince(moment(), function (err) {
+      wikiService.findPagesForDigestSince(moment(), err => {
         expect(err).to.exist();
         done();
       });
