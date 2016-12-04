@@ -1,86 +1,86 @@
 'use strict';
 
-var request = require('supertest');
-var sinon = require('sinon').sandbox.create();
-var expect = require('must-dist');
-var moment = require('moment-timezone');
+const request = require('supertest');
+const sinon = require('sinon').sandbox.create();
+const expect = require('must-dist');
+const moment = require('moment-timezone');
 
-var beans = require('../../testutil/configureForTest').get('beans');
-var mailarchiveService = beans.get('mailarchiveService');
-var Mail = beans.get('archivedMail');
-var Member = beans.get('member');
-var member = new Member({id: 'ai di', nickname: 'nigg'});
+const beans = require('../../testutil/configureForTest').get('beans');
+const mailarchiveService = beans.get('mailarchiveService');
+const Mail = beans.get('archivedMail');
+const Member = beans.get('member');
+const member = new Member({id: 'ai di', nickname: 'nigg'});
 
-var app = require('../../testutil/testHelper')('mailarchiveApp').createApp();
+const app = require('../../testutil/testHelper')('mailarchiveApp').createApp();
 
-describe('Mail content page', function () {
-  afterEach(function () {
+describe('Mail content page', () => {
+  afterEach(() => {
     sinon.restore();
   });
 
-  it('shows "page not found" error if no message is given', function (done) {
+  it('shows "page not found" error if no message is given', done => {
     request(app)
       .get('/message')
-      .expect(404, function (err) {
+      .expect(404, err => {
         done(err);
       });
   });
 
-  it('shows text "Keine E-Mails" if mail is not found', function (done) {
-    var mailForId = sinon.stub(mailarchiveService, 'mailForId', function (id, callback) {callback(null, undefined); });
+  it('shows text "Keine E-Mails" if mail is not found', done => {
+    const mailForId = sinon.stub(mailarchiveService, 'mailForId', (id, callback) => {callback(null, undefined); });
     request(app)
       .get('/message/mailID')
       .expect(200)
-      .expect(/Keine E-Mails/, function (err) {
+      .expect(/Keine E-Mails/, err => {
         expect(mailForId.calledOnce).to.be(true);
         done(err);
       });
   });
 
-  it('shows html if message contains html', function (done) {
-    var displayedMail = new Mail({
+  it('shows html if message contains html', done => {
+    const displayedMail = new Mail({
       'html': '<div>Html message 1</div>',
       'id': '<message1@nomail.com>'
     });
 
-    var mailForId = sinon.stub(mailarchiveService, 'mailForId', function (id, callback) {callback(null, displayedMail); });
+    const mailForId = sinon.stub(mailarchiveService, 'mailForId', (id, callback) => {callback(null, displayedMail); });
     request(app)
       .get('/message/mailID')
       .expect(200)
-      .expect(/<div>Html message 1<\/div>/, function (err) {
+      .expect(/<div>Html message 1<\/div>/, err => {
         expect(mailForId.calledOnce).to.be(true);
         done(err);
       });
   });
 
-  it('filters mail addresses and phone numbers from html', function (done) {
-    var displayedMail = new Mail({
+  it('filters mail addresses and phone numbers from html', done => {
+    const displayedMail = new Mail({
       'html': '<div>Html message 1: mail@somewhere.org Tel: +49 (123) 45 67 89</div>',
       'id': '<message1@nomail.com>'
     });
 
-    var mailForId = sinon.stub(mailarchiveService, 'mailForId', function (id, callback) {callback(null, displayedMail); });
+    const mailForId = sinon.stub(mailarchiveService, 'mailForId', (id, callback) => {callback(null, displayedMail); });
     request(app)
       .get('/message/mailID')
       .expect(200)
-      .expect(/<div>Html message 1: \.\.\.@\.\.\. Tel: \.\.\.<\/div>/, function (err) {
+      .expect(/<div>Html message 1: \.\.\.@\.\.\. Tel: \.\.\.<\/div>/, err => {
         expect(mailForId.calledOnce).to.be(true);
         done(err);
       });
   });
 
-  it('references sender member page if available', function (done) {
-    var displayedMail = new Mail({
+  it('references sender member page if available', done => {
+    const displayedMail = new Mail({
       id: '<message1@nomail.com>'
     });
     displayedMail.member = member;
 
-    var mailForId = sinon.stub(mailarchiveService, 'mailForId', function (id, callback) {callback(null, displayedMail); });
+    const mailForId = sinon.stub(mailarchiveService, 'mailForId', (id, callback) => {callback(null, displayedMail); });
 
     request(app)
       .get('/message/mailID')
       .expect(200)
-      .expect(/href="\/members\/nigg"/, function (err) {
+      .expect(/href="\/members\/nigg"/, err => {
         expect(mailForId.calledOnce).to.be(true);
         done(err);
       });
@@ -88,52 +88,52 @@ describe('Mail content page', function () {
 
 });
 
-describe('Mail index page', function () {
-  afterEach(function () {
+describe('Mail index page', () => {
+  afterEach(() => {
     sinon.restore();
   });
 
   function stubMailHeaders(headers) {
-    sinon.stub(mailarchiveService, 'threadedMails', function (group, callback) {callback(null, headers); });
-    sinon.stub(mailarchiveService, 'unthreadedMails', function (group, callback) {callback(null, headers); });
+    sinon.stub(mailarchiveService, 'threadedMails', (group, callback) => {callback(null, headers); });
+    sinon.stub(mailarchiveService, 'unthreadedMails', (group, callback) => {callback(null, headers); });
   }
 
-  it('shows group name in the title', function (done) {
+  it('shows group name in the title', done => {
     stubMailHeaders([]);
 
     request(app)
       .get('/list/threaded/group')
       .expect(200)
-      .expect(/<title>\s*group\s*E-Mails/, function (err) {
+      .expect(/<title>\s*group\s*E-Mails/, err => {
         done(err);
       });
   });
 
-  it('shows group name heading', function (done) {
+  it('shows group name heading', done => {
     stubMailHeaders([]);
 
     request(app)
       .get('/list/threaded/group')
       .expect(200)
-      .expect(/group/, function (err) {
+      .expect(/group/, err => {
         done(err);
       });
   });
 
-  it('shows text "Keine E-Mails" if no mails for group are available', function (done) {
+  it('shows text "Keine E-Mails" if no mails for group are available', done => {
     stubMailHeaders([]);
 
     request(app)
       .get('/list/threaded/group')
       .expect(200)
-      .expect(/Keine E-Mails/, function (err) {
+      .expect(/Keine E-Mails/, err => {
         done(err);
       });
   });
 
-  var mailTime = moment('01 Jan 2010 21:14:14 +0100', 'DD MMM YYYY HH:mm:ss Z');
+  const mailTime = moment('01 Jan 2010 21:14:14 +0100', 'DD MMM YYYY HH:mm:ss Z');
   mailTime.locale('de');
-  var displayedMailHeader = new Mail({
+  let displayedMailHeader = new Mail({
     from: {name: 'Sender Name'},
     timeUnix: mailTime.unix(),
     id: '<message1@nomail.com>',
@@ -141,40 +141,40 @@ describe('Mail index page', function () {
     group: 'group'
   });
 
-  it('shows sender', function (done) {
+  it('shows sender', done => {
     stubMailHeaders([displayedMailHeader]);
 
     request(app)
       .get('/list/threaded/group')
       .expect(200)
-      .expect(/Sender Name/, function (err) {
+      .expect(/Sender Name/, err => {
         done(err);
       });
   });
 
-  it('shows subject', function (done) {
+  it('shows subject', done => {
     stubMailHeaders([displayedMailHeader]);
 
     request(app)
       .get('/list/threaded/group')
       .expect(200)
-      .expect(/Mail 1/, function (err) {
+      .expect(/Mail 1/, err => {
         done(err);
       });
   });
 
-  it('shows mail time', function (done) {
+  it('shows mail time', done => {
     stubMailHeaders([displayedMailHeader]);
 
     request(app)
       .get('/list/threaded/group')
       .expect(200)
-      .expect(new RegExp(mailTime.format('L')), function (err) {
+      .expect(new RegExp(mailTime.format('L')), err => {
         done(err);
       });
   });
 
-  it('references sender member page if available', function (done) {
+  it('references sender member page if available', done => {
     displayedMailHeader = new Mail({
       id: 'Mail 1'
     });
@@ -184,17 +184,17 @@ describe('Mail index page', function () {
     request(app)
       .get('/list/threaded/group')
       .expect(200)
-      .expect(/href="\/members\/nigg"/, function (err) {
+      .expect(/href="\/members\/nigg"/, err => {
         done(err);
       });
   });
 
-  it('references sender member page inside the thread', function (done) {
-    var displayedMailHeader1 = new Mail(
-      {id: 'Mail 1', subject: 'Mail 1', references: [], group: 'group' }
+  it('references sender member page inside the thread', done => {
+    const displayedMailHeader1 = new Mail(
+      {id: 'Mail 1', subject: 'Mail 1', references: [], group: 'group'}
     );
-    var displayedMailHeader2 = new Mail(
-      {id: 'Mail 2', subject: 'Mail 2', references: ['Mail 1'], from: {name: 'Sender Name 2', id: 'sender ID'}, group: 'group' }
+    const displayedMailHeader2 = new Mail(
+      {id: 'Mail 2', subject: 'Mail 2', references: ['Mail 1'], from: {name: 'Sender Name 2', id: 'sender ID'}, group: 'group'}
     );
     stubMailHeaders([displayedMailHeader1, displayedMailHeader2]);
     displayedMailHeader1.member = member;
@@ -202,7 +202,7 @@ describe('Mail index page', function () {
     request(app)
       .get('/list/threaded/group')
       .expect(200)
-      .expect(/href="\/members\/nigg"/, function (err) {
+      .expect(/href="\/members\/nigg"/, err => {
         done(err);
       });
   });
