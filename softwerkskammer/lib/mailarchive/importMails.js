@@ -1,8 +1,5 @@
 'use strict';
 const moment = require('moment-timezone');
-const beans = require('simple-configure').get('beans');
-const fieldHelpers = beans.get('fieldHelpers');
-const memberstore = beans.get('memberstore');
 
 const path = require('path');
 
@@ -14,6 +11,10 @@ const MailParser = require('mailparser').MailParser;
 const fs = require('fs');
 const crypto = require('crypto');
 
+const beans = require('simple-configure').get('beans');
+const fieldHelpers = beans.get('fieldHelpers');
+const memberstore = beans.get('memberstore');
+
 module.exports = function importMails(file, group, done) {
   function date(parsedObject) {
     if (fieldHelpers.isFilled(parsedObject.headers.date)) {
@@ -23,22 +24,21 @@ module.exports = function importMails(file, group, done) {
     return moment();
   }
 
-  function assignMessageId(parsedObject, mailDbObject, done1) {
+  function assignMessageId(parsedObject, mailDbObject, callback) {
     /* eslint new-cap: 0 */
     if (parsedObject.messageId) {
       mailDbObject.id = parsedObject.messageId;
-      done1(null, mailDbObject);
-      return;
+      return callback();
     }
 
     const shasum = crypto.createHash('sha1');
-    const s = fs.ReadStream(file);
+    const s = fs.createReadStream(file); // file may be big -> stream instead of readFile
+
     s.on('data', d => shasum.update(d));
 
     s.on('end', () => {
-      const d = shasum.digest('hex');
-      mailDbObject.id = 'mail-sha1-' + d + '@softwerkskammer.org';
-      done1(null, mailDbObject);
+      mailDbObject.id = 'mail-sha1-' + shasum.digest('hex') + '@softwerkskammer.org';
+      callback();
     });
   }
 
@@ -51,13 +51,6 @@ module.exports = function importMails(file, group, done) {
     }
     logger.info('No references found for eMail with subject: ' + parsedObject.subject);
     return null;
-  }
-
-  function name(fromStructure) {
-    if (fromStructure.name) {
-      return fromStructure.name;
-    }
-    return fromStructure.address.replace(/@.*/, '');
   }
 
   const mailparser = new MailParser({
@@ -79,7 +72,7 @@ module.exports = function importMails(file, group, done) {
 
     const from = parsedObject.from[0];
     mailDbObject.from = {
-      name: name(from)
+      name: from.name || from.address.replace(/@.*/, '')
     };
     memberstore.getMemberForEMail(from.address, (err, member) => {
       if (err) {
