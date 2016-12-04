@@ -2,7 +2,6 @@
 
 var sinon = require('sinon').sandbox.create();
 var expect = require('must-dist');
-var _ = require('lodash');
 var beans = require('../../testutil/configureForTest').get('beans');
 var wikiService = beans.get('wikiService');
 var moment = require('moment-timezone');
@@ -229,7 +228,7 @@ describe('WikiService (getBlogPosts)', function () {
   it('skips empty posts and posts without proper date', function (done) {
     wikiService.getBlogpostsForGroup('error', function (err, result) {
       expect(result.length).to.equal(4);
-      var titles = _.map(result, 'title');
+      var titles = result.map(post => post.title);
       expect(titles).to.contain('1');
       expect(titles).to.contain('3');
       expect(titles).to.contain('4');

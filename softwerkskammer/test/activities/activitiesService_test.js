@@ -7,9 +7,6 @@ var verify = chado.verify;
 var sinon = require('sinon').sandbox.create();
 var expect = require('must-dist');
 var moment = require('moment-timezone');
-var _ = require('lodash');
-
-//var util = require('util');
 
 var conf = require('../../testutil/configureForTest');
 var beans = conf.get('beans');
@@ -41,7 +38,8 @@ var dummyActivity = new Activity({
 var group = new Group({id: 'groupname', longName: 'Buxtehude'});
 
 var waitinglistMembersOf = function (activity) {
-  return _.map(_.map(activity.allWaitinglistEntries(), 'state'), '_memberId');
+  /* eslint no-underscore-dangle: 0 */
+  return activity.allWaitinglistEntries().map(entry => entry.state).map(state => state._memberId);
 };
 
 var activityWithEinzelzimmer = function (ressource) {

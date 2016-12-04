@@ -1,6 +1,5 @@
 'use strict';
 var expect = require('must-dist');
-var _ = require('lodash');
 var i18n = require('i18next');
 
 require('../../testutil/configureForTest');
@@ -8,7 +7,7 @@ var beans = require('simple-configure').get('beans');
 var validation = beans.get('validation');
 
 function translateMessages(messages) {
-  return _.map(messages, function (message) {
+  return messages.map(function (message) {
     return i18n.t(message);
   });
 }

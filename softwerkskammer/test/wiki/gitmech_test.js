@@ -1,7 +1,7 @@
 'use strict';
 
 const moment = require('moment-timezone');
-const _ = require('lodash');
+const R = require('ramda');
 const sinon = require('sinon').sandbox.create();
 const expect = require('must-dist');
 const beans = require('../../testutil/configureForTest').get('beans');
@@ -245,9 +245,9 @@ describe('the gitmech module', function () {
   };
 
   describe(' - write operations', function () {
-    describe('"add" command', runTestsFor('add', _.partial(Git.add, 'path')));
-    describe('"rm" command', runTestsFor('rm', _.partial(Git.rm, 'path')));
-    describe('"mv" command', runTestsFor('mv', _.partial(Git.mv, 'oldpath', 'newpath')));
+    describe('"add" command', runTestsFor('add', R.partial(Git.add, ['path'])));
+    describe('"rm" command', runTestsFor('rm', R.partial(Git.rm, ['path'])));
+    describe('"mv" command', runTestsFor('mv', R.partial(Git.mv, ['oldpath', 'newpath'])));
   });
 
   describe(' - searching', function () {

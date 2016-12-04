@@ -3,9 +3,6 @@
 var sinon = require('sinon').sandbox.create();
 var expect = require('must-dist');
 var moment = require('moment-timezone');
-var _ = require('lodash');
-
-//var util = require('util');
 
 var beans = require('../../testutil/configureForTest').get('beans');
 var waitinglistService = beans.get('waitinglistService');
@@ -19,7 +16,8 @@ var Activity = beans.get('activity');
 var activity1;
 
 var waitinglistMembersOf = function (activity, resourceName) {
-  return _.map(_.map(activity.resourceNamed(resourceName).waitinglistEntries(), 'state'), '_memberId');
+  /* eslint no-underscore-dangle: 0 */
+  return activity.resourceNamed(resourceName).waitinglistEntries().map(entry => entry.state).map(state => state._memberId);
 };
 
 var activityWithEinzelzimmer = function (resource) {

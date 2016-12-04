@@ -3,7 +3,6 @@
 var request = require('supertest');
 var sinon = require('sinon').sandbox.create();
 var expect = require('must-dist');
-var _ = require('lodash');
 var moment = require('moment-timezone');
 
 var chado = require('chado');
@@ -118,7 +117,7 @@ describe('Activity application', function () {
       callback(null, [emptyActivity]);
     });
     sinon.stub(memberstore, 'getMembersForIds', function (ids, callback) {
-      var members = _.map(ids, function (id) { return id === 'memberId1' ? member1 : (id === 'memberId2' ? member2 : (id === 'memberId3' ? member3 : (id === 'memberId4' ? member4 : undefined))); });
+      var members = ids.map(function (id) { return id === 'memberId1' ? member1 : (id === 'memberId2' ? member2 : (id === 'memberId3' ? member3 : (id === 'memberId4' ? member4 : undefined))); });
       callback(null, members);
     });
 
