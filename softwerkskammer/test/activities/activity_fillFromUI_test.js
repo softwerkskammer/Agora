@@ -1,8 +1,8 @@
 'use strict';
 
-var expect = require('must-dist');
+const expect = require('must-dist');
 
-var Activity = require('../../testutil/configureForTest').get('beans').get('activity');
+const Activity = require('../../testutil/configureForTest').get('beans').get('activity');
 
 function checkResourceNames(activity, resourceName1, resourceName2) {
   if (resourceName2) {
@@ -15,15 +15,15 @@ function checkResourceNames(activity, resourceName1, resourceName2) {
   }
 }
 
-describe('Activity (when filled from UI)', function () {
+describe('Activity (when filled from UI)', () => {
 
-  it('does not change the activity\'s ID', function () {
-    var activity = new Activity({id: 'myId'}).fillFromUI({});
+  it('does not change the activity\'s ID', () => {
+    const activity = new Activity({id: 'myId'}).fillFromUI({});
     expect(activity.id()).to.equal('myId');
   });
 
-  it('parses start date and time using default timezone', function () {
-    var activity = new Activity().fillFromUI({
+  it('parses start date and time using default timezone', () => {
+    const activity = new Activity().fillFromUI({
       url: 'myURL',
       startDate: '01.02.2013',
       startTime: '12:34'
@@ -31,8 +31,8 @@ describe('Activity (when filled from UI)', function () {
     expect(activity.startMoment().format()).to.equal('2013-02-01T12:34:00+01:00');
   });
 
-  it('parses end date and time using default timezone', function () {
-    var activity = new Activity().fillFromUI({
+  it('parses end date and time using default timezone', () => {
+    const activity = new Activity().fillFromUI({
       url: 'myURL',
       endDate: '01.08.2013',
       endTime: '12:34'
@@ -40,38 +40,38 @@ describe('Activity (when filled from UI)', function () {
     expect(activity.endMoment().format()).to.equal('2013-08-01T12:34:00+02:00');
   });
 
-  describe('creates a resource', function () {
+  describe('creates a resource', () => {
 
-    it('without limit', function () {
-      var activity = new Activity().fillFromUI({resources: {names: 'Veranstaltung', limits: '', previousNames: ''}});
+    it('without limit', () => {
+      const activity = new Activity().fillFromUI({resources: {names: 'Veranstaltung', limits: '', previousNames: ''}});
 
       checkResourceNames(activity, 'Veranstaltung');
       expect(activity.resourceNamed('Veranstaltung').limit(), 'Limit of resource').to.equal(undefined);
     });
 
-    it('with limit 0', function () {
-      var activity = new Activity().fillFromUI({resources: {names: 'Veranstaltung', limits: '0', previousNames: ''}});
+    it('with limit 0', () => {
+      const activity = new Activity().fillFromUI({resources: {names: 'Veranstaltung', limits: '0', previousNames: ''}});
 
       checkResourceNames(activity, 'Veranstaltung');
       expect(activity.resourceNamed('Veranstaltung').limit(), 'Limit of resource').to.equal(0);
     });
 
-    it('with limit', function () {
-      var activity = new Activity().fillFromUI({resources: {names: 'Veranstaltung', limits: '10', previousNames: ''}});
+    it('with limit', () => {
+      const activity = new Activity().fillFromUI({resources: {names: 'Veranstaltung', limits: '10', previousNames: ''}});
 
       checkResourceNames(activity, 'Veranstaltung');
       expect(activity.resourceNamed('Veranstaltung').limit(), 'Limit of resource').to.equal(10);
     });
 
-    it('without limit when the entered limit is negative', function () {
-      var activity = new Activity().fillFromUI({resources: {names: 'Veranstaltung', limits: '-10', previousNames: ''}});
+    it('without limit when the entered limit is negative', () => {
+      const activity = new Activity().fillFromUI({resources: {names: 'Veranstaltung', limits: '-10', previousNames: ''}});
 
       checkResourceNames(activity, 'Veranstaltung');
       expect(activity.resourceNamed('Veranstaltung').limit(), 'Limit of resource').to.equal(undefined);
     });
 
-    it('without limit when the entered limit is not an integer', function () {
-      var activity = new Activity().fillFromUI({
+    it('without limit when the entered limit is not an integer', () => {
+      const activity = new Activity().fillFromUI({
         resources: {
           names: 'Veranstaltung',
           limits: 'dudu',
@@ -83,8 +83,8 @@ describe('Activity (when filled from UI)', function () {
       expect(activity.resourceNamed('Veranstaltung').limit(), 'Limit of resource').to.equal(undefined);
     });
 
-    it('with open registration', function () {
-      var activity = new Activity().fillFromUI({
+    it('with open registration', () => {
+      const activity = new Activity().fillFromUI({
         resources: {
           names: 'Veranstaltung',
           limits: 'dudu',
@@ -97,8 +97,8 @@ describe('Activity (when filled from UI)', function () {
       expect(activity.resourceNamed('Veranstaltung').isRegistrationOpen(), 'Registration at resource').to.equal(true);
     });
 
-    it('with closed registration', function () {
-      var activity = new Activity().fillFromUI({
+    it('with closed registration', () => {
+      const activity = new Activity().fillFromUI({
         resources: {
           names: 'Veranstaltung',
           limits: 'dudu',
@@ -111,8 +111,8 @@ describe('Activity (when filled from UI)', function () {
       expect(activity.resourceNamed('Veranstaltung').isRegistrationOpen(), 'Registration at resource').to.equal(false);
     });
 
-    it('with unsubscription possible', function () {
-      var activity = new Activity().fillFromUI({
+    it('with unsubscription possible', () => {
+      const activity = new Activity().fillFromUI({
         resources: {
           names: 'Veranstaltung',
           limits: 'dudu',
@@ -125,8 +125,8 @@ describe('Activity (when filled from UI)', function () {
       expect(activity.resourceNamed('Veranstaltung').canUnsubscribe(), 'Unsubscription at resource').to.equal(true);
     });
 
-    it('with unsubscription not possible', function () {
-      var activity = new Activity().fillFromUI({
+    it('with unsubscription not possible', () => {
+      const activity = new Activity().fillFromUI({
         resources: {
           names: 'Veranstaltung',
           limits: 'dudu',
@@ -139,8 +139,8 @@ describe('Activity (when filled from UI)', function () {
       expect(activity.resourceNamed('Veranstaltung').canUnsubscribe(), 'Unsubscription at resource').to.equal(false);
     });
 
-    it('with ID', function () {
-      var activity = new Activity().fillFromUI({
+    it('with ID', () => {
+      const activity = new Activity().fillFromUI({
         assignedGroup: 'My Group',
         title: 'My Title',
         startDate: '01.02.2013',
@@ -150,8 +150,8 @@ describe('Activity (when filled from UI)', function () {
       expect(activity.id()).to.equal('My_Group_My_Title_Fri_Feb_01_2013_20_15_00_GMT+0100');
     });
 
-    it('with several resources where only one has open registration', function () {
-      var activity = new Activity().fillFromUI({
+    it('with several resources where only one has open registration', () => {
+      const activity = new Activity().fillFromUI({
         resources: {
           names: 'Something irrelevant', limits: '',
           isRegistrationOpen: 'yes'
@@ -163,18 +163,18 @@ describe('Activity (when filled from UI)', function () {
 
   });
 
-  describe('adds a limit', function () {
+  describe('adds a limit', () => {
 
-    it('to a resource without limit', function () {
-      var activity = new Activity({resources: {Veranstaltung: {_registeredMembers: []}}})
+    it('to a resource without limit', () => {
+      const activity = new Activity({resources: {Veranstaltung: {_registeredMembers: []}}})
         .fillFromUI({resources: {names: 'Veranstaltung', limits: '10', previousNames: 'Veranstaltung'}});
 
       checkResourceNames(activity, 'Veranstaltung');
       expect(activity.resourceNamed('Veranstaltung').limit(), 'Limit of resource').to.equal(10);
     });
 
-    it('to a resource with registered members', function () {
-      var activity = new Activity({
+    it('to a resource with registered members', () => {
+      const activity = new Activity({
         resources: {
           Veranstaltung: {
             _registeredMembers: [
@@ -191,8 +191,8 @@ describe('Activity (when filled from UI)', function () {
       expect(activity.resourceNamed('Veranstaltung').registeredMembers(), 'Members of resource').to.contain('memberId');
     });
 
-    it('to a resource with too many registered members', function () {
-      var activity = new Activity({
+    it('to a resource with too many registered members', () => {
+      const activity = new Activity({
         resources: {
           Veranstaltung: {
             _registeredMembers: [
@@ -213,34 +213,34 @@ describe('Activity (when filled from UI)', function () {
 
   });
 
-  describe('removes a limit', function () {
+  describe('removes a limit', () => {
 
-    it('from a resource with limit', function () {
-      var activity = new Activity({resources: {Veranstaltung: {_registeredMembers: [], limit: 10}}})
+    it('from a resource with limit', () => {
+      const activity = new Activity({resources: {Veranstaltung: {_registeredMembers: [], limit: 10}}})
         .fillFromUI({resources: {names: 'Veranstaltung', limits: '', previousNames: 'Veranstaltung'}});
 
       checkResourceNames(activity, 'Veranstaltung');
       expect(activity.resourceNamed('Veranstaltung').limit(), 'Limit of resource').to.equal(undefined);
     });
 
-    it('from a resource with limit when the new limit is negative', function () {
-      var activity = new Activity({resources: {Veranstaltung: {_registeredMembers: [], limit: 10}}})
+    it('from a resource with limit when the new limit is negative', () => {
+      const activity = new Activity({resources: {Veranstaltung: {_registeredMembers: [], limit: 10}}})
         .fillFromUI({resources: {names: 'Veranstaltung', limits: '-1', previousNames: 'Veranstaltung'}});
 
       checkResourceNames(activity, 'Veranstaltung');
       expect(activity.resourceNamed('Veranstaltung').limit(), 'Limit of resource').to.equal(undefined);
     });
 
-    it('from a resource with limit when the new limit is not an integer', function () {
-      var activity = new Activity({resources: {Veranstaltung: {_registeredMembers: [], limit: 10}}})
+    it('from a resource with limit when the new limit is not an integer', () => {
+      const activity = new Activity({resources: {Veranstaltung: {_registeredMembers: [], limit: 10}}})
         .fillFromUI({resources: {names: 'Veranstaltung', limits: 'tuut', previousNames: 'Veranstaltung'}});
 
       checkResourceNames(activity, 'Veranstaltung');
       expect(activity.resourceNamed('Veranstaltung').limit(), 'Limit of resource').to.equal(undefined);
     });
 
-    it('from a resource with registered members', function () {
-      var activity = new Activity({
+    it('from a resource with registered members', () => {
+      const activity = new Activity({
         resources: {
           Veranstaltung: {
             _registeredMembers: [

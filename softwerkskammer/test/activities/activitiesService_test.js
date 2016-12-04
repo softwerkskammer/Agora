@@ -1,30 +1,30 @@
 'use strict';
 
-var chado = require('chado');
-var cb = chado.callback;
-var verify = chado.verify;
+const chado = require('chado');
+const cb = chado.callback;
+const verify = chado.verify;
 
-var sinon = require('sinon').sandbox.create();
-var expect = require('must-dist');
-var moment = require('moment-timezone');
+const sinon = require('sinon').sandbox.create();
+const expect = require('must-dist');
+const moment = require('moment-timezone');
 
-var conf = require('../../testutil/configureForTest');
-var beans = conf.get('beans');
-var reservedURLs = conf.get('reservedActivityURLs');
+const conf = require('../../testutil/configureForTest');
+const beans = conf.get('beans');
+const reservedURLs = conf.get('reservedActivityURLs');
 
-var activitiesService = beans.get('activitiesService');
-var activitystore = beans.get('activitystore');
-var groupsService = beans.get('groupsService');
-var groupstore = beans.get('groupstore');
-var memberstore = beans.get('memberstore');
-var membersService = beans.get('membersService');
+const activitiesService = beans.get('activitiesService');
+const activitystore = beans.get('activitystore');
+const groupsService = beans.get('groupsService');
+const groupstore = beans.get('groupstore');
+const memberstore = beans.get('memberstore');
+const membersService = beans.get('membersService');
 
-var Activity = beans.get('activity');
-var Member = beans.get('member');
-var Group = beans.get('group');
-var notifications = beans.get('notifications');
+const Activity = beans.get('activity');
+const Member = beans.get('member');
+const Group = beans.get('group');
+const notifications = beans.get('notifications');
 
-var dummyActivity = new Activity({
+const dummyActivity = new Activity({
   title: 'Title of the Activity',
   description: 'description',
   assignedGroup: 'assignedGroup',
@@ -35,90 +35,90 @@ var dummyActivity = new Activity({
   color: 'aus Gruppe'
 });
 
-var group = new Group({id: 'groupname', longName: 'Buxtehude'});
+const group = new Group({id: 'groupname', longName: 'Buxtehude'});
 
-var waitinglistMembersOf = function (activity) {
+function waitinglistMembersOf(activity) {
   /* eslint no-underscore-dangle: 0 */
   return activity.allWaitinglistEntries().map(entry => entry.state).map(state => state._memberId);
-};
+}
 
-var activityWithEinzelzimmer = function (ressource) {
-  var state = {resources: {Veranstaltung: ressource}};
-  var activity = new Activity(state);
-  sinon.stub(activitystore, 'saveActivity', function (id, callback) { callback(null); });
-  sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, activity); });
-  sinon.stub(activitystore, 'getActivityForId', function (id, callback) { callback(null, activity); });
+function activityWithEinzelzimmer(ressource) {
+  const state = {resources: {Veranstaltung: ressource}};
+  const activity = new Activity(state);
+  sinon.stub(activitystore, 'saveActivity', (id, callback) => { callback(null); });
+  sinon.stub(activitystore, 'getActivity', (id, callback) => { callback(null, activity); });
+  sinon.stub(activitystore, 'getActivityForId', (id, callback) => { callback(null, activity); });
   return activity;
-};
+}
 
-describe('Activities Service', function () {
+describe('Activities Service', () => {
 
-  beforeEach(function () {
+  beforeEach(() => {
     //sinon.stub(membersService, 'getImage', function(member, callback) { callback(); });
 
-    sinon.stub(activitystore, 'allActivities', function (callback) {callback(null, [dummyActivity]); });
+    sinon.stub(activitystore, 'allActivities', callback => {callback(null, [dummyActivity]); });
 
-    sinon.stub(groupsService, 'getAllAvailableGroups', function (callback) {
+    sinon.stub(groupsService, 'getAllAvailableGroups', callback => {
       callback(null, [
         {id: 'assignedGroup', longName: 'The name of the assigned Group'}
       ]);
     });
-    sinon.stub(groupsService, 'allGroupColors', function (callback) {
-      var result = {};
+    sinon.stub(groupsService, 'allGroupColors', callback => {
+      const result = {};
       result.assignedGroup = '#123456';
       callback(null, result);
     });
   });
 
-  afterEach(function () {
+  afterEach(() => {
     sinon.restore();
   });
 
-  it('returns the queried activities and enhances them with their color and group name', function () {
-    activitiesService.getActivitiesForDisplay(activitystore.allActivities, function (err, activities) {
+  it('returns the queried activities and enhances them with their color and group name', () => {
+    activitiesService.getActivitiesForDisplay(activitystore.allActivities, (err, activities) => {
       expect(err).to.not.exist();
       expect(activities.length).to.equal(1);
-      var activity = activities[0];
+      const activity = activities[0];
       expect(activity.title()).to.equal('Title of the Activity');
       expect(activity.colorRGB).to.equal('#123456');
       expect(activity.groupName()).to.equal('The name of the assigned Group');
     });
   });
 
-  it('returns an activity and enhances it with its group and visitors', function (done) {
-    var member1 = new Member({
+  it('returns an activity and enhances it with its group and visitors', done => {
+    const member1 = new Member({
       id: 'memberId1',
       nickname: 'participant1',
       email: 'nick1@b.c',
       firstname: 'Firstname1',
       lastname: 'Lastname1'
     });
-    var member2 = new Member({
+    const member2 = new Member({
       id: 'memberId2',
       nickname: 'participant2',
       email: 'nick2@b.c',
       firstname: 'Firstname2',
       lastname: 'Lastname2'
     });
-    var owner = new Member({id: 'ownerId', nickname: 'owner', email: 'a@b.c'});
+    const owner = new Member({id: 'ownerId', nickname: 'owner', email: 'a@b.c'});
 
-    var emptyActivity = new Activity({
+    const emptyActivity = new Activity({
       title: 'Title of the Activity',
       url: 'urlOfTheActivity',
       assignedGroup: 'groupname',
       owner: 'ownerId'
     });
 
-    sinon.stub(activitystore, 'getActivity', function (activityId, callback) { callback(null, emptyActivity); });
-    sinon.stub(memberstore, 'getMembersForIds', function (ids, callback) {
-      var memberA = new Member({
+    sinon.stub(activitystore, 'getActivity', (activityId, callback) => { callback(null, emptyActivity); });
+    sinon.stub(memberstore, 'getMembersForIds', (ids, callback) => {
+      const memberA = new Member({
         id: 'memberId1',
         nickname: 'participant1',
         email: 'nick1@b.c',
         firstname: 'Firstname1',
         lastname: 'Lastname1'
       });
-      var memberB = new Member({
+      const memberB = new Member({
         id: 'memberId2',
         nickname: 'participant2',
         email: 'nick2@b.c',
@@ -128,18 +128,18 @@ describe('Activities Service', function () {
 
       callback(null, [memberA, memberB]);
     });
-    sinon.stub(membersService, 'putAvatarIntoMemberAndSave', function (member, callback) {callback();});
-    sinon.stub(memberstore, 'getMemberForId', function (id, callback) {
+    sinon.stub(membersService, 'putAvatarIntoMemberAndSave', (member, callback) => {callback();});
+    sinon.stub(memberstore, 'getMemberForId', (id, callback) => {
       callback(null, owner);
     });
-    sinon.stub(groupstore, 'getGroup', function (groupname, callback) {
+    sinon.stub(groupstore, 'getGroup', (groupname, callback) => {
       if (groupname === 'groupname') {
         return callback(null, group);
       }
       return callback(null, null);
     });
 
-    var expectedActivity = new Activity({
+    const expectedActivity = new Activity({
       title: 'Title of the Activity',
       url: 'urlOfTheActivity',
       assignedGroup: 'groupname',
@@ -158,9 +158,9 @@ describe('Activities Service', function () {
       .on(activitiesService, done);
   });
 
-  describe('checks the validity of URLs and', function () {
+  describe('checks the validity of URLs and', () => {
 
-    it('does not allow the URL \'edit\'', function (done) {
+    it('does not allow the URL \'edit\'', done => {
       verify('activitiesService')
         .canHandle('isValidUrl')
         .withArgs(reservedURLs, 'edit', cb)
@@ -168,8 +168,8 @@ describe('Activities Service', function () {
         .on(activitiesService, done);
     });
 
-    it('allows the untrimmed URL \'uhu\'', function (done) {
-      sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, null); });
+    it('allows the untrimmed URL \'uhu\'', done => {
+      sinon.stub(activitystore, 'getActivity', (id, callback) => { callback(null, null); });
       verify('activitiesService')
         .canHandle('isValidUrl')
         .withArgs(reservedURLs, 'uhu', cb)
@@ -177,7 +177,7 @@ describe('Activities Service', function () {
         .on(activitiesService, done);
     });
 
-    it('does not allow a URL containing a "/"', function (done) {
+    it('does not allow a URL containing a "/"', done => {
       verify('activitiesService')
         .canHandle('isValidUrl')
         .withArgs(reservedURLs, 'legal/egal', cb)
@@ -186,42 +186,42 @@ describe('Activities Service', function () {
     });
   });
 
-  describe('- when adding a visitor -', function () {
+  describe('- when adding a visitor -', () => {
 
-    beforeEach(function () {
-      sinon.stub(activitystore, 'saveActivity', function (id, callback) { callback(null); });
+    beforeEach(() => {
+      sinon.stub(activitystore, 'saveActivity', (id, callback) => { callback(null); });
       sinon.stub(notifications, 'visitorRegistration');
     });
 
     function activityWithAddMemberIdReturning(truthValue) {
-      return {addMemberId: function () { return truthValue; }};
+      return {addMemberId: () => truthValue};
     }
 
-    it('does not show a status message when member addition succeeds', function (done) {
-      sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, activityWithAddMemberIdReturning(true)); });
+    it('does not show a status message when member addition succeeds', done => {
+      sinon.stub(activitystore, 'getActivity', (id, callback) => { callback(null, activityWithAddMemberIdReturning(true)); });
 
-      activitiesService.addVisitorTo('memberId', 'activity-url', moment(), function (err, statusTitle, statusText) {
+      activitiesService.addVisitorTo('memberId', 'activity-url', moment(), (err, statusTitle, statusText) => {
         expect(statusTitle).to.not.exist();
         expect(statusText).to.not.exist();
         done(err);
       });
     });
 
-    it('shows a status message when member addition fails', function (done) {
-      sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, activityWithAddMemberIdReturning(false)); });
+    it('shows a status message when member addition fails', done => {
+      sinon.stub(activitystore, 'getActivity', (id, callback) => { callback(null, activityWithAddMemberIdReturning(false)); });
 
-      activitiesService.addVisitorTo('memberId', 'activity-url', moment(), function (err, statusTitle, statusText) {
+      activitiesService.addVisitorTo('memberId', 'activity-url', moment(), (err, statusTitle, statusText) => {
         expect(statusTitle).to.be('activities.registration_not_now');
         expect(statusText).to.be('activities.registration_not_possible');
         done(err);
       });
     });
 
-    it('notifies of the registration when member addition succeeds', function (done) {
-      var activity = activityWithAddMemberIdReturning(true);
-      sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, activity); });
+    it('notifies of the registration when member addition succeeds', done => {
+      const activity = activityWithAddMemberIdReturning(true);
+      sinon.stub(activitystore, 'getActivity', (id, callback) => { callback(null, activity); });
 
-      activitiesService.addVisitorTo('memberId', 'activity-url', moment(), function (err) {
+      activitiesService.addVisitorTo('memberId', 'activity-url', moment(), err => {
         expect(notifications.visitorRegistration.calledOnce).to.be(true);
         expect(notifications.visitorRegistration.firstCall.args[0]).to.eql(activity);
         expect(notifications.visitorRegistration.firstCall.args[1]).to.equal('memberId');
@@ -229,29 +229,29 @@ describe('Activities Service', function () {
       });
     });
 
-    it('does not notify of the registration when member addition fails', function (done) {
-      sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(null, activityWithAddMemberIdReturning(false)); });
+    it('does not notify of the registration when member addition fails', done => {
+      sinon.stub(activitystore, 'getActivity', (id, callback) => { callback(null, activityWithAddMemberIdReturning(false)); });
 
-      activitiesService.addVisitorTo('memberId', 'activity-url', moment(), function (err) {
+      activitiesService.addVisitorTo('memberId', 'activity-url', moment(), err => {
         expect(notifications.visitorRegistration.called).to.be(false);
         done(err);
       });
     });
 
-    it('gives an error when activity could not be loaded', function (done) {
-      sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(new Error('error')); });
+    it('gives an error when activity could not be loaded', done => {
+      sinon.stub(activitystore, 'getActivity', (id, callback) => { callback(new Error('error')); });
 
-      activitiesService.addVisitorTo('memberId', 'activity-url', moment(), function (err) {
+      activitiesService.addVisitorTo('memberId', 'activity-url', moment(), err => {
         expect(err).to.exist();
         done(); // error condition - do not pass err
       });
     });
   });
 
-  describe('- when removing a visitor -', function () {
+  describe('- when removing a visitor -', () => {
 
-    it('succeeds when registration is open', function (done) {
-      var activity = activityWithEinzelzimmer({
+    it('succeeds when registration is open', done => {
+      const activity = activityWithEinzelzimmer({
         _registrationOpen: true,
         _registeredMembers: [
           {memberId: 'memberId'},
@@ -260,15 +260,15 @@ describe('Activities Service', function () {
       });
       sinon.stub(notifications, 'visitorUnregistration');
 
-      activitiesService.removeVisitorFrom('memberId', 'activity-url', function (err) {
+      activitiesService.removeVisitorFrom('memberId', 'activity-url', err => {
         expect(activity.allRegisteredMembers()).to.not.contain('memberId');
         expect(activity.allRegisteredMembers()).to.contain('otherId');
         done(err);
       });
     });
 
-    it('succeeds when registration is not open', function (done) {
-      var activity = activityWithEinzelzimmer({
+    it('succeeds when registration is not open', done => {
+      const activity = activityWithEinzelzimmer({
         _registrationOpen: false,
         _registeredMembers: [
           {memberId: 'memberId'},
@@ -277,15 +277,15 @@ describe('Activities Service', function () {
       });
       sinon.stub(notifications, 'visitorUnregistration');
 
-      activitiesService.removeVisitorFrom('memberId', 'activity-url', function (err) {
+      activitiesService.removeVisitorFrom('memberId', 'activity-url', err => {
         expect(activity.allRegisteredMembers()).to.not.contain('memberId');
         expect(activity.allRegisteredMembers()).to.contain('otherId');
         done(err);
       });
     });
 
-    it('notifies of the unregistration', function (done) {
-      var activity = activityWithEinzelzimmer({
+    it('notifies of the unregistration', done => {
+      const activity = activityWithEinzelzimmer({
         _registrationOpen: true,
         _registeredMembers: [
           {memberId: 'memberId'},
@@ -294,7 +294,7 @@ describe('Activities Service', function () {
       });
       sinon.stub(notifications, 'visitorUnregistration');
 
-      activitiesService.removeVisitorFrom('memberId', 'activity-url', function (err) {
+      activitiesService.removeVisitorFrom('memberId', 'activity-url', err => {
         expect(notifications.visitorUnregistration.calledOnce).to.be(true);
         expect(notifications.visitorUnregistration.firstCall.args[0]).to.eql(activity);
         expect(notifications.visitorUnregistration.firstCall.args[1]).to.equal('memberId');
@@ -302,36 +302,36 @@ describe('Activities Service', function () {
       });
     });
 
-    it('gives an error when activity could not be loaded', function (done) {
-      sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(new Error('error')); });
+    it('gives an error when activity could not be loaded', done => {
+      sinon.stub(activitystore, 'getActivity', (id, callback) => { callback(new Error('error')); });
 
-      activitiesService.removeVisitorFrom('memberId', 'activity-url', function (err) {
+      activitiesService.removeVisitorFrom('memberId', 'activity-url', err => {
         expect(err, 'Error').to.exist();
         done(); // error condition - do not pass err
       });
     });
   });
 
-  describe('- when adding somebody to the waitinglist -', function () {
+  describe('- when adding somebody to the waitinglist -', () => {
 
-    it('succeeds when resource has a waitinglist', function (done) {
-      var activity = activityWithEinzelzimmer({_waitinglist: []});
+    it('succeeds when resource has a waitinglist', done => {
+      const activity = activityWithEinzelzimmer({_waitinglist: []});
       sinon.stub(notifications, 'waitinglistAddition');
 
-      activitiesService.addToWaitinglist('memberId', 'activity-url', moment(), function (err, statusTitle, statusText) {
+      activitiesService.addToWaitinglist('memberId', 'activity-url', moment(), (err, statusTitle, statusText) => {
         expect(statusTitle, 'Status Title').to.not.exist();
         expect(statusText, 'Status Text').to.not.exist();
-        var waitinglistMembers = waitinglistMembersOf(activity);
+        const waitinglistMembers = waitinglistMembersOf(activity);
         expect(waitinglistMembers).to.contain('memberId');
         done(err);
       });
     });
 
-    it('notifies of the waitinglist addition', function (done) {
-      var activity = activityWithEinzelzimmer({_waitinglist: []});
+    it('notifies of the waitinglist addition', done => {
+      const activity = activityWithEinzelzimmer({_waitinglist: []});
       sinon.stub(notifications, 'waitinglistAddition');
 
-      activitiesService.addToWaitinglist('memberId', 'activity-url', moment(), function (err) {
+      activitiesService.addToWaitinglist('memberId', 'activity-url', moment(), err => {
         expect(notifications.waitinglistAddition.calledOnce).to.be(true);
         expect(notifications.waitinglistAddition.firstCall.args[0]).to.eql(activity);
         expect(notifications.waitinglistAddition.firstCall.args[1]).to.equal('memberId');
@@ -339,32 +339,32 @@ describe('Activities Service', function () {
       });
     });
 
-    it('gives a status message when there is no waitinglist', function (done) {
-      var activity = activityWithEinzelzimmer({});
+    it('gives a status message when there is no waitinglist', done => {
+      const activity = activityWithEinzelzimmer({});
 
-      activitiesService.addToWaitinglist('memberId', 'activity-url', moment(), function (err, statusTitle, statusText) {
+      activitiesService.addToWaitinglist('memberId', 'activity-url', moment(), (err, statusTitle, statusText) => {
         expect(statusTitle, 'Status Title').to.equal('activities.waitinglist_not_possible');
         expect(statusText, 'Status Text').to.equal('activities.no_waitinglist');
-        var waitinglistMembers = waitinglistMembersOf(activity);
+        const waitinglistMembers = waitinglistMembersOf(activity);
         expect(waitinglistMembers).to.not.contain('memberId');
         done(err);
       });
     });
 
-    it('gives an error when activity could not be loaded', function (done) {
-      sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(new Error('error')); });
+    it('gives an error when activity could not be loaded', done => {
+      sinon.stub(activitystore, 'getActivity', (id, callback) => { callback(new Error('error')); });
 
-      activitiesService.addToWaitinglist('memberId', 'activity-url', moment(), function (err) {
+      activitiesService.addToWaitinglist('memberId', 'activity-url', moment(), err => {
         expect(err, 'Error').to.exist();
         done(); // error condition - do not pass err
       });
     });
   });
 
-  describe('- when removing a waitinglist member -', function () {
+  describe('- when removing a waitinglist member -', () => {
 
-    it('succeeds no matter whether registration is open or not', function (done) {
-      var activity = activityWithEinzelzimmer({
+    it('succeeds no matter whether registration is open or not', done => {
+      const activity = activityWithEinzelzimmer({
         _waitinglist: [
           {_memberId: 'memberId'},
           {_memberId: 'otherId'}
@@ -372,16 +372,16 @@ describe('Activities Service', function () {
       });
       sinon.stub(notifications, 'waitinglistRemoval');
 
-      activitiesService.removeFromWaitinglist('memberId', 'activity-url', function (err) {
-        var waitinglistMembers = waitinglistMembersOf(activity);
+      activitiesService.removeFromWaitinglist('memberId', 'activity-url', err => {
+        const waitinglistMembers = waitinglistMembersOf(activity);
         expect(waitinglistMembers).to.not.contain('memberId');
         expect(waitinglistMembers).to.contain('otherId');
         done(err);
       });
     });
 
-    it('notifies of the waitinglist removal', function (done) {
-      var activity = activityWithEinzelzimmer({
+    it('notifies of the waitinglist removal', done => {
+      const activity = activityWithEinzelzimmer({
         _registrationOpen: true,
         _registeredMembers: [
           {memberId: 'memberId'},
@@ -390,7 +390,7 @@ describe('Activities Service', function () {
       });
       sinon.stub(notifications, 'waitinglistRemoval');
 
-      activitiesService.removeFromWaitinglist('memberId', 'activity-url', function (err) {
+      activitiesService.removeFromWaitinglist('memberId', 'activity-url', err => {
         expect(notifications.waitinglistRemoval.calledOnce).to.be(true);
         expect(notifications.waitinglistRemoval.firstCall.args[0]).to.eql(activity);
         expect(notifications.waitinglistRemoval.firstCall.args[1]).to.equal('memberId');
@@ -398,10 +398,10 @@ describe('Activities Service', function () {
       });
     });
 
-    it('gives an error when activity could not be loaded', function (done) {
-      sinon.stub(activitystore, 'getActivity', function (id, callback) { callback(new Error('error')); });
+    it('gives an error when activity could not be loaded', done => {
+      sinon.stub(activitystore, 'getActivity', (id, callback) => { callback(new Error('error')); });
 
-      activitiesService.removeFromWaitinglist('memberId', 'activity-url', function (err) {
+      activitiesService.removeFromWaitinglist('memberId', 'activity-url', err => {
         expect(err, 'Error').to.exist();
         done(); // error condition - do not pass err
       });
