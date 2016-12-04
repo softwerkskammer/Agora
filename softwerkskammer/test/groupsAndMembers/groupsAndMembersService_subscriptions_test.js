@@ -1,79 +1,79 @@
 'use strict';
 
-var sinon = require('sinon').sandbox.create();
-var beans = require('../../testutil/configureForTest').get('beans');
+const sinon = require('sinon').sandbox.create();
+const beans = require('../../testutil/configureForTest').get('beans');
 
-var expect = require('must-dist');
+const expect = require('must-dist');
 
-var Member = beans.get('member');
-var Group = beans.get('group');
-var memberstore = beans.get('memberstore');
-var groupsService = beans.get('groupsService');
-var groupsAndMembersService = beans.get('groupsAndMembersService');
+const Member = beans.get('member');
+const Group = beans.get('group');
+const memberstore = beans.get('memberstore');
+const groupsService = beans.get('groupsService');
+const groupsAndMembersService = beans.get('groupsAndMembersService');
 
-var email = 'user@mail.com';
-var groupA = new Group({id: 'groupA', organizers: []});
-var member = new Member({id: 'id', email: email});
+const email = 'user@mail.com';
+const groupA = new Group({id: 'groupA', organizers: []});
+const member = new Member({id: 'id', email: email});
 
-describe('Groups and Members Service (Subscriptions)', function () {
-  var getMemberForIdSpy;
-  var addUserToListSpy;
-  var removeUserFromListSpy;
-  var subscribedGroups = [];
+describe('Groups and Members Service (Subscriptions)', () => {
+  let getMemberForIdSpy;
+  let addUserToListSpy;
+  let removeUserFromListSpy;
+  let subscribedGroups = [];
 
-  beforeEach(function () {
-    getMemberForIdSpy = sinon.stub(memberstore, 'getMemberForId', function (memberID, callback) { callback(null, member); });
-    addUserToListSpy = sinon.stub(groupsService, 'addUserToList', function (someEmail, list, callback) { callback(); });
-    removeUserFromListSpy = sinon.stub(groupsService, 'removeUserFromList', function (someEmail, list, callback) { callback(); });
-    sinon.stub(groupsService, 'getSubscribedGroupsForUser', function (memberEmail, callback) { callback(null, subscribedGroups); });
+  beforeEach(() => {
+    getMemberForIdSpy = sinon.stub(memberstore, 'getMemberForId', (memberID, callback) => { callback(null, member); });
+    addUserToListSpy = sinon.stub(groupsService, 'addUserToList', (someEmail, list, callback) => { callback(); });
+    removeUserFromListSpy = sinon.stub(groupsService, 'removeUserFromList', (someEmail, list, callback) => { callback(); });
+    sinon.stub(groupsService, 'getSubscribedGroupsForUser', (memberEmail, callback) => { callback(null, subscribedGroups); });
   });
 
-  afterEach(function () {
+  afterEach(() => {
     sinon.restore();
     subscribedGroups = [];
     groupA.organizers = [];
   });
 
-  describe('updateAdminlistSubscriptions', function () {
+  describe('updateAdminlistSubscriptions', () => {
 
-    it('subscribes a new contact person', function (done) {
+    it('subscribes a new contact person', done => {
       groupA.organizers.push(member.id());
       subscribedGroups.push(groupA);
-      sinon.stub(groupsService, 'getMailinglistUsersOfList', function (listname, callback) { callback(null, []); });
+      sinon.stub(groupsService, 'getMailinglistUsersOfList', (listname, callback) => { callback(null, []); });
 
-      groupsAndMembersService.updateAdminlistSubscriptions(member.id(), function (err) {
+      groupsAndMembersService.updateAdminlistSubscriptions(member.id(), err => {
         expect(addUserToListSpy.called, 'subscribe is called').to.be(true);
         expect(removeUserFromListSpy.called, 'unsubscribe is called').to.be(false);
         done(err);
       });
     });
 
-    it('unsubscribes an ex-contact person', function (done) {
-      sinon.stub(groupsService, 'getMailinglistUsersOfList', function (listname, callback) { callback(null, [email]); });
+    it('unsubscribes an ex-contact person', done => {
+      sinon.stub(groupsService, 'getMailinglistUsersOfList', (listname, callback) => { callback(null, [email]); });
 
-      groupsAndMembersService.updateAdminlistSubscriptions(member.id(), function (err) {
+      groupsAndMembersService.updateAdminlistSubscriptions(member.id(), err => {
         expect(addUserToListSpy.called, 'subscribe is called').to.be(false);
         expect(removeUserFromListSpy.called, 'unsubscribe is called').to.be(true);
         done(err);
       });
     });
 
-    it('does nothing if contact person is already subscribed', function (done) {
+    it('does nothing if contact person is already subscribed', done => {
       groupA.organizers.push(member.id());
       subscribedGroups.push(groupA);
-      sinon.stub(groupsService, 'getMailinglistUsersOfList', function (listname, callback) { callback(null, [email]); });
+      sinon.stub(groupsService, 'getMailinglistUsersOfList', (listname, callback) => { callback(null, [email]); });
 
-      groupsAndMembersService.updateAdminlistSubscriptions(member.id(), function (err) {
+      groupsAndMembersService.updateAdminlistSubscriptions(member.id(), err => {
         expect(addUserToListSpy.called, 'subscribe is called').to.be(false);
         expect(removeUserFromListSpy.called, 'unsubscribe is called').to.be(false);
         done(err);
       });
     });
 
-    it('does nothing if non-contact person is not subscribed', function (done) {
-      sinon.stub(groupsService, 'getMailinglistUsersOfList', function (listname, callback) { callback(null, []); });
+    it('does nothing if non-contact person is not subscribed', done => {
+      sinon.stub(groupsService, 'getMailinglistUsersOfList', (listname, callback) => { callback(null, []); });
 
-      groupsAndMembersService.updateAdminlistSubscriptions(member.id(), function (err) {
+      groupsAndMembersService.updateAdminlistSubscriptions(member.id(), err => {
         expect(addUserToListSpy.called, 'subscribe is called').to.be(false);
         expect(removeUserFromListSpy.called, 'unsubscribe is called').to.be(false);
         done(err);
@@ -82,26 +82,26 @@ describe('Groups and Members Service (Subscriptions)', function () {
 
   });
 
-  describe('saveGroup', function () {
-    var createOrSaveGroupSpy;
+  describe('saveGroup', () => {
+    let createOrSaveGroupSpy;
 
-    beforeEach(function () {
+    beforeEach(() => {
       subscribedGroups.push(groupA);
-      createOrSaveGroupSpy = sinon.stub(groupsService, 'createOrSaveGroup', function (group, callback) { callback(); });
-      sinon.stub(groupsService, 'getMailinglistUsersOfList', function (listname, callback) { callback(null, []); });
+      createOrSaveGroupSpy = sinon.stub(groupsService, 'createOrSaveGroup', (group, callback) => { callback(); });
+      sinon.stub(groupsService, 'getMailinglistUsersOfList', (listname, callback) => { callback(null, []); });
     });
 
-    it('calls groupService to perform saving', function (done) {
-      groupsAndMembersService.saveGroup(groupA, function (err) {
+    it('calls groupService to perform saving', done => {
+      groupsAndMembersService.saveGroup(groupA, err => {
         expect(createOrSaveGroupSpy.called, 'save in GroupsService is called').to.be(true);
         done(err);
       });
     });
 
-    it('calls membersService to retrieve member if in organizers (and subscribes)', function (done) {
+    it('calls membersService to retrieve member if in organizers (and subscribes)', done => {
       groupA.organizers.push('id');
 
-      groupsAndMembersService.saveGroup(groupA, function (err) {
+      groupsAndMembersService.saveGroup(groupA, err => {
         expect(getMemberForIdSpy.called, 'getMemberForID in MembersService is called').to.be(true);
         expect(addUserToListSpy.called, 'subscribe in GroupsService is called').to.be(true);
         expect(addUserToListSpy.args[0][1]).to.equal('admins');
@@ -109,8 +109,8 @@ describe('Groups and Members Service (Subscriptions)', function () {
       });
     });
 
-    it('does not call membersService to retrieve member if not in organizers (and does not subscribe)', function (done) {
-      groupsAndMembersService.saveGroup(groupA, function (err) {
+    it('does not call membersService to retrieve member if not in organizers (and does not subscribe)', done => {
+      groupsAndMembersService.saveGroup(groupA, err => {
         expect(getMemberForIdSpy.called, 'getMemberForID in MembersService is called').to.be(false);
         expect(addUserToListSpy.called, 'subscribe in GroupsService is called').to.be(false);
         done(err);
@@ -119,37 +119,37 @@ describe('Groups and Members Service (Subscriptions)', function () {
 
   });
 
-  describe('updateSubscriptions', function () {
-    var updateSubscriptionsSpy;
-    var mailinglistUsers = [];
+  describe('updateSubscriptions', () => {
+    let updateSubscriptionsSpy;
+    const mailinglistUsers = [];
 
-    beforeEach(function () {
+    beforeEach(() => {
       subscribedGroups.push(groupA);
-      updateSubscriptionsSpy = sinon.stub(groupsService, 'updateSubscriptions', function (memberEmail, oldEmail, subscriptions, callback) { callback(); });
-      sinon.stub(groupsService, 'getMailinglistUsersOfList', function (listname, callback) { callback(null, mailinglistUsers); });
+      updateSubscriptionsSpy = sinon.stub(groupsService, 'updateSubscriptions', (memberEmail, oldEmail, subscriptions, callback) => { callback(); });
+      sinon.stub(groupsService, 'getMailinglistUsersOfList', (listname, callback) => { callback(null, mailinglistUsers); });
     });
 
-    it('calls groupService to perform saving', function (done) {
-      groupsAndMembersService.updateSubscriptions(member, '', [], function (err) {
+    it('calls groupService to perform saving', done => {
+      groupsAndMembersService.updateSubscriptions(member, '', [], err => {
         expect(updateSubscriptionsSpy.called, 'updateSubscriptions in GroupsService is called').to.be(true);
         done(err);
       });
     });
 
-    it('subscribes the member to the admin list if is organizer', function (done) {
+    it('subscribes the member to the admin list if is organizer', done => {
       groupA.organizers.push('id');
 
-      groupsAndMembersService.updateSubscriptions(member, '', ['groupA'], function (err) {
+      groupsAndMembersService.updateSubscriptions(member, '', ['groupA'], err => {
         expect(addUserToListSpy.called, 'subscribe in GroupsService is called').to.be(true);
         expect(addUserToListSpy.args[0][1]).to.equal('admins');
         done(err);
       });
     });
 
-    it('unsubscribes the member from the admin list if not organizer anymore', function (done) {
+    it('unsubscribes the member from the admin list if not organizer anymore', done => {
       mailinglistUsers.push(email);
 
-      groupsAndMembersService.updateSubscriptions(member, '', ['groupA'], function (err) {
+      groupsAndMembersService.updateSubscriptions(member, '', ['groupA'], err => {
         expect(removeUserFromListSpy.called, 'subscribe in GroupsService is called').to.be(true);
         expect(removeUserFromListSpy.args[0][1]).to.equal('admins');
         done(err);
@@ -158,29 +158,29 @@ describe('Groups and Members Service (Subscriptions)', function () {
 
   });
 
-  describe('(un)subscribe one group', function () {
-    var mailinglistUsers = [];
+  describe('(un)subscribe one group', () => {
+    let mailinglistUsers = [];
 
-    beforeEach(function () {
-      sinon.stub(groupsService, 'getMailinglistUsersOfList', function (listname, callback) { callback(null, mailinglistUsers); });
+    beforeEach(() => {
+      sinon.stub(groupsService, 'getMailinglistUsersOfList', (listname, callback) => { callback(null, mailinglistUsers); });
     });
 
-    afterEach(function () {
+    afterEach(() => {
       mailinglistUsers = [];
     });
 
-    it('calls groupService to perform saving and subscribes only to groupA', function (done) {
-      groupsAndMembersService.subscribeMemberToGroup(member, 'groupA', function (err) {
+    it('calls groupService to perform saving and subscribes only to groupA', done => {
+      groupsAndMembersService.subscribeMemberToGroup(member, 'groupA', err => {
         expect(addUserToListSpy.calledOnce, 'subscribe in GroupsService is called').to.be(true);
         expect(addUserToListSpy.args[0][1]).to.equal('groupA');
         done(err);
       });
     });
 
-    it('calls groupService to perform saving and subscribes also to group "admins"', function (done) {
+    it('calls groupService to perform saving and subscribes also to group "admins"', done => {
       groupA.organizers.push('id');
       subscribedGroups.push(groupA);
-      groupsAndMembersService.subscribeMemberToGroup(member, 'groupA', function (err) {
+      groupsAndMembersService.subscribeMemberToGroup(member, 'groupA', err => {
         expect(addUserToListSpy.calledTwice, 'subscribe in GroupsService is called twice').to.be(true);
         expect(addUserToListSpy.args[0][1]).to.equal('groupA');
         expect(addUserToListSpy.args[1][1]).to.equal('admins'); // 2nd call
@@ -188,18 +188,18 @@ describe('Groups and Members Service (Subscriptions)', function () {
       });
     });
 
-    it('calls groupService to perform saving and unsubscribes only from groupA', function (done) {
-      groupsAndMembersService.unsubscribeMemberFromGroup(member, 'groupA', function (err) {
+    it('calls groupService to perform saving and unsubscribes only from groupA', done => {
+      groupsAndMembersService.unsubscribeMemberFromGroup(member, 'groupA', err => {
         expect(removeUserFromListSpy.calledOnce, 'unsubscribe in GroupsService is called').to.be(true);
         expect(removeUserFromListSpy.args[0][1]).to.equal('groupA');
         done(err);
       });
     });
 
-    it('calls groupService to perform saving and unsubscribes also from group "admins"', function (done) {
+    it('calls groupService to perform saving and unsubscribes also from group "admins"', done => {
       groupA.organizers.push('id');
       mailinglistUsers.push(email);
-      groupsAndMembersService.unsubscribeMemberFromGroup(member, 'groupA', function (err) {
+      groupsAndMembersService.unsubscribeMemberFromGroup(member, 'groupA', err => {
         expect(removeUserFromListSpy.calledTwice, 'unsubscribe in GroupsService is called twice').to.be(true);
         expect(removeUserFromListSpy.args[0][1]).to.equal('groupA');
         expect(removeUserFromListSpy.args[1][1]).to.equal('admins'); // 2nd call
