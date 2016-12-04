@@ -1,25 +1,25 @@
 'use strict';
-var request = require('supertest');
-var sinon = require('sinon').sandbox.create();
+const request = require('supertest');
+const sinon = require('sinon').sandbox.create();
 
-var beans = require('../../testutil/configureForTest').get('beans');
-var galleryService = beans.get('galleryService');
+const beans = require('../../testutil/configureForTest').get('beans');
+const galleryService = beans.get('galleryService');
 
-var app = require('../../testutil/testHelper')('galleryApp').createApp();
+const app = require('../../testutil/testHelper')('galleryApp').createApp();
 
-var OK = 200;
+const OK = 200;
 
-describe('/gallery', function () {
+describe('/gallery', () => {
   /* eslint no-path-concat: 0 */
-  var storedImageId = 'image.jpg';
-  var imagePath = __dirname + '/fixtures/' + storedImageId;
+  const storedImageId = 'image.jpg';
+  const imagePath = __dirname + '/fixtures/' + storedImageId;
 
-  afterEach(function () {
+  afterEach(() => {
     sinon.restore();
   });
 
-  it('GET /{imageId} responds with the image', function (done) {
-    sinon.stub(galleryService, 'retrieveScaledImage', function (imageId, width, callback) {
+  it('GET /{imageId} responds with the image', done => {
+    sinon.stub(galleryService, 'retrieveScaledImage', (imageId, width, callback) => {
       if (storedImageId === imageId) {
         callback(null, imagePath);
       }
