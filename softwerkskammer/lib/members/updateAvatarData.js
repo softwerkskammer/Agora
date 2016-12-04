@@ -15,7 +15,7 @@ store.allMembers((err, members) => {
   store.socratesOnlyMembers((err1, socMembers) => {
     if (err1 || !members) { console.log('avatar updater had problems loading members'); }
     console.log('starting avatar update');
-    async.each(R.concat(members, socMembers), service.updateImage, err2 => {
+    async.each(R.union(members, socMembers), service.updateImage, err2 => {
       if (err2) {
         console.log('avatar updater encountered an error: ' + err2.message);
       }
