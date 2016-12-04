@@ -1,17 +1,17 @@
 'use strict';
 
-var request = require('supertest');
+const request = require('supertest');
 require('../../testutil/configureForTest');
 
-var app = require('../../app').create();
+const app = require('../../app').create();
 
-describe('Gallery application security for normal visitors does not allow to access for', function () {
+describe('Gallery application security for normal visitors does not allow to access for', () => {
 
-  it('/{name}', function (done) {
+  it('/{name}', done => {
     request(app).get('/gallery/some-image').expect(302).expect('location', /login/, done);
   });
 
-  it('/', function (done) {
+  it('/', done => {
     request(app).post('/gallery/').expect(302).expect('location', /login/, done);
   });
 

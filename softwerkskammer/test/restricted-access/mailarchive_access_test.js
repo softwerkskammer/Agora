@@ -1,13 +1,13 @@
 'use strict';
 
-var request = require('supertest');
+const request = require('supertest');
 require('../../testutil/configureForTest');
 
-var app = require('../../app').create();
+const app = require('../../app').create();
 
-describe('Mailarchive application security for normal visitors does not allow to access for', function () {
+describe('Mailarchive application security for normal visitors does not allow to access for', () => {
 
-  it('any URI', function (done) {
+  it('any URI', done => {
     request(app).get('/mailarchive/list/group').expect(302).expect('location', /login/, done);
   });
 

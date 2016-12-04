@@ -1,49 +1,49 @@
 'use strict';
 
-var request = require('supertest');
+const request = require('supertest');
 require('../../testutil/configureForTest');
 
-var app = require('../../app').create();
+const app = require('../../app').create();
 
-describe('Activities application security for normal visitors does not allow to access for', function () {
+describe('Activities application security for normal visitors does not allow to access for', () => {
 
-  it('/new', function (done) {
+  it('/new', done => {
     request(app).get('/activities/new').expect(302).expect('location', /login/, done);
   });
 
-  it('/newLike', function (done) {
+  it('/newLike', done => {
     request(app).get('/activities/newLike/other').expect(302).expect('location', /login/, done);
   });
 
-  it('/edit', function (done) {
+  it('/edit', done => {
     request(app).get('/activities/edit/EventA').expect(302).expect('location', /login/, done);
   });
 
-  it('/submit', function (done) {
+  it('/submit', done => {
     request(app).post('/activities/submit').expect(302).expect('location', /login/, done);
   });
 
-  it('/addon', function (done) {
+  it('/addon', done => {
     request(app).get('/activities/addon/someActivity').expect(302).expect('location', /login/, done);
   });
 
-  it('/addons', function (done) {
+  it('/addons', done => {
     request(app).get('/activities/addons/someActivity').expect(302).expect('location', /login/, done);
   });
 
-  it('/payment', function (done) {
+  it('/payment', done => {
     request(app).get('/activities/payment/someActivity').expect(302).expect('location', /login/, done);
   });
 
-  it('/paymentReceived', function (done) {
+  it('/paymentReceived', done => {
     request(app).get('/activities/paymentReceived/someActivity').expect(302).expect('location', /login/, done);
   });
 
-  it('/subscribe', function (done) {
+  it('/subscribe', done => {
     request(app).post('/activities/subscribe').expect(302).expect('location', /login/, done);
   });
 
-  it('/addToWaitinglist', function (done) {
+  it('/addToWaitinglist', done => {
     request(app).post('/activities/addToWaitinglist').expect(302).expect('location', /login/, done);
   });
 

@@ -1,13 +1,13 @@
 'use strict';
 
-var request = require('supertest');
+const request = require('supertest');
 require('../../testutil/configureForTest');
 
-var app = require('../../app').create();
+const app = require('../../app').create();
 
-describe('Some pages security for normal visitors does not allow to access', function () {
+describe('Some pages security for normal visitors does not allow to access', () => {
 
-  it('/dashboard', function (done) {
+  it('/dashboard', done => {
     request(app).get('/dashboard/').expect(302).expect('location', /login/, done);
   });
 
