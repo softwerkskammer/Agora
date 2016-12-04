@@ -1,7 +1,8 @@
 'use strict';
 
 const moment = require('moment-timezone');
-const misc = require('../commons/misc');
+const beans = require('simple-configure').get('beans');
+const misc = beans.get('misc');
 
 function contentsToObject(contents, year) {
   if (!contents) { return {}; }
