@@ -1,73 +1,74 @@
 'use strict';
 
-var expect = require('must-dist');
-var beans = require('./../../testutil/configureForTest').get('beans');
-var CONFLICTING_VERSIONS = beans.get('constants').CONFLICTING_VERSIONS;
-var persistence = require('../../lib/persistence/persistence')('teststore');
-var clearStore = function (callback) {
-  persistence.drop(function () {
+const expect = require('must-dist');
+const beans = require('./../../testutil/configureForTest').get('beans');
+const CONFLICTING_VERSIONS = beans.get('constants').CONFLICTING_VERSIONS;
+const persistence = require('../../lib/persistence/persistence')('teststore');
+
+function clearStore(callback) {
+  persistence.drop(() => {
     callback(); // here we can ignore errors
   });
-};
+}
 
-describe('The persistence store', function () {
+describe('The persistence store', () => {
 
   beforeEach(clearStore); // if this fails, you need to start your mongo DB
 
-  describe('in general', function () {
-    var toPersist = {id: 'toPersist', name: 'Heinz'};
+  describe('in general', () => {
+    const toPersist = {id: 'toPersist', name: 'Heinz'};
 
-    var storeSampleData = function (done) {
+    const storeSampleData = done => {
       persistence.save(toPersist, done);
     };
 
-    describe('on save', function () {
-      it('fails to save object without id', function (done) {
-        persistence.save({}, function (err) {
+    describe('on save', () => {
+      it('fails to save object without id', done => {
+        persistence.save({}, err => {
           expect(err.message).to.equal('Given object has no valid id');
           done(); // error condition - do not pass err
         });
       });
 
-      it('fails to save object with id null', function (done) {
-        persistence.save({id: null}, function (err) {
+      it('fails to save object with id null', done => {
+        persistence.save({id: null}, err => {
           expect(err.message).to.equal('Given object has no valid id');
           done(); // error condition - do not pass err
         });
       });
     });
 
-    describe('on save-with-version', function () {
-      it('fails to save-with-version object without id', function (done) {
-        persistence.saveWithVersion({}, function (err) {
+    describe('on save-with-version', () => {
+      it('fails to save-with-version object without id', done => {
+        persistence.saveWithVersion({}, err => {
           expect(err.message).to.equal('Given object has no valid id');
           done(); // error condition - do not pass err
         });
       });
 
-      it('fails to save-with-version object with id null', function (done) {
-        persistence.saveWithVersion({id: null}, function (err) {
+      it('fails to save-with-version object with id null', done => {
+        persistence.saveWithVersion({id: null}, err => {
           expect(err.message).to.equal('Given object has no valid id');
           done(); // error condition - do not pass err
         });
       });
 
-      it('on save-with-version, saves an object that is not yet in database and initializes version with 1', function (done) {
-        persistence.saveWithVersion({id: 123}, function (err) {
+      it('on save-with-version, saves an object that is not yet in database and initializes version with 1', done => {
+        persistence.saveWithVersion({id: 123}, err => {
           if (err) {return done(err); }
-          persistence.getById(123, function (err1, result) {
+          persistence.getById(123, (err1, result) => {
             expect(result.version).to.equal(1);
             done(err1);
           });
         });
       });
 
-      it('on save-with-version, updates an object that is in database with same version', function (done) {
-        persistence.save({id: 123, data: 'abc', version: 1}, function (err) {
+      it('on save-with-version, updates an object that is in database with same version', done => {
+        persistence.save({id: 123, data: 'abc', version: 1}, err => {
           if (err) {return done(err); }
-          persistence.saveWithVersion({id: 123, data: 'def', version: 1}, function (err1) {
+          persistence.saveWithVersion({id: 123, data: 'def', version: 1}, err1 => {
             if (err1) {return done(err1); }
-            persistence.getById(123, function (err2, result) {
+            persistence.getById(123, (err2, result) => {
               expect(result.data).to.equal('def');
               expect(result.version).to.equal(2);
               done(err2);
@@ -76,13 +77,13 @@ describe('The persistence store', function () {
         });
       });
 
-      it('on save-with-version, does not update an object that is in database with a different version', function (done) {
-        persistence.save({id: 123, data: 'abc', version: 2}, function (err) {
+      it('on save-with-version, does not update an object that is in database with a different version', done => {
+        persistence.save({id: 123, data: 'abc', version: 2}, err => {
           if (err) {return done(err); }
-          var objectToSave = {id: 123, data: 'def', version: 1};
-          persistence.saveWithVersion(objectToSave, function (err1) {
+          const objectToSave = {id: 123, data: 'def', version: 1};
+          persistence.saveWithVersion(objectToSave, err1 => {
             expect(err1.message).to.equal(CONFLICTING_VERSIONS);
-            persistence.getById(123, function (err2, result) {
+            persistence.getById(123, (err2, result) => {
               expect(result.data, 'Data of object in database remains unchanged').to.equal('abc');
               expect(result.version, 'Version of object in database remains unchanged').to.equal(2);
               expect(objectToSave.version, 'Version of object to save remains unchanged').to.equal(1);
@@ -93,12 +94,12 @@ describe('The persistence store', function () {
       });
     });
 
-    describe('on update', function () {
-      it('replaces old object with new object', function (done) {
-        storeSampleData(function () {
-          persistence.update({id: 'toPersist', firstname: 'Peter'}, 'toPersist', function (err) {
+    describe('on update', () => {
+      it('replaces old object with new object', done => {
+        storeSampleData(() => {
+          persistence.update({id: 'toPersist', firstname: 'Peter'}, 'toPersist', err => {
             if (err) { done(err); }
-            persistence.getById('toPersist', function (err1, result) {
+            persistence.getById('toPersist', (err1, result) => {
               expect(result.id).to.equal('toPersist');
               expect(result.name).to.be.undefined();
               expect(result.firstname).to.equal('Peter');
@@ -108,13 +109,13 @@ describe('The persistence store', function () {
         });
       });
 
-      it('replaces old object with new object even if id\'s differ', function (done) {
-        storeSampleData(function () {
-          persistence.update({id: 'toPersist2', name: 'Heinz'}, 'toPersist', function (err) {
+      it('replaces old object with new object even if id\'s differ', done => {
+        storeSampleData(() => {
+          persistence.update({id: 'toPersist2', name: 'Heinz'}, 'toPersist', err => {
             if (err) { done(err); }
-            persistence.getById('toPersist', function (err1, result) {
+            persistence.getById('toPersist', (err1, result) => {
               expect(result).to.be.undefined();
-              persistence.getById('toPersist2', function (err2, result1) {
+              persistence.getById('toPersist2', (err2, result1) => {
                 expect(result1.id).to.equal('toPersist2');
                 expect(result1.name).to.equal('Heinz');
                 done(err2);
@@ -125,17 +126,17 @@ describe('The persistence store', function () {
       });
     });
 
-    describe('on getById', function () {
-      it('retrieves none for non-existing id', function (done) {
-        persistence.getById('non-existing-id', function (err, result) {
+    describe('on getById', () => {
+      it('retrieves none for non-existing id', done => {
+        persistence.getById('non-existing-id', (err, result) => {
           expect(result).not.to.exist();
           done(err);
         });
       });
 
-      it('retrieves one for existing id', function (done) {
-        storeSampleData(function () {
-          persistence.getById('toPersist', function (err, result) {
+      it('retrieves one for existing id', done => {
+        storeSampleData(() => {
+          persistence.getById('toPersist', (err, result) => {
             expect(result.id).to.equal('toPersist');
             expect(result.name).to.equal('Heinz');
             done(err);
@@ -143,9 +144,9 @@ describe('The persistence store', function () {
         });
       });
 
-      it('retrieves undefined if the id should be null', function (done) {
-        storeSampleData(function () {
-          persistence.getById(null, function (err, result) {
+      it('retrieves undefined if the id should be null', done => {
+        storeSampleData(() => {
+          persistence.getById(null, (err, result) => {
             expect(err).not.to.exist();
             expect(result).to.be(undefined);
             done(err);
@@ -154,17 +155,17 @@ describe('The persistence store', function () {
       });
     });
 
-    describe('on list', function () {
-      it('retrieves an empty list when no data is inserted', function (done) {
-        persistence.list({}, function (err, result) {
+    describe('on list', () => {
+      it('retrieves an empty list when no data is inserted', done => {
+        persistence.list({}, (err, result) => {
           expect(result).to.have.length(0);
           done(err);
         });
       });
 
-      it('retrieves all', function (done) {
-        storeSampleData(function () {
-          persistence.list({}, function (err, result) {
+      it('retrieves all', done => {
+        storeSampleData(() => {
+          persistence.list({}, (err, result) => {
             expect(result).to.have.length(1);
             expect(result[0].name).to.equal('Heinz');
             done(err);
@@ -173,10 +174,10 @@ describe('The persistence store', function () {
       });
     });
 
-    describe('on getByField', function () {
-      it('retrieves undefined if some field should be null', function (done) {
-        storeSampleData(function () {
-          persistence.getByField({id: null}, function (err, result) {
+    describe('on getByField', () => {
+      it('retrieves undefined if some field should be null', done => {
+        storeSampleData(() => {
+          persistence.getByField({id: null}, (err, result) => {
             expect(err).not.to.exist();
             expect(result).to.be(undefined);
             done(err);
@@ -185,12 +186,12 @@ describe('The persistence store', function () {
       });
     });
 
-    describe('on remove', function () {
-      it('removes an object having an id', function (done) {
-        storeSampleData(function () {
-          persistence.remove('toPersist', function (err1) {
+    describe('on remove', () => {
+      it('removes an object having an id', done => {
+        storeSampleData(() => {
+          persistence.remove('toPersist', err1 => {
             if (err1) { return done(err1); }
-            persistence.getById('toPersist', function (err2, result) {
+            persistence.getById('toPersist', (err2, result) => {
               expect(result).to.be.undefined();
               done(err2);
             });
@@ -198,8 +199,8 @@ describe('The persistence store', function () {
         });
       });
 
-      it('cannot remove an object with no id', function (done) {
-        persistence.remove(undefined, function (err) {
+      it('cannot remove an object with no id', done => {
+        persistence.remove(undefined, err => {
           expect(err.message).to.equal('Given object has no valid id');
           done();
         });
@@ -207,29 +208,29 @@ describe('The persistence store', function () {
     });
   });
 
-  describe('for many objects', function () {
-    var user1 = {id: '1', firstname: 'Heinz', lastname: 'Meier'};
-    var user2 = {id: '2', firstname: 'Max', lastname: 'Albers'};
-    var user3 = {id: '3', firstname: 'Peter', lastname: 'Paulsen'};
-    var user4 = {id: '4', firstname: 'Anna', lastname: 'Albers'};
+  describe('for many objects', () => {
+    const user1 = {id: '1', firstname: 'Heinz', lastname: 'Meier'};
+    const user2 = {id: '2', firstname: 'Max', lastname: 'Albers'};
+    const user3 = {id: '3', firstname: 'Peter', lastname: 'Paulsen'};
+    const user4 = {id: '4', firstname: 'Anna', lastname: 'Albers'};
 
-    var storeSampleData = function (done) {
-      persistence.save(user1, function () {
-        persistence.save(user2, function () {
-          persistence.save(user3, function () {
+    const storeSampleData = done => {
+      persistence.save(user1, () => {
+        persistence.save(user2, () => {
+          persistence.save(user3, () => {
             persistence.save(user4, done);
           });
         });
       });
     };
 
-    var storeSampleDataAtOnce = function (done) {
+    const storeSampleDataAtOnce = done => {
       persistence.saveAll([user1, user2, user3, user4], done);
     };
 
-    it('retrieves all members in ascending order', function (done) {
-      storeSampleData(function () {
-        persistence.list({lastname: 1, firstname: 1}, function (err, result) {
+    it('retrieves all members in ascending order', done => {
+      storeSampleData(() => {
+        persistence.list({lastname: 1, firstname: 1}, (err, result) => {
           expect(result).to.have.length(4);
           expect(result[0].firstname).to.equal('Anna');
           expect(result[0].lastname).to.equal('Albers');
@@ -244,9 +245,9 @@ describe('The persistence store', function () {
       });
     });
 
-    it('retrieves those members whose IDs are contained in the list', function (done) {
-      storeSampleData(function () {
-        persistence.listByIds(['3', '4', '6', 'test'], {lastname: 1, firstname: 1}, function (err, result) {
+    it('retrieves those members whose IDs are contained in the list', done => {
+      storeSampleData(() => {
+        persistence.listByIds(['3', '4', '6', 'test'], {lastname: 1, firstname: 1}, (err, result) => {
           expect(result).to.have.length(2);
           expect(result[0].firstname).to.equal('Anna');
           expect(result[0].lastname).to.equal('Albers');
@@ -257,9 +258,9 @@ describe('The persistence store', function () {
       });
     });
 
-    it('stores all objects with one call', function (done) {
-      storeSampleDataAtOnce(function () {
-        persistence.list({lastname: 1, firstname: 1}, function (err, result) {
+    it('stores all objects with one call', done => {
+      storeSampleDataAtOnce(() => {
+        persistence.list({lastname: 1, firstname: 1}, (err, result) => {
           expect(result).to.have.length(4);
           expect(result[0].firstname).to.equal('Anna');
           expect(result[0].lastname).to.equal('Albers');
@@ -276,20 +277,20 @@ describe('The persistence store', function () {
 
   });
 
-  describe('for Member', function () {
-    var Member = beans.get('member');
-    var moment = require('moment-timezone');
-    var toPersist = new Member().initFromSessionUser({authenticationId: 'toPersist'}).state;
+  describe('for Member', () => {
+    const Member = beans.get('member');
+    const moment = require('moment-timezone');
+    const toPersist = new Member().initFromSessionUser({authenticationId: 'toPersist'}).state;
 
-    var storeSampleData = function (done) {
+    const storeSampleData = done => {
       persistence.save(toPersist, done);
     };
 
-    it('checks that created has been written', function (done) {
+    it('checks that created has been written', done => {
       // this test will definitely fail, if run a microsecond before midnight. - Ideas?
-      var today = moment().format('DD.MM.YY');
-      storeSampleData(function () {
-        persistence.getById('toPersist', function (err, result) {
+      const today = moment().format('DD.MM.YY');
+      storeSampleData(() => {
+        persistence.getById('toPersist', (err, result) => {
           expect(result.id).to.equal('toPersist');
           expect(result.created).to.exist();
           expect(result.created).to.equal(today);
