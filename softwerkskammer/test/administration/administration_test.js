@@ -1,53 +1,49 @@
 'use strict';
 
-var request = require('supertest');
-var sinon = require('sinon').sandbox.create();
+const request = require('supertest');
+const sinon = require('sinon').sandbox.create();
 
-var beans = require('../../testutil/configureForTest').get('beans');
+const beans = require('../../testutil/configureForTest').get('beans');
 
-var memberstore = beans.get('memberstore');
-var Member = beans.get('member');
-var dummymember = new Member({id: 'memberID', nickname: 'hada', email: 'a@b.c', site: 'http://my.blog', firstname: 'Hans', lastname: 'Dampf', authentications: []});
-var socratesmember = new Member({id: 'socID', nickname: 'soci', email: 'soc@ra.tes', site: '', firstname: 'Frank', lastname: 'Pink', socratesOnly: true, authentications: []});
+const memberstore = beans.get('memberstore');
+const Member = beans.get('member');
+const dummymember = new Member({id: 'memberID', nickname: 'hada', email: 'a@b.c', site: 'http://my.blog', firstname: 'Hans', lastname: 'Dampf', authentications: []});
+const socratesmember = new Member({id: 'socID', nickname: 'soci', email: 'soc@ra.tes', site: '', firstname: 'Frank', lastname: 'Pink', socratesOnly: true, authentications: []});
 
-var groupsService = beans.get('groupsService');
-var membersService = beans.get('membersService');
-var groupsAndMembersService = beans.get('groupsAndMembersService');
-var Group = beans.get('group');
+const groupsService = beans.get('groupsService');
+const membersService = beans.get('membersService');
+const groupsAndMembersService = beans.get('groupsAndMembersService');
+const Group = beans.get('group');
 
-var activitiesService = beans.get('activitiesService');
-var Activity = beans.get('activity');
+const activitiesService = beans.get('activitiesService');
+const Activity = beans.get('activity');
 
-var fieldHelpers = beans.get('fieldHelpers');
-var createApp = require('../../testutil/testHelper')('administrationApp').createApp;
+const fieldHelpers = beans.get('fieldHelpers');
+const createApp = require('../../testutil/testHelper')('administrationApp').createApp;
 
-describe('Administration application', function () {
-  var appWithSuperuser = request(createApp('superuserID'));
+describe('Administration application', () => {
+  const appWithSuperuser = request(createApp('superuserID'));
 
-  var emptyActivity = new Activity({title: 'Title of the Activity', description: 'description1', assignedGroup: 'groupname',
+  const emptyActivity = new Activity({
+    title: 'Title of the Activity', description: 'description1', assignedGroup: 'groupname',
     location: 'location1', direction: 'direction1', startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'),
-    url: 'urlOfTheActivity', owner: 'owner' });
+    url: 'urlOfTheActivity', owner: 'owner'
+  });
 
-  beforeEach(function () {
-    sinon.stub(groupsService, 'getAllAvailableGroups', function (callback) {
-      return callback(null, [new Group({id: 'id', longName: 'GRUPPO', description: 'desc'})]);
-    });
-    sinon.stub(membersService, 'putAvatarIntoMemberAndSave', function (member, callback) {
+  beforeEach(() => {
+    sinon.stub(groupsService, 'getAllAvailableGroups', callback => callback(null, [new Group({id: 'id', longName: 'GRUPPO', description: 'desc'})]));
+    sinon.stub(membersService, 'putAvatarIntoMemberAndSave', (member, callback) => {
       callback();
     });
   });
 
-  afterEach(function () {
+  afterEach(() => {
     sinon.restore();
   });
 
-  it('shows the table for members including socrates only members', function (done) {
-    sinon.stub(memberstore, 'allMembers', function (callback) {
-      return callback(null, [dummymember]);
-    });
-    sinon.stub(memberstore, 'socratesOnlyMembers', function (callback) {
-      return callback(null, [socratesmember]);
-    });
+  it('shows the table for members including socrates only members', done => {
+    sinon.stub(memberstore, 'allMembers', callback => callback(null, [dummymember]));
+    sinon.stub(memberstore, 'socratesOnlyMembers', callback => callback(null, [socratesmember]));
     appWithSuperuser
       .get('/memberTable')
       .expect(200)
@@ -57,10 +53,8 @@ describe('Administration application', function () {
       .expect(/soc@ra\.tes/, done);
   });
 
-  it('shows the table for members and groups', function (done) {
-    sinon.stub(groupsAndMembersService, 'getAllMembersWithTheirGroups', function (callback) {
-      return callback(null, [dummymember], [{group: 'Überflüssig', extraAddresses: ['peter.pan@alice.de']}]);
-    });
+  it('shows the table for members and groups', done => {
+    sinon.stub(groupsAndMembersService, 'getAllMembersWithTheirGroups', callback => callback(null, [dummymember], [{group: 'Überflüssig', extraAddresses: ['peter.pan@alice.de']}]));
     appWithSuperuser
       .get('/memberAndGroupTable')
       .expect(200)
@@ -71,7 +65,7 @@ describe('Administration application', function () {
       .expect(/GRUP&hellip;/, done);
   });
 
-  it('shows the table for groups', function (done) {
+  it('shows the table for groups', done => {
     appWithSuperuser
       .get('/groupTable')
       .expect(200)
@@ -79,10 +73,8 @@ describe('Administration application', function () {
       .expect(/GRUPPO/, done);
   });
 
-  it('shows the table for activities', function (done) {
-    sinon.stub(activitiesService, 'getActivitiesForDisplay', function (activitiesFetcher, callback) {
-      return callback(null, [emptyActivity]);
-    });
+  it('shows the table for activities', done => {
+    sinon.stub(activitiesService, 'getActivitiesForDisplay', (activitiesFetcher, callback) => callback(null, [emptyActivity]));
     appWithSuperuser
       .get('/activityTable')
       .expect(200)
