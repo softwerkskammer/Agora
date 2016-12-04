@@ -6,46 +6,54 @@ const app = require('../../app').create();
 const request = require('supertest');
 const theApp = request(app);
 
+function checkGetUrlForRedirection(url, done) {
+  theApp.get(url).expect(302).expect('location', /login/, done);
+}
+
+function checkPostUrlForRedirection(url, done) {
+  theApp.post(url).expect(302).expect('location', /login/, done);
+}
+
 describe('Activities application security for normal visitors does not allow to access for', () => {
 
   it('/new', done => {
-    theApp.get('/activities/new').expect(302).expect('location', /login/, done);
+    checkGetUrlForRedirection('/activities/new', done);
   });
 
   it('/newLike', done => {
-    theApp.get('/activities/newLike/other').expect(302).expect('location', /login/, done);
+    checkGetUrlForRedirection('/activities/newLike/other', done);
   });
 
   it('/edit', done => {
-    theApp.get('/activities/edit/EventA').expect(302).expect('location', /login/, done);
+    checkGetUrlForRedirection('/activities/edit/EventA', done);
   });
 
   it('/submit', done => {
-    theApp.post('/activities/submit').expect(302).expect('location', /login/, done);
+    checkPostUrlForRedirection('/activities/submit', done);
   });
 
   it('/addon', done => {
-    theApp.get('/activities/addon/someActivity').expect(302).expect('location', /login/, done);
+    checkGetUrlForRedirection('/activities/addon/someActivity', done);
   });
 
   it('/addons', done => {
-    theApp.get('/activities/addons/someActivity').expect(302).expect('location', /login/, done);
+    checkGetUrlForRedirection('/activities/addons/someActivity', done);
   });
 
   it('/payment', done => {
-    theApp.get('/activities/payment/someActivity').expect(302).expect('location', /login/, done);
+    checkGetUrlForRedirection('/activities/payment/someActivity', done);
   });
 
   it('/paymentReceived', done => {
-    theApp.get('/activities/paymentReceived/someActivity').expect(302).expect('location', /login/, done);
+    checkGetUrlForRedirection('/activities/paymentReceived/someActivity', done);
   });
 
   it('/subscribe', done => {
-    theApp.post('/activities/subscribe').expect(302).expect('location', /login/, done);
+    checkPostUrlForRedirection('/activities/subscribe', done);
   });
 
   it('/addToWaitinglist', done => {
-    theApp.post('/activities/addToWaitinglist').expect(302).expect('location', /login/, done);
+    checkPostUrlForRedirection('/activities/addToWaitinglist', done);
   });
 
 });
@@ -53,7 +61,7 @@ describe('Activities application security for normal visitors does not allow to 
 describe('Activity results application security for normal visitors does not allow to access for', () => {
 
   it('/{name}', done => {
-    theApp.get('/activityresults/socrates').expect(302).expect('location', /login/, done);
+    checkGetUrlForRedirection('/activityresults/socrates', done);
   });
 
 });
@@ -61,31 +69,31 @@ describe('Activity results application security for normal visitors does not all
 describe('Gallery application security for normal visitors does not allow to access for', () => {
 
   it('/{name}', done => {
-    theApp.get('/gallery/some-image').expect(302).expect('location', /login/, done);
+    checkGetUrlForRedirection('/gallery/some-image', done);
   });
 
   it('/', done => {
-    theApp.post('/gallery/').expect(302).expect('location', /login/, done);
+    checkPostUrlForRedirection('/gallery/', done);
   });
 
 });
 
-describe('Groups application security for normal visitors does not allow to access for', () =>{
+describe('Groups application security for normal visitors does not allow to access for', () => {
 
-  it('/new', done =>{
-    theApp.get('/groups/new').expect(302).expect('location', /login/, done);
+  it('/new', done => {
+    checkGetUrlForRedirection('/groups/new', done);
   });
 
-  it('/edit', done =>{
-    theApp.get('/groups/edit/GroupA').expect(302).expect('location', /login/, done);
+  it('/edit', done => {
+    checkGetUrlForRedirection('/groups/edit/GroupA', done);
   });
 
-  it('/submit', done =>{
-    theApp.post('/groups/submit').expect(302).expect('location', /login/, done);
+  it('/submit', done => {
+    checkPostUrlForRedirection('/groups/submit', done);
   });
 
-  it('/subscribe', done =>{
-    theApp.post('/groups/subscribe/GroupA').expect(302).expect('location', /login/, done);
+  it('/subscribe', done => {
+    checkPostUrlForRedirection('/groups/subscribe/GroupA', done);
   });
 
 });
@@ -93,7 +101,7 @@ describe('Groups application security for normal visitors does not allow to acce
 describe('Mailarchive application security for normal visitors does not allow to access for', () => {
 
   it('any URI', done => {
-    theApp.get('/mailarchive/list/group').expect(302).expect('location', /login/, done);
+    checkGetUrlForRedirection('/mailarchive/list/group', done);
   });
 
 });
@@ -101,35 +109,35 @@ describe('Mailarchive application security for normal visitors does not allow to
 describe('Mailsender application security for normal visitors does not allow to access for', () => {
 
   it('any URI', done => {
-    theApp.get('/mailsender/something').expect(302).expect('location', /login/, done);
+    checkGetUrlForRedirection('/mailsender/something', done);
   });
 
   it('/invitation', done => {
-    theApp.get('/invitation').expect(302).expect('location', /login/, done);
+    checkGetUrlForRedirection('/invitation', done);
   });
 
 });
 
-describe('Members application security for normal visitors does not allow to access for', () =>{
+describe('Members application security for normal visitors does not allow to access for', () => {
 
-  it('/members', done =>{
-    theApp.get('/members/').expect(302).expect('location', /login/, done);
+  it('/members', done => {
+    checkGetUrlForRedirection('/members/', done);
   });
 
-  it('/new', done =>{
-    theApp.get('/members/new').expect(302).expect('location', /login/, done);
+  it('/new', done => {
+    checkGetUrlForRedirection('/members/new', done);
   });
 
-  it('/edit', done =>{
-    theApp.get('/members/edit/nick').expect(302).expect('location', /login/, done);
+  it('/edit', done => {
+    checkGetUrlForRedirection('/members/edit/nick', done);
   });
 
-  it('/nickname', done =>{
-    theApp.get('/members/nick').expect(302).expect('location', /login/, done);
+  it('/nickname', done => {
+    checkGetUrlForRedirection('/members/nick', done);
   });
 
-  it('/submit', done =>{
-    theApp.post('/members/submit').expect(302).expect('location', /login/, done);
+  it('/submit', done => {
+    checkPostUrlForRedirection('/members/submit', done);
   });
 
 });
@@ -137,7 +145,7 @@ describe('Members application security for normal visitors does not allow to acc
 describe('Some pages security for normal visitors does not allow to access', () => {
 
   it('/dashboard', done => {
-    theApp.get('/dashboard/').expect(302).expect('location', /login/, done);
+    checkGetUrlForRedirection('/dashboard/', done);
   });
 
 });
