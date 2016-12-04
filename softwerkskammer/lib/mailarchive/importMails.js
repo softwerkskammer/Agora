@@ -74,7 +74,7 @@ module.exports = function importMails(file, group, done) {
         name: from.name || from.address.replace(/@.*/, '')
       };
       if (member) { mailDbObject.from.id = member.id(); }
-      getMessageId(parsedObject, (id) => {
+      getMessageId(parsedObject, id => {
         mailDbObject.id = id;
         logger.info('Message ID assigned to eMail: ' + mailDbObject.id);
         done(null, mailDbObject);
