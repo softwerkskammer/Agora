@@ -1,21 +1,21 @@
 'use strict';
 
-var conf = require('../../testutil/configureForTest');
-var beans = conf.get('beans');
-var expressSessionConfigurator = beans.get('expressSessionConfigurator');
-var MemoryStore = require('express-session').MemoryStore;
-var expect = require('must-dist');
+const conf = require('../../testutil/configureForTest');
+const beans = conf.get('beans');
+const expressSessionConfigurator = beans.get('expressSessionConfigurator');
+const MemoryStore = require('express-session').MemoryStore;
+const expect = require('must-dist');
 
-describe('Configuration sets Persistent Store only if configured', function () {
+describe('Configuration sets Persistent Store only if configured', () => {
 
-  it('to RAM Store', function () {
-    var req = {
+  it('to RAM Store', () => {
+    const req = {
       originalUrl: '/something',
       headers: {},
       cookies: {},
       signedCookies: {}
     };
-    var next = function () { return ''; };
+    const next = () => '';
     expressSessionConfigurator(req, {}, next);
 
     expect(conf.get('dontUsePersistentSessions')).to.be(true);

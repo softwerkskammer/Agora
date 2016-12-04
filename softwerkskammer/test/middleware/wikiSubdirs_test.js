@@ -1,43 +1,43 @@
 'use strict';
 
-var sinon = require('sinon').sandbox.create();
-var expect = require('must-dist');
+const sinon = require('sinon').sandbox.create();
+const expect = require('must-dist');
 
-var beans = require('../../testutil/configureForTest').get('beans');
-var wikiSubdirs = beans.get('wikiSubdirs');
-var Git = beans.get('gitmech');
-var Group = beans.get('group');
-var groupstore = beans.get('groupstore');
+const beans = require('../../testutil/configureForTest').get('beans');
+const wikiSubdirs = beans.get('wikiSubdirs');
+const Git = beans.get('gitmech');
+const Group = beans.get('group');
+const groupstore = beans.get('groupstore');
 
-describe('Wikisubdirs', function () {
-  var allGroups = [
+describe('Wikisubdirs', () => {
+  const allGroups = [
     new Group({id: 'a', type: Group.allTypes()[0]}),
     new Group({id: 'b', type: Group.allTypes()[0]}),
     new Group({id: 'c', type: Group.allTypes()[1]}),
     new Group({id: 'groupWithoutWiki', type: Group.allTypes()[1]})
   ];
-  beforeEach(function () {
-    sinon.stub(Git, 'lsdirs', function (callback) {
+  beforeEach(() => {
+    sinon.stub(Git, 'lsdirs', callback => {
       callback(null, ['a', 'c', 'b', 'andere']);
     });
-    sinon.stub(groupstore, 'allGroups', function (callback) {
+    sinon.stub(groupstore, 'allGroups', callback => {
       callback(null, allGroups);
     });
   });
 
-  afterEach(function () {
+  afterEach(() => {
     sinon.restore();
   });
 
-  it('transforms the dirs and groups correctly', function () {
-    var req = {
+  it('transforms the dirs and groups correctly', () => {
+    const req = {
       originalUrl: '/something',
       headers: {},
       cookies: {},
       signedCookies: {}
     };
-    var res = { locals: {} };
-    var next = function () { return ''; };
+    const res = {locals: {}};
+    const next = () => '';
     wikiSubdirs(req, res, next);
     expect(res.locals.structuredWikisubdirs.regional).to.eql(['c']);
     expect(res.locals.structuredWikisubdirs.themed).to.eql(['a', 'b']);
