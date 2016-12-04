@@ -1,8 +1,5 @@
 'use strict';
 const moment = require('moment-timezone');
-const beans = require('simple-configure').get('beans');
-const fieldHelpers = beans.get('fieldHelpers');
-const memberstore = beans.get('memberstore');
 
 const path = require('path');
 
@@ -14,7 +11,12 @@ const MailParser = require('mailparser').MailParser;
 const fs = require('fs');
 const crypto = require('crypto');
 
+const beans = require('simple-configure').get('beans');
+const fieldHelpers = beans.get('fieldHelpers');
+const memberstore = beans.get('memberstore');
+
 module.exports = function importMails(file, group, done) {
+
   function date(parsedObject) {
     if (fieldHelpers.isFilled(parsedObject.headers.date)) {
       return moment(parsedObject.headers.date, 'ddd, DD MMM YYYY HH:mm:ss ZZ', 'en');
@@ -23,23 +25,16 @@ module.exports = function importMails(file, group, done) {
     return moment();
   }
 
-  function assignMessageId(parsedObject, mailDbObject, done1) {
+  function getMessageId(parsedObject, callback) {
     /* eslint new-cap: 0 */
     if (parsedObject.messageId) {
-      mailDbObject.id = parsedObject.messageId;
-      done1(null, mailDbObject);
-      return;
+      return callback(parsedObject.messageId);
     }
 
     const shasum = crypto.createHash('sha1');
-    const s = fs.ReadStream(file);
+    const s = fs.createReadStream(file); // file may be big -> stream instead of readFile
     s.on('data', d => shasum.update(d));
-
-    s.on('end', () => {
-      const d = shasum.digest('hex');
-      mailDbObject.id = 'mail-sha1-' + d + '@softwerkskammer.org';
-      done1(null, mailDbObject);
-    });
+    s.on('end', () => callback('mail-sha1-' + shasum.digest('hex') + '@softwerkskammer.org'));
   }
 
   function references(parsedObject) {
@@ -53,13 +48,6 @@ module.exports = function importMails(file, group, done) {
     return null;
   }
 
-  function name(fromStructure) {
-    if (fromStructure.name) {
-      return fromStructure.name;
-    }
-    return fromStructure.address.replace(/@.*/, '');
-  }
-
   const mailparser = new MailParser({
     // remove mail attachments
     streamAttachments: true
@@ -67,27 +55,25 @@ module.exports = function importMails(file, group, done) {
 
   mailparser.on('end', parsedObject => {
     logger.info('Starting to parse eMail');
-    const mailDbObject = {};
-    mailDbObject.group = group;
-    mailDbObject.subject = parsedObject.subject;
-
-    mailDbObject.timeUnix = date(parsedObject).unix();
-
-    mailDbObject.references = references(parsedObject);
-    mailDbObject.text = parsedObject.text;
-    mailDbObject.html = parsedObject.html;
-
     const from = parsedObject.from[0];
-    mailDbObject.from = {
-      name: name(from)
-    };
+
     memberstore.getMemberForEMail(from.address, (err, member) => {
       if (err) {
-        logger.error('Could not get member for eMail: ' + err);
+        logger.error('Could not get member for eMail, error is: ' + err);
         return done(err);
       }
-      if (member) { mailDbObject.from.id = member.id(); }
-      assignMessageId(parsedObject, mailDbObject, () => {
+      const mailDbObject = {
+        group: group,
+        subject: parsedObject.subject,
+        text: parsedObject.text,
+        html: parsedObject.html,
+        timeUnix: date(parsedObject).unix(),
+        references: references(parsedObject),
+        from: {name: from.name || from.address.replace(/@.*/, ''), id: (member ? member.id() : undefined)}
+      };
+
+      getMessageId(parsedObject, id => {
+        mailDbObject.id = id;
         logger.info('Message ID assigned to eMail: ' + mailDbObject.id);
         done(null, mailDbObject);
       });
