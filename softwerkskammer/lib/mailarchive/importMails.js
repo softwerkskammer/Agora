@@ -16,6 +16,7 @@ const fieldHelpers = beans.get('fieldHelpers');
 const memberstore = beans.get('memberstore');
 
 module.exports = function importMails(file, group, done) {
+
   function date(parsedObject) {
     if (fieldHelpers.isFilled(parsedObject.headers.date)) {
       return moment(parsedObject.headers.date, 'ddd, DD MMM YYYY HH:mm:ss ZZ', 'en');
@@ -61,19 +62,16 @@ module.exports = function importMails(file, group, done) {
         logger.error('Could not get member for eMail, error is: ' + err);
         return done(err);
       }
-      const mailDbObject = {};
-      mailDbObject.group = group;
-      mailDbObject.subject = parsedObject.subject;
-      mailDbObject.text = parsedObject.text;
-      mailDbObject.html = parsedObject.html;
-
-      mailDbObject.timeUnix = date(parsedObject).unix();
-      mailDbObject.references = references(parsedObject);
-
-      mailDbObject.from = {
-        name: from.name || from.address.replace(/@.*/, '')
+      const mailDbObject = {
+        group: group,
+        subject: parsedObject.subject,
+        text: parsedObject.text,
+        html: parsedObject.html,
+        timeUnix: date(parsedObject).unix(),
+        references: references(parsedObject),
+        from: {name: from.name || from.address.replace(/@.*/, ''), id: (member ? member.id() : undefined)}
       };
-      if (member) { mailDbObject.from.id = member.id(); }
+
       getMessageId(parsedObject, id => {
         mailDbObject.id = id;
         logger.info('Message ID assigned to eMail: ' + mailDbObject.id);
