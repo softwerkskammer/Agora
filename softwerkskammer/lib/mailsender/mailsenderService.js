@@ -21,11 +21,6 @@ const mailtransport = beans.get('mailtransport');
 function sendMail(message, type, callback) {
   mailtransport.sendMail(message, type, conf.get('sender-address'), callback);
 }
-function buttonFor(activity) { // FIXME: this is currently not working, see https://github.com/softwerkskammer/Agora/issues/1151
-  const url = misc.toFullQualifiedUrl('activities/subscribe', activity.url());
-  const text = 'Count me in! - Ich bin dabei!';
-  return {text: text, url: url};
-}
 
 function activityMarkdown(activity, language) {
   let markdown = activity.description() + '\n\n**Datum:** ' + activity.startMoment().locale(language || 'de').format('LLL') + '\n\n**Ort:** ' + activity.location();
@@ -119,7 +114,7 @@ module.exports = {
   },
 
   sendRegistrationAllowed: function sendRegistrationAllowed(member, activity, waitinglistEntry, callback) {
-    const activityFullUrl = conf.get('publicUrlPrefix') + '/activities/' + encodeURIComponent(activity.url());
+    const activityFullUrl = misc.toFullQualifiedUrl('activities', encodeURIComponent(activity.url()));
     const markdownGerman = 'Für die Veranstaltung ["' + activity.title() + '"](' + activityFullUrl + ') sind wieder Plätze frei.\n\nDu kannst Dich bis ' +
       waitinglistEntry.registrationValidUntil() + ' Uhr registrieren.';
     const markdownEnglish = 'There are a few more places for activity ["' + activity.title() + '"](' + activityFullUrl + ').\n\nYou can register until ' +
@@ -128,7 +123,10 @@ module.exports = {
     message.setReceiver(member);
     message.setSubject('Moving up for / Nachrücken für "' + activity.title() + '"');
     message.setMarkdown(markdownEnglish + '\n\n---\n\n' + markdownGerman);
-    message.addToButtons(buttonFor(activity));
+    message.addToButtons({
+      text: 'Zur Aktivität',
+      url: activityFullUrl
+    });
     sendMail(message, 'Nachricht', callback);
   },
 
