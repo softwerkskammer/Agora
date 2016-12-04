@@ -24,7 +24,7 @@ module.exports = function importMails(file, group, done) {
     return moment();
   }
 
-  function assignMessageId(parsedObject, mailDbObject, callback) {
+  function getMessageId(parsedObject, callback) {
     /* eslint new-cap: 0 */
     if (parsedObject.messageId) {
       return callback(parsedObject.messageId);
@@ -74,7 +74,7 @@ module.exports = function importMails(file, group, done) {
         name: from.name || from.address.replace(/@.*/, '')
       };
       if (member) { mailDbObject.from.id = member.id(); }
-      assignMessageId(parsedObject, mailDbObject, (id) => {
+      getMessageId(parsedObject, (id) => {
         mailDbObject.id = id;
         logger.info('Message ID assigned to eMail: ' + mailDbObject.id);
         done(null, mailDbObject);
