@@ -15,14 +15,15 @@ describe('configureForTest issue', () => {
 
   it('is not caused by underlying beans library', () => {
       const moduleName = 'membersPersistence';
-      const beans1a = new CoolBeans({[moduleName]: '1a'});
-      const beans1b = new CoolBeans({[moduleName]: '2'});
-      const beans2 = new CoolBeans({[moduleName]: '1b'});
-      const module1a = beans1a.get(moduleName);
-      const module2 = beans2.get(moduleName);
-      const module1b = beans1b.get(moduleName);
-      expect(module1a).to.not.be(module2);
-      expect(module1b).to.not.be(module2);
+      const beans1a = new CoolBeans({[moduleName]: {properties: {value: '1a'}}});
+      const beans1b = new CoolBeans({[moduleName]: {properties: { value: '1b'}}});
+      const beans2 = new CoolBeans({[moduleName]: {properties:{value: '2'}}});
+      const module1a = beans1a.get(moduleName).value;
+      const module2 = beans2.get(moduleName).value;
+      const module1b = beans1b.get(moduleName).value;
+      expect(module1a).to.be('1a');
+      expect(module2).to.be('2');
+      expect(module1b).to.be('1b');
   });
 
   it('is caused by simpe-configure', () => {
