@@ -20,7 +20,7 @@ app.get('/memberTable', (req, res, next) => {
     if (err) { return next(err); }
     memberstore.socratesOnlyMembers((err1, socMembers) => {
       if (err1) { return next(err1); }
-      res.render('memberTable', {members: R.union(members, socMembers)});
+      res.render('memberTable', {members: R.unionWith(R.eqBy(m => m.id()), members, socMembers)});
     });
   });
 });
