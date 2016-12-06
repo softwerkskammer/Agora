@@ -13,8 +13,12 @@ function dataToLines(data) {
   return data ? data.split('\n').filter(v => v !== '') : [];
 }
 
+function esc(arg) { // to secure command line execution
+  return '\'' + arg + '\'';
+}
+
 function commit(path, message, author, callback) {
-  gitExec.command(['commit', '--author="' + author + '"', '-m', '"' + message + '"', path], callback);
+  gitExec.command(['commit', '--author=' + esc(author), '-m', esc(message), esc(path)], callback);
 }
 
 module.exports = {
@@ -28,11 +32,11 @@ module.exports = {
   },
 
   readFile: function readFile(path, version, callback) {
-    gitExec.command(['show', version + ':' + path], callback);
+    gitExec.command(['show', version + ':' + esc(path)], callback);
   },
 
   log: function log(path, version, howMany, callback) {
-    gitExec.command(['log', '-' + howMany, '--no-notes', '--follow', '--pretty=format:%h%n%H%n%an%n%ai%n%s', version, '--name-only', '--', path], (err, data) => {
+    gitExec.command(['log', '-' + howMany, '--no-notes', '--follow', '--pretty=format:%h%n%H%n%an%n%ai%n%s', version, '--name-only', '--', esc(path)], (err, data) => {
       if (err) { return callback(err); }
       const logdata = data ? data.split('\n\n') : [];
       const metadata = misc.compact(logdata).map(chunk => {
@@ -54,7 +58,7 @@ module.exports = {
   },
 
   latestChanges: function latestChanges(path, moment, callback) {
-    gitExec.command(['log', '--since="' + moment.format('MM/DD/YYYY hh:mm:ss') + '"', '--pretty=format:%h%n%H%n%an%n%ai%n%s', '--', path], (err, data) => {
+    gitExec.command(['log', '--since="' + moment.format('MM/DD/YYYY hh:mm:ss') + '"', '--pretty=format:%h%n%H%n%an%n%ai%n%s', '--', esc(path)], (err, data) => {
       if (err) { return callback(err); }
       const logdata = data ? data.split('\n') : [];
       const metadata = [];
@@ -74,28 +78,28 @@ module.exports = {
   },
 
   add: function add(path, message, author, callback) {
-    gitExec.command(['add', path], err => {
+    gitExec.command(['add', esc(path)], err => {
       if (err) { return callback(err); }
       return commit(path, message, author, callback);
     });
   },
 
   mv: function mv(oldpath, newpath, message, author, callback) {
-    gitExec.command(['mv', oldpath, newpath], err => {
+    gitExec.command(['mv', esc(oldpath), esc(newpath)], err => {
       if (err) { return callback(err); }
       return commit('', message, author, callback);
     });
   },
 
   rm: function rm(path, message, author, callback) {
-    gitExec.command(['rm', path], err => {
+    gitExec.command(['rm', esc(path)], err => {
       if (err) { return callback(err); }
       return commit(path, message, author, callback);
     });
   },
 
   grep: function grep(pattern, callback) {
-    gitExec.command(['grep', '--no-color', '-F', '-n', '-i', '-I', pattern], (err, data) => {
+    gitExec.command(['grep', '--no-color', '-F', '-n', '-i', '-I', esc(pattern)], (err, data) => {
       if (err) {
         if (err.message.split('\n').length < 3) {
           return callback(null, []);
@@ -104,7 +108,7 @@ module.exports = {
       }
       const result = data ? data.split('\n') : [];
       // Search in the file names
-      return gitExec.command(['ls-files', '*' + pattern + '*.md'], (err1, data1) => {
+      return gitExec.command(['ls-files', '*' + esc(pattern) + '*.md'], (err1, data1) => {
 
         if (data1) {
           data1.split('\n').forEach(name => result.push(name) );
@@ -116,11 +120,11 @@ module.exports = {
   },
 
   diff: function diff(path, revisions, callback) {
-    gitExec.command(['diff', '--no-color', '-b', revisions, '--', path], callback);
+    gitExec.command(['diff', '--no-color', '-b', esc(revisions), '--', esc(path)], callback);
   },
 
   ls: function ls(subdir, callback) {
-    gitExec.command(['ls-tree', '--name-only', '-r', 'HEAD', subdir], (err, data) => {
+    gitExec.command(['ls-tree', '--name-only', '-r', 'HEAD', esc(subdir)], (err, data) => {
       if (err) { return callback(err); }
       return callback(null, dataToLines(data));
     });
@@ -135,7 +139,7 @@ module.exports = {
   },
 
   lsblogposts: function lsblogposts(groupname, pattern, callback) {
-    gitExec.command(['ls-files', groupname + '/' + pattern], (err, data) => {
+    gitExec.command(['ls-files', esc(groupname + '/' + pattern)], (err, data) => {
       if (err) { return callback(err); }
       return callback(null, dataToLines(data));
     });
