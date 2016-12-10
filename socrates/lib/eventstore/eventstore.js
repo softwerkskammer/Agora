@@ -1,22 +1,22 @@
 'use strict';
 
-var beans = require('simple-configure').get('beans');
-var _ = require('lodash');
-var misc = beans.get('misc');
+const beans = require('simple-configure').get('beans');
+const R = require('ramda');
+const misc = beans.get('misc');
 
-var GlobalEventStore = beans.get('GlobalEventStore');
-var persistence = beans.get('eventstorePersistence');
+const GlobalEventStore = beans.get('GlobalEventStore');
+const persistence = beans.get('eventstorePersistence');
 
 function toGlobalEventStore(callback, err, jsobject) {
   return misc.toObject(GlobalEventStore, callback, err, jsobject);
 }
 
 module.exports = {
-  getEventStore: function (url, callback) {
-    persistence.getByField({url: url}, _.partial(toGlobalEventStore, callback));
+  getEventStore: function getEventStore(url, callback) {
+    persistence.getByField({url: url}, R.partial(toGlobalEventStore, [callback]));
   },
 
-  saveEventStore: function (eventStore, callback) {
+  saveEventStore: function saveEventStore(eventStore, callback) {
     persistence.save(eventStore.state, callback);
   }
 };

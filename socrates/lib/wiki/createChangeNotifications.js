@@ -1,23 +1,23 @@
 'use strict';
-var path = require('path');
+const path = require('path');
 require('../../configure'); // initializing parameters
 
 /*eslint no-sync: 0 */
-var winston = require('winston-config').fromFileSync(path.join(__dirname, '../../../config/winston-config.json'));
-var logger = winston.loggers.get('scripts');
+const winston = require('winston-config').fromFileSync(path.join(__dirname, '../../../config/winston-config.json'));
+const logger = winston.loggers.get('scripts');
 
-var beans = require('simple-configure').get('beans');
+const beans = require('simple-configure').get('beans');
 // open persistence AFTER logger is created
-var persistence = beans.get('settingsPersistence');
-var wikiService = beans.get('wikiService');
-var notifications = beans.get('socratesNotifications');
-var moment = require('moment-timezone');
-var util = require('util');
+const persistence = beans.get('settingsPersistence');
+const wikiService = beans.get('wikiService');
+const notifications = beans.get('socratesNotifications');
+const moment = require('moment-timezone');
+const util = require('util');
 
-var lastNotifications = 'lastWikiNotificationsSoCraTes';
+const lastNotifications = 'lastWikiNotificationsSoCraTes';
 
 function closeAndExit() {
-  return persistence.closeDB(function () {
+  return persistence.closeDB(() => {
     /* eslint no-process-exit: 0 */
     logger.info('Terminating the process.......');
     process.exit();
@@ -25,18 +25,18 @@ function closeAndExit() {
 }
 
 logger.info('== SoCraTes Wiki Changes ==========================================================================');
-persistence.getByField({id: lastNotifications}, function (err, result) {
+persistence.getByField({id: lastNotifications}, (err, result) => {
   if (err) {
     logger.error('Error when reading lastWikiNotificationsSoCraTes: ' + err);
     return closeAndExit();
   }
   logger.info('No error when reading lastWikiNotificationsSoCraTes');
-  var yesterday = moment().subtract(1, 'days');
-  var lastNotified = result || {id: lastNotifications, moment: yesterday.toDate()};
+  const yesterday = moment().subtract(1, 'days');
+  const lastNotified = result || {id: lastNotifications, moment: yesterday.toDate()};
   if (result) {
     logger.info('Last notified: ' + util.inspect(result.moment));
   }
-  wikiService.findPagesForDigestSince(moment(lastNotified.moment), function (err1, changes) {
+  wikiService.findPagesForDigestSince(moment(lastNotified.moment), (err1, changes) => {
     /* eslint no-console: 0 */
     if (err1) {
       logger.error('Error when finding pages for Digest: ' + err1);
@@ -47,13 +47,13 @@ persistence.getByField({id: lastNotifications}, function (err, result) {
       console.log('no changes to report'); // for cron mail
       return closeAndExit();
     }
-    notifications.wikiChanges(changes, function (err2) {
+    notifications.wikiChanges(changes, err2 => {
       if (err2) {
         logger.error(err2);
         return closeAndExit();
       }
       lastNotified.moment = moment().toDate();
-      persistence.save(lastNotified, function (err3) {
+      persistence.save(lastNotified, err3 => {
         if (err3) {
           logger.error(err3);
           return closeAndExit();

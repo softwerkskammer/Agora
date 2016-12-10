@@ -1,16 +1,16 @@
 'use strict';
 
-var async = require('async');
+const async = require('async');
 
-var conf = require('simple-configure');
+const conf = require('simple-configure');
 
-var beans = conf.get('beans');
-var memberstore = beans.get('memberstore');
-var subscriberstore = beans.get('subscriberstore');
-var activityParticipantService = beans.get('activityParticipantService');
-var logger = require('winston').loggers.get('application');
+const beans = conf.get('beans');
+const memberstore = beans.get('memberstore');
+const subscriberstore = beans.get('subscriberstore');
+const activityParticipantService = beans.get('activityParticipantService');
+const logger = require('winston').loggers.get('application');
 
-var mailtransport = beans.get('mailtransport');
+const mailtransport = beans.get('mailtransport');
 
 function sendMail(message, type, callback) {
   mailtransport.sendMail(message, type, conf.get('sender-address'), callback);
@@ -18,12 +18,12 @@ function sendMail(message, type, callback) {
 
 module.exports = {
 
-  sendMailToAllSubscribers: function (message, globalCallback) {
-    var type = '$t(mailsender.invitation)';
-    subscriberstore.allSubscribers(function (err, subscribers) {
+  sendMailToAllSubscribers: function sendMailToAllSubscribers(message, globalCallback) {
+    const type = '$t(mailsender.invitation)';
+    subscriberstore.allSubscribers((err, subscribers) => {
       if (err) { return globalCallback(err, mailtransport.statusmessageForError(type, err)); }
 
-      async.map(subscribers, function (subscriber, callback) { memberstore.getMemberForId(subscriber.id(), callback); }, function (err1, members) {
+      async.map(subscribers, (subscriber, callback) => memberstore.getMemberForId(subscriber.id(), callback), (err1, members) => {
         if (err1) { return globalCallback(err1, mailtransport.statusmessageForError(type, err1)); }
         message.setBccToMemberAddresses(members);
         logger.info('BCC: ' + message.bcc);
@@ -33,9 +33,9 @@ module.exports = {
     });
   },
 
-  sendMailToParticipantsOf: function (year, message, callback) {
-    var type = '$t(mailsender.reminder)';
-    return activityParticipantService.getParticipantsFor(year, function (err, participants) {
+  sendMailToParticipantsOf: function sendMailToParticipantsOf(year, message, callback) {
+    const type = '$t(mailsender.reminder)';
+    return activityParticipantService.getParticipantsFor(year, (err, participants) => {
       if (err) { return callback(err, mailtransport.statusmessageForError(type, err)); }
       message.setBccToMemberAddresses(participants);
       sendMail(message, type, callback);

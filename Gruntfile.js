@@ -82,7 +82,7 @@ module.exports = function (grunt) {
         flatten: true
       },
       datatablesBootstrapAndGermanJS: {
-        src: 'softwerkskammer/frontend/3rd_party_js/dataTables*',
+        src: ['node_modules/datatables.net-bs/js/dataTables*', 'softwerkskammer/frontend/3rd_party_js/dataTables*'],
         dest: 'softwerkskammer/public/clientscripts',
         expand: true,
         flatten: true

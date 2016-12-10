@@ -1,6 +1,6 @@
 'use strict';
 
-var currentYear = 2017;
+const currentYear = 2017;
 
 module.exports.currentYear = currentYear;
 module.exports.urlPrefix = 'socrates-';

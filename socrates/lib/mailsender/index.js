@@ -1,27 +1,27 @@
 'use strict';
 
-var conf = require('simple-configure');
-var beans = conf.get('beans');
+const conf = require('simple-configure');
+const beans = conf.get('beans');
 
-var misc = beans.get('misc');
-var validation = beans.get('validation');
-var statusmessage = beans.get('statusmessage');
-var mailsenderService = beans.get('mailsenderService');
-var socratesMailsenderService = beans.get('socratesMailsenderService');
-var Message = beans.get('message');
-var currentYear = beans.get('socratesConstants').currentYear;
+const misc = beans.get('misc');
+const validation = beans.get('validation');
+const statusmessage = beans.get('statusmessage');
+const mailsenderService = beans.get('mailsenderService');
+const socratesMailsenderService = beans.get('socratesMailsenderService');
+const Message = beans.get('message');
+const currentYear = beans.get('socratesConstants').currentYear;
 
-var app = misc.expressAppIn(__dirname);
+const app = misc.expressAppIn(__dirname);
 
 function messageSubmitted(req, res, next) {
   if (req.body && req.body.massMailing && !res.locals.accessrights.canEditActivity()) {
     return res.redirect('/registration');
   }
 
-  var errors = validation.isValidMessage(req.body);
+  const errors = validation.isValidMessage(req.body);
   if (errors.length !== 0) { return res.render('../../../views/errorPages/validationError', {errors: errors}); }
 
-  var message = new Message(req.body, req.user.member);
+  const message = new Message(req.body, req.user.member);
 
   function processResult(err, statusmsg) {
     if (err) { return next(err); }
@@ -42,8 +42,8 @@ function messageSubmitted(req, res, next) {
   res.redirect(req.body.successURL);
 }
 
-app.get('/massMailing', function (req, res) {
-  var message = new Message();
+app.get('/massMailing', (req, res) => {
+  const message = new Message();
   message.addToButtons({
     text: 'To SoCraTes 2017',
     url: conf.get('publicUrlPrefix')
@@ -51,15 +51,13 @@ app.get('/massMailing', function (req, res) {
   res.render('compose', {message: message, successURL: '/', massMailing: true});
 });
 
-app.get('/contactMember/:nickname', function (req, res, next) {
-  mailsenderService.dataForShowingMessageToMember(req.params.nickname, function (err, result) {
+app.get('/contactMember/:nickname', (req, res, next) => {
+  mailsenderService.dataForShowingMessageToMember(req.params.nickname, (err, result) => {
     if (err || !result) {return next(err); }
     res.render('compose', result);
   });
 });
 
-app.post('/send', function (req, res, next) {
-  messageSubmitted(req, res, next);
-});
+app.post('/send', messageSubmitted);
 
 module.exports = app;

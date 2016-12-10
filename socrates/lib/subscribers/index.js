@@ -1,12 +1,12 @@
 'use strict';
-var beans = require('simple-configure').get('beans');
-var misc = beans.get('misc');
-var subscriberstore = beans.get('subscriberstore');
+const beans = require('simple-configure').get('beans');
+const misc = beans.get('misc');
+const subscriberstore = beans.get('subscriberstore');
 
-var app = misc.expressAppIn(__dirname);
+const app = misc.expressAppIn(__dirname);
 
-app.get('/count', function (req, res) {
-  subscriberstore.allSubscribers(function (err, subscribers) {
+app.get('/count', (req, res) => {
+  subscriberstore.allSubscribers((err, subscribers) => {
     if (err || !subscribers) { return res.end(''); }
     res.end(subscribers.length.toString());
   });
