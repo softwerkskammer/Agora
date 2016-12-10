@@ -11,7 +11,7 @@ class Addon {
   fillFromUI(uiInputObject) {
     this.state.homeAddress = uiInputObject.homeAddress;
     this.state.billingAddress = uiInputObject.billingAddress;
-    this.state.tShirtSize = misc.compact(uiInputObject.tShirtSize).get(0);
+    this.state.tShirtSize = misc.compact(uiInputObject.tShirtSize)[0];
     this.state.remarks = uiInputObject.remarks;
     return this;
   }
