@@ -40,7 +40,6 @@ mixin editavatar(member, returnToParticipantsListing)
             button.btn.btn-xs.btn-primary(type='submit', title=t('general.save'))
               i.fa.fa-fw.fa-check
               | &nbsp; #{t('general.save')}
-      +imageScripts
 
       +hidden('nickname', member.nickname())
       +hidden('scale')
@@ -51,6 +50,7 @@ mixin editavatar(member, returnToParticipantsListing)
       +hidden('w')
 
 mixin avatarscript
+  +imageScripts
   script.
     $(function () {
       var preview = $('img#preview');
