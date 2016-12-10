@@ -1,45 +1,42 @@
 'use strict';
 
-var _ = require('lodash');
-var R = require('ramda');
-var async = require('async');
+const R = require('ramda');
+const async = require('async');
 
-var conf = require('simple-configure');
-var beans = conf.get('beans');
-var activitystore = beans.get('activitystore');
-var eventstoreService = beans.get('eventstoreService');
-var socratesConstants = beans.get('socratesConstants');
+const conf = require('simple-configure');
+const beans = conf.get('beans');
+const activitystore = beans.get('activitystore');
+const eventstoreService = beans.get('eventstoreService');
+const socratesConstants = beans.get('socratesConstants');
 
 module.exports = {
 
   participationStatus: function (subscriber, callback) {
     function containsSoCraTes(activities) {
-      return !!_.find(activities, 'state.isSoCraTes');
+      return activities.some(act => act.state.isSoCraTes);
     }
 
     // examine the old SoCraTes conferences:
-    activitystore.activitiesForGroupIdsAndRegisteredMemberId([], subscriber.id(), false, function (err1, pastActivities) {
+    activitystore.activitiesForGroupIdsAndRegisteredMemberId([], subscriber.id(), false, (err1, pastActivities) => {
       if (err1) { return callback(err1); }
       if (containsSoCraTes(pastActivities)) {
         return callback(null, true);
       }
 
       // examine the new eventsourced SoCraTes conferences (starting with 2016):
-      var eventsourcedSoCraTesYears = R.range(2016, socratesConstants.currentYear + 1);
-      async.map(eventsourcedSoCraTesYears, function (year, cb) {
-          eventstoreService.getRegistrationReadModel(socratesConstants.urlPrefix + year, function (err, readModel) {
+      const eventsourcedSoCraTesYears = R.range(2016, socratesConstants.currentYear + 1);
+      async.map(eventsourcedSoCraTesYears, (year, cb) => {
+          eventstoreService.getRegistrationReadModel(socratesConstants.urlPrefix + year, (err, readModel) => {
             if (err || !readModel) { return cb(null, false); }
             return cb(null, readModel.isAlreadyRegistered(subscriber.id()));
           });
         },
-        function (err, results) {
-          var participatedInEventsourcedSoCraTes;
+        (err, results) => {
+          let participatedInEventsourcedSoCraTes;
           if (err || !results) {
             participatedInEventsourcedSoCraTes = false;
           } else {
-            participatedInEventsourcedSoCraTes = R.reduce(function (acc, elem) {
-              return acc || elem;
-            }, false, results);
+            participatedInEventsourcedSoCraTes = R.reduce((acc, elem) => acc || elem, false, results);
           }
           callback(null, participatedInEventsourcedSoCraTes);
         });

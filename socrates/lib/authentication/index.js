@@ -1,22 +1,22 @@
 'use strict';
 
-var jwt = require('jwt-simple');
-var passport = require('passport');
-var moment = require('moment-timezone');
-var logger = require('winston').loggers.get('socrates-authorization');
+const jwt = require('jwt-simple');
+const passport = require('passport');
+const moment = require('moment-timezone');
+const logger = require('winston').loggers.get('socrates-authorization');
 
-var conf = require('simple-configure');
-var beans = conf.get('beans');
-var misc = beans.get('misc');
-var jwtSecret = conf.get('jwtSecret');
+const conf = require('simple-configure');
+const beans = conf.get('beans');
+const misc = beans.get('misc');
+const jwtSecret = conf.get('jwtSecret');
 
-var subscriberService = beans.get('subscriberService');
-var membersService = beans.get('membersService');
-var statusmessage = beans.get('statusmessage');
+const subscriberService = beans.get('subscriberService');
+const membersService = beans.get('membersService');
+const statusmessage = beans.get('statusmessage');
 
-var app = misc.expressAppIn(__dirname);
+const app = misc.expressAppIn(__dirname);
 
-app.get('/loggedIn', function (req, res, next) {
+app.get('/loggedIn', (req, res, next) => {
 
   function getTokenFrom(req1) {
     return jwt.decode(req1.query.id_token, jwtSecret);
@@ -30,7 +30,7 @@ app.get('/loggedIn', function (req, res, next) {
       return callback(new Error('Authentication failed (expired token).'));
     }
     // load member and subscriber:
-    membersService.findMemberFor(null, token.userId, token.oldUserId, function (err, member) {
+    membersService.findMemberFor(null, token.userId, token.oldUserId, (err, member) => {
       if (err) { return callback(err); }
       // no member: this person+auth is unknown in SWK
       if (!member) { return callback(null, {authenticationId: token.userId, profile: token.profile}); }
@@ -39,7 +39,7 @@ app.get('/loggedIn', function (req, res, next) {
     })();
   }
 
-  createUserObject(getTokenFrom(req), function (err, userObject, returnTo) {
+  createUserObject(getTokenFrom(req), (err, userObject, returnTo) => {
     /*eslint no-underscore-dangle: 0*/
 
     if (err) { return next(err); }
@@ -47,9 +47,9 @@ app.get('/loggedIn', function (req, res, next) {
       returnTo = req.session.returnTo;
     }
     req._passport.session.user = userObject;
-    passport.authenticate('session')(req, res, function () {
+    passport.authenticate('session')(req, res, () => {
       if (req.user.member) {
-        return subscriberService.createSubscriberIfNecessaryFor(req.user.member.id(), function (err1, subscriberAlreadyExists) {
+        return subscriberService.createSubscriberIfNecessaryFor(req.user.member.id(), (err1, subscriberAlreadyExists) => {
           if (err1) { return next(err1); }
           if (!subscriberAlreadyExists) {
             delete req.session.statusmessage; // If the subscriber was not an SWK member, SWK added a "profile saved" message to the session.
@@ -66,7 +66,7 @@ app.get('/loggedIn', function (req, res, next) {
   });
 });
 
-app.get('/logout', function (req, res) {
+app.get('/logout', (req, res) => {
   req.logout();
   delete req.session.registrationTuple;
   if (req.isAuthenticated && req.isAuthenticated()) {

@@ -1,17 +1,16 @@
 'use strict';
 
-var conf = require('simple-configure');
-var logger = require('winston').loggers.get('transactions');
-var pug = require('pug');
-var path = require('path');
-var _ = require('lodash');
+const conf = require('simple-configure');
+const logger = require('winston').loggers.get('transactions');
+const pug = require('pug');
+const path = require('path');
 
-var beans = conf.get('beans');
-var memberstore = beans.get('memberstore');
-var subscriberstore = beans.get('subscriberstore');
-var subscriberService = beans.get('subscriberService');
-var socratesConstants = beans.get('socratesConstants');
-var sendBulkMail = beans.get('mailtransport').sendBulkMail;
+const beans = conf.get('beans');
+const memberstore = beans.get('memberstore');
+const subscriberstore = beans.get('subscriberstore');
+const subscriberService = beans.get('subscriberService');
+const socratesConstants = beans.get('socratesConstants');
+const sendBulkMail = beans.get('mailtransport').sendBulkMail;
 
 function sendMail(params) {
   sendBulkMail(params.receivers, params.subject, params.html, params.fromName, params.fromAddress, params.callback);
@@ -27,9 +26,9 @@ function renderingOptions(member) {
 }
 
 function notifyConcernedParties(params, self) {
-  var options = renderingOptions(params.member);
+  const options = renderingOptions(params.member);
   options.bookingdetails = params.bookingdetails;
-  var filename = path.join(__dirname, 'pug/' + params.participantFilename + '.pug');
+  let filename = path.join(__dirname, 'pug/' + params.participantFilename + '.pug');
   sendMail({
     fromName: 'SoCraTes Notifications',
     fromAddress: self.registrationListEmailAddress(),
@@ -38,7 +37,7 @@ function notifyConcernedParties(params, self) {
     html: pug.renderFile(filename, options)
   });
 
-  var receivers = self.registrationListEmailAddress();
+  let receivers = self.registrationListEmailAddress();
   if (!receivers) { return logger.error('no receivers for sending mail'); }
   filename = path.join(__dirname, 'pug/' + params.organizersFilename + '.pug');
   sendMail({
@@ -51,14 +50,14 @@ function notifyConcernedParties(params, self) {
 }
 
 module.exports = {
-  newSoCraTesMemberRegistered: function (member) {
-    var receivers = this.registrationListEmailAddress();
+  newSoCraTesMemberRegistered: function newSoCraTesMemberRegistered(member) {
+    const receivers = this.registrationListEmailAddress();
     if (!receivers) { return logger.error('no receivers for sending mail'); }
-    subscriberstore.allSubscribers(function (err1, subscribers) {
+    subscriberstore.allSubscribers((err1, subscribers) => {
       if (err1 || !subscribers) { return logger.error(err1); }
-      var options = renderingOptions(member);
+      const options = renderingOptions(member);
       options.count = subscribers.length;
-      var filename = path.join(__dirname, 'pug/newmembertemplate.pug');
+      const filename = path.join(__dirname, 'pug/newmembertemplate.pug');
       sendMail({
         fromName: 'SoCraTes Notifications',
         fromAddress: conf.get('sender-address'),
@@ -69,11 +68,11 @@ module.exports = {
     });
   },
 
-  newParticipant: function (memberID, bookingdetails) {
+  newParticipant: function newParticipant(memberID, bookingdetails) {
     const self = this;
-    memberstore.getMemberForId(memberID, function (err, member) {
+    memberstore.getMemberForId(memberID, (err, member) => {
       if (err || !member) { return logger.error(err); }
-      var params = {
+      const params = {
         member: member,
         bookingdetails: bookingdetails,
         participantFilename: 'registrationConfirmation',
@@ -85,9 +84,9 @@ module.exports = {
     });
   },
 
-  changedDuration: function (member, bookingdetails) {
+  changedDuration: function changedDuration(member, bookingdetails) {
     const self = this;
-    var params = {
+    const params = {
       member: member,
       bookingdetails: bookingdetails,
       participantFilename: 'changedRegistration',
@@ -98,9 +97,9 @@ module.exports = {
     notifyConcernedParties(params, self);
   },
 
-  changedResource: function (member, bookingdetails) {
+  changedResource: function changedResource(member, bookingdetails) {
     const self = this;
-    var params = {
+    const params = {
       member: member,
       bookingdetails: bookingdetails,
       participantFilename: 'changedRegistration',
@@ -111,9 +110,9 @@ module.exports = {
     notifyConcernedParties(params, self);
   },
 
-  changedWaitinglist: function (member, bookingdetails) {
+  changedWaitinglist: function changedWaitinglist(member, bookingdetails) {
     const self = this;
-    var params = {
+    const params = {
       member: member,
       bookingdetails: bookingdetails,
       participantFilename: 'changedWaitinglist',
@@ -124,9 +123,9 @@ module.exports = {
     notifyConcernedParties(params, self);
   },
 
-  removedFromParticipants: function (member) {
+  removedFromParticipants: function removedFromParticipants(member) {
     const self = this;
-    var params = {
+    const params = {
       member: member,
       bookingdetails: {resourceKind: 'participant list'},
       participantFilename: 'removalNotification',
@@ -137,9 +136,9 @@ module.exports = {
     notifyConcernedParties(params, self);
   },
 
-  removedFromWaitinglist: function (member) {
+  removedFromWaitinglist: function removedFromWaitinglist(member) {
     const self = this;
-    var params = {
+    const params = {
       member: member,
       bookingdetails: {resourceKind: 'waitinglist'},
       participantFilename: 'removalNotification',
@@ -150,11 +149,11 @@ module.exports = {
     notifyConcernedParties(params, self);
   },
 
-  newWaitinglistEntry: function (memberID, bookingdetails) {
+  newWaitinglistEntry: function newWaitinglistEntry(memberID, bookingdetails) {
     const self = this;
-    memberstore.getMemberForId(memberID, function (err, member) {
+    memberstore.getMemberForId(memberID, (err, member) => {
       if (err || !member) { return logger.error(err); }
-      var params = {
+      const params = {
         member: member,
         bookingdetails: bookingdetails,
         participantFilename: 'waitinglistConfirmation',
@@ -166,15 +165,15 @@ module.exports = {
     });
   },
 
-  wikiChanges: function (changes, callback) {
+  wikiChanges: function wikiChanges(changes, callback) {
     const self = this;
-    var options = {
-      directories: _.sortBy(changes, 'dir')
+    const options = {
+      directories: changes.sort(change => change.dir)
     };
-    _.defaults(options, renderingOptions());
-    subscriberService.emailAddressesForWikiNotifications(function (err1, emails) {
+    Object.defaults(options, renderingOptions());
+    subscriberService.emailAddressesForWikiNotifications((err1, emails) => {
       if (err1 || emails.length === 0) { return callback(err1); }
-      var filename = path.join(__dirname, 'pug/wikichangetemplate.pug');
+      const filename = path.join(__dirname, 'pug/wikichangetemplate.pug');
       sendMail({
         fromName: 'SoCraTes Notifications',
         fromAddress: self.infoListEmailAddress(),
@@ -190,10 +189,12 @@ module.exports = {
     // public for stubbing in tests
     return conf.get('registrationListEmailAddress');
   },
+
   infoListEmailAddress: function infoListEmailAddress() {
     // public for stubbing in tests
     return conf.get('infoListEmailAddress') || this.registrationListEmailAddress();
   },
+
   notificationListEmailAddress: function notificationListEmailAddress() {
     // public for stubbing in tests (Future Use)
     return conf.get('notificationListEmailAddress') || this.infoListEmailAddress();

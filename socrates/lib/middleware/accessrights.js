@@ -1,61 +1,61 @@
 'use strict';
-var conf = require('simple-configure');
-var beans = conf.get('beans');
-var Member = beans.get('member');
+const conf = require('simple-configure');
+const beans = conf.get('beans');
+const Member = beans.get('member');
 
 module.exports = function accessrights(req, res, next) {
   res.locals.accessrights = {
     req: req,
 
-    member: function () {
+    member: function member() {
       return this.req.user && this.req.user.member;
     },
 
-    isRegistered: function () {
+    isRegistered: function isRegistered() {
       return !!this.member();
     },
 
-    memberId: function () {
+    memberId: function memberId() {
       return this.isRegistered() ? this.member().id() : null;
     },
 
-    isMember: function (member) {
+    isMember: function isMember(member) {
       return this.isRegistered() && this.memberId() === member.id();
     },
 
-    isSuperuser: function () {
+    isSuperuser: function isSuperuser() {
       return Member.isSuperuser(this.memberId()); // same superusers as in SWK
     },
 
-    isSoCraTesAdmin: function () { // superusers are automatically SoCraTes admins
+    isSoCraTesAdmin: function isSoCraTesAdmin() { // superusers are automatically SoCraTes admins
       return this.isRegistered() && (conf.get('socratesAdmins').indexOf(this.memberId()) > -1 || this.isSuperuser());
     },
 
-    canEditMember: function (member) {
+    canEditMember: function canEditMember(member) {
       return this.isMember(member);
     },
 
-    canDeleteMember: function (memberOrSubscriber) {
+    canDeleteMember: function canDeleteMember(memberOrSubscriber) {
       return this.isSuperuser() && !this.isMember(memberOrSubscriber);
     },
 
-    canCreateActivity: function () {
+    canCreateActivity: function canCreateActivity() {
       return this.isSuperuser();
     },
 
-    canEditActivity: function () {
+    canEditActivity: function canEditActivity() {
       return this.isSoCraTesAdmin();
     },
 
-    canDeleteActivity: function () {
+    canDeleteActivity: function canDeleteActivity() {
       return this.isSuperuser();
     },
 
-    canEditPhoto: function (photo) {
+    canEditPhoto: function canEditPhoto(photo) {
       return this.isSuperuser() || (photo && photo.uploadedBy && photo.uploadedBy() === this.memberId());
     },
 
-    canDeletePhoto: function () {
+    canDeletePhoto: function canDeletePhoto() {
       return this.isSuperuser();
     }
 

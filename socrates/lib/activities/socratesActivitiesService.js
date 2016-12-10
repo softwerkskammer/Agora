@@ -1,15 +1,15 @@
 'use strict';
 
 const R = require('ramda');
-var async = require('async');
-var beans = require('simple-configure').get('beans');
-var e = beans.get('eventConstants');
-var memberstore = beans.get('memberstore');
-var eventstoreService = beans.get('eventstoreService');
-var notifications = beans.get('socratesNotifications');
-var roomOptions = beans.get('roomOptions');
+const async = require('async');
+const beans = require('simple-configure').get('beans');
+const e = beans.get('eventConstants');
+const memberstore = beans.get('memberstore');
+const eventstoreService = beans.get('eventstoreService');
+const notifications = beans.get('socratesNotifications');
+const roomOptions = beans.get('roomOptions');
 
-var currentUrl = beans.get('socratesConstants').currentUrl;
+const currentUrl = beans.get('socratesConstants').currentUrl;
 
 const ValidationErrors = beans.get('validationErrors');
 
@@ -73,7 +73,7 @@ module.exports = {
 
         if (event.event === e.REGISTERED_PARTICIPANT_FROM_WAITINGLIST) {
           args.handleSuccess = () => {
-            var bookingdetails = roomOptions.informationFor(params.roomType, params.duration);
+            const bookingdetails = roomOptions.informationFor(params.roomType, params.duration);
             bookingdetails.fromWaitinglist = true;
             notifications.newParticipant(member.id(), bookingdetails);
           };

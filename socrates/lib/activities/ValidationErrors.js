@@ -1,12 +1,12 @@
 'use strict';
 
-function ValidationErrors(errors) {
-  this.errors = errors;
+class ValidationErrors extends Error {
+  constructor(errors) {
+    super();
+    this.errors = errors;
+    this.name = 'ValidationErrors';
+    this.message = 'Validation Errors';
+  }
 }
-
-ValidationErrors.prototype = Object.create(Error.prototype);
-ValidationErrors.prototype.constructor = ValidationErrors;
-ValidationErrors.prototype.name = 'ValidationErrors';
-ValidationErrors.prototype.message = 'Validation Errors';
 
 module.exports = ValidationErrors;

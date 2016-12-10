@@ -1,17 +1,16 @@
 'use strict';
 
-var _ = require('lodash');
-var async = require('async');
+const async = require('async');
 
-var beans = require('simple-configure').get('beans');
-var memberstore = beans.get('memberstore');
-var subscriberstore = beans.get('subscriberstore');
-var Subscriber = beans.get('subscriber');
+const beans = require('simple-configure').get('beans');
+const memberstore = beans.get('memberstore');
+const subscriberstore = beans.get('subscriberstore');
+const Subscriber = beans.get('subscriber');
 
 module.exports = {
 
-  createSubscriberIfNecessaryFor: function (id, callback) {
-    subscriberstore.getSubscriber(id, function (err, particip) {
+  createSubscriberIfNecessaryFor: function createSubscriberIfNecessaryFor(id, callback) {
+    subscriberstore.getSubscriber(id, (err, particip) => {
       if (err) { return callback(err, true); }
       if (!particip) {
         return subscriberstore.saveSubscriber(new Subscriber({id: id}), callback);
@@ -20,22 +19,22 @@ module.exports = {
     });
   },
 
-  getMemberIfSubscriberExists: function (nickname, callback) {
-    memberstore.getMember(nickname, function (err, member) {
+  getMemberIfSubscriberExists: function getMemberIfSubscriberExists(nickname, callback) {
+    memberstore.getMember(nickname, (err, member) => {
       if (err || !member) { return callback(err); }
-      subscriberstore.getSubscriber(member.id(), function (err1, subscriber) {
+      subscriberstore.getSubscriber(member.id(), (err1, subscriber) => {
         if (err1 || !subscriber) { return callback(err1); }
         callback(null, member);
       });
     });
   },
 
-  getMembersAndSubscribersForIds: function (memberIds, globalCallback) {
-    memberstore.getMembersForIds(memberIds, function (err, members) {
+  getMembersAndSubscribersForIds: function getMembersAndSubscribersForIds(memberIds, globalCallback) {
+    memberstore.getMembersForIds(memberIds, (err, members) => {
       if (err || !members) { return globalCallback(err); }
       async.map(members,
-        function (member, callback) {
-          subscriberstore.getSubscriber(member.id(), function (err1, subscriber) {
+        (member, callback) => {
+          subscriberstore.getSubscriber(member.id(), (err1, subscriber) => {
             if (err1 || !subscriber) { return callback(err1); }
             member.subscriber = subscriber;
             callback(null, member);
@@ -44,10 +43,10 @@ module.exports = {
     });
   },
 
-  getMembersForSubscribers: function (subscribers, globalCallback) {
+  getMembersForSubscribers: function getMembersForSubscribers(subscribers, globalCallback) {
     async.map(subscribers,
-      function (subscriber, callback) {
-        memberstore.getMemberForId(subscriber.id(), function (err1, member) {
+      (subscriber, callback) => {
+        memberstore.getMemberForId(subscriber.id(), (err1, member) => {
           if (err1 || !member) { return callback(err1); }
           member.subscriber = subscriber;
           callback(null, member);
@@ -55,24 +54,24 @@ module.exports = {
       }, globalCallback);
   },
 
-  emailAddressesForWikiNotifications: function (globalCallback) {
-    subscriberstore.allSubscribers(function (err, subscribers) {
+  emailAddressesForWikiNotifications: function emailAddressesForWikiNotifications(globalCallback) {
+    subscriberstore.allSubscribers((err, subscribers) => {
       if (err || !subscribers) { return globalCallback(err); }
-      var memberIds = _(subscribers).filter(function (subscriber) { return subscriber.notifyOnWikiChangesSoCraTes(); }).map(function (subscriber) {return subscriber.id(); }).value();
-      memberstore.getMembersForIds(memberIds, function (err1, members) {
+      const memberIds = subscribers.filter(subscriber => subscriber.notifyOnWikiChangesSoCraTes()).map(subscriber => subscriber.id());
+      memberstore.getMembersForIds(memberIds, (err1, members) => {
         if (err1) { return globalCallback(err1); }
-        globalCallback(null, _.map(members, function (member) { return member.email(); }));
+        globalCallback(null, members.map(member => member.email()));
       });
     });
   },
 
-  removeSubscriber: function (subscriber, callback) {
-    subscriberstore.removeSubscriber(subscriber, function (err) {
+  removeSubscriber: function removeSubscriber(subscriber, callback) {
+    subscriberstore.removeSubscriber(subscriber, err => {
       if (err) { return callback(err); }
-      memberstore.getMemberForId(subscriber.id(), function (err1, member) {
+      memberstore.getMemberForId(subscriber.id(), (err1, member) => {
         if (err1) { return callback(err1); }
         if (member.socratesOnly()) {
-          return memberstore.removeMember(subscriber, function (err2) {
+          return memberstore.removeMember(subscriber, err2 => {
             if (err2) { return callback(err2); }
             callback(null);
           });

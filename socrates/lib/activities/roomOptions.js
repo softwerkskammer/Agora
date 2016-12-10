@@ -1,12 +1,10 @@
 'use strict';
 
-var _ = require('lodash');
+const thursdayEvening = 7;
+const dinner = 13;
+const day = 37; // adapt this line to the actual day fare as reduced by sponsoring
 
-var thursdayEvening = 7;
-var dinner = 13;
-var day = 37; // adapt this line to the actual day fare as reduced by sponsoring
-
-var rooms = [
+const rooms = [
   {id: 'single', name: 'Single', display: 'single room', price: 70 + dinner},
   {id: 'bed_in_double', name: 'Double shared', display: 'bed in a double room', price: 50 + dinner},
   {id: 'bed_in_junior', name: 'Junior shared', display: 'bed in a junior room', price: 46 + dinner},
@@ -14,11 +12,11 @@ var rooms = [
 ];
 
 module.exports = {
-  allIds: function () {
-    return _.map(rooms, 'id');
+  allIds: function allIds() {
+    return rooms.map(room => room.id);
   },
 
-  allRoomOptions: function () {
+  allRoomOptions: function allRoomOptions() {
     function option(room) {
       return {
         id: room.id,
@@ -30,10 +28,10 @@ module.exports = {
       };
     }
 
-    return _.map(rooms, option);
+    return rooms.map(option);
   },
 
-  informationFor: function (id, duration) {
+  informationFor: function informationFor(id, duration) {
     return {
       room: this.waitinglistInformationFor(id).room,
       nights: (duration > 3 ? duration - 1 : duration),
@@ -41,20 +39,20 @@ module.exports = {
     };
   },
 
-  endOfStayFor: function (duration) {
-    var endOfStay = ['saturday evening', 'sunday morning', 'sunday evening', 'monday morning'];
+  endOfStayFor: function endOfStayFor(duration) {
+    const endOfStay = ['saturday evening', 'sunday morning', 'sunday evening', 'monday morning'];
     return endOfStay[duration - 2];
   },
 
-  isValidDuration: function (duration) {
+  isValidDuration: function isValidDuration(duration) {
     return !!this.endOfStayFor(duration);
   },
 
-  isValidRoomType: function (roomType) {
-    return !!_.find(rooms, {id: roomType});
+  isValidRoomType: function isValidRoomType(roomType) {
+    return rooms.some(room => room.id === roomType);
   },
 
-  waitinglistInformationFor: function (id) {
-    return {room: _.find(rooms, {id: id}).display};
+  waitinglistInformationFor: function waitinglistInformationFor(id) {
+    return {room: rooms.find(room => room.id === id).display};
   }
 };
