@@ -1,51 +1,51 @@
 'use strict';
 
-var moment = require('moment-timezone');
+const moment = require('moment-timezone');
 
-function Payment(object) {
-  this.state = object || {}; // this must be *the* object that is referenced by subscriber.state._payment
-  return this;
+class Payment {
+  constructor(object) {
+    this.state = object || {}; // this must be *the* object that is referenced by subscriber.state._payment
+  }
+
+  moneyTransferred() {
+    return this.state.moneyTransferred;
+  }
+
+  creditCardPaid() {
+    return this.state.creditCardPaid;
+  }
+
+  moneyTransferredMoment() {
+    return this.state.moneyTransferred && moment(this.state.moneyTransferred);
+  }
+
+  creditCardPaidMoment() {
+    return this.state.creditCardPaid && moment(this.state.creditCardPaid);
+  }
+
+  paymentReceivedMoment() {
+    return this.state.paymentReceived && moment(this.state.paymentReceived);
+  }
+
+  paymentDone() {
+    return !!(this.creditCardPaid() || this.moneyTransferred());
+  }
+
+  paymentConfirmed() {
+    return !!this.state.paymentReceived;
+  }
+
+  noteCreditCardPayment() {
+    this.state.creditCardPaid = moment().toDate();
+  }
+
+  noteMoneyTransfer() {
+    this.state.moneyTransferred = moment().toDate();
+  }
+
+  notePaymentReceived() {
+    this.state.paymentReceived = moment().toDate();
+  }
 }
-
-
-Payment.prototype.moneyTransferred = function () {
-  return this.state.moneyTransferred;
-};
-
-Payment.prototype.creditCardPaid = function () {
-  return this.state.creditCardPaid;
-};
-
-Payment.prototype.moneyTransferredMoment = function () {
-  return this.state.moneyTransferred && moment(this.state.moneyTransferred);
-};
-
-Payment.prototype.creditCardPaidMoment = function () {
-  return this.state.creditCardPaid && moment(this.state.creditCardPaid);
-};
-
-Payment.prototype.paymentReceivedMoment = function () {
-  return this.state.paymentReceived && moment(this.state.paymentReceived);
-};
-
-Payment.prototype.paymentDone = function () {
-  return !!(this.creditCardPaid() || this.moneyTransferred());
-};
-
-Payment.prototype.paymentConfirmed = function () {
-  return !!this.state.paymentReceived;
-};
-
-Payment.prototype.noteCreditCardPayment = function () {
-  this.state.creditCardPaid = moment().toDate();
-};
-
-Payment.prototype.noteMoneyTransfer = function () {
-  this.state.moneyTransferred = moment().toDate();
-};
-
-Payment.prototype.notePaymentReceived = function () {
-  this.state.paymentReceived = moment().toDate();
-};
 
 module.exports = Payment;
