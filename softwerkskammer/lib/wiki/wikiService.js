@@ -122,7 +122,7 @@ module.exports = {
       if (err) { return callback(err); }
       if (result.length === 0) { return callback(err, []); }
       async.map(result,
-        function (path, mapCallback) {
+        (path, mapCallback) =>{
           Git.readFileFs(path, (err1, post) => {
             if (err1) { return mapCallback(err1); }
             mapCallback(null, self.parseBlogPost(path, post));
@@ -145,7 +145,7 @@ module.exports = {
         const resultLine = new DirectoryWithChangedFiles({dir: directory, files: []});
         self.pageList(directory, (listErr, items) => {
           if (listErr) { return directoryCallback(listErr); }
-          async.eachLimit(items, 5, function (item, itemsCallback) {
+          async.eachLimit(items, 5, (item, itemsCallback) => {
             Git.latestChanges(item.fullname + '.md', moment, (err1, metadata) => {
               if (err1) { return itemsCallback(err1); }
               if (metadata.length > 0) {
