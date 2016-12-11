@@ -1,50 +1,52 @@
 'use strict';
 
-var _ = require('lodash');
+const beans = require('simple-configure').get('beans');
+const misc = beans.get('misc');
 
-function Addon(object) {
-  this.state = object; // this must be *the* object that is referenced by subscriber.state._addon
-  return this;
+class Addon {
+  constructor(object) {
+    this.state = object; // this must be *the* object that is referenced by subscriber.state._addon
+  }
+
+  fillFromUI(uiInputObject) {
+    this.state.homeAddress = uiInputObject.homeAddress;
+    this.state.billingAddress = uiInputObject.billingAddress;
+    this.state.tShirtSize = misc.compact(uiInputObject.tShirtSize)[0];
+    this.state.remarks = uiInputObject.remarks;
+    return this;
+  }
+
+  remarks() {
+    return this.state.remarks;
+  }
+
+  homeAddress() {
+    return this.state.homeAddress;
+  }
+
+  homeAddressLines() {
+    return this.state.homeAddress ? this.state.homeAddress.split('\n') : [];
+  }
+
+  billingAddress() {
+    return this.state.billingAddress;
+  }
+
+  billingAddressLines() {
+    return this.state.billingAddress ? this.state.billingAddress.split('\n') : [];
+  }
+
+  tShirtSize() {
+    return this.state.tShirtSize;
+  }
+
+  ladiesTShirt() {
+    return this.state.tShirtSize.startsWith('Ladies');
+  }
+
+  static hasAddonInformation(uiInputObject) {
+    return !!uiInputObject.homeAddress;
+  }
 }
-
-Addon.prototype.fillFromUI = function (uiInputObject) {
-  this.state.homeAddress = uiInputObject.homeAddress;
-  this.state.billingAddress = uiInputObject.billingAddress;
-  this.state.tShirtSize = _(uiInputObject.tShirtSize).compact().first();
-  this.state.remarks = uiInputObject.remarks;
-  return this;
-};
-
-Addon.prototype.remarks = function () {
-  return this.state.remarks;
-};
-
-Addon.prototype.homeAddress = function () {
-  return this.state.homeAddress;
-};
-
-Addon.prototype.homeAddressLines = function () {
-  return this.state.homeAddress ? this.state.homeAddress.split('\n') : [];
-};
-
-Addon.prototype.billingAddress = function () {
-  return this.state.billingAddress;
-};
-
-Addon.prototype.billingAddressLines = function () {
-  return this.state.billingAddress ? this.state.billingAddress.split('\n') : [];
-};
-
-Addon.prototype.tShirtSize = function () {
-  return this.state.tShirtSize;
-};
-
-Addon.prototype.ladiesTShirt = function () {
-  return this.state.tShirtSize.startsWith('Ladies');
-};
-
-Addon.hasAddonInformation = function (uiInputObject) {
-  return !!uiInputObject.homeAddress;
-};
 
 module.exports = Addon;

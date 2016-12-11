@@ -1,11 +1,11 @@
 'use strict';
 
-var sponsors = require('./sponsors.json');
-var _ = require('lodash');
+const sponsors = require('./sponsors.json');
+const _ = require('lodash');
 
 function composePairs() {
-  var pair = {};
-  return _(sponsors).shuffle().transform(function (result, sponsor, index) {
+  let pair = {};
+  return _(sponsors).shuffle().transform((result, sponsor, index) => {
     if (index % 2) {
       pair.second = sponsor;
     } else {

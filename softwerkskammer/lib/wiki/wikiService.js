@@ -122,7 +122,7 @@ module.exports = {
       if (err) { return callback(err); }
       if (result.length === 0) { return callback(err, []); }
       async.map(result,
-        (path, mapCallback) =>{
+        (path, mapCallback) => {
           Git.readFileFs(path, (err1, post) => {
             if (err1) { return mapCallback(err1); }
             mapCallback(null, self.parseBlogPost(path, post));

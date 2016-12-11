@@ -1,44 +1,44 @@
 'use strict';
 
-var beans = require('simple-configure').get('beans');
-var _ = require('lodash');
-var persistence = beans.get('subscribersPersistence');
-var memberstore = beans.get('memberstore');
-var Subscriber = beans.get('subscriber');
-var misc = beans.get('misc');
-var logger = require('winston').loggers.get('transactions');
-var toSubscriber = _.partial(misc.toObject, Subscriber);
+const beans = require('simple-configure').get('beans');
+const R = require('ramda');
+const persistence = beans.get('subscribersPersistence');
+const memberstore = beans.get('memberstore');
+const Subscriber = beans.get('subscriber');
+const misc = beans.get('misc');
+const logger = require('winston').loggers.get('transactions');
+const toSubscriber = R.partial(misc.toObject, [Subscriber]);
 
-var toSubscriberList = function (callback, err, result) {
+function toSubscriberList(callback, err, result) {
   if (err) { return callback(err); }
-  callback(null, _.map(result, function (each) { return new Subscriber(each); }));
-};
+  callback(null, result.map(each => new Subscriber(each)));
+}
 
 module.exports = {
-  allSubscribers: function (callback) {
-    persistence.list({}, _.partial(toSubscriberList, callback));
+  allSubscribers: function allSubscribers(callback) {
+    persistence.list({}, R.partial(toSubscriberList, [callback]));
   },
 
-  getSubscriber: function (id, callback) {
-    persistence.getById(id, _.partial(toSubscriber, callback));
+  getSubscriber: function getSubscriber(id, callback) {
+    persistence.getById(id, R.partial(toSubscriber, [callback]));
   },
 
-  getSubscriberByNickname: function (nickname, callback) {
-    var self = this;
-    memberstore.getMember(nickname, function (err, member) {
+  getSubscriberByNickname: function getSubscriberByNickname(nickname, callback) {
+    const self = this;
+    memberstore.getMember(nickname, (err, member) => {
       if (err || !member) { return callback(err); }
       self.getSubscriber(member.id(), callback);
     });
   },
 
-  removeSubscriber: function (subscriber, callback) {
-    persistence.remove(subscriber.id(), function (err) {
+  removeSubscriber: function removeSubscriber(subscriber, callback) {
+    persistence.remove(subscriber.id(), err => {
       logger.info('Subscriber removed: ' + JSON.stringify(subscriber));
       callback(err);
     });
   },
 
-  saveSubscriber: function (subscriber, callback) {
+  saveSubscriber: function saveSubscriber(subscriber, callback) {
     persistence.save(subscriber.state, callback);
   }
 };

@@ -1,29 +1,28 @@
 /*eslint no-underscore-dangle: 0*/
 'use strict';
 
-var path = require('path');
-var fs = require('fs');
-var qrimage = require('qr-image');
-var _ = require('lodash');
+const path = require('path');
+const fs = require('fs');
+const qrimage = require('qr-image');
 
-var conf = require('simple-configure');
-var beans = conf.get('beans');
-var Renderer = beans.get('renderer');
-var misc = beans.get('misc');
-var eventstoreService = beans.get('eventstoreService');
-var mailsenderService = beans.get('mailsenderService');
-var socratesConstants = beans.get('socratesConstants');
-var sponsorpairs = require('./sponsorpairs');
+const conf = require('simple-configure');
+const beans = conf.get('beans');
+const Renderer = beans.get('renderer');
+const misc = beans.get('misc');
+const eventstoreService = beans.get('eventstoreService');
+const mailsenderService = beans.get('mailsenderService');
+const socratesConstants = beans.get('socratesConstants');
+const sponsorpairs = require('./sponsorpairs');
 
-var app = misc.expressAppIn(__dirname);
+const app = misc.expressAppIn(__dirname);
 
-app.get('/', function (req, res, next) {
-  eventstoreService.getRegistrationReadModel(socratesConstants.currentUrl, function (err, registrationReadModel) {
+app.get('/', (req, res, next) => {
+  eventstoreService.getRegistrationReadModel(socratesConstants.currentUrl, (err, registrationReadModel) => {
     if (err || !registrationReadModel) { return next(err); }
-    eventstoreService.getRoomsReadModel(socratesConstants.currentUrl, function (err2, roomsReadModel) {
+    eventstoreService.getRoomsReadModel(socratesConstants.currentUrl, (err2, roomsReadModel) => {
       if (err2 || !roomsReadModel) { return next(err2); }
-      var memberId = res.locals.accessrights.memberId();
-      var registration = {
+      const memberId = res.locals.accessrights.memberId();
+      const registration = {
         alreadyRegistered: registrationReadModel.isAlreadyRegistered(memberId),
         alreadyOnWaitinglist: registrationReadModel.isAlreadyOnWaitinglist(memberId),
         selectedOptions: registrationReadModel.selectedOptionsFor(memberId),
@@ -33,95 +32,92 @@ app.get('/', function (req, res, next) {
       res.render('index', {sponsors: sponsorpairs(), registration: registration});
     });
   });
-
-
-
 });
 
-app.get('/goodbye.html', function (req, res) {
+app.get('/goodbye.html', (req, res) => {
   if (req.user && req.user.member) {
     return res.redirect('/');
   }
   res.render('goodbye');
 });
 
-app.get('/robots.txt', function (req, res, next) {
-  fs.readFile(path.join(__dirname, 'views', 'robots.txt'), 'utf8', function (err, data) {
+app.get('/robots.txt', (req, res, next) => {
+  fs.readFile(path.join(__dirname, 'views', 'robots.txt'), 'utf8', (err, data) => {
     if (err) { return next(err); }
     res.send(data);
   });
 });
 
-app.get('/impressum.html', function (req, res) {
+app.get('/impressum.html', (req, res) => {
   res.render('impressum');
 });
 
-app.get('/schedule.html', function (req, res) {
+app.get('/schedule.html', (req, res) => {
   res.render('schedule', {currentYear: socratesConstants.currentYear});
 });
 
-app.get('/experienceReports.html', function (req, res) {
+app.get('/experienceReports.html', (req, res) => {
   res.render('experienceReports');
 });
 
-app.get('/location.html', function (req, res) {
+app.get('/location.html', (req, res) => {
   res.render('location');
 });
 
-app.get('/history.html', function (req, res) {
+app.get('/history.html', (req, res) => {
   res.render('history');
 });
 
-app.get('/values.html', function (req, res) {
+app.get('/values.html', (req, res) => {
   res.render('values');
 });
 
-app.get('/sponsoring.html', function (req, res) {
+app.get('/sponsoring.html', (req, res) => {
   res.render('sponsoring');
 });
 
-app.post('/preview', function (req, res) {
+app.post('/preview', (req, res) => {
   res.send(Renderer.render(req.body.data, req.body.subdir));
 });
 
-app.get('/login', function (req, res) {
+app.get('/login', (req, res) => {
   res.render('authenticationRequired');
 });
 
-app.get('/loginDialog', function (req, res) {
+app.get('/loginDialog', (req, res) => {
   res.render('loginDialog', {returnUrl: req.query.returnUrl});
 });
 
-app.get('/cheatsheet.html', function (req, res) {
+app.get('/cheatsheet.html', (req, res) => {
   res.render('lazyMarkdownCheatsheet');
 });
 
-app.get('/mustBeSuperuser', function (req, res) {
+app.get('/mustBeSuperuser', (req, res) => {
   res.render('superuserRightsRequired', {requestedPage: req.query.page});
 });
 
-app.get('/mustBeSoCraTesAdmin', function (req, res) {
+app.get('/mustBeSoCraTesAdmin', (req, res) => {
   res.render('socratesAdminRightsRequired', {requestedPage: req.query.page});
 });
 
-app.get('/qrcode', function (req, res) {
-  var url = req.query.url;
-  var fullUrl = _.startsWith(url, 'http') ? url : conf.get('publicUrlPrefix') + url;
-  var img = qrimage.image(fullUrl, {type: 'svg'});
+app.get('/qrcode', (req, res) => {
+  const url = req.query.url;
+  const fullUrl = misc.startsWith(url, 'http') ? url : conf.get('publicUrlPrefix') + url;
+  const img = qrimage.image(fullUrl, {type: 'svg'});
   res.type('svg');
   img.pipe(res);
 });
 
-app.get('/resign', function (req, res) {
+app.get('/resign', (req, res) => {
   if (req.user.member) {
     return res.render('compose-resign', {nickname: req.user.member.nickname()});
   }
   return res.render('/');
 });
 
-app.post('/submitresign', function (req, res, next) {
-  var markdown = '#### Resignation from SoCraTes-Conference\n\n' + '**' + req.i18n.t('mailsender.why-resign') + '**\n' + req.body.why + '\n\n**' + req.i18n.t('mailsender.notes-resign') + '**\n' + req.body.notes;
-  return mailsenderService.sendResignment(markdown, req.user.member, function (err, statusmsg) {
+app.post('/submitresign', (req, res, next) => {
+  const markdown = '#### Resignation from SoCraTes-Conference\n\n' + '**' + req.i18n.t('mailsender.why-resign') + '**\n' + req.body.why + '\n\n**' + req.i18n.t('mailsender.notes-resign') + '**\n' + req.body.notes;
+  return mailsenderService.sendResignment(markdown, req.user.member, (err, statusmsg) => {
     if (err) { return next(err); }
     statusmsg.putIntoSession(req);
     res.redirect('/');

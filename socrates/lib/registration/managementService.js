@@ -1,19 +1,18 @@
 'use strict';
 
-var beans = require('simple-configure').get('beans');
-var _ = require('lodash');
-var async = require('async');
+const beans = require('simple-configure').get('beans');
+const async = require('async');
 
-var subscriberstore = beans.get('subscriberstore');
+const subscriberstore = beans.get('subscriberstore');
 
 module.exports = {
 
-  addonLinesOf: function (members, globalCallback) {
+  addonLinesOf: function addonLinesOf(members, globalCallback) {
     async.map(members,
-      function (member, callback) {
-        subscriberstore.getSubscriber(member.id(), function (err, subscriber) {
+      (member, callback) => {
+        subscriberstore.getSubscriber(member.id(), (err, subscriber) => {
           if (err || !subscriber) { return callback(err); }
-          var participation = subscriber.isParticipating() ? subscriber.currentParticipation() : {};
+          const participation = subscriber.isParticipating() ? subscriber.currentParticipation() : {};
 
           callback(null, {member: member, addon: subscriber.addon(), participation: participation, subscriber: subscriber});
         });
@@ -21,18 +20,18 @@ module.exports = {
       globalCallback);
   },
 
-  addonLinesOfMembersWithSubscribers: function (members) {
-    return _.map(members, function (member) {
-        var participation = member.subscriber.isParticipating() ? member.subscriber.currentParticipation() : {};
-        return {member: member, addon: member.subscriber.addon(), participation: participation};
-      });
+  addonLinesOfMembersWithSubscribers: function addonLinesOfMembersWithSubscribers(members) {
+    return members.map(member => {
+      const participation = member.subscriber.isParticipating() ? member.subscriber.currentParticipation() : {};
+      return {member: member, addon: member.subscriber.addon(), participation: participation};
+    });
   },
 
-  tshirtSizes: function (addonLines) {
-    var sizes = {};
-    _.each(addonLines, function (line) {
-      var size = line.addon.tShirtSize();
-      var currentCount = sizes[size];
+  tshirtSizes: function tshirtSizes(addonLines) {
+    const sizes = {};
+    addonLines.forEach(line => {
+      const size = line.addon.tShirtSize();
+      const currentCount = sizes[size];
       if (currentCount) {
         sizes[size].count = currentCount.count + 1;
       } else {
@@ -42,17 +41,17 @@ module.exports = {
     return sizes;
   },
 
-  durations: function (registrationReadModel) {
-    var durations = registrationReadModel.durations();
+  durations: function durations(registrationReadModel) {
+    const modeldurations = registrationReadModel.durations();
 
-    function count(index) { return durations[index] ? durations[index].count : 0; }
+    function count(index) { return modeldurations[index] ? modeldurations[index].count : 0; }
 
-    if (durations[2]) { durations[2].total = count(2) + count(3) + count(4) + count(5); }
-    if (durations[3]) { durations[3].total = count(3) + count(4) + count(5); }
-    if (durations[4]) { durations[4].total = count(4) + count(5); }
-    if (durations[5]) { durations[5].total = count(5); }
+    if (modeldurations[2]) { modeldurations[2].total = count(2) + count(3) + count(4) + count(5); }
+    if (modeldurations[3]) { modeldurations[3].total = count(3) + count(4) + count(5); }
+    if (modeldurations[4]) { modeldurations[4].total = count(4) + count(5); }
+    if (modeldurations[5]) { modeldurations[5].total = count(5); }
 
-    return durations;
+    return modeldurations;
   }
 
 };
