@@ -101,22 +101,21 @@ describe('Payment Service', () => {
 
   describe('Fee Calculation', () => {
     it('returns the correct fee for valid inputs, rounded to two digits', () => {
-      expect(paymentService.calcFee(100)).to.be(3.3);
-      expect(paymentService.calcFee(600.55)).to.be(18.25);
-      expect(paymentService.calcFee(12345)).to.be(369.01);
+      expect(paymentService.calcFee(100)).to.be.between(3.29, 3.3);
+      expect(paymentService.calcFee(600.55)).to.be.between(18.24, 18.25);
+      expect(paymentService.calcFee(12345)).to.be.between(369, 369.01);
     });
 
     it('returns rubbish for some kinds of invalid inputs', () => {
-      expect(paymentService.calcFee('100')).to.be(930.18);
-      expect(paymentService.calcFee(false)).to.be(0.31);
-      expect(paymentService.calcFee(null)).to.be(0.31);
+      expect(paymentService.calcFee('100')).to.be.between(930.17, 930.18);
+      expect(paymentService.calcFee(false)).to.be.between(0.3, 0.31);
+      expect(paymentService.calcFee(null)).to.be.between(0.3, 0.31);
     });
 
-    //it('returns NaN for other kinds of invalid inputs', function () {
-    // TODO!
-    // expect(isNaN(paymentService.calcFee('abc'))).to.be.true();
-    // expect(isNaN(paymentService.calcFee(undefined))).to.be.true();
-    //});
+    it('returns "NaN" for other kinds of invalid inputs', () => {
+      expect(paymentService.calcFee('abc')).to.eql(NaN);
+      expect(paymentService.calcFee(undefined)).to.eql(NaN);
+    });
   });
 
 });

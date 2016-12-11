@@ -1,12 +1,18 @@
 /* eslint no-underscore-dangle: 0 */
 
 const moment = require('moment-timezone');
-const numeral = require('numeral');
-numeral.language('de', require('numeral/languages/de'));
-numeral.language('en-gb', require('numeral/languages/en-gb'));
 
 const conf = require('simple-configure');
 const misc = conf.get('beans').get('misc');
+
+// adding additional languages to builtin Intl
+if (!require('intl-locales-supported')(['de', 'en-gb'])) {
+  // `Intl` exists, but it doesn't have the data we need, so load the
+  // polyfill and replace the constructors with need with the polyfill's.
+  const IntlPolyfill = require('intl');
+  Intl.NumberFormat = IntlPolyfill.NumberFormat;
+  Intl.DateTimeFormat = IntlPolyfill.DateTimeFormat;
+}
 
 module.exports = {
   isFilled: function isFilled(someValue) {
@@ -78,6 +84,7 @@ module.exports = {
       const timeStringOrDefault = timeString || '00:00';
       return moment.tz(dateString + ' ' + timeStringOrDefault, 'D.M.YYYY H:m', timezoneName);
     }
+    return undefined;
   },
 
   defaultTimezone: function defaultTimezone() {
@@ -85,16 +92,11 @@ module.exports = {
   },
 
   formatNumberWithCurrentLocale: function formatNumberWithCurrentLocale(res, number) {
-    return numeral.language(res.locals.language)(number).format('0.00');
+    return new Intl.NumberFormat(res.locals.language, {minimumFractionDigits: 2, maximumFractionDigits: 2}).format(number || 0);
   },
 
   parseNumberWithCurrentLocale: function parseNumberWithCurrentLocale(language, numberString) {
     return parseFloat(numberString.replace(',', '.'));
-    // return numeral.language(language)().unformat(numberString);
-  },
-
-  roundNumber: function roundNumber(number) {
-    return numeral().unformat(numeral(number).format('0.00'));
   },
 
   containsSlash: function containsSlash(string) {

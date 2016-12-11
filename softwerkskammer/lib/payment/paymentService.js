@@ -5,11 +5,9 @@ const beans = require('simple-configure').get('beans');
 const PaymentInfo = beans.get('paymentInfo');
 const statusmessage = beans.get('statusmessage');
 const stripeService = beans.get('stripeService');
-const fieldHelpers = beans.get('fieldHelpers');
 
 function calcFee(amount) {
-  const fee = ((amount + 0.3) / 0.971) - amount;
-  return fieldHelpers.roundNumber(fee);
+  return ((amount + 0.3) / 0.971) - amount;
 }
 
 module.exports = {

@@ -19,9 +19,10 @@ app.get('/', (req, res, next) => {
 });
 
 app.get('/calcFee/:amount', (req, res) => {
-  let amount = fieldHelpers.parseNumberWithCurrentLocale(res.locals.language, req.params.amount);
+  const amount = fieldHelpers.parseNumberWithCurrentLocale(res.locals.language, req.params.amount);
   if (!amount) { return res.end(''); }
-  res.end(fieldHelpers.formatNumberWithCurrentLocale(res, paymentService.calcFee(amount)) + ' €');
+  const fee = fieldHelpers.formatNumberWithCurrentLocale(res, paymentService.calcFee(amount));
+  res.end(fee + ' €');
 });
 
 app.get('/calcFee', (req, res) => res.end(''));
