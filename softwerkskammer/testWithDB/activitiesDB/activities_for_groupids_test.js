@@ -1,25 +1,25 @@
 'use strict';
 
-var moment = require('moment-timezone');
+const moment = require('moment-timezone');
 
-var sinon = require('sinon').sandbox.create();
-var expect = require('must-dist');
+const sinon = require('sinon').sandbox.create();
+const expect = require('must-dist');
 
-var beans = require('../../testutil/configureForTestWithDB').get('beans');
-var activitystore = beans.get('activitystore');
-var persistence = beans.get('activitiesPersistence');
-var Activity = beans.get('activity');
+const beans = require('../../testutil/configureForTestWithDB').get('beans');
+const activitystore = beans.get('activitystore');
+const persistence = beans.get('activitiesPersistence');
+const Activity = beans.get('activity');
 
-describe('Activity application with DB - shows activities for Group-Ids -', function () {
+describe('Activity application with DB - shows activities for Group-Ids -', () => {
 
-  var tomorrowEarly = moment().add(1, 'days');
-  var tomorrowLate = moment().add(1, 'days').add(1, 'hours');
-  var dayAfterTomorrow = moment().add(2, 'days');
-  var yesterday = moment().subtract(1, 'days');
-  var dayBeforeYesterday = moment().subtract(2, 'days');
-  var threeDaysAgo = moment().subtract(3, 'days');
+  const tomorrowEarly = moment().add(1, 'days');
+  const tomorrowLate = moment().add(1, 'days').add(1, 'hours');
+  const dayAfterTomorrow = moment().add(2, 'days');
+  const yesterday = moment().subtract(1, 'days');
+  const dayBeforeYesterday = moment().subtract(2, 'days');
+  const threeDaysAgo = moment().subtract(3, 'days');
 
-  var futureActivity1 = new Activity({
+  const futureActivity1 = new Activity({
     id: 'futureActivity1', title: 'Future Activity 1', description: 'description1', assignedGroup: 'groupname1',
     location: 'location1', direction: 'direction1', startUnix: tomorrowEarly.unix(), endUnix: dayAfterTomorrow.unix(),
     url: 'url_future', owner: 'owner', resources: {
@@ -27,7 +27,7 @@ describe('Activity application with DB - shows activities for Group-Ids -', func
       AndereVeranstaltung: {_registeredMembers: [{memberId: 'memberId2'}], _registrationOpen: true}
     }, version: 1
   });
-  var futureActivity2 = new Activity({
+  const futureActivity2 = new Activity({
     id: 'futureActivity2',
     title: 'Future Activity 2',
     description: 'description1',
@@ -42,7 +42,7 @@ describe('Activity application with DB - shows activities for Group-Ids -', func
     version: 1
   });
 
-  var currentActivity1 = new Activity({
+  const currentActivity1 = new Activity({
     id: 'currentActivity1',
     title: 'Current Activity 1',
     description: 'description1',
@@ -56,13 +56,13 @@ describe('Activity application with DB - shows activities for Group-Ids -', func
     resources: {Veranstaltung: {_registeredMembers: [{memberId: 'memberId'}], _registrationOpen: true}},
     version: 1
   });
-  var currentActivity2 = new Activity({
+  const currentActivity2 = new Activity({
     id: 'currentActivity2', title: 'Current Activity 2', description: 'description1', assignedGroup: 'groupname2',
     location: 'location1', direction: 'direction1', startUnix: yesterday.unix(), endUnix: tomorrowEarly.unix(),
     url: 'url_current', owner: 'owner', resources: {Veranstaltung: {}}, version: 1
   }); // resource has no registered members!
 
-  var pastActivity1 = new Activity({
+  const pastActivity1 = new Activity({
     id: 'pastActivity1',
     title: 'Past Activity 1',
     description: 'description1',
@@ -77,7 +77,7 @@ describe('Activity application with DB - shows activities for Group-Ids -', func
     version: 1
   });
 
-  var pastActivity2 = new Activity({
+  const pastActivity2 = new Activity({
     id: 'pastActivity2',
     title: 'Past Activity 2',
     description: 'description1',
@@ -92,20 +92,20 @@ describe('Activity application with DB - shows activities for Group-Ids -', func
     version: 1
   });
 
-  beforeEach(function (done) { // if this fails, you need to start your mongo DB
+  beforeEach(done => { // if this fails, you need to start your mongo DB
 
-    persistence.drop(function () {
-      activitystore.saveActivity(pastActivity1, function (err) {
+    persistence.drop(() => {
+      activitystore.saveActivity(pastActivity1, err => {
         if (err) { done(err); }
-        activitystore.saveActivity(pastActivity2, function (err1) {
+        activitystore.saveActivity(pastActivity2, err1 => {
           if (err1) { done(err1); }
-          activitystore.saveActivity(futureActivity1, function (err2) {
+          activitystore.saveActivity(futureActivity1, err2 => {
             if (err2) { done(err2); }
-            activitystore.saveActivity(futureActivity2, function (err3) {
+            activitystore.saveActivity(futureActivity2, err3 => {
               if (err3) { done(err3); }
-              activitystore.saveActivity(currentActivity1, function (err4) {
+              activitystore.saveActivity(currentActivity1, err4 => {
                 if (err4) { done(err4); }
-                activitystore.saveActivity(currentActivity2, function (err5) {
+                activitystore.saveActivity(currentActivity2, err5 => {
                   done(err5);
                 });
               });
@@ -116,13 +116,13 @@ describe('Activity application with DB - shows activities for Group-Ids -', func
     });
   });
 
-  afterEach(function () {
+  afterEach(() => {
     sinon.restore();
   });
 
-  it('shows only current and future activities of Group 1', function (done) {
+  it('shows only current and future activities of Group 1', done => {
 
-    activitystore.upcomingActivitiesForGroupIds(['groupname1'], function (err, activities) {
+    activitystore.upcomingActivitiesForGroupIds(['groupname1'], (err, activities) => {
       expect(activities.length).to.equal(2);
       expect(activities[0].title()).to.equal('Current Activity 1');
       expect(activities[1].title()).to.equal('Future Activity 1');
@@ -130,9 +130,9 @@ describe('Activity application with DB - shows activities for Group-Ids -', func
     });
   });
 
-  it('shows current and future activities of Group 1 and activities with subscribed member', function (done) {
+  it('shows current and future activities of Group 1 and activities with subscribed member', done => {
 
-    activitystore.activitiesForGroupIdsAndRegisteredMemberId(['groupname1'], 'memberId', true, function (err, activities) {
+    activitystore.activitiesForGroupIdsAndRegisteredMemberId(['groupname1'], 'memberId', true, (err, activities) => {
       expect(activities.length).to.equal(3);
       expect(activities[0].title()).to.equal('Current Activity 1');
       expect(activities[1].title()).to.equal('Future Activity 1');
@@ -141,18 +141,18 @@ describe('Activity application with DB - shows activities for Group-Ids -', func
     });
   });
 
-  it('shows activity only once even if member is subscribed to multiple resources', function (done) {
+  it('shows activity only once even if member is subscribed to multiple resources', done => {
 
-    activitystore.activitiesForGroupIdsAndRegisteredMemberId([], 'memberId2', true, function (err, activities) {
+    activitystore.activitiesForGroupIdsAndRegisteredMemberId([], 'memberId2', true, (err, activities) => {
       expect(activities.length).to.equal(1);
       expect(activities[0].title()).to.equal('Future Activity 1');
       done(err);
     });
   });
 
-  it('shows past activities of Group 1 and activities with subscribed member', function (done) {
+  it('shows past activities of Group 1 and activities with subscribed member', done => {
 
-    activitystore.activitiesForGroupIdsAndRegisteredMemberId(['groupname1'], 'memberId', false, function (err, activities) {
+    activitystore.activitiesForGroupIdsAndRegisteredMemberId(['groupname1'], 'memberId', false, (err, activities) => {
       expect(activities.length).to.equal(2);
       expect(activities[0].title()).to.equal('Past Activity 1');
       expect(activities[1].title()).to.equal('Past Activity 2');
@@ -160,9 +160,9 @@ describe('Activity application with DB - shows activities for Group-Ids -', func
     });
   });
 
-  it('shows current and future activities of activities with subscribed member', function (done) {
+  it('shows current and future activities of activities with subscribed member', done => {
 
-    activitystore.activitiesForGroupIdsAndRegisteredMemberId([], 'memberId', true, function (err, activities) {
+    activitystore.activitiesForGroupIdsAndRegisteredMemberId([], 'memberId', true, (err, activities) => {
       expect(activities.length).to.equal(2);
       expect(activities[0].title()).to.equal('Current Activity 1');
       expect(activities[1].title()).to.equal('Future Activity 2');
@@ -170,9 +170,9 @@ describe('Activity application with DB - shows activities for Group-Ids -', func
     });
   });
 
-  it('returns an empty list if no matching activities are found', function (done) {
+  it('returns an empty list if no matching activities are found', done => {
 
-    activitystore.activitiesForGroupIdsAndRegisteredMemberId([], 'unknownMemberId', true, function (err, activities) {
+    activitystore.activitiesForGroupIdsAndRegisteredMemberId([], 'unknownMemberId', true, (err, activities) => {
       expect(activities.length).to.equal(0);
       done(err);
     });
@@ -180,15 +180,15 @@ describe('Activity application with DB - shows activities for Group-Ids -', func
 
 });
 
-describe('Activity application with DB - without activities -', function () {
+describe('Activity application with DB - without activities -', () => {
 
-  beforeEach(function (done) { // if this fails, you need to start your mongo DB
+  beforeEach(done => { // if this fails, you need to start your mongo DB
     persistence.drop(done);
   });
 
-  it('returns an empty list if there are no activities at all', function (done) {
+  it('returns an empty list if there are no activities at all', done => {
 
-    activitystore.activitiesForGroupIdsAndRegisteredMemberId([], 'unknownMemberId', true, function (err, activities) {
+    activitystore.activitiesForGroupIdsAndRegisteredMemberId([], 'unknownMemberId', true, (err, activities) => {
       expect(err).to.not.exist();
       expect(activities.length).to.equal(0);
       done(err);

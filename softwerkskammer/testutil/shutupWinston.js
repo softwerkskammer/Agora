@@ -1,14 +1,14 @@
 'use strict';
-var winston = require('winston');
+const winston = require('winston');
 
 function shutup() {
   winston.loggers = {
-    add: function () { return undefined; },
-    get: function () {
-      var dummyLogger = {
-        warn: function () {return undefined; },
-        info: function () { return undefined; },
-        error: function () { return undefined; }
+    add: () => undefined,
+    get: () => {
+      const dummyLogger = {
+        warn: () => undefined,
+        info: () => undefined,
+        error: () => undefined
       };
       return dummyLogger;
     }

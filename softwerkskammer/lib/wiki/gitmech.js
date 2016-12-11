@@ -62,7 +62,7 @@ module.exports = {
       if (err) { return callback(err); }
       const logdata = data ? data.split('\n') : [];
       const metadata = [];
-      for (var i = Math.floor(logdata.length / 5); i > 0; i = i - 1) {
+      for (let i = Math.floor(logdata.length / 5); i > 0; i = i - 1) {
         const group = logdata.slice((i - 1) * 5, i * 5);
         metadata.push(new Metadata({
           name: path.replace('.md', ''),

@@ -5,7 +5,6 @@ const sinon = require('sinon').sandbox.create();
 const expect = require('must-dist');
 
 const csurf = require('csurf');
-//var passport = require('passport');
 const beans = require('../../testutil/configureForTest').get('beans');
 
 const setupApp = require('../../testutil/testHelper');
@@ -111,17 +110,6 @@ describe('Security regarding', () => {
         .expect(/Du hast einen Fehler gefunden\./, done);
 
     });
-
-    //    it('does not happen through paths in authentication error messages', function (done) {
-    //      var app = setupApp('authenticationApp').createApp(null, passport.initialize(), passport.session(), serverpathRemover);
-    //
-    //      request(app)
-    //        .get('/github/callback?code=_')
-    //        .expect(500)
-    //        .expect(/\(node_modules/)
-    //        .expect(/ node_modules/)
-    //        .expect(/Problem bei der Authentifizierung/, done);
-    //    });
 
   });
 

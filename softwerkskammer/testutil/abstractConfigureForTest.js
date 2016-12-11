@@ -2,9 +2,9 @@
 
 module.exports = function (testBeansFilename) {
 
-  var conf = require('simple-configure');
-  var _ = require('lodash');
-  var Beans = require('CoolBeans');
+  const conf = require('simple-configure');
+  const _ = require('lodash');
+  const Beans = require('CoolBeans');
   require('./shutupWinston')();
 
   // first, set the normal configuration (important e.g. for mongoDB)
@@ -13,8 +13,8 @@ module.exports = function (testBeansFilename) {
   // then, overwrite what needs to be changed:
 
   // beans:
-  var productionBeans = require('../../config/beans.json');
-  var testBeans = require('../../config/' + testBeansFilename);
+  const productionBeans = require('../../config/beans.json');
+  const testBeans = require('../../config/' + testBeansFilename);
   _.assign(productionBeans, testBeans);
 
   conf.addProperties({

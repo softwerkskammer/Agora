@@ -5,10 +5,10 @@
 const R = require('ramda');
 
 require('./configure'); // initializing parameters
-var beans = require('simple-configure').get('beans');
-var activitystore = beans.get('activitystore');
+const beans = require('simple-configure').get('beans');
+const activitystore = beans.get('activitystore');
 
-var really = process.argv[2];
+let really = process.argv[2];
 if (!really || really !== 'really') {
   console.log('If you want to run this script, append "really" to the command line.');
   process.exit();
@@ -19,8 +19,8 @@ activitystore.allActivities((err, activities) => {
     console.log(err);
     process.exit();
   }
-  var simple = activities.filter(activity => activity.resourceNames().length === 1);
-  var more = activities.filter(activity => activity.resourceNames().length > 1);
+  const simple = activities.filter(activity => activity.resourceNames().length === 1);
+  const more = activities.filter(activity => activity.resourceNames().length > 1);
 
   more.forEach(activity => console.log(activity.title() + ' (url: ' + activity.url() + '-' + activity.resourceNames() + ')'));
   console.log(more.length + ' activites with multiple resources');

@@ -22,7 +22,7 @@ module.exports = {
   },
 
   getImage: function getImage(member, callback, optionalTunneledGravatarUrl) {
-    var url = this.avatarUrl(member.email(), 16, optionalTunneledGravatarUrl);
+    const url = this.avatarUrl(member.email(), 16, optionalTunneledGravatarUrl);
     imageDataFromGravatar(url, data => {
       member.setAvatarData(data);
       callback(data);

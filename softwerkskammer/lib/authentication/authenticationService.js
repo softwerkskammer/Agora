@@ -3,8 +3,6 @@
 const moment = require('moment-timezone');
 const jwt = require('jwt-simple');
 
-// var logger = require('winston').loggers.get('authorization');
-
 const conf = require('simple-configure');
 const beans = conf.get('beans');
 const membersService = beans.get('membersService');

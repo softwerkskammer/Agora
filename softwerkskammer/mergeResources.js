@@ -7,10 +7,10 @@ const R = require('ramda');
 const async = require('async');
 
 require('./configure'); // initializing parameters
-var beans = require('simple-configure').get('beans');
-var activitystore = beans.get('activitystore');
+const beans = require('simple-configure').get('beans');
+const activitystore = beans.get('activitystore');
 
-var really = process.argv[2];
+const really = process.argv[2];
 if (!really || really !== 'really') {
   console.log('If you want to run this script, append "really" to the command line.');
   process.exit();
@@ -21,17 +21,17 @@ activitystore.allActivities((err, activities) => {
     console.log(err);
     process.exit();
   }
-  var more = activities.filter(activity => activity.resourceNames().length > 1);
+  const more = activities.filter(activity => activity.resourceNames().length > 1);
 
   more.forEach(activity => console.log(activity.title() + ' (url: ' + activity.url() + '-' + activity.resourceNames() + ')'));
   console.log(more.length + ' activites with multiple resources');
 
-  var standardName = 'Veranstaltung';
+  const standardName = 'Veranstaltung';
   more.forEach(activity => {
     console.log(activity.title() + ' hat ' + activity.allRegisteredMembers().length + ' Registrierungen vorher');
-    var resourcesPlain = activity.state.resources;
-    var veranstaltung = {_registeredMembers: [], _registrationOpen: true};
-    var newRegistrations = R.uniqBy(registration => registration.memberId, R.flatten(R.keys(resourcesPlain).map(name => resourcesPlain[name]._registeredMembers)));
+    const resourcesPlain = activity.state.resources;
+    const veranstaltung = {_registeredMembers: [], _registrationOpen: true};
+    const newRegistrations = R.uniqBy(registration => registration.memberId, R.flatten(R.keys(resourcesPlain).map(name => resourcesPlain[name]._registeredMembers)));
     activity.state.resources = {};
     veranstaltung._registeredMembers = newRegistrations;
     activity.state.resources[standardName] = veranstaltung;
@@ -47,12 +47,12 @@ activitystore.allActivities((err, activities) => {
     console.log('all ' + more.length + ' activities with multiple resources converted');
 
     // now for the simple activities
-    var simple = activities.filter(activity => activity.resourceNames().length === 1);
+    const simple = activities.filter(activity => activity.resourceNames().length === 1);
     console.log(simple.length + ' activites with onle one resource');
     console.log(R.uniq(simple.map(each => each.resourceNames())));
-    var withWrongName = simple.filter(activity => !activity.state.resources[standardName]);
+    const withWrongName = simple.filter(activity => !activity.state.resources[standardName]);
     withWrongName.forEach(activity => {
-      var name = activity.resourceNames()[0];
+      const name = activity.resourceNames()[0];
       activity.state.resources[standardName] = activity.state.resources[name];
       delete activity.state.resources[name];
     });
