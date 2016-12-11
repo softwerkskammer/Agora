@@ -3,7 +3,6 @@
 module.exports = function (testBeansFilename) {
 
   const conf = require('simple-configure');
-  const _ = require('lodash');
   const Beans = require('CoolBeans');
   require('./shutupWinston')();
 
@@ -15,7 +14,7 @@ module.exports = function (testBeansFilename) {
   // beans:
   const productionBeans = require('../../config/beans.json');
   const testBeans = require('../../config/' + testBeansFilename);
-  _.assign(productionBeans, testBeans);
+  Object.assign(productionBeans, testBeans);
 
   conf.addProperties({
     port: '17125',

@@ -1,6 +1,5 @@
 'use strict';
 
-const _ = require('lodash');
 const express = require('express');
 const userStub = require('./userStub');
 
@@ -35,7 +34,7 @@ module.exports = function universalTestHelper(defaultLanguage) {
           app.use(userStub(atts.user));
         }
         app.use(beans.get('accessrights'));
-        _.each(atts.secureByMiddlewares, middleware => {
+        (atts.secureByMiddlewares || []).forEach(middleware => {
           app.use(middleware);
         });
         app.use((req, res, next) => {
@@ -52,7 +51,7 @@ module.exports = function universalTestHelper(defaultLanguage) {
         app.use(beans.get('expressViewHelper'));
         app.use(initI18N);
 
-        _.each(atts.middlewares, middleware => {
+        (atts.middlewares || []).forEach(middleware => {
           app.use(middleware);
         });
 
