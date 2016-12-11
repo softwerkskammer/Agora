@@ -5,7 +5,7 @@ const _ = require('lodash');
 
 function composePairs() {
   let pair = {};
-  return _(sponsors).shuffle().transform((result, sponsor, index) =>{
+  return _(sponsors).shuffle().transform((result, sponsor, index) => {
     if (index % 2) {
       pair.second = sponsor;
     } else {

@@ -29,7 +29,7 @@ module.exports = {
 
   tshirtSizes: function tshirtSizes(addonLines) {
     const sizes = {};
-    addonLines.forEach(line =>{
+    addonLines.forEach(line => {
       const size = line.addon.tShirtSize();
       const currentCount = sizes[size];
       if (currentCount) {
