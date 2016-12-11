@@ -1,6 +1,8 @@
 'use strict';
 
-const fieldHelpers = require('../../testutil/configureForTest').get('beans').get('fieldHelpers');
+const beans = require('../../testutil/configureForTest').get('beans');
+const fieldHelpers = beans.get('fieldHelpers');
+beans.get('initI18N'); // initialize iternationalization for results
 const expect = require('must-dist');
 
 describe('Activity application', () => {
@@ -233,7 +235,7 @@ describe('parseToMomentUsingTimezone function', () => {
 describe('formatNumberWithCurrentLocale', () => {
 
   it('formats for "de"', () => {
-    const res = {locals: {language: 'de'}};
+    const res = {locals: {language: 'de-DE'}};
     const result = fieldHelpers.formatNumberWithCurrentLocale(res, 22);
     expect(result).to.equal('22,00');
   });
