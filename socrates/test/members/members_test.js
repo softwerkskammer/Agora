@@ -1,45 +1,45 @@
 /* eslint no-underscore-dangle: 0 */
 'use strict';
 
-var request = require('supertest');
-var sinon = require('sinon').sandbox.create();
-var expect = require('must-dist');
-var moment = require('moment-timezone');
+const request = require('supertest');
+const sinon = require('sinon').sandbox.create();
+const expect = require('must-dist');
+const moment = require('moment-timezone');
 
 const config = require('../../testutil/configureForTest');
-var beans = config.get('beans');
-var cache = config.get('cache');
-var userWithoutMember = require('../../testutil/userWithoutMember');
-var membersService = beans.get('membersService');
-var memberstore = beans.get('memberstore');
-var socratesMembersService = beans.get('socratesMembersService');
-var subscriberService = beans.get('subscriberService');
-var subscriberstore = beans.get('subscriberstore');
-var socratesNotifications = beans.get('socratesNotifications');
-var groupsAndMembersService = beans.get('groupsAndMembersService');
-var Member = beans.get('member');
-var Subscriber = beans.get('subscriber');
-var currentYear = beans.get('socratesConstants').currentYear;
+const beans = config.get('beans');
+const cache = config.get('cache');
+const userWithoutMember = require('../../testutil/userWithoutMember');
+const membersService = beans.get('membersService');
+const memberstore = beans.get('memberstore');
+const socratesMembersService = beans.get('socratesMembersService');
+const subscriberService = beans.get('subscriberService');
+const subscriberstore = beans.get('subscriberstore');
+const socratesNotifications = beans.get('socratesNotifications');
+const groupsAndMembersService = beans.get('groupsAndMembersService');
+const Member = beans.get('member');
+const Subscriber = beans.get('subscriber');
+const currentYear = beans.get('socratesConstants').currentYear;
 
-var events = beans.get('events');
-var GlobalEventStore = beans.get('GlobalEventStore');
-var eventstore = beans.get('eventstore');
+const events = beans.get('events');
+const GlobalEventStore = beans.get('GlobalEventStore');
+const eventstore = beans.get('eventstore');
 
-var createApp = require('../../testutil/testHelper')('socratesMembersApp').createApp;
+const createApp = require('../../testutil/testHelper')('socratesMembersApp').createApp;
 
-var aShortTimeAgo = moment.tz().subtract(10, 'minutes');
+const aShortTimeAgo = moment.tz().subtract(10, 'minutes');
 
-describe('SoCraTes members application', function () {
-  var appWithoutMember;
-  var appWithSoftwerkskammerMember;
-  var appWithSocratesMember;
-  var softwerkskammerMember;
-  var socratesMember;
-  var softwerkskammerSubscriber;
-  var socratesSubscriber;
-  var eventStore;
+describe('SoCraTes members application', () => {
+  let appWithoutMember;
+  let appWithSoftwerkskammerMember;
+  let appWithSocratesMember;
+  let softwerkskammerMember;
+  let socratesMember;
+  let softwerkskammerSubscriber;
+  let socratesSubscriber;
+  let eventStore;
 
-  beforeEach(function () {
+  beforeEach(() => {
     softwerkskammerMember = new Member({
       id: 'memberId',
       nickname: 'hada',
@@ -78,7 +78,7 @@ describe('SoCraTes members application', function () {
     appWithSocratesMember = request(createApp({user: {member: socratesMember, subscriber: socratesSubscriber}}));
   });
 
-  beforeEach(function () {
+  beforeEach(() => {
     /* eslint camelcase: 0 */
     cache.flushAll();
 
@@ -90,11 +90,10 @@ describe('SoCraTes members application', function () {
       events.roomQuotaWasSet('bed_in_junior', 10)
     ];
 
-    sinon.stub(eventstore, 'getEventStore', function (url, callback) {
-      return callback(null, eventStore); });
+    sinon.stub(eventstore, 'getEventStore', (url, callback) => callback(null, eventStore));
 
-    sinon.stub(memberstore, 'getMembersForIds', function (ids, callback) {
-      var members = [];
+    sinon.stub(memberstore, 'getMembersForIds', (ids, callback) => {
+      const members = [];
       if (ids.indexOf('memberId') > -1) {
         members.push(softwerkskammerMember);
       }
@@ -103,38 +102,36 @@ describe('SoCraTes members application', function () {
       }
       callback(null, members);
     });
-    sinon.stub(membersService, 'putAvatarIntoMemberAndSave', function (member, callback) {
-      callback();
-    });
+    sinon.stub(membersService, 'putAvatarIntoMemberAndSave', (member, callback) => callback());
   });
 
-  afterEach(function () {
+  afterEach(() => {
     sinon.restore();
   });
 
-  describe('accessing a member page', function () {
+  describe('accessing a member page', () => {
 
-    it('gives a 404 if there is no matching member in the database', function (done) {
-      sinon.stub(memberstore, 'getMember', function (nickname, callback) { callback(null); });
-
-      appWithSoftwerkskammerMember
-        .get('/hada')
-        .expect(404, done);
-    });
-
-    it('gives a 404 if there is a member but no matching subscriber in the database', function (done) {
-      sinon.stub(memberstore, 'getMember', function (nickname, callback) { callback(null, softwerkskammerMember); });
-      sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null); });
+    it('gives a 404 if there is no matching member in the database', done => {
+      sinon.stub(memberstore, 'getMember', (nickname, callback) => { callback(null); });
 
       appWithSoftwerkskammerMember
         .get('/hada')
         .expect(404, done);
     });
 
-    it('shows the subscriber\'s own page for a Softwerkskammer member', function (done) {
-      sinon.stub(memberstore, 'getMember', function (nickname, callback) { callback(null, softwerkskammerMember); });
-      sinon.stub(memberstore, 'getMemberForId', function (nickname, callback) { callback(null, softwerkskammerMember); });
-      sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, softwerkskammerSubscriber); });
+    it('gives a 404 if there is a member but no matching subscriber in the database', done => {
+      sinon.stub(memberstore, 'getMember', (nickname, callback) => { callback(null, softwerkskammerMember); });
+      sinon.stub(subscriberstore, 'getSubscriber', (nickname, callback) => { callback(null); });
+
+      appWithSoftwerkskammerMember
+        .get('/hada')
+        .expect(404, done);
+    });
+
+    it('shows the subscriber\'s own page for a Softwerkskammer member', done => {
+      sinon.stub(memberstore, 'getMember', (nickname, callback) => { callback(null, softwerkskammerMember); });
+      sinon.stub(memberstore, 'getMemberForId', (nickname, callback) => { callback(null, softwerkskammerMember); });
+      sinon.stub(subscriberstore, 'getSubscriber', (nickname, callback) => { callback(null, softwerkskammerSubscriber); });
 
       appWithSoftwerkskammerMember
         .get('/hada')
@@ -143,10 +140,10 @@ describe('SoCraTes members application', function () {
         .expect(/Last name:&nbsp;<\/strong>Dampf/, done);
     });
 
-    it('shows the subscriber\'s own page for a non-Softwerkskammer member', function (done) {
-      sinon.stub(memberstore, 'getMember', function (nickname, callback) { callback(null, socratesMember); });
-      sinon.stub(memberstore, 'getMemberForId', function (nickname, callback) { callback(null, socratesMember); });
-      sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
+    it('shows the subscriber\'s own page for a non-Softwerkskammer member', done => {
+      sinon.stub(memberstore, 'getMember', (nickname, callback) => { callback(null, socratesMember); });
+      sinon.stub(memberstore, 'getMemberForId', (nickname, callback) => { callback(null, socratesMember); });
+      sinon.stub(subscriberstore, 'getSubscriber', (nickname, callback) => { callback(null, socratesSubscriber); });
 
       appWithSocratesMember
         .get('/nini')
@@ -155,10 +152,10 @@ describe('SoCraTes members application', function () {
         .expect(/Last name:&nbsp;<\/strong>Meier/, done);
     });
 
-    it('shows a different subscriber\'s page', function (done) {
-      sinon.stub(memberstore, 'getMember', function (nickname, callback) { callback(null, socratesMember); });
-      sinon.stub(memberstore, 'getMemberForId', function (nickname, callback) { callback(null, socratesMember); });
-      sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
+    it('shows a different subscriber\'s page', done => {
+      sinon.stub(memberstore, 'getMember', (nickname, callback) => { callback(null, socratesMember); });
+      sinon.stub(memberstore, 'getMemberForId', (nickname, callback) => { callback(null, socratesMember); });
+      sinon.stub(subscriberstore, 'getSubscriber', (nickname, callback) => { callback(null, socratesSubscriber); });
 
       appWithSoftwerkskammerMember
         .get('/nini')
@@ -167,11 +164,11 @@ describe('SoCraTes members application', function () {
         .expect(/Last name:&nbsp;<\/strong>Meier/, done);
     });
 
-    describe('displaying the associated roommate in the profile', function () {
+    describe('displaying the associated roommate in the profile', () => {
 
-      beforeEach(function () {
+      beforeEach(() => {
 
-        sinon.stub(memberstore, 'getMember', function (nickname, callback) {
+        sinon.stub(memberstore, 'getMember', (nickname, callback) => {
           if (nickname === 'hada') {
             return callback(null, softwerkskammerMember);
           }
@@ -180,7 +177,7 @@ describe('SoCraTes members application', function () {
           }
           callback(null, undefined);
         });
-        sinon.stub(memberstore, 'getMemberForId', function (id, callback) {
+        sinon.stub(memberstore, 'getMemberForId', (id, callback) => {
           if (id === 'memberId') {
             return callback(null, softwerkskammerMember);
           }
@@ -189,20 +186,20 @@ describe('SoCraTes members application', function () {
           }
           callback(null, undefined);
         });
-        sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
+        sinon.stub(subscriberstore, 'getSubscriber', (nickname, callback) => { callback(null, socratesSubscriber); });
       });
 
-      it('does not display anything about roommates if the subscriber is not a participant', function (done) {
+      it('does not display anything about roommates if the subscriber is not a participant', done => {
 
         appWithSocratesMember
           .get('/nini')
-          .expect(200, function (err, res) {
+          .expect(200, (err, res) => {
             expect(res.text).to.not.contain('Your roommate');
             done(err);
           });
       });
 
-      it('does not display anything about roommates if the subscriber is in a single-bed room', function (done) {
+      it('does not display anything about roommates if the subscriber is in a single-bed room', done => {
         eventStore.state.events = eventStore.state.events.concat([
           events.registeredParticipantFromWaitinglist('single', 3, 'memberId2', aShortTimeAgo)
         ]);
@@ -210,13 +207,13 @@ describe('SoCraTes members application', function () {
 
         appWithSocratesMember
           .get('/nini')
-          .expect(200, function (err, res) {
+          .expect(200, (err, res) => {
             expect(res.text).to.not.contain('Your roommate');
             done(err);
           });
       });
 
-      it('displays other unmatched roommates if the subscriber is in a double-bed room but has no roommate associated', function (done) {
+      it('displays other unmatched roommates if the subscriber is in a double-bed room but has no roommate associated', done => {
         eventStore.state.events = eventStore.state.events.concat([
           events.registeredParticipantFromWaitinglist('bed_in_double', 3, 'memberId', aShortTimeAgo),
           events.registeredParticipantFromWaitinglist('bed_in_double', 3, 'memberId2', aShortTimeAgo)
@@ -227,13 +224,13 @@ describe('SoCraTes members application', function () {
           .get('/nini')
           .expect(200)
           .expect(/Your roommate:&nbsp;<\/strong>You do not have a roommate yet./)
-          .expect(/<dd>Hans Dampf&nbsp;<\/dd>/, function (err, res) {
+          .expect(/<dd>Hans Dampf&nbsp;<\/dd>/, (err, res) => {
             expect(res.text).to.not.contain('<dd>Petra Meier');
             done(err);
           });
       });
 
-      it('displays the name of the roommate if the subscriber is in a double-bed room and has a roommate associated', function (done) {
+      it('displays the name of the roommate if the subscriber is in a double-bed room and has a roommate associated', done => {
         eventStore.state.events = eventStore.state.events.concat([
           events.registeredParticipantFromWaitinglist('bed_in_double', 3, 'memberId', aShortTimeAgo),
           events.registeredParticipantFromWaitinglist('bed_in_double', 3, 'memberId2', aShortTimeAgo),
@@ -247,7 +244,7 @@ describe('SoCraTes members application', function () {
           .expect(/Your roommate:&nbsp;<\/strong>Hans Dampf/, done);
       });
 
-      it('does not display anything about roommates on a different member\'s profile', function (done) {
+      it('does not display anything about roommates on a different member\'s profile', done => {
         eventStore.state.events = eventStore.state.events.concat([
           events.registeredParticipantFromWaitinglist('bed_in_double', 3, 'memberId', aShortTimeAgo),
           events.registeredParticipantFromWaitinglist('bed_in_double', 3, 'memberId2', aShortTimeAgo),
@@ -257,7 +254,7 @@ describe('SoCraTes members application', function () {
 
         appWithSocratesMember
           .get('/hada')
-          .expect(200, function (err, res) {
+          .expect(200, (err, res) => {
             expect(res.text).to.not.contain('Your roommate');
             done(err);
           });
@@ -266,11 +263,11 @@ describe('SoCraTes members application', function () {
 
   });
 
-  describe('editing a subscriber page', function () {
+  describe('editing a subscriber page', () => {
 
-    describe('initially creates an account', function () {
-      it('allows somebody who is neither member nor subscriber to create his account', function (done) {
-        sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(); });
+    describe('initially creates an account', () => {
+      it('allows somebody who is neither member nor subscriber to create his account', done => {
+        sinon.stub(subscriberstore, 'getSubscriber', (nickname, callback) => { callback(); });
 
         appWithoutMember
           .get('/edit')
@@ -278,8 +275,8 @@ describe('SoCraTes members application', function () {
           .expect(/In order to keep you informed about the SoCraTes conference, we need you to provide us with the following information\. Please fill in all mandatory fields\./, done);
       });
 
-      it('allows a SoCraTes-only member to edit his page', function (done) {
-        sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
+      it('allows a SoCraTes-only member to edit his page', done => {
+        sinon.stub(subscriberstore, 'getSubscriber', (nickname, callback) => { callback(null, socratesSubscriber); });
 
         appWithSocratesMember
           .get('/edit')
@@ -287,8 +284,8 @@ describe('SoCraTes members application', function () {
           .expect(/Here you can edit your information\./, done);
       });
 
-      it('allows a Softwerkskammer member to edit his page', function (done) {
-        sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, softwerkskammerSubscriber); });
+      it('allows a Softwerkskammer member to edit his page', done => {
+        sinon.stub(subscriberstore, 'getSubscriber', (nickname, callback) => { callback(null, softwerkskammerSubscriber); });
 
         appWithSoftwerkskammerMember
           .get('/edit')
@@ -297,59 +294,59 @@ describe('SoCraTes members application', function () {
       });
     });
 
-    describe('- entering a desired roommate', function () {
-      it('does not allow an unregistered subscriber to enter a roommate', function (done) {
-        sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
+    describe('- entering a desired roommate', () => {
+      it('does not allow an unregistered subscriber to enter a roommate', done => {
+        sinon.stub(subscriberstore, 'getSubscriber', (nickname, callback) => { callback(null, socratesSubscriber); });
 
         appWithSocratesMember
           .get('/edit')
           .expect(200)
-          .end(function (err, res) {
+          .end((err, res) => {
             expect(res.text).to.not.contain('Who do you want to share your room with');
             done(err);
           });
       });
 
-      it('does not allow a subscriber who is registered for a single-bed-room to enter a desired roommate', function (done) {
+      it('does not allow a subscriber who is registered for a single-bed-room to enter a desired roommate', done => {
         eventStore.state.events = eventStore.state.events.concat([
           events.registeredParticipantFromWaitinglist('single', 3, 'memberId2', aShortTimeAgo)
         ]);
         socratesSubscriber.state.participations[currentYear] = {};
-        sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
+        sinon.stub(subscriberstore, 'getSubscriber', (nickname, callback) => { callback(null, socratesSubscriber); });
 
         appWithSocratesMember
           .get('/edit')
           .expect(200)
           .expect(/Home Address/)
-          .end(function (err, res) {
+          .end((err, res) => {
             expect(res.text).to.not.contain('Who do you want to share your room with');
             done(err);
           });
       });
 
-      it('does not allow a subscriber who is registered for an exclusive junior room to enter a desired roommate', function (done) {
+      it('does not allow a subscriber who is registered for an exclusive junior room to enter a desired roommate', done => {
         eventStore.state.events = eventStore.state.events.concat([
           events.registeredParticipantFromWaitinglist('junior', 3, 'memberId2', aShortTimeAgo)
         ]);
         socratesSubscriber.state.participations[currentYear] = {};
-        sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
+        sinon.stub(subscriberstore, 'getSubscriber', (nickname, callback) => { callback(null, socratesSubscriber); });
 
         appWithSocratesMember
           .get('/edit')
           .expect(200)
           .expect(/Home Address/)
-          .end(function (err, res) {
+          .end((err, res) => {
             expect(res.text).to.not.contain('Who do you want to share your room with');
             done(err);
           });
       });
 
-      it('allows a subscriber who is registered for a bed in a double-bed room to enter a desired roommate', function (done) {
+      it('allows a subscriber who is registered for a bed in a double-bed room to enter a desired roommate', done => {
         eventStore.state.events = eventStore.state.events.concat([
           events.registeredParticipantFromWaitinglist('bed_in_double', 3, 'memberId2', aShortTimeAgo)
         ]);
         socratesSubscriber.state.participations[currentYear] = {};
-        sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
+        sinon.stub(subscriberstore, 'getSubscriber', (nickname, callback) => { callback(null, socratesSubscriber); });
 
         appWithSocratesMember
           .get('/edit')
@@ -358,12 +355,12 @@ describe('SoCraTes members application', function () {
           .expect(/Who do you want to share your room with/, done);
       });
 
-      it('allows a subscriber who is registered for a bed in a junior room to enter a desired roommate', function (done) {
+      it('allows a subscriber who is registered for a bed in a junior room to enter a desired roommate', done => {
         eventStore.state.events = eventStore.state.events.concat([
           events.registeredParticipantFromWaitinglist('bed_in_junior', 3, 'memberId2', aShortTimeAgo)
         ]);
         socratesSubscriber.state.participations[currentYear] = {};
-        sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
+        sinon.stub(subscriberstore, 'getSubscriber', (nickname, callback) => { callback(null, socratesSubscriber); });
 
         appWithSocratesMember
           .get('/edit')
@@ -373,21 +370,21 @@ describe('SoCraTes members application', function () {
       });
     });
 
-    describe('- entering the home address', function () {
-      it('does not allow an unregistered subscriber to enter the home address', function (done) {
-        sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, softwerkskammerSubscriber); });
+    describe('- entering the home address', () => {
+      it('does not allow an unregistered subscriber to enter the home address', done => {
+        sinon.stub(subscriberstore, 'getSubscriber', (nickname, callback) => { callback(null, softwerkskammerSubscriber); });
 
         appWithSoftwerkskammerMember
           .get('/edit')
           .expect(200)
-          .end(function (err, res) {
+          .end((err, res) => {
             expect(res.text).to.not.contain('Home Address');
             done(err);
           });
       });
 
-      it('does allow a registered subscriber to enter the home address, even if he is not participating this year', function (done) {
-        sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
+      it('does allow a registered subscriber to enter the home address, even if he is not participating this year', done => {
+        sinon.stub(subscriberstore, 'getSubscriber', (nickname, callback) => { callback(null, socratesSubscriber); });
 
         appWithSocratesMember
           .get('/edit')
@@ -397,11 +394,11 @@ describe('SoCraTes members application', function () {
 
     });
 
-    it('allows a subscriber who is registered to enter the home address', function (done) {
+    it('allows a subscriber who is registered to enter the home address', done => {
       eventStore.state.events = eventStore.state.events.concat([
         events.registeredParticipantFromWaitinglist('bed_in_double', 3, 'memberId2', aShortTimeAgo)
       ]);
-      sinon.stub(subscriberstore, 'getSubscriber', function (nickname, callback) { callback(null, socratesSubscriber); });
+      sinon.stub(subscriberstore, 'getSubscriber', (nickname, callback) => { callback(null, socratesSubscriber); });
 
       appWithSocratesMember
         .get('/edit')
@@ -411,10 +408,10 @@ describe('SoCraTes members application', function () {
 
   });
 
-  describe('submitting a member form', function () {
+  describe('submitting a member form', () => {
 
-    it('rejects a member with invalid and different nickname on submit', function (done) {
-      sinon.stub(membersService, 'isValidNickname', function (nickname, callback) {
+    it('rejects a member with invalid and different nickname on submit', done => {
+      sinon.stub(membersService, 'isValidNickname', (nickname, callback) => {
         callback(null, false);
       });
 
@@ -429,8 +426,8 @@ describe('SoCraTes members application', function () {
         .expect(/This nickname is not available\./, done);
     });
 
-    it('rejects a member with invalid and different email address on submit', function (done) {
-      sinon.stub(membersService, 'isValidEmail', function (nickname, callback) {
+    it('rejects a member with invalid and different email address on submit', done => {
+      sinon.stub(membersService, 'isValidEmail', (nickname, callback) => {
         callback(null, false);
       });
 
@@ -445,7 +442,7 @@ describe('SoCraTes members application', function () {
         .expect(/This e-mail address is already registered\./, done);
     });
 
-    it('rejects a member with missing first and last name on submit', function (done) {
+    it('rejects a member with missing first and last name on submit', done => {
       appWithSoftwerkskammerMember
         .post('/submit')
         .send('id=0815&&nickname=hada&previousNickname=hada&email=here@there.org&previousEmail=here@there.org')
@@ -456,12 +453,12 @@ describe('SoCraTes members application', function () {
         .expect(/Last name is required\./, done);
     });
 
-    it('rejects a member with missing first name who validly changed their nickname and mailaddress on submit', function (done) {
+    it('rejects a member with missing first name who validly changed their nickname and mailaddress on submit', done => {
       // attention: This combination is required to prove the invocations of the callbacks in case of no error!
-      sinon.stub(membersService, 'isValidNickname', function (nickname, callback) {
+      sinon.stub(membersService, 'isValidNickname', (nickname, callback) => {
         callback(null, true);
       });
-      sinon.stub(membersService, 'isValidEmail', function (nickname, callback) {
+      sinon.stub(membersService, 'isValidEmail', (nickname, callback) => {
         callback(null, true);
       });
 
@@ -474,11 +471,11 @@ describe('SoCraTes members application', function () {
         .expect(/First name is required\./, done);
     });
 
-    it('rejects a member with invalid nickname and email address on submit, giving two error messages', function (done) {
-      sinon.stub(membersService, 'isValidNickname', function (nickname, callback) {
+    it('rejects a member with invalid nickname and email address on submit, giving two error messages', done => {
+      sinon.stub(membersService, 'isValidNickname', (nickname, callback) => {
         callback(null, false);
       });
-      sinon.stub(membersService, 'isValidEmail', function (nickname, callback) {
+      sinon.stub(membersService, 'isValidEmail', (nickname, callback) => {
         callback(null, false);
       });
 
@@ -496,21 +493,21 @@ describe('SoCraTes members application', function () {
         .expect(/This e-mail address is already registered\./, done);
     });
 
-    it('saves an existing Softwerkskammer member, creates a subscriber because it is not yet there, and does not trigger notification sending', function (done) {
-      var subscriberSaved = false;
-      sinon.stub(membersService, 'isValidNickname', function (nickname, callback) { callback(null, true); });
-      sinon.stub(membersService, 'isValidEmail', function (nickname, callback) { callback(null, true); });
-      sinon.stub(memberstore, 'saveMember', function (member, callback) { callback(null); });
-      var subscriberSave = sinon.stub(subscriberstore, 'saveSubscriber', function (subscriber, callback) {
+    it('saves an existing Softwerkskammer member, creates a subscriber because it is not yet there, and does not trigger notification sending', done => {
+      let subscriberSaved = false;
+      sinon.stub(membersService, 'isValidNickname', (nickname, callback) => { callback(null, true); });
+      sinon.stub(membersService, 'isValidEmail', (nickname, callback) => { callback(null, true); });
+      sinon.stub(memberstore, 'saveMember', (member, callback) => { callback(null); });
+      const subscriberSave = sinon.stub(subscriberstore, 'saveSubscriber', (subscriber, callback) => {
         subscriberSaved = true;
         callback(null);
       });
-      var notificationCall = sinon.stub(socratesNotifications, 'newSoCraTesMemberRegistered', function () { return undefined; });
+      const notificationCall = sinon.stub(socratesNotifications, 'newSoCraTesMemberRegistered', () => undefined);
 
       // the following stub indicates that the member already exists
-      sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups', function (nickname, callback) { callback(null, softwerkskammerMember); });
+      sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups', (nickname, callback) => { callback(null, softwerkskammerMember); });
       // and that the subscriber is not yet there at first call
-      sinon.stub(subscriberstore, 'getSubscriber', function (id, callback) {
+      sinon.stub(subscriberstore, 'getSubscriber', (id, callback) => {
         if (subscriberSaved) { return callback(null, softwerkskammerSubscriber); }
         callback(null);
       });
@@ -522,26 +519,26 @@ describe('SoCraTes members application', function () {
         .send('homeAddress=home')
         .send('hasParticipationInformation=true')
         .expect(302)
-        .expect('location', '/', function (err) {
+        .expect('location', '/', err => {
           expect(subscriberSave.called).to.be(true);
           expect(notificationCall.called).to.be(false);
           done(err);
         });
     });
 
-    describe('for exisiting members with subscribers', function () {
+    describe('for exisiting members with subscribers', () => {
 
-      it('saves an existing SoCraTes member, creates no subscriber because it is already there, and does not trigger notification sending; forwards to root page', function (done) {
-        sinon.stub(membersService, 'isValidNickname', function (nickname, callback) { callback(null, true); });
-        sinon.stub(membersService, 'isValidEmail', function (nickname, callback) { callback(null, true); });
-        sinon.stub(memberstore, 'saveMember', function (member, callback) { callback(null); });
-        var subscriberSave = sinon.stub(subscriberstore, 'saveSubscriber', function (subscriber, callback) { callback(null); });
-        var notificationCall = sinon.stub(socratesNotifications, 'newSoCraTesMemberRegistered', function () { return undefined; });
+      it('saves an existing SoCraTes member, creates no subscriber because it is already there, and does not trigger notification sending; forwards to root page', done => {
+        sinon.stub(membersService, 'isValidNickname', (nickname, callback) => { callback(null, true); });
+        sinon.stub(membersService, 'isValidEmail', (nickname, callback) => { callback(null, true); });
+        sinon.stub(memberstore, 'saveMember', (member, callback) => { callback(null); });
+        const subscriberSave = sinon.stub(subscriberstore, 'saveSubscriber', (subscriber, callback) => { callback(null); });
+        const notificationCall = sinon.stub(socratesNotifications, 'newSoCraTesMemberRegistered', () => undefined);
 
         // the following stub indicates that the member already exists
-        sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups', function (nickname, callback) { callback(null, socratesMember); });
+        sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups', (nickname, callback) => { callback(null, socratesMember); });
         // and that the subscriber also exists
-        sinon.stub(subscriberstore, 'getSubscriber', function (id, callback) { callback(null, socratesSubscriber); });
+        sinon.stub(subscriberstore, 'getSubscriber', (id, callback) => { callback(null, socratesSubscriber); });
 
         appWithSocratesMember
           .post('/submit')
@@ -551,7 +548,7 @@ describe('SoCraTes members application', function () {
           .send('homeAddress=home')
           .send('hasParticipationInformation=true')
           .expect(302)
-          .expect('location', '/', function (err) {
+          .expect('location', '/', err => {
             expect(subscriberSave.called).to.be(true);
             expect(notificationCall.called).to.be(false);
             done(err);
@@ -560,22 +557,22 @@ describe('SoCraTes members application', function () {
 
     });
 
-    it('saves a new SoCraTes member and a new subscriber and triggers notification sending', function (done) {
-      var subscriberSaved = false;
-      sinon.stub(membersService, 'isValidNickname', function (nickname, callback) { callback(null, true); });
-      sinon.stub(membersService, 'isValidEmail', function (nickname, callback) { callback(null, true); });
-      sinon.stub(memberstore, 'allMembers', function (callback) { callback(null, [softwerkskammerMember, socratesMember]); });
-      sinon.stub(memberstore, 'saveMember', function (member, callback) { callback(null); });
-      var subscriberSave = sinon.stub(subscriberstore, 'saveSubscriber', function (subscriber, callback) {
+    it('saves a new SoCraTes member and a new subscriber and triggers notification sending', done => {
+      let subscriberSaved = false;
+      sinon.stub(membersService, 'isValidNickname', (nickname, callback) => { callback(null, true); });
+      sinon.stub(membersService, 'isValidEmail', (nickname, callback) => { callback(null, true); });
+      sinon.stub(memberstore, 'allMembers', callback => { callback(null, [softwerkskammerMember, socratesMember]); });
+      sinon.stub(memberstore, 'saveMember', (member, callback) => { callback(null); });
+      const subscriberSave = sinon.stub(subscriberstore, 'saveSubscriber', (subscriber, callback) => {
         subscriberSaved = true;
         callback(null);
       });
-      var notificationCall = sinon.stub(socratesNotifications, 'newSoCraTesMemberRegistered', function () { return undefined; });
+      const notificationCall = sinon.stub(socratesNotifications, 'newSoCraTesMemberRegistered', () => undefined);
 
       // the following stub indicates that the member does not exist yet
-      sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups', function (nickname, callback) { callback(null); });
+      sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups', (nickname, callback) => { callback(null); });
       // and that the subscriber does not exist either
-      sinon.stub(subscriberstore, 'getSubscriber', function (id, callback) {
+      sinon.stub(subscriberstore, 'getSubscriber', (id, callback) => {
         if (subscriberSaved) { return callback(null, socratesSubscriber); }
         callback(null);
       });
@@ -587,7 +584,7 @@ describe('SoCraTes members application', function () {
         .send('homeAddress=home')
         .send('hasParticipationInformation=true')
         .expect(302)
-        .expect('location', '/', function (err) {
+        .expect('location', '/', err => {
           expect(subscriberSave.called).to.be(true);
           expect(notificationCall.called).to.be(true);
           done(err);
@@ -596,25 +593,25 @@ describe('SoCraTes members application', function () {
 
   });
 
-  describe('submitting deletion of a member', function () {
-    beforeEach(function () {
-      sinon.stub(subscriberstore, 'getSubscriberByNickname', function (nicknameOfEditMember, callback) {
+  describe('submitting deletion of a member', () => {
+    beforeEach(() => {
+      sinon.stub(subscriberstore, 'getSubscriberByNickname', (nicknameOfEditMember, callback) => {
         callback(null, socratesSubscriber);
       });
     });
 
-    it('refuses permission and redirects to the profile page', function (done) {
+    it('refuses permission and redirects to the profile page', done => {
       appWithSocratesMember
         .post('/delete')
         .send('nickname=someNick')
         .expect(302)
-        .expect('location', '/members/someNick', function (err) {
+        .expect('location', '/members/someNick', err => {
           done(err);
         });
     });
 
-    it('refuses deletion when the subscriber is also participant and redirects to the profile page', function (done) {
-      sinon.stub(socratesMembersService, 'participationStatus', function (subscriber, callback) {
+    it('refuses deletion when the subscriber is also participant and redirects to the profile page', done => {
+      sinon.stub(socratesMembersService, 'participationStatus', (subscriber, callback) => {
         callback(null, true);
       });
 
@@ -622,17 +619,17 @@ describe('SoCraTes members application', function () {
         .post('/delete')
         .send('nickname=someNick')
         .expect(302)
-        .expect('location', '/members/someNick', function (err) {
+        .expect('location', '/members/someNick', err => {
           done(err);
         });
     });
 
-    it('deletes a subscriber that is not participant and redirects to the profiles overview page of current year', function (done) {
-      sinon.stub(socratesMembersService, 'participationStatus', function (subscriber, callback) {
+    it('deletes a subscriber that is not participant and redirects to the profiles overview page of current year', done => {
+      sinon.stub(socratesMembersService, 'participationStatus', (subscriber, callback) => {
         callback(null, false);
       });
 
-      var deleteCall = sinon.stub(subscriberService, 'removeSubscriber', function (subscriber, callback) {
+      const deleteCall = sinon.stub(subscriberService, 'removeSubscriber', (subscriber, callback) => {
         callback(null);
       });
 
@@ -640,7 +637,7 @@ describe('SoCraTes members application', function () {
         .post('/delete')
         .send('nickname=someNick')
         .expect(302)
-        .expect('location', /participantsOverview/, function (err) {
+        .expect('location', /participantsOverview/, err => {
           expect(deleteCall.called).to.be(true);
           done(err);
         });

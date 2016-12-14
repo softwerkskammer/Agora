@@ -1,49 +1,49 @@
 'use strict';
 
-var expect = require('must-dist');
-var sinon = require('sinon').sandbox.create();
+const expect = require('must-dist');
+const sinon = require('sinon').sandbox.create();
 
-var conf = require('../../testutil/configureForTest');
-var beans = conf.get('beans');
-var accessrights = beans.get('accessrights');
+const conf = require('../../testutil/configureForTest');
+const beans = conf.get('beans');
+const accessrights = beans.get('accessrights');
 
-describe('accessrights', function () {
+describe('accessrights', () => {
 
-  var req;
-  var res;
-  var next;
+  let req;
+  let res;
+  let next;
 
-  beforeEach(function () {
+  beforeEach(() => {
     req = {};
     res = {locals: {}};
-    next = function () { return; };
+    next = () => { return; };
 
     accessrights(req, res, next);
   });
 
-  afterEach(function () {
+  afterEach(() => {
     sinon.restore();
   });
 
-  var loginAs = function (memberId) {
-    req.user = {member: {id: function () {return memberId; }}};
-  };
+  function loginAs(memberId) {
+    req.user = {member: {id: () => memberId}};
+  }
 
-  it('does not allow activity editing if nobody is logged in', function () {
+  it('does not allow activity editing if nobody is logged in', () => {
     expect(res.locals.accessrights.canEditActivity()).to.be.false();
   });
 
-  it('does not allow activity editing for non-superusers', function () {
+  it('does not allow activity editing for non-superusers', () => {
     loginAs('memberId');
     expect(res.locals.accessrights.canEditActivity()).to.be.false();
   });
 
-  it('allows activity editing for superusers', function () {
+  it('allows activity editing for superusers', () => {
     loginAs('superuserID');
     expect(res.locals.accessrights.canEditActivity()).to.be.true();
   });
 
-  it('allows activity editing for SoCraTes-Admins', function () {
+  it('allows activity editing for SoCraTes-Admins', () => {
     conf.addProperties({socratesAdmins: ['memberId']});
 
     loginAs('memberId');

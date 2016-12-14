@@ -1,149 +1,149 @@
 'use strict';
 
-var expect = require('must-dist');
-var sinon = require('sinon').sandbox.create();
+const expect = require('must-dist');
+const sinon = require('sinon').sandbox.create();
 
-var beans = require('../../testutil/configureForTest').get('beans');
-var subscriberService = beans.get('subscriberService');
+const beans = require('../../testutil/configureForTest').get('beans');
+const subscriberService = beans.get('subscriberService');
 
-var memberstore = beans.get('memberstore');
-var subscriberstore = beans.get('subscriberstore');
-var Subscriber = beans.get('subscriber');
-var Member = beans.get('member');
+const memberstore = beans.get('memberstore');
+const subscriberstore = beans.get('subscriberstore');
+const Subscriber = beans.get('subscriber');
+const Member = beans.get('member');
 
-var memberID1 = 'stubbed_member';
-var memberID2 = 'another_stubbed_member';
+const memberID1 = 'stubbed_member';
+const memberID2 = 'another_stubbed_member';
 
-describe('SubscriberService', function () {
+describe('SubscriberService', () => {
 
-  var expectedMember1 = new Member({id: memberID1, email: 'email'});
-  var subscriber1 = new Subscriber({id: memberID1, notifyOnWikiChangesSoCraTes: true});
-  var error = new Error('some weird problem');
+  const expectedMember1 = new Member({id: memberID1, email: 'email'});
+  const subscriber1 = new Subscriber({id: memberID1, notifyOnWikiChangesSoCraTes: true});
+  const error = new Error('some weird problem');
 
-  afterEach(function () {
+  afterEach(() => {
     sinon.restore();
   });
 
-  describe('getMemberIfSubscriberExists', function () {
+  describe('getMemberIfSubscriberExists', () => {
 
-    it('returns an error if getMember returns an error', function (done) {
-      sinon.stub(memberstore, 'getMember', function (nick, cb) { cb(error); });
+    it('returns an error if getMember returns an error', done => {
+      sinon.stub(memberstore, 'getMember', (nick, cb) => { cb(error); });
 
-      subscriberService.getMemberIfSubscriberExists('irrelevant', function (err, member) {
+      subscriberService.getMemberIfSubscriberExists('irrelevant', (err, member) => {
         expect(err).to.eql(error);
         expect(member).to.be.falsy();
         done();
       });
     });
 
-    it('returns no member if getMember returns no member', function (done) {
-      sinon.stub(memberstore, 'getMember', function (nick, cb) { cb(null); });
+    it('returns no member if getMember returns no member', done => {
+      sinon.stub(memberstore, 'getMember', (nick, cb) => { cb(null); });
 
-      subscriberService.getMemberIfSubscriberExists('irrelevant', function (err, member) {
+      subscriberService.getMemberIfSubscriberExists('irrelevant', (err, member) => {
         expect(member).to.be.falsy();
         done(err);
       });
     });
 
-    it('returns an error if getSubscriber returns an error', function (done) {
-      sinon.stub(memberstore, 'getMember', function (nick, cb) { cb(null, expectedMember1); });
-      sinon.stub(subscriberstore, 'getSubscriber', function (nick, cb) { cb(error); });
+    it('returns an error if getSubscriber returns an error', done => {
+      sinon.stub(memberstore, 'getMember', (nick, cb) => { cb(null, expectedMember1); });
+      sinon.stub(subscriberstore, 'getSubscriber', (nick, cb) => { cb(error); });
 
-      subscriberService.getMemberIfSubscriberExists('irrelevant', function (err, member) {
+      subscriberService.getMemberIfSubscriberExists('irrelevant', (err, member) => {
         expect(err).to.eql(error);
         expect(member).to.be.falsy();
         done();
       });
     });
 
-    it('returns no member if getSubscriber returns no subscriber', function (done) {
-      sinon.stub(memberstore, 'getMember', function (nick, cb) { cb(null, expectedMember1); });
-      sinon.stub(subscriberstore, 'getSubscriber', function (nick, cb) { cb(null); });
+    it('returns no member if getSubscriber returns no subscriber', done => {
+      sinon.stub(memberstore, 'getMember', (nick, cb) => { cb(null, expectedMember1); });
+      sinon.stub(subscriberstore, 'getSubscriber', (nick, cb) => { cb(null); });
 
-      subscriberService.getMemberIfSubscriberExists('irrelevant', function (err, member) {
+      subscriberService.getMemberIfSubscriberExists('irrelevant', (err, member) => {
         expect(member).to.be.falsy();
         done(err);
       });
     });
 
-    it('returns a member if getMember and getSubscriber both return a valid result', function (done) {
-      sinon.stub(memberstore, 'getMember', function (nick, cb) { cb(null, expectedMember1); });
-      sinon.stub(subscriberstore, 'getSubscriber', function (nick, cb) { cb(null, subscriber1); });
+    it('returns a member if getMember and getSubscriber both return a valid result', done => {
+      sinon.stub(memberstore, 'getMember', (nick, cb) => { cb(null, expectedMember1); });
+      sinon.stub(subscriberstore, 'getSubscriber', (nick, cb) => { cb(null, subscriber1); });
 
-      subscriberService.getMemberIfSubscriberExists('irrelevant', function (err, member) {
+      subscriberService.getMemberIfSubscriberExists('irrelevant', (err, member) => {
         expect(member).to.eql(expectedMember1);
         done(err);
       });
     });
   });
 
-  describe('emailAddressesForWikiNotifications', function () {
-    var expectedMember2 = new Member({id: memberID2, email: 'email2'});
-    var subscriber2 = new Subscriber({id: memberID2});
-    var subscriber3 = new Subscriber({id: 'unknown_member'});
+  describe('emailAddressesForWikiNotifications', () => {
+    const expectedMember2 = new Member({id: memberID2, email: 'email2'});
+    const subscriber2 = new Subscriber({id: memberID2});
+    const subscriber3 = new Subscriber({id: 'unknown_member'});
 
-    beforeEach(function () {
-      sinon.stub(memberstore, 'getMembersForIds', function (ids, cb) {
-        var result = [];
+    beforeEach(() => {
+      sinon.stub(memberstore, 'getMembersForIds', (ids, cb) => {
+        const result = [];
         if (ids.indexOf(memberID1) > -1) { result.push(expectedMember1); }
         if (ids.indexOf(memberID2) > -1) { result.push(expectedMember2); }
         return cb(null, result);
       });
     });
 
-    it('are collected if subscribers are interested', function (done) {
-      sinon.stub(subscriberstore, 'allSubscribers', function (cb) { cb(null, [subscriber1, subscriber2]); });
+    it('are collected if subscribers are interested', done => {
+      sinon.stub(subscriberstore, 'allSubscribers', cb => { cb(null, [subscriber1, subscriber2]); });
 
-      subscriberService.emailAddressesForWikiNotifications(function (err, emailAddresses) {
+      subscriberService.emailAddressesForWikiNotifications((err, emailAddresses) => {
         expect(emailAddresses).to.have.length(1);
         expect(emailAddresses[0]).to.be('email');
         done(err);
       });
     });
 
-    it('are empty if subscribers are not interested', function (done) {
-      sinon.stub(subscriberstore, 'allSubscribers', function (cb) { cb(null, [subscriber2]); });
+    it('are empty if subscribers are not interested', done => {
+      sinon.stub(subscriberstore, 'allSubscribers', cb => { cb(null, [subscriber2]); });
 
-      subscriberService.emailAddressesForWikiNotifications(function (err, emailAddresses) {
+      subscriberService.emailAddressesForWikiNotifications((err, emailAddresses) => {
         expect(emailAddresses).to.have.length(0);
         done(err);
       });
     });
 
-    it('are empty if subscribers have no member', function (done) {
-      sinon.stub(subscriberstore, 'allSubscribers', function (cb) { cb(null, [subscriber3]); });
+    it('are empty if subscribers have no member', done => {
+      sinon.stub(subscriberstore, 'allSubscribers', cb => { cb(null, [subscriber3]); });
 
-      subscriberService.emailAddressesForWikiNotifications(function (err, emailAddresses) {
+      subscriberService.emailAddressesForWikiNotifications((err, emailAddresses) => {
         expect(emailAddresses).to.have.length(0);
         done(err);
       });
     });
   });
 
-  describe('removeSubscriber', function () {
-    beforeEach(function() {
-      sinon.stub(subscriberstore, 'removeSubscriber', function (subscriber, callback) {
+  describe('removeSubscriber', () => {
+    beforeEach(() => {
+      sinon.stub(subscriberstore, 'removeSubscriber', (subscriber, callback) => {
         callback(null);
       });
 
-      sinon.stub(memberstore, 'getMemberForId', function (subscriberId, callback) {
+      sinon.stub(memberstore, 'getMemberForId', (subscriberId, callback) => {
         callback(null, expectedMember1);
       });
     });
 
-    it('only removes the subscriber the member is also regular Softwerkskammer member', function (done) {
-      subscriberService.removeSubscriber(subscriber1, function(err) {
+    it('only removes the subscriber the member is also regular Softwerkskammer member', done => {
+      subscriberService.removeSubscriber(subscriber1, err => {
         done(err);
       });
     });
 
-    it('also removes the member if she is also regular Softwerkskammer member', function (done) {
-      var removeMemberCall = sinon.stub(memberstore, 'removeMember', function (subscriber, callback) {
+    it('also removes the member if she is also regular Softwerkskammer member', done => {
+      const removeMemberCall = sinon.stub(memberstore, 'removeMember', (subscriber, callback) => {
         callback(null);
       });
       expectedMember1.state.socratesOnly = true;
 
-      subscriberService.removeSubscriber(subscriber1, function(err) {
+      subscriberService.removeSubscriber(subscriber1, err => {
         expectedMember1.state.socratesOnly = false;
         expect(removeMemberCall.called).to.be(true);
         done(err);

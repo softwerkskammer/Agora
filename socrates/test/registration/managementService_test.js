@@ -11,17 +11,17 @@ const managementService = beans.get('managementService');
 
 const aLongTimeAgo = moment.tz().subtract(40, 'minutes');
 
-describe('Management Service', function () {
+describe('Management Service', () => {
 
-  describe('when calculating durations', function () {
+  describe('when calculating durations', () => {
 
     let listOfEvents;
 
-    beforeEach(function () {
+    beforeEach(() => {
       listOfEvents = [];
     });
 
-    it('counts each value', function () {
+    it('counts each value', () => {
       listOfEvents = [
         events.registeredParticipantFromWaitinglist('single', 2, 'member-id1', aLongTimeAgo),
         events.registeredParticipantFromWaitinglist('single', 2, 'member-id2', aLongTimeAgo),
@@ -49,7 +49,7 @@ describe('Management Service', function () {
       expect(durations[5]).to.eql({count: 2, duration: 'monday morning', total: 2});
     });
 
-    it('counts only durations that are present', function () {
+    it('counts only durations that are present', () => {
       listOfEvents = [
         events.registeredParticipantFromWaitinglist('single', 2, 'member-id1', aLongTimeAgo),
         events.registeredParticipantFromWaitinglist('single', 2, 'member-id2', aLongTimeAgo),

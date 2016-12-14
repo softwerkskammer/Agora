@@ -1,21 +1,21 @@
 'use strict';
 
-var expect = require('must-dist');
-var sinon = require('sinon').sandbox.create();
+const expect = require('must-dist');
+const sinon = require('sinon').sandbox.create();
 
-var beans = require('../../testutil/configureForTest').get('beans');
-var persistence = beans.get('eventstorePersistence');
-var GlobalEventStore = beans.get('GlobalEventStore');
-var store = beans.get('eventstore');
+const beans = require('../../testutil/configureForTest').get('beans');
+const persistence = beans.get('eventstorePersistence');
+const GlobalEventStore = beans.get('GlobalEventStore');
+const store = beans.get('eventstore');
 
 describe('eventstore', () => {
-  var eventStore = {
+  const eventStore = {
     url: 'socrates-url',
     events: [{event: 'EVENT-1'}],
     resourceEvents: [{event: 'EVENT-2'}]
   };
 
-  var getByField;
+  let getByField;
 
   beforeEach(() => {
     getByField = sinon.stub(persistence, 'getByField', (object, callback) => callback(null, eventStore));
@@ -36,7 +36,7 @@ describe('eventstore', () => {
 
   it('returns a GlobalEventStore object although the persistence only returns a JS object', done => {
     store.getEventStore('socrates-url', (err, globalEventStore) => {
-      expect(globalEventStore instanceof GlobalEventStore).to.be(true);
+      expect(globalEventStore).to.be.a(GlobalEventStore);
       done(err);
     });
   });

@@ -1,19 +1,19 @@
 'use strict';
 
 process.chdir(__dirname);
-var _ = require('lodash');
-var conf = require('simple-configure');
-var Beans = require('CoolBeans');
-var NodeCache = require('node-cache');
-var path = require('path');
+const _ = require('lodash');
+const conf = require('simple-configure');
+const Beans = require('CoolBeans');
+const NodeCache = require('node-cache');
+const path = require('path');
 
 function createConfiguration() {
-  var configdir = path.join(__dirname, '/../config/');
+  const configdir = path.join(__dirname, '/../config/');
 
   // first, set the default values
   // beans:
-  var swkBeans = require(configdir + 'beans.json');
-  var socratesBeans = require(configdir + 'beans-socrates.json');
+  const swkBeans = require(configdir + 'beans.json');
+  const socratesBeans = require(configdir + 'beans-socrates.json');
   _.assign(swkBeans, socratesBeans);
 
   conf.addProperties({
@@ -28,7 +28,7 @@ function createConfiguration() {
     secret: 'secret',
     sessionkey: 'socrates-conference.de',
     beans: new Beans(swkBeans),
-    cache: new NodeCache({ stdTTL: 0, checkperiod: 0, errorOnMissing: false, useClones: false }),
+    cache: new NodeCache({stdTTL: 0, checkperiod: 0, errorOnMissing: false, useClones: false}),
     emaildomainname: 'localhost',
     softwerkskammerURL: 'http://localhost:17124',
     socratesURL: 'http://localhost:17224',
@@ -37,7 +37,7 @@ function createConfiguration() {
   });
 
   // then, add properties from config files:
-  var files = ['mongo-config.json',
+  const files = ['mongo-config.json',
     'ezmlm-config.json',
     'socrates-server-config.json',
     'authentication-config.json',
@@ -47,7 +47,7 @@ function createConfiguration() {
     'socrates-wikirepo-config.json',
     'activityresults-config.json',
     'crosssite-config.json'];
-  conf.addFiles(_.map(files, function (file) { return configdir + file; }));
+  conf.addFiles(_.map(files, file => configdir + file));
 
   return conf;
 }

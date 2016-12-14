@@ -1,73 +1,71 @@
 /* eslint no-underscore-dangle: 0 */
 'use strict';
 
-var sinon = require('sinon').sandbox.create();
-var expect = require('must-dist');
-var _ = require('lodash');
-var moment = require('moment-timezone');
+const sinon = require('sinon').sandbox.create();
+const expect = require('must-dist');
+const _ = require('lodash');
+const moment = require('moment-timezone');
 
 const conf = require('../../testutil/configureForTest');
-var beans = conf.get('beans');
-var cache = conf.get('cache');
+const beans = conf.get('beans');
+const cache = conf.get('cache');
 
-var activityParticipantService = beans.get('activityParticipantService');
-var activitystore = beans.get('activitystore');
-var SoCraTesActivity = beans.get('socratesActivity');
-var Member = beans.get('member');
-var Subscriber = beans.get('subscriber');
+const activityParticipantService = beans.get('activityParticipantService');
+const activitystore = beans.get('activitystore');
+const SoCraTesActivity = beans.get('socratesActivity');
+const Member = beans.get('member');
+const Subscriber = beans.get('subscriber');
 
-var memberstore = beans.get('memberstore');
-var subscriberstore = beans.get('subscriberstore');
+const memberstore = beans.get('memberstore');
+const subscriberstore = beans.get('subscriberstore');
 
-var events = beans.get('events');
-var eventstore = beans.get('eventstore');
-var GlobalEventStore = beans.get('GlobalEventStore');
+const events = beans.get('events');
+const eventstore = beans.get('eventstore');
+const GlobalEventStore = beans.get('GlobalEventStore');
 
-describe('activityParticipantService', function () {
+describe('activityParticipantService', () => {
 
-  var eventStore;
-  var subscriber;
+  let eventStore;
+  let subscriber;
 
-  beforeEach(function () {
+  beforeEach(() => {
     cache.flushAll();
 
     eventStore = new GlobalEventStore();
 
-    sinon.stub(eventstore, 'getEventStore', function (url, callback) {
-      callback(null, eventStore);
+    sinon.stub(eventstore, 'getEventStore', (url, callback) => callback(null, eventStore));
+
+    sinon.stub(memberstore, 'getMembersForIds', (ids, callback) => {
+      callback(null, _.map(ids, id => new Member({id: id})));
     });
 
-    sinon.stub(memberstore, 'getMembersForIds', function (ids, callback) {
-      callback(null, _.map(ids, function (id) { return new Member({id: id}); }));
-    });
-
-    sinon.stub(subscriberstore, 'allSubscribers', function (callback) {
+    sinon.stub(subscriberstore, 'allSubscribers', callback => {
       callback(null, [subscriber]);
     });
   });
 
-  afterEach(function () {
+  afterEach(() => {
     sinon.restore();
   });
 
-  it('loads the participants and their participation information for a year (before 2016)', function (done) {
+  it('loads the participants and their participation information for a year (before 2016)', done => {
     /*eslint camelcase: 0*/
-    var socrates = {resources: {Veranstaltung: {_registeredMembers: [{memberId: 'memberId', duration: 2}]}}};
-    sinon.stub(activitystore, 'getActivity', function (url, callback) {
+    const socrates = {resources: {Veranstaltung: {_registeredMembers: [{memberId: 'memberId', duration: 2}]}}};
+    sinon.stub(activitystore, 'getActivity', (url, callback) => {
       callback(null, new SoCraTesActivity(socrates));
     });
 
     subscriber = new Subscriber({id: 'memberId'});
     subscriber.participationOf('2010').state.roommate = 'My buddy';
 
-    activityParticipantService.getParticipantsFor('2010', function (err, participants) {
+    activityParticipantService.getParticipantsFor('2010', (err, participants) => {
       expect(participants).to.have.length(1);
       expect(participants[0].participation.roommate()).to.be('My buddy');
       done(err);
     });
   });
 
-  it('loads the participants and their participation information for a year (on or after 2016)', function (done) {
+  it('loads the participants and their participation information for a year (on or after 2016)', done => {
     eventStore.state.events = [
       events.registeredParticipantFromWaitinglist('single', 2, 'memberId', moment.tz())
     ];
@@ -75,14 +73,14 @@ describe('activityParticipantService', function () {
     subscriber = new Subscriber({id: 'memberId'});
     subscriber.participationOf('2020').state.roommate = 'My buddy';
 
-    activityParticipantService.getParticipantsFor('2020', function (err, participants) {
+    activityParticipantService.getParticipantsFor('2020', (err, participants) => {
       expect(participants).to.have.length(1);
       expect(participants[0].participation.roommate()).to.be('My buddy');
       done(err);
     });
   });
 
-  it('loads the waitinglist participants and their participation information for a year (on or after 2016)', function (done) {
+  it('loads the waitinglist participants and their participation information for a year (on or after 2016)', done => {
     eventStore.state.events = [
       events.waitinglistParticipantWasRegistered(['single', 'junior'], 2, 'session-id', 'memberId', moment.tz())
     ];
@@ -90,7 +88,7 @@ describe('activityParticipantService', function () {
     subscriber = new Subscriber({id: 'memberId'});
     //subscriber.participationOf('2020').state.roommate = 'My buddy';
 
-    activityParticipantService.getWaitinglistParticipantsFor('2020', function (err, participants) {
+    activityParticipantService.getWaitinglistParticipantsFor('2020', (err, participants) => {
       expect(participants).to.have.length(1);
       expect(participants[0].id()).to.be('memberId');
       done(err);

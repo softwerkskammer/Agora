@@ -3,15 +3,15 @@
 'use strict';
 
 require('./configure'); // initializing parameters
-var async = require('async');
-var beans = require('simple-configure').get('beans');
-var activityParticipantService = beans.get('activityParticipantService');
-var managementService = beans.get('managementService');
+const async = require('async');
+const beans = require('simple-configure').get('beans');
+const activityParticipantService = beans.get('activityParticipantService');
+const managementService = beans.get('managementService');
 
-var subscriberstore = beans.get('subscriberstore');
-var persistence = beans.get('subscribersPersistence');
+const subscriberstore = beans.get('subscriberstore');
+const persistence = beans.get('subscribersPersistence');
 
-var really = process.argv[2];
+const really = process.argv[2];
 
 if (!really || really !== 'really') {
   console.log('If you really want to rename the group, append "really" to the command line.');
@@ -30,24 +30,24 @@ function handle(err) {
   }
 }
 
-activityParticipantService.getParticipantsFor(2016, function (err, participants) {
+activityParticipantService.getParticipantsFor(2016, (err, participants) => {
   handle(err);
-  managementService.addonLinesOf(participants, function (err1, addonLines) {
+  managementService.addonLinesOf(participants, (err1, addonLines) => {
     handle(err1);
     addonLines.forEach(line => console.log(line.member.displayName() + ' # ' + JSON.stringify(line.participation)));
     const brokenLines = addonLines.filter(line => !line.participation.state);
     async.map(brokenLines,
-      function (line, callback) {
-        subscriberstore.getSubscriber(line.member.id(), function (err2, subscriber) {
+      (line, callback) => {
+        subscriberstore.getSubscriber(line.member.id(), (err2, subscriber) => {
           if (err2 || !subscriber) { callback(err); }
           console.log(line.member.displayName());
           subscriber.fillFromUI({hasParticipationInformation: true});
           callback(null, subscriber);
         });
       },
-      function (errs, fixedSubscribers) {
+      (errs, fixedSubscribers) => {
         handle(errs);
-        async.each(fixedSubscribers, subscriberstore.saveSubscriber, function (errs2) {
+        async.each(fixedSubscribers, subscriberstore.saveSubscriber, errs2 => {
           handle(errs2);
           closeDBsAndExit();
         });

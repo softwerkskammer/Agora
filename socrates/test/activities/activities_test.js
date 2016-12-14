@@ -1,44 +1,44 @@
 'use strict';
 
-var request = require('supertest');
-var expect = require('must-dist');
-var sinon = require('sinon').sandbox.create();
+const request = require('supertest');
+const expect = require('must-dist');
+const sinon = require('sinon').sandbox.create();
 
-var conf = require('../../testutil/configureForTest');
-var beans = conf.get('beans');
+const conf = require('../../testutil/configureForTest');
+const beans = conf.get('beans');
 const cache = conf.get('cache');
 
-var GlobalEventStore = beans.get('GlobalEventStore');
-var eventstore = beans.get('eventstore');
-var eventstoreService = beans.get('eventstoreService');
+const GlobalEventStore = beans.get('GlobalEventStore');
+const eventstore = beans.get('eventstore');
+const eventstoreService = beans.get('eventstoreService');
 
-var Member = beans.get('member');
-var activitiesService = beans.get('activitiesService');
-var activitystore = beans.get('activitystore');
+const Member = beans.get('member');
+const activitiesService = beans.get('activitiesService');
+const activitystore = beans.get('activitystore');
 
-var createApp = require('../../testutil/testHelper')('socratesActivitiesApp').createApp;
+const createApp = require('../../testutil/testHelper')('socratesActivitiesApp').createApp;
 
-describe('SoCraTes activities application', function () {
-  var appWithSocratesMember = request(createApp({member: new Member({id: 'memberId'})}));
+describe('SoCraTes activities application', () => {
+  const appWithSocratesMember = request(createApp({member: new Member({id: 'memberId'})}));
 
-  var saveEventStoreStub;
+  let saveEventStoreStub;
 
-  beforeEach(function () {
+  beforeEach(() => {
     cache.flushAll();
 
-    sinon.stub(activitiesService, 'getActivityWithGroupAndParticipants', function (url, callback) { callback(); });
-    sinon.stub(activitystore, 'saveActivity', function (activity, callback) { callback(); });
+    sinon.stub(activitiesService, 'getActivityWithGroupAndParticipants', (url, callback) => { callback(); });
+    sinon.stub(activitystore, 'saveActivity', (activity, callback) => { callback(); });
 
-    saveEventStoreStub = sinon.stub(eventstore, 'saveEventStore', function (store, callback) { callback(); });
+    saveEventStoreStub = sinon.stub(eventstore, 'saveEventStore', (store, callback) => { callback(); });
   });
 
-  afterEach(function () {
+  afterEach(() => {
     sinon.restore();
   });
 
-  describe('when submitting the socrates information', function () {
+  describe('when submitting the socrates information', () => {
 
-    it('creates the eventstore and the socrates read model', function (done) {
+    it('creates the eventstore and the socrates read model', done => {
 
       sinon.stub(eventstore, 'getEventStore', (url, callback) => callback(null, null));
 
@@ -50,7 +50,7 @@ describe('SoCraTes activities application', function () {
         .send('resources[limits]=100&resources[limits]=200&resources[limits]=300&resources[limits]=400')
         .expect(302)
         .expect('Location', '/registration/')
-        .end(function (err) {
+        .end(err => {
           const cachedStore = cache.get('socrates-2015' + '_' + 'globalEventStoreForWriting');
           expect(cachedStore.state.events.length).to.eql(7);
           expect(cachedStore.state.url).to.eql('socrates-2015');
@@ -59,11 +59,11 @@ describe('SoCraTes activities application', function () {
         });
     });
 
-    it('updates the eventstore and the socrates read model', function (done) {
-      sinon.stub(eventstore, 'getEventStore', function (url, callback) { callback(null, new GlobalEventStore({url: 'socrates-2015', events: [{event: 'EVENT1'}, {event: 'EVENT2'}, {event: 'EVENT3'}]})); });
+    it('updates the eventstore and the socrates read model', done => {
+      sinon.stub(eventstore, 'getEventStore', (url, callback) => { callback(null, new GlobalEventStore({url: 'socrates-2015', events: [{event: 'EVENT1'}, {event: 'EVENT2'}, {event: 'EVENT3'}]})); });
 
       // first, initialise the cache with a read model:
-      eventstoreService.getSoCraTesReadModel('socrates-2015', function () {
+      eventstoreService.getSoCraTesReadModel('socrates-2015', () => {
 
         appWithSocratesMember
           .post('/submit')
@@ -73,7 +73,7 @@ describe('SoCraTes activities application', function () {
           .send('resources[limits]=100&resources[limits]=200&resources[limits]=300&resources[limits]=400')
           .expect(302)
           .expect('Location', '/registration/')
-          .end(function (err) {
+          .end(err => {
             const cachedStore = cache.get('socrates-2015' + '_' + 'globalEventStoreForWriting');
             expect(cachedStore.state.events.length).to.eql(10);
             expect(cachedStore.state.url).to.eql('socrates-2015');
@@ -90,8 +90,8 @@ describe('SoCraTes activities application', function () {
       });
     });
 
-    it('changing the year of an existing SoCraTes is not allowed (and has no effect)', function (done) {
-      sinon.stub(eventstore, 'getEventStore', function (url, callback) {
+    it('changing the year of an existing SoCraTes is not allowed (and has no effect)', done => {
+      sinon.stub(eventstore, 'getEventStore', (url, callback) => {
         if (url === 'socrates-2014') {
           return callback(null, new GlobalEventStore({url: 'socrates-2014', events: [{event: 'EVENT1'}, {event: 'EVENT2'}, {event: 'EVENT3'}]}));
         }
@@ -99,7 +99,7 @@ describe('SoCraTes activities application', function () {
       });
 
       // first, initialise the cache with a read model:
-      eventstoreService.getSoCraTesReadModel('socrates-2014', function () {
+      eventstoreService.getSoCraTesReadModel('socrates-2014', () => {
 
         appWithSocratesMember
           .post('/submit')
@@ -109,7 +109,7 @@ describe('SoCraTes activities application', function () {
           .send('resources[limits]=100&resources[limits]=200&resources[limits]=300&resources[limits]=400')
           .expect(200)
           .expect(/It is impossible to alter the year of an existing SoCraTes conference./)
-          .end(function (err) {
+          .end(err => {
             const cachedStore = cache.get('socrates-2014' + '_' + 'globalEventStoreForWriting');
             expect(cachedStore.state.events.length).to.eql(3);
             expect(cachedStore.state.url).to.eql('socrates-2014');
