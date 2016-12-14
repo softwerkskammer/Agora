@@ -1,7 +1,7 @@
 'use strict';
 
 const expect = require('must-dist');
-const _ = require('lodash');
+const R = require('ramda');
 const moment = require('moment-timezone');
 
 describe('Moment', () => {
@@ -21,8 +21,10 @@ describe('Moment', () => {
       expect(result[4]).to.equal(jan1);
     });
 
-    it('Lodash sortBy can sort the moments', () => {
-      const result = _.sortBy([jan3, jan5, jan1, jan2, jan4]);
+    it('JavaScript array sorts with provided comparator', () => {
+      const result = [jan3, jan5, jan1, jan2, jan4].sort(
+        (momA, momB) => momA.valueOf() - momB.valueOf()
+      );
       expect(result[0]).to.equal(jan1);
       expect(result[1]).to.equal(jan2);
       expect(result[2]).to.equal(jan3);
@@ -30,8 +32,8 @@ describe('Moment', () => {
       expect(result[4]).to.equal(jan5);
     });
 
-    it('Lodash sortBy can sort on the formatted value', () => {
-      const result = _.sortBy([jan3, jan5, jan1, jan2, jan4], mom => mom.format());
+    it('Ramda sortBy can sort the moments by its encapsulated date', () => {
+      const result = R.sortBy(mom => mom.toDate(), [jan3, jan5, jan1, jan2, jan4]);
       expect(result[0]).to.equal(jan1);
       expect(result[1]).to.equal(jan2);
       expect(result[2]).to.equal(jan3);
@@ -39,14 +41,13 @@ describe('Moment', () => {
       expect(result[4]).to.equal(jan5);
     });
 
-    it('lodash min can find the minimum date, even without comparator function', () => {
-      const result = _.min([jan3, jan5, jan1, jan2, jan4]);
-      expect(result).to.equal(jan1);
-    });
-
-    it('lodash max can find the maximum date, even without comparator function', () => {
-      const result = _.max([jan3, jan5, jan1, jan2, jan4]);
-      expect(result).to.equal(jan5);
+    it('Ramda sortBy can sort on the formatted value', () => {
+      const result = R.sortBy(mom => mom.format(), [jan3, jan5, jan1, jan2, jan4]);
+      expect(result[0]).to.equal(jan1);
+      expect(result[1]).to.equal(jan2);
+      expect(result[2]).to.equal(jan3);
+      expect(result[3]).to.equal(jan4);
+      expect(result[4]).to.equal(jan5);
     });
   });
 });
