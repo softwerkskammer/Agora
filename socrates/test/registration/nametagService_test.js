@@ -36,4 +36,18 @@ describe('Nametag Service', () => {
       '\\hline \n\\nametag{Hans}{Dampf}{}\\\\ \\hline \n' +
       '\n\\end{tabular}\n\n\n');
   });
+
+  it('returns tables for an arbitrary number of members and splits every 12 members for a new page and every 3 for a new row', () => {
+    const member = new Member({firstname: 'Hans', lastname: 'Dampf'});
+    expect(nametagService._tablesFor([member, member, member, member, member, member, member, member, member, member, member, member, member, member, member])).to.be(
+      '\\begin{tabular}{|p{7cm}|p{7cm}|p{7cm}|} \n\\hline ' + '\n' +
+      '\\nametag{Hans}{Dampf}{} & \\nametag{Hans}{Dampf}{} & \\nametag{Hans}{Dampf}{}\\\\ \\hline \n' +
+      '\\nametag{Hans}{Dampf}{} & \\nametag{Hans}{Dampf}{} & \\nametag{Hans}{Dampf}{}\\\\ \\hline \n' +
+      '\\nametag{Hans}{Dampf}{} & \\nametag{Hans}{Dampf}{} & \\nametag{Hans}{Dampf}{}\\\\ \\hline \n' +
+      '\\nametag{Hans}{Dampf}{} & \\nametag{Hans}{Dampf}{} & \\nametag{Hans}{Dampf}{}\\\\ \\hline \n' +
+      '\n\\end{tabular}\n\n\n' +
+      '\\begin{tabular}{|p{7cm}|p{7cm}|p{7cm}|} \n' + '\\hline \n' +
+      '\\nametag{Hans}{Dampf}{} & \\nametag{Hans}{Dampf}{} & \\nametag{Hans}{Dampf}{}\\\\ \\hline \n' +
+      '\n\\end{tabular}\n\n\n');
+  });
 });

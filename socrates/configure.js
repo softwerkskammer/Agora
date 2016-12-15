@@ -1,7 +1,6 @@
 'use strict';
 
 process.chdir(__dirname);
-const _ = require('lodash');
 const conf = require('simple-configure');
 const Beans = require('CoolBeans');
 const NodeCache = require('node-cache');
@@ -14,7 +13,7 @@ function createConfiguration() {
   // beans:
   const swkBeans = require(configdir + 'beans.json');
   const socratesBeans = require(configdir + 'beans-socrates.json');
-  _.assign(swkBeans, socratesBeans);
+  Object.assign(swkBeans, socratesBeans);
 
   conf.addProperties({
     port: '17224',
@@ -47,7 +46,7 @@ function createConfiguration() {
     'socrates-wikirepo-config.json',
     'activityresults-config.json',
     'crosssite-config.json'];
-  conf.addFiles(_.map(files, file => configdir + file));
+  conf.addFiles(files.map(file => configdir + file));
 
   return conf;
 }

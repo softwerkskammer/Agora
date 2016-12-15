@@ -3,7 +3,6 @@
 module.exports = function (firstTestBeansFilename, secondTestBeansFilename) {
 
   const conf = require('simple-configure');
-  const _ = require('lodash');
   const Beans = require('CoolBeans');
   require('../../softwerkskammer/testutil/shutupWinston')();
 
@@ -17,7 +16,7 @@ module.exports = function (firstTestBeansFilename, secondTestBeansFilename) {
   const secondProductionBeans = require('../../config/beans-socrates.json');
   const firstTestBeans = require('../../config/' + firstTestBeansFilename);
   const secondTestBeans = require('../../config/' + secondTestBeansFilename);
-  _.assign(productionBeans, secondProductionBeans, firstTestBeans, secondTestBeans);
+  Object.assign(productionBeans, secondProductionBeans, firstTestBeans, secondTestBeans);
 
   conf.addProperties({
     port: '17225',

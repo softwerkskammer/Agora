@@ -3,7 +3,6 @@
 
 const sinon = require('sinon').sandbox.create();
 const expect = require('must-dist');
-const _ = require('lodash');
 const moment = require('moment-timezone');
 
 const conf = require('../../testutil/configureForTest');
@@ -36,7 +35,7 @@ describe('activityParticipantService', () => {
     sinon.stub(eventstore, 'getEventStore', (url, callback) => callback(null, eventStore));
 
     sinon.stub(memberstore, 'getMembersForIds', (ids, callback) => {
-      callback(null, _.map(ids, id => new Member({id: id})));
+      callback(null, ids.map(id => new Member({id: id})));
     });
 
     sinon.stub(subscriberstore, 'allSubscribers', callback => {
