@@ -4,7 +4,7 @@ const conf = require('simple-configure');
 const logger = require('winston').loggers.get('authorization');
 const securedBySoCraTesAdminURLRegex = new RegExp(conf.get('securedBySoCraTesAdminURLPattern'));
 
-module.exports = function redirectIfNotSuperuser(req, res, next) {
+module.exports = function redirectIfNotSoCraTesAdmin(req, res, next) {
   const originalUrl = req.originalUrl;
   const user = req.user;
 
