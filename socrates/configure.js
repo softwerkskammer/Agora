@@ -20,11 +20,11 @@ function createConfiguration() {
     port: '17224',
     mongoURL: 'mongodb://localhost:27017/swk',
     publicUrlPrefix: 'http://localhost:17224',
-    securedByLoginURLPattern: '/wiki|' +
-    '/mailsender|' +
-    '/members',
-    securedBySuperuserURLPattern: '^/activities',
-    securedBySoCraTesAdminURLPattern: '^/mailsender/massMailing',
+    securedByLoginURLPattern: '^/wiki|' +
+    '^/mailsender|' +
+    '^/members',
+    securedBySuperuserURLPattern: '^/rightNowThereIsNoSuperuserOnlyURL',
+    securedBySoCraTesAdminURLPattern: '^/mailsender/massMailing|^/activities',
     secret: 'secret',
     sessionkey: 'socrates-conference.de',
     beans: new Beans(swkBeans),
