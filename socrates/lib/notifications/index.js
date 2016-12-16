@@ -69,7 +69,6 @@ module.exports = {
   },
 
   newParticipant: function newParticipant(memberID, bookingdetails) {
-    const self = this;
     memberstore.getMemberForId(memberID, (err, member) => {
       if (err || !member) { return logger.error(err); }
       const params = {
@@ -80,12 +79,11 @@ module.exports = {
         organizersFilename: 'superuserRegistrationNotification',
         organizersSubject: 'New SoCraTes Registration'
       };
-      notifyConcernedParties(params, self);
+      notifyConcernedParties(params, this);
     });
   },
 
   changedDuration: function changedDuration(member, bookingdetails) {
-    const self = this;
     const params = {
       member: member,
       bookingdetails: bookingdetails,
@@ -94,11 +92,10 @@ module.exports = {
       organizersFilename: 'superuserRegistrationNotification',
       organizersSubject: 'Change in SoCraTes Registration - Duration'
     };
-    notifyConcernedParties(params, self);
+    notifyConcernedParties(params, this);
   },
 
   changedResource: function changedResource(member, bookingdetails) {
-    const self = this;
     const params = {
       member: member,
       bookingdetails: bookingdetails,
@@ -107,11 +104,10 @@ module.exports = {
       organizersFilename: 'superuserRegistrationNotification',
       organizersSubject: 'Change in SoCraTes Registration - Resource'
     };
-    notifyConcernedParties(params, self);
+    notifyConcernedParties(params, this);
   },
 
   changedWaitinglist: function changedWaitinglist(member, bookingdetails) {
-    const self = this;
     const params = {
       member: member,
       bookingdetails: bookingdetails,
@@ -120,11 +116,10 @@ module.exports = {
       organizersFilename: 'superuserWaitinglistNotification',
       organizersSubject: 'Change in SoCraTes Waitinglist - Resource'
     };
-    notifyConcernedParties(params, self);
+    notifyConcernedParties(params, this);
   },
 
   removedFromParticipants: function removedFromParticipants(member) {
-    const self = this;
     const params = {
       member: member,
       bookingdetails: {resourceKind: 'participant list'},
@@ -133,11 +128,10 @@ module.exports = {
       organizersFilename: 'superuserRemovalNotification',
       organizersSubject: 'Change in SoCraTes Registration - Removal from Participants'
     };
-    notifyConcernedParties(params, self);
+    notifyConcernedParties(params, this);
   },
 
   removedFromWaitinglist: function removedFromWaitinglist(member) {
-    const self = this;
     const params = {
       member: member,
       bookingdetails: {resourceKind: 'waitinglist'},
@@ -146,11 +140,10 @@ module.exports = {
       organizersFilename: 'superuserRemovalNotification',
       organizersSubject: 'Change in SoCraTes Registration - Removal from Waitinglist'
     };
-    notifyConcernedParties(params, self);
+    notifyConcernedParties(params, this);
   },
 
   newWaitinglistEntry: function newWaitinglistEntry(memberID, bookingdetails) {
-    const self = this;
     memberstore.getMemberForId(memberID, (err, member) => {
       if (err || !member) { return logger.error(err); }
       const params = {
@@ -161,12 +154,11 @@ module.exports = {
         organizersFilename: 'superuserWaitinglistNotification',
         organizersSubject: 'New SoCraTes Waitinglist Entry'
       };
-      notifyConcernedParties(params, self);
+      notifyConcernedParties(params, this);
     });
   },
 
   wikiChanges: function wikiChanges(changes, callback) {
-    const self = this;
     const options = {
       directories: changes.sort(change => change.dir)
     };
@@ -176,7 +168,7 @@ module.exports = {
       const filename = path.join(__dirname, 'pug/wikichangetemplate.pug');
       sendMail({
         fromName: 'SoCraTes Notifications',
-        fromAddress: self.infoListEmailAddress(),
+        fromAddress: this.infoListEmailAddress(),
         receivers: emails,
         subject: 'SoCraTes Wiki Changes',
         html: pug.renderFile(filename, options),
